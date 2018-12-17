@@ -1,0 +1,1 @@
+include ':ChipsLibrary',':vcard','photoviewer','framesequence'
