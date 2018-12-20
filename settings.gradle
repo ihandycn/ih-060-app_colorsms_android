@@ -1,1 +1,1 @@
-include ':ChipsLibrary',':vcard','photoviewer','framesequence'
+include ':app', ':libphotoviewer', ':libchips', ':libvcard', ':libframesequence'
