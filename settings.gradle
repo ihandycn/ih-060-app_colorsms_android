@@ -1,1 +1,2 @@
-include ':app', ':libphotoviewer', ':libchips', ':libvcard', ':libframesequence'
+include ':app', ':libphotoviewer', ':libchips', ':libvcard', ':libframesequence', ':libsuperapps'
+project(':libsuperapps').projectDir = new File('libs/libSuperApps/lib')

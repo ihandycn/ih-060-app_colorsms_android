@@ -68,7 +68,6 @@ xcuserdata
 captures/
 
 # Launcher project specific files
-*.sa
 airlauncher_db_files/
 launcher.db
 .gitstatus

@@ -1,0 +1,3 @@
+[submodule "libs/libSuperApps"]
+	path = libs/libSuperApps
+	url = https://git.ihandysoft.com/nogroup/Lib_SuperApps_Android.git

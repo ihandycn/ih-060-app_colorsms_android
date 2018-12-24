@@ -5,7 +5,7 @@ android {
     buildToolsVersion rootProject.ext.buildToolsVersion
 
     defaultConfig {
-        applicationId "com.android.messaging"
+        applicationId "com.color.sms.messages.emoji"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 1
@@ -26,6 +26,7 @@ dependencies {
     compile project(':libvcard')
     compile project(':libphotoviewer')
     compile project(':libframesequence')
+    compile project(':libsuperapps')
 
     compile "com.android.support:design:${rootProject.ext.supportLibVersion}"
     compile "com.android.support:appcompat-v7:${rootProject.ext.supportLibVersion}"
@@ -35,4 +36,6 @@ dependencies {
     compile "com.android.support:support-v13:${rootProject.ext.supportLibVersion}"
 
     compile 'com.google.guava:guava:26.0-android'
+
+    compile "com.ihandy.appframework:libAppframework.beta:4.8.5.beta05"
 }
