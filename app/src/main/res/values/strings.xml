@@ -14,7 +14,8 @@
     See the License for the specific language governing permissions and
     limitations under the License.
 -->
-<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
+<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2"
+    xmlns:tools="http://schemas.android.com/tools" tools:ignore="MissingTranslation">
     <!-- The name of the application as it appears under the main Launcher icon and in various activity titles -->
     <string name="app_name">Messaging</string>
 
@@ -975,4 +976,8 @@
     <string name="selected_sim_content_message"><xliff:g id="selected_sim">%s</xliff:g> selected</string>
 
     <string name="work_directory_display_name">Work Profile contacts</string>
+
+    <string name="bottom_navigation_item_messaging">Messaging</string>
+    <string name="bottom_navigation_item_sms_show">SMS Show</string>
+    <string name="bottom_navigation_item_emoji">Emoji</string>
 </resources>
