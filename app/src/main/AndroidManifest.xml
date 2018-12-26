@@ -63,6 +63,10 @@
         android:theme="@style/BugleTheme"
         android:supportsRtl="true">
 
+        <meta-data
+            android:name="io.fabric.ApiKey"
+            android:value="0b4450f77c38aaab5bda6429b3e6ece0f4c33dfb" />
+
         <!-- Displays a list of conversations -->
         <activity
             android:name=".ui.conversationlist.ConversationListActivity"
