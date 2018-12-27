@@ -18,16 +18,25 @@ package com.android.messaging.ui.conversationlist;
 
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.design.widget.BottomNavigationView;
+import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBar;
 import android.view.Menu;
 import android.view.MenuItem;
 
 import com.android.messaging.R;
+import com.android.messaging.ui.BasePagerAdapter;
 import com.android.messaging.ui.UIIntents;
 import com.android.messaging.util.DebugUtils;
 import com.android.messaging.util.Trace;
 
-public class ConversationListActivity extends AbstractConversationListActivity {
+public class ConversationListActivity extends AbstractConversationListActivity
+        implements BottomNavigationView.OnNavigationItemSelectedListener {
+
+    private ViewPager mViewPager;
+    private BasePagerAdapter mPagerAdapter;
+
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
         Trace.beginSection("ConversationListActivity.onCreate");
@@ -35,6 +44,7 @@ public class ConversationListActivity extends AbstractConversationListActivity {
         setContentView(R.layout.conversation_list_activity);
         Trace.endSection();
         invalidateActionBar();
+        initPager();
     }
 
     @Override
@@ -83,7 +93,7 @@ public class ConversationListActivity extends AbstractConversationListActivity {
 
     @Override
     public boolean onOptionsItemSelected(final MenuItem menuItem) {
-        switch(menuItem.getItemId()) {
+        switch (menuItem.getItemId()) {
             case R.id.action_start_new_conversation:
                 onActionBarStartNewConversation();
                 return true;
@@ -101,6 +111,24 @@ public class ConversationListActivity extends AbstractConversationListActivity {
                 return true;
         }
         return super.onOptionsItemSelected(menuItem);
+    }
+
+    @Override
+    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+
+
+        switch (item.getItemId()) {
+            case R.id.messaging:
+                mViewPager.setCurrentItem(0);
+                return true;
+            case R.id.sms_show:
+                mViewPager.setCurrentItem(1);
+                return true;
+            case R.id.emoji:
+                mViewPager.setCurrentItem(2);
+                return true;
+        }
+        return false;
     }
 
     @Override
@@ -132,13 +160,18 @@ public class ConversationListActivity extends AbstractConversationListActivity {
     @Override
     public void onWindowFocusChanged(final boolean hasFocus) {
         super.onWindowFocusChanged(hasFocus);
-        final ConversationListFragment conversationListFragment =
-                (ConversationListFragment) getFragmentManager().findFragmentById(
-                        R.id.conversation_list_fragment);
         // When the screen is turned on, the last used activity gets resumed, but it gets
         // window focus only after the lock screen is unlocked.
-        if (hasFocus && conversationListFragment != null) {
-            conversationListFragment.setScrolledToNewestConversationIfNeeded();
-        }
+//        if (hasFocus && mViewPager.getCurrentItem() == 0) {
+//            ((ConversationListFragment) mPagerAdapter.getItem(0)).setScrolledToNewestConversationIfNeeded();
+//        }
+    }
+
+    private void initPager() {
+        BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation_view);
+        mViewPager = findViewById(R.id.fragment_pager);
+        mPagerAdapter = new BasePagerAdapter(getFragmentManager());
+        mViewPager.setAdapter(mPagerAdapter);
+        bottomNavigationView.setOnNavigationItemSelectedListener(this);
     }
 }
