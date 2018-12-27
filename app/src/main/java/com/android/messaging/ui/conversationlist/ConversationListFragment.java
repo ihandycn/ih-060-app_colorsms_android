@@ -317,11 +317,6 @@ public class ConversationListFragment extends Fragment implements ConversationLi
             startNewConversationMenuItem.setVisible(accessibilityManager
                     .isTouchExplorationEnabled());
         }
-
-        final MenuItem archive = menu.findItem(R.id.action_show_archived);
-        if (archive != null) {
-            archive.setVisible(true);
-        }
     }
 
     @Override

@@ -68,8 +68,6 @@ public class MultiSelectActionModeCallback implements Callback {
     private final ArrayMap<String, SelectedConversation> mSelectedConversations;
 
     private Listener mListener;
-    private MenuItem mArchiveMenuItem;
-    private MenuItem mUnarchiveMenuItem;
     private MenuItem mAddContactMenuItem;
     private MenuItem mBlockMenuItem;
     private MenuItem mNotificationOnMenuItem;
@@ -85,8 +83,6 @@ public class MultiSelectActionModeCallback implements Callback {
     @Override
     public boolean onCreateActionMode(ActionMode actionMode, Menu menu) {
         actionMode.getMenuInflater().inflate(R.menu.conversation_list_fragment_select_menu, menu);
-        mArchiveMenuItem = menu.findItem(R.id.action_archive);
-        mUnarchiveMenuItem = menu.findItem(R.id.action_unarchive);
         mAddContactMenuItem = menu.findItem(R.id.action_add_contact);
         mBlockMenuItem = menu.findItem(R.id.action_block);
         mNotificationOffMenuItem = menu.findItem(R.id.action_notification_off);
@@ -106,12 +102,6 @@ public class MultiSelectActionModeCallback implements Callback {
         switch(menuItem.getItemId()) {
             case R.id.action_delete:
                 mListener.onActionBarDelete(mSelectedConversations.values());
-                return true;
-            case R.id.action_archive:
-                mListener.onActionBarArchive(mSelectedConversations.values(), true);
-                return true;
-            case R.id.action_unarchive:
-                mListener.onActionBarArchive(mSelectedConversations.values(), false);
                 return true;
             case R.id.action_notification_off:
                 mListener.onActionBarNotification(mSelectedConversations.values(), false);
@@ -212,8 +202,5 @@ public class MultiSelectActionModeCallback implements Callback {
         // conversation we show off button. We can show both if we have a mixture.
         mNotificationOffMenuItem.setVisible(hasCurrentlyOnNotification);
         mNotificationOnMenuItem.setVisible(hasCurrentlyOffNotification);
-
-        mArchiveMenuItem.setVisible(hasCurrentlyUnarchived);
-        mUnarchiveMenuItem.setVisible(hasCurrentlyArchived);
     }
 }

@@ -27,6 +27,7 @@
     <color name="archived_conversation_action_bar_background_color_dark">#838383</color>
 
     <!-- Conversation list -->
+    <color name="conversation_list_contact_read_background_color">#d4d9de</color>
     <color name="conversation_list_item_conversation">#19191c</color>
     <color name="conversation_list_item_snippet">#222327</color>
     <color name="conversation_list_error">#f52e2e</color>

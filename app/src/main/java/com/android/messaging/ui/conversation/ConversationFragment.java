@@ -751,9 +751,6 @@ public class ConversationFragment extends Fragment implements ConversationDataLi
         menu.findItem(R.id.action_add_contact).setVisible(addContactActionVisible);
 
         // See if we should show archive or unarchive.
-        final boolean isArchived = data.getIsArchived();
-        menu.findItem(R.id.action_archive).setVisible(!isArchived);
-        menu.findItem(R.id.action_unarchive).setVisible(isArchived);
 
         // Conditionally enable the phone call button.
         final boolean supportCallAction = (PhoneUtils.getDefault().isVoiceCapable() &&
@@ -786,15 +783,6 @@ public class ConversationFragment extends Fragment implements ConversationDataLi
                     centerPoint = new Point(display.getWidth() / 2, display.getHeight() / 2);
                 }
                 UIIntents.get().launchPhoneCallActivity(getActivity(), phoneNumber, centerPoint);
-                return true;
-
-            case R.id.action_archive:
-                mBinding.getData().archiveConversation(mBinding);
-                closeConversation(mConversationId);
-                return true;
-
-            case R.id.action_unarchive:
-                mBinding.getData().unarchiveConversation(mBinding);
                 return true;
 
             case R.id.action_settings:

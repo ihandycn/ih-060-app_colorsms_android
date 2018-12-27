@@ -103,9 +103,6 @@ public class ConversationListActivity extends AbstractConversationListActivity
             case R.id.action_debug_options:
                 onActionBarDebug();
                 return true;
-            case R.id.action_show_archived:
-                onActionBarArchived();
-                return true;
             case R.id.action_show_blocked_contacts:
                 onActionBarBlockedParticipants();
                 return true;
