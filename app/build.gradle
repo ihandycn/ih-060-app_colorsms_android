@@ -48,5 +48,7 @@ dependencies {
         transitive = true
     }
 
+    compile "com.google.android.gms:play-services-gcm:${rootProject.ext.googlePlayServiceVersion}"
+    compile "com.google.firebase:firebase-ads:${rootProject.ext.googlePlayServiceVersion}"
     compile "com.ihandy.appframework:libAppframework.beta:4.8.5.beta05"
 }

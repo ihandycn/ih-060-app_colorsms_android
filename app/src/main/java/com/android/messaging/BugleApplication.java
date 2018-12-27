@@ -16,7 +16,6 @@
 
 package com.android.messaging;
 
-import android.app.Application;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -45,6 +44,7 @@ import com.android.messaging.util.OsUtil;
 import com.android.messaging.util.PhoneUtils;
 import com.android.messaging.util.Trace;
 import com.google.common.annotations.VisibleForTesting;
+import com.ihs.app.framework.HSApplication;
 
 import java.io.File;
 import java.lang.Thread.UncaughtExceptionHandler;
@@ -52,7 +52,7 @@ import java.lang.Thread.UncaughtExceptionHandler;
 /**
  * The application object
  */
-public class BugleApplication extends Application implements UncaughtExceptionHandler {
+public class BugleApplication extends HSApplication implements UncaughtExceptionHandler {
     private static final String TAG = LogUtil.BUGLE_TAG;
 
     private UncaughtExceptionHandler sSystemUncaughtExceptionHandler;
