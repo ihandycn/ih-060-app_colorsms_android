@@ -20,7 +20,7 @@
     <dimen name="action_bar_elevation">8dp</dimen>
     <dimen name="action_bar_text_size">20sp</dimen>
     <dimen name="conversation_message_text_size">13.3sp</dimen>
-    <dimen name="conversation_status_text_size">12sp</dimen>
+    <dimen name="conversation_status_text_size">10.7sp</dimen>
     <dimen name="conversation_title_text_size">12sp</dimen>
     <dimen name="conversation_info_text_size">12sp</dimen>
     <dimen name="conversation_compose_send_text_size">16sp</dimen>
@@ -43,10 +43,10 @@
 
     <dimen name="message_bubble_arrow_width">9dp</dimen>
     <dimen name="message_text_bottom_padding">12dp</dimen>
-    <dimen name="message_text_top_padding">10dp</dimen>
+    <dimen name="message_text_top_padding">14dp</dimen>
     <dimen name="message_text_left_right_padding">14dp</dimen>
-    <dimen name="message_padding_default">18dp</dimen>
-    <dimen name="message_padding_same_author">2dp</dimen>
+    <dimen name="message_padding_default">24dp</dimen>
+    <dimen name="message_padding_same_author">4.7dp</dimen>
     <dimen name="message_metadata_top_padding">4dp</dimen>
     <dimen name="message_audio_attachment_padding">12dp</dimen>
 

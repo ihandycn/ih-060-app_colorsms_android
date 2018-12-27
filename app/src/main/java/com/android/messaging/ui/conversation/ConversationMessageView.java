@@ -689,7 +689,6 @@ public class ConversationMessageView extends FrameLayout implements View.OnClick
         // These values depend on whether the message has text, attachments, or both.
         // We intentionally don't set defaults, so the compiler will tell us if we forget
         // to set one of them, or if we set one more than once.
-        final int contentLeftPadding, contentRightPadding;
         final Drawable textBackground;
         final int textMinHeight;
         final int textTopMargin;
@@ -699,8 +698,6 @@ public class ConversationMessageView extends FrameLayout implements View.OnClick
         if (mData.hasAttachments()) {
             if (shouldShowMessageTextBubble()) {
                 // Text and attachment(s)
-                contentLeftPadding = incoming ? arrowWidth : 0;
-                contentRightPadding = outgoing ? arrowWidth : 0;
                 textBackground = drawableProvider.getBubbleDrawable(
                         isSelected(),
                         incoming,
@@ -714,8 +711,6 @@ public class ConversationMessageView extends FrameLayout implements View.OnClick
                 textRightPadding = messageTextLeftRightPadding;
             } else {
                 // Attachment(s) only
-                contentLeftPadding = incoming ? arrowWidth : 0;
-                contentRightPadding = outgoing ? arrowWidth : 0;
                 textBackground = null;
                 textMinHeight = 0;
                 textTopMargin = 0;
@@ -726,24 +721,22 @@ public class ConversationMessageView extends FrameLayout implements View.OnClick
             }
         } else {
             // Text only
-            contentLeftPadding = (!showArrow && incoming) ? arrowWidth : 0;
-            contentRightPadding = (!showArrow && outgoing) ? arrowWidth : 0;
             textBackground = drawableProvider.getBubbleDrawable(
                     isSelected(),
                     incoming,
-                    shouldShowMessageBubbleArrow(),
+                    true,
                     mData.hasIncomingErrorStatus());
             textMinHeight = messageTextMinHeightDefault;
             textTopMargin = 0;
             textTopPadding = textTopPaddingDefault;
             textBottomPadding = textBottomPaddingDefault;
             if (showArrow && incoming) {
-                textLeftPadding = messageTextLeftRightPadding + arrowWidth;
+                textLeftPadding = messageTextLeftRightPadding;
             } else {
                 textLeftPadding = messageTextLeftRightPadding;
             }
             if (showArrow && outgoing) {
-                textRightPadding = messageTextLeftRightPadding + arrowWidth;
+                textRightPadding = messageTextLeftRightPadding;
             } else {
                 textRightPadding = messageTextLeftRightPadding;
             }
@@ -768,11 +761,9 @@ public class ConversationMessageView extends FrameLayout implements View.OnClick
             // Need to switch right and left padding in RtL mode
             mMessageTextAndInfoView.setPadding(textRightPadding, textTopPadding, textLeftPadding,
                     textBottomPadding);
-            mMessageBubble.setPadding(contentRightPadding, 0, contentLeftPadding, 0);
         } else {
             mMessageTextAndInfoView.setPadding(textLeftPadding, textTopPadding, textRightPadding,
                     textBottomPadding);
-            mMessageBubble.setPadding(contentLeftPadding, 0, contentRightPadding, 0);
         }
 
         // Update the message row and message bubble views

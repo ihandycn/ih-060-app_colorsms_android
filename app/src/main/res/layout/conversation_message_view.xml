@@ -144,11 +144,16 @@
                 android:layout_marginRight="4dp"
                 style="@style/ConversationMessageStatus"
                 android:visibility="gone" />
-            <TextView
+            <com.superapps.view.TypefacedTextView
                 android:id="@+id/message_status"
+                style="@style/ConversationMessageStatus"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                style="@style/ConversationMessageStatus"
+                android:paddingEnd="7dp"
+                android:paddingLeft="7dp"
+                android:paddingRight="7dp"
+                app:typeface="@string/custom_font_regular"
+                android:paddingStart="7dp"
                 android:visibility="gone" />
             <TextView
                 android:id="@+id/sim_name"
