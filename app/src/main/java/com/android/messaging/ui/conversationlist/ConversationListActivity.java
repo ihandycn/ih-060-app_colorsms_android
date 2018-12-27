@@ -115,16 +115,20 @@ public class ConversationListActivity extends AbstractConversationListActivity
 
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-
-
         switch (item.getItemId()) {
             case R.id.messaging:
                 mViewPager.setCurrentItem(0);
                 return true;
             case R.id.sms_show:
+                if (isInConversationListSelectMode()) {
+                    exitMultiSelectState();
+                }
                 mViewPager.setCurrentItem(1);
                 return true;
             case R.id.emoji:
+                if (isInConversationListSelectMode()) {
+                    exitMultiSelectState();
+                }
                 mViewPager.setCurrentItem(2);
                 return true;
         }
