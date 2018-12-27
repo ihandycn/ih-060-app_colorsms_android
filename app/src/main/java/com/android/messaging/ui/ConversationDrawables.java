@@ -48,6 +48,7 @@ public class ConversationDrawables {
     private Drawable mFastScrollPreviewDrawableRight;
     private final Context mContext;
     private int mOutgoingBubbleColor;
+    private int mIncomingBubbleColor;
     private int mIncomingErrorBubbleColor;
     private int mIncomingAudioButtonColor;
     private int mSelectedBubbleColor;
@@ -73,11 +74,11 @@ public class ConversationDrawables {
     public void updateDrawables() {
         final Resources resources = mContext.getResources();
 
-        mIncomingBubbleDrawable = resources.getDrawable(R.drawable.msg_bubble_incoming);
+        mIncomingBubbleDrawable = resources.getDrawable(R.drawable.message_bubble_incoming_new);
         mIncomingBubbleNoArrowDrawable =
                 resources.getDrawable(R.drawable.message_bubble_incoming_no_arrow);
         mIncomingErrorBubbleDrawable = resources.getDrawable(R.drawable.msg_bubble_error);
-        mOutgoingBubbleDrawable =  resources.getDrawable(R.drawable.msg_bubble_outgoing);
+        mOutgoingBubbleDrawable =  resources.getDrawable(R.drawable.message_bubble_outgoing_new);
         mOutgoingBubbleNoArrowDrawable =
                 resources.getDrawable(R.drawable.message_bubble_outgoing_no_arrow);
         mAudioPlayButtonDrawable = resources.getDrawable(R.drawable.ic_audio_play);
@@ -96,6 +97,7 @@ public class ConversationDrawables {
         mFastScrollPreviewDrawableRight =
                 resources.getDrawable(R.drawable.fastscroll_preview_right);
         mOutgoingBubbleColor = resources.getColor(R.color.message_bubble_color_outgoing);
+        mIncomingBubbleColor = resources.getColor(R.color.message_bubble_color_incoming);
         mIncomingErrorBubbleColor =
                 resources.getColor(R.color.message_error_bubble_color_incoming);
         mIncomingAudioButtonColor =
@@ -127,7 +129,7 @@ public class ConversationDrawables {
             if (isError) {
                 color = mIncomingErrorBubbleColor;
             } else {
-                color = mThemeColor;
+                color = mIncomingBubbleColor;
             }
         } else {
             color = mOutgoingBubbleColor;

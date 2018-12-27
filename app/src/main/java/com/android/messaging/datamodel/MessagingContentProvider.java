@@ -55,7 +55,7 @@ public class MessagingContentProvider extends ContentProvider {
 
     @VisibleForTesting
     public static final String AUTHORITY =
-            "com.android.messaging.datamodel.MessagingContentProvider";
+            "com.color.messaging.datamodel.MessagingContentProvider";
     private static final String CONTENT_AUTHORITY = "content://" + AUTHORITY + '/';
 
     // Conversations query

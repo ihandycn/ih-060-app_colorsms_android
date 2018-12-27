@@ -19,7 +19,7 @@
     <dimen name="action_bar_height">56dp</dimen>
     <dimen name="action_bar_elevation">8dp</dimen>
     <dimen name="action_bar_text_size">20sp</dimen>
-    <dimen name="conversation_message_text_size">16sp</dimen>
+    <dimen name="conversation_message_text_size">13.3sp</dimen>
     <dimen name="conversation_status_text_size">12sp</dimen>
     <dimen name="conversation_title_text_size">12sp</dimen>
     <dimen name="conversation_info_text_size">12sp</dimen>
@@ -34,6 +34,7 @@
     <dimen name="conversation_list_contact_icon_size">40dp</dimen>
     <dimen name="conversation_list_error_icon_size">16dp</dimen>
     <dimen name="conversation_message_contact_icon_size">42dp</dimen>
+    <dimen name="conversation_message_contact_bubble_margin">11dp</dimen>
     <dimen name="conversation_message_photo_min_size">96dp</dimen>
     <dimen name="conversation_list_notification_bell_padding">4dp</dimen>
     <dimen name="conversation_list_empty_text_bottom_margin">30dp</dimen>

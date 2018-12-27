@@ -46,7 +46,7 @@ public class MediaScratchFileProvider extends FileProvider {
 
     @VisibleForTesting
     public static final String AUTHORITY =
-            "com.android.messaging.datamodel.MediaScratchFileProvider";
+            "com.color.messaging.datamodel.MediaScratchFileProvider";
     private static final String MEDIA_SCRATCH_SPACE_DIR = "mediascratchspace";
 
     public static boolean isMediaScratchSpaceUri(final Uri uri) {

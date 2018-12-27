@@ -18,7 +18,6 @@ package com.android.messaging.datamodel;
 
 import android.content.Context;
 import android.net.Uri;
-import android.text.TextUtils;
 
 import com.android.messaging.Factory;
 import com.android.messaging.util.LogUtil;
@@ -34,7 +33,7 @@ public class MmsFileProvider extends FileProvider {
     private static final String TAG = LogUtil.BUGLE_TAG;
 
     @VisibleForTesting
-    static final String AUTHORITY = "com.android.messaging.datamodel.MmsFileProvider";
+    static final String AUTHORITY = "com.color.messaging.datamodel.MmsFileProvider";
     private static final String RAW_MMS_DIR = "rawmms";
 
     /**
