@@ -66,12 +66,13 @@ import java.util.List;
  */
 public class ConversationListItemView extends FrameLayout implements OnClickListener,
         OnLongClickListener, OnLayoutChangeListener {
-    static final int UNREAD_SNIPPET_LINE_COUNT = 3;
-    static final int NO_UNREAD_SNIPPET_LINE_COUNT = 1;
-    private int mListItemReadColor;
-    private int mListItemUnreadColor;
-    private Typeface mListItemReadTypeface;
-    private Typeface mListItemUnreadTypeface;
+    static final int SNIPPET_LINE_COUNT = 1;
+    static final int ERROR_MESSAGE_LINE_COUNT = 1;
+    private int mConversationNameColor;
+    private int mSnippetColor;
+    private Typeface mConversationNameReadTypeface;
+    private Typeface mConversationNameUnreadTypeface;
+    private Typeface mSnippetTypeface;
     private static String sPlusOneString;
     private static String sPlusNString;
 
@@ -161,11 +162,12 @@ public class ConversationListItemView extends FrameLayout implements OnClickList
         mSnippetTextView.addOnLayoutChangeListener(this);
 
         final Resources resources = getContext().getResources();
-        mListItemReadColor = resources.getColor(R.color.conversation_list_item_read);
-        mListItemUnreadColor = resources.getColor(R.color.conversation_list_item_unread);
+        mConversationNameColor = resources.getColor(R.color.conversation_list_item_conversation);
+        mSnippetColor = resources.getColor(R.color.conversation_list_item_snippet);
 
-        mListItemReadTypeface = Typefaces.getRobotoNormal();
-        mListItemUnreadTypeface = Typefaces.getRobotoBold();
+        mConversationNameReadTypeface = Typefaces.getCustomMedium();
+        mConversationNameUnreadTypeface = Typefaces.getCustomSemiBold();
+        mSnippetTypeface = Typefaces.getCustomRegular();
 
         if (OsUtil.isAtLeastL()) {
             setTransitionGroup(true);
@@ -191,11 +193,11 @@ public class ConversationListItemView extends FrameLayout implements OnClickList
 
     private void setConversationName() {
         if (mData.getIsRead() || mData.getShowDraft()) {
-            mConversationNameView.setTextColor(mListItemReadColor);
-            mConversationNameView.setTypeface(mListItemReadTypeface);
+            mConversationNameView.setTextColor(mConversationNameColor);
+            mConversationNameView.setTypeface(mConversationNameReadTypeface);
         } else {
-            mConversationNameView.setTextColor(mListItemUnreadColor);
-            mConversationNameView.setTypeface(mListItemUnreadTypeface);
+            mConversationNameView.setTextColor(mSnippetColor);
+            mConversationNameView.setTypeface(mConversationNameUnreadTypeface);
         }
 
         final String conversationName = mData.getName();
@@ -246,7 +248,18 @@ public class ConversationListItemView extends FrameLayout implements OnClickList
     }
 
     private void setSnippet() {
-        mSnippetTextView.setText(getSnippetText());
+        final boolean isDefaultSmsApp = PhoneUtils.getDefault().isDefaultSmsApp();
+        if (mData.getIsFailedStatus() && isDefaultSmsApp) {
+            int failureMessageId = R.string.message_status_download_failed;
+
+            if (mData.getIsMessageTypeOutgoing()) {
+                failureMessageId = MmsUtils.mapRawStatusToErrorResourceId(mData.getMessageStatus(),
+                        mData.getMessageRawTelephonyStatus());
+            }
+            mSnippetTextView.setText(getContext().getResources().getString(failureMessageId));
+        } else {
+            mSnippetTextView.setText(getSnippetText());
+        }
     }
 
     // Resource Ids of content descriptions prefixes for different message status.
@@ -374,25 +387,23 @@ public class ConversationListItemView extends FrameLayout implements OnClickList
 
         int color;
         final int maxLines;
-        final Typeface typeface;
         final int typefaceStyle = mData.getShowDraft() ? Typeface.ITALIC : Typeface.NORMAL;
         final String snippetText = getSnippetText();
 
-        if (mData.getIsRead() || mData.getShowDraft()) {
-            maxLines = TextUtils.isEmpty(snippetText) ? 0 : NO_UNREAD_SNIPPET_LINE_COUNT;
-            color = mListItemReadColor;
-            typeface = mListItemReadTypeface;
+        final boolean isDefaultSmsApp = PhoneUtils.getDefault().isDefaultSmsApp();
+        if (mData.getIsFailedStatus() && isDefaultSmsApp) {
+            color = resources.getColor(R.color.conversation_list_error);
+            maxLines = ERROR_MESSAGE_LINE_COUNT;
         } else {
-            maxLines = TextUtils.isEmpty(snippetText) ? 0 : UNREAD_SNIPPET_LINE_COUNT;
-            color = mListItemUnreadColor;
-            typeface = mListItemUnreadTypeface;
+            maxLines = TextUtils.isEmpty(snippetText) ? 0 : SNIPPET_LINE_COUNT;
+            color = mSnippetColor;
         }
 
         mSnippetTextView.setMaxLines(maxLines);
         mSnippetTextView.setTextColor(color);
-        mSnippetTextView.setTypeface(typeface, typefaceStyle);
+        mSnippetTextView.setTypeface(mSnippetTypeface, typefaceStyle);
         mSubjectTextView.setTextColor(color);
-        mSubjectTextView.setTypeface(typeface, typefaceStyle);
+        mSubjectTextView.setTypeface(mSnippetTypeface, typefaceStyle);
 
         setSnippet();
         setConversationName();
@@ -401,30 +412,19 @@ public class ConversationListItemView extends FrameLayout implements OnClickList
         setContentDescription(buildContentDescription(resources, mData,
                 mConversationNameView.getPaint()));
 
-        final boolean isDefaultSmsApp = PhoneUtils.getDefault().isDefaultSmsApp();
-        // don't show the error state unless we're the default sms app
-        if (mData.getIsFailedStatus() && isDefaultSmsApp) {
-            mTimestampTextView.setTextColor(resources.getColor(R.color.conversation_list_error));
-            mTimestampTextView.setTypeface(mListItemReadTypeface, typefaceStyle);
-            int failureMessageId = R.string.message_status_download_failed;
-            if (mData.getIsMessageTypeOutgoing()) {
-                failureMessageId = MmsUtils.mapRawStatusToErrorResourceId(mData.getMessageStatus(),
-                        mData.getMessageRawTelephonyStatus());
-            }
-            mTimestampTextView.setText(resources.getString(failureMessageId));
-        } else if (mData.getShowDraft()
+        if (mData.getShowDraft()
                 || mData.getMessageStatus() == MessageData.BUGLE_STATUS_OUTGOING_DRAFT
                 // also check for unknown status which we get because sometimes the conversation
                 // row is left with a latest_message_id of a no longer existing message and
                 // therefore the join values come back as null (or in this case zero).
                 || mData.getMessageStatus() == MessageData.BUGLE_STATUS_UNKNOWN) {
-            mTimestampTextView.setTextColor(mListItemReadColor);
-            mTimestampTextView.setTypeface(mListItemReadTypeface, typefaceStyle);
+            mTimestampTextView.setTextColor(mConversationNameColor);
+            mTimestampTextView.setTypeface(mConversationNameReadTypeface, typefaceStyle);
             mTimestampTextView.setText(resources.getString(
                     R.string.conversation_list_item_view_draft_message));
          } else {
-            mTimestampTextView.setTextColor(mListItemReadColor);
-            mTimestampTextView.setTypeface(mListItemReadTypeface, typefaceStyle);
+            mTimestampTextView.setTextColor(mConversationNameColor);
+            mTimestampTextView.setTypeface(mConversationNameReadTypeface, typefaceStyle);
             final String formattedTimestamp = mData.getFormattedTimestamp();
             if (mData.getIsSendRequested()) {
                 mTimestampTextView.setText(R.string.message_status_sending);

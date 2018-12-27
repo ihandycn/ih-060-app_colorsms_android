@@ -265,9 +265,22 @@
 
     <style name="ConversationListItemViewTextStyle">
         <item name="android:includeFontPadding">false</item>
-        <item name="android:textSize">14sp</item>
+        <item name="android:textSize">15sp</item>
         <item name="android:background">@null</item>
         <item name="android:textColor">@color/conversation_list_details</item>
+    </style>
+
+    <style name="ConversationListItemViewTextTimeStampStyle">
+        <item name="android:includeFontPadding">false</item>
+        <item name="android:textSize">11sp</item>
+        <item name="android:background">@null</item>
+        <item name="android:textColor">@color/conversation_list_timestamp</item>
+    </style>
+
+    <style name="ConversationListItemViewTextUnreadCountStyle">
+        <item name="android:includeFontPadding">false</item>
+        <item name="android:textSize">11sp</item>
+        <item name="android:textColor">@android:color/white</item>
     </style>
 
     <style name="ConversationListItemViewConversationNameStyle" parent="ConversationListItemViewTextStyle">

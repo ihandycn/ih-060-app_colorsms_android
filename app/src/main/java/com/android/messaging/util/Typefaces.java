@@ -17,6 +17,8 @@ package com.android.messaging.util;
 
 import android.graphics.Typeface;
 
+import com.android.messaging.Factory;
+
 /**
  * Provides access to typefaces used by code. Specially important for typefaces coming from assets,
  * which appear (from platform code inspection) to not be cached.
@@ -24,22 +26,35 @@ import android.graphics.Typeface;
  * not worth stubbing.
  */
 public class Typefaces {
-    private static Typeface sRobotoBold;
-    private static Typeface sRobotoNormal;
 
-    public static Typeface getRobotoBold() {
+    private static Typeface sCustomSemiBold;
+    private static Typeface sCustomRegular;
+    private static Typeface sCustomMedium;
+
+    public static Typeface getCustomSemiBold() {
         Assert.isMainThread();
-        if (sRobotoBold == null) {
-            sRobotoBold = Typeface.create(Typeface.SANS_SERIF, Typeface.BOLD);
+        if (sCustomSemiBold == null) {
+            sCustomSemiBold = Typeface.createFromAsset(Factory.get().getApplicationContext().getAssets(),
+                    "fonts/Custom-SemiBold.ttf");
         }
-        return sRobotoBold;
+        return sCustomSemiBold;
     }
 
-    public static Typeface getRobotoNormal() {
+    public static Typeface getCustomRegular() {
         Assert.isMainThread();
-        if (sRobotoNormal == null) {
-            sRobotoNormal = Typeface.create(Typeface.SANS_SERIF, Typeface.NORMAL);
+        if (sCustomRegular == null) {
+            sCustomRegular = Typeface.createFromAsset(Factory.get().getApplicationContext().getAssets(),
+                    "fonts/Custom-Regular.ttf");
         }
-        return sRobotoNormal;
+        return sCustomRegular;
+    }
+
+    public static Typeface getCustomMedium() {
+        Assert.isMainThread();
+        if (sCustomMedium == null) {
+            sCustomMedium = Typeface.createFromAsset(Factory.get().getApplicationContext().getAssets(),
+                    "fonts/Custom-Medium.ttf");
+        }
+        return sCustomMedium;
     }
 }

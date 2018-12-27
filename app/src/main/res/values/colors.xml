@@ -27,11 +27,12 @@
     <color name="archived_conversation_action_bar_background_color_dark">#838383</color>
 
     <!-- Conversation list -->
-    <color name="conversation_list_item_read">#636363</color>
-    <color name="conversation_list_item_unread">#323232</color>
-    <color name="conversation_list_error">#F05A24</color>
+    <color name="conversation_list_item_conversation">#19191c</color>
+    <color name="conversation_list_item_snippet">#222327</color>
+    <color name="conversation_list_error">#f52e2e</color>
     <color name="conversation_list_name">#DE000000</color>
     <color name="conversation_list_details">#8A000000</color>
+    <color name="conversation_list_timestamp">#afb1be</color>
 
     <color name="conversation_compose_divider_start">#44000000</color>
 
