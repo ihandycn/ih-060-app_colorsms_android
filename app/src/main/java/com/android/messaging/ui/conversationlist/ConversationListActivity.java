@@ -22,20 +22,26 @@ import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBar;
+import android.support.v7.widget.Toolbar;
+import android.view.ActionMode;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.TextView;
 
 import com.android.messaging.R;
 import com.android.messaging.ui.BasePagerAdapter;
 import com.android.messaging.ui.UIIntents;
 import com.android.messaging.util.DebugUtils;
 import com.android.messaging.util.Trace;
+import com.android.messaging.util.UiUtils;
 
 public class ConversationListActivity extends AbstractConversationListActivity
         implements BottomNavigationView.OnNavigationItemSelectedListener {
 
     private ViewPager mViewPager;
     private BasePagerAdapter mPagerAdapter;
+    private TextView mTitleTextView;
 
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
@@ -43,19 +49,32 @@ public class ConversationListActivity extends AbstractConversationListActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.conversation_list_activity);
         Trace.endSection();
-        invalidateActionBar();
+
+        initActionBar();
         initPager();
+    }
+
+    @Override
+    public ActionMode startActionMode(ActionMode.Callback callback) {
+        // set custom title visibility gone, when start MultiSelectActionMode etc.
+        mTitleTextView.setVisibility(View.GONE);
+        return super.startActionMode(callback);
     }
 
     @Override
     protected void updateActionBar(final ActionBar actionBar) {
         actionBar.setTitle(getString(R.string.app_name));
-        actionBar.setDisplayShowTitleEnabled(true);
+        actionBar.setDisplayShowTitleEnabled(false);
         actionBar.setDisplayHomeAsUpEnabled(false);
         actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
         actionBar.setBackgroundDrawable(new ColorDrawable(
                 getResources().getColor(R.color.action_bar_background_color)));
         actionBar.show();
+
+        //update statusBar color
+        UiUtils.setStatusBarColor(this, getResources().getColor(R.color.action_bar_background_color));
+
+        mTitleTextView.setVisibility(View.VISIBLE);
         super.updateActionBar(actionBar);
     }
 
@@ -166,6 +185,13 @@ public class ConversationListActivity extends AbstractConversationListActivity
 //        if (hasFocus && mViewPager.getCurrentItem() == 0) {
 //            ((ConversationListFragment) mPagerAdapter.getItem(0)).setScrolledToNewestConversationIfNeeded();
 //        }
+    }
+
+    private void initActionBar() {
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        mTitleTextView = findViewById(R.id.toolbar_title);
+        setSupportActionBar(toolbar);
+        invalidateActionBar();
     }
 
     private void initPager() {

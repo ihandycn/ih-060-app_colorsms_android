@@ -81,7 +81,7 @@ public class BugleActionBarActivity extends AppCompatActivity implements ImeUtil
 
     @Override
     protected void onRestart() {
-        super.onStop();
+        super.onRestart();
         if (LogUtil.isLoggable(LogUtil.BUGLE_TAG, LogUtil.VERBOSE)) {
             LogUtil.v(LogUtil.BUGLE_TAG, this.getLocalClassName() + ".onRestart");
         }
@@ -347,9 +347,10 @@ public class BugleActionBarActivity extends AppCompatActivity implements ImeUtil
             actionBar.setDisplayShowTitleEnabled(false);
             actionBar.setDisplayShowCustomEnabled(false);
             mActionMode.getCallback().onPrepareActionMode(mActionMode, mActionBarMenu);
+            UiUtils.setStatusBarColor(BugleActionBarActivity.this, getResources().getColor(R.color.primary_color));
             actionBar.setBackgroundDrawable(new ColorDrawable(
                     getResources().getColor(R.color.primary_color)));
-            actionBar.setHomeAsUpIndicator(R.drawable.ic_cancel_small_dark);
+            actionBar.setHomeAsUpIndicator(R.drawable.ic_cancel_small_light);
             actionBar.show();
         }
     }

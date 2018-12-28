@@ -24,6 +24,7 @@ import android.content.res.Configuration;
 import android.graphics.Color;
 import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
+import android.os.Build;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.app.ActionBar;
@@ -252,14 +253,20 @@ public class UiUtils {
 
     public static void setStatusBarColor(final Activity activity, final int color) {
         if (OsUtil.isAtLeastL()) {
-            // To achieve the appearance of an 80% opacity blend against a black background,
-            // each color channel is reduced in value by 20%.
-            final int blendedRed = (int) Math.floor(0.8 * Color.red(color));
-            final int blendedGreen = (int) Math.floor(0.8 * Color.green(color));
-            final int blendedBlue = (int) Math.floor(0.8 * Color.blue(color));
+            // we need statusbar color same as actionbar color
+            activity.getWindow().setStatusBarColor(color);
 
-            activity.getWindow().setStatusBarColor(
-                    Color.rgb(blendedRed, blendedGreen, blendedBlue));
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M ) {
+                View decor = activity.getWindow().getDecorView();
+                if (color == Color.WHITE) {
+                    decor.setSystemUiVisibility(View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
+                } else {
+                    // We want to change tint color to white again.
+                    // You can also record the flags in advance so that you can turn UI back completely if
+                    // you have set other flags before, such as translucent or full screen.
+                    decor.setSystemUiVisibility(View.SYSTEM_UI_FLAG_VISIBLE);
+                }
+            }
         }
     }
 
