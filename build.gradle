@@ -34,4 +34,5 @@ ext {
     targetSdkVersion = 26
     supportLibVersion = "27.1.1"
     googlePlayServiceVersion = "15.0.0"
+    glideVersion = "4.8.0"
 }

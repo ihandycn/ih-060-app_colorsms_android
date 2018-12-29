@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:background="@drawable/emoji_tab_item_bg_drawable">
+
+    <RelativeLayout
+        android:id="@+id/tab_custom_view"
+        android:layout_width="55dp"
+        android:layout_height="52dp">
+
+        <ImageView
+            android:id="@+id/tab_icon_view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:src="@drawable/ic_audio_play"
+            android:translationY="-0.65dp" />
+
+        <ImageView
+            android:id="@+id/tab_new_view"
+            android:layout_width="4.7dp"
+            android:layout_height="4.7dp"
+            android:layout_below="@id/tab_icon_view"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="1.7dp"
+            android:background="#ff2828"
+            android:translationY="-0.65dp"
+            android:visibility="gone" />
+    </RelativeLayout>
+</FrameLayout>

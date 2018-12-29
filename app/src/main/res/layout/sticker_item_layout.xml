@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="69dp"
+    android:layout_height="69dp">
+
+    <com.android.messaging.ui.emoji.SquareImageView
+        android:id="@+id/emoji_image"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scaleType="centerInside"
+        android:src="@drawable/ic_audio_play" />
+
+    <ImageView
+        android:id="@+id/emoji_status"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|right"
+        android:layout_marginBottom="4dp"
+        android:layout_marginEnd="3.3dp"
+        android:layout_marginRight="3.3dp"
+        android:src="@drawable/emoji_download_icon"
+        android:visibility="gone"
+        tools:ignore="RtlHardcoded" />
+
+    <FrameLayout
+        android:id="@+id/download_progress_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@drawable/emoji_download_bg_drawable"
+        android:visibility="gone">
+
+        <ProgressBar
+            android:id="@+id/download_progress_bar"
+            style="?android:attr/progressBarStyleHorizontal"
+            android:layout_width="23dp"
+            android:layout_height="23dp"
+            android:layout_gravity="center"
+            android:max="100"
+            android:progressDrawable="@drawable/emoji_circle_progress_bar_drawable"
+            tools:progress="80" />
+    </FrameLayout>
+</FrameLayout>

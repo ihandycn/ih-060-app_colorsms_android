@@ -51,4 +51,9 @@ dependencies {
     compile "com.google.android.gms:play-services-gcm:${rootProject.ext.googlePlayServiceVersion}"
     compile "com.google.firebase:firebase-ads:${rootProject.ext.googlePlayServiceVersion}"
     compile "com.ihandy.appframework:libAppframework.beta:4.8.5.beta05"
+
+    implementation "com.github.bumptech.glide:glide:${rootProject.ext.glideVersion}"
+    annotationProcessor "com.github.bumptech.glide:compiler:${rootProject.ext.glideVersion}"
+
+    implementation 'pl.droidsonroids.gif:android-gif-drawable:1.2.7'
 }

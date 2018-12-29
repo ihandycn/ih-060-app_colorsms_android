@@ -90,6 +90,7 @@ import com.android.messaging.ui.contact.AddContactsConfirmationDialog;
 import com.android.messaging.ui.conversation.ComposeMessageView.IComposeMessageViewHost;
 import com.android.messaging.ui.conversation.ConversationInputManager.ConversationInputHost;
 import com.android.messaging.ui.conversation.ConversationMessageView.ConversationMessageViewHost;
+import com.android.messaging.ui.emoji.EmojiPickerFragment;
 import com.android.messaging.ui.mediapicker.MediaPicker;
 import com.android.messaging.util.AccessibilityUtil;
 import com.android.messaging.util.Assert;
@@ -119,15 +120,25 @@ public class ConversationFragment extends Fragment implements ConversationDataLi
 
     public interface ConversationFragmentHost extends ImeUtil.ImeStateHost {
         void onStartComposeMessage();
+
         void onConversationMetadataUpdated();
+
         boolean shouldResumeComposeMessage();
+
         void onFinishCurrentConversation();
+
         void invalidateActionBar();
+
         ActionMode startActionMode(ActionMode.Callback callback);
+
         void dismissActionMode();
+
         ActionMode getActionMode();
+
         void onConversationMessagesUpdated(int numberOfMessages);
+
         void onConversationParticipantDataLoaded(int numberOfParticipants);
+
         boolean isActiveAndFocused();
     }
 
@@ -154,8 +165,7 @@ public class ConversationFragment extends Fragment implements ConversationDataLi
     // This binding keeps track of our associated ConversationData instance
     // A binding should have the lifetime of the owning component,
     //  don't recreate, unbind and bind if you need new data
-    @VisibleForTesting
-    final Binding<ConversationData> mBinding = BindingBase.createBinding(this);
+    @VisibleForTesting final Binding<ConversationData> mBinding = BindingBase.createBinding(this);
 
     // Saved Instance State Data - only for temporal data which is nice to maintain but not
     // critical for correctness.
@@ -234,43 +244,43 @@ public class ConversationFragment extends Fragment implements ConversationDataLi
 
     private int mScrollToDismissThreshold;
     private final RecyclerView.OnScrollListener mListScrollListener =
-        new RecyclerView.OnScrollListener() {
-            // Keeps track of cumulative scroll delta during a scroll event, which we may use to
-            // hide the media picker & co.
-            private int mCumulativeScrollDelta;
-            private boolean mScrollToDismissHandled;
-            private boolean mWasScrolledToBottom = true;
-            private int mScrollState = RecyclerView.SCROLL_STATE_IDLE;
+            new RecyclerView.OnScrollListener() {
+                // Keeps track of cumulative scroll delta during a scroll event, which we may use to
+                // hide the media picker & co.
+                private int mCumulativeScrollDelta;
+                private boolean mScrollToDismissHandled;
+                private boolean mWasScrolledToBottom = true;
+                private int mScrollState = RecyclerView.SCROLL_STATE_IDLE;
 
-            @Override
-            public void onScrollStateChanged(final RecyclerView view, final int newState) {
-                if (newState == RecyclerView.SCROLL_STATE_IDLE) {
-                    // Reset scroll states.
-                    mCumulativeScrollDelta = 0;
-                    mScrollToDismissHandled = false;
-                } else if (newState == RecyclerView.SCROLL_STATE_DRAGGING) {
-                    mRecyclerView.getItemAnimator().endAnimations();
+                @Override
+                public void onScrollStateChanged(final RecyclerView view, final int newState) {
+                    if (newState == RecyclerView.SCROLL_STATE_IDLE) {
+                        // Reset scroll states.
+                        mCumulativeScrollDelta = 0;
+                        mScrollToDismissHandled = false;
+                    } else if (newState == RecyclerView.SCROLL_STATE_DRAGGING) {
+                        mRecyclerView.getItemAnimator().endAnimations();
+                    }
+                    mScrollState = newState;
                 }
-                mScrollState = newState;
-            }
 
-            @Override
-            public void onScrolled(final RecyclerView view, final int dx, final int dy) {
-                if (mScrollState == RecyclerView.SCROLL_STATE_DRAGGING &&
-                        !mScrollToDismissHandled) {
-                    mCumulativeScrollDelta += dy;
-                    // Dismiss the keyboard only when the user scroll up (into the past).
-                    if (mCumulativeScrollDelta < -mScrollToDismissThreshold) {
-                        mComposeMessageView.hideAllComposeInputs(false /* animate */);
-                        mScrollToDismissHandled = true;
+                @Override
+                public void onScrolled(final RecyclerView view, final int dx, final int dy) {
+                    if (mScrollState == RecyclerView.SCROLL_STATE_DRAGGING &&
+                            !mScrollToDismissHandled) {
+                        mCumulativeScrollDelta += dy;
+                        // Dismiss the keyboard only when the user scroll up (into the past).
+                        if (mCumulativeScrollDelta < -mScrollToDismissThreshold) {
+                            mComposeMessageView.hideAllComposeInputs(false /* animate */);
+                            mScrollToDismissHandled = true;
+                        }
+                    }
+                    if (mWasScrolledToBottom != isScrolledToBottom()) {
+                        mConversationComposeDivider.animate().alpha(isScrolledToBottom() ? 0 : 1);
+                        mWasScrolledToBottom = isScrolledToBottom();
                     }
                 }
-                if (mWasScrolledToBottom != isScrolledToBottom()) {
-                    mConversationComposeDivider.animate().alpha(isScrolledToBottom() ? 0 : 1);
-                    mWasScrolledToBottom = isScrolledToBottom();
-                }
-            }
-    };
+            };
 
     private final ActionMode.Callback mMessageActionModeCallback = new ActionMode.Callback() {
         @Override
@@ -321,7 +331,7 @@ public class ConversationFragment extends Fragment implements ConversationDataLi
                         }
                     } else {
                         getActivity().requestPermissions(
-                                new String[] { Manifest.permission.WRITE_EXTERNAL_STORAGE }, 0);
+                                new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 0);
                     }
                     return true;
                 case R.id.action_delete_message:
@@ -503,7 +513,7 @@ public class ConversationFragment extends Fragment implements ConversationDataLi
      */
     @Override
     public View onCreateView(final LayoutInflater inflater, final ViewGroup container,
-            final Bundle savedInstanceState) {
+                             final Bundle savedInstanceState) {
         final View view = inflater.inflate(R.layout.conversation_fragment, container, false);
         mRecyclerView = (RecyclerView) view.findViewById(android.R.id.list);
         final LinearLayoutManager manager = new LinearLayoutManager(getActivity());
@@ -523,7 +533,7 @@ public class ConversationFragment extends Fragment implements ConversationDataLi
                 endAnimation(holder);
                 final long timeSinceSend = System.currentTimeMillis() - data.getReceivedTimeStamp();
                 if (data.getReceivedTimeStamp() ==
-                                InsertNewMessageAction.getLastSentMessageTimestamp() &&
+                        InsertNewMessageAction.getLastSentMessageTimestamp() &&
                         !data.getIsIncoming() &&
                         timeSinceSend < MESSAGE_ANIMATION_MAX_WAIT) {
                     final ConversationMessageBubbleView messageBubble =
@@ -551,21 +561,21 @@ public class ConversationFragment extends Fragment implements ConversationDataLi
                     view.setAlpha(0);
                     mPopupTransitionAnimation = new PopupTransitionAnimation(startRect, view);
                     mPopupTransitionAnimation.setOnStartCallback(new Runnable() {
-                            @Override
-                            public void run() {
-                                final int startWidth = composeBubbleRect.width();
-                                attachmentView.onMessageAnimationStart();
-                                messageBubble.kickOffMorphAnimation(startWidth,
-                                        messageBubble.findViewById(R.id.message_text_and_info)
-                                        .getMeasuredWidth());
-                            }
-                        });
+                        @Override
+                        public void run() {
+                            final int startWidth = composeBubbleRect.width();
+                            attachmentView.onMessageAnimationStart();
+                            messageBubble.kickOffMorphAnimation(startWidth,
+                                    messageBubble.findViewById(R.id.message_text_and_info)
+                                            .getMeasuredWidth());
+                        }
+                    });
                     mPopupTransitionAnimation.setOnStopCallback(new Runnable() {
-                            @Override
-                            public void run() {
-                                view.setAlpha(1);
-                            }
-                        });
+                        @Override
+                        public void run() {
+                            view.setAlpha(1);
+                        }
+                    });
                     mPopupTransitionAnimation.startAfterLayoutComplete();
                     mAddAnimations.add(holder);
                     return true;
@@ -605,7 +615,7 @@ public class ConversationFragment extends Fragment implements ConversationDataLi
         mRecyclerView.addOnScrollListener(mListScrollListener);
         mFastScroller = ConversationFastScroller.addTo(mRecyclerView,
                 UiUtils.isRtlMode() ? ConversationFastScroller.POSITION_LEFT_SIDE :
-                    ConversationFastScroller.POSITION_RIGHT_SIDE);
+                        ConversationFastScroller.POSITION_RIGHT_SIDE);
 
         mComposeMessageView = (ComposeMessageView)
                 view.findViewById(R.id.message_compose_view_container);
@@ -661,7 +671,7 @@ public class ConversationFragment extends Fragment implements ConversationDataLi
     }
 
     public static void displayPhoto(final Uri photoUri, final Rect imageBounds,
-            final boolean isDraft, final String conversationId, final Activity activity) {
+                                    final boolean isDraft, final String conversationId, final Activity activity) {
         final Uri imagesUri =
                 isDraft ? MessagingContentProvider.buildDraftImagesUri(conversationId)
                         : MessagingContentProvider.buildConversationImagesUri(conversationId);
@@ -674,7 +684,7 @@ public class ConversationFragment extends Fragment implements ConversationDataLi
     }
 
     private void selectMessage(final ConversationMessageView messageView,
-            final MessagePartData attachment) {
+                               final MessagePartData attachment) {
         mSelectedMessage = messageView;
         if (mSelectedMessage == null) {
             mAdapter.setSelectedMessage(null);
@@ -805,10 +815,10 @@ public class ConversationFragment extends Fragment implements ConversationDataLi
                                     new DialogInterface.OnClickListener() {
                                         @Override
                                         public void onClick(final DialogInterface dialog,
-                                                final int button) {
+                                                            final int button) {
                                             deleteConversation();
                                         }
-                            })
+                                    })
                             .setNegativeButton(R.string.delete_conversation_decline_button, null)
                             .show();
                 } else {
@@ -825,8 +835,8 @@ public class ConversationFragment extends Fragment implements ConversationDataLi
      */
     @Override
     public void onConversationMessagesCursorUpdated(final ConversationData data,
-            final Cursor cursor, final ConversationMessageData newestMessage,
-            final boolean isSync) {
+                                                    final Cursor cursor, final ConversationMessageData newestMessage,
+                                                    final boolean isSync) {
         mBinding.ensureBound(data);
 
         // This needs to be determined before swapping cursor, which may change the scroll state.
@@ -870,13 +880,13 @@ public class ConversationFragment extends Fragment implements ConversationDataLi
                             getView().getRootView(),
                             getString(R.string.in_conversation_notify_new_message_text),
                             SnackBar.Action.createCustomAction(new Runnable() {
-                                @Override
-                                public void run() {
-                                    scrollToBottom(true /* smoothScroll */);
-                                    mComposeMessageView.hideAllComposeInputs(false /* animate */);
-                                }
-                            },
-                            getString(R.string.in_conversation_notify_new_message_action)),
+                                                                   @Override
+                                                                   public void run() {
+                                                                       scrollToBottom(true /* smoothScroll */);
+                                                                       mComposeMessageView.hideAllComposeInputs(false /* animate */);
+                                                                   }
+                                                               },
+                                    getString(R.string.in_conversation_notify_new_message_action)),
                             null /* interactions */,
                             SnackBar.Placement.above(mComposeMessageView));
                 }
@@ -935,7 +945,7 @@ public class ConversationFragment extends Fragment implements ConversationDataLi
     }
 
     public void setConversationInfo(final Context context, final String conversationId,
-            final MessageData draftData) {
+                                    final MessageData draftData) {
         // TODO: Eventually I would like the Factory to implement
         // Factory.get().bindConversationData(mBinding, getActivity(), this, conversationId));
         if (!mBinding.isBound()) {
@@ -1017,7 +1027,7 @@ public class ConversationFragment extends Fragment implements ConversationDataLi
                         public void run() {
                             sendMessage(message);
                         }
-            });
+                    });
         }
     }
 
@@ -1044,6 +1054,7 @@ public class ConversationFragment extends Fragment implements ConversationDataLi
      * Called to check if all conditions are nominal and a "go" for some action, such as deleting
      * a message, that requires this app to be the default app. This is also a precondition
      * required for sending a draft.
+     *
      * @return true if all conditions are nominal and we're ready to send a message
      */
     @Override
@@ -1055,14 +1066,15 @@ public class ConversationFragment extends Fragment implements ConversationDataLi
      * When there's some condition that prevents an operation, such as sending a message,
      * call warnOfMissingActionConditions to put up a snackbar and allow the user to repair
      * that condition.
-     * @param sending - true if we're called during a sending operation
+     *
+     * @param sending                                  - true if we're called during a sending operation
      * @param commandToRunAfterActionConditionResolved - a runnable to run after the user responds
-     *                  positively to the condition prompt and resolves the condition. If null,
-     *                  the user will be shown a toast to tap the send button again.
+     *                                                 positively to the condition prompt and resolves the condition. If null,
+     *                                                 the user will be shown a toast to tap the send button again.
      */
     @Override
     public void warnOfMissingActionConditions(final boolean sending,
-            final Runnable commandToRunAfterActionConditionResolved) {
+                                              final Runnable commandToRunAfterActionConditionResolved) {
         if (mChangeDefaultSmsAppHelper == null) {
             mChangeDefaultSmsAppHelper = new ChangeDefaultSmsAppHelper();
         }
@@ -1126,11 +1138,11 @@ public class ConversationFragment extends Fragment implements ConversationDataLi
                     .setMessage(R.string.delete_message_confirmation_dialog_text)
                     .setPositiveButton(R.string.delete_message_confirmation_button,
                             new OnClickListener() {
-                        @Override
-                        public void onClick(final DialogInterface dialog, final int which) {
-                            mBinding.getData().deleteMessage(mBinding, messageId);
-                        }
-                    })
+                                @Override
+                                public void onClick(final DialogInterface dialog, final int which) {
+                                    mBinding.getData().deleteMessage(mBinding, messageId);
+                                }
+                            })
                     .setNegativeButton(android.R.string.cancel, null);
             if (OsUtil.isAtLeastJB_MR1()) {
                 builder.setOnDismissListener(new OnDismissListener() {
@@ -1188,7 +1200,7 @@ public class ConversationFragment extends Fragment implements ConversationDataLi
 
             mRecyclerView.setVisibility(View.VISIBLE);
             mHost.onConversationParticipantDataLoaded
-                (mBinding.getData().getNumberOfParticipantsExcludingSelf());
+                    (mBinding.getData().getNumberOfParticipantsExcludingSelf());
         }
     }
 
@@ -1237,7 +1249,7 @@ public class ConversationFragment extends Fragment implements ConversationDataLi
 
     @Override
     public boolean onAttachmentClick(final ConversationMessageView messageView,
-            final MessagePartData attachment, final Rect imageBounds, final boolean longPress) {
+                                     final MessagePartData attachment, final Rect imageBounds, final boolean longPress) {
         if (longPress) {
             selectMessage(messageView, attachment);
             return true;
@@ -1299,7 +1311,7 @@ public class ConversationFragment extends Fragment implements ConversationDataLi
         private final List<AttachmentToSave> mAttachmentsToSave = new ArrayList<>();
 
         public SaveAttachmentTask(final Context context, final Uri contentUri,
-                final String contentType) {
+                                  final String contentType) {
             mContext = context;
             addAttachmentToSave(contentUri, contentType);
         }
@@ -1328,7 +1340,7 @@ public class ConversationFragment extends Fragment implements ConversationDataLi
                         || ContentType.isVideoType(attachment.contentType);
                 attachment.persistedUri = UriUtil.persistContent(attachment.uri,
                         isImageOrVideo ? appDir : downloadDir, attachment.contentType);
-           }
+            }
             return null;
         }
 
@@ -1340,8 +1352,8 @@ public class ConversationFragment extends Fragment implements ConversationDataLi
             int otherCount = 0;
             for (final AttachmentToSave attachment : mAttachmentsToSave) {
                 if (attachment.persistedUri == null) {
-                   failCount++;
-                   continue;
+                    failCount++;
+                    continue;
                 }
 
                 // Inform MediaScanner about the new file
@@ -1367,11 +1379,11 @@ public class ConversationFragment extends Fragment implements ConversationDataLi
                                 file.getName() /* title */,
                                 mContext.getString(
                                         R.string.attachment_file_description) /* description */,
-                                        true /* isMediaScannerScannable */,
-                                        attachment.contentType,
-                                        file.getAbsolutePath(),
-                                        file.length(),
-                                        false /* showNotification */);
+                                true /* isMediaScannerScannable */,
+                                attachment.contentType,
+                                file.getAbsolutePath(),
+                                file.length(),
+                                false /* showNotification */);
                     }
                 }
             }
@@ -1468,6 +1480,11 @@ public class ConversationFragment extends Fragment implements ConversationDataLi
     }
 
     @Override
+    public EmojiPickerFragment createEmojiPicker() {
+        return EmojiPickerFragment.newInstance();
+    }
+
+    @Override
     public void notifyOfAttachmentLoadFailed() {
         UiUtils.showToastAtBottom(R.string.attachment_load_failed_dialog_message);
     }
@@ -1479,11 +1496,11 @@ public class ConversationFragment extends Fragment implements ConversationDataLi
     }
 
     public static void warnOfExceedingMessageLimit(final boolean sending,
-            final ComposeMessageView composeMessageView, final String conversationId,
-            final Activity activity, final boolean tooManyVideos) {
+                                                   final ComposeMessageView composeMessageView, final String conversationId,
+                                                   final Activity activity, final boolean tooManyVideos) {
         final AlertDialog.Builder builder =
                 new AlertDialog.Builder(activity)
-                    .setTitle(R.string.mms_attachment_limit_reached);
+                        .setTitle(R.string.mms_attachment_limit_reached);
 
         if (sending) {
             if (tooManyVideos) {
@@ -1494,7 +1511,7 @@ public class ConversationFragment extends Fragment implements ConversationDataLi
                                 new OnClickListener() {
                                     @Override
                                     public void onClick(final DialogInterface dialog,
-                                            final int which) {
+                                                        final int which) {
                                         composeMessageView.sendMessageIgnoreMessageSizeLimit();
                                     }
                                 });
@@ -1503,7 +1520,8 @@ public class ConversationFragment extends Fragment implements ConversationDataLi
                 @Override
                 public void onClick(final DialogInterface dialog, final int which) {
                     showAttachmentChooser(conversationId, activity);
-                }});
+                }
+            });
         } else {
             builder.setMessage(R.string.attachment_limit_reached_dialog_message_when_composing)
                     .setPositiveButton(android.R.string.ok, null);
@@ -1517,7 +1535,7 @@ public class ConversationFragment extends Fragment implements ConversationDataLi
     }
 
     public static void showAttachmentChooser(final String conversationId,
-            final Activity activity) {
+                                             final Activity activity) {
         UIIntents.get().launchAttachmentChooserActivity(activity,
                 conversationId, REQUEST_CHOOSE_ATTACHMENTS);
     }

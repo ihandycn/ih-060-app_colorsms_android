@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <com.android.messaging.ui.emoji.ViewPagerDotIndicatorView
+        android:id="@+id/dot_indicator_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="10.3dp"
+        android:gravity="center"
+        android:orientation="horizontal" />
+
+    <com.superapps.view.ViewPagerFixed
+        android:id="@+id/emoji_item_pager"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@id/dot_indicator_view"
+        />
+</RelativeLayout>
