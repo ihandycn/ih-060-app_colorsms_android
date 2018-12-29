@@ -8,6 +8,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.android.messaging.ui.emoji.utils.EmojiManager;
 import com.superapps.util.Dimensions;
 
 import java.util.List;
@@ -25,7 +26,7 @@ public class EmojiItemPagerAdapter extends PagerAdapter {
         if (data == null || data.isEmpty()) {
             return;
         }
-        mData = EmojiUtils.subList(data, EMOJI_COUNT_ONE_PAGE);
+        mData = EmojiManager.subList(data, EMOJI_COUNT_ONE_PAGE);
     }
 
     @Override

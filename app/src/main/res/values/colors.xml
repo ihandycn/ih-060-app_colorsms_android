@@ -176,4 +176,6 @@
 
     <color name="transparent">#00000000</color>
     <color name="emoji_tab_selected_color">#edf1f3</color>
+
+    <color name="black_alpha_20">#cd000000</color>
 </resources>

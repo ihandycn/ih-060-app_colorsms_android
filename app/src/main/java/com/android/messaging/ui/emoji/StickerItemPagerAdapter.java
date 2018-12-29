@@ -8,6 +8,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.android.messaging.ui.emoji.utils.EmojiManager;
 import com.superapps.util.Dimensions;
 
 import java.util.List;
@@ -25,7 +26,7 @@ public class StickerItemPagerAdapter extends PagerAdapter {
         if (data == null || data.isEmpty()) {
             return;
         }
-        mData = EmojiUtils.subList(data, STICKER_COUNT_ONE_PAGE);
+        mData = EmojiManager.subList(data, STICKER_COUNT_ONE_PAGE);
     }
 
 
@@ -46,7 +47,7 @@ public class StickerItemPagerAdapter extends PagerAdapter {
         RecyclerView recyclerView = new RecyclerView(context);
         recyclerView.setOverScrollMode(View.OVER_SCROLL_NEVER);
         recyclerView.setPadding(Dimensions.pxFromDp(24.3f), Dimensions.pxFromDp(17.7f), Dimensions.pxFromDp(23.7f), Dimensions.pxFromDp(13.3f));
-        StickerItemRecyclerAdapter adapter = new StickerItemRecyclerAdapter(mData.get(position));
+        StickerItemRecyclerAdapter adapter = new StickerItemRecyclerAdapter(position, mData.get(position));
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new GridLayoutManager(context, STICKER_COLUMNS));
         recyclerView.addItemDecoration(new EmojiItemDecoration(STICKER_COLUMNS, STICKER_ROWS, Dimensions.pxFromDp(69), Dimensions.pxFromDp(69)));

@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--
+<?xml version="1.0" encoding="utf-8"?><!--
     Copyright (C) 2015 The Android Open Source Project
 
     Licensed under the Apache License, Version 2.0 (the "License");
@@ -14,8 +13,7 @@
     See the License for the specific language governing permissions and
     limitations under the License.
 -->
-<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2"
-    xmlns:tools="http://schemas.android.com/tools" tools:ignore="MissingTranslation">
+<resources xmlns:tools="http://schemas.android.com/tools" xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2" tools:ignore="MissingTranslation">
     <!-- The name of the application as it appears under the main Launcher icon and in various activity titles -->
     <string name="app_name">Messaging</string>
 
@@ -982,4 +980,8 @@
     <string name="bottom_navigation_item_emoji">Emoji</string>
 
     <string name="action_bar_title_typeface">Script-Roman.otf</string>
+
+    <string name="network_error">Network error.</string>
+    <string name="network_error_and_try_again">Network errors. Please try again.</string>
+    <string name="sticker_send_msg">SHARE</string>
 </resources>

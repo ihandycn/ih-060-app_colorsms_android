@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--
+<?xml version="1.0" encoding="utf-8"?><!--
     Copyright (C) 2015 The Android Open Source Project
 
     Licensed under the Apache License, Version 2.0 (the "License");
@@ -14,58 +13,58 @@
     See the License for the specific language governing permissions and
     limitations under the License.
 -->
-<manifest xmlns:android="http://schemas.android.com/apk/res/android"
-          package="com.android.messaging"
-          android:installLocation="internalOnly">
+<manifest package="com.android.messaging"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:installLocation="internalOnly">
 
     <uses-sdk
         android:minSdkVersion="19"
-        android:targetSdkVersion="26"/>
+        android:targetSdkVersion="26" />
 
     <!-- Application holds CPU wakelock while working in background -->
-    <uses-permission android:name="android.permission.WAKE_LOCK"/>
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
     <!-- Application needs SMS/MMS permissions -->
-    <uses-permission android:name="android.permission.READ_SMS"/>
-    <uses-permission android:name="android.permission.WRITE_SMS"/>
-    <uses-permission android:name="android.permission.RECEIVE_SMS"/>
-    <uses-permission android:name="android.permission.RECEIVE_MMS"/>
-    <uses-permission android:name="android.permission.SEND_SMS"/>
+    <uses-permission android:name="android.permission.READ_SMS" />
+    <uses-permission android:name="android.permission.WRITE_SMS" />
+    <uses-permission android:name="android.permission.RECEIVE_SMS" />
+    <uses-permission android:name="android.permission.RECEIVE_MMS" />
+    <uses-permission android:name="android.permission.SEND_SMS" />
     <!-- Application needs access to MMS network -->
-    <uses-permission android:name="android.permission.INTERNET"/>
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
-    <uses-permission android:name="android.permission.CHANGE_NETWORK_STATE"/>
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.CHANGE_NETWORK_STATE" />
     <!-- Application needs CONTACT permissions -->
-    <uses-permission android:name="android.permission.READ_CONTACTS"/>
-    <uses-permission android:name="android.permission.WRITE_CONTACTS"/>
+    <uses-permission android:name="android.permission.READ_CONTACTS" />
+    <uses-permission android:name="android.permission.WRITE_CONTACTS" />
     <!-- Application needs to read profiles for the user itself from CP2 -->
-    <uses-permission android:name="android.permission.READ_PROFILE"/>
-    <uses-permission android:name="android.permission.VIBRATE"/>
-    <uses-permission android:name="android.permission.READ_PHONE_STATE"/>
+    <uses-permission android:name="android.permission.READ_PROFILE" />
+    <uses-permission android:name="android.permission.VIBRATE" />
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
 
-    <uses-permission android:name="android.permission.CAMERA"/>
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
-    <uses-permission android:name="android.permission.RECORD_AUDIO"/>
-    <uses-permission android:name="android.permission.CALL_PHONE"/>
-    <uses-permission android:name="android.permission.DOWNLOAD_WITHOUT_NOTIFICATION"/>
-    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
+    <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.RECORD_AUDIO" />
+    <uses-permission android:name="android.permission.CALL_PHONE" />
+    <uses-permission android:name="android.permission.DOWNLOAD_WITHOUT_NOTIFICATION" />
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
 
     <!--  Optional features -->
     <uses-feature
         android:name="android.hardware.camera"
-        android:required="false"/>
+        android:required="false" />
     <uses-feature
         android:name="android.hardware.camera.front"
-        android:required="false"/>
+        android:required="false" />
     <uses-feature
         android:name="android.hardware.camera.autofocus"
-        android:required="false"/>
+        android:required="false" />
     <uses-feature
         android:name="android.hardware.microphone"
-        android:required="false"/>
+        android:required="false" />
     <uses-feature
         android:name="android.hardware.screen.portrait"
-        android:required="false"/>
+        android:required="false" />
 
     <application
         android:name="com.android.messaging.BugleApplication"
@@ -77,7 +76,7 @@
 
         <meta-data
             android:name="io.fabric.ApiKey"
-            android:value="0b4450f77c38aaab5bda6429b3e6ece0f4c33dfb"/>
+            android:value="0b4450f77c38aaab5bda6429b3e6ece0f4c33dfb" />
 
         <!-- Displays a list of conversations -->
         <activity
@@ -87,18 +86,18 @@
             android:screenOrientation="portrait"
             android:theme="@style/BugleTheme.ConversationListActivity">
             <intent-filter>
-                <action android:name="android.intent.action.MAIN"/>
+                <action android:name="android.intent.action.MAIN" />
 
-                <category android:name="android.intent.category.LAUNCHER"/>
-                <category android:name="android.intent.category.DEFAULT"/>
-                <category android:name="android.intent.category.APP_MESSAGING"/>
+                <category android:name="android.intent.category.LAUNCHER" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.APP_MESSAGING" />
             </intent-filter>
         </activity>
 
         <activity
             android:name=".ui.PermissionCheckActivity"
             android:configChanges="orientation|screenSize|keyboardHidden"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait" />
 
         <!-- Launches a conversation (ensures correct app name shown in recents) -->
         <activity
@@ -109,24 +108,24 @@
             android:screenOrientation="portrait"
             android:theme="@style/Invisible">
             <intent-filter>
-                <action android:name="android.intent.action.VIEW"/>
-                <action android:name="android.intent.action.SENDTO"/>
+                <action android:name="android.intent.action.VIEW" />
+                <action android:name="android.intent.action.SENDTO" />
 
-                <category android:name="android.intent.category.DEFAULT"/>
-                <category android:name="android.intent.category.BROWSABLE"/>
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
 
-                <data android:scheme="sms"/>
-                <data android:scheme="smsto"/>
+                <data android:scheme="sms" />
+                <data android:scheme="smsto" />
             </intent-filter>
             <intent-filter>
-                <action android:name="android.intent.action.VIEW"/>
-                <action android:name="android.intent.action.SENDTO"/>
+                <action android:name="android.intent.action.VIEW" />
+                <action android:name="android.intent.action.SENDTO" />
 
-                <category android:name="android.intent.category.DEFAULT"/>
-                <category android:name="android.intent.category.BROWSABLE"/>
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
 
-                <data android:scheme="mms"/>
-                <data android:scheme="mmsto"/>
+                <data android:scheme="mms" />
+                <data android:scheme="mmsto" />
             </intent-filter>
         </activity>
 
@@ -140,7 +139,7 @@
             android:theme="@style/BugleTheme.ArchivedConversationListActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.android.messaging.ui.conversationlist.ConversationListActivity"/>
+                android:value="com.android.messaging.ui.conversationlist.ConversationListActivity" />
         </activity>
 
         <!-- Displays the contents of a single conversation -->
@@ -153,7 +152,7 @@
             android:windowSoftInputMode="stateHidden|adjustResize">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.android.messaging.ui.conversationlist.ConversationListActivity"/>
+                android:value="com.android.messaging.ui.conversationlist.ConversationListActivity" />
         </activity>
 
         <!-- Blocked Participants -->
@@ -166,7 +165,7 @@
             android:theme="@style/BugleTheme">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.android.messaging.ui.conversationlist.ConversationListActivity"/>
+                android:value="com.android.messaging.ui.conversationlist.ConversationListActivity" />
         </activity>
 
         <!-- Full-screen photo viewer -->
@@ -175,8 +174,7 @@
             android:configChanges="orientation|screenSize|keyboardHidden"
             android:label="@string/photo_view_activity_title"
             android:screenOrientation="portrait"
-            android:theme="@style/BuglePhotoViewTheme"
-            />
+            android:theme="@style/BuglePhotoViewTheme" />
 
         <!-- Settings -->
         <activity
@@ -188,7 +186,7 @@
             android:theme="@style/BugleTheme.SettingsActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.android.messaging.ui.conversationlist.ConversationListActivity"/>
+                android:value="com.android.messaging.ui.conversationlist.ConversationListActivity" />
         </activity>
 
         <activity
@@ -200,7 +198,7 @@
             android:theme="@style/BugleTheme.SettingsActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.android.messaging.ui.appsettings.SettingsActivity"/>
+                android:value="com.android.messaging.ui.appsettings.SettingsActivity" />
         </activity>
 
         <activity
@@ -212,12 +210,12 @@
             android:theme="@style/BugleTheme.SettingsActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.android.messaging.ui.appsettings.SettingsActivity"/>
+                android:value="com.android.messaging.ui.appsettings.SettingsActivity" />
             <intent-filter>
-                <action android:name="android.intent.action.MAIN"/>
+                <action android:name="android.intent.action.MAIN" />
 
-                <category android:name="android.intent.category.DEFAULT"/>
-                <category android:name="android.intent.category.NOTIFICATION_PREFERENCES"/>
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.NOTIFICATION_PREFERENCES" />
             </intent-filter>
         </activity>
 
@@ -229,23 +227,21 @@
             android:excludeFromRecents="true"
             android:screenOrientation="portrait"
             android:theme="@style/BugleTheme.DialogActivity">
-            <intent-filter
-                android:label="@string/share_intent_label">
-                <action android:name="android.intent.action.SEND"/>
-                <category android:name="android.intent.category.DEFAULT"/>
+            <intent-filter android:label="@string/share_intent_label">
+                <action android:name="android.intent.action.SEND" />
+                <category android:name="android.intent.category.DEFAULT" />
 
-                <data android:mimeType="text/plain"/>
-                <data android:mimeType="text/x-vCard"/>
-                <data android:mimeType="text/x-vcard"/>
-                <data android:mimeType="image/*"/>
-                <data android:mimeType="audio/*"/>
-                <data android:mimeType="application/ogg"/>
+                <data android:mimeType="text/plain" />
+                <data android:mimeType="text/x-vCard" />
+                <data android:mimeType="text/x-vcard" />
+                <data android:mimeType="image/*" />
+                <data android:mimeType="audio/*" />
+                <data android:mimeType="application/ogg" />
             </intent-filter>
-            <intent-filter
-                android:label="@string/share_intent_label">
-                <action android:name="android.intent.action.SEND_MULTIPLE"/>
-                <category android:name="android.intent.category.DEFAULT"/>
-                <data android:mimeType="image/*"/>
+            <intent-filter android:label="@string/share_intent_label">
+                <action android:name="android.intent.action.SEND_MULTIPLE" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <data android:mimeType="image/*" />
             </intent-filter>
         </activity>
 
@@ -259,7 +255,7 @@
             android:theme="@style/BugleTheme">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.android.messaging.ui.conversation.ConversationActivity"/>
+                android:value="com.android.messaging.ui.conversation.ConversationActivity" />
         </activity>
 
         <!-- License -->
@@ -268,8 +264,7 @@
             android:exported="true"
             android:label="@string/menu_license"
             android:screenOrientation="portrait"
-            android:theme="@android:style/Theme.Holo.Light.Dialog">
-        </activity>
+            android:theme="@android:style/Theme.Holo.Light.Dialog"></activity>
 
         <!-- Message Forwarding -->
         <activity
@@ -277,8 +272,7 @@
             android:configChanges="orientation|screenSize|keyboardHidden"
             android:label="@string/forward_message_activity_title"
             android:screenOrientation="portrait"
-            android:theme="@style/BugleTheme.DialogActivity">
-        </activity>
+            android:theme="@style/BugleTheme.DialogActivity"></activity>
 
         <!-- Entry point for handling remote input/actions. Currently, this is only used by Android
              Wear to send voice replies. Since that uses PendingIntents, we don't need to export
@@ -290,8 +284,7 @@
             android:configChanges="orientation|screenSize|keyboardHidden"
             android:exported="false"
             android:screenOrientation="portrait"
-            android:theme="@style/Invisible">
-        </activity>
+            android:theme="@style/Invisible"></activity>
 
         <!-- VCard details -->
         <activity
@@ -302,7 +295,7 @@
             android:theme="@style/BugleTheme">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".ui.conversation.ConversationActivity"/>
+                android:value=".ui.conversation.ConversationActivity" />
         </activity>
 
         <!-- Attachment chooser -->
@@ -315,7 +308,7 @@
             android:theme="@style/BugleTheme">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.android.messaging.ui.conversation.ConversationActivity"/>
+                android:value="com.android.messaging.ui.conversation.ConversationActivity" />
         </activity>
 
         <!-- Test activity that we use to host fragments/views. Unfortunately, apparently necessary
@@ -325,40 +318,37 @@
         <activity
             android:name=".ui.TestActivity"
             android:configChanges="orientation|screenSize|keyboardHidden"
-            android:screenOrientation="portrait">
-        </activity>
+            android:screenOrientation="portrait"></activity>
 
         <activity
             android:name=".ui.debug.DebugMmsConfigActivity"
             android:configChanges="orientation|screenSize|keyboardHidden"
             android:exported="false"
             android:screenOrientation="portrait"
-            android:theme="@style/BugleTheme.DialogActivity">
-        </activity>
+            android:theme="@style/BugleTheme.DialogActivity"></activity>
 
         <provider
             android:name=".datamodel.MessagingContentProvider"
             android:authorities="com.color.messaging.datamodel.MessagingContentProvider"
             android:exported="false"
-            android:label="@string/app_name">
-        </provider>
+            android:label="@string/app_name"></provider>
 
         <provider
             android:name=".datamodel.MmsFileProvider"
             android:authorities="com.color.messaging.datamodel.MmsFileProvider"
             android:exported="false"
-            android:grantUriPermissions="true"/>
+            android:grantUriPermissions="true" />
 
         <provider
             android:name=".datamodel.MediaScratchFileProvider"
             android:authorities="com.color.messaging.datamodel.MediaScratchFileProvider"
             android:exported="false"
-            android:grantUriPermissions="true"/>
+            android:grantUriPermissions="true" />
 
 
         <!-- Action Services -->
-        <service android:name=".datamodel.action.ActionServiceImpl"/>
-        <service android:name=".datamodel.action.BackgroundWorkerService"/>
+        <service android:name=".datamodel.action.ActionServiceImpl" />
+        <service android:name=".datamodel.action.BackgroundWorkerService" />
 
         <!-- Sms and Mms related items -->
 
@@ -369,8 +359,8 @@
             android:enabled="false"
             android:permission="android.permission.BROADCAST_WAP_PUSH">
             <intent-filter android:priority="2147483647">
-                <action android:name="android.provider.Telephony.WAP_PUSH_RECEIVED"/>
-                <data android:mimeType="application/vnd.wap.mms-message"/>
+                <action android:name="android.provider.Telephony.WAP_PUSH_RECEIVED" />
+                <data android:mimeType="application/vnd.wap.mms-message" />
             </intent-filter>
         </receiver>
         <receiver
@@ -378,10 +368,10 @@
             android:enabled="false"
             android:permission="android.permission.BROADCAST_SMS">
             <intent-filter android:priority="2147483647">
-                <action android:name="android.provider.Telephony.SMS_RECEIVED"/>
+                <action android:name="android.provider.Telephony.SMS_RECEIVED" />
             </intent-filter>
             <intent-filter android:priority="2147483647">
-                <action android:name="android.provider.Telephony.MMS_DOWNLOADED"/>
+                <action android:name="android.provider.Telephony.MMS_DOWNLOADED" />
             </intent-filter>
         </receiver>
 
@@ -392,8 +382,8 @@
             android:enabled="false"
             android:permission="android.permission.BROADCAST_WAP_PUSH">
             <intent-filter android:priority="3">
-                <action android:name="android.provider.Telephony.WAP_PUSH_RECEIVED"/>
-                <data android:mimeType="application/vnd.wap.mms-message"/>
+                <action android:name="android.provider.Telephony.WAP_PUSH_RECEIVED" />
+                <data android:mimeType="application/vnd.wap.mms-message" />
             </intent-filter>
         </receiver>
         <receiver
@@ -401,7 +391,7 @@
             android:enabled="false"
             android:permission="android.permission.BROADCAST_SMS">
             <intent-filter android:priority="3">
-                <action android:name="android.provider.Telephony.SMS_RECEIVED"/>
+                <action android:name="android.provider.Telephony.SMS_RECEIVED" />
             </intent-filter>
         </receiver>
 
@@ -410,15 +400,15 @@
             android:name=".receiver.MmsWapPushDeliverReceiver"
             android:permission="android.permission.BROADCAST_WAP_PUSH">
             <intent-filter>
-                <action android:name="android.provider.Telephony.WAP_PUSH_DELIVER"/>
-                <data android:mimeType="application/vnd.wap.mms-message"/>
+                <action android:name="android.provider.Telephony.WAP_PUSH_DELIVER" />
+                <data android:mimeType="application/vnd.wap.mms-message" />
             </intent-filter>
         </receiver>
         <receiver
             android:name=".receiver.SmsDeliverReceiver"
             android:permission="android.permission.BROADCAST_SMS">
             <intent-filter>
-                <action android:name="android.provider.Telephony.SMS_DELIVER"/>
+                <action android:name="android.provider.Telephony.SMS_DELIVER" />
             </intent-filter>
         </receiver>
 
@@ -426,19 +416,19 @@
             android:name=".receiver.SendStatusReceiver"
             android:exported="false">
             <intent-filter>
-                <action android:name="com.android.messaging.receiver.SendStatusReceiver.MESSAGE_SENT"/>
-                <data android:scheme="content"/>
+                <action android:name="com.android.messaging.receiver.SendStatusReceiver.MESSAGE_SENT" />
+                <data android:scheme="content" />
             </intent-filter>
             <intent-filter>
-                <action android:name="com.android.messaging.receiver.SendStatusReceiver.MESSAGE_DELIVERED"/>
+                <action android:name="com.android.messaging.receiver.SendStatusReceiver.MESSAGE_DELIVERED" />
             </intent-filter>
             <intent-filter>
-                <action android:name="com.android.messaging.receiver.SendStatusReceiver.MMS_SENT"/>
-                <data android:scheme="content"/>
+                <action android:name="com.android.messaging.receiver.SendStatusReceiver.MMS_SENT" />
+                <data android:scheme="content" />
             </intent-filter>
             <intent-filter>
-                <action android:name="com.android.messaging.receiver.SendStatusReceiver.MMS_DOWNLOADED"/>
-                <data android:scheme="content"/>
+                <action android:name="com.android.messaging.receiver.SendStatusReceiver.MMS_DOWNLOADED" />
+                <data android:scheme="content" />
             </intent-filter>
         </receiver>
 
@@ -447,11 +437,11 @@
             android:exported="true"
             android:permission="android.permission.SEND_RESPOND_VIA_MESSAGE">
             <intent-filter>
-                <action android:name="android.intent.action.RESPOND_VIA_MESSAGE"/>
-                <category android:name="android.intent.category.DEFAULT"/>
+                <action android:name="android.intent.action.RESPOND_VIA_MESSAGE" />
+                <category android:name="android.intent.category.DEFAULT" />
 
-                <data android:scheme="sms"/>
-                <data android:scheme="smsto"/>
+                <data android:scheme="sms" />
+                <data android:scheme="smsto" />
             </intent-filter>
         </service>
 
@@ -462,63 +452,61 @@
             android:label="@string/class_0_message_activity"
             android:launchMode="singleTask"
             android:screenOrientation="portrait"
-            android:theme="@style/BugleTheme.DialogActivity">
-        </activity>
+            android:theme="@style/BugleTheme.DialogActivity"></activity>
 
         <activity
             android:name=".ui.SmsStorageLowWarningActivity"
             android:configChanges="orientation|screenSize|keyboardHidden"
             android:screenOrientation="portrait"
-            android:theme="@style/Invisible"/>
+            android:theme="@style/Invisible" />
 
         <activity
             android:name=".ui.appsettings.ApnSettingsActivity"
             android:configChanges="orientation|screenSize|keyboardHidden"
             android:parentActivityName="com.android.messaging.ui.appsettings.SettingsActivity"
             android:screenOrientation="portrait"
-            android:theme="@style/BugleTheme"/>
+            android:theme="@style/BugleTheme" />
 
         <activity
             android:name=".ui.appsettings.ApnEditorActivity"
             android:configChanges="orientation|screenSize|keyboardHidden"
             android:parentActivityName="com.android.messaging.ui.appsettings.ApnSettingsActivity"
             android:screenOrientation="portrait"
-            android:theme="@style/BugleTheme"/>
+            android:theme="@style/BugleTheme" />
 
         <receiver android:name=".receiver.StorageStatusReceiver">
             <intent-filter>
-                <action android:name="android.intent.action.DEVICE_STORAGE_LOW"/>
+                <action android:name="android.intent.action.DEVICE_STORAGE_LOW" />
             </intent-filter>
             <intent-filter>
-                <action android:name="android.intent.action.DEVICE_STORAGE_OK"/>
+                <action android:name="android.intent.action.DEVICE_STORAGE_OK" />
             </intent-filter>
         </receiver>
 
         <receiver android:name=".receiver.BootAndPackageReplacedReceiver">
             <intent-filter>
-                <action android:name="android.intent.action.BOOT_COMPLETED"/>
-                <action android:name="android.intent.action.MY_PACKAGE_REPLACED"/>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+                <action android:name="android.intent.action.MY_PACKAGE_REPLACED" />
             </intent-filter>
         </receiver>
 
         <!-- Broadcast receiver that will be notified to reset notifications -->
         <receiver
             android:name=".receiver.NotificationReceiver"
-            android:exported="false">
-        </receiver>
+            android:exported="false"></receiver>
 
         <!-- Broadcast receiver that will be notified for ActionService alarms. -->
         <receiver
             android:name=".datamodel.action.ActionServiceImpl$PendingActionReceiver"
             android:exported="false">
             <intent-filter>
-                <action android:name="com.android.messaging.datamodel.PENDING_ACTION"/>
+                <action android:name="com.android.messaging.datamodel.PENDING_ACTION" />
             </intent-filter>
         </receiver>
 
         <receiver android:name=".receiver.DefaultSmsSubscriptionChangeReceiver">
             <intent-filter>
-                <action android:name="android.telephony.action.DEFAULT_SMS_SUBSCRIPTION_CHANGED"/>
+                <action android:name="android.telephony.action.DEFAULT_SMS_SUBSCRIPTION_CHANGED" />
             </intent-filter>
         </receiver>
 
@@ -527,15 +515,15 @@
             android:name=".widget.BugleWidgetProvider"
             android:label="@string/widget_conversation_name">
             <intent-filter>
-                <action android:name="android.appwidget.action.APPWIDGET_UPDATE"/>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
             </intent-filter>
             <intent-filter>
-                <action android:name="com.android.Bugle.intent.action.ACTION_NOTIFY_CONVERSATIONS_CHANGED"/>
+                <action android:name="com.android.Bugle.intent.action.ACTION_NOTIFY_CONVERSATIONS_CHANGED" />
             </intent-filter>
 
             <meta-data
                 android:name="android.appwidget.provider"
-                android:resource="@xml/widget_conversation_list"/>
+                android:resource="@xml/widget_conversation_list" />
         </receiver>
 
         <!-- Widget that displays the messages of a single conversation -->
@@ -543,26 +531,26 @@
             android:name=".widget.WidgetConversationProvider"
             android:label="@string/widget_conversation_name">
             <intent-filter>
-                <action android:name="android.appwidget.action.APPWIDGET_UPDATE"/>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
             </intent-filter>
             <intent-filter>
-                <action android:name="com.android.Bugle.intent.action.ACTION_NOTIFY_MESSAGES_CHANGED"/>
+                <action android:name="com.android.Bugle.intent.action.ACTION_NOTIFY_MESSAGES_CHANGED" />
             </intent-filter>
 
             <meta-data
                 android:name="android.appwidget.provider"
-                android:resource="@xml/widget_conversation"/>
+                android:resource="@xml/widget_conversation" />
         </receiver>
 
         <service
             android:name=".widget.WidgetConversationListService"
             android:exported="false"
-            android:permission="android.permission.BIND_REMOTEVIEWS"/>
+            android:permission="android.permission.BIND_REMOTEVIEWS" />
 
         <service
             android:name=".widget.WidgetConversationService"
             android:exported="false"
-            android:permission="android.permission.BIND_REMOTEVIEWS"/>
+            android:permission="android.permission.BIND_REMOTEVIEWS" />
 
         <activity
             android:name=".ui.WidgetPickConversationActivity"
@@ -570,11 +558,17 @@
             android:screenOrientation="portrait"
             android:theme="@style/BugleTheme">
             <intent-filter>
-                <action android:name="android.appwidget.action.APPWIDGET_CONFIGURE"/>
+                <action android:name="android.appwidget.action.APPWIDGET_CONFIGURE" />
             </intent-filter>
         </activity>
 
-        <service android:name="android.support.v7.mms.MmsService"/>
+        <activity
+            android:name=".ui.emoji.StickerMagicDetailActivity"
+            android:excludeFromRecents="true"
+            android:screenOrientation="portrait"
+            android:theme="@style/WindowBgAndTranslucent" />
+
+        <service android:name="android.support.v7.mms.MmsService" />
     </application>
 
 </manifest>

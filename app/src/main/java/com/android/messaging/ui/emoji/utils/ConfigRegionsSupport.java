@@ -1,4 +1,4 @@
-package com.android.messaging.ui.emoji.config;
+package com.android.messaging.ui.emoji.utils;
 
 import net.appcloudbox.common.utils.AcbMapUtils;
 

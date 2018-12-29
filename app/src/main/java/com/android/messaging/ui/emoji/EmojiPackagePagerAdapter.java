@@ -10,6 +10,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 
 import com.android.messaging.R;
+import com.android.messaging.glide.GlideApp;
 import com.superapps.view.ViewPagerFixed;
 
 import java.util.ArrayList;
@@ -78,9 +79,7 @@ public class EmojiPackagePagerAdapter extends PagerAdapter {
             View view = LayoutInflater.from(mContext).inflate(R.layout.emoji_tab_item_layout, null);
             TabLayout.Tab tab = mTabLayout.getTabAt(i);
             ImageView tabIconView = view.findViewById(R.id.tab_icon_view);
-            if (info.mTabDrawableIconRes > 0) {
-                tabIconView.setImageResource(info.mTabDrawableIconRes);
-            }
+            GlideApp.with(mContext).asBitmap().load(info.mTabIconUrl).placeholder(R.drawable.emoji_normal_tab_icon).into(tabIconView);
             if (tab != null) {
                 tab.setCustomView(view);
             }

@@ -5,14 +5,16 @@
     android:layout_height="69dp">
 
     <com.android.messaging.ui.emoji.SquareImageView
-        android:id="@+id/emoji_image"
+        android:id="@+id/sticker_image"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:scaleType="centerInside"
-        android:src="@drawable/ic_audio_play" />
+        android:src="@drawable/emoji_normal_tab_icon"
+        android:background="@drawable/material_compat_button_bg"
+        />
 
     <ImageView
-        android:id="@+id/emoji_status"
+        android:id="@+id/sticker_status"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|right"

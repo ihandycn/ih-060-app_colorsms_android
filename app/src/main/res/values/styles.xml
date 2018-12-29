@@ -660,4 +660,10 @@
         <item name="android:textSize">@dimen/directory_header_text_size</item>
         <item name="android:textStyle">bold</item>
     </style>
+
+    <style name="WindowBgAndTranslucent" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="android:windowTranslucentStatus">true</item>
+        <item name="android:windowBackground">@color/black_alpha_20</item>
+        <item name="android:windowIsTranslucent">true</item>
+    </style>
 </resources>

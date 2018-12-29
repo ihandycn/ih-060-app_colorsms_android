@@ -27,7 +27,7 @@ import android.support.v7.mms.CarrierConfigValuesLoader;
 import android.support.v7.mms.MmsManager;
 import android.telephony.CarrierConfigManager;
 
-import com.android.messaging.ui.emoji.config.EmojiConfig;
+import com.android.messaging.ui.emoji.utils.EmojiConfig;
 import com.android.messaging.datamodel.DataModel;
 import com.android.messaging.receiver.SmsReceiver;
 import com.android.messaging.sms.ApnDatabase;
