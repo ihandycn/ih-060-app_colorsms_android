@@ -40,7 +40,10 @@
         <item name="apnPreferenceStyle">@style/ApnPreference</item>
     </style>
 
-    <style name="BugleTheme.ConversationActivity" parent="@style/BugleTheme.ConversationActivityBase"></style>
+    <style name="BugleTheme.ConversationActivity" parent="@style/BugleTheme.ConversationActivityBase">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+    </style>
 
     <style name="BugleTheme.ConversationActivityBase" parent="BugleTheme">
         <item name="android:windowBackground">@color/conversation_background</item>

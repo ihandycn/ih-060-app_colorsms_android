@@ -23,7 +23,9 @@ import android.graphics.Rect;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
+import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
+import android.view.ActionMode;
 import android.view.MenuItem;
 
 import com.android.messaging.R;
@@ -97,6 +99,8 @@ public class ConversationActivity extends BugleActionBarActivity
         mUiState.setHost(this);
         mInstanceStateSaved = false;
 
+        initActionBar();
+
         // Don't animate UI state change for initial setup.
         updateUiState(false /* animate */);
 
@@ -117,6 +121,18 @@ public class ConversationActivity extends BugleActionBarActivity
                 UIIntents.get().launchFullScreenVideoViewer(this, Uri.parse(extraToDisplay));
             }
         }
+    }
+
+    @Override
+    public ActionMode startActionMode(ActionMode.Callback callback) {
+        // set custom title visibility gone, when start MultiSelectActionMode etc.
+        return super.startActionMode(callback);
+    }
+
+    private void initActionBar() {
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        invalidateActionBar();
     }
 
     @Override
@@ -281,7 +297,7 @@ public class ConversationActivity extends BugleActionBarActivity
 
     @Override // From ConversationActivityUiStateListener
     public void onConversationContactPickerUiStateChanged(final int oldState, final int newState,
-            final boolean animate) {
+                                                          final boolean animate) {
         Assert.isTrue(oldState != newState);
         updateUiState(animate);
     }
@@ -362,7 +378,7 @@ public class ConversationActivity extends BugleActionBarActivity
 
     @Override
     protected void onActivityResult(final int requestCode, final int resultCode,
-            final Intent data) {
+                                    final Intent data) {
         if (requestCode == ConversationFragment.REQUEST_CHOOSE_ATTACHMENTS &&
                 resultCode == RESULT_OK) {
             final ConversationFragment conversationFragment = getConversationFragment();

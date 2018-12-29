@@ -165,7 +165,8 @@ public class ConversationFragment extends Fragment implements ConversationDataLi
     // This binding keeps track of our associated ConversationData instance
     // A binding should have the lifetime of the owning component,
     //  don't recreate, unbind and bind if you need new data
-    @VisibleForTesting final Binding<ConversationData> mBinding = BindingBase.createBinding(this);
+    @VisibleForTesting
+    final Binding<ConversationData> mBinding = BindingBase.createBinding(this);
 
     // Saved Instance State Data - only for temporal data which is nice to maintain but not
     // critical for correctness.
@@ -1540,15 +1541,9 @@ public class ConversationFragment extends Fragment implements ConversationDataLi
                 conversationId, REQUEST_CHOOSE_ATTACHMENTS);
     }
 
-    private void updateActionAndStatusBarColor(final ActionBar actionBar) {
-        final int themeColor = ConversationDrawables.get().getConversationThemeColor();
-        actionBar.setBackgroundDrawable(new ColorDrawable(themeColor));
-        UiUtils.setStatusBarColor(getActivity(), themeColor);
-    }
-
     public void updateActionBar(final ActionBar actionBar) {
+
         if (mComposeMessageView == null || !mComposeMessageView.updateActionBar(actionBar)) {
-            updateActionAndStatusBarColor(actionBar);
             // We update this regardless of whether or not the action bar is showing so that we
             // don't get a race when it reappears.
             actionBar.setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
@@ -1603,6 +1598,10 @@ public class ConversationFragment extends Fragment implements ConversationDataLi
                 actionBar.show();
             }
         }
+        actionBar.setDisplayShowTitleEnabled(false);
+        actionBar.setBackgroundDrawable(new ColorDrawable(
+                getResources().getColor(android.R.color.transparent)));
+        UiUtils.setStatusBarColor(getActivity(), getResources().getColor(R.color.action_bar_background_color));
     }
 
     @Override
