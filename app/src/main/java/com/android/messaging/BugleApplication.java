@@ -27,6 +27,7 @@ import android.support.v7.mms.CarrierConfigValuesLoader;
 import android.support.v7.mms.MmsManager;
 import android.telephony.CarrierConfigManager;
 
+import com.android.messaging.ui.emoji.config.EmojiConfig;
 import com.android.messaging.datamodel.DataModel;
 import com.android.messaging.receiver.SmsReceiver;
 import com.android.messaging.sms.ApnDatabase;
@@ -83,6 +84,8 @@ public class BugleApplication extends HSApplication implements UncaughtException
             LogUtil.e(TAG, "BugleApplication.onCreate: FactoryImpl.register skipped for test run");
         }
 
+        EmojiConfig.getInstance().doInit();
+
         sSystemUncaughtExceptionHandler = Thread.getDefaultUncaughtExceptionHandler();
         Thread.setDefaultUncaughtExceptionHandler(this);
         Trace.endSection();
@@ -136,7 +139,7 @@ public class BugleApplication extends HSApplication implements UncaughtException
     }
 
     private static void initMmsLib(final Context context, final BugleGservices bugleGservices,
-            final CarrierConfigValuesLoader carrierConfigValuesLoader) {
+                                   final CarrierConfigValuesLoader carrierConfigValuesLoader) {
         MmsManager.setApnSettingsLoader(new BugleApnSettingsLoader(context));
         MmsManager.setCarrierConfigValuesLoader(carrierConfigValuesLoader);
         MmsManager.setUserAgentInfoLoader(new BugleUserAgentInfoLoader(context));
@@ -212,14 +215,14 @@ public class BugleApplication extends HSApplication implements UncaughtException
             if (file != null) {
                 android.os.Debug.startMethodTracing(file.getAbsolutePath(), 160 * 1024 * 1024);
                 new Handler(Looper.getMainLooper()).postDelayed(
-                       new Runnable() {
+                        new Runnable() {
                             @Override
                             public void run() {
                                 android.os.Debug.stopMethodTracing();
                                 // Allow world to see trace file
                                 DebugUtils.ensureReadable(file);
                                 LogUtil.d(LogUtil.PROFILE_TAG, "Tracing complete - "
-                                     + file.getAbsolutePath());
+                                        + file.getAbsolutePath());
                             }
                         }, 30000);
             }

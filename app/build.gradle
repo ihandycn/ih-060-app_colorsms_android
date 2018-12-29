@@ -18,12 +18,14 @@ android {
             minifyEnabled false
             multiDexEnabled true
             ext.enableCrashlytics = false
+            buildConfigField 'String', 'EMOJI_CONFIG', '"ddddd"'
         }
 
         release {
             minifyEnabled false
             ext.enableCrashlytics = true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.txt'
+            buildConfigField 'String', 'EMOJI_CONFIG', '"ddddd"'
         }
     }
 }
