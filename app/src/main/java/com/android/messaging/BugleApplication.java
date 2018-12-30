@@ -21,20 +21,23 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.res.Configuration;
+import android.graphics.drawable.Drawable;
 import android.os.Handler;
 import android.os.Looper;
 import android.support.v7.mms.CarrierConfigValuesLoader;
 import android.support.v7.mms.MmsManager;
 import android.telephony.CarrierConfigManager;
 
-import com.android.messaging.ui.emoji.utils.EmojiConfig;
 import com.android.messaging.datamodel.DataModel;
+import com.android.messaging.libwebp.WebpBytebufferDecoder;
+import com.android.messaging.libwebp.WebpResourceDecoder;
 import com.android.messaging.receiver.SmsReceiver;
 import com.android.messaging.sms.ApnDatabase;
 import com.android.messaging.sms.BugleApnSettingsLoader;
 import com.android.messaging.sms.BugleUserAgentInfoLoader;
 import com.android.messaging.sms.MmsConfig;
 import com.android.messaging.ui.ConversationDrawables;
+import com.android.messaging.ui.emoji.utils.EmojiConfig;
 import com.android.messaging.util.BugleGservices;
 import com.android.messaging.util.BugleGservicesKeys;
 import com.android.messaging.util.BuglePrefs;
@@ -44,11 +47,15 @@ import com.android.messaging.util.LogUtil;
 import com.android.messaging.util.OsUtil;
 import com.android.messaging.util.PhoneUtils;
 import com.android.messaging.util.Trace;
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.ResourceDecoder;
 import com.google.common.annotations.VisibleForTesting;
 import com.ihs.app.framework.HSApplication;
 
 import java.io.File;
+import java.io.InputStream;
 import java.lang.Thread.UncaughtExceptionHandler;
+import java.nio.ByteBuffer;
 
 /**
  * The application object
@@ -86,9 +93,21 @@ public class BugleApplication extends HSApplication implements UncaughtException
 
         EmojiConfig.getInstance().doInit();
 
+        initGlideAnimatedWebp();
+
         sSystemUncaughtExceptionHandler = Thread.getDefaultUncaughtExceptionHandler();
         Thread.setDefaultUncaughtExceptionHandler(this);
         Trace.endSection();
+    }
+
+    @SuppressWarnings("unchecked")
+    private void initGlideAnimatedWebp() {
+        ResourceDecoder decoder = new WebpResourceDecoder(this);
+        ResourceDecoder byteDecoder = new WebpBytebufferDecoder(this);
+        // use prepend() avoid intercept by default decoder
+        Glide.get(this).getRegistry()
+                .prepend(InputStream.class, Drawable.class, decoder)
+                .prepend(ByteBuffer.class, Drawable.class, byteDecoder);
     }
 
     @Override

@@ -35,4 +35,5 @@ ext {
     supportLibVersion = "27.1.1"
     googlePlayServiceVersion = "15.0.0"
     glideVersion = "4.8.0"
+    frescoAnimatedWebp = "1.11.0"
 }

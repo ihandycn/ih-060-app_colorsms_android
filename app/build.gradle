@@ -61,6 +61,7 @@ dependencies {
 
     implementation "com.github.bumptech.glide:glide:${rootProject.ext.glideVersion}"
     annotationProcessor "com.github.bumptech.glide:compiler:${rootProject.ext.glideVersion}"
+    implementation "com.facebook.fresco:animated-webp:${rootProject.ext.frescoAnimatedWebp}"
 
     implementation 'pl.droidsonroids.gif:android-gif-drawable:1.2.7'
 }
