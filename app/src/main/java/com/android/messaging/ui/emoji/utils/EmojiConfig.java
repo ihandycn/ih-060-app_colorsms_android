@@ -75,7 +75,7 @@ public class EmojiConfig implements HSLibraryConfig.ILibraryListener {
             throw new IllegalStateException("The emoji config is null!!!!");
         }
 
-        List<String> allAddedSticker = EmojiManager.getAddedSticker();
+        List<String> allAddedSticker = EmojiManager.getTabSticker();
         boolean isFirstLoad = allAddedSticker.isEmpty();
         Context context = HSApplication.getContext();
         String baseUrl = HSMapUtils.getString(sConfigMap, "BaseUrl");
@@ -177,7 +177,7 @@ public class EmojiConfig implements HSLibraryConfig.ILibraryListener {
         }
 
         if (isFirstLoad) {
-            EmojiManager.addSticker(allAddedSticker);
+            EmojiManager.addTabSticker(allAddedSticker);
         }
         return result;
     }

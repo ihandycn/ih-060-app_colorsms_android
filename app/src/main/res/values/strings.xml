@@ -984,4 +984,5 @@
     <string name="network_error">Network error.</string>
     <string name="network_error_and_try_again">Network errors. Please try again.</string>
     <string name="sticker_send_msg">SHARE</string>
+    <string name="sticker_no_recent">Click an emoji to send to friends.</string>
 </resources>

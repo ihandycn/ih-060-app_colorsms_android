@@ -37,9 +37,11 @@ public class StickerItemRecyclerAdapter extends RecyclerView.Adapter<StickerItem
     private List<BaseEmojiInfo> mData;
     private int mMagicPreloadCount;
     private int mPositionInViewPager;
+    private View.OnClickListener mOnItemClickListener;
 
-    StickerItemRecyclerAdapter(int position, List<BaseEmojiInfo> data) {
+    StickerItemRecyclerAdapter(int position, List<BaseEmojiInfo> data, View.OnClickListener onItemClickListener) {
         mPositionInViewPager = position;
+        mOnItemClickListener = onItemClickListener;
         mData = data;
         mMagicPreloadCount = EmojiConfig.getInstance().optInteger(0, "MagicPreloadCount");
     }
@@ -72,6 +74,10 @@ public class StickerItemRecyclerAdapter extends RecyclerView.Adapter<StickerItem
         }
 
         holder.stickerImageView.setOnClickListener(v -> {
+            if (mOnItemClickListener != null) {
+                holder.stickerImageView.setTag(stickerInfo);
+                mOnItemClickListener.onClick(holder.stickerImageView);
+            }
             switch (stickerInfo.mEmojiType) {
                 case STICKER_IMAGE:
                 case STICKER_GIF:

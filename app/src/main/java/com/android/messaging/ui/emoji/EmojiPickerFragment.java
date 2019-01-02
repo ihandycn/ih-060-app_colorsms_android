@@ -12,12 +12,13 @@ import android.view.ViewGroup;
 
 import com.android.messaging.R;
 import com.android.messaging.ui.emoji.utils.EmojiConfig;
+import com.android.messaging.ui.emoji.utils.EmojiManager;
 import com.superapps.view.ViewPagerFixed;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class EmojiPickerFragment extends Fragment {
+public class EmojiPickerFragment extends Fragment implements View.OnClickListener {
 
     public static final String FRAGMENT_TAG = "emoji_picker";
 
@@ -39,7 +40,7 @@ public class EmojiPickerFragment extends Fragment {
 
     private void initView(View view) {
         mTabLayout = view.findViewById(R.id.emoji_tab_layout);
-        mEmojiPackagePagerAdapter = new EmojiPackagePagerAdapter(getActivity(), mTabLayout);
+        mEmojiPackagePagerAdapter = new EmojiPackagePagerAdapter(getActivity(), mTabLayout, this);
         mEmojiPager = view.findViewById(R.id.emoji_pager);
         mEmojiPager.setAdapter(mEmojiPackagePagerAdapter);
         mTabLayout.setupWithViewPager(mEmojiPager);
@@ -56,6 +57,13 @@ public class EmojiPickerFragment extends Fragment {
                 activity.getResources().getIdentifier("emoji_normal_tab_icon", "drawable", packageName)).toString();
         info.mEmojiInfoList = getTestList();
         result.add(info);
+
+        EmojiPackageInfo recentInfo = new EmojiPackageInfo();
+        recentInfo.mEmojiPackageType = EmojiPackageType.RECENT;
+        recentInfo.mTabIconUrl = Uri.parse("android.resource://" + packageName + "/" +
+                activity.getResources().getIdentifier("emoji_recent_tab_icon", "drawable", packageName)).toString();
+        result.add(recentInfo);
+
         result.addAll(EmojiConfig.getInstance().getAddedEmojiFromConfig());
         return result;
     }
@@ -70,4 +78,15 @@ public class EmojiPickerFragment extends Fragment {
         return result;
     }
 
+    @Override
+    public void onClick(View v) {
+        Object tag = v.getTag();
+        if (!(tag instanceof StickerInfo)) {
+            return;
+        }
+
+        StickerInfo info = (StickerInfo) tag;
+        EmojiManager.saveRecentSticker(info.toString());
+        mEmojiPackagePagerAdapter.updateRecentItem();
+    }
 }

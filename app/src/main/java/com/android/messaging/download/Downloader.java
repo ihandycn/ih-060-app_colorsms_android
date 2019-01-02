@@ -84,6 +84,9 @@ public class Downloader {
     }
 
     public boolean isDownloaded(String url) {
+        if (TextUtils.isEmpty(url)) {
+            return false;
+        }
         File file = getDownloadFile(url);
         return file.exists() && file.length() > 0;
     }

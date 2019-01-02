@@ -11,6 +11,7 @@ import android.widget.ImageView;
 
 import com.android.messaging.R;
 import com.android.messaging.glide.GlideApp;
+import com.android.messaging.ui.emoji.utils.EmojiManager;
 import com.superapps.view.ViewPagerFixed;
 
 import java.util.ArrayList;
@@ -21,11 +22,20 @@ public class EmojiPackagePagerAdapter extends PagerAdapter {
     private List<EmojiPackageInfo> mData;
     private TabLayout mTabLayout;
     private Context mContext;
+    private StickerItemPagerAdapter mRecentPagerAdapter;
+    private View.OnClickListener mOnItemClickListener;
 
-    EmojiPackagePagerAdapter(Context context, TabLayout tabLayout) {
+    EmojiPackagePagerAdapter(Context context, TabLayout tabLayout, View.OnClickListener onItemClickListener) {
         mContext = context;
         mTabLayout = tabLayout;
+        mOnItemClickListener = onItemClickListener;
         mData = new ArrayList<>();
+    }
+
+    public void updateRecentItem() {
+        if (mRecentPagerAdapter != null) {
+            mRecentPagerAdapter.updateRecentItem();
+        }
     }
 
     @Override
@@ -55,9 +65,12 @@ public class EmojiPackagePagerAdapter extends PagerAdapter {
     private PagerAdapter getPagerAdapter(EmojiPackageInfo info) {
         switch (info.mEmojiPackageType) {
             case STICKER:
-                return new StickerItemPagerAdapter(info.mEmojiInfoList);
+                return new StickerItemPagerAdapter(info.mEmojiInfoList, mOnItemClickListener);
             case EMOJI:
                 return new EmojiItemPagerAdapter(info.mEmojiInfoList);
+            case RECENT:
+                mRecentPagerAdapter = new StickerItemPagerAdapter(true, EmojiManager.getRecentStickerInfo(), mOnItemClickListener);
+                return mRecentPagerAdapter;
             default:
                 throw new IllegalStateException("There is no this type: " + info.mEmojiPackageType + "!!!");
         }

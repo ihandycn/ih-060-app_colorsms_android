@@ -2,6 +2,9 @@ package com.android.messaging.ui.emoji;
 
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.text.TextUtils;
+
+import com.android.messaging.download.Downloader;
 
 public class StickerInfo extends BaseEmojiInfo implements Parcelable {
 
@@ -47,4 +50,26 @@ public class StickerInfo extends BaseEmojiInfo implements Parcelable {
             return new StickerInfo[size];
         }
     };
+
+    public static StickerInfo unflatten(String flatten) {
+        StickerInfo result = new StickerInfo();
+        String[] split = flatten.split("\\|");
+        if (split.length != 4) {
+            throw new IllegalStateException("split.lenght must be 4!!!");
+        }
+        result.mEmojiType = EmojiType.valueOfInt(Integer.valueOf(split[0]));
+        result.mStickerUrl = split[1];
+        result.mMagicUrl = split[2];
+        result.mSoundUrl = split[3];
+        if (result.mEmojiType == EmojiType.STICKER_MAGIC && !TextUtils.isEmpty(result.mMagicUrl)) {
+            result.mIsDownloaded = Downloader.getInstance().isDownloaded(result.mMagicUrl);
+        }
+
+        return result;
+    }
+
+    @Override
+    public String toString() {
+        return mEmojiType.value + "|" + mStickerUrl + "|" + mMagicUrl + "|" + mSoundUrl;
+    }
 }
