@@ -17,7 +17,6 @@
 <com.android.messaging.ui.ImeDetectFrameLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/conversation_and_compose_container"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
@@ -26,6 +25,16 @@
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
         android:layout_height="@dimen/action_bar_height">
+
+        <com.superapps.view.TypefacedTextView
+            android:id="@+id/toolbar_title"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_gravity="center"
+            android:layout_marginTop="5dp"
+            android:gravity="center"
+            android:textColor="#222327"
+            android:textSize="16.7dp"/>
     </android.support.v7.widget.Toolbar>
 
     <FrameLayout

@@ -27,6 +27,8 @@ import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.view.ActionMode;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.TextView;
 
 import com.android.messaging.R;
 import com.android.messaging.datamodel.MessagingContentProvider;
@@ -42,6 +44,7 @@ import com.android.messaging.util.Assert;
 import com.android.messaging.util.ContentType;
 import com.android.messaging.util.LogUtil;
 import com.android.messaging.util.OsUtil;
+import com.android.messaging.util.Typefaces;
 import com.android.messaging.util.UiUtils;
 
 public class ConversationActivity extends BugleActionBarActivity
@@ -60,6 +63,7 @@ public class ConversationActivity extends BugleActionBarActivity
 
     // Tracks whether onPause is called.
     private boolean mIsPaused;
+    private TextView mTitleTextView;
 
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
@@ -126,13 +130,21 @@ public class ConversationActivity extends BugleActionBarActivity
     @Override
     public ActionMode startActionMode(ActionMode.Callback callback) {
         // set custom title visibility gone, when start MultiSelectActionMode etc.
+        mTitleTextView.setVisibility(View.GONE);
         return super.startActionMode(callback);
+    }
+
+    @Override public void dismissActionMode() {
+        super.dismissActionMode();
+        mTitleTextView.setVisibility(View.VISIBLE);
     }
 
     private void initActionBar() {
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         invalidateActionBar();
+        mTitleTextView = findViewById(R.id.toolbar_title);
+        mTitleTextView.setTypeface(Typefaces.getCustomSemiBold());
     }
 
     @Override
@@ -199,7 +211,7 @@ public class ConversationActivity extends BugleActionBarActivity
         if (contactPicker != null && mUiState.shouldShowContactPickerFragment()) {
             contactPicker.updateActionBar(actionBar);
         } else if (conversation != null && mUiState.shouldShowConversationFragment()) {
-            conversation.updateActionBar(actionBar);
+            conversation.updateActionBar(actionBar, mTitleTextView);
         }
     }
 

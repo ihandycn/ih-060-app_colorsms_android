@@ -1541,31 +1541,15 @@ public class ConversationFragment extends Fragment implements ConversationDataLi
                 conversationId, REQUEST_CHOOSE_ATTACHMENTS);
     }
 
-    public void updateActionBar(final ActionBar actionBar) {
-
+    public void updateActionBar(final ActionBar actionBar, final TextView tvTitle) {
         if (mComposeMessageView == null || !mComposeMessageView.updateActionBar(actionBar)) {
             // We update this regardless of whether or not the action bar is showing so that we
             // don't get a race when it reappears.
             actionBar.setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
             actionBar.setDisplayHomeAsUpEnabled(true);
             // Reset the back arrow to its default
-            actionBar.setHomeAsUpIndicator(0);
-            View customView = actionBar.getCustomView();
-            if (customView == null || customView.getId() != R.id.conversation_title_container) {
-                final LayoutInflater inflator = (LayoutInflater)
-                        getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-                customView = inflator.inflate(R.layout.action_bar_conversation_name, null);
-                customView.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(final View v) {
-                        onBackPressed();
-                    }
-                });
-                actionBar.setCustomView(customView);
-            }
+            actionBar.setHomeAsUpIndicator(R.drawable.ic_back);
 
-            final TextView conversationNameView =
-                    (TextView) customView.findViewById(R.id.conversation_title);
             final String conversationName = getConversationName();
             if (!TextUtils.isEmpty(conversationName)) {
                 // RTL : To format conversation title if it happens to be phone numbers.
@@ -1573,21 +1557,19 @@ public class ConversationFragment extends Fragment implements ConversationDataLi
                 final String formattedName = bidiFormatter.unicodeWrap(
                         UiUtils.commaEllipsize(
                                 conversationName,
-                                conversationNameView.getPaint(),
-                                conversationNameView.getWidth(),
+                                tvTitle.getPaint(),
+                                tvTitle.getWidth(),
                                 getString(R.string.plus_one),
                                 getString(R.string.plus_n)).toString(),
                         TextDirectionHeuristicsCompat.LTR);
-                conversationNameView.setText(formattedName);
+                tvTitle.setText(formattedName);
                 // In case phone numbers are mixed in the conversation name, we need to vocalize it.
                 final String vocalizedConversationName =
                         AccessibilityUtil.getVocalizedPhoneNumber(getResources(), conversationName);
-                conversationNameView.setContentDescription(vocalizedConversationName);
-                getActivity().setTitle(conversationName);
+                tvTitle.setContentDescription(vocalizedConversationName);
             } else {
                 final String appName = getString(R.string.app_name);
-                conversationNameView.setText(appName);
-                getActivity().setTitle(appName);
+                tvTitle.setText(appName);
             }
 
             // When conversation is showing and media picker is not showing, then hide the action
@@ -1599,8 +1581,7 @@ public class ConversationFragment extends Fragment implements ConversationDataLi
             }
         }
         actionBar.setDisplayShowTitleEnabled(false);
-        actionBar.setBackgroundDrawable(new ColorDrawable(
-                getResources().getColor(android.R.color.transparent)));
+        actionBar.setBackgroundDrawable(getResources().getDrawable(R.drawable.actionbar_underline_bg));
         UiUtils.setStatusBarColor(getActivity(), getResources().getColor(R.color.action_bar_background_color));
     }
 

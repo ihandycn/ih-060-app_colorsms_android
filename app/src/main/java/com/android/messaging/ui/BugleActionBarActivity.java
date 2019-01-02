@@ -350,7 +350,7 @@ public class BugleActionBarActivity extends AppCompatActivity implements ImeUtil
             UiUtils.setStatusBarColor(BugleActionBarActivity.this, getResources().getColor(R.color.primary_color));
             actionBar.setBackgroundDrawable(new ColorDrawable(
                     getResources().getColor(R.color.primary_color)));
-            actionBar.setHomeAsUpIndicator(R.drawable.ic_cancel_small_light);
+            actionBar.setHomeAsUpIndicator(R.drawable.ic_close_light);
             actionBar.show();
         }
     }

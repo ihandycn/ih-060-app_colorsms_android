@@ -17,7 +17,6 @@
 package com.android.messaging.ui.animation;
 
 import android.animation.TypeEvaluator;
-import android.app.Activity;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Rect;
@@ -39,34 +38,54 @@ import com.android.messaging.util.UiUtils;
  * This class handles the case where the viewToAnimate moves during the animation
  */
 public class PopupTransitionAnimation extends Animation {
-    /** The view we're animating */
+    /**
+     * The view we're animating
+     */
     private final View mViewToAnimate;
 
-    /** The rect to start the slide in animation from */
+    /**
+     * The rect to start the slide in animation from
+     */
     private final Rect mStartRect;
 
-    /** The rect of the currently animated view */
+    /**
+     * The rect of the currently animated view
+     */
     private Rect mCurrentRect;
 
-    /** The rect that we're animating to.  This can change during the animation */
+    /**
+     * The rect that we're animating to.  This can change during the animation
+     */
     private final Rect mDestRect;
 
-    /** The bounds of the popup in window coordinates.  Does not include notification bar */
+    /**
+     * The bounds of the popup in window coordinates.  Does not include notification bar
+     */
     private final Rect mPopupRect;
 
-    /** The bounds of the action bar in window coordinates.  We clip the popup to below this */
+    /**
+     * The bounds of the action bar in window coordinates.  We clip the popup to below this
+     */
     private final Rect mActionBarRect;
 
-    /** Interpolates between the start and end rect for every animation tick */
+    /**
+     * Interpolates between the start and end rect for every animation tick
+     */
     private final TypeEvaluator<Rect> mRectEvaluator;
 
-    /** The popup window that holds contains the animating view */
+    /**
+     * The popup window that holds contains the animating view
+     */
     private PopupWindow mPopupWindow;
 
-    /** The layout root for the popup which is where the animated view is rendered */
+    /**
+     * The layout root for the popup which is where the animated view is rendered
+     */
     private View mPopupRoot;
 
-    /** The action bar's view */
+    /**
+     * The action bar's view
+     */
     private final View mActionBarView;
 
     private Runnable mOnStartCallback;
@@ -185,7 +204,9 @@ public class PopupTransitionAnimation extends Animation {
         }
         // Update mDestRect as it may have moved during the animation
         mPopupRect.set(UiUtils.getMeasuredBoundsOnScreen(mPopupRoot));
-        mActionBarRect.set(UiUtils.getMeasuredBoundsOnScreen(mActionBarView));
+        if (mActionBarView != null) {
+            mActionBarRect.set(UiUtils.getMeasuredBoundsOnScreen(mActionBarView));
+        }
         computeDestRect();
 
         // Update currentRect to the new animated coordinates, and request mPopupRoot to redraw

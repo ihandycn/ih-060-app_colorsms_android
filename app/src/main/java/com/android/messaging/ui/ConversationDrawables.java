@@ -51,7 +51,8 @@ public class ConversationDrawables {
     private int mIncomingBubbleColor;
     private int mIncomingErrorBubbleColor;
     private int mIncomingAudioButtonColor;
-    private int mSelectedBubbleColor;
+    private int mIncomingSelectedBubbleColor;
+    private int mOutgoingSelectedBubbleColor;
     private int mThemeColor;
 
     public static ConversationDrawables get() {
@@ -78,7 +79,7 @@ public class ConversationDrawables {
         mIncomingBubbleNoArrowDrawable =
                 resources.getDrawable(R.drawable.message_bubble_incoming_no_arrow);
         mIncomingErrorBubbleDrawable = resources.getDrawable(R.drawable.msg_bubble_error);
-        mOutgoingBubbleDrawable =  resources.getDrawable(R.drawable.message_bubble_outgoing_new);
+        mOutgoingBubbleDrawable = resources.getDrawable(R.drawable.message_bubble_outgoing_new);
         mOutgoingBubbleNoArrowDrawable =
                 resources.getDrawable(R.drawable.message_bubble_outgoing_no_arrow);
         mAudioPlayButtonDrawable = resources.getDrawable(R.drawable.ic_audio_play);
@@ -102,12 +103,13 @@ public class ConversationDrawables {
                 resources.getColor(R.color.message_error_bubble_color_incoming);
         mIncomingAudioButtonColor =
                 resources.getColor(R.color.message_audio_button_color_incoming);
-        mSelectedBubbleColor = resources.getColor(R.color.message_bubble_color_selected);
+        mIncomingSelectedBubbleColor = resources.getColor(R.color.message_bubble_color_selected_incoming);
+        mOutgoingSelectedBubbleColor = resources.getColor(R.color.message_bubble_color_selected_outgoing);
         mThemeColor = resources.getColor(R.color.primary_color);
     }
 
     public Drawable getBubbleDrawable(final boolean selected, final boolean incoming,
-            final boolean needArrow, final boolean isError) {
+                                      final boolean needArrow, final boolean isError) {
         final Drawable protoDrawable;
         if (needArrow) {
             if (incoming) {
@@ -123,16 +125,20 @@ public class ConversationDrawables {
         }
 
         int color;
-        if (selected) {
-            color = mSelectedBubbleColor;
-        } else if (incoming) {
+        if (incoming) {
             if (isError) {
                 color = mIncomingErrorBubbleColor;
+            } else if (selected) {
+                color = mIncomingSelectedBubbleColor;
             } else {
                 color = mIncomingBubbleColor;
             }
         } else {
-            color = mOutgoingBubbleColor;
+            if (selected) {
+                color = mOutgoingSelectedBubbleColor;
+            } else {
+                color = mOutgoingBubbleColor;
+            }
         }
 
         return ImageUtils.getTintedDrawable(mContext, protoDrawable, color);
@@ -159,7 +165,7 @@ public class ConversationDrawables {
 
     public Drawable getAudioProgressBackgroundDrawable(final boolean incoming) {
         return incoming ? mIncomingAudioProgressBackgroundDrawable :
-            mOutgoingAudioProgressBackgroundDrawable;
+                mOutgoingAudioProgressBackgroundDrawable;
     }
 
     public Drawable getFastScrollThumbDrawable(final boolean pressed) {
@@ -173,7 +179,7 @@ public class ConversationDrawables {
 
     public Drawable getFastScrollPreviewDrawable(boolean positionRight) {
         Drawable protoDrawable = positionRight ? mFastScrollPreviewDrawableRight :
-            mFastScrollPreviewDrawableLeft;
+                mFastScrollPreviewDrawableLeft;
         return ImageUtils.getTintedDrawable(mContext, protoDrawable, mThemeColor);
     }
 }
