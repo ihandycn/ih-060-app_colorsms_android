@@ -176,8 +176,8 @@ public class MediaPicker extends Fragment implements DraftMessageSubscriptionDat
         mBinding.bind(DataModel.get().createMediaPickerData(context));
         mEnabledChoosers = new ArrayList<MediaChooser>();
         mChoosers = new MediaChooser[] {
-            new CameraMediaChooser(this),
-            new GalleryMediaChooser(this),
+//            new CameraMediaChooser(this),
+//            new GalleryMediaChooser(this),
             new AudioMediaChooser(this),
         };
 
