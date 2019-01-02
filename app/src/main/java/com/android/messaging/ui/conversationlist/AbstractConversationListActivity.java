@@ -214,9 +214,9 @@ public abstract class AbstractConversationListActivity  extends BugleActionBarAc
         } else {
             avatarUri = null;
         }
-        final AddContactsConfirmationDialog dialog = new AddContactsConfirmationDialog(
-                this, avatarUri, conversation.otherParticipantNormalizedDestination);
-        dialog.show();
+        final AddContactsConfirmationDialog dialog =
+                AddContactsConfirmationDialog.newInstance(avatarUri, conversation.otherParticipantNormalizedDestination);
+        UiUtils.showDialogFragment(this, dialog);
         exitMultiSelectState();
     }
 

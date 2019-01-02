@@ -17,6 +17,7 @@
 package com.android.messaging.util;
 
 import android.Manifest;
+import android.app.Activity;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
@@ -203,9 +204,9 @@ public class ContactUtil {
                     ContactsContract.QuickContact.MODE_LARGE, null);
         } else if (!TextUtils.isEmpty(normalizedDestination) && !TextUtils.equals(
                 normalizedDestination, ParticipantData.getUnknownSenderDestination())) {
-            final AddContactsConfirmationDialog dialog = new AddContactsConfirmationDialog(
-                    view.getContext(), avatarUri, normalizedDestination);
-            dialog.show();
+            if (view.getContext() instanceof Activity) {
+                UiUtils.showDialogFragment((Activity) view.getContext(), AddContactsConfirmationDialog.newInstance(avatarUri, normalizedDestination));
+            }
         }
     }
 

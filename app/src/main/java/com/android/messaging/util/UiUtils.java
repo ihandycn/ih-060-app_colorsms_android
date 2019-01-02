@@ -17,6 +17,8 @@
 package com.android.messaging.util;
 
 import android.app.Activity;
+import android.app.DialogFragment;
+import android.app.FragmentTransaction;
 import android.content.Context;
 import android.content.ContextWrapper;
 import android.content.pm.ActivityInfo;
@@ -83,6 +85,8 @@ public class UiUtils {
 
     public static final Interpolator EASE_OUT_INTERPOLATOR = new CubicBezierInterpolator(
             0.0f, 0.0f, 0.2f, 1f);
+
+    private static final String TAG_DIALOG_FRAGMENT = "dialog_fragment";
 
     /** Show a simple toast at the bottom */
     public static void showToastAtBottom(final int messageId) {
@@ -405,6 +409,17 @@ public class UiUtils {
                 LogUtil.e(LogUtil.BUGLE_TAG, "Error setting shadow visibility", ex);
             }
         }
+    }
+
+    public static void showDialogFragment(Activity activity, DialogFragment dialogFragment) {
+        if (activity == null || activity.isFinishing()) {
+            return;
+        }
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1 && activity.isDestroyed()) {
+            return;
+        }
+        FragmentTransaction ft = activity.getFragmentManager().beginTransaction();
+        dialogFragment.show(ft, TAG_DIALOG_FRAGMENT);
     }
 
     /**

@@ -15,70 +15,90 @@
  */
 package com.android.messaging.ui.contact;
 
-import android.app.AlertDialog;
-import android.content.Context;
 import android.content.DialogInterface;
-import android.content.res.Resources;
 import android.net.Uri;
+import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.Button;
 import android.widget.TextView;
 
+import com.android.messaging.BaseDialog;
 import com.android.messaging.R;
 import com.android.messaging.ui.ContactIconView;
 import com.android.messaging.ui.UIIntents;
 import com.android.messaging.util.AccessibilityUtil;
 
-public class AddContactsConfirmationDialog implements DialogInterface.OnClickListener {
-    private final Context mContext;
-    private final Uri mAvatarUri;
-    private final String mNormalizedDestination;
+public class AddContactsConfirmationDialog extends BaseDialog {
 
-    public AddContactsConfirmationDialog(final Context context, final Uri avatarUri,
-            final String normalizedDestination) {
-        mContext = context;
-        mAvatarUri = avatarUri;
-        mNormalizedDestination = normalizedDestination;
-    }
+    private static final String BUNDLE_KEY_AVATAR_URI = "BUNDLE_KEY_AVATAR_URI";
+    private static final String BUNDLE_KEY_DESTINATION = "BUNDLE_KEY_DESTINATION";
 
-    public void show() {
-        final int confirmAddContactStringId = R.string.add_contact_confirmation;
-        final int cancelStringId = android.R.string.cancel;
-        final AlertDialog alertDialog = new AlertDialog.Builder(mContext)
-        .setTitle(R.string.add_contact_confirmation_dialog_title)
-        .setView(createBodyView())
-        .setPositiveButton(confirmAddContactStringId, this)
-        .setNegativeButton(cancelStringId, null)
-        .create();
-        alertDialog.show();
-        final Resources resources = mContext.getResources();
-        final Button cancelButton = alertDialog.getButton(DialogInterface.BUTTON_NEGATIVE);
-        if (cancelButton != null) {
-            cancelButton.setTextColor(resources.getColor(R.color.contact_picker_button_text_color));
-        }
-        final Button addButton = alertDialog.getButton(DialogInterface.BUTTON_POSITIVE);
-        if (addButton != null) {
-            addButton.setTextColor(resources.getColor(R.color.contact_picker_button_text_color));
-        }
+    private String mAvatarUri;
+    private String mNormalizedDestination;
+
+    public static AddContactsConfirmationDialog newInstance(Uri avatarUri, String normalizedDestination) {
+        AddContactsConfirmationDialog dialog = new AddContactsConfirmationDialog();
+
+        Bundle bundle = new Bundle();
+        bundle.putString(BUNDLE_KEY_AVATAR_URI, avatarUri == null ? "" : avatarUri.toString());
+        bundle.putString(BUNDLE_KEY_DESTINATION, normalizedDestination);
+        dialog.setArguments(bundle);
+        return dialog;
     }
 
     @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        mAvatarUri = getArguments() != null ? getArguments().getString(BUNDLE_KEY_AVATAR_URI) : null;
+        mNormalizedDestination = getArguments() != null ? getArguments().getString(BUNDLE_KEY_DESTINATION) : null;
+    }
+
+    @Override
+    protected CharSequence getMessages() {
+        return null;
+    }
+
+    @Override
+    protected CharSequence getTitle() {
+        return getString(R.string.add_contact_confirmation_dialog_title);
+    }
+
+    @Override
+    protected CharSequence getNegativeButtonText() {
+        return getString(android.R.string.cancel);
+    }
+
+    @Override
+    protected CharSequence getPositiveButtonText() {
+        return getString(R.string.add_contact_confirmation);
+    }
+
+    @Override
+    protected View getContentView() {
+        return createBodyView();
+    }
+
     public void onClick(final DialogInterface dialog, final int which) {
-        UIIntents.get().launchAddContactActivity(mContext, mNormalizedDestination);
+        UIIntents.get().launchAddContactActivity(getActivity(), mNormalizedDestination);
     }
 
     private View createBodyView() {
-        final View view = LayoutInflater.from(mContext).inflate(
+        final View view = LayoutInflater.from(getActivity()).inflate(
                 R.layout.add_contacts_confirmation_dialog_body, null);
         final ContactIconView iconView = (ContactIconView) view.findViewById(R.id.contact_icon);
-        iconView.setImageResourceUri(mAvatarUri);
+        if (TextUtils.isEmpty(mAvatarUri)) {
+            iconView.setImageResourceUri(null);
+        } else {
+            iconView.setImageResourceUri(Uri.parse(mAvatarUri));
+        }
+
         final TextView textView = (TextView) view.findViewById(R.id.participant_name);
         textView.setText(mNormalizedDestination);
         // Accessibility reason : in case phone numbers are mixed in the display name,
         // we need to vocalize it for talkback.
         final String vocalizedDisplayName = AccessibilityUtil.getVocalizedPhoneNumber(
-                mContext.getResources(), mNormalizedDestination);
+                getResources(), mNormalizedDestination);
         textView.setContentDescription(vocalizedDisplayName);
         return view;
     }

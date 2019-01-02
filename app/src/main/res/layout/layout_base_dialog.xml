@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:launcher="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:id="@+id/dialog_root_view"
+    android:background="@color/dialog_background">
+
+    <LinearLayout
+        android:id="@+id/linearLayout"
+        android:layout_width="300dp"
+        android:layout_height="wrap_content"
+        android:background="@drawable/dialog_bg"
+        android:orientation="vertical"
+        launcher:layout_constraintBottom_toBottomOf="parent"
+        launcher:layout_constraintLeft_toLeftOf="parent"
+        launcher:layout_constraintRight_toRightOf="parent"
+        launcher:layout_constraintTop_toTopOf="parent">
+
+        <com.superapps.view.AutoResizeTextView
+            android:id="@+id/dialog_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:maxHeight="72dp"
+            launcher:autoSizeMaxTextSize="@dimen/dialog_content_title_size"
+            android:textColor="@color/color_dialog_title_text"
+            android:alpha="@dimen/dialog_content_title"
+            android:textSize="@dimen/dialog_content_title_size"
+            android:text="Add to Contacts?"
+            android:layout_marginLeft="@dimen/dialog_content_margin_left"
+            android:layout_marginRight="@dimen/dialog_content_margin_right"
+            android:layout_marginTop="@dimen/dialog_content_margin_top"
+            tools:ignore="RelativeOverlap"
+            android:layout_marginEnd="@dimen/dialog_content_margin_right"
+            android:layout_marginStart="@dimen/dialog_content_margin_left"
+            launcher:typefaceFileName="@string/dialog_content_title_font"/>
+
+
+        <FrameLayout
+            android:id="@+id/content_view"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/dialog_content_margin_left"
+            android:layout_marginRight="@dimen/dialog_content_margin_right"
+            android:layout_marginTop="@dimen/dialog_content_margin_top"
+            android:clipChildren="false"
+            tools:ignore="RelativeOverlap"
+            android:layout_marginEnd="@dimen/dialog_content_margin_right"
+            android:layout_marginStart="@dimen/dialog_content_margin_left" >
+
+            <com.superapps.view.TypefacedTextView
+                android:id="@+id/dialog_content"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/color_dialog_content_text"
+                android:lineSpacingExtra="@dimen/dialog_text_extra_line_height"
+                android:lineSpacingMultiplier="@dimen/dialog_text_line_height_multiple"
+                android:layout_marginTop="@dimen/dialog_content_text_margin_top"
+                android:alpha="@dimen/dialog_content_text"
+                android:textSize="@dimen/dialog_content_text_size"
+                android:text="I am a message"
+                launcher:typefaceFileName="@string/dialog_content_text_font"/>
+
+        </FrameLayout>
+
+        <LinearLayout android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/btn_group_horizontal"
+            android:orientation="horizontal"
+            android:layout_marginLeft="@dimen/dialog_group_btn_margin_left"
+            android:layout_marginRight="@dimen/dialog_group_btn_margin_right"
+            android:layout_marginTop="@dimen/dialog_group_btn_margin_top"
+            android:layout_marginBottom="@dimen/dialog_group_btn_margin_bottom"
+            android:gravity="center_horizontal"
+            xmlns:android="http://schemas.android.com/apk/res/android"
+            android:layout_marginStart="@dimen/dialog_group_btn_margin_left"
+            android:layout_marginEnd="@dimen/dialog_group_btn_margin_right">
+
+            <com.superapps.view.TypefacedTextView
+                android:id="@+id/negative_btn"
+                android:layout_width="0dp"
+                android:layout_height="@dimen/dialog_btn_height"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:background="@drawable/dialog_negative_button_bg"
+                android:text="@android:string/cancel"
+                android:textColor="#515151"
+                android:textAllCaps="true"
+                android:textSize="@dimen/dialog_ok_btn_text_size"
+                android:paddingStart="@dimen/dialog_two_btn_padding_left"
+                android:paddingEnd="@dimen/dialog_two_btn_padding_right"
+                launcher:typefaceFileName="@string/dialog_ok_btn_font"
+                android:layout_marginEnd="16dp"/>
+
+            <com.superapps.view.TypefacedTextView
+                android:id="@+id/ok_btn"
+                android:layout_width="0dp"
+                android:layout_height="@dimen/dialog_btn_height"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:background="@drawable/dialog_positive_button_bg"
+                android:text="@android:string/ok"
+                android:textColor="@android:color/white"
+                android:textAllCaps="true"
+                android:textSize="@dimen/dialog_ok_btn_text_size"
+                android:paddingStart="@dimen/dialog_two_btn_padding_left"
+                android:paddingEnd="@dimen/dialog_two_btn_padding_right"
+                launcher:typefaceFileName="@string/dialog_ok_btn_font"
+                 />
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+</android.support.constraint.ConstraintLayout>

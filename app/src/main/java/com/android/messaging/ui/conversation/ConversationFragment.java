@@ -804,7 +804,7 @@ public class ConversationFragment extends Fragment implements ConversationDataLi
                 Assert.notNull(participant);
                 final String destination = participant.getNormalizedDestination();
                 final Uri avatarUri = AvatarUriUtil.createAvatarUri(participant);
-                (new AddContactsConfirmationDialog(getActivity(), avatarUri, destination)).show();
+                UiUtils.showDialogFragment(getActivity(), AddContactsConfirmationDialog.newInstance(avatarUri, destination));
                 return true;
 
             case R.id.action_delete:

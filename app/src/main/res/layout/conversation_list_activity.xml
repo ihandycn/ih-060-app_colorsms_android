@@ -4,13 +4,14 @@
     android:id="@+id/audio_attachment_background"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/attachment_chooser_audio_background"
+    android:background="@color/action_bar_background_color"
     android:orientation="vertical">
 
     <android.support.v7.widget.Toolbar
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/action_bar_height">
+        android:layout_height="@dimen/action_bar_height"
+        app:elevation="@dimen/action_bar_elevation">
 
         <com.superapps.view.TypefacedTextView
             android:id="@+id/toolbar_title"
