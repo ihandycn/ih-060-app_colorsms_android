@@ -15,12 +15,13 @@
  */
 package com.android.messaging.ui.contact;
 
-import android.content.DialogInterface;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.android.messaging.BaseDialog;
@@ -64,6 +65,26 @@ public class AddContactsConfirmationDialog extends BaseDialog {
         return getString(R.string.add_contact_confirmation_dialog_title);
     }
 
+    @Nullable
+    @Override
+    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
+        setOnNegativeButtonClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dismissAllowingStateLoss();
+            }
+        });
+
+        setOnPositiveButtonClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                UIIntents.get().launchAddContactActivity(getActivity(), mNormalizedDestination);
+
+            }
+        });
+        return super.onCreateView(inflater, container, savedInstanceState);
+    }
+
     @Override
     protected CharSequence getNegativeButtonText() {
         return getString(android.R.string.cancel);
@@ -71,16 +92,12 @@ public class AddContactsConfirmationDialog extends BaseDialog {
 
     @Override
     protected CharSequence getPositiveButtonText() {
-        return getString(R.string.add_contact_confirmation);
+        return getString(R.string.dialog_add_contact_confirmation);
     }
 
     @Override
     protected View getContentView() {
         return createBodyView();
-    }
-
-    public void onClick(final DialogInterface dialog, final int which) {
-        UIIntents.get().launchAddContactActivity(getActivity(), mNormalizedDestination);
     }
 
     private View createBodyView() {
