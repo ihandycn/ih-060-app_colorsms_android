@@ -494,7 +494,7 @@ public class MediaPicker extends Fragment implements DraftMessageSubscriptionDat
         if (isFullScreen() && mSelectedChooser != null) {
             mSelectedChooser.updateActionBar(actionBar);
         } else {
-            actionBar.hide();
+//            actionBar.hide();
         }
     }
 

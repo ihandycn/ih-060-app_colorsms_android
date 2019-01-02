@@ -421,7 +421,7 @@ public class ConversationInputManager implements ConversationInput.ConversationI
                 private void handleStateChange() {
                     onVisibilityChanged(isOpen());
                     mHost.invalidateActionBar();
-                    updateHostOptionsMenu();
+//                    updateHostOptionsMenu();
                 }
 
                 @Override

@@ -30,9 +30,9 @@ import android.widget.LinearLayout;
 
 import com.android.messaging.R;
 import com.android.messaging.ui.PagingAwareViewPager;
-import com.android.messaging.util.Assert;
 import com.android.messaging.util.OsUtil;
 import com.android.messaging.util.UiUtils;
+import com.superapps.util.Dimensions;
 
 /**
  * Custom layout panel which makes the MediaPicker animations seamless and synchronized
@@ -48,6 +48,7 @@ public class MediaPickerPanel extends ViewGroup {
     private LinearLayout mTabStrip;
     private boolean mFullScreenOnly;
     private PagingAwareViewPager mViewPager;
+    private LinearLayout mMediaButtons;
 
     /**
      * True if the MediaPicker is full screen or animating into it
@@ -99,6 +100,17 @@ public class MediaPickerPanel extends ViewGroup {
         super.onFinishInflate();
         mTabStrip = (LinearLayout) findViewById(R.id.mediapicker_tabstrip);
         mViewPager = (PagingAwareViewPager) findViewById(R.id.mediapicker_view_pager);
+        mMediaButtons = findViewById(R.id.media_buttons);
+        mMediaButtons.findViewById(R.id.media_camera).setOnClickListener(v -> {
+
+        });
+        mMediaButtons.findViewById(R.id.media_photo).setOnClickListener(v -> {
+
+        });
+        mMediaButtons.findViewById(R.id.media_voice).setOnClickListener(v -> {
+            setDesiredHeight(Dimensions.pxFromDp(196), true);
+            mMediaButtons.setVisibility(View.GONE);
+        });
         mTouchHandler = new TouchHandler();
         setOnTouchListener(mTouchHandler);
         mViewPager.setOnTouchListener(mTouchHandler);
@@ -109,7 +121,7 @@ public class MediaPickerPanel extends ViewGroup {
 
             @Override
             public void onLayoutChange(View v, int left, int top, int right, int bottom,
-                    int oldLeft, int oldTop, int oldRight, int oldBottom) {
+                                       int oldLeft, int oldTop, int oldRight, int oldBottom) {
                 final boolean newLandscapeMode = UiUtils.isLandscapeMode();
                 if (mLandscapeMode != newLandscapeMode) {
                     mLandscapeMode = newLandscapeMode;
@@ -141,20 +153,10 @@ public class MediaPickerPanel extends ViewGroup {
 
         measureChild(mTabStrip, widthMeasureSpec, heightMeasureSpec);
 
-        int tabStripHeight;
-        if (requiresFullScreen()) {
-            // Ensure that the tab strip is always visible, even in full screen.
-            tabStripHeight = mTabStrip.getMeasuredHeight();
-        } else {
-            // Slide out the tab strip at the end of the animation to full screen.
-            tabStripHeight = Math.min(mTabStrip.getMeasuredHeight(),
-                    requestedHeight - desiredHeight);
-        }
-
         // If we are animating and have an interim desired height, use the default height. We can't
         // take the max here as on some devices the mDefaultViewPagerHeight may be too big in
         // landscape mode after animation.
-        final int tabAdjustedDesiredHeight = desiredHeight - tabStripHeight;
+        final int tabAdjustedDesiredHeight = desiredHeight;
         final int viewPagerHeight =
                 tabAdjustedDesiredHeight <= 1 ? mDefaultViewPagerHeight : tabAdjustedDesiredHeight;
 
@@ -162,19 +164,18 @@ public class MediaPickerPanel extends ViewGroup {
                 viewPagerHeight, MeasureSpec.EXACTLY);
         measureChild(mViewPager, widthMeasureSpec, viewPagerHeightMeasureSpec);
         setMeasuredDimension(mViewPager.getMeasuredWidth(), desiredHeight);
+        measureChild(mMediaButtons, widthMeasureSpec, viewPagerHeightMeasureSpec);
+        setMeasuredDimension(mMediaButtons.getMeasuredWidth(), desiredHeight);
     }
 
     @Override
     protected void onLayout(final boolean changed, final int left, final int top, final int right,
-            final int bottom) {
+                            final int bottom) {
         int y = top;
         final int width = right - left;
 
-        final int viewPagerHeight = mViewPager.getMeasuredHeight();
-        mViewPager.layout(0, y, width, y + viewPagerHeight);
-        y += viewPagerHeight;
-
-        mTabStrip.layout(0, y, width, y + mTabStrip.getMeasuredHeight());
+        mViewPager.layout(0, y, width, y + getMeasuredHeight());
+        mMediaButtons.layout(0, y, width, y + getMeasuredHeight());
     }
 
     void onChooserChanged() {
@@ -236,8 +237,9 @@ public class MediaPickerPanel extends ViewGroup {
     /**
      * Expand the media picker panel. Since we always set the pager adapter to null when the panel
      * is collapsed, we need to restore the adapter and the starting page.
-     * @param expanded expanded or collapsed
-     * @param animate need animation
+     *
+     * @param expanded     expanded or collapsed
+     * @param animate      need animation
      * @param startingPage the desired selected page to start
      */
     void setExpanded(final boolean expanded, final boolean animate, final int startingPage) {
@@ -245,7 +247,7 @@ public class MediaPickerPanel extends ViewGroup {
     }
 
     private void setExpanded(final boolean expanded, final boolean animate, final int startingPage,
-            final boolean force) {
+                             final boolean force) {
         if (expanded == mExpanded && !force) {
             return;
         }
@@ -260,6 +262,7 @@ public class MediaPickerPanel extends ViewGroup {
         if (expanded) {
             setupViewPager(startingPage);
             mMediaPicker.dispatchOpened();
+            mMediaButtons.setVisibility(View.VISIBLE);
         } else {
             mMediaPicker.dispatchDismissed();
         }
@@ -278,7 +281,7 @@ public class MediaPickerPanel extends ViewGroup {
     private void setDesiredHeight(int height, final boolean animate) {
         final int startHeight = mCurrentDesiredHeight;
         if (height == LayoutParams.WRAP_CONTENT) {
-            height = measureHeight();
+            height = mDefaultViewPagerHeight;
         }
         clearAnimation();
         if (animate) {
@@ -286,7 +289,7 @@ public class MediaPickerPanel extends ViewGroup {
             final Animation animation = new Animation() {
                 @Override
                 protected void applyTransformation(final float interpolatedTime,
-                        final Transformation t) {
+                                                   final Transformation t) {
                     mCurrentDesiredHeight = (int) (startHeight + deltaHeight * interpolatedTime);
                     requestLayout();
                 }
@@ -303,15 +306,6 @@ public class MediaPickerPanel extends ViewGroup {
             mCurrentDesiredHeight = height;
         }
         requestLayout();
-    }
-
-    /**
-     * @return The minimum total height of the view
-     */
-    private int measureHeight() {
-        final int measureSpec = MeasureSpec.makeMeasureSpec(Integer.MAX_VALUE, MeasureSpec.AT_MOST);
-        measureChild(mTabStrip, measureSpec, measureSpec);
-        return mDefaultViewPagerHeight + mTabStrip.getMeasuredHeight();
     }
 
     /**
@@ -484,36 +478,6 @@ public class MediaPickerPanel extends ViewGroup {
                     if (!mMoved || mDownEvent == null) {
                         return false;
                     }
-                    final float dx = motionEvent.getRawX() - mDownEvent.getRawX();
-                    final float dy = motionEvent.getRawY() - mDownEvent.getRawY();
-
-                    final float dt =
-                            (motionEvent.getEventTime() - mDownEvent.getEventTime()) / 1000.0f;
-                    final float yVelocity = dy / dt;
-
-                    boolean handled = false;
-
-                    // Vertical swipe occurred if the direction is as least mostly in the y
-                    // component and has the required velocity (px/sec)
-                    if ((dx == 0 || (Math.abs(dy) / Math.abs(dx)) > DIRECTION_RATIO) &&
-                            Math.abs(yVelocity) > mFlingThresholdPx) {
-                        if (yVelocity < 0 && mExpanded) {
-                            setFullScreenView(true, true);
-                            handled = true;
-                        } else if (yVelocity > 0) {
-                            if (mFullScreen && yVelocity < mBigFlingThresholdPx) {
-                                setFullScreenView(false, true);
-                            } else {
-                                setExpanded(false, true, PAGE_NOT_SET);
-                            }
-                            handled = true;
-                        }
-                    }
-
-                    if (!handled) {
-                        // If they didn't swipe enough, animate back to resting state
-                        setDesiredHeight(getDesiredHeight(), true);
-                    }
                     resetState();
                     break;
                 }
@@ -530,18 +494,6 @@ public class MediaPickerPanel extends ViewGroup {
                 case MotionEvent.ACTION_MOVE: {
                     if (mDownEvent == null) {
                         return mMoved;
-                    }
-
-                    final float dx = mDownEvent.getRawX() - motionEvent.getRawX();
-                    final float dy = mDownEvent.getRawY() - motionEvent.getRawY();
-                    // Don't act if the move is mostly horizontal
-                    if (Math.abs(dy) > mTouchSlop &&
-                            (Math.abs(dy) / Math.abs(dx)) > DIRECTION_RATIO) {
-                        setDesiredHeight((int) (mDownHeight + dy), false);
-                        mMoved = true;
-                        if (dy < -mTouchSlop) {
-                            mMovedDown = true;
-                        }
                     }
                     return mMoved;
                 }
