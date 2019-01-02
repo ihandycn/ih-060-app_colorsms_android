@@ -16,6 +16,18 @@
         android:id="@+id/emoji_item_pager"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_above="@id/dot_indicator_view"
-        />
+        android:layout_above="@id/dot_indicator_view" />
+
+    <ImageView
+        android:id="@+id/delete_emoji_btn"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginBottom="27.7dp"
+        android:layout_marginEnd="20dp"
+        android:background="@drawable/material_compat_button_bg"
+        android:scaleType="centerInside"
+        android:src="@drawable/emoji_delete_icon"
+        android:visibility="gone" />
 </RelativeLayout>

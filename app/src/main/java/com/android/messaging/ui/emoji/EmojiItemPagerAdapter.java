@@ -21,11 +21,13 @@ public class EmojiItemPagerAdapter extends PagerAdapter {
     private final int EMOJI_COUNT_ONE_PAGE = EMOJI_COLUMNS * EMOJI_ROWS - 1;
 
     private List<List<BaseEmojiInfo>> mData;
+    private EmojiPickerFragment.OnEmojiClickListener mOnEmojiClickListener;
 
-    EmojiItemPagerAdapter(List<BaseEmojiInfo> data) {
+    EmojiItemPagerAdapter(List<BaseEmojiInfo> data, EmojiPickerFragment.OnEmojiClickListener emojiClickListener) {
         if (data == null || data.isEmpty()) {
             return;
         }
+        mOnEmojiClickListener = emojiClickListener;
         mData = EmojiManager.subList(data, EMOJI_COUNT_ONE_PAGE);
     }
 
@@ -46,7 +48,7 @@ public class EmojiItemPagerAdapter extends PagerAdapter {
         RecyclerView recyclerView = new RecyclerView(context);
         recyclerView.setOverScrollMode(View.OVER_SCROLL_NEVER);
         recyclerView.setPadding(Dimensions.pxFromDp(20), Dimensions.pxFromDp(17.7f), Dimensions.pxFromDp(20), Dimensions.pxFromDp(11.7f));
-        EmojiItemRecyclerAdapter adapter = new EmojiItemRecyclerAdapter(mData.get(position));
+        EmojiItemRecyclerAdapter adapter = new EmojiItemRecyclerAdapter(mData.get(position), mOnEmojiClickListener);
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new GridLayoutManager(context, EMOJI_COLUMNS));
         recyclerView.addItemDecoration(new EmojiItemDecoration(EMOJI_COLUMNS, EMOJI_ROWS, Dimensions.pxFromDp(29), Dimensions.pxFromDp(29)));

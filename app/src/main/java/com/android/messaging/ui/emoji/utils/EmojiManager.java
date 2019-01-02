@@ -13,11 +13,11 @@ public class EmojiManager {
     private static final String PREF_FILE_NAME = "emoji";
     private static final String PREF_RECENT_STICKER = "pref_recent_sticker";
 
-    public static List<String> getTabSticker() {
+    static List<String> getTabSticker() {
         return Preferences.get(PREF_FILE_NAME).getStringList(PREF_TAB_STICKER);
     }
 
-    public static void addTabSticker(List<String> nameList) {
+    static void addTabSticker(List<String> nameList) {
         Preferences.get(PREF_FILE_NAME).putStringList(PREF_TAB_STICKER, nameList);
     }
 
@@ -26,10 +26,11 @@ public class EmojiManager {
         if (data.contains(name)) {
             throw new IllegalStateException("The sticker of " + name + " already added to emoji picker!!!");
         }
-        data.add(name);
+        data.add(0, name);
         Preferences.get(PREF_FILE_NAME).putStringList(PREF_TAB_STICKER, data);
     }
 
+    @SuppressWarnings("unused")
     public static void removeTabSticker(String name) {
         List<String> data = getTabSticker();
         if (!data.contains(name)) {
@@ -61,6 +62,9 @@ public class EmojiManager {
         Preferences.get(PREF_FILE_NAME).putStringList(PREF_RECENT_STICKER, list);
     }
 
+    public static boolean isTabSticker(String name) {
+        return getTabSticker().contains(name);
+    }
 
     public static List<List<BaseEmojiInfo>> subList(List<BaseEmojiInfo> data, int pageCount) {
         int count = (int) Math.ceil(data.size() / (float) pageCount);

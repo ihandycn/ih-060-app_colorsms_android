@@ -69,8 +69,16 @@ public class EmojiConfig implements HSLibraryConfig.ILibraryListener {
         return HSMapUtils.optInteger(sConfigMap, defaultValue, path);
     }
 
-    @SuppressWarnings("unchecked")
     public @NonNull List<EmojiPackageInfo> getAddedEmojiFromConfig() {
+        return getEmojiFromConfig(true);
+    }
+
+    public @NonNull List<EmojiPackageInfo> getStoreEmojiFromConfig() {
+        return getEmojiFromConfig(false);
+    }
+
+    @SuppressWarnings("unchecked")
+    private @NonNull List<EmojiPackageInfo> getEmojiFromConfig(boolean isMustBeAdded) {
         if (sConfigMap == null || sConfigMap.isEmpty()) {
             throw new IllegalStateException("The emoji config is null!!!!");
         }
@@ -90,14 +98,21 @@ public class EmojiConfig implements HSLibraryConfig.ILibraryListener {
             Map<String, ?> configMap = configMaps.get(i);
 
             packageInfo.mName = (String) configMap.get("Name");
-            if (isFirstLoad) {
-                if (i < presetEmojiCount) {
-                    allAddedSticker.add(packageInfo.mName);
+            if (isMustBeAdded) {
+                if (isFirstLoad) {
+                    if (i < presetEmojiCount) {
+                        allAddedSticker.add(packageInfo.mName);
+                    } else {
+                        break;
+                    }
                 } else {
-                    break;
+                    if (!allAddedSticker.contains(packageInfo.mName)) {
+                        continue;
+                    }
                 }
             } else {
-                if (!allAddedSticker.contains(packageInfo.mName)) {
+                // store emoji
+                if (i < presetEmojiCount) {
                     continue;
                 }
             }
@@ -176,8 +191,26 @@ public class EmojiConfig implements HSLibraryConfig.ILibraryListener {
             result.add(packageInfo);
         }
 
-        if (isFirstLoad) {
-            EmojiManager.addTabSticker(allAddedSticker);
+        if (isMustBeAdded) {
+            if (isFirstLoad) {
+                EmojiManager.addTabSticker(allAddedSticker);
+            } else {
+                result = order(result, allAddedSticker);
+            }
+        }
+        return result;
+    }
+
+    private List<EmojiPackageInfo> order(List<EmojiPackageInfo> data, List<String> orderList) {
+        List<EmojiPackageInfo> result = new ArrayList<>(data.size());
+        for (int i = 0; i < orderList.size(); i++) {
+            String name = orderList.get(i);
+            for (EmojiPackageInfo info : data) {
+                if (info.mName.equals(name)) {
+                    result.add(info);
+                    break;
+                }
+            }
         }
         return result;
     }

@@ -13,9 +13,11 @@ import java.util.List;
 
 public class EmojiItemRecyclerAdapter extends RecyclerView.Adapter<EmojiItemRecyclerAdapter.EmojiViewHolder> {
     private List<BaseEmojiInfo> mData;
+    private EmojiPickerFragment.OnEmojiClickListener mOnEmojiClickListener;
 
-    EmojiItemRecyclerAdapter(List<BaseEmojiInfo> data) {
+    EmojiItemRecyclerAdapter(List<BaseEmojiInfo> data, EmojiPickerFragment.OnEmojiClickListener emojiClickListener) {
         mData = data;
+        mOnEmojiClickListener = emojiClickListener;
     }
 
     @NonNull
@@ -30,8 +32,13 @@ public class EmojiItemRecyclerAdapter extends RecyclerView.Adapter<EmojiItemRecy
         if (!(info instanceof EmojiInfo)) {
             throw new IllegalStateException("info must be EmojiInfo!!!");
         }
-
-        holder.textView.setText(new String(Character.toChars(((EmojiInfo) info).mEmojiValue)));
+        EmojiInfo emojiInfo = (EmojiInfo) info;
+        holder.textView.setText(emojiInfo.mEmoji);
+        holder.textView.setOnClickListener(v -> {
+            if (mOnEmojiClickListener != null) {
+                mOnEmojiClickListener.emojiClick(emojiInfo);
+            }
+        });
     }
 
     @Override

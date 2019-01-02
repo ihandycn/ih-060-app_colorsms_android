@@ -24,15 +24,15 @@ public class StickerItemPagerAdapter extends PagerAdapter {
     private final int STICKER_COUNT_ONE_PAGE = STICKER_COLUMNS * STICKER_ROWS;
 
     private List<List<BaseEmojiInfo>> mData;
-    private View.OnClickListener mOnItemClickListener;
+    private EmojiPickerFragment.OnEmojiClickListener mOnEmojiClickListener;
     private boolean mIsRecentPage;
 
-    StickerItemPagerAdapter(List<BaseEmojiInfo> data, View.OnClickListener onItemClickListener) {
-        this(false, data, onItemClickListener);
+    StickerItemPagerAdapter(List<BaseEmojiInfo> data, EmojiPickerFragment.OnEmojiClickListener emojiClickListener) {
+        this(false, data, emojiClickListener);
     }
 
-    StickerItemPagerAdapter(boolean isRecentPage, List<BaseEmojiInfo> data, View.OnClickListener onItemClickListener) {
-        mOnItemClickListener = onItemClickListener;
+    StickerItemPagerAdapter(boolean isRecentPage, List<BaseEmojiInfo> data, EmojiPickerFragment.OnEmojiClickListener emojiClickListener) {
+        mOnEmojiClickListener = emojiClickListener;
         mIsRecentPage = isRecentPage;
         if (data == null || data.isEmpty()) {
             mData = new ArrayList<>();
@@ -74,7 +74,7 @@ public class StickerItemPagerAdapter extends PagerAdapter {
             RecyclerView recyclerView = new RecyclerView(context);
             recyclerView.setOverScrollMode(View.OVER_SCROLL_NEVER);
             recyclerView.setPadding(Dimensions.pxFromDp(24.3f), Dimensions.pxFromDp(17.7f), Dimensions.pxFromDp(23.7f), Dimensions.pxFromDp(13.3f));
-            StickerItemRecyclerAdapter adapter = new StickerItemRecyclerAdapter(position, mData.get(position), mOnItemClickListener);
+            StickerItemRecyclerAdapter adapter = new StickerItemRecyclerAdapter(position, mData.get(position), mOnEmojiClickListener);
             recyclerView.setAdapter(adapter);
             recyclerView.setLayoutManager(new GridLayoutManager(context, STICKER_COLUMNS));
             recyclerView.addItemDecoration(new EmojiItemDecoration(STICKER_COLUMNS, STICKER_ROWS, Dimensions.pxFromDp(69), Dimensions.pxFromDp(69)));

@@ -1,5 +1,6 @@
 package com.android.messaging.ui.emoji;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.design.widget.TabLayout;
@@ -23,16 +24,16 @@ public class EmojiPackagePagerAdapter extends PagerAdapter {
     private TabLayout mTabLayout;
     private Context mContext;
     private StickerItemPagerAdapter mRecentPagerAdapter;
-    private View.OnClickListener mOnItemClickListener;
+    private EmojiPickerFragment.OnEmojiClickListener mOnEmojiClickListener;
 
-    EmojiPackagePagerAdapter(Context context, TabLayout tabLayout, View.OnClickListener onItemClickListener) {
+    EmojiPackagePagerAdapter(Context context, TabLayout tabLayout, EmojiPickerFragment.OnEmojiClickListener emojiClickListener) {
         mContext = context;
         mTabLayout = tabLayout;
-        mOnItemClickListener = onItemClickListener;
+        mOnEmojiClickListener = emojiClickListener;
         mData = new ArrayList<>();
     }
 
-    public void updateRecentItem() {
+    void updateRecentItem() {
         if (mRecentPagerAdapter != null) {
             mRecentPagerAdapter.updateRecentItem();
         }
@@ -53,6 +54,15 @@ public class EmojiPackagePagerAdapter extends PagerAdapter {
         EmojiPackageInfo info = mData.get(position);
         View view = LayoutInflater.from(container.getContext()).inflate(R.layout.emoji_page_item_layout, container, false);
         ViewPagerFixed itemPager = view.findViewById(R.id.emoji_item_pager);
+        if (info.mEmojiPackageType == EmojiPackageType.EMOJI) {
+            View deleteBtn = view.findViewById(R.id.delete_emoji_btn);
+            deleteBtn.setVisibility(View.VISIBLE);
+            deleteBtn.setOnClickListener(v -> {
+                if (mOnEmojiClickListener != null) {
+                    mOnEmojiClickListener.delete();
+                }
+            });
+        }
         ViewPagerDotIndicatorView dotIndicatorView = view.findViewById(R.id.dot_indicator_view);
         itemPager.addOnPageChangeListener(dotIndicatorView);
         PagerAdapter adapter = getPagerAdapter(info);
@@ -65,11 +75,11 @@ public class EmojiPackagePagerAdapter extends PagerAdapter {
     private PagerAdapter getPagerAdapter(EmojiPackageInfo info) {
         switch (info.mEmojiPackageType) {
             case STICKER:
-                return new StickerItemPagerAdapter(info.mEmojiInfoList, mOnItemClickListener);
+                return new StickerItemPagerAdapter(info.mEmojiInfoList, mOnEmojiClickListener);
             case EMOJI:
-                return new EmojiItemPagerAdapter(info.mEmojiInfoList);
+                return new EmojiItemPagerAdapter(info.mEmojiInfoList, mOnEmojiClickListener);
             case RECENT:
-                mRecentPagerAdapter = new StickerItemPagerAdapter(true, EmojiManager.getRecentStickerInfo(), mOnItemClickListener);
+                mRecentPagerAdapter = new StickerItemPagerAdapter(true, EmojiManager.getRecentStickerInfo(), mOnEmojiClickListener);
                 return mRecentPagerAdapter;
             default:
                 throw new IllegalStateException("There is no this type: " + info.mEmojiPackageType + "!!!");
@@ -81,14 +91,34 @@ public class EmojiPackagePagerAdapter extends PagerAdapter {
         container.removeView((View) object);
     }
 
+    @Override
+    public int getItemPosition(@NonNull Object object) {
+        return POSITION_NONE;
+    }
+
     public void update(List<EmojiPackageInfo> dataList) {
         mData.clear();
         mData.addAll(dataList);
         notifyDataSetChanged();
 
+        updateTabView();
+    }
+
+    void insertThirdItem(EmojiPackageInfo packageInfo) {
+        if (mData.size() < 3) {
+            mData.add(packageInfo);
+        }
+        mData.add(2, packageInfo);
+        notifyDataSetChanged();
+
+        updateTabView();
+    }
+
+    private void updateTabView() {
         int count = mTabLayout.getTabCount();
         for (int i = 0; i < count; i++) {
             EmojiPackageInfo info = mData.get(i);
+            @SuppressLint("InflateParams")
             View view = LayoutInflater.from(mContext).inflate(R.layout.emoji_tab_item_layout, null);
             TabLayout.Tab tab = mTabLayout.getTabAt(i);
             ImageView tabIconView = view.findViewById(R.id.tab_icon_view);

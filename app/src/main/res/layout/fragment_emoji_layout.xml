@@ -24,20 +24,12 @@
             android:layout_height="0.7dp"
             android:background="#e9ebf2" />
 
-        <ImageView
-            android:id="@+id/emoji_city"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:layout_alignParentEnd="true"
-            android:layout_below="@id/line_view"
-            android:background="#FF0404" />
-
         <android.support.design.widget.TabLayout
             android:id="@+id/emoji_tab_layout"
             android:layout_width="match_parent"
             android:layout_height="50dp"
             android:layout_below="@id/line_view"
-            android:layout_toStartOf="@id/emoji_city"
+            android:layout_toStartOf="@+id/emoji_store_btn"
             android:background="#ffffff"
             app:tabIndicatorHeight="0dp"
             app:tabMaxWidth="0dp"
@@ -47,5 +39,21 @@
             app:tabPaddingEnd="0dp"
             app:tabPaddingStart="0dp"
             app:tabPaddingTop="0dp" />
+
+        <FrameLayout
+            android:id="@+id/emoji_store_btn"
+            android:layout_width="56dp"
+            android:layout_height="50dp"
+            android:layout_alignParentEnd="true"
+            android:layout_below="@id/line_view"
+            android:background="@drawable/material_compat_button_bg">
+
+            <ImageView
+                android:layout_width="33dp"
+                android:layout_height="34dp"
+                android:layout_gravity="center"
+                android:scaleType="centerInside"
+                android:src="@drawable/emoji_store_icon" />
+        </FrameLayout>
     </RelativeLayout>
 </RelativeLayout>

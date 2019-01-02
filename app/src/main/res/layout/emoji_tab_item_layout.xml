@@ -14,7 +14,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
-            android:src="@drawable/ic_audio_play_outgoing"
+            android:src="@drawable/emoji_normal_tab_icon"
             android:translationY="-0.65dp" />
 
         <ImageView

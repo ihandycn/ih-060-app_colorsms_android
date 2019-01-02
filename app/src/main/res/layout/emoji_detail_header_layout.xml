@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:paddingLeft="-22dp"
+    android:paddingRight="-22dp">
+
+    <ImageView
+        android:id="@+id/emoji_detail_image"
+        android:layout_width="match_parent"
+        android:layout_height="225dp"
+        android:focusable="true"
+        android:focusableInTouchMode="true"
+        android:scaleType="centerCrop" />
+
+    <com.superapps.view.TypefacedTextView
+        android:id="@+id/emoji_detail_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="18.67dp"
+        android:layout_marginLeft="18.67dp"
+        android:layout_marginTop="15.67dp"
+        android:textColor="#FF333333"
+        android:textSize="21sp"
+        app:typeface="@string/custom_font_bold" />
+
+    <com.superapps.view.TypefacedTextView
+        android:id="@+id/emoji_detail_get_btn"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:layout_marginLeft="18.67dp"
+        android:layout_marginTop="22dp"
+        android:layout_marginRight="18.67dp"
+        android:gravity="center"
+        android:text="@string/emoji_get"
+        android:textColor="#FF333333"
+        android:textSize="19.33sp"
+        app:typeface="@string/custom_font_bold" />
+
+</LinearLayout>

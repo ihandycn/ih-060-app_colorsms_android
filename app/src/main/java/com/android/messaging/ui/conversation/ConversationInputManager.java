@@ -19,6 +19,7 @@ import android.app.FragmentManager;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
+import android.view.KeyEvent;
 import android.widget.EditText;
 
 import com.android.messaging.R;
@@ -562,6 +563,21 @@ public class ConversationInputManager implements ConversationInput.ConversationI
                 return;
             }
             mEmojiPickerFragment = mHost.createEmojiPicker();
+            mEmojiPickerFragment.setOnEmojiEditListener(new EmojiPickerFragment.OnEmojiEditListener() {
+                @Override
+                public void add(String emojiStr) {
+                    if (mSink != null && mSink.getComposeEditText() != null) {
+                        mSink.getComposeEditText().append(emojiStr);
+                    }
+                }
+
+                @Override
+                public void delete() {
+                    if (mSink != null && mSink.getComposeEditText() != null) {
+                        mSink.getComposeEditText().dispatchKeyEvent(new KeyEvent(KeyEvent.ACTION_DOWN, KeyEvent.KEYCODE_DEL));
+                    }
+                }
+            });
         }
 
         private boolean isAddedToFragmentManager() {
