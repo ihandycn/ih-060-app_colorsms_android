@@ -32,7 +32,6 @@ public class Typefaces {
     private static Typeface sCustomMedium;
 
     public static Typeface getCustomSemiBold() {
-        Assert.isMainThread();
         if (sCustomSemiBold == null) {
             sCustomSemiBold = Typeface.createFromAsset(Factory.get().getApplicationContext().getAssets(),
                     "fonts/Custom-SemiBold.ttf");
@@ -41,7 +40,6 @@ public class Typefaces {
     }
 
     public static Typeface getCustomRegular() {
-        Assert.isMainThread();
         if (sCustomRegular == null) {
             sCustomRegular = Typeface.createFromAsset(Factory.get().getApplicationContext().getAssets(),
                     "fonts/Custom-Regular.ttf");
@@ -50,7 +48,6 @@ public class Typefaces {
     }
 
     public static Typeface getCustomMedium() {
-        Assert.isMainThread();
         if (sCustomMedium == null) {
             sCustomMedium = Typeface.createFromAsset(Factory.get().getApplicationContext().getAssets(),
                     "fonts/Custom-Medium.ttf");

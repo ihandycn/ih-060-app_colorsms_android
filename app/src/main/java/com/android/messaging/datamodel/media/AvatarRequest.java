@@ -32,6 +32,7 @@ import com.android.messaging.R;
 import com.android.messaging.util.Assert;
 import com.android.messaging.util.AvatarUriUtil;
 import com.android.messaging.util.LogUtil;
+import com.android.messaging.util.Typefaces;
 import com.android.messaging.util.UriUtil;
 
 import java.io.FileNotFoundException;
@@ -161,7 +162,7 @@ public class AvatarRequest extends UriImageRequest<AvatarRequestDescriptor> {
                 getBackgroundColor());
         final Resources resources = mContext.getResources();
         final Paint paint = new Paint(Paint.ANTI_ALIAS_FLAG);
-        paint.setTypeface(Typeface.create("sans-serif-thin", Typeface.NORMAL));
+        paint.setTypeface(Typefaces.getCustomSemiBold());
         paint.setColor(resources.getColor(R.color.letter_tile_font_color));
         final float letterToTileRatio = resources.getFraction(R.dimen.letter_to_tile_ratio, 1, 1);
         paint.setTextSize(letterToTileRatio * minOfWidthAndHeight);
@@ -179,7 +180,7 @@ public class AvatarRequest extends UriImageRequest<AvatarRequestDescriptor> {
     }
 
     private int getBackgroundColor() {
-        return mContext.getResources().getColor(R.color.primary_color);
+        return mContext.getResources().getColor(R.color.letter_tile_bg_color);
     }
 
     @Override
