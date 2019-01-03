@@ -459,9 +459,7 @@ public class ConversationListItemView extends FrameLayout implements OnClickList
         mContactIconView.setOnLongClickListener(this);
         mContactIconView.setClickable(!mHostInterface.isSelectionMode());
         mContactIconView.setLongClickable(!mHostInterface.isSelectionMode());
-
-        mContactIconView.setColorFilter(getContext().getResources().getColor(R.color.primary_color), PorterDuff.Mode.DST_ATOP);
-
+        
         mContactCheckmarkView.setVisibility(checkmarkVisiblity);
         mFailedStatusIconView.setVisibility(failStatusVisiblity);
 
