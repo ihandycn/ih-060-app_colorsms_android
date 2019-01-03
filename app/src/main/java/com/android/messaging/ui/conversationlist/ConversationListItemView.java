@@ -19,6 +19,7 @@ import android.content.Context;
 import android.content.res.Resources;
 import android.database.Cursor;
 import android.graphics.Color;
+import android.graphics.PorterDuff;
 import android.graphics.Rect;
 import android.graphics.Typeface;
 import android.net.Uri;
@@ -459,6 +460,8 @@ public class ConversationListItemView extends FrameLayout implements OnClickList
         mContactIconView.setClickable(!mHostInterface.isSelectionMode());
         mContactIconView.setLongClickable(!mHostInterface.isSelectionMode());
 
+        mContactIconView.setColorFilter(getContext().getResources().getColor(R.color.primary_color), PorterDuff.Mode.DST_ATOP);
+
         mContactCheckmarkView.setVisibility(checkmarkVisiblity);
         mFailedStatusIconView.setVisibility(failStatusVisiblity);
 
@@ -499,6 +502,12 @@ public class ConversationListItemView extends FrameLayout implements OnClickList
         mImagePreviewView.setOnClickListener(previewClickListener);
         mAudioAttachmentView.setOnLongClickListener(this);
         mAudioAttachmentView.setVisibility(audioPreviewVisiblity);
+
+        if (previewImageVisibility == View.VISIBLE || audioPreviewVisiblity == VISIBLE) {
+            mTimestampTextView.setVisibility(GONE);
+        } else {
+            mTimestampTextView.setVisibility(VISIBLE);
+        }
 
         final int notificationBellVisiblity = mData.getNotificationEnabled() ? GONE : VISIBLE;
         mNotificationBellView.setVisibility(notificationBellVisiblity);
