@@ -976,7 +976,7 @@
     <string name="work_directory_display_name">Work Profile contacts</string>
 
     <string name="bottom_navigation_item_messaging">Messaging</string>
-    <string name="bottom_navigation_item_sms_show">Color Alert</string>
+    <string name="bottom_navigation_item_sms_show">SMS Show</string>
     <string name="bottom_navigation_item_emoji">Emoji</string>
 
     <string name="action_bar_title_typeface">Script-Roman.otf</string>
