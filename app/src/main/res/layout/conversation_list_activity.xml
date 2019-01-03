@@ -32,13 +32,6 @@
         android:layout_marginTop="@dimen/action_bar_height"
         android:layout_marginBottom="@dimen/bottom_navigation_view_height" />
 
-    <android.support.design.widget.BottomNavigationView
-        android:id="@+id/bottom_navigation_view"
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/bottom_navigation_view_height"
-        android:layout_gravity="bottom"
-        app:menu="@menu/bottom_navigation_menu">
-
-    </android.support.design.widget.BottomNavigationView>
+    <include layout="@layout/bottom_navigation_view_auto_res"/>
 </FrameLayout>
 

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:launcher="http://schemas.android.com/apk/res-auto"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -9,21 +9,22 @@
 
     <LinearLayout
         android:id="@+id/linearLayout"
-        android:layout_width="300dp"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:background="@drawable/dialog_bg"
         android:orientation="vertical"
-        launcher:layout_constraintBottom_toBottomOf="parent"
-        launcher:layout_constraintLeft_toLeftOf="parent"
-        launcher:layout_constraintRight_toRightOf="parent"
-        launcher:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintWidth_percent="0.82">
 
         <com.superapps.view.AutoResizeTextView
             android:id="@+id/dialog_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:maxHeight="72dp"
-            launcher:autoSizeMaxTextSize="@dimen/dialog_content_title_size"
+            app:autoSizeMaxTextSize="@dimen/dialog_content_title_size"
             android:textColor="@color/color_dialog_title_text"
             android:alpha="@dimen/dialog_content_title"
             android:textSize="@dimen/dialog_content_title_size"
@@ -34,7 +35,7 @@
             tools:ignore="RelativeOverlap"
             android:layout_marginEnd="@dimen/dialog_content_margin_right"
             android:layout_marginStart="@dimen/dialog_content_margin_left"
-            launcher:typefaceFileName="@string/dialog_content_title_font"/>
+            app:typefaceFileName="@string/dialog_content_title_font"/>
 
 
         <FrameLayout
@@ -60,7 +61,7 @@
                 android:alpha="@dimen/dialog_content_text"
                 android:textSize="@dimen/dialog_content_text_size"
                 android:text="I am a message"
-                launcher:typefaceFileName="@string/dialog_content_text_font"/>
+                app:typefaceFileName="@string/dialog_content_text_font"/>
 
         </FrameLayout>
 
@@ -90,7 +91,7 @@
                 android:textSize="@dimen/dialog_ok_btn_text_size"
                 android:paddingStart="@dimen/dialog_two_btn_padding_left"
                 android:paddingEnd="@dimen/dialog_two_btn_padding_right"
-                launcher:typefaceFileName="@string/dialog_ok_btn_font"
+                app:typefaceFileName="@string/dialog_ok_btn_font"
                 android:layout_marginEnd="16dp"/>
 
             <com.superapps.view.TypefacedTextView
@@ -106,7 +107,7 @@
                 android:textSize="@dimen/dialog_ok_btn_text_size"
                 android:paddingStart="@dimen/dialog_two_btn_padding_left"
                 android:paddingEnd="@dimen/dialog_two_btn_padding_right"
-                launcher:typefaceFileName="@string/dialog_ok_btn_font"
+                app:typefaceFileName="@string/dialog_ok_btn_font"
                  />
 
         </LinearLayout>

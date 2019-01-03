@@ -19,7 +19,6 @@ package com.android.messaging.ui.conversationlist;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.design.widget.BottomNavigationView;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.widget.Toolbar;
@@ -37,7 +36,7 @@ import com.android.messaging.util.Trace;
 import com.android.messaging.util.UiUtils;
 
 public class ConversationListActivity extends AbstractConversationListActivity
-        implements BottomNavigationView.OnNavigationItemSelectedListener {
+        implements BottomNavigationView.OnItemSelectedListener {
 
     private ViewPager mViewPager;
     private BasePagerAdapter mPagerAdapter;
@@ -130,25 +129,24 @@ public class ConversationListActivity extends AbstractConversationListActivity
     }
 
     @Override
-    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.messaging:
+    public void onSelected(int position) {
+        switch (position) {
+            case BottomNavigationView.POSITION_MESSAGING:
                 mViewPager.setCurrentItem(0);
-                return true;
-            case R.id.sms_show:
+                break;
+            case BottomNavigationView.POSITION_SMS_SHOW:
                 if (isInConversationListSelectMode()) {
                     exitMultiSelectState();
                 }
                 mViewPager.setCurrentItem(1);
-                return true;
-            case R.id.emoji:
+                break;
+            case BottomNavigationView.POSITION_EMOJI:
                 if (isInConversationListSelectMode()) {
                     exitMultiSelectState();
                 }
                 mViewPager.setCurrentItem(2);
-                return true;
+                break;
         }
-        return false;
     }
 
     @Override
@@ -199,6 +197,7 @@ public class ConversationListActivity extends AbstractConversationListActivity
         mViewPager = findViewById(R.id.fragment_pager);
         mPagerAdapter = new BasePagerAdapter(getFragmentManager());
         mViewPager.setAdapter(mPagerAdapter);
-        bottomNavigationView.setOnNavigationItemSelectedListener(this);
+        bottomNavigationView.setOnItemSelectedListener(this);
+        bottomNavigationView.setSelectedPositon(0);
     }
 }
