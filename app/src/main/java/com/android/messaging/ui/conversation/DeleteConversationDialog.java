@@ -6,8 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.android.messaging.BaseDialog;
-import com.android.messaging.ui.UIIntents;
+import com.android.messaging.ui.BaseDialog;
 
 public class DeleteConversationDialog extends BaseDialog {
 

@@ -24,7 +24,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.android.messaging.BaseDialog;
+import com.android.messaging.ui.BaseDialog;
 import com.android.messaging.R;
 import com.android.messaging.ui.ContactIconView;
 import com.android.messaging.ui.UIIntents;

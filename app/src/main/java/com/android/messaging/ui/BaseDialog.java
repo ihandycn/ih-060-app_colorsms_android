@@ -1,4 +1,4 @@
-package com.android.messaging;
+package com.android.messaging.ui;
 
 
 import android.app.Activity;
@@ -15,6 +15,7 @@ import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.TextView;
 
+import com.android.messaging.R;
 import com.superapps.util.BackgroundDrawables;
 
 public abstract class BaseDialog extends DialogFragment {
@@ -24,6 +25,12 @@ public abstract class BaseDialog extends DialogFragment {
 
     public void setOnDismissOrCancelListener(OnDismissOrCancelListener onDismissOrCancelListener) {
         this.mOnDismissOrCancelListener = onDismissOrCancelListener;
+    }
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setStyle(STYLE_NO_TITLE, R.style.TransparentDialog);
     }
 
     protected abstract CharSequence getTitle();
