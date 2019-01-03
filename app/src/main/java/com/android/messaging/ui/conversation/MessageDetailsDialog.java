@@ -33,6 +33,7 @@ import com.android.messaging.datamodel.data.ParticipantData;
 import com.android.messaging.mmslib.pdu.PduHeaders;
 import com.android.messaging.sms.DatabaseMessages.MmsMessage;
 import com.android.messaging.sms.MmsUtils;
+import com.android.messaging.ui.BaseAlertDialog;
 import com.android.messaging.util.Assert;
 import com.android.messaging.util.Assert.DoesNotRunOnMainThread;
 import com.android.messaging.util.Dates;
@@ -86,10 +87,9 @@ public class MessageDetailsDialog {
 
     private static void showDialog(final Context context, String messageDetails) {
         if (!TextUtils.isEmpty(messageDetails)) {
-            new AlertDialog.Builder(context)
+            new BaseAlertDialog.Builder(context)
                     .setTitle(R.string.message_details_title)
                     .setMessage(messageDetails)
-                    .setCancelable(true)
                     .show();
         }
     }

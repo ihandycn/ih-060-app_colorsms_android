@@ -34,6 +34,7 @@ import com.android.messaging.datamodel.action.UpdateConversationOptionsAction;
 import com.android.messaging.datamodel.action.UpdateDestinationBlockedAction;
 import com.android.messaging.datamodel.data.ConversationListData;
 import com.android.messaging.datamodel.data.ConversationListItemData;
+import com.android.messaging.ui.BaseAlertDialog;
 import com.android.messaging.ui.BugleActionBarActivity;
 import com.android.messaging.ui.SnackBar;
 import com.android.messaging.ui.SnackBarInteraction;
@@ -132,23 +133,19 @@ public abstract class AbstractConversationListActivity  extends BugleActionBarAc
             return;
         }
 
-        new AlertDialog.Builder(this)
+        new BaseAlertDialog.Builder(this)
                 .setTitle(getResources().getQuantityString(
                         R.plurals.delete_conversations_confirmation_dialog_title,
                         conversations.size()))
                 .setPositiveButton(R.string.delete_conversation_confirmation_button,
-                        new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(final DialogInterface dialog,
-                                    final int button) {
-                                for (final SelectedConversation conversation : conversations) {
-                                    DeleteConversationAction.deleteConversation(
-                                            conversation.conversationId,
-                                            conversation.timestamp);
-                                }
-                                exitMultiSelectState();
+                        (dialog, button) -> {
+                            for (final SelectedConversation conversation : conversations) {
+                                DeleteConversationAction.deleteConversation(
+                                        conversation.conversationId,
+                                        conversation.timestamp);
                             }
-                })
+                            exitMultiSelectState();
+                        })
                 .setNegativeButton(R.string.delete_conversation_decline_button, null)
                 .show();
     }
@@ -223,7 +220,7 @@ public abstract class AbstractConversationListActivity  extends BugleActionBarAc
     @Override
     public void onActionBarBlock(final SelectedConversation conversation) {
         final Resources res = getResources();
-        new AlertDialog.Builder(this)
+        new BaseAlertDialog.Builder(this)
                 .setTitle(res.getString(R.string.block_confirmation_title,
                         conversation.otherParticipantNormalizedDestination))
                 .setMessage(res.getString(R.string.block_confirmation_message))
@@ -259,7 +256,6 @@ public abstract class AbstractConversationListActivity  extends BugleActionBarAc
                         exitMultiSelectState();
                     }
                 })
-                .create()
                 .show();
     }
 

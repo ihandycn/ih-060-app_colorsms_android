@@ -81,6 +81,7 @@ import com.android.messaging.datamodel.data.MessagePartData;
 import com.android.messaging.datamodel.data.ParticipantData;
 import com.android.messaging.datamodel.data.SubscriptionListData.SubscriptionListEntry;
 import com.android.messaging.ui.AttachmentPreview;
+import com.android.messaging.ui.BaseAlertDialog;
 import com.android.messaging.ui.BugleActionBarActivity;
 import com.android.messaging.ui.ConversationDrawables;
 import com.android.messaging.ui.SnackBar;
@@ -106,6 +107,7 @@ import com.android.messaging.util.TextUtil;
 import com.android.messaging.util.UiUtils;
 import com.android.messaging.util.UriUtil;
 import com.google.common.annotations.VisibleForTesting;
+import com.superapps.util.Toasts;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -809,19 +811,14 @@ public class ConversationFragment extends Fragment implements ConversationDataLi
 
             case R.id.action_delete:
                 if (isReadyForAction()) {
-                    new AlertDialog.Builder(getActivity())
+                    new BaseAlertDialog.Builder(getActivity())
                             .setTitle(getResources().getQuantityString(
                                     R.plurals.delete_conversations_confirmation_dialog_title, 1))
                             .setPositiveButton(R.string.delete_conversation_confirmation_button,
-                                    new DialogInterface.OnClickListener() {
-                                        @Override
-                                        public void onClick(final DialogInterface dialog,
-                                                            final int button) {
-                                            deleteConversation();
-                                        }
-                                    })
+                                    (dialog, button) -> deleteConversation())
                             .setNegativeButton(R.string.delete_conversation_decline_button, null)
                             .show();
+
                 } else {
                     warnOfMissingActionConditions(false /*sending*/,
                             null /*commandToRunAfterActionConditionResolved*/);
@@ -1169,14 +1166,16 @@ public class ConversationFragment extends Fragment implements ConversationDataLi
     }
 
     public void deleteConversation() {
-        if (isReadyForAction()) {
-            final Context context = getActivity();
-            mBinding.getData().deleteConversation(mBinding);
-            closeConversation(mConversationId);
-        } else {
-            warnOfMissingActionConditions(false /*sending*/,
-                    null /*commandToRunAfterActionConditionResolved*/);
-        }
+
+        Toasts.showToast("delete successfully");
+//        if (isReadyForAction()) {
+//            final Context context = getActivity();
+//            mBinding.getData().deleteConversation(mBinding);
+//            closeConversation(mConversationId);
+//        } else {
+//            warnOfMissingActionConditions(false /*sending*/,
+//                    null /*commandToRunAfterActionConditionResolved*/);
+//        }
     }
 
     @Override

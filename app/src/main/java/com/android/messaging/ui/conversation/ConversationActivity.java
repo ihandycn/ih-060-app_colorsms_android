@@ -257,7 +257,7 @@ public class ConversationActivity extends BugleActionBarActivity
                 ContactPickerFragment.FRAGMENT_TAG);
     }
 
-    private ConversationFragment getConversationFragment() {
+    public ConversationFragment getConversationFragment() {
         return (ConversationFragment) getFragmentManager().findFragmentByTag(
                 ConversationFragment.FRAGMENT_TAG);
     }
