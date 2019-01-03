@@ -16,12 +16,7 @@
 package com.android.messaging.ui.mediapicker;
 
 import android.content.Context;
-import android.graphics.Color;
-import android.graphics.PorterDuff;
 import android.graphics.Rect;
-import android.graphics.Typeface;
-import android.graphics.drawable.Drawable;
-import android.graphics.drawable.GradientDrawable;
 import android.media.MediaRecorder;
 import android.net.Uri;
 import android.util.AttributeSet;
@@ -44,6 +39,7 @@ import com.android.messaging.util.MediaUtil;
 import com.android.messaging.util.MediaUtil.OnCompletionListener;
 import com.android.messaging.util.SafeAsyncTask;
 import com.android.messaging.util.ThreadUtil;
+import com.android.messaging.util.Typefaces;
 import com.android.messaging.util.UiUtils;
 import com.google.common.annotations.VisibleForTesting;
 
@@ -120,6 +116,7 @@ public class AudioRecordView extends FrameLayout implements
         mRecordButton = findViewById(R.id.record_button);
         mHintTextView = (TextView) findViewById(R.id.hint_text);
         mTimerTextView = (PausableChronometer) findViewById(R.id.timer_text);
+        mTimerTextView.setTypeface(Typefaces.getCustomMedium());
         mSoundLevels.setLevelSource(mMediaRecorder.getLevelSource());
         mRecordButton.setOnTouchListener(new OnTouchListener() {
             @Override
@@ -194,7 +191,6 @@ public class AudioRecordView extends FrameLayout implements
         switch (mCurrentMode) {
             case MODE_IDLE:
                 mHintTextView.setVisibility(VISIBLE);
-                mHintTextView.setTypeface(null, Typeface.NORMAL);
                 mTimerTextView.setVisibility(GONE);
                 mSoundLevels.setEnabled(false);
                 mTimerTextView.stop();
@@ -215,27 +211,10 @@ public class AudioRecordView extends FrameLayout implements
                 Assert.fail("invalid mode for AudioRecordView!");
                 break;
         }
-        updateRecordButtonAppearance();
     }
 
     public void setThemeColor(final int color) {
         mThemeColor = color;
-        updateRecordButtonAppearance();
-    }
-
-    private void updateRecordButtonAppearance() {
-        final Drawable foregroundDrawable = getResources().getDrawable(R.drawable.ic_mp_audio_mic);
-        final GradientDrawable backgroundDrawable = ((GradientDrawable) getResources()
-                .getDrawable(R.drawable.audio_record_control_button_background));
-        if (isRecording()) {
-            foregroundDrawable.setColorFilter(Color.WHITE, PorterDuff.Mode.SRC_ATOP);
-            backgroundDrawable.setColor(mThemeColor);
-        } else {
-            foregroundDrawable.setColorFilter(mThemeColor, PorterDuff.Mode.SRC_ATOP);
-            backgroundDrawable.setColor(Color.WHITE);
-        }
-        mRecordButtonVisual.setImageDrawable(foregroundDrawable);
-        mRecordButtonVisual.setBackground(backgroundDrawable);
     }
 
     @VisibleForTesting
@@ -279,7 +258,6 @@ public class AudioRecordView extends FrameLayout implements
                 });
             }
             setMode(MODE_IDLE);
-            mHintTextView.setTypeface(null, Typeface.BOLD);
         } else if (isRecording()) {
             // Record for some extra time to ensure the ending part is saved.
             setMode(MODE_STOPPING);

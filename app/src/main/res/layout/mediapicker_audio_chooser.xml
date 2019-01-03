@@ -19,22 +19,23 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:importantForAccessibility="no" >
+    android:importantForAccessibility="no">
 
     <FrameLayout
         android:id="@+id/mediapicker_enabled"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" >
+        android:layout_height="match_parent">
 
-        <TextView
+        <com.superapps.view.TypefacedTextView
             android:id="@+id/hint_text"
             style="@style/AudioPickerHintText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="top|center"
-            android:layout_marginTop="16dp"
+            android:layout_marginTop="24dp"
+            android:importantForAccessibility="no"
             android:text="@string/audio_picker_hint_text"
-            android:importantForAccessibility="no" />
+            app:typeface="@string/custom_font_regular"/>
 
         <com.android.messaging.ui.mediapicker.PausableChronometer
             android:id="@+id/timer_text"
@@ -42,8 +43,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="top|center"
-            android:layout_marginTop="16dp"
-            android:visibility="gone" />
+            android:layout_marginTop="26dp"
+            android:visibility="gone"/>
 
         <com.android.messaging.ui.mediapicker.SoundLevels
             android:id="@+id/sound_levels"
@@ -51,9 +52,9 @@
             android:layout_height="260dp"
             android:layout_gravity="center"
             android:focusableInTouchMode="false"
-            app:minLevelRadius="55dp"
             app:maxLevelRadius="130dp"
-            app:primaryColor="@color/audio_picker_level_primary_color" />
+            app:minLevelRadius="55dp"
+            app:primaryColor="@color/audio_picker_level_primary_color"/>
 
         <!-- View to make the touachable area larger for accessibility's two-finger touch -->
         <FrameLayout
@@ -61,22 +62,21 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:padding="30dp"
+            android:contentDescription="@string/audio_record_view_content_description"
             android:focusable="true"
             android:focusableInTouchMode="true"
-            android:contentDescription="@string/audio_record_view_content_description" >
+            android:padding="30dp">
 
             <ImageView
                 android:id="@+id/record_button_visual"
-                android:layout_width="70dp"
-                android:layout_height="70dp"
-                android:layout_margin="30dp"
+                android:layout_width="80dp"
+                android:layout_height="80dp"
                 android:layout_gravity="center"
-                android:scaleType="center"
-                android:src="@drawable/ic_mp_audio_mic"
-                android:background="@drawable/audio_record_control_button_background"
+                android:layout_margin="30dp"
+                android:contentDescription="@null"
                 android:importantForAccessibility="no"
-                android:contentDescription="@null" />
+                android:scaleType="centerCrop"
+                android:src="@drawable/ic_voice_input"/>
         </FrameLayout>
 
     </FrameLayout>
@@ -86,10 +86,10 @@
         android:id="@+id/missing_permission_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:text="@string/enable_permission_procedure"
-        android:contentDescription="@string/enable_permission_procedure_description"
         android:background="@android:color/white"
+        android:contentDescription="@string/enable_permission_procedure_description"
         android:gravity="center"
-        android:visibility="gone" />
+        android:text="@string/enable_permission_procedure"
+        android:visibility="gone"/>
 
 </com.android.messaging.ui.mediapicker.AudioRecordView>

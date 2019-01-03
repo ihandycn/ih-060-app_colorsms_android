@@ -295,7 +295,7 @@
     <!-- Error occurred while recording audio -->
     <string name="audio_recording_error"> Couldn\'t save audio. Try again.</string>
     <!-- Hint text on the audio recorder that instructs user how to start recording -->
-    <string name="audio_picker_hint_text">Tap &amp; hold</string>
+    <string name="audio_picker_hint_text">Tap and hold</string>
 
     <!-- An enumeration comma for separating multiple names in notifications. [CHAR LIMIT=2] -->
     <string name="enumeration_comma">,\u0020</string>
