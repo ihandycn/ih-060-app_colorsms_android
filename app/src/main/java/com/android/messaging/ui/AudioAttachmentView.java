@@ -42,6 +42,7 @@ import com.android.messaging.util.Assert;
 import com.android.messaging.util.ContentType;
 import com.android.messaging.util.LogUtil;
 import com.android.messaging.util.MediaUtil;
+import com.android.messaging.util.Typefaces;
 import com.android.messaging.util.UiUtils;
 
 /**
@@ -109,6 +110,7 @@ public class AudioAttachmentView extends LinearLayout {
 
         mPlayPauseButton = (AudioAttachmentPlayPauseButton) findViewById(R.id.play_pause_button);
         mChronometer = (PausableChronometer) findViewById(R.id.timer);
+        mChronometer.setTypeface(Typefaces.getCustomRegular());
         mProgressBar = (AudioPlaybackProgressBar) findViewById(R.id.progress);
         mPlayPauseButton.setOnClickListener(new OnClickListener() {
             @Override

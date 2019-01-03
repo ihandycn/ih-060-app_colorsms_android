@@ -14,7 +14,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
-            android:src="@drawable/ic_audio_play"
+            android:src="@drawable/ic_audio_play_outgoing"
             android:translationY="-0.65dp" />
 
         <ImageView

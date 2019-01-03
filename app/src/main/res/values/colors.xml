@@ -114,7 +114,7 @@
     <color name="audio_picker_hint_text_color">#b333353c</color>
     <color name="audio_picker_timer_text_color">#33353c</color>
     <color name="audio_attachment_timer_text_color">#323232</color>
-    <color name="audio_progress_bar_color">@color/primary_color</color>
+    <color name="audio_progress_bar_color">@android:color/white</color>
 
     <color name="notification_sender_text">#9A9A9A</color>
     <color name="notification_secondary_text">#FFFFFF</color>

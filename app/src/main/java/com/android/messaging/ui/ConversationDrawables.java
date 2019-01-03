@@ -37,8 +37,10 @@ public class ConversationDrawables {
     private Drawable mIncomingErrorBubbleDrawable;
     private Drawable mIncomingBubbleNoArrowDrawable;
     private Drawable mOutgoingBubbleNoArrowDrawable;
-    private Drawable mAudioPlayButtonDrawable;
-    private Drawable mAudioPauseButtonDrawable;
+    private Drawable mIncomingAudioPlayButtonDrawable;
+    private Drawable mIncomingAudioPauseButtonDrawable;
+    private Drawable mOutgoingAudioPlayButtonDrawable;
+    private Drawable mOutgoingAudioPauseButtonDrawable;
     private Drawable mIncomingAudioProgressBackgroundDrawable;
     private Drawable mOutgoingAudioProgressBackgroundDrawable;
     private Drawable mAudioProgressForegroundDrawable;
@@ -82,8 +84,10 @@ public class ConversationDrawables {
         mOutgoingBubbleDrawable = resources.getDrawable(R.drawable.message_bubble_outgoing_new);
         mOutgoingBubbleNoArrowDrawable =
                 resources.getDrawable(R.drawable.message_bubble_outgoing_no_arrow);
-        mAudioPlayButtonDrawable = resources.getDrawable(R.drawable.ic_audio_play);
-        mAudioPauseButtonDrawable = resources.getDrawable(R.drawable.ic_audio_pause);
+        mIncomingAudioPlayButtonDrawable = resources.getDrawable(R.drawable.ic_audio_play_incoming);
+        mIncomingAudioPauseButtonDrawable = resources.getDrawable(R.drawable.ic_audio_pause_incoming);
+        mOutgoingAudioPlayButtonDrawable = resources.getDrawable(R.drawable.ic_audio_play_outgoing);
+        mOutgoingAudioPauseButtonDrawable = resources.getDrawable(R.drawable.ic_audio_pause_outgoing);
         mIncomingAudioProgressBackgroundDrawable =
                 resources.getDrawable(R.drawable.audio_progress_bar_background_incoming);
         mOutgoingAudioProgressBackgroundDrawable =
@@ -145,17 +149,15 @@ public class ConversationDrawables {
     }
 
     private int getAudioButtonColor(final boolean incoming) {
-        return incoming ? mIncomingAudioButtonColor : mThemeColor;
+        return incoming ? mIncomingAudioButtonColor : 0xffffffff;
     }
 
     public Drawable getPlayButtonDrawable(final boolean incoming) {
-        return ImageUtils.getTintedDrawable(
-                mContext, mAudioPlayButtonDrawable, getAudioButtonColor(incoming));
+        return incoming ? mIncomingAudioPlayButtonDrawable : mOutgoingAudioPlayButtonDrawable;
     }
 
     public Drawable getPauseButtonDrawable(final boolean incoming) {
-        return ImageUtils.getTintedDrawable(
-                mContext, mAudioPauseButtonDrawable, getAudioButtonColor(incoming));
+        return incoming ? mIncomingAudioPauseButtonDrawable : mOutgoingAudioPauseButtonDrawable;
     }
 
     public Drawable getAudioProgressDrawable(final boolean incoming) {
