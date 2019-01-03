@@ -1166,16 +1166,14 @@ public class ConversationFragment extends Fragment implements ConversationDataLi
     }
 
     public void deleteConversation() {
-
-        Toasts.showToast("delete successfully");
-//        if (isReadyForAction()) {
-//            final Context context = getActivity();
-//            mBinding.getData().deleteConversation(mBinding);
-//            closeConversation(mConversationId);
-//        } else {
-//            warnOfMissingActionConditions(false /*sending*/,
-//                    null /*commandToRunAfterActionConditionResolved*/);
-//        }
+        if (isReadyForAction()) {
+            final Context context = getActivity();
+            mBinding.getData().deleteConversation(mBinding);
+            closeConversation(mConversationId);
+        } else {
+            warnOfMissingActionConditions(false /*sending*/,
+                    null /*commandToRunAfterActionConditionResolved*/);
+        }
     }
 
     @Override

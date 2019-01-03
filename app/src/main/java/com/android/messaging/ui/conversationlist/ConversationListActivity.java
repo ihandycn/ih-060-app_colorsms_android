@@ -133,18 +133,21 @@ public class ConversationListActivity extends AbstractConversationListActivity
         switch (position) {
             case BottomNavigationView.POSITION_MESSAGING:
                 mViewPager.setCurrentItem(0);
+                mTitleTextView.setText(R.string.bottom_navigation_item_messaging);
                 break;
             case BottomNavigationView.POSITION_SMS_SHOW:
                 if (isInConversationListSelectMode()) {
                     exitMultiSelectState();
                 }
                 mViewPager.setCurrentItem(1);
+                mTitleTextView.setText(R.string.bottom_navigation_item_sms_show);
                 break;
             case BottomNavigationView.POSITION_EMOJI:
                 if (isInConversationListSelectMode()) {
                     exitMultiSelectState();
                 }
                 mViewPager.setCurrentItem(2);
+                mTitleTextView.setText(R.string.bottom_navigation_item_emoji);
                 break;
         }
     }
