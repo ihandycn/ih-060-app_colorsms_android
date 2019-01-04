@@ -200,6 +200,7 @@ public class ConversationListActivity extends AbstractConversationListActivity
         mViewPager = findViewById(R.id.fragment_pager);
         mPagerAdapter = new BasePagerAdapter(getFragmentManager());
         mViewPager.setAdapter(mPagerAdapter);
+        mViewPager.setOffscreenPageLimit(2);
         bottomNavigationView.setOnItemSelectedListener(this);
         bottomNavigationView.setSelectedPositon(0);
     }

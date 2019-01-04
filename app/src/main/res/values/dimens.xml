@@ -164,7 +164,6 @@
     <dimen name="focus_inner_stroke">2dp</dimen>
 
     <dimen name="conversation_bubble_width_snap">20dp</dimen>
-
     <!-- Widget -->
     <dimen name="widget_margin">8dp</dimen>
     <dimen name="widget_subtitle_margin">0dp</dimen>
@@ -200,4 +199,7 @@
     <dimen name="directory_header_text_size">14sp</dimen>
 
     <dimen name="bottom_navigation_view_height">62dp</dimen>
+
+    <!--sms show-->
+    <dimen name="sms_show_apply_button_height">53dp</dimen>
 </resources>

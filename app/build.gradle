@@ -60,6 +60,7 @@ dependencies {
     compile "com.google.firebase:firebase-ads:${rootProject.ext.googlePlayServiceVersion}"
     compile "com.ihandy.appframework:libAppframework.beta:4.8.5.beta05"
 
+    compile 'com.airbnb.android:lottie:2.5.5'
     implementation "com.github.bumptech.glide:glide:${rootProject.ext.glideVersion}"
     annotationProcessor "com.github.bumptech.glide:compiler:${rootProject.ext.glideVersion}"
     implementation "com.facebook.fresco:animated-webp:${rootProject.ext.frescoAnimatedWebp}"

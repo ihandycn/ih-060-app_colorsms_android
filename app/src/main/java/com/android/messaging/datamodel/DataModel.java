@@ -47,10 +47,13 @@ import com.android.messaging.datamodel.data.PeopleAndOptionsData.PeopleAndOption
 import com.android.messaging.datamodel.data.PeopleOptionsItemData;
 import com.android.messaging.datamodel.data.SettingsData;
 import com.android.messaging.datamodel.data.SettingsData.SettingsDataListener;
+import com.android.messaging.datamodel.data.SmsShowListItemData;
 import com.android.messaging.datamodel.data.SubscriptionListData;
 import com.android.messaging.datamodel.data.VCardContactItemData;
 import com.android.messaging.util.Assert.DoesNotRunOnMainThread;
 import com.android.messaging.util.ConnectivityUtil;
+
+import java.util.HashSet;
 
 public abstract class DataModel {
     private String mFocusedConversation;
@@ -109,6 +112,8 @@ public abstract class DataModel {
     public abstract SettingsData createSettingsData(Context context, SettingsDataListener listener);
 
     public abstract DraftMessageData createDraftMessageData(String conversationId);
+
+    public abstract SmsShowListItemData createSmsShowListItemData(int id, String mainPagePreviewUrl, String smsShowUrl);
 
     public abstract ActionService getActionService();
 

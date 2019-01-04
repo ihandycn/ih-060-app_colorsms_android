@@ -107,6 +107,8 @@ public abstract class UIIntents {
     // Message position to scroll to.
     public static final String UI_INTENT_EXTRA_MESSAGE_POSITION = "message_position";
 
+    public static final String UI_INTENT_EXTRA_SMS_SHOW_ID = "sms_show_id";
+
     /**
      * Launch the permission check activity
      */
@@ -246,6 +248,13 @@ public abstract class UIIntents {
      */
     public abstract void launchPerSubscriptionSettingsActivity(Context context, int subId,
             String settingTitle);
+
+
+    /**
+     * Launch an activity to display sms show full screen
+     * @param id sms show item id {@link com.android.messaging.datamodel.data.SmsShowListItemData}.
+     */
+    public abstract void launchSmsShowDetailActivity(Context context, int id);
 
     /**
      * Get a ACTION_VIEW intent

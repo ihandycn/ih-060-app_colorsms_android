@@ -474,6 +474,15 @@
             android:screenOrientation="portrait"
             android:theme="@style/BugleTheme" />
 
+        <activity
+            android:name=".ui.smsshow.SmsShowDetailActivity"
+            android:configChanges="orientation|screenSize|keyboardHidden"
+            android:launchMode="singleTop"
+            android:parentActivityName="com.android.messaging.ui.conversationlist.ConversationListActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
+
+
         <receiver android:name=".receiver.StorageStatusReceiver">
             <intent-filter>
                 <action android:name="android.intent.action.DEVICE_STORAGE_LOW" />

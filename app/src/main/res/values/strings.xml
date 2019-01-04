@@ -992,4 +992,7 @@
     <string name="emoji_store_title">Emoji Store</string>
     <string name="emoji_get">GET</string>
     <string name="emoji_added">ADDED</string>
+
+    <!--sms show-->
+    <string name="sms_show_apply">APPLY</string>
 </resources>

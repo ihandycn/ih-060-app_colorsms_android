@@ -37,6 +37,11 @@ public abstract class BuglePrefs {
     public static final String SHARED_PREFERENCES_PER_SUBSCRIPTION_PREFIX = "buglesub_";
 
     /**
+     * Shared preferences name for sms show
+     */
+    public static final String SMS_SHOW_SHARED_PREFERENCES_NAME = "bugle_sms_show";
+
+    /**
      * A placeholder base version for Bugle builds where no shared pref version was defined.
      */
     public static final int NO_SHARED_PREFERENCES_VERSION = -1;

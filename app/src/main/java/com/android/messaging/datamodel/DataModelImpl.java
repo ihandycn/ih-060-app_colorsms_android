@@ -47,6 +47,7 @@ import com.android.messaging.datamodel.data.PeopleAndOptionsData.PeopleAndOption
 import com.android.messaging.datamodel.data.PeopleOptionsItemData;
 import com.android.messaging.datamodel.data.SettingsData;
 import com.android.messaging.datamodel.data.SettingsData.SettingsDataListener;
+import com.android.messaging.datamodel.data.SmsShowListItemData;
 import com.android.messaging.datamodel.data.SubscriptionListData;
 import com.android.messaging.datamodel.data.VCardContactItemData;
 import com.android.messaging.sms.MmsConfig;
@@ -56,6 +57,8 @@ import com.android.messaging.util.ConnectivityUtil;
 import com.android.messaging.util.LogUtil;
 import com.android.messaging.util.OsUtil;
 import com.android.messaging.util.PhoneUtils;
+
+import java.util.HashSet;
 
 public class DataModelImpl extends DataModel {
     private final Context mContext;
@@ -162,6 +165,11 @@ public class DataModelImpl extends DataModel {
     @Override
     public DraftMessageData createDraftMessageData(String conversationId) {
         return new DraftMessageData(conversationId);
+    }
+
+    @Override
+    public SmsShowListItemData createSmsShowListItemData(int id, String mainPagePreviewUrl, String smsShowUrl) {
+        return null;
     }
 
     @Override
