@@ -52,7 +52,6 @@ public class ConversationDrawables {
     private int mOutgoingBubbleColor;
     private int mIncomingBubbleColor;
     private int mIncomingErrorBubbleColor;
-    private int mIncomingAudioButtonColor;
     private int mIncomingSelectedBubbleColor;
     private int mOutgoingSelectedBubbleColor;
     private int mThemeColor;
@@ -105,8 +104,6 @@ public class ConversationDrawables {
         mIncomingBubbleColor = resources.getColor(R.color.message_bubble_color_incoming);
         mIncomingErrorBubbleColor =
                 resources.getColor(R.color.message_error_bubble_color_incoming);
-        mIncomingAudioButtonColor =
-                resources.getColor(R.color.message_audio_button_color_incoming);
         mIncomingSelectedBubbleColor = resources.getColor(R.color.message_bubble_color_selected_incoming);
         mOutgoingSelectedBubbleColor = resources.getColor(R.color.message_bubble_color_selected_outgoing);
         mThemeColor = resources.getColor(R.color.primary_color);
@@ -149,7 +146,7 @@ public class ConversationDrawables {
     }
 
     private int getAudioButtonColor(final boolean incoming) {
-        return incoming ? mIncomingAudioButtonColor : 0xffffffff;
+        return incoming ? mThemeColor : 0xffffffff;
     }
 
     public Drawable getPlayButtonDrawable(final boolean incoming) {

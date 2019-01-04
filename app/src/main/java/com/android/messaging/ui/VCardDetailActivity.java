@@ -37,11 +37,15 @@ public class VCardDetailActivity extends BugleActionBarActivity {
 
     @Override
     public void onAttachFragment(final Fragment fragment) {
-        Assert.isTrue(fragment instanceof VCardDetailFragment);
-        final Uri vCardUri = getIntent().getParcelableExtra(UIIntents.UI_INTENT_EXTRA_VCARD_URI);
-        Assert.notNull(vCardUri);
-        final VCardDetailFragment vCardDetailFragment = (VCardDetailFragment) fragment;
-        vCardDetailFragment.setVCardUri(vCardUri);
+        try {
+            Assert.isTrue(fragment instanceof VCardDetailFragment);
+            final Uri vCardUri = getIntent().getParcelableExtra(UIIntents.UI_INTENT_EXTRA_VCARD_URI);
+            Assert.notNull(vCardUri);
+            final VCardDetailFragment vCardDetailFragment = (VCardDetailFragment) fragment;
+            vCardDetailFragment.setVCardUri(vCardUri);
+        } catch (Throwable e) {
+            e.printStackTrace();
+        }
     }
 
     @Override

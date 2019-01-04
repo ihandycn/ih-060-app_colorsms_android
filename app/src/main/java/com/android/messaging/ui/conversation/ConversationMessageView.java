@@ -1108,7 +1108,7 @@ public class ConversationMessageView extends FrameLayout implements View.OnClick
             final AudioAttachmentView audioView = (AudioAttachmentView) view;
             audioView.bindMessagePartData(attachment, mData.getIsIncoming(), isSelected());
             audioView.setBackground(ConversationDrawables.get().getBubbleDrawable(
-                    isSelected(), mData.getIsIncoming(), false /* needArrow */,
+                    isSelected(), mData.getIsIncoming(), true /* needArrow */,
                     mData.hasIncomingErrorStatus()));
         }
 
