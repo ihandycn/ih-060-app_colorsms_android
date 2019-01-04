@@ -6,7 +6,7 @@ function webpFile(){
         fi
         fullname=$(basename $1)
         filename=$(echo $fullname | cut -d . -f1)
-        ./bin/gif2webp -q 75 -lossy -m 6 $1 -o ${1%/*}/0_gif_webp/$filename.webp
+        ./webp-bin/gif2webp -q 75 -lossy -m 6 $1 -o ${1%/*}/0_gif_webp/$filename.webp
 
     elif [[ ${1##*.} == "jpg" || ${1##*.} == "png" ]]; then
         if [[ ! -d ${1%/*}/0_webp ]]; then
@@ -15,7 +15,7 @@ function webpFile(){
         fi
         fullname=$(basename $1)
         filename=$(echo $fullname | cut -d . -f1)
-        ./bin/cwebp -q 75 $1 -o ${1%/*}/0_webp/$filename.webp
+        ./webp-bin/cwebp -q 75 $1 -o ${1%/*}/0_webp/$filename.webp
 
     else 
         echo "webp 文件不作任何处理！！！"
