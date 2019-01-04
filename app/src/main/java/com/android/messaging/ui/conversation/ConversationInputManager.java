@@ -93,6 +93,8 @@ public class ConversationInputManager implements ConversationInput.ConversationI
         EditText getComposeEditText();
 
         void setAccessibility(boolean enabled);
+
+        void onKeyboardVisible(boolean isVisible);
     }
 
     private final ConversationInputHost mHost;
@@ -118,6 +120,7 @@ public class ConversationInputManager implements ConversationInput.ConversationI
         @Override
         public void onImeStateChanged(final boolean imeOpen) {
             mImeInput.onVisibilityChanged(imeOpen);
+            mSink.onKeyboardVisible(imeOpen);
         }
     };
 
@@ -160,7 +163,7 @@ public class ConversationInputManager implements ConversationInput.ConversationI
         mEmojiInput = new ConversationEmojiPicker(this);
         mSimInput = new SimSelector(this);
         mImeInput = new ConversationImeKeyboard(this, mImeStateHost.isImeOpen());
-        mInputs = new ConversationInput[]{mMediaInput, mSimInput, mImeInput};
+        mInputs = new ConversationInput[]{mMediaInput, mSimInput, mImeInput, mEmojiInput};
 
         if (savedState != null) {
             for (int i = 0; i < mInputs.length; i++) {
@@ -389,9 +392,6 @@ public class ConversationInputManager implements ConversationInput.ConversationI
         }
 
         private void initMediaPicker() {
-            if (mMediaPicker != null) {
-                return;
-            }
             mMediaPicker = mHost.createMediaPicker();
             setConversationThemeColor(ConversationDrawables.get().getConversationThemeColor());
             mMediaPicker.setSubscriptionDataProvider(mHost);
@@ -467,6 +467,7 @@ public class ConversationInputManager implements ConversationInput.ConversationI
         public boolean hide(boolean animate) {
             if (mMediaPicker != null) {
                 mMediaPicker.dismiss(animate);
+                mMediaPicker = null;
             }
             return !isOpen();
         }
