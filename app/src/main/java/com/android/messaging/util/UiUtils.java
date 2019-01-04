@@ -51,28 +51,38 @@ import com.android.messaging.Factory;
 import com.android.messaging.R;
 import com.android.messaging.ui.SnackBar;
 import com.android.messaging.ui.SnackBar.Placement;
-import com.android.messaging.ui.conversationlist.ConversationListActivity;
 import com.android.messaging.ui.SnackBarInteraction;
 import com.android.messaging.ui.SnackBarManager;
 import com.android.messaging.ui.UIIntents;
+import com.ihs.commons.config.HSConfig;
+import com.ihs.commons.utils.HSLog;
+import com.superapps.util.Preferences;
 
 import java.lang.reflect.Field;
 import java.util.List;
 
 public class UiUtils {
-    /** MediaPicker transition duration in ms */
+    /**
+     * MediaPicker transition duration in ms
+     */
     public static final int MEDIAPICKER_TRANSITION_DURATION =
             getApplicationContext().getResources().getInteger(
                     R.integer.mediapicker_transition_duration);
-    /** Short transition duration in ms */
+    /**
+     * Short transition duration in ms
+     */
     public static final int ASYNCIMAGE_TRANSITION_DURATION =
             getApplicationContext().getResources().getInteger(
                     R.integer.asyncimage_transition_duration);
-    /** Compose transition duration in ms */
+    /**
+     * Compose transition duration in ms
+     */
     public static final int COMPOSE_TRANSITION_DURATION =
             getApplicationContext().getResources().getInteger(
                     R.integer.compose_transition_duration);
-    /** Generic duration for revealing/hiding a view */
+    /**
+     * Generic duration for revealing/hiding a view
+     */
     public static final int REVEAL_ANIMATION_DURATION =
             getApplicationContext().getResources().getInteger(
                     R.integer.reveal_view_animation_duration);
@@ -88,19 +98,25 @@ public class UiUtils {
 
     private static final String TAG_DIALOG_FRAGMENT = "dialog_fragment";
 
-    /** Show a simple toast at the bottom */
+    /**
+     * Show a simple toast at the bottom
+     */
     public static void showToastAtBottom(final int messageId) {
         UiUtils.showToastAtBottom(getApplicationContext().getString(messageId));
     }
 
-    /** Show a simple toast at the bottom */
+    /**
+     * Show a simple toast at the bottom
+     */
     public static void showToastAtBottom(final String message) {
         final Toast toast = Toast.makeText(getApplicationContext(), message, Toast.LENGTH_LONG);
         toast.setGravity(Gravity.BOTTOM | Gravity.CENTER_HORIZONTAL, 0, 0);
         toast.show();
     }
 
-    /** Show a simple toast at the default position */
+    /**
+     * Show a simple toast at the default position
+     */
     public static void showToast(final int messageId) {
         final Toast toast = Toast.makeText(getApplicationContext(),
                 getApplicationContext().getString(messageId), Toast.LENGTH_LONG);
@@ -108,7 +124,9 @@ public class UiUtils {
         toast.show();
     }
 
-    /** Show a simple toast at the default position */
+    /**
+     * Show a simple toast at the default position
+     */
     public static void showToast(final int pluralsMessageId, final int count) {
         final Toast toast = Toast.makeText(getApplicationContext(),
                 getApplicationContext().getResources().getQuantityString(pluralsMessageId, count),
@@ -118,8 +136,8 @@ public class UiUtils {
     }
 
     public static void showSnackBar(final Context context, @NonNull final View parentView,
-            final String message, @Nullable final Runnable runnable, final int runnableLabel,
-            @Nullable final List<SnackBarInteraction> interactions) {
+                                    final String message, @Nullable final Runnable runnable, final int runnableLabel,
+                                    @Nullable final List<SnackBarInteraction> interactions) {
         Assert.notNull(context);
         SnackBar.Action action = null;
         switch (runnableLabel) {
@@ -127,32 +145,32 @@ public class UiUtils {
                 action = SnackBar.Action.createUndoAction(runnable);
                 break;
             case SnackBar.Action.SNACK_BAR_RETRY:
-                action =  SnackBar.Action.createRetryAction(runnable);
+                action = SnackBar.Action.createRetryAction(runnable);
                 break;
-            default :
+            default:
                 break;
         }
 
         showSnackBarWithCustomAction(context, parentView, message, action, interactions,
-                                        null /* placement */);
+                null /* placement */);
     }
 
     public static void showSnackBarWithCustomAction(final Context context,
-            @NonNull final View parentView,
-            @NonNull final String message,
-            @NonNull final SnackBar.Action action,
-            @Nullable final List<SnackBarInteraction> interactions,
-            @Nullable final Placement placement) {
+                                                    @NonNull final View parentView,
+                                                    @NonNull final String message,
+                                                    @NonNull final SnackBar.Action action,
+                                                    @Nullable final List<SnackBarInteraction> interactions,
+                                                    @Nullable final Placement placement) {
         Assert.notNull(context);
         Assert.isTrue(!TextUtils.isEmpty(message));
         Assert.notNull(action);
         SnackBarManager.get()
-            .newBuilder(parentView)
-            .setText(message)
-            .setAction(action)
-            .withInteractions(interactions)
-            .withPlacement(placement)
-            .show();
+                .newBuilder(parentView)
+                .setText(message)
+                .setAction(action)
+                .withInteractions(interactions)
+                .withPlacement(placement)
+                .show();
     }
 
     /**
@@ -162,8 +180,8 @@ public class UiUtils {
         final OnLayoutChangeListener listener = new OnLayoutChangeListener() {
             @Override
             public void onLayoutChange(final View v, final int left, final int top, final int right,
-                    final int bottom, final int oldLeft, final int oldTop, final int oldRight,
-                    final int oldBottom) {
+                                       final int bottom, final int oldLeft, final int oldTop, final int oldRight,
+                                       final int oldBottom) {
                 // Call the runnable outside the layout pass because very few actions are allowed in
                 // the layout pass
                 ThreadUtil.getMainThreadHandler().post(runnable);
@@ -202,12 +220,13 @@ public class UiUtils {
 
     /**
      * Reveals/Hides a view with a scale animation from view center.
-     * @param view the view to animate
+     *
+     * @param view              the view to animate
      * @param desiredVisibility desired visibility (e.g. View.GONE) for the animated view.
-     * @param onFinishRunnable an optional runnable called at the end of the animation
+     * @param onFinishRunnable  an optional runnable called at the end of the animation
      */
     public static void revealOrHideViewWithAnimation(final View view, final int desiredVisibility,
-            @Nullable final Runnable onFinishRunnable) {
+                                                     @Nullable final Runnable onFinishRunnable) {
         final boolean needAnimation = view.getVisibility() != desiredVisibility;
         if (needAnimation) {
             final float fromScale = desiredVisibility == View.VISIBLE ? 0F : 1F;
@@ -260,7 +279,7 @@ public class UiUtils {
             // we need statusbar color same as actionbar color
             activity.getWindow().setStatusBarColor(color);
 
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M ) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                 View decor = activity.getWindow().getDecorView();
                 if (color == Color.WHITE) {
                     decor.setSystemUiVisibility(View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
@@ -316,19 +335,52 @@ public class UiUtils {
     }
 
     /**
+     * Judge for welcome pages.
+     */
+    private static final String PREF_KEY_FIRST_TIME_LAUNCH = "pref_key_first_launch";
+    private static boolean shouldShowWelcomeStart(){
+        return Preferences.getDefault().getBoolean(PREF_KEY_FIRST_TIME_LAUNCH, true);
+    }
+
+    private static boolean shouldShowWelcomePermission(){
+        return !OsUtil.hasPermissions(OsUtil.REQUIRE_PERMISSION_IN_WELCOME);
+    }
+
+    private static boolean shouldShowWelcomeSetDefault(){
+        return !PhoneUtils.getDefault().isDefaultSmsApp();
+    }
+
+    private static boolean hasShownWelcomeSetDefault = false;
+
+    /**
      * Check if the activity needs to be redirected to permission check
+     *
      * @return true if {@link Activity#finish()} was called because redirection was performed
      */
-    public static boolean redirectToPermissionCheckIfNeeded(final Activity activity) {
-        if (!OsUtil.hasRequiredPermissions()) {
-            UIIntents.get().launchPermissionCheckActivity(activity);
+    public static boolean redirectToWelcomeIfNeeded(final Activity activity) {
+        if (shouldShowWelcomeStart()) {
+            Preferences.getDefault().putBoolean(PREF_KEY_FIRST_TIME_LAUNCH, false);
+            UIIntents.get().launchWelcomeStartActivity(activity);
+            HSLog.d("UiUtil", "show welcome start");
         } else {
-            // No redirect performed
-            return false;
+            if (shouldShowWelcomePermission()) {
+                UIIntents.get().launchWelcomePermissionActivity(activity);
+                HSLog.d("UiUtil", "show welcome permission");
+            } else {
+                if (shouldShowWelcomeSetDefault() && !hasShownWelcomeSetDefault){
+                    hasShownWelcomeSetDefault = true;
+                    UIIntents.get().launchWelcomeSetAsDefaultActivity(activity);
+                    HSLog.d("UiUtil", "show welcome set as default");
+                } else {
+                    // No redirect performed
+                    return false;
+                }
+            }
         }
 
         // Redirect performed
         activity.finish();
+        HSLog.d("UiUtil", activity.getLocalClassName() + " finish");
         return true;
     }
 
@@ -336,6 +388,7 @@ public class UiUtils {
      * Called to check if all conditions are nominal and a "go" for some action, such as deleting
      * a message, that requires this app to be the default app. This is also a precondition
      * required for sending a draft.
+     *
      * @return true if all conditions are nominal and we're ready to send a message
      */
     public static boolean isReadyForAction() {

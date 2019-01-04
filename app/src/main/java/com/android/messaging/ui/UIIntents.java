@@ -110,9 +110,13 @@ public abstract class UIIntents {
     public static final String UI_INTENT_EXTRA_SMS_SHOW_ID = "sms_show_id";
 
     /**
-     * Launch the permission check activity
+     * Launch the welcome activity
      */
-    public abstract void launchPermissionCheckActivity(final Context context);
+    public abstract void launchWelcomeStartActivity(final Context context);
+
+    public abstract void launchWelcomePermissionActivity(final Context context);
+
+    public abstract void launchWelcomeSetAsDefaultActivity(final Context context);
 
     public abstract void launchConversationListActivity(final Context context);
 

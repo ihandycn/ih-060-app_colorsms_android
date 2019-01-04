@@ -25,6 +25,7 @@ import android.os.UserManager;
 import android.support.v4.os.BuildCompat;
 
 import com.android.messaging.Factory;
+import com.superapps.util.RuntimePermissions;
 
 import java.util.ArrayList;
 import java.util.Hashtable;
@@ -230,6 +231,9 @@ public class OsUtil {
         return OsUtil.hasPermission(Manifest.permission.ACCESS_FINE_LOCATION);
     }
 
+    public static boolean hasContactPermission(){
+        return hasPermission(Manifest.permission.READ_CONTACTS);
+    }
 
     public static boolean hasStoragePermission() {
         // Note that READ_EXTERNAL_STORAGE and WRITE_EXTERNAL_STORAGE are granted or denied
@@ -277,4 +281,28 @@ public class OsUtil {
     public static String[] getMissingRequiredPermissions() {
         return getMissingPermissions(sRequiredPermissions);
     }
+
+    /**
+     * Welcome permission
+     */
+    public static String[] REQUIRE_PERMISSION_IN_WELCOME = new String[] {
+            // Required to read existing SMS threads
+            Manifest.permission.READ_SMS,
+            // This is not strictly required, but simplifies the contact picker scenarios
+            Manifest.permission.READ_CONTACTS,
+    };
+
+    /**
+     * If the user click never ask again before.
+     */
+    public static boolean needSystemSettingInWelcome(Context context){
+        for (String permission : REQUIRE_PERMISSION_IN_WELCOME){
+            if (RuntimePermissions.checkSelfPermission(context, permission)
+                    == RuntimePermissions.PERMISSION_PERMANENTLY_DENIED){
+                return true;
+            }
+        }
+        return false;
+    }
+
 }

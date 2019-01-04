@@ -13,8 +13,8 @@
     See the License for the specific language governing permissions and
     limitations under the License.
 -->
-<manifest package="com.android.messaging"
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.android.messaging"
     android:installLocation="internalOnly">
 
     <uses-sdk
@@ -40,7 +40,6 @@
     <uses-permission android:name="android.permission.READ_PROFILE" />
     <uses-permission android:name="android.permission.VIBRATE" />
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
-
     <uses-permission android:name="android.permission.CAMERA" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
@@ -49,7 +48,7 @@
     <uses-permission android:name="android.permission.DOWNLOAD_WITHOUT_NOTIFICATION" />
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
 
-    <!--  Optional features -->
+    <!-- Optional features -->
     <uses-feature
         android:name="android.hardware.camera"
         android:required="false" />
@@ -67,13 +66,12 @@
         android:required="false" />
 
     <application
-        android:name="com.android.messaging.BugleApplication"
+        android:name=".BugleApplication"
         android:allowBackup="false"
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/BugleTheme">
-
         <meta-data
             android:name="io.fabric.ApiKey"
             android:value="0b4450f77c38aaab5bda6429b3e6ece0f4c33dfb" />
@@ -93,7 +91,6 @@
                 <category android:name="android.intent.category.APP_MESSAGING" />
             </intent-filter>
         </activity>
-
         <activity
             android:name=".ui.PermissionCheckActivity"
             android:configChanges="orientation|screenSize|keyboardHidden"
@@ -134,7 +131,7 @@
             android:name=".ui.conversationlist.ArchivedConversationListActivity"
             android:configChanges="orientation|screenSize|keyboardHidden"
             android:label="@string/archived_activity_title"
-            android:parentActivityName="com.android.messaging.ui.conversationlist.ConversationListActivity"
+            android:parentActivityName=".ui.conversationlist.ConversationListActivity"
             android:screenOrientation="portrait"
             android:theme="@style/BugleTheme.ArchivedConversationListActivity">
             <meta-data
@@ -146,7 +143,7 @@
         <activity
             android:name=".ui.conversation.ConversationActivity"
             android:configChanges="orientation|screenSize|keyboardHidden"
-            android:parentActivityName="com.android.messaging.ui.conversationlist.ConversationListActivity"
+            android:parentActivityName=".ui.conversationlist.ConversationListActivity"
             android:screenOrientation="portrait"
             android:theme="@style/BugleTheme.ConversationActivity"
             android:windowSoftInputMode="stateHidden|adjustResize">
@@ -160,7 +157,7 @@
             android:name=".ui.BlockedParticipantsActivity"
             android:configChanges="orientation|screenSize|keyboardHidden"
             android:label="@string/blocked_contacts_title"
-            android:parentActivityName="com.android.messaging.ui.conversationlist.ConversationListActivity"
+            android:parentActivityName=".ui.conversationlist.ConversationListActivity"
             android:screenOrientation="portrait"
             android:theme="@style/BugleTheme">
             <meta-data
@@ -181,36 +178,35 @@
             android:name=".ui.appsettings.SettingsActivity"
             android:configChanges="orientation|screenSize|keyboardHidden"
             android:label="@string/settings_activity_title"
-            android:parentActivityName="com.android.messaging.ui.conversationlist.ConversationListActivity"
+            android:parentActivityName=".ui.conversationlist.ConversationListActivity"
             android:screenOrientation="portrait"
             android:theme="@style/BugleTheme.SettingsActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.android.messaging.ui.conversationlist.ConversationListActivity" />
         </activity>
-
         <activity
             android:name=".ui.appsettings.PerSubscriptionSettingsActivity"
             android:configChanges="orientation|screenSize|keyboardHidden"
             android:label="@string/advanced_settings_activity_title"
-            android:parentActivityName="com.android.messaging.ui.appsettings.SettingsActivity"
+            android:parentActivityName=".ui.appsettings.SettingsActivity"
             android:screenOrientation="portrait"
             android:theme="@style/BugleTheme.SettingsActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.android.messaging.ui.appsettings.SettingsActivity" />
         </activity>
-
         <activity
             android:name=".ui.appsettings.ApplicationSettingsActivity"
             android:configChanges="orientation|screenSize|keyboardHidden"
             android:label="@string/general_settings_activity_title"
-            android:parentActivityName="com.android.messaging.ui.appsettings.SettingsActivity"
+            android:parentActivityName=".ui.appsettings.SettingsActivity"
             android:screenOrientation="portrait"
             android:theme="@style/BugleTheme.SettingsActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.android.messaging.ui.appsettings.SettingsActivity" />
+
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -229,6 +225,7 @@
             android:theme="@style/BugleTheme.DialogActivity">
             <intent-filter android:label="@string/share_intent_label">
                 <action android:name="android.intent.action.SEND" />
+
                 <category android:name="android.intent.category.DEFAULT" />
 
                 <data android:mimeType="text/plain" />
@@ -240,7 +237,9 @@
             </intent-filter>
             <intent-filter android:label="@string/share_intent_label">
                 <action android:name="android.intent.action.SEND_MULTIPLE" />
+
                 <category android:name="android.intent.category.DEFAULT" />
+
                 <data android:mimeType="image/*" />
             </intent-filter>
         </activity>
@@ -250,7 +249,7 @@
             android:name=".ui.conversationsettings.PeopleAndOptionsActivity"
             android:configChanges="orientation|screenSize|keyboardHidden"
             android:label="@string/people_and_options_activity_title"
-            android:parentActivityName="com.android.messaging.ui.conversation.ConversationActivity"
+            android:parentActivityName=".ui.conversation.ConversationActivity"
             android:screenOrientation="portrait"
             android:theme="@style/BugleTheme">
             <meta-data
@@ -258,13 +257,32 @@
                 android:value="com.android.messaging.ui.conversation.ConversationActivity" />
         </activity>
 
+        <!-- Welcome -->
+        <activity
+            android:name=".ui.welcome.WelcomeStartActivity"
+            android:configChanges="orientation|screenSize|keyboardHidden"
+            android:screenOrientation="portrait"
+            android:theme="@style/WelcomeTheme" />
+
+        <activity
+            android:name=".ui.welcome.WelcomePermissionActivity"
+            android:configChanges="orientation|screenSize|keyboardHidden"
+            android:screenOrientation="portrait"
+            android:theme="@style/WelcomeTheme" />
+
+        <activity
+            android:name=".ui.welcome.WelcomeSetAsDefault"
+            android:configChanges="orientation|screenSize|keyboardHidden"
+            android:screenOrientation="portrait"
+            android:theme="@style/WelcomeTheme" />
+
         <!-- License -->
         <activity
             android:name=".ui.LicenseActivity"
             android:exported="true"
             android:label="@string/menu_license"
             android:screenOrientation="portrait"
-            android:theme="@android:style/Theme.Holo.Light.Dialog"></activity>
+            android:theme="@style/WelcomeTheme" />
 
         <!-- Message Forwarding -->
         <activity
@@ -272,19 +290,21 @@
             android:configChanges="orientation|screenSize|keyboardHidden"
             android:label="@string/forward_message_activity_title"
             android:screenOrientation="portrait"
-            android:theme="@style/BugleTheme.DialogActivity"></activity>
+            android:theme="@style/BugleTheme.DialogActivity" />
 
-        <!-- Entry point for handling remote input/actions. Currently, this is only used by Android
+        <!--
+             Entry point for handling remote input/actions. Currently, this is only used by Android
              Wear to send voice replies. Since that uses PendingIntents, we don't need to export
              this activity. If we want other apps to be able to use this activity at will,
              we'll need to guard it with a signature-matching protected permission. We would also
-             need to add an intent filter and remove the android:exported attribute. -->
+             need to add an intent filter and remove the android:exported attribute.
+        -->
         <activity
             android:name=".ui.RemoteInputEntrypointActivity"
             android:configChanges="orientation|screenSize|keyboardHidden"
             android:exported="false"
             android:screenOrientation="portrait"
-            android:theme="@style/Invisible"></activity>
+            android:theme="@style/Invisible" />
 
         <!-- VCard details -->
         <activity
@@ -303,7 +323,7 @@
             android:name=".ui.attachmentchooser.AttachmentChooserActivity"
             android:configChanges="orientation|screenSize|keyboardHidden"
             android:label="@string/attachment_chooser_activity_title"
-            android:parentActivityName="com.android.messaging.ui.conversation.ConversationActivity"
+            android:parentActivityName=".ui.conversation.ConversationActivity"
             android:screenOrientation="portrait"
             android:theme="@style/BugleTheme">
             <meta-data
@@ -311,46 +331,44 @@
                 android:value="com.android.messaging.ui.conversation.ConversationActivity" />
         </activity>
 
-        <!-- Test activity that we use to host fragments/views. Unfortunately, apparently necessary
+        <!--
+             Test activity that we use to host fragments/views. Unfortunately, apparently necessary
              because Android framework test cases want activity to be in the instrumented package.
              See http://developer.android.com/reference/android/test/ActivityInstrumentationTestCase2.html
         -->
         <activity
             android:name=".ui.TestActivity"
             android:configChanges="orientation|screenSize|keyboardHidden"
-            android:screenOrientation="portrait"></activity>
-
+            android:screenOrientation="portrait" />
         <activity
             android:name=".ui.debug.DebugMmsConfigActivity"
             android:configChanges="orientation|screenSize|keyboardHidden"
             android:exported="false"
             android:screenOrientation="portrait"
-            android:theme="@style/BugleTheme.DialogActivity"></activity>
+            android:theme="@style/BugleTheme.DialogActivity" />
 
         <provider
             android:name=".datamodel.MessagingContentProvider"
             android:authorities="com.color.messaging.datamodel.MessagingContentProvider"
             android:exported="false"
-            android:label="@string/app_name"></provider>
-
+            android:label="@string/app_name" />
         <provider
             android:name=".datamodel.MmsFileProvider"
             android:authorities="com.color.messaging.datamodel.MmsFileProvider"
             android:exported="false"
             android:grantUriPermissions="true" />
-
         <provider
             android:name=".datamodel.MediaScratchFileProvider"
             android:authorities="com.color.messaging.datamodel.MediaScratchFileProvider"
             android:exported="false"
             android:grantUriPermissions="true" />
 
-
         <!-- Action Services -->
         <service android:name=".datamodel.action.ActionServiceImpl" />
         <service android:name=".datamodel.action.BackgroundWorkerService" />
 
         <!-- Sms and Mms related items -->
+
 
         <!-- Intents for Notification and Pre-KLP Delivery -->
         <!-- Registered with the highest possible priority (max_int) -->
@@ -360,6 +378,7 @@
             android:permission="android.permission.BROADCAST_WAP_PUSH">
             <intent-filter android:priority="2147483647">
                 <action android:name="android.provider.Telephony.WAP_PUSH_RECEIVED" />
+
                 <data android:mimeType="application/vnd.wap.mms-message" />
             </intent-filter>
         </receiver>
@@ -383,6 +402,7 @@
             android:permission="android.permission.BROADCAST_WAP_PUSH">
             <intent-filter android:priority="3">
                 <action android:name="android.provider.Telephony.WAP_PUSH_RECEIVED" />
+
                 <data android:mimeType="application/vnd.wap.mms-message" />
             </intent-filter>
         </receiver>
@@ -401,6 +421,7 @@
             android:permission="android.permission.BROADCAST_WAP_PUSH">
             <intent-filter>
                 <action android:name="android.provider.Telephony.WAP_PUSH_DELIVER" />
+
                 <data android:mimeType="application/vnd.wap.mms-message" />
             </intent-filter>
         </receiver>
@@ -411,12 +432,12 @@
                 <action android:name="android.provider.Telephony.SMS_DELIVER" />
             </intent-filter>
         </receiver>
-
         <receiver
             android:name=".receiver.SendStatusReceiver"
             android:exported="false">
             <intent-filter>
                 <action android:name="com.android.messaging.receiver.SendStatusReceiver.MESSAGE_SENT" />
+
                 <data android:scheme="content" />
             </intent-filter>
             <intent-filter>
@@ -424,10 +445,12 @@
             </intent-filter>
             <intent-filter>
                 <action android:name="com.android.messaging.receiver.SendStatusReceiver.MMS_SENT" />
+
                 <data android:scheme="content" />
             </intent-filter>
             <intent-filter>
                 <action android:name="com.android.messaging.receiver.SendStatusReceiver.MMS_DOWNLOADED" />
+
                 <data android:scheme="content" />
             </intent-filter>
         </receiver>
@@ -438,6 +461,7 @@
             android:permission="android.permission.SEND_RESPOND_VIA_MESSAGE">
             <intent-filter>
                 <action android:name="android.intent.action.RESPOND_VIA_MESSAGE" />
+
                 <category android:name="android.intent.category.DEFAULT" />
 
                 <data android:scheme="sms" />
@@ -452,25 +476,22 @@
             android:label="@string/class_0_message_activity"
             android:launchMode="singleTask"
             android:screenOrientation="portrait"
-            android:theme="@style/BugleTheme.DialogActivity"></activity>
-
+            android:theme="@style/BugleTheme.DialogActivity" />
         <activity
             android:name=".ui.SmsStorageLowWarningActivity"
             android:configChanges="orientation|screenSize|keyboardHidden"
             android:screenOrientation="portrait"
             android:theme="@style/Invisible" />
-
         <activity
             android:name=".ui.appsettings.ApnSettingsActivity"
             android:configChanges="orientation|screenSize|keyboardHidden"
-            android:parentActivityName="com.android.messaging.ui.appsettings.SettingsActivity"
+            android:parentActivityName=".ui.appsettings.SettingsActivity"
             android:screenOrientation="portrait"
             android:theme="@style/BugleTheme" />
-
         <activity
             android:name=".ui.appsettings.ApnEditorActivity"
             android:configChanges="orientation|screenSize|keyboardHidden"
-            android:parentActivityName="com.android.messaging.ui.appsettings.ApnSettingsActivity"
+            android:parentActivityName=".ui.appsettings.ApnSettingsActivity"
             android:screenOrientation="portrait"
             android:theme="@style/BugleTheme" />
 
@@ -491,7 +512,6 @@
                 <action android:name="android.intent.action.DEVICE_STORAGE_OK" />
             </intent-filter>
         </receiver>
-
         <receiver android:name=".receiver.BootAndPackageReplacedReceiver">
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
@@ -502,7 +522,7 @@
         <!-- Broadcast receiver that will be notified to reset notifications -->
         <receiver
             android:name=".receiver.NotificationReceiver"
-            android:exported="false"></receiver>
+            android:exported="false" />
 
         <!-- Broadcast receiver that will be notified for ActionService alarms. -->
         <receiver
@@ -512,7 +532,6 @@
                 <action android:name="com.android.messaging.datamodel.PENDING_ACTION" />
             </intent-filter>
         </receiver>
-
         <receiver android:name=".receiver.DefaultSmsSubscriptionChangeReceiver">
             <intent-filter>
                 <action android:name="android.telephony.action.DEFAULT_SMS_SUBSCRIPTION_CHANGED" />
@@ -555,7 +574,6 @@
             android:name=".widget.WidgetConversationListService"
             android:exported="false"
             android:permission="android.permission.BIND_REMOTEVIEWS" />
-
         <service
             android:name=".widget.WidgetConversationService"
             android:exported="false"
@@ -570,7 +588,6 @@
                 <action android:name="android.appwidget.action.APPWIDGET_CONFIGURE" />
             </intent-filter>
         </activity>
-
         <activity
             android:name=".ui.emoji.StickerMagicDetailActivity"
             android:excludeFromRecents="true"

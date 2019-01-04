@@ -54,7 +54,7 @@ public class LaunchConversationActivity extends Activity implements
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (UiUtils.redirectToPermissionCheckIfNeeded(this)) {
+        if (UiUtils.redirectToWelcomeIfNeeded(this)) {
             return;
         }
 

@@ -995,4 +995,35 @@
 
     <!--sms show-->
     <string name="sms_show_apply">APPLY</string>
+
+    <!-- Welcome-->
+    <string name="welcome_start_button">START</string>
+    <string name="welcome_start_description">By clicking START, you agree to our</string>
+    <string name="welcome_start_service">Terms of Service</string>
+    <string name="welcome_start_and">and</string>
+    <string name="welcome_start_policy">Privacy Policy</string>
+
+    <string name="welcome_permission_button">ALLOW</string>
+    <string name="welcome_permission_title">Necessary Permissions</string>
+    <string name="welcome_permission_description">To work properly, we need the following permissions.</string>
+    <string name="welcome_permission_sms_title">SMS</string>
+    <string name="welcome_permission_sms_description_1">Send and view SMS messages</string>
+    <string name="welcome_permission_sms_description_2">Remind you in time when messages come</string>
+    <string name="welcome_permission_sms_description_3">Quick reply to others’ messages</string>
+    <string name="welcome_permission_contacts_title">SMS</string>
+    <string name="welcome_permission_contacts_description_1">Remind you who sent the messages</string>
+    <string name="welcome_permission_contacts_description_2">Show SMS contacts</string>
+    <string name="welcome_permission_contacts_description_3">Provide contact management features</string>
+    <string name="welcome_permission_contacts_description_4">Easier for you to choose the person you want to send messages by your contacts</string>
+    <string name="welcome_permission_failed_toast">Color SMS can’t work without permissions</string>
+
+    <string name="welcome_set_default_button">OK</string>
+    <string name="welcome_set_default_skip">SKIP</string>
+    <string name="welcome_set_default_title">Set as Default</string>
+    <string name="welcome_set_default_description">More cool features to keep in touch, make ColorSMS as your default SMS app</string>
+    <string name="welcome_set_default_emoji">A lot of beautiful Emojis</string>
+    <string name="welcome_set_default_music">Custom ringtone music</string>
+    <string name="welcome_set_default_group">Group messaging</string>
+    <string name="welcome_set_default_delete">Delete useless SMS messages</string>
+    <string name="welcome_set_default_feature">More features coming soon</string>
 </resources>

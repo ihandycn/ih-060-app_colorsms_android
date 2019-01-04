@@ -14,10 +14,6 @@ import android.widget.ImageView;
 
 import com.android.messaging.R;
 import com.android.messaging.glide.GlideApp;
-import com.android.messaging.libwebp.WebpDrawable;
-import com.android.messaging.libwebp.WebpUtils;
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.integration.webp.decoder.WebpDrawableTransformation;
 import com.bumptech.glide.request.target.SimpleTarget;
 import com.bumptech.glide.request.transition.Transition;
 

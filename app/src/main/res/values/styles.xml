@@ -101,6 +101,13 @@
         <item name="android:lines">1</item>
     </style>
 
+    <style name="WelcomeTheme" parent="@style/BugleTheme">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+        <item name="android:windowBackground">@android:color/background_light</item>
+        <item name="actionOverflowButtonStyle">@style/OverflowButtonStyle</item>
+    </style>
+
     <style name="ConversationActionBarTitleTextStyle" parent="BugleActionBarTitleTextStyle">
         <item name="android:background">?android:attr/selectableItemBackground</item>
     </style>

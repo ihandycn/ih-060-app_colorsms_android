@@ -70,6 +70,9 @@ import com.android.messaging.util.ConversationIdSet;
 import com.android.messaging.util.LogUtil;
 import com.android.messaging.util.UiUtils;
 import com.android.messaging.util.UriUtil;
+import com.android.messaging.ui.welcome.WelcomePermissionActivity;
+import com.android.messaging.ui.welcome.WelcomeSetAsDefault;
+import com.android.messaging.ui.welcome.WelcomeStartActivity;
 
 /**
  * A central repository of Intents used to start activities.
@@ -136,8 +139,20 @@ public class UIIntentsImpl extends UIIntents {
     }
 
     @Override
-    public void launchPermissionCheckActivity(final Context context) {
-        final Intent intent = new Intent(context, PermissionCheckActivity.class);
+    public void launchWelcomeStartActivity(final Context context) {
+        final Intent intent = new Intent(context, WelcomeStartActivity.class);
+        context.startActivity(intent);
+    }
+
+    @Override
+    public void launchWelcomePermissionActivity(final Context context) {
+        final Intent intent = new Intent(context, WelcomePermissionActivity.class);
+        context.startActivity(intent);
+    }
+
+    @Override
+    public void launchWelcomeSetAsDefaultActivity(final Context context) {
+        final Intent intent = new Intent(context, WelcomeSetAsDefault.class);
         context.startActivity(intent);
     }
 

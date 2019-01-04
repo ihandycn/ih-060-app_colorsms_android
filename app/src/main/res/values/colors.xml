@@ -184,4 +184,15 @@
     <color name="emoji_tab_selected_color">#edf1f3</color>
 
     <color name="black_alpha_20">#cd000000</color>
+
+    <color name="welcome_text_start_description">#99fffefe</color>
+    <color name="welcome_text_permission_list">#ff353535</color>
+    <color name="welcome_text_set_default_list">#ff1b1b1b</color>
+    <color name="welcome_text_description">#ff4a4a4a</color>
+    <color name="welcome_button_white">#ffffffff</color>
+    <color name="welcome_button_white_pressed">#ffe0e0e0</color>
+    <color name="welcome_button_white_ripple">#ffe0e0e0</color>
+    <color name="welcome_button_green">#ff1acc48</color>
+    <color name="welcome_button_green_pressed">#ff14ae3c</color>
+    <color name="welcome_button_green_ripple">#ff14ae3c</color>
 </resources>
