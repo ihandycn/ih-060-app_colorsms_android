@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--
+<?xml version="1.0" encoding="utf-8"?><!--
     Copyright (C) 2015 The Android Open Source Project
 
     Licensed under the Apache License, Version 2.0 (the "License");
@@ -77,11 +76,12 @@
     <dimen name="notification_wearable_image_width">240dp</dimen>
 
     <!-- Contact Picker related dimensions. -->
-    <dimen name="contact_list_text_size">16sp</dimen>
-    <dimen name="contact_list_detail_text_size">14sp</dimen>
-    <dimen name="contact_list_icon_size">42dp</dimen>
+    <dimen name="contact_list_text_size">15sp</dimen>
+    <dimen name="contact_list_detail_text_size">13sp</dimen>
+    <dimen name="contact_list_detail_type_text_size">11sp</dimen>
+    <dimen name="contact_list_icon_size">40dp</dimen>
     <dimen name="recipient_edit_text_size">20sp</dimen>
-    <dimen name="pager_tab_header_text_size">14sp</dimen>
+    <dimen name="pager_tab_header_text_size">15sp</dimen>
     <dimen name="pager_tab_underline_selected">2dp</dimen>
     <dimen name="contact_list_alphabet_header_text_size">26dp</dimen>
 

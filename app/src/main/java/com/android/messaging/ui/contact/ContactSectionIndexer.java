@@ -19,6 +19,8 @@ import android.database.Cursor;
 import android.os.Bundle;
 import android.provider.ContactsContract.Contacts;
 import android.text.TextUtils;
+import android.util.Log;
+import android.util.SparseArray;
 import android.widget.SectionIndexer;
 
 import com.android.messaging.util.Assert;
@@ -26,6 +28,8 @@ import com.android.messaging.util.ContactUtil;
 import com.android.messaging.util.LogUtil;
 
 import java.util.ArrayList;
+
+import javax.annotation.Nullable;
 
 /**
  * Indexes contact alphabetical sections so we can report to the fast scrolling list view
@@ -36,9 +40,41 @@ public class ContactSectionIndexer implements SectionIndexer {
     private String[] mSections;
     private ArrayList<Integer> mSectionStartingPositions;
     private static final String BLANK_HEADER_STRING = " ";
+    private SparseArray<String> mMap;
 
-    public ContactSectionIndexer(final Cursor contactsCursor) {
+    ContactSectionIndexer(final Cursor contactsCursor) {
         buildIndexer(contactsCursor);
+        mMap = new SparseArray<>();
+        int count = contactsCursor.getCount();
+        for (int i = 0; i < count; i++) {
+            int section = getSectionForPosition(i);
+            if (getPositionForSection(section) == i) {
+                int key = mMap.size() + i;
+                mMap.put(key, mSections[section]);
+            }
+        }
+    }
+
+    @Nullable
+    String getSectionForStartingPosition(int position) {
+        return mMap.get(position);
+    }
+
+    int mapListPositionToCursorPosition(int listPosition) {
+        int size = mMap.size();
+        for (int i = 0; i < size; i++) {
+            int key = mMap.keyAt(i);
+            if (key > listPosition) {
+                Assert.isNaturalNumber(listPosition - i);
+                return listPosition - i;
+            }
+        }
+        Assert.isNaturalNumber(listPosition - size);
+        return listPosition - size;
+    }
+
+    int getSectionCount() {
+        return mSections == null ? 0 : mSections.length;
     }
 
     @Override
@@ -142,7 +178,7 @@ public class ContactSectionIndexer implements SectionIndexer {
                 // a slightly more sophisticated heuristic, but as a fallback this is good enough.
                 final String sortKey = cursor.getString(ContactUtil.INDEX_SORT_KEY);
                 final String section = TextUtils.isEmpty(sortKey) ? BLANK_HEADER_STRING :
-                    sortKey.substring(0, 1).toUpperCase();
+                        sortKey.substring(0, 1).toUpperCase();
 
                 final int lastIndex = sections.size() - 1;
                 final String currentSection = lastIndex >= 0 ? sections.get(lastIndex) : null;

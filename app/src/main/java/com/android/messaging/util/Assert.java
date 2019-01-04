@@ -20,9 +20,14 @@ import android.os.Looper;
 import java.util.Arrays;
 
 public final class Assert {
-    public static @interface RunsOnMainThread {}
-    public static @interface DoesNotRunOnMainThread {}
-    public static @interface RunsOnAnyThread {}
+    public static @interface RunsOnMainThread {
+    }
+
+    public static @interface DoesNotRunOnMainThread {
+    }
+
+    public static @interface RunsOnAnyThread {
+    }
 
     private static final String TEST_THREAD_SUBSTRING = "test";
 
@@ -55,7 +60,7 @@ public final class Assert {
     }
 
     // This is called from FactoryImpl once the Gservices class is initialized.
-    public static void initializeGservices (final BugleGservices gservices) {
+    public static void initializeGservices(final BugleGservices gservices) {
         gservices.registerForChanges(new Runnable() {
             @Override
             public void run() {
@@ -63,6 +68,12 @@ public final class Assert {
             }
         });
         refreshGservices(gservices);
+    }
+
+    public static void isNaturalNumber(int number) {
+        if (number < 0) {
+            fail("Expected number to be the natural number, but number = " + number, true);
+        }
     }
 
     /**
@@ -122,7 +133,7 @@ public final class Assert {
         }
     }
 
-    public static void oneOf(final int actual, final int ...expected) {
+    public static void oneOf(final int actual, final int... expected) {
         for (int value : expected) {
             if (actual == value) {
                 return;
@@ -163,6 +174,7 @@ public final class Assert {
 
     /**
      * Halt execution if the value passed in is not null
+     *
      * @param obj The object to check
      */
     public static void isNull(final Object obj) {
@@ -173,7 +185,8 @@ public final class Assert {
 
     /**
      * Halt execution if the value passed in is not null
-     * @param obj The object to check
+     *
+     * @param obj            The object to check
      * @param failureMessage message to print when halting execution
      */
     public static void isNull(final Object obj, final String failureMessage) {
@@ -184,6 +197,7 @@ public final class Assert {
 
     /**
      * Halt execution if the value passed in is null
+     *
      * @param obj The object to check
      */
     public static void notNull(final Object obj) {

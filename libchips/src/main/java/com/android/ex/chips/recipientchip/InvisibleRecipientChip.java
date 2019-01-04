@@ -110,11 +110,6 @@ public class InvisibleRecipientChip extends ReplacementSpan implements DrawableR
     }
 
     @Override
-    public Rect getWarningIconBounds() {
-        return NULL_RECTANGLE;
-    }
-
-    @Override
     public void draw(final Canvas canvas) {
         // do nothing.
     }

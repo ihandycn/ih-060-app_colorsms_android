@@ -33,12 +33,11 @@ import com.android.messaging.util.ImeUtil;
 public abstract class CustomHeaderPagerListViewHolder extends BasePagerViewHolder
         implements CustomHeaderPagerViewHolder {
     private final Context mContext;
-    private final CursorAdapter mListAdapter;
+    private final CustomCursorAdapter mListAdapter;
     private boolean mListCursorInitialized;
     private ListView mListView;
 
-    public CustomHeaderPagerListViewHolder(final Context context,
-            final CursorAdapter adapter) {
+    public CustomHeaderPagerListViewHolder(final Context context, final CustomCursorAdapter adapter) {
         mContext = context;
         mListAdapter = adapter;
     }

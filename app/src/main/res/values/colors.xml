@@ -25,6 +25,10 @@
     <color name="archived_conversation_action_bar_background_color">#9D9D9D</color>
     <color name="archived_conversation_action_bar_background_color_dark">#838383</color>
 
+    <!-- Pager tab -->
+    <color name="pager_tab_state_selected">#09ac33</color>
+    <color name="pager_tab_state_normal">#2d2f34</color>
+
     <!-- Conversation list -->
     <color name="conversation_list_contact_read_background_color">#d4d9de</color>
     <color name="conversation_list_item_conversation">#19191c</color>
@@ -85,19 +89,20 @@
 
     <color name="contact_avatar_default_background">#d2d2d2</color>
     <color name="contact_avatar_pressed_color">#40000000</color>
-    <color name="contact_list_text_primary">#4d4d4d</color>
-    <color name="contact_list_text_secondary">#999999</color>
+    <color name="contact_list_text_primary">#19191c</color>
+    <color name="contact_list_text_secondary">#222327</color>
+    <color name="contact_list_text_type">#afb1be</color>
 
-    <color name="compose_contact_text">@android:color/white</color>
-    <color name="compose_contact_faint_text">#a0ffffff</color>
+    <color name="compose_contact_text">#19191c</color>
+    <color name="compose_contact_faint_text">#5919191c</color>
     <color name="compose_contact_divider">#44000000</color>
     <color name="contact_picker_tab_pressed">#ddffffff</color>
-    <color name="contact_picker_tab_underline">@android:color/white</color>
+    <color name="contact_picker_tab_underline">#1acc48</color>
     <color name="contact_list_alphabet_header">@color/primary_color</color>
     <color name="contact_picker_background">#ffffff</color>
     <color name="chips_dropdown_background_activated">#4285f4</color>
     <color name="chips_dropdown_background_pressed">#ededed</color>
-    <color name="chips_background_color">#33000000</color>
+    <color name="chips_background_color">#1acc48</color>
     <color name="chips_text_color">@android:color/white</color>
 
     <color name="camera_button_container_background">#80000000</color>

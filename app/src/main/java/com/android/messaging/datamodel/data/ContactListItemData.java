@@ -52,7 +52,7 @@ public class ContactListItemData {
     /**
      * Bind to a contact cursor in the contact list.
      */
-    public void bind(final Cursor cursor, final String alphabetHeader) {
+    public void bind(final Cursor cursor) {
         final long dataId = cursor.getLong(ContactUtil.INDEX_DATA_ID);
         final long contactId = cursor.getLong(ContactUtil.INDEX_CONTACT_ID);
         final String lookupKey = cursor.getString(ContactUtil.INDEX_LOOKUP_KEY);
@@ -63,7 +63,6 @@ public class ContactListItemData {
         final String destinationLabel = cursor.getString(ContactUtil.INDEX_PHONE_EMAIL_LABEL);
         mStyledName = null;
         mStyledDestination = null;
-        mAlphabetHeader = alphabetHeader;
         mSingleRecipient = false;
 
         // Check whether this contact is first level (i.e. whether it's the first entry of this

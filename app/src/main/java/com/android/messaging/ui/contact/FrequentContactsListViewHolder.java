@@ -26,9 +26,8 @@ import com.android.messaging.ui.contact.ContactListItemView.HostInterface;
  */
 public class FrequentContactsListViewHolder extends CustomHeaderPagerListViewHolder {
     public FrequentContactsListViewHolder(final Context context,
-            final HostInterface clivHostInterface) {
-        super(context, new ContactListAdapter(context, null, clivHostInterface,
-                false /* needAlphabetHeader */));
+                                          final HostInterface clivHostInterface) {
+        super(context, new ContactListAdapter(clivHostInterface, false /* needAlphabetHeader */));
     }
 
     @Override

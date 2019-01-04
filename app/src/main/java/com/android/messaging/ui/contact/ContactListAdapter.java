@@ -16,71 +16,101 @@
 
 package com.android.messaging.ui.contact;
 
-import android.content.Context;
 import android.database.Cursor;
-import android.view.LayoutInflater;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.CursorAdapter;
-import android.widget.SectionIndexer;
+import android.widget.TextView;
 
 import com.android.messaging.R;
-import com.android.messaging.util.Assert;
+import com.android.messaging.ui.CustomCursorAdapter;
 
-public class ContactListAdapter extends CursorAdapter implements SectionIndexer {
+public class ContactListAdapter extends CustomCursorAdapter {
+
+    private static final int ITEM_VIEW_TYPE_ALPHABET_HEADER = 0;
+    private static final int ITEM_VIEW_TYPE_CONTACT = 1;
+
     private final ContactListItemView.HostInterface mClivHostInterface;
     private final boolean mNeedAlphabetHeader;
     private ContactSectionIndexer mSectionIndexer;
 
-    public ContactListAdapter(final Context context, final Cursor cursor,
-            final ContactListItemView.HostInterface clivHostInterface,
-            final boolean needAlphabetHeader) {
-        super(context, cursor, 0);
+    ContactListAdapter(final ContactListItemView.HostInterface clivHostInterface,
+                       final boolean needAlphabetHeader) {
         mClivHostInterface = clivHostInterface;
         mNeedAlphabetHeader = needAlphabetHeader;
-        mSectionIndexer = new ContactSectionIndexer(cursor);
     }
 
     @Override
-    public void bindView(final View view, final Context context, final Cursor cursor) {
-        Assert.isTrue(view instanceof ContactListItemView);
-        final ContactListItemView contactListItemView = (ContactListItemView) view;
-        String alphabetHeader = null;
-        if (mNeedAlphabetHeader) {
-            final int position = cursor.getPosition();
-            final int section = mSectionIndexer.getSectionForPosition(position);
-            // Check if the position is the first in the section.
-            if (mSectionIndexer.getPositionForSection(section) == position) {
-                alphabetHeader = (String) mSectionIndexer.getSections()[section];
-            }
+    protected View onCreateView(int position, int itemViewType, ViewGroup parent) {
+        View view = null;
+        switch (itemViewType) {
+            case ITEM_VIEW_TYPE_ALPHABET_HEADER:
+                view = View.inflate(parent.getContext(), R.layout.contact_list_section_view, null);
+                break;
+            case ITEM_VIEW_TYPE_CONTACT:
+                view = View.inflate(parent.getContext(), R.layout.contact_list_item_view, null);
+                break;
         }
-        contactListItemView.bind(cursor, mClivHostInterface, mNeedAlphabetHeader, alphabetHeader);
+        return view;
     }
 
     @Override
-    public View newView(final Context context, final Cursor cursor, final ViewGroup parent) {
-        final LayoutInflater layoutInflater = LayoutInflater.from(context);
-        return layoutInflater.inflate(R.layout.contact_list_item_view, parent, false);
+    protected void onBindView(int position, int itemViewType, View view) {
+        String alphabetHeader;
+        switch (itemViewType) {
+            case ITEM_VIEW_TYPE_ALPHABET_HEADER:
+                alphabetHeader = mSectionIndexer.getSectionForStartingPosition(position);
+                ((TextView) view).setText(alphabetHeader);
+                break;
+            case ITEM_VIEW_TYPE_CONTACT:
+                int cursorPosition = position;
+                if (mNeedAlphabetHeader) {
+                    cursorPosition = mSectionIndexer.mapListPositionToCursorPosition(position);
+                }
+                mCursor.moveToPosition(cursorPosition);
+                ((ContactListItemView) view).bind(mCursor, mClivHostInterface);
+                break;
+        }
     }
 
     @Override
-    public Cursor swapCursor(final Cursor newCursor) {
-        mSectionIndexer = new ContactSectionIndexer(newCursor);
-        return super.swapCursor(newCursor);
+    protected void onSwapCursor(Cursor cursor) {
+        if (mNeedAlphabetHeader) {
+            mSectionIndexer = new ContactSectionIndexer(cursor);
+        }
     }
 
     @Override
-    public Object[] getSections() {
-        return mSectionIndexer.getSections();
+    public int getCount() {
+        if (mCursor == null) {
+            return 0;
+        }
+
+        if (mNeedAlphabetHeader) {
+            Log.d("List.type", "mCursor.getCount(): " + mCursor.getCount() + " mSectionIndexer.getSectionCount(): " + mSectionIndexer.getSectionCount());
+            return mCursor.getCount() + mSectionIndexer.getSectionCount();
+        } else {
+            return mCursor.getCount();
+        }
     }
 
     @Override
-    public int getPositionForSection(final int sectionIndex) {
-        return mSectionIndexer.getPositionForSection(sectionIndex);
+    public Object getItem(int position) {
+        return null;
     }
 
     @Override
-    public int getSectionForPosition(final int position) {
-        return mSectionIndexer.getSectionForPosition(position);
+    public int getViewTypeCount() {
+        return 2;
+    }
+
+    @Override
+    public int getItemViewType(int position) {
+        if (mNeedAlphabetHeader) {
+            String alphabetHeader = mSectionIndexer.getSectionForStartingPosition(position);
+            return alphabetHeader == null ? ITEM_VIEW_TYPE_CONTACT : ITEM_VIEW_TYPE_ALPHABET_HEADER;
+        } else {
+            return ITEM_VIEW_TYPE_CONTACT;
+        }
     }
 }
