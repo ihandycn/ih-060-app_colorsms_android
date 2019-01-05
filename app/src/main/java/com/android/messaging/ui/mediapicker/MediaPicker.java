@@ -48,11 +48,13 @@ import com.android.messaging.datamodel.data.PendingAttachmentData;
 import com.android.messaging.datamodel.data.DraftMessageData.DraftMessageSubscriptionDataProvider;
 import com.android.messaging.ui.BugleActionBarActivity;
 import com.android.messaging.ui.FixedViewPagerAdapter;
+import com.android.messaging.ui.conversation.ConversationFragment;
 import com.android.messaging.ui.mediapicker.DocumentImagePicker.SelectionListener;
 import com.android.messaging.util.AccessibilityUtil;
 import com.android.messaging.util.Assert;
 import com.android.messaging.util.UiUtils;
 import com.google.common.annotations.VisibleForTesting;
+import com.ihs.commons.notificationcenter.HSGlobalNotificationCenter;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -466,6 +468,7 @@ public class MediaPicker extends Fragment implements DraftMessageSubscriptionDat
             mMediaPickerPanel.setExpanded(false, animate, MediaPickerPanel.PAGE_NOT_SET);
         }
         mSelectedChooser = null;
+        HSGlobalNotificationCenter.sendNotification(ConversationFragment.EVENT_SHOW_OPTION_MENU);
     }
 
     /**
@@ -496,6 +499,10 @@ public class MediaPicker extends Fragment implements DraftMessageSubscriptionDat
         } else {
 //            actionBar.hide();
         }
+    }
+
+    public void setSelectedChooser(int index) {
+        mSelectedChooser = mEnabledChoosers.get(index);
     }
 
     /**

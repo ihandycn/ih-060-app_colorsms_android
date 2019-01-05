@@ -36,7 +36,8 @@
         <View
             android:id="@+id/top_margin"
             android:layout_width="match_parent"
-            android:layout_height="16dp" />
+            android:layout_height="16dp"
+            android:visibility="gone" />
 
         <include
             android:id="@+id/attachment_draft_view"

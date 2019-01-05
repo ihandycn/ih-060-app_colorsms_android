@@ -107,6 +107,9 @@ import com.android.messaging.util.TextUtil;
 import com.android.messaging.util.UiUtils;
 import com.android.messaging.util.UriUtil;
 import com.google.common.annotations.VisibleForTesting;
+import com.ihs.commons.notificationcenter.HSGlobalNotificationCenter;
+import com.ihs.commons.notificationcenter.INotificationObserver;
+import com.ihs.commons.utils.HSBundle;
 import com.superapps.util.Toasts;
 
 import java.io.File;
@@ -118,7 +121,10 @@ import java.util.List;
  */
 public class ConversationFragment extends Fragment implements ConversationDataListener,
         IComposeMessageViewHost, ConversationMessageViewHost, ConversationInputHost,
-        DraftMessageDataListener {
+        DraftMessageDataListener, INotificationObserver {
+
+    public static final String EVENT_SHOW_OPTION_MENU = "event_show_option_menu";
+    public static final String EVENT_HIDE_OPTION_MENU = "event_hide_option_menu";
 
     public interface ConversationFragmentHost extends ImeUtil.ImeStateHost {
         void onStartComposeMessage();
@@ -443,6 +449,9 @@ public class ConversationFragment extends Fragment implements ConversationDataLi
                     }
                 }
         );
+
+        HSGlobalNotificationCenter.addObserver(EVENT_SHOW_OPTION_MENU, this);
+        HSGlobalNotificationCenter.addObserver(EVENT_HIDE_OPTION_MENU, this);
     }
 
     /**
@@ -1539,44 +1548,43 @@ public class ConversationFragment extends Fragment implements ConversationDataLi
     }
 
     public void updateActionBar(final ActionBar actionBar, final TextView tvTitle) {
-        if (mComposeMessageView == null || !mComposeMessageView.updateActionBar(actionBar)) {
-            // We update this regardless of whether or not the action bar is showing so that we
-            // don't get a race when it reappears.
-            actionBar.setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
-            actionBar.setDisplayHomeAsUpEnabled(true);
-            // Reset the back arrow to its default
-            actionBar.setHomeAsUpIndicator(R.drawable.ic_back);
+        // We update this regardless of whether or not the action bar is showing so that we
+        // don't get a race when it reappears.
+        actionBar.setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
+        actionBar.setDisplayHomeAsUpEnabled(true);
+        // Reset the back arrow to its default
+        actionBar.setHomeAsUpIndicator(R.drawable.ic_back);
 
-            final String conversationName = getConversationName();
-            if (!TextUtils.isEmpty(conversationName)) {
-                // RTL : To format conversation title if it happens to be phone numbers.
-                final BidiFormatter bidiFormatter = BidiFormatter.getInstance();
-                final String formattedName = bidiFormatter.unicodeWrap(
-                        UiUtils.commaEllipsize(
-                                conversationName,
-                                tvTitle.getPaint(),
-                                tvTitle.getWidth(),
-                                getString(R.string.plus_one),
-                                getString(R.string.plus_n)).toString(),
-                        TextDirectionHeuristicsCompat.LTR);
-                tvTitle.setText(formattedName);
-                // In case phone numbers are mixed in the conversation name, we need to vocalize it.
-                final String vocalizedConversationName =
-                        AccessibilityUtil.getVocalizedPhoneNumber(getResources(), conversationName);
-                tvTitle.setContentDescription(vocalizedConversationName);
-            } else {
-                final String appName = getString(R.string.app_name);
-                tvTitle.setText(appName);
-            }
-
-            // When conversation is showing and media picker is not showing, then hide the action
-            // bar only when we are in landscape mode, with IME open.
-            if (mHost.isImeOpen() && UiUtils.isLandscapeMode()) {
-                actionBar.hide();
-            } else {
-                actionBar.show();
-            }
+        final String conversationName = getConversationName();
+        if (!TextUtils.isEmpty(conversationName)) {
+            // RTL : To format conversation title if it happens to be phone numbers.
+            final BidiFormatter bidiFormatter = BidiFormatter.getInstance();
+            final String formattedName = bidiFormatter.unicodeWrap(
+                    UiUtils.commaEllipsize(
+                            conversationName,
+                            tvTitle.getPaint(),
+                            tvTitle.getWidth(),
+                            getString(R.string.plus_one),
+                            getString(R.string.plus_n)).toString(),
+                    TextDirectionHeuristicsCompat.LTR);
+            tvTitle.setText(formattedName);
+            // In case phone numbers are mixed in the conversation name, we need to vocalize it.
+            final String vocalizedConversationName =
+                    AccessibilityUtil.getVocalizedPhoneNumber(getResources(), conversationName);
+            tvTitle.setContentDescription(vocalizedConversationName);
+        } else {
+            final String appName = getString(R.string.app_name);
+            tvTitle.setText(appName);
         }
+
+        // When conversation is showing and media picker is not showing, then hide the action
+        // bar only when we are in landscape mode, with IME open.
+        if (mHost.isImeOpen() && UiUtils.isLandscapeMode()) {
+            actionBar.hide();
+        } else {
+            actionBar.show();
+        }
+
         actionBar.setDisplayShowTitleEnabled(false);
         actionBar.setBackgroundDrawable(getResources().getDrawable(R.drawable.actionbar_underline_bg));
         UiUtils.setStatusBarColor(getActivity(), getResources().getColor(R.color.action_bar_background_color));
@@ -1641,5 +1649,16 @@ public class ConversationFragment extends Fragment implements ConversationDataLi
     @Override
     public int getAttachmentsClearedFlags() {
         return DraftMessageData.ATTACHMENTS_CHANGED;
+    }
+
+    @Override public void onReceive(String s, HSBundle hsBundle) {
+        switch (s) {
+            case EVENT_SHOW_OPTION_MENU:
+                setOptionsMenuVisibility(true);
+                break;
+            case EVENT_HIDE_OPTION_MENU:
+                setOptionsMenuVisibility(false);
+                break;
+        }
     }
 }
