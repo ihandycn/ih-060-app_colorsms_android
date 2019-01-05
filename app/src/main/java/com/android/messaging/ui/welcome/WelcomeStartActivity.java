@@ -9,6 +9,7 @@ import android.view.View;
 
 import com.android.messaging.R;
 import com.android.messaging.ui.UIIntents;
+import com.android.messaging.ui.WebViewActivity;
 import com.android.messaging.util.UiUtils;
 import com.ihs.commons.config.HSConfig;
 import com.ihs.commons.utils.HSLog;
@@ -43,23 +44,17 @@ public class WelcomeStartActivity extends AppCompatActivity implements View.OnCl
                 break;
 
             case R.id.welcome_start_service:
-//                Intent serviceIntent = new Intent();
-//                serviceIntent.setData(Uri.parse(HSConfig.optString(
-//                        "", "Application", "TermsOfServiceURL")));
-//                HSLog.d("WelcomeStartActivity", HSConfig.optString(
-//                        "", "Application", "TermsOfServiceURL"));
-//                serviceIntent.setAction(Intent.ACTION_VIEW);
-//                startActivity(serviceIntent);
+                Intent termsOfServiceIntent = WebViewActivity.newIntent(
+                        HSConfig.optString("", "Application", "TermsOfServiceURL"),
+                        false, false);
+                startActivity(termsOfServiceIntent);
                 break;
 
             case R.id.welcome_start_policy:
-//                Intent privacyIntent = new Intent();
-//                privacyIntent.setData(Uri.parse(HSConfig.optString(
-//                        "", "Application", "PrivacyPolicyURL")));
-//                HSLog.d("WelcomeStartActivity", HSConfig.optString(
-//                        "", "Application", "TermsOfServiceURL"));
-//                privacyIntent.setAction(Intent.ACTION_VIEW);
-//                startActivity(privacyIntent);
+                Intent privacyIntent = WebViewActivity.newIntent(
+                HSConfig.optString("", "Application", "PrivacyPolicyURL"),
+                        false, false);
+                startActivity(privacyIntent);
                 break;
         }
     }

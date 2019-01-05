@@ -276,6 +276,13 @@
             android:screenOrientation="portrait"
             android:theme="@style/WelcomeTheme" />
 
+        <!-- WebView -->
+        <activity android:name=".ui.WebViewActivity"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar"
+            android:windowSoftInputMode="adjustPan"/>
+
         <!-- License -->
         <activity
             android:name=".ui.LicenseActivity"

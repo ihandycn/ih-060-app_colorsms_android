@@ -1026,4 +1026,9 @@
     <string name="welcome_set_default_group">Group messaging</string>
     <string name="welcome_set_default_delete">Delete useless SMS messages</string>
     <string name="welcome_set_default_feature">More features coming soon</string>
+
+    <!-- News -->
+    <string name="news_detail_error_reload">Reload</string>
+    <string name="refresh">Refresh</string>
+
 </resources>
