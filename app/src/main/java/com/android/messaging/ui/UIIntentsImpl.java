@@ -365,9 +365,10 @@ public class UIIntentsImpl extends UIIntents {
     }
 
     @Override
-    public void launchSmsShowDetailActivity(Context context, int id) {
+    public void launchSmsShowDetailActivity(Context context, int id, String smsShowUrl) {
         final Intent intent = new Intent(context, SmsShowDetailActivity.class);
         intent.putExtra(UI_INTENT_EXTRA_SMS_SHOW_ID, id);
+        intent.putExtra(UI_INTENT_EXTRA_SMS_SHOW_URL, smsShowUrl);
         context.startActivity(intent);
     }
 

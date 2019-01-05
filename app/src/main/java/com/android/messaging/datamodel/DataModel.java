@@ -47,6 +47,7 @@ import com.android.messaging.datamodel.data.PeopleAndOptionsData.PeopleAndOption
 import com.android.messaging.datamodel.data.PeopleOptionsItemData;
 import com.android.messaging.datamodel.data.SettingsData;
 import com.android.messaging.datamodel.data.SettingsData.SettingsDataListener;
+import com.android.messaging.datamodel.data.SmsShowListData;
 import com.android.messaging.datamodel.data.SmsShowListItemData;
 import com.android.messaging.datamodel.data.SubscriptionListData;
 import com.android.messaging.datamodel.data.VCardContactItemData;
@@ -114,6 +115,7 @@ public abstract class DataModel {
     public abstract DraftMessageData createDraftMessageData(String conversationId);
 
     public abstract SmsShowListItemData createSmsShowListItemData(int id, String mainPagePreviewUrl, String smsShowUrl);
+    public abstract SmsShowListData createSmsShowListData();
 
     public abstract ActionService getActionService();
 

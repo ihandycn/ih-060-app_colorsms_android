@@ -18,6 +18,7 @@
         android:textSize="18sp"
         android:textColor="@android:color/white"
         android:gravity="center"
+        android:visibility="gone"
         android:alpha="0"
         android:layout_gravity="bottom"
         app:typeface="@string/custom_font_bold"
@@ -27,7 +28,9 @@
         android:id="@+id/loading_lottie_animation"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:visibility="gone"
-        android:layout_gravity="center_horizontal|bottom"/>
+        android:layout_gravity="center"
+        app:lottie_fileName="lottie/loading.json"
+        app:lottie_autoPlay="true"
+        app:lottie_loop="true"/>
 
 </FrameLayout>

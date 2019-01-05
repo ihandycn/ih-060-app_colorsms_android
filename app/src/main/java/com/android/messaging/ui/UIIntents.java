@@ -109,6 +109,8 @@ public abstract class UIIntents {
 
     public static final String UI_INTENT_EXTRA_SMS_SHOW_ID = "sms_show_id";
 
+    public static final String UI_INTENT_EXTRA_SMS_SHOW_URL = "sms_show_url";
+
     /**
      * Launch the welcome activity
      */
@@ -258,7 +260,7 @@ public abstract class UIIntents {
      * Launch an activity to display sms show full screen
      * @param id sms show item id {@link com.android.messaging.datamodel.data.SmsShowListItemData}.
      */
-    public abstract void launchSmsShowDetailActivity(Context context, int id);
+    public abstract void launchSmsShowDetailActivity(Context context, int id, String smsShowUrl);
 
     /**
      * Get a ACTION_VIEW intent

@@ -1,28 +1,25 @@
 package com.android.messaging.ui.smsshow;
 
 import android.app.Fragment;
-import android.content.Context;
-import android.graphics.drawable.Animatable;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 
 import com.android.messaging.R;
-import com.android.messaging.glide.GlideApp;
-import com.bumptech.glide.request.target.SimpleTarget;
-import com.bumptech.glide.request.transition.Transition;
+import com.ihs.commons.notificationcenter.HSGlobalNotificationCenter;
+import com.ihs.commons.notificationcenter.INotificationObserver;
+import com.ihs.commons.utils.HSBundle;
 
-import java.util.ArrayList;
-
-public class SmsShowListFragment extends Fragment {
+public class SmsShowListFragment extends Fragment implements INotificationObserver {
     public static final String FRAGMENT_TAG = "smsshow";
+
+    public static final String NOTIFICATION_KEY_APPLIED_SMS_SHOW_CHANGED = "NOTIFICATION_KEY_APPLIED_SMS_SHOW_CHANGED";
+
+    private SmsShowListAdapter mAdapter;
 
     @Nullable
     @Override
@@ -30,9 +27,10 @@ public class SmsShowListFragment extends Fragment {
         View view = inflater.inflate(R.layout.sms_show_list_fragment, container, false);
         RecyclerView recyclerView = view.findViewById(R.id.sms_show_list);
         recyclerView.setHasFixedSize(true);
-        SmsShowListAdapter adapter = new SmsShowListAdapter(getActivity());
-        recyclerView.setAdapter(adapter);
+        mAdapter = new SmsShowListAdapter(getActivity());
+        recyclerView.setAdapter(mAdapter);
         recyclerView.setLayoutManager(new GridLayoutManager(getActivity(), 2));
+        HSGlobalNotificationCenter.addObserver(NOTIFICATION_KEY_APPLIED_SMS_SHOW_CHANGED, this);
         return view;
     }
 
@@ -47,8 +45,15 @@ public class SmsShowListFragment extends Fragment {
     }
 
     @Override
-    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
+    public void onDestroyView() {
+        super.onDestroyView();
+        HSGlobalNotificationCenter.removeObserver(this);
+    }
 
+    @Override
+    public void onReceive(String s, HSBundle hsBundle) {
+        if (NOTIFICATION_KEY_APPLIED_SMS_SHOW_CHANGED.equals(s)) {
+            mAdapter.updateSelectedTheme();
+        }
     }
 }

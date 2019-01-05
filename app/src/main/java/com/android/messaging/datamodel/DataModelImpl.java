@@ -47,6 +47,7 @@ import com.android.messaging.datamodel.data.PeopleAndOptionsData.PeopleAndOption
 import com.android.messaging.datamodel.data.PeopleOptionsItemData;
 import com.android.messaging.datamodel.data.SettingsData;
 import com.android.messaging.datamodel.data.SettingsData.SettingsDataListener;
+import com.android.messaging.datamodel.data.SmsShowListData;
 import com.android.messaging.datamodel.data.SmsShowListItemData;
 import com.android.messaging.datamodel.data.SubscriptionListData;
 import com.android.messaging.datamodel.data.VCardContactItemData;
@@ -169,7 +170,12 @@ public class DataModelImpl extends DataModel {
 
     @Override
     public SmsShowListItemData createSmsShowListItemData(int id, String mainPagePreviewUrl, String smsShowUrl) {
-        return null;
+        return new SmsShowListItemData(id, mainPagePreviewUrl, smsShowUrl);
+    }
+
+    @Override
+    public SmsShowListData createSmsShowListData() {
+        return new SmsShowListData();
     }
 
     @Override
