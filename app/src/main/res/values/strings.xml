@@ -1010,7 +1010,7 @@
     <string name="welcome_permission_sms_description_1">Send and view SMS messages</string>
     <string name="welcome_permission_sms_description_2">Remind you in time when messages come</string>
     <string name="welcome_permission_sms_description_3">Quick reply to others’ messages</string>
-    <string name="welcome_permission_contacts_title">SMS</string>
+    <string name="welcome_permission_contacts_title">Contacts</string>
     <string name="welcome_permission_contacts_description_1">Remind you who sent the messages</string>
     <string name="welcome_permission_contacts_description_2">Show SMS contacts</string>
     <string name="welcome_permission_contacts_description_3">Provide contact management features</string>

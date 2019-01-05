@@ -5,18 +5,18 @@
     android:layout_height="match_parent">
 
     <android.support.constraint.Guideline
-        android:id="@+id/guideline"
+        android:id="@+id/guideline_2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.321875" />
+        app:layout_constraintGuide_percent="0.34" />
 
     <ImageView
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:scaleType="centerCrop"
         android:src="@drawable/ic_welcome_start_bg"
-        app:layout_constraintTop_toBottomOf="@id/guideline" />
+        app:layout_constraintTop_toBottomOf="@id/guideline_2" />
 
     <com.superapps.view.TypefacedTextView
         android:id="@+id/welcome_start_button"
