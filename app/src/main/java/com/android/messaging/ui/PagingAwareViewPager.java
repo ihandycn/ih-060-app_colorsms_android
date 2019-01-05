@@ -27,7 +27,7 @@ import com.android.messaging.util.UiUtils;
  * A simple extension on the standard ViewPager which lets you turn paging on/off.
  */
 public class PagingAwareViewPager extends ViewPager {
-    private boolean mPagingEnabled = true;
+    private boolean mPagingEnabled = false;
 
     public PagingAwareViewPager(Context context, AttributeSet attrs) {
         super(context, attrs);

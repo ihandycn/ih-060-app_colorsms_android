@@ -102,12 +102,17 @@ public class MediaPickerPanel extends ViewGroup {
         mViewPager = (PagingAwareViewPager) findViewById(R.id.mediapicker_view_pager);
         mMediaButtons = findViewById(R.id.media_buttons);
         mMediaButtons.findViewById(R.id.media_camera).setOnClickListener(v -> {
-
+            setupViewPager(0);
+            setFullScreenView(true, false);
+            mMediaButtons.setVisibility(View.GONE);
         });
         mMediaButtons.findViewById(R.id.media_photo).setOnClickListener(v -> {
-
+            setupViewPager(1);
+            setFullScreenView(true, false);
+            mMediaButtons.setVisibility(View.GONE);
         });
         mMediaButtons.findViewById(R.id.media_voice).setOnClickListener(v -> {
+            setupViewPager(2);
             setDesiredHeight(Dimensions.pxFromDp(196), true);
             mMediaButtons.setVisibility(View.GONE);
         });
@@ -333,7 +338,8 @@ public class MediaPickerPanel extends ViewGroup {
      * ViewPager should have its paging disabled when in full screen mode.
      */
     private void updateViewPager() {
-        mViewPager.setPagingEnabled(!mFullScreen);
+        mViewPager.setPagingEnabled(false);
+//        mViewPager.setPagingEnabled(!mFullScreen);
     }
 
     @Override
@@ -421,7 +427,7 @@ public class MediaPickerPanel extends ViewGroup {
                     if (mMediaPicker.isChooserHandlingTouch()) {
                         if (shouldAllowRecaptureTouch(ev)) {
                             mMediaPicker.stopChooserTouchHandling();
-                            mViewPager.setPagingEnabled(true);
+//                            mViewPager.setPagingEnabled(true);
                             return false;
                         }
                         // If the chooser is claiming ownership on all touch events, then we
