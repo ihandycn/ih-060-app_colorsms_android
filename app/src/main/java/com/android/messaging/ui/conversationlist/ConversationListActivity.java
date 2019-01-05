@@ -16,9 +16,9 @@
 
 package com.android.messaging.ui.conversationlist;
 
+import android.content.Intent;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.widget.Toolbar;
@@ -26,21 +26,31 @@ import android.view.ActionMode;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.FrameLayout.LayoutParams;
 import android.widget.TextView;
 
+import com.airbnb.lottie.LottieAnimationView;
 import com.android.messaging.R;
 import com.android.messaging.ui.BasePagerAdapter;
 import com.android.messaging.ui.UIIntents;
 import com.android.messaging.util.DebugUtils;
+import com.android.messaging.util.PhoneUtils;
 import com.android.messaging.util.Trace;
 import com.android.messaging.util.UiUtils;
+import com.superapps.util.Calendars;
+import com.superapps.util.Preferences;
 
 public class ConversationListActivity extends AbstractConversationListActivity
         implements BottomNavigationView.OnItemSelectedListener {
 
+    private static final int REQUEST_SET_DEFAULT_SMS_APP = 2;
+    private static final String PREF_KEY_BANNER_SHOW_TIME = "pref_key_banner_set_default_show_time";
+
     private ViewPager mViewPager;
     private BasePagerAdapter mPagerAdapter;
     private TextView mTitleTextView;
+    private View mBanner;
 
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
@@ -51,6 +61,9 @@ public class ConversationListActivity extends AbstractConversationListActivity
 
         initActionBar();
         initPager();
+        if (!PhoneUtils.getDefault().isDefaultSmsApp()) {
+            initBanner();
+        }
     }
 
     @Override
@@ -188,6 +201,15 @@ public class ConversationListActivity extends AbstractConversationListActivity
 //        }
     }
 
+    @Override
+    public void onActivityResult(final int requestCode, final int resultCode, final Intent data) {
+        if (requestCode == REQUEST_SET_DEFAULT_SMS_APP) {
+            if (PhoneUtils.getDefault().isDefaultSmsApp()) {
+                removeBanner();
+            }
+        }
+    }
+
     private void initActionBar() {
         Toolbar toolbar = findViewById(R.id.toolbar);
         mTitleTextView = findViewById(R.id.toolbar_title);
@@ -204,4 +226,59 @@ public class ConversationListActivity extends AbstractConversationListActivity
         bottomNavigationView.setOnItemSelectedListener(this);
         bottomNavigationView.setSelectedPositon(0);
     }
+
+    private void initBanner() {
+        int bannerHeight = (int) getResources().getDimension(R.dimen.banner_set_as_default);
+
+        ViewGroup container = findViewById(R.id.audio_attachment_background);
+        mBanner = getLayoutInflater().inflate(R.layout.banner_set_default, container, false);
+        if (mBanner == null) {
+            return;
+        }
+        LayoutParams bannerParams = new LayoutParams(LayoutParams.MATCH_PARENT, bannerHeight);
+        bannerParams.topMargin = (int) getResources().getDimension(R.dimen.action_bar_height);
+        container.addView(mBanner, bannerParams);
+
+        if (mViewPager != null) {
+            LayoutParams viewPagerParams = (LayoutParams) mViewPager.getLayoutParams();
+            viewPagerParams.topMargin += bannerHeight;
+        }
+
+        mBanner.setOnClickListener(v -> {
+            final Intent intent = UIIntents.get().getChangeDefaultSmsAppIntent(this);
+            startActivityForResult(intent, REQUEST_SET_DEFAULT_SMS_APP);
+        });
+
+        if (shouldShowAnim()) {
+            LottieAnimationView animationView = findViewById(R.id.banner_set_as_default_anim);
+            if (animationView != null) {
+                animationView.setProgress(0);
+                animationView.setRepeatCount(1);
+                mBanner.postDelayed(() -> {
+                    animationView.playAnimation();
+                    Preferences.getDefault().putLong(PREF_KEY_BANNER_SHOW_TIME, System.currentTimeMillis());
+                }, 1500L);
+            }
+        }
+    }
+
+    private void removeBanner() {
+        if (mBanner != null) {
+            mBanner.setVisibility(View.GONE);
+            ViewGroup container = findViewById(R.id.audio_attachment_background);
+            container.removeView(mBanner);
+
+            if (mViewPager != null) {
+                LayoutParams viewPagerParams = (LayoutParams) mViewPager.getLayoutParams();
+                viewPagerParams.topMargin -= (int) getResources().getDimension(R.dimen.action_bar_height);
+            }
+        }
+    }
+
+    private boolean shouldShowAnim() {
+        long lastTime = Preferences.getDefault().getLong(PREF_KEY_BANNER_SHOW_TIME, 0);
+        long currentTime = System.currentTimeMillis();
+        return !Calendars.isSameDay(lastTime, currentTime);
+    }
+
 }

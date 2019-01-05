@@ -29,9 +29,9 @@
         android:id="@+id/fragment_pager"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginTop="@dimen/action_bar_height"
-        android:layout_marginBottom="@dimen/bottom_navigation_view_height" />
+        android:layout_marginBottom="@dimen/bottom_navigation_view_height"
+        android:layout_marginTop="@dimen/action_bar_height" />
 
-    <include layout="@layout/bottom_navigation_view_auto_res"/>
+    <include layout="@layout/bottom_navigation_view_auto_res" />
 </FrameLayout>
 

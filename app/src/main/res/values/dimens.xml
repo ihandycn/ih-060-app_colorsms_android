@@ -202,4 +202,7 @@
 
     <!--sms show-->
     <dimen name="sms_show_apply_button_height">53dp</dimen>
+
+    <!--banner -->
+    <dimen name="banner_set_as_default">60dp</dimen>
 </resources>
