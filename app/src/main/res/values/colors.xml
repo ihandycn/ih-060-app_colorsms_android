@@ -15,7 +15,6 @@
 -->
 <resources>
     <color name="primary_color">#1acc48</color>
-    <color name="permission_check_activity_background">@color/primary_color</color>
     <color name="text_primary_color">#222327</color>
 
     <!--  Action bar -->

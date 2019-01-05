@@ -91,10 +91,6 @@
                 <category android:name="android.intent.category.APP_MESSAGING" />
             </intent-filter>
         </activity>
-        <activity
-            android:name=".ui.PermissionCheckActivity"
-            android:configChanges="orientation|screenSize|keyboardHidden"
-            android:screenOrientation="portrait" />
 
         <!-- Launches a conversation (ensures correct app name shown in recents) -->
         <activity
