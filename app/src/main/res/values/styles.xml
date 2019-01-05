@@ -45,6 +45,13 @@
         <item name="windowNoTitle">true</item>
     </style>
 
+    <style name="BugleTheme.AttachmentChooserActivity" parent="@style/BugleTheme">
+        <item name="android:windowBackground">@color/conversation_background</item>
+        <item name="windowActionBarOverlay">true</item>
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+    </style>
+
     <style name="BugleTheme.ConversationActivityBase" parent="BugleTheme">
         <item name="android:windowBackground">@color/conversation_background</item>
         <item name="windowActionBarOverlay">true</item>
@@ -646,7 +653,7 @@
     </style>
 
     <style name="AttachmentGridItemViewCheckBoxStyle">
-        <item name="android:paddingRight">4dp</item>
+        <item name="android:paddingRight">7dp</item>
     </style>
 
     <style name="PromoScreenTextStyle">

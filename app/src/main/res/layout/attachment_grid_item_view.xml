@@ -17,8 +17,7 @@
 <com.android.messaging.ui.attachmentchooser.AttachmentGridItemView
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="@dimen/attachment_grid_image_cell_size"
-    android:clickable="true">
+    android:layout_height="@dimen/attachment_grid_image_cell_size">
 
     <FrameLayout
         android:id="@+id/attachment_container"
@@ -35,9 +34,9 @@
         style="@style/AttachmentGridItemViewCheckBoxStyle"
         android:button="@drawable/gallery_checkbox_selector"
         android:background="@null"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="26.3dp"
+        android:layout_height="26.3dp"
         android:layout_gravity="top|end"
-        android:paddingTop="4dp"
+        android:paddingTop="7dp"
         android:contentDescription="@string/gallery_checkbox_content_description" />
 </com.android.messaging.ui.attachmentchooser.AttachmentGridItemView>

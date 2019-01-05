@@ -18,21 +18,29 @@ package com.android.messaging.ui.attachmentchooser;
 
 import android.app.Fragment;
 import android.os.Bundle;
+import android.support.v7.app.ActionBar;
+import android.support.v7.widget.Toolbar;
+import android.view.MenuItem;
+import android.widget.TextView;
 
 import com.android.messaging.R;
 import com.android.messaging.ui.BugleActionBarActivity;
 import com.android.messaging.ui.UIIntents;
 import com.android.messaging.ui.attachmentchooser.AttachmentChooserFragment.AttachmentChooserFragmentHost;
 import com.android.messaging.util.Assert;
+import com.android.messaging.util.Typefaces;
+import com.android.messaging.util.UiUtils;
 
 public class AttachmentChooserActivity extends BugleActionBarActivity implements
         AttachmentChooserFragmentHost {
+
+    private TextView mTitleTextView;
 
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.attachment_chooser_activity);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(false);
+        initActionBar();
     }
 
     @Override
@@ -46,6 +54,43 @@ public class AttachmentChooserActivity extends BugleActionBarActivity implements
             chooserFragment.setConversationId(conversationId);
             chooserFragment.setHost(this);
         }
+    }
+
+    public void setActionBarTitle(String title) {
+        if (mTitleTextView != null) {
+            mTitleTextView.setText(title);
+        }
+    }
+
+    private void initActionBar() {
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        invalidateActionBar();
+        mTitleTextView = findViewById(R.id.toolbar_title);
+        mTitleTextView.setTypeface(Typefaces.getCustomSemiBold());
+        mTitleTextView.setText(R.string.attachment_chooser_activity_title);
+    }
+
+    @Override
+    protected void updateActionBar(final ActionBar actionBar) {
+        actionBar.setDisplayHomeAsUpEnabled(true);
+        // Reset the back arrow to its default
+        actionBar.setHomeAsUpIndicator(R.drawable.ic_back);
+        actionBar.setDisplayShowTitleEnabled(false);
+        actionBar.setBackgroundDrawable(getResources().getDrawable(R.drawable.actionbar_underline_bg));
+        UiUtils.setStatusBarColor(this, getResources().getColor(R.color.action_bar_background_color));
+
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem menuItem) {
+        boolean superConsumed = super.onOptionsItemSelected(menuItem);
+        switch (menuItem.getItemId()) {
+            case android.R.id.home:
+                finish();
+                return true;
+        }
+        return superConsumed;
     }
 
     @Override

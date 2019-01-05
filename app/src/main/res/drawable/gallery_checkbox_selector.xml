@@ -18,10 +18,10 @@
     xmlns:android="http://schemas.android.com/apk/res/android">
     <item
         android:state_checked="true"
-        android:drawable="@drawable/ic_checkbox_light" />
+        android:drawable="@drawable/icon_selected_selectattachments" />
     <item
         android:state_selected="true"
-        android:drawable="@drawable/ic_checkbox_light" />
+        android:drawable="@drawable/icon_selected_selectattachments" />
     <item
-        android:drawable="@drawable/ic_checkbox_blank_light" />
+        android:drawable="@drawable/icon_notselected_selectattachments" />
 </selector>

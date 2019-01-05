@@ -332,7 +332,7 @@
             android:label="@string/attachment_chooser_activity_title"
             android:parentActivityName=".ui.conversation.ConversationActivity"
             android:screenOrientation="portrait"
-            android:theme="@style/BugleTheme">
+            android:theme="@style/BugleTheme.AttachmentChooserActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.android.messaging.ui.conversation.ConversationActivity" />

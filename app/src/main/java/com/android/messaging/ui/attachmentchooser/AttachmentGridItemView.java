@@ -16,11 +16,13 @@
 package com.android.messaging.ui.attachmentchooser;
 
 import android.content.Context;
+import android.graphics.Outline;
 import android.graphics.Rect;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.TouchDelegate;
 import android.view.View;
+import android.view.ViewOutlineProvider;
 import android.widget.CheckBox;
 import android.widget.FrameLayout;
 
@@ -28,11 +30,14 @@ import com.android.messaging.R;
 import com.android.messaging.datamodel.data.MessagePartData;
 import com.android.messaging.ui.AttachmentPreviewFactory;
 import com.android.messaging.util.Assert;
+import com.android.messaging.util.OsUtil;
 import com.google.common.annotations.VisibleForTesting;
+import com.superapps.util.Dimensions;
 
 /**
  * Shows an item in the attachment picker grid.
  */
+@SuppressWarnings("Convert2Lambda")
 public class AttachmentGridItemView extends FrameLayout {
     public interface HostInterface {
         boolean isItemSelected(MessagePartData attachment);
@@ -53,8 +58,18 @@ public class AttachmentGridItemView extends FrameLayout {
     @Override
     protected void onFinishInflate() {
         super.onFinishInflate();
-        mAttachmentViewContainer = (FrameLayout) findViewById(R.id.attachment_container);
-        mCheckBox = (CheckBox) findViewById(R.id.checkbox);
+        mAttachmentViewContainer = findViewById(R.id.attachment_container);
+        if (OsUtil.isAtLeastL()){
+            ViewOutlineProvider viewOutlineProvider = new ViewOutlineProvider() {
+                @Override
+                public void getOutline(View view, Outline outline) {
+                    outline.setRoundRect(0, 0, view.getWidth(), view.getHeight(), Dimensions.pxFromDp(3.3f));
+                }
+            };
+            mAttachmentViewContainer.setClipToOutline(true);
+            mAttachmentViewContainer.setOutlineProvider(viewOutlineProvider);
+        }
+        mCheckBox = findViewById(R.id.checkbox);
         mCheckBox.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(final View v) {
@@ -86,6 +101,7 @@ public class AttachmentGridItemView extends FrameLayout {
     protected void onMeasure(final int widthMeasureSpec, final int heightMeasureSpec) {
         // The grid view auto-fits the columns, so we want to let the height match the width
         // to make the attachment preview square.
+        //noinspection SuspiciousNameCombination
         super.onMeasure(widthMeasureSpec, widthMeasureSpec);
     }
 
@@ -97,11 +113,6 @@ public class AttachmentGridItemView extends FrameLayout {
             mAttachmentData = attachment;
             updateAttachmentView();
         }
-    }
-
-    @VisibleForTesting
-    HostInterface testGetHostInterface() {
-        return mHostInterface;
     }
 
     public void updateSelectedState() {

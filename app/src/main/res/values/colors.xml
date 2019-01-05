@@ -171,7 +171,7 @@
     <color name="ripple_material_light">#40000000</color>
     <color name="widget_conversation_title_color">#FFFFFF</color>
 
-    <color name="attachment_chooser_audio_background">#eeeeee</color>
+    <color name="attachment_chooser_audio_background">#1acc48</color>
     <color name="attachment_chooser_vcard_background">#eeeeee</color>
 
     <color name="fastscroll_track_color">#1e000000</color>

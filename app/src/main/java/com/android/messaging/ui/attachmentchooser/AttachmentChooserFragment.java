@@ -20,7 +20,7 @@ import android.content.Context;
 import android.graphics.Rect;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.v7.app.ActionBar;
+import android.support.annotation.NonNull;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -37,7 +37,6 @@ import com.android.messaging.datamodel.binding.BindingBase;
 import com.android.messaging.datamodel.data.DraftMessageData;
 import com.android.messaging.datamodel.data.DraftMessageData.DraftMessageDataListener;
 import com.android.messaging.datamodel.data.MessagePartData;
-import com.android.messaging.ui.BugleActionBarActivity;
 import com.android.messaging.ui.UIIntents;
 import com.android.messaging.ui.attachmentchooser.AttachmentGridView.AttachmentGridHost;
 import com.google.common.annotations.VisibleForTesting;
@@ -62,7 +61,7 @@ public class AttachmentChooserFragment extends Fragment implements DraftMessageD
     public View onCreateView(final LayoutInflater inflater, final ViewGroup container,
             final Bundle savedInstanceState) {
         final View view = inflater.inflate(R.layout.attachment_chooser_fragment, container, false);
-        mAttachmentGridView = (AttachmentGridView) view.findViewById(R.id.grid);
+        mAttachmentGridView = view.findViewById(R.id.grid);
         mAdapter = new AttachmentGridAdapter(getActivity());
         mAttachmentGridView.setAdapter(mAdapter);
         mAttachmentGridView.setHost(this);
@@ -143,19 +142,16 @@ public class AttachmentChooserFragment extends Fragment implements DraftMessageD
 
     @Override
     public void updateSelectionCount(int count) {
-        if (getActivity() instanceof BugleActionBarActivity) {
-            final ActionBar actionBar = ((BugleActionBarActivity) getActivity())
-                    .getSupportActionBar();
-            if (actionBar != null) {
-                actionBar.setTitle(getResources().getString(
-                        R.string.attachment_chooser_selection, count));
-            }
+        if (getActivity() instanceof AttachmentChooserActivity) {
+            ((AttachmentChooserActivity) getActivity()).setActionBarTitle(getResources().getString(
+                    R.string.attachment_chooser_selection, count));
         }
     }
 
+    @SuppressWarnings("WeakerAccess")
     class AttachmentGridAdapter extends ArrayAdapter<MessagePartData> {
         public AttachmentGridAdapter(final Context context) {
-            super(context, R.layout.attachment_grid_item_view, new ArrayList<MessagePartData>());
+            super(context, R.layout.attachment_grid_item_view, new ArrayList<>());
         }
 
         public void onAttachmentsLoaded(final List<MessagePartData> attachments) {
@@ -165,14 +161,16 @@ public class AttachmentChooserFragment extends Fragment implements DraftMessageD
         }
 
         @Override
-        public View getView(final int position, final View convertView, final ViewGroup parent) {
+        @NonNull
+        public View getView(final int position, final View convertView, @NonNull final ViewGroup parent) {
             AttachmentGridItemView itemView;
             final MessagePartData item = getItem(position);
-            if (convertView != null && convertView instanceof AttachmentGridItemView) {
+            if (convertView instanceof AttachmentGridItemView) {
                 itemView = (AttachmentGridItemView) convertView;
             } else {
                 final LayoutInflater inflater = (LayoutInflater) getContext()
                         .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+                //noinspection ConstantConditions
                 itemView = (AttachmentGridItemView) inflater.inflate(
                         R.layout.attachment_grid_item_view, parent, false);
             }
