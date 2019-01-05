@@ -142,9 +142,6 @@ public class MediaPickerPanel extends ViewGroup {
     @Override
     protected void onMeasure(final int widthMeasureSpec, final int heightMeasureSpec) {
         int requestedHeight = MeasureSpec.getSize(heightMeasureSpec);
-        if (mMediaPicker.getChooserShowsActionBarInFullScreen()) {
-            requestedHeight -= mActionBarHeight;
-        }
         int desiredHeight = Math.min(mCurrentDesiredHeight, requestedHeight);
         if (mExpanded && desiredHeight == 0) {
             // If we want to be shown, we have to have a non-0 height.  Returning a height of 0 will
@@ -218,11 +215,7 @@ public class MediaPickerPanel extends ViewGroup {
                     fullHeight -= UiUtils.getMeasuredBoundsOnScreen(composeContainer).top;
                 }
             }
-            if (mMediaPicker.getChooserShowsActionBarInFullScreen()) {
-                return fullHeight - mActionBarHeight;
-            } else {
-                return fullHeight;
-            }
+            return fullHeight;
         } else if (mExpanded) {
             return LayoutParams.WRAP_CONTENT;
         } else {
