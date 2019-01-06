@@ -36,6 +36,7 @@ import com.android.messaging.sms.ApnDatabase;
 import com.android.messaging.sms.BugleApnSettingsLoader;
 import com.android.messaging.sms.BugleUserAgentInfoLoader;
 import com.android.messaging.sms.MmsConfig;
+import com.android.messaging.smsshow.MessagingMsgCenterFactoryImpl;
 import com.android.messaging.ui.ConversationDrawables;
 import com.android.messaging.ui.emoji.utils.EmojiConfig;
 import com.android.messaging.util.BugleGservices;
@@ -51,6 +52,7 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.ResourceDecoder;
 import com.google.common.annotations.VisibleForTesting;
 import com.ihs.app.framework.HSApplication;
+import com.messagecenter.customize.MessageCenterManager;
 
 import java.io.File;
 import java.io.InputStream;
@@ -93,21 +95,9 @@ public class BugleApplication extends HSApplication implements UncaughtException
 
         EmojiConfig.getInstance().doInit();
 
-        initGlideAnimatedWebp();
-
         sSystemUncaughtExceptionHandler = Thread.getDefaultUncaughtExceptionHandler();
         Thread.setDefaultUncaughtExceptionHandler(this);
         Trace.endSection();
-    }
-
-    @SuppressWarnings("unchecked")
-    private void initGlideAnimatedWebp() {
-        ResourceDecoder decoder = new WebpResourceDecoder(this);
-        ResourceDecoder byteDecoder = new WebpBytebufferDecoder(this);
-        // use prepend() avoid intercept by default decoder
-        Glide.get(this).getRegistry()
-                .prepend(InputStream.class, Drawable.class, decoder)
-                .prepend(ByteBuffer.class, Drawable.class, byteDecoder);
     }
 
     @Override
@@ -143,6 +133,8 @@ public class BugleApplication extends HSApplication implements UncaughtException
         if (OsUtil.isAtLeastM()) {
             registerCarrierConfigChangeReceiver(context);
         }
+
+        initMessageCenterLib();
 
         Trace.endSection();
     }
@@ -190,6 +182,10 @@ public class BugleApplication extends HSApplication implements UncaughtException
         maybeHandleSharedPrefsUpgrade(factory);
         MmsConfig.load();
         Trace.endSection();
+    }
+
+    public void initMessageCenterLib() {
+        MessageCenterManager.init(new MessagingMsgCenterFactoryImpl());
     }
 
     @Override

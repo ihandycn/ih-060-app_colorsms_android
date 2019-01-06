@@ -1,24 +1,42 @@
 package com.android.messaging.datamodel.data;
 
 import com.android.messaging.datamodel.DataModel;
+import com.ihs.commons.config.HSConfig;
 
 import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 public class SmsShowListData {
+    private static SmsShowListData sInstance = new SmsShowListData();
+
+    private static final String CONFIG_KEY_ID = "Id";
+    private static final String CONFIG_KEY_PREVIEW_URL = "Mainpage";
+    private static final String CONFIG_KEY_SMS_SHOW_URL = "WebpUrl";
 
     private ArrayList<SmsShowListItemData> mList;
 
-    public SmsShowListData() {
+    private SmsShowListData() {
+        List<Map<String, ?>> items = (List<Map<String, ?>>) HSConfig.getList("Application", "SmsShow", "Themes");
+        mList = new ArrayList<>(items.size());
 
+        DataModel model = DataModel.get();
+        try {
+            for (Map<String, ?> item : items) {
+                mList.add(model.createSmsShowListItemData((Integer) item.get(CONFIG_KEY_ID),
+                        (String) item.get(CONFIG_KEY_PREVIEW_URL),
+                        (String) item.get(CONFIG_KEY_SMS_SHOW_URL)));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static SmsShowListData getInstance() {
+        return sInstance;
     }
 
     public ArrayList<SmsShowListItemData> getData() {
-        mList = new ArrayList<>(20);
-        for (int i = 0; i < 18; i++) {
-            String url = "http://a0.att.hudong.com/14/72/19300001138148138494729355525.jpg";
-            SmsShowListItemData itemData = DataModel.get().createSmsShowListItemData(i, url, url);
-            mList.add(itemData);
-        }
         return mList;
     }
 

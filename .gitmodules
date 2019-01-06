@@ -1,3 +1,6 @@
 [submodule "libs/libSuperApps"]
 	path = libs/libSuperApps
 	url = https://git.ihandysoft.com/nogroup/Lib_SuperApps_Android.git
+[submodule "libs/libColorPhone"]
+	path = libs/libColorPhone
+	url = https://git.ihandysoft.com/nogroup/Lib_ColorPhone_Android.git

@@ -502,10 +502,18 @@
             android:name=".ui.smsshow.SmsShowDetailActivity"
             android:configChanges="orientation|screenSize|keyboardHidden"
             android:launchMode="singleTop"
-            android:parentActivityName="com.android.messaging.ui.conversationlist.ConversationListActivity"
             android:screenOrientation="portrait"
+            android:excludeFromRecents="true"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
 
+        <activity
+            android:name=".ui.smsshow.SmsShowActivity"
+            android:configChanges="orientation|screenSize|keyboardHidden"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait"
+            android:excludeFromRecents="true"
+            android:taskAffinity=".sms.show"
+            android:theme="@style/Theme.AppCompat.Translucent" />
 
         <receiver android:name=".receiver.StorageStatusReceiver">
             <intent-filter>

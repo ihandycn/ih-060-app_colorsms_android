@@ -40,6 +40,7 @@ import android.support.v4.content.LocalBroadcastManager;
 import android.text.TextUtils;
 
 import com.android.ex.photo.Intents.PhotoViewIntentBuilder;
+import com.android.messaging.Factory;
 import com.android.messaging.R;
 import com.android.messaging.datamodel.ConversationImagePartsView;
 import com.android.messaging.datamodel.MediaScratchFileProvider;
@@ -63,6 +64,7 @@ import com.android.messaging.ui.conversationlist.ForwardMessageActivity;
 import com.android.messaging.ui.conversationsettings.PeopleAndOptionsActivity;
 import com.android.messaging.ui.debug.DebugMmsConfigActivity;
 import com.android.messaging.ui.photoviewer.BuglePhotoViewActivity;
+import com.android.messaging.ui.smsshow.SmsShowActivity;
 import com.android.messaging.ui.smsshow.SmsShowDetailActivity;
 import com.android.messaging.util.Assert;
 import com.android.messaging.util.ContentType;
@@ -370,6 +372,13 @@ public class UIIntentsImpl extends UIIntents {
         intent.putExtra(UI_INTENT_EXTRA_SMS_SHOW_ID, id);
         intent.putExtra(UI_INTENT_EXTRA_SMS_SHOW_URL, smsShowUrl);
         context.startActivity(intent);
+    }
+
+    @Override
+    public void launchSmsShowActivity() {
+        final Intent intent = new Intent(Factory.get().getApplicationContext(), SmsShowActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        Factory.get().getApplicationContext().startActivity(intent);
     }
 
     @Override

@@ -257,10 +257,16 @@ public abstract class UIIntents {
 
 
     /**
-     * Launch an activity to display sms show full screen
+     * Launch an activity to display sms show details full screen
      * @param id sms show item id {@link com.android.messaging.datamodel.data.SmsShowListItemData}.
      */
     public abstract void launchSmsShowDetailActivity(Context context, int id, String smsShowUrl);
+
+
+    /**
+     * Launch an activity to display sms show
+     */
+    public abstract void launchSmsShowActivity();
 
     /**
      * Get a ACTION_VIEW intent

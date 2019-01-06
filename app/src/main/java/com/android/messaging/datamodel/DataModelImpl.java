@@ -175,7 +175,7 @@ public class DataModelImpl extends DataModel {
 
     @Override
     public SmsShowListData createSmsShowListData() {
-        return new SmsShowListData();
+        return SmsShowListData.getInstance();
     }
 
     @Override

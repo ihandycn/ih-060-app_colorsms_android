@@ -1,6 +1,7 @@
 package com.android.messaging.ui.smsshow;
 
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
@@ -17,6 +18,10 @@ import com.android.messaging.datamodel.data.SmsShowListItemData;
 import com.android.messaging.glide.GlideApp;
 import com.android.messaging.smsshow.SmsShowUtils;
 import com.android.messaging.ui.UIIntents;
+import com.bumptech.glide.integration.webp.decoder.WebpDrawable;
+import com.bumptech.glide.integration.webp.decoder.WebpDrawableTransformation;
+import com.bumptech.glide.load.Transformation;
+import com.bumptech.glide.load.resource.bitmap.CenterCrop;
 
 import java.util.ArrayList;
 
@@ -24,7 +29,7 @@ public class SmsShowListAdapter extends RecyclerView.Adapter<SmsShowListAdapter.
     private ArrayList<SmsShowListItemData> mData;
     private Context mContext;
 
-    private static final String[] COLORS = new String[]{
+    private static final String[] COLORS = new String[] {
             "#ff9af6e1",
             "#fffae997",
             "#ffa4ffb1",
@@ -73,12 +78,15 @@ public class SmsShowListAdapter extends RecyclerView.Adapter<SmsShowListAdapter.
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         String url = mSelectedPosition == position
-//                ? mData.get(position).getSmsShowUrl()
-                ? "http://uploads.5068.com/allimg/1712/151-1G225092K3.jpg"
+                ? mData.get(position).getSmsShowUrl()
                 : mData.get(position).getMainPagePreviewUrl();
+
+        Transformation<Bitmap> centerCrop = new CenterCrop();
 
         GlideApp.with(mContext)
                 .load(url)
+                .optionalTransform(centerCrop)
+                .optionalTransform(WebpDrawable.class, new WebpDrawableTransformation(centerCrop))
                 .placeholder(getThemePreviewDrawable(position))
                 .into(holder.mSmsShowImage);
     }

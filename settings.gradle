@@ -1,2 +1,3 @@
-include ':app', ':libphotoviewer', ':libchips', ':libvcard', ':libframesequence', ':libsuperapps'
-project(':libsuperapps').projectDir = new File('libs/libSuperApps/lib')
+include ':app', ':libphotoviewer', ':libchips', ':libvcard', ':libframesequence', ':libSuperApps', ':libMessageCenter'
+project(':libSuperApps').projectDir = new File('libs/libSuperApps/lib')
+project(':libMessageCenter').projectDir = new File('libs/libColorPhone/libMessageCenter')
