@@ -3,6 +3,7 @@ package com.android.messaging.ui;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.res.Resources;
 import android.support.annotation.StringRes;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -12,6 +13,8 @@ import android.widget.TextView;
 
 import com.android.messaging.R;
 import com.ihs.app.framework.HSApplication;
+import com.superapps.util.BackgroundDrawables;
+import com.superapps.util.Dimensions;
 
 public class BaseAlertDialog {
 
@@ -105,6 +108,7 @@ public class BaseAlertDialog {
                 .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         // instantiate the dialog with the custom Theme
         View layout = inflater.inflate(R.layout.layout_base_dialog, null);
+        Resources resources = builder.context.getResources();
 
         Dialog dialog = new Dialog(builder.context, R.style.BaseDialogTheme);
         dialog.setCancelable(true);
@@ -123,10 +127,11 @@ public class BaseAlertDialog {
                 }
                 this.dialog.dismiss();
             });
+            positiveButton.setBackground(BackgroundDrawables.createBackgroundDrawable(resources.getColor(R.color.dialog_positive_button_color),
+                    Dimensions.pxFromDp(3.3f),true));
         } else {
             // if no confirm button just set the visibility to GONE
-            layout.findViewById(R.id.ok_btn).setVisibility(
-                    View.GONE);
+            layout.findViewById(R.id.ok_btn).setVisibility(View.GONE);
         }
         // set the cancel button
         if (!TextUtils.isEmpty(builder.negativeButtonText)) {
@@ -139,6 +144,8 @@ public class BaseAlertDialog {
                 }
                 this.dialog.dismiss();
             });
+            negativeButton.setBackground(BackgroundDrawables.createBackgroundDrawable(resources.getColor(R.color.dialog_negative_button_color),
+                    Dimensions.pxFromDp(3.3f),true));
         } else {
             // if no confirm button just set the visibility to GONE
             layout.findViewById(R.id.negative_btn).setVisibility(View.GONE);
@@ -154,6 +161,8 @@ public class BaseAlertDialog {
                     builder.contentView, new FrameLayout.LayoutParams(
                             FrameLayout.LayoutParams.MATCH_PARENT,
                             FrameLayout.LayoutParams.WRAP_CONTENT));
+        } else {
+            layout.findViewById(R.id.content_view).setVisibility(View.GONE);
         }
 
     }

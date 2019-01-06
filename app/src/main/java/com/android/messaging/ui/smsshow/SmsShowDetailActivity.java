@@ -24,6 +24,7 @@ import com.bumptech.glide.load.resource.bitmap.CenterInside;
 import com.bumptech.glide.request.target.SimpleTarget;
 import com.bumptech.glide.request.transition.Transition;
 import com.ihs.app.framework.activity.HSAppCompatActivity;
+import com.superapps.util.BackgroundDrawables;
 
 public class SmsShowDetailActivity extends HSAppCompatActivity {
     private Animatable mAnimatable;
@@ -59,6 +60,7 @@ public class SmsShowDetailActivity extends HSAppCompatActivity {
             }
         });
 
+        applyButton.setBackground(BackgroundDrawables.createBackgroundDrawable(getColor(R.color.primary_color), 0, true));
         applyButton.setOnClickListener(v -> {
             SmsShowUtils.setSmsShowAppliedId(id);
         });

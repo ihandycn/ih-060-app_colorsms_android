@@ -95,6 +95,7 @@
     <!--Dialog color-->
 
     <color name="dialog_negative_button_color">#ebeef3</color>
+    <color name="dialog_positive_button_color">@color/primary_color</color>
     <color name="theme_main_text_color">#454545</color>
     <color name="theme_main_color">#448AFF</color>
     <color name="boost_btn_background">#448AFF</color>
