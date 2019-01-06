@@ -24,13 +24,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.android.messaging.ui.BaseDialog;
+import com.android.messaging.ui.BaseDialogFragment;
 import com.android.messaging.R;
 import com.android.messaging.ui.ContactIconView;
 import com.android.messaging.ui.UIIntents;
 import com.android.messaging.util.AccessibilityUtil;
 
-public class AddContactsConfirmationDialog extends BaseDialog {
+public class AddContactsConfirmationDialog extends BaseDialogFragment {
 
     private static final String BUNDLE_KEY_AVATAR_URI = "BUNDLE_KEY_AVATAR_URI";
     private static final String BUNDLE_KEY_DESTINATION = "BUNDLE_KEY_DESTINATION";

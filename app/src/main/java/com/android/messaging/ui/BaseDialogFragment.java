@@ -17,8 +17,9 @@ import android.widget.TextView;
 
 import com.android.messaging.R;
 import com.superapps.util.BackgroundDrawables;
+import com.superapps.util.Dimensions;
 
-public abstract class BaseDialog extends DialogFragment {
+public abstract class BaseDialogFragment extends DialogFragment {
     private OnDismissOrCancelListener mOnDismissOrCancelListener;
     private View.OnClickListener mNegativeClickListener;
     private View.OnClickListener mPositiveClickListener;
@@ -87,6 +88,9 @@ public abstract class BaseDialog extends DialogFragment {
                 mNegativeClickListener.onClick(negativeButton);
             }
         });
+        negativeButton.setBackground(BackgroundDrawables.createBackgroundDrawable(getResources().getColor(R.color.dialog_negative_button_color),
+                Dimensions.pxFromDp(3.3f),true));
+
 
         final TextView positiveButton = root.findViewById(R.id.ok_btn);
         positiveButton.setText(getPositiveButtonText());
@@ -96,6 +100,9 @@ public abstract class BaseDialog extends DialogFragment {
                 mPositiveClickListener.onClick(positiveButton);
             }
         });
+        positiveButton.setBackground(BackgroundDrawables.createBackgroundDrawable(getResources().getColor(R.color.dialog_positive_button_color),
+                Dimensions.pxFromDp(3.3f),true));
+
         return root;
 
     }

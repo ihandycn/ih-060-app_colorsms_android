@@ -37,7 +37,6 @@ import android.content.res.Configuration;
 import android.database.Cursor;
 import android.graphics.Point;
 import android.graphics.Rect;
-import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
@@ -83,7 +82,6 @@ import com.android.messaging.datamodel.data.SubscriptionListData.SubscriptionLis
 import com.android.messaging.ui.AttachmentPreview;
 import com.android.messaging.ui.BaseAlertDialog;
 import com.android.messaging.ui.BugleActionBarActivity;
-import com.android.messaging.ui.ConversationDrawables;
 import com.android.messaging.ui.SnackBar;
 import com.android.messaging.ui.UIIntents;
 import com.android.messaging.ui.animation.PopupTransitionAnimation;
@@ -110,7 +108,6 @@ import com.google.common.annotations.VisibleForTesting;
 import com.ihs.commons.notificationcenter.HSGlobalNotificationCenter;
 import com.ihs.commons.notificationcenter.INotificationObserver;
 import com.ihs.commons.utils.HSBundle;
-import com.superapps.util.Toasts;
 
 import java.io.File;
 import java.util.ArrayList;

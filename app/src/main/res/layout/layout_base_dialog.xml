@@ -53,7 +53,6 @@
                 android:textColor="@color/color_dialog_content_text"
                 android:lineSpacingExtra="@dimen/dialog_text_extra_line_height"
                 android:lineSpacingMultiplier="@dimen/dialog_text_line_height_multiple"
-                android:layout_marginTop="@dimen/dialog_content_text_margin_top"
                 android:alpha="@dimen/dialog_content_text"
                 android:textSize="@dimen/dialog_content_text_size"
                 tools:text="I am a message"
