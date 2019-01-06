@@ -94,7 +94,7 @@ public class BugleApplication extends HSApplication implements UncaughtException
         }
 
         EmojiConfig.getInstance().doInit();
-
+        initMessageCenterLib();
         sSystemUncaughtExceptionHandler = Thread.getDefaultUncaughtExceptionHandler();
         Thread.setDefaultUncaughtExceptionHandler(this);
         Trace.endSection();
@@ -133,8 +133,6 @@ public class BugleApplication extends HSApplication implements UncaughtException
         if (OsUtil.isAtLeastM()) {
             registerCarrierConfigChangeReceiver(context);
         }
-
-        initMessageCenterLib();
 
         Trace.endSection();
     }
