@@ -34,6 +34,7 @@ import com.airbnb.lottie.LottieAnimationView;
 import com.android.messaging.R;
 import com.android.messaging.ui.BasePagerAdapter;
 import com.android.messaging.ui.UIIntents;
+import com.android.messaging.ui.dialog.FiveStarRateDialog;
 import com.android.messaging.util.DebugUtils;
 import com.android.messaging.util.PhoneUtils;
 import com.android.messaging.util.Trace;
@@ -99,12 +100,18 @@ public class ConversationListActivity extends AbstractConversationListActivity
         supportInvalidateOptionsMenu();
     }
 
+    private boolean showRate = false;
     @Override
     public void onBackPressed() {
         if (isInConversationListSelectMode()) {
             exitMultiSelectState();
         } else {
-            super.onBackPressed();
+            if (showRate || !FiveStarRateDialog.showShowFiveStarRateDialogOnBackToDesktopIfNeed(this)) {
+                super.onBackPressed();
+            } else {
+                showRate = true;
+            }
+            
         }
     }
 

@@ -13,7 +13,7 @@
     See the License for the specific language governing permissions and
     limitations under the License.
 -->
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
     <color name="primary_color">#1acc48</color>
     <color name="text_primary_color">#222327</color>
 
@@ -189,7 +189,6 @@
 
     <color name="black_alpha_20">#cd000000</color>
 
-    <color name="material_ripple">#33000000</color>
     <color name="news_bar_content_bg">#eaeaea</color>
 
     <!-- Welcome -->
@@ -203,4 +202,33 @@
     <color name="welcome_button_green">#ff1acc48</color>
     <color name="welcome_button_green_pressed">#ff14ae3c</color>
     <color name="welcome_button_green_ripple">#ff14ae3c</color>
+
+    <color name="warn" tools:ignore="all">#FF3101</color>
+    <color name="text" tools:ignore="all">#666666</color>
+
+    <!-- Dialog -->
+    <color name="dialog_button_blue">#448aff</color>
+    <color name="ad_card" tools:ignore="all">#eaeaea</color>
+
+    <!-- Material Design -->
+    <color name="material_text_white_primary">#deffffff</color>
+    <color name="material_text_white_secondary">#8affffff</color>
+    <color name="material_text_black_secondary">#8a000000</color>
+    <color name="material_text_black_primary">#de000000</color>
+    <color name="material_text_button_positive">#ff000000</color> <!-- TODO de000000 87% alpha-->
+    <color name="material_ripple_dark">#66000000</color>
+    <color name="material_ripple">#33000000</color>
+    <color name="material_ripple_white">#33FFFFFF</color>
+    <color name="material_ripple_button_white">#e0e1e2</color>
+    <color name="material_text_black_hint">#61000000</color>
+    <color name="material_text_black_p70">#b2000000</color>
+    <color name="material_color_accent">#448aff</color>
+    <color name="material_color_switch_thumb">#ffffff</color>
+    <color name="material_color_foreground">#cccccc</color>
+
+    <!-- Feedback -->
+    <color name="feedback_bg">#ececec</color>
+    <color name="feedback_primary">#0096fa</color>
+    <color name="feedback_hint_text">#bdbdbd</color>
+    <color name="feedback_input_text">#626262</color>
 </resources>

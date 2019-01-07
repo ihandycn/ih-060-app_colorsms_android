@@ -39,6 +39,7 @@ import com.android.messaging.R;
 import com.android.messaging.ui.BugleActionBarActivity;
 import com.android.messaging.ui.LicenseActivity;
 import com.android.messaging.ui.UIIntents;
+import com.android.messaging.ui.dialog.FiveStarRateDialog;
 import com.android.messaging.util.BuglePrefs;
 import com.android.messaging.util.DebugUtils;
 import com.android.messaging.util.OsUtil;
@@ -98,6 +99,9 @@ public class ApplicationSettingsActivity extends BugleActionBarActivity {
         private Preference mSmsEnabledPreference;
         private boolean mIsSmsPreferenceClicked;
 
+        private String m5StarPrefKey;
+        private Preference m5StarPreference;
+
         public ApplicationSettingsFragment() {
             // Required empty constructor
         }
@@ -122,6 +126,9 @@ public class ApplicationSettingsActivity extends BugleActionBarActivity {
             mSmsEnabledPrefKey = getString(R.string.sms_enabled_pref_key);
             mSmsEnabledPreference = findPreference(mSmsEnabledPrefKey);
             mIsSmsPreferenceClicked = false;
+
+            m5StarPrefKey = getString(R.string.rate_pref_key);
+            m5StarPreference = findPreference(m5StarPrefKey);
 
             final SharedPreferences prefs = getPreferenceScreen().getSharedPreferences();
             updateSoundSummary(prefs);
@@ -152,6 +159,9 @@ public class ApplicationSettingsActivity extends BugleActionBarActivity {
             if (preference.getKey() ==  mSmsDisabledPrefKey ||
                     preference.getKey() == mSmsEnabledPrefKey) {
                 mIsSmsPreferenceClicked = true;
+            } else if (TextUtils.equals(preference.getKey(), m5StarPrefKey)) {
+                FiveStarRateDialog.showFiveStarFromSetting(getActivity());
+                return true;
             }
             return super.onPreferenceTreeClick(preferenceScreen, preference);
         }

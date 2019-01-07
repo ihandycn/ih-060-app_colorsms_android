@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/permission_guide_content"
+    android:layout_width="match_parent"
+    android:layout_height="125dp"
+    android:layout_marginBottom="10dp"
+    android:layout_marginLeft="6dp"
+    android:layout_marginRight="6dp"
+    android:alpha="0"
+    android:background="@drawable/five_star_rate_guide_icon">
+
+    <com.superapps.view.TypefacedTextView
+        android:layout_width="207dp"
+        android:layout_height="34dp"
+        android:layout_gravity="center_horizontal|top"
+        android:layout_marginTop="77dp"
+        android:ellipsize="end"
+        android:gravity="center_horizontal"
+        android:includeFontPadding="false"
+        android:maxLines="2"
+        android:text="@string/five_star_rate"
+        android:textColor="@android:color/white"
+        android:textSize="15sp"
+        app:typeface="@string/roboto_medium" />
+
+    <android.support.v7.widget.AppCompatImageView
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        android:layout_gravity="end|top|right"
+        android:layout_marginRight="14dp"
+        android:layout_marginTop="10dp"
+        android:scaleType="centerInside"
+        app:srcCompat="@drawable/notification_cleaner_usage_access_bottom_tip_dismiss_btn" />
+</FrameLayout>

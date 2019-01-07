@@ -71,6 +71,10 @@
             android:key="@string/advanced_pref_key"
             android:title="@string/advanced_settings" />
 
+    <PreferenceScreen
+        android:key="@string/rate_pref_key"
+        android:title="@string/launcher_settings_five_star" />
+
     <PreferenceCategory
         android:key="@string/debug_pref_key"
         android:title="@string/debug_category_pref_title">

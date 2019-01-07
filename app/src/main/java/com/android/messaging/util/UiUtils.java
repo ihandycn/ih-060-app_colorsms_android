@@ -44,6 +44,7 @@ import android.view.animation.Animation;
 import android.view.animation.Animation.AnimationListener;
 import android.view.animation.Interpolator;
 import android.view.animation.ScaleAnimation;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.RemoteViews;
 import android.widget.Toast;
 
@@ -54,11 +55,11 @@ import com.android.messaging.ui.SnackBar.Placement;
 import com.android.messaging.ui.SnackBarInteraction;
 import com.android.messaging.ui.SnackBarManager;
 import com.android.messaging.ui.UIIntents;
-import com.ihs.commons.config.HSConfig;
 import com.ihs.commons.utils.HSLog;
 import com.superapps.util.Preferences;
 
 import java.lang.reflect.Field;
+import java.util.ArrayList;
 import java.util.List;
 
 public class UiUtils {
@@ -507,7 +508,82 @@ public class UiUtils {
         return null;
     }
 
+    @SuppressWarnings("SimplifiableIfStatement")
+    public static boolean isDestroyed(Activity activity) {
+        if (activity == null) {
+            return false;
+        }
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
+            return activity.isDestroyed();
+        }
+        return false;
+    }
+
     public static RemoteViews getWidgetMissingPermissionView(final Context context) {
         return new RemoteViews(context.getPackageName(), R.layout.widget_missing_permission);
+    }
+
+    public static void showKeyboard(Context context) {
+        InputMethodManager imm = (InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE);
+        imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0);
+    }
+
+    public static void hideKeyboard(Activity activity) {
+        InputMethodManager imm = (InputMethodManager) activity.getSystemService(Activity.INPUT_METHOD_SERVICE);
+        // Find the currently focused view, so we can grab the correct window token from it
+        View view = activity.getCurrentFocus();
+        // If no view currently has focus, create a new one, just so we can grab a window token from it
+        if (view == null) {
+            view = new View(activity);
+        }
+        imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+    }
+
+    /**
+     * Given a coordinate relative to the descendant, find the coordinate in a parent view's
+     * coordinates.
+     *
+     * @param descendant        The descendant to which the passed coordinate is relative.
+     * @param root              The root view to make the coordinates relative to.
+     * @param outCoord          The coordinate that we want mapped.
+     * @param includeRootScroll Whether or not to account for the scroll of the descendant:
+     *                          sometimes this is relevant as in a child's coordinates within the descendant.
+     * @return The factor by which this descendant is scaled relative to this DragLayer. Caution
+     * this scale factor is assumed to be equal in X and Y, and so if at any point this
+     * assumption fails, we will need to return a pair of scale factors.
+     */
+    public static float getDescendantCoordRelativeToParent(
+            View descendant, View root, int[] outCoord, boolean includeRootScroll) {
+        ArrayList<View> ancestorChain = new ArrayList<>();
+
+        float[] pt = {outCoord[0], outCoord[1]};
+
+        View v = descendant;
+        while (v != root && v != null) {
+            ancestorChain.add(v);
+            v = (View) v.getParent();
+        }
+        ancestorChain.add(root);
+
+        float scale = 1.0f;
+        int count = ancestorChain.size();
+        for (int i = 0; i < count; i++) {
+            View v0 = ancestorChain.get(i);
+            // For TextViews, scroll has a meaning which relates to the text position
+            // which is very strange... ignore the scroll.
+            if (v0 != descendant || includeRootScroll) {
+                pt[0] -= v0.getScrollX();
+                pt[1] -= v0.getScrollY();
+            }
+
+            v0.getMatrix().mapPoints(pt);
+            pt[0] += v0.getLeft();
+            pt[1] += v0.getTop();
+            scale *= v0.getScaleX();
+        }
+
+        outCoord[0] = Math.round(pt[0]);
+        outCoord[1] = Math.round(pt[1]);
+        return scale;
     }
 }

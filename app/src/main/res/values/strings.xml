@@ -871,6 +871,9 @@
     <!-- The title for advanced settings section in the settings activity  -->
     <string name="advanced_settings">Advanced</string>
 
+    <!-- The title for advanced settings section in the settings activity  -->
+    <string name="launcher_settings_five_star">5 star rating</string>
+
     <!-- The title for general settings activity  -->
     <string name="general_settings_activity_title">General settings</string>
 
@@ -1032,5 +1035,27 @@
     <!-- News -->
     <string name="news_detail_error_reload">Reload</string>
     <string name="refresh">Refresh</string>
+
+    <!-- 5-star rating -->
+    <string name="five_star_hint_text">How was your experience with us?</string>
+    <string name="five_star_positive_text">Submit</string>
+    <string name="five_star_one_text">Hated it</string>
+    <string name="five_star_two_text">Disliked it</string>
+    <string name="five_star_three_text">It was OK</string>
+    <string name="five_star_four_text">Liked it</string>
+    <string name="five_star_five_text">Loved it</string>
+
+    <string name="loved_it_desc">Thanks! Please rate with words like Nice, Useful, Stylish…</string>
+    <string name="liked_it_desc">Please tell us what you dislike. We will try our best to improve it!</string>
+    <string name="five_star_rate">Scroll up to rate 5 stars.</string>
+
+    <!-- Feedback -->
+    <string name="feedback_title">Feedback</string>
+    <string name="feedback_content_placeholder">" Your feedback helps us make improvements"</string>
+    <string name="feedback_email_placeholder">" Please enter your email address"</string>
+    <string name="feedback_submit_btn">SEND</string>
+    <string name="feedback_toast_empty_content">Please write your feedback</string>
+    <string name="feedback_toast_invalid_email">Please enter a valid email address</string>
+    <string name="feedback_toast_send_success">Thanks for your feedback!</string>
 
 </resources>

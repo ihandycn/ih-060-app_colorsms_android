@@ -31,6 +31,7 @@
     <string name="send_sound_pref_key" translatable="false">send_sound</string>
     <bool name="send_sound_pref_default" translatable="false">true</bool>
     <string name="advanced_pref_key" translatable="false">advanced_prefs</string>
+    <string name="rate_pref_key" translatable="false">rate_prefs</string>
 
     <!-- Subscription-specific settings. The values of these pref keys must be prefixed with
          "buglesub_" to allow for runtime sanity checks -->

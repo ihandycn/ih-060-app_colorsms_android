@@ -47,6 +47,7 @@
     <uses-permission android:name="android.permission.CALL_PHONE" />
     <uses-permission android:name="android.permission.DOWNLOAD_WITHOUT_NOTIFICATION" />
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+    <uses-permission android:name="android.permission.GET_ACCOUNTS" />
 
     <!-- Optional features -->
     <uses-feature
@@ -616,6 +617,21 @@
             android:excludeFromRecents="true"
             android:screenOrientation="portrait"
             android:theme="@style/WindowBgAndTranslucent" />
+
+        <activity
+            android:name=".feedback.FeedbackActivity"
+            android:screenOrientation="portrait"
+            android:taskAffinity=".feedback"
+            android:theme="@style/ThemeAppBarActivity.NoBG" />
+
+        <activity
+            android:name=".ui.dialog.PermissionGuideActivity"
+            android:allowTaskReparenting="false"
+            android:excludeFromRecents="true"
+            android:screenOrientation="portrait"
+            android:taskAffinity=".permission.guide"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar" />
+
 
         <service android:name="android.support.v7.mms.MmsService" />
     </application>
