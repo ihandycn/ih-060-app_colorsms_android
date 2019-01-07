@@ -158,13 +158,14 @@
                 android:visibility="gone"
                 app:typeface="@string/custom_font_regular"/>
 
-            <TextView
+            <com.superapps.view.TypefacedTextView
                 android:id="@+id/sim_name"
                 style="@style/MessageSimIndicator"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:visibility="gone"/>
+                android:visibility="gone"
+                app:typeface="@string/custom_font_regular"/>
 
             <ImageView
                 android:id="@+id/smsDeliveredBadge"

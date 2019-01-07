@@ -148,8 +148,8 @@
     <color name="open_conversation_animation_background_shadow">#40000000</color>
     <color name="compose_notification_bar_background">@color/primary_color</color>
 
-    <color name="sim_selector_text_primary">#4d4d4d</color>
-    <color name="sim_selector_text_secondary">#999999</color>
+    <color name="sim_selector_text_primary">#222327</color>
+    <color name="sim_selector_text_secondary">#838383</color>
     <color name="sim_selector_background_end">#cceeeeee</color>
     <color name="sim_selector_background_start">#ffeeeeee</color>
     <color name="sim_indicator_color_light">#ffffff</color>

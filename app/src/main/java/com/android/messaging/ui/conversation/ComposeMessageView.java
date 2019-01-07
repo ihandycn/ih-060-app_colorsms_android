@@ -133,7 +133,8 @@ public class ComposeMessageView extends LinearLayout
     private PlainTextEditText mComposeEditText;
     private PlainTextEditText mComposeSubjectText;
     private TextView mMmsIndicator;
-    private ImageView mSendButton;
+    private SimIconView mSelfSendIcon;
+    private ImageButton mSendButton;
     private View mSubjectView;
     private ImageButton mDeleteSubjectButton;
     private AttachmentPreview mAttachmentPreview;
@@ -228,6 +229,28 @@ public class ComposeMessageView extends LinearLayout
                 new LengthFilter(MmsConfig.get(ParticipantData.DEFAULT_SELF_SUB_ID)
                         .getMaxTextLimit())});
 
+        mSelfSendIcon = (SimIconView) findViewById(R.id.self_send_icon);
+        mSelfSendIcon.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                boolean shown = mInputManager.toggleSimSelector(true /* animate */,
+                        getSelfSubscriptionListEntry());
+                hideAttachmentsWhenShowingSims(shown);
+            }
+        });
+        mSelfSendIcon.setOnLongClickListener(new OnLongClickListener() {
+            @Override
+            public boolean onLongClick(final View v) {
+                if (mHost.shouldShowSubjectEditor()) {
+                    showSubjectEditor();
+                } else {
+                    boolean shown = mInputManager.toggleSimSelector(true /* animate */,
+                            getSelfSubscriptionListEntry());
+                    hideAttachmentsWhenShowingSims(shown);
+                }
+                return true;
+            }
+        });
 
         mComposeSubjectText = (PlainTextEditText) findViewById(
                 R.id.compose_subject_text);
@@ -650,7 +673,42 @@ public class ComposeMessageView extends LinearLayout
             mSubjectView.setVisibility(View.VISIBLE);
         }
 
+        final boolean hasMessageText = (TextUtils.getTrimmedLength(messageText) > 0);
+        final boolean hasSubject = (TextUtils.getTrimmedLength(subject) > 0);
+        final boolean hasWorkingDraft = hasMessageText || hasSubject ||
+                mBinding.getData().hasAttachments();
+
+        // Update the send message button. Self icon uri might be null if self participant data
+        // and/or conversation metadata hasn't been loaded by the host.
+        final Uri selfSendButtonUri = getSelfSendButtonIconUri();
         int sendWidgetMode = SEND_WIDGET_MODE_SELF_AVATAR;
+        if (selfSendButtonUri != null) {
+            if (hasWorkingDraft && isDataLoadedForMessageSend()) {
+                UiUtils.revealOrHideViewWithAnimation(mSendButton, VISIBLE, null);
+                if (isOverriddenAvatarAGroup()) {
+                    // If the host has overriden the avatar to show a group avatar where the
+                    // send button sits, we have to hide the group avatar because it can be larger
+                    // than the send button and pieces of the avatar will stick out from behind
+                    // the send button.
+                    UiUtils.revealOrHideViewWithAnimation(mSelfSendIcon, GONE, null);
+                }
+                mMmsIndicator.setVisibility(draftMessageData.getIsMms() ? VISIBLE : INVISIBLE);
+                sendWidgetMode = SEND_WIDGET_MODE_SEND_BUTTON;
+            } else {
+                mSelfSendIcon.setImageResourceUri(selfSendButtonUri);
+                if (isOverriddenAvatarAGroup()) {
+                    UiUtils.revealOrHideViewWithAnimation(mSelfSendIcon, VISIBLE, null);
+                }
+                UiUtils.revealOrHideViewWithAnimation(mSendButton, GONE, null);
+                mMmsIndicator.setVisibility(INVISIBLE);
+                if (shouldShowSimSelector(mConversationDataModel.getData())) {
+                    sendWidgetMode = SEND_WIDGET_MODE_SIM_SELECTOR;
+                }
+            }
+        } else {
+            mSelfSendIcon.setImageResourceUri(null);
+        }
+
         if (mSendWidgetMode != sendWidgetMode || sendWidgetMode == SEND_WIDGET_MODE_SIM_SELECTOR) {
             setSendButtonAccessibility(sendWidgetMode);
             mSendWidgetMode = sendWidgetMode;
@@ -732,9 +790,15 @@ public class ComposeMessageView extends LinearLayout
             case SEND_WIDGET_MODE_SELF_AVATAR:
                 // No send button and no SIM selector; the self send button is no longer
                 // important for accessibility.
+                mSelfSendIcon.setImportantForAccessibility(IMPORTANT_FOR_ACCESSIBILITY_NO);
+                mSelfSendIcon.setContentDescription(null);
+                mSendButton.setVisibility(View.GONE);
+                setSendWidgetAccessibilityTraversalOrder(SEND_WIDGET_MODE_SELF_AVATAR);
                 break;
 
             case SEND_WIDGET_MODE_SIM_SELECTOR:
+                mSelfSendIcon.setImportantForAccessibility(IMPORTANT_FOR_ACCESSIBILITY_YES);
+                mSelfSendIcon.setContentDescription(getSimContentDescription());
                 setSendWidgetAccessibilityTraversalOrder(SEND_WIDGET_MODE_SIM_SELECTOR);
                 break;
 
@@ -904,6 +968,7 @@ public class ComposeMessageView extends LinearLayout
             mSendButton.setImportantForAccessibility(IMPORTANT_FOR_ACCESSIBILITY_YES);
             setSendButtonAccessibility(mSendWidgetMode);
         } else {
+            mSelfSendIcon.setImportantForAccessibility(IMPORTANT_FOR_ACCESSIBILITY_NO);
             mComposeEditText.setImportantForAccessibility(IMPORTANT_FOR_ACCESSIBILITY_NO);
             mSendButton.setImportantForAccessibility(IMPORTANT_FOR_ACCESSIBILITY_NO);
             mAttachMediaButton.setImportantForAccessibility(IMPORTANT_FOR_ACCESSIBILITY_NO);

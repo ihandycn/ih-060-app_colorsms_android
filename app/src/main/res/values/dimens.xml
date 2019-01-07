@@ -142,8 +142,8 @@
     <dimen name="explode_animation_highlight_elevation">6dp</dimen>
 
     <dimen name="sim_selector_text_size">14sp</dimen>
-    <dimen name="sim_selector_detail_text_size">14sp</dimen>
-    <dimen name="sim_selector_icon_size">42dp</dimen>
+    <dimen name="sim_selector_detail_text_size">13.3sp</dimen>
+    <dimen name="sim_selector_icon_size">36.7dp</dimen>
 
     <dimen name="copy_contact_dialog_left_padding">25dp</dimen>
     <dimen name="copy_contact_dialog_right_padding">10dp</dimen>

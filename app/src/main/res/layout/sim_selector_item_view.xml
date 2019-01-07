@@ -19,37 +19,39 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="horizontal"
     android:background="?android:attr/selectableItemBackground"
-    android:padding="12dp"
-    android:clipToPadding="false">
+    android:clipToPadding="false"
+    android:orientation="horizontal"
+    android:padding="12dp">
 
     <LinearLayout
         android:id="@+id/details_container"
-        android:orientation="vertical"
         style="@style/SimSelectorItemLinearLayoutStyle"
         android:layout_width="0dp"
-        android:layout_weight="1"
         android:layout_height="wrap_content"
-        android:layout_gravity="center_vertical" >
+        android:layout_gravity="center_vertical"
+        android:layout_weight="1"
+        android:orientation="vertical">
 
-        <TextView
+        <com.superapps.view.TypefacedTextView
             android:id="@+id/name"
+            style="@style/SimSelectorItem"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:singleLine="true"
-            android:maxLines="1"
             android:ellipsize="end"
-            style="@style/SimSelectorItem" />
+            android:maxLines="1"
+            android:singleLine="true"
+            app:typeface="@string/custom_font_medium"/>
 
-        <TextView
+        <com.superapps.view.TypefacedTextView
             android:id="@+id/details"
+            style="@style/SimSelectorItemDetail"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:singleLine="true"
-            android:maxLines="1"
             android:ellipsize="end"
-            style="@style/SimSelectorItemDetail" />
+            android:maxLines="1"
+            android:singleLine="true"
+            app:typeface="@string/custom_font_regular"/>
 
     </LinearLayout>
 
@@ -57,9 +59,9 @@
         android:id="@+id/sim_icon"
         android:layout_width="@dimen/sim_selector_icon_size"
         android:layout_height="@dimen/sim_selector_icon_size"
-        android:importantForAccessibility="no"
         android:layout_gravity="center_vertical"
         android:elevation="3dp"
-        app:iconSize="normal" />
+        android:importantForAccessibility="no"
+        app:iconSize="normal"/>
 
 </com.android.messaging.ui.conversation.SimSelectorItemView>
