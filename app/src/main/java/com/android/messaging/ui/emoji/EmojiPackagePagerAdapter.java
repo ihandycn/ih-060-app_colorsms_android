@@ -113,9 +113,16 @@ public class EmojiPackagePagerAdapter extends PagerAdapter {
             View view = LayoutInflater.from(mContext).inflate(R.layout.emoji_tab_item_layout, null);
             TabLayout.Tab tab = mTabLayout.getTabAt(i);
             ImageView tabIconView = view.findViewById(R.id.tab_icon_view);
+            ImageView newTabView = view.findViewById(R.id.tab_new_view);
+            if (EmojiManager.isNewTabSticker(info.mName)) {
+                newTabView.setVisibility(View.VISIBLE);
+            } else {
+                newTabView.setVisibility(View.GONE);
+            }
             GlideApp.with(mContext).asBitmap().load(info.mTabIconUrl).placeholder(R.drawable.emoji_normal_tab_icon).into(tabIconView);
             if (tab != null) {
                 tab.setCustomView(view);
+                tab.setTag(info);
             }
         }
     }

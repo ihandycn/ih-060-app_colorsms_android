@@ -101,6 +101,30 @@ public class EmojiPickerFragment extends Fragment implements INotificationObserv
             }
         });
 
+        tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+            @Override
+            public void onTabSelected(TabLayout.Tab tab) {
+            }
+
+            @Override
+            public void onTabUnselected(TabLayout.Tab tab) {
+                Object object = tab.getTag();
+                if (object instanceof EmojiPackageInfo) {
+                    EmojiPackageInfo packageInfo = (EmojiPackageInfo) object;
+                    if (EmojiManager.isNewTabSticker(packageInfo.mName)) {
+                        EmojiManager.removeNewTabSticker(packageInfo.mName);
+                        assert tab.getCustomView() != null;
+                        tab.getCustomView().findViewById(R.id.tab_new_view).setVisibility(View.GONE);
+                    }
+                }
+            }
+
+            @Override
+            public void onTabReselected(TabLayout.Tab tab) {
+
+            }
+        });
+
         mEmojiPager = view.findViewById(R.id.emoji_pager);
         mEmojiPager.setAdapter(mEmojiPackagePagerAdapter);
         tabLayout.setupWithViewPager(mEmojiPager);

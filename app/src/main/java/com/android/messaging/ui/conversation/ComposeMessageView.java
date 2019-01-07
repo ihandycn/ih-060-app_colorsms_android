@@ -60,6 +60,7 @@ import com.android.messaging.ui.AttachmentPreview;
 import com.android.messaging.ui.BugleActionBarActivity;
 import com.android.messaging.ui.PlainTextEditText;
 import com.android.messaging.ui.conversation.ConversationInputManager.ConversationInputSink;
+import com.android.messaging.ui.emoji.utils.EmojiManager;
 import com.android.messaging.util.AccessibilityUtil;
 import com.android.messaging.util.Assert;
 import com.android.messaging.util.AvatarUriUtil;
@@ -140,6 +141,7 @@ public class ComposeMessageView extends LinearLayout
     private AttachmentPreview mAttachmentPreview;
     private ImageView mAttachMediaButton;
     private ImageView mEmojiKeyboardBtn;
+    private ImageView mEmojiGuideView;
 
     private final Binding<DraftMessageData> mBinding;
     private IComposeMessageViewHost mHost;
@@ -326,11 +328,18 @@ public class ComposeMessageView extends LinearLayout
         mAttachmentPreview.setComposeMessageView(this);
 
         mMmsIndicator = (TextView) findViewById(R.id.mms_indicator);
-
+        mEmojiGuideView = findViewById(R.id.emoji_guide_view);
+        if (EmojiManager.isShowEmojiGuide()) {
+            mEmojiGuideView.setVisibility(VISIBLE);
+        }
         mEmojiKeyboardBtn = findViewById(R.id.emoji_btn);
         mEmojiKeyboardBtn.setTag(INPUT_EMOJI);
         mEmojiKeyboardBtn.setOnClickListener(v -> {
             if (v.getTag().equals(INPUT_EMOJI)) {
+                if (EmojiManager.isShowEmojiGuide()) {
+                    EmojiManager.recordAlreadyShowEmojiGuide();
+                    mEmojiGuideView.setVisibility(GONE);
+                }
                 mEmojiKeyboardBtn.setTag(INPUT_KEYBOARD);
                 mEmojiKeyboardBtn.setImageResource(R.drawable.input_keyboard_icon);
                 mInputManager.showEmoji();

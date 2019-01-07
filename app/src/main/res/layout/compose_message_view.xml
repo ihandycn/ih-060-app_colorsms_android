@@ -14,12 +14,12 @@
     limitations under the License.
 -->
 <com.android.messaging.ui.conversation.ComposeMessageView android:id="@+id/message_compose_view_container"
-                                                          xmlns:android="http://schemas.android.com/apk/res/android"
-                                                          xmlns:tools="http://schemas.android.com/tools"
-                                                          android:layout_width="match_parent"
-                                                          android:layout_height="wrap_content"
-                                                          android:orientation="vertical"
-                                                          xmlns:app="http://schemas.android.com/apk/res-auto">
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
 
     <!-- Note it may seem off to have the layout_weight="1" on the compose bar and attachment view
      when it's the media picker that expands, but this is correct because weight also works when
@@ -115,17 +115,17 @@
                     android:orientation="vertical">
 
                     <!--<ImageView-->
-                        <!--android:id="@+id/send_message_button"-->
-                        <!--android:layout_width="36.7dp"-->
-                        <!--android:layout_height="36.7dp"-->
-                        <!--android:layout_marginTop="8.3dp"-->
-                        <!--android:src="@drawable/input_send_message_icon" />-->
+                    <!--android:id="@+id/send_message_button"-->
+                    <!--android:layout_width="36.7dp"-->
+                    <!--android:layout_height="36.7dp"-->
+                    <!--android:layout_marginTop="8.3dp"-->
+                    <!--android:src="@drawable/input_send_message_icon" />-->
 
                     <FrameLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="8.3dp"
-                        android:layout_gravity="top">
+                        android:layout_gravity="top"
+                        android:layout_marginTop="8.3dp">
 
                         <com.android.messaging.ui.conversation.SimIconView
                             android:id="@+id/self_send_icon"
@@ -190,6 +190,17 @@
                     android:src="@drawable/input_emoji_icon" />
 
             </LinearLayout>
+
+            <ImageView
+                android:id="@+id/emoji_guide_view"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="right|bottom"
+                android:layout_marginBottom="36.7dp"
+                android:layout_marginEnd="62dp"
+                android:src="@drawable/emoji_guide_icon"
+                android:visibility="gone"
+                tools:ignore="RtlHardcoded" />
         </FrameLayout>
     </LinearLayout>
 

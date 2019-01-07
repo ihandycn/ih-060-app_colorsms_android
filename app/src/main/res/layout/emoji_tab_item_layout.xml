@@ -23,9 +23,7 @@
             android:layout_height="4.7dp"
             android:layout_below="@id/tab_icon_view"
             android:layout_centerHorizontal="true"
-            android:layout_marginTop="1.7dp"
-            android:background="#ff2828"
-            android:translationY="-0.65dp"
+            android:background="@drawable/emoji_new_tab_guide_drawable"
             android:visibility="gone" />
     </RelativeLayout>
 </FrameLayout>

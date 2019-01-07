@@ -22,6 +22,8 @@ public class EmojiManager {
     private static final String PREF_TAB_STICKER = "pref_tab_sticker";
     private static final String PREF_FILE_NAME = "emoji";
     private static final String PREF_RECENT_STICKER = "pref_recent_sticker";
+    private static final String PREF_NEW_TAB_STICKER = "pref_new_tab_sticker";
+    private static final String PREF_IS_SHOW_EMOJI_GUIDE = "pref_is_show_emoji_guide";
 
     static List<String> getTabSticker() {
         return Preferences.get(PREF_FILE_NAME).getStringList(PREF_TAB_STICKER);
@@ -32,6 +34,7 @@ public class EmojiManager {
     }
 
     public static void addTabSticker(String name) {
+        Preferences.get(PREF_FILE_NAME).addStringToList(PREF_NEW_TAB_STICKER, name);
         List<String> data = getTabSticker();
         if (data.contains(name)) {
             throw new IllegalStateException("The sticker of " + name + " already added to emoji picker!!!");
@@ -42,12 +45,30 @@ public class EmojiManager {
 
     @SuppressWarnings("unused")
     public static void removeTabSticker(String name) {
+        removeNewTabSticker(name);
         List<String> data = getTabSticker();
         if (!data.contains(name)) {
             throw new IllegalStateException("The sticker of " + name + " already removed from emoji picker!!!");
         }
         data.remove(name);
         Preferences.get(PREF_FILE_NAME).putStringList(PREF_TAB_STICKER, data);
+    }
+
+    public static void removeNewTabSticker(String name) {
+        Preferences.get(PREF_FILE_NAME).removeStringFromList(PREF_NEW_TAB_STICKER, name);
+    }
+
+    public static boolean isNewTabSticker(String name) {
+        List<String> data = Preferences.get(PREF_FILE_NAME).getStringList(PREF_NEW_TAB_STICKER);
+        return data.contains(name);
+    }
+
+    public static boolean isShowEmojiGuide() {
+        return Preferences.get(PREF_FILE_NAME).getBoolean(PREF_IS_SHOW_EMOJI_GUIDE, true);
+    }
+
+    public static void recordAlreadyShowEmojiGuide() {
+        Preferences.get(PREF_FILE_NAME).putBoolean(PREF_IS_SHOW_EMOJI_GUIDE, false);
     }
 
     @SuppressWarnings("SuspiciousMethodCalls")
