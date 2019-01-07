@@ -52,7 +52,9 @@ public class MessagingMsgCenterFactoryImpl extends MessageCenterFactoryImpl {
 
             @Override
             public void onMessageBoxPrepareToStart() {
-                UIIntents.get().launchSmsShowActivity();
+                if (SmsShowUtils.getSmsShowAppliedId() > 0) {
+                    UIIntents.get().launchSmsShowActivity();
+                }
             }
         };
     }
