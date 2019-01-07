@@ -982,7 +982,7 @@
     <string name="action_bar_title_typeface">Script-Roman.otf</string>
     <string name="network_error">Network error.</string>
     <string name="network_error_and_try_again">Network errors. Please try again.</string>
-    <string name="sticker_send_msg">SHARE</string>
+    <string name="sticker_send_msg">SELECT</string>
     <string name="sticker_no_recent">Click an emoji to send to friends.</string>
     <string name="media_picker_camera">Camera</string>
     <string name="media_picker_photo">Photo</string>
