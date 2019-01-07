@@ -76,6 +76,7 @@ class CameraMediaChooser extends MediaChooser implements
     public View destroyView() {
         CameraManager.get().closeCamera();
         CameraManager.get().setListener(null);
+        CameraManager.get().setRenderOverlay(null);
         CameraManager.get().setSubscriptionDataProvider(null);
         return super.destroyView();
     }
@@ -234,6 +235,7 @@ class CameraMediaChooser extends MediaChooser implements
 
     /**
      * Updates the view when entering or leaving full-screen camera mode
+     *
      * @param fullScreen
      */
     @Override
@@ -247,6 +249,7 @@ class CameraMediaChooser extends MediaChooser implements
 
     /**
      * Initializes the control to a default state when it is opened / closed
+     *
      * @param open True if the control is opened
      */
     @Override
@@ -269,12 +272,12 @@ class CameraMediaChooser extends MediaChooser implements
     }
 
     private void requestCameraPermission() {
-        mMediaPicker.requestPermissions(new String[] { Manifest.permission.CAMERA },
+        mMediaPicker.requestPermissions(new String[]{Manifest.permission.CAMERA},
                 MediaPicker.CAMERA_PERMISSION_REQUEST_CODE);
     }
 
     private void requestRecordAudioPermission() {
-        mMediaPicker.requestPermissions(new String[] { Manifest.permission.RECORD_AUDIO },
+        mMediaPicker.requestPermissions(new String[]{Manifest.permission.RECORD_AUDIO},
                 MediaPicker.RECORD_AUDIO_PERMISSION_REQUEST_CODE);
     }
 
@@ -318,8 +321,9 @@ class CameraMediaChooser extends MediaChooser implements
 
     /**
      * Handles an error from the camera manager by showing the appropriate error message to the user
+     *
      * @param errorCode One of the CameraManager.ERROR_* constants
-     * @param e The exception which caused the error, if any
+     * @param e         The exception which caused the error, if any
      */
     @Override
     public void onCameraError(final int errorCode, final Exception e) {
@@ -406,7 +410,9 @@ class CameraMediaChooser extends MediaChooser implements
         shutterVisual.startAnimation(animation);
     }
 
-    /** Updates the state of the buttons and overlays based on the current state of the view */
+    /**
+     * Updates the state of the buttons and overlays based on the current state of the view
+     */
     private void updateViewState() {
         if (mView == null) {
             return;
@@ -427,7 +433,7 @@ class CameraMediaChooser extends MediaChooser implements
 
         mView.setSystemUiVisibility(
                 fullScreen ? View.SYSTEM_UI_FLAG_LOW_PROFILE :
-                View.SYSTEM_UI_FLAG_VISIBLE);
+                        View.SYSTEM_UI_FLAG_VISIBLE);
 
         mFullScreenButton.setVisibility(!fullScreen ? View.VISIBLE : View.GONE);
         mFullScreenButton.setEnabled(isCameraAvailable);
