@@ -2,6 +2,7 @@ package com.android.messaging.ui.emoji;
 
 import android.app.Activity;
 import android.app.Fragment;
+import android.graphics.Rect;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -11,14 +12,21 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.android.messaging.R;
+import com.android.messaging.datamodel.data.MediaPickerMessagePartData;
+import com.android.messaging.datamodel.data.MessagePartData;
+import com.android.messaging.download.Downloader;
 import com.android.messaging.ui.emoji.utils.EmojiConfig;
 import com.android.messaging.ui.emoji.utils.EmojiManager;
+import com.android.messaging.util.ContentType;
 import com.ihs.commons.notificationcenter.HSGlobalNotificationCenter;
 import com.ihs.commons.notificationcenter.INotificationObserver;
 import com.ihs.commons.utils.HSBundle;
+import com.superapps.util.Threads;
 import com.superapps.view.ViewPagerFixed;
 
+import java.io.File;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 public class EmojiPickerFragment extends Fragment implements INotificationObserver {
@@ -31,6 +39,7 @@ public class EmojiPickerFragment extends Fragment implements INotificationObserv
     private EmojiPackagePagerAdapter mEmojiPackagePagerAdapter;
     private ViewPagerFixed mEmojiPager;
     private OnEmojiEditListener mOnEmojiEditListener;
+    private OnStickerSendListener mOnStickerSendListener;
 
     public static EmojiPickerFragment newInstance() {
         return new EmojiPickerFragment();
@@ -40,10 +49,15 @@ public class EmojiPickerFragment extends Fragment implements INotificationObserv
         mOnEmojiEditListener = onEmojiEditListener;
     }
 
+    public void setOnStickerSendListener(OnStickerSendListener onStickerSendListener) {
+        mOnStickerSendListener = onStickerSendListener;
+    }
+
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         HSGlobalNotificationCenter.addObserver(NOTIFICATION_ADD_EMOJI_FROM_STORE, this);
+        HSGlobalNotificationCenter.addObserver(StickerMagicDetailActivity.NOTIFICATION_SEND_MAGIC_STICKER, this);
     }
 
     @Nullable
@@ -61,8 +75,17 @@ public class EmojiPickerFragment extends Fragment implements INotificationObserv
             public void emojiClick(BaseEmojiInfo emojiInfo) {
                 if (emojiInfo instanceof StickerInfo) {
                     StickerInfo info = (StickerInfo) emojiInfo;
-                    EmojiManager.saveRecentSticker(info.toString());
-                    mEmojiPackagePagerAdapter.updateRecentItem();
+
+                    updateRecentSticker(info);
+
+                    EmojiManager.getStickerFile(getActivity(), info.mStickerUrl, file -> {
+                        String contentType = ContentType.IMAGE_PNG;
+                        if (info.mEmojiType == EmojiType.STICKER_GIF) {
+                            contentType = ContentType.IMAGE_GIF;
+                        }
+                        sendSticker(file, info.mStartRect, contentType, info.mStickerWidth, info.mStickerHeight);
+                    });
+
                 } else if (emojiInfo instanceof EmojiInfo) {
                     if (mOnEmojiEditListener != null) {
                         mOnEmojiEditListener.add(((EmojiInfo) emojiInfo).mEmoji);
@@ -83,6 +106,19 @@ public class EmojiPickerFragment extends Fragment implements INotificationObserv
         tabLayout.setupWithViewPager(mEmojiPager);
         mEmojiPackagePagerAdapter.update(initData());
         view.findViewById(R.id.emoji_store_btn).setOnClickListener(v -> EmojiStoreActivity.start(getActivity()));
+    }
+
+    private void updateRecentSticker(StickerInfo info) {
+        EmojiManager.saveRecentSticker(info.toString());
+        mEmojiPackagePagerAdapter.updateRecentItem();
+    }
+
+    private void sendSticker(File file, Rect rect, String contentType, int width, int height) {
+        if (mOnStickerSendListener != null) {
+            final List<MessagePartData> items = new ArrayList<>(1);
+            items.add(new MediaPickerMessagePartData(rect, contentType, Uri.fromFile(file), width, height));
+            mOnStickerSendListener.sendSticker(items);
+        }
     }
 
     private List<EmojiPackageInfo> initData() {
@@ -139,6 +175,22 @@ public class EmojiPickerFragment extends Fragment implements INotificationObserv
                     mEmojiPager.setCurrentItem(2);
                 }
                 break;
+            case StickerMagicDetailActivity.NOTIFICATION_SEND_MAGIC_STICKER:
+                Threads.postOnMainThreadDelayed(() -> {
+                    Object o = hsBundle.getObject(StickerMagicDetailActivity.BUNDLE_SEND_MAGIC_STICKER_DATA);
+                    if (!(o instanceof StickerInfo)) {
+                        return;
+                    }
+                    StickerInfo stickerInfo = (StickerInfo) o;
+                    File file = Downloader.getInstance().getDownloadFile(stickerInfo.mMagicUrl);
+                    if (!file.exists()) {
+                        return;
+                    }
+                    updateRecentSticker(stickerInfo);
+
+                    sendSticker(file, stickerInfo.mStartRect, ContentType.IMAGE_GIF, stickerInfo.mStickerWidth, stickerInfo.mStickerHeight);
+                }, 500);
+                break;
             default:
                 break;
         }
@@ -155,6 +207,10 @@ public class EmojiPickerFragment extends Fragment implements INotificationObserv
         void emojiClick(BaseEmojiInfo emojiInfo);
 
         void delete();
+    }
+
+    public interface OnStickerSendListener {
+        void sendSticker(Collection<MessagePartData> items);
     }
 
 }

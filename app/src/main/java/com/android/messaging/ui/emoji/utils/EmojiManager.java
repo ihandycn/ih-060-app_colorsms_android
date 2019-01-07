@@ -1,9 +1,19 @@
 package com.android.messaging.ui.emoji.utils;
 
+import android.annotation.SuppressLint;
+import android.content.Context;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+import android.text.TextUtils;
+
+import com.android.messaging.glide.GlideApp;
 import com.android.messaging.ui.emoji.BaseEmojiInfo;
 import com.android.messaging.ui.emoji.StickerInfo;
+import com.bumptech.glide.request.target.SimpleTarget;
+import com.bumptech.glide.request.transition.Transition;
 import com.superapps.util.Preferences;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -85,5 +95,28 @@ public class EmojiManager {
             throw new IllegalStateException("count must bigger than 0!!!!");
         }
         return result;
+    }
+
+    @SuppressLint("CheckResult")
+    public static void getStickerFile(Context context, final String picUrl, OnGetStickerFileListener stickerFileListener) {
+        if (!TextUtils.isEmpty(picUrl)) {
+            if (!TextUtils.isEmpty(picUrl)) {
+                GlideApp.with(context)
+                        .asFile()
+                        .load(picUrl)
+                        .downloadOnly(new SimpleTarget<File>() {
+                            @Override
+                            public void onResourceReady(@NonNull File file, @Nullable Transition<? super File> transition) {
+                                if (stickerFileListener != null) {
+                                    stickerFileListener.onSuccess(file);
+                                }
+                            }
+                        });
+            }
+        }
+    }
+
+    public interface OnGetStickerFileListener {
+        void onSuccess(@NonNull File file);
     }
 }

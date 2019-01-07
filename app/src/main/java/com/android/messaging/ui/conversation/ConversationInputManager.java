@@ -564,6 +564,10 @@ public class ConversationInputManager implements ConversationInput.ConversationI
                 return;
             }
             mEmojiPickerFragment = mHost.createEmojiPicker();
+            mEmojiPickerFragment.setOnStickerSendListener(items -> {
+                mSink.onMediaItemsSelected(items);
+                mHost.invalidateActionBar();
+            });
             mEmojiPickerFragment.setOnEmojiEditListener(new EmojiPickerFragment.OnEmojiEditListener() {
                 @Override
                 public void add(String emojiStr) {

@@ -1,5 +1,6 @@
 package com.android.messaging.ui.emoji;
 
+import android.graphics.Rect;
 import android.os.Parcel;
 import android.text.TextUtils;
 
@@ -13,40 +14,9 @@ public class StickerInfo extends BaseEmojiInfo {
     boolean mClickable;
     public boolean mIsDownloaded;
 
-    @Override public int describeContents() {
-        return 0;
-    }
-
-    @Override public void writeToParcel(Parcel dest, int flags) {
-        super.writeToParcel(dest, flags);
-        dest.writeString(this.mStickerUrl);
-        dest.writeString(this.mMagicUrl);
-        dest.writeString(this.mSoundUrl);
-        dest.writeByte(this.mClickable ? (byte) 1 : (byte) 0);
-        dest.writeByte(this.mIsDownloaded ? (byte) 1 : (byte) 0);
-    }
-
-    public StickerInfo() {
-    }
-
-    private StickerInfo(Parcel in) {
-        super(in);
-        this.mStickerUrl = in.readString();
-        this.mMagicUrl = in.readString();
-        this.mSoundUrl = in.readString();
-        this.mClickable = in.readByte() != 0;
-        this.mIsDownloaded = in.readByte() != 0;
-    }
-
-    public static final Creator<StickerInfo> CREATOR = new Creator<StickerInfo>() {
-        @Override public StickerInfo createFromParcel(Parcel source) {
-            return new StickerInfo(source);
-        }
-
-        @Override public StickerInfo[] newArray(int size) {
-            return new StickerInfo[size];
-        }
-    };
+    public int mStickerHeight;
+    public int mStickerWidth;
+    public Rect mStartRect;
 
     public static StickerInfo unflatten(String flatten) {
         StickerInfo result = new StickerInfo();
@@ -69,4 +39,45 @@ public class StickerInfo extends BaseEmojiInfo {
     public String toString() {
         return mEmojiType.value + "|" + mStickerUrl + "|" + mMagicUrl + "|" + mSoundUrl;
     }
+
+    @Override public int describeContents() {
+        return 0;
+    }
+
+    @Override public void writeToParcel(Parcel dest, int flags) {
+        super.writeToParcel(dest, flags);
+        dest.writeString(this.mStickerUrl);
+        dest.writeString(this.mMagicUrl);
+        dest.writeString(this.mSoundUrl);
+        dest.writeByte(this.mClickable ? (byte) 1 : (byte) 0);
+        dest.writeByte(this.mIsDownloaded ? (byte) 1 : (byte) 0);
+        dest.writeInt(this.mStickerHeight);
+        dest.writeInt(this.mStickerWidth);
+        dest.writeParcelable(this.mStartRect, flags);
+    }
+
+    public StickerInfo() {
+    }
+
+    protected StickerInfo(Parcel in) {
+        super(in);
+        this.mStickerUrl = in.readString();
+        this.mMagicUrl = in.readString();
+        this.mSoundUrl = in.readString();
+        this.mClickable = in.readByte() != 0;
+        this.mIsDownloaded = in.readByte() != 0;
+        this.mStickerHeight = in.readInt();
+        this.mStickerWidth = in.readInt();
+        this.mStartRect = in.readParcelable(Rect.class.getClassLoader());
+    }
+
+    public static final Creator<StickerInfo> CREATOR = new Creator<StickerInfo>() {
+        @Override public StickerInfo createFromParcel(Parcel source) {
+            return new StickerInfo(source);
+        }
+
+        @Override public StickerInfo[] newArray(int size) {
+            return new StickerInfo[size];
+        }
+    };
 }

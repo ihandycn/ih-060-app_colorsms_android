@@ -81,6 +81,8 @@ public abstract class BaseStickerItemRecyclerAdapter extends RecyclerView.Adapte
 
                     @Override
                     public void onResourceReady(@NonNull GifDrawable resource, @Nullable Transition<? super GifDrawable> transition) {
+                        stickerInfo.mStickerWidth = resource.getMinimumWidth();
+                        stickerInfo.mStickerHeight = resource.getMinimumHeight();
                         this.view.setImageDrawable(resource);
                     }
                 });
@@ -95,6 +97,8 @@ public abstract class BaseStickerItemRecyclerAdapter extends RecyclerView.Adapte
                 .into(new CustomViewTarget<GifImageView, Bitmap>(holder.stickerImageView) {
                     @Override
                     public void onResourceReady(@NonNull Bitmap resource, @Nullable Transition transition) {
+                        stickerInfo.mStickerWidth = resource.getWidth();
+                        stickerInfo.mStickerHeight = resource.getHeight();
                         this.view.setImageBitmap(resource);
                     }
 

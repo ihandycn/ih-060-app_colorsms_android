@@ -16,6 +16,8 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.target.CustomViewTarget;
 import com.bumptech.glide.request.transition.Transition;
 import com.ihs.app.framework.activity.HSAppCompatActivity;
+import com.ihs.commons.notificationcenter.HSGlobalNotificationCenter;
+import com.ihs.commons.utils.HSBundle;
 import com.ihs.commons.utils.HSLog;
 
 import java.io.File;
@@ -28,6 +30,9 @@ public class StickerMagicDetailActivity extends HSAppCompatActivity implements V
 
     private static final String TAG = StickerMagicDetailActivity.class.getSimpleName();
     static final String INTENT_KEY_EMOJI_INFO = "emoji_info";
+
+    public final static String NOTIFICATION_SEND_MAGIC_STICKER = "notification_send_magic_sticker";
+    public final static String BUNDLE_SEND_MAGIC_STICKER_DATA = "bundle_send_magic_sticker_data";
 
     public static void start(Context context, StickerInfo stickerInfo) {
         Intent starter = new Intent(context, StickerMagicDetailActivity.class);
@@ -45,7 +50,7 @@ public class StickerMagicDetailActivity extends HSAppCompatActivity implements V
         setContentView(R.layout.activity_sticker_magic_layout);
 
         findViewById(R.id.emoji_show_close).setOnClickListener(this);
-        findViewById(R.id.emoji_show_share_btn).setOnClickListener(this);
+        findViewById(R.id.send_btn).setOnClickListener(this);
         mGifImageView = findViewById(R.id.emoji_show_image);
 
         mStickerInfo = getIntent().getParcelableExtra(INTENT_KEY_EMOJI_INFO);
@@ -65,7 +70,11 @@ public class StickerMagicDetailActivity extends HSAppCompatActivity implements V
             case R.id.emoji_show_close:
                 finish();
                 break;
-            case R.id.emoji_show_share_btn:
+            case R.id.send_btn:
+                HSBundle bundle = new HSBundle();
+                bundle.putObject(BUNDLE_SEND_MAGIC_STICKER_DATA, mStickerInfo);
+                HSGlobalNotificationCenter.sendNotification(NOTIFICATION_SEND_MAGIC_STICKER, bundle);
+                finish();
                 break;
         }
     }
@@ -97,6 +106,8 @@ public class StickerMagicDetailActivity extends HSAppCompatActivity implements V
 
                     @Override
                     public void onResourceReady(@NonNull GifDrawable resource, @Nullable Transition<? super GifDrawable> transition) {
+                        mStickerInfo.mStickerWidth = resource.getMinimumWidth();
+                        mStickerInfo.mStickerHeight = resource.getMinimumHeight();
                         resource.reset();
                         this.view.setImageDrawable(resource);
                         if (mSoundPlayer != null) {

@@ -33,7 +33,7 @@
     </FrameLayout>
 
     <com.superapps.view.TypefacedTextView
-        android:id="@+id/emoji_show_share_btn"
+        android:id="@+id/send_btn"
         android:layout_width="match_parent"
         android:layout_height="41dp"
         android:layout_gravity="bottom"
