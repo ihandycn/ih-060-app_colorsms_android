@@ -75,7 +75,7 @@ public class EmojiManager {
     private static List<String> getRecentStickerStr() {
         int maxRecentCount = EmojiConfig.getInstance().optInteger(0, "RecentEmojiCount");
         List<String> result = Preferences.get(PREF_FILE_NAME).getStringList(PREF_RECENT_STICKER);
-        if (result.size() > maxRecentCount) {
+        if (maxRecentCount > 0 && result.size() > maxRecentCount) {
             List<String> removeList = new ArrayList<>(result.size() - maxRecentCount);
             for (int i = result.size() - 1; i >= maxRecentCount; i--) {
                 removeList.add(result.get(i));
