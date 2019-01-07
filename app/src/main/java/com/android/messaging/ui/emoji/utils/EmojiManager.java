@@ -50,8 +50,18 @@ public class EmojiManager {
         Preferences.get(PREF_FILE_NAME).putStringList(PREF_TAB_STICKER, data);
     }
 
+    @SuppressWarnings("SuspiciousMethodCalls")
     private static List<String> getRecentStickerStr() {
-        return Preferences.get(PREF_FILE_NAME).getStringList(PREF_RECENT_STICKER);
+        int maxRecentCount = EmojiConfig.getInstance().optInteger(0, "RecentEmojiCount");
+        List<String> result = Preferences.get(PREF_FILE_NAME).getStringList(PREF_RECENT_STICKER);
+        if (result.size() > maxRecentCount) {
+            List<String> removeList = new ArrayList<>(result.size() - maxRecentCount);
+            for (int i = result.size() - 1; i >= maxRecentCount; i--) {
+                removeList.add(result.get(i));
+            }
+            result.removeAll(removeList);
+        }
+        return result;
     }
 
     public static List<BaseEmojiInfo> getRecentStickerInfo() {
