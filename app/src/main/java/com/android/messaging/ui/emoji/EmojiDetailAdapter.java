@@ -78,8 +78,8 @@ public class EmojiDetailAdapter extends BaseStickerItemRecyclerAdapter {
                 getBtn.setBackground(BackgroundDrawables.createBackgroundDrawable(0xFFD6D6D6, Dimensions.pxFromDp(20), true));
                 EmojiManager.addTabSticker(mEmojiPackageInfo.mName);
                 HSBundle bundle = new HSBundle();
-                bundle.putString(EmojiStoreActivity.NOTIFICATION_BUNDLE_ITEM_NAME, mEmojiPackageInfo.mName);
-                HSGlobalNotificationCenter.sendNotification(EmojiStoreActivity.NOTIFICATION_REFRESH_ITEM_STATUS, bundle);
+                bundle.putString(EmojiFragment.NOTIFICATION_BUNDLE_ITEM_NAME, mEmojiPackageInfo.mName);
+                HSGlobalNotificationCenter.sendNotification(EmojiFragment.NOTIFICATION_REFRESH_ITEM_STATUS, bundle);
 
                 HSBundle packageBundle = new HSBundle();
                 packageBundle.putObject(EmojiPickerFragment.NOTIFICATION_BUNDLE_PACKAGE_INFO, mEmojiPackageInfo);

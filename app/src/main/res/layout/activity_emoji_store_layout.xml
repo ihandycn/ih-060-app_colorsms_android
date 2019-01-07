@@ -35,13 +35,8 @@
 
     </RelativeLayout>
 
-    <com.android.messaging.ui.view.RecyclerViewWidthSlideListener
-        android:id="@+id/emoji_store_list"
+    <FrameLayout
+        android:id="@+id/emoji_store_layout"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="#ffececec"
-        android:overScrollMode="never"
-        android:paddingLeft="6.67dp"
-        android:paddingRight="6.67dp" />
-
+        android:layout_height="match_parent" />
 </LinearLayout>

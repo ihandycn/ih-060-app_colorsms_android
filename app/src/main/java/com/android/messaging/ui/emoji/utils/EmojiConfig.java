@@ -84,7 +84,7 @@ public class EmojiConfig implements HSLibraryConfig.ILibraryListener {
         }
 
         List<String> allAddedSticker = EmojiManager.getTabSticker();
-        boolean isFirstLoad = allAddedSticker.isEmpty();
+        int initSize = allAddedSticker.size();
         Context context = HSApplication.getContext();
         String baseUrl = HSMapUtils.getString(sConfigMap, "BaseUrl");
         String bannerFileName = HSMapUtils.getString(sConfigMap, "BannerFileName");
@@ -99,16 +99,11 @@ public class EmojiConfig implements HSLibraryConfig.ILibraryListener {
 
             packageInfo.mName = (String) configMap.get("Name");
             if (isMustBeAdded) {
-                if (isFirstLoad) {
-                    if (i < presetEmojiCount) {
-                        allAddedSticker.add(packageInfo.mName);
-                    } else {
-                        break;
-                    }
-                } else {
-                    if (!allAddedSticker.contains(packageInfo.mName)) {
-                        continue;
-                    }
+                if (i >= presetEmojiCount && !allAddedSticker.contains(packageInfo.mName)) {
+                    continue;
+                }
+                if (!allAddedSticker.contains(packageInfo.mName)) {
+                    allAddedSticker.add(packageInfo.mName);
                 }
             } else {
                 // store emoji
@@ -192,11 +187,10 @@ public class EmojiConfig implements HSLibraryConfig.ILibraryListener {
         }
 
         if (isMustBeAdded) {
-            if (isFirstLoad) {
+            if (allAddedSticker.size() != initSize) {
                 EmojiManager.addTabSticker(allAddedSticker);
-            } else {
-                result = order(result, allAddedSticker);
             }
+            result = order(result, allAddedSticker);
         }
         return result;
     }

@@ -24,7 +24,7 @@ public class BasePagerAdapter extends FragmentStatePagerAdapter {
             case 1:
                 return new SmsShowListFragment();
             case 2:
-                return new EmojiFragment();
+                return EmojiFragment.newInstance();
         }
         return null;
     }
