@@ -54,15 +54,6 @@ public class EmojiPackagePagerAdapter extends PagerAdapter {
         EmojiPackageInfo info = mData.get(position);
         View view = LayoutInflater.from(container.getContext()).inflate(R.layout.emoji_page_item_layout, container, false);
         ViewPagerFixed itemPager = view.findViewById(R.id.emoji_item_pager);
-        if (info.mEmojiPackageType == EmojiPackageType.EMOJI) {
-            View deleteBtn = view.findViewById(R.id.delete_emoji_btn);
-            deleteBtn.setVisibility(View.VISIBLE);
-            deleteBtn.setOnClickListener(v -> {
-                if (mOnEmojiClickListener != null) {
-                    mOnEmojiClickListener.delete();
-                }
-            });
-        }
         ViewPagerDotIndicatorView dotIndicatorView = view.findViewById(R.id.dot_indicator_view);
         itemPager.addOnPageChangeListener(dotIndicatorView);
         PagerAdapter adapter = getPagerAdapter(info);

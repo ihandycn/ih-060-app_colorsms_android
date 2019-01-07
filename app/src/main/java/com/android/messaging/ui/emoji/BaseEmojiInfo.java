@@ -3,7 +3,7 @@ package com.android.messaging.ui.emoji;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-public abstract class BaseEmojiInfo implements Parcelable {
+public class BaseEmojiInfo implements Parcelable {
     public EmojiType mEmojiType;
 
 

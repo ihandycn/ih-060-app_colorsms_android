@@ -11,6 +11,7 @@ import android.view.ViewGroup;
 import com.android.messaging.ui.emoji.utils.EmojiManager;
 import com.superapps.util.Dimensions;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class EmojiItemPagerAdapter extends PagerAdapter {
@@ -28,7 +29,27 @@ public class EmojiItemPagerAdapter extends PagerAdapter {
             return;
         }
         mOnEmojiClickListener = emojiClickListener;
-        mData = EmojiManager.subList(data, EMOJI_COUNT_ONE_PAGE);
+        List<List<BaseEmojiInfo>> list = EmojiManager.subList(data, EMOJI_COUNT_ONE_PAGE);
+        mData = new ArrayList<>(list.size());
+        for (int i = 0; i < list.size(); i++) {
+            List<BaseEmojiInfo> subList = list.get(i);
+            List<BaseEmojiInfo> copySubList = new ArrayList<>(subList);
+            if (subList.size() == EMOJI_COUNT_ONE_PAGE) {
+                BaseEmojiInfo info = new BaseEmojiInfo();
+                info.mEmojiType = EmojiType.EMOJI_DELETE;
+                copySubList.add(info);
+            } else {
+                for (int k = 0; k < EMOJI_COUNT_ONE_PAGE - subList.size(); k++) {
+                    BaseEmojiInfo emptyInfo = new BaseEmojiInfo();
+                    emptyInfo.mEmojiType = EmojiType.EMOJI_EMPTY;
+                    copySubList.add(emptyInfo);
+                }
+                BaseEmojiInfo info = new BaseEmojiInfo();
+                info.mEmojiType = EmojiType.EMOJI_DELETE;
+                copySubList.add(info);
+            }
+            mData.add(copySubList);
+        }
     }
 
     @Override
