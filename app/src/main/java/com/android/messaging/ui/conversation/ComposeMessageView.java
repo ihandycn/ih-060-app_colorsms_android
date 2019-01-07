@@ -647,8 +647,7 @@ public class ComposeMessageView extends LinearLayout
         }
 
         // Fall back to default self-avatar in the base case.
-        final ParticipantData self = mConversationDataModel.getData().getDefaultSelfParticipant();
-        return self == null ? null : AvatarUriUtil.createAvatarUri(self);
+        return null;
     }
 
     private SubscriptionListEntry getSelfSubscriptionListEntry() {
@@ -682,9 +681,13 @@ public class ComposeMessageView extends LinearLayout
         // and/or conversation metadata hasn't been loaded by the host.
         final Uri selfSendButtonUri = getSelfSendButtonIconUri();
         int sendWidgetMode = SEND_WIDGET_MODE_SELF_AVATAR;
-        if (selfSendButtonUri != null) {
+        if (selfSendButtonUri != null || getSelfSubscriptionListEntry() == null) {
             if (hasWorkingDraft && isDataLoadedForMessageSend()) {
-                UiUtils.revealOrHideViewWithAnimation(mSendButton, VISIBLE, null);
+                if (selfSendButtonUri != null) {
+                    UiUtils.revealOrHideViewWithAnimation(mSendButton, VISIBLE, null);
+                } else {
+                    mSendButton.setVisibility(View.VISIBLE);
+                }
                 if (isOverriddenAvatarAGroup()) {
                     // If the host has overriden the avatar to show a group avatar where the
                     // send button sits, we have to hide the group avatar because it can be larger
@@ -695,7 +698,11 @@ public class ComposeMessageView extends LinearLayout
                 mMmsIndicator.setVisibility(draftMessageData.getIsMms() ? VISIBLE : INVISIBLE);
                 sendWidgetMode = SEND_WIDGET_MODE_SEND_BUTTON;
             } else {
-                mSelfSendIcon.setImageResourceUri(selfSendButtonUri);
+                if (selfSendButtonUri != null) {
+                    mSelfSendIcon.setImageResourceUri(selfSendButtonUri);
+                } else {
+                    mSelfSendIcon.setImageResource(R.drawable.input_send_message_icon);
+                }
                 if (isOverriddenAvatarAGroup()) {
                     UiUtils.revealOrHideViewWithAnimation(mSelfSendIcon, VISIBLE, null);
                 }

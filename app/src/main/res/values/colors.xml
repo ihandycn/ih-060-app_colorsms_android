@@ -150,8 +150,8 @@
 
     <color name="sim_selector_text_primary">#222327</color>
     <color name="sim_selector_text_secondary">#838383</color>
-    <color name="sim_selector_background_end">#cceeeeee</color>
-    <color name="sim_selector_background_start">#ffeeeeee</color>
+    <color name="sim_selector_background_end">#e3ffffff</color>
+    <color name="sim_selector_background_start">#ffffffff</color>
     <color name="sim_indicator_color_light">#ffffff</color>
     <color name="sim_indicator_color_dark">#323232</color>
 

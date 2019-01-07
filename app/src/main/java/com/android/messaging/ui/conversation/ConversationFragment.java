@@ -1589,7 +1589,7 @@ public class ConversationFragment extends Fragment implements ConversationDataLi
 
     @Override
     public boolean shouldShowSubjectEditor() {
-        return true;
+        return false;
     }
 
     @Override
