@@ -43,7 +43,7 @@
                 android:layout_gravity="center_vertical"
                 android:drawableBottom="@drawable/chip_autocomplete_bottom_line"
                 android:textCursorDrawable="@drawable/chip_autocomplete_cursor"
-                android:drawablePadding="6dp"
+                android:drawablePadding="4dp"
                 android:minHeight="@dimen/compose_message_contacts_height"
                 android:popupBackground="@drawable/contact_popup_background"
                 android:dropDownWidth="match_parent"

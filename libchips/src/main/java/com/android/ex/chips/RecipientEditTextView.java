@@ -40,6 +40,7 @@ import android.graphics.Point;
 import android.graphics.Rect;
 import android.graphics.RectF;
 import android.graphics.Shader.TileMode;
+import android.graphics.Typeface;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.StateListDrawable;
@@ -98,6 +99,7 @@ import com.android.ex.chips.recipientchip.DrawableRecipientChip;
 import com.android.ex.chips.recipientchip.InvisibleRecipientChip;
 import com.android.ex.chips.recipientchip.ReplacementDrawableSpan;
 import com.android.ex.chips.recipientchip.VisibleRecipientChip;
+import com.superapps.util.Fonts;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -346,6 +348,9 @@ public class RecipientEditTextView extends MultiAutoCompleteTextView implements
         setOnEditorActionListener(this);
 
         setDropdownChipLayouter(new DropdownChipLayouter(LayoutInflater.from(context), context));
+
+        Typeface typeface = Fonts.getTypeface(Fonts.Font.ofFontResId(R.string.custom_font_semibold));
+        getPaint().setTypeface(typeface);
     }
 
     private void setupPopupWindow(ListPopupWindow popup) {
@@ -792,7 +797,7 @@ public class RecipientEditTextView extends MultiAutoCompleteTextView implements
     }
 
     private Bitmap createChipBitmap(RecipientEntry contact, TextPaint paint,
-                                                 Drawable overrideBackgroundDrawable, int backgroundColor) {
+                                    Drawable overrideBackgroundDrawable, int backgroundColor) {
         Rect backgroundPadding = new Rect();
         if (overrideBackgroundDrawable != null) {
             overrideBackgroundDrawable.getPadding(backgroundPadding);

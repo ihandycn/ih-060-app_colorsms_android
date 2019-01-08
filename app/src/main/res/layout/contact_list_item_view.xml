@@ -54,21 +54,22 @@
         android:layout_gravity="center_vertical"
         android:orientation="vertical">
 
-        <TextView
+        <com.superapps.view.TypefacedTextView
             android:id="@+id/contact_name"
             style="@style/ContactListItem"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:ellipsize="end"
             android:maxLines="1"
-            android:singleLine="true" />
+            android:singleLine="true"
+            app:typeface="@string/custom_font_medium"/>
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal">
 
-            <TextView
+            <com.superapps.view.TypefacedTextView
                 android:id="@+id/contact_details"
                 style="@style/ContactListItemDetail"
                 android:layout_width="0dp"
@@ -76,13 +77,16 @@
                 android:layout_weight="1"
                 android:ellipsize="end"
                 android:maxLines="1"
-                android:singleLine="true" />
+                android:singleLine="true"
+                app:typeface="@string/custom_font_regular" />
 
-            <TextView
+            <com.superapps.view.TypefacedTextView
                 android:id="@+id/contact_detail_type"
                 style="@style/ContactListItemDetailType"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content"
+                app:typeface="@string/custom_font_regular" />
+
         </LinearLayout>
 
     </LinearLayout>

@@ -42,7 +42,7 @@ import com.android.messaging.util.OsUtil;
  * but allows for the view containing the tabs to be placed anywhere on screen. Text-related
  * attributes can also be assigned in XML - these will get propogated to the child TextViews
  * automatically.
- *
+ * <p>
  * Note: this file is taken from the AOSP /packages/apps/ContactsCommon/src/com/android/contacts/
  * common/list/ViewPagerTabs.java. Some platform specific API calls (e.g. ViewOutlineProvider which
  * assumes L and above) have been modified to support down to Api Level 16.
@@ -66,11 +66,11 @@ public class ViewPagerTabs extends HorizontalScrollView implements ViewPager.OnP
     private static final int TAB_SIDE_PADDING_IN_DPS = 10;
 
     // TODO: This should use <declare-styleable> in the future
-    private static final int[] ATTRS = new int[] {
-        android.R.attr.textSize,
-        android.R.attr.textStyle,
-        android.R.attr.textColor,
-        android.R.attr.textAllCaps
+    private static final int[] ATTRS = new int[]{
+            android.R.attr.textSize,
+            android.R.attr.textStyle,
+            android.R.attr.textColor,
+            android.R.attr.textAllCaps
     };
 
     /**
@@ -128,16 +128,6 @@ public class ViewPagerTabs extends HorizontalScrollView implements ViewPager.OnP
         addView(mTabStrip,
                 new FrameLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.MATCH_PARENT));
         a.recycle();
-
-        // enable shadow casting from view bounds
-        if (OsUtil.isAtLeastL()) {
-            setOutlineProvider(new ViewOutlineProvider() {
-                @Override
-                public void getOutline(View view, Outline outline) {
-                    outline.setRect(0, 0, view.getWidth(), view.getHeight());
-                }
-            });
-        }
     }
 
     public void setViewPager(ViewPager viewPager) {

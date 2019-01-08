@@ -198,15 +198,15 @@
     </style>
 
     <style name="ContactListItemDetail">
-        <item name="android:textSize">@dimen/contact_list_detail_type_text_size</item>
-        <item name="android:textColor">@color/contact_list_text_type</item>
+        <item name="android:textSize">@dimen/contact_list_detail_text_size</item>
+        <item name="android:textColor">@color/contact_list_text_secondary</item>
         <item name="android:background">@null</item>
     </style>
 
     <style name="ContactListItemDetailType" parent="ContactListItemDetail">
         <item name="android:paddingLeft">12dp</item>
-        <item name="android:textSize">@dimen/contact_list_detail_text_size</item>
-        <item name="android:textColor">@color/contact_list_text_secondary</item>
+        <item name="android:textSize">@dimen/contact_list_detail_type_text_size</item>
+        <item name="android:textColor">@color/contact_list_text_type</item>
     </style>
 
     <style name="ContactListItemDrawableIndicator">

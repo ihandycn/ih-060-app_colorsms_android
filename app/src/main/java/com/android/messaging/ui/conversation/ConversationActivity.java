@@ -19,6 +19,7 @@ package com.android.messaging.ui.conversation;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.content.Intent;
+import android.graphics.Color;
 import android.graphics.Rect;
 import android.net.Uri;
 import android.os.Bundle;
@@ -134,7 +135,8 @@ public class ConversationActivity extends BugleActionBarActivity
         return super.startActionMode(callback);
     }
 
-    @Override public void dismissActionMode() {
+    @Override
+    public void dismissActionMode() {
         super.dismissActionMode();
         mTitleTextView.setVisibility(View.VISIBLE);
     }
@@ -213,6 +215,8 @@ public class ConversationActivity extends BugleActionBarActivity
         } else if (conversation != null && mUiState.shouldShowConversationFragment()) {
             conversation.updateActionBar(actionBar, mTitleTextView);
         }
+        //update statusBar color
+        UiUtils.setStatusBarColor(this, getResources().getColor(R.color.action_bar_background_color));
     }
 
     @Override
