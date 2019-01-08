@@ -74,7 +74,7 @@ public class EmojiDetailAdapter extends BaseStickerItemRecyclerAdapter {
             getBtn.setBackground(BackgroundDrawables.createBackgroundDrawable(0xFFD6D6D6, Dimensions.pxFromDp(20), true));
         } else {
             getBtn.setTextColor(0xFF333333);
-            getBtn.setBackground(BackgroundDrawables.createBackgroundDrawable(0xFFF4BE3E, Dimensions.pxFromDp(20), true));
+            getBtn.setBackground(BackgroundDrawables.createBackgroundDrawable(0xFFF4BE3E, 0xFFDAA017, Dimensions.pxFromDp(20), false, true));
             getBtn.setOnClickListener(v -> {
                 if (!TextUtils.isEmpty(mSource)) {
                     BugleAnalytics.logEvent("SMSEmoji_ChatEmoji_StoreDetail_Get", true, "type", mSource);

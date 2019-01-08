@@ -1,15 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
-<selector xmlns:android="http://schemas.android.com/apk/res/android">
-    <item android:state_pressed="false">
+<ripple xmlns:android="http://schemas.android.com/apk/res/android"
+    android:color="#D6A704">
+    <item>
         <shape android:shape="rectangle">
             <corners android:radius="20.5dp" />
-            <solid android:color="#ff1197ff" />
+            <solid android:color="#ffc600" />
         </shape>
     </item>
-    <item android:state_pressed="true">
+    <item android:id="@android:id/mask">
         <shape android:shape="rectangle">
             <corners android:radius="20.5dp" />
-            <solid android:color="#ff0e7cd4" />
+            <solid android:color="#ffffffff" />
         </shape>
     </item>
-</selector>
+</ripple>

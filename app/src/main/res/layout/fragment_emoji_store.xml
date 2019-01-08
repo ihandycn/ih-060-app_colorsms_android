@@ -3,6 +3,4 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#ffececec"
-    android:overScrollMode="never"
-    android:paddingLeft="6.67dp"
-    android:paddingRight="6.67dp" />
+    android:overScrollMode="never" />

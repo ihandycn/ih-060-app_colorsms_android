@@ -31,6 +31,9 @@ public class ViewPagerDotIndicatorView extends LinearLayout implements ViewPager
     private int mLastPosition;
 
     public void initDot(int count, int selectedPosition) {
+        if (count < 2) {
+            return;
+        }
         for (int i = 0; i < count; i++) {
             FrameLayout layout = new FrameLayout(getContext());
             int size = Dimensions.pxFromDp(7);
@@ -66,17 +69,21 @@ public class ViewPagerDotIndicatorView extends LinearLayout implements ViewPager
     }
 
     private void selectStatus(int position) {
-        View currentView = getChildAt(position);
-        currentView.setSelected(true);
-        currentView.setScaleY(MAX_RATIO);
-        currentView.setScaleX(MAX_RATIO);
+        if (position < getChildCount()) {
+            View currentView = getChildAt(position);
+            currentView.setSelected(true);
+            currentView.setScaleY(MAX_RATIO);
+            currentView.setScaleX(MAX_RATIO);
+        }
     }
 
     private void unSelectStatus(int position) {
-        View lastView = getChildAt(position);
-        lastView.setSelected(false);
-        lastView.setScaleX(1f);
-        lastView.setScaleY(1f);
+        if (position < getChildCount()) {
+            View lastView = getChildAt(position);
+            lastView.setSelected(false);
+            lastView.setScaleX(1f);
+            lastView.setScaleY(1f);
+        }
     }
 
     @Override

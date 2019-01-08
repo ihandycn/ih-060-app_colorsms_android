@@ -6,4 +6,4 @@
     android:background="@drawable/material_compat_button_bg"
     android:gravity="center"
     android:textColor="#000000"
-    android:textSize="20sp" />
+    android:textSize="23sp" />

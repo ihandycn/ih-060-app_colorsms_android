@@ -4,9 +4,12 @@ import android.app.FragmentManager;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.widget.ImageView;
 
 import com.android.messaging.R;
 import com.ihs.app.framework.activity.HSAppCompatActivity;
+import com.superapps.util.BackgroundDrawables;
+import com.superapps.util.Dimensions;
 
 public class EmojiStoreActivity extends HSAppCompatActivity {
 
@@ -26,6 +29,8 @@ public class EmojiStoreActivity extends HSAppCompatActivity {
                 EmojiStoreFragment.newInstance("char_tab"),
                 EmojiStoreFragment.FRAGMENT_TAG).commit();
 
-        findViewById(R.id.emoji_store_back_btn).setOnClickListener(v -> this.finish());
+        ImageView backBtn = findViewById(R.id.emoji_store_back_btn);
+        backBtn.setBackground(BackgroundDrawables.createBackgroundDrawable(0xffffffff, 0x33000000, Dimensions.pxFromDp(18), false, true));
+        backBtn.setOnClickListener(v -> this.finish());
     }
 }

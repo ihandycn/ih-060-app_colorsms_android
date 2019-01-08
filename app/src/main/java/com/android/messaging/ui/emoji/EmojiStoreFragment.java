@@ -47,6 +47,7 @@ public class EmojiStoreFragment extends Fragment implements INotificationObserve
     private List<EmojiPackageInfo> mStoreEmojiPackageInfoList;
     private StoreAdapter mAdapter;
     private String mSource;
+    private boolean mIsFirstLoad = false;
 
     public static EmojiStoreFragment newInstance(String source) {
         EmojiStoreFragment fragment = new EmojiStoreFragment();
@@ -90,8 +91,18 @@ public class EmojiStoreFragment extends Fragment implements INotificationObserve
         recyclerView.setLayoutManager(new GridLayoutManager(getActivity(), MAX_COLUMNS));
         recyclerView.addItemDecoration(new StoreItemDecoration());
         HSGlobalNotificationCenter.addObserver(NOTIFICATION_REFRESH_ITEM_STATUS, this);
-
+        mIsFirstLoad = true;
         return view;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (!mIsFirstLoad) {
+            mAdapter.notifyDataSetChanged();
+        } else {
+            mIsFirstLoad = false;
+        }
     }
 
     @Override
@@ -157,7 +168,7 @@ public class EmojiStoreFragment extends Fragment implements INotificationObserve
             } else {
                 holder.getBtn.setText(res.getString(R.string.emoji_get));
                 holder.getBtn.setTextColor(0xFF333333);
-                holder.getBtn.setBackground(BackgroundDrawables.createBackgroundDrawable(0xFFF4BE3E, Dimensions.pxFromDp(15), true));
+                holder.getBtn.setBackground(BackgroundDrawables.createBackgroundDrawable(0xFFF4BE3E, 0xFFDAA017, Dimensions.pxFromDp(15), false, true));
                 holder.getBtn.setOnClickListener(v -> {
                     if (!TextUtils.isEmpty(mSource)) {
                         BugleAnalytics.logEvent("SMSEmoji_ChatEmoji_StoreList_Get", true, "type", packageInfo.mName, "source", mSource);

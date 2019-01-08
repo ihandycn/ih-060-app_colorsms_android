@@ -582,7 +582,7 @@
             android:name=".ui.emoji.EmojiDetailActivity"
             android:excludeFromRecents="true"
             android:screenOrientation="portrait"
-            android:theme="@style/WindowBgAndTranslucent" />
+            android:theme="@style/WindowBgWhiteAndTranslucent" />
 
         <activity
             android:name=".feedback.FeedbackActivity"
