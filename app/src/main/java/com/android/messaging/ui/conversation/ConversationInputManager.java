@@ -556,6 +556,12 @@ public class ConversationInputManager implements ConversationInput.ConversationI
 
         @Override
         public boolean hide(boolean animate) {
+            if (mEmojiPickerFragment != null){
+                mFragmentManager.beginTransaction()
+                        .remove(mEmojiPickerFragment)
+                        .commit();
+                mEmojiPickerFragment = null;
+            }
             return true;
         }
 
