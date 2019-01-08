@@ -38,7 +38,6 @@ import android.view.View;
 import android.view.WindowManager;
 
 import com.android.messaging.datamodel.data.DraftMessageData.DraftMessageSubscriptionDataProvider;
-import com.android.messaging.Factory;
 import com.android.messaging.datamodel.data.ParticipantData;
 import com.android.messaging.datamodel.media.ImageRequest;
 import com.android.messaging.sms.MmsConfig;
@@ -282,7 +281,9 @@ class CameraManager implements FocusOverlayManager.Listener {
             });
         }
         mCameraPreview = preview;
-        tryShowPreview();
+        if (preview != null) {
+            tryShowPreview();
+        }
     }
 
     void setRenderOverlay(final RenderOverlay renderOverlay) {
