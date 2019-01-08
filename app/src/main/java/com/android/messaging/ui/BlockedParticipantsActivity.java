@@ -40,8 +40,9 @@ public class BlockedParticipantsActivity extends AppCompatActivity {
         title.setText(getString(R.string.blocked_contacts_title));
         toolbar.setTitle("");
         setSupportActionBar(toolbar);
-        assert getSupportActionBar() != null;
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        }
         getSupportActionBar().setDisplayShowHomeEnabled(true);
     }
 

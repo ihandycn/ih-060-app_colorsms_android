@@ -24,7 +24,6 @@ import android.view.MenuItem;
 import android.widget.TextView;
 
 import com.android.messaging.R;
-import com.android.messaging.ui.BugleActionBarActivity;
 import com.android.messaging.ui.UIIntents;
 import com.android.messaging.util.Assert;
 
@@ -43,7 +42,9 @@ public class PeopleAndOptionsActivity extends AppCompatActivity {
         TextView title = toolbar.findViewById(R.id.toolbar_title);
         title.setText(getString(R.string.people_and_options_activity_title));
         setSupportActionBar(toolbar);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        }
         getSupportActionBar().setDisplayShowHomeEnabled(true);
     }
 

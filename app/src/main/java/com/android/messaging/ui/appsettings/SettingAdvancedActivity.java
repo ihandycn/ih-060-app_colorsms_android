@@ -35,8 +35,9 @@ public class SettingAdvancedActivity extends AppCompatActivity {
         title.setText(getString(R.string.advanced_settings_activity_title));
         toolbar.setTitle("");
         setSupportActionBar(toolbar);
-        assert getSupportActionBar() != null;
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        }
         getSupportActionBar().setDisplayShowHomeEnabled(true);
 
         //phone number

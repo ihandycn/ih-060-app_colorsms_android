@@ -47,8 +47,9 @@ public class SettingGeneralActivity extends AppCompatActivity {
         TextView title = toolbar.findViewById(R.id.toolbar_title);
         title.setText(getString(R.string.general_settings_activity_title));
         setSupportActionBar(toolbar);
-        assert getSupportActionBar() != null;
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        }
         getSupportActionBar().setDisplayShowHomeEnabled(true);
 
         final boolean topLevel = getIntent().getBooleanExtra(
