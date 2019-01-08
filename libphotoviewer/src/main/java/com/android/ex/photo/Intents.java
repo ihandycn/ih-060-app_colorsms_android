@@ -157,7 +157,7 @@ public class Intents {
             mScaleAnimation = false;
             mActionBarHiddenInitially = false;
             mDisplayFullScreenThumbs = false;
-            mEnableTimerLightsOut = true;
+            mEnableTimerLightsOut = false;
         }
 
         /** Sets auto lights out */

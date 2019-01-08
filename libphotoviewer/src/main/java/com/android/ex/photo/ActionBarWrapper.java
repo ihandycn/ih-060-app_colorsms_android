@@ -1,7 +1,15 @@
 package com.android.ex.photo;
 
 import android.app.ActionBar;
+import android.content.Context;
+import android.graphics.PorterDuff;
+import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
+import android.util.TypedValue;
+import android.view.Gravity;
+import android.widget.TextView;
+
+import com.superapps.util.Dimensions;
 
 /**
  * Wrapper around {@link ActionBar}.
@@ -9,6 +17,7 @@ import android.graphics.drawable.Drawable;
 public class ActionBarWrapper implements ActionBarInterface {
 
     private final ActionBar mActionBar;
+    private TextView mTitle;
 
     private class MenuVisiblityListenerWrapper implements ActionBar.OnMenuVisibilityListener {
 
@@ -24,8 +33,23 @@ public class ActionBarWrapper implements ActionBarInterface {
         }
     }
 
-    public ActionBarWrapper(ActionBar actionBar) {
+    public ActionBarWrapper(ActionBar actionBar, Context context) {
         mActionBar = actionBar;
+        int identifier = context.getResources().getIdentifier("photo_view_ic_back", "drawable", context.getPackageName());
+        Drawable drawable = context.getResources().getDrawable(identifier);
+        drawable.setColorFilter(0xffffffff, PorterDuff.Mode.SRC_IN);
+        mActionBar.setHomeAsUpIndicator(drawable);
+        mActionBar.setDisplayShowHomeEnabled(false);
+        mActionBar.setDisplayShowTitleEnabled(false);
+        mActionBar.setDisplayShowCustomEnabled(true);
+        mTitle = new TextView(context);
+        mTitle.setTextColor(0xb3ffffff);
+        mTitle.setTextSize(TypedValue.COMPLEX_UNIT_SP, 14.7f);
+        mTitle.setTypeface(Typeface.createFromAsset(context.getApplicationContext().getAssets(),
+                "fonts/Custom-Medium.ttf"));
+        mTitle.setGravity(Gravity.CENTER);
+        mTitle.setPadding(Dimensions.pxFromDp(15), Dimensions.pxFromDp(3), 0, 0);
+        mActionBar.setCustomView(mTitle);
     }
 
     @Override
@@ -45,17 +69,19 @@ public class ActionBarWrapper implements ActionBarInterface {
 
     @Override
     public CharSequence getTitle() {
-       return mActionBar.getTitle();
+       return mTitle.getText();
     }
 
     @Override
     public void setTitle(CharSequence title) {
-        mActionBar.setTitle(title);
+        //mActionBar.setTitle(title);
     }
 
     @Override
     public void setSubtitle(CharSequence subtitle) {
-        mActionBar.setSubtitle(subtitle);
+        //mActionBar.setSubtitle(subtitle);
+        mActionBar.setDisplayShowTitleEnabled(false);
+        mTitle.setText(subtitle);
     }
 
     @Override

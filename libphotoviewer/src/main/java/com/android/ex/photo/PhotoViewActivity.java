@@ -122,7 +122,7 @@ public class PhotoViewActivity extends FragmentActivity
     @Override
     public ActionBarInterface getActionBarInterface() {
         if (mActionBar == null) {
-            mActionBar = new ActionBarWrapper(getActionBar());
+            mActionBar = new ActionBarWrapper(getActionBar(), this);
         }
         return mActionBar;
     }
