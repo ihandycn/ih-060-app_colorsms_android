@@ -94,8 +94,11 @@ public class FocusOverlayManager {
 
     public interface Listener {
         public void autoFocus();
+
         public void cancelAutoFocus();
+
         public boolean capture();
+
         public void setFocusParameters();
     }
 
@@ -303,7 +306,7 @@ public class FocusOverlayManager {
     }
 
     private void initializeFocusAreas(int focusWidth, int focusHeight,
-            int x, int y, int previewWidth, int previewHeight) {
+                                      int x, int y, int previewWidth, int previewHeight) {
         if (mFocusArea == null) {
             mFocusArea = new ArrayList<Object>();
             mFocusArea.add(new Area(new Rect(), 1));
@@ -315,7 +318,7 @@ public class FocusOverlayManager {
     }
 
     private void initializeMeteringAreas(int focusWidth, int focusHeight,
-            int x, int y, int previewWidth, int previewHeight) {
+                                         int x, int y, int previewWidth, int previewHeight) {
         if (mMeteringArea == null) {
             mMeteringArea = new ArrayList<Object>();
             mMeteringArea.add(new Area(new Rect(), 1));
@@ -335,7 +338,7 @@ public class FocusOverlayManager {
 
         // Let users be able to cancel previous touch focus.
         if ((mFocusArea != null) && (mState == STATE_FOCUSING ||
-                    mState == STATE_SUCCESS || mState == STATE_FAIL)) {
+                mState == STATE_SUCCESS || mState == STATE_FAIL)) {
             cancelAutoFocus();
         }
         // Initialize variables.
@@ -451,6 +454,9 @@ public class FocusOverlayManager {
         if (!mInitialized) {
             return;
         }
+        if (mPieRenderer == null) {
+            return;
+        }
         FocusIndicator focusIndicator = mPieRenderer;
 
         if (mState == STATE_IDLE) {
@@ -482,14 +488,16 @@ public class FocusOverlayManager {
         }
 
         // Put focus indicator to the center. clear reset position
-        mPieRenderer.clear();
+        if (mPieRenderer != null) {
+            mPieRenderer.clear();
+        }
 
         mFocusArea = null;
         mMeteringArea = null;
     }
 
     private void calculateTapArea(int focusWidth, int focusHeight, float areaMultiple,
-            int x, int y, int previewWidth, int previewHeight, Rect rect) {
+                                  int x, int y, int previewWidth, int previewHeight, Rect rect) {
         int areaWidth = (int) (focusWidth * areaMultiple);
         int areaHeight = (int) (focusHeight * areaMultiple);
         int left = clamp(x - areaWidth / 2, 0, previewWidth - areaWidth);
