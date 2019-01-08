@@ -17,6 +17,7 @@ package com.android.messaging.ui;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Typeface;
 import android.support.v4.text.BidiFormatter;
 import android.support.v4.text.TextDirectionHeuristicsCompat;
 import android.text.TextUtils;
@@ -66,9 +67,16 @@ public class PersonItemView extends LinearLayout implements PersonItemDataListen
 
     @Override
     protected void onFinishInflate() {
-        mNameTextView = (TextView) findViewById(R.id.name);
-        mDetailsTextView = (TextView) findViewById(R.id.details);
-        mContactIconView = (ContactIconView) findViewById(R.id.contact_icon);
+        super.onFinishInflate();
+        mNameTextView = findViewById(R.id.name);
+        mDetailsTextView = findViewById(R.id.details);
+        Typeface tf = Typeface.createFromAsset(getContext().getAssets(),
+                "fonts/Custom-Medium.ttf");
+        mNameTextView.setTypeface(tf);
+        Typeface tf1 = Typeface.createFromAsset(getContext().getAssets(),
+                "fonts/Custom-Regular.ttf");
+        mDetailsTextView.setTypeface(tf1);
+        mContactIconView = findViewById(R.id.contact_icon);
         mDetailsContainer = findViewById(R.id.details_container);
         mNameTextView.addOnLayoutChangeListener(this);
     }
@@ -168,22 +176,16 @@ public class PersonItemView extends LinearLayout implements PersonItemDataListen
         if (mListener == null) {
             return;
         }
-        setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(final View v) {
-                if (mListener != null && mBinding.isBound()) {
-                    mListener.onPersonClicked(mBinding.getData());
-                }
+        setOnClickListener(v -> {
+            if (mListener != null && mBinding.isBound()) {
+                mListener.onPersonClicked(mBinding.getData());
             }
         });
-        final OnLongClickListener onLongClickListener = new OnLongClickListener() {
-            @Override
-            public boolean onLongClick(View v) {
-                if (mListener != null && mBinding.isBound()) {
-                    return mListener.onPersonLongClicked(mBinding.getData());
-                }
-                return false;
+        final OnLongClickListener onLongClickListener = v -> {
+            if (mListener != null && mBinding.isBound()) {
+                return mListener.onPersonLongClicked(mBinding.getData());
             }
+            return false;
         };
         setOnLongClickListener(onLongClickListener);
         mContactIconView.setOnLongClickListener(onLongClickListener);

@@ -727,10 +727,10 @@
     <string name="block_confirmation_message">You\'ll continue to receive messages from this number but won\'t be notified anymore. This conversation will be archived.</string>
 
     <!-- The title of the list of blocked contacts -->
-    <string name="blocked_contacts_title">Blocked contacts</string>
+    <string name="blocked_contacts_title">Blocked Contacts</string>
 
     <!-- The message in a blocked contact item which indicates tapping will unblock -->
-    <string name="tap_to_unblock_message">UNBLOCK</string>
+    <string name="tap_to_unblock_message">Unblock</string>
 
     <!-- Action menu title for viewing the list of blocked contacts -->
     <string name="view_blocked_contacts_title">Blocked contacts</string>
@@ -871,11 +871,10 @@
     <!-- The title for advanced settings section in the settings activity  -->
     <string name="advanced_settings">Advanced</string>
 
-    <!-- The title for advanced settings section in the settings activity  -->
     <string name="launcher_settings_five_star">5 star rating</string>
 
     <!-- The title for general settings activity  -->
-    <string name="general_settings_activity_title">General settings</string>
+    <string name="general_settings_activity_title">General</string>
 
     <!-- The title for advanced settings activity  -->
     <string name="advanced_settings_activity_title">Advanced settings</string>
@@ -1057,5 +1056,15 @@
     <string name="feedback_toast_empty_content">Please write your feedback</string>
     <string name="feedback_toast_invalid_email">Please enter a valid email address</string>
     <string name="feedback_toast_send_success">Thanks for your feedback!</string>
+
+    <!--Setting-->
+    <string name="setting_5_star_rating">5 star rating</string>
+    <string name="setting_feedback">Feedback</string>
+    <string name="setting_privacy_policy">Privacy policy</string>
+    <string name="setting_terms_of_service">Terms of service</string>
+    <string name="setting_sms_pop_ups">SMS Pop-ups</string>
+    <string name="setting_sms_pop_ups_summary">Display a popup window after receiving SMS</string>
+    <string name="setting_sms_show">SMS Show</string>
+    <string name="setting_sms_show_summary">Beautify SMS reminder effects</string>
 
 </resources>

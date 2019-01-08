@@ -31,17 +31,8 @@ public abstract class BuglePrefsImpl extends BuglePrefs {
         mContext = context;
     }
 
-    /**
-     * Validate the prefs key passed in. Subclasses should override this as needed to perform
-     * runtime checks (such as making sure per-subscription settings don't sneak into application-
-     * wide settings).
-     */
-    protected void validateKey(String key) {
-    }
-
     @Override
     public int getInt(final String key, final int defaultValue) {
-        validateKey(key);
         final SharedPreferences prefs = mContext.getSharedPreferences(
                 getSharedPreferencesName(), Context.MODE_PRIVATE);
         return prefs.getInt(key, defaultValue);
@@ -49,7 +40,6 @@ public abstract class BuglePrefsImpl extends BuglePrefs {
 
     @Override
     public long getLong(final String key, final long defaultValue) {
-        validateKey(key);
         final SharedPreferences prefs = mContext.getSharedPreferences(
                 getSharedPreferencesName(), Context.MODE_PRIVATE);
         return prefs.getLong(key, defaultValue);
@@ -57,7 +47,6 @@ public abstract class BuglePrefsImpl extends BuglePrefs {
 
     @Override
     public boolean getBoolean(final String key, final boolean defaultValue) {
-        validateKey(key);
         final SharedPreferences prefs = mContext.getSharedPreferences(
                 getSharedPreferencesName(), Context.MODE_PRIVATE);
         return prefs.getBoolean(key, defaultValue);
@@ -65,7 +54,6 @@ public abstract class BuglePrefsImpl extends BuglePrefs {
 
     @Override
     public String getString(final String key, final String defaultValue) {
-        validateKey(key);
         final SharedPreferences prefs = mContext.getSharedPreferences(
                 getSharedPreferencesName(), Context.MODE_PRIVATE);
         return prefs.getString(key, defaultValue);
@@ -79,7 +67,6 @@ public abstract class BuglePrefsImpl extends BuglePrefs {
 
     @Override
     public void putInt(final String key, final int value) {
-        validateKey(key);
         final SharedPreferences prefs = mContext.getSharedPreferences(
                 getSharedPreferencesName(), Context.MODE_PRIVATE);
         final SharedPreferences.Editor editor = prefs.edit();
@@ -89,7 +76,6 @@ public abstract class BuglePrefsImpl extends BuglePrefs {
 
     @Override
     public void putLong(final String key, final long value) {
-        validateKey(key);
         final SharedPreferences prefs = mContext.getSharedPreferences(
                 getSharedPreferencesName(), Context.MODE_PRIVATE);
         final SharedPreferences.Editor editor = prefs.edit();
@@ -99,7 +85,6 @@ public abstract class BuglePrefsImpl extends BuglePrefs {
 
     @Override
     public void putBoolean(final String key, final boolean value) {
-        validateKey(key);
         final SharedPreferences prefs = mContext.getSharedPreferences(
                 getSharedPreferencesName(), Context.MODE_PRIVATE);
         final SharedPreferences.Editor editor = prefs.edit();
@@ -109,7 +94,6 @@ public abstract class BuglePrefsImpl extends BuglePrefs {
 
     @Override
     public void putString(final String key, final String value) {
-        validateKey(key);
         final SharedPreferences prefs = mContext.getSharedPreferences(
                 getSharedPreferencesName(), Context.MODE_PRIVATE);
         final SharedPreferences.Editor editor = prefs.edit();
@@ -125,7 +109,6 @@ public abstract class BuglePrefsImpl extends BuglePrefs {
 
     @Override
     public void remove(final String key) {
-        validateKey(key);
         final SharedPreferences prefs = mContext.getSharedPreferences(
                 getSharedPreferencesName(), Context.MODE_PRIVATE);
         final SharedPreferences.Editor editor = prefs.edit();

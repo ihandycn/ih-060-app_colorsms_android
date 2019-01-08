@@ -33,13 +33,14 @@ import com.android.messaging.datamodel.data.BlockedParticipantsData;
 import com.android.messaging.datamodel.data.BlockedParticipantsData.BlockedParticipantsDataListener;
 import com.android.messaging.datamodel.DataModel;
 import com.android.messaging.util.Assert;
+import com.superapps.util.BackgroundDrawables;
+import com.superapps.util.Dimensions;
 
 /**
  * Show a list of currently blocked participants.
  */
 public class BlockedParticipantsFragment extends Fragment
         implements BlockedParticipantsDataListener {
-    private ListView mListView;
     private BlockedParticipantListAdapter mAdapter;
     private final Binding<BlockedParticipantsData> mBinding =
             BindingBase.createBinding(this);
@@ -51,10 +52,10 @@ public class BlockedParticipantsFragment extends Fragment
 
     @Override
     public View onCreateView(final LayoutInflater inflater, final ViewGroup container,
-            final Bundle savedInstanceState) {
+                             final Bundle savedInstanceState) {
         final View view =
                 inflater.inflate(R.layout.blocked_participants_fragment, container, false);
-        mListView = (ListView) view.findViewById(android.R.id.list);
+        ListView mListView = view.findViewById(android.R.id.list);
         mAdapter = new BlockedParticipantListAdapter(getActivity(), null);
         mListView.setAdapter(mAdapter);
         mBinding.bind(DataModel.get().createBlockedParticipantsData(getActivity(), this));
@@ -77,14 +78,19 @@ public class BlockedParticipantsFragment extends Fragment
      * An adapter to display ParticipantListItemView based on ParticipantData.
      */
     private class BlockedParticipantListAdapter extends CursorAdapter {
-        public BlockedParticipantListAdapter(final Context context, final Cursor cursor) {
+        BlockedParticipantListAdapter(final Context context, final Cursor cursor) {
             super(context, cursor, 0);
         }
 
         @Override
         public View newView(Context context, Cursor cursor, ViewGroup parent) {
-            return LayoutInflater.from(context)
+            View v = LayoutInflater.from(context)
                     .inflate(R.layout.blocked_participant_list_item_view, parent, false);
+            v.findViewById(R.id.tap_to_unblock).setBackground(
+                    BackgroundDrawables.createBackgroundDrawable(
+                            0xff1acc48, Dimensions.pxFromDp(16), true)
+            );
+            return v;
         }
 
         @Override

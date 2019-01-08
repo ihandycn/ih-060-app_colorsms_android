@@ -14,8 +14,7 @@
     See the License for the specific language governing permissions and
     limitations under the License.
 -->
-<merge
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<merge xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
@@ -25,36 +24,45 @@
         android:id="@+id/contact_icon"
         android:layout_width="@dimen/contact_list_icon_size"
         android:layout_height="@dimen/contact_list_icon_size"
+        android:layout_gravity="center_vertical"
         android:importantForAccessibility="no"
-        app:iconSize="normal"
-        android:layout_gravity="center_vertical" />
+        app:iconSize="normal" />
 
     <LinearLayout
         android:id="@+id/details_container"
-        android:orientation="vertical"
-        style="@style/ContactListItemLinearLayoutStyle"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_weight="1"
         android:layout_gravity="center_vertical"
-        android:background="@android:color/transparent">
+        android:layout_weight="1"
+        android:background="@android:color/transparent"
+        android:orientation="vertical"
+        android:paddingLeft="16dp"
+        android:paddingRight="16dp">
 
         <TextView
             android:id="@+id/name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:singleLine="true"
-            android:maxLines="1"
+            android:layout_gravity="left|center_vertical"
+            android:background="@null"
             android:ellipsize="end"
-            style="@style/ParticipantListItem" />
+            android:maxLines="1"
+            android:singleLine="true"
+            android:fontFamily="@string/custom_font_semibold"
+            android:textColor="@color/participant_list_text_primary"
+            android:textSize="@dimen/participant_list_text_size" />
 
         <TextView
             android:id="@+id/details"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:maxLines="2"
+            android:background="@null"
             android:ellipsize="end"
-            style="@style/ContactListItemDetail" />
+            android:maxLines="2"
+            android:textColor="@color/contact_list_text_type"
+            android:textSize="@dimen/contact_list_detail_type_text_size"
+            android:fontFamily="@string/custom_font_semibold"
 
+            app:typeface="@string/custom_font_regular" />
     </LinearLayout>
 </merge>

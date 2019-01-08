@@ -154,10 +154,9 @@
         <activity
             android:name=".ui.BlockedParticipantsActivity"
             android:configChanges="orientation|screenSize|keyboardHidden"
-            android:label="@string/blocked_contacts_title"
             android:parentActivityName=".ui.conversationlist.ConversationListActivity"
             android:screenOrientation="portrait"
-            android:theme="@style/BugleTheme">
+            android:theme="@style/BaseSettingsActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.android.messaging.ui.conversationlist.ConversationListActivity" />
@@ -178,39 +177,10 @@
             android:label="@string/settings_activity_title"
             android:parentActivityName=".ui.conversationlist.ConversationListActivity"
             android:screenOrientation="portrait"
-            android:theme="@style/BugleTheme.SettingsActivity">
+            android:theme="@style/SettingsActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.android.messaging.ui.conversationlist.ConversationListActivity" />
-        </activity>
-        <activity
-            android:name=".ui.appsettings.PerSubscriptionSettingsActivity"
-            android:configChanges="orientation|screenSize|keyboardHidden"
-            android:label="@string/advanced_settings_activity_title"
-            android:parentActivityName=".ui.appsettings.SettingsActivity"
-            android:screenOrientation="portrait"
-            android:theme="@style/BugleTheme.SettingsActivity">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.android.messaging.ui.appsettings.SettingsActivity" />
-        </activity>
-        <activity
-            android:name=".ui.appsettings.ApplicationSettingsActivity"
-            android:configChanges="orientation|screenSize|keyboardHidden"
-            android:label="@string/general_settings_activity_title"
-            android:parentActivityName=".ui.appsettings.SettingsActivity"
-            android:screenOrientation="portrait"
-            android:theme="@style/BugleTheme.SettingsActivity">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.android.messaging.ui.appsettings.SettingsActivity" />
-
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.DEFAULT" />
-                <category android:name="android.intent.category.NOTIFICATION_PREFERENCES" />
-            </intent-filter>
         </activity>
 
         <!-- Handles sharing intent -->
@@ -249,7 +219,7 @@
             android:label="@string/people_and_options_activity_title"
             android:parentActivityName=".ui.conversation.ConversationActivity"
             android:screenOrientation="portrait"
-            android:theme="@style/BugleTheme">
+            android:theme="@style/BaseSettingsActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.android.messaging.ui.conversation.ConversationActivity" />
@@ -261,13 +231,11 @@
             android:configChanges="orientation|screenSize|keyboardHidden"
             android:screenOrientation="portrait"
             android:theme="@style/WelcomeTheme" />
-
         <activity
             android:name=".ui.welcome.WelcomePermissionActivity"
             android:configChanges="orientation|screenSize|keyboardHidden"
             android:screenOrientation="portrait"
             android:theme="@style/WelcomeTheme" />
-
         <activity
             android:name=".ui.welcome.WelcomeSetAsDefault"
             android:configChanges="orientation|screenSize|keyboardHidden"
@@ -275,11 +243,12 @@
             android:theme="@style/WelcomeTheme" />
 
         <!-- WebView -->
-        <activity android:name=".ui.WebViewActivity"
+        <activity
+            android:name=".ui.WebViewActivity"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar"
-            android:windowSoftInputMode="adjustPan"/>
+            android:windowSoftInputMode="adjustPan" />
 
         <!-- License -->
         <activity
@@ -499,21 +468,19 @@
             android:parentActivityName=".ui.appsettings.ApnSettingsActivity"
             android:screenOrientation="portrait"
             android:theme="@style/BugleTheme" />
-
         <activity
             android:name=".ui.smsshow.SmsShowDetailActivity"
             android:configChanges="orientation|screenSize|keyboardHidden"
+            android:excludeFromRecents="true"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
-            android:excludeFromRecents="true"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
-
         <activity
             android:name=".ui.smsshow.SmsShowActivity"
             android:configChanges="orientation|screenSize|keyboardHidden"
+            android:excludeFromRecents="true"
             android:launchMode="singleTask"
             android:screenOrientation="portrait"
-            android:excludeFromRecents="true"
             android:taskAffinity=".sms.show"
             android:theme="@style/Theme.AppCompat.Translucent" />
 
@@ -606,13 +573,11 @@
             android:excludeFromRecents="true"
             android:screenOrientation="portrait"
             android:theme="@style/WindowBgAndTranslucent" />
-
         <activity
             android:name=".ui.emoji.EmojiStoreActivity"
             android:excludeFromRecents="true"
             android:screenOrientation="portrait"
             android:theme="@style/BugleTheme.ConversationActivity" />
-
         <activity
             android:name=".ui.emoji.EmojiDetailActivity"
             android:excludeFromRecents="true"
@@ -635,6 +600,18 @@
 
 
         <service android:name="android.support.v7.mms.MmsService" />
+
+        <activity
+            android:name=".ui.appsettings.SettingGeneralActivity"
+            android:excludeFromRecents="true"
+            android:screenOrientation="portrait"
+            android:theme="@style/BaseSettingsActivity" />
+
+        <activity
+            android:name=".ui.appsettings.SettingAdvancedActivity"
+            android:excludeFromRecents="true"
+            android:screenOrientation="portrait"
+            android:theme="@style/BaseSettingsActivity" />
     </application>
 
 </manifest>

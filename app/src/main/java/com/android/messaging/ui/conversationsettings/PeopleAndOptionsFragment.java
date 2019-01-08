@@ -45,6 +45,7 @@ import com.android.messaging.datamodel.data.PeopleAndOptionsData;
 import com.android.messaging.datamodel.data.PeopleAndOptionsData.PeopleAndOptionsDataListener;
 import com.android.messaging.datamodel.data.PeopleOptionsItemData;
 import com.android.messaging.datamodel.data.PersonItemData;
+import com.android.messaging.ui.BaseAlertDialog;
 import com.android.messaging.ui.CompositeAdapter;
 import com.android.messaging.ui.PersonItemView;
 import com.android.messaging.ui.UIIntents;
@@ -77,14 +78,14 @@ public class PeopleAndOptionsFragment extends Fragment
     public View onCreateView(final LayoutInflater inflater, final ViewGroup container,
             final Bundle savedInstanceState) {
         final View view = inflater.inflate(R.layout.people_and_options_fragment, container, false);
-        mListView = (ListView) view.findViewById(android.R.id.list);
+        mListView = view.findViewById(android.R.id.list);
         mPeopleListAdapter = new PeopleListAdapter(getActivity());
         mOptionsListAdapter = new OptionsListAdapter();
         final CompositeAdapter compositeAdapter = new CompositeAdapter(getActivity());
         compositeAdapter.addPartition(new PeopleAndOptionsPartition(mOptionsListAdapter,
                 R.string.general_settings_title, false));
         compositeAdapter.addPartition(new PeopleAndOptionsPartition(mPeopleListAdapter,
-                R.string.participant_list_title, true));
+                R.string.participant_list_title, false));
         mListView.setAdapter(compositeAdapter);
         return view;
     }
@@ -158,21 +159,18 @@ public class PeopleAndOptionsFragment extends Fragment
                 }
                 final Resources res = getResources();
                 final Activity activity = getActivity();
-                new AlertDialog.Builder(activity)
+
+                new BaseAlertDialog.Builder(activity)
                         .setTitle(res.getString(R.string.block_confirmation_title,
                                 item.getOtherParticipant().getDisplayDestination()))
                         .setMessage(res.getString(R.string.block_confirmation_message))
                         .setNegativeButton(android.R.string.cancel, null)
                         .setPositiveButton(android.R.string.ok,
-                                new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface arg0, int arg1) {
-                                mBinding.getData().setDestinationBlocked(mBinding, true);
-                                activity.setResult(ConversationActivity.FINISH_RESULT_CODE);
-                                activity.finish();
-                            }
-                        })
-                        .create()
+                                (arg0, arg1) -> {
+                                    mBinding.getData().setDestinationBlocked(mBinding, true);
+                                    activity.setResult(ConversationActivity.FINISH_RESULT_CODE);
+                                    activity.finish();
+                                })
                         .show();
                 break;
         }
@@ -247,7 +245,7 @@ public class PeopleAndOptionsFragment extends Fragment
      */
     private class PeopleListAdapter extends ArrayAdapter<ParticipantData> {
         public PeopleListAdapter(final Context context) {
-            super(context, R.layout.people_list_item_view, new ArrayList<ParticipantData>());
+            super(context, R.layout.people_list_item_view, new ArrayList<>());
         }
 
         public void updateParticipants(final List<ParticipantData> newList) {
@@ -312,14 +310,14 @@ public class PeopleAndOptionsFragment extends Fragment
 
         @Override
         public View getHeaderView(final View convertView, final ViewGroup parentView) {
-            View view = null;
+            View view;
             if (convertView != null && convertView.getId() == R.id.people_and_options_header) {
                 view = convertView;
             } else {
                 view = LayoutInflater.from(getActivity()).inflate(
                         R.layout.people_and_options_section_header, parentView, false);
             }
-            final TextView text = (TextView) view.findViewById(R.id.header_text);
+            final TextView text = view.findViewById(R.id.header_text);
             final View divider = view.findViewById(R.id.divider);
             text.setText(mHeaderResId);
             divider.setVisibility(mNeedDivider ? View.VISIBLE : View.GONE);

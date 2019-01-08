@@ -18,21 +18,31 @@ package com.android.messaging.ui;
 
 import android.app.Fragment;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
+import android.widget.TextView;
 
 import com.android.messaging.R;
 
 /**
  * Show a list of currently blocked participants.
  */
-public class BlockedParticipantsActivity extends BugleActionBarActivity {
+public class BlockedParticipantsActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.blocked_participants_activity);
 
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        TextView title = toolbar.findViewById(R.id.toolbar_title);
+        title.setText(getString(R.string.blocked_contacts_title));
+        toolbar.setTitle("");
+        setSupportActionBar(toolbar);
+        assert getSupportActionBar() != null;
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
     }
 
     @Override

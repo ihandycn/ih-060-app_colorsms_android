@@ -70,7 +70,7 @@
         <item name="android:windowContentOverlay">@null</item>
     </style>
 
-    <style name="BugleTheme.DialogActivity" parent="@style/Theme.AppCompat.Light.Dialog"/>
+    <style name="BugleTheme.DialogActivity" parent="@style/Theme.AppCompat.Light.Dialog" />
 
     <style name="BugleTheme.ConversationListActivity" parent="BugleTheme">
         <item name="windowActionBar">false</item>
@@ -91,6 +91,17 @@
     </style>
 
     <style name="BugleTheme.SettingsActivity" parent="BugleTheme">
+        <item name="android:textSize">@dimen/settings_list_text_size</item>
+    </style>
+
+    <style name="BaseSettingsActivity" parent="BugleTheme">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+        <item name="android:windowBackground">@android:color/background_light</item>
+        <item name="actionOverflowButtonStyle">@style/OverflowButtonStyle</item>
+    </style>
+
+    <style name="SettingsActivity" parent="BaseSettingsActivity">
         <item name="android:textSize">@dimen/settings_list_text_size</item>
     </style>
 
@@ -400,12 +411,6 @@
         <item name="android:paddingLeft">16dp</item>
     </style>
 
-    <style name="PeopleAndOptionsSectionHeader">
-        <item name="android:textSize">@dimen/people_and_options_header_text_size</item>
-        <item name="android:textColor">@color/people_and_options_header_text</item>
-        <item name="android:background">@null</item>
-    </style>
-
     <style name="DropDownListViewStyle">
         <item name="android:dividerHeight">0dp</item>
     </style>
@@ -682,7 +687,8 @@
         <item name="android:windowNoTitle">true</item>      <!-- 是否显示title -->
         <item name="android:windowIsTranslucent">true</item>    <!-- 是否半透明 -->
         <item name="android:windowIsFloating">false</item>       <!-- 是否浮现在activity之上 -->
-        <item name="android:windowContentOverlay">@null</item>  <!-- 也是个 drawable，定义 content overlay 的背景 -->
+        <item name="android:windowContentOverlay">@null
+        </item>  <!-- 也是个 drawable，定义 content overlay 的背景 -->
         <item name="android:backgroundDimEnabled">true</item>  <!-- 背景是否模糊显示 -->
     </style>
 
@@ -723,7 +729,7 @@
         <item name="android:textSize">14sp</item>
     </style>
 
-    <style name="DefaultCompatDialog" parent="Theme.AppCompat.Light.Dialog.Alert"/>
+    <style name="DefaultCompatDialog" parent="Theme.AppCompat.Light.Dialog.Alert" />
 
     <style name="DialogTitleText">
         <item name="android:layout_width">wrap_content</item>
@@ -739,6 +745,11 @@
         <item name="android:textSize">16sp</item>
         <item name="typeface">@string/custom_font_regular</item>
         <item name="android:textColor">@color/material_text_black_secondary</item>
+    </style>
+
+    <style name="SettingSwitchStyle" parent="Theme.AppCompat.Light">
+        <item name="colorControlActivated">#1acc48</item>
+        <item name="colorSwitchThumbNormal">#c0c2cb</item>
     </style>
 
 </resources>

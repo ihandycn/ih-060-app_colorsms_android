@@ -6,11 +6,9 @@
 
     <include layout="@layout/setting_top_tool_bar_view" />
 
-    <fragment
-        android:id="@+id/people_and_options_fragment"
-        class="com.android.messaging.ui.conversationsettings.PeopleAndOptionsFragment"
+    <FrameLayout
+        android:id="@+id/setting_fragment_container"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:theme="@style/Theme.AppCompat.Light.DarkActionBar" />
-
+        android:layout_height="match_parent">
+    </FrameLayout>
 </LinearLayout>

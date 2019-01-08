@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <include layout="@layout/setting_top_tool_bar_view" />
+
+    <com.android.messaging.ui.appsettings.SettingItemView
+        android:id="@+id/setting_advanced_phone_number"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:title="@string/mms_phone_number_pref_title"
+        app:type="2" />
+
+    <com.android.messaging.ui.appsettings.SettingItemView
+        android:id="@+id/setting_advanced_auto_retrieve"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:summary="@string/auto_retrieve_mms_pref_summary"
+        app:title="@string/auto_retrieve_mms_pref_title"
+        app:type="1" />
+
+    <com.android.messaging.ui.appsettings.SettingItemView
+        android:id="@+id/setting_advanced_roaming_auto_retrieve"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:summary="@string/auto_retrieve_mms_when_roaming_pref_summary"
+        app:title="@string/auto_retrieve_mms_when_roaming_pref_title"
+        app:type="1" />
+
+    <com.android.messaging.ui.appsettings.SettingItemView
+        android:id="@+id/setting_advanced_delivery_reports"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:summary="@string/delivery_reports_pref_summary"
+        app:title="@string/delivery_reports_pref_title"
+        app:type="1" />
+</LinearLayout>

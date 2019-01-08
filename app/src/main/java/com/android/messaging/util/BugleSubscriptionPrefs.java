@@ -40,13 +40,6 @@ public class BugleSubscriptionPrefs extends BuglePrefsImpl {
     }
 
     @Override
-    protected void validateKey(String key) {
-        super.validateKey(key);
-        // Callers should only access per-subscription preferences from this class
-        Assert.isTrue(key.startsWith(SHARED_PREFERENCES_PER_SUBSCRIPTION_PREFIX));
-    }
-
-    @Override
     public void onUpgrade(final int oldVersion, final int newVersion) {
         switch (oldVersion) {
             case BuglePrefs.NO_SHARED_PREFERENCES_VERSION:

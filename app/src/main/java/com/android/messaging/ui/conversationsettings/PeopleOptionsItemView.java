@@ -17,23 +17,19 @@ package com.android.messaging.ui.conversationsettings;
 
 import android.content.Context;
 import android.database.Cursor;
-import android.support.v7.widget.SwitchCompat;
 import android.text.TextUtils;
 import android.util.AttributeSet;
-import android.view.View;
-import android.widget.LinearLayout;
-import android.widget.TextView;
 
-import com.android.messaging.R;
 import com.android.messaging.datamodel.DataModel;
 import com.android.messaging.datamodel.data.ParticipantData;
 import com.android.messaging.datamodel.data.PeopleOptionsItemData;
+import com.android.messaging.ui.appsettings.SettingItemView;
 import com.android.messaging.util.Assert;
 
 /**
  * The view for a single entry in the options section of people & options activity.
  */
-public class PeopleOptionsItemView extends LinearLayout {
+public class PeopleOptionsItemView extends SettingItemView {
     /**
      * Implemented by the host of this view that handles options click event.
      */
@@ -41,9 +37,6 @@ public class PeopleOptionsItemView extends LinearLayout {
         void onOptionsItemViewClicked(PeopleOptionsItemData item, boolean isChecked);
     }
 
-    private TextView mTitle;
-    private TextView mSubtitle;
-    private SwitchCompat mSwitch;
     private final PeopleOptionsItemData mData;
     private HostInterface mHostInterface;
 
@@ -53,47 +46,32 @@ public class PeopleOptionsItemView extends LinearLayout {
     }
 
     @Override
-    protected void onFinishInflate () {
-        mTitle = (TextView) findViewById(R.id.title);
-        mSubtitle = (TextView) findViewById(R.id.subtitle);
-        mSwitch = (SwitchCompat) findViewById(R.id.switch_button);
-        setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(final View v) {
-                mHostInterface.onOptionsItemViewClicked(mData, !mData.getChecked());
-            }
-        });
+    protected void onFinishInflate() {
+        super.onFinishInflate();
+        setOnItemClickListener(() -> mHostInterface.onOptionsItemViewClicked(mData, !mData.getChecked()));
     }
 
     public void bind(final Cursor cursor, final int columnIndex, ParticipantData otherParticipant,
-            final HostInterface hostInterface) {
+                     final HostInterface hostInterface) {
         Assert.isTrue(columnIndex < PeopleOptionsItemData.SETTINGS_COUNT && columnIndex >= 0);
         mData.bind(cursor, otherParticipant, columnIndex);
         mHostInterface = hostInterface;
 
-        mTitle.setText(mData.getTitle());
+        setTitle(mData.getTitle());
         final String subtitle = mData.getSubtitle();
-        if (TextUtils.isEmpty(subtitle)) {
-            mSubtitle.setVisibility(GONE);
-        } else {
-            mSubtitle.setVisibility(VISIBLE);
-            mSubtitle.setText(subtitle);
+        if (!TextUtils.isEmpty(subtitle)) {
+            setSummary(subtitle);
         }
 
         if (mData.getCheckable()) {
-            mSwitch.setVisibility(VISIBLE);
-            mSwitch.setChecked(mData.getChecked());
-        } else {
-            mSwitch.setVisibility(GONE);
+            setViewType(SettingItemView.SWITCH);
+            setChecked(mData.getChecked());
         }
 
         final boolean enabled = mData.getEnabled();
         if (enabled != isEnabled()) {
-            mTitle.setEnabled(enabled);
-            mSubtitle.setEnabled(enabled);
-            mSwitch.setEnabled(enabled);
-            setAlpha(enabled ? 1.0f : 0.5f);
             setEnabled(enabled);
+            setEnable(enabled);
         }
     }
 }

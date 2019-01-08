@@ -91,7 +91,7 @@
     <color name="contact_avatar_pressed_color">#40000000</color>
     <color name="contact_list_text_primary">#19191c</color>
     <color name="contact_list_text_secondary">#222327</color>
-    <color name="contact_list_text_type">#afb1be</color>
+    <color name="contact_list_text_type">#222327</color>
 
     <color name="compose_contact_text">#19191c</color>
     <color name="compose_contact_faint_text">#5919191c</color>
@@ -131,9 +131,9 @@
     <color name="notification_warning_color">#ff0000</color>
     <color name="notification_subject_color">#99aaaaaa</color>
 
-    <color name="participant_list_text_primary">#4d4d4d</color>
+    <color name="participant_list_text_primary">#222327</color>
     <color name="participant_list_text_secondary">#6d6d6d</color>
-    <color name="people_and_options_header_text">#6d6d6d</color>
+    <color name="people_and_options_header_text">#56575c</color>
     <color name="people_and_options_list_divider">#cccccc</color>
 
     <color name="fab_color">@color/primary_color</color>
@@ -144,7 +144,7 @@
     <color name="mms_indicator_color">#8BC34A</color>
     <color name="list_empty_text">#6d6d6d</color>
     <color name="low_storage_action_item_color">#ff000000</color>
-    <color name="unblock_item_text_color">@color/primary_color</color>
+    <color name="unblock_item_text_color">#ffffff</color>
     <color name="open_conversation_animation_background_shadow">#40000000</color>
     <color name="compose_notification_bar_background">@color/primary_color</color>
 

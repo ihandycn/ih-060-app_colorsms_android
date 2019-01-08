@@ -33,13 +33,6 @@ public class BugleApplicationPrefs extends BuglePrefsImpl {
     }
 
     @Override
-    protected void validateKey(String key) {
-        super.validateKey(key);
-        // Callers shouldn't try to access per-subscription preferences from this class
-        Assert.isFalse(key.startsWith(SHARED_PREFERENCES_PER_SUBSCRIPTION_PREFIX));
-    }
-
-    @Override
     public void onUpgrade(int oldVersion, int newVersion) {
     }
 }

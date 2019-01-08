@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--
+<?xml version="1.0" encoding="utf-8"?><!--
     Copyright (C) 2015 The Android Open Source Project
 
     Licensed under the Apache License, Version 2.0 (the "License");
@@ -56,6 +55,16 @@
             <enum name="compact" value="1" />
             <enum name="subcompact" value="2" />
         </attr>
+    </declare-styleable>
+    <declare-styleable name="SettingItemView">
+        <attr name="type" format="integer">
+            <enum name="normal" value="3" />
+            <enum name="switch_view" value="1" />
+            <enum name="with_triangle" value="2"/>
+        </attr>
+        <attr name="title"/>
+        <attr name="summary" format="reference" />
+        <attr name="icon" format="reference" />
     </declare-styleable>
     <attr name="apnPreferenceStyle" format="reference" />
 </resources>

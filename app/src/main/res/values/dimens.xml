@@ -79,7 +79,7 @@
     <!-- Contact Picker related dimensions. -->
     <dimen name="contact_list_text_size">15sp</dimen>
     <dimen name="contact_list_detail_text_size">13sp</dimen>
-    <dimen name="contact_list_detail_type_text_size">11sp</dimen>
+    <dimen name="contact_list_detail_type_text_size">12.7sp</dimen>
     <dimen name="contact_list_icon_size">40dp</dimen>
     <dimen name="recipient_edit_text_size">20sp</dimen>
     <dimen name="pager_tab_header_text_size">15sp</dimen>
@@ -110,9 +110,9 @@
     <dimen name="attachment_rounded_corner_radius">3dp</dimen>
     <dimen name="progress_indicator_default_stroke_width">2dp</dimen>
     <dimen name="progress_indicator_default_radius">12dp</dimen>
-    <dimen name="participant_list_text_size">18sp</dimen>
+    <dimen name="participant_list_text_size">16sp</dimen>
     <dimen name="participant_list_detail_text_size">14sp</dimen>
-    <dimen name="people_and_options_header_text_size">16sp</dimen>
+    <dimen name="people_and_options_header_text_size">12.7sp</dimen>
     <dimen name="image_attachment_fallback_width">240dp</dimen>
     <dimen name="image_attachment_fallback_height">240dp</dimen>
 

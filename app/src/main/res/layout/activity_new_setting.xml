@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <include layout="@layout/setting_top_tool_bar_view" />
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+            <!--default sms app-->
+            <com.android.messaging.ui.appsettings.SettingItemView
+                android:id="@+id/setting_item_default_sms"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:title="@string/sms_enabled_pref_title"
+                app:type="2" />
+
+            <!--outgoing messages sounds-->
+            <com.android.messaging.ui.appsettings.SettingItemView
+                android:id="@+id/setting_item_outgoing_message_sounds"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:title="@string/send_sound_pref_title"
+                app:type="1" />
+
+            <!--Notifications-->
+            <com.android.messaging.ui.appsettings.SettingItemView
+                android:id="@+id/setting_item_notifications"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:title="@string/notifications_enabled_pref_title"
+                app:type="1" />
+
+            <!--SMS Pop-ups-->
+            <com.android.messaging.ui.appsettings.SettingItemView
+                android:id="@+id/setting_item_sms_pop_ups"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:summary="@string/setting_sms_pop_ups_summary"
+                app:title="@string/setting_sms_pop_ups"
+                app:type="1" />
+
+            <!--SMS Show-->
+            <com.android.messaging.ui.appsettings.SettingItemView
+                android:id="@+id/setting_item_sms_show"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:summary="@string/setting_sms_show_summary"
+                app:title="@string/bottom_navigation_item_sms_show"
+                app:type="1" />
+
+            <!--Sound-->
+            <com.android.messaging.ui.appsettings.SettingItemView
+                android:id="@+id/setting_item_sound"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:title="@string/notification_sound_pref_title"
+                app:type="2" />
+
+            <!--Vibrate-->
+            <com.android.messaging.ui.appsettings.SettingItemView
+                android:id="@+id/setting_item_vibrate"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:key="@string/notification_vibration_pref_key"
+                app:title="@string/notification_vibrate_pref_title"
+                app:type="1" />
+
+            <!--Blocked contacts-->
+            <com.android.messaging.ui.appsettings.SettingItemView
+                android:id="@+id/setting_item_blocked_contacts"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:title="@string/blocked_contacts_title"
+                app:type="2" />
+
+            <!--Advanced-->
+            <com.android.messaging.ui.appsettings.SettingItemView
+                android:id="@+id/setting_item_advanced"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:title="@string/advanced_settings"
+                app:type="2" />
+
+            <!--5 star rating-->
+            <com.android.messaging.ui.appsettings.SettingItemView
+                android:id="@+id/setting_item_five_star_rating"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:title="@string/setting_5_star_rating"
+                app:type="2" />
+
+            <!--feedback-->
+            <com.android.messaging.ui.appsettings.SettingItemView
+                android:id="@+id/setting_item_feedback"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:title="@string/setting_feedback"
+                app:type="2" />
+
+            <!--privacy policy-->
+            <com.android.messaging.ui.appsettings.SettingItemView
+                android:id="@+id/setting_item_privacy_policy"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:title="@string/setting_privacy_policy"
+                app:type="0" />
+
+            <!--terms of services-->
+            <com.android.messaging.ui.appsettings.SettingItemView
+                android:id="@+id/setting_item_terms_of_service"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:title="@string/setting_terms_of_service"
+                app:type="0" />
+        </LinearLayout>
+    </ScrollView>
+</LinearLayout>

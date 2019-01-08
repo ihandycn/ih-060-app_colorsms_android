@@ -18,7 +18,10 @@ package com.android.messaging.ui.conversationsettings;
 
 import android.app.Fragment;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
+import android.widget.TextView;
 
 import com.android.messaging.R;
 import com.android.messaging.ui.BugleActionBarActivity;
@@ -28,14 +31,20 @@ import com.android.messaging.util.Assert;
 /**
  * Shows a list of participants in a conversation.
  */
-public class PeopleAndOptionsActivity extends BugleActionBarActivity {
+public class PeopleAndOptionsActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.people_and_options_activity);
 
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        toolbar.setTitle("");
+        TextView title = toolbar.findViewById(R.id.toolbar_title);
+        title.setText(getString(R.string.people_and_options_activity_title));
+        setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
     }
 
     @Override
