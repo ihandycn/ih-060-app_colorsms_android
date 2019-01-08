@@ -28,6 +28,7 @@ public class BaseAlertDialog {
         private View contentView;
         private DialogInterface.OnClickListener positiveButtonClickListener;
         private DialogInterface.OnClickListener negativeButtonClickListener;
+        private DialogInterface.OnDismissListener onDismissListener;
 
         public Builder(Context context) {
             this.context = context;
@@ -94,6 +95,11 @@ public class BaseAlertDialog {
             return this;
         }
 
+        public Builder setOnDismissListener(DialogInterface.OnDismissListener listener) {
+            this.onDismissListener = listener;
+            return this;
+        }
+
 
         public void show() {
             new BaseAlertDialog(this).show();
@@ -103,7 +109,7 @@ public class BaseAlertDialog {
 
     private Dialog dialog;
 
-    BaseAlertDialog(Builder builder) {
+    public BaseAlertDialog(Builder builder) {
         LayoutInflater inflater = (LayoutInflater) HSApplication.getContext()
                 .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         // instantiate the dialog with the custom Theme
@@ -128,7 +134,7 @@ public class BaseAlertDialog {
                 this.dialog.dismiss();
             });
             positiveButton.setBackground(BackgroundDrawables.createBackgroundDrawable(resources.getColor(R.color.dialog_positive_button_color),
-                    Dimensions.pxFromDp(3.3f),true));
+                    Dimensions.pxFromDp(3.3f), true));
         } else {
             // if no confirm button just set the visibility to GONE
             layout.findViewById(R.id.ok_btn).setVisibility(View.GONE);
@@ -145,7 +151,7 @@ public class BaseAlertDialog {
                 this.dialog.dismiss();
             });
             negativeButton.setBackground(BackgroundDrawables.createBackgroundDrawable(resources.getColor(R.color.dialog_negative_button_color),
-                    Dimensions.pxFromDp(3.3f),true));
+                    Dimensions.pxFromDp(3.3f), true));
         } else {
             // if no confirm button just set the visibility to GONE
             layout.findViewById(R.id.negative_btn).setVisibility(View.GONE);
@@ -165,11 +171,16 @@ public class BaseAlertDialog {
             layout.findViewById(R.id.content_view).setVisibility(View.GONE);
         }
 
+        dialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+            @Override public void onDismiss(DialogInterface dialog) {
+                if (builder.onDismissListener != null) {
+                    builder.onDismissListener.onDismiss(dialog);
+                }
+            }
+        });
     }
 
     public void show() {
         dialog.show();
     }
-
-
 }

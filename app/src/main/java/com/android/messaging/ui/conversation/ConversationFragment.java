@@ -1139,7 +1139,7 @@ public class ConversationFragment extends Fragment implements ConversationDataLi
 
     void deleteMessage(final String messageId) {
         if (isReadyForAction()) {
-            final AlertDialog.Builder builder = new AlertDialog.Builder(getActivity())
+            final BaseAlertDialog.Builder builder = new BaseAlertDialog.Builder(getActivity())
                     .setTitle(R.string.delete_message_confirmation_dialog_title)
                     .setMessage(R.string.delete_message_confirmation_dialog_text)
                     .setPositiveButton(R.string.delete_message_confirmation_button,
@@ -1150,22 +1150,12 @@ public class ConversationFragment extends Fragment implements ConversationDataLi
                                 }
                             })
                     .setNegativeButton(android.R.string.cancel, null);
-            if (OsUtil.isAtLeastJB_MR1()) {
-                builder.setOnDismissListener(new OnDismissListener() {
-                    @Override
-                    public void onDismiss(final DialogInterface dialog) {
-                        mHost.dismissActionMode();
-                    }
-                });
-            } else {
-                builder.setOnCancelListener(new OnCancelListener() {
-                    @Override
-                    public void onCancel(final DialogInterface dialog) {
-                        mHost.dismissActionMode();
-                    }
-                });
-            }
-            builder.create().show();
+            builder.setOnDismissListener(new OnDismissListener() {
+                @Override public void onDismiss(DialogInterface dialog) {
+                    mHost.dismissActionMode();
+                }
+            });
+            builder.show();
         } else {
             warnOfMissingActionConditions(false /*sending*/,
                     null /*commandToRunAfterActionConditionResolved*/);

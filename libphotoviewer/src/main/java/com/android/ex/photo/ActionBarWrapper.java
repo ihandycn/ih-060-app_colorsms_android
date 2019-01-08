@@ -35,8 +35,7 @@ public class ActionBarWrapper implements ActionBarInterface {
 
     public ActionBarWrapper(ActionBar actionBar, Context context) {
         mActionBar = actionBar;
-        int identifier = context.getResources().getIdentifier("photo_view_ic_back", "drawable", context.getPackageName());
-        Drawable drawable = context.getResources().getDrawable(identifier);
+        Drawable drawable = context.getResources().getDrawable(R.drawable.ic_back_wide);
         drawable.setColorFilter(0xffffffff, PorterDuff.Mode.SRC_IN);
         mActionBar.setHomeAsUpIndicator(drawable);
         mActionBar.setDisplayShowHomeEnabled(false);
