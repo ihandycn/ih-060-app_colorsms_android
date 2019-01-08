@@ -134,8 +134,10 @@ public class ComposeMessageView extends LinearLayout
     // There is a draft
     private static final int SEND_WIDGET_MODE_SEND_BUTTON = 3;
 
+    private static final String INPUT_MEDIA = "media";
     private static final String INPUT_EMOJI = "emoji";
     private static final String INPUT_KEYBOARD = "keyboard";
+
 
     private PlainTextEditText mComposeEditText;
     private PlainTextEditText mComposeSubjectText;
@@ -327,11 +329,21 @@ public class ComposeMessageView extends LinearLayout
 
         mAttachMediaButton =
                 findViewById(R.id.media_btn);
+        mAttachMediaButton.setTag(INPUT_MEDIA);
         mAttachMediaButton.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(final View clickView) {
+            public void onClick(final View v) {
                 // Showing the media picker is treated as starting to compose the message.
-                mInputManager.showHideMediaPicker(true /* show */, true /* animate */);
+                if (v.getTag().equals(INPUT_MEDIA)) {
+                    mAttachMediaButton.setTag(INPUT_KEYBOARD);
+                    mAttachMediaButton.setImageResource(R.drawable.input_keyboard_icon);
+                    mInputManager.showHideMediaPicker(true /* show */, true /* animate */);
+                } else {
+                    ImeUtil.get().showImeKeyboard(getContext(), mComposeEditText);
+                    if (mHost.shouldHideAttachmentsWhenSimSelectorShown()) {
+                        hideSimSelector();
+                    }
+                }
             }
         });
 
@@ -421,8 +433,17 @@ public class ComposeMessageView extends LinearLayout
     @Override
     public void onKeyboardVisible(boolean isVisible) {
         if (isVisible) {
-            mEmojiKeyboardBtn.setTag(INPUT_EMOJI);
-            mEmojiKeyboardBtn.setImageResource(R.drawable.input_emoji_icon);
+            Object emojiTag = mEmojiKeyboardBtn.getTag();
+            if (INPUT_KEYBOARD.equals(emojiTag)){
+                mEmojiKeyboardBtn.setTag(INPUT_EMOJI);
+                mEmojiKeyboardBtn.setImageResource(R.drawable.input_emoji_icon);
+            }
+
+            Object mediaTag = mAttachMediaButton.getTag();
+            if (INPUT_KEYBOARD.equals(mediaTag)){
+                mAttachMediaButton.setTag(INPUT_MEDIA);
+                mAttachMediaButton.setImageResource(R.drawable.input_media_icon);
+            }
         }
     }
 
