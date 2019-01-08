@@ -34,7 +34,7 @@ public class Typefaces {
     public static Typeface getCustomSemiBold() {
         if (sCustomSemiBold == null) {
             sCustomSemiBold = Typeface.createFromAsset(Factory.get().getApplicationContext().getAssets(),
-                    "fonts/Custom-SemiBold.ttf");
+                    "fonts/Custom-Semibold.ttf");
         }
         return sCustomSemiBold;
     }
