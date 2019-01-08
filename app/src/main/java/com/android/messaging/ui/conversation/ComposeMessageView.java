@@ -121,6 +121,8 @@ public class ComposeMessageView extends LinearLayout
         int overrideCounterColor();
 
         int getAttachmentsClearedFlags();
+
+        Activity getHostActivity();
     }
 
     public static final int CODEPOINTS_REMAINING_BEFORE_COUNTER_SHOWN = 10;
@@ -515,6 +517,7 @@ public class ComposeMessageView extends LinearLayout
                                     final MessageData message = mBinding.getData()
                                             .prepareMessageForSending(mBinding);
                                     if (message != null && message.hasContent()) {
+                                        FiveStarRateDialog.showFiveStarWhenSendMsgIfNeed(mHost.getHostActivity());
                                         playSentSound();
                                         mHost.sendMessage(message);
                                         hideSubjectEditor();

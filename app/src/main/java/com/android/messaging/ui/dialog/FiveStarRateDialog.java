@@ -79,13 +79,13 @@ public class FiveStarRateDialog extends DefaultButtonDialog2 implements View.OnC
         public String toString() {
             switch (this.code) {
                 case 0:
-                    return "From Send First Message";
+                    return "SendSuccess";
                 case 1:
-                    return "From Send First Emoji";
+                    return "SendEmoji";
                 case 2:
-                    return "From Quit App";
+                    return "ExitApp";
                 case 3:
-                    return "From Settings";
+                    return "Settings";
                 default:
                     return "Others";
             }
@@ -455,7 +455,8 @@ public class FiveStarRateDialog extends DefaultButtonDialog2 implements View.OnC
     }
 
     private void logStarClick(int position) {
-        BugleAnalytics.logEvent("Alert_FiveStar_Star_Clicked", "type", (position + 1) + "star");
+        BugleAnalytics.logEvent("Alert_FiveStar_Star_Clicked", "type", (position + 1) + "star",
+                "from", sFiveStarRateTipFrom);
     }
 
     private void logSubmitNoStarClick() {

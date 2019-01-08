@@ -1650,6 +1650,10 @@ public class ConversationFragment extends Fragment implements ConversationDataLi
         return DraftMessageData.ATTACHMENTS_CHANGED;
     }
 
+    @Override public Activity getHostActivity() {
+        return getActivity();
+    }
+
     @Override public void onReceive(String s, HSBundle hsBundle) {
         switch (s) {
             case EVENT_SHOW_OPTION_MENU:
