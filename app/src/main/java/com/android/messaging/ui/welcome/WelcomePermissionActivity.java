@@ -17,7 +17,7 @@ public class WelcomePermissionActivity extends AppCompatActivity {
         setContentView(R.layout.activity_welcome_permission);
 
         findViewById(R.id.welcome_permission_button).setOnClickListener(v -> {
-            String[] permissions = OsUtil.getMissingPermissions(OsUtil.REQUIRE_PERMISSION_IN_WELCOME);
+            String[] permissions = OsUtil.getMissingRequiredPermissions();
             requestPermissions(permissions, REQUIRED_PERMISSIONS_REQUEST_CODE);
         });
     }
@@ -26,7 +26,7 @@ public class WelcomePermissionActivity extends AppCompatActivity {
     public void onRequestPermissionsResult(
             final int requestCode, final String permissions[], final int[] grantResults) {
         if (requestCode == REQUIRED_PERMISSIONS_REQUEST_CODE) {
-            if (OsUtil.hasPermissions(OsUtil.REQUIRE_PERMISSION_IN_WELCOME)) {
+            if (OsUtil.hasRequiredPermissions()) {
                 UIIntents.get().launchConversationListActivity(this);
                 finish();
             } else {

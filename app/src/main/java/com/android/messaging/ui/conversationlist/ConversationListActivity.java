@@ -68,6 +68,22 @@ public class ConversationListActivity extends AbstractConversationListActivity
     }
 
     @Override
+    public void onStart(){
+        super.onStart();
+        if (shouldShowAnim()) {
+            LottieAnimationView animationView = mBanner.findViewById(R.id.banner_set_as_default_anim);
+            if (animationView != null) {
+                animationView.setProgress(0);
+                animationView.setRepeatCount(1);
+                mBanner.postDelayed(() -> {
+                    animationView.playAnimation();
+                    Preferences.getDefault().putLong(PREF_KEY_BANNER_SHOW_TIME, System.currentTimeMillis());
+                }, 1000L);
+            }
+        }
+    }
+
+    @Override
     public ActionMode startActionMode(ActionMode.Callback callback) {
         // set custom title visibility gone, when start MultiSelectActionMode etc.
         mTitleTextView.setVisibility(View.GONE);
@@ -101,6 +117,7 @@ public class ConversationListActivity extends AbstractConversationListActivity
     }
 
     private boolean showRate = false;
+
     @Override
     public void onBackPressed() {
         if (isInConversationListSelectMode()) {
@@ -111,7 +128,7 @@ public class ConversationListActivity extends AbstractConversationListActivity
             } else {
                 showRate = true;
             }
-            
+
         }
     }
 
@@ -255,18 +272,6 @@ public class ConversationListActivity extends AbstractConversationListActivity
             final Intent intent = UIIntents.get().getChangeDefaultSmsAppIntent(this);
             startActivityForResult(intent, REQUEST_SET_DEFAULT_SMS_APP);
         });
-
-        if (shouldShowAnim()) {
-            LottieAnimationView animationView = findViewById(R.id.banner_set_as_default_anim);
-            if (animationView != null) {
-                animationView.setProgress(0);
-                animationView.setRepeatCount(1);
-                mBanner.postDelayed(() -> {
-                    animationView.playAnimation();
-                    Preferences.getDefault().putLong(PREF_KEY_BANNER_SHOW_TIME, System.currentTimeMillis());
-                }, 1500L);
-            }
-        }
     }
 
     private void removeBanner() {
@@ -283,9 +288,11 @@ public class ConversationListActivity extends AbstractConversationListActivity
     }
 
     private boolean shouldShowAnim() {
+        if (mBanner == null) {
+            return false;
+        }
         long lastTime = Preferences.getDefault().getLong(PREF_KEY_BANNER_SHOW_TIME, 0);
         long currentTime = System.currentTimeMillis();
         return !Calendars.isSameDay(lastTime, currentTime);
     }
-
 }

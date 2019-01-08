@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -8,7 +8,7 @@
 
     <com.superapps.view.TypefacedTextView
         android:id="@+id/welcome_permission_title"
-        android:layout_width="0dp"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginEnd="24dp"
         android:layout_marginStart="24dp"
@@ -16,188 +16,190 @@
         android:text="@string/welcome_permission_title"
         android:textColor="@color/welcome_text_permission_list"
         android:textSize="24sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
         app:typeface="@string/custom_font_bold" />
 
 
     <com.superapps.view.TypefacedTextView
         android:id="@+id/welcome_permission_description"
-        android:layout_width="0dp"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_below="@+id/welcome_permission_title"
         android:layout_marginEnd="24dp"
         android:layout_marginStart="24dp"
         android:layout_marginTop="11.7dp"
         android:text="@string/welcome_permission_description"
         android:textColor="@color/welcome_text_description"
         android:textSize="12.7sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/welcome_permission_title"
         app:typeface="@string/custom_font_medium" />
 
-    <android.support.constraint.Guideline
-        android:id="@+id/guideline_1"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.276" />
-
     <LinearLayout
-        android:id="@+id/welcome_permission_sms_description"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="26dp"
+        android:layout_height="match_parent"
+        android:layout_above="@+id/welcome_permission_button"
+        android:layout_below="@+id/welcome_permission_description"
         android:layout_marginEnd="19dp"
         android:layout_marginStart="19dp"
-        android:orientation="vertical"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/guideline_1">
+        android:gravity="center"
+        android:orientation="vertical">
 
-        <com.superapps.view.TypefacedTextView
-            android:id="@+id/welcome_permission_sms_title"
+        <LinearLayout
+            android:id="@+id/welcome_permission_sms_description"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:drawablePadding="3dp"
-            android:drawableStart="@drawable/ic_welcome_permission_sms"
-            android:text="@string/welcome_permission_sms_title"
-            android:textColor="#e61acc48"
-            android:textSize="18sp"
-            app:typeface="@string/custom_font_bold" />
+            android:orientation="vertical"
+            app:layout_constraintTop_toTopOf="parent">
 
-        <com.superapps.view.TypefacedTextView
+            <com.superapps.view.TypefacedTextView
+                android:id="@+id/welcome_permission_sms_title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:drawablePadding="3dp"
+                android:drawableStart="@drawable/ic_welcome_permission_sms"
+                android:text="@string/welcome_permission_sms_title"
+                android:textColor="#e61acc48"
+                android:textSize="18sp"
+                app:typeface="@string/custom_font_bold" />
+
+            <com.superapps.view.TypefacedTextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="15dp"
+                android:layout_marginTop="8dp"
+                android:drawablePadding="9dp"
+                android:drawableStart="@drawable/ic_welcome_permission_list_dot"
+                android:text="@string/welcome_permission_sms_description_1"
+                android:textColor="@color/welcome_text_permission_list"
+                android:textSize="12sp"
+                app:typeface="@string/custom_font_regular" />
+
+            <com.superapps.view.TypefacedTextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="15dp"
+                android:layout_marginTop="11dp"
+                android:drawablePadding="9dp"
+                android:drawableStart="@drawable/ic_welcome_permission_list_dot"
+                android:text="@string/welcome_permission_sms_description_2"
+                android:textColor="@color/welcome_text_permission_list"
+                android:textSize="12sp"
+                app:typeface="@string/custom_font_regular" />
+
+            <com.superapps.view.TypefacedTextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="15dp"
+                android:layout_marginTop="11dp"
+                android:drawablePadding="9dp"
+                android:drawableStart="@drawable/ic_welcome_permission_list_dot"
+                android:text="@string/welcome_permission_sms_description_3"
+                android:textColor="@color/welcome_text_permission_list"
+                android:textSize="12sp"
+                app:typeface="@string/custom_font_regular" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/welcome_permission_contacts_description"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginStart="15dp"
-            android:layout_marginTop="8dp"
-            android:drawablePadding="9dp"
-            android:drawableStart="@drawable/ic_welcome_permission_list_dot"
-            android:text="@string/welcome_permission_sms_description_1"
-            android:textColor="@color/welcome_text_permission_list"
-            android:textSize="12sp"
-            app:typeface="@string/custom_font_regular" />
+            android:layout_marginBottom="23dp"
+            android:layout_marginTop="23dp"
+            android:orientation="vertical">
 
-        <com.superapps.view.TypefacedTextView
+            <com.superapps.view.TypefacedTextView
+                android:id="@+id/welcome_permission_contacts_title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:drawablePadding="3dp"
+                android:drawableStart="@drawable/ic_welcome_permission_contacts"
+                android:text="@string/welcome_permission_contacts_title"
+                android:textColor="#e63079ff"
+                android:textSize="18sp"
+                app:typeface="@string/custom_font_bold" />
+
+            <com.superapps.view.TypefacedTextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="15dp"
+                android:layout_marginTop="8dp"
+                android:drawablePadding="9dp"
+                android:drawableStart="@drawable/ic_welcome_permission_list_dot"
+                android:text="@string/welcome_permission_contacts_description_1"
+                android:textColor="@color/welcome_text_permission_list"
+                android:textSize="12sp"
+                app:typeface="@string/custom_font_regular" />
+
+            <com.superapps.view.TypefacedTextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="15dp"
+                android:layout_marginTop="11dp"
+                android:drawablePadding="9dp"
+                android:drawableStart="@drawable/ic_welcome_permission_list_dot"
+                android:text="@string/welcome_permission_contacts_description_2"
+                android:textColor="@color/welcome_text_permission_list"
+                android:textSize="12sp"
+                app:typeface="@string/custom_font_regular" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/welcome_permission_phone_description"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginStart="15dp"
-            android:layout_marginTop="11dp"
-            android:drawablePadding="9dp"
-            android:drawableStart="@drawable/ic_welcome_permission_list_dot"
-            android:text="@string/welcome_permission_sms_description_2"
-            android:textColor="@color/welcome_text_permission_list"
-            android:textSize="12sp"
-            app:typeface="@string/custom_font_regular" />
+            android:orientation="vertical"
+            app:layout_constraintBottom_toBottomOf="parent">
 
-        <com.superapps.view.TypefacedTextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="15dp"
-            android:layout_marginTop="11dp"
-            android:drawablePadding="9dp"
-            android:drawableStart="@drawable/ic_welcome_permission_list_dot"
-            android:text="@string/welcome_permission_sms_description_3"
-            android:textColor="@color/welcome_text_permission_list"
-            android:textSize="12sp"
-            app:typeface="@string/custom_font_regular" />
+            <com.superapps.view.TypefacedTextView
+                android:id="@+id/welcome_permission_phone_title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:drawablePadding="3dp"
+                android:drawableStart="@drawable/ic_welcome_permission_phone"
+                android:text="@string/welcome_permission_contacts_title"
+                android:textColor="#e6fd9d20"
+                android:textSize="18sp"
+                app:typeface="@string/custom_font_bold" />
 
+            <com.superapps.view.TypefacedTextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="15dp"
+                android:layout_marginTop="8dp"
+                android:drawablePadding="9dp"
+                android:drawableStart="@drawable/ic_welcome_permission_list_dot"
+                android:text="@string/welcome_permission_phone_description_1"
+                android:textColor="@color/welcome_text_permission_list"
+                android:textSize="12sp"
+                app:typeface="@string/custom_font_regular" />
+
+            <com.superapps.view.TypefacedTextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="15dp"
+                android:layout_marginTop="11dp"
+                android:drawablePadding="9dp"
+                android:drawableStart="@drawable/ic_welcome_permission_list_dot"
+                android:text="@string/welcome_permission_phone_description_2"
+                android:textColor="@color/welcome_text_permission_list"
+                android:textSize="12sp"
+                app:typeface="@string/custom_font_regular" />
+
+        </LinearLayout>
     </LinearLayout>
-
-
-    <LinearLayout
-        android:id="@+id/welcome_permission_contacts_description"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="19dp"
-        android:layout_marginStart="19dp"
-        android:layout_marginTop="26dp"
-        android:orientation="vertical"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/welcome_permission_sms_description">
-
-        <com.superapps.view.TypefacedTextView
-            android:id="@+id/welcome_permission_contacts_title"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:drawablePadding="3dp"
-            android:drawableStart="@drawable/ic_welcome_permission_contacts"
-            android:text="@string/welcome_permission_contacts_title"
-            android:textColor="#e63079ff"
-            android:textSize="18sp"
-            app:typeface="@string/custom_font_bold" />
-
-        <com.superapps.view.TypefacedTextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="15dp"
-            android:layout_marginTop="8dp"
-            android:drawablePadding="9dp"
-            android:drawableStart="@drawable/ic_welcome_permission_list_dot"
-            android:text="@string/welcome_permission_contacts_description_1"
-            android:textColor="@color/welcome_text_permission_list"
-            android:textSize="12sp"
-            app:typeface="@string/custom_font_regular" />
-
-        <com.superapps.view.TypefacedTextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="15dp"
-            android:layout_marginTop="11dp"
-            android:drawablePadding="9dp"
-            android:drawableStart="@drawable/ic_welcome_permission_list_dot"
-            android:text="@string/welcome_permission_contacts_description_2"
-            android:textColor="@color/welcome_text_permission_list"
-            android:textSize="12sp"
-            app:typeface="@string/custom_font_regular" />
-
-        <com.superapps.view.TypefacedTextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="15dp"
-            android:layout_marginTop="11dp"
-            android:drawablePadding="9dp"
-            android:drawableStart="@drawable/ic_welcome_permission_list_dot"
-            android:text="@string/welcome_permission_contacts_description_3"
-            android:textColor="@color/welcome_text_permission_list"
-            android:textSize="12sp"
-            app:typeface="@string/custom_font_regular" />
-
-        <com.superapps.view.TypefacedTextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="15dp"
-            android:layout_marginTop="11dp"
-            android:drawablePadding="9dp"
-            android:drawableStart="@drawable/ic_welcome_permission_list_dot"
-            android:text="@string/welcome_permission_contacts_description_4"
-            android:textColor="@color/welcome_text_permission_list"
-            android:textSize="12sp"
-            app:typeface="@string/custom_font_regular" />
-
-    </LinearLayout>
-
-    <android.support.constraint.Guideline
-        android:id="@+id/guideline_2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.889" />
 
     <com.superapps.view.TypefacedTextView
         android:id="@+id/welcome_permission_button"
         android:layout_width="260.7dp"
         android:layout_height="46dp"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="24dp"
         android:background="@drawable/welcome_button_green_bg"
         android:gravity="center"
-        android:text="@string/welcome_start_button"
+        android:text="@string/welcome_permission_button"
         android:textColor="#ffffffff"
         android:textSize="14sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/guideline_2"
         app:typeface="@string/custom_font_bold" />
 
-</android.support.constraint.ConstraintLayout>
+</RelativeLayout>

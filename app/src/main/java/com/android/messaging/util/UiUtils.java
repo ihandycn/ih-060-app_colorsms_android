@@ -344,7 +344,7 @@ public class UiUtils {
     }
 
     private static boolean shouldShowWelcomePermission(){
-        return !OsUtil.hasPermissions(OsUtil.REQUIRE_PERMISSION_IN_WELCOME);
+        return !OsUtil.hasRequiredPermissions();
     }
 
     private static boolean shouldShowWelcomeSetDefault(){
@@ -362,16 +362,16 @@ public class UiUtils {
         if (shouldShowWelcomeStart()) {
             Preferences.getDefault().putBoolean(PREF_KEY_FIRST_TIME_LAUNCH, false);
             UIIntents.get().launchWelcomeStartActivity(activity);
-            HSLog.d("UiUtil", "show welcome start");
+            HSLog.d("UiUtil", "Show welcome start");
         } else {
             if (shouldShowWelcomePermission()) {
                 UIIntents.get().launchWelcomePermissionActivity(activity);
-                HSLog.d("UiUtil", "show welcome permission");
+                HSLog.d("UiUtil", "Show welcome permission");
             } else {
                 if (shouldShowWelcomeSetDefault() && !hasShownWelcomeSetDefault){
                     hasShownWelcomeSetDefault = true;
                     UIIntents.get().launchWelcomeSetAsDefaultActivity(activity);
-                    HSLog.d("UiUtil", "show welcome set as default");
+                    HSLog.d("UiUtil", "Show welcome set as default");
                 } else {
                     // No redirect performed
                     return false;

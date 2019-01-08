@@ -281,28 +281,4 @@ public class OsUtil {
     public static String[] getMissingRequiredPermissions() {
         return getMissingPermissions(sRequiredPermissions);
     }
-
-    /**
-     * Welcome permission
-     */
-    public static String[] REQUIRE_PERMISSION_IN_WELCOME = new String[] {
-            // Required to read existing SMS threads
-            Manifest.permission.READ_SMS,
-            // This is not strictly required, but simplifies the contact picker scenarios
-            Manifest.permission.READ_CONTACTS,
-    };
-
-    /**
-     * If the user click never ask again before.
-     */
-    public static boolean needSystemSettingInWelcome(Context context){
-        for (String permission : REQUIRE_PERMISSION_IN_WELCOME){
-            if (RuntimePermissions.checkSelfPermission(context, permission)
-                    == RuntimePermissions.PERMISSION_PERMANENTLY_DENIED){
-                return true;
-            }
-        }
-        return false;
-    }
-
 }
