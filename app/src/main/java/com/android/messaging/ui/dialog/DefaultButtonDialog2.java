@@ -56,12 +56,12 @@ public abstract class DefaultButtonDialog2 {
 
     private boolean mInited;
 
-    public DefaultButtonDialog2(Context activity) {
+    public DefaultButtonDialog2(Activity activity) {
         this(activity, 0);
     }
 
-    public DefaultButtonDialog2(Context activity, int themeId) {
-        mActivity = (Activity) activity;
+    public DefaultButtonDialog2(Activity activity, int themeId) {
+        mActivity = activity;
         mThemeId = themeId;
     }
 

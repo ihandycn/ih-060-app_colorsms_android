@@ -5,7 +5,7 @@ import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
 import android.animation.ValueAnimator;
 import android.annotation.SuppressLint;
-import android.content.Context;
+import android.app.Activity;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.support.v4.content.ContextCompat;
@@ -79,15 +79,15 @@ public class FiveStarRateDialog extends DefaultButtonDialog2 implements View.OnC
         public String toString() {
             switch (this.code) {
                 case 0:
-                    return "From Boost+";
+                    return "From Send First Message";
                 case 1:
-                    return "From Set As Wallpaper";
+                    return "From Send First Emoji";
                 case 2:
-                    return "From Boost";
+                    return "From Quit App";
                 case 3:
-                    return "From 5 Star Rating";
+                    return "From Settings";
                 default:
-                    return "";
+                    return "Others";
             }
         }
     }
@@ -137,7 +137,7 @@ public class FiveStarRateDialog extends DefaultButtonDialog2 implements View.OnC
     private AnimatorSet mAnimatorSet;
     private int mAnimCount;
 
-    public FiveStarRateDialog(Context context, From from) {
+    public FiveStarRateDialog(Activity context, From from) {
         super(context);
         mMetrics = context.getResources().getDisplayMetrics();
         mFrom = from;
@@ -256,7 +256,6 @@ public class FiveStarRateDialog extends DefaultButtonDialog2 implements View.OnC
 
     @Override
     protected void onClickNegativeButton(View v) {
-        BugleAnalytics.logEvent("Alert_FiveStar_Closed");
     }
 
     @Override
@@ -505,17 +504,15 @@ public class FiveStarRateDialog extends DefaultButtonDialog2 implements View.OnC
     }
 
     private static boolean isShowFiveStarRateMoreThenInterval() {
-//        return System.currentTimeMillis() - Preferences.get(DESKTOP_PREFS).getLong(PREF_KEY_FIVE_STAR_SHOWED_TIME, 0)
-//                >= 30 * DateUtils.MINUTE_IN_MILLIS;
         return System.currentTimeMillis() - Preferences.get(DESKTOP_PREFS).getLong(PREF_KEY_FIVE_STAR_SHOWED_TIME, 0)
-                >= 30 * DateUtils.SECOND_IN_MILLIS;
+                >= 30 * DateUtils.MINUTE_IN_MILLIS;
     }
 
     private static boolean shouldShowThisTime() {
         return !isHadFiveStarRate() && isShowFiveStarRateTooMaxTimes() && isShowFiveStarRateMoreThenInterval();
     }
 
-    public static boolean showShowFiveStarRateDialogOnBackToDesktopIfNeed(Context context) {
+    public static boolean showShowFiveStarRateDialogOnBackToDesktopIfNeed(Activity context) {
         Preferences.get(DESKTOP_PREFS).incrementAndGetInt(PREF_KEY_BACK_TO_DESKTOP_TIMES);
 
         if (shouldShowThisTime() && timesCondition()) {
@@ -525,7 +522,7 @@ public class FiveStarRateDialog extends DefaultButtonDialog2 implements View.OnC
         return false;
     }
 
-    public static boolean showFiveStarWhenSendMsgIfNeed(Context context) {
+    public static boolean showFiveStarWhenSendMsgIfNeed(Activity context) {
         if (shouldShowThisTime() &&
                 !Preferences.get(DESKTOP_PREFS).getBoolean(PREF_KEY_FIVE_STAR_SHOWED_AFTER_SEND_MSG, false)) {
             showFiveStarRateDialog(context, From.SEND_MESSAGE);
@@ -534,7 +531,7 @@ public class FiveStarRateDialog extends DefaultButtonDialog2 implements View.OnC
         return false;
     }
 
-    public static boolean showFiveStarWhenSendEmojiIfNeed(Context context) {
+    public static boolean showFiveStarWhenSendEmojiIfNeed(Activity context) {
         if (shouldShowThisTime() &&
                 !Preferences.get(DESKTOP_PREFS).getBoolean(PREF_KEY_FIVE_STAR_SHOWED_AFTER_SEND_EMOJI, false)) {
             showFiveStarRateDialog(context, From.SEND_EMOJI);
@@ -544,11 +541,11 @@ public class FiveStarRateDialog extends DefaultButtonDialog2 implements View.OnC
     }
 
 
-    public static void showFiveStarFromSetting(Context context) {
+    public static void showFiveStarFromSetting(Activity context) {
         showFiveStarRateDialog(context, From.SETTING);
     }
 
-    private static void showFiveStarRateDialog(Context context, From from) {
+    private static void showFiveStarRateDialog(Activity context, From from) {
         Threads.postOnMainThreadDelayed(() ->
                 new FiveStarRateDialog(context, from).show(), 100);
     }
