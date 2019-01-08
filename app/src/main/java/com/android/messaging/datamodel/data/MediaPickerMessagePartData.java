@@ -19,33 +19,54 @@ package com.android.messaging.datamodel.data;
 import android.graphics.Rect;
 import android.net.Uri;
 
+import com.android.messaging.ui.emoji.EmojiType;
+
 public class MediaPickerMessagePartData extends MessagePartData {
     private final Rect mStartRect;
+    private String mName;
+    private EmojiType mEmojiType = null;
 
     public MediaPickerMessagePartData(final Rect startRect, final String contentType,
-            final Uri contentUri, final int width, final int height) {
+                                      final Uri contentUri, final int width, final int height) {
         this(startRect, null /* messageText */, contentType, contentUri, width, height);
     }
 
-   public MediaPickerMessagePartData(final Rect startRect, final String messageText,
-            final String contentType, final Uri contentUri, final int width, final int height) {
+    public MediaPickerMessagePartData(final Rect startRect, final String messageText,
+                                      final String contentType, final Uri contentUri, final int width, final int height) {
         this(startRect, messageText, contentType, contentUri, width, height,
                 false /*onlySingleAttachment*/);
     }
 
     public MediaPickerMessagePartData(final Rect startRect, final String contentType,
-            final Uri contentUri, final int width, final int height,
-            final boolean onlySingleAttachment) {
+                                      final Uri contentUri, final int width, final int height,
+                                      final boolean onlySingleAttachment) {
         this(startRect, null /* messageText */, contentType, contentUri, width, height,
                 onlySingleAttachment);
     }
 
     public MediaPickerMessagePartData(final Rect startRect, final String messageText,
-            final String contentType, final Uri contentUri, final int width, final int height,
-            final boolean onlySingleAttachment) {
+                                      final String contentType, final Uri contentUri, final int width, final int height,
+                                      final boolean onlySingleAttachment) {
         super(messageText, contentType, contentUri, width, height, onlySingleAttachment);
         mStartRect = startRect;
     }
+
+    public String getName() {
+        return mName;
+    }
+
+    public void setName(String name) {
+        this.mName = name;
+    }
+
+    public void setEmojiType(EmojiType type) {
+        mEmojiType = type;
+    }
+
+    public EmojiType getEmojiType() {
+        return mEmojiType;
+    }
+
 
     /**
      * @return The starting rect to animate the attachment preview from in order to perform a smooth

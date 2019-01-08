@@ -5,6 +5,7 @@ import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.PagerAdapter;
+import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,6 +14,7 @@ import android.widget.ImageView;
 import com.android.messaging.R;
 import com.android.messaging.glide.GlideApp;
 import com.android.messaging.ui.emoji.utils.EmojiManager;
+import com.android.messaging.util.BugleAnalytics;
 import com.superapps.view.ViewPagerFixed;
 
 import java.util.ArrayList;
@@ -24,9 +26,9 @@ public class EmojiPackagePagerAdapter extends PagerAdapter {
     private TabLayout mTabLayout;
     private Context mContext;
     private StickerItemPagerAdapter mRecentPagerAdapter;
-    private EmojiPickerFragment.OnEmojiClickListener mOnEmojiClickListener;
+    private OnEmojiClickListener mOnEmojiClickListener;
 
-    EmojiPackagePagerAdapter(Context context, TabLayout tabLayout, EmojiPickerFragment.OnEmojiClickListener emojiClickListener) {
+    EmojiPackagePagerAdapter(Context context, TabLayout tabLayout, OnEmojiClickListener emojiClickListener) {
         mContext = context;
         mTabLayout = tabLayout;
         mOnEmojiClickListener = emojiClickListener;
@@ -58,6 +60,27 @@ public class EmojiPackagePagerAdapter extends PagerAdapter {
         itemPager.addOnPageChangeListener(dotIndicatorView);
         PagerAdapter adapter = getPagerAdapter(info);
         itemPager.setAdapter(adapter);
+        itemPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            private int currentPosition = 0;
+
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+                if (position > currentPosition) {
+                    BugleAnalytics.logEvent("SMSEmoji_ChatEmoji_Page_Slideleft", true);
+                }
+                currentPosition = position;
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+
+            }
+        });
         dotIndicatorView.initDot(adapter.getCount(), 0);
         container.addView(view);
         return view;
@@ -125,5 +148,14 @@ public class EmojiPackagePagerAdapter extends PagerAdapter {
                 tab.setTag(info);
             }
         }
+    }
+
+    public interface OnEmojiClickListener {
+
+        void emojiClick(EmojiInfo emojiInfo);
+
+        void stickerClickExcludeMagic(StickerInfo stickerInfo);
+
+        void deleteEmoji();
     }
 }

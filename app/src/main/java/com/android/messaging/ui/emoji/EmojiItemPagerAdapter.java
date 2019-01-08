@@ -22,9 +22,9 @@ public class EmojiItemPagerAdapter extends PagerAdapter {
     private final int EMOJI_COUNT_ONE_PAGE = EMOJI_COLUMNS * EMOJI_ROWS - 1;
 
     private List<List<BaseEmojiInfo>> mData;
-    private EmojiPickerFragment.OnEmojiClickListener mOnEmojiClickListener;
+    private EmojiPackagePagerAdapter.OnEmojiClickListener mOnEmojiClickListener;
 
-    EmojiItemPagerAdapter(List<BaseEmojiInfo> data, EmojiPickerFragment.OnEmojiClickListener emojiClickListener) {
+    EmojiItemPagerAdapter(List<BaseEmojiInfo> data, EmojiPackagePagerAdapter.OnEmojiClickListener emojiClickListener) {
         if (data == null || data.isEmpty()) {
             return;
         }

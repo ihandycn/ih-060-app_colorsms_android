@@ -64,6 +64,7 @@ import com.android.messaging.ui.emoji.utils.EmojiManager;
 import com.android.messaging.util.AccessibilityUtil;
 import com.android.messaging.util.Assert;
 import com.android.messaging.util.AvatarUriUtil;
+import com.android.messaging.util.BugleAnalytics;
 import com.android.messaging.util.BuglePrefs;
 import com.android.messaging.util.ContentType;
 import com.android.messaging.util.ImeUtil;
@@ -72,6 +73,7 @@ import com.android.messaging.util.MediaUtil;
 import com.android.messaging.util.OsUtil;
 import com.android.messaging.util.UiUtils;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
@@ -142,6 +144,10 @@ public class ComposeMessageView extends LinearLayout
     private ImageView mAttachMediaButton;
     private ImageView mEmojiKeyboardBtn;
     private ImageView mEmojiGuideView;
+
+    private List<String> mEmojiLogCodeList;
+    private List<String> mMagicStickerLogNameList;
+    private List<String> mStickerLogNameList;
 
     private final Binding<DraftMessageData> mBinding;
     private IComposeMessageViewHost mHost;
@@ -281,6 +287,7 @@ public class ComposeMessageView extends LinearLayout
         mSendButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(final View clickView) {
+                logEmojiEvent();
                 sendMessageInternal(true /* checkMessageSize */);
             }
         });
@@ -336,6 +343,7 @@ public class ComposeMessageView extends LinearLayout
         mEmojiKeyboardBtn.setTag(INPUT_EMOJI);
         mEmojiKeyboardBtn.setOnClickListener(v -> {
             if (v.getTag().equals(INPUT_EMOJI)) {
+                BugleAnalytics.logEvent("SMSEmoji_Chat_Emoji_Click", true);
                 if (EmojiManager.isShowEmojiGuide()) {
                     EmojiManager.recordAlreadyShowEmojiGuide();
                     mEmojiGuideView.setVisibility(GONE);
@@ -344,12 +352,66 @@ public class ComposeMessageView extends LinearLayout
                 mEmojiKeyboardBtn.setImageResource(R.drawable.input_keyboard_icon);
                 mInputManager.showEmoji();
             } else {
+                BugleAnalytics.logEvent("SMSEmoji_Chat_Keyboard_Click");
                 ImeUtil.get().showImeKeyboard(getContext(), mComposeEditText);
                 if (mHost.shouldHideAttachmentsWhenSimSelectorShown()) {
                     hideSimSelector();
                 }
             }
         });
+    }
+
+    private void logEmojiEvent() {
+        if (mEmojiLogCodeList != null && !mEmojiLogCodeList.isEmpty()) {
+            String message = mComposeEditText.getText().toString();
+            for (String code : mEmojiLogCodeList) {
+                if (message.contains(code)) {
+                    BugleAnalytics.logEvent("SMSEmoji_ChatEmoji_LittleEmoji_Send", true, "type", code);
+                }
+            }
+            mEmojiLogCodeList.clear();
+        }
+        logEvent("SMSEmoji_ChatEmoji_Tab_Send", mStickerLogNameList);
+        logEvent("SMSEmoji_ChatEmoji_Magic_Send", mMagicStickerLogNameList);
+    }
+
+    private void logEvent(String eventName, List<String> data) {
+        if (data != null && !data.isEmpty()) {
+            for (String type : data) {
+                BugleAnalytics.logEvent(eventName, true, "type", type);
+            }
+
+            data.clear();
+        }
+    }
+
+    private void removeEmojiEvent() {
+        logEvent("SMSEmoji_ChatEmoji_Tab_Cancel", mStickerLogNameList);
+        logEvent("SMSEmoji_ChatEmoji_Magic_Tab_Cancel", mMagicStickerLogNameList);
+    }
+
+    @Override
+    public void logMagicSticker(String name) {
+        if (mMagicStickerLogNameList == null) {
+            mMagicStickerLogNameList = new ArrayList<>();
+        }
+        mMagicStickerLogNameList.add(name);
+    }
+
+    @Override
+    public void logEmoji(String code) {
+        if (mEmojiLogCodeList == null) {
+            mEmojiLogCodeList = new ArrayList<>();
+        }
+        mEmojiLogCodeList.add(code);
+    }
+
+    @Override
+    public void logSticker(String name) {
+        if (mStickerLogNameList == null) {
+            mStickerLogNameList = new ArrayList<>();
+        }
+        mStickerLogNameList.add(name);
     }
 
     @Override
@@ -618,6 +680,7 @@ public class ComposeMessageView extends LinearLayout
     }
 
     public void clearAttachments() {
+        removeEmojiEvent();
         mBinding.getData().clearAttachments(mHost.getAttachmentsClearedFlags());
         mHost.onAttachmentsCleared();
     }

@@ -30,11 +30,13 @@ import com.android.messaging.datamodel.data.ConversationData.ConversationDataLis
 import com.android.messaging.datamodel.data.ConversationData.SimpleConversationDataListener;
 import com.android.messaging.datamodel.data.DraftMessageData;
 import com.android.messaging.datamodel.data.DraftMessageData.DraftMessageSubscriptionDataProvider;
+import com.android.messaging.datamodel.data.MediaPickerMessagePartData;
 import com.android.messaging.datamodel.data.MessagePartData;
 import com.android.messaging.datamodel.data.PendingAttachmentData;
 import com.android.messaging.datamodel.data.SubscriptionListData.SubscriptionListEntry;
 import com.android.messaging.ui.ConversationDrawables;
 import com.android.messaging.ui.emoji.EmojiPickerFragment;
+import com.android.messaging.ui.emoji.EmojiType;
 import com.android.messaging.ui.mediapicker.MediaPicker;
 import com.android.messaging.ui.mediapicker.MediaPicker.MediaPickerListener;
 import com.android.messaging.util.Assert;
@@ -95,6 +97,12 @@ public class ConversationInputManager implements ConversationInput.ConversationI
         void setAccessibility(boolean enabled);
 
         void onKeyboardVisible(boolean isVisible);
+
+        void logMagicSticker(String name);
+
+        void logEmoji(String code);
+
+        void logSticker(String name);
     }
 
     private final ConversationInputHost mHost;
@@ -556,7 +564,7 @@ public class ConversationInputManager implements ConversationInput.ConversationI
 
         @Override
         public boolean hide(boolean animate) {
-            if (mEmojiPickerFragment != null){
+            if (mEmojiPickerFragment != null) {
                 mFragmentManager.beginTransaction()
                         .remove(mEmojiPickerFragment)
                         .commit();
@@ -570,22 +578,37 @@ public class ConversationInputManager implements ConversationInput.ConversationI
                 return;
             }
             mEmojiPickerFragment = mHost.createEmojiPicker();
-            mEmojiPickerFragment.setOnStickerSendListener(items -> {
-                mSink.onMediaItemsSelected(items);
-                mHost.invalidateActionBar();
-            });
-            mEmojiPickerFragment.setOnEmojiEditListener(new EmojiPickerFragment.OnEmojiEditListener() {
+            mEmojiPickerFragment.setOnEmojiPickerListener(new EmojiPickerFragment.OnEmojiPickerListener() {
                 @Override
-                public void add(String emojiStr) {
+                public void addEmoji(String emojiStr) {
                     if (mSink != null && mSink.getComposeEditText() != null) {
                         mSink.getComposeEditText().append(emojiStr);
+                        mSink.logEmoji(emojiStr);
                     }
                 }
 
                 @Override
-                public void delete() {
+                public void deleteEmoji() {
                     if (mSink != null && mSink.getComposeEditText() != null) {
                         mSink.getComposeEditText().dispatchKeyEvent(new KeyEvent(KeyEvent.ACTION_DOWN, KeyEvent.KEYCODE_DEL));
+                    }
+                }
+
+                @Override
+                public void prepareSendSticker(Collection<MessagePartData> items) {
+                    mSink.onMediaItemsSelected(items);
+                    mHost.invalidateActionBar();
+                    for (MessagePartData data : items) {
+                        if (data instanceof MediaPickerMessagePartData) {
+                            MediaPickerMessagePartData mediaData = (MediaPickerMessagePartData) data;
+                            if (mediaData.getEmojiType() != null) {
+                                if (mediaData.getEmojiType() == EmojiType.STICKER_MAGIC) {
+                                    mSink.logMagicSticker(mediaData.getName());
+                                } else {
+                                    mSink.logSticker(mediaData.getName());
+                                }
+                            }
+                        }
                     }
                 }
             });

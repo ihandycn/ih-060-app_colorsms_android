@@ -17,16 +17,19 @@ import com.superapps.util.Dimensions;
 public class EmojiDetailActivity extends HSAppCompatActivity {
 
     private static final String INTENT_EMOJI_PACKAGE_INFO = "intent_emoji_package_info";
+    private static final String INTENT_SOURCE = "intent_source";
     private static final int HEADER_BOTTOM = Dimensions.pxFromDp(16.33f);
     private static final int INNER_HORIZONTAL_SPACING = Dimensions.pxFromDp(5);
     private static final int INNER_VERTICAL_SPACING = Dimensions.pxFromDp(13);
 
     private static final int GALLERY_COLUMNS = 4;
     private EmojiPackageInfo mEmojiPackageInfo;
+    private String mSource;
 
-    public static void start(Context context, EmojiPackageInfo packageInfo) {
+    public static void start(String source, Context context, EmojiPackageInfo packageInfo) {
         Intent starter = new Intent(context, EmojiDetailActivity.class);
         starter.putExtra(INTENT_EMOJI_PACKAGE_INFO, packageInfo);
+        starter.putExtra(INTENT_SOURCE, source);
         context.startActivity(starter);
     }
 
@@ -37,8 +40,13 @@ public class EmojiDetailActivity extends HSAppCompatActivity {
 
         setContentView(R.layout.activity_emoji_detail_layout);
 
-        mEmojiPackageInfo = getIntent().getParcelableExtra(INTENT_EMOJI_PACKAGE_INFO);
-
+        Intent intent = getIntent();
+        if (intent == null) {
+            finish();
+            return;
+        }
+        mEmojiPackageInfo = intent.getParcelableExtra(INTENT_EMOJI_PACKAGE_INFO);
+        mSource = intent.getStringExtra(INTENT_SOURCE);
 
         setupRecyclerView();
 
@@ -49,7 +57,7 @@ public class EmojiDetailActivity extends HSAppCompatActivity {
     private void setupRecyclerView() {
         RecyclerViewWidthSlideListener gallery = findViewById(R.id.emoji_detail_recycler);
 
-        EmojiDetailAdapter adapter = new EmojiDetailAdapter(mEmojiPackageInfo);
+        EmojiDetailAdapter adapter = new EmojiDetailAdapter(mEmojiPackageInfo, mSource);
         gallery.setAdapter(adapter);
         gallery.addItemDecoration(new GridItemDecoration());
         GridLayoutManager manager = new GridLayoutManager(this, GALLERY_COLUMNS);

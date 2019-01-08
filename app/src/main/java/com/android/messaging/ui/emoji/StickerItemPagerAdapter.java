@@ -24,14 +24,14 @@ public class StickerItemPagerAdapter extends PagerAdapter {
     private final int STICKER_COUNT_ONE_PAGE = STICKER_COLUMNS * STICKER_ROWS;
 
     private List<List<BaseEmojiInfo>> mData;
-    private EmojiPickerFragment.OnEmojiClickListener mOnEmojiClickListener;
+    private EmojiPackagePagerAdapter.OnEmojiClickListener mOnEmojiClickListener;
     private boolean mIsRecentPage;
 
-    StickerItemPagerAdapter(List<BaseEmojiInfo> data, EmojiPickerFragment.OnEmojiClickListener emojiClickListener) {
+    StickerItemPagerAdapter(List<BaseEmojiInfo> data, EmojiPackagePagerAdapter.OnEmojiClickListener emojiClickListener) {
         this(false, data, emojiClickListener);
     }
 
-    StickerItemPagerAdapter(boolean isRecentPage, List<BaseEmojiInfo> data, EmojiPickerFragment.OnEmojiClickListener emojiClickListener) {
+    StickerItemPagerAdapter(boolean isRecentPage, List<BaseEmojiInfo> data, EmojiPackagePagerAdapter.OnEmojiClickListener emojiClickListener) {
         mOnEmojiClickListener = emojiClickListener;
         mIsRecentPage = isRecentPage;
         if (data == null || data.isEmpty()) {

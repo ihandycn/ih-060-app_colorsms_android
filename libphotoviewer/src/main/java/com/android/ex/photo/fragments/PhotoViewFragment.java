@@ -22,6 +22,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.database.Cursor;
+import android.graphics.drawable.Animatable;
 import android.graphics.drawable.Drawable;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
@@ -46,6 +47,7 @@ import com.android.ex.photo.R;
 import com.android.ex.photo.adapters.PhotoPagerAdapter;
 import com.android.ex.photo.loaders.PhotoBitmapLoaderInterface;
 import com.android.ex.photo.loaders.PhotoBitmapLoaderInterface.BitmapResult;
+import com.android.ex.photo.util.PhotoViewAnalytics;
 import com.android.ex.photo.views.PhotoView;
 import com.android.ex.photo.views.ProgressBarWrapper;
 
@@ -89,11 +91,15 @@ public class PhotoViewFragment extends Fragment implements
     protected final static String ARG_POSITION = "arg-position";
     protected final static String ARG_SHOW_SPINNER = "arg-show-spinner";
 
-    /** The URL of a photo to display */
+    /**
+     * The URL of a photo to display
+     */
     protected String mResolvedPhotoUri;
     protected String mThumbnailUri;
     protected String mContentDescription;
-    /** The intent we were launched with */
+    /**
+     * The intent we were launched with
+     */
     protected Intent mIntent;
     protected PhotoViewCallbacks mCallback;
     protected PhotoPagerAdapter mAdapter;
@@ -108,7 +114,9 @@ public class PhotoViewFragment extends Fragment implements
 
     protected int mPosition;
 
-    /** Whether or not the fragment should make the photo full-screen */
+    /**
+     * Whether or not the fragment should make the photo full-screen
+     */
     protected boolean mFullScreen;
 
     /**
@@ -116,28 +124,39 @@ public class PhotoViewFragment extends Fragment implements
      */
     protected boolean mWatchNetworkState;
 
-    /** Whether or not this fragment will only show the loading spinner */
+    /**
+     * Whether or not this fragment will only show the loading spinner
+     */
     protected boolean mOnlyShowSpinner;
 
-    /** Whether or not the progress bar is showing valid information about the progress stated */
+    /**
+     * Whether or not the progress bar is showing valid information about the progress stated
+     */
     protected boolean mProgressBarNeeded = true;
 
     protected View mPhotoPreviewAndProgress;
     protected boolean mThumbnailShown;
 
-    /** Whether or not there is currently a connection to the internet */
+    /**
+     * Whether or not there is currently a connection to the internet
+     */
     protected boolean mConnected;
 
-    /** Whether or not we can display the thumbnail at fullscreen size */
+    /**
+     * Whether or not we can display the thumbnail at fullscreen size
+     */
     protected boolean mDisplayThumbsFullScreen;
 
-    /** Public no-arg constructor for allowing the framework to handle orientation changes */
+    /**
+     * Public no-arg constructor for allowing the framework to handle orientation changes
+     */
     public PhotoViewFragment() {
         // Do nothing.
     }
 
     /**
      * Create a {@link PhotoViewFragment}.
+     *
      * @param intent
      * @param position
      * @param onlyShowSpinner
@@ -217,7 +236,7 @@ public class PhotoViewFragment extends Fragment implements
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
-            Bundle savedInstanceState) {
+                             Bundle savedInstanceState) {
         final View view = inflater.inflate(R.layout.photo_fragment_view, container, false);
         initializeView(view);
         return view;
@@ -321,7 +340,7 @@ public class PhotoViewFragment extends Fragment implements
 
     @Override
     public Loader<BitmapResult> onCreateLoader(int id, Bundle args) {
-        if(mOnlyShowSpinner) {
+        if (mOnlyShowSpinner) {
             return null;
         }
         String uri = null;
@@ -413,6 +432,9 @@ public class PhotoViewFragment extends Fragment implements
      */
     private void bindPhoto(Drawable drawable) {
         if (drawable != null) {
+            if (drawable instanceof Animatable) {
+                PhotoViewAnalytics.logEvent("SMSEmoji_ChatEmoji_Gif_SendView", true);
+            }
             if (mPhotoView != null) {
                 mPhotoView.bindDrawable(drawable);
             }

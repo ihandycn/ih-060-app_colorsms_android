@@ -3,6 +3,7 @@ package com.android.messaging.ui.emoji;
 import android.content.res.Resources;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,6 +12,7 @@ import android.widget.ImageView;
 import com.android.messaging.R;
 import com.android.messaging.glide.GlideApp;
 import com.android.messaging.ui.emoji.utils.EmojiManager;
+import com.android.messaging.util.BugleAnalytics;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.ihs.commons.notificationcenter.HSGlobalNotificationCenter;
 import com.ihs.commons.utils.HSBundle;
@@ -24,9 +26,11 @@ public class EmojiDetailAdapter extends BaseStickerItemRecyclerAdapter {
     private static final int TYPE_NORMAL = 1;
 
     private EmojiPackageInfo mEmojiPackageInfo;
+    private String mSource;
 
-    EmojiDetailAdapter(EmojiPackageInfo emojiPackageInfo) {
+    EmojiDetailAdapter(EmojiPackageInfo emojiPackageInfo, String source) {
         this.mEmojiPackageInfo = emojiPackageInfo;
+        this.mSource = source;
     }
 
     @Override
@@ -72,14 +76,17 @@ public class EmojiDetailAdapter extends BaseStickerItemRecyclerAdapter {
             getBtn.setTextColor(0xFF333333);
             getBtn.setBackground(BackgroundDrawables.createBackgroundDrawable(0xFFF4BE3E, Dimensions.pxFromDp(20), true));
             getBtn.setOnClickListener(v -> {
+                if (!TextUtils.isEmpty(mSource)) {
+                    BugleAnalytics.logEvent("SMSEmoji_ChatEmoji_StoreDetail_Get", true, "type", mSource);
+                }
                 getBtn.setOnClickListener(null);
                 getBtn.setText(res.getString(R.string.emoji_added));
                 getBtn.setTextColor(0xFFFFFFFF);
                 getBtn.setBackground(BackgroundDrawables.createBackgroundDrawable(0xFFD6D6D6, Dimensions.pxFromDp(20), true));
                 EmojiManager.addTabSticker(mEmojiPackageInfo.mName);
                 HSBundle bundle = new HSBundle();
-                bundle.putString(EmojiFragment.NOTIFICATION_BUNDLE_ITEM_NAME, mEmojiPackageInfo.mName);
-                HSGlobalNotificationCenter.sendNotification(EmojiFragment.NOTIFICATION_REFRESH_ITEM_STATUS, bundle);
+                bundle.putString(EmojiStoreFragment.NOTIFICATION_BUNDLE_ITEM_NAME, mEmojiPackageInfo.mName);
+                HSGlobalNotificationCenter.sendNotification(EmojiStoreFragment.NOTIFICATION_REFRESH_ITEM_STATUS, bundle);
 
                 HSBundle packageBundle = new HSBundle();
                 packageBundle.putObject(EmojiPickerFragment.NOTIFICATION_BUNDLE_PACKAGE_INFO, mEmojiPackageInfo);

@@ -14,6 +14,7 @@ import com.android.messaging.R;
 import com.android.messaging.download.DownloadListener;
 import com.android.messaging.download.Downloader;
 import com.android.messaging.glide.GlideApp;
+import com.android.messaging.util.BugleAnalytics;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.target.CustomViewTarget;
 import com.bumptech.glide.request.transition.Transition;
@@ -143,7 +144,7 @@ public abstract class BaseStickerItemRecyclerAdapter extends RecyclerView.Adapte
                 });
     }
 
-    void downloadMagicEmoji(@NonNull StickerInfo stickerInfo, @NonNull StickerViewHolder holder) {
+    void downloadMagicEmoji(boolean isAutoDownload, @NonNull StickerInfo stickerInfo, @NonNull StickerViewHolder holder) {
         if (Downloader.getInstance().isDownloading(stickerInfo.mMagicUrl)) {
             return;
         }
@@ -169,6 +170,9 @@ public abstract class BaseStickerItemRecyclerAdapter extends RecyclerView.Adapte
             @Override
             public void onSuccess(String url, File file) {
                 HSLog.d(TAG, "downloadMagicEmoji, onComplete()");
+                if (!isAutoDownload) {
+                    BugleAnalytics.logEvent("SMSEmoji_ChatEmoji_Magic_Download", true,"type1", StickerInfo.getNumFromUrl(url), "type2", "success");
+                }
                 holder.progressBar.setProgress(100);
                 Threads.postOnMainThreadDelayed(() -> {
                     stickerInfo.mIsDownloaded = true;
@@ -182,16 +186,19 @@ public abstract class BaseStickerItemRecyclerAdapter extends RecyclerView.Adapte
             @Override
             public void onCancel(String url) {
                 HSLog.d(TAG, "downloadMagicEmoji, onCancel ");
-                failure();
+                failure(url);
             }
 
             @Override
             public void onFail(String url, String failMsg) {
                 HSLog.d(TAG, "downloadMagicEmoji, onFailed: " + failMsg);
-                failure();
+                failure(url);
             }
 
-            private void failure() {
+            private void failure(String url) {
+                if (!isAutoDownload) {
+                    BugleAnalytics.logEvent("SMSEmoji_ChatEmoji_Magic_Download", true,"type1", StickerInfo.getNumFromUrl(url), "type2", "fail");
+                }
                 holder.progressLayout.setVisibility(View.GONE);
                 holder.magicStatusView.setVisibility(View.VISIBLE);
                 Toasts.showToast(R.string.network_error_and_try_again);

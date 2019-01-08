@@ -13,21 +13,47 @@ public class StickerInfo extends BaseEmojiInfo {
     public String mSoundUrl;
     boolean mClickable;
     public boolean mIsDownloaded;
+    public String mPackageName;
 
     public int mStickerHeight;
     public int mStickerWidth;
     public Rect mStartRect;
 
+    public static String getNumFromUrl(String url) {
+        if (TextUtils.isEmpty(url)) {
+            return "";
+        }
+        String result = "";
+        boolean isStart = false;
+        char[] chars = url.toCharArray();
+        for (int i = chars.length - 1; i >= 0; i--) {
+            char c = chars[i];
+            if (c == '.') {
+                isStart = true;
+                continue;
+            }
+            if (c == '/') {
+                break;
+            }
+            if (isStart) {
+                result += c;
+            }
+        }
+
+        return result;
+    }
+
     public static StickerInfo unflatten(String flatten) {
         StickerInfo result = new StickerInfo();
         String[] split = flatten.split("\\|");
-        if (split.length != 4) {
-            throw new IllegalStateException("split.lenght must be 4!!!");
+        if (split.length != 5) {
+            throw new IllegalStateException("split.lenght must be 5!!!");
         }
         result.mEmojiType = EmojiType.valueOfInt(Integer.valueOf(split[0]));
         result.mStickerUrl = split[1];
         result.mMagicUrl = split[2];
         result.mSoundUrl = split[3];
+        result.mPackageName = split[4];
         if (result.mEmojiType == EmojiType.STICKER_MAGIC && !TextUtils.isEmpty(result.mMagicUrl)) {
             result.mIsDownloaded = Downloader.getInstance().isDownloaded(result.mMagicUrl);
         }
@@ -37,7 +63,7 @@ public class StickerInfo extends BaseEmojiInfo {
 
     @Override
     public String toString() {
-        return mEmojiType.value + "|" + mStickerUrl + "|" + mMagicUrl + "|" + mSoundUrl;
+        return mEmojiType.value + "|" + mStickerUrl + "|" + mMagicUrl + "|" + mSoundUrl + "|" + mPackageName;
     }
 
     @Override public int describeContents() {
@@ -54,6 +80,7 @@ public class StickerInfo extends BaseEmojiInfo {
         dest.writeInt(this.mStickerHeight);
         dest.writeInt(this.mStickerWidth);
         dest.writeParcelable(this.mStartRect, flags);
+        dest.writeString(this.mPackageName);
     }
 
     public StickerInfo() {
@@ -69,6 +96,7 @@ public class StickerInfo extends BaseEmojiInfo {
         this.mStickerHeight = in.readInt();
         this.mStickerWidth = in.readInt();
         this.mStartRect = in.readParcelable(Rect.class.getClassLoader());
+        this.mPackageName = in.readString();
     }
 
     public static final Creator<StickerInfo> CREATOR = new Creator<StickerInfo>() {

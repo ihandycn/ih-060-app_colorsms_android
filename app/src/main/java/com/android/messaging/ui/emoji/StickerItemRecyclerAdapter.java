@@ -17,9 +17,9 @@ public class StickerItemRecyclerAdapter extends BaseStickerItemRecyclerAdapter {
     private List<BaseEmojiInfo> mData;
     private int mMagicPreloadCount;
     private int mPositionInViewPager;
-    private EmojiPickerFragment.OnEmojiClickListener mOnEmojiClickListener;
+    private EmojiPackagePagerAdapter.OnEmojiClickListener mOnEmojiClickListener;
 
-    StickerItemRecyclerAdapter(int position, List<BaseEmojiInfo> data, EmojiPickerFragment.OnEmojiClickListener emojiClickListener) {
+    StickerItemRecyclerAdapter(int position, List<BaseEmojiInfo> data, EmojiPackagePagerAdapter.OnEmojiClickListener emojiClickListener) {
         mPositionInViewPager = position;
         mOnEmojiClickListener = emojiClickListener;
         mData = data;
@@ -63,7 +63,7 @@ public class StickerItemRecyclerAdapter extends BaseStickerItemRecyclerAdapter {
     @Override
     public void onMagicItemLoadingFinish(StickerInfo stickerInfo, StickerViewHolder holder) {
         if (mPositionInViewPager == 0 && !stickerInfo.mIsDownloaded && holder.getAdapterPosition() < mMagicPreloadCount) {
-            downloadMagicEmoji(stickerInfo, holder);
+            downloadMagicEmoji(true, stickerInfo, holder);
         }
     }
 
@@ -72,7 +72,7 @@ public class StickerItemRecyclerAdapter extends BaseStickerItemRecyclerAdapter {
             Rect rect = new Rect();
             v.getGlobalVisibleRect(rect);
             stickerInfo.mStartRect = rect;
-            mOnEmojiClickListener.emojiClick(stickerInfo);
+            mOnEmojiClickListener.stickerClickExcludeMagic(stickerInfo);
         }
     }
 
@@ -81,7 +81,7 @@ public class StickerItemRecyclerAdapter extends BaseStickerItemRecyclerAdapter {
             return;
         }
         if (!stickerInfo.mIsDownloaded) {
-            downloadMagicEmoji(stickerInfo, holder);
+            downloadMagicEmoji(false, stickerInfo, holder);
         } else {
             Rect rect = new Rect();
             v.getGlobalVisibleRect(rect);

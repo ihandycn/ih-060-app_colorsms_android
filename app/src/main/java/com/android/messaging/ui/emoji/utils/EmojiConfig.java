@@ -138,6 +138,7 @@ public class EmojiConfig implements HSLibraryConfig.ILibraryListener {
                 for (int k = 0; k < fileList.size(); k++) {
                     String fileName = fileList.get(k);
                     StickerInfo stickerInfo = new StickerInfo();
+                    stickerInfo.mPackageName = packageInfo.mName;
                     stickerInfo.mEmojiType = EmojiType.STICKER_GIF;
                     stickerInfo.mStickerUrl = baseUrl + imageSubPath + "/" + fileName + ".gif";
                     stickerInfoList.add(stickerInfo);
@@ -155,6 +156,7 @@ public class EmojiConfig implements HSLibraryConfig.ILibraryListener {
                 for (int k = 0; k < fileList.size(); k++) {
                     String fileName = fileList.get(k);
                     StickerInfo stickerInfo = new StickerInfo();
+                    stickerInfo.mPackageName = packageInfo.mName;
                     stickerInfo.mEmojiType = EmojiType.STICKER_MAGIC;
                     stickerInfo.mStickerUrl = baseUrl + previewImageSubPath + "/" + fileName + ".png";
                     stickerInfo.mMagicUrl = baseUrl + imageSubPath + "/" + fileName + ".gif";
@@ -173,6 +175,7 @@ public class EmojiConfig implements HSLibraryConfig.ILibraryListener {
                 for (int k = 0; k < fileList.size(); k++) {
                     String fileName = fileList.get(k);
                     StickerInfo stickerInfo = new StickerInfo();
+                    stickerInfo.mPackageName = packageInfo.mName;
                     stickerInfo.mEmojiType = EmojiType.STICKER_IMAGE;
                     stickerInfo.mStickerUrl = baseUrl + imageSubPath + "/" + fileName + ".png";
                     stickerInfoList.add(stickerInfo);

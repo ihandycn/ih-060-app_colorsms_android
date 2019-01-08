@@ -18,9 +18,9 @@ public class EmojiItemRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.
     private static final int TYPE_TEXT = 2;
 
     private List<BaseEmojiInfo> mData;
-    private EmojiPickerFragment.OnEmojiClickListener mOnEmojiClickListener;
+    private EmojiPackagePagerAdapter.OnEmojiClickListener mOnEmojiClickListener;
 
-    EmojiItemRecyclerAdapter(List<BaseEmojiInfo> data, EmojiPickerFragment.OnEmojiClickListener emojiClickListener) {
+    EmojiItemRecyclerAdapter(List<BaseEmojiInfo> data, EmojiPackagePagerAdapter.OnEmojiClickListener emojiClickListener) {
         mData = data;
         mOnEmojiClickListener = emojiClickListener;
     }
@@ -40,7 +40,7 @@ public class EmojiItemRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.
         if (holder instanceof EmojiImageViewHolder) {
             ((EmojiImageViewHolder) holder).imageView.setOnClickListener(v -> {
                 if (mOnEmojiClickListener != null) {
-                    mOnEmojiClickListener.delete();
+                    mOnEmojiClickListener.deleteEmoji();
                 }
             });
         } else if (holder instanceof EmojiViewHolder) {

@@ -24,6 +24,7 @@ import com.android.messaging.glide.GlideRequests;
 import com.android.messaging.ui.emoji.utils.EmojiConfig;
 import com.android.messaging.ui.emoji.utils.EmojiManager;
 import com.android.messaging.ui.view.RecyclerViewWidthSlideListener;
+import com.android.messaging.util.BugleAnalytics;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.ihs.commons.notificationcenter.HSGlobalNotificationCenter;
 import com.ihs.commons.notificationcenter.INotificationObserver;
@@ -35,24 +36,40 @@ import com.superapps.view.TypefacedTextView;
 
 import java.util.List;
 
-public class EmojiFragment extends Fragment implements INotificationObserver {
+public class EmojiStoreFragment extends Fragment implements INotificationObserver {
 
     public static final String FRAGMENT_TAG = "emoji_fragment";
 
+    public static final String BUNDLE_SOURCE = "bundle_source";
     public static final String NOTIFICATION_REFRESH_ITEM_STATUS = "notificaiton_refresh_item_status";
     public static final String NOTIFICATION_BUNDLE_ITEM_NAME = "notification_bundle_item_position";
     private static final int MAX_COLUMNS = 2;
     private List<EmojiPackageInfo> mStoreEmojiPackageInfoList;
     private StoreAdapter mAdapter;
+    private String mSource;
 
-    public static EmojiFragment newInstance() {
-        return new EmojiFragment();
+    public static EmojiStoreFragment newInstance(String source) {
+        EmojiStoreFragment fragment = new EmojiStoreFragment();
+        Bundle bundle = new Bundle();
+        bundle.putString(BUNDLE_SOURCE, source);
+        fragment.setArguments(bundle);
+        return fragment;
+    }
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        Bundle bundle = getArguments();
+        if (bundle != null) {
+            mSource = bundle.getString(BUNDLE_SOURCE);
+        }
     }
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.emoji_fragment, container, false);
+        View view = inflater.inflate(R.layout.fragment_emoji_store, container, false);
 
         mStoreEmojiPackageInfoList = EmojiConfig.getInstance().getStoreEmojiFromConfig();
         RecyclerViewWidthSlideListener recyclerView = view.findViewById(R.id.emoji_store_list);
@@ -63,6 +80,9 @@ public class EmojiFragment extends Fragment implements INotificationObserver {
 
             @Override
             public void slideDown() {
+                if (!TextUtils.isEmpty(mSource)) {
+                    BugleAnalytics.logEvent("SMSEmoji_ChatEmoji_StoreList_Slideup", true, "type", mSource);
+                }
             }
         });
         mAdapter = new StoreAdapter(getActivity());
@@ -139,6 +159,9 @@ public class EmojiFragment extends Fragment implements INotificationObserver {
                 holder.getBtn.setTextColor(0xFF333333);
                 holder.getBtn.setBackground(BackgroundDrawables.createBackgroundDrawable(0xFFF4BE3E, Dimensions.pxFromDp(15), true));
                 holder.getBtn.setOnClickListener(v -> {
+                    if (!TextUtils.isEmpty(mSource)) {
+                        BugleAnalytics.logEvent("SMSEmoji_ChatEmoji_StoreList_Get", true, "type", packageInfo.mName, "source", mSource);
+                    }
                     holder.getBtn.setOnClickListener(null);
                     holder.getBtn.setText(res.getString(R.string.emoji_added));
                     holder.getBtn.setTextColor(0xFFFFFFFF);
@@ -152,7 +175,12 @@ public class EmojiFragment extends Fragment implements INotificationObserver {
 
             holder.previewLayout.bindEmojiItems(packageInfo);
 
-            holder.itemView.setOnClickListener(v -> EmojiDetailActivity.start(getActivity(), packageInfo));
+            holder.itemView.setOnClickListener(v -> {
+                if (!TextUtils.isEmpty(mSource)) {
+                    BugleAnalytics.logEvent("SMSEmoji_ChatEmoji_StoreList_Click", true, "source", mSource);
+                }
+                EmojiDetailActivity.start(mSource, getActivity(), packageInfo);
+            });
 
             GlideRequests imageRequest = GlideApp.with(mContext);
             imageRequest.asBitmap()

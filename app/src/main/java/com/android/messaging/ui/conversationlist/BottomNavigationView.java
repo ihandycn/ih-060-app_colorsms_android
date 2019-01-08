@@ -4,12 +4,12 @@ import android.content.Context;
 import android.support.annotation.Nullable;
 import android.util.AttributeSet;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.android.messaging.R;
+import com.android.messaging.util.BugleAnalytics;
 
 import java.util.ArrayList;
 
@@ -61,6 +61,7 @@ public class BottomNavigationView extends LinearLayout {
         findViewById(R.id.item_emoji).setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
+                BugleAnalytics.logEvent("SMSEmoji_ChatEmoji_Store_Click", true, "type", "tab");
                 onSelected(POSITION_EMOJI);
             }
         });

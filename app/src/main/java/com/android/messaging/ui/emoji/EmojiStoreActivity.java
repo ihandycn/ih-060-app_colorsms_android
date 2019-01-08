@@ -23,8 +23,8 @@ public class EmojiStoreActivity extends HSAppCompatActivity {
         FragmentManager manager = getFragmentManager();
         manager.beginTransaction().replace(
                 R.id.emoji_store_layout,
-                EmojiFragment.newInstance(),
-                EmojiFragment.FRAGMENT_TAG).commit();
+                EmojiStoreFragment.newInstance("char_tab"),
+                EmojiStoreFragment.FRAGMENT_TAG).commit();
 
         findViewById(R.id.emoji_store_back_btn).setOnClickListener(v -> this.finish());
     }

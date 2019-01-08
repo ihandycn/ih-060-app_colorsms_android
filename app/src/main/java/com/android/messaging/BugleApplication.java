@@ -29,6 +29,7 @@ import android.support.v7.mms.CarrierConfigValuesLoader;
 import android.support.v7.mms.MmsManager;
 import android.telephony.CarrierConfigManager;
 
+import com.android.ex.photo.util.PhotoViewAnalytics;
 import com.android.messaging.datamodel.DataModel;
 import com.android.messaging.receiver.SmsReceiver;
 import com.android.messaging.sms.ApnDatabase;
@@ -38,6 +39,7 @@ import com.android.messaging.sms.MmsConfig;
 import com.android.messaging.smsshow.MessagingMsgCenterFactoryImpl;
 import com.android.messaging.ui.ConversationDrawables;
 import com.android.messaging.ui.emoji.utils.EmojiConfig;
+import com.android.messaging.util.BugleAnalytics;
 import com.android.messaging.util.BugleGservices;
 import com.android.messaging.util.BugleGservicesKeys;
 import com.android.messaging.util.BuglePrefs;
@@ -103,6 +105,7 @@ public class BugleApplication extends HSApplication implements UncaughtException
             LogUtil.e(TAG, "BugleApplication.onCreate: FactoryImpl.register skipped for test run");
         }
 
+        initPhotoViewAnalytics();
         EmojiConfig.getInstance().doInit();
         initMessageCenterLib();
         sSystemUncaughtExceptionHandler = Thread.getDefaultUncaughtExceptionHandler();
@@ -110,6 +113,10 @@ public class BugleApplication extends HSApplication implements UncaughtException
         Trace.endSection();
 
         CommonUtils.getAppInstallTimeMillis();
+    }
+
+    private void initPhotoViewAnalytics() {
+        PhotoViewAnalytics.initAnalytics(BugleAnalytics::logEvent);
     }
 
     @Override
