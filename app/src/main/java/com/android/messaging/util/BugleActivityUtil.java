@@ -18,17 +18,14 @@ package com.android.messaging.util;
 
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.os.UserManager;
-import android.text.TextUtils;
+import android.view.ContextThemeWrapper;
 
 import com.android.messaging.Factory;
 import com.android.messaging.R;
 import com.android.messaging.datamodel.DataModel;
-import com.android.messaging.ui.conversation.ConversationActivity;
-import com.android.messaging.ui.conversationlist.ConversationListActivity;
 
 /**
  * Utility class including logic to verify requirements to run Bugle and other activity startup
@@ -83,6 +80,22 @@ public class BugleActivityUtil {
             return false;
         }
         return true;
+    }
+
+    public static Activity contextToActivitySafely(Context context) {
+        if (context == null) {
+            return null;
+        } else if (context instanceof Activity) {
+            return (Activity) context;
+        } else if (context instanceof ContextThemeWrapper) {
+            return (Activity) (((ContextThemeWrapper) context).getBaseContext());
+        } else if (context instanceof android.support.v7.view.ContextThemeWrapper) {
+            return (Activity) (((android.support.v7.view.ContextThemeWrapper) context).getBaseContext());
+        } else if (context instanceof android.support.v7.widget.TintContextWrapper) {
+            return (Activity) (((android.support.v7.widget.TintContextWrapper) context).getBaseContext());
+        } else {
+            return null;
+        }
     }
 }
 

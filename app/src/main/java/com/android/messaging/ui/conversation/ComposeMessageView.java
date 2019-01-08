@@ -66,6 +66,7 @@ import com.android.messaging.ui.emoji.utils.EmojiManager;
 import com.android.messaging.util.AccessibilityUtil;
 import com.android.messaging.util.Assert;
 import com.android.messaging.util.AvatarUriUtil;
+import com.android.messaging.util.BugleActivityUtil;
 import com.android.messaging.util.BugleAnalytics;
 import com.android.messaging.util.BuglePrefs;
 import com.android.messaging.util.ContentType;
@@ -434,13 +435,13 @@ public class ComposeMessageView extends LinearLayout
     public void onKeyboardVisible(boolean isVisible) {
         if (isVisible) {
             Object emojiTag = mEmojiKeyboardBtn.getTag();
-            if (INPUT_KEYBOARD.equals(emojiTag)){
+            if (INPUT_KEYBOARD.equals(emojiTag)) {
                 mEmojiKeyboardBtn.setTag(INPUT_EMOJI);
                 mEmojiKeyboardBtn.setImageResource(R.drawable.input_emoji_icon);
             }
 
             Object mediaTag = mAttachMediaButton.getTag();
-            if (INPUT_KEYBOARD.equals(mediaTag)){
+            if (INPUT_KEYBOARD.equals(mediaTag)) {
                 mAttachMediaButton.setTag(INPUT_MEDIA);
                 mAttachMediaButton.setImageResource(R.drawable.input_media_icon);
             }
@@ -527,7 +528,7 @@ public class ComposeMessageView extends LinearLayout
                             if (partDataList != null && !partDataList.isEmpty()) {
                                 for (MessagePartData partData : partDataList) {
                                     if (ContentType.IMAGE_GIF.equals(partData.getContentType())) {
-                                        FiveStarRateDialog.showFiveStarWhenSendEmojiIfNeed((Activity) getContext());
+                                        FiveStarRateDialog.showFiveStarWhenSendEmojiIfNeed(BugleActivityUtil.contextToActivitySafely(getContext()));
                                         break;
                                     }
                                 }

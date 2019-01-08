@@ -23,7 +23,7 @@ public class StickerInfo extends BaseEmojiInfo {
         if (TextUtils.isEmpty(url)) {
             return "";
         }
-        String result = "";
+        StringBuilder result = new StringBuilder();
         boolean isStart = false;
         char[] chars = url.toCharArray();
         for (int i = chars.length - 1; i >= 0; i--) {
@@ -36,11 +36,11 @@ public class StickerInfo extends BaseEmojiInfo {
                 break;
             }
             if (isStart) {
-                result += c;
+                result.insert(0, c);
             }
         }
 
-        return result;
+        return result.toString();
     }
 
     public static StickerInfo unflatten(String flatten) {
