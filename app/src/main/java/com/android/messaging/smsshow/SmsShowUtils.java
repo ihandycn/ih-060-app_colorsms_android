@@ -17,7 +17,7 @@ public class SmsShowUtils {
     }
 
     public static boolean isSmsShowEnabledByUser() {
-        return Preferences.get(BuglePrefs.SMS_SHOW_SHARED_PREFERENCES_NAME).getBoolean(PREFS_KEY_SMS_SHOW_ENABLED, false);
+        return Preferences.get(BuglePrefs.SMS_SHOW_SHARED_PREFERENCES_NAME).getBoolean(PREFS_KEY_SMS_SHOW_ENABLED, true);
     }
 
     public static void setSmsShowAppliedId(int id) {

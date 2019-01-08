@@ -25,14 +25,13 @@ import com.ihs.app.framework.activity.HSAppCompatActivity;
 import com.superapps.util.BackgroundDrawables;
 
 public class SmsShowDetailActivity extends HSAppCompatActivity {
-    private Animatable mAnimatable;
+    private Animatable mSmsShowView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.sms_show_detail_activity);
         TextView applyButton = findViewById(R.id.apply_button);
-        LottieAnimationView loadingAnimView = findViewById(R.id.loading_lottie_animation);
         ImageView imageView = findViewById(R.id.sms_show_image);
 
         String url = getIntent().getStringExtra(UIIntents.UI_INTENT_EXTRA_SMS_SHOW_URL);
@@ -48,11 +47,9 @@ public class SmsShowDetailActivity extends HSAppCompatActivity {
             public void onResourceReady(@NonNull Drawable resource, @Nullable Transition<? super Drawable> transition) {
                 imageView.setImageDrawable(resource);
                 if (resource instanceof Animatable) {
-                    mAnimatable = ((Animatable) resource);
-                    mAnimatable.start();
+                    mSmsShowView = ((Animatable) resource);
+                    mSmsShowView.start();
                 }
-                loadingAnimView.cancelAnimation();
-                loadingAnimView.setVisibility(View.GONE);
                 applyButton.setVisibility(View.VISIBLE);
                 applyButton.animate().alpha(1f).setDuration(240L).start();
             }
@@ -67,8 +64,8 @@ public class SmsShowDetailActivity extends HSAppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        if (mAnimatable != null && !mAnimatable.isRunning()) {
-            mAnimatable.start();
+        if (mSmsShowView != null && !mSmsShowView.isRunning()) {
+            mSmsShowView.start();
         }
     }
 
@@ -76,8 +73,8 @@ public class SmsShowDetailActivity extends HSAppCompatActivity {
     protected void onPause() {
         super.onPause();
 
-        if (mAnimatable != null) {
-            mAnimatable.stop();
+        if (mSmsShowView != null) {
+            mSmsShowView.stop();
         }
     }
 }
