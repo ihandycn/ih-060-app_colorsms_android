@@ -15,6 +15,7 @@
  */
 package com.android.messaging.ui.conversation;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Rect;
@@ -60,6 +61,7 @@ import com.android.messaging.ui.AttachmentPreview;
 import com.android.messaging.ui.BugleActionBarActivity;
 import com.android.messaging.ui.PlainTextEditText;
 import com.android.messaging.ui.conversation.ConversationInputManager.ConversationInputSink;
+import com.android.messaging.ui.dialog.FiveStarRateDialog;
 import com.android.messaging.ui.emoji.utils.EmojiManager;
 import com.android.messaging.util.AccessibilityUtil;
 import com.android.messaging.util.Assert;
@@ -498,6 +500,15 @@ public class ComposeMessageView extends LinearLayout
                         @Override
                         public void onDraftChecked(DraftMessageData data, int result) {
                             mBinding.ensureBound(data);
+                            List<MessagePartData> partDataList = data.getReadOnlyAttachments();
+                            if (partDataList != null && !partDataList.isEmpty()) {
+                                for (MessagePartData partData : partDataList) {
+                                    if (ContentType.IMAGE_GIF.equals(partData.getContentType())) {
+                                        FiveStarRateDialog.showFiveStarWhenSendEmojiIfNeed((Activity) getContext());
+                                        break;
+                                    }
+                                }
+                            }
                             switch (result) {
                                 case CheckDraftForSendTask.RESULT_PASSED:
                                     // Continue sending after check succeeded.
