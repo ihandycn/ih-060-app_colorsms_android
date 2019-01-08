@@ -11,6 +11,7 @@ android {
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 1
         versionName "1.0"
+        multiDexEnabled true
     }
 
     compileOptions {
@@ -21,7 +22,6 @@ android {
     buildTypes {
         debug {
             minifyEnabled false
-            multiDexEnabled true
             ext.enableCrashlytics = false
             buildConfigField 'String', 'EMOJI_CONFIG', '"ddddd"'
         }
@@ -44,6 +44,7 @@ dependencies {
     compile project(':libSuperApps')
     compile project(':libMessageCenter')
 
+    compile 'com.android.support:multidex:1.0.3'
     compile "com.android.support:design:${rootProject.ext.supportLibVersion}"
     compile "com.android.support:appcompat-v7:${rootProject.ext.supportLibVersion}"
     compile "com.android.support:palette-v7:${rootProject.ext.supportLibVersion}"

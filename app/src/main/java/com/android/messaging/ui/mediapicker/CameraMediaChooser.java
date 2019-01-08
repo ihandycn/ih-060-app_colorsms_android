@@ -223,6 +223,10 @@ class CameraMediaChooser extends MediaChooser implements
         return view;
     }
 
+    public void showPreview() {
+        mView.setVisibility(View.VISIBLE);
+    }
+
     @Override
     public int getIconResource() {
         return R.drawable.ic_camera_light;

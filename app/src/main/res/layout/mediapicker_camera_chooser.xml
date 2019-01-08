@@ -19,12 +19,13 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:visibility="invisible"
     android:background="@android:color/black">
 
     <FrameLayout
         android:id="@+id/mediapicker_enabled"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" >
+        android:layout_height="wrap_content">
 
         <!-- Default to using the hardware rendered camera preview, we will fall back to
         SoftwareCameraPreview in CameraMediaChooserView if needed -->
@@ -32,53 +33,53 @@
             android:id="@+id/camera_preview"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_gravity="center" />
+            android:layout_gravity="center"/>
 
         <com.android.messaging.ui.mediapicker.camerafocus.RenderOverlay
             android:id="@+id/focus_visual"
             android:layout_width="match_parent"
-            android:layout_height="match_parent" />
+            android:layout_height="match_parent"/>
 
         <View
             android:id="@+id/camera_shutter_visual"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:background="@android:color/white"
-            android:visibility="gone" />
+            android:visibility="gone"/>
 
         <!-- Need a background on this view in order for the ripple effect to have a place to draw -->
         <FrameLayout
             android:id="@+id/camera_button_container"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_gravity="bottom"
             android:background="@android:color/transparent"
-            android:paddingTop="20dp"
-            android:layout_gravity="bottom">
+            android:paddingTop="20dp">
 
             <FrameLayout
+                style="@style/CameraChooserFrameStyle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="start|center_vertical"
-                style="@style/CameraChooserFrameStyle">
+                android:layout_gravity="start|center_vertical">
 
                 <ImageButton
                     android:id="@+id/camera_swap_mode_button"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:minWidth="48dp"
-                    android:minHeight="48dp"
                     android:background="@drawable/transparent_button_background"
-                    android:src="@drawable/ic_mp_video_small_light"
-                    android:contentDescription="@string/camera_switch_to_video_mode"/>
+                    android:contentDescription="@string/camera_switch_to_video_mode"
+                    android:minHeight="48dp"
+                    android:minWidth="48dp"
+                    android:src="@drawable/ic_mp_video_small_light"/>
 
                 <Chronometer
                     android:id="@+id/camera_video_counter"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:padding="16dp"
                     android:textColor="@android:color/white"
                     android:textSize="18sp"
-                    android:padding="16dp"
-                    android:visibility="gone" />
+                    android:visibility="gone"/>
 
             </FrameLayout>
 
@@ -87,11 +88,11 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:minWidth="96dp"
-                android:minHeight="96dp"
                 android:background="@drawable/transparent_button_background"
-                android:src="@drawable/ic_checkmark_large_light"
-                android:contentDescription="@string/camera_take_picture"/>
+                android:contentDescription="@string/camera_take_picture"
+                android:minHeight="96dp"
+                android:minWidth="96dp"
+                android:src="@drawable/ic_checkmark_large_light"/>
 
             <FrameLayout
                 android:layout_width="wrap_content"
@@ -103,32 +104,32 @@
                     android:id="@+id/camera_fullScreen_button"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:minWidth="48dp"
-                    android:minHeight="48dp"
                     android:background="@drawable/transparent_button_background"
-                    android:src="@drawable/ic_mp_full_screen_light"
-                    android:contentDescription="@string/camera_switch_full_screen" />
+                    android:contentDescription="@string/camera_switch_full_screen"
+                    android:minHeight="48dp"
+                    android:minWidth="48dp"
+                    android:src="@drawable/ic_mp_full_screen_light"/>
 
                 <ImageButton
                     android:id="@+id/camera_swapCamera_button"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:minWidth="48dp"
-                    android:minHeight="48dp"
                     android:background="@drawable/transparent_button_background"
-                    android:visibility="gone"
-                    android:contentDescription="@string/camera_switch_camera_facing"/>
+                    android:contentDescription="@string/camera_switch_camera_facing"
+                    android:minHeight="48dp"
+                    android:minWidth="48dp"
+                    android:visibility="gone"/>
 
                 <ImageButton
                     android:id="@+id/camera_cancel_button"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:minWidth="48dp"
-                    android:minHeight="48dp"
                     android:background="@drawable/transparent_button_background"
+                    android:contentDescription="@string/camera_cancel_recording"
+                    android:minHeight="48dp"
+                    android:minWidth="48dp"
                     android:src="@drawable/ic_remove_small_light"
-                    android:visibility="gone"
-                    android:contentDescription="@string/camera_cancel_recording" />
+                    android:visibility="gone"/>
 
             </FrameLayout>
 
@@ -141,10 +142,10 @@
         android:id="@+id/missing_permission_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:text="@string/enable_permission_procedure"
-        android:contentDescription="@string/enable_permission_procedure_description"
         android:background="@android:color/white"
+        android:contentDescription="@string/enable_permission_procedure_description"
         android:gravity="center"
-        android:visibility="gone" />
+        android:text="@string/enable_permission_procedure"
+        android:visibility="gone"/>
 
 </com.android.messaging.ui.mediapicker.CameraMediaChooserView>

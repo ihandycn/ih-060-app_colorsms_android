@@ -105,20 +105,20 @@ public class MediaPickerPanel extends ViewGroup {
         mMediaButtons = findViewById(R.id.media_buttons);
         mMediaButtons.findViewById(R.id.media_camera).setOnClickListener(v -> {
             mMediaPicker.setSelectedChooser(0);
-            setupViewPager(0);
+            mViewPager.setCurrentItem(0);
             setFullScreenView(true, false);
             mMediaButtons.setVisibility(View.GONE);
         });
         mMediaButtons.findViewById(R.id.media_photo).setOnClickListener(v -> {
             mMediaPicker.setSelectedChooser(1);
-            setupViewPager(1);
+            mViewPager.setCurrentItem(1);
             setFullScreenView(true, false);
             HSGlobalNotificationCenter.sendNotification(ConversationFragment.EVENT_HIDE_OPTION_MENU);
             mMediaButtons.setVisibility(View.GONE);
         });
         mMediaButtons.findViewById(R.id.media_voice).setOnClickListener(v -> {
             mMediaPicker.setSelectedChooser(2);
-            setupViewPager(2);
+            mViewPager.setCurrentItem(2);
             setDesiredHeight(Dimensions.pxFromDp(196), true);
             mMediaButtons.setVisibility(View.GONE);
         });

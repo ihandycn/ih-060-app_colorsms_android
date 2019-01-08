@@ -35,6 +35,7 @@
     <dimen name="conversation_list_contact_icon_size">40dp</dimen>
     <dimen name="conversation_list_error_icon_size">16dp</dimen>
     <dimen name="conversation_message_contact_icon_size">42dp</dimen>
+    <dimen name="conversation_message_info_min_height">36dp</dimen>
     <dimen name="conversation_message_contact_bubble_margin">11dp</dimen>
     <dimen name="conversation_message_photo_min_size">96dp</dimen>
     <dimen name="conversation_list_notification_bell_padding">4dp</dimen>
@@ -43,8 +44,8 @@
     <dimen name="conversation_list_item_timestamp_margin">16dp</dimen>
 
     <dimen name="message_bubble_arrow_width">9dp</dimen>
-    <dimen name="message_text_bottom_padding">12dp</dimen>
-    <dimen name="message_text_top_padding">14dp</dimen>
+    <dimen name="message_text_bottom_padding">6dp</dimen>
+    <dimen name="message_text_top_padding">8dp</dimen>
     <dimen name="message_text_left_right_padding">14dp</dimen>
     <dimen name="message_padding_default">24dp</dimen>
     <dimen name="message_padding_same_author">4.7dp</dimen>

@@ -21,18 +21,15 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.res.Configuration;
-import android.graphics.drawable.Drawable;
-import android.os.Build;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.StrictMode;
+import android.support.multidex.MultiDex;
 import android.support.v7.mms.CarrierConfigValuesLoader;
 import android.support.v7.mms.MmsManager;
 import android.telephony.CarrierConfigManager;
 
 import com.android.messaging.datamodel.DataModel;
-import com.android.messaging.libwebp.WebpBytebufferDecoder;
-import com.android.messaging.libwebp.WebpResourceDecoder;
 import com.android.messaging.receiver.SmsReceiver;
 import com.android.messaging.sms.ApnDatabase;
 import com.android.messaging.sms.BugleApnSettingsLoader;
@@ -51,16 +48,12 @@ import com.android.messaging.util.LogUtil;
 import com.android.messaging.util.OsUtil;
 import com.android.messaging.util.PhoneUtils;
 import com.android.messaging.util.Trace;
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.ResourceDecoder;
 import com.google.common.annotations.VisibleForTesting;
 import com.ihs.app.framework.HSApplication;
 import com.messagecenter.customize.MessageCenterManager;
 
 import java.io.File;
-import java.io.InputStream;
 import java.lang.Thread.UncaughtExceptionHandler;
-import java.nio.ByteBuffer;
 
 /**
  * The application object
@@ -81,6 +74,11 @@ public class BugleApplication extends HSApplication implements UncaughtException
      */
     public static boolean isRunningTests() {
         return sRunningTests;
+    }
+
+    @Override protected void attachBaseContext(Context base) {
+        super.attachBaseContext(base);
+        MultiDex.install(this);
     }
 
     @Override

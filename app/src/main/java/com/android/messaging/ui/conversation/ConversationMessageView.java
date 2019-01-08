@@ -678,7 +678,7 @@ public class ConversationMessageView extends FrameLayout implements View.OnClick
                 res.getDimensionPixelSize(R.dimen.message_padding_default);
         final int arrowWidth = res.getDimensionPixelOffset(R.dimen.message_bubble_arrow_width);
         final int messageTextMinHeightDefault = res.getDimensionPixelSize(
-                R.dimen.conversation_message_contact_icon_size);
+                R.dimen.conversation_message_info_min_height);
         final int messageTextLeftRightPadding = res.getDimensionPixelOffset(
                 R.dimen.message_text_left_right_padding);
         final int textTopPaddingDefault = res.getDimensionPixelOffset(

@@ -503,6 +503,9 @@ public class MediaPicker extends Fragment implements DraftMessageSubscriptionDat
 
     public void setSelectedChooser(int index) {
         mSelectedChooser = mEnabledChoosers.get(index);
+        if (mSelectedChooser instanceof CameraMediaChooser) {
+            ((CameraMediaChooser) mSelectedChooser).showPreview();
+        }
     }
 
     /**

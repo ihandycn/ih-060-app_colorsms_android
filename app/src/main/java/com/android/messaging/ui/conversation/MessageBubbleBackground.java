@@ -34,14 +34,14 @@ public class MessageBubbleBackground extends LinearLayout {
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
         super.onMeasure(widthMeasureSpec, heightMeasureSpec);
-        final int widthPadding = getPaddingLeft() + getPaddingRight();
-        int bubbleWidth = getMeasuredWidth() - widthPadding;
-        final int maxWidth = MeasureSpec.getSize(widthMeasureSpec) - widthPadding;
-        // Round up to next snapWidthPixels
-        bubbleWidth = Math.min(maxWidth,
-                (int) (Math.ceil(bubbleWidth / (float) mSnapWidthPixels) * mSnapWidthPixels));
-        super.onMeasure(
-                MeasureSpec.makeMeasureSpec(bubbleWidth + widthPadding, MeasureSpec.EXACTLY),
-                heightMeasureSpec);
+//        final int widthPadding = getPaddingLeft() + getPaddingRight();
+//        int bubbleWidth = getMeasuredWidth() - widthPadding;
+//        final int maxWidth = MeasureSpec.getSize(widthMeasureSpec) - widthPadding;
+//        // Round up to next snapWidthPixels
+//        bubbleWidth = Math.min(maxWidth,
+//                (int) (Math.ceil(bubbleWidth / (float) mSnapWidthPixels) * mSnapWidthPixels));
+//        super.onMeasure(
+//                MeasureSpec.makeMeasureSpec(bubbleWidth + widthPadding, MeasureSpec.EXACTLY),
+//                heightMeasureSpec);
     }
 }

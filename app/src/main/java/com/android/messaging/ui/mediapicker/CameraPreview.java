@@ -115,9 +115,9 @@ public class CameraPreview {
     }
 
     public void onAttachedToWindow() {
-        if (CameraManager.hasCameraPermission()) {
-            CameraManager.get().openCamera();
-        }
+//        if (CameraManager.hasCameraPermission()) {
+//            CameraManager.get().openCamera();
+//        }
     }
 
     public void onDetachedFromWindow() {
