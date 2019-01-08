@@ -1,4 +1,9 @@
 apply plugin: 'com.android.application'
+
+repositories {
+    maven { url 'https://maven.fabric.io/public' }
+}
+
 apply plugin: 'io.fabric'
 
 android {
@@ -10,7 +15,7 @@ android {
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 1
-        versionName "1.0"
+        versionName "1.0.0.develop"
         multiDexEnabled true
     }
 
@@ -22,7 +27,7 @@ android {
     buildTypes {
         debug {
             minifyEnabled false
-            ext.enableCrashlytics = false
+            ext.enableCrashlytics = true
             buildConfigField 'String', 'EMOJI_CONFIG', '"ddddd"'
         }
 
@@ -54,9 +59,6 @@ dependencies {
     compile 'com.android.support.constraint:constraint-layout:1.1.0'
 
     compile 'com.google.guava:guava:26.0-android'
-    compile('com.crashlytics.sdk.android:crashlytics:2.9.1@aar') {
-        transitive = true
-    }
 
     compile "com.google.android.gms:play-services-gcm:${rootProject.ext.googlePlayServiceVersion}"
     compile "com.google.firebase:firebase-ads:${rootProject.ext.googlePlayServiceVersion}"
@@ -69,4 +71,5 @@ dependencies {
     implementation "com.facebook.fresco:animated-webp:${rootProject.ext.frescoAnimatedWebp}"
 
     implementation 'pl.droidsonroids.gif:android-gif-drawable:1.2.7'
+    implementation 'com.crashlytics.sdk.android:crashlytics:2.9.8'
 }

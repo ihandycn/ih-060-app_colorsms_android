@@ -48,12 +48,15 @@ import com.android.messaging.util.LogUtil;
 import com.android.messaging.util.OsUtil;
 import com.android.messaging.util.PhoneUtils;
 import com.android.messaging.util.Trace;
+import com.crashlytics.android.Crashlytics;
 import com.google.common.annotations.VisibleForTesting;
 import com.ihs.app.framework.HSApplication;
 import com.messagecenter.customize.MessageCenterManager;
 
 import java.io.File;
 import java.lang.Thread.UncaughtExceptionHandler;
+
+import io.fabric.sdk.android.Fabric;
 
 /**
  * The application object
@@ -85,6 +88,7 @@ public class BugleApplication extends HSApplication implements UncaughtException
     public void onCreate() {
         Trace.beginSection("app.onCreate");
         super.onCreate();
+        Fabric.with(this, new Crashlytics());
 
         if (BuildConfig.DEBUG) {
             StrictMode.setThreadPolicy(new StrictMode.ThreadPolicy.Builder().detectAll().penaltyLog().build());
