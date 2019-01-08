@@ -18,8 +18,6 @@ import com.android.messaging.ui.UIIntents;
 import com.bumptech.glide.integration.webp.decoder.WebpDrawable;
 import com.bumptech.glide.integration.webp.decoder.WebpDrawableTransformation;
 import com.bumptech.glide.load.Transformation;
-import com.bumptech.glide.load.engine.DiskCacheStrategy;
-import com.bumptech.glide.load.resource.bitmap.CenterCrop;
 import com.bumptech.glide.load.resource.bitmap.CenterInside;
 import com.bumptech.glide.request.target.SimpleTarget;
 import com.bumptech.glide.request.transition.Transition;
@@ -60,7 +58,7 @@ public class SmsShowDetailActivity extends HSAppCompatActivity {
             }
         });
 
-        applyButton.setBackground(BackgroundDrawables.createBackgroundDrawable(getColor(R.color.primary_color), 0, true));
+        applyButton.setBackground(BackgroundDrawables.createBackgroundDrawable(getResources().getColor(R.color.primary_color), 0, true));
         applyButton.setOnClickListener(v -> {
             SmsShowUtils.setSmsShowAppliedId(id);
         });
