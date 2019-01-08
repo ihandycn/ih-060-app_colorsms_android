@@ -516,4 +516,25 @@
     <string name="conversation_creation_failure" msgid="8597624563218724441">"Não foi possível iniciar a conversa"</string>
     <string name="link_display_format" msgid="8700344957248709584">"<xliff:g id="TEXT">%1$s</xliff:g> (<xliff:g id="URL">%2$s</xliff:g>)"</string>
     <string name="selected_sim_content_message" msgid="4504796674843354505">"<xliff:g id="SELECTED_SIM">%s</xliff:g> selecionado"</string>
+
+    <string name="launcher_settings_five_star"> Classificação 5 estrelas</string>
+    <string name="five_star_hint_text">Como foi a sua experiência connosco?</string>
+    <string name="five_star_five_text">Adorei</string>
+    <string name="five_star_four_text">Gostei</string>
+    <string name="five_star_three_text">Foi bom</string>
+    <string name="five_star_two_text">Não gostei</string>
+    <string name="five_star_one_text">Foi péssimo</string>
+    <string name="five_star_positive_text">Enviar</string>
+
+    <string name="loved_it_desc">Obrigado! Por favor, avalie com palavras como Legal, Útil, Estiloso…</string>
+    <string name="liked_it_desc">Conte-nos o que você não gosta. Vamos tentar o nosso melhor para melhorá-lo!</string>
+    <string name="five_star_rate">Deslize o dedo para cima para avaliar com 5 estrelas.</string>
+
+    <string name="feedback_title">Comentários</string>
+    <string name="feedback_content_placeholder">" Comentários ajudam-nos a melhorar"</string>
+    <string name="feedback_email_placeholder">" Indicar o seu  e-mail"</string>
+    <string name="feedback_submit_btn">Enviar</string>
+    <string name="feedback_toast_empty_content">Comentar</string>
+    <string name="feedback_toast_invalid_email">Insirir  e-mail válido</string>
+    <string name="feedback_toast_send_success">Agradecemos o comentário !</string>
 </resources>

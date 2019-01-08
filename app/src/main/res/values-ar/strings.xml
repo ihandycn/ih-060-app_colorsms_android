@@ -620,4 +620,25 @@
     <string name="conversation_creation_failure" msgid="8597624563218724441">"لا يمكن بدء المحادثة"</string>
     <string name="link_display_format" msgid="8700344957248709584">"<xliff:g id="TEXT">%1$s</xliff:g> (<xliff:g id="URL">%2$s</xliff:g>)"</string>
     <string name="selected_sim_content_message" msgid="4504796674843354505">"تم اختيار <xliff:g id="SELECTED_SIM">%s</xliff:g>"</string>
+
+    <string name="launcher_settings_five_star">تقييم 5 نجوم</string>
+    <string name="five_star_hint_text">كيف كانت تجربتك معنا؟</string>
+    <string name="five_star_five_text">أعجبني كثيراً</string>
+    <string name="five_star_four_text">أعجبني</string>
+    <string name="five_star_three_text">لا بأس به</string>
+    <string name="five_star_two_text">لم يعجبني</string>
+    <string name="five_star_one_text">كرهته</string>
+    <string name="five_star_positive_text">إرسال</string>
+
+    <string name="loved_it_desc">شكراً! يرجى التقييم وإضافة كلمات مثل جميل، جيد، مفيد…</string>
+    <string name="liked_it_desc">أخبرنا ما لم يعجبك، من فضلك. سنبذل قصارى جهدنا لتحسينه!</string>
+    <string name="five_star_rate">اسحب لأعلى للتقييم بـ 5 نجوم.</string>
+
+    <string name="feedback_title">ردود الفعل</string>
+    <string name="feedback_content_placeholder">" ملاحظاتك تساعدنا على إجراء تحسينات"</string>
+    <string name="feedback_email_placeholder">" برجاء إدخال عنوان بريدك الإلكتروني"</string>
+    <string name="feedback_submit_btn">إرسال</string>
+    <string name="feedback_toast_empty_content">برجاء كتابة ملاحظاتك</string>
+    <string name="feedback_toast_invalid_email">برجاء إدخال عنوان بريد إلكتروني صالح</string>
+    <string name="feedback_toast_send_success">شكرًا على ملاحظاتك!</string>
 </resources>

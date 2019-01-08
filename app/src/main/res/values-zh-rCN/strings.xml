@@ -516,4 +516,26 @@
     <string name="conversation_creation_failure" msgid="8597624563218724441">"无法发起对话"</string>
     <string name="link_display_format" msgid="8700344957248709584">"<xliff:g id="TEXT">%1$s</xliff:g> (<xliff:g id="URL">%2$s</xliff:g>)"</string>
     <string name="selected_sim_content_message" msgid="4504796674843354505">"已选择<xliff:g id="SELECTED_SIM">%s</xliff:g>"</string>
+
+    <string name="launcher_settings_five_star">5星好评</string>
+    <string name="five_star_hint_text">觉得桌面如何？</string>
+    <string name="five_star_positive_text">提交</string>
+    <string name="five_star_one_text">讨厌</string>
+    <string name="five_star_two_text">不喜欢</string>
+    <string name="five_star_three_text">一般</string>
+    <string name="five_star_four_text">喜欢</string>
+    <string name="five_star_five_text">喜爱</string>
+
+    <string name="loved_it_desc">非常感谢，请为我们评价。推荐您使用这些词：好看、有用、时尚…</string>
+    <string name="liked_it_desc">请给我们反馈您不喜欢的功能，我们会尽力优化的！</string>
+    <string name="five_star_rate">向上滑动去写5星好评</string>
+
+    <string name="feedback_title">反馈</string>
+    <string name="feedback_content_placeholder">"您的宝贵建议有助于我们改进"</string>
+    <string name="feedback_email_placeholder">"请输入您的电子邮箱地址"</string>
+    <string name="feedback_submit_btn">发送</string>
+    <string name="feedback_toast_empty_content">请输入您的反馈建议</string>
+    <string name="feedback_toast_invalid_email">请输入有效邮箱地址</string>
+    <string name="feedback_toast_send_success">感谢您的反馈！</string>
+
 </resources>

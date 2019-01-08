@@ -516,4 +516,26 @@
     <string name="conversation_creation_failure" msgid="8597624563218724441">"Sohbet başlatılamadı"</string>
     <string name="link_display_format" msgid="8700344957248709584">"<xliff:g id="TEXT">%1$s</xliff:g> (<xliff:g id="URL">%2$s</xliff:g>)"</string>
     <string name="selected_sim_content_message" msgid="4504796674843354505">"<xliff:g id="SELECTED_SIM">%s</xliff:g> seçildi"</string>
+
+    <string name="launcher_settings_five_star">5 Yıldızlı Puan</string>
+    <string name="five_star_hint_text">Bizden memnun kaldınız mı?</string>
+    <string name="five_star_five_text">Bayıldım</string>
+    <string name="five_star_four_text">Beğendim</string>
+    <string name="five_star_three_text">Eh işte</string>
+    <string name="five_star_two_text">Beğenmedim</string>
+    <string name="five_star_one_text">Nefret ettim</string>
+    <string name="five_star_positive_text">Gönder</string>
+
+    <string name="loved_it_desc">Teşekkürler! Lütfen Güzel, Kullanışlı, Tarz gibi sözcüklerle puan verin.</string>
+    <string name="liked_it_desc">Neleri beğenmediğinizi söyleyin. İyileştirmek için elimizden geleni yapalım.</string>
+    <string name="five_star_rate">5 yıldız vermek için yukarı kaydırın</string>
+
+    <string name="feedback_title">Geri Bildirim</string>
+    <string name="feedback_content_placeholder">" Geri bildiriminiz daha iyi hale gelmemize yardımcı olur"</string>
+    <string name="feedback_email_placeholder">" Lütfen e-posta adresinizi girin"</string>
+    <string name="feedback_submit_btn">Gönder</string>
+    <string name="feedback_toast_empty_content">Lütfen geri bildiriminizi yazın</string>
+    <string name="feedback_toast_invalid_email">Lütfen geçerli bir e-posta adresi girin</string>
+    <string name="feedback_toast_send_success">Geri bildiriminiz için teşekkürler!</string>
+
 </resources>

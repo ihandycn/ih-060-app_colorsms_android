@@ -516,4 +516,25 @@
     <string name="conversation_creation_failure" msgid="8597624563218724441">"スレッドを開始できませんでした"</string>
     <string name="link_display_format" msgid="8700344957248709584">"<xliff:g id="TEXT">%1$s</xliff:g>（<xliff:g id="URL">%2$s</xliff:g>）"</string>
     <string name="selected_sim_content_message" msgid="4504796674843354505">"<xliff:g id="SELECTED_SIM">%s</xliff:g>が選択されています"</string>
+
+    <string name="launcher_settings_five_star">5つ星評価</string>
+    <string name="five_star_hint_text">感想をお聞かせください。</string>
+    <string name="five_star_positive_text">提出</string>
+    <string name="five_star_one_text">嫌い</string>
+    <string name="five_star_two_text">気に入らなかった</string>
+    <string name="five_star_three_text">まぁまぁ</string>
+    <string name="five_star_four_text">好き</string>
+    <string name="five_star_five_text">大好き</string>
+
+    <string name="loved_it_desc">ありがとう！すばらしい、便利、おしゃれ…などの言葉で評価してください。</string>
+    <string name="liked_it_desc">気に入らないことを教えてください。改善するために全力を尽くします！</string>
+    <string name="five_star_rate">スライドアップして5つ星の評価をする。</string>
+
+    <string name="feedback_title">フィードバック</string>
+    <string name="feedback_content_placeholder">" あなたのフィードバックはME Launcherの改善につながります"</string>
+    <string name="feedback_email_placeholder">" あなたのメールアドレスを入力してください"</string>
+    <string name="feedback_submit_btn">送信</string>
+    <string name="feedback_toast_empty_content">フィードバックを書いてください</string>
+    <string name="feedback_toast_invalid_email">有効なメールアドレスを入力してください</string>
+    <string name="feedback_toast_send_success">フィードバックをありがとうございました！</string>
 </resources>

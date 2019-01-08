@@ -516,4 +516,25 @@
     <string name="conversation_creation_failure" msgid="8597624563218724441">"Die Unterhaltung konnte nicht gestartet werden."</string>
     <string name="link_display_format" msgid="8700344957248709584">"<xliff:g id="TEXT">%1$s</xliff:g> (<xliff:g id="URL">%2$s</xliff:g>)"</string>
     <string name="selected_sim_content_message" msgid="4504796674843354505">"<xliff:g id="SELECTED_SIM">%s</xliff:g> ausgewählt"</string>
+
+    <string name="launcher_settings_five_star">5-Sterne-Bewertung</string>
+    <string name="five_star_hint_text">Wie war Ihre Erfahrung mit uns?</string>
+    <string name="five_star_positive_text">Absenden</string>
+    <string name="five_star_one_text">Furchtbar</string>
+    <string name="five_star_two_text">Nicht so gut</string>
+    <string name="five_star_three_text">War okay</string>
+    <string name="five_star_four_text">War gut</string>
+    <string name="five_star_five_text">War toll</string>
+
+    <string name="loved_it_desc">Danke! Bitte bewerten Sie die App mit Adjektiven wie: schön, praktisch, stilvoll…</string>
+    <string name="liked_it_desc">Bitte sagen Sie uns, was Ihnen missfällt. Wir werden uns größte Mühe geben, die App zu verbessern.</string>
+    <string name="five_star_rate">Wischen Sie nach oben, um die App mit 5 Sternen zu bewerten.</string>
+
+    <string name="feedback_title">Feedback</string>
+    <string name="feedback_content_placeholder">" Ihr Feedback hilft uns bei Verbesserungen "</string>
+    <string name="feedback_email_placeholder">" Bitte geben Sie Ihre E-Mail-Adresse ein "</string>
+    <string name="feedback_submit_btn">SENDEN</string>
+    <string name="feedback_toast_empty_content">Bitte tragen Sie Ihr Feedback ein</string>
+    <string name="feedback_toast_invalid_email">Bitte geben Sie eine gültige E-Mail-Adresse an</string>
+    <string name="feedback_toast_send_success">Danke für Ihr Feedback!</string>
 </resources>
