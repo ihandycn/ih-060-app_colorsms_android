@@ -122,8 +122,6 @@ public class ComposeMessageView extends LinearLayout
         int overrideCounterColor();
 
         int getAttachmentsClearedFlags();
-
-        Activity getHostActivity();
     }
 
     public static final int CODEPOINTS_REMAINING_BEFORE_COUNTER_SHOWN = 10;
@@ -523,12 +521,13 @@ public class ComposeMessageView extends LinearLayout
                     mHost.getConversationSelfSubId(), new CheckDraftTaskCallback() {
                         @Override
                         public void onDraftChecked(DraftMessageData data, int result) {
+                            boolean sendEmoji = false;
                             mBinding.ensureBound(data);
                             List<MessagePartData> partDataList = data.getReadOnlyAttachments();
                             if (partDataList != null && !partDataList.isEmpty()) {
                                 for (MessagePartData partData : partDataList) {
                                     if (ContentType.IMAGE_GIF.equals(partData.getContentType())) {
-                                        FiveStarRateDialog.showFiveStarWhenSendEmojiIfNeed(BugleActivityUtil.contextToActivitySafely(getContext()));
+                                        sendEmoji = true;
                                         break;
                                     }
                                 }
@@ -539,7 +538,11 @@ public class ComposeMessageView extends LinearLayout
                                     final MessageData message = mBinding.getData()
                                             .prepareMessageForSending(mBinding);
                                     if (message != null && message.hasContent()) {
-                                        FiveStarRateDialog.showFiveStarWhenSendMsgIfNeed(mHost.getHostActivity());
+                                        if (sendEmoji) {
+                                            FiveStarRateDialog.showFiveStarWhenSendEmojiIfNeed(BugleActivityUtil.contextToActivitySafely(getContext()));
+                                        } else {
+                                            FiveStarRateDialog.showFiveStarWhenSendMsgIfNeed(BugleActivityUtil.contextToActivitySafely(getContext()));
+                                        }
                                         playSentSound();
                                         mHost.sendMessage(message);
                                         hideSubjectEditor();
