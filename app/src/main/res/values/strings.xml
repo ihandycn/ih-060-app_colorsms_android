@@ -1018,7 +1018,7 @@
     <string name="welcome_permission_phone_title">Phone</string>
     <string name="welcome_permission_phone_description_1">Quickly reply by phone</string>
     <string name="welcome_permission_phone_description_2">Support dual SIM</string>
-    <string name="welcome_permission_failed_toast">Color SMS can’t work without permissions</string>
+    <string name="welcome_permission_failed_toast">Color SMS can\'t work without permissions</string>
 
     <string name="welcome_set_default_button">OK</string>
     <string name="welcome_set_default_skip">SKIP</string>
@@ -1063,7 +1063,7 @@
     <string name="setting_privacy_policy">Privacy policy</string>
     <string name="setting_terms_of_service">Terms of service</string>
     <string name="setting_sms_pop_ups">SMS Pop-ups</string>
-    <string name="setting_sms_pop_ups_summary">Display a popup window after receiving SMS</string>
+    <string name="setting_sms_pop_ups_summary">Pop up a window when receiving messages</string>
     <string name="setting_sms_show">SMS Show</string>
     <string name="setting_sms_show_summary">Beautify SMS reminder effects</string>
     <string name="setting_sms_show_close_dialog_title">Confirm to turn off?</string>
