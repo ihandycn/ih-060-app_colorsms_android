@@ -261,7 +261,7 @@ public class AttachmentPreview extends ScrollView implements OnAttachmentClickLi
                     AttachmentPreviewFactory.TYPE_SINGLE, true /* startImageRequest */, this);
             if (attachmentView != null) {
                 mAttachmentView.addView(attachmentView);
-                if (!mComposeMessageView.isMediaPickerShowing() && shouldAnimate) {
+                if (!mComposeMessageView.isCameraOrGalleryShowing() && shouldAnimate) {
                     tryAnimateViewIn(attachment, attachmentView);
                 }
             }

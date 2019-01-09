@@ -154,6 +154,14 @@ public class MediaPickerFragment extends Fragment implements View.OnClickListene
         }
     }
 
+    public void hideAudioView() {
+        if (mAudioRecordView != null) {
+            mAudioRecordView.onPause();
+            mMediaLayout.setVisibility(View.VISIBLE);
+            mAudioRecordView.setVisibility(View.GONE);
+        }
+    }
+
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         if (permissions.length == 0 || grantResults.length == 0) {

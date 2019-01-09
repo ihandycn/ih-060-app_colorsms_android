@@ -1581,7 +1581,7 @@ public class ConversationFragment extends Fragment implements ConversationDataLi
     }
 
     @Override
-    public boolean isMediaPickerShowing() {
+    public boolean isCameraOrGalleryShowing() {
         return mCameraGalleryFragment != null;
     }
 
