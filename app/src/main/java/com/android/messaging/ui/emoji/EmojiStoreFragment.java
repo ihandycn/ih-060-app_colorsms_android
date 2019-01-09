@@ -77,13 +77,13 @@ public class EmojiStoreFragment extends Fragment implements INotificationObserve
         recyclerView.setOnSlideListener(new RecyclerViewWidthSlideListener.OnSlideListener() {
             @Override
             public void slideUp() {
+                if (!TextUtils.isEmpty(mSource)) {
+                    BugleAnalytics.logEvent("SMSEmoji_ChatEmoji_StoreList_Slideup", true, "type", mSource);
+                }
             }
 
             @Override
             public void slideDown() {
-                if (!TextUtils.isEmpty(mSource)) {
-                    BugleAnalytics.logEvent("SMSEmoji_ChatEmoji_StoreList_Slideup", true, "type", mSource);
-                }
             }
         });
         mAdapter = new StoreAdapter(getActivity());
