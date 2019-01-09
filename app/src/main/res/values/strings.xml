@@ -1008,7 +1008,7 @@
     <string name="welcome_permission_title">Necessary Permissions</string>
     <string name="welcome_permission_description">To work properly, we need the following permissions.</string>
     <string name="welcome_permission_sms_title">SMS</string>
-    <string name="welcome_permission_sms_description_1">Send and receive SMS messages</string>
+    <string name="welcome_permission_sms_description_1">Send and receive messages</string>
     <string name="welcome_permission_sms_description_2">Timely remind you of new messages</string>
     <string name="welcome_permission_sms_description_3">Instantly reply messages</string>
     <string name="welcome_permission_contacts_title">Contacts</string>
@@ -1022,13 +1022,13 @@
     <string name="welcome_set_default_button">OK</string>
     <string name="welcome_set_default_skip">SKIP</string>
     <string name="welcome_set_default_title">Set as Default</string>
-    <string name="welcome_set_default_description">More cool features to keep in touch, make ColorSMS as your default SMS app</string>
-    <string name="welcome_set_default_emoji">A lot of beautiful Emojis</string>
+    <string name="welcome_set_default_description">To enjoy more cool features, please set Color SMS as default.</string>
+    <string name="welcome_set_default_emoji">Lots of cute and funny emojis</string>
     <string name="welcome_set_default_music">Custom ringtone music</string>
     <string name="welcome_set_default_group">Group messaging</string>
-    <string name="welcome_set_default_delete">Delete useless SMS messages</string>
+    <string name="welcome_set_default_delete">Clean up useless messages</string>
     <string name="welcome_set_default_feature">More features coming soon</string>
-    <string name="welcome_set_default_failed_toast">Set failed, Color SMS can\'t work</string>
+    <string name="welcome_set_default_failed_toast">Color SMS was not set up properly</string>
 
     <!-- News -->
     <string name="news_detail_error_reload">Reload</string>
