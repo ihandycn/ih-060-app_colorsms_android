@@ -339,11 +339,13 @@ public class ConversationFragment extends Fragment implements ConversationDataLi
                         getActivity().requestPermissions(
                                 new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 0);
                     }
+                    BugleAnalytics.logEvent("SMS_DetailsPage_LongPress_Save", true);
                     return true;
                 case R.id.action_delete_message:
                     if (mSelectedMessage != null) {
                         deleteMessage(messageId);
                     }
+                    BugleAnalytics.logEvent("SMS_DetailsPage_LongPress_Delete", true);
                     return true;
                 case R.id.action_download:
                     if (mSelectedMessage != null) {
@@ -364,12 +366,14 @@ public class ConversationFragment extends Fragment implements ConversationDataLi
                     clipboard.setPrimaryClip(
                             ClipData.newPlainText(null /* label */, data.getText()));
                     mHost.dismissActionMode();
+                    BugleAnalytics.logEvent("SMS_DetailsPage_LongPress_Copy", true);
                     return true;
                 case R.id.details_menu:
                     MessageDetailsDialog.show(
                             getActivity(), data, mBinding.getData().getParticipants(),
                             mBinding.getData().getSelfParticipantById(data.getSelfParticipantId()));
                     mHost.dismissActionMode();
+                    BugleAnalytics.logEvent("SMS_DetailsPage_LongPress_Info", true);
                     return true;
                 case R.id.share_message_menu:
                     shareMessage(data);
@@ -382,6 +386,7 @@ public class ConversationFragment extends Fragment implements ConversationDataLi
                     final MessageData message = mBinding.getData().createForwardedMessage(data);
                     UIIntents.get().launchForwardMessageActivity(getActivity(), message);
                     mHost.dismissActionMode();
+                    BugleAnalytics.logEvent("SMS_DetailsPage_LongPress_Forward", true);
                     return true;
             }
             return false;
@@ -417,6 +422,7 @@ public class ConversationFragment extends Fragment implements ConversationDataLi
         @Override
         public void onDestroyActionMode(final ActionMode actionMode) {
             selectMessage(null);
+            BugleAnalytics.logEvent("SMS_DetailsPage_LongPress_Close", true);
         }
     };
 
@@ -449,6 +455,7 @@ public class ConversationFragment extends Fragment implements ConversationDataLi
 
         HSGlobalNotificationCenter.addObserver(EVENT_SHOW_OPTION_MENU, this);
         HSGlobalNotificationCenter.addObserver(EVENT_HIDE_OPTION_MENU, this);
+        BugleAnalytics.logEvent("SMS_DetailsPage_Show", true);
     }
 
     /**
@@ -697,9 +704,14 @@ public class ConversationFragment extends Fragment implements ConversationDataLi
     @Override
     public boolean onOptionsItemSelected(final MenuItem item) {
         switch (item.getItemId()) {
+            case R.id.action_menu:
+                BugleAnalytics.logEvent("SMS_DetailsPage_IconSettings_Click", true);
+                return true;
+
             case R.id.action_people_and_options:
                 Assert.isTrue(mBinding.getData().getParticipantsLoaded());
                 UIIntents.get().launchPeopleAndOptionsActivity(getActivity(), mConversationId);
+                BugleAnalytics.logEvent("SMS_DetailsPage_Settings_PeopleOptions", true);
                 return true;
 
             case R.id.action_call:
@@ -719,6 +731,7 @@ public class ConversationFragment extends Fragment implements ConversationDataLi
                     centerPoint = new Point(display.getWidth() / 2, display.getHeight() / 2);
                 }
                 UIIntents.get().launchPhoneCallActivity(getActivity(), phoneNumber, centerPoint);
+                BugleAnalytics.logEvent("SMS_DetailsPage_IconCall_Click", true);
                 return true;
 
             case R.id.action_add_contact:
@@ -727,6 +740,7 @@ public class ConversationFragment extends Fragment implements ConversationDataLi
                 final String destination = participant.getNormalizedDestination();
                 final Uri avatarUri = AvatarUriUtil.createAvatarUri(participant);
                 UiUtils.showDialogFragment(getActivity(), AddContactsConfirmationDialog.newInstance(avatarUri, destination));
+                BugleAnalytics.logEvent("SMS_DetailsPage_Settings_AddContact", true);
                 return true;
 
             case R.id.action_delete:
@@ -743,6 +757,7 @@ public class ConversationFragment extends Fragment implements ConversationDataLi
                     warnOfMissingActionConditions(false /*sending*/,
                             null /*commandToRunAfterActionConditionResolved*/);
                 }
+                BugleAnalytics.logEvent("SMS_DetailsPage_Settings_Delete", true);
                 return true;
         }
         return super.onOptionsItemSelected(item);

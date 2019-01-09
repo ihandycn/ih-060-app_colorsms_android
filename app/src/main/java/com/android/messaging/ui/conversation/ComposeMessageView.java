@@ -40,6 +40,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.airbnb.lottie.L;
 import com.android.messaging.Factory;
 import com.android.messaging.R;
 import com.android.messaging.datamodel.binding.Binding;
@@ -239,6 +240,7 @@ public class ComposeMessageView extends LinearLayout
                 if (mHost.shouldHideAttachmentsWhenSimSelectorShown()) {
                     hideSimSelector();
                 }
+                BugleAnalytics.logEvent("SMS_DetailsPage_DialogBox_Click", true);
             }
         });
 
@@ -326,6 +328,7 @@ public class ComposeMessageView extends LinearLayout
             @Override
             public void onClick(final View clickView) {
                 logEmojiEvent();
+                BugleAnalytics.logEvent("SMS_DetailsPage_IconSend_Click", true);
                 sendMessageInternal(true /* checkMessageSize */);
             }
         });
@@ -375,6 +378,7 @@ public class ComposeMessageView extends LinearLayout
             } else {
                 showMediaPicker();
             }
+            BugleAnalytics.logEvent("SMS_DetailsPage_IconPlus_Click", true);
         });
 
         mAttachmentPreview = (AttachmentPreview) findViewById(R.id.attachment_draft_view);
@@ -826,6 +830,8 @@ public class ComposeMessageView extends LinearLayout
         mBinding.getData().setSelfId(selfId, notify);
     }
 
+    private boolean logIconSIMShow = false;
+
     private Uri getSelfSendButtonIconUri() {
         final Uri overridenSelfUri = mHost.getSelfSendButtonIconUri();
         if (overridenSelfUri != null) {
@@ -834,6 +840,10 @@ public class ComposeMessageView extends LinearLayout
         final SubscriptionListEntry subscriptionListEntry = getSelfSubscriptionListEntry();
 
         if (subscriptionListEntry != null) {
+            if (!logIconSIMShow) {
+                logIconSIMShow = true;
+                BugleAnalytics.logEvent("SMS_DetailsPage_IconSIM_Show", true);
+            }
             return subscriptionListEntry.selectedIconUri;
         }
 

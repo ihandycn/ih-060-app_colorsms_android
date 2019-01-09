@@ -31,6 +31,7 @@ import android.widget.LinearLayout;
 import com.android.messaging.R;
 import com.android.messaging.ui.PagingAwareViewPager;
 import com.android.messaging.ui.conversation.ConversationFragment;
+import com.android.messaging.util.BugleAnalytics;
 import com.android.messaging.util.OsUtil;
 import com.android.messaging.util.UiUtils;
 import com.ihs.commons.notificationcenter.HSGlobalNotificationCenter;
@@ -108,6 +109,7 @@ public class MediaPickerPanel extends ViewGroup {
             mViewPager.setCurrentItem(0, false);
             setFullScreenView(true, false);
             mMediaButtons.setVisibility(View.GONE);
+            BugleAnalytics.logEvent("SMS_DetailsPage_Plus_Camera", true);
         });
         mMediaButtons.findViewById(R.id.media_photo).setOnClickListener(v -> {
             mMediaPicker.setSelectedChooser(1);
@@ -115,12 +117,14 @@ public class MediaPickerPanel extends ViewGroup {
             setFullScreenView(true, false);
             HSGlobalNotificationCenter.sendNotification(ConversationFragment.EVENT_HIDE_OPTION_MENU);
             mMediaButtons.setVisibility(View.GONE);
+            BugleAnalytics.logEvent("SMS_DetailsPage_Plus_Photo", true);
         });
         mMediaButtons.findViewById(R.id.media_voice).setOnClickListener(v -> {
             mMediaPicker.setSelectedChooser(2);
             mViewPager.setCurrentItem(2, false);
             setDesiredHeight(Dimensions.pxFromDp(196), true);
             mMediaButtons.setVisibility(View.GONE);
+            BugleAnalytics.logEvent("SMS_DetailsPage_Plus_Voice", true);
         });
         mTouchHandler = new TouchHandler();
         setOnTouchListener(mTouchHandler);

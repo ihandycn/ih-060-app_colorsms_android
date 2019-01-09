@@ -19,7 +19,6 @@ package com.android.messaging.ui.conversation;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.content.Intent;
-import android.graphics.Color;
 import android.graphics.Rect;
 import android.net.Uri;
 import android.os.Bundle;
@@ -42,6 +41,7 @@ import com.android.messaging.ui.conversation.ConversationActivityUiState.Convers
 import com.android.messaging.ui.conversation.ConversationFragment.ConversationFragmentHost;
 import com.android.messaging.ui.conversationlist.ConversationListActivity;
 import com.android.messaging.util.Assert;
+import com.android.messaging.util.BugleAnalytics;
 import com.android.messaging.util.ContentType;
 import com.android.messaging.util.LogUtil;
 import com.android.messaging.util.OsUtil;
@@ -228,6 +228,7 @@ public class ConversationActivity extends BugleActionBarActivity
             onNavigationUpPressed();
             return true;
         }
+        BugleAnalytics.logEvent("SMS_DetailsPage_IconBack_Click", true);
         return false;
     }
 

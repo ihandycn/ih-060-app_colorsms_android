@@ -29,6 +29,7 @@ import android.widget.ListView;
 import com.android.messaging.R;
 import com.android.messaging.datamodel.data.SubscriptionListData;
 import com.android.messaging.datamodel.data.SubscriptionListData.SubscriptionListEntry;
+import com.android.messaging.util.BugleAnalytics;
 import com.android.messaging.util.UiUtils;
 
 import java.util.ArrayList;
@@ -65,6 +66,7 @@ public class SimSelectorView extends FrameLayout implements SimSelectorItemView.
             @Override
             public void onClick(View v) {
                 showOrHide(false, true);
+                BugleAnalytics.logEvent("SMS_DetailsPage_IconSIM_Choose", "choice", "null");
             }
         });
     }
@@ -161,6 +163,7 @@ public class SimSelectorView extends FrameLayout implements SimSelectorItemView.
     public void onSimItemClicked(SubscriptionListEntry item) {
         mListener.onSimItemClicked(item);
         showOrHide(false, true);
+        BugleAnalytics.logEvent("SMS_DetailsPage_IconSIM_Choose", "choice", String.valueOf(mAdapter.getPosition(item)));
     }
 
     public boolean isOpen() {

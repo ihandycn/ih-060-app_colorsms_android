@@ -26,6 +26,7 @@ import com.android.messaging.datamodel.data.SubscriptionListData.SubscriptionLis
 import com.android.messaging.ui.conversation.SimSelectorView.SimSelectorViewListener;
 import com.android.messaging.util.AccessibilityUtil;
 import com.android.messaging.util.Assert;
+import com.android.messaging.util.BugleAnalytics;
 import com.android.messaging.util.OsUtil;
 import com.android.messaging.util.ThreadUtil;
 
@@ -94,6 +95,9 @@ abstract class ConversationSimSelector extends ConversationInput {
 
         if (mDataReady) {
             mSimSelectorView.showOrHide(show, animate);
+            if (show == false) {
+                BugleAnalytics.logEvent("SMS_DetailsPage_IconSIM_Choose", "choice", "null");
+            }
             return mSimSelectorView.isOpen() == show;
         } else {
             mPendingShow = Pair.create(show, animate);
