@@ -15,7 +15,7 @@
         android:layout_marginTop="40dp"
         android:text="@string/welcome_permission_title"
         android:textColor="@color/welcome_text_permission_list"
-        android:textSize="24sp"
+        android:textSize="25.3sp"
         app:typeface="@string/custom_font_bold" />
 
 
@@ -26,7 +26,7 @@
         android:layout_below="@+id/welcome_permission_title"
         android:layout_marginEnd="24dp"
         android:layout_marginStart="24dp"
-        android:layout_marginTop="11.7dp"
+        android:lineSpacingExtra="6.7sp"
         android:text="@string/welcome_permission_description"
         android:textColor="@color/welcome_text_description"
         android:textSize="12.7sp"
@@ -46,8 +46,7 @@
             android:id="@+id/welcome_permission_sms_description"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            app:layout_constraintTop_toTopOf="parent">
+            android:orientation="vertical">
 
             <com.superapps.view.TypefacedTextView
                 android:id="@+id/welcome_permission_sms_title"
@@ -147,8 +146,7 @@
             android:id="@+id/welcome_permission_phone_description"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            app:layout_constraintBottom_toBottomOf="parent">
+            android:orientation="vertical">
 
             <com.superapps.view.TypefacedTextView
                 android:id="@+id/welcome_permission_phone_title"
@@ -156,7 +154,7 @@
                 android:layout_height="wrap_content"
                 android:drawablePadding="3dp"
                 android:drawableStart="@drawable/ic_welcome_permission_phone"
-                android:text="@string/welcome_permission_contacts_title"
+                android:text="@string/welcome_permission_phone_title"
                 android:textColor="#e6fd9d20"
                 android:textSize="18sp"
                 app:typeface="@string/custom_font_bold" />
@@ -188,6 +186,7 @@
         </LinearLayout>
     </LinearLayout>
 
+
     <com.superapps.view.TypefacedTextView
         android:id="@+id/welcome_permission_button"
         android:layout_width="260.7dp"
@@ -197,6 +196,7 @@
         android:layout_marginBottom="24dp"
         android:background="@drawable/welcome_button_green_bg"
         android:gravity="center"
+        android:paddingTop="1dp"
         android:text="@string/welcome_permission_button"
         android:textColor="#ffffffff"
         android:textSize="14sp"

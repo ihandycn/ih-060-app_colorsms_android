@@ -6,6 +6,7 @@ import android.widget.Toast;
 
 import com.android.messaging.R;
 import com.android.messaging.ui.UIIntents;
+import com.android.messaging.util.BugleAnalytics;
 import com.android.messaging.util.OsUtil;
 
 public class WelcomePermissionActivity extends AppCompatActivity {
@@ -19,7 +20,20 @@ public class WelcomePermissionActivity extends AppCompatActivity {
         findViewById(R.id.welcome_permission_button).setOnClickListener(v -> {
             String[] permissions = OsUtil.getMissingRequiredPermissions();
             requestPermissions(permissions, REQUIRED_PERMISSIONS_REQUEST_CODE);
+            BugleAnalytics.logEvent("SMS_Start_PermissionPage_BtnClick", true);
         });
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        BugleAnalytics.logEvent("SMS_Start_PermissionPage_Show", true);
+    }
+
+    @Override
+    public void onBackPressed(){
+        super.onBackPressed();
+        BugleAnalytics.logEvent("SMS_Start_PermissionPage_Back", true);
     }
 
     @Override
@@ -28,6 +42,7 @@ public class WelcomePermissionActivity extends AppCompatActivity {
         if (requestCode == REQUIRED_PERMISSIONS_REQUEST_CODE) {
             if (OsUtil.hasRequiredPermissions()) {
                 UIIntents.get().launchConversationListActivity(this);
+                BugleAnalytics.logEvent("SMS_Start_Permission_Success", true);
                 finish();
             } else {
                 Toast.makeText(this, R.string.welcome_permission_failed_toast,

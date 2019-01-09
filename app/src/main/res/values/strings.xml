@@ -1028,8 +1028,7 @@
     <string name="welcome_set_default_group">Group messaging</string>
     <string name="welcome_set_default_delete">Delete useless SMS messages</string>
     <string name="welcome_set_default_feature">More features coming soon</string>
-
-    <string name="banner_set_default">Set Color SMS as default SMS </string>
+    <string name="welcome_set_default_failed_toast">Set failed, Color SMS can\'t work</string>
 
     <!-- News -->
     <string name="news_detail_error_reload">Reload</string>

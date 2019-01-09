@@ -1,47 +1,38 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <android.support.constraint.Guideline
-        android:id="@+id/guideline"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.34" />
-
     <ImageView
         android:layout_width="match_parent"
-        android:layout_height="0dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        android:adjustViewBounds="true"
         android:scaleType="fitXY"
-        android:src="@drawable/ic_welcome_start_bg"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/guideline" />
+        android:src="@drawable/ic_welcome_start_bg" />
 
     <com.superapps.view.TypefacedTextView
         android:id="@+id/welcome_start_button"
         android:layout_width="260.7dp"
         android:layout_height="46dp"
-        android:layout_marginBottom="23dp"
+        android:layout_gravity="bottom|center_horizontal"
+        android:layout_marginBottom="50dp"
         android:background="@drawable/welcome_button_white_bg"
         android:gravity="center"
+        android:paddingTop="1dp"
         android:text="@string/welcome_start_button"
         android:textColor="#ff000000"
         android:textSize="14sp"
-        app:layout_constraintBottom_toTopOf="@+id/welcome_start_line_1"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
         app:typeface="@string/custom_font_bold" />
 
     <LinearLayout
-        android:id="@+id/welcome_start_line_1"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_gravity="bottom|center_horizontal"
         android:layout_marginBottom="13dp"
-        android:gravity="center"
-        android:orientation="horizontal"
-        app:layout_constraintBottom_toBottomOf="parent">
+        android:gravity="center_horizontal"
+        android:orientation="horizontal">
 
         <com.superapps.view.TypefacedTextView
             android:id="@+id/welcome_start_service"
@@ -56,6 +47,7 @@
         <com.superapps.view.TypefacedTextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginTop="1dp"
             android:text="@string/welcome_start_and"
             android:textColor="@color/welcome_text_start_description"
             android:textSize="9.3sp"
@@ -73,4 +65,4 @@
 
     </LinearLayout>
 
-</android.support.constraint.ConstraintLayout>
+</FrameLayout>

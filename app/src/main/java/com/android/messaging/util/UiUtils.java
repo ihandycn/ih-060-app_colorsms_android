@@ -339,19 +339,18 @@ public class UiUtils {
      * Judge for welcome pages.
      */
     private static final String PREF_KEY_FIRST_TIME_LAUNCH = "pref_key_first_launch";
-    private static boolean shouldShowWelcomeStart(){
+
+    private static boolean shouldShowWelcomeStart() {
         return Preferences.getDefault().getBoolean(PREF_KEY_FIRST_TIME_LAUNCH, true);
     }
 
-    private static boolean shouldShowWelcomePermission(){
+    private static boolean shouldShowWelcomePermission() {
         return !OsUtil.hasRequiredPermissions();
     }
 
-    private static boolean shouldShowWelcomeSetDefault(){
+    private static boolean shouldShowWelcomeSetDefault() {
         return !PhoneUtils.getDefault().isDefaultSmsApp();
     }
-
-    private static boolean hasShownWelcomeSetDefault = false;
 
     /**
      * Check if the activity needs to be redirected to permission check
@@ -368,8 +367,7 @@ public class UiUtils {
                 UIIntents.get().launchWelcomePermissionActivity(activity);
                 HSLog.d("UiUtil", "Show welcome permission");
             } else {
-                if (shouldShowWelcomeSetDefault() && !hasShownWelcomeSetDefault){
-                    hasShownWelcomeSetDefault = true;
+                if (shouldShowWelcomeSetDefault()) {
                     UIIntents.get().launchWelcomeSetAsDefaultActivity(activity);
                     HSLog.d("UiUtil", "Show welcome set as default");
                 } else {
