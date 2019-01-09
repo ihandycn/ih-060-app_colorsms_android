@@ -60,16 +60,16 @@ public class WelcomeStartActivity extends AppCompatActivity implements View.OnCl
         switch (view.getId()) {
             case R.id.welcome_start_button:
                 String[] permissions = OsUtil.getMissingRequiredPermissions();
+                if (OsUtil.isAtLeastM()) {
+                    BugleAnalytics.logEvent("SMS_Start_WelcomePage_BtnClick_Above23", true);
+                } else {
+                    BugleAnalytics.logEvent("SMS_Start_WelcomePage_BtnClick_Below23", true);
+                }
                 if (permissions.length != 0) {
                     requestPermissions(permissions, REQUIRED_PERMISSIONS_REQUEST_CODE);
                 } else {
                     UIIntents.get().launchConversationListActivity(this);
                     finish();
-                }
-                if (OsUtil.isAtLeastM()) {
-                    BugleAnalytics.logEvent("SMS_Start_WelcomePage_BtnClick_Above23", true);
-                } else {
-                    BugleAnalytics.logEvent("SMS_Start_WelcomePage_BtnClick_Below23", true);
                 }
                 break;
 

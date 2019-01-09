@@ -24,33 +24,9 @@ public class WelcomePermissionActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_welcome_permission);
 
-        mRequiredPermissions = OsUtil.getMissingRequiredPermissions();
-
-        LinearLayout container = findViewById(R.id.welcome_permission_container);
-        LayoutInflater inflater = getLayoutInflater();
-        for (String permission : mRequiredPermissions) {
-            switch (permission) {
-                case Manifest.permission.READ_SMS:
-                    inflater.inflate(R.layout.item_welcome_permission_sms, container, true);
-                    break;
-
-                case Manifest.permission.READ_CONTACTS:
-                    inflater.inflate(R.layout.item_welcome_permission_contacts, container, true);
-                    break;
-
-                case Manifest.permission.READ_PHONE_STATE:
-                    inflater.inflate(R.layout.item_welcome_permission_phone, container, true);
-                    break;
-
-                default:
-                    break;
-            }
-        }
-
         findViewById(R.id.welcome_permission_button).setOnClickListener(v -> {
-            String[] requiredPermissions = OsUtil.getMissingRequiredPermissions();
-            if (requiredPermissions.length != 0) {
-                requestPermissions(requiredPermissions, REQUIRED_PERMISSIONS_REQUEST_CODE);
+            if (mRequiredPermissions.length != 0) {
+                requestPermissions(mRequiredPermissions, REQUIRED_PERMISSIONS_REQUEST_CODE);
                 BugleAnalytics.logEvent("SMS_Start_PermissionPage_BtnClick", true);
             } else {
                 redirect();
@@ -63,6 +39,9 @@ public class WelcomePermissionActivity extends AppCompatActivity {
     @Override
     public void onStart() {
         super.onStart();
+
+        mRequiredPermissions = OsUtil.getMissingRequiredPermissions();
+        refreshPermissionList(mRequiredPermissions);
         BugleAnalytics.logEvent("SMS_Start_PermissionPage_Show", true);
     }
 
@@ -71,7 +50,6 @@ public class WelcomePermissionActivity extends AppCompatActivity {
         if (!mShieldBackKey) {
             super.onBackPressed();
             BugleAnalytics.logEvent("SMS_Start_PermissionPage_Back", true);
-            finish();
         }
     }
 
@@ -105,6 +83,30 @@ public class WelcomePermissionActivity extends AppCompatActivity {
                 }
                 Toast.makeText(this, R.string.welcome_permission_failed_toast,
                         Toast.LENGTH_LONG).show();
+            }
+        }
+    }
+
+    private void refreshPermissionList(String[] permissions){
+        LinearLayout container = findViewById(R.id.welcome_permission_container);
+        container.removeAllViews();
+        LayoutInflater inflater = getLayoutInflater();
+        for (String permission : permissions) {
+            switch (permission) {
+                case Manifest.permission.READ_SMS:
+                    inflater.inflate(R.layout.item_welcome_permission_sms, container, true);
+                    break;
+
+                case Manifest.permission.READ_CONTACTS:
+                    inflater.inflate(R.layout.item_welcome_permission_contacts, container, true);
+                    break;
+
+                case Manifest.permission.READ_PHONE_STATE:
+                    inflater.inflate(R.layout.item_welcome_permission_phone, container, true);
+                    break;
+
+                default:
+                    break;
             }
         }
     }
