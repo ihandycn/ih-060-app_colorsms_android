@@ -15,7 +15,7 @@
 -->
 <resources xmlns:tools="http://schemas.android.com/tools" xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2" tools:ignore="MissingTranslation">
     <!-- The name of the application as it appears under the main Launcher icon and in various activity titles -->
-    <string name="app_name">Messaging</string>
+    <string name="app_name">Color SMS</string>
 
     <!-- The name of the application as it appears in external share intent dialogs -->
     <string name="share_intent_label">Messaging</string>
