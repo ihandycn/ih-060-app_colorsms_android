@@ -140,11 +140,6 @@ public class ComposeMessageView extends LinearLayout
     // There is a draft
     private static final int SEND_WIDGET_MODE_SEND_BUTTON = 3;
 
-    private static final String INPUT_MEDIA = "media";
-    private static final String INPUT_EMOJI = "emoji";
-    private static final String INPUT_KEYBOARD = "keyboard";
-
-
     private PlainTextEditText mComposeEditText;
     private PlainTextEditText mComposeSubjectText;
     private TextView mMmsIndicator;
@@ -394,8 +389,6 @@ public class ComposeMessageView extends LinearLayout
         mAttachMediaButton =
                 findViewById(R.id.media_btn);
         mAttachMediaButton.setBackground(BackgroundDrawables.createBackgroundDrawable(0xfff4f7f9, 0x1935363b, Dimensions.pxFromDp(20), false, true));
-        mAttachMediaButton.setTag(INPUT_MEDIA);
-
         mAttachMediaButton.setOnClickListener(v -> {
             if (isMediaPickerShowing()) {
                 showKeyboard();
@@ -421,7 +414,6 @@ public class ComposeMessageView extends LinearLayout
         }
         mEmojiPickerLayout = findViewById(R.id.emoji_picker_container);
         mEmojiKeyboardBtn = findViewById(R.id.emoji_btn);
-        mEmojiKeyboardBtn.setTag(INPUT_EMOJI);
         mEmojiKeyboardBtn.setOnClickListener(v -> {
             if (isEmojiPickerShowing()) {
                 BugleAnalytics.logEvent("SMSEmoji_Chat_Keyboard_Click");
@@ -444,7 +436,6 @@ public class ComposeMessageView extends LinearLayout
 
     private void showMediaPicker() {
         mMediaPickerLayout.setVisibility(VISIBLE);
-        mAttachMediaButton.setTag(INPUT_KEYBOARD);
         mAttachMediaButton.setImageResource(R.drawable.input_keyboard_black_icon);
         mInputManager.showMediaPicker();
     }
@@ -492,7 +483,6 @@ public class ComposeMessageView extends LinearLayout
             mEmojiGuideView.setVisibility(GONE);
         }
         mEmojiPickerLayout.setVisibility(VISIBLE);
-        mEmojiKeyboardBtn.setTag(INPUT_KEYBOARD);
         mEmojiKeyboardBtn.setImageResource(R.drawable.input_keyboard_icon);
         mInputManager.showEmojiPicker();
     }
@@ -558,17 +548,12 @@ public class ComposeMessageView extends LinearLayout
     @Override
     public void onKeyboardVisible(boolean isVisible) {
         if (isVisible) {
-            Object emojiTag = mEmojiKeyboardBtn.getTag();
-            if (INPUT_KEYBOARD.equals(emojiTag)) {
-                mEmojiKeyboardBtn.setTag(INPUT_EMOJI);
-                mEmojiKeyboardBtn.setImageResource(R.drawable.input_emoji_icon);
-            }
-
-            Object mediaTag = mAttachMediaButton.getTag();
-            if (INPUT_KEYBOARD.equals(mediaTag)) {
-                mAttachMediaButton.setTag(INPUT_MEDIA);
-                mAttachMediaButton.setImageResource(R.drawable.input_media_icon);
-            }
+            mEmojiKeyboardBtn.setImageResource(R.drawable.input_emoji_icon);
+            mAttachMediaButton.setImageResource(R.drawable.input_media_icon);
+        } else if (!isEmojiPickerShowing()) {
+            mEmojiKeyboardBtn.setImageResource(R.drawable.input_emoji_icon);
+        } else if (!isMediaPickerShowing()) {
+            mAttachMediaButton.setImageResource(R.drawable.input_media_icon);
         }
     }
 
