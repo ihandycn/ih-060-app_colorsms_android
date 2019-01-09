@@ -75,6 +75,8 @@ import com.android.messaging.util.LogUtil;
 import com.android.messaging.util.MediaUtil;
 import com.android.messaging.util.OsUtil;
 import com.android.messaging.util.UiUtils;
+import com.superapps.util.BackgroundDrawables;
+import com.superapps.util.Dimensions;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -328,6 +330,7 @@ public class ComposeMessageView extends LinearLayout
 
         mAttachMediaButton =
                 findViewById(R.id.media_btn);
+        mAttachMediaButton.setBackground(BackgroundDrawables.createBackgroundDrawable(0xfff4f7f9, 0x1935363b, Dimensions.pxFromDp(20), false, true));
         mAttachMediaButton.setTag(INPUT_MEDIA);
         mAttachMediaButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -335,7 +338,7 @@ public class ComposeMessageView extends LinearLayout
                 // Showing the media picker is treated as starting to compose the message.
                 if (v.getTag().equals(INPUT_MEDIA)) {
                     mAttachMediaButton.setTag(INPUT_KEYBOARD);
-                    mAttachMediaButton.setImageResource(R.drawable.input_keyboard_icon);
+                    mAttachMediaButton.setImageResource(R.drawable.input_keyboard_black_icon);
                     mInputManager.showHideMediaPicker(true /* show */, true /* animate */);
                 } else {
                     ImeUtil.get().showImeKeyboard(getContext(), mComposeEditText);
