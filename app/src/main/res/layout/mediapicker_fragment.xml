@@ -46,14 +46,14 @@
         android:paddingRight="18dp">
 
         <LinearLayout
-            android:id="@+id/media_camera"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:gravity="center_horizontal"
             android:orientation="vertical">
 
-            <ImageView
+            <com.android.messaging.ui.view.ColorFilterImageView
+                android:id="@+id/media_camera"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="30dp"
@@ -70,14 +70,14 @@
         </LinearLayout>
 
         <LinearLayout
-            android:id="@+id/media_photo"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:gravity="center_horizontal"
             android:orientation="vertical">
 
-            <ImageView
+            <com.android.messaging.ui.view.ColorFilterImageView
+                android:id="@+id/media_photo"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="30dp"
@@ -94,14 +94,14 @@
         </LinearLayout>
 
         <LinearLayout
-            android:id="@+id/media_voice"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:gravity="center_horizontal"
             android:orientation="vertical">
 
-            <ImageView
+            <com.android.messaging.ui.view.ColorFilterImageView
+                android:id="@+id/media_voice"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="30dp"
