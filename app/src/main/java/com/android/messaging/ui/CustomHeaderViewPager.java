@@ -26,6 +26,7 @@ import android.widget.LinearLayout;
 
 import com.android.messaging.R;
 import com.android.messaging.util.Assert;
+import com.android.messaging.util.BugleAnalytics;
 
 /**
  * A view that contains both a view pager and a tab strip wrapped in a linear layout.
@@ -74,12 +75,13 @@ public class CustomHeaderViewPager extends LinearLayout {
 
             @Override
             public void onPageScrolled(int position, float positionOffset,
-                    int positionOffsetPixels) {
+                                       int positionOffsetPixels) {
                 mTabstrip.onPageScrolled(position, positionOffset, positionOffsetPixels);
             }
 
             @Override
             public void onPageSelected(int position) {
+                BugleAnalytics.logEvent("SMS_ContactsTabPage_Show", true, "type", position == 0 ? "Frequents" : "AllContacts");
                 mTabstrip.onPageSelected(position);
             }
         });

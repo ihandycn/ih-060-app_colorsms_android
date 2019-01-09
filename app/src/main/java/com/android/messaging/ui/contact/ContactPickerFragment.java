@@ -57,6 +57,7 @@ import com.android.messaging.ui.animation.ViewGroupItemVerticalExplodeAnimation;
 import com.android.messaging.ui.contact.ContactRecipientAutoCompleteView.ContactChipsChangeListener;
 import com.android.messaging.util.Assert;
 import com.android.messaging.util.Assert.RunsOnMainThread;
+import com.android.messaging.util.BugleAnalytics;
 import com.android.messaging.util.ContactUtil;
 import com.android.messaging.util.ImeUtil;
 import com.android.messaging.util.LogUtil;
@@ -96,14 +97,17 @@ public class ContactPickerFragment extends Fragment implements ContactPickerData
 
     public interface ContactPickerFragmentHost {
         void onGetOrCreateNewConversation(String conversationId);
+
         void onBackButtonPressed();
+
         void onInitiateAddMoreParticipants();
+
         void onParticipantCountChanged(boolean canAddMoreParticipants);
+
         void invalidateActionBar();
     }
 
-    @VisibleForTesting
-    final Binding<ContactPickerData> mBinding = BindingBase.createBinding(this);
+    @VisibleForTesting final Binding<ContactPickerData> mBinding = BindingBase.createBinding(this);
 
     private ContactPickerFragmentHost mHost;
     private ContactRecipientAutoCompleteView mRecipientTextView;
@@ -139,7 +143,7 @@ public class ContactPickerFragment extends Fragment implements ContactPickerData
      */
     @Override
     public View onCreateView(final LayoutInflater inflater, final ViewGroup container,
-            final Bundle savedInstanceState) {
+                             final Bundle savedInstanceState) {
         final View view = inflater.inflate(R.layout.contact_picker_fragment, container, false);
         mRecipientTextView = (ContactRecipientAutoCompleteView)
                 view.findViewById(R.id.recipient_text_view);
@@ -153,12 +157,12 @@ public class ContactPickerFragment extends Fragment implements ContactPickerData
         mRecipientTextView.addTextChangedListener(new TextWatcher() {
             @Override
             public void onTextChanged(final CharSequence s, final int start, final int before,
-                    final int count) {
+                                      final int count) {
             }
 
             @Override
             public void beforeTextChanged(final CharSequence s, final int start, final int count,
-                    final int after) {
+                                          final int after) {
             }
 
             @Override
@@ -169,7 +173,7 @@ public class ContactPickerFragment extends Fragment implements ContactPickerData
 
         final CustomHeaderPagerViewHolder[] viewHolders = {
                 mFrequentContactsListViewHolder,
-                mAllContactsListViewHolder };
+                mAllContactsListViewHolder};
 
         mCustomHeaderViewPager = (CustomHeaderViewPager) view.findViewById(R.id.contact_pager);
         mCustomHeaderViewPager.setViewHolders(viewHolders);
@@ -200,7 +204,7 @@ public class ContactPickerFragment extends Fragment implements ContactPickerData
 
     /**
      * {@inheritDoc}
-     *
+     * <p>
      * Called when the host activity has been created. At this point, the host activity should
      * have set the contact picking mode for us so that we may update our visuals.
      */
@@ -233,6 +237,7 @@ public class ContactPickerFragment extends Fragment implements ContactPickerData
                 final int baseInputType = InputType.TYPE_TEXT_FLAG_MULTI_LINE;
                 if ((mRecipientTextView.getInputType() & InputType.TYPE_CLASS_PHONE) !=
                         InputType.TYPE_CLASS_PHONE) {
+                    BugleAnalytics.logEvent("SMS_AddContacts_NumberType_Click");
                     mRecipientTextView.setInputType(baseInputType | InputType.TYPE_CLASS_PHONE);
                     menuItem.setIcon(R.drawable.ic_ime_light);
                 } else {
@@ -243,10 +248,12 @@ public class ContactPickerFragment extends Fragment implements ContactPickerData
                 return true;
 
             case R.id.action_add_more_participants:
+                BugleAnalytics.logEvent("SMS_AddContacts_Click", true);
                 mHost.onInitiateAddMoreParticipants();
                 return true;
 
             case R.id.action_confirm_participants:
+                BugleAnalytics.logEvent("SMS_AddContacts_Complete_BtnClick", true);
                 maybeGetOrCreateConversation();
                 return true;
 
@@ -276,7 +283,7 @@ public class ContactPickerFragment extends Fragment implements ContactPickerData
 
     @Override // From ContactListItemView.HostInterface
     public void onContactListItemClicked(final ContactListItemData item,
-            final ContactListItemView view) {
+                                         final ContactListItemView view) {
         if (!isContactSelected(item)) {
             if (mContactPickingMode == MODE_PICK_INITIAL_CONTACT) {
                 mPendingExplodeView = view;
@@ -308,12 +315,12 @@ public class ContactPickerFragment extends Fragment implements ContactPickerData
             Assert.isTrue(
                     // We may start from undefined mode to any mode when we are restoring state.
                     (mContactPickingMode == MODE_UNDEFINED) ||
-                    (mContactPickingMode == MODE_PICK_INITIAL_CONTACT && mode == MODE_CHIPS_ONLY) ||
-                    (mContactPickingMode == MODE_CHIPS_ONLY && mode == MODE_PICK_MORE_CONTACTS) ||
-                    (mContactPickingMode == MODE_PICK_MORE_CONTACTS
-                            && mode == MODE_PICK_MAX_PARTICIPANTS) ||
-                    (mContactPickingMode == MODE_PICK_MAX_PARTICIPANTS
-                            && mode == MODE_PICK_MORE_CONTACTS));
+                            (mContactPickingMode == MODE_PICK_INITIAL_CONTACT && mode == MODE_CHIPS_ONLY) ||
+                            (mContactPickingMode == MODE_CHIPS_ONLY && mode == MODE_PICK_MORE_CONTACTS) ||
+                            (mContactPickingMode == MODE_PICK_MORE_CONTACTS
+                                    && mode == MODE_PICK_MAX_PARTICIPANTS) ||
+                            (mContactPickingMode == MODE_PICK_MAX_PARTICIPANTS
+                                    && mode == MODE_PICK_MORE_CONTACTS));
 
             mContactPickingMode = mode;
             updateVisualsForContactPickingMode(animate);
@@ -464,7 +471,7 @@ public class ContactPickerFragment extends Fragment implements ContactPickerData
         mHost.onParticipantCountChanged(ContactPickerData.getCanAddMoreParticipants(newCount));
 
         // Refresh our local copy of the selected chips set to keep it up-to-date.
-        mSelectedPhoneNumbers =  mRecipientTextView.getSelectedDestinations();
+        mSelectedPhoneNumbers = mRecipientTextView.getSelectedDestinations();
         invalidateContactLists();
     }
 
@@ -500,6 +507,7 @@ public class ContactPickerFragment extends Fragment implements ContactPickerData
     /**
      * Kicks off a scene transition that animates visibility changes of individual contact list
      * items via explode animation.
+     *
      * @param show whether the contact lists are to be shown or hidden.
      */
     private void startExplodeTransitionForContactLists(final boolean show) {
@@ -509,7 +517,7 @@ public class ContactPickerFragment extends Fragment implements ContactPickerData
         }
         final Explode transition = new Explode();
         final Rect epicenter = mPendingExplodeView == null ? null :
-            UiUtils.getMeasuredBoundsOnScreen(mPendingExplodeView);
+                UiUtils.getMeasuredBoundsOnScreen(mPendingExplodeView);
         transition.setDuration(UiUtils.COMPOSE_TRANSITION_DURATION);
         transition.setInterpolator(UiUtils.EASE_IN_INTERPOLATOR);
         transition.setEpicenterCallback(new EpicenterCallback() {
@@ -549,21 +557,21 @@ public class ContactPickerFragment extends Fragment implements ContactPickerData
         }
 
         mCustomHeaderViewPager.animate().alpha(show ? 1F : 0F)
-            .setStartDelay(!show ? UiUtils.COMPOSE_TRANSITION_DURATION : 0)
-            .withStartAction(new Runnable() {
-                @Override
-                public void run() {
-                    mCustomHeaderViewPager.setVisibility(View.VISIBLE);
-                    mCustomHeaderViewPager.setAlpha(show ? 0F : 1F);
-                }
-            })
-            .withEndAction(new Runnable() {
-                @Override
-                public void run() {
-                    mCustomHeaderViewPager.setVisibility(show ? View.VISIBLE : View.GONE);
-                    mCustomHeaderViewPager.setAlpha(1F);
-                }
-            });
+                .setStartDelay(!show ? UiUtils.COMPOSE_TRANSITION_DURATION : 0)
+                .withStartAction(new Runnable() {
+                    @Override
+                    public void run() {
+                        mCustomHeaderViewPager.setVisibility(View.VISIBLE);
+                        mCustomHeaderViewPager.setAlpha(show ? 0F : 1F);
+                    }
+                })
+                .withEndAction(new Runnable() {
+                    @Override
+                    public void run() {
+                        mCustomHeaderViewPager.setVisibility(show ? View.VISIBLE : View.GONE);
+                        mCustomHeaderViewPager.setAlpha(1F);
+                    }
+                });
     }
 
     @Override
@@ -585,7 +593,7 @@ public class ContactPickerFragment extends Fragment implements ContactPickerData
     @Override
     @RunsOnMainThread
     public void onGetOrCreateConversationSucceeded(final ActionMonitor monitor,
-            final Object data, final String conversationId) {
+                                                   final Object data, final String conversationId) {
         Assert.isTrue(monitor == mMonitor);
         Assert.isTrue(conversationId != null);
 
@@ -599,7 +607,7 @@ public class ContactPickerFragment extends Fragment implements ContactPickerData
     @Override
     @RunsOnMainThread
     public void onGetOrCreateConversationFailed(final ActionMonitor monitor,
-            final Object data) {
+                                                final Object data) {
         Assert.isTrue(monitor == mMonitor);
         LogUtil.e(LogUtil.BUGLE_TAG, "onGetOrCreateConversationFailed");
         mMonitor = null;

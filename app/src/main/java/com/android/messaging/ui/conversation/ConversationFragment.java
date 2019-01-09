@@ -94,6 +94,7 @@ import com.android.messaging.ui.mediapicker.MediaPicker;
 import com.android.messaging.util.AccessibilityUtil;
 import com.android.messaging.util.Assert;
 import com.android.messaging.util.AvatarUriUtil;
+import com.android.messaging.util.BugleAnalytics;
 import com.android.messaging.util.ChangeDefaultSmsAppHelper;
 import com.android.messaging.util.ContentType;
 import com.android.messaging.util.ImeUtil;
@@ -170,8 +171,7 @@ public class ConversationFragment extends Fragment implements ConversationDataLi
     // This binding keeps track of our associated ConversationData instance
     // A binding should have the lifetime of the owning component,
     //  don't recreate, unbind and bind if you need new data
-    @VisibleForTesting
-    final Binding<ConversationData> mBinding = BindingBase.createBinding(this);
+    @VisibleForTesting final Binding<ConversationData> mBinding = BindingBase.createBinding(this);
 
     // Saved Instance State Data - only for temporal data which is nice to maintain but not
     // critical for correctness.
@@ -932,6 +932,12 @@ public class ConversationFragment extends Fragment implements ConversationDataLi
     public void sendMessage(final MessageData message) {
         if (isReadyForAction()) {
             if (ensureKnownRecipients()) {
+                String name = mBinding.getData().getConversationName();
+                if (!TextUtils.isEmpty(name)) {
+                    String[] count = name.split(",");
+                    BugleAnalytics.logEvent("SMS_SendPeopleAmount_Statistics", true, "type", String.valueOf(count.length));
+                }
+
                 // Merge the caption text from attachments into the text body of the messages
                 message.consolidateText();
 
@@ -1449,6 +1455,7 @@ public class ConversationFragment extends Fragment implements ConversationDataLi
         UIIntents.get().launchAttachmentChooserActivity(activity,
                 conversationId, REQUEST_CHOOSE_ATTACHMENTS);
     }
+
 
     public void updateActionBar(final ActionBar actionBar, final TextView tvTitle) {
         // We update this regardless of whether or not the action bar is showing so that we

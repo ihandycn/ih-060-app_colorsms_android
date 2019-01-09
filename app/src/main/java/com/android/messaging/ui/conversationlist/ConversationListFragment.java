@@ -54,6 +54,7 @@ import com.android.messaging.ui.SnackBarInteraction;
 import com.android.messaging.ui.UIIntents;
 import com.android.messaging.util.AccessibilityUtil;
 import com.android.messaging.util.Assert;
+import com.android.messaging.util.BugleAnalytics;
 import com.android.messaging.util.ImeUtil;
 import com.android.messaging.util.LogUtil;
 import com.android.messaging.util.UiUtils;
@@ -80,10 +81,15 @@ public class ConversationListFragment extends Fragment implements ConversationLi
                                         final ConversationListItemData conversationListItemData,
                                         final boolean isLongClick,
                                         final ConversationListItemView conversationView);
+
         public void onCreateConversationClick();
+
         public boolean isConversationSelected(final String conversationId);
+
         public boolean isSwipeAnimatable();
+
         public boolean isSelectionMode();
+
         public boolean hasWindowFocus();
     }
 
@@ -99,8 +105,7 @@ public class ConversationListFragment extends Fragment implements ConversationLi
             "conversationListViewState";
     private Parcelable mListState;
 
-    @VisibleForTesting
-    final Binding<ConversationListData> mListBinding = BindingBase.createBinding(this);
+    @VisibleForTesting final Binding<ConversationListData> mListBinding = BindingBase.createBinding(this);
 
     public static ConversationListFragment createArchivedConversationListFragment() {
         return createConversationListFragment(BUNDLE_ARCHIVED_MODE);
@@ -168,7 +173,7 @@ public class ConversationListFragment extends Fragment implements ConversationLi
      */
     @Override
     public View onCreateView(final LayoutInflater inflater, final ViewGroup container,
-            final Bundle savedInstanceState) {
+                             final Bundle savedInstanceState) {
         final ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.conversation_list_fragment,
                 container, false);
         mRecyclerView = (RecyclerView) rootView.findViewById(android.R.id.list);
@@ -226,6 +231,7 @@ public class ConversationListFragment extends Fragment implements ConversationLi
             mStartNewConversationButton.setOnClickListener(new OnClickListener() {
                 @Override
                 public void onClick(final View clickView) {
+                    BugleAnalytics.logEvent("SMS_CreateMessage_ButtonClick", true);
                     mHost.onCreateConversationClick();
                 }
             });
@@ -282,7 +288,7 @@ public class ConversationListFragment extends Fragment implements ConversationLi
 
     @Override
     public void onConversationListCursorUpdated(final ConversationListData data,
-            final Cursor cursor) {
+                                                final Cursor cursor) {
         mListBinding.ensureBound(data);
         final Cursor oldCursor = mAdapter.swapCursor(cursor);
         updateEmptyListUi(cursor == null || cursor.getCount() == 0);
@@ -305,7 +311,7 @@ public class ConversationListFragment extends Fragment implements ConversationLi
      */
     @Override
     public void onConversationClicked(final ConversationListItemData conversationListItemData,
-            final boolean isLongClick, final ConversationListItemView conversationView) {
+                                      final boolean isLongClick, final ConversationListItemView conversationView) {
         final ConversationListData listData = mListBinding.getData();
         mHost.onConversationClick(listData, conversationListItemData, isLongClick,
                 conversationView);
