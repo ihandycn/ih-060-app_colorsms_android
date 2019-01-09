@@ -26,6 +26,17 @@
             android:textSize="@dimen/action_bar_page_title_text_size"
             app:typefaceFileName="@string/action_bar_title_typeface" />
 
+        <ImageView
+            android:id="@+id/toolbar_img"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:scaleType="center"
+            android:layout_gravity="center_vertical|right"
+            android:layout_marginEnd="16dp"
+            android:layout_marginRight="16dp"
+            android:src="@drawable/ic_settings"
+            />
+
     </android.support.v7.widget.Toolbar>
 
     <android.support.v4.view.ViewPager

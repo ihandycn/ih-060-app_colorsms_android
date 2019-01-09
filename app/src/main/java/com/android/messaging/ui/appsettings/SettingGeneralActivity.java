@@ -6,7 +6,6 @@ import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.Settings;
-import android.provider.Telephony;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
@@ -21,14 +20,11 @@ import com.android.messaging.ui.UIIntents;
 import com.android.messaging.ui.WebViewActivity;
 import com.android.messaging.ui.dialog.FiveStarRateDialog;
 import com.android.messaging.util.BuglePrefs;
-import com.android.messaging.util.PhoneUtils;
 import com.ihs.commons.config.HSConfig;
 import com.messagecenter.customize.MessageCenterSettings;
 
 public class SettingGeneralActivity extends AppCompatActivity {
-    private static final int REQUEST_SET_DEFAULT_SMS_APP = 2;
 
-    private SettingItemView mSetDefaultView;
     private SettingItemView mSMSShowView;
     private SettingItemView mOutgoingSoundView;
     private SettingItemView mNotificationView;
@@ -42,29 +38,19 @@ public class SettingGeneralActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_new_setting);
 
+        final boolean topLevel = getIntent().getBooleanExtra(
+                UIIntents.UI_INTENT_EXTRA_TOP_LEVEL_SETTINGS, false);
+
         Toolbar toolbar = findViewById(R.id.toolbar);
         toolbar.setTitle("");
         TextView title = toolbar.findViewById(R.id.toolbar_title);
-        title.setText(getString(R.string.general_settings_activity_title));
+        title.setText(topLevel ? getString(R.string.settings_activity_title) :
+                getString(R.string.general_settings_activity_title));
         setSupportActionBar(toolbar);
         if (getSupportActionBar() != null) {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         }
         getSupportActionBar().setDisplayShowHomeEnabled(true);
-
-        final boolean topLevel = getIntent().getBooleanExtra(
-                UIIntents.UI_INTENT_EXTRA_TOP_LEVEL_SETTINGS, false);
-
-        //set default
-        mSetDefaultView = findViewById(R.id.setting_item_default_sms);
-        final String defaultSmsAppLabel = getString(R.string.default_sms_app,
-                PhoneUtils.getDefault().getDefaultSmsAppLabel());
-        mSetDefaultView.setSummary(defaultSmsAppLabel);
-        mSetDefaultView.setOnItemClickListener(() -> {
-            final Intent intent = new Intent(Telephony.Sms.Intents.ACTION_CHANGE_DEFAULT);
-            //intent.putExtra(Telephony.Sms.Intents.EXTRA_PACKAGE_NAME, getPackageName());
-            startActivityForResult(intent, REQUEST_SET_DEFAULT_SMS_APP);
-        });
 
         //outgoing message sounds
         mOutgoingSoundView = findViewById(R.id.setting_item_outgoing_message_sounds);
@@ -226,10 +212,6 @@ public class SettingGeneralActivity extends AppCompatActivity {
                 prefs.putString(prefKey, uri == null ? "" : uri.toString());
                 updateSoundSummary();
             }
-        } else if (requestCode == REQUEST_SET_DEFAULT_SMS_APP) {
-            final String defaultSmsAppLabel = getString(R.string.default_sms_app,
-                    PhoneUtils.getDefault().getDefaultSmsAppLabel());
-            mSetDefaultView.setSummary(defaultSmsAppLabel);
         }
     }
 

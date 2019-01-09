@@ -721,9 +721,6 @@ public class ConversationFragment extends Fragment implements ConversationDataLi
                 UIIntents.get().launchPhoneCallActivity(getActivity(), phoneNumber, centerPoint);
                 return true;
 
-            case R.id.action_settings:
-                return true;
-
             case R.id.action_add_contact:
                 final ParticipantData participant = mBinding.getData().getOtherParticipant();
                 Assert.notNull(participant);

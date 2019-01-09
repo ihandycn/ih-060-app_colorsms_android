@@ -15,13 +15,6 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical">
-            <!--default sms app-->
-            <com.android.messaging.ui.appsettings.SettingItemView
-                android:id="@+id/setting_item_default_sms"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                app:title="@string/sms_enabled_pref_title"
-                app:type="2" />
 
             <!--outgoing messages sounds-->
             <com.android.messaging.ui.appsettings.SettingItemView
@@ -54,7 +47,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 app:summary="@string/setting_sms_show_summary"
-                app:title="@string/bottom_navigation_item_sms_show"
+                app:title="@string/setting_sms_show"
                 app:type="1" />
 
             <!--Sound-->
@@ -95,16 +88,14 @@
                 android:id="@+id/setting_item_five_star_rating"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:title="@string/setting_5_star_rating"
-                app:type="2" />
+                app:title="@string/setting_5_star_rating" />
 
             <!--feedback-->
             <com.android.messaging.ui.appsettings.SettingItemView
                 android:id="@+id/setting_item_feedback"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:title="@string/setting_feedback"
-                app:type="2" />
+                app:title="@string/setting_feedback" />
 
             <!--privacy policy-->
             <com.android.messaging.ui.appsettings.SettingItemView

@@ -71,7 +71,6 @@ public class ConversationListFragment extends Fragment implements ConversationLi
     private static final String BUNDLE_FORWARD_MESSAGE_MODE = "forward_message_mode";
     private static final boolean VERBOSE = false;
 
-    private MenuItem mShowBlockedMenuItem;
     private boolean mArchiveMode;
     private boolean mBlockedAvailable;
     private boolean mForwardMessageMode;
@@ -295,41 +294,10 @@ public class ConversationListFragment extends Fragment implements ConversationLi
     @Override
     public void setBlockedParticipantsAvailable(final boolean blockedAvailable) {
         mBlockedAvailable = blockedAvailable;
-        if (mShowBlockedMenuItem != null) {
-            mShowBlockedMenuItem.setVisible(blockedAvailable);
-        }
     }
 
     public void updateUi() {
         mAdapter.notifyDataSetChanged();
-    }
-
-    @Override
-    public void onPrepareOptionsMenu(final Menu menu) {
-        super.onPrepareOptionsMenu(menu);
-        final MenuItem startNewConversationMenuItem =
-                menu.findItem(R.id.action_start_new_conversation);
-        if (startNewConversationMenuItem != null) {
-            // It is recommended for the Floating Action button functionality to be duplicated as a
-            // menu
-            AccessibilityManager accessibilityManager = (AccessibilityManager)
-                    getActivity().getSystemService(Context.ACCESSIBILITY_SERVICE);
-            startNewConversationMenuItem.setVisible(accessibilityManager
-                    .isTouchExplorationEnabled());
-        }
-    }
-
-    @Override
-    public void onCreateOptionsMenu(final Menu menu, final MenuInflater inflater) {
-        if (!isAdded()) {
-            // Guard against being called before we're added to the activity
-            return;
-        }
-
-        mShowBlockedMenuItem = menu.findItem(R.id.action_show_blocked_contacts);
-        if (mShowBlockedMenuItem != null) {
-            mShowBlockedMenuItem.setVisible(mBlockedAvailable);
-        }
     }
 
     /**

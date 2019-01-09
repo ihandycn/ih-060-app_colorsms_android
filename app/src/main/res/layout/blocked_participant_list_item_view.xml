@@ -19,6 +19,7 @@
     android:layout_width="fill_parent"
     android:layout_height="wrap_content"
     android:orientation="horizontal"
+    android:background="?android:attr/selectableItemBackground"
     android:padding="@dimen/blocked_participant_list_item_view_padding">
 
     <com.android.messaging.ui.ContactIconView
@@ -34,6 +35,7 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_gravity="center_vertical"
+        android:paddingTop="2dp"
         android:layout_weight="1"
         android:background="@null"
         android:ellipsize="end"
@@ -50,8 +52,7 @@
         android:layout_width="wrap_content"
         android:layout_height="32dp"
         android:layout_gravity="center_vertical"
-        android:paddingTop="2dp"
-        android:layout_marginRight="16dp"
+        android:paddingTop="3dp"
         android:gravity="center"
         android:paddingLeft="14dp"
         android:paddingRight="14dp"

@@ -16,41 +16,27 @@
 
 package com.android.messaging.ui.conversationlist;
 
-import android.content.Intent;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.widget.Toolbar;
-import android.view.ActionMode;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.FrameLayout.LayoutParams;
 import android.widget.TextView;
 
-import com.airbnb.lottie.LottieAnimationView;
 import com.android.messaging.R;
 import com.android.messaging.ui.BasePagerAdapter;
 import com.android.messaging.ui.UIIntents;
 import com.android.messaging.ui.dialog.FiveStarRateDialog;
-import com.android.messaging.util.BugleAnalytics;
-import com.android.messaging.util.DebugUtils;
-import com.android.messaging.util.PhoneUtils;
 import com.android.messaging.util.Trace;
 import com.android.messaging.util.UiUtils;
-import com.superapps.util.Calendars;
-import com.superapps.util.Preferences;
+import com.superapps.util.BackgroundDrawables;
+import com.superapps.util.Dimensions;
 
 public class ConversationListActivity extends AbstractConversationListActivity
         implements BottomNavigationView.OnItemSelectedListener {
 
-    private static final int REQUEST_SET_DEFAULT_SMS_APP = 2;
-    private static final String PREF_KEY_BANNER_SHOW_TIME = "pref_key_banner_set_default_show_time";
-
     private ViewPager mViewPager;
-    private BasePagerAdapter mPagerAdapter;
     private TextView mTitleTextView;
 
     @Override
@@ -65,15 +51,8 @@ public class ConversationListActivity extends AbstractConversationListActivity
     }
 
     @Override
-    public ActionMode startActionMode(ActionMode.Callback callback) {
-        // set custom title visibility gone, when start MultiSelectActionMode etc.
-        mTitleTextView.setVisibility(View.GONE);
-        return super.startActionMode(callback);
-    }
-
-    @Override
     protected void updateActionBar(final ActionBar actionBar) {
-        actionBar.setTitle(getString(R.string.app_name));
+        actionBar.setTitle("");
         actionBar.setDisplayShowTitleEnabled(false);
         actionBar.setDisplayHomeAsUpEnabled(false);
         actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
@@ -84,17 +63,7 @@ public class ConversationListActivity extends AbstractConversationListActivity
         //update statusBar color
         UiUtils.setStatusBarColor(this, getResources().getColor(R.color.action_bar_background_color));
 
-        mTitleTextView.setVisibility(View.VISIBLE);
         super.updateActionBar(actionBar);
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        // Invalidate the menu as items that are based on settings may have changed
-        // while not in the app (e.g. Talkback enabled/disable affects new conversation
-        // button)
-        supportInvalidateOptionsMenu();
     }
 
     private boolean showRate = false;
@@ -109,41 +78,7 @@ public class ConversationListActivity extends AbstractConversationListActivity
             } else {
                 showRate = true;
             }
-
         }
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(final Menu menu) {
-        if (super.onCreateOptionsMenu(menu)) {
-            return true;
-        }
-        getMenuInflater().inflate(R.menu.conversation_list_fragment_menu, menu);
-        final MenuItem item = menu.findItem(R.id.action_debug_options);
-        if (item != null) {
-            final boolean enableDebugItems = DebugUtils.isDebugEnabled();
-            item.setVisible(enableDebugItems).setEnabled(enableDebugItems);
-        }
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(final MenuItem menuItem) {
-        switch (menuItem.getItemId()) {
-            case R.id.action_start_new_conversation:
-                onActionBarStartNewConversation();
-                return true;
-            case R.id.action_settings:
-                onActionBarSettings();
-                return true;
-            case R.id.action_debug_options:
-                onActionBarDebug();
-                return true;
-            case R.id.action_show_blocked_contacts:
-                onActionBarBlockedParticipants();
-                return true;
-        }
-        return super.onOptionsItemSelected(menuItem);
     }
 
     @Override
@@ -175,22 +110,6 @@ public class ConversationListActivity extends AbstractConversationListActivity
         exitMultiSelectState();
     }
 
-    public void onActionBarStartNewConversation() {
-        UIIntents.get().launchCreateNewConversationActivity(this, null);
-    }
-
-    public void onActionBarSettings() {
-        UIIntents.get().launchSettingsActivity(this);
-    }
-
-    public void onActionBarBlockedParticipants() {
-        UIIntents.get().launchBlockedParticipantsActivity(this);
-    }
-
-    public void onActionBarArchived() {
-        UIIntents.get().launchArchivedConversationsActivity(this);
-    }
-
     @Override
     public boolean isSwipeAnimatable() {
         return !isInConversationListSelectMode();
@@ -209,6 +128,11 @@ public class ConversationListActivity extends AbstractConversationListActivity
     private void initActionBar() {
         Toolbar toolbar = findViewById(R.id.toolbar);
         mTitleTextView = findViewById(R.id.toolbar_title);
+        View setting = findViewById(R.id.toolbar_img);
+        setting.setBackground(BackgroundDrawables.createBackgroundDrawable(0xffffffff,
+                Dimensions.pxFromDp(20), true));
+        setting.setOnClickListener(v ->
+                UIIntents.get().launchSettingsActivity(this));
         setSupportActionBar(toolbar);
         invalidateActionBar();
     }
@@ -216,12 +140,12 @@ public class ConversationListActivity extends AbstractConversationListActivity
     private void initPager() {
         BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation_view);
         mViewPager = findViewById(R.id.fragment_pager);
-        mPagerAdapter = new BasePagerAdapter(getFragmentManager());
+        BasePagerAdapter mPagerAdapter = new BasePagerAdapter(getFragmentManager());
         mViewPager.setAdapter(mPagerAdapter);
         mViewPager.setOffscreenPageLimit(2);
         bottomNavigationView.setOnItemSelectedListener(this);
         bottomNavigationView.setSelectedPosition(0);
-        mViewPager.setOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener(){
+        mViewPager.setOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
             @Override
             public void onPageSelected(int position) {
                 bottomNavigationView.setSelectedPosition(position);
