@@ -19,8 +19,12 @@ public class WelcomePermissionActivity extends AppCompatActivity {
 
         findViewById(R.id.welcome_permission_button).setOnClickListener(v -> {
             String[] permissions = OsUtil.getMissingRequiredPermissions();
-            requestPermissions(permissions, REQUIRED_PERMISSIONS_REQUEST_CODE);
-            BugleAnalytics.logEvent("SMS_Start_PermissionPage_BtnClick", true);
+            if (permissions.length != 0) {
+                requestPermissions(permissions, REQUIRED_PERMISSIONS_REQUEST_CODE);
+                BugleAnalytics.logEvent("SMS_Start_PermissionPage_BtnClick", true);
+            } else {
+                redirect();
+            }
         });
     }
 
@@ -41,13 +45,17 @@ public class WelcomePermissionActivity extends AppCompatActivity {
             final int requestCode, final String permissions[], final int[] grantResults) {
         if (requestCode == REQUIRED_PERMISSIONS_REQUEST_CODE) {
             if (OsUtil.hasRequiredPermissions()) {
-                UIIntents.get().launchConversationListActivity(this);
-                BugleAnalytics.logEvent("SMS_Start_Permission_Success", true);
-                finish();
+                redirect();
             } else {
                 Toast.makeText(this, R.string.welcome_permission_failed_toast,
                         Toast.LENGTH_LONG).show();
             }
         }
+    }
+
+    private void redirect(){
+        UIIntents.get().launchConversationListActivity(this);
+        BugleAnalytics.logEvent("SMS_Start_Permission_Success", true);
+        finish();
     }
 }
