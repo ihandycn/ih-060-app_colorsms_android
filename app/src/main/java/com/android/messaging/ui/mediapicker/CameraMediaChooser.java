@@ -59,16 +59,16 @@ class CameraMediaChooser extends MediaChooser implements
     private View mEnabledView;
     private View mMissingPermissionView;
 
-    CameraMediaChooser(final MediaPicker mediaPicker) {
-        super(mediaPicker);
+    CameraMediaChooser(final CameraGalleryFragment cameraGalleryFragment) {
+        super(cameraGalleryFragment);
     }
 
     @Override
     public int getSupportedMediaTypes() {
         if (CameraManager.get().hasAnyCamera()) {
-            return MediaPicker.MEDIA_TYPE_IMAGE | MediaPicker.MEDIA_TYPE_VIDEO;
+            return CameraGalleryFragment.MEDIA_TYPE_IMAGE | CameraGalleryFragment.MEDIA_TYPE_VIDEO;
         } else {
-            return MediaPicker.MEDIA_TYPE_NONE;
+            return CameraGalleryFragment.MEDIA_TYPE_NONE;
         }
     }
 
@@ -112,7 +112,7 @@ class CameraMediaChooser extends MediaChooser implements
         mFullScreenButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(final View view) {
-                mMediaPicker.setFullScreen(true);
+                mCameraGalleryFragment.setFullScreen(true);
             }
         });
 
@@ -128,7 +128,7 @@ class CameraMediaChooser extends MediaChooser implements
         mCaptureButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(final View v) {
-                final float heightPercent = Math.min(mMediaPicker.getViewPager().getHeight() /
+                final float heightPercent = Math.min(mCameraGalleryFragment.getViewPager().getHeight() /
                         (float) mCameraPreviewHost.getView().getHeight(), 1);
 
                 if (CameraManager.get().isRecording()) {
@@ -150,7 +150,7 @@ class CameraMediaChooser extends MediaChooser implements
                                 if (mView != null) {
                                     mView.getGlobalVisibleRect(startRect);
                                 }
-                                mMediaPicker.dispatchItemsSelected(
+                                mCameraGalleryFragment.dispatchItemsSelected(
                                         new MediaPickerMessagePartData(startRect, contentType,
                                                 uriToVideo, width, height),
                                         true /* dismissMediaPicker */);
@@ -205,7 +205,7 @@ class CameraMediaChooser extends MediaChooser implements
             public void onClick(final View view) {
                 mVideoCancelled = true;
                 CameraManager.get().stopVideo();
-                mMediaPicker.dismiss(true);
+                mCameraGalleryFragment.dismiss(true);
             }
         });
 
@@ -278,13 +278,13 @@ class CameraMediaChooser extends MediaChooser implements
     }
 
     private void requestCameraPermission() {
-        mMediaPicker.requestPermissions(new String[]{Manifest.permission.CAMERA},
-                MediaPicker.CAMERA_PERMISSION_REQUEST_CODE);
+        mCameraGalleryFragment.requestPermissions(new String[]{Manifest.permission.CAMERA},
+                CameraGalleryFragment.CAMERA_PERMISSION_REQUEST_CODE);
     }
 
     private void requestRecordAudioPermission() {
-        mMediaPicker.requestPermissions(new String[]{Manifest.permission.RECORD_AUDIO},
-                MediaPicker.RECORD_AUDIO_PERMISSION_REQUEST_CODE);
+        mCameraGalleryFragment.requestPermissions(new String[]{Manifest.permission.RECORD_AUDIO},
+                CameraGalleryFragment.RECORD_AUDIO_PERMISSION_REQUEST_CODE);
     }
 
     @Override
@@ -294,13 +294,13 @@ class CameraMediaChooser extends MediaChooser implements
             return;
         }
 
-        if (requestCode == MediaPicker.CAMERA_PERMISSION_REQUEST_CODE) {
+        if (requestCode == CameraGalleryFragment.CAMERA_PERMISSION_REQUEST_CODE) {
             final boolean permissionGranted = grantResults[0] == PackageManager.PERMISSION_GRANTED;
             updateForPermissionState(permissionGranted);
             if (permissionGranted && mCameraPreviewHost != null) {
                 mCameraPreviewHost.onCameraPermissionGranted();
             }
-        } else if (requestCode == MediaPicker.RECORD_AUDIO_PERMISSION_REQUEST_CODE) {
+        } else if (requestCode == CameraGalleryFragment.RECORD_AUDIO_PERMISSION_REQUEST_CODE) {
             Assert.isFalse(CameraManager.get().isVideoMode());
             if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 // Switch to video mode
@@ -376,7 +376,7 @@ class CameraMediaChooser extends MediaChooser implements
     private void onSwapMode() {
         CameraManager.get().setVideoMode(!CameraManager.get().isVideoMode());
         if (CameraManager.get().isVideoMode()) {
-            mMediaPicker.setFullScreen(true);
+            mCameraGalleryFragment.setFullScreen(true);
 
             // For now we start recording immediately
             mCaptureButton.performClick();
@@ -433,7 +433,7 @@ class CameraMediaChooser extends MediaChooser implements
             // Context is null if the fragment was already removed from the activity
             return;
         }
-        final boolean fullScreen = mMediaPicker.isFullScreen();
+        final boolean fullScreen = mCameraGalleryFragment.isFullScreen();
         final boolean videoMode = CameraManager.get().isVideoMode();
         final boolean isRecording = CameraManager.get().isRecording();
         final boolean isCameraAvailable = isCameraAvailable();

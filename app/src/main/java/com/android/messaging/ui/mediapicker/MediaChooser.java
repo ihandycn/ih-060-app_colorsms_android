@@ -38,7 +38,7 @@ import com.android.messaging.util.OsUtil;
 abstract class MediaChooser extends BasePagerViewHolder
         implements DraftMessageSubscriptionDataProvider {
     /** The media picker that the chooser is hosted in */
-    protected final MediaPicker mMediaPicker;
+    protected final CameraGalleryFragment mCameraGalleryFragment;
 
     /** Referencing the main media picker binding to perform data loading */
     protected final ImmutableBindingRef<MediaPickerData> mBindingRef;
@@ -59,12 +59,12 @@ abstract class MediaChooser extends BasePagerViewHolder
 
     /**
      * Initializes a new instance of the Chooser class
-     * @param mediaPicker The media picker that the chooser is hosted in
+     * @param cameraGalleryFragment The media picker that the chooser is hosted in
      */
-    MediaChooser(final MediaPicker mediaPicker) {
-        Assert.notNull(mediaPicker);
-        mMediaPicker = mediaPicker;
-        mBindingRef = mediaPicker.getMediaPickerDataBinding();
+    MediaChooser(final CameraGalleryFragment cameraGalleryFragment) {
+        Assert.notNull(cameraGalleryFragment);
+        mCameraGalleryFragment = cameraGalleryFragment;
+        mBindingRef = cameraGalleryFragment.getMediaPickerDataBinding();
         mSelected = false;
     }
 
@@ -96,18 +96,18 @@ abstract class MediaChooser extends BasePagerViewHolder
         mTabButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(final View view) {
-                mMediaPicker.selectChooser(MediaChooser.this);
+                mCameraGalleryFragment.selectChooser(MediaChooser.this);
             }
         });
     }
 
     protected Context getContext() {
-        return mMediaPicker.getActivity();
+        return mCameraGalleryFragment.getActivity();
     }
 
     protected FragmentManager getFragmentManager() {
-        return OsUtil.isAtLeastJB_MR1() ? mMediaPicker.getChildFragmentManager() :
-                mMediaPicker.getFragmentManager();
+        return OsUtil.isAtLeastJB_MR1() ? mCameraGalleryFragment.getChildFragmentManager() :
+                mCameraGalleryFragment.getFragmentManager();
     }
     protected LayoutInflater getLayoutInflater() {
         return LayoutInflater.from(getContext());
@@ -205,7 +205,7 @@ abstract class MediaChooser extends BasePagerViewHolder
 
     @Override
     public int getConversationSelfSubId() {
-        return mMediaPicker.getConversationSelfSubId();
+        return mCameraGalleryFragment.getConversationSelfSubId();
     }
 
     /** Optional activity life-cycle methods to be overridden by subclasses */

@@ -63,7 +63,7 @@ import java.util.List;
 /**
  * Fragment used to select or capture media to be added to the message
  */
-public class MediaPicker extends Fragment implements DraftMessageSubscriptionDataProvider {
+public class CameraGalleryFragment extends Fragment implements DraftMessageSubscriptionDataProvider {
     /**
      * The listener interface for events from the media picker
      */
@@ -207,11 +207,11 @@ public class MediaPicker extends Fragment implements DraftMessageSubscriptionDat
      */
     private ImmutableBindingRef<DraftMessageData> mDraftMessageDataModel;
 
-    public MediaPicker() {
+    public CameraGalleryFragment() {
         this(Factory.get().getApplicationContext(), true);
     }
 
-    public MediaPicker(final Context context, boolean isCamera) {
+    public CameraGalleryFragment(final Context context, boolean isCamera) {
         mBinding.bind(DataModel.get().createMediaPickerData(context));
         mEnabledChoosers = new ArrayList<MediaChooser>();
         if (isCamera) {

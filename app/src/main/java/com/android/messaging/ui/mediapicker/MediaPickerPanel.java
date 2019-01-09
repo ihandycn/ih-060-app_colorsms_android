@@ -67,7 +67,7 @@ public class MediaPickerPanel extends FrameLayout {
     /**
      * The media picker for dispatching events to the MediaPicker's listener
      */
-    private MediaPicker mMediaPicker;
+    private CameraGalleryFragment mCameraGalleryFragment;
 
     /**
      * The computed default "half-screen" height of the view pager in px
@@ -211,8 +211,8 @@ public class MediaPickerPanel extends FrameLayout {
         return mFullScreen;
     }
 
-    void setMediaPicker(final MediaPicker mediaPicker) {
-        mMediaPicker = mediaPicker;
+    void setMediaPicker(final CameraGalleryFragment cameraGalleryFragment) {
+        mCameraGalleryFragment = cameraGalleryFragment;
     }
 
     /**
@@ -243,8 +243,8 @@ public class MediaPickerPanel extends FrameLayout {
 
     private void setupViewPager(final int startingPage) {
         mViewPager.setVisibility(View.VISIBLE);
-        if (startingPage >= 0 && startingPage < mMediaPicker.getPagerAdapter().getCount()) {
-            mViewPager.setAdapter(mMediaPicker.getPagerAdapter());
+        if (startingPage >= 0 && startingPage < mCameraGalleryFragment.getPagerAdapter().getCount()) {
+            mViewPager.setAdapter(mCameraGalleryFragment.getPagerAdapter());
             mViewPager.setCurrentItem(startingPage);
         }
         updateViewPager();
@@ -277,9 +277,9 @@ public class MediaPickerPanel extends FrameLayout {
 //        });
         if (expanded) {
             setupViewPager(startingPage);
-            mMediaPicker.dispatchOpened();
+            mCameraGalleryFragment.dispatchOpened();
         } else {
-            mMediaPicker.dispatchDismissed();
+            mCameraGalleryFragment.dispatchDismissed();
         }
 
         // Call setFullScreenView() when we are in landscape mode so it can go full screen as
@@ -340,7 +340,7 @@ public class MediaPickerPanel extends FrameLayout {
         }
         mFullScreen = fullScreen;
 //        setDesiredHeight(getDesiredHeight(), animate);
-        mMediaPicker.dispatchFullScreen(mFullScreen);
+        mCameraGalleryFragment.dispatchFullScreen(mFullScreen);
         updateViewPager();
     }
 
@@ -430,13 +430,13 @@ public class MediaPickerPanel extends FrameLayout {
                     // Ask the MediaPicker whether the contained view can be swiped down.
                     // We record the value at the start of the drag to decide the swiping mode
                     // for the entire motion.
-                    mCanChildViewSwipeDown = mMediaPicker.canSwipeDownChooser();
+                    mCanChildViewSwipeDown = mCameraGalleryFragment.canSwipeDownChooser();
                     return false;
 
                 case MotionEvent.ACTION_MOVE: {
-                    if (mMediaPicker.isChooserHandlingTouch()) {
+                    if (mCameraGalleryFragment.isChooserHandlingTouch()) {
                         if (shouldAllowRecaptureTouch(ev)) {
-                            mMediaPicker.stopChooserTouchHandling();
+                            mCameraGalleryFragment.stopChooserTouchHandling();
 //                            mViewPager.setPagingEnabled(true);
                             return false;
                         }
@@ -527,23 +527,5 @@ public class MediaPickerPanel extends FrameLayout {
             updateViewPager();
         }
     }
-
-//    protected void onRequestPermissionsResult(
-//            final int requestCode, final String permissions[], final int[] grantResults) {
-//        if (permissions.length == 0 || grantResults.length == 0) {
-//            return;
-//        }
-//        if (MediaPicker.CAMERA_PERMISSION_REQUEST_CODE == requestCode) {
-//            final boolean permissionGranted = grantResults[0] == PackageManager.PERMISSION_GRANTED;
-//            if (permissionGranted) {
-//                expandToCamera();
-//            }
-//        } else if (MediaPicker.GALLERY_PERMISSION_REQUEST_CODE == requestCode) {
-//            final boolean permissionGranted = grantResults[0] == PackageManager.PERMISSION_GRANTED;
-//            if (permissionGranted) {
-//                expandToGallery();
-//            }
-//        }
-//    }
 }
 

@@ -88,7 +88,7 @@ import com.android.messaging.ui.conversation.ConversationInputManager.Conversati
 import com.android.messaging.ui.conversation.ConversationMessageView.ConversationMessageViewHost;
 import com.android.messaging.ui.dialog.FiveStarRateDialog;
 import com.android.messaging.ui.emoji.EmojiPickerFragment;
-import com.android.messaging.ui.mediapicker.MediaPicker;
+import com.android.messaging.ui.mediapicker.CameraGalleryFragment;
 import com.android.messaging.ui.mediapicker.MediaPickerFragment;
 import com.android.messaging.util.AccessibilityUtil;
 import com.android.messaging.util.Assert;
@@ -108,7 +108,6 @@ import com.google.common.annotations.VisibleForTesting;
 import com.ihs.commons.notificationcenter.HSGlobalNotificationCenter;
 import com.ihs.commons.notificationcenter.INotificationObserver;
 import com.ihs.commons.utils.HSBundle;
-import com.superapps.util.Threads;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -944,9 +943,9 @@ public class ConversationFragment extends Fragment implements ConversationDataLi
         return OsUtil.isAtLeastJB_MR1() ? getChildFragmentManager() : getFragmentManager();
     }
 
-    public MediaPicker getMediaPicker() {
-        return (MediaPicker) getFragmentManagerToUse().findFragmentByTag(
-                MediaPicker.FRAGMENT_TAG);
+    public CameraGalleryFragment getMediaPicker() {
+        return (CameraGalleryFragment) getFragmentManagerToUse().findFragmentByTag(
+                CameraGalleryFragment.FRAGMENT_TAG);
     }
 
     @Override
@@ -1173,7 +1172,7 @@ public class ConversationFragment extends Fragment implements ConversationDataLi
     }
 
     public boolean onBackPressed() {
-        if (mMediaPicker != null) {
+        if (mCameraGalleryFragment != null) {
             hideMediaPicker();
             return true;
         }
@@ -1181,7 +1180,7 @@ public class ConversationFragment extends Fragment implements ConversationDataLi
     }
 
     public boolean onNavigationUpPressed() {
-        if (mMediaPicker != null) {
+        if (mCameraGalleryFragment != null) {
             hideMediaPicker();
             return true;
         }
@@ -1583,7 +1582,7 @@ public class ConversationFragment extends Fragment implements ConversationDataLi
 
     @Override
     public boolean isMediaPickerShowing() {
-        return mMediaPicker != null;
+        return mCameraGalleryFragment != null;
     }
 
     @Override
@@ -1603,21 +1602,21 @@ public class ConversationFragment extends Fragment implements ConversationDataLi
     }
 
 
-    private MediaPicker mMediaPicker;
+    private CameraGalleryFragment mCameraGalleryFragment;
 
     @Override
     public void showCamera() {
         mMediaLayout.setVisibility(View.VISIBLE);
-        if (mMediaPicker == null) {
+        if (mCameraGalleryFragment == null) {
             initMediaPicker(true);
         }
 
         getFragmentManagerToUse().beginTransaction().replace(
                 R.id.camera_photo_layout,
-                mMediaPicker,
-                MediaPicker.FRAGMENT_TAG).commitAllowingStateLoss();
+                mCameraGalleryFragment,
+                CameraGalleryFragment.FRAGMENT_TAG).commitAllowingStateLoss();
 
-        mMediaPicker.open(MediaPicker.MEDIA_TYPE_DEFAULT);
+        mCameraGalleryFragment.open(CameraGalleryFragment.MEDIA_TYPE_DEFAULT);
     }
 
     @Override
@@ -1625,25 +1624,25 @@ public class ConversationFragment extends Fragment implements ConversationDataLi
         setOptionsMenuVisibility(false);
 
         mMediaLayout.setVisibility(View.VISIBLE);
-        if (mMediaPicker == null) {
+        if (mCameraGalleryFragment == null) {
             initMediaPicker(false);
         }
 
         getFragmentManagerToUse().beginTransaction().replace(
                 R.id.camera_photo_layout,
-                mMediaPicker,
-                MediaPicker.FRAGMENT_TAG).commitAllowingStateLoss();
+                mCameraGalleryFragment,
+                CameraGalleryFragment.FRAGMENT_TAG).commitAllowingStateLoss();
 
-        mMediaPicker.open(MediaPicker.MEDIA_TYPE_DEFAULT);
+        mCameraGalleryFragment.open(CameraGalleryFragment.MEDIA_TYPE_DEFAULT);
     }
 
     private void initMediaPicker(boolean isCamera) {
-        mMediaPicker = new MediaPicker(getActivity(), isCamera);
+        mCameraGalleryFragment = new CameraGalleryFragment(getActivity(), isCamera);
         setConversationThemeColor(ConversationDrawables.get().getConversationThemeColor());
-        mMediaPicker.setSubscriptionDataProvider(this);
+        mCameraGalleryFragment.setSubscriptionDataProvider(this);
         ImmutableBindingRef<DraftMessageData> mDraftDataModel = BindingBase.createBindingReference(mComposeMessageView.getDraftDataModel());
-        mMediaPicker.setDraftMessageDataModel(mDraftDataModel);
-        mMediaPicker.setListener(new MediaPicker.MediaPickerListener() {
+        mCameraGalleryFragment.setDraftMessageDataModel(mDraftDataModel);
+        mCameraGalleryFragment.setListener(new CameraGalleryFragment.MediaPickerListener() {
             @Override
             public void onOpened() {
                 handleStateChange();
@@ -1708,19 +1707,19 @@ public class ConversationFragment extends Fragment implements ConversationDataLi
 
     public void hideMediaPicker() {
         mMediaLayout.setVisibility(View.GONE);
-        if (mMediaPicker != null) {
-            mMediaPicker.dismiss(false);
+        if (mCameraGalleryFragment != null) {
+            mCameraGalleryFragment.dismiss(false);
             getFragmentManagerToUse()
                     .beginTransaction()
-                    .remove(mMediaPicker)
+                    .remove(mCameraGalleryFragment)
                     .commit();
-            mMediaPicker = null;
+            mCameraGalleryFragment = null;
         }
     }
 
     public void setConversationThemeColor(final int themeColor) {
-        if (mMediaPicker != null) {
-            mMediaPicker.setConversationThemeColor(themeColor);
+        if (mCameraGalleryFragment != null) {
+            mCameraGalleryFragment.setConversationThemeColor(themeColor);
         }
     }
 }

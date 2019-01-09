@@ -47,14 +47,14 @@ class GalleryMediaChooser extends MediaChooser implements
     private GalleryGridView mGalleryGridView;
     private View mMissingPermissionView;
 
-    GalleryMediaChooser(final MediaPicker mediaPicker) {
-        super(mediaPicker);
+    GalleryMediaChooser(final CameraGalleryFragment cameraGalleryFragment) {
+        super(cameraGalleryFragment);
         mAdapter = new GalleryGridAdapter(Factory.get().getApplicationContext(), null);
     }
 
     @Override
     public int getSupportedMediaTypes() {
-        return MediaPicker.MEDIA_TYPE_IMAGE | MediaPicker.MEDIA_TYPE_VIDEO;
+        return CameraGalleryFragment.MEDIA_TYPE_IMAGE | CameraGalleryFragment.MEDIA_TYPE_VIDEO;
     }
 
     @Override
@@ -86,24 +86,24 @@ class GalleryMediaChooser extends MediaChooser implements
 
     @Override
     public void onItemSelected(final MessagePartData item) {
-        mMediaPicker.dispatchItemsSelected(item, !mGalleryGridView.isMultiSelectEnabled());
+        mCameraGalleryFragment.dispatchItemsSelected(item, !mGalleryGridView.isMultiSelectEnabled());
     }
 
     @Override
     public void onItemUnselected(final MessagePartData item) {
-        mMediaPicker.dispatchItemUnselected(item);
+        mCameraGalleryFragment.dispatchItemUnselected(item);
     }
 
     @Override
     public void onConfirmSelection() {
         // The user may only confirm if multiselect is enabled.
         Assert.isTrue(mGalleryGridView.isMultiSelectEnabled());
-        mMediaPicker.dispatchConfirmItemSelection();
+        mCameraGalleryFragment.dispatchConfirmItemSelection();
     }
 
     @Override
     public void onUpdate() {
-        mMediaPicker.invalidateOptionsMenu();
+        mCameraGalleryFragment.invalidateOptionsMenu();
     }
 
     @Override
@@ -130,7 +130,7 @@ class GalleryMediaChooser extends MediaChooser implements
         mAdapter.setHostInterface(mGalleryGridView);
         mGalleryGridView.setAdapter(mAdapter);
         mGalleryGridView.setHostInterface(this);
-        mGalleryGridView.setDraftMessageDataModel(mMediaPicker.getDraftMessageDataModel());
+        mGalleryGridView.setDraftMessageDataModel(mCameraGalleryFragment.getDraftMessageDataModel());
         if (OsUtil.hasStoragePermission()) {
             startMediaPickerDataLoader();
         }
@@ -148,7 +148,7 @@ class GalleryMediaChooser extends MediaChooser implements
 
     @Override
     public void onDocumentPickerItemClicked() {
-        mMediaPicker.launchDocumentPicker();
+        mCameraGalleryFragment.launchDocumentPicker();
     }
 
     @Override
@@ -197,9 +197,9 @@ class GalleryMediaChooser extends MediaChooser implements
     protected void setSelected(final boolean selected) {
         super.setSelected(selected);
         if (selected && !OsUtil.hasStoragePermission()) {
-            mMediaPicker.requestPermissions(
+            mCameraGalleryFragment.requestPermissions(
                     new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},
-                    MediaPicker.GALLERY_PERMISSION_REQUEST_CODE);
+                    CameraGalleryFragment.GALLERY_PERMISSION_REQUEST_CODE);
         }
     }
 
@@ -215,7 +215,7 @@ class GalleryMediaChooser extends MediaChooser implements
             return;
         }
 
-        if (requestCode == MediaPicker.GALLERY_PERMISSION_REQUEST_CODE) {
+        if (requestCode == CameraGalleryFragment.GALLERY_PERMISSION_REQUEST_CODE) {
             final boolean permissionGranted = grantResults[0] == PackageManager.PERMISSION_GRANTED;
             if (permissionGranted) {
                 startMediaPickerDataLoader();
@@ -236,6 +236,6 @@ class GalleryMediaChooser extends MediaChooser implements
 
     @Override
     protected void setHasOptionsMenu() {
-        mMediaPicker.setHasOptionsMenu(true);
+        mCameraGalleryFragment.setHasOptionsMenu(true);
     }
 }
