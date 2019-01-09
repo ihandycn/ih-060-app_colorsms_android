@@ -701,7 +701,7 @@ public class ConversationMessageView extends FrameLayout implements View.OnClick
                 textBackground = drawableProvider.getBubbleDrawable(
                         isSelected(),
                         incoming,
-                        false /* needArrow */,
+                        true /* needArrow */,
                         mData.hasIncomingErrorStatus());
                 textMinHeight = messageTextMinHeightDefault;
                 textTopMargin = messageTopPaddingClustered;

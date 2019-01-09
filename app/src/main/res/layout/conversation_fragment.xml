@@ -47,8 +47,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="4dp"
                 android:layout_gravity="bottom"
-                android:background="@drawable/conversation_compose_divider_gradient"
                 android:alpha="0"
+                android:background="@color/transparent"
                 android:importantForAccessibility="no" />
 
             <include layout="@layout/sim_selector_view"

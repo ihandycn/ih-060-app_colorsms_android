@@ -122,6 +122,8 @@ public class BaseAlertDialog {
 
         this.dialog = dialog;
 
+        layout.setOnClickListener(v -> dialog.dismiss());
+
         ((TextView) layout.findViewById(R.id.dialog_title)).setText(builder.title);
         // set the confirm button
         if (!TextUtils.isEmpty(builder.positiveButtonText)) {
