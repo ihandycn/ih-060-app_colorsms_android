@@ -14,12 +14,13 @@ import com.android.messaging.ui.UIIntents;
 import com.android.messaging.ui.WebViewActivity;
 import com.android.messaging.util.BugleAnalytics;
 import com.android.messaging.util.OsUtil;
-import com.android.messaging.util.UiUtils;
 import com.ihs.commons.config.HSConfig;
 import com.superapps.util.Dimensions;
 import com.superapps.view.TypefacedTextView;
 
 public class WelcomeStartActivity extends AppCompatActivity implements View.OnClickListener {
+    private static final int REQUIRED_PERMISSIONS_REQUEST_CODE = 1;
+    private boolean mShieldBackKey = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,6 +37,8 @@ public class WelcomeStartActivity extends AppCompatActivity implements View.OnCl
         TypefacedTextView policyText = findViewById(R.id.welcome_start_policy);
         policyText.getPaint().setFlags(Paint.UNDERLINE_TEXT_FLAG);
         policyText.setOnClickListener(this);
+
+        mShieldBackKey = HSConfig.optBoolean(false, "Application", "StartPageAllowBack");
     }
 
     @Override
@@ -46,19 +49,28 @@ public class WelcomeStartActivity extends AppCompatActivity implements View.OnCl
 
     @Override
     public void onBackPressed() {
-        super.onBackPressed();
-        BugleAnalytics.logEvent("SMS_Start_WelcomePage_Back", true);
+        if (!mShieldBackKey) {
+            super.onBackPressed();
+            BugleAnalytics.logEvent("SMS_Start_WelcomePage_Back", true);
+        }
     }
 
     @Override
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.welcome_start_button:
-                if (!UiUtils.redirectToWelcomeIfNeeded(this)) {
+                String[] permissions = OsUtil.getMissingRequiredPermissions();
+                if (permissions.length != 0) {
+                    requestPermissions(permissions, REQUIRED_PERMISSIONS_REQUEST_CODE);
+                } else {
                     UIIntents.get().launchConversationListActivity(this);
                     finish();
                 }
-                BugleAnalytics.logEvent("SMS_Start_WelcomePage_BtnClick", true);
+                if (OsUtil.isAtLeastM()) {
+                    BugleAnalytics.logEvent("SMS_Start_WelcomePage_BtnClick_Above23", true);
+                } else {
+                    BugleAnalytics.logEvent("SMS_Start_WelcomePage_BtnClick_Below23", true);
+                }
                 break;
 
             case R.id.welcome_start_service:
@@ -77,11 +89,23 @@ public class WelcomeStartActivity extends AppCompatActivity implements View.OnCl
         }
     }
 
+    @Override
+    public void onRequestPermissionsResult(
+            final int requestCode, final String permissions[], final int[] grantResults) {
+        if (requestCode == REQUIRED_PERMISSIONS_REQUEST_CODE) {
+            if (OsUtil.hasRequiredPermissions()) {
+                BugleAnalytics.logEvent("SMS_Start_WelcomePage_Permission_Success", true);
+            }
+            UIIntents.get().launchConversationListActivity(this);
+            finish();
+        }
+    }
+
     @SuppressLint("NewApi")
     private void configNavigationBar() {
         if (OsUtil.isAtLeastL()) {
             getWindow().getDecorView().setSystemUiVisibility(
-                    View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION |View.SYSTEM_UI_FLAG_FULLSCREEN);
+                    View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION | View.SYSTEM_UI_FLAG_FULLSCREEN);
             getWindow().setNavigationBarColor(Color.TRANSPARENT);
 
             int navigationHeight = Dimensions.getNavigationBarHeight(this);

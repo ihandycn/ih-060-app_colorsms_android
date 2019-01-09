@@ -9,9 +9,11 @@ import com.android.messaging.R;
 import com.android.messaging.ui.UIIntents;
 import com.android.messaging.util.BugleAnalytics;
 import com.android.messaging.util.PhoneUtils;
+import com.ihs.commons.config.HSConfig;
 
 public class WelcomeSetAsDefault extends AppCompatActivity {
-    private static final int REQUEST_SET_DEFAULT_SMS_APP = 2;
+    private static final int REQUEST_SET_DEFAULT_SMS_APP = 3;
+    private boolean mShieldBackKey = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -23,6 +25,8 @@ public class WelcomeSetAsDefault extends AppCompatActivity {
             startActivityForResult(intent, REQUEST_SET_DEFAULT_SMS_APP);
             BugleAnalytics.logEvent("SMS_Start_SetDefaultPage_Btnclick", true);
         });
+
+        mShieldBackKey = HSConfig.optBoolean(false, "Application", "StartPageAllowBack");
     }
 
     @Override
@@ -33,8 +37,10 @@ public class WelcomeSetAsDefault extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        super.onBackPressed();
-        BugleAnalytics.logEvent("SMS_Start_SetDefaultPage_Back", true);
+        if (!mShieldBackKey) {
+            super.onBackPressed();
+            BugleAnalytics.logEvent("SMS_Start_SetDefaultPage_Back", true);
+        }
     }
 
     @Override
