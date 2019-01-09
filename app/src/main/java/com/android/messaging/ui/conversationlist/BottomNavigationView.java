@@ -31,8 +31,8 @@ public class BottomNavigationView extends LinearLayout {
         super(context, attrs);
     }
 
-    public void setSelectedPositon(int positon) {
-        mCurrentPosition = positon;
+    public void setSelectedPosition(int position) {
+        onSelected(position);
     }
 
     public void setOnItemSelectedListener(OnItemSelectedListener listener) {
@@ -43,45 +43,33 @@ public class BottomNavigationView extends LinearLayout {
     protected void onFinishInflate() {
         super.onFinishInflate();
 
-        findViewById(R.id.item_messaging).setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                onSelected(POSITION_MESSAGING);
-            }
+        findViewById(R.id.item_messaging).setOnClickListener(v -> onSelected(POSITION_MESSAGING));
+
+
+        findViewById(R.id.item_smsshow).setOnClickListener(v -> onSelected(POSITION_SMS_SHOW));
+
+        findViewById(R.id.item_emoji).setOnClickListener(v -> {
+            BugleAnalytics.logEvent("SMSEmoji_ChatEmoji_Store_Click", true, "type", "tab");
+            onSelected(POSITION_EMOJI);
         });
 
+        mIcons.add(findViewById(R.id.item_messaging_icon));
+        mIcons.add(findViewById(R.id.item_smsshow_icon));
+        mIcons.add(findViewById(R.id.item_emoji_icon));
 
-        findViewById(R.id.item_smsshow).setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                onSelected(POSITION_SMS_SHOW);
-            }
-        });
-
-        findViewById(R.id.item_emoji).setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                BugleAnalytics.logEvent("SMSEmoji_ChatEmoji_Store_Click", true, "type", "tab");
-                onSelected(POSITION_EMOJI);
-            }
-        });
-
-        mIcons.add((ImageView) findViewById(R.id.item_messaging_icon));
-        mIcons.add((ImageView) findViewById(R.id.item_smsshow_icon));
-        mIcons.add((ImageView) findViewById(R.id.item_emoji_icon));
-
-        mTitles.add((TextView) findViewById(R.id.item_messaging_text));
-        mTitles.add((TextView) findViewById(R.id.item_smsshow_text));
-        mTitles.add((TextView) findViewById(R.id.item_emoji_text));
+        mTitles.add(findViewById(R.id.item_messaging_text));
+        mTitles.add(findViewById(R.id.item_smsshow_text));
+        mTitles.add(findViewById(R.id.item_emoji_text));
     }
 
     private void onSelected(int position) {
         if (mCurrentPosition == position) {
             return;
         }
-        mIcons.get(mCurrentPosition).setSelected(false);
-        mTitles.get(mCurrentPosition).setSelected(false);
-
+        if (mCurrentPosition >= 0) {
+            mIcons.get(mCurrentPosition).setSelected(false);
+            mTitles.get(mCurrentPosition).setSelected(false);
+        }
         mIcons.get(position).setSelected(true);
         mTitles.get(position).setSelected(true);
 

@@ -131,7 +131,7 @@ public class AvatarRequest extends UriImageRequest<AvatarRequestDescriptor> {
             sDefaultPersonBitmapLarge = largeDefaultPerson.getBitmap();
         }
 
-        Bitmap defaultPerson = null;
+        Bitmap defaultPerson;
         if (mDescriptor.isWearBackground) {
             final BitmapDrawable wearDefaultPerson = (BitmapDrawable) mContext.getResources()
                     .getDrawable(R.drawable.ic_person_wear);

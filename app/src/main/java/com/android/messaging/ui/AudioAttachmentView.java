@@ -108,36 +108,33 @@ public class AudioAttachmentView extends LinearLayout {
     protected void onFinishInflate() {
         super.onFinishInflate();
 
-        mPlayPauseButton = (AudioAttachmentPlayPauseButton) findViewById(R.id.play_pause_button);
-        mChronometer = (PausableChronometer) findViewById(R.id.timer);
+        mPlayPauseButton = findViewById(R.id.play_pause_button);
+        mChronometer = findViewById(R.id.timer);
         mChronometer.setTypeface(Typefaces.getCustomRegular());
-        mProgressBar = (AudioPlaybackProgressBar) findViewById(R.id.progress);
-        mPlayPauseButton.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(final View v) {
-                // Has the MediaPlayer already been prepared?
-                if (mMediaPlayer != null && mPrepared) {
-                    if (mMediaPlayer.isPlaying()) {
-                        mMediaPlayer.pause();
-                        mChronometer.pause();
-                        mProgressBar.pause();
-                    } else {
-                        playAudio();
-                    }
+        mProgressBar = findViewById(R.id.progress);
+        mPlayPauseButton.setOnClickListener(v -> {
+            // Has the MediaPlayer already been prepared?
+            if (mMediaPlayer != null && mPrepared) {
+                if (mMediaPlayer.isPlaying()) {
+                    mMediaPlayer.pause();
+                    mChronometer.pause();
+                    mProgressBar.pause();
                 } else {
-                    // Either eager preparation is still going on (the user must have clicked
-                    // the Play button immediately after the view is bound) or this is lazy
-                    // preparation.
-                    if (mStartPlayAfterPrepare) {
-                        // The user is (starting and) pausing before the MediaPlayer is prepared
-                        mStartPlayAfterPrepare = false;
-                    } else {
-                        mStartPlayAfterPrepare = true;
-                        setupMediaPlayer();
-                    }
+                    playAudio();
                 }
-                updatePlayPauseButtonState();
+            } else {
+                // Either eager preparation is still going on (the user must have clicked
+                // the Play button immediately after the view is bound) or this is lazy
+                // preparation.
+                if (mStartPlayAfterPrepare) {
+                    // The user is (starting and) pausing before the MediaPlayer is prepared
+                    mStartPlayAfterPrepare = false;
+                } else {
+                    mStartPlayAfterPrepare = true;
+                    setupMediaPlayer();
+                }
             }
+            updatePlayPauseButtonState();
         });
         updatePlayPauseButtonState();
         initializeViewsForMode();
@@ -229,45 +226,36 @@ public class AudioAttachmentView extends LinearLayout {
             try {
                 mMediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
                 mMediaPlayer.setDataSource(Factory.get().getApplicationContext(), mDataSourceUri);
-                mMediaPlayer.setOnCompletionListener(new OnCompletionListener() {
-                    @Override
-                    public void onCompletion(final MediaPlayer mp) {
-                        updatePlayPauseButtonState();
-                        mChronometer.reset();
-                        mChronometer.setBase(SystemClock.elapsedRealtime() -
-                                mMediaPlayer.getDuration());
-                        updateChronometerVisibility(false /* playing */);
-                        mProgressBar.reset();
+                mMediaPlayer.setOnCompletionListener(mp -> {
+                    updatePlayPauseButtonState();
+                    mChronometer.reset();
+                    mChronometer.setBase(SystemClock.elapsedRealtime() -
+                            mMediaPlayer.getDuration());
+                    updateChronometerVisibility(false /* playing */);
+                    mProgressBar.reset();
 
-                        mPlaybackFinished = true;
-                    }
+                    mPlaybackFinished = true;
                 });
 
-                mMediaPlayer.setOnPreparedListener(new OnPreparedListener() {
-                    @Override
-                    public void onPrepared(final MediaPlayer mp) {
-                        // Set base on the chronometer so we can show the full length of the audio.
-                        mChronometer.setBase(SystemClock.elapsedRealtime() -
-                                mMediaPlayer.getDuration());
-                        mProgressBar.setDuration(mMediaPlayer.getDuration());
-                        mMediaPlayer.seekTo(0);
-                        mPrepared = true;
+                mMediaPlayer.setOnPreparedListener(mp -> {
+                    // Set base on the chronometer so we can show the full length of the audio.
+                    mChronometer.setBase(SystemClock.elapsedRealtime() -
+                            mMediaPlayer.getDuration());
+                    mProgressBar.setDuration(mMediaPlayer.getDuration());
+                    mMediaPlayer.seekTo(0);
+                    mPrepared = true;
 
-                        if (mStartPlayAfterPrepare) {
-                            mStartPlayAfterPrepare = false;
-                            playAudio();
-                            updatePlayPauseButtonState();
-                        }
-                    }
-                });
-
-                mMediaPlayer.setOnErrorListener(new OnErrorListener() {
-                    @Override
-                    public boolean onError(final MediaPlayer mp, final int what, final int extra) {
+                    if (mStartPlayAfterPrepare) {
                         mStartPlayAfterPrepare = false;
-                        onAudioReplayError(what, extra, null);
-                        return true;
+                        playAudio();
+                        updatePlayPauseButtonState();
                     }
+                });
+
+                mMediaPlayer.setOnErrorListener((mp, what, extra) -> {
+                    mStartPlayAfterPrepare = false;
+                    onAudioReplayError(what, extra, null);
+                    return true;
                 });
 
                 mMediaPlayer.prepareAsync();
@@ -375,10 +363,10 @@ public class AudioAttachmentView extends LinearLayout {
                 mProgressBar.setVisibility(GONE);
                 mChronometer.setVisibility(GONE);
                 ((MarginLayoutParams) mPlayPauseButton.getLayoutParams()).setMargins(0, 0, 0, 0);
-                final ImageView playButton = (ImageView) findViewById(R.id.play_button);
+                final ImageView playButton = findViewById(R.id.play_button);
                 playButton.setImageDrawable(
                         getResources().getDrawable(R.drawable.ic_preview_play));
-                final ImageView pauseButton = (ImageView) findViewById(R.id.pause_button);
+                final ImageView pauseButton = findViewById(R.id.pause_button);
                 pauseButton.setImageDrawable(
                         getResources().getDrawable(R.drawable.ic_preview_pause));
                 break;

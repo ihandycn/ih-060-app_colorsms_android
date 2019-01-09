@@ -33,7 +33,7 @@
     <dimen name="conversation_list_image_preview_corner_radius">3dp</dimen>
     <dimen name="conversation_list_image_preview_size">41dp</dimen>
     <dimen name="conversation_list_contact_icon_size">40dp</dimen>
-    <dimen name="conversation_list_error_icon_size">16dp</dimen>
+    <dimen name="conversation_list_error_icon_size">18.7dp</dimen>
     <dimen name="conversation_message_contact_icon_size">42dp</dimen>
     <dimen name="conversation_message_info_min_height">36dp</dimen>
     <dimen name="conversation_message_contact_bubble_margin">11dp</dimen>

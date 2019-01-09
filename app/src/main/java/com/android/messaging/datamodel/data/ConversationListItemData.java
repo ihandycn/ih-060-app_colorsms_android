@@ -207,7 +207,7 @@ public class ConversationListItemData {
         return mNotificationSoundUri;
     }
 
-    public boolean getNotifiationVibrate() {
+    public boolean getNotificationVibrate() {
         return mNotificationVibrate;
     }
 

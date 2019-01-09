@@ -16,8 +16,11 @@
         <com.superapps.view.TypefacedTextView
             android:id="@+id/toolbar_title"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:layout_gravity="center"
+            android:gravity="center"
+            android:paddingLeft="5dp"
+            android:paddingRight="5dp"
             android:text="@string/bottom_navigation_item_messaging"
             android:textColor="@color/action_bar_title_text_color"
             android:textSize="@dimen/action_bar_page_title_text_size"
@@ -31,6 +34,13 @@
         android:layout_height="match_parent"
         android:layout_marginBottom="@dimen/bottom_navigation_view_height"
         android:layout_marginTop="@dimen/action_bar_height" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:layout_gravity="bottom"
+        android:layout_marginBottom="@dimen/bottom_navigation_view_height"
+        android:background="@color/divider_color" />
 
     <include layout="@layout/bottom_navigation_view_auto_res" />
 </FrameLayout>

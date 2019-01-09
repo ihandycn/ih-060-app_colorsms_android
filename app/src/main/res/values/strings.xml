@@ -977,9 +977,9 @@
 
     <string name="work_directory_display_name">Work Profile contacts</string>
 
-    <string name="bottom_navigation_item_messaging">Messaging</string>
-    <string name="bottom_navigation_item_sms_show">SMS Show</string>
-    <string name="bottom_navigation_item_emoji">Emoji</string>
+    <string name="bottom_navigation_item_messaging">&#160;Messages&#160;</string>
+    <string name="bottom_navigation_item_sms_show">&#160;SMS Show&#160;</string>
+    <string name="bottom_navigation_item_emoji">&#160;Emoji&#160;</string>
 
     <string name="action_bar_title_typeface">Script-Roman.otf</string>
     <string name="network_error">Network error.</string>

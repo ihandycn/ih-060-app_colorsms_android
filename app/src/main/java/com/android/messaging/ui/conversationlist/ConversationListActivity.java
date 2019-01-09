@@ -248,7 +248,13 @@ public class ConversationListActivity extends AbstractConversationListActivity
         mViewPager.setAdapter(mPagerAdapter);
         mViewPager.setOffscreenPageLimit(2);
         bottomNavigationView.setOnItemSelectedListener(this);
-        bottomNavigationView.setSelectedPositon(0);
+        bottomNavigationView.setSelectedPosition(0);
+        mViewPager.setOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener(){
+            @Override
+            public void onPageSelected(int position) {
+                bottomNavigationView.setSelectedPosition(position);
+            }
+        });
     }
 
     private void initBanner() {

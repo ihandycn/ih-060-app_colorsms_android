@@ -888,7 +888,7 @@ public abstract class MessageNotificationState extends NotificationState {
                                 convData.getSelfId(),
                                 convData.getNotificationSoundUri(),
                                 convData.getNotificationEnabled(),
-                                convData.getNotifiationVibrate(),
+                                convData.getNotificationVibrate(),
                                 avatarUri,
                                 convMessageData.getSenderContactLookupUri(),
                                 subId,
