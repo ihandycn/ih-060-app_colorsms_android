@@ -997,6 +997,7 @@
 
     <!--sms show-->
     <string name="sms_show_apply">APPLY</string>
+    <string name="sms_show_current_theme">CURRENT THEME</string>
 
     <!-- Welcome-->
     <string name="welcome_start_button">START</string>

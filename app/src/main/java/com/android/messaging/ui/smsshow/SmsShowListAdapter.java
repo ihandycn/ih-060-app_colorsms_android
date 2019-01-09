@@ -29,13 +29,13 @@ public class SmsShowListAdapter extends RecyclerView.Adapter<SmsShowListAdapter.
     private ArrayList<SmsShowListItemData> mData;
     private Context mContext;
 
-    private static final String[] COLORS = new String[] {
-            "#ff9af6e1",
-            "#fffae997",
-            "#ffa4ffb1",
-            "#ffffb7a4",
-            "#ffa4efff",
-            "#ffa4c0ff",
+    private static final int[] COLORS = new int[]{
+            0xff9af6e1,
+            0xfffae997,
+            0xffa4ffb1,
+            0xffffb7a4,
+            0xffa4efff,
+            0xffa4c0ff,
     };
 
     private int mSelectedPosition;
@@ -77,7 +77,8 @@ public class SmsShowListAdapter extends RecyclerView.Adapter<SmsShowListAdapter.
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        String url = mSelectedPosition == position
+        boolean isSelected = mSelectedPosition == position;
+        String url = isSelected
                 ? mData.get(position).getSmsShowUrl()
                 : mData.get(position).getMainPagePreviewUrl();
 
@@ -89,6 +90,11 @@ public class SmsShowListAdapter extends RecyclerView.Adapter<SmsShowListAdapter.
                 .optionalTransform(WebpDrawable.class, new WebpDrawableTransformation(centerCrop))
                 .placeholder(getThemePreviewDrawable(position))
                 .into(holder.mSmsShowImage);
+
+        GlideApp.with(mContext).load(isSelected ? R.drawable.sms_show_detail_page_background : "").centerCrop().into(holder.mSmsShowBackground);
+        GlideApp.with(mContext).load(isSelected ? R.drawable.sms_show_message_box : "").into(holder.mMessageBox);
+
+        holder.mCheckMark.setVisibility(isSelected ? View.VISIBLE : View.GONE);
     }
 
     @Override
@@ -98,7 +104,7 @@ public class SmsShowListAdapter extends RecyclerView.Adapter<SmsShowListAdapter.
 
     private Drawable getThemePreviewDrawable(int position) {
         int colorIndex = position % COLORS.length;
-        return new ColorDrawable(Color.parseColor(COLORS[colorIndex]));
+        return new ColorDrawable(COLORS[colorIndex]);
     }
 
     private int getSelectedPosition() {
@@ -116,10 +122,16 @@ public class SmsShowListAdapter extends RecyclerView.Adapter<SmsShowListAdapter.
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
         ImageView mSmsShowImage;
+        ImageView mSmsShowBackground;
+        ImageView mMessageBox;
+        ImageView mCheckMark;
 
         public ViewHolder(View itemView) {
             super(itemView);
             mSmsShowImage = itemView.findViewById(R.id.sms_show_image);
+            mSmsShowBackground = itemView.findViewById(R.id.sms_show_background);
+            mMessageBox = itemView.findViewById(R.id.message_box);
+            mCheckMark = itemView.findViewById(R.id.selected_checkmark);
         }
     }
 

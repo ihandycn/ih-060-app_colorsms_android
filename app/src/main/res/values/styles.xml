@@ -759,4 +759,17 @@
         <item name="colorSwitchThumbNormal">#c0c2cb</item>
     </style>
 
+    <style name="SmsShow.DarkFullScreen" parent="Theme.AppCompat.DayNight.NoActionBar">
+        <item name="windowNoTitle">true</item>
+        <item name="android:windowFullscreen">true</item>
+        <item name="android:windowContentOverlay">@null</item>
+    </style>
+
+
+    <style name="SmsShowProgressBar" parent="Base.Widget.AppCompat.ProgressBar.Horizontal">
+        <item name="android:progressDrawable">@drawable/sms_show_loading_progress_bar</item>
+        <item name="android:minHeight">5.3dip</item>
+        <item name="android:maxHeight">5.3dip</item>
+    </style>
+    
 </resources>

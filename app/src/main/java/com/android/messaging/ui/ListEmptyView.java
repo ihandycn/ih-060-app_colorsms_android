@@ -23,6 +23,7 @@ import android.widget.LinearLayout;
 import android.widget.LinearLayout.LayoutParams;
 import android.widget.TextView;
 
+import com.airbnb.lottie.LottieAnimationView;
 import com.android.messaging.R;
 
 /**
@@ -31,6 +32,7 @@ import com.android.messaging.R;
 public class ListEmptyView extends LinearLayout {
     private ImageView mEmptyImageHint;
     private TextView mEmptyTextHint;
+    private LottieAnimationView mLoadingAnimationView;
 
     public ListEmptyView(final Context context, final AttributeSet attrs) {
         super(context, attrs);
@@ -42,6 +44,7 @@ public class ListEmptyView extends LinearLayout {
 
         mEmptyImageHint = (ImageView) findViewById(R.id.empty_image_hint);
         mEmptyTextHint = (TextView) findViewById(R.id.empty_text_hint);
+        mLoadingAnimationView = (LottieAnimationView) findViewById(R.id.loading_image_hint);
     }
 
     public void setImageHint(final int resId) {
@@ -58,6 +61,17 @@ public class ListEmptyView extends LinearLayout {
 
     public void setIsImageVisible(final boolean isImageVisible) {
         mEmptyImageHint.setVisibility(isImageVisible ? VISIBLE : GONE);
+    }
+
+    public void setIsLoadingAnimationVisible(final boolean isLoadingAnimationVisible) {
+        if (isLoadingAnimationVisible) {
+            setIsImageVisible(false);
+            mLoadingAnimationView.setVisibility(VISIBLE);
+            mLoadingAnimationView.playAnimation();
+        } else {
+            mLoadingAnimationView.setVisibility(GONE);
+            mLoadingAnimationView.cancelAnimation();
+        }
     }
 
     public void setIsVerticallyCentered(final boolean isVerticallyCentered) {

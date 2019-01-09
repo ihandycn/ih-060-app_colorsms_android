@@ -83,6 +83,10 @@
 
     <!--sms show-->
     <color name="sms_show_list_background_color">#f1f2f6</color>
+    <color name="sms_show_detail_apply_button_bg_color">#be32ff</color>
+    <color name="sms_show_detail_apply_button_text_color">#ffffff</color>
+    <color name="sms_show_detail_apply_button_applied_text_color">#be32ff</color>
+    <color name="sms_show_detail_apply_button_applied_bg_color">#ffffff</color>
 
     <!-- Base color used for color filtering. -->
     <color name="color_filter_base_color">#ff0000</color>

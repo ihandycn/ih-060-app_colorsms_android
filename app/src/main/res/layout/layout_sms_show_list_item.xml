@@ -7,12 +7,37 @@
     android:layout_marginEnd="3dp"
     android:layout_marginTop="10dp"
     app:cardElevation="0dp"
-    app:cardCornerRadius="16dp">
+    app:cardPreventCornerOverlap="false"
+    app:cardCornerRadius="@dimen/sms_show_list_item_radius">
+
+
+    <ImageView
+        android:id="@+id/sms_show_background"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+    <ImageView
+        android:id="@+id/message_box"
+        android:layout_width="150dp"
+        android:layout_height="90dp"
+        android:layout_gravity="center"
+        android:layout_marginBottom="10dp" />
 
     <ImageView
         android:id="@+id/sms_show_image"
         android:layout_width="match_parent"
-        android:layout_height="280dp"
-        />
+        android:layout_height="270dp" />
+
+    <ImageView
+        android:id="@+id/selected_checkmark"
+        android:layout_gravity="top|end"
+        android:layout_width="37dp"
+        android:layout_height="37dp"
+        android:paddingStart="12dp"
+        android:paddingEnd="8dp"
+        android:paddingTop="10dp"
+        android:paddingBottom="12dp"
+        android:background="@drawable/sms_show_list_item_selected_white_background"
+        android:src="@drawable/ic_apply_checkmark" />
 
 </android.support.v7.widget.CardView>

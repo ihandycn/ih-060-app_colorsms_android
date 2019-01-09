@@ -371,6 +371,10 @@ public class UIIntentsImpl extends UIIntents {
         final Intent intent = new Intent(context, SmsShowDetailActivity.class);
         intent.putExtra(UI_INTENT_EXTRA_SMS_SHOW_ID, id);
         intent.putExtra(UI_INTENT_EXTRA_SMS_SHOW_URL, smsShowUrl);
+
+        if (context instanceof Activity) {
+            ((Activity) context).overridePendingTransition(R.anim.smsshow_detail_in, R.anim.smsshow_detail_out);
+        }
         context.startActivity(intent);
     }
 

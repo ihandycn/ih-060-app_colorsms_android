@@ -260,6 +260,9 @@
  public *;
 }
 
+-keep class me.jessyan.progressmanager.** { *; }
+ -keep interface me.jessyan.progressmanager.** { *; }
+
 -keep class com.google.** { *; }
 
 -keep class android.support.graphics.drawable.** { *; }

@@ -474,7 +474,7 @@
             android:excludeFromRecents="true"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
-            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
+            android:theme="@style/SmsShow.DarkFullScreen" />
         <activity
             android:name=".ui.smsshow.SmsShowActivity"
             android:configChanges="orientation|screenSize|keyboardHidden"
