@@ -175,8 +175,6 @@ public class ConversationListFragment extends Fragment implements ConversationLi
         mRecyclerView = (RecyclerView) rootView.findViewById(android.R.id.list);
         mEmptyListMessageView = (ListEmptyView) rootView.findViewById(R.id.no_conversations_view);
         mEmptyListMessageView.setImageHint(R.drawable.ic_oobe_conv_list);
-        mEmptyListMessageView.setIsImageVisible(false);
-        mEmptyListMessageView.setIsLoadingAnimationVisible(true);
 
         // The default behavior for default layout param generation by LinearLayoutManager is to
         // provide width and height of WRAP_CONTENT, but this is not desirable for
@@ -362,8 +360,10 @@ public class ConversationListFragment extends Fragment implements ConversationLi
     private void updateEmptyListUi(final boolean isEmpty) {
         if (isEmpty) {
             int emptyListText;
+            boolean isFirstSynsCompleted = true;
             if (!mListBinding.getData().getHasFirstSyncCompleted()) {
                 emptyListText = R.string.conversation_list_first_sync_text;
+                isFirstSynsCompleted = false;
             } else if (mArchiveMode) {
                 emptyListText = R.string.archived_conversation_list_empty_text;
             } else {
@@ -371,8 +371,8 @@ public class ConversationListFragment extends Fragment implements ConversationLi
             }
             mEmptyListMessageView.setTextHint(emptyListText);
             mEmptyListMessageView.setVisibility(View.VISIBLE);
-            mEmptyListMessageView.setIsImageVisible(true);
-            mEmptyListMessageView.setIsLoadingAnimationVisible(false);
+            mEmptyListMessageView.setIsImageVisible(isFirstSynsCompleted);
+            mEmptyListMessageView.setIsLoadingAnimationVisible(!isFirstSynsCompleted);
             mEmptyListMessageView.setIsVerticallyCentered(true);
         } else {
             // stop loading animation
