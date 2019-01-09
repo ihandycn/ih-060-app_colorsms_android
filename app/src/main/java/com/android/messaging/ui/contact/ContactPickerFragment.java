@@ -278,6 +278,8 @@ public class ContactPickerFragment extends Fragment implements ContactPickerData
         if (data != null && data.getCount() == 0) {
             // Show the all contacts list when there's no frequents.
             mCustomHeaderViewPager.setCurrentItem(1);
+        } else if (data != null){
+            BugleAnalytics.logEvent("SMS_ContactsTabPage_Show", true, "type", "Frequents");
         }
     }
 
