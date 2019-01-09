@@ -18,7 +18,6 @@ import com.superapps.util.Dimensions;
 
 public class BaseAlertDialog {
 
-
     public static class Builder {
         private Context context;
         private String title;
@@ -173,11 +172,9 @@ public class BaseAlertDialog {
             layout.findViewById(R.id.content_view).setVisibility(View.GONE);
         }
 
-        dialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
-            @Override public void onDismiss(DialogInterface dialog) {
-                if (builder.onDismissListener != null) {
-                    builder.onDismissListener.onDismiss(dialog);
-                }
+        dialog.setOnDismissListener(dialog1 -> {
+            if (builder.onDismissListener != null) {
+                builder.onDismissListener.onDismiss(dialog1);
             }
         });
     }

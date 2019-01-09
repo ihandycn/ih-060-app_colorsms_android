@@ -14,10 +14,13 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.android.messaging.R;
+import com.android.messaging.datamodel.action.DeleteConversationAction;
 import com.android.messaging.feedback.FeedbackActivity;
 import com.android.messaging.smsshow.SmsShowUtils;
+import com.android.messaging.ui.BaseAlertDialog;
 import com.android.messaging.ui.UIIntents;
 import com.android.messaging.ui.WebViewActivity;
+import com.android.messaging.ui.conversationlist.MultiSelectActionModeCallback;
 import com.android.messaging.ui.dialog.FiveStarRateDialog;
 import com.android.messaging.util.BuglePrefs;
 import com.ihs.commons.config.HSConfig;
@@ -63,7 +66,22 @@ public class SettingGeneralActivity extends AppCompatActivity {
         //sms show --dong.guo
         mSMSShowView = findViewById(R.id.setting_item_sms_show);
         mSMSShowView.setChecked(SmsShowUtils.isSmsShowEnabledByUser());
-        mSMSShowView.setOnItemClickListener(() -> SmsShowUtils.setSmsShowUserEnabled(mSMSShowView.isChecked()));
+        mSMSShowView.setOnClickListener(v -> {
+            if (mSMSShowView.isChecked()) {
+                new BaseAlertDialog.Builder(this)
+                        .setTitle(getResources().getString(R.string.setting_sms_show_close_dialog_title))
+                        .setMessage(getResources().getString(R.string.setting_sms_show_close_dialog_content))
+                        .setNegativeButton(R.string.setting_sms_show_close_dialog_ok,
+                                (dialog, button) -> {
+                                    SmsShowUtils.setSmsShowUserEnabled(mSMSShowView.isChecked());
+                                    mSMSShowView.setChecked(false);
+                                })
+                        .setPositiveButton(R.string.delete_conversation_decline_button, null)
+                        .show();
+            } else {
+                mSMSShowView.setChecked(true);
+            }
+        });
 
         //pop ups
         mPopUpsView = findViewById(R.id.setting_item_sms_pop_ups);
@@ -106,8 +124,8 @@ public class SettingGeneralActivity extends AppCompatActivity {
         mNotificationView.setOnItemClickListener(() -> {
                     boolean b = mNotificationView.isChecked();
                     prefs.putBoolean(notificationKey, b);
-                    mSMSShowView.setEnable(b);
                     mPopUpsView.setEnable(b);
+                    mSMSShowView.setEnable(b && mPopUpsView.isChecked());
                     mSoundView.setEnable(b);
                     mVibrateView.setEnable(b);
                 }

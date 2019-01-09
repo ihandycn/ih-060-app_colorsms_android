@@ -1066,5 +1066,8 @@
     <string name="setting_sms_pop_ups_summary">Display a popup window after receiving SMS</string>
     <string name="setting_sms_show">SMS Show</string>
     <string name="setting_sms_show_summary">Beautify SMS reminder effects</string>
+    <string name="setting_sms_show_close_dialog_title">Confirm to turn off?</string>
+    <string name="setting_sms_show_close_dialog_content">You will lose the beautiful SMS reminder themes, really want to close it?</string>
+    <string name="setting_sms_show_close_dialog_ok">oooook</string>
 
 </resources>
