@@ -220,12 +220,20 @@ public class ConversationInputManager implements ConversationInput.ConversationI
         mMediaInput.resetViewHolderState();
     }
 
-    public void showHideMediaPicker(final boolean show, final boolean animate) {
-        showHideInternal(mMediaInput, show, animate);
+    public void showMediaPicker() {
+        showHideInternal(mMediaInput, true, true);
     }
 
-    public void showEmoji() {
+    public void hideMediaPicker(){
+        showHideInternal(mMediaInput, false, false);
+    }
+
+    public void showEmojiPicker() {
         showHideInternal(mEmojiInput, true, false);
+    }
+
+    public void hideEmojiPicker() {
+        showHideInternal(mEmojiInput, false, false);
     }
 
     /**
@@ -544,7 +552,7 @@ public class ConversationInputManager implements ConversationInput.ConversationI
 
         private EmojiPickerFragment mEmojiPickerFragment;
 
-        public ConversationEmojiPicker(ConversationInputBase baseHost) {
+        ConversationEmojiPicker(ConversationInputBase baseHost) {
             super(baseHost, false);
         }
 
@@ -555,7 +563,7 @@ public class ConversationInputManager implements ConversationInput.ConversationI
                 initEmojiPicker();
 
                 mFragmentManager.beginTransaction().replace(
-                        R.id.mediapicker_container,
+                        R.id.emoji_picker_container,
                         mEmojiPickerFragment,
                         EmojiPickerFragment.FRAGMENT_TAG).commit();
             }
@@ -564,12 +572,6 @@ public class ConversationInputManager implements ConversationInput.ConversationI
 
         @Override
         public boolean hide(boolean animate) {
-            if (mEmojiPickerFragment != null) {
-                mFragmentManager.beginTransaction()
-                        .remove(mEmojiPickerFragment)
-                        .commit();
-                mEmojiPickerFragment = null;
-            }
             return true;
         }
 
@@ -614,7 +616,7 @@ public class ConversationInputManager implements ConversationInput.ConversationI
             });
         }
 
-        private boolean isAddedToFragmentManager() {
+        boolean isAddedToFragmentManager() {
             return mEmojiPickerFragment != null && mFragmentManager.findFragmentByTag(EmojiPickerFragment.FRAGMENT_TAG) != null;
         }
     }

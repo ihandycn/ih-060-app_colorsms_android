@@ -13,21 +13,20 @@
     See the License for the specific language governing permissions and
     limitations under the License.
 -->
-<com.android.messaging.ui.conversation.ComposeMessageView
+<com.android.messaging.ui.conversation.ComposeMessageView android:id="@+id/message_compose_view_container"
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/message_compose_view_container"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="#f4f7f9"
     android:orientation="vertical">
 
-<!-- Note it may seem off to have the layout_weight="1" on the compose bar and attachment view
-     when it's the media picker that expands, but this is correct because weight also works when
-     there's not enough space.  Any views with positive weights will be shrunk to make space.
-     When the media picker goes full screen, it fills the parent, leaving no room for the compose
-     bar -->
+    <!-- Note it may seem off to have the layout_weight="1" on the compose bar and attachment view
+         when it's the media picker that expands, but this is correct because weight also works when
+         there's not enough space.  Any views with positive weights will be shrunk to make space.
+         When the media picker goes full screen, it fills the parent, leaving no room for the compose
+         bar -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -45,7 +44,7 @@
         <View
             android:layout_width="match_parent"
             android:layout_height="1px"
-            android:background="#e9ebf2"/>
+            android:background="#e9ebf2" />
 
         <include
             android:id="@+id/attachment_draft_view"
@@ -167,6 +166,7 @@
             </RelativeLayout>
 
             <LinearLayout
+                android:id="@+id/input_layout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="bottom"
@@ -213,6 +213,12 @@
         android:id="@+id/mediapicker_container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_weight="0" />
+        android:visibility="gone" />
+
+    <FrameLayout
+        android:id="@+id/emoji_picker_container"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:visibility="gone" />
 
 </com.android.messaging.ui.conversation.ComposeMessageView>
