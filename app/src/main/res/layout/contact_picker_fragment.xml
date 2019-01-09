@@ -67,6 +67,7 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1">
+
         <com.android.messaging.ui.CustomHeaderViewPager
             android:id="@+id/contact_pager"
             android:layout_width="match_parent"
@@ -75,8 +76,8 @@
         <View
             android:id="@+id/compose_contact_divider"
             android:layout_width="match_parent"
-            android:layout_height="4dp"
+            android:layout_height="1px"
             android:layout_gravity="top"
-            android:background="@drawable/compose_chips_divider_gradient"/>
+            android:background="#e9ebf2"/>
     </FrameLayout>
 </LinearLayout>
