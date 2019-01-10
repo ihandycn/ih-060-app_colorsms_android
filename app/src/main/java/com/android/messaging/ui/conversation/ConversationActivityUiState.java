@@ -167,9 +167,9 @@ public class ConversationActivityUiState implements Parcelable, Cloneable {
      */
     public void onStartMessageCompose() {
         // This cannot happen when we are in one of the full-screen contact picking states.
-        Assert.isTrue(mConversationContactUiState != STATE_CONTACT_PICKER_ONLY_INITIAL_CONTACT &&
-                mConversationContactUiState != STATE_CONTACT_PICKER_ONLY_ADD_MORE_CONTACTS &&
-                mConversationContactUiState != STATE_CONTACT_PICKER_ONLY_MAX_PARTICIPANTS);
+//        Assert.isTrue(mConversationContactUiState != STATE_CONTACT_PICKER_ONLY_INITIAL_CONTACT &&
+//                mConversationContactUiState != STATE_CONTACT_PICKER_ONLY_ADD_MORE_CONTACTS &&
+//                mConversationContactUiState != STATE_CONTACT_PICKER_ONLY_MAX_PARTICIPANTS);
         if (mConversationContactUiState == STATE_HYBRID_WITH_CONVERSATION_AND_CHIPS_VIEW) {
             performUiStateUpdate(STATE_CONVERSATION_ONLY, true);
         }
