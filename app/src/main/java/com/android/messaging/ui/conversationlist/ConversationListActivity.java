@@ -42,6 +42,8 @@ public class ConversationListActivity extends AbstractConversationListActivity
     private TextView mTitleTextView;
     private View mSettingsBtn;
 
+    private boolean mShowRateAlert = false;
+
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
         Trace.beginSection("ConversationListActivity.onCreate");
@@ -73,17 +75,21 @@ public class ConversationListActivity extends AbstractConversationListActivity
         super.updateActionBar(actionBar);
     }
 
-    private boolean showRate = false;
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        FiveStarRateDialog.dismissDialogs();
+    }
 
     @Override
     public void onBackPressed() {
         if (isInConversationListSelectMode()) {
             exitMultiSelectState();
         } else {
-            if (showRate || !FiveStarRateDialog.showShowFiveStarRateDialogOnBackToDesktopIfNeed(this)) {
+            if (mShowRateAlert || !FiveStarRateDialog.showShowFiveStarRateDialogOnBackToDesktopIfNeed(this)) {
                 super.onBackPressed();
             } else {
-                showRate = true;
+                mShowRateAlert = true;
             }
         }
     }
