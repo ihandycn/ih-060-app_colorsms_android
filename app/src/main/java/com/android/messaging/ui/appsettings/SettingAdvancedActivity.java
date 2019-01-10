@@ -14,6 +14,7 @@ import com.android.messaging.R;
 import com.android.messaging.datamodel.data.ParticipantData;
 import com.android.messaging.ui.UIIntents;
 import com.android.messaging.util.Assert;
+import com.android.messaging.util.BugleAnalytics;
 import com.android.messaging.util.BuglePrefs;
 import com.android.messaging.util.PhoneUtils;
 
@@ -61,8 +62,10 @@ public class SettingAdvancedActivity extends AppCompatActivity {
         final String autoRetrieveKey = getString(R.string.auto_retrieve_mms_pref_key);
         mAutoRetrieve.setChecked(prefs.getBoolean(autoRetrieveKey,
                 getResources().getBoolean(R.bool.auto_retrieve_mms_pref_default)));
-        mAutoRetrieve.setOnItemClickListener(() ->
-                prefs.putBoolean(autoRetrieveKey, mAutoRetrieve.isChecked()));
+        mAutoRetrieve.setOnItemClickListener(() -> {
+            prefs.putBoolean(autoRetrieveKey, mAutoRetrieve.isChecked());
+            BugleAnalytics.logEvent("SMS_Settings_Advanced_AutoRetrieve_Click", true);
+        });
 
         //Roaming auto retrieve
         mRoamingAutoRetrieve = findViewById(R.id.setting_advanced_roaming_auto_retrieve);
@@ -77,8 +80,11 @@ public class SettingAdvancedActivity extends AppCompatActivity {
         final String deliveryReportsKey = getString(R.string.delivery_reports_pref_key);
         mSMSDeliveryReports.setChecked(prefs.getBoolean(deliveryReportsKey,
                 getResources().getBoolean(R.bool.delivery_reports_pref_default)));
-        mSMSDeliveryReports.setOnItemClickListener(() -> prefs.putBoolean(deliveryReportsKey,
-                mSMSDeliveryReports.isChecked()));
+        mSMSDeliveryReports.setOnItemClickListener(() -> {
+            prefs.putBoolean(deliveryReportsKey, mSMSDeliveryReports.isChecked());
+            BugleAnalytics.logEvent("SMS_Settings_Advanced_DeliveryReports_Click", true);
+
+        });
 
         if (!PhoneUtils.getDefault().isDefaultSmsApp()) {
             mAutoRetrieve.setChecked(false);

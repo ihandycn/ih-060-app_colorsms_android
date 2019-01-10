@@ -29,6 +29,7 @@ import com.android.messaging.R;
 import com.android.messaging.ui.BasePagerAdapter;
 import com.android.messaging.ui.UIIntents;
 import com.android.messaging.ui.dialog.FiveStarRateDialog;
+import com.android.messaging.util.BugleAnalytics;
 import com.android.messaging.util.Trace;
 import com.android.messaging.util.UiUtils;
 import com.superapps.util.BackgroundDrawables;
@@ -145,8 +146,10 @@ public class ConversationListActivity extends AbstractConversationListActivity
         mSettingsBtn = findViewById(R.id.toolbar_img);
         mSettingsBtn.setBackground(BackgroundDrawables.createBackgroundDrawable(0xffffffff,
                 Dimensions.pxFromDp(20), true));
-        mSettingsBtn.setOnClickListener(v ->
-                UIIntents.get().launchSettingsActivity(this));
+        mSettingsBtn.setOnClickListener(v -> {
+            UIIntents.get().launchSettingsActivity(this);
+            BugleAnalytics.logEvent("SMS_Mainpage_Settings_Click", true);
+        });
         setSupportActionBar(toolbar);
         invalidateActionBar();
     }

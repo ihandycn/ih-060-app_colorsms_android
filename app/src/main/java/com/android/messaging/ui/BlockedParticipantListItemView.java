@@ -24,10 +24,11 @@ import android.widget.TextView;
 
 import com.android.messaging.R;
 import com.android.messaging.datamodel.data.ParticipantListItemData;
+import com.android.messaging.util.BugleAnalytics;
 
 /**
  * View for individual participant in blocked participants list.
- *
+ * <p>
  * Unblocks participant when clicked.
  */
 public class BlockedParticipantListItemView extends LinearLayout {
@@ -44,7 +45,10 @@ public class BlockedParticipantListItemView extends LinearLayout {
         super.onFinishInflate();
         mNameTextView = findViewById(R.id.name);
         mContactIconView = findViewById(R.id.contact_icon);
-        setOnClickListener(v -> mData.unblock(getContext()));
+        setOnClickListener(v -> {
+            mData.unblock(getContext());
+            BugleAnalytics.logEvent("SMS_Settings_BlockedContacts_Unlock", true);
+        });
     }
 
     public void bind(final ParticipantListItemData data) {
@@ -53,7 +57,7 @@ public class BlockedParticipantListItemView extends LinearLayout {
         mNameTextView.setText(bidiFormatter.unicodeWrap(
                 data.getDisplayName(), TextDirectionHeuristicsCompat.LTR));
         mContactIconView.setImageResourceUri(data.getAvatarUri(), data.getContactId(),
-                    data.getLookupKey(), data.getNormalizedDestination());
+                data.getLookupKey(), data.getNormalizedDestination());
         mNameTextView.setText(data.getDisplayName());
     }
 }

@@ -25,6 +25,7 @@ import com.android.messaging.datamodel.data.SettingsData.SettingsDataListener;
 import com.android.messaging.datamodel.data.SettingsData.SettingsItem;
 import com.android.messaging.ui.UIIntents;
 import com.android.messaging.util.Assert;
+import com.android.messaging.util.BugleAnalytics;
 import com.android.messaging.util.PhoneUtils;
 
 import java.util.ArrayList;
@@ -155,6 +156,7 @@ public class SettingsActivity extends AppCompatActivity {
                         case SettingsItem.TYPE_PER_SUBSCRIPTION_SETTINGS:
                             UIIntents.get().launchPerSubscriptionSettingsActivity(getActivity(),
                                     item.getSubId(), item.getActivityTitle());
+                            BugleAnalytics.logEvent("SMS_Settings_Advanced_Click", true);
                             break;
 
                         default:

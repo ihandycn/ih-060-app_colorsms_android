@@ -22,6 +22,7 @@ import com.android.messaging.ui.UIIntents;
 import com.android.messaging.ui.WebViewActivity;
 import com.android.messaging.ui.conversationlist.MultiSelectActionModeCallback;
 import com.android.messaging.ui.dialog.FiveStarRateDialog;
+import com.android.messaging.util.BugleAnalytics;
 import com.android.messaging.util.BuglePrefs;
 import com.ihs.commons.config.HSConfig;
 import com.messagecenter.customize.MessageCenterSettings;
@@ -61,7 +62,10 @@ public class SettingGeneralActivity extends AppCompatActivity {
         final boolean defaultValue = getResources().getBoolean(
                 R.bool.send_sound_pref_default);
         mOutgoingSoundView.setChecked(prefs.getBoolean(prefKey, defaultValue));
-        mOutgoingSoundView.setOnItemClickListener(() -> prefs.putBoolean(prefKey, mOutgoingSoundView.isChecked()));
+        mOutgoingSoundView.setOnItemClickListener(() -> {
+            prefs.putBoolean(prefKey, mOutgoingSoundView.isChecked());
+            BugleAnalytics.logEvent("SMS_Settings_MessageSounds_Click", true);
+        });
 
         //sms show --dong.guo
         mSMSShowView = findViewById(R.id.setting_item_sms_show);
@@ -81,6 +85,7 @@ public class SettingGeneralActivity extends AppCompatActivity {
             } else {
                 mSMSShowView.setChecked(true);
             }
+            BugleAnalytics.logEvent("SMS_Settings_SMSShow_Click", true);
         });
 
         //pop ups
@@ -94,19 +99,26 @@ public class SettingGeneralActivity extends AppCompatActivity {
             boolean b = mPopUpsView.isChecked();
             MessageCenterSettings.setSMSAssistantModuleEnabled(b);
             mSMSShowView.setEnable(b);
+            BugleAnalytics.logEvent("SMS_Settings_Popups_Click", true);
         });
 
         //sounds
         mSoundView = findViewById(R.id.setting_item_sound);
         updateSoundSummary();
-        mSoundView.setOnItemClickListener(this::onSoundItemClick);
+        mSoundView.setOnItemClickListener(() -> {
+            onSoundItemClick();
+            BugleAnalytics.logEvent("SMS_Settings_Sound_Click", true);
+        });
 
         //vibrate
         mVibrateView = findViewById(R.id.setting_item_vibrate);
         final String vibratePrefKey = getString(R.string.notification_vibration_pref_key);
         final boolean vibrateDefaultValue = getResources().getBoolean(R.bool.notification_vibration_pref_default);
         mVibrateView.setChecked(prefs.getBoolean(vibratePrefKey, vibrateDefaultValue));
-        mVibrateView.setOnItemClickListener(() -> prefs.putBoolean(vibratePrefKey, mVibrateView.isChecked()));
+        mVibrateView.setOnItemClickListener(() -> {
+            prefs.putBoolean(vibratePrefKey, mVibrateView.isChecked());
+            BugleAnalytics.logEvent("SMS_Settings_Vibrate_Click", true);
+        });
 
         //notification
         mNotificationView = findViewById(R.id.setting_item_notifications);
@@ -128,18 +140,22 @@ public class SettingGeneralActivity extends AppCompatActivity {
                     mSMSShowView.setEnable(b && mPopUpsView.isChecked());
                     mSoundView.setEnable(b);
                     mVibrateView.setEnable(b);
+                    BugleAnalytics.logEvent("SMS_Settings_Notifications_Click", true);
                 }
         );
 
         //blocked contacts
         SettingItemView mBlockedContactsView = findViewById(R.id.setting_item_blocked_contacts);
-        mBlockedContactsView.setOnItemClickListener(() ->
-                UIIntents.get().launchBlockedParticipantsActivity(this));
+        mBlockedContactsView.setOnItemClickListener(() -> {
+            UIIntents.get().launchBlockedParticipantsActivity(this);
+            BugleAnalytics.logEvent("SMS_Settings_BlockedContacts_Click", true);
+        });
 
         //advances
         SettingItemView mAdvancedView = findViewById(R.id.setting_item_advanced);
         if (topLevel) {
             mAdvancedView.setOnItemClickListener(() -> {
+                BugleAnalytics.logEvent("SMS_Settings_Advanced_Click", true);
                 Intent intent = UIIntents.get().getAdvancedSettingsIntent(this);
                 startActivity(intent);
             });
@@ -149,7 +165,10 @@ public class SettingGeneralActivity extends AppCompatActivity {
 
         //5 star
         SettingItemView mFiveStarRatingView = findViewById(R.id.setting_item_five_star_rating);
-        mFiveStarRatingView.setOnItemClickListener(() -> FiveStarRateDialog.showFiveStarFromSetting(this));
+        mFiveStarRatingView.setOnItemClickListener(() -> {
+            FiveStarRateDialog.showFiveStarFromSetting(this);
+            BugleAnalytics.logEvent("SMS_Settings_5StarRating_Click", true);
+        });
 
         //feedback
         ((SettingItemView) findViewById(R.id.setting_item_feedback)).setOnItemClickListener(
