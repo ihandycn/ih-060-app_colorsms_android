@@ -972,7 +972,11 @@ public class ConversationFragment extends Fragment implements ConversationDataLi
     }
 
     public String getConversationName() {
-        return mBinding.getData().getConversationName();
+        if (mBinding.isBound()) {
+            return mBinding.getData().getConversationName();
+        } else {
+            return "";
+        }
     }
 
     @Override
