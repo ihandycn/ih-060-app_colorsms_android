@@ -176,19 +176,26 @@ public class ComposeMessageView extends LinearLayout
     private final ConversationDataListener mDataListener = new SimpleConversationDataListener() {
         @Override
         public void onConversationMetadataUpdated(ConversationData data) {
-            mConversationDataModel.ensureBound(data);
+            if (mConversationDataModel != null) {
+                mConversationDataModel.ensureBound(data);
+            }
+
             updateVisualsOnDraftChanged();
         }
 
         @Override
         public void onConversationParticipantDataLoaded(ConversationData data) {
-            mConversationDataModel.ensureBound(data);
+            if (mConversationDataModel != null) {
+                mConversationDataModel.ensureBound(data);
+            }
             updateVisualsOnDraftChanged();
         }
 
         @Override
         public void onSubscriptionListDataLoaded(ConversationData data) {
-            mConversationDataModel.ensureBound(data);
+            if (mConversationDataModel != null) {
+                mConversationDataModel.ensureBound(data);
+            }
             updateOnSelfSubscriptionChange();
             updateVisualsOnDraftChanged();
         }
@@ -281,8 +288,11 @@ public class ComposeMessageView extends LinearLayout
         mSelfSendIcon.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                boolean shown = mInputManager.toggleSimSelector(true /* animate */,
-                        getSelfSubscriptionListEntry());
+                SubscriptionListEntry entry = getSelfSubscriptionListEntry();
+                boolean shown = false;
+                if (entry != null) {
+                    shown = mInputManager.toggleSimSelector(true /* animate */, entry);
+                }
                 hideAttachmentsWhenShowingSims(shown);
             }
         });
@@ -292,8 +302,11 @@ public class ComposeMessageView extends LinearLayout
                 if (mHost.shouldShowSubjectEditor()) {
                     showSubjectEditor();
                 } else {
-                    boolean shown = mInputManager.toggleSimSelector(true /* animate */,
-                            getSelfSubscriptionListEntry());
+                    SubscriptionListEntry entry = getSelfSubscriptionListEntry();
+                    boolean shown = false;
+                    if (entry != null) {
+                        shown = mInputManager.toggleSimSelector(true /* animate */, entry);
+                    }
                     hideAttachmentsWhenShowingSims(shown);
                 }
                 return true;
@@ -335,8 +348,11 @@ public class ComposeMessageView extends LinearLayout
         mSendButton.setOnLongClickListener(new OnLongClickListener() {
             @Override
             public boolean onLongClick(final View arg0) {
-                boolean shown = mInputManager.toggleSimSelector(true /* animate */,
-                        getSelfSubscriptionListEntry());
+                SubscriptionListEntry entry = getSelfSubscriptionListEntry();
+                boolean shown = false;
+                if (entry != null) {
+                    shown = mInputManager.toggleSimSelector(true /* animate */, entry);
+                }
                 hideAttachmentsWhenShowingSims(shown);
                 if (mHost.shouldShowSubjectEditor()) {
                     showSubjectEditor();
@@ -353,7 +369,7 @@ public class ComposeMessageView extends LinearLayout
                 if (event.getEventType() == AccessibilityEvent.TYPE_VIEW_LONG_CLICKED) {
                     event.getText().clear();
                     event.getText().add(getResources()
-                            .getText(shouldShowSimSelector(mConversationDataModel.getData()) ?
+                            .getText(mConversationDataModel != null && shouldShowSimSelector(mConversationDataModel.getData()) ?
                                     R.string.send_button_long_click_description_with_sim_selector :
                                     R.string.send_button_long_click_description_no_sim_selector));
                     // Make this an announcement so TalkBack will read our custom message.
@@ -550,7 +566,9 @@ public class ComposeMessageView extends LinearLayout
 
     public void setConversationDataModel(final ImmutableBindingRef<ConversationData> refDataModel) {
         mConversationDataModel = refDataModel;
-        mConversationDataModel.getData().addConversationDataListener(mDataListener);
+        if (mConversationDataModel != null) {
+            mConversationDataModel.getData().addConversationDataListener(mDataListener);
+        }
     }
 
     ImmutableBindingRef<DraftMessageData> getDraftDataModel() {
@@ -852,6 +870,9 @@ public class ComposeMessageView extends LinearLayout
     }
 
     private SubscriptionListEntry getSelfSubscriptionListEntry() {
+        if (mConversationDataModel == null || mBinding == null) {
+            return null;
+        }
         return mConversationDataModel.getData().getSubscriptionEntryForSelfParticipant(
                 mBinding.getData().getSelfId(), false /* excludeDefault */);
     }
@@ -909,7 +930,7 @@ public class ComposeMessageView extends LinearLayout
                 }
                 UiUtils.revealOrHideViewWithAnimation(mSendButton, GONE, null);
                 mMmsIndicator.setVisibility(INVISIBLE);
-                if (shouldShowSimSelector(mConversationDataModel.getData())) {
+                if (mConversationDataModel != null && shouldShowSimSelector(mConversationDataModel.getData())) {
                     sendWidgetMode = SEND_WIDGET_MODE_SIM_SELECTOR;
                 }
             }
@@ -927,7 +948,7 @@ public class ComposeMessageView extends LinearLayout
         final int attachmentCount = attachments.size();
         if (attachmentCount == 0) {
             final SubscriptionListEntry subscriptionListEntry =
-                    mConversationDataModel.getData().getSubscriptionEntryForSelfParticipant(
+                    mConversationDataModel == null ? null : mConversationDataModel.getData().getSubscriptionEntryForSelfParticipant(
                             mBinding.getData().getSelfId(), false /* excludeDefault */);
             if (subscriptionListEntry == null) {
                 mComposeEditText.setHint(R.string.compose_message_view_hint_text);
