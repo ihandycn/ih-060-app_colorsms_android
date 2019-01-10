@@ -10,10 +10,11 @@ import com.android.messaging.ui.UIIntents;
 import com.android.messaging.util.BugleAnalytics;
 import com.android.messaging.util.PhoneUtils;
 import com.ihs.commons.config.HSConfig;
+import com.superapps.util.Toasts;
 
 public class WelcomeSetAsDefault extends AppCompatActivity {
     private static final int REQUEST_SET_DEFAULT_SMS_APP = 3;
-    private boolean mShieldBackKey = false;
+    private boolean mAllowBackKey = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -26,7 +27,7 @@ public class WelcomeSetAsDefault extends AppCompatActivity {
             BugleAnalytics.logEvent("SMS_Start_SetDefaultPage_Btnclick", true);
         });
 
-        mShieldBackKey = HSConfig.optBoolean(false, "Application", "StartPageAllowBack");
+        mAllowBackKey = HSConfig.optBoolean(true, "Application", "StartPageAllowBack");
     }
 
     @Override
@@ -37,7 +38,7 @@ public class WelcomeSetAsDefault extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        if (!mShieldBackKey) {
+        if (mAllowBackKey) {
             super.onBackPressed();
             BugleAnalytics.logEvent("SMS_Start_SetDefaultPage_Back", true);
         }
@@ -51,8 +52,7 @@ public class WelcomeSetAsDefault extends AppCompatActivity {
                 BugleAnalytics.logEvent("SMS_Start_SetDefault_Success", true);
                 finish();
             } else {
-                Toast.makeText(this, R.string.welcome_set_default_failed_toast,
-                        Toast.LENGTH_LONG).show();
+                Toasts.showToast(R.string.welcome_set_default_failed_toast, Toast.LENGTH_LONG);
             }
         }
     }

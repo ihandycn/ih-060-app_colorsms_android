@@ -20,7 +20,7 @@ import com.superapps.view.TypefacedTextView;
 
 public class WelcomeStartActivity extends AppCompatActivity implements View.OnClickListener {
     private static final int REQUIRED_PERMISSIONS_REQUEST_CODE = 1;
-    private boolean mShieldBackKey = false;
+    private boolean mAllowBackKey = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,7 +38,7 @@ public class WelcomeStartActivity extends AppCompatActivity implements View.OnCl
         policyText.getPaint().setFlags(Paint.UNDERLINE_TEXT_FLAG);
         policyText.setOnClickListener(this);
 
-        mShieldBackKey = HSConfig.optBoolean(false, "Application", "StartPageAllowBack");
+        mAllowBackKey = HSConfig.optBoolean(true, "Application", "StartPageAllowBack");
     }
 
     @Override
@@ -49,7 +49,7 @@ public class WelcomeStartActivity extends AppCompatActivity implements View.OnCl
 
     @Override
     public void onBackPressed() {
-        if (!mShieldBackKey) {
+        if (mAllowBackKey) {
             super.onBackPressed();
             BugleAnalytics.logEvent("SMS_Start_WelcomePage_Back", true);
         }

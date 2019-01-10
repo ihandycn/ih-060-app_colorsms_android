@@ -13,10 +13,11 @@ import com.android.messaging.ui.UIIntents;
 import com.android.messaging.util.BugleAnalytics;
 import com.android.messaging.util.OsUtil;
 import com.ihs.commons.config.HSConfig;
+import com.superapps.util.Toasts;
 
 public class WelcomePermissionActivity extends AppCompatActivity {
     private static final int REQUIRED_PERMISSIONS_REQUEST_CODE = 2;
-    private boolean mShieldBackKey = false;
+    private boolean mAllowBackKey = true;
     private String[] mRequiredPermissions;
 
     @Override
@@ -33,7 +34,7 @@ public class WelcomePermissionActivity extends AppCompatActivity {
             }
         });
 
-        mShieldBackKey = HSConfig.optBoolean(false, "Application", "StartPageAllowBack");
+        mAllowBackKey = HSConfig.optBoolean(true, "Application", "StartPageAllowBack");
     }
 
     @Override
@@ -47,7 +48,7 @@ public class WelcomePermissionActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        if (!mShieldBackKey) {
+        if (mAllowBackKey) {
             super.onBackPressed();
             BugleAnalytics.logEvent("SMS_Start_PermissionPage_Back", true);
         }
@@ -81,13 +82,12 @@ public class WelcomePermissionActivity extends AppCompatActivity {
                             break;
                     }
                 }
-                Toast.makeText(this, R.string.welcome_permission_failed_toast,
-                        Toast.LENGTH_LONG).show();
+                Toasts.showToast(R.string.welcome_permission_failed_toast, Toast.LENGTH_LONG);
             }
         }
     }
 
-    private void refreshPermissionList(String[] permissions){
+    private void refreshPermissionList(String[] permissions) {
         LinearLayout container = findViewById(R.id.welcome_permission_container);
         container.removeAllViews();
         LayoutInflater inflater = getLayoutInflater();
