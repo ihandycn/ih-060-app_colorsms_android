@@ -186,7 +186,6 @@ public class ConversationListItemView extends FrameLayout implements OnClickList
                                final int bottom, final int oldLeft, final int oldTop, final int oldRight,
                                final int oldBottom) {
         if (v == mConversationNameView) {
-            Log.d("---->>>>", "onLayoutChange:");
             setConversationName();
             setContactImage();
         } else if (v == mSnippetTextView) {
