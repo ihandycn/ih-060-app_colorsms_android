@@ -539,4 +539,53 @@
     <string name="feedback_toast_invalid_email">โปรดใส่ที่อยู่อีเมลที่ถูกต้อง</string>
     <string name="feedback_toast_send_success">ขอบคุณสำหรับข้อเสนอแนะ!</string>
 
+    <string name="setting_sms_show">แสดง SMS</string>
+    <string name="sms_show_more_themes">พบธีมเพิ่มเติมเร็วๆ นี้</string>
+    <string name="setting_sms_show_close_dialog_content">คุณจะไม่มีธีมแจ้งเตือน SMS สวยๆ อีก แน่ใจหรือไม่ว่าต้องการปิด?</string>
+    <string name="sms_show_download_failed">ดาวน์โหลดล้มเหลว</string>
+    <string name="sticker_send_msg">เลือก</string>
+    <string name="welcome_permission_title">สิทธิ์ใช้งานที่จำเป็น</string>
+    <string name="welcome_permission_description">เพื่อให้ทำงานได้ราบรื่น เราต้องได้รับสิทธิ์ใช้งานต่อไปนี้</string>
+    <string name="welcome_permission_sms_description_1">ส่งและรับข้อความ</string>
+    <string name="welcome_permission_sms_description_2">แจ้งเตือนข้อความใหม่อย่างตรงเวลา</string>
+    <string name="welcome_permission_sms_description_3">ตอบกลับข้อความทันที</string>
+    <string name="welcome_permission_contacts_description_1">แสดงรายชื่อติดต่อ SMS</string>
+    <string name="welcome_permission_contacts_description_2">ส่งข้อความหารายชื่อโดยตรง</string>
+    <string name="welcome_permission_phone_description_1">ตอบกลับด่วนจากโทรศัพท์</string>
+    <string name="welcome_permission_phone_description_2">อ่านสถานะโทรศัพท์</string>
+    <string name="welcome_set_default_title">ตั้งเป็นค่าเริ่มต้น</string>
+    <string name="welcome_set_default_description">เพื่อให้สนุกกับฟีเจอร์เจ๋งๆ ได้มากขึ้น กรุณาตั้ง Color SMS เป็นค่าเริ่มต้น</string>
+    <string name="welcome_set_default_emoji">อิโมจิน่ารักแสนสนุกมากมาย</string>
+    <string name="welcome_set_default_music">ริงโทนแบบกำหนดเอง</string>
+    <string name="welcome_set_default_delete">ล้างข้อความที่ไม่มีประโยชน์</string>
+    <string name="welcome_set_default_group">ส่งข้อความกลุ่ม</string>
+    <string name="welcome_set_default_feature">พบฟีเจอร์เพิ่มเติมเร็วๆ นี้</string>
+    <string name="welcome_permission_failed_toast">Color SMS ทำงานไม่ได้หากไม่ได้รับอนุญาต</string>
+    <string name="media_picker_voice">เสียง</string>
+    <string name="setting_sms_pop_ups">ป็อปอัป SMS</string>
+    <string name="setting_sms_pop_ups_summary">หน้าต่างป็อปอัปเมื่อได้รับข้อความ</string>
+    <string name="setting_sms_show_summary">เอฟเฟกต์สวยงามเมื่อ SMS ปรากฏ</string>
+    <string name="setting_terms_of_service">ข้อกำหนดการให้บริการ</string>
+    <string name="setting_privacy_policy">นโยบายความเป็นส่วนตัว</string>
+    <string name="setting_feedback">คำติชม</string>
+    <string name="setting_5_star_rating">ให้คะแนนเรา</string>
+    <string name="welcome_set_default_button">ตกลง</string>
+    <string name="welcome_start_policy">นโยบายความเป็นส่วนตัว</string>
+    <string name="welcome_start_service">ข้อกำหนดการให้บริการ</string>
+    <string name="emoji_get">รับ</string>
+    <string name="emoji_added">เพิ่มแล้ว</string>
+    <string name="emoji_store_title">ร้านค้าอิโมจิ</string>
+    <string name="setting_sms_show_close_dialog_ok">ตกลง</string>
+
+    <string name="search_show_contacts">รายชื่อติดต่อ</string>
+    <string name="welcome_start_button">เริ่มต้น</string>
+    <string name="icon_preview_phone_title">โทร</string>
+    <string name="apply_btn">ใช้</string>
+    <string name="icon_preview_camera_title">กล้อง</string>
+    <string name="weather_city_loading_message">กำลังโหลด…</string>
+    <string name="app_store_category_name_photography">รูปภาพ</string>
+    <string name="request_permission_guide_allow">อนุญาต</string>
+    <string name="gdpr_dialog_title">ยืนยันการปิดหรือไม่</string>
+    <string name="current_theme_btn">ธีมปัจจุบัน</string>
+
 </resources>

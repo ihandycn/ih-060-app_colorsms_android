@@ -590,4 +590,52 @@
     <string name="feedback_toast_invalid_email">Пожалуйста, введите действительный адрес электронной почты</string>
     <string name="feedback_toast_send_success">Спасибо за ваш отзыв!</string>
 
+    <string name="setting_sms_show">СМС-шоу</string>
+    <string name="sms_show_more_themes">Скоро появятся новые темы</string>
+    <string name="setting_sms_show_close_dialog_content">Вы потеряете красивые темы с напоминаниями об СМС. Закрыть эту функцию?</string>
+    <string name="sms_show_download_failed">Не удалось загрузить</string>
+    <string name="sticker_send_msg">ВЫБРАТЬ</string>
+    <string name="welcome_permission_title">Требуемые разрешения</string>
+    <string name="welcome_permission_description">Для правильной работы требуются следующие разрешения.</string>
+    <string name="welcome_permission_sms_description_1">Отправка и получение сообщений</string>
+    <string name="welcome_permission_sms_description_2">Своевременное напоминание о новых сообщениях</string>
+    <string name="welcome_permission_sms_description_3">Быстрые ответы на сообщения</string>
+    <string name="welcome_permission_contacts_description_1">Отображение контактов СМС</string>
+    <string name="welcome_permission_contacts_description_2">Прямые сообщения вашим контактам</string>
+    <string name="welcome_permission_phone_description_1">Быстрый ответ с телефона</string>
+    <string name="welcome_permission_phone_description_2">Информация о состоянии телефона</string>
+    <string name="welcome_set_default_title">Сделать приложением по умолчанию</string>
+    <string name="welcome_set_default_description">Чтобы получить больше классных функций, сделайте Color SMS приложением по умолчанию.</string>
+    <string name="welcome_set_default_emoji">Множество симпатичных и забавных эмотиконов</string>
+    <string name="welcome_set_default_music">Пользовательские рингтоны</string>
+    <string name="welcome_set_default_delete">Очистка ненужных сообщений</string>
+    <string name="welcome_set_default_group">Групповые сообщения</string>
+    <string name="welcome_set_default_feature">Скоро появятся новые функции</string>
+    <string name="welcome_permission_failed_toast">Для работы Color SMS требуются разрешения</string>
+    <string name="media_picker_voice">Голосовое сообщение</string>
+    <string name="setting_sms_pop_ups">Всплывающие СМС</string>
+    <string name="setting_sms_pop_ups_summary">Всплывающее окно при получении сообщения</string>
+    <string name="setting_sms_show_summary">Потрясающие эффекты при получении СМС</string>
+    <string name="setting_terms_of_service">Условия обслуживания</string>
+    <string name="setting_privacy_policy">Политика конфиденциальности</string>
+    <string name="setting_feedback">Отзывы</string>
+    <string name="setting_5_star_rating">Оцените приложение</string>
+    <string name="welcome_set_default_button">OK</string>
+    <string name="welcome_start_policy">Политика конфиденциальности</string>
+    <string name="welcome_start_service">Условия обслуживания</string>
+    <string name="emoji_get">ПОЛУЧИТЬ</string>
+    <string name="emoji_added">ДОБАВЛЕНО</string>
+    <string name="emoji_store_title">Магазин эмотиконов</string>
+    <string name="setting_sms_show_close_dialog_ok">OK</string>
+
+    <string name="search_show_contacts">Контакты</string>
+    <string name="welcome_start_button">НАЧАТЬ</string>
+    <string name="icon_preview_phone_title">Телефон</string>
+    <string name="apply_btn">Применить</string>
+    <string name="icon_preview_camera_title">Камера</string>
+    <string name="weather_city_loading_message">Загрузка…</string>
+    <string name="app_store_category_name_photography">Фотографирование</string>
+    <string name="gdpr_dialog_title">Вы действительно хотите выключить эту опцию?</string>
+    <string name="current_theme_btn">Текущая тема</string>
+
 </resources>
