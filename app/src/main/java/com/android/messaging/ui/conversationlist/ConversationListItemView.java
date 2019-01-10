@@ -19,7 +19,6 @@ import android.content.Context;
 import android.content.res.Resources;
 import android.database.Cursor;
 import android.graphics.Color;
-import android.graphics.PorterDuff;
 import android.graphics.Rect;
 import android.graphics.Typeface;
 import android.net.Uri;
@@ -56,7 +55,6 @@ import com.android.messaging.util.Assert;
 import com.android.messaging.util.ContentType;
 import com.android.messaging.util.ImageUtils;
 import com.android.messaging.util.OsUtil;
-import com.android.messaging.util.PhoneUtils;
 import com.android.messaging.util.Typefaces;
 import com.android.messaging.util.UiUtils;
 import com.android.messaging.util.UriUtil;
@@ -284,8 +282,7 @@ public class ConversationListItemView extends FrameLayout implements OnClickList
     }
 
     private void setSnippet() {
-        final boolean isDefaultSmsApp = PhoneUtils.getDefault().isDefaultSmsApp();
-        if (mData.getIsFailedStatus() && isDefaultSmsApp) {
+        if (mData.getIsFailedStatus()) {
             int failureMessageId = R.string.message_status_download_failed;
 
             if (mData.getIsMessageTypeOutgoing()) {
@@ -426,8 +423,7 @@ public class ConversationListItemView extends FrameLayout implements OnClickList
         final int typefaceStyle = mData.getShowDraft() ? Typeface.ITALIC : Typeface.NORMAL;
         final String snippetText = getSnippetText();
 
-        final boolean isDefaultSmsApp = PhoneUtils.getDefault().isDefaultSmsApp();
-        if (mData.getIsFailedStatus() && isDefaultSmsApp) {
+        if (mData.getIsFailedStatus()) {
             color = resources.getColor(R.color.conversation_list_error);
             maxLines = ERROR_MESSAGE_LINE_COUNT;
         } else {
@@ -481,7 +477,7 @@ public class ConversationListItemView extends FrameLayout implements OnClickList
             contactIconVisibility = VISIBLE;
             // Only show the fail icon if it is not a group conversation.
             // And also require that we be the default sms app.
-            if (mData.getIsFailedStatus() && !mData.getIsGroup() && isDefaultSmsApp) {
+            if (mData.getIsFailedStatus() && !mData.getIsGroup()) {
                 failStatusVisiblity = VISIBLE;
             }
         }
