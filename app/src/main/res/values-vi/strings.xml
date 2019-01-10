@@ -577,14 +577,14 @@
     <string name="emoji_store_title">Cửa hàng Emoji</string>
     <string name="setting_sms_show_close_dialog_ok">OK</string>
 
-    <string name="search_show_contacts">Liên hệ</string>
+    <string name="welcome_permission_contacts_title">Liên hệ</string>
     <string name="welcome_start_button">BẮT ĐẦU</string>
-    <string name="icon_preview_phone_title">Điện thoại</string>
-    <string name="apply_btn">ÁP DỤNG</string>
-    <string name="icon_preview_camera_title">Camera</string>
-    <string name="weather_city_loading_message">Đang tải…</string>
-    <string name="app_store_category_name_photography">Nhiếp ảnh</string>
-    <string name="request_permission_guide_allow">CHO PHÉP</string>
-    <string name="gdpr_dialog_title">Xác nhận tắt?</string>
-    <string name="current_theme_btn">Chủ đề Hiện tại</string>
+    <string name="welcome_permission_phone_title">Điện thoại</string>
+    <string name="sms_show_apply">ÁP DỤNG</string>
+    <string name="media_picker_camera">Camera</string>
+    <string name="sms_show_loading">Đang tải…</string>
+    <string name="media_picker_photo">Nhiếp ảnh</string>
+    <string name="welcome_permission_button">CHO PHÉP</string>
+    <string name="setting_sms_show_close_dialog_title">Xác nhận tắt?</string>
+    <string name="sms_show_current_theme">Chủ đề Hiện tại</string>
 </resources>

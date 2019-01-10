@@ -577,14 +577,14 @@
     <string name="emoji_store_title">Toko Emoji</string>
     <string name="setting_sms_show_close_dialog_ok">OK</string>
 
-    <string name="search_show_contacts">Kontak</string>
+    <string name="welcome_permission_contacts_title">Kontak</string>
     <string name="welcome_start_button">MULAI</string>
-    <string name="icon_preview_phone_title">Phone</string>
-    <string name="apply_btn">Terapkan</string>
-    <string name="icon_preview_camera_title">Camera</string>
-    <string name="weather_city_loading_message">Memuat…</string>
-    <string name="app_store_category_name_photography">Fotografi</string>
-    <string name="request_permission_guide_allow">IZINKAN</string>
-    <string name="gdpr_dialog_title">Yakin ingin mematikan?</string>
-    <string name="current_theme_btn">Tema Sekarang</string>
+    <string name="welcome_permission_phone_title">Phone</string>
+    <string name="sms_show_apply">Terapkan</string>
+    <string name="media_picker_camera">Camera</string>
+    <string name="sms_show_loading">Memuat…</string>
+    <string name="media_picker_photo">Fotografi</string>
+    <string name="welcome_permission_button">IZINKAN</string>
+    <string name="setting_sms_show_close_dialog_title">Yakin ingin mematikan?</string>
+    <string name="sms_show_current_theme">Tema Sekarang</string>
 </resources>

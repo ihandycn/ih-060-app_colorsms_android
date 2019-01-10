@@ -576,14 +576,14 @@
     <string name="emoji_store_title">इमो‍जी स्‍टोर</string>
     <string name="setting_sms_show_close_dialog_ok">ठीक है</string>
 
-    <string name="search_show_contacts">संपर्कों</string>
+    <string name="welcome_permission_contacts_title">संपर्कों</string>
     <string name="welcome_start_button">शुरु करें</string>
-    <string name="icon_preview_phone_title">फोन </string>
-    <string name="apply_btn">लागू करें</string>
-    <string name="icon_preview_camera_title">कैमरा </string>
-    <string name="weather_city_loading_message">लोड हो रहा है…</string>
-    <string name="app_store_category_name_photography">फ़ोटोग्राफ़ी </string>
-    <string name="request_permission_guide_allow">अनुमति दें</string>
-    <string name="gdpr_dialog_title">बंद करना है?</string>
-    <string name="current_theme_btn">वर्तमान विषयवस्तु</string>
+    <string name="welcome_permission_phone_title">फोन </string>
+    <string name="sms_show_apply">लागू करें</string>
+    <string name="media_picker_camera">कैमरा </string>
+    <string name="sms_show_loading">लोड हो रहा है…</string>
+    <string name="media_picker_photo">फ़ोटोग्राफ़ी </string>
+    <string name="welcome_permission_button">अनुमति दें</string>
+    <string name="setting_sms_show_close_dialog_title">बंद करना है?</string>
+    <string name="sms_show_current_theme">वर्तमान विषयवस्तु</string>
 </resources>
