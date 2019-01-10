@@ -21,6 +21,7 @@ import android.os.Bundle;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.widget.Toolbar;
+import android.view.ActionMode;
 import android.view.View;
 import android.widget.TextView;
 
@@ -38,6 +39,7 @@ public class ConversationListActivity extends AbstractConversationListActivity
 
     private ViewPager mViewPager;
     private TextView mTitleTextView;
+    private View mSettingsBtn;
 
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
@@ -60,6 +62,10 @@ public class ConversationListActivity extends AbstractConversationListActivity
                 getResources().getColor(R.color.action_bar_background_color)));
         actionBar.show();
 
+        if (mTitleTextView != null && mTitleTextView.getVisibility() == View.GONE) {
+            mTitleTextView.setVisibility(View.VISIBLE);
+            mSettingsBtn.setVisibility(View.VISIBLE);
+        }
         //update statusBar color
         UiUtils.setStatusBarColor(this, getResources().getColor(R.color.action_bar_background_color));
 
@@ -79,6 +85,13 @@ public class ConversationListActivity extends AbstractConversationListActivity
                 showRate = true;
             }
         }
+    }
+
+    @Override
+    public ActionMode startActionMode(ActionMode.Callback callback) {
+        mTitleTextView.setVisibility(View.GONE);
+        mSettingsBtn.setVisibility(View.GONE);
+        return super.startActionMode(callback);
     }
 
     @Override
@@ -105,6 +118,7 @@ public class ConversationListActivity extends AbstractConversationListActivity
         }
     }
 
+
     @Override
     public void onActionBarHome() {
         exitMultiSelectState();
@@ -128,10 +142,10 @@ public class ConversationListActivity extends AbstractConversationListActivity
     private void initActionBar() {
         Toolbar toolbar = findViewById(R.id.toolbar);
         mTitleTextView = findViewById(R.id.toolbar_title);
-        View setting = findViewById(R.id.toolbar_img);
-        setting.setBackground(BackgroundDrawables.createBackgroundDrawable(0xffffffff,
+        mSettingsBtn = findViewById(R.id.toolbar_img);
+        mSettingsBtn.setBackground(BackgroundDrawables.createBackgroundDrawable(0xffffffff,
                 Dimensions.pxFromDp(20), true));
-        setting.setOnClickListener(v ->
+        mSettingsBtn.setOnClickListener(v ->
                 UIIntents.get().launchSettingsActivity(this));
         setSupportActionBar(toolbar);
         invalidateActionBar();

@@ -127,7 +127,7 @@ public class AvatarRequest extends UriImageRequest<AvatarRequestDescriptor> {
         }
         if (sDefaultPersonBitmapLarge == null) {
             final BitmapDrawable largeDefaultPerson = (BitmapDrawable) mContext.getResources()
-                    .getDrawable(R.drawable.ic_person_light_large);
+                    .getDrawable(R.drawable.ic_person_light);
             sDefaultPersonBitmapLarge = largeDefaultPerson.getBitmap();
         }
 
