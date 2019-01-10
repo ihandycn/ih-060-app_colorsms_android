@@ -295,7 +295,7 @@ class CameraMediaChooser extends MediaChooser implements
         if (requestCode == MediaPicker.CAMERA_PERMISSION_REQUEST_CODE) {
             final boolean permissionGranted = grantResults[0] == PackageManager.PERMISSION_GRANTED;
             updateForPermissionState(permissionGranted);
-            if (permissionGranted) {
+            if (permissionGranted && mCameraPreviewHost != null) {
                 mCameraPreviewHost.onCameraPermissionGranted();
             }
         } else if (requestCode == MediaPicker.RECORD_AUDIO_PERMISSION_REQUEST_CODE) {
