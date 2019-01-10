@@ -1017,7 +1017,7 @@
     <string name="welcome_permission_contacts_description_2">Directly text your contacts</string>
     <string name="welcome_permission_phone_title">Phone</string>
     <string name="welcome_permission_phone_description_1">Quickly reply by phone</string>
-    <string name="welcome_permission_phone_description_2">Support dual SIM</string>
+    <string name="welcome_permission_phone_description_2">Read phone state</string>
     <string name="welcome_permission_failed_toast">Color SMS can\'t work without permissions</string>
 
     <string name="welcome_set_default_button">OK</string>
@@ -1068,6 +1068,6 @@
     <string name="setting_sms_show_summary">Beautify SMS reminder effects</string>
     <string name="setting_sms_show_close_dialog_title">Confirm to turn off?</string>
     <string name="setting_sms_show_close_dialog_content">You will lose the beautiful SMS reminder themes, really want to close it?</string>
-    <string name="setting_sms_show_close_dialog_ok">oooook</string>
+    <string name="setting_sms_show_close_dialog_ok">OK</string>
 
 </resources>
