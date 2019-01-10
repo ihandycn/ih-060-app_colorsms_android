@@ -963,12 +963,7 @@ public class ConversationFragment extends Fragment implements ConversationDataLi
             }
         } else {
             warnOfMissingActionConditions(true /*sending*/,
-                    new Runnable() {
-                        @Override
-                        public void run() {
-                            sendMessage(message);
-                        }
-                    });
+                    () -> sendMessage(message));
         }
     }
 

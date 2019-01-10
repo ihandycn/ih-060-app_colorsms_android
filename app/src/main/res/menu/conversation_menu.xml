@@ -37,7 +37,6 @@
             <group>
                 <item
                     android:id="@+id/action_add_contact"
-                    android:icon="@drawable/ic_person_add_light"
                     android:orderInCategory="90"
                     android:title="@string/action_add_contact"
                     appcompat:showAsAction="never"/>

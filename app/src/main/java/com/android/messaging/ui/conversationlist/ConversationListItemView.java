@@ -453,13 +453,11 @@ public class ConversationListItemView extends FrameLayout implements OnClickList
                 // row is left with a latest_message_id of a no longer existing message and
                 // therefore the join values come back as null (or in this case zero).
                 || mData.getMessageStatus() == MessageData.BUGLE_STATUS_UNKNOWN) {
-            mTimestampTextView.setTextColor(mConversationNameColor);
-            mTimestampTextView.setTypeface(mConversationNameReadTypeface, typefaceStyle);
+            mTimestampTextView.setTypeface(Typefaces.getCustomRegular(), typefaceStyle);
             mTimestampTextView.setText(resources.getString(
                     R.string.conversation_list_item_view_draft_message));
         } else {
-            mTimestampTextView.setTextColor(mConversationNameColor);
-            mTimestampTextView.setTypeface(mConversationNameReadTypeface, typefaceStyle);
+            mTimestampTextView.setTypeface(Typefaces.getCustomRegular(), typefaceStyle);
             final String formattedTimestamp = mData.getFormattedTimestamp();
             if (mData.getIsSendRequested()) {
                 mTimestampTextView.setText(R.string.message_status_sending);
