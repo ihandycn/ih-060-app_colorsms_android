@@ -27,7 +27,6 @@ import android.support.v4.text.TextDirectionHeuristicsCompat;
 import android.text.TextPaint;
 import android.text.TextUtils;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.View.OnLayoutChangeListener;
@@ -75,6 +74,7 @@ public class ConversationListItemView extends FrameLayout implements OnClickList
     private Typeface mSnippetTypeface;
     private static String sPlusOneString;
     private static String sPlusNString;
+    private Boolean mIsReadBefore;
 
     public interface HostInterface {
         boolean isConversationSelected(final String conversationId);
@@ -228,13 +228,17 @@ public class ConversationListItemView extends FrameLayout implements OnClickList
     }
 
     private void setContactImage() {
+
+        if (mIsReadBefore != null && mData.getIsRead() == mIsReadBefore) {
+            return;
+        }
+
+        mIsReadBefore = mData.getIsRead();
         Uri iconUri = null;
-        Log.d("---->>>", "setContactImage: " +(mData.getIcon() == null));
-        Log.d("---->>>", "setContactImage: " +(mData.getIcon()));
 
         String imgUri = mData.getIcon();
         int contactIconBackgroundColor;
-        if (mData.getIsRead() || mData.getShowDraft()) {
+        if (mData.getIsRead()) {
             //read
             contactIconBackgroundColor = 0xffd4d9de;
         } else {

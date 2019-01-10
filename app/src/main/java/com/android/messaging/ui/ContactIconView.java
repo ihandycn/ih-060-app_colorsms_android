@@ -130,18 +130,35 @@ public class ContactIconView extends AsyncImageView {
         maybeInitializeOnClickListener();
     }
 
+    public void setImageResourceUri(final Uri uri, final long contactId,
+                                    final String contactLookupKey, final String normalizedDestination,
+                                    final int backgroundColor) {
+        if (uri == null) {
+            setImageResourceId(null);
+        } else {
+            final String avatarType = AvatarUriUtil.getAvatarType(uri);
+            if (AvatarUriUtil.TYPE_GROUP_URI.equals(avatarType)) {
+                setImageResourceId(new AvatarGroupRequestDescriptor(uri, mIconSize, mIconSize));
+            } else {
+                setImageResourceId(new AvatarRequestDescriptor(uri, mIconSize, mIconSize, backgroundColor));
+            }
+        }
+
+        mContactId = contactId;
+        mContactLookupKey = contactLookupKey;
+        mNormalizedDestination = normalizedDestination;
+        mAvatarUri = uri;
+
+        maybeInitializeOnClickListener();
+    }
+
     protected void maybeInitializeOnClickListener() {
         if ((mContactId > ParticipantData.PARTICIPANT_CONTACT_ID_NOT_RESOLVED
                 && !TextUtils.isEmpty(mContactLookupKey)) ||
                 !TextUtils.isEmpty(mNormalizedDestination)) {
             if (!mDisableClickHandler) {
-                setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(final View view) {
-                        ContactUtil.showOrAddContact(view, mContactId, mContactLookupKey,
-                                mAvatarUri, mNormalizedDestination);
-                    }
-                });
+                setOnClickListener(view -> ContactUtil.showOrAddContact(view, mContactId, mContactLookupKey,
+                        mAvatarUri, mNormalizedDestination));
             }
         } else {
             // This should happen when the phone number is not in the user's contacts or it is a

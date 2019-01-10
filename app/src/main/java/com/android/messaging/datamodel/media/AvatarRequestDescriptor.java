@@ -26,19 +26,28 @@ import com.android.messaging.util.UriUtil;
 
 public class AvatarRequestDescriptor extends UriImageRequestDescriptor {
     final boolean isWearBackground;
+    public Integer backgroundColor;
 
     public AvatarRequestDescriptor(final Uri uri, final int desiredWidth,
-            final int desiredHeight) {
+                                   final int desiredHeight, final Integer backgroundColor) {
+        this(uri, desiredWidth, desiredHeight, true /* cropToCircle */);
+        if (backgroundColor != null) {
+            this.backgroundColor = backgroundColor;
+        }
+    }
+
+    public AvatarRequestDescriptor(final Uri uri, final int desiredWidth,
+                                   final int desiredHeight) {
         this(uri, desiredWidth, desiredHeight, true /* cropToCircle */);
     }
 
     public AvatarRequestDescriptor(final Uri uri, final int desiredWidth,
-            final int desiredHeight, final boolean cropToCircle) {
+                                   final int desiredHeight, final boolean cropToCircle) {
         this(uri, desiredWidth, desiredHeight, cropToCircle, false /* isWearBackground */);
     }
 
     public AvatarRequestDescriptor(final Uri uri, final int desiredWidth,
-            final int desiredHeight, boolean cropToCircle, boolean isWearBackground) {
+                                   final int desiredHeight, boolean cropToCircle, boolean isWearBackground) {
         super(uri, desiredWidth, desiredHeight, false /* allowCompression */, true /* isStatic */,
                 cropToCircle,
                 ImageUtils.DEFAULT_CIRCLE_BACKGROUND_COLOR /* circleBackgroundColor */,
