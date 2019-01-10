@@ -79,6 +79,7 @@ import com.android.messaging.util.OsUtil;
 import com.android.messaging.util.UiUtils;
 import com.superapps.util.BackgroundDrawables;
 import com.superapps.util.Dimensions;
+import com.superapps.util.Threads;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -640,11 +641,15 @@ public class ComposeMessageView extends LinearLayout
                                     final MessageData message = mBinding.getData()
                                             .prepareMessageForSending(mBinding);
                                     if (message != null && message.hasContent()) {
-                                        if (sendEmoji) {
-                                            FiveStarRateDialog.showFiveStarWhenSendEmojiIfNeed(BugleActivityUtil.contextToActivitySafely(getContext()));
-                                        } else {
-                                            FiveStarRateDialog.showFiveStarWhenSendMsgIfNeed(BugleActivityUtil.contextToActivitySafely(getContext()));
-                                        }
+                                        boolean finalSendEmoji = sendEmoji;
+                                        Threads.postOnMainThreadDelayed(() -> {
+                                            if (finalSendEmoji) {
+                                                FiveStarRateDialog.showFiveStarWhenSendEmojiIfNeed(BugleActivityUtil.contextToActivitySafely(getContext()));
+                                            } else {
+                                                FiveStarRateDialog.showFiveStarWhenSendMsgIfNeed(BugleActivityUtil.contextToActivitySafely(getContext()));
+                                            }
+                                        }, 500);
+
                                         playSentSound();
                                         mHost.sendMessage(message);
                                         hideSubjectEditor();
