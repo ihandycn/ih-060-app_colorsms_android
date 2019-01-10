@@ -44,6 +44,7 @@ import com.android.messaging.util.MediaUtil;
 import com.android.messaging.util.MediaUtilImpl;
 import com.android.messaging.util.OsUtil;
 import com.android.messaging.util.PhoneUtils;
+import com.superapps.util.Threads;
 
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -120,14 +121,7 @@ class FactoryImpl extends Factory {
 
         mApplication.initializeSync(this);
 
-        final Thread asyncInitialization = new Thread() {
-            @Override
-            public void run() {
-                Process.setThreadPriority(Process.THREAD_PRIORITY_BACKGROUND);
-                mApplication.initializeAsync(FactoryImpl.this);
-            }
-        };
-        asyncInitialization.start();
+        Threads.postOnThreadPoolExecutor(() -> mApplication.initializeAsync(FactoryImpl.this));
     }
 
     @Override

@@ -31,6 +31,9 @@ import android.telephony.CarrierConfigManager;
 
 import com.android.ex.photo.util.PhotoViewAnalytics;
 import com.android.messaging.datamodel.DataModel;
+import com.android.messaging.debug.BlockCanaryConfig;
+import com.android.messaging.debug.DebugConfig;
+import com.android.messaging.debug.UploadLeakService;
 import com.android.messaging.receiver.SmsReceiver;
 import com.android.messaging.sms.ApnDatabase;
 import com.android.messaging.sms.BugleApnSettingsLoader;
@@ -51,14 +54,24 @@ import com.android.messaging.util.OsUtil;
 import com.android.messaging.util.PhoneUtils;
 import com.android.messaging.util.Trace;
 import com.crashlytics.android.Crashlytics;
+import com.github.moduth.blockcanary.BlockCanary;
 import com.google.common.annotations.VisibleForTesting;
 import com.ihs.app.framework.HSApplication;
+import com.ihs.commons.utils.HSLog;
 import com.messagecenter.customize.MessageCenterManager;
+import com.squareup.leakcanary.AndroidExcludedRefs;
+import com.squareup.leakcanary.ExcludedRefs;
+import com.squareup.leakcanary.LeakCanary;
+import com.superapps.taskrunner.AsyncMainThreadTask;
 
 import java.io.File;
 import java.lang.Thread.UncaughtExceptionHandler;
+import java.util.concurrent.TimeUnit;
 
 import io.fabric.sdk.android.Fabric;
+
+import static com.android.messaging.debug.DebugConfig.ENABLE_BLOCK_CANARY;
+import static com.android.messaging.debug.DebugConfig.ENABLE_LEAK_CANARY;
 
 /**
  * The application object
@@ -195,9 +208,27 @@ public class BugleApplication extends HSApplication implements UncaughtException
     // Called from thread started in FactoryImpl.register() (i.e. not run in tests)
     public void initializeAsync(final Factory factory) {
         // Handle shared prefs upgrade & Load MMS Configuration
+
         Trace.beginSection("app.initializeAsync");
         maybeHandleSharedPrefsUpgrade(factory);
         MmsConfig.load();
+
+        HSLog.d(TAG, "initializeAsync start " + "leak canary enabled ? " + ENABLE_LEAK_CANARY);
+        if (ENABLE_LEAK_CANARY) {
+            ExcludedRefs excludedRefs = AndroidExcludedRefs
+                    .createAppDefaults()
+                    .instanceField("android.view.ViewConfiguration", "mContext").reason("In AOSP the ViewConfiguration class does not have a context. Here we have ViewConfiguration.sConfigurations (static field) holding on to a ViewConfiguration instance that has a context that is the activity. Observed here: https://github.com/square/leakcanary/issues/1#issuecomment-100324683")
+                    .build();
+            LeakCanary.refWatcher(this)
+                    .watchDelay(20, TimeUnit.SECONDS)
+                    .listenerServiceClass(UploadLeakService.class)
+                    .excludedRefs(excludedRefs)
+                    .buildAndInstall();
+        }
+
+        if (ENABLE_BLOCK_CANARY) {
+            BlockCanary.install(this, new BlockCanaryConfig()).start();
+        }
         Trace.endSection();
     }
 
