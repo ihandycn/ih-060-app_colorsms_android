@@ -551,7 +551,7 @@
     <string name="welcome_permission_contacts_description_1">Affichez les contacts SMS</string>
     <string name="welcome_permission_contacts_description_2">Textez directement vos contacts</string>
     <string name="welcome_permission_phone_description_1">Répondez rapidement par téléphone</string>
-    <string name="welcome_permission_phone_description_2">Lecture de l'état du téléphone</string>
+    <string name="welcome_permission_phone_description_2">Lecture de l\'état du téléphone</string>
     <string name="welcome_set_default_title">Définir par défaut</string>
     <string name="welcome_set_default_description">Pour profiter de plus de fonctionnalités, veuillez définir Color SMS par défaut.</string>
     <string name="welcome_set_default_emoji">De nombreux emojis mignons et rigolos</string>
@@ -564,16 +564,16 @@
     <string name="setting_sms_pop_ups">Pop-ups SMS</string>
     <string name="setting_sms_pop_ups_summary">Fait apparaître une fenêtre lors de la réception de messages</string>
     <string name="setting_sms_show_summary">Sublimes effets lorsque le SMS apparaît</string>
-    <string name="setting_terms_of_service">Conditions d'utilisation</string>
+    <string name="setting_terms_of_service">Conditions d\'utilisation</string>
     <string name="setting_privacy_policy">Politique de confidentialité</string>
     <string name="setting_feedback">Commentaires</string>
     <string name="setting_5_star_rating">Nous évaluer</string>
     <string name="welcome_set_default_button">OK</string>
     <string name="welcome_start_policy">Politique de confidentialité</string>
-    <string name="welcome_start_service">Conditions d'utilisation</string>
+    <string name="welcome_start_service">Conditions d\'utilisation</string>
     <string name="emoji_get">OBTENIR</string>
     <string name="emoji_added">AJOUTÉ</string>
-    <string name="emoji_store_title">Boutique d'emojis</string>
+    <string name="emoji_store_title">Boutique d\'emojis</string>
     <string name="setting_sms_show_close_dialog_ok">OK</string>
 
     <string name="search_show_contacts">Contacts</string>
