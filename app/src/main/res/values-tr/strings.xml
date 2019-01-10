@@ -553,7 +553,7 @@
     <string name="welcome_permission_phone_description_1">Telefonla hızla yanıt verme</string>
     <string name="welcome_permission_phone_description_2">Telefon durumunu okuma</string>
     <string name="welcome_set_default_title">Varsayılan Olarak Ayarla</string>
-    <string name="welcome_set_default_description">Daha fazla havalı özellikten faydalanmak için Color SMS'i varsayılan olarak ayarlayın.</string>
+    <string name="welcome_set_default_description">Daha fazla havalı özellikten faydalanmak için Color SMS\'i varsayılan olarak ayarlayın.</string>
     <string name="welcome_set_default_emoji">Bir sürü şirin ve komik emoji</string>
     <string name="welcome_set_default_music">Özel zil sesi</string>
     <string name="welcome_set_default_delete">Gereksiz mesajları siler</string>
