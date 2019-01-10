@@ -472,16 +472,16 @@ public class ConversationListItemView extends FrameLayout implements OnClickList
         setSelected(isSelected);
 
         int contactIconVisibility = GONE;
-        int checkmarkVisiblity = GONE;
-        int failStatusVisiblity = GONE;
+        int checkMarkVisibility = GONE;
+        int failStatusVisibility = GONE;
         if (isSelected) {
-            checkmarkVisiblity = VISIBLE;
+            checkMarkVisibility = VISIBLE;
         } else {
             contactIconVisibility = VISIBLE;
             // Only show the fail icon if it is not a group conversation.
             // And also require that we be the default sms app.
             if (mData.getIsFailedStatus() && !mData.getIsGroup()) {
-                failStatusVisiblity = VISIBLE;
+                failStatusVisibility = VISIBLE;
             }
         }
 
@@ -491,8 +491,8 @@ public class ConversationListItemView extends FrameLayout implements OnClickList
         mContactIconView.setClickable(!mHostInterface.isSelectionMode());
         mContactIconView.setLongClickable(!mHostInterface.isSelectionMode());
 
-        mContactCheckmarkView.setVisibility(checkmarkVisiblity);
-        mFailedStatusIconView.setVisibility(failStatusVisiblity);
+        mContactCheckmarkView.setVisibility(checkMarkVisibility);
+        mFailedStatusIconView.setVisibility(failStatusVisibility);
 
         final Uri previewUri = mData.getShowDraft() ?
                 mData.getDraftPreviewUri() : mData.getPreviewUri();
@@ -538,8 +538,8 @@ public class ConversationListItemView extends FrameLayout implements OnClickList
             mTimestampTextView.setVisibility(VISIBLE);
         }
 
-        final int notificationBellVisiblity = mData.getNotificationEnabled() ? GONE : VISIBLE;
-        mNotificationBellView.setVisibility(notificationBellVisiblity);
+        final int notificationBellVisibility = mData.getNotificationEnabled() ? GONE : VISIBLE;
+        mNotificationBellView.setVisibility(notificationBellVisibility);
     }
 
     public boolean isSwipeAnimatable() {
@@ -577,12 +577,7 @@ public class ConversationListItemView extends FrameLayout implements OnClickList
         final String conversationId = mData.getConversationId();
         UpdateConversationArchiveStatusAction.archiveConversation(conversationId);
 
-        final Runnable undoRunnable = new Runnable() {
-            @Override
-            public void run() {
-                UpdateConversationArchiveStatusAction.unarchiveConversation(conversationId);
-            }
-        };
+        final Runnable undoRunnable = () -> UpdateConversationArchiveStatusAction.unarchiveConversation(conversationId);
         final String message = getResources().getString(R.string.archived_toast_message, 1);
         UiUtils.showSnackBar(getContext(), getRootView(), message, undoRunnable,
                 SnackBar.Action.SNACK_BAR_UNDO,
