@@ -68,20 +68,9 @@ public class AddContactsConfirmationDialog extends BaseDialogFragment {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
-        setOnNegativeButtonClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                dismissAllowingStateLoss();
-            }
-        });
+        setOnNegativeButtonClickListener(v -> dismissAllowingStateLoss());
 
-        setOnPositiveButtonClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                UIIntents.get().launchAddContactActivity(getActivity(), mNormalizedDestination);
-
-            }
-        });
+        setOnPositiveButtonClickListener(v -> UIIntents.get().launchAddContactActivity(getActivity(), mNormalizedDestination));
         return super.onCreateView(inflater, container, savedInstanceState);
     }
 
@@ -103,14 +92,14 @@ public class AddContactsConfirmationDialog extends BaseDialogFragment {
     private View createBodyView() {
         final View view = LayoutInflater.from(getActivity()).inflate(
                 R.layout.add_contacts_confirmation_dialog_body, null);
-        final ContactIconView iconView = (ContactIconView) view.findViewById(R.id.contact_icon);
+        final ContactIconView iconView = view.findViewById(R.id.contact_icon);
         if (TextUtils.isEmpty(mAvatarUri)) {
             iconView.setImageResourceUri(null);
         } else {
             iconView.setImageResourceUri(Uri.parse(mAvatarUri));
         }
 
-        final TextView textView = (TextView) view.findViewById(R.id.participant_name);
+        final TextView textView = view.findViewById(R.id.participant_name);
         textView.setText(mNormalizedDestination);
         // Accessibility reason : in case phone numbers are mixed in the display name,
         // we need to vocalize it for talkback.

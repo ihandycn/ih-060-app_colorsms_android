@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--
+<?xml version="1.0" encoding="utf-8"?><!--
     Copyright (C) 2015 The Android Open Source Project
 
     Licensed under the Apache License, Version 2.0 (the "License");
@@ -14,32 +13,36 @@
     See the License for the specific language governing permissions and
     limitations under the License.
 -->
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:orientation="horizontal"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:layout_gravity="center_vertical"
-    >
+    android:orientation="horizontal">
 
     <com.android.messaging.ui.ContactIconView
         android:id="@+id/contact_icon"
         android:layout_width="@dimen/conversation_list_contact_icon_size"
         android:layout_height="@dimen/conversation_list_contact_icon_size"
-        android:importantForAccessibility="no"
-        app:iconSize="large"
         android:layout_gravity="center_vertical"
-        android:clickable="true" />
+        android:clickable="true"
+        android:importantForAccessibility="no"
+        app:iconSize="large" />
 
-    <TextView
+    <com.superapps.view.TypefacedTextView
         android:id="@+id/participant_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:singleLine="true"
-        android:maxLines="1"
+        android:layout_gravity="center_vertical"
         android:ellipsize="end"
-        style="@style/AddContactConfirmationTextStyle"
-        android:layout_gravity="center_vertical" />
+        android:maxLines="1"
+        android:paddingEnd="24dp"
+        android:paddingLeft="12dp"
+        android:paddingRight="24dp"
+        android:paddingStart="12dp"
+        android:singleLine="true"
+        android:textSize="16.7sp"
+        android:textColor="#7d8089"
+        app:typeface="@string/custom_font_medium" />
 
 </LinearLayout>

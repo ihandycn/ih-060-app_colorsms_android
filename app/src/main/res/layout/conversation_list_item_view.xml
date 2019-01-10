@@ -209,8 +209,7 @@
                         android:id="@+id/conversation_timestamp"
                         style="@style/ConversationListItemViewTextTimeStampStyle"
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginEnd="@dimen/conversation_list_item_timestamp_margin"/>
+                        android:layout_height="wrap_content" />
 
                     <TextView
                         android:id="@+id/conversation_unread_messages_count"
@@ -218,8 +217,7 @@
                         android:layout_width="21dp"
                         android:layout_height="21dp"
                         android:layout_marginTop="10dp"
-                        android:visibility="invisible"
-                        android:layout_marginEnd="@dimen/conversation_list_item_timestamp_margin"/>
+                        android:visibility="invisible" />
                 </LinearLayout>
             </FrameLayout>
         </LinearLayout>
