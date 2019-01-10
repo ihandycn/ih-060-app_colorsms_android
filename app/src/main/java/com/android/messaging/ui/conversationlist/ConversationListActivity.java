@@ -154,12 +154,12 @@ public class ConversationListActivity extends AbstractConversationListActivity
     private void initPager() {
         BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation_view);
         mViewPager = findViewById(R.id.fragment_pager);
-        BasePagerAdapter mPagerAdapter = new BasePagerAdapter(getFragmentManager());
+        BasePagerAdapter mPagerAdapter = new BasePagerAdapter(getFragmentManager(), mViewPager);
         mViewPager.setAdapter(mPagerAdapter);
         mViewPager.setOffscreenPageLimit(2);
         bottomNavigationView.setOnItemSelectedListener(this);
         bottomNavigationView.setSelectedPosition(0);
-        mViewPager.setOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
+        mViewPager.addOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
             @Override
             public void onPageSelected(int position) {
                 bottomNavigationView.setSelectedPosition(position);

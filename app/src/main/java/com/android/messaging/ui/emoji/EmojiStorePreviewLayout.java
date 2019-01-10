@@ -69,7 +69,7 @@ public class EmojiStorePreviewLayout extends ViewGroup {
                     gifRequest.as(GifDrawable.class)
                             .load(stickerInfo.mStickerUrl)
                             .diskCacheStrategy(DiskCacheStrategy.DATA)
-                            .into(new CustomViewTarget<GifImageView,GifDrawable>(child) {
+                            .into(new CustomViewTarget<GifImageView, GifDrawable>(child) {
                                 @Override protected void onResourceCleared(@Nullable Drawable placeholder) {
                                 }
 
@@ -86,6 +86,30 @@ public class EmojiStorePreviewLayout extends ViewGroup {
                     break;
             }
             addView(child);
+        }
+    }
+
+    public void stopGif() {
+        for (int i = 0; i < getChildCount(); i++) {
+            View child = getChildAt(i);
+            if (child instanceof GifImageView) {
+                Drawable drawable = ((GifImageView) child).getDrawable();
+                if (drawable instanceof GifDrawable) {
+                    ((GifDrawable) drawable).stop();
+                }
+            }
+        }
+    }
+
+    public void startGif() {
+        for (int i = 0; i < getChildCount(); i++) {
+            View child = getChildAt(i);
+            if (child instanceof GifImageView) {
+                Drawable drawable = ((GifImageView) child).getDrawable();
+                if (drawable instanceof GifDrawable) {
+                    ((GifDrawable) drawable).start();
+                }
+            }
         }
     }
 }

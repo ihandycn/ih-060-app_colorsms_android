@@ -11,6 +11,7 @@ import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.view.ViewPager;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
@@ -48,6 +49,7 @@ public class EmojiStoreFragment extends Fragment implements INotificationObserve
     private StoreAdapter mAdapter;
     private String mSource;
     private boolean mIsFirstLoad = false;
+    private RecyclerViewWidthSlideListener mRecyclerView;
 
     public static EmojiStoreFragment newInstance(String source) {
         EmojiStoreFragment fragment = new EmojiStoreFragment();
@@ -67,14 +69,28 @@ public class EmojiStoreFragment extends Fragment implements INotificationObserve
         }
     }
 
+    public void setViewPager(ViewPager viewPager) {
+        if (viewPager != null) {
+            viewPager.addOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
+                @Override public void onPageSelected(int position) {
+                    if (position == 2) {
+                        startGif();
+                    } else {
+                        stopGif();
+                    }
+                }
+            });
+        }
+    }
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_emoji_store, container, false);
 
         mStoreEmojiPackageInfoList = EmojiConfig.getInstance().getStoreEmojiFromConfig();
-        RecyclerViewWidthSlideListener recyclerView = view.findViewById(R.id.emoji_store_list);
-        recyclerView.setOnSlideListener(new RecyclerViewWidthSlideListener.OnSlideListener() {
+        mRecyclerView = view.findViewById(R.id.emoji_store_list);
+        mRecyclerView.setOnSlideListener(new RecyclerViewWidthSlideListener.OnSlideListener() {
             @Override
             public void slideUp() {
                 if (!TextUtils.isEmpty(mSource)) {
@@ -87,9 +103,9 @@ public class EmojiStoreFragment extends Fragment implements INotificationObserve
             }
         });
         mAdapter = new StoreAdapter(getActivity());
-        recyclerView.setAdapter(mAdapter);
-        recyclerView.setLayoutManager(new GridLayoutManager(getActivity(), MAX_COLUMNS));
-        recyclerView.addItemDecoration(new StoreItemDecoration());
+        mRecyclerView.setAdapter(mAdapter);
+        mRecyclerView.setLayoutManager(new GridLayoutManager(getActivity(), MAX_COLUMNS));
+        mRecyclerView.addItemDecoration(new StoreItemDecoration());
         HSGlobalNotificationCenter.addObserver(NOTIFICATION_REFRESH_ITEM_STATUS, this);
         mIsFirstLoad = true;
         return view;
@@ -124,6 +140,26 @@ public class EmojiStoreFragment extends Fragment implements INotificationObserve
                 break;
             default:
                 break;
+        }
+    }
+
+    private void stopGif() {
+        for (int i = 0; i < mRecyclerView.getChildCount(); i++) {
+            View child = mRecyclerView.getChildAt(i);
+            View layout = child.findViewById(R.id.preview_layout);
+            if (layout instanceof EmojiStorePreviewLayout) {
+                ((EmojiStorePreviewLayout) layout).stopGif();
+            }
+        }
+    }
+
+    private void startGif() {
+        for (int i = 0; i < mRecyclerView.getChildCount(); i++) {
+            View child = mRecyclerView.getChildAt(i);
+            View layout = child.findViewById(R.id.preview_layout);
+            if (layout instanceof EmojiStorePreviewLayout) {
+                ((EmojiStorePreviewLayout) layout).startGif();
+            }
         }
     }
 

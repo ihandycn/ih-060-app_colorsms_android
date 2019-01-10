@@ -4,6 +4,7 @@ package com.android.messaging.ui;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.support.v13.app.FragmentStatePagerAdapter;
+import android.support.v4.view.ViewPager;
 
 import com.android.messaging.ui.conversationlist.ConversationListFragment;
 import com.android.messaging.ui.emoji.EmojiStoreFragment;
@@ -11,9 +12,11 @@ import com.android.messaging.ui.smsshow.SmsShowListFragment;
 
 public class BasePagerAdapter extends FragmentStatePagerAdapter {
     private static final int NUM_PAGES = 3;
+    private ViewPager mViewPager;
 
-    public BasePagerAdapter(FragmentManager fm) {
+    public BasePagerAdapter(FragmentManager fm, ViewPager viewPager) {
         super(fm);
+        mViewPager = viewPager;
     }
 
     @Override
@@ -24,7 +27,9 @@ public class BasePagerAdapter extends FragmentStatePagerAdapter {
             case 1:
                 return new SmsShowListFragment();
             case 2:
-                return EmojiStoreFragment.newInstance("tab");
+                EmojiStoreFragment storeFragment = EmojiStoreFragment.newInstance("tab");
+                storeFragment.setViewPager(mViewPager);
+                return storeFragment;
         }
         return null;
     }
