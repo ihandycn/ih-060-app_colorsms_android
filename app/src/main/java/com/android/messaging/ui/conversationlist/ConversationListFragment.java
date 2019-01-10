@@ -77,20 +77,20 @@ public class ConversationListFragment extends Fragment implements ConversationLi
     private boolean mForwardMessageMode;
 
     public interface ConversationListFragmentHost {
-        public void onConversationClick(final ConversationListData listData,
-                                        final ConversationListItemData conversationListItemData,
-                                        final boolean isLongClick,
-                                        final ConversationListItemView conversationView);
+        void onConversationClick(final ConversationListData listData,
+                                 final ConversationListItemData conversationListItemData,
+                                 final boolean isLongClick,
+                                 final ConversationListItemView conversationView);
 
-        public void onCreateConversationClick();
+        void onCreateConversationClick();
 
-        public boolean isConversationSelected(final String conversationId);
+        boolean isConversationSelected(final String conversationId);
 
-        public boolean isSwipeAnimatable();
+        boolean isSwipeAnimatable();
 
-        public boolean isSelectionMode();
+        boolean isSelectionMode();
 
-        public boolean hasWindowFocus();
+        boolean hasWindowFocus();
     }
 
     private ConversationListFragmentHost mHost;
@@ -176,8 +176,8 @@ public class ConversationListFragment extends Fragment implements ConversationLi
                              final Bundle savedInstanceState) {
         final ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.conversation_list_fragment,
                 container, false);
-        mRecyclerView = (RecyclerView) rootView.findViewById(android.R.id.list);
-        mEmptyListMessageView = (ListEmptyView) rootView.findViewById(R.id.no_conversations_view);
+        mRecyclerView = rootView.findViewById(android.R.id.list);
+        mEmptyListMessageView = rootView.findViewById(R.id.no_conversations_view);
         mEmptyListMessageView.setImageHint(R.drawable.ic_oobe_conv_list);
 
         // The default behavior for default layout param generation by LinearLayoutManager is to
