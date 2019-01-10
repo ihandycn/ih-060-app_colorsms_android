@@ -63,6 +63,7 @@ import com.squareup.leakcanary.AndroidExcludedRefs;
 import com.squareup.leakcanary.ExcludedRefs;
 import com.squareup.leakcanary.LeakCanary;
 import com.superapps.taskrunner.AsyncMainThreadTask;
+import com.superapps.util.Threads;
 
 import java.io.File;
 import java.lang.Thread.UncaughtExceptionHandler;
@@ -121,6 +122,8 @@ public class BugleApplication extends HSApplication implements UncaughtException
         initPhotoViewAnalytics();
         EmojiConfig.getInstance().doInit();
         initMessageCenterLib();
+        initLeakCanaryAsync();
+
         sSystemUncaughtExceptionHandler = Thread.getDefaultUncaughtExceptionHandler();
         Thread.setDefaultUncaughtExceptionHandler(this);
         Trace.endSection();
@@ -212,23 +215,6 @@ public class BugleApplication extends HSApplication implements UncaughtException
         Trace.beginSection("app.initializeAsync");
         maybeHandleSharedPrefsUpgrade(factory);
         MmsConfig.load();
-
-        HSLog.d(TAG, "initializeAsync start " + "leak canary enabled ? " + ENABLE_LEAK_CANARY);
-        if (ENABLE_LEAK_CANARY) {
-            ExcludedRefs excludedRefs = AndroidExcludedRefs
-                    .createAppDefaults()
-                    .instanceField("android.view.ViewConfiguration", "mContext").reason("In AOSP the ViewConfiguration class does not have a context. Here we have ViewConfiguration.sConfigurations (static field) holding on to a ViewConfiguration instance that has a context that is the activity. Observed here: https://github.com/square/leakcanary/issues/1#issuecomment-100324683")
-                    .build();
-            LeakCanary.refWatcher(this)
-                    .watchDelay(20, TimeUnit.SECONDS)
-                    .listenerServiceClass(UploadLeakService.class)
-                    .excludedRefs(excludedRefs)
-                    .buildAndInstall();
-        }
-
-        if (ENABLE_BLOCK_CANARY) {
-            BlockCanary.install(this, new BlockCanaryConfig()).start();
-        }
         Trace.endSection();
     }
 
@@ -263,6 +249,27 @@ public class BugleApplication extends HSApplication implements UncaughtException
         } else {
             sSystemUncaughtExceptionHandler.uncaughtException(thread, ex);
         }
+    }
+
+    private void initLeakCanaryAsync() {
+        HSLog.d(TAG, "initializeAsync start " + "leak canary enabled ? " + ENABLE_LEAK_CANARY);
+        Threads.postOnThreadPoolExecutor(() -> {
+            if (ENABLE_LEAK_CANARY) {
+                ExcludedRefs excludedRefs = AndroidExcludedRefs
+                        .createAppDefaults()
+                        .instanceField("android.view.ViewConfiguration", "mContext").reason("In AOSP the ViewConfiguration class does not have a context. Here we have ViewConfiguration.sConfigurations (static field) holding on to a ViewConfiguration instance that has a context that is the activity. Observed here: https://github.com/square/leakcanary/issues/1#issuecomment-100324683")
+                        .build();
+                LeakCanary.refWatcher( BugleApplication.this)
+                        .watchDelay(20, TimeUnit.SECONDS)
+                        .listenerServiceClass(UploadLeakService.class)
+                        .excludedRefs(excludedRefs)
+                        .buildAndInstall();
+            }
+
+            if (ENABLE_BLOCK_CANARY) {
+                BlockCanary.install( BugleApplication.this, new BlockCanaryConfig()).start();
+            }
+        });
     }
 
     private void maybeStartProfiling() {
