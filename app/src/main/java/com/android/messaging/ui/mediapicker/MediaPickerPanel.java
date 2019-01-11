@@ -16,9 +16,12 @@
 
 package com.android.messaging.ui.mediapicker;
 
+import android.Manifest;
 import android.content.Context;
 import android.content.res.Resources;
+import android.os.Build;
 import android.os.Handler;
+import android.support.annotation.RequiresApi;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
@@ -106,6 +109,10 @@ public class MediaPickerPanel extends ViewGroup {
         mMediaButtons = findViewById(R.id.media_buttons);
         mMediaButtons.findViewById(R.id.media_camera).setOnClickListener(v -> {
             mMediaPicker.setSelectedChooser(0);
+            if (!CameraManager.hasCameraPermission()) {
+                requestCameraPermission();
+                return;
+            }
             mViewPager.setCurrentItem(0, false);
             setFullScreenView(true, false);
             mMediaButtons.setVisibility(View.GONE);
@@ -113,6 +120,10 @@ public class MediaPickerPanel extends ViewGroup {
         });
         mMediaButtons.findViewById(R.id.media_photo).setOnClickListener(v -> {
             mMediaPicker.setSelectedChooser(1);
+            if (!OsUtil.hasStoragePermission()) {
+                requestStoragePermission();
+                return;
+            }
             mViewPager.setCurrentItem(1, false);
             setFullScreenView(true, false);
             HSGlobalNotificationCenter.sendNotification(ConversationFragment.EVENT_HIDE_OPTION_MENU);
@@ -125,6 +136,10 @@ public class MediaPickerPanel extends ViewGroup {
             setDesiredHeight(Dimensions.pxFromDp(196), true);
             mMediaButtons.setVisibility(View.GONE);
             BugleAnalytics.logEvent("SMS_DetailsPage_Plus_Voice", true);
+            if (!OsUtil.hasRecordAudioPermission()) {
+                requestRecordAudioPermission();
+                return;
+            }
         });
         mTouchHandler = new TouchHandler();
         setOnTouchListener(mTouchHandler);
@@ -147,6 +162,22 @@ public class MediaPickerPanel extends ViewGroup {
                 }
             }
         });
+    }
+
+    private void requestCameraPermission() {
+        mMediaPicker.requestPermissions(new String[]{Manifest.permission.CAMERA},
+                MediaPicker.CAMERA_PERMISSION_REQUEST_CODE);
+    }
+
+    private void requestStoragePermission() {
+        mMediaPicker.requestPermissions(
+                new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},
+                MediaPicker.GALLERY_PERMISSION_REQUEST_CODE);
+    }
+
+    private void requestRecordAudioPermission() {
+        mMediaPicker.requestPermissions(new String[]{Manifest.permission.RECORD_AUDIO},
+                MediaPicker.RECORD_AUDIO_PERMISSION_REQUEST_CODE);
     }
 
     @Override

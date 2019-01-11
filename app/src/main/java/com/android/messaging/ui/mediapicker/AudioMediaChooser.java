@@ -114,7 +114,7 @@ class AudioMediaChooser extends MediaChooser implements
     }
 
     private void requestRecordAudioPermission() {
-        mMediaPicker.requestPermissions(new String[] { Manifest.permission.RECORD_AUDIO },
+        mMediaPicker.requestPermissions(new String[]{Manifest.permission.RECORD_AUDIO},
                 MediaPicker.RECORD_AUDIO_PERMISSION_REQUEST_CODE);
     }
 
@@ -127,8 +127,13 @@ class AudioMediaChooser extends MediaChooser implements
 
         if (requestCode == MediaPicker.RECORD_AUDIO_PERMISSION_REQUEST_CODE) {
             final boolean permissionGranted = grantResults[0] == PackageManager.PERMISSION_GRANTED;
-            mEnabledView.setVisibility(permissionGranted ? View.VISIBLE : View.GONE);
-            mMissingPermissionView.setVisibility(permissionGranted ? View.GONE : View.VISIBLE);
+            if (mEnabledView != null) {
+                mEnabledView.setVisibility(permissionGranted ? View.VISIBLE : View.GONE);
+            }
+
+            if (mMissingPermissionView != null) {
+                mMissingPermissionView.setVisibility(permissionGranted ? View.GONE : View.VISIBLE);
+            }
         }
     }
 }
