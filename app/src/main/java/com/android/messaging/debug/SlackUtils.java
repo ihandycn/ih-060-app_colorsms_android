@@ -19,7 +19,7 @@ public class SlackUtils {
     private static final String TAG = "SlackUtils";
 
     private static final String URL =
-            "https://hooks.slack.com/services/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";
+            "https://hooks.slack.com/services/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";
 
     static void sendLeak(String text) {
         send(text, ReportType.LEAK);
