@@ -24,6 +24,15 @@ android {
         targetCompatibility JavaVersion.VERSION_1_8
     }
 
+    dexOptions {
+        javaMaxHeapSize "4g"
+    }
+
+    lintOptions {
+        // Continue to check for errors in release builds, but continue the build even when errors are found
+        abortOnError false
+    }
+
     buildTypes {
         debug {
             minifyEnabled false
@@ -32,7 +41,8 @@ android {
         }
 
         release {
-            minifyEnabled false
+            minifyEnabled true
+            multiDexEnabled true
             ext.enableCrashlytics = true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.txt'
             buildConfigField 'String', 'EMOJI_CONFIG', '"ddddd"'
