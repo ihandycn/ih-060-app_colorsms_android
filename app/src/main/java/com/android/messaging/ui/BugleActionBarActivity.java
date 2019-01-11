@@ -74,9 +74,6 @@ public class BugleActionBarActivity extends AppCompatActivity implements ImeUtil
     @Override
     protected void onStart() {
         super.onStart();
-        if (UiUtils.redirectToWelcomeIfNeeded(this)) {
-            return;
-        }
         if (LogUtil.isLoggable(LogUtil.BUGLE_TAG, LogUtil.VERBOSE)) {
             LogUtil.v(LogUtil.BUGLE_TAG, this.getLocalClassName() + ".onStart");
         }

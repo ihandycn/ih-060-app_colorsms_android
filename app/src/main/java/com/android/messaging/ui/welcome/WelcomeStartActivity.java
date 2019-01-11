@@ -59,11 +59,7 @@ public class WelcomeStartActivity extends AppCompatActivity implements View.OnCl
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.welcome_start_button:
-                if (OsUtil.isAtLeastM()) {
-                    BugleAnalytics.logEvent("SMS_Start_WelcomePage_BtnClick_Above23", true);
-                } else {
-                    BugleAnalytics.logEvent("SMS_Start_WelcomePage_BtnClick_Below23", true);
-                }
+                BugleAnalytics.logEvent("SMS_Start_WelcomePage_BtnClick", true);
                 UIIntents.get().launchConversationListActivity(this);
                 finish();
                 break;

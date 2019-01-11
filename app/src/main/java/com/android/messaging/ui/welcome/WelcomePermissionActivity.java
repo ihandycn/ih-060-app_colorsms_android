@@ -1,6 +1,7 @@
 package com.android.messaging.ui.welcome;
 
 import android.Manifest;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -56,7 +57,7 @@ public class WelcomePermissionActivity extends AppCompatActivity {
 
     @Override
     public void onRequestPermissionsResult(
-            final int requestCode, final String permissions[], final int[] grantResults) {
+            final int requestCode, @NonNull final String permissions[], @NonNull final int[] grantResults) {
         if (requestCode == REQUIRED_PERMISSIONS_REQUEST_CODE) {
             if (OsUtil.hasRequiredPermissions()) {
                 redirect();
