@@ -15,6 +15,7 @@
  */
 package com.android.messaging.ui.conversation;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Rect;
@@ -31,10 +32,8 @@ import android.util.AttributeSet;
 import android.view.ContextThemeWrapper;
 import android.view.KeyEvent;
 import android.view.View;
-import android.view.ViewTreeObserver;
 import android.view.accessibility.AccessibilityEvent;
 import android.view.inputmethod.EditorInfo;
-import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -131,8 +130,6 @@ public class ComposeMessageView extends LinearLayout
 
     public static final int CODEPOINTS_REMAINING_BEFORE_COUNTER_SHOWN = 10;
 
-    private static final int DISTANCE_SLOP = 180;
-
     // There is no draft and there is no need for the SIM selector
     private static final int SEND_WIDGET_MODE_SELF_AVATAR = 1;
     // There is no draft but we need to show the SIM selector
@@ -156,16 +153,10 @@ public class ComposeMessageView extends LinearLayout
     private ImageView mAttachMediaButton;
     private ImageView mEmojiKeyboardBtn;
     private ImageView mEmojiGuideView;
-    private LinearLayout mInputLayout;
-    private FrameLayout mMediaPickerLayout;
-    private FrameLayout mEmojiPickerLayout;
 
     private List<String> mEmojiLogCodeList;
     private List<String> mMagicStickerLogNameList;
     private List<String> mStickerLogNameList;
-
-    private boolean mIsMediaPendingShow = false;
-    private boolean mIsEmojiPendingShow = false;
 
     private final Binding<DraftMessageData> mBinding;
     private IComposeMessageViewHost mHost;
@@ -235,8 +226,8 @@ public class ComposeMessageView extends LinearLayout
     @Override
     protected void onFinishInflate() {
         super.onFinishInflate();
-        mInputLayout = findViewById(R.id.input_layout);
-        mComposeEditText = findViewById(R.id.compose_message_text);
+        mComposeEditText = (PlainTextEditText) findViewById(
+                R.id.compose_message_text);
         mComposeEditText.setOnEditorActionListener(this);
         mComposeEditText.addTextChangedListener(this);
         mComposeEditText.setOnFocusChangeListener(new OnFocusChangeListener() {
@@ -262,33 +253,6 @@ public class ComposeMessageView extends LinearLayout
         mComposeEditText.setFilters(new InputFilter[]{
                 new LengthFilter(MmsConfig.get(ParticipantData.DEFAULT_SELF_SUB_ID)
                         .getMaxTextLimit())});
-
-        mComposeEditText.getViewTreeObserver().addOnPreDrawListener(() -> {
-            if (mIsEmojiPendingShow || mIsMediaPendingShow) {
-                if (isKeyboardVisible()) {
-                    return false;
-                } else if (mIsEmojiPendingShow) {
-                    showEmojiPicker();
-                    mIsEmojiPendingShow = false;
-                    return false;
-                } else if (mIsMediaPendingShow) {
-                    showMediaPicker();
-                    mIsMediaPendingShow = false;
-                    return false;
-                }
-            } else {
-                if (isKeyboardVisible()) {
-                    if (isEmojiPickerShowing()) {
-                        hideEmojiPicker();
-                        return false;
-                    } else if (isMediaPickerShowing()) {
-                        hideMediaPicker();
-                        return false;
-                    }
-                }
-            }
-            return true;
-        });
 
         mSelfSendIcon = (SimIconView) findViewById(R.id.self_send_icon);
         mSelfSendIcon.setOnClickListener(new OnClickListener() {
@@ -384,24 +348,26 @@ public class ComposeMessageView extends LinearLayout
             }
         });
 
-        mMediaPickerLayout = findViewById(R.id.mediapicker_container);
         mAttachMediaButton =
                 findViewById(R.id.media_btn);
         mAttachMediaButton.setBackground(BackgroundDrawables.createBackgroundDrawable(0xfff4f7f9, 0x1935363b, Dimensions.pxFromDp(20), false, true));
         mAttachMediaButton.setTag(INPUT_MEDIA);
-        mAttachMediaButton.setOnClickListener(v -> {
-            if (isMediaPickerShowing()) {
-                showKeyboard();
-            } else if (isEmojiPickerShowing()) {
-                hideEmojiPicker();
-                showMediaPicker();
-            } else if (isKeyboardVisible()) {
-                mIsMediaPendingShow = true;
-                hideKeyboard();
-            } else {
-                showMediaPicker();
+        mAttachMediaButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(final View v) {
+                // Showing the media picker is treated as starting to compose the message.
+                if (v.getTag().equals(INPUT_MEDIA)) {
+                    mAttachMediaButton.setTag(INPUT_KEYBOARD);
+                    mAttachMediaButton.setImageResource(R.drawable.input_keyboard_black_icon);
+                    mInputManager.showHideMediaPicker(true /* show */, true /* animate */);
+                } else {
+                    ImeUtil.get().showImeKeyboard(getContext(), mComposeEditText);
+                    if (mHost.shouldHideAttachmentsWhenSimSelectorShown()) {
+                        hideSimSelector();
+                    }
+                }
+                BugleAnalytics.logEvent("SMS_DetailsPage_IconPlus_Click", true);
             }
-            BugleAnalytics.logEvent("SMS_DetailsPage_IconPlus_Click", true);
         });
 
         mAttachmentPreview = (AttachmentPreview) findViewById(R.id.attachment_draft_view);
@@ -412,87 +378,26 @@ public class ComposeMessageView extends LinearLayout
         if (EmojiManager.isShowEmojiGuide()) {
             mEmojiGuideView.setVisibility(VISIBLE);
         }
-        mEmojiPickerLayout = findViewById(R.id.emoji_picker_container);
         mEmojiKeyboardBtn = findViewById(R.id.emoji_btn);
         mEmojiKeyboardBtn.setTag(INPUT_EMOJI);
         mEmojiKeyboardBtn.setOnClickListener(v -> {
-            if (isEmojiPickerShowing()) {
-                BugleAnalytics.logEvent("SMSEmoji_Chat_Keyboard_Click");
-                showKeyboard();
-            } else if (isMediaPickerShowing()) {
-                hideMediaPicker();
-                showEmojiPicker();
-            } else if (isKeyboardVisible()) {
-                mIsEmojiPendingShow = true;
-                hideKeyboard();
+            if (v.getTag().equals(INPUT_EMOJI)) {
+                BugleAnalytics.logEvent("SMSEmoji_Chat_Emoji_Click", true);
+                if (EmojiManager.isShowEmojiGuide()) {
+                    EmojiManager.recordAlreadyShowEmojiGuide();
+                    mEmojiGuideView.setVisibility(GONE);
+                }
+                mEmojiKeyboardBtn.setTag(INPUT_KEYBOARD);
+                mEmojiKeyboardBtn.setImageResource(R.drawable.input_keyboard_icon);
+                mInputManager.showEmoji();
             } else {
-                showEmojiPicker();
+                BugleAnalytics.logEvent("SMSEmoji_Chat_Keyboard_Click");
+                ImeUtil.get().showImeKeyboard(getContext(), mComposeEditText);
+                if (mHost.shouldHideAttachmentsWhenSimSelectorShown()) {
+                    hideSimSelector();
+                }
             }
         });
-    }
-
-    private boolean isMediaPickerShowing() {
-        return mMediaPickerLayout.getVisibility() == VISIBLE;
-    }
-
-    private void showMediaPicker() {
-        mMediaPickerLayout.setVisibility(VISIBLE);
-        mAttachMediaButton.setTag(INPUT_KEYBOARD);
-        mAttachMediaButton.setImageResource(R.drawable.input_keyboard_black_icon);
-        mInputManager.showMediaPicker();
-    }
-
-    private void hideMediaPicker() {
-        mMediaPickerLayout.setVisibility(GONE);
-        mInputManager.hideMediaPicker();
-    }
-
-    private boolean isKeyboardVisible() {
-        return (getDistanceFromInputToBottom() > DISTANCE_SLOP && !isEmojiPickerShowing() && !isMediaPickerShowing())
-                || (getDistanceFromInputToBottom() > (mEmojiPickerLayout.getHeight() + DISTANCE_SLOP) && isEmojiPickerShowing())
-                || (getDistanceFromInputToBottom() > (mMediaPickerLayout.getHeight() + DISTANCE_SLOP) && isMediaPickerShowing());
-    }
-
-    private boolean isEmojiPickerShowing() {
-        return mEmojiPickerLayout.getVisibility() == VISIBLE;
-    }
-
-    private int getDistanceFromInputToBottom() {
-        return Dimensions.getPhoneHeight(getContext()) - getInputBottom();
-    }
-
-    private int getInputBottom() {
-        Rect temp = new Rect();
-        mInputLayout.getGlobalVisibleRect(temp);
-        return temp.bottom;
-    }
-
-    private void showKeyboard() {
-        ImeUtil.get().showImeKeyboard(getContext(), mComposeEditText);
-        if (mHost.shouldHideAttachmentsWhenSimSelectorShown()) {
-            hideSimSelector();
-        }
-    }
-
-    private void hideKeyboard() {
-        ImeUtil.get().hideImeKeyboard(getContext(), mComposeEditText);
-    }
-
-    private void showEmojiPicker() {
-        BugleAnalytics.logEvent("SMSEmoji_Chat_Emoji_Click", true);
-        if (EmojiManager.isShowEmojiGuide()) {
-            EmojiManager.recordAlreadyShowEmojiGuide();
-            mEmojiGuideView.setVisibility(GONE);
-        }
-        mEmojiPickerLayout.setVisibility(VISIBLE);
-        mEmojiKeyboardBtn.setTag(INPUT_KEYBOARD);
-        mEmojiKeyboardBtn.setImageResource(R.drawable.input_keyboard_icon);
-        mInputManager.showEmojiPicker();
-    }
-
-    private void hideEmojiPicker() {
-        mEmojiPickerLayout.setVisibility(GONE);
-        mInputManager.hideEmojiPicker();
     }
 
     private void logEmojiEvent() {

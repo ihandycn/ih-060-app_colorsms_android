@@ -145,7 +145,7 @@
             android:parentActivityName=".ui.conversationlist.ConversationListActivity"
             android:screenOrientation="portrait"
             android:theme="@style/BugleTheme.ConversationActivity"
-            android:windowSoftInputMode="stateAlwaysHidden|adjustResize">
+            android:windowSoftInputMode="stateHidden|adjustResize">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.android.messaging.ui.conversationlist.ConversationListActivity" />
