@@ -32,6 +32,8 @@
 
 -keep class android.support.rastermill.** { *; }
 
+-keep class com.android.messaging.util.GifTranscoder{ *; }
+
 # Android SVG
 -dontwarn com.caverock.androidsvg.**
 -keep class com.caverock.androidsvg.** { *; }
