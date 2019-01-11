@@ -18,12 +18,16 @@ package com.android.messaging.datamodel.action;
 
 import android.app.AlarmManager;
 import android.app.IntentService;
+import android.app.Notification;
 import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.SystemClock;
+import android.support.annotation.Nullable;
 
 import com.android.messaging.Factory;
 import com.android.messaging.datamodel.DataModel;
@@ -45,6 +49,7 @@ public class ActionServiceImpl extends IntentService {
 
     /**
      * Start action by sending intent to the service
+     *
      * @param action - action to start
      */
     protected static void startAction(final Action action) {
@@ -58,12 +63,13 @@ public class ActionServiceImpl extends IntentService {
 
     /**
      * Schedule an action to run after specified delay using alarm manager to send pendingintent
-     * @param action - action to start
+     *
+     * @param action      - action to start
      * @param requestCode - request code used to collapse requests
-     * @param delayMs - delay in ms (from now) before action will start
+     * @param delayMs     - delay in ms (from now) before action will start
      */
     protected static void scheduleAction(final Action action, final int requestCode,
-            final long delayMs) {
+                                         final long delayMs) {
         final Intent intent = PendingActionReceiver.makeIntent(OP_START_ACTION);
         final Bundle actionBundle = new Bundle();
         actionBundle.putParcelable(BUNDLE_ACTION, action);
@@ -74,11 +80,12 @@ public class ActionServiceImpl extends IntentService {
 
     /**
      * Handle response returned by BackgroundWorker
-     * @param request - request generating response
+     *
+     * @param request  - request generating response
      * @param response - response from service
      */
     protected static void handleResponseFromBackgroundWorker(final Action action,
-            final Bundle response) {
+                                                             final Bundle response) {
         final Intent intent = makeIntent(OP_RECEIVE_BACKGROUND_RESPONSE);
 
         final Bundle actionBundle = new Bundle();
@@ -91,10 +98,11 @@ public class ActionServiceImpl extends IntentService {
 
     /**
      * Handle response returned by BackgroundWorker
+     *
      * @param request - request generating failure
      */
     protected static void handleFailureFromBackgroundWorker(final Action action,
-            final Exception exception) {
+                                                            final Exception exception) {
         final Intent intent = makeIntent(OP_RECEIVE_BACKGROUND_FAILURE);
 
         final Bundle actionBundle = new Bundle();
@@ -157,7 +165,7 @@ public class ActionServiceImpl extends IntentService {
         }
 
         public static void scheduleAlarm(final Intent intent, final int requestCode,
-                final long delayMs) {
+                                         final long delayMs) {
             final Context context = Factory.get().getApplicationContext();
             final PendingIntent pendingIntent = PendingIntent.getBroadcast(
                     context, requestCode, intent, PendingIntent.FLAG_CANCEL_CURRENT);
@@ -187,7 +195,7 @@ public class ActionServiceImpl extends IntentService {
      * triggered
      */
     public static PendingIntent makeStartActionPendingIntent(final Context context,
-            final Action action, final int requestCode, final boolean launchesAnActivity) {
+                                                             final Action action, final int requestCode, final boolean launchesAnActivity) {
         final Intent intent = PendingActionReceiver.makeIntent(OP_START_ACTION);
         final Bundle actionBundle = new Bundle();
         actionBundle.putParcelable(BUNDLE_ACTION, action);
@@ -207,6 +215,14 @@ public class ActionServiceImpl extends IntentService {
         super.onCreate();
         mBackgroundWorker = DataModel.get().getBackgroundWorkerForActionService();
         DataModel.get().getConnectivityUtil().registerForSignalStrength();
+    }
+
+    @Override
+    public int onStartCommand(@Nullable Intent intent, int flags, int startId) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            startForeground(startId, new Notification());
+        }
+        return super.onStartCommand(intent, flags, startId);
     }
 
     @Override
@@ -236,10 +252,16 @@ public class ActionServiceImpl extends IntentService {
         // memory (in total around 1MB). See this article for background
         // http://developer.android.com/reference/android/os/TransactionTooLargeException.html
         // Perhaps we should keep large structures in the action monitor?
-        if (context.startService(intent) == null) {
+        ComponentName name = null;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            name = context.startForegroundService(intent);
+        } else {
+            name = context.startService(intent);
+        }
+        if (name == null) {
             LogUtil.e(TAG,
                     "ActionService.startServiceWithIntent: failed to start service for intent "
-                    + intent);
+                            + intent);
             sWakeLock.release(intent, opcode);
         }
     }
@@ -261,7 +283,7 @@ public class ActionServiceImpl extends IntentService {
             Action action;
             final Bundle actionBundle = intent.getBundleExtra(EXTRA_ACTION_BUNDLE);
             actionBundle.setClassLoader(getClassLoader());
-            switch(opcode) {
+            switch (opcode) {
                 case OP_START_ACTION: {
                     action = (Action) actionBundle.getParcelable(BUNDLE_ACTION);
                     executeAction(action);
@@ -293,6 +315,7 @@ public class ActionServiceImpl extends IntentService {
     }
 
     private static final long EXECUTION_TIME_WARN_LIMIT_MS = 1000; // 1 second
+
     /**
      * Local execution of action on ActionService thread
      */

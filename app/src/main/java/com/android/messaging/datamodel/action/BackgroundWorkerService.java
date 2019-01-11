@@ -17,9 +17,13 @@
 package com.android.messaging.datamodel.action;
 
 import android.app.IntentService;
+import android.app.Notification;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 
 import com.android.messaging.Factory;
 import com.android.messaging.datamodel.DataModel;
@@ -61,6 +65,14 @@ public class BackgroundWorkerService extends IntentService {
         }
     }
 
+    @Override
+    public int onStartCommand(@Nullable Intent intent, int flags, int startId) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            startForeground(startId, new Notification());
+        }
+        return super.onStartCommand(intent, flags, startId);
+    }
+
     // ops
     @VisibleForTesting
     protected static final int OP_PROCESS_REQUEST = 400;
@@ -77,7 +89,7 @@ public class BackgroundWorkerService extends IntentService {
      * Queue action intent to the BackgroundWorkerService after acquiring wake lock
      */
     private static void startServiceWithAction(final Action action,
-            final int retryCount) {
+                                               final int retryCount) {
         final Intent intent = new Intent();
         intent.putExtra(EXTRA_ACTION, action);
         intent.putExtra(EXTRA_ATTEMPT, retryCount);
@@ -97,10 +109,16 @@ public class BackgroundWorkerService extends IntentService {
             LogUtil.v(TAG, "acquiring wakelock for opcode " + opcode);
         }
 
-        if (context.startService(intent) == null) {
+        ComponentName name;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            name = context.startForegroundService(intent);
+        } else {
+            name = context.startService(intent);
+        }
+        if (name == null) {
             LogUtil.e(TAG,
                     "BackgroundWorkerService.startServiceWithAction: failed to start service for "
-                    + opcode);
+                            + opcode);
             sWakeLock.release(intent, opcode);
         }
     }
@@ -116,7 +134,7 @@ public class BackgroundWorkerService extends IntentService {
         sWakeLock.ensure(intent, opcode);
 
         try {
-            switch(opcode) {
+            switch (opcode) {
                 case OP_PROCESS_REQUEST: {
                     final Action action = intent.getParcelableExtra(EXTRA_ACTION);
                     final int attempt = intent.getIntExtra(EXTRA_ATTEMPT, -1);
