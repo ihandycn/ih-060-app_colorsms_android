@@ -298,10 +298,6 @@ public class BugleNotifications {
      * @return true if the notification should occur
      */
     public static boolean shouldNotify() {
-        if (Factory.get().getIsForeground()) {
-            return false;
-        }
-
         // disable notifications when we enable message box to avoid
         if (MessageCenterSettings.isSMSAssistantModuleEnabled()) {
             return false;
