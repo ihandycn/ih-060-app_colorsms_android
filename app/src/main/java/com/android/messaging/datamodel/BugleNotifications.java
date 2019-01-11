@@ -81,6 +81,7 @@ import com.android.messaging.util.PhoneUtils;
 import com.android.messaging.util.RingtoneUtil;
 import com.android.messaging.util.ThreadUtil;
 import com.android.messaging.util.UriUtil;
+import com.messagecenter.customize.MessageCenterSettings;
 
 import java.util.HashSet;
 import java.util.Iterator;
