@@ -586,5 +586,7 @@
     <string name="welcome_permission_button">开启</string>
     <string name="setting_sms_show_close_dialog_title">确定关闭？</string>
     <string name="sms_show_current_theme">当前的主题</string>
+    <string name="emoji_recent_empty_description">暂无收藏</string>
+
 
 </resources>
