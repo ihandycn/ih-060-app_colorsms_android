@@ -2,6 +2,7 @@ package com.android.messaging.smsshow;
 
 import com.android.messaging.util.BuglePrefs;
 import com.ihs.commons.notificationcenter.HSGlobalNotificationCenter;
+import com.messagecenter.customize.MessageCenterSettings;
 import com.superapps.util.Preferences;
 
 import static com.android.messaging.ui.smsshow.SmsShowListFragment.NOTIFICATION_KEY_APPLIED_SMS_SHOW_CHANGED;
@@ -13,6 +14,10 @@ public class SmsShowUtils {
     public static void setSmsShowUserEnabled(boolean enabled) {
         if (isSmsShowEnabledByUser() != enabled) {
             Preferences.get(BuglePrefs.SMS_SHOW_SHARED_PREFERENCES_NAME).putBoolean(PREFS_KEY_SMS_SHOW_ENABLED, enabled);
+        }
+
+        if (enabled) {
+            MessageCenterSettings.setSMSAssistantModuleEnabled(true);
         }
     }
 

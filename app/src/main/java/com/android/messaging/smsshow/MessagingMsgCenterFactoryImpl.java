@@ -14,7 +14,7 @@ public class MessagingMsgCenterFactoryImpl extends MessageCenterFactoryImpl {
 
     @Override
     public boolean isSMSAssistantOpenDefault() {
-        return true;
+        return false;
     }
 
     @Override
