@@ -183,7 +183,7 @@ public class SettingGeneralActivity extends AppCompatActivity {
         SettingItemView mPrivacyPolicy = findViewById(R.id.setting_item_privacy_policy);
         mPrivacyPolicy.setOnItemClickListener(() -> {
             Intent privacyIntent = WebViewActivity.newIntent(
-                    HSConfig.optString("", "Application", "PrivacyPolicyURL"),
+                    HSConfig.optString("", "Application", "PrivacyPolicyUrl"),
                     false, false);
             startActivity(privacyIntent);
         });
@@ -192,7 +192,7 @@ public class SettingGeneralActivity extends AppCompatActivity {
         SettingItemView mTermsOfService = findViewById(R.id.setting_item_terms_of_service);
         mTermsOfService.setOnItemClickListener(() -> {
             Intent termsOfServiceIntent = WebViewActivity.newIntent(
-                    HSConfig.optString("", "Application", "TermsOfServiceURL"),
+                    HSConfig.optString("", "Application", "TermsOfServiceUrl"),
                     false, false);
             startActivity(termsOfServiceIntent);
         });
