@@ -363,13 +363,13 @@ public class UiUtils {
             UIIntents.get().launchWelcomeStartActivity(activity);
             HSLog.d("UiUtil", "Show welcome start");
         } else {
-            if (shouldShowWelcomePermission()) {
-                UIIntents.get().launchWelcomePermissionActivity(activity);
-                HSLog.d("UiUtil", "Show welcome permission");
+            if (shouldShowWelcomeSetDefault()) {
+                UIIntents.get().launchWelcomeSetAsDefaultActivity(activity);
+                HSLog.d("UiUtil", "Show welcome set as default");
             } else {
-                if (shouldShowWelcomeSetDefault()) {
-                    UIIntents.get().launchWelcomeSetAsDefaultActivity(activity);
-                    HSLog.d("UiUtil", "Show welcome set as default");
+                if (shouldShowWelcomePermission()) {
+                    UIIntents.get().launchWelcomePermissionActivity(activity);
+                    HSLog.d("UiUtil", "Show welcome permission");
                 } else {
                     // No redirect performed
                     return false;
