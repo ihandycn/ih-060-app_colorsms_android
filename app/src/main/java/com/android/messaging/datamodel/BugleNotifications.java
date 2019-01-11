@@ -308,6 +308,10 @@ public class BugleNotifications {
             return false;
         }
         // Now check prefs (i.e. settings) to see if the user turned off notifications.
+        return isNotificationSettingsSwitchOpenned();
+    }
+
+    public static boolean isNotificationSettingsSwitchOpenned() {
         final BuglePrefs prefs = BuglePrefs.getApplicationPrefs();
         final Context context = Factory.get().getApplicationContext();
         final String prefKey = context.getString(R.string.notifications_enabled_pref_key);

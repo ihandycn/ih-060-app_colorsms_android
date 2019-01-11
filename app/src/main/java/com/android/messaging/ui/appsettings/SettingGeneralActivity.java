@@ -75,12 +75,13 @@ public class SettingGeneralActivity extends AppCompatActivity {
                         .setMessage(getResources().getString(R.string.setting_sms_show_close_dialog_content))
                         .setNegativeButton(R.string.setting_sms_show_close_dialog_ok,
                                 (dialog, button) -> {
-                                    SmsShowUtils.setSmsShowUserEnabled(mSmsShowView.isChecked());
+                                    SmsShowUtils.setSmsShowUserEnabled(false);
                                     mSmsShowView.setChecked(false);
                                 })
                         .setPositiveButton(R.string.delete_conversation_decline_button, null)
                         .show();
             } else {
+                SmsShowUtils.setSmsShowUserEnabled(true);
                 mSmsShowView.setChecked(true);
             }
             BugleAnalytics.logEvent("SMS_Settings_SMSShow_Click", true);

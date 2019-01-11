@@ -4,6 +4,7 @@ import com.android.messaging.Factory;
 import com.android.messaging.datamodel.BugleNotifications;
 import com.android.messaging.ui.UIIntents;
 import com.android.messaging.util.PhoneUtils;
+import com.ihs.commons.utils.HSLog;
 import com.messagecenter.customize.MessageCenterFactoryImpl;
 import com.messagecenter.customize.SmsShowCallBack;
 import com.messagecenter.notification.NotificationMessageAlertActivity;
@@ -31,7 +32,7 @@ public class MessagingMsgCenterFactoryImpl extends MessageCenterFactoryImpl {
 
             @Override
             public boolean configEnabled() {
-                return !Factory.get().getIsForeground() && BugleNotifications.shouldNotify();
+                return !Factory.get().getIsForeground() && BugleNotifications.isNotificationSettingsSwitchOpenned();
             }
 
 
