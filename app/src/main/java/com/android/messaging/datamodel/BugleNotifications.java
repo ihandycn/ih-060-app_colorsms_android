@@ -62,6 +62,7 @@ import com.android.messaging.datamodel.media.UriImageRequestDescriptor;
 import com.android.messaging.datamodel.media.VideoThumbnailRequest;
 import com.android.messaging.sms.MmsSmsUtils;
 import com.android.messaging.sms.MmsUtils;
+import com.android.messaging.smsshow.SmsShowUtils;
 import com.android.messaging.ui.UIIntents;
 import com.android.messaging.util.Assert;
 import com.android.messaging.util.AvatarUriUtil;
@@ -296,11 +297,19 @@ public class BugleNotifications {
      * @return true if the notification should occur
      */
     public static boolean shouldNotify() {
+        if (Factory.get().getIsForeground()) {
+            return false;
+        }
+
+        // disable notifications when we enable message box to avoid
+        if (MessageCenterSettings.isSMSAssistantModuleEnabled()) {
+            return false;
+        }
+
         // If we're not the default sms app, don't put up any notifications.
         if (!PhoneUtils.getDefault().isDefaultSmsApp()) {
             return false;
         }
-
         // Now check prefs (i.e. settings) to see if the user turned off notifications.
         final BuglePrefs prefs = BuglePrefs.getApplicationPrefs();
         final Context context = Factory.get().getApplicationContext();
@@ -413,10 +422,11 @@ public class BugleNotifications {
                                        final boolean softSound) {
         final Context context = Factory.get().getApplicationContext();
         final NotificationCompat.Builder notifBuilder = new NotificationCompat.Builder(context);
-        notifBuilder.setCategory(Notification.CATEGORY_MESSAGE);
+        if (OsUtil.isAtLeastL()) {
+            notifBuilder.setCategory(Notification.CATEGORY_MESSAGE);
+        }
         // TODO: Need to fix this for multi conversation notifications to rate limit dings.
         final String conversationId = state.mConversationIds.first();
-
 
         final Uri ringtoneUri = RingtoneUtil.getNotificationRingtoneUri(state.getRingtoneUri());
         // If the notification's conversation is currently observable (focused or in the
