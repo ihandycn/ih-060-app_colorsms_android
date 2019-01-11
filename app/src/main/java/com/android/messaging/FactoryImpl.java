@@ -16,7 +16,10 @@
 
 package com.android.messaging;
 
+import android.app.Activity;
+import android.app.Application;
 import android.content.Context;
+import android.os.Bundle;
 import android.os.Process;
 import android.telephony.SmsManager;
 import android.util.SparseArray;
@@ -44,6 +47,7 @@ import com.android.messaging.util.MediaUtil;
 import com.android.messaging.util.MediaUtilImpl;
 import com.android.messaging.util.OsUtil;
 import com.android.messaging.util.PhoneUtils;
+import com.messagecenter.notification.NotificationMessageAlertActivity;
 import com.superapps.util.Threads;
 
 import java.util.concurrent.ConcurrentHashMap;
@@ -64,6 +68,7 @@ class FactoryImpl extends Factory {
     private MediaUtil mMediaUtil;
     private SparseArray<BugleSubscriptionPrefs> mSubscriptionPrefs;
     private BugleCarrierConfigValuesLoader mCarrierConfigValuesLoader;
+    private boolean mIsForeground;
 
     // Cached instance for Pre-L_MR1
     private static final Object PHONEUTILS_INSTANCE_LOCK = new Object();
@@ -101,6 +106,47 @@ class FactoryImpl extends Factory {
         factory.mMediaUtil = new MediaUtilImpl();
         factory.mSubscriptionPrefs = new SparseArray<BugleSubscriptionPrefs>();
         factory.mCarrierConfigValuesLoader = new BugleCarrierConfigValuesLoader(applicationContext);
+        application.registerActivityLifecycleCallbacks(new Application.ActivityLifecycleCallbacks() {
+
+            @Override
+            public void onActivityCreated(Activity activity, Bundle savedInstanceState) {
+            }
+
+            @Override
+            public void onActivityStarted(Activity activity) {
+
+
+            }
+
+            @Override
+            public void onActivityResumed(Activity activity) {
+                if (!(activity instanceof NotificationMessageAlertActivity)) {
+                    factory.mIsForeground = true;
+                }
+            }
+
+            @Override
+            public void onActivityPaused(Activity activity) {
+                if (!(activity instanceof NotificationMessageAlertActivity)) {
+                    factory.mIsForeground = false;
+                }
+            }
+
+            @Override
+            public void onActivityStopped(Activity activity) {
+
+            }
+
+            @Override
+            public void onActivitySaveInstanceState(Activity activity, Bundle outState) {
+
+            }
+
+            @Override
+            public void onActivityDestroyed(Activity activity) {
+
+            }
+        });
 
         Assert.initializeGservices(factory.mBugleGservices);
         LogUtil.initializeGservices(factory.mBugleGservices);
@@ -216,6 +262,11 @@ class FactoryImpl extends Factory {
             }
             return sPhoneUtilsInstancePreLMR1;
         }
+    }
+
+    @Override
+    public boolean getIsForeground() {
+        return mIsForeground;
     }
 
     @Override

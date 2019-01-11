@@ -1,6 +1,9 @@
 package com.android.messaging.smsshow;
 
+import com.android.messaging.Factory;
+import com.android.messaging.datamodel.BugleNotifications;
 import com.android.messaging.ui.UIIntents;
+import com.android.messaging.util.PhoneUtils;
 import com.messagecenter.customize.MessageCenterFactoryImpl;
 import com.messagecenter.customize.SmsShowCallBack;
 import com.messagecenter.sms.SmsMessageAlertActivity;
@@ -22,13 +25,14 @@ public class MessagingMsgCenterFactoryImpl extends MessageCenterFactoryImpl {
             }
 
             /**
-             * @return true sms show is an important feature for product, so MessageBox is only controlled by user.
+             * @return only open this feature when set sms default and notification switch opened.
              */
 
             @Override
             public boolean configEnabled() {
-                return true;
+                return !Factory.get().getIsForeground() && BugleNotifications.shouldNotify();
             }
+
 
             @Override
             public boolean showAd() {

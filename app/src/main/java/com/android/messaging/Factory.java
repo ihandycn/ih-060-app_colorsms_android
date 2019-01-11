@@ -68,6 +68,7 @@ public abstract class Factory {
     public abstract PhoneUtils getPhoneUtils(int subId);
     public abstract MediaUtil getMediaUtil();
     public abstract BugleCarrierConfigValuesLoader getCarrierConfigValuesLoader();
+    public abstract boolean getIsForeground();
     // Note this needs to run from any thread
     public abstract void reclaimMemory();
 
