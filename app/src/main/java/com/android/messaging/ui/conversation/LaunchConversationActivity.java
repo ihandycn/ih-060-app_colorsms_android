@@ -98,6 +98,14 @@ public class LaunchConversationActivity extends Activity implements
         finish();
     }
 
+    @Override
+    public void onStart(){
+        super.onStart();
+        if (UiUtils.redirectToWelcomeIfNeeded(this)) {
+            return;
+        }
+    }
+
     private String getBody(final Uri uri) {
         if (uri == null) {
             return null;

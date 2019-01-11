@@ -37,6 +37,14 @@ public class BaseBugleActivity extends Activity {
     }
 
     @Override
+    public void onStart(){
+        super.onStart();
+        if (UiUtils.redirectToWelcomeIfNeeded(this)) {
+            return;
+        }
+    }
+
+    @Override
     protected void onResume() {
         super.onResume();
         LogUtil.v(LogUtil.BUGLE_TAG, this.getLocalClassName() + ".onResume");
