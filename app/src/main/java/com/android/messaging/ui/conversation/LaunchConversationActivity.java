@@ -99,8 +99,8 @@ public class LaunchConversationActivity extends Activity implements
     }
 
     @Override
-    public void onStart(){
-        super.onStart();
+    public void onRestart(){
+        super.onRestart();
         if (UiUtils.redirectToWelcomeIfNeeded(this)) {
             return;
         }
