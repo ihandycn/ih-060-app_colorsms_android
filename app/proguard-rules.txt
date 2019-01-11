@@ -30,6 +30,8 @@
 -dontwarn android.databinding.**
 -keep class android.databinding.** { *; }
 
+-keep class android.support.rastermill.** { *; }
+
 # Android SVG
 -dontwarn com.caverock.androidsvg.**
 -keep class com.caverock.androidsvg.** { *; }
