@@ -15,15 +15,13 @@
 # Tapjoy
 -keep class com.tapjoy.** { *; }
 -dontwarn com.tapjoy.**
-
--dontwarn com.google.firebase.**
+-dontwarn com.google.**
+-dontwarn com.ihs.**
+-dontwarn com.messagecenter.**
+-dontwarn net.appcloudbox.**
 -dontwarn com.amazon.**
 -dontwarn com.appsflyer.FirebaseInstanceIdListener**
 
--dontwarn com.ihs.interstitialads.**
--dontwarn com.ihs.affiliateads.HeaderAds.AffiliateHeader**
--dontwarn net.appcloudbox.h5game.**
--dontwarn net.appcloudbox.apevent.**
 -dontwarn com.call.assistant.**
 -dontwarn com.acb.call.**
 -dontwarn com.vertical.color.phone.**
@@ -126,15 +124,3 @@
  -keep interface me.jessyan.progressmanager.** { *; }
 
 -keep class android.support.graphics.drawable.** { *; }
-
--dontwarn com.google.**
--keep class com.google.** { *; }
-
--dontwarn com.ihs.**
--keep class com.ihs.** { *; }
-
--dontwarn net.appcloudbox.**
--keep class net.appcloudbox.** { *; }
-
--dontwarn com.messagecenter.**
--keep class com.messagecenter.** { *; }
