@@ -243,10 +243,12 @@ public class ConversationListItemView extends FrameLayout implements OnClickList
         } else {
             //unread
             contactIconBackgroundColor = 0xff1acc48;
-            imgUri = imgUri.concat("unread");
+            if (!TextUtils.isEmpty(imgUri)) {
+                imgUri = imgUri.concat("unread");
+            }
         }
 
-        if (mData.getIcon() != null) {
+        if (!TextUtils.isEmpty(imgUri)) {
             iconUri = Uri.parse(imgUri);
         }
 
