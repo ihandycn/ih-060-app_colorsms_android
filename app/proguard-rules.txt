@@ -8,6 +8,16 @@
 
 -keepattributes EnclosingMethod
 
+-optimizationpasses 5
+
+-keepclasseswithmembernames class * {
+   native <methods>;
+}
+
+-keep class * implements Android.os.Parcelable {
+   public static final Android.os.Parcelable$Creator *;
+}
+
 # Flurry
 -keep class com.flurry.** { *; }
 -dontwarn com.flurry.**
