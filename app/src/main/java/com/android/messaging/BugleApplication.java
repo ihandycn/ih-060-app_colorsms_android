@@ -154,7 +154,8 @@ public class BugleApplication extends HSApplication implements UncaughtException
 
         maybeStartProfiling();
 
-        BugleApplication.updateAppConfig(context);
+        // execute init works only after sms default set
+        BugleApplication.updateAppConfig(context, true);
 
         // Initialize MMS lib
         initMmsLib(context, bugleGservices, carrierConfigValuesLoader);
@@ -201,9 +202,9 @@ public class BugleApplication extends HSApplication implements UncaughtException
         });
     }
 
-    public static void updateAppConfig(final Context context) {
+    public static void updateAppConfig(final Context context, boolean isDefaultSms) {
         // Make sure we set the correct state for the SMS/MMS receivers
-        SmsReceiver.updateSmsReceiveHandler(context);
+        SmsReceiver.updateSmsReceiveHandler(context, isDefaultSms);
     }
 
     // Called from thread started in FactoryImpl.register() (i.e. not run in tests)

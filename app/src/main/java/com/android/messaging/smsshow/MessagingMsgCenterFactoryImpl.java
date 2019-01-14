@@ -32,9 +32,10 @@ public class MessagingMsgCenterFactoryImpl extends MessageCenterFactoryImpl {
 
             @Override
             public boolean configEnabled() {
-                return !Factory.get().getIsForeground() && BugleNotifications.isNotificationSettingsSwitchOpenned();
+                return !Factory.get().getIsForeground()
+                        && BugleNotifications.isNotificationSettingsSwitchOpenned()
+                        && PhoneUtils.getDefault().isDefaultSmsApp();
             }
-
 
             @Override
             public boolean showAd() {

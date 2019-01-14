@@ -72,11 +72,13 @@ public final class SmsReceiver extends BroadcastReceiver {
      * When running as a secondary user, this receiver is still used to trigger the incoming
      * notification.
      */
-    public static void updateSmsReceiveHandler(final Context context) {
+    public static void updateSmsReceiveHandler(final Context context, boolean isDefaultSms) {
         boolean smsReceiverEnabled;
         boolean mmsWapPushReceiverEnabled;
         boolean respondViaMessageEnabled;
         boolean broadcastAbortEnabled;
+        boolean smsMessageReceiverMessageEnabled = true; // SmsMessageReceiver in libColorPhone
+
 
         if (OsUtil.isAtLeastKLP()) {
             // When we're running as the secondary user, we don't get the new SMS_DELIVER intent,
@@ -84,13 +86,17 @@ public final class SmsReceiver extends BroadcastReceiver {
             // listen for the SMS_RECEIVED intent. For the secondary user, use this SmsReceiver
             // for both sms and mms notification. For the primary user on KLP (and above), we don't
             // use the SmsReceiver.
-            smsReceiverEnabled = OsUtil.isSecondaryUser();
+            boolean isSmsEnabled = PhoneUtils.getDefault().isSmsEnabled();
+
+            smsReceiverEnabled = OsUtil.isSecondaryUser() && isSmsEnabled;
             // On KLP use the new deliver event for mms
             mmsWapPushReceiverEnabled = false;
             // On KLP we need to always enable this handler to show in the list of sms apps
             respondViaMessageEnabled = true;
             // On KLP we don't need to abort the broadcast
             broadcastAbortEnabled = false;
+
+            smsMessageReceiverMessageEnabled = isSmsEnabled;
         } else {
             // On JB we use the sms receiver for both sms/mms delivery
             final boolean carrierSmsEnabled = PhoneUtils.getDefault().isSmsEnabled();
@@ -174,10 +180,16 @@ public final class SmsReceiver extends BroadcastReceiver {
                     PackageManager.COMPONENT_ENABLED_STATE_DISABLED, PackageManager.DONT_KILL_APP);
         }
 
-        // simply enable SmsMessageReceiver, handle sms messages as above in the future;
-        packageManager.setComponentEnabledSetting(
-                new ComponentName(context, SmsMessageReceiver.class),
-                PackageManager.COMPONENT_ENABLED_STATE_ENABLED, PackageManager.DONT_KILL_APP);
+        if (smsMessageReceiverMessageEnabled) {
+            packageManager.setComponentEnabledSetting(
+                    new ComponentName(context, SmsMessageReceiver.class),
+                    PackageManager.COMPONENT_ENABLED_STATE_ENABLED, PackageManager.DONT_KILL_APP);
+        } else {
+            packageManager.setComponentEnabledSetting(
+                    new ComponentName(context, SmsMessageReceiver.class),
+                    PackageManager.COMPONENT_ENABLED_STATE_DISABLED, PackageManager.DONT_KILL_APP);
+
+        }
 
     }
 

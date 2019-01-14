@@ -154,12 +154,8 @@ class FactoryImpl extends Factory {
         if (PhoneUtils.getDefault().isDefaultSmsApp()) {
             factory.onDefaultSmsSet();
         }
-        PhoneUtils.getDefault().registerDefaultSmsPackageChange(new Runnable() {
-            @Override
-            public void run() {
-                factory.onDefaultSmsSet();
-            }
-        }, null);
+        PhoneUtils.getDefault().registerDefaultSmsPackageChange(factory::onDefaultSmsSet,
+                () -> BugleApplication.updateAppConfig(factory.getApplicationContext(), false));
 
         return factory;
     }
