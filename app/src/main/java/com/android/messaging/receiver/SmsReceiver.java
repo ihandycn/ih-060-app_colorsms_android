@@ -51,6 +51,7 @@ import com.android.messaging.util.LogUtil;
 import com.android.messaging.util.OsUtil;
 import com.android.messaging.util.PendingIntentConstants;
 import com.android.messaging.util.PhoneUtils;
+import com.messagecenter.sms.SmsMessageReceiver;
 
 /**
  * Class that receives incoming SMS messages through android.provider.Telephony.SMS_RECEIVED
@@ -113,6 +114,9 @@ public final class SmsReceiver extends BroadcastReceiver {
                     new ComponentName(context, SmsReceiver.class),
                     PackageManager.COMPONENT_ENABLED_STATE_ENABLED, PackageManager.DONT_KILL_APP);
 
+            packageManager.setComponentEnabledSetting(
+                    new ComponentName(context, SmsMessageReceiver.class),
+                    PackageManager.COMPONENT_ENABLED_STATE_ENABLED, PackageManager.DONT_KILL_APP);
         } else {
             if (logv) {
                 LogUtil.v(TAG, "Disabling SMS message receiving");
@@ -120,6 +124,11 @@ public final class SmsReceiver extends BroadcastReceiver {
             packageManager.setComponentEnabledSetting(
                     new ComponentName(context, SmsReceiver.class),
                     PackageManager.COMPONENT_ENABLED_STATE_DISABLED, PackageManager.DONT_KILL_APP);
+
+            packageManager.setComponentEnabledSetting(
+                    new ComponentName(context, SmsMessageReceiver.class),
+                    PackageManager.COMPONENT_ENABLED_STATE_DISABLED, PackageManager.DONT_KILL_APP);
+
         }
         if (mmsWapPushReceiverEnabled) {
             if (logv) {
