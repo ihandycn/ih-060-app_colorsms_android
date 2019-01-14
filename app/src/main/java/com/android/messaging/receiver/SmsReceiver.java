@@ -114,9 +114,6 @@ public final class SmsReceiver extends BroadcastReceiver {
                     new ComponentName(context, SmsReceiver.class),
                     PackageManager.COMPONENT_ENABLED_STATE_ENABLED, PackageManager.DONT_KILL_APP);
 
-            packageManager.setComponentEnabledSetting(
-                    new ComponentName(context, SmsMessageReceiver.class),
-                    PackageManager.COMPONENT_ENABLED_STATE_ENABLED, PackageManager.DONT_KILL_APP);
         } else {
             if (logv) {
                 LogUtil.v(TAG, "Disabling SMS message receiving");
@@ -124,11 +121,6 @@ public final class SmsReceiver extends BroadcastReceiver {
             packageManager.setComponentEnabledSetting(
                     new ComponentName(context, SmsReceiver.class),
                     PackageManager.COMPONENT_ENABLED_STATE_DISABLED, PackageManager.DONT_KILL_APP);
-
-            packageManager.setComponentEnabledSetting(
-                    new ComponentName(context, SmsMessageReceiver.class),
-                    PackageManager.COMPONENT_ENABLED_STATE_DISABLED, PackageManager.DONT_KILL_APP);
-
         }
         if (mmsWapPushReceiverEnabled) {
             if (logv) {
@@ -181,6 +173,12 @@ public final class SmsReceiver extends BroadcastReceiver {
                     new ComponentName(context, NoConfirmationSmsSendService.class),
                     PackageManager.COMPONENT_ENABLED_STATE_DISABLED, PackageManager.DONT_KILL_APP);
         }
+
+        // simply enable SmsMessageReceiver, handle sms messages as above in the future;
+        packageManager.setComponentEnabledSetting(
+                new ComponentName(context, SmsMessageReceiver.class),
+                PackageManager.COMPONENT_ENABLED_STATE_ENABLED, PackageManager.DONT_KILL_APP);
+
     }
 
     private static final String EXTRA_ERROR_CODE = "errorCode";
