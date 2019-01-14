@@ -20,7 +20,6 @@ import android.app.Activity;
 import android.app.Application;
 import android.content.Context;
 import android.os.Bundle;
-import android.os.Process;
 import android.telephony.SmsManager;
 import android.util.SparseArray;
 
@@ -151,15 +150,22 @@ class FactoryImpl extends Factory {
         Assert.initializeGservices(factory.mBugleGservices);
         LogUtil.initializeGservices(factory.mBugleGservices);
 
-        if (OsUtil.hasRequiredPermissions()) {
-            factory.onRequiredPermissionsAcquired();
+
+        if (PhoneUtils.getDefault().isDefaultSmsApp()) {
+            factory.onDefaultSmsSet();
         }
+        PhoneUtils.getDefault().registerDefaultSmsPackageChange(new Runnable() {
+            @Override
+            public void run() {
+                factory.onDefaultSmsSet();
+            }
+        }, null);
 
         return factory;
     }
 
     @Override
-    public void onRequiredPermissionsAcquired() {
+    public void onDefaultSmsSet() {
         if (sInitialized) {
             return;
         }

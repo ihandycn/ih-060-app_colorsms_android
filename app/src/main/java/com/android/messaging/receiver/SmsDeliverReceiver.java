@@ -20,12 +20,16 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 
+import com.android.messaging.util.PhoneUtils;
+
 /**
  * Class that receives incoming SMS messages on KLP+ Devices.
  */
 public final class SmsDeliverReceiver extends BroadcastReceiver {
     @Override
     public void onReceive(final Context context, final Intent intent) {
-        SmsReceiver.deliverSmsIntent(context, intent);
+        if (PhoneUtils.getDefault().isDefaultSmsApp()) {
+            SmsReceiver.deliverSmsIntent(context, intent);
+        }
     }
 }

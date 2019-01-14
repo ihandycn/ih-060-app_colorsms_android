@@ -22,8 +22,10 @@ import android.content.Intent;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.PackageManager.NameNotFoundException;
+import android.database.ContentObserver;
 import android.database.Cursor;
 import android.net.ConnectivityManager;
+import android.net.Uri;
 import android.provider.Settings;
 import android.provider.Telephony;
 import android.support.v4.util.ArrayMap;
@@ -34,14 +36,16 @@ import android.telephony.SubscriptionManager;
 import android.telephony.TelephonyManager;
 import android.text.TextUtils;
 
+import com.android.messaging.BuildConfig;
 import com.android.messaging.Factory;
 import com.android.messaging.R;
 import com.android.messaging.datamodel.data.ParticipantData;
 import com.android.messaging.sms.MmsSmsUtils;
 import com.google.i18n.phonenumbers.NumberParseException;
-import com.google.i18n.phonenumbers.Phonenumber.PhoneNumber;
 import com.google.i18n.phonenumbers.PhoneNumberUtil;
 import com.google.i18n.phonenumbers.PhoneNumberUtil.PhoneNumberFormat;
+import com.google.i18n.phonenumbers.Phonenumber.PhoneNumber;
+import com.superapps.util.Toasts;
 
 import java.lang.reflect.Method;
 import java.util.ArrayList;
@@ -895,6 +899,35 @@ public abstract class PhoneUtils {
             return  mContext.getPackageName().equals(configuredApplication);
         }
         return true;
+    }
+
+    public void registerDefaultSmsPackageChange(Runnable setRunnable, Runnable clearedRunnable) {
+        Uri uri = Settings.Secure.getUriFor("sms_default_application");
+
+        Factory.get().getApplicationContext().getContentResolver().registerContentObserver(uri, false, new ContentObserver(null) {
+            @Override
+            public void onChange(boolean selfChange) {
+                super.onChange(selfChange);
+                if (!isDefaultSmsApp()) {
+                    if (clearedRunnable != null) {
+                        clearedRunnable.run();
+                    }
+                    android.os.Process.killProcess(android.os.Process.myPid());
+                } else {
+                    if (setRunnable != null) {
+                        setRunnable.run();
+                    }
+                }
+
+                if (BuildConfig.DEBUG) {
+                    if (isDefaultSmsApp()) {
+                        Toasts.showToast("debug toast : sms_default_application_set");
+                    } else {
+                        Toasts.showToast("debug toast : sms_default_application_cleared");
+                    }
+                }
+            }
+        });
     }
 
     /**
