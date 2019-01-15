@@ -35,10 +35,8 @@ import com.android.messaging.util.UiUtils;
 import com.superapps.util.BackgroundDrawables;
 import com.superapps.util.Dimensions;
 
-public class ConversationListActivity extends AbstractConversationListActivity
-        implements BottomNavigationView.OnItemSelectedListener {
+public class ConversationListActivity extends AbstractConversationListActivity {
 
-    private ViewPager mViewPager;
     private TextView mTitleTextView;
     private View mSettingsBtn;
 
@@ -52,7 +50,6 @@ public class ConversationListActivity extends AbstractConversationListActivity
         Trace.endSection();
 
         initActionBar();
-        initPager();
     }
 
     @Override
@@ -102,31 +99,6 @@ public class ConversationListActivity extends AbstractConversationListActivity
     }
 
     @Override
-    public void onSelected(int position) {
-        switch (position) {
-            case BottomNavigationView.POSITION_MESSAGING:
-                mViewPager.setCurrentItem(0);
-                mTitleTextView.setText(R.string.bottom_navigation_item_messaging);
-                break;
-            case BottomNavigationView.POSITION_SMS_SHOW:
-                if (isInConversationListSelectMode()) {
-                    exitMultiSelectState();
-                }
-                mViewPager.setCurrentItem(1);
-                mTitleTextView.setText(R.string.bottom_navigation_item_sms_show);
-                break;
-            case BottomNavigationView.POSITION_EMOJI:
-                if (isInConversationListSelectMode()) {
-                    exitMultiSelectState();
-                }
-                mViewPager.setCurrentItem(2);
-                mTitleTextView.setText(R.string.bottom_navigation_item_emoji);
-                break;
-        }
-    }
-
-
-    @Override
     public void onActionBarHome() {
         exitMultiSelectState();
     }
@@ -139,11 +111,14 @@ public class ConversationListActivity extends AbstractConversationListActivity
     @Override
     public void onWindowFocusChanged(final boolean hasFocus) {
         super.onWindowFocusChanged(hasFocus);
+        final ConversationListFragment conversationListFragment =
+                (ConversationListFragment) getFragmentManager().findFragmentById(
+                        R.id.conversation_list_fragment);
         // When the screen is turned on, the last used activity gets resumed, but it gets
         // window focus only after the lock screen is unlocked.
-//        if (hasFocus && mViewPager.getCurrentItem() == 0) {
-//            ((ConversationListFragment) mPagerAdapter.getItem(0)).setScrolledToNewestConversationIfNeeded();
-//        }
+        if (hasFocus && conversationListFragment != null) {
+            conversationListFragment.setScrolledToNewestConversationIfNeeded();
+        }
     }
 
     private void initActionBar() {
@@ -160,19 +135,4 @@ public class ConversationListActivity extends AbstractConversationListActivity
         invalidateActionBar();
     }
 
-    private void initPager() {
-        BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation_view);
-        mViewPager = findViewById(R.id.fragment_pager);
-        BasePagerAdapter mPagerAdapter = new BasePagerAdapter(getFragmentManager(), mViewPager);
-        mViewPager.setAdapter(mPagerAdapter);
-        mViewPager.setOffscreenPageLimit(2);
-        bottomNavigationView.setOnItemSelectedListener(this);
-        bottomNavigationView.setSelectedPosition(0);
-        mViewPager.addOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
-            @Override
-            public void onPageSelected(int position) {
-                bottomNavigationView.setSelectedPosition(position);
-            }
-        });
-    }
 }

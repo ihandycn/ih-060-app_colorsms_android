@@ -39,20 +39,14 @@
 
     </android.support.v7.widget.Toolbar>
 
-    <com.android.messaging.ui.conversationlist.ConversationViewPager
-        android:id="@+id/fragment_pager"
+    <fragment
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        class="com.android.messaging.ui.conversationlist.ConversationListFragment"
+        android:id="@+id/conversation_list_fragment"
+        android:theme="@style/Theme.AppCompat.Light.DarkActionBar"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginBottom="@dimen/bottom_navigation_view_height"
-        android:layout_marginTop="@dimen/action_bar_height" />
+        android:layout_marginTop="@dimen/action_bar_height"/>
 
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="1px"
-        android:layout_gravity="bottom"
-        android:layout_marginBottom="@dimen/bottom_navigation_view_height"
-        android:background="@color/divider_color" />
-
-    <include layout="@layout/bottom_navigation_view_auto_res" />
 </FrameLayout>
 
