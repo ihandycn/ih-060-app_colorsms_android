@@ -1023,12 +1023,12 @@
     <string name="welcome_set_default_button">OK</string>
     <string name="welcome_set_default_skip">SKIP</string>
     <string name="welcome_set_default_title">Set as Default</string>
-    <string name="welcome_set_default_description">To enjoy more cool features, please set Color SMS as default.</string>
-    <string name="welcome_set_default_emoji">Lots of cute and funny emojis</string>
-    <string name="welcome_set_default_music">Custom ringtone music</string>
+    <string name="welcome_set_default_description">No set to default, you can not use SMS features.</string>
+    <string name="welcome_set_default_emoji">Chat with SMS and MMS</string>
+    <string name="welcome_set_default_music">Receive message notifications</string>
     <string name="welcome_set_default_group">Group messaging</string>
     <string name="welcome_set_default_delete">Clean up useless messages</string>
-    <string name="welcome_set_default_feature">More features coming soon</string>
+    <string name="welcome_set_default_feature">Other SMS basic features</string>
     <string name="welcome_set_default_failed_toast">Color SMS was not set up properly</string>
 
     <!-- News -->
