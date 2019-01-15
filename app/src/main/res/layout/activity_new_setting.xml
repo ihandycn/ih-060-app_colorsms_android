@@ -37,7 +37,6 @@
                 android:id="@+id/setting_item_sms_pop_ups"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:visibility="gone"
                 app:summary="@string/setting_sms_pop_ups_summary"
                 app:title="@string/setting_sms_pop_ups"
                 app:type="1" />
