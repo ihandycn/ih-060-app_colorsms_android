@@ -27,6 +27,7 @@ import android.view.MenuItem;
 import android.view.View;
 
 import com.android.messaging.R;
+import com.android.messaging.ui.dialog.FiveStarRateDialog;
 import com.android.messaging.util.BugleActivityUtil;
 import com.android.messaging.util.ImeUtil;
 import com.android.messaging.util.LogUtil;
@@ -121,6 +122,7 @@ public class BugleActionBarActivity extends AppCompatActivity implements ImeUtil
     protected void onDestroy() {
         super.onDestroy();
         mDestroyed = true;
+        FiveStarRateDialog.dismissDialogs();
     }
 
     public boolean getIsDestroyed() {

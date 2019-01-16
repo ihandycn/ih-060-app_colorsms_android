@@ -75,7 +75,6 @@ public class ConversationListActivity extends AbstractConversationListActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        FiveStarRateDialog.dismissDialogs();
     }
 
     @Override
