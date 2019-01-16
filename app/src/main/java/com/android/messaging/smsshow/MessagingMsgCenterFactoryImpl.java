@@ -3,6 +3,7 @@ package com.android.messaging.smsshow;
 import com.android.messaging.Factory;
 import com.android.messaging.datamodel.BugleNotifications;
 import com.android.messaging.ui.UIIntents;
+import com.android.messaging.util.BugleAnalytics;
 import com.android.messaging.util.PhoneUtils;
 import com.ihs.commons.utils.HSLog;
 import com.messagecenter.customize.MessageCenterFactoryImpl;
@@ -82,6 +83,55 @@ public class MessagingMsgCenterFactoryImpl extends MessageCenterFactoryImpl {
             @Override
             public boolean showDefaultSmsAppEntranceIcon() {
                 return false;
+            }
+        };
+    }
+
+    @Override
+    public NotificationMessageAlertActivity.Event getNotificationMessageEvent() {
+        return new NotificationMessageAlertActivity.Event() {
+            @Override
+            public void onAdShow() {
+
+            }
+
+            @Override
+            public void onAdClick() {
+
+            }
+
+            @Override
+            public void onAdFlurryRecord(boolean isShown) {
+
+            }
+
+            @Override
+            public void onShow() {
+                BugleAnalytics.logEvent("SMS_PopUp_Show", true);
+            }
+
+            @Override
+            public void onDismiss(NotificationMessageAlertActivity.DismissType type) {
+
+                if (type == NotificationMessageAlertActivity.DismissType.MENU_CLOSE) {
+                    BugleAnalytics.logEvent("SMS_PopUp_Disable", true);
+                }
+                BugleAnalytics.logEvent("SMS_PopUp_Close", true, "type", type.toString());
+            }
+
+            @Override
+            public void onReplyClicked(String msgType) {
+                BugleAnalytics.logEvent("SMS_PopUp_Reply_BtnClick", true);
+            }
+
+            @Override
+            public void onNextClicked(String msgType) {
+                BugleAnalytics.logEvent("SMS_PopUp_Next_BtnClick", true);
+            }
+
+            @Override
+            public void onContentClick(String msgType) {
+                BugleAnalytics.logEvent("SMS_PopUp_Click", true);
             }
         };
     }
