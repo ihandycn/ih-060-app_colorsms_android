@@ -224,7 +224,9 @@ class CameraMediaChooser extends MediaChooser implements
     }
 
     public void showPreview() {
-        mView.setVisibility(View.VISIBLE);
+        if (mView != null) {
+            mView.setVisibility(View.VISIBLE);
+        }
     }
 
     @Override

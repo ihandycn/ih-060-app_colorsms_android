@@ -959,7 +959,9 @@ public class PhotoView extends View implements OnGestureListener,
                         } else {
                             finalCenterY = Math.min(Math.max(minY, finalCenterY), maxY);
                         }
-                        mScaleRunnable.start(currentScale, mMaxScale, finalCenterX, finalCenterY);
+                        if (mScaleRunnable != null) {
+                            mScaleRunnable.start(currentScale, mMaxScale, finalCenterX, finalCenterY);
+                        }
                     }
                 }
             };
