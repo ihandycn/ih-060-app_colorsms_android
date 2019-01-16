@@ -46,9 +46,11 @@ public class ConversationListActivity extends AbstractConversationListActivity {
     protected void onCreate(final Bundle savedInstanceState) {
         Trace.beginSection("ConversationListActivity.onCreate");
         super.onCreate(savedInstanceState);
+        if (UiUtils.redirectToWelcomeIfNeeded(this)) {
+            return;
+        }
         setContentView(R.layout.conversation_list_activity);
         Trace.endSection();
-
         initActionBar();
     }
 

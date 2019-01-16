@@ -62,9 +62,6 @@ public class BugleActionBarActivity extends AppCompatActivity implements ImeUtil
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (UiUtils.redirectToWelcomeIfNeeded(this)) {
-            return;
-        }
 
         mLastScreenHeight = getResources().getDisplayMetrics().heightPixels;
         if (LogUtil.isLoggable(LogUtil.BUGLE_TAG, LogUtil.VERBOSE)) {
@@ -85,9 +82,6 @@ public class BugleActionBarActivity extends AppCompatActivity implements ImeUtil
         super.onRestart();
         if (LogUtil.isLoggable(LogUtil.BUGLE_TAG, LogUtil.VERBOSE)) {
             LogUtil.v(LogUtil.BUGLE_TAG, this.getLocalClassName() + ".onRestart");
-        }
-        if (UiUtils.redirectToWelcomeIfNeeded(this)) {
-            return;
         }
     }
 
