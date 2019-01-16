@@ -28,8 +28,10 @@ import com.android.messaging.R;
 import com.android.messaging.datamodel.data.ParticipantData;
 import com.android.messaging.datamodel.media.AvatarGroupRequestDescriptor;
 import com.android.messaging.datamodel.media.AvatarRequestDescriptor;
+import com.android.messaging.ui.conversationlist.ConversationListActivity;
 import com.android.messaging.util.Assert;
 import com.android.messaging.util.AvatarUriUtil;
+import com.android.messaging.util.BugleAnalytics;
 import com.android.messaging.util.ContactUtil;
 
 /**
@@ -165,6 +167,10 @@ public class ContactIconView extends AsyncImageView {
             // group conversation, group conversations don't have contact phone numbers. If this
             // is the case then absorb the click to prevent propagation.
             setOnClickListener(null);
+        }
+
+        if (getContext() instanceof ConversationListActivity) {
+            BugleAnalytics.logEvent("SMS_Messages_Avatar_Click", true);
         }
     }
 }

@@ -51,6 +51,7 @@ import com.android.messaging.ui.ContactIconView;
 import com.android.messaging.ui.SnackBar;
 import com.android.messaging.ui.SnackBarInteraction;
 import com.android.messaging.util.Assert;
+import com.android.messaging.util.BugleAnalytics;
 import com.android.messaging.util.ContentType;
 import com.android.messaging.util.ImageUtils;
 import com.android.messaging.util.OsUtil;
@@ -115,6 +116,7 @@ public class ConversationListItemView extends FrameLayout implements OnClickList
             } else {
                 mHostInterface.startFullScreenVideoViewer(previewUri);
             }
+            BugleAnalytics.logEvent("SMS_Messages_Preview_Click", true);
         }
     };
 

@@ -41,6 +41,7 @@ import com.android.messaging.ui.UIIntents;
 import com.android.messaging.ui.contact.AddContactsConfirmationDialog;
 import com.android.messaging.ui.conversationlist.ConversationListFragment.ConversationListFragmentHost;
 import com.android.messaging.ui.conversationlist.MultiSelectActionModeCallback.SelectedConversation;
+import com.android.messaging.util.BugleAnalytics;
 import com.android.messaging.util.DebugUtils;
 import com.android.messaging.util.PhoneUtils;
 import com.android.messaging.util.Trace;
@@ -109,6 +110,8 @@ public abstract class AbstractConversationListActivity  extends BugleActionBarAc
 
     @Override
     public void onActionBarDelete(final Collection<SelectedConversation> conversations) {
+        BugleAnalytics.logEvent("SMS_EditMode_Delete_BtnClick", true);
+
         if (!PhoneUtils.getDefault().isDefaultSmsApp()) {
             // TODO: figure out a good way to combine this with the implementation in
             // ConversationFragment doing similar things
@@ -186,6 +189,7 @@ public abstract class AbstractConversationListActivity  extends BugleActionBarAc
     @Override
     public void onActionBarNotification(final Iterable<SelectedConversation> conversations,
             final boolean isNotificationOn) {
+
         for (final SelectedConversation conversation : conversations) {
             UpdateConversationOptionsAction.enableConversationNotifications(
                     conversation.conversationId, isNotificationOn);
@@ -198,6 +202,7 @@ public abstract class AbstractConversationListActivity  extends BugleActionBarAc
             null /* undoRunnable */,
             SnackBar.Action.SNACK_BAR_UNDO, mConversationListFragment.getSnackBarInteractions());
         exitMultiSelectState();
+        BugleAnalytics.logEvent("SMS_EditMode_Mute_BtnClick", true);
     }
 
     @Override
@@ -212,6 +217,7 @@ public abstract class AbstractConversationListActivity  extends BugleActionBarAc
                 AddContactsConfirmationDialog.newInstance(avatarUri, conversation.otherParticipantNormalizedDestination);
         UiUtils.showDialogFragment(this, dialog);
         exitMultiSelectState();
+        BugleAnalytics.logEvent("SMS_EditMode_AddContact_BtnClick", true);
     }
 
     @Override
@@ -254,6 +260,7 @@ public abstract class AbstractConversationListActivity  extends BugleActionBarAc
                     }
                 })
                 .show();
+        BugleAnalytics.logEvent("SMS_EditMode_BlockContact_BtnClick", true);
     }
 
     @Override
@@ -279,6 +286,8 @@ public abstract class AbstractConversationListActivity  extends BugleActionBarAc
                     this, conversationId, null,
                     sceneTransitionAnimationOptions,
                     hasCustomTransitions);
+            BugleAnalytics.logEvent("SMS_Messages_Message_Click", true);
+
         }
     }
 

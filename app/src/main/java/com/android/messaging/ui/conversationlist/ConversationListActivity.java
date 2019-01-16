@@ -49,6 +49,7 @@ public class ConversationListActivity extends AbstractConversationListActivity {
         setContentView(R.layout.conversation_list_activity);
         Trace.endSection();
 
+        BugleAnalytics.logEvent("SMS_Messages_Show", true);
         initActionBar();
     }
 
@@ -83,6 +84,7 @@ public class ConversationListActivity extends AbstractConversationListActivity {
             exitMultiSelectState();
         } else {
             if (mShowRateAlert || !FiveStarRateDialog.showShowFiveStarRateDialogOnBackToDesktopIfNeed(this)) {
+                BugleAnalytics.logEvent("SMS_Messages_Back", true);
                 super.onBackPressed();
             } else {
                 mShowRateAlert = true;
@@ -94,6 +96,7 @@ public class ConversationListActivity extends AbstractConversationListActivity {
     public ActionMode startActionMode(ActionMode.Callback callback) {
         mTitleTextView.setVisibility(View.GONE);
         mSettingsBtn.setVisibility(View.GONE);
+        BugleAnalytics.logEvent("SMS_EditMode_Show", true);
         return super.startActionMode(callback);
     }
 
