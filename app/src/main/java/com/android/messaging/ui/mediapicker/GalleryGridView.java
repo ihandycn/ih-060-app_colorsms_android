@@ -179,6 +179,13 @@ public class GalleryGridView extends MediaPickerGridView implements
         return false;
     }
 
+    @Override
+    protected void onDetachedFromWindow() {
+        super.onDetachedFromWindow();
+        if (mDraftMessageDataModel != null) {
+            mDraftMessageDataModel.getData().removeListener(this);
+        }
+    }
 
     @Override
     public void onDraftChanged(final DraftMessageData data, final int changeFlags) {

@@ -129,6 +129,10 @@ public class DraftMessageData extends BindableData implements ReadDraftDataActio
         mListeners.add(listener);
     }
 
+    public void removeListener(final DraftMessageDataListener listener) {
+        mListeners.remove(listener);
+    }
+
     public void setSubscriptionDataProvider(final DraftMessageSubscriptionDataProvider provider) {
         mSubscriptionDataProvider = provider;
     }
