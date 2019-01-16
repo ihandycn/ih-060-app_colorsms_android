@@ -54,6 +54,9 @@ public class LaunchConversationActivity extends Activity implements
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        if (UiUtils.redirectToWelcomeIfNeeded(this)) {
+            return;
+        }
 
         final Intent intent = getIntent();
         final String action = intent.getAction();
