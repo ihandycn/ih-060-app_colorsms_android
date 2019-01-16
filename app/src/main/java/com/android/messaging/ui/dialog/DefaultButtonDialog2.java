@@ -24,6 +24,7 @@ import com.android.messaging.util.ViewUtils;
 import com.ihs.commons.utils.HSLog;
 import com.superapps.util.Dimensions;
 
+import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -34,7 +35,7 @@ public abstract class DefaultButtonDialog2 {
 
     private static final String TAG = DefaultButtonDialog2.class.getSimpleName();
 
-    private static List<Dialog> sDialogList = new ArrayList<>();
+    private static List<WeakReference<Dialog>> sDialogList = new ArrayList<>();
 
     private LayoutInflater mLayoutInflater;
     protected View mRootView;
@@ -76,7 +77,7 @@ public abstract class DefaultButtonDialog2 {
             @Override
             public void onDismiss(DialogInterface dialog) {
                 HSLog.d(TAG, "onDismiss");
-                sDialogList.remove(mAlertDialog);
+                removeDialog();
                 onDismissComplete();
             }
         });
@@ -98,6 +99,19 @@ public abstract class DefaultButtonDialog2 {
 
         mAlertDialog.setCanceledOnTouchOutside(false);
 
+    }
+
+    private void removeDialog() {
+        for (WeakReference<Dialog> dialog : sDialogList) {
+            try {
+                if (dialog.get() != null && dialog.get() == mAlertDialog) {
+                    sDialogList.remove(dialog);
+                    return;
+                }
+            } catch (IllegalArgumentException e) {
+                e.printStackTrace();
+            }
+        }
     }
 
     private void initIfNeed() {
@@ -314,7 +328,7 @@ public abstract class DefaultButtonDialog2 {
         } catch (Exception e) {
             return false;
         }
-        sDialogList.add(mAlertDialog);
+        sDialogList.add(new WeakReference<>(mAlertDialog));
 
         if (mDesiredWidth > 0 && fitImageWidth()) {
             mTopImage.setScaleType(ImageView.ScaleType.CENTER_CROP);
@@ -352,9 +366,11 @@ public abstract class DefaultButtonDialog2 {
     }
 
     public static void dismissDialogs() {
-        for (Dialog dialog : sDialogList) {
+        for (WeakReference<Dialog> dialog : sDialogList) {
             try {
-                dialog.dismiss();
+                if (dialog.get() != null) {
+                    dialog.get().dismiss();
+                }
             } catch (IllegalArgumentException e) {
                 e.printStackTrace();
             }

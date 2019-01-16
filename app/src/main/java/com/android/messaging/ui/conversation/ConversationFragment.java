@@ -89,6 +89,7 @@ import com.android.messaging.ui.contact.AddContactsConfirmationDialog;
 import com.android.messaging.ui.conversation.ComposeMessageView.IComposeMessageViewHost;
 import com.android.messaging.ui.conversation.ConversationInputManager.ConversationInputHost;
 import com.android.messaging.ui.conversation.ConversationMessageView.ConversationMessageViewHost;
+import com.android.messaging.ui.dialog.FiveStarRateDialog;
 import com.android.messaging.ui.emoji.EmojiPickerFragment;
 import com.android.messaging.ui.mediapicker.MediaPicker;
 import com.android.messaging.util.AccessibilityUtil;
@@ -903,6 +904,7 @@ public class ConversationFragment extends Fragment implements ConversationDataLi
         mConversationId = null;
 
         HSGlobalNotificationCenter.removeObserver(this);
+        FiveStarRateDialog.dismissDialogs();
     }
 
     void suppressWriteDraft() {

@@ -215,7 +215,6 @@ public class FiveStarRateDialog extends DefaultButtonDialog2 implements View.OnC
                             mAnimViewShowed = true;
                             mAnimationView.setComposition(lottieComposition);
                             guideAnim(true);
-                            show();
                         }
                     });
         } catch (RejectedExecutionException e) {

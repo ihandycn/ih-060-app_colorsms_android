@@ -18,7 +18,6 @@ package com.android.messaging.ui.conversationlist;
 
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
-import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.widget.Toolbar;
 import android.view.ActionMode;
@@ -26,7 +25,6 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.android.messaging.R;
-import com.android.messaging.ui.BasePagerAdapter;
 import com.android.messaging.ui.UIIntents;
 import com.android.messaging.ui.dialog.FiveStarRateDialog;
 import com.android.messaging.util.BugleAnalytics;
@@ -76,6 +74,7 @@ public class ConversationListActivity extends AbstractConversationListActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        FiveStarRateDialog.dismissDialogs();
     }
 
     @Override
