@@ -17,6 +17,8 @@ package com.android.messaging.util;
 
 import android.os.Looper;
 
+import com.android.messaging.BuildConfig;
+
 import java.util.Arrays;
 
 public final class Assert {
@@ -72,7 +74,7 @@ public final class Assert {
 
     public static void isNaturalNumber(int number) {
         if (number < 0) {
-            fail("Expected number to be the natural number, but number = " + number, true);
+            fail("Expected number to be the natural number, but number = " + number, false);
         }
     }
 
@@ -212,7 +214,7 @@ public final class Assert {
 
     private static void fail(final String message, final boolean crashRelease) {
         LogUtil.e(LogUtil.BUGLE_TAG, message);
-        if (crashRelease || sShouldCrash) {
+        if (BuildConfig.DEBUG || crashRelease) {
             throw new AssertionError(message);
         } else {
             // Find the method whose assertion failed. We're using a depth of 2, because all public
