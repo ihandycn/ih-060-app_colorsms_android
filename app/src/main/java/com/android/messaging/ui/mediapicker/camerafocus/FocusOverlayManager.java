@@ -380,6 +380,7 @@ public class FocusOverlayManager {
     public void onPreviewStopped() {
         // If auto focus was in progress, it would have been stopped.
         mState = STATE_IDLE;
+        mParameters = null;
         resetTouchFocus();
         updateFocusUI();
     }
