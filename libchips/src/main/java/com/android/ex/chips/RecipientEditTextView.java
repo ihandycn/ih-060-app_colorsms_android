@@ -403,6 +403,7 @@ public class RecipientEditTextView extends MultiAutoCompleteTextView implements
     protected void onDetachedFromWindow() {
         super.onDetachedFromWindow();
         mAttachedToWindow = false;
+        setOnEditorActionListener(null);
     }
 
     @Override
