@@ -90,7 +90,6 @@ public class SnackBarManager {
     private final Handler mHideHandler;
 
     private SnackBar mCurrentSnackBar;
-    private SnackBar mLatestSnackBar;
     private SnackBar mNextSnackBar;
     private boolean mIsCurrentlyDismissing;
     private PopupWindow mPopupWindow;
@@ -99,10 +98,6 @@ public class SnackBarManager {
         mTranslationDurationMs = Factory.get().getApplicationContext().getResources().getInteger(
                 R.integer.snackbar_translation_duration_ms);
         mHideHandler = new Handler();
-    }
-
-    public SnackBar getLatestSnackBar() {
-        return mLatestSnackBar;
     }
 
     public SnackBar.Builder newBuilder(final View parentView) {
@@ -122,13 +117,11 @@ public class SnackBarManager {
             // Dismiss the current snack bar. That will cause the next snack bar to be shown on
             // completion.
             mNextSnackBar = snackBar;
-            mLatestSnackBar = snackBar;
             dismiss();
             return;
         }
 
         mCurrentSnackBar = snackBar;
-        mLatestSnackBar = snackBar;
 
         // We want to know when either button was tapped so we can dismiss.
         snackBar.setListener(mDismissOnUserTapListener);
