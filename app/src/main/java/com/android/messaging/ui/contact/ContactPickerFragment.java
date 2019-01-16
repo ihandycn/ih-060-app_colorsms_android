@@ -224,6 +224,10 @@ public class ContactPickerFragment extends Fragment implements ContactPickerData
             mBinding.unbind();
         }
 
+        if (mRecipientTextView != null) {
+            mRecipientTextView.setContactChipsListener(null);
+        }
+
         if (mMonitor != null) {
             mMonitor.unregister();
         }
