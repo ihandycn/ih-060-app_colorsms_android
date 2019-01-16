@@ -67,8 +67,9 @@ public class ContactListAdapter extends CustomCursorAdapter {
                 if (mNeedAlphabetHeader) {
                     cursorPosition = mSectionIndexer.mapListPositionToCursorPosition(position);
                 }
-                mCursor.moveToPosition(cursorPosition);
-                ((ContactListItemView) view).bind(mCursor, mClivHostInterface);
+                if (mCursor.moveToPosition(cursorPosition)) {
+                    ((ContactListItemView) view).bind(mCursor, mClivHostInterface);
+                }
                 break;
         }
     }
