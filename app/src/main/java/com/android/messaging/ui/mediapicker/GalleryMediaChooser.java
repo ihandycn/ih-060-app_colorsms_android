@@ -60,6 +60,7 @@ class GalleryMediaChooser extends MediaChooser implements
     @Override
     public View destroyView() {
         mGalleryGridView.setAdapter(null);
+        mGalleryGridView.setHostInterface(null);
         mAdapter.setHostInterface(null);
         // The loader is started only if startMediaPickerDataLoader() is called
         if (OsUtil.hasStoragePermission()) {
@@ -138,6 +139,7 @@ class GalleryMediaChooser extends MediaChooser implements
         updateForPermissionState(OsUtil.hasStoragePermission());
         return view;
     }
+
 
     @Override
     int getActionBarTitleResId() {
