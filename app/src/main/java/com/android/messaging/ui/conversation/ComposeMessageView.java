@@ -224,6 +224,12 @@ public class ComposeMessageView extends LinearLayout
     }
 
     @Override
+    protected void onDetachedFromWindow() {
+        super.onDetachedFromWindow();
+        mComposeEditText.setOnEditorActionListener(null);
+    }
+
+    @Override
     protected void onFinishInflate() {
         super.onFinishInflate();
         mComposeEditText = (PlainTextEditText) findViewById(
