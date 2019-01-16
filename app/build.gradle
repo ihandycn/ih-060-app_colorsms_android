@@ -37,15 +37,15 @@ android {
         debug {
             minifyEnabled false
             ext.enableCrashlytics = true
-            buildConfigField 'String', 'EMOJI_CONFIG', '"ddddd"'
+            buildConfigField 'String', 'EMOJI_CONFIG', '"emoji config remote url"'
         }
 
         release {
             minifyEnabled true
             multiDexEnabled true
             ext.enableCrashlytics = true
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.txt'
-            buildConfigField 'String', 'EMOJI_CONFIG', '"ddddd"'
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.txt'
+            buildConfigField 'String', 'EMOJI_CONFIG', '"emoji config remote url"'
         }
     }
 }
