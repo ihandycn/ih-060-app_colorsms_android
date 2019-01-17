@@ -155,7 +155,7 @@ public final class SmsReceiver extends BroadcastReceiver {
                     PackageManager.COMPONENT_ENABLED_STATE_ENABLED, PackageManager.DONT_KILL_APP);
         } else {
             if (logv) {
-                LogUtil.v(TAG, "Disabling SMS/MMS broadcast abort");
+                LogUtil.v(TAG,  "Disabling SMS/MMS broadcast abort");
             }
             packageManager.setComponentEnabledSetting(
                     new ComponentName(context, AbortSmsReceiver.class),
@@ -194,7 +194,7 @@ public final class SmsReceiver extends BroadcastReceiver {
     }
 
     private static final String EXTRA_ERROR_CODE = "errorCode";
-    private static final String EXTRA_SUB_ID = "subscription";
+    public static final String EXTRA_SUB_ID = "subscription";
 
     public static void deliverSmsIntent(final Context context, final Intent intent) {
         final android.telephony.SmsMessage[] messages = getMessagesFromIntent(intent);

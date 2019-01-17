@@ -32,6 +32,7 @@ import com.android.messaging.sms.MmsUtils;
 import com.android.messaging.ui.UIIntents;
 import com.android.messaging.ui.conversationlist.ConversationListActivity;
 import com.android.messaging.util.LogUtil;
+import com.android.messaging.util.TextUtil;
 
 /**
  * Respond to a special intent and send an SMS message without the user's intervention, unless
@@ -40,8 +41,9 @@ import com.android.messaging.util.LogUtil;
 public class NoConfirmationSmsSendService extends IntentService {
     private static final String TAG = LogUtil.BUGLE_TAG;
 
-    private static final String EXTRA_SUBSCRIPTION = "subscription";
+    public static final String EXTRA_SUBSCRIPTION = "subscription";
     public static final String EXTRA_SELF_ID = "self_id";
+    public static final String EXTRA_QUICK_REPLY_ADDRESS = "quick_reply_address";
 
     public NoConfirmationSmsSendService() {
         // Class name will be the thread name.
@@ -86,7 +88,10 @@ public class NoConfirmationSmsSendService extends IntentService {
         final Uri intentUri = intent.getData();
         final String recipients = intentUri != null ? MmsUtils.getSmsRecipients(intentUri) : null;
 
-        if (TextUtils.isEmpty(recipients) && TextUtils.isEmpty(conversationId)) {
+        // address is added for quick reply, because we don't need to read the conversation id that is used for intentUri
+        final String address = intent.getStringExtra(EXTRA_QUICK_REPLY_ADDRESS);
+
+        if (TextUtils.isEmpty(recipients) && TextUtils.isEmpty(conversationId) && TextUtils.isEmpty(address)) {
             if (LogUtil.isLoggable(TAG, LogUtil.VERBOSE)) {
                 LogUtil.v(TAG, "Both conversationId and recipient(s) cannot be empty");
             }
@@ -107,7 +112,7 @@ public class NoConfirmationSmsSendService extends IntentService {
             // but we're not testing for that here and we're sending the message as an sms.
 
             if (TextUtils.isEmpty(conversationId)) {
-                InsertNewMessageAction.insertNewMessage(subId, recipients, message, subject);
+                InsertNewMessageAction.insertNewMessage(subId, address == null ? recipients : address, message, subject);
             } else {
                 MessageData messageData = null;
                 if (requiresMms) {

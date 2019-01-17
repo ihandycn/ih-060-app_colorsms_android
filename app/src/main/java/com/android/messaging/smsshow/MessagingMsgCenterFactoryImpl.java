@@ -1,7 +1,13 @@
 package com.android.messaging.smsshow;
 
+import android.content.Context;
+import android.content.Intent;
+import android.telephony.TelephonyManager;
+
 import com.android.messaging.Factory;
 import com.android.messaging.datamodel.BugleNotifications;
+import com.android.messaging.datamodel.NoConfirmationSmsSendService;
+import com.android.messaging.datamodel.data.ParticipantData;
 import com.android.messaging.ui.UIIntents;
 import com.android.messaging.util.BugleAnalytics;
 import com.android.messaging.util.PhoneUtils;
@@ -10,6 +16,10 @@ import com.messagecenter.customize.MessageCenterFactoryImpl;
 import com.messagecenter.customize.SmsShowCallBack;
 import com.messagecenter.notification.NotificationMessageAlertActivity;
 import com.messagecenter.sms.SmsMessageAlertActivity;
+
+import static com.android.messaging.datamodel.NoConfirmationSmsSendService.EXTRA_QUICK_REPLY_ADDRESS;
+import static com.android.messaging.datamodel.NoConfirmationSmsSendService.EXTRA_SUBSCRIPTION;
+import static com.android.messaging.receiver.SmsReceiver.EXTRA_SUB_ID;
 
 public class MessagingMsgCenterFactoryImpl extends MessageCenterFactoryImpl {
 
@@ -132,6 +142,20 @@ public class MessagingMsgCenterFactoryImpl extends MessageCenterFactoryImpl {
             @Override
             public void onContentClick(String msgType) {
                 BugleAnalytics.logEvent("SMS_PopUp_Click", true);
+            }
+
+            @Override
+            public void sendSms(Intent receivedSmsIntent, String dest, String messages) {
+                int subId = PhoneUtils.getDefault().getEffectiveIncomingSubIdFromSystem(
+                        receivedSmsIntent, EXTRA_SUB_ID);
+
+                Context context = Factory.get().getApplicationContext();
+                final Intent sendIntent = new Intent(context, NoConfirmationSmsSendService.class);
+                sendIntent.setAction(TelephonyManager.ACTION_RESPOND_VIA_MESSAGE);
+                sendIntent.putExtra(Intent.EXTRA_TEXT, messages);
+                sendIntent.putExtra(EXTRA_SUBSCRIPTION,  subId);
+                sendIntent.putExtra(EXTRA_QUICK_REPLY_ADDRESS, dest);
+                context.startService(sendIntent);
             }
         };
     }
