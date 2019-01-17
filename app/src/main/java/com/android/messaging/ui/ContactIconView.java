@@ -159,8 +159,13 @@ public class ContactIconView extends AsyncImageView {
                 && !TextUtils.isEmpty(mContactLookupKey)) ||
                 !TextUtils.isEmpty(mNormalizedDestination)) {
             if (!mDisableClickHandler) {
-                setOnClickListener(view -> ContactUtil.showOrAddContact(view, mContactId, mContactLookupKey,
-                        mAvatarUri, mNormalizedDestination));
+                setOnClickListener(view -> {
+                    ContactUtil.showOrAddContact(view, mContactId, mContactLookupKey,
+                            mAvatarUri, mNormalizedDestination);
+                    if (getContext() instanceof ConversationListActivity) {
+                        BugleAnalytics.logEvent("SMS_Messages_Avatar_Click", true);
+                    }
+                });
             }
         } else {
             // This should happen when the phone number is not in the user's contacts or it is a
@@ -169,8 +174,6 @@ public class ContactIconView extends AsyncImageView {
             setOnClickListener(null);
         }
 
-        if (getContext() instanceof ConversationListActivity) {
-            BugleAnalytics.logEvent("SMS_Messages_Avatar_Click", true);
-        }
+
     }
 }
