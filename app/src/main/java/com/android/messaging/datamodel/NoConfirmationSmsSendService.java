@@ -88,7 +88,7 @@ public class NoConfirmationSmsSendService extends IntentService {
         final Uri intentUri = intent.getData();
         final String recipients = intentUri != null ? MmsUtils.getSmsRecipients(intentUri) : null;
 
-        // address is added for quick reply, because we don't need to read the conversation id that is used for intentUri
+        // address is added for quick reply in message box, because we don't need to read the conversation id that is used for intentUri
         final String address = intent.getStringExtra(EXTRA_QUICK_REPLY_ADDRESS);
 
         if (TextUtils.isEmpty(recipients) && TextUtils.isEmpty(conversationId) && TextUtils.isEmpty(address)) {

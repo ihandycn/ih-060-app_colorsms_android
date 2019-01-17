@@ -148,7 +148,6 @@ public class MessagingMsgCenterFactoryImpl extends MessageCenterFactoryImpl {
             public void sendSms(Intent receivedSmsIntent, String dest, String messages) {
                 int subId = PhoneUtils.getDefault().getEffectiveIncomingSubIdFromSystem(
                         receivedSmsIntent, EXTRA_SUB_ID);
-
                 Context context = Factory.get().getApplicationContext();
                 final Intent sendIntent = new Intent(context, NoConfirmationSmsSendService.class);
                 sendIntent.setAction(TelephonyManager.ACTION_RESPOND_VIA_MESSAGE);
