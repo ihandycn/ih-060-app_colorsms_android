@@ -52,6 +52,7 @@ import com.android.messaging.util.OsUtil;
 import com.android.messaging.util.PendingIntentConstants;
 import com.android.messaging.util.PhoneUtils;
 import com.messagecenter.sms.SmsMessageReceiver;
+import com.superapps.util.Notifications;
 
 /**
  * Class that receives incoming SMS messages through android.provider.Telephony.SMS_RECEIVED
@@ -283,7 +284,7 @@ public final class SmsReceiver extends BroadcastReceiver {
         final PendingIntent pendingIntent = UIIntents.get()
                 .getPendingIntentForSecondaryUserNewMessageNotification(context);
 
-        final NotificationCompat.Builder builder = new NotificationCompat.Builder(context);
+        final NotificationCompat.Builder builder = new NotificationCompat.Builder(context, PendingIntentConstants.SMS_NOTIFICATION_CHANNEL_ID);
         builder.setContentTitle(resources.getString(R.string.secondary_user_new_message_title))
                 .setTicker(resources.getString(R.string.secondary_user_new_message_ticker))
                 .setSmallIcon(R.drawable.ic_sms_light)
@@ -297,17 +298,12 @@ public final class SmsReceiver extends BroadcastReceiver {
         bigTextStyle.bigText(resources.getString(R.string.secondary_user_new_message_title));
         final Notification notification = bigTextStyle.build();
 
-        final NotificationManagerCompat notificationManager =
-                NotificationManagerCompat.from(Factory.get().getApplicationContext());
-
         int defaults = Notification.DEFAULT_LIGHTS;
         if (BugleNotifications.shouldVibrate(new SecondaryUserNotificationState())) {
             defaults |= Notification.DEFAULT_VIBRATE;
         }
         notification.defaults = defaults;
-
-        notificationManager.notify(getNotificationTag(),
-                PendingIntentConstants.SMS_SECONDARY_USER_NOTIFICATION_ID, notification);
+        Notifications.notifySafely(PendingIntentConstants.SMS_SECONDARY_USER_NOTIFICATION_ID, notification, BugleNotifications.getSmsNotificationChannel());
     }
 
     /**

@@ -58,6 +58,7 @@ import com.android.messaging.util.LogUtil;
 import com.android.messaging.util.PendingIntentConstants;
 import com.android.messaging.util.UriUtil;
 import com.google.common.collect.Lists;
+import com.superapps.util.Notifications;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -787,7 +788,7 @@ public abstract class MessageNotificationState extends NotificationState {
             bigText.append("\n\n").append(statusText);
         }
 
-        final NotificationCompat.Builder notifBuilder = new NotificationCompat.Builder(context);
+        final NotificationCompat.Builder notifBuilder = new NotificationCompat.Builder(context, PendingIntentConstants.SMS_NOTIFICATION_CHANNEL_ID);
         final NotificationCompat.Style notifStyle =
                 new NotificationCompat.BigTextStyle(notifBuilder).bigText(bigText);
         notifBuilder.setStyle(notifStyle);
@@ -1229,7 +1230,7 @@ public abstract class MessageNotificationState extends NotificationState {
                 }
                 if (failedMessages.size() > 0) {
                     final NotificationCompat.Builder builder =
-                            new NotificationCompat.Builder(context);
+                            new NotificationCompat.Builder(context, PendingIntentConstants.SMS_NOTIFICATION_CHANNEL_ID);
 
                     CharSequence line1;
                     CharSequence line2;
@@ -1320,17 +1321,11 @@ public abstract class MessageNotificationState extends NotificationState {
                     }
 
                     if (builder != null) {
-                        notificationManager.notify(
-                                BugleNotifications.buildNotificationTag(
-                                        PendingIntentConstants.MSG_SEND_ERROR, null),
-                                PendingIntentConstants.MSG_SEND_ERROR,
-                                builder.build());
+                        Notifications.notifySafely(PendingIntentConstants.MSG_SEND_ERROR, builder.build(),
+                                BugleNotifications.getSmsNotificationChannel());
                     }
                 } else {
-                    notificationManager.cancel(
-                            BugleNotifications.buildNotificationTag(
-                                    PendingIntentConstants.MSG_SEND_ERROR, null),
-                            PendingIntentConstants.MSG_SEND_ERROR);
+                    Notifications.cancelSafely(PendingIntentConstants.MSG_SEND_ERROR);
                 }
             }
         } finally {

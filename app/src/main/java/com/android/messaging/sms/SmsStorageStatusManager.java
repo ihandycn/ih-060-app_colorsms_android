@@ -24,9 +24,12 @@ import android.support.v4.app.NotificationManagerCompat;
 
 import com.android.messaging.Factory;
 import com.android.messaging.R;
+import com.android.messaging.datamodel.BugleNotifications;
 import com.android.messaging.ui.UIIntents;
+import com.android.messaging.util.BugleAnalytics;
 import com.android.messaging.util.PendingIntentConstants;
 import com.android.messaging.util.PhoneUtils;
+import com.superapps.util.Notifications;
 
 /**
  * Class that handles SMS auto delete and notification when storage is low
@@ -65,7 +68,7 @@ public class SmsStorageStatusManager {
         final PendingIntent pendingIntent = UIIntents.get()
                 .getPendingIntentForLowStorageNotifications(context);
 
-        final NotificationCompat.Builder builder = new NotificationCompat.Builder(context);
+        final NotificationCompat.Builder builder = new NotificationCompat.Builder(context, PendingIntentConstants.SMS_NOTIFICATION_CHANNEL_ID);
         builder.setContentTitle(resources.getString(R.string.sms_storage_low_title))
                 .setTicker(resources.getString(R.string.sms_storage_low_notification_ticker))
                 .setSmallIcon(R.drawable.ic_failed_light)
@@ -78,12 +81,9 @@ public class SmsStorageStatusManager {
                 new NotificationCompat.BigTextStyle(builder);
         bigTextStyle.bigText(resources.getString(R.string.sms_storage_low_text));
         final Notification notification = bigTextStyle.build();
-
-        final NotificationManagerCompat notificationManager =
-                NotificationManagerCompat.from(Factory.get().getApplicationContext());
-
-        notificationManager.notify(getNotificationTag(),
-                PendingIntentConstants.SMS_STORAGE_LOW_NOTIFICATION_ID, notification);
+        Notifications.notifySafely(PendingIntentConstants.SMS_STORAGE_LOW_NOTIFICATION_ID,
+                notification,
+                BugleNotifications.getSmsNotificationChannel());
     }
 
     /**

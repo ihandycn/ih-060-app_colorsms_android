@@ -17,6 +17,7 @@
 package com.android.messaging.datamodel;
 
 import android.app.Notification;
+import android.app.NotificationChannel;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
@@ -62,7 +63,6 @@ import com.android.messaging.datamodel.media.UriImageRequestDescriptor;
 import com.android.messaging.datamodel.media.VideoThumbnailRequest;
 import com.android.messaging.sms.MmsSmsUtils;
 import com.android.messaging.sms.MmsUtils;
-import com.android.messaging.smsshow.SmsShowUtils;
 import com.android.messaging.ui.UIIntents;
 import com.android.messaging.util.Assert;
 import com.android.messaging.util.AvatarUriUtil;
@@ -81,7 +81,9 @@ import com.android.messaging.util.PhoneUtils;
 import com.android.messaging.util.RingtoneUtil;
 import com.android.messaging.util.ThreadUtil;
 import com.android.messaging.util.UriUtil;
+import com.ihs.app.framework.HSApplication;
 import com.messagecenter.customize.MessageCenterSettings;
+import com.superapps.util.Notifications;
 
 import java.util.HashSet;
 import java.util.Iterator;
@@ -422,7 +424,7 @@ public class BugleNotifications {
     private static void processAndSend(final NotificationState state, final boolean silent,
                                        final boolean softSound) {
         final Context context = Factory.get().getApplicationContext();
-        final NotificationCompat.Builder notifBuilder = new NotificationCompat.Builder(context);
+        final NotificationCompat.Builder notifBuilder = new NotificationCompat.Builder(context, PendingIntentConstants.SMS_NOTIFICATION_CHANNEL_ID);
         if (OsUtil.isAtLeastL()) {
             notifBuilder.setCategory(Notification.CATEGORY_MESSAGE);
         }
@@ -972,8 +974,6 @@ public class BugleNotifications {
         // Mark the notification as finished
         notificationState.mCanceled = true;
 
-        final NotificationManagerCompat notificationManager =
-                NotificationManagerCompat.from(Factory.get().getApplicationContext());
         // Only need conversationId for tags with a single conversation.
         String conversationId = null;
         if (conversationIds != null && conversationIds.size() == 1) {
@@ -985,7 +985,7 @@ public class BugleNotifications {
         notification.flags |= Notification.FLAG_AUTO_CANCEL;
         notification.defaults |= Notification.DEFAULT_LIGHTS;
 
-        notificationManager.notify(notificationTag, type, notification);
+        Notifications.notifySafely(type, notification, getSmsNotificationChannel());
 
         LogUtil.i(TAG, "Notifying for conversation " + conversationId + "; "
                 + "tag = " + notificationTag + ", type = " + type);
@@ -1202,6 +1202,12 @@ public class BugleNotifications {
         }
     }
 
+    public static NotificationChannel getSmsNotificationChannel() {
+        return Notifications.getChannel(PendingIntentConstants.SMS_NOTIFICATION_CHANNEL_ID,
+                HSApplication.getContext().getResources().getString(R.string.sms_notification_channel),
+                HSApplication.getContext().getResources().getString(R.string.sms_notification_channel_description));
+    }
+
     public static void notifyEmergencySmsFailed(final String emergencyNumber,
                                                 final String conversationId) {
         final Context context = Factory.get().getApplicationContext();
@@ -1214,7 +1220,7 @@ public class BugleNotifications {
         final PendingIntent destinationIntent = UIIntents.get()
                 .getPendingIntentForConversationActivity(context, conversationId, null /* draft */);
 
-        final NotificationCompat.Builder builder = new NotificationCompat.Builder(context);
+        final NotificationCompat.Builder builder = new NotificationCompat.Builder(context, PendingIntentConstants.SMS_NOTIFICATION_CHANNEL_ID);
         builder.setTicker(line1)
                 .setContentTitle(line1)
                 .setContentText(line2)
@@ -1222,12 +1228,7 @@ public class BugleNotifications {
                 .setSmallIcon(R.drawable.ic_failed_light)
                 .setContentIntent(destinationIntent)
                 .setSound(UriUtil.getUriForResourceId(context, R.raw.message_failure));
-
-        final String tag = context.getPackageName() + ":emergency_sms_error";
-        NotificationManagerCompat.from(context).notify(
-                tag,
-                PendingIntentConstants.MSG_SEND_ERROR,
-                builder.build());
+        Notifications.notifySafely(PendingIntentConstants.MSG_SEND_ERROR, builder.build(), getSmsNotificationChannel());
     }
 }
 

@@ -1072,4 +1072,9 @@
     <string name="emoji_recent_empty_description">Click an emoji to share with friends.</string>
 
 
+    <!--notification channel-->
+    <string name="sms_notification_channel">Sms Notification</string>
+    <string name="sms_notification_channel_description">Show a notification when received sms</string>
+
+
 </resources>
