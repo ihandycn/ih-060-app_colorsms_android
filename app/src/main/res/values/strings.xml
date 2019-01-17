@@ -982,7 +982,7 @@
     <string name="bottom_navigation_item_sms_show">&#160;SMS Show&#160;</string>
     <string name="bottom_navigation_item_emoji">&#160;Emoji&#160;</string>
 
-    <string name="action_bar_title_typeface">Script-Roman.otf</string>
+    <string name="action_bar_title_typeface">FugazOne-Regular.ttf</string>
     <string name="network_error">Network error.</string>
     <string name="network_error_and_try_again">Network errors. Please try again.</string>
     <string name="sticker_send_msg">SELECT</string>
