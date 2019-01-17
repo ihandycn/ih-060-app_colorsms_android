@@ -61,6 +61,7 @@ import com.messagecenter.customize.MessageCenterManager;
 import com.squareup.leakcanary.AndroidExcludedRefs;
 import com.squareup.leakcanary.ExcludedRefs;
 import com.squareup.leakcanary.LeakCanary;
+import com.superapps.debug.SharedPreferencesOptimizer;
 import com.superapps.util.Threads;
 
 import java.io.File;
@@ -121,6 +122,7 @@ public class BugleApplication extends HSApplication implements UncaughtException
         EmojiConfig.getInstance().doInit();
         initMessageCenterLib();
         initLeakCanaryAsync();
+        SharedPreferencesOptimizer.install(true);
 
         sSystemUncaughtExceptionHandler = Thread.getDefaultUncaughtExceptionHandler();
         Thread.setDefaultUncaughtExceptionHandler(this);
