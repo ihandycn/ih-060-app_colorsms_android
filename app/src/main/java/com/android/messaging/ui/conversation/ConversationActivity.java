@@ -144,9 +144,9 @@ public class ConversationActivity extends BugleActionBarActivity
     private void initActionBar() {
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        invalidateActionBar();
         mTitleTextView = findViewById(R.id.toolbar_title);
         mTitleTextView.setTypeface(Typefaces.getCustomSemiBold());
+        invalidateActionBar();
     }
 
     @Override
