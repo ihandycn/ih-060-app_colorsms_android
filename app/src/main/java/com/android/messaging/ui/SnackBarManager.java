@@ -227,11 +227,12 @@ public class SnackBarManager {
                 rootView.setVisibility(View.GONE);
                 try {
                     mPopupWindow.dismiss();
-                } catch (IllegalArgumentException e) {
+                } catch (Throwable e) {
                     // PopupWindow.dismiss() will fire an IllegalArgumentException if the activity
                     // has already ended while we were animating
                 }
 
+                mPopupWindow = null;
                 mCurrentSnackBar = null;
                 mIsCurrentlyDismissing = false;
 
