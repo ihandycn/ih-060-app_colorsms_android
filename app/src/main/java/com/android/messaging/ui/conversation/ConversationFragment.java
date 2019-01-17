@@ -898,6 +898,7 @@ public class ConversationFragment extends Fragment implements ConversationDataLi
         if (mComposeMessageView != null) {
             mComposeMessageView.unbind();
         }
+        mRecyclerView.setAdapter(null);
 
         // And unbind this fragment from its data
         mBinding.unbind();
