@@ -197,7 +197,7 @@ public class MediaPicker extends Fragment implements DraftMessageSubscriptionDat
         mIsAttached = true;
         if (mStartingMediaTypeOnAttach != MEDA_TYPE_INVALID) {
             // open() was previously called. Do the pending open now.
-            doOpen(mStartingMediaTypeOnAttach, mAnimateOnAttach);
+            doOpen(mStartingMediaTypeOnAttach, mAnimateOnAttach, true);
         }
     }
 
@@ -353,7 +353,7 @@ public class MediaPicker extends Fragment implements DraftMessageSubscriptionDat
     public void open(final int startingMediaType, final boolean animate) {
         mOpen = true;
         if (mIsAttached) {
-            doOpen(startingMediaType, animate);
+            doOpen(startingMediaType, animate, false);
         } else {
             // open() can get called immediately after the MediaPicker is created. In that case,
             // we defer doing work as it may require an attached fragment (eg. calling
@@ -363,7 +363,7 @@ public class MediaPicker extends Fragment implements DraftMessageSubscriptionDat
         }
     }
 
-    private void doOpen(int startingMediaType, final boolean animate) {
+    private void doOpen(int startingMediaType, final boolean animate, boolean fromAttach) {
         final boolean isTouchExplorationEnabled = AccessibilityUtil.isTouchExplorationEnabled(
                 // getActivity() will be null at this point
                 Factory.get().getApplicationContext());
@@ -373,7 +373,9 @@ public class MediaPicker extends Fragment implements DraftMessageSubscriptionDat
         if (startingMediaType == MEDIA_TYPE_DEFAULT) {
             final int selectedChooserIndex = mBinding.getData().getSelectedChooserIndex();
             if (selectedChooserIndex >= 0 && selectedChooserIndex < mEnabledChoosers.size()) {
-                selectChooser(mEnabledChoosers.get(selectedChooserIndex));
+                if (fromAttach){
+                    selectChooser(mEnabledChoosers.get(selectedChooserIndex), false);
+                }
             } else {
                 // This is the first time the picker is being used
                 if (isTouchExplorationEnabled) {
@@ -387,7 +389,9 @@ public class MediaPicker extends Fragment implements DraftMessageSubscriptionDat
             for (final MediaChooser chooser : mEnabledChoosers) {
                 if (startingMediaType == MEDIA_TYPE_DEFAULT ||
                         (startingMediaType & chooser.getSupportedMediaTypes()) != MEDIA_TYPE_NONE) {
-                    selectChooser(chooser);
+                    if (fromAttach){
+                        selectChooser(chooser, false);
+                    }
                     break;
                 }
             }
@@ -395,7 +399,9 @@ public class MediaPicker extends Fragment implements DraftMessageSubscriptionDat
 
         if (mSelectedChooser == null) {
             // Fall back to the first chooser.
-            selectChooser(mEnabledChoosers.get(0));
+            if (fromAttach) {
+                selectChooser(mEnabledChoosers.get(0), false);
+            }
         }
 
         if (mMediaPickerPanel != null) {
@@ -506,6 +512,42 @@ public class MediaPicker extends Fragment implements DraftMessageSubscriptionDat
         if (mSelectedChooser instanceof CameraMediaChooser) {
             ((CameraMediaChooser) mSelectedChooser).showPreview();
         }
+    }
+
+    /**
+     * Selects a new chooser
+     * @param newSelectedChooser The newly selected chooser
+     * @param selected If selected the newSelectedChooser
+     */
+    void selectChooser(final MediaChooser newSelectedChooser, boolean selected) {
+        if (mSelectedChooser == newSelectedChooser) {
+            return;
+        }
+
+        if (mSelectedChooser != null) {
+            mSelectedChooser.setSelected(false);
+        }
+        mSelectedChooser = newSelectedChooser;
+        if (mSelectedChooser != null) {
+            mSelectedChooser.setSelected(selected);
+        }
+
+        final int chooserIndex = mEnabledChoosers.indexOf(mSelectedChooser);
+        if (mViewPager != null) {
+            mViewPager.setCurrentItem(chooserIndex, true /* smoothScroll */);
+        }
+
+        if (isFullScreen()) {
+            invalidateOptionsMenu();
+        }
+
+        // Save the newly selected chooser's index so we may directly switch to it the
+        // next time user opens the media picker.
+        mBinding.getData().saveSelectedChooserIndex(chooserIndex);
+        if (mMediaPickerPanel != null) {
+            mMediaPickerPanel.onChooserChanged();
+        }
+        dispatchChooserSelected(chooserIndex);
     }
 
     /**
