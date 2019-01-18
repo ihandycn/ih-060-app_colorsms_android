@@ -83,8 +83,8 @@ public class AttachmentPreview extends ScrollView implements OnAttachmentClickLi
         addOnLayoutChangeListener(new OnLayoutChangeListener() {
             @Override
             public void onLayoutChange(final View v, final int left, final int top, final int right,
-                    final int bottom, final int oldLeft, final int oldTop, final int oldRight,
-                    final int oldBottom) {
+                                       final int bottom, final int oldLeft, final int oldTop, final int oldRight,
+                                       final int oldBottom) {
                 post(new Runnable() {
                     @Override
                     public void run() {
@@ -261,7 +261,7 @@ public class AttachmentPreview extends ScrollView implements OnAttachmentClickLi
                     AttachmentPreviewFactory.TYPE_SINGLE, true /* startImageRequest */, this);
             if (attachmentView != null) {
                 mAttachmentView.addView(attachmentView);
-                if (shouldAnimate) {
+                if (!mComposeMessageView.isMediaPickerShowing() && shouldAnimate) {
                     tryAnimateViewIn(attachment, attachmentView);
                 }
             }
@@ -316,7 +316,7 @@ public class AttachmentPreview extends ScrollView implements OnAttachmentClickLi
 
     @Override
     public boolean onAttachmentClick(final MessagePartData attachment,
-            final Rect viewBoundsOnScreen, final boolean longPress) {
+                                     final Rect viewBoundsOnScreen, final boolean longPress) {
         if (longPress) {
             mComposeMessageView.onAttachmentPreviewLongClicked();
             return true;

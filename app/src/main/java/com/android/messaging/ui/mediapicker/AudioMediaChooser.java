@@ -136,4 +136,8 @@ class AudioMediaChooser extends MediaChooser implements
             }
         }
     }
+
+    @Override protected void setHasOptionsMenu() {
+
+    }
 }

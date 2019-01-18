@@ -24,7 +24,7 @@ import android.view.ViewGroup;
  * as well as logic to save/restore instance state that's persisted not only for activity
  * reconstruction (e.g. during a configuration change), but also cases where the individual
  * page view gets destroyed and recreated.
- *
+ * <p>
  * To opt into saving/restoring instance state behavior for a particular page view, let the
  * PageView implement PersistentInstanceState to save and restore instance states to/from a
  * Parcelable.
@@ -81,6 +81,7 @@ public abstract class BasePagerViewHolder implements PagerViewHolder {
     public View getView(ViewGroup container) {
         if (mView == null) {
             mView = createView(container);
+            setHasOptionsMenu();
             // When initially created, check if the view has any saved state. If so restore it.
             restorePendingState();
         }
@@ -103,4 +104,6 @@ public abstract class BasePagerViewHolder implements PagerViewHolder {
      * Create and initialize a new page view.
      */
     protected abstract View createView(ViewGroup container);
+
+    protected abstract void setHasOptionsMenu();
 }

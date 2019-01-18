@@ -16,34 +16,25 @@
 
 package com.android.messaging.ui.mediapicker;
 
-import android.Manifest;
 import android.content.Context;
-import android.content.pm.PackageManager;
 import android.content.res.Resources;
 import android.os.Handler;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewConfiguration;
-import android.view.ViewGroup;
-import android.view.animation.Animation;
-import android.view.animation.Transformation;
+import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 
 import com.android.messaging.R;
 import com.android.messaging.ui.PagingAwareViewPager;
-import com.android.messaging.ui.conversation.ConversationFragment;
-import com.android.messaging.util.BugleAnalytics;
-import com.android.messaging.util.OsUtil;
 import com.android.messaging.util.UiUtils;
-import com.ihs.commons.notificationcenter.HSGlobalNotificationCenter;
-import com.superapps.util.Dimensions;
 
 /**
  * Custom layout panel which makes the MediaPicker animations seamless and synchronized
  * Designed to be very specific to the MediaPicker's usage
  */
-public class MediaPickerPanel extends ViewGroup {
+public class MediaPickerPanel extends FrameLayout {
     /**
      * The window of time in which we might to decide to reinterpret the intent of a gesture.
      */
@@ -58,7 +49,7 @@ public class MediaPickerPanel extends ViewGroup {
     /**
      * True if the MediaPicker is full screen or animating into it
      */
-    private boolean mFullScreen;
+    private boolean mFullScreen = true;
 
     /**
      * True if the MediaPicker is open at all
@@ -105,34 +96,6 @@ public class MediaPickerPanel extends ViewGroup {
         super.onFinishInflate();
         mTabStrip = (LinearLayout) findViewById(R.id.mediapicker_tabstrip);
         mViewPager = (PagingAwareViewPager) findViewById(R.id.mediapicker_view_pager);
-        mMediaButtons = findViewById(R.id.media_buttons);
-        mMediaButtons.findViewById(R.id.media_camera).setOnClickListener(v -> {
-            mMediaPicker.setSelectedChooser(0);
-            if (!CameraManager.hasCameraPermission()) {
-                requestCameraPermission();
-                return;
-            }
-            expandToCamera();
-        });
-        mMediaButtons.findViewById(R.id.media_photo).setOnClickListener(v -> {
-            mMediaPicker.setSelectedChooser(1);
-            if (!OsUtil.hasStoragePermission()) {
-                requestStoragePermission();
-                return;
-            }
-            expandToGallery();
-        });
-        mMediaButtons.findViewById(R.id.media_voice).setOnClickListener(v -> {
-            mMediaPicker.setSelectedChooser(2);
-            mViewPager.setCurrentItem(2, false);
-            setDesiredHeight(Dimensions.pxFromDp(196), true);
-            mMediaButtons.setVisibility(View.GONE);
-            BugleAnalytics.logEvent("SMS_DetailsPage_Plus_Voice", true);
-            if (!OsUtil.hasRecordAudioPermission()) {
-                requestRecordAudioPermission();
-                return;
-            }
-        });
         mTouchHandler = new TouchHandler();
         setOnTouchListener(mTouchHandler);
         mViewPager.setOnTouchListener(mTouchHandler);
@@ -156,83 +119,83 @@ public class MediaPickerPanel extends ViewGroup {
         });
     }
 
-    private void expandToCamera() {
-        mViewPager.setCurrentItem(0, false);
-        setFullScreenView(true, false);
-        mMediaButtons.setVisibility(View.GONE);
-        BugleAnalytics.logEvent("SMS_DetailsPage_Plus_Camera", true);
-    }
+//    private void expandToCamera() {
+//        mViewPager.setCurrentItem(0, false);
+//        setFullScreenView(true, false);
+//        mMediaButtons.setVisibility(View.GONE);
+//        BugleAnalytics.logEvent("SMS_DetailsPage_Plus_Camera", true);
+//    }
+//
+//    private void expandToGallery() {
+//        mViewPager.setCurrentItem(1, false);
+//        setFullScreenView(true, false);
+//        HSGlobalNotificationCenter.sendNotification(ConversationFragment.EVENT_HIDE_OPTION_MENU);
+//        mMediaButtons.setVisibility(View.GONE);
+//        BugleAnalytics.logEvent("SMS_DetailsPage_Plus_Photo", true);
+//    }
+//
+//    private void requestCameraPermission() {
+//        if (OsUtil.isAtLeastM()) {
+//            mMediaPicker.requestPermissions(new String[]{Manifest.permission.CAMERA},
+//                    MediaPicker.CAMERA_PERMISSION_REQUEST_CODE);
+//        }
+//    }
+//
+//    private void requestStoragePermission() {
+//        if (OsUtil.isAtLeastM()) {
+//            mMediaPicker.requestPermissions(
+//                    new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},
+//                    MediaPicker.GALLERY_PERMISSION_REQUEST_CODE);
+//        }
+//    }
+//
+//    private void requestRecordAudioPermission() {
+//        if (OsUtil.isAtLeastM()) {
+//            mMediaPicker.requestPermissions(new String[]{Manifest.permission.RECORD_AUDIO},
+//                    MediaPicker.RECORD_AUDIO_PERMISSION_REQUEST_CODE);
+//        }
+//    }
 
-    private void expandToGallery() {
-        mViewPager.setCurrentItem(1, false);
-        setFullScreenView(true, false);
-        HSGlobalNotificationCenter.sendNotification(ConversationFragment.EVENT_HIDE_OPTION_MENU);
-        mMediaButtons.setVisibility(View.GONE);
-        BugleAnalytics.logEvent("SMS_DetailsPage_Plus_Photo", true);
-    }
-
-    private void requestCameraPermission() {
-        if (OsUtil.isAtLeastM()) {
-            mMediaPicker.requestPermissions(new String[]{Manifest.permission.CAMERA},
-                    MediaPicker.CAMERA_PERMISSION_REQUEST_CODE);
-        }
-    }
-
-    private void requestStoragePermission() {
-        if (OsUtil.isAtLeastM()) {
-            mMediaPicker.requestPermissions(
-                    new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},
-                    MediaPicker.GALLERY_PERMISSION_REQUEST_CODE);
-        }
-    }
-
-    private void requestRecordAudioPermission() {
-        if (OsUtil.isAtLeastM()) {
-            mMediaPicker.requestPermissions(new String[]{Manifest.permission.RECORD_AUDIO},
-                    MediaPicker.RECORD_AUDIO_PERMISSION_REQUEST_CODE);
-        }
-    }
-
-    @Override
-    protected void onMeasure(final int widthMeasureSpec, final int heightMeasureSpec) {
-        int requestedHeight = MeasureSpec.getSize(heightMeasureSpec);
-        int desiredHeight = Math.min(mCurrentDesiredHeight, requestedHeight);
-        if (mExpanded && desiredHeight == 0) {
-            // If we want to be shown, we have to have a non-0 height.  Returning a height of 0 will
-            // cause the framework to abort the animation from 0, so we must always have some
-            // height once we start expanding
-            desiredHeight = 1;
-        } else if (!mExpanded && desiredHeight == 0) {
-            mViewPager.setVisibility(View.GONE);
-            mViewPager.setAdapter(null);
-        }
-
-        measureChild(mTabStrip, widthMeasureSpec, heightMeasureSpec);
-
-        // If we are animating and have an interim desired height, use the default height. We can't
-        // take the max here as on some devices the mDefaultViewPagerHeight may be too big in
-        // landscape mode after animation.
-        final int tabAdjustedDesiredHeight = desiredHeight;
-        final int viewPagerHeight =
-                tabAdjustedDesiredHeight <= 1 ? mDefaultViewPagerHeight : tabAdjustedDesiredHeight;
-
-        int viewPagerHeightMeasureSpec = MeasureSpec.makeMeasureSpec(
-                viewPagerHeight, MeasureSpec.EXACTLY);
-        measureChild(mViewPager, widthMeasureSpec, viewPagerHeightMeasureSpec);
-        setMeasuredDimension(mViewPager.getMeasuredWidth(), desiredHeight);
-        measureChild(mMediaButtons, widthMeasureSpec, viewPagerHeightMeasureSpec);
-        setMeasuredDimension(mMediaButtons.getMeasuredWidth(), desiredHeight);
-    }
-
-    @Override
-    protected void onLayout(final boolean changed, final int left, final int top, final int right,
-                            final int bottom) {
-        int y = top;
-        final int width = right - left;
-
-        mViewPager.layout(0, y, width, y + getMeasuredHeight());
-        mMediaButtons.layout(0, y, width, y + getMeasuredHeight());
-    }
+//    @Override
+//    protected void onMeasure(final int widthMeasureSpec, final int heightMeasureSpec) {
+//        int requestedHeight = MeasureSpec.getSize(heightMeasureSpec);
+//        int desiredHeight = Math.min(mCurrentDesiredHeight, requestedHeight);
+//        if (mExpanded && desiredHeight == 0) {
+//            // If we want to be shown, we have to have a non-0 height.  Returning a height of 0 will
+//            // cause the framework to abort the animation from 0, so we must always have some
+//            // height once we start expanding
+//            desiredHeight = 1;
+//        } else if (!mExpanded && desiredHeight == 0) {
+//            mViewPager.setVisibility(View.GONE);
+//            mViewPager.setAdapter(null);
+//        }
+//
+//        measureChild(mTabStrip, widthMeasureSpec, heightMeasureSpec);
+//
+//        // If we are animating and have an interim desired height, use the default height. We can't
+//        // take the max here as on some devices the mDefaultViewPagerHeight may be too big in
+//        // landscape mode after animation.
+//        final int tabAdjustedDesiredHeight = desiredHeight;
+//        final int viewPagerHeight =
+//                tabAdjustedDesiredHeight <= 1 ? mDefaultViewPagerHeight : tabAdjustedDesiredHeight;
+//
+//        int viewPagerHeightMeasureSpec = MeasureSpec.makeMeasureSpec(
+//                viewPagerHeight, MeasureSpec.EXACTLY);
+//        measureChild(mViewPager, widthMeasureSpec, viewPagerHeightMeasureSpec);
+//        setMeasuredDimension(mViewPager.getMeasuredWidth(), desiredHeight);
+////        measureChild(mMediaButtons, widthMeasureSpec, viewPagerHeightMeasureSpec);
+////        setMeasuredDimension(mMediaButtons.getMeasuredWidth(), desiredHeight);
+//    }
+//
+//    @Override
+//    protected void onLayout(final boolean changed, final int left, final int top, final int right,
+//                            final int bottom) {
+//        int y = top;
+//        final int width = right - left;
+//
+//        mViewPager.layout(0, y, width, y + getMeasuredHeight());
+////        mMediaButtons.layout(0, y, width, y + getMeasuredHeight());
+//    }
 
     void onChooserChanged() {
         if (mFullScreen) {
@@ -257,24 +220,25 @@ public class MediaPickerPanel extends ViewGroup {
      * not being dragged by the user).
      */
     private int getDesiredHeight() {
-        if (mFullScreen) {
-            int fullHeight = getContext().getResources().getDisplayMetrics().heightPixels;
-            if (OsUtil.isAtLeastKLP() && isAttachedToWindow()) {
-                // When we're attached to the window, we can get an accurate height, not necessary
-                // on older API level devices because they don't include the action bar height
-                View composeContainer =
-                        getRootView().findViewById(R.id.conversation_and_compose_container);
-                if (composeContainer != null) {
-                    // protect against composeContainer having been unloaded already
-                    fullHeight -= UiUtils.getMeasuredBoundsOnScreen(composeContainer).top;
-                }
-            }
-            return fullHeight;
-        } else if (mExpanded) {
-            return LayoutParams.WRAP_CONTENT;
-        } else {
-            return 0;
-        }
+//        if (mFullScreen) {
+//            int fullHeight = getContext().getResources().getDisplayMetrics().heightPixels;
+//            if (OsUtil.isAtLeastKLP() && isAttachedToWindow()) {
+//                // When we're attached to the window, we can get an accurate height, not necessary
+//                // on older API level devices because they don't include the action bar height
+//                View composeContainer =
+//                        getRootView().findViewById(R.id.conversation_and_compose_container);
+//                if (composeContainer != null) {
+//                    // protect against composeContainer having been unloaded already
+//                    fullHeight -= UiUtils.getMeasuredBoundsOnScreen(composeContainer).top;
+//                }
+//            }
+//            return fullHeight;
+//        } else if (mExpanded) {
+//            return LayoutParams.WRAP_CONTENT;
+//        } else {
+//            return 0;
+//        }
+        return 0;
     }
 
     private void setupViewPager(final int startingPage) {
@@ -303,18 +267,17 @@ public class MediaPickerPanel extends ViewGroup {
         if (expanded == mExpanded && !force) {
             return;
         }
-        mFullScreen = false;
+        mFullScreen = true;
         mExpanded = expanded;
-        mHandler.post(new Runnable() {
-            @Override
-            public void run() {
-                setDesiredHeight(getDesiredHeight(), animate);
-            }
-        });
+//        mHandler.post(new Runnable() {
+//            @Override
+//            public void run() {
+//                setDesiredHeight(getDesiredHeight(), animate);
+//            }
+//        });
         if (expanded) {
             setupViewPager(startingPage);
             mMediaPicker.dispatchOpened();
-            mMediaButtons.setVisibility(View.VISIBLE);
         } else {
             mMediaPicker.dispatchDismissed();
         }
@@ -331,33 +294,33 @@ public class MediaPickerPanel extends ViewGroup {
     }
 
     private void setDesiredHeight(int height, final boolean animate) {
-        final int startHeight = mCurrentDesiredHeight;
-        if (height == LayoutParams.WRAP_CONTENT) {
-            height = mDefaultViewPagerHeight;
-        }
-        clearAnimation();
-        if (animate) {
-            final int deltaHeight = height - startHeight;
-            final Animation animation = new Animation() {
-                @Override
-                protected void applyTransformation(final float interpolatedTime,
-                                                   final Transformation t) {
-                    mCurrentDesiredHeight = (int) (startHeight + deltaHeight * interpolatedTime);
-                    requestLayout();
-                }
-
-                @Override
-                public boolean willChangeBounds() {
-                    return true;
-                }
-            };
-            animation.setDuration(UiUtils.MEDIAPICKER_TRANSITION_DURATION);
-            animation.setInterpolator(UiUtils.EASE_OUT_INTERPOLATOR);
-            startAnimation(animation);
-        } else {
-            mCurrentDesiredHeight = height;
-        }
-        requestLayout();
+//        final int startHeight = mCurrentDesiredHeight;
+//        if (height == LayoutParams.WRAP_CONTENT) {
+//            height = mDefaultViewPagerHeight;
+//        }
+//        clearAnimation();
+//        if (animate) {
+//            final int deltaHeight = height - startHeight;
+//            final Animation animation = new Animation() {
+//                @Override
+//                protected void applyTransformation(final float interpolatedTime,
+//                                                   final Transformation t) {
+//                    mCurrentDesiredHeight = (int) (startHeight + deltaHeight * interpolatedTime);
+//                    requestLayout();
+//                }
+//
+//                @Override
+//                public boolean willChangeBounds() {
+//                    return true;
+//                }
+//            };
+//            animation.setDuration(UiUtils.MEDIAPICKER_TRANSITION_DURATION);
+//            animation.setInterpolator(UiUtils.EASE_OUT_INTERPOLATOR);
+//            startAnimation(animation);
+//        } else {
+//            mCurrentDesiredHeight = height;
+//        }
+//        requestLayout();
     }
 
     /**
@@ -376,7 +339,7 @@ public class MediaPickerPanel extends ViewGroup {
             return;
         }
         mFullScreen = fullScreen;
-        setDesiredHeight(getDesiredHeight(), animate);
+//        setDesiredHeight(getDesiredHeight(), animate);
         mMediaPicker.dispatchFullScreen(mFullScreen);
         updateViewPager();
     }
@@ -565,22 +528,22 @@ public class MediaPickerPanel extends ViewGroup {
         }
     }
 
-    protected void onRequestPermissionsResult(
-            final int requestCode, final String permissions[], final int[] grantResults) {
-        if (permissions.length == 0 || grantResults.length == 0) {
-            return;
-        }
-        if (MediaPicker.CAMERA_PERMISSION_REQUEST_CODE == requestCode) {
-            final boolean permissionGranted = grantResults[0] == PackageManager.PERMISSION_GRANTED;
-            if (permissionGranted) {
-                expandToCamera();
-            }
-        } else if (MediaPicker.GALLERY_PERMISSION_REQUEST_CODE == requestCode) {
-            final boolean permissionGranted = grantResults[0] == PackageManager.PERMISSION_GRANTED;
-            if (permissionGranted) {
-                expandToGallery();
-            }
-        }
-    }
+//    protected void onRequestPermissionsResult(
+//            final int requestCode, final String permissions[], final int[] grantResults) {
+//        if (permissions.length == 0 || grantResults.length == 0) {
+//            return;
+//        }
+//        if (MediaPicker.CAMERA_PERMISSION_REQUEST_CODE == requestCode) {
+//            final boolean permissionGranted = grantResults[0] == PackageManager.PERMISSION_GRANTED;
+//            if (permissionGranted) {
+//                expandToCamera();
+//            }
+//        } else if (MediaPicker.GALLERY_PERMISSION_REQUEST_CODE == requestCode) {
+//            final boolean permissionGranted = grantResults[0] == PackageManager.PERMISSION_GRANTED;
+//            if (permissionGranted) {
+//                expandToGallery();
+//            }
+//        }
+//    }
 }
 

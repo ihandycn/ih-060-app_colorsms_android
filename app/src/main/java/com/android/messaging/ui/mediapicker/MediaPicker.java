@@ -64,9 +64,13 @@ import java.util.List;
  * Fragment used to select or capture media to be added to the message
  */
 public class MediaPicker extends Fragment implements DraftMessageSubscriptionDataProvider {
-    /** The listener interface for events from the media picker */
+    /**
+     * The listener interface for events from the media picker
+     */
     public interface MediaPickerListener {
-        /** Called when the media picker is opened so the host can accommodate the UI */
+        /**
+         * Called when the media picker is opened so the host can accommodate the UI
+         */
         void onOpened();
 
         /**
@@ -77,6 +81,7 @@ public class MediaPicker extends Fragment implements DraftMessageSubscriptionDat
 
         /**
          * Called when the user selects one or more items
+         *
          * @param items The list of items which were selected
          */
         void onItemsSelected(Collection<MessagePartData> items, boolean dismissMediaPicker);
@@ -98,6 +103,7 @@ public class MediaPicker extends Fragment implements DraftMessageSubscriptionDat
 
         /**
          * Called when a pending attachment is added.
+         *
          * @param pendingItem the pending attachment data being loaded.
          */
         void onPendingItemAdded(PendingAttachmentData pendingItem);
@@ -108,79 +114,114 @@ public class MediaPicker extends Fragment implements DraftMessageSubscriptionDat
         void onChooserSelected(final int chooserIndex);
     }
 
-    /** The tag used when registering and finding this fragment */
+    /**
+     * The tag used when registering and finding this fragment
+     */
     public static final String FRAGMENT_TAG = "mediapicker";
 
     // Media type constants that the media picker supports
-    public static final int MEDIA_TYPE_DEFAULT     = 0x0000;
-    public static final int MEDIA_TYPE_NONE        = 0x0000;
-    public static final int MEDIA_TYPE_IMAGE       = 0x0001;
-    public static final int MEDIA_TYPE_VIDEO       = 0x0002;
-    public static final int MEDIA_TYPE_AUDIO       = 0x0004;
-    public static final int MEDIA_TYPE_VCARD       = 0x0008;
-    public static final int MEDIA_TYPE_LOCATION    = 0x0010;
-    private static final int MEDA_TYPE_INVALID     = 0x0020;
-    public static final int MEDIA_TYPE_ALL         = 0xFFFF;
+    public static final int MEDIA_TYPE_DEFAULT = 0x0000;
+    public static final int MEDIA_TYPE_NONE = 0x0000;
+    public static final int MEDIA_TYPE_IMAGE = 0x0001;
+    public static final int MEDIA_TYPE_VIDEO = 0x0002;
+    public static final int MEDIA_TYPE_AUDIO = 0x0004;
+    public static final int MEDIA_TYPE_VCARD = 0x0008;
+    public static final int MEDIA_TYPE_LOCATION = 0x0010;
+    private static final int MEDA_TYPE_INVALID = 0x0020;
+    public static final int MEDIA_TYPE_ALL = 0xFFFF;
 
-    /** The listener to call when events occur */
+    /**
+     * The listener to call when events occur
+     */
     private MediaPickerListener mListener;
 
-    /** The handler used to dispatch calls to the listener */
+    /**
+     * The handler used to dispatch calls to the listener
+     */
     private Handler mListenerHandler;
 
-    /** The bit flags of media types supported */
+    /**
+     * The bit flags of media types supported
+     */
     private int mSupportedMediaTypes;
 
-    /** The list of choosers which could be within the media picker */
+    /**
+     * The list of choosers which could be within the media picker
+     */
     private final MediaChooser[] mChoosers;
 
-    /** The list of currently enabled choosers */
+    /**
+     * The list of currently enabled choosers
+     */
     private final ArrayList<MediaChooser> mEnabledChoosers;
 
-    /** The currently selected chooser */
+    /**
+     * The currently selected chooser
+     */
     private MediaChooser mSelectedChooser;
 
-    /** The main panel that controls the custom layout */
+    /**
+     * The main panel that controls the custom layout
+     */
     private MediaPickerPanel mMediaPickerPanel;
 
-    /** The linear layout that holds the icons to select individual chooser tabs */
+    /**
+     * The linear layout that holds the icons to select individual chooser tabs
+     */
     private LinearLayout mTabStrip;
 
-    /** The view pager to swap between choosers */
+    /**
+     * The view pager to swap between choosers
+     */
     private ViewPager mViewPager;
 
-    /** The current pager adapter for the view pager */
+    /**
+     * The current pager adapter for the view pager
+     */
     private FixedViewPagerAdapter<MediaChooser> mPagerAdapter;
 
-    /** True if the media picker is visible */
+    /**
+     * True if the media picker is visible
+     */
     private boolean mOpen;
 
-    /** The theme color to use to make the media picker match the rest of the UI */
+    /**
+     * The theme color to use to make the media picker match the rest of the UI
+     */
     private int mThemeColor;
 
-    @VisibleForTesting
-    final Binding<MediaPickerData> mBinding = BindingBase.createBinding(this);
+    @VisibleForTesting final Binding<MediaPickerData> mBinding = BindingBase.createBinding(this);
 
-    /** Handles picking image from the document picker */
+    /**
+     * Handles picking image from the document picker
+     */
     private DocumentImagePicker mDocumentImagePicker;
 
-    /** Provides subscription-related data to access per-subscription configurations. */
+    /**
+     * Provides subscription-related data to access per-subscription configurations.
+     */
     private DraftMessageSubscriptionDataProvider mSubscriptionDataProvider;
 
-    /** Provides access to DraftMessageData associated with the current conversation */
+    /**
+     * Provides access to DraftMessageData associated with the current conversation
+     */
     private ImmutableBindingRef<DraftMessageData> mDraftMessageDataModel;
 
     public MediaPicker() {
-        this(Factory.get().getApplicationContext());
+        this(Factory.get().getApplicationContext(), true);
     }
 
-    public MediaPicker(final Context context) {
+    public MediaPicker(final Context context, boolean isCamera) {
         mBinding.bind(DataModel.get().createMediaPickerData(context));
         mEnabledChoosers = new ArrayList<MediaChooser>();
-        mChoosers = new MediaChooser[] {
-            new CameraMediaChooser(this),
-            new GalleryMediaChooser(this),
-            new AudioMediaChooser(this),
+        if (isCamera) {
+            mSelectedChooser = new CameraMediaChooser(this);
+        } else {
+            mSelectedChooser = new GalleryMediaChooser(this);
+        }
+
+        mChoosers = new MediaChooser[]{
+                mSelectedChooser
         };
 
         mOpen = false;
@@ -192,12 +233,12 @@ public class MediaPicker extends Fragment implements DraftMessageSubscriptionDat
     private boolean mAnimateOnAttach;
 
     @Override
-    public void onAttach (final Activity activity) {
+    public void onAttach(final Activity activity) {
         super.onAttach(activity);
         mIsAttached = true;
         if (mStartingMediaTypeOnAttach != MEDA_TYPE_INVALID) {
             // open() was previously called. Do the pending open now.
-            doOpen(mStartingMediaTypeOnAttach, mAnimateOnAttach, true);
+            doOpen(mStartingMediaTypeOnAttach, true);
         }
     }
 
@@ -207,13 +248,13 @@ public class MediaPicker extends Fragment implements DraftMessageSubscriptionDat
         mBinding.getData().init(getLoaderManager());
         mDocumentImagePicker = new DocumentImagePicker(this,
                 new SelectionListener() {
-            @Override
-            public void onDocumentSelected(final PendingAttachmentData data) {
-                if (mBinding.isBound()) {
-                    dispatchPendingItemAdded(data);
-                }
-            }
-        });
+                    @Override
+                    public void onDocumentSelected(final PendingAttachmentData data) {
+                        if (mBinding.isBound()) {
+                            dispatchPendingItemAdded(data);
+                        }
+                    }
+                });
     }
 
     @Override
@@ -271,7 +312,7 @@ public class MediaPicker extends Fragment implements DraftMessageSubscriptionDat
         final boolean isTouchExplorationEnabled = AccessibilityUtil.isTouchExplorationEnabled(
                 getActivity());
         mMediaPickerPanel.setFullScreenOnly(isTouchExplorationEnabled);
-        mMediaPickerPanel.setExpanded(mOpen, true, mEnabledChoosers.indexOf(mSelectedChooser));
+        mMediaPickerPanel.setExpanded(mOpen, false, mEnabledChoosers.indexOf(mSelectedChooser));
         return mMediaPickerPanel;
     }
 
@@ -308,6 +349,7 @@ public class MediaPicker extends Fragment implements DraftMessageSubscriptionDat
 
     /**
      * Sets the theme color to make the media picker match the surrounding UI
+     *
      * @param themeColor The new theme color
      */
     public void setConversationThemeColor(final int themeColor) {
@@ -347,23 +389,23 @@ public class MediaPicker extends Fragment implements DraftMessageSubscriptionDat
 
     /**
      * Opens the media picker and optionally shows the chooser for the supplied media type
+     *
      * @param startingMediaType The media type of the chooser to open if {@link #MEDIA_TYPE_DEFAULT}
      *                          is used, then the default chooser from saved shared prefs is opened
      */
-    public void open(final int startingMediaType, final boolean animate) {
+    public void open(final int startingMediaType) {
         mOpen = true;
         if (mIsAttached) {
-            doOpen(startingMediaType, animate, false);
+            doOpen(startingMediaType, false);
         } else {
             // open() can get called immediately after the MediaPicker is created. In that case,
             // we defer doing work as it may require an attached fragment (eg. calling
             // Fragment#requestPermission)
             mStartingMediaTypeOnAttach = startingMediaType;
-            mAnimateOnAttach = animate;
         }
     }
 
-    private void doOpen(int startingMediaType, final boolean animate, boolean fromAttach) {
+    private void doOpen(int startingMediaType, boolean fromAttach) {
         final boolean isTouchExplorationEnabled = AccessibilityUtil.isTouchExplorationEnabled(
                 // getActivity() will be null at this point
                 Factory.get().getApplicationContext());
@@ -373,7 +415,7 @@ public class MediaPicker extends Fragment implements DraftMessageSubscriptionDat
         if (startingMediaType == MEDIA_TYPE_DEFAULT) {
             final int selectedChooserIndex = mBinding.getData().getSelectedChooserIndex();
             if (selectedChooserIndex >= 0 && selectedChooserIndex < mEnabledChoosers.size()) {
-                if (fromAttach){
+                if (fromAttach) {
                     selectChooser(mEnabledChoosers.get(selectedChooserIndex), false);
                 }
             } else {
@@ -389,7 +431,7 @@ public class MediaPicker extends Fragment implements DraftMessageSubscriptionDat
             for (final MediaChooser chooser : mEnabledChoosers) {
                 if (startingMediaType == MEDIA_TYPE_DEFAULT ||
                         (startingMediaType & chooser.getSupportedMediaTypes()) != MEDIA_TYPE_NONE) {
-                    if (fromAttach){
+                    if (fromAttach) {
                         selectChooser(chooser, false);
                     }
                     break;
@@ -406,18 +448,21 @@ public class MediaPicker extends Fragment implements DraftMessageSubscriptionDat
 
         if (mMediaPickerPanel != null) {
             mMediaPickerPanel.setFullScreenOnly(isTouchExplorationEnabled);
-            mMediaPickerPanel.setExpanded(true, animate,
+            mMediaPickerPanel.setExpanded(true, false,
                     mEnabledChoosers.indexOf(mSelectedChooser));
         }
     }
 
-    /** @return True if the media picker is open */
+    /**
+     * @return True if the media picker is open
+     */
     public boolean isOpen() {
         return mOpen;
     }
 
     /**
      * Sets the list of media types to allow the user to select
+     *
      * @param mediaTypes The bit flags of media types to allow.  Can be any combination of the
      *                   MEDIA_TYPE_* values
      */
@@ -467,9 +512,12 @@ public class MediaPicker extends Fragment implements DraftMessageSubscriptionDat
         return mViewPager;
     }
 
-    /** Hides the media picker, and frees up any resources it’s using */
+    /**
+     * Hides the media picker, and frees up any resources it’s using
+     */
     public void dismiss(final boolean animate) {
         mOpen = false;
+        releaseView();
         if (mMediaPickerPanel != null) {
             mMediaPickerPanel.setExpanded(false, animate, MediaPickerPanel.PAGE_NOT_SET);
         }
@@ -479,6 +527,7 @@ public class MediaPicker extends Fragment implements DraftMessageSubscriptionDat
 
     /**
      * Sets the listener for the media picker events
+     *
      * @param listener The listener which will receive events
      */
     public void setListener(final MediaPickerListener listener) {
@@ -487,7 +536,9 @@ public class MediaPicker extends Fragment implements DraftMessageSubscriptionDat
         mListenerHandler = listener != null ? new Handler() : null;
     }
 
-    /** @return True if the media picker is in full-screen mode */
+    /**
+     * @return True if the media picker is in full-screen mode
+     */
     public boolean isFullScreen() {
         return mMediaPickerPanel != null && mMediaPickerPanel.isFullScreen();
     }
@@ -516,8 +567,9 @@ public class MediaPicker extends Fragment implements DraftMessageSubscriptionDat
 
     /**
      * Selects a new chooser
+     *
      * @param newSelectedChooser The newly selected chooser
-     * @param selected If selected the newSelectedChooser
+     * @param selected           If selected the newSelectedChooser
      */
     void selectChooser(final MediaChooser newSelectedChooser, boolean selected) {
         if (mSelectedChooser == newSelectedChooser) {
@@ -544,14 +596,15 @@ public class MediaPicker extends Fragment implements DraftMessageSubscriptionDat
         // Save the newly selected chooser's index so we may directly switch to it the
         // next time user opens the media picker.
         mBinding.getData().saveSelectedChooserIndex(chooserIndex);
-        if (mMediaPickerPanel != null) {
-            mMediaPickerPanel.onChooserChanged();
-        }
+//        if (mMediaPickerPanel != null) {
+//            mMediaPickerPanel.onChooserChanged();
+//        }
         dispatchChooserSelected(chooserIndex);
     }
 
     /**
      * Selects a new chooser
+     *
      * @param newSelectedChooser The newly selected chooser
      */
     void selectChooser(final MediaChooser newSelectedChooser) {
@@ -579,9 +632,9 @@ public class MediaPicker extends Fragment implements DraftMessageSubscriptionDat
         // Save the newly selected chooser's index so we may directly switch to it the
         // next time user opens the media picker.
         mBinding.getData().saveSelectedChooserIndex(chooserIndex);
-        if (mMediaPickerPanel != null) {
-            mMediaPickerPanel.onChooserChanged();
-        }
+//        if (mMediaPickerPanel != null) {
+//            mMediaPickerPanel.onChooserChanged();
+//        }
         dispatchChooserSelected(chooserIndex);
     }
 
@@ -592,12 +645,17 @@ public class MediaPicker extends Fragment implements DraftMessageSubscriptionDat
         return false;
     }
 
-    public boolean onBackPressed() {
-        return mSelectedChooser != null && mSelectedChooser.onBackPressed();
+    public void releaseView() {
+        if (mSelectedChooser != null){
+            mSelectedChooser.destroyView();
+        }
     }
 
     void invalidateOptionsMenu() {
-        ((BugleActionBarActivity) getActivity()).supportInvalidateOptionsMenu();
+        Activity activity = getActivity();
+        if (activity instanceof BugleActionBarActivity) {
+            ((BugleActionBarActivity) activity).supportInvalidateOptionsMenu();
+        }
     }
 
     void dispatchOpened() {
@@ -656,7 +714,7 @@ public class MediaPicker extends Fragment implements DraftMessageSubscriptionDat
     }
 
     void dispatchItemsSelected(final Collection<MessagePartData> items,
-            final boolean dismissMediaPicker) {
+                               final boolean dismissMediaPicker) {
         if (mListener != null) {
             mListenerHandler.post(new Runnable() {
                 @Override
@@ -785,8 +843,8 @@ public class MediaPicker extends Fragment implements DraftMessageSubscriptionDat
             mSelectedChooser.onRequestPermissionsResult(requestCode, permissions, grantResults);
         }
 
-        if (mMediaPickerPanel != null){
-            mMediaPickerPanel.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        }
+//        if (mMediaPickerPanel != null){
+//            mMediaPickerPanel.onRequestPermissionsResult(requestCode, permissions, grantResults);
+//        }
     }
 }

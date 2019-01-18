@@ -28,7 +28,6 @@ import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.content.DialogInterface.OnCancelListener;
 import android.content.DialogInterface.OnClickListener;
 import android.content.DialogInterface.OnDismissListener;
 import android.content.Intent;
@@ -46,10 +45,8 @@ import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.text.BidiFormatter;
 import android.support.v4.text.TextDirectionHeuristicsCompat;
 import android.support.v7.app.ActionBar;
-import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.RecyclerView.ViewHolder;
 import android.text.TextUtils;
 import android.view.ActionMode;
 import android.view.Display;
@@ -60,12 +57,12 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewConfiguration;
 import android.view.ViewGroup;
+import android.widget.FrameLayout;
 import android.widget.TextView;
 
 import com.android.messaging.R;
 import com.android.messaging.datamodel.DataModel;
 import com.android.messaging.datamodel.MessagingContentProvider;
-import com.android.messaging.datamodel.action.InsertNewMessageAction;
 import com.android.messaging.datamodel.binding.Binding;
 import com.android.messaging.datamodel.binding.BindingBase;
 import com.android.messaging.datamodel.binding.ImmutableBindingRef;
@@ -78,13 +75,13 @@ import com.android.messaging.datamodel.data.DraftMessageData.DraftMessageDataLis
 import com.android.messaging.datamodel.data.MessageData;
 import com.android.messaging.datamodel.data.MessagePartData;
 import com.android.messaging.datamodel.data.ParticipantData;
+import com.android.messaging.datamodel.data.PendingAttachmentData;
 import com.android.messaging.datamodel.data.SubscriptionListData.SubscriptionListEntry;
-import com.android.messaging.ui.AttachmentPreview;
 import com.android.messaging.ui.BaseAlertDialog;
 import com.android.messaging.ui.BugleActionBarActivity;
+import com.android.messaging.ui.ConversationDrawables;
 import com.android.messaging.ui.SnackBar;
 import com.android.messaging.ui.UIIntents;
-import com.android.messaging.ui.animation.PopupTransitionAnimation;
 import com.android.messaging.ui.contact.AddContactsConfirmationDialog;
 import com.android.messaging.ui.conversation.ComposeMessageView.IComposeMessageViewHost;
 import com.android.messaging.ui.conversation.ConversationInputManager.ConversationInputHost;
@@ -92,6 +89,7 @@ import com.android.messaging.ui.conversation.ConversationMessageView.Conversatio
 import com.android.messaging.ui.dialog.FiveStarRateDialog;
 import com.android.messaging.ui.emoji.EmojiPickerFragment;
 import com.android.messaging.ui.mediapicker.MediaPicker;
+import com.android.messaging.ui.mediapicker.MediaPickerFragment;
 import com.android.messaging.util.AccessibilityUtil;
 import com.android.messaging.util.Assert;
 import com.android.messaging.util.AvatarUriUtil;
@@ -110,9 +108,11 @@ import com.google.common.annotations.VisibleForTesting;
 import com.ihs.commons.notificationcenter.HSGlobalNotificationCenter;
 import com.ihs.commons.notificationcenter.INotificationObserver;
 import com.ihs.commons.utils.HSBundle;
+import com.superapps.util.Threads;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 /**
@@ -169,6 +169,7 @@ public class ConversationFragment extends Fragment implements ConversationDataLi
     // If the fragment receives a draft as part of the invocation this is set
     private MessageData mIncomingDraft;
 
+    private FrameLayout mMediaLayout;
     // This binding keeps track of our associated ConversationData instance
     // A binding should have the lifetime of the owning component,
     //  don't recreate, unbind and bind if you need new data
@@ -556,6 +557,8 @@ public class ConversationFragment extends Fragment implements ConversationDataLi
         // Bind the compose message view to the DraftMessageData
         mComposeMessageView.bind(DataModel.get().createDraftMessageData(
                 mBinding.getData().getConversationId()), this);
+
+        mMediaLayout = view.findViewById(R.id.camera_photo_layout);
 
         return view;
     }
@@ -1170,13 +1173,18 @@ public class ConversationFragment extends Fragment implements ConversationDataLi
     }
 
     public boolean onBackPressed() {
-        if (mComposeMessageView.onBackPressed()) {
+        if (mMediaPicker != null) {
+            hideMediaPicker();
             return true;
         }
-        return false;
+        return mComposeMessageView.onBackPressed();
     }
 
     public boolean onNavigationUpPressed() {
+        if (mMediaPicker != null) {
+            hideMediaPicker();
+            return true;
+        }
         return mComposeMessageView.onNavigationUpPressed();
     }
 
@@ -1408,8 +1416,8 @@ public class ConversationFragment extends Fragment implements ConversationDataLi
     }
 
     @Override
-    public MediaPicker createMediaPicker() {
-        return new MediaPicker(getActivity());
+    public MediaPickerFragment createMediaPicker() {
+        return MediaPickerFragment.newInstance();
     }
 
     @Override
@@ -1574,6 +1582,11 @@ public class ConversationFragment extends Fragment implements ConversationDataLi
     }
 
     @Override
+    public boolean isMediaPickerShowing() {
+        return mMediaPicker != null;
+    }
+
+    @Override
     public int getAttachmentsClearedFlags() {
         return DraftMessageData.ATTACHMENTS_CHANGED;
     }
@@ -1586,6 +1599,128 @@ public class ConversationFragment extends Fragment implements ConversationDataLi
             case EVENT_HIDE_OPTION_MENU:
                 setOptionsMenuVisibility(false);
                 break;
+        }
+    }
+
+
+    private MediaPicker mMediaPicker;
+
+    @Override
+    public void showCamera() {
+        mMediaLayout.setVisibility(View.VISIBLE);
+        if (mMediaPicker == null) {
+            initMediaPicker(true);
+        }
+
+        getFragmentManagerToUse().beginTransaction().replace(
+                R.id.camera_photo_layout,
+                mMediaPicker,
+                MediaPicker.FRAGMENT_TAG).commit();
+
+        mMediaPicker.open(MediaPicker.MEDIA_TYPE_DEFAULT);
+    }
+
+    @Override
+    public void showPhoto() {
+        setOptionsMenuVisibility(false);
+
+        mMediaLayout.setVisibility(View.VISIBLE);
+        if (mMediaPicker == null) {
+            initMediaPicker(false);
+        }
+
+        getFragmentManagerToUse().beginTransaction().replace(
+                R.id.camera_photo_layout,
+                mMediaPicker,
+                MediaPicker.FRAGMENT_TAG).commit();
+
+        mMediaPicker.open(MediaPicker.MEDIA_TYPE_DEFAULT);
+    }
+
+    private void initMediaPicker(boolean isCamera) {
+        mMediaPicker = new MediaPicker(getActivity(), isCamera);
+        setConversationThemeColor(ConversationDrawables.get().getConversationThemeColor());
+        mMediaPicker.setSubscriptionDataProvider(this);
+        ImmutableBindingRef<DraftMessageData> mDraftDataModel = BindingBase.createBindingReference(mComposeMessageView.getDraftDataModel());
+        mMediaPicker.setDraftMessageDataModel(mDraftDataModel);
+        mMediaPicker.setListener(new MediaPicker.MediaPickerListener() {
+            @Override
+            public void onOpened() {
+                handleStateChange();
+            }
+
+            @Override
+            public void onFullScreenChanged(boolean fullScreen) {
+                // When we're full screen, we want to disable accessibility on the
+                // ComposeMessageView controls (attach button, message input, sim chooser)
+                // that are hiding underneath the action bar.
+                mComposeMessageView.setAccessibility(!fullScreen /*enabled*/);
+                handleStateChange();
+            }
+
+            @Override
+            public void onDismissed() {
+                // Re-enable accessibility on all controls now that the media picker is
+                // going away.
+                mComposeMessageView.setAccessibility(true /*enabled*/);
+                handleStateChange();
+            }
+
+            private void handleStateChange() {
+                mHost.invalidateActionBar();
+            }
+
+            @Override
+            public void onItemsSelected(final Collection<MessagePartData> items,
+                                        final boolean resumeCompose) {
+                mComposeMessageView.onMediaItemsSelected(items);
+                mHost.invalidateActionBar();
+                if (resumeCompose) {
+                    hideMediaPicker();
+                    mComposeMessageView.resumeComposeMessage();
+                }
+            }
+
+            @Override
+            public void onItemUnselected(final MessagePartData item) {
+                mComposeMessageView.onMediaItemsUnselected(item);
+                mHost.invalidateActionBar();
+            }
+
+            @Override
+            public void onConfirmItemSelection() {
+                hideMediaPicker();
+                mComposeMessageView.resumeComposeMessage();
+            }
+
+            @Override
+            public void onPendingItemAdded(final PendingAttachmentData pendingItem) {
+                mComposeMessageView.onPendingAttachmentAdded(pendingItem);
+            }
+
+            @Override
+            public void onChooserSelected(final int chooserIndex) {
+                mHost.invalidateActionBar();
+                mHost.dismissActionMode();
+            }
+        });
+    }
+
+    public void hideMediaPicker() {
+        mMediaLayout.setVisibility(View.GONE);
+        if (mMediaPicker != null) {
+            mMediaPicker.dismiss(false);
+            getFragmentManagerToUse()
+                    .beginTransaction()
+                    .remove(mMediaPicker)
+                    .commit();
+            mMediaPicker = null;
+        }
+    }
+
+    public void setConversationThemeColor(final int themeColor) {
+        if (mMediaPicker != null) {
+            mMediaPicker.setConversationThemeColor(themeColor);
         }
     }
 }

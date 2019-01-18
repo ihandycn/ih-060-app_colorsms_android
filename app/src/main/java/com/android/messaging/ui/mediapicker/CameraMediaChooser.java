@@ -487,6 +487,11 @@ class CameraMediaChooser extends MediaChooser implements
         return 0;
     }
 
+    @Override
+    protected void setHasOptionsMenu() {
+
+    }
+
     /**
      * Returns if the camera is currently ready camera is loaded and not taking a picture.
      * otherwise we should avoid taking another picture, swapping camera or recording video.

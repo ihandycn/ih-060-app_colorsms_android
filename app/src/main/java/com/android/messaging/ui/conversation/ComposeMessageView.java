@@ -126,6 +126,8 @@ public class ComposeMessageView extends LinearLayout
         int overrideCounterColor();
 
         int getAttachmentsClearedFlags();
+
+        boolean isMediaPickerShowing();
     }
 
     public static final int CODEPOINTS_REMAINING_BEFORE_COUNTER_SHOWN = 10;
@@ -1121,6 +1123,10 @@ public class ComposeMessageView extends LinearLayout
             return false;
         }
         return AvatarUriUtil.TYPE_GROUP_URI.equals(AvatarUriUtil.getAvatarType(overridenSelfUri));
+    }
+
+    public boolean isMediaPickerShowing() {
+        return mHost.isMediaPickerShowing();
     }
 
     @Override
