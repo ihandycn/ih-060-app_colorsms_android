@@ -911,7 +911,7 @@ public class BugleNotifications {
         final int requestCode = multiMessageNotificationState.getReplyIntentRequestCode();
         final PendingIntent replyPendingIntent = UIIntents.get()
                 .getPendingIntentForSendingMessageToConversation(context,
-                        conversationId, selfId, requiresMms, requestCode);
+                        conversationId, selfId, requiresMms, requestCode, notificationState.mType);
 
         final int replyLabelRes = requiresMms ? R.string.notification_reply_via_mms :
                 R.string.notification_reply_via_sms;

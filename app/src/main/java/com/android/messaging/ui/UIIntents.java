@@ -104,6 +104,8 @@ public abstract class UIIntents {
 
     public static final String UI_INTENT_EXTRA_SELF_ID = "self_id";
 
+    public static final String UI_INTENT_EXTRA_NOTIFICATION_ID = "notification_id";
+
     // Message position to scroll to.
     public static final String UI_INTENT_EXTRA_MESSAGE_POSITION = "message_position";
 
@@ -332,7 +334,7 @@ public abstract class UIIntents {
      */
     public abstract PendingIntent getPendingIntentForSendingMessageToConversation(
             final Context context, final String conversationId, final String selfId,
-            final boolean requiresMms, final int requestCode);
+            final boolean requiresMms, final int requestCode, final int notificationId);
 
     /**
      * Get a PendingIntent for clearing notifications.
