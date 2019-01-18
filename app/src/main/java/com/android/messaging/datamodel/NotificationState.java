@@ -15,6 +15,7 @@
  */
 package com.android.messaging.datamodel;
 
+import android.app.NotificationChannel;
 import android.app.PendingIntent;
 import android.net.Uri;
 import android.support.v4.app.NotificationCompat;
@@ -62,6 +63,7 @@ public abstract class NotificationState {
 
     public NotificationCompat.Style mNotificationStyle;
     public NotificationCompat.Builder mNotificationBuilder;
+    public NotificationChannel mChannel;
     public boolean mCanceled;
     public int mType;
     public int mBaseRequestCode;
