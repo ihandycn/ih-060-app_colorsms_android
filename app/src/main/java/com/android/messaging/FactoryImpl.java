@@ -19,6 +19,7 @@ package com.android.messaging;
 import android.app.Activity;
 import android.app.Application;
 import android.content.Context;
+import android.os.Build;
 import android.os.Bundle;
 import android.telephony.SmsManager;
 import android.util.SparseArray;
@@ -47,8 +48,10 @@ import com.android.messaging.util.MediaUtilImpl;
 import com.android.messaging.util.OsUtil;
 import com.android.messaging.util.PhoneUtils;
 import com.messagecenter.notification.NotificationMessageAlertActivity;
+import com.superapps.util.Compats;
 import com.superapps.util.Threads;
 
+import java.lang.reflect.Field;
 import java.util.concurrent.ConcurrentHashMap;
 
 class FactoryImpl extends Factory {
@@ -80,7 +83,7 @@ class FactoryImpl extends Factory {
     }
 
     public static Factory register(final Context applicationContext,
-            final BugleApplication application) {
+                                   final BugleApplication application) {
         // This only gets called once (from BugleApplication.onCreate), but its not called in tests.
         Assert.isTrue(!sRegistered);
         Assert.isNull(Factory.get());
@@ -143,13 +146,21 @@ class FactoryImpl extends Factory {
 
             @Override
             public void onActivityDestroyed(Activity activity) {
+                try {
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && Compats.IS_SAMSUNG_DEVICE) {
+                        Object systemService = applicationContext.getSystemService(Class.forName("com.samsung.android.content.clipboard.SemClipboardManager"));
+                        Field mContext = systemService.getClass().getDeclaredField("mContext");
+                        mContext.setAccessible(true);
+                        mContext.set(systemService, null);
+                    }
+                } catch (ClassNotFoundException | NoSuchFieldException | IllegalAccessException e) { //ignored
 
+                }
             }
         });
 
         Assert.initializeGservices(factory.mBugleGservices);
         LogUtil.initializeGservices(factory.mBugleGservices);
-
 
         if (PhoneUtils.getDefault().isDefaultSmsApp()) {
             factory.onDefaultSmsSet();
