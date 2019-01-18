@@ -742,5 +742,9 @@ public class MediaPicker extends Fragment implements DraftMessageSubscriptionDat
         if (mSelectedChooser != null) {
             mSelectedChooser.onRequestPermissionsResult(requestCode, permissions, grantResults);
         }
+
+        if (mMediaPickerPanel != null){
+            mMediaPickerPanel.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        }
     }
 }

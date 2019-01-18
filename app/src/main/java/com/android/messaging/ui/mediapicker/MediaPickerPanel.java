@@ -18,10 +18,9 @@ package com.android.messaging.ui.mediapicker;
 
 import android.Manifest;
 import android.content.Context;
+import android.content.pm.PackageManager;
 import android.content.res.Resources;
-import android.os.Build;
 import android.os.Handler;
-import android.support.annotation.RequiresApi;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
@@ -113,10 +112,7 @@ public class MediaPickerPanel extends ViewGroup {
                 requestCameraPermission();
                 return;
             }
-            mViewPager.setCurrentItem(0, false);
-            setFullScreenView(true, false);
-            mMediaButtons.setVisibility(View.GONE);
-            BugleAnalytics.logEvent("SMS_DetailsPage_Plus_Camera", true);
+            expandToCamera();
         });
         mMediaButtons.findViewById(R.id.media_photo).setOnClickListener(v -> {
             mMediaPicker.setSelectedChooser(1);
@@ -124,11 +120,7 @@ public class MediaPickerPanel extends ViewGroup {
                 requestStoragePermission();
                 return;
             }
-            mViewPager.setCurrentItem(1, false);
-            setFullScreenView(true, false);
-            HSGlobalNotificationCenter.sendNotification(ConversationFragment.EVENT_HIDE_OPTION_MENU);
-            mMediaButtons.setVisibility(View.GONE);
-            BugleAnalytics.logEvent("SMS_DetailsPage_Plus_Photo", true);
+            expandToGallery();
         });
         mMediaButtons.findViewById(R.id.media_voice).setOnClickListener(v -> {
             mMediaPicker.setSelectedChooser(2);
@@ -164,20 +156,41 @@ public class MediaPickerPanel extends ViewGroup {
         });
     }
 
+    private void expandToCamera() {
+        mViewPager.setCurrentItem(0, false);
+        setFullScreenView(true, false);
+        mMediaButtons.setVisibility(View.GONE);
+        BugleAnalytics.logEvent("SMS_DetailsPage_Plus_Camera", true);
+    }
+
+    private void expandToGallery() {
+        mViewPager.setCurrentItem(1, false);
+        setFullScreenView(true, false);
+        HSGlobalNotificationCenter.sendNotification(ConversationFragment.EVENT_HIDE_OPTION_MENU);
+        mMediaButtons.setVisibility(View.GONE);
+        BugleAnalytics.logEvent("SMS_DetailsPage_Plus_Photo", true);
+    }
+
     private void requestCameraPermission() {
-        mMediaPicker.requestPermissions(new String[]{Manifest.permission.CAMERA},
-                MediaPicker.CAMERA_PERMISSION_REQUEST_CODE);
+        if (OsUtil.isAtLeastM()) {
+            mMediaPicker.requestPermissions(new String[]{Manifest.permission.CAMERA},
+                    MediaPicker.CAMERA_PERMISSION_REQUEST_CODE);
+        }
     }
 
     private void requestStoragePermission() {
-        mMediaPicker.requestPermissions(
-                new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},
-                MediaPicker.GALLERY_PERMISSION_REQUEST_CODE);
+        if (OsUtil.isAtLeastM()) {
+            mMediaPicker.requestPermissions(
+                    new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},
+                    MediaPicker.GALLERY_PERMISSION_REQUEST_CODE);
+        }
     }
 
     private void requestRecordAudioPermission() {
-        mMediaPicker.requestPermissions(new String[]{Manifest.permission.RECORD_AUDIO},
-                MediaPicker.RECORD_AUDIO_PERMISSION_REQUEST_CODE);
+        if (OsUtil.isAtLeastM()) {
+            mMediaPicker.requestPermissions(new String[]{Manifest.permission.RECORD_AUDIO},
+                    MediaPicker.RECORD_AUDIO_PERMISSION_REQUEST_CODE);
+        }
     }
 
     @Override
@@ -549,6 +562,24 @@ public class MediaPickerPanel extends ViewGroup {
             mMovedDown = false;
             mCanChildViewSwipeDown = false;
             updateViewPager();
+        }
+    }
+
+    protected void onRequestPermissionsResult(
+            final int requestCode, final String permissions[], final int[] grantResults) {
+        if (permissions.length == 0 || grantResults.length == 0) {
+            return;
+        }
+        if (MediaPicker.CAMERA_PERMISSION_REQUEST_CODE == requestCode) {
+            final boolean permissionGranted = grantResults[0] == PackageManager.PERMISSION_GRANTED;
+            if (permissionGranted) {
+                expandToCamera();
+            }
+        } else if (MediaPicker.GALLERY_PERMISSION_REQUEST_CODE == requestCode) {
+            final boolean permissionGranted = grantResults[0] == PackageManager.PERMISSION_GRANTED;
+            if (permissionGranted) {
+                expandToGallery();
+            }
         }
     }
 }
