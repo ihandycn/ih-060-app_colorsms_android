@@ -1615,7 +1615,7 @@ public class ConversationFragment extends Fragment implements ConversationDataLi
         getFragmentManagerToUse().beginTransaction().replace(
                 R.id.camera_photo_layout,
                 mMediaPicker,
-                MediaPicker.FRAGMENT_TAG).commit();
+                MediaPicker.FRAGMENT_TAG).commitAllowingStateLoss();
 
         mMediaPicker.open(MediaPicker.MEDIA_TYPE_DEFAULT);
     }
@@ -1632,7 +1632,7 @@ public class ConversationFragment extends Fragment implements ConversationDataLi
         getFragmentManagerToUse().beginTransaction().replace(
                 R.id.camera_photo_layout,
                 mMediaPicker,
-                MediaPicker.FRAGMENT_TAG).commit();
+                MediaPicker.FRAGMENT_TAG).commitAllowingStateLoss();
 
         mMediaPicker.open(MediaPicker.MEDIA_TYPE_DEFAULT);
     }

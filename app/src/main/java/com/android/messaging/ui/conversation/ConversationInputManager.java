@@ -38,11 +38,14 @@ import com.android.messaging.ui.emoji.EmojiPickerFragment;
 import com.android.messaging.ui.emoji.EmojiType;
 import com.android.messaging.ui.mediapicker.MediaPickerFragment;
 import com.android.messaging.util.Assert;
+import com.android.messaging.util.BugleAnalytics;
 import com.android.messaging.util.ImeUtil;
 import com.android.messaging.util.ImeUtil.ImeStateHost;
 import com.google.common.annotations.VisibleForTesting;
 
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 /**
  * Manages showing/hiding/persisting different mutually exclusive UI components nested in
@@ -405,15 +408,28 @@ public class ConversationInputManager implements ConversationInput.ConversationI
                 return;
             }
             mMediaPicker = mHost.createMediaPicker();
-            mMediaPicker.setOnMediaItemClickListener(new MediaPickerFragment.OnMediaItemClickListener() {
+            mMediaPicker.setSubscriptionDataProvider(mHost);
+            mMediaPicker.setOnMediaItemClickListener(new MediaPickerFragment.OnMediaItemListener() {
                 @Override
                 public void showCamera() {
+                    BugleAnalytics.logEvent("SMS_DetailsPage_Plus_Camera", true);
                     mHost.showCamera();
                 }
 
                 @Override
                 public void showPhoto() {
+                    BugleAnalytics.logEvent("SMS_DetailsPage_Plus_Photo", true);
                     mHost.showPhoto();
+                }
+
+                @Override
+                public void onAudioRecorded(MessagePartData item) {
+                    final List<MessagePartData> items = new ArrayList<MessagePartData>(1);
+                    items.add(item);
+                    mSink.onMediaItemsSelected(items);
+
+                    mHost.invalidateActionBar();
+                    mSink.resumeComposeMessage();
                 }
             });
         }
