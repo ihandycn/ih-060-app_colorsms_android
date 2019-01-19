@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 
 import com.android.messaging.R;
 import com.android.messaging.ui.emoji.utils.EmojiConfig;
+import com.superapps.util.Threads;
 
 import java.util.List;
 
@@ -18,6 +19,7 @@ public class StickerItemRecyclerAdapter extends BaseStickerItemRecyclerAdapter {
     private int mMagicPreloadCount;
     private int mPositionInViewPager;
     private EmojiPackagePagerAdapter.OnEmojiClickListener mOnEmojiClickListener;
+    private boolean mCouldClickSticker = true;
 
     StickerItemRecyclerAdapter(int position, List<BaseEmojiInfo> data, EmojiPackagePagerAdapter.OnEmojiClickListener emojiClickListener) {
         mPositionInViewPager = position;
@@ -46,6 +48,11 @@ public class StickerItemRecyclerAdapter extends BaseStickerItemRecyclerAdapter {
         bindStickerInfo(stickerHolder, stickerInfo);
 
         stickerHolder.stickerImageView.setOnClickListener(v -> {
+            if (!mCouldClickSticker) {
+                return;
+            }
+            mCouldClickSticker = false;
+            Threads.postOnMainThreadDelayed(() -> mCouldClickSticker = true, 200);
             switch (stickerInfo.mEmojiType) {
                 case STICKER_IMAGE:
                 case STICKER_GIF:
