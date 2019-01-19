@@ -75,7 +75,6 @@ public class ConversationListItemView extends FrameLayout implements OnClickList
     private Typeface mSnippetTypeface;
     private static String sPlusOneString;
     private static String sPlusNString;
-    private Boolean mIsReadBefore;
 
     public interface HostInterface {
         boolean isConversationSelected(final String conversationId);
@@ -229,14 +228,7 @@ public class ConversationListItemView extends FrameLayout implements OnClickList
     }
 
     private void setContactImage() {
-
-        if (mIsReadBefore != null && mData.getIsRead() == mIsReadBefore) {
-            return;
-        }
-
-        mIsReadBefore = mData.getIsRead();
         Uri iconUri = null;
-
         String imgUri = mData.getIcon();
         int contactIconBackgroundColor;
         if (mData.getIsRead()) {
