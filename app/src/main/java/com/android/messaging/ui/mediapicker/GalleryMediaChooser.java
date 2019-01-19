@@ -59,8 +59,7 @@ class GalleryMediaChooser extends MediaChooser implements
 
     @Override
     public View destroyView() {
-        mGalleryGridView.setAdapter(null);
-        mGalleryGridView.setHostInterface(null);
+        mGalleryGridView.onDestroy();
         mAdapter.setHostInterface(null);
         // The loader is started only if startMediaPickerDataLoader() is called
         if (OsUtil.hasStoragePermission()) {
@@ -129,8 +128,7 @@ class GalleryMediaChooser extends MediaChooser implements
         mGalleryGridView = (GalleryGridView) view.findViewById(R.id.gallery_grid_view);
         mAdapter.setHostInterface(mGalleryGridView);
         mGalleryGridView.setAdapter(mAdapter);
-        mGalleryGridView.setHostInterface(this);
-        mGalleryGridView.setDraftMessageDataModel(mMediaPicker.getDraftMessageDataModel());
+        mGalleryGridView.setDraftMessageDataModel(mMediaPicker.getDraftMessageDataModel(), this);
         if (OsUtil.hasStoragePermission()) {
             startMediaPickerDataLoader();
         }
@@ -167,7 +165,7 @@ class GalleryMediaChooser extends MediaChooser implements
 
     @Override
     public void onMediaPickerDataUpdated(final MediaPickerData mediaPickerData, final Object data,
-            final int loaderId) {
+                                         final int loaderId) {
         mBindingRef.ensureBound(mediaPickerData);
         Assert.equals(MediaPickerData.GALLERY_IMAGE_LOADER, loaderId);
         Cursor rawCursor = null;
@@ -178,9 +176,9 @@ class GalleryMediaChooser extends MediaChooser implements
         // with an extra item for document picker integration in the front.
         final MatrixCursor specialItemsCursor =
                 new MatrixCursor(GalleryGridItemData.SPECIAL_ITEM_COLUMNS);
-        specialItemsCursor.addRow(new Object[] { GalleryGridItemData.ID_DOCUMENT_PICKER_ITEM });
+        specialItemsCursor.addRow(new Object[]{GalleryGridItemData.ID_DOCUMENT_PICKER_ITEM});
         final MergeCursor cursor =
-                new MergeCursor(new Cursor[] { specialItemsCursor, rawCursor });
+                new MergeCursor(new Cursor[]{specialItemsCursor, rawCursor});
         mAdapter.swapCursor(cursor);
     }
 
@@ -198,7 +196,7 @@ class GalleryMediaChooser extends MediaChooser implements
         super.setSelected(selected);
         if (selected && !OsUtil.hasStoragePermission()) {
             mMediaPicker.requestPermissions(
-                    new String[] { Manifest.permission.READ_EXTERNAL_STORAGE },
+                    new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},
                     MediaPicker.GALLERY_PERMISSION_REQUEST_CODE);
         }
     }

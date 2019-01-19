@@ -70,16 +70,16 @@ public class DraftMessageData extends BindableData implements ReadDraftDataActio
     }
 
     // Flags sent to onDraftChanged to help the receiver limit the amount of work done
-    public static int ATTACHMENTS_CHANGED  =     0x0001;
-    public static int MESSAGE_TEXT_CHANGED =     0x0002;
-    public static int MESSAGE_SUBJECT_CHANGED =  0x0004;
+    public static int ATTACHMENTS_CHANGED = 0x0001;
+    public static int MESSAGE_TEXT_CHANGED = 0x0002;
+    public static int MESSAGE_SUBJECT_CHANGED = 0x0004;
     // Whether the self participant data has been loaded
-    public static int SELF_CHANGED =             0x0008;
-    public static int ALL_CHANGED =              0x00FF;
+    public static int SELF_CHANGED = 0x0008;
+    public static int ALL_CHANGED = 0x00FF;
     // ALL_CHANGED intentionally doesn't include WIDGET_CHANGED. ConversationFragment needs to
     // be notified if the draft it is looking at is changed externally (by a desktop widget) so it
     // can reload the draft.
-    public static int WIDGET_CHANGED  =          0x0100;
+    public static int WIDGET_CHANGED = 0x0100;
 
     private final String mConversationId;
     private ReadDraftDataActionMonitor mMonitor;
@@ -94,25 +94,37 @@ public class DraftMessageData extends BindableData implements ReadDraftDataActio
     private MessageTextStats mMessageTextStats;
     private boolean mSending;
 
-    /** Keeps track of completed attachments in the message draft. This data is persisted to db */
+    /**
+     * Keeps track of completed attachments in the message draft. This data is persisted to db
+     */
     private final List<MessagePartData> mAttachments;
 
-    /** A read-only wrapper on mAttachments surfaced to the UI layer for rendering */
+    /**
+     * A read-only wrapper on mAttachments surfaced to the UI layer for rendering
+     */
     private final List<MessagePartData> mReadOnlyAttachments;
 
-    /** Keeps track of pending attachments that are being loaded. The pending attachments are
+    /**
+     * Keeps track of pending attachments that are being loaded. The pending attachments are
      * transient, because they are not persisted to the database and are dropped once we go
-     * to the background (after the UI calls saveToStorage) */
+     * to the background (after the UI calls saveToStorage)
+     */
     private final List<PendingAttachmentData> mPendingAttachments;
 
-    /** A read-only wrapper on mPendingAttachments surfaced to the UI layer for rendering */
+    /**
+     * A read-only wrapper on mPendingAttachments surfaced to the UI layer for rendering
+     */
     private final List<PendingAttachmentData> mReadOnlyPendingAttachments;
 
-    /** Is the current draft a cached copy of what's been saved to the database. If so, we
-     * may skip loading from database if we are still bound */
+    /**
+     * Is the current draft a cached copy of what's been saved to the database. If so, we
+     * may skip loading from database if we are still bound
+     */
     private boolean mIsDraftCachedCopy;
 
-    /** Whether we are currently asynchronously validating the draft before sending. */
+    /**
+     * Whether we are currently asynchronously validating the draft before sending.
+     */
     private CheckDraftForSendTask mCheckDraftForSendTask;
 
     public DraftMessageData(final String conversationId) {
@@ -127,6 +139,12 @@ public class DraftMessageData extends BindableData implements ReadDraftDataActio
 
     public void addListener(final DraftMessageDataListener listener) {
         mListeners.add(listener);
+    }
+
+    public void removeListener(final DraftMessageDataListener listener) {
+        if (mListeners != null) {
+            mListeners.remove(listener);
+        }
     }
 
     public void setSubscriptionDataProvider(final DraftMessageSubscriptionDataProvider provider) {
@@ -175,7 +193,7 @@ public class DraftMessageData extends BindableData implements ReadDraftDataActio
      * Create a MessageData object containing a copy of all the parts in this DraftMessageData.
      *
      * @param clearLocalCopy whether we should clear out the in-memory copy of the parts. If we
-     *        are simply pausing/resuming and not sending the message, then we can keep
+     *                       are simply pausing/resuming and not sending the message, then we can keep
      * @return the MessageData for the draft, null if self id is not set
      */
     public MessageData createMessageWithCurrentAttachments(final boolean clearLocalCopy) {
@@ -335,6 +353,7 @@ public class DraftMessageData extends BindableData implements ReadDraftDataActio
     /**
      * Try to add one attachment to the attachment list, while guarding against duplicates and
      * going over the limit.
+     *
      * @return true if the attachment limit was reached, false otherwise
      */
     private boolean addOneAttachmentNoNotify(final MessagePartData attachment) {
@@ -351,7 +370,7 @@ public class DraftMessageData extends BindableData implements ReadDraftDataActio
     }
 
     private void addAttachment(final MessagePartData attachment,
-            final PendingAttachmentData pendingAttachment) {
+                               final PendingAttachmentData pendingAttachment) {
         if (attachment != null && attachment.isSinglePartOnly()) {
             // clear any existing attachments because the attachment we're adding can only
             // exist by itself.
@@ -390,7 +409,7 @@ public class DraftMessageData extends BindableData implements ReadDraftDataActio
     }
 
     public void addPendingAttachment(final PendingAttachmentData pendingAttachment,
-            final BindingBase<DraftMessageData> binding) {
+                                     final BindingBase<DraftMessageData> binding) {
         final boolean reachedLimit = addOnePendingAttachmentNoNotify(pendingAttachment,
                 binding.getBindingId());
         if (reachedLimit) {
@@ -402,10 +421,11 @@ public class DraftMessageData extends BindableData implements ReadDraftDataActio
     /**
      * Try to add one pending attachment, while guarding against duplicates and
      * going over the limit.
+     *
      * @return true if the attachment limit was reached, false otherwise
      */
     private boolean addOnePendingAttachmentNoNotify(final PendingAttachmentData pendingAttachment,
-            final String bindingId) {
+                                                    final String bindingId) {
         final boolean reachedLimit = getAttachmentCount() >= getAttachmentLimit();
         if (reachedLimit || containsAttachment(pendingAttachment.getContentUri())) {
             // Never go over the limit. Never add duplicated attachments.
@@ -503,7 +523,7 @@ public class DraftMessageData extends BindableData implements ReadDraftDataActio
     }
 
     public void updatePendingAttachment(final MessagePartData updatedAttachment,
-            final PendingAttachmentData pendingAttachment) {
+                                        final PendingAttachmentData pendingAttachment) {
         for (final PendingAttachmentData existingAttachment : mPendingAttachments) {
             if (existingAttachment.getContentUri().equals(pendingAttachment.getContentUri())) {
                 mPendingAttachments.remove(pendingAttachment);
@@ -524,8 +544,9 @@ public class DraftMessageData extends BindableData implements ReadDraftDataActio
 
     /**
      * Remove the attachments from the draft and notify any listeners.
+     *
      * @param flags typically this will be ATTACHMENTS_CHANGED. When attachments are cleared in a
-     * widget, flags will also contain WIDGET_CHANGED.
+     *              widget, flags will also contain WIDGET_CHANGED.
      */
     public void clearAttachments(final int flags) {
         destroyAttachments();
@@ -541,7 +562,7 @@ public class DraftMessageData extends BindableData implements ReadDraftDataActio
     }
 
     public boolean loadFromStorage(final BindingBase<DraftMessageData> binding,
-            final MessageData optionalIncomingDraft, boolean clearLocalDraft) {
+                                   final MessageData optionalIncomingDraft, boolean clearLocalDraft) {
         LogUtil.d(LogUtil.BUGLE_TAG, "DraftMessageData: "
                 + (optionalIncomingDraft == null ? "loading" : "setting")
                 + " for conversationId=" + mConversationId);
@@ -576,7 +597,7 @@ public class DraftMessageData extends BindableData implements ReadDraftDataActio
         // If self id is null then we'll not attempt to change the conversation's self id.
         final MessageData message = createMessageWithCurrentAttachments(false /* clearLocalCopy */);
         // Before writing message to db ensure the caller is bound to us (and knows the id)
-        if (isBound(binding.getBindingId())){
+        if (isBound(binding.getBindingId())) {
             WriteDraftMessageAction.writeDraftMessage(mConversationId, message);
         }
     }
@@ -587,7 +608,7 @@ public class DraftMessageData extends BindableData implements ReadDraftDataActio
      * the message data with a self Id through which the message will be sent.
      *
      * @param binding the binding object from our consumer. We need to make sure we are still bound
-     *        to that binding before saving to storage.
+     *                to that binding before saving to storage.
      */
     public MessageData prepareMessageForSending(final BindingBase<DraftMessageData> binding) {
         // We can't send the message while there's still stuff pending.
@@ -608,7 +629,7 @@ public class DraftMessageData extends BindableData implements ReadDraftDataActio
 
     @Override // ReadDraftMessageActionListener.onReadDraftMessageSucceeded
     public void onReadDraftDataSucceeded(final ReadDraftDataAction action, final Object data,
-            final MessageData message, final ConversationListItemData conversation) {
+                                         final MessageData message, final ConversationListItemData conversation) {
         final String bindingId = (String) data;
 
         // Before passing draft message on to ui ensure the data is bound to the same bindingid
@@ -638,6 +659,7 @@ public class DraftMessageData extends BindableData implements ReadDraftDataActio
 
     /**
      * Check if Bugle is default sms app
+     *
      * @return
      */
     public boolean getIsDefaultSmsApp() {
@@ -697,17 +719,17 @@ public class DraftMessageData extends BindableData implements ReadDraftDataActio
     }
 
     public void checkDraftForAction(final boolean checkMessageSize, final int selfSubId,
-            final CheckDraftTaskCallback callback, final Binding<DraftMessageData> binding) {
+                                    final CheckDraftTaskCallback callback, final Binding<DraftMessageData> binding) {
         new CheckDraftForSendTask(checkMessageSize, selfSubId, callback, binding)
-            .executeOnThreadPool((Void) null);
+                .executeOnThreadPool((Void) null);
     }
 
     /**
      * Allows us to have multiple data listeners for DraftMessageData
      */
     private class DraftMessageDataEventDispatcher
-        extends ArrayList<DraftMessageDataListener>
-        implements DraftMessageDataListener {
+            extends ArrayList<DraftMessageDataListener>
+            implements DraftMessageDataListener {
 
         @Override
         @RunsOnMainThread
@@ -756,7 +778,7 @@ public class DraftMessageData extends BindableData implements ReadDraftDataActio
         private int mPreExecuteResult = RESULT_PASSED;
 
         public CheckDraftForSendTask(final boolean checkMessageSize, final int selfSubId,
-                final CheckDraftTaskCallback callback, final Binding<DraftMessageData> binding) {
+                                     final CheckDraftTaskCallback callback, final Binding<DraftMessageData> binding) {
             mCheckMessageSize = checkMessageSize;
             mSelfSubId = selfSubId;
             mCallback = callback;
@@ -831,6 +853,7 @@ public class DraftMessageData extends BindableData implements ReadDraftDataActio
          * 1. Check if the draft message contains too many attachments to send
          * 2. Computes the minimum size that this message could be compressed/downsampled/encoded
          * before sending and check if it meets the carrier max size for sending.
+         *
          * @see MessagePartData#getMinimumSizeInBytesForSending()
          */
         @DoesNotRunOnMainThread

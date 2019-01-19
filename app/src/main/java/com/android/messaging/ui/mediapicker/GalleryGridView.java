@@ -56,9 +56,13 @@ public class GalleryGridView extends MediaPickerGridView implements
      */
     public interface GalleryGridViewListener {
         void onDocumentPickerItemClicked();
+
         void onItemSelected(MessagePartData item);
+
         void onItemUnselected(MessagePartData item);
+
         void onConfirmSelection();
+
         void onUpdate();
     }
 
@@ -74,20 +78,27 @@ public class GalleryGridView extends MediaPickerGridView implements
         mSelectedImages = new ArrayMap<Uri, MessagePartData>();
     }
 
-    public void setHostInterface(final GalleryGridViewListener hostInterface) {
+    public void setDraftMessageDataModel(final BindingBase<DraftMessageData> dataModel, final GalleryGridViewListener hostInterface) {
         mListener = hostInterface;
-    }
-
-    public void setDraftMessageDataModel(final BindingBase<DraftMessageData> dataModel) {
         mDraftMessageDataModel = BindingBase.createBindingReference(dataModel);
         mDraftMessageDataModel.getData().addListener(this);
     }
 
+    public void onDestroy() {
+        setAdapter(null);
+        if (mDraftMessageDataModel != null) {
+            mDraftMessageDataModel.getData().removeListener(this);
+        }
+        mListener = null;
+    }
+
     @Override
     public void onItemClicked(final View view, final GalleryGridItemData data,
-            final boolean longClick) {
+                              final boolean longClick) {
         if (data.isDocumentPickerItem()) {
-            mListener.onDocumentPickerItemClicked();
+            if (mListener != null) {
+                mListener.onDocumentPickerItemClicked();
+            }
         } else if (ContentType.isMediaType(data.getContentType())) {
             if (longClick) {
                 // Turn on multi-select mode when an item is long-pressed.
@@ -98,7 +109,7 @@ public class GalleryGridView extends MediaPickerGridView implements
             view.getGlobalVisibleRect(startRect);
             if (isMultiSelectEnabled()) {
                 toggleItemSelection(startRect, data);
-            } else {
+            } else if (mListener != null) {
                 mListener.onItemSelected(data.constructMessagePartData(startRect));
             }
         } else {
@@ -125,7 +136,9 @@ public class GalleryGridView extends MediaPickerGridView implements
         Assert.isTrue(isMultiSelectEnabled());
         if (isItemSelected(data)) {
             final MessagePartData item = mSelectedImages.remove(data.getImageUri());
-            mListener.onItemUnselected(item);
+            if (mListener != null) {
+                mListener.onItemUnselected(item);
+            }
             if (mSelectedImages.size() == 0) {
                 // No image is selected any more, turn off multi-select mode.
                 setMultiSelectEnabled(false);
@@ -133,7 +146,9 @@ public class GalleryGridView extends MediaPickerGridView implements
         } else {
             final MessagePartData item = data.constructMessagePartData(startRect);
             mSelectedImages.put(data.getImageUri(), item);
-            mListener.onItemSelected(item);
+            if (mListener != null) {
+                mListener.onItemSelected(item);
+            }
         }
         invalidateViews();
     }
@@ -173,7 +188,9 @@ public class GalleryGridView extends MediaPickerGridView implements
 
             case R.id.action_confirm_multiselect:
                 Assert.isTrue(!canToggleMultiSelect());
-                mListener.onConfirmSelection();
+                if (mListener != null) {
+                    mListener.onConfirmSelection();
+                }
                 return true;
         }
         return false;
@@ -217,7 +234,9 @@ public class GalleryGridView extends MediaPickerGridView implements
         }
 
         if (changed) {
-            mListener.onUpdate();
+            if (mListener != null){
+                mListener.onUpdate();
+            }
             invalidateViews();
         }
     }
@@ -302,14 +321,15 @@ public class GalleryGridView extends MediaPickerGridView implements
 
         public static final Parcelable.Creator<SavedState> CREATOR =
                 new Parcelable.Creator<SavedState>() {
-            @Override
-            public SavedState createFromParcel(final Parcel in) {
-                return new SavedState(in);
-            }
-            @Override
-            public SavedState[] newArray(final int size) {
-                return new SavedState[size];
-            }
-        };
+                    @Override
+                    public SavedState createFromParcel(final Parcel in) {
+                        return new SavedState(in);
+                    }
+
+                    @Override
+                    public SavedState[] newArray(final int size) {
+                        return new SavedState[size];
+                    }
+                };
     }
 }
