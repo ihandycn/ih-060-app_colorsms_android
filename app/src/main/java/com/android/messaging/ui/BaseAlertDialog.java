@@ -1,15 +1,17 @@
 package com.android.messaging.ui;
 
 import android.annotation.SuppressLint;
-import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.res.Resources;
+import android.os.Build;
 import android.support.annotation.StringRes;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.FrameLayout;
 import android.widget.TextView;
 
@@ -122,9 +124,18 @@ public class BaseAlertDialog {
         @SuppressLint("InflateParams") View layout = inflater.inflate(R.layout.layout_base_dialog, null);
         Resources resources = builder.context.getResources();
 
-        Dialog dialog = new AlertDialog.Builder(builder.context, R.style.DefaultCompatDialog).
-                setView(layout).
-                setCancelable(true).create();
+        Dialog dialog = new Dialog(builder.context, R.style.BaseDialogTheme);
+        dialog.setCancelable(true);
+        dialog.setContentView(layout);
+        Window window = dialog.getWindow();
+
+        if (window != null) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                window.setStatusBarColor(0x00000000);
+            } else {
+                window.addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+            }
+        }
 
         this.dialog = dialog;
 
