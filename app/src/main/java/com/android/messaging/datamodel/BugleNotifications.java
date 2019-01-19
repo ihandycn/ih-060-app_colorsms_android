@@ -18,6 +18,7 @@ package com.android.messaging.datamodel;
 
 import android.app.Notification;
 import android.app.NotificationChannel;
+import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
@@ -1242,6 +1243,17 @@ public class BugleNotifications {
                 .setContentIntent(destinationIntent)
                 .setSound(UriUtil.getUriForResourceId(context, R.raw.message_failure));
         Notifications.notifySafely(PendingIntentConstants.MSG_SEND_ERROR, builder.build(), getSmsNotificationChannel());
+    }
+
+    public static void cancelSmsNotifications() {
+        try {
+            final NotificationManager notificationManager = (NotificationManager) Factory.get().getApplicationContext().getSystemService(Context.NOTIFICATION_SERVICE);
+            notificationManager.cancel(PendingIntentConstants.SMS_NOTIFICATION_ID);
+            if (OsUtil.isAtLeastO()) {
+                notificationManager.deleteNotificationChannel(PendingIntentConstants.SMS_NOTIFICATION_CHANNEL_ID);
+            }
+        } catch (Exception e) {
+        }
     }
 }
 

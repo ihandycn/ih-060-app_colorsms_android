@@ -42,6 +42,7 @@ import android.widget.ImageView;
 
 import com.android.messaging.R;
 import com.android.messaging.annotation.VisibleForAnimation;
+import com.android.messaging.datamodel.BugleNotifications;
 import com.android.messaging.datamodel.DataModel;
 import com.android.messaging.datamodel.binding.Binding;
 import com.android.messaging.datamodel.binding.BindingBase;
@@ -141,6 +142,7 @@ public class ConversationListFragment extends Fragment implements ConversationLi
         setScrolledToNewestConversationIfNeeded();
 
         updateUi();
+        BugleNotifications.cancelSmsNotifications();
     }
 
     public void setScrolledToNewestConversationIfNeeded() {
