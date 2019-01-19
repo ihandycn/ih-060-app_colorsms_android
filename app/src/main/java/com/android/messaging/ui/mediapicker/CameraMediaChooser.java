@@ -48,7 +48,6 @@ import com.android.messaging.util.UiUtils;
 class CameraMediaChooser extends MediaChooser implements
         CameraManager.CameraManagerListener {
     private CameraPreview.CameraPreviewHost mCameraPreviewHost;
-    private ImageButton mFullScreenButton;
     private ImageButton mSwapCameraButton;
     private ImageButton mSwapModeButton;
     private ImageButton mCaptureButton;
@@ -59,16 +58,16 @@ class CameraMediaChooser extends MediaChooser implements
     private View mEnabledView;
     private View mMissingPermissionView;
 
-    CameraMediaChooser(final MediaPicker mediaPicker) {
-        super(mediaPicker);
+    CameraMediaChooser(final CameraGalleryFragment cameraGalleryFragment) {
+        super(cameraGalleryFragment);
     }
 
     @Override
     public int getSupportedMediaTypes() {
         if (CameraManager.get().hasAnyCamera()) {
-            return MediaPicker.MEDIA_TYPE_IMAGE | MediaPicker.MEDIA_TYPE_VIDEO;
+            return CameraGalleryFragment.MEDIA_TYPE_IMAGE | CameraGalleryFragment.MEDIA_TYPE_VIDEO;
         } else {
-            return MediaPicker.MEDIA_TYPE_NONE;
+            return CameraGalleryFragment.MEDIA_TYPE_NONE;
         }
     }
 
@@ -108,13 +107,6 @@ class CameraMediaChooser extends MediaChooser implements
 
         final View shutterVisual = view.findViewById(R.id.camera_shutter_visual);
 
-        mFullScreenButton = (ImageButton) view.findViewById(R.id.camera_fullScreen_button);
-        mFullScreenButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(final View view) {
-                mMediaPicker.setFullScreen(true);
-            }
-        });
 
         mSwapCameraButton = (ImageButton) view.findViewById(R.id.camera_swapCamera_button);
         mSwapCameraButton.setOnClickListener(new View.OnClickListener() {
@@ -128,7 +120,7 @@ class CameraMediaChooser extends MediaChooser implements
         mCaptureButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(final View v) {
-                final float heightPercent = Math.min(mMediaPicker.getViewPager().getHeight() /
+                final float heightPercent = Math.min(mCameraGalleryFragment.getViewPager().getHeight() /
                         (float) mCameraPreviewHost.getView().getHeight(), 1);
 
                 if (CameraManager.get().isRecording()) {
@@ -150,7 +142,7 @@ class CameraMediaChooser extends MediaChooser implements
                                 if (mView != null) {
                                     mView.getGlobalVisibleRect(startRect);
                                 }
-                                mMediaPicker.dispatchItemsSelected(
+                                mCameraGalleryFragment.dispatchItemsSelected(
                                         new MediaPickerMessagePartData(startRect, contentType,
                                                 uriToVideo, width, height),
                                         true /* dismissMediaPicker */);
@@ -205,7 +197,7 @@ class CameraMediaChooser extends MediaChooser implements
             public void onClick(final View view) {
                 mVideoCancelled = true;
                 CameraManager.get().stopVideo();
-                mMediaPicker.dismiss(true);
+                mCameraGalleryFragment.dismiss(true);
             }
         });
 
@@ -278,13 +270,13 @@ class CameraMediaChooser extends MediaChooser implements
     }
 
     private void requestCameraPermission() {
-        mMediaPicker.requestPermissions(new String[]{Manifest.permission.CAMERA},
-                MediaPicker.CAMERA_PERMISSION_REQUEST_CODE);
+        mCameraGalleryFragment.requestPermissions(new String[]{Manifest.permission.CAMERA},
+                CameraGalleryFragment.CAMERA_PERMISSION_REQUEST_CODE);
     }
 
     private void requestRecordAudioPermission() {
-        mMediaPicker.requestPermissions(new String[]{Manifest.permission.RECORD_AUDIO},
-                MediaPicker.RECORD_AUDIO_PERMISSION_REQUEST_CODE);
+        mCameraGalleryFragment.requestPermissions(new String[]{Manifest.permission.RECORD_AUDIO},
+                CameraGalleryFragment.RECORD_AUDIO_PERMISSION_REQUEST_CODE);
     }
 
     @Override
@@ -294,13 +286,13 @@ class CameraMediaChooser extends MediaChooser implements
             return;
         }
 
-        if (requestCode == MediaPicker.CAMERA_PERMISSION_REQUEST_CODE) {
+        if (requestCode == CameraGalleryFragment.CAMERA_PERMISSION_REQUEST_CODE) {
             final boolean permissionGranted = grantResults[0] == PackageManager.PERMISSION_GRANTED;
             updateForPermissionState(permissionGranted);
             if (permissionGranted && mCameraPreviewHost != null) {
                 mCameraPreviewHost.onCameraPermissionGranted();
             }
-        } else if (requestCode == MediaPicker.RECORD_AUDIO_PERMISSION_REQUEST_CODE) {
+        } else if (requestCode == CameraGalleryFragment.RECORD_AUDIO_PERMISSION_REQUEST_CODE) {
             Assert.isFalse(CameraManager.get().isVideoMode());
             if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 // Switch to video mode
@@ -376,8 +368,6 @@ class CameraMediaChooser extends MediaChooser implements
     private void onSwapMode() {
         CameraManager.get().setVideoMode(!CameraManager.get().isVideoMode());
         if (CameraManager.get().isVideoMode()) {
-            mMediaPicker.setFullScreen(true);
-
             // For now we start recording immediately
             mCaptureButton.performClick();
         }
@@ -433,7 +423,6 @@ class CameraMediaChooser extends MediaChooser implements
             // Context is null if the fragment was already removed from the activity
             return;
         }
-        final boolean fullScreen = mMediaPicker.isFullScreen();
         final boolean videoMode = CameraManager.get().isVideoMode();
         final boolean isRecording = CameraManager.get().isRecording();
         final boolean isCameraAvailable = isCameraAvailable();
@@ -441,14 +430,10 @@ class CameraMediaChooser extends MediaChooser implements
         final boolean frontCamera = cameraInfo != null && cameraInfo.facing ==
                 Camera.CameraInfo.CAMERA_FACING_FRONT;
 
-        mView.setSystemUiVisibility(
-                fullScreen ? View.SYSTEM_UI_FLAG_LOW_PROFILE :
-                        View.SYSTEM_UI_FLAG_VISIBLE);
+        mView.setSystemUiVisibility(View.SYSTEM_UI_FLAG_LOW_PROFILE);
 
-        mFullScreenButton.setVisibility(!fullScreen ? View.VISIBLE : View.GONE);
-        mFullScreenButton.setEnabled(isCameraAvailable);
-        mSwapCameraButton.setVisibility(
-                fullScreen && !isRecording && CameraManager.get().hasFrontAndBackCamera() ?
+
+        mSwapCameraButton.setVisibility(!isRecording && CameraManager.get().hasFrontAndBackCamera() ?
                         View.VISIBLE : View.GONE);
         mSwapCameraButton.setImageResource(frontCamera ?
                 R.drawable.ic_camera_front_light :
@@ -485,6 +470,11 @@ class CameraMediaChooser extends MediaChooser implements
     @Override
     int getActionBarTitleResId() {
         return 0;
+    }
+
+    @Override
+    protected void setHasOptionsMenu() {
+
     }
 
     /**

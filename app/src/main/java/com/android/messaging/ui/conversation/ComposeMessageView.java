@@ -15,7 +15,6 @@
  */
 package com.android.messaging.ui.conversation;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Rect;
@@ -34,12 +33,12 @@ import android.view.KeyEvent;
 import android.view.View;
 import android.view.accessibility.AccessibilityEvent;
 import android.view.inputmethod.EditorInfo;
+import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.airbnb.lottie.L;
 import com.android.messaging.Factory;
 import com.android.messaging.R;
 import com.android.messaging.datamodel.binding.Binding;
@@ -92,7 +91,7 @@ import java.util.List;
  */
 public class ComposeMessageView extends LinearLayout
         implements TextView.OnEditorActionListener, DraftMessageDataListener, TextWatcher,
-        ConversationInputSink, INotificationObserver {
+        ConversationInputSink {
 
     public interface IComposeMessageViewHost extends
             DraftMessageData.DraftMessageSubscriptionDataProvider {
@@ -129,9 +128,13 @@ public class ComposeMessageView extends LinearLayout
         int overrideCounterColor();
 
         int getAttachmentsClearedFlags();
+
+        boolean isCameraOrGalleryShowing();
     }
 
     public static final int CODEPOINTS_REMAINING_BEFORE_COUNTER_SHOWN = 10;
+
+    private static final int DISTANCE_SLOP = 180;
 
     // There is no draft and there is no need for the SIM selector
     private static final int SEND_WIDGET_MODE_SELF_AVATAR = 1;
@@ -139,11 +142,6 @@ public class ComposeMessageView extends LinearLayout
     private static final int SEND_WIDGET_MODE_SIM_SELECTOR = 2;
     // There is a draft
     private static final int SEND_WIDGET_MODE_SEND_BUTTON = 3;
-
-    private static final String INPUT_MEDIA = "media";
-    private static final String INPUT_EMOJI = "emoji";
-    private static final String INPUT_KEYBOARD = "keyboard";
-
 
     private PlainTextEditText mComposeEditText;
     private PlainTextEditText mComposeSubjectText;
@@ -156,10 +154,16 @@ public class ComposeMessageView extends LinearLayout
     private ImageView mAttachMediaButton;
     private ImageView mEmojiKeyboardBtn;
     private ImageView mEmojiGuideView;
+    private LinearLayout mInputLayout;
+    private FrameLayout mMediaPickerLayout;
+    private FrameLayout mEmojiPickerLayout;
 
     private List<String> mEmojiLogCodeList;
     private List<String> mMagicStickerLogNameList;
     private List<String> mStickerLogNameList;
+
+    private boolean mIsMediaPendingShow = false;
+    private boolean mIsEmojiPendingShow = false;
 
     private final Binding<DraftMessageData> mBinding;
     private IComposeMessageViewHost mHost;
@@ -226,23 +230,17 @@ public class ComposeMessageView extends LinearLayout
         mInputManager.onDetach();
     }
 
-    @Override protected void onAttachedToWindow() {
-        super.onAttachedToWindow();
-        HSGlobalNotificationCenter.addObserver(ConversationFragment.EVENT_SHOW_OPTION_MENU, this);
-    }
-
     @Override
     protected void onDetachedFromWindow() {
         super.onDetachedFromWindow();
-        HSGlobalNotificationCenter.removeObserver(this);
         mComposeEditText.setOnEditorActionListener(null);
     }
 
     @Override
     protected void onFinishInflate() {
         super.onFinishInflate();
-        mComposeEditText = (PlainTextEditText) findViewById(
-                R.id.compose_message_text);
+        mInputLayout = findViewById(R.id.input_layout);
+        mComposeEditText = findViewById(R.id.compose_message_text);
         mComposeEditText.setOnEditorActionListener(this);
         mComposeEditText.addTextChangedListener(this);
         mComposeEditText.setOnFocusChangeListener(new OnFocusChangeListener() {
@@ -268,6 +266,33 @@ public class ComposeMessageView extends LinearLayout
         mComposeEditText.setFilters(new InputFilter[]{
                 new LengthFilter(MmsConfig.get(ParticipantData.DEFAULT_SELF_SUB_ID)
                         .getMaxTextLimit())});
+
+        mComposeEditText.getViewTreeObserver().addOnPreDrawListener(() -> {
+            if (mIsEmojiPendingShow || mIsMediaPendingShow) {
+                if (isKeyboardVisible()) {
+                    return false;
+                } else if (mIsEmojiPendingShow) {
+                    showEmojiPicker();
+                    mIsEmojiPendingShow = false;
+                    return false;
+                } else if (mIsMediaPendingShow) {
+                    showMediaPicker();
+                    mIsMediaPendingShow = false;
+                    return false;
+                }
+            } else {
+                if (isKeyboardVisible()) {
+                    if (isEmojiPickerShowing()) {
+                        hideEmojiPicker();
+                        return false;
+                    } else if (isMediaPickerShowing()) {
+                        hideMediaPicker();
+                        return false;
+                    }
+                }
+            }
+            return true;
+        });
 
         mSelfSendIcon = (SimIconView) findViewById(R.id.self_send_icon);
         mSelfSendIcon.setOnClickListener(new OnClickListener() {
@@ -363,26 +388,23 @@ public class ComposeMessageView extends LinearLayout
             }
         });
 
+        mMediaPickerLayout = findViewById(R.id.media_picker_container);
         mAttachMediaButton =
                 findViewById(R.id.media_btn);
         mAttachMediaButton.setBackground(BackgroundDrawables.createBackgroundDrawable(0xfff4f7f9, 0x1935363b, Dimensions.pxFromDp(20), false, true));
-        mAttachMediaButton.setTag(INPUT_MEDIA);
-        mAttachMediaButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(final View v) {
-                // Showing the media picker is treated as starting to compose the message.
-                if (v.getTag().equals(INPUT_MEDIA)) {
-                    mAttachMediaButton.setTag(INPUT_KEYBOARD);
-                    mAttachMediaButton.setImageResource(R.drawable.input_keyboard_black_icon);
-                    mInputManager.showHideMediaPicker(true /* show */, true /* animate */);
-                } else {
-                    ImeUtil.get().showImeKeyboard(getContext(), mComposeEditText);
-                    if (mHost.shouldHideAttachmentsWhenSimSelectorShown()) {
-                        hideSimSelector();
-                    }
-                }
-                BugleAnalytics.logEvent("SMS_DetailsPage_IconPlus_Click", true);
+        mAttachMediaButton.setOnClickListener(v -> {
+            if (isMediaPickerShowing()) {
+                showKeyboard();
+            } else if (isEmojiPickerShowing()) {
+                hideEmojiPicker();
+                showMediaPicker();
+            } else if (isKeyboardVisible()) {
+                mIsMediaPendingShow = true;
+                hideKeyboard();
+            } else {
+                showMediaPicker();
             }
+            BugleAnalytics.logEvent("SMS_DetailsPage_IconPlus_Click", true);
         });
 
         mAttachmentPreview = (AttachmentPreview) findViewById(R.id.attachment_draft_view);
@@ -393,26 +415,84 @@ public class ComposeMessageView extends LinearLayout
         if (EmojiManager.isShowEmojiGuide()) {
             mEmojiGuideView.setVisibility(VISIBLE);
         }
+        mEmojiPickerLayout = findViewById(R.id.emoji_picker_container);
         mEmojiKeyboardBtn = findViewById(R.id.emoji_btn);
-        mEmojiKeyboardBtn.setTag(INPUT_EMOJI);
         mEmojiKeyboardBtn.setOnClickListener(v -> {
-            if (v.getTag().equals(INPUT_EMOJI)) {
-                BugleAnalytics.logEvent("SMSEmoji_Chat_Emoji_Click", true);
-                if (EmojiManager.isShowEmojiGuide()) {
-                    EmojiManager.recordAlreadyShowEmojiGuide();
-                    mEmojiGuideView.setVisibility(GONE);
-                }
-                mEmojiKeyboardBtn.setTag(INPUT_KEYBOARD);
-                mEmojiKeyboardBtn.setImageResource(R.drawable.input_keyboard_icon);
-                mInputManager.showEmoji();
-            } else {
+            if (isEmojiPickerShowing()) {
                 BugleAnalytics.logEvent("SMSEmoji_Chat_Keyboard_Click");
-                ImeUtil.get().showImeKeyboard(getContext(), mComposeEditText);
-                if (mHost.shouldHideAttachmentsWhenSimSelectorShown()) {
-                    hideSimSelector();
-                }
+                showKeyboard();
+            } else if (isMediaPickerShowing()) {
+                hideMediaPicker();
+                showEmojiPicker();
+            } else if (isKeyboardVisible()) {
+                mIsEmojiPendingShow = true;
+                hideKeyboard();
+            } else {
+                showEmojiPicker();
             }
         });
+    }
+
+    private boolean isMediaPickerShowing() {
+        return mMediaPickerLayout.getVisibility() == VISIBLE;
+    }
+
+    private void showMediaPicker() {
+        mMediaPickerLayout.setVisibility(VISIBLE);
+        mAttachMediaButton.setImageResource(R.drawable.input_keyboard_black_icon);
+        mInputManager.showMediaPicker();
+    }
+
+    private void hideMediaPicker() {
+        mMediaPickerLayout.setVisibility(GONE);
+        mInputManager.hideMediaPicker();
+    }
+
+    private boolean isKeyboardVisible() {
+        return (getDistanceFromInputToBottom() > DISTANCE_SLOP && !isEmojiPickerShowing() && !isMediaPickerShowing())
+                || (getDistanceFromInputToBottom() > (mEmojiPickerLayout.getHeight() + DISTANCE_SLOP) && isEmojiPickerShowing())
+                || (getDistanceFromInputToBottom() > (mMediaPickerLayout.getHeight() + DISTANCE_SLOP) && isMediaPickerShowing());
+    }
+
+    private boolean isEmojiPickerShowing() {
+        return mEmojiPickerLayout.getVisibility() == VISIBLE;
+    }
+
+    private int getDistanceFromInputToBottom() {
+        return Dimensions.getPhoneHeight(getContext()) - getInputBottom();
+    }
+
+    private int getInputBottom() {
+        Rect temp = new Rect();
+        mInputLayout.getGlobalVisibleRect(temp);
+        return temp.bottom;
+    }
+
+    private void showKeyboard() {
+        ImeUtil.get().showImeKeyboard(getContext(), mComposeEditText);
+        if (mHost.shouldHideAttachmentsWhenSimSelectorShown()) {
+            hideSimSelector();
+        }
+    }
+
+    private void hideKeyboard() {
+        ImeUtil.get().hideImeKeyboard(getContext(), mComposeEditText);
+    }
+
+    private void showEmojiPicker() {
+        BugleAnalytics.logEvent("SMSEmoji_Chat_Emoji_Click", true);
+        if (EmojiManager.isShowEmojiGuide()) {
+            EmojiManager.recordAlreadyShowEmojiGuide();
+            mEmojiGuideView.setVisibility(GONE);
+        }
+        mEmojiPickerLayout.setVisibility(VISIBLE);
+        mEmojiKeyboardBtn.setImageResource(R.drawable.input_keyboard_icon);
+        mInputManager.showEmojiPicker();
+    }
+
+    private void hideEmojiPicker() {
+        mEmojiPickerLayout.setVisibility(GONE);
+        mInputManager.hideEmojiPicker();
     }
 
     private void logEmojiEvent() {
@@ -471,17 +551,12 @@ public class ComposeMessageView extends LinearLayout
     @Override
     public void onKeyboardVisible(boolean isVisible) {
         if (isVisible) {
-            Object emojiTag = mEmojiKeyboardBtn.getTag();
-            if (INPUT_KEYBOARD.equals(emojiTag)) {
-                mEmojiKeyboardBtn.setTag(INPUT_EMOJI);
-                mEmojiKeyboardBtn.setImageResource(R.drawable.input_emoji_icon);
-            }
-
-            Object mediaTag = mAttachMediaButton.getTag();
-            if (INPUT_KEYBOARD.equals(mediaTag)) {
-                mAttachMediaButton.setTag(INPUT_MEDIA);
-                mAttachMediaButton.setImageResource(R.drawable.input_media_icon);
-            }
+            mEmojiKeyboardBtn.setImageResource(R.drawable.input_emoji_icon);
+            mAttachMediaButton.setImageResource(R.drawable.input_media_icon);
+        } else if (!isEmojiPickerShowing()) {
+            mEmojiKeyboardBtn.setImageResource(R.drawable.input_emoji_icon);
+        } else if (!isMediaPickerShowing()) {
+            mAttachMediaButton.setImageResource(R.drawable.input_media_icon);
         }
     }
 
@@ -1132,6 +1207,10 @@ public class ComposeMessageView extends LinearLayout
         return AvatarUriUtil.TYPE_GROUP_URI.equals(AvatarUriUtil.getAvatarType(overridenSelfUri));
     }
 
+    public boolean isCameraOrGalleryShowing() {
+        return mHost.isCameraOrGalleryShowing();
+    }
+
     @Override
     public void setAccessibility(boolean enabled) {
         if (enabled) {
@@ -1144,17 +1223,6 @@ public class ComposeMessageView extends LinearLayout
             mComposeEditText.setImportantForAccessibility(IMPORTANT_FOR_ACCESSIBILITY_NO);
             mSendButton.setImportantForAccessibility(IMPORTANT_FOR_ACCESSIBILITY_NO);
             mAttachMediaButton.setImportantForAccessibility(IMPORTANT_FOR_ACCESSIBILITY_NO);
-        }
-    }
-
-    @Override public void onReceive(String s, HSBundle hsBundle) {
-        switch (s) {
-            case ConversationFragment.EVENT_SHOW_OPTION_MENU:
-                if (mAttachMediaButton != null) {
-                    mAttachMediaButton.setTag(INPUT_MEDIA);
-                    mAttachMediaButton.setImageResource(R.drawable.input_media_icon);
-                }
-                break;
         }
     }
 }

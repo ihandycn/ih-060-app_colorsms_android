@@ -34,17 +34,18 @@ import com.android.messaging.datamodel.data.MediaPickerMessagePartData;
 import com.android.messaging.datamodel.data.MessagePartData;
 import com.android.messaging.datamodel.data.PendingAttachmentData;
 import com.android.messaging.datamodel.data.SubscriptionListData.SubscriptionListEntry;
-import com.android.messaging.ui.ConversationDrawables;
 import com.android.messaging.ui.emoji.EmojiPickerFragment;
 import com.android.messaging.ui.emoji.EmojiType;
-import com.android.messaging.ui.mediapicker.MediaPicker;
-import com.android.messaging.ui.mediapicker.MediaPicker.MediaPickerListener;
+import com.android.messaging.ui.mediapicker.MediaPickerFragment;
 import com.android.messaging.util.Assert;
+import com.android.messaging.util.BugleAnalytics;
 import com.android.messaging.util.ImeUtil;
 import com.android.messaging.util.ImeUtil.ImeStateHost;
 import com.google.common.annotations.VisibleForTesting;
 
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 /**
  * Manages showing/hiding/persisting different mutually exclusive UI components nested in
@@ -70,13 +71,17 @@ public class ConversationInputManager implements ConversationInput.ConversationI
 
         SimSelectorView getSimSelectorView();
 
-        MediaPicker createMediaPicker();
+        MediaPickerFragment createMediaPicker();
 
         void showHideSimSelector(boolean show);
 
         int getSimSelectorItemLayoutId();
 
         EmojiPickerFragment createEmojiPicker();
+
+        void showCamera();
+
+        void showPhoto();
     }
 
     /**
@@ -220,12 +225,20 @@ public class ConversationInputManager implements ConversationInput.ConversationI
         mMediaInput.resetViewHolderState();
     }
 
-    public void showHideMediaPicker(final boolean show, final boolean animate) {
-        showHideInternal(mMediaInput, show, animate);
+    public void showMediaPicker() {
+        showHideInternal(mMediaInput, true, true);
     }
 
-    public void showEmoji() {
+    public void hideMediaPicker() {
+        showHideInternal(mMediaInput, false, false);
+    }
+
+    public void showEmojiPicker() {
         showHideInternal(mEmojiInput, true, false);
+    }
+
+    public void hideEmojiPicker() {
+        showHideInternal(mEmojiInput, false, false);
     }
 
     /**
@@ -335,15 +348,15 @@ public class ConversationInputManager implements ConversationInput.ConversationI
             if (currInput != target) {
                 // TODO : If there's more exceptions we will want to make this more
                 // generic
-                if (currInput instanceof ConversationMediaPicker &&
-                        target instanceof ConversationImeKeyboard &&
-                        mMediaInput.getExistingOrCreateMediaPicker() != null &&
-                        mMediaInput.getExistingOrCreateMediaPicker().canShowIme()) {
-                    // Allow the keyboard and location mediaPicker to be open at the same time,
-                    // but ensure the media picker is full screen to allow enough room
-                    mMediaInput.getExistingOrCreateMediaPicker().setFullScreen(true);
-                    continue;
-                }
+//                if (currInput instanceof ConversationMediaPicker &&
+//                        target instanceof ConversationImeKeyboard &&
+//                        mMediaInput.getExistingOrCreateMediaPicker() != null &&
+//                        mMediaInput.getExistingOrCreateMediaPicker().canShowIme()) {
+//                    // Allow the keyboard and location mediaPicker to be open at the same time,
+//                    // but ensure the media picker is full screen to allow enough room
+//                    mMediaInput.getExistingOrCreateMediaPicker().setFullScreen(true);
+//                    continue;
+//                }
                 showHideInternal(currInput, false /* show */, false /* animate */);
             }
         }
@@ -383,7 +396,7 @@ public class ConversationInputManager implements ConversationInput.ConversationI
             super(baseHost, false);
         }
 
-        private MediaPicker mMediaPicker;
+        private MediaPickerFragment mMediaPicker;
 
         @Override
         public boolean show(boolean animate) {
@@ -391,152 +404,62 @@ public class ConversationInputManager implements ConversationInput.ConversationI
                 initMediaPicker();
 
                 mFragmentManager.beginTransaction().replace(
-                        R.id.mediapicker_container,
+                        R.id.media_picker_container,
                         mMediaPicker,
-                        MediaPicker.FRAGMENT_TAG).commit();
+                        MediaPickerFragment.FRAGMENT_TAG).commit();
             }
-            mMediaPicker.open(MediaPicker.MEDIA_TYPE_DEFAULT, animate);
-            return isOpen();
+            return true;
         }
 
         private void initMediaPicker() {
+            if (mMediaPicker != null) {
+                return;
+            }
             mMediaPicker = mHost.createMediaPicker();
-            setConversationThemeColor(ConversationDrawables.get().getConversationThemeColor());
             mMediaPicker.setSubscriptionDataProvider(mHost);
-            mMediaPicker.setDraftMessageDataModel(mDraftDataModel);
-            mMediaPicker.setListener(new MediaPickerListener() {
+            mMediaPicker.setOnMediaItemClickListener(new MediaPickerFragment.OnMediaItemListener() {
                 @Override
-                public void onOpened() {
-                    handleStateChange();
+                public void showCamera() {
+                    BugleAnalytics.logEvent("SMS_DetailsPage_Plus_Camera", true);
+                    mHost.showCamera();
                 }
 
                 @Override
-                public void onFullScreenChanged(boolean fullScreen) {
-                    // When we're full screen, we want to disable accessibility on the
-                    // ComposeMessageView controls (attach button, message input, sim chooser)
-                    // that are hiding underneath the action bar.
-                    mSink.setAccessibility(!fullScreen /*enabled*/);
-                    handleStateChange();
+                public void showPhoto() {
+                    BugleAnalytics.logEvent("SMS_DetailsPage_Plus_Photo", true);
+                    mHost.showPhoto();
                 }
 
                 @Override
-                public void onDismissed() {
-                    // Re-enable accessibility on all controls now that the media picker is
-                    // going away.
-                    mSink.setAccessibility(true /*enabled*/);
-                    handleStateChange();
-                }
-
-                private void handleStateChange() {
-                    onVisibilityChanged(isOpen());
-                    mHost.invalidateActionBar();
-//                    updateHostOptionsMenu();
-                }
-
-                @Override
-                public void onItemsSelected(final Collection<MessagePartData> items,
-                                            final boolean resumeCompose) {
+                public void onAudioRecorded(MessagePartData item) {
+                    final List<MessagePartData> items = new ArrayList<MessagePartData>(1);
+                    items.add(item);
                     mSink.onMediaItemsSelected(items);
-                    mHost.invalidateActionBar();
-                    if (resumeCompose) {
-                        mSink.resumeComposeMessage();
-                    }
-                }
 
-                @Override
-                public void onItemUnselected(final MessagePartData item) {
-                    mSink.onMediaItemsUnselected(item);
                     mHost.invalidateActionBar();
-                }
-
-                @Override
-                public void onConfirmItemSelection() {
                     mSink.resumeComposeMessage();
-                }
-
-                @Override
-                public void onPendingItemAdded(final PendingAttachmentData pendingItem) {
-                    mSink.onPendingAttachmentAdded(pendingItem);
-                }
-
-                @Override
-                public void onChooserSelected(final int chooserIndex) {
-                    mHost.invalidateActionBar();
-                    mHost.dismissActionMode();
                 }
             });
         }
 
         private boolean isAddedToFragmentManager() {
-            return mMediaPicker != null && mFragmentManager.findFragmentByTag(MediaPicker.FRAGMENT_TAG) != null;
+            return mMediaPicker != null && mFragmentManager.findFragmentByTag(MediaPickerFragment.FRAGMENT_TAG) != null;
         }
 
         @Override
         public boolean hide(boolean animate) {
-            if (mMediaPicker != null) {
-                mMediaPicker.dismiss(animate);
-                mMediaPicker = null;
-            }
-            return !isOpen();
+            mMediaPicker.hideAudioView();
+            return true;
         }
 
         public void resetViewHolderState() {
-            if (mMediaPicker != null) {
-                mMediaPicker.resetViewHolderState();
-            }
-        }
-
-        public void setConversationThemeColor(final int themeColor) {
-            if (mMediaPicker != null) {
-                mMediaPicker.setConversationThemeColor(themeColor);
-            }
+//            if (mMediaPicker != null) {
+//                mMediaPicker.resetViewHolderState();
+//            }
         }
 
         private boolean isOpen() {
-            return (mMediaPicker != null && mMediaPicker.isOpen());
-        }
-
-        private MediaPicker getExistingOrCreateMediaPicker() {
-            if (mMediaPicker != null) {
-                return mMediaPicker;
-            }
-            MediaPicker mediaPicker = (MediaPicker)
-                    mFragmentManager.findFragmentByTag(MediaPicker.FRAGMENT_TAG);
-            if (mediaPicker == null) {
-                mediaPicker = mHost.createMediaPicker();
-                if (mediaPicker == null) {
-                    return null;    // this use of ComposeMessageView doesn't support media picking
-                }
-                mFragmentManager.beginTransaction().replace(
-                        R.id.mediapicker_container,
-                        mediaPicker,
-                        MediaPicker.FRAGMENT_TAG).commit();
-            }
-            return mediaPicker;
-        }
-
-        @Override
-        public boolean updateActionBar(ActionBar actionBar) {
-            if (isOpen()) {
-                mMediaPicker.updateActionBar(actionBar);
-                return true;
-            }
-            return false;
-        }
-
-        @Override
-        public boolean onNavigationUpPressed() {
-            if (isOpen() && mMediaPicker.isFullScreen()) {
-                return onBackPressed();
-            }
-            return super.onNavigationUpPressed();
-        }
-
-        public boolean onBackPressed() {
-            if (mMediaPicker != null && mMediaPicker.onBackPressed()) {
-                return true;
-            }
-            return super.onBackPressed();
+            return (mMediaPicker != null);
         }
     }
 
@@ -544,7 +467,7 @@ public class ConversationInputManager implements ConversationInput.ConversationI
 
         private EmojiPickerFragment mEmojiPickerFragment;
 
-        public ConversationEmojiPicker(ConversationInputBase baseHost) {
+        ConversationEmojiPicker(ConversationInputBase baseHost) {
             super(baseHost, false);
         }
 
@@ -555,7 +478,7 @@ public class ConversationInputManager implements ConversationInput.ConversationI
                 initEmojiPicker();
 
                 mFragmentManager.beginTransaction().replace(
-                        R.id.mediapicker_container,
+                        R.id.emoji_picker_container,
                         mEmojiPickerFragment,
                         EmojiPickerFragment.FRAGMENT_TAG).commit();
             }
@@ -564,12 +487,6 @@ public class ConversationInputManager implements ConversationInput.ConversationI
 
         @Override
         public boolean hide(boolean animate) {
-            if (mEmojiPickerFragment != null) {
-                mFragmentManager.beginTransaction()
-                        .remove(mEmojiPickerFragment)
-                        .commit();
-                mEmojiPickerFragment = null;
-            }
             return true;
         }
 
@@ -614,7 +531,7 @@ public class ConversationInputManager implements ConversationInput.ConversationI
             });
         }
 
-        private boolean isAddedToFragmentManager() {
+        boolean isAddedToFragmentManager() {
             return mEmojiPickerFragment != null && mFragmentManager.findFragmentByTag(EmojiPickerFragment.FRAGMENT_TAG) != null;
         }
     }

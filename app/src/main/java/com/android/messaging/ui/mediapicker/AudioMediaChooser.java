@@ -34,13 +34,13 @@ class AudioMediaChooser extends MediaChooser implements
     private View mEnabledView;
     private View mMissingPermissionView;
 
-    AudioMediaChooser(final MediaPicker mediaPicker) {
-        super(mediaPicker);
+    AudioMediaChooser(final CameraGalleryFragment cameraGalleryFragment) {
+        super(cameraGalleryFragment);
     }
 
     @Override
     public int getSupportedMediaTypes() {
-        return MediaPicker.MEDIA_TYPE_AUDIO;
+        return CameraGalleryFragment.MEDIA_TYPE_AUDIO;
     }
 
     @Override
@@ -55,7 +55,7 @@ class AudioMediaChooser extends MediaChooser implements
 
     @Override
     public void onAudioRecorded(final MessagePartData item) {
-        mMediaPicker.dispatchItemsSelected(item, true);
+        mCameraGalleryFragment.dispatchItemsSelected(item, true);
     }
 
     @Override
@@ -73,7 +73,7 @@ class AudioMediaChooser extends MediaChooser implements
                 container /* root */,
                 false /* attachToRoot */);
         view.setHostInterface(this);
-        view.setThemeColor(mMediaPicker.getConversationThemeColor());
+        view.setThemeColor(mCameraGalleryFragment.getConversationThemeColor());
         mEnabledView = view.findViewById(R.id.mediapicker_enabled);
         mMissingPermissionView = view.findViewById(R.id.missing_permission_view);
         return view;
@@ -114,8 +114,8 @@ class AudioMediaChooser extends MediaChooser implements
     }
 
     private void requestRecordAudioPermission() {
-        mMediaPicker.requestPermissions(new String[]{Manifest.permission.RECORD_AUDIO},
-                MediaPicker.RECORD_AUDIO_PERMISSION_REQUEST_CODE);
+        mCameraGalleryFragment.requestPermissions(new String[]{Manifest.permission.RECORD_AUDIO},
+                CameraGalleryFragment.RECORD_AUDIO_PERMISSION_REQUEST_CODE);
     }
 
     @Override
@@ -125,7 +125,7 @@ class AudioMediaChooser extends MediaChooser implements
             return;
         }
 
-        if (requestCode == MediaPicker.RECORD_AUDIO_PERMISSION_REQUEST_CODE) {
+        if (requestCode == CameraGalleryFragment.RECORD_AUDIO_PERMISSION_REQUEST_CODE) {
             final boolean permissionGranted = grantResults[0] == PackageManager.PERMISSION_GRANTED;
             if (mEnabledView != null) {
                 mEnabledView.setVisibility(permissionGranted ? View.VISIBLE : View.GONE);
@@ -135,5 +135,9 @@ class AudioMediaChooser extends MediaChooser implements
                 mMissingPermissionView.setVisibility(permissionGranted ? View.GONE : View.VISIBLE);
             }
         }
+    }
+
+    @Override protected void setHasOptionsMenu() {
+
     }
 }
