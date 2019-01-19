@@ -90,6 +90,12 @@ public class StickerMagicDetailActivity extends HSAppCompatActivity implements V
     }
 
     @Override
+    protected void onStop() {
+        super.onStop();
+        finish();
+    }
+
+    @Override
     protected void onDestroy() {
         super.onDestroy();
         release();

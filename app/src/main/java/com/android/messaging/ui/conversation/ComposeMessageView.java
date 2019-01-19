@@ -132,9 +132,7 @@ public class ComposeMessageView extends LinearLayout
         boolean isCameraOrGalleryShowing();
     }
 
-    public static final int CODEPOINTS_REMAINING_BEFORE_COUNTER_SHOWN = 10;
-
-    private static final int DISTANCE_SLOP = 180;
+    private static final int DISTANCE_SLOP = Dimensions.pxFromDp(90);
 
     // There is no draft and there is no need for the SIM selector
     private static final int SEND_WIDGET_MODE_SELF_AVATAR = 1;
