@@ -24,7 +24,7 @@ public class SettingAdvancedActivity extends AppCompatActivity {
     private SettingItemView mRoamingAutoRetrieve;
     private SettingItemView mSMSDeliveryReports;
 
-    final BuglePrefs prefs = BuglePrefs.getApplicationPrefs();
+    final BuglePrefs mPrefs = BuglePrefs.getApplicationPrefs();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,30 +60,30 @@ public class SettingAdvancedActivity extends AppCompatActivity {
         //Auto Retrieve
         mAutoRetrieve = findViewById(R.id.setting_advanced_auto_retrieve);
         final String autoRetrieveKey = getString(R.string.auto_retrieve_mms_pref_key);
-        mAutoRetrieve.setChecked(prefs.getBoolean(autoRetrieveKey,
+        mAutoRetrieve.setChecked(mPrefs.getBoolean(autoRetrieveKey,
                 getResources().getBoolean(R.bool.auto_retrieve_mms_pref_default)));
         mAutoRetrieve.setOnItemClickListener(() -> {
-            prefs.putBoolean(autoRetrieveKey, mAutoRetrieve.isChecked());
+            mPrefs.putBoolean(autoRetrieveKey, mAutoRetrieve.isChecked());
             BugleAnalytics.logEvent("SMS_Settings_Advanced_AutoRetrieve_Click", true);
         });
 
         //Roaming auto retrieve
         mRoamingAutoRetrieve = findViewById(R.id.setting_advanced_roaming_auto_retrieve);
         final String roamingAutoRetrieveKey = getString(R.string.auto_retrieve_mms_when_roaming_pref_key);
-        mRoamingAutoRetrieve.setChecked(prefs.getBoolean(roamingAutoRetrieveKey,
+        mRoamingAutoRetrieve.setChecked(mPrefs.getBoolean(roamingAutoRetrieveKey,
                 getResources().getBoolean(R.bool.auto_retrieve_mms_when_roaming_pref_default)));
-        mRoamingAutoRetrieve.setOnItemClickListener(() -> prefs.putBoolean(roamingAutoRetrieveKey,
+        mRoamingAutoRetrieve.setOnItemClickListener(() -> mPrefs.putBoolean(roamingAutoRetrieveKey,
                 mRoamingAutoRetrieve.isChecked()));
 
         //sms delivery reports
         mSMSDeliveryReports = findViewById(R.id.setting_advanced_delivery_reports);
         final String deliveryReportsKey = getString(R.string.delivery_reports_pref_key);
+        final BuglePrefs prefs = BuglePrefs.getSubscriptionPrefs(mSubId);
         mSMSDeliveryReports.setChecked(prefs.getBoolean(deliveryReportsKey,
                 getResources().getBoolean(R.bool.delivery_reports_pref_default)));
         mSMSDeliveryReports.setOnItemClickListener(() -> {
             prefs.putBoolean(deliveryReportsKey, mSMSDeliveryReports.isChecked());
             BugleAnalytics.logEvent("SMS_Settings_Advanced_DeliveryReports_Click", true);
-
         });
 
         if (!PhoneUtils.getDefault().isDefaultSmsApp()) {
