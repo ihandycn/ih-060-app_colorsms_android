@@ -70,7 +70,10 @@ public class AddContactsConfirmationDialog extends BaseDialogFragment {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
         setOnNegativeButtonClickListener(v -> dismissAllowingStateLoss());
 
-        setOnPositiveButtonClickListener(v -> UIIntents.get().launchAddContactActivity(getActivity(), mNormalizedDestination));
+        setOnPositiveButtonClickListener(v -> {
+            UIIntents.get().launchAddContactActivity(getActivity(), mNormalizedDestination);
+            dismissAllowingStateLoss();
+        });
         return super.onCreateView(inflater, container, savedInstanceState);
     }
 
