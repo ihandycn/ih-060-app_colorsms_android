@@ -18,6 +18,7 @@ package com.android.messaging.datamodel;
 
 import android.app.Notification;
 import android.app.NotificationChannel;
+import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
@@ -425,6 +426,7 @@ public class BugleNotifications {
                                        final boolean softSound) {
         final Context context = Factory.get().getApplicationContext();
         final NotificationCompat.Builder notifBuilder = new NotificationCompat.Builder(context, PendingIntentConstants.SMS_NOTIFICATION_CHANNEL_ID);
+        final NotificationChannel notificationChannel = getSmsNotificationChannel();
         if (OsUtil.isAtLeastL()) {
             notifBuilder.setCategory(Notification.CATEGORY_MESSAGE);
         }
@@ -454,7 +456,7 @@ public class BugleNotifications {
             notifBuilder.setDeleteIntent(clearIntent);
         }
 
-        updateBuilderAudioVibrate(state, notifBuilder, silent, ringtoneUri, conversationId);
+        updateBuilderAudioVibrate(state, notifBuilder, silent, notificationChannel, ringtoneUri, conversationId);
 
         // Set the content intent
         PendingIntent destinationIntent;
@@ -479,6 +481,7 @@ public class BugleNotifications {
         final NotificationCompat.Style notifStyle = state.build(notifBuilder);
         state.mNotificationBuilder = notifBuilder;
         state.mNotificationStyle = notifStyle;
+        state.mChannel = notificationChannel;
         if (!state.mPeople.isEmpty()) {
             final Bundle people = new Bundle();
             people.putStringArray(NotificationCompat.EXTRA_PEOPLE,
@@ -651,6 +654,7 @@ public class BugleNotifications {
 
     private static void updateBuilderAudioVibrate(final NotificationState state,
                                                   final NotificationCompat.Builder notifBuilder, final boolean silent,
+                                                  final NotificationChannel channel,
                                                   final Uri ringtoneUri, final String conversationId) {
         int defaults = Notification.DEFAULT_LIGHTS;
         if (!silent) {
@@ -675,8 +679,17 @@ public class BugleNotifications {
                             || SystemClock.elapsedRealtime() - lastTime > sTimeBetweenDingsMs) {
                         sLastMessageDingTime.put(conversationId, SystemClock.elapsedRealtime());
                         notifBuilder.setSound(ringtoneUri);
+
+                        if (channel != null) {
+                            // only above android O, channel is not null;
+                            channel.setSound(ringtoneUri, Notification.AUDIO_ATTRIBUTES_DEFAULT);
+                        }
                         if (shouldVibrate(state)) {
                             defaults |= Notification.DEFAULT_VIBRATE;
+                            if (channel != null) {
+                                // only above android O, channel is not null;
+                                channel.setVibrationPattern(new long[]{100, 200, 300});
+                            }
                         }
                     }
                 }
@@ -911,7 +924,7 @@ public class BugleNotifications {
         final int requestCode = multiMessageNotificationState.getReplyIntentRequestCode();
         final PendingIntent replyPendingIntent = UIIntents.get()
                 .getPendingIntentForSendingMessageToConversation(context,
-                        conversationId, selfId, requiresMms, requestCode);
+                        conversationId, selfId, requiresMms, requestCode, notificationState.mType);
 
         final int replyLabelRes = requiresMms ? R.string.notification_reply_via_mms :
                 R.string.notification_reply_via_sms;
@@ -985,7 +998,7 @@ public class BugleNotifications {
         notification.flags |= Notification.FLAG_AUTO_CANCEL;
         notification.defaults |= Notification.DEFAULT_LIGHTS;
 
-        Notifications.notifySafely(type, notification, getSmsNotificationChannel());
+        Notifications.notifySafely(type, notification, notificationState.mChannel);
 
         LogUtil.i(TAG, "Notifying for conversation " + conversationId + "; "
                 + "tag = " + notificationTag + ", type = " + type);
@@ -1203,9 +1216,10 @@ public class BugleNotifications {
     }
 
     public static NotificationChannel getSmsNotificationChannel() {
-        return Notifications.getChannel(PendingIntentConstants.SMS_NOTIFICATION_CHANNEL_ID,
+        NotificationChannel channel =  Notifications.getChannel(PendingIntentConstants.SMS_NOTIFICATION_CHANNEL_ID,
                 HSApplication.getContext().getResources().getString(R.string.sms_notification_channel),
                 HSApplication.getContext().getResources().getString(R.string.sms_notification_channel_description));
+        return channel;
     }
 
     public static void notifyEmergencySmsFailed(final String emergencyNumber,
@@ -1229,6 +1243,17 @@ public class BugleNotifications {
                 .setContentIntent(destinationIntent)
                 .setSound(UriUtil.getUriForResourceId(context, R.raw.message_failure));
         Notifications.notifySafely(PendingIntentConstants.MSG_SEND_ERROR, builder.build(), getSmsNotificationChannel());
+    }
+
+    public static void cancelSmsNotifications() {
+        try {
+            final NotificationManager notificationManager = (NotificationManager) Factory.get().getApplicationContext().getSystemService(Context.NOTIFICATION_SERVICE);
+            notificationManager.cancel(PendingIntentConstants.SMS_NOTIFICATION_ID);
+            if (OsUtil.isAtLeastO()) {
+                notificationManager.deleteNotificationChannel(PendingIntentConstants.SMS_NOTIFICATION_CHANNEL_ID);
+            }
+        } catch (Exception e) {
+        }
     }
 }
 

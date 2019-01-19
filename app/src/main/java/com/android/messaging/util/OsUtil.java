@@ -44,6 +44,7 @@ public class OsUtil {
     private static boolean sIsAtLeastL_MR1;
     private static boolean sIsAtLeastM;
     private static boolean sIsAtLeastN;
+    private static boolean sIsAtLeastO;
 
     private static Boolean sIsSecondaryUser = null;
 
@@ -57,7 +58,8 @@ public class OsUtil {
         sIsAtLeastL = v >= android.os.Build.VERSION_CODES.LOLLIPOP;
         sIsAtLeastL_MR1 = v >= android.os.Build.VERSION_CODES.LOLLIPOP_MR1;
         sIsAtLeastM = v >= android.os.Build.VERSION_CODES.M;
-        sIsAtLeastN = BuildCompat.isAtLeastN();
+        sIsAtLeastN = v >= android.os.Build.VERSION_CODES.N;
+        sIsAtLeastO = v >= android.os.Build.VERSION_CODES.O;
     }
 
     /**
@@ -130,6 +132,10 @@ public class OsUtil {
      */
     public static boolean isAtLeastN() {
         return sIsAtLeastN;
+    }
+
+    public static boolean isAtLeastO() {
+        return sIsAtLeastO;
     }
 
     /**

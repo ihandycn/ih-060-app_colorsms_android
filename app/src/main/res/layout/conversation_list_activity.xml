@@ -24,6 +24,7 @@
             android:text="@string/bottom_navigation_item_messaging"
             android:textColor="@color/action_bar_title_text_color"
             android:textSize="@dimen/action_bar_page_title_text_size"
+            android:letterSpacing="-0.01"
             app:typefaceFileName="@string/action_bar_title_typeface" />
 
         <ImageView
@@ -33,7 +34,6 @@
             android:scaleType="center"
             android:layout_gravity="center_vertical|end"
             android:layout_marginEnd="16dp"
-            android:layout_marginRight="16dp"
             android:src="@drawable/ic_settings"
             />
 

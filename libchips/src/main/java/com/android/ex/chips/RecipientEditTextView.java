@@ -349,7 +349,7 @@ public class RecipientEditTextView extends MultiAutoCompleteTextView implements
 
         setDropdownChipLayouter(new DropdownChipLayouter(LayoutInflater.from(context), context));
 
-        Typeface typeface = Fonts.getTypeface(Fonts.Font.ofFontResId(R.string.custom_font_semibold));
+        Typeface typeface = Fonts.getTypeface(Fonts.Font.ofFontResId(R.string.custom_font_regular));
         getPaint().setTypeface(typeface);
     }
 

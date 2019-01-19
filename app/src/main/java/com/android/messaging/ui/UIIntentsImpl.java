@@ -427,7 +427,8 @@ public class UIIntentsImpl extends UIIntents {
     @Override
     public PendingIntent getPendingIntentForSendingMessageToConversation(final Context context,
                                                                          final String conversationId, final String selfId, final boolean requiresMms,
-                                                                         final int requestCode) {
+                                                                         final int requestCode,
+                                                                         final int notificationId) {
         final Intent intent = new Intent(context, RemoteInputEntrypointActivity.class);
         intent.setAction(Intent.ACTION_SENDTO);
         // Ensure that the platform doesn't reuse PendingIntents across conversations
@@ -435,6 +436,7 @@ public class UIIntentsImpl extends UIIntents {
         intent.putExtra(UIIntents.UI_INTENT_EXTRA_CONVERSATION_ID, conversationId);
         intent.putExtra(UIIntents.UI_INTENT_EXTRA_SELF_ID, selfId);
         intent.putExtra(UIIntents.UI_INTENT_EXTRA_REQUIRES_MMS, requiresMms);
+        intent.putExtra(UIIntents.UI_INTENT_EXTRA_NOTIFICATION_ID, notificationId);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         return getPendingIntentWithParentStack(context, intent, requestCode);
     }

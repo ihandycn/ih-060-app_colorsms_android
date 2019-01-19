@@ -1,5 +1,7 @@
 package com.android.messaging.ui;
 
+import android.annotation.SuppressLint;
+import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -16,6 +18,7 @@ import com.ihs.app.framework.HSApplication;
 import com.superapps.util.BackgroundDrawables;
 import com.superapps.util.Dimensions;
 
+@SuppressWarnings("WeakerAccess")
 public class BaseAlertDialog {
 
     public static class Builder {
@@ -61,8 +64,8 @@ public class BaseAlertDialog {
         /**
          * Set the positive button resource and it's listener
          *
-         * @param positiveButtonText
-         * @return
+         * @param positiveButtonText The positive button text
+         * @return builder
          */
         public Builder setPositiveButton(int positiveButtonText,
                                          DialogInterface.OnClickListener listener) {
@@ -94,6 +97,7 @@ public class BaseAlertDialog {
             return this;
         }
 
+        @SuppressWarnings("UnusedReturnValue")
         public Builder setOnDismissListener(DialogInterface.OnDismissListener listener) {
             this.onDismissListener = listener;
             return this;
@@ -112,12 +116,15 @@ public class BaseAlertDialog {
         LayoutInflater inflater = (LayoutInflater) HSApplication.getContext()
                 .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         // instantiate the dialog with the custom Theme
-        View layout = inflater.inflate(R.layout.layout_base_dialog, null);
+        if (inflater == null){
+            return;
+        }
+        @SuppressLint("InflateParams") View layout = inflater.inflate(R.layout.layout_base_dialog, null);
         Resources resources = builder.context.getResources();
 
-        Dialog dialog = new Dialog(builder.context, R.style.BaseDialogTheme);
-        dialog.setCancelable(true);
-        dialog.setContentView(layout);
+        Dialog dialog = new AlertDialog.Builder(builder.context, R.style.DefaultCompatDialog).
+                setView(layout).
+                setCancelable(true).create();
 
         this.dialog = dialog;
 

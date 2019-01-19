@@ -167,6 +167,7 @@ public class FiveStarRateDialog extends DefaultButtonDialog2 implements View.OnC
         mStillView = ViewUtils.findViewById(faceView, R.id.still_view);
         mStillView.setVisibility(GONE);
         mAnimationView = ViewUtils.findViewById(faceView, R.id.animation_view);
+        mAnimationView.useHardwareAcceleration();
         ViewGroup imageContainer = ViewUtils.findViewById(mRootView, R.id.dialog_image_container);
         imageContainer.addView(faceView);
         mStarDescView = ViewUtils.findViewById(v, R.id.star_desc);
