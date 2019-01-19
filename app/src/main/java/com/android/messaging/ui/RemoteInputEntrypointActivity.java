@@ -19,6 +19,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.telephony.TelephonyManager;
 
+import com.android.messaging.datamodel.BugleNotifications;
 import com.android.messaging.datamodel.NoConfirmationSmsSendService;
 import com.android.messaging.util.LogUtil;
 import com.superapps.util.Notifications;
@@ -47,9 +48,12 @@ public class RemoteInputEntrypointActivity extends BaseBugleActivity {
             sendIntent.putExtras(intent);
             // Wear apparently passes all of its extras via the clip data. Must pass it along.
             sendIntent.setClipData(intent.getClipData());
+
+            BugleNotifications.cancelSmsNotifications();
+            BugleNotifications.markMessagesAsRead(intent.getStringExtra(UIIntents.UI_INTENT_EXTRA_CONVERSATION_ID));
+
             startService(sendIntent);
             setResult(RESULT_OK);
-            Notifications.cancelSafely(getIntent().getIntExtra(UIIntents.UI_INTENT_EXTRA_NOTIFICATION_ID, -1));
         } else {
             LogUtil.w(TAG, "Unrecognized intent action: " + action);
             setResult(RESULT_CANCELED);
