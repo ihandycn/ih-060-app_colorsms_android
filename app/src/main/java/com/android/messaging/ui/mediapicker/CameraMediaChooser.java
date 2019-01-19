@@ -48,7 +48,6 @@ import com.android.messaging.util.UiUtils;
 class CameraMediaChooser extends MediaChooser implements
         CameraManager.CameraManagerListener {
     private CameraPreview.CameraPreviewHost mCameraPreviewHost;
-    private ImageButton mFullScreenButton;
     private ImageButton mSwapCameraButton;
     private ImageButton mSwapModeButton;
     private ImageButton mCaptureButton;
@@ -108,13 +107,6 @@ class CameraMediaChooser extends MediaChooser implements
 
         final View shutterVisual = view.findViewById(R.id.camera_shutter_visual);
 
-        mFullScreenButton = (ImageButton) view.findViewById(R.id.camera_fullScreen_button);
-        mFullScreenButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(final View view) {
-                mCameraGalleryFragment.setFullScreen(true);
-            }
-        });
 
         mSwapCameraButton = (ImageButton) view.findViewById(R.id.camera_swapCamera_button);
         mSwapCameraButton.setOnClickListener(new View.OnClickListener() {
@@ -376,8 +368,6 @@ class CameraMediaChooser extends MediaChooser implements
     private void onSwapMode() {
         CameraManager.get().setVideoMode(!CameraManager.get().isVideoMode());
         if (CameraManager.get().isVideoMode()) {
-            mCameraGalleryFragment.setFullScreen(true);
-
             // For now we start recording immediately
             mCaptureButton.performClick();
         }
@@ -433,7 +423,6 @@ class CameraMediaChooser extends MediaChooser implements
             // Context is null if the fragment was already removed from the activity
             return;
         }
-        final boolean fullScreen = mCameraGalleryFragment.isFullScreen();
         final boolean videoMode = CameraManager.get().isVideoMode();
         final boolean isRecording = CameraManager.get().isRecording();
         final boolean isCameraAvailable = isCameraAvailable();
@@ -441,14 +430,10 @@ class CameraMediaChooser extends MediaChooser implements
         final boolean frontCamera = cameraInfo != null && cameraInfo.facing ==
                 Camera.CameraInfo.CAMERA_FACING_FRONT;
 
-        mView.setSystemUiVisibility(
-                fullScreen ? View.SYSTEM_UI_FLAG_LOW_PROFILE :
-                        View.SYSTEM_UI_FLAG_VISIBLE);
+        mView.setSystemUiVisibility(View.SYSTEM_UI_FLAG_LOW_PROFILE);
 
-        mFullScreenButton.setVisibility(!fullScreen ? View.VISIBLE : View.GONE);
-        mFullScreenButton.setEnabled(isCameraAvailable);
-        mSwapCameraButton.setVisibility(
-                fullScreen && !isRecording && CameraManager.get().hasFrontAndBackCamera() ?
+
+        mSwapCameraButton.setVisibility(!isRecording && CameraManager.get().hasFrontAndBackCamera() ?
                         View.VISIBLE : View.GONE);
         mSwapCameraButton.setImageResource(frontCamera ?
                 R.drawable.ic_camera_front_light :

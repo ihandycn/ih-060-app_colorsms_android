@@ -14,21 +14,8 @@
     limitations under the License.
 -->
 
-<com.android.messaging.ui.mediapicker.MediaPickerPanel xmlns:android="http://schemas.android.com/apk/res/android"
+<com.android.messaging.ui.PagingAwareViewPager android:id="@+id/mediapicker_view_pager"
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#f4f7f9">
-
-    <com.android.messaging.ui.PagingAwareViewPager
-        android:id="@+id/mediapicker_view_pager"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent" />
-
-    <LinearLayout
-        android:id="@+id/mediapicker_tabstrip"
-        android:layout_width="match_parent"
-        android:layout_height="48dp"
-        android:gravity="center"
-        android:orientation="horizontal"
-        android:visibility="gone" />
-</com.android.messaging.ui.mediapicker.MediaPickerPanel>
+    android:background="#f4f7f9" />

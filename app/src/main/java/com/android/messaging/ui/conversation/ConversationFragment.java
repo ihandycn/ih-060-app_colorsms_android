@@ -1615,8 +1615,6 @@ public class ConversationFragment extends Fragment implements ConversationDataLi
                 R.id.camera_photo_layout,
                 mCameraGalleryFragment,
                 CameraGalleryFragment.FRAGMENT_TAG).commitAllowingStateLoss();
-
-        mCameraGalleryFragment.open(CameraGalleryFragment.MEDIA_TYPE_DEFAULT);
     }
 
     @Override
@@ -1632,8 +1630,6 @@ public class ConversationFragment extends Fragment implements ConversationDataLi
                 R.id.camera_photo_layout,
                 mCameraGalleryFragment,
                 CameraGalleryFragment.FRAGMENT_TAG).commitAllowingStateLoss();
-
-        mCameraGalleryFragment.open(CameraGalleryFragment.MEDIA_TYPE_DEFAULT);
     }
 
     private void initMediaPicker(boolean isCamera) {
@@ -1643,20 +1639,6 @@ public class ConversationFragment extends Fragment implements ConversationDataLi
         ImmutableBindingRef<DraftMessageData> mDraftDataModel = BindingBase.createBindingReference(mComposeMessageView.getDraftDataModel());
         mCameraGalleryFragment.setDraftMessageDataModel(mDraftDataModel);
         mCameraGalleryFragment.setListener(new CameraGalleryFragment.MediaPickerListener() {
-            @Override
-            public void onOpened() {
-                handleStateChange();
-            }
-
-            @Override
-            public void onFullScreenChanged(boolean fullScreen) {
-                // When we're full screen, we want to disable accessibility on the
-                // ComposeMessageView controls (attach button, message input, sim chooser)
-                // that are hiding underneath the action bar.
-                mComposeMessageView.setAccessibility(!fullScreen /*enabled*/);
-                handleStateChange();
-            }
-
             @Override
             public void onDismissed() {
                 // Re-enable accessibility on all controls now that the media picker is

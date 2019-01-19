@@ -100,16 +100,6 @@
                 android:paddingEnd="16dp">
 
                 <ImageButton
-                    android:id="@+id/camera_fullScreen_button"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:background="@drawable/transparent_button_background"
-                    android:contentDescription="@string/camera_switch_full_screen"
-                    android:minHeight="48dp"
-                    android:minWidth="48dp"
-                    android:src="@drawable/ic_mp_full_screen_light"/>
-
-                <ImageButton
                     android:id="@+id/camera_swapCamera_button"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
