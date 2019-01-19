@@ -1,21 +1,16 @@
 package com.android.messaging.ui.welcome;
 
-import android.annotation.SuppressLint;
 import android.content.Intent;
-import android.graphics.Color;
 import android.graphics.Paint;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
-import android.widget.FrameLayout;
 
 import com.android.messaging.R;
 import com.android.messaging.ui.UIIntents;
 import com.android.messaging.ui.WebViewActivity;
 import com.android.messaging.util.BugleAnalytics;
-import com.android.messaging.util.OsUtil;
 import com.ihs.commons.config.HSConfig;
-import com.superapps.util.Dimensions;
 import com.superapps.view.TypefacedTextView;
 
 public class WelcomeStartActivity extends AppCompatActivity implements View.OnClickListener {
@@ -26,7 +21,6 @@ public class WelcomeStartActivity extends AppCompatActivity implements View.OnCl
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_welcome_start);
-        configNavigationBar();
 
         findViewById(R.id.welcome_start_button).setOnClickListener(this);
 
@@ -80,22 +74,4 @@ public class WelcomeStartActivity extends AppCompatActivity implements View.OnCl
         }
     }
 
-    @SuppressLint("NewApi")
-    private void configNavigationBar() {
-        if (OsUtil.isAtLeastL()) {
-            getWindow().getDecorView().setSystemUiVisibility(
-                    View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION | View.SYSTEM_UI_FLAG_FULLSCREEN);
-            getWindow().setNavigationBarColor(Color.TRANSPARENT);
-
-            int navigationHeight = Dimensions.getNavigationBarHeight(this);
-
-            View button = findViewById(R.id.welcome_start_button);
-            FrameLayout.LayoutParams buttonParams = (FrameLayout.LayoutParams) button.getLayoutParams();
-            buttonParams.bottomMargin += navigationHeight;
-
-            View content = findViewById(R.id.welcome_start_content);
-            FrameLayout.LayoutParams contentParams = (FrameLayout.LayoutParams) content.getLayoutParams();
-            contentParams.bottomMargin += navigationHeight;
-        }
-    }
 }

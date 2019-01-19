@@ -1,29 +1,42 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
     <ImageView
+        android:id="@+id/imageView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="bottom"
         android:adjustViewBounds="true"
         android:scaleType="fitXY"
-        android:src="@drawable/ic_welcome_start_bg" />
+        android:src="@drawable/ic_welcome_start_bg"
+        app:layout_constraintBottom_toBottomOf="parent" />
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:adjustViewBounds="true"
+        android:src="@drawable/logo"
+        app:layout_constraintVertical_bias="0.52"
+        app:layout_constraintBottom_toTopOf="@+id/imageView"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <com.superapps.view.TypefacedTextView
         android:id="@+id/welcome_start_button"
-        android:layout_width="260.7dp"
-        android:layout_height="46dp"
-        android:layout_gravity="bottom|center_horizontal"
-        android:layout_marginBottom="50dp"
+        android:layout_width="247dp"
+        android:layout_height="50dp"
+        android:layout_marginBottom="57dp"
         android:background="@drawable/welcome_button_white_bg"
         android:gravity="center"
-        android:paddingTop="1dp"
         android:text="@string/welcome_start_button"
         android:textColor="#ff000000"
         android:textSize="14sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
         app:typeface="@string/custom_font_bold" />
 
     <LinearLayout
@@ -31,9 +44,10 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|center_horizontal"
-        android:layout_marginBottom="13dp"
+        android:layout_marginTop="22dp"
         android:gravity="center_horizontal"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        app:layout_constraintTop_toBottomOf="@+id/welcome_start_button">
 
         <com.superapps.view.TypefacedTextView
             android:id="@+id/welcome_start_service"
@@ -66,4 +80,5 @@
 
     </LinearLayout>
 
-</FrameLayout>
+
+</android.support.constraint.ConstraintLayout>
