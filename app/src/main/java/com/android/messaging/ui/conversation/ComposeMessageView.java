@@ -76,6 +76,9 @@ import com.android.messaging.util.LogUtil;
 import com.android.messaging.util.MediaUtil;
 import com.android.messaging.util.OsUtil;
 import com.android.messaging.util.UiUtils;
+import com.ihs.commons.notificationcenter.HSGlobalNotificationCenter;
+import com.ihs.commons.notificationcenter.INotificationObserver;
+import com.ihs.commons.utils.HSBundle;
 import com.superapps.util.BackgroundDrawables;
 import com.superapps.util.Dimensions;
 import com.superapps.util.Threads;
@@ -89,7 +92,7 @@ import java.util.List;
  */
 public class ComposeMessageView extends LinearLayout
         implements TextView.OnEditorActionListener, DraftMessageDataListener, TextWatcher,
-        ConversationInputSink {
+        ConversationInputSink, INotificationObserver {
 
     public interface IComposeMessageViewHost extends
             DraftMessageData.DraftMessageSubscriptionDataProvider {
@@ -223,9 +226,15 @@ public class ComposeMessageView extends LinearLayout
         mInputManager.onDetach();
     }
 
+    @Override protected void onAttachedToWindow() {
+        super.onAttachedToWindow();
+        HSGlobalNotificationCenter.addObserver(ConversationFragment.EVENT_SHOW_OPTION_MENU, this);
+    }
+
     @Override
     protected void onDetachedFromWindow() {
         super.onDetachedFromWindow();
+        HSGlobalNotificationCenter.removeObserver(this);
         mComposeEditText.setOnEditorActionListener(null);
     }
 
@@ -1135,6 +1144,17 @@ public class ComposeMessageView extends LinearLayout
             mComposeEditText.setImportantForAccessibility(IMPORTANT_FOR_ACCESSIBILITY_NO);
             mSendButton.setImportantForAccessibility(IMPORTANT_FOR_ACCESSIBILITY_NO);
             mAttachMediaButton.setImportantForAccessibility(IMPORTANT_FOR_ACCESSIBILITY_NO);
+        }
+    }
+
+    @Override public void onReceive(String s, HSBundle hsBundle) {
+        switch (s) {
+            case ConversationFragment.EVENT_SHOW_OPTION_MENU:
+                if (mAttachMediaButton != null) {
+                    mAttachMediaButton.setTag(INPUT_MEDIA);
+                    mAttachMediaButton.setImageResource(R.drawable.input_media_icon);
+                }
+                break;
         }
     }
 }
