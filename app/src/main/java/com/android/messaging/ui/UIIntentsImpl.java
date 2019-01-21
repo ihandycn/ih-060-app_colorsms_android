@@ -162,7 +162,9 @@ public class UIIntentsImpl extends UIIntents {
      * Get an intent which takes you to the conversation list
      */
     private Intent getConversationListActivityIntent(final Context context) {
-        return new Intent(context, ConversationListActivity.class);
+        Intent intent = new Intent(context, ConversationListActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        return intent;
     }
 
     @Override

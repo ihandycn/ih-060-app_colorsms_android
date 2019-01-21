@@ -41,6 +41,7 @@ import com.android.messaging.Factory;
 import com.android.messaging.R;
 import com.android.messaging.datamodel.data.ParticipantData;
 import com.android.messaging.sms.MmsSmsUtils;
+import com.android.messaging.ui.UIIntents;
 import com.google.i18n.phonenumbers.NumberParseException;
 import com.google.i18n.phonenumbers.PhoneNumberUtil;
 import com.google.i18n.phonenumbers.PhoneNumberUtil.PhoneNumberFormat;
@@ -904,7 +905,8 @@ public abstract class PhoneUtils {
     public void registerDefaultSmsPackageChange(Runnable setRunnable, Runnable clearedRunnable) {
         Uri uri = Settings.Secure.getUriFor("sms_default_application");
 
-        Factory.get().getApplicationContext().getContentResolver().registerContentObserver(uri, false, new ContentObserver(null) {
+        Context context = Factory.get().getApplicationContext();
+        context.getContentResolver().registerContentObserver(uri, false, new ContentObserver(null) {
             @Override
             public void onChange(boolean selfChange) {
                 super.onChange(selfChange);
@@ -912,6 +914,8 @@ public abstract class PhoneUtils {
                     if (clearedRunnable != null) {
                         clearedRunnable.run();
                     }
+                    // clear activity in default task
+                    UIIntents.get().launchConversationListActivity(context);
                     android.os.Process.killProcess(android.os.Process.myPid());
                 } else {
                     if (setRunnable != null) {
