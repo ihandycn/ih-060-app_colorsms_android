@@ -122,7 +122,6 @@ public class SettingItemView extends FrameLayout {
         mViewType = type;
         if (mRootView != null) {
             if (type == 1) {
-                mViewType = SWITCH;
                 if (mSwitchView != null) {
                     return;
                 }
@@ -133,7 +132,6 @@ public class SettingItemView extends FrameLayout {
                     mSwitchView = mRootView.findViewById(R.id.switch_widget);
                 }
             } else if (type == 2) {
-                mViewType = WITH_TRIANGLE;
                 if (mTriangleView != null) {
                     return;
                 }
@@ -144,6 +142,14 @@ public class SettingItemView extends FrameLayout {
                     LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,
                             ViewGroup.LayoutParams.WRAP_CONTENT);
                     widgetFrame.addView(mTriangleView, params);
+                }
+            } else if (type == NORMAL) {
+                final ViewGroup widgetFrame = mRootView.findViewById(R.id.widget_frame);
+                if (mSwitchView != null) {
+                    widgetFrame.removeView(mSwitchView);
+                }
+                if (mTriangleView != null) {
+                    widgetFrame.removeView(mTriangleView);
                 }
             }
         }

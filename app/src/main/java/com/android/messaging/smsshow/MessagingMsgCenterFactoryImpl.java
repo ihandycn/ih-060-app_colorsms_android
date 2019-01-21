@@ -10,6 +10,7 @@ import com.android.messaging.datamodel.NoConfirmationSmsSendService;
 import com.android.messaging.datamodel.data.ParticipantData;
 import com.android.messaging.ui.UIIntents;
 import com.android.messaging.util.BugleAnalytics;
+import com.android.messaging.util.OsUtil;
 import com.android.messaging.util.PhoneUtils;
 import com.ihs.commons.utils.HSLog;
 import com.messagecenter.customize.MessageCenterFactoryImpl;
@@ -44,7 +45,7 @@ public class MessagingMsgCenterFactoryImpl extends MessageCenterFactoryImpl {
             @Override
             public boolean configEnabled() {
                 return !Factory.get().getIsForeground()
-                        && BugleNotifications.isNotificationSettingsSwitchOpenned()
+                        && (BugleNotifications.isNotificationSettingsSwitchOpenned() || OsUtil.isAtLeastO())
                         && PhoneUtils.getDefault().isDefaultSmsApp();
             }
 
