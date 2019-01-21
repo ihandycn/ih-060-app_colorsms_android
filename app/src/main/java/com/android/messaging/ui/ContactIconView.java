@@ -22,7 +22,6 @@ import android.net.Uri;
 import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
-import android.view.View;
 
 import com.android.messaging.R;
 import com.android.messaging.datamodel.data.ParticipantData;
@@ -163,6 +162,7 @@ public class ContactIconView extends AsyncImageView {
                     ContactUtil.showOrAddContact(view, mContactId, mContactLookupKey,
                             mAvatarUri, mNormalizedDestination);
                     if (getContext() instanceof ConversationListActivity) {
+                        ConversationListActivity.logFirstComeInClickEvent("avatar");
                         BugleAnalytics.logEvent("SMS_Messages_Avatar_Click", true);
                     }
                 });

@@ -22,9 +22,6 @@ import android.graphics.Path;
 import android.graphics.RectF;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
-import android.media.MediaPlayer.OnCompletionListener;
-import android.media.MediaPlayer.OnErrorListener;
-import android.media.MediaPlayer.OnPreparedListener;
 import android.net.Uri;
 import android.os.SystemClock;
 import android.text.TextUtils;
@@ -37,6 +34,7 @@ import android.widget.LinearLayout;
 import com.android.messaging.Factory;
 import com.android.messaging.R;
 import com.android.messaging.datamodel.data.MessagePartData;
+import com.android.messaging.ui.conversationlist.ConversationListActivity;
 import com.android.messaging.ui.mediapicker.PausableChronometer;
 import com.android.messaging.util.Assert;
 import com.android.messaging.util.ContentType;
@@ -114,6 +112,7 @@ public class AudioAttachmentView extends LinearLayout {
         mProgressBar = findViewById(R.id.progress);
         mPlayPauseButton.setOnClickListener(v -> {
             // Has the MediaPlayer already been prepared?
+            ConversationListActivity.logFirstComeInClickEvent("attachment");
             if (mMediaPlayer != null && mPrepared) {
                 if (mMediaPlayer.isPlaying()) {
                     mMediaPlayer.pause();

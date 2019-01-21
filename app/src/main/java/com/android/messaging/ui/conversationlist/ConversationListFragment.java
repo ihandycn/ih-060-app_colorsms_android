@@ -17,7 +17,6 @@ package com.android.messaging.ui.conversationlist;
 
 import android.app.Activity;
 import android.app.Fragment;
-import android.content.Context;
 import android.database.Cursor;
 import android.graphics.Rect;
 import android.net.Uri;
@@ -28,15 +27,11 @@ import android.support.v4.view.ViewGroupCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.view.ViewGroup.MarginLayoutParams;
 import android.view.ViewPropertyAnimator;
-import android.view.accessibility.AccessibilityManager;
 import android.widget.AbsListView;
 import android.widget.ImageView;
 
@@ -233,6 +228,7 @@ public class ConversationListFragment extends Fragment implements ConversationLi
             mStartNewConversationButton.setOnClickListener(new OnClickListener() {
                 @Override
                 public void onClick(final View clickView) {
+                    ConversationListActivity.logFirstComeInClickEvent("create");
                     BugleAnalytics.logEvent("SMS_CreateMessage_ButtonClick", true);
                     mHost.onCreateConversationClick();
                 }

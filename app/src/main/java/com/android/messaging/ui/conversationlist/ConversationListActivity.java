@@ -54,6 +54,8 @@ public class ConversationListActivity extends AbstractConversationListActivity {
 
     private Handler mAnimHandler;
 
+    private static boolean mIsNoActionBack = true;
+
     private enum AnimState {
         NONE,
         APPEAR,
@@ -78,6 +80,7 @@ public class ConversationListActivity extends AbstractConversationListActivity {
         setContentView(R.layout.conversation_list_activity);
         configAppBar();
         showEmojiStoreGuide();
+        mIsNoActionBack = true;
         BugleAnalytics.logEvent("SMS_Messages_Show", true);
         Trace.endSection();
     }
@@ -171,6 +174,7 @@ public class ConversationListActivity extends AbstractConversationListActivity {
                 Dimensions.pxFromDp(20), true));
         mSettingsBtn.setOnClickListener(v -> {
             UIIntents.get().launchSettingsActivity(this);
+            logFirstComeInClickEvent("settings");
             BugleAnalytics.logEvent("SMS_Mainpage_Settings_Click", true);
         });
 
@@ -184,6 +188,8 @@ public class ConversationListActivity extends AbstractConversationListActivity {
             if (!mIsEmojiStoreClickable) {
                 return;
             }
+            logFirstComeInClickEvent("emojistore");
+            BugleAnalytics.logEvent("SMS_Messages_Emojistore_Click", true);
             if (mAnimState == AnimState.DISAPPEAR) {
                 mIsEmojiStoreClickable = false;
                 Threads.postOnMainThreadDelayed(() -> {
@@ -338,4 +344,25 @@ public class ConversationListActivity extends AbstractConversationListActivity {
         return super.dispatchTouchEvent(event);
     }
 
+    public static void logFirstComeInClickEvent(String type) {
+        if (!type.equals("no_action")) {
+            mIsNoActionBack = false;
+        }
+        Preferences.getDefault().doOnce(new Runnable() {
+            @Override public void run() {
+                BugleAnalytics.logEvent("SMS_Messages_First_Click", true, "type", type);
+            }
+        }, "pref_first_come_in_click_event");
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        if (mIsRedirectToWelcome) {
+            return;
+        }
+        if (mIsNoActionBack) {
+            logFirstComeInClickEvent("no_action");
+        }
+    }
 }

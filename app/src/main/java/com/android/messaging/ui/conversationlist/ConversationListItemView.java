@@ -97,6 +97,7 @@ public class ConversationListItemView extends FrameLayout implements OnClickList
     private final OnClickListener fullScreenPreviewClickListener = new OnClickListener() {
         @Override
         public void onClick(final View v) {
+            ConversationListActivity.logFirstComeInClickEvent("attachment");
             final String previewType = mData.getShowDraft() ?
                     mData.getDraftPreviewContentType() : mData.getPreviewContentType();
             Assert.isTrue(ContentType.isImageType(previewType) ||
@@ -626,6 +627,7 @@ public class ConversationListItemView extends FrameLayout implements OnClickList
      */
     @Override
     public void onClick(final View v) {
+        ConversationListActivity.logFirstComeInClickEvent("messages");
         processClick(v, false);
     }
 
@@ -634,6 +636,7 @@ public class ConversationListItemView extends FrameLayout implements OnClickList
      */
     @Override
     public boolean onLongClick(final View v) {
+        ConversationListActivity.logFirstComeInClickEvent("longpress");
         return processClick(v, true);
     }
 
