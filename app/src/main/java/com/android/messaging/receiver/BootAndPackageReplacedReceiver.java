@@ -36,9 +36,6 @@ public class BootAndPackageReplacedReceiver extends BroadcastReceiver {
     public void onReceive(final Context context, final Intent intent) {
         if (Intent.ACTION_BOOT_COMPLETED.equals(intent.getAction())
                 || Intent.ACTION_MY_PACKAGE_REPLACED.equals(intent.getAction())) {
-            // Repost unseen notifications
-            Factory.get().getApplicationPrefs().putLong(
-                    BuglePrefsKeys.LATEST_NOTIFICATION_MESSAGE_TIMESTAMP, Long.MIN_VALUE);
             UpdateMessageNotificationAction.updateMessageNotification();
             BugleApplication.updateAppConfig(context, PhoneUtils.getDefault().isDefaultSmsApp());
         } else {

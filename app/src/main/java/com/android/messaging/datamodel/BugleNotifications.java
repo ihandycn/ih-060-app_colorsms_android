@@ -301,11 +301,6 @@ public class BugleNotifications {
      * @return true if the notification should occur
      */
     public static boolean shouldNotify() {
-        // disable notifications when we enable message box to avoid
-        if (MessageCenterSettings.isSMSAssistantModuleEnabled()) {
-            return false;
-        }
-
         // If we're not the default sms app, don't put up any notifications.
         if (!PhoneUtils.getDefault().isDefaultSmsApp()) {
             return false;
@@ -475,7 +470,9 @@ public class BugleNotifications {
 
         // TODO: set based on contact coming from a favorite.
         notifBuilder.setPriority(state.getPriority());
-
+        if (notificationChannel != null) {
+             notificationChannel.setImportance(state.getChannelPriority());
+        }
         // Save the state of the notification in-progress so when the avatar is loaded,
         // we can continue building the notification.
         final NotificationCompat.Style notifStyle = state.build(notifBuilder);
@@ -1218,7 +1215,7 @@ public class BugleNotifications {
         Notifications.notifySafely(tag, PendingIntentConstants.MSG_SEND_ERROR, builder.build(), getSmsNotificationChannel());
     }
 
-    public static void cancelSmsNotifications() {
+    public static void cancelAllSmsNotifications() {
         try {
             final NotificationManager notificationManager = (NotificationManager) Factory.get().getApplicationContext().getSystemService(Context.NOTIFICATION_SERVICE);
             notificationManager.cancel(PendingIntentConstants.SMS_NOTIFICATION_ID);

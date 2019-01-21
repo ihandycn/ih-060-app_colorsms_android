@@ -15,9 +15,11 @@
  */
 package com.android.messaging.datamodel;
 
+import android.annotation.TargetApi;
 import android.app.NotificationChannel;
 import android.app.PendingIntent;
 import android.net.Uri;
+import android.os.Build;
 import android.support.v4.app.NotificationCompat;
 
 import com.android.messaging.datamodel.DatabaseHelper.MessageColumns;
@@ -135,6 +137,13 @@ public abstract class NotificationState {
      * @return the notification priority level for this notification.
      */
     public abstract int getPriority();
+
+
+    /**
+     * @return the NotificationChannel priority level for this notification.
+     */
+    @TargetApi(Build.VERSION_CODES.O)
+    public abstract int getChannelPriority();
 
     /** @return custom ringtone URI or null if not set */
     public String getRingtoneUri() {

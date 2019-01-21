@@ -15,13 +15,16 @@
  */
 package com.android.messaging.datamodel;
 
+import android.annotation.TargetApi;
 import android.app.Notification;
+import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.res.Resources;
 import android.database.Cursor;
 import android.graphics.Typeface;
 import android.net.Uri;
+import android.os.Build;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.NotificationCompat.Builder;
 import android.support.v4.app.NotificationCompat.WearableExtender;
@@ -58,6 +61,7 @@ import com.android.messaging.util.LogUtil;
 import com.android.messaging.util.PendingIntentConstants;
 import com.android.messaging.util.UriUtil;
 import com.google.common.collect.Lists;
+import com.messagecenter.customize.MessageCenterSettings;
 import com.superapps.util.Notifications;
 
 import java.util.ArrayList;
@@ -121,8 +125,22 @@ public abstract class MessageNotificationState extends NotificationState {
     @Override
     public int getPriority() {
         // Returning PRIORITY_HIGH causes L to put up a HUD notification. Without it, the ticker
-        // isn't displayed.
+        // isn't displayed, when Message box is enabled, we disable the Head-Up notification
+        if (MessageCenterSettings.isSMSAssistantModuleEnabled()) {
+            return Notification.PRIORITY_DEFAULT;
+        }
         return Notification.PRIORITY_HIGH;
+    }
+
+    @TargetApi(Build.VERSION_CODES.O)
+    @Override
+    public int getChannelPriority() {
+        // Returning PRIORITY_HIGH causes L to put up a HUD notification. Without it, the ticker
+        // isn't displayed.
+        if (MessageCenterSettings.isSMSAssistantModuleEnabled()) {
+            return NotificationManager.IMPORTANCE_DEFAULT;
+        }
+        return NotificationManager.IMPORTANCE_HIGH;
     }
 
     /**

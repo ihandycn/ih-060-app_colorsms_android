@@ -7,12 +7,10 @@ import android.telephony.TelephonyManager;
 import com.android.messaging.Factory;
 import com.android.messaging.datamodel.BugleNotifications;
 import com.android.messaging.datamodel.NoConfirmationSmsSendService;
-import com.android.messaging.datamodel.data.ParticipantData;
 import com.android.messaging.ui.UIIntents;
 import com.android.messaging.util.BugleAnalytics;
 import com.android.messaging.util.OsUtil;
 import com.android.messaging.util.PhoneUtils;
-import com.ihs.commons.utils.HSLog;
 import com.messagecenter.customize.MessageCenterFactoryImpl;
 import com.messagecenter.customize.SmsShowCallBack;
 import com.messagecenter.notification.NotificationMessageAlertActivity;
@@ -127,6 +125,8 @@ public class MessagingMsgCenterFactoryImpl extends MessageCenterFactoryImpl {
                 if (type == NotificationMessageAlertActivity.DismissType.MENU_CLOSE) {
                     BugleAnalytics.logEvent("SMS_PopUp_Disable", true);
                 }
+
+                BugleNotifications.markAllMessagesAsSeen();
                 BugleAnalytics.logEvent("SMS_PopUp_Close", true, "type", type.toString());
             }
 

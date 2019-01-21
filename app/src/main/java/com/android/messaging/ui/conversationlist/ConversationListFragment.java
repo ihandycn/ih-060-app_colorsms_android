@@ -137,7 +137,6 @@ public class ConversationListFragment extends Fragment implements ConversationLi
         setScrolledToNewestConversationIfNeeded();
 
         updateUi();
-        BugleNotifications.cancelSmsNotifications();
     }
 
     public void setScrolledToNewestConversationIfNeeded() {

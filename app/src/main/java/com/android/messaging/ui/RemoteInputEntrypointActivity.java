@@ -22,7 +22,6 @@ import android.telephony.TelephonyManager;
 import com.android.messaging.datamodel.BugleNotifications;
 import com.android.messaging.datamodel.NoConfirmationSmsSendService;
 import com.android.messaging.util.LogUtil;
-import com.superapps.util.Notifications;
 
 public class RemoteInputEntrypointActivity extends BaseBugleActivity {
     private static final String TAG = LogUtil.BUGLE_TAG;
@@ -49,7 +48,7 @@ public class RemoteInputEntrypointActivity extends BaseBugleActivity {
             // Wear apparently passes all of its extras via the clip data. Must pass it along.
             sendIntent.setClipData(intent.getClipData());
 
-            BugleNotifications.cancelSmsNotifications();
+            BugleNotifications.cancelAllSmsNotifications();
             BugleNotifications.markMessagesAsRead(intent.getStringExtra(UIIntents.UI_INTENT_EXTRA_CONVERSATION_ID));
 
             startService(sendIntent);
