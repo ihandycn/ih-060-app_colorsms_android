@@ -49,6 +49,10 @@ public class ConversationListActivity extends AbstractConversationListActivity {
 
     private TextView mTitleTextView;
     private View mSettingsBtn;
+    private View mEmojiStoreIconView;
+    private View mEmojiStoreCircleView;
+    private ViewGroup mGuideContainer;
+    private View mTriangleShape;
 
     private boolean mShowRateAlert = false;
 
@@ -65,8 +69,6 @@ public class ConversationListActivity extends AbstractConversationListActivity {
 
     private AnimState mAnimState = AnimState.NONE;
 
-    private ViewGroup mGuideContainer;
-    private View mTriangleShape;
 
     private boolean mIsEmojiStoreClickable = true;
 
@@ -98,6 +100,7 @@ public class ConversationListActivity extends AbstractConversationListActivity {
         if (mTitleTextView != null && mTitleTextView.getVisibility() == View.GONE) {
             mTitleTextView.setVisibility(View.VISIBLE);
             mSettingsBtn.setVisibility(View.VISIBLE);
+            mEmojiStoreIconView.setVisibility(View.VISIBLE);
         }
         //update statusBar color
         UiUtils.setStatusBarColor(this, getResources().getColor(R.color.action_bar_background_color));
@@ -129,6 +132,8 @@ public class ConversationListActivity extends AbstractConversationListActivity {
     public ActionMode startActionMode(ActionMode.Callback callback) {
         mTitleTextView.setVisibility(View.GONE);
         mSettingsBtn.setVisibility(View.GONE);
+        stopEmojiStoreGuide();
+        mEmojiStoreIconView.setVisibility(View.GONE);
         BugleAnalytics.logEvent("SMS_EditMode_Show", true);
         return super.startActionMode(callback);
     }
@@ -181,10 +186,10 @@ public class ConversationListActivity extends AbstractConversationListActivity {
         mAnimHandler = new Handler();
         mGuideContainer = findViewById(R.id.emoji_store_guide_content);
         mTriangleShape = findViewById(R.id.emoji_store_guide_triangle);
-        View store = findViewById(R.id.emoji_store_icon);
-        store.setScaleX(1f);
-        store.setScaleY(1f);
-        store.setOnClickListener(v -> {
+        mEmojiStoreIconView = findViewById(R.id.emoji_store_icon);
+        mEmojiStoreIconView.setScaleX(1f);
+        mEmojiStoreIconView.setScaleY(1f);
+        mEmojiStoreIconView.setOnClickListener(v -> {
             if (!mIsEmojiStoreClickable) {
                 return;
             }
@@ -200,7 +205,7 @@ public class ConversationListActivity extends AbstractConversationListActivity {
                 EmojiStoreActivity.start(ConversationListActivity.this);
             }
         });
-        store.setOnTouchListener(new View.OnTouchListener() {
+        mEmojiStoreIconView.setOnTouchListener(new View.OnTouchListener() {
             boolean touch = false;
 
             @Override
@@ -209,8 +214,8 @@ public class ConversationListActivity extends AbstractConversationListActivity {
                     case MotionEvent.ACTION_DOWN:
                         if (!touch) {
                             touch = true;
-                            store.animate().cancel();
-                            store.animate()
+                            mEmojiStoreIconView.animate().cancel();
+                            mEmojiStoreIconView.animate()
                                     .scaleX(0.7f)
                                     .scaleY(0.7f)
                                     .setDuration(200L)
@@ -220,8 +225,8 @@ public class ConversationListActivity extends AbstractConversationListActivity {
                     case MotionEvent.ACTION_UP:
                         if (touch) {
                             touch = false;
-                            store.animate().cancel();
-                            store.animate()
+                            mEmojiStoreIconView.animate().cancel();
+                            mEmojiStoreIconView.animate()
                                     .scaleX(1f)
                                     .scaleY(1f)
                                     .setDuration(200)
@@ -242,20 +247,20 @@ public class ConversationListActivity extends AbstractConversationListActivity {
         }
         Preferences.getDefault().putBoolean(PREF_SHOW_EMOJI_GUIDE, false);
         mAnimState = AnimState.APPEAR;
-        View circle = findViewById(R.id.emoji_store_circle);
+        mEmojiStoreCircleView = findViewById(R.id.emoji_store_circle);
 
         mAnimHandler.postDelayed(() -> {
-            circle.setVisibility(View.VISIBLE);
-            circle.setScaleX(0.9f);
-            circle.setScaleY(0.9f);
-            circle.setAlpha(1f);
-            circle.animate()
+            mEmojiStoreCircleView.setVisibility(View.VISIBLE);
+            mEmojiStoreCircleView.setScaleX(0.9f);
+            mEmojiStoreCircleView.setScaleY(0.9f);
+            mEmojiStoreCircleView.setAlpha(1f);
+            mEmojiStoreCircleView.animate()
                     .scaleX(2.2f)
                     .scaleY(2.2f)
                     .alpha(0f)
                     .setDuration(1000L)
                     .setInterpolator(PathInterpolatorCompat.create(0.1f, 0.95f))
-                    .withEndAction(() -> circle.setVisibility(View.INVISIBLE))
+                    .withEndAction(() -> mEmojiStoreCircleView.setVisibility(View.GONE))
                     .start();
         }, 800L);
 
@@ -330,8 +335,8 @@ public class ConversationListActivity extends AbstractConversationListActivity {
                     .start();
         }, 150L);
         mAnimHandler.postDelayed(() -> {
-            mGuideContainer.setVisibility(View.INVISIBLE);
-            mTriangleShape.setVisibility(View.INVISIBLE);
+            mGuideContainer.setVisibility(View.GONE);
+            mTriangleShape.setVisibility(View.GONE);
             mAnimState = AnimState.NONE;
         }, 250L);
     }
@@ -363,6 +368,21 @@ public class ConversationListActivity extends AbstractConversationListActivity {
         }
         if (mIsNoActionBack) {
             logFirstComeInClickEvent("no_action");
+        }
+    }
+
+    private void stopEmojiStoreGuide() {
+        if (mAnimState != AnimState.NONE) {
+            if (mGuideContainer != null) {
+                mGuideContainer.setVisibility(View.GONE);
+            }
+            if (mTriangleShape != null) {
+                mTriangleShape.setVisibility(View.GONE);
+            }
+            if (mEmojiStoreCircleView != null) {
+                mEmojiStoreCircleView.setVisibility(View.GONE);
+            }
+            mAnimState = AnimState.NONE;
         }
     }
 }
