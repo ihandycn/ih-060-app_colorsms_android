@@ -54,9 +54,6 @@ public class LaunchConversationActivity extends Activity implements
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (UiUtils.redirectToWelcomeIfNeeded(this)) {
-            return;
-        }
 
         final Intent intent = getIntent();
         final String action = intent.getAction();
@@ -101,9 +98,6 @@ public class LaunchConversationActivity extends Activity implements
     @Override
     public void onRestart(){
         super.onRestart();
-        if (UiUtils.redirectToWelcomeIfNeeded(this)) {
-            return;
-        }
     }
 
     private String getBody(final Uri uri) {

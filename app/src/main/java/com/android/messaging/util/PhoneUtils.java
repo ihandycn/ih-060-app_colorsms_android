@@ -914,8 +914,6 @@ public abstract class PhoneUtils {
                     if (clearedRunnable != null) {
                         clearedRunnable.run();
                     }
-                    // clear activity in default task
-                    UIIntents.get().launchConversationListActivity(context);
                     android.os.Process.killProcess(android.os.Process.myPid());
                 } else {
                     if (setRunnable != null) {

@@ -55,6 +55,9 @@ import com.android.messaging.ui.SnackBar.Placement;
 import com.android.messaging.ui.SnackBarInteraction;
 import com.android.messaging.ui.SnackBarManager;
 import com.android.messaging.ui.UIIntents;
+import com.android.messaging.ui.welcome.WelcomePermissionActivity;
+import com.android.messaging.ui.welcome.WelcomeSetAsDefault;
+import com.android.messaging.ui.welcome.WelcomeStartActivity;
 import com.ihs.commons.utils.HSLog;
 import com.superapps.util.Preferences;
 
@@ -358,6 +361,18 @@ public class UiUtils {
      * @return true if {@link Activity#finish()} was called because redirection was performed
      */
     public static boolean redirectToWelcomeIfNeeded(final Activity activity) {
+        if (activity instanceof WelcomeStartActivity) {
+            return false;
+        }
+
+        if (activity instanceof WelcomePermissionActivity) {
+            return false;
+        }
+
+        if (activity instanceof WelcomeSetAsDefault) {
+            return false;
+        }
+
         if (shouldShowWelcomeStart()) {
             Preferences.getDefault().putBoolean(PREF_KEY_FIRST_TIME_LAUNCH, false);
             UIIntents.get().launchWelcomeStartActivity(activity);
