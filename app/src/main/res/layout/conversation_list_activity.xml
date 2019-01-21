@@ -11,33 +11,7 @@
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
         android:layout_height="@dimen/action_bar_height"
-        app:elevation="@dimen/action_bar_elevation">
-
-        <com.superapps.view.TypefacedTextView
-            android:id="@+id/toolbar_title"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_gravity="center"
-            android:gravity="center"
-            android:paddingLeft="5dp"
-            android:paddingRight="5dp"
-            android:text="@string/bottom_navigation_item_messaging"
-            android:textColor="@color/action_bar_title_text_color"
-            android:textSize="@dimen/action_bar_page_title_text_size"
-            android:letterSpacing="-0.01"
-            app:typefaceFileName="@string/action_bar_title_typeface" />
-
-        <ImageView
-            android:id="@+id/toolbar_img"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:scaleType="center"
-            android:layout_gravity="center_vertical|end"
-            android:layout_marginEnd="16dp"
-            android:src="@drawable/ic_settings"
-            />
-
-    </android.support.v7.widget.Toolbar>
+        app:elevation="@dimen/action_bar_elevation" />
 
     <fragment
         xmlns:android="http://schemas.android.com/apk/res/android"

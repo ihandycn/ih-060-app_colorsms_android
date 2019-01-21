@@ -63,18 +63,18 @@ public class StickerMagicDetailActivity extends HSAppCompatActivity implements V
             HSLog.w(TAG, "Sound not found and play gif only.");
             playGif();
         }
-        BugleAnalytics.logEvent("SMSEmoji_ChatEmoji_Magic_View", true,"type", StickerInfo.getNumFromUrl(mStickerInfo.mMagicUrl));
+        BugleAnalytics.logEvent("SMSEmoji_ChatEmoji_Magic_View", true, "type", StickerInfo.getNumFromUrl(mStickerInfo.mMagicUrl));
     }
 
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.emoji_show_close:
-                BugleAnalytics.logEvent("SMSEmoji_ChatEmoji_Magic_Cancel",true);
+                BugleAnalytics.logEvent("SMSEmoji_ChatEmoji_Magic_Cancel", true);
                 finish();
                 break;
             case R.id.send_btn:
-                BugleAnalytics.logEvent("SMSEmoji_ChatEmoji_Magic_Select_Click", true,"type", StickerInfo.getNumFromUrl(mStickerInfo.mMagicUrl));
+                BugleAnalytics.logEvent("SMSEmoji_ChatEmoji_Magic_Select_Click", true, "type", StickerInfo.getNumFromUrl(mStickerInfo.mMagicUrl));
                 HSBundle bundle = new HSBundle();
                 bundle.putObject(BUNDLE_SEND_MAGIC_STICKER_DATA, mStickerInfo);
                 HSGlobalNotificationCenter.sendNotification(NOTIFICATION_SEND_MAGIC_STICKER, bundle);
@@ -86,12 +86,12 @@ public class StickerMagicDetailActivity extends HSAppCompatActivity implements V
     @Override
     public void onBackPressed() {
         super.onBackPressed();
-        BugleAnalytics.logEvent("SMSEmoji_ChatEmoji_Magic_Cancel",true);
+        BugleAnalytics.logEvent("SMSEmoji_ChatEmoji_Magic_Cancel", true);
     }
 
     @Override
-    protected void onStop() {
-        super.onStop();
+    protected void onPause() {
+        super.onPause();
         finish();
     }
 

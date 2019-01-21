@@ -1076,5 +1076,6 @@
     <string name="sms_notification_channel">Sms Notification</string>
     <string name="sms_notification_channel_description">Show a notification when received sms</string>
 
+    <string name="emoji_add_more">More emojis</string>
 
 </resources>
