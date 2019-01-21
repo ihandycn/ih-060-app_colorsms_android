@@ -81,7 +81,8 @@ public class SmsStorageStatusManager {
                 new NotificationCompat.BigTextStyle(builder);
         bigTextStyle.bigText(resources.getString(R.string.sms_storage_low_text));
         final Notification notification = bigTextStyle.build();
-        Notifications.notifySafely(PendingIntentConstants.SMS_STORAGE_LOW_NOTIFICATION_ID,
+        Notifications.notifySafely(getNotificationTag(),
+                PendingIntentConstants.SMS_STORAGE_LOW_NOTIFICATION_ID,
                 notification,
                 BugleNotifications.getSmsNotificationChannel());
     }

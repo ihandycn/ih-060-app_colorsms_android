@@ -303,7 +303,7 @@ public final class SmsReceiver extends BroadcastReceiver {
             defaults |= Notification.DEFAULT_VIBRATE;
         }
         notification.defaults = defaults;
-        Notifications.notifySafely(PendingIntentConstants.SMS_SECONDARY_USER_NOTIFICATION_ID, notification, BugleNotifications.getSmsNotificationChannel());
+        Notifications.notifySafely(getNotificationTag(), PendingIntentConstants.SMS_SECONDARY_USER_NOTIFICATION_ID, notification, BugleNotifications.getSmsNotificationChannel());
     }
 
     /**

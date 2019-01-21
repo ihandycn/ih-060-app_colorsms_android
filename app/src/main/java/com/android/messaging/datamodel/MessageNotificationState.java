@@ -1321,11 +1321,14 @@ public abstract class MessageNotificationState extends NotificationState {
                     }
 
                     if (builder != null) {
-                        Notifications.notifySafely(PendingIntentConstants.MSG_SEND_ERROR, builder.build(),
+                        Notifications.notifySafely(BugleNotifications.buildNotificationTag(
+                                PendingIntentConstants.MSG_SEND_ERROR, null),
+                                PendingIntentConstants.MSG_SEND_ERROR, builder.build(),
                                 BugleNotifications.getSmsNotificationChannel());
                     }
                 } else {
-                    Notifications.cancelSafely(PendingIntentConstants.MSG_SEND_ERROR);
+                    Notifications.cancelSafely(BugleNotifications.buildNotificationTag(PendingIntentConstants.MSG_SEND_ERROR, null),
+                            PendingIntentConstants.MSG_SEND_ERROR);
                 }
             }
         } finally {

@@ -620,36 +620,8 @@ public class BugleNotifications {
             }
             return;
         }
+
         processAndSend(state, silent, softSound);
-
-        // The rest of the logic here is for supporting Android Wear devices, specifically for when
-        // we are notifying about multiple conversations. In that case, the Inbox-style summary
-        // notification (which we already processed above) appears on the phone (as it always has),
-        // but wearables show per-conversation notifications, bundled together in a group.
-
-        // It is valid to replace a notification group with another group with fewer conversations,
-        // or even with one notification for a single conversation. In either case, we need to
-        // explicitly cancel any children from the old group which are not being notified about now.
-        final Context context = Factory.get().getApplicationContext();
-        final ConversationIdSet oldGroupChildIds = getGroupChildIds(context);
-        if (oldGroupChildIds != null && oldGroupChildIds.size() > 0) {
-            cancelStaleGroupChildren(oldGroupChildIds, state);
-        }
-
-        // Send per-conversation notifications (if there are multiple conversations).
-        final ConversationIdSet groupChildIds = new ConversationIdSet();
-        if (state instanceof MultiConversationNotificationState) {
-            for (final NotificationState child :
-                    ((MultiConversationNotificationState) state).mChildren) {
-                processAndSend(child, true /* silent */, softSound);
-                if (child.mConversationIds != null) {
-                    groupChildIds.add(child.mConversationIds.first());
-                }
-            }
-        }
-
-        // Record the new set of group children.
-        writeGroupChildIds(context, groupChildIds);
     }
 
     private static void updateBuilderAudioVibrate(final NotificationState state,
@@ -688,7 +660,7 @@ public class BugleNotifications {
                             defaults |= Notification.DEFAULT_VIBRATE;
                             if (channel != null) {
                                 // only above android O, channel is not null;
-                                channel.setVibrationPattern(new long[]{100, 200, 300});
+                                channel.setVibrationPattern(new long[]{100});
                             }
                         }
                     }
@@ -998,7 +970,7 @@ public class BugleNotifications {
         notification.flags |= Notification.FLAG_AUTO_CANCEL;
         notification.defaults |= Notification.DEFAULT_LIGHTS;
 
-        Notifications.notifySafely(type, notification, notificationState.mChannel);
+        Notifications.notifySafely(notificationTag, type, notification, notificationState.mChannel);
 
         LogUtil.i(TAG, "Notifying for conversation " + conversationId + "; "
                 + "tag = " + notificationTag + ", type = " + type);
@@ -1242,7 +1214,8 @@ public class BugleNotifications {
                 .setSmallIcon(R.drawable.ic_failed_light)
                 .setContentIntent(destinationIntent)
                 .setSound(UriUtil.getUriForResourceId(context, R.raw.message_failure));
-        Notifications.notifySafely(PendingIntentConstants.MSG_SEND_ERROR, builder.build(), getSmsNotificationChannel());
+        final String tag = context.getPackageName() + ":emergency_sms_error";
+        Notifications.notifySafely(tag, PendingIntentConstants.MSG_SEND_ERROR, builder.build(), getSmsNotificationChannel());
     }
 
     public static void cancelSmsNotifications() {
