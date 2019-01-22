@@ -279,13 +279,7 @@ public class PeopleAndOptionsFragment extends Fragment
                 }
 
                 @Override
-                public boolean onPersonLongClicked(final PersonItemData data) {
-                    if (mBinding.isBound()) {
-                        final CopyContactDetailDialog dialog = new CopyContactDetailDialog(
-                                getContext(), data.getDetails());
-                        dialog.show();
-                        return true;
-                    }
+                public boolean onPersonLongClicked(PersonItemData data) {
                     return false;
                 }
             });
