@@ -62,6 +62,7 @@ import com.android.messaging.util.PendingIntentConstants;
 import com.android.messaging.util.UriUtil;
 import com.google.common.collect.Lists;
 import com.messagecenter.customize.MessageCenterSettings;
+import com.messagecenter.util.Utils;
 import com.superapps.util.Notifications;
 
 import java.util.ArrayList;
@@ -144,7 +145,7 @@ public abstract class MessageNotificationState extends NotificationState {
     }
 
     private boolean disableHeadUpNotification() {
-        return MessageCenterSettings.isSMSAssistantModuleEnabled() && !Factory.get().getIsForeground();
+        return MessageCenterSettings.isSMSAssistantModuleEnabled() && !Factory.get().getIsForeground() && Utils.isScreenOn(Factory.get().getApplicationContext());
     }
 
     /**
