@@ -104,8 +104,6 @@ public class ConversationInputManager implements ConversationInput.ConversationI
 
         void setAccessibility(boolean enabled);
 
-        void onKeyboardVisible(boolean isVisible);
-
         void logMagicSticker(String name);
 
         void logEmoji(String code);
@@ -140,7 +138,6 @@ public class ConversationInputManager implements ConversationInput.ConversationI
         @Override
         public void onImeStateChanged(final boolean imeOpen) {
             mImeInput.onVisibilityChanged(imeOpen);
-            mSink.onKeyboardVisible(imeOpen);
         }
     };
 

@@ -441,6 +441,7 @@ public class ComposeMessageView extends LinearLayout
     @Override
     public void hideMediaPickerView() {
         mMediaPickerLayout.setVisibility(GONE);
+        mAttachMediaButton.setImageResource(R.drawable.input_media_icon);
     }
 
     private void hideMediaPicker(){
@@ -493,6 +494,7 @@ public class ComposeMessageView extends LinearLayout
     @Override
     public void hideEmojiPickerView() {
         mEmojiPickerLayout.setVisibility(GONE);
+        mEmojiKeyboardBtn.setImageResource(R.drawable.input_emoji_icon);
     }
 
     private void hideEmojiPicker(){
@@ -551,18 +553,6 @@ public class ComposeMessageView extends LinearLayout
             mStickerLogNameList = new ArrayList<>();
         }
         mStickerLogNameList.add(name);
-    }
-
-    @Override
-    public void onKeyboardVisible(boolean isVisible) {
-        if (isVisible) {
-            mEmojiKeyboardBtn.setImageResource(R.drawable.input_emoji_icon);
-            mAttachMediaButton.setImageResource(R.drawable.input_media_icon);
-        } else if (!isEmojiPickerShowing()) {
-            mEmojiKeyboardBtn.setImageResource(R.drawable.input_emoji_icon);
-        } else if (!isMediaPickerShowing()) {
-            mAttachMediaButton.setImageResource(R.drawable.input_media_icon);
-        }
     }
 
     private void hideAttachmentsWhenShowingSims(final boolean simPickerVisible) {
