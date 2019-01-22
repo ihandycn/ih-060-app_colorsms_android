@@ -126,7 +126,7 @@ public abstract class MessageNotificationState extends NotificationState {
     @Override
     public int getPriority() {
         // Returning PRIORITY_HIGH causes L to put up a HUD notification. Without it, the ticker
-        // isn't displayed, when Message box is enabled, we disable the Head-Up notification
+        // isn't displayed, when Message box is enabled, we disable the Head-Up notification. And use high priority to wake up screen when screen off
         if (disableHeadUpNotification()) {
             return Notification.PRIORITY_DEFAULT;
         }
@@ -136,8 +136,6 @@ public abstract class MessageNotificationState extends NotificationState {
     @TargetApi(Build.VERSION_CODES.O)
     @Override
     public int getChannelPriority() {
-        // Returning PRIORITY_HIGH causes L to put up a HUD notification. Without it, the ticker
-        // isn't displayed.
         if (disableHeadUpNotification()) {
             return NotificationManager.IMPORTANCE_DEFAULT;
         }
