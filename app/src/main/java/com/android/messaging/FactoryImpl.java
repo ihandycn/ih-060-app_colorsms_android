@@ -183,7 +183,7 @@ class FactoryImpl extends Factory {
         }
         sInitialized = true;
 
-        mApplication.initializeSync(this);
+        Threads.postOnMainThread(() -> mApplication.initializeSync(this));
 
         Threads.postOnThreadPoolExecutor(() -> mApplication.initializeAsync(FactoryImpl.this));
     }

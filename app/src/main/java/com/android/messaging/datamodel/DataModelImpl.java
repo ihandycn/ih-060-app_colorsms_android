@@ -16,9 +16,11 @@
 
 package com.android.messaging.datamodel;
 
+import android.annotation.TargetApi;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
+import android.os.Build;
 import android.telephony.SubscriptionManager;
 
 import com.android.messaging.datamodel.action.ActionService;
@@ -58,8 +60,6 @@ import com.android.messaging.util.ConnectivityUtil;
 import com.android.messaging.util.LogUtil;
 import com.android.messaging.util.OsUtil;
 import com.android.messaging.util.PhoneUtils;
-
-import java.util.HashSet;
 
 public class DataModelImpl extends DataModel {
     private final Context mContext;
@@ -225,6 +225,7 @@ public class DataModelImpl extends DataModel {
         ParticipantRefresh.refreshParticipantsIfNeeded();
     }
 
+    @TargetApi(Build.VERSION_CODES.LOLLIPOP_MR1)
     @Override
     public void onApplicationCreated() {
         FixupMessageStatusOnStartupAction.fixupMessageStatus();
