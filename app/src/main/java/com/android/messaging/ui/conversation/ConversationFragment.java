@@ -175,7 +175,8 @@ public class ConversationFragment extends Fragment implements ConversationDataLi
     // This binding keeps track of our associated ConversationData instance
     // A binding should have the lifetime of the owning component,
     //  don't recreate, unbind and bind if you need new data
-    @VisibleForTesting final Binding<ConversationData> mBinding = BindingBase.createBinding(this);
+    @VisibleForTesting
+    final Binding<ConversationData> mBinding = BindingBase.createBinding(this);
 
     // Saved Instance State Data - only for temporal data which is nice to maintain but not
     // critical for correctness.
@@ -1514,14 +1515,7 @@ public class ConversationFragment extends Fragment implements ConversationDataLi
             tvTitle.setText(appName);
         }
 
-        // When conversation is showing and media picker is not showing, then hide the action
-        // bar only when we are in landscape mode, with IME open.
-        if (mHost.isImeOpen() && UiUtils.isLandscapeMode()) {
-            actionBar.hide();
-        } else {
-            actionBar.show();
-        }
-
+        actionBar.show();
         actionBar.setDisplayShowTitleEnabled(false);
         actionBar.setBackgroundDrawable(getResources().getDrawable(R.drawable.actionbar_underline_bg));
         UiUtils.setStatusBarColor(getActivity(), getResources().getColor(R.color.action_bar_background_color));
