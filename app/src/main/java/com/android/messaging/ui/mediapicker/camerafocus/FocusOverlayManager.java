@@ -298,6 +298,10 @@ public class FocusOverlayManager {
             return;
         }
 
+        if (mPieRenderer == null) {
+            return;
+        }
+
         if (moving) {
             mPieRenderer.showStart();
         } else {
