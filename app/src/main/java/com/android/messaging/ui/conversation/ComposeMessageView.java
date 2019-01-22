@@ -75,9 +75,6 @@ import com.android.messaging.util.LogUtil;
 import com.android.messaging.util.MediaUtil;
 import com.android.messaging.util.OsUtil;
 import com.android.messaging.util.UiUtils;
-import com.ihs.commons.notificationcenter.HSGlobalNotificationCenter;
-import com.ihs.commons.notificationcenter.INotificationObserver;
-import com.ihs.commons.utils.HSBundle;
 import com.superapps.util.BackgroundDrawables;
 import com.superapps.util.Dimensions;
 import com.superapps.util.Threads;
@@ -441,8 +438,13 @@ public class ComposeMessageView extends LinearLayout
         mInputManager.showMediaPicker();
     }
 
-    private void hideMediaPicker() {
+    @Override
+    public void hideMediaPickerView() {
         mMediaPickerLayout.setVisibility(GONE);
+    }
+
+    private void hideMediaPicker(){
+        hideMediaPickerView();
         mInputManager.hideMediaPicker();
     }
 
@@ -488,8 +490,13 @@ public class ComposeMessageView extends LinearLayout
         mInputManager.showEmojiPicker();
     }
 
-    private void hideEmojiPicker() {
+    @Override
+    public void hideEmojiPickerView() {
         mEmojiPickerLayout.setVisibility(GONE);
+    }
+
+    private void hideEmojiPicker(){
+        hideEmojiPickerView();
         mInputManager.hideEmojiPicker();
     }
 
@@ -1166,10 +1173,6 @@ public class ComposeMessageView extends LinearLayout
 
     public void saveInputState(final Bundle outState) {
         mInputManager.onSaveInputState(outState);
-    }
-
-    public void resetMediaPickerState() {
-        mInputManager.resetMediaPickerState();
     }
 
     public boolean onBackPressed() {

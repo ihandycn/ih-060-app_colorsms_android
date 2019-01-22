@@ -966,7 +966,6 @@ public class ConversationFragment extends Fragment implements ConversationDataLi
                 message.consolidateText();
 
                 mBinding.getData().sendMessage(mBinding, message);
-                mComposeMessageView.resetMediaPickerState();
             } else {
                 LogUtil.w(LogUtil.BUGLE_TAG, "Message can't be sent: conv participants not loaded");
             }
@@ -995,8 +994,6 @@ public class ConversationFragment extends Fragment implements ConversationDataLi
 
     @Override
     public void onAttachmentsCleared() {
-        // When attachments are removed, reset transient media picker state such as image selection.
-        mComposeMessageView.resetMediaPickerState();
     }
 
     /**

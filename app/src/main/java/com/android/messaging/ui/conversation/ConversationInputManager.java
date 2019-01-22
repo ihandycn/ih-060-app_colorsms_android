@@ -111,6 +111,10 @@ public class ConversationInputManager implements ConversationInput.ConversationI
         void logEmoji(String code);
 
         void logSticker(String name);
+
+        void hideMediaPickerView();
+
+        void hideEmojiPickerView();
     }
 
     private final ConversationInputHost mHost;
@@ -222,10 +226,6 @@ public class ConversationInputManager implements ConversationInput.ConversationI
             }
         }
         return false;
-    }
-
-    public void resetMediaPickerState() {
-        mMediaInput.resetViewHolderState();
     }
 
     public void showMediaPicker() {
@@ -455,14 +455,14 @@ public class ConversationInputManager implements ConversationInput.ConversationI
             return true;
         }
 
-        public void resetViewHolderState() {
-//            if (mMediaPicker != null) {
-//                mMediaPicker.resetViewHolderState();
-//            }
-        }
-
         private boolean isOpen() {
             return (mMediaPicker != null);
+        }
+
+        @Override
+        public boolean onBackPressed() {
+            mSink.hideMediaPickerView();
+            return super.onBackPressed();
         }
     }
 
@@ -537,6 +537,11 @@ public class ConversationInputManager implements ConversationInput.ConversationI
                     return mSink.isContainMessagePartData(uri);
                 }
             });
+        }
+
+        @Override public boolean onBackPressed() {
+            mSink.hideEmojiPickerView();
+            return super.onBackPressed();
         }
 
         boolean isAddedToFragmentManager() {
