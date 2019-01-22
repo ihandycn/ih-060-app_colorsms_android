@@ -126,7 +126,7 @@ public abstract class MessageNotificationState extends NotificationState {
     public int getPriority() {
         // Returning PRIORITY_HIGH causes L to put up a HUD notification. Without it, the ticker
         // isn't displayed, when Message box is enabled, we disable the Head-Up notification
-        if (MessageCenterSettings.isSMSAssistantModuleEnabled()) {
+        if (disableHeadUpNotification()) {
             return Notification.PRIORITY_DEFAULT;
         }
         return Notification.PRIORITY_HIGH;
@@ -137,10 +137,14 @@ public abstract class MessageNotificationState extends NotificationState {
     public int getChannelPriority() {
         // Returning PRIORITY_HIGH causes L to put up a HUD notification. Without it, the ticker
         // isn't displayed.
-        if (MessageCenterSettings.isSMSAssistantModuleEnabled()) {
+        if (disableHeadUpNotification()) {
             return NotificationManager.IMPORTANCE_DEFAULT;
         }
         return NotificationManager.IMPORTANCE_HIGH;
+    }
+
+    private boolean disableHeadUpNotification() {
+        return MessageCenterSettings.isSMSAssistantModuleEnabled() && !Factory.get().getIsForeground();
     }
 
     /**
