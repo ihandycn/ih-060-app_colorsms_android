@@ -59,8 +59,6 @@ public class BugleActionBarActivity extends AppCompatActivity implements ImeUtil
     // device
     private int mLastScreenHeight;
 
-    protected boolean mIsRedirectToWelcome = false;
-
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

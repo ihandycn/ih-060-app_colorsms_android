@@ -3,6 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="247.7dp"
+    android:background="#ffffff"
     android:orientation="vertical">
 
     <com.superapps.view.ViewPagerFixed
@@ -10,7 +11,7 @@
         android:layout_width="match_parent"
         android:layout_height="197dp"
         android:layout_above="@+id/bottom_tab_layout"
-        android:background="#ffffff" />
+        />
 
     <RelativeLayout
         android:id="@+id/bottom_tab_layout"
@@ -30,7 +31,6 @@
             android:layout_height="50dp"
             android:layout_below="@id/line_view"
             android:layout_toStartOf="@+id/emoji_store_btn"
-            android:background="#ffffff"
             app:tabIndicatorHeight="0dp"
             app:tabMaxWidth="0dp"
             app:tabMinWidth="0dp"

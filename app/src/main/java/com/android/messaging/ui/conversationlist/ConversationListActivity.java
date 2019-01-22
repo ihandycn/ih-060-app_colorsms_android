@@ -31,6 +31,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.android.messaging.Factory;
 import com.android.messaging.R;
 import com.android.messaging.ui.UIIntents;
 import com.android.messaging.ui.dialog.FiveStarRateDialog;
@@ -59,6 +60,7 @@ public class ConversationListActivity extends AbstractConversationListActivity {
     private Handler mAnimHandler;
 
     private static boolean mIsNoActionBack = true;
+    private boolean mIsRealCreate = false;
 
     private enum AnimState {
         NONE,
@@ -76,9 +78,10 @@ public class ConversationListActivity extends AbstractConversationListActivity {
     protected void onCreate(final Bundle savedInstanceState) {
         Trace.beginSection("ConversationListActivity.onCreate");
         super.onCreate(savedInstanceState);
-        if (mIsRedirectToWelcome) {
+        if (Factory.sIsRedirectToWelcome) {
             return;
         }
+        mIsRealCreate = true;
         setContentView(R.layout.conversation_list_activity);
         configAppBar();
         showEmojiStoreGuide();
@@ -363,7 +366,7 @@ public class ConversationListActivity extends AbstractConversationListActivity {
     @Override
     protected void onStop() {
         super.onStop();
-        if (mIsRedirectToWelcome) {
+        if (!mIsRealCreate) {
             return;
         }
         if (mIsNoActionBack) {
