@@ -587,5 +587,7 @@
     <string name="setting_sms_show_close_dialog_title">オフにしてよろしいですか？</string>
     <string name="emoji_recent_empty_description">お気に入りなし</string>
 
+    <string name="emoji_add_more">もっと絵文字</string>
+
     <string name="sms_show_current_theme">現在のテーマ</string>
 </resources>

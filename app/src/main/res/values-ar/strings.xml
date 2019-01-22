@@ -691,5 +691,7 @@
     <string name="setting_sms_show_close_dialog_title">تأكيد الإيقاف؟</string>
     <string name="emoji_recent_empty_description">لا مفضلات</string>
 
+    <string name="emoji_add_more">المزيد من الإيموجي</string>
+
     <string name="sms_show_current_theme">القالب الحالي</string>
 </resources>

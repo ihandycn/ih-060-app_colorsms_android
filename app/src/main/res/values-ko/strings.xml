@@ -588,5 +588,7 @@
     <string name="sms_show_current_theme">현재 테마</string>
     <string name="emoji_recent_empty_description">즐겨찾기 없음</string>
 
+    <string name="emoji_add_more">더 많은 이모지</string>
+
 
 </resources>

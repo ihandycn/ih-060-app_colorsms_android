@@ -587,5 +587,7 @@
     <string name="setting_sms_show_close_dialog_title">Confirmer pour désactiver ?</string>
     <string name="emoji_recent_empty_description">Aucun favori</string>
 
+    <string name="emoji_add_more">Plus d\'emojis</string>
+
     <string name="sms_show_current_theme">Thème actuel</string>
 </resources>

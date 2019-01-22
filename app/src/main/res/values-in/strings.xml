@@ -588,5 +588,7 @@
     <string name="setting_sms_show_close_dialog_title">Yakin ingin mematikan?</string>
     <string name="emoji_recent_empty_description">Tidak ada favorit</string>
 
+    <string name="emoji_add_more">Emoji lainnya</string>
+
     <string name="sms_show_current_theme">Tema Sekarang</string>
 </resources>

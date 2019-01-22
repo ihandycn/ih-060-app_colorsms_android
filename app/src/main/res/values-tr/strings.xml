@@ -588,5 +588,7 @@
     <string name="sms_show_current_theme">Geçerli Tema</string>
     <string name="emoji_recent_empty_description">Sık kullanılan yok</string>
 
+    <string name="emoji_add_more">Daha fazla emoji</string>
+
 
 </resources>
