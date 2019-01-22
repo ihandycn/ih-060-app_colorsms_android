@@ -83,7 +83,7 @@
     <dimen name="contact_list_icon_size">40dp</dimen>
     <dimen name="recipient_edit_text_size">20sp</dimen>
     <dimen name="pager_tab_header_text_size">15sp</dimen>
-    <dimen name="pager_tab_underline_selected">1px</dimen>
+    <dimen name="pager_tab_underline_selected">3dp</dimen>
     <dimen name="contact_list_alphabet_header_text_size">26dp</dimen>
 
     <!-- Flings slower than this length / sec will be ignored -->
