@@ -35,12 +35,15 @@ import android.widget.ImageButton;
 
 import com.android.messaging.R;
 import com.android.messaging.datamodel.data.MediaPickerMessagePartData;
+import com.android.messaging.ui.conversation.ConversationFastScroller;
+import com.android.messaging.ui.conversation.ConversationFragment;
 import com.android.messaging.ui.mediapicker.CameraManager.MediaCallback;
 import com.android.messaging.ui.mediapicker.camerafocus.RenderOverlay;
 import com.android.messaging.util.Assert;
 import com.android.messaging.util.LogUtil;
 import com.android.messaging.util.OsUtil;
 import com.android.messaging.util.UiUtils;
+import com.ihs.commons.notificationcenter.HSGlobalNotificationCenter;
 
 /**
  * Chooser which allows the user to take pictures or video without leaving the current app/activity
@@ -198,6 +201,7 @@ class CameraMediaChooser extends MediaChooser implements
                 mVideoCancelled = true;
                 CameraManager.get().stopVideo();
                 mCameraGalleryFragment.dismiss(true);
+                HSGlobalNotificationCenter.sendNotification(ConversationFragment.EVENT_HIDE_MEDIA_PICKER);
             }
         });
 
@@ -434,7 +438,7 @@ class CameraMediaChooser extends MediaChooser implements
 
 
         mSwapCameraButton.setVisibility(!isRecording && CameraManager.get().hasFrontAndBackCamera() ?
-                        View.VISIBLE : View.GONE);
+                View.VISIBLE : View.GONE);
         mSwapCameraButton.setImageResource(frontCamera ?
                 R.drawable.ic_camera_front_light :
                 R.drawable.ic_camera_rear_light);

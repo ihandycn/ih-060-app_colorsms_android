@@ -126,6 +126,7 @@ public class ConversationFragment extends Fragment implements ConversationDataLi
 
     public static final String EVENT_SHOW_OPTION_MENU = "event_show_option_menu";
     public static final String EVENT_HIDE_OPTION_MENU = "event_hide_option_menu";
+    public static final String EVENT_HIDE_MEDIA_PICKER = "event_hide_media_picker";
 
     public interface ConversationFragmentHost extends ImeUtil.ImeStateHost {
         void onStartComposeMessage();
@@ -459,7 +460,8 @@ public class ConversationFragment extends Fragment implements ConversationDataLi
         );
 
         HSGlobalNotificationCenter.addObserver(EVENT_SHOW_OPTION_MENU, this);
-        HSGlobalNotificationCenter.addObserver(EVENT_HIDE_OPTION_MENU, this);
+        HSGlobalNotificationCenter.addObserver(EVENT_SHOW_OPTION_MENU, this);
+        HSGlobalNotificationCenter.addObserver(EVENT_HIDE_MEDIA_PICKER, this);
         BugleAnalytics.logEvent("SMS_DetailsPage_Show", true);
     }
 
@@ -1591,6 +1593,9 @@ public class ConversationFragment extends Fragment implements ConversationDataLi
                 break;
             case EVENT_HIDE_OPTION_MENU:
                 setOptionsMenuVisibility(false);
+                break;
+            case EVENT_HIDE_MEDIA_PICKER:
+                hideMediaPicker();
                 break;
         }
     }

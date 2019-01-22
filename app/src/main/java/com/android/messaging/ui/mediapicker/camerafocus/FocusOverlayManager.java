@@ -340,6 +340,10 @@ public class FocusOverlayManager {
             return;
         }
 
+        if (mPieRenderer == null) {
+            return;
+        }
+
         // Let users be able to cancel previous touch focus.
         if ((mFocusArea != null) && (mState == STATE_FOCUSING ||
                 mState == STATE_SUCCESS || mState == STATE_FAIL)) {
