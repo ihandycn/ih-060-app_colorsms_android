@@ -454,6 +454,19 @@ public class DraftMessageData extends BindableData implements ReadDraftDataActio
         return !mAttachments.isEmpty();
     }
 
+    public boolean isContainMessagePartData(Uri uri) {
+        if (uri == null || mAttachments == null) {
+            return true;
+        }
+        for (MessagePartData data : mAttachments) {
+            Uri contentUri = data.getContentUri();
+            if (contentUri != null && contentUri.equals(uri)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     public boolean hasPendingAttachments() {
         return !mPendingAttachments.isEmpty();
     }

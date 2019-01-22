@@ -797,6 +797,11 @@ public class ComposeMessageView extends LinearLayout
     }
 
     @Override
+    public boolean isContainMessagePartData(Uri uri) {
+        return mBinding.getData().isContainMessagePartData(uri);
+    }
+
+    @Override
     public void onMediaItemsUnselected(final MessagePartData item) {
         mBinding.getData().removeAttachment(item);
         announceMediaItemState(false /*isSelected*/);

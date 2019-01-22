@@ -17,6 +17,7 @@ package com.android.messaging.ui.conversation;
 
 import android.app.FragmentManager;
 import android.content.Context;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.view.KeyEvent;
@@ -90,6 +91,8 @@ public class ConversationInputManager implements ConversationInput.ConversationI
      */
     public interface ConversationInputSink {
         void onMediaItemsSelected(Collection<MessagePartData> items);
+
+        boolean isContainMessagePartData(Uri uri);
 
         void onMediaItemsUnselected(MessagePartData item);
 
@@ -527,6 +530,11 @@ public class ConversationInputManager implements ConversationInput.ConversationI
                             }
                         }
                     }
+                }
+
+                @Override
+                public boolean isContainMessagePartData(Uri uri) {
+                    return mSink.isContainMessagePartData(uri);
                 }
             });
         }
