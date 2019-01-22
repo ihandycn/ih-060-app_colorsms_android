@@ -2,13 +2,13 @@
 <selector xmlns:android="http://schemas.android.com/apk/res/android">
     <item android:state_pressed="true">
         <shape>
-            <corners android:radius="23dp" />
+            <corners android:radius="25dp" />
             <solid android:color="@color/welcome_button_white_pressed" />
         </shape>
     </item>
     <item android:state_pressed="false">
         <shape>
-            <corners android:radius="23dp" />
+            <corners android:radius="25dp" />
             <solid android:color="@color/welcome_button_white" />
         </shape>
     </item>
