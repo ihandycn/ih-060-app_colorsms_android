@@ -756,5 +756,8 @@
         <item name="android:minHeight">5.3dip</item>
         <item name="android:maxHeight">5.3dip</item>
     </style>
-    
+
+    <style name="PopupMenu" parent="ThemeOverlay.AppCompat.Light">
+        <item name="android:listSelector">?attr/listChoiceBackgroundIndicator</item>
+    </style>
 </resources>
