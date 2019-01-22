@@ -88,4 +88,11 @@ dependencies {
 
     implementation 'pl.droidsonroids.gif:android-gif-drawable:1.2.7'
     implementation 'com.crashlytics.sdk.android:crashlytics:2.9.8'
+
+
+    // "D/DebugDB: Open http://xxxxxxxx:8080 in your browser" will appear in your logcat,
+    // open it in your browser to see out project tables;
+    debugImplementation 'com.amitshekhar.android:debug-db:1.0.3'
+
+
 }

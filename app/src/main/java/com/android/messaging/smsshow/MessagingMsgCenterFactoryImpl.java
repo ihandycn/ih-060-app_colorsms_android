@@ -2,11 +2,18 @@ package com.android.messaging.smsshow;
 
 import android.content.Context;
 import android.content.Intent;
+import android.support.annotation.WorkerThread;
 import android.telephony.TelephonyManager;
 
 import com.android.messaging.Factory;
+import com.android.messaging.datamodel.BugleDatabaseOperations;
 import com.android.messaging.datamodel.BugleNotifications;
+import com.android.messaging.datamodel.DataModel;
+import com.android.messaging.datamodel.DatabaseWrapper;
 import com.android.messaging.datamodel.NoConfirmationSmsSendService;
+import com.android.messaging.datamodel.NotificationState;
+import com.android.messaging.datamodel.data.MessageData;
+import com.android.messaging.datamodel.data.ParticipantData;
 import com.android.messaging.ui.UIIntents;
 import com.android.messaging.util.BugleAnalytics;
 import com.android.messaging.util.OsUtil;
@@ -92,6 +99,20 @@ public class MessagingMsgCenterFactoryImpl extends MessageCenterFactoryImpl {
             @Override
             public boolean showDefaultSmsAppEntranceIcon() {
                 return false;
+            }
+
+            @WorkerThread
+            @Override
+            public boolean isUserBlocked(Intent receivedSmsIntent, String from) {
+                int subId = PhoneUtils.getDefault().getEffectiveIncomingSubIdFromSystem(
+                        receivedSmsIntent, EXTRA_SUB_ID);
+                final DatabaseWrapper db = DataModel.get().getDatabase();
+                final ParticipantData rawSender = ParticipantData.getFromRawPhoneBySimLocale(from, subId);
+                boolean isBlocked =  BugleDatabaseOperations.isBlockedDestination(
+                        db, rawSender.getNormalizedDestination());
+
+
+                return  isBlocked;
             }
         };
     }
