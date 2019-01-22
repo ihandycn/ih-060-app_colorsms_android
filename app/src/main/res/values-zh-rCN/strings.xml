@@ -582,7 +582,7 @@
     <string name="sms_show_apply">应用</string>
     <string name="media_picker_camera">相机</string>
     <string name="sms_show_loading">加载中……</string>
-    <string name="media_picker_photo">摄影</string>
+    <string name="media_picker_photo">图片</string>
     <string name="welcome_permission_button">开启</string>
     <string name="setting_sms_show_close_dialog_title">确定关闭？</string>
     <string name="sms_show_current_theme">当前的主题</string>
