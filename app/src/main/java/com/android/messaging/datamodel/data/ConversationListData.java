@@ -97,7 +97,7 @@ public class ConversationListData extends BindableData
                     loader = new BoundCursorLoader(bindingId, mContext,
                             MessagingContentProvider.CONVERSATIONS_URI,
                             ConversationListItemData.PROJECTION,
-                            null,
+                            mArchivedMode ? WHERE_ARCHIVED : WHERE_NOT_ARCHIVED,
                             null,       // selection args
                             SORT_ORDER);
                     break;
