@@ -25,6 +25,7 @@ import android.text.TextUtils;
 
 import com.android.messaging.Factory;
 import com.android.messaging.datamodel.BugleDatabaseOperations;
+import com.android.messaging.datamodel.BugleNotifications;
 import com.android.messaging.datamodel.DataModel;
 import com.android.messaging.datamodel.DatabaseWrapper;
 import com.android.messaging.datamodel.MessagingContentProvider;
@@ -151,6 +152,8 @@ public class InsertNewMessageAction extends Action implements Parcelable {
             return null;
         }
         final int subId = self.getSubId();
+
+        BugleNotifications.markMessagesAsRead(conversationId);
 
         // TODO: Work out whether to send with SMS or MMS (taking into account recipients)?
         final boolean isSms = (message.getProtocol() == MessageData.PROTOCOL_SMS);
