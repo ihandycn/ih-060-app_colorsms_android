@@ -55,6 +55,7 @@ import com.android.messaging.ui.SnackBar.Placement;
 import com.android.messaging.ui.SnackBarInteraction;
 import com.android.messaging.ui.SnackBarManager;
 import com.android.messaging.ui.UIIntents;
+import com.android.messaging.ui.WebViewActivity;
 import com.android.messaging.ui.welcome.WelcomePermissionActivity;
 import com.android.messaging.ui.welcome.WelcomeSetAsDefault;
 import com.android.messaging.ui.welcome.WelcomeStartActivity;
@@ -370,6 +371,10 @@ public class UiUtils {
         }
 
         if (activity instanceof WelcomeSetAsDefault) {
+            return false;
+        }
+
+        if (activity instanceof WebViewActivity) {
             return false;
         }
 
