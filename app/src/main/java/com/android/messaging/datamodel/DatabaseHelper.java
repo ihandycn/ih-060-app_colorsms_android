@@ -36,7 +36,7 @@ import com.google.common.annotations.VisibleForTesting;
 /**
  * TODO: Open Issues:
  * - Should we be storing the draft messages in the regular messages table or should we have a
- *   separate table for drafts to keep the normal messages query as simple as possible?
+ * separate table for drafts to keep the normal messages query as simple as possible?
  */
 
 /**
@@ -49,10 +49,14 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return Integer.parseInt(context.getResources().getString(R.string.database_version));
     }
 
-    /** Table containing names of all other tables and views */
+    /**
+     * Table containing names of all other tables and views
+     */
     private static final String MASTER_TABLE = "sqlite_master";
-    /** Column containing the name of the tables and views */
-    private static final String[] MASTER_COLUMNS = new String[] { "name", };
+    /**
+     * Column containing the name of the tables and views
+     */
+    private static final String[] MASTER_COLUMNS = new String[]{"name",};
 
     // Table names
     public static final String CONVERSATIONS_TABLE = "conversations";
@@ -176,7 +180,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                     + ConversationColumns.LAST_READ_TIMESTAMP + " INT DEFAULT(0), "
                     + ConversationColumns.ICON + " TEXT, "
                     + ConversationColumns.PARTICIPANT_CONTACT_ID + " INT DEFAULT ( "
-                            + ParticipantData.PARTICIPANT_CONTACT_ID_NOT_RESOLVED + "), "
+                    + ParticipantData.PARTICIPANT_CONTACT_ID_NOT_RESOLVED + "), "
                     + ConversationColumns.PARTICIPANT_LOOKUP_KEY + " TEXT, "
                     + ConversationColumns.OTHER_PARTICIPANT_NORMALIZED_DESTINATION + " TEXT, "
                     + ConversationColumns.CURRENT_SELF_ID + " TEXT, "
@@ -191,18 +195,18 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     private static final String CONVERSATIONS_TABLE_SMS_THREAD_ID_INDEX_SQL =
             "CREATE INDEX index_" + CONVERSATIONS_TABLE + "_" + ConversationColumns.SMS_THREAD_ID
-            + " ON " +  CONVERSATIONS_TABLE
-            + "(" + ConversationColumns.SMS_THREAD_ID + ")";
+                    + " ON " + CONVERSATIONS_TABLE
+                    + "(" + ConversationColumns.SMS_THREAD_ID + ")";
 
     private static final String CONVERSATIONS_TABLE_ARCHIVE_STATUS_INDEX_SQL =
             "CREATE INDEX index_" + CONVERSATIONS_TABLE + "_" + ConversationColumns.ARCHIVE_STATUS
-            + " ON " +  CONVERSATIONS_TABLE
-            + "(" + ConversationColumns.ARCHIVE_STATUS + ")";
+                    + " ON " + CONVERSATIONS_TABLE
+                    + "(" + ConversationColumns.ARCHIVE_STATUS + ")";
 
     private static final String CONVERSATIONS_TABLE_SORT_TIMESTAMP_INDEX_SQL =
             "CREATE INDEX index_" + CONVERSATIONS_TABLE + "_" + ConversationColumns.SORT_TIMESTAMP
-            + " ON " +  CONVERSATIONS_TABLE
-            + "(" + ConversationColumns.SORT_TIMESTAMP + ")";
+                    + " ON " + CONVERSATIONS_TABLE
+                    + "(" + ConversationColumns.SORT_TIMESTAMP + ")";
 
     // Messages table schema
     public static class MessageColumns implements BaseColumns {
@@ -298,13 +302,13 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     // Primary sort index for messages table : by conversation id, status, received timestamp.
     private static final String MESSAGES_TABLE_SORT_INDEX_SQL =
-            "CREATE INDEX index_" + MESSAGES_TABLE + "_sort ON " +  MESSAGES_TABLE + "("
+            "CREATE INDEX index_" + MESSAGES_TABLE + "_sort ON " + MESSAGES_TABLE + "("
                     + MessageColumns.CONVERSATION_ID + ", "
                     + MessageColumns.STATUS + ", "
                     + MessageColumns.RECEIVED_TIMESTAMP + ")";
 
     private static final String MESSAGES_TABLE_STATUS_SEEN_INDEX_SQL =
-            "CREATE INDEX index_" + MESSAGES_TABLE + "_status_seen ON " +  MESSAGES_TABLE + "("
+            "CREATE INDEX index_" + MESSAGES_TABLE + "_status_seen ON " + MESSAGES_TABLE + "("
                     + MessageColumns.STATUS + ", "
                     + MessageColumns.SEEN + ")";
 
@@ -360,21 +364,21 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     public static final String CREATE_PARTS_TRIGGER_SQL =
             "CREATE TRIGGER " + PARTS_TABLE + "_TRIGGER" + " AFTER INSERT ON " + PARTS_TABLE
-            + " FOR EACH ROW "
-            + " BEGIN UPDATE " + PARTS_TABLE
-            + " SET " + PartColumns.TIMESTAMP + "="
-            + " (SELECT received_timestamp FROM " + MESSAGES_TABLE + " WHERE " + MESSAGES_TABLE
-            + "." + MessageColumns._ID + "=" + "NEW." + PartColumns.MESSAGE_ID + ")"
-            + " WHERE " + PARTS_TABLE + "." + PartColumns._ID + "=" + "NEW." + PartColumns._ID
-            + "; END";
+                    + " FOR EACH ROW "
+                    + " BEGIN UPDATE " + PARTS_TABLE
+                    + " SET " + PartColumns.TIMESTAMP + "="
+                    + " (SELECT received_timestamp FROM " + MESSAGES_TABLE + " WHERE " + MESSAGES_TABLE
+                    + "." + MessageColumns._ID + "=" + "NEW." + PartColumns.MESSAGE_ID + ")"
+                    + " WHERE " + PARTS_TABLE + "." + PartColumns._ID + "=" + "NEW." + PartColumns._ID
+                    + "; END";
 
     public static final String CREATE_MESSAGES_TRIGGER_SQL =
             "CREATE TRIGGER " + MESSAGES_TABLE + "_TRIGGER" + " AFTER UPDATE OF "
-            + MessageColumns.RECEIVED_TIMESTAMP + " ON " + MESSAGES_TABLE
-            + " FOR EACH ROW BEGIN UPDATE " + PARTS_TABLE + " SET " + PartColumns.TIMESTAMP
-            + " = NEW." + MessageColumns.RECEIVED_TIMESTAMP + " WHERE " + PARTS_TABLE + "."
-            + PartColumns.MESSAGE_ID + " = NEW." + MessageColumns._ID
-            + "; END;";
+                    + MessageColumns.RECEIVED_TIMESTAMP + " ON " + MESSAGES_TABLE
+                    + " FOR EACH ROW BEGIN UPDATE " + PARTS_TABLE + " SET " + PartColumns.TIMESTAMP
+                    + " = NEW." + MessageColumns.RECEIVED_TIMESTAMP + " WHERE " + PARTS_TABLE + "."
+                    + PartColumns.MESSAGE_ID + " = NEW." + MessageColumns._ID
+                    + "; END;";
 
     // Primary sort index for parts table : by message_id
     private static final String PARTS_TABLE_MESSAGE_INDEX_SQL =
@@ -464,7 +468,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     private static final String CREATE_SELF_PARTICIPANT_SQL =
             "INSERT INTO " + PARTICIPANTS_TABLE
-            + " ( " +  ParticipantColumns.SUB_ID + " ) VALUES ( %s )";
+                    + " ( " + ParticipantColumns.SUB_ID + " ) VALUES ( %s )";
 
     static String getCreateSelfParticipantSql(int subId) {
         return String.format(CREATE_SELF_PARTICIPANT_SQL, subId);
@@ -499,7 +503,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     private static final String CONVERSATION_PARTICIPANTS_TABLE_CONVERSATION_ID_INDEX_SQL =
             "CREATE INDEX index_" + CONVERSATION_PARTICIPANTS_TABLE + "_"
                     + ConversationParticipantsColumns.CONVERSATION_ID
-                    + " ON " +  CONVERSATION_PARTICIPANTS_TABLE
+                    + " ON " + CONVERSATION_PARTICIPANTS_TABLE
                     + "(" + ConversationParticipantsColumns.CONVERSATION_ID + ")";
 
     // View for getting parts which are for draft messages.
@@ -529,36 +533,37 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             + " = " + MessageData.BUGLE_STATUS_OUTGOING_DRAFT;
 
     // List of all our SQL tables
-    private static final String[] CREATE_TABLE_SQLS = new String[] {
-        CREATE_CONVERSATIONS_TABLE_SQL,
-        CREATE_MESSAGES_TABLE_SQL,
-        CREATE_PARTS_TABLE_SQL,
-        CREATE_PARTICIPANTS_TABLE_SQL,
-        CREATE_CONVERSATION_PARTICIPANTS_TABLE_SQL,
+    private static final String[] CREATE_TABLE_SQLS = new String[]{
+            CREATE_CONVERSATIONS_TABLE_SQL,
+            CREATE_MESSAGES_TABLE_SQL,
+            CREATE_PARTS_TABLE_SQL,
+            CREATE_PARTICIPANTS_TABLE_SQL,
+            CREATE_CONVERSATION_PARTICIPANTS_TABLE_SQL,
     };
 
     // List of all our indices
-    private static final String[] CREATE_INDEX_SQLS = new String[] {
-        CONVERSATIONS_TABLE_SMS_THREAD_ID_INDEX_SQL,
-        CONVERSATIONS_TABLE_ARCHIVE_STATUS_INDEX_SQL,
-        CONVERSATIONS_TABLE_SORT_TIMESTAMP_INDEX_SQL,
-        MESSAGES_TABLE_SORT_INDEX_SQL,
-        MESSAGES_TABLE_STATUS_SEEN_INDEX_SQL,
-        PARTS_TABLE_MESSAGE_INDEX_SQL,
-        CONVERSATION_PARTICIPANTS_TABLE_CONVERSATION_ID_INDEX_SQL,
+    private static final String[] CREATE_INDEX_SQLS = new String[]{
+            CONVERSATIONS_TABLE_SMS_THREAD_ID_INDEX_SQL,
+            CONVERSATIONS_TABLE_ARCHIVE_STATUS_INDEX_SQL,
+            CONVERSATIONS_TABLE_SORT_TIMESTAMP_INDEX_SQL,
+            MESSAGES_TABLE_SORT_INDEX_SQL,
+            MESSAGES_TABLE_STATUS_SEEN_INDEX_SQL,
+            PARTS_TABLE_MESSAGE_INDEX_SQL,
+            CONVERSATION_PARTICIPANTS_TABLE_CONVERSATION_ID_INDEX_SQL,
     };
 
     // List of all our SQL triggers
-    private static final String[] CREATE_TRIGGER_SQLS = new String[] {
+    private static final String[] CREATE_TRIGGER_SQLS = new String[]{
             CREATE_PARTS_TRIGGER_SQL,
             CREATE_MESSAGES_TRIGGER_SQL,
     };
 
+    //创建 conversation_list_view
     // List of all our views
-    private static final String[] CREATE_VIEW_SQLS = new String[] {
-        ConversationListItemData.getConversationListViewSql(),
-        ConversationImagePartsView.getCreateSql(),
-        DRAFT_PARTS_VIEW_SQL,
+    private static final String[] CREATE_VIEW_SQLS = new String[]{
+            ConversationListItemData.getConversationListViewSql(),
+            ConversationImagePartsView.getCreateSql(),
+            DRAFT_PARTS_VIEW_SQL,
     };
 
     private static final Object sLock = new Object();
@@ -572,8 +577,9 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     /**
      * Get a (singleton) instance of {@link DatabaseHelper}, creating one if there isn't one yet.
      * This is the only public method for getting a new instance of the class.
+     *
      * @param context Should be the application context (or something that will live for the
-     * lifetime of the application).
+     *                lifetime of the application).
      * @return The current (or a new) DatabaseHelper instance.
      */
     public static DatabaseHelper getInstance(final Context context) {
@@ -587,8 +593,9 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     /**
      * Private constructor, used from {@link #getInstance()}.
+     *
      * @param context Should be the application context (or something that will live for the
-     * lifetime of the application).
+     *                lifetime of the application).
      */
     private DatabaseHelper(final Context context) {
         super(context, DATABASE_NAME, null, getDatabaseVersion(context), null);
@@ -598,6 +605,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     /**
      * Test method that always instantiates a new DatabaseHelper instance. This should
      * be used ONLY by the tests and never by the real application.
+     *
      * @param context Test context.
      * @return Brand new DatabaseHelper instance.
      */
@@ -611,6 +619,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     /**
      * Get the (singleton) instance of @{link DatabaseWrapper}.
      * <p>The database is always opened as a writeable database.
+     *
      * @return The current (or a new) DatabaseWrapper instance.
      */
     @DoesNotRunOnMainThread
@@ -649,14 +658,14 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     /**
      * Drop and rebuild a given view.
      */
-    static void rebuildView(final SQLiteDatabase db, final String viewName,
-            final String createViewSql) {
-        dropView(db, viewName, true /* throwOnFailure */);
+    public static void rebuildView(final DatabaseWrapper db, final String viewName,
+                            final String createViewSql) {
+        dropView(db.getDatabase(), viewName, true /* throwOnFailure */);
         db.execSQL(createViewSql);
     }
 
     private static void dropView(final SQLiteDatabase db, final String viewName,
-            final boolean throwOnFailure) {
+                                 final boolean throwOnFailure) {
         final String dropPrefix = "DROP VIEW IF EXISTS ";
         try {
             db.execSQL(dropPrefix + viewName);

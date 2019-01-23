@@ -25,6 +25,7 @@ import android.os.Handler;
 import android.os.Looper;
 import android.os.StrictMode;
 import android.support.multidex.MultiDex;
+import android.support.v4.os.TraceCompat;
 import android.support.v7.mms.CarrierConfigValuesLoader;
 import android.support.v7.mms.MmsManager;
 import android.telephony.CarrierConfigManager;
@@ -41,6 +42,7 @@ import com.android.messaging.sms.MmsConfig;
 import com.android.messaging.smsshow.MessagingMsgCenterFactoryImpl;
 import com.android.messaging.ui.ConversationDrawables;
 import com.android.messaging.ui.emoji.utils.EmojiConfig;
+import com.android.messaging.upgrader.Upgrader;
 import com.android.messaging.util.BugleAnalytics;
 import com.android.messaging.util.BugleGservices;
 import com.android.messaging.util.BugleGservicesKeys;
@@ -62,10 +64,15 @@ import com.squareup.leakcanary.AndroidExcludedRefs;
 import com.squareup.leakcanary.ExcludedRefs;
 import com.squareup.leakcanary.LeakCanary;
 import com.superapps.debug.SharedPreferencesOptimizer;
+import com.superapps.taskrunner.ParallelBackgroundTask;
+import com.superapps.taskrunner.Task;
+import com.superapps.taskrunner.TaskRunner;
 import com.superapps.util.Threads;
 
 import java.io.File;
 import java.lang.Thread.UncaughtExceptionHandler;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import io.fabric.sdk.android.Fabric;
@@ -123,12 +130,26 @@ public class BugleApplication extends HSApplication implements UncaughtException
         initMessageCenterLib();
         initLeakCanaryAsync();
         SharedPreferencesOptimizer.install(true);
+        onMainProcessApplicationCreate();
 
         sSystemUncaughtExceptionHandler = Thread.getDefaultUncaughtExceptionHandler();
         Thread.setDefaultUncaughtExceptionHandler(this);
         Trace.endSection();
 
         CommonUtils.getAppInstallTimeMillis();
+    }
+
+    private void onMainProcessApplicationCreate() {
+        TraceCompat.beginSection("Application#onMainProcessApplicationCreate");
+        try {
+            List<Task> initWorks = new ArrayList<>();
+
+            initWorks.add(new ParallelBackgroundTask("Upgrade", () -> Upgrader.getUpgrader(this).upgrade()));
+
+            TaskRunner.run(initWorks);
+        } finally {
+            TraceCompat.endSection();
+        }
     }
 
     private void initPhotoViewAnalytics() {

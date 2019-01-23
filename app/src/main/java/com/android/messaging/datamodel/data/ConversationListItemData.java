@@ -357,7 +357,7 @@ public class ConversationListItemData {
                     + " as " + ConversationListViewColumns.SNIPPET_SENDER_DISPLAY_DESTINATION + ", "
                     + DatabaseHelper.CONVERSATIONS_TABLE + '.' + ConversationColumns.IS_ENTERPRISE
                     + " as " + ConversationListViewColumns.IS_ENTERPRISE + ", "
-                    + "IFNULL("+ UNREAD_MESSAGES_NUMBER_TABLE + "." + ConversationListViewColumns.UNREAD_MESSAGE_COUNT
+                    + "IFNULL(" + UNREAD_MESSAGES_NUMBER_TABLE + "." + ConversationListViewColumns.UNREAD_MESSAGE_COUNT
                     + ",0) as " + ConversationListViewColumns.UNREAD_MESSAGE_COUNT;
 
     private static final String JOIN_PARTICIPANTS =
@@ -366,14 +366,15 @@ public class ConversationListItemData {
                     + '=' + DatabaseHelper.PARTICIPANTS_TABLE + '.' + DatabaseHelper.ParticipantColumns._ID
                     + ") ";
 
-    private static final String JOIN_UNREAD_MESSAGE_COUNT = "LEFT JOIN (" +
-            "SELECT " + DatabaseHelper.MESSAGES_TABLE + '.' + MessageColumns.CONVERSATION_ID +
-            ",COUNT(*) AS " + ConversationListViewColumns.UNREAD_MESSAGE_COUNT +
-            " FROM " + DatabaseHelper.MESSAGES_TABLE +
-            " WHERE " + DatabaseHelper.MESSAGES_TABLE + "." + MessageColumns.READ + "==0 " +
-            "GROUP BY " + DatabaseHelper.MESSAGES_TABLE + "." + MessageColumns.CONVERSATION_ID
-            + ") AS " + UNREAD_MESSAGES_NUMBER_TABLE +
-            " ON (" + UNREAD_MESSAGES_NUMBER_TABLE + "." + MessageColumns.CONVERSATION_ID
+    private static final String JOIN_UNREAD_MESSAGE_COUNT = "LEFT JOIN ("
+            + "SELECT " + DatabaseHelper.MESSAGES_TABLE + '.' + MessageColumns.CONVERSATION_ID
+            + ",COUNT(*) AS " + ConversationListViewColumns.UNREAD_MESSAGE_COUNT
+            + " FROM " + DatabaseHelper.MESSAGES_TABLE
+            + " WHERE " + DatabaseHelper.MESSAGES_TABLE + "." + MessageColumns.READ + "==0 AND "
+            + DatabaseHelper.MESSAGES_TABLE + "." + MessageColumns.STATUS
+            + "!=3 GROUP BY " + DatabaseHelper.MESSAGES_TABLE + "." + MessageColumns.CONVERSATION_ID
+            + ") AS " + UNREAD_MESSAGES_NUMBER_TABLE
+            + " ON (" + UNREAD_MESSAGES_NUMBER_TABLE + "." + MessageColumns.CONVERSATION_ID
             + '=' + DatabaseHelper.CONVERSATIONS_TABLE + '.' + ConversationColumns._ID + ") ";
 
     // View that makes latest message read flag available with rest of conversation data.
