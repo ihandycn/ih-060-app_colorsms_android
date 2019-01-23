@@ -196,6 +196,7 @@ public class MessagingMsgCenterFactoryImpl extends MessageCenterFactoryImpl {
                 int subId = PhoneUtils.getDefault().getEffectiveIncomingSubIdFromSystem(
                         receivedSmsIntent, EXTRA_SUB_ID);
                 Context context = Factory.get().getApplicationContext();
+                BugleNotifications.markAllMessagesAsSeen();
                 final Intent sendIntent = new Intent(context, NoConfirmationSmsSendService.class);
                 sendIntent.setAction(TelephonyManager.ACTION_RESPOND_VIA_MESSAGE);
                 sendIntent.putExtra(Intent.EXTRA_TEXT, messages);
