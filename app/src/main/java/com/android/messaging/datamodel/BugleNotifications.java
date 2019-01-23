@@ -656,7 +656,8 @@ public class BugleNotifications {
                             defaults |= Notification.DEFAULT_VIBRATE;
                             if (channel != null) {
                                 // only above android O, channel is not null;
-                                channel.setVibrationPattern(new long[]{100});
+                                channel.enableVibration(true);
+                                channel.setVibrationPattern(new long[]{100, 200, 300});
                             }
                         }
                     }
