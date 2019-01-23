@@ -87,6 +87,9 @@ public class ConversationListActivity extends AbstractConversationListActivity {
         showEmojiStoreGuide();
         mIsNoActionBack = true;
         BugleAnalytics.logEvent("SMS_Messages_Show", true);
+
+        Preferences.get(FiveStarRateDialog.DESKTOP_PREFS).incrementAndGetInt(FiveStarRateDialog.PREF_KEY_MAIN_ACTIVITY_SHOW_TIME);
+        FiveStarRateDialog.showFiveStarWhenMainPageShowIfNeed(this);
         Trace.endSection();
     }
 

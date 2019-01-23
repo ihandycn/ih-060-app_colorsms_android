@@ -53,6 +53,7 @@ public class FiveStarRateDialog extends DefaultButtonDialog2 implements View.OnC
     public static final String PREF_KEY_BACK_TO_DESKTOP_TIMES = "PREF_KEY_BACK_TO_DESKTOP_TIMES";
     public static final String PREF_KEY_BACK_TO_DESKTOP_SHOW_COUNT = "PREF_KEY_BACK_TO_DESKTOP_SHOW_COUNT";
     public static final String PREF_KEY_BACK_TO_DESKTOP_SHOW_TIMES = "PREF_KEY_BACK_TO_DESKTOP_SHOW_TIMES";
+    public static final String PREF_KEY_MAIN_ACTIVITY_SHOW_TIME = "PREF_KEY_MAIN_ACTIVITY_SHOW_TIME";
     private static final long CHANGE_DURATION = 500;
     private static final long ONE_STEP_DURATION = 200;
     private static final long ANIM_DELAY = 200;
@@ -506,7 +507,7 @@ public class FiveStarRateDialog extends DefaultButtonDialog2 implements View.OnC
 
     private static boolean isShowFiveStarRateMoreThenInterval() {
         return System.currentTimeMillis() - Preferences.get(DESKTOP_PREFS).getLong(PREF_KEY_FIVE_STAR_SHOWED_TIME, 0)
-                >= 30 * DateUtils.MINUTE_IN_MILLIS;
+                >= DateUtils.HOUR_IN_MILLIS;
     }
 
     private static boolean shouldShowThisTime() {
@@ -541,6 +542,14 @@ public class FiveStarRateDialog extends DefaultButtonDialog2 implements View.OnC
         return false;
     }
 
+    public static boolean showFiveStarWhenMainPageShowIfNeed(Activity context) {
+        int mainActivityCreateTime = Preferences.get(DESKTOP_PREFS).getInt(PREF_KEY_MAIN_ACTIVITY_SHOW_TIME, 0);
+        if (shouldShowThisTime() && (mainActivityCreateTime == 2 || mainActivityCreateTime == 4)) {
+            showFiveStarRateDialog(context, From.SEND_EMOJI);
+            return true;
+        }
+        return false;
+    }
 
     public static void showFiveStarFromSetting(Activity context) {
         showFiveStarRateDialog(context, From.SETTING);
