@@ -146,7 +146,7 @@ public class ConversationMessageView extends FrameLayout implements View.OnClick
         mMessageTextView.setOnClickListener(this);
         IgnoreLinkLongClickHelper.ignoreLinkLongClick(mMessageTextView, this);
 
-        mStatusTextView = (TextView) findViewById(R.id.message_status);
+        mStatusTextView = findViewById(R.id.message_status);
         mTitleTextView = (TextView) findViewById(R.id.message_title);
         mMmsInfoTextView = (TextView) findViewById(R.id.mms_info);
         mMessageTitleLayout = (LinearLayout) findViewById(R.id.message_title_layout);

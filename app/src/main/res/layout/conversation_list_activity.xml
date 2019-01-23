@@ -14,7 +14,6 @@
         app:elevation="@dimen/action_bar_elevation" />
 
     <fragment
-        xmlns:android="http://schemas.android.com/apk/res/android"
         class="com.android.messaging.ui.conversationlist.ConversationListFragment"
         android:id="@+id/conversation_list_fragment"
         android:theme="@style/Theme.AppCompat.Light.DarkActionBar"

@@ -322,12 +322,6 @@
         <item name="android:textColor">@color/conversation_list_timestamp</item>
     </style>
 
-    <style name="ConversationListItemViewTextUnreadCountStyle">
-        <item name="android:includeFontPadding">false</item>
-        <item name="android:textSize">11sp</item>
-        <item name="android:textColor">@android:color/white</item>
-    </style>
-
     <style name="ConversationListItemViewConversationNameStyle" parent="ConversationListItemViewTextStyle">
         <item name="android:textSize">16sp</item>
         <item name="android:textColor">@color/conversation_list_name</item>

@@ -821,13 +821,10 @@ public class ConversationFragment extends Fragment implements ConversationDataLi
                     UiUtils.showSnackBarWithCustomAction(getActivity(),
                             getView().getRootView(),
                             getString(R.string.in_conversation_notify_new_message_text),
-                            SnackBar.Action.createCustomAction(new Runnable() {
-                                                                   @Override
-                                                                   public void run() {
-                                                                       scrollToBottom(true /* smoothScroll */);
-                                                                       mComposeMessageView.hideAllComposeInputs(false /* animate */);
-                                                                   }
-                                                               },
+                            SnackBar.Action.createCustomAction(() -> {
+                                scrollToBottom(true /* smoothScroll */);
+                                mComposeMessageView.hideAllComposeInputs(false /* animate */);
+                            },
                                     getString(R.string.in_conversation_notify_new_message_action)),
                             null /* interactions */,
                             SnackBar.Placement.above(mComposeMessageView));
@@ -1093,7 +1090,8 @@ public class ConversationFragment extends Fragment implements ConversationDataLi
                             })
                     .setNegativeButton(android.R.string.cancel, null);
             builder.setOnDismissListener(new OnDismissListener() {
-                @Override public void onDismiss(DialogInterface dialog) {
+                @Override
+                public void onDismiss(DialogInterface dialog) {
                     mHost.dismissActionMode();
                 }
             });
@@ -1586,7 +1584,8 @@ public class ConversationFragment extends Fragment implements ConversationDataLi
         return DraftMessageData.ATTACHMENTS_CHANGED;
     }
 
-    @Override public void onReceive(String s, HSBundle hsBundle) {
+    @Override
+    public void onReceive(String s, HSBundle hsBundle) {
         switch (s) {
             case EVENT_SHOW_OPTION_MENU:
                 setOptionsMenuVisibility(true);

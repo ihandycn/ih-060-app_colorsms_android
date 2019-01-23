@@ -39,6 +39,8 @@ import java.util.List;
  * Class wrapping the conversation list view used to display each item in conversation list
  */
 public class ConversationListItemData {
+    private static final String UNREAD_MESSAGES_NUMBER_TABLE = "unread_table";
+
     private String mConversationId;
     private String mName;
     private String mIcon;
@@ -68,6 +70,7 @@ public class ConversationListItemData {
     private String mSnippetSenderFirstName;
     private String mSnippetSenderDisplayDestination;
     private boolean mIsEnterprise;
+    private int mUnreadCount;
 
     public ConversationListItemData() {
     }
@@ -120,6 +123,7 @@ public class ConversationListItemData {
         mSnippetSenderDisplayDestination =
                 cursor.getString(INDEX_SNIPPET_SENDER_DISPLAY_DESTINATION);
         mIsEnterprise = cursor.getInt(INDEX_IS_ENTERPRISE) == 1;
+        mUnreadCount = cursor.getInt(INDEX_UNREAD_MESSAGE_COUNT);
     }
 
     public String getConversationId() {
@@ -159,16 +163,16 @@ public class ConversationListItemData {
     }
 
     /**
-      * @see ConversationColumns#PARTICIPANT_CONTACT_ID
-      * @return the contact id of the participant if it is a 1:1 conversation, -1 for group.
-      */
+     * @return the contact id of the participant if it is a 1:1 conversation, -1 for group.
+     * @see ConversationColumns#PARTICIPANT_CONTACT_ID
+     */
     public long getParticipantContactId() {
         return mParticipantContactId;
     }
 
     /**
-     * @see ConversationColumns#IS_ENTERPRISE
      * @return whether the conversation is enterprise.
+     * @see ConversationColumns#IS_ENTERPRISE
      */
     public boolean isEnterprise() {
         return mIsEnterprise;
@@ -272,18 +276,22 @@ public class ConversationListItemData {
         return mSnippetSenderDisplayDestination;
     }
 
-    public void deleteConversation() {
+    public int getUnreadMessagesNumber() {
+        return mUnreadCount;
+    }
+
+    void deleteConversation() {
         DeleteConversationAction.deleteConversation(mConversationId, mTimestamp);
     }
 
     /**
      * Get the name of the view for this data item
      */
-    public static final String getConversationListView() {
+    public static String getConversationListView() {
         return CONVERSATION_LIST_VIEW;
     }
 
-    public static final String getConversationListViewSql() {
+    public static String getConversationListViewSql() {
         return CONVERSATION_LIST_VIEW_SQL;
     }
 
@@ -291,70 +299,82 @@ public class ConversationListItemData {
 
     private static final String CONVERSATION_LIST_VIEW_PROJECTION =
             DatabaseHelper.CONVERSATIONS_TABLE + '.' + ConversationColumns._ID
-            + " as " + ConversationListViewColumns._ID + ", "
-            + DatabaseHelper.CONVERSATIONS_TABLE + '.' + ConversationColumns.NAME
-            + " as " + ConversationListViewColumns.NAME + ", "
-            + DatabaseHelper.CONVERSATIONS_TABLE + '.' + ConversationColumns.CURRENT_SELF_ID
-            + " as " + ConversationListViewColumns.CURRENT_SELF_ID + ", "
-            + DatabaseHelper.CONVERSATIONS_TABLE + '.' + ConversationColumns.ARCHIVE_STATUS
-            + " as " + ConversationListViewColumns.ARCHIVE_STATUS + ", "
-            + DatabaseHelper.MESSAGES_TABLE + '.' + MessageColumns.READ
-            + " as " + ConversationListViewColumns.READ + ", "
-            + DatabaseHelper.CONVERSATIONS_TABLE + '.' + ConversationColumns.ICON
-            + " as " + ConversationListViewColumns.ICON + ", "
-            + DatabaseHelper.CONVERSATIONS_TABLE + '.' + ConversationColumns.PARTICIPANT_CONTACT_ID
-            + " as " + ConversationListViewColumns.PARTICIPANT_CONTACT_ID + ", "
-            + DatabaseHelper.CONVERSATIONS_TABLE + '.' + ConversationColumns.PARTICIPANT_LOOKUP_KEY
-            + " as " + ConversationListViewColumns.PARTICIPANT_LOOKUP_KEY + ", "
-            + DatabaseHelper.CONVERSATIONS_TABLE + '.'
+                    + " as " + ConversationListViewColumns._ID + ", "
+                    + DatabaseHelper.CONVERSATIONS_TABLE + '.' + ConversationColumns.NAME
+                    + " as " + ConversationListViewColumns.NAME + ", "
+                    + DatabaseHelper.CONVERSATIONS_TABLE + '.' + ConversationColumns.CURRENT_SELF_ID
+                    + " as " + ConversationListViewColumns.CURRENT_SELF_ID + ", "
+                    + DatabaseHelper.CONVERSATIONS_TABLE + '.' + ConversationColumns.ARCHIVE_STATUS
+                    + " as " + ConversationListViewColumns.ARCHIVE_STATUS + ", "
+                    + DatabaseHelper.MESSAGES_TABLE + '.' + MessageColumns.READ
+                    + " as " + ConversationListViewColumns.READ + ", "
+                    + DatabaseHelper.CONVERSATIONS_TABLE + '.' + ConversationColumns.ICON
+                    + " as " + ConversationListViewColumns.ICON + ", "
+                    + DatabaseHelper.CONVERSATIONS_TABLE + '.' + ConversationColumns.PARTICIPANT_CONTACT_ID
+                    + " as " + ConversationListViewColumns.PARTICIPANT_CONTACT_ID + ", "
+                    + DatabaseHelper.CONVERSATIONS_TABLE + '.' + ConversationColumns.PARTICIPANT_LOOKUP_KEY
+                    + " as " + ConversationListViewColumns.PARTICIPANT_LOOKUP_KEY + ", "
+                    + DatabaseHelper.CONVERSATIONS_TABLE + '.'
                     + ConversationColumns.OTHER_PARTICIPANT_NORMALIZED_DESTINATION
-            + " as " + ConversationListViewColumns.OTHER_PARTICIPANT_NORMALIZED_DESTINATION + ", "
-            + DatabaseHelper.CONVERSATIONS_TABLE + '.' + ConversationColumns.SORT_TIMESTAMP
-            + " as " + ConversationListViewColumns.SORT_TIMESTAMP + ", "
-            + DatabaseHelper.CONVERSATIONS_TABLE + '.' + ConversationColumns.SHOW_DRAFT
-            + " as " + ConversationListViewColumns.SHOW_DRAFT + ", "
-            + DatabaseHelper.CONVERSATIONS_TABLE + '.' + ConversationColumns.DRAFT_SNIPPET_TEXT
-            + " as " + ConversationListViewColumns.DRAFT_SNIPPET_TEXT + ", "
-            + DatabaseHelper.CONVERSATIONS_TABLE + '.' + ConversationColumns.DRAFT_PREVIEW_URI
-            + " as " + ConversationListViewColumns.DRAFT_PREVIEW_URI + ", "
-            + DatabaseHelper.CONVERSATIONS_TABLE + '.' + ConversationColumns.DRAFT_SUBJECT_TEXT
-            + " as " + ConversationListViewColumns.DRAFT_SUBJECT_TEXT + ", "
-            + DatabaseHelper.CONVERSATIONS_TABLE + '.'
+                    + " as " + ConversationListViewColumns.OTHER_PARTICIPANT_NORMALIZED_DESTINATION + ", "
+                    + DatabaseHelper.CONVERSATIONS_TABLE + '.' + ConversationColumns.SORT_TIMESTAMP
+                    + " as " + ConversationListViewColumns.SORT_TIMESTAMP + ", "
+                    + DatabaseHelper.CONVERSATIONS_TABLE + '.' + ConversationColumns.SHOW_DRAFT
+                    + " as " + ConversationListViewColumns.SHOW_DRAFT + ", "
+                    + DatabaseHelper.CONVERSATIONS_TABLE + '.' + ConversationColumns.DRAFT_SNIPPET_TEXT
+                    + " as " + ConversationListViewColumns.DRAFT_SNIPPET_TEXT + ", "
+                    + DatabaseHelper.CONVERSATIONS_TABLE + '.' + ConversationColumns.DRAFT_PREVIEW_URI
+                    + " as " + ConversationListViewColumns.DRAFT_PREVIEW_URI + ", "
+                    + DatabaseHelper.CONVERSATIONS_TABLE + '.' + ConversationColumns.DRAFT_SUBJECT_TEXT
+                    + " as " + ConversationListViewColumns.DRAFT_SUBJECT_TEXT + ", "
+                    + DatabaseHelper.CONVERSATIONS_TABLE + '.'
                     + ConversationColumns.DRAFT_PREVIEW_CONTENT_TYPE
-            + " as " + ConversationListViewColumns.DRAFT_PREVIEW_CONTENT_TYPE + ", "
-            + DatabaseHelper.CONVERSATIONS_TABLE + '.' + ConversationColumns.PREVIEW_URI
-            + " as " + ConversationListViewColumns.PREVIEW_URI + ", "
-            + DatabaseHelper.CONVERSATIONS_TABLE + '.' + ConversationColumns.PREVIEW_CONTENT_TYPE
-            + " as " + ConversationListViewColumns.PREVIEW_CONTENT_TYPE + ", "
-            + DatabaseHelper.CONVERSATIONS_TABLE + '.' + ConversationColumns.PARTICIPANT_COUNT
-            + " as " + ConversationListViewColumns.PARTICIPANT_COUNT + ", "
-            + DatabaseHelper.CONVERSATIONS_TABLE + '.' + ConversationColumns.NOTIFICATION_ENABLED
-            + " as " + ConversationListViewColumns.NOTIFICATION_ENABLED + ", "
-            + DatabaseHelper.CONVERSATIONS_TABLE + '.' + ConversationColumns.NOTIFICATION_SOUND_URI
-            + " as " + ConversationListViewColumns.NOTIFICATION_SOUND_URI + ", "
-            + DatabaseHelper.CONVERSATIONS_TABLE + '.' + ConversationColumns.NOTIFICATION_VIBRATION
-            + " as " + ConversationListViewColumns.NOTIFICATION_VIBRATION + ", "
-            + DatabaseHelper.CONVERSATIONS_TABLE + '.' +
+                    + " as " + ConversationListViewColumns.DRAFT_PREVIEW_CONTENT_TYPE + ", "
+                    + DatabaseHelper.CONVERSATIONS_TABLE + '.' + ConversationColumns.PREVIEW_URI
+                    + " as " + ConversationListViewColumns.PREVIEW_URI + ", "
+                    + DatabaseHelper.CONVERSATIONS_TABLE + '.' + ConversationColumns.PREVIEW_CONTENT_TYPE
+                    + " as " + ConversationListViewColumns.PREVIEW_CONTENT_TYPE + ", "
+                    + DatabaseHelper.CONVERSATIONS_TABLE + '.' + ConversationColumns.PARTICIPANT_COUNT
+                    + " as " + ConversationListViewColumns.PARTICIPANT_COUNT + ", "
+                    + DatabaseHelper.CONVERSATIONS_TABLE + '.' + ConversationColumns.NOTIFICATION_ENABLED
+                    + " as " + ConversationListViewColumns.NOTIFICATION_ENABLED + ", "
+                    + DatabaseHelper.CONVERSATIONS_TABLE + '.' + ConversationColumns.NOTIFICATION_SOUND_URI
+                    + " as " + ConversationListViewColumns.NOTIFICATION_SOUND_URI + ", "
+                    + DatabaseHelper.CONVERSATIONS_TABLE + '.' + ConversationColumns.NOTIFICATION_VIBRATION
+                    + " as " + ConversationListViewColumns.NOTIFICATION_VIBRATION + ", "
+                    + DatabaseHelper.CONVERSATIONS_TABLE + '.' +
                     ConversationColumns.INCLUDE_EMAIL_ADDRESS
-            + " as " + ConversationListViewColumns.INCLUDE_EMAIL_ADDRESS + ", "
-            + DatabaseHelper.MESSAGES_TABLE + '.' + MessageColumns.STATUS
-            + " as " + ConversationListViewColumns.MESSAGE_STATUS + ", "
-            + DatabaseHelper.MESSAGES_TABLE + '.' + MessageColumns.RAW_TELEPHONY_STATUS
-            + " as " + ConversationListViewColumns.MESSAGE_RAW_TELEPHONY_STATUS + ", "
-            + DatabaseHelper.MESSAGES_TABLE + '.' + MessageColumns._ID
-            + " as " + ConversationListViewColumns.MESSAGE_ID + ", "
-            + DatabaseHelper.PARTICIPANTS_TABLE + '.' + ParticipantColumns.FIRST_NAME
-            + " as " + ConversationListViewColumns.SNIPPET_SENDER_FIRST_NAME + ", "
-            + DatabaseHelper.PARTICIPANTS_TABLE + '.' + ParticipantColumns.DISPLAY_DESTINATION
-            + " as " + ConversationListViewColumns.SNIPPET_SENDER_DISPLAY_DESTINATION + ", "
-            + DatabaseHelper.CONVERSATIONS_TABLE + '.' + ConversationColumns.IS_ENTERPRISE
-            + " as " + ConversationListViewColumns.IS_ENTERPRISE;
+                    + " as " + ConversationListViewColumns.INCLUDE_EMAIL_ADDRESS + ", "
+                    + DatabaseHelper.MESSAGES_TABLE + '.' + MessageColumns.STATUS
+                    + " as " + ConversationListViewColumns.MESSAGE_STATUS + ", "
+                    + DatabaseHelper.MESSAGES_TABLE + '.' + MessageColumns.RAW_TELEPHONY_STATUS
+                    + " as " + ConversationListViewColumns.MESSAGE_RAW_TELEPHONY_STATUS + ", "
+                    + DatabaseHelper.MESSAGES_TABLE + '.' + MessageColumns._ID
+                    + " as " + ConversationListViewColumns.MESSAGE_ID + ", "
+                    + DatabaseHelper.PARTICIPANTS_TABLE + '.' + ParticipantColumns.FIRST_NAME
+                    + " as " + ConversationListViewColumns.SNIPPET_SENDER_FIRST_NAME + ", "
+                    + DatabaseHelper.PARTICIPANTS_TABLE + '.' + ParticipantColumns.DISPLAY_DESTINATION
+                    + " as " + ConversationListViewColumns.SNIPPET_SENDER_DISPLAY_DESTINATION + ", "
+                    + DatabaseHelper.CONVERSATIONS_TABLE + '.' + ConversationColumns.IS_ENTERPRISE
+                    + " as " + ConversationListViewColumns.IS_ENTERPRISE + ", "
+                    + "IFNULL("+ UNREAD_MESSAGES_NUMBER_TABLE + "." + ConversationListViewColumns.UNREAD_MESSAGE_COUNT
+                    + ",0) as " + ConversationListViewColumns.UNREAD_MESSAGE_COUNT;
 
     private static final String JOIN_PARTICIPANTS =
             " LEFT JOIN " + DatabaseHelper.PARTICIPANTS_TABLE + " ON ("
-            + DatabaseHelper.MESSAGES_TABLE + '.' + MessageColumns.SENDER_PARTICIPANT_ID
-            + '=' + DatabaseHelper.PARTICIPANTS_TABLE + '.' + DatabaseHelper.ParticipantColumns._ID
-            + ") ";
+                    + DatabaseHelper.MESSAGES_TABLE + '.' + MessageColumns.SENDER_PARTICIPANT_ID
+                    + '=' + DatabaseHelper.PARTICIPANTS_TABLE + '.' + DatabaseHelper.ParticipantColumns._ID
+                    + ") ";
+
+    private static final String JOIN_UNREAD_MESSAGE_COUNT = "LEFT JOIN (" +
+            "SELECT " + DatabaseHelper.MESSAGES_TABLE + '.' + MessageColumns.CONVERSATION_ID +
+            ",COUNT(*) AS " + ConversationListViewColumns.UNREAD_MESSAGE_COUNT +
+            " FROM " + DatabaseHelper.MESSAGES_TABLE +
+            " WHERE " + DatabaseHelper.MESSAGES_TABLE + "." + MessageColumns.READ + "==0 " +
+            "GROUP BY " + DatabaseHelper.MESSAGES_TABLE + "." + MessageColumns.CONVERSATION_ID
+            + ") AS " + UNREAD_MESSAGES_NUMBER_TABLE +
+            " ON (" + UNREAD_MESSAGES_NUMBER_TABLE + "." + MessageColumns.CONVERSATION_ID
+            + '=' + DatabaseHelper.CONVERSATIONS_TABLE + '.' + ConversationColumns._ID + ") ";
 
     // View that makes latest message read flag available with rest of conversation data.
     private static final String CONVERSATION_LIST_VIEW_SQL = "CREATE VIEW " +
@@ -367,9 +387,9 @@ public class ConversationListItemData {
             + " as " + ConversationListViewColumns.SUBJECT_TEXT + " "
             + " FROM " + DatabaseHelper.CONVERSATIONS_TABLE
             + " LEFT JOIN " + DatabaseHelper.MESSAGES_TABLE + " ON ("
-            + DatabaseHelper.CONVERSATIONS_TABLE + '.' +  ConversationColumns.LATEST_MESSAGE_ID
+            + DatabaseHelper.CONVERSATIONS_TABLE + '.' + ConversationColumns.LATEST_MESSAGE_ID
             + '=' + DatabaseHelper.MESSAGES_TABLE + '.' + MessageColumns._ID + ") "
-            + JOIN_PARTICIPANTS
+            + JOIN_PARTICIPANTS + JOIN_UNREAD_MESSAGE_COUNT
             + "ORDER BY " + DatabaseHelper.CONVERSATIONS_TABLE + '.'
             + ConversationColumns.SORT_TIMESTAMP + " DESC";
 
@@ -408,39 +428,41 @@ public class ConversationListItemData {
         static final String SNIPPET_SENDER_DISPLAY_DESTINATION =
                 "snippet_sender_display_destination";
         static final String IS_ENTERPRISE = ConversationColumns.IS_ENTERPRISE;
+        static final String UNREAD_MESSAGE_COUNT = "unread_message_count";
     }
 
     public static final String[] PROJECTION = {
-        ConversationListViewColumns._ID,
-        ConversationListViewColumns.NAME,
-        ConversationListViewColumns.ICON,
-        ConversationListViewColumns.SNIPPET_TEXT,
-        ConversationListViewColumns.SORT_TIMESTAMP,
-        ConversationListViewColumns.READ,
-        ConversationListViewColumns.PREVIEW_URI,
-        ConversationListViewColumns.PREVIEW_CONTENT_TYPE,
-        ConversationListViewColumns.PARTICIPANT_CONTACT_ID,
-        ConversationListViewColumns.PARTICIPANT_LOOKUP_KEY,
-        ConversationListViewColumns.OTHER_PARTICIPANT_NORMALIZED_DESTINATION,
-        ConversationListViewColumns.PARTICIPANT_COUNT,
-        ConversationListViewColumns.CURRENT_SELF_ID,
-        ConversationListViewColumns.NOTIFICATION_ENABLED,
-        ConversationListViewColumns.NOTIFICATION_SOUND_URI,
-        ConversationListViewColumns.NOTIFICATION_VIBRATION,
-        ConversationListViewColumns.INCLUDE_EMAIL_ADDRESS,
-        ConversationListViewColumns.MESSAGE_STATUS,
-        ConversationListViewColumns.SHOW_DRAFT,
-        ConversationListViewColumns.DRAFT_PREVIEW_URI,
-        ConversationListViewColumns.DRAFT_PREVIEW_CONTENT_TYPE,
-        ConversationListViewColumns.DRAFT_SNIPPET_TEXT,
-        ConversationListViewColumns.ARCHIVE_STATUS,
-        ConversationListViewColumns.MESSAGE_ID,
-        ConversationListViewColumns.SUBJECT_TEXT,
-        ConversationListViewColumns.DRAFT_SUBJECT_TEXT,
-        ConversationListViewColumns.MESSAGE_RAW_TELEPHONY_STATUS,
-        ConversationListViewColumns.SNIPPET_SENDER_FIRST_NAME,
-        ConversationListViewColumns.SNIPPET_SENDER_DISPLAY_DESTINATION,
-        ConversationListViewColumns.IS_ENTERPRISE,
+            ConversationListViewColumns._ID,
+            ConversationListViewColumns.NAME,
+            ConversationListViewColumns.ICON,
+            ConversationListViewColumns.SNIPPET_TEXT,
+            ConversationListViewColumns.SORT_TIMESTAMP,
+            ConversationListViewColumns.READ,
+            ConversationListViewColumns.PREVIEW_URI,
+            ConversationListViewColumns.PREVIEW_CONTENT_TYPE,
+            ConversationListViewColumns.PARTICIPANT_CONTACT_ID,
+            ConversationListViewColumns.PARTICIPANT_LOOKUP_KEY,
+            ConversationListViewColumns.OTHER_PARTICIPANT_NORMALIZED_DESTINATION,
+            ConversationListViewColumns.PARTICIPANT_COUNT,
+            ConversationListViewColumns.CURRENT_SELF_ID,
+            ConversationListViewColumns.NOTIFICATION_ENABLED,
+            ConversationListViewColumns.NOTIFICATION_SOUND_URI,
+            ConversationListViewColumns.NOTIFICATION_VIBRATION,
+            ConversationListViewColumns.INCLUDE_EMAIL_ADDRESS,
+            ConversationListViewColumns.MESSAGE_STATUS,
+            ConversationListViewColumns.SHOW_DRAFT,
+            ConversationListViewColumns.DRAFT_PREVIEW_URI,
+            ConversationListViewColumns.DRAFT_PREVIEW_CONTENT_TYPE,
+            ConversationListViewColumns.DRAFT_SNIPPET_TEXT,
+            ConversationListViewColumns.ARCHIVE_STATUS,
+            ConversationListViewColumns.MESSAGE_ID,
+            ConversationListViewColumns.SUBJECT_TEXT,
+            ConversationListViewColumns.DRAFT_SUBJECT_TEXT,
+            ConversationListViewColumns.MESSAGE_RAW_TELEPHONY_STATUS,
+            ConversationListViewColumns.SNIPPET_SENDER_FIRST_NAME,
+            ConversationListViewColumns.SNIPPET_SENDER_DISPLAY_DESTINATION,
+            ConversationListViewColumns.IS_ENTERPRISE,
+            ConversationListViewColumns.UNREAD_MESSAGE_COUNT,
     };
 
     private static final int INDEX_ID = 0;
@@ -466,35 +488,36 @@ public class ConversationListItemData {
     private static final int INDEX_DRAFT_PREVIEW_CONTENT_TYPE = 20;
     private static final int INDEX_DRAFT_SNIPPET_TEXT = 21;
     private static final int INDEX_ARCHIVE_STATUS = 22;
-    private static final int INDEX_MESSAGE_ID = 23;
+    //private static final int INDEX_MESSAGE_ID = 23;
     private static final int INDEX_SUBJECT_TEXT = 24;
     private static final int INDEX_DRAFT_SUBJECT_TEXT = 25;
     private static final int INDEX_MESSAGE_RAW_TELEPHONY_STATUS = 26;
     private static final int INDEX_SNIPPET_SENDER_FIRST_NAME = 27;
     private static final int INDEX_SNIPPET_SENDER_DISPLAY_DESTINATION = 28;
     private static final int INDEX_IS_ENTERPRISE = 29;
+    private static final int INDEX_UNREAD_MESSAGE_COUNT = 30;
 
     private static final String DIVIDER_TEXT = ", ";
 
     public static boolean hasAnyEnterpriseContact(
-             final List<ParticipantData> participants) {
-         for (final ParticipantData participant : participants) {
-             if (ContactUtil.isEnterpriseContactId(participant.getContactId())) {
-                 return true;
-             }
-         }
-         return false;
-     }
+            final List<ParticipantData> participants) {
+        for (final ParticipantData participant : participants) {
+            if (ContactUtil.isEnterpriseContactId(participant.getContactId())) {
+                return true;
+            }
+        }
+        return false;
+    }
 
     /**
      * Get a conversation from the local DB based on the conversation id.
      *
-     * @param dbWrapper       The database
-     * @param conversationId  The conversation Id to read
+     * @param dbWrapper      The database
+     * @param conversationId The conversation Id to read
      * @return The existing conversation or null
      */
     public static ConversationListItemData getExistingConversation(final DatabaseWrapper dbWrapper,
-            final String conversationId) {
+                                                                   final String conversationId) {
         ConversationListItemData conversation = null;
 
         // Look for an existing conversation in the db with this conversation id
@@ -504,7 +527,7 @@ public class ConversationListItemData {
             cursor = dbWrapper.query(getConversationListView(),
                     PROJECTION,
                     ConversationColumns._ID + "=?",
-                    new String[] { conversationId },
+                    new String[]{conversationId},
                     null, null, null);
             Assert.inRange(cursor.getCount(), 0, 1);
             if (cursor.moveToFirst()) {
@@ -521,13 +544,13 @@ public class ConversationListItemData {
     }
 
     public static String generateConversationName(final List<ParticipantData>
-            participants) {
+                                                          participants) {
         if (participants.size() == 1) {
             // Prefer full name over first name for 1:1 conversation
             return participants.get(0).getDisplayName(true);
         }
 
-        final ArrayList<String> participantNames = new ArrayList<String>();
+        final ArrayList<String> participantNames = new ArrayList<>();
         for (final ParticipantData participant : participants) {
             // Prefer first name over full name for group conversation
             participantNames.add(participant.getDisplayName(false));

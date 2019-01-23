@@ -1,10 +1,9 @@
 package com.android.messaging.ui.appsettings;
 
 import android.content.Intent;
+import android.os.Bundle;
 import android.support.v4.text.BidiFormatter;
 import android.support.v4.text.TextDirectionHeuristicsCompat;
-import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.view.MenuItem;
@@ -17,8 +16,9 @@ import com.android.messaging.util.Assert;
 import com.android.messaging.util.BugleAnalytics;
 import com.android.messaging.util.BuglePrefs;
 import com.android.messaging.util.PhoneUtils;
+import com.ihs.app.framework.activity.HSAppCompatActivity;
 
-public class SettingAdvancedActivity extends AppCompatActivity {
+public class SettingAdvancedActivity extends HSAppCompatActivity {
 
     private SettingItemView mAutoRetrieve;
     private SettingItemView mRoamingAutoRetrieve;

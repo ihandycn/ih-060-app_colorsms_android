@@ -8,7 +8,6 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.Settings;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.view.MenuItem;
@@ -28,12 +27,13 @@ import com.android.messaging.util.BuglePrefs;
 import com.android.messaging.util.BuglePrefsKeys;
 import com.android.messaging.util.OsUtil;
 import com.android.messaging.util.PendingIntentConstants;
+import com.ihs.app.framework.activity.HSAppCompatActivity;
 import com.ihs.commons.config.HSConfig;
 import com.messagecenter.customize.MessageCenterSettings;
 
 import static com.android.messaging.ui.appsettings.SettingItemView.NORMAL;
 
-public class SettingGeneralActivity extends AppCompatActivity {
+public class SettingGeneralActivity extends HSAppCompatActivity {
     private static final int REQUEST_CODE_START_RINGTONE_PICKER = 1;
 
     private SettingItemView mSmsShowView;

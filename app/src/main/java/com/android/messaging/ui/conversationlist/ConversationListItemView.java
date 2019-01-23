@@ -58,6 +58,8 @@ import com.android.messaging.util.OsUtil;
 import com.android.messaging.util.Typefaces;
 import com.android.messaging.util.UiUtils;
 import com.android.messaging.util.UriUtil;
+import com.superapps.util.BackgroundDrawables;
+import com.superapps.util.Dimensions;
 
 import java.util.List;
 
@@ -140,6 +142,7 @@ public class ConversationListItemView extends FrameLayout implements OnClickList
     private AsyncImageView mImagePreviewView;
     private AudioAttachmentView mAudioAttachmentView;
     private HostInterface mHostInterface;
+    private TextView mUnreadMessagesCountView;
 
     public ConversationListItemView(final Context context, final AttributeSet attrs) {
         super(context, attrs);
@@ -167,6 +170,8 @@ public class ConversationListItemView extends FrameLayout implements OnClickList
                 findViewById(R.id.crossSwipeArchiveIconRight);
         mImagePreviewView = findViewById(R.id.conversation_image_preview);
         mAudioAttachmentView = findViewById(R.id.audio_attachment_view);
+        mUnreadMessagesCountView = findViewById(R.id.conversation_unread_messages_count);
+
         mConversationNameView.addOnLayoutChangeListener(this);
         mSnippetTextView.addOnLayoutChangeListener(this);
 
@@ -490,6 +495,9 @@ public class ConversationListItemView extends FrameLayout implements OnClickList
         mContactCheckmarkView.setVisibility(checkMarkVisibility);
         mFailedStatusIconView.setVisibility(failStatusVisibility);
 
+        boolean shouldShowUnreadMsgCount = mData.getUnreadMessagesNumber() > 0;
+        int unreadMsgCountViewVisibility = shouldShowUnreadMsgCount ? VISIBLE : GONE;
+
         final Uri previewUri = mData.getShowDraft() ?
                 mData.getDraftPreviewUri() : mData.getPreviewUri();
         final String previewContentType = mData.getShowDraft() ?
@@ -498,7 +506,7 @@ public class ConversationListItemView extends FrameLayout implements OnClickList
         Uri previewImageUri = null;
         int previewImageVisibility = GONE;
         int audioPreviewVisibility = GONE;
-        if (previewUri != null && !TextUtils.isEmpty(previewContentType)) {
+        if (!shouldShowUnreadMsgCount && previewUri != null && !TextUtils.isEmpty(previewContentType)) {
             if (ContentType.isAudioType(previewContentType)) {
                 boolean incoming = !(mData.getShowDraft() || mData.getIsMessageTypeOutgoing());
                 mAudioAttachmentView.bind(previewUri, incoming, false);
@@ -513,6 +521,14 @@ public class ConversationListItemView extends FrameLayout implements OnClickList
                 previewClickListener = fullScreenPreviewClickListener;
                 previewImageVisibility = VISIBLE;
             }
+        }
+
+        mUnreadMessagesCountView.setVisibility(unreadMsgCountViewVisibility);
+        if (unreadMsgCountViewVisibility == VISIBLE) {
+            mUnreadMessagesCountView.setBackground(
+                    BackgroundDrawables.createBackgroundDrawable(0xfff52e2e,
+                            Dimensions.pxFromDp(10.5f), false));
+            mUnreadMessagesCountView.setText(String.valueOf(mData.getUnreadMessagesNumber()));
         }
 
         final int imageSize = resources.getDimensionPixelSize(
