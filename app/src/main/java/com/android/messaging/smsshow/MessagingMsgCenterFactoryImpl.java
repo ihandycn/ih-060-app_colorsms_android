@@ -2,6 +2,7 @@ package com.android.messaging.smsshow;
 
 import android.content.Context;
 import android.content.Intent;
+import android.database.Cursor;
 import android.support.annotation.WorkerThread;
 import android.telephony.TelephonyManager;
 
@@ -9,10 +10,10 @@ import com.android.messaging.Factory;
 import com.android.messaging.datamodel.BugleDatabaseOperations;
 import com.android.messaging.datamodel.BugleNotifications;
 import com.android.messaging.datamodel.DataModel;
+import com.android.messaging.datamodel.DatabaseHelper;
 import com.android.messaging.datamodel.DatabaseWrapper;
 import com.android.messaging.datamodel.NoConfirmationSmsSendService;
-import com.android.messaging.datamodel.NotificationState;
-import com.android.messaging.datamodel.data.MessageData;
+import com.android.messaging.datamodel.data.ConversationListItemData;
 import com.android.messaging.datamodel.data.ParticipantData;
 import com.android.messaging.ui.UIIntents;
 import com.android.messaging.util.BugleAnalytics;
@@ -25,6 +26,8 @@ import com.messagecenter.sms.SmsMessageAlertActivity;
 
 import static com.android.messaging.datamodel.NoConfirmationSmsSendService.EXTRA_QUICK_REPLY_ADDRESS;
 import static com.android.messaging.datamodel.NoConfirmationSmsSendService.EXTRA_SUBSCRIPTION;
+import static com.android.messaging.datamodel.data.ConversationListItemData.PROJECTION;
+import static com.android.messaging.datamodel.data.ConversationListItemData.getConversationListView;
 import static com.android.messaging.receiver.SmsReceiver.EXTRA_SUB_ID;
 
 public class MessagingMsgCenterFactoryImpl extends MessageCenterFactoryImpl {
@@ -112,7 +115,29 @@ public class MessagingMsgCenterFactoryImpl extends MessageCenterFactoryImpl {
                         db, rawSender.getNormalizedDestination());
 
 
-                return  isBlocked;
+                boolean isNotificationDisabled = false;
+
+                Cursor cursor = null;
+                try {
+                    cursor = db.query(getConversationListView(),
+                            PROJECTION,
+                            DatabaseHelper.ConversationColumns.OTHER_PARTICIPANT_NORMALIZED_DESTINATION + "=?",
+                            new String[] { rawSender.getNormalizedDestination() },
+                            null, null, null);
+
+                    ConversationListItemData conversation;
+                    if (cursor.moveToFirst()) {
+                        conversation = new ConversationListItemData();
+                        conversation.bind(cursor);
+                        isNotificationDisabled = !conversation.getNotificationEnabled();
+                    }
+                } finally {
+                    if (cursor != null) {
+                        cursor.close();
+                    }
+                }
+
+                return  isBlocked || isNotificationDisabled;
             }
         };
     }
