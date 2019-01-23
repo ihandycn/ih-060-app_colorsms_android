@@ -92,7 +92,7 @@ dependencies {
 
     // "D/DebugDB: Open http://xxxxxxxx:8080 in your browser" will appear in your logcat,
     // open it in your browser to see out project tables;
-    debugImplementation 'com.amitshekhar.android:debug-db:1.0.3'
+//    debugImplementation 'com.amitshekhar.android:debug-db:1.0.3'
 
 
 }
