@@ -656,7 +656,7 @@ public class ComposeMessageView extends LinearLayout
                                             } else {
                                                 FiveStarRateDialog.showFiveStarWhenSendMsgIfNeed(BugleActivityUtil.contextToActivitySafely(getContext()));
                                             }
-                                        }, 900);
+                                        }, 1600);
 
                                         playSentSound();
                                         mHost.sendMessage(message);
