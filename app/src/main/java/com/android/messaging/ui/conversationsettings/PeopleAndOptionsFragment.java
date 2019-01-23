@@ -51,9 +51,13 @@ import com.android.messaging.ui.PersonItemView;
 import com.android.messaging.ui.UIIntents;
 import com.android.messaging.ui.conversation.ConversationActivity;
 import com.android.messaging.util.Assert;
+import com.android.messaging.util.OsUtil;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import static com.android.messaging.datamodel.data.PeopleOptionsItemData.SETTING_NOTIFICATION_SOUND_URI;
+import static com.android.messaging.datamodel.data.PeopleOptionsItemData.SETTING_NOTIFICATION_VIBRATION;
 
 /**
  * Shows a list of participants of a conversation and displays options.
@@ -139,7 +143,7 @@ public class PeopleAndOptionsFragment extends Fragment
                 mBinding.getData().enableConversationNotifications(mBinding, isChecked);
                 break;
 
-            case PeopleOptionsItemData.SETTING_NOTIFICATION_SOUND_URI:
+            case SETTING_NOTIFICATION_SOUND_URI:
                 final Intent ringtonePickerIntent = UIIntents.get().getRingtonePickerIntent(
                         getString(R.string.notification_sound_pref_title),
                         item.getRingtoneUri(), Settings.System.DEFAULT_NOTIFICATION_URI,
@@ -147,7 +151,7 @@ public class PeopleAndOptionsFragment extends Fragment
                 startActivityForResult(ringtonePickerIntent, REQUEST_CODE_RINGTONE_PICKER);
                 break;
 
-            case PeopleOptionsItemData.SETTING_NOTIFICATION_VIBRATION:
+            case SETTING_NOTIFICATION_VIBRATION:
                 mBinding.getData().enableConversationNotificationVibration(mBinding,
                         isChecked);
                 break;
@@ -208,6 +212,11 @@ public class PeopleAndOptionsFragment extends Fragment
             if (mOtherParticipantData == null) {
                 count--;
             }
+
+            if (OsUtil.isAtLeastO()) {
+                // remove SETTING_NOTIFICATION_SOUND_URI and SETTING_NOTIFICATION_VIBRATION
+                count -= 2;
+            }
             return mOptionsCursor == null ? 0 : count;
         }
 
@@ -233,6 +242,7 @@ public class PeopleAndOptionsFragment extends Fragment
                         inflater.inflate(R.layout.people_options_item_view, parent, false);
             }
             mOptionsCursor.moveToFirst();
+
             itemView.bind(mOptionsCursor, position, mOtherParticipantData,
                     PeopleAndOptionsFragment.this);
             return itemView;
