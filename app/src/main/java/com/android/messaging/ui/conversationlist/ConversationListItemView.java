@@ -495,7 +495,7 @@ public class ConversationListItemView extends FrameLayout implements OnClickList
         mContactCheckmarkView.setVisibility(checkMarkVisibility);
         mFailedStatusIconView.setVisibility(failStatusVisibility);
 
-        boolean shouldShowUnreadMsgCount = mData.getUnreadMessagesNumber() > 0;
+        boolean shouldShowUnreadMsgCount = !mData.getIsRead() && mData.getUnreadMessagesNumber() > 0;
         int unreadMsgCountViewVisibility = shouldShowUnreadMsgCount ? VISIBLE : GONE;
 
         final Uri previewUri = mData.getShowDraft() ?
