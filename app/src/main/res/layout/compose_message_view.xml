@@ -137,6 +137,7 @@
                             android:id="@+id/send_message_button"
                             android:layout_width="36.7dp"
                             android:layout_height="36.7dp"
+                            android:background="@null"
                             android:contentDescription="@string/sendButtonContentDescription"
                             android:src="@drawable/input_send_message_icon"
                             android:visibility="gone" />
