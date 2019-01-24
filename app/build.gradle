@@ -37,7 +37,7 @@ android {
         debug {
             minifyEnabled false
             ext.enableCrashlytics = true
-            buildConfigField 'String', 'EMOJI_CONFIG', '"emoji config remote url"'
+            buildConfigField 'String', 'EMOJI_CONFIG', '"http://cdn.appcloudbox.net/smoothappsstudio/apps/bubble/emojiconfig/config-bubble-emoji-1.0.0-5.sa"'
         }
 
         release {
@@ -45,7 +45,7 @@ android {
             multiDexEnabled true
             ext.enableCrashlytics = true
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.txt'
-            buildConfigField 'String', 'EMOJI_CONFIG', '"emoji config remote url"'
+            buildConfigField 'String', 'EMOJI_CONFIG', '"http://cdn.appcloudbox.net/smoothappsstudio/apps/bubble/emojiconfig/config-bubble-emoji-1.0.0-5.sa"'
         }
     }
 }
