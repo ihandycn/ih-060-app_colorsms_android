@@ -27,6 +27,7 @@ import com.android.messaging.util.BuglePrefs;
 import com.android.messaging.util.BuglePrefsKeys;
 import com.android.messaging.util.OsUtil;
 import com.android.messaging.util.PendingIntentConstants;
+import com.android.messaging.util.UiUtils;
 import com.ihs.app.framework.activity.HSAppCompatActivity;
 import com.ihs.commons.config.HSConfig;
 import com.messagecenter.customize.MessageCenterSettings;
@@ -62,6 +63,7 @@ public class SettingGeneralActivity extends HSAppCompatActivity {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         }
         getSupportActionBar().setDisplayShowHomeEnabled(true);
+        UiUtils.setStatusBarColor(this, getResources().getColor(R.color.action_bar_background_color));
 
         //outgoing message sounds
         mOutgoingSoundView = findViewById(R.id.setting_item_outgoing_message_sounds);

@@ -174,6 +174,7 @@ public class ConversationListActivity extends AbstractConversationListActivity {
         LayoutInflater.from(this).inflate(R.layout.conversation_list_toolbar_layout, toolbar, true);
         toolbar.setBackgroundColor(Color.WHITE);
         setSupportActionBar(toolbar);
+        invalidateActionBar();
 
         setupToolbarUI();
     }

@@ -282,8 +282,6 @@ public class UiUtils {
     public static void setStatusBarColor(final Activity activity, final int color) {
         if (OsUtil.isAtLeastL()) {
             // we need statusbar color same as actionbar color
-            activity.getWindow().setStatusBarColor(color);
-
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                 View decor = activity.getWindow().getDecorView();
                 if (color == Color.WHITE) {
@@ -293,6 +291,17 @@ public class UiUtils {
                     // You can also record the flags in advance so that you can turn UI back completely if
                     // you have set other flags before, such as translucent or full screen.
                     decor.setSystemUiVisibility(View.SYSTEM_UI_FLAG_VISIBLE);
+                }
+                activity.getWindow().setStatusBarColor(color);
+            } else {
+                if (color == Color.WHITE) {
+                    final int blendedRed = (int) Math.floor(0.8 * Color.red(color));
+                    final int blendedGreen = (int) Math.floor(0.8 * Color.green(color));
+                    final int blendedBlue = (int) Math.floor(0.8 * Color.blue(color));
+                    activity.getWindow().setStatusBarColor(
+                            Color.rgb(blendedRed, blendedGreen, blendedBlue));
+                } else {
+                    activity.getWindow().setStatusBarColor(color);
                 }
             }
         }

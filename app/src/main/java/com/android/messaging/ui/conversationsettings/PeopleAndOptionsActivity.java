@@ -26,6 +26,7 @@ import android.widget.TextView;
 import com.android.messaging.R;
 import com.android.messaging.ui.UIIntents;
 import com.android.messaging.util.Assert;
+import com.android.messaging.util.UiUtils;
 
 /**
  * Shows a list of participants in a conversation.
@@ -46,6 +47,7 @@ public class PeopleAndOptionsActivity extends AppCompatActivity {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         }
         getSupportActionBar().setDisplayShowHomeEnabled(true);
+        UiUtils.setStatusBarColor(this, getResources().getColor(R.color.action_bar_background_color));
     }
 
     @Override
