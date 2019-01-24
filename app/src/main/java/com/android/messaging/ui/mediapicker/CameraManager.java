@@ -281,9 +281,7 @@ class CameraManager implements FocusOverlayManager.Listener {
             });
         }
         mCameraPreview = preview;
-        if (preview != null) {
-            tryShowPreview();
-        }
+        tryShowPreview();
     }
 
     void setRenderOverlay(final RenderOverlay renderOverlay) {
