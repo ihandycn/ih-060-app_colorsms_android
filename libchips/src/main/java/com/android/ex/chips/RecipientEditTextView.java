@@ -876,7 +876,7 @@ public class RecipientEditTextView extends MultiAutoCompleteTextView implements
      * Given a height, returns a Y offset that will draw the text in the middle of the height.
      */
     protected float getTextYOffset(int height) {
-        return height - ((height - mTextHeight) / 2);
+        return height - ((height - mTextHeight) / 2) - Dimensions.pxFromDp(2);
     }
 
     /**
