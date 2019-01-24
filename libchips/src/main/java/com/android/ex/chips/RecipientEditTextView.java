@@ -99,6 +99,7 @@ import com.android.ex.chips.recipientchip.DrawableRecipientChip;
 import com.android.ex.chips.recipientchip.InvisibleRecipientChip;
 import com.android.ex.chips.recipientchip.ReplacementDrawableSpan;
 import com.android.ex.chips.recipientchip.VisibleRecipientChip;
+import com.superapps.util.Dimensions;
 import com.superapps.util.Fonts;
 
 import java.util.ArrayList;
