@@ -12,7 +12,7 @@ import com.android.messaging.util.PhoneUtils;
 import com.ihs.commons.config.HSConfig;
 import com.superapps.util.Toasts;
 
-public class WelcomeSetAsDefault extends AppCompatActivity {
+public class WelcomeSetAsDefaultActivity extends AppCompatActivity {
     private static final int REQUEST_SET_DEFAULT_SMS_APP = 3;
     private boolean mAllowBackKey = true;
 
@@ -22,7 +22,7 @@ public class WelcomeSetAsDefault extends AppCompatActivity {
         setContentView(R.layout.activity_welcome_set_as_default);
 
         findViewById(R.id.welcome_set_default_button).setOnClickListener(v -> {
-            final Intent intent = UIIntents.get().getChangeDefaultSmsAppIntent(WelcomeSetAsDefault.this);
+            final Intent intent = UIIntents.get().getChangeDefaultSmsAppIntent(WelcomeSetAsDefaultActivity.this);
             startActivityForResult(intent, REQUEST_SET_DEFAULT_SMS_APP);
             BugleAnalytics.logEvent("SMS_Start_SetDefaultPage_Btnclick", true);
         });

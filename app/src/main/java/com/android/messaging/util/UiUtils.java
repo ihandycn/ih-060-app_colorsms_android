@@ -57,7 +57,7 @@ import com.android.messaging.ui.SnackBarManager;
 import com.android.messaging.ui.UIIntents;
 import com.android.messaging.ui.WebViewActivity;
 import com.android.messaging.ui.welcome.WelcomePermissionActivity;
-import com.android.messaging.ui.welcome.WelcomeSetAsDefault;
+import com.android.messaging.ui.welcome.WelcomeSetAsDefaultActivity;
 import com.android.messaging.ui.welcome.WelcomeStartActivity;
 import com.ihs.commons.utils.HSLog;
 import com.superapps.util.Preferences;
@@ -379,7 +379,7 @@ public class UiUtils {
             return false;
         }
 
-        if (activity instanceof WelcomeSetAsDefault) {
+        if (activity instanceof WelcomeSetAsDefaultActivity) {
             return false;
         }
 

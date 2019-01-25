@@ -204,7 +204,7 @@ public class ContactRecipientAutoCompleteView extends RecipientEditTextView {
         @Override
         protected void onPostExecute(final Integer invalidChipsRemoved) {
             mCurrentSanitizeTask = null;
-            if (invalidChipsRemoved > 0) {
+            if (invalidChipsRemoved > 0 && mChipsChangeListener != null) {
                 mChipsChangeListener.onInvalidContactChipsPruned(invalidChipsRemoved);
             }
         }
@@ -278,7 +278,7 @@ public class ContactRecipientAutoCompleteView extends RecipientEditTextView {
 
     @Override
     public boolean onEditorAction(final TextView view, final int actionId, final KeyEvent event) {
-        if (actionId == EditorInfo.IME_ACTION_DONE) {
+        if (actionId == EditorInfo.IME_ACTION_DONE && mChipsChangeListener != null) {
             mChipsChangeListener.onEntryComplete();
         }
         return super.onEditorAction(view, actionId, event);

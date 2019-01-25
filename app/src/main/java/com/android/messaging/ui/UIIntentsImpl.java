@@ -73,7 +73,7 @@ import com.android.messaging.util.LogUtil;
 import com.android.messaging.util.UiUtils;
 import com.android.messaging.util.UriUtil;
 import com.android.messaging.ui.welcome.WelcomePermissionActivity;
-import com.android.messaging.ui.welcome.WelcomeSetAsDefault;
+import com.android.messaging.ui.welcome.WelcomeSetAsDefaultActivity;
 import com.android.messaging.ui.welcome.WelcomeStartActivity;
 
 /**
@@ -154,7 +154,7 @@ public class UIIntentsImpl extends UIIntents {
 
     @Override
     public void launchWelcomeSetAsDefaultActivity(final Context context) {
-        final Intent intent = new Intent(context, WelcomeSetAsDefault.class);
+        final Intent intent = new Intent(context, WelcomeSetAsDefaultActivity.class);
         context.startActivity(intent);
     }
 
