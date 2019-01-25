@@ -53,7 +53,7 @@ public abstract class Factory {
         Assert.isTrue(!sInitialized);
         sInstance = factory;
     }
-    public abstract void onDefaultSmsSet();
+    public abstract void onDefaultSmsSetAndPermissionsGranted();
 
     public abstract Context getApplicationContext();
     public abstract DataModel getDataModel();

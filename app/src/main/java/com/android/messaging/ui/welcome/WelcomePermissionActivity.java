@@ -9,6 +9,7 @@ import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
+import com.android.messaging.Factory;
 import com.android.messaging.R;
 import com.android.messaging.ui.UIIntents;
 import com.android.messaging.util.BugleAnalytics;
@@ -61,6 +62,7 @@ public class WelcomePermissionActivity extends AppCompatActivity {
         if (requestCode == REQUIRED_PERMISSIONS_REQUEST_CODE) {
             if (OsUtil.hasRequiredPermissions()) {
                 redirect();
+                Factory.get().onDefaultSmsSetAndPermissionsGranted();
             } else {
                 for (String permission : mRequiredPermissions) {
                     switch (permission) {

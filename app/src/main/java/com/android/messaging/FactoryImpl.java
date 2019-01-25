@@ -127,7 +127,7 @@ class FactoryImpl extends Factory {
                 if (!(activity instanceof NotificationMessageAlertActivity)) {
                     factory.mIsForeground = true;
                 }
-                if (sIsRedirectToWelcome){
+                if (sIsRedirectToWelcome) {
                     sIsRedirectToWelcome = false;
                 }
             }
@@ -167,17 +167,22 @@ class FactoryImpl extends Factory {
         Assert.initializeGservices(factory.mBugleGservices);
         LogUtil.initializeGservices(factory.mBugleGservices);
 
-        if (PhoneUtils.getDefault().isDefaultSmsApp()) {
-            factory.onDefaultSmsSet();
+        if (PhoneUtils.getDefault().isDefaultSmsApp() && OsUtil.hasRequiredPermissions()) {
+            factory.onDefaultSmsSetAndPermissionsGranted();
         }
-        PhoneUtils.getDefault().registerDefaultSmsPackageChange(factory::onDefaultSmsSet,
+        PhoneUtils.getDefault().registerDefaultSmsPackageChange(
+                () -> {
+                    if (OsUtil.hasRequiredPermissions()) {
+                        factory.onDefaultSmsSetAndPermissionsGranted();
+                    }
+                },
                 () -> BugleApplication.updateAppConfig(factory.getApplicationContext(), false));
 
         return factory;
     }
 
     @Override
-    public void onDefaultSmsSet() {
+    public void onDefaultSmsSetAndPermissionsGranted() {
         if (sInitialized) {
             return;
         }

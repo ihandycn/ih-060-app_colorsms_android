@@ -5,9 +5,11 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.widget.Toast;
 
+import com.android.messaging.Factory;
 import com.android.messaging.R;
 import com.android.messaging.ui.UIIntents;
 import com.android.messaging.util.BugleAnalytics;
+import com.android.messaging.util.OsUtil;
 import com.android.messaging.util.PhoneUtils;
 import com.ihs.commons.config.HSConfig;
 import com.superapps.util.Toasts;
@@ -48,7 +50,12 @@ public class WelcomeSetAsDefaultActivity extends AppCompatActivity {
     public void onActivityResult(final int requestCode, final int resultCode, final Intent data) {
         if (requestCode == REQUEST_SET_DEFAULT_SMS_APP) {
             if (PhoneUtils.getDefault().isDefaultSmsApp()) {
-                UIIntents.get().launchConversationListActivity(this);
+                if (OsUtil.hasRequiredPermissions()) {
+                    Factory.get().onDefaultSmsSetAndPermissionsGranted();
+                    UIIntents.get().launchConversationListActivity(this);
+                } else {
+                    UIIntents.get().launchWelcomePermissionActivity(this);
+                }
                 BugleAnalytics.logEvent("SMS_Start_SetDefault_Success", true);
                 finish();
             } else {
