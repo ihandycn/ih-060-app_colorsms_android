@@ -37,7 +37,7 @@ public class EmojiManager {
         Preferences.get(PREF_FILE_NAME).addStringToList(PREF_NEW_TAB_STICKER, name);
         List<String> data = getTabSticker();
         if (data.contains(name)) {
-            throw new IllegalStateException("The sticker of " + name + " already added to emoji picker!!!");
+            return;
         }
         data.add(0, name);
         Preferences.get(PREF_FILE_NAME).putStringList(PREF_TAB_STICKER, data);
@@ -48,7 +48,7 @@ public class EmojiManager {
         removeNewTabSticker(name);
         List<String> data = getTabSticker();
         if (!data.contains(name)) {
-            throw new IllegalStateException("The sticker of " + name + " already removed from emoji picker!!!");
+            return;
         }
         data.remove(name);
         Preferences.get(PREF_FILE_NAME).putStringList(PREF_TAB_STICKER, data);
