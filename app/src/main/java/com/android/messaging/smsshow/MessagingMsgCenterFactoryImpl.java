@@ -19,6 +19,7 @@ import com.android.messaging.ui.UIIntents;
 import com.android.messaging.util.BugleAnalytics;
 import com.android.messaging.util.OsUtil;
 import com.android.messaging.util.PhoneUtils;
+import com.ihs.commons.config.HSConfig;
 import com.messagecenter.customize.MessageCenterFactoryImpl;
 import com.messagecenter.customize.SmsShowCallBack;
 import com.messagecenter.notification.NotificationMessageAlertActivity;
@@ -34,7 +35,7 @@ public class MessagingMsgCenterFactoryImpl extends MessageCenterFactoryImpl {
 
     @Override
     public boolean isSMSAssistantOpenDefault() {
-        return false;
+        return HSConfig.optBoolean(false,"Application", "SMSPopUps", "DefaultSwitch");
     }
 
     @Override
