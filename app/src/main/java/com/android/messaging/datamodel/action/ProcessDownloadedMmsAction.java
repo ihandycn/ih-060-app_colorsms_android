@@ -82,7 +82,7 @@ public class ProcessDownloadedMmsAction extends Action {
     // Set when message downloaded by us (legacy)
     private static final String KEY_STATUS = "status";
     private static final String KEY_RAW_STATUS = "raw_status";
-    private static final String KEY_MMS_URI =  "mms_uri";
+    private static final String KEY_MMS_URI = "mms_uri";
 
     // Used to send a deferred response in response to auto-download failure
     private static final String KEY_SEND_DEFERRED_RESP_STATUS = "send_deferred_resp_status";
@@ -453,9 +453,13 @@ public class ProcessDownloadedMmsAction extends Action {
                 }
                 final boolean blockedSender = BugleDatabaseOperations.isBlockedDestination(
                         db, sender.getNormalizedDestination());
-                conversationId = BugleDatabaseOperations.getOrCreateConversationFromThreadId(db,
-                        mms.mThreadId, blockedSender, subId);
-
+                if (recipients.size() <= 2) {
+                    conversationId = BugleDatabaseOperations.getOrCreateConversationFromThreadId(db,
+                            mms.mThreadId, from, blockedSender, subId);
+                } else {
+                    conversationId = BugleDatabaseOperations.getOrCreateConversationFromThreadId(db,
+                            mms.mThreadId, blockedSender, subId);
+                }
                 messageInFocusedConversation =
                         DataModel.get().isFocusedConversation(conversationId);
                 messageInObservableConversation =

@@ -89,9 +89,9 @@ public class ReceiveMmsMessageAction extends Action implements Parcelable {
             final boolean blocked = BugleDatabaseOperations.isBlockedDestination(
                     db, rawSender.getNormalizedDestination());
             final boolean autoDownload = (!blocked && MmsUtils.allowMmsAutoRetrieve(subId));
-            final String conversationId =
-                    BugleDatabaseOperations.getOrCreateConversationFromThreadId(db, mms.mThreadId,
-                            blocked, subId);
+            final String conversationId = recipients.size() <= 2
+                    ? BugleDatabaseOperations.getOrCreateConversationFromThreadId(db, mms.mThreadId, from, blocked, subId)
+                    : BugleDatabaseOperations.getOrCreateConversationFromThreadId(db, mms.mThreadId, blocked, subId);
 
             final boolean messageInFocusedConversation =
                     DataModel.get().isFocusedConversation(conversationId);
@@ -112,7 +112,7 @@ public class ReceiveMmsMessageAction extends Action implements Parcelable {
 
                 message = MmsUtils.createMmsMessage(mms, conversationId, participantId, selfId,
                         (autoDownload ? MessageData.BUGLE_STATUS_INCOMING_RETRYING_AUTO_DOWNLOAD :
-                            MessageData.BUGLE_STATUS_INCOMING_YET_TO_MANUAL_DOWNLOAD));
+                                MessageData.BUGLE_STATUS_INCOMING_YET_TO_MANUAL_DOWNLOAD));
                 // Write the message
                 BugleDatabaseOperations.insertNewMessageInTransaction(db, message);
 
@@ -120,7 +120,7 @@ public class ReceiveMmsMessageAction extends Action implements Parcelable {
                     BugleDatabaseOperations.updateConversationMetadataInTransaction(db,
                             conversationId, message.getMessageId(), message.getReceivedTimeStamp(),
                             blocked, true /* shouldAutoSwitchSelfId */);
-                    final ParticipantData sender = ParticipantData .getFromId(
+                    final ParticipantData sender = ParticipantData.getFromId(
                             db, participantId);
                     BugleActionToasts.onMessageReceived(conversationId, sender, message);
                 }
