@@ -33,6 +33,7 @@ import com.android.messaging.Factory;
 import com.android.messaging.datamodel.DataModel;
 import com.android.messaging.util.LogUtil;
 import com.android.messaging.util.LoggingTimer;
+import com.android.messaging.util.PendingIntentConstants;
 import com.android.messaging.util.WakeLockHelper;
 import com.google.common.annotations.VisibleForTesting;
 
@@ -213,16 +214,11 @@ public class ActionServiceImpl extends IntentService {
     @Override
     public void onCreate() {
         super.onCreate();
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            startForeground(PendingIntentConstants.SMS_BACKGROUND_SERVICE_ID, new Notification());
+        }
         mBackgroundWorker = DataModel.get().getBackgroundWorkerForActionService();
         DataModel.get().getConnectivityUtil().registerForSignalStrength();
-    }
-
-    @Override
-    public int onStartCommand(@Nullable Intent intent, int flags, int startId) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            startForeground(startId, new Notification());
-        }
-        return super.onStartCommand(intent, flags, startId);
     }
 
     @Override

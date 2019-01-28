@@ -23,7 +23,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
 
 import com.android.messaging.Factory;
 import com.android.messaging.datamodel.DataModel;
@@ -31,6 +30,7 @@ import com.android.messaging.datamodel.DataModelException;
 import com.android.messaging.util.Assert;
 import com.android.messaging.util.LogUtil;
 import com.android.messaging.util.LoggingTimer;
+import com.android.messaging.util.PendingIntentConstants;
 import com.android.messaging.util.WakeLockHelper;
 import com.google.common.annotations.VisibleForTesting;
 
@@ -63,14 +63,6 @@ public class BackgroundWorkerService extends IntentService {
         for (final Action action : actions) {
             startServiceWithAction(action, 0);
         }
-    }
-
-    @Override
-    public int onStartCommand(@Nullable Intent intent, int flags, int startId) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            startForeground(startId, new Notification());
-        }
-        return super.onStartCommand(intent, flags, startId);
     }
 
     // ops
@@ -120,6 +112,14 @@ public class BackgroundWorkerService extends IntentService {
                     "BackgroundWorkerService.startServiceWithAction: failed to start service for "
                             + opcode);
             sWakeLock.release(intent, opcode);
+        }
+    }
+
+    @Override
+    public void onCreate() {
+        super.onCreate();
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            startForeground(PendingIntentConstants.SMS_NOTIFICATION_ID, new Notification());
         }
     }
 
