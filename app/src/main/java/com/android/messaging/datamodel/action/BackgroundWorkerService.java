@@ -119,7 +119,7 @@ public class BackgroundWorkerService extends IntentService {
     public void onCreate() {
         super.onCreate();
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            startForeground(PendingIntentConstants.SMS_NOTIFICATION_ID, new Notification());
+            startForeground(PendingIntentConstants.SMS_BACKGROUND_SERVICE_ID, new Notification());
         }
     }
 
