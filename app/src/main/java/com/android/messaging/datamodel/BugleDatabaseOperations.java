@@ -179,9 +179,6 @@ public class BugleDatabaseOperations {
     public static String getOrCreateConversationFromThreadId(final DatabaseWrapper db,
                                                              final long threadId, String sender, final boolean senderBlocked, final int refSubId) {
         Assert.isNotMainThread();
-        if (MmsUtils.getRecipientsByThread(threadId).size() <= 2) {
-            return getOrCreateConversationFromThreadId(db, threadId, senderBlocked, refSubId);
-        }
         final List<String> recipients = new ArrayList<>();
         recipients.add(sender);
         final ArrayList<ParticipantData> participants =
