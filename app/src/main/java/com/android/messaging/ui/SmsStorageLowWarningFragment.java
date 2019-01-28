@@ -47,7 +47,7 @@ import java.util.List;
  * Dialog to show the sms storage low warning
  */
 public class SmsStorageLowWarningFragment extends Fragment {
-    private SmsStorageLowWarningFragment() {
+    public SmsStorageLowWarningFragment() {
     }
 
     public static SmsStorageLowWarningFragment newInstance() {
@@ -157,7 +157,7 @@ public class SmsStorageLowWarningFragment extends Fragment {
     /**
      * The dialog to confirm user's delete action
      */
-    private static class ConfirmationDialog extends DialogFragment {
+    public static class ConfirmationDialog extends DialogFragment {
         private Duration mDuration;
         private String mDurationString;
 
