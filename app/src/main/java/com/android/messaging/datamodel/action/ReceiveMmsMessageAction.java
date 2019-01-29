@@ -33,8 +33,10 @@ import com.android.messaging.datamodel.data.MessageData;
 import com.android.messaging.datamodel.data.ParticipantData;
 import com.android.messaging.mmslib.pdu.PduHeaders;
 import com.android.messaging.sms.DatabaseMessages;
+import com.android.messaging.sms.MmsSmsUtils;
 import com.android.messaging.sms.MmsUtils;
 import com.android.messaging.util.LogUtil;
+import com.ihs.app.framework.HSApplication;
 
 import java.util.List;
 
@@ -89,9 +91,14 @@ public class ReceiveMmsMessageAction extends Action implements Parcelable {
             final boolean blocked = BugleDatabaseOperations.isBlockedDestination(
                     db, rawSender.getNormalizedDestination());
             final boolean autoDownload = (!blocked && MmsUtils.allowMmsAutoRetrieve(subId));
-            final String conversationId = recipients.size() <= 2
-                    ? BugleDatabaseOperations.getOrCreateConversationFromThreadId(db, mms.mThreadId, from, blocked, subId)
-                    : BugleDatabaseOperations.getOrCreateConversationFromThreadId(db, mms.mThreadId, blocked, subId);
+
+            final String conversationId;
+            if (recipients.size() <= 2 && from != null) {
+                long threadId = MmsSmsUtils.Threads.getOrCreateThreadId(HSApplication.getContext(), from);
+                conversationId = BugleDatabaseOperations.getOrCreateConversationFromThreadId(db, threadId, from, blocked, subId);
+            } else {
+                conversationId = BugleDatabaseOperations.getOrCreateConversationFromThreadId(db, mms.mThreadId, blocked, subId);
+            }
 
             final boolean messageInFocusedConversation =
                     DataModel.get().isFocusedConversation(conversationId);

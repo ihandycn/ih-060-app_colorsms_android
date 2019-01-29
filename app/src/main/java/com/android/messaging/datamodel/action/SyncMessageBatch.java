@@ -65,9 +65,9 @@ class SyncMessageBatch {
     private final ArrayList<LocalDatabaseMessage> mMessagesToDelete;
 
     SyncMessageBatch(final ArrayList<SmsMessage> smsToAdd,
-            final ArrayList<MmsMessage> mmsToAdd,
-            final ArrayList<LocalDatabaseMessage> messagesToDelete,
-            final ThreadInfoCache cache) {
+                     final ArrayList<MmsMessage> mmsToAdd,
+                     final ArrayList<LocalDatabaseMessage> messagesToDelete,
+                     final ThreadInfoCache cache) {
         mSmsToAdd = smsToAdd;
         mMmsToAdd = mmsToAdd;
         mMessagesToDelete = messagesToDelete;
@@ -197,7 +197,7 @@ class SyncMessageBatch {
     }
 
     public static int bugleStatusForSms(final boolean isOutgoing, final int type,
-            final int status) {
+                                        final int status) {
         int bugleStatus = MessageData.BUGLE_STATUS_UNKNOWN;
         // For a message we sync either
         if (isOutgoing) {
@@ -206,7 +206,7 @@ class SyncMessageBatch {
                     type == Telephony.Sms.MESSAGE_TYPE_OUTBOX ||
                     type == Telephony.Sms.MESSAGE_TYPE_QUEUED ||
                     (type == Telephony.Sms.MESSAGE_TYPE_SENT &&
-                     status == Telephony.Sms.STATUS_FAILED)) {
+                            status == Telephony.Sms.STATUS_FAILED)) {
                 // Not sent counts as failed and available for manual resend
                 bugleStatus = MessageData.BUGLE_STATUS_OUTGOING_FAILED;
             } else if (status == Sms.STATUS_COMPLETE) {
@@ -242,7 +242,7 @@ class SyncMessageBatch {
         // A forced resync of all messages should still keep the archived states.
         // The database upgrade code notifies sync manager of this. We need to
         // honor the original customization to this conversation if created.
-        final String conversationId = mCache.getOrCreateConversation(db, mms.mThreadId, mms.mSubId,
+        final String conversationId = mCache.getOrCreateConversationForMms(db, senderId, mms.mThreadId, mms.mSubId,
                 DataModel.get().getSyncManager().getCustomizationForThread(mms.mThreadId));
         if (conversationId == null) {
             LogUtil.e(TAG, "SyncMessageBatch: Failed to create conversation for MMS thread "
@@ -288,8 +288,8 @@ class SyncMessageBatch {
 
     // TODO: Remove this after we no longer see this crash (b/18375758)
     private static void rethrowSQLiteConstraintExceptionWithDetails(SQLiteConstraintException e,
-            DatabaseWrapper db, String messageUri, long threadId, String conversationId,
-            String selfId, String senderId) {
+                                                                    DatabaseWrapper db, String messageUri, long threadId, String conversationId,
+                                                                    String selfId, String senderId) {
         // Add some extra debug information to the exception for tracking down b/18375758.
         // The default detail message for SQLiteConstraintException tells us that a foreign
         // key constraint failed, but not which one! Messages have foreign keys to 3 tables:
@@ -302,8 +302,8 @@ class SyncMessageBatch {
         try {
             // Look for an existing conversation in the db with the conversation id
             cursor = db.rawQuery("SELECT " + ConversationColumns._ID
-                    + " FROM " + DatabaseHelper.CONVERSATIONS_TABLE
-                    + " WHERE " + ConversationColumns._ID + "=" + conversationId,
+                            + " FROM " + DatabaseHelper.CONVERSATIONS_TABLE
+                            + " WHERE " + ConversationColumns._ID + "=" + conversationId,
                     null);
             if (cursor != null && cursor.moveToFirst()) {
                 Assert.isTrue(cursor.getCount() == 1);
@@ -360,7 +360,7 @@ class SyncMessageBatch {
      * @return Total number of deleted messages
      */
     private static int batchDelete(final DatabaseWrapper db, final String table,
-            final String column, final String[] ids) {
+                                   final String column, final String[] ids) {
         int totalDeleted = 0;
         final int totalIds = ids.length;
         for (int start = 0; start < totalIds; start += MmsUtils.MAX_IDS_PER_QUERY) {

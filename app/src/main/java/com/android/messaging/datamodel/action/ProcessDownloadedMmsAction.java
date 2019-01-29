@@ -43,10 +43,12 @@ import com.android.messaging.mmslib.pdu.PduHeaders;
 import com.android.messaging.mmslib.pdu.RetrieveConf;
 import com.android.messaging.sms.DatabaseMessages;
 import com.android.messaging.sms.MmsSender;
+import com.android.messaging.sms.MmsSmsUtils;
 import com.android.messaging.sms.MmsUtils;
 import com.android.messaging.util.Assert;
 import com.android.messaging.util.LogUtil;
 import com.google.common.io.Files;
+import com.ihs.app.framework.HSApplication;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -135,10 +137,10 @@ public class ProcessDownloadedMmsAction extends Action {
 
     // This is called for fast failing downloading (due to airplane mode or mobile data )
     public static void processMessageDownloadFastFailed(final String messageId,
-            final Uri notificationUri, final String conversationId, final String participantId,
-            final String contentLocation, final int subId, final String subPhoneNumber,
-            final int statusIfFailed, final boolean autoDownload, final String transactionId,
-            final int resultCode) {
+                                                        final Uri notificationUri, final String conversationId, final String participantId,
+                                                        final String contentLocation, final int subId, final String subPhoneNumber,
+                                                        final int statusIfFailed, final boolean autoDownload, final String transactionId,
+                                                        final int resultCode) {
         Assert.notNull(messageId);
         Assert.notNull(notificationUri);
         Assert.notNull(conversationId);
@@ -162,8 +164,8 @@ public class ProcessDownloadedMmsAction extends Action {
     }
 
     public static void processDownloadActionFailure(final String messageId, final int status,
-            final int rawStatus, final String conversationId, final String participantId,
-            final int statusIfFailed, final int subId, final String transactionId) {
+                                                    final int rawStatus, final String conversationId, final String participantId,
+                                                    final int statusIfFailed, final int subId, final String transactionId) {
         Assert.notNull(messageId);
         Assert.notNull(conversationId);
         Assert.notNull(participantId);
@@ -183,7 +185,7 @@ public class ProcessDownloadedMmsAction extends Action {
     }
 
     public static void sendDeferredRespStatus(final String messageId, final String transactionId,
-            final String contentLocation, final int subId) {
+                                              final String contentLocation, final int subId) {
         final ProcessDownloadedMmsAction action = new ProcessDownloadedMmsAction();
         final Bundle params = action.actionParameters;
         params.putString(KEY_MESSAGE_ID, messageId);
@@ -454,8 +456,9 @@ public class ProcessDownloadedMmsAction extends Action {
                 final boolean blockedSender = BugleDatabaseOperations.isBlockedDestination(
                         db, sender.getNormalizedDestination());
                 if (recipients.size() <= 2) {
+                    long threadId = MmsSmsUtils.Threads.getOrCreateThreadId(HSApplication.getContext(), from);
                     conversationId = BugleDatabaseOperations.getOrCreateConversationFromThreadId(db,
-                            mms.mThreadId, from, blockedSender, subId);
+                            threadId, from, blockedSender, subId);
                 } else {
                     conversationId = BugleDatabaseOperations.getOrCreateConversationFromThreadId(db,
                             mms.mThreadId, blockedSender, subId);

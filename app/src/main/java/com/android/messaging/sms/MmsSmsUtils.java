@@ -122,7 +122,7 @@ public class MmsSmsUtils {
      * @return true if MMS is required.
      */
     public static boolean getRequireMmsForEmailAddress(final boolean destinationHasEmailAddress,
-            final int subId) {
+                                                       final int subId) {
         if (!TextUtils.isEmpty(MmsConfig.get(subId).getEmailGateway())) {
             return false;
         } else {
@@ -134,7 +134,7 @@ public class MmsSmsUtils {
      * Helper functions for the "threads" table used by MMS and SMS.
      */
     public static final class Threads implements android.provider.Telephony.ThreadsColumns {
-        private static final String[] ID_PROJECTION = { BaseColumns._ID };
+        private static final String[] ID_PROJECTION = {BaseColumns._ID};
         private static final Uri THREAD_ID_CONTENT_URI = Uri.parse(
                 "content://mms-sms/threadID");
         public static final Uri CONTENT_URI = Uri.withAppendedPath(

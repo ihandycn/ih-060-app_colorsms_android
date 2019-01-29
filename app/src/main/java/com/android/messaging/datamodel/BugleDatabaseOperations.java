@@ -55,6 +55,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
+
 import javax.annotation.Nullable;
 
 
@@ -73,7 +74,7 @@ public class BugleDatabaseOperations {
      * Convert list of recipient strings (email/phone number) into list of ConversationParticipants
      *
      * @param recipients The recipient list
-     * @param refSubId The subId used to normalize phone numbers in the recipients
+     * @param refSubId   The subId used to normalize phone numbers in the recipients
      */
     static ArrayList<ParticipantData> getConversationParticipantsFromRecipients(
             final List<String> recipients, final int refSubId) {
@@ -151,16 +152,16 @@ public class BugleDatabaseOperations {
 
     /**
      * Get or create a conversation based on the message's thread id
-     *
+     * <p>
      * NOTE: There are phones on which you can't get the recipients from the thread id for SMS
      * until you have a message, so use getOrCreateConversationFromRecipient instead.
-     *
+     * <p>
      * TODO: Should this be in MMS/SMS code?
      *
-     * @param db the database
-     * @param threadId The message's thread
+     * @param db            the database
+     * @param threadId      The message's thread
      * @param senderBlocked Flag whether sender of message is in blocked people list
-     * @param refSubId The reference subId for canonicalize phone numbers
+     * @param refSubId      The reference subId for canonicalize phone numbers
      * @return conversationId
      */
     @DoesNotRunOnMainThread
@@ -191,15 +192,15 @@ public class BugleDatabaseOperations {
     /**
      * Get or create a conversation based on provided recipient
      *
-     * @param db the database
-     * @param threadId The message's thread
+     * @param db            the database
+     * @param threadId      The message's thread
      * @param senderBlocked Flag whether sender of message is in blocked people list
-     * @param recipient recipient for thread
+     * @param recipient     recipient for thread
      * @return conversationId
      */
     @DoesNotRunOnMainThread
     public static String getOrCreateConversationFromRecipient(final DatabaseWrapper db,
-            final long threadId, final boolean senderBlocked, final ParticipantData recipient) {
+                                                              final long threadId, final boolean senderBlocked, final ParticipantData recipient) {
         Assert.isNotMainThread();
         final ArrayList<ParticipantData> recipients = new ArrayList<>(1);
         recipients.add(recipient);
@@ -209,19 +210,19 @@ public class BugleDatabaseOperations {
     /**
      * Get or create a conversation based on provided participants
      *
-     * @param db the database
-     * @param threadId The message's thread
-     * @param archived Flag whether the conversation should be created archived
-     * @param participants list of conversation participants
+     * @param db             the database
+     * @param threadId       The message's thread
+     * @param archived       Flag whether the conversation should be created archived
+     * @param participants   list of conversation participants
      * @param noNotification If notification should be disabled
-     * @param noVibrate If vibrate on notification should be disabled
-     * @param soundUri If there is custom sound URI
+     * @param noVibrate      If vibrate on notification should be disabled
+     * @param soundUri       If there is custom sound URI
      * @return a conversation id
      */
     @DoesNotRunOnMainThread
     public static String getOrCreateConversation(final DatabaseWrapper db, final long threadId,
-            final boolean archived, final ArrayList<ParticipantData> participants,
-            boolean noNotification, boolean noVibrate, String soundUri) {
+                                                 final boolean archived, final ArrayList<ParticipantData> participants,
+                                                 boolean noNotification, boolean noVibrate, String soundUri) {
         Assert.isNotMainThread();
 
         // Check to see if this conversation is already in out local db cache
@@ -266,7 +267,7 @@ public class BugleDatabaseOperations {
     @VisibleForTesting
     @DoesNotRunOnMainThread
     public static String getExistingConversation(final DatabaseWrapper dbWrapper,
-            final long threadId, final boolean senderBlocked) {
+                                                 final long threadId, final boolean senderBlocked) {
         Assert.isNotMainThread();
         String conversationId = null;
 
@@ -294,7 +295,7 @@ public class BugleDatabaseOperations {
     /**
      * Get the thread id for an existing conversation from the local DB.
      *
-     * @param dbWrapper The database
+     * @param dbWrapper      The database
      * @param conversationId The conversation to look up thread for
      * @return The thread id. Returns -1 if the conversation was not found or if it was found
      * but the thread column was NULL.
@@ -307,9 +308,9 @@ public class BugleDatabaseOperations {
         Cursor cursor = null;
         try {
             cursor = dbWrapper.query(DatabaseHelper.CONVERSATIONS_TABLE,
-                    new String[] { ConversationColumns.SMS_THREAD_ID },
+                    new String[]{ConversationColumns.SMS_THREAD_ID},
                     ConversationColumns._ID + " =?",
-                    new String[] { conversationId },
+                    new String[]{conversationId},
                     null, null, null);
 
             if (cursor.moveToFirst()) {
@@ -338,14 +339,14 @@ public class BugleDatabaseOperations {
     }
 
     static boolean isBlockedParticipant(final DatabaseWrapper db, final String value,
-            final String column) {
+                                        final String column) {
         Cursor cursor = null;
         try {
             cursor = db.query(DatabaseHelper.PARTICIPANTS_TABLE,
-                    new String[] { ParticipantColumns.BLOCKED },
+                    new String[]{ParticipantColumns.BLOCKED},
                     column + "=? AND " + ParticipantColumns.SUB_ID + "=?",
-                    new String[] { value,
-                    Integer.toString(ParticipantData.OTHER_THAN_SELF_SUB_ID) },
+                    new String[]{value,
+                            Integer.toString(ParticipantData.OTHER_THAN_SELF_SUB_ID)},
                     null, null, null);
 
             Assert.inRange(cursor.getCount(), 0, 1);
@@ -362,23 +363,23 @@ public class BugleDatabaseOperations {
 
     /**
      * Create a conversation in the local DB based on the message's thread id.
-     *
+     * <p>
      * It's up to the caller to make sure that this is all inside a transaction.  It will return
      * null if it's not in the local DB.
      *
-     * @param dbWrapper     The database
-     * @param threadId      The message's thread
-     * @param selfId        The selfId to make default for this conversation
-     * @param archived      Flag whether the conversation should be created archived
+     * @param dbWrapper      The database
+     * @param threadId       The message's thread
+     * @param selfId         The selfId to make default for this conversation
+     * @param archived       Flag whether the conversation should be created archived
      * @param noNotification If notification should be disabled
-     * @param noVibrate     If vibrate on notification should be disabled
-     * @param soundUri      The customized sound
+     * @param noVibrate      If vibrate on notification should be disabled
+     * @param soundUri       The customized sound
      * @return The existing conversation id or new conversation id
      */
     static String createConversationInTransaction(final DatabaseWrapper dbWrapper,
-            final long threadId, final String conversationName, final String selfId,
-            final List<ParticipantData> participants, final boolean archived,
-            boolean noNotification, boolean noVibrate, String soundUri) {
+                                                  final long threadId, final String conversationName, final String selfId,
+                                                  final List<ParticipantData> participants, final boolean archived,
+                                                  boolean noNotification, boolean noVibrate, String soundUri) {
         // We want conversation and participant creation to be atomic
         Assert.isTrue(dbWrapper.getDatabase().inTransaction());
         boolean hasEmailAddress = false;
@@ -450,7 +451,7 @@ public class BugleDatabaseOperations {
     }
 
     private static void fillParticipantData(final ContentValues values,
-            final List<ParticipantData> participants) {
+                                            final List<ParticipantData> participants) {
         if (participants != null && !participants.isEmpty()) {
             final Uri avatarUri = AvatarUriUtil.createAvatarUri(participants);
             values.put(ConversationColumns.ICON, avatarUri.toString());
@@ -480,7 +481,7 @@ public class BugleDatabaseOperations {
      */
     @DoesNotRunOnMainThread
     public static boolean deleteConversation(final DatabaseWrapper dbWrapper,
-            final String conversationId, final long cutoffTimestamp) {
+                                             final String conversationId, final long cutoffTimestamp) {
         Assert.isNotMainThread();
         dbWrapper.beginTransaction();
         boolean conversationDeleted = false;
@@ -490,14 +491,14 @@ public class BugleDatabaseOperations {
             if (cutoffTimestamp == Long.MAX_VALUE) {
                 // Delete parts and messages
                 dbWrapper.delete(DatabaseHelper.MESSAGES_TABLE,
-                        MessageColumns.CONVERSATION_ID + "=?", new String[] { conversationId });
+                        MessageColumns.CONVERSATION_ID + "=?", new String[]{conversationId});
                 conversationMessagesDeleted = true;
             } else {
                 // Delete all messages prior to the cutoff
                 dbWrapper.delete(DatabaseHelper.MESSAGES_TABLE,
                         MessageColumns.CONVERSATION_ID + "=? AND "
                                 + MessageColumns.RECEIVED_TIMESTAMP + "<=?",
-                                new String[] { conversationId, Long.toString(cutoffTimestamp) });
+                        new String[]{conversationId, Long.toString(cutoffTimestamp)});
 
                 // Delete any draft message. The delete above may not always include the draft,
                 // because under certain scenarios (e.g. sending messages in progress), the draft
@@ -507,14 +508,14 @@ public class BugleDatabaseOperations {
                 // without also deleting the conversation itself (see b/20262204 for details).
                 dbWrapper.delete(DatabaseHelper.MESSAGES_TABLE,
                         MessageColumns.STATUS + "=? AND " + MessageColumns.CONVERSATION_ID + "=?",
-                        new String[] {
-                            Integer.toString(MessageData.BUGLE_STATUS_OUTGOING_DRAFT),
-                            conversationId
+                        new String[]{
+                                Integer.toString(MessageData.BUGLE_STATUS_OUTGOING_DRAFT),
+                                conversationId
                         });
 
                 // Check to see if there are any messages left in the conversation
                 final long count = dbWrapper.queryNumEntries(DatabaseHelper.MESSAGES_TABLE,
-                        MessageColumns.CONVERSATION_ID + "=?", new String[] { conversationId });
+                        MessageColumns.CONVERSATION_ID + "=?", new String[]{conversationId});
                 conversationMessagesDeleted = (count == 0);
 
                 // Log detail information if there are still messages left in the conversation
@@ -532,7 +533,7 @@ public class BugleDatabaseOperations {
             if (conversationMessagesDeleted) {
                 // Delete conversation row
                 final int count = dbWrapper.delete(DatabaseHelper.CONVERSATIONS_TABLE,
-                        ConversationColumns._ID + "=?", new String[] { conversationId });
+                        ConversationColumns._ID + "=?", new String[]{conversationId});
                 conversationDeleted = (count > 0);
             }
             dbWrapper.setTransactionSuccessful();
@@ -610,8 +611,8 @@ public class BugleDatabaseOperations {
 
     @DoesNotRunOnMainThread
     public static void updateConversationMetadataInTransaction(final DatabaseWrapper db,
-            final String conversationId, final String messageId, final long latestTimestamp,
-            final boolean keepArchived, final boolean shouldAutoSwitchSelfId) {
+                                                               final String conversationId, final String messageId, final long latestTimestamp,
+                                                               final boolean keepArchived, final boolean shouldAutoSwitchSelfId) {
         Assert.isNotMainThread();
         updateConversationMetadataInTransaction(
                 db, conversationId, messageId, latestTimestamp, keepArchived, null,
@@ -620,7 +621,7 @@ public class BugleDatabaseOperations {
 
     @DoesNotRunOnMainThread
     public static void updateConversationArchiveStatusInTransaction(final DatabaseWrapper dbWrapper,
-            final String conversationId, final boolean isArchived) {
+                                                                    final String conversationId, final boolean isArchived) {
         Assert.isNotMainThread();
         Assert.isTrue(dbWrapper.getDatabase().inTransaction());
         final ContentValues values = new ContentValues();
@@ -629,7 +630,7 @@ public class BugleDatabaseOperations {
     }
 
     static void addSnippetTextAndPreviewToContentValues(final MessageData message,
-            final boolean showDraft, final ContentValues values) {
+                                                        final boolean showDraft, final ContentValues values) {
         values.put(ConversationColumns.SHOW_DRAFT, showDraft ? 1 : 0);
         values.put(ConversationColumns.SNIPPET_TEXT, message.getMessageText());
         values.put(ConversationColumns.SUBJECT_TEXT, message.getMmsSubject());
@@ -651,10 +652,11 @@ public class BugleDatabaseOperations {
     /**
      * Adds self-id auto switch info for a conversation if the last message has a different
      * subscription than the conversation's.
+     *
      * @return true if self id will need to be changed, false otherwise.
      */
     static boolean addSelfIdAutoSwitchInfoToContentValues(final DatabaseWrapper dbWrapper,
-            final MessageData message, final String conversationId, final ContentValues values) {
+                                                          final MessageData message, final String conversationId, final ContentValues values) {
         // Only auto switch conversation self for incoming messages.
         if (!OsUtil.isAtLeastL_MR1() || !message.getIsIncoming()) {
             return false;
