@@ -1062,6 +1062,7 @@
     <string name="setting_feedback">Feedback</string>
     <string name="setting_privacy_policy">Privacy policy</string>
     <string name="setting_terms_of_service">Terms of service</string>
+    <string name="setting_change_font">Change Font</string>
     <string name="setting_sms_pop_ups">SMS Pop-ups</string>
     <string name="setting_sms_pop_ups_summary">Pop up a window when receiving messages</string>
     <string name="setting_sms_show">SMS Show</string>

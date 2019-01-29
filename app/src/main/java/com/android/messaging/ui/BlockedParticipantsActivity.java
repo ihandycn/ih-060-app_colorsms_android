@@ -23,12 +23,13 @@ import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.widget.TextView;
 
+import com.android.messaging.BaseActivity;
 import com.android.messaging.R;
 
 /**
  * Show a list of currently blocked participants.
  */
-public class BlockedParticipantsActivity extends AppCompatActivity {
+public class BlockedParticipantsActivity extends BaseActivity {
 
     @Override
     protected void onCreate(final Bundle savedInstanceState) {

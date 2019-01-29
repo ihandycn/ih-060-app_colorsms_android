@@ -1,4 +1,4 @@
-include ':app', ':libphotoviewer', ':libchips', ':libvcard', ':libframesequence', ':libSuperApps', ':libMessageCenter', ':libBlockCanary'
+include ':app', ':libphotoviewer', ':libchips', ':libvcard', ':libframesequence', ':libSuperApps', ':libMessageCenter', ':libBlockCanary', ':fontChangelib'
 project(':libSuperApps').projectDir = new File('libs/libSuperApps/lib')
 project(':libMessageCenter').projectDir = new File('libs/libColorPhone/libMessageCenter')
 project(':libBlockCanary').projectDir = new File('libs/libBlockCanary')

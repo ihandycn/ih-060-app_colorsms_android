@@ -29,6 +29,8 @@ import com.android.messaging.ui.AsyncImageView.AsyncImageViewDelayLoader;
 import com.android.messaging.ui.conversation.ConversationMessageView.ConversationMessageViewHost;
 import com.android.messaging.util.Assert;
 
+import org.qcode.fontchange.impl.FontManagerImpl;
+
 import java.util.HashSet;
 import java.util.List;
 
@@ -76,6 +78,7 @@ public class ConversationMessageAdapter extends
                 layoutInflater.inflate(R.layout.conversation_message_view, null);
         conversationMessageView.setHost(mHost);
         conversationMessageView.setImageViewDelayLoader(mImageViewDelayLoader);
+        FontManagerImpl.getInstance().applyFont(conversationMessageView, true);
         return new ConversationMessageViewHolder(conversationMessageView,
                             mViewClickListener, mViewLongClickListener);
     }

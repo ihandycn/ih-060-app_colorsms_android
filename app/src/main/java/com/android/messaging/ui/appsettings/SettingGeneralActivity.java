@@ -1,6 +1,7 @@
 package com.android.messaging.ui.appsettings;
 
 import android.annotation.TargetApi;
+import android.app.AlertDialog;
 import android.content.Intent;
 import android.media.Ringtone;
 import android.media.RingtoneManager;
@@ -12,8 +13,10 @@ import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.SeekBar;
 import android.widget.TextView;
 
+import com.android.messaging.BaseActivity;
 import com.android.messaging.Factory;
 import com.android.messaging.R;
 import com.android.messaging.feedback.FeedbackActivity;
@@ -28,13 +31,15 @@ import com.android.messaging.util.BuglePrefsKeys;
 import com.android.messaging.util.OsUtil;
 import com.android.messaging.util.PendingIntentConstants;
 import com.android.messaging.util.UiUtils;
-import com.ihs.app.framework.activity.HSAppCompatActivity;
 import com.ihs.commons.config.HSConfig;
 import com.messagecenter.customize.MessageCenterSettings;
 
+import org.qcode.fontchange.IFontChangeListener;
+import org.qcode.fontchange.impl.FontManagerImpl;
+
 import static com.android.messaging.ui.appsettings.SettingItemView.NORMAL;
 
-public class SettingGeneralActivity extends HSAppCompatActivity {
+public class SettingGeneralActivity extends BaseActivity{
     private static final int REQUEST_CODE_START_RINGTONE_PICKER = 1;
 
     private SettingItemView mSmsShowView;
@@ -221,7 +226,39 @@ public class SettingGeneralActivity extends HSAppCompatActivity {
                     false, false);
             startActivity(termsOfServiceIntent);
         });
+
+        //change font
+        SettingItemView mChangeFont = findViewById(R.id.setting_item_change_font);
+        mChangeFont.setOnItemClickListener(() -> {
+            // add a dialog for font change
+            AlertDialog.Builder builder = new AlertDialog.Builder(SettingGeneralActivity.this);
+            AlertDialog dialog = builder.create();
+            View dialogView = View.inflate(SettingGeneralActivity.this,R.layout.layout_font_setting,null);
+            SeekBar mSeekBar = dialogView.findViewById(R.id.seek_bar);
+            mSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+                @Override
+                public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
+                    float scale = i / 50.0f;
+                    prefs.putLong("font_scale", (long) i);
+                    FontManagerImpl.getInstance().changeFontSize(scale, mListener);
+                }
+
+                @Override
+                public void onStartTrackingTouch(SeekBar seekBar) {
+
+                }
+
+                @Override
+                public void onStopTrackingTouch(SeekBar seekBar) {
+
+                }
+            });
+            FontManagerImpl.getInstance().applyFont(dialogView, true);
+            dialog.setView(dialogView);
+            dialog.show();
+        });
     }
+
 
     private void updateSoundSummary() {
         // The silent ringtone just returns an empty string
@@ -312,6 +349,37 @@ public class SettingGeneralActivity extends HSAppCompatActivity {
                 return super.onOptionsItemSelected(item);
         }
     }
+
+    private IFontChangeListener mListener = new IFontChangeListener() {
+        @Override
+        public void onLoadStart(float scale) {
+        }
+
+        @Override
+        public void onLoadStart(String fontPath) {
+
+        }
+
+        @Override
+        public void onLoadSuccess(float scale) {
+//            Toast.makeText(MainActivity.this, "加载成功", Toast.LENGTH_SHORT).show();
+        }
+
+        @Override
+        public void onLoadSuccess(String fontPath) {
+
+        }
+
+        @Override
+        public void onLoadFail(float scale) {
+//            Toast.makeText(MainActivity.this, "加载失败", Toast.LENGTH_SHORT).show();
+        }
+
+        @Override
+        public void onLoadFail(String fontPath) {
+
+        }
+    };
 }
 
 
