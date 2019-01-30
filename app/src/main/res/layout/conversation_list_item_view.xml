@@ -95,7 +95,9 @@
                     android:clickable="true"
                     android:contentDescription="@null"
                     android:importantForAccessibility="no"
-                    app:iconSize="large" />
+                    app:iconSize="large"
+                    app:fadeIn="false"
+                    app:reveal="false"/>
 
                 <ImageView
                     android:id="@+id/conversation_checkmark"
