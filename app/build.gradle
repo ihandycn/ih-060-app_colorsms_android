@@ -5,6 +5,7 @@ repositories {
 }
 
 apply plugin: 'io.fabric'
+apply from: 'tasks.gradle'
 
 android {
     compileSdkVersion rootProject.ext.compileSdkVersion
