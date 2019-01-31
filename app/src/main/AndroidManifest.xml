@@ -461,7 +461,7 @@
             android:name=".ui.SmsStorageLowWarningActivity"
             android:configChanges="orientation|screenSize|keyboardHidden"
             android:screenOrientation="portrait"
-            android:theme="@style/Invisible" />
+            android:theme="@style/BugleTheme.DialogActivity" />
         <activity
             android:name=".ui.appsettings.ApnSettingsActivity"
             android:configChanges="orientation|screenSize|keyboardHidden"

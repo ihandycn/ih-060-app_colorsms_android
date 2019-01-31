@@ -85,7 +85,7 @@ public class SmsStorageLowWarningFragment extends Fragment {
     /**
      * The dialog to show for user to choose what delete actions to take when storage is low
      */
-    private static class ChooseActionDialogFragment extends DialogFragment {
+    public static class ChooseActionDialogFragment extends DialogFragment {
         public static ChooseActionDialogFragment newInstance() {
             return new ChooseActionDialogFragment();
         }
