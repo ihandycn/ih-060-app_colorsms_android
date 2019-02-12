@@ -82,7 +82,7 @@ public class PeopleAndOptionsFragment extends Fragment
 
     @Override
     public View onCreateView(final LayoutInflater inflater, final ViewGroup container,
-            final Bundle savedInstanceState) {
+                             final Bundle savedInstanceState) {
         final View view = inflater.inflate(R.layout.people_and_options_fragment, container, false);
         mListView = view.findViewById(android.R.id.list);
         mPeopleListAdapter = new PeopleListAdapter(getActivity());
@@ -129,7 +129,7 @@ public class PeopleAndOptionsFragment extends Fragment
 
     @Override
     public void onParticipantsListLoaded(final PeopleAndOptionsData data,
-            final List<ParticipantData> participants) {
+                                         final List<ParticipantData> participants) {
         mBinding.ensureBound(data);
         mPeopleListAdapter.updateParticipants(participants);
         final ParticipantData otherParticipant = participants.size() == 1 ?
@@ -139,7 +139,7 @@ public class PeopleAndOptionsFragment extends Fragment
 
     @Override
     public void onOptionsItemViewClicked(final PeopleOptionsItemData item,
-            final boolean isChecked) {
+                                         final boolean isChecked) {
         switch (item.getItemId()) {
             case PeopleOptionsItemData.SETTING_NOTIFICATION_ENABLED:
                 mBinding.getData().enableConversationNotifications(mBinding, isChecked);
@@ -272,7 +272,7 @@ public class PeopleAndOptionsFragment extends Fragment
                     final Ringtone tone = RingtoneManager.getRingtone(getActivity(), ringtoneUri);
 
                     if (tone != null) {
-                         tone.getTitle(getActivity());
+                        tone.getTitle(getActivity());
                     }
                     return true;
                 }
@@ -341,7 +341,7 @@ public class PeopleAndOptionsFragment extends Fragment
         private final boolean mNeedDivider;
 
         public PeopleAndOptionsPartition(final BaseAdapter adapter, final int headerResId,
-                final boolean needDivider) {
+                                         final boolean needDivider) {
             super(true /* showIfEmpty */, true /* hasHeader */, adapter);
             mHeaderResId = headerResId;
             mNeedDivider = needDivider;
