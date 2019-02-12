@@ -55,9 +55,10 @@ public class PeopleOptionsItemView extends SettingItemView {
     }
 
     public void bind(final Cursor cursor, int columnIndex, ParticipantData otherParticipant,
-                     final HostInterface hostInterface) {
+                     final HostInterface hostInterface,
+                     final boolean enableRingtone) {
         Assert.isTrue(columnIndex < PeopleOptionsItemData.SETTINGS_COUNT && columnIndex >= 0);
-        if (OsUtil.isAtLeastO() && columnIndex == 1) {
+        if (!enableRingtone && columnIndex == 1) {
             columnIndex = SETTING_BLOCKED;
         }
 
