@@ -222,6 +222,14 @@ public class ActionServiceImpl extends IntentService {
     }
 
     @Override
+    public int onStartCommand(@Nullable Intent intent, int flags, int startId) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            startForeground(PendingIntentConstants.SMS_BACKGROUND_SERVICE_ID, new Notification());
+        }
+        return super.onStartCommand(intent, flags, startId);
+    }
+
+    @Override
     public void onDestroy() {
         super.onDestroy();
         DataModel.get().getConnectivityUtil().unregisterForSignalStrength();
