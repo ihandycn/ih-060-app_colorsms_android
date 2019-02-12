@@ -301,6 +301,9 @@ public class ConversationFragment extends Fragment implements ConversationDataLi
                 return false;
             }
             final ConversationMessageData data = mSelectedMessage.getData();
+            if (getActivity() == null) {
+                return false;
+            }
             final MenuInflater menuInflater = getActivity().getMenuInflater();
             menuInflater.inflate(R.menu.conversation_fragment_select_menu, menu);
             menu.findItem(R.id.action_download).setVisible(data.getShowDownloadMessage());
