@@ -16,7 +16,6 @@
 
 package com.android.messaging.datamodel.action;
 
-import android.Manifest;
 import android.content.Context;
 import android.os.Bundle;
 import android.os.Parcel;
@@ -63,6 +62,10 @@ public class ReceiveMmsMessageAction extends Action implements Parcelable {
 
     @Override
     protected Object executeAction() {
+        if (!OsUtil.hasSmsPermission()) {
+            return null;
+        }
+
         final Context context = Factory.get().getApplicationContext();
         final int subId = actionParameters.getInt(KEY_SUB_ID, ParticipantData.DEFAULT_SELF_SUB_ID);
         final byte[] pushData = actionParameters.getByteArray(KEY_PUSH_DATA);

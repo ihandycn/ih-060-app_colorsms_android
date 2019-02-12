@@ -54,6 +54,10 @@ public class ReceiveSmsMessageAction extends Action implements Parcelable {
 
     @Override
     protected Object executeAction() {
+        if (!OsUtil.hasSmsPermission()) {
+            return null;
+        }
+
         final Context context = Factory.get().getApplicationContext();
         final ContentValues messageValues = actionParameters.getParcelable(KEY_MESSAGE_VALUES);
         final DatabaseWrapper db = DataModel.get().getDatabase();
