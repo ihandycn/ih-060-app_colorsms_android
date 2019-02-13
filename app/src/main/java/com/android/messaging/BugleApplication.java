@@ -29,6 +29,7 @@ import android.support.v4.os.TraceCompat;
 import android.support.v7.mms.CarrierConfigValuesLoader;
 import android.support.v7.mms.MmsManager;
 import android.telephony.CarrierConfigManager;
+import android.text.TextUtils;
 
 import com.android.ex.photo.util.PhotoViewAnalytics;
 import com.android.messaging.datamodel.DataModel;
@@ -132,7 +133,12 @@ public class BugleApplication extends HSApplication implements UncaughtException
         initMessageCenterLib();
         initLeakCanaryAsync();
         SharedPreferencesOptimizer.install(true);
-        onMainProcessApplicationCreate();
+        String packageName = getPackageName();
+        String processName = getProcessName();
+        boolean isOnMainProcess = TextUtils.equals(processName, packageName);
+        if (isOnMainProcess) {
+            onMainProcessApplicationCreate();
+        }
 
         sSystemUncaughtExceptionHandler = Thread.getDefaultUncaughtExceptionHandler();
         Thread.setDefaultUncaughtExceptionHandler(this);
