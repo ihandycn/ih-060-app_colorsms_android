@@ -24,6 +24,7 @@ build_message:
     paths:
     - outputs/build-dependencies.txt
     - outputs/*.apk
+    - outputs/*.txt
     expire_in: 1 week
   tags:
   - android
