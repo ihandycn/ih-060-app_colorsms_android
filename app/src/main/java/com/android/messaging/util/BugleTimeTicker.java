@@ -23,8 +23,7 @@ public class BugleTimeTicker extends TimeTicker {
     static {
         sAppList.add("com.android.mms");
         sAppList.add("com.google.android.apps.messaging");
-        sAppList.add("com.android.contacts/com.android.mms.ui.ConversationList");
-        sAppList.add("com.android.contacts/.MmsConversationActivity");
+        sAppList.add("com.android.contacts");
         sAppList.add("com.sonyericsson.conversations");
         sAppList.add("com.motorola.messaging");
         sAppList.add("com.motorola.blur.conversations");
@@ -34,11 +33,12 @@ public class BugleTimeTicker extends TimeTicker {
         sAppList.add("com.asus.message");
         sAppList.add("com.huawei.message");
         sAppList.add("com.lge.message");
-        sAppList.add("com.lenovo.ideafriend/.alias.MmsActivity");
+        sAppList.add("com.lenovo.ideafriend");
         sAppList.add("com.zui.mms");
         sAppList.add("com.google.android.talk");
-        sAppList.add("com.android.messaging/.ui.conversationlist.ConversationListActivity");
-        sAppList.add("com.samsung.android.messaging/com.android.mms.ui.ConversationComposer");
+        sAppList.add("com.android.messaging");
+        sAppList.add("com.samsung.android.communicationservice");
+        sAppList.add("com.samsung.android.messaging");
         sAppList.add("com.textra");
         sAppList.add("com.link.messages.sms");
         sAppList.add("com.calea.echo");
