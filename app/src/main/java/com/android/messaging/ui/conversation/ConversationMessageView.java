@@ -657,7 +657,12 @@ public class ConversationMessageView extends FrameLayout implements View.OnClick
             mMessageTextView.setText(text);
             // Linkify phone numbers, web urls, emails, and map addresses to allow users to
             // click on them and take the default intent.
-            mMessageTextHasLinks = Linkify.addLinks(mMessageTextView, Linkify.ALL);
+            try {
+                mMessageTextHasLinks = Linkify.addLinks(mMessageTextView, Linkify.ALL);
+            } catch (Exception e) {
+                // catch crash: https://fabric.io/smsgroup/android/apps/com.color.sms.messages.emoji/issues/5c5616d4f8b88c296372d310?time=last-seven-days
+                // ignore framework error
+            }
             mMessageTextView.setVisibility(View.VISIBLE);
         } else {
             mMessageTextView.setVisibility(View.GONE);
