@@ -39,6 +39,7 @@ import com.android.messaging.sms.MmsConfig;
 import com.android.messaging.sms.MmsSender;
 import com.android.messaging.sms.MmsUtils;
 import com.android.messaging.util.Assert;
+import com.android.messaging.util.BugleAnalytics;
 import com.android.messaging.util.LogUtil;
 
 import java.io.File;
@@ -236,6 +237,7 @@ public class ProcessSentMessageAction extends Action {
         boolean failed;
         if (status == MmsUtils.MMS_REQUEST_SUCCEEDED) {
             message.markMessageSent(timestamp);
+            BugleAnalytics.logEvent("SMS_DetailsPage_IconSend_Click", true, "Type", isSms ? "SMS" : "MMS");
             failed = false;
         } else if (status == MmsUtils.MMS_REQUEST_AUTO_RETRY
                 && message.getInResendWindow(timestamp)) {

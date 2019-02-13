@@ -42,6 +42,7 @@ import android.text.TextUtils;
 import com.android.ex.photo.Intents.PhotoViewIntentBuilder;
 import com.android.messaging.Factory;
 import com.android.messaging.R;
+import com.android.messaging.datamodel.BugleNotifications;
 import com.android.messaging.datamodel.ConversationImagePartsView;
 import com.android.messaging.datamodel.MediaScratchFileProvider;
 import com.android.messaging.datamodel.MessagingContentProvider;
@@ -409,12 +410,30 @@ public class UIIntentsImpl extends UIIntents {
     }
 
     @Override
+    public PendingIntent getPendingIntentForConversationListActivityFromNotification(final Context context) {
+        final Intent intent = getConversationListActivityIntent(context);
+        intent.putExtra(BugleNotifications.EXTRA_FROM_NOTIFICATION, true);
+        return getPendingIntentWithParentStack(context, intent, 0);
+    }
+
+    @Override
     public PendingIntent getPendingIntentForConversationActivity(final Context context,
                                                                  final String conversationId, final MessageData draft) {
         final Intent intent = getConversationActivityIntent(context, conversationId, draft,
                 false /* withCustomTransition */);
         // Ensure that the platform doesn't reuse PendingIntents across conversations
         intent.setData(MessagingContentProvider.buildConversationMetadataUri(conversationId));
+        return getPendingIntentWithParentStack(context, intent, 0);
+    }
+
+    @Override
+    public PendingIntent getPendingIntentForConversationActivityFromNotification(final Context context,
+                                                                 final String conversationId, final MessageData draft) {
+        final Intent intent = getConversationActivityIntent(context, conversationId, draft,
+                false /* withCustomTransition */);
+        // Ensure that the platform doesn't reuse PendingIntents across conversations
+        intent.setData(MessagingContentProvider.buildConversationMetadataUri(conversationId));
+        intent.putExtra(BugleNotifications.EXTRA_FROM_NOTIFICATION, true);
         return getPendingIntentWithParentStack(context, intent, 0);
     }
 

@@ -307,6 +307,11 @@ public abstract class UIIntents {
      */
     public abstract PendingIntent getPendingIntentForConversationListActivity(
             final Context context);
+    /**
+     * Get a PendingIntent for starting conversation list from notifications.
+     */
+    public abstract PendingIntent getPendingIntentForConversationListActivityFromNotification(
+            final Context context);
 
     /**
      * Get a PendingIntent for starting conversation list from widget.
@@ -318,6 +323,12 @@ public abstract class UIIntents {
      * Get a PendingIntent for showing a conversation from notifications.
      */
     public abstract PendingIntent getPendingIntentForConversationActivity(final Context context,
+            final String conversationId, final MessageData draft);
+
+    /**
+     * Get a PendingIntent for showing a conversation from notifications.
+     */
+    public abstract PendingIntent getPendingIntentForConversationActivityFromNotification(final Context context,
             final String conversationId, final MessageData draft);
 
     /**

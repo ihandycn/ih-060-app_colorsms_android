@@ -914,7 +914,6 @@ public abstract class PhoneUtils {
                     if (clearedRunnable != null) {
                         clearedRunnable.run();
                     }
-                    android.os.Process.killProcess(android.os.Process.myPid());
                 } else {
                     if (setRunnable != null) {
                         setRunnable.run();

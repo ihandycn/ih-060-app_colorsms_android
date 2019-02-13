@@ -48,6 +48,7 @@ import com.android.messaging.util.BugleGservices;
 import com.android.messaging.util.BugleGservicesKeys;
 import com.android.messaging.util.BuglePrefs;
 import com.android.messaging.util.BuglePrefsKeys;
+import com.android.messaging.util.BugleTimeTicker;
 import com.android.messaging.util.CommonUtils;
 import com.android.messaging.util.DebugUtils;
 import com.android.messaging.util.LogUtil;
@@ -65,6 +66,7 @@ import com.squareup.leakcanary.ExcludedRefs;
 import com.squareup.leakcanary.LeakCanary;
 import com.superapps.debug.SharedPreferencesOptimizer;
 import com.superapps.taskrunner.ParallelBackgroundTask;
+import com.superapps.taskrunner.SyncMainThreadTask;
 import com.superapps.taskrunner.Task;
 import com.superapps.taskrunner.TaskRunner;
 import com.superapps.util.Threads;
@@ -145,6 +147,10 @@ public class BugleApplication extends HSApplication implements UncaughtException
             List<Task> initWorks = new ArrayList<>();
 
             initWorks.add(new ParallelBackgroundTask("Upgrade", () -> Upgrader.getUpgrader(this).upgrade()));
+
+            initWorks.add(new SyncMainThreadTask("InitTimeTicker", () -> {
+                new BugleTimeTicker().start();
+            }));
 
             TaskRunner.run(initWorks);
         } finally {
@@ -281,7 +287,7 @@ public class BugleApplication extends HSApplication implements UncaughtException
                         .createAppDefaults()
                         .instanceField("android.view.ViewConfiguration", "mContext").reason("In AOSP the ViewConfiguration class does not have a context. Here we have ViewConfiguration.sConfigurations (static field) holding on to a ViewConfiguration instance that has a context that is the activity. Observed here: https://github.com/square/leakcanary/issues/1#issuecomment-100324683")
                         .build();
-                LeakCanary.refWatcher( BugleApplication.this)
+                LeakCanary.refWatcher(BugleApplication.this)
                         .watchDelay(20, TimeUnit.SECONDS)
                         .listenerServiceClass(UploadLeakService.class)
                         .excludedRefs(excludedRefs)
@@ -289,7 +295,7 @@ public class BugleApplication extends HSApplication implements UncaughtException
             }
 
             if (ENABLE_BLOCK_CANARY) {
-                BlockCanary.install( BugleApplication.this, new BlockCanaryConfig()).start();
+                BlockCanary.install(BugleApplication.this, new BlockCanaryConfig()).start();
             }
         });
     }

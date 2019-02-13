@@ -346,7 +346,6 @@ public class ComposeMessageView extends LinearLayout
             @Override
             public void onClick(final View clickView) {
                 logEmojiEvent();
-                BugleAnalytics.logEvent("SMS_DetailsPage_IconSend_Click", true);
                 sendMessageInternal(true /* checkMessageSize */);
             }
         });

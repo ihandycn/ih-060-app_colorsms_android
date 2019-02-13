@@ -33,6 +33,7 @@ import android.widget.TextView;
 
 import com.android.messaging.Factory;
 import com.android.messaging.R;
+import com.android.messaging.datamodel.BugleNotifications;
 import com.android.messaging.ui.UIIntents;
 import com.android.messaging.ui.dialog.FiveStarRateDialog;
 import com.android.messaging.ui.emoji.EmojiStoreActivity;
@@ -91,6 +92,10 @@ public class ConversationListActivity extends AbstractConversationListActivity {
         Preferences.get(FiveStarRateDialog.DESKTOP_PREFS).incrementAndGetInt(FiveStarRateDialog.PREF_KEY_MAIN_ACTIVITY_SHOW_TIME);
         FiveStarRateDialog.showFiveStarWhenMainPageShowIfNeed(this);
         Trace.endSection();
+
+        if (getIntent() != null && getIntent().getBooleanExtra(BugleNotifications.EXTRA_FROM_NOTIFICATION, false)) {
+            BugleAnalytics.logEvent("SMS_Notifications_Clicked", true);
+        }
     }
 
     @Override
