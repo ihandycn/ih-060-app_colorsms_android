@@ -32,7 +32,7 @@ import com.android.messaging.util.LogUtil;
 
 /**
  * The SMS sent and delivery intent receiver.
- *
+ * <p>
  * This class just simply forwards the intents to proper recipients for actual handling.
  */
 public class SendStatusReceiver extends BroadcastReceiver {
@@ -68,12 +68,16 @@ public class SendStatusReceiver extends BroadcastReceiver {
                     intent.getIntExtra(EXTRA_PART_ID, NO_PART_ID),
                     intent.getIntExtra(EXTRA_SUB_ID, ParticipantData.DEFAULT_SELF_SUB_ID));
         } else if (MMS_SENT_ACTION.equals(action)) {
-            final Uri messageUri = intent.getData();
-            ProcessSentMessageAction.processMmsSent(resultCode, messageUri,
-                    intent.getExtras());
+            if (intent.getExtras() != null) {
+                final Uri messageUri = intent.getData();
+                ProcessSentMessageAction.processMmsSent(resultCode, messageUri,
+                        intent.getExtras());
+            }
         } else if (MMS_DOWNLOADED_ACTION.equals(action)) {
-            ProcessDownloadedMmsAction.processMessageDownloaded(resultCode,
-                    intent.getExtras());
+            if (intent.getExtras() != null) {
+                ProcessDownloadedMmsAction.processMessageDownloaded(resultCode,
+                        intent.getExtras());
+            }
         } else if (MESSAGE_DELIVERED_ACTION.equals(action)) {
             final SmsMessage smsMessage = MmsUtils.getSmsMessageFromDeliveryReport(intent);
             final Uri smsMessageUri = intent.getData();
