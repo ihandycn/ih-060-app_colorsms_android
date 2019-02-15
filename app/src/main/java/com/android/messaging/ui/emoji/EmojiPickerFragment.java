@@ -129,6 +129,7 @@ public class EmojiPickerFragment extends Fragment implements INotificationObserv
         mEmojiPager.setAdapter(mEmojiPackagePagerAdapter);
         tabLayout.setupWithViewPager(mEmojiPager);
         mEmojiPackagePagerAdapter.update(initData());
+        mEmojiPager.setCurrentItem(2);
         view.findViewById(R.id.emoji_store_btn).setOnClickListener(v -> {
             BugleAnalytics.logEvent("SMSEmoji_ChatEmoji_Store_Click", true, "type", "chat_tab");
             EmojiStoreActivity.start(getActivity());
