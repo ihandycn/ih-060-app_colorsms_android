@@ -1,14 +1,22 @@
 package com.android.messaging.ui.appsettings;
 
 import android.content.Context;
+import android.content.res.ColorStateList;
 import android.content.res.TypedArray;
+import android.graphics.Color;
+import android.graphics.PorterDuff;
+import android.graphics.drawable.ColorDrawable;
+import android.graphics.drawable.StateListDrawable;
 import android.support.annotation.DrawableRes;
 import android.support.annotation.IntDef;
 import android.support.annotation.Nullable;
+import android.support.v4.graphics.drawable.DrawableCompat;
+import android.support.v7.widget.SwitchCompat;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CompoundButton;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -16,6 +24,7 @@ import android.widget.Switch;
 import android.widget.TextView;
 
 import com.android.messaging.R;
+import com.android.messaging.ui.customize.PrimaryColors;
 
 public class SettingItemView extends FrameLayout {
     public static final int SWITCH = 1;
@@ -109,7 +118,9 @@ public class SettingItemView extends FrameLayout {
 
         setOnClickListener(v -> {
             if (mSwitchView != null) {
-                mSwitchView.setChecked(!mSwitchView.isChecked());
+                boolean isChecked = !mSwitchView.isChecked();
+                mSwitchView.setChecked(isChecked);
+                toggleSwitchViewColorFilter(isChecked);
             }
 
             if (mListener != null) {
@@ -162,6 +173,7 @@ public class SettingItemView extends FrameLayout {
     public void setChecked(boolean isChecked) {
         if (mViewType == SWITCH && mSwitchView != null) {
             mSwitchView.setChecked(isChecked);
+            toggleSwitchViewColorFilter(isChecked);
         }
     }
 
@@ -199,5 +211,15 @@ public class SettingItemView extends FrameLayout {
 
     public void setOnItemClickListener(OnSettingItemClickListener listener) {
         mListener = listener;
+    }
+
+    private void toggleSwitchViewColorFilter(boolean isChecked) {
+        if (isChecked) {
+            mSwitchView.getThumbDrawable().setColorFilter(PrimaryColors.getPrimaryColor(), PorterDuff.Mode.SRC_ATOP);
+            mSwitchView.getTrackDrawable().setColorFilter(PrimaryColors.getPrimaryColor(), PorterDuff.Mode.SRC_ATOP);
+        } else {
+            mSwitchView.getThumbDrawable().clearColorFilter();
+            mSwitchView.getTrackDrawable().clearColorFilter();
+        }
     }
 }

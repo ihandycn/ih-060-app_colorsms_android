@@ -21,6 +21,7 @@ import android.graphics.drawable.Drawable;
 
 import com.android.messaging.Factory;
 import com.android.messaging.R;
+import com.android.messaging.ui.customize.PrimaryColors;
 import com.android.messaging.util.ImageUtils;
 
 /**
@@ -106,7 +107,7 @@ public class ConversationDrawables {
                 resources.getColor(R.color.message_error_bubble_color_incoming);
         mIncomingSelectedBubbleColor = resources.getColor(R.color.message_bubble_color_selected_incoming);
         mOutgoingSelectedBubbleColor = resources.getColor(R.color.message_bubble_color_selected_outgoing);
-        mThemeColor = resources.getColor(R.color.primary_color);
+        mThemeColor = PrimaryColors.getPrimaryColor();
     }
 
     public Drawable getBubbleDrawable(final boolean selected, final boolean incoming,

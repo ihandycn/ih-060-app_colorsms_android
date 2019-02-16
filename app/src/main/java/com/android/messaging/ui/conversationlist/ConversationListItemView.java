@@ -50,6 +50,7 @@ import com.android.messaging.ui.AudioAttachmentView;
 import com.android.messaging.ui.ContactIconView;
 import com.android.messaging.ui.SnackBar;
 import com.android.messaging.ui.SnackBarInteraction;
+import com.android.messaging.ui.customize.PrimaryColors;
 import com.android.messaging.util.Assert;
 import com.android.messaging.util.BugleAnalytics;
 import com.android.messaging.util.ContentType;
@@ -242,7 +243,7 @@ public class ConversationListItemView extends FrameLayout implements OnClickList
             contactIconBackgroundColor = 0xffd4d9de;
         } else {
             //unread
-            contactIconBackgroundColor = 0xff1acc48;
+            contactIconBackgroundColor = PrimaryColors.getPrimaryColor();
             if (!TextUtils.isEmpty(imgUri)) {
                 imgUri = imgUri.concat("unread");
             }

@@ -68,4 +68,8 @@ public final class BuglePrefsKeys {
     public static final String PROCESS_PENDING_MESSAGES_RETRY_COUNT
             = "process_pending_retry";
 
+    /**
+     * theme color, overrides primary color
+     */
+    public static final String PREFS_KEY_PRIMARY_COLOR = "prefs_key_primary_color";
 }

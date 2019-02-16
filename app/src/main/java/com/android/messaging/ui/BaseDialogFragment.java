@@ -16,6 +16,7 @@ import android.widget.FrameLayout;
 import android.widget.TextView;
 
 import com.android.messaging.R;
+import com.android.messaging.ui.customize.PrimaryColors;
 import com.superapps.util.BackgroundDrawables;
 import com.superapps.util.Dimensions;
 
@@ -100,7 +101,7 @@ public abstract class BaseDialogFragment extends DialogFragment {
                 mPositiveClickListener.onClick(positiveButton);
             }
         });
-        positiveButton.setBackground(BackgroundDrawables.createBackgroundDrawable(getResources().getColor(R.color.dialog_positive_button_color),
+        positiveButton.setBackground(BackgroundDrawables.createBackgroundDrawable(PrimaryColors.getPrimaryColor(),
                 Dimensions.pxFromDp(3.3f),true));
 
         return root;

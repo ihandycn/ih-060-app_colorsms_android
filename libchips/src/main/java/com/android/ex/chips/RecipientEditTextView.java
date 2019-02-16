@@ -51,6 +51,7 @@ import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
 import android.os.Parcelable;
+import android.support.annotation.ColorInt;
 import android.support.annotation.NonNull;
 import android.text.Editable;
 import android.text.InputType;
@@ -3256,4 +3257,9 @@ public class RecipientEditTextView extends MultiAutoCompleteTextView implements
             mHandler.post(mDelayedShrink);
         }
     }
+
+    public void setUnselectedChipBackgroundColor(@ColorInt int color) {
+        mUnselectedChipBackgroundColor = color;
+    }
+
 }
