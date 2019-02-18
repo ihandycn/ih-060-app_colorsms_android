@@ -184,6 +184,10 @@ public class ConversationListItemView extends FrameLayout implements OnClickList
         mConversationNameUnreadTypeface = Typefaces.getCustomSemiBold();
         mSnippetTypeface = Typefaces.getCustomRegular();
 
+        mContactCheckmarkView.setBackgroundDrawable(BackgroundDrawables.
+                createBackgroundDrawable(PrimaryColors.getPrimaryColor(), Dimensions.pxFromDp(28), false));
+
+
         if (OsUtil.isAtLeastL()) {
             setTransitionGroup(true);
         }

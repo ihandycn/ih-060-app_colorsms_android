@@ -65,6 +65,7 @@ import com.android.messaging.datamodel.media.VideoThumbnailRequest;
 import com.android.messaging.sms.MmsSmsUtils;
 import com.android.messaging.sms.MmsUtils;
 import com.android.messaging.ui.UIIntents;
+import com.android.messaging.ui.customize.PrimaryColors;
 import com.android.messaging.util.Assert;
 import com.android.messaging.util.AvatarUriUtil;
 import com.android.messaging.util.BugleAnalytics;
@@ -697,7 +698,7 @@ public class BugleNotifications {
         notificationState.mNotificationBuilder
                 .setSmallIcon(notificationState.getIcon())
                 .setVisibility(NotificationCompat.VISIBILITY_PRIVATE)
-                .setColor(context.getResources().getColor(R.color.notification_accent_color))
+                .setColor(PrimaryColors.getPrimaryColor())
 //            .setPublicVersion(null)    // TODO: when/if we ever support different
                 // text on the lockscreen, instead of "contents hidden"
                 .setCategory(CATEGORY_MESSAGE);

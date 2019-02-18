@@ -32,9 +32,12 @@ import com.android.messaging.datamodel.DataModel;
 import com.android.messaging.datamodel.data.ContactListItemData;
 import com.android.messaging.datamodel.data.ParticipantData;
 import com.android.messaging.ui.ContactIconView;
+import com.android.messaging.ui.customize.PrimaryColors;
 import com.android.messaging.util.Assert;
 import com.android.messaging.util.AvatarUriUtil;
 import com.google.common.annotations.VisibleForTesting;
+import com.superapps.util.BackgroundDrawables;
+import com.superapps.util.Dimensions;
 
 /**
  * The view for a single entry in a contact list.
@@ -62,11 +65,15 @@ public class ContactListItemView extends LinearLayout implements OnClickListener
 
     @Override
     protected void onFinishInflate() {
+        super.onFinishInflate();
         mContactNameTextView = (TextView) findViewById(R.id.contact_name);
         mContactDetailsTextView = (TextView) findViewById(R.id.contact_details);
         mContactDetailTypeTextView = (TextView) findViewById(R.id.contact_detail_type);
         mContactIconView = (ContactIconView) findViewById(R.id.contact_icon);
         mContactCheckmarkView = (ImageView) findViewById(R.id.contact_checkmark);
+        mContactCheckmarkView.setBackground(BackgroundDrawables.
+                createBackgroundDrawable(PrimaryColors.getPrimaryColor(), Dimensions.pxFromDp(28), false));
+
     }
 
     /**
