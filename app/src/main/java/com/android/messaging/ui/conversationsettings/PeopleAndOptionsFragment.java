@@ -16,17 +16,18 @@
 package com.android.messaging.ui.conversationsettings;
 
 import android.app.Activity;
-import android.app.AlertDialog;
 import android.app.Fragment;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.database.Cursor;
+import android.media.Ringtone;
 import android.media.RingtoneManager;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.provider.Settings;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -51,6 +52,7 @@ import com.android.messaging.ui.PersonItemView;
 import com.android.messaging.ui.UIIntents;
 import com.android.messaging.ui.conversation.ConversationActivity;
 import com.android.messaging.util.Assert;
+import com.android.messaging.util.BuglePrefs;
 import com.android.messaging.util.OsUtil;
 
 import java.util.ArrayList;
@@ -80,7 +82,7 @@ public class PeopleAndOptionsFragment extends Fragment
 
     @Override
     public View onCreateView(final LayoutInflater inflater, final ViewGroup container,
-            final Bundle savedInstanceState) {
+                             final Bundle savedInstanceState) {
         final View view = inflater.inflate(R.layout.people_and_options_fragment, container, false);
         mListView = view.findViewById(android.R.id.list);
         mPeopleListAdapter = new PeopleListAdapter(getActivity());
@@ -127,7 +129,7 @@ public class PeopleAndOptionsFragment extends Fragment
 
     @Override
     public void onParticipantsListLoaded(final PeopleAndOptionsData data,
-            final List<ParticipantData> participants) {
+                                         final List<ParticipantData> participants) {
         mBinding.ensureBound(data);
         mPeopleListAdapter.updateParticipants(participants);
         final ParticipantData otherParticipant = participants.size() == 1 ?
@@ -137,7 +139,7 @@ public class PeopleAndOptionsFragment extends Fragment
 
     @Override
     public void onOptionsItemViewClicked(final PeopleOptionsItemData item,
-            final boolean isChecked) {
+                                         final boolean isChecked) {
         switch (item.getItemId()) {
             case PeopleOptionsItemData.SETTING_NOTIFICATION_ENABLED:
                 mBinding.getData().enableConversationNotifications(mBinding, isChecked);
@@ -190,6 +192,8 @@ public class PeopleAndOptionsFragment extends Fragment
         private Cursor mOptionsCursor;
         private ParticipantData mOtherParticipantData;
 
+        private boolean isRingtoneEnabled = isRingtoneEnabled();
+
         public Cursor swapCursor(final Cursor newCursor) {
             final Cursor oldCursor = mOptionsCursor;
             if (newCursor != oldCursor) {
@@ -213,7 +217,7 @@ public class PeopleAndOptionsFragment extends Fragment
                 count--;
             }
 
-            if (OsUtil.isAtLeastO()) {
+            if (!isRingtoneEnabled) {
                 // remove SETTING_NOTIFICATION_SOUND_URI and SETTING_NOTIFICATION_VIBRATION
                 count -= 2;
             }
@@ -244,8 +248,39 @@ public class PeopleAndOptionsFragment extends Fragment
             mOptionsCursor.moveToFirst();
 
             itemView.bind(mOptionsCursor, position, mOtherParticipantData,
-                    PeopleAndOptionsFragment.this);
+                    PeopleAndOptionsFragment.this, isRingtoneEnabled);
             return itemView;
+        }
+
+        private boolean isRingtoneEnabled() {
+            if (OsUtil.isAtLeastO()) {
+                return false;
+            }
+            String prefKey = getString(R.string.notification_sound_pref_key);
+            final BuglePrefs prefs = BuglePrefs.getApplicationPrefs();
+
+            String ringtoneString = prefs.getString(prefKey, null);
+
+            if (ringtoneString == null) {
+                ringtoneString = Settings.System.DEFAULT_NOTIFICATION_URI.toString();
+                prefs.putString(prefKey, ringtoneString);
+            }
+
+            try {
+                if (!TextUtils.isEmpty(ringtoneString)) {
+                    final Uri ringtoneUri = Uri.parse(ringtoneString);
+                    final Ringtone tone = RingtoneManager.getRingtone(getActivity(), ringtoneUri);
+
+                    if (tone != null) {
+                        tone.getTitle(getActivity());
+                    }
+                    return true;
+                }
+                return false;
+            } catch (SecurityException e) {
+                e.printStackTrace();
+                return false;
+            }
         }
     }
 
@@ -306,7 +341,7 @@ public class PeopleAndOptionsFragment extends Fragment
         private final boolean mNeedDivider;
 
         public PeopleAndOptionsPartition(final BaseAdapter adapter, final int headerResId,
-                final boolean needDivider) {
+                                         final boolean needDivider) {
             super(true /* showIfEmpty */, true /* hasHeader */, adapter);
             mHeaderResId = headerResId;
             mNeedDivider = needDivider;

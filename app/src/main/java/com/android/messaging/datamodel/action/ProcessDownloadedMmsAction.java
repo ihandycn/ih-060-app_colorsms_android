@@ -455,7 +455,7 @@ public class ProcessDownloadedMmsAction extends Action {
                 }
                 final boolean blockedSender = BugleDatabaseOperations.isBlockedDestination(
                         db, sender.getNormalizedDestination());
-                if (recipients.size() <= 2) {
+                if (recipients != null && recipients.size() <= 2) {
                     long threadId = MmsSmsUtils.Threads.getOrCreateThreadId(HSApplication.getContext(), from);
                     conversationId = BugleDatabaseOperations.getOrCreateConversationFromThreadId(db,
                             threadId, from, blockedSender, subId);

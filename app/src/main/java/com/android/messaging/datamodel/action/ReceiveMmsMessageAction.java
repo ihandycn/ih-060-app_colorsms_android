@@ -36,6 +36,7 @@ import com.android.messaging.sms.DatabaseMessages;
 import com.android.messaging.sms.MmsSmsUtils;
 import com.android.messaging.sms.MmsUtils;
 import com.android.messaging.util.LogUtil;
+import com.android.messaging.util.OsUtil;
 import com.ihs.app.framework.HSApplication;
 
 import java.util.List;
@@ -61,6 +62,10 @@ public class ReceiveMmsMessageAction extends Action implements Parcelable {
 
     @Override
     protected Object executeAction() {
+        if (!OsUtil.hasSmsPermission()) {
+            return null;
+        }
+
         final Context context = Factory.get().getApplicationContext();
         final int subId = actionParameters.getInt(KEY_SUB_ID, ParticipantData.DEFAULT_SELF_SUB_ID);
         final byte[] pushData = actionParameters.getByteArray(KEY_PUSH_DATA);
@@ -93,7 +98,7 @@ public class ReceiveMmsMessageAction extends Action implements Parcelable {
             final boolean autoDownload = (!blocked && MmsUtils.allowMmsAutoRetrieve(subId));
 
             final String conversationId;
-            if (recipients.size() <= 2 && from != null) {
+            if (recipients != null && recipients.size() <= 2) {
                 long threadId = MmsSmsUtils.Threads.getOrCreateThreadId(HSApplication.getContext(), from);
                 conversationId = BugleDatabaseOperations.getOrCreateConversationFromThreadId(db, threadId, from, blocked, subId);
             } else {

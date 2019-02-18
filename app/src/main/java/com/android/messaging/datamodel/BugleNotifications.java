@@ -67,6 +67,7 @@ import com.android.messaging.sms.MmsUtils;
 import com.android.messaging.ui.UIIntents;
 import com.android.messaging.util.Assert;
 import com.android.messaging.util.AvatarUriUtil;
+import com.android.messaging.util.BugleAnalytics;
 import com.android.messaging.util.BugleGservices;
 import com.android.messaging.util.BugleGservicesKeys;
 import com.android.messaging.util.BuglePrefs;
@@ -112,6 +113,8 @@ public class BugleNotifications {
     public static final int UPDATE_MESSAGES = 1;
     public static final int UPDATE_ERRORS = 2;
     public static final int UPDATE_ALL = UPDATE_MESSAGES + UPDATE_ERRORS;
+
+    public static final String EXTRA_FROM_NOTIFICATION = "extra_from_notification";
 
     // Constants for notification type used for audio and vibration settings.
     public static final int LOCAL_SMS_NOTIFICATION = 0;
@@ -457,11 +460,11 @@ public class BugleNotifications {
         if (state.mConversationIds.size() > 1) {
             // We have notifications for multiple conversation, go to the conversation list.
             destinationIntent = UIIntents.get()
-                    .getPendingIntentForConversationListActivity(context);
+                    .getPendingIntentForConversationListActivityFromNotification(context);
         } else {
             // We have a single conversation, go directly to that conversation.
             destinationIntent = UIIntents.get()
-                    .getPendingIntentForConversationActivity(context,
+                    .getPendingIntentForConversationActivityFromNotification(context,
                             state.mConversationIds.first(),
                             null /*draft*/);
         }
@@ -617,6 +620,7 @@ public class BugleNotifications {
             return;
         }
 
+        BugleAnalytics.logEvent("SMS_Notifications_Pushed", true);
         processAndSend(state, silent, softSound);
     }
 

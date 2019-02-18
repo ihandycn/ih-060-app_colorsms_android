@@ -346,7 +346,6 @@ public class ComposeMessageView extends LinearLayout
             @Override
             public void onClick(final View clickView) {
                 logEmojiEvent();
-                BugleAnalytics.logEvent("SMS_DetailsPage_IconSend_Click", true);
                 sendMessageInternal(true /* checkMessageSize */);
             }
         });
@@ -444,7 +443,7 @@ public class ComposeMessageView extends LinearLayout
         mAttachMediaButton.setImageResource(R.drawable.input_media_icon);
     }
 
-    private void hideMediaPicker(){
+    private void hideMediaPicker() {
         hideMediaPickerView();
         mInputManager.hideMediaPicker();
     }
@@ -497,20 +496,33 @@ public class ComposeMessageView extends LinearLayout
         mEmojiKeyboardBtn.setImageResource(R.drawable.input_emoji_icon);
     }
 
-    private void hideEmojiPicker(){
+    private void hideEmojiPicker() {
         hideEmojiPickerView();
         mInputManager.hideEmojiPicker();
     }
 
     private void logEmojiEvent() {
+        boolean hasLittleEmoji = false;
         if (mEmojiLogCodeList != null && !mEmojiLogCodeList.isEmpty()) {
             String message = mComposeEditText.getText().toString();
             for (String code : mEmojiLogCodeList) {
                 if (message.contains(code)) {
                     BugleAnalytics.logEvent("SMSEmoji_ChatEmoji_LittleEmoji_Send", true, "type", code);
+                    hasLittleEmoji = true;
                 }
             }
             mEmojiLogCodeList.clear();
+        }
+        boolean hasSticker = mStickerLogNameList != null && !mStickerLogNameList.isEmpty();
+        boolean hasMagicSticker = mMagicStickerLogNameList != null && !mMagicStickerLogNameList.isEmpty();
+        if (hasLittleEmoji && !hasSticker && !hasMagicSticker) {
+            BugleAnalytics.logEvent("SMSEmoji_ChatEmoji_Emoji_Send", true, "type", "emoji");
+        } else if (!hasLittleEmoji && hasSticker && !hasMagicSticker) {
+            BugleAnalytics.logEvent("SMSEmoji_ChatEmoji_Emoji_Send", true, "type", "sticker");
+        } else if (!hasLittleEmoji && !hasSticker && hasMagicSticker) {
+            BugleAnalytics.logEvent("SMSEmoji_ChatEmoji_Emoji_Send", true, "type", "magic");
+        } else if (hasLittleEmoji || hasSticker || hasMagicSticker) {
+            BugleAnalytics.logEvent("SMSEmoji_ChatEmoji_Emoji_Send", true, "type", "other");
         }
         logEvent("SMSEmoji_ChatEmoji_Tab_Send", mStickerLogNameList);
         logEvent("SMSEmoji_ChatEmoji_Magic_Send", mMagicStickerLogNameList);

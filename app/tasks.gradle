@@ -1,0 +1,33 @@
+
+
+def gitInfo() {
+    def gitBranch = 'git rev-parse --abbrev-ref HEAD'.execute([], project.rootDir).text.trim()
+    def gitSha = 'git rev-parse --short HEAD'.execute([], project.rootDir).text.trim()
+    def gitStatus = 'git status -z --ignore-submodules=untracked'.execute([], project.rootDir).text.trim()
+    if (gitStatus.isEmpty()) {
+        return gitBranch + "_" + gitSha
+    } else {
+        return gitBranch + "_" + gitSha + "_modified"
+    }
+}
+
+android {
+    applicationVariants.all { variant ->
+        def buildType = variant.buildType.name
+        def taskMiddleName = variant.variantData.name.capitalize()
+
+        if (buildType == 'release') {
+            Task signApk = tasks.create(name: "sign${taskMiddleName}Apk",
+                    type: Exec,
+                    group: 'Themes',
+                    description: 'Sign theme apk.') {
+                commandLine './sign_message/sign_message.sh', variant.mergedFlavor.versionName
+            }
+            variant.assemble.finalizedBy signApk
+        }
+    }
+
+    defaultConfig {
+        buildConfigField "String", "GIT_INFO", "\"${gitInfo()}\""
+    }
+}

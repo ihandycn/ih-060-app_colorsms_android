@@ -16,19 +16,23 @@
 
 package com.android.messaging;
 
+import android.app.Notification;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.res.Configuration;
+import android.net.Uri;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.StrictMode;
+import android.provider.Settings;
 import android.support.multidex.MultiDex;
 import android.support.v4.os.TraceCompat;
 import android.support.v7.mms.CarrierConfigValuesLoader;
 import android.support.v7.mms.MmsManager;
 import android.telephony.CarrierConfigManager;
+import android.text.TextUtils;
 
 import com.android.ex.photo.util.PhotoViewAnalytics;
 import com.android.messaging.datamodel.DataModel;
@@ -41,6 +45,7 @@ import com.android.messaging.sms.BugleUserAgentInfoLoader;
 import com.android.messaging.sms.MmsConfig;
 import com.android.messaging.smsshow.MessagingMsgCenterFactoryImpl;
 import com.android.messaging.ui.ConversationDrawables;
+import com.android.messaging.ui.SetAsDefaultGuideActivity;
 import com.android.messaging.ui.emoji.utils.EmojiConfig;
 import com.android.messaging.upgrader.Upgrader;
 import com.android.messaging.util.BugleAnalytics;
@@ -48,8 +53,10 @@ import com.android.messaging.util.BugleGservices;
 import com.android.messaging.util.BugleGservicesKeys;
 import com.android.messaging.util.BuglePrefs;
 import com.android.messaging.util.BuglePrefsKeys;
+import com.android.messaging.util.BugleTimeTicker;
 import com.android.messaging.util.CommonUtils;
 import com.android.messaging.util.DebugUtils;
+import com.android.messaging.util.DefaultSmsAppChangeObserver;
 import com.android.messaging.util.LogUtil;
 import com.android.messaging.util.OsUtil;
 import com.android.messaging.util.PhoneUtils;
@@ -59,14 +66,20 @@ import com.github.moduth.blockcanary.BlockCanary;
 import com.google.common.annotations.VisibleForTesting;
 import com.ihs.app.framework.HSApplication;
 import com.ihs.commons.utils.HSLog;
+import com.ihs.device.permanent.HSPermanentUtils;
+import com.ihs.device.permanent.PermanentService;
 import com.messagecenter.customize.MessageCenterManager;
 import com.squareup.leakcanary.AndroidExcludedRefs;
 import com.squareup.leakcanary.ExcludedRefs;
 import com.squareup.leakcanary.LeakCanary;
+import com.superapps.broadcast.BroadcastCenter;
 import com.superapps.debug.SharedPreferencesOptimizer;
 import com.superapps.taskrunner.ParallelBackgroundTask;
+import com.superapps.taskrunner.SyncMainThreadTask;
 import com.superapps.taskrunner.Task;
 import com.superapps.taskrunner.TaskRunner;
+import com.superapps.util.Calendars;
+import com.superapps.util.Preferences;
 import com.superapps.util.Threads;
 
 import java.io.File;
@@ -77,6 +90,7 @@ import java.util.concurrent.TimeUnit;
 
 import io.fabric.sdk.android.Fabric;
 
+import static android.content.IntentFilter.SYSTEM_HIGH_PRIORITY;
 import static com.android.messaging.debug.DebugConfig.ENABLE_BLOCK_CANARY;
 import static com.android.messaging.debug.DebugConfig.ENABLE_LEAK_CANARY;
 
@@ -88,6 +102,8 @@ public class BugleApplication extends HSApplication implements UncaughtException
 
     private UncaughtExceptionHandler sSystemUncaughtExceptionHandler;
     private static boolean sRunningTests = false;
+    private static final int KEEP_ALIVE_NOTIFICATION_ID = 20000;
+    private static final int KEEP_ALIVE_NOTIFICATION_ID_OREO = 20001;
 
     @VisibleForTesting
     protected static void setTestsRunning() {
@@ -130,7 +146,14 @@ public class BugleApplication extends HSApplication implements UncaughtException
         initMessageCenterLib();
         initLeakCanaryAsync();
         SharedPreferencesOptimizer.install(true);
-        onMainProcessApplicationCreate();
+        String packageName = getPackageName();
+        String processName = getProcessName();
+        boolean isOnMainProcess = TextUtils.equals(processName, packageName);
+        if (isOnMainProcess) {
+            onMainProcessApplicationCreate();
+        }
+
+        initKeepAlive();
 
         sSystemUncaughtExceptionHandler = Thread.getDefaultUncaughtExceptionHandler();
         Thread.setDefaultUncaughtExceptionHandler(this);
@@ -146,10 +169,87 @@ public class BugleApplication extends HSApplication implements UncaughtException
 
             initWorks.add(new ParallelBackgroundTask("Upgrade", () -> Upgrader.getUpgrader(this).upgrade()));
 
+            initWorks.add(new SyncMainThreadTask("InitTimeTicker", () -> {
+                new BugleTimeTicker().start();
+            }));
+
+            initWorks.add(new SyncMainThreadTask("InitObserveDefaultSmsAppChanged", this::initObserveDefaultSmsAppChanged));
+            initWorks.add(new SyncMainThreadTask("InitObserveScreenStatusChanged", this::initObserveUserPresentChanged));
+
             TaskRunner.run(initWorks);
         } finally {
             TraceCompat.endSection();
         }
+    }
+
+    private void initKeepAlive() {
+        // Init keep alive arguments
+        HSPermanentUtils.initKeepAlive(true,
+                true,
+                true,
+                true,
+                true,
+                false,
+                false,
+                false,
+                null,
+                new PermanentService.PermanentServiceListener() {
+                    @Override
+                    public Notification getForegroundNotification() {
+                        return null;
+                    }
+
+                    @Override
+                    public int getNotificationID() {
+                        return KEEP_ALIVE_NOTIFICATION_ID;
+                    }
+
+                    @Override
+                    public int getNotificationIDForOreo() {
+                        return KEEP_ALIVE_NOTIFICATION_ID_OREO;
+                    }
+
+                    @Override
+                    public void onServiceCreate() {
+
+                    }
+                });
+        // Start permanent services
+        Threads.postOnMainThreadDelayed(HSPermanentUtils::startKeepAlive, 10 * 1000);
+    }
+
+    private void initObserveDefaultSmsAppChanged() {
+        Uri uri = Settings.Secure.getUriFor("sms_default_application");
+
+        Context context = getApplicationContext();
+        context.getContentResolver().registerContentObserver(uri, false, new DefaultSmsAppChangeObserver(null));
+    }
+
+    private void initObserveUserPresentChanged() {
+        final IntentFilter screenFilter = new IntentFilter();
+        screenFilter.addAction(Intent.ACTION_USER_PRESENT);
+        screenFilter.setPriority(SYSTEM_HIGH_PRIORITY);
+
+        final String KEY_FOR_LAST_USER_PRESENT_TIME = "last_user_present_time";
+        final String KEY_FOR_TODAY_USER_PRESENT_COUNT = "today_user_present_count";
+        BroadcastCenter.register(getApplicationContext(), (context, intent) -> {
+            long lastUserPresent = Preferences.getDefault().getLong(KEY_FOR_LAST_USER_PRESENT_TIME, 0);
+            long now = System.currentTimeMillis();
+            if (Calendars.isSameDay(lastUserPresent, now)) {
+                Preferences.getDefault().incrementAndGetInt(KEY_FOR_TODAY_USER_PRESENT_COUNT);
+            } else {
+                Preferences.getDefault().putInt(KEY_FOR_TODAY_USER_PRESENT_COUNT, 1);
+                Preferences.getDefault().putLong(KEY_FOR_LAST_USER_PRESENT_TIME, now);
+            }
+            if (Preferences.getDefault().getInt(KEY_FOR_TODAY_USER_PRESENT_COUNT, 0) == 3) {
+                Preferences.getDefault().doLimitedTimes(new Runnable() {
+                    @Override
+                    public void run() {
+                        SetAsDefaultGuideActivity.startActivity(getApplicationContext(), SetAsDefaultGuideActivity.USER_PRESENT);
+                    }
+                }, "show_set_as_default_dialog_when_user_present", 3);
+            }
+        }, screenFilter);
     }
 
     private void initPhotoViewAnalytics() {
@@ -281,7 +381,7 @@ public class BugleApplication extends HSApplication implements UncaughtException
                         .createAppDefaults()
                         .instanceField("android.view.ViewConfiguration", "mContext").reason("In AOSP the ViewConfiguration class does not have a context. Here we have ViewConfiguration.sConfigurations (static field) holding on to a ViewConfiguration instance that has a context that is the activity. Observed here: https://github.com/square/leakcanary/issues/1#issuecomment-100324683")
                         .build();
-                LeakCanary.refWatcher( BugleApplication.this)
+                LeakCanary.refWatcher(BugleApplication.this)
                         .watchDelay(20, TimeUnit.SECONDS)
                         .listenerServiceClass(UploadLeakService.class)
                         .excludedRefs(excludedRefs)
@@ -289,7 +389,7 @@ public class BugleApplication extends HSApplication implements UncaughtException
             }
 
             if (ENABLE_BLOCK_CANARY) {
-                BlockCanary.install( BugleApplication.this, new BlockCanaryConfig()).start();
+                BlockCanary.install(BugleApplication.this, new BlockCanaryConfig()).start();
             }
         });
     }

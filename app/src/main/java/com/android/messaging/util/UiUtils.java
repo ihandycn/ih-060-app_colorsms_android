@@ -50,6 +50,7 @@ import android.widget.Toast;
 
 import com.android.messaging.Factory;
 import com.android.messaging.R;
+import com.android.messaging.ui.SetAsDefaultGuideActivity;
 import com.android.messaging.ui.SnackBar;
 import com.android.messaging.ui.SnackBar.Placement;
 import com.android.messaging.ui.SnackBarInteraction;
@@ -371,6 +372,9 @@ public class UiUtils {
      * @return true if {@link Activity#finish()} was called because redirection was performed
      */
     public static boolean redirectToWelcomeIfNeeded(final Activity activity) {
+        if (activity instanceof SetAsDefaultGuideActivity) {
+            return false;
+        }
         if (activity instanceof WelcomeStartActivity) {
             return false;
         }

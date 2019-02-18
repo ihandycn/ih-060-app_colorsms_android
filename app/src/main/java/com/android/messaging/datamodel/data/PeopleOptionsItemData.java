@@ -91,12 +91,18 @@ public class PeopleOptionsItemData {
                 Uri ringtoneUri = RingtoneUtil.getNotificationRingtoneUri(ringtoneString);
 
                 mSubtitle = mContext.getString(R.string.silent_ringtone);
-                if (ringtoneUri != null) {
-                    final Ringtone ringtone = RingtoneManager.getRingtone(mContext, ringtoneUri);
-                    if (ringtone != null) {
-                        mSubtitle = ringtone.getTitle(mContext);
+
+                try {
+                    if (ringtoneUri != null) {
+                        final Ringtone ringtone = RingtoneManager.getRingtone(mContext, ringtoneUri);
+                        if (ringtone != null) {
+                            mSubtitle = ringtone.getTitle(mContext);
+                        }
                     }
+                } catch (SecurityException e) {
+                    e.printStackTrace();
                 }
+
                 mCheckable = false;
                 mRingtoneUri = ringtoneUri;
                 mEnabled = notificationEnabled;

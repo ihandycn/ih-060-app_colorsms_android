@@ -31,6 +31,7 @@ import com.android.messaging.sms.MmsUtils;
 import com.android.messaging.util.Assert;
 import com.android.messaging.util.Assert.RunsOnMainThread;
 import com.android.messaging.util.LogUtil;
+import com.android.messaging.util.OsUtil;
 
 import java.util.ArrayList;
 
@@ -90,6 +91,9 @@ public class GetOrCreateConversationAction extends Action implements Parcelable 
      */
     @Override
     protected Object executeAction() {
+        if (!OsUtil.hasSmsPermission()) {
+            return null;
+        }
         final DatabaseWrapper db = DataModel.get().getDatabase();
 
         // First find the thread id for this list of participants.

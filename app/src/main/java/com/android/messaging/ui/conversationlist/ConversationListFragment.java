@@ -37,7 +37,6 @@ import android.widget.ImageView;
 
 import com.android.messaging.R;
 import com.android.messaging.annotation.VisibleForAnimation;
-import com.android.messaging.datamodel.BugleNotifications;
 import com.android.messaging.datamodel.DataModel;
 import com.android.messaging.datamodel.binding.Binding;
 import com.android.messaging.datamodel.binding.BindingBase;
@@ -55,6 +54,8 @@ import com.android.messaging.util.ImeUtil;
 import com.android.messaging.util.LogUtil;
 import com.android.messaging.util.UiUtils;
 import com.google.common.annotations.VisibleForTesting;
+import com.superapps.util.IntegerBuckets;
+import com.superapps.util.Preferences;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -289,6 +290,14 @@ public class ConversationListFragment extends Fragment implements ConversationLi
         mListBinding.ensureBound(data);
         final Cursor oldCursor = mAdapter.swapCursor(cursor);
         updateEmptyListUi(cursor == null || cursor.getCount() == 0);
+        if (cursor != null && cursor.getCount() > 0) {
+            Preferences.getDefault().doOnce(new Runnable() {
+                @Override public void run() {
+                    IntegerBuckets buckets = new IntegerBuckets(10, 20, 30, 40, 50);
+                    BugleAnalytics.logEvent("SMS_FirstLoading_Success", true, "Number", buckets.getBucket(cursor.getCount()));
+                }
+            }, "pref_key_first_loading_conversation_count");
+        }
         if (mListState != null && cursor != null && oldCursor == null) {
             mRecyclerView.getLayoutManager().onRestoreInstanceState(mListState);
         }

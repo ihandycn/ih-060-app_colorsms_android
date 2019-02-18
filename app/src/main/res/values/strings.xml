@@ -18,6 +18,9 @@
     <string name="app_name">Color SMS</string>
     <string name="facebook_app_id" translatable="false">128794158052413</string>
 
+    <!-- For libDevice:permanent -->
+    <string name="sync_account_type" translatable="false">com.color.sms.messages.emoji.sync_account</string>
+
     <!-- The name of the application as it appears in external share intent dialogs -->
     <string name="share_intent_label">Color SMS</string>
     <!-- The title when selecting a conversation to share to -->
@@ -1074,10 +1077,17 @@
 
 
     <!--notification channel-->
-    <string name="sms_notification_channel">Sms Notification</string>
-    <string name="sms_notification_channel_description">Show a notification when received sms</string>
+    <string name="sms_notification_channel">SMS Notification</string>
+    <string name="sms_notification_channel_description">Show a notification when received SMS</string>
 
     <string name="emoji_add_more">More emojis</string>
 
+    <string name="set_as_default_dialog_title_default_change">Default SMS Cleared</string>
+    <string name="set_as_default_dialog_description_default_change">Color SMS can’t work properly without being set as default.</string>
+    <string name="set_as_default_dialog_button_ok_default_change">Set Now</string>
+
+    <string name="set_as_default_dialog_title_user_present">Set Color SMS as default</string>
+    <string name="set_as_default_dialog_description_user_present">Color SMS can’t work without being set as default.</string>
+    <string name="set_as_default_dialog_button_ok_user_present">OK</string>
 
 </resources>

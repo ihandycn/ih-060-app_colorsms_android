@@ -37,6 +37,7 @@ import com.messagecenter.customize.MessageCenterSettings;
 import org.qcode.fontchange.IFontChangeListener;
 import org.qcode.fontchange.impl.FontManagerImpl;
 
+import static android.view.View.GONE;
 import static com.android.messaging.ui.appsettings.SettingItemView.NORMAL;
 
 public class SettingGeneralActivity extends BaseActivity{
@@ -272,15 +273,20 @@ public class SettingGeneralActivity extends BaseActivity{
             prefs.putString(prefKey, ringtoneString);
         }
 
-        if (!TextUtils.isEmpty(ringtoneString)) {
-            final Uri ringtoneUri = Uri.parse(ringtoneString);
-            final Ringtone tone = RingtoneManager.getRingtone(this, ringtoneUri);
+        try {
+            if (!TextUtils.isEmpty(ringtoneString)) {
+                final Uri ringtoneUri = Uri.parse(ringtoneString);
+                final Ringtone tone = RingtoneManager.getRingtone(this, ringtoneUri);
 
-            if (tone != null) {
-                ringtoneName = tone.getTitle(this);
+                if (tone != null) {
+                    ringtoneName = tone.getTitle(this);
+                }
             }
+        } catch (SecurityException e) {
+            e.printStackTrace();
+            mSoundView.setVisibility(GONE);
+            return;
         }
-
         mSoundView.setSummary(ringtoneName);
     }
 

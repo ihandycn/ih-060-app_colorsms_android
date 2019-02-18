@@ -23,6 +23,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 
 import com.android.messaging.Factory;
 import com.android.messaging.datamodel.DataModel;
@@ -121,6 +122,14 @@ public class BackgroundWorkerService extends IntentService {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             startForeground(PendingIntentConstants.SMS_BACKGROUND_SERVICE_ID, new Notification());
         }
+    }
+
+    @Override
+    public int onStartCommand(@Nullable Intent intent, int flags, int startId) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            startForeground(PendingIntentConstants.SMS_BACKGROUND_SERVICE_ID, new Notification());
+        }
+        return super.onStartCommand(intent, flags, startId);
     }
 
     @Override

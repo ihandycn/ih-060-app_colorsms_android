@@ -480,7 +480,7 @@ public class ConversationInputManager implements ConversationInput.ConversationI
                 mFragmentManager.beginTransaction().replace(
                         R.id.emoji_picker_container,
                         mEmojiPickerFragment,
-                        EmojiPickerFragment.FRAGMENT_TAG).commit();
+                        EmojiPickerFragment.FRAGMENT_TAG).commitAllowingStateLoss();
             }
             return true;
         }

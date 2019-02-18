@@ -31,6 +31,7 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.android.messaging.R;
+import com.android.messaging.datamodel.BugleNotifications;
 import com.android.messaging.datamodel.MessagingContentProvider;
 import com.android.messaging.datamodel.data.MessageData;
 import com.android.messaging.ui.BugleActionBarActivity;
@@ -73,6 +74,10 @@ public class ConversationActivity extends BugleActionBarActivity
         setContentView(R.layout.conversation_activity);
 
         final Intent intent = getIntent();
+
+        if (getIntent() != null && getIntent().getBooleanExtra(BugleNotifications.EXTRA_FROM_NOTIFICATION, false)) {
+            BugleAnalytics.logEvent("SMS_Notifications_Clicked", true);
+        }
 
         // Do our best to restore UI state from saved instance state.
         if (savedInstanceState != null) {
