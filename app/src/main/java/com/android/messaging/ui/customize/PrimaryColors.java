@@ -29,4 +29,9 @@ public class PrimaryColors {
         final int blendedBlue = (int) Math.floor(0.8 * Color.blue(color));
         return Color.rgb(blendedRed, blendedGreen, blendedBlue);
     }
+
+    @ColorInt
+    public static int getSoundLevelPrimaryColor() {
+        return getPrimaryColor() & 0x33ffffff;
+    }
 }

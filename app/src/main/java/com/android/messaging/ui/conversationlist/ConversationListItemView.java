@@ -521,6 +521,8 @@ public class ConversationListItemView extends FrameLayout implements OnClickList
                         getContext(), R.drawable.ic_preview_play);
                 previewClickListener = fullScreenPreviewClickListener;
                 previewImageVisibility = VISIBLE;
+                mImagePreviewView.setBackgroundDrawable(BackgroundDrawables.
+                        createBackgroundDrawable(PrimaryColors.getPrimaryColor(), Dimensions.pxFromDp(28), false));
             } else if (ContentType.isImageType(previewContentType)) {
                 previewImageUri = previewUri;
                 previewClickListener = fullScreenPreviewClickListener;

@@ -30,6 +30,7 @@ import android.view.View;
 import android.view.accessibility.AccessibilityNodeInfo;
 
 import com.android.messaging.R;
+import com.android.messaging.ui.customize.PrimaryColors;
 import com.android.messaging.util.LogUtil;
 
 /**
@@ -93,7 +94,7 @@ public class SoundLevels extends View {
 
         mPrimaryLevelPaint = new Paint();
         mPrimaryLevelPaint.setColor(
-                a.getColor(R.styleable.SoundLevels_primaryColor, Color.BLACK));
+                a.getColor(R.styleable.SoundLevels_primaryColor, PrimaryColors.getSoundLevelPrimaryColor()));
         mPrimaryLevelPaint.setFlags(Paint.ANTI_ALIAS_FLAG);
 
         a.recycle();

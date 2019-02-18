@@ -32,6 +32,7 @@ import com.android.messaging.datamodel.data.DraftMessageData.DraftMessageSubscri
 import com.android.messaging.datamodel.data.MediaPickerMessagePartData;
 import com.android.messaging.datamodel.data.MessagePartData;
 import com.android.messaging.sms.MmsConfig;
+import com.android.messaging.ui.customize.PrimaryColors;
 import com.android.messaging.util.Assert;
 import com.android.messaging.util.ContentType;
 import com.android.messaging.util.LogUtil;
@@ -42,6 +43,8 @@ import com.android.messaging.util.ThreadUtil;
 import com.android.messaging.util.Typefaces;
 import com.android.messaging.util.UiUtils;
 import com.google.common.annotations.VisibleForTesting;
+import com.superapps.util.BackgroundDrawables;
+import com.superapps.util.Dimensions;
 
 /**
  * Hosts an audio recorder with tap and hold to record functionality.
@@ -113,6 +116,9 @@ public class AudioRecordView extends FrameLayout implements
         super.onFinishInflate();
         mSoundLevels = (SoundLevels) findViewById(R.id.sound_levels);
         mRecordButtonVisual = (ImageView) findViewById(R.id.record_button_visual);
+        mRecordButtonVisual.setBackground(BackgroundDrawables.
+                createBackgroundDrawable(PrimaryColors.getPrimaryColor(), Dimensions.pxFromDp(50), false));
+
         mRecordButton = findViewById(R.id.record_button);
         mHintTextView = (TextView) findViewById(R.id.hint_text);
         mTimerTextView = (PausableChronometer) findViewById(R.id.timer_text);

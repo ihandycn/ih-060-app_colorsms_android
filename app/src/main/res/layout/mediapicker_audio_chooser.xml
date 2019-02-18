@@ -54,7 +54,7 @@
             android:focusableInTouchMode="false"
             app:maxLevelRadius="130dp"
             app:minLevelRadius="55dp"
-            app:primaryColor="@color/audio_picker_level_primary_color" />
+            />
 
         <!-- View to make the touachable area larger for accessibility's two-finger touch -->
         <FrameLayout
