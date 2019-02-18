@@ -248,6 +248,14 @@
             android:launchMode="singleTop"
             android:theme="@style/WelcomeTheme" />
 
+        <activity
+            android:name=".ui.SetAsDefaultGuideActivity"
+            android:excludeFromRecents="true"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait"
+            android:taskAffinity=".setasdefault.guide"
+            android:theme="@style/Theme.AppCompat.Translucent" />
+
         <!-- WebView -->
         <activity
             android:name=".ui.WebViewActivity"

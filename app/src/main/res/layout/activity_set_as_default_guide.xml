@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/dialog_background_transparent"
+    tools:context="com.android.messaging.ui.SetAsDefaultGuideActivity">
+
+    <android.support.constraint.Guideline
+        android:id="@+id/set_as_default_guideline"
+        android:layout_width="1dp"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.09" />
+
+    <android.support.constraint.Guideline
+        android:id="@+id/set_as_default_guideline_end"
+        android:layout_width="1dp"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.91" />
+
+    <LinearLayout
+        android:id="@+id/linearLayout"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:layout_marginTop="8dp"
+        android:background="@drawable/new_dialog_bg"
+        android:clipChildren="false"
+        android:orientation="vertical"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="@id/set_as_default_guideline_end"
+        app:layout_constraintStart_toStartOf="@id/set_as_default_guideline"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <com.superapps.view.RoundImageView
+            android:id="@+id/set_as_default_top_image"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            app:radius_leftTop="@dimen/dialog_corner_radius"
+            app:radius_rightTop="@dimen/dialog_corner_radius" />
+
+        <com.superapps.view.AutoResizeTextView
+            android:id="@+id/set_as_default_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/dialog_content_margin_left"
+            android:layout_marginRight="@dimen/dialog_content_margin_right"
+            android:layout_marginTop="@dimen/dialog_content_margin_top"
+            android:maxLines="1"
+            android:textColor="#3c3c3c"
+            android:textSize="@dimen/dialog_content_title_size"
+            app:autoSizeMaxTextSize="@dimen/dialog_content_title_size"
+            app:typeface="@string/custom_font_bold" />
+
+        <com.superapps.view.TypefacedTextView
+            android:id="@+id/set_as_default_content"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/dialog_content_margin_left"
+            android:layout_marginRight="@dimen/dialog_content_margin_right"
+            android:layout_marginTop="@dimen/dialog_content_text_margin_top"
+            android:alpha="@dimen/dialog_content_text"
+            android:lineSpacingExtra="@dimen/dialog_text_extra_line_height"
+            android:lineSpacingMultiplier="@dimen/dialog_text_line_height_multiple"
+            android:textColor="#454545"
+            android:textSize="@dimen/dialog_content_text_size"
+            app:typeface="@string/custom_font_semibold" />
+
+        <com.superapps.view.TypefacedTextView
+            android:id="@+id/set_as_default_ok_btn"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dialog_btn_height"
+            android:layout_marginBottom="@dimen/dialog_btn_margin_bottom"
+            android:layout_marginEnd="@dimen/dialog_btn_margin_right"
+            android:layout_marginLeft="@dimen/dialog_btn_margin_left"
+            android:layout_marginRight="@dimen/dialog_btn_margin_right"
+            android:layout_marginStart="@dimen/dialog_btn_margin_left"
+            android:layout_marginTop="@dimen/dialog_btn_margin_top"
+            android:background="@drawable/new_dialog_btn_bg"
+            android:gravity="center"
+            android:paddingLeft="@dimen/dialog_btn_padding_left"
+            android:paddingRight="@dimen/dialog_btn_padding_right"
+            android:text="@android:string/ok"
+            android:textAllCaps="true"
+            android:textColor="@android:color/white"
+            android:textSize="@dimen/dialog_ok_btn_text_size"
+            app:typeface="@string/custom_font_bold" />
+
+    </LinearLayout>
+
+    <ImageView
+        android:id="@+id/set_as_default_cancel_btn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginEnd="2dp"
+        android:layout_marginRight="2dp"
+        android:layout_marginTop="2dp"
+        android:background="@drawable/material_close_btn_bg_round"
+        android:padding="12dp"
+        android:src="@drawable/dialog_cancel"
+        app:layout_constraintEnd_toEndOf="@+id/linearLayout"
+        app:layout_constraintTop_toTopOf="@+id/linearLayout" />
+
+</android.support.constraint.ConstraintLayout>

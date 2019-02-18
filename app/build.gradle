@@ -91,6 +91,8 @@ dependencies {
     implementation 'com.crashlytics.sdk.android:crashlytics:2.9.8'
     implementation 'com.facebook.android:facebook-android-sdk:4.23.0'
 
+    compile "com.ihandy.device:device-permanent.gm:4.5.4.gm"
+
 
     // "D/DebugDB: Open http://xxxxxxxx:8080 in your browser" will appear in your logcat,
     // open it in your browser to see out project tables. Please only  use it to see the table,
