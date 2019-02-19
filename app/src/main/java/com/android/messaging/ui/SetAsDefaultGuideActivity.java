@@ -102,6 +102,10 @@ public class SetAsDefaultGuideActivity extends AppCompatActivity {
                     BugleAnalytics.logEvent("SMS_DefaultAlert_SetDefault_Success", true, "type", "Cleared");
                 }
                 finish();
+                if (mType == DEFAULT_CHANGED) {
+                    Intent launchIntent = getPackageManager().getLaunchIntentForPackage(getPackageName());
+                    Navigations.startActivitySafely(this, launchIntent);
+                }
             } else {
                 Toasts.showToast(R.string.welcome_set_default_failed_toast, Toast.LENGTH_LONG);
             }

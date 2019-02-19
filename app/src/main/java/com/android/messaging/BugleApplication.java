@@ -233,6 +233,9 @@ public class BugleApplication extends HSApplication implements UncaughtException
         final String KEY_FOR_LAST_USER_PRESENT_TIME = "last_user_present_time";
         final String KEY_FOR_TODAY_USER_PRESENT_COUNT = "today_user_present_count";
         BroadcastCenter.register(getApplicationContext(), (context, intent) -> {
+            if (PhoneUtils.getDefault().isDefaultSmsApp()) {
+                return;
+            }
             long lastUserPresent = Preferences.getDefault().getLong(KEY_FOR_LAST_USER_PRESENT_TIME, 0);
             long now = System.currentTimeMillis();
             if (Calendars.isSameDay(lastUserPresent, now)) {
