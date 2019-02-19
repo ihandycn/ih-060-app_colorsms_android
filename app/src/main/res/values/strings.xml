@@ -1085,8 +1085,8 @@
     <string name="set_as_default_dialog_description_default_change">Color SMS can’t work properly without being set as default.</string>
     <string name="set_as_default_dialog_button_ok_default_change">Set Now</string>
 
-    <string name="set_as_default_dialog_title_user_present">Set Color SMS as default</string>
-    <string name="set_as_default_dialog_description_user_present">Color SMS can’t work without being set as default.</string>
+    <string name="set_as_default_dialog_title_user_present">Set Color SMS as Default</string>
+    <string name="set_as_default_dialog_description_user_present">Send funny emojis, stickers and GIFS to friends via Color SMS.</string>
     <string name="set_as_default_dialog_button_ok_user_present">OK</string>
 
 </resources>

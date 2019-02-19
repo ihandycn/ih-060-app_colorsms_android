@@ -67,14 +67,14 @@ public class SetAsDefaultGuideActivity extends AppCompatActivity {
             title.setText(R.string.set_as_default_dialog_title_user_present);
             subtitle.setText(R.string.set_as_default_dialog_description_user_present);
             topImage.setImageResource(R.drawable.set_as_default_top_image);
-            okBtn.setBackground(BackgroundDrawables.createBackgroundDrawable(getResources().getColor(R.color.theme_main_color),
+            okBtn.setBackground(BackgroundDrawables.createBackgroundDrawable(getResources().getColor(R.color.dialog_positive_button_color),
                     (int) getResources().getDimension(R.dimen.dialog_btn_corner_radius), true));
             okBtn.setText(R.string.set_as_default_dialog_button_ok_user_present);
         } else {
             title.setText(R.string.set_as_default_dialog_title_default_change);
             subtitle.setText(R.string.set_as_default_dialog_description_default_change);
             topImage.setImageResource(R.drawable.set_as_default_top_image);
-            okBtn.setBackground(BackgroundDrawables.createBackgroundDrawable(getResources().getColor(R.color.theme_main_color),
+            okBtn.setBackground(BackgroundDrawables.createBackgroundDrawable(getResources().getColor(R.color.dialog_positive_button_color),
                     (int) getResources().getDimension(R.dimen.dialog_btn_corner_radius), true));
             okBtn.setText(R.string.set_as_default_dialog_button_ok_default_change);
         }
