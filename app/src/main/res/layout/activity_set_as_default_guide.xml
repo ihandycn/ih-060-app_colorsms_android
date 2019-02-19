@@ -102,7 +102,7 @@
         android:layout_marginTop="2dp"
         android:background="@drawable/material_close_btn_bg_round"
         android:padding="12dp"
-        android:src="@drawable/dialog_cancel"
+        android:src="@drawable/set_as_default_close"
         app:layout_constraintEnd_toEndOf="@+id/linearLayout"
         app:layout_constraintTop_toTopOf="@+id/linearLayout" />
 

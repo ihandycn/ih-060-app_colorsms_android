@@ -1,6 +1,7 @@
 package com.android.messaging.ui;
 
 import android.app.Activity;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -11,10 +12,12 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.messaging.R;
+import com.android.messaging.ui.conversationlist.ConversationListActivity;
 import com.android.messaging.util.BugleAnalytics;
 import com.android.messaging.util.CommonUtils;
 import com.android.messaging.util.PhoneUtils;
 import com.superapps.util.BackgroundDrawables;
+import com.superapps.util.Dimensions;
 import com.superapps.util.Navigations;
 import com.superapps.util.Toasts;
 
@@ -66,16 +69,16 @@ public class SetAsDefaultGuideActivity extends AppCompatActivity {
         if (mType == USER_PRESENT) {
             title.setText(R.string.set_as_default_dialog_title_user_present);
             subtitle.setText(R.string.set_as_default_dialog_description_user_present);
-            topImage.setImageResource(R.drawable.set_as_default_top_image);
+            topImage.setImageResource(R.drawable.set_as_default_top_image_user_present);
             okBtn.setBackground(BackgroundDrawables.createBackgroundDrawable(getResources().getColor(R.color.dialog_positive_button_color),
-                    (int) getResources().getDimension(R.dimen.dialog_btn_corner_radius), true));
+                    Dimensions.pxFromDp(3.3f), true));
             okBtn.setText(R.string.set_as_default_dialog_button_ok_user_present);
         } else {
             title.setText(R.string.set_as_default_dialog_title_default_change);
             subtitle.setText(R.string.set_as_default_dialog_description_default_change);
-            topImage.setImageResource(R.drawable.set_as_default_top_image);
+            topImage.setImageResource(R.drawable.set_as_default_top_image_cleard);
             okBtn.setBackground(BackgroundDrawables.createBackgroundDrawable(getResources().getColor(R.color.dialog_positive_button_color),
-                    (int) getResources().getDimension(R.dimen.dialog_btn_corner_radius), true));
+                    Dimensions.pxFromDp(3.3f), true));
             okBtn.setText(R.string.set_as_default_dialog_button_ok_default_change);
         }
 
@@ -93,6 +96,22 @@ public class SetAsDefaultGuideActivity extends AppCompatActivity {
     }
 
     @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+        mType = intent.getIntExtra("from", USER_PRESENT);
+
+        if (mType == USER_PRESENT) {
+            BugleAnalytics.logEvent("SMS_DefaultAlert_Show", true, "type", "Unlock");
+        } else {
+            BugleAnalytics.logEvent("SMS_DefaultAlert_Show", true, "type", "Cleared");
+        }
+
+        CommonUtils.immersiveStatusAndNavigationBar(getWindow());
+
+        initView();
+    }
+
+    @Override
     public void onActivityResult(final int requestCode, final int resultCode, final Intent data) {
         if (requestCode == REQUEST_SET_DEFAULT_SMS_APP) {
             if (PhoneUtils.getDefault().isDefaultSmsApp()) {
@@ -103,8 +122,11 @@ public class SetAsDefaultGuideActivity extends AppCompatActivity {
                 }
                 finish();
                 if (mType == DEFAULT_CHANGED) {
-                    Intent launchIntent = getPackageManager().getLaunchIntentForPackage(getPackageName());
-                    Navigations.startActivitySafely(this, launchIntent);
+                    Intent intent = new Intent(Intent.ACTION_MAIN)
+                            .addCategory(Intent.CATEGORY_LAUNCHER)
+                            .setComponent(new ComponentName(this, ConversationListActivity.class))
+                            .setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_RESET_TASK_IF_NEEDED);
+                    Navigations.startActivitySafely(this, intent);
                 }
             } else {
                 Toasts.showToast(R.string.welcome_set_default_failed_toast, Toast.LENGTH_LONG);
