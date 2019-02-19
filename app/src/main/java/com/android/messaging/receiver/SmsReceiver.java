@@ -78,7 +78,6 @@ public final class SmsReceiver extends BroadcastReceiver {
         boolean mmsWapPushReceiverEnabled;
         boolean respondViaMessageEnabled;
         boolean broadcastAbortEnabled;
-        boolean smsMessageReceiverMessageEnabled = true; // SmsMessageReceiver in libColorPhone
 
 
         if (OsUtil.isAtLeastKLP()) {
@@ -96,8 +95,6 @@ public final class SmsReceiver extends BroadcastReceiver {
             respondViaMessageEnabled = true;
             // On KLP we don't need to abort the broadcast
             broadcastAbortEnabled = false;
-
-            smsMessageReceiverMessageEnabled = isSmsEnabled;
         } else {
             // On JB we use the sms receiver for both sms/mms delivery
             final boolean carrierSmsEnabled = PhoneUtils.getDefault().isSmsEnabled();
@@ -181,16 +178,10 @@ public final class SmsReceiver extends BroadcastReceiver {
                     PackageManager.COMPONENT_ENABLED_STATE_DISABLED, PackageManager.DONT_KILL_APP);
         }
 
-        if (smsMessageReceiverMessageEnabled) {
-            packageManager.setComponentEnabledSetting(
-                    new ComponentName(context, SmsMessageReceiver.class),
-                    PackageManager.COMPONENT_ENABLED_STATE_ENABLED, PackageManager.DONT_KILL_APP);
-        } else {
-            packageManager.setComponentEnabledSetting(
-                    new ComponentName(context, SmsMessageReceiver.class),
-                    PackageManager.COMPONENT_ENABLED_STATE_DISABLED, PackageManager.DONT_KILL_APP);
-
-        }
+        // SmsMessageReceiver in libColorPhone
+        packageManager.setComponentEnabledSetting(
+                new ComponentName(context, SmsMessageReceiver.class),
+                PackageManager.COMPONENT_ENABLED_STATE_ENABLED, PackageManager.DONT_KILL_APP);
 
     }
 
