@@ -35,13 +35,11 @@
         app:layout_constraintStart_toStartOf="@id/set_as_default_guideline"
         app:layout_constraintTop_toTopOf="parent">
 
-        <com.superapps.view.RoundImageView
+        <ImageView
             android:id="@+id/set_as_default_top_image"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            app:radius_leftTop="@dimen/dialog_corner_radius"
-            app:radius_rightTop="@dimen/dialog_corner_radius" />
+            android:layout_gravity="center" />
 
         <com.superapps.view.AutoResizeTextView
             android:id="@+id/set_as_default_title"
