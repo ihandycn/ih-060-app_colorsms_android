@@ -22,11 +22,16 @@ import android.graphics.Color;
 import android.graphics.Rect;
 import android.graphics.Typeface;
 import android.net.Uri;
+import android.os.Handler;
+import android.os.HandlerThread;
+import android.support.v4.provider.FontRequest;
+import android.support.v4.provider.FontsContractCompat;
 import android.support.v4.text.BidiFormatter;
 import android.support.v4.text.TextDirectionHeuristicsCompat;
 import android.text.TextPaint;
 import android.text.TextUtils;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.View.OnLayoutChangeListener;
@@ -35,6 +40,7 @@ import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.android.messaging.Factory;
 import com.android.messaging.R;
@@ -52,6 +58,7 @@ import com.android.messaging.ui.SnackBar;
 import com.android.messaging.ui.SnackBarInteraction;
 import com.android.messaging.util.Assert;
 import com.android.messaging.util.BugleAnalytics;
+import com.android.messaging.util.BuglePrefs;
 import com.android.messaging.util.ContentType;
 import com.android.messaging.util.ImageUtils;
 import com.android.messaging.util.OsUtil;
@@ -60,6 +67,8 @@ import com.android.messaging.util.UiUtils;
 import com.android.messaging.util.UriUtil;
 import com.superapps.util.BackgroundDrawables;
 import com.superapps.util.Dimensions;
+
+import org.qcode.fontchange.impl.QueryBuilder;
 
 import java.util.List;
 
@@ -77,6 +86,8 @@ public class ConversationListItemView extends FrameLayout implements OnClickList
     private Typeface mSnippetTypeface;
     private static String sPlusOneString;
     private static String sPlusNString;
+    private Handler mHandler = null;
+    private int[] weights = {400,500,700};
 
     public interface HostInterface {
         boolean isConversationSelected(final String conversationId);
@@ -179,9 +190,7 @@ public class ConversationListItemView extends FrameLayout implements OnClickList
         mConversationNameColor = resources.getColor(R.color.conversation_list_item_conversation);
         mSnippetColor = resources.getColor(R.color.conversation_list_item_snippet);
 
-        mConversationNameReadTypeface = Typefaces.getCustomMedium();
-        mConversationNameUnreadTypeface = Typefaces.getCustomSemiBold();
-        mSnippetTypeface = Typefaces.getCustomRegular();
+        initTypeface();
 
         if (OsUtil.isAtLeastL()) {
             setTransitionGroup(true);
@@ -231,6 +240,68 @@ public class ConversationListItemView extends FrameLayout implements OnClickList
                 TextDirectionHeuristicsCompat.LTR);
 
         mConversationNameView.setText(bidiFormattedName);
+    }
+
+    private void initTypeface(){
+        String familyName = BuglePrefs.getApplicationPrefs().getString("font_family","");
+        if (familyName.isEmpty()){
+            mConversationNameReadTypeface = Typefaces.getCustomMedium();
+            mConversationNameUnreadTypeface = Typefaces.getCustomSemiBold();
+            mSnippetTypeface = Typefaces.getCustomRegular();
+            return;
+        }
+        for (int weight : weights) {
+            QueryBuilder queryBuilder = new QueryBuilder(familyName)
+                    .withWidth(100f)
+                    .withWeight(weight)
+                    .withItalic(0.0f)
+                    .withBestEffort(true);
+            final String query = queryBuilder.build();
+
+            FontRequest request = new FontRequest(
+                    "com.google.android.gms.fonts",
+                    "com.google.android.gms",
+                    query,
+                    com.iflytek.android_font_loader_lib.R.array.com_google_android_gms_fonts_certs);
+
+
+            FontsContractCompat.FontRequestCallback callback = new FontsContractCompat
+                    .FontRequestCallback() {
+                @Override
+                public void onTypefaceRetrieved(Typeface typeface) {
+                    switch (weight) {
+                        case 400:
+                            mSnippetTypeface = typeface;
+                            break;
+                        case 500:
+                            mConversationNameReadTypeface = typeface;
+                            break;
+                        case 700:
+                            mConversationNameUnreadTypeface = typeface;
+                            break;
+                    }
+                }
+
+                @Override
+                public void onTypefaceRequestFailed(int reason) {
+                    Toast.makeText(getContext(),
+                            getContext().getString(com.iflytek.android_font_loader_lib.R.string.request_failed, reason), Toast.LENGTH_LONG)
+                            .show();
+                }
+            };
+            FontsContractCompat
+                    .requestFont(getContext(), request, callback,
+                            getHandlerThreadHandler());
+        }
+    }
+
+    private Handler getHandlerThreadHandler() {
+        if (mHandler == null) {
+            HandlerThread handlerThread = new HandlerThread("fonts");
+            handlerThread.start();
+            mHandler = new Handler(handlerThread.getLooper());
+        }
+        return mHandler;
     }
 
     private void setContactImage() {

@@ -2,13 +2,20 @@ package org.qcode.fontchange.impl;
 
 import android.content.Context;
 import android.graphics.Typeface;
+import android.os.Handler;
+import android.os.HandlerThread;
+import android.support.v4.provider.FontRequest;
+import android.support.v4.provider.FontsContractCompat;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
+import android.widget.Toast;
+
+import com.iflytek.android_font_loader_lib.R;
+import com.superapps.view.TypefacedTextView;
 
 import org.qcode.fontchange.FontManager;
-import org.qcode.fontchange.FontSizeAttr;
 import org.qcode.fontchange.IFontChangeListener;
 import org.qcode.fontchange.base.observable.INotifyUpdate;
 import org.qcode.fontchange.base.observable.Observable;
@@ -19,8 +26,6 @@ import java.lang.reflect.Method;
 
 /**
  * 字体大小调节加载管理类对外实现接口
- * qqliu
- * 2016/9/24.
  */
 public class FontManagerImpl extends FontManager {
 
@@ -29,6 +34,12 @@ public class FontManagerImpl extends FontManager {
     //单例相关
     private static volatile FontManagerImpl mInstance;
     private String mFontPath;
+    private Handler mHandler = null;
+    private Typeface mTypeface_thin = null, mTypeface_light = null,
+            mTypeface_regular = null, mTypeface_medium = null,
+            mTypeface_bold = null, mTypeface_black = null;
+    private int weights[] = {100,300,400,500,700,900};
+    private boolean isTypefaceRetrieved = false;
 
     private FontManagerImpl() {
     }
@@ -78,12 +89,15 @@ public class FontManagerImpl extends FontManager {
         }
     }
 
-    public void applyFont(TextView textView) {
+    public void applyFont(TypefacedTextView textView) {
         if (null == textView) {
             Logging.d(TAG, "applyFont()| view is null");
             return;
         }
 
+        if (!textView.fontChangeable()){
+            return;
+        }
         /*FontSizeAttr sizeAttr = ViewFontTagHelper.getFontAttr(textView);
         if (null != sizeAttr) {
             sizeAttr.apply(textView, mScale);
@@ -92,9 +106,9 @@ public class FontManagerImpl extends FontManager {
     }
 
     public void applyFont(View view, boolean applyChild) {
-        if (view instanceof TextView) {
-            applyFont((TextView) view);
-            changeTypeFaced((TextView) view);
+        if (view instanceof TypefacedTextView) {
+            applyFont((TypefacedTextView) view);
+            changeTypeFaced((TypefacedTextView) view);
         } else {
             if (view instanceof RecyclerView) {
                 clearRecyclerView((RecyclerView) view);
@@ -118,9 +132,10 @@ public class FontManagerImpl extends FontManager {
         }
 
         mFontPath = fontPath;
-
         try {
-            refreshFont();
+            if (!fontPath.isEmpty()){
+                requestDownload(fontPath);
+            }
             if (fontChangeListener != null) {
                 fontChangeListener.onLoadSuccess(fontPath);
             }
@@ -133,11 +148,101 @@ public class FontManagerImpl extends FontManager {
         }
     }
 
-    private void changeTypeFaced(TextView textView) {
-        if (mFontPath != null) {
-            Typeface typeface = Typeface.createFromAsset(mContext.getAssets(), mFontPath);
-            textView.setTypeface(typeface);
+    private void changeTypeFaced(TypefacedTextView textView) {
+        // use google font replace local font
+        // fontPath is changed to fontName
+        if (isTypefaceRetrieved && textView.fontChangeable()){
+            int weight = textView.getFontStyle() * 100;
+            switch (weight) {
+                case 100:
+                    textView.setTypeface(mTypeface_thin);
+                    break;
+                case 300:
+                    textView.setTypeface(mTypeface_light);
+                    break;
+                case 400:
+                    textView.setTypeface(mTypeface_regular);
+                    break;
+                case 500:
+                    textView.setTypeface(mTypeface_medium);
+                    break;
+                case 700:
+                    textView.setTypeface(mTypeface_bold);
+                    break;
+                case 900:
+                    textView.setTypeface(mTypeface_black);
+                    break;
+            }
         }
+    }
+
+    private void requestDownload(String familyName) {
+        for (final int weight : weights) {
+            QueryBuilder queryBuilder = new QueryBuilder(familyName)
+                    .withWidth(100f)
+                    .withWeight(weight)
+                    .withItalic(0.0f)
+                    .withBestEffort(true);
+            final String query = queryBuilder.build();
+
+            Log.d(TAG, "Requesting a font. Query: " + query);
+            FontRequest request = new FontRequest(
+                    "com.google.android.gms.fonts",
+                    "com.google.android.gms",
+                    query,
+                    R.array.com_google_android_gms_fonts_certs);
+
+
+            FontsContractCompat.FontRequestCallback callback = new FontsContractCompat
+                    .FontRequestCallback() {
+                @Override
+                public void onTypefaceRetrieved(Typeface typeface) {
+                    Log.i(TAG, "onTypefaceRetrieved: "+ query);
+                    // save typeface to local
+                    isTypefaceRetrieved = true;
+                    switch (weight) {
+                        case 100:
+                            mTypeface_thin = typeface;
+                            break;
+                        case 300:
+                            mTypeface_light = typeface;
+                            break;
+                        case 400:
+                            mTypeface_regular = typeface;
+                            break;
+                        case 500:
+                            mTypeface_medium = typeface;
+                            break;
+                        case 700:
+                            mTypeface_bold = typeface;
+                            break;
+                        case 900:
+                            mTypeface_black = typeface;
+                            break;
+                    }
+                    refreshFont();
+                }
+
+                @Override
+                public void onTypefaceRequestFailed(int reason) {
+                    Toast.makeText(mContext,
+                            mContext.getString(R.string.request_failed, reason), Toast.LENGTH_LONG)
+                            .show();
+                }
+            };
+            FontsContractCompat
+                    .requestFont(mContext, request, callback,
+                            getHandlerThreadHandler());
+        }
+    }
+
+    private Handler getHandlerThreadHandler() {
+        if (mHandler == null) {
+            HandlerThread handlerThread = new HandlerThread("fonts");
+            handlerThread.start();
+            mHandler = new Handler(handlerThread.getLooper());
+        }
+        return mHandler;
     }
 
     public float getFontScale() {

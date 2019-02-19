@@ -13,6 +13,7 @@ import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
@@ -253,6 +254,18 @@ public class SettingGeneralActivity extends BaseActivity{
                 public void onStopTrackingTouch(SeekBar seekBar) {
 
                 }
+            });
+            Button fontSmall = dialogView.findViewById(R.id.btn_small);
+            Button fontNormal = dialogView.findViewById(R.id.btn_normal);
+            Button fontBig = dialogView.findViewById(R.id.btn_big);
+            Button fontBiggest = dialogView.findViewById(R.id.btn_biggest);
+            fontNormal.setOnClickListener(v -> {
+                FontManagerImpl.getInstance().changeTypeFaced("Muli",mListener);
+                prefs.putString("font_family","Muli");
+            });
+            fontSmall.setOnClickListener(v -> {
+                FontManagerImpl.getInstance().changeTypeFaced("Mada",mListener);
+                prefs.putString("font_family","Mada");
             });
             FontManagerImpl.getInstance().applyFont(dialogView, true);
             dialog.setView(dialogView);

@@ -2,6 +2,8 @@ package org.qcode.fontchange.impl;
 
 import android.widget.TextView;
 
+import com.superapps.view.TypefacedTextView;
+
 import org.qcode.fontchange.FontSizeAttr;
 
 /**
@@ -12,9 +14,9 @@ import org.qcode.fontchange.FontSizeAttr;
 
 public class FontViewHelperImpl {
 
-    private TextView mTxtView;
+    private TypefacedTextView mTxtView;
 
-    public FontViewHelperImpl(TextView view) {
+    public FontViewHelperImpl(TypefacedTextView view) {
         mTxtView = view;
     }
 

@@ -2,6 +2,8 @@ package org.qcode.fontchange;
 
 import android.widget.TextView;
 
+import com.superapps.view.TypefacedTextView;
+
 import org.qcode.fontchange.impl.ActivityFontEventHandlerImpl;
 import org.qcode.fontchange.impl.FontManagerImpl;
 import org.qcode.fontchange.impl.FontViewHelperImpl;
@@ -26,7 +28,7 @@ public class FontManager {
      * @param view
      * @return
      */
-    public static FontViewHelperImpl with(TextView view) {
+    public static FontViewHelperImpl with(TypefacedTextView view) {
         return new FontViewHelperImpl(view);
     }
 

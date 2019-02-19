@@ -25,7 +25,9 @@
         android:text="@string/bottom_navigation_item_messaging"
         android:textColor="@color/action_bar_title_text_color"
         android:textSize="@dimen/action_bar_page_title_text_size"
-        app:typefaceFileName="@string/action_bar_title_typeface" />
+        app:typefaceFileName="@string/action_bar_title_typeface"
+        app:font_style="black"
+        app:changeable="false"/>
 
     <LinearLayout
         android:id="@+id/emoji_store_guide_content"

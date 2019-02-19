@@ -34,11 +34,12 @@ public abstract class BaseActivity extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-//        requestWindowFeature(Window.FEATURE_NO_TITLE); // 去掉标题栏，自定义
-//        getWindow().setFormat(PixelFormat.RGBA_8888);
         FontManagerImpl.getInstance().init(BaseActivity.this);
         long scale = BuglePrefs.getApplicationPrefs().getLong("font_scale",30);
+        String fontFamily = BuglePrefs.getApplicationPrefs().getString("font_family","");
         FontManagerImpl.getInstance().changeFontSize(scale / 50.0f, mListener);
+        FontManagerImpl.getInstance().changeTypeFaced(fontFamily, mListener);
+
         initFontHandler();
     }
 

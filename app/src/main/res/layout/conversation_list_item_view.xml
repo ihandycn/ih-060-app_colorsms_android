@@ -157,7 +157,7 @@
                             android:src="@drawable/ic_notifications_off_small_light"
                             android:visibility="gone" />
 
-                        <TextView
+                        <com.superapps.view.TypefacedTextView
                             android:id="@+id/conversation_name"
                             style="@style/ConversationListItemViewConversationNameStyle"
                             android:layout_width="match_parent"
@@ -178,7 +178,7 @@
                         android:visibility="gone" />
                 </LinearLayout>
 
-                <TextView
+                <com.superapps.view.TypefacedTextView
                     android:id="@+id/conversation_subject"
                     style="@style/ConversationListItemViewTextStyle"
                     android:layout_width="match_parent"
@@ -188,7 +188,7 @@
                     android:singleLine="true"
                     android:visibility="gone" />
 
-                <TextView
+                <com.superapps.view.TypefacedTextView
                     android:id="@+id/conversation_snippet"
                     style="@style/ConversationListItemViewTextStyle"
                     android:layout_width="match_parent"
@@ -224,7 +224,7 @@
                     android:visibility="gone"
                     app:layoutMode="subcompact" />
 
-                <TextView
+                <com.superapps.view.TypefacedTextView
                     android:id="@+id/conversation_timestamp"
                     style="@style/ConversationListItemViewTextTimeStampStyle"
                     android:layout_width="wrap_content"

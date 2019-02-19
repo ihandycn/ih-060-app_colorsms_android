@@ -48,6 +48,8 @@ import com.superapps.util.Dimensions;
 import com.superapps.util.Preferences;
 import com.superapps.util.Threads;
 
+import org.qcode.fontchange.impl.FontManagerImpl;
+
 public class ConversationListActivity extends AbstractConversationListActivity {
 
     private static final String PREF_SHOW_EMOJI_GUIDE = "pref_show_emoji_guide";
