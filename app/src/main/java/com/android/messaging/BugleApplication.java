@@ -190,9 +190,9 @@ public class BugleApplication extends HSApplication implements UncaughtException
     private void initKeepAlive() {
         // Init keep alive arguments
         HSPermanentUtils.initKeepAlive(true,
+                false,
                 true,
-                true,
-                true,
+                false,
                 true,
                 false,
                 false,
