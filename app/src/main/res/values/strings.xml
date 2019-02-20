@@ -994,6 +994,8 @@
     <string name="emoji_store_title">Emoji Store</string>
     <string name="emoji_get">GET</string>
     <string name="emoji_added">ADDED</string>
+    <string name="emoji_add_more">More emojis</string>
+    <string name="emoji_recent_empty_description">Click an emoji to share with friends.</string>
 
     <!--sms show-->
     <string name="sms_show_apply">APPLY</string>
@@ -1069,14 +1071,17 @@
     <string name="setting_sms_show_close_dialog_title">Confirm to turn off?</string>
     <string name="setting_sms_show_close_dialog_content">You will lose the beautiful SMS reminder themes, really want to close it?</string>
     <string name="setting_sms_show_close_dialog_ok">OK</string>
-    <string name="emoji_recent_empty_description">Click an emoji to share with friends.</string>
-
+    <string name="setting_test_change_theme_color">change theme color for debug</string>
 
     <!--notification channel-->
     <string name="sms_notification_channel">SMS Notification</string>
     <string name="sms_notification_channel_description">Show a notification when received SMS</string>
 
-    <string name="emoji_add_more">More emojis</string>
 
+    <!--customize-->
+    <string name="bubble_customize_preview_incoming_message">Hi, there! Nice to meet you.</string>
+    <string name="bubble_customize_preview_outgoing_message">Nice to meet you too</string>
+    <string name="bubble_customize_tab_style">Style</string>
+    <string name="bubble_customize_tab_color">Color</string>
 
 </resources>

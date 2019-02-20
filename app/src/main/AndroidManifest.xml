@@ -619,7 +619,11 @@
             android:name=".ui.appsettings.SettingAdvancedActivity"
             android:excludeFromRecents="true"
             android:screenOrientation="portrait"
-            android:theme="@style/BaseSettingsActivity" />
+            android:theme="@style/Theme.AppCompat.Light" />
+
+        <activity android:name=".debug.ChangeThemeColorDebugActivity" />
+
+        <activity android:name=".ui.customize.CustomBubblesActivity" />
     </application>
 
 </manifest>

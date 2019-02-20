@@ -2,6 +2,8 @@
 <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="@color/white"
     xmlns:tools="http://schemas.android.com/tools">
 
 
@@ -34,5 +36,30 @@
         android:textSize="23sp"
         android:textStyle="bold"
         android:background="@color/primary_color"/>
+
+
+    <View
+        android:id="@+id/divider"
+        android:layout_width="match_parent"
+        android:layout_height="8dp"
+        android:background="@color/customize_bubbles_divider"
+        app:layout_constraintVertical_bias="0.4"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent" />
+
+    <FrameLayout
+        android:id="@+id/customize_container"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        app:layout_constraintTop_toTopOf="@id/divider"
+        app:layout_constraintBottom_toBottomOf="parent">
+
+        <com.android.messaging.ui.CustomHeaderViewPager
+            android:id="@+id/customize_pager"
+            android:layout_width="match_parent"
+            android:layout_height="45dp"/>
+
+
+    </FrameLayout>
 
 </android.support.constraint.ConstraintLayout>

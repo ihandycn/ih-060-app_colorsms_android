@@ -21,6 +21,7 @@ import android.graphics.drawable.Drawable;
 
 import com.android.messaging.Factory;
 import com.android.messaging.R;
+import com.android.messaging.ui.customize.BubbleBackgroundColors;
 import com.android.messaging.ui.customize.PrimaryColors;
 import com.android.messaging.util.ImageUtils;
 
@@ -77,6 +78,8 @@ public class ConversationDrawables {
     public void updateDrawables() {
         final Resources resources = mContext.getResources();
 
+        mThemeColor = PrimaryColors.getPrimaryColor();
+
         mIncomingBubbleDrawable = resources.getDrawable(R.drawable.message_bubble_incoming_new);
         mIncomingBubbleNoArrowDrawable =
                 resources.getDrawable(R.drawable.message_bubble_incoming_no_arrow);
@@ -84,10 +87,12 @@ public class ConversationDrawables {
         mOutgoingBubbleDrawable = resources.getDrawable(R.drawable.message_bubble_outgoing_new);
         mOutgoingBubbleNoArrowDrawable =
                 resources.getDrawable(R.drawable.message_bubble_outgoing_no_arrow);
-        mIncomingAudioPlayButtonDrawable = resources.getDrawable(R.drawable.ic_audio_play_incoming);
-        mIncomingAudioPauseButtonDrawable = resources.getDrawable(R.drawable.ic_audio_pause_incoming);
+        mIncomingAudioPlayButtonDrawable = ImageUtils.getTintedDrawable(mContext, resources.getDrawable(R.drawable.ic_audio_play_incoming), mThemeColor);
+        mIncomingAudioPauseButtonDrawable = ImageUtils.getTintedDrawable(mContext, resources.getDrawable(R.drawable.ic_audio_pause_incoming), mThemeColor);
+
         mOutgoingAudioPlayButtonDrawable = resources.getDrawable(R.drawable.ic_audio_play_outgoing);
         mOutgoingAudioPauseButtonDrawable = resources.getDrawable(R.drawable.ic_audio_pause_outgoing);
+
         mIncomingAudioProgressBackgroundDrawable =
                 resources.getDrawable(R.drawable.audio_progress_bar_background_incoming);
         mOutgoingAudioProgressBackgroundDrawable =
@@ -101,13 +106,13 @@ public class ConversationDrawables {
                 resources.getDrawable(R.drawable.fastscroll_preview_left);
         mFastScrollPreviewDrawableRight =
                 resources.getDrawable(R.drawable.fastscroll_preview_right);
-        mOutgoingBubbleColor = resources.getColor(R.color.message_bubble_color_outgoing);
+        mOutgoingBubbleColor = BubbleBackgroundColors.getBubbleBackgroundColor();
         mIncomingBubbleColor = resources.getColor(R.color.message_bubble_color_incoming);
         mIncomingErrorBubbleColor =
                 resources.getColor(R.color.message_error_bubble_color_incoming);
         mIncomingSelectedBubbleColor = resources.getColor(R.color.message_bubble_color_selected_incoming);
-        mOutgoingSelectedBubbleColor = resources.getColor(R.color.message_bubble_color_selected_outgoing);
-        mThemeColor = PrimaryColors.getPrimaryColor();
+        mOutgoingSelectedBubbleColor = BubbleBackgroundColors.getBubbleBackgroundColorDark();
+
     }
 
     public Drawable getBubbleDrawable(final boolean selected, final boolean incoming,
