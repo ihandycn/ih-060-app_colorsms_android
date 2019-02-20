@@ -132,18 +132,6 @@ public class BugleApplication extends HSApplication implements UncaughtException
             StrictMode.setThreadPolicy(new StrictMode.ThreadPolicy.Builder().detectAll().penaltyLog().build());
             StrictMode.setVmPolicy(new StrictMode.VmPolicy.Builder().detectAll().penaltyLog().build());
         }
-
-        // Note onCreate is called in both test and real application environments
-        if (!sRunningTests) {
-            // Only create the factory if not running tests
-            FactoryImpl.register(getApplicationContext(), this);
-        } else {
-            LogUtil.e(TAG, "BugleApplication.onCreate: FactoryImpl.register skipped for test run");
-        }
-
-        initPhotoViewAnalytics();
-        EmojiConfig.getInstance().doInit();
-        initMessageCenterLib();
         initLeakCanaryAsync();
         SharedPreferencesOptimizer.install(true);
         String packageName = getPackageName();
@@ -169,16 +157,33 @@ public class BugleApplication extends HSApplication implements UncaughtException
 
             initWorks.add(new ParallelBackgroundTask("Upgrade", () -> Upgrader.getUpgrader(this).upgrade()));
 
-            initWorks.add(new SyncMainThreadTask("InitTimeTicker", () -> {
-                new BugleTimeTicker().start();
-            }));
+            initWorks.add(new SyncMainThreadTask("InitFactoryImpl", this::initFactoryImpl));
 
-            initWorks.add(new SyncMainThreadTask("InitObserveDefaultSmsAppChanged", this::initObserveDefaultSmsAppChanged));
+            initWorks.add(new SyncMainThreadTask("InitPhotoViewAnalytics", this::initPhotoViewAnalytics));
+
+            initWorks.add(new SyncMainThreadTask("InitEmojiConfig", () -> EmojiConfig.getInstance().doInit();
+
+            initWorks.add(new SyncMainThreadTask("InitMessageCenter", this::initMessageCenterLib));
+
+            initWorks.add(new SyncMainThreadTask("InitTimeTicker", () -> new BugleTimeTicker().start()));
+
+            initWorks.add(new SyncMainThreadTask("InitObserverDefaultSmsChanged", this::initObserveDefaultSmsAppChanged));
+
             initWorks.add(new SyncMainThreadTask("InitObserveScreenStatusChanged", this::initObserveUserPresentChanged));
 
             TaskRunner.run(initWorks);
         } finally {
             TraceCompat.endSection();
+        }
+    }
+
+    private void initFactoryImpl() {
+        // Note onCreate is called in both test and real application environments
+        if (!sRunningTests) {
+            // Only create the factory if not running tests
+            FactoryImpl.register(getApplicationContext(), this);
+        } else {
+            LogUtil.e(TAG, "BugleApplication.onCreate: FactoryImpl.register skipped for test run");
         }
     }
 
