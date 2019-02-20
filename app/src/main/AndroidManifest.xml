@@ -655,10 +655,11 @@
         <service
             android:name="com.ihs.device.permanent.syncaccount.SyncService"
             tools:remove="android:process" />
-        
+
         <receiver
             android:name="com.ihs.device.permanent.PermanentReceiver"
             tools:remove="android:process" />
+
         <service
             android:name="com.ihs.device.permanent.GuardJobService"
             tools:remove="android:process" />
@@ -666,9 +667,11 @@
         <provider
             android:name="com.ihs.device.permanent.syncaccount.SyncContentProvider"
             tools:remove="android:process" />
+
         <provider
             android:name="com.ihs.device.common.AppInfoProvider"
             tools:remove="android:process" />
+        
         <activity
             android:name="com.ihs.device.permanent.foreground.ForegroundActivity"
             tools:remove="android:process"/>
