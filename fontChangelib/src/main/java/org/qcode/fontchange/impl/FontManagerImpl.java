@@ -95,7 +95,7 @@ public class FontManagerImpl extends FontManager {
             return;
         }
 
-        if (!textView.fontChangeable()){
+        if (!textView.fontSizeChangeable()){
             return;
         }
         /*FontSizeAttr sizeAttr = ViewFontTagHelper.getFontAttr(textView);
@@ -151,7 +151,7 @@ public class FontManagerImpl extends FontManager {
     private void changeTypeFaced(TypefacedTextView textView) {
         // use google font replace local font
         // fontPath is changed to fontName
-        if (isTypefaceRetrieved && textView.fontChangeable()){
+        if (isTypefaceRetrieved && textView.fontFamilyChangeable()){
             int weight = textView.getFontStyle() * 100;
             switch (weight) {
                 case 100:

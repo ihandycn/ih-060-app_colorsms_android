@@ -24,8 +24,7 @@
         android:layout_marginTop="15.67dp"
         android:textColor="#FF333333"
         android:textSize="21sp"
-        app:typeface="@string/custom_font_bold"
-        app:changeable="false"/>
+        app:typeface="@string/custom_font_bold"/>
 
     <com.superapps.view.TypefacedTextView
         android:id="@+id/emoji_detail_get_btn"
@@ -40,7 +39,6 @@
         android:text="@string/emoji_get"
         android:textColor="#FF333333"
         android:textSize="19.33sp"
-        app:typeface="@string/custom_font_semibold"
-        app:changeable="false"/>
+        app:typeface="@string/custom_font_semibold"/>
 
 </LinearLayout>

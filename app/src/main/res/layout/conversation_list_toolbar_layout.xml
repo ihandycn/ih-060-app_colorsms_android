@@ -27,7 +27,7 @@
         android:textSize="@dimen/action_bar_page_title_text_size"
         app:typefaceFileName="@string/action_bar_title_typeface"
         app:font_style="black"
-        app:changeable="false"/>
+        app:font_family_changeable="false"/>
 
     <LinearLayout
         android:id="@+id/emoji_store_guide_content"
