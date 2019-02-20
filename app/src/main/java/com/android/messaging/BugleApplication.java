@@ -161,7 +161,7 @@ public class BugleApplication extends HSApplication implements UncaughtException
 
             initWorks.add(new SyncMainThreadTask("InitPhotoViewAnalytics", this::initPhotoViewAnalytics));
 
-            initWorks.add(new SyncMainThreadTask("InitEmojiConfig", () -> EmojiConfig.getInstance().doInit();
+            initWorks.add(new SyncMainThreadTask("InitEmojiConfig", () -> EmojiConfig.getInstance().doInit()));
 
             initWorks.add(new SyncMainThreadTask("InitMessageCenter", this::initMessageCenterLib));
 
