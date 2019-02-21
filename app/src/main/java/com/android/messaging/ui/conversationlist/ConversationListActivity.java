@@ -126,6 +126,7 @@ public class ConversationListActivity extends AbstractConversationListActivity
         setupDrawer();
 
         HSGlobalNotificationCenter.addObserver(EVENT_MAINPAGE_RECREATE, this);
+        BugleAnalytics.logEvent("SMS_Messages_Show", true, "color", String.valueOf(ThemeSelectActivity.getSelectedIndex()));
     }
 
     @Override
@@ -167,6 +168,7 @@ public class ConversationListActivity extends AbstractConversationListActivity
                 drawerClickIndex = DRAWER_INDEX_NONE;
                 Preferences.getDefault().putBoolean(PREF_KEY_MAIN_DRAWER_OPENED, true);
                 setDrawerMenuIcon();
+                BugleAnalytics.logEvent("Menu_Show", true);
                 super.onDrawerOpened(drawerView);
             }
 
@@ -176,22 +178,24 @@ public class ConversationListActivity extends AbstractConversationListActivity
 
                 switch (drawerClickIndex) {
                     case DRAWER_INDEX_THEME_COLOR:
+                        BugleAnalytics.logEvent("Menu_ThemeColor_Click");
                         Navigations.startActivity(ConversationListActivity.this, ThemeSelectActivity.class);
                         break;
                     case DRAWER_INDEX_BUBBLE:
+                        BugleAnalytics.logEvent("Menu_Bubble_Click");
                         Toasts.showToast(R.string.coming_soon);
                         break;
                     case DRAWER_INDEX_CHAT_BACKGROUND:
+                        BugleAnalytics.logEvent("Menu_ChatBackground_Click");
                         Toasts.showToast(R.string.coming_soon);
                         break;
                     case DRAWER_INDEX_SETTING:
                         UIIntents.get().launchSettingsActivity(ConversationListActivity.this);
-                        logFirstComeInClickEvent("settings");
-                        BugleAnalytics.logEvent("SMS_Mainpage_Settings_Click", true);
+                        BugleAnalytics.logEvent("Menu_Settings_Click", true);
                         break;
                     case DRAWER_INDEX_RATE:
                         FiveStarRateDialog.showFiveStarFromSetting(ConversationListActivity.this);
-                        BugleAnalytics.logEvent("SMS_Settings_5StarRating_Click", true);
+                        BugleAnalytics.logEvent("Menu_FiveStart_Click", true);
                         break;
                     case DRAWER_INDEX_NONE:
                     default:

@@ -11,6 +11,7 @@ import com.android.messaging.R;
 import com.android.messaging.ui.ConversationDrawables;
 import com.android.messaging.ui.conversationlist.ConversationListActivity;
 import com.android.messaging.ui.customize.PrimaryColors;
+import com.android.messaging.util.BugleAnalytics;
 import com.ihs.app.framework.activity.HSAppCompatActivity;
 import com.ihs.commons.notificationcenter.HSGlobalNotificationCenter;
 import com.superapps.util.BackgroundDrawables;
@@ -47,6 +48,8 @@ public class ThemeSelectActivity extends HSAppCompatActivity {
             0xff81de09,
             0xfff6bd01
     };
+
+    private int beforeColor;
 
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
@@ -86,6 +89,9 @@ public class ThemeSelectActivity extends HSAppCompatActivity {
 
         // initial refresh
         refreshSelectStatus();
+
+        beforeColor = PrimaryColors.getPrimaryColor();
+        BugleAnalytics.logEvent("Customize_ThemeColor_Show", true);
     }
 
     private void refreshSelectStatus() {
@@ -107,5 +113,22 @@ public class ThemeSelectActivity extends HSAppCompatActivity {
                 return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override protected void onDestroy() {
+        super.onDestroy();
+
+        if (PrimaryColors.getPrimaryColor() != beforeColor) {
+            BugleAnalytics.logEvent("Customize_ThemeColor_Change", true, "color", String.valueOf(getSelectedIndex()));
+        }
+    }
+
+    public static int getSelectedIndex() {
+        for (int i = 0; i < COLORS.length; i++) {
+            if (COLORS[i] == PrimaryColors.getPrimaryColor()) {
+                return i;
+            }
+        }
+        return -1;
     }
 }
