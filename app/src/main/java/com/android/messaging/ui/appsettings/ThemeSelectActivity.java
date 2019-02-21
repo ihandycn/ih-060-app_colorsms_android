@@ -49,8 +49,6 @@ public class ThemeSelectActivity extends HSAppCompatActivity {
             0xfff6bd01
     };
 
-    private int beforeColor;
-
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -84,13 +82,16 @@ public class ThemeSelectActivity extends HSAppCompatActivity {
                 ConversationDrawables.get().updateDrawables();
                 // notify main page recreate
                 HSGlobalNotificationCenter.sendNotification(ConversationListActivity.EVENT_MAINPAGE_RECREATE);
+
+                BugleAnalytics.logEvent("Customize_ThemeColor_Change", true, "color", String.valueOf(getSelectedIndex()));
+
+                finish();
             });
         }
 
         // initial refresh
         refreshSelectStatus();
 
-        beforeColor = PrimaryColors.getPrimaryColor();
         BugleAnalytics.logEvent("Customize_ThemeColor_Show", true);
     }
 
@@ -113,14 +114,6 @@ public class ThemeSelectActivity extends HSAppCompatActivity {
                 return true;
         }
         return super.onOptionsItemSelected(item);
-    }
-
-    @Override protected void onDestroy() {
-        super.onDestroy();
-
-        if (PrimaryColors.getPrimaryColor() != beforeColor) {
-            BugleAnalytics.logEvent("Customize_ThemeColor_Change", true, "color", String.valueOf(getSelectedIndex()));
-        }
     }
 
     public static int getSelectedIndex() {

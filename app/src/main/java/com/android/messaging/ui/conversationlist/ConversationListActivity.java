@@ -147,6 +147,8 @@ public class ConversationListActivity extends AbstractConversationListActivity
         UiUtils.setStatusBarColor(this, getResources().getColor(R.color.action_bar_background_color));
 
         super.updateActionBar(actionBar);
+
+        setDrawerMenuIcon();
     }
 
     private void setupDrawer() {
@@ -182,12 +184,12 @@ public class ConversationListActivity extends AbstractConversationListActivity
                         Navigations.startActivity(ConversationListActivity.this, ThemeSelectActivity.class);
                         break;
                     case DRAWER_INDEX_BUBBLE:
-                        BugleAnalytics.logEvent("Menu_Bubble_Click");
-                        Toasts.showToast(R.string.coming_soon);
+//                        BugleAnalytics.logEvent("Menu_Bubble_Click");
+//                        Toasts.showToast(R.string.coming_soon);
                         break;
                     case DRAWER_INDEX_CHAT_BACKGROUND:
-                        BugleAnalytics.logEvent("Menu_ChatBackground_Click");
-                        Toasts.showToast(R.string.coming_soon);
+//                        BugleAnalytics.logEvent("Menu_ChatBackground_Click");
+//                        Toasts.showToast(R.string.coming_soon);
                         break;
                     case DRAWER_INDEX_SETTING:
                         UIIntents.get().launchSettingsActivity(ConversationListActivity.this);
@@ -217,8 +219,6 @@ public class ConversationListActivity extends AbstractConversationListActivity
         navigationContent.findViewById(R.id.navigation_item_chat_background).setOnClickListener(this);
         navigationContent.findViewById(R.id.navigation_item_setting).setOnClickListener(this);
         navigationContent.findViewById(R.id.navigation_item_rate).setOnClickListener(this);
-
-        setDrawerMenuIcon();
     }
 
     @SuppressWarnings("RestrictedApi")
@@ -518,12 +518,16 @@ public class ConversationListActivity extends AbstractConversationListActivity
                 drawerLayout.closeDrawer(navigationView);
                 break;
             case R.id.navigation_item_bubble:
-                drawerClickIndex = DRAWER_INDEX_BUBBLE;
-                drawerLayout.closeDrawer(navigationView);
+//                drawerClickIndex = DRAWER_INDEX_BUBBLE;
+//                drawerLayout.closeDrawer(navigationView);
+                BugleAnalytics.logEvent("Menu_Bubble_Click");
+                Toasts.showToast(R.string.coming_soon);
                 break;
             case R.id.navigation_item_chat_background:
-                drawerClickIndex = DRAWER_INDEX_CHAT_BACKGROUND;
-                drawerLayout.closeDrawer(navigationView);
+//                drawerClickIndex = DRAWER_INDEX_CHAT_BACKGROUND;
+//                drawerLayout.closeDrawer(navigationView);
+                BugleAnalytics.logEvent("Menu_ChatBackground_Click");
+                Toasts.showToast(R.string.coming_soon);
                 break;
             case R.id.navigation_item_setting:
                 drawerClickIndex = DRAWER_INDEX_SETTING;
