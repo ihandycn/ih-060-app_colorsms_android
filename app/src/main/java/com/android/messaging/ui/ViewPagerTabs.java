@@ -18,9 +18,7 @@ package com.android.messaging.ui;
 import android.content.Context;
 import android.content.res.ColorStateList;
 import android.content.res.TypedArray;
-import android.graphics.Outline;
 import android.graphics.Typeface;
-import android.graphics.drawable.ColorDrawable;
 import android.os.Handler;
 import android.os.HandlerThread;
 import android.support.v4.provider.FontRequest;
@@ -31,7 +29,6 @@ import android.util.AttributeSet;
 import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.View;
-import android.view.ViewOutlineProvider;
 import android.widget.FrameLayout;
 import android.widget.HorizontalScrollView;
 import android.widget.LinearLayout;
@@ -40,9 +37,9 @@ import android.widget.Toast;
 
 import com.android.messaging.Factory;
 import com.android.messaging.R;
+import com.android.messaging.ui.customize.PrimaryColors;
 import com.android.messaging.util.BuglePrefs;
 import com.android.messaging.util.OsUtil;
-import com.android.messaging.util.Typefaces;
 
 import org.qcode.fontchange.impl.QueryBuilder;
 
@@ -78,7 +75,6 @@ public class ViewPagerTabs extends HorizontalScrollView implements ViewPager.OnP
     private static final int[] ATTRS = new int[]{
             android.R.attr.textSize,
             android.R.attr.textStyle,
-            android.R.attr.textColor,
             android.R.attr.textAllCaps
     };
     private Handler mHandler = null;
@@ -132,10 +128,10 @@ public class ViewPagerTabs extends HorizontalScrollView implements ViewPager.OnP
         final TypedArray a = context.obtainStyledAttributes(attrs, ATTRS);
         mTextSize = a.getDimensionPixelSize(0, 0);
         mTextStyle = a.getInt(1, 0);
-        mTextColor = a.getColorStateList(2);
-        mTextAllCaps = a.getBoolean(3, false);
+        mTextAllCaps = a.getBoolean(2, false);
 
         mTabStrip = new ViewPagerTabStrip(context);
+        mTextColor = getTextColor();
         addView(mTabStrip,
                 new FrameLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.MATCH_PARENT));
         a.recycle();
@@ -190,6 +186,20 @@ public class ViewPagerTabs extends HorizontalScrollView implements ViewPager.OnP
             textView.setSelected(true);
         }
     }
+
+    private ColorStateList getTextColor() {
+        int[][] states = new int[][] {
+                new int[] { android.R.attr.state_selected},
+                new int[] { -android.R.attr.state_selected}
+        };
+
+        int[] colors = new int[] {
+                PrimaryColors.getPrimaryColor(),
+                getResources().getColor(R.color.pager_tab_state_normal)
+        };
+        return new ColorStateList(states, colors);
+    }
+
 
     @Override
     public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {

@@ -9,12 +9,16 @@ import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 
 import com.android.messaging.R;
 import com.android.messaging.datamodel.data.DraftMessageData;
 import com.android.messaging.datamodel.data.MessagePartData;
+import com.android.messaging.ui.customize.PrimaryColors;
 import com.android.messaging.util.BugleAnalytics;
 import com.android.messaging.util.OsUtil;
+import com.superapps.util.BackgroundDrawables;
+import com.superapps.util.Dimensions;
 
 import org.qcode.fontchange.impl.FontManagerImpl;
 
@@ -59,7 +63,12 @@ public class MediaPickerFragment extends Fragment implements View.OnClickListene
         mMediaLayout = view.findViewById(R.id.media_buttons);
         view.findViewById(R.id.media_camera).setOnClickListener(this);
         view.findViewById(R.id.media_photo).setOnClickListener(this);
-        view.findViewById(R.id.media_voice).setOnClickListener(this);
+        ImageView mediaVoice = view.findViewById(R.id.media_voice);
+        mediaVoice.setOnClickListener(this);
+        mediaVoice.setBackground(BackgroundDrawables.createBackgroundDrawable(getResources().getColor(R.color.primary_color),
+                getResources().getColor(R.color.primary_color_dark),
+                Dimensions.pxFromDp(35), false, false));
+
         mAudioRecordView = view.findViewById(R.id.audio_record_layout);
         mEnabledView = view.findViewById(R.id.mediapicker_enabled);
         mMissingPermissionView = view.findViewById(R.id.missing_permission_view);

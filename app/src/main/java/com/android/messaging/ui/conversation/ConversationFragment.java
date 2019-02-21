@@ -1516,8 +1516,8 @@ public class ConversationFragment extends Fragment implements ConversationDataLi
     public static void warnOfExceedingMessageLimit(final boolean sending,
                                                    final ComposeMessageView composeMessageView, final String conversationId,
                                                    final Activity activity, final boolean tooManyVideos) {
-        final AlertDialog.Builder builder =
-                new AlertDialog.Builder(activity)
+        final BaseAlertDialog.Builder builder =
+                new BaseAlertDialog.Builder(activity)
                         .setTitle(R.string.mms_attachment_limit_reached);
 
         if (sending) {

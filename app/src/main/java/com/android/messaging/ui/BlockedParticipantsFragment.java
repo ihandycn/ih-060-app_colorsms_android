@@ -32,6 +32,7 @@ import com.android.messaging.datamodel.binding.BindingBase;
 import com.android.messaging.datamodel.data.BlockedParticipantsData;
 import com.android.messaging.datamodel.data.BlockedParticipantsData.BlockedParticipantsDataListener;
 import com.android.messaging.datamodel.DataModel;
+import com.android.messaging.ui.customize.PrimaryColors;
 import com.android.messaging.util.Assert;
 import com.superapps.util.BackgroundDrawables;
 import com.superapps.util.Dimensions;
@@ -88,7 +89,7 @@ public class BlockedParticipantsFragment extends Fragment
                     .inflate(R.layout.blocked_participant_list_item_view, parent, false);
             v.findViewById(R.id.tap_to_unblock).setBackground(
                     BackgroundDrawables.createBackgroundDrawable(
-                            0xff1acc48, Dimensions.pxFromDp(16), true)
+                            PrimaryColors.getPrimaryColor(), Dimensions.pxFromDp(16), true)
             );
             return v;
         }

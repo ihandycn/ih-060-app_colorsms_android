@@ -28,6 +28,7 @@ import android.view.View;
 
 import com.android.messaging.BaseActivity;
 import com.android.messaging.R;
+import com.android.messaging.ui.customize.PrimaryColors;
 import com.android.messaging.ui.dialog.FiveStarRateDialog;
 import com.android.messaging.util.BugleActivityUtil;
 import com.android.messaging.util.ImeUtil;
@@ -346,9 +347,8 @@ public class BugleActionBarActivity extends BaseActivity implements ImeUtil.ImeS
             actionBar.setDisplayShowTitleEnabled(false);
             actionBar.setDisplayShowCustomEnabled(false);
             mActionMode.getCallback().onPrepareActionMode(mActionMode, mActionBarMenu);
-            UiUtils.setStatusBarColor(BugleActionBarActivity.this, getResources().getColor(R.color.primary_color));
-            actionBar.setBackgroundDrawable(new ColorDrawable(
-                    getResources().getColor(R.color.primary_color)));
+            UiUtils.setStatusBarColor(BugleActionBarActivity.this, PrimaryColors.getPrimaryColor());
+            actionBar.setBackgroundDrawable(new ColorDrawable(PrimaryColors.getPrimaryColor()));
             actionBar.setHomeAsUpIndicator(R.drawable.ic_close_light);
             actionBar.show();
         }

@@ -47,6 +47,7 @@
         style="@style/AudioAttachmentTimerText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginStart="5dp"
         android:layout_gravity="center" />
 
     <com.android.messaging.ui.AudioPlaybackProgressBar
@@ -54,6 +55,7 @@
         style="@android:style/Widget.ProgressBar.Horizontal"
         android:layout_width="0dp"
         android:layout_height="@dimen/audio_progress_bar_height"
+        android:layout_marginStart="3dp"
         android:layout_gravity="center"
         android:layout_weight="1" />
 </merge>

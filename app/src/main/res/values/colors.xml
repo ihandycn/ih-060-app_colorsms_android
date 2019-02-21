@@ -15,7 +15,9 @@
 -->
 <resources xmlns:tools="http://schemas.android.com/tools">
     <color name="primary_color">#1acc48</color>
+    <color name="primary_color_dark">#0D6624</color>
     <color name="text_primary_color">#222327</color>
+    <color name="setting_gray">#25000000</color>
 
     <!-- base color -->
     <color name="divider_color">#e4e7eb</color>
@@ -172,6 +174,7 @@
     <color name="settings_list_text_secondary">#6d6d6d</color>
     <color name="group_mms_setting_text_color">#333333</color>
     <color name="settings_item_title_text_primary">#000000</color>
+    <color name="settings_switch_unchecked">#c0c2cb</color>
 
     <color name="contact_picker_button_text_color">@color/primary_color</color>
 

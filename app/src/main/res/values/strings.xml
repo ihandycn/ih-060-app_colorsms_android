@@ -1092,4 +1092,15 @@
     <string name="set_as_default_dialog_description_user_present">Color SMS can’t work without being set as default.</string>
     <string name="set_as_default_dialog_button_ok_user_present">OK</string>
 
+    <string name="drawer_open" translatable="false">Open navigation drawer</string>
+    <string name="drawer_close" translatable="false">Close navigation drawer</string>
+    <string name="theme_select_title">Theme Color</string>
+    <string name="theme_select_description">Select theme color you like</string>
+    <string name="menu_theme_color">Theme Color</string>
+    <string name="menu_bubble">Chat Bubble</string>
+    <string name="menu_chat_background">Chat Background</string>
+    <string name="menu_setting">Settings</string>
+    <string name="menu_rate">5 star rating</string>
+    <string name="menu_group_customization">Customize</string>
+    <string name="coming_soon">Coming soon in a few days</string>
 </resources>

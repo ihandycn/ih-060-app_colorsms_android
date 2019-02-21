@@ -17,7 +17,9 @@ package com.android.messaging.ui;
 
 import android.content.Context;
 import android.content.res.Resources;
+import android.graphics.PorterDuff;
 import android.graphics.Rect;
+import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
@@ -42,6 +44,7 @@ import com.android.messaging.datamodel.media.ImageRequestDescriptor;
 import com.android.messaging.datamodel.media.UriImageRequestDescriptor;
 import com.android.messaging.ui.MultiAttachmentLayout.OnAttachmentClickListener;
 import com.android.messaging.ui.PersonItemView.PersonItemViewListener;
+import com.android.messaging.ui.customize.PrimaryColors;
 import com.android.messaging.util.Assert;
 import com.android.messaging.util.ContentType;
 import com.android.messaging.util.ImageUtils;
@@ -271,6 +274,11 @@ public class AttachmentPreviewFactory {
                 view.findViewById(R.id.audio_attachment_view);
         audioView.bindMessagePartData(
                 attachmentData, false /* incoming */, false /* showAsSelected */);
+
+        final ViewGroup audioViewContainer =
+                view.findViewById(R.id.audio_attachment_background);
+        audioViewContainer.getBackground().setColorFilter(PrimaryColors.getPrimaryColor(), PorterDuff.Mode.SRC_ATOP);
+
         return view;
     }
 

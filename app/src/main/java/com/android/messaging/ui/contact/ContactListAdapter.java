@@ -24,6 +24,7 @@ import android.widget.TextView;
 
 import com.android.messaging.R;
 import com.android.messaging.ui.CustomCursorAdapter;
+import com.android.messaging.ui.customize.PrimaryColors;
 
 import org.qcode.fontchange.impl.FontManagerImpl;
 
@@ -48,6 +49,7 @@ public class ContactListAdapter extends CustomCursorAdapter {
         switch (itemViewType) {
             case ITEM_VIEW_TYPE_ALPHABET_HEADER:
                 view = View.inflate(parent.getContext(), R.layout.contact_list_section_view, null);
+                ((TextView) view).setTextColor(PrimaryColors.getPrimaryColor());
                 break;
             case ITEM_VIEW_TYPE_CONTACT:
                 view = View.inflate(parent.getContext(), R.layout.contact_list_item_view, null);
