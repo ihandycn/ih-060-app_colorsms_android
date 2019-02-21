@@ -36,17 +36,23 @@ import android.content.res.Configuration;
 import android.database.Cursor;
 import android.graphics.Point;
 import android.graphics.Rect;
+import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
+import android.os.HandlerThread;
 import android.os.Parcelable;
 import android.support.v4.content.LocalBroadcastManager;
+import android.support.v4.provider.FontRequest;
+import android.support.v4.provider.FontsContractCompat;
 import android.support.v4.text.BidiFormatter;
 import android.support.v4.text.TextDirectionHeuristicsCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.Spannable;
+import android.text.SpannableString;
 import android.text.TextUtils;
 import android.view.ActionMode;
 import android.view.Display;
@@ -54,11 +60,13 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.SubMenu;
 import android.view.View;
 import android.view.ViewConfiguration;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.android.messaging.R;
 import com.android.messaging.datamodel.BugleNotifications;
@@ -95,6 +103,7 @@ import com.android.messaging.util.AccessibilityUtil;
 import com.android.messaging.util.Assert;
 import com.android.messaging.util.AvatarUriUtil;
 import com.android.messaging.util.BugleAnalytics;
+import com.android.messaging.util.BuglePrefs;
 import com.android.messaging.util.ChangeDefaultSmsAppHelper;
 import com.android.messaging.util.ContentType;
 import com.android.messaging.util.ImeUtil;
@@ -103,12 +112,16 @@ import com.android.messaging.util.OsUtil;
 import com.android.messaging.util.PhoneUtils;
 import com.android.messaging.util.SafeAsyncTask;
 import com.android.messaging.util.TextUtil;
+import com.android.messaging.util.Typefaces;
 import com.android.messaging.util.UiUtils;
 import com.android.messaging.util.UriUtil;
 import com.google.common.annotations.VisibleForTesting;
 import com.ihs.commons.notificationcenter.HSGlobalNotificationCenter;
 import com.ihs.commons.notificationcenter.INotificationObserver;
 import com.ihs.commons.utils.HSBundle;
+import com.superapps.view.CustomTypefaceSpan;
+
+import org.qcode.fontchange.impl.QueryBuilder;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -125,6 +138,7 @@ public class ConversationFragment extends Fragment implements ConversationDataLi
     public static final String EVENT_SHOW_OPTION_MENU = "event_show_option_menu";
     public static final String EVENT_HIDE_OPTION_MENU = "event_hide_option_menu";
     public static final String EVENT_HIDE_MEDIA_PICKER = "event_hide_media_picker";
+    private Handler fontHandler = null;
 
     public interface ConversationFragmentHost extends ImeUtil.ImeStateHost {
         void onStartComposeMessage();
@@ -709,6 +723,68 @@ public class ConversationFragment extends Fragment implements ConversationDataLi
         final boolean supportCallAction = (PhoneUtils.getDefault().isVoiceCapable() &&
                 data.getParticipantPhoneNumber() != null);
         menu.findItem(R.id.action_call).setVisible(supportCallAction);
+
+        initTypeface(menu);
+    }
+
+    private void initTypeface(Menu menu) {
+        String familyName = BuglePrefs.getApplicationPrefs().getString("font_family", "");
+        if (familyName.isEmpty()) {
+            applyFontToMenuItem(menu.findItem(R.id.action_people_and_options), Typefaces.getCustomRegular());
+            applyFontToMenuItem(menu.findItem(R.id.action_delete),Typefaces.getCustomRegular());
+            applyFontToMenuItem(menu.findItem(R.id.action_add_contact),Typefaces.getCustomRegular());
+            return;
+        }
+        int weight = 400;    // regular
+        QueryBuilder queryBuilder = new QueryBuilder(familyName)
+                .withWidth(100f)
+                .withWeight(weight)
+                .withItalic(0.0f)
+                .withBestEffort(true);
+        final String query = queryBuilder.build();
+
+        FontRequest request = new FontRequest(
+                "com.google.android.gms.fonts",
+                "com.google.android.gms",
+                query,
+                com.iflytek.android_font_loader_lib.R.array.com_google_android_gms_fonts_certs);
+
+
+        FontsContractCompat.FontRequestCallback callback = new FontsContractCompat
+                .FontRequestCallback() {
+            @Override
+            public void onTypefaceRetrieved(Typeface typeface) {
+                applyFontToMenuItem(menu.findItem(R.id.action_people_and_options),typeface);
+                applyFontToMenuItem(menu.findItem(R.id.action_delete),typeface);
+                applyFontToMenuItem(menu.findItem(R.id.action_add_contact),typeface);
+            }
+
+            @Override
+            public void onTypefaceRequestFailed(int reason) {
+                Toast.makeText(getContext(),
+                        getContext().getString(com.iflytek.android_font_loader_lib.R.string.request_failed, reason), Toast.LENGTH_LONG)
+                        .show();
+            }
+        };
+        FontsContractCompat
+                .requestFont(getContext(), request, callback,
+                        getHandlerThreadHandler());
+
+    }
+
+    private Handler getHandlerThreadHandler() {
+        if (fontHandler == null) {
+            HandlerThread handlerThread = new HandlerThread("fonts");
+            handlerThread.start();
+            fontHandler = new Handler(handlerThread.getLooper());
+        }
+        return fontHandler;
+    }
+
+    private void applyFontToMenuItem(MenuItem mi,Typeface font) {
+        SpannableString mNewTitle = new SpannableString(mi.getTitle());
+        mNewTitle.setSpan(new CustomTypefaceSpan("" , font), 0 , mNewTitle.length(),  Spannable.SPAN_INCLUSIVE_INCLUSIVE);
+        mi.setTitle(mNewTitle);
     }
 
     @Override

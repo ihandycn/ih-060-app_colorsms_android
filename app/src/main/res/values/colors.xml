@@ -240,5 +240,6 @@
     <color name="feedback_input_text">#626262</color>
 
     <color name="ic_launcher_background">@color/primary_color</color>
+    <color name="text_shadow">#33000000</color>
 
 </resources>

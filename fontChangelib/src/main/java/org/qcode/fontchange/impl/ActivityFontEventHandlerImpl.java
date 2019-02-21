@@ -47,12 +47,10 @@ public class ActivityFontEventHandlerImpl {
             return;
         }
 
-//        fontPath = "fonts/Custom-Bold.otf";
-        mActivity = new WeakReference<Activity>(activity);
+        mActivity = new WeakReference<>(activity);
 
         if(mNeedDelegateViewCreate) {
             mFontInflaterFactory = new FontInflaterFactoryImpl(getFontAttributeParser());
-            // this will cause "A factory has already been set on this LayoutInflater" problem need fix
             LayoutInflater.from(activity).setFactory(mFontInflaterFactory);
             mFontInflaterFactory.setViewCreateListener(mViewCreateListener);
         }

@@ -1,5 +1,6 @@
 package com.android.messaging.ui.appsettings;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
@@ -10,7 +11,11 @@ import android.widget.Toast;
 
 import com.android.messaging.BaseActivity;
 import com.android.messaging.R;
+import com.android.messaging.ui.view.LevelSeekBar;
 import com.android.messaging.util.BuglePrefs;
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.GoogleApiAvailability;
+import com.superapps.util.Toasts;
 
 import org.qcode.fontchange.IFontChangeListener;
 import org.qcode.fontchange.impl.FontManagerImpl;
@@ -19,9 +24,10 @@ import org.qcode.fontchange.impl.FontManagerImpl;
  * Created by zhangjie on 2019/2/20.
  */
 
-public class ChangeFontActivity extends BaseActivity{
+public class ChangeFontActivity extends BaseActivity implements LevelSeekBar.OnLevelChangeListener{
 
     final BuglePrefs prefs = BuglePrefs.getApplicationPrefs();
+    private LevelSeekBar mSeekBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,46 +44,37 @@ public class ChangeFontActivity extends BaseActivity{
         }
         getSupportActionBar().setDisplayShowHomeEnabled(true);
 
-        // add a dialog for font change
-        SeekBar mSeekBar = findViewById(R.id.seek_bar);
-        mSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
-            @Override
-            public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
-                float scale = i / 50.0f;
-                prefs.putLong("font_scale", (long) i);
-                FontManagerImpl.getInstance().changeFontSize(scale, mListener);
-            }
+        mSeekBar = findViewById(R.id.seek_bar);
+        int level = (int) prefs.getLong("font_scale",4);
 
-            @Override
-            public void onStartTrackingTouch(SeekBar seekBar) {
+        mSeekBar.setOnLevelChangeListener(this);
+        mSeekBar.setLevel(level);
 
-            }
-
-            @Override
-            public void onStopTrackingTouch(SeekBar seekBar) {
-
-            }
-        });
         Button fontSmall = findViewById(R.id.btn_small);
         Button fontNormal = findViewById(R.id.btn_normal);
         Button fontBig = findViewById(R.id.btn_big);
         Button fontBiggest = findViewById(R.id.btn_biggest);
-        fontNormal.setOnClickListener(v -> {
-            FontManagerImpl.getInstance().changeTypeFaced("Muli",mListener);
-            prefs.putString("font_family","Muli");
-        });
-        fontSmall.setOnClickListener(v -> {
-            FontManagerImpl.getInstance().changeTypeFaced("Cinzel",mListener);
-            prefs.putString("font_family","Cinzel");
-        });
-        fontBig.setOnClickListener(v -> {
-            FontManagerImpl.getInstance().changeTypeFaced("Coiny",mListener);
-            prefs.putString("font_family","Coiny");
-        });
-        fontBiggest.setOnClickListener(v -> {
-            FontManagerImpl.getInstance().changeTypeFaced("Poppins",mListener);
-            prefs.putString("font_family","Poppins");
-        });
+
+        if (isGooglePlayServicesAvailable(ChangeFontActivity.this)){
+            fontNormal.setOnClickListener(v -> {
+                FontManagerImpl.getInstance().changeTypeFaced("Muli",mListener);
+                prefs.putString("font_family","Muli");
+            });
+            fontSmall.setOnClickListener(v -> {
+                FontManagerImpl.getInstance().changeTypeFaced("Cinzel",mListener);
+                prefs.putString("font_family","Cinzel");
+            });
+            fontBig.setOnClickListener(v -> {
+                FontManagerImpl.getInstance().changeTypeFaced("Coiny",mListener);
+                prefs.putString("font_family","Coiny");
+            });
+            fontBiggest.setOnClickListener(v -> {
+                FontManagerImpl.getInstance().changeTypeFaced("Poppins",mListener);
+                prefs.putString("font_family","Poppins");
+            });
+        } else {
+            Toasts.showToast("You need Google service");
+        }
     }
 
     @Override
@@ -103,7 +100,6 @@ public class ChangeFontActivity extends BaseActivity{
 
         @Override
         public void onLoadSuccess(float scale) {
-//            Toast.makeText(ChangeFontActivity.this, "加载成功", Toast.LENGTH_SHORT).show();
         }
 
         @Override
@@ -113,7 +109,6 @@ public class ChangeFontActivity extends BaseActivity{
 
         @Override
         public void onLoadFail(float scale) {
-//            Toast.makeText(MainActivity.this, "加载失败", Toast.LENGTH_SHORT).show();
         }
 
         @Override
@@ -121,4 +116,17 @@ public class ChangeFontActivity extends BaseActivity{
 
         }
     };
+
+    public boolean isGooglePlayServicesAvailable(Context context){
+        GoogleApiAvailability googleApiAvailability = GoogleApiAvailability.getInstance();
+        int resultCode = googleApiAvailability.isGooglePlayServicesAvailable(context);
+        return resultCode == ConnectionResult.SUCCESS;
+    }
+
+    @Override
+    public void onLevelChanged(LevelSeekBar seekBar, int oldLevel, int newLevel, boolean fromUser) {
+        float scale = newLevel / 5f;
+        prefs.putLong("font_scale", (long) newLevel);
+        FontManagerImpl.getInstance().changeFontSize(scale, mListener);
+    }
 }

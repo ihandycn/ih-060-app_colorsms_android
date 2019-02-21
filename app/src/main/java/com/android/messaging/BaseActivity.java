@@ -32,7 +32,7 @@ public abstract class BaseActivity extends AppCompatActivity
         FontManagerImpl.getInstance().init(BaseActivity.this);
         long scale = BuglePrefs.getApplicationPrefs().getLong("font_scale",30);
         String fontFamily = BuglePrefs.getApplicationPrefs().getString("font_family","");
-        FontManagerImpl.getInstance().changeFontSize(scale / 50.0f, mListener);
+        FontManagerImpl.getInstance().changeFontSize(scale / 5f, mListener);
         FontManagerImpl.getInstance().changeTypeFaced(fontFamily, mListener);
 
         initFontHandler();

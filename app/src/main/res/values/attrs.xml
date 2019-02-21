@@ -67,4 +67,19 @@
         <attr name="icon" format="reference" />
     </declare-styleable>
     <attr name="apnPreferenceStyle" format="reference" />
+
+    <declare-styleable name="LevelSeekBar">
+        <attr name="thumb" format="reference" />
+        <attr name="levelCount" format="integer" />
+        <attr name="level" format="integer" />
+        <attr name="trackHeight" format="dimension" />
+        <attr name="trackBackgroundHeight" format="dimension" />
+        <attr name="trackColor" format="color" />
+        <attr name="trackBackgroundColor" format="color" />
+        <attr name="scaleMark">
+            <enum name="normal" value="0" />
+            <enum name="round" value="1" />
+        </attr>
+        <attr name="scaleMarkColor" format="color" />
+    </declare-styleable>
 </resources>

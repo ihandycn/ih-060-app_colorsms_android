@@ -1,7 +1,5 @@
 package org.qcode.fontchange;
 
-import android.widget.TextView;
-
 import com.superapps.view.TypefacedTextView;
 
 import org.qcode.fontchange.impl.ActivityFontEventHandlerImpl;

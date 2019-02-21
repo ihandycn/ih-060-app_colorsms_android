@@ -2,9 +2,28 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical">
 
     <include layout="@layout/setting_top_tool_bar_view" />
+
+    <view class="com.android.messaging.ui.view.FontChangePreviewLayout$Container"
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="194dp"
+        tools:background="#50a6d6"
+        android:clipChildren="false">
+
+        <com.android.messaging.ui.view.FontChangePreviewLayout
+            android:id="@+id/icon_settings_preview_layout"
+            android:layout_width="match_parent"
+            android:layout_height="100dp"
+            android:layout_gravity="center_vertical"
+            android:layout_marginLeft="64dp"
+            android:layout_marginRight="64dp" />
+    </view>
+
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -49,13 +68,16 @@
 
     </LinearLayout>
 
-    <SeekBar
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+    <com.android.messaging.ui.view.LevelSeekBar
         android:id="@+id/seek_bar"
-        android:max="100"
-        android:progress="60"
-        android:thumbTint="@color/solid_black"
-        android:theme="@style/Widget.AppCompat.SeekBar"/>
+        android:layout_width="match_parent"
+        android:layout_height="35dp"
+        android:paddingLeft="28dp"
+        android:paddingRight="28dp"
+        app:levelCount="9"
+        app:scaleMark="round"
+        app:thumb="@drawable/settings_icon_size_slider_blue_solid"
+        app:trackBackgroundHeight="5dp"
+        app:trackHeight="5dp" />
 
 </LinearLayout>
