@@ -94,7 +94,7 @@ public class SoundLevels extends View {
 
         mPrimaryLevelPaint = new Paint();
         mPrimaryLevelPaint.setColor(
-                a.getColor(R.styleable.SoundLevels_primaryColor, PrimaryColors.getSoundLevelPrimaryColor()));
+                a.getColor(R.styleable.SoundLevels_primaryColor, Color.BLACK));
         mPrimaryLevelPaint.setFlags(Paint.ANTI_ALIAS_FLAG);
 
         a.recycle();

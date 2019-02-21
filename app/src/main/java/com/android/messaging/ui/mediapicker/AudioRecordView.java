@@ -117,7 +117,7 @@ public class AudioRecordView extends FrameLayout implements
         mSoundLevels = (SoundLevels) findViewById(R.id.sound_levels);
         mRecordButtonVisual = (ImageView) findViewById(R.id.record_button_visual);
         mRecordButtonVisual.setBackground(BackgroundDrawables.
-                createBackgroundDrawable(PrimaryColors.getPrimaryColor(), Dimensions.pxFromDp(50), false));
+                createBackgroundDrawable(getResources().getColor(R.color.primary_color), Dimensions.pxFromDp(50), false));
 
         mRecordButton = findViewById(R.id.record_button);
         mHintTextView = (TextView) findViewById(R.id.hint_text);

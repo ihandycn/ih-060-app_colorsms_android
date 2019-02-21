@@ -169,8 +169,12 @@ public class ConversationDrawables {
     }
 
     public Drawable getAudioProgressBackgroundDrawable(final boolean incoming) {
-        return incoming ? mIncomingAudioProgressBackgroundDrawable :
-                mOutgoingAudioProgressBackgroundDrawable;
+        if (incoming) {
+            return ImageUtils.getTintedDrawable(
+                    mContext, mIncomingAudioProgressBackgroundDrawable, mThemeColor);
+        } else {
+            return mOutgoingAudioProgressBackgroundDrawable;
+        }
     }
 
     public Drawable getFastScrollThumbDrawable(final boolean pressed) {
