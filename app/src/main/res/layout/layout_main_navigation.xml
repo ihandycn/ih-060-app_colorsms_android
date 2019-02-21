@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <!-- Header -->
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="153dp"
+        android:layout_gravity="center"
+        android:orientation="horizontal">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_gravity="center"
+            android:layout_height="wrap_content"
+            android:src="@drawable/navigation_header_icon"/>
+    </FrameLayout>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@android:color/white"
+        android:clipToPadding="false"
+        android:paddingBottom="10dp">
+
+        <!-- List view in xml -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:orientation="vertical">
+
+            <com.superapps.view.TypefacedTextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="14sp"
+                android:textColor="#66222327"
+                android:layout_marginBottom="6dp"
+                android:layout_marginLeft="28dp"
+                android:layout_marginTop="19dp"
+                android:text="@string/menu_group_customization"
+                app:typeface="@string/custom_font_medium"/>
+
+            <!-- Item Theme Color -->
+            <RelativeLayout
+                android:id="@+id/navigation_item_theme_color"
+                style="@style/DrawerMenuItem">
+
+                <android.support.v7.widget.AppCompatImageView
+                    style="@style/DrawerMenuIcon"
+                    app:srcCompat="@drawable/ic_menu_theme"/>
+
+                <com.superapps.view.TypefacedTextView
+                    style="@style/DrawerMenuTitle"
+                    android:text="@string/menu_theme_color"
+                    app:typeface="@string/custom_font_medium"/>
+            </RelativeLayout>
+
+            <!-- Item Bubble -->
+            <RelativeLayout
+                android:id="@+id/navigation_item_bubble"
+                style="@style/DrawerMenuItem">
+
+                <android.support.v7.widget.AppCompatImageView
+                    style="@style/DrawerMenuIcon"
+                    app:srcCompat="@drawable/ic_menu_bubble"/>
+
+                <com.superapps.view.TypefacedTextView
+                    style="@style/DrawerMenuTitle"
+                    android:text="@string/menu_bubble"
+                    app:typeface="@string/custom_font_medium"/>
+            </RelativeLayout>
+
+            <!-- Item Chat Background -->
+            <RelativeLayout
+                android:id="@+id/navigation_item_chat_background"
+                style="@style/DrawerMenuItem">
+
+                <android.support.v7.widget.AppCompatImageView
+                    style="@style/DrawerMenuIcon"
+                    app:srcCompat="@drawable/ic_menu_chat"/>
+
+                <com.superapps.view.TypefacedTextView
+                    style="@style/DrawerMenuTitle"
+                    android:text="@string/menu_chat_background"
+                    app:typeface="@string/custom_font_medium"/>
+            </RelativeLayout>
+
+            <!-- Item Setting -->
+            <RelativeLayout
+                android:id="@+id/navigation_item_setting"
+                style="@style/DrawerMenuItem"
+                android:layout_marginTop="35dp">
+
+                <android.support.v7.widget.AppCompatImageView
+                    style="@style/DrawerMenuIcon"
+                    app:srcCompat="@drawable/ic_menu_setting"/>
+
+                <com.superapps.view.TypefacedTextView
+                    style="@style/DrawerMenuTitle"
+                    android:text="@string/menu_setting"
+                    app:typeface="@string/custom_font_medium"/>
+            </RelativeLayout>
+
+            <!-- Item Rate -->
+            <RelativeLayout
+                android:id="@+id/navigation_item_rate"
+                style="@style/DrawerMenuItem">
+
+                <android.support.v7.widget.AppCompatImageView
+                    style="@style/DrawerMenuIcon"
+                    app:srcCompat="@drawable/ic_menu_rate"/>
+
+                <com.superapps.view.TypefacedTextView
+                    style="@style/DrawerMenuTitle"
+                    android:text="@string/menu_rate"
+                    app:typeface="@string/custom_font_medium"/>
+            </RelativeLayout>
+        </LinearLayout>
+    </ScrollView>
+</LinearLayout>
