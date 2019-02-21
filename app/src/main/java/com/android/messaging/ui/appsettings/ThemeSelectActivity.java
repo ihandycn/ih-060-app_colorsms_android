@@ -42,7 +42,7 @@ public class ThemeSelectActivity extends HSAppCompatActivity {
             0xff7646ff,
             0xfff846c0,
             0xffd619ff,
-            0xfff93b4b,
+            0xfff14d4d,
             0xfff5d20d,
             0xff000000,
             0xff81de09,
