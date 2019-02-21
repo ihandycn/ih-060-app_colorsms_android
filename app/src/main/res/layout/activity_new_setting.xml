@@ -106,15 +106,6 @@
                 android:layout_height="wrap_content"
                 app:title="@string/setting_terms_of_service"
                 app:type="0" />
-
-
-            <com.android.messaging.ui.appsettings.SettingItemView
-                android:id="@+id/setting_test"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                app:title="@string/setting_test_change_theme_color"
-                app:type="0" />
-
         </LinearLayout>
     </ScrollView>
 </LinearLayout>

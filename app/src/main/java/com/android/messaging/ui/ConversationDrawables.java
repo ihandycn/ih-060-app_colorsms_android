@@ -88,9 +88,8 @@ public class ConversationDrawables {
         mOutgoingBubbleDrawable = resources.getDrawable(R.drawable.message_bubble_outgoing_new);
         mOutgoingBubbleNoArrowDrawable =
                 resources.getDrawable(R.drawable.message_bubble_outgoing_no_arrow);
-        mIncomingAudioPlayButtonDrawable = ImageUtils.getTintedDrawable(mContext, resources.getDrawable(R.drawable.ic_audio_play_incoming), mThemeColor);
-        mIncomingAudioPauseButtonDrawable = ImageUtils.getTintedDrawable(mContext, resources.getDrawable(R.drawable.ic_audio_pause_incoming), mThemeColor);
-
+        mIncomingAudioPlayButtonDrawable = resources.getDrawable(R.drawable.ic_audio_play_incoming);
+        mIncomingAudioPauseButtonDrawable = resources.getDrawable(R.drawable.ic_audio_pause_incoming);
         mOutgoingAudioPlayButtonDrawable = resources.getDrawable(R.drawable.ic_audio_play_outgoing);
         mOutgoingAudioPauseButtonDrawable = resources.getDrawable(R.drawable.ic_audio_pause_outgoing);
 

@@ -14,7 +14,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 
-import com.android.messaging.BuildConfig;
 import com.android.messaging.Factory;
 import com.android.messaging.R;
 import com.android.messaging.feedback.FeedbackActivity;
@@ -22,7 +21,6 @@ import com.android.messaging.smsshow.SmsShowUtils;
 import com.android.messaging.ui.BaseAlertDialog;
 import com.android.messaging.ui.UIIntents;
 import com.android.messaging.ui.WebViewActivity;
-import com.android.messaging.ui.customize.CustomBubblesActivity;
 import com.android.messaging.util.BugleAnalytics;
 import com.android.messaging.util.BuglePrefs;
 import com.android.messaging.util.BuglePrefsKeys;
@@ -216,16 +214,6 @@ public class SettingGeneralActivity extends HSAppCompatActivity {
                     false, false);
             startActivity(termsOfServiceIntent);
         });
-
-        SettingItemView mTest = findViewById(R.id.setting_test);
-        if (BuildConfig.DEBUG) {
-            mTest.setVisibility(View.VISIBLE);
-            mTest.setOnClickListener(v -> {
-                Intent intent = new Intent(SettingGeneralActivity.this, CustomBubblesActivity.class);
-                startActivity(intent);
-            });
-        }
-
     }
 
     private void updateSoundSummary() {

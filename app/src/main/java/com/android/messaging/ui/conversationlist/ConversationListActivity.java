@@ -41,6 +41,7 @@ import com.android.messaging.R;
 import com.android.messaging.datamodel.BugleNotifications;
 import com.android.messaging.ui.UIIntents;
 import com.android.messaging.ui.appsettings.ThemeSelectActivity;
+import com.android.messaging.ui.customize.CustomBubblesActivity;
 import com.android.messaging.ui.dialog.FiveStarRateDialog;
 import com.android.messaging.ui.emoji.EmojiStoreActivity;
 import com.android.messaging.util.BugleAnalytics;
@@ -527,7 +528,7 @@ public class ConversationListActivity extends AbstractConversationListActivity
 //                drawerClickIndex = DRAWER_INDEX_BUBBLE;
 //                drawerLayout.closeDrawer(navigationView);
                 BugleAnalytics.logEvent("Menu_Bubble_Click");
-                Toasts.showToast(R.string.coming_soon);
+                Navigations.startActivity(ConversationListActivity.this, CustomBubblesActivity.class);
                 break;
             case R.id.navigation_item_chat_background:
 //                drawerClickIndex = DRAWER_INDEX_CHAT_BACKGROUND;
