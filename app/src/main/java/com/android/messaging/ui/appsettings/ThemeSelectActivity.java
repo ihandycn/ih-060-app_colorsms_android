@@ -6,6 +6,7 @@ import android.view.MenuItem;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.android.messaging.Factory;
 import com.android.messaging.R;
 import com.android.messaging.ui.conversationlist.ConversationListActivity;
 import com.android.messaging.ui.customize.PrimaryColors;
@@ -74,6 +75,7 @@ public class ThemeSelectActivity extends HSAppCompatActivity {
                 refreshSelectStatus();
 
                 // notify main page recreate
+                Factory.get().reclaimMemory();
                 HSGlobalNotificationCenter.sendNotification(ConversationListActivity.EVENT_MAINPAGE_RECREATE);
             });
         }
