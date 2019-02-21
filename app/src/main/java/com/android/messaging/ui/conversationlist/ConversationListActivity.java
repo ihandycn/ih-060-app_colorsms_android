@@ -63,6 +63,8 @@ public class ConversationListActivity extends AbstractConversationListActivity
     private static final String PREF_SHOW_EMOJI_GUIDE = "pref_show_emoji_guide";
     private static final String PREF_KEY_MAIN_DRAWER_OPENED = "pref_key_main_drawer_opened";
 
+    private static boolean sIsRecreate = false;
+
     private static final int DRAWER_INDEX_NONE = -1;
     private static final int DRAWER_INDEX_THEME_COLOR = 0;
     private static final int DRAWER_INDEX_BUBBLE = 1;
@@ -113,11 +115,13 @@ public class ConversationListActivity extends AbstractConversationListActivity
         configAppBar();
         showEmojiStoreGuide();
         mIsNoActionBack = true;
-        BugleAnalytics.logEvent("SMS_Messages_Show", true);
 
-        Preferences.get(FiveStarRateDialog.DESKTOP_PREFS).incrementAndGetInt(FiveStarRateDialog.PREF_KEY_MAIN_ACTIVITY_SHOW_TIME);
-        FiveStarRateDialog.showFiveStarWhenMainPageShowIfNeed(this);
-        Trace.endSection();
+        if (sIsRecreate) {
+            sIsRecreate = false;
+        } else {
+            Preferences.get(FiveStarRateDialog.DESKTOP_PREFS).incrementAndGetInt(FiveStarRateDialog.PREF_KEY_MAIN_ACTIVITY_SHOW_TIME);
+            FiveStarRateDialog.showFiveStarWhenMainPageShowIfNeed(this);
+        }
 
         if (getIntent() != null && getIntent().getBooleanExtra(BugleNotifications.EXTRA_FROM_NOTIFICATION, false)) {
             BugleAnalytics.logEvent("SMS_Notifications_Clicked", true);
@@ -127,6 +131,8 @@ public class ConversationListActivity extends AbstractConversationListActivity
 
         HSGlobalNotificationCenter.addObserver(EVENT_MAINPAGE_RECREATE, this);
         BugleAnalytics.logEvent("SMS_Messages_Show", true, "color", String.valueOf(ThemeSelectActivity.getSelectedIndex()));
+
+        Trace.endSection();
     }
 
     @Override
@@ -543,6 +549,7 @@ public class ConversationListActivity extends AbstractConversationListActivity
     @Override public void onReceive(String s, HSBundle hsBundle) {
         switch (s) {
             case EVENT_MAINPAGE_RECREATE:
+                sIsRecreate = true;
                 recreate();
                 break;
         }
