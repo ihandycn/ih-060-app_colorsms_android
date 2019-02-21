@@ -28,6 +28,8 @@ import com.android.messaging.R;
 import com.android.messaging.util.Assert;
 import com.android.messaging.util.BugleAnalytics;
 
+import org.qcode.fontchange.impl.FontManagerImpl;
+
 /**
  * A view that contains both a view pager and a tab strip wrapped in a linear layout.
  */
@@ -85,6 +87,7 @@ public class CustomHeaderViewPager extends LinearLayout {
                 mTabstrip.onPageSelected(position);
             }
         });
+        FontManagerImpl.getInstance().applyFont(mTabstrip, true);
     }
 
     public int getSelectedItemPosition() {

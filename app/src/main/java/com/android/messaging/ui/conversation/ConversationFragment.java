@@ -100,7 +100,6 @@ import com.android.messaging.util.ContentType;
 import com.android.messaging.util.ImeUtil;
 import com.android.messaging.util.LogUtil;
 import com.android.messaging.util.OsUtil;
-import com.android.messaging.util.PendingIntentConstants;
 import com.android.messaging.util.PhoneUtils;
 import com.android.messaging.util.SafeAsyncTask;
 import com.android.messaging.util.TextUtil;
@@ -110,9 +109,6 @@ import com.google.common.annotations.VisibleForTesting;
 import com.ihs.commons.notificationcenter.HSGlobalNotificationCenter;
 import com.ihs.commons.notificationcenter.INotificationObserver;
 import com.ihs.commons.utils.HSBundle;
-import com.superapps.util.Notifications;
-
-import org.qcode.fontchange.impl.FontManagerImpl;
 
 import java.io.File;
 import java.util.ArrayList;

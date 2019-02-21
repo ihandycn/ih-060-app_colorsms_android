@@ -6,6 +6,7 @@ import android.view.MenuItem;
 import android.widget.Button;
 import android.widget.SeekBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.android.messaging.BaseActivity;
 import com.android.messaging.R;
@@ -102,7 +103,7 @@ public class ChangeFontActivity extends BaseActivity{
 
         @Override
         public void onLoadSuccess(float scale) {
-//            Toast.makeText(MainActivity.this, "加载成功", Toast.LENGTH_SHORT).show();
+//            Toast.makeText(ChangeFontActivity.this, "加载成功", Toast.LENGTH_SHORT).show();
         }
 
         @Override

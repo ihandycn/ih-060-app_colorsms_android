@@ -1,13 +1,8 @@
 package com.android.messaging;
 
-import android.graphics.PixelFormat;
 import android.os.Bundle;
-import android.support.v4.app.FragmentActivity;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.app.AppCompatDelegate;
-import android.view.Window;
 
-import com.android.messaging.ui.appsettings.SettingGeneralActivity;
 import com.android.messaging.util.BuglePrefs;
 
 import org.qcode.fontchange.FontManager;
@@ -121,7 +116,7 @@ public abstract class BaseActivity extends AppCompatActivity
 
         @Override
         public void onLoadSuccess(float scale) {
-//            Toast.makeText(MainActivity.this, "加载成功", Toast.LENGTH_SHORT).show();
+//            Toast.makeText(BaseActivity.this, "加载成功", Toast.LENGTH_SHORT).show();
         }
 
         @Override
@@ -139,4 +134,8 @@ public abstract class BaseActivity extends AppCompatActivity
 
         }
     };
+
+    protected void restartBaseActivity(){
+        recreate();
+    }
 }

@@ -16,6 +16,8 @@ import com.android.messaging.datamodel.data.MessagePartData;
 import com.android.messaging.util.BugleAnalytics;
 import com.android.messaging.util.OsUtil;
 
+import org.qcode.fontchange.impl.FontManagerImpl;
+
 public class MediaPickerFragment extends Fragment implements View.OnClickListener {
 
     public static final String FRAGMENT_TAG = "media_picker_fragment";
@@ -49,6 +51,7 @@ public class MediaPickerFragment extends Fragment implements View.OnClickListene
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.media_picker_layout, container, false);
         initView(view);
+        FontManagerImpl.getInstance().applyFont(view, true);
         return view;
     }
 

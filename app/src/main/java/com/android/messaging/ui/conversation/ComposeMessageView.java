@@ -18,8 +18,13 @@ package com.android.messaging.ui.conversation;
 import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Rect;
+import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.HandlerThread;
+import android.support.v4.provider.FontRequest;
+import android.support.v4.provider.FontsContractCompat;
 import android.support.v7.app.ActionBar;
 import android.text.Editable;
 import android.text.Html;
@@ -38,6 +43,7 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.android.messaging.Factory;
 import com.android.messaging.R;
@@ -79,6 +85,8 @@ import com.superapps.util.BackgroundDrawables;
 import com.superapps.util.Dimensions;
 import com.superapps.util.Threads;
 
+import org.qcode.fontchange.impl.QueryBuilder;
+
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -89,6 +97,8 @@ import java.util.List;
 public class ComposeMessageView extends LinearLayout
         implements TextView.OnEditorActionListener, DraftMessageDataListener, TextWatcher,
         ConversationInputSink {
+
+    private Handler mHandler = null;
 
     public interface IComposeMessageViewHost extends
             DraftMessageData.DraftMessageSubscriptionDataProvider {
@@ -288,6 +298,7 @@ public class ComposeMessageView extends LinearLayout
             }
             return true;
         });
+        initTypeface(mComposeEditText);
 
         mSelfSendIcon = (SimIconView) findViewById(R.id.self_send_icon);
         mSelfSendIcon.setOnClickListener(new OnClickListener() {
@@ -1232,5 +1243,54 @@ public class ComposeMessageView extends LinearLayout
             mSendButton.setImportantForAccessibility(IMPORTANT_FOR_ACCESSIBILITY_NO);
             mAttachMediaButton.setImportantForAccessibility(IMPORTANT_FOR_ACCESSIBILITY_NO);
         }
+    }
+
+    private void initTypeface(TextView textView) {
+        String familyName = BuglePrefs.getApplicationPrefs().getString("font_family", "");
+        if (familyName.isEmpty()) {
+            return;
+        }
+        int weight = 400;    // regular
+        QueryBuilder queryBuilder = new QueryBuilder(familyName)
+                .withWidth(100f)
+                .withWeight(weight)
+                .withItalic(0.0f)
+                .withBestEffort(true);
+        final String query = queryBuilder.build();
+
+        FontRequest request = new FontRequest(
+                "com.google.android.gms.fonts",
+                "com.google.android.gms",
+                query,
+                com.iflytek.android_font_loader_lib.R.array.com_google_android_gms_fonts_certs);
+
+
+        FontsContractCompat.FontRequestCallback callback = new FontsContractCompat
+                .FontRequestCallback() {
+            @Override
+            public void onTypefaceRetrieved(Typeface typeface) {
+                textView.setTypeface(typeface);
+            }
+
+            @Override
+            public void onTypefaceRequestFailed(int reason) {
+                Toast.makeText(getContext(),
+                        getContext().getString(com.iflytek.android_font_loader_lib.R.string.request_failed, reason), Toast.LENGTH_LONG)
+                        .show();
+            }
+        };
+        FontsContractCompat
+                .requestFont(getContext(), request, callback,
+                        getHandlerThreadHandler());
+
+    }
+
+    private Handler getHandlerThreadHandler() {
+        if (mHandler == null) {
+            HandlerThread handlerThread = new HandlerThread("fonts");
+            handlerThread.start();
+            mHandler = new Handler(handlerThread.getLooper());
+        }
+        return mHandler;
     }
 }

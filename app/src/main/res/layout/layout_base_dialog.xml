@@ -34,7 +34,8 @@
             android:maxHeight="72dp"
             app:autoSizeMaxTextSize="@dimen/dialog_content_title_size"
             app:autoSizeMinTextSize="16sp"
-            app:typeface="@string/custom_font_semibold"/>
+            app:typeface="@string/custom_font_semibold"
+            app:font_style="medium"/>
 
 
         <FrameLayout
@@ -57,7 +58,8 @@
                 android:alpha="@dimen/dialog_content_text"
                 android:textSize="@dimen/dialog_content_text_size"
                 tools:text="I am a message"
-                app:typeface="@string/custom_font_medium" />
+                app:typeface="@string/custom_font_medium"
+                app:font_style="regular"/>
 
         </FrameLayout>
 
@@ -87,7 +89,8 @@
                 android:paddingStart="@dimen/dialog_two_btn_padding_left"
                 android:paddingEnd="@dimen/dialog_two_btn_padding_right"
                 app:typeface="@string/custom_font_semibold"
-                android:layout_marginEnd="16dp"/>
+                android:layout_marginEnd="16dp"
+                app:font_style="medium"/>
 
             <com.superapps.view.TypefacedTextView
                 android:id="@+id/ok_btn"
@@ -104,7 +107,7 @@
                 android:paddingStart="@dimen/dialog_two_btn_padding_left"
                 android:paddingEnd="@dimen/dialog_two_btn_padding_right"
                 app:typeface="@string/custom_font_semibold"
-                 />
+                app:font_style="medium"/>
 
         </LinearLayout>
 

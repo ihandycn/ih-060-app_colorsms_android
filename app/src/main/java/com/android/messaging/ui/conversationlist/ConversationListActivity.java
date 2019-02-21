@@ -17,16 +17,13 @@
 package com.android.messaging.ui.conversationlist;
 
 import android.animation.ValueAnimator;
-import android.content.Context;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.os.Handler;
-import android.os.PowerManager;
 import android.support.v4.view.animation.PathInterpolatorCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.ActionMode;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -47,8 +44,6 @@ import com.superapps.util.BackgroundDrawables;
 import com.superapps.util.Dimensions;
 import com.superapps.util.Preferences;
 import com.superapps.util.Threads;
-
-import org.qcode.fontchange.impl.FontManagerImpl;
 
 public class ConversationListActivity extends AbstractConversationListActivity {
 
@@ -381,23 +376,11 @@ public class ConversationListActivity extends AbstractConversationListActivity {
     @Override
     protected void onStop() {
         super.onStop();
-        PowerManager pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
-        if (pm != null){
-            isScreenOn = pm.isScreenOn();
-        }
         if (!mIsRealCreate) {
             return;
         }
         if (mIsNoActionBack) {
             logFirstComeInClickEvent("no_action");
-        }
-    }
-
-    @Override
-    protected void onRestart() {
-        super.onRestart();
-        if (isScreenOn){
-            recreate();
         }
     }
 

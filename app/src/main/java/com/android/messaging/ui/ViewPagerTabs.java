@@ -19,7 +19,12 @@ import android.content.Context;
 import android.content.res.ColorStateList;
 import android.content.res.TypedArray;
 import android.graphics.Outline;
+import android.graphics.Typeface;
 import android.graphics.drawable.ColorDrawable;
+import android.os.Handler;
+import android.os.HandlerThread;
+import android.support.v4.provider.FontRequest;
+import android.support.v4.provider.FontsContractCompat;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.util.AttributeSet;
@@ -35,7 +40,11 @@ import android.widget.Toast;
 
 import com.android.messaging.Factory;
 import com.android.messaging.R;
+import com.android.messaging.util.BuglePrefs;
 import com.android.messaging.util.OsUtil;
+import com.android.messaging.util.Typefaces;
+
+import org.qcode.fontchange.impl.QueryBuilder;
 
 /**
  * Lightweight implementation of ViewPager tabs. This looks similar to traditional actionBar tabs,
@@ -72,6 +81,8 @@ public class ViewPagerTabs extends HorizontalScrollView implements ViewPager.OnP
             android.R.attr.textColor,
             android.R.attr.textAllCaps
     };
+    private Handler mHandler = null;
+    private Typeface mTypeface;
 
     /**
      * Shows a toast with the tab description when long-clicked.
@@ -146,6 +157,7 @@ public class ViewPagerTabs extends HorizontalScrollView implements ViewPager.OnP
 
     private void addTab(CharSequence tabTitle, final int position) {
         final TextView textView = new TextView(getContext());
+        initTypeface(textView);
         textView.setText(tabTitle);
         textView.setBackgroundResource(R.drawable.contact_picker_tab_background_selector);
         textView.setGravity(Gravity.CENTER);
@@ -158,7 +170,9 @@ public class ViewPagerTabs extends HorizontalScrollView implements ViewPager.OnP
 
         // Assign various text appearance related attributes to child views.
         if (mTextStyle > 0) {
+            // change typeface to fit google font
             textView.setTypeface(textView.getTypeface(), mTextStyle);
+
         }
         if (mTextSize > 0) {
             textView.setTextSize(TypedValue.COMPLEX_UNIT_PX, mTextSize);
@@ -223,4 +237,54 @@ public class ViewPagerTabs extends HorizontalScrollView implements ViewPager.OnP
     public int getSelectedItemPosition() {
         return mPrevSelected;
     }
+
+    private void initTypeface(TextView textView) {
+        String familyName = BuglePrefs.getApplicationPrefs().getString("font_family", "");
+        if (familyName.isEmpty()) {
+            return;
+        }
+        int weight = (mTextStyle + 6) * 100;    // bold
+        QueryBuilder queryBuilder = new QueryBuilder(familyName)
+                .withWidth(100f)
+                .withWeight(weight)
+                .withItalic(0.0f)
+                .withBestEffort(true);
+        final String query = queryBuilder.build();
+
+        FontRequest request = new FontRequest(
+                "com.google.android.gms.fonts",
+                "com.google.android.gms",
+                query,
+                com.iflytek.android_font_loader_lib.R.array.com_google_android_gms_fonts_certs);
+
+
+        FontsContractCompat.FontRequestCallback callback = new FontsContractCompat
+                .FontRequestCallback() {
+            @Override
+            public void onTypefaceRetrieved(Typeface typeface) {
+                textView.setTypeface(typeface);
+            }
+
+            @Override
+            public void onTypefaceRequestFailed(int reason) {
+                Toast.makeText(getContext(),
+                        getContext().getString(com.iflytek.android_font_loader_lib.R.string.request_failed, reason), Toast.LENGTH_LONG)
+                        .show();
+            }
+        };
+        FontsContractCompat
+                .requestFont(getContext(), request, callback,
+                        getHandlerThreadHandler());
+
+    }
+
+    private Handler getHandlerThreadHandler() {
+        if (mHandler == null) {
+            HandlerThread handlerThread = new HandlerThread("fonts");
+            handlerThread.start();
+            mHandler = new Handler(handlerThread.getLooper());
+        }
+        return mHandler;
+    }
+
 }

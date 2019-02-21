@@ -34,6 +34,8 @@ import com.superapps.util.Preferences;
 import com.superapps.util.Threads;
 import com.superapps.view.TypefacedTextView;
 
+import org.qcode.fontchange.impl.FontManagerImpl;
+
 import java.util.concurrent.RejectedExecutionException;
 
 import static android.view.View.GONE;
@@ -199,6 +201,7 @@ public class FiveStarRateDialog extends DefaultButtonDialog2 implements View.OnC
         mHandImageView = ViewUtils.findViewById(v, R.id.hand_img);
         loadAnimation();
         mAnimCount = 0;
+        FontManagerImpl.getInstance().applyFont(v, true);
         return v;
     }
 
