@@ -8,6 +8,7 @@ import android.widget.TextView;
 
 import com.android.messaging.Factory;
 import com.android.messaging.R;
+import com.android.messaging.ui.ConversationDrawables;
 import com.android.messaging.ui.conversationlist.ConversationListActivity;
 import com.android.messaging.ui.customize.PrimaryColors;
 import com.ihs.app.framework.activity.HSAppCompatActivity;
@@ -74,8 +75,11 @@ public class ThemeSelectActivity extends HSAppCompatActivity {
 
                 refreshSelectStatus();
 
-                // notify main page recreate
+                // clear media caches
                 Factory.get().reclaimMemory();
+                // update drawable color cache
+                ConversationDrawables.get().updateDrawables();
+                // notify main page recreate
                 HSGlobalNotificationCenter.sendNotification(ConversationListActivity.EVENT_MAINPAGE_RECREATE);
             });
         }

@@ -17,6 +17,7 @@ package com.android.messaging.ui;
 
 import android.content.Context;
 import android.content.res.Resources;
+import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 
 import com.android.messaging.Factory;
@@ -101,12 +102,16 @@ public class ConversationDrawables {
                 resources.getDrawable(R.drawable.fastscroll_preview_left);
         mFastScrollPreviewDrawableRight =
                 resources.getDrawable(R.drawable.fastscroll_preview_right);
-        mOutgoingBubbleColor = resources.getColor(R.color.message_bubble_color_outgoing);
+        mOutgoingBubbleColor = PrimaryColors.getPrimaryColor();
         mIncomingBubbleColor = resources.getColor(R.color.message_bubble_color_incoming);
         mIncomingErrorBubbleColor =
                 resources.getColor(R.color.message_error_bubble_color_incoming);
         mIncomingSelectedBubbleColor = resources.getColor(R.color.message_bubble_color_selected_incoming);
-        mOutgoingSelectedBubbleColor = resources.getColor(R.color.message_bubble_color_selected_outgoing);
+        float[] hsb = new float[3];
+        Color.RGBToHSV(Color.red(mOutgoingBubbleColor), Color.green(mOutgoingBubbleColor),
+                Color.blue(mOutgoingBubbleColor), hsb);
+        hsb[2] /= 1.2f;
+        mOutgoingSelectedBubbleColor = Color.HSVToColor(hsb);
         mThemeColor = PrimaryColors.getPrimaryColor();
     }
 
