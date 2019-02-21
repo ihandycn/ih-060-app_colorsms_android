@@ -1,14 +1,17 @@
 package com.android.messaging.ui.customize;
 
-import android.app.Activity;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
+import android.view.MenuItem;
 
 import com.android.messaging.R;
 import com.android.messaging.ui.CustomHeaderPagerViewHolder;
 import com.android.messaging.ui.CustomHeaderViewPager;
 
-public class CustomBubblesActivity extends Activity {
+public class CustomBubblesActivity extends AppCompatActivity {
 
     private CustomHeaderViewPager mCustomHeaderViewPager;
     private BubbleStyleViewHolder mBubbleStyleViewHolder;
@@ -18,6 +21,7 @@ public class CustomBubblesActivity extends Activity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.customize_bubbles_activity);
+        initActionBar();
         mCustomHeaderViewPager = findViewById(R.id.customize_pager);
 
         mBubbleStyleViewHolder = new BubbleStyleViewHolder(this);
@@ -32,5 +36,24 @@ public class CustomBubblesActivity extends Activity {
         mCustomHeaderViewPager.setViewPagerTabHeight(CustomHeaderViewPager.DEFAULT_TAB_STRIP_SIZE);
         mCustomHeaderViewPager.setBackgroundColor(getResources().getColor(R.color.contact_picker_background));
         mCustomHeaderViewPager.setCurrentItem(0);
+    }
+
+    private void initActionBar() {
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        toolbar.setTitle("");
+        setSupportActionBar(toolbar);
+        ActionBar actionBar = getSupportActionBar();
+        if (actionBar != null) {
+            actionBar.setDisplayShowHomeEnabled(true);
+        }
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == android.R.id.home){
+            finish();
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 }

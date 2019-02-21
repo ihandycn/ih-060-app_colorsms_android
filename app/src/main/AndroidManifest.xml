@@ -623,7 +623,10 @@
 
         <activity android:name=".debug.ChangeThemeColorDebugActivity" />
 
-        <activity android:name=".ui.customize.CustomBubblesActivity" />
+        <activity android:name=".ui.customize.CustomBubblesActivity"
+            android:excludeFromRecents="true"
+            android:screenOrientation="portrait"
+            android:theme="@style/BugleTheme.ConversationActivity"/>
     </application>
 
 </manifest>

@@ -14,7 +14,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:textColor="#222327"
+            android:textColor="@color/text_primary_color"
             android:textSize="16.7sp"
             app:typeface="@string/custom_font_semibold" />
     </android.support.v7.widget.Toolbar>

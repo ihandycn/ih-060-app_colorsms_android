@@ -1083,5 +1083,6 @@
     <string name="bubble_customize_preview_outgoing_message">Nice to meet you too</string>
     <string name="bubble_customize_tab_style">Style</string>
     <string name="bubble_customize_tab_color">Color</string>
+    <string name="bubble_customize_action_bar_title">Bubble</string>
 
 </resources>

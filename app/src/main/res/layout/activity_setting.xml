@@ -4,7 +4,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <include layout="@layout/setting_top_tool_bar_view" />
+    <include layout="@layout/top_tool_bar_view" />
 
     <FrameLayout
         android:id="@+id/setting_fragment_container"
