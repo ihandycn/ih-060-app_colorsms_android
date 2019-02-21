@@ -25,6 +25,8 @@ import android.widget.TextView;
 import com.android.messaging.R;
 import com.android.messaging.ui.CustomCursorAdapter;
 
+import org.qcode.fontchange.impl.FontManagerImpl;
+
 public class ContactListAdapter extends CustomCursorAdapter {
 
     private static final int ITEM_VIEW_TYPE_ALPHABET_HEADER = 0;
@@ -51,6 +53,7 @@ public class ContactListAdapter extends CustomCursorAdapter {
                 view = View.inflate(parent.getContext(), R.layout.contact_list_item_view, null);
                 break;
         }
+        FontManagerImpl.getInstance().applyFont(view, true);
         return view;
     }
 

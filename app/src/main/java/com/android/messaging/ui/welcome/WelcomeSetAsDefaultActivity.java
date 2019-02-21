@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.widget.Toast;
 
+import com.android.messaging.BaseActivity;
 import com.android.messaging.Factory;
 import com.android.messaging.R;
 import com.android.messaging.ui.UIIntents;
@@ -16,7 +17,7 @@ import com.ihs.commons.config.HSConfig;
 import com.superapps.util.Calendars;
 import com.superapps.util.Toasts;
 
-public class WelcomeSetAsDefaultActivity extends AppCompatActivity {
+public class WelcomeSetAsDefaultActivity extends BaseActivity {
     private static final int REQUEST_SET_DEFAULT_SMS_APP = 3;
     private boolean mAllowBackKey = true;
 

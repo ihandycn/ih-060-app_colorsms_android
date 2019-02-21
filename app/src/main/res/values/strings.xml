@@ -883,6 +883,8 @@
     <!-- The title for advanced settings activity  -->
     <string name="advanced_settings_activity_title">Advanced settings</string>
 
+    <string name="change_font">Change Font</string>
+
     <!-- The title for sim_specific settings  -->
     <string name="sim_specific_settings">\"<xliff:g id="sim_name">%s</xliff:g>\" SIM</string>
 

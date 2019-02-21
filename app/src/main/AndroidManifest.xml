@@ -628,6 +628,11 @@
             android:excludeFromRecents="true"
             android:screenOrientation="portrait"
             android:theme="@style/BaseSettingsActivity" />
+
+        <activity android:name=".ui.appsettings.ChangeFontActivity"
+            android:excludeFromRecents="true"
+            android:screenOrientation="portrait"
+            android:theme="@style/BaseSettingsActivity"/>
     </application>
 
 </manifest>

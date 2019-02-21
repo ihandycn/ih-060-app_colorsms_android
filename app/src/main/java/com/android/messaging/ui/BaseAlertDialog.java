@@ -20,6 +20,8 @@ import com.ihs.app.framework.HSApplication;
 import com.superapps.util.BackgroundDrawables;
 import com.superapps.util.Dimensions;
 
+import org.qcode.fontchange.impl.FontManagerImpl;
+
 @SuppressWarnings("WeakerAccess")
 public class BaseAlertDialog {
 
@@ -127,6 +129,8 @@ public class BaseAlertDialog {
         Dialog dialog = new Dialog(builder.context, R.style.BaseDialogTheme);
         dialog.setCancelable(true);
         dialog.setContentView(layout);
+        FontManagerImpl.getInstance().applyFont(layout, true);
+
         Window window = dialog.getWindow();
 
         if (window != null) {

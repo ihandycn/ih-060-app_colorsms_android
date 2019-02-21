@@ -55,6 +55,8 @@ import com.android.messaging.util.Assert;
 import com.android.messaging.util.BuglePrefs;
 import com.android.messaging.util.OsUtil;
 
+import org.qcode.fontchange.impl.FontManagerImpl;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -93,6 +95,7 @@ public class PeopleAndOptionsFragment extends Fragment
         compositeAdapter.addPartition(new PeopleAndOptionsPartition(mPeopleListAdapter,
                 R.string.participant_list_title, false));
         mListView.setAdapter(compositeAdapter);
+        FontManagerImpl.getInstance().applyFont(view, true);
         return view;
     }
 
@@ -249,6 +252,7 @@ public class PeopleAndOptionsFragment extends Fragment
 
             itemView.bind(mOptionsCursor, position, mOtherParticipantData,
                     PeopleAndOptionsFragment.this, isRingtoneEnabled);
+            FontManagerImpl.getInstance().applyFont(itemView, true);
             return itemView;
         }
 
@@ -328,6 +332,7 @@ public class PeopleAndOptionsFragment extends Fragment
                     return false;
                 }
             });
+            FontManagerImpl.getInstance().applyFont(itemView, true);
             return itemView;
         }
     }

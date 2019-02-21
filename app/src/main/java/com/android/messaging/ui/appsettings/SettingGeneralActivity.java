@@ -232,44 +232,9 @@ public class SettingGeneralActivity extends BaseActivity{
         //change font
         SettingItemView mChangeFont = findViewById(R.id.setting_item_change_font);
         mChangeFont.setOnItemClickListener(() -> {
-            // add a dialog for font change
-            AlertDialog.Builder builder = new AlertDialog.Builder(SettingGeneralActivity.this);
-            AlertDialog dialog = builder.create();
-            View dialogView = View.inflate(SettingGeneralActivity.this,R.layout.layout_font_setting,null);
-            SeekBar mSeekBar = dialogView.findViewById(R.id.seek_bar);
-            mSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
-                @Override
-                public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
-                    float scale = i / 50.0f;
-                    prefs.putLong("font_scale", (long) i);
-                    FontManagerImpl.getInstance().changeFontSize(scale, mListener);
-                }
-
-                @Override
-                public void onStartTrackingTouch(SeekBar seekBar) {
-
-                }
-
-                @Override
-                public void onStopTrackingTouch(SeekBar seekBar) {
-
-                }
-            });
-            Button fontSmall = dialogView.findViewById(R.id.btn_small);
-            Button fontNormal = dialogView.findViewById(R.id.btn_normal);
-            Button fontBig = dialogView.findViewById(R.id.btn_big);
-            Button fontBiggest = dialogView.findViewById(R.id.btn_biggest);
-            fontNormal.setOnClickListener(v -> {
-                FontManagerImpl.getInstance().changeTypeFaced("Muli",mListener);
-                prefs.putString("font_family","Muli");
-            });
-            fontSmall.setOnClickListener(v -> {
-                FontManagerImpl.getInstance().changeTypeFaced("Mada",mListener);
-                prefs.putString("font_family","Mada");
-            });
-            FontManagerImpl.getInstance().applyFont(dialogView, true);
-            dialog.setView(dialogView);
-            dialog.show();
+            // add a new activity
+            Intent intent = new Intent(this,ChangeFontActivity.class);
+            startActivity(intent);
         });
     }
 
@@ -368,37 +333,6 @@ public class SettingGeneralActivity extends BaseActivity{
                 return super.onOptionsItemSelected(item);
         }
     }
-
-    private IFontChangeListener mListener = new IFontChangeListener() {
-        @Override
-        public void onLoadStart(float scale) {
-        }
-
-        @Override
-        public void onLoadStart(String fontPath) {
-
-        }
-
-        @Override
-        public void onLoadSuccess(float scale) {
-//            Toast.makeText(MainActivity.this, "加载成功", Toast.LENGTH_SHORT).show();
-        }
-
-        @Override
-        public void onLoadSuccess(String fontPath) {
-
-        }
-
-        @Override
-        public void onLoadFail(float scale) {
-//            Toast.makeText(MainActivity.this, "加载失败", Toast.LENGTH_SHORT).show();
-        }
-
-        @Override
-        public void onLoadFail(String fontPath) {
-
-        }
-    };
 }
 
 

@@ -52,6 +52,7 @@ public class ConversationListAdapter
             final Cursor cursor) {
         final ConversationListItemView conversationListItemView = holder.mView;
         conversationListItemView.bind(cursor, mClivHostInterface);
+        FontManagerImpl.getInstance().applyFont(holder.mView, true);
     }
 
     @Override
@@ -61,7 +62,6 @@ public class ConversationListAdapter
         final ConversationListItemView itemView =
                 (ConversationListItemView) layoutInflater.inflate(
                         R.layout.conversation_list_item_view, null);
-        FontManagerImpl.getInstance().applyFont(itemView, true);
         return new ConversationListViewHolder(itemView);
     }
 

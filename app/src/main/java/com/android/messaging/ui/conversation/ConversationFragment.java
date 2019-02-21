@@ -112,6 +112,8 @@ import com.ihs.commons.notificationcenter.INotificationObserver;
 import com.ihs.commons.utils.HSBundle;
 import com.superapps.util.Notifications;
 
+import org.qcode.fontchange.impl.FontManagerImpl;
+
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -318,7 +320,6 @@ public class ConversationFragment extends Fragment implements ConversationDataLi
             // unclear which attachment to pick when we make this context menu at the message level
             // instead of the part level
             menu.findItem(R.id.copy_text).setVisible(data.getCanCopyMessageToClipboard());
-
             return true;
         }
 

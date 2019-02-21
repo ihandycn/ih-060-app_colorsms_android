@@ -41,7 +41,7 @@
         app:lottie_autoPlay="false"
         app:lottie_loop="true"/>
 
-    <TextView
+    <com.superapps.view.TypefacedTextView
         android:id="@+id/empty_text_hint"
         android:gravity="center_horizontal"
         android:layout_width="wrap_content"

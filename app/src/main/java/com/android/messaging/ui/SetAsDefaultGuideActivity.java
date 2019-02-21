@@ -10,6 +10,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.messaging.BaseActivity;
 import com.android.messaging.R;
 import com.android.messaging.util.BugleAnalytics;
 import com.android.messaging.util.CommonUtils;
@@ -18,7 +19,7 @@ import com.superapps.util.BackgroundDrawables;
 import com.superapps.util.Navigations;
 import com.superapps.util.Toasts;
 
-public class SetAsDefaultGuideActivity extends AppCompatActivity {
+public class SetAsDefaultGuideActivity extends BaseActivity {
     private static final int REQUEST_SET_DEFAULT_SMS_APP = 3;
 
     public static final int USER_PRESENT = 1;

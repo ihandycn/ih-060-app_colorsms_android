@@ -2,13 +2,15 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:background="#888">
+    android:orientation="vertical">
+
+    <include layout="@layout/setting_top_tool_bar_view" />
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="50dp"
         android:orientation="horizontal">
+
         <Button
             android:id="@+id/btn_small"
             android:layout_width="0dp"
@@ -16,7 +18,7 @@
             android:layout_height="match_parent"
             android:textColor="#515151"
             android:textSize="18sp"
-            android:text="Light"/>
+            android:text="Muli"/>
 
         <Button
             android:id="@+id/btn_normal"
@@ -25,7 +27,7 @@
             android:layout_height="match_parent"
             android:textColor="#515151"
             android:textSize="12sp"
-            android:text="normal"/>
+            android:text="Cinzel"/>
 
         <Button
             android:id="@+id/btn_big"
@@ -34,7 +36,7 @@
             android:layout_height="match_parent"
             android:textColor="#515151"
             android:textSize="18sp"
-            android:text="Bold"/>
+            android:text="Coiny"/>
 
         <Button
             android:id="@+id/btn_biggest"
@@ -43,7 +45,7 @@
             android:layout_height="match_parent"
             android:textColor="#515151"
             android:textSize="18sp"
-            android:text="Black"/>
+            android:text="Poppins"/>
 
     </LinearLayout>
 
@@ -52,6 +54,8 @@
         android:layout_height="wrap_content"
         android:id="@+id/seek_bar"
         android:max="100"
-        android:progress="60"/>
+        android:progress="60"
+        android:thumbTint="@color/solid_black"
+        android:theme="@style/Widget.AppCompat.SeekBar"/>
 
 </LinearLayout>
