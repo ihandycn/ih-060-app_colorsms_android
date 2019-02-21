@@ -23,7 +23,6 @@ import com.android.messaging.ui.BaseAlertDialog;
 import com.android.messaging.ui.UIIntents;
 import com.android.messaging.ui.WebViewActivity;
 import com.android.messaging.ui.customize.CustomBubblesActivity;
-import com.android.messaging.ui.dialog.FiveStarRateDialog;
 import com.android.messaging.util.BugleAnalytics;
 import com.android.messaging.util.BuglePrefs;
 import com.android.messaging.util.BuglePrefsKeys;
@@ -191,13 +190,6 @@ public class SettingGeneralActivity extends HSAppCompatActivity {
             mAdvancedView.setVisibility(View.GONE);
         }
 
-        //5 star
-        SettingItemView mFiveStarRatingView = findViewById(R.id.setting_item_five_star_rating);
-        mFiveStarRatingView.setOnItemClickListener(() -> {
-            FiveStarRateDialog.showFiveStarFromSetting(this);
-            BugleAnalytics.logEvent("SMS_Settings_5StarRating_Click", true);
-        });
-
         //feedback
         ((SettingItemView) findViewById(R.id.setting_item_feedback)).setOnItemClickListener(
                 () -> {
@@ -301,7 +293,6 @@ public class SettingGeneralActivity extends HSAppCompatActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        FiveStarRateDialog.dismissDialogs();
     }
 
     @Override

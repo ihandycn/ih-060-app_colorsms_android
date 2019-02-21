@@ -784,7 +784,7 @@ public class BugleNotifications {
 
         final NotificationCompat.Builder notifBuilder = notificationState.mNotificationBuilder;
         notifBuilder.setStyle(notificationState.mNotificationStyle);
-        notifBuilder.setColor(context.getResources().getColor(R.color.notification_accent_color));
+        notifBuilder.setColor(PrimaryColors.getPrimaryColor());
 
         final WearableExtender wearableExtender = new WearableExtender();
         setWearableGroupOptions(notifBuilder, notificationState);

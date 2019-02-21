@@ -1,25 +1,41 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.v4.widget.DrawerLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/audio_attachment_background"
+    android:id="@+id/main_drawer_layout"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@color/action_bar_background_color"
-    android:orientation="vertical">
+    android:layout_height="match_parent">
 
-    <android.support.v7.widget.Toolbar
-        android:id="@+id/toolbar"
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/action_bar_height"
-        app:elevation="@dimen/action_bar_elevation" />
-
-    <fragment
-        class="com.android.messaging.ui.conversationlist.ConversationListFragment"
-        android:id="@+id/conversation_list_fragment"
-        android:theme="@style/Theme.AppCompat.Light.DarkActionBar"
+    <FrameLayout
+        android:id="@+id/audio_attachment_background"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginTop="@dimen/action_bar_height"/>
+        android:background="@color/action_bar_background_color"
+        android:orientation="vertical">
 
-</FrameLayout>
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/action_bar_height"
+            app:elevation="@dimen/action_bar_elevation"/>
 
+        <fragment
+            android:id="@+id/conversation_list_fragment"
+            class="com.android.messaging.ui.conversationlist.ConversationListFragment"
+            android:theme="@style/Theme.AppCompat.Light.DarkActionBar"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="@dimen/action_bar_height"/>
+
+    </FrameLayout>
+
+    <!-- Side navigation drawer UI -->
+    <android.support.design.widget.NavigationView
+        android:id="@+id/navigation_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_gravity="start"
+        android:background="@android:color/white"
+        app:menu="@menu/empty">
+    </android.support.design.widget.NavigationView>
+</android.support.v4.widget.DrawerLayout>

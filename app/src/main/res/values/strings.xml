@@ -1085,4 +1085,15 @@
     <string name="bubble_customize_tab_color">Color</string>
     <string name="bubble_customize_action_bar_title">Bubble</string>
 
+    <string name="drawer_open" translatable="false">Open navigation drawer</string>
+    <string name="drawer_close" translatable="false">Close navigation drawer</string>
+    <string name="theme_select_title">Theme Color</string>
+    <string name="theme_select_description">Select theme color you like</string>
+    <string name="menu_theme_color">Theme Color</string>
+    <string name="menu_bubble">Chat Bubble</string>
+    <string name="menu_chat_background">Chat Background</string>
+    <string name="menu_setting">Settings</string>
+    <string name="menu_rate">5 star rating</string>
+    <string name="menu_group_customization">Customize</string>
+    <string name="coming_soon">Coming soon in a few days</string>
 </resources>

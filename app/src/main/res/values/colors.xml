@@ -15,7 +15,9 @@
 -->
 <resources xmlns:tools="http://schemas.android.com/tools">
     <color name="primary_color">#1acc48</color>
+    <color name="primary_color_dark">#0D6624</color>
     <color name="text_primary_color">#222327</color>
+    <color name="setting_gray">#25000000</color>
 
     <!-- base color -->
     <color name="divider_color">#e4e7eb</color>

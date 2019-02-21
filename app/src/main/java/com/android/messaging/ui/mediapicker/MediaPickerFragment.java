@@ -60,11 +60,11 @@ public class MediaPickerFragment extends Fragment implements View.OnClickListene
         mMediaLayout = view.findViewById(R.id.media_buttons);
         view.findViewById(R.id.media_camera).setOnClickListener(this);
         view.findViewById(R.id.media_photo).setOnClickListener(this);
-        ImageView mediaVoice= view.findViewById(R.id.media_voice);
+        ImageView mediaVoice = view.findViewById(R.id.media_voice);
         mediaVoice.setOnClickListener(this);
-        mediaVoice.setBackground(BackgroundDrawables.createBackgroundDrawable(PrimaryColors.getPrimaryColor(),
-                PrimaryColors.getPrimaryColorDark(),
-                Dimensions.pxFromDp(35), false, true));
+        mediaVoice.setBackground(BackgroundDrawables.createBackgroundDrawable(getResources().getColor(R.color.primary_color),
+                getResources().getColor(R.color.primary_color_dark),
+                Dimensions.pxFromDp(35), false, false));
 
         mAudioRecordView = view.findViewById(R.id.audio_record_layout);
         mEnabledView = view.findViewById(R.id.mediapicker_enabled);
