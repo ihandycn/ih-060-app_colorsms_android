@@ -12,6 +12,7 @@ import com.android.messaging.ui.ConversationDrawables;
 import com.android.messaging.ui.conversationlist.ConversationListActivity;
 import com.android.messaging.ui.customize.PrimaryColors;
 import com.android.messaging.util.BugleAnalytics;
+import com.ihs.app.framework.HSApplication;
 import com.ihs.app.framework.activity.HSAppCompatActivity;
 import com.ihs.commons.notificationcenter.HSGlobalNotificationCenter;
 import com.superapps.util.BackgroundDrawables;
@@ -35,7 +36,7 @@ public class ThemeSelectActivity extends HSAppCompatActivity {
     };
 
     private static int[] COLORS = new int[]{
-            PrimaryColors.getPrimaryColor(),
+            HSApplication.getContext().getResources().getColor(R.color.primary_color),
             0xff0083fe,
             0xff16c7d3,
             0xffff7e2a,
