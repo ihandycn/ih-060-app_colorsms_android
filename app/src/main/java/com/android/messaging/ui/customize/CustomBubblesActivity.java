@@ -8,14 +8,16 @@ import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 
 import com.android.messaging.R;
-import com.android.messaging.ui.CustomHeaderPagerViewHolder;
+import com.android.messaging.ui.CustomPagerViewHolder;
 import com.android.messaging.ui.CustomHeaderViewPager;
+import com.android.messaging.ui.CustomViewPager;
 
-public class CustomBubblesActivity extends AppCompatActivity {
+public class CustomBubblesActivity extends AppCompatActivity  {
 
     private CustomHeaderViewPager mCustomHeaderViewPager;
     private BubbleStyleViewHolder mBubbleStyleViewHolder;
     private BubbleColorViewHolder mBubbleColorViewHolder;
+
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -27,15 +29,19 @@ public class CustomBubblesActivity extends AppCompatActivity {
         mBubbleStyleViewHolder = new BubbleStyleViewHolder(this);
         mBubbleColorViewHolder = new BubbleColorViewHolder(this);
 
-        final CustomHeaderPagerViewHolder[] viewHolders = {
+        final CustomPagerViewHolder[] viewHolders = {
                 mBubbleStyleViewHolder,
                 mBubbleColorViewHolder};
 
         mCustomHeaderViewPager = findViewById(R.id.customize_pager);
         mCustomHeaderViewPager.setViewHolders(viewHolders);
-        mCustomHeaderViewPager.setViewPagerTabHeight(CustomHeaderViewPager.DEFAULT_TAB_STRIP_SIZE);
+        mCustomHeaderViewPager.setViewPagerTabHeight(CustomViewPager.DEFAULT_TAB_STRIP_SIZE);
         mCustomHeaderViewPager.setBackgroundColor(getResources().getColor(R.color.contact_picker_background));
         mCustomHeaderViewPager.setCurrentItem(0);
+    }
+
+    public void openCustomizeColor(int type) {
+
     }
 
     private void initActionBar() {

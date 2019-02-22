@@ -17,10 +17,10 @@ package com.android.messaging.ui;
 
 import com.android.messaging.Factory;
 
-public class CustomHeaderViewPagerAdapter extends
-        FixedViewPagerAdapter<CustomHeaderPagerViewHolder> {
+public class CustomViewPagerAdapter extends
+        FixedViewPagerAdapter<CustomPagerViewHolder> {
 
-    public CustomHeaderViewPagerAdapter(final CustomHeaderPagerViewHolder[] viewHolders) {
+    public CustomViewPagerAdapter(final CustomPagerViewHolder[] viewHolders) {
         super(viewHolders);
     }
 

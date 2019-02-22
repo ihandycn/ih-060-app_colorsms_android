@@ -112,6 +112,12 @@
             android:id="@+id/customize_pager"
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
+
+        <com.android.messaging.ui.customize.ChooseCustomBubbleColorView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"/>
+
+
     </FrameLayout>
 
 </android.support.constraint.ConstraintLayout>

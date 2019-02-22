@@ -18,13 +18,13 @@ package com.android.messaging.ui.contact;
 import android.content.Context;
 
 import com.android.messaging.R;
-import com.android.messaging.ui.CustomHeaderPagerListViewHolder;
+import com.android.messaging.ui.CustomPagerListViewHolder;
 import com.android.messaging.ui.contact.ContactListItemView.HostInterface;
 
 /**
  * Holds the frequent contacts view for the contact picker's view pager.
  */
-public class FrequentContactsListViewHolder extends CustomHeaderPagerListViewHolder {
+public class FrequentContactsListViewHolder extends CustomPagerListViewHolder {
     public FrequentContactsListViewHolder(final Context context,
                                           final HostInterface clivHostInterface) {
         super(context, new ContactListAdapter(clivHostInterface, false /* needAlphabetHeader */));

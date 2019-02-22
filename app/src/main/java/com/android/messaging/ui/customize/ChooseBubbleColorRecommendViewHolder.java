@@ -11,10 +11,11 @@ import com.android.messaging.R;
 import com.android.messaging.ui.BasePagerViewHolder;
 import com.android.messaging.ui.CustomPagerViewHolder;
 
-public class BubbleStyleViewHolder extends BasePagerViewHolder implements CustomPagerViewHolder {
+
+public class ChooseBubbleColorRecommendViewHolder extends BasePagerViewHolder implements CustomPagerViewHolder {
     private Context mContext;
 
-    public BubbleStyleViewHolder(final Context context) {
+    public ChooseBubbleColorRecommendViewHolder(final Context context) {
         mContext = context;
     }
 
@@ -22,14 +23,14 @@ public class BubbleStyleViewHolder extends BasePagerViewHolder implements Custom
     protected View createView(ViewGroup container) {
         final LayoutInflater inflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         final View view = inflater.inflate(
-                R.layout.bubble_customize_style_layout,
+                R.layout.choose_custom_bubble_color_recommend,
                 null /* root */,
                 false /* attachToRoot */);
 
         RecyclerView recyclerView = view.findViewById(R.id.recycler_view);
         recyclerView.setHasFixedSize(true);
-        recyclerView.setAdapter(new BubbleStyleAdapter(mContext));
-        recyclerView.setLayoutManager(new GridLayoutManager(mContext, 2));
+        recyclerView.setAdapter(new ChooseBubbleColorRecommendAdapter(mContext));
+        recyclerView.setLayoutManager(new GridLayoutManager(mContext, 4));
 
         return view;
     }
@@ -43,7 +44,8 @@ public class BubbleStyleViewHolder extends BasePagerViewHolder implements Custom
 
     @Override
     public CharSequence getPageTitle(Context context) {
-        return context.getString(R.string.bubble_customize_tab_style);
+        return context.getString(R.string.bubble_customize_color_recommend);
     }
 
 }
+

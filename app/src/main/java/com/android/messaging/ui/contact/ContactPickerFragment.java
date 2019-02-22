@@ -51,8 +51,9 @@ import com.android.messaging.datamodel.data.ContactListItemData;
 import com.android.messaging.datamodel.data.ContactPickerData;
 import com.android.messaging.datamodel.data.ContactPickerData.ContactPickerDataListener;
 import com.android.messaging.datamodel.data.ParticipantData;
-import com.android.messaging.ui.CustomHeaderPagerViewHolder;
+import com.android.messaging.ui.CustomPagerViewHolder;
 import com.android.messaging.ui.CustomHeaderViewPager;
+import com.android.messaging.ui.CustomViewPager;
 import com.android.messaging.ui.animation.ViewGroupItemVerticalExplodeAnimation;
 import com.android.messaging.ui.contact.ContactRecipientAutoCompleteView.ContactChipsChangeListener;
 import com.android.messaging.ui.customize.PrimaryColors;
@@ -172,13 +173,13 @@ public class ContactPickerFragment extends Fragment implements ContactPickerData
             }
         });
 
-        final CustomHeaderPagerViewHolder[] viewHolders = {
+        final CustomPagerViewHolder[] viewHolders = {
                 mFrequentContactsListViewHolder,
                 mAllContactsListViewHolder};
 
         mCustomHeaderViewPager = (CustomHeaderViewPager) view.findViewById(R.id.contact_pager);
         mCustomHeaderViewPager.setViewHolders(viewHolders);
-        mCustomHeaderViewPager.setViewPagerTabHeight(CustomHeaderViewPager.DEFAULT_TAB_STRIP_SIZE);
+        mCustomHeaderViewPager.setViewPagerTabHeight(CustomViewPager.DEFAULT_TAB_STRIP_SIZE);
         mCustomHeaderViewPager.setBackgroundColor(getResources()
                 .getColor(R.color.contact_picker_background));
 

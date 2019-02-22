@@ -22,7 +22,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
 import android.widget.AbsListView.OnScrollListener;
-import android.widget.CursorAdapter;
 import android.widget.ListView;
 
 import com.android.messaging.util.ImeUtil;
@@ -30,14 +29,14 @@ import com.android.messaging.util.ImeUtil;
 /**
  * Produces and holds a list view and its tab header to be displayed in a ViewPager.
  */
-public abstract class CustomHeaderPagerListViewHolder extends BasePagerViewHolder
-        implements CustomHeaderPagerViewHolder {
+public abstract class CustomPagerListViewHolder extends BasePagerViewHolder
+        implements CustomPagerViewHolder {
     private final Context mContext;
     private final CustomCursorAdapter mListAdapter;
     private boolean mListCursorInitialized;
     private ListView mListView;
 
-    public CustomHeaderPagerListViewHolder(final Context context, final CustomCursorAdapter adapter) {
+    public CustomPagerListViewHolder(final Context context, final CustomCursorAdapter adapter) {
         mContext = context;
         mListAdapter = adapter;
     }

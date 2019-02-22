@@ -21,6 +21,6 @@ import android.content.Context;
  * An extension on the standard PagerViewHolder to return a custom header view to be used by
  * CustomHeaderViewPager
  */
-public interface CustomHeaderPagerViewHolder extends PagerViewHolder {
+public interface CustomPagerViewHolder extends PagerViewHolder {
     CharSequence getPageTitle(Context context);
 }

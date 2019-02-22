@@ -7,9 +7,9 @@ import android.view.ViewGroup;
 
 import com.android.messaging.R;
 import com.android.messaging.ui.BasePagerViewHolder;
-import com.android.messaging.ui.CustomHeaderPagerViewHolder;
+import com.android.messaging.ui.CustomPagerViewHolder;
 
-public class BubbleColorViewHolder extends BasePagerViewHolder implements CustomHeaderPagerViewHolder {
+public class BubbleColorViewHolder extends BasePagerViewHolder implements CustomPagerViewHolder {
     private Context mContext;
 
     public BubbleColorViewHolder(final Context context) {
