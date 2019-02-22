@@ -31,7 +31,6 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:contentDescription="@string/audio_play_content_description"
-            android:background="@drawable/white_circle_attachment_background"
             android:src="@drawable/ic_preview_play" />
 
         <ImageView
@@ -40,7 +39,6 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:contentDescription="@string/audio_pause_content_description"
-            android:background="@drawable/white_circle_attachment_background"
             android:src="@drawable/ic_preview_pause" />
     </com.android.messaging.ui.AudioAttachmentPlayPauseButton>
 

@@ -22,7 +22,6 @@ import android.graphics.drawable.Drawable;
 
 import com.android.messaging.Factory;
 import com.android.messaging.R;
-import com.android.messaging.ui.customize.BubbleBackgroundColors;
 import com.android.messaging.ui.customize.PrimaryColors;
 import com.android.messaging.util.ImageUtils;
 
@@ -79,8 +78,6 @@ public class ConversationDrawables {
     public void updateDrawables() {
         final Resources resources = mContext.getResources();
 
-        mThemeColor = PrimaryColors.getPrimaryColor();
-
         mIncomingBubbleDrawable = resources.getDrawable(R.drawable.message_bubble_incoming_new);
         mIncomingBubbleNoArrowDrawable =
                 resources.getDrawable(R.drawable.message_bubble_incoming_no_arrow);
@@ -92,7 +89,6 @@ public class ConversationDrawables {
         mIncomingAudioPauseButtonDrawable = resources.getDrawable(R.drawable.ic_audio_pause_incoming);
         mOutgoingAudioPlayButtonDrawable = resources.getDrawable(R.drawable.ic_audio_play_outgoing);
         mOutgoingAudioPauseButtonDrawable = resources.getDrawable(R.drawable.ic_audio_pause_outgoing);
-
         mIncomingAudioProgressBackgroundDrawable =
                 resources.getDrawable(R.drawable.audio_progress_bar_background_incoming);
         mOutgoingAudioProgressBackgroundDrawable =
