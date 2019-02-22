@@ -533,7 +533,7 @@ public class ConversationListItemView extends FrameLayout implements OnClickList
         mUnreadMessagesCountView.setVisibility(unreadMsgCountViewVisibility);
         if (unreadMsgCountViewVisibility == VISIBLE) {
             mUnreadMessagesCountView.setBackground(
-                    BackgroundDrawables.createBackgroundDrawable(0xfff14d4d,
+                    BackgroundDrawables.createBackgroundDrawable(0xffe62a2a,
                             Dimensions.pxFromDp(10.5f), false));
             mUnreadMessagesCountView.setText(String.valueOf(mData.getUnreadMessagesNumber()));
         }
