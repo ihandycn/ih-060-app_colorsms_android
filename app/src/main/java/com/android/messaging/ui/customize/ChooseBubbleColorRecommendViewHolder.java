@@ -1,6 +1,7 @@
 package com.android.messaging.ui.customize;
 
 import android.content.Context;
+import android.graphics.Rect;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -10,6 +11,7 @@ import android.view.ViewGroup;
 import com.android.messaging.R;
 import com.android.messaging.ui.BasePagerViewHolder;
 import com.android.messaging.ui.CustomPagerViewHolder;
+import com.superapps.util.Dimensions;
 
 
 public class ChooseBubbleColorRecommendViewHolder extends BasePagerViewHolder implements CustomPagerViewHolder {
@@ -29,8 +31,8 @@ public class ChooseBubbleColorRecommendViewHolder extends BasePagerViewHolder im
 
         RecyclerView recyclerView = view.findViewById(R.id.recycler_view);
         recyclerView.setHasFixedSize(true);
-        recyclerView.setAdapter(new ChooseBubbleColorRecommendAdapter(mContext));
         recyclerView.setLayoutManager(new GridLayoutManager(mContext, 4));
+        recyclerView.setAdapter(new ChooseBubbleColorRecommendAdapter(mContext));
 
         return view;
     }
@@ -46,6 +48,5 @@ public class ChooseBubbleColorRecommendViewHolder extends BasePagerViewHolder im
     public CharSequence getPageTitle(Context context) {
         return context.getString(R.string.bubble_customize_color_recommend);
     }
-
 }
 
