@@ -30,7 +30,7 @@
             android:layout_height="match_parent"
             android:layout_weight="1">
 
-            <ImageView
+            <com.android.messaging.wallpaper.BackgroundImageView
                 android:id="@+id/conversation_fragment_wallpaper"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"

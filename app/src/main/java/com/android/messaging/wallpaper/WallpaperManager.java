@@ -1,6 +1,9 @@
 package com.android.messaging.wallpaper;
 
+import android.text.TextUtils;
+
 import com.android.messaging.util.BuglePrefs;
+import com.android.messaging.util.TextUtil;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -10,6 +13,49 @@ public class WallpaperManager {
 
     private static final String PREF_KEY_WALLPAPER_PATH = "pref_key_wallpaper_path";
     static final String LOCAL_DIRECTORY = "wallpapers" + File.separator + "local";
+    private static List<WallpaperChangeListener> sWallpaperChangeListeners;
+
+    public interface WallpaperChangeListener {
+        void onWallpaperChanged();
+        void onOnlineWallpaperChanged();
+    }
+
+    public static void addWallpaperChangeListener(WallpaperChangeListener listener) {
+        if (sWallpaperChangeListeners == null) {
+            sWallpaperChangeListeners = new ArrayList<>();
+        }
+        sWallpaperChangeListeners.add(listener);
+    }
+
+    public static void removeWallpaperChangeListener(WallpaperChangeListener listener) {
+        if (sWallpaperChangeListeners != null) {
+            sWallpaperChangeListeners.remove(listener);
+        }
+        if (sWallpaperChangeListeners.size() == 0) {
+            sWallpaperChangeListeners.clear();
+            sWallpaperChangeListeners = null;
+        }
+    }
+
+    public static void onWallpaperChanged() {
+        if (sWallpaperChangeListeners == null || sWallpaperChangeListeners.size() == 0) {
+            return;
+        }
+
+        for (WallpaperChangeListener l : sWallpaperChangeListeners) {
+            l.onWallpaperChanged();
+        }
+    }
+
+    public static void onOnlineWallpaperChanged() {
+        if (sWallpaperChangeListeners == null || sWallpaperChangeListeners.size() == 0) {
+            return;
+        }
+
+        for (WallpaperChangeListener l : sWallpaperChangeListeners) {
+            l.onOnlineWallpaperChanged();
+        }
+    }
 
     public static String getWallpaperPathByThreadId(String threadId) {
         String threadWallpaperPath = BuglePrefs.getApplicationPrefs().
@@ -30,13 +76,13 @@ public class WallpaperManager {
             return null;
         }
     }
-
-    static void setWallpaperPath(String path) {
-        BuglePrefs.getApplicationPrefs().putString(PREF_KEY_WALLPAPER_PATH, path);
-    }
-
+    
     static void setWallpaperPath(String threadId, String path) {
-        BuglePrefs.getApplicationPrefs().putString(PREF_KEY_WALLPAPER_PATH + "_" + threadId, path);
+        if (!TextUtils.isEmpty(threadId)) {
+            BuglePrefs.getApplicationPrefs().putString(PREF_KEY_WALLPAPER_PATH + "_" + threadId, path);
+        } else {
+            BuglePrefs.getApplicationPrefs().putString(PREF_KEY_WALLPAPER_PATH, path);
+        }
     }
 
     static List<WallpaperChooserItem> getWallpaperChooserList() {

@@ -13,6 +13,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.text.TextUtils;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
@@ -24,6 +25,7 @@ import com.android.messaging.glide.GlideApp;
 import com.android.messaging.util.BugleActivityUtil;
 import com.android.messaging.util.BugleAnalytics;
 import com.android.messaging.util.CommonUtils;
+import com.android.messaging.util.TextUtil;
 import com.android.messaging.util.ViewUtils;
 import com.android.messaging.wallpaper.crop.CropImageOptions;
 import com.android.messaging.wallpaper.crop.CropOverlayView;
@@ -62,12 +64,17 @@ public class WallpaperEditActivity extends HSAppCompatActivity implements View.O
     private CropOverlayView mCropOverlayView;
     private String mWallpaperPath;
     private boolean mIsCutEventLogged = false;
+    private String mThreadId;
 
     private View mResetBtn;
 
-    public static Intent getLaunchIntent(Context context, Intent uriIntent) {
+    public static Intent getLaunchIntent(Context context, Intent uriIntent, String threadId) {
         Intent intent = new Intent(context, WallpaperEditActivity.class);
         intent.putExtra(WallpaperEditActivity.INTENT_KEY_WALLPAPER_URI, uriIntent);
+        if (!TextUtils.isEmpty(threadId)) {
+            intent.putExtra("thread_id", threadId);
+            return intent;
+        }
         return intent;
     }
 
@@ -93,6 +100,11 @@ public class WallpaperEditActivity extends HSAppCompatActivity implements View.O
         mResetBtn = ViewUtils.findViewById(this, R.id.wallpaper_edit_reset_button);
         findViewById(R.id.wallpaper_view_return).setOnClickListener(this);
         init();
+
+        String threadId = getIntent().getStringExtra("thread_id");
+        if (!TextUtils.isEmpty(threadId)) {
+            mThreadId = threadId;
+        }
         BugleAnalytics.logEvent("SMS_ChatBackground_CutPage_Show");
     }
 
@@ -224,8 +236,8 @@ public class WallpaperEditActivity extends HSAppCompatActivity implements View.O
     }
 
     private void saveWallpaperToLocal(Bitmap bitmap) {
-        String fileName = Utils.md5(mWallpaperPath + "_1.png");
-        File storedWallpaper = new File(CommonUtils.getDirectory(LOCAL_DIRECTORY), fileName);
+        String fileName = Utils.md5(mWallpaperPath);
+        File storedWallpaper = new File(CommonUtils.getDirectory(LOCAL_DIRECTORY), fileName + "_1.png");
 
         FileOutputStream out;
         try {
@@ -244,7 +256,7 @@ public class WallpaperEditActivity extends HSAppCompatActivity implements View.O
         }
 
         final String storedPath = storedWallpaper.getAbsolutePath();
-        WallpaperManager.setWallpaperPath(storedPath);
+        WallpaperManager.setWallpaperPath(mThreadId, storedPath);
     }
 
     private void initData() {
@@ -374,6 +386,7 @@ public class WallpaperEditActivity extends HSAppCompatActivity implements View.O
                 break;
             case R.id.wallpaper_edit_apply_button:
                 apply();
+                WallpaperManager.onWallpaperChanged();
                 finish();
                 BugleAnalytics.logEvent("SMS_ChatBackground_CutPage_Applied");
                 break;

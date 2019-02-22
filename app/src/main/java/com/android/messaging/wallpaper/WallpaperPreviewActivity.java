@@ -36,7 +36,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
-public class WallpaperPreviewActivity extends AppCompatActivity {
+public class WallpaperPreviewActivity extends AppCompatActivity implements WallpaperManager.WallpaperChangeListener {
 
     public static final int REQUEST_CODE_PICK_WALLPAPER = 2;
 
@@ -150,16 +150,18 @@ public class WallpaperPreviewActivity extends AppCompatActivity {
         String threadId = getIntent().getStringExtra("thread_id");
         if (threadId != null) {
             mThreadId = threadId;
-            BugleAnalytics.logEvent("SMS_ChatBackground_Show","from","Options");
+            BugleAnalytics.logEvent("SMS_ChatBackground_Show", "from", "Options");
         } else {
-            BugleAnalytics.logEvent("SMS_ChatBackground_Show","from","Menu");
+            BugleAnalytics.logEvent("SMS_ChatBackground_Show", "from", "Menu");
         }
+        WallpaperManager.addWallpaperChangeListener(this);
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
         mListeners.clear();
+        WallpaperManager.removeWallpaperChangeListener(this);
     }
 
     @Override
@@ -181,10 +183,19 @@ public class WallpaperPreviewActivity extends AppCompatActivity {
                 return;
             }
 
-            Intent intent = WallpaperEditActivity.getLaunchIntent(this, data);
+            Intent intent = WallpaperEditActivity.getLaunchIntent(this, data, mThreadId);
             startActivity(intent);
-            finish();
         }
+    }
+
+    @Override
+    public void onWallpaperChanged() {
+        finish();
+    }
+
+    @Override
+    public void onOnlineWallpaperChanged() {
+
     }
 
     class WallpaperChooserAdapter extends RecyclerView.Adapter<WallpaperChooserViewHolder> {
@@ -221,7 +232,7 @@ public class WallpaperPreviewActivity extends AppCompatActivity {
                 view.setOnClickListener(v -> {
                     onItemSelected(view);
                     mWallpaperPreviewImg.setImageBitmap(null);
-                    WallpaperManager.setWallpaperPath("");
+                    WallpaperManager.setWallpaperPath(null, "");
                     BugleAnalytics.logEvent("SMS_ChatBackground_Backgrounds_Clicked");
                 });
             } else {
@@ -232,11 +243,8 @@ public class WallpaperPreviewActivity extends AppCompatActivity {
                         if (view.isItemSelected()) {
                             view.onItemSelected();
                             setPreviewImage(item.getLocalPath());
-                            if (mThreadId != null) {
-                                WallpaperManager.setWallpaperPath(mThreadId, item.getAbsolutePath());
-                            } else {
-                                WallpaperManager.setWallpaperPath(item.getAbsolutePath());
-                            }
+                            WallpaperManager.setWallpaperPath(mThreadId, item.getAbsolutePath());
+                            WallpaperManager.onOnlineWallpaperChanged();
                             BugleAnalytics.logEvent("SMS_ChatBackground_Backgrounds_Applied");
                         }
                     } else {
@@ -247,18 +255,16 @@ public class WallpaperPreviewActivity extends AppCompatActivity {
                                 Threads.postOnMainThread(() -> {
                                     view.onLoadingSuccess();
                                     setPreviewImage(item.getLocalPath());
-                                    if (mThreadId != null) {
-                                        WallpaperManager.setWallpaperPath(mThreadId, item.getAbsolutePath());
-                                    } else {
-                                        WallpaperManager.setWallpaperPath(item.getAbsolutePath());
-                                    }
+                                    WallpaperManager.setWallpaperPath(mThreadId, item.getAbsolutePath());
+                                    WallpaperManager.onOnlineWallpaperChanged();
                                     BugleAnalytics.logEvent("SMS_ChatBackground_Backgrounds_Applied");
                                 });
                             }
 
                             @Override
                             public void onDownloadFailed() {
-
+                                view.onItemDeselected();
+                                view.onLoadingSuccess();
                             }
                         }, item.getRemoteUrl());
                     }

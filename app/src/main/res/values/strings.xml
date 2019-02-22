@@ -1096,4 +1096,5 @@
     <string name="wallpaper_reset">reset</string>
     <string name="wallpaper_done">DONE</string>
     <string name="wallpaper_add_photos">Add Photos</string>
+    <string name="wallpaper_download_failed">Network Error</string>
 </resources>

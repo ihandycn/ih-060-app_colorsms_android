@@ -55,6 +55,7 @@ import com.android.messaging.ui.conversation.ConversationActivity;
 import com.android.messaging.util.Assert;
 import com.android.messaging.util.BuglePrefs;
 import com.android.messaging.util.OsUtil;
+import com.android.messaging.wallpaper.WallpaperManager;
 import com.android.messaging.wallpaper.WallpaperPreviewActivity;
 
 import java.util.ArrayList;
@@ -67,7 +68,7 @@ import static com.android.messaging.datamodel.data.PeopleOptionsItemData.SETTING
  * Shows a list of participants of a conversation and displays options.
  */
 public class PeopleAndOptionsFragment extends Fragment
-        implements PeopleAndOptionsDataListener, PeopleOptionsItemView.HostInterface {
+        implements PeopleAndOptionsDataListener, PeopleOptionsItemView.HostInterface, WallpaperManager.WallpaperChangeListener {
     private ListView mListView;
     private OptionsListAdapter mOptionsListAdapter;
     private PeopleListAdapter mPeopleListAdapter;
@@ -81,6 +82,7 @@ public class PeopleAndOptionsFragment extends Fragment
     public void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mBinding.getData().init(getLoaderManager(), mBinding);
+        WallpaperManager.addWallpaperChangeListener(this);
     }
 
     @Override
@@ -93,7 +95,7 @@ public class PeopleAndOptionsFragment extends Fragment
         CustomizeListAdapter adapter = new CustomizeListAdapter();
 
         final CompositeAdapter compositeAdapter = new CompositeAdapter(getActivity());
-        compositeAdapter.addPartition(new PeopleAndOptionsPartition(adapter, R.string.customize_title,false));
+        compositeAdapter.addPartition(new PeopleAndOptionsPartition(adapter, R.string.customize_title, false));
         compositeAdapter.addPartition(new PeopleAndOptionsPartition(mOptionsListAdapter,
                 R.string.general_settings_title, false));
         compositeAdapter.addPartition(new PeopleAndOptionsPartition(mPeopleListAdapter,
@@ -117,6 +119,7 @@ public class PeopleAndOptionsFragment extends Fragment
     public void onDestroy() {
         super.onDestroy();
         mBinding.unbind();
+        WallpaperManager.removeWallpaperChangeListener(this);
     }
 
     public void setConversationId(final String conversationId) {
@@ -186,6 +189,20 @@ public class PeopleAndOptionsFragment extends Fragment
                                 })
                         .show();
                 break;
+        }
+    }
+
+    @Override
+    public void onWallpaperChanged() {
+        if (getActivity() != null) {
+            getActivity().finish();
+        }
+    }
+
+    @Override
+    public void onOnlineWallpaperChanged() {
+        if (getActivity() != null) {
+            getActivity().finish();
         }
     }
 

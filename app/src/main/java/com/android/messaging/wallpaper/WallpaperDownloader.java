@@ -1,20 +1,20 @@
 package com.android.messaging.wallpaper;
 
-import android.graphics.Bitmap;
-
+import com.android.messaging.R;
 import com.android.messaging.util.CommonUtils;
-import com.bumptech.glide.Glide;
-import com.ihs.app.framework.HSApplication;
+import com.ihs.commons.connection.HSHttpConnection;
+import com.ihs.commons.connection.httplib.HttpRequest;
+import com.ihs.commons.utils.HSError;
+import com.ihs.commons.utils.HSLog;
 import com.superapps.util.Threads;
+import com.superapps.util.Toasts;
 
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
 
 import static com.android.messaging.wallpaper.WallpaperManager.LOCAL_DIRECTORY;
 
 public class WallpaperDownloader {
+    private static final String TAG = WallpaperDownloader.class.getSimpleName();
 
     interface WallpaperDownloadListener {
         void onDownloadSuccess(String path);
@@ -24,43 +24,38 @@ public class WallpaperDownloader {
 
     public static void download(WallpaperDownloadListener listener, String url) {
         Threads.postOnThreadPoolExecutor(() -> {
-            Bitmap bitmap = null;
-            try {
-                bitmap = Glide.with(HSApplication.getContext())
-                        .asBitmap()
-                        .load(url)
-                        .submit(1080, 1363)
-                        .get();
+            final HSHttpConnection connection = new HSHttpConnection(url, HttpRequest.Method.GET);
 
-            } catch (Exception e) {
-                listener.onDownloadFailed();
-                e.printStackTrace();
-            }
+            String fileName = getWallpaperPathString(url) + ".png";
+            File storedWallpaper = new File(CommonUtils.getDirectory(LOCAL_DIRECTORY), fileName);
 
-            if (bitmap != null) {
-                String fileName = getWallpaperPathString(url) + ".png";
-                File storedWallpaper = new File(CommonUtils.getDirectory(LOCAL_DIRECTORY), fileName);
-
-                FileOutputStream out;
-                try {
-                    out = new FileOutputStream(storedWallpaper);
-                } catch (FileNotFoundException e) {
-                    e.printStackTrace();
-                    listener.onDownloadFailed();
-                    return;
+            connection.setDownloadFile(storedWallpaper);
+            connection.setConnectionFinishedListener(new HSHttpConnection.OnConnectionFinishedListener() {
+                @Override
+                public void onConnectionFinished(HSHttpConnection hsHttpConnection) {
+                    if (hsHttpConnection.isSucceeded()) {
+                        HSLog.d(TAG, "File download success");
+                        final String storedPath = storedWallpaper.getAbsolutePath();
+                        Threads.postOnMainThread(() -> listener.onDownloadSuccess(storedPath));
+                    } else {
+                        HSLog.d(TAG, "File download failed");
+                        Threads.postOnMainThread(() -> {
+                            listener.onDownloadFailed();
+                            Toasts.showToast(R.string.wallpaper_download_failed);
+                        });
+                    }
                 }
 
-                bitmap.compress(Bitmap.CompressFormat.PNG, 100, out);
-                final String storedPath = storedWallpaper.getAbsolutePath();
-                try {
-                    out.flush();
-                    out.close();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                    listener.onDownloadFailed();
+                @Override
+                public void onConnectionFailed(HSHttpConnection hsHttpConnection, HSError hsError) {
+                    HSLog.d(TAG, "File download failed error = " + hsError.getMessage());
+                    Threads.postOnMainThread(() -> {
+                        listener.onDownloadFailed();
+                        Toasts.showToast(R.string.wallpaper_download_failed);
+                    });
                 }
-                listener.onDownloadSuccess(storedPath);
-            }
+            });
+            connection.startSync();
         });
     }
 
