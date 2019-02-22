@@ -233,7 +233,7 @@
                     android:id="@+id/conversation_unread_messages_count"
                     android:layout_width="21dp"
                     android:layout_height="21dp"
-                    android:layout_gravity="right|top"
+                    android:layout_gravity="end|top"
                     android:layout_marginTop="20dp"
                     android:gravity="center"
                     android:includeFontPadding="false"
