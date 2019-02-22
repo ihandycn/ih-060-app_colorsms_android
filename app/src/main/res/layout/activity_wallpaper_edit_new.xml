@@ -9,10 +9,11 @@
     android:orientation="vertical">
 
     <FrameLayout
+        android:clipChildren="false"
         android:layout_width="match_parent"
         android:layout_height="40dp"
-        android:layout_marginLeft="17dp"
-        android:layout_marginRight="17dp"
+        android:layout_marginLeft="7dp"
+        android:layout_marginRight="7dp"
         android:layout_marginTop="36dp">
 
         <ImageView
@@ -20,7 +21,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical|start"
-            android:src="@drawable/ic_back_sms_show_detail_page"
+            android:alpha="0.7"
+            android:padding="10dp"
+            android:src="@drawable/wallpaper_edit_icon_back"
             tools:ignore="ContentDescription" />
 
         <com.superapps.view.TypefacedTextView
@@ -28,10 +31,11 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical|end"
+            android:padding="10dp"
             android:text="@string/wallpaper_reset"
             android:textAllCaps="true"
-            android:textColor="#b3ffffff"
-            android:textSize="16sp"
+            android:textColor="@color/white_70_transparent"
+            android:textSize="13sp"
             app:typeface="@string/custom_font_medium" />
     </FrameLayout>
 
@@ -39,7 +43,7 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_marginBottom="45dp"
-        android:layout_marginTop="51dp"
+        android:layout_marginTop="25dp"
         android:layout_weight="1">
 
         <ImageView
