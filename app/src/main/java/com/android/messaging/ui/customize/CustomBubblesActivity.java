@@ -15,7 +15,7 @@ import com.android.messaging.ui.CustomViewPager;
 public class CustomBubblesActivity extends AppCompatActivity  {
 
     private CustomHeaderViewPager mCustomHeaderViewPager;
-    private BubbleStyleViewHolder mBubbleStyleViewHolder;
+    private BubbleDrawableViewHolder mBubbleDrawableViewHolder;
     private BubbleColorViewHolder mBubbleColorViewHolder;
 
 
@@ -26,11 +26,11 @@ public class CustomBubblesActivity extends AppCompatActivity  {
         initActionBar();
         mCustomHeaderViewPager = findViewById(R.id.customize_pager);
 
-        mBubbleStyleViewHolder = new BubbleStyleViewHolder(this);
+        mBubbleDrawableViewHolder = new BubbleDrawableViewHolder(this);
         mBubbleColorViewHolder = new BubbleColorViewHolder(this);
 
         final CustomPagerViewHolder[] viewHolders = {
-                mBubbleStyleViewHolder,
+                mBubbleDrawableViewHolder,
                 mBubbleColorViewHolder};
 
         mCustomHeaderViewPager = findViewById(R.id.customize_pager);

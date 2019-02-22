@@ -12,10 +12,10 @@ import android.widget.ImageView;
 import com.android.messaging.R;
 import com.android.messaging.util.ImageUtils;
 
-public class BubbleStyleAdapter extends RecyclerView.Adapter<BubbleStyleAdapter.ViewHolder> {
+public class BubbleDrawableAdapter extends RecyclerView.Adapter<BubbleDrawableAdapter.ViewHolder> {
     private Context mContext;
 
-    public BubbleStyleAdapter(Context context) {
+    public BubbleDrawableAdapter(Context context) {
         mContext = context;
     }
 
