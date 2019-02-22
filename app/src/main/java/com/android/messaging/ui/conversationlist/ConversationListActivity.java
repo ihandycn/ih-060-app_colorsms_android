@@ -31,6 +31,7 @@ import android.support.v7.widget.AppCompatDrawableManager;
 import android.support.v7.widget.Toolbar;
 import android.view.ActionMode;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
@@ -163,7 +164,7 @@ public class ConversationListActivity extends AbstractConversationListActivity
         navigationView.setPadding(0, Dimensions.getStatusBarInset(this), 0, 0);
 
         drawerLayout = findViewById(R.id.main_drawer_layout);
-        ActionBarDrawerToggle drawerToggle = new ActionBarDrawerToggle(this, drawerLayout, findViewById(R.id.toolbar), R.string.drawer_open, R.string.drawer_close) {
+        ActionBarDrawerToggle drawerToggle = new ActionBarDrawerToggle(this, drawerLayout, R.string.drawer_open, R.string.drawer_close) {
             @Override
             public void onDrawerStateChanged(int newState) {
                 if (newState == DrawerLayout.STATE_SETTLING) {
@@ -268,6 +269,25 @@ public class ConversationListActivity extends AbstractConversationListActivity
                 mShowRateAlert = true;
             }
         }
+    }
+
+    @Override public boolean onOptionsItemSelected(MenuItem menuItem) {
+        if (mActionMode != null &&
+                mActionMode.getCallback().onActionItemClicked(mActionMode, menuItem)) {
+            return true;
+        }
+
+        switch (menuItem.getItemId()) {
+            case android.R.id.home:
+                if (mActionMode != null) {
+                    dismissActionMode();
+                    return true;
+                } else {
+                    drawerLayout.openDrawer(navigationView);
+                    return true;
+                }
+        }
+        return super.onOptionsItemSelected(menuItem);
     }
 
     @Override
