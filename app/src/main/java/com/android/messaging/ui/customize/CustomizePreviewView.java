@@ -27,8 +27,8 @@ public class CustomizePreviewView extends ConstraintLayout {
 
     public void updateBubbleDrawables() {
         mIncomingMessage.setBackground(
-                ConversationDrawables.get().getBubbleDrawable(false, true, false, false));
+                ConversationDrawables.get().getBubbleDrawable(false, true, true, false));
         mOutgoingMessage.setBackground(
-                ConversationDrawables.get().getBubbleDrawable(false, false, false, false));
+                ConversationDrawables.get().getBubbleDrawable(false, false, true, false));
     }
 }

@@ -2,7 +2,8 @@
 <merge xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    xmlns:tools="http://schemas.android.com/tools">
 
     <com.superapps.view.TypefacedTextView
         android:id="@+id/contact_icon"
@@ -28,14 +29,27 @@
         android:gravity="center"
         android:padding="10dp"
         android:text="@string/bubble_customize_preview_incoming_message"
-        android:textColor="#222327"
+        android:textColor="@color/text_primary_color"
         android:textSize="13sp"
         android:ellipsize="none"
         android:inputType="textMultiLine"
         android:maxLines="3"
         app:layout_constraintStart_toEndOf="@id/contact_icon"
         app:layout_constraintTop_toTopOf="@id/contact_icon"
-        app:font_size_changeable="true"/>
+        app:font_size_changeable="true"
+        tools:background="@color/primary_color"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="10sp"
+        android:textColor="@color/conversation_list_timestamp"
+        android:text="1hr ago"
+        android:layout_marginStart="12dp"
+        android:layout_marginTop="5dp"
+        app:layout_constraintTop_toBottomOf="@id/incoming_message_preview_item"
+        app:layout_constraintStart_toStartOf="@id/incoming_message_preview_item" />
+
 
     <com.superapps.view.TypefacedTextView
         android:id="@+id/outgoing_message_preview_item"
@@ -56,6 +70,19 @@
         android:maxLines="3"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:font_size_changeable="true"/>
+        app:font_size_changeable="true"
+        tools:background="@color/primary_color"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="10sp"
+        android:textColor="@color/conversation_list_timestamp"
+        android:text="now"
+        android:layout_marginStart="12dp"
+        android:layout_marginTop="5dp"
+        app:layout_constraintTop_toBottomOf="@id/outgoing_message_preview_item"
+        app:layout_constraintEnd_toEndOf="@id/outgoing_message_preview_item" />
+
 
 </merge>
