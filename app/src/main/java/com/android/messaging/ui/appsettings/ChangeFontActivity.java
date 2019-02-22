@@ -5,20 +5,15 @@ import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
-import android.widget.SeekBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.android.messaging.BaseActivity;
 import com.android.messaging.R;
 import com.android.messaging.ui.conversationlist.ConversationListActivity;
 import com.android.messaging.ui.view.LevelSeekBar;
 import com.android.messaging.util.BuglePrefs;
-import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
 import com.ihs.commons.notificationcenter.HSGlobalNotificationCenter;
-import com.superapps.util.Toasts;
 
 import org.qcode.fontchange.IFontChangeListener;
 import org.qcode.fontchange.impl.FontManagerImpl;
@@ -55,7 +50,8 @@ public class ChangeFontActivity extends BaseActivity implements LevelSeekBar.OnL
         mSeekBar = findViewById(R.id.seek_bar);
         mTextFontFamily = findViewById(R.id.setting_text_font_name);
         mTextFontSize = findViewById(R.id.setting_text_size_info);
-        mChangeFontContainer = findViewById(R.id.chang_font_container);
+        mChangeFontContainer = findViewById(R.id.change_font_container);
+        View changeFontItem = findViewById(R.id.change_font_item);
 
         int level = (int) prefs.getLong("font_scale", 2);
         String fontFamily = prefs.getString("font_family", "Default");
@@ -65,7 +61,7 @@ public class ChangeFontActivity extends BaseActivity implements LevelSeekBar.OnL
         mSeekBar.setOnLevelChangeListener(this);
         mSeekBar.setLevel(level);
 
-        mChangeFontContainer.setOnClickListener(new View.OnClickListener() {
+        changeFontItem.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 // open a dialog to choose font
@@ -130,6 +126,8 @@ public class ChangeFontActivity extends BaseActivity implements LevelSeekBar.OnL
         FontManagerImpl.getInstance().changeFontSize(scale, mListener);
         mTextFontSize.setText(mTextSizes[newLevel]);
         mFontChange = true;
+        // need modify view height
+//        mChangeFontContainer.requestLayout();
     }
 
     @Override
