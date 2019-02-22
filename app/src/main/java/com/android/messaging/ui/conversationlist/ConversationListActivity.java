@@ -225,6 +225,8 @@ public class ConversationListActivity extends AbstractConversationListActivity
         navigationContent.findViewById(R.id.navigation_item_chat_background).setOnClickListener(this);
         navigationContent.findViewById(R.id.navigation_item_setting).setOnClickListener(this);
         navigationContent.findViewById(R.id.navigation_item_rate).setOnClickListener(this);
+
+        setDrawerMenuIcon();
     }
 
     @SuppressWarnings("RestrictedApi")
