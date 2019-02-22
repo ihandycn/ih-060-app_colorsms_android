@@ -20,6 +20,7 @@ import android.content.res.TypedArray;
 import android.graphics.Canvas;
 import android.graphics.Path;
 import android.graphics.RectF;
+import android.graphics.drawable.Drawable;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.net.Uri;
@@ -35,6 +36,7 @@ import com.android.messaging.Factory;
 import com.android.messaging.R;
 import com.android.messaging.datamodel.data.MessagePartData;
 import com.android.messaging.ui.conversationlist.ConversationListActivity;
+import com.android.messaging.ui.customize.PrimaryColors;
 import com.android.messaging.ui.mediapicker.PausableChronometer;
 import com.android.messaging.util.Assert;
 import com.android.messaging.util.ContentType;
@@ -42,6 +44,8 @@ import com.android.messaging.util.LogUtil;
 import com.android.messaging.util.MediaUtil;
 import com.android.messaging.util.Typefaces;
 import com.android.messaging.util.UiUtils;
+import com.superapps.util.BackgroundDrawables;
+import com.superapps.util.Dimensions;
 
 /**
  * A reusable widget that hosts an audio player for audio attachment playback. This widget is used
@@ -365,9 +369,14 @@ public class AudioAttachmentView extends LinearLayout {
                 final ImageView playButton = findViewById(R.id.play_button);
                 playButton.setImageDrawable(
                         getResources().getDrawable(R.drawable.ic_preview_play));
+                Drawable customizeBackgroundDrawable = BackgroundDrawables.
+                        createBackgroundDrawable(PrimaryColors.getPrimaryColor(), Dimensions.pxFromDp(28), false);
+                playButton.setBackground(customizeBackgroundDrawable);
+
                 final ImageView pauseButton = findViewById(R.id.pause_button);
                 pauseButton.setImageDrawable(
                         getResources().getDrawable(R.drawable.ic_preview_pause));
+                pauseButton.setBackground(customizeBackgroundDrawable);
                 break;
 
             default:

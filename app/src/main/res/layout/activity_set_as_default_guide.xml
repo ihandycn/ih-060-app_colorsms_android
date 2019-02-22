@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/dialog_background_transparent"
+    android:background="#b2000000"
     tools:context="com.android.messaging.ui.SetAsDefaultGuideActivity">
 
     <android.support.constraint.Guideline
@@ -35,13 +35,11 @@
         app:layout_constraintStart_toStartOf="@id/set_as_default_guideline"
         app:layout_constraintTop_toTopOf="parent">
 
-        <com.superapps.view.RoundImageView
+        <ImageView
             android:id="@+id/set_as_default_top_image"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            app:radius_leftTop="@dimen/dialog_corner_radius"
-            app:radius_rightTop="@dimen/dialog_corner_radius" />
+            android:layout_gravity="center" />
 
         <com.superapps.view.AutoResizeTextView
             android:id="@+id/set_as_default_title"
@@ -102,7 +100,7 @@
         android:layout_marginTop="2dp"
         android:background="@drawable/material_close_btn_bg_round"
         android:padding="12dp"
-        android:src="@drawable/dialog_cancel"
+        android:src="@drawable/set_as_default_close"
         app:layout_constraintEnd_toEndOf="@+id/linearLayout"
         app:layout_constraintTop_toTopOf="@+id/linearLayout" />
 

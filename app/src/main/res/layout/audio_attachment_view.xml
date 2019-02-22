@@ -31,7 +31,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:contentDescription="@string/audio_play_content_description"
-            android:src="@drawable/ic_audio_play_outgoing" />
+            android:src="@drawable/ic_preview_play" />
 
         <ImageView
             android:id="@+id/pause_button"
@@ -39,7 +39,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:contentDescription="@string/audio_pause_content_description"
-            android:src="@drawable/ic_audio_pause_outgoing" />
+            android:src="@drawable/ic_preview_pause" />
     </com.android.messaging.ui.AudioAttachmentPlayPauseButton>
 
     <com.android.messaging.ui.mediapicker.PausableChronometer

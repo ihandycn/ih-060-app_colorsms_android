@@ -132,18 +132,6 @@ public class BugleApplication extends HSApplication implements UncaughtException
             StrictMode.setThreadPolicy(new StrictMode.ThreadPolicy.Builder().detectAll().penaltyLog().build());
             StrictMode.setVmPolicy(new StrictMode.VmPolicy.Builder().detectAll().penaltyLog().build());
         }
-
-        // Note onCreate is called in both test and real application environments
-        if (!sRunningTests) {
-            // Only create the factory if not running tests
-            FactoryImpl.register(getApplicationContext(), this);
-        } else {
-            LogUtil.e(TAG, "BugleApplication.onCreate: FactoryImpl.register skipped for test run");
-        }
-
-        initPhotoViewAnalytics();
-        EmojiConfig.getInstance().doInit();
-        initMessageCenterLib();
         initLeakCanaryAsync();
         SharedPreferencesOptimizer.install(true);
         String packageName = getPackageName();
@@ -169,11 +157,18 @@ public class BugleApplication extends HSApplication implements UncaughtException
 
             initWorks.add(new ParallelBackgroundTask("Upgrade", () -> Upgrader.getUpgrader(this).upgrade()));
 
-            initWorks.add(new SyncMainThreadTask("InitTimeTicker", () -> {
-                new BugleTimeTicker().start();
-            }));
+            initWorks.add(new SyncMainThreadTask("InitFactoryImpl", this::initFactoryImpl));
 
-            initWorks.add(new SyncMainThreadTask("InitObserveDefaultSmsAppChanged", this::initObserveDefaultSmsAppChanged));
+            initWorks.add(new SyncMainThreadTask("InitPhotoViewAnalytics", this::initPhotoViewAnalytics));
+
+            initWorks.add(new SyncMainThreadTask("InitEmojiConfig", () -> EmojiConfig.getInstance().doInit()));
+
+            initWorks.add(new SyncMainThreadTask("InitMessageCenter", this::initMessageCenterLib));
+
+            initWorks.add(new SyncMainThreadTask("InitTimeTicker", () -> new BugleTimeTicker().start()));
+
+            initWorks.add(new SyncMainThreadTask("InitObserverDefaultSmsChanged", this::initObserveDefaultSmsAppChanged));
+
             initWorks.add(new SyncMainThreadTask("InitObserveScreenStatusChanged", this::initObserveUserPresentChanged));
 
             TaskRunner.run(initWorks);
@@ -182,12 +177,22 @@ public class BugleApplication extends HSApplication implements UncaughtException
         }
     }
 
+    private void initFactoryImpl() {
+        // Note onCreate is called in both test and real application environments
+        if (!sRunningTests) {
+            // Only create the factory if not running tests
+            FactoryImpl.register(getApplicationContext(), this);
+        } else {
+            LogUtil.e(TAG, "BugleApplication.onCreate: FactoryImpl.register skipped for test run");
+        }
+    }
+
     private void initKeepAlive() {
         // Init keep alive arguments
         HSPermanentUtils.initKeepAlive(true,
+                false,
                 true,
-                true,
-                true,
+                false,
                 true,
                 false,
                 false,
@@ -233,6 +238,9 @@ public class BugleApplication extends HSApplication implements UncaughtException
         final String KEY_FOR_LAST_USER_PRESENT_TIME = "last_user_present_time";
         final String KEY_FOR_TODAY_USER_PRESENT_COUNT = "today_user_present_count";
         BroadcastCenter.register(getApplicationContext(), (context, intent) -> {
+            if (PhoneUtils.getDefault().isDefaultSmsApp()) {
+                return;
+            }
             long lastUserPresent = Preferences.getDefault().getLong(KEY_FOR_LAST_USER_PRESENT_TIME, 0);
             long now = System.currentTimeMillis();
             if (Calendars.isSameDay(lastUserPresent, now)) {

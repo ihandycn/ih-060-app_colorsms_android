@@ -731,7 +731,7 @@
     <string name="block_confirmation_message">You\'ll continue to receive messages from this number but won\'t be notified anymore. This conversation will be archived.</string>
 
     <!-- The title of the list of blocked contacts -->
-    <string name="blocked_contacts_title">Blocked Contacts</string>
+    <string name="blocked_contacts_title">Blocked contacts</string>
 
     <!-- The message in a blocked contact item which indicates tapping will unblock -->
     <string name="tap_to_unblock_message">Unblock</string>
@@ -999,6 +999,8 @@
     <string name="emoji_store_title">Emoji Store</string>
     <string name="emoji_get">GET</string>
     <string name="emoji_added">ADDED</string>
+    <string name="emoji_add_more">More emojis</string>
+    <string name="emoji_recent_empty_description">Click an emoji to share with friends.</string>
 
     <!--sms show-->
     <string name="sms_show_apply">APPLY</string>
@@ -1075,38 +1077,47 @@
     <string name="setting_text_size_hint">Normal</string>
     <string name="setting_sms_pop_ups">SMS Pop-ups</string>
     <string name="setting_sms_pop_ups_summary">Pop up a window when receiving messages</string>
-    <string name="setting_sms_show">SMS Show</string>
+    <string name="setting_sms_show">SMS show</string>
     <string name="setting_sms_show_summary">Beautify SMS reminder effects</string>
     <string name="setting_sms_show_close_dialog_title">Confirm to turn off?</string>
     <string name="setting_sms_show_close_dialog_content">You will lose the beautiful SMS reminder themes, really want to close it?</string>
     <string name="setting_sms_show_close_dialog_ok">OK</string>
-    <string name="emoji_recent_empty_description">Click an emoji to share with friends.</string>
-
+    <string name="setting_test_change_theme_color">change theme color for debug</string>
 
     <!--notification channel-->
     <string name="sms_notification_channel">SMS Notification</string>
     <string name="sms_notification_channel_description">Show a notification when received SMS</string>
 
-    <string name="emoji_add_more">More emojis</string>
-
-    <string name="set_as_default_dialog_title_default_change">Default SMS Cleared</string>
-    <string name="set_as_default_dialog_description_default_change">Color SMS can’t work properly without being set as default.</string>
-    <string name="set_as_default_dialog_button_ok_default_change">Set Now</string>
-
-    <string name="set_as_default_dialog_title_user_present">Set Color SMS as default</string>
-    <string name="set_as_default_dialog_description_user_present">Color SMS can’t work without being set as default.</string>
-    <string name="set_as_default_dialog_button_ok_user_present">OK</string>
+    <!--customize-->
+    <string name="bubble_customize_preview_incoming_message">Hi, there! Nice to meet you.</string>
+    <string name="bubble_customize_preview_outgoing_message">Nice to meet you too</string>
+    <string name="bubble_customize_tab_style">Style</string>
+    <string name="bubble_customize_tab_color">Color</string>
+    <string name="bubble_customize_action_bar_title">Bubble</string>
+    <string name="bubble_customize_bubble_color">Bubble Color</string>
+    <string name="bubble_customize_text_color">Text Color</string>
+    <string name="bubble_customize_received">Received</string>
+    <string name="bubble_customize_sent">Sent</string>
+    <string name="bubble_customize_color_recommend">Recommend</string>
+    <string name="bubble_customize_color_advance">Advance</string>
 
     <string name="drawer_open" translatable="false">Open navigation drawer</string>
     <string name="drawer_close" translatable="false">Close navigation drawer</string>
-    <string name="theme_select_title">Theme Color</string>
+    <string name="theme_select_title">Theme color</string>
     <string name="theme_select_description">Select theme color you like</string>
-    <string name="menu_theme_color">Theme Color</string>
-    <string name="menu_bubble">Chat Bubble</string>
-    <string name="menu_chat_background">Chat Background</string>
     <string name="menu_change_font">Change Font</string>
+    <string name="menu_theme_color">Theme color</string>
+    <string name="menu_bubble">Chat bubble</string>
+    <string name="menu_chat_background">Chat background</string>
     <string name="menu_setting">Settings</string>
     <string name="menu_rate">5 star rating</string>
     <string name="menu_group_customization">Customize</string>
     <string name="coming_soon">Coming soon in a few days</string>
+
+    <string name="set_as_default_dialog_title_default_change">Default SMS Cleared</string>
+    <string name="set_as_default_dialog_description_default_change">Color SMS can\'t work properly without being set as default.</string>
+    <string name="set_as_default_dialog_button_ok_default_change">Set Now</string>
+    <string name="set_as_default_dialog_title_user_present">Set Color SMS as Default</string>
+    <string name="set_as_default_dialog_description_user_present">Send funny emojis, stickers and GIFs to friends via Color SMS.</string>
+    <string name="set_as_default_dialog_button_ok_user_present">OK</string>
 </resources>

@@ -32,6 +32,7 @@ import android.support.v7.widget.AppCompatDrawableManager;
 import android.support.v7.widget.Toolbar;
 import android.view.ActionMode;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
@@ -43,6 +44,7 @@ import com.android.messaging.datamodel.BugleNotifications;
 import com.android.messaging.ui.UIIntents;
 import com.android.messaging.ui.appsettings.ChangeFontActivity;
 import com.android.messaging.ui.appsettings.ThemeSelectActivity;
+import com.android.messaging.ui.customize.CustomBubblesActivity;
 import com.android.messaging.ui.dialog.FiveStarRateDialog;
 import com.android.messaging.ui.emoji.EmojiStoreActivity;
 import com.android.messaging.util.BugleAnalytics;
@@ -167,7 +169,7 @@ public class ConversationListActivity extends AbstractConversationListActivity
         navigationView.setPadding(0, Dimensions.getStatusBarInset(this), 0, 0);
 
         drawerLayout = findViewById(R.id.main_drawer_layout);
-        ActionBarDrawerToggle drawerToggle = new ActionBarDrawerToggle(this, drawerLayout, findViewById(R.id.toolbar), R.string.drawer_open, R.string.drawer_close) {
+        ActionBarDrawerToggle drawerToggle = new ActionBarDrawerToggle(this, drawerLayout, R.string.drawer_open, R.string.drawer_close) {
             @Override
             public void onDrawerStateChanged(int newState) {
                 if (newState == DrawerLayout.STATE_SETTLING) {
@@ -235,6 +237,8 @@ public class ConversationListActivity extends AbstractConversationListActivity
         navigationContent.findViewById(R.id.navigation_item_change_font).setOnClickListener(this);
         navigationContent.findViewById(R.id.navigation_item_setting).setOnClickListener(this);
         navigationContent.findViewById(R.id.navigation_item_rate).setOnClickListener(this);
+
+        setDrawerMenuIcon();
     }
 
     @SuppressWarnings("RestrictedApi")
@@ -276,6 +280,25 @@ public class ConversationListActivity extends AbstractConversationListActivity
                 mShowRateAlert = true;
             }
         }
+    }
+
+    @Override public boolean onOptionsItemSelected(MenuItem menuItem) {
+        if (mActionMode != null &&
+                mActionMode.getCallback().onActionItemClicked(mActionMode, menuItem)) {
+            return true;
+        }
+
+        switch (menuItem.getItemId()) {
+            case android.R.id.home:
+                if (mActionMode != null) {
+                    dismissActionMode();
+                    return true;
+                } else {
+                    drawerLayout.openDrawer(navigationView);
+                    return true;
+                }
+        }
+        return super.onOptionsItemSelected(menuItem);
     }
 
     @Override
@@ -537,7 +560,7 @@ public class ConversationListActivity extends AbstractConversationListActivity
 //                drawerClickIndex = DRAWER_INDEX_BUBBLE;
 //                drawerLayout.closeDrawer(navigationView);
                 BugleAnalytics.logEvent("Menu_Bubble_Click");
-                Toasts.showToast(R.string.coming_soon);
+                Navigations.startActivity(ConversationListActivity.this, CustomBubblesActivity.class);
                 break;
             case R.id.navigation_item_chat_background:
 //                drawerClickIndex = DRAWER_INDEX_CHAT_BACKGROUND;

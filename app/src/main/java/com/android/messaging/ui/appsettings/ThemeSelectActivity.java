@@ -35,7 +35,7 @@ public class ThemeSelectActivity extends HSAppCompatActivity {
     };
 
     private static int[] COLORS = new int[]{
-            0xff1acc48,
+            PrimaryColors.getPrimaryColor(),
             0xff0083fe,
             0xff16c7d3,
             0xffff7e2a,

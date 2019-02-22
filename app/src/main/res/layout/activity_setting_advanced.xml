@@ -5,7 +5,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <include layout="@layout/setting_top_tool_bar_view" />
+    <include layout="@layout/top_tool_bar_view" />
 
     <com.android.messaging.ui.appsettings.SettingItemView
         android:id="@+id/setting_advanced_phone_number"

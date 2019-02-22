@@ -245,4 +245,10 @@
     <color name="ic_launcher_background">@color/primary_color</color>
     <color name="text_shadow">#33000000</color>
 
+    <!--customize-->
+    <color name="customize_bubble_divider">#f4f5f8</color>
+    <color name="customize_bubble_ring">#dee0e8</color>
+    <color name="customize_bubble_color_divider">#23313131</color>
+    <color name="customize_bubble_primary_text_color">#4f5157</color>
+
 </resources>
