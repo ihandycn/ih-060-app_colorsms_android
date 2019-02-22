@@ -27,7 +27,7 @@
             android:alpha="@dimen/dialog_content_title"
             android:textSize="@dimen/dialog_content_title_size"
             tools:text="Add to Contacts?"
-            android:layout_marginTop="@dimen/dialog_content_margin_top"
+            android:layout_marginTop="22dp"
             tools:ignore="RelativeOverlap"
             android:layout_marginEnd="@dimen/dialog_content_margin_right"
             android:layout_marginStart="@dimen/dialog_content_margin_left"
@@ -41,8 +41,8 @@
             android:id="@+id/content_view"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/dialog_content_margin_top"
             android:clipChildren="false"
+            android:layout_marginTop="3dp"
             tools:ignore="RelativeOverlap"
             android:layout_marginEnd="@dimen/dialog_content_margin_right"
             android:layout_marginStart="@dimen/dialog_content_margin_left" >

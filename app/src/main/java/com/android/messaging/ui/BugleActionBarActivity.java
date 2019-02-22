@@ -51,7 +51,7 @@ public class BugleActionBarActivity extends AppCompatActivity implements ImeUtil
 
     // The ActionMode that represents the modal contextual action bar, using our own implementation
     // rather than the built in contextual action bar to reduce jank
-    private CustomActionMode mActionMode;
+    protected CustomActionMode mActionMode;
 
     // The menu for the action bar
     private Menu mActionBarMenu;
@@ -264,7 +264,7 @@ public class BugleActionBarActivity extends AppCompatActivity implements ImeUtil
      * Custom ActionMode implementation which allows us to just replace the contents of the main
      * action bar rather than overlay over it
      */
-    private class CustomActionMode extends ActionMode {
+    protected class CustomActionMode extends ActionMode {
         private CharSequence mTitle;
         private CharSequence mSubtitle;
         private View mCustomView;
