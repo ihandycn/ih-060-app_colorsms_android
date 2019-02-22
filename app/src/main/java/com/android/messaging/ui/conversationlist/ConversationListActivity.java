@@ -46,6 +46,8 @@ import com.android.messaging.ui.emoji.EmojiStoreActivity;
 import com.android.messaging.util.BugleAnalytics;
 import com.android.messaging.util.Trace;
 import com.android.messaging.util.UiUtils;
+import com.android.messaging.wallpaper.WallpaperManager;
+import com.android.messaging.wallpaper.WallpaperPreviewActivity;
 import com.ihs.commons.notificationcenter.HSGlobalNotificationCenter;
 import com.ihs.commons.notificationcenter.INotificationObserver;
 import com.ihs.commons.utils.HSBundle;
@@ -129,8 +131,19 @@ public class ConversationListActivity extends AbstractConversationListActivity
 
         setupDrawer();
 
+        String bgPath = WallpaperManager.getWallpaperPathByThreadId(null);
+        String backgroundStr;
+        if (bgPath == null || bgPath.equals("")) {
+            backgroundStr = "default";
+        } else if (bgPath.contains("_1.png")) {
+            backgroundStr = "customize";
+        } else {
+            backgroundStr = "colorsms";
+        }
         HSGlobalNotificationCenter.addObserver(EVENT_MAINPAGE_RECREATE, this);
-        BugleAnalytics.logEvent("SMS_Messages_Show", true, "color", String.valueOf(ThemeSelectActivity.getSelectedIndex()));
+        BugleAnalytics.logEvent("SMS_Messages_Show", true,
+                "color", String.valueOf(ThemeSelectActivity.getSelectedIndex()),
+                "background", backgroundStr);
 
         Trace.endSection();
     }
@@ -485,7 +498,8 @@ public class ConversationListActivity extends AbstractConversationListActivity
             mIsNoActionBack = false;
         }
         Preferences.getDefault().doOnce(new Runnable() {
-            @Override public void run() {
+            @Override
+            public void run() {
                 BugleAnalytics.logEvent("SMS_Messages_First_Click", true, "type", type);
             }
         }, "pref_first_come_in_click_event");
@@ -517,7 +531,8 @@ public class ConversationListActivity extends AbstractConversationListActivity
         }
     }
 
-    @Override public void onClick(View v) {
+    @Override
+    public void onClick(View v) {
         switch (v.getId()) {
             case R.id.navigation_item_theme_color:
                 drawerClickIndex = DRAWER_INDEX_THEME_COLOR;
@@ -533,7 +548,7 @@ public class ConversationListActivity extends AbstractConversationListActivity
 //                drawerClickIndex = DRAWER_INDEX_CHAT_BACKGROUND;
 //                drawerLayout.closeDrawer(navigationView);
                 BugleAnalytics.logEvent("Menu_ChatBackground_Click");
-                Toasts.showToast(R.string.coming_soon);
+                WallpaperPreviewActivity.startWallpaperPreview(this);
                 break;
             case R.id.navigation_item_setting:
                 drawerClickIndex = DRAWER_INDEX_SETTING;
@@ -546,7 +561,8 @@ public class ConversationListActivity extends AbstractConversationListActivity
         }
     }
 
-    @Override public void onReceive(String s, HSBundle hsBundle) {
+    @Override
+    public void onReceive(String s, HSBundle hsBundle) {
         switch (s) {
             case EVENT_MAINPAGE_RECREATE:
                 sIsRecreate = true;

@@ -20,6 +20,7 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.os.Build;
 import android.os.UserManager;
 import android.view.ContextThemeWrapper;
 
@@ -96,6 +97,21 @@ public class BugleActivityUtil {
         } else {
             return null;
         }
+    }
+
+    @SuppressWarnings("SimplifiableIfStatement")
+    public static boolean isDestroyed(Activity activity) {
+        if (activity == null) {
+            return false;
+        }
+
+        if (activity.isFinishing()) {
+            return true;
+        }
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
+            return activity.isDestroyed();
+        }
+        return false;
     }
 }
 

@@ -543,6 +543,7 @@
     <string name="action_debug_options">Debug</string>
     <!-- Title for the "People and Options" activity -->
     <string name="people_and_options_activity_title">People &amp; options</string>
+    <string name="customize_title">Customize</string>
     <!-- Title for the general settings section in the "People and options" activity -->
     <string name="general_settings_title">General</string>
     <!-- Title for the list of participants in the "People and options" activity -->
@@ -1084,9 +1085,15 @@
     <string name="theme_select_description">Select theme color you like</string>
     <string name="menu_theme_color">Theme Color</string>
     <string name="menu_bubble">Bubble</string>
-    <string name="menu_chat_background">Chat Background</string>
     <string name="menu_setting">Settings</string>
     <string name="menu_rate">5 star rating</string>
     <string name="menu_group_customization">Customization</string>
     <string name="coming_soon">Coming soon in a few days</string>
+
+    <!--wallpaper-->
+    <string name="wallpaper_title">Chat Background</string>
+    <string name="wallpaper_set_failed">failed</string>
+    <string name="wallpaper_reset">reset</string>
+    <string name="wallpaper_done">DONE</string>
+    <string name="wallpaper_add_photos">Add Photos</string>
 </resources>

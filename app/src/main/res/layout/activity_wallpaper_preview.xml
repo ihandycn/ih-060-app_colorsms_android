@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <include layout="@layout/setting_top_tool_bar_view" />
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1">
+
+        <ImageView
+            android:id="@+id/wallpaper_preview"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scaleType="centerCrop"
+            tools:ignore="ContentDescription" />
+        <!-- Message list -->
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/wallpaper_chooser_message_list"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@null"
+            android:clipToPadding="false"
+            android:listSelector="@android:color/transparent"
+            android:paddingTop="@dimen/action_bar_height" />
+    </FrameLayout>
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="98.7dp"
+        android:background="#fff6f8fa">
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/wallpaper_chooser_container"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:paddingStart="3.3dp"
+            android:paddingEnd="3.3dp"
+            android:orientation="horizontal" />
+    </FrameLayout>
+</LinearLayout>

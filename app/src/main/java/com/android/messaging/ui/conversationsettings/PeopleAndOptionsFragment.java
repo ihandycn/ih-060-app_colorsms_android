@@ -27,6 +27,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.provider.Settings;
+import android.support.annotation.NonNull;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -54,6 +55,7 @@ import com.android.messaging.ui.conversation.ConversationActivity;
 import com.android.messaging.util.Assert;
 import com.android.messaging.util.BuglePrefs;
 import com.android.messaging.util.OsUtil;
+import com.android.messaging.wallpaper.WallpaperPreviewActivity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -71,6 +73,7 @@ public class PeopleAndOptionsFragment extends Fragment
     private PeopleListAdapter mPeopleListAdapter;
     private final Binding<PeopleAndOptionsData> mBinding =
             BindingBase.createBinding(this);
+    private String mConversationId;
 
     private static final int REQUEST_CODE_RINGTONE_PICKER = 1000;
 
@@ -87,7 +90,10 @@ public class PeopleAndOptionsFragment extends Fragment
         mListView = view.findViewById(android.R.id.list);
         mPeopleListAdapter = new PeopleListAdapter(getActivity());
         mOptionsListAdapter = new OptionsListAdapter();
+        CustomizeListAdapter adapter = new CustomizeListAdapter();
+
         final CompositeAdapter compositeAdapter = new CompositeAdapter(getActivity());
+        compositeAdapter.addPartition(new PeopleAndOptionsPartition(adapter, R.string.customize_title,false));
         compositeAdapter.addPartition(new PeopleAndOptionsPartition(mOptionsListAdapter,
                 R.string.general_settings_title, false));
         compositeAdapter.addPartition(new PeopleAndOptionsPartition(mPeopleListAdapter,
@@ -118,6 +124,7 @@ public class PeopleAndOptionsFragment extends Fragment
         Assert.notNull(conversationId);
         mBinding.bind(DataModel.get().createPeopleAndOptionsData(conversationId, getActivity(),
                 this));
+        mConversationId = conversationId;
     }
 
     @Override
@@ -179,6 +186,36 @@ public class PeopleAndOptionsFragment extends Fragment
                                 })
                         .show();
                 break;
+        }
+    }
+
+    private class CustomizeListAdapter extends BaseAdapter {
+
+        @Override
+        public int getCount() {
+            return 1;
+        }
+
+        @Override
+        public Object getItem(int position) {
+            return null;
+        }
+
+        @Override
+        public long getItemId(int position) {
+            return 0;
+        }
+
+        @Override
+        public View getView(final int position, final View convertView, final ViewGroup parent) {
+            final LayoutInflater inflater = (LayoutInflater) getContext()
+                    .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+            View itemView = inflater.inflate(R.layout.conversation_option_customize, parent,
+                    false);
+            itemView.setOnClickListener(v -> {
+                WallpaperPreviewActivity.startWallpaperPreviewByThreadId(getContext(), mConversationId);
+            });
+            return itemView;
         }
     }
 

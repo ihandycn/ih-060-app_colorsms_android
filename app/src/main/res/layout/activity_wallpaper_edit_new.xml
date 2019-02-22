@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/wallpaper_edit_root_container"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@android:color/black"
+    android:orientation="vertical">
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:layout_marginLeft="17dp"
+        android:layout_marginRight="17dp"
+        android:layout_marginTop="36dp">
+
+        <ImageView
+            android:id="@+id/wallpaper_view_return"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical|start"
+            android:src="@drawable/ic_back_sms_show_detail_page"
+            tools:ignore="ContentDescription" />
+
+        <com.superapps.view.TypefacedTextView
+            android:id="@+id/wallpaper_edit_reset_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical|end"
+            android:text="@string/wallpaper_reset"
+            android:textAllCaps="true"
+            android:textColor="#b3ffffff"
+            android:textSize="16sp"
+            app:typeface="@string/custom_font_medium" />
+    </FrameLayout>
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginBottom="45dp"
+        android:layout_marginTop="51dp"
+        android:layout_weight="1">
+
+        <ImageView
+            android:id="@+id/wallpaper_edit_image"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scaleType="matrix"
+            tools:ignore="ContentDescription" />
+
+        <com.android.messaging.wallpaper.crop.CropOverlayView
+            android:id="@+id/wallpaper_overlay_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:visibility="gone" />
+    </FrameLayout>
+
+    <com.superapps.view.TypefacedTextView
+        android:id="@+id/wallpaper_edit_apply_button"
+        android:layout_width="288dp"
+        android:layout_height="41dp"
+        android:layout_gravity="center"
+        android:layout_marginBottom="11.3dp"
+        android:layout_marginTop="11dp"
+        android:background="@drawable/wallpaper_edit_done_btn_bg"
+        android:gravity="center"
+        android:text="@string/wallpaper_done"
+        android:textAllCaps="true"
+        android:textColor="@android:color/white"
+        android:textSize="14sp"
+        app:typeface="@string/custom_font_semibold" />
+</LinearLayout>
