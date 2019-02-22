@@ -280,9 +280,11 @@ public class ConversationListItemView extends FrameLayout implements OnClickList
                             break;
                         case 500:
                             mConversationNameReadTypeface = typeface;
+                            mConversationNameView.setTypeface(typeface);
                             break;
                         case 700:
                             mConversationNameUnreadTypeface = typeface;
+                            mConversationNameView.setTypeface(typeface);
                             break;
                     }
                 }

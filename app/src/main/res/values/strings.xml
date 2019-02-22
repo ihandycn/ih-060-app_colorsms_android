@@ -1068,6 +1068,11 @@
     <string name="setting_privacy_policy">Privacy policy</string>
     <string name="setting_terms_of_service">Terms of service</string>
     <string name="setting_change_font">Change Font</string>
+    <string name="setting_text_font">Text Font</string>
+    <string name="setting_text_size">Text Size</string>
+    <string name="setting_text_font_name">Roboto</string>
+    <string name="setting_text_size_info">Medium Large</string>
+    <string name="setting_text_size_hint">Normal</string>
     <string name="setting_sms_pop_ups">SMS Pop-ups</string>
     <string name="setting_sms_pop_ups_summary">Pop up a window when receiving messages</string>
     <string name="setting_sms_show">SMS Show</string>
@@ -1099,6 +1104,7 @@
     <string name="menu_theme_color">Theme Color</string>
     <string name="menu_bubble">Chat Bubble</string>
     <string name="menu_chat_background">Chat Background</string>
+    <string name="menu_change_font">Change Font</string>
     <string name="menu_setting">Settings</string>
     <string name="menu_rate">5 star rating</string>
     <string name="menu_group_customization">Customize</string>

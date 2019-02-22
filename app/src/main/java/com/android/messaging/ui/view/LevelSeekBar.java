@@ -3,6 +3,7 @@ package com.android.messaging.ui.view;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.RectF;
 import android.graphics.drawable.Drawable;
@@ -22,12 +23,12 @@ public class LevelSeekBar extends View {
     public static final int NORMAL_MARK = 0;
     public static final int ROUND_MARK = 1;
 
-    private static final int DEFAULT_LEVEL_COUNT = 7;
+    private static final int DEFAULT_LEVEL_COUNT = 5;
     private static final int DEFAULT_LEVEL = 3;
     private static final int DEFAULT_TRACK_HEIGHT = Dimensions.pxFromDp(2.3f);
     private static final int DEFAULT_TRACK_BACKGROUND_HEIGHT = Dimensions.pxFromDp(2f);
-    private static final int DEFAULT_TRACK_COLOR = 0xff7fafff;
-    private static final int DEFAULT_TRACK_BACKGROUND_COLOR = 0xffdfdfdf;
+    private static final int DEFAULT_TRACK_COLOR = 0xff1acc48;
+    private static final int DEFAULT_TRACK_BACKGROUND_COLOR = 0xffd8dde2;
     private static final int DEFAULT_THUMB_RES_ID = R.drawable.settings_icon_size_slider;
     private static final int DEFAULT_SCALE_MARK_COLOR = 0xffffffff;
     private float mRoundRadius;
@@ -145,8 +146,7 @@ public class LevelSeekBar extends View {
         doDrawTrack(canvas);
 
         // Draw scales
-        float halfScaleWidth = mTrackHeight / 2;
-        float scaleTopY = trackBottom - 2 * mTrackHeight;
+        float halfScaleWidth = mTrackHeight / 1.2f;
         for (int i = 0; i < mLevelCount; i++) {
             float x;
             if (i == 0) {
@@ -159,18 +159,27 @@ public class LevelSeekBar extends View {
             boolean onBackground = mIsRtl ? x < thumbX : x > thumbX;
             if (onBackground) {
                 mShapePaint.setColor(mTrackBgColor);
-                halfScaleWidth = mTrackBgHeight / 2;
-                scaleTopY = trackBottom - 2 * mTrackBgHeight;
+                halfScaleWidth = mTrackBgHeight / 1.2f;
             }
-            if (mScaleMark == NORMAL_MARK) {
-                canvas.drawRect(x - halfScaleWidth, scaleTopY, x + halfScaleWidth, trackBottom, mShapePaint);
-            } else if (mScaleMark == ROUND_MARK){
-                // first and last round divider not needed.
-                if (i != 0 && i != mLevelCount - 1) {
-                    mShapePaint.setColor(mMarkColor);
-                    mShapePaint.setAntiAlias(true);
-                    canvas.drawCircle(x, cy, halfScaleWidth, mShapePaint);
-                }
+
+            // first and last round divider needed.
+            mShapePaint.setColor(mTrackBgColor);
+            mShapePaint.setAntiAlias(true);
+            canvas.drawCircle(x, cy, halfScaleWidth, mShapePaint);
+        }
+
+        // Draw scales background
+        for (int i = 0; i < mLevel; i++) {
+            float x = mIsRtl ? paddingLeft + width - i * gridDistance : paddingLeft + i * gridDistance;
+            boolean onBackground = mIsRtl ? x < thumbX : x > thumbX;
+
+            if (onBackground) {
+                halfScaleWidth = mTrackBgHeight / 1.2f;
+            }
+            if (mScaleMark == ROUND_MARK) {
+                mShapePaint.setColor(mMarkColor);
+                mShapePaint.setAntiAlias(true);
+                canvas.drawCircle(x, cy, halfScaleWidth, mShapePaint);
             }
         }
 

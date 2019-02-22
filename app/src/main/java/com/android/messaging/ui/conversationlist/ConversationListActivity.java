@@ -17,6 +17,7 @@
 package com.android.messaging.ui.conversationlist;
 
 import android.animation.ValueAnimator;
+import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
@@ -40,6 +41,7 @@ import com.android.messaging.Factory;
 import com.android.messaging.R;
 import com.android.messaging.datamodel.BugleNotifications;
 import com.android.messaging.ui.UIIntents;
+import com.android.messaging.ui.appsettings.ChangeFontActivity;
 import com.android.messaging.ui.appsettings.ThemeSelectActivity;
 import com.android.messaging.ui.dialog.FiveStarRateDialog;
 import com.android.messaging.ui.emoji.EmojiStoreActivity;
@@ -71,6 +73,7 @@ public class ConversationListActivity extends AbstractConversationListActivity
     private static final int DRAWER_INDEX_CHAT_BACKGROUND = 2;
     private static final int DRAWER_INDEX_SETTING = 3;
     private static final int DRAWER_INDEX_RATE = 4;
+    private static final int DRAWER_INDEX_CHANGE_FONT = 5;
 
     private int drawerClickIndex = DRAWER_INDEX_NONE;
 
@@ -198,6 +201,11 @@ public class ConversationListActivity extends AbstractConversationListActivity
 //                        BugleAnalytics.logEvent("Menu_ChatBackground_Click");
 //                        Toasts.showToast(R.string.coming_soon);
                         break;
+                    case DRAWER_INDEX_CHANGE_FONT:
+                        BugleAnalytics.logEvent("Menu_ChangeFont_Click");
+                        Intent intent = new Intent(ConversationListActivity.this,ChangeFontActivity.class);
+                        startActivity(intent);
+                        break;
                     case DRAWER_INDEX_SETTING:
                         UIIntents.get().launchSettingsActivity(ConversationListActivity.this);
                         BugleAnalytics.logEvent("Menu_Settings_Click", true);
@@ -224,6 +232,7 @@ public class ConversationListActivity extends AbstractConversationListActivity
         navigationContent.findViewById(R.id.navigation_item_theme_color).setOnClickListener(this);
         navigationContent.findViewById(R.id.navigation_item_bubble).setOnClickListener(this);
         navigationContent.findViewById(R.id.navigation_item_chat_background).setOnClickListener(this);
+        navigationContent.findViewById(R.id.navigation_item_change_font).setOnClickListener(this);
         navigationContent.findViewById(R.id.navigation_item_setting).setOnClickListener(this);
         navigationContent.findViewById(R.id.navigation_item_rate).setOnClickListener(this);
     }
@@ -535,6 +544,10 @@ public class ConversationListActivity extends AbstractConversationListActivity
 //                drawerLayout.closeDrawer(navigationView);
                 BugleAnalytics.logEvent("Menu_ChatBackground_Click");
                 Toasts.showToast(R.string.coming_soon);
+                break;
+            case R.id.navigation_item_change_font:
+                drawerClickIndex = DRAWER_INDEX_CHANGE_FONT;
+                drawerLayout.closeDrawer(navigationView);
                 break;
             case R.id.navigation_item_setting:
                 drawerClickIndex = DRAWER_INDEX_SETTING;

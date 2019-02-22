@@ -220,14 +220,6 @@ public class SettingGeneralActivity extends BaseActivity{
                     false, false);
             startActivity(termsOfServiceIntent);
         });
-
-        //change font
-        SettingItemView mChangeFont = findViewById(R.id.setting_item_change_font);
-        mChangeFont.setOnItemClickListener(() -> {
-            // add a new activity
-            Intent intent = new Intent(this,ChangeFontActivity.class);
-            startActivity(intent);
-        });
     }
 
 
