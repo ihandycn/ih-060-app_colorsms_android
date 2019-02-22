@@ -57,7 +57,7 @@ public class ChangeFontActivity extends BaseActivity implements LevelSeekBar.OnL
         mTextFontSize = findViewById(R.id.setting_text_size_info);
         mChangeFontContainer = findViewById(R.id.chang_font_container);
 
-        int level = (int) prefs.getLong("font_scale", 4);
+        int level = (int) prefs.getLong("font_scale", 2);
         String fontFamily = prefs.getString("font_family", "Default");
 
         mTextFontFamily.setText(fontFamily);
@@ -125,7 +125,7 @@ public class ChangeFontActivity extends BaseActivity implements LevelSeekBar.OnL
 
     @Override
     public void onLevelChanged(LevelSeekBar seekBar, int oldLevel, int newLevel, boolean fromUser) {
-        float scale = newLevel / 5f;
+        float scale = getScaleFromLevel(newLevel);
         prefs.putLong("font_scale", (long) newLevel);
         FontManagerImpl.getInstance().changeFontSize(scale, mListener);
         mTextFontSize.setText(mTextSizes[newLevel]);
@@ -144,5 +144,31 @@ public class ChangeFontActivity extends BaseActivity implements LevelSeekBar.OnL
         if (mFontChange) {
             HSGlobalNotificationCenter.sendNotification(ConversationListActivity.EVENT_MAINPAGE_RECREATE);
         }
+    }
+
+    private float getScaleFromLevel(int level) {
+        float scale = 1;
+        switch (level) {
+            case 0:
+                scale = 0.72f;
+                break;
+            case 1:
+                scale = 0.85f;
+                break;
+            case 2:
+                // normal
+                scale = 1;
+                break;
+            case 3:
+                scale = 1.15f;
+                break;
+            case 4:
+                scale = 1.32f;
+                break;
+            case 5:
+                scale = 1.52f;
+                break;
+        }
+        return scale;
     }
 }

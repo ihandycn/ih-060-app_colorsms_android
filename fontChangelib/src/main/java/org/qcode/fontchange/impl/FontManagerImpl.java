@@ -13,6 +13,7 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.iflytek.android_font_loader_lib.R;
+import com.superapps.util.Dimensions;
 import com.superapps.view.TypefacedTextView;
 
 import org.qcode.fontchange.FontManager;
@@ -102,7 +103,7 @@ public class FontManagerImpl extends FontManager {
         if (null != sizeAttr) {
             sizeAttr.apply(textView, mScale);
         }*/
-        textView.setTextSize(mScale * 36);
+        textView.setTextSize(mScale * Dimensions.pxFromDp(10));
     }
 
     public void applyFont(View view, boolean applyChild) {

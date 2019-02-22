@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<merge xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <com.superapps.view.TypefacedTextView
+        android:id="@+id/contact_icon"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="24dp"
+        android:layout_marginTop="24dp"
+        android:background="@drawable/bubble_customize_preview_contact_icon_background"
+        android:gravity="center"
+        android:text="E"
+        android:textColor="@color/white"
+        android:textSize="23sp"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <com.superapps.view.TypefacedTextView
+        android:id="@+id/incoming_message_preview_item"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:maxWidth="250dp"
+        android:layout_marginStart="11dp"
+        android:gravity="center"
+        android:padding="10dp"
+        android:text="@string/bubble_customize_preview_incoming_message"
+        android:textColor="#222327"
+        android:textSize="13sp"
+        android:ellipsize="none"
+        android:inputType="textMultiLine"
+        android:maxLines="3"
+        app:layout_constraintStart_toEndOf="@id/contact_icon"
+        app:layout_constraintTop_toTopOf="@id/contact_icon"
+        app:font_size_changeable="true"/>
+
+    <com.superapps.view.TypefacedTextView
+        android:id="@+id/outgoing_message_preview_item"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:maxWidth="300dp"
+        android:layout_marginStart="24dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginEnd="24dp"
+        android:layout_marginBottom="35dp"
+        android:gravity="center"
+        android:padding="10dp"
+        android:text="@string/bubble_customize_preview_outgoing_message"
+        android:textColor="@color/white"
+        android:textSize="13sp"
+        android:ellipsize="none"
+        android:inputType="textMultiLine"
+        android:maxLines="3"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:font_size_changeable="true"/>
+
+</merge>

@@ -1,137 +1,151 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical">
 
-    <include layout="@layout/setting_top_tool_bar_view" />
+    <include layout="@layout/top_tool_bar_view" />
 
-    <View
+
+    <com.android.messaging.ui.customize.CustomizePreviewView
         android:layout_width="match_parent"
-        android:layout_height="200dp"/>
+        android:layout_height="0dp"
+        android:layout_weight="2" />
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_weight="1"
         android:orientation="vertical">
 
+        <View
+            android:id="@+id/divider"
+            android:layout_width="match_parent"
+            android:layout_height="8dp"
+            android:background="@color/customize_bubble_divider"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.4" />
+
         <RelativeLayout
+            android:id="@+id/chang_font_container"
             android:layout_width="match_parent"
             android:layout_height="48dp"
-            android:orientation="horizontal"
-            android:id="@+id/chang_font_container"
-            android:gravity="center_vertical">
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
 
             <ImageView
+                android:id="@+id/icon_text_font"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="25dp"
-                android:id="@+id/icon_text_font"
-                android:src="@drawable/icon_textfont"/>
+                android:src="@drawable/icon_textfont" />
 
             <com.superapps.view.TypefacedTextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_toEndOf="@id/icon_text_font"
                 android:layout_marginStart="8dp"
-                android:textSize="14.7sp"
+                android:layout_toEndOf="@id/icon_text_font"
                 android:text="@string/setting_text_font"
-                app:typeface="@string/custom_font_bold"
-                app:font_style="bold"/>
+                android:textSize="14.7sp"
+                app:font_style="bold"
+                app:typeface="@string/custom_font_bold" />
 
             <com.superapps.view.TypefacedTextView
+                android:id="@+id/setting_text_font_name"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:id="@+id/setting_text_font_name"
                 android:layout_alignParentEnd="true"
                 android:layout_marginEnd="23.3dp"
-                android:text="@string/setting_text_font_name"/>
+                android:text="@string/setting_text_font_name" />
         </RelativeLayout>
 
         <View
             android:layout_width="match_parent"
             android:layout_height="0.7dp"
-            android:background="#313131"
-            android:alpha="0.15"
+            android:layout_marginEnd="23.3dp"
             android:layout_marginStart="23.3dp"
-            android:layout_marginEnd="23.3dp"/>
+            android:alpha="0.15"
+            android:background="#313131" />
 
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="48dp"
-            android:orientation="horizontal"
-            android:gravity="center_vertical">
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:id="@+id/icon_text_size"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="25dp"
+                android:src="@drawable/icon_textsize" />
+
+            <com.superapps.view.TypefacedTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_toEndOf="@id/icon_text_size"
+                android:text="@string/setting_text_size"
+                android:textSize="14.7sp"
+                app:font_style="bold"
+                app:typeface="@string/custom_font_bold" />
+
+            <com.superapps.view.TypefacedTextView
+                android:id="@+id/setting_text_size_info"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_marginEnd="23.3dp"
+                android:text="@string/setting_text_size_info" />
+        </RelativeLayout>
+
+        <com.superapps.view.TypefacedTextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="26dp"
+            android:layout_marginStart="135dp"
+            android:layout_marginTop="28dp"
+            android:text="@string/setting_text_size_hint" />
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
 
             <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
                 android:layout_marginStart="25dp"
-                android:id="@+id/icon_text_size"
-                android:src="@drawable/icon_textsize"/>
+                android:src="@drawable/icon_lower" />
 
-            <com.superapps.view.TypefacedTextView
+            <com.android.messaging.ui.view.LevelSeekBar
+                android:id="@+id/seek_bar"
+                android:layout_width="match_parent"
+                android:layout_height="35dp"
+                android:layout_marginLeft="55dp"
+                android:layout_marginRight="55dp"
+                android:paddingLeft="11dp"
+                android:paddingRight="11dp"
+                app:levelCount="6"
+                app:scaleMark="round"
+                app:scaleMarkColor="#1acc48"
+                app:thumb="@drawable/settings_icon_size_slider_blue_solid"
+                app:trackBackgroundHeight="5dp"
+                app:trackHeight="5dp" />
+
+            <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_toEndOf="@id/icon_text_size"
-                android:layout_marginStart="8dp"
-                android:textSize="14.7sp"
-                android:text="@string/setting_text_size"
-                app:typeface="@string/custom_font_bold"
-                app:font_style="bold"/>
-
-            <com.superapps.view.TypefacedTextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/setting_text_size_info"
                 android:layout_alignParentEnd="true"
-                android:layout_marginEnd="23.3dp"
-                android:text="@string/setting_text_size_info"/>
+                android:layout_centerVertical="true"
+                android:layout_marginEnd="27dp"
+                android:src="@drawable/icon_add" />
         </RelativeLayout>
+
     </LinearLayout>
 
-    <com.superapps.view.TypefacedTextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="28dp"
-        android:layout_marginBottom="26dp"
-        android:layout_marginStart="135dp"
-        android:text="@string/setting_text_size_hint"/>
-
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
-
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="25dp"
-            android:layout_centerVertical="true"
-            android:src="@drawable/icon_lower"/>
-
-        <com.android.messaging.ui.view.LevelSeekBar
-            android:id="@+id/seek_bar"
-            android:layout_width="match_parent"
-            android:layout_height="35dp"
-            android:layout_marginLeft="55dp"
-            android:layout_marginRight="55dp"
-            android:paddingLeft="11dp"
-            android:paddingRight="11dp"
-            app:levelCount="6"
-            app:scaleMark="round"
-            app:thumb="@drawable/settings_icon_size_slider_blue_solid"
-            app:trackBackgroundHeight="5dp"
-            app:trackHeight="5dp"
-            app:scaleMarkColor="#1acc48"/>
-
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:layout_alignParentEnd="true"
-            android:layout_marginEnd="27dp"
-            android:src="@drawable/icon_add"/>
-    </RelativeLayout>
 
 </LinearLayout>
