@@ -731,7 +731,7 @@
     <string name="block_confirmation_message">You\'ll continue to receive messages from this number but won\'t be notified anymore. This conversation will be archived.</string>
 
     <!-- The title of the list of blocked contacts -->
-    <string name="blocked_contacts_title">Blocked Contacts</string>
+    <string name="blocked_contacts_title">Blocked contacts</string>
 
     <!-- The message in a blocked contact item which indicates tapping will unblock -->
     <string name="tap_to_unblock_message">Unblock</string>
@@ -1083,11 +1083,11 @@
 
     <string name="drawer_open" translatable="false">Open navigation drawer</string>
     <string name="drawer_close" translatable="false">Close navigation drawer</string>
-    <string name="theme_select_title">Theme Color</string>
+    <string name="theme_select_title">Theme color</string>
     <string name="theme_select_description">Select theme color you like</string>
-    <string name="menu_theme_color">Theme Color</string>
-    <string name="menu_bubble">Chat Bubble</string>
-    <string name="menu_chat_background">Chat Background</string>
+    <string name="menu_theme_color">Theme color</string>
+    <string name="menu_bubble">Chat bubble</string>
+    <string name="menu_chat_background">Chat background</string>
     <string name="menu_setting">Settings</string>
     <string name="menu_rate">5 star rating</string>
     <string name="menu_group_customization">Customize</string>
