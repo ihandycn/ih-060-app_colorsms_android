@@ -96,7 +96,7 @@
         android:id="@+id/divider"
         android:layout_width="match_parent"
         android:layout_height="8dp"
-        android:background="@color/customize_bubbles_divider"
+        android:background="@color/customize_bubble_divider"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.4" />
@@ -111,7 +111,7 @@
         <com.android.messaging.ui.CustomHeaderViewPager
             android:id="@+id/customize_pager"
             android:layout_width="match_parent"
-            android:layout_height="60dp" />
+            android:layout_height="match_parent" />
     </FrameLayout>
 
 </android.support.constraint.ConstraintLayout>

@@ -1,6 +1,170 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
-    android:layout_height="match_parent">
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingStart="21dp"
+    android:paddingEnd="21dp"
+    android:orientation="vertical">
 
-</android.support.constraint.ConstraintLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:orientation="horizontal">
+
+        <ImageView
+            android:layout_width="21dp"
+            android:layout_height="21dp"
+            android:src="@drawable/ic_bubble_color"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/bubble_customize_bubble_color"
+            android:textColor="#222327"
+            android:layout_marginStart="7dp"
+            android:textSize="14.7sp" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="14.7sp"
+            android:layout_weight="1"
+            android:textColor="@color/customize_bubble_primary_text_color"
+            android:text="@string/bubble_customize_received"
+            />
+
+        <ImageView
+            android:id="@+id/bubble_color_received"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="0"
+            android:padding="5dp"
+            android:src="@drawable/gray_circle_btn_bg_drawable"
+            android:background="@drawable/bubble_customize_color_ring"/>
+        
+    </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:layout_marginTop="5dp"
+        android:layout_marginBottom="5dp"
+        android:background="@color/customize_bubble_color_divider"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="14.7sp"
+            android:layout_weight="1"
+            android:textColor="@color/customize_bubble_primary_text_color"
+            android:text="@string/bubble_customize_sent"
+            />
+
+        <ImageView
+            android:id="@+id/bubble_color_sent"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="0"
+            android:padding="5dp"
+            android:src="@drawable/gray_circle_btn_bg_drawable"
+            android:background="@drawable/bubble_customize_color_ring"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:orientation="horizontal">
+
+        <ImageView
+            android:layout_width="21dp"
+            android:layout_height="21dp"
+            android:src="@drawable/ic_text_color"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/bubble_customize_text_color"
+            android:textColor="#222327"
+            android:layout_marginStart="7dp"
+            android:textSize="14.7sp" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="14.7sp"
+            android:layout_weight="1"
+            android:textColor="@color/customize_bubble_primary_text_color"
+            android:text="@string/bubble_customize_received"
+            />
+
+        <ImageView
+            android:id="@+id/text_color_received"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="0"
+            android:padding="5dp"
+            android:src="@drawable/gray_circle_btn_bg_drawable"
+            android:background="@drawable/bubble_customize_color_ring"/>
+
+    </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:layout_marginTop="5dp"
+        android:layout_marginBottom="5dp"
+        android:background="@color/customize_bubble_color_divider"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="14.7sp"
+            android:layout_weight="1"
+            android:textColor="@color/customize_bubble_primary_text_color"
+            android:text="@string/bubble_customize_sent"
+            />
+
+        <ImageView
+            android:id="@+id/text_color_sent"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="0"
+            android:padding="5dp"
+            android:src="@drawable/gray_circle_btn_bg_drawable"
+            android:background="@drawable/bubble_customize_color_ring"/>
+
+    </LinearLayout>
+
+
+
+
+</LinearLayout>

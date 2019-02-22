@@ -1,6 +1,9 @@
 package com.android.messaging.ui.customize;
 
 import android.content.Context;
+import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,6 +26,11 @@ public class BubbleStyleViewHolder extends BasePagerViewHolder implements Custom
                 R.layout.bubble_customize_style_layout,
                 null /* root */,
                 false /* attachToRoot */);
+
+        RecyclerView recyclerView = view.findViewById(R.id.recycler_view);
+        recyclerView.setHasFixedSize(true);
+        recyclerView.setAdapter(new BubbleStyleAdapter(mContext));
+        recyclerView.setLayoutManager(new GridLayoutManager(mContext, 2));
 
         return view;
     }

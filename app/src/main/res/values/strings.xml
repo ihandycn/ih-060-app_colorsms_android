@@ -1084,6 +1084,10 @@
     <string name="bubble_customize_tab_style">Style</string>
     <string name="bubble_customize_tab_color">Color</string>
     <string name="bubble_customize_action_bar_title">Bubble</string>
+    <string name="bubble_customize_bubble_color">Bubble Color</string>
+    <string name="bubble_customize_text_color">Text Color</string>
+    <string name="bubble_customize_received">Received</string>
+    <string name="bubble_customize_sent">Sent</string>
 
     <string name="drawer_open" translatable="false">Open navigation drawer</string>
     <string name="drawer_close" translatable="false">Close navigation drawer</string>
