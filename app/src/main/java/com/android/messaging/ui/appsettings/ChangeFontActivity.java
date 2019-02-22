@@ -127,7 +127,7 @@ public class ChangeFontActivity extends BaseActivity implements LevelSeekBar.OnL
         mTextFontSize.setText(mTextSizes[newLevel]);
         mFontChange = true;
         // need modify view height
-//        mChangeFontContainer.requestLayout();
+        mChangeFontContainer.requestLayout();
     }
 
     @Override

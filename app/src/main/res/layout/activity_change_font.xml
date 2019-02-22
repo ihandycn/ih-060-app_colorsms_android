@@ -11,13 +11,11 @@
 
     <com.android.messaging.ui.customize.CustomizePreviewView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_weight="1"/>
+        android:layout_height="wrap_content"/>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_weight="1"
         android:orientation="vertical">
 
         <View
@@ -147,6 +145,5 @@
         </RelativeLayout>
 
     </LinearLayout>
-
 
 </LinearLayout>
