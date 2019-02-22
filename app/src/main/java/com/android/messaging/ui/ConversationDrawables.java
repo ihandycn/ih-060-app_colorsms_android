@@ -22,8 +22,10 @@ import android.graphics.drawable.Drawable;
 
 import com.android.messaging.Factory;
 import com.android.messaging.R;
+import com.android.messaging.ui.customize.BubbleDrawables;
 import com.android.messaging.ui.customize.PrimaryColors;
 import com.android.messaging.util.ImageUtils;
+import com.superapps.util.BackgroundDrawables;
 
 /**
  * A singleton cache that holds tinted drawable resources for displaying messages, such as
@@ -78,7 +80,7 @@ public class ConversationDrawables {
     public void updateDrawables() {
         final Resources resources = mContext.getResources();
 
-        mIncomingBubbleDrawable = resources.getDrawable(R.drawable.message_bubble_incoming_new);
+        mIncomingBubbleDrawable = resources.getDrawable(BubbleDrawables.getSelectedDrawable());
         mIncomingBubbleNoArrowDrawable =
                 resources.getDrawable(R.drawable.message_bubble_incoming_no_arrow);
         mIncomingErrorBubbleDrawable = resources.getDrawable(R.drawable.msg_bubble_error);
@@ -113,6 +115,12 @@ public class ConversationDrawables {
         hsb[2] /= 1.2f;
         mOutgoingSelectedBubbleColor = Color.HSVToColor(hsb);
         mThemeColor = PrimaryColors.getPrimaryColor();
+    }
+
+    public void updateBubbleDrawable(int index) {
+        final Resources resources = mContext.getResources();
+        mIncomingBubbleDrawable = resources.getDrawable(BubbleDrawables.getSelectedDrawable(index));
+        mOutgoingBubbleDrawable = resources.getDrawable(R.drawable.message_bubble_outgoing_new);
     }
 
     public Drawable getBubbleDrawable(final boolean selected, final boolean incoming,

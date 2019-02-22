@@ -30,9 +30,9 @@ public class BubbleDrawableAdapter extends RecyclerView.Adapter<BubbleDrawableAd
             int oldSelectedPosition = BubbleDrawables.getSelectedIndex();
             if (position != oldSelectedPosition) {
                 BubbleDrawables.setSelectedIndex(position);
+                notifyItemChanged(oldSelectedPosition);
+                notifyItemChanged(position);
             }
-            notifyItemChanged(oldSelectedPosition);
-            notifyItemChanged(position);
         });
         return viewHolder;
     }
