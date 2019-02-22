@@ -18,6 +18,9 @@
     <string name="app_name">Color SMS</string>
     <string name="facebook_app_id" translatable="false">128794158052413</string>
 
+    <!-- For libDevice:permanent -->
+    <string name="sync_account_type" translatable="false">com.color.sms.messages.emoji.sync_account</string>
+
     <!-- The name of the application as it appears in external share intent dialogs -->
     <string name="share_intent_label">Color SMS</string>
     <!-- The title when selecting a conversation to share to -->
@@ -1062,9 +1065,9 @@
     <string name="setting_feedback">Feedback</string>
     <string name="setting_privacy_policy">Privacy policy</string>
     <string name="setting_terms_of_service">Terms of service</string>
-    <string name="setting_sms_pop_ups">SMS Pop-ups</string>
+    <string name="setting_sms_pop_ups">SMS pop-ups</string>
     <string name="setting_sms_pop_ups_summary">Pop up a window when receiving messages</string>
-    <string name="setting_sms_show">SMS Show</string>
+    <string name="setting_sms_show">SMS show</string>
     <string name="setting_sms_show_summary">Beautify SMS reminder effects</string>
     <string name="setting_sms_show_close_dialog_title">Confirm to turn off?</string>
     <string name="setting_sms_show_close_dialog_content">You will lose the beautiful SMS reminder themes, really want to close it?</string>
@@ -1089,4 +1092,11 @@
     <string name="menu_rate">5 star rating</string>
     <string name="menu_group_customization">Customize</string>
     <string name="coming_soon">Coming soon in a few days</string>
+
+    <string name="set_as_default_dialog_title_default_change">Default SMS Cleared</string>
+    <string name="set_as_default_dialog_description_default_change">Color SMS can\'t work properly without being set as default.</string>
+    <string name="set_as_default_dialog_button_ok_default_change">Set Now</string>
+    <string name="set_as_default_dialog_title_user_present">Set Color SMS as Default</string>
+    <string name="set_as_default_dialog_description_user_present">Send funny emojis, stickers and GIFs to friends via Color SMS.</string>
+    <string name="set_as_default_dialog_button_ok_user_present">OK</string>
 </resources>

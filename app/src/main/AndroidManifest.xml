@@ -14,6 +14,7 @@
     limitations under the License.
 -->
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     package="com.android.messaging"
     android:installLocation="internalOnly">
 
@@ -255,6 +256,14 @@
             android:screenOrientation="portrait"
             android:launchMode="singleTop"
             android:theme="@style/WelcomeTheme" />
+
+        <activity
+            android:name=".ui.SetAsDefaultGuideActivity"
+            android:excludeFromRecents="true"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait"
+            android:taskAffinity=".setasdefault.guide"
+            android:theme="@style/Theme.AppCompat.Translucent" />
 
         <!-- WebView -->
         <activity
@@ -628,6 +637,52 @@
             android:excludeFromRecents="true"
             android:screenOrientation="portrait"
             android:theme="@style/BaseSettingsActivity" />
+
+
+        <!--Lib permanent-->
+        <service
+            android:name="com.ihs.device.permanent.PermanentService"
+            android:label="GuardServiceNew"
+            tools:replace="android:label"
+            tools:remove="android:process"
+            />
+
+        <service
+            android:name="com.ihs.device.permanent.PermanentService$PermanentServiceInner"
+            tools:remove="android:process"
+            />
+
+        <receiver
+            android:name="com.ihs.device.permanent.PermanentService$PermanentReceiver"
+            tools:remove="android:process" />
+
+        <service
+            android:name="com.ihs.device.permanent.syncaccount.AuthenticationService"
+            tools:remove="android:process" />
+
+        <service
+            android:name="com.ihs.device.permanent.syncaccount.SyncService"
+            tools:remove="android:process" />
+
+        <receiver
+            android:name="com.ihs.device.permanent.PermanentReceiver"
+            tools:remove="android:process" />
+
+        <service
+            android:name="com.ihs.device.permanent.GuardJobService"
+            tools:remove="android:process" />
+
+        <provider
+            android:name="com.ihs.device.permanent.syncaccount.SyncContentProvider"
+            tools:remove="android:process" />
+
+        <provider
+            android:name="com.ihs.device.common.AppInfoProvider"
+            tools:remove="android:process" />
+        
+        <activity
+            android:name="com.ihs.device.permanent.foreground.ForegroundActivity"
+            tools:remove="android:process"/>
     </application>
 
 </manifest>
