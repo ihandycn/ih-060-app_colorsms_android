@@ -2,7 +2,7 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    >
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -12,13 +12,14 @@
         android:background="@color/white"
         android:gravity="center_vertical">
 
-        <TextView
+        <com.superapps.view.TypefacedTextView
             android:id="@+id/title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textSize="14sp"
             android:layout_weight="1"
-            android:textColor="@color/text_primary_color" />
+            android:textColor="@color/text_primary_color"
+            app:typeface="@string/custom_font_semibold"/>
 
         <ImageView
             android:id="@+id/close_button"

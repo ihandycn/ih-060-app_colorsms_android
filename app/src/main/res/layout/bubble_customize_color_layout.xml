@@ -2,6 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:paddingStart="21dp"
     android:paddingEnd="21dp"
     android:orientation="vertical">
@@ -17,13 +18,14 @@
             android:layout_height="21dp"
             android:src="@drawable/ic_bubble_color"/>
 
-        <TextView
+        <com.superapps.view.TypefacedTextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/bubble_customize_bubble_color"
             android:textColor="#222327"
             android:layout_marginStart="7dp"
-            android:textSize="14.7sp" />
+            android:textSize="14.7sp"
+            app:typeface="@string/custom_font_bold"/>
     </LinearLayout>
 
     <LinearLayout
@@ -32,14 +34,14 @@
         android:orientation="horizontal"
         android:gravity="center_vertical">
 
-        <TextView
+        <com.superapps.view.TypefacedTextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textSize="14.7sp"
             android:layout_weight="1"
             android:textColor="@color/customize_bubble_primary_text_color"
             android:text="@string/bubble_customize_received"
-            />
+            app:typeface="@string/custom_font_medium" />
 
         <ImageView
             android:id="@+id/bubble_color_incoming"
@@ -64,14 +66,14 @@
         android:orientation="horizontal"
         android:gravity="center_vertical">
 
-        <TextView
+        <com.superapps.view.TypefacedTextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textSize="14.7sp"
             android:layout_weight="1"
             android:textColor="@color/customize_bubble_primary_text_color"
             android:text="@string/bubble_customize_sent"
-            />
+            app:typeface="@string/custom_font_medium" />
 
         <ImageView
             android:id="@+id/bubble_color_outgoing"
@@ -94,13 +96,14 @@
             android:layout_height="21dp"
             android:src="@drawable/ic_text_color"/>
 
-        <TextView
+        <com.superapps.view.TypefacedTextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/bubble_customize_text_color"
             android:textColor="#222327"
             android:layout_marginStart="7dp"
-            android:textSize="14.7sp" />
+            android:textSize="14.7sp"
+            app:typeface="@string/custom_font_bold"/>
     </LinearLayout>
 
     <LinearLayout
@@ -109,14 +112,14 @@
         android:orientation="horizontal"
         android:gravity="center_vertical">
 
-        <TextView
+        <com.superapps.view.TypefacedTextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textSize="14.7sp"
             android:layout_weight="1"
             android:textColor="@color/customize_bubble_primary_text_color"
             android:text="@string/bubble_customize_received"
-            />
+            app:typeface="@string/custom_font_medium" />
 
         <ImageView
             android:id="@+id/text_color_incoming"
@@ -141,14 +144,14 @@
         android:orientation="horizontal"
         android:gravity="center_vertical">
 
-        <TextView
+        <com.superapps.view.TypefacedTextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textSize="14.7sp"
             android:layout_weight="1"
             android:textColor="@color/customize_bubble_primary_text_color"
             android:text="@string/bubble_customize_sent"
-            />
+            app:typeface="@string/custom_font_medium" />
 
         <ImageView
             android:id="@+id/text_color_outgoing"

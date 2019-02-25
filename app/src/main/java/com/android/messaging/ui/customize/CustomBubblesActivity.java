@@ -23,6 +23,7 @@ public class CustomBubblesActivity extends AppCompatActivity implements CustomMe
 
     private ChooseMessageColorPagerView mChooseMessageColorPagerView;
     private CustomMessagePreviewView mCustomMessagePreview;
+    private ChooseMessageColorEntryViewHolder mChooseMessageColorEntryViewHolder;
 
     @ChooseMessageColorEntryViewHolder.CustomColor
     private int mColorType;
@@ -39,14 +40,14 @@ public class CustomBubblesActivity extends AppCompatActivity implements CustomMe
         mChooseMessageColorPagerView.setHost(this);
 
         BubbleDrawableViewHolder bubbleDrawableViewHolder = new BubbleDrawableViewHolder(this);
-        ChooseMessageColorEntryViewHolder chooseMessageColorEntryViewHolder = new ChooseMessageColorEntryViewHolder(this);
+        mChooseMessageColorEntryViewHolder = new ChooseMessageColorEntryViewHolder(this);
 
         bubbleDrawableViewHolder.setHost(this);
-        chooseMessageColorEntryViewHolder.setHost(this);
+        mChooseMessageColorEntryViewHolder.setHost(this);
 
         final CustomPagerViewHolder[] viewHolders = {
                 bubbleDrawableViewHolder,
-                chooseMessageColorEntryViewHolder};
+                mChooseMessageColorEntryViewHolder};
 
         CustomHeaderViewPager customHeaderViewPager = findViewById(R.id.customize_pager);
         customHeaderViewPager.setViewHolders(viewHolders);
@@ -78,6 +79,7 @@ public class CustomBubblesActivity extends AppCompatActivity implements CustomMe
                 mCustomMessagePreview.previewCustomTextColor(false, color);
                 break;
         }
+        mChooseMessageColorEntryViewHolder.previewCustomColor(mColorType, color);
     }
 
     @Override

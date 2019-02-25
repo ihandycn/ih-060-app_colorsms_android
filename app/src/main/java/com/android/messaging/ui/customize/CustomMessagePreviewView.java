@@ -2,7 +2,6 @@ package com.android.messaging.ui.customize;
 
 import android.content.Context;
 import android.graphics.PorterDuff;
-import android.graphics.drawable.Drawable;
 import android.support.annotation.ColorInt;
 import android.support.constraint.ConstraintLayout;
 import android.util.AttributeSet;
@@ -11,9 +10,11 @@ import android.widget.TextView;
 
 import com.android.messaging.R;
 import com.android.messaging.ui.ConversationDrawables;
-import com.superapps.util.BackgroundDrawables;
 
 public class CustomMessagePreviewView extends ConstraintLayout {
+
+    private int mIncomingPreviewColor;
+    private int mOutgoingPreviewColor;
 
     private TextView mIncomingMessage;
     private TextView mOutgoingMessage;
@@ -32,12 +33,18 @@ public class CustomMessagePreviewView extends ConstraintLayout {
                 ConversationDrawables.get().getBubbleDrawable(false, true, true, false));
         mOutgoingMessage.setBackground(
                 ConversationDrawables.get().getBubbleDrawable(false, false, true, false));
+
+        mIncomingPreviewColor = ConversationColors.get().getBubbleBackgroundColor(true);
+        mOutgoingPreviewColor = ConversationColors.get().getBubbleBackgroundColor(false);
     }
 
     public void previewCustomBubbleDrawables(int id) {
-        int drawableResId =  BubbleDrawables.getSelectedDrawable(id);
+        int drawableResId = BubbleDrawables.getSelectedDrawable(id);
         mIncomingMessage.setBackgroundResource(drawableResId);
         mOutgoingMessage.setBackgroundResource(drawableResId);
+
+        mIncomingMessage.getBackground().setColorFilter(mIncomingPreviewColor, PorterDuff.Mode.SRC_ATOP);
+        mOutgoingMessage.getBackground().setColorFilter(mOutgoingPreviewColor, PorterDuff.Mode.SRC_ATOP);
     }
 
     public void previewCustomBubbleBackgroundColor(boolean incoming, @ColorInt int color) {
@@ -45,6 +52,11 @@ public class CustomMessagePreviewView extends ConstraintLayout {
             mIncomingMessage.getBackground().setColorFilter(color, PorterDuff.Mode.SRC_ATOP);
         } else {
             mOutgoingMessage.getBackground().setColorFilter(color, PorterDuff.Mode.SRC_ATOP);
+        }
+        if (incoming) {
+            mIncomingPreviewColor = color;
+        } else {
+            mOutgoingPreviewColor = color;
         }
     }
 

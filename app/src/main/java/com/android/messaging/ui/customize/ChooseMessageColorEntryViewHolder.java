@@ -1,6 +1,7 @@
 package com.android.messaging.ui.customize;
 
 import android.content.Context;
+import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.support.annotation.IntDef;
 import android.view.LayoutInflater;
@@ -72,12 +73,29 @@ public class ChooseMessageColorEntryViewHolder extends BasePagerViewHolder imple
         mMessageTextColorOutgoing.setOnClickListener(this);
 
         mDefaultPreviewDrawable = mContext.getResources().getDrawable(R.drawable.custom_message_color_default_preview_drawable);
-        updateAppearance();
+        initAppearance();
         return view;
     }
 
+    void previewCustomColor(@CustomColor int type, int color) {
+        switch (type) {
+            case BUBBLE_COLOR_INCOMING:
+                mBubbleBackgroundColorIncoming.getDrawable().setColorFilter(color, PorterDuff.Mode.SRC_ATOP);
+                break;
+            case BUBBLE_COLOR_OUTGOING:
+                mBubbleBackgroundColorOutgoing.getDrawable().setColorFilter(color, PorterDuff.Mode.SRC_ATOP);
+                break;
+            case TEXT_COLOR_INCOMING:
+                mMessageTextColorIncoming.getDrawable().setColorFilter(color, PorterDuff.Mode.SRC_ATOP);
+                break;
+            case TEXT_COLOR_OUTGOING:
+                mMessageTextColorOutgoing.getDrawable().setColorFilter(color, PorterDuff.Mode.SRC_ATOP);
+                break;
+        }
+    }
 
-    public void updateAppearance() {
+
+    private void initAppearance() {
         ConversationColors conversationColors = ConversationColors.get();
 
         mBubbleBackgroundColorIncoming.setImageDrawable(ImageUtils
@@ -92,6 +110,7 @@ public class ChooseMessageColorEntryViewHolder extends BasePagerViewHolder imple
         mMessageTextColorOutgoing.setImageDrawable(ImageUtils
                 .getTintedDrawable(mContext, mDefaultPreviewDrawable, conversationColors.getMessageTextColor(false)));
     }
+
 
     @Override
     public void onClick(View v) {

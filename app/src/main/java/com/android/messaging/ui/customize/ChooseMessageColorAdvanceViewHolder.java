@@ -1,6 +1,7 @@
 package com.android.messaging.ui.customize;
 
 import android.content.Context;
+import android.support.annotation.ColorInt;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,6 +13,8 @@ import com.android.messaging.ui.CustomPagerViewHolder;
 public class ChooseMessageColorAdvanceViewHolder extends BasePagerViewHolder implements CustomPagerViewHolder {
     private Context mContext;
     private OnColorChangedListener mListener;
+
+    private AnyColorPickerView mColorPickerView;
 
     ChooseMessageColorAdvanceViewHolder(final Context context) {
         mContext = context;
@@ -25,15 +28,18 @@ public class ChooseMessageColorAdvanceViewHolder extends BasePagerViewHolder imp
                 null /* root */,
                 false /* attachToRoot */);
 
-        AnyColorPickerView anyColorPickerView = view.findViewById(R.id.color_picker_view);
-        anyColorPickerView.setColor(PrimaryColors.getPrimaryColor());
-        anyColorPickerView.setOnColorChangedListener(color -> mListener.onColorChanged(color));
+        mColorPickerView = view.findViewById(R.id.color_picker_view);
+        mColorPickerView.setOnColorChangedListener(color -> mListener.onColorChanged(color));
 
         return view;
     }
 
-    public void setOnColorChangedListener(OnColorChangedListener listener) {
+    void setOnColorChangedListener(OnColorChangedListener listener) {
         mListener = listener;
+    }
+
+    void setColor(@ColorInt int color) {
+        mColorPickerView.setColor(color);
     }
 
     @Override
