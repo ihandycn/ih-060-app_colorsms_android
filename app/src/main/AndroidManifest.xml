@@ -690,12 +690,12 @@
             tools:remove="android:process"/>
 
         <activity
-            android:name=".wallpaper.WallpaperPreviewActivity"
+            android:name=".ui.wallpaper.WallpaperPreviewActivity"
             android:excludeFromRecents="true"
             android:screenOrientation="portrait"
             android:theme="@style/BaseSettingsActivity" />
         <activity
-            android:name=".wallpaper.WallpaperEditActivity"
+            android:name=".ui.wallpaper.WallpaperEditActivity"
             android:excludeFromRecents="true"
             android:screenOrientation="portrait"
             android:theme="@style/BaseSettingsActivity" />

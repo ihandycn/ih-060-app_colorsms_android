@@ -1,4 +1,4 @@
-package com.android.messaging.wallpaper;
+package com.android.messaging.ui.wallpaper;
 
 import com.android.messaging.R;
 import com.android.messaging.util.CommonUtils;
@@ -11,7 +11,7 @@ import com.superapps.util.Toasts;
 
 import java.io.File;
 
-import static com.android.messaging.wallpaper.WallpaperManager.LOCAL_DIRECTORY;
+import static com.android.messaging.ui.wallpaper.WallpaperManager.LOCAL_DIRECTORY;
 
 public class WallpaperDownloader {
     private static final String TAG = WallpaperDownloader.class.getSimpleName();

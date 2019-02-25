@@ -1,4 +1,4 @@
-package com.android.messaging.wallpaper;
+package com.android.messaging.ui.wallpaper;
 
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;

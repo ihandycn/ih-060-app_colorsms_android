@@ -27,7 +27,6 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.provider.Settings;
-import android.support.annotation.NonNull;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -55,8 +54,8 @@ import com.android.messaging.ui.conversation.ConversationActivity;
 import com.android.messaging.util.Assert;
 import com.android.messaging.util.BuglePrefs;
 import com.android.messaging.util.OsUtil;
-import com.android.messaging.wallpaper.WallpaperManager;
-import com.android.messaging.wallpaper.WallpaperPreviewActivity;
+import com.android.messaging.ui.wallpaper.WallpaperManager;
+import com.android.messaging.ui.wallpaper.WallpaperPreviewActivity;
 
 import org.qcode.fontchange.impl.FontManagerImpl;
 

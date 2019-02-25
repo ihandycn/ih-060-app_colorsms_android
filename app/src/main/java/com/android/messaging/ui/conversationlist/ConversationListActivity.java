@@ -50,8 +50,8 @@ import com.android.messaging.ui.emoji.EmojiStoreActivity;
 import com.android.messaging.util.BugleAnalytics;
 import com.android.messaging.util.Trace;
 import com.android.messaging.util.UiUtils;
-import com.android.messaging.wallpaper.WallpaperManager;
-import com.android.messaging.wallpaper.WallpaperPreviewActivity;
+import com.android.messaging.ui.wallpaper.WallpaperManager;
+import com.android.messaging.ui.wallpaper.WallpaperPreviewActivity;
 import com.ihs.commons.notificationcenter.HSGlobalNotificationCenter;
 import com.ihs.commons.notificationcenter.INotificationObserver;
 import com.ihs.commons.utils.HSBundle;
@@ -59,7 +59,6 @@ import com.superapps.util.Dimensions;
 import com.superapps.util.Navigations;
 import com.superapps.util.Preferences;
 import com.superapps.util.Threads;
-import com.superapps.util.Toasts;
 
 public class ConversationListActivity extends AbstractConversationListActivity
         implements View.OnClickListener, INotificationObserver {

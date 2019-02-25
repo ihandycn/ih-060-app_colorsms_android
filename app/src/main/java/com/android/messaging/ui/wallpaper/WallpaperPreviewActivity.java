@@ -1,4 +1,4 @@
-package com.android.messaging.wallpaper;
+package com.android.messaging.ui.wallpaper;
 
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
@@ -137,15 +137,6 @@ public class WallpaperPreviewActivity extends AppCompatActivity implements Wallp
         wallpaperChooser.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
         wallpaperChooser.setAdapter(new WallpaperChooserAdapter(this, WallpaperManager.getWallpaperChooserList()));
         wallpaperChooser.setItemViewCacheSize(15);
-
-//        RecyclerView messageList = findViewById(R.id.wallpaper_chooser_message_list);
-//        final LinearLayoutManager manager = new LinearLayoutManager(this);
-//        //manager.setStackFromEnd(true);
-//        manager.setReverseLayout(false);
-//        messageList.setHasFixedSize(true);
-//        messageList.setLayoutManager(manager);
-//        WallpaperPreviewMessageAdapter adapter = new WallpaperPreviewMessageAdapter(this);
-//        messageList.setAdapter(adapter);
 
         String threadId = getIntent().getStringExtra("thread_id");
         if (threadId != null) {

@@ -115,7 +115,7 @@ import com.android.messaging.util.TextUtil;
 import com.android.messaging.util.Typefaces;
 import com.android.messaging.util.UiUtils;
 import com.android.messaging.util.UriUtil;
-import com.android.messaging.wallpaper.WallpaperManager;
+import com.android.messaging.ui.wallpaper.WallpaperManager;
 import com.google.common.annotations.VisibleForTesting;
 import com.ihs.commons.notificationcenter.HSGlobalNotificationCenter;
 import com.ihs.commons.notificationcenter.INotificationObserver;

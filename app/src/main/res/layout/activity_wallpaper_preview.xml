@@ -5,21 +5,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <android.support.v7.widget.Toolbar
-        android:id="@+id/toolbar"
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/action_bar_height">
-
-        <com.superapps.view.TypefacedTextView
-            android:id="@+id/toolbar_title"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_gravity="center"
-            android:layout_marginTop="5dp"
-            android:gravity="center"
-            android:textColor="#222327"
-            android:textSize="16.7dp" />
-    </android.support.v7.widget.Toolbar>
+    <include layout="@layout/top_tool_bar_view" />
 
     <FrameLayout
         android:layout_width="match_parent"
@@ -33,14 +19,16 @@
             android:scaleType="centerCrop"
             tools:ignore="ContentDescription" />
         <!-- Message list -->
-        <android.support.v7.widget.RecyclerView
+        <ScrollView
             android:id="@+id/wallpaper_chooser_message_list"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="@null"
-            android:clipToPadding="false"
-            android:listSelector="@android:color/transparent"
-            android:paddingTop="@dimen/action_bar_height" />
+            android:background="@null">
+
+            <com.android.messaging.ui.customize.CustomMessagePreviewView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+        </ScrollView>
     </FrameLayout>
 
     <FrameLayout
@@ -53,8 +41,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
-            android:paddingStart="3.3dp"
+            android:orientation="horizontal"
             android:paddingEnd="3.3dp"
-            android:orientation="horizontal" />
+            android:paddingStart="3.3dp" />
     </FrameLayout>
 </LinearLayout>

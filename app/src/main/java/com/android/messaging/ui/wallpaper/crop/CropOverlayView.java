@@ -10,7 +10,7 @@
 // - Sun Tsu,
 // "The Art of War"
 
-package com.android.messaging.wallpaper.crop;
+package com.android.messaging.ui.wallpaper.crop;
 
 import android.annotation.TargetApi;
 import android.content.Context;

@@ -53,7 +53,7 @@
             android:scaleType="matrix"
             tools:ignore="ContentDescription" />
 
-        <com.android.messaging.wallpaper.crop.CropOverlayView
+        <com.android.messaging.ui.wallpaper.crop.CropOverlayView
             android:id="@+id/wallpaper_overlay_view"
             android:layout_width="match_parent"
             android:layout_height="match_parent"

@@ -1,4 +1,4 @@
-package com.android.messaging.wallpaper;
+package com.android.messaging.ui.wallpaper;
 
 import android.content.Context;
 import android.content.Intent;
@@ -25,10 +25,9 @@ import com.android.messaging.glide.GlideApp;
 import com.android.messaging.util.BugleActivityUtil;
 import com.android.messaging.util.BugleAnalytics;
 import com.android.messaging.util.CommonUtils;
-import com.android.messaging.util.TextUtil;
 import com.android.messaging.util.ViewUtils;
-import com.android.messaging.wallpaper.crop.CropImageOptions;
-import com.android.messaging.wallpaper.crop.CropOverlayView;
+import com.android.messaging.ui.wallpaper.crop.CropImageOptions;
+import com.android.messaging.ui.wallpaper.crop.CropOverlayView;
 import com.bumptech.glide.request.target.ImageViewTarget;
 import com.bumptech.glide.request.transition.Transition;
 import com.ihs.app.framework.activity.HSAppCompatActivity;
@@ -42,7 +41,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
-import static com.android.messaging.wallpaper.WallpaperManager.LOCAL_DIRECTORY;
+import static com.android.messaging.ui.wallpaper.WallpaperManager.LOCAL_DIRECTORY;
 
 public class WallpaperEditActivity extends HSAppCompatActivity implements View.OnClickListener {
 

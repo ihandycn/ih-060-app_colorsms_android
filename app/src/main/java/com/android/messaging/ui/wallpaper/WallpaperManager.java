@@ -1,9 +1,8 @@
-package com.android.messaging.wallpaper;
+package com.android.messaging.ui.wallpaper;
 
 import android.text.TextUtils;
 
 import com.android.messaging.util.BuglePrefs;
-import com.android.messaging.util.TextUtil;
 
 import java.io.File;
 import java.util.ArrayList;
