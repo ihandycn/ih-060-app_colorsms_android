@@ -546,6 +546,7 @@
     <string name="action_debug_options">Debug</string>
     <!-- Title for the "People and Options" activity -->
     <string name="people_and_options_activity_title">People &amp; options</string>
+    <string name="customize_title">Customize</string>
     <!-- Title for the general settings section in the "People and options" activity -->
     <string name="general_settings_title">General</string>
     <!-- Title for the list of participants in the "People and options" activity -->
@@ -1120,4 +1121,12 @@
     <string name="set_as_default_dialog_title_user_present">Set Color SMS as Default</string>
     <string name="set_as_default_dialog_description_user_present">Send funny emojis, stickers and GIFs to friends via Color SMS.</string>
     <string name="set_as_default_dialog_button_ok_user_present">OK</string>
+
+    <!--wallpaper-->
+    <string name="wallpaper_title">Chat Background</string>
+    <string name="wallpaper_set_failed">failed</string>
+    <string name="wallpaper_reset">reset</string>
+    <string name="wallpaper_done">DONE</string>
+    <string name="wallpaper_add_photos">Add Photos</string>
+    <string name="wallpaper_download_failed">Network Error</string>
 </resources>

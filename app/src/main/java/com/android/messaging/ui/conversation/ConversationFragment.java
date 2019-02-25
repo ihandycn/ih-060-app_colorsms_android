@@ -18,7 +18,6 @@ package com.android.messaging.ui.conversation;
 
 import android.Manifest;
 import android.app.Activity;
-import android.app.AlertDialog;
 import android.app.DownloadManager;
 import android.app.Fragment;
 import android.app.FragmentManager;
@@ -37,6 +36,7 @@ import android.database.Cursor;
 import android.graphics.Point;
 import android.graphics.Rect;
 import android.graphics.Typeface;
+import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
@@ -60,11 +60,11 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.view.SubMenu;
 import android.view.View;
 import android.view.ViewConfiguration;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -115,6 +115,7 @@ import com.android.messaging.util.TextUtil;
 import com.android.messaging.util.Typefaces;
 import com.android.messaging.util.UiUtils;
 import com.android.messaging.util.UriUtil;
+import com.android.messaging.wallpaper.WallpaperManager;
 import com.google.common.annotations.VisibleForTesting;
 import com.ihs.commons.notificationcenter.HSGlobalNotificationCenter;
 import com.ihs.commons.notificationcenter.INotificationObserver;
@@ -176,6 +177,8 @@ public class ConversationFragment extends Fragment implements ConversationDataLi
     private RecyclerView mRecyclerView;
     private ConversationMessageAdapter mAdapter;
     private ConversationFastScroller mFastScroller;
+    private ImageView mWallpaperView;
+
 
     private View mConversationComposeDivider;
     private ChangeDefaultSmsAppHelper mChangeDefaultSmsAppHelper;
@@ -578,7 +581,7 @@ public class ConversationFragment extends Fragment implements ConversationDataLi
                 mBinding.getData().getConversationId()), this);
 
         mMediaLayout = view.findViewById(R.id.camera_photo_layout);
-
+        mWallpaperView = view.findViewById(R.id.conversation_fragment_wallpaper);
         return view;
     }
 
@@ -665,6 +668,13 @@ public class ConversationFragment extends Fragment implements ConversationDataLi
     @Override
     public void onResume() {
         super.onResume();
+
+        String wallpaperPath = WallpaperManager.getWallpaperPathByThreadId(mConversationId);
+        if (wallpaperPath != null && !wallpaperPath.equals("")) {
+            mWallpaperView.setImageDrawable(new BitmapDrawable(wallpaperPath));
+        } else {
+            mWallpaperView.setImageDrawable(null);
+        }
 
         if (mIncomingDraft == null) {
             mComposeMessageView.requestDraftMessage(mClearLocalDraft);

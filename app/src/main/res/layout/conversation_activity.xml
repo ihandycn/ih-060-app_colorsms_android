@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--
+<?xml version="1.0" encoding="utf-8"?><!--
     Copyright (C) 2015 The Android Open Source Project
 
     Licensed under the Apache License, Version 2.0 (the "License");
@@ -14,8 +13,7 @@
     See the License for the specific language governing permissions and
     limitations under the License.
 -->
-<com.android.messaging.ui.ImeDetectFrameLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<com.android.messaging.ui.ImeDetectFrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/conversation_and_compose_container"
     android:layout_width="match_parent"
@@ -35,17 +33,17 @@
             android:layout_marginTop="5dp"
             android:gravity="center"
             android:textColor="#222327"
-            android:textSize="16.7dp"/>
+            android:textSize="16.7dp" />
     </android.support.v7.widget.Toolbar>
 
     <FrameLayout
         android:id="@+id/conversation_fragment_container"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginTop="@dimen/action_bar_height"/>
+        android:layout_marginTop="@dimen/action_bar_height" />
 
     <FrameLayout
         android:id="@+id/contact_picker_fragment_container"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+        android:layout_height="match_parent" />
 </com.android.messaging.ui.ImeDetectFrameLayout>
