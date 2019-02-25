@@ -11,12 +11,12 @@ import com.android.messaging.ui.ConversationDrawables;
 
 import org.qcode.fontchange.impl.FontManagerImpl;
 
-public class CustomizePreviewView extends ConstraintLayout {
+public class CustomMessagePreviewView extends ConstraintLayout {
 
     private TextView mIncomingMessage;
     private TextView mOutgoingMessage;
 
-    public CustomizePreviewView(final Context context, final AttributeSet attrs) {
+    public CustomMessagePreviewView(final Context context, final AttributeSet attrs) {
         super(context, attrs);
         final LayoutInflater inflater = LayoutInflater.from(context);
         inflater.inflate(R.layout.customize_preview_view, this, true);
