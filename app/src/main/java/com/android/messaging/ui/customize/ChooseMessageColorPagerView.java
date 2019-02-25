@@ -1,9 +1,10 @@
 package com.android.messaging.ui.customize;
 
 import android.content.Context;
+import android.support.v4.view.animation.PathInterpolatorCompat;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
-import android.view.View;
+import android.view.animation.Interpolator;
 import android.widget.FrameLayout;
 import android.widget.TextView;
 
@@ -19,6 +20,12 @@ import static com.android.messaging.ui.customize.ChooseMessageColorEntryViewHold
 
 public class ChooseMessageColorPagerView extends FrameLayout implements OnColorChangedListener {
 
+    private static final long REVEAL_DURATION = 400L;
+    private static final long DISAPPEAR_DURATION = 360L;
+
+    private final Interpolator mInterpolator =
+            PathInterpolatorCompat.create(0.4f, 0.8f, 0.74f, 1f);
+
     private CustomMessageHost mHost;
 
     private TextView mTitle;
@@ -33,10 +40,23 @@ public class ChooseMessageColorPagerView extends FrameLayout implements OnColorC
         inflater.inflate(R.layout.choose_custom_bubble_color_layout, this, true);
 
         mTitle = findViewById(R.id.title);
-        findViewById(R.id.close_button).setOnClickListener(v -> setVisibility(GONE));
+        findViewById(R.id.close_button).setOnClickListener(v -> disappear());
 
         initPager(context);
         setClickable(true);
+    }
+
+
+    void reveal() {
+        setVisibility(VISIBLE);
+        animate().translationY(0f).setInterpolator(mInterpolator).setDuration(REVEAL_DURATION).start();
+    }
+
+    void disappear() {
+        animate().translationY(getResources().getDimensionPixelSize(R.dimen.bubble_customize_color_pager_translation))
+                .setInterpolator(mInterpolator)
+                .setDuration(DISAPPEAR_DURATION).start();
+        postDelayed(() -> setVisibility(GONE), DISAPPEAR_DURATION);
     }
 
     void updateTitle(@ChooseMessageColorEntryViewHolder.CustomColor int type) {
@@ -66,7 +86,6 @@ public class ChooseMessageColorPagerView extends FrameLayout implements OnColorC
                 , prefix
                 , suffix
         ));
-
     }
 
     private void initPager(Context context) {

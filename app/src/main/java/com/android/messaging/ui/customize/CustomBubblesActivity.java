@@ -7,7 +7,6 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
-import android.view.View;
 
 import com.android.messaging.R;
 import com.android.messaging.ui.CustomHeaderViewPager;
@@ -59,7 +58,7 @@ public class CustomBubblesActivity extends AppCompatActivity implements CustomMe
     @Override
     public void openColorPickerView(int type) {
         mColorType = type;
-        mChooseMessageColorPagerView.setVisibility(View.VISIBLE);
+        mChooseMessageColorPagerView.reveal();
         mChooseMessageColorPagerView.updateTitle(type);
     }
 

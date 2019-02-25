@@ -76,8 +76,8 @@
             android:id="@+id/choose_message_color_view"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:translationY="@dimen/bubble_customize_color_pager_translation"
             android:visibility="gone"/>
-
 
     </FrameLayout>
 
