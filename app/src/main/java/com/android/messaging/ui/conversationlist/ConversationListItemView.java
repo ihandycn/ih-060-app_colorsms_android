@@ -66,6 +66,7 @@ import com.android.messaging.util.OsUtil;
 import com.android.messaging.util.Typefaces;
 import com.android.messaging.util.UiUtils;
 import com.android.messaging.util.UriUtil;
+import com.ihs.app.framework.HSApplication;
 import com.superapps.util.BackgroundDrawables;
 import com.superapps.util.Dimensions;
 
@@ -291,8 +292,8 @@ public class ConversationListItemView extends FrameLayout implements OnClickList
 
                 @Override
                 public void onTypefaceRequestFailed(int reason) {
-                    Toast.makeText(getContext(),
-                            getContext().getString(com.iflytek.android_font_loader_lib.R.string.request_failed, reason), Toast.LENGTH_LONG)
+                    Toast.makeText(HSApplication.getContext(),
+                            HSApplication.getContext().getString(com.iflytek.android_font_loader_lib.R.string.request_failed, reason), Toast.LENGTH_LONG)
                             .show();
                 }
             };

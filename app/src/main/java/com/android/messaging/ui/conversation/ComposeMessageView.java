@@ -82,6 +82,7 @@ import com.android.messaging.util.LogUtil;
 import com.android.messaging.util.MediaUtil;
 import com.android.messaging.util.OsUtil;
 import com.android.messaging.util.UiUtils;
+import com.ihs.app.framework.HSApplication;
 import com.superapps.util.BackgroundDrawables;
 import com.superapps.util.Dimensions;
 import com.superapps.util.Threads;
@@ -1282,15 +1283,14 @@ public class ComposeMessageView extends LinearLayout
 
             @Override
             public void onTypefaceRequestFailed(int reason) {
-                Toast.makeText(getContext(),
-                        getContext().getString(com.iflytek.android_font_loader_lib.R.string.request_failed, reason), Toast.LENGTH_LONG)
+                Toast.makeText(HSApplication.getContext(),
+                        HSApplication.getContext().getString(com.iflytek.android_font_loader_lib.R.string.request_failed, reason), Toast.LENGTH_LONG)
                         .show();
             }
         };
         FontsContractCompat
                 .requestFont(getContext(), request, callback,
                         getHandlerThreadHandler());
-
     }
 
     private Handler getHandlerThreadHandler() {

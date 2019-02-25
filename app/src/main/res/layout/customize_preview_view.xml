@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <merge xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    xmlns:tools="http://schemas.android.com/tools">
+    android:layout_height="match_parent">
 
     <com.superapps.view.TypefacedTextView
         android:id="@+id/contact_icon"
@@ -24,31 +24,30 @@
         android:id="@+id/incoming_message_preview_item"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:maxWidth="250dp"
         android:layout_marginStart="11dp"
-        android:gravity="center"
+        android:ellipsize="none"
+        android:gravity="center_vertical"
+        android:maxLines="3"
+        android:maxWidth="250dp"
         android:padding="10dp"
         android:text="@string/bubble_customize_preview_incoming_message"
         android:textColor="@color/text_primary_color"
         android:textSize="13sp"
-        android:ellipsize="none"
-        android:inputType="textMultiLine"
-        android:maxLines="3"
+        app:font_size_changeable="true"
         app:layout_constraintStart_toEndOf="@id/contact_icon"
         app:layout_constraintTop_toTopOf="@id/contact_icon"
-        app:font_size_changeable="true"
-        tools:background="@color/primary_color"/>
+        tools:background="@color/primary_color" />
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textSize="10sp"
-        android:textColor="@color/conversation_list_timestamp"
-        android:text="1hr ago"
         android:layout_marginStart="12dp"
         android:layout_marginTop="5dp"
-        app:layout_constraintTop_toBottomOf="@id/incoming_message_preview_item"
-        app:layout_constraintStart_toStartOf="@id/incoming_message_preview_item" />
+        android:text="1hr ago"
+        android:textColor="@color/conversation_list_timestamp"
+        android:textSize="10sp"
+        app:layout_constraintStart_toStartOf="@id/incoming_message_preview_item"
+        app:layout_constraintTop_toBottomOf="@id/incoming_message_preview_item" />
 
 
     <com.superapps.view.TypefacedTextView
@@ -74,13 +73,13 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textSize="10sp"
-        android:textColor="@color/conversation_list_timestamp"
-        android:text="now"
         android:layout_marginStart="12dp"
         android:layout_marginTop="5dp"
-        app:layout_constraintTop_toBottomOf="@id/outgoing_message_preview_item"
-        app:layout_constraintEnd_toEndOf="@id/outgoing_message_preview_item" />
+        android:text="now"
+        android:textColor="@color/conversation_list_timestamp"
+        android:textSize="10sp"
+        app:layout_constraintEnd_toEndOf="@id/outgoing_message_preview_item"
+        app:layout_constraintTop_toBottomOf="@id/outgoing_message_preview_item" />
 
 
 </merge>

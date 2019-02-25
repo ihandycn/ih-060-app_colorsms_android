@@ -21,6 +21,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.messaging.R;
+import com.ihs.app.framework.HSApplication;
 import com.superapps.util.Fonts;
 
 import org.qcode.fontchange.impl.QueryBuilder;
@@ -135,8 +136,8 @@ public class RadioButtonAdapter extends BaseAdapter {
 
             @Override
             public void onTypefaceRequestFailed(int reason) {
-                Toast.makeText(mContext,
-                        mContext.getString(R.string.request_failed, reason), Toast.LENGTH_LONG)
+                Toast.makeText(HSApplication.getContext(),
+                        HSApplication.getContext().getString(R.string.request_failed, reason), Toast.LENGTH_LONG)
                         .show();
             }
         };

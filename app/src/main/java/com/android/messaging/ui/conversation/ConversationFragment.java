@@ -117,6 +117,7 @@ import com.android.messaging.util.UiUtils;
 import com.android.messaging.util.UriUtil;
 import com.android.messaging.ui.wallpaper.WallpaperManager;
 import com.google.common.annotations.VisibleForTesting;
+import com.ihs.app.framework.HSApplication;
 import com.ihs.commons.notificationcenter.HSGlobalNotificationCenter;
 import com.ihs.commons.notificationcenter.INotificationObserver;
 import com.ihs.commons.utils.HSBundle;
@@ -771,8 +772,8 @@ public class ConversationFragment extends Fragment implements ConversationDataLi
 
             @Override
             public void onTypefaceRequestFailed(int reason) {
-                Toast.makeText(getContext(),
-                        getContext().getString(com.iflytek.android_font_loader_lib.R.string.request_failed, reason), Toast.LENGTH_LONG)
+                Toast.makeText(HSApplication.getContext(),
+                        HSApplication.getContext().getString(com.iflytek.android_font_loader_lib.R.string.request_failed, reason), Toast.LENGTH_LONG)
                         .show();
             }
         };

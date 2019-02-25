@@ -2,9 +2,6 @@ package org.qcode.fontchange;
 
 /**
  * 支持字体变化的Activity应实现的接口
- *
- * qqliu
- * 2016/9/25.
  */
 public interface IFontChangeActivity {
     /***

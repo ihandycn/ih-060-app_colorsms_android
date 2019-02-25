@@ -40,6 +40,7 @@ import com.android.messaging.R;
 import com.android.messaging.ui.customize.PrimaryColors;
 import com.android.messaging.util.BuglePrefs;
 import com.android.messaging.util.OsUtil;
+import com.ihs.app.framework.HSApplication;
 
 import org.qcode.fontchange.impl.QueryBuilder;
 
@@ -277,8 +278,8 @@ public class ViewPagerTabs extends HorizontalScrollView implements ViewPager.OnP
 
             @Override
             public void onTypefaceRequestFailed(int reason) {
-                Toast.makeText(getContext(),
-                        getContext().getString(com.iflytek.android_font_loader_lib.R.string.request_failed, reason), Toast.LENGTH_LONG)
+                Toast.makeText(HSApplication.getContext(),
+                        HSApplication.getContext().getString(com.iflytek.android_font_loader_lib.R.string.request_failed, reason), Toast.LENGTH_LONG)
                         .show();
             }
         };

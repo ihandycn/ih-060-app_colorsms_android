@@ -1,31 +1,33 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/change_font_container"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:id="@+id/change_font_container"
     android:orientation="vertical">
 
     <include layout="@layout/top_tool_bar_view" />
 
-
-    <com.android.messaging.ui.customize.CustomMessagePreviewView
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
+        android:layout_height="wrap_content"
+        android:layout_weight="1">
+
+        <com.android.messaging.ui.customize.CustomMessagePreviewView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+    </ScrollView>
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="316dp"
         android:orientation="vertical">
 
         <View
             android:id="@+id/divider"
             android:layout_width="match_parent"
             android:layout_height="8dp"
-            android:background="@color/customize_bubble_divider"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.4" />
+            android:background="@color/customize_bubble_divider" />
 
         <RelativeLayout
             android:id="@+id/change_font_item"
@@ -143,7 +145,5 @@
                 android:layout_marginEnd="27dp"
                 android:src="@drawable/icon_add" />
         </RelativeLayout>
-
     </LinearLayout>
-
 </LinearLayout>
