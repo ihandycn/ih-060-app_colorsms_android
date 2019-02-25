@@ -1,6 +1,7 @@
 package com.android.messaging.ui.customize;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,6 +24,9 @@ public class ChooseBubbleColorAdvanceViewHolder extends BasePagerViewHolder impl
                 R.layout.choose_custom_bubble_color_advance,
                 null /* root */,
                 false /* attachToRoot */);
+
+        ColorPickerView colorPickerView = view.findViewById(R.id.color_picker_view);
+        colorPickerView.setColor(PrimaryColors.getPrimaryColor());
 
         return view;
     }

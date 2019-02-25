@@ -39,5 +39,6 @@ public class ChooseCustomBubbleColorView extends FrameLayout {
         mCustomHeaderViewPager.setViewPagerTabHeight(CustomViewPager.DEFAULT_TAB_STRIP_SIZE);
         mCustomHeaderViewPager.setBackgroundColor(getResources().getColor(R.color.contact_picker_background));
         mCustomHeaderViewPager.setCurrentItem(0);
+        setClickable(true);
     }
 }
