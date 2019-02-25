@@ -13,9 +13,15 @@ import com.android.messaging.R;
 import com.android.messaging.util.ImageUtils;
 
 public class BubbleDrawableAdapter extends RecyclerView.Adapter<BubbleDrawableAdapter.ViewHolder> {
-    private Context mContext;
 
-    public BubbleDrawableAdapter(Context context) {
+    public interface OnSelectedBubbleChangeListener {
+        void onChange(int id);
+    }
+
+    private Context mContext;
+    private OnSelectedBubbleChangeListener mListener;
+
+    BubbleDrawableAdapter(Context context) {
         mContext = context;
     }
 
@@ -32,9 +38,14 @@ public class BubbleDrawableAdapter extends RecyclerView.Adapter<BubbleDrawableAd
                 BubbleDrawables.setSelectedIndex(position);
                 notifyItemChanged(oldSelectedPosition);
                 notifyItemChanged(position);
+                mListener.onChange(position);
             }
         });
         return viewHolder;
+    }
+
+    public void setOnSelectedBubbleChangeListener(OnSelectedBubbleChangeListener mListener) {
+        this.mListener = mListener;
     }
 
     @Override

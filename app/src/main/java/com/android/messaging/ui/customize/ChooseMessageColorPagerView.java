@@ -3,6 +3,7 @@ package com.android.messaging.ui.customize;
 import android.content.Context;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
+import android.view.View;
 import android.widget.FrameLayout;
 
 import com.android.messaging.R;
@@ -12,10 +13,18 @@ import com.android.messaging.ui.CustomViewPager;
 
 public class ChooseMessageColorPagerView extends FrameLayout implements OnColorChangedListener {
 
+    private CustomMessageHost mHost;
+
+    public void setHost(CustomMessageHost host) {
+        mHost = host;
+    }
+
     public ChooseMessageColorPagerView(final Context context, final AttributeSet attrs) {
         super(context, attrs);
         final LayoutInflater inflater = LayoutInflater.from(context);
         inflater.inflate(R.layout.choose_custom_bubble_color_layout, this, true);
+
+        findViewById(R.id.close_button).setOnClickListener(v -> setVisibility(GONE));
 
         initPager(context);
         setClickable(true);
@@ -41,6 +50,6 @@ public class ChooseMessageColorPagerView extends FrameLayout implements OnColorC
 
     @Override
     public void onColorChanged(int color) {
-
+        mHost.previewCustomColor(color);
     }
 }

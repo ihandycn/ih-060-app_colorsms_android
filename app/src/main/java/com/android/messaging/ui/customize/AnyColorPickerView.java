@@ -1,7 +1,6 @@
 package com.android.messaging.ui.customize;
 
 import android.content.Context;
-import android.graphics.BlurMaskFilter;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.ComposeShader;
@@ -26,11 +25,11 @@ import java.lang.annotation.RetentionPolicy;
  * 取色器
  * <p>
  * 所有注释单位为dp的全局变量，初始都是dp值，在使用之前会乘上屏幕像素(mDensity)称为px值
- *
+ * https://github.com/relish-wang/ColorPicker
  * @author Relish Wang
  * @since 2017/08/02
  */
-public class ColorPickerView extends View {
+public class AnyColorPickerView extends View {
 
     @IntDef({PANEL.SAT_VAL, PANEL.HUE})
     @Retention(RetentionPolicy.SOURCE)
@@ -140,15 +139,15 @@ public class ColorPickerView extends View {
 
     private OnColorChangedListener mListener;
 
-    public ColorPickerView(Context context) {
+    public AnyColorPickerView(Context context) {
         this(context, null);
     }
 
-    public ColorPickerView(Context context, AttributeSet attrs) {
+    public AnyColorPickerView(Context context, AttributeSet attrs) {
         this(context, attrs, 0);
     }
 
-    public ColorPickerView(Context context, AttributeSet attrs, int defStyle) {
+    public AnyColorPickerView(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
         init();
     }

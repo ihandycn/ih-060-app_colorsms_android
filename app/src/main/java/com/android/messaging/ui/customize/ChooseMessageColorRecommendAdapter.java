@@ -17,7 +17,6 @@ public class ChooseMessageColorRecommendAdapter extends RecyclerView.Adapter<Cho
     private Context mContext;
     private OnColorChangedListener mListener;
 
-
     ChooseMessageColorRecommendAdapter(Context context) {
         mContext = context;
     }
@@ -33,7 +32,7 @@ public class ChooseMessageColorRecommendAdapter extends RecyclerView.Adapter<Cho
         ViewHolder viewHolder = new ViewHolder(v);
 
         viewHolder.mBackground.setOnClickListener(v1 -> {
-
+            mListener.onColorChanged(ConversationColors.COLORS[viewHolder.getAdapterPosition()]);
         });
         return viewHolder;
     }

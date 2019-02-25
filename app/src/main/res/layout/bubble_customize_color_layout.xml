@@ -42,12 +42,11 @@
             />
 
         <ImageView
-            android:id="@+id/bubble_color_received"
+            android:id="@+id/bubble_color_incoming"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="0"
             android:padding="5dp"
-            android:src="@drawable/gray_circle_btn_bg_drawable"
             android:background="@drawable/bubble_customize_color_ring"/>
         
     </LinearLayout>
@@ -75,12 +74,11 @@
             />
 
         <ImageView
-            android:id="@+id/bubble_color_sent"
+            android:id="@+id/bubble_color_outgoing"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="0"
             android:padding="5dp"
-            android:src="@drawable/gray_circle_btn_bg_drawable"
             android:background="@drawable/bubble_customize_color_ring"/>
 
     </LinearLayout>
@@ -121,12 +119,11 @@
             />
 
         <ImageView
-            android:id="@+id/text_color_received"
+            android:id="@+id/text_color_incoming"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="0"
             android:padding="5dp"
-            android:src="@drawable/gray_circle_btn_bg_drawable"
             android:background="@drawable/bubble_customize_color_ring"/>
 
     </LinearLayout>
@@ -154,17 +151,13 @@
             />
 
         <ImageView
-            android:id="@+id/text_color_sent"
+            android:id="@+id/text_color_outgoing"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="0"
             android:padding="5dp"
-            android:src="@drawable/gray_circle_btn_bg_drawable"
             android:background="@drawable/bubble_customize_color_ring"/>
 
     </LinearLayout>
-
-
-
 
 </LinearLayout>

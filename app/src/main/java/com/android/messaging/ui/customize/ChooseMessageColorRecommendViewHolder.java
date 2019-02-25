@@ -37,7 +37,7 @@ public class ChooseMessageColorRecommendViewHolder extends BasePagerViewHolder i
         return view;
     }
 
-    public void setOnColorChangedListener(OnColorChangedListener listener) {
+    void setOnColorChangedListener(OnColorChangedListener listener) {
         mListener = listener;
     }
 

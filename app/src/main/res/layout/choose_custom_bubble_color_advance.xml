@@ -3,7 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <com.android.messaging.ui.customize.ColorPickerView
+    <com.android.messaging.ui.customize.AnyColorPickerView
         android:id="@+id/color_picker_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
