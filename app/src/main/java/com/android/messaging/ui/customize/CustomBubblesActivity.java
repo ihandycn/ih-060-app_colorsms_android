@@ -60,6 +60,7 @@ public class CustomBubblesActivity extends AppCompatActivity implements CustomMe
     public void openColorPickerView(int type) {
         mColorType = type;
         mChooseMessageColorPagerView.setVisibility(View.VISIBLE);
+        mChooseMessageColorPagerView.updateTitle(type);
     }
 
     @Override
