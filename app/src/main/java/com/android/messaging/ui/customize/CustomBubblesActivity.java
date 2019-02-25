@@ -16,7 +16,7 @@ public class CustomBubblesActivity extends AppCompatActivity  {
 
     private CustomHeaderViewPager mCustomHeaderViewPager;
     private BubbleDrawableViewHolder mBubbleDrawableViewHolder;
-    private BubbleColorViewHolder mBubbleColorViewHolder;
+    private ChooseMessageColorEntryViewHolder mChooseMessageColorEntryViewHolder;
 
 
     @Override
@@ -27,11 +27,11 @@ public class CustomBubblesActivity extends AppCompatActivity  {
         mCustomHeaderViewPager = findViewById(R.id.customize_pager);
 
         mBubbleDrawableViewHolder = new BubbleDrawableViewHolder(this);
-        mBubbleColorViewHolder = new BubbleColorViewHolder(this);
+        mChooseMessageColorEntryViewHolder = new ChooseMessageColorEntryViewHolder(this);
 
         final CustomPagerViewHolder[] viewHolders = {
                 mBubbleDrawableViewHolder,
-                mBubbleColorViewHolder};
+                mChooseMessageColorEntryViewHolder};
 
         mCustomHeaderViewPager = findViewById(R.id.customize_pager);
         mCustomHeaderViewPager.setViewHolders(viewHolders);

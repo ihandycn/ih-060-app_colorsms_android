@@ -10,9 +10,9 @@ import com.android.messaging.ui.CustomFooterViewPager;
 import com.android.messaging.ui.CustomPagerViewHolder;
 import com.android.messaging.ui.CustomViewPager;
 
-public class ChooseMessageColorEntryView extends FrameLayout implements OnColorChangedListener {
+public class CustomMessagePagerView extends FrameLayout implements OnColorChangedListener {
 
-    public ChooseMessageColorEntryView(final Context context, final AttributeSet attrs) {
+    public CustomMessagePagerView(final Context context, final AttributeSet attrs) {
         super(context, attrs);
         final LayoutInflater inflater = LayoutInflater.from(context);
         inflater.inflate(R.layout.choose_custom_bubble_color_layout, this, true);

@@ -71,7 +71,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
 
-        <com.android.messaging.ui.customize.ChooseMessageColorEntryView
+        <com.android.messaging.ui.customize.CustomMessagePagerView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:visibility="gone"/>
