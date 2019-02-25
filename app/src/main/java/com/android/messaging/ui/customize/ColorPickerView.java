@@ -140,10 +140,6 @@ public class ColorPickerView extends View {
 
     private OnColorChangedListener mListener;
 
-    interface OnColorChangedListener {
-        void onColorChanged(int color);
-    }
-
     public ColorPickerView(Context context) {
         this(context, null);
     }

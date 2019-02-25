@@ -42,7 +42,7 @@ public class BubbleDrawableAdapter extends RecyclerView.Adapter<BubbleDrawableAd
         if (position == BubbleDrawables.getSelectedIndex()) {
             Drawable drawable = ImageUtils.getTintedDrawable(mContext,
                     mContext.getResources().getDrawable(BubbleDrawables.BUBBLES[position]),
-                    BubbleBackgroundColors.getBubbleBackgroundColor());
+                    ConversationColors.get().getBubbleBackgroundColor(false));
             holder.mBubble.setBackground(drawable);
             holder.mBubble.setImageResource(R.drawable.ic_checkmark_large_light);
         } else {

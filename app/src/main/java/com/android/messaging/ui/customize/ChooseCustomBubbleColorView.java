@@ -15,30 +15,37 @@ import com.android.messaging.ui.CustomPagerViewHolder;
 import com.android.messaging.ui.CustomViewPager;
 import com.android.messaging.ui.ViewPagerTabs;
 
-public class ChooseCustomBubbleColorView extends FrameLayout {
-
-    private CustomFooterViewPager mCustomHeaderViewPager;
-    private ChooseBubbleColorRecommendViewHolder mBubbleStyleViewHolder;
-    private ChooseBubbleColorAdvanceViewHolder mBubbleColorViewHolder;
+public class ChooseCustomBubbleColorView extends FrameLayout implements OnColorChangedListener {
 
     public ChooseCustomBubbleColorView(final Context context, final AttributeSet attrs) {
         super(context, attrs);
         final LayoutInflater inflater = LayoutInflater.from(context);
         inflater.inflate(R.layout.choose_custom_bubble_color_layout, this, true);
 
-        mBubbleStyleViewHolder = new ChooseBubbleColorRecommendViewHolder(context);
-        mBubbleColorViewHolder = new ChooseBubbleColorAdvanceViewHolder(context);
+        initPager(context);
+        setClickable(true);
+    }
+
+    public void initPager(Context context) {
+        ChooseBubbleColorRecommendViewHolder bubbleRecommendViewHolder = new ChooseBubbleColorRecommendViewHolder(context);
+        ChooseBubbleColorAdvanceViewHolder bubbleColorViewHolder = new ChooseBubbleColorAdvanceViewHolder(context);
+
+        bubbleRecommendViewHolder.setOnColorChangedListener(this);
+        bubbleColorViewHolder.setOnColorChangedListener(this);
 
         final CustomPagerViewHolder[] viewHolders = {
-                mBubbleStyleViewHolder,
-                mBubbleColorViewHolder};
+                bubbleRecommendViewHolder,
+                bubbleColorViewHolder};
 
+        CustomFooterViewPager customHeaderViewPager = findViewById(R.id.custom_footer_pager);
+        customHeaderViewPager.setViewHolders(viewHolders);
+        customHeaderViewPager.setViewPagerTabHeight(CustomViewPager.DEFAULT_TAB_STRIP_SIZE);
+        customHeaderViewPager.setBackgroundColor(getResources().getColor(R.color.contact_picker_background));
+        customHeaderViewPager.setCurrentItem(0);
+    }
 
-        mCustomHeaderViewPager = findViewById(R.id.custom_footer_pager);
-        mCustomHeaderViewPager.setViewHolders(viewHolders);
-        mCustomHeaderViewPager.setViewPagerTabHeight(CustomViewPager.DEFAULT_TAB_STRIP_SIZE);
-        mCustomHeaderViewPager.setBackgroundColor(getResources().getColor(R.color.contact_picker_background));
-        mCustomHeaderViewPager.setCurrentItem(0);
-        setClickable(true);
+    @Override
+    public void onColorChanged(int color) {
+
     }
 }

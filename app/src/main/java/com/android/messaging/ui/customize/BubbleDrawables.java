@@ -6,7 +6,7 @@ import com.android.messaging.R;
 import com.android.messaging.ui.ConversationDrawables;
 import com.android.messaging.util.BuglePrefs;
 
-import static com.android.messaging.util.BuglePrefsKeys.PREFS_KEY_BUBBLE_DRWABLE_ID;
+import static com.android.messaging.util.BuglePrefsKeys.PREFS_KEY_BUBBLE_DRAWABLE_ID;
 
 public class BubbleDrawables {
     private static final BuglePrefs prefs = BuglePrefs.getApplicationPrefs();
@@ -23,11 +23,11 @@ public class BubbleDrawables {
     };
 
     public static int getSelectedIndex() {
-        return prefs.getInt(PREFS_KEY_BUBBLE_DRWABLE_ID, 0);
+        return prefs.getInt(PREFS_KEY_BUBBLE_DRAWABLE_ID, 0);
     }
 
     public static void setSelectedIndex(int position) {
-        prefs.putInt(PREFS_KEY_BUBBLE_DRWABLE_ID, position);
+        prefs.putInt(PREFS_KEY_BUBBLE_DRAWABLE_ID, position);
         ConversationDrawables.get().updateBubbleDrawable(position);
     }
 

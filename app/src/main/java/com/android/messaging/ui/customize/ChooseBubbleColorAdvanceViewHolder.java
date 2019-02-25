@@ -12,8 +12,9 @@ import com.android.messaging.ui.CustomPagerViewHolder;
 
 public class ChooseBubbleColorAdvanceViewHolder extends BasePagerViewHolder implements CustomPagerViewHolder {
     private Context mContext;
+    private OnColorChangedListener mListener;
 
-    public ChooseBubbleColorAdvanceViewHolder(final Context context) {
+    ChooseBubbleColorAdvanceViewHolder(final Context context) {
         mContext = context;
     }
 
@@ -27,10 +28,14 @@ public class ChooseBubbleColorAdvanceViewHolder extends BasePagerViewHolder impl
 
         ColorPickerView colorPickerView = view.findViewById(R.id.color_picker_view);
         colorPickerView.setColor(PrimaryColors.getPrimaryColor());
+        colorPickerView.setOnColorChangedListener(color -> mListener.onColorChanged(color));
 
         return view;
     }
 
+    public void setOnColorChangedListener(OnColorChangedListener listener) {
+        mListener = listener;
+    }
 
     @Override
     protected void setHasOptionsMenu() {

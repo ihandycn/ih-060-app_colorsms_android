@@ -16,8 +16,9 @@ import com.superapps.util.Dimensions;
 
 public class ChooseBubbleColorRecommendViewHolder extends BasePagerViewHolder implements CustomPagerViewHolder {
     private Context mContext;
+    private OnColorChangedListener mListener;
 
-    public ChooseBubbleColorRecommendViewHolder(final Context context) {
+    ChooseBubbleColorRecommendViewHolder(final Context context) {
         mContext = context;
     }
 
@@ -32,11 +33,15 @@ public class ChooseBubbleColorRecommendViewHolder extends BasePagerViewHolder im
         RecyclerView recyclerView = view.findViewById(R.id.recycler_view);
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new GridLayoutManager(mContext, 4));
-        recyclerView.setAdapter(new ChooseBubbleColorRecommendAdapter(mContext));
-
+        ChooseBubbleColorRecommendAdapter adapter = new ChooseBubbleColorRecommendAdapter(mContext);
+        adapter.setOnColorChangedListener(color -> mListener.onColorChanged(color));
+        recyclerView.setAdapter(adapter);
         return view;
     }
 
+    public void setOnColorChangedListener(OnColorChangedListener listener) {
+        mListener = listener;
+    }
 
     @Override
     protected void setHasOptionsMenu() {

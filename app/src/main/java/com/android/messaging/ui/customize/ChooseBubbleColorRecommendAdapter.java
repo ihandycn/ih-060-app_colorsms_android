@@ -15,9 +15,15 @@ import com.bumptech.glide.request.RequestOptions;
 
 public class ChooseBubbleColorRecommendAdapter extends RecyclerView.Adapter<ChooseBubbleColorRecommendAdapter.ViewHolder> {
     private Context mContext;
+    private OnColorChangedListener mListener;
 
-    public ChooseBubbleColorRecommendAdapter(Context context) {
+
+    ChooseBubbleColorRecommendAdapter(Context context) {
         mContext = context;
+    }
+
+    void setOnColorChangedListener(OnColorChangedListener listener) {
+        mListener = listener;
     }
 
     @NonNull
@@ -35,14 +41,14 @@ public class ChooseBubbleColorRecommendAdapter extends RecyclerView.Adapter<Choo
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         GlideApp.with(mContext)
-                .load(new ColorDrawable(BubbleBackgroundColors.COLORS[position]))
+                .load(new ColorDrawable(ConversationColors.COLORS[position]))
                 .apply(RequestOptions.circleCropTransform())
                 .into(holder.mBackground);
     }
 
     @Override
     public int getItemCount() {
-        return BubbleBackgroundColors.COLORS.length;
+        return ConversationColors.COLORS.length;
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
