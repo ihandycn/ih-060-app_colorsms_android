@@ -47,6 +47,7 @@ import com.android.messaging.ui.BugleAnimationTags;
 import com.android.messaging.ui.ListEmptyView;
 import com.android.messaging.ui.SnackBarInteraction;
 import com.android.messaging.ui.UIIntents;
+import com.android.messaging.ui.customize.PrimaryColors;
 import com.android.messaging.util.AccessibilityUtil;
 import com.android.messaging.util.Assert;
 import com.android.messaging.util.BugleAnalytics;
@@ -54,6 +55,8 @@ import com.android.messaging.util.ImeUtil;
 import com.android.messaging.util.LogUtil;
 import com.android.messaging.util.UiUtils;
 import com.google.common.annotations.VisibleForTesting;
+import com.superapps.util.BackgroundDrawables;
+import com.superapps.util.Dimensions;
 import com.superapps.util.IntegerBuckets;
 import com.superapps.util.Preferences;
 
@@ -221,6 +224,10 @@ public class ConversationListFragment extends Fragment implements ConversationLi
 
         mStartNewConversationButton = (ImageView) rootView.findViewById(
                 R.id.start_new_conversation_button);
+        mStartNewConversationButton.setBackgroundDrawable(BackgroundDrawables.
+                createBackgroundDrawable(PrimaryColors.getPrimaryColor(),
+                        Dimensions.pxFromDp(28),
+                        true));
         if (mArchiveMode) {
             mStartNewConversationButton.setVisibility(View.GONE);
         } else {

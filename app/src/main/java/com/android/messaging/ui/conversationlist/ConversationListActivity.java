@@ -19,13 +19,19 @@ package com.android.messaging.ui.conversationlist;
 import android.animation.ValueAnimator;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.design.widget.NavigationView;
 import android.support.v4.view.animation.PathInterpolatorCompat;
+import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
+import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v7.widget.AppCompatDrawableManager;
 import android.support.v7.widget.Toolbar;
 import android.view.ActionMode;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
@@ -35,22 +41,45 @@ import com.android.messaging.Factory;
 import com.android.messaging.R;
 import com.android.messaging.datamodel.BugleNotifications;
 import com.android.messaging.ui.UIIntents;
+import com.android.messaging.ui.appsettings.ThemeSelectActivity;
 import com.android.messaging.ui.dialog.FiveStarRateDialog;
 import com.android.messaging.ui.emoji.EmojiStoreActivity;
 import com.android.messaging.util.BugleAnalytics;
 import com.android.messaging.util.Trace;
 import com.android.messaging.util.UiUtils;
-import com.superapps.util.BackgroundDrawables;
+import com.ihs.commons.notificationcenter.HSGlobalNotificationCenter;
+import com.ihs.commons.notificationcenter.INotificationObserver;
+import com.ihs.commons.utils.HSBundle;
 import com.superapps.util.Dimensions;
+import com.superapps.util.Navigations;
 import com.superapps.util.Preferences;
 import com.superapps.util.Threads;
+import com.superapps.util.Toasts;
 
-public class ConversationListActivity extends AbstractConversationListActivity {
+public class ConversationListActivity extends AbstractConversationListActivity
+        implements View.OnClickListener, INotificationObserver {
+
+    public static final String EVENT_MAINPAGE_RECREATE = "event_mainpage_recreate";
 
     private static final String PREF_SHOW_EMOJI_GUIDE = "pref_show_emoji_guide";
+    private static final String PREF_KEY_MAIN_DRAWER_OPENED = "pref_key_main_drawer_opened";
+
+    private static boolean sIsRecreate = false;
+
+    private static final int DRAWER_INDEX_NONE = -1;
+    private static final int DRAWER_INDEX_THEME_COLOR = 0;
+    private static final int DRAWER_INDEX_BUBBLE = 1;
+    private static final int DRAWER_INDEX_CHAT_BACKGROUND = 2;
+    private static final int DRAWER_INDEX_SETTING = 3;
+    private static final int DRAWER_INDEX_RATE = 4;
+
+    private int drawerClickIndex = DRAWER_INDEX_NONE;
+
+    // Drawer related stuff
+    private DrawerLayout drawerLayout;
+    private NavigationView navigationView;
 
     private TextView mTitleTextView;
-    private View mSettingsBtn;
     private View mEmojiStoreIconView;
     private View mEmojiStoreCircleView;
     private ViewGroup mGuideContainer;
@@ -87,15 +116,24 @@ public class ConversationListActivity extends AbstractConversationListActivity {
         configAppBar();
         showEmojiStoreGuide();
         mIsNoActionBack = true;
-        BugleAnalytics.logEvent("SMS_Messages_Show", true);
 
-        Preferences.get(FiveStarRateDialog.DESKTOP_PREFS).incrementAndGetInt(FiveStarRateDialog.PREF_KEY_MAIN_ACTIVITY_SHOW_TIME);
-        FiveStarRateDialog.showFiveStarWhenMainPageShowIfNeed(this);
-        Trace.endSection();
+        if (sIsRecreate) {
+            sIsRecreate = false;
+        } else {
+            Preferences.get(FiveStarRateDialog.DESKTOP_PREFS).incrementAndGetInt(FiveStarRateDialog.PREF_KEY_MAIN_ACTIVITY_SHOW_TIME);
+            FiveStarRateDialog.showFiveStarWhenMainPageShowIfNeed(this);
+        }
 
         if (getIntent() != null && getIntent().getBooleanExtra(BugleNotifications.EXTRA_FROM_NOTIFICATION, false)) {
             BugleAnalytics.logEvent("SMS_Notifications_Clicked", true);
         }
+
+        setupDrawer();
+
+        HSGlobalNotificationCenter.addObserver(EVENT_MAINPAGE_RECREATE, this);
+        BugleAnalytics.logEvent("SMS_Messages_Show", true, "color", String.valueOf(ThemeSelectActivity.getSelectedIndex()));
+
+        Trace.endSection();
     }
 
     @Override
@@ -110,23 +148,117 @@ public class ConversationListActivity extends AbstractConversationListActivity {
 
         if (mTitleTextView != null && mTitleTextView.getVisibility() == View.GONE) {
             mTitleTextView.setVisibility(View.VISIBLE);
-            mSettingsBtn.setVisibility(View.VISIBLE);
             mEmojiStoreIconView.setVisibility(View.VISIBLE);
         }
         //update statusBar color
         UiUtils.setStatusBarColor(this, getResources().getColor(R.color.action_bar_background_color));
 
         super.updateActionBar(actionBar);
+
+        setDrawerMenuIcon();
+    }
+
+    private void setupDrawer() {
+        navigationView = findViewById(R.id.navigation_view);
+        navigationView.setItemIconTintList(null);
+        navigationView.setPadding(0, Dimensions.getStatusBarInset(this), 0, 0);
+
+        drawerLayout = findViewById(R.id.main_drawer_layout);
+        ActionBarDrawerToggle drawerToggle = new ActionBarDrawerToggle(this, drawerLayout, R.string.drawer_open, R.string.drawer_close) {
+            @Override
+            public void onDrawerStateChanged(int newState) {
+                if (newState == DrawerLayout.STATE_SETTLING) {
+
+                }
+            }
+
+            @Override
+            public void onDrawerOpened(View drawerView) {
+                drawerClickIndex = DRAWER_INDEX_NONE;
+                Preferences.getDefault().putBoolean(PREF_KEY_MAIN_DRAWER_OPENED, true);
+                setDrawerMenuIcon();
+                BugleAnalytics.logEvent("Menu_Show", true);
+                super.onDrawerOpened(drawerView);
+            }
+
+            @Override
+            public void onDrawerClosed(View drawerView) {
+                super.onDrawerClosed(drawerView);
+
+                switch (drawerClickIndex) {
+                    case DRAWER_INDEX_THEME_COLOR:
+                        BugleAnalytics.logEvent("Menu_ThemeColor_Click");
+                        Navigations.startActivity(ConversationListActivity.this, ThemeSelectActivity.class);
+                        break;
+                    case DRAWER_INDEX_BUBBLE:
+//                        BugleAnalytics.logEvent("Menu_Bubble_Click");
+//                        Toasts.showToast(R.string.coming_soon);
+                        break;
+                    case DRAWER_INDEX_CHAT_BACKGROUND:
+//                        BugleAnalytics.logEvent("Menu_ChatBackground_Click");
+//                        Toasts.showToast(R.string.coming_soon);
+                        break;
+                    case DRAWER_INDEX_SETTING:
+                        UIIntents.get().launchSettingsActivity(ConversationListActivity.this);
+                        BugleAnalytics.logEvent("Menu_Settings_Click", true);
+                        break;
+                    case DRAWER_INDEX_RATE:
+                        FiveStarRateDialog.showFiveStarFromSetting(ConversationListActivity.this);
+                        BugleAnalytics.logEvent("Menu_FiveStart_Click", true);
+                        break;
+                    case DRAWER_INDEX_NONE:
+                    default:
+                        break;
+                }
+
+                drawerClickIndex = DRAWER_INDEX_NONE;
+            }
+        };
+
+        drawerLayout.setDrawerListener(drawerToggle);
+        drawerToggle.syncState();
+
+        View navigationContent = getLayoutInflater().inflate(R.layout.layout_main_navigation, navigationView, false);
+        navigationView.addView(navigationContent);
+
+        navigationContent.findViewById(R.id.navigation_item_theme_color).setOnClickListener(this);
+        navigationContent.findViewById(R.id.navigation_item_bubble).setOnClickListener(this);
+        navigationContent.findViewById(R.id.navigation_item_chat_background).setOnClickListener(this);
+        navigationContent.findViewById(R.id.navigation_item_setting).setOnClickListener(this);
+        navigationContent.findViewById(R.id.navigation_item_rate).setOnClickListener(this);
+
+        setDrawerMenuIcon();
+    }
+
+    @SuppressWarnings("RestrictedApi")
+    private void setDrawerMenuIcon() {
+        getSupportActionBar().setHomeButtonEnabled(true);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+        Drawable drawable;
+        if (!Preferences.getDefault().getBoolean(PREF_KEY_MAIN_DRAWER_OPENED, false)) {
+            drawable = AppCompatDrawableManager.get().getDrawable(this, R.drawable.ic_navigation_drawer_dot);
+        } else {
+            drawable = AppCompatDrawableManager.get().getDrawable(this, R.drawable.ic_navigation_drawer);
+        }
+        getSupportActionBar().setHomeAsUpIndicator(drawable);
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
+
         FiveStarRateDialog.dismissDialogs();
+        HSGlobalNotificationCenter.removeObserver(this);
     }
 
     @Override
     public void onBackPressed() {
+        if (drawerLayout.isDrawerOpen(navigationView)) {
+            drawerLayout.closeDrawer(navigationView);
+            return;
+        }
+
         if (isInConversationListSelectMode()) {
             exitMultiSelectState();
         } else {
@@ -139,10 +271,28 @@ public class ConversationListActivity extends AbstractConversationListActivity {
         }
     }
 
+    @Override public boolean onOptionsItemSelected(MenuItem menuItem) {
+        if (mActionMode != null &&
+                mActionMode.getCallback().onActionItemClicked(mActionMode, menuItem)) {
+            return true;
+        }
+
+        switch (menuItem.getItemId()) {
+            case android.R.id.home:
+                if (mActionMode != null) {
+                    dismissActionMode();
+                    return true;
+                } else {
+                    drawerLayout.openDrawer(navigationView);
+                    return true;
+                }
+        }
+        return super.onOptionsItemSelected(menuItem);
+    }
+
     @Override
     public ActionMode startActionMode(ActionMode.Callback callback) {
         mTitleTextView.setVisibility(View.GONE);
-        mSettingsBtn.setVisibility(View.GONE);
         stopEmojiStoreGuide();
         mEmojiStoreIconView.setVisibility(View.GONE);
         BugleAnalytics.logEvent("SMS_EditMode_Show", true);
@@ -186,15 +336,6 @@ public class ConversationListActivity extends AbstractConversationListActivity {
 
     private void setupToolbarUI() {
         mTitleTextView = findViewById(R.id.toolbar_title);
-        mSettingsBtn = findViewById(R.id.setting_btn);
-        mSettingsBtn.setBackground(BackgroundDrawables.createBackgroundDrawable(0xffffffff,
-                Dimensions.pxFromDp(20), true));
-        mSettingsBtn.setOnClickListener(v -> {
-            UIIntents.get().launchSettingsActivity(this);
-            logFirstComeInClickEvent("settings");
-            BugleAnalytics.logEvent("SMS_Mainpage_Settings_Click", true);
-        });
-
         mAnimHandler = new Handler();
         mGuideContainer = findViewById(R.id.emoji_store_guide_content);
         mTriangleShape = findViewById(R.id.emoji_store_guide_triangle);
@@ -395,6 +536,44 @@ public class ConversationListActivity extends AbstractConversationListActivity {
                 mEmojiStoreCircleView.setVisibility(View.GONE);
             }
             mAnimState = AnimState.NONE;
+        }
+    }
+
+    @Override public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.navigation_item_theme_color:
+                drawerClickIndex = DRAWER_INDEX_THEME_COLOR;
+                drawerLayout.closeDrawer(navigationView);
+                break;
+            case R.id.navigation_item_bubble:
+//                drawerClickIndex = DRAWER_INDEX_BUBBLE;
+//                drawerLayout.closeDrawer(navigationView);
+                BugleAnalytics.logEvent("Menu_Bubble_Click");
+                Toasts.showToast(R.string.coming_soon);
+                break;
+            case R.id.navigation_item_chat_background:
+//                drawerClickIndex = DRAWER_INDEX_CHAT_BACKGROUND;
+//                drawerLayout.closeDrawer(navigationView);
+                BugleAnalytics.logEvent("Menu_ChatBackground_Click");
+                Toasts.showToast(R.string.coming_soon);
+                break;
+            case R.id.navigation_item_setting:
+                drawerClickIndex = DRAWER_INDEX_SETTING;
+                drawerLayout.closeDrawer(navigationView);
+                break;
+            case R.id.navigation_item_rate:
+                drawerClickIndex = DRAWER_INDEX_RATE;
+                drawerLayout.closeDrawer(navigationView);
+                break;
+        }
+    }
+
+    @Override public void onReceive(String s, HSBundle hsBundle) {
+        switch (s) {
+            case EVENT_MAINPAGE_RECREATE:
+                sIsRecreate = true;
+                recreate();
+                break;
         }
     }
 }

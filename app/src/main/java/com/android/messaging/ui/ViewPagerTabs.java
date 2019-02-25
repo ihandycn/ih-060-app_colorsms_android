@@ -35,7 +35,10 @@ import android.widget.Toast;
 
 import com.android.messaging.Factory;
 import com.android.messaging.R;
+import com.android.messaging.ui.customize.PrimaryColors;
 import com.android.messaging.util.OsUtil;
+
+import java.util.ArrayList;
 
 /**
  * Lightweight implementation of ViewPager tabs. This looks similar to traditional actionBar tabs,
@@ -69,7 +72,6 @@ public class ViewPagerTabs extends HorizontalScrollView implements ViewPager.OnP
     private static final int[] ATTRS = new int[]{
             android.R.attr.textSize,
             android.R.attr.textStyle,
-            android.R.attr.textColor,
             android.R.attr.textAllCaps
     };
 
@@ -121,10 +123,10 @@ public class ViewPagerTabs extends HorizontalScrollView implements ViewPager.OnP
         final TypedArray a = context.obtainStyledAttributes(attrs, ATTRS);
         mTextSize = a.getDimensionPixelSize(0, 0);
         mTextStyle = a.getInt(1, 0);
-        mTextColor = a.getColorStateList(2);
-        mTextAllCaps = a.getBoolean(3, false);
+        mTextAllCaps = a.getBoolean(2, false);
 
         mTabStrip = new ViewPagerTabStrip(context);
+        mTextColor = getTextColor();
         addView(mTabStrip,
                 new FrameLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.MATCH_PARENT));
         a.recycle();
@@ -176,6 +178,20 @@ public class ViewPagerTabs extends HorizontalScrollView implements ViewPager.OnP
             textView.setSelected(true);
         }
     }
+
+    private ColorStateList getTextColor() {
+        int[][] states = new int[][] {
+                new int[] { android.R.attr.state_selected},
+                new int[] { -android.R.attr.state_selected}
+        };
+
+        int[] colors = new int[] {
+                PrimaryColors.getPrimaryColor(),
+                getResources().getColor(R.color.pager_tab_state_normal)
+        };
+        return new ColorStateList(states, colors);
+    }
+
 
     @Override
     public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {

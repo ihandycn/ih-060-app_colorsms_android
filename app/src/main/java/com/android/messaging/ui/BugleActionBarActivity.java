@@ -27,6 +27,7 @@ import android.view.MenuItem;
 import android.view.View;
 
 import com.android.messaging.R;
+import com.android.messaging.ui.customize.PrimaryColors;
 import com.android.messaging.ui.dialog.FiveStarRateDialog;
 import com.android.messaging.util.BugleActivityUtil;
 import com.android.messaging.util.ImeUtil;
@@ -50,7 +51,7 @@ public class BugleActionBarActivity extends AppCompatActivity implements ImeUtil
 
     // The ActionMode that represents the modal contextual action bar, using our own implementation
     // rather than the built in contextual action bar to reduce jank
-    private CustomActionMode mActionMode;
+    protected CustomActionMode mActionMode;
 
     // The menu for the action bar
     private Menu mActionBarMenu;
@@ -263,7 +264,7 @@ public class BugleActionBarActivity extends AppCompatActivity implements ImeUtil
      * Custom ActionMode implementation which allows us to just replace the contents of the main
      * action bar rather than overlay over it
      */
-    private class CustomActionMode extends ActionMode {
+    protected class CustomActionMode extends ActionMode {
         private CharSequence mTitle;
         private CharSequence mSubtitle;
         private View mCustomView;
@@ -345,9 +346,8 @@ public class BugleActionBarActivity extends AppCompatActivity implements ImeUtil
             actionBar.setDisplayShowTitleEnabled(false);
             actionBar.setDisplayShowCustomEnabled(false);
             mActionMode.getCallback().onPrepareActionMode(mActionMode, mActionBarMenu);
-            UiUtils.setStatusBarColor(BugleActionBarActivity.this, getResources().getColor(R.color.primary_color));
-            actionBar.setBackgroundDrawable(new ColorDrawable(
-                    getResources().getColor(R.color.primary_color)));
+            UiUtils.setStatusBarColor(BugleActionBarActivity.this, PrimaryColors.getPrimaryColor());
+            actionBar.setBackgroundDrawable(new ColorDrawable(PrimaryColors.getPrimaryColor()));
             actionBar.setHomeAsUpIndicator(R.drawable.ic_close_light);
             actionBar.show();
         }

@@ -50,6 +50,7 @@ import com.android.messaging.ui.AudioAttachmentView;
 import com.android.messaging.ui.ContactIconView;
 import com.android.messaging.ui.SnackBar;
 import com.android.messaging.ui.SnackBarInteraction;
+import com.android.messaging.ui.customize.PrimaryColors;
 import com.android.messaging.util.Assert;
 import com.android.messaging.util.BugleAnalytics;
 import com.android.messaging.util.ContentType;
@@ -183,6 +184,10 @@ public class ConversationListItemView extends FrameLayout implements OnClickList
         mConversationNameUnreadTypeface = Typefaces.getCustomSemiBold();
         mSnippetTypeface = Typefaces.getCustomRegular();
 
+        mContactCheckmarkView.setBackgroundDrawable(BackgroundDrawables.
+                createBackgroundDrawable(PrimaryColors.getPrimaryColor(), Dimensions.pxFromDp(28), false));
+
+
         if (OsUtil.isAtLeastL()) {
             setTransitionGroup(true);
         }
@@ -242,7 +247,7 @@ public class ConversationListItemView extends FrameLayout implements OnClickList
             contactIconBackgroundColor = 0xffd4d9de;
         } else {
             //unread
-            contactIconBackgroundColor = 0xff1acc48;
+            contactIconBackgroundColor = PrimaryColors.getPrimaryColor();
             if (!TextUtils.isEmpty(imgUri)) {
                 imgUri = imgUri.concat("unread");
             }
@@ -516,6 +521,8 @@ public class ConversationListItemView extends FrameLayout implements OnClickList
                         getContext(), R.drawable.ic_preview_play);
                 previewClickListener = fullScreenPreviewClickListener;
                 previewImageVisibility = VISIBLE;
+                mImagePreviewView.setBackgroundDrawable(BackgroundDrawables.
+                        createBackgroundDrawable(PrimaryColors.getPrimaryColor(), Dimensions.pxFromDp(28), false));
             } else if (ContentType.isImageType(previewContentType)) {
                 previewImageUri = previewUri;
                 previewClickListener = fullScreenPreviewClickListener;
@@ -526,7 +533,7 @@ public class ConversationListItemView extends FrameLayout implements OnClickList
         mUnreadMessagesCountView.setVisibility(unreadMsgCountViewVisibility);
         if (unreadMsgCountViewVisibility == VISIBLE) {
             mUnreadMessagesCountView.setBackground(
-                    BackgroundDrawables.createBackgroundDrawable(0xfff52e2e,
+                    BackgroundDrawables.createBackgroundDrawable(0xffe62a2a,
                             Dimensions.pxFromDp(10.5f), false));
             mUnreadMessagesCountView.setText(String.valueOf(mData.getUnreadMessagesNumber()));
         }

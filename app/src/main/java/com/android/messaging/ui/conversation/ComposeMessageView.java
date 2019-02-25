@@ -61,6 +61,7 @@ import com.android.messaging.ui.AttachmentPreview;
 import com.android.messaging.ui.BugleActionBarActivity;
 import com.android.messaging.ui.PlainTextEditText;
 import com.android.messaging.ui.conversation.ConversationInputManager.ConversationInputSink;
+import com.android.messaging.ui.customize.PrimaryColors;
 import com.android.messaging.ui.dialog.FiveStarRateDialog;
 import com.android.messaging.ui.emoji.utils.EmojiManager;
 import com.android.messaging.util.AccessibilityUtil;
@@ -142,7 +143,7 @@ public class ComposeMessageView extends LinearLayout
     private PlainTextEditText mComposeSubjectText;
     private TextView mMmsIndicator;
     private SimIconView mSelfSendIcon;
-    private ImageButton mSendButton;
+    private ImageView mSendButton;
     private View mSubjectView;
     private ImageButton mDeleteSubjectButton;
     private AttachmentPreview mAttachmentPreview;
@@ -342,6 +343,9 @@ public class ComposeMessageView extends LinearLayout
         mSubjectView = findViewById(R.id.subject_view);
 
         mSendButton = findViewById(R.id.send_message_button);
+        mSendButton.setBackground(BackgroundDrawables.createBackgroundDrawable(PrimaryColors.getPrimaryColor(),
+                PrimaryColors.getPrimaryColorDark(),
+                Dimensions.pxFromDp(29), false, true));
         mSendButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(final View clickView) {
@@ -954,6 +958,10 @@ public class ComposeMessageView extends LinearLayout
                     mSelfSendIcon.setImageResourceUri(selfSendButtonUri);
                 } else {
                     mSelfSendIcon.setImageResource(R.drawable.input_send_message_icon);
+                    mSelfSendIcon.setBackground(BackgroundDrawables.createBackgroundDrawable(PrimaryColors.getPrimaryColor(),
+                            PrimaryColors.getPrimaryColorDark(),
+                            Dimensions.pxFromDp(20), false, true));
+
                 }
                 if (isOverriddenAvatarAGroup()) {
                     UiUtils.revealOrHideViewWithAnimation(mSelfSendIcon, VISIBLE, null);

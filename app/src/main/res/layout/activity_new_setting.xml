@@ -84,13 +84,6 @@
                 app:title="@string/advanced_settings"
                 app:type="2" />
 
-            <!--5 star rating-->
-            <com.android.messaging.ui.appsettings.SettingItemView
-                android:id="@+id/setting_item_five_star_rating"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                app:title="@string/setting_5_star_rating" />
-
             <!--feedback-->
             <com.android.messaging.ui.appsettings.SettingItemView
                 android:id="@+id/setting_item_feedback"

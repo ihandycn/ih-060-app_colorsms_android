@@ -133,7 +133,7 @@
                             app:iconSize="normal"
                             app:reveal="true" />
 
-                        <ImageButton
+                        <ImageView
                             android:id="@+id/send_message_button"
                             android:layout_width="36.7dp"
                             android:layout_height="36.7dp"

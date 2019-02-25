@@ -17,10 +17,12 @@ package com.android.messaging.ui;
 
 import android.content.Context;
 import android.content.res.Resources;
+import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 
 import com.android.messaging.Factory;
 import com.android.messaging.R;
+import com.android.messaging.ui.customize.PrimaryColors;
 import com.android.messaging.util.ImageUtils;
 
 /**
@@ -100,13 +102,17 @@ public class ConversationDrawables {
                 resources.getDrawable(R.drawable.fastscroll_preview_left);
         mFastScrollPreviewDrawableRight =
                 resources.getDrawable(R.drawable.fastscroll_preview_right);
-        mOutgoingBubbleColor = resources.getColor(R.color.message_bubble_color_outgoing);
+        mOutgoingBubbleColor = PrimaryColors.getPrimaryColor();
         mIncomingBubbleColor = resources.getColor(R.color.message_bubble_color_incoming);
         mIncomingErrorBubbleColor =
                 resources.getColor(R.color.message_error_bubble_color_incoming);
         mIncomingSelectedBubbleColor = resources.getColor(R.color.message_bubble_color_selected_incoming);
-        mOutgoingSelectedBubbleColor = resources.getColor(R.color.message_bubble_color_selected_outgoing);
-        mThemeColor = resources.getColor(R.color.primary_color);
+        float[] hsb = new float[3];
+        Color.RGBToHSV(Color.red(mOutgoingBubbleColor), Color.green(mOutgoingBubbleColor),
+                Color.blue(mOutgoingBubbleColor), hsb);
+        hsb[2] /= 1.2f;
+        mOutgoingSelectedBubbleColor = Color.HSVToColor(hsb);
+        mThemeColor = PrimaryColors.getPrimaryColor();
     }
 
     public Drawable getBubbleDrawable(final boolean selected, final boolean incoming,
@@ -163,8 +169,12 @@ public class ConversationDrawables {
     }
 
     public Drawable getAudioProgressBackgroundDrawable(final boolean incoming) {
-        return incoming ? mIncomingAudioProgressBackgroundDrawable :
-                mOutgoingAudioProgressBackgroundDrawable;
+        if (incoming) {
+            return ImageUtils.getTintedDrawable(
+                    mContext, mIncomingAudioProgressBackgroundDrawable, mThemeColor);
+        } else {
+            return mOutgoingAudioProgressBackgroundDrawable;
+        }
     }
 
     public Drawable getFastScrollThumbDrawable(final boolean pressed) {

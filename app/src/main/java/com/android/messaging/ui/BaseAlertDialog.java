@@ -16,6 +16,7 @@ import android.widget.FrameLayout;
 import android.widget.TextView;
 
 import com.android.messaging.R;
+import com.android.messaging.ui.customize.PrimaryColors;
 import com.ihs.app.framework.HSApplication;
 import com.superapps.util.BackgroundDrawables;
 import com.superapps.util.Dimensions;
@@ -152,7 +153,7 @@ public class BaseAlertDialog {
                 }
                 this.dialog.dismiss();
             });
-            positiveButton.setBackground(BackgroundDrawables.createBackgroundDrawable(resources.getColor(R.color.dialog_positive_button_color),
+            positiveButton.setBackground(BackgroundDrawables.createBackgroundDrawable(PrimaryColors.getPrimaryColor(),
                     Dimensions.pxFromDp(3.3f), true));
         } else {
             // if no confirm button just set the visibility to GONE

@@ -55,6 +55,7 @@ import com.android.messaging.ui.CustomHeaderPagerViewHolder;
 import com.android.messaging.ui.CustomHeaderViewPager;
 import com.android.messaging.ui.animation.ViewGroupItemVerticalExplodeAnimation;
 import com.android.messaging.ui.contact.ContactRecipientAutoCompleteView.ContactChipsChangeListener;
+import com.android.messaging.ui.customize.PrimaryColors;
 import com.android.messaging.util.Assert;
 import com.android.messaging.util.Assert.RunsOnMainThread;
 import com.android.messaging.util.BugleAnalytics;
@@ -145,8 +146,8 @@ public class ContactPickerFragment extends Fragment implements ContactPickerData
     public View onCreateView(final LayoutInflater inflater, final ViewGroup container,
                              final Bundle savedInstanceState) {
         final View view = inflater.inflate(R.layout.contact_picker_fragment, container, false);
-        mRecipientTextView = (ContactRecipientAutoCompleteView)
-                view.findViewById(R.id.recipient_text_view);
+        mRecipientTextView = view.findViewById(R.id.recipient_text_view);
+        mRecipientTextView.setUnselectedChipBackgroundColor(PrimaryColors.getPrimaryColor());
         mRecipientTextView.setThreshold(0);
         mRecipientTextView.setDropDownAnchor(R.id.compose_contact_divider);
 
@@ -591,7 +592,7 @@ public class ContactPickerFragment extends Fragment implements ContactPickerData
         // etc. will take the spot of the action bar.
         actionBar.hide();
         UiUtils.setStatusBarColor(getActivity(),
-                getResources().getColor(R.color.compose_notification_bar_background));
+                PrimaryColors.getPrimaryColor());
     }
 
     private GetOrCreateConversationActionMonitor mMonitor;

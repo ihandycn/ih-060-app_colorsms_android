@@ -189,6 +189,14 @@
                 android:value="com.android.messaging.ui.conversationlist.ConversationListActivity" />
         </activity>
 
+        <activity
+            android:name=".ui.appsettings.ThemeSelectActivity"
+            android:configChanges="orientation|screenSize|keyboardHidden"
+            android:label="@string/settings_activity_title"
+            android:screenOrientation="portrait"
+            android:theme="@style/SettingsActivity">
+        </activity>
+
         <!-- Handles sharing intent -->
         <activity
             android:name=".ui.conversationlist.ShareIntentActivity"

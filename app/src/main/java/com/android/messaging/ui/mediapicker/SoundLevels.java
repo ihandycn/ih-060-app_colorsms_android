@@ -30,6 +30,7 @@ import android.view.View;
 import android.view.accessibility.AccessibilityNodeInfo;
 
 import com.android.messaging.R;
+import com.android.messaging.ui.customize.PrimaryColors;
 import com.android.messaging.util.LogUtil;
 
 /**
