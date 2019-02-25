@@ -10,11 +10,11 @@ import com.android.messaging.R;
 import com.android.messaging.ui.BasePagerViewHolder;
 import com.android.messaging.ui.CustomPagerViewHolder;
 
-public class ChooseBubbleColorAdvanceViewHolder extends BasePagerViewHolder implements CustomPagerViewHolder {
+public class ChooseMessageColorAdvanceViewHolder extends BasePagerViewHolder implements CustomPagerViewHolder {
     private Context mContext;
     private OnColorChangedListener mListener;
 
-    ChooseBubbleColorAdvanceViewHolder(final Context context) {
+    ChooseMessageColorAdvanceViewHolder(final Context context) {
         mContext = context;
     }
 

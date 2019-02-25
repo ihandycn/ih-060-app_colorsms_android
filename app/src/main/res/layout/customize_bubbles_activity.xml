@@ -71,10 +71,10 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
 
-        <com.android.messaging.ui.customize.ChooseCustomBubbleColorView
+        <com.android.messaging.ui.customize.ChooseMessageColorEntryView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:visibility="visible"/>
+            android:visibility="gone"/>
 
 
     </FrameLayout>

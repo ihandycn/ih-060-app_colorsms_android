@@ -13,12 +13,12 @@ import com.android.messaging.R;
 import com.android.messaging.glide.GlideApp;
 import com.bumptech.glide.request.RequestOptions;
 
-public class ChooseBubbleColorRecommendAdapter extends RecyclerView.Adapter<ChooseBubbleColorRecommendAdapter.ViewHolder> {
+public class ChooseMessageColorRecommendAdapter extends RecyclerView.Adapter<ChooseMessageColorRecommendAdapter.ViewHolder> {
     private Context mContext;
     private OnColorChangedListener mListener;
 
 
-    ChooseBubbleColorRecommendAdapter(Context context) {
+    ChooseMessageColorRecommendAdapter(Context context) {
         mContext = context;
     }
 
