@@ -47,11 +47,11 @@ import com.android.messaging.ui.appsettings.ThemeSelectActivity;
 import com.android.messaging.ui.customize.CustomBubblesActivity;
 import com.android.messaging.ui.dialog.FiveStarRateDialog;
 import com.android.messaging.ui.emoji.EmojiStoreActivity;
+import com.android.messaging.ui.wallpaper.WallpaperManager;
+import com.android.messaging.ui.wallpaper.WallpaperPreviewActivity;
 import com.android.messaging.util.BugleAnalytics;
 import com.android.messaging.util.Trace;
 import com.android.messaging.util.UiUtils;
-import com.android.messaging.ui.wallpaper.WallpaperManager;
-import com.android.messaging.ui.wallpaper.WallpaperPreviewActivity;
 import com.ihs.commons.notificationcenter.HSGlobalNotificationCenter;
 import com.ihs.commons.notificationcenter.INotificationObserver;
 import com.ihs.commons.utils.HSBundle;
@@ -208,16 +208,16 @@ public class ConversationListActivity extends AbstractConversationListActivity
                         Navigations.startActivity(ConversationListActivity.this, ThemeSelectActivity.class);
                         break;
                     case DRAWER_INDEX_BUBBLE:
-//                        BugleAnalytics.logEvent("Menu_Bubble_Click");
-//                        Toasts.showToast(R.string.coming_soon);
+                        BugleAnalytics.logEvent("Menu_Bubble_Click");
+                        Navigations.startActivity(ConversationListActivity.this, CustomBubblesActivity.class);
                         break;
                     case DRAWER_INDEX_CHAT_BACKGROUND:
-//                        BugleAnalytics.logEvent("Menu_ChatBackground_Click");
-//                        Toasts.showToast(R.string.coming_soon);
+                        BugleAnalytics.logEvent("Menu_ChatBackground_Click");
+                        WallpaperPreviewActivity.startWallpaperPreview(ConversationListActivity.this);
                         break;
                     case DRAWER_INDEX_CHANGE_FONT:
                         BugleAnalytics.logEvent("Menu_ChangeFont_Click");
-                        Intent intent = new Intent(ConversationListActivity.this,ChangeFontActivity.class);
+                        Intent intent = new Intent(ConversationListActivity.this, ChangeFontActivity.class);
                         startActivity(intent);
                         break;
                     case DRAWER_INDEX_SETTING:
@@ -571,16 +571,12 @@ public class ConversationListActivity extends AbstractConversationListActivity
                 drawerLayout.closeDrawer(navigationView);
                 break;
             case R.id.navigation_item_bubble:
-//                drawerClickIndex = DRAWER_INDEX_BUBBLE;
-//                drawerLayout.closeDrawer(navigationView);
-                BugleAnalytics.logEvent("Menu_Bubble_Click");
-                Navigations.startActivity(ConversationListActivity.this, CustomBubblesActivity.class);
+                drawerClickIndex = DRAWER_INDEX_BUBBLE;
+                drawerLayout.closeDrawer(navigationView);
                 break;
             case R.id.navigation_item_chat_background:
-//                drawerClickIndex = DRAWER_INDEX_CHAT_BACKGROUND;
-//                drawerLayout.closeDrawer(navigationView);
-                BugleAnalytics.logEvent("Menu_ChatBackground_Click");
-                WallpaperPreviewActivity.startWallpaperPreview(this);
+                drawerClickIndex = DRAWER_INDEX_CHAT_BACKGROUND;
+                drawerLayout.closeDrawer(navigationView);
                 break;
             case R.id.navigation_item_change_font:
                 drawerClickIndex = DRAWER_INDEX_CHANGE_FONT;
