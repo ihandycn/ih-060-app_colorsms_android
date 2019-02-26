@@ -19,7 +19,7 @@ public abstract class CustomViewPager extends LinearLayout {
     public final static int DEFAULT_TAB_STRIP_SIZE = -1;
     private final int mDefaultTabStripSize;
     private ViewPager mViewPager;
-    private ViewPagerTabs mTabstrip;
+    protected ViewPagerTabs mTabstrip;
 
     public CustomViewPager(final Context context, final AttributeSet attrs) {
         super(context, attrs);

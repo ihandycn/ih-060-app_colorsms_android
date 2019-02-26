@@ -738,6 +738,12 @@
         <item name="colorSwitchThumbNormal">#c0c2cb</item>
     </style>
 
+    <style name="CustomColorEntryItem" >
+        <item name="android:paddingStart">20dp</item>
+        <item name="android:paddingEnd">20dp</item>
+    </style>
+
+
     <style name="SmsShow.DarkFullScreen" parent="Theme.AppCompat.DayNight.NoActionBar">
         <item name="windowNoTitle">true</item>
         <item name="android:windowFullscreen">true</item>

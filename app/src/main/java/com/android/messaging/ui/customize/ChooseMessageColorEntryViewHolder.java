@@ -8,6 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 
 import com.android.messaging.R;
 import com.android.messaging.ui.BasePagerViewHolder;
@@ -34,15 +35,18 @@ public class ChooseMessageColorEntryViewHolder extends BasePagerViewHolder imple
         int TEXT_COLOR_OUTGOING = 3;
     }
 
-
     private Context mContext;
     private CustomMessageHost mHost;
 
     private ImageView mBubbleBackgroundColorIncoming;
     private ImageView mBubbleBackgroundColorOutgoing;
-
     private ImageView mMessageTextColorIncoming;
     private ImageView mMessageTextColorOutgoing;
+
+    private LinearLayout mBubbleBackgroundColorIncomingContainer;
+    private LinearLayout mBubbleBackgroundColorOutgoingContainer;
+    private LinearLayout mMessageTextColorIncomingContainer;
+    private LinearLayout mMessageTextColorOutgoingContainer;
 
     private Drawable mDefaultPreviewDrawable;
 
@@ -67,10 +71,15 @@ public class ChooseMessageColorEntryViewHolder extends BasePagerViewHolder imple
         mMessageTextColorIncoming = view.findViewById(R.id.text_color_incoming);
         mMessageTextColorOutgoing = view.findViewById(R.id.text_color_outgoing);
 
-        mBubbleBackgroundColorIncoming.setOnClickListener(this);
-        mBubbleBackgroundColorOutgoing.setOnClickListener(this);
-        mMessageTextColorIncoming.setOnClickListener(this);
-        mMessageTextColorOutgoing.setOnClickListener(this);
+        mBubbleBackgroundColorIncomingContainer = view.findViewById(R.id.bubble_color_incoming_container);
+        mBubbleBackgroundColorOutgoingContainer = view.findViewById(R.id.bubble_color_outgoing_container);
+        mMessageTextColorIncomingContainer = view.findViewById(R.id.text_color_incoming_container);
+        mMessageTextColorOutgoingContainer = view.findViewById(R.id.text_color_outgoing_container);
+
+        mBubbleBackgroundColorIncomingContainer.setOnClickListener(this);
+        mBubbleBackgroundColorOutgoingContainer.setOnClickListener(this);
+        mMessageTextColorIncomingContainer.setOnClickListener(this);
+        mMessageTextColorOutgoingContainer.setOnClickListener(this);
 
         mDefaultPreviewDrawable = mContext.getResources().getDrawable(R.drawable.custom_message_color_default_preview_drawable);
         initAppearance();
@@ -114,13 +123,13 @@ public class ChooseMessageColorEntryViewHolder extends BasePagerViewHolder imple
 
     @Override
     public void onClick(View v) {
-        if (mBubbleBackgroundColorIncoming.equals(v)) {
+        if (mBubbleBackgroundColorIncomingContainer.equals(v)) {
             mHost.openColorPickerView(BUBBLE_COLOR_INCOMING);
-        } else if (mBubbleBackgroundColorOutgoing.equals(v)) {
+        } else if (mBubbleBackgroundColorOutgoingContainer.equals(v)) {
             mHost.openColorPickerView(BUBBLE_COLOR_OUTGOING);
-        } else if (mMessageTextColorIncoming.equals(v)) {
+        } else if (mMessageTextColorIncomingContainer.equals(v)) {
             mHost.openColorPickerView(TEXT_COLOR_INCOMING);
-        } else if (mMessageTextColorOutgoing.equals(v)) {
+        } else if (mMessageTextColorOutgoingContainer.equals(v)) {
             mHost.openColorPickerView(TEXT_COLOR_OUTGOING);
         }
     }

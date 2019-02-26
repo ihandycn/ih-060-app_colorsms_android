@@ -3,14 +3,13 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:paddingStart="21dp"
-    android:paddingEnd="21dp"
     android:orientation="vertical">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
+        style="@style/CustomColorEntryItem"
         android:orientation="horizontal">
 
         <ImageView
@@ -29,10 +28,13 @@
     </LinearLayout>
 
     <LinearLayout
+        android:id="@+id/bubble_color_incoming_container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:gravity="center_vertical">
+        android:gravity="center_vertical"
+        style="@style/CustomColorEntryItem"
+        android:background="?android:attr/selectableItemBackground">
 
         <com.superapps.view.TypefacedTextView
             android:layout_width="wrap_content"
@@ -61,10 +63,14 @@
         android:background="@color/customize_bubble_color_divider"/>
 
     <LinearLayout
+        android:id="@+id/bubble_color_outgoing_container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:gravity="center_vertical">
+        android:gravity="center_vertical"
+        style="@style/CustomColorEntryItem"
+
+        android:background="?android:attr/selectableItemBackground">
 
         <com.superapps.view.TypefacedTextView
             android:layout_width="wrap_content"
@@ -82,13 +88,13 @@
             android:layout_weight="0"
             android:padding="5dp"
             android:background="@drawable/bubble_customize_color_ring"/>
-
     </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
+        style="@style/CustomColorEntryItem"
         android:orientation="horizontal">
 
         <ImageView
@@ -107,10 +113,14 @@
     </LinearLayout>
 
     <LinearLayout
+        android:id="@+id/text_color_incoming_container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:gravity="center_vertical">
+        android:gravity="center_vertical"
+        style="@style/CustomColorEntryItem"
+
+        android:background="?android:attr/selectableItemBackground">
 
         <com.superapps.view.TypefacedTextView
             android:layout_width="wrap_content"
@@ -139,10 +149,13 @@
         android:background="@color/customize_bubble_color_divider"/>
 
     <LinearLayout
+        android:id="@+id/text_color_outgoing_container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:gravity="center_vertical">
+        android:gravity="center_vertical"
+        style="@style/CustomColorEntryItem"
+        android:background="?android:attr/selectableItemBackground">
 
         <com.superapps.view.TypefacedTextView
             android:layout_width="wrap_content"

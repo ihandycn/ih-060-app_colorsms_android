@@ -56,6 +56,11 @@ public class ViewPagerTabStrip extends LinearLayout {
         setWillNotDraw(false);
     }
 
+    public void setUnderlineThickness(int thickness) {
+        mSelectedUnderlineThickness = thickness;
+        invalidate();
+    }
+
     /**
      * Notifies this view that view pager has been scrolled. We save the tab index
      * and selection offset for interpolating the position and width of selection

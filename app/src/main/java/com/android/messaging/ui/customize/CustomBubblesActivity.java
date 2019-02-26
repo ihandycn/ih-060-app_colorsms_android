@@ -123,6 +123,7 @@ public class CustomBubblesActivity extends AppCompatActivity implements CustomMe
             // notify main page recreate
             HSGlobalNotificationCenter.sendNotification(ConversationListActivity.EVENT_MAINPAGE_RECREATE);
             BugleAnalytics.logEvent("Customize_Bubble_Save_Click");
+            mSaveButton.setEnabled(false);
         });
         mSaveButton.setEnabled(false);
     }

@@ -137,6 +137,10 @@ public class ViewPagerTabs extends HorizontalScrollView implements ViewPager.OnP
         addTabs(mPager.getAdapter());
     }
 
+    public void setUnderlineThickness(int thickness) {
+        mTabStrip.setUnderlineThickness(thickness);
+    }
+
     private void addTabs(PagerAdapter adapter) {
         mTabStrip.removeAllViews();
 

@@ -780,7 +780,7 @@ public class ConversationFragment extends Fragment implements ConversationDataLi
             }
         };
         FontsContractCompat
-                .requestFont(getContext(), request, callback,
+                .requestFont(getActivity(), request, callback,
                         getHandlerThreadHandler());
 
     }
