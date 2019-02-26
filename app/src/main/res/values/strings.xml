@@ -732,13 +732,13 @@
     <string name="block_confirmation_message">You\'ll continue to receive messages from this number but won\'t be notified anymore. This conversation will be archived.</string>
 
     <!-- The title of the list of blocked contacts -->
-    <string name="blocked_contacts_title">Blocked contacts</string>
+    <string name="blocked_contacts_title">Blocked Contacts</string>
 
     <!-- The message in a blocked contact item which indicates tapping will unblock -->
     <string name="tap_to_unblock_message">Unblock</string>
 
     <!-- Action menu title for viewing the list of blocked contacts -->
-    <string name="view_blocked_contacts_title">Blocked contacts</string>
+    <string name="view_blocked_contacts_title">Blocked Contacts</string>
 
     <!-- Content description for the button in gallery media picker to pick an image from the document library -->
     <string name="pick_image_from_document_library_content_description">Choose image from document library</string>
@@ -1066,7 +1066,7 @@
     <string name="feedback_toast_send_success">Thanks for your feedback!</string>
 
     <!--Setting-->
-    <string name="setting_5_star_rating">5 star rating</string>
+    <string name="setting_5_star_rating">5 Star Rating</string>
     <string name="setting_feedback">Feedback</string>
     <string name="setting_privacy_policy">Privacy policy</string>
     <string name="setting_terms_of_service">Terms of service</string>
@@ -1078,7 +1078,7 @@
     <string name="setting_text_size_hint">Normal</string>
     <string name="setting_sms_pop_ups">SMS Pop-ups</string>
     <string name="setting_sms_pop_ups_summary">Pop up a window when receiving messages</string>
-    <string name="setting_sms_show">SMS show</string>
+    <string name="setting_sms_show">SMS Show</string>
     <string name="setting_sms_show_summary">Beautify SMS reminder effects</string>
     <string name="setting_sms_show_close_dialog_title">Confirm to turn off?</string>
     <string name="setting_sms_show_close_dialog_content">You will lose the beautiful SMS reminder themes, really want to close it?</string>
@@ -1091,7 +1091,7 @@
 
     <!--customize-->
     <string name="bubble_customize_preview_incoming_message">Hi, there! Nice to meet you.</string>
-    <string name="bubble_customize_preview_outgoing_message">Nice to meet you too</string>
+    <string name="bubble_customize_preview_outgoing_message">Nice to meet you too.</string>
     <string name="bubble_customize_tab_style">Style</string>
     <string name="bubble_customize_tab_color">Color</string>
     <string name="bubble_customize_action_bar_title">Bubble</string>
@@ -1106,14 +1106,14 @@
 
     <string name="drawer_open" translatable="false">Open navigation drawer</string>
     <string name="drawer_close" translatable="false">Close navigation drawer</string>
-    <string name="theme_select_title">Theme color</string>
+    <string name="theme_select_title">Theme Color</string>
     <string name="theme_select_description">Select theme color you like</string>
     <string name="menu_change_font">Change Font</string>
-    <string name="menu_theme_color">Theme color</string>
-    <string name="menu_bubble">Chat bubble</string>
-    <string name="menu_chat_background">Chat background</string>
+    <string name="menu_theme_color">Theme Color</string>
+    <string name="menu_bubble">Chat Bubble</string>
+    <string name="menu_chat_background">Chat Background</string>
     <string name="menu_setting">Settings</string>
-    <string name="menu_rate">5 star rating</string>
+    <string name="menu_rate">5 Star Rating</string>
     <string name="menu_group_customization">Customize</string>
     <string name="coming_soon">Coming soon in a few days</string>
 
