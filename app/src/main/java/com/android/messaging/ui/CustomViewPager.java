@@ -46,6 +46,10 @@ public abstract class CustomViewPager extends LinearLayout {
     }
 
     public void setViewHolders(final CustomPagerViewHolder[] viewHolders) {
+        setViewHolders(viewHolders, false);
+    }
+
+    public void setViewHolders(final CustomPagerViewHolder[] viewHolders, boolean isContactPickerPage) {
         Assert.notNull(mViewPager);
         final PagerAdapter adapter = new CustomViewPagerAdapter(viewHolders);
         mViewPager.setAdapter(adapter);
@@ -65,7 +69,9 @@ public abstract class CustomViewPager extends LinearLayout {
 
             @Override
             public void onPageSelected(int position) {
-                BugleAnalytics.logEvent("SMS_ContactsTabPage_Show", true, "type", position == 0 ? "Frequents" : "AllContacts");
+                if (isContactPickerPage) {
+                    BugleAnalytics.logEvent("SMS_ContactsTabPage_Show", true, "type", position == 0 ? "Frequents" : "AllContacts");
+                }
                 mTabstrip.onPageSelected(position);
             }
         });
