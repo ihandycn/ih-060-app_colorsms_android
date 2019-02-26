@@ -1,5 +1,6 @@
 package com.android.messaging.ui.customize;
 
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.ColorInt;
 import android.support.annotation.Nullable;
@@ -10,6 +11,7 @@ import android.view.MenuItem;
 import android.widget.TextView;
 
 import com.android.messaging.R;
+import com.android.messaging.ui.BaseAlertDialog;
 import com.android.messaging.ui.ConversationDrawables;
 import com.android.messaging.ui.CustomHeaderViewPager;
 import com.android.messaging.ui.CustomPagerViewHolder;
@@ -28,7 +30,6 @@ import static com.android.messaging.ui.customize.ChooseMessageColorEntryViewHold
 
 
 public class CustomBubblesActivity extends AppCompatActivity implements CustomMessageHost {
-
 
     private ChooseMessageColorPagerView mChooseMessageColorPagerView;
     private CustomMessagePreviewView mCustomMessagePreview;
@@ -118,11 +119,19 @@ public class CustomBubblesActivity extends AppCompatActivity implements CustomMe
         mSaveButton.setOnClickListener(v -> {
             mCustomMessagePreview.save(mConversationId);
 
-            ConversationDrawables.get().updateDrawables();
-            // notify main page recreate
-            HSGlobalNotificationCenter.sendNotification(ConversationListActivity.EVENT_MAINPAGE_RECREATE);
+            new BaseAlertDialog.Builder(CustomBubblesActivity.this)
+                    .setTitle(R.string.bubble_customize_save_confirm_dialog_title)
+                    .setMessage(R.string.bubble_customize_save_confirm_dialog_content)
+                    .setPositiveButton(getString(R.string.save).toUpperCase(), (dialog, which) -> {
+                        ConversationDrawables.get().updateDrawables();
+                        disableSaveButton();
+
+                        // notify main page recreate
+                        HSGlobalNotificationCenter.sendNotification(ConversationListActivity.EVENT_MAINPAGE_RECREATE);
+                    })
+                    .setNegativeButton(getString(R.string.share_cancel).toUpperCase(), null)
+                    .show();
             BugleAnalytics.logEvent("Customize_Bubble_Save_Click");
-            disableSaveButton();
         });
         disableSaveButton();
     }
