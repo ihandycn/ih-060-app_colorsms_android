@@ -6,6 +6,7 @@ import android.view.MenuItem;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.android.messaging.BaseActivity;
 import com.android.messaging.Factory;
 import com.android.messaging.R;
 import com.android.messaging.ui.ConversationDrawables;
@@ -13,12 +14,11 @@ import com.android.messaging.ui.conversationlist.ConversationListActivity;
 import com.android.messaging.ui.customize.PrimaryColors;
 import com.android.messaging.util.BugleAnalytics;
 import com.ihs.app.framework.HSApplication;
-import com.ihs.app.framework.activity.HSAppCompatActivity;
 import com.ihs.commons.notificationcenter.HSGlobalNotificationCenter;
 import com.superapps.util.BackgroundDrawables;
 import com.superapps.util.Dimensions;
 
-public class ThemeSelectActivity extends HSAppCompatActivity {
+public class ThemeSelectActivity extends BaseActivity {
 
     private static int[] COLOR_IMG_IDS = new int[]{
             R.id.iv_theme_select_1,
