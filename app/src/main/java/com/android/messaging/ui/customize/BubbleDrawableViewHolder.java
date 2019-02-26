@@ -41,7 +41,6 @@ public class BubbleDrawableViewHolder extends BasePagerViewHolder implements Cus
         return view;
     }
 
-
     @Override
     protected void setHasOptionsMenu() {
 

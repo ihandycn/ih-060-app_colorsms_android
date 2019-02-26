@@ -1102,6 +1102,7 @@
     <string name="bubble_customize_color_recommend">Recommend</string>
     <string name="bubble_customize_color_advance">Advance</string>
     <string name="bubble_customize_color_title">%1$s (%2$s)</string>
+    <string name="bubble_customize_save">Save</string>
 
     <string name="drawer_open" translatable="false">Open navigation drawer</string>
     <string name="drawer_close" translatable="false">Close navigation drawer</string>

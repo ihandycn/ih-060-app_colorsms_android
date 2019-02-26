@@ -28,6 +28,8 @@ public class ChooseMessageColorPagerView extends FrameLayout implements OnColorC
 
     private CustomMessageHost mHost;
 
+
+    private ChooseMessageColorRecommendViewHolder mBubbleRecommendViewHolder;
     private TextView mTitle;
 
     public void setHost(CustomMessageHost host) {
@@ -86,17 +88,18 @@ public class ChooseMessageColorPagerView extends FrameLayout implements OnColorC
                 , prefix
                 , suffix
         ));
+        mBubbleRecommendViewHolder.updateSelectedPosition();
     }
 
     private void initPager(Context context) {
-        ChooseMessageColorRecommendViewHolder bubbleRecommendViewHolder = new ChooseMessageColorRecommendViewHolder(context);
+        mBubbleRecommendViewHolder = new ChooseMessageColorRecommendViewHolder(context);
         ChooseMessageColorAdvanceViewHolder bubbleColorViewHolder = new ChooseMessageColorAdvanceViewHolder(context);
 
-        bubbleRecommendViewHolder.setOnColorChangedListener(this);
+        mBubbleRecommendViewHolder.setOnColorChangedListener(this);
         bubbleColorViewHolder.setOnColorChangedListener(this);
 
         final CustomPagerViewHolder[] viewHolders = {
-                bubbleRecommendViewHolder,
+                mBubbleRecommendViewHolder,
                 bubbleColorViewHolder};
 
         CustomFooterViewPager customHeaderViewPager = findViewById(R.id.custom_footer_pager);

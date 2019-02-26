@@ -13,8 +13,12 @@ import com.android.messaging.ui.ConversationDrawables;
 
 public class CustomMessagePreviewView extends ConstraintLayout {
 
-    private int mIncomingPreviewColor;
-    private int mOutgoingPreviewColor;
+    private int mIncomingBackgroundPreviewColor;
+    private int mOutgoingBackgroundPreviewColor;
+    private int mIncomingTextPreviewColor;
+    private int mOutgoingTextPreviewColor;
+
+    private int mPreviewBubbleDrawableId;
 
     private TextView mIncomingMessage;
     private TextView mOutgoingMessage;
@@ -34,8 +38,13 @@ public class CustomMessagePreviewView extends ConstraintLayout {
         mOutgoingMessage.setBackground(
                 ConversationDrawables.get().getBubbleDrawable(false, false, true, false));
 
-        mIncomingPreviewColor = ConversationColors.get().getBubbleBackgroundColor(true);
-        mOutgoingPreviewColor = ConversationColors.get().getBubbleBackgroundColor(false);
+        mIncomingBackgroundPreviewColor = ConversationColors.get().getBubbleBackgroundColor(true);
+        mOutgoingBackgroundPreviewColor = ConversationColors.get().getBubbleBackgroundColor(false);
+
+        mIncomingTextPreviewColor = ConversationColors.get().getMessageTextColor(true);
+        mOutgoingTextPreviewColor = ConversationColors.get().getMessageTextColor(false);
+
+        mPreviewBubbleDrawableId = BubbleDrawables.getSelectedIndex();
     }
 
     public void previewCustomBubbleDrawables(int id) {
@@ -43,8 +52,10 @@ public class CustomMessagePreviewView extends ConstraintLayout {
         mIncomingMessage.setBackgroundResource(drawableResId);
         mOutgoingMessage.setBackgroundResource(drawableResId);
 
-        mIncomingMessage.getBackground().setColorFilter(mIncomingPreviewColor, PorterDuff.Mode.SRC_ATOP);
-        mOutgoingMessage.getBackground().setColorFilter(mOutgoingPreviewColor, PorterDuff.Mode.SRC_ATOP);
+        mIncomingMessage.getBackground().setColorFilter(mIncomingBackgroundPreviewColor, PorterDuff.Mode.SRC_ATOP);
+        mOutgoingMessage.getBackground().setColorFilter(mOutgoingBackgroundPreviewColor, PorterDuff.Mode.SRC_ATOP);
+
+        mPreviewBubbleDrawableId = id;
     }
 
     public void previewCustomBubbleBackgroundColor(boolean incoming, @ColorInt int color) {
@@ -54,9 +65,9 @@ public class CustomMessagePreviewView extends ConstraintLayout {
             mOutgoingMessage.getBackground().setColorFilter(color, PorterDuff.Mode.SRC_ATOP);
         }
         if (incoming) {
-            mIncomingPreviewColor = color;
+            mIncomingBackgroundPreviewColor = color;
         } else {
-            mOutgoingPreviewColor = color;
+            mOutgoingBackgroundPreviewColor = color;
         }
     }
 
@@ -66,5 +77,15 @@ public class CustomMessagePreviewView extends ConstraintLayout {
         } else {
             mOutgoingMessage.setTextColor(color);
         }
+    }
+
+    public void save() {
+        ConversationColors.get().setBubbleBackgroundColor(true, mIncomingBackgroundPreviewColor);
+        ConversationColors.get().setBubbleBackgroundColor(false, mOutgoingBackgroundPreviewColor);
+
+        ConversationColors.get().setMessageTextColor(true, mIncomingTextPreviewColor);
+        ConversationColors.get().setMessageTextColor(false, mOutgoingTextPreviewColor);
+
+        BubbleDrawables.setSelectedIndex(mPreviewBubbleDrawableId);
     }
 }

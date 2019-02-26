@@ -15,6 +15,7 @@ import com.android.messaging.ui.CustomPagerViewHolder;
 public class ChooseMessageColorRecommendViewHolder extends BasePagerViewHolder implements CustomPagerViewHolder {
     private Context mContext;
     private OnColorChangedListener mListener;
+    private ChooseMessageColorRecommendAdapter mAdapter;
 
     ChooseMessageColorRecommendViewHolder(final Context context) {
         mContext = context;
@@ -31,10 +32,16 @@ public class ChooseMessageColorRecommendViewHolder extends BasePagerViewHolder i
         RecyclerView recyclerView = view.findViewById(R.id.recycler_view);
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new GridLayoutManager(mContext, 4));
-        ChooseMessageColorRecommendAdapter adapter = new ChooseMessageColorRecommendAdapter(mContext);
-        adapter.setOnColorChangedListener(color -> mListener.onColorChanged(color));
-        recyclerView.setAdapter(adapter);
+        mAdapter = new ChooseMessageColorRecommendAdapter(mContext);
+        mAdapter.setOnColorChangedListener(color -> mListener.onColorChanged(color));
+        recyclerView.setAdapter(mAdapter);
         return view;
+    }
+
+    void updateSelectedPosition() {
+        if (mAdapter != null) {
+            mAdapter.reset();
+        }
     }
 
     void setOnColorChangedListener(OnColorChangedListener listener) {

@@ -24,15 +24,20 @@
             app:typeface="@string/custom_font_semibold" />
 
 
-        <!--<TextView-->
-            <!--android:id="@+id/save_button"-->
-            <!--android:layout_width="match_parent"-->
-            <!--android:layout_height="match_parent"-->
-            <!--android:layout_gravity="center_vertical|end"-->
-            <!--android:layout_marginTop="5dp"-->
-            <!--android:gravity="center"-->
-            <!--android:textColor="@color/white"-->
-            <!--android:textSize="12.7sp" />-->
+        <com.superapps.view.TypefacedTextView
+            android:id="@+id/save_button"
+            android:layout_width="wrap_content"
+            android:layout_height="30dp"
+            android:layout_gravity="center_vertical|end"
+            android:layout_marginTop="5dp"
+            android:paddingStart="15dp"
+            android:paddingEnd="15dp"
+            android:layout_marginEnd="18dp"
+            android:gravity="center"
+            android:text="@string/bubble_customize_save"
+            android:textColor="@color/white"
+            android:textSize="12.7sp"
+            app:typeface="@string/custom_font_semibold"/>
 
     </android.support.v7.widget.Toolbar>
 

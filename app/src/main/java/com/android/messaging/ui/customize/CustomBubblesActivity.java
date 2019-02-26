@@ -7,11 +7,17 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
+import android.widget.TextView;
 
 import com.android.messaging.R;
+import com.android.messaging.ui.ConversationDrawables;
 import com.android.messaging.ui.CustomHeaderViewPager;
 import com.android.messaging.ui.CustomPagerViewHolder;
 import com.android.messaging.ui.CustomViewPager;
+import com.android.messaging.ui.conversationlist.ConversationListActivity;
+import com.ihs.commons.notificationcenter.HSGlobalNotificationCenter;
+import com.superapps.util.BackgroundDrawables;
+import com.superapps.util.Dimensions;
 
 import static com.android.messaging.ui.customize.ChooseMessageColorEntryViewHolder.CustomColor.BUBBLE_COLOR_INCOMING;
 import static com.android.messaging.ui.customize.ChooseMessageColorEntryViewHolder.CustomColor.BUBBLE_COLOR_OUTGOING;
@@ -24,6 +30,8 @@ public class CustomBubblesActivity extends AppCompatActivity implements CustomMe
     private ChooseMessageColorPagerView mChooseMessageColorPagerView;
     private CustomMessagePreviewView mCustomMessagePreview;
     private ChooseMessageColorEntryViewHolder mChooseMessageColorEntryViewHolder;
+    private BubbleDrawableViewHolder mBubbleDrawableViewHolder;
+    private TextView mSaveButton;
 
     @ChooseMessageColorEntryViewHolder.CustomColor
     private int mColorType;
@@ -39,14 +47,14 @@ public class CustomBubblesActivity extends AppCompatActivity implements CustomMe
 
         mChooseMessageColorPagerView.setHost(this);
 
-        BubbleDrawableViewHolder bubbleDrawableViewHolder = new BubbleDrawableViewHolder(this);
+        mBubbleDrawableViewHolder = new BubbleDrawableViewHolder(this);
         mChooseMessageColorEntryViewHolder = new ChooseMessageColorEntryViewHolder(this);
 
-        bubbleDrawableViewHolder.setHost(this);
+        mBubbleDrawableViewHolder.setHost(this);
         mChooseMessageColorEntryViewHolder.setHost(this);
 
         final CustomPagerViewHolder[] viewHolders = {
-                bubbleDrawableViewHolder,
+                mBubbleDrawableViewHolder,
                 mChooseMessageColorEntryViewHolder};
 
         CustomHeaderViewPager customHeaderViewPager = findViewById(R.id.customize_pager);
@@ -54,6 +62,7 @@ public class CustomBubblesActivity extends AppCompatActivity implements CustomMe
         customHeaderViewPager.setViewPagerTabHeight(CustomViewPager.DEFAULT_TAB_STRIP_SIZE);
         customHeaderViewPager.setBackgroundColor(getResources().getColor(R.color.contact_picker_background));
         customHeaderViewPager.setCurrentItem(0);
+
     }
 
     @Override
@@ -80,11 +89,13 @@ public class CustomBubblesActivity extends AppCompatActivity implements CustomMe
                 break;
         }
         mChooseMessageColorEntryViewHolder.previewCustomColor(mColorType, color);
+        enableSaveButton();
     }
 
     @Override
     public void previewCustomBubbleDrawable(int id) {
         mCustomMessagePreview.previewCustomBubbleDrawables(id);
+        enableSaveButton();
     }
 
     private void initActionBar() {
@@ -94,6 +105,25 @@ public class CustomBubblesActivity extends AppCompatActivity implements CustomMe
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
             actionBar.setDisplayShowHomeEnabled(true);
+        }
+
+        mSaveButton = findViewById(R.id.save_button);
+        mSaveButton.setBackground(BackgroundDrawables
+                .createBackgroundDrawable(0xffd8dce3, Dimensions.pxFromDp(25), false));
+        mSaveButton.setOnClickListener(v -> {
+            mCustomMessagePreview.save();
+            ConversationDrawables.get().updateDrawables();
+            // notify main page recreate
+            HSGlobalNotificationCenter.sendNotification(ConversationListActivity.EVENT_MAINPAGE_RECREATE);
+        });
+        mSaveButton.setEnabled(false);
+    }
+
+    private void enableSaveButton() {
+        if (!mSaveButton.isEnabled()) {
+            mSaveButton.setBackground(BackgroundDrawables
+                    .createBackgroundDrawable(PrimaryColors.getPrimaryColor(), Dimensions.pxFromDp(25), true));
+
         }
     }
 

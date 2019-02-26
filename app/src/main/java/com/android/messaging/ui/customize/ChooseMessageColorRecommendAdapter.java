@@ -2,6 +2,7 @@ package com.android.messaging.ui.customize;
 
 import android.content.Context;
 import android.graphics.drawable.ColorDrawable;
+import android.support.annotation.ColorInt;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -14,15 +15,26 @@ import com.android.messaging.glide.GlideApp;
 import com.bumptech.glide.request.RequestOptions;
 
 public class ChooseMessageColorRecommendAdapter extends RecyclerView.Adapter<ChooseMessageColorRecommendAdapter.ViewHolder> {
+
     private Context mContext;
     private OnColorChangedListener mListener;
 
+    private int mItemCount;
+    private int mSelectedPosition = -1;
+
     ChooseMessageColorRecommendAdapter(Context context) {
         mContext = context;
+        mItemCount = ConversationColors.COLORS.length;
     }
 
     void setOnColorChangedListener(OnColorChangedListener listener) {
         mListener = listener;
+    }
+
+    void reset() {
+        int position = mSelectedPosition;
+        mSelectedPosition = -1;
+        notifyItemChanged(position);
     }
 
     @NonNull
@@ -32,7 +44,16 @@ public class ChooseMessageColorRecommendAdapter extends RecyclerView.Adapter<Cho
         ViewHolder viewHolder = new ViewHolder(v);
 
         viewHolder.mBackground.setOnClickListener(v1 -> {
-            mListener.onColorChanged(ConversationColors.COLORS[viewHolder.getAdapterPosition()]);
+            int position = viewHolder.getAdapterPosition();
+            if (position != mSelectedPosition) {
+                mListener.onColorChanged(ConversationColors.COLORS[position]);
+                notifyItemChanged(position);
+                if (mSelectedPosition != -1) {
+                    notifyItemChanged(mSelectedPosition);
+                }
+                mSelectedPosition = position;
+            }
+
         });
         return viewHolder;
     }
@@ -43,11 +64,26 @@ public class ChooseMessageColorRecommendAdapter extends RecyclerView.Adapter<Cho
                 .load(new ColorDrawable(ConversationColors.COLORS[position]))
                 .apply(RequestOptions.circleCropTransform())
                 .into(holder.mBackground);
+
+        if (position == mSelectedPosition) {
+            holder.mCheckmark.setVisibility(View.VISIBLE);
+        } else {
+            holder.mCheckmark.setVisibility(View.GONE);
+        }
     }
 
     @Override
     public int getItemCount() {
-        return ConversationColors.COLORS.length;
+        return mItemCount;
+    }
+
+    private int findPositionByColor(@ColorInt int color) {
+        for (int i = 0; i < mItemCount; i++) {
+            if (ConversationColors.COLORS[i] == color) {
+                return i;
+            }
+        }
+        return -1;
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
@@ -57,6 +93,8 @@ public class ChooseMessageColorRecommendAdapter extends RecyclerView.Adapter<Cho
         public ViewHolder(View itemView) {
             super(itemView);
             mBackground = itemView.findViewById(R.id.background);
+            mCheckmark = itemView.findViewById(R.id.check_mark);
+
         }
     }
 }
