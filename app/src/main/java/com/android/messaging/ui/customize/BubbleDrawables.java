@@ -11,7 +11,7 @@ import static com.android.messaging.util.BuglePrefsKeys.PREFS_KEY_BUBBLE_DRAWABL
 public class BubbleDrawables {
     private static final BuglePrefs prefs = BuglePrefs.getApplicationPrefs();
 
-    public static final int[] BUBBLES = new int[]{
+    public static final int[] BUBBLES_INCOMING = new int[]{
             R.drawable.style_01,
             R.drawable.style_02,
             R.drawable.style_03,
@@ -21,6 +21,18 @@ public class BubbleDrawables {
             R.drawable.style_07,
             R.drawable.style_08,
     };
+
+    public static final int[] BUBBLES_OUTGOING = new int[]{
+            R.drawable.style_01_outgoing,
+            R.drawable.style_02_outgoing,
+            R.drawable.style_03_outgoing,
+            R.drawable.style_04_outgoing,
+            R.drawable.style_05_outgoing,
+            R.drawable.style_06_outgoing,
+            R.drawable.style_07_outgoing,
+            R.drawable.style_08_outgoing,
+    };
+
 
     public static int getSelectedIndex() {
         return prefs.getInt(PREFS_KEY_BUBBLE_DRAWABLE_ID, 0);
@@ -32,13 +44,21 @@ public class BubbleDrawables {
     }
 
     @DrawableRes
-    public static int getSelectedDrawable() {
-        return BUBBLES[getSelectedIndex()];
+    public static int getSelectedDrawable(boolean incoming) {
+        if (incoming) {
+            return BUBBLES_INCOMING[getSelectedIndex()];
+        } else {
+            return BUBBLES_OUTGOING[getSelectedIndex()];
+        }
     }
 
     @DrawableRes
-    public static int getSelectedDrawable(int index) {
-        return BUBBLES[index];
+    public static int getSelectedDrawable(int index, boolean incoming) {
+        if (incoming) {
+            return BUBBLES_INCOMING[index];
+        } else {
+            return BUBBLES_OUTGOING[index];
+        }
     }
 }
 

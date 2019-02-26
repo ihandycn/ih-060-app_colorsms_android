@@ -51,9 +51,8 @@ public class CustomMessagePreviewView extends ConstraintLayout {
     }
 
     public void previewCustomBubbleDrawables(int id) {
-        int drawableResId = BubbleDrawables.getSelectedDrawable(id);
-        mIncomingMessage.setBackgroundResource(drawableResId);
-        mOutgoingMessage.setBackgroundResource(drawableResId);
+        mIncomingMessage.setBackgroundResource(BubbleDrawables.getSelectedDrawable(id, true));
+        mOutgoingMessage.setBackgroundResource(BubbleDrawables.getSelectedDrawable(id, false));
 
         mIncomingMessage.getBackground().setColorFilter(mIncomingBackgroundPreviewColor, PorterDuff.Mode.SRC_ATOP);
         mOutgoingMessage.getBackground().setColorFilter(mOutgoingBackgroundPreviewColor, PorterDuff.Mode.SRC_ATOP);

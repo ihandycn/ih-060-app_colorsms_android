@@ -1,6 +1,7 @@
 package com.android.messaging.ui.customize;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.support.annotation.ColorInt;
 import android.support.annotation.NonNull;
@@ -22,9 +23,19 @@ public class ChooseMessageColorRecommendAdapter extends RecyclerView.Adapter<Cho
     private int mItemCount;
     private int mSelectedPosition = -1;
 
+    private int[] mData = ConversationColors.COLORS;
+
     ChooseMessageColorRecommendAdapter(Context context) {
         mContext = context;
         mItemCount = ConversationColors.COLORS.length;
+    }
+
+    void updatePresetColors(@ColorInt int firstPositionColor, @ColorInt int secondPositionColor) {
+        mData[0] = firstPositionColor;
+        mData[1] = secondPositionColor;
+
+        notifyItemChanged(0);
+        notifyItemChanged(1);
     }
 
     void setOnColorChangedListener(OnColorChangedListener listener) {
@@ -46,44 +57,42 @@ public class ChooseMessageColorRecommendAdapter extends RecyclerView.Adapter<Cho
         viewHolder.mBackground.setOnClickListener(v1 -> {
             int position = viewHolder.getAdapterPosition();
             if (position != mSelectedPosition) {
-                mListener.onColorChanged(ConversationColors.COLORS[position]);
+                mListener.onColorChanged(mData[position]);
                 notifyItemChanged(position);
                 if (mSelectedPosition != -1) {
                     notifyItemChanged(mSelectedPosition);
                 }
                 mSelectedPosition = position;
             }
-
         });
         return viewHolder;
     }
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        GlideApp.with(mContext)
-                .load(new ColorDrawable(ConversationColors.COLORS[position]))
-                .apply(RequestOptions.circleCropTransform())
-                .into(holder.mBackground);
-
         if (position == mSelectedPosition) {
             holder.mCheckmark.setVisibility(View.VISIBLE);
         } else {
             holder.mCheckmark.setVisibility(View.GONE);
         }
+
+        if (mData[position] == mContext.getResources().getColor(R.color.message_text_color_outgoing)) {
+            holder.mBackground.setBackgroundResource(R.drawable.bubble_customize_color_ring);
+            holder.mBackground.setImageDrawable(null);
+            return;
+        } else {
+            holder.mBackground.setBackground(null);
+        }
+
+        GlideApp.with(mContext)
+                .load(new ColorDrawable(mData[position]))
+                .apply(RequestOptions.circleCropTransform())
+                .into(holder.mBackground);
     }
 
     @Override
     public int getItemCount() {
         return mItemCount;
-    }
-
-    private int findPositionByColor(@ColorInt int color) {
-        for (int i = 0; i < mItemCount; i++) {
-            if (ConversationColors.COLORS[i] == color) {
-                return i;
-            }
-        }
-        return -1;
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {

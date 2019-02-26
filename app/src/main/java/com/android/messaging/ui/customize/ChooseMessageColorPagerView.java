@@ -1,7 +1,10 @@
 package com.android.messaging.ui.customize;
 
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
 import android.animation.ObjectAnimator;
 import android.content.Context;
+import android.content.res.Resources;
 import android.support.v4.view.animation.PathInterpolatorCompat;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
@@ -13,7 +16,6 @@ import com.android.messaging.R;
 import com.android.messaging.ui.CustomFooterViewPager;
 import com.android.messaging.ui.CustomPagerViewHolder;
 import com.android.messaging.ui.CustomViewPager;
-import com.superapps.util.Threads;
 
 import static com.android.messaging.ui.customize.ChooseMessageColorEntryViewHolder.CustomColor.BUBBLE_COLOR_INCOMING;
 import static com.android.messaging.ui.customize.ChooseMessageColorEntryViewHolder.CustomColor.BUBBLE_COLOR_OUTGOING;
@@ -69,36 +71,57 @@ public class ChooseMessageColorPagerView extends FrameLayout implements OnColorC
         mAlphaAnimator.setDuration(200L);
         mAlphaAnimator.setStartDelay(DISAPPEAR_DURATION);
         mAlphaAnimator.start();
+        mAlphaAnimator.addListener(new AnimatorListenerAdapter() {
+            @Override
+            public void onAnimationEnd(Animator animation) {
+                super.onAnimationEnd(animation);
+                setVisibility(GONE);
+            }
+        });
     }
 
     void updateTitle(@ChooseMessageColorEntryViewHolder.CustomColor int type) {
-
         String prefix = "";
         String suffix = "";
 
+        Resources resources = getResources();
         switch (type) {
             case BUBBLE_COLOR_INCOMING:
-                prefix = getContext().getString(R.string.bubble_customize_bubble_color);
-                suffix = getContext().getString(R.string.bubble_customize_received);
+                prefix = resources.getString(R.string.bubble_customize_bubble_color);
+                suffix = resources.getString(R.string.bubble_customize_received);
+
+                mBubbleRecommendViewHolder.update(resources.getColor(R.color.message_bubble_color_incoming),
+                        resources.getColor(R.color.message_bubble_color_outgoing));
                 break;
             case BUBBLE_COLOR_OUTGOING:
                 prefix = getContext().getString(R.string.bubble_customize_bubble_color);
                 suffix = getContext().getString(R.string.bubble_customize_sent);
+
+                mBubbleRecommendViewHolder.update(resources.getColor(R.color.message_bubble_color_incoming),
+                        resources.getColor(R.color.message_bubble_color_outgoing));
                 break;
             case TEXT_COLOR_INCOMING:
                 prefix = getContext().getString(R.string.bubble_customize_text_color);
                 suffix = getContext().getString(R.string.bubble_customize_received);
+
+                mBubbleRecommendViewHolder.update(resources.getColor(R.color.message_text_color_incoming),
+                        resources.getColor(R.color.message_text_color_outgoing));
+
                 break;
             case TEXT_COLOR_OUTGOING:
                 prefix = getContext().getString(R.string.bubble_customize_text_color);
                 suffix = getContext().getString(R.string.bubble_customize_sent);
+
+                mBubbleRecommendViewHolder.update(resources.getColor(R.color.message_text_color_incoming),
+                        resources.getColor(R.color.message_text_color_outgoing));
+
                 break;
         }
         mTitle.setText(String.format(getContext().getString(R.string.bubble_customize_color_title)
                 , prefix
                 , suffix
         ));
-        mBubbleRecommendViewHolder.updateSelectedPosition();
+
     }
 
     private void initPager(Context context) {

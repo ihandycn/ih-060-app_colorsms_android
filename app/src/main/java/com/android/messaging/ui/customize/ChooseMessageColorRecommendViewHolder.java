@@ -1,6 +1,7 @@
 package com.android.messaging.ui.customize;
 
 import android.content.Context;
+import android.support.annotation.ColorInt;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -12,6 +13,7 @@ import com.android.messaging.ui.BasePagerViewHolder;
 import com.android.messaging.ui.CustomPagerViewHolder;
 import com.android.messaging.ui.emoji.EmojiItemDecoration;
 import com.superapps.util.Dimensions;
+import com.superapps.util.Threads;
 
 
 public class ChooseMessageColorRecommendViewHolder extends BasePagerViewHolder implements CustomPagerViewHolder {
@@ -43,10 +45,11 @@ public class ChooseMessageColorRecommendViewHolder extends BasePagerViewHolder i
         return view;
     }
 
-    void updateSelectedPosition() {
-        if (mAdapter != null) {
+    void update(@ColorInt int firstPositionColor, @ColorInt int secondPositionColor) {
+        Threads.postOnMainThread(() -> {
             mAdapter.reset();
-        }
+            mAdapter.updatePresetColors(firstPositionColor, secondPositionColor);
+        });
     }
 
     void setOnColorChangedListener(OnColorChangedListener listener) {

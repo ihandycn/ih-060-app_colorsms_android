@@ -2,7 +2,6 @@ package com.android.messaging.ui.customize;
 
 import android.content.Context;
 import android.graphics.PorterDuff;
-import android.graphics.drawable.Drawable;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -11,7 +10,6 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 
 import com.android.messaging.R;
-import com.android.messaging.util.ImageUtils;
 
 public class BubbleDrawableAdapter extends RecyclerView.Adapter<BubbleDrawableAdapter.ViewHolder> {
 
@@ -54,7 +52,7 @@ public class BubbleDrawableAdapter extends RecyclerView.Adapter<BubbleDrawableAd
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        holder.mBubble.setBackgroundResource(BubbleDrawables.BUBBLES[position]);
+        holder.mBubble.setBackgroundResource(BubbleDrawables.BUBBLES_INCOMING[position]);
         if (position == mSelectedPosition) {
             holder.mBubble.getBackground().setColorFilter(PrimaryColors.getPrimaryColor(), PorterDuff.Mode.SRC_ATOP);
             holder.mBubble.setImageResource(R.drawable.ic_checkmark_large_light);
@@ -66,7 +64,7 @@ public class BubbleDrawableAdapter extends RecyclerView.Adapter<BubbleDrawableAd
 
     @Override
     public int getItemCount() {
-        return BubbleDrawables.BUBBLES.length;
+        return BubbleDrawables.BUBBLES_INCOMING.length;
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {

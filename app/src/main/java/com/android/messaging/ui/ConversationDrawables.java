@@ -81,11 +81,11 @@ public class ConversationDrawables {
     public void updateDrawables() {
         final Resources resources = mContext.getResources();
 
-        mIncomingBubbleDrawable = resources.getDrawable(BubbleDrawables.getSelectedDrawable());
+        mIncomingBubbleDrawable = resources.getDrawable(BubbleDrawables.getSelectedDrawable(true));
         mIncomingBubbleNoArrowDrawable =
                 resources.getDrawable(R.drawable.message_bubble_incoming_no_arrow);
         mIncomingErrorBubbleDrawable = resources.getDrawable(R.drawable.msg_bubble_error);
-        mOutgoingBubbleDrawable = resources.getDrawable(R.drawable.message_bubble_outgoing_new);
+        mOutgoingBubbleDrawable = resources.getDrawable(BubbleDrawables.getSelectedDrawable(false));
         mOutgoingBubbleNoArrowDrawable =
                 resources.getDrawable(R.drawable.message_bubble_outgoing_no_arrow);
         mIncomingAudioPlayButtonDrawable = resources.getDrawable(R.drawable.ic_audio_play_incoming);
@@ -116,8 +116,8 @@ public class ConversationDrawables {
 
     public void updateBubbleDrawable(int index) {
         final Resources resources = mContext.getResources();
-        mIncomingBubbleDrawable = resources.getDrawable(BubbleDrawables.getSelectedDrawable(index));
-        mOutgoingBubbleDrawable = resources.getDrawable(R.drawable.message_bubble_outgoing_new);
+        mIncomingBubbleDrawable = resources.getDrawable(BubbleDrawables.getSelectedDrawable(index, true));
+        mOutgoingBubbleDrawable = resources.getDrawable(BubbleDrawables.getSelectedDrawable(index, false));
     }
 
     public Drawable getBubbleDrawable(final boolean selected, final boolean incoming,

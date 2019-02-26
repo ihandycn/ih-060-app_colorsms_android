@@ -115,17 +115,15 @@ public class CustomBubblesActivity extends AppCompatActivity implements CustomMe
         }
 
         mSaveButton = findViewById(R.id.save_button);
-        mSaveButton.setBackground(BackgroundDrawables
-                .createBackgroundDrawable(0xffd8dce3, Dimensions.pxFromDp(25), false));
         mSaveButton.setOnClickListener(v -> {
             mCustomMessagePreview.save(mConversationId);
             ConversationDrawables.get().updateDrawables();
             // notify main page recreate
             HSGlobalNotificationCenter.sendNotification(ConversationListActivity.EVENT_MAINPAGE_RECREATE);
             BugleAnalytics.logEvent("Customize_Bubble_Save_Click");
-            mSaveButton.setEnabled(false);
+            disableSaveButton();
         });
-        mSaveButton.setEnabled(false);
+        disableSaveButton();
     }
 
     private void enableSaveButton() {
@@ -134,6 +132,12 @@ public class CustomBubblesActivity extends AppCompatActivity implements CustomMe
                     .createBackgroundDrawable(PrimaryColors.getPrimaryColor(), Dimensions.pxFromDp(25), true));
             mSaveButton.setEnabled(true);
         }
+    }
+
+    private void disableSaveButton() {
+        mSaveButton.setBackground(BackgroundDrawables
+                .createBackgroundDrawable(0xffd8dce3, Dimensions.pxFromDp(25), false));
+        mSaveButton.setEnabled(false);
     }
 
     @Override
