@@ -36,18 +36,18 @@ public class ThemeSelectActivity extends BaseActivity {
     };
 
     private static int[] COLORS = new int[]{
-            HSApplication.getContext().getResources().getColor(R.color.primary_color),
-            0xff0083fe,
-            0xff16c7d3,
-            0xffff7e2a,
-            0xff7646ff,
-            0xfff846c0,
-            0xffd619ff,
-            0xfff14d4d,
-            0xfff5d20d,
-            0xff000000,
-            0xff81de09,
-            0xfff6bd01
+            0xff1acc48,
+            0xff338ee4,
+            0xff0098a6,
+            0xffd74315,
+            0xff744fdc,
+            0xffe54da7,
+            0xffba43d4,
+            0xffc62827,
+            0xfff0ce0f,
+            0xff315eaf,
+            0xff87c932,
+            0xffe8b437
     };
 
     @Override
