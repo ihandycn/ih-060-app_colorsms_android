@@ -114,7 +114,6 @@ public class FontManagerImpl extends FontManager {
 
             if (applyChild) {
                 if (view instanceof ViewGroup) {
-                    //遍历子元素应用字体大小调节
                     ViewGroup viewGroup = (ViewGroup) view;
                     for (int i = 0; i < viewGroup.getChildCount(); i++) {
                         applyFont(viewGroup.getChildAt(i), true);
@@ -124,24 +123,24 @@ public class FontManagerImpl extends FontManager {
         }
     }
 
-    public void changeTypeFaced(String fontPath, IFontChangeListener fontChangeListener) {
+    public void loadAndSetTypeface(String fontName, IFontChangeListener fontChangeListener) {
         if (null != fontChangeListener) {
-            fontChangeListener.onLoadStart(fontPath);
+            fontChangeListener.onLoadStart(fontName);
         }
 
-        mFontPath = fontPath;
+        mFontPath = fontName;
         try {
-            if (!fontPath.isEmpty()){
-                requestDownload(fontPath);
+            if (!fontName.isEmpty()){
+                requestDownload(fontName);
             }
             if (fontChangeListener != null) {
-                fontChangeListener.onLoadSuccess(fontPath);
+                fontChangeListener.onLoadSuccess(fontName);
             }
         } catch (Exception ex) {
             Logging.d(TAG, "changeFontSize()| error happened", ex);
 
             if (fontChangeListener != null) {
-                fontChangeListener.onLoadFail(fontPath);
+                fontChangeListener.onLoadFail(fontName);
             }
         }
     }

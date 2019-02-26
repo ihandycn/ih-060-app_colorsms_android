@@ -20,9 +20,6 @@ import android.content.res.ColorStateList;
 import android.content.res.TypedArray;
 import android.graphics.Typeface;
 import android.os.Handler;
-import android.os.HandlerThread;
-import android.support.v4.provider.FontRequest;
-import android.support.v4.provider.FontsContractCompat;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.util.AttributeSet;
@@ -37,13 +34,9 @@ import android.widget.Toast;
 
 import com.android.messaging.Factory;
 import com.android.messaging.R;
+import com.android.messaging.font.MessageFontManager;
 import com.android.messaging.ui.customize.PrimaryColors;
-import com.android.messaging.util.BuglePrefs;
 import com.android.messaging.util.OsUtil;
-import com.ihs.app.framework.HSApplication;
-
-import org.qcode.fontchange.FontManager;
-import org.qcode.fontchange.impl.QueryBuilder;
 
 /**
  * Lightweight implementation of ViewPager tabs. This looks similar to traditional actionBar tabs,
@@ -155,7 +148,8 @@ public class ViewPagerTabs extends HorizontalScrollView implements ViewPager.OnP
 
     private void addTab(CharSequence tabTitle, final int position) {
         final TextView textView = new TextView(getContext());
-        initTypeface(textView);
+        //initTypeface(textView);
+        MessageFontManager.loadAndSetTypeface(textView, 400);
         textView.setText(tabTitle);
         textView.setBackgroundResource(R.drawable.contact_picker_tab_background_selector);
         textView.setGravity(Gravity.CENTER);
@@ -249,54 +243,4 @@ public class ViewPagerTabs extends HorizontalScrollView implements ViewPager.OnP
     public int getSelectedItemPosition() {
         return mPrevSelected;
     }
-
-    private void initTypeface(TextView textView) {
-        String familyName = BuglePrefs.getApplicationPrefs().getString(FontManager.MESSAGE_FONT_FAMILY, "");
-        if (familyName.isEmpty()) {
-            return;
-        }
-        int weight = (mTextStyle + 6) * 100;    // bold
-        QueryBuilder queryBuilder = new QueryBuilder(familyName)
-                .withWidth(100f)
-                .withWeight(weight)
-                .withItalic(0.0f)
-                .withBestEffort(true);
-        final String query = queryBuilder.build();
-
-        FontRequest request = new FontRequest(
-                "com.google.android.gms.fonts",
-                "com.google.android.gms",
-                query,
-                com.iflytek.android_font_loader_lib.R.array.com_google_android_gms_fonts_certs);
-
-
-        FontsContractCompat.FontRequestCallback callback = new FontsContractCompat
-                .FontRequestCallback() {
-            @Override
-            public void onTypefaceRetrieved(Typeface typeface) {
-                textView.setTypeface(typeface);
-            }
-
-            @Override
-            public void onTypefaceRequestFailed(int reason) {
-                Toast.makeText(HSApplication.getContext(),
-                        HSApplication.getContext().getString(com.iflytek.android_font_loader_lib.R.string.request_failed, reason), Toast.LENGTH_LONG)
-                        .show();
-            }
-        };
-        FontsContractCompat
-                .requestFont(getContext(), request, callback,
-                        getHandlerThreadHandler());
-
-    }
-
-    private Handler getHandlerThreadHandler() {
-        if (mHandler == null) {
-            HandlerThread handlerThread = new HandlerThread("fonts");
-            handlerThread.start();
-            mHandler = new Handler(handlerThread.getLooper());
-        }
-        return mHandler;
-    }
-
 }

@@ -741,8 +741,8 @@ public class ConversationFragment extends Fragment implements ConversationDataLi
     }
 
     private void initTypeface(Menu menu) {
-        String familyName = BuglePrefs.getApplicationPrefs().getString(FontManager.MESSAGE_FONT_FAMILY, "");
-        if (familyName.isEmpty()) {
+        String familyName = BuglePrefs.getApplicationPrefs().getString(FontManager.MESSAGE_FONT_FAMILY, "Default");
+        if (familyName.isEmpty() || familyName.equals("Default") || familyName.equals("System")) {
             applyFontToMenuItem(menu.findItem(R.id.action_people_and_options), Typefaces.getCustomRegular());
             applyFontToMenuItem(menu.findItem(R.id.action_delete),Typefaces.getCustomRegular());
             applyFontToMenuItem(menu.findItem(R.id.action_add_contact),Typefaces.getCustomRegular());

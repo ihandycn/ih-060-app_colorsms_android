@@ -31,12 +31,13 @@ public abstract class BaseActivity extends AppCompatActivity
 
         FontManagerImpl.getInstance().init(BaseActivity.this);
 
-        String fontFamily = BuglePrefs.getApplicationPrefs().getString(FontManager.MESSAGE_FONT_FAMILY,"");
+        String fontFamily = BuglePrefs.getApplicationPrefs().getString(FontManager.MESSAGE_FONT_FAMILY, "Default");
         float scale = MessageFontManager.getFontScale();
 
-        FontManagerImpl.getInstance().changeFontSize(scale , null);
-        FontManagerImpl.getInstance().changeTypeFaced(fontFamily, null);
-
+        FontManagerImpl.getInstance().changeFontSize(scale, null);
+        if (fontFamily != null && !fontFamily.equals("Default") && !fontFamily.equals("System")) {
+            FontManagerImpl.getInstance().loadAndSetTypeface(fontFamily, null);
+        }
         initFontHandler();
     }
 
@@ -86,7 +87,7 @@ public abstract class BaseActivity extends AppCompatActivity
         super.onResume();
 
         ////此通知放在此处，尽量让子类的view都添加到view树内
-        if(mFirstTimeApplyFont) {
+        if (mFirstTimeApplyFont) {
             mFontEventHandler.onViewCreated();
             mFirstTimeApplyFont = false;
         }
@@ -106,7 +107,7 @@ public abstract class BaseActivity extends AppCompatActivity
         mFontEventHandler.onWindowFocusChanged(hasFocus);
     }
 
-    protected void restartBaseActivity(){
+    protected void restartBaseActivity() {
         recreate();
     }
 }

@@ -41,7 +41,11 @@ import java.util.Map;
 
 public class ChooseFontDialog {
     private static final String[] sSupportGoogleFonts = {
-            "Default", "System", "Nunito Sans", "Muli", "Cinzel", "Coiny", "Ubuntu", "Rubik"
+            "Default", "System",
+            "Advent Pro", "Atma", "Cormorant Garamond", "Encode Sans", "Expletus Sans",
+            "Fahkwang", "Fira Sans Condensed", "IBM Plex Sans", "Kodchasan", "Krub",
+            "Mali", "Mitr", "Montserrat", "Montserrat Alternates", "Rajdhani",
+            "Saira", "Saira_Extra Condensed", "Taviraj", "Tillana", "Zilla Slab"
     };
 
     private static final String TAG = "ChooseFontDialog";
@@ -207,13 +211,12 @@ public class ChooseFontDialog {
                 String fontFamily = sSupportGoogleFonts[position];
                 mFontFamily = fontFamily;
                 if (!fontFamily.equals("Default") && !fontFamily.equals("System")) {
-                    FontManagerImpl.getInstance().changeTypeFaced(fontFamily, mListener);
+                    FontManagerImpl.getInstance().loadAndSetTypeface(fontFamily, mListener);
                 }
                 prefs.putString(FontManager.MESSAGE_FONT_FAMILY, fontFamily);
                 HSGlobalNotificationCenter.sendNotification(ConversationListActivity.EVENT_MAINPAGE_RECREATE);
                 new Handler().postDelayed(this::dismiss, 1);
             }
-
         });
     }
 

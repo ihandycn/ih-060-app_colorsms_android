@@ -224,6 +224,7 @@ public class ConversationListItemView extends FrameLayout implements OnClickList
     private void setConversationName() {
         if (mData.getIsRead() || mData.getShowDraft()) {
             mConversationNameView.setTextColor(mConversationNameColor);
+
             mConversationNameView.setTypeface(mConversationNameReadTypeface);
         } else {
             mConversationNameView.setTextColor(mSnippetColor);
@@ -249,8 +250,8 @@ public class ConversationListItemView extends FrameLayout implements OnClickList
     }
 
     private void initTypeface(){
-        String familyName = BuglePrefs.getApplicationPrefs().getString(FontManager.MESSAGE_FONT_FAMILY,"");
-        if (familyName.isEmpty()){
+        String familyName = BuglePrefs.getApplicationPrefs().getString(FontManager.MESSAGE_FONT_FAMILY,"Default");
+        if (familyName.isEmpty() || familyName.equals("Default") || familyName.equals("System")){
             mConversationNameReadTypeface = Typefaces.getCustomMedium();
             mConversationNameUnreadTypeface = Typefaces.getCustomSemiBold();
             mSnippetTypeface = Typefaces.getCustomRegular();

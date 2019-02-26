@@ -10,6 +10,7 @@ import android.widget.Toast;
 
 import com.android.messaging.R;
 import com.android.messaging.util.BuglePrefs;
+import com.android.messaging.util.Typefaces;
 
 import org.qcode.fontchange.FontManager;
 import org.qcode.fontchange.impl.QueryBuilder;
@@ -59,13 +60,23 @@ public class MessageFontManager {
         return scale;
     }
 
-    public static void downloadAndSetTypeface(TextView tv) {
+    public static void loadAndSetTypeface(TextView tv, int weight) {
         WeakReference<TextView> t = new WeakReference<>(tv);
-        String familyName = BuglePrefs.getApplicationPrefs().getString(FontManager.MESSAGE_FONT_FAMILY, "");
-        if (familyName.isEmpty()) {
+        String familyName = BuglePrefs.getApplicationPrefs().getString(FontManager.MESSAGE_FONT_FAMILY, "Default");
+        if (familyName.isEmpty() || familyName.equals("Default") || familyName.equals("System")) {
+            switch (weight) {
+                case 400:
+                    tv.setTypeface(Typefaces.getCustomRegular());
+                    break;
+                case 500:
+                    tv.setTypeface(Typefaces.getCustomMedium());
+                    break;
+                case 700:
+                    tv.setTypeface(Typefaces.getCustomSemiBold());
+                    break;
+            }
             return;
         }
-        int weight = 400;    // regular
         QueryBuilder queryBuilder = new QueryBuilder(familyName)
                 .withWidth(100f)
                 .withWeight(weight)
