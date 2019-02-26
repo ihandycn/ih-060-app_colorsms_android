@@ -132,12 +132,6 @@ public class WallpaperPreviewActivity extends BaseActivity implements WallpaperM
         }
         getSupportActionBar().setDisplayShowHomeEnabled(true);
 
-        mWallpaperPreviewImg = findViewById(R.id.wallpaper_preview);
-        String wallpaperPath = WallpaperManager.getWallpaperPathByThreadId(null);
-        if (!TextUtils.isEmpty(wallpaperPath)) {
-            setPreviewImage(wallpaperPath);
-        }
-
         RecyclerView wallpaperChooser = findViewById(R.id.wallpaper_chooser_container);
         wallpaperChooser.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
         wallpaperChooser.setAdapter(new WallpaperChooserAdapter(this, WallpaperManager.getWallpaperChooserList()));
@@ -150,6 +144,13 @@ public class WallpaperPreviewActivity extends BaseActivity implements WallpaperM
         } else {
             BugleAnalytics.logEvent("SMS_ChatBackground_Show", "from", "Menu");
         }
+
+        mWallpaperPreviewImg = findViewById(R.id.wallpaper_preview);
+        String wallpaperPath = WallpaperManager.getWallpaperPathByThreadId(mThreadId);
+        if (!TextUtils.isEmpty(wallpaperPath)) {
+            setPreviewImage(wallpaperPath);
+        }
+
         WallpaperManager.addWallpaperChangeListener(this);
     }
 
@@ -233,7 +234,11 @@ public class WallpaperPreviewActivity extends BaseActivity implements WallpaperM
                     }
                     onItemSelected(view);
                     mWallpaperPreviewImg.setImageBitmap(null);
-                    WallpaperManager.setWallpaperPath(null, "");
+                    if (mThreadId == null) {
+                        WallpaperManager.setWallpaperPath(null, "");
+                    } else {
+                        WallpaperManager.setWallpaperPath(mThreadId, "empty");
+                    }
                     BugleAnalytics.logEvent("SMS_ChatBackground_Backgrounds_Clicked");
                 });
                 if (TextUtils.isEmpty(wallpaperPath)) {

@@ -41,7 +41,7 @@ import java.util.Map;
 
 public class ChooseFontDialog {
     private static final String[] sSupportGoogleFonts = {
-            "Default", "System",
+            "Default", "Roboto",
             "Advent Pro", "Atma", "Cormorant Garamond", "Encode Sans", "Expletus Sans",
             "Fahkwang", "Fira Sans Condensed", "IBM Plex Sans", "Kodchasan", "Krub",
             "Mali", "Mitr", "Montserrat", "Montserrat Alternates", "Rajdhani",
@@ -102,7 +102,6 @@ public class ChooseFontDialog {
             return false;
         }
         init();
-        mFontFamily = mPrefs.getString(FontManager.MESSAGE_FONT_FAMILY, "Default");
         try {
             if (mDialog.getWindow() != null) {
                 mDialog.getWindow().getAttributes().windowAnimations = Animation.ABSOLUTE;

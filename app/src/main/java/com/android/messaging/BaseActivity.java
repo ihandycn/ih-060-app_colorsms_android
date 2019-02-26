@@ -86,7 +86,6 @@ public abstract class BaseActivity extends AppCompatActivity
     protected void onResume() {
         super.onResume();
 
-        ////此通知放在此处，尽量让子类的view都添加到view树内
         if (mFirstTimeApplyFont) {
             mFontEventHandler.onViewCreated();
             mFirstTimeApplyFont = false;

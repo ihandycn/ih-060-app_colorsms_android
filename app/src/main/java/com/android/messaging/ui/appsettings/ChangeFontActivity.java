@@ -102,13 +102,6 @@ public class ChangeFontActivity extends BaseActivity implements LevelSeekBar.OnL
         }
     };
 
-    public boolean isGooglePlayServicesAvailable(Context context) {
-        GoogleApiAvailability googleApiAvailability = GoogleApiAvailability.getInstance();
-        int resultCode = googleApiAvailability.isGooglePlayServicesAvailable(context);
-//        return resultCode == ConnectionResult.SUCCESS;
-        return true;
-    }
-
     @Override
     public void onLevelChanged(LevelSeekBar seekBar, int oldLevel, int newLevel, boolean fromUser) {
         MessageFontManager.setFontScale(newLevel);

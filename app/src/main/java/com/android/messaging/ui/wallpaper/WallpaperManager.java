@@ -59,7 +59,10 @@ public class WallpaperManager {
     public static String getWallpaperPathByThreadId(String threadId) {
         String threadWallpaperPath = BuglePrefs.getApplicationPrefs().
                 getString(PREF_KEY_WALLPAPER_PATH + "_" + threadId, "");
-        if (threadWallpaperPath != null && !threadWallpaperPath.equals("")) {
+        if (!TextUtils.isEmpty(threadWallpaperPath)) {
+            if (threadWallpaperPath.equals("empty")) {
+                return null;
+            }
             return threadWallpaperPath;
         } else {
             return getWallpaperPath();
@@ -75,7 +78,7 @@ public class WallpaperManager {
             return null;
         }
     }
-    
+
     static void setWallpaperPath(String threadId, String path) {
         if (!TextUtils.isEmpty(threadId)) {
             BuglePrefs.getApplicationPrefs().putString(PREF_KEY_WALLPAPER_PATH + "_" + threadId, path);

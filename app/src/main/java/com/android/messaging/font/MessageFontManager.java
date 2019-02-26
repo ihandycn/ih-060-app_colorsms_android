@@ -64,17 +64,17 @@ public class MessageFontManager {
         WeakReference<TextView> t = new WeakReference<>(tv);
         String familyName = BuglePrefs.getApplicationPrefs().getString(FontManager.MESSAGE_FONT_FAMILY, "Default");
         if (familyName.isEmpty() || familyName.equals("Default") || familyName.equals("System")) {
-            switch (weight) {
-                case 400:
-                    tv.setTypeface(Typefaces.getCustomRegular());
-                    break;
-                case 500:
-                    tv.setTypeface(Typefaces.getCustomMedium());
-                    break;
-                case 700:
-                    tv.setTypeface(Typefaces.getCustomSemiBold());
-                    break;
-            }
+//            switch (weight) {
+//                case 400:
+//                    tv.setTypeface(Typefaces.getCustomRegular());
+//                    break;
+//                case 500:
+//                    tv.setTypeface(Typefaces.getCustomMedium());
+//                    break;
+//                case 700:
+//                    tv.setTypeface(Typefaces.getCustomSemiBold());
+//                    break;
+//            }
             return;
         }
         QueryBuilder queryBuilder = new QueryBuilder(familyName)

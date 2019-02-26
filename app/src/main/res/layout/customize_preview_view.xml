@@ -38,13 +38,16 @@
         app:layout_constraintTop_toTopOf="@id/contact_icon"
         tools:background="@color/primary_color" />
 
-    <TextView
+    <com.superapps.view.TypefacedTextView
+        android:id="@+id/message_preview_timestamp_1"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="12dp"
+        android:layout_height="16dp"
         android:layout_marginTop="5dp"
+        android:gravity="center"
+        android:paddingLeft="8dp"
+        android:paddingRight="8dp"
         android:text="1hr ago"
-        android:textColor="@color/conversation_list_timestamp"
+        android:textColor="@color/timestamp_text_incoming"
         android:textSize="10sp"
         app:layout_constraintStart_toStartOf="@id/incoming_message_preview_item"
         app:layout_constraintTop_toBottomOf="@id/incoming_message_preview_item" />
@@ -70,16 +73,17 @@
         app:layout_constraintTop_toBottomOf="@id/incoming_message_preview_item"
         tools:background="@color/primary_color" />
 
-    <TextView
+    <com.superapps.view.TypefacedTextView
+        android:id="@+id/message_preview_timestamp_2"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="12dp"
+        android:layout_height="16dp"
         android:layout_marginTop="5dp"
+        android:gravity="center"
+        android:paddingLeft="8dp"
+        android:paddingRight="8dp"
         android:text="now"
-        android:textColor="@color/conversation_list_timestamp"
+        android:textColor="@color/timestamp_text_incoming"
         android:textSize="10sp"
         app:layout_constraintEnd_toEndOf="@id/outgoing_message_preview_item"
         app:layout_constraintTop_toBottomOf="@id/outgoing_message_preview_item" />
-
-
 </merge>

@@ -160,7 +160,6 @@ public class ActivityFontEventHandlerImpl {
                 View contentView = getContentView();
                 mFontManager.applyFont(contentView, true);
 
-                //通知Activity做其他刷新操作
                 if(activity instanceof IFontChangeActivity) {
                     ((IFontChangeActivity) activity).handleFontChange();
                 }

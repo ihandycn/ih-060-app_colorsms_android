@@ -673,7 +673,7 @@ public class ConversationFragment extends Fragment implements ConversationDataLi
         super.onResume();
 
         String wallpaperPath = WallpaperManager.getWallpaperPathByThreadId(mConversationId);
-        if (wallpaperPath != null && !wallpaperPath.equals("")) {
+        if (!TextUtils.isEmpty(wallpaperPath)) {
             mWallpaperView.setImageDrawable(new BitmapDrawable(wallpaperPath));
         } else {
             mWallpaperView.setImageDrawable(null);

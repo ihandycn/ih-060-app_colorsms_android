@@ -30,6 +30,7 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.AppCompatDrawableManager;
 import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
 import android.view.ActionMode;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -140,7 +141,7 @@ public class ConversationListActivity extends AbstractConversationListActivity
 
         String bgPath = WallpaperManager.getWallpaperPathByThreadId(null);
         String backgroundStr;
-        if (bgPath == null || bgPath.equals("")) {
+        if (TextUtils.isEmpty(bgPath)) {
             backgroundStr = "default";
         } else if (bgPath.contains("_1.png")) {
             backgroundStr = "customize";

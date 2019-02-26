@@ -12,6 +12,8 @@ import android.widget.TextView;
 import com.android.messaging.R;
 import com.android.messaging.ui.ConversationDrawables;
 import com.android.messaging.util.BugleAnalytics;
+import com.superapps.util.BackgroundDrawables;
+import com.superapps.util.Dimensions;
 
 public class CustomMessagePreviewView extends ConstraintLayout {
 
@@ -31,6 +33,12 @@ public class CustomMessagePreviewView extends ConstraintLayout {
         inflater.inflate(R.layout.customize_preview_view, this, true);
         mIncomingMessage = findViewById(R.id.incoming_message_preview_item);
         mOutgoingMessage = findViewById(R.id.outgoing_message_preview_item);
+        findViewById(R.id.message_preview_timestamp_1).setBackground(BackgroundDrawables.createBackgroundDrawable(
+                getResources().getColor(R.color.white_40_transparent), Dimensions.pxFromDp(16), false
+        ));
+        findViewById(R.id.message_preview_timestamp_2).setBackground(BackgroundDrawables.createBackgroundDrawable(
+                getResources().getColor(R.color.white_40_transparent), Dimensions.pxFromDp(16), false
+        ));
         initBubbleDrawables();
     }
 
