@@ -117,6 +117,7 @@ public class CustomBubblesActivity extends AppCompatActivity implements CustomMe
         mSaveButton = findViewById(R.id.save_button);
         mSaveButton.setOnClickListener(v -> {
             mCustomMessagePreview.save(mConversationId);
+
             ConversationDrawables.get().updateDrawables();
             // notify main page recreate
             HSGlobalNotificationCenter.sendNotification(ConversationListActivity.EVENT_MAINPAGE_RECREATE);

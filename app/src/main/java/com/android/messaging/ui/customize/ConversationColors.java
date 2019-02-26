@@ -86,21 +86,29 @@ public class ConversationColors {
 
     public void setBubbleBackgroundColor(boolean incoming, @ColorInt int color) {
         if (incoming) {
-            mPrefs.putInt(PREFS_KEY_BUBBLE_BACKGROUND_COLOR_INCOMING, color);
-            mIncomingBubbleBackgroundColor = color;
+            if (mIncomingBubbleBackgroundColor != color) {
+                mPrefs.putInt(PREFS_KEY_BUBBLE_BACKGROUND_COLOR_INCOMING, color);
+                mIncomingBubbleBackgroundColor = color;
+            }
         } else {
-            mPrefs.putInt(PREFS_KEY_BUBBLE_BACKGROUND_COLOR_OUTGOING, color);
-            mOutgoingBubbleBackgroundColor = color;
+            if (mOutgoingBubbleBackgroundColor != color) {
+                mPrefs.putInt(PREFS_KEY_BUBBLE_BACKGROUND_COLOR_OUTGOING, color);
+                mOutgoingBubbleBackgroundColor = color;
+            }
         }
     }
 
     public void setMessageTextColor(boolean incoming, @ColorInt int color) {
         if (incoming) {
-            mPrefs.putInt(PREFS_KEY_MESSAGE_TEXT_COLOR_INCOMING, color);
-            mIncomingTextColor = color;
+            if (mIncomingTextColor != color) {
+                mPrefs.putInt(PREFS_KEY_MESSAGE_TEXT_COLOR_INCOMING, color);
+                mIncomingTextColor = color;
+            }
         } else {
-            mPrefs.putInt(PREFS_KEY_MESSAGE_TEXT_COLOR_OUTGOING, color);
-            mOutgoingTextColor = color;
+            if (mOutgoingTextColor != color) {
+                mPrefs.putInt(PREFS_KEY_MESSAGE_TEXT_COLOR_OUTGOING, color);
+                mOutgoingTextColor = color;
+            }
         }
     }
 
