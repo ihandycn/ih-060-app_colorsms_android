@@ -215,7 +215,7 @@
     <dimen name="bubble_customize_preview_contact_icon_width">40dp</dimen>
     <dimen name="bubble_customize_preview_contact_icon_height">40dp</dimen>
     <dimen name="bubble_customize_color_ring_size">40dp</dimen>
-    <dimen name="bubble_customize_color_pager_translation">360dp</dimen>
+    <dimen name="bubble_customize_color_pager_translation">321dp</dimen>
 
     <!--banner -->
     <dimen name="banner_set_as_default">60dp</dimen>

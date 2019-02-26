@@ -12,6 +12,7 @@ import com.android.messaging.R;
 import com.android.messaging.ui.CustomFooterViewPager;
 import com.android.messaging.ui.CustomPagerViewHolder;
 import com.android.messaging.ui.CustomViewPager;
+import com.superapps.util.Threads;
 
 import static com.android.messaging.ui.customize.ChooseMessageColorEntryViewHolder.CustomColor.BUBBLE_COLOR_INCOMING;
 import static com.android.messaging.ui.customize.ChooseMessageColorEntryViewHolder.CustomColor.BUBBLE_COLOR_OUTGOING;
@@ -28,9 +29,10 @@ public class ChooseMessageColorPagerView extends FrameLayout implements OnColorC
 
     private CustomMessageHost mHost;
 
-
     private ChooseMessageColorRecommendViewHolder mBubbleRecommendViewHolder;
     private TextView mTitle;
+
+    private Runnable disappearRunnable = () -> animate().alpha(0f).setDuration(240L).start();
 
     public void setHost(CustomMessageHost host) {
         mHost = host;
@@ -51,6 +53,8 @@ public class ChooseMessageColorPagerView extends FrameLayout implements OnColorC
 
     void reveal() {
         setVisibility(VISIBLE);
+        Threads.removeOnMainThread(disappearRunnable);
+        setAlpha(1f);
         animate().translationY(0f).setInterpolator(mInterpolator).setDuration(REVEAL_DURATION).start();
     }
 
@@ -58,7 +62,7 @@ public class ChooseMessageColorPagerView extends FrameLayout implements OnColorC
         animate().translationY(getResources().getDimensionPixelSize(R.dimen.bubble_customize_color_pager_translation))
                 .setInterpolator(mInterpolator)
                 .setDuration(DISAPPEAR_DURATION).start();
-        postDelayed(() -> setVisibility(GONE), DISAPPEAR_DURATION);
+        Threads.postOnMainThreadDelayed(disappearRunnable, DISAPPEAR_DURATION);
     }
 
     void updateTitle(@ChooseMessageColorEntryViewHolder.CustomColor int type) {

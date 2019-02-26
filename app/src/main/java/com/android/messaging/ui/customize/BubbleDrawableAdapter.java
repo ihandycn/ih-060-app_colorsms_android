@@ -1,6 +1,7 @@
 package com.android.messaging.ui.customize;
 
 import android.content.Context;
+import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
@@ -21,8 +22,11 @@ public class BubbleDrawableAdapter extends RecyclerView.Adapter<BubbleDrawableAd
     private Context mContext;
     private OnSelectedBubbleChangeListener mListener;
 
+    private int mSelectedPosition;
+
     BubbleDrawableAdapter(Context context) {
         mContext = context;
+        mSelectedPosition = BubbleDrawables.getSelectedIndex();
     }
 
     @NonNull
@@ -33,8 +37,9 @@ public class BubbleDrawableAdapter extends RecyclerView.Adapter<BubbleDrawableAd
 
         viewHolder.mBubble.setOnClickListener(v1 -> {
             int position = viewHolder.getAdapterPosition();
-            int oldSelectedPosition = BubbleDrawables.getSelectedIndex();
+            int oldSelectedPosition = mSelectedPosition;
             if (position != oldSelectedPosition) {
+                mSelectedPosition = position;
                 notifyItemChanged(oldSelectedPosition);
                 notifyItemChanged(position);
                 mListener.onChange(position);
@@ -43,20 +48,18 @@ public class BubbleDrawableAdapter extends RecyclerView.Adapter<BubbleDrawableAd
         return viewHolder;
     }
 
-    public void setOnSelectedBubbleChangeListener(OnSelectedBubbleChangeListener mListener) {
+    void setOnSelectedBubbleChangeListener(OnSelectedBubbleChangeListener mListener) {
         this.mListener = mListener;
     }
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        if (position == BubbleDrawables.getSelectedIndex()) {
-            Drawable drawable = ImageUtils.getTintedDrawable(mContext,
-                    mContext.getResources().getDrawable(BubbleDrawables.BUBBLES[position]),
-                    ConversationColors.get().getBubbleBackgroundColor(false));
-            holder.mBubble.setBackground(drawable);
+        holder.mBubble.setBackgroundResource(BubbleDrawables.BUBBLES[position]);
+        if (position == mSelectedPosition) {
+            holder.mBubble.getBackground().setColorFilter(PrimaryColors.getPrimaryColor(), PorterDuff.Mode.SRC_ATOP);
             holder.mBubble.setImageResource(R.drawable.ic_checkmark_large_light);
         } else {
-            holder.mBubble.setBackgroundResource(BubbleDrawables.BUBBLES[position]);
+            holder.mBubble.getBackground().setColorFilter(null);
             holder.mBubble.setImageDrawable(null);
         }
     }

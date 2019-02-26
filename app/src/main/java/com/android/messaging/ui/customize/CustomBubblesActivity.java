@@ -14,7 +14,9 @@ import com.android.messaging.ui.ConversationDrawables;
 import com.android.messaging.ui.CustomHeaderViewPager;
 import com.android.messaging.ui.CustomPagerViewHolder;
 import com.android.messaging.ui.CustomViewPager;
+import com.android.messaging.ui.UIIntents;
 import com.android.messaging.ui.conversationlist.ConversationListActivity;
+import com.android.messaging.util.BugleAnalytics;
 import com.ihs.commons.notificationcenter.HSGlobalNotificationCenter;
 import com.superapps.util.BackgroundDrawables;
 import com.superapps.util.Dimensions;
@@ -27,6 +29,7 @@ import static com.android.messaging.ui.customize.ChooseMessageColorEntryViewHold
 
 public class CustomBubblesActivity extends AppCompatActivity implements CustomMessageHost {
 
+
     private ChooseMessageColorPagerView mChooseMessageColorPagerView;
     private CustomMessagePreviewView mCustomMessagePreview;
     private ChooseMessageColorEntryViewHolder mChooseMessageColorEntryViewHolder;
@@ -35,6 +38,7 @@ public class CustomBubblesActivity extends AppCompatActivity implements CustomMe
 
     @ChooseMessageColorEntryViewHolder.CustomColor
     private int mColorType;
+    private String mConversationId;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -63,6 +67,9 @@ public class CustomBubblesActivity extends AppCompatActivity implements CustomMe
         customHeaderViewPager.setBackgroundColor(getResources().getColor(R.color.contact_picker_background));
         customHeaderViewPager.setCurrentItem(0);
 
+        BugleAnalytics.logEvent("Customize_Bubble_Show");
+
+        mConversationId = getIntent().getStringExtra(UIIntents.UI_INTENT_EXTRA_CONVERSATION_ID);
     }
 
     @Override
@@ -111,10 +118,11 @@ public class CustomBubblesActivity extends AppCompatActivity implements CustomMe
         mSaveButton.setBackground(BackgroundDrawables
                 .createBackgroundDrawable(0xffd8dce3, Dimensions.pxFromDp(25), false));
         mSaveButton.setOnClickListener(v -> {
-            mCustomMessagePreview.save();
+            mCustomMessagePreview.save(mConversationId);
             ConversationDrawables.get().updateDrawables();
             // notify main page recreate
             HSGlobalNotificationCenter.sendNotification(ConversationListActivity.EVENT_MAINPAGE_RECREATE);
+            BugleAnalytics.logEvent("Customize_Bubble_Save_Click");
         });
         mSaveButton.setEnabled(false);
     }
@@ -123,7 +131,7 @@ public class CustomBubblesActivity extends AppCompatActivity implements CustomMe
         if (!mSaveButton.isEnabled()) {
             mSaveButton.setBackground(BackgroundDrawables
                     .createBackgroundDrawable(PrimaryColors.getPrimaryColor(), Dimensions.pxFromDp(25), true));
-
+            mSaveButton.setEnabled(true);
         }
     }
 

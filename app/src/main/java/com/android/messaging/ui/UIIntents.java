@@ -271,6 +271,11 @@ public abstract class UIIntents {
     public abstract void launchSmsShowActivity();
 
     /**
+     * Launch an activity to custom bubbles
+     */
+    public abstract void launchCustomBubblesActivity(Context context, String conversationId);
+
+    /**
      * Get a ACTION_VIEW intent
      * @param url display the data in the url to users
      */

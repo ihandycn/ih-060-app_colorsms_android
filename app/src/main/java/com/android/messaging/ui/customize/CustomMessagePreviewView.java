@@ -44,6 +44,9 @@ public class CustomMessagePreviewView extends ConstraintLayout {
         mIncomingTextPreviewColor = ConversationColors.get().getMessageTextColor(true);
         mOutgoingTextPreviewColor = ConversationColors.get().getMessageTextColor(false);
 
+        mIncomingMessage.setTextColor(mIncomingTextPreviewColor);
+        mOutgoingMessage.setTextColor(mOutgoingTextPreviewColor);
+
         mPreviewBubbleDrawableId = BubbleDrawables.getSelectedIndex();
     }
 
@@ -79,7 +82,7 @@ public class CustomMessagePreviewView extends ConstraintLayout {
         }
     }
 
-    public void save() {
+    public void save(String conversationId) {
         ConversationColors.get().setBubbleBackgroundColor(true, mIncomingBackgroundPreviewColor);
         ConversationColors.get().setBubbleBackgroundColor(false, mOutgoingBackgroundPreviewColor);
 

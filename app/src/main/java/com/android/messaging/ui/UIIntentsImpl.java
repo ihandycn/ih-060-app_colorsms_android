@@ -63,6 +63,7 @@ import com.android.messaging.ui.conversationlist.ArchivedConversationListActivit
 import com.android.messaging.ui.conversationlist.ConversationListActivity;
 import com.android.messaging.ui.conversationlist.ForwardMessageActivity;
 import com.android.messaging.ui.conversationsettings.PeopleAndOptionsActivity;
+import com.android.messaging.ui.customize.CustomBubblesActivity;
 import com.android.messaging.ui.debug.DebugMmsConfigActivity;
 import com.android.messaging.ui.photoviewer.BuglePhotoViewActivity;
 import com.android.messaging.ui.smsshow.SmsShowActivity;
@@ -71,6 +72,7 @@ import com.android.messaging.util.Assert;
 import com.android.messaging.util.ContentType;
 import com.android.messaging.util.ConversationIdSet;
 import com.android.messaging.util.LogUtil;
+import com.android.messaging.util.TextUtil;
 import com.android.messaging.util.UiUtils;
 import com.android.messaging.util.UriUtil;
 import com.android.messaging.ui.welcome.WelcomePermissionActivity;
@@ -386,6 +388,15 @@ public class UIIntentsImpl extends UIIntents {
         final Intent intent = new Intent(Factory.get().getApplicationContext(), SmsShowActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         Factory.get().getApplicationContext().startActivity(intent);
+    }
+
+    @Override
+    public void launchCustomBubblesActivity(Context context, String conversationId) {
+        final Intent intent = new Intent(context, CustomBubblesActivity.class);
+        if (!TextUtils.isEmpty(conversationId)) {
+            intent.putExtra(UI_INTENT_EXTRA_CONVERSATION_ID, conversationId);
+        }
+        context.startActivity(intent);
     }
 
     @Override

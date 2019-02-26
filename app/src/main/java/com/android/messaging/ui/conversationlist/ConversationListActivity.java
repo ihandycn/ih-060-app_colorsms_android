@@ -44,6 +44,7 @@ import com.android.messaging.datamodel.BugleNotifications;
 import com.android.messaging.ui.UIIntents;
 import com.android.messaging.ui.appsettings.ChangeFontActivity;
 import com.android.messaging.ui.appsettings.ThemeSelectActivity;
+import com.android.messaging.ui.customize.BubbleDrawables;
 import com.android.messaging.ui.customize.CustomBubblesActivity;
 import com.android.messaging.ui.dialog.FiveStarRateDialog;
 import com.android.messaging.ui.emoji.EmojiStoreActivity;
@@ -147,8 +148,9 @@ public class ConversationListActivity extends AbstractConversationListActivity
         }
         HSGlobalNotificationCenter.addObserver(EVENT_MAINPAGE_RECREATE, this);
         BugleAnalytics.logEvent("SMS_Messages_Show", true,
-                "color", String.valueOf(ThemeSelectActivity.getSelectedIndex()),
-                "background", backgroundStr);
+                "themeColor", String.valueOf(ThemeSelectActivity.getSelectedIndex()),
+                "background", backgroundStr,
+                "bubbleStyle", String.valueOf(BubbleDrawables.getSelectedIndex()));
 
         Trace.endSection();
     }
