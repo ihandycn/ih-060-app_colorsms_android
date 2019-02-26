@@ -1,5 +1,6 @@
 package com.android.messaging.ui.customize;
 
+import android.animation.ObjectAnimator;
 import android.content.Context;
 import android.support.v4.view.animation.PathInterpolatorCompat;
 import android.util.AttributeSet;
@@ -32,7 +33,7 @@ public class ChooseMessageColorPagerView extends FrameLayout implements OnColorC
     private ChooseMessageColorRecommendViewHolder mBubbleRecommendViewHolder;
     private TextView mTitle;
 
-    private Runnable disappearRunnable = () -> animate().alpha(0f).setDuration(240L).start();
+    private ObjectAnimator mAlphaAnimator;
 
     public void setHost(CustomMessageHost host) {
         mHost = host;
@@ -53,7 +54,9 @@ public class ChooseMessageColorPagerView extends FrameLayout implements OnColorC
 
     void reveal() {
         setVisibility(VISIBLE);
-        Threads.removeOnMainThread(disappearRunnable);
+        if (mAlphaAnimator != null) {
+            mAlphaAnimator.cancel();
+        }
         setAlpha(1f);
         animate().translationY(0f).setInterpolator(mInterpolator).setDuration(REVEAL_DURATION).start();
     }
@@ -62,7 +65,10 @@ public class ChooseMessageColorPagerView extends FrameLayout implements OnColorC
         animate().translationY(getResources().getDimensionPixelSize(R.dimen.bubble_customize_color_pager_translation))
                 .setInterpolator(mInterpolator)
                 .setDuration(DISAPPEAR_DURATION).start();
-        Threads.postOnMainThreadDelayed(disappearRunnable, DISAPPEAR_DURATION);
+        mAlphaAnimator = ObjectAnimator.ofFloat(ChooseMessageColorPagerView.this, "alpha", 0f);
+        mAlphaAnimator.setDuration(200L);
+        mAlphaAnimator.setStartDelay(DISAPPEAR_DURATION);
+        mAlphaAnimator.start();
     }
 
     void updateTitle(@ChooseMessageColorEntryViewHolder.CustomColor int type) {

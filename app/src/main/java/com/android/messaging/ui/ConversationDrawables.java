@@ -109,12 +109,8 @@ public class ConversationDrawables {
         mIncomingBubbleColor = ConversationColors.get().getBubbleBackgroundColor(true);
         mIncomingErrorBubbleColor =
                 resources.getColor(R.color.message_error_bubble_color_incoming);
-        mIncomingSelectedBubbleColor = resources.getColor(R.color.message_bubble_color_selected_incoming);
-        float[] hsb = new float[3];
-        Color.RGBToHSV(Color.red(mOutgoingBubbleColor), Color.green(mOutgoingBubbleColor),
-                Color.blue(mOutgoingBubbleColor), hsb);
-        hsb[2] /= 1.2f;
-        mOutgoingSelectedBubbleColor = Color.HSVToColor(hsb);
+        mIncomingSelectedBubbleColor = ConversationColors.get().getBubbleBackgroundColorDark(true);
+        mOutgoingSelectedBubbleColor = ConversationColors.get().getBubbleBackgroundColorDark(false);
         mThemeColor = PrimaryColors.getPrimaryColor();
     }
 
