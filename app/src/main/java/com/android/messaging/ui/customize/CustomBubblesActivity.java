@@ -7,6 +7,7 @@ import android.support.annotation.Nullable;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
 import android.view.MenuItem;
 import android.widget.TextView;
 
@@ -68,9 +69,9 @@ public class CustomBubblesActivity extends AppCompatActivity implements CustomMe
         customHeaderViewPager.setBackgroundColor(getResources().getColor(R.color.contact_picker_background));
         customHeaderViewPager.setCurrentItem(0);
 
-        BugleAnalytics.logEvent("Customize_Bubble_Show");
-
         mConversationId = getIntent().getStringExtra(UIIntents.UI_INTENT_EXTRA_CONVERSATION_ID);
+
+        BugleAnalytics.logEvent("Customize_Bubble_Show", "from", getOpenSourceType());
     }
 
     @Override
@@ -117,21 +118,25 @@ public class CustomBubblesActivity extends AppCompatActivity implements CustomMe
 
         mSaveButton = findViewById(R.id.save_button);
         mSaveButton.setOnClickListener(v -> {
-            mCustomMessagePreview.save(mConversationId);
-
             new BaseAlertDialog.Builder(CustomBubblesActivity.this)
                     .setTitle(R.string.bubble_customize_save_confirm_dialog_title)
                     .setMessage(R.string.bubble_customize_save_confirm_dialog_content)
                     .setPositiveButton(getString(R.string.save).toUpperCase(), (dialog, which) -> {
+
+                        mCustomMessagePreview.save(mConversationId);
+
                         ConversationDrawables.get().updateDrawables();
+
                         disableSaveButton();
 
+                        BugleAnalytics.logEvent("Customize_Bubble_SaveChange_Alert_Click");
                         // notify main page recreate
                         HSGlobalNotificationCenter.sendNotification(ConversationListActivity.EVENT_MAINPAGE_RECREATE);
                     })
                     .setNegativeButton(getString(R.string.share_cancel).toUpperCase(), null)
                     .show();
             BugleAnalytics.logEvent("Customize_Bubble_Save_Click");
+            BugleAnalytics.logEvent("Customize_Bubble_SaveChange_Alert_Show");
         });
         disableSaveButton();
     }
@@ -148,6 +153,10 @@ public class CustomBubblesActivity extends AppCompatActivity implements CustomMe
         mSaveButton.setBackground(BackgroundDrawables
                 .createBackgroundDrawable(0xffd8dce3, Dimensions.pxFromDp(25), false));
         mSaveButton.setEnabled(false);
+    }
+
+    private String getOpenSourceType() {
+        return TextUtils.isEmpty(mConversationId) ? "settings" : "chat";
     }
 
     @Override

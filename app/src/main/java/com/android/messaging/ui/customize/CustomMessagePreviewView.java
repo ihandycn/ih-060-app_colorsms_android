@@ -4,12 +4,14 @@ import android.content.Context;
 import android.graphics.PorterDuff;
 import android.support.annotation.ColorInt;
 import android.support.constraint.ConstraintLayout;
+import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.widget.TextView;
 
 import com.android.messaging.R;
 import com.android.messaging.ui.ConversationDrawables;
+import com.android.messaging.util.BugleAnalytics;
 
 public class CustomMessagePreviewView extends ConstraintLayout {
 
@@ -18,7 +20,7 @@ public class CustomMessagePreviewView extends ConstraintLayout {
     private int mIncomingTextPreviewColor;
     private int mOutgoingTextPreviewColor;
 
-    private int mPreviewBubbleDrawableId;
+    private int mPreviewBubbleDrawableIdentifier;
 
     private TextView mIncomingMessage;
     private TextView mOutgoingMessage;
@@ -47,7 +49,7 @@ public class CustomMessagePreviewView extends ConstraintLayout {
         mIncomingMessage.setTextColor(mIncomingTextPreviewColor);
         mOutgoingMessage.setTextColor(mOutgoingTextPreviewColor);
 
-        mPreviewBubbleDrawableId = BubbleDrawables.getSelectedIndex();
+        mPreviewBubbleDrawableIdentifier = BubbleDrawables.getSelectedIndex();
     }
 
     public void previewCustomBubbleDrawables(int id) {
@@ -57,18 +59,15 @@ public class CustomMessagePreviewView extends ConstraintLayout {
         mIncomingMessage.getBackground().setColorFilter(mIncomingBackgroundPreviewColor, PorterDuff.Mode.SRC_ATOP);
         mOutgoingMessage.getBackground().setColorFilter(mOutgoingBackgroundPreviewColor, PorterDuff.Mode.SRC_ATOP);
 
-        mPreviewBubbleDrawableId = id;
+        mPreviewBubbleDrawableIdentifier = id;
     }
 
     public void previewCustomBubbleBackgroundColor(boolean incoming, @ColorInt int color) {
         if (incoming) {
             mIncomingMessage.getBackground().setColorFilter(color, PorterDuff.Mode.SRC_ATOP);
-        } else {
-            mOutgoingMessage.getBackground().setColorFilter(color, PorterDuff.Mode.SRC_ATOP);
-        }
-        if (incoming) {
             mIncomingBackgroundPreviewColor = color;
         } else {
+            mOutgoingMessage.getBackground().setColorFilter(color, PorterDuff.Mode.SRC_ATOP);
             mOutgoingBackgroundPreviewColor = color;
         }
     }
@@ -76,18 +75,76 @@ public class CustomMessagePreviewView extends ConstraintLayout {
     public void previewCustomTextColor(boolean incoming, @ColorInt int color) {
         if (incoming) {
             mIncomingMessage.setTextColor(color);
+            mIncomingTextPreviewColor = color;
         } else {
             mOutgoingMessage.setTextColor(color);
+            mOutgoingTextPreviewColor = color;
         }
     }
 
     public void save(String conversationId) {
-        ConversationColors.get().setBubbleBackgroundColor(true, mIncomingBackgroundPreviewColor);
-        ConversationColors.get().setBubbleBackgroundColor(false, mOutgoingBackgroundPreviewColor);
+        boolean bubbleDrawableChanged = false;
+        boolean bubbleBackgroundColorChanged = false;
+        boolean bubbleTextColorChanged = false;
 
-        ConversationColors.get().setMessageTextColor(true, mIncomingTextPreviewColor);
-        ConversationColors.get().setMessageTextColor(false, mOutgoingTextPreviewColor);
+        if (mPreviewBubbleDrawableIdentifier != BubbleDrawables.getSelectedIndex()) {
+            BubbleDrawables.setSelectedIndex(mPreviewBubbleDrawableIdentifier);
+            bubbleDrawableChanged = true;
+            BugleAnalytics.logEvent("Customize_Bubble_Style_Change", "style",
+                    String.valueOf(mPreviewBubbleDrawableIdentifier));
+        }
 
-        BubbleDrawables.setSelectedIndex(mPreviewBubbleDrawableId);
+        if (mIncomingBackgroundPreviewColor != ConversationColors.get().getBubbleBackgroundColor(true)) {
+            ConversationColors.get().setBubbleBackgroundColor(true, mIncomingBackgroundPreviewColor);
+            bubbleBackgroundColorChanged = true;
+        }
+
+        if (mOutgoingBackgroundPreviewColor != ConversationColors.get().getBubbleBackgroundColor(false)) {
+            ConversationColors.get().setBubbleBackgroundColor(false, mOutgoingBackgroundPreviewColor);
+            bubbleBackgroundColorChanged = true;
+        }
+
+        if (mIncomingTextPreviewColor != ConversationColors.get().getMessageTextColor(true)) {
+            ConversationColors.get().setMessageTextColor(true, mIncomingTextPreviewColor);
+            bubbleTextColorChanged = true;
+        }
+
+        if (mOutgoingTextPreviewColor != ConversationColors.get().getMessageTextColor(false)) {
+            ConversationColors.get().setMessageTextColor(false, mOutgoingTextPreviewColor);
+            bubbleTextColorChanged = true;
+        }
+
+        String from = TextUtils.isEmpty(conversationId) ? "settings" : "chat";
+
+        BugleAnalytics.logEvent("Customize_Bubble_Change", "from", from, "type",
+                getBubbleChangeString(bubbleDrawableChanged, bubbleBackgroundColorChanged || bubbleTextColorChanged));
+
+        if (bubbleBackgroundColorChanged || bubbleTextColorChanged) {
+            BugleAnalytics.logEvent("Customize_Bubble_Color_Change", "type",
+                    getBubbleColorChangeString(bubbleBackgroundColorChanged, bubbleTextColorChanged));
+        }
     }
+
+    private String getBubbleChangeString(boolean drawableChanged, boolean colorChanged) {
+        if (drawableChanged && colorChanged ) {
+            return "both";
+        } else if (drawableChanged) {
+            return "style";
+        } else if (colorChanged) {
+            return "color";
+        }
+        return "noChange";
+    }
+
+    private String getBubbleColorChangeString(boolean bubbleColorChanged, boolean textColorChanged) {
+        if (bubbleColorChanged && textColorChanged) {
+            return "both";
+        } else if (bubbleColorChanged) {
+            return "bubble";
+        } else if (textColorChanged) {
+            return "text";
+        }
+        return "noChange";
+    }
+
 }

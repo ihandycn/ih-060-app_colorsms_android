@@ -61,6 +61,7 @@ import com.android.messaging.ui.MultiAttachmentLayout.OnAttachmentClickListener;
 import com.android.messaging.ui.PersonItemView;
 import com.android.messaging.ui.UIIntents;
 import com.android.messaging.ui.VideoThumbnailView;
+import com.android.messaging.ui.customize.ConversationColors;
 import com.android.messaging.util.AccessibilityUtil;
 import com.android.messaging.util.Assert;
 import com.android.messaging.util.AvatarUriUtil;
@@ -899,15 +900,16 @@ public class ConversationMessageView extends FrameLayout implements View.OnClick
     }
 
     private void updateTextAppearance() {
-        int messageColorResId;
-        int statusColorResId = -1;
+        int messageColor;
+        int statusColor = -1;
         int infoColorResId = -1;
         int timestampColorResId;
         int subjectLabelColorResId;
-        messageColorResId = (mData.getIsIncoming() ?
-                R.color.message_text_color_incoming : R.color.message_text_color_outgoing);
+
+        Resources resources = getResources();
+        messageColor = ConversationColors.get().getMessageTextColor(mData.getIsIncoming());
         if (isSelected()) {
-            statusColorResId = R.color.message_action_status_text;
+            statusColor =  resources.getColor(R.color.message_action_status_text);
             infoColorResId = R.color.message_action_info_text;
             if (shouldShowMessageTextBubble()) {
                 timestampColorResId = R.color.message_action_timestamp_text;
@@ -919,7 +921,7 @@ public class ConversationMessageView extends FrameLayout implements View.OnClick
                 subjectLabelColorResId = R.color.timestamp_text_outgoing;
             }
         } else {
-            statusColorResId = messageColorResId;
+            statusColor = messageColor;
             infoColorResId = R.color.timestamp_text_incoming;
             switch (mData.getStatus()) {
 
@@ -941,10 +943,10 @@ public class ConversationMessageView extends FrameLayout implements View.OnClick
 
                 case MessageData.BUGLE_STATUS_INCOMING_EXPIRED_OR_NOT_AVAILABLE:
                 case MessageData.BUGLE_STATUS_INCOMING_DOWNLOAD_FAILED:
-                    messageColorResId = R.color.message_text_color_incoming_download_failed;
+                    messageColor = getResources().getColor(R.color.message_text_color_incoming_download_failed);
                     timestampColorResId = R.color.message_download_failed_timestamp_text;
                     subjectLabelColorResId = R.color.message_text_color_incoming_download_failed;
-                    statusColorResId = R.color.message_download_failed_status_text;
+                    statusColor = resources.getColor(R.color.message_download_failed_status_text);
                     infoColorResId = R.color.message_info_text_incoming_download_failed;
                     break;
 
@@ -966,24 +968,23 @@ public class ConversationMessageView extends FrameLayout implements View.OnClick
                     break;
             }
         }
-        final int messageColor = getResources().getColor(messageColorResId);
         mMessageTextView.setTextColor(messageColor);
         mMessageTextView.setLinkTextColor(messageColor);
         mSubjectText.setTextColor(messageColor);
-        if (statusColorResId >= 0) {
-            mTitleTextView.setTextColor(getResources().getColor(statusColorResId));
+        if (statusColor >= 0) {
+            mTitleTextView.setTextColor(statusColor);
         }
         if (infoColorResId >= 0) {
-            mMmsInfoTextView.setTextColor(getResources().getColor(infoColorResId));
+            mMmsInfoTextView.setTextColor(resources.getColor(infoColorResId));
         }
         if (timestampColorResId == R.color.timestamp_text_incoming &&
                 mData.hasAttachments() && !shouldShowMessageTextBubble()) {
             timestampColorResId = R.color.timestamp_text_outgoing;
         }
-        mStatusTextView.setTextColor(getResources().getColor(timestampColorResId));
+        mStatusTextView.setTextColor(resources.getColor(timestampColorResId));
 
-        mSubjectLabel.setTextColor(getResources().getColor(subjectLabelColorResId));
-        mSenderNameTextView.setTextColor(getResources().getColor(timestampColorResId));
+        mSubjectLabel.setTextColor(resources.getColor(subjectLabelColorResId));
+        mSenderNameTextView.setTextColor(resources.getColor(timestampColorResId));
     }
 
     /**
