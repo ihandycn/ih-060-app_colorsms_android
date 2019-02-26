@@ -45,6 +45,7 @@ import com.android.messaging.ui.UIIntents;
 import com.android.messaging.ui.appsettings.ChangeFontActivity;
 import com.android.messaging.ui.appsettings.ThemeSelectActivity;
 import com.android.messaging.ui.customize.BubbleDrawables;
+import com.android.messaging.ui.customize.ConversationColors;
 import com.android.messaging.ui.customize.CustomBubblesActivity;
 import com.android.messaging.ui.dialog.FiveStarRateDialog;
 import com.android.messaging.ui.emoji.EmojiStoreActivity;
@@ -150,7 +151,11 @@ public class ConversationListActivity extends AbstractConversationListActivity
         BugleAnalytics.logEvent("SMS_Messages_Show", true,
                 "themeColor", String.valueOf(ThemeSelectActivity.getSelectedIndex()),
                 "background", backgroundStr,
-                "bubbleStyle", String.valueOf(BubbleDrawables.getSelectedIndex()));
+                "bubbleStyle", String.valueOf(BubbleDrawables.getSelectedIndex()),
+                "received bubble color", ConversationColors.get().getConversationColorEventType(true, true),
+                "sent bubble color", ConversationColors.get().getConversationColorEventType(false, true),
+                "received text color", ConversationColors.get().getConversationColorEventType(true, false),
+                "sent text color", ConversationColors.get().getConversationColorEventType(false, false));
 
         Trace.endSection();
     }

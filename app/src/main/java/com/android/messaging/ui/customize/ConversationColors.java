@@ -6,9 +6,11 @@ import android.support.annotation.ColorInt;
 
 import com.android.messaging.Factory;
 import com.android.messaging.R;
+import com.android.messaging.ui.appsettings.ThemeSelectActivity;
 import com.android.messaging.util.BugleApplicationPrefs;
 import com.android.messaging.util.BuglePrefs;
 
+import static com.android.messaging.ui.appsettings.ThemeSelectActivity.COLORS;
 import static com.android.messaging.util.BuglePrefsKeys.PREFS_KEY_BUBBLE_BACKGROUND_COLOR_INCOMING;
 import static com.android.messaging.util.BuglePrefsKeys.PREFS_KEY_BUBBLE_BACKGROUND_COLOR_OUTGOING;
 import static com.android.messaging.util.BuglePrefsKeys.PREFS_KEY_MESSAGE_TEXT_COLOR_INCOMING;
@@ -16,22 +18,6 @@ import static com.android.messaging.util.BuglePrefsKeys.PREFS_KEY_MESSAGE_TEXT_C
 
 public class ConversationColors {
     private static ConversationColors sInstance;
-
-    static int[] COLORS = new int[]{
-            PrimaryColors.getPrimaryColor(),
-            0xff0083fe,
-            0xff16c7d3,
-            0xffff7e2a,
-            0xff7646ff,
-            0xfff846c0,
-            0xffd619ff,
-            0xfff14d4d,
-            0xfff5d20d,
-            0xff000000,
-            0xff81de09,
-            0xfff6bd01
-    };
-
     private final BuglePrefs mPrefs = BugleApplicationPrefs.getApplicationPrefs();
     private int mIncomingBubbleBackgroundColor;
     private int mOutgoingBubbleBackgroundColor;
@@ -111,6 +97,28 @@ public class ConversationColors {
             }
         }
     }
+
+    public String getConversationColorEventType(boolean isBubble, boolean incoming) {
+        if (isBubble && incoming) {
+            return getIndexFromThemeColors(mIncomingBubbleBackgroundColor);
+        } else if (isBubble) {
+            return getIndexFromThemeColors(mOutgoingBubbleBackgroundColor);
+        } else if (incoming) {
+            return getIndexFromThemeColors(mIncomingTextColor);
+        } else {
+            return getIndexFromThemeColors(mOutgoingTextColor);
+        }
+    }
+
+    private String getIndexFromThemeColors(@ColorInt int color) {
+        for (int i = 0; i < COLORS.length; i++) {
+            if (COLORS[i] == color) {
+                return String.valueOf(i);
+            }
+        }
+        return "advance";
+    }
+
 
     @ColorInt
     public int getBubbleBackgroundColorDark(boolean incoming) {

@@ -1,7 +1,6 @@
 package com.android.messaging.ui.customize;
 
 import android.content.Context;
-import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.support.annotation.ColorInt;
 import android.support.annotation.NonNull;
@@ -15,6 +14,8 @@ import com.android.messaging.R;
 import com.android.messaging.glide.GlideApp;
 import com.bumptech.glide.request.RequestOptions;
 
+import static com.android.messaging.ui.appsettings.ThemeSelectActivity.COLORS;
+
 public class ChooseMessageColorRecommendAdapter extends RecyclerView.Adapter<ChooseMessageColorRecommendAdapter.ViewHolder> {
 
     private Context mContext;
@@ -23,11 +24,13 @@ public class ChooseMessageColorRecommendAdapter extends RecyclerView.Adapter<Cho
     private int mItemCount;
     private int mSelectedPosition = -1;
 
-    private int[] mData = ConversationColors.COLORS;
+    private int[] mData;
 
     ChooseMessageColorRecommendAdapter(Context context) {
         mContext = context;
-        mItemCount = ConversationColors.COLORS.length;
+        mItemCount = COLORS.length;
+        mData = new int[mItemCount];
+        System.arraycopy(COLORS, 1, mData, 2, mItemCount - 2);
     }
 
     void updatePresetColors(@ColorInt int firstPositionColor, @ColorInt int secondPositionColor) {

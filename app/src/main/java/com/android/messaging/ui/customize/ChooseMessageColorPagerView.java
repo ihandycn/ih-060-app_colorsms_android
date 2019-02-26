@@ -76,8 +76,10 @@ public class ChooseMessageColorPagerView extends FrameLayout implements OnColorC
             public void onAnimationEnd(Animator animation) {
                 super.onAnimationEnd(animation);
                 setVisibility(GONE);
+                mHost.closeColorPickerView();
             }
         });
+
     }
 
     void updateTitle(@ChooseMessageColorEntryViewHolder.CustomColor int type) {

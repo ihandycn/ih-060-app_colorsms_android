@@ -1,6 +1,5 @@
 package com.android.messaging.ui.customize;
 
-import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.ColorInt;
 import android.support.annotation.Nullable;
@@ -9,6 +8,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.TextView;
 
 import com.android.messaging.R;
@@ -79,6 +79,12 @@ public class CustomBubblesActivity extends AppCompatActivity implements CustomMe
         mColorType = type;
         mChooseMessageColorPagerView.reveal();
         mChooseMessageColorPagerView.updateTitle(type);
+        disableSaveButton();
+    }
+
+    @Override
+    public void closeColorPickerView() {
+        enableSaveButton();
     }
 
     @Override
@@ -118,27 +124,41 @@ public class CustomBubblesActivity extends AppCompatActivity implements CustomMe
 
         mSaveButton = findViewById(R.id.save_button);
         mSaveButton.setOnClickListener(v -> {
-            new BaseAlertDialog.Builder(CustomBubblesActivity.this)
-                    .setTitle(R.string.bubble_customize_save_confirm_dialog_title)
-                    .setMessage(R.string.bubble_customize_save_confirm_dialog_content)
-                    .setPositiveButton(getString(R.string.save).toUpperCase(), (dialog, which) -> {
-
-                        mCustomMessagePreview.save(mConversationId);
-
-                        ConversationDrawables.get().updateDrawables();
-
-                        disableSaveButton();
-
-                        BugleAnalytics.logEvent("Customize_Bubble_SaveChange_Alert_Click");
-                        // notify main page recreate
-                        HSGlobalNotificationCenter.sendNotification(ConversationListActivity.EVENT_MAINPAGE_RECREATE);
-                    })
-                    .setNegativeButton(getString(R.string.share_cancel).toUpperCase(), null)
-                    .show();
+            save();
             BugleAnalytics.logEvent("Customize_Bubble_Save_Click");
             BugleAnalytics.logEvent("Customize_Bubble_SaveChange_Alert_Show");
         });
         disableSaveButton();
+    }
+
+    private void save() {
+        mCustomMessagePreview.save(mConversationId);
+
+        ConversationDrawables.get().updateDrawables();
+
+        disableSaveButton();
+
+        // notify main page recreate
+        HSGlobalNotificationCenter.sendNotification(ConversationListActivity.EVENT_MAINPAGE_RECREATE);
+
+        finish();
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (mSaveButton.isEnabled()) {
+            new BaseAlertDialog.Builder(CustomBubblesActivity.this)
+                    .setTitle(R.string.bubble_customize_save_confirm_dialog_title)
+                    .setMessage(R.string.bubble_customize_save_confirm_dialog_content)
+                    .setPositiveButton(getString(R.string.save).toUpperCase(), (dialog, which) -> {
+                        save();
+                        BugleAnalytics.logEvent("Customize_Bubble_SaveChange_Alert_Click");
+                    })
+                    .setNegativeButton(getString(R.string.share_cancel).toUpperCase(), null)
+                    .show();
+        } else {
+            super.onBackPressed();
+        }
     }
 
     private void enableSaveButton() {
@@ -162,7 +182,7 @@ public class CustomBubblesActivity extends AppCompatActivity implements CustomMe
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == android.R.id.home) {
-            finish();
+            onBackPressed();
             return true;
         }
         return super.onOptionsItemSelected(item);

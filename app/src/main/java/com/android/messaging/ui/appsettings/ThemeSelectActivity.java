@@ -35,7 +35,7 @@ public class ThemeSelectActivity extends BaseActivity {
             R.id.iv_theme_select_12
     };
 
-    private static int[] COLORS = new int[]{
+    public static int[] COLORS = new int[]{
             0xff1acc48,
             0xff338ee4,
             0xff0098a6,
