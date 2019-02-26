@@ -5,10 +5,9 @@ import android.support.annotation.Nullable;
 import android.support.v7.widget.AppCompatImageView;
 import android.util.AttributeSet;
 
-public class BackgroundImageView extends AppCompatImageView {
+import com.superapps.util.Dimensions;
 
-    private int width;
-    private int height;
+public class BackgroundImageView extends AppCompatImageView {
 
     public BackgroundImageView(Context context) {
         super(context);
@@ -24,19 +23,11 @@ public class BackgroundImageView extends AppCompatImageView {
 
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-        if (width == 0 && height == 0) {
-            super.onMeasure(widthMeasureSpec, heightMeasureSpec);
-        } else {
-            setMeasuredDimension(width, height);
-        }
-    }
-
-    @Override
-    protected void onSizeChanged(int w, int h, int oldw, int oldh) {
-        super.onSizeChanged(w, h, oldw, oldh);
-        if (width == 0 && height == 0 && (w > 0 || h > 0)) {
-            width = w;
-            height = h;
-        }
+        int width = Dimensions.getPhoneWidth(getContext());
+        int height = Dimensions.getPhoneHeight(getContext()) -
+                Dimensions.getNavigationBarHeight(getContext()) -
+                Dimensions.getStatusBarHeight(getContext()) -
+                Dimensions.pxFromDp(56) - Dimensions.pxFromDp(48);
+        setMeasuredDimension(width, height);
     }
 }

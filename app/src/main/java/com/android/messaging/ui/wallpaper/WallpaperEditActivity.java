@@ -32,6 +32,7 @@ import com.bumptech.glide.request.target.ImageViewTarget;
 import com.bumptech.glide.request.transition.Transition;
 import com.ihs.app.framework.activity.HSAppCompatActivity;
 import com.ihs.commons.utils.HSLog;
+import com.superapps.util.Dimensions;
 import com.superapps.util.Threads;
 import com.superapps.util.Toasts;
 
@@ -492,8 +493,9 @@ public class WallpaperEditActivity extends HSAppCompatActivity implements View.O
     private PointF getRatio() {
         //Point point = WallpaperUtils.getWindowSize(this);
         PointF pointF = new PointF();
-        pointF.x = 1080;
-        pointF.y = 1363;
+        pointF.x = Dimensions.getPhoneWidth(this);
+        pointF.y = Dimensions.getPhoneHeight(this) - Dimensions.getStatusBarHeight(this)
+                - Dimensions.getNavigationBarHeight(this) - Dimensions.pxFromDp(56 + 48);
         return pointF;
     }
 }

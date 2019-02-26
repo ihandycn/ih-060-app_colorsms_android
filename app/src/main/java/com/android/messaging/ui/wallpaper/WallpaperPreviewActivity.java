@@ -12,10 +12,10 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -23,6 +23,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.android.messaging.BaseActivity;
 import com.android.messaging.R;
 import com.android.messaging.glide.GlideApp;
 import com.android.messaging.util.BugleAnalytics;
@@ -36,7 +37,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
-public class WallpaperPreviewActivity extends AppCompatActivity implements WallpaperManager.WallpaperChangeListener {
+public class WallpaperPreviewActivity extends BaseActivity implements WallpaperManager.WallpaperChangeListener {
 
     public static final int REQUEST_CODE_PICK_WALLPAPER = 2;
 
@@ -132,6 +133,10 @@ public class WallpaperPreviewActivity extends AppCompatActivity implements Wallp
         getSupportActionBar().setDisplayShowHomeEnabled(true);
 
         mWallpaperPreviewImg = findViewById(R.id.wallpaper_preview);
+        String wallpaperPath = WallpaperManager.getWallpaperPathByThreadId(null);
+        if (!TextUtils.isEmpty(wallpaperPath)) {
+            setPreviewImage(wallpaperPath);
+        }
 
         RecyclerView wallpaperChooser = findViewById(R.id.wallpaper_chooser_container);
         wallpaperChooser.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
@@ -210,7 +215,9 @@ public class WallpaperPreviewActivity extends AppCompatActivity implements Wallp
             WallpaperChooserItem item = wallpaperInfoList.get(position);
             WallpaperChooserItemView view = (WallpaperChooserItemView) holder.itemView;
             view.setChooserItem(item);
+            String wallpaperPath = WallpaperManager.getWallpaperPathByThreadId(mThreadId);
             if (item.getItemType() == WallpaperChooserItem.TYPE_ADD_PHOTO) {
+                view.setBackgroundResource(R.drawable.wallpaper_add_photo_bg);
                 view.setOnClickListener(v -> {
                     Intent pickIntent = new Intent(Intent.ACTION_PICK);
                     pickIntent.setDataAndType(android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI, "image/*");
@@ -221,14 +228,26 @@ public class WallpaperPreviewActivity extends AppCompatActivity implements Wallp
             } else if (item.getItemType() == WallpaperChooserItem.TYPE_EMPTY) {
                 addListener(view);
                 view.setOnClickListener(v -> {
+                    if (view.isItemSelected()) {
+                        return;
+                    }
                     onItemSelected(view);
                     mWallpaperPreviewImg.setImageBitmap(null);
                     WallpaperManager.setWallpaperPath(null, "");
                     BugleAnalytics.logEvent("SMS_ChatBackground_Backgrounds_Clicked");
                 });
+                if (TextUtils.isEmpty(wallpaperPath)) {
+                    onItemSelected(view);
+                }
             } else {
                 addListener(view);
+                if (wallpaperPath != null && wallpaperPath.equals(item.getAbsolutePath())) {
+                    onItemSelected(view);
+                }
                 view.setOnClickListener(v -> {
+                    if (view.isItemSelected()) {
+                        return;
+                    }
                     onItemSelected(view);
                     if (item.isDownloaded()) {
                         if (view.isItemSelected()) {
@@ -244,18 +263,20 @@ public class WallpaperPreviewActivity extends AppCompatActivity implements Wallp
                             @Override
                             public void onDownloadSuccess(String path) {
                                 Threads.postOnMainThread(() -> {
-                                    view.onLoadingSuccess();
-                                    setPreviewImage(item.getLocalPath());
-                                    WallpaperManager.setWallpaperPath(mThreadId, item.getAbsolutePath());
-                                    WallpaperManager.onOnlineWallpaperChanged();
-                                    BugleAnalytics.logEvent("SMS_ChatBackground_Backgrounds_Applied");
+                                    view.onLoadingDone();
+                                    if (view.isItemSelected()) {
+                                        setPreviewImage(item.getLocalPath());
+                                        WallpaperManager.setWallpaperPath(mThreadId, item.getAbsolutePath());
+                                        WallpaperManager.onOnlineWallpaperChanged();
+                                        BugleAnalytics.logEvent("SMS_ChatBackground_Backgrounds_Applied");
+                                    }
                                 });
                             }
 
                             @Override
                             public void onDownloadFailed() {
                                 view.onItemDeselected();
-                                view.onLoadingSuccess();
+                                view.onLoadingDone();
                             }
                         }, item.getRemoteUrl());
                     }

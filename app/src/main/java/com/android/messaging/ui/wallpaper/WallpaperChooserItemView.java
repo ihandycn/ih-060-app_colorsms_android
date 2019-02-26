@@ -114,7 +114,7 @@ public class WallpaperChooserItemView extends FrameLayout {
         }
     }
 
-    public void onLoadingSuccess() {
+    public void onLoadingDone() {
         if (mIsItemSelected) {
             onLoadingSuccessAndSelected();
         } else if (mLoadingAnimator != null && mLoadingAnimator.isRunning()) {
