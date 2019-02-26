@@ -86,6 +86,7 @@ import com.android.messaging.datamodel.data.MessagePartData;
 import com.android.messaging.datamodel.data.ParticipantData;
 import com.android.messaging.datamodel.data.PendingAttachmentData;
 import com.android.messaging.datamodel.data.SubscriptionListData.SubscriptionListEntry;
+import com.android.messaging.font.MessageFontManager;
 import com.android.messaging.ui.BaseAlertDialog;
 import com.android.messaging.ui.BugleActionBarActivity;
 import com.android.messaging.ui.ConversationDrawables;
@@ -123,6 +124,7 @@ import com.ihs.commons.notificationcenter.INotificationObserver;
 import com.ihs.commons.utils.HSBundle;
 import com.superapps.view.CustomTypefaceSpan;
 
+import org.qcode.fontchange.FontManager;
 import org.qcode.fontchange.impl.QueryBuilder;
 
 import java.io.File;
@@ -739,7 +741,7 @@ public class ConversationFragment extends Fragment implements ConversationDataLi
     }
 
     private void initTypeface(Menu menu) {
-        String familyName = BuglePrefs.getApplicationPrefs().getString("font_family", "");
+        String familyName = BuglePrefs.getApplicationPrefs().getString(FontManager.MESSAGE_FONT_FAMILY, "");
         if (familyName.isEmpty()) {
             applyFontToMenuItem(menu.findItem(R.id.action_people_and_options), Typefaces.getCustomRegular());
             applyFontToMenuItem(menu.findItem(R.id.action_delete),Typefaces.getCustomRegular());
@@ -758,7 +760,7 @@ public class ConversationFragment extends Fragment implements ConversationDataLi
                 "com.google.android.gms.fonts",
                 "com.google.android.gms",
                 query,
-                com.iflytek.android_font_loader_lib.R.array.com_google_android_gms_fonts_certs);
+                R.array.com_google_android_gms_fonts_certs);
 
 
         FontsContractCompat.FontRequestCallback callback = new FontsContractCompat

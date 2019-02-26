@@ -42,6 +42,7 @@ import com.android.messaging.util.BuglePrefs;
 import com.android.messaging.util.OsUtil;
 import com.ihs.app.framework.HSApplication;
 
+import org.qcode.fontchange.FontManager;
 import org.qcode.fontchange.impl.QueryBuilder;
 
 /**
@@ -250,7 +251,7 @@ public class ViewPagerTabs extends HorizontalScrollView implements ViewPager.OnP
     }
 
     private void initTypeface(TextView textView) {
-        String familyName = BuglePrefs.getApplicationPrefs().getString("font_family", "");
+        String familyName = BuglePrefs.getApplicationPrefs().getString(FontManager.MESSAGE_FONT_FAMILY, "");
         if (familyName.isEmpty()) {
             return;
         }

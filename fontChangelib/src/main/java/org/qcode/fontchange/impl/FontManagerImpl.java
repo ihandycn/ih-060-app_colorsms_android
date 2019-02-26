@@ -7,9 +7,11 @@ import android.os.HandlerThread;
 import android.support.v4.provider.FontRequest;
 import android.support.v4.provider.FontsContractCompat;
 import android.support.v7.widget.RecyclerView;
+import android.util.AttributeSet;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.iflytek.android_font_loader_lib.R;
@@ -17,6 +19,7 @@ import com.superapps.util.Dimensions;
 import com.superapps.view.TypefacedTextView;
 
 import org.qcode.fontchange.FontManager;
+import org.qcode.fontchange.FontSizeAttr;
 import org.qcode.fontchange.IFontChangeListener;
 import org.qcode.fontchange.base.observable.INotifyUpdate;
 import org.qcode.fontchange.base.observable.Observable;
@@ -25,9 +28,6 @@ import org.qcode.fontchange.base.utils.Logging;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 
-/**
- * 字体大小调节加载管理类对外实现接口
- */
 public class FontManagerImpl extends FontManager {
 
     private static final String TAG = "FontManagerImpl";
@@ -99,11 +99,8 @@ public class FontManagerImpl extends FontManager {
         if (!textView.fontSizeChangeable()){
             return;
         }
-        /*FontSizeAttr sizeAttr = ViewFontTagHelper.getFontAttr(textView);
-        if (null != sizeAttr) {
-            sizeAttr.apply(textView, mScale);
-        }*/
-        textView.setTextSize(mScale * Dimensions.pxFromDp(10));
+
+        textView.setTextScale(mScale);
     }
 
     public void applyFont(View view, boolean applyChild) {

@@ -62,6 +62,7 @@ import com.android.messaging.datamodel.data.MessagePartData;
 import com.android.messaging.datamodel.data.ParticipantData;
 import com.android.messaging.datamodel.data.PendingAttachmentData;
 import com.android.messaging.datamodel.data.SubscriptionListData.SubscriptionListEntry;
+import com.android.messaging.font.MessageFontManager;
 import com.android.messaging.sms.MmsConfig;
 import com.android.messaging.ui.AttachmentPreview;
 import com.android.messaging.ui.BugleActionBarActivity;
@@ -87,6 +88,7 @@ import com.superapps.util.BackgroundDrawables;
 import com.superapps.util.Dimensions;
 import com.superapps.util.Threads;
 
+import org.qcode.fontchange.FontManager;
 import org.qcode.fontchange.impl.QueryBuilder;
 
 import java.util.ArrayList;
@@ -300,7 +302,8 @@ public class ComposeMessageView extends LinearLayout
             }
             return true;
         });
-        initTypeface(mComposeEditText);
+       // initTypeface(mComposeEditText);
+        MessageFontManager.downloadAndSetTypeface(mComposeEditText);
 
         mSelfSendIcon = (SimIconView) findViewById(R.id.self_send_icon);
         mSelfSendIcon.setOnClickListener(new OnClickListener() {
@@ -1255,7 +1258,7 @@ public class ComposeMessageView extends LinearLayout
     }
 
     private void initTypeface(TextView textView) {
-        String familyName = BuglePrefs.getApplicationPrefs().getString("font_family", "");
+        String familyName = BuglePrefs.getApplicationPrefs().getString(FontManager.MESSAGE_FONT_FAMILY, "");
         if (familyName.isEmpty()) {
             return;
         }
@@ -1271,7 +1274,7 @@ public class ComposeMessageView extends LinearLayout
                 "com.google.android.gms.fonts",
                 "com.google.android.gms",
                 query,
-                com.iflytek.android_font_loader_lib.R.array.com_google_android_gms_fonts_certs);
+                R.array.com_google_android_gms_fonts_certs);
 
 
         FontsContractCompat.FontRequestCallback callback = new FontsContractCompat

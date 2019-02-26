@@ -252,7 +252,7 @@ public class ConversationListFragment extends Fragment implements ConversationLi
         ViewGroupCompat.setTransitionGroup(rootView, false);
 
         setHasOptionsMenu(true);
-        FontManagerImpl.getInstance().applyFont(mEmptyListMessageView, true);
+   //     FontManagerImpl.getInstance().applyFont(mEmptyListMessageView, true);
         return rootView;
     }
 

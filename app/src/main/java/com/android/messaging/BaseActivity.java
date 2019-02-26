@@ -3,11 +3,11 @@ package com.android.messaging;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 
+import com.android.messaging.font.MessageFontManager;
 import com.android.messaging.util.BuglePrefs;
 
 import org.qcode.fontchange.FontManager;
 import org.qcode.fontchange.IFontChangeActivity;
-import org.qcode.fontchange.IFontChangeListener;
 import org.qcode.fontchange.impl.ActivityFontEventHandlerImpl;
 import org.qcode.fontchange.impl.FontManagerImpl;
 
@@ -30,40 +30,14 @@ public abstract class BaseActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
 
         FontManagerImpl.getInstance().init(BaseActivity.this);
-        long level = BuglePrefs.getApplicationPrefs().getLong("font_scale",2);
-        String fontFamily = BuglePrefs.getApplicationPrefs().getString("font_family","");
-        float scale = getScaleFromLevel((int) level);
 
-        FontManagerImpl.getInstance().changeFontSize(scale , mListener);
-        FontManagerImpl.getInstance().changeTypeFaced(fontFamily, mListener);
+        String fontFamily = BuglePrefs.getApplicationPrefs().getString(FontManager.MESSAGE_FONT_FAMILY,"");
+        float scale = MessageFontManager.getFontScale();
+
+        FontManagerImpl.getInstance().changeFontSize(scale , null);
+        FontManagerImpl.getInstance().changeTypeFaced(fontFamily, null);
 
         initFontHandler();
-    }
-
-    private float getScaleFromLevel(int level) {
-        float scale =1;
-        switch (level) {
-            case 0:
-                scale = 0.72f;
-                break;
-            case 1:
-                scale = 0.85f;
-                break;
-            case 2:
-                // normal
-                scale = 1;
-                break;
-            case 3:
-                scale = 1.15f;
-                break;
-            case 4:
-                scale = 1.32f;
-                break;
-            case 5:
-                scale = 1.52f;
-                break;
-        }
-        return scale;
     }
 
     private void initFontHandler() {
@@ -131,37 +105,6 @@ public abstract class BaseActivity extends AppCompatActivity
 
         mFontEventHandler.onWindowFocusChanged(hasFocus);
     }
-
-    private IFontChangeListener mListener = new IFontChangeListener() {
-        @Override
-        public void onLoadStart(float scale) {
-        }
-
-        @Override
-        public void onLoadStart(String fontPath) {
-
-        }
-
-        @Override
-        public void onLoadSuccess(float scale) {
-//            Toast.makeText(BaseActivity.this, "加载成功", Toast.LENGTH_SHORT).show();
-        }
-
-        @Override
-        public void onLoadSuccess(String fontPath) {
-
-        }
-
-        @Override
-        public void onLoadFail(float scale) {
-//            Toast.makeText(MainActivity.this, "加载失败", Toast.LENGTH_SHORT).show();
-        }
-
-        @Override
-        public void onLoadFail(String fontPath) {
-
-        }
-    };
 
     protected void restartBaseActivity(){
         recreate();

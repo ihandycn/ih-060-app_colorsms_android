@@ -20,12 +20,15 @@ import android.widget.RadioButton;
 import android.widget.TextView;
 
 import com.android.messaging.R;
+import com.android.messaging.ui.conversationlist.ConversationListActivity;
 import com.android.messaging.util.BuglePrefs;
 import com.android.messaging.util.ViewUtils;
+import com.ihs.commons.notificationcenter.HSGlobalNotificationCenter;
 import com.ihs.commons.utils.HSLog;
 import com.superapps.util.BackgroundDrawables;
 import com.superapps.util.Dimensions;
 
+import org.qcode.fontchange.FontManager;
 import org.qcode.fontchange.IFontChangeListener;
 import org.qcode.fontchange.impl.FontManagerImpl;
 
@@ -37,21 +40,23 @@ import java.util.Map;
 
 
 public class ChooseFontDialog {
+    private static final String[] sSupportGoogleFonts = {
+            "Default", "System", "Nunito Sans", "Muli", "Cinzel", "Coiny", "Ubuntu", "Rubik"
+    };
 
     private static final String TAG = "ChooseFontDialog";
     private BuglePrefs mPrefs = BuglePrefs.getApplicationPrefs();
-    private Activity activity;
+    private Activity mActivity;
     private Dialog mDialog;
     private View mRootView;
-    private FrameLayout mContentView;
-    private View dialogContent;
-    private View dialogRoot;
+    private View mDialogContent;
+    private View mDialogRoot;
     private String mFontFamily;
     private IFontChangeListener mListener;
 
-    public ChooseFontDialog(Context activity, IFontChangeListener listener) {
-        this.activity = (Activity) activity;
-        mFontFamily = mPrefs.getString("font_family", "Default");;
+    ChooseFontDialog(Context activity, IFontChangeListener listener) {
+        this.mActivity = (Activity) activity;
+        mFontFamily = mPrefs.getString(FontManager.MESSAGE_FONT_FAMILY, "Default");
         mListener = listener;
     }
 
@@ -59,9 +64,7 @@ public class ChooseFontDialog {
         mDialog = builder;
         builder.setContentView(mRootView);
         builder.setCancelable(true);
-        builder.setOnDismissListener(dialog -> {
-            HSLog.d(TAG, "onDismiss");
-        });
+        builder.setOnDismissListener(dialog -> HSLog.d(TAG, "onDismiss"));
         builder.setOnCancelListener(dialog -> {
             HSLog.d(TAG, "onCancel");
             dismissSafely();
@@ -73,29 +76,29 @@ public class ChooseFontDialog {
     @SuppressLint("InflateParams")
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     protected void init() {
-        LayoutInflater mLayoutInflater = LayoutInflater.from(activity);
-        Dialog builder = new Dialog(activity, R.style.NewDialogTheme);
+        LayoutInflater mLayoutInflater = LayoutInflater.from(mActivity);
+        Dialog builder = new Dialog(mActivity, R.style.NewDialogTheme);
 
         mRootView = mLayoutInflater.inflate(R.layout.dialog_no_btn, null);
 
         configDialog(builder);
-        mContentView = ViewUtils.findViewById(mRootView, R.id.content_view);
+        FrameLayout mContentView = ViewUtils.findViewById(mRootView, R.id.content_view);
         mContentView.addView(createContentView(mLayoutInflater, mContentView));
 
         //set dialog color and corner
-        dialogContent = mRootView.findViewById(R.id.linearLayout);
-        assert dialogContent != null;
-        dialogContent.setBackground(BackgroundDrawables.createBackgroundDrawable(Color.WHITE,
-                activity.getResources().getDimension(R.dimen.dialog_corner_radius), false));
-        dialogRoot = mRootView.findViewById(R.id.dialog_root_view);
+        mDialogContent = mRootView.findViewById(R.id.linearLayout);
+        assert mDialogContent != null;
+        mDialogContent.setBackground(BackgroundDrawables.createBackgroundDrawable(Color.WHITE,
+                mActivity.getResources().getDimension(R.dimen.dialog_corner_radius), false));
+        mDialogRoot = mRootView.findViewById(R.id.dialog_root_view);
     }
 
     public final boolean show() {
-        if (activity == null || activity.isFinishing()) {
+        if (mActivity == null || mActivity.isFinishing()) {
             return false;
         }
         init();
-        mFontFamily = mPrefs.getString("font_family", "Default");
+        mFontFamily = mPrefs.getString(FontManager.MESSAGE_FONT_FAMILY, "Default");
         try {
             if (mDialog.getWindow() != null) {
                 mDialog.getWindow().getAttributes().windowAnimations = Animation.ABSOLUTE;
@@ -130,8 +133,7 @@ public class ChooseFontDialog {
         BuglePrefs prefs = BuglePrefs.getApplicationPrefs();
 
         ListView selectGroup = view.findViewById(R.id.select_radio_group);
-        String[] choicesArr = {"Default", "System", "Nunito Sans", "Muli", "Cinzel", "Coiny", "Ubuntu", "Rubik"};
-        List<String> choicesList = Arrays.asList(choicesArr);
+        List<String> choicesList = Arrays.asList(sSupportGoogleFonts);
         int checkedIndex = choicesList.indexOf(mFontFamily);
         if (checkedIndex == -1) {
             checkedIndex = 0;
@@ -143,7 +145,7 @@ public class ChooseFontDialog {
             map.put("item", charSequence);
             list.add(map);
         }
-        RadioButtonAdapter adapter = new RadioButtonAdapter(activity, list, checkedIndex);
+        RadioButtonAdapter adapter = new RadioButtonAdapter(mActivity, list, checkedIndex);
         if (list.size() > 6) {
             lp = (LinearLayout.LayoutParams) selectGroup.getLayoutParams();
             lp.height = Dimensions.pxFromDp(315);
@@ -202,12 +204,13 @@ public class ChooseFontDialog {
                     r.setChecked(false);
                 }
                 radioButton.setChecked(true);
-                String fontFamily = choicesArr[position];
+                String fontFamily = sSupportGoogleFonts[position];
                 mFontFamily = fontFamily;
                 if (!fontFamily.equals("Default") && !fontFamily.equals("System")) {
                     FontManagerImpl.getInstance().changeTypeFaced(fontFamily, mListener);
                 }
-                prefs.putString("font_family", fontFamily);
+                prefs.putString(FontManager.MESSAGE_FONT_FAMILY, fontFamily);
+                HSGlobalNotificationCenter.sendNotification(ConversationListActivity.EVENT_MAINPAGE_RECREATE);
                 new Handler().postDelayed(this::dismiss, 1);
             }
 
@@ -215,10 +218,10 @@ public class ChooseFontDialog {
     }
 
     public final void dismiss() {
-        if (!activity.isFinishing()) {
-            if (dialogRoot != null && dialogContent != null) {
-                dialogRoot.animate().setDuration(320).alpha(0).start();
-                dialogContent.animate().scaleX(0.97f).scaleY(0.97f).alpha(0).setDuration(280).start();
+        if (!mActivity.isFinishing()) {
+            if (mDialogRoot != null && mDialogContent != null) {
+                mDialogRoot.animate().setDuration(320).alpha(0).start();
+                mDialogContent.animate().scaleX(0.97f).scaleY(0.97f).alpha(0).setDuration(280).start();
                 new Handler().postDelayed(() -> {
                     if (mDialog.isShowing()) {
                         mListener.onLoadSuccess(100);

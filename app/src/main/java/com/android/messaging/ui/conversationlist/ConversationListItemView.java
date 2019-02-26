@@ -31,7 +31,6 @@ import android.support.v4.text.TextDirectionHeuristicsCompat;
 import android.text.TextPaint;
 import android.text.TextUtils;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.View.OnLayoutChangeListener;
@@ -70,6 +69,7 @@ import com.ihs.app.framework.HSApplication;
 import com.superapps.util.BackgroundDrawables;
 import com.superapps.util.Dimensions;
 
+import org.qcode.fontchange.FontManager;
 import org.qcode.fontchange.impl.QueryBuilder;
 
 import java.util.List;
@@ -249,7 +249,7 @@ public class ConversationListItemView extends FrameLayout implements OnClickList
     }
 
     private void initTypeface(){
-        String familyName = BuglePrefs.getApplicationPrefs().getString("font_family","");
+        String familyName = BuglePrefs.getApplicationPrefs().getString(FontManager.MESSAGE_FONT_FAMILY,"");
         if (familyName.isEmpty()){
             mConversationNameReadTypeface = Typefaces.getCustomMedium();
             mConversationNameUnreadTypeface = Typefaces.getCustomSemiBold();
@@ -268,8 +268,7 @@ public class ConversationListItemView extends FrameLayout implements OnClickList
                     "com.google.android.gms.fonts",
                     "com.google.android.gms",
                     query,
-                    com.iflytek.android_font_loader_lib.R.array.com_google_android_gms_fonts_certs);
-
+                    R.array.com_google_android_gms_fonts_certs);
 
             FontsContractCompat.FontRequestCallback callback = new FontsContractCompat
                     .FontRequestCallback() {
@@ -293,7 +292,7 @@ public class ConversationListItemView extends FrameLayout implements OnClickList
                 @Override
                 public void onTypefaceRequestFailed(int reason) {
                     Toast.makeText(HSApplication.getContext(),
-                            HSApplication.getContext().getString(com.iflytek.android_font_loader_lib.R.string.request_failed, reason), Toast.LENGTH_LONG)
+                            HSApplication.getContext().getString(R.string.request_failed, reason), Toast.LENGTH_SHORT)
                             .show();
                 }
             };

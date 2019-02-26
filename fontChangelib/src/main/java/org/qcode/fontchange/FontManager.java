@@ -6,13 +6,10 @@ import org.qcode.fontchange.impl.ActivityFontEventHandlerImpl;
 import org.qcode.fontchange.impl.FontManagerImpl;
 import org.qcode.fontchange.impl.FontViewHelperImpl;
 
-/**
- * 字体大小调节框架对外接口
- * qqliu
- * 2016/10/8.
- */
-
 public class FontManager {
+    public static final String MESSAGE_FONT_SCALE = "message_font_scale";
+    public static final String MESSAGE_FONT_FAMILY = "message_font_family";
+
     /***
      * 获取字体管理类实例
      * @return
