@@ -46,9 +46,9 @@ public class ChooseMessageColorRecommendAdapter extends RecyclerView.Adapter<Cho
                 mSelectedPosition = i;
             }
         }
+        notifyItemRangeChanged(0, 2);
         notifyItemChanged(lastSelectedPosition);
         notifyItemChanged(mSelectedPosition);
-        notifyItemRangeChanged(0, 1);
     }
 
     void setOnColorChangedListener(OnColorChangedListener listener) {
@@ -61,7 +61,7 @@ public class ChooseMessageColorRecommendAdapter extends RecyclerView.Adapter<Cho
         View v = LayoutInflater.from(mContext).inflate(R.layout.choose_bubble_color_grid_list_item, parent, false);
         ViewHolder viewHolder = new ViewHolder(v);
 
-        viewHolder.mBackground.setOnClickListener(v1 -> {
+        viewHolder.mColor.setOnClickListener(v1 -> {
             int position = viewHolder.getAdapterPosition();
             if (position != mSelectedPosition) {
                 mListener.onColorChanged(mData[position]);
@@ -77,26 +77,22 @@ public class ChooseMessageColorRecommendAdapter extends RecyclerView.Adapter<Cho
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        if (position == mSelectedPosition) {
-            holder.mCheckmark.setVisibility(View.VISIBLE);
-        } else {
-            holder.mCheckmark.setVisibility(View.GONE);
-        }
 
-        if (mData[position] == mContext.getResources().getColor(R.color.message_text_color_outgoing)) {
-            holder.mBackground.setBackgroundResource(R.drawable.bubble_customize_color_ring);
-            holder.mBackground.setImageDrawable(null);
+        boolean isLightColor = mData[position] == mContext.getResources().getColor(R.color.message_text_color_outgoing);
+        boolean isSelected = position == mSelectedPosition;
+
+        holder.mCheckmark.setVisibility(isSelected ? View.VISIBLE : View.GONE);
+
+        if (isSelected && isLightColor) {
             holder.mCheckmark.getDrawable().setColorFilter(0xff4d4f51, PorterDuff.Mode.SRC_ATOP);
-            return;
         } else {
-            holder.mBackground.setBackground(null);
             holder.mCheckmark.getDrawable().setColorFilter(null);
         }
 
         GlideApp.with(mContext)
-                .load(new ColorDrawable(mData[position]))
+                .load(isLightColor ? R.drawable.bubble_customize_color_ring : new ColorDrawable(mData[position]))
                 .apply(RequestOptions.circleCropTransform())
-                .into(holder.mBackground);
+                .into(holder.mColor);
     }
 
     @Override
@@ -105,12 +101,12 @@ public class ChooseMessageColorRecommendAdapter extends RecyclerView.Adapter<Cho
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
-        ImageView mBackground;
+        ImageView mColor;
         ImageView mCheckmark;
 
         public ViewHolder(View itemView) {
             super(itemView);
-            mBackground = itemView.findViewById(R.id.background);
+            mColor = itemView.findViewById(R.id.background);
             mCheckmark = itemView.findViewById(R.id.check_mark);
 
         }

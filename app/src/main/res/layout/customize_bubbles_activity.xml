@@ -35,6 +35,7 @@
             android:layout_marginEnd="18dp"
             android:gravity="center"
             android:text="@string/bubble_customize_save"
+            android:includeFontPadding="false"
             android:textColor="@color/white"
             android:textSize="12.7sp"
             app:typeface="@string/custom_font_semibold"/>

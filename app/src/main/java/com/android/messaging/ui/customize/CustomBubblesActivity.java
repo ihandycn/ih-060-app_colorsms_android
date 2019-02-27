@@ -59,12 +59,7 @@ public class CustomBubblesActivity extends BaseActivity implements CustomMessage
 
         mCustomMessagePreview.updateBubbleDrawables(mConversationId);
         mChooseMessageColorPagerView.setHost(this);
-        customContainer.post(new Runnable() {
-            @Override
-            public void run() {
-                mChooseMessageColorPagerView.setTranslationY(customContainer.getHeight());
-            }
-        });
+        customContainer.post(() -> mChooseMessageColorPagerView.setTranslationY(customContainer.getHeight()));
 
         mBubbleDrawableViewHolder = new BubbleDrawableViewHolder(this, mConversationId);
         mChooseMessageColorEntryViewHolder = new ChooseMessageColorEntryViewHolder(this, mConversationId);

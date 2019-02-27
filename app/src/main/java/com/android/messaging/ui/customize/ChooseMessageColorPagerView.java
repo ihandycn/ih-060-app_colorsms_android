@@ -77,7 +77,6 @@ public class ChooseMessageColorPagerView extends FrameLayout implements OnColorC
             case BUBBLE_COLOR_INCOMING:
                 prefix = resources.getString(R.string.bubble_customize_bubble_color);
                 suffix = resources.getString(R.string.bubble_customize_received);
-
                 mMessageColorRecommendViewHolder.update(resources.getColor(R.color.message_bubble_color_incoming),
                         resources.getColor(R.color.message_bubble_color_outgoing),
                         CustomMessagePreviewView.getBubbleBackgroundPreviewColor(true));
@@ -85,7 +84,6 @@ public class ChooseMessageColorPagerView extends FrameLayout implements OnColorC
             case BUBBLE_COLOR_OUTGOING:
                 prefix = getContext().getString(R.string.bubble_customize_bubble_color);
                 suffix = getContext().getString(R.string.bubble_customize_sent);
-
                 mMessageColorRecommendViewHolder.update(resources.getColor(R.color.message_bubble_color_incoming),
                         resources.getColor(R.color.message_bubble_color_outgoing),
                         CustomMessagePreviewView.getBubbleBackgroundPreviewColor(false));
@@ -93,20 +91,16 @@ public class ChooseMessageColorPagerView extends FrameLayout implements OnColorC
             case TEXT_COLOR_INCOMING:
                 prefix = getContext().getString(R.string.bubble_customize_text_color);
                 suffix = getContext().getString(R.string.bubble_customize_received);
-
                 mMessageColorRecommendViewHolder.update(resources.getColor(R.color.message_text_color_incoming),
                         resources.getColor(R.color.message_text_color_outgoing),
                         CustomMessagePreviewView.getMessageTextPreviewColor(true));
-
                 break;
             case TEXT_COLOR_OUTGOING:
                 prefix = getContext().getString(R.string.bubble_customize_text_color);
                 suffix = getContext().getString(R.string.bubble_customize_sent);
-
                 mMessageColorRecommendViewHolder.update(resources.getColor(R.color.message_text_color_incoming),
                         resources.getColor(R.color.message_text_color_outgoing),
                         CustomMessagePreviewView.getMessageTextPreviewColor(false));
-
                 break;
         }
         mTitle.setText(String.format(getContext().getString(R.string.bubble_customize_color_title)

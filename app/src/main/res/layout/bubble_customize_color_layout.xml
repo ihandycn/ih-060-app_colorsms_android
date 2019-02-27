@@ -30,6 +30,7 @@
                 android:textColor="#222327"
                 android:layout_marginStart="7dp"
                 android:textSize="14.7sp"
+                android:includeFontPadding="false"
                 app:typeface="@string/custom_font_bold"/>
         </LinearLayout>
 
@@ -49,6 +50,7 @@
                 android:layout_weight="1"
                 android:textColor="@color/customize_bubble_primary_text_color"
                 android:text="@string/bubble_customize_received"
+                android:includeFontPadding="false"
                 app:typeface="@string/custom_font_medium" />
 
             <ImageView
@@ -85,6 +87,7 @@
                 android:layout_weight="1"
                 android:textColor="@color/customize_bubble_primary_text_color"
                 android:text="@string/bubble_customize_sent"
+                android:includeFontPadding="false"
                 app:typeface="@string/custom_font_medium" />
 
             <ImageView
@@ -115,6 +118,7 @@
                 android:textColor="#222327"
                 android:layout_marginStart="7dp"
                 android:textSize="14.7sp"
+                android:includeFontPadding="false"
                 app:typeface="@string/custom_font_bold"/>
         </LinearLayout>
 
@@ -135,6 +139,7 @@
                 android:layout_weight="1"
                 android:textColor="@color/customize_bubble_primary_text_color"
                 android:text="@string/bubble_customize_received"
+                android:includeFontPadding="false"
                 app:typeface="@string/custom_font_medium" />
 
             <ImageView
@@ -170,6 +175,7 @@
                 android:layout_weight="1"
                 android:textColor="@color/customize_bubble_primary_text_color"
                 android:text="@string/bubble_customize_sent"
+                android:includeFontPadding="false"
                 app:typeface="@string/custom_font_medium" />
 
             <ImageView

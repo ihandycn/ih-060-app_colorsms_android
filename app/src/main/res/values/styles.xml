@@ -738,7 +738,7 @@
         <item name="colorSwitchThumbNormal">#c0c2cb</item>
     </style>
 
-    <style name="CustomColorEntryItem" >
+    <style name="CustomColorEntryItem">
         <item name="android:paddingStart">20dp</item>
         <item name="android:paddingEnd">20dp</item>
         <item name="android:paddingTop">5dp</item>
