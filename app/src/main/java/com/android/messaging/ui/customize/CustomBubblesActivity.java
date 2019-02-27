@@ -1,5 +1,6 @@
 package com.android.messaging.ui.customize;
 
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.ColorInt;
 import android.support.annotation.Nullable;
@@ -9,6 +10,7 @@ import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.view.MenuItem;
 import android.widget.FrameLayout;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.android.messaging.BaseActivity;
@@ -20,10 +22,13 @@ import com.android.messaging.ui.CustomPagerViewHolder;
 import com.android.messaging.ui.CustomViewPager;
 import com.android.messaging.ui.UIIntents;
 import com.android.messaging.ui.conversationlist.ConversationListActivity;
+import com.android.messaging.ui.wallpaper.WallpaperManager;
 import com.android.messaging.util.BugleAnalytics;
 import com.ihs.commons.notificationcenter.HSGlobalNotificationCenter;
 import com.superapps.util.BackgroundDrawables;
 import com.superapps.util.Dimensions;
+
+import java.io.File;
 
 import static com.android.messaging.ui.customize.ChooseMessageColorEntryViewHolder.CustomColor.BUBBLE_COLOR_INCOMING;
 import static com.android.messaging.ui.customize.ChooseMessageColorEntryViewHolder.CustomColor.BUBBLE_COLOR_OUTGOING;
@@ -52,6 +57,12 @@ public class CustomBubblesActivity extends BaseActivity implements CustomMessage
         initActionBar();
 
         mConversationId = getIntent().getStringExtra(UIIntents.UI_INTENT_EXTRA_CONVERSATION_ID);
+
+        String bgPath = WallpaperManager.getWallpaperPathByThreadId(mConversationId);
+        if (!TextUtils.isEmpty(bgPath)) {
+            ImageView bg = findViewById(R.id.customize_bubbles_bg);
+            bg.setImageURI(Uri.fromFile(new File(bgPath)));
+        }
 
         mChooseMessageColorPagerView = findViewById(R.id.choose_message_color_view);
         mCustomMessagePreview = findViewById(R.id.custom_message_preview);

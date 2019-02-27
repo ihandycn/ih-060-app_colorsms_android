@@ -215,7 +215,7 @@ public class ChooseFontDialog {
                 FontManagerImpl.getInstance().loadAndSetTypeface(fontFamily, mListener);
                 Preferences.getDefault().putString(TypefacedTextView.MESSAGE_FONT_FAMILY, fontFamily);
                 HSGlobalNotificationCenter.sendNotification(ConversationListActivity.EVENT_MAINPAGE_RECREATE);
-                BugleAnalytics.logEvent("Customize_TextFont_Change", "font", fontFamily);
+                BugleAnalytics.logEvent("Customize_TextFont_Change", true, "font", fontFamily);
                 new Handler().postDelayed(this::dismiss, 1);
             }
         });

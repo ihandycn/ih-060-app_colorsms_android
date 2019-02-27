@@ -27,6 +27,7 @@ import com.android.messaging.BaseActivity;
 import com.android.messaging.R;
 import com.android.messaging.glide.GlideApp;
 import com.android.messaging.util.BugleAnalytics;
+import com.android.messaging.util.TextUtil;
 import com.bumptech.glide.request.target.ImageViewTarget;
 import com.bumptech.glide.request.transition.Transition;
 import com.superapps.util.Navigations;
@@ -74,6 +75,19 @@ public class WallpaperPreviewActivity extends BaseActivity implements WallpaperM
         }
     }
 
+    public void onItemPreSelected(WallpaperChooserItemView view) {
+        for (WallpaperChooserItemView v : mListeners) {
+            if (v.isItemSelected()) {
+                continue;
+            }
+            if (v.equals(view)) {
+                v.onItemPreSelected();
+            } else {
+                v.onItemDeselected();
+            }
+        }
+    }
+
     private void setPreviewImage(String path) {
         String url = Uri.fromFile(new File(path)).toString();
         GlideApp.with(WallpaperPreviewActivity.this)
@@ -115,7 +129,6 @@ public class WallpaperPreviewActivity extends BaseActivity implements WallpaperM
                     @Override
                     public void onLoadCleared(Drawable placeholder) {
                         super.onLoadCleared(placeholder);
-
                     }
                 });
     }
@@ -143,15 +156,15 @@ public class WallpaperPreviewActivity extends BaseActivity implements WallpaperM
         String threadId = getIntent().getStringExtra("thread_id");
         if (threadId != null) {
             mThreadId = threadId;
-            BugleAnalytics.logEvent("SMS_ChatBackground_Show", "from", "Options");
+            BugleAnalytics.logEvent("SMS_ChatBackground_Show", true, "from", "Options");
         } else {
-            BugleAnalytics.logEvent("SMS_ChatBackground_Show", "from", "Menu");
+            BugleAnalytics.logEvent("SMS_ChatBackground_Show", true, "from", "Menu");
         }
 
         mWallpaperPreviewImg = findViewById(R.id.wallpaper_preview);
         String wallpaperPath = WallpaperManager.getWallpaperPathByThreadId(mThreadId);
         if (!TextUtils.isEmpty(wallpaperPath)) {
-            setPreviewImage(wallpaperPath);
+            mWallpaperPreviewImg.setImageURI(Uri.fromFile(new File(wallpaperPath)));
         }
 
         WallpaperManager.addWallpaperChangeListener(this);
@@ -190,7 +203,7 @@ public class WallpaperPreviewActivity extends BaseActivity implements WallpaperM
 
     @Override
     public void onWallpaperChanged() {
-        finish();
+        recreate();
     }
 
     @Override
@@ -227,7 +240,8 @@ public class WallpaperPreviewActivity extends BaseActivity implements WallpaperM
                     pickIntent.setDataAndType(android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI, "image/*");
                     Intent chooserIntent = Intent.createChooser(pickIntent, "Select Image");
                     Navigations.startActivityForResultSafely((Activity) mContext, chooserIntent, REQUEST_CODE_PICK_WALLPAPER);
-                    BugleAnalytics.logEvent("SMS_ChatBackground_AddPhotos_Clicked");
+                    BugleAnalytics.logEvent("SMS_ChatBackground_AddPhotos_Clicked", true,
+                            "from", TextUtils.isEmpty(mThreadId) ? "Menu" : "Options");
                 });
             } else if (item.getItemType() == WallpaperChooserItem.TYPE_EMPTY) {
                 addListener(view);
@@ -242,7 +256,10 @@ public class WallpaperPreviewActivity extends BaseActivity implements WallpaperM
                     } else {
                         WallpaperManager.setWallpaperPath(mThreadId, "empty");
                     }
-                    BugleAnalytics.logEvent("SMS_ChatBackground_Backgrounds_Clicked");
+                    BugleAnalytics.logEvent("SMS_ChatBackground_Backgrounds_Clicked", true,
+                            "from", TextUtils.isEmpty(mThreadId) ? "Menu" : "Options");
+                    BugleAnalytics.logEvent("SMS_ChatBackground_Backgrounds_Applied", true,
+                            "from", TextUtils.isEmpty(mThreadId) ? "Menu" : "Options");
                 });
                 if (TextUtils.isEmpty(wallpaperPath)) {
                     onItemSelected(view);
@@ -254,23 +271,29 @@ public class WallpaperPreviewActivity extends BaseActivity implements WallpaperM
                 }
                 view.setOnClickListener(v -> {
                     if (view.isItemSelected()) {
+                        onItemSelected(view);
                         return;
                     }
-                    onItemSelected(view);
                     if (item.isDownloaded()) {
+                        onItemSelected(view);
                         if (view.isItemSelected()) {
                             view.onItemSelected();
                             setPreviewImage(item.getLocalPath());
                             WallpaperManager.setWallpaperPath(mThreadId, item.getAbsolutePath());
                             WallpaperManager.onOnlineWallpaperChanged();
-                            BugleAnalytics.logEvent("SMS_ChatBackground_Backgrounds_Applied");
+                            BugleAnalytics.logEvent("SMS_ChatBackground_Backgrounds_Applied", true,
+                                    "from", TextUtils.isEmpty(mThreadId) ? "Menu" : "Options");
                         }
                     } else {
                         view.onLoadingStart();
+                        onItemPreSelected(view);
                         WallpaperDownloader.download(new WallpaperDownloader.WallpaperDownloadListener() {
                             @Override
                             public void onDownloadSuccess(String path) {
                                 Threads.postOnMainThread(() -> {
+                                    if (view.isItemPreChoosed()) {
+                                        onItemSelected(view);
+                                    }
                                     view.onLoadingDone();
                                     if (view.isItemSelected()) {
                                         if (isDestroyed()) {
@@ -279,7 +302,8 @@ public class WallpaperPreviewActivity extends BaseActivity implements WallpaperM
                                         setPreviewImage(item.getLocalPath());
                                         WallpaperManager.setWallpaperPath(mThreadId, item.getAbsolutePath());
                                         WallpaperManager.onOnlineWallpaperChanged();
-                                        BugleAnalytics.logEvent("SMS_ChatBackground_Backgrounds_Applied");
+                                        BugleAnalytics.logEvent("SMS_ChatBackground_Backgrounds_Applied", true,
+                                                "from", TextUtils.isEmpty(mThreadId) ? "Menu" : "Options");
                                     }
                                 });
                             }
@@ -291,7 +315,8 @@ public class WallpaperPreviewActivity extends BaseActivity implements WallpaperM
                             }
                         }, item.getRemoteUrl());
                     }
-                    BugleAnalytics.logEvent("SMS_ChatBackground_Backgrounds_Clicked");
+                    BugleAnalytics.logEvent("SMS_ChatBackground_Backgrounds_Clicked", true,
+                            "from", TextUtils.isEmpty(mThreadId) ? "Menu" : "Options");
                 });
             }
         }

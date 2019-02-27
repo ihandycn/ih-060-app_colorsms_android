@@ -1,15 +1,19 @@
 package com.android.messaging.ui.appsettings;
 
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.android.messaging.BaseActivity;
 import com.android.messaging.R;
 import com.android.messaging.font.MessageFontManager;
 import com.android.messaging.ui.view.LevelSeekBar;
+import com.android.messaging.ui.wallpaper.WallpaperManager;
 import com.android.messaging.util.BugleAnalytics;
 import com.android.messaging.util.BuglePrefs;
 import com.superapps.util.Networks;
@@ -21,6 +25,8 @@ import org.qcode.fontchange.FontManager;
 import org.qcode.fontchange.IFontChangeListener;
 import org.qcode.fontchange.impl.ActivityFontEventHandlerImpl;
 import org.qcode.fontchange.impl.FontManagerImpl;
+
+import java.io.File;
 
 public class ChangeFontActivity extends BaseActivity implements LevelSeekBar.OnLevelChangeListener {
 
@@ -52,6 +58,11 @@ public class ChangeFontActivity extends BaseActivity implements LevelSeekBar.OnL
         }
         getSupportActionBar().setDisplayShowHomeEnabled(true);
 
+        String bgPath = WallpaperManager.getWallpaperPathByThreadId(null);
+        if (!TextUtils.isEmpty(bgPath)) {
+            ((ImageView) findViewById(R.id.change_font_bg)).setImageURI(Uri.fromFile(new File(bgPath)));
+        }
+
         LevelSeekBar mSeekBar = findViewById(R.id.seek_bar);
         mTextFontFamily = findViewById(R.id.setting_text_font_name);
         mTextFontSize = findViewById(R.id.setting_text_size_info);
@@ -69,14 +80,14 @@ public class ChangeFontActivity extends BaseActivity implements LevelSeekBar.OnL
         changeFontItem.setOnClickListener(v -> {
             if (!Networks.isNetworkAvailable(-1)) {
                 Toasts.showToast(R.string.network_error);
-                BugleAnalytics.logEvent("Customize_TextFont_Click", "request", "fail");
+                BugleAnalytics.logEvent("Customize_TextFont_Click", true, "request", "fail");
             } else {
                 // open a dialog to choose font
                 new ChooseFontDialog(ChangeFontActivity.this, mListener).show();
-                BugleAnalytics.logEvent("Customize_TextFont_Click", "request", "success");
+                BugleAnalytics.logEvent("Customize_TextFont_Click", true, "request", "success");
             }
         });
-        BugleAnalytics.logEvent("Customize_Font_Show");
+        BugleAnalytics.logEvent("Customize_Font_Show", true);
 
         initFontHandler();
     }
@@ -155,6 +166,8 @@ public class ChangeFontActivity extends BaseActivity implements LevelSeekBar.OnL
         mTextFontSize.setText(getResources().getString(sTextSizeRes[newLevel]));
         // need modify view height
         mChangeFontContainer.requestLayout();
-        BugleAnalytics.logEvent("Customize_TextSize_Change", "size", getResources().getString(sTextSizeRes[newLevel]));
+        if (fromUser) {
+            BugleAnalytics.logEvent("Customize_TextSize_Change", true, "size", getResources().getString(sTextSizeRes[newLevel]));
+        }
     }
 }

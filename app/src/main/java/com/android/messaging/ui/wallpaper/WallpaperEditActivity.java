@@ -105,7 +105,8 @@ public class WallpaperEditActivity extends HSAppCompatActivity implements View.O
         if (!TextUtils.isEmpty(threadId)) {
             mThreadId = threadId;
         }
-        BugleAnalytics.logEvent("SMS_ChatBackground_CutPage_Show");
+        BugleAnalytics.logEvent("SMS_ChatBackground_CutPage_Show", true,
+                "from", TextUtils.isEmpty(mThreadId) ? "Menu" : "Options");
     }
 
     private void bindEvents() {
@@ -115,7 +116,8 @@ public class WallpaperEditActivity extends HSAppCompatActivity implements View.O
             if (b) {
                 showResetBtn();
                 if (!mIsCutEventLogged) {
-                    BugleAnalytics.logEvent("SMS_ChatBackground_CutPage_CutOut");
+                    BugleAnalytics.logEvent("SMS_ChatBackground_CutPage_CutOut", true,
+                            "from", TextUtils.isEmpty(mThreadId) ? "Menu" : "Options");
                     mIsCutEventLogged = true;
                 }
             }
@@ -388,7 +390,8 @@ public class WallpaperEditActivity extends HSAppCompatActivity implements View.O
                 apply();
                 WallpaperManager.onWallpaperChanged();
                 finish();
-                BugleAnalytics.logEvent("SMS_ChatBackground_CutPage_Applied");
+                BugleAnalytics.logEvent("SMS_ChatBackground_CutPage_Applied", true,
+                        "from", TextUtils.isEmpty(mThreadId) ? "Menu" : "Options");
                 break;
             case R.id.wallpaper_view_return:
                 cancel();

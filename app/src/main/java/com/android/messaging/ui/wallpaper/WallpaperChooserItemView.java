@@ -31,6 +31,7 @@ public class WallpaperChooserItemView extends FrameLayout {
     private ObjectAnimator mLoadingAnimator;
     private boolean mIsItemSelected;
     private boolean mIsLoadingPlaying;
+    private boolean mIsItemPreSelected;
 
     public WallpaperChooserItemView(@NonNull Context context) {
         super(context);
@@ -100,12 +101,21 @@ public class WallpaperChooserItemView extends FrameLayout {
         return mIsItemSelected;
     }
 
+    void onItemPreSelected() {
+        mIsItemPreSelected = true;
+    }
+
+    boolean isItemPreChoosed() {
+        return mIsItemPreSelected;
+    }
+
     void onItemSelected() {
         mIsItemSelected = true;
         onSelected();
     }
 
     void onItemDeselected() {
+        mIsItemPreSelected = false;
         if (mIsItemSelected) {
             mIsItemSelected = false;
             if (!mIsLoadingPlaying) {
