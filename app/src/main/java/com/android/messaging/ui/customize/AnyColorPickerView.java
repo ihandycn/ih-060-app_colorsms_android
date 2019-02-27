@@ -1,6 +1,8 @@
 package com.android.messaging.ui.customize;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.ComposeShader;
@@ -17,6 +19,8 @@ import android.support.annotation.IntDef;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
+
+import com.android.messaging.R;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -67,9 +71,9 @@ public class AnyColorPickerView extends View {
      */
     private float mSVTrackerRadius = 7.3f;
     /**
-     * SV指示器的半径（单位：dp）
+     * H指示器的宽高（单位：dp）
      */
-    private float mHTrackerRadius = 6.7f;
+    private float mHTrackerSize = 23.5f;
     /**
      * H、SV矩形与父布局的边距（单位：dp）
      */
@@ -92,6 +96,7 @@ public class AnyColorPickerView extends View {
      * 绘制SV指示器的画笔
      */
     private Paint mSatValTrackerPaint;
+
     /**
      * 绘制H的画笔
      */
@@ -100,6 +105,11 @@ public class AnyColorPickerView extends View {
      * 绘制H指示器的画笔
      */
     private Paint mHueTrackerPaint;
+
+    /**
+     * 绘制Hue指示器的图形
+     */
+    private Bitmap mHueTrackerBitmap;
 
     //H、V着色器
     private Shader mHueShader;
@@ -159,7 +169,7 @@ public class AnyColorPickerView extends View {
     private void init() {
         mDensity = getContext().getResources().getDisplayMetrics().density;//获取屏幕密度
         mSVTrackerRadius *= mDensity;//灰度饱和度指示器的半径
-        mHTrackerRadius *= mDensity;//色相指示器高度
+        mHTrackerSize *= mDensity;//色相指示器高度
         mRectOffset *= mDensity;//H、SV矩形与父布局的边距
         mHuePanelWidth *= mDensity;//H矩形的宽度
         mPanelSpacing *= mDensity;//H、SV矩形间的间距
@@ -168,6 +178,8 @@ public class AnyColorPickerView extends View {
         mRadius *= mDensity;//H、SV矩形间的圆角弧度
 
         mDrawingOffset = calculateRequiredOffset();//计算所需位移
+
+        mHueTrackerBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.ic_hue_tracker);
 
         initPaintTools();//初始化画笔、画布
 
@@ -310,7 +322,11 @@ public class AnyColorPickerView extends View {
 
         // 选择条
         Point p = hueToPoint(mHue);
-        canvas.drawCircle(p.x, p.y, mHTrackerRadius, mHueTrackerPaint);
+        canvas.drawBitmap(mHueTrackerBitmap,
+                p.x - mHTrackerSize / 2,
+                p.y - mHTrackerSize / 2,
+                mSatValTrackerPaint);
+
     }
 
     private Point hueToPoint(float hue) {

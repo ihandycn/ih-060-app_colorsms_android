@@ -40,8 +40,7 @@
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             android:gravity="center_vertical"
-            style="@style/CustomColorEntryItem"
-            android:background="?android:attr/selectableItemBackground">
+            style="@style/CustomColorEntryItem">
 
             <com.superapps.view.TypefacedTextView
                 android:layout_width="wrap_content"
@@ -76,9 +75,7 @@
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             android:gravity="center_vertical"
-            style="@style/CustomColorEntryItem"
-
-            android:background="?android:attr/selectableItemBackground">
+            style="@style/CustomColorEntryItem">
 
             <com.superapps.view.TypefacedTextView
                 android:layout_width="wrap_content"
@@ -128,9 +125,7 @@
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             android:gravity="center_vertical"
-            style="@style/CustomColorEntryItem"
-
-            android:background="?android:attr/selectableItemBackground">
+            style="@style/CustomColorEntryItem">
 
             <com.superapps.view.TypefacedTextView
                 android:layout_width="wrap_content"
@@ -165,8 +160,7 @@
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             android:gravity="center_vertical"
-            style="@style/CustomColorEntryItem"
-            android:background="?android:attr/selectableItemBackground">
+            style="@style/CustomColorEntryItem">
 
             <com.superapps.view.TypefacedTextView
                 android:layout_width="wrap_content"

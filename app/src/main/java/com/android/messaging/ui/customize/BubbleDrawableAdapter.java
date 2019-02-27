@@ -55,10 +55,10 @@ public class BubbleDrawableAdapter extends RecyclerView.Adapter<BubbleDrawableAd
         holder.mBubble.setBackgroundResource(BubbleDrawables.BUBBLES_INCOMING[position]);
         if (position == mSelectedPosition) {
             holder.mBubble.getBackground().setColorFilter(PrimaryColors.getPrimaryColor(), PorterDuff.Mode.SRC_ATOP);
-            holder.mBubble.setImageResource(R.drawable.ic_customize_bubble_checkmark);
+            holder.mCheckmark.setVisibility(View.VISIBLE);
         } else {
             holder.mBubble.getBackground().setColorFilter(null);
-            holder.mBubble.setImageDrawable(null);
+            holder.mCheckmark.setVisibility(View.GONE);
         }
     }
 
@@ -69,10 +69,12 @@ public class BubbleDrawableAdapter extends RecyclerView.Adapter<BubbleDrawableAd
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
         ImageView mBubble;
+        ImageView mCheckmark;
 
         public ViewHolder(View itemView) {
             super(itemView);
             mBubble = itemView.findViewById(R.id.bubble_item);
+            mCheckmark = itemView.findViewById(R.id.check_mark);
         }
     }
 }

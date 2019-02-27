@@ -84,9 +84,9 @@ public class ChooseMessageColorRecommendAdapter extends RecyclerView.Adapter<Cho
         holder.mCheckmark.setVisibility(isSelected ? View.VISIBLE : View.GONE);
 
         if (isSelected && isLightColor) {
-            holder.mCheckmark.getDrawable().setColorFilter(0xff4d4f51, PorterDuff.Mode.SRC_ATOP);
+            holder.mCheckmark.setImageResource(R.drawable.ic_customize_bubble_checkmark_dark);
         } else {
-            holder.mCheckmark.getDrawable().setColorFilter(null);
+            holder.mCheckmark.setImageResource(R.drawable.icon_customize_bubble_checkmark);
         }
 
         GlideApp.with(mContext)

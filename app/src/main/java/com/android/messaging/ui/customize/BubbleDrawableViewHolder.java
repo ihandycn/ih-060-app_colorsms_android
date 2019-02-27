@@ -18,6 +18,7 @@ public class BubbleDrawableViewHolder extends BasePagerViewHolder implements Cus
 
     BubbleDrawableViewHolder(final Context context, String conversationId) {
         mContext = context;
+        mConversationId = conversationId;
     }
 
     void setHost(CustomMessageHost host) {
@@ -33,6 +34,7 @@ public class BubbleDrawableViewHolder extends BasePagerViewHolder implements Cus
                 false /* attachToRoot */);
 
         RecyclerView recyclerView = view.findViewById(R.id.recycler_view);
+        recyclerView.setOverScrollMode(View.OVER_SCROLL_NEVER);
         recyclerView.setHasFixedSize(true);
         BubbleDrawableAdapter adapter = new BubbleDrawableAdapter(mContext, mConversationId);
         adapter.setOnSelectedBubbleChangeListener((int index) -> mHost.previewCustomBubbleDrawable(index));
@@ -45,7 +47,6 @@ public class BubbleDrawableViewHolder extends BasePagerViewHolder implements Cus
     protected void setHasOptionsMenu() {
 
     }
-
 
     @Override
     public CharSequence getPageTitle(Context context) {

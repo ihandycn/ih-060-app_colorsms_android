@@ -1,6 +1,7 @@
 package com.android.messaging.ui.customize;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.support.annotation.IntDef;
@@ -14,6 +15,7 @@ import com.android.messaging.R;
 import com.android.messaging.ui.BasePagerViewHolder;
 import com.android.messaging.ui.CustomPagerViewHolder;
 import com.android.messaging.util.ImageUtils;
+import com.superapps.util.BackgroundDrawables;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -82,6 +84,12 @@ public class ChooseMessageColorEntryViewHolder extends BasePagerViewHolder imple
         mBubbleBackgroundColorOutgoingContainer.setOnClickListener(this);
         mMessageTextColorIncomingContainer.setOnClickListener(this);
         mMessageTextColorOutgoingContainer.setOnClickListener(this);
+
+        Drawable drawable = BackgroundDrawables.createBackgroundDrawable(Color.WHITE, 0xffd6d7da, 0,false, true);
+        mBubbleBackgroundColorIncomingContainer.setBackground(drawable);
+        mBubbleBackgroundColorOutgoingContainer.setBackground(drawable);
+        mMessageTextColorIncomingContainer.setBackground(drawable);
+        mMessageTextColorOutgoingContainer.setBackground(drawable);
 
         mDefaultPreviewDrawable = mContext.getResources().getDrawable(R.drawable.custom_message_color_default_preview_drawable);
         initAppearance();
