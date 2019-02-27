@@ -4,7 +4,6 @@ import android.support.annotation.DrawableRes;
 import android.text.TextUtils;
 
 import com.android.messaging.R;
-import com.android.messaging.ui.ConversationDrawables;
 import com.android.messaging.util.BuglePrefs;
 
 import static com.android.messaging.util.BuglePrefsKeys.PREFS_KEY_BUBBLE_DRAWABLE_IDENTIFIER;

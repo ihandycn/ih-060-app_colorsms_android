@@ -1074,7 +1074,6 @@
     <string name="setting_text_font">Text Font</string>
     <string name="setting_text_size">Text Size</string>
     <string name="setting_text_font_name">Roboto</string>
-    <string name="setting_text_size_info">Medium Large</string>
     <string name="setting_text_size_hint_larger">Largest</string>
     <string name="setting_text_size_hint_large">Large</string>
     <string name="setting_text_size_hint_medium_large">Medium</string>
