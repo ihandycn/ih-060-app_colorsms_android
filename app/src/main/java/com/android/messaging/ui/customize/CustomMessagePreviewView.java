@@ -23,7 +23,7 @@ public class CustomMessagePreviewView extends ConstraintLayout {
     private int mIncomingTextPreviewColor;
     private int mOutgoingTextPreviewColor;
 
-    private int mPreviewBubbleDrawableIdentifier;
+    private int mPreviewBubbleDrawableIndex;
 
     private TextView mIncomingMessage;
     private TextView mOutgoingMessage;
@@ -59,17 +59,17 @@ public class CustomMessagePreviewView extends ConstraintLayout {
         mIncomingMessage.setTextColor(mIncomingTextPreviewColor);
         mOutgoingMessage.setTextColor(mOutgoingTextPreviewColor);
 
-        mPreviewBubbleDrawableIdentifier = BubbleDrawables.getSelectedIndex();
+        mPreviewBubbleDrawableIndex = BubbleDrawables.getSelectedIndex(conversationId);
     }
 
-    public void previewCustomBubbleDrawables(int id) {
-        mIncomingMessage.setBackgroundResource(BubbleDrawables.getSelectedDrawable(id, true));
-        mOutgoingMessage.setBackgroundResource(BubbleDrawables.getSelectedDrawable(id, false));
+    public void previewCustomBubbleDrawables(int index) {
+        mIncomingMessage.setBackgroundResource(BubbleDrawables.getSelectedDrawable(index, true));
+        mOutgoingMessage.setBackgroundResource(BubbleDrawables.getSelectedDrawable(index, false));
 
         mIncomingMessage.getBackground().setColorFilter(mIncomingBackgroundPreviewColor, PorterDuff.Mode.SRC_ATOP);
         mOutgoingMessage.getBackground().setColorFilter(mOutgoingBackgroundPreviewColor, PorterDuff.Mode.SRC_ATOP);
 
-        mPreviewBubbleDrawableIdentifier = id;
+        mPreviewBubbleDrawableIndex = index;
     }
 
     public void previewCustomBubbleBackgroundColor(boolean incoming, @ColorInt int color) {
@@ -97,11 +97,11 @@ public class CustomMessagePreviewView extends ConstraintLayout {
         boolean bubbleBackgroundColorChanged = false;
         boolean bubbleTextColorChanged = false;
 
-        if (mPreviewBubbleDrawableIdentifier != BubbleDrawables.getSelectedIndex()) {
-            BubbleDrawables.setSelectedIndex(mPreviewBubbleDrawableIdentifier);
+        if (mPreviewBubbleDrawableIndex != BubbleDrawables.getSelectedIndex(mConversationId)) {
+            BubbleDrawables.setSelectedIndex(mPreviewBubbleDrawableIndex, mConversationId);
             bubbleDrawableChanged = true;
             BugleAnalytics.logEvent("Customize_Bubble_Style_Change", "style",
-                    String.valueOf(mPreviewBubbleDrawableIdentifier));
+                    String.valueOf(mPreviewBubbleDrawableIndex));
         }
 
         if (mIncomingBackgroundPreviewColor != ConversationColors.get().getBubbleBackgroundColor(true, mConversationId)) {

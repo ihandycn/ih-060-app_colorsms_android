@@ -14,7 +14,7 @@ import com.android.messaging.R;
 public class BubbleDrawableAdapter extends RecyclerView.Adapter<BubbleDrawableAdapter.ViewHolder> {
 
     public interface OnSelectedBubbleChangeListener {
-        void onChange(int id);
+        void onChange(int index);
     }
 
     private Context mContext;
@@ -22,9 +22,9 @@ public class BubbleDrawableAdapter extends RecyclerView.Adapter<BubbleDrawableAd
 
     private int mSelectedPosition;
 
-    BubbleDrawableAdapter(Context context) {
+    BubbleDrawableAdapter(Context context, String conversationId) {
         mContext = context;
-        mSelectedPosition = BubbleDrawables.getSelectedIndex();
+        mSelectedPosition = BubbleDrawables.getSelectedIndex(conversationId);
     }
 
     @NonNull

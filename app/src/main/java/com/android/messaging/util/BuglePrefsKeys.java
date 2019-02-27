@@ -76,7 +76,7 @@ public final class BuglePrefsKeys {
     /**
      * bubble drawable identifier, not @DrawableId
      */
-    public static final String PREFS_KEY_BUBBLE_DRAWABLE_ID = "prefs_key_bubble_drawable_id";
+    public static final String PREFS_KEY_BUBBLE_DRAWABLE_IDENTIFIER = "prefs_key_bubble_drawable_id";
 
     /**
      * bubble background color incoming

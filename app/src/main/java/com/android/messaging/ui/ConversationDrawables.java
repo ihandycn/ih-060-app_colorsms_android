@@ -37,8 +37,6 @@ public class ConversationDrawables {
 
     // Cache the color filtered bubble drawables so that we don't need to create a
     // new one for each ConversationMessageView.
-    private Drawable mIncomingBubbleDrawable;
-    private Drawable mOutgoingBubbleDrawable;
     private Drawable mIncomingErrorBubbleDrawable;
     private Drawable mIncomingBubbleNoArrowDrawable;
     private Drawable mOutgoingBubbleNoArrowDrawable;
@@ -77,11 +75,9 @@ public class ConversationDrawables {
     public void updateDrawables() {
         final Resources resources = mContext.getResources();
 
-        mIncomingBubbleDrawable = resources.getDrawable(BubbleDrawables.getSelectedDrawable(true));
         mIncomingBubbleNoArrowDrawable =
                 resources.getDrawable(R.drawable.message_bubble_incoming_no_arrow);
         mIncomingErrorBubbleDrawable = resources.getDrawable(R.drawable.msg_bubble_error);
-        mOutgoingBubbleDrawable = resources.getDrawable(BubbleDrawables.getSelectedDrawable(false));
         mOutgoingBubbleNoArrowDrawable =
                 resources.getDrawable(R.drawable.message_bubble_outgoing_no_arrow);
         mIncomingAudioPlayButtonDrawable = resources.getDrawable(R.drawable.ic_audio_play_incoming);
@@ -106,22 +102,17 @@ public class ConversationDrawables {
         mThemeColor = PrimaryColors.getPrimaryColor();
     }
 
-    public void updateBubbleDrawable(int index) {
-        final Resources resources = mContext.getResources();
-        mIncomingBubbleDrawable = resources.getDrawable(BubbleDrawables.getSelectedDrawable(index, true));
-        mOutgoingBubbleDrawable = resources.getDrawable(BubbleDrawables.getSelectedDrawable(index, false));
-    }
-
     public Drawable getBubbleDrawable(final boolean selected, final boolean incoming,
                                       final boolean needArrow, final boolean isError,
                                       final String conversationId) {
         final Drawable protoDrawable;
+        final Resources resources = mContext.getResources();
         if (needArrow) {
             if (incoming) {
                 protoDrawable = isError && !selected ?
-                        mIncomingErrorBubbleDrawable : mIncomingBubbleDrawable;
+                        mIncomingErrorBubbleDrawable : resources.getDrawable(BubbleDrawables.getSelectedDrawable(true, conversationId));
             } else {
-                protoDrawable = mOutgoingBubbleDrawable;
+                protoDrawable = resources.getDrawable(BubbleDrawables.getSelectedDrawable(false, conversationId));
             }
         } else if (incoming) {
             protoDrawable = mIncomingBubbleNoArrowDrawable;

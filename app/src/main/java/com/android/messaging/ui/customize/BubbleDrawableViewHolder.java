@@ -14,8 +14,9 @@ import com.android.messaging.ui.CustomPagerViewHolder;
 public class BubbleDrawableViewHolder extends BasePagerViewHolder implements CustomPagerViewHolder {
     private Context mContext;
     private CustomMessageHost mHost;
+    private String mConversationId;
 
-    BubbleDrawableViewHolder(final Context context) {
+    BubbleDrawableViewHolder(final Context context, String conversationId) {
         mContext = context;
     }
 
@@ -33,11 +34,10 @@ public class BubbleDrawableViewHolder extends BasePagerViewHolder implements Cus
 
         RecyclerView recyclerView = view.findViewById(R.id.recycler_view);
         recyclerView.setHasFixedSize(true);
-        BubbleDrawableAdapter adapter = new BubbleDrawableAdapter(mContext);
-        adapter.setOnSelectedBubbleChangeListener((int id) -> mHost.previewCustomBubbleDrawable(id));
+        BubbleDrawableAdapter adapter = new BubbleDrawableAdapter(mContext, mConversationId);
+        adapter.setOnSelectedBubbleChangeListener((int index) -> mHost.previewCustomBubbleDrawable(index));
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new GridLayoutManager(mContext, 2));
-
         return view;
     }
 

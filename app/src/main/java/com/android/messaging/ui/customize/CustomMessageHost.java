@@ -10,5 +10,5 @@ public interface CustomMessageHost {
 
     void previewCustomColor(@ColorInt int color);
 
-    void previewCustomBubbleDrawable(int id);
+    void previewCustomBubbleDrawable(int index);
 }

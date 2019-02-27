@@ -152,7 +152,7 @@ public class ConversationListActivity extends AbstractConversationListActivity
         BugleAnalytics.logEvent("SMS_Messages_Show", true,
                 "themeColor", String.valueOf(ThemeSelectActivity.getSelectedIndex()),
                 "background", backgroundStr,
-                "bubbleStyle", String.valueOf(BubbleDrawables.getSelectedIndex()),
+                "bubbleStyle", String.valueOf(BubbleDrawables.getSelectedIdentifier()),
                 "received bubble color", ConversationColors.get().getConversationColorEventType(true, true),
                 "sent bubble color", ConversationColors.get().getConversationColorEventType(false, true),
                 "received text color", ConversationColors.get().getConversationColorEventType(true, false),
