@@ -35,8 +35,6 @@ public class ChooseMessageColorPagerView extends FrameLayout implements OnColorC
     private ChooseMessageColorRecommendViewHolder mBubbleRecommendViewHolder;
     private TextView mTitle;
 
-    private ObjectAnimator mAlphaAnimator;
-
     public void setHost(CustomMessageHost host) {
         mHost = host;
     }
@@ -56,30 +54,14 @@ public class ChooseMessageColorPagerView extends FrameLayout implements OnColorC
 
     void reveal() {
         setVisibility(VISIBLE);
-        if (mAlphaAnimator != null) {
-            mAlphaAnimator.cancel();
-        }
-        setAlpha(1f);
         animate().translationY(0f).setInterpolator(mInterpolator).setDuration(REVEAL_DURATION).start();
     }
 
     void disappear() {
-        animate().translationY(getResources().getDimensionPixelSize(R.dimen.bubble_customize_color_pager_translation))
+        animate().translationY(getHeight())
                 .setInterpolator(mInterpolator)
                 .setDuration(DISAPPEAR_DURATION).start();
-        mAlphaAnimator = ObjectAnimator.ofFloat(ChooseMessageColorPagerView.this, "alpha", 0f);
-        mAlphaAnimator.setDuration(200L);
-        mAlphaAnimator.setStartDelay(DISAPPEAR_DURATION);
-        mAlphaAnimator.start();
-        mAlphaAnimator.addListener(new AnimatorListenerAdapter() {
-            @Override
-            public void onAnimationEnd(Animator animation) {
-                super.onAnimationEnd(animation);
-                setVisibility(GONE);
-                mHost.closeColorPickerView();
-            }
-        });
-
+        postDelayed(() -> setVisibility(GONE), DISAPPEAR_DURATION);
     }
 
     void updateTitle(@ChooseMessageColorEntryViewHolder.CustomColor int type) {

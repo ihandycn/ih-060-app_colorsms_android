@@ -8,6 +8,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.view.MenuItem;
+import android.widget.FrameLayout;
 import android.widget.TextView;
 
 import com.android.messaging.BaseActivity;
@@ -54,9 +55,16 @@ public class CustomBubblesActivity extends BaseActivity implements CustomMessage
 
         mChooseMessageColorPagerView = findViewById(R.id.choose_message_color_view);
         mCustomMessagePreview = findViewById(R.id.custom_message_preview);
-        mCustomMessagePreview.updateBubbleDrawables(mConversationId);
+        FrameLayout customContainer = findViewById(R.id.customize_container);
 
+        mCustomMessagePreview.updateBubbleDrawables(mConversationId);
         mChooseMessageColorPagerView.setHost(this);
+        customContainer.post(new Runnable() {
+            @Override
+            public void run() {
+                mChooseMessageColorPagerView.setTranslationY(customContainer.getHeight());
+            }
+        });
 
         mBubbleDrawableViewHolder = new BubbleDrawableViewHolder(this, mConversationId);
         mChooseMessageColorEntryViewHolder = new ChooseMessageColorEntryViewHolder(this);

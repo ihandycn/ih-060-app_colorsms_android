@@ -741,6 +741,8 @@
     <style name="CustomColorEntryItem" >
         <item name="android:paddingStart">20dp</item>
         <item name="android:paddingEnd">20dp</item>
+        <item name="android:paddingTop">5dp</item>
+        <item name="android:paddingBottom">5dp</item>
     </style>
 
 
