@@ -68,6 +68,8 @@ import com.android.messaging.util.UriUtil;
 import com.ihs.app.framework.HSApplication;
 import com.superapps.util.BackgroundDrawables;
 import com.superapps.util.Dimensions;
+import com.superapps.util.Preferences;
+import com.superapps.view.TypefacedTextView;
 
 import org.qcode.fontchange.FontManager;
 import org.qcode.fontchange.impl.QueryBuilder;
@@ -192,7 +194,7 @@ public class ConversationListItemView extends FrameLayout implements OnClickList
         mConversationNameColor = resources.getColor(R.color.conversation_list_item_conversation);
         mSnippetColor = resources.getColor(R.color.conversation_list_item_snippet);
 
-        initTypeface();
+        //initTypeface();
 
         mContactCheckmarkView.setBackgroundDrawable(BackgroundDrawables.
                 createBackgroundDrawable(PrimaryColors.getPrimaryColor(), Dimensions.pxFromDp(28), false));
@@ -250,7 +252,7 @@ public class ConversationListItemView extends FrameLayout implements OnClickList
     }
 
     private void initTypeface(){
-        String familyName = BuglePrefs.getApplicationPrefs().getString(FontManager.MESSAGE_FONT_FAMILY,"Default");
+        String familyName = Preferences.getDefault().getString(TypefacedTextView.MESSAGE_FONT_FAMILY,"Default");
         if (familyName.isEmpty() || familyName.equals("Default") || familyName.equals("System")){
             mConversationNameReadTypeface = Typefaces.getCustomMedium();
             mConversationNameUnreadTypeface = Typefaces.getCustomSemiBold();

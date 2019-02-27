@@ -5,6 +5,8 @@ import android.support.v7.app.AppCompatActivity;
 
 import com.android.messaging.font.MessageFontManager;
 import com.android.messaging.util.BuglePrefs;
+import com.superapps.util.Preferences;
+import com.superapps.view.TypefacedTextView;
 
 import org.qcode.fontchange.FontManager;
 import org.qcode.fontchange.IFontChangeActivity;
@@ -31,14 +33,14 @@ public abstract class BaseActivity extends AppCompatActivity
 
         FontManagerImpl.getInstance().init(BaseActivity.this);
 
-        String fontFamily = BuglePrefs.getApplicationPrefs().getString(FontManager.MESSAGE_FONT_FAMILY, "Default");
+        String fontFamily = Preferences.getDefault().getString(TypefacedTextView.MESSAGE_FONT_FAMILY, "Default");
         float scale = MessageFontManager.getFontScale();
 
         FontManagerImpl.getInstance().changeFontSize(scale, null);
-        if (fontFamily != null && !fontFamily.equals("Default") && !fontFamily.equals("System")) {
-            FontManagerImpl.getInstance().loadAndSetTypeface(fontFamily, null);
-        }
-        initFontHandler();
+//        if (fontFamily != null && !fontFamily.equals("Default") && !fontFamily.equals("System")) {
+//            FontManagerImpl.getInstance().loadAndSetTypeface(fontFamily, null);
+//        }
+//        initFontHandler();
     }
 
     private void initFontHandler() {
@@ -68,8 +70,8 @@ public abstract class BaseActivity extends AppCompatActivity
     protected void onDestroy() {
         mIsDestroyingFlag = true;
         super.onDestroy();
-
-        mFontEventHandler.onDestroy();
+//
+//        mFontEventHandler.onDestroy();
     }
 
     @Override
@@ -86,12 +88,12 @@ public abstract class BaseActivity extends AppCompatActivity
     protected void onResume() {
         super.onResume();
 
-        if (mFirstTimeApplyFont) {
-            mFontEventHandler.onViewCreated();
-            mFirstTimeApplyFont = false;
-        }
-
-        mFontEventHandler.onResume();
+//        if (mFirstTimeApplyFont) {
+//            mFontEventHandler.onViewCreated();
+//            mFirstTimeApplyFont = false;
+//        }
+//
+//        mFontEventHandler.onResume();
     }
 
     @Override
@@ -103,7 +105,7 @@ public abstract class BaseActivity extends AppCompatActivity
     public void onWindowFocusChanged(boolean hasFocus) {
         super.onWindowFocusChanged(hasFocus);
 
-        mFontEventHandler.onWindowFocusChanged(hasFocus);
+      //  mFontEventHandler.onWindowFocusChanged(hasFocus);
     }
 
     protected void restartBaseActivity() {

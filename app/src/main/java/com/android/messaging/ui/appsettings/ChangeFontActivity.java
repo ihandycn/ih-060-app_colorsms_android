@@ -10,15 +10,18 @@ import com.android.messaging.BaseActivity;
 import com.android.messaging.R;
 import com.android.messaging.font.MessageFontManager;
 import com.android.messaging.ui.view.LevelSeekBar;
+import com.android.messaging.util.BugleAnalytics;
 import com.android.messaging.util.BuglePrefs;
+import com.superapps.util.Preferences;
+import com.superapps.view.TypefacedTextView;
 
 import org.qcode.fontchange.FontManager;
 import org.qcode.fontchange.IFontChangeListener;
+import org.qcode.fontchange.impl.ActivityFontEventHandlerImpl;
 import org.qcode.fontchange.impl.FontManagerImpl;
 
 public class ChangeFontActivity extends BaseActivity implements LevelSeekBar.OnLevelChangeListener {
-
-    final BuglePrefs prefs = BuglePrefs.getApplicationPrefs();
+    
     private View mChangeFontContainer;
     private TextView mTextFontFamily;
     private TextView mTextFontSize;
@@ -28,6 +31,9 @@ public class ChangeFontActivity extends BaseActivity implements LevelSeekBar.OnL
             R.string.setting_text_size_hint_medium_large,
             R.string.setting_text_size_hint_large,
             R.string.setting_text_size_hint_larger};
+
+    private ActivityFontEventHandlerImpl mFontEventHandler;
+    private boolean mFirstTimeApplyFont = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,7 +57,7 @@ public class ChangeFontActivity extends BaseActivity implements LevelSeekBar.OnL
         View changeFontItem = findViewById(R.id.change_font_item);
 
         int level = BuglePrefs.getApplicationPrefs().getInt(FontManager.MESSAGE_FONT_SCALE, 2);
-        String fontFamily = prefs.getString(FontManager.MESSAGE_FONT_FAMILY, "Default");
+        String fontFamily = Preferences.getDefault().getString(TypefacedTextView.MESSAGE_FONT_FAMILY, "Default");
 
         mTextFontFamily.setText(fontFamily);
         mTextFontSize.setText(getResources().getString(sTextSizeRes[level]));
@@ -62,6 +68,35 @@ public class ChangeFontActivity extends BaseActivity implements LevelSeekBar.OnL
             // open a dialog to choose font
             new ChooseFontDialog(ChangeFontActivity.this, mListener).show();
         });
+        BugleAnalytics.logEvent("Customize_Font_Show");
+
+        initFontHandler();
+    }
+
+    private void initFontHandler() {
+        mFontEventHandler = FontManager.newActivityFontEventHandler()
+                .setSupportFontChange(isSupportFontChange())
+                .setSwitchFontImmediately(isSwitchFontImmediately())
+                .setNeedDelegateViewCreate(false);
+        mFontEventHandler.onCreate(this);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        mFontEventHandler.onDestroy();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        if (mFirstTimeApplyFont) {
+            mFontEventHandler.onViewCreated();
+            mFirstTimeApplyFont = false;
+        }
+
+        mFontEventHandler.onResume();
     }
 
     @Override
@@ -86,7 +121,7 @@ public class ChangeFontActivity extends BaseActivity implements LevelSeekBar.OnL
 
         @Override
         public void onLoadSuccess(float scale) {
-            String fontFamily = prefs.getString(FontManager.MESSAGE_FONT_FAMILY, "Roboto");
+            String fontFamily = Preferences.getDefault().getString(TypefacedTextView.MESSAGE_FONT_FAMILY, "Roboto");
             mTextFontFamily.setText(fontFamily);
         }
 

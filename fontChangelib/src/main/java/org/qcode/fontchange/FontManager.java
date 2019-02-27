@@ -8,7 +8,6 @@ import org.qcode.fontchange.impl.FontViewHelperImpl;
 
 public class FontManager {
     public static final String MESSAGE_FONT_SCALE = "message_font_scale";
-    public static final String MESSAGE_FONT_FAMILY = "message_font_family";
 
     /***
      * 获取字体管理类实例

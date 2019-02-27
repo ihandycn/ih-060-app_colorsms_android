@@ -20,6 +20,7 @@ import android.content.res.ColorStateList;
 import android.content.res.TypedArray;
 import android.graphics.Typeface;
 import android.os.Handler;
+import android.support.v4.provider.FontsContractCompat;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.util.AttributeSet;
@@ -152,17 +153,23 @@ public class ViewPagerTabs extends HorizontalScrollView implements ViewPager.OnP
 
     private void addTab(CharSequence tabTitle, final int position) {
         final TextView textView = new TextView(getContext());
-        //initTypeface(textView);
-        MessageFontManager.loadAndSetTypeface(textView, 400);
+        MessageFontManager.loadTypeface(400, new FontsContractCompat.FontRequestCallback(){
+            @Override
+            public void onTypefaceRetrieved(Typeface typeface) {
+                //这儿会内存泄漏
+                textView.setTypeface(typeface);
+            }
+
+            @Override
+            public void onTypefaceRequestFailed(int reason) {
+                super.onTypefaceRequestFailed(reason);
+            }
+        });
+
         textView.setText(tabTitle);
         textView.setBackgroundResource(R.drawable.contact_picker_tab_background_selector);
         textView.setGravity(Gravity.CENTER);
-        textView.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mPager.setCurrentItem(getRtlPosition(position));
-            }
-        });
+        textView.setOnClickListener(v -> mPager.setCurrentItem(getRtlPosition(position)));
 
         // Assign various text appearance related attributes to child views.
         if (mTextStyle > 0) {

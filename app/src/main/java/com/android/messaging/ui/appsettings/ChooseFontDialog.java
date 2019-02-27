@@ -27,6 +27,8 @@ import com.ihs.commons.notificationcenter.HSGlobalNotificationCenter;
 import com.ihs.commons.utils.HSLog;
 import com.superapps.util.BackgroundDrawables;
 import com.superapps.util.Dimensions;
+import com.superapps.util.Preferences;
+import com.superapps.view.TypefacedTextView;
 
 import org.qcode.fontchange.FontManager;
 import org.qcode.fontchange.IFontChangeListener;
@@ -41,7 +43,7 @@ import java.util.Map;
 
 public class ChooseFontDialog {
     private static final String[] sSupportGoogleFonts = {
-            "Default", "Roboto",
+            "Default", "System",
             "Advent Pro", "Atma", "Cormorant Garamond", "Encode Sans", "Expletus Sans",
             "Fahkwang", "Fira Sans Condensed", "IBM Plex Sans", "Kodchasan", "Krub",
             "Mali", "Mitr", "Montserrat", "Montserrat Alternates", "Rajdhani",
@@ -49,7 +51,6 @@ public class ChooseFontDialog {
     };
 
     private static final String TAG = "ChooseFontDialog";
-    private BuglePrefs mPrefs = BuglePrefs.getApplicationPrefs();
     private Activity mActivity;
     private Dialog mDialog;
     private View mRootView;
@@ -60,7 +61,7 @@ public class ChooseFontDialog {
 
     ChooseFontDialog(Context activity, IFontChangeListener listener) {
         this.mActivity = (Activity) activity;
-        mFontFamily = mPrefs.getString(FontManager.MESSAGE_FONT_FAMILY, "Default");
+        mFontFamily = Preferences.getDefault().getString(TypefacedTextView.MESSAGE_FONT_FAMILY, "Default");
         mListener = listener;
     }
 
@@ -209,10 +210,9 @@ public class ChooseFontDialog {
                 radioButton.setChecked(true);
                 String fontFamily = sSupportGoogleFonts[position];
                 mFontFamily = fontFamily;
-                if (!fontFamily.equals("Default") && !fontFamily.equals("System")) {
-                    FontManagerImpl.getInstance().loadAndSetTypeface(fontFamily, mListener);
-                }
-                prefs.putString(FontManager.MESSAGE_FONT_FAMILY, fontFamily);
+
+                FontManagerImpl.getInstance().loadAndSetTypeface(fontFamily, mListener);
+                Preferences.getDefault().putString(TypefacedTextView.MESSAGE_FONT_FAMILY, fontFamily);
                 HSGlobalNotificationCenter.sendNotification(ConversationListActivity.EVENT_MAINPAGE_RECREATE);
                 new Handler().postDelayed(this::dismiss, 1);
             }

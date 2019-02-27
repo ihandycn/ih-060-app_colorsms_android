@@ -36,10 +36,13 @@ public class FontManagerImpl extends FontManager {
     private static volatile FontManagerImpl mInstance;
     private String mFontPath;
     private Handler mHandler = null;
-    private Typeface mTypeface_thin = null, mTypeface_light = null,
-            mTypeface_regular = null, mTypeface_medium = null,
-            mTypeface_bold = null, mTypeface_black = null;
-    private int weights[] = {100,300,400,500,700,900};
+    private Typeface mTypeface_thin = null,
+            mTypeface_light = null,
+            mTypeface_regular = null,
+            mTypeface_medium = null,
+            mTypeface_bold = null,
+            mTypeface_black = null;
+    private int weights[] = {100, 300, 400, 500, 600, 700, 900};
     private boolean isTypefaceRetrieved = false;
 
     private FontManagerImpl() {
@@ -96,7 +99,7 @@ public class FontManagerImpl extends FontManager {
             return;
         }
 
-        if (!textView.fontSizeChangeable()){
+        if (!textView.fontSizeChangeable()) {
             return;
         }
 
@@ -130,7 +133,7 @@ public class FontManagerImpl extends FontManager {
 
         mFontPath = fontName;
         try {
-            if (!fontName.isEmpty()){
+            if (!fontName.isEmpty()) {
                 requestDownload(fontName);
             }
             if (fontChangeListener != null) {
@@ -148,7 +151,7 @@ public class FontManagerImpl extends FontManager {
     private void changeTypeFaced(TypefacedTextView textView) {
         // use google font replace local font
         // fontPath is changed to fontName
-        if (isTypefaceRetrieved && textView.fontFamilyChangeable()){
+        if (isTypefaceRetrieved && textView.fontFamilyChangeable()) {
             int weight = textView.getFontStyle() * 100;
             switch (weight) {
                 case 100:
@@ -174,6 +177,21 @@ public class FontManagerImpl extends FontManager {
     }
 
     private void requestDownload(String familyName) {
+        if (familyName.equals("System")) {
+            mTypeface_thin = null;
+            mTypeface_light = null;
+            mTypeface_regular = null;
+            mTypeface_medium = null;
+            mTypeface_bold = null;
+            mTypeface_black = null;
+            refreshFont();
+            return;
+        }
+
+        if (familyName.equals("Default")) {
+            familyName = "Poppins";
+        }
+
         for (final int weight : weights) {
             QueryBuilder queryBuilder = new QueryBuilder(familyName)
                     .withWidth(100f)
@@ -194,7 +212,7 @@ public class FontManagerImpl extends FontManager {
                     .FontRequestCallback() {
                 @Override
                 public void onTypefaceRetrieved(Typeface typeface) {
-                    Log.i(TAG, "onTypefaceRetrieved: "+ query);
+                    Log.i(TAG, "onTypefaceRetrieved: " + query);
                     // save typeface to local
                     isTypefaceRetrieved = true;
                     switch (weight) {

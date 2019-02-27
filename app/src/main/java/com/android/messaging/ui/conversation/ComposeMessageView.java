@@ -18,8 +18,10 @@ package com.android.messaging.ui.conversation;
 import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Rect;
+import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.v4.provider.FontsContractCompat;
 import android.support.v7.app.ActionBar;
 import android.text.Editable;
 import android.text.Html;
@@ -290,8 +292,17 @@ public class ComposeMessageView extends LinearLayout
             }
             return true;
         });
-       // initTypeface(mComposeEditText);
-        MessageFontManager.loadAndSetTypeface(mComposeEditText, 400);
+        MessageFontManager.loadTypeface(400, new FontsContractCompat.FontRequestCallback(){
+            @Override
+            public void onTypefaceRetrieved(Typeface typeface) {
+                mComposeEditText.setTypeface(typeface);
+            }
+
+            @Override
+            public void onTypefaceRequestFailed(int reason) {
+                super.onTypefaceRequestFailed(reason);
+            }
+        });
 
         mSelfSendIcon = findViewById(R.id.self_send_icon);
         mSelfSendIcon.setOnClickListener(v -> {

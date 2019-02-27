@@ -122,7 +122,9 @@ import com.ihs.app.framework.HSApplication;
 import com.ihs.commons.notificationcenter.HSGlobalNotificationCenter;
 import com.ihs.commons.notificationcenter.INotificationObserver;
 import com.ihs.commons.utils.HSBundle;
+import com.superapps.util.Preferences;
 import com.superapps.view.CustomTypefaceSpan;
+import com.superapps.view.TypefacedTextView;
 
 import org.qcode.fontchange.FontManager;
 import org.qcode.fontchange.impl.QueryBuilder;
@@ -741,35 +743,23 @@ public class ConversationFragment extends Fragment implements ConversationDataLi
     }
 
     private void initTypeface(Menu menu) {
-        String familyName = BuglePrefs.getApplicationPrefs().getString(FontManager.MESSAGE_FONT_FAMILY, "Default");
+        String familyName = Preferences.getDefault().getString(TypefacedTextView.MESSAGE_FONT_FAMILY, "Default");
         if (familyName.isEmpty() || familyName.equals("Default") || familyName.equals("System")) {
             applyFontToMenuItem(menu.findItem(R.id.action_people_and_options), Typefaces.getCustomRegular());
-            applyFontToMenuItem(menu.findItem(R.id.action_delete),Typefaces.getCustomRegular());
-            applyFontToMenuItem(menu.findItem(R.id.action_add_contact),Typefaces.getCustomRegular());
+            applyFontToMenuItem(menu.findItem(R.id.action_delete), Typefaces.getCustomRegular());
+            applyFontToMenuItem(menu.findItem(R.id.action_add_contact), Typefaces.getCustomRegular());
             return;
         }
-        int weight = 400;    // regular
-        QueryBuilder queryBuilder = new QueryBuilder(familyName)
-                .withWidth(100f)
-                .withWeight(weight)
-                .withItalic(0.0f)
-                .withBestEffort(true);
-        final String query = queryBuilder.build();
 
-        FontRequest request = new FontRequest(
-                "com.google.android.gms.fonts",
-                "com.google.android.gms",
-                query,
-                R.array.com_google_android_gms_fonts_certs);
-
-
-        FontsContractCompat.FontRequestCallback callback = new FontsContractCompat
+        MessageFontManager.loadTypeface(400, new FontsContractCompat
                 .FontRequestCallback() {
             @Override
             public void onTypefaceRetrieved(Typeface typeface) {
-                applyFontToMenuItem(menu.findItem(R.id.action_people_and_options),typeface);
-                applyFontToMenuItem(menu.findItem(R.id.action_delete),typeface);
-                applyFontToMenuItem(menu.findItem(R.id.action_add_contact),typeface);
+                if (typeface != null) {
+                    applyFontToMenuItem(menu.findItem(R.id.action_people_and_options), typeface);
+                    applyFontToMenuItem(menu.findItem(R.id.action_delete), typeface);
+                    applyFontToMenuItem(menu.findItem(R.id.action_add_contact), typeface);
+                }
             }
 
             @Override
@@ -778,25 +768,12 @@ public class ConversationFragment extends Fragment implements ConversationDataLi
                         HSApplication.getContext().getString(com.iflytek.android_font_loader_lib.R.string.request_failed, reason), Toast.LENGTH_LONG)
                         .show();
             }
-        };
-        FontsContractCompat
-                .requestFont(getActivity(), request, callback,
-                        getHandlerThreadHandler());
-
+        });
     }
 
-    private Handler getHandlerThreadHandler() {
-        if (fontHandler == null) {
-            HandlerThread handlerThread = new HandlerThread("fonts");
-            handlerThread.start();
-            fontHandler = new Handler(handlerThread.getLooper());
-        }
-        return fontHandler;
-    }
-
-    private void applyFontToMenuItem(MenuItem mi,Typeface font) {
+    private void applyFontToMenuItem(MenuItem mi, Typeface font) {
         SpannableString mNewTitle = new SpannableString(mi.getTitle());
-        mNewTitle.setSpan(new CustomTypefaceSpan("" , font), 0 , mNewTitle.length(),  Spannable.SPAN_INCLUSIVE_INCLUSIVE);
+        mNewTitle.setSpan(new CustomTypefaceSpan("", font), 0, mNewTitle.length(), Spannable.SPAN_INCLUSIVE_INCLUSIVE);
         mi.setTitle(mNewTitle);
     }
 
@@ -912,9 +889,9 @@ public class ConversationFragment extends Fragment implements ConversationDataLi
                             getView().getRootView(),
                             getString(R.string.in_conversation_notify_new_message_text),
                             SnackBar.Action.createCustomAction(() -> {
-                                scrollToBottom(true /* smoothScroll */);
-                                mComposeMessageView.hideAllComposeInputs(false /* animate */);
-                            },
+                                        scrollToBottom(true /* smoothScroll */);
+                                        mComposeMessageView.hideAllComposeInputs(false /* animate */);
+                                    },
                                     getString(R.string.in_conversation_notify_new_message_action)),
                             null /* interactions */,
                             SnackBar.Placement.above(mComposeMessageView));

@@ -21,6 +21,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.messaging.R;
+import com.android.messaging.font.MessageFontManager;
 import com.ihs.app.framework.HSApplication;
 import com.superapps.util.Fonts;
 
@@ -96,8 +97,21 @@ public class RadioButtonAdapter extends BaseAdapter {
         } else {
             holder.radioBtn.setChecked(false);
         }
-        if (!mRequested && !fontFamily.equals("Default") && !fontFamily.equals("System")) {
-            requestDownload(fontFamily, holder.radioBtn, position);
+        if (!mRequested && !fontFamily.equals("Default")) {
+            if (fontFamily.equals("System")) {
+                fontFamily = "Roboto";
+            }
+            MessageFontManager.loadTypeface(fontFamily,400, new FontsContractCompat.FontRequestCallback(){
+                @Override
+                public void onTypefaceRetrieved(Typeface typeface) {
+                    holder.radioBtn.setTypeface(typeface);
+                }
+
+                @Override
+                public void onTypefaceRequestFailed(int reason) {
+
+                }
+            });
         }
         return convertView;
     }
@@ -106,52 +120,5 @@ public class RadioButtonAdapter extends BaseAdapter {
         RadioButton radioBtn;
     }
 
-    private void requestDownload(final String familyName, final TextView fontView, final int position) {
-        QueryBuilder queryBuilder = new QueryBuilder(familyName)
-                .withWidth(10)
-                .withWeight(400)
-                .withItalic(0)
-                .withBestEffort(true);
-        String query = queryBuilder.build();
 
-        Log.d("FontAdapter", "Requesting a font. Query: " + query);
-        FontRequest request = new FontRequest(
-                "com.google.android.gms.fonts",
-                "com.google.android.gms",
-                query,
-                R.array.com_google_android_gms_fonts_certs);
-
-        FontsContractCompat.FontRequestCallback callback = new FontsContractCompat
-                .FontRequestCallback() {
-            @Override
-            public void onTypefaceRetrieved(Typeface typeface) {
-                Log.d("FontAdapter", "onTypefaceRetrieved: ");
-                fontView.setTypeface(typeface);
-                fontView.setText(familyName);
-                if (position == getCount() - 1) {
-                    mRequested = true;
-//                    mListener.onLoadSuccess(100);
-                }
-            }
-
-            @Override
-            public void onTypefaceRequestFailed(int reason) {
-                Toast.makeText(HSApplication.getContext(),
-                        HSApplication.getContext().getString(R.string.request_failed, reason), Toast.LENGTH_LONG)
-                        .show();
-            }
-        };
-        FontsContractCompat
-                .requestFont(mContext, request, callback,
-                        getHandlerThreadHandler());
-    }
-
-    private Handler getHandlerThreadHandler() {
-        if (mHandler == null) {
-            HandlerThread handlerThread = new HandlerThread("fonts");
-            handlerThread.start();
-            mHandler = new Handler(handlerThread.getLooper());
-        }
-        return mHandler;
-    }
 }
