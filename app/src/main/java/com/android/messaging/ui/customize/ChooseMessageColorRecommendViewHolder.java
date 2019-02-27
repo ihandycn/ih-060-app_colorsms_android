@@ -45,11 +45,8 @@ public class ChooseMessageColorRecommendViewHolder extends BasePagerViewHolder i
         return view;
     }
 
-    void update(@ColorInt int firstPositionColor, @ColorInt int secondPositionColor) {
-        Threads.postOnMainThread(() -> {
-            mAdapter.reset();
-            mAdapter.updatePresetColors(firstPositionColor, secondPositionColor);
-        });
+    void update(@ColorInt int firstPositionColor, @ColorInt int secondPositionColor, @ColorInt int selectedColor) {
+        Threads.postOnMainThread(() -> mAdapter.updatePresetColors(firstPositionColor, secondPositionColor, selectedColor));
     }
 
     void setOnColorChangedListener(OnColorChangedListener listener) {

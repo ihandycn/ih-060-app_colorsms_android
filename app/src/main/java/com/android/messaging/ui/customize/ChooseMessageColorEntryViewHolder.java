@@ -37,11 +37,12 @@ public class ChooseMessageColorEntryViewHolder extends BasePagerViewHolder imple
 
     private Context mContext;
     private CustomMessageHost mHost;
+    private String mConversationId;
 
-    private ImageView mBubbleBackgroundColorIncoming;
-    private ImageView mBubbleBackgroundColorOutgoing;
-    private ImageView mMessageTextColorIncoming;
-    private ImageView mMessageTextColorOutgoing;
+    private ImageView mBubbleBackgroundColorIncomingView;
+    private ImageView mBubbleBackgroundColorOutgoingView;
+    private ImageView mMessageTextColorIncomingView;
+    private ImageView mMessageTextColorOutgoingView;
 
     private LinearLayout mBubbleBackgroundColorIncomingContainer;
     private LinearLayout mBubbleBackgroundColorOutgoingContainer;
@@ -50,8 +51,9 @@ public class ChooseMessageColorEntryViewHolder extends BasePagerViewHolder imple
 
     private Drawable mDefaultPreviewDrawable;
 
-    ChooseMessageColorEntryViewHolder(final Context context) {
+    ChooseMessageColorEntryViewHolder(final Context context, String conversationId) {
         mContext = context;
+        mConversationId = conversationId;
     }
 
     public void setHost(CustomMessageHost host) {
@@ -66,10 +68,10 @@ public class ChooseMessageColorEntryViewHolder extends BasePagerViewHolder imple
                 null /* root */,
                 false /* attachToRoot */);
 
-        mBubbleBackgroundColorIncoming = view.findViewById(R.id.bubble_color_incoming);
-        mBubbleBackgroundColorOutgoing = view.findViewById(R.id.bubble_color_outgoing);
-        mMessageTextColorIncoming = view.findViewById(R.id.text_color_incoming);
-        mMessageTextColorOutgoing = view.findViewById(R.id.text_color_outgoing);
+        mBubbleBackgroundColorIncomingView = view.findViewById(R.id.bubble_color_incoming);
+        mBubbleBackgroundColorOutgoingView = view.findViewById(R.id.bubble_color_outgoing);
+        mMessageTextColorIncomingView = view.findViewById(R.id.text_color_incoming);
+        mMessageTextColorOutgoingView = view.findViewById(R.id.text_color_outgoing);
 
         mBubbleBackgroundColorIncomingContainer = view.findViewById(R.id.bubble_color_incoming_container);
         mBubbleBackgroundColorOutgoingContainer = view.findViewById(R.id.bubble_color_outgoing_container);
@@ -89,35 +91,34 @@ public class ChooseMessageColorEntryViewHolder extends BasePagerViewHolder imple
     void previewCustomColor(@CustomColor int type, int color) {
         switch (type) {
             case BUBBLE_COLOR_INCOMING:
-                mBubbleBackgroundColorIncoming.getDrawable().setColorFilter(color, PorterDuff.Mode.SRC_ATOP);
+                mBubbleBackgroundColorIncomingView.getDrawable().setColorFilter(color, PorterDuff.Mode.SRC_ATOP);
                 break;
             case BUBBLE_COLOR_OUTGOING:
-                mBubbleBackgroundColorOutgoing.getDrawable().setColorFilter(color, PorterDuff.Mode.SRC_ATOP);
+                mBubbleBackgroundColorOutgoingView.getDrawable().setColorFilter(color, PorterDuff.Mode.SRC_ATOP);
                 break;
             case TEXT_COLOR_INCOMING:
-                mMessageTextColorIncoming.getDrawable().setColorFilter(color, PorterDuff.Mode.SRC_ATOP);
+                mMessageTextColorIncomingView.getDrawable().setColorFilter(color, PorterDuff.Mode.SRC_ATOP);
                 break;
             case TEXT_COLOR_OUTGOING:
-                mMessageTextColorOutgoing.getDrawable().setColorFilter(color, PorterDuff.Mode.SRC_ATOP);
+                mMessageTextColorOutgoingView.getDrawable().setColorFilter(color, PorterDuff.Mode.SRC_ATOP);
                 break;
         }
     }
 
-
     private void initAppearance() {
         ConversationColors conversationColors = ConversationColors.get();
 
-        mBubbleBackgroundColorIncoming.setImageDrawable(ImageUtils
-                .getTintedDrawable(mContext, mDefaultPreviewDrawable, conversationColors.getBubbleBackgroundColor(true)));
+        mBubbleBackgroundColorIncomingView.setImageDrawable(ImageUtils
+                .getTintedDrawable(mContext, mDefaultPreviewDrawable, conversationColors.getBubbleBackgroundColor(true, mConversationId)));
 
-        mBubbleBackgroundColorOutgoing.setImageDrawable(ImageUtils
-                .getTintedDrawable(mContext, mDefaultPreviewDrawable, conversationColors.getBubbleBackgroundColor(false)));
+        mBubbleBackgroundColorOutgoingView.setImageDrawable(ImageUtils
+                .getTintedDrawable(mContext, mDefaultPreviewDrawable, conversationColors.getBubbleBackgroundColor(false, mConversationId)));
 
-        mMessageTextColorIncoming.setImageDrawable(ImageUtils
-                .getTintedDrawable(mContext, mDefaultPreviewDrawable, conversationColors.getMessageTextColor(true)));
+        mMessageTextColorIncomingView.setImageDrawable(ImageUtils
+                .getTintedDrawable(mContext, mDefaultPreviewDrawable, conversationColors.getMessageTextColor(true, mConversationId)));
 
-        mMessageTextColorOutgoing.setImageDrawable(ImageUtils
-                .getTintedDrawable(mContext, mDefaultPreviewDrawable, conversationColors.getMessageTextColor(false)));
+        mMessageTextColorOutgoingView.setImageDrawable(ImageUtils
+                .getTintedDrawable(mContext, mDefaultPreviewDrawable, conversationColors.getMessageTextColor(false, mConversationId)));
     }
 
 

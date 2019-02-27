@@ -67,7 +67,7 @@ public class CustomBubblesActivity extends BaseActivity implements CustomMessage
         });
 
         mBubbleDrawableViewHolder = new BubbleDrawableViewHolder(this, mConversationId);
-        mChooseMessageColorEntryViewHolder = new ChooseMessageColorEntryViewHolder(this);
+        mChooseMessageColorEntryViewHolder = new ChooseMessageColorEntryViewHolder(this, mConversationId);
 
         mBubbleDrawableViewHolder.setHost(this);
         mChooseMessageColorEntryViewHolder.setHost(this);

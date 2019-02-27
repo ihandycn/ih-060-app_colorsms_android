@@ -33,22 +33,25 @@ public class ChooseMessageColorRecommendAdapter extends RecyclerView.Adapter<Cho
         System.arraycopy(COLORS, 1, mData, 2, mItemCount - 2);
     }
 
-    void updatePresetColors(@ColorInt int firstPositionColor, @ColorInt int secondPositionColor) {
+    void updatePresetColors(@ColorInt int firstPositionColor,
+                            @ColorInt int secondPositionColor,
+                            @ColorInt int selectedColor) {
         mData[0] = firstPositionColor;
         mData[1] = secondPositionColor;
 
-        notifyItemChanged(0);
-        notifyItemChanged(1);
+        int lastSelectedPosition = mSelectedPosition;
+        for (int i = 0; i < mItemCount; i++) {
+            if (mData[i] == selectedColor) {
+                mSelectedPosition = i;
+            }
+        }
+        notifyItemChanged(lastSelectedPosition);
+        notifyItemChanged(mSelectedPosition);
+        notifyItemRangeChanged(0, 1);
     }
 
     void setOnColorChangedListener(OnColorChangedListener listener) {
         mListener = listener;
-    }
-
-    void reset() {
-        int position = mSelectedPosition;
-        mSelectedPosition = -1;
-        notifyItemChanged(position);
     }
 
     @NonNull

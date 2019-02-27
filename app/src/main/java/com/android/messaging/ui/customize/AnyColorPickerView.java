@@ -38,6 +38,10 @@ public class AnyColorPickerView extends View {
         int HUE = 1;
     }
 
+    private static final float DEFAULT_HUE = 360f;
+    private static final float DEFAULT_SAT = 0f;
+    private static final float DEFAULT_VAL = 0f;
+
     /**
      * 显示H、SV的矩形的边框粗细（单位：dp）
      */
@@ -102,9 +106,9 @@ public class AnyColorPickerView extends View {
     private Shader mValShader;
 
     //HSV的默认值
-    private float mHue = 360f;
-    private float mSat = 0f;
-    private float mVal = 0f;
+    private float mHue = DEFAULT_HUE;
+    private float mSat = DEFAULT_SAT;
+    private float mVal = DEFAULT_VAL;
 
     /**
      * 用于显示被选择H的位置的指示器的颜色
@@ -466,7 +470,8 @@ public class AnyColorPickerView extends View {
         return mHueRect.left < mHueRect.right && mHueRect.top < mHueRect.bottom  // check for empty first
                 && x >= mHueRect.left - 10f * mDensity
                 && x < mHueRect.right +  10f * mDensity
-                && y >= mHueRect.top && y < mHueRect.bottom;
+                && y >= mHueRect.top - 10f * mDensity
+                && y < mHueRect.bottom + 10f * mDensity;
     }
 
 
@@ -526,6 +531,10 @@ public class AnyColorPickerView extends View {
      */
     public void setColor(@ColorInt int color) {
         setColor(color, false);
+    }
+
+    public void reset() {
+        setColor(Color.HSVToColor(new float[]{DEFAULT_HUE, DEFAULT_SAT, DEFAULT_VAL}));
     }
 
     /**

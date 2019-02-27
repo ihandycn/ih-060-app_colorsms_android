@@ -42,6 +42,12 @@ public class ChooseMessageColorAdvanceViewHolder extends BasePagerViewHolder imp
         mColorPickerView.setColor(color);
     }
 
+    void reset() {
+        if (mColorPickerView != null) {
+            mColorPickerView.reset();
+        }
+    }
+
     @Override
     protected void setHasOptionsMenu() {
 

@@ -18,15 +18,31 @@ import com.superapps.util.Dimensions;
 public class CustomMessagePreviewView extends ConstraintLayout {
     private String mConversationId;
 
-    private int mIncomingBackgroundPreviewColor;
-    private int mOutgoingBackgroundPreviewColor;
-    private int mIncomingTextPreviewColor;
-    private int mOutgoingTextPreviewColor;
+    private static int sIncomingBackgroundPreviewColor;
+    private static int sOutgoingBackgroundPreviewColor;
+    private static int sIncomingTextPreviewColor;
+    private static int sOutgoingTextPreviewColor;
 
     private int mPreviewBubbleDrawableIndex;
 
     private TextView mIncomingMessage;
     private TextView mOutgoingMessage;
+
+    public static int getBubbleBackgroundPreviewColor(boolean incoming) {
+        if (incoming) {
+            return sIncomingBackgroundPreviewColor;
+        } else {
+            return sOutgoingBackgroundPreviewColor;
+        }
+    }
+
+    public static int getMessageTextPreviewColor(boolean incoming) {
+        if (incoming) {
+            return sIncomingTextPreviewColor;
+        } else {
+            return sOutgoingTextPreviewColor;
+        }
+    }
 
     public CustomMessagePreviewView(final Context context, final AttributeSet attrs) {
         super(context, attrs);
@@ -50,14 +66,14 @@ public class CustomMessagePreviewView extends ConstraintLayout {
         mOutgoingMessage.setBackground(
                 ConversationDrawables.get().getBubbleDrawable(false, false, true, false, mConversationId));
 
-        mIncomingBackgroundPreviewColor = ConversationColors.get().getBubbleBackgroundColor(true);
-        mOutgoingBackgroundPreviewColor = ConversationColors.get().getBubbleBackgroundColor(false);
+        sIncomingBackgroundPreviewColor = ConversationColors.get().getBubbleBackgroundColor(true);
+        sOutgoingBackgroundPreviewColor = ConversationColors.get().getBubbleBackgroundColor(false);
 
-        mIncomingTextPreviewColor = ConversationColors.get().getMessageTextColor(true);
-        mOutgoingTextPreviewColor = ConversationColors.get().getMessageTextColor(false);
+        sIncomingTextPreviewColor = ConversationColors.get().getMessageTextColor(true);
+        sOutgoingTextPreviewColor = ConversationColors.get().getMessageTextColor(false);
 
-        mIncomingMessage.setTextColor(mIncomingTextPreviewColor);
-        mOutgoingMessage.setTextColor(mOutgoingTextPreviewColor);
+        mIncomingMessage.setTextColor(sIncomingTextPreviewColor);
+        mOutgoingMessage.setTextColor(sOutgoingTextPreviewColor);
 
         mPreviewBubbleDrawableIndex = BubbleDrawables.getSelectedIndex(conversationId);
     }
@@ -66,8 +82,8 @@ public class CustomMessagePreviewView extends ConstraintLayout {
         mIncomingMessage.setBackgroundResource(BubbleDrawables.getSelectedDrawable(index, true));
         mOutgoingMessage.setBackgroundResource(BubbleDrawables.getSelectedDrawable(index, false));
 
-        mIncomingMessage.getBackground().setColorFilter(mIncomingBackgroundPreviewColor, PorterDuff.Mode.SRC_ATOP);
-        mOutgoingMessage.getBackground().setColorFilter(mOutgoingBackgroundPreviewColor, PorterDuff.Mode.SRC_ATOP);
+        mIncomingMessage.getBackground().setColorFilter(sIncomingBackgroundPreviewColor, PorterDuff.Mode.SRC_ATOP);
+        mOutgoingMessage.getBackground().setColorFilter(sOutgoingBackgroundPreviewColor, PorterDuff.Mode.SRC_ATOP);
 
         mPreviewBubbleDrawableIndex = index;
     }
@@ -75,20 +91,20 @@ public class CustomMessagePreviewView extends ConstraintLayout {
     public void previewCustomBubbleBackgroundColor(boolean incoming, @ColorInt int color) {
         if (incoming) {
             mIncomingMessage.getBackground().setColorFilter(color, PorterDuff.Mode.SRC_ATOP);
-            mIncomingBackgroundPreviewColor = color;
+            sIncomingBackgroundPreviewColor = color;
         } else {
             mOutgoingMessage.getBackground().setColorFilter(color, PorterDuff.Mode.SRC_ATOP);
-            mOutgoingBackgroundPreviewColor = color;
+            sOutgoingBackgroundPreviewColor = color;
         }
     }
 
     public void previewCustomTextColor(boolean incoming, @ColorInt int color) {
         if (incoming) {
             mIncomingMessage.setTextColor(color);
-            mIncomingTextPreviewColor = color;
+            sIncomingTextPreviewColor = color;
         } else {
             mOutgoingMessage.setTextColor(color);
-            mOutgoingTextPreviewColor = color;
+            sOutgoingTextPreviewColor = color;
         }
     }
 
@@ -104,23 +120,23 @@ public class CustomMessagePreviewView extends ConstraintLayout {
                     String.valueOf(mPreviewBubbleDrawableIndex));
         }
 
-        if (mIncomingBackgroundPreviewColor != ConversationColors.get().getBubbleBackgroundColor(true, mConversationId)) {
-            ConversationColors.get().setBubbleBackgroundColor(true, mIncomingBackgroundPreviewColor, mConversationId);
+        if (sIncomingBackgroundPreviewColor != ConversationColors.get().getBubbleBackgroundColor(true, mConversationId)) {
+            ConversationColors.get().setBubbleBackgroundColor(true, sIncomingBackgroundPreviewColor, mConversationId);
             bubbleBackgroundColorChanged = true;
         }
 
-        if (mOutgoingBackgroundPreviewColor != ConversationColors.get().getBubbleBackgroundColor(false, mConversationId)) {
-            ConversationColors.get().setBubbleBackgroundColor(false, mOutgoingBackgroundPreviewColor, mConversationId);
+        if (sOutgoingBackgroundPreviewColor != ConversationColors.get().getBubbleBackgroundColor(false, mConversationId)) {
+            ConversationColors.get().setBubbleBackgroundColor(false, sOutgoingBackgroundPreviewColor, mConversationId);
             bubbleBackgroundColorChanged = true;
         }
 
-        if (mIncomingTextPreviewColor != ConversationColors.get().getMessageTextColor(true, mConversationId)) {
-            ConversationColors.get().setMessageTextColor(true, mIncomingTextPreviewColor, mConversationId);
+        if (sIncomingTextPreviewColor != ConversationColors.get().getMessageTextColor(true, mConversationId)) {
+            ConversationColors.get().setMessageTextColor(true, sIncomingTextPreviewColor, mConversationId);
             bubbleTextColorChanged = true;
         }
 
-        if (mOutgoingTextPreviewColor != ConversationColors.get().getMessageTextColor(false, mConversationId)) {
-            ConversationColors.get().setMessageTextColor(false, mOutgoingTextPreviewColor, mConversationId);
+        if (sOutgoingTextPreviewColor != ConversationColors.get().getMessageTextColor(false, mConversationId)) {
+            ConversationColors.get().setMessageTextColor(false, sOutgoingTextPreviewColor, mConversationId);
             bubbleTextColorChanged = true;
         }
 

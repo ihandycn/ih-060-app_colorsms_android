@@ -1,8 +1,5 @@
 package com.android.messaging.ui.customize;
 
-import android.animation.Animator;
-import android.animation.AnimatorListenerAdapter;
-import android.animation.ObjectAnimator;
 import android.content.Context;
 import android.content.res.Resources;
 import android.support.v4.view.animation.PathInterpolatorCompat;
@@ -32,7 +29,9 @@ public class ChooseMessageColorPagerView extends FrameLayout implements OnColorC
 
     private CustomMessageHost mHost;
 
-    private ChooseMessageColorRecommendViewHolder mBubbleRecommendViewHolder;
+    private CustomFooterViewPager mCustomFooterPager;
+    private ChooseMessageColorRecommendViewHolder mMessageColorRecommendViewHolder;
+    private ChooseMessageColorAdvanceViewHolder mMessageColorAdvanceViewHolder;
     private TextView mTitle;
 
     public void setHost(CustomMessageHost host) {
@@ -45,14 +44,16 @@ public class ChooseMessageColorPagerView extends FrameLayout implements OnColorC
         inflater.inflate(R.layout.choose_custom_bubble_color_layout, this, true);
 
         mTitle = findViewById(R.id.title);
+        mCustomFooterPager = findViewById(R.id.custom_footer_pager);
         findViewById(R.id.close_button).setOnClickListener(v -> disappear());
 
         initPager(context);
         setClickable(true);
     }
 
-
     void reveal() {
+        mCustomFooterPager.setCurrentItem(0);
+        mMessageColorAdvanceViewHolder.reset();
         setVisibility(VISIBLE);
         animate().translationY(0f).setInterpolator(mInterpolator).setDuration(REVEAL_DURATION).start();
     }
@@ -61,7 +62,10 @@ public class ChooseMessageColorPagerView extends FrameLayout implements OnColorC
         animate().translationY(getHeight())
                 .setInterpolator(mInterpolator)
                 .setDuration(DISAPPEAR_DURATION).start();
-        postDelayed(() -> setVisibility(GONE), DISAPPEAR_DURATION);
+        postDelayed(() -> {
+            ChooseMessageColorPagerView.this.setVisibility(GONE);
+            mHost.closeColorPickerView();
+        }, DISAPPEAR_DURATION);
     }
 
     void updateTitle(@ChooseMessageColorEntryViewHolder.CustomColor int type) {
@@ -74,30 +78,34 @@ public class ChooseMessageColorPagerView extends FrameLayout implements OnColorC
                 prefix = resources.getString(R.string.bubble_customize_bubble_color);
                 suffix = resources.getString(R.string.bubble_customize_received);
 
-                mBubbleRecommendViewHolder.update(resources.getColor(R.color.message_bubble_color_incoming),
-                        resources.getColor(R.color.message_bubble_color_outgoing));
+                mMessageColorRecommendViewHolder.update(resources.getColor(R.color.message_bubble_color_incoming),
+                        resources.getColor(R.color.message_bubble_color_outgoing),
+                        CustomMessagePreviewView.getBubbleBackgroundPreviewColor(true));
                 break;
             case BUBBLE_COLOR_OUTGOING:
                 prefix = getContext().getString(R.string.bubble_customize_bubble_color);
                 suffix = getContext().getString(R.string.bubble_customize_sent);
 
-                mBubbleRecommendViewHolder.update(resources.getColor(R.color.message_bubble_color_incoming),
-                        resources.getColor(R.color.message_bubble_color_outgoing));
+                mMessageColorRecommendViewHolder.update(resources.getColor(R.color.message_bubble_color_incoming),
+                        resources.getColor(R.color.message_bubble_color_outgoing),
+                        CustomMessagePreviewView.getBubbleBackgroundPreviewColor(false));
                 break;
             case TEXT_COLOR_INCOMING:
                 prefix = getContext().getString(R.string.bubble_customize_text_color);
                 suffix = getContext().getString(R.string.bubble_customize_received);
 
-                mBubbleRecommendViewHolder.update(resources.getColor(R.color.message_text_color_incoming),
-                        resources.getColor(R.color.message_text_color_outgoing));
+                mMessageColorRecommendViewHolder.update(resources.getColor(R.color.message_text_color_incoming),
+                        resources.getColor(R.color.message_text_color_outgoing),
+                        CustomMessagePreviewView.getMessageTextPreviewColor(true));
 
                 break;
             case TEXT_COLOR_OUTGOING:
                 prefix = getContext().getString(R.string.bubble_customize_text_color);
                 suffix = getContext().getString(R.string.bubble_customize_sent);
 
-                mBubbleRecommendViewHolder.update(resources.getColor(R.color.message_text_color_incoming),
-                        resources.getColor(R.color.message_text_color_outgoing));
+                mMessageColorRecommendViewHolder.update(resources.getColor(R.color.message_text_color_incoming),
+                        resources.getColor(R.color.message_text_color_outgoing),
+                        CustomMessagePreviewView.getMessageTextPreviewColor(false));
 
                 break;
         }
@@ -109,15 +117,15 @@ public class ChooseMessageColorPagerView extends FrameLayout implements OnColorC
     }
 
     private void initPager(Context context) {
-        mBubbleRecommendViewHolder = new ChooseMessageColorRecommendViewHolder(context);
-        ChooseMessageColorAdvanceViewHolder bubbleColorViewHolder = new ChooseMessageColorAdvanceViewHolder(context);
+        mMessageColorRecommendViewHolder = new ChooseMessageColorRecommendViewHolder(context);
+        mMessageColorAdvanceViewHolder = new ChooseMessageColorAdvanceViewHolder(context);
 
-        mBubbleRecommendViewHolder.setOnColorChangedListener(this);
-        bubbleColorViewHolder.setOnColorChangedListener(this);
+        mMessageColorRecommendViewHolder.setOnColorChangedListener(this);
+        mMessageColorAdvanceViewHolder.setOnColorChangedListener(this);
 
         final CustomPagerViewHolder[] viewHolders = {
-                mBubbleRecommendViewHolder,
-                bubbleColorViewHolder};
+                mMessageColorRecommendViewHolder,
+                mMessageColorAdvanceViewHolder};
 
         CustomFooterViewPager customHeaderViewPager = findViewById(R.id.custom_footer_pager);
         customHeaderViewPager.setViewHolders(viewHolders);
