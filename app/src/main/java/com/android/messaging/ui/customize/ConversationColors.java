@@ -2,6 +2,7 @@ package com.android.messaging.ui.customize;
 
 import android.content.res.Resources;
 import android.graphics.Color;
+import android.provider.CalendarContract;
 import android.support.annotation.ColorInt;
 import android.text.TextUtils;
 
@@ -24,7 +25,7 @@ public class ConversationColors {
     private int mOutgoingBubbleBackgroundColor;
     private int mIncomingTextColor;
     private int mOutgoingTextColor;
-
+    
     public static ConversationColors get() {
         if (sInstance == null) {
             sInstance = new ConversationColors();
@@ -154,11 +155,20 @@ public class ConversationColors {
     }
 
     private String getIndexFromThemeColors(@ColorInt int color) {
+        Resources res = Factory.get().getApplicationContext().getResources();
+        if (color == res.getColor(R.color.message_bubble_color_incoming)
+                || color == res.getColor(R.color.message_bubble_color_outgoing)
+                || color == res.getColor(R.color.message_text_color_outgoing)
+                || color == res.getColor(R.color.message_text_color_incoming)) {
+            return "default";
+        }
+
         for (int i = 0; i < COLORS.length; i++) {
             if (COLORS[i] == color) {
                 return String.valueOf(i);
             }
         }
+
         return "advance";
     }
 
