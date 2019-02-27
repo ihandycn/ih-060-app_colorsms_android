@@ -65,6 +65,7 @@ import com.crashlytics.android.Crashlytics;
 import com.github.moduth.blockcanary.BlockCanary;
 import com.google.common.annotations.VisibleForTesting;
 import com.ihs.app.framework.HSApplication;
+import com.ihs.commons.config.HSConfig;
 import com.ihs.commons.utils.HSLog;
 import com.ihs.device.permanent.HSPermanentUtils;
 import com.ihs.device.permanent.PermanentService;
@@ -238,6 +239,9 @@ public class BugleApplication extends HSApplication implements UncaughtException
         final String KEY_FOR_LAST_USER_PRESENT_TIME = "last_user_present_time";
         final String KEY_FOR_TODAY_USER_PRESENT_COUNT = "today_user_present_count";
         BroadcastCenter.register(getApplicationContext(), (context, intent) -> {
+            if (!HSConfig.optBoolean(false, "Application", "SetDefaultAlert", "Switch")) {
+                return;
+            }
             if (PhoneUtils.getDefault().isDefaultSmsApp()) {
                 return;
             }
