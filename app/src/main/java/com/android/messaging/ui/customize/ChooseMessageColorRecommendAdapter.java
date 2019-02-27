@@ -1,6 +1,7 @@
 package com.android.messaging.ui.customize;
 
 import android.content.Context;
+import android.graphics.PorterDuff;
 import android.graphics.drawable.ColorDrawable;
 import android.support.annotation.ColorInt;
 import android.support.annotation.NonNull;
@@ -85,9 +86,11 @@ public class ChooseMessageColorRecommendAdapter extends RecyclerView.Adapter<Cho
         if (mData[position] == mContext.getResources().getColor(R.color.message_text_color_outgoing)) {
             holder.mBackground.setBackgroundResource(R.drawable.bubble_customize_color_ring);
             holder.mBackground.setImageDrawable(null);
+            holder.mCheckmark.getDrawable().setColorFilter(0xff4d4f51, PorterDuff.Mode.SRC_ATOP);
             return;
         } else {
             holder.mBackground.setBackground(null);
+            holder.mCheckmark.getDrawable().setColorFilter(null);
         }
 
         GlideApp.with(mContext)

@@ -55,7 +55,7 @@ public class BubbleDrawableAdapter extends RecyclerView.Adapter<BubbleDrawableAd
         holder.mBubble.setBackgroundResource(BubbleDrawables.BUBBLES_INCOMING[position]);
         if (position == mSelectedPosition) {
             holder.mBubble.getBackground().setColorFilter(PrimaryColors.getPrimaryColor(), PorterDuff.Mode.SRC_ATOP);
-            holder.mBubble.setImageResource(R.drawable.ic_checkmark_large_light);
+            holder.mBubble.setImageResource(R.drawable.ic_customize_bubble_checkmark);
         } else {
             holder.mBubble.getBackground().setColorFilter(null);
             holder.mBubble.setImageDrawable(null);

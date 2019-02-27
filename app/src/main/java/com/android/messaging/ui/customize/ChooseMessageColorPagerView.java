@@ -21,8 +21,8 @@ import static com.android.messaging.ui.customize.ChooseMessageColorEntryViewHold
 
 public class ChooseMessageColorPagerView extends FrameLayout implements OnColorChangedListener {
 
-    private static final long REVEAL_DURATION = 400L;
-    private static final long DISAPPEAR_DURATION = 360L;
+    private static final long REVEAL_DURATION = 280L;
+    private static final long DISAPPEAR_DURATION = 280L;
 
     private final Interpolator mInterpolator =
             PathInterpolatorCompat.create(0.4f, 0.8f, 0.74f, 1f);
