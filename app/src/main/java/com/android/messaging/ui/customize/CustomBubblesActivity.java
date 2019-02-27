@@ -1,6 +1,5 @@
 package com.android.messaging.ui.customize;
 
-import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.ColorInt;
 import android.support.annotation.Nullable;
@@ -9,9 +8,9 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.view.MenuItem;
-import android.view.View;
 import android.widget.TextView;
 
+import com.android.messaging.BaseActivity;
 import com.android.messaging.R;
 import com.android.messaging.ui.BaseAlertDialog;
 import com.android.messaging.ui.ConversationDrawables;
@@ -31,7 +30,7 @@ import static com.android.messaging.ui.customize.ChooseMessageColorEntryViewHold
 import static com.android.messaging.ui.customize.ChooseMessageColorEntryViewHolder.CustomColor.TEXT_COLOR_OUTGOING;
 
 
-public class CustomBubblesActivity extends AppCompatActivity implements CustomMessageHost {
+public class CustomBubblesActivity extends BaseActivity implements CustomMessageHost {
 
     private ChooseMessageColorPagerView mChooseMessageColorPagerView;
     private CustomMessagePreviewView mCustomMessagePreview;
@@ -42,6 +41,8 @@ public class CustomBubblesActivity extends AppCompatActivity implements CustomMe
     @ChooseMessageColorEntryViewHolder.CustomColor
     private int mColorType;
     private String mConversationId;
+
+    private boolean mHasChanged;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -86,7 +87,9 @@ public class CustomBubblesActivity extends AppCompatActivity implements CustomMe
 
     @Override
     public void closeColorPickerView() {
-        enableSaveButton();
+        if (mHasChanged) {
+            enableSaveButton();
+        }
     }
 
     @Override
@@ -106,12 +109,13 @@ public class CustomBubblesActivity extends AppCompatActivity implements CustomMe
                 break;
         }
         mChooseMessageColorEntryViewHolder.previewCustomColor(mColorType, color);
-        enableSaveButton();
+        mHasChanged = true;
     }
 
     @Override
     public void previewCustomBubbleDrawable(int index) {
         mCustomMessagePreview.previewCustomBubbleDrawables(index);
+        mHasChanged = true;
         enableSaveButton();
     }
 
@@ -148,7 +152,7 @@ public class CustomBubblesActivity extends AppCompatActivity implements CustomMe
 
     @Override
     public void onBackPressed() {
-        if (mSaveButton.isEnabled()) {
+        if (mHasChanged) {
             new BaseAlertDialog.Builder(CustomBubblesActivity.this)
                     .setTitle(R.string.bubble_customize_save_confirm_dialog_title)
                     .setMessage(R.string.bubble_customize_save_confirm_dialog_content)
