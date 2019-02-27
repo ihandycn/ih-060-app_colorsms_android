@@ -84,6 +84,9 @@ public class WallpaperPreviewActivity extends BaseActivity implements WallpaperM
                     @Override
                     public void onResourceReady(@NonNull Bitmap resource, @Nullable Transition<? super Bitmap> transition) {
                         Threads.postOnMainThread(() -> {
+                            if (isDestroyed()) {
+                                return;
+                            }
                             mWallpaperPreviewImg.setVisibility(View.INVISIBLE);
                             mWallpaperPreviewImg.setImageBitmap(resource);
                             ObjectAnimator animator = ObjectAnimator.ofFloat(mWallpaperPreviewImg, "alpha", 0f, 1f);
@@ -270,6 +273,9 @@ public class WallpaperPreviewActivity extends BaseActivity implements WallpaperM
                                 Threads.postOnMainThread(() -> {
                                     view.onLoadingDone();
                                     if (view.isItemSelected()) {
+                                        if (isDestroyed()) {
+                                            return;
+                                        }
                                         setPreviewImage(item.getLocalPath());
                                         WallpaperManager.setWallpaperPath(mThreadId, item.getAbsolutePath());
                                         WallpaperManager.onOnlineWallpaperChanged();

@@ -21,7 +21,7 @@ import org.qcode.fontchange.impl.ActivityFontEventHandlerImpl;
 import org.qcode.fontchange.impl.FontManagerImpl;
 
 public class ChangeFontActivity extends BaseActivity implements LevelSeekBar.OnLevelChangeListener {
-    
+
     private View mChangeFontContainer;
     private TextView mTextFontFamily;
     private TextView mTextFontSize;
