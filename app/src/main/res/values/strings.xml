@@ -884,7 +884,7 @@
     <!-- The title for advanced settings activity  -->
     <string name="advanced_settings_activity_title">Advanced settings</string>
 
-    <string name="change_font">Change Font</string>
+    <string name="change_font">Font &#038; Font Size</string>
 
     <!-- The title for sim_specific settings  -->
     <string name="sim_specific_settings">\"<xliff:g id="sim_name">%s</xliff:g>\" SIM</string>
@@ -1070,9 +1070,9 @@
     <string name="setting_feedback">Feedback</string>
     <string name="setting_privacy_policy">Privacy policy</string>
     <string name="setting_terms_of_service">Terms of service</string>
-    <string name="setting_change_font">Change Font</string>
-    <string name="setting_text_font">Text Font</string>
-    <string name="setting_text_size">Text Size</string>
+    <string name="setting_change_font">Font &#038; Font Size</string>
+    <string name="setting_text_font">Font</string>
+    <string name="setting_text_size">Font Size</string>
     <string name="setting_text_font_name">Roboto</string>
     <string name="setting_text_size_hint_larger">Largest</string>
     <string name="setting_text_size_hint_large">Large</string>
@@ -1114,9 +1114,9 @@
     <string name="drawer_close" translatable="false">Close navigation drawer</string>
     <string name="theme_select_title">Theme Color</string>
     <string name="theme_select_description">Select theme color you like</string>
-    <string name="menu_change_font">Change Font</string>
+    <string name="menu_change_font">Font &#038; Font Size</string>
     <string name="menu_theme_color">Theme Color</string>
-    <string name="menu_bubble">Chat Bubble</string>
+    <string name="menu_bubble">Bubble</string>
     <string name="menu_chat_background">Chat Background</string>
     <string name="menu_setting">Settings</string>
     <string name="menu_rate">5 Star Rating</string>
