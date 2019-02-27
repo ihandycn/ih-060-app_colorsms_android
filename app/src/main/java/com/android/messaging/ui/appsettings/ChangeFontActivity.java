@@ -12,7 +12,9 @@ import com.android.messaging.font.MessageFontManager;
 import com.android.messaging.ui.view.LevelSeekBar;
 import com.android.messaging.util.BugleAnalytics;
 import com.android.messaging.util.BuglePrefs;
+import com.superapps.util.Networks;
 import com.superapps.util.Preferences;
+import com.superapps.util.Toasts;
 import com.superapps.view.TypefacedTextView;
 
 import org.qcode.fontchange.FontManager;
@@ -25,7 +27,7 @@ public class ChangeFontActivity extends BaseActivity implements LevelSeekBar.OnL
     private View mChangeFontContainer;
     private TextView mTextFontFamily;
     private TextView mTextFontSize;
-    private static int[] sTextSizeRes = {R.string.setting_text_size_hint_small,
+    public static int[] sTextSizeRes = {R.string.setting_text_size_hint_small,
             R.string.setting_text_size_hint_medium_small,
             R.string.setting_text_size_hint_normal,
             R.string.setting_text_size_hint_medium_large,
@@ -65,8 +67,14 @@ public class ChangeFontActivity extends BaseActivity implements LevelSeekBar.OnL
         mSeekBar.setLevel(level);
 
         changeFontItem.setOnClickListener(v -> {
-            // open a dialog to choose font
-            new ChooseFontDialog(ChangeFontActivity.this, mListener).show();
+            if (!Networks.isNetworkAvailable(-1)) {
+                Toasts.showToast(R.string.network_error);
+                BugleAnalytics.logEvent("Customize_TextFont_Click", "request", "fail");
+            } else {
+                // open a dialog to choose font
+                new ChooseFontDialog(ChangeFontActivity.this, mListener).show();
+                BugleAnalytics.logEvent("Customize_TextFont_Click", "request", "success");
+            }
         });
         BugleAnalytics.logEvent("Customize_Font_Show");
 
@@ -147,5 +155,6 @@ public class ChangeFontActivity extends BaseActivity implements LevelSeekBar.OnL
         mTextFontSize.setText(getResources().getString(sTextSizeRes[newLevel]));
         // need modify view height
         mChangeFontContainer.requestLayout();
+        BugleAnalytics.logEvent("Customize_TextSize_Change", "size", getResources().getString(sTextSizeRes[newLevel]));
     }
 }

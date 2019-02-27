@@ -44,6 +44,7 @@ import com.android.messaging.R;
 import com.android.messaging.datamodel.BugleNotifications;
 import com.android.messaging.ui.UIIntents;
 import com.android.messaging.ui.appsettings.ChangeFontActivity;
+import com.android.messaging.ui.appsettings.ChooseFontDialog;
 import com.android.messaging.ui.appsettings.ThemeSelectActivity;
 import com.android.messaging.ui.customize.BubbleDrawables;
 import com.android.messaging.ui.customize.ConversationColors;
@@ -53,6 +54,7 @@ import com.android.messaging.ui.emoji.EmojiStoreActivity;
 import com.android.messaging.ui.wallpaper.WallpaperManager;
 import com.android.messaging.ui.wallpaper.WallpaperPreviewActivity;
 import com.android.messaging.util.BugleAnalytics;
+import com.android.messaging.util.BuglePrefs;
 import com.android.messaging.util.Trace;
 import com.android.messaging.util.UiUtils;
 import com.ihs.commons.notificationcenter.HSGlobalNotificationCenter;
@@ -62,6 +64,9 @@ import com.superapps.util.Dimensions;
 import com.superapps.util.Navigations;
 import com.superapps.util.Preferences;
 import com.superapps.util.Threads;
+import com.superapps.view.TypefacedTextView;
+
+import org.qcode.fontchange.FontManager;
 
 public class ConversationListActivity extends AbstractConversationListActivity
         implements View.OnClickListener, INotificationObserver {
@@ -157,6 +162,11 @@ public class ConversationListActivity extends AbstractConversationListActivity
                 "sent bubble color", ConversationColors.get().getConversationColorEventType(false, true),
                 "received text color", ConversationColors.get().getConversationColorEventType(true, false),
                 "sent text color", ConversationColors.get().getConversationColorEventType(false, false));
+
+        BugleAnalytics.logEvent("SMS_Messages_Show_1", true,
+                "font", Preferences.getDefault().getString(TypefacedTextView.MESSAGE_FONT_FAMILY, "Default"),
+                "size", getResources().getString(ChangeFontActivity.sTextSizeRes[BuglePrefs.getApplicationPrefs().getInt(FontManager.MESSAGE_FONT_SCALE, 2)])
+        );
 
         Trace.endSection();
     }
@@ -302,7 +312,8 @@ public class ConversationListActivity extends AbstractConversationListActivity
         }
     }
 
-    @Override public boolean onOptionsItemSelected(MenuItem menuItem) {
+    @Override
+    public boolean onOptionsItemSelected(MenuItem menuItem) {
         if (mActionMode != null &&
                 mActionMode.getCallback().onActionItemClicked(mActionMode, menuItem)) {
             return true;
