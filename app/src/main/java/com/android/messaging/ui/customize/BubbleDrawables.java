@@ -13,7 +13,7 @@ public class BubbleDrawables {
     private static final BuglePrefs prefs = BuglePrefs.getApplicationPrefs();
 
     // R.drawable.style_01,
-    private static final int DEFAULT_DRAWABLE_IDENTIFIER = 0;
+    private static final int DEFAULT_DRAWABLE_IDENTIFIER = 1;
 
     public static final int[] BUBBLES_INCOMING = new int[]{
             R.drawable.style_01,
