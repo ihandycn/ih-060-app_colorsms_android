@@ -54,11 +54,7 @@ public class ConversationDrawables {
     private Drawable mFastScrollPreviewDrawableLeft;
     private Drawable mFastScrollPreviewDrawableRight;
     private final Context mContext;
-    private int mOutgoingBubbleColor;
-    private int mIncomingBubbleColor;
     private int mIncomingErrorBubbleColor;
-    private int mIncomingSelectedBubbleColor;
-    private int mOutgoingSelectedBubbleColor;
     private int mThemeColor;
 
     public static ConversationDrawables get() {
@@ -105,12 +101,8 @@ public class ConversationDrawables {
                 resources.getDrawable(R.drawable.fastscroll_preview_left);
         mFastScrollPreviewDrawableRight =
                 resources.getDrawable(R.drawable.fastscroll_preview_right);
-        mOutgoingBubbleColor = ConversationColors.get().getBubbleBackgroundColor(false);
-        mIncomingBubbleColor = ConversationColors.get().getBubbleBackgroundColor(true);
         mIncomingErrorBubbleColor =
                 resources.getColor(R.color.message_error_bubble_color_incoming);
-        mIncomingSelectedBubbleColor = ConversationColors.get().getBubbleBackgroundColorDark(true);
-        mOutgoingSelectedBubbleColor = ConversationColors.get().getBubbleBackgroundColorDark(false);
         mThemeColor = PrimaryColors.getPrimaryColor();
     }
 
@@ -121,7 +113,8 @@ public class ConversationDrawables {
     }
 
     public Drawable getBubbleDrawable(final boolean selected, final boolean incoming,
-                                      final boolean needArrow, final boolean isError) {
+                                      final boolean needArrow, final boolean isError,
+                                      final String conversationId) {
         final Drawable protoDrawable;
         if (needArrow) {
             if (incoming) {
@@ -141,15 +134,19 @@ public class ConversationDrawables {
             if (isError) {
                 color = mIncomingErrorBubbleColor;
             } else if (selected) {
-                color = mIncomingSelectedBubbleColor;
+                // incoming selected bubble color
+                color = ConversationColors.get().getBubbleBackgroundColorDark(true, conversationId);
             } else {
-                color = mIncomingBubbleColor;
+                // incoming bubble color
+                color = ConversationColors.get().getBubbleBackgroundColor(true, conversationId);
             }
         } else {
             if (selected) {
-                color = mOutgoingSelectedBubbleColor;
+                // outgoing selected bubble color
+                color = ConversationColors.get().getBubbleBackgroundColorDark(false, conversationId);
             } else {
-                color = mOutgoingBubbleColor;
+                // outgoing bubble color
+                color = ConversationColors.get().getBubbleBackgroundColor(false, conversationId);
             }
         }
 

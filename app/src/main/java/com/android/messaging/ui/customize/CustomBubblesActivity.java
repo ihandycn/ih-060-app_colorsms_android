@@ -49,8 +49,11 @@ public class CustomBubblesActivity extends AppCompatActivity implements CustomMe
         setContentView(R.layout.customize_bubbles_activity);
         initActionBar();
 
+        mConversationId = getIntent().getStringExtra(UIIntents.UI_INTENT_EXTRA_CONVERSATION_ID);
+
         mChooseMessageColorPagerView = findViewById(R.id.choose_message_color_view);
         mCustomMessagePreview = findViewById(R.id.custom_message_preview);
+        mCustomMessagePreview.updateBubbleDrawables(mConversationId);
 
         mChooseMessageColorPagerView.setHost(this);
 
@@ -70,7 +73,6 @@ public class CustomBubblesActivity extends AppCompatActivity implements CustomMe
         customHeaderViewPager.setBackgroundColor(getResources().getColor(R.color.contact_picker_background));
         customHeaderViewPager.setCurrentItem(0);
 
-        mConversationId = getIntent().getStringExtra(UIIntents.UI_INTENT_EXTRA_CONVERSATION_ID);
 
         BugleAnalytics.logEvent("Customize_Bubble_Show", "from", getOpenSourceType());
     }
@@ -133,7 +135,7 @@ public class CustomBubblesActivity extends AppCompatActivity implements CustomMe
     }
 
     private void save() {
-        mCustomMessagePreview.save(mConversationId);
+        mCustomMessagePreview.save();
 
         ConversationDrawables.get().updateDrawables();
 

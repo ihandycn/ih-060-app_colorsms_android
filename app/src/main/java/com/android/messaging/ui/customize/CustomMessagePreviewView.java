@@ -16,6 +16,7 @@ import com.superapps.util.BackgroundDrawables;
 import com.superapps.util.Dimensions;
 
 public class CustomMessagePreviewView extends ConstraintLayout {
+    private String mConversationId;
 
     private int mIncomingBackgroundPreviewColor;
     private int mOutgoingBackgroundPreviewColor;
@@ -39,14 +40,15 @@ public class CustomMessagePreviewView extends ConstraintLayout {
         findViewById(R.id.message_preview_timestamp_2).setBackground(BackgroundDrawables.createBackgroundDrawable(
                 getResources().getColor(R.color.white_40_transparent), Dimensions.pxFromDp(16), false
         ));
-        initBubbleDrawables();
+        updateBubbleDrawables(null);
     }
 
-    private void initBubbleDrawables() {
+    void updateBubbleDrawables(final String conversationId) {
+        mConversationId = conversationId;
         mIncomingMessage.setBackground(
-                ConversationDrawables.get().getBubbleDrawable(false, true, true, false));
+                ConversationDrawables.get().getBubbleDrawable(false, true, true, false, mConversationId));
         mOutgoingMessage.setBackground(
-                ConversationDrawables.get().getBubbleDrawable(false, false, true, false));
+                ConversationDrawables.get().getBubbleDrawable(false, false, true, false, mConversationId));
 
         mIncomingBackgroundPreviewColor = ConversationColors.get().getBubbleBackgroundColor(true);
         mOutgoingBackgroundPreviewColor = ConversationColors.get().getBubbleBackgroundColor(false);
@@ -90,7 +92,7 @@ public class CustomMessagePreviewView extends ConstraintLayout {
         }
     }
 
-    public void save(String conversationId) {
+    public void save() {
         boolean bubbleDrawableChanged = false;
         boolean bubbleBackgroundColorChanged = false;
         boolean bubbleTextColorChanged = false;
@@ -102,27 +104,27 @@ public class CustomMessagePreviewView extends ConstraintLayout {
                     String.valueOf(mPreviewBubbleDrawableIdentifier));
         }
 
-        if (mIncomingBackgroundPreviewColor != ConversationColors.get().getBubbleBackgroundColor(true)) {
-            ConversationColors.get().setBubbleBackgroundColor(true, mIncomingBackgroundPreviewColor);
+        if (mIncomingBackgroundPreviewColor != ConversationColors.get().getBubbleBackgroundColor(true, mConversationId)) {
+            ConversationColors.get().setBubbleBackgroundColor(true, mIncomingBackgroundPreviewColor, mConversationId);
             bubbleBackgroundColorChanged = true;
         }
 
-        if (mOutgoingBackgroundPreviewColor != ConversationColors.get().getBubbleBackgroundColor(false)) {
-            ConversationColors.get().setBubbleBackgroundColor(false, mOutgoingBackgroundPreviewColor);
+        if (mOutgoingBackgroundPreviewColor != ConversationColors.get().getBubbleBackgroundColor(false, mConversationId)) {
+            ConversationColors.get().setBubbleBackgroundColor(false, mOutgoingBackgroundPreviewColor, mConversationId);
             bubbleBackgroundColorChanged = true;
         }
 
-        if (mIncomingTextPreviewColor != ConversationColors.get().getMessageTextColor(true)) {
-            ConversationColors.get().setMessageTextColor(true, mIncomingTextPreviewColor);
+        if (mIncomingTextPreviewColor != ConversationColors.get().getMessageTextColor(true, mConversationId)) {
+            ConversationColors.get().setMessageTextColor(true, mIncomingTextPreviewColor, mConversationId);
             bubbleTextColorChanged = true;
         }
 
-        if (mOutgoingTextPreviewColor != ConversationColors.get().getMessageTextColor(false)) {
-            ConversationColors.get().setMessageTextColor(false, mOutgoingTextPreviewColor);
+        if (mOutgoingTextPreviewColor != ConversationColors.get().getMessageTextColor(false, mConversationId)) {
+            ConversationColors.get().setMessageTextColor(false, mOutgoingTextPreviewColor, mConversationId);
             bubbleTextColorChanged = true;
         }
 
-        String from = TextUtils.isEmpty(conversationId) ? "settings" : "chat";
+        String from = TextUtils.isEmpty(mConversationId) ? "settings" : "chat";
 
         BugleAnalytics.logEvent("Customize_Bubble_Change", "from", from, "type",
                 getBubbleChangeString(bubbleDrawableChanged, bubbleBackgroundColorChanged || bubbleTextColorChanged));

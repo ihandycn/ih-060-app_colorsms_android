@@ -3,6 +3,7 @@ package com.android.messaging.ui.customize;
 import android.content.res.Resources;
 import android.graphics.Color;
 import android.support.annotation.ColorInt;
+import android.text.TextUtils;
 
 import com.android.messaging.Factory;
 import com.android.messaging.R;
@@ -62,6 +63,17 @@ public class ConversationColors {
     }
 
     @ColorInt
+    public int getBubbleBackgroundColor(boolean incoming, String conversationId) {
+        if (TextUtils.isEmpty(conversationId)) {
+            return getBubbleBackgroundColor(incoming);
+        } else if (incoming) {
+            return mPrefs.getInt(PREFS_KEY_BUBBLE_BACKGROUND_COLOR_INCOMING + "_" + conversationId, mIncomingBubbleBackgroundColor);
+        } else {
+            return mPrefs.getInt(PREFS_KEY_BUBBLE_BACKGROUND_COLOR_OUTGOING + "_" + conversationId, mOutgoingBubbleBackgroundColor);
+        }
+    }
+
+    @ColorInt
     public int getMessageTextColor(boolean incoming) {
         if (incoming) {
             return mIncomingTextColor;
@@ -70,7 +82,18 @@ public class ConversationColors {
         }
     }
 
-    public void setBubbleBackgroundColor(boolean incoming, @ColorInt int color) {
+    @ColorInt
+    public int getMessageTextColor(boolean incoming, String conversationId) {
+        if (TextUtils.isEmpty(conversationId)) {
+            return getMessageTextColor(incoming);
+        } else if (incoming) {
+            return mPrefs.getInt(PREFS_KEY_MESSAGE_TEXT_COLOR_INCOMING + "_" + conversationId, mIncomingTextColor);
+        } else {
+            return mPrefs.getInt(PREFS_KEY_MESSAGE_TEXT_COLOR_OUTGOING + "_" + conversationId, mOutgoingTextColor);
+        }
+    }
+
+    void setBubbleBackgroundColor(boolean incoming, @ColorInt int color) {
         if (incoming) {
             if (mIncomingBubbleBackgroundColor != color) {
                 mPrefs.putInt(PREFS_KEY_BUBBLE_BACKGROUND_COLOR_INCOMING, color);
@@ -84,7 +107,17 @@ public class ConversationColors {
         }
     }
 
-    public void setMessageTextColor(boolean incoming, @ColorInt int color) {
+    void setBubbleBackgroundColor(boolean incoming, @ColorInt int color, String conversationId) {
+        if (TextUtils.isEmpty(conversationId)) {
+            setBubbleBackgroundColor(incoming, color);
+        } else if (incoming) {
+            mPrefs.putInt(PREFS_KEY_BUBBLE_BACKGROUND_COLOR_INCOMING + "_" + conversationId, color);
+        } else {
+            mPrefs.putInt(PREFS_KEY_BUBBLE_BACKGROUND_COLOR_OUTGOING + "_" + conversationId, color);
+        }
+    }
+
+    void setMessageTextColor(boolean incoming, @ColorInt int color) {
         if (incoming) {
             if (mIncomingTextColor != color) {
                 mPrefs.putInt(PREFS_KEY_MESSAGE_TEXT_COLOR_INCOMING, color);
@@ -95,6 +128,16 @@ public class ConversationColors {
                 mPrefs.putInt(PREFS_KEY_MESSAGE_TEXT_COLOR_OUTGOING, color);
                 mOutgoingTextColor = color;
             }
+        }
+    }
+
+    void setMessageTextColor(boolean incoming, @ColorInt int color, String conversationId) {
+        if (TextUtils.isEmpty(conversationId)) {
+            setMessageTextColor(incoming, color);
+        } else if (incoming) {
+            mPrefs.putInt(PREFS_KEY_MESSAGE_TEXT_COLOR_INCOMING + "_" + conversationId, color);
+        } else {
+            mPrefs.putInt(PREFS_KEY_MESSAGE_TEXT_COLOR_OUTGOING + "_" + conversationId, color);
         }
     }
 
@@ -119,10 +162,9 @@ public class ConversationColors {
         return "advance";
     }
 
-
     @ColorInt
-    public int getBubbleBackgroundColorDark(boolean incoming) {
-        return getColorDark(getBubbleBackgroundColor(incoming));
+    public int getBubbleBackgroundColorDark(boolean incoming, String conversationId) {
+        return getColorDark(getBubbleBackgroundColor(incoming, conversationId));
     }
 
     private int getColorDark(@ColorInt int color) {
