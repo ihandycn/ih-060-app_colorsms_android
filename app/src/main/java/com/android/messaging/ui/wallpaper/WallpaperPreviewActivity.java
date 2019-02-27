@@ -203,7 +203,15 @@ public class WallpaperPreviewActivity extends BaseActivity implements WallpaperM
 
     @Override
     public void onWallpaperChanged() {
-        recreate();
+        if (TextUtils.isEmpty(mThreadId)) {
+            String wallpaperPath = WallpaperManager.getWallpaperPathByThreadId(mThreadId);
+            if (!TextUtils.isEmpty(wallpaperPath)) {
+                mWallpaperPreviewImg.setImageURI(Uri.fromFile(new File(wallpaperPath)));
+            }
+            onItemSelected(null);
+        } else {
+            finish();
+        }
     }
 
     @Override

@@ -1,34 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical">
-
-    <FrameLayout
-        android:id="@+id/chat_background"
-        style="@style/PeopleListItemViewStyle"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="?android:attr/selectableItemBackground">
-
-        <com.superapps.view.TypefacedTextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:paddingBottom="16dp"
-            android:paddingTop="16dp"
-            android:text="@string/wallpaper_title"
-            android:textColor="#222327"
-            android:textSize="16sp"
-            app:typeface="@string/custom_font_medium" />
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1px"
-            android:layout_gravity="bottom"
-            android:background="@color/divider_color" />
-    </FrameLayout>
 
     <FrameLayout
         android:id="@+id/chat_bubble"
@@ -54,5 +29,28 @@
             android:background="@color/divider_color" />
     </FrameLayout>
 
+    <FrameLayout
+        android:id="@+id/chat_background"
+        style="@style/PeopleListItemViewStyle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="?android:attr/selectableItemBackground">
+
+        <com.superapps.view.TypefacedTextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingBottom="16dp"
+            android:paddingTop="16dp"
+            android:text="@string/wallpaper_title"
+            android:textColor="#222327"
+            android:textSize="16sp"
+            app:typeface="@string/custom_font_medium" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1px"
+            android:layout_gravity="bottom"
+            android:background="@color/divider_color" />
+    </FrameLayout>
 </LinearLayout>
 

@@ -31,6 +31,7 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.AppCompatDrawableManager;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.ActionMode;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -51,6 +52,8 @@ import com.android.messaging.ui.customize.ConversationColors;
 import com.android.messaging.ui.customize.CustomBubblesActivity;
 import com.android.messaging.ui.dialog.FiveStarRateDialog;
 import com.android.messaging.ui.emoji.EmojiStoreActivity;
+import com.android.messaging.ui.wallpaper.WallpaperChooserItem;
+import com.android.messaging.ui.wallpaper.WallpaperDownloader;
 import com.android.messaging.ui.wallpaper.WallpaperManager;
 import com.android.messaging.ui.wallpaper.WallpaperPreviewActivity;
 import com.android.messaging.util.BugleAnalytics;
@@ -144,29 +147,40 @@ public class ConversationListActivity extends AbstractConversationListActivity
 
         setupDrawer();
 
-        String bgPath = WallpaperManager.getWallpaperPathByThreadId(null);
-        String backgroundStr;
-        if (TextUtils.isEmpty(bgPath)) {
-            backgroundStr = "default";
-        } else if (bgPath.contains("_1.png")) {
-            backgroundStr = "customize";
-        } else {
-            backgroundStr = "colorsms";
-        }
         HSGlobalNotificationCenter.addObserver(EVENT_MAINPAGE_RECREATE, this);
-        BugleAnalytics.logEvent("SMS_Messages_Show", true,
-                "themeColor", String.valueOf(ThemeSelectActivity.getSelectedIndex()),
-                "background", backgroundStr,
-                "bubbleStyle", String.valueOf(BubbleDrawables.getSelectedIdentifier()),
-                "received bubble color", ConversationColors.get().getConversationColorEventType(true, true),
-                "sent bubble color", ConversationColors.get().getConversationColorEventType(false, true),
-                "received text color", ConversationColors.get().getConversationColorEventType(true, false),
-                "sent text color", ConversationColors.get().getConversationColorEventType(false, false));
 
-        BugleAnalytics.logEvent("SMS_Messages_Show_1", true,
-                "font", Preferences.getDefault().getString(TypefacedTextView.MESSAGE_FONT_FAMILY, "Default"),
-                "size", getResources().getString(ChangeFontActivity.sTextSizeRes[BuglePrefs.getApplicationPrefs().getInt(FontManager.MESSAGE_FONT_SCALE, 2)])
-        );
+        Threads.postOnThreadPoolExecutor(() -> {
+            String bgPath = WallpaperManager.getWallpaperPathByThreadId(null);
+            String backgroundStr;
+            if (TextUtils.isEmpty(bgPath)) {
+                backgroundStr = "default";
+            } else if (bgPath.contains("_1.png")) {
+                backgroundStr = "customize";
+            } else {
+                int index = 100;
+                for (int i = 0; i < WallpaperChooserItem.sRemoteUrl.length; i++) {
+                    if (WallpaperDownloader.getAbsolutePath(WallpaperChooserItem.sRemoteUrl[i]).equals(bgPath)) {
+                        index = i;
+                        break;
+                    }
+                }
+                backgroundStr = "colorsms_" + index;
+            }
+            BugleAnalytics.logEvent("SMS_Messages_Show", true,
+                    "themeColor", String.valueOf(ThemeSelectActivity.getSelectedIndex()),
+                    "background", backgroundStr,
+                    "bubbleStyle", String.valueOf(BubbleDrawables.getSelectedIdentifier()),
+                    "received bubble color", ConversationColors.get().getConversationColorEventType(true, true),
+                    "sent bubble color", ConversationColors.get().getConversationColorEventType(false, true),
+                    "received text color", ConversationColors.get().getConversationColorEventType(true, false),
+                    "sent text color", ConversationColors.get().getConversationColorEventType(false, false));
+
+            BugleAnalytics.logEvent("SMS_Messages_Show_1", true,
+                    "font", Preferences.getDefault().getString(TypefacedTextView.MESSAGE_FONT_FAMILY, "Default"),
+                    "size", getResources().getString(ChangeFontActivity.sTextSizeRes[BuglePrefs.getApplicationPrefs().getInt(FontManager.MESSAGE_FONT_SCALE, 2)])
+            );
+        });
+
 
         Trace.endSection();
     }

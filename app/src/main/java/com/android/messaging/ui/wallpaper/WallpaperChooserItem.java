@@ -23,12 +23,11 @@ public class WallpaperChooserItem {
             R.drawable.wallpaper_thumbnail_frost,
             R.drawable.wallpaper_thumbnail_gates_wood,
             R.drawable.wallpaper_thumbnail_iceland,
-            R.drawable.wallpaper_thumbnail_neon,
             R.drawable.wallpaper_thumbnail_sea,
             R.drawable.wallpaper_thumbnail_winter
     };
 
-    private static final String[] sRemoteUrl = {
+    public static final String[] sRemoteUrl = {
             "https://s3.amazonaws.com/superapps-dev/ColorSMS/Chat%20Background/wallpaper_abstract.jpg",
             "https://s3.amazonaws.com/superapps-dev/ColorSMS/Chat%20Background/wallpaper_butterfly1.jpg",
             "https://s3.amazonaws.com/superapps-dev/ColorSMS/Chat%20Background/wallpaper_butterfly2.jpg",
@@ -40,7 +39,6 @@ public class WallpaperChooserItem {
             "https://s3.amazonaws.com/superapps-dev/ColorSMS/Chat%20Background/wallpaper_forst.jpg",
             "https://s3.amazonaws.com/superapps-dev/ColorSMS/Chat%20Background/wallpaper_gates_wood.jpg",
             "https://s3.amazonaws.com/superapps-dev/ColorSMS/Chat%20Background/wallpaper_iceland.jpg",
-            "https://s3.amazonaws.com/superapps-dev/ColorSMS/Chat%20Background/wallpaper_neon.jpg",
             "https://s3.amazonaws.com/superapps-dev/ColorSMS/Chat%20Background/wallpaper_sea.jpg",
             "https://s3.amazonaws.com/superapps-dev/ColorSMS/Chat%20Background/wallpaper_winter.jpg"
     };
