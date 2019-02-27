@@ -1,5 +1,6 @@
 package com.android.messaging.ui.customize;
 
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.ColorInt;
 import android.support.annotation.Nullable;
@@ -152,9 +153,12 @@ public class CustomBubblesActivity extends AppCompatActivity implements CustomMe
                     .setMessage(R.string.bubble_customize_save_confirm_dialog_content)
                     .setPositiveButton(getString(R.string.save).toUpperCase(), (dialog, which) -> {
                         save();
+                        finish();
                         BugleAnalytics.logEvent("Customize_Bubble_SaveChange_Alert_Click");
                     })
-                    .setNegativeButton(getString(R.string.share_cancel).toUpperCase(), null)
+                    .setNegativeButton(getString(R.string.share_cancel).toUpperCase(), (dialog, which) -> {
+                        finish();
+                    })
                     .show();
         } else {
             super.onBackPressed();
