@@ -3,8 +3,9 @@ package com.android.messaging.ui.view;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Canvas;
-import android.graphics.Color;
 import android.graphics.Paint;
+import android.graphics.PorterDuff;
+import android.graphics.PorterDuffColorFilter;
 import android.graphics.RectF;
 import android.graphics.drawable.Drawable;
 import android.support.v4.content.ContextCompat;
@@ -13,6 +14,7 @@ import android.view.MotionEvent;
 import android.view.View;
 
 import com.android.messaging.R;
+import com.android.messaging.ui.customize.PrimaryColors;
 import com.superapps.util.Dimensions;
 
 /**
@@ -27,10 +29,8 @@ public class LevelSeekBar extends View {
     private static final int DEFAULT_LEVEL = 3;
     private static final int DEFAULT_TRACK_HEIGHT = Dimensions.pxFromDp(2.3f);
     private static final int DEFAULT_TRACK_BACKGROUND_HEIGHT = Dimensions.pxFromDp(2f);
-    private static final int DEFAULT_TRACK_COLOR = 0xff1acc48;
     private static final int DEFAULT_TRACK_BACKGROUND_COLOR = 0xffd8dde2;
     private static final int DEFAULT_THUMB_RES_ID = R.drawable.settings_icon_size_slider;
-    private static final int DEFAULT_SCALE_MARK_COLOR = 0xffffffff;
     private float mRoundRadius;
 
     public interface OnLevelChangeListener {
@@ -63,15 +63,16 @@ public class LevelSeekBar extends View {
         mTrackHeight = a.getDimensionPixelSize(R.styleable.LevelSeekBar_trackHeight, DEFAULT_TRACK_HEIGHT);
         mTrackBgHeight = a.getDimensionPixelSize(R.styleable.LevelSeekBar_trackBackgroundHeight,
                 DEFAULT_TRACK_BACKGROUND_HEIGHT);
-        mTrackColor = a.getColor(R.styleable.LevelSeekBar_trackColor, DEFAULT_TRACK_COLOR);
+        mTrackColor = PrimaryColors.getPrimaryColor();
         mTrackBgColor = a.getColor(R.styleable.LevelSeekBar_trackBackgroundColor, DEFAULT_TRACK_BACKGROUND_COLOR);
         mThumbDrawable = a.getDrawable(R.styleable.LevelSeekBar_thumb);
         if (mThumbDrawable == null) {
             mThumbDrawable = ContextCompat.getDrawable(context, DEFAULT_THUMB_RES_ID);
         }
+        mThumbDrawable.setColorFilter(new PorterDuffColorFilter(PrimaryColors.getPrimaryColor(), PorterDuff.Mode.SRC_IN));
         mScaleMark = a.getInt(R.styleable.LevelSeekBar_scaleMark, NORMAL_MARK);
         if (mScaleMark != NORMAL_MARK) {
-            mMarkColor = a.getColor(R.styleable.LevelSeekBar_scaleMarkColor, DEFAULT_SCALE_MARK_COLOR);
+            mMarkColor = PrimaryColors.getPrimaryColor();
         }
         a.recycle();
         mShapePaint = new Paint();

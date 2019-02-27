@@ -1,6 +1,5 @@
 package com.android.messaging.ui.appsettings;
 
-import android.content.Context;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
@@ -12,7 +11,6 @@ import com.android.messaging.R;
 import com.android.messaging.font.MessageFontManager;
 import com.android.messaging.ui.view.LevelSeekBar;
 import com.android.messaging.util.BuglePrefs;
-import com.google.android.gms.common.GoogleApiAvailability;
 
 import org.qcode.fontchange.FontManager;
 import org.qcode.fontchange.IFontChangeListener;
@@ -24,7 +22,12 @@ public class ChangeFontActivity extends BaseActivity implements LevelSeekBar.OnL
     private View mChangeFontContainer;
     private TextView mTextFontFamily;
     private TextView mTextFontSize;
-    private String[] mTextSizes = {"Small", "Medium Small", "Normal", "Medium Large", "Large", "Larger"};
+    private static int[] sTextSizeRes = {R.string.setting_text_size_hint_small,
+            R.string.setting_text_size_hint_medium_small,
+            R.string.setting_text_size_hint_normal,
+            R.string.setting_text_size_hint_medium_large,
+            R.string.setting_text_size_hint_large,
+            R.string.setting_text_size_hint_larger};
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,7 +54,7 @@ public class ChangeFontActivity extends BaseActivity implements LevelSeekBar.OnL
         String fontFamily = prefs.getString(FontManager.MESSAGE_FONT_FAMILY, "Default");
 
         mTextFontFamily.setText(fontFamily);
-        mTextFontSize.setText(mTextSizes[level]);
+        mTextFontSize.setText(getResources().getString(sTextSizeRes[level]));
         mSeekBar.setOnLevelChangeListener(this);
         mSeekBar.setLevel(level);
 
@@ -106,7 +109,7 @@ public class ChangeFontActivity extends BaseActivity implements LevelSeekBar.OnL
     public void onLevelChanged(LevelSeekBar seekBar, int oldLevel, int newLevel, boolean fromUser) {
         MessageFontManager.setFontScale(newLevel);
         FontManagerImpl.getInstance().changeFontSize(MessageFontManager.getFontScaleByLevel(newLevel), null);
-        mTextFontSize.setText(mTextSizes[newLevel]);
+        mTextFontSize.setText(getResources().getString(sTextSizeRes[newLevel]));
         // need modify view height
         mChangeFontContainer.requestLayout();
     }
