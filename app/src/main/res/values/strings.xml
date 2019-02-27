@@ -1075,12 +1075,12 @@
     <string name="setting_text_size">Text Size</string>
     <string name="setting_text_font_name">Roboto</string>
     <string name="setting_text_size_info">Medium Large</string>
-    <string name="setting_text_size_hint_larger">Larger</string>
+    <string name="setting_text_size_hint_larger">Largest</string>
     <string name="setting_text_size_hint_large">Large</string>
-    <string name="setting_text_size_hint_medium_large">Medium Large</string>
-    <string name="setting_text_size_hint_normal">Normal</string>
-    <string name="setting_text_size_hint_medium_small">Medium Small</string>
-    <string name="setting_text_size_hint_small">Small</string>
+    <string name="setting_text_size_hint_medium_large">Medium</string>
+    <string name="setting_text_size_hint_normal">Default</string>
+    <string name="setting_text_size_hint_medium_small">Small</string>
+    <string name="setting_text_size_hint_small">Smallest</string>
     <string name="setting_sms_pop_ups">SMS Pop-ups</string>
     <string name="setting_sms_pop_ups_summary">Pop up a window when receiving messages</string>
     <string name="setting_sms_show">SMS Show</string>
