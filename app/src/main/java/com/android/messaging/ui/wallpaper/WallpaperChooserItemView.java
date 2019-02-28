@@ -122,8 +122,8 @@ public class WallpaperChooserItemView extends FrameLayout {
                 onDeselected();
             }
         }
-        if (mLoadingAnimator.isRunning()) {
-            mLoadingAnimator.cancel();
+        if (mLoadEndLottie.isAnimating()) {
+            mLoadEndLottie.cancelAnimation();
         }
     }
 
