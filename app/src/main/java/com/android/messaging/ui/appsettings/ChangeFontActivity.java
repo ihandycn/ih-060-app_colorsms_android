@@ -144,7 +144,7 @@ public class ChangeFontActivity extends BaseActivity implements LevelSeekBar.OnL
 
         @Override
         public void onLoadSuccess(float scale) {
-            String fontFamily = Preferences.getDefault().getString(TypefacedTextView.MESSAGE_FONT_FAMILY, "Roboto");
+            String fontFamily = Preferences.getDefault().getString(TypefacedTextView.MESSAGE_FONT_FAMILY, "Default");
             mTextFontFamily.setText(fontFamily);
         }
 
@@ -166,7 +166,8 @@ public class ChangeFontActivity extends BaseActivity implements LevelSeekBar.OnL
     @Override
     public void onLevelChanged(LevelSeekBar seekBar, int oldLevel, int newLevel, boolean fromUser) {
         MessageFontManager.setFontScale(newLevel);
-        FontManagerImpl.getInstance().changeFontSize(MessageFontManager.getFontScaleByLevel(newLevel), null);
+        //FontManagerImpl.getInstance().changeFontSize(MessageFontManager.getFontScaleByLevel(newLevel), null);
+        FontManagerImpl.getInstance().changeFontSize(MessageFontManager.getFontScaleByLevel(newLevel), mChangeFontContainer, true);
         mTextFontSize.setText(getResources().getString(sTextSizeRes[newLevel]));
         // need modify view height
         mChangeFontContainer.requestLayout();

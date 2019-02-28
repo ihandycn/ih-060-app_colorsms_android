@@ -48,9 +48,9 @@ public class ChooseFontDialog {
     private static final String[] sSupportGoogleFonts = {
             "Default", "System",
             "Advent Pro", "Atma", "Cormorant Garamond", "Encode Sans", "Expletus Sans",
-            "Fahkwang", "Fira Sans Condensed", "IBM Plex Sans", "Kodchasan", "Krub",
-            "Mali", "Mitr", "Montserrat", "Montserrat Alternates", "Rajdhani",
-            "Saira", "Saira Extra Condensed", "Taviraj", "Tillana", "Zilla Slab"
+            "Fira Sans Condensed", "IBM Plex Sans",
+            "Mitr", "Montserrat", "Montserrat Alternates", "Rajdhani",
+            "Saira", "Taviraj", "Tillana", "Zilla Slab"
     };
 
     private static final String TAG = "ChooseFontDialog";

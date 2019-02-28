@@ -93,6 +93,17 @@ public class FontManagerImpl extends FontManager {
         }
     }
 
+    public void changeFontSize(float scale, View view, boolean applyChild) {
+        float tmpScale = mScale;
+        mScale = scale;
+
+        try {
+            applyFont(view, applyChild);
+        } catch (Exception ex) {
+            mScale = tmpScale;
+        }
+    }
+
     public void applyFont(TypefacedTextView textView) {
         if (null == textView) {
             Logging.d(TAG, "applyFont()| view is null");
