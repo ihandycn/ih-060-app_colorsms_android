@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/change_font_container"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical">
+              xmlns:app="http://schemas.android.com/apk/res-auto"
+              android:id="@+id/change_font_container"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:orientation="vertical">
 
-    <include layout="@layout/top_tool_bar_view" />
+    <include layout="@layout/top_tool_bar_view"/>
 
     <FrameLayout
         android:layout_width="match_parent"
@@ -17,7 +17,7 @@
             android:id="@+id/change_font_bg"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:scaleType="centerCrop" />
+            android:scaleType="centerCrop"/>
 
         <ScrollView
             android:layout_width="match_parent"
@@ -25,7 +25,7 @@
 
             <com.android.messaging.ui.customize.CustomMessagePreviewView
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content"/>
         </ScrollView>
     </FrameLayout>
 
@@ -38,11 +38,12 @@
             android:id="@+id/divider"
             android:layout_width="match_parent"
             android:layout_height="8dp"
-            android:background="@color/customize_bubble_divider" />
+            android:background="@color/customize_bubble_divider"/>
 
         <RelativeLayout
             android:id="@+id/change_font_item"
             android:layout_width="match_parent"
+            android:visibility="gone"
             android:layout_height="69dp"
             android:orientation="horizontal">
 
@@ -56,7 +57,7 @@
                 android:textColor="#222327"
                 android:textSize="14.7sp"
                 app:font_style="bold"
-                app:typeface="@string/custom_font_bold" />
+                app:typeface="@string/custom_font_bold"/>
 
             <com.superapps.view.TypefacedTextView
                 android:id="@+id/setting_text_font_name"
@@ -69,7 +70,7 @@
                 android:text="@string/setting_text_font_name"
                 android:textColor="#9b9da7"
                 android:textSize="14sp"
-                app:typeface="@string/custom_font_medium" />
+                app:typeface="@string/custom_font_medium"/>
         </RelativeLayout>
 
         <View
@@ -77,8 +78,9 @@
             android:layout_height="0.3dp"
             android:layout_marginLeft="22dp"
             android:layout_marginRight="22dp"
+            android:visibility="gone"
             android:alpha="0.15"
-            android:background="#313131" />
+            android:background="#313131"/>
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -95,7 +97,7 @@
                 android:textColor="#222327"
                 android:textSize="14.7sp"
                 app:font_style="bold"
-                app:typeface="@string/custom_font_bold" />
+                app:typeface="@string/custom_font_bold"/>
 
             <com.superapps.view.TypefacedTextView
                 android:id="@+id/setting_text_size_info"
@@ -106,7 +108,7 @@
                 android:layout_marginEnd="22dp"
                 android:textColor="#9b9da7"
                 android:textSize="14sp"
-                app:typeface="@string/custom_font_medium" />
+                app:typeface="@string/custom_font_medium"/>
         </RelativeLayout>
 
         <LinearLayout
@@ -124,7 +126,7 @@
                 android:text="@string/setting_text_size_hint_small"
                 android:textColor="#e6313239"
                 android:textSize="10sp"
-                app:typeface="@string/custom_font_medium" />
+                app:typeface="@string/custom_font_medium"/>
 
             <View
                 android:layout_width="0dp"
@@ -138,7 +140,7 @@
                 android:text="@string/setting_text_size_hint_normal"
                 android:textColor="#e6313239"
                 android:textSize="12sp"
-                app:typeface="@string/custom_font_medium" />
+                app:typeface="@string/custom_font_medium"/>
 
             <View
                 android:layout_width="0dp"
@@ -152,7 +154,7 @@
                 android:text="@string/setting_text_size_hint_larger"
                 android:textColor="#e6313239"
                 android:textSize="16sp"
-                app:typeface="@string/custom_font_medium" />
+                app:typeface="@string/custom_font_medium"/>
         </LinearLayout>
 
         <com.android.messaging.ui.view.LevelSeekBar
@@ -165,6 +167,6 @@
             app:scaleMark="round"
             app:thumb="@drawable/settings_icon_size_slider_blue_solid"
             app:trackBackgroundHeight="3dp"
-            app:trackHeight="3dp" />
+            app:trackHeight="3dp"/>
     </LinearLayout>
 </LinearLayout>
