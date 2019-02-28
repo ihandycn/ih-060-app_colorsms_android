@@ -767,15 +767,6 @@ public class ConversationMessageView extends FrameLayout implements View.OnClick
                 (LinearLayout.LayoutParams) mMessageTextAndInfoView.getLayoutParams();
         textAndInfoLayoutParams.topMargin = textTopMargin;
 
-        if (UiUtils.isRtlMode()) {
-            // Need to switch right and left padding in RtL mode
-            mMessageTextAndInfoView.setPadding(textRightPadding, textTopPadding, textLeftPadding,
-                    textBottomPadding);
-        } else {
-            mMessageTextAndInfoView.setPadding(textLeftPadding, textTopPadding, textRightPadding,
-                    textBottomPadding);
-        }
-
         // Update the message row and message bubble views
         setPadding(getPaddingLeft(), messageTopPadding, getPaddingRight(), 0);
         mMessageBubble.setGravity(gravity);

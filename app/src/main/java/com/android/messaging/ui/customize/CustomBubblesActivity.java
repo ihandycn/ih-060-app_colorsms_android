@@ -150,7 +150,7 @@ public class CustomBubblesActivity extends BaseActivity implements CustomMessage
         mSaveButton.setOnClickListener(v -> {
             save();
             BugleAnalytics.logEvent("Customize_Bubble_Save_Click");
-            BugleAnalytics.logEvent("Customize_Bubble_SaveChange_Alert_Show");
+
         });
         disableSaveButton();
     }
@@ -183,6 +183,7 @@ public class CustomBubblesActivity extends BaseActivity implements CustomMessage
                         finish();
                     })
                     .show();
+            BugleAnalytics.logEvent("Customize_Bubble_SaveChange_Alert_Show");
         } else {
             super.onBackPressed();
         }
