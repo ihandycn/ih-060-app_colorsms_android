@@ -3,13 +3,14 @@ package com.android.messaging.ui.customize;
 import android.support.annotation.DrawableRes;
 import android.text.TextUtils;
 
+import com.android.messaging.Factory;
 import com.android.messaging.R;
 import com.android.messaging.util.BuglePrefs;
 
 import static com.android.messaging.util.BuglePrefsKeys.PREFS_KEY_BUBBLE_DRAWABLE_IDENTIFIER;
 
 public class BubbleDrawables {
-    private static final BuglePrefs prefs = BuglePrefs.getApplicationPrefs();
+    private static final BuglePrefs prefs = Factory.get().getCustomizePrefs();
 
     // R.drawable.style_01,
     private static final int DEFAULT_DRAWABLE_IDENTIFIER = 1;

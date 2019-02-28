@@ -20,7 +20,7 @@ import static com.android.messaging.util.BuglePrefsKeys.PREFS_KEY_MESSAGE_TEXT_C
 
 public class ConversationColors {
     private static ConversationColors sInstance;
-    private final BuglePrefs mPrefs = BugleApplicationPrefs.getApplicationPrefs();
+    private final BuglePrefs mPrefs = Factory.get().getCustomizePrefs();
     private int mIncomingBubbleBackgroundColor;
     private int mOutgoingBubbleBackgroundColor;
     private int mIncomingTextColor;

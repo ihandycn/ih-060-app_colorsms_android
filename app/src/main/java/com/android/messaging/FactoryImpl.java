@@ -37,6 +37,7 @@ import com.android.messaging.ui.UIIntents;
 import com.android.messaging.ui.UIIntentsImpl;
 import com.android.messaging.util.Assert;
 import com.android.messaging.util.BugleApplicationPrefs;
+import com.android.messaging.util.BugleCustomizePrefs;
 import com.android.messaging.util.BugleGservices;
 import com.android.messaging.util.BugleGservicesImpl;
 import com.android.messaging.util.BuglePrefs;
@@ -61,6 +62,7 @@ class FactoryImpl extends Factory {
     private BugleGservices mBugleGservices;
     private BugleApplicationPrefs mBugleApplicationPrefs;
     private BugleWidgetPrefs mBugleWidgetPrefs;
+    private BuglePrefs mBugleCustomizePrefs;
     private Context mApplicationContext;
     private UIIntents mUIIntents;
     private MemoryCacheManager mMemoryCacheManager;
@@ -104,6 +106,7 @@ class FactoryImpl extends Factory {
         factory.mBugleApplicationPrefs = new BugleApplicationPrefs(applicationContext);
         factory.mDataModel = new DataModelImpl(applicationContext);
         factory.mBugleWidgetPrefs = new BugleWidgetPrefs(applicationContext);
+        factory.mBugleCustomizePrefs = new BugleCustomizePrefs(applicationContext);
         factory.mUIIntents = new UIIntentsImpl();
         factory.mContactContentObserver = new ContactContentObserver();
         factory.mMediaUtil = new MediaUtilImpl();
@@ -216,6 +219,11 @@ class FactoryImpl extends Factory {
     @Override
     public BuglePrefs getWidgetPrefs() {
         return mBugleWidgetPrefs;
+    }
+
+    @Override
+    public BuglePrefs getCustomizePrefs() {
+        return mBugleCustomizePrefs;
     }
 
     @Override

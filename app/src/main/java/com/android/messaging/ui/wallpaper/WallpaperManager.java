@@ -2,6 +2,7 @@ package com.android.messaging.ui.wallpaper;
 
 import android.text.TextUtils;
 
+import com.android.messaging.Factory;
 import com.android.messaging.util.BuglePrefs;
 
 import java.io.File;
@@ -10,9 +11,13 @@ import java.util.List;
 
 public class WallpaperManager {
 
+
     private static final String PREF_KEY_WALLPAPER_PATH = "pref_key_wallpaper_path";
     static final String LOCAL_DIRECTORY = "wallpapers" + File.separator + "local";
     private static List<WallpaperChangeListener> sWallpaperChangeListeners;
+
+    private static BuglePrefs sPrefs = Factory.get().getCustomizePrefs();
+
 
     public interface WallpaperChangeListener {
         void onWallpaperChanged();
@@ -57,7 +62,7 @@ public class WallpaperManager {
     }
 
     public static String getWallpaperPathByThreadId(String threadId) {
-        String threadWallpaperPath = BuglePrefs.getApplicationPrefs().
+        String threadWallpaperPath = sPrefs.
                 getString(PREF_KEY_WALLPAPER_PATH + "_" + threadId, "");
         if (!TextUtils.isEmpty(threadWallpaperPath)) {
             if (threadWallpaperPath.equals("empty")) {
@@ -70,7 +75,7 @@ public class WallpaperManager {
     }
 
     private static String getWallpaperPath() {
-        String wallpaperPath = BuglePrefs.getApplicationPrefs().
+        String wallpaperPath = sPrefs.
                 getString(PREF_KEY_WALLPAPER_PATH, "");
         if (wallpaperPath != null && !wallpaperPath.equals("")) {
             return wallpaperPath;
@@ -81,9 +86,9 @@ public class WallpaperManager {
 
     static void setWallpaperPath(String threadId, String path) {
         if (!TextUtils.isEmpty(threadId)) {
-            BuglePrefs.getApplicationPrefs().putString(PREF_KEY_WALLPAPER_PATH + "_" + threadId, path);
+            sPrefs.putString(PREF_KEY_WALLPAPER_PATH + "_" + threadId, path);
         } else {
-            BuglePrefs.getApplicationPrefs().putString(PREF_KEY_WALLPAPER_PATH, path);
+            sPrefs.putString(PREF_KEY_WALLPAPER_PATH, path);
         }
     }
 
