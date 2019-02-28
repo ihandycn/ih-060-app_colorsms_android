@@ -37,6 +37,7 @@ import android.view.animation.ScaleAnimation;
 import android.view.animation.TranslateAnimation;
 import android.widget.ImageView;
 
+import com.airbnb.lottie.L;
 import com.android.ex.photo.ActionBarInterface.OnMenuVisibilityListener;
 import com.android.ex.photo.PhotoViewPager.InterceptType;
 import com.android.ex.photo.PhotoViewPager.OnInterceptTouchListener;
@@ -57,7 +58,7 @@ import java.util.Set;
 /**
  * This class implements all the logic of the photo view activity. An activity should use this class
  * calling through from relevant activity methods to the methods of the same name here.
- *
+ * <p>
  * To customize the photo viewer activity, you should subclass this and implement your
  * customizations here. Then subclass {@link PhotoViewActivity} and override just
  * {@link PhotoViewActivity#createController createController} to instantiate your controller
@@ -65,27 +66,39 @@ import java.util.Set;
  */
 public class PhotoViewController implements
         LoaderManager.LoaderCallbacks<Cursor>, OnPageChangeListener, OnInterceptTouchListener,
-        OnMenuVisibilityListener, PhotoViewCallbacks  {
+        OnMenuVisibilityListener, PhotoViewCallbacks {
 
     /**
      * Defines the interface between the Activity and this class.
-     *
+     * <p>
      * The activity itself must delegate all appropriate method calls into this class, to the
      * methods of the same name.
      */
     public interface ActivityInterface {
         public Context getContext();
+
         public Context getApplicationContext();
+
         public Intent getIntent();
+
         public void setContentView(int resId);
+
         public <T extends View> T findViewById(int id);
+
         public Resources getResources();
+
         public FragmentManager getSupportFragmentManager();
+
         public LoaderManager getSupportLoaderManager();
+
         public ActionBarInterface getActionBarInterface();
+
         public boolean onOptionsItemSelected(MenuItem item);
+
         public void finish();
+
         public void overridePendingTransition(int enterAnim, int exitAnim);
+
         public PhotoViewController getController();
     }
 
@@ -110,13 +123,17 @@ public class PhotoViewController implements
 
     public static final int LOADER_PHOTO_LIST = 100;
 
-    /** Count used when the real photo count is unknown [but, may be determined] */
+    /**
+     * Count used when the real photo count is unknown [but, may be determined]
+     */
     public static final int ALBUM_COUNT_UNKNOWN = -1;
 
     public static final int ENTER_ANIMATION_DURATION_MS = 250;
     public static final int EXIT_ANIMATION_DURATION_MS = 250;
 
-    /** Argument key for the dialog message */
+    /**
+     * Argument key for the dialog message
+     */
     public static final String KEY_MESSAGE = "dialog_message";
 
     public static int sMemoryClass;
@@ -128,52 +145,94 @@ public class PhotoViewController implements
 
     private final View.OnSystemUiVisibilityChangeListener mSystemUiVisibilityChangeListener;
 
-    /** The URI of the photos we're viewing; may be {@code null} */
+    /**
+     * The URI of the photos we're viewing; may be {@code null}
+     */
     private String mPhotosUri;
-    /** The uri of the initial photo */
+    /**
+     * The uri of the initial photo
+     */
     private String mInitialPhotoUri;
-    /** The index of the currently viewed photo */
+    /**
+     * The index of the currently viewed photo
+     */
     private int mCurrentPhotoIndex;
-    /** The uri of the currently viewed photo */
+    /**
+     * The uri of the currently viewed photo
+     */
     private String mCurrentPhotoUri;
-    /** The query projection to use; may be {@code null} */
+    /**
+     * The query projection to use; may be {@code null}
+     */
     private String[] mProjection;
-    /** The total number of photos; only valid if {@link #mIsEmpty} is {@code false}. */
+    /**
+     * The total number of photos; only valid if {@link #mIsEmpty} is {@code false}.
+     */
     protected int mAlbumCount = ALBUM_COUNT_UNKNOWN;
-    /** {@code true} if the view is empty. Otherwise, {@code false}. */
+    /**
+     * {@code true} if the view is empty. Otherwise, {@code false}.
+     */
     protected boolean mIsEmpty;
-    /** the main root view */
+    /**
+     * the main root view
+     */
     protected View mRootView;
-    /** Background image that contains nothing, so it can be alpha faded from
-     * transparent to black without affecting any other views. */
+    /**
+     * Background image that contains nothing, so it can be alpha faded from
+     * transparent to black without affecting any other views.
+     */
     @Nullable
     protected View mBackground;
-    /** The main pager; provides left/right swipe between photos */
+    /**
+     * The main pager; provides left/right swipe between photos
+     */
     protected PhotoViewPager mViewPager;
-    /** The temporary image so that we can quickly scale up the fullscreen thumbnail */
+    /**
+     * The temporary image so that we can quickly scale up the fullscreen thumbnail
+     */
     @Nullable
     protected ImageView mTemporaryImage;
-    /** Adapter to create pager views */
+    /**
+     * Adapter to create pager views
+     */
     protected PhotoPagerAdapter mAdapter;
-    /** Whether or not we're in "full screen" mode */
+    /**
+     * Whether or not we're in "full screen" mode
+     */
     protected boolean mFullScreen;
-    /** The listeners wanting full screen state for each screen position */
+    /**
+     * The listeners wanting full screen state for each screen position
+     */
     private final Map<Integer, OnScreenListener>
             mScreenListeners = new HashMap<Integer, OnScreenListener>();
-    /** The set of listeners wanting full screen state */
+    /**
+     * The set of listeners wanting full screen state
+     */
     private final Set<CursorChangedListener> mCursorListeners = new HashSet<CursorChangedListener>();
-    /** When {@code true}, restart the loader when the activity becomes active */
+    /**
+     * When {@code true}, restart the loader when the activity becomes active
+     */
     private boolean mKickLoader;
-    /** Don't attempt operations that may trigger a fragment transaction when the activity is
-     * destroyed */
+    /**
+     * Don't attempt operations that may trigger a fragment transaction when the activity is
+     * destroyed
+     */
     private boolean mIsDestroyedCompat;
-    /** Whether or not this activity is paused */
+    /**
+     * Whether or not this activity is paused
+     */
     protected boolean mIsPaused = true;
-    /** The maximum scale factor applied to images when they are initially displayed */
+    /**
+     * The maximum scale factor applied to images when they are initially displayed
+     */
     protected float mMaxInitialScale;
-    /** The title in the actionbar */
+    /**
+     * The title in the actionbar
+     */
     protected String mActionBarTitle;
-    /** The subtitle in the actionbar */
+    /**
+     * The subtitle in the actionbar
+     */
     protected String mActionBarSubtitle;
 
     private boolean mEnterAnimationFinished;
@@ -183,7 +242,9 @@ public class PhotoViewController implements
     protected int mAnimationStartWidth;
     protected int mAnimationStartHeight;
 
-    /** Whether lights out should invoked based on timer */
+    /**
+     * Whether lights out should invoked based on timer
+     */
     protected boolean mIsTimerLightsOutEnabled;
     protected boolean mActionBarHiddenInitially;
     protected boolean mDisplayThumbsFullScreen;
@@ -226,7 +287,7 @@ public class PhotoViewController implements
     }
 
     public PhotoPagerAdapter createPhotoPagerAdapter(Context context,
-            android.support.v4.app.FragmentManager fm, Cursor c, float maxScale) {
+                                                     android.support.v4.app.FragmentManager fm, Cursor c, float maxScale) {
         return new PhotoPagerAdapter(context, fm, c, maxScale, mDisplayThumbsFullScreen);
     }
 
@@ -306,9 +367,10 @@ public class PhotoViewController implements
 
         mActivity.setContentView(getContentViewId());
 
+        mViewPager = (PhotoViewPager) findViewById(R.id.photo_view_pager);
         // Create the adapter and add the view pager
         mAdapter = createPhotoPagerAdapter(mActivity.getContext(),
-                        mActivity.getSupportFragmentManager(), null, mMaxInitialScale);
+                mActivity.getSupportFragmentManager(), null, mMaxInitialScale);
         final Resources resources = mActivity.getResources();
         mRootView = findViewById(getRootViewId());
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
@@ -316,9 +378,8 @@ public class PhotoViewController implements
         }
         mBackground = getBackground();
         mTemporaryImage = getTemporaryImage();
-        mViewPager = (PhotoViewPager) findViewById(R.id.photo_view_pager);
         mViewPager.setAdapter(mAdapter);
-        mViewPager.setOnPageChangeListener(this);
+        mViewPager.addOnPageChangeListener(this);
         mViewPager.setOnInterceptTouchListener(this);
         mViewPager.setPageMargin(resources.getDimensionPixelSize(R.dimen.photo_page_margin));
 
@@ -397,7 +458,8 @@ public class PhotoViewController implements
         return true;
     }
 
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {}
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+    }
 
     protected View findViewById(int id) {
         return mActivity.findViewById(id);
@@ -409,7 +471,7 @@ public class PhotoViewController implements
      */
     @IdRes
     protected int getRootViewId() {
-      return R.id.photo_activity_root_view;
+        return R.id.photo_activity_root_view;
     }
 
     /**
@@ -455,7 +517,8 @@ public class PhotoViewController implements
         return mTemporaryImage != null;
     }
 
-    public void onStart() {}
+    public void onStart() {
+    }
 
     public void onResume() {
         setFullScreen(mFullScreen, false);
@@ -471,7 +534,8 @@ public class PhotoViewController implements
         mIsPaused = true;
     }
 
-    public void onStop() {}
+    public void onStop() {
+    }
 
     public void onDestroy() {
         mIsDestroyedCompat = true;
@@ -507,13 +571,13 @@ public class PhotoViewController implements
     }
 
     public boolean onOptionsItemSelected(MenuItem item) {
-       switch (item.getItemId()) {
-          case android.R.id.home:
-             mActivity.finish();
-             return true;
-          default:
-             return false;
-       }
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                mActivity.finish();
+                return true;
+            default:
+                return false;
+        }
     }
 
     @Override
@@ -647,7 +711,7 @@ public class PhotoViewController implements
 
                 mViewPager.setCurrentItem(mCurrentPhotoIndex, false);
                 if (wasEmpty) {
-                    setViewActivated(mCurrentPhotoIndex);
+                    setViewActivated(-1, mCurrentPhotoIndex);
                 }
             }
             // Update the any action items
@@ -693,8 +757,9 @@ public class PhotoViewController implements
 
     @Override
     public void onPageSelected(int position) {
+        int lastPosition = mCurrentPhotoIndex;
         mCurrentPhotoIndex = position;
-        setViewActivated(position);
+        setViewActivated(lastPosition, position);
     }
 
     @Override
@@ -796,11 +861,19 @@ public class PhotoViewController implements
     };
 
     @Override
-    public void setViewActivated(int position) {
+    public void setViewActivated(int lastPosition, int position) {
+        if (lastPosition != -1) {
+            OnScreenListener lastListener = mScreenListeners.get(lastPosition);
+            if (lastListener != null) {
+                lastListener.onViewDeActivated(lastPosition);
+            }
+        }
+
         OnScreenListener listener = mScreenListeners.get(position);
         if (listener != null) {
-            listener.onViewActivated();
+            listener.onViewActivated(position);
         }
+
         final Cursor cursor = getCursorAtProperPosition();
         mCurrentPhotoIndex = position;
         // FLAG: get the column indexes once in onLoadFinished().
@@ -852,6 +925,7 @@ public class PhotoViewController implements
     /**
      * Returns a string used as an announcement for accessibility after the user moves to a new
      * photo. It will be called after {@link #updateActionBar} has been called.
+     *
      * @param position the index in the album of the currently active photo
      * @return announcement for accessibility
      */
@@ -878,6 +952,7 @@ public class PhotoViewController implements
 
     /**
      * If the input string is non-null, it is returned, otherwise an empty string is returned;
+     *
      * @param in
      * @return
      */
@@ -891,6 +966,7 @@ public class PhotoViewController implements
     /**
      * Utility method that will return the cursor that contains the data
      * at the current position so that it refers to the current image on screen.
+     *
      * @return the cursor at the current position or
      * null if no cursor exists or if the {@link PhotoViewPager} is null.
      */
@@ -1029,7 +1105,7 @@ public class PhotoViewController implements
                     }
                 };
                 ViewPropertyAnimator animator = mTemporaryImage.animate().scaleX(1f).scaleY(1f)
-                    .translationX(0).translationY(0).setDuration(ENTER_ANIMATION_DURATION_MS);
+                        .translationX(0).translationY(0).setDuration(ENTER_ANIMATION_DURATION_MS);
                 if (version >= Build.VERSION_CODES.JELLY_BEAN) {
                     animator.withEndAction(endRunnable);
                 } else {
@@ -1116,12 +1192,12 @@ public class PhotoViewController implements
             ViewPropertyAnimator animator = null;
             if (hasTemporaryImage() && mTemporaryImage.getVisibility() == View.VISIBLE) {
                 animator = mTemporaryImage.animate().scaleX(scale).scaleY(scale)
-                    .translationX(translateX).translationY(translateY)
-                    .setDuration(EXIT_ANIMATION_DURATION_MS);
+                        .translationX(translateX).translationY(translateY)
+                        .setDuration(EXIT_ANIMATION_DURATION_MS);
             } else {
                 animator = mViewPager.animate().scaleX(scale).scaleY(scale)
-                    .translationX(translateX).translationY(translateY)
-                    .setDuration(EXIT_ANIMATION_DURATION_MS);
+                        .translationX(translateX).translationY(translateY)
+                        .setDuration(EXIT_ANIMATION_DURATION_MS);
             }
             // If the user has swiped to a different photo, fade out the current photo
             // along with the scale animation.
@@ -1213,17 +1289,17 @@ public class PhotoViewController implements
                 final View base = mRootView;
                 base.getViewTreeObserver().addOnGlobalLayoutListener(
                         new OnGlobalLayoutListener() {
-                    @Override
-                    public void onGlobalLayout() {
-                        int version = android.os.Build.VERSION.SDK_INT;
-                        if (version >= android.os.Build.VERSION_CODES.JELLY_BEAN) {
-                            base.getViewTreeObserver().removeOnGlobalLayoutListener(this);
-                        } else {
-                            base.getViewTreeObserver().removeGlobalOnLayoutListener(this);
-                        }
-                        runEnterAnimation();
-                    }
-                });
+                            @Override
+                            public void onGlobalLayout() {
+                                int version = android.os.Build.VERSION.SDK_INT;
+                                if (version >= android.os.Build.VERSION_CODES.JELLY_BEAN) {
+                                    base.getViewTreeObserver().removeOnGlobalLayoutListener(this);
+                                } else {
+                                    base.getViewTreeObserver().removeGlobalOnLayoutListener(this);
+                                }
+                                runEnterAnimation();
+                            }
+                        });
             } else {
                 // initiate the animation
                 runEnterAnimation();
@@ -1361,7 +1437,7 @@ public class PhotoViewController implements
 
     /**
      * Return true iff the app is being run as a secondary user on kitkat.
-     *
+     * <p>
      * This is a hack which we only know to work on kitkat.
      */
     private boolean kitkatIsSecondaryUser() {
@@ -1376,5 +1452,20 @@ public class PhotoViewController implements
      */
     public View.OnSystemUiVisibilityChangeListener getSystemUiVisibilityChangeListener() {
         return mSystemUiVisibilityChangeListener;
+    }
+
+    @Override
+    public String getLottieFilePath(String uriStr) {
+        return null;
+    }
+
+    @Override
+    public String getSoundFilePath(String uriStr) {
+        return null;
+    }
+
+    @Override
+    public int getCurrentPagePosition() {
+        return mCurrentPhotoIndex;
     }
 }

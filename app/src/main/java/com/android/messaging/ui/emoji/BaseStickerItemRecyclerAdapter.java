@@ -5,6 +5,7 @@ import android.graphics.drawable.Drawable;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -145,7 +146,8 @@ public abstract class BaseStickerItemRecyclerAdapter extends RecyclerView.Adapte
     }
 
     void downloadMagicEmoji(boolean isAutoDownload, @NonNull StickerInfo stickerInfo, @NonNull StickerViewHolder holder) {
-        if (Downloader.getInstance().isDownloading(stickerInfo.mMagicUrl)) {
+        String url = TextUtils.isEmpty(stickerInfo.mLottieZipUrl) ? stickerInfo.mMagicUrl : stickerInfo.mLottieZipUrl;
+        if (Downloader.getInstance().isDownloading(url)) {
             return;
         }
 
@@ -154,7 +156,7 @@ public abstract class BaseStickerItemRecyclerAdapter extends RecyclerView.Adapte
             return;
         }
         Downloader.getInstance().download(stickerInfo.mSoundUrl, null);
-        Downloader.getInstance().download(stickerInfo.mMagicUrl, new DownloadListener() {
+        DownloadListener downloadListener = new DownloadListener() {
             @Override
             public void onStart(String url) {
             }
@@ -171,7 +173,7 @@ public abstract class BaseStickerItemRecyclerAdapter extends RecyclerView.Adapte
             public void onSuccess(String url, File file) {
                 HSLog.d(TAG, "downloadMagicEmoji, onComplete()");
                 if (!isAutoDownload) {
-                    BugleAnalytics.logEvent("SMSEmoji_ChatEmoji_Magic_Download", true,"type1", StickerInfo.getNumFromUrl(url), "type2", "success");
+                    BugleAnalytics.logEvent("SMSEmoji_ChatEmoji_Magic_Download", true, "type1", StickerInfo.getNumFromUrl(url), "type2", "success");
                 }
                 holder.progressBar.setProgress(100);
                 Threads.postOnMainThreadDelayed(() -> {
@@ -197,13 +199,19 @@ public abstract class BaseStickerItemRecyclerAdapter extends RecyclerView.Adapte
 
             private void failure(String url) {
                 if (!isAutoDownload) {
-                    BugleAnalytics.logEvent("SMSEmoji_ChatEmoji_Magic_Download", true,"type1", StickerInfo.getNumFromUrl(url), "type2", "fail");
+                    BugleAnalytics.logEvent("SMSEmoji_ChatEmoji_Magic_Download", true, "type1", StickerInfo.getNumFromUrl(url), "type2", "fail");
                 }
                 holder.progressLayout.setVisibility(View.GONE);
                 holder.magicStatusView.setVisibility(View.VISIBLE);
                 Toasts.showToast(R.string.network_error_and_try_again);
             }
-        });
+        };
+        if (TextUtils.isEmpty(stickerInfo.mLottieZipUrl)) {
+            Downloader.getInstance().download(stickerInfo.mMagicUrl, downloadListener);
+        } else {
+            Downloader.getInstance().download(stickerInfo.mMagicUrl, null);
+            Downloader.getInstance().download(stickerInfo.mLottieZipUrl, downloadListener);
+        }
         holder.progressLayout.setVisibility(View.VISIBLE);
         holder.magicStatusView.setVisibility(View.INVISIBLE);
         holder.progressBar.setProgress(1);

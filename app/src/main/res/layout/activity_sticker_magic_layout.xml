@@ -20,18 +20,11 @@
         tools:ignore="RtlHardcoded" />
 
     <FrameLayout
+        android:id="@+id/magic_container_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_marginBottom="74.3dp"
-        android:layout_marginTop="61dp">
-
-        <pl.droidsonroids.gif.GifImageView
-            android:id="@+id/emoji_show_image"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_gravity="center"
-            android:scaleType="fitCenter" />
-    </FrameLayout>
+        android:layout_marginTop="61dp" />
 
     <com.superapps.view.TypefacedTextView
         android:id="@+id/send_btn"

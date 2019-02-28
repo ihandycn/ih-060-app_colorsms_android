@@ -2,15 +2,19 @@ package com.android.messaging.ui.emoji.utils;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.SharedPreferences;
+import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
 
+import com.android.messaging.download.Downloader;
 import com.android.messaging.glide.GlideApp;
 import com.android.messaging.ui.emoji.BaseEmojiInfo;
 import com.android.messaging.ui.emoji.StickerInfo;
 import com.bumptech.glide.request.target.SimpleTarget;
 import com.bumptech.glide.request.transition.Transition;
+import com.ihs.commons.utils.HSLog;
 import com.superapps.util.Preferences;
 
 import java.io.File;
@@ -19,11 +23,15 @@ import java.util.List;
 
 public class EmojiManager {
 
+    private static final String TAG = EmojiManager.class.getSimpleName();
+
     private static final String PREF_TAB_STICKER = "pref_tab_sticker";
     private static final String PREF_FILE_NAME = "emoji";
     private static final String PREF_RECENT_STICKER = "pref_recent_sticker";
     private static final String PREF_NEW_TAB_STICKER = "pref_new_tab_sticker";
     private static final String PREF_IS_SHOW_EMOJI_GUIDE = "pref_is_show_emoji_guide";
+    private static final String PREF_STICKER_MAGIC_LOTTIE_URL_PREFIX = "pref_sticker_magic_lottie_url_";
+    private static final String PREF_STICKER_MAGIC_SOUND_URL_PREFIX = "pref_sticker_magic_sound_url_";
 
     static List<String> getTabSticker() {
         return Preferences.get(PREF_FILE_NAME).getStringList(PREF_TAB_STICKER);
@@ -145,6 +153,47 @@ public class EmojiManager {
                         });
             }
         }
+    }
+
+
+    public static void makeGifRelateToLottie(String gifUrl, String lottieUrl, String soundUrl) {
+        File gifFile = Downloader.getInstance().getDownloadFile(gifUrl);
+        if (!gifFile.exists()) {
+            HSLog.d(TAG, "gif file is not exist!!!");
+            return;
+        }
+
+        File lottieFile = Downloader.getInstance().getDownloadFile(lottieUrl);
+        if (!lottieFile.exists()) {
+            HSLog.d(TAG, "lottie file is not exist!!!");
+            return;
+        }
+
+        SharedPreferences.Editor editor = Preferences.get(PREF_FILE_NAME).edit();
+        String uriStr = Uri.fromFile(gifFile).toString();
+        editor.putString(PREF_STICKER_MAGIC_LOTTIE_URL_PREFIX + uriStr, lottieUrl);
+        editor.putString(PREF_STICKER_MAGIC_SOUND_URL_PREFIX + uriStr, soundUrl);
+        editor.apply();
+    }
+
+    public static String getLottieUrlByGifUriStr(String uriStr) {
+        return Preferences.get(PREF_FILE_NAME).getString(PREF_STICKER_MAGIC_LOTTIE_URL_PREFIX + uriStr, "");
+    }
+
+    public static String getSoundUrlByGifUriStr(String uriStr) {
+        return Preferences.get(PREF_FILE_NAME).getString(PREF_STICKER_MAGIC_SOUND_URL_PREFIX + uriStr, "");
+    }
+
+    public static boolean isStickerMagicUri(String uriStr) {
+        return !TextUtils.isEmpty(uriStr) && uriStr.contains("/com.color.sms.messages.emoji/cache/message-download-file/");
+    }
+
+    public static void makePartUriRelateToStickerMagicUri(String partUriStr, String stickerMagicUriStr) {
+        Preferences.get(PREF_FILE_NAME).putString(partUriStr, stickerMagicUriStr);
+    }
+
+    public static String getStickerMagicUriByPartUri(String partUriStr) {
+        return Preferences.get(PREF_FILE_NAME).getString(partUriStr, "");
     }
 
     public interface OnGetStickerFileListener {

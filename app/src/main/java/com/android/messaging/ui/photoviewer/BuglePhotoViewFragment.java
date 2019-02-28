@@ -17,22 +17,27 @@ package com.android.messaging.ui.photoviewer;
 
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
+import android.os.Bundle;
 import android.support.rastermill.FrameSequenceDrawable;
 import android.support.v4.content.Loader;
+import android.text.TextUtils;
 
 import com.android.ex.photo.PhotoViewCallbacks;
 import com.android.ex.photo.fragments.PhotoViewFragment;
 import com.android.ex.photo.loaders.PhotoBitmapLoaderInterface.BitmapResult;
+import com.android.messaging.ui.emoji.utils.EmojiManager;
 
 public class BuglePhotoViewFragment extends PhotoViewFragment {
 
-    /** Public no-arg constructor for allowing the framework to handle orientation changes */
+    /**
+     * Public no-arg constructor for allowing the framework to handle orientation changes
+     */
     public BuglePhotoViewFragment() {
         // Do nothing.
     }
 
     public static PhotoViewFragment newInstance(Intent intent, int position,
-            boolean onlyShowSpinner) {
+                                                boolean onlyShowSpinner) {
         final PhotoViewFragment f = new BuglePhotoViewFragment();
         initializeArguments(intent, position, onlyShowSpinner, f);
         return f;
@@ -50,40 +55,67 @@ public class BuglePhotoViewFragment extends PhotoViewFragment {
     }
 
     @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        if (!TextUtils.isEmpty(mResolvedPhotoUri)) {
+            String uri = EmojiManager.getStickerMagicUriByPartUri(mResolvedPhotoUri);
+            if (!TextUtils.isEmpty(uri)) {
+                mPhotoUriStr = mResolvedPhotoUri;
+                mResolvedPhotoUri = uri;
+            }
+        }
+    }
+
+    @Override
     public void onResume() {
         super.onResume();
-        startGif();
+        onViewVisible();
     }
 
     @Override
     public void onPause() {
-        stopGif();
         super.onPause();
-    }
-
-    @Override
-    public void onViewActivated() {
-        super.onViewActivated();
-        startGif();
+        onViewInVisible();
     }
 
     @Override
     public void resetViews() {
         super.resetViews();
-        stopGif();
+        onViewInVisible();
     }
 
     private void stopGif() {
         final Drawable drawable = getDrawable();
-        if (drawable != null && drawable instanceof FrameSequenceDrawable) {
+        if (drawable instanceof FrameSequenceDrawable) {
             ((FrameSequenceDrawable) drawable).stop();
         }
     }
 
     private void startGif() {
+        if (mCallback.getCurrentPagePosition() != mPosition) {
+            return;
+        }
         final Drawable drawable = getDrawable();
-        if (drawable != null && drawable instanceof FrameSequenceDrawable) {
+        if (drawable instanceof FrameSequenceDrawable) {
             ((FrameSequenceDrawable) drawable).start();
         }
+    }
+
+    @Override
+    protected void onViewVisible() {
+        super.onViewVisible();
+        if (isLottieModel()) {
+            startPlayLottie();
+        } else {
+            startGif();
+        }
+    }
+
+    @Override
+    protected void onViewInVisible() {
+        super.onViewInVisible();
+        pauseLottie();
+        stopGif();
     }
 }

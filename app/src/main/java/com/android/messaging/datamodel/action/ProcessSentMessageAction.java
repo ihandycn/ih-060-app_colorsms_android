@@ -24,6 +24,7 @@ import android.os.Parcel;
 import android.os.Parcelable;
 import android.telephony.PhoneNumberUtils;
 import android.telephony.SmsManager;
+import android.text.TextUtils;
 
 import com.android.messaging.Factory;
 import com.android.messaging.datamodel.BugleDatabaseOperations;
@@ -38,6 +39,7 @@ import com.android.messaging.mmslib.pdu.SendConf;
 import com.android.messaging.sms.MmsConfig;
 import com.android.messaging.sms.MmsSender;
 import com.android.messaging.sms.MmsUtils;
+import com.android.messaging.ui.emoji.utils.EmojiManager;
 import com.android.messaging.util.Assert;
 import com.android.messaging.util.BugleAnalytics;
 import com.android.messaging.util.LogUtil;
@@ -46,9 +48,9 @@ import java.io.File;
 import java.util.ArrayList;
 
 /**
-* Update message status to reflect success or failure
-* Can also update the message itself if a "final" message is now available from telephony db
-*/
+ * Update message status to reflect success or failure
+ * Can also update the message itself if a "final" message is now available from telephony db
+ */
 public class ProcessSentMessageAction extends Action {
     private static final String TAG = LogUtil.BUGLE_DATAMODEL_TAG;
 
@@ -76,7 +78,7 @@ public class ProcessSentMessageAction extends Action {
 
     // This is called when MMS lib API returns via PendingIntent
     public static void processMmsSent(final int resultCode, final Uri messageUri,
-            final Bundle extras) {
+                                      final Bundle extras) {
         final ProcessSentMessageAction action = new ProcessSentMessageAction();
         final Bundle params = action.actionParameters;
         params.putBoolean(KEY_SMS, false);
@@ -98,8 +100,8 @@ public class ProcessSentMessageAction extends Action {
     }
 
     public static void processMessageSentFastFailed(final String messageId,
-            final Uri messageUri, final Uri updatedMessageUri, final int subId, final boolean isSms,
-            final int status, final int rawStatus, final int resultCode) {
+                                                    final Uri messageUri, final Uri updatedMessageUri, final int subId, final boolean isSms,
+                                                    final int status, final int rawStatus, final int resultCode) {
         final ProcessSentMessageAction action = new ProcessSentMessageAction();
         final Bundle params = action.actionParameters;
         params.putBoolean(KEY_SMS, isSms);
@@ -119,9 +121,9 @@ public class ProcessSentMessageAction extends Action {
     }
 
     /**
-    * Update message status to reflect success or failure
-    * Can also update the message itself if a "final" message is now available from telephony db
-    */
+     * Update message status to reflect success or failure
+     * Can also update the message itself if a "final" message is now available from telephony db
+     */
     @Override
     protected Object executeAction() {
         final Context context = Factory.get().getApplicationContext();
@@ -200,8 +202,8 @@ public class ProcessSentMessageAction extends Action {
     }
 
     static void processResult(final String messageId, Uri updatedMessageUri, int status,
-            final int rawStatus, final boolean isSms, final Action processingAction,
-            final int subId, final int resultCode, final int httpStatusCode) {
+                              final int rawStatus, final boolean isSms, final Action processingAction,
+                              final int subId, final int resultCode, final int httpStatusCode) {
         final DatabaseWrapper db = DataModel.get().getDatabase();
         MessageData message = BugleDatabaseOperations.readMessage(db, messageId);
         final MessageData originalMessage = message;
@@ -210,6 +212,17 @@ public class ProcessSentMessageAction extends Action {
                     + " missing from local database");
             return;
         }
+
+        ArrayList<String> stickerMagicUriList = new ArrayList<>();
+        for (MessagePartData data : message.getParts()) {
+            String uriStr = data.getContentUri().toString();
+            if (EmojiManager.isStickerMagicUri(uriStr)) {
+                stickerMagicUriList.add(uriStr);
+            } else {
+                stickerMagicUriList.add("");
+            }
+        }
+
         final String conversationId = message.getConversationId();
         if (updatedMessageUri != null) {
             // Update message if we have newly written final message in the telephony db
@@ -231,6 +244,15 @@ public class ProcessSentMessageAction extends Action {
                 status = MmsUtils.MMS_REQUEST_MANUAL_RETRY;
                 LogUtil.e(TAG, "ProcessSentMessageAction: Unable to read sending message");
             }
+        }
+
+        int i = 0;
+        for (MessagePartData data : message.getParts()) {
+            String stickerMagicUri = stickerMagicUriList.get(i);
+            if (!TextUtils.isEmpty(stickerMagicUri)) {
+                EmojiManager.makePartUriRelateToStickerMagicUri(data.getContentUri().toString(), stickerMagicUri);
+            }
+            i++;
         }
 
         final long timestamp = System.currentTimeMillis();

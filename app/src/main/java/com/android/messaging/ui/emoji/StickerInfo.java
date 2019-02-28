@@ -11,6 +11,7 @@ public class StickerInfo extends BaseEmojiInfo {
     public String mStickerUrl;
     public String mMagicUrl;
     public String mSoundUrl;
+    public String mLottieZipUrl;
     boolean mClickable;
     public boolean mIsDownloaded;
     public String mPackageName;
@@ -55,7 +56,8 @@ public class StickerInfo extends BaseEmojiInfo {
         result.mSoundUrl = split[3];
         result.mPackageName = split[4];
         if (result.mEmojiType == EmojiType.STICKER_MAGIC && !TextUtils.isEmpty(result.mMagicUrl)) {
-            result.mIsDownloaded = Downloader.getInstance().isDownloaded(result.mMagicUrl);
+            String url = TextUtils.isEmpty(result.mLottieZipUrl) ? result.mMagicUrl : result.mLottieZipUrl;
+            result.mIsDownloaded = Downloader.getInstance().isDownloaded(url);
         }
 
         return result;
@@ -81,6 +83,7 @@ public class StickerInfo extends BaseEmojiInfo {
         dest.writeInt(this.mStickerWidth);
         dest.writeParcelable(this.mStartRect, flags);
         dest.writeString(this.mPackageName);
+        dest.writeString(this.mLottieZipUrl);
     }
 
     public StickerInfo() {
@@ -97,6 +100,7 @@ public class StickerInfo extends BaseEmojiInfo {
         this.mStickerWidth = in.readInt();
         this.mStartRect = in.readParcelable(Rect.class.getClassLoader());
         this.mPackageName = in.readString();
+        this.mLottieZipUrl = in.readString();
     }
 
     public static final Creator<StickerInfo> CREATOR = new Creator<StickerInfo>() {

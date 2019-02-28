@@ -3,12 +3,14 @@ package com.android.messaging.ui.emoji;
 import android.graphics.Rect;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.android.messaging.R;
 import com.android.messaging.ui.emoji.utils.EmojiConfig;
+import com.android.messaging.ui.emoji.utils.EmojiManager;
 import com.superapps.util.Threads;
 
 import java.util.List;
@@ -90,6 +92,9 @@ public class StickerItemRecyclerAdapter extends BaseStickerItemRecyclerAdapter {
         if (!stickerInfo.mIsDownloaded) {
             downloadMagicEmoji(false, stickerInfo, holder);
         } else {
+            if (!TextUtils.isEmpty(stickerInfo.mLottieZipUrl)) {
+                EmojiManager.makeGifRelateToLottie(stickerInfo.mMagicUrl, stickerInfo.mLottieZipUrl, stickerInfo.mSoundUrl);
+            }
             Rect rect = new Rect();
             v.getGlobalVisibleRect(rect);
             stickerInfo.mStartRect = rect;

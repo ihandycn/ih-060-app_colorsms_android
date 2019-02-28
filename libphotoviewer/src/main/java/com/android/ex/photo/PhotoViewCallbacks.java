@@ -28,11 +28,12 @@ public interface PhotoViewCallbacks {
         /**
          * A new view has been activated and the previous view de-activated.
          */
-        public void onViewActivated();
+        public void onViewActivated(int position);
 
+        public void onViewDeActivated(int position);
         /**
          * This view is a candidate for being the next view.
-         *
+         * <p>
          * This will be called when the view is focused completely on the view immediately before
          * or after this one, so that this view can reset itself if nessecary.
          */
@@ -62,6 +63,7 @@ public interface PhotoViewCallbacks {
          * Called when the cursor that contains the photo list data
          * is updated. Note that there is no guarantee that the cursor
          * will be at the proper position.
+         *
          * @param cursor the cursor containing the photo list data
          */
         public void onCursorChanged(Cursor cursor);
@@ -75,12 +77,12 @@ public interface PhotoViewCallbacks {
 
     public void removeCursorListener(CursorChangedListener listener);
 
-    public void setViewActivated(int position);
+    public void setViewActivated(int lastPosition, int position);
 
     public void onNewPhotoLoaded(int position);
 
     public void onFragmentPhotoLoadComplete(PhotoViewFragment fragment,
-            boolean success);
+                                            boolean success);
 
     public void toggleFullScreen();
 
@@ -98,4 +100,11 @@ public interface PhotoViewCallbacks {
      * Returns the adapter associated with this activity.
      */
     public PhotoPagerAdapter getAdapter();
+
+    public String getLottieFilePath(String uriStr);
+
+    public String getSoundFilePath(String uriStr);
+
+    public int getCurrentPagePosition();
+
 }

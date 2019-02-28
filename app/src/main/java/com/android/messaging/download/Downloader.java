@@ -92,9 +92,11 @@ public class Downloader {
     }
 
     public synchronized void download(final String url, DownloadListener listener) {
-        if (TextUtils.isEmpty(url) && listener != null) {
-            listener.onStart(url);
-            listener.onFail(url, "url is null!!!");
+        if (TextUtils.isEmpty(url)) {
+            if (listener != null) {
+                listener.onStart(url);
+                listener.onFail(url, "url is null!!!");
+            }
             return;
         }
         Runnable taskRunnable = () -> {
@@ -209,7 +211,21 @@ public class Downloader {
     }
 
     public File getDownloadFile(String url) {
+        if (TextUtils.isEmpty(url)) {
+            return null;
+        }
         return new File(mCacheDir, FileUtils.md5(url));
+    }
+
+    public String getDownloadFilePath(String url) {
+        if (TextUtils.isEmpty(url)) {
+            return null;
+        }
+        File file = getDownloadFile(url);
+        if (!file.exists() || file.length() == 0) {
+            return null;
+        }
+        return file.getAbsolutePath();
     }
 
     private void removeTask(@NonNull String url) {

@@ -53,8 +53,8 @@ import com.android.messaging.receiver.NotificationReceiver;
 import com.android.messaging.sms.MmsSmsUtils;
 import com.android.messaging.ui.appsettings.ApnEditorActivity;
 import com.android.messaging.ui.appsettings.ApnSettingsActivity;
-import com.android.messaging.ui.appsettings.SettingGeneralActivity;
 import com.android.messaging.ui.appsettings.SettingAdvancedActivity;
+import com.android.messaging.ui.appsettings.SettingGeneralActivity;
 import com.android.messaging.ui.appsettings.SettingsActivity;
 import com.android.messaging.ui.attachmentchooser.AttachmentChooserActivity;
 import com.android.messaging.ui.conversation.ConversationActivity;
@@ -67,15 +67,15 @@ import com.android.messaging.ui.debug.DebugMmsConfigActivity;
 import com.android.messaging.ui.photoviewer.BuglePhotoViewActivity;
 import com.android.messaging.ui.smsshow.SmsShowActivity;
 import com.android.messaging.ui.smsshow.SmsShowDetailActivity;
+import com.android.messaging.ui.welcome.WelcomePermissionActivity;
+import com.android.messaging.ui.welcome.WelcomeSetAsDefaultActivity;
+import com.android.messaging.ui.welcome.WelcomeStartActivity;
 import com.android.messaging.util.Assert;
 import com.android.messaging.util.ContentType;
 import com.android.messaging.util.ConversationIdSet;
 import com.android.messaging.util.LogUtil;
 import com.android.messaging.util.UiUtils;
 import com.android.messaging.util.UriUtil;
-import com.android.messaging.ui.welcome.WelcomePermissionActivity;
-import com.android.messaging.ui.welcome.WelcomeSetAsDefaultActivity;
-import com.android.messaging.ui.welcome.WelcomeStartActivity;
 
 /**
  * A central repository of Intents used to start activities.
@@ -428,7 +428,7 @@ public class UIIntentsImpl extends UIIntents {
 
     @Override
     public PendingIntent getPendingIntentForConversationActivityFromNotification(final Context context,
-                                                                 final String conversationId, final MessageData draft) {
+                                                                                 final String conversationId, final MessageData draft) {
         final Intent intent = getConversationActivityIntent(context, conversationId, draft,
                 false /* withCustomTransition */);
         // Ensure that the platform doesn't reuse PendingIntents across conversations
