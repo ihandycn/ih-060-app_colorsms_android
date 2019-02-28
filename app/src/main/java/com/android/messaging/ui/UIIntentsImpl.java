@@ -389,6 +389,12 @@ public class UIIntentsImpl extends UIIntents {
     }
 
     @Override
+    public void launchDragHotSeatActivity(Context context) {
+        Intent intent = new Intent(context, DragHotSeatActivity.class);
+        context.startActivity(intent);
+    }
+
+    @Override
     public Intent getViewUrlIntent(final String url) {
         final Uri uri = Uri.parse(url);
         return new Intent(Intent.ACTION_VIEW, uri);

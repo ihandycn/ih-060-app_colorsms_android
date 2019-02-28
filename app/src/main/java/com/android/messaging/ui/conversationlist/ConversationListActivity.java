@@ -17,6 +17,7 @@
 package com.android.messaging.ui.conversationlist;
 
 import android.animation.ValueAnimator;
+import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
@@ -40,7 +41,9 @@ import android.widget.TextView;
 import com.android.messaging.Factory;
 import com.android.messaging.R;
 import com.android.messaging.datamodel.BugleNotifications;
+import com.android.messaging.ui.DragHotSeatActivity;
 import com.android.messaging.ui.UIIntents;
+import com.android.messaging.ui.UIIntentsImpl;
 import com.android.messaging.ui.appsettings.ThemeSelectActivity;
 import com.android.messaging.ui.dialog.FiveStarRateDialog;
 import com.android.messaging.ui.emoji.EmojiStoreActivity;
@@ -50,6 +53,7 @@ import com.android.messaging.util.UiUtils;
 import com.ihs.commons.notificationcenter.HSGlobalNotificationCenter;
 import com.ihs.commons.notificationcenter.INotificationObserver;
 import com.ihs.commons.utils.HSBundle;
+import com.ihs.commons.utils.HSPreferenceHelper;
 import com.superapps.util.Dimensions;
 import com.superapps.util.Navigations;
 import com.superapps.util.Preferences;
@@ -265,13 +269,17 @@ public class ConversationListActivity extends AbstractConversationListActivity
             if (mShowRateAlert || !FiveStarRateDialog.showShowFiveStarRateDialogOnBackToDesktopIfNeed(this)) {
                 BugleAnalytics.logEvent("SMS_Messages_Back", true);
                 super.onBackPressed();
+                Preferences.getDefault().doOnce(
+                        () -> UIIntentsImpl.get().launchDragHotSeatActivity(this),
+                        DragHotSeatActivity.SHOW_DRAG_HOTSEAT);
             } else {
                 mShowRateAlert = true;
             }
         }
     }
 
-    @Override public boolean onOptionsItemSelected(MenuItem menuItem) {
+    @Override
+    public boolean onOptionsItemSelected(MenuItem menuItem) {
         if (mActionMode != null &&
                 mActionMode.getCallback().onActionItemClicked(mActionMode, menuItem)) {
             return true;
@@ -507,7 +515,8 @@ public class ConversationListActivity extends AbstractConversationListActivity
             mIsNoActionBack = false;
         }
         Preferences.getDefault().doOnce(new Runnable() {
-            @Override public void run() {
+            @Override
+            public void run() {
                 BugleAnalytics.logEvent("SMS_Messages_First_Click", true, "type", type);
             }
         }, "pref_first_come_in_click_event");
@@ -539,7 +548,8 @@ public class ConversationListActivity extends AbstractConversationListActivity
         }
     }
 
-    @Override public void onClick(View v) {
+    @Override
+    public void onClick(View v) {
         switch (v.getId()) {
             case R.id.navigation_item_theme_color:
                 drawerClickIndex = DRAWER_INDEX_THEME_COLOR;
@@ -568,7 +578,8 @@ public class ConversationListActivity extends AbstractConversationListActivity
         }
     }
 
-    @Override public void onReceive(String s, HSBundle hsBundle) {
+    @Override
+    public void onReceive(String s, HSBundle hsBundle) {
         switch (s) {
             case EVENT_MAINPAGE_RECREATE:
                 sIsRecreate = true;
