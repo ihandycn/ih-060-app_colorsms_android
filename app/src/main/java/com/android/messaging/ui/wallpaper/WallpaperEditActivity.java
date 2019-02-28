@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.Matrix;
+import android.graphics.Point;
 import android.graphics.PointF;
 import android.graphics.RectF;
 import android.graphics.drawable.Drawable;
@@ -269,8 +270,21 @@ public class WallpaperEditActivity extends HSAppCompatActivity implements View.O
 
             @Override
             public void onResourceReady(@NonNull Bitmap resource, @Nullable Transition<? super Bitmap> transition) {
-                mWallpaperView.setImageBitmap(resource);
-                view.postDelayed(() -> loadBitmapComplete(view, resource), 10);
+                Point size = new Point();
+                getWindowManager().getDefaultDisplay().getSize(size);
+                int w = resource.getWidth();
+                int h = resource.getHeight();
+                int x = size.x;
+                int y = size.y;
+                if (resource.getWidth() > size.x || resource.getHeight() > size.y) {
+                    float scale = Math.min(x * 1.0f / w, y * 1.0f / h);
+                    Bitmap r = Bitmap.createScaledBitmap(resource, (int) (scale * w), (int) (scale * h), false);
+                    mWallpaperView.setImageBitmap(r);
+                    view.postDelayed(() -> loadBitmapComplete(view, r), 10);
+                } else {
+                    mWallpaperView.setImageBitmap(resource);
+                    view.postDelayed(() -> loadBitmapComplete(view, resource), 10);
+                }
             }
 
             @Override
