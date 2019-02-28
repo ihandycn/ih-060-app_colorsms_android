@@ -31,7 +31,6 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.AppCompatDrawableManager;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.ActionMode;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -45,7 +44,6 @@ import com.android.messaging.R;
 import com.android.messaging.datamodel.BugleNotifications;
 import com.android.messaging.ui.UIIntents;
 import com.android.messaging.ui.appsettings.ChangeFontActivity;
-import com.android.messaging.ui.appsettings.ChooseFontDialog;
 import com.android.messaging.ui.appsettings.ThemeSelectActivity;
 import com.android.messaging.ui.customize.BubbleDrawables;
 import com.android.messaging.ui.customize.ConversationColors;
@@ -77,7 +75,7 @@ public class ConversationListActivity extends AbstractConversationListActivity
     public static final String EVENT_MAINPAGE_RECREATE = "event_mainpage_recreate";
 
     private static final String PREF_SHOW_EMOJI_GUIDE = "pref_show_emoji_guide";
-    private static final String PREF_KEY_MAIN_DRAWER_OPENED = "pref_key_main_drawer_opened";
+    public static final String PREF_KEY_MAIN_DRAWER_OPENED = "pref_key_main_drawer_opened";
 
     private static boolean sIsRecreate = false;
 
@@ -148,6 +146,7 @@ public class ConversationListActivity extends AbstractConversationListActivity
         setupDrawer();
 
         HSGlobalNotificationCenter.addObserver(EVENT_MAINPAGE_RECREATE, this);
+        BugleAnalytics.logEvent("SMS_ActiveUsers", true);
 
         if (savedInstanceState == null || !savedInstanceState.getBoolean("is_activity_restart")) {
             Threads.postOnThreadPoolExecutor(() -> {

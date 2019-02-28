@@ -2,7 +2,6 @@ package com.android.messaging.ui.welcome;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
 import android.widget.Toast;
 
 import com.android.messaging.BaseActivity;
@@ -36,6 +35,7 @@ public class WelcomeSetAsDefaultActivity extends BaseActivity {
         });
 
         mAllowBackKey = HSConfig.optBoolean(true, "Application", "StartPageAllowBack");
+        BugleAnalytics.logEvent("SMS_ActiveUsers", true);
     }
 
     @Override

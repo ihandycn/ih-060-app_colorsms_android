@@ -2,10 +2,7 @@ package com.android.messaging.upgrader;
 
 import android.content.Context;
 
-import com.android.messaging.datamodel.DataModel;
-import com.android.messaging.datamodel.DatabaseHelper;
-import com.android.messaging.datamodel.DatabaseWrapper;
-import com.android.messaging.datamodel.data.ConversationListItemData;
+import com.android.messaging.ui.conversationlist.ConversationListActivity;
 import com.superapps.util.Preferences;
 
 public class Upgrader extends BaseUpgrader {
@@ -25,11 +22,8 @@ public class Upgrader extends BaseUpgrader {
 
     @Override
     protected void onAppUpgrade(int oldVersion, int newVersion) {
-        if (oldVersion <= 4 & newVersion > 4) {
-            final DatabaseWrapper db = DataModel.get().getDatabase();
-            if (db != null) {
-                DatabaseHelper.rebuildView(db, ConversationListItemData.getConversationListView(), ConversationListItemData.getConversationListViewSql());
-            }
+        if (oldVersion <= 12 && newVersion > 12) {
+            Preferences.getDefault().putBoolean(ConversationListActivity.PREF_KEY_MAIN_DRAWER_OPENED, true);
         }
     }
 

@@ -35,7 +35,7 @@ public class MessagingMsgCenterFactoryImpl extends MessageCenterFactoryImpl {
 
     @Override
     public boolean isSMSAssistantOpenDefault() {
-        return HSConfig.optBoolean(false,"Application", "SMSPopUps", "DefaultSwitch");
+        return HSConfig.optBoolean(false, "Application", "SMSPopUps", "DefaultSwitch");
     }
 
     @Override
@@ -112,7 +112,7 @@ public class MessagingMsgCenterFactoryImpl extends MessageCenterFactoryImpl {
                         receivedSmsIntent, EXTRA_SUB_ID);
                 final DatabaseWrapper db = DataModel.get().getDatabase();
                 final ParticipantData rawSender = ParticipantData.getFromRawPhoneBySimLocale(from, subId);
-                boolean isBlocked =  BugleDatabaseOperations.isBlockedDestination(
+                boolean isBlocked = BugleDatabaseOperations.isBlockedDestination(
                         db, rawSender.getNormalizedDestination());
 
 
@@ -123,7 +123,7 @@ public class MessagingMsgCenterFactoryImpl extends MessageCenterFactoryImpl {
                     cursor = db.query(getConversationListView(),
                             PROJECTION,
                             DatabaseHelper.ConversationColumns.OTHER_PARTICIPANT_NORMALIZED_DESTINATION + "=?",
-                            new String[] { rawSender.getNormalizedDestination() },
+                            new String[]{rawSender.getNormalizedDestination()},
                             null, null, null);
 
                     ConversationListItemData conversation;
@@ -138,7 +138,7 @@ public class MessagingMsgCenterFactoryImpl extends MessageCenterFactoryImpl {
                     }
                 }
 
-                return  isBlocked || isNotificationDisabled;
+                return isBlocked || isNotificationDisabled;
             }
         };
     }
@@ -164,6 +164,7 @@ public class MessagingMsgCenterFactoryImpl extends MessageCenterFactoryImpl {
             @Override
             public void onShow() {
                 BugleAnalytics.logEvent("SMS_PopUp_Show", true);
+                BugleAnalytics.logEvent("SMS_ActiveUsers", true);
             }
 
             @Override
@@ -201,7 +202,7 @@ public class MessagingMsgCenterFactoryImpl extends MessageCenterFactoryImpl {
                 final Intent sendIntent = new Intent(context, NoConfirmationSmsSendService.class);
                 sendIntent.setAction(TelephonyManager.ACTION_RESPOND_VIA_MESSAGE);
                 sendIntent.putExtra(Intent.EXTRA_TEXT, messages);
-                sendIntent.putExtra(EXTRA_SUBSCRIPTION,  subId);
+                sendIntent.putExtra(EXTRA_SUBSCRIPTION, subId);
                 sendIntent.putExtra(EXTRA_QUICK_REPLY_ADDRESS, dest);
                 context.startService(sendIntent);
             }
