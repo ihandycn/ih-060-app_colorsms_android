@@ -38,9 +38,9 @@ public class ChooseMessageColorRecommendViewHolder extends BasePagerViewHolder i
         RecyclerView recyclerView = view.findViewById(R.id.recycler_view);
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new GridLayoutManager(mContext, 4));
-        recyclerView.setPadding(Dimensions.pxFromDp(47f), Dimensions.pxFromDp(30f), Dimensions.pxFromDp(47f), Dimensions.pxFromDp(30f));
 
         float size = Dimensions.getPhoneWidth(mContext) * 0.125f;
+        recyclerView.setPadding(Dimensions.pxFromDp(47f), Dimensions.pxFromDp(10f), Dimensions.pxFromDp(47f), Dimensions.pxFromDp(10f));
         recyclerView.addItemDecoration(new RecommendColorItemDecoration(4, 3, (int)size, (int)size));
         mAdapter = new ChooseMessageColorRecommendAdapter(mContext);
         mAdapter.setOnColorChangedListener(color -> mListener.onColorChanged(color));

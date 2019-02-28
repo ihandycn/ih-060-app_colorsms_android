@@ -78,7 +78,8 @@ public class ChooseMessageColorRecommendAdapter extends RecyclerView.Adapter<Cho
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
 
-        boolean isLightColor = mData[position] == mContext.getResources().getColor(R.color.message_text_color_outgoing);
+        boolean isLightColor = (mData[position] == mContext.getResources().getColor(R.color.message_text_color_outgoing)
+                || mData[position] == mContext.getResources().getColor(R.color.message_bubble_color_incoming));
         boolean isSelected = position == mSelectedPosition;
 
         holder.mCheckmark.setVisibility(isSelected ? View.VISIBLE : View.GONE);

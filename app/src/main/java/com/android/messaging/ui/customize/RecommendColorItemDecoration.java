@@ -5,17 +5,21 @@ import android.graphics.Rect;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 
+import com.superapps.util.Dimensions;
+
 public class RecommendColorItemDecoration extends RecyclerView.ItemDecoration {
 
     private int mNumColumn;
     private int mNumRows;
     private int mHorizontalSpacing;
-    private int mVerticalSpacing;
+    private int mVerticalItemSpacing;
     private int mItemWidth;
     private int mItemHeight;
     private int mHorizontalOffsetSpacing;
     private int mItemHorizontalSpacing;
     private boolean mInitSpacing = false;
+
+    private int mVerticalSpacing;
 
     public RecommendColorItemDecoration(int column, int row, int itemWidth, int itemHeight) {
         mNumColumn = column;
@@ -35,7 +39,9 @@ public class RecommendColorItemDecoration extends RecyclerView.ItemDecoration {
             mHorizontalSpacing = (mItemHorizontalSpacing * mNumColumn) / (mNumColumn - 1);
             mHorizontalOffsetSpacing = mHorizontalSpacing - mItemHorizontalSpacing;
 
-            mVerticalSpacing = (parentHeight - parent.getPaddingTop() - parent.getPaddingBottom() - mItemHeight * mNumRows) / (mNumRows - 1);
+            mVerticalItemSpacing = Dimensions.pxFromDp(21);
+            mVerticalSpacing = parentHeight - parent.getPaddingTop() - parent.getPaddingBottom() - mNumRows * mItemHeight - (mVerticalItemSpacing) * (mNumRows - 1);
+
         }
         int position = parent.getChildAdapterPosition(view);
         int column = position % mNumColumn;
@@ -53,7 +59,11 @@ public class RecommendColorItemDecoration extends RecyclerView.ItemDecoration {
 
         if (position >= mNumColumn) {
             // 2 is for float to int loss
-            outRect.top = mVerticalSpacing - 2;
+            outRect.top = Dimensions.pxFromDp(21);
+        }
+
+        if (position < mNumColumn) {
+            outRect.top = mVerticalSpacing / 2;
         }
     }
 }
