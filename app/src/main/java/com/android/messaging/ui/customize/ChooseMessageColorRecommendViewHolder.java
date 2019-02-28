@@ -62,7 +62,6 @@ public class ChooseMessageColorRecommendViewHolder extends BasePagerViewHolder i
 
     }
 
-
     @Override
     public CharSequence getPageTitle(Context context) {
         return context.getString(R.string.bubble_customize_color_recommend);
