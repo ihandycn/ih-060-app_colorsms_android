@@ -59,6 +59,11 @@ public class CustomMessagePreviewView extends ConstraintLayout {
         updateBubbleDrawables(null);
     }
 
+    public void setIsFontPreview() {
+        mIncomingMessage.setText(getResources().getString(R.string.bubble_customize_preview_incoming_message_font));
+        mOutgoingMessage.setText(getResources().getString(R.string.bubble_customize_preview_outgoing_message_font));
+    }
+
     void updateBubbleDrawables(final String conversationId) {
         mConversationId = conversationId;
         mIncomingMessage.setBackground(
@@ -142,7 +147,7 @@ public class CustomMessagePreviewView extends ConstraintLayout {
 
         String from = TextUtils.isEmpty(mConversationId) ? "settings" : "chat";
 
-        BugleAnalytics.logEvent("Customize_Bubble_Change", true,"from", from, "type",
+        BugleAnalytics.logEvent("Customize_Bubble_Change", true, "from", from, "type",
                 getBubbleChangeString(bubbleDrawableChanged, bubbleBackgroundColorChanged || bubbleTextColorChanged));
 
         if (bubbleBackgroundColorChanged || bubbleTextColorChanged) {
@@ -152,7 +157,7 @@ public class CustomMessagePreviewView extends ConstraintLayout {
     }
 
     private String getBubbleChangeString(boolean drawableChanged, boolean colorChanged) {
-        if (drawableChanged && colorChanged ) {
+        if (drawableChanged && colorChanged) {
             return "both";
         } else if (drawableChanged) {
             return "style";

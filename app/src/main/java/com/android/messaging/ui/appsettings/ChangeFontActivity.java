@@ -12,6 +12,7 @@ import android.widget.TextView;
 import com.android.messaging.BaseActivity;
 import com.android.messaging.R;
 import com.android.messaging.font.MessageFontManager;
+import com.android.messaging.ui.customize.CustomMessagePreviewView;
 import com.android.messaging.ui.view.LevelSeekBar;
 import com.android.messaging.ui.wallpaper.WallpaperManager;
 import com.android.messaging.util.BugleAnalytics;
@@ -63,6 +64,9 @@ public class ChangeFontActivity extends BaseActivity implements LevelSeekBar.OnL
         if (!TextUtils.isEmpty(bgPath)) {
             ((ImageView) findViewById(R.id.change_font_bg)).setImageURI(Uri.fromFile(new File(bgPath)));
         }
+
+        CustomMessagePreviewView customMessagePreviewView = findViewById(R.id.message_preview_view);
+        customMessagePreviewView.setIsFontPreview();
 
         LevelSeekBar mSeekBar = findViewById(R.id.seek_bar);
         mTextFontFamily = findViewById(R.id.setting_text_font_name);
