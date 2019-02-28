@@ -16,37 +16,23 @@
             android:id="@+id/dialog_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/light_dialog_content_select_margin_top"
             android:layout_marginStart="24dp"
             android:alpha="@dimen/dialog_content_title"
+            android:text="test"
             android:textColor="#6e717b"
-            android:layout_marginBottom="@dimen/light_dialog_content_select_margin_top"
             android:textSize="13.3sp"
-            app:typeface="@string/custom_font_medium"
-            android:text="test"/>
-
-        <View
-            android:id="@+id/listview_header"
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:visibility="invisible"
-            android:background="#eee"/>
+            app:typeface="@string/custom_font_medium" />
 
         <ListView
             android:id="@+id/select_radio_group"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:choiceMode="singleChoice"
+            android:fastScrollEnabled="true"
             android:scrollbars="vertical">
 
         </ListView>
-
-        <View
-            android:id="@+id/listview_footer"
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:visibility="invisible"
-            android:background="#eee"/>
     </LinearLayout>
-
 </LinearLayout>
 

@@ -6,13 +6,14 @@ import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
 import android.graphics.Color;
+import android.graphics.PorterDuff;
+import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
-import android.widget.AbsListView;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.ListView;
@@ -21,17 +22,18 @@ import android.widget.TextView;
 
 import com.android.messaging.R;
 import com.android.messaging.ui.conversationlist.ConversationListActivity;
+import com.android.messaging.ui.customize.PrimaryColors;
 import com.android.messaging.util.BugleAnalytics;
-import com.android.messaging.util.BuglePrefs;
 import com.android.messaging.util.ViewUtils;
+import com.ihs.app.framework.HSApplication;
 import com.ihs.commons.notificationcenter.HSGlobalNotificationCenter;
 import com.ihs.commons.utils.HSLog;
+import com.messagecenter.util.Utils;
 import com.superapps.util.BackgroundDrawables;
 import com.superapps.util.Dimensions;
 import com.superapps.util.Preferences;
 import com.superapps.view.TypefacedTextView;
 
-import org.qcode.fontchange.FontManager;
 import org.qcode.fontchange.IFontChangeListener;
 import org.qcode.fontchange.impl.FontManagerImpl;
 
@@ -48,7 +50,7 @@ public class ChooseFontDialog {
             "Advent Pro", "Atma", "Cormorant Garamond", "Encode Sans", "Expletus Sans",
             "Fahkwang", "Fira Sans Condensed", "IBM Plex Sans", "Kodchasan", "Krub",
             "Mali", "Mitr", "Montserrat", "Montserrat Alternates", "Rajdhani",
-            "Saira", "Saira_Extra Condensed", "Taviraj", "Tillana", "Zilla Slab"
+            "Saira", "Saira Extra Condensed", "Taviraj", "Tillana", "Zilla Slab"
     };
 
     private static final String TAG = "ChooseFontDialog";
@@ -59,11 +61,18 @@ public class ChooseFontDialog {
     private View mDialogRoot;
     private String mFontFamily;
     private IFontChangeListener mListener;
+    private Drawable mCheckedDrawable, mUncheckedDrawable;
 
     ChooseFontDialog(Context activity, IFontChangeListener listener) {
         this.mActivity = (Activity) activity;
         mFontFamily = Preferences.getDefault().getString(TypefacedTextView.MESSAGE_FONT_FAMILY, "Default");
         mListener = listener;
+
+        mCheckedDrawable = HSApplication.getContext().getResources().getDrawable(R.drawable.select_icon_click);
+        mCheckedDrawable.setColorFilter(PrimaryColors.getPrimaryColor(), PorterDuff.Mode.SRC_ATOP);
+        mCheckedDrawable.setBounds(0, 0, mCheckedDrawable.getIntrinsicWidth(), mCheckedDrawable.getIntrinsicHeight());
+        mUncheckedDrawable = HSApplication.getContext().getResources().getDrawable(R.drawable.select_icon_normal);
+        mUncheckedDrawable.setBounds(0, 0, mUncheckedDrawable.getIntrinsicWidth(), mUncheckedDrawable.getIntrinsicHeight());
     }
 
     private void configDialog(Dialog builder) {
@@ -127,15 +136,12 @@ public class ChooseFontDialog {
     }
 
     private void configRadioGroup(View view) {
-        View header = view.findViewById(R.id.listview_header);
-        View footer = view.findViewById(R.id.listview_footer);
         View v = mRootView.findViewById(R.id.content_view);
         LinearLayout.LayoutParams lp = (LinearLayout.LayoutParams) v.getLayoutParams();
         lp.leftMargin = 0;
         lp.rightMargin = 0;
         lp.bottomMargin = Dimensions.pxFromDp(32);
         v.setLayoutParams(lp);
-        BuglePrefs prefs = BuglePrefs.getApplicationPrefs();
 
         ListView selectGroup = view.findViewById(R.id.select_radio_group);
         List<String> choicesList = Arrays.asList(sSupportGoogleFonts);
@@ -155,44 +161,6 @@ public class ChooseFontDialog {
             lp = (LinearLayout.LayoutParams) selectGroup.getLayoutParams();
             lp.height = Dimensions.pxFromDp(315);
             selectGroup.setLayoutParams(lp);
-            footer.setVisibility(View.VISIBLE);
-            selectGroup.setOnScrollListener(new AbsListView.OnScrollListener() {
-                private int currentVisibleItemCount;
-                private int currentScrollState;
-                private int currentFirstVisibleItem;
-                private int totalItem;
-
-                @Override
-                public void onScrollStateChanged(AbsListView absListView, int i) {
-                    this.currentScrollState = i;
-                    this.isScrollCompleted();
-                }
-
-                @Override
-                public void onScroll(AbsListView absListView, int i, int i1, int i2) {
-                    this.currentFirstVisibleItem = i;
-                    this.currentVisibleItemCount = i1;
-                    this.totalItem = i2;
-                }
-
-                private void isScrollCompleted() {
-                    if (this.currentScrollState == SCROLL_STATE_IDLE) {
-                        if (currentFirstVisibleItem == 0) {
-                            // scroll to start
-                            footer.setVisibility(View.VISIBLE);
-                            header.setVisibility(View.INVISIBLE);
-                        } else if (totalItem - currentFirstVisibleItem == currentVisibleItemCount) {
-                            // scroll to end
-                            footer.setVisibility(View.INVISIBLE);
-                            header.setVisibility(View.VISIBLE);
-                        } else {
-                            // scroll between
-                            footer.setVisibility(View.VISIBLE);
-                            header.setVisibility(View.VISIBLE);
-                        }
-                    }
-                }
-            });
         }
         selectGroup.setAdapter(adapter);
         int finalCheckedIndex = checkedIndex;
@@ -207,8 +175,10 @@ public class ChooseFontDialog {
             if (position != finalCheckedIndex) {
                 if (r != null) {
                     r.setChecked(false);
+                    toggleRadioButtonColorFilter(r, false);
                 }
                 radioButton.setChecked(true);
+                toggleRadioButtonColorFilter(radioButton, true);
                 String fontFamily = sSupportGoogleFonts[position];
                 mFontFamily = fontFamily;
 
@@ -243,6 +213,22 @@ public class ChooseFontDialog {
             mDialog.dismiss();
         } catch (Exception e) {
             e.printStackTrace();
+        }
+    }
+
+    private void toggleRadioButtonColorFilter(RadioButton btn, boolean isChecked) {
+        if (isChecked) {
+            if (Utils.isRtl()) {
+                btn.setCompoundDrawables(null, null, mCheckedDrawable, null);
+            } else {
+                btn.setCompoundDrawables(mCheckedDrawable, null, null, null);
+            }
+        } else {
+            if (Utils.isRtl()) {
+                btn.setCompoundDrawables(null, null, mUncheckedDrawable, null);
+            } else {
+                btn.setCompoundDrawables(mUncheckedDrawable, null, null, null);
+            }
         }
     }
 }

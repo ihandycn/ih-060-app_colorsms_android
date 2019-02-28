@@ -49,6 +49,7 @@ import com.android.messaging.datamodel.action.UpdateConversationArchiveStatusAct
 import com.android.messaging.datamodel.data.ConversationListItemData;
 import com.android.messaging.datamodel.data.MessageData;
 import com.android.messaging.datamodel.media.UriImageRequestDescriptor;
+import com.android.messaging.font.MessageFontManager;
 import com.android.messaging.sms.MmsUtils;
 import com.android.messaging.ui.AsyncImageView;
 import com.android.messaging.ui.AudioAttachmentView;
@@ -91,7 +92,7 @@ public class ConversationListItemView extends FrameLayout implements OnClickList
     private static String sPlusOneString;
     private static String sPlusNString;
     private Handler mHandler = null;
-    private int[] weights = {400,500,700};
+    private int[] weights = {400, 500, 700};
 
     public interface HostInterface {
         boolean isConversationSelected(final String conversationId);
@@ -195,6 +196,7 @@ public class ConversationListItemView extends FrameLayout implements OnClickList
         mSnippetColor = resources.getColor(R.color.conversation_list_item_snippet);
 
         //initTypeface();
+        //setTypeface
 
         mContactCheckmarkView.setBackgroundDrawable(BackgroundDrawables.
                 createBackgroundDrawable(PrimaryColors.getPrimaryColor(), Dimensions.pxFromDp(28), false));
@@ -226,11 +228,19 @@ public class ConversationListItemView extends FrameLayout implements OnClickList
     private void setConversationName() {
         if (mData.getIsRead() || mData.getShowDraft()) {
             mConversationNameView.setTextColor(mConversationNameColor);
-
-            mConversationNameView.setTypeface(mConversationNameReadTypeface);
         } else {
             mConversationNameView.setTextColor(mSnippetColor);
-            mConversationNameView.setTypeface(mConversationNameUnreadTypeface);
+            MessageFontManager.loadTypeface(600, new FontsContractCompat.FontRequestCallback() {
+                @Override
+                public void onTypefaceRetrieved(Typeface typeface) {
+                    mConversationNameView.setTypeface(typeface);
+                }
+
+                @Override
+                public void onTypefaceRequestFailed(int reason) {
+
+                }
+            });
         }
 
         final String conversationName = mData.getName();
@@ -251,9 +261,9 @@ public class ConversationListItemView extends FrameLayout implements OnClickList
         mConversationNameView.setText(bidiFormattedName);
     }
 
-    private void initTypeface(){
-        String familyName = Preferences.getDefault().getString(TypefacedTextView.MESSAGE_FONT_FAMILY,"Default");
-        if (familyName.isEmpty() || familyName.equals("Default") || familyName.equals("System")){
+    private void initTypeface() {
+        String familyName = Preferences.getDefault().getString(TypefacedTextView.MESSAGE_FONT_FAMILY, "Default");
+        if (familyName.isEmpty() || familyName.equals("Default") || familyName.equals("System")) {
             mConversationNameReadTypeface = Typefaces.getCustomMedium();
             mConversationNameUnreadTypeface = Typefaces.getCustomSemiBold();
             mSnippetTypeface = Typefaces.getCustomRegular();
@@ -519,9 +529,7 @@ public class ConversationListItemView extends FrameLayout implements OnClickList
 
         mSnippetTextView.setMaxLines(maxLines);
         mSnippetTextView.setTextColor(color);
-        mSnippetTextView.setTypeface(mSnippetTypeface, typefaceStyle);
         mSubjectTextView.setTextColor(color);
-        mSubjectTextView.setTypeface(mSnippetTypeface, typefaceStyle);
 
         setSnippet();
         setConversationName();
@@ -536,17 +544,31 @@ public class ConversationListItemView extends FrameLayout implements OnClickList
                 // row is left with a latest_message_id of a no longer existing message and
                 // therefore the join values come back as null (or in this case zero).
                 || mData.getMessageStatus() == MessageData.BUGLE_STATUS_UNKNOWN) {
-            mTimestampTextView.setTypeface(Typefaces.getCustomRegular(), typefaceStyle);
+            //mTimestampTextView.setTypeface(Typefaces.getCustomRegular(), typefaceStyle);
             mTimestampTextView.setText(resources.getString(
                     R.string.conversation_list_item_view_draft_message));
         } else {
-            mTimestampTextView.setTypeface(Typefaces.getCustomRegular(), typefaceStyle);
+            //mTimestampTextView.setTypeface(Typefaces.getCustomRegular(), typefaceStyle);
             final String formattedTimestamp = mData.getFormattedTimestamp();
             if (mData.getIsSendRequested()) {
                 mTimestampTextView.setText(R.string.message_status_sending);
             } else {
                 mTimestampTextView.setText(formattedTimestamp);
             }
+        }
+
+        String fontName = Preferences.getDefault().getString(TypefacedTextView.MESSAGE_FONT_FAMILY, "Default");
+        if (TextUtils.isEmpty(fontName) || fontName.equals("Default")) {
+            mTimestampTextView.setTypeface(Typefaces.getCustomRegular(), typefaceStyle);
+        } else if (fontName.equals("System")){
+            mTimestampTextView.setTypeface(null, typefaceStyle);
+        } else {
+            MessageFontManager.loadTypeface(400, new FontsContractCompat.FontRequestCallback() {
+                @Override
+                public void onTypefaceRetrieved(Typeface typeface) {
+                    mTimestampTextView.setTypeface(typeface, typefaceStyle);
+                }
+            });
         }
 
         final boolean isSelected = mHostInterface.isConversationSelected(mData.getConversationId());
