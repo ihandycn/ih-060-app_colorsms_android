@@ -28,19 +28,19 @@ public class WallpaperChooserItem {
     };
 
     public static final String[] sRemoteUrl = {
-            "https://s3.amazonaws.com/superapps-dev/ColorSMS/Chat%20Background/wallpaper_abstract.jpg",
-            "https://s3.amazonaws.com/superapps-dev/ColorSMS/Chat%20Background/wallpaper_butterfly1.jpg",
-            "https://s3.amazonaws.com/superapps-dev/ColorSMS/Chat%20Background/wallpaper_butterfly2.jpg",
-            "https://s3.amazonaws.com/superapps-dev/ColorSMS/Chat%20Background/wallpaper_chocolate.jpg",
-            "https://s3.amazonaws.com/superapps-dev/ColorSMS/Chat%20Background/wallpaper_dandelion1.jpg",
-            "https://s3.amazonaws.com/superapps-dev/ColorSMS/Chat%20Background/wallpaper_dandeline2.jpg",
-            "https://s3.amazonaws.com/superapps-dev/ColorSMS/Chat%20Background/wallpaper_dandelion3.jpg",
-            "https://s3.amazonaws.com/superapps-dev/ColorSMS/Chat%20Background/wallpaper_flower.jpg",
-            "https://s3.amazonaws.com/superapps-dev/ColorSMS/Chat%20Background/wallpaper_forst.jpg",
-            "https://s3.amazonaws.com/superapps-dev/ColorSMS/Chat%20Background/wallpaper_gates_wood.jpg",
-            "https://s3.amazonaws.com/superapps-dev/ColorSMS/Chat%20Background/wallpaper_iceland.jpg",
-            "https://s3.amazonaws.com/superapps-dev/ColorSMS/Chat%20Background/wallpaper_sea.jpg",
-            "https://s3.amazonaws.com/superapps-dev/ColorSMS/Chat%20Background/wallpaper_winter.jpg"
+            "http://cdn.appcloudbox.net/smoothappsstudio/apps/bubble/chatbackground/wallpaper_abstract.jpg",
+            "http://cdn.appcloudbox.net/smoothappsstudio/apps/bubble/chatbackground/wallpaper_butterfly1.jpg",
+            "http://cdn.appcloudbox.net/smoothappsstudio/apps/bubble/chatbackground/wallpaper_butterfly2.jpg",
+            "http://cdn.appcloudbox.net/smoothappsstudio/apps/bubble/chatbackground/wallpaper_chocolate.jpg",
+            "http://cdn.appcloudbox.net/smoothappsstudio/apps/bubble/chatbackground/wallpaper_dandelion1.jpg",
+            "http://cdn.appcloudbox.net/smoothappsstudio/apps/bubble/chatbackground/wallpaper_dandeline2.jpg",
+            "http://cdn.appcloudbox.net/smoothappsstudio/apps/bubble/chatbackground/wallpaper_dandelion3.jpg",
+            "http://cdn.appcloudbox.net/smoothappsstudio/apps/bubble/chatbackground/wallpaper_flower.jpg",
+            "http://cdn.appcloudbox.net/smoothappsstudio/apps/bubble/chatbackground/wallpaper_forst.jpg",
+            "http://cdn.appcloudbox.net/smoothappsstudio/apps/bubble/chatbackground/wallpaper_gates_wood.jpg",
+            "http://cdn.appcloudbox.net/smoothappsstudio/apps/bubble/chatbackground/wallpaper_iceland.jpg",
+            "http://cdn.appcloudbox.net/smoothappsstudio/apps/bubble/chatbackground/wallpaper_sea.jpg",
+            "http://cdn.appcloudbox.net/smoothappsstudio/apps/bubble/chatbackground/wallpaper_winter.jpg"
     };
 
     public void setIndex(int mIndex) {
