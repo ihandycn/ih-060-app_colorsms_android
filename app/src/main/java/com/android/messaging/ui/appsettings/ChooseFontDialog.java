@@ -16,7 +16,6 @@ import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
-import android.widget.ListView;
 import android.widget.RadioButton;
 import android.widget.TextView;
 
@@ -45,6 +44,7 @@ import java.util.Map;
 
 
 public class ChooseFontDialog {
+
     private static final String[] sSupportGoogleFonts = {
             "Default", "System",
             "Advent Pro", "Atma", "Cormorant Garamond", "Encode Sans", "Expletus Sans",
@@ -143,7 +143,6 @@ public class ChooseFontDialog {
         lp.bottomMargin = Dimensions.pxFromDp(32);
         v.setLayoutParams(lp);
 
-        ListView selectGroup = view.findViewById(R.id.select_radio_group);
         List<String> choicesList = Arrays.asList(sSupportGoogleFonts);
         int checkedIndex = choicesList.indexOf(mFontFamily);
         if (checkedIndex == -1) {
@@ -156,39 +155,32 @@ public class ChooseFontDialog {
             map.put("item", charSequence);
             list.add(map);
         }
-        RadioButtonAdapter adapter = new RadioButtonAdapter(mActivity, list, checkedIndex);
-        if (list.size() > 6) {
-            lp = (LinearLayout.LayoutParams) selectGroup.getLayoutParams();
-            lp.height = Dimensions.pxFromDp(315);
-            selectGroup.setLayoutParams(lp);
-        }
-        selectGroup.setAdapter(adapter);
-        int finalCheckedIndex = checkedIndex;
-        selectGroup.setOnItemClickListener((parent, view1, position, id) -> {
-            // item click
-            View t = parent.getChildAt(finalCheckedIndex);
-            RadioButton r = null;
-            if (t != null) {
-                r = t.findViewById(R.id.dialog_select_btn);
+
+        LinearLayout scrollContent = view.findViewById(R.id.scroll_content);
+        for (int i = 0; i < choicesList.size(); i++) {
+            ChooseFontItem item = (ChooseFontItem) LayoutInflater.from(mActivity).inflate(R.layout.new_dialog_select_item, scrollContent, false);
+            item.setFontFamily(choicesList.get(i));
+            if (checkedIndex == i) {
+                item.setSelected(true);
             }
-            RadioButton radioButton = view1.findViewById(R.id.dialog_select_btn);
-            if (position != finalCheckedIndex) {
-                if (r != null) {
-                    r.setChecked(false);
-                    toggleRadioButtonColorFilter(r, false);
-                }
-                radioButton.setChecked(true);
-                toggleRadioButtonColorFilter(radioButton, true);
-                String fontFamily = sSupportGoogleFonts[position];
+            item.loadFont();
+            final int k = i;
+            item.setOnClickListener(v1 -> {
+                String fontFamily = sSupportGoogleFonts[k];
                 mFontFamily = fontFamily;
+
+                item.setSelected(true);
+                item.refreshRadioStatus();
 
                 FontManagerImpl.getInstance().loadAndSetTypeface(fontFamily, mListener);
                 Preferences.getDefault().putString(TypefacedTextView.MESSAGE_FONT_FAMILY, fontFamily);
                 HSGlobalNotificationCenter.sendNotification(ConversationListActivity.EVENT_MAINPAGE_RECREATE);
                 BugleAnalytics.logEvent("Customize_TextFont_Change", true, "font", fontFamily);
                 new Handler().postDelayed(this::dismiss, 1);
-            }
-        });
+            });
+
+            scrollContent.addView(item);
+        }
     }
 
     public final void dismiss() {
