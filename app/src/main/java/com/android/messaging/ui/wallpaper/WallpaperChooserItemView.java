@@ -105,7 +105,7 @@ public class WallpaperChooserItemView extends FrameLayout {
         mIsItemPreSelected = true;
     }
 
-    boolean isItemPreChoosed() {
+    boolean isItemPreSelected() {
         return mIsItemPreSelected;
     }
 
@@ -121,6 +121,9 @@ public class WallpaperChooserItemView extends FrameLayout {
             if (!mIsLoadingPlaying) {
                 onDeselected();
             }
+        }
+        if (mLoadingAnimator.isRunning()) {
+            mLoadingAnimator.cancel();
         }
     }
 

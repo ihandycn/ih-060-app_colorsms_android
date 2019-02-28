@@ -27,7 +27,6 @@ import com.android.messaging.BaseActivity;
 import com.android.messaging.R;
 import com.android.messaging.glide.GlideApp;
 import com.android.messaging.util.BugleAnalytics;
-import com.android.messaging.util.TextUtil;
 import com.bumptech.glide.request.target.ImageViewTarget;
 import com.bumptech.glide.request.transition.Transition;
 import com.superapps.util.Navigations;
@@ -281,8 +280,7 @@ public class WallpaperPreviewActivity extends BaseActivity implements WallpaperM
                     onItemSelected(view);
                 }
                 view.setOnClickListener(v -> {
-                    if (view.isItemSelected()) {
-                        onItemSelected(view);
+                    if (view.isItemSelected() || view.isItemPreSelected()) {
                         return;
                     }
                     if (item.isDownloaded()) {
@@ -302,7 +300,7 @@ public class WallpaperPreviewActivity extends BaseActivity implements WallpaperM
                             @Override
                             public void onDownloadSuccess(String path) {
                                 Threads.postOnMainThread(() -> {
-                                    if (view.isItemPreChoosed()) {
+                                    if (view.isItemPreSelected()) {
                                         onItemSelected(view);
                                     }
                                     view.onLoadingDone();
