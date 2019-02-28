@@ -42,6 +42,7 @@ public class ChangeFontActivity extends BaseActivity implements LevelSeekBar.OnL
 
     private ActivityFontEventHandlerImpl mFontEventHandler;
     private boolean mFirstTimeApplyFont = true;
+    private int mPrefFontLevel = 999, mCurrentFontLevel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -69,13 +70,13 @@ public class ChangeFontActivity extends BaseActivity implements LevelSeekBar.OnL
         mChangeFontContainer = findViewById(R.id.change_font_container);
         View changeFontItem = findViewById(R.id.change_font_item);
 
-        int level = BuglePrefs.getApplicationPrefs().getInt(FontManager.MESSAGE_FONT_SCALE, 2);
+        mPrefFontLevel = BuglePrefs.getApplicationPrefs().getInt(FontManager.MESSAGE_FONT_SCALE, 2);
         String fontFamily = Preferences.getDefault().getString(TypefacedTextView.MESSAGE_FONT_FAMILY, "Default");
 
         mTextFontFamily.setText(fontFamily);
-        mTextFontSize.setText(getResources().getString(sTextSizeRes[level]));
+        mTextFontSize.setText(getResources().getString(sTextSizeRes[mPrefFontLevel]));
         mSeekBar.setOnLevelChangeListener(this);
-        mSeekBar.setLevel(level);
+        mSeekBar.setLevel(mPrefFontLevel);
 
         changeFontItem.setOnClickListener(v -> {
             if (!Networks.isNetworkAvailable(-1)) {
@@ -104,6 +105,9 @@ public class ChangeFontActivity extends BaseActivity implements LevelSeekBar.OnL
     protected void onDestroy() {
         super.onDestroy();
         mFontEventHandler.onDestroy();
+        if (mPrefFontLevel != mCurrentFontLevel) {
+            BugleAnalytics.logEvent("Customize_TextSize_Change", true, "size", getResources().getString(sTextSizeRes[newLevel]));
+        }
     }
 
     @Override
@@ -166,8 +170,6 @@ public class ChangeFontActivity extends BaseActivity implements LevelSeekBar.OnL
         mTextFontSize.setText(getResources().getString(sTextSizeRes[newLevel]));
         // need modify view height
         mChangeFontContainer.requestLayout();
-        if (fromUser) {
-            BugleAnalytics.logEvent("Customize_TextSize_Change", true, "size", getResources().getString(sTextSizeRes[newLevel]));
-        }
+        mCurrentFontLevel = newLevel;
     }
 }

@@ -28,6 +28,8 @@ import com.ihs.commons.notificationcenter.HSGlobalNotificationCenter;
 import com.superapps.util.BackgroundDrawables;
 import com.superapps.util.Dimensions;
 
+import org.qcode.fontchange.impl.FontManagerImpl;
+
 import java.io.File;
 
 import static com.android.messaging.ui.customize.ChooseMessageColorEntryViewHolder.CustomColor.BUBBLE_COLOR_INCOMING;
@@ -87,6 +89,8 @@ public class CustomBubblesActivity extends BaseActivity implements CustomMessage
         customHeaderViewPager.setViewPagerTabHeight(CustomViewPager.DEFAULT_TAB_STRIP_SIZE);
         customHeaderViewPager.setBackgroundColor(getResources().getColor(R.color.contact_picker_background));
         customHeaderViewPager.setCurrentItem(0);
+
+        FontManagerImpl.getInstance().applyFont(findViewById(R.id.custom_message_preview), true);
 
         BugleAnalytics.logEvent("Customize_Bubble_Show", "from", getOpenSourceType());
     }

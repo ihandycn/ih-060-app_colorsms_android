@@ -149,38 +149,40 @@ public class ConversationListActivity extends AbstractConversationListActivity
 
         HSGlobalNotificationCenter.addObserver(EVENT_MAINPAGE_RECREATE, this);
 
-        Threads.postOnThreadPoolExecutor(() -> {
-            String bgPath = WallpaperManager.getWallpaperPathByThreadId(null);
-            String backgroundStr;
-            if (TextUtils.isEmpty(bgPath)) {
-                backgroundStr = "default";
-            } else if (bgPath.contains("_1.png")) {
-                backgroundStr = "customize";
-            } else {
-                int index = 100;
-                for (int i = 0; i < WallpaperChooserItem.sRemoteUrl.length; i++) {
-                    if (WallpaperDownloader.getAbsolutePath(WallpaperChooserItem.sRemoteUrl[i]).equals(bgPath)) {
-                        index = i;
-                        break;
+        if (savedInstanceState == null || !savedInstanceState.getBoolean("is_activity_restart")) {
+            Threads.postOnThreadPoolExecutor(() -> {
+                String bgPath = WallpaperManager.getWallpaperPathByThreadId(null);
+                String backgroundStr;
+                if (TextUtils.isEmpty(bgPath)) {
+                    backgroundStr = "default";
+                } else if (bgPath.contains("_1.png")) {
+                    backgroundStr = "customize";
+                } else {
+                    int index = 100;
+                    for (int i = 0; i < WallpaperChooserItem.sRemoteUrl.length; i++) {
+                        if (WallpaperDownloader.getAbsolutePath(WallpaperChooserItem.sRemoteUrl[i]).equals(bgPath)) {
+                            index = i;
+                            break;
+                        }
                     }
+                    backgroundStr = "colorsms_" + index;
                 }
-                backgroundStr = "colorsms_" + index;
-            }
-            BugleAnalytics.logEvent("SMS_Messages_Show", true,
-                    "themeColor", String.valueOf(ThemeSelectActivity.getSelectedIndex()),
-                    "background", backgroundStr,
-                    "bubbleStyle", String.valueOf(BubbleDrawables.getSelectedIdentifier()),
-                    "received bubble color", ConversationColors.get().getConversationColorEventType(true, true),
-                    "sent bubble color", ConversationColors.get().getConversationColorEventType(false, true),
-                    "received text color", ConversationColors.get().getConversationColorEventType(true, false),
-                    "sent text color", ConversationColors.get().getConversationColorEventType(false, false));
 
-            BugleAnalytics.logEvent("SMS_Messages_Show_1", true,
-                    "font", Preferences.getDefault().getString(TypefacedTextView.MESSAGE_FONT_FAMILY, "Default"),
-                    "size", getResources().getString(ChangeFontActivity.sTextSizeRes[BuglePrefs.getApplicationPrefs().getInt(FontManager.MESSAGE_FONT_SCALE, 2)])
-            );
-        });
+                BugleAnalytics.logEvent("SMS_Messages_Show", true,
+                        "themeColor", String.valueOf(ThemeSelectActivity.getSelectedIndex()),
+                        "background", backgroundStr,
+                        "bubbleStyle", String.valueOf(BubbleDrawables.getSelectedIdentifier()),
+                        "received bubble color", ConversationColors.get().getConversationColorEventType(true, true),
+                        "sent bubble color", ConversationColors.get().getConversationColorEventType(false, true),
+                        "received text color", ConversationColors.get().getConversationColorEventType(true, false),
+                        "sent text color", ConversationColors.get().getConversationColorEventType(false, false));
 
+                BugleAnalytics.logEvent("SMS_Messages_Show_1", true,
+                        "font", Preferences.getDefault().getString(TypefacedTextView.MESSAGE_FONT_FAMILY, "Default"),
+                        "size", getResources().getString(ChangeFontActivity.sTextSizeRes[BuglePrefs.getApplicationPrefs().getInt(FontManager.MESSAGE_FONT_SCALE, 2)])
+                );
+            });
+        }
 
         Trace.endSection();
     }
@@ -634,5 +636,12 @@ public class ConversationListActivity extends AbstractConversationListActivity
                 recreate();
                 break;
         }
+    }
+
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putBoolean("is_activity_restart", true);
     }
 }
