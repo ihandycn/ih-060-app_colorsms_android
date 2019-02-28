@@ -512,7 +512,7 @@ public class WallpaperEditActivity extends HSAppCompatActivity implements View.O
         PointF pointF = new PointF();
         pointF.x = Dimensions.getPhoneWidth(this);
         pointF.y = Dimensions.getPhoneHeight(this) - Dimensions.getStatusBarHeight(this)
-                - Dimensions.getNavigationBarHeight(this) - Dimensions.pxFromDp(56 + 48);
+                 - Dimensions.pxFromDp(56 + 48);
         return pointF;
     }
 }

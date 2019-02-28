@@ -25,7 +25,6 @@ public class BackgroundImageView extends AppCompatImageView {
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
         int width = Dimensions.getPhoneWidth(getContext());
         int height = Dimensions.getPhoneHeight(getContext()) -
-                Dimensions.getNavigationBarHeight(getContext()) -
                 Dimensions.getStatusBarHeight(getContext()) -
                 Dimensions.pxFromDp(56) - Dimensions.pxFromDp(48);
         setMeasuredDimension(width, height);
