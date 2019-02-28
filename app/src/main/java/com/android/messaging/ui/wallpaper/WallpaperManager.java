@@ -18,7 +18,6 @@ public class WallpaperManager {
 
     private static BuglePrefs sPrefs = Factory.get().getCustomizePrefs();
 
-
     public interface WallpaperChangeListener {
         void onWallpaperChanged();
         void onOnlineWallpaperChanged();

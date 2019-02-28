@@ -142,7 +142,7 @@ public class CustomMessagePreviewView extends ConstraintLayout {
 
         String from = TextUtils.isEmpty(mConversationId) ? "settings" : "chat";
 
-        BugleAnalytics.logEvent("Customize_Bubble_Change", "from", from, "type",
+        BugleAnalytics.logEvent("Customize_Bubble_Change", true,"from", from, "type",
                 getBubbleChangeString(bubbleDrawableChanged, bubbleBackgroundColorChanged || bubbleTextColorChanged));
 
         if (bubbleBackgroundColorChanged || bubbleTextColorChanged) {

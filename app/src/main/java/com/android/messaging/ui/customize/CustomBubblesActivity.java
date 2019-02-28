@@ -93,7 +93,7 @@ public class CustomBubblesActivity extends BaseActivity implements CustomMessage
 
         FontManagerImpl.getInstance().applyFont(findViewById(R.id.custom_message_preview), true);
 
-        BugleAnalytics.logEvent("Customize_Bubble_Show", "from", getOpenSourceType());
+        BugleAnalytics.logEvent("Customize_Bubble_Show", true, "from", getOpenSourceType());
     }
 
     @Override

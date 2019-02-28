@@ -1,8 +1,9 @@
 package com.android.messaging.ui.customize;
 
 import android.content.Context;
-import android.graphics.PorterDuff;
+import android.content.res.Resources;
 import android.graphics.drawable.ColorDrawable;
+import android.graphics.drawable.Drawable;
 import android.support.annotation.ColorInt;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
@@ -26,12 +27,16 @@ public class ChooseMessageColorRecommendAdapter extends RecyclerView.Adapter<Cho
     private int mSelectedPosition = -1;
 
     private int[] mData;
+    private ColorDrawable[] mColorDrawables;
+    private ColorDrawable[] mPresetColorDrawables;
 
     ChooseMessageColorRecommendAdapter(Context context) {
         mContext = context;
         mItemCount = COLORS.length;
         mData = new int[mItemCount];
+        mColorDrawables = new ColorDrawable[mItemCount];
         System.arraycopy(COLORS, 1, mData, 2, mItemCount - 2);
+        initPresetColorDrawable();
     }
 
     void updatePresetColors(@ColorInt int firstPositionColor,
@@ -40,12 +45,16 @@ public class ChooseMessageColorRecommendAdapter extends RecyclerView.Adapter<Cho
         mData[0] = firstPositionColor;
         mData[1] = secondPositionColor;
 
+        mColorDrawables[0] = getDrawableByColor(firstPositionColor);
+        mColorDrawables[1] = getDrawableByColor(secondPositionColor);
+
         int lastSelectedPosition = mSelectedPosition;
         for (int i = 0; i < mItemCount; i++) {
             if (mData[i] == selectedColor) {
                 mSelectedPosition = i;
             }
         }
+
         notifyItemRangeChanged(0, 2);
         notifyItemChanged(lastSelectedPosition);
         notifyItemChanged(mSelectedPosition);
@@ -75,6 +84,25 @@ public class ChooseMessageColorRecommendAdapter extends RecyclerView.Adapter<Cho
         return viewHolder;
     }
 
+    private void initPresetColorDrawable() {
+        mPresetColorDrawables = new ColorDrawable[4];
+        Resources resources = mContext.getResources();
+        mPresetColorDrawables[0] = new ColorDrawable(resources.getColor(R.color.message_bubble_color_incoming));
+        mPresetColorDrawables[1] = new ColorDrawable(resources.getColor(R.color.message_bubble_color_outgoing));
+        mPresetColorDrawables[2] = new ColorDrawable(resources.getColor(R.color.message_text_color_incoming));
+        mPresetColorDrawables[3] = new ColorDrawable(resources.getColor(R.color.message_text_color_outgoing));
+    }
+
+    private ColorDrawable getDrawableByColor(@ColorInt int color) {
+        for (ColorDrawable colorDrawable : mPresetColorDrawables) {
+            if (colorDrawable.getColor() == color) {
+                return colorDrawable;
+            }
+        }
+        return null;
+    }
+
+
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
 
@@ -90,11 +118,19 @@ public class ChooseMessageColorRecommendAdapter extends RecyclerView.Adapter<Cho
             holder.mCheckmark.setImageResource(R.drawable.icon_customize_bubble_checkmark);
         }
 
-        GlideApp.with(mContext)
-                .load(isLightColor ? R.drawable.bubble_customize_color_ring : new ColorDrawable(mData[position]))
-                .apply(RequestOptions.circleCropTransform())
-                .into(holder.mColor);
+        if (isLightColor) {
+            GlideApp.with(mContext).load(R.drawable.bubble_customize_color_ring).into(holder.mColor);
+        } else {
+            if (mColorDrawables[position] == null) {
+                mColorDrawables[position] = new ColorDrawable(mData[position]);
+            }
+            GlideApp.with(mContext)
+                    .load(mColorDrawables[position])
+                    .apply(RequestOptions.circleCropTransform())
+                    .into(holder.mColor);
+        }
     }
+
 
     @Override
     public int getItemCount() {
