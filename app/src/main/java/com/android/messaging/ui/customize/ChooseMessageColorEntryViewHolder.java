@@ -85,11 +85,14 @@ public class ChooseMessageColorEntryViewHolder extends BasePagerViewHolder imple
         mMessageTextColorIncomingContainer.setOnClickListener(this);
         mMessageTextColorOutgoingContainer.setOnClickListener(this);
 
-        Drawable drawable = BackgroundDrawables.createBackgroundDrawable(Color.WHITE, 0xffd6d7da, 0,false, true);
-        mBubbleBackgroundColorIncomingContainer.setBackground(drawable);
-        mBubbleBackgroundColorOutgoingContainer.setBackground(drawable);
-        mMessageTextColorIncomingContainer.setBackground(drawable);
-        mMessageTextColorOutgoingContainer.setBackground(drawable);
+        mBubbleBackgroundColorIncomingContainer.setBackground(
+                BackgroundDrawables.createBackgroundDrawable(Color.WHITE, 0xffd6d7da, 0,false, true));
+        mBubbleBackgroundColorOutgoingContainer.setBackground(
+                BackgroundDrawables.createBackgroundDrawable(Color.WHITE, 0xffd6d7da, 0,false, true));
+        mMessageTextColorIncomingContainer.setBackground(
+                BackgroundDrawables.createBackgroundDrawable(Color.WHITE, 0xffd6d7da, 0,false, true));
+        mMessageTextColorOutgoingContainer.setBackground(
+                BackgroundDrawables.createBackgroundDrawable(Color.WHITE, 0xffd6d7da, 0,false, true));
 
         mDefaultPreviewDrawable = mContext.getResources().getDrawable(R.drawable.custom_message_color_default_preview_drawable);
         initAppearance();

@@ -55,7 +55,7 @@ public class ChooseMessageColorPagerView extends FrameLayout implements OnColorC
         mCustomFooterPager.setCurrentItem(0);
         mMessageColorAdvanceViewHolder.reset();
         setVisibility(VISIBLE);
-        animate().translationY(0f).setInterpolator(mInterpolator).setDuration(REVEAL_DURATION).start();
+        post(() -> animate().translationY(0f).setInterpolator(mInterpolator).setDuration(REVEAL_DURATION).start());
     }
 
     void disappear() {
