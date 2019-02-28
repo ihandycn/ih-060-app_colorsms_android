@@ -117,7 +117,7 @@ public class CustomMessagePreviewView extends ConstraintLayout {
             BubbleDrawables.setSelectedIndex(mPreviewBubbleDrawableIndex, mConversationId);
             bubbleDrawableChanged = true;
             BugleAnalytics.logEvent("Customize_Bubble_Style_Change", "style",
-                    String.valueOf(mPreviewBubbleDrawableIndex));
+                    String.valueOf(BubbleDrawables.getSelectedIdentifier()));
         }
 
         if (sIncomingBackgroundPreviewColor != ConversationColors.get().getBubbleBackgroundColor(true, mConversationId)) {

@@ -9,6 +9,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -170,6 +171,11 @@ public class CustomBubblesActivity extends BaseActivity implements CustomMessage
 
     @Override
     public void onBackPressed() {
+        if (mChooseMessageColorPagerView.getVisibility() == View.VISIBLE) {
+            mChooseMessageColorPagerView.disappear();
+            return;
+        }
+
         if (mHasChanged) {
             new BaseAlertDialog.Builder(CustomBubblesActivity.this)
                     .setTitle(R.string.bubble_customize_save_confirm_dialog_title)
