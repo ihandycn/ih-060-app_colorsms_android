@@ -157,16 +157,18 @@ public class CustomBubblesActivity extends BaseActivity implements CustomMessage
     }
 
     private void save() {
+        mSaveButton.setEnabled(false);
+
         mCustomMessagePreview.save();
+
+        finish();
 
         ConversationDrawables.get().updateDrawables();
 
-        disableSaveButton();
 
         // notify main page recreate
         HSGlobalNotificationCenter.sendNotification(ConversationListActivity.EVENT_MAINPAGE_RECREATE);
 
-        finish();
     }
 
     @Override

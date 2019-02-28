@@ -132,23 +132,6 @@ public class WallpaperEditActivity extends HSAppCompatActivity implements View.O
         });
     }
 
-    private boolean isGif(byte[] header) {
-        StringBuilder stringBuilder = new StringBuilder();
-        if (header == null || header.length <= 0) {
-            return false;
-        }
-        for (byte aByte : header) {
-            int v = aByte & 0xFF;
-            String hv = Integer.toHexString(v);
-            if (hv.length() < 2) {
-                stringBuilder.append(0);
-            }
-            stringBuilder.append(hv);
-        }
-        // 47494638 is hex number for string "gif"
-        return stringBuilder.toString().toUpperCase().contains("47494638");
-    }
-
     private void errorState(String msg) {
         HSLog.w(msg);
         finish();
@@ -178,7 +161,7 @@ public class WallpaperEditActivity extends HSAppCompatActivity implements View.O
             }
 
             InputStream imageStream;
-            byte[] type = new byte[4];
+            final byte[] type = new byte[4];
             try {
                 imageStream = getContentResolver().openInputStream(selectedImage);
             } catch (FileNotFoundException e) {
@@ -211,8 +194,18 @@ public class WallpaperEditActivity extends HSAppCompatActivity implements View.O
                 return;
             }
 
-            if (isGif(type)) {
-                //showError(R.string.local_wallpaper_pick_error_gif_not_supported);
+            // isGif
+            StringBuilder stringBuilder = new StringBuilder();
+            for (byte aByte : type) {
+                int v = aByte & 0xFF;
+                String hv = Integer.toHexString(v);
+                if (hv.length() < 2) {
+                    stringBuilder.append(0);
+                }
+                stringBuilder.append(hv);
+            }
+            // 47494638 is hex number for string "gif"
+            if (stringBuilder.toString().toUpperCase().contains("47494638")) {
                 errorState("local wallpaper image file is gif");
                 return;
             }
