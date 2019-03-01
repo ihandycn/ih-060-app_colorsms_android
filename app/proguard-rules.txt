@@ -138,3 +138,4 @@
  -keep interface me.jessyan.progressmanager.** { *; }
 
 -keep class android.support.graphics.drawable.** { *; }
+-keep class com.android.messaging.ui.wallpaper.WallpaperEditActivity { *; }
