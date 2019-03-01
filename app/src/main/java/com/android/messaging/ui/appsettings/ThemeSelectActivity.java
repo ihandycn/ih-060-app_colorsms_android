@@ -13,6 +13,7 @@ import com.android.messaging.ui.ConversationDrawables;
 import com.android.messaging.ui.conversationlist.ConversationListActivity;
 import com.android.messaging.ui.customize.PrimaryColors;
 import com.android.messaging.util.BugleAnalytics;
+import com.android.messaging.util.UiUtils;
 import com.ihs.app.framework.HSApplication;
 import com.ihs.commons.notificationcenter.HSGlobalNotificationCenter;
 import com.superapps.util.BackgroundDrawables;
@@ -65,7 +66,8 @@ public class ThemeSelectActivity extends BaseActivity {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         }
         getSupportActionBar().setDisplayShowHomeEnabled(true);
-
+        
+        UiUtils.setStatusBarColor(this, getResources().getColor(R.color.action_bar_background_color));
         // setup color select
         for (int i = 0; i < COLORS.length; i++) {
             findViewById(COLOR_IMG_IDS[i]).setBackground(
