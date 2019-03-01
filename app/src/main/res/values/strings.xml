@@ -1068,8 +1068,8 @@
     <!--Setting-->
     <string name="setting_5_star_rating">5 Star Rating</string>
     <string name="setting_feedback">Feedback</string>
-    <string name="setting_privacy_policy">Privacy policy</string>
-    <string name="setting_terms_of_service">Terms of service</string>
+    <string name="setting_privacy_policy">Privacy Policy</string>
+    <string name="setting_terms_of_service">Terms of Service</string>
     <string name="setting_change_font">Font Size</string>
     <string name="setting_text_font">Font</string>
     <string name="setting_text_size">Font Size</string>
