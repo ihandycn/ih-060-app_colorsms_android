@@ -55,19 +55,16 @@ import com.android.messaging.ui.wallpaper.WallpaperDownloader;
 import com.android.messaging.ui.wallpaper.WallpaperManager;
 import com.android.messaging.ui.wallpaper.WallpaperPreviewActivity;
 import com.android.messaging.util.BugleAnalytics;
-import com.android.messaging.util.BuglePrefs;
 import com.android.messaging.util.Trace;
 import com.android.messaging.util.UiUtils;
 import com.ihs.commons.notificationcenter.HSGlobalNotificationCenter;
 import com.ihs.commons.notificationcenter.INotificationObserver;
 import com.ihs.commons.utils.HSBundle;
+import com.superapps.font.FontStyleManager;
 import com.superapps.util.Dimensions;
 import com.superapps.util.Navigations;
 import com.superapps.util.Preferences;
 import com.superapps.util.Threads;
-import com.superapps.view.TypefacedTextView;
-
-import org.qcode.fontchange.FontManager;
 
 public class ConversationListActivity extends AbstractConversationListActivity
         implements View.OnClickListener, INotificationObserver {
@@ -177,8 +174,8 @@ public class ConversationListActivity extends AbstractConversationListActivity
                         "sent text color", ConversationColors.get().getConversationColorEventType(false, false));
 
                 BugleAnalytics.logEvent("SMS_Messages_Show_1", true,
-                        "font", Preferences.getDefault().getString(TypefacedTextView.MESSAGE_FONT_FAMILY, "Default"),
-                        "size", getResources().getString(ChangeFontActivity.sTextSizeRes[BuglePrefs.getApplicationPrefs().getInt(FontManager.MESSAGE_FONT_SCALE, 2)])
+                        "font", FontStyleManager.getFontFamily(),
+                        "size", String.valueOf(FontStyleManager.getFontScaleLevel())
                 );
             });
         }

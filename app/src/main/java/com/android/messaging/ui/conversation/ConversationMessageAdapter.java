@@ -23,16 +23,10 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.android.messaging.R;
-import com.android.messaging.ui.AsyncImageView;
-import com.android.messaging.ui.CursorRecyclerAdapter;
 import com.android.messaging.ui.AsyncImageView.AsyncImageViewDelayLoader;
+import com.android.messaging.ui.CursorRecyclerAdapter;
 import com.android.messaging.ui.conversation.ConversationMessageView.ConversationMessageViewHost;
 import com.android.messaging.util.Assert;
-
-import org.qcode.fontchange.impl.FontManagerImpl;
-
-import java.util.HashSet;
-import java.util.List;
 
 /**
  * Provides an interface to expose Conversation Message Cursor data to a UI widget like a
@@ -78,7 +72,6 @@ public class ConversationMessageAdapter extends
                 layoutInflater.inflate(R.layout.conversation_message_view, null);
         conversationMessageView.setHost(mHost);
         conversationMessageView.setImageViewDelayLoader(mImageViewDelayLoader);
-        FontManagerImpl.getInstance().applyFont(conversationMessageView, true);
         return new ConversationMessageViewHolder(conversationMessageView,
                             mViewClickListener, mViewLongClickListener);
     }

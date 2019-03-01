@@ -22,10 +22,6 @@ import android.graphics.Color;
 import android.graphics.Rect;
 import android.graphics.Typeface;
 import android.net.Uri;
-import android.os.Handler;
-import android.os.HandlerThread;
-import android.support.v4.provider.FontRequest;
-import android.support.v4.provider.FontsContractCompat;
 import android.support.v4.text.BidiFormatter;
 import android.support.v4.text.TextDirectionHeuristicsCompat;
 import android.text.TextPaint;
@@ -39,7 +35,6 @@ import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.android.messaging.Factory;
 import com.android.messaging.R;
@@ -49,7 +44,6 @@ import com.android.messaging.datamodel.action.UpdateConversationArchiveStatusAct
 import com.android.messaging.datamodel.data.ConversationListItemData;
 import com.android.messaging.datamodel.data.MessageData;
 import com.android.messaging.datamodel.media.UriImageRequestDescriptor;
-import com.android.messaging.font.MessageFontManager;
 import com.android.messaging.sms.MmsUtils;
 import com.android.messaging.ui.AsyncImageView;
 import com.android.messaging.ui.AudioAttachmentView;
@@ -59,21 +53,14 @@ import com.android.messaging.ui.SnackBarInteraction;
 import com.android.messaging.ui.customize.PrimaryColors;
 import com.android.messaging.util.Assert;
 import com.android.messaging.util.BugleAnalytics;
-import com.android.messaging.util.BuglePrefs;
 import com.android.messaging.util.ContentType;
 import com.android.messaging.util.ImageUtils;
 import com.android.messaging.util.OsUtil;
-import com.android.messaging.util.Typefaces;
 import com.android.messaging.util.UiUtils;
 import com.android.messaging.util.UriUtil;
-import com.ihs.app.framework.HSApplication;
+import com.superapps.font.FontUtils;
 import com.superapps.util.BackgroundDrawables;
 import com.superapps.util.Dimensions;
-import com.superapps.util.Preferences;
-import com.superapps.view.TypefacedTextView;
-
-import org.qcode.fontchange.FontManager;
-import org.qcode.fontchange.impl.QueryBuilder;
 
 import java.util.List;
 
@@ -86,13 +73,8 @@ public class ConversationListItemView extends FrameLayout implements OnClickList
     static final int ERROR_MESSAGE_LINE_COUNT = 1;
     private int mConversationNameColor;
     private int mSnippetColor;
-    private Typeface mConversationNameReadTypeface;
-    private Typeface mConversationNameUnreadTypeface;
-    private Typeface mSnippetTypeface;
     private static String sPlusOneString;
     private static String sPlusNString;
-    private Handler mHandler = null;
-    private int[] weights = {400, 500, 700};
 
     public interface HostInterface {
         boolean isConversationSelected(final String conversationId);
@@ -228,19 +210,10 @@ public class ConversationListItemView extends FrameLayout implements OnClickList
     private void setConversationName() {
         if (mData.getIsRead() || mData.getShowDraft()) {
             mConversationNameView.setTextColor(mConversationNameColor);
+            mConversationNameView.setTypeface(FontUtils.getTypeface(FontUtils.MEDIUM));
         } else {
             mConversationNameView.setTextColor(mSnippetColor);
-            MessageFontManager.loadTypeface(600, new FontsContractCompat.FontRequestCallback() {
-                @Override
-                public void onTypefaceRetrieved(Typeface typeface) {
-                    mConversationNameView.setTypeface(typeface);
-                }
-
-                @Override
-                public void onTypefaceRequestFailed(int reason) {
-
-                }
-            });
+            mConversationNameView.setTypeface(FontUtils.getTypeface(FontUtils.SEMI_BOLD));
         }
 
         final String conversationName = mData.getName();
@@ -259,69 +232,6 @@ public class ConversationListItemView extends FrameLayout implements OnClickList
                 TextDirectionHeuristicsCompat.LTR);
 
         mConversationNameView.setText(bidiFormattedName);
-    }
-
-    private void initTypeface() {
-        String familyName = Preferences.getDefault().getString(TypefacedTextView.MESSAGE_FONT_FAMILY, "Default");
-        if (familyName.isEmpty() || familyName.equals("Default") || familyName.equals("System")) {
-            mConversationNameReadTypeface = Typefaces.getCustomMedium();
-            mConversationNameUnreadTypeface = Typefaces.getCustomSemiBold();
-            mSnippetTypeface = Typefaces.getCustomRegular();
-            return;
-        }
-        for (int weight : weights) {
-            QueryBuilder queryBuilder = new QueryBuilder(familyName)
-                    .withWidth(100f)
-                    .withWeight(weight)
-                    .withItalic(0.0f)
-                    .withBestEffort(true);
-            final String query = queryBuilder.build();
-
-            FontRequest request = new FontRequest(
-                    "com.google.android.gms.fonts",
-                    "com.google.android.gms",
-                    query,
-                    R.array.com_google_android_gms_fonts_certs);
-
-            FontsContractCompat.FontRequestCallback callback = new FontsContractCompat
-                    .FontRequestCallback() {
-                @Override
-                public void onTypefaceRetrieved(Typeface typeface) {
-                    switch (weight) {
-                        case 400:
-                            mSnippetTypeface = typeface;
-                            break;
-                        case 500:
-                            mConversationNameReadTypeface = typeface;
-                            mConversationNameView.setTypeface(typeface);
-                            break;
-                        case 700:
-                            mConversationNameUnreadTypeface = typeface;
-                            mConversationNameView.setTypeface(typeface);
-                            break;
-                    }
-                }
-
-                @Override
-                public void onTypefaceRequestFailed(int reason) {
-                    Toast.makeText(HSApplication.getContext(),
-                            HSApplication.getContext().getString(R.string.request_failed, reason), Toast.LENGTH_SHORT)
-                            .show();
-                }
-            };
-            FontsContractCompat
-                    .requestFont(getContext(), request, callback,
-                            getHandlerThreadHandler());
-        }
-    }
-
-    private Handler getHandlerThreadHandler() {
-        if (mHandler == null) {
-            HandlerThread handlerThread = new HandlerThread("fonts");
-            handlerThread.start();
-            mHandler = new Handler(handlerThread.getLooper());
-        }
-        return mHandler;
     }
 
     private void setContactImage() {
@@ -535,8 +445,7 @@ public class ConversationListItemView extends FrameLayout implements OnClickList
         setConversationName();
         setSubject();
         setWorkProfileIcon();
-        setContentDescription(buildContentDescription(resources, mData,
-                mConversationNameView.getPaint()));
+        setContentDescription(buildContentDescription(resources, mData, mConversationNameView.getPaint()));
 
         if (mData.getShowDraft()
                 || mData.getMessageStatus() == MessageData.BUGLE_STATUS_OUTGOING_DRAFT
@@ -557,19 +466,7 @@ public class ConversationListItemView extends FrameLayout implements OnClickList
             }
         }
 
-        String fontName = Preferences.getDefault().getString(TypefacedTextView.MESSAGE_FONT_FAMILY, "Default");
-        if (TextUtils.isEmpty(fontName) || fontName.equals("Default")) {
-            mTimestampTextView.setTypeface(Typefaces.getCustomRegular(), typefaceStyle);
-        } else if (fontName.equals("System")){
-            mTimestampTextView.setTypeface(null, typefaceStyle);
-        } else {
-            MessageFontManager.loadTypeface(400, new FontsContractCompat.FontRequestCallback() {
-                @Override
-                public void onTypefaceRetrieved(Typeface typeface) {
-                    mTimestampTextView.setTypeface(typeface, typefaceStyle);
-                }
-            });
-        }
+        mTimestampTextView.setTypeface(FontUtils.getTypeface());
 
         final boolean isSelected = mHostInterface.isConversationSelected(mData.getConversationId());
         setSelected(isSelected);

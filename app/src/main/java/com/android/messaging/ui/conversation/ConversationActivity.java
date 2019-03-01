@@ -46,7 +46,6 @@ import com.android.messaging.util.BugleAnalytics;
 import com.android.messaging.util.ContentType;
 import com.android.messaging.util.LogUtil;
 import com.android.messaging.util.OsUtil;
-import com.android.messaging.util.Typefaces;
 import com.android.messaging.util.UiUtils;
 
 public class ConversationActivity extends BugleActionBarActivity
@@ -152,7 +151,6 @@ public class ConversationActivity extends BugleActionBarActivity
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         mTitleTextView = findViewById(R.id.toolbar_title);
-        mTitleTextView.setTypeface(Typefaces.getCustomSemiBold());
         invalidateActionBar();
     }
 

@@ -17,8 +17,6 @@ import com.android.messaging.ui.emoji.utils.EmojiManager;
 import com.android.messaging.util.BugleAnalytics;
 import com.superapps.view.ViewPagerFixed;
 
-import org.qcode.fontchange.impl.FontManagerImpl;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -85,7 +83,6 @@ public class EmojiPackagePagerAdapter extends PagerAdapter {
         });
         dotIndicatorView.initDot(adapter.getCount(), 0);
         container.addView(view);
-        FontManagerImpl.getInstance().applyFont(view, true);
         return view;
     }
 

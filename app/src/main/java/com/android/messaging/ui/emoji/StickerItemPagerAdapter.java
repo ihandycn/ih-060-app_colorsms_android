@@ -13,8 +13,6 @@ import com.android.messaging.R;
 import com.android.messaging.ui.emoji.utils.EmojiManager;
 import com.superapps.util.Dimensions;
 
-import org.qcode.fontchange.impl.FontManagerImpl;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -83,7 +81,6 @@ public class StickerItemPagerAdapter extends PagerAdapter {
             view = recyclerView;
         }
         container.addView(view);
-        FontManagerImpl.getInstance().applyFont(view, true);
         return view;
     }
 

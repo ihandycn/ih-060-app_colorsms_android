@@ -48,9 +48,9 @@
             android:ellipsize="end"
             android:maxLines="1"
             android:singleLine="true"
-            android:fontFamily="@string/custom_font_semibold"
             android:textColor="@color/participant_list_text_primary"
-            android:textSize="@dimen/participant_list_text_size" />
+            android:textSize="@dimen/participant_list_text_size"
+            app:typeface="@string/custom_font_medium"/>
 
         <com.superapps.view.TypefacedTextView
             android:id="@+id/details"
@@ -61,7 +61,6 @@
             android:maxLines="2"
             android:textColor="@color/contact_list_text_type"
             android:textSize="@dimen/contact_list_detail_type_text_size"
-            android:fontFamily="@string/custom_font_semibold"
             app:typeface="@string/custom_font_regular" />
     </LinearLayout>
 </merge>

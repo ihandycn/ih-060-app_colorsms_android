@@ -44,7 +44,6 @@
         <RelativeLayout
             android:id="@+id/change_font_item"
             android:layout_width="match_parent"
-            android:visibility="gone"
             android:layout_height="69dp"
             android:orientation="horizontal">
 

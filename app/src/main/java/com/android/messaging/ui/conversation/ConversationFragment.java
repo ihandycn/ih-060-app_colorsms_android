@@ -41,11 +41,8 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
-import android.os.HandlerThread;
 import android.os.Parcelable;
 import android.support.v4.content.LocalBroadcastManager;
-import android.support.v4.provider.FontRequest;
-import android.support.v4.provider.FontsContractCompat;
 import android.support.v4.text.BidiFormatter;
 import android.support.v4.text.TextDirectionHeuristicsCompat;
 import android.support.v7.app.ActionBar;
@@ -66,7 +63,6 @@ import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.android.messaging.R;
 import com.android.messaging.datamodel.BugleNotifications;
@@ -86,7 +82,6 @@ import com.android.messaging.datamodel.data.MessagePartData;
 import com.android.messaging.datamodel.data.ParticipantData;
 import com.android.messaging.datamodel.data.PendingAttachmentData;
 import com.android.messaging.datamodel.data.SubscriptionListData.SubscriptionListEntry;
-import com.android.messaging.font.MessageFontManager;
 import com.android.messaging.ui.BaseAlertDialog;
 import com.android.messaging.ui.BugleActionBarActivity;
 import com.android.messaging.ui.ConversationDrawables;
@@ -100,11 +95,11 @@ import com.android.messaging.ui.dialog.FiveStarRateDialog;
 import com.android.messaging.ui.emoji.EmojiPickerFragment;
 import com.android.messaging.ui.mediapicker.CameraGalleryFragment;
 import com.android.messaging.ui.mediapicker.MediaPickerFragment;
+import com.android.messaging.ui.wallpaper.WallpaperManager;
 import com.android.messaging.util.AccessibilityUtil;
 import com.android.messaging.util.Assert;
 import com.android.messaging.util.AvatarUriUtil;
 import com.android.messaging.util.BugleAnalytics;
-import com.android.messaging.util.BuglePrefs;
 import com.android.messaging.util.ChangeDefaultSmsAppHelper;
 import com.android.messaging.util.ContentType;
 import com.android.messaging.util.ImeUtil;
@@ -113,21 +108,14 @@ import com.android.messaging.util.OsUtil;
 import com.android.messaging.util.PhoneUtils;
 import com.android.messaging.util.SafeAsyncTask;
 import com.android.messaging.util.TextUtil;
-import com.android.messaging.util.Typefaces;
 import com.android.messaging.util.UiUtils;
 import com.android.messaging.util.UriUtil;
-import com.android.messaging.ui.wallpaper.WallpaperManager;
 import com.google.common.annotations.VisibleForTesting;
-import com.ihs.app.framework.HSApplication;
 import com.ihs.commons.notificationcenter.HSGlobalNotificationCenter;
 import com.ihs.commons.notificationcenter.INotificationObserver;
 import com.ihs.commons.utils.HSBundle;
-import com.superapps.util.Preferences;
+import com.superapps.font.FontUtils;
 import com.superapps.view.CustomTypefaceSpan;
-import com.superapps.view.TypefacedTextView;
-
-import org.qcode.fontchange.FontManager;
-import org.qcode.fontchange.impl.QueryBuilder;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -144,7 +132,6 @@ public class ConversationFragment extends Fragment implements ConversationDataLi
     public static final String EVENT_SHOW_OPTION_MENU = "event_show_option_menu";
     public static final String EVENT_HIDE_OPTION_MENU = "event_hide_option_menu";
     public static final String EVENT_HIDE_MEDIA_PICKER = "event_hide_media_picker";
-    private Handler fontHandler = null;
 
     public interface ConversationFragmentHost extends ImeUtil.ImeStateHost {
         void onStartComposeMessage();
@@ -465,19 +452,13 @@ public class ConversationFragment extends Fragment implements ConversationDataLi
         mAdapter = new ConversationMessageAdapter(getActivity(), null, this,
                 null,
                 // Sets the item click listener on the Recycler item views.
-                new View.OnClickListener() {
-                    @Override
-                    public void onClick(final View v) {
-                        final ConversationMessageView messageView = (ConversationMessageView) v;
-                        handleMessageClick(messageView);
-                    }
+                v -> {
+                    final ConversationMessageView messageView = (ConversationMessageView) v;
+                    handleMessageClick(messageView);
                 },
-                new View.OnLongClickListener() {
-                    @Override
-                    public boolean onLongClick(final View view) {
-                        selectMessage((ConversationMessageView) view);
-                        return true;
-                    }
+                view -> {
+                    selectMessage((ConversationMessageView) view);
+                    return true;
                 }
         );
 
@@ -743,32 +724,11 @@ public class ConversationFragment extends Fragment implements ConversationDataLi
     }
 
     private void initTypeface(Menu menu) {
-        String familyName = Preferences.getDefault().getString(TypefacedTextView.MESSAGE_FONT_FAMILY, "Default");
-        if (familyName.isEmpty() || familyName.equals("Default") || familyName.equals("System")) {
-            applyFontToMenuItem(menu.findItem(R.id.action_people_and_options), Typefaces.getCustomRegular());
-            applyFontToMenuItem(menu.findItem(R.id.action_delete), Typefaces.getCustomRegular());
-            applyFontToMenuItem(menu.findItem(R.id.action_add_contact), Typefaces.getCustomRegular());
-            return;
-        }
+        Typeface tp = FontUtils.getTypeface();
 
-        MessageFontManager.loadTypeface(400, new FontsContractCompat
-                .FontRequestCallback() {
-            @Override
-            public void onTypefaceRetrieved(Typeface typeface) {
-                if (typeface != null) {
-                    applyFontToMenuItem(menu.findItem(R.id.action_people_and_options), typeface);
-                    applyFontToMenuItem(menu.findItem(R.id.action_delete), typeface);
-                    applyFontToMenuItem(menu.findItem(R.id.action_add_contact), typeface);
-                }
-            }
-
-            @Override
-            public void onTypefaceRequestFailed(int reason) {
-                Toast.makeText(HSApplication.getContext(),
-                        HSApplication.getContext().getString(com.iflytek.android_font_loader_lib.R.string.request_failed, reason), Toast.LENGTH_LONG)
-                        .show();
-            }
-        });
+        applyFontToMenuItem(menu.findItem(R.id.action_people_and_options), tp);
+        applyFontToMenuItem(menu.findItem(R.id.action_delete), tp);
+        applyFontToMenuItem(menu.findItem(R.id.action_add_contact), tp);
     }
 
     private void applyFontToMenuItem(MenuItem mi, Typeface font) {

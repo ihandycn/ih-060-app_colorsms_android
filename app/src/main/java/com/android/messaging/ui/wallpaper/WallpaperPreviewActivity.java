@@ -35,8 +35,6 @@ import com.superapps.util.Navigations;
 import com.superapps.util.Threads;
 import com.superapps.util.Toasts;
 
-import org.qcode.fontchange.impl.FontManagerImpl;
-
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
@@ -174,7 +172,6 @@ public class WallpaperPreviewActivity extends BaseActivity implements WallpaperM
         ((CustomMessagePreviewView)findViewById(R.id.wallpaper_chooser_add_preview_message)).updateBubbleDrawables(mThreadId);
 
         WallpaperManager.addWallpaperChangeListener(this);
-        FontManagerImpl.getInstance().applyFont(findViewById(R.id.wallpaper_chooser_message_list), true);
     }
 
     @Override

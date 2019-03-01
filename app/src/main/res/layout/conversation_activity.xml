@@ -32,8 +32,10 @@
             android:layout_gravity="center"
             android:layout_marginTop="5dp"
             android:gravity="center"
+            android:includeFontPadding="false"
             android:textColor="#222327"
-            android:textSize="16.7dp" />
+            android:textSize="16.7dp"
+            app:typeface="@string/custom_font_semibold" />
     </android.support.v7.widget.Toolbar>
 
     <FrameLayout

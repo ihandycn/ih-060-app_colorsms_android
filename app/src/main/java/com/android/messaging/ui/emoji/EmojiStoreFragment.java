@@ -35,8 +35,6 @@ import com.superapps.util.Dimensions;
 import com.superapps.view.RoundImageView;
 import com.superapps.view.TypefacedTextView;
 
-import org.qcode.fontchange.impl.FontManagerImpl;
-
 import java.util.List;
 
 public class EmojiStoreFragment extends Fragment implements INotificationObserver {
@@ -221,7 +219,6 @@ public class EmojiStoreFragment extends Fragment implements INotificationObserve
                     HSGlobalNotificationCenter.sendNotification(EmojiPickerFragment.NOTIFICATION_ADD_EMOJI_FROM_STORE, bundle);
                 });
             }
-            FontManagerImpl.getInstance().applyFont(holder.getBtn, true);
 
             holder.previewLayout.bindEmojiItems(packageInfo);
 

@@ -5,7 +5,6 @@ import android.os.Bundle;
 import android.support.annotation.ColorInt;
 import android.support.annotation.Nullable;
 import android.support.v7.app.ActionBar;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.view.MenuItem;
@@ -29,8 +28,6 @@ import com.android.messaging.util.UiUtils;
 import com.ihs.commons.notificationcenter.HSGlobalNotificationCenter;
 import com.superapps.util.BackgroundDrawables;
 import com.superapps.util.Dimensions;
-
-import org.qcode.fontchange.impl.FontManagerImpl;
 
 import java.io.File;
 
@@ -97,8 +94,6 @@ public class CustomBubblesActivity extends BaseActivity implements CustomMessage
         customHeaderViewPager.setViewPagerTabHeight(CustomViewPager.DEFAULT_TAB_STRIP_SIZE);
         customHeaderViewPager.setBackgroundColor(getResources().getColor(R.color.contact_picker_background));
         customHeaderViewPager.setCurrentItem(0);
-
-        FontManagerImpl.getInstance().applyFont(findViewById(R.id.custom_message_preview), true);
 
         BugleAnalytics.logEvent("Customize_Bubble_Show", true, "from", getOpenSourceType());
     }

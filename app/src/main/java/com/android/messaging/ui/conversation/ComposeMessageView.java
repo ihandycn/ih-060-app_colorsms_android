@@ -18,10 +18,8 @@ package com.android.messaging.ui.conversation;
 import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Rect;
-import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.v4.provider.FontsContractCompat;
 import android.support.v7.app.ActionBar;
 import android.text.Editable;
 import android.text.Html;
@@ -58,7 +56,6 @@ import com.android.messaging.datamodel.data.MessagePartData;
 import com.android.messaging.datamodel.data.ParticipantData;
 import com.android.messaging.datamodel.data.PendingAttachmentData;
 import com.android.messaging.datamodel.data.SubscriptionListData.SubscriptionListEntry;
-import com.android.messaging.font.MessageFontManager;
 import com.android.messaging.sms.MmsConfig;
 import com.android.messaging.ui.AttachmentPreview;
 import com.android.messaging.ui.BugleActionBarActivity;
@@ -79,6 +76,7 @@ import com.android.messaging.util.LogUtil;
 import com.android.messaging.util.MediaUtil;
 import com.android.messaging.util.OsUtil;
 import com.android.messaging.util.UiUtils;
+import com.superapps.font.FontUtils;
 import com.superapps.util.BackgroundDrawables;
 import com.superapps.util.Dimensions;
 import com.superapps.util.Threads;
@@ -240,6 +238,7 @@ public class ComposeMessageView extends LinearLayout
         super.onFinishInflate();
         mInputLayout = findViewById(R.id.input_layout);
         mComposeEditText = findViewById(R.id.compose_message_text);
+        mComposeEditText.setTypeface(FontUtils.getTypeface());
         mComposeEditText.setOnEditorActionListener(this);
         mComposeEditText.addTextChangedListener(this);
         mComposeEditText.setOnFocusChangeListener(new OnFocusChangeListener() {
@@ -291,17 +290,6 @@ public class ComposeMessageView extends LinearLayout
                 }
             }
             return true;
-        });
-        MessageFontManager.loadTypeface(400, new FontsContractCompat.FontRequestCallback(){
-            @Override
-            public void onTypefaceRetrieved(Typeface typeface) {
-                mComposeEditText.setTypeface(typeface);
-            }
-
-            @Override
-            public void onTypefaceRequestFailed(int reason) {
-                super.onTypefaceRequestFailed(reason);
-            }
         });
 
         mSelfSendIcon = findViewById(R.id.self_send_icon);

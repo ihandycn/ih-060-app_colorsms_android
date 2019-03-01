@@ -60,8 +60,6 @@ import com.superapps.util.Dimensions;
 import com.superapps.util.IntegerBuckets;
 import com.superapps.util.Preferences;
 
-import org.qcode.fontchange.impl.FontManagerImpl;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -252,7 +250,6 @@ public class ConversationListFragment extends Fragment implements ConversationLi
         ViewGroupCompat.setTransitionGroup(rootView, false);
 
         setHasOptionsMenu(true);
-   //     FontManagerImpl.getInstance().applyFont(mEmptyListMessageView, true);
         return rootView;
     }
 

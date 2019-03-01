@@ -6,8 +6,6 @@ import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
 import android.graphics.Color;
-import android.graphics.PorterDuff;
-import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Handler;
 import android.view.LayoutInflater;
@@ -16,25 +14,18 @@ import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
-import android.widget.RadioButton;
 import android.widget.TextView;
 
 import com.android.messaging.R;
 import com.android.messaging.ui.conversationlist.ConversationListActivity;
-import com.android.messaging.ui.customize.PrimaryColors;
 import com.android.messaging.util.BugleAnalytics;
 import com.android.messaging.util.ViewUtils;
-import com.ihs.app.framework.HSApplication;
 import com.ihs.commons.notificationcenter.HSGlobalNotificationCenter;
 import com.ihs.commons.utils.HSLog;
-import com.messagecenter.util.Utils;
+import com.superapps.font.FontStyleManager;
+import com.superapps.font.FontUtils;
 import com.superapps.util.BackgroundDrawables;
 import com.superapps.util.Dimensions;
-import com.superapps.util.Preferences;
-import com.superapps.view.TypefacedTextView;
-
-import org.qcode.fontchange.IFontChangeListener;
-import org.qcode.fontchange.impl.FontManagerImpl;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -42,15 +33,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-
 public class ChooseFontDialog {
 
     private static final String[] sSupportGoogleFonts = {
-            "Default", "System",
-            "Advent Pro", "Atma", "Cormorant Garamond", "Encode Sans", "Expletus Sans",
-            "Fira Sans Condensed", "IBM Plex Sans",
-            "Mitr", "Montserrat", "Montserrat Alternates", "Rajdhani",
-            "Saira", "Taviraj", "Tillana", "Zilla Slab"
+            FontUtils.MESSAGE_FONT_FAMILY_DEFAULT_VALUE,
+            "Krub", "Mali", "SairaExtraCondensed", "SourceSerifPro"
     };
 
     private static final String TAG = "ChooseFontDialog";
@@ -60,19 +47,10 @@ public class ChooseFontDialog {
     private View mDialogContent;
     private View mDialogRoot;
     private String mFontFamily;
-    private IFontChangeListener mListener;
-    private Drawable mCheckedDrawable, mUncheckedDrawable;
 
-    ChooseFontDialog(Context activity, IFontChangeListener listener) {
+    ChooseFontDialog(Context activity) {
         this.mActivity = (Activity) activity;
-        mFontFamily = Preferences.getDefault().getString(TypefacedTextView.MESSAGE_FONT_FAMILY, "Default");
-        mListener = listener;
-
-        mCheckedDrawable = HSApplication.getContext().getResources().getDrawable(R.drawable.select_icon_click);
-        mCheckedDrawable.setColorFilter(PrimaryColors.getPrimaryColor(), PorterDuff.Mode.SRC_ATOP);
-        mCheckedDrawable.setBounds(0, 0, mCheckedDrawable.getIntrinsicWidth(), mCheckedDrawable.getIntrinsicHeight());
-        mUncheckedDrawable = HSApplication.getContext().getResources().getDrawable(R.drawable.select_icon_normal);
-        mUncheckedDrawable.setBounds(0, 0, mUncheckedDrawable.getIntrinsicWidth(), mUncheckedDrawable.getIntrinsicHeight());
+        mFontFamily = FontStyleManager.getFontFamily();
     }
 
     private void configDialog(Dialog builder) {
@@ -172,8 +150,8 @@ public class ChooseFontDialog {
                 item.setSelected(true);
                 item.refreshRadioStatus();
 
-                FontManagerImpl.getInstance().loadAndSetTypeface(fontFamily, mListener);
-                Preferences.getDefault().putString(TypefacedTextView.MESSAGE_FONT_FAMILY, fontFamily);
+                FontStyleManager.setFontFamily(fontFamily);
+                ((ChangeFontActivity)mActivity).onFontChange();
                 HSGlobalNotificationCenter.sendNotification(ConversationListActivity.EVENT_MAINPAGE_RECREATE);
                 BugleAnalytics.logEvent("Customize_TextFont_Change", true, "font", fontFamily);
                 new Handler().postDelayed(this::dismiss, 1);
@@ -190,7 +168,6 @@ public class ChooseFontDialog {
                 mDialogContent.animate().scaleX(0.97f).scaleY(0.97f).alpha(0).setDuration(280).start();
                 new Handler().postDelayed(() -> {
                     if (mDialog.isShowing()) {
-                        mListener.onLoadSuccess(100);
                         dismissSafely();
                     }
                 }, 320);
@@ -205,22 +182,6 @@ public class ChooseFontDialog {
             mDialog.dismiss();
         } catch (Exception e) {
             e.printStackTrace();
-        }
-    }
-
-    private void toggleRadioButtonColorFilter(RadioButton btn, boolean isChecked) {
-        if (isChecked) {
-            if (Utils.isRtl()) {
-                btn.setCompoundDrawables(null, null, mCheckedDrawable, null);
-            } else {
-                btn.setCompoundDrawables(mCheckedDrawable, null, null, null);
-            }
-        } else {
-            if (Utils.isRtl()) {
-                btn.setCompoundDrawables(null, null, mUncheckedDrawable, null);
-            } else {
-                btn.setCompoundDrawables(mUncheckedDrawable, null, null, null);
-            }
         }
     }
 }

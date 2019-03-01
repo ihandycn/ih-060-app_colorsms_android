@@ -51,16 +51,11 @@ import com.android.messaging.ui.CompositeAdapter;
 import com.android.messaging.ui.PersonItemView;
 import com.android.messaging.ui.UIIntents;
 import com.android.messaging.ui.conversation.ConversationActivity;
-import com.android.messaging.ui.conversationlist.ConversationListActivity;
-import com.android.messaging.ui.customize.CustomBubblesActivity;
+import com.android.messaging.ui.wallpaper.WallpaperManager;
+import com.android.messaging.ui.wallpaper.WallpaperPreviewActivity;
 import com.android.messaging.util.Assert;
 import com.android.messaging.util.BuglePrefs;
 import com.android.messaging.util.OsUtil;
-import com.android.messaging.ui.wallpaper.WallpaperManager;
-import com.android.messaging.ui.wallpaper.WallpaperPreviewActivity;
-import com.superapps.util.Navigations;
-
-import org.qcode.fontchange.impl.FontManagerImpl;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -105,7 +100,6 @@ public class PeopleAndOptionsFragment extends Fragment
         compositeAdapter.addPartition(new PeopleAndOptionsPartition(mPeopleListAdapter,
                 R.string.participant_list_title, false));
         mListView.setAdapter(compositeAdapter);
-        FontManagerImpl.getInstance().applyFont(view, true);
         return view;
     }
 
@@ -318,7 +312,6 @@ public class PeopleAndOptionsFragment extends Fragment
 
             itemView.bind(mOptionsCursor, position, mOtherParticipantData,
                     PeopleAndOptionsFragment.this, isRingtoneEnabled);
-            FontManagerImpl.getInstance().applyFont(itemView, true);
             return itemView;
         }
 
@@ -398,7 +391,6 @@ public class PeopleAndOptionsFragment extends Fragment
                     return false;
                 }
             });
-            FontManagerImpl.getInstance().applyFont(itemView, true);
             return itemView;
         }
     }

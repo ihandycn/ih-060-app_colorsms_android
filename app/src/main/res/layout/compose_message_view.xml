@@ -173,6 +173,7 @@
                 <com.android.messaging.ui.PlainTextEditText
                     android:id="@+id/compose_message_text"
                     style="@style/ConversationComposeSendText"
+                    android:includeFontPadding="false"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"

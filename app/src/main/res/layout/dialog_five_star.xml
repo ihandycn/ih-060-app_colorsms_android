@@ -2,8 +2,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:orientation="vertical">
+    android:layout_height="wrap_content">
 
     <com.android.messaging.ui.dialog.FiveStarLayout
         android:id="@+id/rate_area"
@@ -44,7 +43,7 @@
         android:lines="2"
         android:textColor="@color/text"
         android:textSize="14sp"
-        app:typeface="@string/roboto_regular"
+        app:typeface="@string/custom_font_regular"
         app:font_style="regular"/>
 
     <ImageView

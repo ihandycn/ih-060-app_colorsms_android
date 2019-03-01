@@ -14,13 +14,10 @@ import android.widget.ImageView;
 import com.android.messaging.R;
 import com.android.messaging.datamodel.data.DraftMessageData;
 import com.android.messaging.datamodel.data.MessagePartData;
-import com.android.messaging.ui.customize.PrimaryColors;
 import com.android.messaging.util.BugleAnalytics;
 import com.android.messaging.util.OsUtil;
 import com.superapps.util.BackgroundDrawables;
 import com.superapps.util.Dimensions;
-
-import org.qcode.fontchange.impl.FontManagerImpl;
 
 public class MediaPickerFragment extends Fragment implements View.OnClickListener {
 
@@ -55,7 +52,6 @@ public class MediaPickerFragment extends Fragment implements View.OnClickListene
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.media_picker_layout, container, false);
         initView(view);
-        FontManagerImpl.getInstance().applyFont(view, true);
         return view;
     }
 

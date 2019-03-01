@@ -25,8 +25,6 @@ import android.view.ViewGroup;
 import com.android.messaging.R;
 import com.android.messaging.ui.CursorRecyclerAdapter;
 
-import org.qcode.fontchange.impl.FontManagerImpl;
-
 /**
  * Provides an interface to expose Conversation List Cursor data to a UI widget like a ListView.
  */
@@ -52,7 +50,6 @@ public class ConversationListAdapter
             final Cursor cursor) {
         final ConversationListItemView conversationListItemView = holder.mView;
         conversationListItemView.bind(cursor, mClivHostInterface);
-        FontManagerImpl.getInstance().applyFont(holder.mView, true);
     }
 
     @Override

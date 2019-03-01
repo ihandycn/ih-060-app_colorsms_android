@@ -54,7 +54,6 @@ android {
 dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
     compile project(':libchips')
-    compile project(':fontChangelib')
     compile project(':libvcard')
     compile project(':libphotoviewer')
     compile project(':libframesequence')

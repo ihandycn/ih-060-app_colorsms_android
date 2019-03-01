@@ -66,7 +66,7 @@ public class ThemeSelectActivity extends BaseActivity {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         }
         getSupportActionBar().setDisplayShowHomeEnabled(true);
-        
+
         UiUtils.setStatusBarColor(this, getResources().getColor(R.color.action_bar_background_color));
         // setup color select
         for (int i = 0; i < COLORS.length; i++) {

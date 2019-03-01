@@ -1,7 +1,6 @@
 package com.android.messaging.ui.appsettings;
 
 import android.annotation.TargetApi;
-import android.app.AlertDialog;
 import android.content.Intent;
 import android.media.Ringtone;
 import android.media.RingtoneManager;
@@ -13,8 +12,6 @@ import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
-import android.widget.SeekBar;
 import android.widget.TextView;
 
 import com.android.messaging.BaseActivity;
@@ -33,9 +30,6 @@ import com.android.messaging.util.PendingIntentConstants;
 import com.android.messaging.util.UiUtils;
 import com.ihs.commons.config.HSConfig;
 import com.messagecenter.customize.MessageCenterSettings;
-
-import org.qcode.fontchange.IFontChangeListener;
-import org.qcode.fontchange.impl.FontManagerImpl;
 
 import static android.view.View.GONE;
 import static com.android.messaging.ui.appsettings.SettingItemView.NORMAL;

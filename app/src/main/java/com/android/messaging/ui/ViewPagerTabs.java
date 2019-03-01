@@ -18,9 +18,6 @@ package com.android.messaging.ui;
 import android.content.Context;
 import android.content.res.ColorStateList;
 import android.content.res.TypedArray;
-import android.graphics.Typeface;
-import android.os.Handler;
-import android.support.v4.provider.FontsContractCompat;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.util.AttributeSet;
@@ -35,9 +32,9 @@ import android.widget.Toast;
 
 import com.android.messaging.Factory;
 import com.android.messaging.R;
-import com.android.messaging.font.MessageFontManager;
 import com.android.messaging.ui.customize.PrimaryColors;
 import com.android.messaging.util.OsUtil;
+import com.superapps.font.FontUtils;
 
 /**
  * Lightweight implementation of ViewPager tabs. This looks similar to traditional actionBar tabs,
@@ -73,8 +70,6 @@ public class ViewPagerTabs extends HorizontalScrollView implements ViewPager.OnP
             android.R.attr.textStyle,
             android.R.attr.textAllCaps
     };
-    private Handler mHandler = null;
-    private Typeface mTypeface;
 
     /**
      * Shows a toast with the tab description when long-clicked.
@@ -153,19 +148,8 @@ public class ViewPagerTabs extends HorizontalScrollView implements ViewPager.OnP
 
     private void addTab(CharSequence tabTitle, final int position) {
         final TextView textView = new TextView(getContext());
-        MessageFontManager.loadTypeface(400, new FontsContractCompat.FontRequestCallback(){
-            @Override
-            public void onTypefaceRetrieved(Typeface typeface) {
-                //这儿会内存泄漏
-                textView.setTypeface(typeface);
-            }
 
-            @Override
-            public void onTypefaceRequestFailed(int reason) {
-                super.onTypefaceRequestFailed(reason);
-            }
-        });
-
+        textView.setTypeface(FontUtils.getTypeface());
         textView.setText(tabTitle);
         textView.setBackgroundResource(R.drawable.contact_picker_tab_background_selector);
         textView.setGravity(Gravity.CENTER);

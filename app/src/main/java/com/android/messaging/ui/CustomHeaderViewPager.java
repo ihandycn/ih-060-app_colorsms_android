@@ -16,19 +16,9 @@
 package com.android.messaging.ui;
 
 import android.content.Context;
-import android.support.v4.view.PagerAdapter;
-import android.support.v4.view.ViewPager;
-import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.util.AttributeSet;
-import android.util.TypedValue;
-import android.view.LayoutInflater;
-import android.widget.LinearLayout;
 
 import com.android.messaging.R;
-import com.android.messaging.util.Assert;
-import com.android.messaging.util.BugleAnalytics;
-
-import org.qcode.fontchange.impl.FontManagerImpl;
 
 /**
  * A view that contains both a view pager and a tab strip wrapped in a linear layout.

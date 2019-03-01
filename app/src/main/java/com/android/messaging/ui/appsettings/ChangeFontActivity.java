@@ -11,23 +11,15 @@ import android.widget.TextView;
 
 import com.android.messaging.BaseActivity;
 import com.android.messaging.R;
-import com.android.messaging.font.MessageFontManager;
-import com.android.messaging.ui.UIIntents;
+import com.android.messaging.font.ChangeFontUtils;
 import com.android.messaging.ui.customize.CustomMessagePreviewView;
 import com.android.messaging.ui.view.LevelSeekBar;
 import com.android.messaging.ui.wallpaper.WallpaperManager;
 import com.android.messaging.util.BugleAnalytics;
-import com.android.messaging.util.BuglePrefs;
 import com.android.messaging.util.UiUtils;
+import com.superapps.font.FontStyleManager;
 import com.superapps.util.Networks;
-import com.superapps.util.Preferences;
 import com.superapps.util.Toasts;
-import com.superapps.view.TypefacedTextView;
-
-import org.qcode.fontchange.FontManager;
-import org.qcode.fontchange.IFontChangeListener;
-import org.qcode.fontchange.impl.ActivityFontEventHandlerImpl;
-import org.qcode.fontchange.impl.FontManagerImpl;
 
 import java.io.File;
 
@@ -43,8 +35,6 @@ public class ChangeFontActivity extends BaseActivity implements LevelSeekBar.OnL
             R.string.setting_text_size_hint_large,
             R.string.setting_text_size_hint_larger};
 
-    private ActivityFontEventHandlerImpl mFontEventHandler;
-    private boolean mFirstTimeApplyFont = true;
     private int mPrefFontLevel = 999, mCurrentFontLevel;
 
     @Override
@@ -79,8 +69,8 @@ public class ChangeFontActivity extends BaseActivity implements LevelSeekBar.OnL
         mChangeFontContainer = findViewById(R.id.change_font_container);
         View changeFontItem = findViewById(R.id.change_font_item);
 
-        mPrefFontLevel = BuglePrefs.getApplicationPrefs().getInt(FontManager.MESSAGE_FONT_SCALE, 2);
-        String fontFamily = Preferences.getDefault().getString(TypefacedTextView.MESSAGE_FONT_FAMILY, "Default");
+        mPrefFontLevel = FontStyleManager.getFontScaleLevel();
+        String fontFamily = FontStyleManager.getFontFamily();
 
         mTextFontFamily.setText(fontFamily);
         mTextFontSize.setText(getResources().getString(sTextSizeRes[mPrefFontLevel]));
@@ -88,47 +78,19 @@ public class ChangeFontActivity extends BaseActivity implements LevelSeekBar.OnL
         mSeekBar.setLevel(mPrefFontLevel);
 
         changeFontItem.setOnClickListener(v -> {
-            if (!Networks.isNetworkAvailable(-1)) {
-                Toasts.showToast(R.string.network_error);
-                BugleAnalytics.logEvent("Customize_TextFont_Click", true, "request", "fail");
-            } else {
-                // open a dialog to choose font
-                new ChooseFontDialog(ChangeFontActivity.this, mListener).show();
-                BugleAnalytics.logEvent("Customize_TextFont_Click", true, "request", "success");
-            }
+            // open a dialog to choose font
+            new ChooseFontDialog(ChangeFontActivity.this).show();
+            BugleAnalytics.logEvent("Customize_TextFont_Click", true, "request", "success");
         });
         BugleAnalytics.logEvent("Customize_Font_Show", true);
-
-        initFontHandler();
-    }
-
-    private void initFontHandler() {
-        mFontEventHandler = FontManager.newActivityFontEventHandler()
-                .setSupportFontChange(isSupportFontChange())
-                .setSwitchFontImmediately(isSwitchFontImmediately())
-                .setNeedDelegateViewCreate(false);
-        mFontEventHandler.onCreate(this);
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        mFontEventHandler.onDestroy();
         if (mPrefFontLevel != mCurrentFontLevel) {
             BugleAnalytics.logEvent("Customize_TextSize_Change", true, "size", getResources().getString(sTextSizeRes[mCurrentFontLevel]));
         }
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-
-        if (mFirstTimeApplyFont) {
-            mFontEventHandler.onViewCreated();
-            mFirstTimeApplyFont = false;
-        }
-
-        mFontEventHandler.onResume();
     }
 
     @Override
@@ -142,44 +104,18 @@ public class ChangeFontActivity extends BaseActivity implements LevelSeekBar.OnL
         }
     }
 
-    private IFontChangeListener mListener = new IFontChangeListener() {
-        @Override
-        public void onLoadStart(float scale) {
-        }
-
-        @Override
-        public void onLoadStart(String fontPath) {
-        }
-
-        @Override
-        public void onLoadSuccess(float scale) {
-            String fontFamily = Preferences.getDefault().getString(TypefacedTextView.MESSAGE_FONT_FAMILY, "Default");
-            mTextFontFamily.setText(fontFamily);
-        }
-
-        @Override
-        public void onLoadSuccess(String fontPath) {
-
-        }
-
-        @Override
-        public void onLoadFail(float scale) {
-        }
-
-        @Override
-        public void onLoadFail(String fontPath) {
-
-        }
-    };
-
     @Override
     public void onLevelChanged(LevelSeekBar seekBar, int oldLevel, int newLevel, boolean fromUser) {
-        MessageFontManager.setFontScale(newLevel);
-        //FontManagerImpl.getInstance().changeFontSize(MessageFontManager.getFontScaleByLevel(newLevel), null);
-        FontManagerImpl.getInstance().changeFontSize(MessageFontManager.getFontScaleByLevel(newLevel), mChangeFontContainer, true);
+        FontStyleManager.setFontScaleLevel(newLevel);
         mTextFontSize.setText(getResources().getString(sTextSizeRes[newLevel]));
-        // need modify view height
+        ChangeFontUtils.changeFontSize(mChangeFontContainer, FontStyleManager.getScaleByLevel(newLevel));
+
         mChangeFontContainer.requestLayout();
         mCurrentFontLevel = newLevel;
+    }
+
+    public void onFontChange() {
+        mTextFontFamily.setText(FontStyleManager.getFontFamily());
+        ChangeFontUtils.changeFontTypeface(mChangeFontContainer, FontStyleManager.getFontFamily());
     }
 }

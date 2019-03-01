@@ -11,8 +11,6 @@ import android.widget.LinearLayout;
 import com.android.messaging.R;
 import com.android.messaging.util.Assert;
 
-import org.qcode.fontchange.impl.FontManagerImpl;
-
 public abstract class CustomViewPager extends LinearLayout {
     public final static int DEFAULT_TAB_STRIP_SIZE = -1;
     private final int mDefaultTabStripSize;
@@ -27,8 +25,8 @@ public abstract class CustomViewPager extends LinearLayout {
         inflater.inflate(getLayoutRes(), this, true);
         setOrientation(LinearLayout.VERTICAL);
 
-        mTabstrip = (ViewPagerTabs) findViewById(R.id.tab_strip);
-        mViewPager = (ViewPager) findViewById(R.id.pager);
+        mTabstrip = findViewById(R.id.tab_strip);
+        mViewPager = findViewById(R.id.pager);
 
         TypedValue tv = new TypedValue();
         context.getTheme().resolveAttribute(android.R.attr.actionBarSize, tv, true);
@@ -68,7 +66,6 @@ public abstract class CustomViewPager extends LinearLayout {
                 mTabstrip.onPageSelected(position);
             }
         });
-        FontManagerImpl.getInstance().applyFont(mTabstrip, true);
     }
 
     public int getSelectedItemPosition() {

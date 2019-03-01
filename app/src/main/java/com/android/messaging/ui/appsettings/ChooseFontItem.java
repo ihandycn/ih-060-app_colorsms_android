@@ -4,17 +4,16 @@ import android.content.Context;
 import android.graphics.PorterDuff;
 import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
-import android.support.v4.provider.FontsContractCompat;
 import android.util.AttributeSet;
 import android.util.TypedValue;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
 
 import com.android.messaging.R;
-import com.android.messaging.font.MessageFontManager;
 import com.android.messaging.ui.customize.PrimaryColors;
 import com.ihs.app.framework.HSApplication;
 import com.messagecenter.util.Utils;
+import com.superapps.font.FontUtils;
 import com.superapps.util.Fonts;
 
 public class ChooseFontItem extends LinearLayout {
@@ -55,32 +54,15 @@ public class ChooseFontItem extends LinearLayout {
 
     public void loadFont() {
         radioBtn = findViewById(R.id.dialog_select_btn);
-        Typeface font = Fonts.getTypeface(getResources().getString(R.string.light_dialog_choice_text_font));
+
         TypedValue out = new TypedValue();
         getResources().getValue(R.dimen.light_dialog_choice_text, out, true);
         float alpha = out.getFloat();
-        radioBtn.setTypeface(font);
         radioBtn.setAlpha(alpha);
         radioBtn.setText(fontFamily);
         radioBtn.setClickable(false);
-
+        radioBtn.setTypeface(FontUtils.getTypefaceByName(fontFamily, FontUtils.SEMI_BOLD));
         refreshRadioStatus();
-        if (!fontFamily.equals("Default")) {
-            if (fontFamily.equals("System")) {
-                fontFamily = "Roboto";
-            }
-            MessageFontManager.loadTypeface(fontFamily, 400, new FontsContractCompat.FontRequestCallback() {
-                @Override
-                public void onTypefaceRetrieved(Typeface typeface) {
-                    radioBtn.setTypeface(typeface);
-                }
-
-                @Override
-                public void onTypefaceRequestFailed(int reason) {
-
-                }
-            });
-        }
     }
 
     public void refreshRadioStatus() {
