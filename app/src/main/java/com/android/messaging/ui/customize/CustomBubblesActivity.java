@@ -69,6 +69,7 @@ public class CustomBubblesActivity extends BaseActivity implements CustomMessage
         if (!TextUtils.isEmpty(bgPath)) {
             ImageView bg = findViewById(R.id.customize_bubbles_bg);
             bg.setImageURI(Uri.fromFile(new File(bgPath)));
+            findViewById(R.id.divider).setVisibility(View.INVISIBLE);
         }
 
         mChooseMessageColorPagerView = findViewById(R.id.choose_message_color_view);
