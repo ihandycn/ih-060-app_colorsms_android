@@ -23,4 +23,5 @@ import android.content.Context;
  */
 public interface CustomPagerViewHolder extends PagerViewHolder {
     CharSequence getPageTitle(Context context);
+    void onPageSelected();
 }

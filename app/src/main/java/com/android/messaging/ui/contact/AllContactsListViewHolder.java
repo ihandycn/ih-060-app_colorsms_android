@@ -20,6 +20,7 @@ import android.content.Context;
 import com.android.messaging.R;
 import com.android.messaging.ui.CustomPagerListViewHolder;
 import com.android.messaging.ui.contact.ContactListItemView.HostInterface;
+import com.android.messaging.util.BugleAnalytics;
 
 /**
  * Holds the all contacts view for the contact picker's view pager.
@@ -61,5 +62,10 @@ public class AllContactsListViewHolder extends CustomPagerListViewHolder {
 
     @Override protected void setHasOptionsMenu() {
 
+    }
+
+    @Override
+    public void onPageSelected() {
+        BugleAnalytics.logEvent("SMS_ContactsTabPage_Show", true, "type", "AllContacts");
     }
 }

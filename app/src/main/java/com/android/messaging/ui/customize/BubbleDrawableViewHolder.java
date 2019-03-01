@@ -53,4 +53,8 @@ public class BubbleDrawableViewHolder extends BasePagerViewHolder implements Cus
         return context.getString(R.string.bubble_customize_tab_style);
     }
 
+    @Override
+    public void onPageSelected() {
+
+    }
 }

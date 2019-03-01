@@ -105,6 +105,7 @@ public class CustomBubblesActivity extends BaseActivity implements CustomMessage
         mChooseMessageColorPagerView.reveal();
         mChooseMessageColorPagerView.updateTitle(type);
         disableSaveButton();
+        BugleAnalytics.logEvent("Customize_Bubble_Color_Click");
     }
 
     @Override

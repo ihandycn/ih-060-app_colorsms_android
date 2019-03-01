@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 import com.android.messaging.R;
 import com.android.messaging.ui.BasePagerViewHolder;
 import com.android.messaging.ui.CustomPagerViewHolder;
+import com.android.messaging.util.BugleAnalytics;
 
 public class ChooseMessageColorAdvanceViewHolder extends BasePagerViewHolder implements CustomPagerViewHolder {
     private Context mContext;
@@ -57,5 +58,10 @@ public class ChooseMessageColorAdvanceViewHolder extends BasePagerViewHolder imp
     @Override
     public CharSequence getPageTitle(Context context) {
         return context.getString(R.string.bubble_customize_color_advance);
+    }
+
+    @Override
+    public void onPageSelected() {
+        BugleAnalytics.logEvent("Customize_Bubble_Color_Advance_Click");
     }
 }

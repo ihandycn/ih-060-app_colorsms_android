@@ -11,7 +11,6 @@ import android.view.ViewGroup;
 import com.android.messaging.R;
 import com.android.messaging.ui.BasePagerViewHolder;
 import com.android.messaging.ui.CustomPagerViewHolder;
-import com.android.messaging.ui.emoji.EmojiItemDecoration;
 import com.superapps.util.Dimensions;
 import com.superapps.util.Threads;
 
@@ -65,6 +64,11 @@ public class ChooseMessageColorRecommendViewHolder extends BasePagerViewHolder i
     @Override
     public CharSequence getPageTitle(Context context) {
         return context.getString(R.string.bubble_customize_color_recommend);
+    }
+
+    @Override
+    public void onPageSelected() {
+
     }
 }
 

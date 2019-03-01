@@ -2,7 +2,6 @@ package com.android.messaging.ui;
 
 import android.content.Context;
 import android.support.annotation.LayoutRes;
-import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.util.AttributeSet;
 import android.util.TypedValue;
@@ -11,7 +10,6 @@ import android.widget.LinearLayout;
 
 import com.android.messaging.R;
 import com.android.messaging.util.Assert;
-import com.android.messaging.util.BugleAnalytics;
 
 import org.qcode.fontchange.impl.FontManagerImpl;
 
@@ -20,6 +18,7 @@ public abstract class CustomViewPager extends LinearLayout {
     private final int mDefaultTabStripSize;
     private ViewPager mViewPager;
     protected ViewPagerTabs mTabstrip;
+
 
     public CustomViewPager(final Context context, final AttributeSet attrs) {
         super(context, attrs);
@@ -46,12 +45,8 @@ public abstract class CustomViewPager extends LinearLayout {
     }
 
     public void setViewHolders(final CustomPagerViewHolder[] viewHolders) {
-        setViewHolders(viewHolders, false);
-    }
-
-    public void setViewHolders(final CustomPagerViewHolder[] viewHolders, boolean isContactPickerPage) {
         Assert.notNull(mViewPager);
-        final PagerAdapter adapter = new CustomViewPagerAdapter(viewHolders);
+        final CustomViewPagerAdapter adapter = new CustomViewPagerAdapter(viewHolders);
         mViewPager.setAdapter(adapter);
         mTabstrip.setViewPager(mViewPager);
         mViewPager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
@@ -69,9 +64,7 @@ public abstract class CustomViewPager extends LinearLayout {
 
             @Override
             public void onPageSelected(int position) {
-                if (isContactPickerPage) {
-                    BugleAnalytics.logEvent("SMS_ContactsTabPage_Show", true, "type", position == 0 ? "Frequents" : "AllContacts");
-                }
+                viewHolders[position].onPageSelected();
                 mTabstrip.onPageSelected(position);
             }
         });
