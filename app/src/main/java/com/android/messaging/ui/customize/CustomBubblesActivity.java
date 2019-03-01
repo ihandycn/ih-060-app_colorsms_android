@@ -25,6 +25,7 @@ import com.android.messaging.ui.UIIntents;
 import com.android.messaging.ui.conversationlist.ConversationListActivity;
 import com.android.messaging.ui.wallpaper.WallpaperManager;
 import com.android.messaging.util.BugleAnalytics;
+import com.android.messaging.util.UiUtils;
 import com.ihs.commons.notificationcenter.HSGlobalNotificationCenter;
 import com.superapps.util.BackgroundDrawables;
 import com.superapps.util.Dimensions;
@@ -58,6 +59,8 @@ public class CustomBubblesActivity extends BaseActivity implements CustomMessage
         super.onCreate(savedInstanceState);
         setContentView(R.layout.customize_bubbles_activity);
         initActionBar();
+
+        UiUtils.setStatusBarColor(this, getResources().getColor(R.color.action_bar_background_color));
 
         mConversationId = getIntent().getStringExtra(UIIntents.UI_INTENT_EXTRA_CONVERSATION_ID);
 

@@ -12,11 +12,13 @@ import android.widget.TextView;
 import com.android.messaging.BaseActivity;
 import com.android.messaging.R;
 import com.android.messaging.font.MessageFontManager;
+import com.android.messaging.ui.UIIntents;
 import com.android.messaging.ui.customize.CustomMessagePreviewView;
 import com.android.messaging.ui.view.LevelSeekBar;
 import com.android.messaging.ui.wallpaper.WallpaperManager;
 import com.android.messaging.util.BugleAnalytics;
 import com.android.messaging.util.BuglePrefs;
+import com.android.messaging.util.UiUtils;
 import com.superapps.util.Networks;
 import com.superapps.util.Preferences;
 import com.superapps.util.Toasts;
@@ -59,6 +61,8 @@ public class ChangeFontActivity extends BaseActivity implements LevelSeekBar.OnL
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         }
         getSupportActionBar().setDisplayShowHomeEnabled(true);
+
+        UiUtils.setStatusBarColor(this, getResources().getColor(R.color.action_bar_background_color));
 
         String bgPath = WallpaperManager.getWallpaperPathByThreadId(null);
         if (!TextUtils.isEmpty(bgPath)) {
