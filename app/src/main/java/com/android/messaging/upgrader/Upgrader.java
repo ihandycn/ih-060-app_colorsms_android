@@ -23,7 +23,7 @@ public class Upgrader extends BaseUpgrader {
     @Override
     protected void onAppUpgrade(int oldVersion, int newVersion) {
         if (oldVersion <= 12 && newVersion > 12) {
-            Preferences.getDefault().putBoolean(ConversationListActivity.PREF_KEY_MAIN_DRAWER_OPENED, true);
+            Preferences.getDefault().putBoolean(ConversationListActivity.PREF_KEY_MAIN_DRAWER_OPENED, false);
         }
     }
 
