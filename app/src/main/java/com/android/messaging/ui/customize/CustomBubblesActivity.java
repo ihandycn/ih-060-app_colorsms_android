@@ -42,6 +42,9 @@ import static com.android.messaging.ui.customize.ChooseMessageColorEntryViewHold
 
 public class CustomBubblesActivity extends BaseActivity implements CustomMessageHost {
 
+    private static final String[] COLOR_TYPES = {"bubble_color_incoming", "bubble_color_outgoing", "message_text_incoming", "message_text_outgoing"};
+
+
     private ChooseMessageColorPagerView mChooseMessageColorPagerView;
     private CustomMessagePreviewView mCustomMessagePreview;
     private ChooseMessageColorEntryViewHolder mChooseMessageColorEntryViewHolder;
@@ -53,6 +56,7 @@ public class CustomBubblesActivity extends BaseActivity implements CustomMessage
     private String mConversationId;
 
     private boolean mHasChanged;
+
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -105,7 +109,7 @@ public class CustomBubblesActivity extends BaseActivity implements CustomMessage
         mChooseMessageColorPagerView.reveal();
         mChooseMessageColorPagerView.updateTitle(type);
         disableSaveButton();
-        BugleAnalytics.logEvent("Customize_Bubble_Color_Click");
+        BugleAnalytics.logEvent("Customize_Bubble_Color_Click", "type", COLOR_TYPES[mColorType]);
     }
 
     @Override
