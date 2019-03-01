@@ -26,6 +26,7 @@ import android.widget.TextView;
 import com.android.messaging.BaseActivity;
 import com.android.messaging.R;
 import com.android.messaging.glide.GlideApp;
+import com.android.messaging.ui.customize.CustomMessagePreviewView;
 import com.android.messaging.util.BugleAnalytics;
 import com.android.messaging.util.UiUtils;
 import com.bumptech.glide.request.target.ImageViewTarget;
@@ -169,6 +170,8 @@ public class WallpaperPreviewActivity extends BaseActivity implements WallpaperM
         if (!TextUtils.isEmpty(wallpaperPath)) {
             mWallpaperPreviewImg.setImageURI(Uri.fromFile(new File(wallpaperPath)));
         }
+
+        ((CustomMessagePreviewView)findViewById(R.id.wallpaper_chooser_add_preview_message)).updateBubbleDrawables(mThreadId);
 
         WallpaperManager.addWallpaperChangeListener(this);
         FontManagerImpl.getInstance().applyFont(findViewById(R.id.wallpaper_chooser_message_list), true);

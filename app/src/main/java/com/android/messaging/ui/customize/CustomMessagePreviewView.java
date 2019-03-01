@@ -56,7 +56,6 @@ public class CustomMessagePreviewView extends ConstraintLayout {
         findViewById(R.id.message_preview_timestamp_2).setBackground(BackgroundDrawables.createBackgroundDrawable(
                 getResources().getColor(R.color.white_40_transparent), Dimensions.pxFromDp(16), false
         ));
-        updateBubbleDrawables(null);
     }
 
     public void setIsFontPreview() {
@@ -64,18 +63,18 @@ public class CustomMessagePreviewView extends ConstraintLayout {
         mOutgoingMessage.setText(getResources().getString(R.string.bubble_customize_preview_outgoing_message_font));
     }
 
-    void updateBubbleDrawables(final String conversationId) {
+    public void updateBubbleDrawables(final String conversationId) {
         mConversationId = conversationId;
         mIncomingMessage.setBackground(
                 ConversationDrawables.get().getBubbleDrawable(false, true, true, false, mConversationId));
         mOutgoingMessage.setBackground(
                 ConversationDrawables.get().getBubbleDrawable(false, false, true, false, mConversationId));
 
-        sIncomingBackgroundPreviewColor = ConversationColors.get().getBubbleBackgroundColor(true);
-        sOutgoingBackgroundPreviewColor = ConversationColors.get().getBubbleBackgroundColor(false);
+        sIncomingBackgroundPreviewColor = ConversationColors.get().getBubbleBackgroundColor(true, conversationId);
+        sOutgoingBackgroundPreviewColor = ConversationColors.get().getBubbleBackgroundColor(false, conversationId);
 
-        sIncomingTextPreviewColor = ConversationColors.get().getMessageTextColor(true);
-        sOutgoingTextPreviewColor = ConversationColors.get().getMessageTextColor(false);
+        sIncomingTextPreviewColor = ConversationColors.get().getMessageTextColor(true, conversationId);
+        sOutgoingTextPreviewColor = ConversationColors.get().getMessageTextColor(false, conversationId);
 
         mIncomingMessage.setTextColor(sIncomingTextPreviewColor);
         mOutgoingMessage.setTextColor(sOutgoingTextPreviewColor);
