@@ -807,7 +807,6 @@
 
     <!-- Label for new message button in share intent dialog -->
     <string name="share_new_message">New message</string>
-    
 
     <!-- Label for new message button in share intent dialog -->
     <string name="share_cancel">Cancel</string>
@@ -885,7 +884,7 @@
     <!-- The title for advanced settings activity  -->
     <string name="advanced_settings_activity_title">Advanced settings</string>
 
-    <string name="change_font">Font Size</string>
+    <string name="change_font">Font &#038; Font Size</string>
 
     <!-- The title for sim_specific settings  -->
     <string name="sim_specific_settings">\"<xliff:g id="sim_name">%s</xliff:g>\" SIM</string>
@@ -1071,7 +1070,7 @@
     <string name="setting_feedback">Feedback</string>
     <string name="setting_privacy_policy">Privacy Policy</string>
     <string name="setting_terms_of_service">Terms of Service</string>
-    <string name="setting_change_font">Font Size</string>
+    <string name="setting_change_font">Font &#038; Font Size</string>
     <string name="setting_text_font">Font</string>
     <string name="setting_text_size">Font Size</string>
     <string name="setting_text_font_name">Roboto</string>
@@ -1117,7 +1116,7 @@
     <string name="drawer_close" translatable="false">Close navigation drawer</string>
     <string name="theme_select_title">Theme Color</string>
     <string name="theme_select_description">Select theme color you like</string>
-    <string name="menu_change_font">Font Size</string>
+    <string name="menu_change_font">Font &#038; Font Size</string>
     <string name="menu_theme_color">Theme Color</string>
     <string name="menu_bubble">Bubble</string>
     <string name="menu_chat_background">Chat Background</string>
