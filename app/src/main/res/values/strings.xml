@@ -1012,7 +1012,6 @@
     <string name="welcome_start_service">Terms of Service</string>
     <string name="welcome_start_and">&#038;</string>
     <string name="welcome_start_policy">Privacy Policy</string>
-
     <string name="welcome_permission_button">ALLOW</string>
     <string name="welcome_permission_title">Necessary Permissions</string>
     <string name="welcome_permission_description">To work properly, we need the following permissions.</string>
