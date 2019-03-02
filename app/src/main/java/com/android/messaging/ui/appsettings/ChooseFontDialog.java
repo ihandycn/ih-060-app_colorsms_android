@@ -11,6 +11,8 @@ import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
+import android.view.WindowManager;
 import android.view.animation.Animation;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
@@ -29,11 +31,9 @@ import com.superapps.util.Dimensions;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
-public class ChooseFontDialog {
+public class ChooseFontDialog implements View.OnClickListener{
 
     private static final String[] sSupportGoogleFonts = {
             FontUtils.MESSAGE_FONT_FAMILY_DEFAULT_VALUE,
@@ -44,9 +44,8 @@ public class ChooseFontDialog {
     private Activity mActivity;
     private Dialog mDialog;
     private View mRootView;
-    private View mDialogContent;
-    private View mDialogRoot;
     private String mFontFamily;
+    private List<ChooseFontItem> mItemViewList = new ArrayList<>();
 
     ChooseFontDialog(Context activity) {
         this.mActivity = (Activity) activity;
@@ -63,27 +62,38 @@ public class ChooseFontDialog {
             dismissSafely();
         });
         mDialog.setOnShowListener(dialog -> HSLog.d(TAG, "OnShow"));
-        mDialog.setCanceledOnTouchOutside(false);
+        mDialog.setCanceledOnTouchOutside(true);
+
+        Window window = mDialog.getWindow();
+
+        if (window != null) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                window.setStatusBarColor(0x00000000);
+            } else {
+                window.addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+            }
+        }
+
     }
 
     @SuppressLint("InflateParams")
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     protected void init() {
         LayoutInflater mLayoutInflater = LayoutInflater.from(mActivity);
-        Dialog builder = new Dialog(mActivity, R.style.NewDialogTheme);
+        Dialog builder = new Dialog(mActivity, R.style.BaseDialogTheme);
 
         mRootView = mLayoutInflater.inflate(R.layout.dialog_no_btn, null);
+        mRootView.setOnClickListener(v -> dismissSafely());
 
         configDialog(builder);
         FrameLayout mContentView = ViewUtils.findViewById(mRootView, R.id.content_view);
         mContentView.addView(createContentView(mLayoutInflater, mContentView));
 
         //set dialog color and corner
-        mDialogContent = mRootView.findViewById(R.id.linearLayout);
+        View mDialogContent = mRootView.findViewById(R.id.linearLayout);
         assert mDialogContent != null;
         mDialogContent.setBackground(BackgroundDrawables.createBackgroundDrawable(Color.WHITE,
                 mActivity.getResources().getDimension(R.dimen.dialog_corner_radius), false));
-        mDialogRoot = mRootView.findViewById(R.id.dialog_root_view);
     }
 
     public final boolean show() {
@@ -127,13 +137,6 @@ public class ChooseFontDialog {
             checkedIndex = 0;
         }
 
-        List<Map<String, Object>> list = new ArrayList<>();
-        for (CharSequence charSequence : choicesList) {
-            Map<String, Object> map = new HashMap<>();
-            map.put("item", charSequence);
-            list.add(map);
-        }
-
         LinearLayout scrollContent = view.findViewById(R.id.scroll_content);
         for (int i = 0; i < choicesList.size(); i++) {
             ChooseFontItem item = (ChooseFontItem) LayoutInflater.from(mActivity).inflate(R.layout.new_dialog_select_item, scrollContent, false);
@@ -142,38 +145,10 @@ public class ChooseFontDialog {
                 item.setSelected(true);
             }
             item.loadFont();
-            final int k = i;
-            item.setOnClickListener(v1 -> {
-                String fontFamily = sSupportGoogleFonts[k];
-                mFontFamily = fontFamily;
-
-                item.setSelected(true);
-                item.refreshRadioStatus();
-
-                FontStyleManager.setFontFamily(fontFamily);
-                ((ChangeFontActivity)mActivity).onFontChange();
-                HSGlobalNotificationCenter.sendNotification(ConversationListActivity.EVENT_MAINPAGE_RECREATE);
-                BugleAnalytics.logEvent("Customize_TextFont_Change", true, "font", fontFamily);
-                new Handler().postDelayed(this::dismiss, 1);
-            });
+            mItemViewList.add(item);
+            item.setOnClickListener(this);
 
             scrollContent.addView(item);
-        }
-    }
-
-    public final void dismiss() {
-        if (!mActivity.isFinishing()) {
-            if (mDialogRoot != null && mDialogContent != null) {
-                mDialogRoot.animate().setDuration(320).alpha(0).start();
-                mDialogContent.animate().scaleX(0.97f).scaleY(0.97f).alpha(0).setDuration(280).start();
-                new Handler().postDelayed(() -> {
-                    if (mDialog.isShowing()) {
-                        dismissSafely();
-                    }
-                }, 320);
-            } else {
-                dismissSafely();
-            }
         }
     }
 
@@ -183,5 +158,28 @@ public class ChooseFontDialog {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    @Override
+    public void onClick(View v) {
+       for (int i = 0 ; i < mItemViewList.size(); i ++) {
+           ChooseFontItem view = mItemViewList.get(i);
+           if (v == view) {
+               String fontFamily = sSupportGoogleFonts[i];
+               mFontFamily = fontFamily;
+
+               view.setSelected(true);
+               view.refreshRadioStatus();
+
+               FontStyleManager.setFontFamily(fontFamily);
+               ((ChangeFontActivity)mActivity).onFontChange();
+               new Handler().postDelayed(this::dismissSafely, 1);
+               BugleAnalytics.logEvent("Customize_TextFont_Change", true, "font", fontFamily);
+               HSGlobalNotificationCenter.sendNotification(ConversationListActivity.EVENT_MAINPAGE_RECREATE);
+           } else {
+               view.setSelected(false);
+               view.refreshRadioStatus();
+           }
+       }
     }
 }
