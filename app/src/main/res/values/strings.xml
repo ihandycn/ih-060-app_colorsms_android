@@ -1095,8 +1095,8 @@
     <!--customize-->
     <string name="bubble_customize_preview_incoming_message">Hi, there! Nice to meet you.</string>
     <string name="bubble_customize_preview_outgoing_message">Nice to meet you too.</string>
-    <string name="bubble_customize_preview_incoming_message_font">Change font size in chat bubbles.</string>
-    <string name="bubble_customize_preview_outgoing_message_font">Okay, that\'s great!</string>
+    <string name="bubble_customize_preview_incoming_message_font">Choose a font you like!</string>
+    <string name="bubble_customize_preview_outgoing_message_font">Change font size in chat bubbles.</string>
     <string name="bubble_customize_tab_style">Style</string>
     <string name="bubble_customize_tab_color">Color</string>
     <string name="bubble_customize_action_bar_title">Bubble</string>
