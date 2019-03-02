@@ -29,6 +29,7 @@ import com.superapps.font.FontUtils;
 import com.superapps.util.BackgroundDrawables;
 import com.superapps.util.Dimensions;
 
+import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -42,6 +43,7 @@ public class ChooseFontDialog implements View.OnClickListener{
 
     private static final String TAG = "ChooseFontDialog";
     private Activity mActivity;
+    private WeakReference<ChangeFontActivity> mWeakActivityReference;
     private Dialog mDialog;
     private View mRootView;
     private String mFontFamily;
@@ -49,6 +51,7 @@ public class ChooseFontDialog implements View.OnClickListener{
 
     ChooseFontDialog(Context activity) {
         this.mActivity = (Activity) activity;
+        mWeakActivityReference = new WeakReference<>((ChangeFontActivity)activity);
         mFontFamily = FontStyleManager.getFontFamily();
     }
 
@@ -172,7 +175,10 @@ public class ChooseFontDialog implements View.OnClickListener{
                view.refreshRadioStatus();
 
                FontStyleManager.setFontFamily(fontFamily);
-               ((ChangeFontActivity)mActivity).onFontChange();
+               ChangeFontActivity activity = mWeakActivityReference.get();
+               if(activity != null && !activity.isDestroyed()) {
+                   activity.onFontChange();
+               }
                new Handler().postDelayed(this::dismissSafely, 1);
                BugleAnalytics.logEvent("Customize_TextFont_Change", true, "font", fontFamily);
                HSGlobalNotificationCenter.sendNotification(ConversationListActivity.EVENT_MAINPAGE_RECREATE);
