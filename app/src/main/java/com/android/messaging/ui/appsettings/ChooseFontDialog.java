@@ -37,7 +37,7 @@ public class ChooseFontDialog {
 
     private static final String[] sSupportGoogleFonts = {
             FontUtils.MESSAGE_FONT_FAMILY_DEFAULT_VALUE,
-            "Krub", "Mali", "SairaExtraCondensed", "SourceSerifPro"
+            "Krub", "Mali", "ExpletusSans", "SourceSerifPro"
     };
 
     private static final String TAG = "ChooseFontDialog";
