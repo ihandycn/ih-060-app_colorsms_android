@@ -97,7 +97,6 @@
     <style name="AudioAttachmentTimerText">
         <item name="android:textSize">@dimen/audio_attachment_text_size</item>
         <item name="android:textColor">@color/audio_attachment_timer_text_color</item>
-        <item name="android:layout_marginEnd">16dp</item>
     </style>
 
     <style name="ConversationMessageText">

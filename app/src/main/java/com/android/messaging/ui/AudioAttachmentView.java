@@ -52,14 +52,20 @@ import com.superapps.util.Dimensions;
  * by both the media picker and the conversation message view to show audio attachments.
  */
 public class AudioAttachmentView extends LinearLayout {
-    /** The normal layout mode where we have the play button, timer and progress bar */
+    /**
+     * The normal layout mode where we have the play button, timer and progress bar
+     */
     private static final int LAYOUT_MODE_NORMAL = 0;
 
-    /** The compact layout mode with only the play button and the timer beneath it. Suitable
-     *  for displaying in limited space such as multi-attachment layout */
+    /**
+     * The compact layout mode with only the play button and the timer beneath it. Suitable
+     * for displaying in limited space such as multi-attachment layout
+     */
     private static final int LAYOUT_MODE_COMPACT = 1;
 
-    /** The sub-compact layout mode with only the play button. */
+    /**
+     * The sub-compact layout mode with only the play button.
+     */
     private static final int LAYOUT_MODE_SUB_COMPACT = 2;
 
     private static final int PLAY_BUTTON = 0;
@@ -96,7 +102,11 @@ public class AudioAttachmentView extends LinearLayout {
         mMode = typedAttributes.getInt(R.styleable.AudioAttachmentView_layoutMode,
                 LAYOUT_MODE_NORMAL);
         final LayoutInflater inflater = LayoutInflater.from(getContext());
-        inflater.inflate(R.layout.audio_attachment_view, this, true);
+        if (mMode == LAYOUT_MODE_NORMAL) {
+            inflater.inflate(R.layout.conversation_view_audio_attachment_view, this, true);
+        } else {
+            inflater.inflate(R.layout.audio_attachment_view, this, true);
+        }
         typedAttributes.recycle();
 
         setWillNotDraw(mMode != LAYOUT_MODE_SUB_COMPACT);
@@ -160,11 +170,12 @@ public class AudioAttachmentView extends LinearLayout {
 
     /**
      * Bind the audio attachment view with a MessagePartData.
+     *
      * @param incoming indicates whether the attachment view is to be styled as a part of an
-     *        incoming message.
+     *                 incoming message.
      */
     public void bindMessagePartData(final MessagePartData messagePartData,
-            final boolean incoming, final boolean showAsSelected) {
+                                    final boolean incoming, final boolean showAsSelected) {
         Assert.isTrue(messagePartData == null ||
                 ContentType.isAudioType(messagePartData.getContentType()));
         final Uri contentUri = (messagePartData == null) ? null : messagePartData.getContentUri();

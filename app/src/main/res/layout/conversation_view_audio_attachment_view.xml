@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<merge xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="horizontal">
+
+    <com.android.messaging.ui.AudioAttachmentPlayPauseButton
+        android:id="@+id/play_pause_button"
+        android:layout_width="34.7dp"
+        android:layout_height="34.7dp"
+        android:layout_gravity="center_vertical">
+
+        <ImageView
+            android:id="@+id/play_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:contentDescription="@string/audio_play_content_description"
+            android:src="@drawable/ic_preview_play" />
+
+        <ImageView
+            android:id="@+id/pause_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:contentDescription="@string/audio_pause_content_description"
+            android:src="@drawable/ic_preview_pause" />
+    </com.android.messaging.ui.AudioAttachmentPlayPauseButton>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:layout_marginLeft="10dp"
+        android:layout_marginStart="10dp"
+        android:orientation="vertical">
+
+        <com.android.messaging.ui.mediapicker.PausableChronometer
+            android:id="@+id/timer"
+            style="@style/AudioAttachmentTimerText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:includeFontPadding="false" />
+
+        <com.android.messaging.ui.AudioPlaybackProgressBar
+            android:id="@+id/progress"
+            style="@android:style/Widget.ProgressBar.Horizontal"
+            android:layout_width="48dp"
+            android:layout_height="@dimen/audio_progress_bar_height"
+            android:layout_marginTop="5dp" />
+    </LinearLayout>
+</merge>
