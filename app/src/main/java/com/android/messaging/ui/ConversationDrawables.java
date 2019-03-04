@@ -22,8 +22,11 @@ import android.graphics.drawable.Drawable;
 
 import com.android.messaging.Factory;
 import com.android.messaging.R;
+import com.android.messaging.ui.customize.BubbleDrawables;
+import com.android.messaging.ui.customize.ConversationColors;
 import com.android.messaging.ui.customize.PrimaryColors;
 import com.android.messaging.util.ImageUtils;
+import com.superapps.util.BackgroundDrawables;
 
 /**
  * A singleton cache that holds tinted drawable resources for displaying messages, such as
@@ -34,8 +37,6 @@ public class ConversationDrawables {
 
     // Cache the color filtered bubble drawables so that we don't need to create a
     // new one for each ConversationMessageView.
-    private Drawable mIncomingBubbleDrawable;
-    private Drawable mOutgoingBubbleDrawable;
     private Drawable mIncomingErrorBubbleDrawable;
     private Drawable mIncomingBubbleNoArrowDrawable;
     private Drawable mOutgoingBubbleNoArrowDrawable;
@@ -51,11 +52,7 @@ public class ConversationDrawables {
     private Drawable mFastScrollPreviewDrawableLeft;
     private Drawable mFastScrollPreviewDrawableRight;
     private final Context mContext;
-    private int mOutgoingBubbleColor;
-    private int mIncomingBubbleColor;
     private int mIncomingErrorBubbleColor;
-    private int mIncomingSelectedBubbleColor;
-    private int mOutgoingSelectedBubbleColor;
     private int mThemeColor;
 
     public static ConversationDrawables get() {
@@ -78,11 +75,9 @@ public class ConversationDrawables {
     public void updateDrawables() {
         final Resources resources = mContext.getResources();
 
-        mIncomingBubbleDrawable = resources.getDrawable(R.drawable.message_bubble_incoming_new);
         mIncomingBubbleNoArrowDrawable =
                 resources.getDrawable(R.drawable.message_bubble_incoming_no_arrow);
         mIncomingErrorBubbleDrawable = resources.getDrawable(R.drawable.msg_bubble_error);
-        mOutgoingBubbleDrawable = resources.getDrawable(R.drawable.message_bubble_outgoing_new);
         mOutgoingBubbleNoArrowDrawable =
                 resources.getDrawable(R.drawable.message_bubble_outgoing_no_arrow);
         mIncomingAudioPlayButtonDrawable = resources.getDrawable(R.drawable.ic_audio_play_incoming);
@@ -102,28 +97,22 @@ public class ConversationDrawables {
                 resources.getDrawable(R.drawable.fastscroll_preview_left);
         mFastScrollPreviewDrawableRight =
                 resources.getDrawable(R.drawable.fastscroll_preview_right);
-        mOutgoingBubbleColor = PrimaryColors.getPrimaryColor();
-        mIncomingBubbleColor = resources.getColor(R.color.message_bubble_color_incoming);
         mIncomingErrorBubbleColor =
                 resources.getColor(R.color.message_error_bubble_color_incoming);
-        mIncomingSelectedBubbleColor = resources.getColor(R.color.message_bubble_color_selected_incoming);
-        float[] hsb = new float[3];
-        Color.RGBToHSV(Color.red(mOutgoingBubbleColor), Color.green(mOutgoingBubbleColor),
-                Color.blue(mOutgoingBubbleColor), hsb);
-        hsb[2] /= 1.2f;
-        mOutgoingSelectedBubbleColor = Color.HSVToColor(hsb);
         mThemeColor = PrimaryColors.getPrimaryColor();
     }
 
     public Drawable getBubbleDrawable(final boolean selected, final boolean incoming,
-                                      final boolean needArrow, final boolean isError) {
+                                      final boolean needArrow, final boolean isError,
+                                      final String conversationId) {
         final Drawable protoDrawable;
+        final Resources resources = mContext.getResources();
         if (needArrow) {
             if (incoming) {
                 protoDrawable = isError && !selected ?
-                        mIncomingErrorBubbleDrawable : mIncomingBubbleDrawable;
+                        mIncomingErrorBubbleDrawable : resources.getDrawable(BubbleDrawables.getSelectedDrawable(true, conversationId));
             } else {
-                protoDrawable = mOutgoingBubbleDrawable;
+                protoDrawable = resources.getDrawable(BubbleDrawables.getSelectedDrawable(false, conversationId));
             }
         } else if (incoming) {
             protoDrawable = mIncomingBubbleNoArrowDrawable;
@@ -136,15 +125,19 @@ public class ConversationDrawables {
             if (isError) {
                 color = mIncomingErrorBubbleColor;
             } else if (selected) {
-                color = mIncomingSelectedBubbleColor;
+                // incoming selected bubble color
+                color = ConversationColors.get().getBubbleBackgroundColorDark(true, conversationId);
             } else {
-                color = mIncomingBubbleColor;
+                // incoming bubble color
+                color = ConversationColors.get().getBubbleBackgroundColor(true, conversationId);
             }
         } else {
             if (selected) {
-                color = mOutgoingSelectedBubbleColor;
+                // outgoing selected bubble color
+                color = ConversationColors.get().getBubbleBackgroundColorDark(false, conversationId);
             } else {
-                color = mOutgoingBubbleColor;
+                // outgoing bubble color
+                color = ConversationColors.get().getBubbleBackgroundColor(false, conversationId);
             }
         }
 

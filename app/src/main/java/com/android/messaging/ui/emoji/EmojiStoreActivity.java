@@ -6,13 +6,14 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.widget.ImageView;
 
+import com.android.messaging.BaseActivity;
 import com.android.messaging.R;
 import com.android.messaging.util.UiUtils;
 import com.ihs.app.framework.activity.HSAppCompatActivity;
 import com.superapps.util.BackgroundDrawables;
 import com.superapps.util.Dimensions;
 
-public class EmojiStoreActivity extends HSAppCompatActivity {
+public class EmojiStoreActivity extends BaseActivity {
 
     public static void start(Context context) {
         Intent starter = new Intent(context, EmojiStoreActivity.class);

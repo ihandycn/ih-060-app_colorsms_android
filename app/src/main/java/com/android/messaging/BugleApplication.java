@@ -65,11 +65,18 @@ import com.crashlytics.android.Crashlytics;
 import com.github.moduth.blockcanary.BlockCanary;
 import com.google.common.annotations.VisibleForTesting;
 import com.ihs.app.framework.HSApplication;
+import com.ihs.app.framework.HSNotificationConstant;
+import com.ihs.app.framework.HSSessionMgr;
+import com.ihs.commons.analytics.publisher.HSPublisherMgr;
 import com.ihs.commons.config.HSConfig;
+import com.ihs.commons.notificationcenter.HSGlobalNotificationCenter;
+import com.ihs.commons.notificationcenter.INotificationObserver;
+import com.ihs.commons.utils.HSBundle;
 import com.ihs.commons.utils.HSLog;
 import com.ihs.device.permanent.HSPermanentUtils;
 import com.ihs.device.permanent.PermanentService;
 import com.messagecenter.customize.MessageCenterManager;
+import com.messagecenter.util.Utils;
 import com.squareup.leakcanary.AndroidExcludedRefs;
 import com.squareup.leakcanary.ExcludedRefs;
 import com.squareup.leakcanary.LeakCanary;
@@ -86,7 +93,9 @@ import com.superapps.util.Threads;
 import java.io.File;
 import java.lang.Thread.UncaughtExceptionHandler;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 import io.fabric.sdk.android.Fabric;
@@ -98,13 +107,24 @@ import static com.android.messaging.debug.DebugConfig.ENABLE_LEAK_CANARY;
 /**
  * The application object
  */
-public class BugleApplication extends HSApplication implements UncaughtExceptionHandler {
+public class BugleApplication extends HSApplication implements UncaughtExceptionHandler,
+        INotificationObserver {
     private static final String TAG = LogUtil.BUGLE_TAG;
+
+    public static final String PREF_KEY_DAILY_EVENTS_LOGGED_TIME = "default_launcher_logged_epoch";
+    public static final String PREF_KEY_DAILY_EVENTS_LOG_SESSION_SEQ = "default_launcher_log_session_seq";
+    public static final String PREF_KEY_DEFAULT_LAUNCHER_STATUS_LOGGED_COUNT = "default_launcher_logged_times";
+
+    /**
+     * We log daily events on start of the 2nd session every day.
+     */
+    private static final long DAILY_EVENTS_LOG_SESSION_SEQ = 2;
 
     private UncaughtExceptionHandler sSystemUncaughtExceptionHandler;
     private static boolean sRunningTests = false;
     private static final int KEEP_ALIVE_NOTIFICATION_ID = 20000;
     private static final int KEEP_ALIVE_NOTIFICATION_ID_OREO = 20001;
+    private boolean mAppsFlyerResultReceived;
 
     @VisibleForTesting
     protected static void setTestsRunning() {
@@ -171,6 +191,15 @@ public class BugleApplication extends HSApplication implements UncaughtException
             initWorks.add(new SyncMainThreadTask("InitObserverDefaultSmsChanged", this::initObserveDefaultSmsAppChanged));
 
             initWorks.add(new SyncMainThreadTask("InitObserveScreenStatusChanged", this::initObserveUserPresentChanged));
+
+            initWorks.add(new SyncMainThreadTask("RecordInstallType", this::recordInstallType));
+
+            initWorks.add(new SyncMainThreadTask("AddObservers", () -> {
+                HSGlobalNotificationCenter.addObserver(HSNotificationConstant.HS_SESSION_START, this);
+                HSGlobalNotificationCenter.addObserver(HSNotificationConstant.HS_SESSION_END, this);
+                HSGlobalNotificationCenter.addObserver(HSNotificationConstant.HS_CONFIG_LOAD_FINISHED, this);
+                HSGlobalNotificationCenter.addObserver(HSNotificationConstant.HS_CONFIG_CHANGED, this);
+            }));
 
             TaskRunner.run(initWorks);
         } finally {
@@ -266,6 +295,44 @@ public class BugleApplication extends HSApplication implements UncaughtException
 
     private void initPhotoViewAnalytics() {
         PhotoViewAnalytics.initAnalytics(BugleAnalytics::logEvent);
+    }
+
+    private void recordInstallType() {
+        HSPublisherMgr.PublisherData data = HSPublisherMgr.getPublisherData(BugleApplication.this);
+
+        Map<String, String> parameters = new HashMap<>();
+        String installType = data.getInstallMode().name();
+        parameters.put("ad_set", data.getAdset());
+        parameters.put("ad_set_id", data.getAdsetId());
+        parameters.put("ad_id", data.getAdId());
+        String debugInfo = "" + installType + "|" + data.getMediaSource() + "|" + data.getAdset();
+        parameters.put("install_type", installType);
+        parameters.put("publisher_debug_info", debugInfo);
+        BugleAnalytics.logEvent("install_type", false, parameters);
+
+        Threads.postOnMainThreadDelayed(() -> BugleAnalytics.logEvent("Agency_Info", false, "install_type", installType, "campaign_id", "" + data.getCampaignID(), "user_level", "" + HSConfig.optString("not_configured", "UserLevel")), 10 * 1000L);
+
+        if (Utils.isNewUser()) {
+            Preferences.getDefault().doOnce(() -> {
+                int delayTimes[] = {20, 40, 65, 95, 125, 365, 1850, 7300, 11000, 15000, 22000};
+                for (int delay : delayTimes) {
+                    Threads.postOnMainThreadDelayed(() -> {
+                        if (!mAppsFlyerResultReceived) {
+                            mAppsFlyerResultReceived = true;
+                            String userLevel = HSConfig.optString("not_configured", "UserLevel");
+                            if (!"1".equals(userLevel) && !"3".equals(userLevel)) {
+                                HSGlobalNotificationCenter.sendNotification(HSNotificationConstant.HS_CONFIG_CHANGED);
+                            }
+                        }
+                        BugleAnalytics.logEvent("New_User_Agency_Info_" + delay,
+                                "install_type", installType,
+                                "user_level", "" + HSConfig.optString("not_configured", "UserLevel"),
+                                "version_code", "" + HSApplication.getCurrentLaunchInfo().appVersionCode,
+                                "double_check", "" + HSConfig.getUserLevel() + "-" + HSConfig.optString("not_configured", "UserLevel"));
+                    }, delay * 1000);
+                }
+            }, "log_user_agency");
+        }
     }
 
     @Override
@@ -464,6 +531,40 @@ public class BugleApplication extends HSApplication implements UncaughtException
             // and ignore any prefs migration.
             LogUtil.e(LogUtil.BUGLE_TAG, "Shared prefs downgrade requested and ignored. " +
                     "oldVersion = " + existingVersion + ", newVersion = " + targetVersion);
+        }
+    }
+
+    @Override public void onReceive(String s, HSBundle hsBundle) {
+        switch (s) {
+            case HSNotificationConstant.HS_SESSION_END:
+                Preferences prefs = Preferences.getDefault();
+                long lastLoggedTime = prefs.getLong(PREF_KEY_DAILY_EVENTS_LOGGED_TIME, 0);
+                long now = System.currentTimeMillis();
+                int dayDifference = Calendars.getDayDifference(now, lastLoggedTime);
+                if (dayDifference > 0) {
+                    int sessionSeq = prefs.incrementAndGetInt(PREF_KEY_DAILY_EVENTS_LOG_SESSION_SEQ);
+                    if (sessionSeq == DAILY_EVENTS_LOG_SESSION_SEQ) {
+                        prefs.putInt(PREF_KEY_DAILY_EVENTS_LOG_SESSION_SEQ, 0);
+                        prefs.putLong(PREF_KEY_DAILY_EVENTS_LOGGED_TIME, now);
+                        long installTime = HSSessionMgr.getFirstSessionStartTime();
+                        int daysSinceInstall = Calendars.getDayDifference(now, installTime);
+                        logDailyStatus(daysSinceInstall);
+                    }
+                }
+                break;
+            default:
+                break;
+        }
+    }
+
+    private void logDailyStatus(final int daysSinceInstall) {
+        if (daysSinceInstall > 0 && daysSinceInstall <= 5 && Utils.isNewUser()) {
+            HSPublisherMgr.PublisherData data = HSPublisherMgr.getPublisherData(this);
+            String installType = data.getInstallMode().name();
+            BugleAnalytics.logEvent("New_User_Agency_Info_" + daysSinceInstall + "_DaysNew",
+                    "install_type", installType,
+                    "user_level", "" + HSConfig.optString("not_configured", "UserLevel"),
+                    "version_code", "" + HSApplication.getCurrentLaunchInfo().appVersionCode);
         }
     }
 }

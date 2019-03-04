@@ -70,16 +70,14 @@
     <application
         android:name=".BugleApplication"
         android:allowBackup="false"
+        android:hardwareAccelerated="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:supportsRtl="true"
-        android:hardwareAccelerated="true"
         android:theme="@style/BugleTheme">
-
         <meta-data
             android:name="com.facebook.sdk.ApplicationId"
             android:value="@string/facebook_app_id" />
-
         <meta-data
             android:name="io.fabric.ApiKey"
             android:value="0b4450f77c38aaab5bda6429b3e6ece0f4c33dfb" />
@@ -253,8 +251,8 @@
         <activity
             android:name=".ui.welcome.WelcomeSetAsDefaultActivity"
             android:configChanges="orientation|screenSize|keyboardHidden"
-            android:screenOrientation="portrait"
             android:launchMode="singleTop"
+            android:screenOrientation="portrait"
             android:theme="@style/WelcomeTheme" />
 
         <activity
@@ -586,7 +584,6 @@
             android:name=".widget.WidgetConversationService"
             android:exported="false"
             android:permission="android.permission.BIND_REMOTEVIEWS" />
-
         <service android:name=".debug.UploadLeakService" />
 
         <activity
@@ -613,13 +610,11 @@
             android:excludeFromRecents="true"
             android:screenOrientation="portrait"
             android:theme="@style/WindowBgWhiteAndTranslucent" />
-
         <activity
             android:name=".feedback.FeedbackActivity"
             android:screenOrientation="portrait"
             android:taskAffinity=".feedback"
             android:theme="@style/ThemeAppBarActivity.NoBG" />
-
         <activity
             android:name=".ui.dialog.PermissionGuideActivity"
             android:allowTaskReparenting="false"
@@ -628,7 +623,6 @@
             android:taskAffinity=".permission.guide"
             android:theme="@android:style/Theme.Translucent.NoTitleBar" />
 
-
         <service android:name="android.support.v7.mms.MmsService" />
 
         <activity
@@ -636,12 +630,23 @@
             android:excludeFromRecents="true"
             android:screenOrientation="portrait"
             android:theme="@style/BaseSettingsActivity" />
-
         <activity
             android:name=".ui.appsettings.SettingAdvancedActivity"
             android:excludeFromRecents="true"
             android:screenOrientation="portrait"
             android:theme="@style/BaseSettingsActivity" />
+
+        <activity android:name=".ui.appsettings.ChangeFontActivity"
+            android:excludeFromRecents="true"
+            android:screenOrientation="portrait"
+            android:theme="@style/BaseSettingsActivity"/>
+
+        <activity android:name=".debug.ChangeThemeColorDebugActivity" />
+
+        <activity android:name=".ui.customize.CustomBubblesActivity"
+            android:excludeFromRecents="true"
+            android:screenOrientation="portrait"
+            android:theme="@style/BugleTheme.ConversationActivity"/>
 
 
         <!--Lib permanent-->
@@ -688,6 +693,18 @@
         <activity
             android:name="com.ihs.device.permanent.foreground.ForegroundActivity"
             tools:remove="android:process"/>
+
+        <activity
+            android:name=".ui.wallpaper.WallpaperPreviewActivity"
+            android:excludeFromRecents="true"
+            android:screenOrientation="portrait"
+            android:theme="@style/BaseSettingsActivity" />
+        <activity
+            android:name=".ui.wallpaper.WallpaperEditActivity"
+            android:excludeFromRecents="true"
+            android:screenOrientation="portrait"
+            android:theme="@style/BaseSettingsActivity" />
+
     </application>
 
 </manifest>

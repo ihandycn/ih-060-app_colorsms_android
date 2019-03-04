@@ -23,6 +23,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.widget.TextView;
 
+import com.android.messaging.BaseActivity;
 import com.android.messaging.R;
 import com.android.messaging.ui.UIIntents;
 import com.android.messaging.util.Assert;
@@ -31,7 +32,7 @@ import com.android.messaging.util.UiUtils;
 /**
  * Shows a list of participants in a conversation.
  */
-public class PeopleAndOptionsActivity extends AppCompatActivity {
+public class PeopleAndOptionsActivity extends BaseActivity {
 
     @Override
     protected void onCreate(final Bundle savedInstanceState) {

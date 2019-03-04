@@ -18,7 +18,6 @@ package com.android.messaging.ui.conversation;
 
 import android.Manifest;
 import android.app.Activity;
-import android.app.AlertDialog;
 import android.app.DownloadManager;
 import android.app.Fragment;
 import android.app.FragmentManager;
@@ -36,6 +35,8 @@ import android.content.res.Configuration;
 import android.database.Cursor;
 import android.graphics.Point;
 import android.graphics.Rect;
+import android.graphics.Typeface;
+import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
@@ -47,6 +48,8 @@ import android.support.v4.text.TextDirectionHeuristicsCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.Spannable;
+import android.text.SpannableString;
 import android.text.TextUtils;
 import android.view.ActionMode;
 import android.view.Display;
@@ -58,6 +61,7 @@ import android.view.View;
 import android.view.ViewConfiguration;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.android.messaging.R;
@@ -91,6 +95,7 @@ import com.android.messaging.ui.dialog.FiveStarRateDialog;
 import com.android.messaging.ui.emoji.EmojiPickerFragment;
 import com.android.messaging.ui.mediapicker.CameraGalleryFragment;
 import com.android.messaging.ui.mediapicker.MediaPickerFragment;
+import com.android.messaging.ui.wallpaper.WallpaperManager;
 import com.android.messaging.util.AccessibilityUtil;
 import com.android.messaging.util.Assert;
 import com.android.messaging.util.AvatarUriUtil;
@@ -100,7 +105,6 @@ import com.android.messaging.util.ContentType;
 import com.android.messaging.util.ImeUtil;
 import com.android.messaging.util.LogUtil;
 import com.android.messaging.util.OsUtil;
-import com.android.messaging.util.PendingIntentConstants;
 import com.android.messaging.util.PhoneUtils;
 import com.android.messaging.util.SafeAsyncTask;
 import com.android.messaging.util.TextUtil;
@@ -110,7 +114,8 @@ import com.google.common.annotations.VisibleForTesting;
 import com.ihs.commons.notificationcenter.HSGlobalNotificationCenter;
 import com.ihs.commons.notificationcenter.INotificationObserver;
 import com.ihs.commons.utils.HSBundle;
-import com.superapps.util.Notifications;
+import com.superapps.font.FontUtils;
+import com.superapps.view.CustomTypefaceSpan;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -164,6 +169,8 @@ public class ConversationFragment extends Fragment implements ConversationDataLi
     private RecyclerView mRecyclerView;
     private ConversationMessageAdapter mAdapter;
     private ConversationFastScroller mFastScroller;
+    private ImageView mWallpaperView;
+
 
     private View mConversationComposeDivider;
     private ChangeDefaultSmsAppHelper mChangeDefaultSmsAppHelper;
@@ -318,7 +325,6 @@ public class ConversationFragment extends Fragment implements ConversationDataLi
             // unclear which attachment to pick when we make this context menu at the message level
             // instead of the part level
             menu.findItem(R.id.copy_text).setVisible(data.getCanCopyMessageToClipboard());
-
             return true;
         }
 
@@ -446,19 +452,13 @@ public class ConversationFragment extends Fragment implements ConversationDataLi
         mAdapter = new ConversationMessageAdapter(getActivity(), null, this,
                 null,
                 // Sets the item click listener on the Recycler item views.
-                new View.OnClickListener() {
-                    @Override
-                    public void onClick(final View v) {
-                        final ConversationMessageView messageView = (ConversationMessageView) v;
-                        handleMessageClick(messageView);
-                    }
+                v -> {
+                    final ConversationMessageView messageView = (ConversationMessageView) v;
+                    handleMessageClick(messageView);
                 },
-                new View.OnLongClickListener() {
-                    @Override
-                    public boolean onLongClick(final View view) {
-                        selectMessage((ConversationMessageView) view);
-                        return true;
-                    }
+                view -> {
+                    selectMessage((ConversationMessageView) view);
+                    return true;
                 }
         );
 
@@ -567,7 +567,7 @@ public class ConversationFragment extends Fragment implements ConversationDataLi
                 mBinding.getData().getConversationId()), this);
 
         mMediaLayout = view.findViewById(R.id.camera_photo_layout);
-
+        mWallpaperView = view.findViewById(R.id.conversation_fragment_wallpaper);
         return view;
     }
 
@@ -655,6 +655,13 @@ public class ConversationFragment extends Fragment implements ConversationDataLi
     public void onResume() {
         super.onResume();
 
+        String wallpaperPath = WallpaperManager.getWallpaperPathByThreadId(mConversationId);
+        if (!TextUtils.isEmpty(wallpaperPath)) {
+            mWallpaperView.setImageDrawable(new BitmapDrawable(wallpaperPath));
+        } else {
+            mWallpaperView.setImageDrawable(null);
+        }
+
         if (mIncomingDraft == null) {
             mComposeMessageView.requestDraftMessage(mClearLocalDraft);
         } else {
@@ -712,6 +719,22 @@ public class ConversationFragment extends Fragment implements ConversationDataLi
         final boolean supportCallAction = (PhoneUtils.getDefault().isVoiceCapable() &&
                 data.getParticipantPhoneNumber() != null);
         menu.findItem(R.id.action_call).setVisible(supportCallAction);
+
+        initTypeface(menu);
+    }
+
+    private void initTypeface(Menu menu) {
+        Typeface tp = FontUtils.getTypeface();
+
+        applyFontToMenuItem(menu.findItem(R.id.action_people_and_options), tp);
+        applyFontToMenuItem(menu.findItem(R.id.action_delete), tp);
+        applyFontToMenuItem(menu.findItem(R.id.action_add_contact), tp);
+    }
+
+    private void applyFontToMenuItem(MenuItem mi, Typeface font) {
+        SpannableString mNewTitle = new SpannableString(mi.getTitle());
+        mNewTitle.setSpan(new CustomTypefaceSpan("", font), 0, mNewTitle.length(), Spannable.SPAN_INCLUSIVE_INCLUSIVE);
+        mi.setTitle(mNewTitle);
     }
 
     @Override
@@ -826,9 +849,9 @@ public class ConversationFragment extends Fragment implements ConversationDataLi
                             getView().getRootView(),
                             getString(R.string.in_conversation_notify_new_message_text),
                             SnackBar.Action.createCustomAction(() -> {
-                                scrollToBottom(true /* smoothScroll */);
-                                mComposeMessageView.hideAllComposeInputs(false /* animate */);
-                            },
+                                        scrollToBottom(true /* smoothScroll */);
+                                        mComposeMessageView.hideAllComposeInputs(false /* animate */);
+                                    },
                                     getString(R.string.in_conversation_notify_new_message_action)),
                             null /* interactions */,
                             SnackBar.Placement.above(mComposeMessageView));

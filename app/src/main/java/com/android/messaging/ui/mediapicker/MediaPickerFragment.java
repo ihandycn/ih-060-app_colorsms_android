@@ -14,7 +14,6 @@ import android.widget.ImageView;
 import com.android.messaging.R;
 import com.android.messaging.datamodel.data.DraftMessageData;
 import com.android.messaging.datamodel.data.MessagePartData;
-import com.android.messaging.ui.customize.PrimaryColors;
 import com.android.messaging.util.BugleAnalytics;
 import com.android.messaging.util.OsUtil;
 import com.superapps.util.BackgroundDrawables;

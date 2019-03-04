@@ -56,9 +56,9 @@ import com.android.messaging.util.BugleAnalytics;
 import com.android.messaging.util.ContentType;
 import com.android.messaging.util.ImageUtils;
 import com.android.messaging.util.OsUtil;
-import com.android.messaging.util.Typefaces;
 import com.android.messaging.util.UiUtils;
 import com.android.messaging.util.UriUtil;
+import com.superapps.font.FontUtils;
 import com.superapps.util.BackgroundDrawables;
 import com.superapps.util.Dimensions;
 
@@ -73,9 +73,6 @@ public class ConversationListItemView extends FrameLayout implements OnClickList
     static final int ERROR_MESSAGE_LINE_COUNT = 1;
     private int mConversationNameColor;
     private int mSnippetColor;
-    private Typeface mConversationNameReadTypeface;
-    private Typeface mConversationNameUnreadTypeface;
-    private Typeface mSnippetTypeface;
     private static String sPlusOneString;
     private static String sPlusNString;
 
@@ -180,9 +177,8 @@ public class ConversationListItemView extends FrameLayout implements OnClickList
         mConversationNameColor = resources.getColor(R.color.conversation_list_item_conversation);
         mSnippetColor = resources.getColor(R.color.conversation_list_item_snippet);
 
-        mConversationNameReadTypeface = Typefaces.getCustomMedium();
-        mConversationNameUnreadTypeface = Typefaces.getCustomSemiBold();
-        mSnippetTypeface = Typefaces.getCustomRegular();
+        //initTypeface();
+        //setTypeface
 
         mContactCheckmarkView.setBackgroundDrawable(BackgroundDrawables.
                 createBackgroundDrawable(PrimaryColors.getPrimaryColor(), Dimensions.pxFromDp(28), false));
@@ -214,10 +210,10 @@ public class ConversationListItemView extends FrameLayout implements OnClickList
     private void setConversationName() {
         if (mData.getIsRead() || mData.getShowDraft()) {
             mConversationNameView.setTextColor(mConversationNameColor);
-            mConversationNameView.setTypeface(mConversationNameReadTypeface);
+            mConversationNameView.setTypeface(FontUtils.getTypeface(FontUtils.MEDIUM));
         } else {
             mConversationNameView.setTextColor(mSnippetColor);
-            mConversationNameView.setTypeface(mConversationNameUnreadTypeface);
+            mConversationNameView.setTypeface(FontUtils.getTypeface(FontUtils.SEMI_BOLD));
         }
 
         final String conversationName = mData.getName();
@@ -443,16 +439,13 @@ public class ConversationListItemView extends FrameLayout implements OnClickList
 
         mSnippetTextView.setMaxLines(maxLines);
         mSnippetTextView.setTextColor(color);
-        mSnippetTextView.setTypeface(mSnippetTypeface, typefaceStyle);
         mSubjectTextView.setTextColor(color);
-        mSubjectTextView.setTypeface(mSnippetTypeface, typefaceStyle);
 
         setSnippet();
         setConversationName();
         setSubject();
         setWorkProfileIcon();
-        setContentDescription(buildContentDescription(resources, mData,
-                mConversationNameView.getPaint()));
+        setContentDescription(buildContentDescription(resources, mData, mConversationNameView.getPaint()));
 
         if (mData.getShowDraft()
                 || mData.getMessageStatus() == MessageData.BUGLE_STATUS_OUTGOING_DRAFT
@@ -460,11 +453,11 @@ public class ConversationListItemView extends FrameLayout implements OnClickList
                 // row is left with a latest_message_id of a no longer existing message and
                 // therefore the join values come back as null (or in this case zero).
                 || mData.getMessageStatus() == MessageData.BUGLE_STATUS_UNKNOWN) {
-            mTimestampTextView.setTypeface(Typefaces.getCustomRegular(), typefaceStyle);
+            //mTimestampTextView.setTypeface(Typefaces.getCustomRegular(), typefaceStyle);
             mTimestampTextView.setText(resources.getString(
                     R.string.conversation_list_item_view_draft_message));
         } else {
-            mTimestampTextView.setTypeface(Typefaces.getCustomRegular(), typefaceStyle);
+            //mTimestampTextView.setTypeface(Typefaces.getCustomRegular(), typefaceStyle);
             final String formattedTimestamp = mData.getFormattedTimestamp();
             if (mData.getIsSendRequested()) {
                 mTimestampTextView.setText(R.string.message_status_sending);
@@ -472,6 +465,8 @@ public class ConversationListItemView extends FrameLayout implements OnClickList
                 mTimestampTextView.setText(formattedTimestamp);
             }
         }
+
+        mTimestampTextView.setTypeface(FontUtils.getTypeface());
 
         final boolean isSelected = mHostInterface.isConversationSelected(mData.getConversationId());
         setSelected(isSelected);

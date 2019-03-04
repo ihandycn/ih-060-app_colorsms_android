@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -15,9 +14,9 @@
 
         <ImageView
             android:layout_width="wrap_content"
-            android:layout_gravity="center"
             android:layout_height="wrap_content"
-            android:src="@drawable/navigation_header_icon"/>
+            android:layout_gravity="center"
+            android:src="@drawable/navigation_header_icon" />
     </FrameLayout>
 
     <ScrollView
@@ -37,13 +36,14 @@
             <com.superapps.view.TypefacedTextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textSize="14sp"
-                android:textColor="#66222327"
                 android:layout_marginBottom="6dp"
                 android:layout_marginLeft="28dp"
                 android:layout_marginTop="19dp"
+                android:includeFontPadding="false"
                 android:text="@string/menu_group_customization"
-                app:typeface="@string/custom_font_medium"/>
+                android:textColor="#66222327"
+                android:textSize="14sp"
+                app:typeface="@string/custom_font_medium" />
 
             <!-- Item Theme Color -->
             <RelativeLayout
@@ -52,12 +52,13 @@
 
                 <android.support.v7.widget.AppCompatImageView
                     style="@style/DrawerMenuIcon"
-                    app:srcCompat="@drawable/ic_menu_theme"/>
+                    app:srcCompat="@drawable/ic_menu_theme" />
 
                 <com.superapps.view.TypefacedTextView
                     style="@style/DrawerMenuTitle"
+                    android:includeFontPadding="false"
                     android:text="@string/menu_theme_color"
-                    app:typeface="@string/custom_font_medium"/>
+                    app:typeface="@string/custom_font_medium" />
             </RelativeLayout>
 
             <!-- Item Bubble -->
@@ -67,12 +68,13 @@
 
                 <android.support.v7.widget.AppCompatImageView
                     style="@style/DrawerMenuIcon"
-                    app:srcCompat="@drawable/ic_menu_bubble"/>
+                    app:srcCompat="@drawable/ic_menu_bubble" />
 
                 <com.superapps.view.TypefacedTextView
                     style="@style/DrawerMenuTitle"
+                    android:includeFontPadding="false"
                     android:text="@string/menu_bubble"
-                    app:typeface="@string/custom_font_medium"/>
+                    app:typeface="@string/custom_font_medium" />
             </RelativeLayout>
 
             <!-- Item Chat Background -->
@@ -82,12 +84,29 @@
 
                 <android.support.v7.widget.AppCompatImageView
                     style="@style/DrawerMenuIcon"
-                    app:srcCompat="@drawable/ic_menu_chat"/>
+                    app:srcCompat="@drawable/ic_menu_chat" />
 
                 <com.superapps.view.TypefacedTextView
                     style="@style/DrawerMenuTitle"
-                    android:text="@string/menu_chat_background"
-                    app:typeface="@string/custom_font_medium"/>
+                    android:includeFontPadding="false"
+                    android:text="@string/wallpaper_title"
+                    app:typeface="@string/custom_font_medium" />
+            </RelativeLayout>
+
+            <!-- Item Change Font -->
+            <RelativeLayout
+                android:id="@+id/navigation_item_change_font"
+                style="@style/DrawerMenuItem">
+
+                <android.support.v7.widget.AppCompatImageView
+                    style="@style/DrawerMenuIcon"
+                    app:srcCompat="@drawable/ic_menu_font" />
+
+                <com.superapps.view.TypefacedTextView
+                    style="@style/DrawerMenuTitle"
+                    android:includeFontPadding="false"
+                    android:text="@string/menu_change_font"
+                    app:typeface="@string/custom_font_medium" />
             </RelativeLayout>
 
             <!-- Item Setting -->
@@ -98,12 +117,13 @@
 
                 <android.support.v7.widget.AppCompatImageView
                     style="@style/DrawerMenuIcon"
-                    app:srcCompat="@drawable/ic_menu_setting"/>
+                    app:srcCompat="@drawable/ic_menu_setting" />
 
                 <com.superapps.view.TypefacedTextView
                     style="@style/DrawerMenuTitle"
+                    android:includeFontPadding="false"
                     android:text="@string/menu_setting"
-                    app:typeface="@string/custom_font_medium"/>
+                    app:typeface="@string/custom_font_medium" />
             </RelativeLayout>
 
             <!-- Item Rate -->
@@ -113,12 +133,13 @@
 
                 <android.support.v7.widget.AppCompatImageView
                     style="@style/DrawerMenuIcon"
-                    app:srcCompat="@drawable/ic_menu_rate"/>
+                    app:srcCompat="@drawable/ic_menu_rate" />
 
                 <com.superapps.view.TypefacedTextView
                     style="@style/DrawerMenuTitle"
+                    android:includeFontPadding="false"
                     android:text="@string/menu_rate"
-                    app:typeface="@string/custom_font_medium"/>
+                    app:typeface="@string/custom_font_medium" />
             </RelativeLayout>
         </LinearLayout>
     </ScrollView>

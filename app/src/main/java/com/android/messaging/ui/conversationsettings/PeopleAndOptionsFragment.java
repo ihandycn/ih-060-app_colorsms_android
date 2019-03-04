@@ -51,6 +51,8 @@ import com.android.messaging.ui.CompositeAdapter;
 import com.android.messaging.ui.PersonItemView;
 import com.android.messaging.ui.UIIntents;
 import com.android.messaging.ui.conversation.ConversationActivity;
+import com.android.messaging.ui.wallpaper.WallpaperManager;
+import com.android.messaging.ui.wallpaper.WallpaperPreviewActivity;
 import com.android.messaging.util.Assert;
 import com.android.messaging.util.BuglePrefs;
 import com.android.messaging.util.OsUtil;
@@ -65,12 +67,13 @@ import static com.android.messaging.datamodel.data.PeopleOptionsItemData.SETTING
  * Shows a list of participants of a conversation and displays options.
  */
 public class PeopleAndOptionsFragment extends Fragment
-        implements PeopleAndOptionsDataListener, PeopleOptionsItemView.HostInterface {
+        implements PeopleAndOptionsDataListener, PeopleOptionsItemView.HostInterface, WallpaperManager.WallpaperChangeListener {
     private ListView mListView;
     private OptionsListAdapter mOptionsListAdapter;
     private PeopleListAdapter mPeopleListAdapter;
     private final Binding<PeopleAndOptionsData> mBinding =
             BindingBase.createBinding(this);
+    private String mConversationId;
 
     private static final int REQUEST_CODE_RINGTONE_PICKER = 1000;
 
@@ -78,6 +81,7 @@ public class PeopleAndOptionsFragment extends Fragment
     public void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mBinding.getData().init(getLoaderManager(), mBinding);
+        WallpaperManager.addWallpaperChangeListener(this);
     }
 
     @Override
@@ -87,7 +91,10 @@ public class PeopleAndOptionsFragment extends Fragment
         mListView = view.findViewById(android.R.id.list);
         mPeopleListAdapter = new PeopleListAdapter(getActivity());
         mOptionsListAdapter = new OptionsListAdapter();
+        CustomizeListAdapter adapter = new CustomizeListAdapter(getActivity());
+
         final CompositeAdapter compositeAdapter = new CompositeAdapter(getActivity());
+        compositeAdapter.addPartition(new PeopleAndOptionsPartition(adapter, R.string.customize_title, false));
         compositeAdapter.addPartition(new PeopleAndOptionsPartition(mOptionsListAdapter,
                 R.string.general_settings_title, false));
         compositeAdapter.addPartition(new PeopleAndOptionsPartition(mPeopleListAdapter,
@@ -111,6 +118,7 @@ public class PeopleAndOptionsFragment extends Fragment
     public void onDestroy() {
         super.onDestroy();
         mBinding.unbind();
+        WallpaperManager.removeWallpaperChangeListener(this);
     }
 
     public void setConversationId(final String conversationId) {
@@ -118,6 +126,7 @@ public class PeopleAndOptionsFragment extends Fragment
         Assert.notNull(conversationId);
         mBinding.bind(DataModel.get().createPeopleAndOptionsData(conversationId, getActivity(),
                 this));
+        mConversationId = conversationId;
     }
 
     @Override
@@ -179,6 +188,60 @@ public class PeopleAndOptionsFragment extends Fragment
                                 })
                         .show();
                 break;
+        }
+    }
+
+    @Override
+    public void onWallpaperChanged() {
+        if (getActivity() != null) {
+            getActivity().finish();
+        }
+    }
+
+    @Override
+    public void onOnlineWallpaperChanged() {
+        if (getActivity() != null) {
+            getActivity().finish();
+        }
+    }
+
+    private class CustomizeListAdapter extends BaseAdapter {
+
+        private Context mContext;
+
+        CustomizeListAdapter(Context context) {
+            mContext = context;
+        }
+
+        @Override
+        public int getCount() {
+            return 1;
+        }
+
+        @Override
+        public Object getItem(int position) {
+            return null;
+        }
+
+        @Override
+        public long getItemId(int position) {
+            return 0;
+        }
+
+        @Override
+        public View getView(final int position, final View convertView, final ViewGroup parent) {
+            final LayoutInflater inflater = (LayoutInflater) mContext
+                    .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+            View itemView = inflater.inflate(R.layout.conversation_option_customize, parent, false);
+
+
+            itemView.findViewById(R.id.chat_background).setOnClickListener(v -> {
+                WallpaperPreviewActivity.startWallpaperPreviewByThreadId(mContext, mConversationId);
+            });
+
+            itemView.findViewById(R.id.chat_bubble).setOnClickListener(v ->
+                    UIIntents.get().launchCustomBubblesActivity(mContext, mConversationId));
+            return itemView;
         }
     }
 

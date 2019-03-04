@@ -76,6 +76,7 @@ import com.android.messaging.util.LogUtil;
 import com.android.messaging.util.MediaUtil;
 import com.android.messaging.util.OsUtil;
 import com.android.messaging.util.UiUtils;
+import com.superapps.font.FontUtils;
 import com.superapps.util.BackgroundDrawables;
 import com.superapps.util.Dimensions;
 import com.superapps.util.Threads;
@@ -237,6 +238,7 @@ public class ComposeMessageView extends LinearLayout
         super.onFinishInflate();
         mInputLayout = findViewById(R.id.input_layout);
         mComposeEditText = findViewById(R.id.compose_message_text);
+        mComposeEditText.setTypeface(FontUtils.getTypeface());
         mComposeEditText.setOnEditorActionListener(this);
         mComposeEditText.addTextChangedListener(this);
         mComposeEditText.setOnFocusChangeListener(new OnFocusChangeListener() {
@@ -290,10 +292,19 @@ public class ComposeMessageView extends LinearLayout
             return true;
         });
 
-        mSelfSendIcon = (SimIconView) findViewById(R.id.self_send_icon);
-        mSelfSendIcon.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
+        mSelfSendIcon = findViewById(R.id.self_send_icon);
+        mSelfSendIcon.setOnClickListener(v -> {
+            SubscriptionListEntry entry = getSelfSubscriptionListEntry();
+            boolean shown = false;
+            if (entry != null) {
+                shown = mInputManager.toggleSimSelector(true /* animate */, entry);
+            }
+            hideAttachmentsWhenShowingSims(shown);
+        });
+        mSelfSendIcon.setOnLongClickListener(v -> {
+            if (mHost.shouldShowSubjectEditor()) {
+                showSubjectEditor();
+            } else {
                 SubscriptionListEntry entry = getSelfSubscriptionListEntry();
                 boolean shown = false;
                 if (entry != null) {
@@ -301,22 +312,7 @@ public class ComposeMessageView extends LinearLayout
                 }
                 hideAttachmentsWhenShowingSims(shown);
             }
-        });
-        mSelfSendIcon.setOnLongClickListener(new OnLongClickListener() {
-            @Override
-            public boolean onLongClick(final View v) {
-                if (mHost.shouldShowSubjectEditor()) {
-                    showSubjectEditor();
-                } else {
-                    SubscriptionListEntry entry = getSelfSubscriptionListEntry();
-                    boolean shown = false;
-                    if (entry != null) {
-                        shown = mInputManager.toggleSimSelector(true /* animate */, entry);
-                    }
-                    hideAttachmentsWhenShowingSims(shown);
-                }
-                return true;
-            }
+            return true;
         });
 
         mComposeSubjectText = (PlainTextEditText) findViewById(
@@ -346,27 +342,21 @@ public class ComposeMessageView extends LinearLayout
         mSendButton.setBackground(BackgroundDrawables.createBackgroundDrawable(PrimaryColors.getPrimaryColor(),
                 PrimaryColors.getPrimaryColorDark(),
                 Dimensions.pxFromDp(29), false, true));
-        mSendButton.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(final View clickView) {
-                logEmojiEvent();
-                sendMessageInternal(true /* checkMessageSize */);
-            }
+        mSendButton.setOnClickListener(clickView -> {
+            logEmojiEvent();
+            sendMessageInternal(true /* checkMessageSize */);
         });
-        mSendButton.setOnLongClickListener(new OnLongClickListener() {
-            @Override
-            public boolean onLongClick(final View arg0) {
-                SubscriptionListEntry entry = getSelfSubscriptionListEntry();
-                boolean shown = false;
-                if (entry != null) {
-                    shown = mInputManager.toggleSimSelector(true /* animate */, entry);
-                }
-                hideAttachmentsWhenShowingSims(shown);
-                if (mHost.shouldShowSubjectEditor()) {
-                    showSubjectEditor();
-                }
-                return true;
+        mSendButton.setOnLongClickListener(arg0 -> {
+            SubscriptionListEntry entry = getSelfSubscriptionListEntry();
+            boolean shown = false;
+            if (entry != null) {
+                shown = mInputManager.toggleSimSelector(true /* animate */, entry);
             }
+            hideAttachmentsWhenShowingSims(shown);
+            if (mHost.shouldShowSubjectEditor()) {
+                showSubjectEditor();
+            }
+            return true;
         });
         mSendButton.setAccessibilityDelegate(new AccessibilityDelegate() {
             @Override

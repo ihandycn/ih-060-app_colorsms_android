@@ -546,6 +546,7 @@
     <string name="action_debug_options">Debug</string>
     <!-- Title for the "People and Options" activity -->
     <string name="people_and_options_activity_title">People &amp; options</string>
+    <string name="customize_title">Customize</string>
     <!-- Title for the general settings section in the "People and options" activity -->
     <string name="general_settings_title">General</string>
     <!-- Title for the list of participants in the "People and options" activity -->
@@ -731,13 +732,13 @@
     <string name="block_confirmation_message">You\'ll continue to receive messages from this number but won\'t be notified anymore. This conversation will be archived.</string>
 
     <!-- The title of the list of blocked contacts -->
-    <string name="blocked_contacts_title">Blocked contacts</string>
+    <string name="blocked_contacts_title">Blocked Contacts</string>
 
     <!-- The message in a blocked contact item which indicates tapping will unblock -->
     <string name="tap_to_unblock_message">Unblock</string>
 
     <!-- Action menu title for viewing the list of blocked contacts -->
-    <string name="view_blocked_contacts_title">Blocked contacts</string>
+    <string name="view_blocked_contacts_title">Blocked Contacts</string>
 
     <!-- Content description for the button in gallery media picker to pick an image from the document library -->
     <string name="pick_image_from_document_library_content_description">Choose image from document library</string>
@@ -883,6 +884,8 @@
     <!-- The title for advanced settings activity  -->
     <string name="advanced_settings_activity_title">Advanced settings</string>
 
+    <string name="change_font">Font &#038; Font Size</string>
+
     <!-- The title for sim_specific settings  -->
     <string name="sim_specific_settings">\"<xliff:g id="sim_name">%s</xliff:g>\" SIM</string>
 
@@ -997,6 +1000,8 @@
     <string name="emoji_store_title">Emoji Store</string>
     <string name="emoji_get">GET</string>
     <string name="emoji_added">ADDED</string>
+    <string name="emoji_add_more">More emojis</string>
+    <string name="emoji_recent_empty_description">Click an emoji to share with friends.</string>
 
     <!--sms show-->
     <string name="sms_show_apply">APPLY</string>
@@ -1007,7 +1012,6 @@
     <string name="welcome_start_service">Terms of Service</string>
     <string name="welcome_start_and">&#038;</string>
     <string name="welcome_start_policy">Privacy Policy</string>
-
     <string name="welcome_permission_button">ALLOW</string>
     <string name="welcome_permission_title">Necessary Permissions</string>
     <string name="welcome_permission_description">To work properly, we need the following permissions.</string>
@@ -1040,7 +1044,7 @@
 
     <!-- 5-star rating -->
     <string name="five_star_hint_text">How was your experience with us?</string>
-    <string name="five_star_positive_text">Submit</string>
+    <string name="five_star_positive_text">SUBMIT</string>
     <string name="five_star_one_text">Hated it</string>
     <string name="five_star_two_text">Disliked it</string>
     <string name="five_star_three_text">It was OK</string>
@@ -1061,35 +1065,62 @@
     <string name="feedback_toast_send_success">Thanks for your feedback!</string>
 
     <!--Setting-->
-    <string name="setting_5_star_rating">5 star rating</string>
+    <string name="setting_5_star_rating">5 Star Rating</string>
     <string name="setting_feedback">Feedback</string>
-    <string name="setting_privacy_policy">Privacy policy</string>
-    <string name="setting_terms_of_service">Terms of service</string>
-    <string name="setting_sms_pop_ups">SMS pop-ups</string>
+    <string name="setting_privacy_policy">Privacy Policy</string>
+    <string name="setting_terms_of_service">Terms of Service</string>
+    <string name="setting_change_font">Font &#038; Font Size</string>
+    <string name="setting_text_font">Font</string>
+    <string name="setting_text_size">Font Size</string>
+    <string name="setting_text_font_name">Roboto</string>
+    <string name="setting_text_size_hint_larger">Largest</string>
+    <string name="setting_text_size_hint_large">Large</string>
+    <string name="setting_text_size_hint_medium_large">Medium</string>
+    <string name="setting_text_size_hint_normal">Default</string>
+    <string name="setting_text_size_hint_medium_small">Small</string>
+    <string name="setting_text_size_hint_small">Smallest</string>
+    <string name="setting_sms_pop_ups">SMS Pop-ups</string>
     <string name="setting_sms_pop_ups_summary">Pop up a window when receiving messages</string>
-    <string name="setting_sms_show">SMS show</string>
+    <string name="setting_sms_show">SMS Show</string>
     <string name="setting_sms_show_summary">Beautify SMS reminder effects</string>
     <string name="setting_sms_show_close_dialog_title">Confirm to turn off?</string>
     <string name="setting_sms_show_close_dialog_content">You will lose the beautiful SMS reminder themes, really want to close it?</string>
     <string name="setting_sms_show_close_dialog_ok">OK</string>
-    <string name="emoji_recent_empty_description">Click an emoji to share with friends.</string>
-
+    <string name="setting_test_change_theme_color">change theme color for debug</string>
 
     <!--notification channel-->
     <string name="sms_notification_channel">SMS Notification</string>
     <string name="sms_notification_channel_description">Show a notification when received SMS</string>
 
-    <string name="emoji_add_more">More emojis</string>
+    <!--customize-->
+    <string name="bubble_customize_preview_incoming_message">Hi, there! Nice to meet you.</string>
+    <string name="bubble_customize_preview_outgoing_message">Nice to meet you too.</string>
+    <string name="bubble_customize_preview_incoming_message_font">Choose a font you like!</string>
+    <string name="bubble_customize_preview_outgoing_message_font">Change font size in chat bubbles.</string>
+    <string name="bubble_customize_tab_style">Style</string>
+    <string name="bubble_customize_tab_color">Color</string>
+    <string name="bubble_customize_action_bar_title">Bubble</string>
+    <string name="bubble_customize_bubble_color">Bubble Color</string>
+    <string name="bubble_customize_text_color">Text Color</string>
+    <string name="bubble_customize_received">Received</string>
+    <string name="bubble_customize_sent">Sent</string>
+    <string name="bubble_customize_color_recommend">Recommend</string>
+    <string name="bubble_customize_color_advance">Advance</string>
+    <string name="bubble_customize_color_title">%1$s (%2$s)</string>
+    <string name="bubble_customize_save">SAVE</string>
+    <string name="bubble_customize_save_confirm_dialog_title">Save Changes</string>
+    <string name="bubble_customize_save_confirm_dialog_content">Bubbles have been modified, would you like to keep changes?</string>
 
     <string name="drawer_open" translatable="false">Open navigation drawer</string>
     <string name="drawer_close" translatable="false">Close navigation drawer</string>
-    <string name="theme_select_title">Theme color</string>
+    <string name="theme_select_title">Theme Color</string>
     <string name="theme_select_description">Select theme color you like</string>
-    <string name="menu_theme_color">Theme color</string>
-    <string name="menu_bubble">Chat bubble</string>
-    <string name="menu_chat_background">Chat background</string>
+    <string name="menu_change_font">Font &#038; Font Size</string>
+    <string name="menu_theme_color">Theme Color</string>
+    <string name="menu_bubble">Bubble</string>
+    <string name="menu_chat_background">Chat Background</string>
     <string name="menu_setting">Settings</string>
-    <string name="menu_rate">5 star rating</string>
+    <string name="menu_rate">5 Star Rating</string>
     <string name="menu_group_customization">Customize</string>
     <string name="coming_soon">Coming soon in a few days</string>
 
@@ -1102,4 +1133,12 @@
     <string name="got_it">Got it</string>
     <string name="drag_hotseat_content">Easier for you to send funny emojis and stickers via Color SMS.</string>
     <string name="drag_hotseat_title">Drag Color SMS to the Hotseat</string>
+
+    <!--wallpaper-->
+    <string name="wallpaper_title">Chat Background</string>
+    <string name="wallpaper_set_failed">failed</string>
+    <string name="wallpaper_reset">RESET</string>
+    <string name="wallpaper_done">DONE</string>
+    <string name="wallpaper_add_photos">Add Photos</string>
+    <string name="wallpaper_download_failed">Network Error</string>
 </resources>

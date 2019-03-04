@@ -95,9 +95,9 @@
                     android:clickable="true"
                     android:contentDescription="@null"
                     android:importantForAccessibility="no"
-                    app:iconSize="large"
                     app:fadeIn="false"
-                    app:reveal="false"/>
+                    app:iconSize="large"
+                    app:reveal="false" />
 
                 <ImageView
                     android:id="@+id/conversation_checkmark"
@@ -156,14 +156,15 @@
                             android:src="@drawable/ic_notifications_off_small_light"
                             android:visibility="gone" />
 
-                        <TextView
+                        <com.superapps.view.TypefacedTextView
                             android:id="@+id/conversation_name"
                             style="@style/ConversationListItemViewConversationNameStyle"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_gravity="center_vertical"
                             android:paddingBottom="2dp"
-                            android:singleLine="true" />
+                            android:singleLine="true"
+                            app:typeface="@string/custom_font_medium" />
                     </LinearLayout>
 
                     <ImageView
@@ -177,7 +178,7 @@
                         android:visibility="gone" />
                 </LinearLayout>
 
-                <TextView
+                <com.superapps.view.TypefacedTextView
                     android:id="@+id/conversation_subject"
                     style="@style/ConversationListItemViewTextStyle"
                     android:layout_width="match_parent"
@@ -185,16 +186,18 @@
                     android:ellipsize="end"
                     android:paddingBottom="3dp"
                     android:singleLine="true"
-                    android:visibility="gone" />
+                    android:visibility="gone"
+                    app:typeface="@string/custom_font_regular" />
 
-                <TextView
+                <com.superapps.view.TypefacedTextView
                     android:id="@+id/conversation_snippet"
                     style="@style/ConversationListItemViewTextStyle"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:ellipsize="end"
                     android:paddingBottom="3dp"
-                    android:textSize="13sp" />
+                    android:textSize="13sp"
+                    app:typeface="@string/custom_font_regular" />
             </LinearLayout>
 
             <!-- The attachment preview on the right side of the view -->
@@ -223,7 +226,7 @@
                     android:visibility="gone"
                     app:layoutMode="subcompact" />
 
-                <TextView
+                <com.superapps.view.TypefacedTextView
                     android:id="@+id/conversation_timestamp"
                     style="@style/ConversationListItemViewTextTimeStampStyle"
                     android:layout_width="wrap_content"
@@ -233,7 +236,7 @@
                     android:id="@+id/conversation_unread_messages_count"
                     android:layout_width="21dp"
                     android:layout_height="21dp"
-                    android:layout_gravity="right|top"
+                    android:layout_gravity="end|top"
                     android:layout_marginTop="20dp"
                     android:gravity="center"
                     android:includeFontPadding="false"

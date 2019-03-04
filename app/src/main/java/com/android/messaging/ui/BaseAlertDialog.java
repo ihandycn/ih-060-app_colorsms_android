@@ -128,6 +128,7 @@ public class BaseAlertDialog {
         Dialog dialog = new Dialog(builder.context, R.style.BaseDialogTheme);
         dialog.setCancelable(true);
         dialog.setContentView(layout);
+
         Window window = dialog.getWindow();
 
         if (window != null) {

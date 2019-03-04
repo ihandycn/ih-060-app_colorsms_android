@@ -22,6 +22,40 @@
     <!-- base color -->
     <color name="divider_color">#e4e7eb</color>
 
+    <color name="black_10_transparent">#1A000000</color>
+    <color name="black_12_transparent">#1f000000</color>
+    <color name="black_20_transparent">#32000000</color>
+    <color name="black_24_transparent">#3D000000</color>
+    <color name="black_27_transparent">#45000000</color>
+    <color name="black_30_transparent">#4D000000</color>
+    <color name="black_40_transparent">#66000000</color>
+    <color name="black_50_transparent">#7F000000</color>
+    <color name="black_54_transparent">#8A000000</color>
+    <color name="black_60_transparent">#99000000</color>
+    <color name="black_70_transparent">#B3000000</color>
+    <color name="black_72_transparent">#B8000000</color>
+    <color name="black_80_transparent">#CC000000</color>
+    <color name="black_86_transparent">#db000000</color>
+    <color name="black_87_transparent">#DF000000</color>
+    <color name="black_90_transparent">#E6000000</color>
+    <color name="black_100_transparent">#FF000000</color>
+
+    <color name="white_10_transparent">#1AFFFFFF</color>
+    <color name="white_20_transparent">#32FFFFFF</color>
+    <color name="white_30_transparent">#4DFFFFFF</color>
+    <color name="white_32_transparent">#ADFFFFFF</color>
+    <color name="white_40_transparent">#66FFFFFF</color>
+    <color name="white_45_transparent">#73FFFFFF</color>
+    <color name="white_50_transparent">#7FFFFFFF</color>
+    <color name="white_60_transparent">#99FFFFFF</color>
+    <color name="white_70_transparent">#B3FFFFFF</color>
+    <color name="white_72_transparent">#B8FFFFFF</color>
+    <color name="white_75_transparent">#BFFFFFFF</color>
+    <color name="white_80_transparent">#CCFFFFFF</color>
+    <color name="white_86_transparent">#DCFFFFFF</color>
+    <color name="white_87_transparent">#DFFFFFFF</color>
+    <color name="white_100_transparent">#FFFFFF</color>
+
     <!--  Action bar -->
     <color name="action_bar_title_text_color">#2d2f34</color>
     <color name="action_bar_background_color">#ffffff</color>
@@ -46,8 +80,8 @@
     <color name="conversation_compose_divider_start">#44000000</color>
 
     <color name="message_text">#000000</color>
-    <color name="timestamp_text_outgoing">#afb1be</color>
-    <color name="timestamp_text_incoming">#afb1be</color>
+    <color name="timestamp_text_outgoing">#ff828292</color>
+    <color name="timestamp_text_incoming">#ff828292</color>
     <color name="timestamp_text_failed">#99ff0000</color>
     <color name="compose_send_text_color">#000000</color>
 
@@ -243,5 +277,12 @@
     <color name="feedback_input_text">#626262</color>
 
     <color name="ic_launcher_background">@color/primary_color</color>
+    <color name="text_shadow">#33000000</color>
+
+    <!--customize-->
+    <color name="customize_bubble_divider">#f4f5f8</color>
+    <color name="customize_bubble_ring">#dee0e8</color>
+    <color name="customize_bubble_color_divider">#23313131</color>
+    <color name="customize_bubble_primary_text_color">#4f5157</color>
 
 </resources>

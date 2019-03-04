@@ -16,6 +16,7 @@ import android.view.WindowManager;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import com.android.messaging.BaseActivity;
 import com.android.messaging.R;
 import com.android.messaging.util.BugleAnalytics;
 import com.android.messaging.util.UiUtils;
@@ -28,7 +29,7 @@ import java.util.Map;
 /**
  * Activity for the user to send feedback.
  */
-public class FeedbackActivity extends HSAppCompatActivity implements View.OnClickListener {
+public class FeedbackActivity extends BaseActivity implements View.OnClickListener {
 
     private static final int MESSAGE_SHOW_KEYBOARD = 1021;
 

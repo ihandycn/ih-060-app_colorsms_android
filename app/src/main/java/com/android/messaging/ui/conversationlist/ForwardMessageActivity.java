@@ -25,14 +25,13 @@ import com.android.messaging.datamodel.data.MessageData;
 import com.android.messaging.ui.BaseBugleActivity;
 import com.android.messaging.ui.UIIntents;
 import com.android.messaging.ui.conversationlist.ConversationListFragment.ConversationListFragmentHost;
-import com.android.messaging.util.Assert;
 
 /**
  * An activity that lets the user forward a SMS/MMS message by picking from a conversation in the
  * conversation list.
  */
 public class ForwardMessageActivity extends BaseBugleActivity
-    implements ConversationListFragmentHost {
+        implements ConversationListFragmentHost {
     private MessageData mDraftMessage;
 
     @Override
@@ -46,15 +45,16 @@ public class ForwardMessageActivity extends BaseBugleActivity
 
     @Override
     public void onAttachFragment(final Fragment fragment) {
-        Assert.isTrue(fragment instanceof ConversationListFragment);
-        final ConversationListFragment clf = (ConversationListFragment) fragment;
-        clf.setHost(this);
+        if (fragment instanceof ConversationListFragment) {
+            final ConversationListFragment clf = (ConversationListFragment) fragment;
+            clf.setHost(this);
+        }
     }
 
     @Override
     public void onConversationClick(final ConversationListData listData,
                                     final ConversationListItemData conversationListItemData,
-            final boolean isLongClick, final ConversationListItemView converastionView) {
+                                    final boolean isLongClick, final ConversationListItemView converastionView) {
         UIIntents.get().launchConversationActivity(
                 this, conversationListItemData.getConversationId(), mDraftMessage);
     }

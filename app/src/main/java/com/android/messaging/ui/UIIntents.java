@@ -275,6 +275,10 @@ public abstract class UIIntents {
      */
     public abstract void launchDragHotSeatActivity(Context context);
 
+    /**
+     * Launch an activity to custom bubbles
+     */
+    public abstract void launchCustomBubblesActivity(Context context, String conversationId);
 
     /**
      * Get a ACTION_VIEW intent

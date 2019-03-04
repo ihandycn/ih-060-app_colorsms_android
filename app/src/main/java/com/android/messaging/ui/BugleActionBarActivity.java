@@ -26,6 +26,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 
+import com.android.messaging.BaseActivity;
 import com.android.messaging.R;
 import com.android.messaging.ui.customize.PrimaryColors;
 import com.android.messaging.ui.dialog.FiveStarRateDialog;
@@ -42,7 +43,7 @@ import java.util.Set;
  * needs that will be common for all activities.  We can break out the common code if/when we need
  * a version that doesn't use an actionbar.
  */
-public class BugleActionBarActivity extends AppCompatActivity implements ImeUtil.ImeStateHost {
+public class BugleActionBarActivity extends BaseActivity implements ImeUtil.ImeStateHost {
     // Tracks the list of observers opting in for IME state change.
     private final Set<ImeUtil.ImeStateObserver> mImeStateObservers = new HashSet<>();
 

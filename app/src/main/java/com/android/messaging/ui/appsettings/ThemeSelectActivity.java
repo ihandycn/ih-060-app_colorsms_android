@@ -6,18 +6,20 @@ import android.view.MenuItem;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.android.messaging.BaseActivity;
 import com.android.messaging.Factory;
 import com.android.messaging.R;
 import com.android.messaging.ui.ConversationDrawables;
 import com.android.messaging.ui.conversationlist.ConversationListActivity;
 import com.android.messaging.ui.customize.PrimaryColors;
 import com.android.messaging.util.BugleAnalytics;
-import com.ihs.app.framework.activity.HSAppCompatActivity;
+import com.android.messaging.util.UiUtils;
+import com.ihs.app.framework.HSApplication;
 import com.ihs.commons.notificationcenter.HSGlobalNotificationCenter;
 import com.superapps.util.BackgroundDrawables;
 import com.superapps.util.Dimensions;
 
-public class ThemeSelectActivity extends HSAppCompatActivity {
+public class ThemeSelectActivity extends BaseActivity {
 
     private static int[] COLOR_IMG_IDS = new int[]{
             R.id.iv_theme_select_1,
@@ -34,7 +36,7 @@ public class ThemeSelectActivity extends HSAppCompatActivity {
             R.id.iv_theme_select_12
     };
 
-    private static int[] COLORS = new int[]{
+    public static int[] COLORS = new int[]{
             0xff1acc48,
             0xff338ee4,
             0xff0098a6,
@@ -65,6 +67,7 @@ public class ThemeSelectActivity extends HSAppCompatActivity {
         }
         getSupportActionBar().setDisplayShowHomeEnabled(true);
 
+        UiUtils.setStatusBarColor(this, getResources().getColor(R.color.action_bar_background_color));
         // setup color select
         for (int i = 0; i < COLORS.length; i++) {
             findViewById(COLOR_IMG_IDS[i]).setBackground(

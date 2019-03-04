@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--
+<?xml version="1.0" encoding="utf-8"?><!--
     Copyright (C) 2015 The Android Open Source Project
 
     Licensed under the Apache License, Version 2.0 (the "License");
@@ -16,40 +15,42 @@
 -->
 <com.android.messaging.ui.ListEmptyView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_gravity="center_vertical"
-    android:layout_marginBottom="@dimen/conversation_list_empty_text_bottom_margin">
+    android:layout_marginBottom="@dimen/conversation_list_empty_text_bottom_margin"
+    android:orientation="vertical">
 
     <ImageView
         android:id="@+id/empty_image_hint"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:importantForAccessibility="no"
-        android:contentDescription="@null"/>
+        android:contentDescription="@null"
+        android:importantForAccessibility="no" />
 
     <com.airbnb.lottie.LottieAnimationView
         android:id="@+id/loading_image_hint"
         android:layout_width="@dimen/loading_lottie_anim_width"
         android:layout_height="@dimen/loading_lottie_anim_height"
         android:layout_gravity="center"
-        android:importantForAccessibility="no"
         android:contentDescription="@null"
+        android:importantForAccessibility="no"
         android:visibility="gone"
-        app:lottie_fileName="lottie/loading.json"
         app:lottie_autoPlay="false"
-        app:lottie_loop="true"/>
+        app:lottie_fileName="lottie/loading.json"
+        app:lottie_loop="true" />
 
-    <TextView
+    <com.superapps.view.TypefacedTextView
         android:id="@+id/empty_text_hint"
-        android:gravity="center_horizontal"
+        style="@style/ListEmptyText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:layout_marginLeft="@dimen/list_empty_text_left_right_margin"
         android:layout_marginRight="@dimen/list_empty_text_left_right_margin"
         android:layout_marginTop="@dimen/list_empty_text_top_margin"
-        style="@style/ListEmptyText"/>
+        android:gravity="center_horizontal"
+        android:includeFontPadding="false"
+        app:typeface="@string/custom_font_regular" />
 </com.android.messaging.ui.ListEmptyView>

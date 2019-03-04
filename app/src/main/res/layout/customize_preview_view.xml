@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="utf-8"?>
+<merge xmlns:android="http://schemas.android.com/apk/res/android"
+       xmlns:app="http://schemas.android.com/apk/res-auto"
+       xmlns:tools="http://schemas.android.com/tools"
+       android:layout_width="match_parent"
+       android:layout_height="match_parent">
+
+    <com.superapps.view.TypefacedTextView
+        android:id="@+id/contact_icon"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="24dp"
+        android:layout_marginTop="24dp"
+        android:background="@drawable/bubble_customize_preview_contact_icon_background"
+        android:gravity="center"
+        android:text="E"
+        android:textColor="@color/white"
+        android:textSize="23sp"
+        android:includeFontPadding="false"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:typeface="@string/custom_font_bold"/>
+
+    <com.superapps.view.TypefacedTextView
+        android:id="@+id/incoming_message_preview_item"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="11dp"
+        android:ellipsize="none"
+        android:gravity="center_vertical"
+        android:maxLines="3"
+        android:maxWidth="250dp"
+        android:padding="10dp"
+        android:text="@string/bubble_customize_preview_incoming_message"
+        android:textColor="@color/text_primary_color"
+        android:textSize="13sp"
+        android:includeFontPadding="false"
+        app:font_size_changeable="true"
+        app:layout_constraintStart_toEndOf="@id/contact_icon"
+        app:layout_constraintTop_toTopOf="@id/contact_icon"
+        app:typeface="@string/custom_font_medium"
+        tools:background="@color/primary_color"/>
+
+    <com.superapps.view.TypefacedTextView
+        android:id="@+id/message_preview_timestamp_1"
+        android:layout_width="wrap_content"
+        android:layout_height="16dp"
+        android:layout_marginTop="5dp"
+        android:gravity="center"
+        android:paddingLeft="8dp"
+        android:paddingRight="8dp"
+        android:text="1hr ago"
+        android:textColor="@color/timestamp_text_incoming"
+        android:textSize="10sp"
+        android:includeFontPadding="false"
+        app:layout_constraintStart_toStartOf="@id/incoming_message_preview_item"
+        app:layout_constraintTop_toBottomOf="@id/incoming_message_preview_item"
+        app:typeface="@string/custom_font_medium"/>
+
+
+    <com.superapps.view.TypefacedTextView
+        android:id="@+id/outgoing_message_preview_item"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="23.3dp"
+        android:layout_marginTop="37.3dp"
+        android:ellipsize="none"
+        android:inputType="textMultiLine"
+        android:maxLines="3"
+        android:maxWidth="300dp"
+        android:padding="10dp"
+        android:gravity="center_vertical"
+        android:text="@string/bubble_customize_preview_outgoing_message"
+        android:textColor="@color/white"
+        android:textSize="13sp"
+        android:includeFontPadding="false"
+        app:font_size_changeable="true"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/incoming_message_preview_item"
+        app:typeface="@string/custom_font_medium"
+        tools:background="@color/primary_color"/>
+
+    <com.superapps.view.TypefacedTextView
+        android:id="@+id/message_preview_timestamp_2"
+        android:layout_width="wrap_content"
+        android:layout_height="16dp"
+        android:layout_marginTop="5dp"
+        android:paddingLeft="8dp"
+        android:paddingRight="8dp"
+        android:text="now"
+        android:includeFontPadding="false"
+        android:textColor="@color/timestamp_text_incoming"
+        android:textSize="10sp"
+        app:layout_constraintEnd_toEndOf="@id/outgoing_message_preview_item"
+        app:layout_constraintTop_toBottomOf="@id/outgoing_message_preview_item"
+        app:typeface="@string/custom_font_medium"/>
+</merge>

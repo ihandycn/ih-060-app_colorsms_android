@@ -203,12 +203,18 @@
     <dimen name="bottom_navigation_view_height">62dp</dimen>
 
     <!--sms show-->
-    <dimen name="sms_show_apply_button_height">46dp</dimen>
     <dimen name="loading_lottie_anim_width">133dp</dimen>
     <dimen name="loading_lottie_anim_height">66dp</dimen>
+    <dimen name="sms_show_apply_button_height">46dp</dimen>
     <dimen name="sms_show_list_item_radius">16dp</dimen>
     <dimen name="sms_show_apply_button_bottom_margin">18dp</dimen>
     <dimen name="sms_show_apply_button_width">240dp</dimen>
+    <dimen name="sms_show">46dp</dimen>
+
+    <!--customize-->
+    <dimen name="bubble_customize_preview_contact_icon_width">40dp</dimen>
+    <dimen name="bubble_customize_preview_contact_icon_height">40dp</dimen>
+    <dimen name="bubble_customize_color_ring_size">40dp</dimen>
 
     <!--banner -->
     <dimen name="banner_set_as_default">60dp</dimen>

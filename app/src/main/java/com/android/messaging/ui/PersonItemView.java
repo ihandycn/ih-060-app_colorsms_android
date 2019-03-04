@@ -17,7 +17,6 @@ package com.android.messaging.ui;
 
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Typeface;
 import android.support.v4.text.BidiFormatter;
 import android.support.v4.text.TextDirectionHeuristicsCompat;
 import android.text.TextUtils;
@@ -70,12 +69,6 @@ public class PersonItemView extends LinearLayout implements PersonItemDataListen
         super.onFinishInflate();
         mNameTextView = findViewById(R.id.name);
         mDetailsTextView = findViewById(R.id.details);
-        Typeface tf = Typeface.createFromAsset(getContext().getAssets(),
-                "fonts/Custom-Medium.ttf");
-        mNameTextView.setTypeface(tf);
-        Typeface tf1 = Typeface.createFromAsset(getContext().getAssets(),
-                "fonts/Custom-Regular.ttf");
-        mDetailsTextView.setTypeface(tf1);
         mContactIconView = findViewById(R.id.contact_icon);
         mDetailsContainer = findViewById(R.id.details_container);
         mNameTextView.addOnLayoutChangeListener(this);
@@ -157,10 +150,6 @@ public class PersonItemView extends LinearLayout implements PersonItemDataListen
     public void setAvatarOnly(final boolean avatarOnly) {
         mAvatarOnly = avatarOnly;
         mDetailsContainer.setVisibility(avatarOnly ? GONE : VISIBLE);
-    }
-
-    public boolean isAvatarOnly() {
-        return mAvatarOnly;
     }
 
     public void setNameTextColor(final int color) {

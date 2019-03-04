@@ -72,4 +72,31 @@ public final class BuglePrefsKeys {
      * theme color, overrides primary color
      */
     public static final String PREFS_KEY_PRIMARY_COLOR = "prefs_key_primary_color";
+
+    /**
+     * bubble drawable identifier, not @DrawableId
+     */
+    public static final String PREFS_KEY_BUBBLE_DRAWABLE_IDENTIFIER = "prefs_key_bubble_drawable_id";
+
+    /**
+     * bubble background color incoming
+     */
+    public static final String PREFS_KEY_BUBBLE_BACKGROUND_COLOR_INCOMING = "bubble_background_color_incoming";
+
+    /**
+     * bubble background color outgoing
+     */
+    public static final String PREFS_KEY_BUBBLE_BACKGROUND_COLOR_OUTGOING = "bubble_background_color_outgoing";
+
+    /**
+     * conversation message text color incoming
+     */
+    public static final String PREFS_KEY_MESSAGE_TEXT_COLOR_INCOMING = "message_text_color_incoming";
+
+    /**
+     * conversation message text color outgoing
+     */
+    public static final String PREFS_KEY_MESSAGE_TEXT_COLOR_OUTGOING = "message_text_color_outgoing";
+
+
 }

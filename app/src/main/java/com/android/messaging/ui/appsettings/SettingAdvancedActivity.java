@@ -9,6 +9,7 @@ import android.text.TextUtils;
 import android.view.MenuItem;
 import android.widget.TextView;
 
+import com.android.messaging.BaseActivity;
 import com.android.messaging.R;
 import com.android.messaging.datamodel.data.ParticipantData;
 import com.android.messaging.ui.UIIntents;
@@ -18,7 +19,7 @@ import com.android.messaging.util.BuglePrefs;
 import com.android.messaging.util.PhoneUtils;
 import com.ihs.app.framework.activity.HSAppCompatActivity;
 
-public class SettingAdvancedActivity extends HSAppCompatActivity {
+public class SettingAdvancedActivity extends BaseActivity {
 
     private SettingItemView mAutoRetrieve;
     private SettingItemView mRoamingAutoRetrieve;

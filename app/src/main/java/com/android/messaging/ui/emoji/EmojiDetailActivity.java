@@ -8,13 +8,14 @@ import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 
+import com.android.messaging.BaseActivity;
 import com.android.messaging.R;
 import com.android.messaging.ui.view.RecyclerViewWidthSlideListener;
 import com.ihs.app.framework.activity.HSAppCompatActivity;
 import com.superapps.util.Dimensions;
 
 
-public class EmojiDetailActivity extends HSAppCompatActivity {
+public class EmojiDetailActivity extends BaseActivity {
 
     private static final String INTENT_EMOJI_PACKAGE_INFO = "intent_emoji_package_info";
     private static final String INTENT_SOURCE = "intent_source";

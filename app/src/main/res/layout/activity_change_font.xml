@@ -1,0 +1,175 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/change_font_container"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <include layout="@layout/top_tool_bar_view" />
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1">
+
+        <com.android.messaging.ui.wallpaper.BackgroundImageView
+            android:id="@+id/change_font_bg"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:scaleType="centerCrop" />
+
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <com.android.messaging.ui.customize.CustomMessagePreviewView
+                android:id="@+id/message_preview_view"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+        </ScrollView>
+    </FrameLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="305dp"
+        android:orientation="vertical">
+
+        <View
+            android:id="@+id/divider"
+            android:layout_width="match_parent"
+            android:layout_height="8dp"
+            android:background="@color/customize_bubble_divider" />
+
+        <RelativeLayout
+            android:id="@+id/change_font_item"
+            android:layout_width="match_parent"
+            android:layout_height="69dp"
+            android:orientation="horizontal">
+
+            <com.superapps.view.TypefacedTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginStart="23dp"
+                android:includeFontPadding="false"
+                android:text="@string/setting_text_font"
+                android:textColor="#222327"
+                android:textSize="14.7sp"
+                app:font_style="bold"
+                app:typeface="@string/custom_font_bold" />
+
+            <com.superapps.view.TypefacedTextView
+                android:id="@+id/setting_text_font_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_centerVertical="true"
+                android:layout_marginEnd="22dp"
+                android:includeFontPadding="false"
+                android:text="@string/setting_text_font_name"
+                android:textColor="#9b9da7"
+                android:textSize="14sp"
+                app:typeface="@string/custom_font_medium" />
+        </RelativeLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0.3dp"
+            android:layout_marginLeft="22dp"
+            android:layout_marginRight="22dp"
+            android:alpha="0.15"
+            android:background="#313131" />
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="69dp"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <com.superapps.view.TypefacedTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginStart="23dp"
+                android:includeFontPadding="false"
+                android:text="@string/setting_text_size"
+                android:textColor="#222327"
+                android:textSize="14.7sp"
+                app:font_style="bold"
+                app:typeface="@string/custom_font_bold" />
+
+            <com.superapps.view.TypefacedTextView
+                android:id="@+id/setting_text_size_info"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_centerVertical="true"
+                android:layout_marginEnd="22dp"
+                android:includeFontPadding="false"
+                android:textColor="#9b9da7"
+                android:textSize="14sp"
+                app:typeface="@string/custom_font_medium" />
+        </RelativeLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="23dp"
+            android:layout_marginRight="23dp"
+            android:layout_marginTop="6dp"
+            android:orientation="horizontal">
+
+            <com.superapps.view.TypefacedTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:alpha="0.9"
+                android:text="@string/setting_text_size_hint_small"
+                android:textColor="#e6313239"
+                android:textSize="10sp"
+                app:typeface="@string/custom_font_medium"
+                tools:ignore="SmallSp" />
+
+            <View
+                android:layout_width="0dp"
+                android:layout_height="1dp"
+                android:layout_weight="75" />
+
+            <com.superapps.view.TypefacedTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:alpha="0.9"
+                android:text="@string/setting_text_size_hint_normal"
+                android:textColor="#e6313239"
+                android:textSize="12sp"
+                app:typeface="@string/custom_font_medium" />
+
+            <View
+                android:layout_width="0dp"
+                android:layout_height="1dp"
+                android:layout_weight="117" />
+
+            <com.superapps.view.TypefacedTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:alpha="0.9"
+                android:text="@string/setting_text_size_hint_larger"
+                android:textColor="#e6313239"
+                android:textSize="16sp"
+                app:typeface="@string/custom_font_medium" />
+        </LinearLayout>
+
+        <com.android.messaging.ui.view.LevelSeekBar
+            android:id="@+id/seek_bar"
+            android:layout_width="match_parent"
+            android:layout_height="35dp"
+            android:paddingLeft="26dp"
+            android:paddingRight="26dp"
+            app:levelCount="6"
+            app:scaleMark="round"
+            app:thumb="@drawable/settings_icon_size_slider_blue_solid"
+            app:trackBackgroundHeight="3dp"
+            app:trackHeight="3dp" />
+    </LinearLayout>
+</LinearLayout>

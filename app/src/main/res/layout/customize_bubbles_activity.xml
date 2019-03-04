@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white">
+
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/action_bar_height"
+        android:elevation="1dp"
+        app:navigationIcon="@drawable/ic_back">
+
+        <com.superapps.view.TypefacedTextView
+            android:id="@+id/toolbar_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="@string/bubble_customize_action_bar_title"
+            android:textColor="@color/text_primary_color"
+            android:textSize="16.7sp"
+            app:typeface="@string/custom_font_semibold" />
+
+
+        <com.superapps.view.TypefacedTextView
+            android:id="@+id/save_button"
+            android:layout_width="wrap_content"
+            android:layout_height="30dp"
+            android:layout_gravity="center_vertical|end"
+            android:layout_marginEnd="18dp"
+            android:layout_marginTop="5dp"
+            android:gravity="center"
+            android:paddingEnd="15dp"
+            android:paddingStart="15dp"
+            android:text="@string/bubble_customize_save"
+            android:includeFontPadding="false"
+            android:textColor="@color/white"
+            android:textSize="12.7sp"
+            app:typeface="@string/custom_font_semibold" />
+
+    </android.support.v7.widget.Toolbar>
+
+    <View
+        android:id="@+id/toolbar_divider"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_gravity="bottom"
+        android:background="@color/divider_color"
+        app:layout_constraintTop_toBottomOf="@id/toolbar" />
+
+
+    <com.android.messaging.ui.wallpaper.BackgroundImageView
+        android:id="@+id/customize_bubbles_bg"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:scaleType="centerCrop"
+        app:layout_constraintTop_toBottomOf="@id/toolbar_divider" />
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toTopOf="@+id/divider"
+        app:layout_constraintTop_toBottomOf="@id/toolbar" >
+
+        <com.android.messaging.ui.customize.CustomMessagePreviewView
+            android:id="@+id/custom_message_preview"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+    </ScrollView>
+
+    <View
+        android:id="@+id/divider"
+        android:layout_width="match_parent"
+        android:layout_height="8dp"
+        android:background="@color/customize_bubble_divider"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.4" />
+
+    <FrameLayout
+        android:id="@+id/customize_container"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/divider">
+
+        <com.android.messaging.ui.CustomHeaderViewPager
+            android:id="@+id/customize_pager"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+        <com.android.messaging.ui.customize.ChooseMessageColorPagerView
+            android:id="@+id/choose_message_color_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:visibility="gone" />
+
+    </FrameLayout>
+
+</android.support.constraint.ConstraintLayout>

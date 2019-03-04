@@ -14,6 +14,7 @@ public class PrimaryColors {
 
     public static void changePrimaryColor(@ColorInt int color) {
         prefs.putInt(BuglePrefsKeys.PREFS_KEY_PRIMARY_COLOR, color);
+        ConversationColors.get().updateColors();
     }
 
     @ColorInt

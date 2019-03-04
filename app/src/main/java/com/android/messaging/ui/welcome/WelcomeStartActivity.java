@@ -33,6 +33,7 @@ public class WelcomeStartActivity extends AppCompatActivity implements View.OnCl
         policyText.setOnClickListener(this);
 
         mAllowBackKey = HSConfig.optBoolean(true, "Application", "StartPageAllowBack");
+        BugleAnalytics.logEvent("SMS_ActiveUsers", true);
     }
 
     @Override

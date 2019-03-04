@@ -14,6 +14,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 
+import com.android.messaging.BaseActivity;
 import com.android.messaging.Factory;
 import com.android.messaging.R;
 import com.android.messaging.feedback.FeedbackActivity;
@@ -27,14 +28,13 @@ import com.android.messaging.util.BuglePrefsKeys;
 import com.android.messaging.util.OsUtil;
 import com.android.messaging.util.PendingIntentConstants;
 import com.android.messaging.util.UiUtils;
-import com.ihs.app.framework.activity.HSAppCompatActivity;
 import com.ihs.commons.config.HSConfig;
 import com.messagecenter.customize.MessageCenterSettings;
 
 import static android.view.View.GONE;
 import static com.android.messaging.ui.appsettings.SettingItemView.NORMAL;
 
-public class SettingGeneralActivity extends HSAppCompatActivity {
+public class SettingGeneralActivity extends BaseActivity{
     private static final int REQUEST_CODE_START_RINGTONE_PICKER = 1;
 
     private SettingItemView mSmsShowView;
@@ -215,6 +215,7 @@ public class SettingGeneralActivity extends HSAppCompatActivity {
             startActivity(termsOfServiceIntent);
         });
     }
+
 
     private void updateSoundSummary() {
         // The silent ringtone just returns an empty string

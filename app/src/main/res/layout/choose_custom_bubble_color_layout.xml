@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="56dp"
+        android:paddingStart="27dp"
+        android:paddingEnd="20dp"
+        android:background="@color/white"
+        android:gravity="center_vertical">
+
+        <com.superapps.view.TypefacedTextView
+            android:id="@+id/title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="14sp"
+            android:layout_weight="1"
+            android:textColor="@color/text_primary_color"
+            app:typeface="@string/custom_font_semibold"/>
+
+        <ImageView
+            android:id="@+id/close_button"
+            android:layout_width="27dp"
+            android:layout_height="27dp"
+            android:layout_gravity="end|center_vertical"
+            android:layout_weight="0"
+            android:src="@drawable/ic_choose_bubble_color_close"/>
+
+    </LinearLayout>
+
+    <com.android.messaging.ui.CustomFooterViewPager
+        android:id="@+id/custom_footer_pager"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="56dp" />
+
+</FrameLayout>
