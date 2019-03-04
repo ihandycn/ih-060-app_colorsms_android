@@ -7,14 +7,13 @@
 
     <ImageView
         android:id="@+id/emoji_show_close"
-        android:layout_width="35dp"
-        android:layout_height="35dp"
+        android:layout_width="28.7dp"
+        android:layout_height="28.7dp"
         android:layout_gravity="end"
-        android:layout_marginEnd="22dp"
-        android:layout_marginRight="22dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginRight="16dp"
         android:layout_marginTop="34dp"
         android:background="@drawable/gray_circle_btn_bg_drawable"
-        android:padding="3dp"
         android:scaleType="centerInside"
         android:src="@drawable/sticker_magic_close_btn"
         tools:ignore="RtlHardcoded" />
