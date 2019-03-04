@@ -23,23 +23,22 @@
         android:id="@+id/magic_container_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginBottom="74.3dp"
-        android:layout_marginTop="61dp" />
+        />
 
     <com.superapps.view.TypefacedTextView
         android:id="@+id/send_btn"
         android:layout_width="match_parent"
-        android:layout_height="45dp"
+        android:layout_height="39dp"
         android:layout_gravity="bottom"
-        android:layout_marginBottom="27.7dp"
-        android:layout_marginLeft="36dp"
-        android:layout_marginRight="36dp"
+        android:layout_marginBottom="25.3dp"
+        android:layout_marginLeft="62dp"
+        android:layout_marginRight="62dp"
         android:background="@drawable/emoji_magic_detail_material_round_btn"
         android:gravity="center_horizontal"
         android:paddingTop="10dp"
         android:text="@string/sticker_send_msg"
         android:textColor="#262a32"
-        android:textSize="17sp"
-        app:typeface="@string/custom_font_semibold" />
+        android:textSize="14sp"
+        app:typeface="@string/custom_font_bold" />
 
 </FrameLayout>
