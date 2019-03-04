@@ -42,7 +42,7 @@ public class ChangeFontActivity extends BaseActivity implements LevelSeekBar.OnL
 
         Toolbar toolbar = findViewById(R.id.toolbar);
         TextView title = toolbar.findViewById(R.id.toolbar_title);
-        title.setText(getString(R.string.change_font));
+        title.setText(getString(R.string.menu_change_font));
         toolbar.setTitle("");
         setSupportActionBar(toolbar);
         if (getSupportActionBar() != null) {

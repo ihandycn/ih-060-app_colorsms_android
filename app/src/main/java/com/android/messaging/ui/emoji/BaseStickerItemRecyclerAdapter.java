@@ -201,7 +201,7 @@ public abstract class BaseStickerItemRecyclerAdapter extends RecyclerView.Adapte
                 }
                 holder.progressLayout.setVisibility(View.GONE);
                 holder.magicStatusView.setVisibility(View.VISIBLE);
-                Toasts.showToast(R.string.network_error_and_try_again);
+                Toasts.showToast(R.string.network_error);
             }
         });
         holder.progressLayout.setVisibility(View.VISIBLE);

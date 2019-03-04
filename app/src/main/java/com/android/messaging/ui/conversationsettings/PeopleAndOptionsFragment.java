@@ -94,7 +94,7 @@ public class PeopleAndOptionsFragment extends Fragment
         CustomizeListAdapter adapter = new CustomizeListAdapter(getActivity());
 
         final CompositeAdapter compositeAdapter = new CompositeAdapter(getActivity());
-        compositeAdapter.addPartition(new PeopleAndOptionsPartition(adapter, R.string.customize_title, false));
+        compositeAdapter.addPartition(new PeopleAndOptionsPartition(adapter, R.string.menu_group_customization, false));
         compositeAdapter.addPartition(new PeopleAndOptionsPartition(mOptionsListAdapter,
                 R.string.general_settings_title, false));
         compositeAdapter.addPartition(new PeopleAndOptionsPartition(mPeopleListAdapter,

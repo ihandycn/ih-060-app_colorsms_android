@@ -142,7 +142,7 @@ public class WallpaperPreviewActivity extends BaseActivity implements WallpaperM
         Toolbar toolbar = findViewById(R.id.toolbar);
         toolbar.setTitle("");
         TextView title = toolbar.findViewById(R.id.toolbar_title);
-        title.setText(getString(R.string.wallpaper_title));
+        title.setText(getString(R.string.menu_chat_background));
         setSupportActionBar(toolbar);
         if (getSupportActionBar() != null) {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
