@@ -89,6 +89,7 @@ public class EmojiConfig implements HSLibraryConfig.ILibraryListener {
         String baseUrl = HSMapUtils.getString(sConfigMap, "BaseUrl");
         String bannerFileName = HSMapUtils.getString(sConfigMap, "BannerFileName");
         int presetEmojiCount = HSMapUtils.optInteger(sConfigMap, 0, "PresetEmojiCount");
+        String lottieMagicStickerStr = HSMapUtils.getString(sConfigMap, "LottieMagic");
 
         List<Map<String, ?>> configMaps = (List<Map<String, ?>>) HSMapUtils.getList(sConfigMap, "Collections");
         List<EmojiPackageInfo> result = new ArrayList<>(configMaps.size());
@@ -157,7 +158,7 @@ public class EmojiConfig implements HSLibraryConfig.ILibraryListener {
                     String fileName = fileList.get(k);
                     String voiceFormat = ".mp3";
                     StickerInfo stickerInfo = new StickerInfo();
-                    if (isLottieMagicEmoji(fileName)) {
+                    if (!TextUtils.isEmpty(lottieMagicStickerStr) && lottieMagicStickerStr.contains(fileName)) {
                         voiceFormat = ".aac";
                         stickerInfo.mLottieZipUrl = baseUrl + imageSubPath + "/" + fileName + ".zip";
                     }
