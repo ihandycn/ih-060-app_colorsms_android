@@ -177,7 +177,7 @@ public class ConversationListActivity extends AbstractConversationListActivity
 
                 BugleAnalytics.logEvent("SMS_Messages_Show_1", true,
                         "font", FontStyleManager.getFontFamily(),
-                        "size", String.valueOf(FontStyleManager.getFontScaleLevel())
+                        "size", getResources().getString(ChangeFontActivity.sTextSizeRes[FontStyleManager.getFontScaleLevel()])
                 );
             });
         }

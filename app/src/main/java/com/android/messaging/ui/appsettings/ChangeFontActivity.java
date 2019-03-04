@@ -18,8 +18,6 @@ import com.android.messaging.ui.wallpaper.WallpaperManager;
 import com.android.messaging.util.BugleAnalytics;
 import com.android.messaging.util.UiUtils;
 import com.superapps.font.FontStyleManager;
-import com.superapps.util.Networks;
-import com.superapps.util.Toasts;
 
 import java.io.File;
 
