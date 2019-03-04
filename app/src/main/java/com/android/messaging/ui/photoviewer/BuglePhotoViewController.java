@@ -180,14 +180,4 @@ public class BuglePhotoViewController extends PhotoViewController {
                                                      final FragmentManager fm, final Cursor c, final float maxScale) {
         return new BuglePhotoPageAdapter(context, fm, c, maxScale, mDisplayThumbsFullScreen);
     }
-
-    @Override
-    public String getLottieFilePath(String uriStr) {
-        return Downloader.getInstance().getDownloadFilePath(EmojiManager.getLottieUrlByGifUriStr(uriStr));
-    }
-
-    @Override
-    public String getSoundFilePath(String uriStr) {
-        return Downloader.getInstance().getDownloadFilePath(EmojiManager.getSoundUrlByGifUriStr(uriStr));
-    }
 }

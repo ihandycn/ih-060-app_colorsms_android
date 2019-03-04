@@ -109,8 +109,8 @@ public class PhotoViewFragment extends Fragment implements
     protected String mResolvedPhotoUri;
     protected String mThumbnailUri;
     protected String mContentDescription;
-    private String mLottieFilePath;
-    private String mSoundFilePath;
+    protected String mLottieFilePath;
+    protected String mSoundFilePath;
     /**
      * The intent we were launched with
      */
@@ -121,7 +121,7 @@ public class PhotoViewFragment extends Fragment implements
     protected BroadcastReceiver mInternetStateReceiver;
 
     protected PhotoView mPhotoView;
-    private LottieAnimationView mStickerLottieMagicView;
+    protected LottieAnimationView mStickerLottieMagicView;
     protected ImageView mPhotoPreviewImage;
     protected TextView mEmptyText;
     protected ImageView mRetryButton;
@@ -212,21 +212,6 @@ public class PhotoViewFragment extends Fragment implements
         mAdapter = mCallback.getAdapter();
         if (mAdapter == null) {
             throw new IllegalStateException("Callback reported null adapter");
-        }
-
-        if (mCallback != null && !TextUtils.isEmpty(mResolvedPhotoUri)) {
-            mSoundFilePath = mCallback.getSoundFilePath(mResolvedPhotoUri);
-            mLottieFilePath = mCallback.getLottieFilePath(mResolvedPhotoUri);
-        }
-
-        if (isLottieModel()) {
-            mStickerLottieMagicView.setVisibility(View.VISIBLE);
-            mPhotoView.setVisibility(View.GONE);
-            mPhotoPreviewAndProgress.setVisibility(View.GONE);
-        } else {
-            mStickerLottieMagicView.setVisibility(View.GONE);
-            mPhotoView.setVisibility(View.VISIBLE);
-            mPhotoPreviewAndProgress.setVisibility(View.VISIBLE);
         }
 
         // Don't call until we've setup the entire view
@@ -492,6 +477,9 @@ public class PhotoViewFragment extends Fragment implements
      */
     private void bindPhoto(Drawable drawable) {
         if (drawable != null) {
+            if (!TextUtils.isEmpty(mSoundFilePath)) {
+                prepareMagicSound(mSoundFilePath);
+            }
             if (drawable instanceof Animatable) {
                 PhotoViewAnalytics.logEvent("SMSEmoji_ChatEmoji_Gif_SendView", true);
             }
@@ -506,10 +494,6 @@ public class PhotoViewFragment extends Fragment implements
 
     public Drawable getDrawable() {
         return (mPhotoView != null ? mPhotoView.getDrawable() : null);
-    }
-
-    public LottieAnimationView getStickerLottieMagicView() {
-        return mStickerLottieMagicView;
     }
 
     /**
@@ -726,9 +710,19 @@ public class PhotoViewFragment extends Fragment implements
         } else if (mCurrentLottieStatus == LOTTIE_STATUS_PAUSE) {
             mCurrentLottieStatus = LOTTIE_STATUS_PLAYING;
             mStickerLottieMagicView.resumeAnimation();
-            if (mSoundPlayer != null) {
-                mSoundPlayer.start();
-            }
+            startSoundPlayer();
+        }
+    }
+
+    protected void pauseSoundPlayer() {
+        if (mSoundPlayer != null) {
+            mSoundPlayer.pause();
+        }
+    }
+
+    protected void startSoundPlayer() {
+        if (mSoundPlayer != null) {
+            mSoundPlayer.start();
         }
     }
 
@@ -736,9 +730,7 @@ public class PhotoViewFragment extends Fragment implements
         if (mCurrentLottieStatus == LOTTIE_STATUS_PLAYING) {
             mCurrentLottieStatus = LOTTIE_STATUS_PAUSE;
             mStickerLottieMagicView.pauseAnimation();
-            if (mSoundPlayer != null) {
-                mSoundPlayer.pause();
-            }
+            pauseSoundPlayer();
         }
     }
 
@@ -749,8 +741,13 @@ public class PhotoViewFragment extends Fragment implements
             mSoundPlayer.prepareAsync();
             mSoundPlayer.setLooping(true);
             mSoundPlayer.setOnPreparedListener(mp -> {
+                if (mCallback.getCurrentPagePosition() != mPosition) {
+                    return;
+                }
                 if (isLottieModel()) {
                     playLottie(mLottieFilePath);
+                } else {
+                    mSoundPlayer.start();
                 }
             });
         } catch (IOException e) {
@@ -763,12 +760,13 @@ public class PhotoViewFragment extends Fragment implements
             InputStream inputStream = new FileInputStream(lottieFilePath);
             ZipInputStream zipInputStream = new ZipInputStream(new BufferedInputStream(inputStream));
             LottieCompositionFactory.fromZipStream(zipInputStream, null).addListener(result -> {
+                if (mCallback.getCurrentPagePosition() != mPosition) {
+                    return;
+                }
                 mStickerLottieMagicView.setComposition(result);
                 mStickerLottieMagicView.playAnimation();
 
-                if (mSoundPlayer != null) {
-                    mSoundPlayer.start();
-                }
+                startSoundPlayer();
                 mCallback.onFragmentPhotoLoadComplete(this, true /* success */);
             });
         } catch (Exception e) {

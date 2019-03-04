@@ -1455,16 +1455,6 @@ public class PhotoViewController implements
     }
 
     @Override
-    public String getLottieFilePath(String uriStr) {
-        return null;
-    }
-
-    @Override
-    public String getSoundFilePath(String uriStr) {
-        return null;
-    }
-
-    @Override
     public int getCurrentPagePosition() {
         return mCurrentPhotoIndex;
     }

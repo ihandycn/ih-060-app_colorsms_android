@@ -8,6 +8,7 @@ import android.view.View;
 
 import com.android.messaging.R;
 import com.android.messaging.download.Downloader;
+import com.android.messaging.ui.emoji.utils.EmojiManager;
 import com.android.messaging.util.BugleAnalytics;
 import com.ihs.app.framework.activity.HSAppCompatActivity;
 import com.ihs.commons.notificationcenter.HSGlobalNotificationCenter;
@@ -45,8 +46,10 @@ public class StickerMagicDetailActivity extends HSAppCompatActivity implements V
         if (!file.exists()) {
             finish();
         } else {
+            Uri gifUri = Uri.fromFile(file);
+            EmojiManager.addStickerMagicFileUri(gifUri.toString());
             mStickerMagicView = new StickerMagicView();
-            mStickerMagicView.setupView(findViewById(R.id.magic_container_view), Uri.fromFile(file), mStickerInfo.mSoundUrl, (width, height) -> {
+            mStickerMagicView.setupView(findViewById(R.id.magic_container_view), gifUri, mStickerInfo.mSoundUrl, (width, height) -> {
                 mStickerInfo.mStickerWidth = width;
                 mStickerInfo.mStickerHeight = height;
             });

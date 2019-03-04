@@ -94,6 +94,8 @@ public class StickerItemRecyclerAdapter extends BaseStickerItemRecyclerAdapter {
         } else {
             if (!TextUtils.isEmpty(stickerInfo.mLottieZipUrl)) {
                 EmojiManager.makeGifRelateToLottie(stickerInfo.mMagicUrl, stickerInfo.mLottieZipUrl, stickerInfo.mSoundUrl);
+            } else {
+                EmojiManager.makeGifRelateToSound(stickerInfo.mMagicUrl, stickerInfo.mSoundUrl);
             }
             Rect rect = new Rect();
             v.getGlobalVisibleRect(rect);

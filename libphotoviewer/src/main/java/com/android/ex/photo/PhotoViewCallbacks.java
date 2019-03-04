@@ -101,10 +101,6 @@ public interface PhotoViewCallbacks {
      */
     public PhotoPagerAdapter getAdapter();
 
-    public String getLottieFilePath(String uriStr);
-
-    public String getSoundFilePath(String uriStr);
-
     public int getCurrentPagePosition();
 
 }

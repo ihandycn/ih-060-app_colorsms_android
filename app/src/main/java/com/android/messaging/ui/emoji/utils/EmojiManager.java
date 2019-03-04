@@ -32,6 +32,7 @@ public class EmojiManager {
     private static final String PREF_IS_SHOW_EMOJI_GUIDE = "pref_is_show_emoji_guide";
     private static final String PREF_STICKER_MAGIC_LOTTIE_URL_PREFIX = "pref_sticker_magic_lottie_url_";
     private static final String PREF_STICKER_MAGIC_SOUND_URL_PREFIX = "pref_sticker_magic_sound_url_";
+    private static final String PREF_STICKER_MAGIC_FILE_URI = "pref_sticker_magic_file_uri";
 
     static List<String> getTabSticker() {
         return Preferences.get(PREF_FILE_NAME).getStringList(PREF_TAB_STICKER);
@@ -176,6 +177,15 @@ public class EmojiManager {
         editor.apply();
     }
 
+    public static void makeGifRelateToSound(String gifUrl, String soundUrl) {
+        File gifFile = Downloader.getInstance().getDownloadFile(gifUrl);
+        if (!gifFile.exists()) {
+            HSLog.d(TAG, "gif file is not exist!!!");
+            return;
+        }
+        Preferences.get(PREF_FILE_NAME).putString(PREF_STICKER_MAGIC_SOUND_URL_PREFIX + Uri.fromFile(gifFile).toString(), soundUrl);
+    }
+
     public static String getLottieUrlByGifUriStr(String uriStr) {
         return Preferences.get(PREF_FILE_NAME).getString(PREF_STICKER_MAGIC_LOTTIE_URL_PREFIX + uriStr, "");
     }
@@ -185,7 +195,7 @@ public class EmojiManager {
     }
 
     public static boolean isStickerMagicUri(String uriStr) {
-        return !TextUtils.isEmpty(uriStr) && uriStr.contains("/com.color.sms.messages.emoji/cache/message-download-file/");
+        return Preferences.get(PREF_FILE_NAME).getStringList(PREF_STICKER_MAGIC_FILE_URI).contains(uriStr);
     }
 
     public static void makePartUriRelateToStickerMagicUri(String partUriStr, String stickerMagicUriStr) {
@@ -194,6 +204,13 @@ public class EmojiManager {
 
     public static String getStickerMagicUriByPartUri(String partUriStr) {
         return Preferences.get(PREF_FILE_NAME).getString(partUriStr, "");
+    }
+
+    public static void addStickerMagicFileUri(String uriStr) {
+        if (isStickerMagicUri(uriStr)) {
+            return;
+        }
+        Preferences.get(PREF_FILE_NAME).addStringToList(PREF_STICKER_MAGIC_FILE_URI, uriStr);
     }
 
     public interface OnGetStickerFileListener {

@@ -21,10 +21,12 @@ import android.os.Bundle;
 import android.support.rastermill.FrameSequenceDrawable;
 import android.support.v4.content.Loader;
 import android.text.TextUtils;
+import android.view.View;
 
 import com.android.ex.photo.PhotoViewCallbacks;
 import com.android.ex.photo.fragments.PhotoViewFragment;
 import com.android.ex.photo.loaders.PhotoBitmapLoaderInterface.BitmapResult;
+import com.android.messaging.download.Downloader;
 import com.android.messaging.ui.emoji.utils.EmojiManager;
 
 public class BuglePhotoViewFragment extends PhotoViewFragment {
@@ -68,6 +70,27 @@ public class BuglePhotoViewFragment extends PhotoViewFragment {
     }
 
     @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+
+        if (!TextUtils.isEmpty(mResolvedPhotoUri)) {
+            mSoundFilePath = getSoundFilePath(mResolvedPhotoUri);
+            mLottieFilePath = getLottieFilePath(mResolvedPhotoUri);
+        }
+
+        if (isLottieModel()) {
+            mStickerLottieMagicView.setVisibility(View.VISIBLE);
+            mPhotoView.setVisibility(View.GONE);
+            mPhotoPreviewAndProgress.setVisibility(View.GONE);
+        } else {
+            mStickerLottieMagicView.setVisibility(View.GONE);
+            mPhotoView.setVisibility(View.VISIBLE);
+            mPhotoPreviewAndProgress.setVisibility(View.VISIBLE);
+        }
+
+    }
+
+    @Override
     public void onResume() {
         super.onResume();
         onViewVisible();
@@ -86,6 +109,9 @@ public class BuglePhotoViewFragment extends PhotoViewFragment {
     }
 
     private void stopGif() {
+        if (!TextUtils.isEmpty(mSoundFilePath)) {
+            pauseSoundPlayer();
+        }
         final Drawable drawable = getDrawable();
         if (drawable instanceof FrameSequenceDrawable) {
             ((FrameSequenceDrawable) drawable).stop();
@@ -95,6 +121,9 @@ public class BuglePhotoViewFragment extends PhotoViewFragment {
     private void startGif() {
         if (mCallback.getCurrentPagePosition() != mPosition) {
             return;
+        }
+        if (!TextUtils.isEmpty(mSoundFilePath)) {
+            startSoundPlayer();
         }
         final Drawable drawable = getDrawable();
         if (drawable instanceof FrameSequenceDrawable) {
@@ -117,5 +146,13 @@ public class BuglePhotoViewFragment extends PhotoViewFragment {
         super.onViewInVisible();
         pauseLottie();
         stopGif();
+    }
+
+    private String getLottieFilePath(String uriStr) {
+        return Downloader.getInstance().getDownloadFilePath(EmojiManager.getLottieUrlByGifUriStr(uriStr));
+    }
+
+    private String getSoundFilePath(String uriStr) {
+        return Downloader.getInstance().getDownloadFilePath(EmojiManager.getSoundUrlByGifUriStr(uriStr));
     }
 }
