@@ -146,7 +146,8 @@ public class ConversationColors {
         if (isBubble && incoming) {
             return getIndexFromThemeColors(mIncomingBubbleBackgroundColor);
         } else if (isBubble) {
-            return getIndexFromThemeColors(mOutgoingBubbleBackgroundColor);
+            return mOutgoingBubbleBackgroundColor == PrimaryColors.getPrimaryColor() ? "themeColor"
+                    : getIndexFromThemeColors(mOutgoingBubbleBackgroundColor);
         } else if (incoming) {
             return getIndexFromThemeColors(mIncomingTextColor);
         } else {

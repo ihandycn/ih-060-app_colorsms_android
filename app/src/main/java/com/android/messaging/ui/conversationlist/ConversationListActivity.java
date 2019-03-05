@@ -171,8 +171,8 @@ public class ConversationListActivity extends AbstractConversationListActivity
                         "background", backgroundStr,
                         "bubbleStyle", String.valueOf(BubbleDrawables.getSelectedIdentifier()),
                         "received bubble color", ConversationColors.get().getConversationColorEventType(true, true),
-                        "sent bubble color", ConversationColors.get().getConversationColorEventType(false, true),
-                        "received text color", ConversationColors.get().getConversationColorEventType(true, false),
+                        "sent bubble color", ConversationColors.get().getConversationColorEventType(true, false),
+                        "received text color", ConversationColors.get().getConversationColorEventType(false, true),
                         "sent text color", ConversationColors.get().getConversationColorEventType(false, false));
 
                 BugleAnalytics.logEvent("SMS_Messages_Show_1", true,
