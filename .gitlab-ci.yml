@@ -1,6 +1,6 @@
 stages:
-- cleanup_build
 - build
+- cleanup_build
 
 build_message:
   stage: build
@@ -33,7 +33,8 @@ cleanup_build_job:
   stage: cleanup_build
   script:
   - ./gradlew clean
-  - rm -r app/build
   - rm -r build
+  - rm -r app/build
+  when: on_failure
   tags:
   - android
