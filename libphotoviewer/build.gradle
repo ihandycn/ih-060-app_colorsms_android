@@ -30,5 +30,5 @@ dependencies {
 
     compile project(':libSuperApps')
 
-    implementation 'com.airbnb.android:lottie:2.8.0'
+    implementation 'com.airbnb.android:lottie:2.7.0'
 }
