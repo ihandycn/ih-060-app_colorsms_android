@@ -5,12 +5,6 @@
     android:layout_height="match_parent">
 
     <ImageView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:scaleType="centerCrop"
-        android:src="@drawable/sms_show_detail_page_background" />
-
-    <ImageView
         android:id="@+id/message_box"
         android:layout_width="292dp"
         android:layout_height="184dp"

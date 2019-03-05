@@ -91,7 +91,6 @@ public class SmsShowListAdapter extends RecyclerView.Adapter<SmsShowListAdapter.
                 .placeholder(getThemePreviewDrawable(position))
                 .into(holder.mSmsShowImage);
 
-        GlideApp.with(mContext).load(isSelected ? R.drawable.sms_show_detail_page_background : "").centerCrop().into(holder.mSmsShowBackground);
         GlideApp.with(mContext).load(isSelected ? R.drawable.sms_show_message_box : "").into(holder.mMessageBox);
 
         holder.mCheckMark.setVisibility(isSelected ? View.VISIBLE : View.GONE);
