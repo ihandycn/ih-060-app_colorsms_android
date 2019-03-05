@@ -23,6 +23,7 @@ import com.android.messaging.util.UiUtils;
 import com.ihs.commons.notificationcenter.HSGlobalNotificationCenter;
 import com.ihs.commons.notificationcenter.INotificationObserver;
 import com.ihs.commons.utils.HSBundle;
+import com.ihs.commons.utils.HSLog;
 import com.superapps.util.Threads;
 import com.superapps.view.ViewPagerFixed;
 
@@ -32,6 +33,8 @@ import java.util.Collection;
 import java.util.List;
 
 public class EmojiPickerFragment extends Fragment implements INotificationObserver {
+
+    private static final String TAG = EmojiPickerFragment.class.getSimpleName();
 
     public static final String NOTIFICATION_ADD_EMOJI_FROM_STORE = "notification_add_emoji_from_store";
     public static final String NOTIFICATION_BUNDLE_PACKAGE_INFO = "notification_bundle_package_info";
@@ -202,6 +205,12 @@ public class EmojiPickerFragment extends Fragment implements INotificationObserv
             result.add(info);
         }
         return result;
+    }
+
+    @Override public void onDestroyView() {
+        super.onDestroyView();
+        HSLog.e(TAG, "onDestroyView()");
+        BaseStickerItemRecyclerAdapter.releaseListener();
     }
 
     @Override public void onDestroy() {

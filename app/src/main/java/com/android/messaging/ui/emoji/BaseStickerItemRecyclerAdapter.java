@@ -25,12 +25,15 @@ import com.superapps.util.Threads;
 import com.superapps.util.Toasts;
 
 import java.io.File;
+import java.util.ArrayList;
 
 import pl.droidsonroids.gif.GifDrawable;
 import pl.droidsonroids.gif.GifImageView;
 
 public abstract class BaseStickerItemRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private static final String TAG = BaseStickerItemRecyclerAdapter.class.getSimpleName();
+
+    private static ArrayList<DownloadListener> mEmojiDownloadListener = new ArrayList<>();
 
     public abstract RecyclerView.ViewHolder createItemViewHolder(@NonNull ViewGroup parent, int viewType);
 
@@ -207,7 +210,7 @@ public abstract class BaseStickerItemRecyclerAdapter extends RecyclerView.Adapte
             }
         };
         if (!TextUtils.isEmpty(stickerInfo.mLottieZipUrl)) {
-            Downloader.getInstance().download(stickerInfo.mLottieZipUrl, new DownloadListener() {
+            DownloadListener lottieDownloadListener = new DownloadListener() {
                 @Override
                 public void onStart(String url) {
 
@@ -222,6 +225,7 @@ public abstract class BaseStickerItemRecyclerAdapter extends RecyclerView.Adapte
                 public void onSuccess(String url, File file) {
                     HSLog.d(TAG, "downloadMagicEmoji, lottie download successfully!!!");
                     Downloader.getInstance().download(stickerInfo.mMagicUrl, downloadListener);
+                    mEmojiDownloadListener.add(downloadListener);
                 }
 
                 @Override
@@ -242,11 +246,13 @@ public abstract class BaseStickerItemRecyclerAdapter extends RecyclerView.Adapte
                     holder.magicStatusView.setVisibility(View.VISIBLE);
                     Toasts.showToast(R.string.network_error_and_try_again);
                 }
-            });
+            };
+            Downloader.getInstance().download(stickerInfo.mLottieZipUrl, lottieDownloadListener);
+            mEmojiDownloadListener.add(lottieDownloadListener);
         } else {
             Downloader.getInstance().download(stickerInfo.mMagicUrl, downloadListener);
+            mEmojiDownloadListener.add(downloadListener);
         }
-
 
         holder.progressLayout.setVisibility(View.VISIBLE);
         holder.magicStatusView.setVisibility(View.INVISIBLE);
@@ -267,5 +273,12 @@ public abstract class BaseStickerItemRecyclerAdapter extends RecyclerView.Adapte
             progressLayout = itemView.findViewById(R.id.download_progress_layout);
             progressBar = itemView.findViewById(R.id.download_progress_bar);
         }
+    }
+
+    static void releaseListener() {
+        for (DownloadListener listener : mEmojiDownloadListener) {
+            listener = null;
+        }
+        mEmojiDownloadListener.clear();
     }
 }

@@ -199,6 +199,7 @@ public class Downloader {
                 } else if (downloadingItem.url.equals(url)) {
                     downloadingItem.connection.cancel();
                     iterator.remove();
+                    deleteDownloadFile(url);
                     break;
                 }
             }
@@ -238,6 +239,16 @@ public class Downloader {
                     break;
                 }
             }
+        }
+    }
+
+    private void deleteDownloadFile(String url){
+        if (TextUtils.isEmpty(url)){
+            return;
+        }
+        File file = getDownloadFile(url);
+        if (file != null && file.exists()){
+            file.delete();
         }
     }
 

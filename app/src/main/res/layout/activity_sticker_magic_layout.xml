@@ -5,6 +5,11 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
+    <FrameLayout
+        android:id="@+id/magic_container_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
     <ImageView
         android:id="@+id/emoji_show_close"
         android:layout_width="28.7dp"
@@ -18,12 +23,6 @@
         android:src="@drawable/sticker_magic_close_btn"
         tools:ignore="RtlHardcoded" />
 
-    <FrameLayout
-        android:id="@+id/magic_container_view"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        />
-
     <com.superapps.view.TypefacedTextView
         android:id="@+id/send_btn"
         android:layout_width="match_parent"
@@ -32,9 +31,9 @@
         android:layout_marginBottom="25.3dp"
         android:layout_marginLeft="62dp"
         android:layout_marginRight="62dp"
-        android:includeFontPadding="false"
         android:background="@drawable/emoji_magic_detail_material_round_btn"
         android:gravity="center_horizontal"
+        android:includeFontPadding="false"
         android:paddingTop="10dp"
         android:text="@string/sticker_send_msg"
         android:textColor="#262a32"
