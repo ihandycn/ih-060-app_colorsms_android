@@ -23,44 +23,16 @@
     <color name="divider_color">#e4e7eb</color>
 
     <color name="black_10_transparent">#1A000000</color>
-    <color name="black_12_transparent">#1f000000</color>
     <color name="black_20_transparent">#32000000</color>
-    <color name="black_24_transparent">#3D000000</color>
-    <color name="black_27_transparent">#45000000</color>
-    <color name="black_30_transparent">#4D000000</color>
-    <color name="black_40_transparent">#66000000</color>
-    <color name="black_50_transparent">#7F000000</color>
-    <color name="black_54_transparent">#8A000000</color>
-    <color name="black_60_transparent">#99000000</color>
-    <color name="black_70_transparent">#B3000000</color>
-    <color name="black_72_transparent">#B8000000</color>
-    <color name="black_80_transparent">#CC000000</color>
-    <color name="black_86_transparent">#db000000</color>
-    <color name="black_87_transparent">#DF000000</color>
-    <color name="black_90_transparent">#E6000000</color>
-    <color name="black_100_transparent">#FF000000</color>
 
-    <color name="white_10_transparent">#1AFFFFFF</color>
     <color name="white_20_transparent">#32FFFFFF</color>
-    <color name="white_30_transparent">#4DFFFFFF</color>
-    <color name="white_32_transparent">#ADFFFFFF</color>
     <color name="white_40_transparent">#66FFFFFF</color>
-    <color name="white_45_transparent">#73FFFFFF</color>
-    <color name="white_50_transparent">#7FFFFFFF</color>
-    <color name="white_60_transparent">#99FFFFFF</color>
     <color name="white_70_transparent">#B3FFFFFF</color>
-    <color name="white_72_transparent">#B8FFFFFF</color>
-    <color name="white_75_transparent">#BFFFFFFF</color>
-    <color name="white_80_transparent">#CCFFFFFF</color>
-    <color name="white_86_transparent">#DCFFFFFF</color>
-    <color name="white_87_transparent">#DFFFFFFF</color>
-    <color name="white_100_transparent">#FFFFFF</color>
 
     <!--  Action bar -->
     <color name="action_bar_title_text_color">#2d2f34</color>
     <color name="action_bar_background_color">#ffffff</color>
     <color name="action_bar_background_color_dark">#ffffff</color>
-    <color name="contextual_action_bar_background_color">#ffffff</color>
     <color name="archived_conversation_action_bar_background_color">#9D9D9D</color>
     <color name="archived_conversation_action_bar_background_color_dark">#838383</color>
 
@@ -76,8 +48,6 @@
     <color name="conversation_list_name">#DE000000</color>
     <color name="conversation_list_details">#8A000000</color>
     <color name="conversation_list_timestamp">#afb1be</color>
-
-    <color name="conversation_compose_divider_start">#44000000</color>
 
     <color name="message_text">#000000</color>
     <color name="timestamp_text_outgoing">#ff828292</color>
@@ -97,7 +67,6 @@
 
     <color name="background_item_transparent">@android:color/transparent</color>
     <color name="background_item_activated">#670099cc</color>
-    <color name="background_item_selected">#cc0099cc</color>
     <color name="background_item_pressed">#6733b5e5</color>
 
     <color name="subject_editor_bubble">#ffffffff</color>
@@ -106,14 +75,9 @@
     <color name="message_text_color_outgoing">#ffffff</color>
     <color name="conversation_background">#fff</color>
     <color name="conversation_edge_effect">#9d9d9d</color>
-    <color name="compose_message_send_color">@color/primary_color</color>
-    <color name="compose_message_send_color_pressed">#999999</color>
     <color name="message_bubble_color_outgoing">@color/primary_color</color>
     <color name="message_bubble_color_incoming">#f4f5f8</color>
     <color name="message_error_bubble_color_incoming">#e2e2e2</color>
-    <color name="message_audio_button_color_incoming">#ffffffff</color>
-    <color name="message_bubble_color_selected_incoming">#e5e7ec</color>
-    <color name="message_bubble_color_selected_outgoing">#14ae3c</color>
     <color name="message_image_selected_tint">#80689F38</color>
     <color name="generic_video_icon">#ff808080</color>
 
@@ -128,9 +92,7 @@
     <color name="color_filter_base_color">#ff0000</color>
 
     <!-- Activity background color -->
-    <drawable name="class_zero_background">#7f040000</drawable>
 
-    <color name="contact_avatar_default_background">#d2d2d2</color>
     <color name="contact_avatar_pressed_color">#40000000</color>
     <color name="contact_list_text_primary">#19191c</color>
     <color name="contact_list_text_secondary">#222327</color>
@@ -138,19 +100,12 @@
 
     <color name="compose_contact_text">#19191c</color>
     <color name="compose_contact_faint_text">#5919191c</color>
-    <color name="compose_contact_divider">#44000000</color>
     <color name="contact_picker_tab_pressed">#ddffffff</color>
-    <color name="contact_picker_tab_underline">@color/primary_color</color>
-    <color name="contact_list_alphabet_header">@color/primary_color</color>
     <color name="contact_picker_background">#ffffff</color>
     <color name="chips_dropdown_background_activated">#4285f4</color>
     <color name="chips_dropdown_background_pressed">#ededed</color>
     <color name="chips_background_color">@color/primary_color</color>
     <color name="chips_text_color">@android:color/white</color>
-
-    <color name="camera_button_container_background">#80000000</color>
-
-    <color name="translucent_white">#80ffffff</color>
 
     <color name="gallery_image_default_background">#eeeeee</color>
     <color name="gallery_image_pressed">#6733b5e5</color>
@@ -160,7 +115,6 @@
     <color name="letter_tile_bg_color">#d4d9de</color>
 
     <color name="audio_picker_level_primary_color">#261acc48</color>
-    <color name="audio_record_control_button_stroke">#30000000</color>
     <color name="audio_picker_hint_text_color">#b333353c</color>
     <color name="audio_picker_timer_text_color">#33353c</color>
     <color name="audio_attachment_timer_text_color">#323232</color>
@@ -170,12 +124,10 @@
     <color name="notification_secondary_text">#FFFFFF</color>
     <color name="notification_tertiary_text">#FFFFFF</color>
     <color name="wearable_notification_participants_count">#a2a2a2</color>
-    <color name="notification_accent_color">@color/primary_color</color>
     <color name="notification_warning_color">#ff0000</color>
     <color name="notification_subject_color">#99aaaaaa</color>
 
     <color name="participant_list_text_primary">#222327</color>
-    <color name="participant_list_text_secondary">#6d6d6d</color>
     <color name="people_and_options_header_text">#56575c</color>
     <color name="people_and_options_list_divider">#cccccc</color>
 
@@ -183,34 +135,20 @@
     <color name="fab_pressed_color">#3ea4dc</color>
     <color name="fab_ripple">#40ffffff</color>
 
-    <color name="message_text_counter_color">#555555</color>
-    <color name="mms_indicator_color">#8BC34A</color>
     <color name="list_empty_text">#6d6d6d</color>
     <color name="low_storage_action_item_color">#ff000000</color>
     <color name="unblock_item_text_color">#ffffff</color>
     <color name="open_conversation_animation_background_shadow">#40000000</color>
-    <color name="compose_notification_bar_background">@color/primary_color</color>
 
     <color name="sim_selector_text_primary">#222327</color>
     <color name="sim_selector_text_secondary">#838383</color>
     <color name="sim_selector_background_end">#e3ffffff</color>
     <color name="sim_selector_background_start">#ffffffff</color>
-    <color name="sim_indicator_color_light">#ffffff</color>
-    <color name="sim_indicator_color_dark">#323232</color>
 
     <color name="text_highlight_color">#80689F38</color>
     <color name="search_view_text_cursor">#b0dddddd</color>
 
-    <color name="button_bar_action_button_text_color">#03a9f4</color>
-    <color name="button_bar_cancel_button_text_color">#4d4d4d</color>
-
-    <color name="settings_list_text_primary">#4d4d4d</color>
-    <color name="settings_list_text_secondary">#6d6d6d</color>
     <color name="group_mms_setting_text_color">#333333</color>
-    <color name="settings_item_title_text_primary">#000000</color>
-    <color name="settings_switch_unchecked">#c0c2cb</color>
-
-    <color name="contact_picker_button_text_color">@color/primary_color</color>
 
     <color name="widget_text_color">#424242</color>
     <color name="widget_incoming_text_color">@android:color/white</color>
@@ -226,8 +164,6 @@
     <color name="fastscroll_thumb_color">#42000000</color>
     <color name="fastscroll_preview_text_color">#ffffff</color>
 
-    <color name="google_gray">#F1F1F1</color>
-
     <color name="transparent">#00000000</color>
     <color name="emoji_tab_selected_color">#edf1f3</color>
 
@@ -238,11 +174,9 @@
     <!-- Welcome -->
     <color name="welcome_text_start_description">#99fffefe</color>
     <color name="welcome_text_permission_list">#ff353535</color>
-    <color name="welcome_text_set_default_list">#ff1b1b1b</color>
     <color name="welcome_text_description">#ff4a4a4a</color>
     <color name="welcome_button_white">#ffffffff</color>
     <color name="welcome_button_white_pressed">#ffe0e0e0</color>
-    <color name="welcome_button_white_ripple">#ffe0e0e0</color>
     <color name="welcome_button_green">@color/primary_color</color>
     <color name="welcome_button_green_pressed">#ff14ae3c</color>
     <color name="welcome_button_green_ripple">#ff14ae3c</color>
@@ -255,17 +189,10 @@
     <color name="ad_card" tools:ignore="all">#eaeaea</color>
 
     <!-- Material Design -->
-    <color name="material_text_white_primary">#deffffff</color>
-    <color name="material_text_white_secondary">#8affffff</color>
     <color name="material_text_black_secondary">#8a000000</color>
     <color name="material_text_black_primary">#de000000</color>
-    <color name="material_text_button_positive">#ff000000</color> <!-- TODO de000000 87% alpha-->
-    <color name="material_ripple_dark">#66000000</color>
+    <!-- TODO de000000 87% alpha-->
     <color name="material_ripple">#33000000</color>
-    <color name="material_ripple_white">#33FFFFFF</color>
-    <color name="material_ripple_button_white">#e0e1e2</color>
-    <color name="material_text_black_hint">#61000000</color>
-    <color name="material_text_black_p70">#b2000000</color>
     <color name="material_color_accent">#448aff</color>
     <color name="material_color_switch_thumb">#ffffff</color>
     <color name="material_color_foreground">#cccccc</color>
@@ -277,7 +204,6 @@
     <color name="feedback_input_text">#626262</color>
 
     <color name="ic_launcher_background">@color/primary_color</color>
-    <color name="text_shadow">#33000000</color>
 
     <!--customize-->
     <color name="customize_bubble_divider">#f4f5f8</color>

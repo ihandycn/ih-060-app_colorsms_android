@@ -23,11 +23,6 @@
         <item name="android:paddingEnd">7dp</item>
     </style>
 
-    <style name="PeopleAndOptionsItemStyle">
-        <item name="android:paddingStart">16dp</item>
-        <item name="android:paddingEnd">16dp</item>
-    </style>
-
     <style name="AudioAttachmentViewStyle">
         <item name="android:paddingStart">16dp</item>
         <item name="android:paddingEnd">16dp</item>

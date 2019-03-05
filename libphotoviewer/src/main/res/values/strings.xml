@@ -18,7 +18,6 @@
 <resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
     <!-- Photo view sub-title for current photo position [CHAR LIMIT=10] -->
     <string name="photo_view_count"><xliff:g id="current_pos">%d</xliff:g> of <xliff:g id="count">%d</xliff:g></string>
-    <string name="retry">Retry</string>
     <!-- Photo view error message shown below thumbnail if full image could not be shown [CHAR LIMIT=30] -->
     <string name="failed">Couldn\'t load image</string>
     <!-- Title and subtitle combined into a single string -->

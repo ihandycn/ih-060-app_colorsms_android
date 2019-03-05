@@ -27,14 +27,6 @@
         <item name="android:background">@android:color/white</item>
     </style>
 
-    <style name="ContactListItemDrawableIndicator">
-        <item name="android:background">?android:attr/selectableItemBackgroundBorderless</item>
-    </style>
-
-    <style name="ConversationActionBarTitleTextStyle" parent="BugleActionBarTitleTextStyle">
-      <item name="android:background">?android:attr/selectableItemBackgroundBorderless</item>
-    </style>
-
     <style name="WidgetConversationListItemStyle">
         <item name="android:background">@drawable/widget_item_background</item>
         <item name="android:layout_height">72dp</item>
