@@ -171,7 +171,7 @@ public abstract class BaseStickerItemRecyclerAdapter extends RecyclerView.Adapte
 
             @Override
             public void onSuccess(String url, File file) {
-                HSLog.d(TAG, "downloadMagicEmoji, onComplete()");
+                HSLog.d(TAG, "downloadMagicEmoji, gif download successfully!!!");
                 if (!isAutoDownload) {
                     BugleAnalytics.logEvent("SMSEmoji_ChatEmoji_Magic_Download", true, "type1", StickerInfo.getNumFromUrl(url), "type2", "success");
                 }
@@ -206,12 +206,48 @@ public abstract class BaseStickerItemRecyclerAdapter extends RecyclerView.Adapte
                 Toasts.showToast(R.string.network_error_and_try_again);
             }
         };
-        if (TextUtils.isEmpty(stickerInfo.mLottieZipUrl)) {
-            Downloader.getInstance().download(stickerInfo.mMagicUrl, downloadListener);
+        if (!TextUtils.isEmpty(stickerInfo.mLottieZipUrl)) {
+            Downloader.getInstance().download(stickerInfo.mLottieZipUrl, new DownloadListener() {
+                @Override
+                public void onStart(String url) {
+
+                }
+
+                @Override
+                public void onProgress(String url, float progressValue) {
+                    HSLog.d(TAG, "downloadMagicEmoji, Lottie - onProgress: " + progressValue);
+                }
+
+                @Override
+                public void onSuccess(String url, File file) {
+                    HSLog.d(TAG, "downloadMagicEmoji, lottie download successfully!!!");
+                    Downloader.getInstance().download(stickerInfo.mMagicUrl, downloadListener);
+                }
+
+                @Override
+                public void onCancel(String url) {
+                    failure(url);
+                }
+
+                @Override
+                public void onFail(String url, String failMsg) {
+                    failure(url);
+                }
+
+                private void failure(String url) {
+                    if (!isAutoDownload) {
+                        BugleAnalytics.logEvent("SMSEmoji_ChatEmoji_Magic_Download", true, "type1", StickerInfo.getNumFromUrl(url), "type2", "fail");
+                    }
+                    holder.progressLayout.setVisibility(View.GONE);
+                    holder.magicStatusView.setVisibility(View.VISIBLE);
+                    Toasts.showToast(R.string.network_error_and_try_again);
+                }
+            });
         } else {
-            Downloader.getInstance().download(stickerInfo.mMagicUrl, null);
-            Downloader.getInstance().download(stickerInfo.mLottieZipUrl, downloadListener);
+            Downloader.getInstance().download(stickerInfo.mMagicUrl, downloadListener);
         }
+
+
         holder.progressLayout.setVisibility(View.VISIBLE);
         holder.magicStatusView.setVisibility(View.INVISIBLE);
         holder.progressBar.setProgress(1);
