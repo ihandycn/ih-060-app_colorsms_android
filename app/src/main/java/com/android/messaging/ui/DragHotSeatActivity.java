@@ -5,6 +5,7 @@ import android.view.ViewGroup;
 
 import com.airbnb.lottie.LottieAnimationView;
 import com.android.messaging.R;
+import com.android.messaging.util.BugleAnalytics;
 import com.ihs.app.framework.activity.HSAppCompatActivity;
 import com.superapps.util.Dimensions;
 
@@ -17,8 +18,12 @@ public class DragHotSeatActivity extends HSAppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_drag_hotseat);
+        BugleAnalytics.logEvent("SMS_DockGuide_Show", true);
+        findViewById(R.id.drag_hotseat_btn).setOnClickListener(v -> {
+            finish();
+            BugleAnalytics.logEvent("SMS_DockGuide_BtnClick", true);
 
-        findViewById(R.id.drag_hotseat_btn).setOnClickListener(v -> finish());
+        });
         lottieAnimationView = findViewById(R.id.lottie_view);
         ViewGroup.LayoutParams layoutParams = lottieAnimationView.getLayoutParams();
         layoutParams.width = (int) (Dimensions.getPhoneWidth(this) * 0.82);
