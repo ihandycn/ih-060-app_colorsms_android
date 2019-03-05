@@ -5,48 +5,39 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
+    <FrameLayout
+        android:id="@+id/magic_container_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
     <ImageView
         android:id="@+id/emoji_show_close"
-        android:layout_width="35dp"
-        android:layout_height="35dp"
+        android:layout_width="28.7dp"
+        android:layout_height="28.7dp"
         android:layout_gravity="end"
-        android:layout_marginEnd="22dp"
-        android:layout_marginRight="22dp"
-        android:layout_marginTop="34dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginRight="16dp"
+        android:layout_marginTop="58dp"
         android:background="@drawable/gray_circle_btn_bg_drawable"
-        android:padding="3dp"
         android:scaleType="centerInside"
         android:src="@drawable/sticker_magic_close_btn"
         tools:ignore="RtlHardcoded" />
 
-    <FrameLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_marginBottom="74.3dp"
-        android:layout_marginTop="61dp">
-
-        <pl.droidsonroids.gif.GifImageView
-            android:id="@+id/emoji_show_image"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_gravity="center"
-            android:scaleType="fitCenter" />
-    </FrameLayout>
-
     <com.superapps.view.TypefacedTextView
         android:id="@+id/send_btn"
         android:layout_width="match_parent"
-        android:layout_height="45dp"
+        android:layout_height="39dp"
         android:layout_gravity="bottom"
-        android:layout_marginBottom="27.7dp"
-        android:layout_marginLeft="36dp"
-        android:layout_marginRight="36dp"
+        android:layout_marginBottom="25.3dp"
+        android:layout_marginLeft="62dp"
+        android:layout_marginRight="62dp"
         android:background="@drawable/emoji_magic_detail_material_round_btn"
         android:gravity="center_horizontal"
+        android:includeFontPadding="false"
         android:paddingTop="10dp"
         android:text="@string/sticker_send_msg"
         android:textColor="#262a32"
-        android:textSize="17sp"
-        app:typeface="@string/custom_font_semibold" />
+        android:textSize="14sp"
+        app:typeface="@string/custom_font_bold" />
 
 </FrameLayout>

@@ -37,10 +37,14 @@ import com.android.ex.photo.loaders.PhotoBitmapLoaderInterface.BitmapResult;
 import com.android.messaging.R;
 import com.android.messaging.datamodel.ConversationImagePartsView.PhotoViewQuery;
 import com.android.messaging.datamodel.MediaScratchFileProvider;
+import com.android.messaging.download.Downloader;
 import com.android.messaging.ui.conversation.ConversationFragment;
+import com.android.messaging.ui.emoji.utils.EmojiManager;
 import com.android.messaging.util.Dates;
 import com.android.messaging.util.LogUtil;
 import com.android.messaging.util.OsUtil;
+
+import java.io.File;
 
 /**
  * Customizations for the photoviewer to display conversation images in full screen.
@@ -162,8 +166,8 @@ public class BuglePhotoViewController extends PhotoViewController {
                 new ConversationFragment.SaveAttachmentTask(((Activity) getActivity()),
                         Uri.parse(photoUri), adapter.getContentType(cursor)).executeOnThreadPool();
             } else {
-                ((Activity)getActivity()).requestPermissions(
-                        new String[] { Manifest.permission.WRITE_EXTERNAL_STORAGE }, 0);
+                ((Activity) getActivity()).requestPermissions(
+                        new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 0);
             }
             return true;
         } else {
@@ -173,7 +177,7 @@ public class BuglePhotoViewController extends PhotoViewController {
 
     @Override
     public PhotoPagerAdapter createPhotoPagerAdapter(final Context context,
-            final FragmentManager fm, final Cursor c, final float maxScale) {
+                                                     final FragmentManager fm, final Cursor c, final float maxScale) {
         return new BuglePhotoPageAdapter(context, fm, c, maxScale, mDisplayThumbsFullScreen);
     }
 }

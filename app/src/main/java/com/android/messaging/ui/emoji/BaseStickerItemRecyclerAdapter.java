@@ -5,6 +5,7 @@ import android.graphics.drawable.Drawable;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -24,12 +25,15 @@ import com.superapps.util.Threads;
 import com.superapps.util.Toasts;
 
 import java.io.File;
+import java.util.ArrayList;
 
 import pl.droidsonroids.gif.GifDrawable;
 import pl.droidsonroids.gif.GifImageView;
 
 public abstract class BaseStickerItemRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private static final String TAG = BaseStickerItemRecyclerAdapter.class.getSimpleName();
+
+    private static ArrayList<DownloadListener> mEmojiDownloadListener = new ArrayList<>();
 
     public abstract RecyclerView.ViewHolder createItemViewHolder(@NonNull ViewGroup parent, int viewType);
 
@@ -145,7 +149,8 @@ public abstract class BaseStickerItemRecyclerAdapter extends RecyclerView.Adapte
     }
 
     void downloadMagicEmoji(boolean isAutoDownload, @NonNull StickerInfo stickerInfo, @NonNull StickerViewHolder holder) {
-        if (Downloader.getInstance().isDownloading(stickerInfo.mMagicUrl)) {
+        String url = TextUtils.isEmpty(stickerInfo.mLottieZipUrl) ? stickerInfo.mMagicUrl : stickerInfo.mLottieZipUrl;
+        if (Downloader.getInstance().isDownloading(url)) {
             return;
         }
 
@@ -154,7 +159,7 @@ public abstract class BaseStickerItemRecyclerAdapter extends RecyclerView.Adapte
             return;
         }
         Downloader.getInstance().download(stickerInfo.mSoundUrl, null);
-        Downloader.getInstance().download(stickerInfo.mMagicUrl, new DownloadListener() {
+        DownloadListener downloadListener = new DownloadListener() {
             @Override
             public void onStart(String url) {
             }
@@ -169,9 +174,9 @@ public abstract class BaseStickerItemRecyclerAdapter extends RecyclerView.Adapte
 
             @Override
             public void onSuccess(String url, File file) {
-                HSLog.d(TAG, "downloadMagicEmoji, onComplete()");
+                HSLog.d(TAG, "downloadMagicEmoji, gif download successfully!!!");
                 if (!isAutoDownload) {
-                    BugleAnalytics.logEvent("SMSEmoji_ChatEmoji_Magic_Download", true,"type1", StickerInfo.getNumFromUrl(url), "type2", "success");
+                    BugleAnalytics.logEvent("SMSEmoji_ChatEmoji_Magic_Download", true, "type1", StickerInfo.getNumFromUrl(url), "type2", "success");
                 }
                 holder.progressBar.setProgress(100);
                 Threads.postOnMainThreadDelayed(() -> {
@@ -197,13 +202,58 @@ public abstract class BaseStickerItemRecyclerAdapter extends RecyclerView.Adapte
 
             private void failure(String url) {
                 if (!isAutoDownload) {
-                    BugleAnalytics.logEvent("SMSEmoji_ChatEmoji_Magic_Download", true,"type1", StickerInfo.getNumFromUrl(url), "type2", "fail");
+                    BugleAnalytics.logEvent("SMSEmoji_ChatEmoji_Magic_Download", true, "type1", StickerInfo.getNumFromUrl(url), "type2", "fail");
                 }
                 holder.progressLayout.setVisibility(View.GONE);
                 holder.magicStatusView.setVisibility(View.VISIBLE);
                 Toasts.showToast(R.string.network_error);
             }
-        });
+        };
+        if (!TextUtils.isEmpty(stickerInfo.mLottieZipUrl)) {
+            DownloadListener lottieDownloadListener = new DownloadListener() {
+                @Override
+                public void onStart(String url) {
+
+                }
+
+                @Override
+                public void onProgress(String url, float progressValue) {
+                    HSLog.d(TAG, "downloadMagicEmoji, Lottie - onProgress: " + progressValue);
+                }
+
+                @Override
+                public void onSuccess(String url, File file) {
+                    HSLog.d(TAG, "downloadMagicEmoji, lottie download successfully!!!");
+                    Downloader.getInstance().download(stickerInfo.mMagicUrl, downloadListener);
+                    mEmojiDownloadListener.add(downloadListener);
+                }
+
+                @Override
+                public void onCancel(String url) {
+                    failure(url);
+                }
+
+                @Override
+                public void onFail(String url, String failMsg) {
+                    failure(url);
+                }
+
+                private void failure(String url) {
+                    if (!isAutoDownload) {
+                        BugleAnalytics.logEvent("SMSEmoji_ChatEmoji_Magic_Download", true, "type1", StickerInfo.getNumFromUrl(url), "type2", "fail");
+                    }
+                    holder.progressLayout.setVisibility(View.GONE);
+                    holder.magicStatusView.setVisibility(View.VISIBLE);
+                    Toasts.showToast(R.string.network_error_and_try_again);
+                }
+            };
+            Downloader.getInstance().download(stickerInfo.mLottieZipUrl, lottieDownloadListener);
+            mEmojiDownloadListener.add(lottieDownloadListener);
+        } else {
+            Downloader.getInstance().download(stickerInfo.mMagicUrl, downloadListener);
+            mEmojiDownloadListener.add(downloadListener);
+        }
+
         holder.progressLayout.setVisibility(View.VISIBLE);
         holder.magicStatusView.setVisibility(View.INVISIBLE);
         holder.progressBar.setProgress(1);
@@ -223,5 +273,12 @@ public abstract class BaseStickerItemRecyclerAdapter extends RecyclerView.Adapte
             progressLayout = itemView.findViewById(R.id.download_progress_layout);
             progressBar = itemView.findViewById(R.id.download_progress_bar);
         }
+    }
+
+    static void releaseListener() {
+        for (DownloadListener listener : mEmojiDownloadListener) {
+            listener = null;
+        }
+        mEmojiDownloadListener.clear();
     }
 }

@@ -26,8 +26,8 @@ import android.support.v4.util.SimpleArrayMap;
 import com.android.ex.photo.Intents;
 import com.android.ex.photo.Intents.PhotoViewIntentBuilder;
 import com.android.ex.photo.fragments.PhotoViewFragment;
-import com.android.ex.photo.provider.PhotoContract.PhotoViewColumns;
 import com.android.ex.photo.provider.PhotoContract.PhotoQuery;
+import com.android.ex.photo.provider.PhotoContract.PhotoViewColumns;
 
 /**
  * Pager adapter for the photo view

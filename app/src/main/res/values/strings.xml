@@ -55,6 +55,8 @@
     <string name="mediapicker_gallery_image_item_description">image <xliff:g id="date">%1$tB %1$te %1$tY %1$tl %1$tM %1$tp</xliff:g></string>
     <string name="mediapicker_gallery_image_item_description_no_date">image</string>
     <string name="mediapicker_audio_title">Record audio</string>
+    <string name="network_error_and_try_again">Network errors. Please try again.</string>
+
 
     <string name="action_share">Share</string>
 

@@ -89,6 +89,7 @@ public class EmojiConfig implements HSLibraryConfig.ILibraryListener {
         String baseUrl = HSMapUtils.getString(sConfigMap, "BaseUrl");
         String bannerFileName = HSMapUtils.getString(sConfigMap, "BannerFileName");
         int presetEmojiCount = HSMapUtils.optInteger(sConfigMap, 0, "PresetEmojiCount");
+        String lottieMagicStickerStr = HSMapUtils.getString(sConfigMap, "LottieMagic");
 
         List<Map<String, ?>> configMaps = (List<Map<String, ?>>) HSMapUtils.getList(sConfigMap, "Collections");
         List<EmojiPackageInfo> result = new ArrayList<>(configMaps.size());
@@ -155,12 +156,17 @@ public class EmojiConfig implements HSLibraryConfig.ILibraryListener {
                 String soundSubPath = (String) configMap.get("SoundSubPath");
                 for (int k = 0; k < fileList.size(); k++) {
                     String fileName = fileList.get(k);
+                    String voiceFormat = ".mp3";
                     StickerInfo stickerInfo = new StickerInfo();
+                    if (!TextUtils.isEmpty(lottieMagicStickerStr) && lottieMagicStickerStr.contains(fileName)) {
+                        voiceFormat = ".aac";
+                        stickerInfo.mLottieZipUrl = baseUrl + imageSubPath + "/" + fileName + ".zip";
+                    }
                     stickerInfo.mPackageName = packageInfo.mName;
                     stickerInfo.mEmojiType = EmojiType.STICKER_MAGIC;
                     stickerInfo.mStickerUrl = baseUrl + previewImageSubPath + "/" + fileName + ".png";
                     stickerInfo.mMagicUrl = baseUrl + imageSubPath + "/" + fileName + ".gif";
-                    stickerInfo.mSoundUrl = baseUrl + soundSubPath + "/" + fileName + ".mp3";
+                    stickerInfo.mSoundUrl = baseUrl + soundSubPath + "/" + fileName + voiceFormat;
                     stickerInfo.mIsDownloaded = Downloader.getInstance().isDownloaded(stickerInfo.mMagicUrl);
                     stickerInfoList.add(stickerInfo);
                 }
@@ -196,6 +202,10 @@ public class EmojiConfig implements HSLibraryConfig.ILibraryListener {
             result = order(result, allAddedSticker);
         }
         return result;
+    }
+
+    private boolean isLottieMagicEmoji(String fileName) {
+        return "25".equals(fileName);
     }
 
     private List<EmojiPackageInfo> order(List<EmojiPackageInfo> data, List<String> orderList) {

@@ -24,12 +24,15 @@ import android.content.IntentFilter;
 import android.database.Cursor;
 import android.graphics.drawable.Animatable;
 import android.graphics.drawable.Drawable;
+import android.media.MediaPlayer;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -38,6 +41,8 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.airbnb.lottie.LottieAnimationView;
+import com.airbnb.lottie.LottieCompositionFactory;
 import com.android.ex.photo.Intents;
 import com.android.ex.photo.PhotoViewCallbacks;
 import com.android.ex.photo.PhotoViewCallbacks.CursorChangedListener;
@@ -50,6 +55,12 @@ import com.android.ex.photo.loaders.PhotoBitmapLoaderInterface.BitmapResult;
 import com.android.ex.photo.util.PhotoViewAnalytics;
 import com.android.ex.photo.views.PhotoView;
 import com.android.ex.photo.views.ProgressBarWrapper;
+
+import java.io.BufferedInputStream;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.zip.ZipInputStream;
 
 /**
  * Displays a photo.
@@ -94,9 +105,12 @@ public class PhotoViewFragment extends Fragment implements
     /**
      * The URL of a photo to display
      */
+    protected String mPhotoUriStr;
     protected String mResolvedPhotoUri;
     protected String mThumbnailUri;
     protected String mContentDescription;
+    protected String mLottieFilePath;
+    protected String mSoundFilePath;
     /**
      * The intent we were launched with
      */
@@ -107,10 +121,13 @@ public class PhotoViewFragment extends Fragment implements
     protected BroadcastReceiver mInternetStateReceiver;
 
     protected PhotoView mPhotoView;
+    protected LottieAnimationView mStickerLottieMagicView;
     protected ImageView mPhotoPreviewImage;
     protected TextView mEmptyText;
     protected ImageView mRetryButton;
     protected ProgressBarWrapper mPhotoProgressBar;
+
+    private MediaPlayer mSoundPlayer;
 
     protected int mPosition;
 
@@ -146,6 +163,13 @@ public class PhotoViewFragment extends Fragment implements
      * Whether or not we can display the thumbnail at fullscreen size
      */
     protected boolean mDisplayThumbsFullScreen;
+
+    private static final int LOTTIE_STATUS_INIT = 1;
+    private static final int LOTTIE_STATUS_PLAYING = 2;
+    private static final int LOTTIE_STATUS_PAUSE = 3;
+    private static final int LOTTIE_STATUS_DESTROY = 4;
+
+    private int mCurrentLottieStatus = LOTTIE_STATUS_INIT;
 
     /**
      * Public no-arg constructor for allowing the framework to handle orientation changes
@@ -189,6 +213,7 @@ public class PhotoViewFragment extends Fragment implements
         if (mAdapter == null) {
             throw new IllegalStateException("Callback reported null adapter");
         }
+
         // Don't call until we've setup the entire view
         setViewVisibility();
     }
@@ -242,8 +267,15 @@ public class PhotoViewFragment extends Fragment implements
         return view;
     }
 
+    protected boolean isLottieModel() {
+        return !TextUtils.isEmpty(mLottieFilePath);
+    }
+
     protected void initializeView(View view) {
         mPhotoView = (PhotoView) view.findViewById(R.id.photo_view);
+        mStickerLottieMagicView = view.findViewById(R.id.lottie_image_view);
+        mStickerLottieMagicView.useHardwareAcceleration();
+
         mPhotoView.setMaxInitialScale(mIntent.getFloatExtra(Intents.EXTRA_MAX_INITIAL_SCALE, 1));
         mPhotoView.setOnClickListener(this);
         mPhotoView.setFullScreen(mFullScreen, false);
@@ -289,7 +321,9 @@ public class PhotoViewFragment extends Fragment implements
             }
         }
 
-        if (!isPhotoBound()) {
+        if (isLottieModel()) {
+            startPlayLottie();
+        } else if (!isPhotoBound()) {
             mProgressBarNeeded = true;
             mPhotoPreviewAndProgress.setVisibility(View.VISIBLE);
 
@@ -322,11 +356,22 @@ public class PhotoViewFragment extends Fragment implements
             mPhotoView.clear();
             mPhotoView = null;
         }
+
+        mCurrentLottieStatus = LOTTIE_STATUS_INIT;
+        if (mSoundPlayer != null) {
+            mSoundPlayer.release();
+            mSoundPlayer = null;
+        }
+
+        if (mStickerLottieMagicView != null) {
+            mStickerLottieMagicView.cancelAnimation();
+            mStickerLottieMagicView = null;
+        }
         super.onDestroyView();
     }
 
     public String getPhotoUri() {
-        return mResolvedPhotoUri;
+        return TextUtils.isEmpty(mPhotoUriStr) ? mResolvedPhotoUri : mPhotoUriStr;
     }
 
     @Override
@@ -432,6 +477,9 @@ public class PhotoViewFragment extends Fragment implements
      */
     private void bindPhoto(Drawable drawable) {
         if (drawable != null) {
+            if (!TextUtils.isEmpty(mSoundFilePath)) {
+                prepareMagicSound(mSoundFilePath);
+            }
             if (drawable instanceof Animatable) {
                 PhotoViewAnalytics.logEvent("SMSEmoji_ChatEmoji_Gif_SendView", true);
             }
@@ -477,7 +525,10 @@ public class PhotoViewFragment extends Fragment implements
     }
 
     @Override
-    public void onViewActivated() {
+    public void onViewActivated(int position) {
+        if (position != mPosition) {
+            return;
+        }
         if (!mCallback.isFragmentActive(this)) {
             // we're not in the foreground; reset our view
             resetViews();
@@ -488,8 +539,26 @@ public class PhotoViewFragment extends Fragment implements
                         null, this);
             }
             mCallback.onFragmentVisible(this);
+            onViewVisible();
         }
     }
+
+    protected void onViewVisible() {
+
+    }
+
+
+    @Override
+    public void onViewDeActivated(int position) {
+        if (position == mPosition) {
+            onViewInVisible();
+        }
+    }
+
+    protected void onViewInVisible() {
+
+    }
+
 
     /**
      * Reset the views to their default states
@@ -623,6 +692,85 @@ public class PhotoViewFragment extends Fragment implements
                 mConnected = true;
                 mPhotoProgressBar.setVisibility(View.VISIBLE);
             }
+        }
+    }
+
+    protected void startPlayLottie() {
+        if (mCallback.getCurrentPagePosition() != mPosition) {
+            return;
+        }
+        if (mCurrentLottieStatus == LOTTIE_STATUS_INIT) {
+            mCurrentLottieStatus = LOTTIE_STATUS_PLAYING;
+
+            if (!TextUtils.isEmpty(mSoundFilePath)) {
+                prepareMagicSound(mSoundFilePath);
+            } else if (!TextUtils.isEmpty(mLottieFilePath)) {
+                playLottie(mLottieFilePath);
+            }
+        } else if (mCurrentLottieStatus == LOTTIE_STATUS_PAUSE) {
+            mCurrentLottieStatus = LOTTIE_STATUS_PLAYING;
+            mStickerLottieMagicView.resumeAnimation();
+            startSoundPlayer();
+        }
+    }
+
+    protected void pauseSoundPlayer() {
+        if (mSoundPlayer != null) {
+            mSoundPlayer.pause();
+        }
+    }
+
+    protected void startSoundPlayer() {
+        if (mSoundPlayer != null) {
+            mSoundPlayer.start();
+        }
+    }
+
+    protected void pauseLottie() {
+        if (mCurrentLottieStatus == LOTTIE_STATUS_PLAYING) {
+            mCurrentLottieStatus = LOTTIE_STATUS_PAUSE;
+            mStickerLottieMagicView.pauseAnimation();
+            pauseSoundPlayer();
+        }
+    }
+
+    private void prepareMagicSound(@NonNull String soundFilePath) {
+        mSoundPlayer = new MediaPlayer();
+        try {
+            mSoundPlayer.setDataSource(soundFilePath);
+            mSoundPlayer.prepareAsync();
+            mSoundPlayer.setLooping(true);
+            mSoundPlayer.setOnPreparedListener(mp -> {
+                if (mCallback.getCurrentPagePosition() != mPosition) {
+                    return;
+                }
+                if (isLottieModel()) {
+                    playLottie(mLottieFilePath);
+                } else {
+                    mSoundPlayer.start();
+                }
+            });
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void playLottie(@NonNull String lottieFilePath) {
+        try {
+            InputStream inputStream = new FileInputStream(lottieFilePath);
+            ZipInputStream zipInputStream = new ZipInputStream(new BufferedInputStream(inputStream));
+            LottieCompositionFactory.fromZipStream(zipInputStream, null).addListener(result -> {
+                if (mCallback.getCurrentPagePosition() != mPosition) {
+                    return;
+                }
+                mStickerLottieMagicView.setComposition(result);
+                mStickerLottieMagicView.playAnimation();
+
+                startSoundPlayer();
+                mCallback.onFragmentPhotoLoadComplete(this, true /* success */);
+            });
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 }
