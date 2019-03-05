@@ -981,10 +981,6 @@
 
     <string name="work_directory_display_name">Work Profile contacts</string>
 
-    <string name="bottom_navigation_item_messaging">&#160;Messages&#160;</string>
-    <string name="bottom_navigation_item_sms_show">&#160;SMS Show&#160;</string>
-    <string name="bottom_navigation_item_emoji">&#160;Emoji&#160;</string>
-
     <string name="action_bar_title_typeface" translatable="false">FugazOne-Regular.ttf</string>
     <string name="network_error">Network error.</string>
     <string name="sticker_send_msg">SELECT</string>
@@ -1067,7 +1063,6 @@
     <string name="setting_terms_of_service">Terms of Service</string>
     <string name="setting_text_font">Font</string>
     <string name="setting_text_size">Font Size</string>
-    <string name="setting_text_font_name">Roboto</string>
     <string name="setting_text_size_hint_larger">Largest</string>
     <string name="setting_text_size_hint_large">Large</string>
     <string name="setting_text_size_hint_medium_large">Medium</string>
@@ -1081,7 +1076,6 @@
     <string name="setting_sms_show_close_dialog_title">Confirm to turn off?</string>
     <string name="setting_sms_show_close_dialog_content">You will lose the beautiful SMS reminder themes, really want to close it?</string>
     <string name="setting_sms_show_close_dialog_ok">OK</string>
-    <string name="setting_test_change_theme_color">change theme color for debug</string>
 
     <!--notification channel-->
     <string name="sms_notification_channel">SMS Notification</string>
@@ -1115,7 +1109,6 @@
     <string name="menu_setting">Settings</string>
     <string name="menu_rate">5 Star Rating</string>
     <string name="menu_group_customization">Customize</string>
-    <string name="coming_soon">Coming soon in a few days</string>
 
     <string name="set_as_default_dialog_title_default_change">Default SMS Cleared</string>
     <string name="set_as_default_dialog_description_default_change">Color SMS can\'t work properly without being set as default.</string>

@@ -68,7 +68,6 @@
                 android:layout_centerVertical="true"
                 android:layout_marginEnd="22dp"
                 android:includeFontPadding="false"
-                android:text="@string/setting_text_font_name"
                 android:textColor="#9b9da7"
                 android:textSize="14sp"
                 app:typeface="@string/custom_font_medium" />
