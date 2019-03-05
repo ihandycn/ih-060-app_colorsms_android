@@ -527,4 +527,7 @@
     <string name="emoji_add_more">Daha fazla emoji</string>
 
 
+
+    <string name="menu_setting">"Ayarlar"</string>
+    <string name="set_as_default_dialog_button_ok_user_present">"Tamam"</string>
 </resources>

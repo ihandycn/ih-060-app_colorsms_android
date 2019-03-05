@@ -943,7 +943,7 @@
     <string name="welcome_permission_button">ALLOW</string>
     <string name="welcome_permission_title">Necessary Permissions</string>
     <string name="welcome_permission_description">To work properly, we need the following permissions.</string>
-    <string name="welcome_permission_sms_title">SMS</string>
+    <string name="welcome_permission_sms_title" translatable="false">SMS</string>
     <string name="welcome_permission_sms_description_1">Send and receive messages</string>
     <string name="welcome_permission_sms_description_2">Timely remind you of new messages</string>
     <string name="welcome_permission_sms_description_3">Instantly reply messages</string>

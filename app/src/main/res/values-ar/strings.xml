@@ -630,4 +630,7 @@
     <string name="emoji_add_more">المزيد من الإيموجي</string>
 
     <string name="sms_show_current_theme">القالب الحالي</string>
+
+    <string name="menu_setting">"الإعدادات"</string>
+    <string name="set_as_default_dialog_button_ok_user_present">"موافق"</string>
 </resources>

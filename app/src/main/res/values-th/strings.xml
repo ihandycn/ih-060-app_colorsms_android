@@ -527,4 +527,7 @@
     <string name="emoji_add_more">อิโมจิเพิ่มเติม</string>
 
 
+
+    <string name="menu_setting">"การตั้งค่า"</string>
+    <string name="set_as_default_dialog_button_ok_user_present">"ตกลง"</string>
 </resources>

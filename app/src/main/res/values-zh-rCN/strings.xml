@@ -527,4 +527,7 @@
     <string name="emoji_add_more">更多表情</string>
 
 
+
+    <string name="menu_setting">"设置"</string>
+    <string name="set_as_default_dialog_button_ok_user_present">"确定"</string>
 </resources>

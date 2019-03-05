@@ -523,4 +523,7 @@
     <string name="setting_sms_show_close_dialog_title">確定關閉？</string>
     <string name="sms_show_current_theme">當前的主題</string>
 
+
+    <string name="menu_setting">"設定"</string>
+    <string name="set_as_default_dialog_button_ok_user_present">"確定"</string>
 </resources>

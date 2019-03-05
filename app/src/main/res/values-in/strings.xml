@@ -526,4 +526,7 @@
     <string name="emoji_add_more">Emoji lainnya</string>
 
     <string name="sms_show_current_theme">Tema Sekarang</string>
+
+    <string name="menu_setting">"Setelan"</string>
+    <string name="set_as_default_dialog_button_ok_user_present">"Oke"</string>
 </resources>

@@ -526,4 +526,7 @@
     <string name="emoji_add_more">Mehr Emojis</string>
 
     <string name="sms_show_current_theme">Aktuelles Design</string>
+
+    <string name="menu_setting">"Einstellungen"</string>
+    <string name="set_as_default_dialog_button_ok_user_present">"OK"</string>
 </resources>

@@ -526,4 +526,7 @@
     <string name="emoji_add_more">Thêm emoji</string>
 
     <string name="sms_show_current_theme">Chủ đề Hiện tại</string>
+
+    <string name="menu_setting">"Cài đặt"</string>
+    <string name="set_as_default_dialog_button_ok_user_present">"OK"</string>
 </resources>

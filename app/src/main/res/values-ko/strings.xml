@@ -527,4 +527,7 @@
     <string name="emoji_add_more">더 많은 이모지</string>
 
 
+
+    <string name="menu_setting">"설정"</string>
+    <string name="set_as_default_dialog_button_ok_user_present">"확인"</string>
 </resources>
