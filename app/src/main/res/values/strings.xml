@@ -917,8 +917,6 @@
     <!-- The accessibility text read when the sim chooser pops up to read the current selected sim -->
     <string name="selected_sim_content_message"><xliff:g id="selected_sim">%s</xliff:g> selected</string>
 
-    <string name="work_directory_display_name">Work Profile contacts</string>
-
     <string name="action_bar_title_typeface" translatable="false">FugazOne-Regular.ttf</string>
     <string name="network_error">Network error.</string>
     <string name="sticker_send_msg">SELECT</string>
@@ -968,8 +966,7 @@
     <string name="welcome_set_default_failed_toast">Color SMS was not set up properly</string>
 
     <!-- News -->
-    <string name="news_detail_error_reload">Reload</string>
-    <string name="refresh">Refresh</string>
+    <string name="reload">Reload</string>
 
     <!-- 5-star rating -->
     <string name="five_star_hint_text">How was your experience with us?</string>
