@@ -62,6 +62,7 @@ import com.android.messaging.util.OsUtil;
 import com.android.messaging.util.PhoneUtils;
 import com.android.messaging.util.Trace;
 import com.crashlytics.android.Crashlytics;
+import com.crashlytics.android.core.CrashlyticsCore;
 import com.github.moduth.blockcanary.BlockCanary;
 import com.google.common.annotations.VisibleForTesting;
 import com.ihs.app.framework.HSApplication;
@@ -113,7 +114,8 @@ public class BugleApplication extends HSApplication implements UncaughtException
 
     public static final String PREF_KEY_DAILY_EVENTS_LOGGED_TIME = "default_launcher_logged_epoch";
     public static final String PREF_KEY_DAILY_EVENTS_LOG_SESSION_SEQ = "default_launcher_log_session_seq";
-    public static final String PREF_KEY_DEFAULT_LAUNCHER_STATUS_LOGGED_COUNT = "default_launcher_logged_times";
+
+    public static final boolean ENABLE_CRASHLYTICS_ON_DEBUG = false;
 
     /**
      * We log daily events on start of the 2nd session every day.
@@ -147,7 +149,12 @@ public class BugleApplication extends HSApplication implements UncaughtException
     public void onCreate() {
         Trace.beginSection("app.onCreate");
         super.onCreate();
-        Fabric.with(this, new Crashlytics());
+
+        Crashlytics.Builder crashlyticsKit = new Crashlytics.Builder();
+        if (!ENABLE_CRASHLYTICS_ON_DEBUG) {
+            crashlyticsKit.core(new CrashlyticsCore.Builder().disabled(BuildConfig.DEBUG).build());
+        }
+        Fabric.with(BugleApplication.this, crashlyticsKit.build());
 
         if (BuildConfig.DEBUG) {
             StrictMode.setThreadPolicy(new StrictMode.ThreadPolicy.Builder().detectAll().penaltyLog().build());
