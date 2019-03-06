@@ -217,6 +217,7 @@ public class ProcessSentMessageAction extends Action {
         List<String> stickerMagicUriList = new ArrayList<>();
         for (MessagePartData data : message.getParts()) {
             if (data.getContentUri() == null) {
+                stickerMagicUriList.add("");
                 continue;
             }
             String uriStr = data.getContentUri().toString();
