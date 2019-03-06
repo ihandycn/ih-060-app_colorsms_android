@@ -24,7 +24,8 @@ public class UploadLeakService extends DisplayLeakService {
             String leakDetailString = LeakCanary.leakInfo(this, heapDump, result, true);
 
             if (!TextUtils.isEmpty(leakDetailString)
-                    && leakDetailString.contains("android.arch.lifecycle.ReportFragment has leaked")) {
+                    && (leakDetailString.contains("android.arch.lifecycle.ReportFragment has leaked")
+                    || leakDetailString.contains("SemClipboardManager"))) {
                 return;
             }
 
