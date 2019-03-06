@@ -1060,4 +1060,6 @@
     <string name="wallpaper_reset">RESET</string>
     <string name="wallpaper_done">DONE</string>
     <string name="wallpaper_add_photos">Add Photos</string>
+
+    <string name="messages">Messages</string>
 </resources>
