@@ -320,6 +320,7 @@ public class ConversationListActivity extends AbstractConversationListActivity
             if (mShowRateAlert || !FiveStarRateDialog.showShowFiveStarRateDialogOnBackToDesktopIfNeed(this)) {
                 BugleAnalytics.logEvent("SMS_Messages_Back", true);
                 super.onBackPressed();
+                overridePendingTransition(0, 0);
                 Preferences.getDefault().doOnce(
                         () -> UIIntentsImpl.get().launchDragHotSeatActivity(this),
                         DragHotSeatActivity.SHOW_DRAG_HOTSEAT);
