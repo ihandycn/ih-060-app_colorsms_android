@@ -18,6 +18,7 @@ package com.android.messaging.datamodel.action;
 
 import android.app.PendingIntent;
 import android.content.Context;
+import android.os.Build;
 import android.os.Bundle;
 
 /**
@@ -25,7 +26,7 @@ import android.os.Bundle;
  */
 public class ActionService {
     protected static PendingIntent makeStartActionPendingIntent(final Context context,
-            final Action action, final int requestCode, final boolean launchesAnActivity) {
+                                                                final Action action, final int requestCode, final boolean launchesAnActivity) {
         return ActionServiceImpl.makeStartActionPendingIntent(context, action, requestCode,
                 launchesAnActivity);
     }
@@ -34,14 +35,18 @@ public class ActionService {
      * Start an action by posting it over the the ActionService
      */
     public void startAction(final Action action) {
-        ActionServiceImpl.startAction(action);
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O) {
+            ActionServiceImpl.startAction(action);
+        } else {
+            ActionThreadImpl.startAction(action);
+        }
     }
 
     /**
      * Schedule a delayed action by posting it over the the ActionService
      */
     public void scheduleAction(final Action action, final int code,
-            final long delayMs) {
+                               final long delayMs) {
         ActionServiceImpl.scheduleAction(action, code, delayMs);
     }
 
@@ -50,14 +55,22 @@ public class ActionService {
      */
     protected void handleResponseFromBackgroundWorker(
             final Action action, final Bundle response) {
-        ActionServiceImpl.handleResponseFromBackgroundWorker(action, response);
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O) {
+            ActionServiceImpl.handleResponseFromBackgroundWorker(action, response);
+        } else {
+            ActionThreadImpl.handleResponseFromBackgroundWorker(action, response);
+        }
     }
 
     /**
      * Process a failure from the BackgroundWorker in the ActionService
      */
     protected void handleFailureFromBackgroundWorker(final Action action,
-            final Exception exception) {
-        ActionServiceImpl.handleFailureFromBackgroundWorker(action, exception);
+                                                     final Exception exception) {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O) {
+            ActionServiceImpl.handleFailureFromBackgroundWorker(action, exception);
+        } else {
+            ActionThreadImpl.handleFailureFromBackgroundWorker(action, exception);
+        }
     }
 }

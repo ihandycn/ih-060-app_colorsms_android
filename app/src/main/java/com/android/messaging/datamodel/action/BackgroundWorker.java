@@ -16,6 +16,8 @@
 
 package com.android.messaging.datamodel.action;
 
+import android.os.Build;
+
 import java.util.List;
 
 /**
@@ -27,6 +29,10 @@ public class BackgroundWorker {
      * Send list of requests from action service to a worker
      */
     public void queueBackgroundWork(final List<Action> backgroundActions) {
-        BackgroundWorkerService.queueBackgroundWork(backgroundActions);
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O) {
+            BackgroundWorkerService.queueBackgroundWork(backgroundActions);
+        } else {
+            BackgroundWorkerThread.queueBackgroundWork(backgroundActions);
+        }
     }
 }

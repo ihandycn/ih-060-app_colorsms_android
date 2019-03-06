@@ -36,6 +36,7 @@ import com.android.messaging.util.LoggingTimer;
 import com.android.messaging.util.PendingIntentConstants;
 import com.android.messaging.util.WakeLockHelper;
 import com.google.common.annotations.VisibleForTesting;
+import com.ihs.app.framework.HSApplication;
 
 /**
  * ActionService used to perform background processing for data model
@@ -187,7 +188,15 @@ public class ActionServiceImpl extends IntentService {
          */
         @Override
         public void onReceive(final Context context, final Intent intent) {
-            ActionServiceImpl.startServiceWithIntent(intent);
+            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O) {
+                ActionServiceImpl.startServiceWithIntent(intent);
+            } else {
+                final int opcode = intent.getIntExtra(EXTRA_OP_CODE, 0);
+                final Bundle actionBundle = intent.getBundleExtra(EXTRA_ACTION_BUNDLE);
+                actionBundle.setClassLoader(HSApplication.getContext().getClassLoader());
+                Action action = actionBundle.getParcelable(BUNDLE_ACTION);
+                ActionThreadImpl.getInstance().executeActionInPool(opcode, action, null, null);
+            }
         }
     }
 
