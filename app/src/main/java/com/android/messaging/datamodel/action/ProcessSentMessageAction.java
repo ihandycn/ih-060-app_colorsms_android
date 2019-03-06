@@ -46,6 +46,7 @@ import com.android.messaging.util.LogUtil;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Update message status to reflect success or failure
@@ -213,8 +214,11 @@ public class ProcessSentMessageAction extends Action {
             return;
         }
 
-        ArrayList<String> stickerMagicUriList = new ArrayList<>();
+        List<String> stickerMagicUriList = new ArrayList<>();
         for (MessagePartData data : message.getParts()) {
+            if (data.getContentUri() == null) {
+                continue;
+            }
             String uriStr = data.getContentUri().toString();
             if (EmojiManager.isStickerMagicUri(uriStr)) {
                 stickerMagicUriList.add(uriStr);
