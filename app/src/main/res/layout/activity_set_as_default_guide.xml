@@ -25,8 +25,8 @@
         android:id="@+id/linearLayout"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="8dp"
         android:layout_marginTop="8dp"
+        android:layout_marginBottom="8dp"
         android:background="@drawable/new_dialog_bg"
         android:clipChildren="false"
         android:orientation="vertical"
@@ -41,47 +41,48 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center" />
 
-        <com.superapps.view.AutoResizeTextView
+        <com.superapps.view.TypefacedTextView
+
             android:id="@+id/set_as_default_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="@dimen/dialog_content_margin_left"
-            android:layout_marginRight="@dimen/dialog_content_margin_right"
             android:layout_marginTop="@dimen/dialog_content_margin_top"
-            android:maxLines="1"
+            android:layout_marginRight="@dimen/dialog_content_margin_right"
+            android:includeFontPadding="false"
             android:textColor="#3c3c3c"
             android:textSize="@dimen/dialog_content_title_size"
             app:autoSizeMaxTextSize="@dimen/dialog_content_title_size"
-            app:typeface="@string/custom_font_bold" />
+            app:typeface="@string/custom_font_semibold" />
 
         <com.superapps.view.TypefacedTextView
             android:id="@+id/set_as_default_content"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="@dimen/dialog_content_margin_left"
-            android:layout_marginRight="@dimen/dialog_content_margin_right"
             android:layout_marginTop="@dimen/dialog_content_text_margin_top"
+            android:layout_marginRight="@dimen/dialog_content_margin_right"
             android:alpha="@dimen/dialog_content_text"
+            android:includeFontPadding="false"
             android:lineSpacingExtra="@dimen/dialog_text_extra_line_height"
             android:lineSpacingMultiplier="@dimen/dialog_text_line_height_multiple"
             android:textColor="#454545"
             android:textSize="@dimen/dialog_content_text_size"
-            app:typeface="@string/custom_font_semibold" />
+            app:typeface="@string/custom_font_medium" />
 
         <com.superapps.view.TypefacedTextView
             android:id="@+id/set_as_default_ok_btn"
             android:layout_width="match_parent"
             android:layout_height="@dimen/dialog_btn_height"
-            android:layout_marginBottom="@dimen/dialog_btn_margin_bottom"
-            android:layout_marginEnd="@dimen/dialog_btn_margin_right"
-            android:layout_marginLeft="@dimen/dialog_btn_margin_left"
-            android:layout_marginRight="@dimen/dialog_btn_margin_right"
             android:layout_marginStart="@dimen/dialog_btn_margin_left"
+            android:layout_marginLeft="@dimen/dialog_btn_margin_left"
             android:layout_marginTop="@dimen/dialog_btn_margin_top"
+            android:layout_marginEnd="@dimen/dialog_btn_margin_right"
+            android:layout_marginRight="@dimen/dialog_btn_margin_right"
+            android:layout_marginBottom="@dimen/dialog_btn_margin_bottom"
             android:background="@drawable/new_dialog_btn_bg"
             android:gravity="center"
-            android:paddingLeft="@dimen/dialog_btn_padding_left"
-            android:paddingRight="@dimen/dialog_btn_padding_right"
+            android:includeFontPadding="false"
             android:text="@android:string/ok"
             android:textAllCaps="true"
             android:textColor="@android:color/white"
@@ -95,9 +96,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
+        android:layout_marginTop="2dp"
         android:layout_marginEnd="2dp"
         android:layout_marginRight="2dp"
-        android:layout_marginTop="2dp"
         android:background="@drawable/material_close_btn_bg_round"
         android:padding="12dp"
         android:src="@drawable/set_as_default_close"

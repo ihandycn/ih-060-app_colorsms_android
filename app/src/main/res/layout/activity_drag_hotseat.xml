@@ -22,7 +22,6 @@
         app:layout_constraintGuide_percent="0.91" />
 
     <LinearLayout
-        app:layout_constraintDimensionRatio=""
         android:id="@+id/linearLayout"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
@@ -32,6 +31,7 @@
         android:clipChildren="false"
         android:orientation="vertical"
         app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintDimensionRatio=""
         app:layout_constraintEnd_toEndOf="@id/set_as_default_guideline_end"
         app:layout_constraintStart_toStartOf="@id/set_as_default_guideline"
         app:layout_constraintTop_toTopOf="parent">
@@ -41,17 +41,16 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
 
-        <com.superapps.view.AutoResizeTextView
+        <com.superapps.view.TypefacedTextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="@dimen/dialog_content_margin_left"
             android:layout_marginRight="@dimen/dialog_content_margin_right"
-            android:maxLines="1"
+            android:includeFontPadding="false"
             android:text="@string/drag_hotseat_title"
             android:textColor="#3c3c3c"
             android:textSize="@dimen/dialog_content_title_size"
-            app:autoSizeMaxTextSize="@dimen/dialog_content_title_size"
-            app:typeface="@string/custom_font_bold" />
+            app:typeface="@string/custom_font_semibold" />
 
         <com.superapps.view.TypefacedTextView
             android:layout_width="wrap_content"
@@ -60,12 +59,13 @@
             android:layout_marginTop="@dimen/dialog_content_text_margin_top"
             android:layout_marginRight="@dimen/dialog_content_margin_right"
             android:alpha="@dimen/dialog_content_text"
+            android:includeFontPadding="false"
             android:lineSpacingExtra="@dimen/dialog_text_extra_line_height"
             android:lineSpacingMultiplier="@dimen/dialog_text_line_height_multiple"
             android:text="@string/drag_hotseat_content"
             android:textColor="#454545"
             android:textSize="@dimen/dialog_content_text_size"
-            app:typeface="@string/custom_font_semibold" />
+            app:typeface="@string/custom_font_medium" />
 
         <com.superapps.view.TypefacedTextView
             android:id="@+id/drag_hotseat_btn"
@@ -79,8 +79,7 @@
             android:layout_marginBottom="@dimen/dialog_btn_margin_bottom"
             android:background="@drawable/drag_hotseat_btn_bg"
             android:gravity="center"
-            android:paddingLeft="@dimen/dialog_btn_padding_left"
-            android:paddingRight="@dimen/dialog_btn_padding_right"
+            android:includeFontPadding="false"
             android:text="@string/got_it"
             android:textAllCaps="true"
             android:textColor="@android:color/white"
