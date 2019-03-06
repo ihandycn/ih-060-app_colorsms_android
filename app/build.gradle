@@ -15,8 +15,8 @@ android {
         applicationId "com.color.sms.messages.emoji"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 14
-        versionName "1.0.7"
+        versionCode 15
+        versionName "1.0.8"
         multiDexEnabled true
     }
 
@@ -38,7 +38,7 @@ android {
         debug {
             minifyEnabled false
             ext.enableCrashlytics = true
-            buildConfigField 'String', 'EMOJI_CONFIG', '"http://superapps-dev.s3.amazonaws.com/airlauncher/emoji/config-bubble-emoji-1.0.1-5.sa"'
+            buildConfigField 'String', 'EMOJI_CONFIG', '"http://superapps-dev.s3.amazonaws.com/airlauncher/emoji/config-bubble-emoji-1.0.1-15.sa"'
         }
 
         release {
