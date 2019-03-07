@@ -24,7 +24,6 @@ import android.os.Parcel;
 import android.os.Parcelable;
 import android.telephony.PhoneNumberUtils;
 import android.telephony.SmsManager;
-import android.text.TextUtils;
 
 import com.android.messaging.Factory;
 import com.android.messaging.datamodel.BugleDatabaseOperations;
@@ -46,7 +45,6 @@ import com.android.messaging.util.LogUtil;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Update message status to reflect success or failure
@@ -214,20 +212,6 @@ public class ProcessSentMessageAction extends Action {
             return;
         }
 
-        List<String> stickerMagicUriList = new ArrayList<>();
-        for (MessagePartData data : message.getParts()) {
-            if (data.getContentUri() == null) {
-                stickerMagicUriList.add("");
-                continue;
-            }
-            String uriStr = data.getContentUri().toString();
-            if (EmojiManager.isStickerMagicUri(uriStr)) {
-                stickerMagicUriList.add(uriStr);
-            } else {
-                stickerMagicUriList.add("");
-            }
-        }
-
         final String conversationId = message.getConversationId();
         if (updatedMessageUri != null) {
             // Update message if we have newly written final message in the telephony db
@@ -251,13 +235,11 @@ public class ProcessSentMessageAction extends Action {
             }
         }
 
-        int i = 0;
         for (MessagePartData data : message.getParts()) {
-            String stickerMagicUri = stickerMagicUriList.get(i);
-            if (!TextUtils.isEmpty(stickerMagicUri) && data.getContentUri() != null) {
-                EmojiManager.makePartUriRelateToStickerMagicUri(data.getContentUri().toString(), stickerMagicUri);
+            if (data.getContentUri() != null
+                    && EmojiManager.isStickerMagicUri(data.getContentUri().toString())) {
+                EmojiManager.makePartUriRelateToStickerMagicUri(data.getContentUri().toString(), data.getContentUri().toString());
             }
-            i++;
         }
 
         final long timestamp = System.currentTimeMillis();
