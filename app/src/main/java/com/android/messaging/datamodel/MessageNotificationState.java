@@ -295,7 +295,7 @@ public abstract class MessageNotificationState extends NotificationState {
             return messageLineInfo.mIsManualDownloadNeeded;
         }
 
-        private MessageLineInfo getLatestMessageLineInfo() {
+        public MessageLineInfo getLatestMessageLineInfo() {
             // The latest message is stored at index zero of the message line infos.
             if (mLineInfos.size() > 0 && mLineInfos.get(0) instanceof MessageLineInfo) {
                 return (MessageLineInfo) mLineInfos.get(0);
@@ -316,7 +316,7 @@ public abstract class MessageNotificationState extends NotificationState {
         }
     }
 
-    final ConversationInfoList mConvList;
+    public final ConversationInfoList mConvList;
     private long mLatestReceivedTimestamp;
 
     private static ConversationIdSet makeConversationIdSet(final ConversationInfoList convList) {

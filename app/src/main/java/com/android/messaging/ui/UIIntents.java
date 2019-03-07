@@ -113,6 +113,10 @@ public abstract class UIIntents {
 
     public static final String UI_INTENT_EXTRA_SMS_SHOW_URL = "sms_show_url";
 
+    public static final String UI_INTENT_EXTRA_MESSAGE = "extra_message";
+
+    public static final String UI_INTENT_EXTRA_CONVERSATION_NAME = "conversation_name";
+
     /**
      * Launch the welcome activity
      */
@@ -279,6 +283,15 @@ public abstract class UIIntents {
      * Launch an activity to custom bubbles
      */
     public abstract void launchCustomBubblesActivity(Context context, String conversationId);
+
+    /**
+     * Launch message box activity
+     */
+    public abstract void launchMessageBoxActivity(Context context,
+                                                  final String conversationId,
+                                                  final String avatarUri,
+                                                  final String conversationName,
+                                                  final CharSequence content);
 
     /**
      * Get a ACTION_VIEW intent

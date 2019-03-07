@@ -40,6 +40,7 @@ import android.view.Gravity;
 import android.view.Surface;
 import android.view.View;
 import android.view.View.OnLayoutChangeListener;
+import android.view.WindowManager;
 import android.view.animation.Animation;
 import android.view.animation.Animation.AnimationListener;
 import android.view.animation.Interpolator;
@@ -305,6 +306,14 @@ public class UiUtils {
                     activity.getWindow().setStatusBarColor(color);
                 }
             }
+        }
+    }
+
+    public static void setStatusAndNavigationBarTransparent(Activity activity) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES
+                .KITKAT) {
+            activity.getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+            activity.getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);
         }
     }
 

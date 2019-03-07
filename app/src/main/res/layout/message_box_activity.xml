@@ -1,0 +1,233 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="#D8000000"
+    android:clipChildren="true">
+
+    <RelativeLayout
+        android:id="@+id/alert_card_container"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_centerInParent="true"
+        android:orientation="vertical"
+        android:windowSoftInputMode="adjustPan">
+
+        <LinearLayout
+            android:id="@+id/alert_card"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/acb_alert_dialog_normal_bg"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="end"
+                android:layout_marginEnd="5dp"
+                android:layout_marginTop="15dp"
+                android:gravity="center_vertical">
+
+                <ImageView
+                    android:id="@+id/jump_to_default"
+                    android:layout_width="36dp"
+                    android:layout_height="36dp"
+                    android:layout_marginEnd="-3dp"
+                    android:background="@drawable/acb_selector_title_round_btn"
+                    android:padding="9dp"
+                    android:src="@drawable/acb_phone_sms_jump_to_default_app"
+                    android:visibility="gone"/>
+
+                <ImageView
+                    android:id="@+id/alert_menu_btn"
+                    android:layout_width="36dp"
+                    android:layout_height="36dp"
+                    android:layout_marginEnd="-3dp"
+                    android:background="@drawable/acb_selector_title_round_btn"
+                    android:padding="9dp"
+                    android:src="@drawable/adb_alert_menu_btn"/>
+
+                <ImageView
+                    android:id="@+id/alert_close_btn"
+                    android:layout_width="36dp"
+                    android:layout_height="36dp"
+                    android:background="@drawable/acb_selector_title_round_btn"
+                    android:padding="9dp"
+                    android:src="@drawable/acb_phone_alert_call_close"/>
+            </LinearLayout>
+
+            <android.support.v4.view.ViewPager
+                android:id="@+id/conversation_pager"
+                android:layout_width="match_parent"
+                android:layout_height="170dp"
+                android:layout_marginTop="-30dp"/>
+
+            <android.support.constraint.ConstraintLayout
+                android:id="@+id/actions_button_container"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:gravity="end"
+                android:visibility="visible"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="10dp" >
+
+                <LinearLayout
+                    android:id="@+id/reply_button"
+                    android:layout_width="0dp"
+                    android:layout_height="40dp"
+                    android:orientation="horizontal"
+                    android:gravity="center"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintLeft_toRightOf="@+id/next_icon"
+                    app:layout_constraintStart_toEndOf="@+id/next_icon"
+                    app:layout_constraintRight_toRightOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    android:background="@drawable/acb_alert_message_box_reply"
+                    android:layout_marginStart="13dp"
+                    android:layout_marginEnd="18dp"
+                    app:layout_goneMarginLeft="18dp"
+                    app:layout_goneMarginStart="18dp" >
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:padding="10dp"
+                        android:src="@drawable/acb_alert_message_box_reply_white_icon"/>
+
+                    <com.superapps.view.TypefacedTextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:gravity="center"
+                        android:layout_gravity="center"
+                        android:layout_marginEnd="5dp"
+                        android:fontFamily="sans-serif-medium"
+                        android:text="@string/acb_message_reply"
+                        android:textColor="@color/white"
+                        android:textSize="15sp"
+                        app:font_style="bold" />
+
+                </LinearLayout>
+
+                <com.superapps.view.TypefacedTextView
+                    android:id="@+id/next_icon"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:paddingLeft="23dp"
+                    android:paddingStart="23dp"
+                    android:paddingRight="23dp"
+                    android:paddingEnd="23dp"
+                    android:visibility="gone"
+                    android:background="@drawable/acb_phone_next_btn_bg"
+                    android:gravity="center"
+                    android:fontFamily="sans-serif-medium"
+                    android:layout_marginStart="18dp"
+                    android:text="@string/acb_message_next"
+                    android:textColor="@color/acb_phone_sms_alert_blue"
+                    android:textSize="15sp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintRight_toLeftOf="@id/reply_button"
+                    app:layout_constraintEnd_toStartOf="@id/reply_button" />
+
+            </android.support.constraint.ConstraintLayout>
+
+            <FrameLayout
+                android:id="@+id/edit_text_container"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:visibility="gone"
+                android:gravity="bottom"
+                android:layout_marginBottom="10dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginLeft="18dp"
+                android:layout_marginStart="18dp"
+                android:layout_marginEnd="18dp"
+                android:layout_marginRight="18dp"
+                android:orientation="horizontal" >
+
+                <EditText
+                    android:id="@+id/edit_text"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingStart="0dp"
+                    android:paddingEnd="96dp"
+                    android:fontFamily="sans-serif"
+                    android:theme="@style/Theme.App.Base"
+                    android:inputType="textCapSentences|textMultiLine"
+                    android:hint="@string/acb_phone_reply"
+                    android:textColor="@android:color/black"
+                    android:maxHeight="63dp"
+                    android:textColorHint="#dfdfdf"
+                    android:textCursorDrawable="@drawable/acb_sms_edit_text_cursor_drawable"
+                    android:scrollHorizontally="false"
+                    android:textSize="14sp"
+                    android:background="@drawable/edit_text_container_bg"
+                    android:imeOptions="actionSend" />
+
+                <FrameLayout
+                    android:id="@+id/reply_icon_container"
+                    android:layout_width="80dp"
+                    android:layout_height="32dp"
+                    android:layout_marginEnd="4dp"
+                    android:layout_marginBottom="4dp"
+                    android:layout_gravity="end|bottom">
+
+                    <ProgressBar
+                        android:id="@+id/progress_bar"
+                        style="@style/Base.Widget.AppCompat.ProgressBar"
+                        android:layout_width="23dp"
+                        android:layout_height="23dp"
+                        android:layout_gravity="center"
+                        android:indeterminate="true"
+                        android:visibility="gone" />
+
+                    <ImageView
+                        android:id="@+id/reply_icon"
+                        android:layout_width="80dp"
+                        android:layout_height="32dp"
+                        android:background="@drawable/acb_alert_message_box_reply"
+                        android:padding="7dp"
+                        android:src="@drawable/acb_alert_message_box_reply_white_icon"/>
+
+                    <ImageView
+                        android:id="@+id/sms_send_failed_tip"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="end|top"
+                        android:layout_marginEnd="24dp"
+                        android:layout_marginTop="7dp"
+                        android:background="@drawable/acb_phone_sms_send_failed_icon"
+                        android:visibility="invisible" />
+                </FrameLayout>
+
+            </FrameLayout>
+
+        </LinearLayout>
+
+        <Space
+            android:id="@+id/space"
+            android:layout_width="match_parent"
+            android:layout_height="8dp"
+            android:background="#00FFFFFF"
+            android:layout_below="@+id/alert_card" />
+
+    </RelativeLayout>
+
+    <com.superapps.view.TypefacedTextView
+        android:id="@+id/customize_app_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginBottom="7dp"
+        android:textSize="14sp"
+        android:textColor="#8e8f90"
+        android:text="@string/app_name"
+        android:layout_above="@+id/alert_card_container" />
+
+
+</RelativeLayout>
+
+

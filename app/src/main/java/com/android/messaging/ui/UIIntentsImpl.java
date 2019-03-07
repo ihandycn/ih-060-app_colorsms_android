@@ -34,6 +34,7 @@ import android.provider.ContactsContract.Contacts;
 import android.provider.ContactsContract.Intents;
 import android.provider.MediaStore;
 import android.provider.Telephony;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.TaskStackBuilder;
 import android.support.v4.content.LocalBroadcastManager;
@@ -51,6 +52,7 @@ import com.android.messaging.datamodel.data.MessagePartData;
 import com.android.messaging.datamodel.data.ParticipantData;
 import com.android.messaging.receiver.NotificationReceiver;
 import com.android.messaging.sms.MmsSmsUtils;
+import com.android.messaging.smsshow.MessageBoxActivity;
 import com.android.messaging.ui.appsettings.ApnEditorActivity;
 import com.android.messaging.ui.appsettings.ApnSettingsActivity;
 import com.android.messaging.ui.appsettings.SettingAdvancedActivity;
@@ -401,6 +403,19 @@ public class UIIntentsImpl extends UIIntents {
         if (!TextUtils.isEmpty(conversationId)) {
             intent.putExtra(UI_INTENT_EXTRA_CONVERSATION_ID, conversationId);
         }
+        context.startActivity(intent);
+    }
+
+    @Override
+    public void launchMessageBoxActivity(Context context, @NonNull String conversationId,
+                                         @NonNull String avatarUri,
+                                         @NonNull String conversationName,
+                                         @NonNull CharSequence content) {
+        final Intent intent = new Intent(context, MessageBoxActivity.class);
+        intent.putExtra(UI_INTENT_EXTRA_CONVERSATION_ID, conversationId);
+        intent.putExtra(UI_INTENT_EXTRA_ATTACHMENT_URI, avatarUri);
+        intent.putExtra(UI_INTENT_EXTRA_CONVERSATION_NAME, conversationName);
+        intent.putExtra(UI_INTENT_EXTRA_MESSAGE, content);
         context.startActivity(intent);
     }
 

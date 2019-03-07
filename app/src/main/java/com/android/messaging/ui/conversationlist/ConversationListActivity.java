@@ -42,6 +42,7 @@ import android.widget.TextView;
 import com.android.messaging.Factory;
 import com.android.messaging.R;
 import com.android.messaging.datamodel.BugleNotifications;
+import com.android.messaging.smsshow.MessageBoxActivity;
 import com.android.messaging.ui.DragHotSeatActivity;
 import com.android.messaging.ui.UIIntents;
 import com.android.messaging.ui.UIIntentsImpl;
@@ -241,7 +242,7 @@ public class ConversationListActivity extends AbstractConversationListActivity
                         break;
                     case DRAWER_INDEX_BUBBLE:
                         BugleAnalytics.logEvent("Menu_Bubble_Click");
-                        Navigations.startActivity(ConversationListActivity.this, CustomBubblesActivity.class);
+                        Navigations.startActivity(ConversationListActivity.this, MessageBoxActivity.class);
                         break;
                     case DRAWER_INDEX_CHAT_BACKGROUND:
                         BugleAnalytics.logEvent("Menu_ChatBackground_Click");

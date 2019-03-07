@@ -82,6 +82,7 @@ import com.android.messaging.util.OsUtil;
 import com.android.messaging.util.PendingIntentConstants;
 import com.android.messaging.util.PhoneUtils;
 import com.android.messaging.util.RingtoneUtil;
+import com.android.messaging.util.TextUtil;
 import com.android.messaging.util.ThreadUtil;
 import com.android.messaging.util.UriUtil;
 import com.ihs.app.framework.HSApplication;
@@ -471,10 +472,10 @@ public class BugleNotifications {
         }
         notifBuilder.setContentIntent(destinationIntent);
 
-        // TODO: set based on contact coming from a favorite.
         notifBuilder.setPriority(state.getPriority());
         if (notificationChannel != null) {
-             notificationChannel.setImportance(state.getChannelPriority());
+            // if channel is not null, the device is above O
+            notificationChannel.setImportance(state.getChannelPriority());
         }
         // Save the state of the notification in-progress so when the avatar is loaded,
         // we can continue building the notification.
@@ -611,6 +612,7 @@ public class BugleNotifications {
     private static void createMessageNotification(final boolean silent,
                                                   final String conversationId) {
         final NotificationState state = MessageNotificationState.getNotificationState();
+
         final boolean softSound = DataModel.get().isNewMessageObservable(conversationId);
         if (state == null) {
             cancel(PendingIntentConstants.SMS_NOTIFICATION_ID);
@@ -621,8 +623,30 @@ public class BugleNotifications {
             return;
         }
 
-        BugleAnalytics.logEvent("SMS_Notifications_Pushed", true);
+        popUpMessageBox(state, conversationId);
         processAndSend(state, silent, softSound);
+        BugleAnalytics.logEvent("SMS_Notifications_Pushed", true);
+
+    }
+
+    private static void popUpMessageBox(final NotificationState state, final String conversationId) {
+        if (state instanceof MessageNotificationState) {
+
+            for (ConversationLineInfo convInfo : ((MessageNotificationState) state).mConvList.mConvInfos) {
+                if (TextUtils.equals(convInfo.mConversationId, conversationId)) {
+                    MessageNotificationState.MessageLineInfo messageLineInfo = convInfo.getLatestMessageLineInfo();
+
+
+                    UIIntents.get().launchMessageBoxActivity(Factory.get().getApplicationContext(),
+                            conversationId,
+                            convInfo.mAvatarUri != null ? convInfo.mAvatarUri.toString() : "",
+                            convInfo.mGroupConversationName,
+                            messageLineInfo.mText);
+                    break;
+                }
+            }
+
+        }
     }
 
     private static void updateBuilderAudioVibrate(final NotificationState state,
