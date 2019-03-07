@@ -242,7 +242,7 @@ public class ConversationListActivity extends AbstractConversationListActivity
                         break;
                     case DRAWER_INDEX_BUBBLE:
                         BugleAnalytics.logEvent("Menu_Bubble_Click");
-                        Navigations.startActivity(ConversationListActivity.this, MessageBoxActivity.class);
+                        Navigations.startActivity(ConversationListActivity.this, CustomBubblesActivity.class);
                         break;
                     case DRAWER_INDEX_CHAT_BACKGROUND:
                         BugleAnalytics.logEvent("Menu_ChatBackground_Click");
