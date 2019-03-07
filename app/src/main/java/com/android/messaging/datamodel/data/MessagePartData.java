@@ -204,7 +204,6 @@ public class MessagePartData implements Parcelable {
      *  or can be called on a part that does not yet have a valid part id to set it.
      */
     public void updatePartId(final String partId) {
-        Assert.isTrue(TextUtils.isEmpty(partId) || TextUtils.isEmpty(mPartId));
         mPartId = partId;
     }
 
@@ -214,7 +213,6 @@ public class MessagePartData implements Parcelable {
      *  or can be called on a part that does not yet have a valid messageId to set it.
      */
     public void updateMessageId(final String messageId) {
-        Assert.isTrue(TextUtils.isEmpty(messageId) || TextUtils.isEmpty(mMessageId));
         mMessageId = messageId;
     }
 

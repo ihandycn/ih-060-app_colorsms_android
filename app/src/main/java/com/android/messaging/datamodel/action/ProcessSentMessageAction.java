@@ -254,7 +254,7 @@ public class ProcessSentMessageAction extends Action {
         int i = 0;
         for (MessagePartData data : message.getParts()) {
             String stickerMagicUri = stickerMagicUriList.get(i);
-            if (!TextUtils.isEmpty(stickerMagicUri)) {
+            if (!TextUtils.isEmpty(stickerMagicUri) && data.getContentUri() != null) {
                 EmojiManager.makePartUriRelateToStickerMagicUri(data.getContentUri().toString(), stickerMagicUri);
             }
             i++;
