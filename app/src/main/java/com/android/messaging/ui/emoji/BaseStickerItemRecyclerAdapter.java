@@ -2,6 +2,7 @@ package com.android.messaging.ui.emoji;
 
 import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.RecyclerView;
@@ -15,6 +16,7 @@ import com.android.messaging.R;
 import com.android.messaging.download.DownloadListener;
 import com.android.messaging.download.Downloader;
 import com.android.messaging.glide.GlideApp;
+import com.android.messaging.ui.emoji.utils.EmojiManager;
 import com.android.messaging.util.BugleAnalytics;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.target.CustomViewTarget;
@@ -125,27 +127,58 @@ public abstract class BaseStickerItemRecyclerAdapter extends RecyclerView.Adapte
         }
 
         holder.stickerImageView.setImageResource(R.drawable.emoji_item_loading_icon);
-        GlideApp.with(holder.itemView.getContext())
-                .asBitmap()
-                .load(stickerInfo.mStickerUrl)
-                .diskCacheStrategy(DiskCacheStrategy.DATA)
-                .into(new CustomViewTarget<GifImageView, Bitmap>(holder.stickerImageView) {
-                    @Override
-                    public void onResourceReady(@NonNull Bitmap resource, @Nullable Transition transition) {
-                        this.view.setImageBitmap(resource);
-                        holder.magicStatusView.setVisibility(View.VISIBLE);
-                        stickerInfo.mClickable = true;
-                        onMagicItemLoadingFinish(stickerInfo, holder);
-                    }
+        if (!stickerInfo.mIsDownloaded) {
+            GlideApp.with(holder.itemView.getContext())
+                    .asBitmap()
+                    .load(stickerInfo.mStickerUrl)
+                    .diskCacheStrategy(DiskCacheStrategy.DATA)
+                    .into(new CustomViewTarget<GifImageView, Bitmap>(holder.stickerImageView) {
+                        @Override
+                        public void onResourceReady(@NonNull Bitmap resource, @Nullable Transition transition) {
+                            this.view.setImageBitmap(resource);
+                            holder.magicStatusView.setVisibility(View.VISIBLE);
+                            stickerInfo.mClickable = true;
+                            onMagicItemLoadingFinish(stickerInfo, holder);
+                        }
 
-                    @Override
-                    protected void onResourceCleared(@Nullable Drawable placeholder) {
-                    }
+                        @Override
+                        protected void onResourceCleared(@Nullable Drawable placeholder) {
+                        }
 
-                    @Override
-                    public void onLoadFailed(@Nullable Drawable errorDrawable) {
-                    }
-                });
+                        @Override
+                        public void onLoadFailed(@Nullable Drawable errorDrawable) {
+                        }
+                    });
+        } else {
+            File file = Downloader.getInstance().getDownloadFile(stickerInfo.mMagicUrl);
+            if (file.exists()) {
+                Uri gifUri = Uri.fromFile(file);
+                EmojiManager.addStickerMagicFileUri(gifUri.toString());
+
+                GlideApp.with(holder.itemView.getContext())
+                        .as(GifDrawable.class)
+                        .load(gifUri)
+                        .diskCacheStrategy(DiskCacheStrategy.DATA)
+                        .into(new CustomViewTarget<GifImageView, GifDrawable>(holder.stickerImageView) {
+                            @Override
+                            protected void onResourceCleared(@Nullable Drawable placeholder) {
+                            }
+
+                            @Override
+                            public void onLoadFailed(@Nullable Drawable errorDrawable) {
+                            }
+
+                            @Override
+                            public void onResourceReady(@NonNull GifDrawable resource, @Nullable Transition<? super GifDrawable> transition) {
+                                stickerInfo.mStickerWidth = resource.getMinimumWidth();
+                                stickerInfo.mStickerHeight = resource.getMinimumHeight();
+                                stickerInfo.mClickable = true;
+                                holder.magicStatusView.setVisibility(View.VISIBLE);
+                                this.view.setImageDrawable(resource);
+                            }
+                        });
+            }
+        }
     }
 
     void downloadMagicEmoji(boolean isAutoDownload, @NonNull StickerInfo stickerInfo, @NonNull StickerViewHolder holder) {
@@ -184,6 +217,33 @@ public abstract class BaseStickerItemRecyclerAdapter extends RecyclerView.Adapte
                     holder.magicStatusView.setImageResource(R.drawable.emoji_player_icon);
                     holder.progressLayout.setVisibility(View.GONE);
                     holder.magicStatusView.setVisibility(View.VISIBLE);
+
+                    if (file.exists()) {
+                        Uri gifUri = Uri.fromFile(file);
+                        EmojiManager.addStickerMagicFileUri(gifUri.toString());
+
+                        GlideApp.with(holder.itemView.getContext())
+                                .as(GifDrawable.class)
+                                .load(gifUri)
+                                .diskCacheStrategy(DiskCacheStrategy.DATA)
+                                .into(new CustomViewTarget<GifImageView, GifDrawable>(holder.stickerImageView) {
+                                    @Override
+                                    protected void onResourceCleared(@Nullable Drawable placeholder) {
+                                    }
+
+                                    @Override
+                                    public void onLoadFailed(@Nullable Drawable errorDrawable) {
+                                    }
+
+                                    @Override
+                                    public void onResourceReady(@NonNull GifDrawable resource, @Nullable Transition<? super GifDrawable> transition) {
+                                        stickerInfo.mStickerWidth = resource.getMinimumWidth();
+                                        stickerInfo.mStickerHeight = resource.getMinimumHeight();
+                                        stickerInfo.mClickable = true;
+                                        this.view.setImageDrawable(resource);
+                                    }
+                                });
+                    }
                 }, 100);
 
             }
