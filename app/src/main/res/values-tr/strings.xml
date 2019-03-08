@@ -526,8 +526,25 @@
 
     <string name="emoji_add_more">Daha fazla emoji</string>
 
-
-
     <string name="menu_setting">"Ayarlar"</string>
     <string name="set_as_default_dialog_button_ok_user_present">"Tamam"</string>
+
+    <string name="acb_guide_ok">OK</string>
+    <string name="acb_phone_reply">" Yanıtla"</string>
+
+    <string name="acb_device_not_support_message">Cihazınız bunu desteklemiyor</string>
+    <string name="acb_message_time_ago" >%1$d dak. önce</string>
+    <string name="acb_message_next" >SONRAKİ</string>
+    <string name="acb_message_guide_title">Kilidi açtıktan hemen sonra okumamış WhatApp Mesajlarını gör.</string>
+    <string name="acb_message_guide_content">Air Launcher etkinleştirmek için erişime izin ver </string>
+    <string name="acb_message_reply" >Yanıtla</string>
+
+    <string name="acb_alert_disable_call_alert">Etkisiz Kıl</string>
+    <string name="acb_phone_alert_close_dialog_negative_action">KAPAT</string>
+    <string name="acb_phone_alert_close_dialog_positive_action">ŞİMDİ DEĞİL</string>
+
+    <string name="acb_alert_disable_message_successfully">Mesaj Asistanı devre dışı bırakıldı</string>
+    <string name="acb_alert_disable_message_alert_title">Mesaj Asistanı kapatılsın mı?</string>
+    <string name="acb_alert_disable_message_alert_message">Mesaj Asistanını kapatırsan, mesaj geldiğinde hatırlatılmaz. Kapatmak istediğinden emin misin?</string>
+
 </resources>

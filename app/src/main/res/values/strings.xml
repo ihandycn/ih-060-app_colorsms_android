@@ -1062,4 +1062,26 @@
     <string name="wallpaper_add_photos">Add Photos</string>
 
     <string name="messages">Messages</string>
+
+    <string name="acb_message_next_num" translatable="false">(%1$d)</string>
+
+    <!--Screen flash translate-->
+    <string name="acb_guide_ok">OK</string>
+    <string name="acb_device_not_support_message">Your device does not support this.</string>
+    <string name="acb_phone_reply" >" REPLY"</string>
+    <string name="acb_message_reply">REPLY</string>
+    <string name="acb_message_next">NEXT</string>
+    <string name="acb_message_time_ago">%1$d min ago</string>
+    <string name="acb_message_guide_title">Instantly know who sent you WhatsApp messages when phone locked</string>
+    <string name="acb_message_guide_content">Open notification access for Air Launcher and enjoy this feature!</string>
+    <string name="acb_message_no_next" translatable="false">The last page</string>
+    <string name="acb_phone_sms_send_successfully_toast"  translatable="false">Send Successfully</string>
+    <string name="acb_alert_disable_call_alert">Disable</string>
+    <string name="acb_phone_alert_close_dialog_negative_action">TURN OFF</string>
+    <string name="acb_phone_alert_close_dialog_positive_action">NOT NOW</string>
+    <string name="acb_alert_disable_message_alert_title">Turn Off Message Assistant?</string>
+    <string name="acb_alert_disable_message_alert_message">If you turn off message assistant, you’ll not get reminder when receiving message. Are you sure to turn it off?</string>
+    <string name="acb_alert_disable_message_successfully">Message Assistant disabled.</string>
+
+
 </resources>

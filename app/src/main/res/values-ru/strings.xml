@@ -578,5 +578,22 @@
 
     <string name="emoji_add_more">Больше эмотиконов</string>
 
+    <string name="acb_guide_ok">OK</string>
+    <string name="acb_phone_reply">" Ответить"</string>
+
+    <string name="acb_device_not_support_message">Ваше устройство это не поддерживает.</string>
+    <string name="acb_message_time_ago" >%1$d мин. назад</string>
+    <string name="acb_message_next" >ДАЛЕЕ</string>
+    <string name="acb_message_guide_title">Просматривайте сообщения в WhatsApp сразу после разблокировки.</string>
+    <string name="acb_message_guide_content">Разрешите доступ для включения Air Launcher </string>
+    <string name="acb_message_reply" >Ответить</string>
+
+    <string name="acb_alert_disable_call_alert">Отключить</string>
+    <string name="acb_phone_alert_close_dialog_negative_action">ОТКЛЮЧИТЬ</string>
+    <string name="acb_phone_alert_close_dialog_positive_action">НЕ СЕЙЧАС</string>
+
+    <string name="acb_alert_disable_message_successfully">Помощник по сообщениям выключен</string>
+    <string name="acb_alert_disable_message_alert_title">Выключить помощник по сообщениям?</string>
+    <string name="acb_alert_disable_message_alert_message">Если выключить помощник по сообщениям,  вы не будете получать напоминания о входящих сообщениях. Вы действительно хотите выключить его?</string>
 
 </resources>

@@ -529,4 +529,24 @@
 
     <string name="menu_setting">"Einstellungen"</string>
     <string name="set_as_default_dialog_button_ok_user_present">"OK"</string>
+
+
+    <string name="acb_guide_ok">OK</string>
+    <string name="acb_phone_reply">" Antworten"</string>
+
+    <string name="acb_device_not_support_message">Ihr Gerät unterstützt dies nicht.</string>
+    <string name="acb_message_time_ago" >vor %1$d Min</string>
+    <string name="acb_message_next" >WEITER</string>
+    <string name="acb_message_guide_title">Ungelesene WhatsApp-Nachrichten sofort nach dem Entsperren anzeigen.</string>
+    <string name="acb_message_guide_content">Zugangsberechtigung erteilen, um die Air Launcher zu aktivieren </string>
+    <string name="acb_message_reply" >Antworten</string>
+
+    <string name="acb_alert_disable_call_alert">Deaktivieren</string>
+    <string name="acb_phone_alert_close_dialog_negative_action">AUSSCHALTEN</string>
+    <string name="acb_phone_alert_close_dialog_positive_action">NICHT JETZ</string>
+
+    <string name="acb_alert_disable_message_successfully">Nachrichtenassistent deaktiviert</string>
+    <string name="acb_alert_disable_message_alert_title">Nachrichtenassistent deaktivieren?</string>
+    <string name="acb_alert_disable_message_alert_message">Wenn Sie den Nachrichtenassistenten deaktivieren, erhalten Sie keine Erinnerung bei entgangenen Nachrichten. Wirklich deaktivieren?</string>
+
 </resources>

@@ -529,4 +529,22 @@
 
     <string name="menu_setting">"Configurações"</string>
     <string name="set_as_default_dialog_button_ok_user_present">"Ok"</string>
+
+    <string name="acb_guide_ok">OK</string>
+    <string name="acb_phone_reply">" Responder"</string>
+
+    <string name="acb_device_not_support_message">Dispositivo não suportado</string>
+    <string name="acb_message_time_ago" >%1$d min. atrás</string>
+    <string name="acb_message_next" >PRÓXIMA</string>
+    <string name="acb_message_guide_title">Veja as mensagens não lidas do WhatsApp imediatamente após o desbloqueio.</string>
+    <string name="acb_message_guide_content">Permite o acesso de utilização para ativar o Air Launcher </string>
+    <string name="acb_message_reply" >Responder</string>
+
+    <string name="acb_alert_disable_call_alert">Desativar</string>
+    <string name="acb_phone_alert_close_dialog_negative_action">DESLIGAR</string>
+    <string name="acb_phone_alert_close_dialog_positive_action">AGORA NÃO</string>
+
+    <string name="acb_alert_disable_message_successfully">Assistente de Mensagens desativado</string>
+    <string name="acb_alert_disable_message_alert_title">Desativar o Assistente de Mensagens?</string>
+    <string name="acb_alert_disable_message_alert_message">Se você desativar o Assistente de Mensagens, não receberá um lembrete quando receber mensagens. Tem certeza de que deseja desativar?</string>
 </resources>
