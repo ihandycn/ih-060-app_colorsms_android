@@ -1063,9 +1063,7 @@
 
     <string name="messages">Messages</string>
 
-    <string name="acb_message_next_num" translatable="false">(%1$d)</string>
-
-    <!--Screen flash translate-->
+    <string name="message_box_next_num" translatable="false">(%1$d)</string>
     <string name="message_box_reply_hint" >" REPLY"</string>
     <string name="message_box_reply">REPLY</string>
     <string name="message_box_next">NEXT</string>

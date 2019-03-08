@@ -251,7 +251,7 @@ public class MessageBoxActivity extends BaseActivity {
         mNextButton.setClickable(true);
         int total = mConversationPagerAdapter.getCount();
         int currentPosition = mConversationPager.getCurrentItem();
-        mNextButton.setText((getString(R.string.message_box_next) + String.format(getString(R.string.acb_message_next_num),
+        mNextButton.setText((getString(R.string.message_box_next) + String.format(getString(R.string.message_box_next_num),
                 total - currentPosition - 1)));
         if (currentPosition == total - 1) {
             mNextButton.setBackground(null);
