@@ -526,8 +526,54 @@
 
     <string name="emoji_add_more">อิโมจิเพิ่มเติม</string>
 
+    <string name="menu_setting">การตั้งค่า</string>
+    <string name="set_as_default_dialog_button_ok_user_present">ตกลง</string>
 
-
-    <string name="menu_setting">"การตั้งค่า"</string>
-    <string name="set_as_default_dialog_button_ok_user_present">"ตกลง"</string>
+    <string name="menu_group_customization">กำหนดเอง</string>
+    <string name="menu_theme_color">สีธีม</string>
+    <string name="theme_select_description">เลือกสีธีมที่คุณต้องการ</string>
+    <string name="menu_bubble">ฟองอากาศ</string>
+    <string name="bubble_customize_tab_color">สี</string>
+    <string name="bubble_customize_tab_style">สไตล์</string>
+    <string name="bubble_customize_received">ได้รับ</string>
+    <string name="bubble_customize_sent">ส่งแล้ว</string>
+    <string name="bubble_customize_bubble_color">สีฟองอากาศ</string>
+    <string name="bubble_customize_text_color">สีข้อความ</string>
+    <string name="bubble_customize_color_recommend">แนะนำ</string>
+    <string name="bubble_customize_color_advance">ขั้นสูง</string>
+    <string name="bubble_customize_save">บันทึก</string>
+    <string name="bubble_customize_save_confirm_dialog_title">บันทึกความเปลี่ยนแปลง</string>
+    <string name="bubble_customize_save_confirm_dialog_content">ฟองอากาศได้รับการแก้ไข คุณต้องการบันทึกความเปลี่ยนแปลงหรือไม่</string>
+    <string name="bubble_customize_preview_incoming_message">ไง หวัดดี! ยินดีที่ได้เจอ</string>
+    <string name="bubble_customize_preview_outgoing_message">ยินดีที่ได้เจอด้วย</string>
+    <string name="bubble_customize_preview_incoming_message_font">เลือกฟอนต์ที่คุณต้องการ!</string>
+    <string name="bubble_customize_preview_outgoing_message_font">เปลี่ยนขนาดฟอนต์ในฟองอากาศสนทนา</string>
+    <string name="menu_chat_background">พื้นหลังการสนทนา</string>
+    <string name="wallpaper_add_photos">เพิ่มรูปภาพ</string>
+    <string name="wallpaper_done">เสร็จ</string>
+    <string name="wallpaper_reset">รีเซ็ต</string>
+    <string name="wallpaper_set_failed">ไม่สำเร็จ</string>
+    <string name="setting_text_font">ฟอนต์</string>
+    <string name="setting_text_size">ขนาดฟอนต์</string>
+    <string name="menu_change_font">ฟอนต์และขนาดฟอนต์</string>
+    <string name="setting_text_size_hint_large">ใหญ่</string>
+    <string name="setting_text_size_hint_larger">ใหญ่ที่สุด</string>
+    <string name="setting_text_size_hint_medium_large">ปานกลาง</string>
+    <string name="setting_text_size_hint_medium_small">เล็ก</string>
+    <string name="setting_text_size_hint_small">เล็กที่สุด</string>
+    <string name="setting_text_size_hint_normal">ค่าเริ่มต้น</string>
+    <string name="set_as_default_dialog_description_user_present">ส่งอิโมจิ สติกเกอร์ และ GIF สนุก ๆ ให้เพื่อนผ่าน</string>
+    <string name="set_as_default_dialog_title_default_change">จัดการแอป SMS ค่าเริ่มต้นแล้ว</string>
+    <string name="set_as_default_dialog_description_default_change">Color SMS ไม่สามารถทำงานได้อย่างเหมาะสมหากไม่ได้ตั้งเป็นค่าเริ่มต้น</string>
+    <string name="drag_hotseat_title">ลาก Color SMS ไปยังช่องพิเศษ</string>
+    <string name="drag_hotseat_content">ให้คุณส่งอิโมจิและสติกเกอร์สนุก ๆ ผ่านทาง Color SMS ง่ายขึ้น</string>
+    <string name="set_as_default_dialog_button_ok_default_change">ตั้งทันที</string>
+    <string name="got_it">รับทราบ</string>
+    <string name="welcome_set_default_failed_toast">Color SMS ไม่ได้ตั้งค่าอย่างถูกต้อง</string>
+    <string name="dialog_add_contact_confirmation">เพิ่ม</string>
+    <string name="network_error">ข้อผิดพลาดเครือข่าย</string>
+    <string name="reload">โหลดใหม่</string>
+    <string name="sms_notification_channel">การแจ้งเตือน SMS</string>
+    <string name="sms_notification_channel_description">แสดงการแจ้งเตือนเมื่อได้รับ SMS</string>
+    <string name="menu_rate">คะแนน 5 ดาว</string>
 </resources>

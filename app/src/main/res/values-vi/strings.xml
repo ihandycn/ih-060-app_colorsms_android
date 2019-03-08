@@ -527,6 +527,54 @@
 
     <string name="sms_show_current_theme">Chủ đề Hiện tại</string>
 
-    <string name="menu_setting">"Cài đặt"</string>
-    <string name="set_as_default_dialog_button_ok_user_present">"OK"</string>
+    <string name="menu_setting">Cài đặt</string>
+    <string name="set_as_default_dialog_button_ok_user_present">OK</string>
+
+    <string name="menu_group_customization">Tùy chỉnh</string>
+    <string name="menu_theme_color">Màu chủ đề</string>
+    <string name="theme_select_description">Chọn màu chủ đề bạn thích</string>
+    <string name="menu_bubble">Bong bóng</string>
+    <string name="bubble_customize_tab_color">Màu sắc</string>
+    <string name="bubble_customize_tab_style">Phong cách</string>
+    <string name="bubble_customize_received">Đã nhận</string>
+    <string name="bubble_customize_sent">Đã gửi</string>
+    <string name="bubble_customize_bubble_color">Màu bong bóng</string>
+    <string name="bubble_customize_text_color">Màu chữ</string>
+    <string name="bubble_customize_color_recommend">Đề xuất</string>
+    <string name="bubble_customize_color_advance">Nâng cao</string>
+    <string name="bubble_customize_save">LƯU</string>
+    <string name="bubble_customize_save_confirm_dialog_title">Lưu thay đổi</string>
+    <string name="bubble_customize_save_confirm_dialog_content">Các bong bóng đã được sửa đổi, bạn có muốn giữ những thay đổi này không?</string>
+    <string name="bubble_customize_preview_incoming_message">Xin chào! Rất vui được gặp bạn.</string>
+    <string name="bubble_customize_preview_outgoing_message">Cũng rất vui được gặp bạn.</string>
+    <string name="bubble_customize_preview_incoming_message_font">Chọn một phông chữ bạn thích!</string>
+    <string name="bubble_customize_preview_outgoing_message_font">Thay đổi kích thước phông chữ trong bong bóng trò chuyện.</string>
+    <string name="menu_chat_background">Hình nền trò chuyện</string>
+    <string name="wallpaper_add_photos">Thêm ảnh</string>
+    <string name="wallpaper_done">XONG</string>
+    <string name="wallpaper_reset">ĐẶT LẠI</string>
+    <string name="wallpaper_set_failed">không thành công</string>
+    <string name="setting_text_font">Phông chữ</string>
+    <string name="setting_text_size">Kích thước phông chữ</string>
+    <string name="menu_change_font">Phông &#038; kích thước phông</string>
+    <string name="setting_text_size_hint_large">Lớn</string>
+    <string name="setting_text_size_hint_larger">Lớn nhất</string>
+    <string name="setting_text_size_hint_medium_large">Trung bình</string>
+    <string name="setting_text_size_hint_medium_small">Nhỏ</string>
+    <string name="setting_text_size_hint_small">Nhỏ nhất</string>
+    <string name="setting_text_size_hint_normal">Mặc định</string>
+    <string name="set_as_default_dialog_description_user_present">Gửi các biểu tượng cảm xúc, nhãn dán và ảnh GIF vui nhộn cho bạn bè qua Color SMS.</string>
+    <string name="set_as_default_dialog_title_default_change">SMS mặc định đã xóa</string>
+    <string name="set_as_default_dialog_description_default_change">Color SMS không thể hoạt động bình thường nếu không được đặt làm mặc định.</string>
+    <string name="drag_hotseat_title">Kéo Color SMS tới Ghế nóng</string>
+    <string name="drag_hotseat_content">Dễ dàng hơn để bạn gửi các biểu tượng cảm xúc và nhãn dán  vui nhộn qua Color SMS.</string>
+    <string name="set_as_default_dialog_button_ok_default_change">Thiết lập ngay</string>
+    <string name="got_it">Đã hiểu</string>
+    <string name="welcome_set_default_failed_toast">Color SMS đã không được thiết lập đúng cách</string>
+    <string name="dialog_add_contact_confirmation">Thêm</string>
+    <string name="network_error">Lỗi mạng.</string>
+    <string name="reload">Tải lại</string>
+    <string name="sms_notification_channel">Thông báo SMS</string>
+    <string name="sms_notification_channel_description">Hiển thị thông báo khi nhận được SMS</string>
+    <string name="menu_rate">Xếp hạng 5 sao</string>
 </resources>

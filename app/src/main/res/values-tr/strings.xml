@@ -526,8 +526,54 @@
 
     <string name="emoji_add_more">Daha fazla emoji</string>
 
+    <string name="menu_setting">Ayarlar</string>
+    <string name="set_as_default_dialog_button_ok_user_present">Tamam</string>
 
-
-    <string name="menu_setting">"Ayarlar"</string>
-    <string name="set_as_default_dialog_button_ok_user_present">"Tamam"</string>
+    <string name="menu_group_customization">Özelleştir</string>
+    <string name="menu_theme_color">Tema Rengi</string>
+    <string name="theme_select_description">Beğendiğin tema rengini seç</string>
+    <string name="menu_bubble">Baloncuk</string>
+    <string name="bubble_customize_tab_color">Renk</string>
+    <string name="bubble_customize_tab_style">Stil</string>
+    <string name="bubble_customize_received">Alındı</string>
+    <string name="bubble_customize_sent">Gönderildi</string>
+    <string name="bubble_customize_bubble_color">Baloncuk Rengi</string>
+    <string name="bubble_customize_text_color">Metin Rengi</string>
+    <string name="bubble_customize_color_recommend">Tavsiye et</string>
+    <string name="bubble_customize_color_advance">Gelişmiş</string>
+    <string name="bubble_customize_save">KAYDET</string>
+    <string name="bubble_customize_save_confirm_dialog_title">Değişiklikleri Kaydet</string>
+    <string name="bubble_customize_save_confirm_dialog_content">Baloncuklar değiştirildi, değişiklikleri kaydetmek ister misin?</string>
+    <string name="bubble_customize_preview_incoming_message">Merhaba! Tanıştığımıza memnun oldum.</string>
+    <string name="bubble_customize_preview_outgoing_message">Ben de memnun oldum.</string>
+    <string name="bubble_customize_preview_incoming_message_font">Beğendiğin yazı tipini seç!</string>
+    <string name="bubble_customize_preview_outgoing_message_font">Sohbet baloncuklarındaki yazı boyutunu değiştirin.</string>
+    <string name="menu_chat_background">Sohbet Arka Planı</string>
+    <string name="wallpaper_add_photos">Fotoğraf Ekle</string>
+    <string name="wallpaper_done">TAMAM</string>
+    <string name="wallpaper_reset">SIFIRLA</string>
+    <string name="wallpaper_set_failed">başarısız</string>
+    <string name="setting_text_font">Yazı Tipi</string>
+    <string name="setting_text_size">Yazı Boyutu</string>
+    <string name="menu_change_font">Yazı Tipi &#038; Yazı Boyutu</string>
+    <string name="setting_text_size_hint_large">Büyük</string>
+    <string name="setting_text_size_hint_larger">En Büyük</string>
+    <string name="setting_text_size_hint_medium_large">Orta</string>
+    <string name="setting_text_size_hint_medium_small">Küçük</string>
+    <string name="setting_text_size_hint_small">En Küçük</string>
+    <string name="setting_text_size_hint_normal">Varsayılan</string>
+    <string name="set_as_default_dialog_description_user_present">Color SMS ile arkadaşlarına komik emojiler, çıkartmalar ve GIFler gönder.</string>
+    <string name="set_as_default_dialog_title_default_change">Varsayılan SMS Değiştirildi</string>
+    <string name="set_as_default_dialog_description_default_change">Color SMS varsayılan olarak ayarlanmadan düzgün olarak işlemez.</string>
+    <string name="drag_hotseat_title">Color SMS\'i Ana Çubuğa Sürükle</string>
+    <string name="drag_hotseat_content">Color SMS ile komik emojileri ve çıkartmaları göndermek daha kolay.</string>
+    <string name="set_as_default_dialog_button_ok_default_change">Hemen Ayarla</string>
+    <string name="got_it">Anladım</string>
+    <string name="welcome_set_default_failed_toast">Color SMS düzgün ayarlanmadı</string>
+    <string name="dialog_add_contact_confirmation">Ekle</string>
+    <string name="network_error">Ağ hatası.</string>
+    <string name="reload">Tekrar Yükle</string>
+    <string name="sms_notification_channel">SMS Bildirimi</string>
+    <string name="sms_notification_channel_description">SMS alındığında bildirim göster</string>
+    <string name="menu_rate">5 Yıldızlı Puanlandırma</string>
 </resources>

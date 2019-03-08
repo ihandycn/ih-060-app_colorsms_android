@@ -524,6 +524,54 @@
     <string name="sms_show_current_theme">當前的主題</string>
 
 
-    <string name="menu_setting">"設定"</string>
-    <string name="set_as_default_dialog_button_ok_user_present">"確定"</string>
+    <string name="menu_setting">設定</string>
+    <string name="set_as_default_dialog_button_ok_user_present">確定</string>
+
+    <string name="menu_group_customization">個性化</string>
+    <string name="menu_theme_color">主題色</string>
+    <string name="theme_select_description">選擇一個你喜歡的顏色</string>
+    <string name="menu_bubble">氣泡</string>
+    <string name="bubble_customize_tab_color">顏色</string>
+    <string name="bubble_customize_tab_style">樣式</string>
+    <string name="bubble_customize_received">收信</string>
+    <string name="bubble_customize_sent">發信</string>
+    <string name="bubble_customize_bubble_color">氣泡顏色</string>
+    <string name="bubble_customize_text_color">文字顏色</string>
+    <string name="bubble_customize_color_recommend">推薦</string>
+    <string name="bubble_customize_color_advance">高級</string>
+    <string name="bubble_customize_save">保存</string>
+    <string name="bubble_customize_save_confirm_dialog_title">保存修改</string>
+    <string name="bubble_customize_save_confirm_dialog_content">氣泡已經修改，是否保存改動？</string>
+    <string name="bubble_customize_preview_incoming_message">嗨，您好！很高興見到你。</string>
+    <string name="bubble_customize_preview_outgoing_message">也很高興見到你。</string>
+    <string name="bubble_customize_preview_incoming_message_font">挑選一個你喜歡的字體！</string>
+    <string name="bubble_customize_preview_outgoing_message_font">修改氣泡內的文字大小</string>
+    <string name="menu_chat_background">聊天背景</string>
+    <string name="wallpaper_add_photos">添加照片</string>
+    <string name="wallpaper_done">完成</string>
+    <string name="wallpaper_reset">重置</string>
+    <string name="wallpaper_set_failed">失敗</string>
+    <string name="setting_text_font">字體</string>
+    <string name="setting_text_size">字號</string>
+    <string name="menu_change_font">字體&#038;字號</string>
+    <string name="setting_text_size_hint_large">大</string>
+    <string name="setting_text_size_hint_larger">最大</string>
+    <string name="setting_text_size_hint_medium_large">中</string>
+    <string name="setting_text_size_hint_medium_small">小</string>
+    <string name="setting_text_size_hint_small">最小</string>
+    <string name="setting_text_size_hint_normal">默認</string>
+    <string name="set_as_default_dialog_description_user_present">通過Color SMS給朋友發送有趣的Emoji、貼紙和動圖。</string>
+    <string name="set_as_default_dialog_title_default_change">默認短信應用被清除</string>
+    <string name="set_as_default_dialog_description_default_change">如果不把Color SMS設為默認，軟件將無法正常運行。</string>
+    <string name="drag_hotseat_title">將Color SMS拖動到Dock欄</string>
+    <string name="drag_hotseat_content">更方便的通過Color SMS給朋友發送有趣的Emoji、貼紙和動圖。</string>
+    <string name="set_as_default_dialog_button_ok_default_change">現在設置</string>
+    <string name="got_it">了解</string>
+    <string name="welcome_set_default_failed_toast">未能成功將Color SMS設為默認</string>
+    <string name="dialog_add_contact_confirmation">添加</string>
+    <string name="network_error">網絡錯誤</string>
+    <string name="reload">重新加載</string>
+    <string name="sms_notification_channel">短信通知</string>
+    <string name="sms_notification_channel_description">當收到短信時，顯示通知消息</string>
+    <string name="menu_rate">五星好評</string>
 </resources>

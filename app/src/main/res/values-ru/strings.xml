@@ -578,5 +578,52 @@
 
     <string name="emoji_add_more">Больше эмотиконов</string>
 
+    <string name="menu_group_customization">Настроить</string>
+    <string name="menu_theme_color">Цвет темы</string>
+    <string name="theme_select_description">Выберите цвет темы на свой вкус</string>
+    <string name="menu_bubble">Пузырь</string>
+    <string name="bubble_customize_tab_color">Цвет</string>
+    <string name="bubble_customize_tab_style">Стиль</string>
+    <string name="bubble_customize_received">Получено</string>
+    <string name="bubble_customize_sent">Отправлено</string>
+    <string name="bubble_customize_bubble_color">Цвет пузыря</string>
+    <string name="bubble_customize_text_color">Цвет текста</string>
+    <string name="bubble_customize_color_recommend">Рекомендуемое</string>
+    <string name="bubble_customize_color_advance">Расширенный режим</string>
+    <string name="bubble_customize_save">СОХРАНИТЬ</string>
+    <string name="bubble_customize_save_confirm_dialog_title">Сохранить изменения</string>
+    <string name="bubble_customize_save_confirm_dialog_content">Пузыри изменены, хотите сохранить изменения?</string>
+    <string name="bubble_customize_preview_incoming_message">Привет! Приятно познакомиться.</string>
+    <string name="bubble_customize_preview_outgoing_message">И мне приятно!</string>
+    <string name="bubble_customize_preview_incoming_message_font">Выберите свой любимый шрифт!</string>
+    <string name="bubble_customize_preview_outgoing_message_font">Выберите размер шрифта для пузырьков чата.</string>
+    <string name="menu_chat_background">Фон чата</string>
+    <string name="wallpaper_add_photos">Добавить снимки</string>
+    <string name="wallpaper_done">ГОТОВО</string>
+    <string name="wallpaper_reset">СБРОС</string>
+    <string name="wallpaper_set_failed">ошибка</string>
+    <string name="setting_text_font">Шрифт</string>
+    <string name="setting_text_size">Размер шрифта</string>
+    <string name="menu_change_font">Шрифт &#038; размер шрифта</string>
+    <string name="setting_text_size_hint_large">Крупный</string>
+    <string name="setting_text_size_hint_larger">Самый крупный</string>
+    <string name="setting_text_size_hint_medium_large">Средний</string>
+    <string name="setting_text_size_hint_medium_small">Маленький</string>
+    <string name="setting_text_size_hint_small">Самый маленький</string>
+    <string name="setting_text_size_hint_normal">По умолчанию</string>
+    <string name="set_as_default_dialog_description_user_present">Отправляйте друзьям эмотиконы, стикеры и гифки через Color SMS.</string>
+    <string name="set_as_default_dialog_title_default_change">По умолчанию для СМС используется другое приложение</string>
+    <string name="set_as_default_dialog_description_default_change">Color SMS не сможет работать правильно, если не будет установлено как приложение по умолчанию.</string>
+    <string name="drag_hotseat_title">Сделайте Color SMS главным приложением</string>
+    <string name="drag_hotseat_content">Через Color SMS удобнее отправлять забавные эмотиконы и стикеры.</string>
+    <string name="set_as_default_dialog_button_ok_default_change">Установить</string>
+    <string name="got_it">Понятно</string>
+    <string name="welcome_set_default_failed_toast">Приложение Color SMS установлено неправильно</string>
+    <string name="dialog_add_contact_confirmation">Добавить</string>
+    <string name="network_error">Ошибка сети.</string>
+    <string name="reload">Перезагрузить</string>
+    <string name="sms_notification_channel">Уведомление об СМС</string>
+    <string name="sms_notification_channel_description">Показывать уведомления о входящих СМС</string>
+    <string name="menu_rate">Оценка 5 звезд</string>
 
 </resources>

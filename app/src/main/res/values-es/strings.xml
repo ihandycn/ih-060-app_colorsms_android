@@ -527,6 +527,54 @@
 
     <string name="sms_show_current_theme">Tema actual</string>
 
-    <string name="menu_setting">"Ajustes"</string>
-    <string name="set_as_default_dialog_button_ok_user_present">"Aceptar"</string>
+    <string name="menu_setting">Ajustes</string>
+    <string name="set_as_default_dialog_button_ok_user_present">Aceptar</string>
+
+    <string name="menu_group_customization">Personalizar</string>
+    <string name="menu_theme_color">Color de tema</string>
+    <string name="theme_select_description">Selecciona el color de tema que quieras</string>
+    <string name="menu_bubble">Burbuja</string>
+    <string name="bubble_customize_tab_color">Color</string>
+    <string name="bubble_customize_tab_style">Estilo</string>
+    <string name="bubble_customize_received">Recibido</string>
+    <string name="bubble_customize_sent">Enviado</string>
+    <string name="bubble_customize_bubble_color">Color de burbuja</string>
+    <string name="bubble_customize_text_color">Color de texto</string>
+    <string name="bubble_customize_color_recommend">Recomendado</string>
+    <string name="bubble_customize_color_advance">Avanzar</string>
+    <string name="bubble_customize_save">GUARDAR</string>
+    <string name="bubble_customize_save_confirm_dialog_title">Guardar cambios</string>
+    <string name="bubble_customize_save_confirm_dialog_content">Se han modificado las burbujas. ¿Quieres conservar los cambios?</string>
+    <string name="bubble_customize_preview_incoming_message">¡Hola! Encantado de conocerte.</string>
+    <string name="bubble_customize_preview_outgoing_message">Encantado de conocerte también.</string>
+    <string name="bubble_customize_preview_incoming_message_font">¡Elige una fuente que te guste!</string>
+    <string name="bubble_customize_preview_outgoing_message_font">Cambia el tamaño de fuente en las burbujas de chat.</string>
+    <string name="menu_chat_background">Fondo de chat</string>
+    <string name="wallpaper_add_photos">Añadir fotos</string>
+    <string name="wallpaper_done">TERMINADO</string>
+    <string name="wallpaper_reset">RESTABLECER</string>
+    <string name="wallpaper_set_failed">error</string>
+    <string name="setting_text_font">Fuente</string>
+    <string name="setting_text_size">Tamaño de fuente</string>
+    <string name="menu_change_font">Fuente &#038; Tamaño de fuente</string>
+    <string name="setting_text_size_hint_large">Grande</string>
+    <string name="setting_text_size_hint_larger">Más grande</string>
+    <string name="setting_text_size_hint_medium_large">Mediana</string>
+    <string name="setting_text_size_hint_medium_small">Pequeña</string>
+    <string name="setting_text_size_hint_small">Más pequeña</string>
+    <string name="setting_text_size_hint_normal">Predeterminada</string>
+    <string name="set_as_default_dialog_description_user_present">Envía emojis, pegatinas y GIF divertidos a tus amigos por Color SMS.</string>
+    <string name="set_as_default_dialog_title_default_change">SMS predeterminado eliminado</string>
+    <string name="set_as_default_dialog_description_default_change">Color SMS no funciona correctamente si no se establece como predeterminada.</string>
+    <string name="drag_hotseat_title">Arrastra Color SMS a la barra principal.</string>
+    <string name="drag_hotseat_content">Te resultará más fácil enviar emojis y pegatinas divertidas a tus amigos por Color SMS.</string>
+    <string name="set_as_default_dialog_button_ok_default_change">Establecer ahora</string>
+    <string name="got_it">Entendido</string>
+    <string name="welcome_set_default_failed_toast">Color SMS no se estableció correctamente.</string>
+    <string name="dialog_add_contact_confirmation">Añadir</string>
+    <string name="network_error">Error de red.</string>
+    <string name="reload">Recargar</string>
+    <string name="sms_notification_channel">Notificación SMS</string>
+    <string name="sms_notification_channel_description">Muestra una notificación cuando se recibe un SMS.</string>
+    <string name="menu_rate">Valoración de 5 estrellas</string>
 </resources>

@@ -527,6 +527,54 @@
 
     <string name="sms_show_current_theme">Tema actual</string>
 
-    <string name="menu_setting">"Configurações"</string>
-    <string name="set_as_default_dialog_button_ok_user_present">"Ok"</string>
+    <string name="menu_setting">Configurações</string>
+    <string name="set_as_default_dialog_button_ok_user_present">Ok</string>
+
+    <string name="menu_group_customization">Personalizar</string>
+    <string name="menu_theme_color">Cor do Tema</string>
+    <string name="theme_select_description">Selecione a cor do tema que desejar</string>
+    <string name="menu_bubble">Bolha</string>
+    <string name="bubble_customize_tab_color">Cor</string>
+    <string name="bubble_customize_tab_style">Estilo</string>
+    <string name="bubble_customize_received">Recebido</string>
+    <string name="bubble_customize_sent">Enviada</string>
+    <string name="bubble_customize_bubble_color">Cor da bolha</string>
+    <string name="bubble_customize_text_color">Cor do texto</string>
+    <string name="bubble_customize_color_recommend">Recomendado</string>
+    <string name="bubble_customize_color_advance">Avançado</string>
+    <string name="bubble_customize_save">SALVAR</string>
+    <string name="bubble_customize_save_confirm_dialog_title">Salvar Alterações</string>
+    <string name="bubble_customize_save_confirm_dialog_content">As bolhas foram modificadas, deseja manter as alterações?</string>
+    <string name="bubble_customize_preview_incoming_message">Olá! Prazer em conhecê-lo(a).</string>
+    <string name="bubble_customize_preview_outgoing_message">Prazer em conhecê-lo(a) também.</string>
+    <string name="bubble_customize_preview_incoming_message_font">Escolha a fonte que deseja!</string>
+    <string name="bubble_customize_preview_outgoing_message_font">Alterar tamanho da fonte nas bolhas das conversas.</string>
+    <string name="menu_chat_background">Fundo da conversa</string>
+    <string name="wallpaper_add_photos">Adicionar Fotos</string>
+    <string name="wallpaper_done">CONCLUÍDO</string>
+    <string name="wallpaper_reset">REDEFINIR</string>
+    <string name="wallpaper_set_failed">falha</string>
+    <string name="setting_text_font">Fonte</string>
+    <string name="setting_text_size">Tamanho da Fonte</string>
+    <string name="menu_change_font">Fonte &#038; Tamanho da Fonte</string>
+    <string name="setting_text_size_hint_large">Grande</string>
+    <string name="setting_text_size_hint_larger">Maior</string>
+    <string name="setting_text_size_hint_medium_large">Médio</string>
+    <string name="setting_text_size_hint_medium_small">Pequeno</string>
+    <string name="setting_text_size_hint_small">Menor</string>
+    <string name="setting_text_size_hint_normal">Padrão</string>
+    <string name="set_as_default_dialog_description_user_present">Envie emojis divertidos, figurinhas e GIFs para amigos via Color SMS.</string>
+    <string name="set_as_default_dialog_title_default_change">Padrão de SMS limpo</string>
+    <string name="set_as_default_dialog_description_default_change">O Color SMS não pode funcionar corretamente sem ser definido como padrão.</string>
+    <string name="drag_hotseat_title">Arraste o Color SMS até o Hotseat</string>
+    <string name="drag_hotseat_content">Mais fácil para que você envie emojis divertidos e figurinhas via Color SMS.</string>
+    <string name="set_as_default_dialog_button_ok_default_change">Definir Agora</string>
+    <string name="got_it">Entendi</string>
+    <string name="welcome_set_default_failed_toast">O Color SMS não foi definido corretamente</string>
+    <string name="dialog_add_contact_confirmation">Adicionar</string>
+    <string name="network_error">Erro de rede.</string>
+    <string name="reload">Recarregar</string>
+    <string name="sms_notification_channel">Notificação de SMS</string>
+    <string name="sms_notification_channel_description">Mostrar uma notificação ao receber SMS</string>
+    <string name="menu_rate">Avaliação com 5 estrelas</string>
 </resources>

@@ -527,6 +527,54 @@
 
     <string name="sms_show_current_theme">現在のテーマ</string>
 
-    <string name="menu_setting">"設定"</string>
-    <string name="set_as_default_dialog_button_ok_user_present">"OK"</string>
+    <string name="menu_setting">設定</string>
+    <string name="set_as_default_dialog_button_ok_user_present">OK</string>
+
+    <string name="menu_group_customization">カスタマイズ</string>
+    <string name="menu_theme_color">テーマカラー</string>
+    <string name="theme_select_description">お好きなテーマカラーを選択</string>
+    <string name="menu_bubble">バブル</string>
+    <string name="bubble_customize_tab_color">カラー</string>
+    <string name="bubble_customize_tab_style">スタイル</string>
+    <string name="bubble_customize_received">受信済み</string>
+    <string name="bubble_customize_sent">送信済み</string>
+    <string name="bubble_customize_bubble_color">バブルカラー</string>
+    <string name="bubble_customize_text_color">テキストカラー</string>
+    <string name="bubble_customize_color_recommend">おすすめ</string>
+    <string name="bubble_customize_color_advance">アドバンス</string>
+    <string name="bubble_customize_save">保存</string>
+    <string name="bubble_customize_save_confirm_dialog_title">変更を保存</string>
+    <string name="bubble_customize_save_confirm_dialog_content">バブルが変わりました、変更をキープしますか？</string>
+    <string name="bubble_customize_preview_incoming_message">こんにちは！初めまして。</string>
+    <string name="bubble_customize_preview_outgoing_message">こちらこそ初めまして。</string>
+    <string name="bubble_customize_preview_incoming_message_font">お好きなフォントを選択！</string>
+    <string name="bubble_customize_preview_outgoing_message_font">チャットバブルのフォントサイズを変更。</string>
+    <string name="menu_chat_background">チャットの背景</string>
+    <string name="wallpaper_add_photos">写真を追加</string>
+    <string name="wallpaper_done">完了</string>
+    <string name="wallpaper_reset">リセット</string>
+    <string name="wallpaper_set_failed">失敗</string>
+    <string name="setting_text_font">フォント</string>
+    <string name="setting_text_size">フォントサイズ</string>
+    <string name="menu_change_font">フォント &#038; フォントサイズ</string>
+    <string name="setting_text_size_hint_large">大</string>
+    <string name="setting_text_size_hint_larger">特大</string>
+    <string name="setting_text_size_hint_medium_large">中</string>
+    <string name="setting_text_size_hint_medium_small">小</string>
+    <string name="setting_text_size_hint_small">特小</string>
+    <string name="setting_text_size_hint_normal">デフォルト</string>
+    <string name="set_as_default_dialog_description_user_present">面白い絵文字や、ステッカー、GIFをColor SMSを介して友達に送信する。</string>
+    <string name="set_as_default_dialog_title_default_change">デフォルトのSMSをオフにしました</string>
+    <string name="set_as_default_dialog_description_default_change">Color SMSはデフォルトに設定しなければ正しく動作しません。</string>
+    <string name="drag_hotseat_title">Color SMSをメインパネルにドラッグする</string>
+    <string name="drag_hotseat_content">Color SMSを介した方が、面白い絵文字やステッカーを送信するのに簡単になります。</string>
+    <string name="set_as_default_dialog_button_ok_default_change">今すぐ設定する</string>
+    <string name="got_it">了解</string>
+    <string name="welcome_set_default_failed_toast">Color SMSは正しくセットアップされませんでした</string>
+    <string name="dialog_add_contact_confirmation">追加</string>
+    <string name="network_error">ネットワークエラー。</string>
+    <string name="reload">リロード</string>
+    <string name="sms_notification_channel">SMS通知</string>
+    <string name="sms_notification_channel_description">SMSを受信した時に通知を表示する</string>
+    <string name="menu_rate">5つ星の評価</string>
 </resources>

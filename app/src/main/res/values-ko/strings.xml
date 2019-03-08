@@ -526,8 +526,54 @@
 
     <string name="emoji_add_more">더 많은 이모지</string>
 
+    <string name="menu_setting">설정</string>
+    <string name="set_as_default_dialog_button_ok_user_present">확인</string>
 
-
-    <string name="menu_setting">"설정"</string>
-    <string name="set_as_default_dialog_button_ok_user_present">"확인"</string>
+    <string name="menu_group_customization">사용자 정의</string>
+    <string name="menu_theme_color">테마 색깔</string>
+    <string name="theme_select_description">좋아하는 테마 색깔을 선택하세요</string>
+    <string name="menu_bubble">풍선</string>
+    <string name="bubble_customize_tab_color">색깔</string>
+    <string name="bubble_customize_tab_style">스타일</string>
+    <string name="bubble_customize_received">받음</string>
+    <string name="bubble_customize_sent">보냄</string>
+    <string name="bubble_customize_bubble_color">풍선 색깔</string>
+    <string name="bubble_customize_text_color">텍스트 색깔</string>
+    <string name="bubble_customize_color_recommend">권장됨</string>
+    <string name="bubble_customize_color_advance">고급</string>
+    <string name="bubble_customize_save">저장</string>
+    <string name="bubble_customize_save_confirm_dialog_title">변경 사항 저장</string>
+    <string name="bubble_customize_save_confirm_dialog_content">풍선이 수정되었습니다. 변경 사항을 유지하시겠습니까?</string>
+    <string name="bubble_customize_preview_incoming_message">안녕하세요! 만나서 반가워요.</string>
+    <string name="bubble_customize_preview_outgoing_message">저도 반가워요.</string>
+    <string name="bubble_customize_preview_incoming_message_font">좋아하는 글꼴을 선택하세요.</string>
+    <string name="bubble_customize_preview_outgoing_message_font">채팅 풍선에서 글꼴 크기를 변경하세요.</string>
+    <string name="menu_chat_background">채팅 배경</string>
+    <string name="wallpaper_add_photos">사진 추가</string>
+    <string name="wallpaper_done">완료</string>
+    <string name="wallpaper_reset">재설정</string>
+    <string name="wallpaper_set_failed">실패</string>
+    <string name="setting_text_font">글꼴</string>
+    <string name="setting_text_size">글꼴 크기</string>
+    <string name="menu_change_font">글꼴 &#038; 글꼴 크기</string>
+    <string name="setting_text_size_hint_large">대형</string>
+    <string name="setting_text_size_hint_larger">초대형</string>
+    <string name="setting_text_size_hint_medium_large">보통</string>
+    <string name="setting_text_size_hint_medium_small">소형</string>
+    <string name="setting_text_size_hint_small">초소형</string>
+    <string name="setting_text_size_hint_normal">기본</string>
+    <string name="set_as_default_dialog_description_user_present">친구에게 재미난 이모지, 스티커 및 GIF를 Colr SMS로 보내세요.</string>
+    <string name="set_as_default_dialog_title_default_change">기본 SMS 삭제됨</string>
+    <string name="set_as_default_dialog_description_default_change">Color SMS를 기본으로 설정하지 않으면 제대로 작동하지 않습니다.</string>
+    <string name="drag_hotseat_title">Color SMS를 기본으로 끌어다 놓으세요</string>
+    <string name="drag_hotseat_content">Color SMS로 재미난 이모지와 스티커를 쉽게 보내세요.</string>
+    <string name="set_as_default_dialog_button_ok_default_change">지금 설정</string>
+    <string name="got_it">예</string>
+    <string name="welcome_set_default_failed_toast">Color SMS가 제대로 설정되지 않았습니다</string>
+    <string name="dialog_add_contact_confirmation">추가</string>
+    <string name="network_error">네트워크 오류.</string>
+    <string name="reload">다시 불러오기</string>
+    <string name="sms_notification_channel">SMS 알림</string>
+    <string name="sms_notification_channel_description">SMS를 받으면 알림을 표시합니다</string>
+    <string name="menu_rate">별 5개 등급</string>
 </resources>
