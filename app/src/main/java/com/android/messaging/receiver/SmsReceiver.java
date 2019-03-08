@@ -51,7 +51,6 @@ import com.android.messaging.util.LogUtil;
 import com.android.messaging.util.OsUtil;
 import com.android.messaging.util.PendingIntentConstants;
 import com.android.messaging.util.PhoneUtils;
-import com.messagecenter.sms.SmsMessageReceiver;
 import com.superapps.util.Notifications;
 
 /**
@@ -177,11 +176,6 @@ public final class SmsReceiver extends BroadcastReceiver {
                     new ComponentName(context, NoConfirmationSmsSendService.class),
                     PackageManager.COMPONENT_ENABLED_STATE_DISABLED, PackageManager.DONT_KILL_APP);
         }
-
-        // SmsMessageReceiver in libColorPhone
-        packageManager.setComponentEnabledSetting(
-                new ComponentName(context, SmsMessageReceiver.class),
-                PackageManager.COMPONENT_ENABLED_STATE_ENABLED, PackageManager.DONT_KILL_APP);
 
     }
 

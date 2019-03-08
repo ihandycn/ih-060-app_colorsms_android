@@ -32,16 +32,6 @@
                 android:gravity="center_vertical">
 
                 <ImageView
-                    android:id="@+id/jump_to_default"
-                    android:layout_width="36dp"
-                    android:layout_height="36dp"
-                    android:layout_marginEnd="-3dp"
-                    android:background="@drawable/acb_selector_title_round_btn"
-                    android:padding="9dp"
-                    android:src="@drawable/acb_phone_sms_jump_to_default_app"
-                    android:visibility="gone"/>
-
-                <ImageView
                     android:id="@+id/alert_menu_btn"
                     android:layout_width="36dp"
                     android:layout_height="36dp"
@@ -106,7 +96,7 @@
                         android:layout_marginEnd="5dp"
                         android:fontFamily="sans-serif-medium"
                         android:text="@string/acb_message_reply"
-                        android:textColor="@color/white"
+                        android:textColor="@android:color/white"
                         android:textSize="15sp"
                         app:font_style="bold" />
 
@@ -154,7 +144,7 @@
                     android:layout_height="wrap_content"
                     android:paddingEnd="96dp"
                     android:fontFamily="sans-serif"
-                    android:theme="@style/Theme.App.Base"
+                    android:theme="@style/MessageBoxEditText"
                     android:inputType="textCapSentences|textMultiLine"
                     android:hint="@string/acb_phone_reply"
                     android:textColor="@android:color/black"
@@ -191,15 +181,6 @@
                         android:padding="7dp"
                         android:src="@drawable/acb_alert_message_box_reply_white_icon"/>
 
-                    <ImageView
-                        android:id="@+id/sms_send_failed_tip"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="end|top"
-                        android:layout_marginEnd="24dp"
-                        android:layout_marginTop="7dp"
-                        android:background="@drawable/acb_phone_sms_send_failed_icon"
-                        android:visibility="invisible" />
                 </FrameLayout>
 
             </FrameLayout>

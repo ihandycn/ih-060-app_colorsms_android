@@ -50,19 +50,19 @@ import com.android.messaging.datamodel.data.MessagePartData;
 import com.android.messaging.datamodel.data.ParticipantData;
 import com.android.messaging.datamodel.media.VideoThumbnailRequest;
 import com.android.messaging.sms.MmsUtils;
+import com.android.messaging.smsshow.MessageBoxSettings;
 import com.android.messaging.ui.UIIntents;
 import com.android.messaging.util.Assert;
 import com.android.messaging.util.AvatarUriUtil;
 import com.android.messaging.util.BugleGservices;
 import com.android.messaging.util.BugleGservicesKeys;
+import com.android.messaging.util.CommonUtils;
 import com.android.messaging.util.ContentType;
 import com.android.messaging.util.ConversationIdSet;
 import com.android.messaging.util.LogUtil;
 import com.android.messaging.util.PendingIntentConstants;
 import com.android.messaging.util.UriUtil;
 import com.google.common.collect.Lists;
-import com.messagecenter.customize.MessageCenterSettings;
-import com.messagecenter.util.Utils;
 import com.superapps.util.Notifications;
 
 import java.util.ArrayList;
@@ -143,7 +143,7 @@ public abstract class MessageNotificationState extends NotificationState {
     }
 
     private boolean disableHeadUpNotification() {
-        return MessageCenterSettings.isSMSAssistantModuleEnabled() && !Factory.get().getIsForeground() && Utils.isScreenOn(Factory.get().getApplicationContext());
+        return MessageBoxSettings.isSMSAssistantModuleEnabled() && !Factory.get().getIsForeground() && CommonUtils.isScreenOn(Factory.get().getApplicationContext());
     }
 
     /**

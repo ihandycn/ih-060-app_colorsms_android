@@ -78,7 +78,7 @@ public class MessageBoxActivity extends BaseActivity {
         closeButton.setOnClickListener(v -> finish());
         ViewGroup mContainer = findViewById(R.id.alert_card_container);
 
-        View turnOffContainer = getLayoutInflater().inflate(R.layout.acb_alert_disable_popup_view, (ViewGroup) mContainer, false);
+        View turnOffContainer = getLayoutInflater().inflate(R.layout.message_box_menu_pop_up, (ViewGroup) mContainer, false);
         final TextView turnOff = turnOffContainer.findViewById(R.id.tv_turn_off);
         turnOff.setText(getString(R.string.acb_alert_disable_call_alert));
         turnOff.measure(0, 0);
@@ -149,10 +149,10 @@ public class MessageBoxActivity extends BaseActivity {
 
             mCloseDialog.setOnShowListener(dialog -> {
                 Button negativeButton = ((AlertDialog) dialog).getButton(DialogInterface.BUTTON_NEGATIVE);
-                negativeButton.setTextColor(ContextCompat.getColor(HSApplication.getContext(), R.color.acb_phone_alert_negative_action));
+                negativeButton.setTextColor(0xff999999);
 
                 Button positiveButton = ((AlertDialog) dialog).getButton(DialogInterface.BUTTON_POSITIVE);
-                positiveButton.setTextColor(ContextCompat.getColor(HSApplication.getContext(), R.color.acb_phone_alert_positive_action));
+                positiveButton.setTextColor(0xff336bf3);
             });
         }
         mCloseDialog.show();
@@ -231,8 +231,8 @@ public class MessageBoxActivity extends BaseActivity {
     }
 
     private void initActionView() {
-        mActionButtonContainer = findViewById(com.messagecenter.R.id.actions_button_container);
-        mEditTextContainer = findViewById(com.messagecenter.R.id.edit_text_container);
+        mActionButtonContainer = findViewById(R.id.actions_button_container);
+        mEditTextContainer = findViewById(R.id.edit_text_container);
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
 
         mOpenEditTextButton = findViewById(R.id.open_edit_text_button);

@@ -9,7 +9,7 @@
         android:layout_height="56dp"
         android:paddingStart="27dp"
         android:paddingEnd="20dp"
-        android:background="@color/white"
+        android:background="@android:color/white"
         android:gravity="center_vertical">
 
         <com.superapps.view.TypefacedTextView

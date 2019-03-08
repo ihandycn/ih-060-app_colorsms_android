@@ -211,4 +211,18 @@
     <color name="customize_bubble_color_divider">#23313131</color>
     <color name="customize_bubble_primary_text_color">#4f5157</color>
 
+    // message box
+    <color name="acb_alert_quantum_panel_bg_color">#FFFFFF</color>
+    <color name="acb_phone_message_item_bg_color">#e9e7e8</color>
+    <color name="acb_phone_message_item_bg_color_pressed">#c6c4c2</color>
+    <color name="acb_phone_react_color_pressed">#eFeFeF</color>
+    <color name="acb_phone_alert_call_bg">#BF000000</color>
+    <color name="acb_phone_sms_reply_color">#07cf44</color>
+    <color name="acb_phone_sms_alert_btn_text_color">#606060</color>
+    <color name="acb_phone_sms_alert_btn_text_color_disabled">#7f7f7f7f</color>
+    <color name="acb_phone_sms_alert_blue">#399afa</color>
+    <color name="acb_phone_color_primary_dark">#0d0d0d</color>
+    <color name="blue_dark">#1D5AB5</color>
+    <color name="cardview_dark_background">#FF424242</color>
+
 </resources>
