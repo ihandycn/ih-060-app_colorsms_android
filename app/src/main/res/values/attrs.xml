@@ -82,4 +82,9 @@
         </attr>
         <attr name="scaleMarkColor" format="color" />
     </declare-styleable>
+
+    <declare-styleable name="MaxHeightRecyclerView">
+        <attr name="maxHeight" format="dimension" />
+    </declare-styleable>
+
 </resources>

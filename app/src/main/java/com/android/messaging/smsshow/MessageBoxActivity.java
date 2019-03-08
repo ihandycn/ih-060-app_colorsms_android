@@ -32,6 +32,9 @@ import com.android.messaging.R;
 import com.android.messaging.datamodel.BugleNotifications;
 import com.android.messaging.util.BugleAnalytics;
 import com.android.messaging.util.UiUtils;
+import com.ihs.commons.notificationcenter.HSGlobalNotificationCenter;
+import com.ihs.commons.notificationcenter.INotificationObserver;
+import com.ihs.commons.utils.HSBundle;
 import com.superapps.util.Dimensions;
 import com.superapps.util.Threads;
 import com.superapps.util.Toasts;
@@ -42,7 +45,8 @@ import static com.android.messaging.ui.UIIntents.UI_INTENT_EXTRA_CONVERSATION_NA
 import static com.android.messaging.ui.UIIntents.UI_INTENT_EXTRA_MESSAGE;
 import static com.android.messaging.ui.UIIntents.UI_INTENT_EXTRA_SELF_ID;
 
-public class MessageBoxActivity extends BaseActivity {
+public class MessageBoxActivity extends BaseActivity implements INotificationObserver {
+    public static final String NOTIFICATION_FINISH_MESSAGE_BOX = "finish_message_box";
 
     private ImageView mReplyIcon;
     private EditText mEditText;
@@ -72,7 +76,7 @@ public class MessageBoxActivity extends BaseActivity {
 
         BugleAnalytics.logEvent("SMS_PopUp_Show", true);
         BugleAnalytics.logEvent("SMS_ActiveUsers", true);
-
+        HSGlobalNotificationCenter.addObserver(NOTIFICATION_FINISH_MESSAGE_BOX, this);
         // todo you must not pass Privacy Information between intents!
     }
 
@@ -353,9 +357,17 @@ public class MessageBoxActivity extends BaseActivity {
     }
 
     @Override
+    public void onReceive(String s, HSBundle hsBundle) {
+        if (NOTIFICATION_FINISH_MESSAGE_BOX.equals(s)) {
+            finish();
+        }
+    }
+
+    @Override
     protected void onDestroy() {
         super.onDestroy();
         BugleNotifications.markAllMessagesAsSeen();
         BugleAnalytics.logEvent("SMS_PopUp_Close", true);
+        HSGlobalNotificationCenter.removeObserver(this);
     }
 }

@@ -29,10 +29,12 @@ import com.android.messaging.datamodel.action.UpdateMessageNotificationAction;
 import com.android.messaging.datamodel.data.MessageData;
 import com.android.messaging.datamodel.data.ParticipantData;
 import com.android.messaging.sms.MmsUtils;
+import com.android.messaging.smsshow.MessageBoxActivity;
 import com.android.messaging.ui.UIIntents;
 import com.android.messaging.ui.conversationlist.ConversationListActivity;
 import com.android.messaging.util.LogUtil;
 import com.android.messaging.util.TextUtil;
+import com.ihs.commons.notificationcenter.HSGlobalNotificationCenter;
 
 /**
  * Respond to a special intent and send an SMS message without the user's intervention, unless
