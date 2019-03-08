@@ -9,7 +9,6 @@ import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.text.Editable;
 import android.text.InputFilter;
@@ -31,7 +30,6 @@ import android.widget.TextView;
 import com.android.messaging.BaseActivity;
 import com.android.messaging.R;
 import com.android.messaging.util.UiUtils;
-import com.ihs.app.framework.HSApplication;
 import com.superapps.util.Dimensions;
 import com.superapps.util.Threads;
 import com.superapps.util.Toasts;
@@ -259,7 +257,7 @@ public class MessageBoxActivity extends BaseActivity {
             mNextButton.setBackground(null);
             mNextButton.setClickable(false);
         } else {
-            mNextButton.setBackgroundResource(R.drawable.acb_phone_next_btn_bg);
+            mNextButton.setBackgroundResource(R.drawable.message_box_next_btn_bg);
         }
     }
 

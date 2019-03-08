@@ -9,7 +9,7 @@
         android:id="@+id/tv_turn_off"
         android:layout_width="match_parent"
         android:layout_height="22dp"
-        android:background="@drawable/acb_phone_call_idle_popview_bg"
+        android:background="@drawable/message_box_popview_item_bg"
         android:gravity="center"
         android:paddingEnd="10dp"
         android:paddingLeft="10dp"
