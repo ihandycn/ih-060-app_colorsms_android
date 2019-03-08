@@ -1,23 +1,39 @@
 package com.android.messaging.smsshow;
 
+import android.app.AlertDialog;
+import android.app.Dialog;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
-import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.InputFilter;
+import android.text.SpannableString;
+import android.text.Spanned;
 import android.text.TextUtils;
 import android.text.TextWatcher;
+import android.text.style.ForegroundColorSpan;
 import android.view.View;
+import android.view.ViewGroup;
+import android.view.WindowManager;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 
 import com.android.messaging.BaseActivity;
 import com.android.messaging.R;
 import com.android.messaging.util.UiUtils;
+import com.ihs.app.framework.HSApplication;
+import com.superapps.util.Dimensions;
+import com.superapps.util.Toasts;
 
 import static com.android.messaging.ui.UIIntents.UI_INTENT_EXTRA_ATTACHMENT_URI;
 import static com.android.messaging.ui.UIIntents.UI_INTENT_EXTRA_CONVERSATION_ID;
@@ -26,13 +42,20 @@ import static com.android.messaging.ui.UIIntents.UI_INTENT_EXTRA_MESSAGE;
 
 public class MessageBoxActivity extends BaseActivity {
 
-    private boolean btnClickable = true;
-    private ImageView replyIcon;
-    private EditText editText;
-    private ProgressBar progressBar;
+    private ImageView mReplyIcon;
+    private EditText mEditText;
+    private ProgressBar mProgressBar;
+
+    private View mOpenEditTextButton;
+    private TextView mNextButton;
+
+    private ViewGroup mEditTextContainer;
+    private ViewGroup mActionButtonContainer;
 
     private ViewPager mConversationPager;
-    private DynamicalPagerAdapter mPagerAdapter;
+    private DynamicalPagerAdapter mConversationPagerAdapter;
+
+    private Dialog mCloseDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,7 +65,95 @@ public class MessageBoxActivity extends BaseActivity {
 
         initConversationList();
         initEditView();
+        configActionView();
+
     }
+
+    private void initMenu() {
+        ImageView closeButton = findViewById(R.id.alert_close_btn);
+        closeButton.setOnClickListener(v -> finish());
+        ViewGroup mContainer = findViewById(R.id.alert_card_container);
+
+        View turnOffContainer = getLayoutInflater().inflate(R.layout.acb_alert_disable_popup_view, (ViewGroup) mContainer, false);
+        final TextView turnOff = turnOffContainer.findViewById(R.id.tv_turn_off);
+        turnOff.setText(getString(R.string.acb_alert_disable_call_alert));
+        turnOff.measure(0, 0);
+        final RipplePopupView popupView = new RipplePopupView(this);
+        popupView.setOutSideBackgroundColor(Color.TRANSPARENT);
+        popupView.setContentView(turnOffContainer);
+        popupView.setOutSideClickListener(v -> popupView.dismiss());
+        turnOff.setOnClickListener(v -> {
+            popupView.dismiss();
+            showCloseDialog();
+        });
+
+        final ImageView menuIv = findViewById(R.id.alert_menu_btn);
+        menuIv.setOnClickListener(view -> {
+            int closeW = menuIv.getWidth();
+            int turnOffW = closeButton.getMeasuredWidth();
+            int popW = turnOff.getMeasuredWidth() / 2;
+            int offsetX = Dimensions.isRtl() ? menuIv.getPaddingLeft() / 2 + popW - 12 : closeW - turnOffW - menuIv.getPaddingRight() - popW + 12;
+            int offsetY = -menuIv.getHeight() * 4 / 5;
+            popupView.showAsDropDown(menuIv, offsetX, offsetY);
+        });
+
+    }
+
+    private void showCloseDialog() {
+        if (mCloseDialog == null) {
+            AlertDialog.Builder builder = new AlertDialog.Builder(this, R.style.CloseDialogTheme);
+
+            String title = getString(R.string.acb_alert_disable_message_alert_title);
+            SpannableString spannableStringTitle = new SpannableString(title);
+            spannableStringTitle.setSpan(
+                    new ForegroundColorSpan(0xDF000000),
+                    0, title.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+            builder.setTitle(spannableStringTitle);
+
+            String message = getString(R.string.acb_alert_disable_message_alert_message);
+            SpannableString spannableStringMessage = new SpannableString(message);
+            spannableStringMessage.setSpan(
+                    new ForegroundColorSpan(0x8A000000),
+                    0, message.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+            builder.setMessage(spannableStringMessage);
+
+            builder.setPositiveButton(getString(R.string.acb_phone_alert_close_dialog_positive_action), new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialogInterface, int i) {
+                    if (mCloseDialog == null) {
+                        return;
+                    }
+                    mCloseDialog.dismiss();
+                    mCloseDialog = null;
+                }
+            });
+
+            builder.setNegativeButton(getString(R.string.acb_phone_alert_close_dialog_negative_action), new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int i) {
+                    if (mCloseDialog == null) {
+                        return;
+                    }
+                    MessageBoxSettings.setSMSAssistantModuleEnabled(false);
+                    mCloseDialog.dismiss();
+                    mCloseDialog = null;
+                    Toasts.showToast(R.string.acb_alert_disable_message_successfully);
+                }
+            });
+
+            mCloseDialog = builder.create();
+
+            mCloseDialog.setOnShowListener(dialog -> {
+                Button negativeButton = ((AlertDialog) dialog).getButton(DialogInterface.BUTTON_NEGATIVE);
+                negativeButton.setTextColor(ContextCompat.getColor(HSApplication.getContext(), R.color.acb_phone_alert_negative_action));
+
+                Button positiveButton = ((AlertDialog) dialog).getButton(DialogInterface.BUTTON_POSITIVE);
+                positiveButton.setTextColor(ContextCompat.getColor(HSApplication.getContext(), R.color.acb_phone_alert_positive_action));
+            });
+        }
+        mCloseDialog.show();
+    }
+
 
     private void initConversationList() {
         mConversationPager = findViewById(R.id.conversation_pager);
@@ -56,10 +167,26 @@ public class MessageBoxActivity extends BaseActivity {
                 message,
                 Uri.parse(avatar),
                 conversationName);
-        mPagerAdapter = new DynamicalPagerAdapter();
+        mConversationPagerAdapter = new DynamicalPagerAdapter();
         item.setTag(intent.getStringExtra(UI_INTENT_EXTRA_CONVERSATION_ID));
-        mPagerAdapter.addView(item);
-        mConversationPager.setAdapter(mPagerAdapter);
+        mConversationPagerAdapter.addView(item);
+        mConversationPager.setAdapter(mConversationPagerAdapter);
+        mConversationPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+                // next button clickable, and update next button text
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+
+            }
+        });
     }
 
     @Override
@@ -69,10 +196,10 @@ public class MessageBoxActivity extends BaseActivity {
         String message = intent.getStringExtra(UI_INTENT_EXTRA_MESSAGE);
 
         boolean isNewConversation = true;
-        int viewCount = mPagerAdapter.getCount();
+        int viewCount = mConversationPagerAdapter.getCount();
         MessageBoxConversationItemView view;
         for (int i = 0; i < viewCount; i++) {
-            view = mPagerAdapter.getViews().get(i);
+            view = mConversationPagerAdapter.getViews().get(i);
             if (TextUtils.equals(conversationId, (String) view.getTag())) {
                 isNewConversation = false;
                 view.addNewMessage(message);
@@ -86,33 +213,69 @@ public class MessageBoxActivity extends BaseActivity {
                     Uri.parse(intent.getStringExtra(UI_INTENT_EXTRA_ATTACHMENT_URI)),
                     intent.getStringExtra(UI_INTENT_EXTRA_CONVERSATION_NAME));
             newItem.setTag(intent.getStringExtra(UI_INTENT_EXTRA_CONVERSATION_ID));
-            mPagerAdapter.addView(newItem);
-            mPagerAdapter.notifyDataSetChanged();
-            mConversationPager.setCurrentItem(mPagerAdapter.getCount() - 1, true);
+            mConversationPagerAdapter.addView(newItem);
+            mConversationPagerAdapter.notifyDataSetChanged();
+            mConversationPager.setCurrentItem(mConversationPagerAdapter.getCount() - 1, true);
+            toggleNextButton();
         }
     }
 
+    private void configActionView() {
+        mActionButtonContainer = findViewById(com.messagecenter.R.id.actions_button_container);
+        mEditTextContainer = findViewById(com.messagecenter.R.id.edit_text_container);
+        getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
+
+        mOpenEditTextButton = findViewById(R.id.open_edit_text_button);
+        mNextButton = findViewById(R.id.next_icon);
+        mOpenEditTextButton.setOnClickListener(v -> openEditText());
+        mNextButton.setOnClickListener(v -> {
+            int currentItem = mConversationPager.getCurrentItem();
+            if (currentItem < mConversationPagerAdapter.getCount()) {
+                mConversationPager.setCurrentItem(currentItem + 1, true);
+            } else {
+                Toasts.showToast(R.string.acb_message_no_next);
+            }
+        });
+    }
+
+    private void toggleNextButton() {
+        mNextButton.setVisibility(View.VISIBLE);
+        mNextButton.setClickable(true);
+        int total = mConversationPagerAdapter.getCount();
+        int currentPosition = mConversationPager.getCurrentItem();
+        mNextButton.setText((getString(R.string.acb_message_next) + String.format(getString(R.string.acb_message_next_num),
+                total - currentPosition - 1)));
+        if (currentPosition == total - 1) {
+            mNextButton.setBackground(null);
+            mNextButton.setClickable(false);
+        } else {
+            mNextButton.setBackgroundResource(R.drawable.acb_phone_next_btn_bg);
+        }
+    }
+
+    private void openEditText() {
+        mActionButtonContainer.setVisibility(View.GONE);
+        mEditTextContainer.setVisibility(View.VISIBLE);
+        mReplyIcon.setVisibility(View.VISIBLE);
+        mReplyIcon.setClickable(true);
+        mEditText.requestFocus();
+        InputMethodManager inputMethodManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+        inputMethodManager.showSoftInput(mEditText, 0);
+    }
+
     private void initEditView() {
-        editText = findViewById(R.id.edit_text);
-        replyIcon = findViewById(R.id.reply_icon);
-
-        findViewById(R.id.reply_button).setOnClickListener(v -> {
-
-        });
-        replyIcon.setOnClickListener(v -> {
-            if (!btnClickable) {
+        mEditText = findViewById(R.id.edit_text);
+        mReplyIcon = findViewById(R.id.reply_icon);
+        mReplyIcon.setOnClickListener(v -> {
+            if (TextUtils.isEmpty(mEditText.getText())) {
                 return;
             }
-            if (TextUtils.isEmpty(editText.getText())) {
-                return;
-            }
+            mReplyIcon.setClickable(false);
             replyMessage();
-
         });
 
-        progressBar = findViewById(R.id.progress_bar);
-
-        editText.addTextChangedListener(new TextWatcher() {
+        mProgressBar = findViewById(R.id.progress_bar);
+        mEditText.addTextChangedListener(new TextWatcher() {
 
             private boolean replyIconEnabled;
 
@@ -124,12 +287,12 @@ public class MessageBoxActivity extends BaseActivity {
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 int characterCount = s.toString().length();
                 if (characterCount == 0) {
-                    replyIcon.setEnabled(false);
-                    replyIcon.getBackground().setColorFilter(0xffd7dfe9, PorterDuff.Mode.SRC_ATOP);
+                    mReplyIcon.setEnabled(false);
+                    mReplyIcon.getBackground().setColorFilter(0xffd7dfe9, PorterDuff.Mode.SRC_ATOP);
                     replyIconEnabled = false;
                 } else if (!replyIconEnabled) {
-                    replyIcon.setEnabled(true);
-                    replyIcon.getBackground().setColorFilter(0x0, PorterDuff.Mode.SRC_ATOP);
+                    mReplyIcon.setEnabled(true);
+                    mReplyIcon.getBackground().setColorFilter(0x0, PorterDuff.Mode.SRC_ATOP);
                     replyIconEnabled = true;
                 }
 
@@ -137,7 +300,7 @@ public class MessageBoxActivity extends BaseActivity {
                 int smsThresholdInByte = 137;
 
                 if (byteCount >= smsThresholdInByte) {
-                    editText.setFilters(new InputFilter[]{new InputFilter.LengthFilter(characterCount)});
+                    mEditText.setFilters(new InputFilter[]{new InputFilter.LengthFilter(characterCount)});
                 }
 
             }
@@ -147,9 +310,9 @@ public class MessageBoxActivity extends BaseActivity {
 
             }
         });
-        replyIcon.setEnabled(false);
-        replyIcon.getBackground().setColorFilter(0xffd7dfe9, PorterDuff.Mode.SRC_ATOP);
-        progressBar.getIndeterminateDrawable().setColorFilter(getResources().getColor(com.messagecenter.R.color.acb_phone_sms_alert_blue), PorterDuff.Mode.SRC_IN);
+        mReplyIcon.setEnabled(false);
+        mReplyIcon.getBackground().setColorFilter(0xffd7dfe9, PorterDuff.Mode.SRC_ATOP);
+        mProgressBar.getIndeterminateDrawable().setColorFilter(getResources().getColor(R.color.acb_phone_sms_alert_blue), PorterDuff.Mode.SRC_IN);
     }
 
     private void replyMessage() {

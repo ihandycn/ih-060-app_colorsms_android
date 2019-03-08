@@ -75,7 +75,7 @@
                 android:layout_marginBottom="10dp" >
 
                 <LinearLayout
-                    android:id="@+id/reply_button"
+                    android:id="@+id/open_edit_text_button"
                     android:layout_width="0dp"
                     android:layout_height="40dp"
                     android:orientation="horizontal"
@@ -129,8 +129,8 @@
                     android:textColor="@color/acb_phone_sms_alert_blue"
                     android:textSize="15sp"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintRight_toLeftOf="@id/reply_button"
-                    app:layout_constraintEnd_toStartOf="@id/reply_button" />
+                    app:layout_constraintRight_toLeftOf="@id/open_edit_text_button"
+                    app:layout_constraintEnd_toStartOf="@id/open_edit_text_button" />
 
             </android.support.constraint.ConstraintLayout>
 
