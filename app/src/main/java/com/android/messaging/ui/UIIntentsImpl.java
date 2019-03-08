@@ -408,11 +408,13 @@ public class UIIntentsImpl extends UIIntents {
 
     @Override
     public void launchMessageBoxActivity(Context context, @NonNull String conversationId,
+                                         @NonNull String selfId,
                                          @NonNull String avatarUri,
                                          @NonNull String conversationName,
                                          @NonNull CharSequence content) {
         final Intent intent = new Intent(context, MessageBoxActivity.class);
         intent.putExtra(UI_INTENT_EXTRA_CONVERSATION_ID, conversationId);
+        intent.putExtra(UI_INTENT_EXTRA_SELF_ID, selfId);
         intent.putExtra(UI_INTENT_EXTRA_ATTACHMENT_URI, avatarUri);
         intent.putExtra(UI_INTENT_EXTRA_CONVERSATION_NAME, conversationName);
         intent.putExtra(UI_INTENT_EXTRA_MESSAGE, content);

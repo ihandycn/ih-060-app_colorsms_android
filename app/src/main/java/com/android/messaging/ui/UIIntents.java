@@ -289,6 +289,7 @@ public abstract class UIIntents {
      */
     public abstract void launchMessageBoxActivity(Context context,
                                                   final String conversationId,
+                                                  final String selfId,
                                                   final String avatarUri,
                                                   final String conversationName,
                                                   final CharSequence content);

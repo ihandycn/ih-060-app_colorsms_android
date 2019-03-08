@@ -33,12 +33,14 @@ import com.android.messaging.R;
 import com.android.messaging.util.UiUtils;
 import com.ihs.app.framework.HSApplication;
 import com.superapps.util.Dimensions;
+import com.superapps.util.Threads;
 import com.superapps.util.Toasts;
 
 import static com.android.messaging.ui.UIIntents.UI_INTENT_EXTRA_ATTACHMENT_URI;
 import static com.android.messaging.ui.UIIntents.UI_INTENT_EXTRA_CONVERSATION_ID;
 import static com.android.messaging.ui.UIIntents.UI_INTENT_EXTRA_CONVERSATION_NAME;
 import static com.android.messaging.ui.UIIntents.UI_INTENT_EXTRA_MESSAGE;
+import static com.android.messaging.ui.UIIntents.UI_INTENT_EXTRA_SELF_ID;
 
 public class MessageBoxActivity extends BaseActivity {
 
@@ -65,8 +67,10 @@ public class MessageBoxActivity extends BaseActivity {
 
         initConversationList();
         initEditView();
-        configActionView();
+        initActionView();
+        initMenu();
 
+        // todo you must not pass Privacy Information between intents!
     }
 
     private void initMenu() {
@@ -162,8 +166,12 @@ public class MessageBoxActivity extends BaseActivity {
         String message = intent.getStringExtra(UI_INTENT_EXTRA_MESSAGE);
         String conversationName = intent.getStringExtra(UI_INTENT_EXTRA_CONVERSATION_NAME);
         String avatar = intent.getStringExtra(UI_INTENT_EXTRA_ATTACHMENT_URI);
+        String selfId = intent.getStringExtra(UI_INTENT_EXTRA_SELF_ID);
+        String conversationId = intent.getStringExtra(UI_INTENT_EXTRA_CONVERSATION_ID);
 
         MessageBoxConversationItemView item = new MessageBoxConversationItemView(this,
+                selfId,
+                conversationId,
                 message,
                 Uri.parse(avatar),
                 conversationName);
@@ -209,6 +217,8 @@ public class MessageBoxActivity extends BaseActivity {
         }
         if (isNewConversation) {
             MessageBoxConversationItemView newItem = new MessageBoxConversationItemView(this,
+                    intent.getStringExtra(UI_INTENT_EXTRA_SELF_ID),
+                    intent.getStringExtra(UI_INTENT_EXTRA_CONVERSATION_ID),
                     message,
                     Uri.parse(intent.getStringExtra(UI_INTENT_EXTRA_ATTACHMENT_URI)),
                     intent.getStringExtra(UI_INTENT_EXTRA_CONVERSATION_NAME));
@@ -220,7 +230,7 @@ public class MessageBoxActivity extends BaseActivity {
         }
     }
 
-    private void configActionView() {
+    private void initActionView() {
         mActionButtonContainer = findViewById(com.messagecenter.R.id.actions_button_container);
         mEditTextContainer = findViewById(com.messagecenter.R.id.edit_text_container);
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
@@ -263,6 +273,15 @@ public class MessageBoxActivity extends BaseActivity {
         inputMethodManager.showSoftInput(mEditText, 0);
     }
 
+    private void closeEditText() {
+        mActionButtonContainer.setVisibility(View.VISIBLE);
+        mEditTextContainer.setVisibility(View.GONE);
+        mReplyIcon.setVisibility(View.GONE);
+        mEditText.clearFocus();
+        InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+        imm.hideSoftInputFromWindow(mEditText.getWindowToken(), 0);
+    }
+
     private void initEditView() {
         mEditText = findViewById(R.id.edit_text);
         mReplyIcon = findViewById(R.id.reply_icon);
@@ -271,7 +290,24 @@ public class MessageBoxActivity extends BaseActivity {
                 return;
             }
             mReplyIcon.setClickable(false);
-            replyMessage();
+            mReplyIcon.setVisibility(View.GONE);
+            mProgressBar.setVisibility(View.VISIBLE);
+
+            Threads.postOnMainThreadDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    mConversationPagerAdapter.getView(mConversationPager.getCurrentItem()).replyMessage(mEditText.getText().toString());
+                    if (mConversationPager.getCurrentItem() < mConversationPagerAdapter.getCount() - 1) {
+                        mConversationPager.setCurrentItem(mConversationPager.getCurrentItem() + 1, true);
+                    } else {
+                        finish();
+                    }
+                    mProgressBar.setVisibility(View.GONE);
+                    mReplyIcon.setClickable(true);
+                    mReplyIcon.setVisibility(View.VISIBLE);
+                }
+            }, 1000L);
+
         });
 
         mProgressBar = findViewById(R.id.progress_bar);
@@ -313,9 +349,5 @@ public class MessageBoxActivity extends BaseActivity {
         mReplyIcon.setEnabled(false);
         mReplyIcon.getBackground().setColorFilter(0xffd7dfe9, PorterDuff.Mode.SRC_ATOP);
         mProgressBar.getIndeterminateDrawable().setColorFilter(getResources().getColor(R.color.acb_phone_sms_alert_blue), PorterDuff.Mode.SRC_IN);
-    }
-
-    private void replyMessage() {
-
     }
 }

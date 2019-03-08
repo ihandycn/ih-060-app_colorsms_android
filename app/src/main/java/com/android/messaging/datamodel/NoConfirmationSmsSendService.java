@@ -88,10 +88,7 @@ public class NoConfirmationSmsSendService extends IntentService {
         final Uri intentUri = intent.getData();
         final String recipients = intentUri != null ? MmsUtils.getSmsRecipients(intentUri) : null;
 
-        // address is added for quick reply in message box, because we don't need to read the conversation id that is used for intentUri
-        final String address = intent.getStringExtra(EXTRA_QUICK_REPLY_ADDRESS);
-
-        if (TextUtils.isEmpty(recipients) && TextUtils.isEmpty(conversationId) && TextUtils.isEmpty(address)) {
+        if (TextUtils.isEmpty(recipients) && TextUtils.isEmpty(conversationId)) {
             if (LogUtil.isLoggable(TAG, LogUtil.VERBOSE)) {
                 LogUtil.v(TAG, "Both conversationId and recipient(s) cannot be empty");
             }
@@ -112,7 +109,7 @@ public class NoConfirmationSmsSendService extends IntentService {
             // but we're not testing for that here and we're sending the message as an sms.
 
             if (TextUtils.isEmpty(conversationId)) {
-                InsertNewMessageAction.insertNewMessage(subId, address == null ? recipients : address, message, subject);
+                InsertNewMessageAction.insertNewMessage(subId, recipients, message, subject);
             } else {
                 MessageData messageData = null;
                 if (requiresMms) {

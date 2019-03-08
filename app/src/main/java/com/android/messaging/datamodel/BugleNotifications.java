@@ -636,9 +636,9 @@ public class BugleNotifications {
                 if (TextUtils.equals(convInfo.mConversationId, conversationId)) {
                     MessageNotificationState.MessageLineInfo messageLineInfo = convInfo.getLatestMessageLineInfo();
 
-
                     UIIntents.get().launchMessageBoxActivity(Factory.get().getApplicationContext(),
                             conversationId,
+                            convInfo.mSelfParticipantId,
                             convInfo.mAvatarUri != null ? convInfo.mAvatarUri.toString() : "",
                             convInfo.mGroupConversationName,
                             messageLineInfo.mText);

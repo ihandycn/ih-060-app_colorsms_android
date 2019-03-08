@@ -2,33 +2,44 @@ package com.android.messaging.smsshow;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.Intent;
+import android.net.Uri;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.AttributeSet;
+import android.telephony.TelephonyManager;
 import android.view.LayoutInflater;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.net.Uri;
 
+import com.android.messaging.Factory;
 import com.android.messaging.R;
+import com.android.messaging.datamodel.BugleNotifications;
+import com.android.messaging.datamodel.NoConfirmationSmsSendService;
 import com.android.messaging.datamodel.media.AvatarRequestDescriptor;
 import com.android.messaging.datamodel.media.ImageResource;
 import com.android.messaging.datamodel.media.MediaRequest;
 import com.android.messaging.datamodel.media.MediaResourceManager;
+import com.android.messaging.ui.UIIntents;
 import com.android.messaging.util.OsUtil;
 import com.superapps.util.Dimensions;
 import com.superapps.util.Threads;
 
 import java.util.ArrayList;
 
+import static com.android.messaging.datamodel.NoConfirmationSmsSendService.EXTRA_SELF_ID;
+
 @SuppressLint("ViewConstructor")
 public class MessageBoxConversationItemView extends FrameLayout {
 
     private MessageBoxListItemAdapter mAdapter;
     private ImageView mAvatar;
+    private String mSelfId;
+    private String mConversationId;
 
     public MessageBoxConversationItemView(Context context,
+                                          String selfId,
+                                          String conversationId,
                                           String message,
                                           Uri avatarUri,
                                           String conversationName) {
@@ -36,6 +47,9 @@ public class MessageBoxConversationItemView extends FrameLayout {
 
         final LayoutInflater inflater = LayoutInflater.from(context);
         inflater.inflate(R.layout.message_box_conversation_item, this, true);
+
+        mSelfId = selfId;
+        mConversationId = conversationId;
 
         RecyclerView mRecyclerView = findViewById(R.id.recycler_view);
         mAvatar = findViewById(R.id.avatar);
@@ -56,6 +70,17 @@ public class MessageBoxConversationItemView extends FrameLayout {
 
     void addNewMessage(String message) {
         mAdapter.addNewIncomingMessage(message);
+    }
+
+    void replyMessage(String message) {
+        Context context = Factory.get().getApplicationContext();
+        BugleNotifications.markAllMessagesAsSeen();
+        final Intent sendIntent = new Intent(context, NoConfirmationSmsSendService.class);
+        sendIntent.setAction(TelephonyManager.ACTION_RESPOND_VIA_MESSAGE);
+        sendIntent.putExtra(Intent.EXTRA_TEXT, message);
+        sendIntent.putExtra(EXTRA_SELF_ID, mSelfId);
+        sendIntent.putExtra(UIIntents.UI_INTENT_EXTRA_CONVERSATION_ID, mConversationId);
+        context.startService(sendIntent);
     }
 
     private void loadAvatar(Uri avatarUri) {
