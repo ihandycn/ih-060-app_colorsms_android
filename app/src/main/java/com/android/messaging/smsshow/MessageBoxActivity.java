@@ -29,6 +29,8 @@ import android.widget.TextView;
 
 import com.android.messaging.BaseActivity;
 import com.android.messaging.R;
+import com.android.messaging.datamodel.BugleNotifications;
+import com.android.messaging.util.BugleAnalytics;
 import com.android.messaging.util.UiUtils;
 import com.superapps.util.Dimensions;
 import com.superapps.util.Threads;
@@ -67,6 +69,9 @@ public class MessageBoxActivity extends BaseActivity {
         initEditView();
         initActionView();
         initMenu();
+
+        BugleAnalytics.logEvent("SMS_PopUp_Show", true);
+        BugleAnalytics.logEvent("SMS_ActiveUsers", true);
 
         // todo you must not pass Privacy Information between intents!
     }
@@ -119,28 +124,23 @@ public class MessageBoxActivity extends BaseActivity {
                     0, message.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
             builder.setMessage(spannableStringMessage);
 
-            builder.setPositiveButton(getString(R.string.message_box_positive_action), new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialogInterface, int i) {
-                    if (mCloseDialog == null) {
-                        return;
-                    }
-                    mCloseDialog.dismiss();
-                    mCloseDialog = null;
+            builder.setPositiveButton(getString(R.string.message_box_positive_action), (dialogInterface, i) -> {
+                if (mCloseDialog == null) {
+                    return;
                 }
+                mCloseDialog.dismiss();
+                mCloseDialog = null;
             });
 
-            builder.setNegativeButton(getString(R.string.message_box_negative_button), new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int i) {
-                    if (mCloseDialog == null) {
-                        return;
-                    }
-                    MessageBoxSettings.setSMSAssistantModuleEnabled(false);
-                    mCloseDialog.dismiss();
-                    mCloseDialog = null;
-                    Toasts.showToast(R.string.message_box_disable_successfully);
+            builder.setNegativeButton(getString(R.string.message_box_negative_button), (dialog, i) -> {
+                if (mCloseDialog == null) {
+                    return;
                 }
+                MessageBoxSettings.setSMSAssistantModuleEnabled(false);
+                mCloseDialog.dismiss();
+                mCloseDialog = null;
+                Toasts.showToast(R.string.message_box_disable_successfully);
+                BugleAnalytics.logEvent("SMS_PopUp_Disable", true);
             });
 
             mCloseDialog = builder.create();
@@ -235,7 +235,10 @@ public class MessageBoxActivity extends BaseActivity {
 
         mOpenEditTextButton = findViewById(R.id.open_edit_text_button);
         mNextButton = findViewById(R.id.next_icon);
-        mOpenEditTextButton.setOnClickListener(v -> openEditText());
+        mOpenEditTextButton.setOnClickListener(v -> {
+            openEditText();
+            BugleAnalytics.logEvent("SMS_PopUp_Reply_BtnClick", true);
+        });
         mNextButton.setOnClickListener(v -> {
             int currentItem = mConversationPager.getCurrentItem();
             if (currentItem < mConversationPagerAdapter.getCount()) {
@@ -347,5 +350,12 @@ public class MessageBoxActivity extends BaseActivity {
         mReplyIcon.setEnabled(false);
         mReplyIcon.getBackground().setColorFilter(0xffd7dfe9, PorterDuff.Mode.SRC_ATOP);
         mProgressBar.getIndeterminateDrawable().setColorFilter(getResources().getColor(R.color.message_box_primary_color), PorterDuff.Mode.SRC_IN);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        BugleNotifications.markAllMessagesAsSeen();
+        BugleAnalytics.logEvent("SMS_PopUp_Close", true);
     }
 }

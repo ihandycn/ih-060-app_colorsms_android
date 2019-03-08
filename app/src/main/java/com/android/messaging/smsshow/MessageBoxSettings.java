@@ -1,5 +1,9 @@
 package com.android.messaging.smsshow;
 
+import com.android.messaging.Factory;
+import com.android.messaging.datamodel.BugleNotifications;
+import com.android.messaging.util.OsUtil;
+import com.android.messaging.util.PhoneUtils;
 import com.ihs.commons.config.HSConfig;
 import com.ihs.commons.notificationcenter.HSGlobalNotificationCenter;
 import com.ihs.commons.utils.HSPreferenceHelper;
@@ -7,6 +11,14 @@ import com.ihs.commons.utils.HSPreferenceHelper;
 public class MessageBoxSettings {
 
     private static final String PREFS_SMS_MESSAGE_ASSISTANT = "prefs_sms_message_assistant";
+
+
+    public static boolean shouldPopUp() {
+        return !Factory.get().getIsForeground()
+                && (BugleNotifications.isNotificationSettingsSwitchOpenned() || OsUtil.isAtLeastO())
+                && isSMSAssistantModuleEnabled()
+                && PhoneUtils.getDefault().isDefaultSmsApp();
+    }
 
 
     /**

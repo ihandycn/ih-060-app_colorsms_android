@@ -64,6 +64,7 @@ import com.android.messaging.datamodel.media.UriImageRequestDescriptor;
 import com.android.messaging.datamodel.media.VideoThumbnailRequest;
 import com.android.messaging.sms.MmsSmsUtils;
 import com.android.messaging.sms.MmsUtils;
+import com.android.messaging.smsshow.MessageBoxSettings;
 import com.android.messaging.ui.UIIntents;
 import com.android.messaging.ui.customize.PrimaryColors;
 import com.android.messaging.util.Assert;
@@ -623,7 +624,9 @@ public class BugleNotifications {
             return;
         }
 
-        popUpMessageBox(state, conversationId);
+        if (MessageBoxSettings.shouldPopUp()) {
+            popUpMessageBox(state, conversationId);
+        }
         processAndSend(state, silent, softSound);
         BugleAnalytics.logEvent("SMS_Notifications_Pushed", true);
 
