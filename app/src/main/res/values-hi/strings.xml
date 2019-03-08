@@ -530,20 +530,16 @@
     <string name="menu_setting">"सेटिंग"</string>
     <string name="set_as_default_dialog_button_ok_user_present">"ठीक"</string>
 
-    <string name="acb_guide_ok">OK</string>
-    <string name="acb_phone_reply">" जवाब दें"</string>
-    <string name="acb_device_not_support_message">आपकी डिवाइस इसका समर्थन नहीं करती।</string>
-    <string name="acb_message_time_ago">%1$d मिनिट पहले</string>
-    <string name="acb_message_next">अगला</string>
-    <string name="acb_message_guide_title">अनलॉक के बाद बिना पढ़े WhatsApp संदेशों को तुरंत देखें।</string>
-    <string name="acb_message_guide_content">प्रयोग की एक्सेस देकर Air Launcher को सक्रिय करें। </string>
-    <string name="acb_message_reply">जवाब</string>
-    <string name="acb_alert_disable_call_alert">अक्षम करें</string>
-    <string name="acb_phone_alert_close_dialog_negative_action">बंद करें</string>
-    <string name="acb_phone_alert_close_dialog_positive_action">अभी नहीं</string>
-    <string name="acb_alert_disable_message_successfully">कॉल सहायक अक्षम है</string>
-    <string name="acb_alert_disable_message_alert_title">कॉल सहायक को बंद करना है?</string>
-    <string name="acb_alert_disable_message_alert_message">यदि आप कॉल सहायक को बंद करते हो, तो जब आप कोई कॉल छोड़ देते हो तो तकाजा नहीं पाआेगे। वास्‍तव में इसे बंद करना है?</string>
+    <string name="message_box_reply_hint">" जवाब दें"</string>
+    <string name="message_box_time_ago">%1$d मिनिट पहले</string>
+    <string name="message_box_next">अगला</string>
+    <string name="message_box_reply">जवाब</string>
+    <string name="message_box_disable">अक्षम करें</string>
+    <string name="message_box_negative_button">बंद करें</string>
+    <string name="message_box_positive_action">अभी नहीं</string>
+    <string name="message_box_disable_successfully">कॉल सहायक अक्षम है</string>
+    <string name="message_box_alert_title">कॉल सहायक को बंद करना है?</string>
+    <string name="message_box_alert_message">यदि आप कॉल सहायक को बंद करते हो, तो जब आप कोई कॉल छोड़ देते हो तो तकाजा नहीं पाआेगे। वास्‍तव में इसे बंद करना है?</string>
 
 
 

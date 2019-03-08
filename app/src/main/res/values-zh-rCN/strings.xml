@@ -529,22 +529,18 @@
     <string name="menu_setting">"设置"</string>
     <string name="set_as_default_dialog_button_ok_user_present">"确定"</string>
 
-    <string name="acb_guide_ok">好</string>
-    <string name="acb_phone_reply">" 回复"</string>
+    <string name="message_box_reply_hint">" 回复"</string>
 
-    <string name="acb_device_not_support_message">你的设备不支持该功能。</string>
-    <string name="acb_message_time_ago" >%1$d分钟以前</string>
-    <string name="acb_message_next" >下一条</string>
-    <string name="acb_message_guide_title">瞬间查看在锁屏期间谁给你发了WhatsApp消息</string>
-    <string name="acb_message_guide_content">允许使用权限启用Air Launcher</string>
-    <string name="acb_message_reply" >回复</string>
+    <string name="message_box_time_ago">%1$d分钟以前</string>
+    <string name="message_box_next">下一条</string>
+    <string name="message_box_reply">回复</string>
 
-    <string name="acb_alert_disable_call_alert">关闭</string>
-    <string name="acb_phone_alert_close_dialog_negative_action">关闭</string>
-    <string name="acb_phone_alert_close_dialog_positive_action">取消</string>
+    <string name="message_box_disable">关闭</string>
+    <string name="message_box_negative_button">关闭</string>
+    <string name="message_box_positive_action">取消</string>
 
-    <string name="acb_alert_disable_message_successfully">消息助手已关闭</string>
-    <string name="acb_alert_disable_message_alert_title">关闭消息助手？</string>
-    <string name="acb_alert_disable_message_alert_message">一旦关闭来电助手，有新消息时将不会收到提醒，确认关闭？</string>
+    <string name="message_box_disable_successfully">消息助手已关闭</string>
+    <string name="message_box_alert_title">关闭消息助手？</string>
+    <string name="message_box_alert_message">一旦关闭来电助手，有新消息时将不会收到提醒，确认关闭？</string>
 
 </resources>

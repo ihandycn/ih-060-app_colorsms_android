@@ -635,22 +635,18 @@
     <string name="set_as_default_dialog_button_ok_user_present">"موافق"</string>
 
 
-    <string name="acb_guide_ok">OK</string>
-    <string name="acb_phone_reply">" الرد"</string>
+    <string name="message_box_reply_hint">" الرد"</string>
 
-    <string name="acb_device_not_support_message">جهازك لا يدعم هذا.</string>
-    <string name="acb_message_time_ago" >قبل %1$d دقائق</string>
-    <string name="acb_message_next" >التالي</string>
-    <string name="acb_message_guide_title">إظهار رسائل WhatsApp فوراً بعد فك القفل.</string>
-    <string name="acb_message_guide_content">اسمح بالدخول لتمكينAir Launcher </string>
-    <string name="acb_message_reply" >>الرد</string>
+    <string name="message_box_time_ago">قبل %1$d دقائق</string>
+    <string name="message_box_next">التالي</string>
+    <string name="message_box_reply">>الرد</string>
 
-    <string name="acb_alert_disable_call_alert">تعطيل</string>
-    <string name="acb_phone_alert_close_dialog_negative_action">إيقاف التشغيل</string>
-    <string name="acb_phone_alert_close_dialog_positive_action">ليس الآن.</string>
+    <string name="message_box_disable">تعطيل</string>
+    <string name="message_box_negative_button">إيقاف التشغيل</string>
+    <string name="message_box_positive_action">ليس الآن.</string>
 
-    <string name="acb_alert_disable_message_successfully">مساعد الرسائل معطل</string>
-    <string name="acb_alert_disable_message_alert_title">إيقاف مساعد الرسائل؟</string>
-    <string name="acb_alert_disable_message_alert_message">إذا أوقفت مساعد الرسائل، فلن تحصل على تذكير عند تلقي رسائل. متأكد من أنك تريد إيقاف تشغيله؟</string>
+    <string name="message_box_disable_successfully">مساعد الرسائل معطل</string>
+    <string name="message_box_alert_title">إيقاف مساعد الرسائل؟</string>
+    <string name="message_box_alert_message">إذا أوقفت مساعد الرسائل، فلن تحصل على تذكير عند تلقي رسائل. متأكد من أنك تريد إيقاف تشغيله؟</string>
 
 </resources>

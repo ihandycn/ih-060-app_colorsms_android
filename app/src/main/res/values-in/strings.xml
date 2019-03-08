@@ -531,22 +531,18 @@
     <string name="set_as_default_dialog_button_ok_user_present">"Oke"</string>
 
 
-    <string name="acb_guide_ok">OK</string>
-    <string name="acb_phone_reply">" Balas"</string>
+    <string name="message_box_reply_hint">" Balas"</string>
 
-    <string name="acb_device_not_support_message">Perangkat Anda tidak mendukung.</string>
-    <string name="acb_message_time_ago" >%1$d menit yang lalu</string>
-    <string name="acb_message_next" >SELANJUTNYA</string>
-    <string name="acb_message_guide_title">Lihat Pesan WhatsApp yang belum dibaca langsung setelah membuka.</string>
-    <string name="acb_message_guide_content">Izinkan akses penggunaan untuk mengaktifkan Air Launcher </string>
-    <string name="acb_message_reply" >Balas</string>
+    <string name="message_box_time_ago">%1$d menit yang lalu</string>
+    <string name="message_box_next">SELANJUTNYA</string>
+    <string name="message_box_reply">Balas</string>
 
-    <string name="acb_alert_disable_call_alert">Nonaktifkan</string>
-    <string name="acb_phone_alert_close_dialog_negative_action">MATIKAN</string>
-    <string name="acb_phone_alert_close_dialog_positive_action">TIDAK SEKARANG</string>
+    <string name="message_box_disable">Nonaktifkan</string>
+    <string name="message_box_negative_button">MATIKAN</string>
+    <string name="message_box_positive_action">TIDAK SEKARANG</string>
 
-    <string name="acb_alert_disable_message_successfully">Asisten Pesan dinonaktifkan</string>
-    <string name="acb_alert_disable_message_alert_title">Nonaktifkan Asisten Pesan?</string>
-    <string name="acb_alert_disable_message_alert_message">Jika menonaktifkan Asisten Pesan, Anda tidak akan diingatkan saat menerima pesan. Yakin menonaktifkannya?</string>
+    <string name="message_box_disable_successfully">Asisten Pesan dinonaktifkan</string>
+    <string name="message_box_alert_title">Nonaktifkan Asisten Pesan?</string>
+    <string name="message_box_alert_message">Jika menonaktifkan Asisten Pesan, Anda tidak akan diingatkan saat menerima pesan. Yakin menonaktifkannya?</string>
 
 </resources>

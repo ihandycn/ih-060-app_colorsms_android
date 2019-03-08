@@ -531,16 +531,13 @@
     <string name="set_as_default_dialog_button_ok_user_present">"OK"</string>
 
 
-    <string name="acb_guide_ok">OK</string>
-    <string name="acb_phone_reply">" Trả lời"</string>
+    <string name="message_box_reply_hint">" Trả lời"</string>
 
-    <string name="acb_device_not_support_message">Your device does not support this.</string>
+    <string name="message_box_disable">Tắt</string>
+    <string name="message_box_negative_button">TẮT</string>
+    <string name="message_box_positive_action">KHÔNG PHẢI HIỆN TẠI</string>
 
-    <string name="acb_alert_disable_call_alert">Tắt</string>
-    <string name="acb_phone_alert_close_dialog_negative_action">TẮT</string>
-    <string name="acb_phone_alert_close_dialog_positive_action">KHÔNG PHẢI HIỆN TẠI</string>
-
-    <string name="acb_alert_disable_message_successfully">Đã tắt Hỗ trợ Cuộc gọi</string>
-    <string name="acb_alert_disable_message_alert_title">Tắt Hỗ trợ Cuộc gọi?</string>
-    <string name="acb_alert_disable_message_alert_message">Nếu bạn tắt Hỗ trợ Cuộc gọi, bạn sẽ không nhận được lời nhắc khi bị lỡ cuộc gọi. Chắc chắn tắt nó?</string>
+    <string name="message_box_disable_successfully">Đã tắt Hỗ trợ Cuộc gọi</string>
+    <string name="message_box_alert_title">Tắt Hỗ trợ Cuộc gọi?</string>
+    <string name="message_box_alert_message">Nếu bạn tắt Hỗ trợ Cuộc gọi, bạn sẽ không nhận được lời nhắc khi bị lỡ cuộc gọi. Chắc chắn tắt nó?</string>
 </resources>

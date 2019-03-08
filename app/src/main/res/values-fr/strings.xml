@@ -531,19 +531,15 @@
     <string name="set_as_default_dialog_button_ok_user_present">"OK"</string>
 
 
-    <string name="acb_guide_ok">OK</string>
-    <string name="acb_phone_reply">" Répondre"</string>
-    <string name="acb_device_not_support_message">Votre appareil ne prend pas en charge ceci.</string>
-    <string name="acb_message_reply" >Répondre</string>
-    <string name="acb_message_time_ago" >il y a %1$d min</string>
-    <string name="acb_message_next" >SUIVANT</string>
-    <string name="acb_message_guide_title">Visualisez les messages WhatsApp non lus instantanément après le déverrouillage.</string>
-    <string name="acb_message_guide_content">Autorisez l’accès d’utilisation pour activer Air Launcher.</string>
-    <string name="acb_alert_disable_call_alert">Désactiver</string>
-    <string name="acb_phone_alert_close_dialog_negative_action">DÉSACTIVER</string>
-    <string name="acb_phone_alert_close_dialog_positive_action">PAS MAINTENANT</string>
-    <string name="acb_alert_disable_message_successfully">Assistant de message désactivé</string>
-    <string name="acb_alert_disable_message_alert_title">Désactiver l\'assistant de message ?</string>
-    <string name="acb_alert_disable_message_alert_message">Si vous désactivez l\'assistant de message, vous ne recevrez pas de rappel lorsque lors de la réception d\'un message Voulez-vous vraiment le désactiver ?</string>
+    <string name="message_box_reply_hint">" Répondre"</string>
+    <string name="message_box_reply">Répondre</string>
+    <string name="message_box_time_ago">il y a %1$d min</string>
+    <string name="message_box_next">SUIVANT</string>
+    <string name="message_box_disable">Désactiver</string>
+    <string name="message_box_negative_button">DÉSACTIVER</string>
+    <string name="message_box_positive_action">PAS MAINTENANT</string>
+    <string name="message_box_disable_successfully">Assistant de message désactivé</string>
+    <string name="message_box_alert_title">Désactiver l\'assistant de message ?</string>
+    <string name="message_box_alert_message">Si vous désactivez l\'assistant de message, vous ne recevrez pas de rappel lorsque lors de la réception d\'un message Voulez-vous vraiment le désactiver ?</string>
 
 </resources>

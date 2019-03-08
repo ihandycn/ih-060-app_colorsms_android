@@ -78,7 +78,7 @@ public class MessageBoxActivity extends BaseActivity {
 
         View turnOffContainer = getLayoutInflater().inflate(R.layout.message_box_menu_pop_up, (ViewGroup) mContainer, false);
         final TextView turnOff = turnOffContainer.findViewById(R.id.tv_turn_off);
-        turnOff.setText(getString(R.string.acb_alert_disable_call_alert));
+        turnOff.setText(getString(R.string.message_box_disable));
         turnOff.measure(0, 0);
         final RipplePopupView popupView = new RipplePopupView(this);
         popupView.setOutSideBackgroundColor(Color.TRANSPARENT);
@@ -105,21 +105,21 @@ public class MessageBoxActivity extends BaseActivity {
         if (mCloseDialog == null) {
             AlertDialog.Builder builder = new AlertDialog.Builder(this, R.style.CloseDialogTheme);
 
-            String title = getString(R.string.acb_alert_disable_message_alert_title);
+            String title = getString(R.string.message_box_alert_title);
             SpannableString spannableStringTitle = new SpannableString(title);
             spannableStringTitle.setSpan(
                     new ForegroundColorSpan(0xDF000000),
                     0, title.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
             builder.setTitle(spannableStringTitle);
 
-            String message = getString(R.string.acb_alert_disable_message_alert_message);
+            String message = getString(R.string.message_box_alert_message);
             SpannableString spannableStringMessage = new SpannableString(message);
             spannableStringMessage.setSpan(
                     new ForegroundColorSpan(0x8A000000),
                     0, message.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
             builder.setMessage(spannableStringMessage);
 
-            builder.setPositiveButton(getString(R.string.acb_phone_alert_close_dialog_positive_action), new DialogInterface.OnClickListener() {
+            builder.setPositiveButton(getString(R.string.message_box_positive_action), new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialogInterface, int i) {
                     if (mCloseDialog == null) {
@@ -130,7 +130,7 @@ public class MessageBoxActivity extends BaseActivity {
                 }
             });
 
-            builder.setNegativeButton(getString(R.string.acb_phone_alert_close_dialog_negative_action), new DialogInterface.OnClickListener() {
+            builder.setNegativeButton(getString(R.string.message_box_negative_button), new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int i) {
                     if (mCloseDialog == null) {
@@ -139,7 +139,7 @@ public class MessageBoxActivity extends BaseActivity {
                     MessageBoxSettings.setSMSAssistantModuleEnabled(false);
                     mCloseDialog.dismiss();
                     mCloseDialog = null;
-                    Toasts.showToast(R.string.acb_alert_disable_message_successfully);
+                    Toasts.showToast(R.string.message_box_disable_successfully);
                 }
             });
 
@@ -241,7 +241,7 @@ public class MessageBoxActivity extends BaseActivity {
             if (currentItem < mConversationPagerAdapter.getCount()) {
                 mConversationPager.setCurrentItem(currentItem + 1, true);
             } else {
-                Toasts.showToast(R.string.acb_message_no_next);
+                Toasts.showToast(R.string.message_box_no_message);
             }
         });
     }
@@ -251,7 +251,7 @@ public class MessageBoxActivity extends BaseActivity {
         mNextButton.setClickable(true);
         int total = mConversationPagerAdapter.getCount();
         int currentPosition = mConversationPager.getCurrentItem();
-        mNextButton.setText((getString(R.string.acb_message_next) + String.format(getString(R.string.acb_message_next_num),
+        mNextButton.setText((getString(R.string.message_box_next) + String.format(getString(R.string.acb_message_next_num),
                 total - currentPosition - 1)));
         if (currentPosition == total - 1) {
             mNextButton.setBackground(null);

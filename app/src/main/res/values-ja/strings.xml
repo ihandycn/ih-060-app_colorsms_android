@@ -530,21 +530,17 @@
     <string name="menu_setting">"設定"</string>
     <string name="set_as_default_dialog_button_ok_user_present">"OK"</string>
 
-    <string name="acb_guide_ok">OK</string>
-    <string name="acb_phone_reply">" 返信"</string>
+    <string name="message_box_reply_hint">" 返信"</string>
 
-    <string name="acb_device_not_support_message">お使いの機器はこれをサポートしていません。</string>
-    <string name="acb_message_time_ago" >%1$d 分前</string>
-    <string name="acb_message_next" >次へ</string>
-    <string name="acb_message_guide_title">WhatsApp の未読メッセージをアンロックした後に見る</string>
-    <string name="acb_message_guide_content">Air Launcher有効にするためのアクセス権を許可します</string>
-    <string name="acb_message_reply" >返信</string>
+    <string name="message_box_time_ago">%1$d 分前</string>
+    <string name="message_box_next">次へ</string>
+    <string name="message_box_reply">返信</string>
 
-    <string name="acb_alert_disable_call_alert">無効</string>
-    <string name="acb_phone_alert_close_dialog_negative_action">オフにする</string>
-    <string name="acb_phone_alert_close_dialog_positive_action">今はしない</string>
+    <string name="message_box_disable">無効</string>
+    <string name="message_box_negative_button">オフにする</string>
+    <string name="message_box_positive_action">今はしない</string>
 
-    <string name="acb_alert_disable_message_successfully">メッセージアシスタントが無効になりました</string>
-    <string name="acb_alert_disable_message_alert_title">メッセージアシスタントをオフにしますか？</string>
-    <string name="acb_alert_disable_message_alert_message">メッセージアシスタントをオフにすると、メッセージを受け取った時にお知らせがきません。それでもオフにしますか？</string>
+    <string name="message_box_disable_successfully">メッセージアシスタントが無効になりました</string>
+    <string name="message_box_alert_title">メッセージアシスタントをオフにしますか？</string>
+    <string name="message_box_alert_message">メッセージアシスタントをオフにすると、メッセージを受け取った時にお知らせがきません。それでもオフにしますか？</string>
 </resources>

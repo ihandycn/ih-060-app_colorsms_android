@@ -15,7 +15,7 @@
         android:paddingLeft="10dp"
         android:paddingRight="10dp"
         android:paddingStart="10dp"
-        android:text="@string/acb_alert_disable_call_alert"
+        android:text="@string/message_box_disable"
         android:textColor="#b2b2b2"
         android:textSize="12sp"
         app:typeface="@string/roboto_medium" />

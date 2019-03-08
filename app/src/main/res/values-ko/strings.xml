@@ -529,21 +529,17 @@
     <string name="menu_setting">"설정"</string>
     <string name="set_as_default_dialog_button_ok_user_present">"확인"</string>
 
-    <string name="acb_guide_ok">확인</string>
-    <string name="acb_phone_reply">" 회신"</string>
+    <string name="message_box_reply_hint">" 회신"</string>
 
-    <string name="acb_device_not_support_message">장치가 이것을 지원하지 않습니다.</string>
-    <string name="acb_message_time_ago" >%1$d분 전</string>
-    <string name="acb_message_next" >다음</string>
-    <string name="acb_message_guide_title">잠금해제 후 읽지 않은 WhatsApp 메시지를 확인하세요.</string>
-    <string name="acb_message_guide_content">Air Launcher 활성화하려면 사용 액세스를 허용하세요 </string>
-    <string name="acb_message_reply" >회신</string>
+    <string name="message_box_time_ago">%1$d분 전</string>
+    <string name="message_box_next">다음</string>
+    <string name="message_box_reply">회신</string>
 
-    <string name="acb_alert_disable_call_alert">비활성화</string>
-    <string name="acb_phone_alert_close_dialog_negative_action">끄기</string>
-    <string name="acb_phone_alert_close_dialog_positive_action">나중에</string>
+    <string name="message_box_disable">비활성화</string>
+    <string name="message_box_negative_button">끄기</string>
+    <string name="message_box_positive_action">나중에</string>
 
-    <string name="acb_alert_disable_message_successfully">메시지 보조 비활성화됨</string>
-    <string name="acb_alert_disable_message_alert_title">메시지 보조를 끌까요?</string>
-    <string name="acb_alert_disable_message_alert_message">메시지 보조를 끄면 메시지를 받았을 때 미리 알림을 받지 못하게 됩니다. 정말로 끌까요?</string>
+    <string name="message_box_disable_successfully">메시지 보조 비활성화됨</string>
+    <string name="message_box_alert_title">메시지 보조를 끌까요?</string>
+    <string name="message_box_alert_message">메시지 보조를 끄면 메시지를 받았을 때 미리 알림을 받지 못하게 됩니다. 정말로 끌까요?</string>
 </resources>
