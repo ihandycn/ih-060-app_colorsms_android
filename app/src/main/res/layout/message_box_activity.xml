@@ -116,7 +116,7 @@
                     android:fontFamily="sans-serif-medium"
                     android:layout_marginStart="18dp"
                     android:text="@string/message_box_next"
-                    android:textColor="@color/acb_phone_sms_alert_blue"
+                    android:textColor="@color/message_box_primary_color"
                     android:textSize="15sp"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintRight_toLeftOf="@id/open_edit_text_button"

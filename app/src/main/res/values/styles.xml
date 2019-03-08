@@ -604,7 +604,7 @@
 
     <style name="MessageBoxEditText" parent="Theme.AppCompat.Light.DarkActionBar">
         <item name="colorControlNormal">@android:color/white</item>
-        <item name="colorControlActivated">@color/acb_phone_sms_alert_blue</item>
+        <item name="colorControlActivated">@color/message_box_primary_color</item>
     </style>
 
     <style name="DialogButton">
@@ -691,6 +691,6 @@
     </style>
 
     <style name="AcbSmsRecyclerViewTheme" parent="Theme.AppCompat.Light">
-        <item name="colorPrimary">@color/acb_phone_sms_alert_blue</item>
+        <item name="colorPrimary">@color/message_box_primary_color</item>
     </style>
 </resources>

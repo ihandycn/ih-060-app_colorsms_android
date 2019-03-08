@@ -346,6 +346,6 @@ public class MessageBoxActivity extends BaseActivity {
         });
         mReplyIcon.setEnabled(false);
         mReplyIcon.getBackground().setColorFilter(0xffd7dfe9, PorterDuff.Mode.SRC_ATOP);
-        mProgressBar.getIndeterminateDrawable().setColorFilter(getResources().getColor(R.color.acb_phone_sms_alert_blue), PorterDuff.Mode.SRC_IN);
+        mProgressBar.getIndeterminateDrawable().setColorFilter(getResources().getColor(R.color.message_box_primary_color), PorterDuff.Mode.SRC_IN);
     }
 }

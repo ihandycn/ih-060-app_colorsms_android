@@ -47,7 +47,7 @@
         android:layout_marginRight="19dp"
         android:scrollbarSize="4dp"
         android:scrollbarStyle="outsideInset"
-        android:scrollbarThumbVertical="@drawable/message_box_textview_scrollbar"
+        android:scrollbarThumbVertical="@drawable/message_box_scrollbar"
         android:scrollbars="vertical"
         android:theme="@style/AcbSmsRecyclerViewTheme" />
 
