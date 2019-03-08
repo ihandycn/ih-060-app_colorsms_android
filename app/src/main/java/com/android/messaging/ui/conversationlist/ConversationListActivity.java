@@ -68,6 +68,8 @@ import com.superapps.util.Navigations;
 import com.superapps.util.Preferences;
 import com.superapps.util.Threads;
 
+import java.util.Calendar;
+
 public class ConversationListActivity extends AbstractConversationListActivity
         implements View.OnClickListener, INotificationObserver {
 
@@ -166,6 +168,8 @@ public class ConversationListActivity extends AbstractConversationListActivity
                     backgroundStr = "colorsms_" + index;
                 }
 
+                int hour = Calendar.getInstance().get(Calendar.HOUR_OF_DAY);
+
                 BugleAnalytics.logEvent("SMS_Messages_Show", true,
                         "themeColor", String.valueOf(ThemeSelectActivity.getSelectedIndex()),
                         "background", backgroundStr,
@@ -177,7 +181,8 @@ public class ConversationListActivity extends AbstractConversationListActivity
 
                 BugleAnalytics.logEvent("SMS_Messages_Show_1", true,
                         "font", FontStyleManager.getFontFamily(),
-                        "size", getResources().getString(ChangeFontActivity.sTextSizeRes[FontStyleManager.getFontScaleLevel()])
+                        "size", getResources().getString(ChangeFontActivity.sTextSizeRes[FontStyleManager.getFontScaleLevel()]),
+                        "open time", String.valueOf(hour)
                 );
             });
         }
