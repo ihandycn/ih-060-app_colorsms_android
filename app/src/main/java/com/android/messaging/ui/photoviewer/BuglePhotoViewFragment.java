@@ -28,8 +28,11 @@ import com.android.ex.photo.fragments.PhotoViewFragment;
 import com.android.ex.photo.loaders.PhotoBitmapLoaderInterface.BitmapResult;
 import com.android.messaging.download.Downloader;
 import com.android.messaging.ui.emoji.utils.EmojiManager;
+import com.android.messaging.util.BugleAnalytics;
 
 public class BuglePhotoViewFragment extends PhotoViewFragment {
+
+    private boolean mIsSentMagicSticker = false;
 
     /**
      * Public no-arg constructor for allowing the framework to handle orientation changes
@@ -63,6 +66,7 @@ public class BuglePhotoViewFragment extends PhotoViewFragment {
         if (!TextUtils.isEmpty(mResolvedPhotoUri)) {
             String uri = EmojiManager.getStickerMagicUriByPartUri(mResolvedPhotoUri);
             if (!TextUtils.isEmpty(uri)) {
+                mIsSentMagicSticker = true;
                 mPhotoUriStr = mResolvedPhotoUri;
                 mResolvedPhotoUri = uri;
             }
@@ -134,7 +138,9 @@ public class BuglePhotoViewFragment extends PhotoViewFragment {
     @Override
     protected void onViewVisible() {
         super.onViewVisible();
+
         if (isLottieModel()) {
+            BugleAnalytics.logEvent(mIsSentMagicSticker ? "SMSEmoji_ChatEmoji_Magic_SendView" : "SMSEmoji_ChatEmoji_Magic_PreSendView", true);
             startPlayLottie();
         } else {
             startGif();
