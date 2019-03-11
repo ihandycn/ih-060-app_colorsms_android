@@ -61,8 +61,6 @@ public class CustomBubblesActivity extends BaseActivity implements CustomMessage
         setContentView(R.layout.customize_bubbles_activity);
         initActionBar();
 
-        UiUtils.setStatusBarColor(this, getResources().getColor(R.color.action_bar_background_color));
-
         mConversationId = getIntent().getStringExtra(UIIntents.UI_INTENT_EXTRA_CONVERSATION_ID);
 
         String bgPath = WallpaperManager.getWallpaperPathByThreadId(mConversationId);
@@ -146,11 +144,11 @@ public class CustomBubblesActivity extends BaseActivity implements CustomMessage
         Toolbar toolbar = findViewById(R.id.toolbar);
         toolbar.setTitle("");
         setSupportActionBar(toolbar);
+        UiUtils.setTitleBarBackground(toolbar, this);
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
             actionBar.setDisplayShowHomeEnabled(true);
         }
-
         mSaveButton = findViewById(R.id.save_button);
         mSaveButton.setOnClickListener(v -> {
             save();

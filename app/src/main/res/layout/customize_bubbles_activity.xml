@@ -16,9 +16,9 @@
             android:id="@+id/toolbar_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center"
+            android:layout_gravity="center_vertical"
             android:text="@string/menu_bubble"
-            android:textColor="@color/text_primary_color"
+            android:textColor="@color/action_bar_title_text_color"
             android:textSize="16.7sp"
             app:typeface="@string/custom_font_semibold" />
 
@@ -28,13 +28,13 @@
             android:layout_width="wrap_content"
             android:layout_height="30dp"
             android:layout_gravity="center_vertical|end"
-            android:layout_marginEnd="18dp"
             android:layout_marginTop="5dp"
+            android:layout_marginEnd="18dp"
             android:gravity="center"
-            android:paddingEnd="15dp"
-            android:paddingStart="15dp"
-            android:text="@string/bubble_customize_save"
             android:includeFontPadding="false"
+            android:paddingStart="15dp"
+            android:paddingEnd="15dp"
+            android:text="@string/bubble_customize_save"
             android:textColor="@color/white"
             android:textSize="12.7sp"
             app:typeface="@string/custom_font_semibold" />
@@ -61,7 +61,7 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         app:layout_constraintBottom_toTopOf="@+id/divider"
-        app:layout_constraintTop_toBottomOf="@id/toolbar" >
+        app:layout_constraintTop_toBottomOf="@id/toolbar">
 
         <com.android.messaging.ui.customize.CustomMessagePreviewView
             android:id="@+id/custom_message_preview"

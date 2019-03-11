@@ -24,27 +24,39 @@ import android.content.ContextWrapper;
 import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
 import android.graphics.Color;
+import android.graphics.PorterDuff;
+import android.graphics.PorterDuffColorFilter;
 import android.graphics.Rect;
+import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
+import android.support.annotation.ColorInt;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.graphics.ColorUtils;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.view.menu.ActionMenuItemView;
+import android.support.v7.widget.ActionMenuView;
+import android.support.v7.widget.Toolbar;
 import android.text.Html;
 import android.text.Spanned;
 import android.text.TextPaint;
 import android.text.TextUtils;
 import android.text.style.URLSpan;
+import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.Surface;
 import android.view.View;
 import android.view.View.OnLayoutChangeListener;
+import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 import android.view.animation.Animation;
 import android.view.animation.Animation.AnimationListener;
 import android.view.animation.Interpolator;
 import android.view.animation.ScaleAnimation;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.ImageButton;
 import android.widget.RemoteViews;
 import android.widget.Toast;
 
@@ -57,6 +69,7 @@ import com.android.messaging.ui.SnackBarInteraction;
 import com.android.messaging.ui.SnackBarManager;
 import com.android.messaging.ui.UIIntents;
 import com.android.messaging.ui.WebViewActivity;
+import com.android.messaging.ui.customize.PrimaryColors;
 import com.android.messaging.ui.welcome.WelcomePermissionActivity;
 import com.android.messaging.ui.welcome.WelcomeSetAsDefaultActivity;
 import com.android.messaging.ui.welcome.WelcomeStartActivity;
@@ -66,6 +79,7 @@ import com.superapps.util.Preferences;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Pattern;
 
 public class UiUtils {
     /**
@@ -280,7 +294,7 @@ public class UiUtils {
                 location[0] + view.getMeasuredWidth(), location[1] + view.getMeasuredHeight());
     }
 
-    public static void setStatusBarColor(final Activity activity, final int color) {
+    public static void setStatusBarColor(final Activity activity, int color) {
         if (OsUtil.isAtLeastL()) {
             // we need statusbar color same as actionbar color
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
@@ -616,5 +630,16 @@ public class UiUtils {
         outCoord[0] = Math.round(pt[0]);
         outCoord[1] = Math.round(pt[1]);
         return scale;
+    }
+
+    public static void setTitleBarBackground(Toolbar toolbar, Activity activity) {
+        try {
+            toolbar.setBackground(new ColorDrawable(PrimaryColors.getPrimaryColor()));
+            setStatusBarColor(activity, PrimaryColors.getPrimaryColorDark());
+
+        } catch (IllegalArgumentException e) {
+            toolbar.setBackground(new ColorDrawable(activity.getResources().getColor(R.color.action_bar_background_color)));
+            setStatusBarColor(activity, activity.getResources().getColor(R.color.action_bar_background_color));
+        }
     }
 }

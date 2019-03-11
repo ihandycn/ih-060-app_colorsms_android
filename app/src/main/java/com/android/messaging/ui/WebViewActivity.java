@@ -323,18 +323,19 @@ public class WebViewActivity extends AppCompatActivity implements View.OnClickLi
         }
     }
 
-    private void configToolbar(){
-        UiUtils.setStatusBarColor(this, Color.WHITE);
+    private void configToolbar() {
         toolbar = (Toolbar) findViewById(R.id.inner_tool_bar);
         toolbar.setTitleTextColor(0xde000000);
         toolbar.setTitle("");
+        toolbar.setNavigationIcon(R.drawable.ic_back);
+        UiUtils.setTitleBarBackground(toolbar,this);
         setSupportActionBar(toolbar);
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
             actionBar.setDisplayHomeAsUpEnabled(true);
             actionBar.setDisplayShowHomeEnabled(true);
         }
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP){
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
             View line = findViewById(R.id.tab_separate_line_top);
             if (line != null) {
                 line.setVisibility(View.VISIBLE);

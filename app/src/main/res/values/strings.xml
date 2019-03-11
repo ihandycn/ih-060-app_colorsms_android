@@ -919,7 +919,7 @@
     <!-- The accessibility text read when the sim chooser pops up to read the current selected sim -->
     <string name="selected_sim_content_message"><xliff:g id="selected_sim">%s</xliff:g> selected</string>
 
-    <string name="action_bar_title_typeface" translatable="false">FugazOne-Regular.ttf</string>
+    <string name="action_bar_title_typeface" translatable="false">Montserrat-SemiBold.ttf</string>
     <string name="network_error">Network error.</string>
     <string name="sticker_send_msg">SELECT</string>
     <string name="media_picker_camera">Camera</string>

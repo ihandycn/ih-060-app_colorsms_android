@@ -49,12 +49,12 @@ public class SettingGeneralActivity extends BaseActivity{
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_new_setting);
-
         final boolean topLevel = getIntent().getBooleanExtra(
                 UIIntents.UI_INTENT_EXTRA_TOP_LEVEL_SETTINGS, false);
 
         Toolbar toolbar = findViewById(R.id.toolbar);
         toolbar.setTitle("");
+        UiUtils.setTitleBarBackground(toolbar,this);
         TextView title = toolbar.findViewById(R.id.toolbar_title);
         title.setText(topLevel ? getString(R.string.settings_activity_title) :
                 getString(R.string.general_settings_activity_title));
@@ -63,7 +63,6 @@ public class SettingGeneralActivity extends BaseActivity{
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         }
         getSupportActionBar().setDisplayShowHomeEnabled(true);
-        UiUtils.setStatusBarColor(this, getResources().getColor(R.color.action_bar_background_color));
 
         //outgoing message sounds
         mOutgoingSoundView = findViewById(R.id.setting_item_outgoing_message_sounds);

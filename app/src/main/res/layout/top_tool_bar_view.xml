@@ -13,11 +13,11 @@
             android:id="@+id/toolbar_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:textColor="@color/text_primary_color"
+            android:includeFontPadding="false"
+            android:textColor="#ffffff"
             android:textSize="16.7sp"
-            app:typeface="@string/custom_font_semibold"
-            app:font_style="bold"/>
+            app:font_style="bold"
+            app:typeface="@string/custom_font_semibold" />
     </android.support.v7.widget.Toolbar>
 
     <View

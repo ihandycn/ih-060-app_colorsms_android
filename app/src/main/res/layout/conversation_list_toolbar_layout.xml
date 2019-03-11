@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
@@ -9,57 +8,58 @@
         android:id="@+id/toolbar_title"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:gravity="center"
-        android:letterSpacing="-0.01"
+        android:layout_marginLeft="-17dp"
         android:layout_marginRight="72dp"
+        android:gravity="center_vertical"
+        android:includeFontPadding="false"
+        android:letterSpacing="-0.01"
         android:text="@string/messages"
         android:textColor="@color/action_bar_title_text_color"
         android:textSize="@dimen/action_bar_page_title_text_size"
-        app:typefaceFileName="@string/action_bar_title_typeface"
-        app:font_family_changeable="false"/>
+        app:font_family_changeable="false"
+        app:typefaceFileName="@string/action_bar_title_typeface" />
 
-    <LinearLayout
+    <com.airbnb.lottie.LottieAnimationView
         android:id="@+id/emoji_store_guide_content"
-        android:layout_width="wrap_content"
-        android:layout_height="37dp"
+        android:layout_width="151dp"
+        android:layout_height="32dp"
         android:layout_alignParentEnd="true"
         android:layout_alignParentRight="true"
         android:layout_centerVertical="true"
         android:layout_marginEnd="63dp"
         android:layout_marginRight="63dp"
-        android:background="@drawable/emoji_store_guide_material_bg"
         android:gravity="center"
         android:orientation="horizontal"
         android:visibility="invisible">
+        <!--
+                  <com.superapps.view.TypefacedTextView
+                      android:layout_width="wrap_content"
+                      android:layout_height="match_parent"
+                      android:gravity="center"
+                      android:maxLines="1"
+                      android:paddingStart="6dp"
+                      android:paddingLeft="8dp"
+                      android:paddingEnd="8dp"
+                      android:paddingRight="6dp"
+                      android:text="@string/emoji_add_more"
+                      android:textColor="#ffffffff"
+                      android:textSize="13sp"
+                      app:typeface="@string/custom_font_semibold" />
 
-        <com.superapps.view.TypefacedTextView
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:gravity="center"
-            android:maxLines="1"
-            android:paddingEnd="8dp"
-            android:paddingLeft="8dp"
-            android:paddingRight="6dp"
-            android:paddingStart="6dp"
-            android:text="@string/emoji_add_more"
-            android:textColor="#ffffffff"
-            android:textSize="13sp"
-            app:typeface="@string/custom_font_semibold"/>
+                  <ImageView
+                      android:layout_width="15dp"
+                      android:layout_height="15dp"
+                      android:src="@drawable/emoji_store_guide_hand" />
 
-        <ImageView
-            android:layout_width="15dp"
-            android:layout_height="15dp"
-            android:src="@drawable/emoji_store_guide_hand"/>
-
-        <ImageView
-            android:layout_width="15dp"
-            android:layout_height="15dp"
-            android:layout_marginEnd="6dp"
-            android:layout_marginLeft="2.3dp"
-            android:layout_marginRight="6dp"
-            android:layout_marginStart="2.3dp"
-            android:src="@drawable/emoji_store_guide_hand"/>
-    </LinearLayout>
+                  <ImageView
+                      android:layout_width="15dp"
+                      android:layout_height="15dp"
+                      android:layout_marginStart="2.3dp"
+                      android:layout_marginLeft="2.3dp"
+                      android:layout_marginEnd="6dp"
+                      android:layout_marginRight="6dp"
+                      android:src="@drawable/emoji_store_guide_hand" />-->
+    </com.airbnb.lottie.LottieAnimationView>
 
 
     <ImageView
@@ -72,7 +72,7 @@
         android:layout_marginEnd="57dp"
         android:layout_marginRight="57dp"
         android:src="@drawable/emoji_store_guide_triangle"
-        android:visibility="invisible"/>
+        android:visibility="invisible" />
 
     <ImageView
         android:id="@+id/emoji_store_icon"
@@ -81,9 +81,9 @@
         android:layout_alignParentEnd="true"
         android:layout_alignParentRight="true"
         android:layout_centerVertical="true"
-        android:layout_marginEnd="16dp"
-        android:layout_marginRight="16dp"
-        android:src="@drawable/emoji_store_icon"/>
+        android:layout_marginEnd="20dp"
+        android:layout_marginRight="20dp"
+        android:src="@drawable/ic_emoji" />
 
     <ImageView
         android:id="@+id/emoji_store_circle"
@@ -95,6 +95,6 @@
         android:layout_marginEnd="16dp"
         android:layout_marginRight="16dp"
         android:src="@drawable/emoji_store_highlight_circle"
-        android:visibility="invisible"/>
+        android:visibility="invisible" />
 </RelativeLayout>
 

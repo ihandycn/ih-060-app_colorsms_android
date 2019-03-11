@@ -148,8 +148,7 @@ public class WallpaperPreviewActivity extends BaseActivity implements WallpaperM
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         }
         getSupportActionBar().setDisplayShowHomeEnabled(true);
-        UiUtils.setStatusBarColor(this, getResources().getColor(R.color.action_bar_background_color));
-
+        UiUtils.setTitleBarBackground(toolbar, this);
         RecyclerView wallpaperChooser = findViewById(R.id.wallpaper_chooser_container);
         wallpaperChooser.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
         wallpaperChooser.setAdapter(new WallpaperChooserAdapter(this, WallpaperManager.getWallpaperChooserList()));
@@ -169,7 +168,7 @@ public class WallpaperPreviewActivity extends BaseActivity implements WallpaperM
             mWallpaperPreviewImg.setImageURI(Uri.fromFile(new File(wallpaperPath)));
         }
 
-        ((CustomMessagePreviewView)findViewById(R.id.wallpaper_chooser_add_preview_message)).updateBubbleDrawables(mThreadId);
+        ((CustomMessagePreviewView) findViewById(R.id.wallpaper_chooser_add_preview_message)).updateBubbleDrawables(mThreadId);
 
         WallpaperManager.addWallpaperChangeListener(this);
     }

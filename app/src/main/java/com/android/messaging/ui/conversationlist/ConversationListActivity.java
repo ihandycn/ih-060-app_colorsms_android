@@ -16,6 +16,8 @@
 
 package com.android.messaging.ui.conversationlist;
 
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
 import android.animation.ValueAnimator;
 import android.content.Intent;
 import android.graphics.Color;
@@ -23,6 +25,8 @@ import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.animation.PathInterpolatorCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -39,6 +43,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.airbnb.lottie.LottieAnimationView;
 import com.android.messaging.Factory;
 import com.android.messaging.R;
 import com.android.messaging.datamodel.BugleNotifications;
@@ -50,6 +55,7 @@ import com.android.messaging.ui.appsettings.ThemeSelectActivity;
 import com.android.messaging.ui.customize.BubbleDrawables;
 import com.android.messaging.ui.customize.ConversationColors;
 import com.android.messaging.ui.customize.CustomBubblesActivity;
+import com.android.messaging.ui.customize.PrimaryColors;
 import com.android.messaging.ui.dialog.FiveStarRateDialog;
 import com.android.messaging.ui.emoji.EmojiStoreActivity;
 import com.android.messaging.ui.wallpaper.WallpaperChooserItem;
@@ -95,7 +101,7 @@ public class ConversationListActivity extends AbstractConversationListActivity
     private TextView mTitleTextView;
     private View mEmojiStoreIconView;
     private View mEmojiStoreCircleView;
-    private ViewGroup mGuideContainer;
+    private LottieAnimationView mGuideContainer;
     private View mTriangleShape;
 
     private boolean mShowRateAlert = false;
@@ -191,16 +197,23 @@ public class ConversationListActivity extends AbstractConversationListActivity
         actionBar.setDisplayShowTitleEnabled(false);
         actionBar.setDisplayHomeAsUpEnabled(false);
         actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
-        actionBar.setBackgroundDrawable(new ColorDrawable(
-                getResources().getColor(R.color.action_bar_background_color)));
+        try {
+            actionBar.setBackgroundDrawable(new ColorDrawable(PrimaryColors.getPrimaryColor()));
+            UiUtils.setStatusBarColor(this, PrimaryColors.getPrimaryColorDark());
+        } catch (IllegalArgumentException e) {
+            actionBar.setBackgroundDrawable(new ColorDrawable(getResources().getColor(R.color.action_bar_background_color)));
+            UiUtils.setStatusBarColor(this, getResources().getColor(R.color.action_bar_background_color));
+
+        }
+
         actionBar.show();
+        //update statusBar color
 
         if (mTitleTextView != null && mTitleTextView.getVisibility() == View.GONE) {
             mTitleTextView.setVisibility(View.VISIBLE);
             mEmojiStoreIconView.setVisibility(View.VISIBLE);
         }
-        //update statusBar color
-        UiUtils.setStatusBarColor(this, getResources().getColor(R.color.action_bar_background_color));
+
 
         super.updateActionBar(actionBar);
 
@@ -213,6 +226,7 @@ public class ConversationListActivity extends AbstractConversationListActivity
         navigationView.setPadding(0, Dimensions.getStatusBarInset(this), 0, 0);
 
         drawerLayout = findViewById(R.id.main_drawer_layout);
+        drawerLayout.setBackgroundColor(PrimaryColors.getPrimaryColor());
         ActionBarDrawerToggle drawerToggle = new ActionBarDrawerToggle(this, drawerLayout, R.string.drawer_open, R.string.drawer_close) {
             @Override
             public void onDrawerStateChanged(int newState) {
@@ -387,10 +401,8 @@ public class ConversationListActivity extends AbstractConversationListActivity
         toolbar.setTitle("");
         toolbar.setContentInsetsRelative(0, 0);
         LayoutInflater.from(this).inflate(R.layout.conversation_list_toolbar_layout, toolbar, true);
-        toolbar.setBackgroundColor(Color.WHITE);
         setSupportActionBar(toolbar);
         invalidateActionBar();
-
         setupToolbarUI();
     }
 
@@ -458,8 +470,19 @@ public class ConversationListActivity extends AbstractConversationListActivity
         if (!isShowEmojiGuide) {
             return;
         }
+        mGuideContainer.setVisibility(View.VISIBLE);
         Preferences.getDefault().putBoolean(PREF_SHOW_EMOJI_GUIDE, false);
-        mAnimState = AnimState.APPEAR;
+        mGuideContainer.setImageAssetsFolder("lottie/show_emoj_bubble/");
+        mGuideContainer.setAnimation("lottie/show_emoj_bubble.json");
+        mGuideContainer.addAnimatorListener(new AnimatorListenerAdapter() {
+            @Override
+            public void onAnimationEnd(Animator animation) {
+                super.onAnimationEnd(animation);
+                mGuideContainer.setVisibility(View.INVISIBLE);
+            }
+        });
+        mGuideContainer.playAnimation();
+       /* mAnimState = AnimState.APPEAR;
         mEmojiStoreCircleView = findViewById(R.id.emoji_store_circle);
 
         mAnimHandler.postDelayed(() -> {
@@ -527,11 +550,25 @@ public class ConversationListActivity extends AbstractConversationListActivity
             triangleAnimator.start();
         }, 1850L);
 
-        mAnimHandler.postDelayed(() -> mAnimState = AnimState.SHOWING, 2050L);
+        mAnimHandler.postDelayed(() -> mAnimState = AnimState.SHOWING, 2050L);*/
     }
 
     private void hideStoreGuide() {
-        mAnimState = AnimState.DISAPPEAR;
+        if (mGuideContainer.getVisibility() != View.VISIBLE) {
+            mGuideContainer.setVisibility(View.VISIBLE);
+        }
+        mGuideContainer.setImageAssetsFolder("lottie/emoj_bubble_dismiss/");
+        mGuideContainer.setAnimation("lottie/emoj_bubble_dismiss.json");
+        mGuideContainer.addAnimatorListener(new AnimatorListenerAdapter() {
+            @Override
+            public void onAnimationEnd(Animator animation) {
+                super.onAnimationEnd(animation);
+                mGuideContainer.setVisibility(View.INVISIBLE);
+            }
+        });
+        mGuideContainer.playAnimation();
+
+       /* mAnimState = AnimState.DISAPPEAR;
         mAnimHandler.removeCallbacksAndMessages(null);
         mGuideContainer.animate()
                 .scaleX(0f)
@@ -551,7 +588,7 @@ public class ConversationListActivity extends AbstractConversationListActivity
             mGuideContainer.setVisibility(View.GONE);
             mTriangleShape.setVisibility(View.GONE);
             mAnimState = AnimState.NONE;
-        }, 250L);
+        }, 250L);*/
     }
 
     @Override
@@ -646,4 +683,5 @@ public class ConversationListActivity extends AbstractConversationListActivity
         super.onSaveInstanceState(outState);
         outState.putBoolean("is_activity_restart", true);
     }
+
 }

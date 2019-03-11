@@ -23,6 +23,7 @@
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
         android:layout_height="@dimen/action_bar_height"
+        android:background="@color/primary_color"
         app:popupTheme="@style/PopupMenu">
 
         <com.superapps.view.TypefacedTextView
@@ -31,9 +32,9 @@
             android:layout_height="match_parent"
             android:layout_gravity="center"
             android:layout_marginTop="5dp"
-            android:gravity="center"
+            android:gravity="center_vertical"
             android:includeFontPadding="false"
-            android:textColor="#222327"
+            android:textColor="@color/action_bar_title_text_color"
             android:textSize="16.7dp"
             app:typeface="@string/custom_font_semibold" />
     </android.support.v7.widget.Toolbar>
