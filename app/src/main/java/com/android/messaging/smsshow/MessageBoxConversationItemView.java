@@ -16,6 +16,7 @@ import com.android.messaging.Factory;
 import com.android.messaging.R;
 import com.android.messaging.datamodel.BugleNotifications;
 import com.android.messaging.datamodel.NoConfirmationSmsSendService;
+import com.android.messaging.datamodel.data.MessageBoxItemData;
 import com.android.messaging.datamodel.media.AvatarRequestDescriptor;
 import com.android.messaging.datamodel.media.ImageResource;
 import com.android.messaging.datamodel.media.MediaRequest;
@@ -37,35 +38,32 @@ public class MessageBoxConversationItemView extends FrameLayout {
     private String mSelfId;
     private String mConversationId;
 
-    public MessageBoxConversationItemView(Context context,
-                                          String selfId,
-                                          String conversationId,
-                                          String message,
-                                          Uri avatarUri,
-                                          String conversationName) {
+    public MessageBoxConversationItemView(Context context, MessageBoxItemData itemData) {
         super(context, null);
 
         final LayoutInflater inflater = LayoutInflater.from(context);
         inflater.inflate(R.layout.message_box_conversation_item, this, true);
 
-        mSelfId = selfId;
-        mConversationId = conversationId;
+        mSelfId = itemData.getSelfId();
+        mConversationId = itemData.getConversationId();
 
         RecyclerView mRecyclerView = findViewById(R.id.recycler_view);
         mAvatar = findViewById(R.id.avatar);
         TextView mConversationName = findViewById(R.id.conversation_name);
 
-        mConversationName.setText(conversationName);
-        loadAvatar(avatarUri);
+        mConversationName.setText(itemData.getConversationName());
+        loadAvatar(Uri.parse(itemData.getAvatarUri()));
 
         LinearLayoutManager llm = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false);
         llm.setStackFromEnd(true);
         mRecyclerView.setLayoutManager(llm);
 
         ArrayList<String > mMessages = new ArrayList<>();
-        mMessages.add(message);
+        mMessages.add(itemData.getContent());
         mAdapter = new MessageBoxListItemAdapter(mMessages);
         mRecyclerView.setAdapter(mAdapter);
+
+        setTag(mConversationId);
     }
 
     void addNewMessage(String message) {

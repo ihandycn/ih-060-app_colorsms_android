@@ -30,6 +30,7 @@ import android.widget.TextView;
 import com.android.messaging.BaseActivity;
 import com.android.messaging.R;
 import com.android.messaging.datamodel.BugleNotifications;
+import com.android.messaging.datamodel.data.MessageBoxItemData;
 import com.android.messaging.util.BugleAnalytics;
 import com.android.messaging.util.UiUtils;
 import com.ihs.commons.notificationcenter.HSGlobalNotificationCenter;
@@ -39,11 +40,7 @@ import com.superapps.util.Dimensions;
 import com.superapps.util.Threads;
 import com.superapps.util.Toasts;
 
-import static com.android.messaging.ui.UIIntents.UI_INTENT_EXTRA_ATTACHMENT_URI;
-import static com.android.messaging.ui.UIIntents.UI_INTENT_EXTRA_CONVERSATION_ID;
-import static com.android.messaging.ui.UIIntents.UI_INTENT_EXTRA_CONVERSATION_NAME;
-import static com.android.messaging.ui.UIIntents.UI_INTENT_EXTRA_MESSAGE;
-import static com.android.messaging.ui.UIIntents.UI_INTENT_EXTRA_SELF_ID;
+import static com.android.messaging.ui.UIIntents.UI_INTENT_EXTRA_MESSAGE_BOX_ITEM;
 
 public class MessageBoxActivity extends BaseActivity implements INotificationObserver {
     public static final String NOTIFICATION_FINISH_MESSAGE_BOX = "finish_message_box";
@@ -77,7 +74,6 @@ public class MessageBoxActivity extends BaseActivity implements INotificationObs
         BugleAnalytics.logEvent("SMS_PopUp_Show", true);
         BugleAnalytics.logEvent("SMS_ActiveUsers", true);
         HSGlobalNotificationCenter.addObserver(NOTIFICATION_FINISH_MESSAGE_BOX, this);
-        // todo you must not pass Privacy Information between intents!
     }
 
     private void initMenu() {
@@ -163,22 +159,10 @@ public class MessageBoxActivity extends BaseActivity implements INotificationObs
 
     private void initConversationList() {
         mConversationPager = findViewById(R.id.conversation_pager);
+        MessageBoxItemData data = getIntent().getParcelableExtra(UI_INTENT_EXTRA_MESSAGE_BOX_ITEM);
 
-        Intent intent = getIntent();
-        String message = intent.getStringExtra(UI_INTENT_EXTRA_MESSAGE);
-        String conversationName = intent.getStringExtra(UI_INTENT_EXTRA_CONVERSATION_NAME);
-        String avatar = intent.getStringExtra(UI_INTENT_EXTRA_ATTACHMENT_URI);
-        String selfId = intent.getStringExtra(UI_INTENT_EXTRA_SELF_ID);
-        String conversationId = intent.getStringExtra(UI_INTENT_EXTRA_CONVERSATION_ID);
-
-        MessageBoxConversationItemView item = new MessageBoxConversationItemView(this,
-                selfId,
-                conversationId,
-                message,
-                Uri.parse(avatar),
-                conversationName);
+        MessageBoxConversationItemView item = new MessageBoxConversationItemView(this, data);
         mConversationPagerAdapter = new DynamicalPagerAdapter();
-        item.setTag(intent.getStringExtra(UI_INTENT_EXTRA_CONVERSATION_ID));
         mConversationPagerAdapter.addView(item);
         mConversationPager.setAdapter(mConversationPagerAdapter);
         mConversationPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
@@ -202,29 +186,24 @@ public class MessageBoxActivity extends BaseActivity implements INotificationObs
     @Override
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
-        String conversationId = intent.getStringExtra(UI_INTENT_EXTRA_CONVERSATION_ID);
-        String message = intent.getStringExtra(UI_INTENT_EXTRA_MESSAGE);
+
+        final MessageBoxItemData data = intent.getParcelableExtra(UI_INTENT_EXTRA_MESSAGE_BOX_ITEM);
 
         boolean isNewConversation = true;
         int viewCount = mConversationPagerAdapter.getCount();
         MessageBoxConversationItemView view;
         for (int i = 0; i < viewCount; i++) {
             view = mConversationPagerAdapter.getViews().get(i);
-            if (TextUtils.equals(conversationId, (String) view.getTag())) {
+            if (TextUtils.equals(data.getConversationId(), (String) view.getTag())) {
                 isNewConversation = false;
-                view.addNewMessage(message);
+                view.addNewMessage(data.getContent());
                 mConversationPager.setCurrentItem(i, true);
                 break;
             }
         }
+
         if (isNewConversation) {
-            MessageBoxConversationItemView newItem = new MessageBoxConversationItemView(this,
-                    intent.getStringExtra(UI_INTENT_EXTRA_SELF_ID),
-                    intent.getStringExtra(UI_INTENT_EXTRA_CONVERSATION_ID),
-                    message,
-                    Uri.parse(intent.getStringExtra(UI_INTENT_EXTRA_ATTACHMENT_URI)),
-                    intent.getStringExtra(UI_INTENT_EXTRA_CONVERSATION_NAME));
-            newItem.setTag(intent.getStringExtra(UI_INTENT_EXTRA_CONVERSATION_ID));
+            MessageBoxConversationItemView newItem = new MessageBoxConversationItemView(this, data);
             mConversationPagerAdapter.addView(newItem);
             mConversationPagerAdapter.notifyDataSetChanged();
             mConversationPager.setCurrentItem(mConversationPagerAdapter.getCount() - 1, true);
@@ -354,6 +333,15 @@ public class MessageBoxActivity extends BaseActivity implements INotificationObs
         mReplyIcon.setEnabled(false);
         mReplyIcon.getBackground().setColorFilter(0xffd7dfe9, PorterDuff.Mode.SRC_ATOP);
         mProgressBar.getIndeterminateDrawable().setColorFilter(getResources().getColor(R.color.message_box_primary_color), PorterDuff.Mode.SRC_IN);
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (mEditTextContainer.getVisibility() == View.VISIBLE) {
+            closeEditText();
+        } else {
+            super.onBackPressed();
+        }
     }
 
     @Override

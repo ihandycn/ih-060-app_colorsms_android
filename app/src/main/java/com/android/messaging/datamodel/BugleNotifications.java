@@ -55,6 +55,7 @@ import com.android.messaging.datamodel.action.MarkAsReadAction;
 import com.android.messaging.datamodel.action.MarkAsSeenAction;
 import com.android.messaging.datamodel.action.RedownloadMmsAction;
 import com.android.messaging.datamodel.data.ConversationListItemData;
+import com.android.messaging.datamodel.data.MessageBoxItemData;
 import com.android.messaging.datamodel.media.AvatarRequestDescriptor;
 import com.android.messaging.datamodel.media.ImageResource;
 import com.android.messaging.datamodel.media.MediaRequest;
@@ -634,21 +635,19 @@ public class BugleNotifications {
 
     private static void popUpMessageBox(final NotificationState state, final String conversationId) {
         if (state instanceof MessageNotificationState) {
-
             for (ConversationLineInfo convInfo : ((MessageNotificationState) state).mConvList.mConvInfos) {
                 if (TextUtils.equals(convInfo.mConversationId, conversationId)) {
                     MessageNotificationState.MessageLineInfo messageLineInfo = convInfo.getLatestMessageLineInfo();
-
                     UIIntents.get().launchMessageBoxActivity(Factory.get().getApplicationContext(),
-                            conversationId,
-                            convInfo.mSelfParticipantId,
-                            convInfo.mAvatarUri != null ? convInfo.mAvatarUri.toString() : "",
-                            convInfo.mGroupConversationName,
-                            messageLineInfo.mText);
+                            new MessageBoxItemData(conversationId,
+                                    convInfo.mSelfParticipantId,
+                                    convInfo.mAvatarUri != null ? convInfo.mAvatarUri.toString() : "",
+                                    convInfo.mGroupConversationName,
+                                    messageLineInfo.mText.toString())
+                            );
                     break;
                 }
             }
-
         }
     }
 

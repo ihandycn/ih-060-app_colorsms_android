@@ -47,6 +47,7 @@ import com.android.messaging.datamodel.BugleNotifications;
 import com.android.messaging.datamodel.ConversationImagePartsView;
 import com.android.messaging.datamodel.MediaScratchFileProvider;
 import com.android.messaging.datamodel.MessagingContentProvider;
+import com.android.messaging.datamodel.data.MessageBoxItemData;
 import com.android.messaging.datamodel.data.MessageData;
 import com.android.messaging.datamodel.data.MessagePartData;
 import com.android.messaging.datamodel.data.ParticipantData;
@@ -407,17 +408,9 @@ public class UIIntentsImpl extends UIIntents {
     }
 
     @Override
-    public void launchMessageBoxActivity(Context context, @NonNull String conversationId,
-                                         @NonNull String selfId,
-                                         @NonNull String avatarUri,
-                                         @NonNull String conversationName,
-                                         @NonNull CharSequence content) {
+    public void launchMessageBoxActivity(Context context, MessageBoxItemData itemData) {
         final Intent intent = new Intent(context, MessageBoxActivity.class);
-        intent.putExtra(UI_INTENT_EXTRA_CONVERSATION_ID, conversationId);
-        intent.putExtra(UI_INTENT_EXTRA_SELF_ID, selfId);
-        intent.putExtra(UI_INTENT_EXTRA_ATTACHMENT_URI, avatarUri);
-        intent.putExtra(UI_INTENT_EXTRA_CONVERSATION_NAME, conversationName);
-        intent.putExtra(UI_INTENT_EXTRA_MESSAGE, content);
+        intent.putExtra(UI_INTENT_EXTRA_MESSAGE_BOX_ITEM, itemData);
         context.startActivity(intent);
     }
 

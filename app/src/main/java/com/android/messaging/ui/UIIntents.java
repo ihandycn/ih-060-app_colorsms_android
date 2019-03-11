@@ -27,6 +27,7 @@ import android.net.Uri;
 import android.os.Bundle;
 
 import com.android.messaging.Factory;
+import com.android.messaging.datamodel.data.MessageBoxItemData;
 import com.android.messaging.datamodel.data.MessageData;
 import com.android.messaging.util.ConversationIdSet;
 
@@ -113,9 +114,8 @@ public abstract class UIIntents {
 
     public static final String UI_INTENT_EXTRA_SMS_SHOW_URL = "sms_show_url";
 
-    public static final String UI_INTENT_EXTRA_MESSAGE = "extra_message";
+    public static final String UI_INTENT_EXTRA_MESSAGE_BOX_ITEM = "message_box_item";
 
-    public static final String UI_INTENT_EXTRA_CONVERSATION_NAME = "conversation_name";
 
     /**
      * Launch the welcome activity
@@ -282,17 +282,12 @@ public abstract class UIIntents {
     /**
      * Launch an activity to custom bubbles
      */
-    public abstract void launchCustomBubblesActivity(Context context, String conversationId);
+    public abstract void launchCustomBubblesActivity(Context context, final String conversationId);
 
     /**
      * Launch message box activity
      */
-    public abstract void launchMessageBoxActivity(Context context,
-                                                  final String conversationId,
-                                                  final String selfId,
-                                                  final String avatarUri,
-                                                  final String conversationName,
-                                                  final CharSequence content);
+    public abstract void launchMessageBoxActivity(Context context, final MessageBoxItemData itemData);
 
     /**
      * Get a ACTION_VIEW intent
