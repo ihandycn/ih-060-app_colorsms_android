@@ -1,4 +1,4 @@
-package com.android.messaging.smsshow;
+package com.android.messaging.ui.messagebox;
 
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;

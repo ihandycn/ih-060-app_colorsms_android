@@ -50,7 +50,7 @@ import com.android.messaging.datamodel.data.MessagePartData;
 import com.android.messaging.datamodel.data.ParticipantData;
 import com.android.messaging.datamodel.media.VideoThumbnailRequest;
 import com.android.messaging.sms.MmsUtils;
-import com.android.messaging.smsshow.MessageBoxSettings;
+import com.android.messaging.ui.messagebox.MessageBoxSettings;
 import com.android.messaging.ui.UIIntents;
 import com.android.messaging.util.Assert;
 import com.android.messaging.util.AvatarUriUtil;

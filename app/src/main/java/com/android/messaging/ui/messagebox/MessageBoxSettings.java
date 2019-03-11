@@ -1,4 +1,4 @@
-package com.android.messaging.smsshow;
+package com.android.messaging.ui.messagebox;
 
 import com.android.messaging.Factory;
 import com.android.messaging.datamodel.BugleNotifications;

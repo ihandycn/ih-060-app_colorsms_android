@@ -1,4 +1,4 @@
-package com.android.messaging.smsshow;
+package com.android.messaging.ui.messagebox;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -7,7 +7,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
 import android.text.Editable;
@@ -39,6 +38,8 @@ import com.ihs.commons.utils.HSBundle;
 import com.superapps.util.Dimensions;
 import com.superapps.util.Threads;
 import com.superapps.util.Toasts;
+
+import java.lang.reflect.Field;
 
 import static com.android.messaging.ui.UIIntents.UI_INTENT_EXTRA_MESSAGE_BOX_ITEM;
 
@@ -181,6 +182,16 @@ public class MessageBoxActivity extends BaseActivity implements INotificationObs
 
             }
         });
+
+
+        try {
+            Field mField = ViewPager.class.getDeclaredField("mScroller");
+            mField.setAccessible(true);
+            FixedSpeedScroller scroller = new FixedSpeedScroller(this);
+            mField.set(mConversationPager, scroller);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
@@ -198,6 +209,7 @@ public class MessageBoxActivity extends BaseActivity implements INotificationObs
                 isNewConversation = false;
                 view.addNewMessage(data.getContent());
                 mConversationPager.setCurrentItem(i, true);
+                toggleNextButton();
                 break;
             }
         }
@@ -224,8 +236,9 @@ public class MessageBoxActivity extends BaseActivity implements INotificationObs
         });
         mNextButton.setOnClickListener(v -> {
             int currentItem = mConversationPager.getCurrentItem();
-            if (currentItem < mConversationPagerAdapter.getCount()) {
-                mConversationPager.setCurrentItem(currentItem + 1, true);
+            if (currentItem > 0) {
+                mConversationPager.setCurrentItem(currentItem - 1, true);
+                toggleNextButton();
             } else {
                 Toasts.showToast(R.string.message_box_no_message);
             }
@@ -238,8 +251,8 @@ public class MessageBoxActivity extends BaseActivity implements INotificationObs
         int total = mConversationPagerAdapter.getCount();
         int currentPosition = mConversationPager.getCurrentItem();
         mNextButton.setText((getString(R.string.message_box_next) + String.format(getString(R.string.message_box_next_num),
-                total - currentPosition - 1)));
-        if (currentPosition == total - 1) {
+                currentPosition)));
+        if (currentPosition == 0) {
             mNextButton.setBackground(null);
             mNextButton.setClickable(false);
         } else {

@@ -35,7 +35,7 @@
 
     </RelativeLayout>
 
-    <com.android.messaging.smsshow.MaxHeightRecyclerView
+    <com.android.messaging.ui.messagebox.MaxHeightRecyclerView
         android:id="@+id/recycler_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

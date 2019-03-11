@@ -1,5 +1,6 @@
 package com.android.messaging.smsshow;
 
+import com.android.messaging.ui.messagebox.MessageBoxSettings;
 import com.android.messaging.util.BuglePrefs;
 import com.ihs.commons.notificationcenter.HSGlobalNotificationCenter;
 import com.superapps.util.Preferences;

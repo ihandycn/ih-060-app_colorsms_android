@@ -18,7 +18,7 @@ import com.android.messaging.BaseActivity;
 import com.android.messaging.Factory;
 import com.android.messaging.R;
 import com.android.messaging.feedback.FeedbackActivity;
-import com.android.messaging.smsshow.MessageBoxSettings;
+import com.android.messaging.ui.messagebox.MessageBoxSettings;
 import com.android.messaging.smsshow.SmsShowUtils;
 import com.android.messaging.ui.BaseAlertDialog;
 import com.android.messaging.ui.UIIntents;

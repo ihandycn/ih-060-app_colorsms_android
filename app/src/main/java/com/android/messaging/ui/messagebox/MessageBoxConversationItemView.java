@@ -1,4 +1,4 @@
-package com.android.messaging.smsshow;
+package com.android.messaging.ui.messagebox;
 
 import android.annotation.SuppressLint;
 import android.content.Context;

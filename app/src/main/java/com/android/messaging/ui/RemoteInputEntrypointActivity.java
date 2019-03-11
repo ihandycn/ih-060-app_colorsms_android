@@ -21,7 +21,7 @@ import android.telephony.TelephonyManager;
 
 import com.android.messaging.datamodel.BugleNotifications;
 import com.android.messaging.datamodel.NoConfirmationSmsSendService;
-import com.android.messaging.smsshow.MessageBoxActivity;
+import com.android.messaging.ui.messagebox.MessageBoxActivity;
 import com.android.messaging.util.LogUtil;
 import com.ihs.commons.notificationcenter.HSGlobalNotificationCenter;
 

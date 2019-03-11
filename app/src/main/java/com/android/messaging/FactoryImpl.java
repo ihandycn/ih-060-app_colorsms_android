@@ -33,7 +33,7 @@ import com.android.messaging.datamodel.media.BugleMediaCacheManager;
 import com.android.messaging.datamodel.media.MediaCacheManager;
 import com.android.messaging.datamodel.media.MediaResourceManager;
 import com.android.messaging.sms.BugleCarrierConfigValuesLoader;
-import com.android.messaging.smsshow.MessageBoxActivity;
+import com.android.messaging.ui.messagebox.MessageBoxActivity;
 import com.android.messaging.ui.UIIntents;
 import com.android.messaging.ui.UIIntentsImpl;
 import com.android.messaging.util.Assert;
