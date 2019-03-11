@@ -179,9 +179,30 @@ public class ConversationListActivity extends AbstractConversationListActivity
                         "received text color", ConversationColors.get().getConversationColorEventType(false, true),
                         "sent text color", ConversationColors.get().getConversationColorEventType(false, false));
 
+                String size;
+                switch (FontStyleManager.getFontScaleLevel()) {
+                    case 0:
+                        size = "Smallest";
+                        break;
+                    case 1:
+                        size = "Small";
+                        break;
+                    case 3:
+                        size = "Medium";
+                        break;
+                    case 4:
+                        size = "Large";
+                        break;
+                    case 5:
+                        size = "Largest";
+                        break;
+                    default:
+                        size = "Default";
+                }
+
                 BugleAnalytics.logEvent("SMS_Messages_Show_1", true,
                         "font", FontStyleManager.getFontFamily(),
-                        "size", getResources().getString(ChangeFontActivity.sTextSizeRes[FontStyleManager.getFontScaleLevel()]),
+                        "size", size,
                         "open time", String.valueOf(hour)
                 );
             });
