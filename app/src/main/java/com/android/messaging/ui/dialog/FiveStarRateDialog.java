@@ -98,7 +98,7 @@ public class FiveStarRateDialog extends DefaultButtonDialog2 implements View.OnC
     private static final int MAX_ANIM_COUNT = 2;
     private static final int INVALID_POSITION = -1;
     private static final int STAR_COUNT = 5;
-    private static final int MAX_POSITION = STAR_COUNT - 2;
+    private static final int MAX_POSITION = STAR_COUNT - 1;
     private static final int MIN_POSITION = 0;
     private static final float PERCENT_ZERO = 0.0f;
     private static final float PERCENT_ONE_STAR = 0.342f;
