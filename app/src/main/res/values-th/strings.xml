@@ -526,9 +526,6 @@
 
     <string name="emoji_add_more">อิโมจิเพิ่มเติม</string>
 
-    <string name="menu_setting">การตั้งค่า</string>
-    <string name="set_as_default_dialog_button_ok_user_present">ตกลง</string>
-
     <string name="menu_group_customization">กำหนดเอง</string>
     <string name="menu_theme_color">สีธีม</string>
     <string name="theme_select_description">เลือกสีธีมที่คุณต้องการ</string>
@@ -576,4 +573,23 @@
     <string name="sms_notification_channel">การแจ้งเตือน SMS</string>
     <string name="sms_notification_channel_description">แสดงการแจ้งเตือนเมื่อได้รับ SMS</string>
     <string name="menu_rate">คะแนน 5 ดาว</string>
+
+    <string name="menu_setting">"การตั้งค่า"</string>
+    <string name="set_as_default_dialog_button_ok_user_present">"ตกลง"</string>
+
+
+    <string name="message_box_reply_hint">" ตอบกลับ"</string>
+
+    <string name="message_box_time_ago">%1$d นาทีก่อน</string>
+    <string name="message_box_next">ถัดไป</string>
+    <string name="message_box_reply">ตอบกลับ</string>
+
+    <string name="message_box_disable">ปิดใช้งาน</string>
+    <string name="message_box_negative_button">ปิด</string>
+    <string name="message_box_positive_action">ไม่ใช่ตอนนี้</string>
+
+    <string name="message_box_disable_successfully">ปิดใช้ผู้ช่วยข้อความ</string>
+    <string name="message_box_alert_title">ปิดใช้ผู้ช่วยข้อความหรือไม่</string>
+    <string name="message_box_alert_message">หากคุณปิดใช้ผู้ช่วยข้อความ คุณจะไม่ได้รับการเตือนเมื่อมีข้อความ แน่ใจหรือไม่ว่าต้องการปิด</string>
+
 </resources>

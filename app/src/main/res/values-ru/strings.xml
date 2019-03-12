@@ -625,5 +625,18 @@
     <string name="sms_notification_channel">Уведомление об СМС</string>
     <string name="sms_notification_channel_description">Показывать уведомления о входящих СМС</string>
     <string name="menu_rate">Оценка 5 звезд</string>
+    <string name="message_box_reply_hint">" Ответить"</string>
+
+    <string name="message_box_time_ago">%1$d мин. назад</string>
+    <string name="message_box_next">ДАЛЕЕ</string>
+    <string name="message_box_reply">Ответить</string>
+
+    <string name="message_box_disable">Отключить</string>
+    <string name="message_box_negative_button">ОТКЛЮЧИТЬ</string>
+    <string name="message_box_positive_action">НЕ СЕЙЧАС</string>
+
+    <string name="message_box_disable_successfully">Помощник по сообщениям выключен</string>
+    <string name="message_box_alert_title">Выключить помощник по сообщениям?</string>
+    <string name="message_box_alert_message">Если выключить помощник по сообщениям,  вы не будете получать напоминания о входящих сообщениях. Вы действительно хотите выключить его?</string>
 
 </resources>

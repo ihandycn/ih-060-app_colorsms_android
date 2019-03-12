@@ -295,4 +295,13 @@ public class CommonUtils {
         }
         return sInstallTime;
     }
+
+    public static boolean isNewUser() {
+        return HSApplication.getFirstLaunchInfo().appVersionCode == HSApplication.getCurrentLaunchInfo().appVersionCode;
+    }
+
+    public static boolean isScreenOn(Context context) {
+        PowerManager powerManager = (PowerManager) context.getSystemService(Context.POWER_SERVICE);
+        return powerManager.isScreenOn();
+    }
 }

@@ -2,7 +2,6 @@ package com.android.messaging.ui.appsettings;
 
 import android.content.Context;
 import android.graphics.PorterDuff;
-import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
 import android.util.TypedValue;
@@ -12,9 +11,8 @@ import android.widget.RadioButton;
 import com.android.messaging.R;
 import com.android.messaging.ui.customize.PrimaryColors;
 import com.ihs.app.framework.HSApplication;
-import com.messagecenter.util.Utils;
 import com.superapps.font.FontUtils;
-import com.superapps.util.Fonts;
+import com.superapps.util.Dimensions;
 
 public class ChooseFontItem extends LinearLayout {
 
@@ -85,13 +83,13 @@ public class ChooseFontItem extends LinearLayout {
 
     private void toggleRadioButtonColorFilter(RadioButton btn, boolean isChecked) {
         if (isChecked) {
-            if (Utils.isRtl()) {
+            if (Dimensions.isRtl()) {
                 btn.setCompoundDrawables(null, null, mCheckedDrawable, null);
             } else {
                 btn.setCompoundDrawables(mCheckedDrawable, null, null, null);
             }
         } else {
-            if (Utils.isRtl()) {
+            if (Dimensions.isRtl()) {
                 btn.setCompoundDrawables(null, null, mUncheckedDrawable, null);
             } else {
                 btn.setCompoundDrawables(mUncheckedDrawable, null, null, null);

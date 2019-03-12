@@ -46,11 +46,13 @@ import com.android.messaging.datamodel.BugleNotifications;
 import com.android.messaging.datamodel.ConversationImagePartsView;
 import com.android.messaging.datamodel.MediaScratchFileProvider;
 import com.android.messaging.datamodel.MessagingContentProvider;
+import com.android.messaging.datamodel.data.MessageBoxItemData;
 import com.android.messaging.datamodel.data.MessageData;
 import com.android.messaging.datamodel.data.MessagePartData;
 import com.android.messaging.datamodel.data.ParticipantData;
 import com.android.messaging.receiver.NotificationReceiver;
 import com.android.messaging.sms.MmsSmsUtils;
+import com.android.messaging.ui.messagebox.MessageBoxActivity;
 import com.android.messaging.ui.appsettings.ApnEditorActivity;
 import com.android.messaging.ui.appsettings.ApnSettingsActivity;
 import com.android.messaging.ui.appsettings.SettingAdvancedActivity;
@@ -75,7 +77,6 @@ import com.android.messaging.util.Assert;
 import com.android.messaging.util.ContentType;
 import com.android.messaging.util.ConversationIdSet;
 import com.android.messaging.util.LogUtil;
-import com.android.messaging.util.TextUtil;
 import com.android.messaging.util.UiUtils;
 import com.android.messaging.util.UriUtil;
 
@@ -401,6 +402,13 @@ public class UIIntentsImpl extends UIIntents {
         if (!TextUtils.isEmpty(conversationId)) {
             intent.putExtra(UI_INTENT_EXTRA_CONVERSATION_ID, conversationId);
         }
+        context.startActivity(intent);
+    }
+
+    @Override
+    public void launchMessageBoxActivity(Context context, MessageBoxItemData itemData) {
+        final Intent intent = new Intent(context, MessageBoxActivity.class);
+        intent.putExtra(UI_INTENT_EXTRA_MESSAGE_BOX_ITEM, itemData);
         context.startActivity(intent);
     }
 

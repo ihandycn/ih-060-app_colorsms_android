@@ -526,8 +526,6 @@
 
     <string name="emoji_add_more">더 많은 이모지</string>
 
-    <string name="menu_setting">설정</string>
-    <string name="set_as_default_dialog_button_ok_user_present">확인</string>
 
     <string name="menu_group_customization">사용자 정의</string>
     <string name="menu_theme_color">테마 색깔</string>
@@ -576,4 +574,20 @@
     <string name="sms_notification_channel">SMS 알림</string>
     <string name="sms_notification_channel_description">SMS를 받으면 알림을 표시합니다</string>
     <string name="menu_rate">별 5개 등급</string>
+    <string name="menu_setting">"설정"</string>
+    <string name="set_as_default_dialog_button_ok_user_present">"확인"</string>
+
+    <string name="message_box_reply_hint">" 회신"</string>
+
+    <string name="message_box_time_ago">%1$d분 전</string>
+    <string name="message_box_next">다음</string>
+    <string name="message_box_reply">회신</string>
+
+    <string name="message_box_disable">비활성화</string>
+    <string name="message_box_negative_button">끄기</string>
+    <string name="message_box_positive_action">나중에</string>
+
+    <string name="message_box_disable_successfully">메시지 보조 비활성화됨</string>
+    <string name="message_box_alert_title">메시지 보조를 끌까요?</string>
+    <string name="message_box_alert_message">메시지 보조를 끄면 메시지를 받았을 때 미리 알림을 받지 못하게 됩니다. 정말로 끌까요?</string>
 </resources>

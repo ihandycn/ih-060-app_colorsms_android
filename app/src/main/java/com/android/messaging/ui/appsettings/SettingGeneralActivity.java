@@ -18,6 +18,7 @@ import com.android.messaging.BaseActivity;
 import com.android.messaging.Factory;
 import com.android.messaging.R;
 import com.android.messaging.feedback.FeedbackActivity;
+import com.android.messaging.ui.messagebox.MessageBoxSettings;
 import com.android.messaging.smsshow.SmsShowUtils;
 import com.android.messaging.ui.BaseAlertDialog;
 import com.android.messaging.ui.UIIntents;
@@ -29,7 +30,6 @@ import com.android.messaging.util.OsUtil;
 import com.android.messaging.util.PendingIntentConstants;
 import com.android.messaging.util.UiUtils;
 import com.ihs.commons.config.HSConfig;
-import com.messagecenter.customize.MessageCenterSettings;
 
 import static android.view.View.GONE;
 import static com.android.messaging.ui.appsettings.SettingItemView.NORMAL;
@@ -100,14 +100,14 @@ public class SettingGeneralActivity extends BaseActivity{
 
         //pop ups
         mPopUpsView = findViewById(R.id.setting_item_sms_pop_ups);
-        boolean defaultV = MessageCenterSettings.isSMSAssistantModuleEnabled();
+        boolean defaultV = MessageBoxSettings.isSMSAssistantModuleEnabled();
         mPopUpsView.setChecked(defaultV);
         if (!defaultV) {
             mSmsShowView.setEnable(false);
         }
         mPopUpsView.setOnItemClickListener(() -> {
             boolean b = mPopUpsView.isChecked();
-            MessageCenterSettings.setSMSAssistantModuleEnabled(b);
+            MessageBoxSettings.setSMSAssistantModuleEnabled(b);
             mSmsShowView.setEnable(b);
             BugleAnalytics.logEvent("SMS_Settings_Popups_Click", true);
         });

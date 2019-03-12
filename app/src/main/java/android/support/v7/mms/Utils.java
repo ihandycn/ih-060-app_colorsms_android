@@ -26,6 +26,8 @@ import android.telephony.TelephonyManager;
 import android.text.TextUtils;
 import android.util.Log;
 
+import com.ihs.app.framework.HSApplication;
+
 import java.net.MalformedURLException;
 import java.net.URL;
 

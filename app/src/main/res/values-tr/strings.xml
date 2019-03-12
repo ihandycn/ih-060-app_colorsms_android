@@ -526,8 +526,6 @@
 
     <string name="emoji_add_more">Daha fazla emoji</string>
 
-    <string name="menu_setting">Ayarlar</string>
-    <string name="set_as_default_dialog_button_ok_user_present">Tamam</string>
 
     <string name="menu_group_customization">Özelleştir</string>
     <string name="menu_theme_color">Tema Rengi</string>
@@ -576,4 +574,21 @@
     <string name="sms_notification_channel">SMS Bildirimi</string>
     <string name="sms_notification_channel_description">SMS alındığında bildirim göster</string>
     <string name="menu_rate">5 Yıldızlı Puanlandırma</string>
+    <string name="menu_setting">"Ayarlar"</string>
+    <string name="set_as_default_dialog_button_ok_user_present">"Tamam"</string>
+
+    <string name="message_box_reply_hint">" Yanıtla"</string>
+
+    <string name="message_box_time_ago">%1$d dak. önce</string>
+    <string name="message_box_next">SONRAKİ</string>
+    <string name="message_box_reply">Yanıtla</string>
+
+    <string name="message_box_disable">Etkisiz Kıl</string>
+    <string name="message_box_negative_button">KAPAT</string>
+    <string name="message_box_positive_action">ŞİMDİ DEĞİL</string>
+
+    <string name="message_box_disable_successfully">Mesaj Asistanı devre dışı bırakıldı</string>
+    <string name="message_box_alert_title">Mesaj Asistanı kapatılsın mı?</string>
+    <string name="message_box_alert_message">Mesaj Asistanını kapatırsan, mesaj geldiğinde hatırlatılmaz. Kapatmak istediğinden emin misin?</string>
+
 </resources>

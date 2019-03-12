@@ -3,7 +3,7 @@
     android:color="@color/white_20_transparent" >
     <item android:id="@android:id/mask">
         <shape>
-            <solid android:color="@color/white"/>
+            <solid android:color="@android:color/white"/>
             <corners android:radius="20dp"/>
         </shape>
     </item>

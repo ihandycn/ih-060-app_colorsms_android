@@ -577,4 +577,18 @@
     <string name="sms_notification_channel">एसएमएस सूचना</string>
     <string name="sms_notification_channel_description">एसएमएस प्राप्‍त करने पर एक सूचना दर्शाएं</string>
     <string name="menu_rate">5 स्‍टार रेटिंग</string>
+
+    <string name="message_box_reply_hint">" जवाब दें"</string>
+    <string name="message_box_time_ago">%1$d मिनिट पहले</string>
+    <string name="message_box_next">अगला</string>
+    <string name="message_box_reply">जवाब</string>
+    <string name="message_box_disable">अक्षम करें</string>
+    <string name="message_box_negative_button">बंद करें</string>
+    <string name="message_box_positive_action">अभी नहीं</string>
+    <string name="message_box_disable_successfully">कॉल सहायक अक्षम है</string>
+    <string name="message_box_alert_title">कॉल सहायक को बंद करना है?</string>
+    <string name="message_box_alert_message">यदि आप कॉल सहायक को बंद करते हो, तो जब आप कोई कॉल छोड़ देते हो तो तकाजा नहीं पाआेगे। वास्‍तव में इसे बंद करना है?</string>
+
+
+
 </resources>

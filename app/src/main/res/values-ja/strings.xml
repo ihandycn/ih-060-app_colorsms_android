@@ -577,4 +577,18 @@
     <string name="sms_notification_channel">SMS通知</string>
     <string name="sms_notification_channel_description">SMSを受信した時に通知を表示する</string>
     <string name="menu_rate">5つ星の評価</string>
+
+    <string name="message_box_reply_hint">" 返信"</string>
+
+    <string name="message_box_time_ago">%1$d 分前</string>
+    <string name="message_box_next">次へ</string>
+    <string name="message_box_reply">返信</string>
+
+    <string name="message_box_disable">無効</string>
+    <string name="message_box_negative_button">オフにする</string>
+    <string name="message_box_positive_action">今はしない</string>
+
+    <string name="message_box_disable_successfully">メッセージアシスタントが無効になりました</string>
+    <string name="message_box_alert_title">メッセージアシスタントをオフにしますか？</string>
+    <string name="message_box_alert_message">メッセージアシスタントをオフにすると、メッセージを受け取った時にお知らせがきません。それでもオフにしますか？</string>
 </resources>

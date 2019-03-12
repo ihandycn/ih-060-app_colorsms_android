@@ -1062,4 +1062,19 @@
     <string name="wallpaper_add_photos">Add Photos</string>
 
     <string name="messages">Messages</string>
+
+    <string name="message_box_next_num" translatable="false">(%1$d)</string>
+    <string name="message_box_reply_hint" >" REPLY"</string>
+    <string name="message_box_reply">REPLY</string>
+    <string name="message_box_next">NEXT</string>
+    <string name="message_box_time_ago">%1$d min ago</string>
+    <string name="message_box_no_message" translatable="false">The last page</string>
+    <string name="message_box_sms_send_successfully_toast"  translatable="false">Send Successfully</string>
+    <string name="message_box_disable">Disable</string>
+    <string name="message_box_negative_button">TURN OFF</string>
+    <string name="message_box_positive_action">NOT NOW</string>
+    <string name="message_box_alert_title">Turn Off Message Assistant?</string>
+    <string name="message_box_alert_message">If you turn off message assistant, you’ll not get reminder when receiving message. Are you sure to turn it off?</string>
+    <string name="message_box_disable_successfully">Message Assistant disabled.</string>
+
 </resources>

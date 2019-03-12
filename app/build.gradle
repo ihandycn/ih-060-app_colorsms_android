@@ -58,7 +58,6 @@ dependencies {
     compile project(':libphotoviewer')
     compile project(':libframesequence')
     compile project(':libSuperApps')
-    compile project(':libMessageCenter')
     compile project(':libBlockCanary')
 
     compile 'com.android.support:multidex:1.0.3'

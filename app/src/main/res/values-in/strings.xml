@@ -577,4 +577,19 @@
     <string name="sms_notification_channel">Notifikasi SMS</string>
     <string name="sms_notification_channel_description">Tampilkan notifikasi saat menerima SMS</string>
     <string name="menu_rate">Peringkat 5 Bintang</string>
+
+    <string name="message_box_reply_hint">" Balas"</string>
+
+    <string name="message_box_time_ago">%1$d menit yang lalu</string>
+    <string name="message_box_next">SELANJUTNYA</string>
+    <string name="message_box_reply">Balas</string>
+
+    <string name="message_box_disable">Nonaktifkan</string>
+    <string name="message_box_negative_button">MATIKAN</string>
+    <string name="message_box_positive_action">TIDAK SEKARANG</string>
+
+    <string name="message_box_disable_successfully">Asisten Pesan dinonaktifkan</string>
+    <string name="message_box_alert_title">Nonaktifkan Asisten Pesan?</string>
+    <string name="message_box_alert_message">Jika menonaktifkan Asisten Pesan, Anda tidak akan diingatkan saat menerima pesan. Yakin menonaktifkannya?</string>
+
 </resources>

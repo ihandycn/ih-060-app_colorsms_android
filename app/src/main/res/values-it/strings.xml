@@ -530,6 +530,7 @@
     <string name="menu_setting">"Impostazioni"</string>
     <string name="set_as_default_dialog_button_ok_user_present">"OK"</string>
 
+<<<<<<< HEAD
     <string name="menu_group_customization">Personalizza</string>
     <string name="menu_theme_color">Colore tema</string>
     <string name="theme_select_description">Seleziona il colore per il tema</string>
@@ -577,4 +578,19 @@
     <string name="sms_notification_channel">Notifica SMS</string>
     <string name="sms_notification_channel_description">Visualizza una notifica alla ricezione di un SMS</string>
     <string name="menu_rate">Valutazione con 5 stelle</string>
+=======
+    <string name="message_box_reply_hint">" Rispoi"</string>
+
+    <string name="message_box_time_ago">%1$d min fa</string>
+    <string name="message_box_next">SUCCESSIVO</string>
+    <string name="message_box_reply">Rispondi</string>
+
+    <string name="message_box_disable">Disattiva</string>
+    <string name="message_box_negative_button">DISATTIVA</string>
+    <string name="message_box_positive_action">NON ORA</string>
+
+    <string name="message_box_disable_successfully">Assistente messaggi disattivato</string>
+    <string name="message_box_alert_title">Vuoi disattivare l\'Assistente messaggi?</string>
+    <string name="message_box_alert_message">Se disattivi la funzione Assistente messaggi non riceverai le notifiche sui messaggi ricevuti. Vuoi disattivare la funzione?</string>
+>>>>>>> feature/message-box
 </resources>

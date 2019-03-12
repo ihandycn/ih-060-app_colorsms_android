@@ -577,4 +577,16 @@
     <string name="sms_notification_channel">Notification SMS</string>
     <string name="sms_notification_channel_description">Afficher une notification lors de la réception d\'un SMS</string>
     <string name="menu_rate">Évaluation à 5 étoiles</string>
+
+    <string name="message_box_reply_hint">" Répondre"</string>
+    <string name="message_box_reply">Répondre</string>
+    <string name="message_box_time_ago">il y a %1$d min</string>
+    <string name="message_box_next">SUIVANT</string>
+    <string name="message_box_disable">Désactiver</string>
+    <string name="message_box_negative_button">DÉSACTIVER</string>
+    <string name="message_box_positive_action">PAS MAINTENANT</string>
+    <string name="message_box_disable_successfully">Assistant de message désactivé</string>
+    <string name="message_box_alert_title">Désactiver l\'assistant de message ?</string>
+    <string name="message_box_alert_message">Si vous désactivez l\'assistant de message, vous ne recevrez pas de rappel lorsque lors de la réception d\'un message Voulez-vous vraiment le désactiver ?</string>
+
 </resources>

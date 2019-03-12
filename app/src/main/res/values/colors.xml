@@ -211,4 +211,15 @@
     <color name="customize_bubble_color_divider">#23313131</color>
     <color name="customize_bubble_primary_text_color">#4f5157</color>
 
+    <!--message box-->
+    <color name="message_box_quantum_panel_bg_color">#FFFFFF</color>
+    <color name="message_box_message_item_bg_color">#e9e7e8</color>
+    <color name="message_box_message_item_bg_color_pressed">#c6c4c2</color>
+    <color name="message_box_translucent_dark_background">#BF000000</color>
+    <color name="message_box_sms_reply_color">#07cf44</color>
+    <color name="message_box_alert_btn_text_color">#606060</color>
+    <color name="message_box_alert_btn_text_color_disabled">#7f7f7f7f</color>
+    <color name="message_box_primary_color">#399afa</color>
+    <color name="message_box_primary_color_dark">#1D5AB5</color>
+
 </resources>

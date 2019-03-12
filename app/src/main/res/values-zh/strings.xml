@@ -524,9 +524,6 @@
     <string name="sms_show_current_theme">當前的主題</string>
 
 
-    <string name="menu_setting">設定</string>
-    <string name="set_as_default_dialog_button_ok_user_present">確定</string>
-
     <string name="menu_group_customization">個性化</string>
     <string name="menu_theme_color">主題色</string>
     <string name="theme_select_description">選擇一個你喜歡的顏色</string>
@@ -574,4 +571,22 @@
     <string name="sms_notification_channel">短信通知</string>
     <string name="sms_notification_channel_description">當收到短信時，顯示通知消息</string>
     <string name="menu_rate">五星好評</string>
+    <string name="menu_setting">"設定"</string>
+    <string name="set_as_default_dialog_button_ok_user_present">"確定"</string>
+
+
+    <string name="message_box_reply_hint">" 回复"</string>
+
+    <string name="message_box_time_ago">%1$d分鐘以前</string>
+    <string name="message_box_next">下一條</string>
+    <string name="message_box_reply">回复</string>
+
+    <string name="message_box_disable">關閉</string>
+    <string name="message_box_negative_button">關閉</string>
+    <string name="message_box_positive_action">取消</string>
+
+    <string name="message_box_disable_successfully">消息助手已關閉</string>
+    <string name="message_box_alert_title">關閉消息助手？</string>
+    <string name="message_box_alert_message">一旦關閉來電助手，有新消息時將不會收到提醒，確認關閉？</string>
+
 </resources>

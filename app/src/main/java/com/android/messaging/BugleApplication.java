@@ -43,10 +43,10 @@ import com.android.messaging.sms.ApnDatabase;
 import com.android.messaging.sms.BugleApnSettingsLoader;
 import com.android.messaging.sms.BugleUserAgentInfoLoader;
 import com.android.messaging.sms.MmsConfig;
-import com.android.messaging.smsshow.MessagingMsgCenterFactoryImpl;
 import com.android.messaging.ui.ConversationDrawables;
 import com.android.messaging.ui.SetAsDefaultGuideActivity;
 import com.android.messaging.ui.emoji.utils.EmojiConfig;
+import com.android.messaging.ui.wallpaper.Utils;
 import com.android.messaging.upgrader.Upgrader;
 import com.android.messaging.util.BugleAnalytics;
 import com.android.messaging.util.BugleGservices;
@@ -76,8 +76,6 @@ import com.ihs.commons.utils.HSBundle;
 import com.ihs.commons.utils.HSLog;
 import com.ihs.device.permanent.HSPermanentUtils;
 import com.ihs.device.permanent.PermanentService;
-import com.messagecenter.customize.MessageCenterManager;
-import com.messagecenter.util.Utils;
 import com.squareup.leakcanary.AndroidExcludedRefs;
 import com.squareup.leakcanary.ExcludedRefs;
 import com.squareup.leakcanary.LeakCanary;
@@ -190,8 +188,6 @@ public class BugleApplication extends HSApplication implements UncaughtException
             initWorks.add(new SyncMainThreadTask("InitPhotoViewAnalytics", this::initPhotoViewAnalytics));
 
             initWorks.add(new SyncMainThreadTask("InitEmojiConfig", () -> EmojiConfig.getInstance().doInit()));
-
-            initWorks.add(new SyncMainThreadTask("InitMessageCenter", this::initMessageCenterLib));
 
             initWorks.add(new SyncMainThreadTask("InitTimeTicker", () -> new BugleTimeTicker().start()));
 
@@ -319,7 +315,7 @@ public class BugleApplication extends HSApplication implements UncaughtException
 
         Threads.postOnMainThreadDelayed(() -> BugleAnalytics.logEvent("Agency_Info", false, "install_type", installType, "campaign_id", "" + data.getCampaignID(), "user_level", "" + HSConfig.optString("not_configured", "UserLevel")), 10 * 1000L);
 
-        if (Utils.isNewUser()) {
+        if (CommonUtils.isNewUser()) {
             Preferences.getDefault().doOnce(() -> {
                 int delayTimes[] = {20, 40, 65, 95, 125, 365, 1850, 7300, 11000, 15000, 22000};
                 for (int delay : delayTimes) {
@@ -424,10 +420,6 @@ public class BugleApplication extends HSApplication implements UncaughtException
         maybeHandleSharedPrefsUpgrade(factory);
         MmsConfig.load();
         Trace.endSection();
-    }
-
-    public void initMessageCenterLib() {
-        MessageCenterManager.init(new MessagingMsgCenterFactoryImpl());
     }
 
     @Override
@@ -565,7 +557,7 @@ public class BugleApplication extends HSApplication implements UncaughtException
     }
 
     private void logDailyStatus(final int daysSinceInstall) {
-        if (daysSinceInstall > 0 && daysSinceInstall <= 5 && Utils.isNewUser()) {
+        if (daysSinceInstall > 0 && daysSinceInstall <= 5 && CommonUtils.isNewUser()) {
             HSPublisherMgr.PublisherData data = HSPublisherMgr.getPublisherData(this);
             String installType = data.getInstallMode().name();
             BugleAnalytics.logEvent("New_User_Agency_Info_" + daysSinceInstall + "_DaysNew",

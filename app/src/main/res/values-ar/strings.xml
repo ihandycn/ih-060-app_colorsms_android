@@ -633,4 +633,20 @@
 
     <string name="menu_setting">"الإعدادات"</string>
     <string name="set_as_default_dialog_button_ok_user_present">"موافق"</string>
+
+
+    <string name="message_box_reply_hint">" الرد"</string>
+
+    <string name="message_box_time_ago">قبل %1$d دقائق</string>
+    <string name="message_box_next">التالي</string>
+    <string name="message_box_reply">>الرد</string>
+
+    <string name="message_box_disable">تعطيل</string>
+    <string name="message_box_negative_button">إيقاف التشغيل</string>
+    <string name="message_box_positive_action">ليس الآن.</string>
+
+    <string name="message_box_disable_successfully">مساعد الرسائل معطل</string>
+    <string name="message_box_alert_title">إيقاف مساعد الرسائل؟</string>
+    <string name="message_box_alert_message">إذا أوقفت مساعد الرسائل، فلن تحصل على تذكير عند تلقي رسائل. متأكد من أنك تريد إيقاف تشغيله؟</string>
+
 </resources>

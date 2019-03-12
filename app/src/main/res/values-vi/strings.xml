@@ -577,4 +577,15 @@
     <string name="sms_notification_channel">Thông báo SMS</string>
     <string name="sms_notification_channel_description">Hiển thị thông báo khi nhận được SMS</string>
     <string name="menu_rate">Xếp hạng 5 sao</string>
+
+
+    <string name="message_box_reply_hint">" Trả lời"</string>
+
+    <string name="message_box_disable">Tắt</string>
+    <string name="message_box_negative_button">TẮT</string>
+    <string name="message_box_positive_action">KHÔNG PHẢI HIỆN TẠI</string>
+
+    <string name="message_box_disable_successfully">Đã tắt Hỗ trợ Cuộc gọi</string>
+    <string name="message_box_alert_title">Tắt Hỗ trợ Cuộc gọi?</string>
+    <string name="message_box_alert_message">Nếu bạn tắt Hỗ trợ Cuộc gọi, bạn sẽ không nhận được lời nhắc khi bị lỡ cuộc gọi. Chắc chắn tắt nó?</string>
 </resources>
