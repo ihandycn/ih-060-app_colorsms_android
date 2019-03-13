@@ -18,6 +18,7 @@ package com.android.messaging.ui.conversationlist;
 
 import android.animation.ValueAnimator;
 import android.content.Intent;
+import android.content.res.Resources;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
@@ -57,18 +58,21 @@ import com.android.messaging.ui.wallpaper.WallpaperDownloader;
 import com.android.messaging.ui.wallpaper.WallpaperManager;
 import com.android.messaging.ui.wallpaper.WallpaperPreviewActivity;
 import com.android.messaging.util.BugleAnalytics;
+import com.android.messaging.util.CommonUtils;
 import com.android.messaging.util.Trace;
 import com.android.messaging.util.UiUtils;
 import com.ihs.commons.notificationcenter.HSGlobalNotificationCenter;
 import com.ihs.commons.notificationcenter.INotificationObserver;
 import com.ihs.commons.utils.HSBundle;
 import com.superapps.font.FontStyleManager;
+import com.superapps.util.Calendars;
 import com.superapps.util.Dimensions;
 import com.superapps.util.Navigations;
 import com.superapps.util.Preferences;
 import com.superapps.util.Threads;
 
 import java.util.Calendar;
+import java.util.Random;
 
 public class ConversationListActivity extends AbstractConversationListActivity
         implements View.OnClickListener, INotificationObserver {
@@ -153,19 +157,20 @@ public class ConversationListActivity extends AbstractConversationListActivity
             Threads.postOnThreadPoolExecutor(() -> {
                 String bgPath = WallpaperManager.getWallpaperPathByThreadId(null);
                 String backgroundStr;
+                int wallpaperIndex = 99;
                 if (TextUtils.isEmpty(bgPath)) {
                     backgroundStr = "default";
+                    wallpaperIndex = 90;
                 } else if (bgPath.contains("_1.png")) {
                     backgroundStr = "customize";
                 } else {
-                    int index = 100;
                     for (int i = 0; i < WallpaperChooserItem.sRemoteUrl.length; i++) {
                         if (WallpaperDownloader.getAbsolutePath(WallpaperChooserItem.sRemoteUrl[i]).equals(bgPath)) {
-                            index = i;
+                            wallpaperIndex = i;
                             break;
                         }
                     }
-                    backgroundStr = "colorsms_" + index;
+                    backgroundStr = "colorsms_" + wallpaperIndex;
                 }
 
                 int hour = Calendar.getInstance().get(Calendar.HOUR_OF_DAY);
@@ -205,6 +210,32 @@ public class ConversationListActivity extends AbstractConversationListActivity
                         "size", size,
                         "open time", String.valueOf(hour)
                 );
+
+                if (Calendars.getDayDifference(System.currentTimeMillis(), CommonUtils.getAppInstallTimeMillis()) == 1) {
+                    final int wallpaper = wallpaperIndex;
+                    Preferences.getDefault().doOnce(() -> {
+                        Resources res = Factory.get().getApplicationContext().getResources();
+                        int bubbleSendFontColor = ConversationColors.get().getMessageTextColor(false);
+                        int bubbleSendBgColor = ConversationColors.get().getBubbleBackgroundColor(false);
+                        int bubbleRcvFontColor = ConversationColors.get().getMessageTextColor(true);
+                        int bubbleRcvBgColor = ConversationColors.get().getBubbleBackgroundColor(true);
+                        if (bubbleRcvBgColor != res.getColor(R.color.message_bubble_color_incoming)
+                                || bubbleSendBgColor != res.getColor(R.color.message_bubble_color_outgoing)
+                                || bubbleSendFontColor != res.getColor(R.color.message_text_color_outgoing)
+                                || bubbleRcvFontColor != res.getColor(R.color.message_text_color_incoming)) {
+                            //bubble font color or bg color has been changed
+                            String fontType = FontStyleManager.getFontFamily();
+                            int fontSize = FontStyleManager.getFontScaleLevel();
+                            int bubbleStyle = BubbleDrawables.getSelectedIdentifier();
+                            BugleAnalytics.logEvent("Customize_Analysis", true,
+                                    "group" + new Random().nextInt(7),
+                                    bubbleSendFontColor + "|" + bubbleSendBgColor + "|"
+                                            + bubbleRcvFontColor + "|" + bubbleRcvBgColor + "|"
+                                            + fontType + "|" + fontSize + "|" + bubbleStyle + "|"
+                                            + wallpaper + "|" + ThemeSelectActivity.getSelectedIndex());
+                        }
+                    }, "pref_key_customize_config_has_send");
+                }
             });
         }
 
