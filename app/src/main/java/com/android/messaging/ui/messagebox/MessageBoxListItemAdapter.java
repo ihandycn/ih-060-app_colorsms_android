@@ -54,7 +54,7 @@ public class MessageBoxListItemAdapter extends RecyclerView.Adapter<MessageBoxLi
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         holder.msgBodyTextView.setText(mMessageList.get(position));
-        holder.msgDateTextView.setText(Dates.getConversationTimeString(mTimestampList.get(0)).toString());
+        holder.msgDateTextView.setText(Dates.getConversationTimeString(mTimestampList.get(position)).toString());
     }
 
     @Override
