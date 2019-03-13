@@ -11,26 +11,27 @@ import android.widget.TextView;
 
 import com.android.messaging.R;
 import com.android.messaging.ui.UIIntents;
+import com.android.messaging.util.Dates;
 
 import java.util.ArrayList;
 
 public class MessageBoxListItemAdapter extends RecyclerView.Adapter<MessageBoxListItemAdapter.ViewHolder> {
-    interface OnItemClickListener {
-        void onItemClick();
-    }
 
-    private ArrayList<String> msgList;
-    private OnItemClickListener onItemClickListener;
+    private ArrayList<String> mMessageList;
+    private ArrayList<Long> mTimestampList;
     private String mConversationId;
 
     MessageBoxListItemAdapter(ArrayList<String> data, String conversationId) {
-        this.msgList = data;
+        this.mMessageList = data;
         this.mConversationId = conversationId;
+        mTimestampList = new ArrayList<>(4);
+        mTimestampList.add(System.currentTimeMillis());
     }
 
     void addNewIncomingMessage(String message) {
-        msgList.add(message);
-        notifyItemInserted(msgList.size() - 1);
+        mMessageList.add(message);
+        mTimestampList.add(System.currentTimeMillis());
+        notifyItemInserted(mMessageList.size() - 1);
     }
 
     @NonNull
@@ -47,24 +48,13 @@ public class MessageBoxListItemAdapter extends RecyclerView.Adapter<MessageBoxLi
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        holder.msgBodyTextView.setText(msgList.get(position));
-//        holder.msgDateTextView.setText(msgList.get(position).getDate());
-        holder.itemView.setOnClickListener(new View.OnClickListener() {
-            @Override public void onClick(View v) {
-                if (onItemClickListener != null) {
-                    onItemClickListener.onItemClick();
-                }
-            }
-        });
+        holder.msgBodyTextView.setText(mMessageList.get(position));
+        holder.msgDateTextView.setText(Dates.getConversationTimeString(mTimestampList.get(0)).toString());
     }
 
     @Override
     public int getItemCount() {
-        return msgList == null ? 0 : msgList.size();
-    }
-
-    public void setOnItemClickListener(OnItemClickListener onItemClickListener) {
-        this.onItemClickListener = onItemClickListener;
+        return mMessageList == null ? 0 : mMessageList.size();
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {

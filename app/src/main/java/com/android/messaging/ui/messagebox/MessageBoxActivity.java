@@ -77,6 +77,12 @@ public class MessageBoxActivity extends BaseActivity implements INotificationObs
         HSGlobalNotificationCenter.addObserver(NOTIFICATION_FINISH_MESSAGE_BOX, this);
     }
 
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+        mConversationPagerAdapter.getView(mConversationPager.getCurrentItem()).updateTimestamp();
+    }
+
     private void initMenu() {
         ImageView closeButton = findViewById(R.id.alert_close_btn);
         closeButton.setOnClickListener(v -> finish());

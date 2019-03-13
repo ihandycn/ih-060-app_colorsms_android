@@ -78,7 +78,10 @@ public class MessageBoxConversationItemView extends FrameLayout {
         sendIntent.putExtra(EXTRA_SELF_ID, mSelfId);
         sendIntent.putExtra(UIIntents.UI_INTENT_EXTRA_CONVERSATION_ID, mConversationId);
         context.startService(sendIntent);
+    }
 
+    void updateTimestamp() {
+        mAdapter.notifyDataSetChanged();
     }
 
     private void loadAvatar(Uri avatarUri) {
