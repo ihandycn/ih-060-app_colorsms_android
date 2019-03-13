@@ -12,8 +12,11 @@ import android.widget.TextView;
 import com.android.messaging.R;
 import com.android.messaging.ui.UIIntents;
 import com.android.messaging.util.Dates;
+import com.ihs.commons.notificationcenter.HSGlobalNotificationCenter;
 
 import java.util.ArrayList;
+
+import static com.android.messaging.ui.messagebox.MessageBoxActivity.NOTIFICATION_FINISH_MESSAGE_BOX;
 
 public class MessageBoxListItemAdapter extends RecyclerView.Adapter<MessageBoxListItemAdapter.ViewHolder> {
 
@@ -40,8 +43,10 @@ public class MessageBoxListItemAdapter extends RecyclerView.Adapter<MessageBoxLi
         View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.message_box_message_item, parent, false);
 
         ViewHolder holder = new ViewHolder(v);
-        holder.msgBodyTextView.setOnClickListener(v1 ->
-                UIIntents.get().launchConversationActivity(v1.getContext(), mConversationId, null));
+        holder.msgBodyTextView.setOnClickListener(v1 -> {
+            UIIntents.get().launchConversationActivity(v1.getContext(), mConversationId, null);
+            HSGlobalNotificationCenter.sendNotification(NOTIFICATION_FINISH_MESSAGE_BOX);
+        });
 
         return holder;
     }
