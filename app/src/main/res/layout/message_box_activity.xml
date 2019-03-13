@@ -12,8 +12,7 @@
         android:layout_height="wrap_content"
         android:layout_marginLeft="10dp"
         android:layout_marginRight="10dp"
-        android:layout_centerInParent="true"
-        android:orientation="vertical"
+        android:layout_marginTop="70dp"
         android:windowSoftInputMode="adjustPan">
 
         <LinearLayout
@@ -22,7 +21,6 @@
             android:layout_height="wrap_content"
             android:background="@drawable/message_box_background"
             android:orientation="vertical">
-
 
             <FrameLayout
                 android:layout_width="match_parent"

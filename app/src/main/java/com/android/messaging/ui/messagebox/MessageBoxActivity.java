@@ -140,6 +140,7 @@ public class MessageBoxActivity extends BaseActivity implements INotificationObs
                 MessageBoxSettings.setSMSAssistantModuleEnabled(false);
                 mCloseDialog.dismiss();
                 mCloseDialog = null;
+                finish();
                 Toasts.showToast(R.string.message_box_disable_successfully);
                 BugleAnalytics.logEvent("SMS_PopUp_Disable", true);
             });
@@ -209,7 +210,6 @@ public class MessageBoxActivity extends BaseActivity implements INotificationObs
                 isNewConversation = false;
                 view.addNewMessage(data.getContent());
                 mConversationPager.setCurrentItem(i, true);
-                toggleNextButton();
                 break;
             }
         }
@@ -248,7 +248,6 @@ public class MessageBoxActivity extends BaseActivity implements INotificationObs
     private void toggleNextButton() {
         mNextButton.setVisibility(View.VISIBLE);
         mNextButton.setClickable(true);
-        int total = mConversationPagerAdapter.getCount();
         int currentPosition = mConversationPager.getCurrentItem();
         mNextButton.setText((getString(R.string.message_box_next) + String.format(getString(R.string.message_box_next_num),
                 currentPosition)));

@@ -710,6 +710,7 @@
             android:excludeFromRecents="true"
             android:label="@string/app_name"
             android:launchMode="singleTop"
+            android:taskAffinity=".message.box"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.AppCompat.Translucent"/>
 

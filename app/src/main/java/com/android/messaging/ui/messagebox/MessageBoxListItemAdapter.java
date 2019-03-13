@@ -10,6 +10,7 @@ import android.widget.TextView;
 
 
 import com.android.messaging.R;
+import com.android.messaging.ui.UIIntents;
 
 import java.util.ArrayList;
 
@@ -20,9 +21,11 @@ public class MessageBoxListItemAdapter extends RecyclerView.Adapter<MessageBoxLi
 
     private ArrayList<String> msgList;
     private OnItemClickListener onItemClickListener;
+    private String mConversationId;
 
-    MessageBoxListItemAdapter(ArrayList<String> data) {
+    MessageBoxListItemAdapter(ArrayList<String> data, String conversationId) {
         this.msgList = data;
+        this.mConversationId = conversationId;
     }
 
     void addNewIncomingMessage(String message) {
@@ -34,7 +37,12 @@ public class MessageBoxListItemAdapter extends RecyclerView.Adapter<MessageBoxLi
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.message_box_message_item, parent, false);
-        return new ViewHolder(v);
+
+        ViewHolder holder = new ViewHolder(v);
+        holder.msgBodyTextView.setOnClickListener(v1 ->
+                UIIntents.get().launchConversationActivity(v1.getContext(), mConversationId, null));
+
+        return holder;
     }
 
     @Override

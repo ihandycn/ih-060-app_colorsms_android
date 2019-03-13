@@ -47,7 +47,7 @@ public class MessageBoxConversationItemView extends FrameLayout {
         mSelfId = itemData.getSelfId();
         mConversationId = itemData.getConversationId();
 
-        RecyclerView mRecyclerView = findViewById(R.id.recycler_view);
+        RecyclerView recyclerView = findViewById(R.id.recycler_view);
         mAvatar = findViewById(R.id.avatar);
         TextView mConversationName = findViewById(R.id.conversation_name);
 
@@ -55,13 +55,12 @@ public class MessageBoxConversationItemView extends FrameLayout {
         loadAvatar(Uri.parse(itemData.getAvatarUri()));
 
         LinearLayoutManager llm = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false);
-        llm.setStackFromEnd(true);
-        mRecyclerView.setLayoutManager(llm);
+        recyclerView.setLayoutManager(llm);
 
         ArrayList<String > mMessages = new ArrayList<>();
         mMessages.add(itemData.getContent());
-        mAdapter = new MessageBoxListItemAdapter(mMessages);
-        mRecyclerView.setAdapter(mAdapter);
+        mAdapter = new MessageBoxListItemAdapter(mMessages, mConversationId);
+        recyclerView.setAdapter(mAdapter);
 
         setTag(mConversationId);
     }
@@ -79,6 +78,7 @@ public class MessageBoxConversationItemView extends FrameLayout {
         sendIntent.putExtra(EXTRA_SELF_ID, mSelfId);
         sendIntent.putExtra(UIIntents.UI_INTENT_EXTRA_CONVERSATION_ID, mConversationId);
         context.startService(sendIntent);
+
     }
 
     private void loadAvatar(Uri avatarUri) {
