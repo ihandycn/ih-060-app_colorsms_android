@@ -6,7 +6,7 @@
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
         android:layout_height="@dimen/action_bar_height"
-        android:elevation="1dp"
+        android:elevation="0dp"
         app:navigationIcon="@drawable/ic_back">
 
         <com.superapps.view.TypefacedTextView
@@ -19,10 +19,4 @@
             app:font_style="bold"
             app:typeface="@string/custom_font_semibold" />
     </android.support.v7.widget.Toolbar>
-
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="1sp"
-        android:layout_gravity="bottom"
-        android:background="@color/divider_color" />
 </merge>

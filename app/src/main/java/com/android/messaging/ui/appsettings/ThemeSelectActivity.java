@@ -1,7 +1,6 @@
 package com.android.messaging.ui.appsettings;
 
 import android.os.Bundle;
-import android.support.v4.graphics.ColorUtils;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.widget.ImageView;
