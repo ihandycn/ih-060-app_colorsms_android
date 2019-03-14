@@ -46,7 +46,6 @@ import com.android.messaging.sms.MmsConfig;
 import com.android.messaging.ui.ConversationDrawables;
 import com.android.messaging.ui.SetAsDefaultGuideActivity;
 import com.android.messaging.ui.emoji.utils.EmojiConfig;
-import com.android.messaging.ui.wallpaper.Utils;
 import com.android.messaging.upgrader.Upgrader;
 import com.android.messaging.util.BugleAnalytics;
 import com.android.messaging.util.BugleGservices;
@@ -57,6 +56,7 @@ import com.android.messaging.util.BugleTimeTicker;
 import com.android.messaging.util.CommonUtils;
 import com.android.messaging.util.DebugUtils;
 import com.android.messaging.util.DefaultSmsAppChangeObserver;
+import com.android.messaging.util.FabricUtils;
 import com.android.messaging.util.LogUtil;
 import com.android.messaging.util.OsUtil;
 import com.android.messaging.util.PhoneUtils;
@@ -114,7 +114,7 @@ public class BugleApplication extends HSApplication implements UncaughtException
     public static final String PREF_KEY_DAILY_EVENTS_LOG_SESSION_SEQ = "default_launcher_log_session_seq";
 
     public static final boolean ENABLE_CRASHLYTICS_ON_DEBUG = false;
-
+    private volatile static boolean isFabricInited;
     /**
      * We log daily events on start of the 2nd session every day.
      */
@@ -148,12 +148,6 @@ public class BugleApplication extends HSApplication implements UncaughtException
         Trace.beginSection("app.onCreate");
         super.onCreate();
 
-        Crashlytics.Builder crashlyticsKit = new Crashlytics.Builder();
-        if (!ENABLE_CRASHLYTICS_ON_DEBUG) {
-            crashlyticsKit.core(new CrashlyticsCore.Builder().disabled(BuildConfig.DEBUG).build());
-        }
-        Fabric.with(BugleApplication.this, crashlyticsKit.build());
-
         if (BuildConfig.DEBUG) {
             StrictMode.setThreadPolicy(new StrictMode.ThreadPolicy.Builder().detectAll().penaltyLog().build());
             StrictMode.setVmPolicy(new StrictMode.VmPolicy.Builder().detectAll().penaltyLog().build());
@@ -168,6 +162,8 @@ public class BugleApplication extends HSApplication implements UncaughtException
         }
 
         initKeepAlive();
+
+        initFabric();
 
         sSystemUncaughtExceptionHandler = Thread.getDefaultUncaughtExceptionHandler();
         Thread.setDefaultUncaughtExceptionHandler(this);
@@ -208,6 +204,25 @@ public class BugleApplication extends HSApplication implements UncaughtException
         } finally {
             TraceCompat.endSection();
         }
+    }
+
+    private void initFabric() {
+        // Set up Crashlytics, disabled for debug builds
+        if (!isFabricInited) {
+            Threads.postOnThreadPoolExecutor(() -> {
+                Crashlytics.Builder crashlyticsKit = new Crashlytics.Builder();
+                if (!ENABLE_CRASHLYTICS_ON_DEBUG) {
+                    crashlyticsKit.core(new CrashlyticsCore.Builder().disabled(BuildConfig.DEBUG).build());
+                }
+                Fabric.with(BugleApplication.this, crashlyticsKit.build());
+                isFabricInited = true;
+                FabricUtils.logQueueEvent();
+            });
+        }
+    }
+
+    public static boolean isFabricInited() {
+        return isFabricInited;
     }
 
     private void initFactoryImpl() {

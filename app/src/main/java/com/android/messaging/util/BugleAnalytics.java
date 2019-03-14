@@ -65,7 +65,13 @@ public class BugleAnalytics {
             }
 
             onLogEvent(eventID, alsoLogToFlurry, eventValues);
-            Answers.getInstance().logCustom(event);
+
+            if (FabricUtils.isFabricInited()) {
+                Answers.getInstance().logCustom(event);
+            } else {
+                FabricUtils.queueEvent(event);
+            }
+
             if (alsoLogToFlurry) {
                 HSAnalytics.logEvent(eventID, eventValues);
             }
