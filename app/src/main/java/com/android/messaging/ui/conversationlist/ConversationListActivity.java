@@ -50,6 +50,7 @@ import com.android.messaging.datamodel.BugleNotifications;
 import com.android.messaging.ui.DragHotSeatActivity;
 import com.android.messaging.ui.UIIntents;
 import com.android.messaging.ui.UIIntentsImpl;
+import com.android.messaging.ui.UserSurveyActivity;
 import com.android.messaging.ui.appsettings.ChangeFontActivity;
 import com.android.messaging.ui.appsettings.ThemeSelectActivity;
 import com.android.messaging.ui.customize.BubbleDrawables;
@@ -111,6 +112,7 @@ public class ConversationListActivity extends AbstractConversationListActivity
     private static boolean mIsNoActionBack = true;
     private boolean mIsRealCreate = false;
     private boolean isScreenOn;
+    private boolean mShowEndAnimation;
 
     private enum AnimState {
         NONE,
@@ -335,9 +337,16 @@ public class ConversationListActivity extends AbstractConversationListActivity
                 BugleAnalytics.logEvent("SMS_Messages_Back", true);
                 super.onBackPressed();
                 overridePendingTransition(0, 0);
-                Preferences.getDefault().doOnce(
-                        () -> UIIntentsImpl.get().launchDragHotSeatActivity(this),
-                        DragHotSeatActivity.SHOW_DRAG_HOTSEAT);
+                if (!Preferences.getDefault().getBoolean(DragHotSeatActivity.SHOW_DRAG_HOTSEAT, false)) {
+                    Preferences.getDefault().doOnce(
+                            () -> UIIntentsImpl.get().launchDragHotSeatActivity(this),
+                            DragHotSeatActivity.SHOW_DRAG_HOTSEAT);
+
+                } else if (!Preferences.getDefault().getBoolean(UserSurveyActivity.SHOW_USER_SURVEY, false)) {
+                    Preferences.getDefault().doOnce(
+                            () -> UIIntentsImpl.get().launchUserSurveyActivity(this),
+                            UserSurveyActivity.SHOW_USER_SURVEY);
+                }
             } else {
                 mShowRateAlert = true;
             }
@@ -470,6 +479,7 @@ public class ConversationListActivity extends AbstractConversationListActivity
         if (!isShowEmojiGuide) {
             return;
         }
+        mAnimState = AnimState.APPEAR;
         mGuideContainer.setVisibility(View.VISIBLE);
         Preferences.getDefault().putBoolean(PREF_SHOW_EMOJI_GUIDE, false);
         mGuideContainer.setImageAssetsFolder("lottie/show_emoj_bubble/");
@@ -478,10 +488,20 @@ public class ConversationListActivity extends AbstractConversationListActivity
             @Override
             public void onAnimationEnd(Animator animation) {
                 super.onAnimationEnd(animation);
-                mGuideContainer.setVisibility(View.INVISIBLE);
+                mAnimState = AnimState.NONE;
+                if (mShowEndAnimation) {
+                    hideStoreGuide();
+                }
+            }
+
+            @Override
+            public void onAnimationStart(Animator animation) {
+                super.onAnimationStart(animation);
+                mAnimState = AnimState.SHOWING;
             }
         });
         mGuideContainer.playAnimation();
+
        /* mAnimState = AnimState.APPEAR;
         mEmojiStoreCircleView = findViewById(R.id.emoji_store_circle);
 
@@ -554,16 +574,17 @@ public class ConversationListActivity extends AbstractConversationListActivity
     }
 
     private void hideStoreGuide() {
-        if (mGuideContainer.getVisibility() != View.VISIBLE) {
-            mGuideContainer.setVisibility(View.VISIBLE);
-        }
+        mGuideContainer.clearAnimation();
+        mAnimState = AnimState.DISAPPEAR;
         mGuideContainer.setImageAssetsFolder("lottie/emoj_bubble_dismiss/");
         mGuideContainer.setAnimation("lottie/emoj_bubble_dismiss.json");
         mGuideContainer.addAnimatorListener(new AnimatorListenerAdapter() {
             @Override
             public void onAnimationEnd(Animator animation) {
                 super.onAnimationEnd(animation);
-                mGuideContainer.setVisibility(View.INVISIBLE);
+                mGuideContainer.setVisibility(View.GONE);
+                mAnimState = AnimState.NONE;
+                mShowEndAnimation = false;
             }
         });
         mGuideContainer.playAnimation();
@@ -593,8 +614,14 @@ public class ConversationListActivity extends AbstractConversationListActivity
 
     @Override
     public boolean dispatchTouchEvent(MotionEvent event) {
-        if (mAnimState == AnimState.SHOWING) {
-            hideStoreGuide();
+
+        if (mGuideContainer.getVisibility() == View.VISIBLE) {
+            if (mAnimState == AnimState.SHOWING) {
+                mShowEndAnimation = true;
+            } else {
+                hideStoreGuide();
+            }
+
         }
         return super.dispatchTouchEvent(event);
     }

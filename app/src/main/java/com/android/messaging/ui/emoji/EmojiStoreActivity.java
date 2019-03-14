@@ -33,7 +33,8 @@ public class EmojiStoreActivity extends BaseActivity {
                 R.id.emoji_store_layout,
                 EmojiStoreFragment.newInstance("char_tab"),
                 EmojiStoreFragment.FRAGMENT_TAG).commit();
-        ImageView backBtn = findViewById(R.id.emoji_store_back_btn);
+        View backBtn = findViewById(R.id.emoji_store_back_btn);
+        backBtn.setBackground(BackgroundDrawables.createBackgroundDrawable(PrimaryColors.getPrimaryColor(), Dimensions.pxFromDp(17.5f), true));
         backBtn.setOnClickListener(v -> this.finish());
         View titleView = findViewById(R.id.title_rl);
 

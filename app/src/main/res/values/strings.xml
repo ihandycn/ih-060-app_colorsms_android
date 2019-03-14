@@ -1062,4 +1062,8 @@
     <string name="wallpaper_add_photos">Add Photos</string>
 
     <string name="messages">Messages</string>
+    <string name="user_survey_content">Do You Like New Designs?</string>
+    <string name="user_survey_action">We added the theme color feature of the custom title bar and changed the design.</string>
+    <string name="dislike">DISLIKE</string>
+    <string name="like">LIKE</string>
 </resources>

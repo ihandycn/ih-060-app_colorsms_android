@@ -109,7 +109,8 @@ public class ContactPickerFragment extends Fragment implements ContactPickerData
         void invalidateActionBar();
     }
 
-    @VisibleForTesting final Binding<ContactPickerData> mBinding = BindingBase.createBinding(this);
+    @VisibleForTesting
+    final Binding<ContactPickerData> mBinding = BindingBase.createBinding(this);
 
     private ContactPickerFragmentHost mHost;
     private ContactRecipientAutoCompleteView mRecipientTextView;
@@ -284,7 +285,7 @@ public class ContactPickerFragment extends Fragment implements ContactPickerData
         if (data != null && data.getCount() == 0) {
             // Show the all contacts list when there's no frequents.
             mCustomHeaderViewPager.setCurrentItem(1);
-        } else if (data != null){
+        } else if (data != null) {
             BugleAnalytics.logEvent("SMS_ContactsTabPage_Show", true, "type", "Frequents");
         }
     }
@@ -593,7 +594,7 @@ public class ContactPickerFragment extends Fragment implements ContactPickerData
         // etc. will take the spot of the action bar.
         actionBar.hide();
         UiUtils.setStatusBarColor(getActivity(),
-                PrimaryColors.getPrimaryColor());
+                PrimaryColors.getPrimaryColorDark());
     }
 
     private GetOrCreateConversationActionMonitor mMonitor;

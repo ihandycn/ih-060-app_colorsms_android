@@ -347,7 +347,7 @@ public class BugleActionBarActivity extends BaseActivity implements ImeUtil.ImeS
             actionBar.setDisplayShowTitleEnabled(false);
             actionBar.setDisplayShowCustomEnabled(false);
             mActionMode.getCallback().onPrepareActionMode(mActionMode, mActionBarMenu);
-            UiUtils.setStatusBarColor(BugleActionBarActivity.this, PrimaryColors.getPrimaryColor());
+            UiUtils.setStatusBarColor(BugleActionBarActivity.this, PrimaryColors.getPrimaryColorDark());
             actionBar.setBackgroundDrawable(new ColorDrawable(PrimaryColors.getPrimaryColor()));
             actionBar.setHomeAsUpIndicator(R.drawable.ic_close_light);
             actionBar.show();

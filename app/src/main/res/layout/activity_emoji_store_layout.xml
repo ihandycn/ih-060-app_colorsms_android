@@ -18,6 +18,7 @@
             android:layout_centerVertical="true"
             android:layout_marginStart="17dp"
             android:layout_marginLeft="17dp"
+            android:scaleType="centerInside"
             android:src="@drawable/ic_back"
             tools:ignore="RtlHardcoded" />
 
@@ -27,11 +28,11 @@
             android:layout_centerVertical="true"
             android:layout_marginLeft="32dp"
             android:layout_toRightOf="@+id/emoji_store_back_btn"
+            android:includeFontPadding="false"
             android:text="@string/emoji_store_title"
             android:textColor="@color/action_bar_title_text_color"
             android:textSize="16.7sp"
             app:font_style="bold"
-            android:includeFontPadding="false"
             app:typeface="@string/custom_font_semibold"
             tools:ignore="RtlHardcoded" />
 

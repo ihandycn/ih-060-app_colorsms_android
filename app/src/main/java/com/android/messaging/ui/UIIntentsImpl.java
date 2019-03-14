@@ -396,6 +396,12 @@ public class UIIntentsImpl extends UIIntents {
         context.startActivity(intent);
     }
 
+    @Override
+    public void launchUserSurveyActivity(Context context) {
+        Intent intent = new Intent(context, UserSurveyActivity.class);
+        context.startActivity(intent);
+    }
+
     public void launchCustomBubblesActivity(Context context, String conversationId) {
         final Intent intent = new Intent(context, CustomBubblesActivity.class);
         if (!TextUtils.isEmpty(conversationId)) {
