@@ -21,8 +21,8 @@
 
     <com.airbnb.lottie.LottieAnimationView
         android:id="@+id/emoji_store_guide_content"
-        android:layout_width="151dp"
-        android:layout_height="32dp"
+        android:layout_width="161dp"
+        android:layout_height="47dp"
         android:layout_alignParentEnd="true"
         android:layout_alignParentRight="true"
         android:layout_centerVertical="true"
@@ -30,36 +30,19 @@
         android:layout_marginRight="50dp"
         android:scaleType="centerCrop"
         android:visibility="invisible">
-        <!--
-                  <com.superapps.view.TypefacedTextView
-                      android:layout_width="wrap_content"
-                      android:layout_height="match_parent"
-                      android:gravity="center"
-                      android:maxLines="1"
-                      android:paddingStart="6dp"
-                      android:paddingLeft="8dp"
-                      android:paddingEnd="8dp"
-                      android:paddingRight="6dp"
-                      android:text="@string/emoji_add_more"
-                      android:textColor="#ffffffff"
-                      android:textSize="13sp"
-                      app:typeface="@string/custom_font_semibold" />
-
-                  <ImageView
-                      android:layout_width="15dp"
-                      android:layout_height="15dp"
-                      android:src="@drawable/emoji_store_guide_hand" />
-
-                  <ImageView
-                      android:layout_width="15dp"
-                      android:layout_height="15dp"
-                      android:layout_marginStart="2.3dp"
-                      android:layout_marginLeft="2.3dp"
-                      android:layout_marginEnd="6dp"
-                      android:layout_marginRight="6dp"
-                      android:src="@drawable/emoji_store_guide_hand" />-->
     </com.airbnb.lottie.LottieAnimationView>
-
+    <com.airbnb.lottie.LottieAnimationView
+        android:id="@+id/emoji_store_guide_end"
+        android:layout_width="161dp"
+        android:layout_height="47dp"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
+        android:layout_marginEnd="50dp"
+        android:layout_marginRight="50dp"
+        android:scaleType="centerCrop"
+        android:visibility="invisible">
+    </com.airbnb.lottie.LottieAnimationView>
 
     <ImageView
         android:id="@+id/emoji_store_guide_triangle"

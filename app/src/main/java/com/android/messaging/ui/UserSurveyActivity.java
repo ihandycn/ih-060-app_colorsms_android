@@ -19,7 +19,6 @@ public class UserSurveyActivity extends HSAppCompatActivity implements View.OnCl
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_user_survey);
         BugleAnalytics.logEvent("Customize_ThemeColor_FeedbackAlert_Show");
-        findViewById(R.id.linearLayout).setBackground(BackgroundDrawables.createBackgroundDrawable(getResources().getColor(R.color.white), Dimensions.pxFromDp(8), false));
         View close = findViewById(R.id.iv_close);
         close.setOnClickListener(this);
         close.setBackground(BackgroundDrawables.createBackgroundDrawable(getResources().getColor(R.color.close_icon), Dimensions.pxFromDp(15), true));

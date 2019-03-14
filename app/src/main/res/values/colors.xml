@@ -211,7 +211,7 @@
     <color name="customize_bubble_color_divider">#23313131</color>
     <color name="customize_bubble_primary_text_color">#4f5157</color>
     <!--user survey-->
-    <color name="close_icon">#e4e6ee</color>
+    <color name="close_icon">#f0f2f8</color>
     <color name="like_icon">#e33232</color>
     <color name="dislike_icon">#31394d</color>
 </resources>

@@ -108,6 +108,7 @@ public class ConversationListActivity extends AbstractConversationListActivity
     private boolean mIsRealCreate = false;
     private boolean isScreenOn;
     private boolean mShowEndAnimation;
+    private LottieAnimationView emtionEndAnimation;
 
     private enum AnimState {
         NONE,
@@ -322,18 +323,20 @@ public class ConversationListActivity extends AbstractConversationListActivity
             exitMultiSelectState();
         } else {
             if (mShowRateAlert || !FiveStarRateDialog.showShowFiveStarRateDialogOnBackToDesktopIfNeed(this)) {
-                BugleAnalytics.logEvent("SMS_Messages_Back", true);
-                super.onBackPressed();
-                overridePendingTransition(0, 0);
-                if (!Preferences.getDefault().getBoolean(DragHotSeatActivity.SHOW_DRAG_HOTSEAT, false)) {
-                    Preferences.getDefault().doOnce(
-                            () -> UIIntentsImpl.get().launchDragHotSeatActivity(this),
-                            DragHotSeatActivity.SHOW_DRAG_HOTSEAT);
 
-                } else if (!Preferences.getDefault().getBoolean(UserSurveyActivity.SHOW_USER_SURVEY, false)) {
+                if (Preferences.getDefault().getBoolean(DragHotSeatActivity.SHOW_DRAG_HOTSEAT, false) && !Preferences.getDefault().getBoolean(UserSurveyActivity.SHOW_USER_SURVEY, false)) {
                     Preferences.getDefault().doOnce(
                             () -> UIIntentsImpl.get().launchUserSurveyActivity(this),
                             UserSurveyActivity.SHOW_USER_SURVEY);
+                } else {
+                    BugleAnalytics.logEvent("SMS_Messages_Back", true);
+                    super.onBackPressed();
+                    overridePendingTransition(0, 0);
+                    if (!Preferences.getDefault().getBoolean(DragHotSeatActivity.SHOW_DRAG_HOTSEAT, false)) {
+                        Preferences.getDefault().doOnce(
+                                () -> UIIntentsImpl.get().launchDragHotSeatActivity(this),
+                                DragHotSeatActivity.SHOW_DRAG_HOTSEAT);
+                    }
                 }
             } else {
                 mShowRateAlert = true;
@@ -412,6 +415,7 @@ public class ConversationListActivity extends AbstractConversationListActivity
         mTitleTextView = findViewById(R.id.toolbar_title);
         mAnimHandler = new Handler();
         mGuideContainer = findViewById(R.id.emoji_store_guide_content);
+        emtionEndAnimation = findViewById(R.id.emoji_store_guide_end);
         mTriangleShape = findViewById(R.id.emoji_store_guide_triangle);
         mEmojiStoreIconView = findViewById(R.id.emoji_store_icon);
         mEmojiStoreIconView.setScaleX(1f);
@@ -567,20 +571,24 @@ public class ConversationListActivity extends AbstractConversationListActivity
     }
 
     private void hideStoreGuide() {
-        mGuideContainer.clearAnimation();
         mAnimState = AnimState.DISAPPEAR;
-        mGuideContainer.setImageAssetsFolder("lottie/emoj_bubble_dismiss/");
-        mGuideContainer.setAnimation("lottie/emoj_bubble_dismiss.json");
-        mGuideContainer.addAnimatorListener(new AnimatorListenerAdapter() {
+        emtionEndAnimation.setVisibility(View.VISIBLE);
+        emtionEndAnimation.setImageAssetsFolder("lottie/emoj_bubble_dismiss/");
+        emtionEndAnimation.setAnimation("lottie/emoj_bubble_dismiss.json");
+        emtionEndAnimation.addAnimatorListener(new AnimatorListenerAdapter() {
             @Override
             public void onAnimationEnd(Animator animation) {
                 super.onAnimationEnd(animation);
-                mGuideContainer.setVisibility(View.GONE);
+                emtionEndAnimation.setVisibility(View.GONE);
                 mAnimState = AnimState.NONE;
                 mShowEndAnimation = false;
             }
         });
-        mGuideContainer.playAnimation();
+        emtionEndAnimation.playAnimation();
+        mAnimHandler.postDelayed(() -> {
+            mGuideContainer.setVisibility(View.GONE);
+        }, 500L);
+
 
        /* mAnimState = AnimState.DISAPPEAR;
         mAnimHandler.removeCallbacksAndMessages(null);

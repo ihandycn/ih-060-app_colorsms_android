@@ -24,8 +24,6 @@
         android:id="@android:id/list"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingTop="@dimen/conversation_list_first_item_extra_padding"
-        android:clipToPadding="false"
         android:listSelector="?android:attr/listSelector"
         android:dividerHeight="0px" />
 
