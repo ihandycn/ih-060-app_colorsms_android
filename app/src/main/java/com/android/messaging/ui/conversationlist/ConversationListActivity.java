@@ -18,17 +18,12 @@ package com.android.messaging.ui.conversationlist;
 
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
-import android.animation.ValueAnimator;
 import android.content.Intent;
-import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.support.design.widget.NavigationView;
-import android.support.v4.view.animation.PathInterpolatorCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -65,7 +60,6 @@ import com.android.messaging.ui.wallpaper.WallpaperManager;
 import com.android.messaging.ui.wallpaper.WallpaperPreviewActivity;
 import com.android.messaging.util.BugleAnalytics;
 import com.android.messaging.util.Trace;
-import com.android.messaging.util.UiUtils;
 import com.ihs.commons.notificationcenter.HSGlobalNotificationCenter;
 import com.ihs.commons.notificationcenter.INotificationObserver;
 import com.ihs.commons.utils.HSBundle;
@@ -104,6 +98,7 @@ public class ConversationListActivity extends AbstractConversationListActivity
     private View mEmojiStoreCircleView;
     private LottieAnimationView mGuideContainer;
     private View mTriangleShape;
+    private View statusbarInset;
 
     private boolean mShowRateAlert = false;
 
@@ -195,21 +190,14 @@ public class ConversationListActivity extends AbstractConversationListActivity
 
     @Override
     protected void updateActionBar(final ActionBar actionBar) {
+        statusbarInset.setBackgroundColor(PrimaryColors.getPrimaryColor());
+
         actionBar.setTitle("");
         actionBar.setDisplayShowTitleEnabled(false);
         actionBar.setDisplayHomeAsUpEnabled(false);
         actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
-        try {
-            actionBar.setBackgroundDrawable(new ColorDrawable(PrimaryColors.getPrimaryColor()));
-            UiUtils.setStatusBarColor(this, PrimaryColors.getPrimaryColorDark());
-        } catch (IllegalArgumentException e) {
-            actionBar.setBackgroundDrawable(new ColorDrawable(getResources().getColor(R.color.action_bar_background_color)));
-            UiUtils.setStatusBarColor(this, getResources().getColor(R.color.action_bar_background_color));
-
-        }
-
+        actionBar.setBackgroundDrawable(new ColorDrawable(PrimaryColors.getPrimaryColor()));
         actionBar.show();
-        //update statusBar color
 
         if (mTitleTextView != null && mTitleTextView.getVisibility() == View.GONE) {
             mTitleTextView.setVisibility(View.VISIBLE);
@@ -406,6 +394,11 @@ public class ConversationListActivity extends AbstractConversationListActivity
     }
 
     private void configAppBar() {
+        statusbarInset = findViewById(R.id.status_bar_inset);
+        ViewGroup.LayoutParams layoutParams = statusbarInset.getLayoutParams();
+        layoutParams.height = Dimensions.getStatusBarHeight(ConversationListActivity.this);
+        statusbarInset.setLayoutParams(layoutParams);
+
         Toolbar toolbar = findViewById(R.id.toolbar);
         toolbar.setTitle("");
         toolbar.setContentInsetsRelative(0, 0);

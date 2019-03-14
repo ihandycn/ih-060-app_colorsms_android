@@ -30,7 +30,6 @@
     <!-- Application theme. -->
     <style name="BugleTheme" parent="BugleBaseTheme">
         <!-- All customizations that are NOT specific to a particular API-level can go here. -->
-        <item name="android:windowLightStatusBar">true</item>
         <item name="android:dropDownListViewStyle">@style/DropDownListViewStyle</item>
         <item name="colorPrimary">@color/action_bar_background_color</item>
         <item name="colorPrimaryDark">@color/action_bar_background_color_dark</item>
@@ -68,7 +67,8 @@
     <style name="BugleTheme.ConversationListActivity" parent="BugleTheme">
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
-        <item name="android:windowBackground">@android:color/background_light</item>
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="android:windowTranslucentStatus">true</item>
     </style>
 
     <style name="BugleTheme.ArchivedConversationListActivity" parent="BugleTheme.ConversationListActivity">
