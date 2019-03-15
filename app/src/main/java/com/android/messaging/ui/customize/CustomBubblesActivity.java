@@ -212,7 +212,7 @@ public class CustomBubblesActivity extends BaseActivity implements CustomMessage
         mSaveButton.setBackground(BackgroundDrawables
                 .createBackgroundDrawable(0xffffffff, Dimensions.pxFromDp(25), false));
         mSaveButton.setEnabled(false);
-        mSaveButton.setTextColor(0x80131313);
+        mSaveButton.setTextColor(0x66131313);
     }
 
     private String getOpenSourceType() {

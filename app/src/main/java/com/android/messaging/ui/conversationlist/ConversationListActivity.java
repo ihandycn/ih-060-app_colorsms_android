@@ -30,6 +30,7 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.AppCompatDrawableManager;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.ActionMode;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -63,6 +64,7 @@ import com.android.messaging.util.Trace;
 import com.ihs.commons.notificationcenter.HSGlobalNotificationCenter;
 import com.ihs.commons.notificationcenter.INotificationObserver;
 import com.ihs.commons.utils.HSBundle;
+import com.messagecenter.util.Utils;
 import com.superapps.font.FontStyleManager;
 import com.superapps.util.Dimensions;
 import com.superapps.util.Navigations;
@@ -108,7 +110,6 @@ public class ConversationListActivity extends AbstractConversationListActivity
     private boolean mIsRealCreate = false;
     private boolean isScreenOn;
     private boolean mShowEndAnimation;
-    private LottieAnimationView emtionEndAnimation;
 
     private enum AnimState {
         NONE,
@@ -191,7 +192,7 @@ public class ConversationListActivity extends AbstractConversationListActivity
 
     @Override
     protected void updateActionBar(final ActionBar actionBar) {
-        statusbarInset.setBackgroundColor(PrimaryColors.getPrimaryColor());
+        statusbarInset.setBackgroundColor(PrimaryColors.getPrimaryColorDark());
 
         actionBar.setTitle("");
         actionBar.setDisplayShowTitleEnabled(false);
@@ -323,8 +324,8 @@ public class ConversationListActivity extends AbstractConversationListActivity
             exitMultiSelectState();
         } else {
             if (mShowRateAlert || !FiveStarRateDialog.showShowFiveStarRateDialogOnBackToDesktopIfNeed(this)) {
+                if (!Utils.isNewUser() && Preferences.getDefault().getBoolean(DragHotSeatActivity.SHOW_DRAG_HOTSEAT, false) && !Preferences.getDefault().getBoolean(UserSurveyActivity.SHOW_USER_SURVEY, false)) {
 
-                if (Preferences.getDefault().getBoolean(DragHotSeatActivity.SHOW_DRAG_HOTSEAT, false) && !Preferences.getDefault().getBoolean(UserSurveyActivity.SHOW_USER_SURVEY, false)) {
                     Preferences.getDefault().doOnce(
                             () -> UIIntentsImpl.get().launchUserSurveyActivity(this),
                             UserSurveyActivity.SHOW_USER_SURVEY);
@@ -415,7 +416,6 @@ public class ConversationListActivity extends AbstractConversationListActivity
         mTitleTextView = findViewById(R.id.toolbar_title);
         mAnimHandler = new Handler();
         mGuideContainer = findViewById(R.id.emoji_store_guide_content);
-        emtionEndAnimation = findViewById(R.id.emoji_store_guide_end);
         mTriangleShape = findViewById(R.id.emoji_store_guide_triangle);
         mEmojiStoreIconView = findViewById(R.id.emoji_store_icon);
         mEmojiStoreIconView.setScaleX(1f);
@@ -486,6 +486,9 @@ public class ConversationListActivity extends AbstractConversationListActivity
             public void onAnimationEnd(Animator animation) {
                 super.onAnimationEnd(animation);
                 mAnimState = AnimState.NONE;
+                if (mGuideContainer.getProgress() >= 0.85f) {
+                    mGuideContainer.setVisibility(View.GONE);
+                }
                 if (mShowEndAnimation) {
                     hideStoreGuide();
                 }
@@ -497,120 +500,15 @@ public class ConversationListActivity extends AbstractConversationListActivity
                 mAnimState = AnimState.SHOWING;
             }
         });
+        mGuideContainer.setMaxProgress(0.85f);
         mGuideContainer.playAnimation();
 
-       /* mAnimState = AnimState.APPEAR;
-        mEmojiStoreCircleView = findViewById(R.id.emoji_store_circle);
-
-        mAnimHandler.postDelayed(() -> {
-            mEmojiStoreCircleView.setVisibility(View.VISIBLE);
-            mEmojiStoreCircleView.setScaleX(0.9f);
-            mEmojiStoreCircleView.setScaleY(0.9f);
-            mEmojiStoreCircleView.setAlpha(1f);
-            mEmojiStoreCircleView.animate()
-                    .scaleX(2.2f)
-                    .scaleY(2.2f)
-                    .alpha(0f)
-                    .setDuration(1000L)
-                    .setInterpolator(PathInterpolatorCompat.create(0.1f, 0.95f))
-                    .withEndAction(() -> mEmojiStoreCircleView.setVisibility(View.GONE))
-                    .start();
-        }, 800L);
-
-        mAnimHandler.postDelayed(() -> {
-            for (int i = 0; i < mGuideContainer.getChildCount(); i++) {
-                mGuideContainer.getChildAt(i).setVisibility(View.VISIBLE);
-            }
-        }, 1750L);
-
-        mAnimHandler.postDelayed(() -> {
-            mGuideContainer.setVisibility(View.VISIBLE);
-            mGuideContainer.setScaleX(0f);
-            mGuideContainer.setScaleY(0.7f);
-            mGuideContainer.setPivotX(mGuideContainer.getWidth());
-            mGuideContainer.setPivotY(mGuideContainer.getHeight() / 2);
-
-            ValueAnimator widthAnimator = ValueAnimator.ofFloat(0f, .85f);
-            widthAnimator.setDuration(350L);
-            widthAnimator.setInterpolator(PathInterpolatorCompat.create(.7f, 2.02f, .57f, 1f));
-            widthAnimator.addUpdateListener(v -> mGuideContainer.setScaleX((Float) v.getAnimatedValue()));
-            widthAnimator.start();
-
-            ValueAnimator heightAnimator = ValueAnimator.ofFloat(0.7f, 0.9f);
-            heightAnimator.setDuration(350L);
-            heightAnimator.setInterpolator(PathInterpolatorCompat.create(0.35f, 3.56f, .56f, 1f));
-            heightAnimator.addUpdateListener(v -> mGuideContainer.setScaleY((Float) v.getAnimatedValue()));
-            heightAnimator.start();
-        }, 1500L);
-
-        mAnimHandler.postDelayed(() -> {
-            mGuideContainer.setPivotX(mGuideContainer.getWidth());
-            ValueAnimator widthAnimator = ValueAnimator.ofFloat(.85f, 1f);
-            widthAnimator.setDuration(200L);
-            widthAnimator.setInterpolator(PathInterpolatorCompat.create(.23f, 0f, .71f, 1.0f));
-            widthAnimator.addUpdateListener(v -> mGuideContainer.setScaleX((Float) v.getAnimatedValue()));
-            widthAnimator.start();
-
-            ValueAnimator heightAnimator = ValueAnimator.ofFloat(0.9f, 1f);
-            heightAnimator.setDuration(200L);
-            heightAnimator.setInterpolator(PathInterpolatorCompat.create(.45f, 0f, .66f, 2.0f));
-            heightAnimator.addUpdateListener(v -> mGuideContainer.setScaleY((Float) v.getAnimatedValue()));
-            heightAnimator.start();
-
-            mTriangleShape.setVisibility(View.VISIBLE);
-            mTriangleShape.setScaleX(0);
-            mTriangleShape.setPivotX(0);
-            ValueAnimator triangleAnimator = ValueAnimator.ofFloat(0f, 1f);
-            triangleAnimator.setDuration(200L);
-            triangleAnimator.setInterpolator(PathInterpolatorCompat.create(.6f, 1.8f));
-            triangleAnimator.addUpdateListener(v -> mTriangleShape.setScaleX((Float) v.getAnimatedValue()));
-            triangleAnimator.start();
-        }, 1850L);
-
-        mAnimHandler.postDelayed(() -> mAnimState = AnimState.SHOWING, 2050L);*/
     }
 
     private void hideStoreGuide() {
         mAnimState = AnimState.DISAPPEAR;
-        emtionEndAnimation.setVisibility(View.VISIBLE);
-        emtionEndAnimation.setImageAssetsFolder("lottie/emoj_bubble_dismiss/");
-        emtionEndAnimation.setAnimation("lottie/emoj_bubble_dismiss.json");
-        emtionEndAnimation.addAnimatorListener(new AnimatorListenerAdapter() {
-            @Override
-            public void onAnimationEnd(Animator animation) {
-                super.onAnimationEnd(animation);
-                emtionEndAnimation.setVisibility(View.GONE);
-                mAnimState = AnimState.NONE;
-                mShowEndAnimation = false;
-            }
-        });
-        emtionEndAnimation.playAnimation();
-        mAnimHandler.postDelayed(() -> {
-            mGuideContainer.setVisibility(View.GONE);
-        }, 500L);
-
-
-       /* mAnimState = AnimState.DISAPPEAR;
-        mAnimHandler.removeCallbacksAndMessages(null);
-        mGuideContainer.animate()
-                .scaleX(0f)
-                .setDuration(250L)
-                .setInterpolator(PathInterpolatorCompat.create(.23f, 0f, .71f, 1.0f))
-                .start();
-        mAnimHandler.postDelayed(() -> {
-            for (int i = 0; i < mGuideContainer.getChildCount(); i++) {
-                mGuideContainer.getChildAt(i).setVisibility(View.INVISIBLE);
-            }
-            mTriangleShape.animate()
-                    .scaleX(0f)
-                    .setDuration(100L)
-                    .start();
-        }, 150L);
-        mAnimHandler.postDelayed(() -> {
-            mGuideContainer.setVisibility(View.GONE);
-            mTriangleShape.setVisibility(View.GONE);
-            mAnimState = AnimState.NONE;
-        }, 250L);*/
+        mGuideContainer.setMaxProgress(1f);
+        mGuideContainer.resumeAnimation();
     }
 
     @Override
