@@ -20,6 +20,7 @@ import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.content.Intent;
 import android.graphics.Rect;
+import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
@@ -41,6 +42,7 @@ import com.android.messaging.ui.contact.ContactPickerFragment.ContactPickerFragm
 import com.android.messaging.ui.conversation.ConversationActivityUiState.ConversationActivityUiStateHost;
 import com.android.messaging.ui.conversation.ConversationFragment.ConversationFragmentHost;
 import com.android.messaging.ui.conversationlist.ConversationListActivity;
+import com.android.messaging.ui.customize.PrimaryColors;
 import com.android.messaging.util.Assert;
 import com.android.messaging.util.BugleAnalytics;
 import com.android.messaging.util.ContentType;
@@ -220,8 +222,17 @@ public class ConversationActivity extends BugleActionBarActivity
         } else if (conversation != null && mUiState.shouldShowConversationFragment()) {
             conversation.updateActionBar(actionBar, mTitleTextView);
         }
-        //update statusBar color
-        UiUtils.setStatusBarColor(this, getResources().getColor(R.color.action_bar_background_color));
+
+        try {
+            actionBar.setBackgroundDrawable(new ColorDrawable(PrimaryColors.getPrimaryColor()));
+            UiUtils.setStatusBarColor(this, PrimaryColors.getPrimaryColorDark());
+
+        } catch (IllegalArgumentException e) {
+            actionBar.setBackgroundDrawable(new ColorDrawable(getResources().getColor(R.color.action_bar_background_color)));
+            UiUtils.setStatusBarColor(this, PrimaryColors.getPrimaryColorDark());
+
+        }
+
     }
 
     @Override

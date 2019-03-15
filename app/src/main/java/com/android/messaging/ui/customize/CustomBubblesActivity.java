@@ -61,8 +61,6 @@ public class CustomBubblesActivity extends BaseActivity implements CustomMessage
         setContentView(R.layout.customize_bubbles_activity);
         initActionBar();
 
-        UiUtils.setStatusBarColor(this, getResources().getColor(R.color.action_bar_background_color));
-
         mConversationId = getIntent().getStringExtra(UIIntents.UI_INTENT_EXTRA_CONVERSATION_ID);
 
         String bgPath = WallpaperManager.getWallpaperPathByThreadId(mConversationId);
@@ -146,11 +144,11 @@ public class CustomBubblesActivity extends BaseActivity implements CustomMessage
         Toolbar toolbar = findViewById(R.id.toolbar);
         toolbar.setTitle("");
         setSupportActionBar(toolbar);
+        UiUtils.setTitleBarBackground(toolbar, this);
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
             actionBar.setDisplayShowHomeEnabled(true);
         }
-
         mSaveButton = findViewById(R.id.save_button);
         mSaveButton.setOnClickListener(v -> {
             save();
@@ -204,15 +202,17 @@ public class CustomBubblesActivity extends BaseActivity implements CustomMessage
     private void enableSaveButton() {
         if (!mSaveButton.isEnabled()) {
             mSaveButton.setBackground(BackgroundDrawables
-                    .createBackgroundDrawable(PrimaryColors.getPrimaryColor(), Dimensions.pxFromDp(25), true));
+                    .createBackgroundDrawable(0xffffffff, Dimensions.pxFromDp(25), true));
             mSaveButton.setEnabled(true);
+            mSaveButton.setTextColor(0xff131313);
         }
     }
 
     private void disableSaveButton() {
         mSaveButton.setBackground(BackgroundDrawables
-                .createBackgroundDrawable(0xffd8dce3, Dimensions.pxFromDp(25), false));
+                .createBackgroundDrawable(0xffffffff, Dimensions.pxFromDp(25), false));
         mSaveButton.setEnabled(false);
+        mSaveButton.setTextColor(0x66131313);
     }
 
     private String getOpenSourceType() {

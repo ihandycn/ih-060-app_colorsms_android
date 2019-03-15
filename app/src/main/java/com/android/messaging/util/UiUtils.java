@@ -25,12 +25,14 @@ import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
 import android.graphics.Color;
 import android.graphics.Rect;
+import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.text.Html;
 import android.text.Spanned;
 import android.text.TextPaint;
@@ -58,6 +60,7 @@ import com.android.messaging.ui.SnackBarInteraction;
 import com.android.messaging.ui.SnackBarManager;
 import com.android.messaging.ui.UIIntents;
 import com.android.messaging.ui.WebViewActivity;
+import com.android.messaging.ui.customize.PrimaryColors;
 import com.android.messaging.ui.welcome.WelcomePermissionActivity;
 import com.android.messaging.ui.welcome.WelcomeSetAsDefaultActivity;
 import com.android.messaging.ui.welcome.WelcomeStartActivity;
@@ -281,7 +284,7 @@ public class UiUtils {
                 location[0] + view.getMeasuredWidth(), location[1] + view.getMeasuredHeight());
     }
 
-    public static void setStatusBarColor(final Activity activity, final int color) {
+    public static void setStatusBarColor(final Activity activity, int color) {
         if (OsUtil.isAtLeastL()) {
             // we need statusbar color same as actionbar color
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
@@ -625,5 +628,16 @@ public class UiUtils {
         outCoord[0] = Math.round(pt[0]);
         outCoord[1] = Math.round(pt[1]);
         return scale;
+    }
+
+    public static void setTitleBarBackground(Toolbar toolbar, Activity activity) {
+        try {
+            toolbar.setBackground(new ColorDrawable(PrimaryColors.getPrimaryColor()));
+            setStatusBarColor(activity, PrimaryColors.getPrimaryColorDark());
+
+        } catch (IllegalArgumentException e) {
+            toolbar.setBackground(new ColorDrawable(activity.getResources().getColor(R.color.action_bar_background_color)));
+            setStatusBarColor(activity, activity.getResources().getColor(R.color.action_bar_background_color));
+        }
     }
 }

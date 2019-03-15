@@ -36,7 +36,7 @@ public class ThemeSelectActivity extends BaseActivity {
     };
 
     public static int[] COLORS = new int[]{
-            0xff1acc48,
+            0xff37a63b,
             0xff338ee4,
             0xff0098a6,
             0xffd74315,
@@ -58,6 +58,7 @@ public class ThemeSelectActivity extends BaseActivity {
 
         Toolbar toolbar = findViewById(R.id.toolbar);
         toolbar.setTitle("");
+        UiUtils.setTitleBarBackground(toolbar, this);
         TextView title = toolbar.findViewById(R.id.toolbar_title);
         title.setText(getString(R.string.menu_theme_color));
         setSupportActionBar(toolbar);
@@ -65,8 +66,6 @@ public class ThemeSelectActivity extends BaseActivity {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         }
         getSupportActionBar().setDisplayShowHomeEnabled(true);
-
-        UiUtils.setStatusBarColor(this, getResources().getColor(R.color.action_bar_background_color));
         // setup color select
         for (int i = 0; i < COLORS.length; i++) {
             findViewById(COLOR_IMG_IDS[i]).setBackground(
@@ -86,8 +85,8 @@ public class ThemeSelectActivity extends BaseActivity {
                 HSGlobalNotificationCenter.sendNotification(ConversationListActivity.EVENT_MAINPAGE_RECREATE);
 
                 BugleAnalytics.logEvent("Customize_ThemeColor_Change", true, "color", String.valueOf(getSelectedIndex()));
+                recreate();
 
-                finish();
             });
         }
 
@@ -96,6 +95,7 @@ public class ThemeSelectActivity extends BaseActivity {
 
         BugleAnalytics.logEvent("Customize_ThemeColor_Show", true);
     }
+
 
     private void refreshSelectStatus() {
         int primaryColor = PrimaryColors.getPrimaryColor();

@@ -225,7 +225,7 @@ public class ConversationListFragment extends Fragment implements ConversationLi
         mStartNewConversationButton = (ImageView) rootView.findViewById(
                 R.id.start_new_conversation_button);
         mStartNewConversationButton.setBackgroundDrawable(BackgroundDrawables.
-                createBackgroundDrawable(PrimaryColors.getPrimaryColor(),
+                createBackgroundDrawable(PrimaryColors.getEditButtonColor(),
                         Dimensions.pxFromDp(28),
                         true));
         if (mArchiveMode) {

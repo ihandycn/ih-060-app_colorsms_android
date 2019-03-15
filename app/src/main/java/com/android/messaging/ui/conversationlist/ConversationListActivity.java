@@ -16,16 +16,15 @@
 
 package com.android.messaging.ui.conversationlist;
 
-import android.animation.ValueAnimator;
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
 import android.content.Intent;
 import android.content.res.Resources;
-import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.design.widget.NavigationView;
-import android.support.v4.view.animation.PathInterpolatorCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -40,17 +39,20 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.airbnb.lottie.LottieAnimationView;
 import com.android.messaging.Factory;
 import com.android.messaging.R;
 import com.android.messaging.datamodel.BugleNotifications;
 import com.android.messaging.ui.DragHotSeatActivity;
 import com.android.messaging.ui.UIIntents;
 import com.android.messaging.ui.UIIntentsImpl;
+import com.android.messaging.ui.UserSurveyActivity;
 import com.android.messaging.ui.appsettings.ChangeFontActivity;
 import com.android.messaging.ui.appsettings.ThemeSelectActivity;
 import com.android.messaging.ui.customize.BubbleDrawables;
 import com.android.messaging.ui.customize.ConversationColors;
 import com.android.messaging.ui.customize.CustomBubblesActivity;
+import com.android.messaging.ui.customize.PrimaryColors;
 import com.android.messaging.ui.dialog.FiveStarRateDialog;
 import com.android.messaging.ui.emoji.EmojiStoreActivity;
 import com.android.messaging.ui.wallpaper.WallpaperChooserItem;
@@ -60,10 +62,10 @@ import com.android.messaging.ui.wallpaper.WallpaperPreviewActivity;
 import com.android.messaging.util.BugleAnalytics;
 import com.android.messaging.util.CommonUtils;
 import com.android.messaging.util.Trace;
-import com.android.messaging.util.UiUtils;
 import com.ihs.commons.notificationcenter.HSGlobalNotificationCenter;
 import com.ihs.commons.notificationcenter.INotificationObserver;
 import com.ihs.commons.utils.HSBundle;
+import com.messagecenter.util.Utils;
 import com.superapps.font.FontStyleManager;
 import com.superapps.util.Calendars;
 import com.superapps.util.Dimensions;
@@ -101,8 +103,9 @@ public class ConversationListActivity extends AbstractConversationListActivity
     private TextView mTitleTextView;
     private View mEmojiStoreIconView;
     private View mEmojiStoreCircleView;
-    private ViewGroup mGuideContainer;
+    private LottieAnimationView mGuideContainer;
     private View mTriangleShape;
+    private View statusbarInset;
 
     private boolean mShowRateAlert = false;
 
@@ -111,6 +114,7 @@ public class ConversationListActivity extends AbstractConversationListActivity
     private static boolean mIsNoActionBack = true;
     private boolean mIsRealCreate = false;
     private boolean isScreenOn;
+    private boolean mShowEndAnimation;
 
     private enum AnimState {
         NONE,
@@ -244,20 +248,20 @@ public class ConversationListActivity extends AbstractConversationListActivity
 
     @Override
     protected void updateActionBar(final ActionBar actionBar) {
+        statusbarInset.setBackgroundColor(PrimaryColors.getPrimaryColorDark());
+
         actionBar.setTitle("");
         actionBar.setDisplayShowTitleEnabled(false);
         actionBar.setDisplayHomeAsUpEnabled(false);
         actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
-        actionBar.setBackgroundDrawable(new ColorDrawable(
-                getResources().getColor(R.color.action_bar_background_color)));
+        actionBar.setBackgroundDrawable(new ColorDrawable(PrimaryColors.getPrimaryColor()));
         actionBar.show();
 
         if (mTitleTextView != null && mTitleTextView.getVisibility() == View.GONE) {
             mTitleTextView.setVisibility(View.VISIBLE);
             mEmojiStoreIconView.setVisibility(View.VISIBLE);
         }
-        //update statusBar color
-        UiUtils.setStatusBarColor(this, getResources().getColor(R.color.action_bar_background_color));
+
 
         super.updateActionBar(actionBar);
 
@@ -270,6 +274,7 @@ public class ConversationListActivity extends AbstractConversationListActivity
         navigationView.setPadding(0, Dimensions.getStatusBarInset(this), 0, 0);
 
         drawerLayout = findViewById(R.id.main_drawer_layout);
+        drawerLayout.setBackgroundColor(PrimaryColors.getPrimaryColor());
         ActionBarDrawerToggle drawerToggle = new ActionBarDrawerToggle(this, drawerLayout, R.string.drawer_open, R.string.drawer_close) {
             @Override
             public void onDrawerStateChanged(int newState) {
@@ -375,12 +380,21 @@ public class ConversationListActivity extends AbstractConversationListActivity
             exitMultiSelectState();
         } else {
             if (mShowRateAlert || !FiveStarRateDialog.showShowFiveStarRateDialogOnBackToDesktopIfNeed(this)) {
-                BugleAnalytics.logEvent("SMS_Messages_Back", true);
-                super.onBackPressed();
-                overridePendingTransition(0, 0);
-                Preferences.getDefault().doOnce(
-                        () -> UIIntentsImpl.get().launchDragHotSeatActivity(this),
-                        DragHotSeatActivity.SHOW_DRAG_HOTSEAT);
+                if (!Utils.isNewUser() && Preferences.getDefault().getBoolean(DragHotSeatActivity.SHOW_DRAG_HOTSEAT, false) && !Preferences.getDefault().getBoolean(UserSurveyActivity.SHOW_USER_SURVEY, false)) {
+
+                    Preferences.getDefault().doOnce(
+                            () -> UIIntentsImpl.get().launchUserSurveyActivity(this),
+                            UserSurveyActivity.SHOW_USER_SURVEY);
+                } else {
+                    BugleAnalytics.logEvent("SMS_Messages_Back", true);
+                    super.onBackPressed();
+                    overridePendingTransition(0, 0);
+                    if (!Preferences.getDefault().getBoolean(DragHotSeatActivity.SHOW_DRAG_HOTSEAT, false)) {
+                        Preferences.getDefault().doOnce(
+                                () -> UIIntentsImpl.get().launchDragHotSeatActivity(this),
+                                DragHotSeatActivity.SHOW_DRAG_HOTSEAT);
+                    }
+                }
             } else {
                 mShowRateAlert = true;
             }
@@ -440,14 +454,17 @@ public class ConversationListActivity extends AbstractConversationListActivity
     }
 
     private void configAppBar() {
+        statusbarInset = findViewById(R.id.status_bar_inset);
+        ViewGroup.LayoutParams layoutParams = statusbarInset.getLayoutParams();
+        layoutParams.height = Dimensions.getStatusBarHeight(ConversationListActivity.this);
+        statusbarInset.setLayoutParams(layoutParams);
+
         Toolbar toolbar = findViewById(R.id.toolbar);
         toolbar.setTitle("");
         toolbar.setContentInsetsRelative(0, 0);
         LayoutInflater.from(this).inflate(R.layout.conversation_list_toolbar_layout, toolbar, true);
-        toolbar.setBackgroundColor(Color.WHITE);
         setSupportActionBar(toolbar);
         invalidateActionBar();
-
         setupToolbarUI();
     }
 
@@ -515,106 +532,51 @@ public class ConversationListActivity extends AbstractConversationListActivity
         if (!isShowEmojiGuide) {
             return;
         }
-        Preferences.getDefault().putBoolean(PREF_SHOW_EMOJI_GUIDE, false);
         mAnimState = AnimState.APPEAR;
-        mEmojiStoreCircleView = findViewById(R.id.emoji_store_circle);
-
-        mAnimHandler.postDelayed(() -> {
-            mEmojiStoreCircleView.setVisibility(View.VISIBLE);
-            mEmojiStoreCircleView.setScaleX(0.9f);
-            mEmojiStoreCircleView.setScaleY(0.9f);
-            mEmojiStoreCircleView.setAlpha(1f);
-            mEmojiStoreCircleView.animate()
-                    .scaleX(2.2f)
-                    .scaleY(2.2f)
-                    .alpha(0f)
-                    .setDuration(1000L)
-                    .setInterpolator(PathInterpolatorCompat.create(0.1f, 0.95f))
-                    .withEndAction(() -> mEmojiStoreCircleView.setVisibility(View.GONE))
-                    .start();
-        }, 800L);
-
-        mAnimHandler.postDelayed(() -> {
-            for (int i = 0; i < mGuideContainer.getChildCount(); i++) {
-                mGuideContainer.getChildAt(i).setVisibility(View.VISIBLE);
+        mGuideContainer.setVisibility(View.VISIBLE);
+        Preferences.getDefault().putBoolean(PREF_SHOW_EMOJI_GUIDE, false);
+        mGuideContainer.setImageAssetsFolder("lottie/show_emoj_bubble/");
+        mGuideContainer.setAnimation("lottie/show_emoj_bubble.json");
+        mGuideContainer.addAnimatorListener(new AnimatorListenerAdapter() {
+            @Override
+            public void onAnimationEnd(Animator animation) {
+                super.onAnimationEnd(animation);
+                mAnimState = AnimState.NONE;
+                if (mGuideContainer.getProgress() >= 0.85f) {
+                    mGuideContainer.setVisibility(View.GONE);
+                }
+                if (mShowEndAnimation) {
+                    hideStoreGuide();
+                }
             }
-        }, 1750L);
 
-        mAnimHandler.postDelayed(() -> {
-            mGuideContainer.setVisibility(View.VISIBLE);
-            mGuideContainer.setScaleX(0f);
-            mGuideContainer.setScaleY(0.7f);
-            mGuideContainer.setPivotX(mGuideContainer.getWidth());
-            mGuideContainer.setPivotY(mGuideContainer.getHeight() / 2);
+            @Override
+            public void onAnimationStart(Animator animation) {
+                super.onAnimationStart(animation);
+                mAnimState = AnimState.SHOWING;
+            }
+        });
+        mGuideContainer.setMaxProgress(0.85f);
+        mGuideContainer.playAnimation();
 
-            ValueAnimator widthAnimator = ValueAnimator.ofFloat(0f, .85f);
-            widthAnimator.setDuration(350L);
-            widthAnimator.setInterpolator(PathInterpolatorCompat.create(.7f, 2.02f, .57f, 1f));
-            widthAnimator.addUpdateListener(v -> mGuideContainer.setScaleX((Float) v.getAnimatedValue()));
-            widthAnimator.start();
-
-            ValueAnimator heightAnimator = ValueAnimator.ofFloat(0.7f, 0.9f);
-            heightAnimator.setDuration(350L);
-            heightAnimator.setInterpolator(PathInterpolatorCompat.create(0.35f, 3.56f, .56f, 1f));
-            heightAnimator.addUpdateListener(v -> mGuideContainer.setScaleY((Float) v.getAnimatedValue()));
-            heightAnimator.start();
-        }, 1500L);
-
-        mAnimHandler.postDelayed(() -> {
-            mGuideContainer.setPivotX(mGuideContainer.getWidth());
-            ValueAnimator widthAnimator = ValueAnimator.ofFloat(.85f, 1f);
-            widthAnimator.setDuration(200L);
-            widthAnimator.setInterpolator(PathInterpolatorCompat.create(.23f, 0f, .71f, 1.0f));
-            widthAnimator.addUpdateListener(v -> mGuideContainer.setScaleX((Float) v.getAnimatedValue()));
-            widthAnimator.start();
-
-            ValueAnimator heightAnimator = ValueAnimator.ofFloat(0.9f, 1f);
-            heightAnimator.setDuration(200L);
-            heightAnimator.setInterpolator(PathInterpolatorCompat.create(.45f, 0f, .66f, 2.0f));
-            heightAnimator.addUpdateListener(v -> mGuideContainer.setScaleY((Float) v.getAnimatedValue()));
-            heightAnimator.start();
-
-            mTriangleShape.setVisibility(View.VISIBLE);
-            mTriangleShape.setScaleX(0);
-            mTriangleShape.setPivotX(0);
-            ValueAnimator triangleAnimator = ValueAnimator.ofFloat(0f, 1f);
-            triangleAnimator.setDuration(200L);
-            triangleAnimator.setInterpolator(PathInterpolatorCompat.create(.6f, 1.8f));
-            triangleAnimator.addUpdateListener(v -> mTriangleShape.setScaleX((Float) v.getAnimatedValue()));
-            triangleAnimator.start();
-        }, 1850L);
-
-        mAnimHandler.postDelayed(() -> mAnimState = AnimState.SHOWING, 2050L);
     }
 
     private void hideStoreGuide() {
         mAnimState = AnimState.DISAPPEAR;
-        mAnimHandler.removeCallbacksAndMessages(null);
-        mGuideContainer.animate()
-                .scaleX(0f)
-                .setDuration(250L)
-                .setInterpolator(PathInterpolatorCompat.create(.23f, 0f, .71f, 1.0f))
-                .start();
-        mAnimHandler.postDelayed(() -> {
-            for (int i = 0; i < mGuideContainer.getChildCount(); i++) {
-                mGuideContainer.getChildAt(i).setVisibility(View.INVISIBLE);
-            }
-            mTriangleShape.animate()
-                    .scaleX(0f)
-                    .setDuration(100L)
-                    .start();
-        }, 150L);
-        mAnimHandler.postDelayed(() -> {
-            mGuideContainer.setVisibility(View.GONE);
-            mTriangleShape.setVisibility(View.GONE);
-            mAnimState = AnimState.NONE;
-        }, 250L);
+        mGuideContainer.setMaxProgress(1f);
+        mGuideContainer.resumeAnimation();
     }
 
     @Override
     public boolean dispatchTouchEvent(MotionEvent event) {
-        if (mAnimState == AnimState.SHOWING) {
-            hideStoreGuide();
+
+        if (mGuideContainer.getVisibility() == View.VISIBLE) {
+            if (mAnimState == AnimState.SHOWING) {
+                mShowEndAnimation = true;
+            } else {
+                hideStoreGuide();
+            }
+
         }
         return super.dispatchTouchEvent(event);
     }
@@ -703,4 +665,5 @@ public class ConversationListActivity extends AbstractConversationListActivity
         super.onSaveInstanceState(outState);
         outState.putBoolean("is_activity_restart", true);
     }
+
 }

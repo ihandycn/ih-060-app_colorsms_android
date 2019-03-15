@@ -17,6 +17,7 @@ import com.android.messaging.util.Assert;
 import com.android.messaging.util.BugleAnalytics;
 import com.android.messaging.util.BuglePrefs;
 import com.android.messaging.util.PhoneUtils;
+import com.android.messaging.util.UiUtils;
 import com.ihs.app.framework.activity.HSAppCompatActivity;
 
 public class SettingAdvancedActivity extends BaseActivity {
@@ -36,6 +37,7 @@ public class SettingAdvancedActivity extends BaseActivity {
         TextView title = toolbar.findViewById(R.id.toolbar_title);
         title.setText(getString(R.string.advanced_settings_activity_title));
         toolbar.setTitle("");
+        UiUtils.setTitleBarBackground(toolbar, this);
         setSupportActionBar(toolbar);
         if (getSupportActionBar() != null) {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);

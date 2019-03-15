@@ -28,11 +28,11 @@
         android:clipChildren="false"
         android:gravity="center_vertical|start"
         android:orientation="horizontal"
-        android:paddingBottom="@dimen/conversation_list_item_view_padding_top"
-        android:paddingEnd="@dimen/conversation_list_item_view_padding"
         android:paddingStart="@dimen/conversation_list_item_view_padding"
         android:paddingTop="@dimen/conversation_list_item_view_padding_top"
-        android:visibility="gone">
+        android:paddingEnd="@dimen/conversation_list_item_view_padding"
+        android:paddingBottom="@dimen/conversation_list_item_view_padding_top"
+        android:visibility="visible">
 
         <ImageView
             android:id="@+id/crossSwipeArchiveIconLeft"
@@ -76,10 +76,10 @@
             android:clipToPadding="false"
             android:duplicateParentState="true"
             android:orientation="horizontal"
-            android:paddingBottom="@dimen/conversation_list_item_view_padding_top"
-            android:paddingEnd="@dimen/conversation_list_item_view_padding"
             android:paddingStart="@dimen/conversation_list_item_view_padding"
-            android:paddingTop="@dimen/conversation_list_item_view_padding_top">
+            android:paddingTop="@dimen/conversation_list_item_view_padding_top"
+            android:paddingEnd="@dimen/conversation_list_item_view_padding"
+            android:paddingBottom="@dimen/conversation_list_item_view_padding_top">
 
             <!-- Contact avatar on the left side of the view -->
             <FrameLayout
@@ -112,9 +112,9 @@
                     android:layout_width="@dimen/conversation_list_error_icon_size"
                     android:layout_height="@dimen/conversation_list_error_icon_size"
                     android:layout_gravity="bottom|end"
-                    android:layout_marginBottom="-2dp"
                     android:layout_marginEnd="-5dp"
                     android:layout_marginRight="-5dp"
+                    android:layout_marginBottom="-2dp"
                     android:background="@android:color/transparent"
                     android:contentDescription="@null"
                     android:importantForAccessibility="no"
@@ -126,10 +126,11 @@
             <LinearLayout
                 style="@style/ConversationListItemViewPaddingStyle"
                 android:layout_width="0dp"
-                android:layout_height="wrap_content"
+                android:layout_height="@dimen/conversation_list_contact_icon_size"
                 android:layout_gravity="top"
                 android:layout_weight="1"
                 android:background="@android:color/transparent"
+                android:clipChildren="false"
                 android:orientation="vertical">
 
                 <LinearLayout
@@ -162,9 +163,9 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_gravity="center_vertical"
-                            android:paddingBottom="2dp"
+                            android:includeFontPadding="false"
                             android:singleLine="true"
-                            app:typeface="@string/custom_font_medium" />
+                            app:typeface="@string/custom_font_semibold" />
                     </LinearLayout>
 
                     <ImageView
@@ -180,30 +181,39 @@
 
                 <com.superapps.view.TypefacedTextView
                     android:id="@+id/conversation_subject"
-                    style="@style/ConversationListItemViewTextStyle"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:ellipsize="end"
-                    android:paddingBottom="3dp"
                     android:singleLine="true"
+                    android:textColor="#19191c"
+                    android:textSize="16sp"
                     android:visibility="gone"
-                    app:typeface="@string/custom_font_regular" />
+                    app:typeface="@string/custom_font_semibold" />
 
-                <com.superapps.view.TypefacedTextView
-                    android:id="@+id/conversation_snippet"
-                    style="@style/ConversationListItemViewTextStyle"
+                <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:ellipsize="end"
-                    android:paddingBottom="3dp"
-                    android:textSize="13sp"
-                    app:typeface="@string/custom_font_regular" />
+                    android:layout_height="match_parent"
+                    android:gravity="bottom">
+
+                    <com.superapps.view.TypefacedTextView
+                        android:id="@+id/conversation_snippet"
+                        style="@style/ConversationListItemViewTextStyle"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:ellipsize="end"
+                        android:includeFontPadding="false"
+                        android:textColor="#878a95"
+                        android:textSize="13sp"
+                        app:typeface="@string/custom_font_regular" />
+                </LinearLayout>
+
+
             </LinearLayout>
 
             <!-- The attachment preview on the right side of the view -->
             <FrameLayout
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:layout_gravity="top|end"
                 android:background="@android:color/transparent">
 
@@ -236,8 +246,7 @@
                     android:id="@+id/conversation_unread_messages_count"
                     android:layout_width="21dp"
                     android:layout_height="21dp"
-                    android:layout_gravity="end|top"
-                    android:layout_marginTop="20dp"
+                    android:layout_gravity="bottom|center_horizontal"
                     android:gravity="center"
                     android:includeFontPadding="false"
                     android:textColor="@android:color/white"

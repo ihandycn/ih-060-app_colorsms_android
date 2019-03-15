@@ -2,6 +2,7 @@ package com.android.messaging.ui.customize;
 
 import android.graphics.Color;
 import android.support.annotation.ColorInt;
+import android.support.v4.graphics.ColorUtils;
 
 import com.android.messaging.Factory;
 import com.android.messaging.R;
@@ -34,5 +35,24 @@ public class PrimaryColors {
     @ColorInt
     public static int getSoundLevelPrimaryColor() {
         return getPrimaryColor() & 0x33ffffff;
+    }
+
+    @ColorInt
+    public static int getContactIconColor() {
+        float[] hsv = new float[3];
+        Color.colorToHSV(getPrimaryColor(), hsv); // convert to hsv
+        hsv[1] = hsv[1] / 1.48f;
+        hsv[2] = hsv[2] * 1.18f;
+        return Color.HSVToColor(hsv);
+    }
+
+
+    @ColorInt
+    public static int getEditButtonColor() {
+        float[] hsv = new float[3];
+        Color.colorToHSV(getPrimaryColor(), hsv); // convert to hsv
+        hsv[1] = hsv[1] / 1.13f;
+        hsv[2] = hsv[2] * 1.26f;
+        return Color.HSVToColor(hsv);
     }
 }

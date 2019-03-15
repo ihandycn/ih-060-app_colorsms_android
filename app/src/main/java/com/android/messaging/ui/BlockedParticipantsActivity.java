@@ -25,6 +25,7 @@ import android.widget.TextView;
 
 import com.android.messaging.BaseActivity;
 import com.android.messaging.R;
+import com.android.messaging.util.UiUtils;
 
 /**
  * Show a list of currently blocked participants.
@@ -40,6 +41,7 @@ public class BlockedParticipantsActivity extends BaseActivity {
         TextView title = toolbar.findViewById(R.id.toolbar_title);
         title.setText(getString(R.string.blocked_contacts_title));
         toolbar.setTitle("");
+        UiUtils.setTitleBarBackground(toolbar, this);
         setSupportActionBar(toolbar);
         if (getSupportActionBar() != null) {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);

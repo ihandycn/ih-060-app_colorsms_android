@@ -43,12 +43,12 @@ public class PeopleAndOptionsActivity extends BaseActivity {
         toolbar.setTitle("");
         TextView title = toolbar.findViewById(R.id.toolbar_title);
         title.setText(getString(R.string.people_and_options_activity_title));
+        UiUtils.setTitleBarBackground(toolbar, this);
         setSupportActionBar(toolbar);
         if (getSupportActionBar() != null) {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         }
         getSupportActionBar().setDisplayShowHomeEnabled(true);
-        UiUtils.setStatusBarColor(this, getResources().getColor(R.color.action_bar_background_color));
     }
 
     @Override

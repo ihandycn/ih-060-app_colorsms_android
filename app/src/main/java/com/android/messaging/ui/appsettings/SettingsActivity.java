@@ -27,6 +27,7 @@ import com.android.messaging.ui.UIIntents;
 import com.android.messaging.util.Assert;
 import com.android.messaging.util.BugleAnalytics;
 import com.android.messaging.util.PhoneUtils;
+import com.android.messaging.util.UiUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -54,6 +55,7 @@ public class SettingsActivity extends AppCompatActivity {
             Toolbar toolbar = findViewById(R.id.toolbar);
             toolbar.setTitle("");
             TextView title = toolbar.findViewById(R.id.toolbar_title);
+            UiUtils.setTitleBarBackground(toolbar, this);
             title.setText(getString(R.string.settings_activity_title));
             setSupportActionBar(toolbar);
             if (getSupportActionBar() != null) {
@@ -127,7 +129,8 @@ public class SettingsActivity extends AppCompatActivity {
             }
 
             @Override
-            public @NonNull View getView(final int position, final View convertView, final ViewGroup parent) {
+            public @NonNull
+            View getView(final int position, final View convertView, final ViewGroup parent) {
                 SettingItemView itemView;
                 if (convertView != null) {
                     itemView = (SettingItemView) convertView;

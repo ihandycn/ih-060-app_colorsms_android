@@ -50,7 +50,7 @@ public class ChangeFontActivity extends BaseActivity implements LevelSeekBar.OnL
         }
         getSupportActionBar().setDisplayShowHomeEnabled(true);
 
-        UiUtils.setStatusBarColor(this, getResources().getColor(R.color.action_bar_background_color));
+        UiUtils.setTitleBarBackground(toolbar, this);
 
         String bgPath = WallpaperManager.getWallpaperPathByThreadId(null);
         if (!TextUtils.isEmpty(bgPath)) {

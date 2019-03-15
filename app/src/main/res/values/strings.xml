@@ -919,7 +919,7 @@
     <!-- The accessibility text read when the sim chooser pops up to read the current selected sim -->
     <string name="selected_sim_content_message"><xliff:g id="selected_sim">%s</xliff:g> selected</string>
 
-    <string name="action_bar_title_typeface" translatable="false">FugazOne-Regular.ttf</string>
+    <string name="action_bar_title_typeface" translatable="false">Montserrat-SemiBold.ttf</string>
     <string name="network_error">Network error.</string>
     <string name="sticker_send_msg">SELECT</string>
     <string name="media_picker_camera">Camera</string>
@@ -1063,6 +1063,7 @@
 
     <string name="messages">Messages</string>
 
+
     <string name="message_box_next_num" translatable="false">(%1$d)</string>
     <string name="message_box_reply_hint" >" REPLY"</string>
     <string name="message_box_reply">REPLY</string>
@@ -1077,4 +1078,8 @@
     <string name="message_box_alert_message">If you turn off message assistant, you’ll not get reminder when receiving message. Are you sure to turn it off?</string>
     <string name="message_box_disable_successfully">Message Assistant disabled.</string>
 
+    <string name="user_survey_content">Do You Like New Designs?</string>
+    <string name="user_survey_action">The navigation bar is now colored to match the theme color.</string>
+    <string name="dislike">DISLIKE</string>
+    <string name="like">LIKE</string>
 </resources>
