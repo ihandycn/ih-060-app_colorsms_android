@@ -6,13 +6,24 @@
     android:background="#D8000000"
     android:clipChildren="true">
 
+    <com.superapps.view.TypefacedTextView
+        android:id="@+id/customize_app_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginBottom="7dp"
+        android:textSize="14sp"
+        android:layout_marginTop="50dp"
+        android:textColor="#8e8f90"
+        android:text="@string/app_name" />
+
     <RelativeLayout
         android:id="@+id/alert_card_container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginLeft="10dp"
         android:layout_marginRight="10dp"
-        android:layout_marginTop="70dp"
+        android:layout_below="@+id/customize_app_name"
         android:windowSoftInputMode="adjustPan">
 
         <LinearLayout
@@ -197,20 +208,7 @@
             android:layout_height="8dp"
             android:background="#00FFFFFF"
             android:layout_below="@+id/alert_card" />
-
     </RelativeLayout>
-
-    <com.superapps.view.TypefacedTextView
-        android:id="@+id/customize_app_name"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginBottom="7dp"
-        android:textSize="14sp"
-        android:textColor="#8e8f90"
-        android:text="@string/app_name"
-        android:layout_above="@+id/alert_card_container" />
-
 
 </RelativeLayout>
 

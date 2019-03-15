@@ -33,8 +33,6 @@ public final class SmsDeliverReceiver extends BroadcastReceiver {
         if (PhoneUtils.getDefault().isDefaultSmsApp()) {
             SmsReceiver.deliverSmsIntent(context, intent);
             BugleAnalytics.logEvent("SMS_Received_Default");
-        } else if (HSConfig.optBoolean(false, "Application", "SMSReceivedAnalysis")){
-            BugleAnalytics.logEvent("SMS_Received_NoDefault");
         }
     }
 

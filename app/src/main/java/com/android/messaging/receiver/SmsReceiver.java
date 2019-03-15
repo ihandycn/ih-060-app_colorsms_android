@@ -44,6 +44,7 @@ import com.android.messaging.datamodel.NoConfirmationSmsSendService;
 import com.android.messaging.datamodel.action.ReceiveSmsMessageAction;
 import com.android.messaging.sms.MmsUtils;
 import com.android.messaging.ui.UIIntents;
+import com.android.messaging.util.BugleAnalytics;
 import com.android.messaging.util.BugleGservices;
 import com.android.messaging.util.BugleGservicesKeys;
 import com.android.messaging.util.DebugUtils;
@@ -51,6 +52,7 @@ import com.android.messaging.util.LogUtil;
 import com.android.messaging.util.OsUtil;
 import com.android.messaging.util.PendingIntentConstants;
 import com.android.messaging.util.PhoneUtils;
+import com.ihs.commons.config.HSConfig;
 import com.superapps.util.Notifications;
 
 /**
@@ -80,14 +82,14 @@ public final class SmsReceiver extends BroadcastReceiver {
 
 
         if (OsUtil.isAtLeastKLP()) {
-            // When we're running as the secondary user, we don't get the new SMS_DELIVER intent,
+            // When we're running as the secondary user or default cleared, we don't get the new SMS_DELIVER intent,
             // only the primary user receives that. As secondary, we need to go old-school and
             // listen for the SMS_RECEIVED intent. For the secondary user, use this SmsReceiver
             // for both sms and mms notification. For the primary user on KLP (and above), we don't
             // use the SmsReceiver.
             boolean isSmsEnabled = PhoneUtils.getDefault().isSmsEnabled();
 
-            smsReceiverEnabled = OsUtil.isSecondaryUser() && isSmsEnabled;
+            smsReceiverEnabled = (OsUtil.isSecondaryUser() && isSmsEnabled) || isSmsReceiverEnabledWhenDefaultCleared();
             // On KLP use the new deliver event for mms
             mmsWapPushReceiverEnabled = false;
             // On KLP we need to always enable this handler to show in the list of sms apps
@@ -230,6 +232,10 @@ public final class SmsReceiver extends BroadcastReceiver {
         }
     }
 
+    private static boolean isSmsReceiverEnabledWhenDefaultCleared() {
+        return HSConfig.optBoolean(false, "Application", "SMSReceivedAnalysis");
+    }
+
     @Override
     public void onReceive(final Context context, final Intent intent) {
         LogUtil.v(TAG, "SmsReceiver.onReceive " + intent);
@@ -244,6 +250,9 @@ public final class SmsReceiver extends BroadcastReceiver {
             } else if (!OsUtil.isAtLeastKLP()) {
                 deliverSmsIntent(context, intent);
             }
+        } else if (PhoneUtils.getDefault().isSmsCapable() && isSmsReceiverEnabledWhenDefaultCleared()) {
+            // sms supported and default not set, we use SmsReceiver to handle this action
+            BugleAnalytics.logEvent("SMS_Received_NoDefault");
         }
     }
 
