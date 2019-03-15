@@ -71,7 +71,6 @@
             android:id="@+id/swipeableContent"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="?android:attr/selectableItemBackground"
             android:clipChildren="false"
             android:clipToPadding="false"
             android:duplicateParentState="true"
@@ -244,9 +243,9 @@
 
                 <com.superapps.view.TypefacedTextView
                     android:id="@+id/conversation_unread_messages_count"
-                    android:layout_width="21dp"
-                    android:layout_height="21dp"
-                    android:layout_gravity="bottom|center_horizontal"
+                    android:layout_width="17dp"
+                    android:layout_height="17dp"
+                    android:layout_gravity="bottom|end"
                     android:gravity="center"
                     android:includeFontPadding="false"
                     android:textColor="@android:color/white"

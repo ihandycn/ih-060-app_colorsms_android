@@ -183,6 +183,8 @@ public class ConversationListItemView extends FrameLayout implements OnClickList
         mContactCheckmarkView.setBackgroundDrawable(BackgroundDrawables.
                 createBackgroundDrawable(PrimaryColors.getPrimaryColor(), Dimensions.pxFromDp(28), false));
 
+        mSwipeableContent.setBackgroundDrawable(BackgroundDrawables.
+                createBackgroundDrawable(getResources().getColor(R.color.action_bar_background_color), 0, true));
 
         if (OsUtil.isAtLeastL()) {
             setTransitionGroup(true);
@@ -528,8 +530,8 @@ public class ConversationListItemView extends FrameLayout implements OnClickList
         mUnreadMessagesCountView.setVisibility(unreadMsgCountViewVisibility);
         if (unreadMsgCountViewVisibility == VISIBLE) {
             mUnreadMessagesCountView.setBackground(
-                    BackgroundDrawables.createBackgroundDrawable(0xffe62a2a,
-                            Dimensions.pxFromDp(10.5f), false));
+                    BackgroundDrawables.createBackgroundDrawable(0xffe35353,
+                            Dimensions.pxFromDp(8.5f), false));
             mUnreadMessagesCountView.setText(String.valueOf(mData.getUnreadMessagesNumber()));
         }
 

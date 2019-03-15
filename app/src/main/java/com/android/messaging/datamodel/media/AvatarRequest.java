@@ -127,12 +127,12 @@ public class AvatarRequest extends UriImageRequest<AvatarRequestDescriptor> {
 
         if (sDefaultPersonBitmap == null) {
             final BitmapDrawable defaultPerson = (BitmapDrawable) mContext.getResources()
-                    .getDrawable(R.drawable.ic_person_light);
+                    .getDrawable(R.drawable.icon_avatar);
             sDefaultPersonBitmap = defaultPerson.getBitmap();
         }
         if (sDefaultPersonBitmapLarge == null) {
             final BitmapDrawable largeDefaultPerson = (BitmapDrawable) mContext.getResources()
-                    .getDrawable(R.drawable.ic_person_light);
+                    .getDrawable(R.drawable.icon_avatar);
             sDefaultPersonBitmapLarge = largeDefaultPerson.getBitmap();
         }
 

@@ -26,12 +26,14 @@ import android.support.v4.view.ViewCompat;
 import android.support.v4.view.ViewGroupCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.view.ViewGroup.MarginLayoutParams;
 import android.view.ViewPropertyAnimator;
+import android.view.ViewTreeObserver;
 import android.widget.AbsListView;
 import android.widget.ImageView;
 
@@ -55,6 +57,7 @@ import com.android.messaging.util.ImeUtil;
 import com.android.messaging.util.LogUtil;
 import com.android.messaging.util.UiUtils;
 import com.google.common.annotations.VisibleForTesting;
+import com.ihs.commons.notificationcenter.HSGlobalNotificationCenter;
 import com.superapps.util.BackgroundDrawables;
 import com.superapps.util.Dimensions;
 import com.superapps.util.IntegerBuckets;
@@ -105,7 +108,8 @@ public class ConversationListFragment extends Fragment implements ConversationLi
             "conversationListViewState";
     private Parcelable mListState;
 
-    @VisibleForTesting final Binding<ConversationListData> mListBinding = BindingBase.createBinding(this);
+    @VisibleForTesting
+    final Binding<ConversationListData> mListBinding = BindingBase.createBinding(this);
 
     public static ConversationListFragment createArchivedConversationListFragment() {
         return createConversationListFragment(BUNDLE_ARCHIVED_MODE);
@@ -177,6 +181,15 @@ public class ConversationListFragment extends Fragment implements ConversationLi
         final ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.conversation_list_fragment,
                 container, false);
         mRecyclerView = rootView.findViewById(android.R.id.list);
+        mRecyclerView.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+            @Override
+            public void onGlobalLayout() {
+                if (mRecyclerView.getAdapter().getItemCount() > 0) {
+                    HSGlobalNotificationCenter.sendNotification(ConversationListActivity.SHOW_EMOJ);
+                    mRecyclerView.getViewTreeObserver().removeOnGlobalLayoutListener(this);
+                }
+            }
+        });
         mEmptyListMessageView = rootView.findViewById(R.id.no_conversations_view);
         mEmptyListMessageView.setImageHint(R.drawable.ic_oobe_conv_list);
 
@@ -299,7 +312,8 @@ public class ConversationListFragment extends Fragment implements ConversationLi
         updateEmptyListUi(cursor == null || cursor.getCount() == 0);
         if (cursor != null && cursor.getCount() > 0) {
             Preferences.getDefault().doOnce(new Runnable() {
-                @Override public void run() {
+                @Override
+                public void run() {
                     IntegerBuckets buckets = new IntegerBuckets(10, 20, 30, 40, 50);
                     BugleAnalytics.logEvent("SMS_FirstLoading_Success", true, "Number", buckets.getBucket(cursor.getCount()));
                 }
@@ -348,6 +362,7 @@ public class ConversationListFragment extends Fragment implements ConversationLi
         if (isEmpty) {
             int emptyListText;
             boolean isFirstSynsCompleted = true;
+            HSGlobalNotificationCenter.sendNotification(ConversationListActivity.SHOW_EMOJ);
             if (!mListBinding.getData().getHasFirstSyncCompleted()) {
                 emptyListText = R.string.conversation_list_first_sync_text;
                 isFirstSynsCompleted = false;
@@ -361,11 +376,13 @@ public class ConversationListFragment extends Fragment implements ConversationLi
             mEmptyListMessageView.setIsImageVisible(isFirstSynsCompleted);
             mEmptyListMessageView.setIsLoadingAnimationVisible(!isFirstSynsCompleted);
             mEmptyListMessageView.setIsVerticallyCentered(true);
+
         } else {
             // stop loading animation
             mEmptyListMessageView.setIsLoadingAnimationVisible(false);
             mEmptyListMessageView.setVisibility(View.GONE);
         }
+
     }
 
     @Override

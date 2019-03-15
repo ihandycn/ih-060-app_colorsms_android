@@ -85,7 +85,7 @@ public class ThemeSelectActivity extends BaseActivity {
                 HSGlobalNotificationCenter.sendNotification(ConversationListActivity.EVENT_MAINPAGE_RECREATE);
 
                 BugleAnalytics.logEvent("Customize_ThemeColor_Change", true, "color", String.valueOf(getSelectedIndex()));
-                recreate();
+                UiUtils.setTitleBarBackground(toolbar, this);
 
             });
         }

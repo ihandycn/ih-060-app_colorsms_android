@@ -61,6 +61,7 @@ import com.android.messaging.ui.wallpaper.WallpaperManager;
 import com.android.messaging.ui.wallpaper.WallpaperPreviewActivity;
 import com.android.messaging.util.BugleAnalytics;
 import com.android.messaging.util.CommonUtils;
+import com.android.messaging.util.MediaUtil;
 import com.android.messaging.util.Trace;
 import com.ihs.app.framework.HSApplication;
 import com.ihs.commons.notificationcenter.HSGlobalNotificationCenter;
@@ -80,6 +81,7 @@ public class ConversationListActivity extends AbstractConversationListActivity
         implements View.OnClickListener, INotificationObserver {
 
     public static final String EVENT_MAINPAGE_RECREATE = "event_mainpage_recreate";
+    public static final String SHOW_EMOJ = "show_emoj";
 
     private static final String PREF_SHOW_EMOJI_GUIDE = "pref_show_emoji_guide";
     public static final String PREF_KEY_MAIN_DRAWER_OPENED = "pref_key_main_drawer_opened";
@@ -138,7 +140,6 @@ public class ConversationListActivity extends AbstractConversationListActivity
         mIsRealCreate = true;
         setContentView(R.layout.conversation_list_activity);
         configAppBar();
-        showEmojiStoreGuide();
         mIsNoActionBack = true;
 
         if (sIsRecreate) {
@@ -155,6 +156,7 @@ public class ConversationListActivity extends AbstractConversationListActivity
         setupDrawer();
 
         HSGlobalNotificationCenter.addObserver(EVENT_MAINPAGE_RECREATE, this);
+        HSGlobalNotificationCenter.addObserver(SHOW_EMOJ, this);
         BugleAnalytics.logEvent("SMS_ActiveUsers", true);
 
         if (savedInstanceState == null || !savedInstanceState.getBoolean("is_activity_restart")) {
@@ -556,6 +558,9 @@ public class ConversationListActivity extends AbstractConversationListActivity
             public void onAnimationStart(Animator animation) {
                 super.onAnimationStart(animation);
                 mAnimState = AnimState.SHOWING;
+                if (mGuideContainer.getProgress() <= 0.5f) {
+                    MediaUtil.get().playSound(ConversationListActivity.this, R.raw.emoj_show, null /* completionListener */);
+                }
             }
         });
         mGuideContainer.setMaxProgress(0.85f);
@@ -657,6 +662,11 @@ public class ConversationListActivity extends AbstractConversationListActivity
             case EVENT_MAINPAGE_RECREATE:
                 sIsRecreate = true;
                 recreate();
+                break;
+            case SHOW_EMOJ:
+                mAnimHandler.postDelayed(() -> showEmojiStoreGuide(), 500);
+                break;
+            default:
                 break;
         }
     }
