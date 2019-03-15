@@ -62,10 +62,10 @@ import com.android.messaging.ui.wallpaper.WallpaperPreviewActivity;
 import com.android.messaging.util.BugleAnalytics;
 import com.android.messaging.util.CommonUtils;
 import com.android.messaging.util.Trace;
+import com.ihs.app.framework.HSApplication;
 import com.ihs.commons.notificationcenter.HSGlobalNotificationCenter;
 import com.ihs.commons.notificationcenter.INotificationObserver;
 import com.ihs.commons.utils.HSBundle;
-import com.messagecenter.util.Utils;
 import com.superapps.font.FontStyleManager;
 import com.superapps.util.Calendars;
 import com.superapps.util.Dimensions;
@@ -248,7 +248,7 @@ public class ConversationListActivity extends AbstractConversationListActivity
 
     @Override
     protected void updateActionBar(final ActionBar actionBar) {
-        statusbarInset.setBackgroundColor(PrimaryColors.getPrimaryColorDark());
+        statusbarInset.setBackgroundColor(PrimaryColors.getPrimaryColor());
 
         actionBar.setTitle("");
         actionBar.setDisplayShowTitleEnabled(false);
@@ -380,7 +380,9 @@ public class ConversationListActivity extends AbstractConversationListActivity
             exitMultiSelectState();
         } else {
             if (mShowRateAlert || !FiveStarRateDialog.showShowFiveStarRateDialogOnBackToDesktopIfNeed(this)) {
-                if (!Utils.isNewUser() && Preferences.getDefault().getBoolean(DragHotSeatActivity.SHOW_DRAG_HOTSEAT, false) && !Preferences.getDefault().getBoolean(UserSurveyActivity.SHOW_USER_SURVEY, false)) {
+                if (HSApplication.getFirstLaunchInfo().appVersionCode != HSApplication.getCurrentLaunchInfo().appVersionCode
+                        && Preferences.getDefault().getBoolean(DragHotSeatActivity.SHOW_DRAG_HOTSEAT, false)
+                        && !Preferences.getDefault().getBoolean(UserSurveyActivity.SHOW_USER_SURVEY, false)) {
 
                     Preferences.getDefault().doOnce(
                             () -> UIIntentsImpl.get().launchUserSurveyActivity(this),
