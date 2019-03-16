@@ -26,7 +26,6 @@ import android.support.v4.view.ViewCompat;
 import android.support.v4.view.ViewGroupCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -209,7 +208,13 @@ public class ConversationListFragment extends Fragment implements ConversationLi
         mRecyclerView.setHasFixedSize(true);
         mRecyclerView.setAdapter(mAdapter);
         mRecyclerView.setOnScrollListener(new RecyclerView.OnScrollListener() {
+
             int mCurrentState = AbsListView.OnScrollListener.SCROLL_STATE_IDLE;
+
+            private boolean mUpDetected;
+            private boolean mDownDetected;
+
+            private boolean isFirstConversationVisible = true;
 
             @Override
             public void onScrolled(final RecyclerView recyclerView, final int dx, final int dy) {
@@ -218,16 +223,38 @@ public class ConversationListFragment extends Fragment implements ConversationLi
                     ImeUtil.get().hideImeKeyboard(getActivity(), mRecyclerView);
                 }
 
-                if (isScrolledToFirstConversation()) {
+                if (!isFirstConversationVisible && isScrolledToFirstConversation()) {
+                    BugleAnalytics.logEvent("SMS_Messages_SlideUpToTop");
+                }
+
+                isFirstConversationVisible = isScrolledToFirstConversation();
+                if (isFirstConversationVisible) {
                     setScrolledToNewestConversationIfNeeded();
                 } else {
                     mListBinding.getData().setScrolledToNewestConversation(false);
+                }
+
+                if (dy != 0) {
+                    if (dy > 0 && !mUpDetected) {
+                        mUpDetected = true;
+                        BugleAnalytics.logEvent("SMS_Messages_SlideUp");
+                    }
+                    if (dy < 0 && !mDownDetected) {
+                        mDownDetected = true;
+                        BugleAnalytics.logEvent("SMS_Messages_SlideDown");
+                    }
                 }
             }
 
             @Override
             public void onScrollStateChanged(final RecyclerView recyclerView, final int newState) {
                 mCurrentState = newState;
+
+                if (newState == RecyclerView.SCROLL_STATE_IDLE) {
+                    // Reset
+                    mUpDetected = false;
+                    mDownDetected = false;
+                }
             }
         });
 

@@ -250,6 +250,12 @@ public class ConversationListActivity extends AbstractConversationListActivity
         Trace.endSection();
     }
 
+    @Override protected void onResume() {
+        super.onResume();
+
+        BugleAnalytics.logEvent("SMS_Messages_Show_Corrected");
+    }
+
     @Override
     protected void updateActionBar(final ActionBar actionBar) {
         statusbarInset.setBackgroundColor(PrimaryColors.getPrimaryColor());
@@ -293,7 +299,8 @@ public class ConversationListActivity extends AbstractConversationListActivity
                 Preferences.getDefault().putBoolean(PREF_KEY_MAIN_DRAWER_OPENED, true);
                 setDrawerMenuIcon();
                 BugleAnalytics.logEvent("Menu_Show", true);
-                if (CommonUtils.isNewUser()) {
+                if (CommonUtils.isNewUser()
+                        && Calendars.isSameDay(CommonUtils.getAppInstallTimeMillis(), System.currentTimeMillis())) {
                     BugleAnalytics.logEvent("Menu_Show_NewUser_TestPrivateBox");
                 }
                 super.onDrawerOpened(drawerView);
@@ -661,7 +668,8 @@ public class ConversationListActivity extends AbstractConversationListActivity
                 break;
             case R.id.navigation_item_privacy_box:
                 Toasts.showToast(R.string.menu_privacy_box_coming);
-                if (CommonUtils.isNewUser()) {
+                if (CommonUtils.isNewUser()
+                        && Calendars.isSameDay(CommonUtils.getAppInstallTimeMillis(), System.currentTimeMillis())) {
                     BugleAnalytics.logEvent("Menu_PrivateBox_Click_NewUser");
                 }
                 break;
