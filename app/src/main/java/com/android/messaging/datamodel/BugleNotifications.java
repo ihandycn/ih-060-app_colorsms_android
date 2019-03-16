@@ -637,6 +637,10 @@ public class BugleNotifications {
             for (ConversationLineInfo convInfo : ((MessageNotificationState) state).mConvList.mConvInfos) {
                 if (TextUtils.equals(convInfo.mConversationId, conversationId)) {
                     MessageNotificationState.MessageLineInfo messageLineInfo = convInfo.getLatestMessageLineInfo();
+                    if (messageLineInfo == null || TextUtils.isEmpty(messageLineInfo.mText)) {
+                        return;
+                    }
+
                     UIIntents.get().launchMessageBoxActivity(Factory.get().getApplicationContext(),
                             new MessageBoxItemData(conversationId,
                                     convInfo.mSelfParticipantId,
