@@ -18,6 +18,8 @@ package com.android.messaging.ui.conversationlist;
 
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
+import android.animation.ObjectAnimator;
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.graphics.drawable.ColorDrawable;
@@ -25,18 +27,24 @@ import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.design.widget.NavigationView;
+import android.support.v4.view.animation.PathInterpolatorCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.AppCompatDrawableManager;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
+import android.text.format.DateUtils;
 import android.view.ActionMode;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Interpolator;
+import android.widget.FrameLayout;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.airbnb.lottie.LottieAnimationView;
@@ -68,12 +76,14 @@ import com.ihs.commons.notificationcenter.HSGlobalNotificationCenter;
 import com.ihs.commons.notificationcenter.INotificationObserver;
 import com.ihs.commons.utils.HSBundle;
 import com.superapps.font.FontStyleManager;
+import com.superapps.util.BackgroundDrawables;
 import com.superapps.util.Calendars;
 import com.superapps.util.Dimensions;
 import com.superapps.util.Navigations;
 import com.superapps.util.Preferences;
 import com.superapps.util.Threads;
 
+import java.lang.ref.WeakReference;
 import java.util.Calendar;
 import java.util.Random;
 
@@ -85,6 +95,11 @@ public class ConversationListActivity extends AbstractConversationListActivity
 
     private static final String PREF_SHOW_EMOJI_GUIDE = "pref_show_emoji_guide";
     public static final String PREF_KEY_MAIN_DRAWER_OPENED = "pref_key_main_drawer_opened";
+
+    private static final String PREF_KEY_THEME_COLOR_CLICKED = "pref_key_navigation_theme_color_clicked";
+    private static final String PREF_KEY_BUBBLE_CLICKED = "pref_key_navigation_bubble_clicked";
+    private static final String PREF_KEY_BACKGROUND_CLICKED = "pref_key_navigation_background_clicked";
+    private static final String PREF_KEY_FONT_CLICKED = "pref_key_navigation_font_clicked";
 
     private static boolean sIsRecreate = false;
 
@@ -147,6 +162,16 @@ public class ConversationListActivity extends AbstractConversationListActivity
         } else {
             Preferences.get(FiveStarRateDialog.DESKTOP_PREFS).incrementAndGetInt(FiveStarRateDialog.PREF_KEY_MAIN_ACTIVITY_SHOW_TIME);
             FiveStarRateDialog.showFiveStarWhenMainPageShowIfNeed(this);
+            WeakReference<AppCompatActivity> activity = new WeakReference<>(this);
+            Threads.postOnMainThreadDelayed(() ->
+            {
+                if (!isFinishing() && activity.get() != null) {
+                    CustomizeGuideController.showGuideIfNeed(activity.get());
+                }
+            }, 1000);
+            if (CommonUtils.isNewUser() && DateUtils.isToday(CommonUtils.getAppInstallTimeMillis())) {
+                BugleAnalytics.logEvent("SMS_Messages_Show_NewUser", true);
+            }
         }
 
         if (getIntent() != null && getIntent().getBooleanExtra(BugleNotifications.EXTRA_FROM_NOTIFICATION, false)) {
@@ -159,7 +184,7 @@ public class ConversationListActivity extends AbstractConversationListActivity
         HSGlobalNotificationCenter.addObserver(SHOW_EMOJ, this);
         BugleAnalytics.logEvent("SMS_ActiveUsers", true);
 
-        if (savedInstanceState == null || !savedInstanceState.getBoolean("is_activity_restart")) {
+        if (!sIsRecreate) {
             Threads.postOnThreadPoolExecutor(() -> {
                 String bgPath = WallpaperManager.getWallpaperPathByThreadId(null);
                 String backgroundStr;
@@ -274,6 +299,7 @@ public class ConversationListActivity extends AbstractConversationListActivity
         navigationView = findViewById(R.id.navigation_view);
         navigationView.setItemIconTintList(null);
         navigationView.setPadding(0, Dimensions.getStatusBarInset(this), 0, 0);
+        View navigationContent = getLayoutInflater().inflate(R.layout.layout_main_navigation, navigationView, false);
 
         drawerLayout = findViewById(R.id.main_drawer_layout);
         drawerLayout.setBackgroundColor(PrimaryColors.getPrimaryColor());
@@ -291,6 +317,9 @@ public class ConversationListActivity extends AbstractConversationListActivity
                 Preferences.getDefault().putBoolean(PREF_KEY_MAIN_DRAWER_OPENED, true);
                 setDrawerMenuIcon();
                 BugleAnalytics.logEvent("Menu_Show", true);
+                if (CommonUtils.isNewUser() && DateUtils.isToday(CommonUtils.getAppInstallTimeMillis())) {
+                    BugleAnalytics.logEvent("Menu_Show_NewUser", true);
+                }
                 super.onDrawerOpened(drawerView);
             }
 
@@ -301,19 +330,32 @@ public class ConversationListActivity extends AbstractConversationListActivity
                 switch (drawerClickIndex) {
                     case DRAWER_INDEX_THEME_COLOR:
                         BugleAnalytics.logEvent("Menu_ThemeColor_Click");
+                        if (CommonUtils.isNewUser() && DateUtils.isToday(CommonUtils.getAppInstallTimeMillis())) {
+                            BugleAnalytics.logEvent("Menu_ThemeColor_Click_NewUser", true);
+                        }
                         Navigations.startActivity(ConversationListActivity.this, ThemeSelectActivity.class);
+                        navigationContent.findViewById(R.id.navigation_item_theme_new_text).setVisibility(View.GONE);
                         break;
                     case DRAWER_INDEX_BUBBLE:
-                        BugleAnalytics.logEvent("Menu_Bubble_Click");
+                        BugleAnalytics.logEvent("Menu_Bubble_Click", true);
+                        if (CommonUtils.isNewUser() && DateUtils.isToday(CommonUtils.getAppInstallTimeMillis())) {
+                            BugleAnalytics.logEvent("Menu_Bubble_Click_NewUser", true);
+                        }
                         Navigations.startActivity(ConversationListActivity.this, CustomBubblesActivity.class);
+                        navigationContent.findViewById(R.id.navigation_item_bubble_new_text).setVisibility(View.GONE);
                         break;
                     case DRAWER_INDEX_CHAT_BACKGROUND:
-                        BugleAnalytics.logEvent("Menu_ChatBackground_Click");
+                        BugleAnalytics.logEvent("Menu_ChatBackground_Click", true);
+                        if (CommonUtils.isNewUser() && DateUtils.isToday(CommonUtils.getAppInstallTimeMillis())) {
+                            BugleAnalytics.logEvent("Menu_ChatBackground_Click_NewUser", true);
+                        }
                         WallpaperPreviewActivity.startWallpaperPreview(ConversationListActivity.this);
+                        navigationContent.findViewById(R.id.navigation_item_background_new_text).setVisibility(View.GONE);
                         break;
                     case DRAWER_INDEX_CHANGE_FONT:
                         BugleAnalytics.logEvent("Menu_ChangeFont_Click");
                         Intent intent = new Intent(ConversationListActivity.this, ChangeFontActivity.class);
+                        navigationContent.findViewById(R.id.navigation_item_font_new_text).setVisibility(View.GONE);
                         startActivity(intent);
                         break;
                     case DRAWER_INDEX_SETTING:
@@ -336,8 +378,30 @@ public class ConversationListActivity extends AbstractConversationListActivity
         drawerLayout.setDrawerListener(drawerToggle);
         drawerToggle.syncState();
 
-        View navigationContent = getLayoutInflater().inflate(R.layout.layout_main_navigation, navigationView, false);
         navigationView.addView(navigationContent);
+
+        if (CommonUtils.isNewUser()) {
+            if (!Preferences.getDefault().getBoolean(PREF_KEY_THEME_COLOR_CLICKED, false)) {
+                View newMark = navigationContent.findViewById(R.id.navigation_item_theme_new_text);
+                newMark.setVisibility(View.VISIBLE);
+                newMark.setBackground(BackgroundDrawables.createBackgroundDrawable(0xffea6126,
+                        Dimensions.pxFromDp(8.7f), false));
+            }
+
+            if (!Preferences.getDefault().getBoolean(PREF_KEY_BUBBLE_CLICKED, false)) {
+                View bubbleNewMark = navigationContent.findViewById(R.id.navigation_item_bubble_new_text);
+                bubbleNewMark.setVisibility(View.VISIBLE);
+                bubbleNewMark.setBackground(BackgroundDrawables.createBackgroundDrawable(0xffea6126,
+                        Dimensions.pxFromDp(8.7f), false));
+            }
+
+            if (!Preferences.getDefault().getBoolean(PREF_KEY_BACKGROUND_CLICKED, false)) {
+                View newMark = navigationContent.findViewById(R.id.navigation_item_background_new_text);
+                newMark.setVisibility(View.VISIBLE);
+                newMark.setBackground(BackgroundDrawables.createBackgroundDrawable(0xffea6126,
+                        Dimensions.pxFromDp(8.7f), false));
+            }
+        }
 
         navigationContent.findViewById(R.id.navigation_item_theme_color).setOnClickListener(this);
         navigationContent.findViewById(R.id.navigation_item_bubble).setOnClickListener(this);
@@ -632,18 +696,22 @@ public class ConversationListActivity extends AbstractConversationListActivity
             case R.id.navigation_item_theme_color:
                 drawerClickIndex = DRAWER_INDEX_THEME_COLOR;
                 drawerLayout.closeDrawer(navigationView);
+                Preferences.getDefault().putBoolean(PREF_KEY_THEME_COLOR_CLICKED, true);
                 break;
             case R.id.navigation_item_bubble:
                 drawerClickIndex = DRAWER_INDEX_BUBBLE;
                 drawerLayout.closeDrawer(navigationView);
+                Preferences.getDefault().putBoolean(PREF_KEY_BUBBLE_CLICKED, true);
                 break;
             case R.id.navigation_item_chat_background:
                 drawerClickIndex = DRAWER_INDEX_CHAT_BACKGROUND;
                 drawerLayout.closeDrawer(navigationView);
+                Preferences.getDefault().putBoolean(PREF_KEY_BACKGROUND_CLICKED, true);
                 break;
             case R.id.navigation_item_change_font:
                 drawerClickIndex = DRAWER_INDEX_CHANGE_FONT;
                 drawerLayout.closeDrawer(navigationView);
+                Preferences.getDefault().putBoolean(PREF_KEY_FONT_CLICKED, true);
                 break;
             case R.id.navigation_item_setting:
                 drawerClickIndex = DRAWER_INDEX_SETTING;
@@ -670,12 +738,4 @@ public class ConversationListActivity extends AbstractConversationListActivity
                 break;
         }
     }
-
-
-    @Override
-    protected void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
-        outState.putBoolean("is_activity_restart", true);
-    }
-
 }
