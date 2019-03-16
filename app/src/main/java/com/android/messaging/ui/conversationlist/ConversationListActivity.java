@@ -73,6 +73,7 @@ import com.superapps.util.Dimensions;
 import com.superapps.util.Navigations;
 import com.superapps.util.Preferences;
 import com.superapps.util.Threads;
+import com.superapps.util.Toasts;
 
 import java.util.Calendar;
 import java.util.Random;
@@ -95,6 +96,7 @@ public class ConversationListActivity extends AbstractConversationListActivity
     private static final int DRAWER_INDEX_SETTING = 3;
     private static final int DRAWER_INDEX_RATE = 4;
     private static final int DRAWER_INDEX_CHANGE_FONT = 5;
+    private static final int DRAWER_INDEX_PRIVACY_BOX = 6;
 
     private int drawerClickIndex = DRAWER_INDEX_NONE;
 
@@ -291,6 +293,9 @@ public class ConversationListActivity extends AbstractConversationListActivity
                 Preferences.getDefault().putBoolean(PREF_KEY_MAIN_DRAWER_OPENED, true);
                 setDrawerMenuIcon();
                 BugleAnalytics.logEvent("Menu_Show", true);
+                if (CommonUtils.isNewUser()) {
+                    BugleAnalytics.logEvent("Menu_Show_NewUser_TestPrivateBox");
+                }
                 super.onDrawerOpened(drawerView);
             }
 
@@ -345,6 +350,7 @@ public class ConversationListActivity extends AbstractConversationListActivity
         navigationContent.findViewById(R.id.navigation_item_change_font).setOnClickListener(this);
         navigationContent.findViewById(R.id.navigation_item_setting).setOnClickListener(this);
         navigationContent.findViewById(R.id.navigation_item_rate).setOnClickListener(this);
+        navigationContent.findViewById(R.id.navigation_item_privacy_box).setOnClickListener(this);
 
         setDrawerMenuIcon();
     }
@@ -652,6 +658,12 @@ public class ConversationListActivity extends AbstractConversationListActivity
             case R.id.navigation_item_rate:
                 drawerClickIndex = DRAWER_INDEX_RATE;
                 drawerLayout.closeDrawer(navigationView);
+                break;
+            case R.id.navigation_item_privacy_box:
+                Toasts.showToast(R.string.menu_privacy_box_coming);
+                if (CommonUtils.isNewUser()) {
+                    BugleAnalytics.logEvent("Menu_PrivateBox_Click_NewUser");
+                }
                 break;
         }
     }

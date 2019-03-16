@@ -1081,4 +1081,7 @@
     <string name="user_survey_action">The navigation bar is now colored to match the theme color.</string>
     <string name="dislike">DISLIKE</string>
     <string name="like">LIKE</string>
+
+    <string name="menu_privacy_box">Private Inbox</string>
+    <string name="menu_privacy_box_coming">Coming soon in a few days</string>
 </resources>
