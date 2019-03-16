@@ -1075,8 +1075,8 @@
     <string name="message_box_negative_button">TURN OFF</string>
     <string name="message_box_positive_action">NOT NOW</string>
     <string name="message_box_alert_title">Turn Off SMS Pop-ups?</string>
-    <string name="message_box_alert_message">If you turn off SMS Pop-ups, you’ll not get reminder when receiving message. Are you sure to turn it off?</string>
-    <string name="message_box_disable_successfully">SMS Pop-ups disabled.</string>
+    <string name="message_box_alert_message">If you turn off SMS Pop-ups, you\'ll not get a pop-up when receiving message.</string>
+    <string name="message_box_disable_successfully">SMS Pop-ups disabled</string>
 
     <string name="user_survey_content">Do You Like New Designs?</string>
     <string name="user_survey_action">The navigation bar is now colored to match the theme color.</string>
