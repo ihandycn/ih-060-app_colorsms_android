@@ -15,7 +15,6 @@ import android.widget.LinearLayout;
 
 import com.airbnb.lottie.LottieAnimationView;
 import com.android.messaging.R;
-import com.android.messaging.ui.dialog.FiveStarRateDialog;
 import com.android.messaging.util.BugleAnalytics;
 import com.android.messaging.util.CommonUtils;
 import com.superapps.util.Dimensions;
@@ -99,6 +98,53 @@ public class CustomizeGuideController {
             }
         });
 
+        ObjectAnimator dismissEnlargeXAnimator = ObjectAnimator.ofFloat(guideContainer, "scaleX", 1, 1.1f);
+        dismissEnlargeXAnimator.setDuration(80);
+        dismissEnlargeXAnimator.setInterpolator(interpolator);
+        ObjectAnimator dismissEnlargeYAnimator = ObjectAnimator.ofFloat(guideContainer, "scaleY", 1, 1.1f);
+        dismissEnlargeYAnimator.setDuration(80);
+        dismissEnlargeYAnimator.setInterpolator(interpolator);
+
+        ObjectAnimator dismissShrinkXAnim = ObjectAnimator.ofFloat(guideContainer, "scaleX", 1.1f, 0.5f);
+        dismissShrinkXAnim.setDuration(120);
+        dismissShrinkXAnim.setStartDelay(80);
+        ObjectAnimator dismissShrinkYAnim = ObjectAnimator.ofFloat(guideContainer, "scaleY", 1.1f, 0.5f);
+        dismissShrinkYAnim.setDuration(120);
+        dismissShrinkYAnim.setStartDelay(80);
+
+        ObjectAnimator dismissAlphaAnim = ObjectAnimator.ofFloat(guideContainer, "alpha", 1, 0);
+        dismissAlphaAnim.setDuration(80);
+        dismissAlphaAnim.setStartDelay(120);
+
+        dismissAlphaAnim.addListener(new AnimatorListenerAdapter() {
+            @Override
+            public void onAnimationEnd(Animator animation) {
+                customizeGuideView.setVisibility(View.GONE);
+            }
+        });
+
+        guideContainer.setOnClickListener(v -> {
+            if (guideLottie.isAnimating()) {
+                guideLottie.setProgress(1);
+                guideLottie.cancelAnimation();
+            }
+
+            if (enlargeXAnimator.isRunning() || shrinkXAnimator.isRunning()) {
+                customizeGuideView.setVisibility(View.GONE);
+                enlargeXAnimator.cancel();
+                enlargeYAnimator.cancel();
+                shrinkXAnimator.cancel();
+                shrinkYAnimator.cancel();
+                alphaAnimator.cancel();
+            } else {
+                dismissEnlargeXAnimator.start();
+                dismissEnlargeYAnimator.start();
+                dismissShrinkXAnim.start();
+                dismissShrinkYAnim.start();
+                dismissAlphaAnim.start();
+            }
+        });
+
         customizeGuideView.setOnTouchListener((v, event) -> {
             if (guideLottie.isAnimating()) {
                 guideLottie.setProgress(1);
@@ -115,37 +161,11 @@ public class CustomizeGuideController {
                 return false;
             }
 
-            ObjectAnimator dismissEnlargeXAnimator = ObjectAnimator.ofFloat(guideContainer, "scaleX", 1, 1.1f);
-            dismissEnlargeXAnimator.setDuration(80);
-            dismissEnlargeXAnimator.setInterpolator(interpolator);
-            ObjectAnimator dismissEnlargeYAnimator = ObjectAnimator.ofFloat(guideContainer, "scaleY", 1, 1.1f);
-            dismissEnlargeYAnimator.setDuration(80);
-            dismissEnlargeYAnimator.setInterpolator(interpolator);
-
-            ObjectAnimator dismissShrinkXAnim = ObjectAnimator.ofFloat(guideContainer, "scaleX", 1.1f, 0.5f);
-            dismissShrinkXAnim.setDuration(120);
-            dismissShrinkXAnim.setStartDelay(80);
-            ObjectAnimator dismissShrinkYAnim = ObjectAnimator.ofFloat(guideContainer, "scaleY", 1.1f, 0.5f);
-            dismissShrinkYAnim.setDuration(120);
-            dismissShrinkYAnim.setStartDelay(80);
-
-            ObjectAnimator dismissAlphaAnim = ObjectAnimator.ofFloat(guideContainer, "alpha", 1, 0);
-            dismissAlphaAnim.setDuration(80);
-            dismissAlphaAnim.setStartDelay(120);
-
-            dismissAlphaAnim.addListener(new AnimatorListenerAdapter() {
-                @Override
-                public void onAnimationEnd(Animator animation) {
-                    customizeGuideView.setVisibility(View.GONE);
-                }
-            });
-
             dismissEnlargeXAnimator.start();
             dismissEnlargeYAnimator.start();
             dismissShrinkXAnim.start();
             dismissShrinkYAnim.start();
             dismissAlphaAnim.start();
-
             return false;
         });
 
