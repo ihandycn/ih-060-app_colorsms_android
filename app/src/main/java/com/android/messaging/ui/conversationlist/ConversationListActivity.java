@@ -164,13 +164,6 @@ public class ConversationListActivity extends AbstractConversationListActivity
         } else {
             Preferences.get(FiveStarRateDialog.DESKTOP_PREFS).incrementAndGetInt(FiveStarRateDialog.PREF_KEY_MAIN_ACTIVITY_SHOW_TIME);
             FiveStarRateDialog.showFiveStarWhenMainPageShowIfNeed(this);
-            WeakReference<AppCompatActivity> activity = new WeakReference<>(this);
-            Threads.postOnMainThreadDelayed(() ->
-            {
-                if (!isFinishing() && activity.get() != null) {
-                    CustomizeGuideController.showGuideIfNeed(activity.get());
-                }
-            }, 1000);
             if (CommonUtils.isNewUser() && DateUtils.isToday(CommonUtils.getAppInstallTimeMillis())) {
                 BugleAnalytics.logEvent("SMS_Messages_Show_NewUser", true);
             }
@@ -279,6 +272,19 @@ public class ConversationListActivity extends AbstractConversationListActivity
         super.onResume();
 
         BugleAnalytics.logEvent("SMS_Messages_Show_Corrected");
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        Preferences.getDefault().incrementAndGetInt(CustomizeGuideController.PREF_KEY_MAIN_PAGE_SHOW_TIME);
+        WeakReference<AppCompatActivity> activity = new WeakReference<>(this);
+        Threads.postOnMainThreadDelayed(() ->
+        {
+            if (!isFinishing() && activity.get() != null) {
+                CustomizeGuideController.showGuideIfNeed(activity.get());
+            }
+        }, 1000);
     }
 
     @Override
