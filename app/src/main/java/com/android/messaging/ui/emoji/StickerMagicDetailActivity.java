@@ -7,6 +7,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
+import android.view.animation.AlphaAnimation;
 
 import com.android.messaging.R;
 import com.android.messaging.download.Downloader;
@@ -34,8 +35,7 @@ public class StickerMagicDetailActivity extends HSAppCompatActivity implements V
         starter.putExtra(INTENT_KEY_EMOJI_INFO, stickerInfo);
         if (context instanceof Activity) {
             Activity activity = (Activity) context;
-            activity.overridePendingTransition(R.anim.fade_in, 0);
-            context.startActivity(starter);
+            activity.startActivity(starter);
         }
     }
 
@@ -45,8 +45,7 @@ public class StickerMagicDetailActivity extends HSAppCompatActivity implements V
         starter.putExtra(FROM_WHERE, from);
         if (context instanceof Activity) {
             Activity activity = (Activity) context;
-            context.startActivity(starter);
-            activity.overridePendingTransition(R.anim.fade_in, 0);
+            activity.startActivity(starter);
         }
 
 
