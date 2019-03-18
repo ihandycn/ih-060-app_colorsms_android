@@ -69,16 +69,19 @@ public class EmojiConfig implements HSLibraryConfig.ILibraryListener {
         return HSMapUtils.optInteger(sConfigMap, defaultValue, path);
     }
 
-    public @NonNull List<EmojiPackageInfo> getAddedEmojiFromConfig() {
+    public @NonNull
+    List<EmojiPackageInfo> getAddedEmojiFromConfig() {
         return getEmojiFromConfig(true);
     }
 
-    public @NonNull List<EmojiPackageInfo> getStoreEmojiFromConfig() {
+    public @NonNull
+    List<EmojiPackageInfo> getStoreEmojiFromConfig() {
         return getEmojiFromConfig(false);
     }
 
     @SuppressWarnings("unchecked")
-    private @NonNull List<EmojiPackageInfo> getEmojiFromConfig(boolean isMustBeAdded) {
+    private @NonNull
+    List<EmojiPackageInfo> getEmojiFromConfig(boolean isMustBeAdded) {
         if (sConfigMap == null || sConfigMap.isEmpty()) {
             throw new IllegalStateException("The emoji config is null!!!!");
         }
@@ -202,6 +205,53 @@ public class EmojiConfig implements HSLibraryConfig.ILibraryListener {
             result = order(result, allAddedSticker);
         }
         return result;
+    }
+
+
+    @SuppressWarnings("unchecked")
+    public @NonNull
+    List<BaseEmojiInfo> getMajicEmoj() {
+        if (sConfigMap == null || sConfigMap.isEmpty()) {
+            throw new IllegalStateException("The emoji config is null!!!!");
+        }
+        String baseUrl = HSMapUtils.getString(sConfigMap, "BaseUrl");
+        String lottieMagicStickerStr = HSMapUtils.getString(sConfigMap, "LottieMagic");
+        List<Map<String, ?>> configMaps = (List<Map<String, ?>>) HSMapUtils.getList(sConfigMap, "Collections");
+        for (int i = 0; i < configMaps.size(); i++) {
+            Map<String, ?> configMap = configMaps.get(i);
+            String name = (String) configMap.get("Name");
+            List<BaseEmojiInfo> stickerInfoList;
+            String magicFiles = (String) configMap.get("MagicFiles");
+            if (!TextUtils.isEmpty(magicFiles)) {
+                List<String> fileList = getFileNameList(magicFiles);
+                if (fileList.isEmpty()) {
+                    throw new IllegalStateException("magicFiles is not null, but fileList is null which is impossible!!!!");
+                }
+
+                stickerInfoList = new ArrayList<>(fileList.size());
+                String imageSubPath = (String) configMap.get("ImageSubPath");
+                String previewImageSubPath = (String) configMap.get("PreviewImageSubPath");
+                String soundSubPath = (String) configMap.get("SoundSubPath");
+                for (int k = 0; k < fileList.size(); k++) {
+                    String fileName = fileList.get(k);
+                    String voiceFormat = ".mp3";
+                    StickerInfo stickerInfo = new StickerInfo();
+                    if (!TextUtils.isEmpty(lottieMagicStickerStr) && lottieMagicStickerStr.contains(fileName)) {
+                        voiceFormat = ".aac";
+                        stickerInfo.mLottieZipUrl = baseUrl + imageSubPath + "/" + fileName + ".zip";
+                    }
+                    stickerInfo.mPackageName = name;
+                    stickerInfo.mEmojiType = EmojiType.STICKER_MAGIC;
+                    stickerInfo.mStickerUrl = baseUrl + previewImageSubPath + "/" + fileName + ".png";
+                    stickerInfo.mMagicUrl = baseUrl + imageSubPath + "/" + fileName + ".gif";
+                    stickerInfo.mSoundUrl = baseUrl + soundSubPath + "/" + fileName + voiceFormat;
+                    stickerInfo.mIsDownloaded = Downloader.getInstance().isDownloaded(stickerInfo.mMagicUrl);
+                    stickerInfoList.add(stickerInfo);
+                }
+                return stickerInfoList;
+            }
+        }
+        return new ArrayList<>();
     }
 
     private boolean isLottieMagicEmoji(String fileName) {

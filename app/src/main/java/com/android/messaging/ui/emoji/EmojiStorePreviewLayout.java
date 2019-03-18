@@ -14,7 +14,10 @@ import com.android.messaging.glide.GlideRequests;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.target.CustomViewTarget;
 import com.bumptech.glide.request.transition.Transition;
+import com.ihs.app.framework.HSApplication;
 import com.superapps.util.Dimensions;
+
+import java.io.File;
 
 import pl.droidsonroids.gif.GifDrawable;
 import pl.droidsonroids.gif.GifImageView;
@@ -70,10 +73,12 @@ public class EmojiStorePreviewLayout extends ViewGroup {
                             .load(stickerInfo.mStickerUrl)
                             .diskCacheStrategy(DiskCacheStrategy.DATA)
                             .into(new CustomViewTarget<GifImageView, GifDrawable>(child) {
-                                @Override protected void onResourceCleared(@Nullable Drawable placeholder) {
+                                @Override
+                                protected void onResourceCleared(@Nullable Drawable placeholder) {
                                 }
 
-                                @Override public void onLoadFailed(@Nullable Drawable errorDrawable) {
+                                @Override
+                                public void onLoadFailed(@Nullable Drawable errorDrawable) {
                                 }
 
                                 @Override
@@ -85,6 +90,23 @@ public class EmojiStorePreviewLayout extends ViewGroup {
                 default:
                     break;
             }
+            addView(child);
+        }
+    }
+
+    void bindEmojiItemsForLottie() {
+        removeAllViews();
+        String drawableName = "magic_lottie_preview";
+        for (int i = 1; i < 9; i++) {
+            Context context = getContext();
+            GifImageView child = new GifImageView(context);
+            GlideRequests imageRequest = GlideApp.with(context);
+            imageRequest.asBitmap()
+                    .load(getResources().getIdentifier(drawableName + i, "drawable", HSApplication.getContext().getPackageName()))
+                    .diskCacheStrategy(DiskCacheStrategy.DATA)
+                    .placeholder(R.drawable.emoji_item_placeholder)
+                    .error(R.drawable.emoji_item_placeholder)
+                    .into(child);
             addView(child);
         }
     }

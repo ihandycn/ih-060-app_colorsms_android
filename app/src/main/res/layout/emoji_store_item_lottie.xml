@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/emoji_store_item_holder"
+    android:layout_width="match_parent"
+    android:layout_height="231.67dp"
+    android:background="@drawable/emoji_store_item_holder_drawable"
+    android:orientation="vertical">
+
+    <com.airbnb.lottie.LottieAnimationView
+        android:id="@+id/emoji_store_item_lottie"
+        android:layout_width="match_parent"
+        android:layout_height="105dp"
+        android:scaleType="centerCrop" />
+
+    <com.android.messaging.ui.emoji.EmojiStorePreviewLayout
+        android:id="@+id/preview_layout"
+        android:layout_width="134.33dp"
+        android:layout_height="61.67dp"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="11dp" />
+
+    <com.superapps.view.TypefacedTextView
+        android:id="@+id/emoji_store_item_get_btn"
+        android:layout_width="match_parent"
+        android:layout_height="30dp"
+        android:layout_marginLeft="10.67dp"
+        android:layout_marginTop="13dp"
+        android:layout_marginRight="10.67dp"
+        android:gravity="center"
+        android:includeFontPadding="false"
+        android:text="@string/emoji_get"
+        android:textColor="#FF343433"
+        android:textSize="14sp"
+        app:typeface="@string/custom_font_semibold"
+        tools:ignore="SmallSp" />
+</LinearLayout>

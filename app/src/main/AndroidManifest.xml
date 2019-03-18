@@ -192,8 +192,7 @@
             android:configChanges="orientation|screenSize|keyboardHidden"
             android:label="@string/settings_activity_title"
             android:screenOrientation="portrait"
-            android:theme="@style/SettingsActivity">
-        </activity>
+            android:theme="@style/SettingsActivity"></activity>
 
         <!-- Handles sharing intent -->
         <activity
@@ -636,31 +635,31 @@
             android:screenOrientation="portrait"
             android:theme="@style/BaseSettingsActivity" />
 
-        <activity android:name=".ui.appsettings.ChangeFontActivity"
+        <activity
+            android:name=".ui.appsettings.ChangeFontActivity"
             android:excludeFromRecents="true"
             android:screenOrientation="portrait"
-            android:theme="@style/BaseSettingsActivity"/>
+            android:theme="@style/BaseSettingsActivity" />
 
         <activity android:name=".debug.ChangeThemeColorDebugActivity" />
 
-        <activity android:name=".ui.customize.CustomBubblesActivity"
+        <activity
+            android:name=".ui.customize.CustomBubblesActivity"
             android:excludeFromRecents="true"
             android:screenOrientation="portrait"
-            android:theme="@style/BugleTheme.ConversationActivity"/>
+            android:theme="@style/BugleTheme.ConversationActivity" />
 
 
         <!--Lib permanent-->
         <service
             android:name="com.ihs.device.permanent.PermanentService"
             android:label="GuardServiceNew"
-            tools:replace="android:label"
             tools:remove="android:process"
-            />
+            tools:replace="android:label" />
 
         <service
             android:name="com.ihs.device.permanent.PermanentService$PermanentServiceInner"
-            tools:remove="android:process"
-            />
+            tools:remove="android:process" />
 
         <receiver
             android:name="com.ihs.device.permanent.PermanentService$PermanentReceiver"
@@ -689,10 +688,10 @@
         <provider
             android:name="com.ihs.device.common.AppInfoProvider"
             tools:remove="android:process" />
-        
+
         <activity
             android:name="com.ihs.device.permanent.foreground.ForegroundActivity"
-            tools:remove="android:process"/>
+            tools:remove="android:process" />
 
         <activity
             android:name=".ui.wallpaper.WallpaperPreviewActivity"
@@ -704,6 +703,12 @@
             android:excludeFromRecents="true"
             android:screenOrientation="portrait"
             android:theme="@style/BaseSettingsActivity" />
+
+        <activity
+            android:name=".ui.emoji.EmojiLottieDetailActivity"
+            android:excludeFromRecents="true"
+            android:screenOrientation="portrait"
+            android:theme="@style/WindowBgWhiteAndTranslucent" />
 
     </application>
 
