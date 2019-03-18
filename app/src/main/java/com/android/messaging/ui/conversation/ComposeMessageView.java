@@ -25,8 +25,11 @@ import android.text.Editable;
 import android.text.Html;
 import android.text.InputFilter;
 import android.text.InputFilter.LengthFilter;
+import android.text.SpannableString;
 import android.text.TextUtils;
 import android.text.TextWatcher;
+import android.text.style.AbsoluteSizeSpan;
+import android.text.style.ForegroundColorSpan;
 import android.util.AttributeSet;
 import android.view.ContextThemeWrapper;
 import android.view.KeyEvent;
@@ -64,6 +67,7 @@ import com.android.messaging.ui.conversation.ConversationInputManager.Conversati
 import com.android.messaging.ui.customize.PrimaryColors;
 import com.android.messaging.ui.dialog.FiveStarRateDialog;
 import com.android.messaging.ui.emoji.utils.EmojiManager;
+import com.android.messaging.ui.signature.SignatureSettingActivity;
 import com.android.messaging.util.AccessibilityUtil;
 import com.android.messaging.util.Assert;
 import com.android.messaging.util.AvatarUriUtil;
@@ -79,6 +83,7 @@ import com.android.messaging.util.UiUtils;
 import com.superapps.font.FontUtils;
 import com.superapps.util.BackgroundDrawables;
 import com.superapps.util.Dimensions;
+import com.superapps.util.Preferences;
 import com.superapps.util.Threads;
 
 import java.util.ArrayList;
@@ -166,6 +171,8 @@ public class ComposeMessageView extends LinearLayout
     private IComposeMessageViewHost mHost;
     private final Context mOriginalContext;
     private int mSendWidgetMode = SEND_WIDGET_MODE_SELF_AVATAR;
+    private String mSignatureStr;
+    ForegroundColorSpan mSignatureSpan = new ForegroundColorSpan(0xb3222327);
 
     // Shared data model object binding from the conversation.
     private ImmutableBindingRef<ConversationData> mConversationDataModel;
@@ -206,6 +213,7 @@ public class ComposeMessageView extends LinearLayout
         super(new ContextThemeWrapper(context, R.style.ColorAccentBlueOverrideStyle), attrs);
         mOriginalContext = context;
         mBinding = BindingBase.createBinding(this);
+        mSignatureStr = Preferences.getDefault().getString(SignatureSettingActivity.PREF_KEY_SIGNATURE_CONTENT, null);
     }
 
     /**
@@ -629,11 +637,33 @@ public class ComposeMessageView extends LinearLayout
         // Check the host for pre-conditions about any action.
         if (mHost.isReadyForAction()) {
             mInputManager.showHideSimSelector(false /* show */, true /* animate */);
-            final String messageToSend = mComposeEditText.getText().toString();
-            mBinding.getData().setMessageText(messageToSend);
             final String subject = mComposeSubjectText.getText().toString();
             mBinding.getData().setMessageSubject(subject);
+
+            boolean includeSignature = false;
+            Editable e = mComposeEditText.getText();
+            int signatureIndex= 0;
+            if (!TextUtils.isEmpty(mSignatureStr)) {
+                signatureIndex = e.getSpanStart(mSignatureSpan);
+                if (signatureIndex < e.length() &&
+                        e.toString().substring(signatureIndex, e.length()).contains(mSignatureStr)) {
+                    includeSignature = true;
+                }
+            }
+
+            if (mBinding.getData().getIsMms() && !TextUtils.isEmpty(mSignatureStr)) {
+                if (signatureIndex > 1
+                        || !mSignatureStr.equals(e.toString().substring(signatureIndex, e.length()))) {
+                    mBinding.getData().setMessageText(e.toString());
+                } else {
+                    mBinding.getData().setMessageText("");
+                }
+            } else {
+                final String messageToSend = mComposeEditText.getText().toString();
+                mBinding.getData().setMessageText(messageToSend);
+            }
             // Asynchronously check the draft against various requirements before sending.
+            boolean finalIncludeSignature = includeSignature;
             mBinding.getData().checkDraftForAction(checkMessageSize,
                     mHost.getConversationSelfSubId(), new CheckDraftTaskCallback() {
                         @Override
@@ -666,6 +696,11 @@ public class ComposeMessageView extends LinearLayout
 
                                         playSentSound();
                                         mHost.sendMessage(message);
+                                        if (!TextUtils.isEmpty(mSignatureStr)) {
+                                            BugleAnalytics.logEvent("SMS_WithSignature_Send", true,
+                                                    "deleteSignature", String.valueOf(!finalIncludeSignature));
+                                        }
+
                                         hideSubjectEditor();
                                         if (AccessibilityUtil.isTouchExplorationEnabled(getContext())) {
                                             AccessibilityUtil.announceForAccessibilityCompat(
@@ -748,7 +783,6 @@ public class ComposeMessageView extends LinearLayout
 
         final String subject = data.getMessageSubject();
         final String message = data.getMessageText();
-
         if ((changeFlags & DraftMessageData.MESSAGE_SUBJECT_CHANGED) ==
                 DraftMessageData.MESSAGE_SUBJECT_CHANGED) {
             mComposeSubjectText.setText(subject);
@@ -759,10 +793,18 @@ public class ComposeMessageView extends LinearLayout
 
         if ((changeFlags & DraftMessageData.MESSAGE_TEXT_CHANGED) ==
                 DraftMessageData.MESSAGE_TEXT_CHANGED) {
-            mComposeEditText.setText(message);
-
-            // Set the cursor selection to the end since setText resets it to the start
-            mComposeEditText.setSelection(mComposeEditText.getText().length());
+            String signature = Preferences.getDefault().getString(SignatureSettingActivity.PREF_KEY_SIGNATURE_CONTENT, null);
+            if (!TextUtils.isEmpty(signature)) {
+                SpannableString sb = new SpannableString(message + "\n" + signature);
+                sb.setSpan(mSignatureSpan, message.length() + 1, sb.length(), 0);
+                sb.setSpan(new AbsoluteSizeSpan(13, true), message.length() + 1, sb.length(), 0);
+                mComposeEditText.setText(sb, TextView.BufferType.SPANNABLE);
+                mComposeEditText.setSelection(message.length());
+            } else {
+                mComposeEditText.setText(message);
+                // Set the cursor selection to the end since setText resets it to the start
+                mComposeEditText.setSelection(mComposeEditText.getText().length());
+            }
         }
 
         if ((changeFlags & DraftMessageData.ATTACHMENTS_CHANGED) ==
@@ -859,7 +901,26 @@ public class ComposeMessageView extends LinearLayout
     }
 
     public void writeDraftMessage() {
-        final String messageText = mComposeEditText.getText().toString();
+
+        Editable e = mComposeEditText.getText();
+        String signature = Preferences.getDefault().
+                getString(SignatureSettingActivity.PREF_KEY_SIGNATURE_CONTENT, null);
+        String messageText = e.toString();
+
+        if (!TextUtils.isEmpty(signature)) {
+            int index = e.getSpanStart(mSignatureSpan);
+            if (index >= 0) {
+                String messageStr = messageText.substring(0, index);
+                String signatureStr = messageText.substring(index, e.length());
+                if (signature.equals(signatureStr)) {
+                    if (messageStr.charAt(messageStr.length() - 1) == '\n') {
+                        messageText = messageStr.substring(0, messageStr.length() - 1);
+                    } else {
+                        messageText = messageStr;
+                    }
+                }
+            }
+        }
         mBinding.getData().setMessageText(messageText);
 
         final String subject = mComposeSubjectText.getText().toString();
@@ -909,6 +970,18 @@ public class ComposeMessageView extends LinearLayout
 
     private void updateVisualsOnDraftChanged() {
         final String messageText = mComposeEditText.getText().toString();
+        boolean hasMessageText = (TextUtils.getTrimmedLength(messageText) > 0);
+
+        if (!TextUtils.isEmpty(mSignatureStr)) {
+            Editable e = mComposeEditText.getText();
+            int index = e.getSpanStart(mSignatureSpan);
+            if (index >= 0) {
+                boolean signatureChanged = !mSignatureStr.equals(e.toString().substring(index, e.length()));
+                if (index <= 1 && !signatureChanged) {
+                    hasMessageText = false;
+                }
+            }
+        }
         final DraftMessageData draftMessageData = mBinding.getData();
         draftMessageData.setMessageText(messageText);
 
@@ -918,7 +991,7 @@ public class ComposeMessageView extends LinearLayout
             mSubjectView.setVisibility(View.VISIBLE);
         }
 
-        final boolean hasMessageText = (TextUtils.getTrimmedLength(messageText) > 0);
+
         final boolean hasSubject = (TextUtils.getTrimmedLength(subject) > 0);
         final boolean hasWorkingDraft = hasMessageText || hasSubject ||
                 mBinding.getData().hasAttachments();

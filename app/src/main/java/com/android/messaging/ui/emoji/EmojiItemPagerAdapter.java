@@ -24,7 +24,7 @@ public class EmojiItemPagerAdapter extends PagerAdapter {
     private List<List<BaseEmojiInfo>> mData;
     private EmojiPackagePagerAdapter.OnEmojiClickListener mOnEmojiClickListener;
 
-    EmojiItemPagerAdapter(List<BaseEmojiInfo> data, EmojiPackagePagerAdapter.OnEmojiClickListener emojiClickListener) {
+    public EmojiItemPagerAdapter(List<BaseEmojiInfo> data, EmojiPackagePagerAdapter.OnEmojiClickListener emojiClickListener) {
         if (data == null || data.isEmpty()) {
             return;
         }

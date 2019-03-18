@@ -63,6 +63,7 @@ import com.android.messaging.ui.customize.CustomBubblesActivity;
 import com.android.messaging.ui.customize.PrimaryColors;
 import com.android.messaging.ui.dialog.FiveStarRateDialog;
 import com.android.messaging.ui.emoji.EmojiStoreActivity;
+import com.android.messaging.ui.signature.SignatureSettingActivity;
 import com.android.messaging.ui.wallpaper.WallpaperChooserItem;
 import com.android.messaging.ui.wallpaper.WallpaperDownloader;
 import com.android.messaging.ui.wallpaper.WallpaperManager;
@@ -234,7 +235,9 @@ public class ConversationListActivity extends AbstractConversationListActivity
                 BugleAnalytics.logEvent("SMS_Messages_Show_1", true,
                         "font", FontStyleManager.getFontFamily(),
                         "size", size,
-                        "open time", String.valueOf(hour)
+                        "open time", String.valueOf(hour),
+                        "signature", String.valueOf(!TextUtils.isEmpty(Preferences.getDefault().getString(
+                                SignatureSettingActivity.PREF_KEY_SIGNATURE_CONTENT, null)))
                 );
 
                 if (Calendars.getDayDifference(System.currentTimeMillis(), CommonUtils.getAppInstallTimeMillis()) == 1) {

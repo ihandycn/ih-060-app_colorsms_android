@@ -23,6 +23,7 @@ import com.android.messaging.smsshow.SmsShowUtils;
 import com.android.messaging.ui.BaseAlertDialog;
 import com.android.messaging.ui.UIIntents;
 import com.android.messaging.ui.WebViewActivity;
+import com.android.messaging.ui.signature.SignatureSettingActivity;
 import com.android.messaging.util.BugleAnalytics;
 import com.android.messaging.util.BuglePrefs;
 import com.android.messaging.util.BuglePrefsKeys;
@@ -30,17 +31,20 @@ import com.android.messaging.util.OsUtil;
 import com.android.messaging.util.PendingIntentConstants;
 import com.android.messaging.util.UiUtils;
 import com.ihs.commons.config.HSConfig;
+import com.superapps.util.Navigations;
+import com.superapps.util.Preferences;
 
 import static android.view.View.GONE;
 import static com.android.messaging.ui.appsettings.SettingItemView.NORMAL;
 
-public class SettingGeneralActivity extends BaseActivity{
+public class SettingGeneralActivity extends BaseActivity {
     private static final int REQUEST_CODE_START_RINGTONE_PICKER = 1;
 
     private SettingItemView mSmsShowView;
     private SettingItemView mOutgoingSoundView;
     private SettingItemView mNotificationView;
     private SettingItemView mPopUpsView;
+    private SettingItemView mSignature;
     private SettingItemView mSoundView;
     private SettingItemView mVibrateView;
     final BuglePrefs prefs = BuglePrefs.getApplicationPrefs();
@@ -54,7 +58,7 @@ public class SettingGeneralActivity extends BaseActivity{
 
         Toolbar toolbar = findViewById(R.id.toolbar);
         toolbar.setTitle("");
-        UiUtils.setTitleBarBackground(toolbar,this);
+        UiUtils.setTitleBarBackground(toolbar, this);
         TextView title = toolbar.findViewById(R.id.toolbar_title);
         title.setText(topLevel ? getString(R.string.settings_activity_title) :
                 getString(R.string.general_settings_activity_title));
@@ -75,7 +79,7 @@ public class SettingGeneralActivity extends BaseActivity{
             BugleAnalytics.logEvent("SMS_Settings_MessageSounds_Click", true);
         });
 
-        //sms show --dong.guo
+        //sms show
         mSmsShowView = findViewById(R.id.setting_item_sms_show);
         mSmsShowView.setChecked(SmsShowUtils.isSmsShowEnabledByUser());
         mSmsShowView.setOnClickListener(v -> {
@@ -109,6 +113,13 @@ public class SettingGeneralActivity extends BaseActivity{
             MessageBoxSettings.setSMSAssistantModuleEnabled(b);
             mSmsShowView.setEnable(b);
             BugleAnalytics.logEvent("SMS_Settings_Popups_Click", true);
+        });
+
+        //signature
+        mSignature = findViewById(R.id.setting_item_signature);
+        mSignature.setOnItemClickListener(() -> {
+            Intent intent = new Intent(this, SignatureSettingActivity.class);
+            Navigations.startActivitySafely(this, intent);
         });
 
         //sounds
@@ -215,6 +226,14 @@ public class SettingGeneralActivity extends BaseActivity{
         });
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        String signature = Preferences.getDefault().getString(SignatureSettingActivity.PREF_KEY_SIGNATURE_CONTENT, null);
+        if (!TextUtils.isEmpty(signature)) {
+            mSignature.setSummary(signature);
+        }
+    }
 
     private void updateSoundSummary() {
         // The silent ringtone just returns an empty string

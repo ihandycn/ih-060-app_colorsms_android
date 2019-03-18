@@ -4,11 +4,11 @@ import android.os.Parcel;
 
 public class EmojiInfo extends BaseEmojiInfo {
 
-    EmojiInfo() {
+    public EmojiInfo() {
         mEmojiType = EmojiType.EMOJI;
     }
 
-    String mEmoji;
+    public String mEmoji;
 
 
     @Override public int describeContents() {

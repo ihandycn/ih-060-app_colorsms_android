@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/signature_root_view"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/black_60_transparent"
+    android:orientation="vertical">
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginBottom="20dp"
+        android:layout_weight="1">
+
+        <LinearLayout
+            android:id="@+id/signature_input_container"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="33.3dp"
+            android:layout_marginStart="33.3dp"
+            android:layout_gravity="center_vertical"
+            android:background="#ffffff"
+            android:orientation="vertical"
+            android:paddingBottom="24dp"
+            android:paddingEnd="24.7dp"
+            android:paddingStart="24.7dp"
+            android:paddingTop="23.3dp">
+
+            <com.superapps.view.TypefacedTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="3dp"
+                android:includeFontPadding="false"
+                android:text="@string/signature"
+                android:textColor="#222327"
+                android:textSize="18.7sp"
+                app:typeface="@string/custom_font_semibold" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="33.7dp">
+
+                <com.android.messaging.ui.signature.InterceptBackKeyEditText
+                    android:id="@+id/signature_input"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="6.7dp"
+                    android:layout_weight="1"
+                    android:background="@null"
+                    android:imeOptions="actionDone"
+                    android:inputType="textMultiLine"
+                    android:maxLines="5"
+                    android:scrollHorizontally="false"
+                    android:textColor="#484552"
+                    android:textCursorDrawable="@drawable/conversation_edittext_cursor"
+                    android:textSize="14.7sp" />
+
+                <ImageView
+                    android:id="@+id/signature_emoji_btn"
+                    android:layout_width="32dp"
+                    android:layout_height="32dp"
+                    android:layout_gravity="bottom"
+                    android:layout_marginBottom="3dp"
+                    android:src="@drawable/ic_emoji" />
+            </LinearLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1.7dp"
+                android:background="#414d53" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="27.7dp"
+                android:orientation="horizontal">
+
+                <com.superapps.view.TypefacedTextView
+                    android:id="@+id/signature_cancel_btn"
+                    android:layout_width="0dp"
+                    android:layout_height="41.3dp"
+                    android:layout_marginEnd="15.7dp"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:includeFontPadding="false"
+                    android:text="@string/share_cancel"
+                    android:textColor="#52565e"
+                    android:textSize="14sp"
+                    app:textAllCaps="true"
+                    app:typeface="@string/custom_font_semibold" />
+
+                <com.superapps.view.TypefacedTextView
+                    android:id="@+id/signature_save_btn"
+                    android:layout_width="0dp"
+                    android:layout_height="41.3dp"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:includeFontPadding="false"
+                    android:text="@string/save"
+                    android:textColor="@color/white"
+                    android:textSize="14sp"
+                    app:textAllCaps="true"
+                    app:typeface="@string/custom_font_semibold" />
+            </LinearLayout>
+        </LinearLayout>
+    </FrameLayout>
+
+    <include
+        android:id="@+id/signature_emoji_container"
+        layout="@layout/emoji_page_item_layout"
+        android:layout_width="match_parent"
+        android:layout_height="197dp"
+        android:layout_gravity="bottom"
+        tools:ignore="IncludeLayoutParam" />
+</LinearLayout>
