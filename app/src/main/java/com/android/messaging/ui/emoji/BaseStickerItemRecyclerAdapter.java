@@ -41,6 +41,8 @@ public abstract class BaseStickerItemRecyclerAdapter extends RecyclerView.Adapte
 
     public abstract void bindItemViewHolder(@NonNull RecyclerView.ViewHolder holder, int position);
 
+    private String from;
+
     public void onMagicItemLoadingFinish(StickerInfo stickerInfo, StickerViewHolder holder) {
     }
 
@@ -209,7 +211,11 @@ public abstract class BaseStickerItemRecyclerAdapter extends RecyclerView.Adapte
             public void onSuccess(String url, File file) {
                 HSLog.d(TAG, "downloadMagicEmoji, gif download successfully!!!");
                 if (!isAutoDownload) {
-                    BugleAnalytics.logEvent("SMSEmoji_ChatEmoji_Magic_Download", true, "type1", StickerInfo.getNumFromUrl(url), "type2", "success");
+                    if (TextUtils.equals(from, StickerMagicDetailActivity.FROM_EMOJ_STORE)) {
+                        BugleAnalytics.logEvent("SMSEmoji_Store_Magic_Download", true, "type1", StickerInfo.getNumFromUrl(url), "type2", "success");
+                    } else {
+                        BugleAnalytics.logEvent("SMSEmoji_ChatEmoji_Magic_Download", true, "type1", StickerInfo.getNumFromUrl(url), "type2", "success");
+                    }
                 }
                 holder.progressBar.setProgress(100);
                 Threads.postOnMainThreadDelayed(() -> {
@@ -262,7 +268,11 @@ public abstract class BaseStickerItemRecyclerAdapter extends RecyclerView.Adapte
 
             private void failure(String url) {
                 if (!isAutoDownload) {
-                    BugleAnalytics.logEvent("SMSEmoji_ChatEmoji_Magic_Download", true, "type1", StickerInfo.getNumFromUrl(url), "type2", "fail");
+                    if (TextUtils.equals(from, StickerMagicDetailActivity.FROM_EMOJ_STORE)) {
+                        BugleAnalytics.logEvent("SMSEmoji_Store_Magic_Download", true, "type1", StickerInfo.getNumFromUrl(url), "type2", "fail");
+                    } else {
+                        BugleAnalytics.logEvent("SMSEmoji_ChatEmoji_Magic_Download", true, "type1", StickerInfo.getNumFromUrl(url), "type2", "fail");
+                    }
                 }
                 holder.progressLayout.setVisibility(View.GONE);
                 holder.magicStatusView.setVisibility(View.VISIBLE);
@@ -317,6 +327,10 @@ public abstract class BaseStickerItemRecyclerAdapter extends RecyclerView.Adapte
         holder.progressLayout.setVisibility(View.VISIBLE);
         holder.magicStatusView.setVisibility(View.INVISIBLE);
         holder.progressBar.setProgress(1);
+    }
+
+    public void setFrom(String from) {
+        this.from = from;
     }
 
     static class StickerViewHolder extends RecyclerView.ViewHolder {

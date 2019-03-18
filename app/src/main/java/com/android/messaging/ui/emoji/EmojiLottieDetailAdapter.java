@@ -33,6 +33,7 @@ public class EmojiLottieDetailAdapter extends BaseStickerItemRecyclerAdapter {
 
     EmojiLottieDetailAdapter(List<BaseEmojiInfo> data) {
         mData = data;
+        setFrom(StickerMagicDetailActivity.FROM_EMOJ_STORE);
     }
 
     @Override
@@ -63,10 +64,6 @@ public class EmojiLottieDetailAdapter extends BaseStickerItemRecyclerAdapter {
                     mCouldClickSticker = false;
                     Threads.postOnMainThreadDelayed(() -> mCouldClickSticker = true, 200);
                     switch (stickerInfo.mEmojiType) {
-                        case STICKER_IMAGE:
-                        case STICKER_GIF:
-                            // clickImageAndGif(v, stickerInfo);
-                            break;
                         case STICKER_MAGIC:
                             clickMagic(v, stickerInfo, stickerHolder);
                             break;
@@ -93,7 +90,7 @@ public class EmojiLottieDetailAdapter extends BaseStickerItemRecyclerAdapter {
             Rect rect = new Rect();
             v.getGlobalVisibleRect(rect);
             stickerInfo.mStartRect = rect;
-            StickerMagicDetailActivity.start(holder.itemView.getContext(), stickerInfo);
+            StickerMagicDetailActivity.start(holder.itemView.getContext(), stickerInfo, StickerMagicDetailActivity.FROM_EMOJ_STORE);
         }
     }
 

@@ -268,10 +268,6 @@ public class EmojiStoreFragment extends Fragment implements INotificationObserve
                     getActivity().startActivity(intent);
 
                 });
-                storeViewHolder.image.setImageAssetsFolder("lottie/emoj_store_guide/");
-                storeViewHolder.image.setAnimation("lottie/emoj_store_guide.json");
-                storeViewHolder.image.loop(true);
-                storeViewHolder.image.playAnimation();
             }
 
 

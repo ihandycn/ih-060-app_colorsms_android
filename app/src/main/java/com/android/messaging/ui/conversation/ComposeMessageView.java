@@ -21,6 +21,7 @@ import android.content.res.Resources;
 import android.graphics.Rect;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v7.app.ActionBar;
 import android.text.Editable;
 import android.text.Html;
@@ -409,29 +410,35 @@ public class ComposeMessageView extends LinearLayout
             mEmojiGuideView.setVisibility(VISIBLE);
         }
         Preferences.getDefault().doLimitedTimes(new Runnable() {
-            @Override public void run() {
+            @Override
+            public void run() {
                 if (EmojiManager.isShowEmojiGuide()) {
                     mEmojiLottieGuideView.setVisibility(View.VISIBLE);
                     mEmojiLottieGuideView.setImageAssetsFolder("lottie/emoji_input_guide/");
                     mEmojiLottieGuideView.setAnimation("lottie/emoji_input_guide.json");
                     mEmojiLottieGuideView.addAnimatorListener(new Animator.AnimatorListener() {
-                        @Override public void onAnimationStart(Animator animation) {
+                        @Override
+                        public void onAnimationStart(Animator animation) {
                             mEmojiKeyboardBtn.setImageResource(android.R.color.transparent);
                         }
 
-                        @Override public void onAnimationEnd(Animator animation) {
+                        @Override
+                        public void onAnimationEnd(Animator animation) {
                             mEmojiKeyboardBtn.setImageResource(R.drawable.input_emoji_icon);
                         }
 
-                        @Override public void onAnimationCancel(Animator animation) {
+                        @Override
+                        public void onAnimationCancel(Animator animation) {
 
                         }
 
-                        @Override public void onAnimationRepeat(Animator animation) {
+                        @Override
+                        public void onAnimationRepeat(Animator animation) {
 
                         }
                     });
-                    mEmojiLottieGuideView.playAnimation();
+                    new Handler().postDelayed(() -> mEmojiLottieGuideView.playAnimation(), 180);
+
                 }
             }
         }, "pref_key_emoji_lottie_guide", 3);
