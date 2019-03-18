@@ -231,7 +231,7 @@ public class EmojiPickerFragment extends Fragment implements INotificationObserv
                 }
                 EmojiPackageInfo packageInfo = (EmojiPackageInfo) object;
                 if (mEmojiPackagePagerAdapter != null) {
-                    mEmojiPackagePagerAdapter.insertThirdItem(packageInfo);
+                    mEmojiPackagePagerAdapter.insertItem(3, packageInfo);
                     mEmojiPager.setCurrentItem(2);
                 }
                 break;
