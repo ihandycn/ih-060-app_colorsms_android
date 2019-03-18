@@ -268,19 +268,13 @@ public class ConversationListActivity extends AbstractConversationListActivity
         Trace.endSection();
     }
 
-    @Override protected void onResume() {
-        super.onResume();
-
-        BugleAnalytics.logEvent("SMS_Messages_Show_Corrected");
-    }
-
     @Override
     protected void onResume() {
         super.onResume();
+        BugleAnalytics.logEvent("SMS_Messages_Show_Corrected");
         Preferences.getDefault().incrementAndGetInt(CustomizeGuideController.PREF_KEY_MAIN_PAGE_SHOW_TIME);
         WeakReference<AppCompatActivity> activity = new WeakReference<>(this);
-        Threads.postOnMainThreadDelayed(() ->
-        {
+        Threads.postOnMainThreadDelayed(() -> {
             if (!isFinishing() && activity.get() != null) {
                 CustomizeGuideController.showGuideIfNeed(activity.get());
             }
