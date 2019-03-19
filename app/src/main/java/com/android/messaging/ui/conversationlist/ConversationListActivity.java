@@ -18,8 +18,6 @@ package com.android.messaging.ui.conversationlist;
 
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
-import android.animation.ObjectAnimator;
-import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.graphics.drawable.ColorDrawable;
@@ -27,7 +25,6 @@ import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.design.widget.NavigationView;
-import android.support.v4.view.animation.PathInterpolatorCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -42,9 +39,6 @@ import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.Interpolator;
-import android.widget.FrameLayout;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.airbnb.lottie.LottieAnimationView;
@@ -54,7 +48,6 @@ import com.android.messaging.datamodel.BugleNotifications;
 import com.android.messaging.ui.DragHotSeatActivity;
 import com.android.messaging.ui.UIIntents;
 import com.android.messaging.ui.UIIntentsImpl;
-import com.android.messaging.ui.UserSurveyActivity;
 import com.android.messaging.ui.appsettings.ChangeFontActivity;
 import com.android.messaging.ui.appsettings.ThemeSelectActivity;
 import com.android.messaging.ui.customize.BubbleDrawables;
@@ -71,7 +64,6 @@ import com.android.messaging.util.BugleAnalytics;
 import com.android.messaging.util.CommonUtils;
 import com.android.messaging.util.MediaUtil;
 import com.android.messaging.util.Trace;
-import com.ihs.app.framework.HSApplication;
 import com.ihs.commons.notificationcenter.HSGlobalNotificationCenter;
 import com.ihs.commons.notificationcenter.INotificationObserver;
 import com.ihs.commons.utils.HSBundle;
@@ -457,23 +449,12 @@ public class ConversationListActivity extends AbstractConversationListActivity
             exitMultiSelectState();
         } else {
             if (mShowRateAlert || !FiveStarRateDialog.showShowFiveStarRateDialogOnBackToDesktopIfNeed(this)) {
-                if (HSApplication.getFirstLaunchInfo().appVersionCode != HSApplication.getCurrentLaunchInfo().appVersionCode
-                        && Preferences.getDefault().getBoolean(DragHotSeatActivity.SHOW_DRAG_HOTSEAT, false)
-                        && !Preferences.getDefault().getBoolean(UserSurveyActivity.SHOW_USER_SURVEY, false)) {
-
-                    Preferences.getDefault().doOnce(
-                            () -> UIIntentsImpl.get().launchUserSurveyActivity(this),
-                            UserSurveyActivity.SHOW_USER_SURVEY);
-                } else {
-                    BugleAnalytics.logEvent("SMS_Messages_Back", true);
-                    super.onBackPressed();
-                    overridePendingTransition(0, 0);
-                    if (!Preferences.getDefault().getBoolean(DragHotSeatActivity.SHOW_DRAG_HOTSEAT, false)) {
-                        Preferences.getDefault().doOnce(
-                                () -> UIIntentsImpl.get().launchDragHotSeatActivity(this),
-                                DragHotSeatActivity.SHOW_DRAG_HOTSEAT);
-                    }
-                }
+                BugleAnalytics.logEvent("SMS_Messages_Back", true);
+                super.onBackPressed();
+                overridePendingTransition(0, 0);
+                Preferences.getDefault().doOnce(
+                        () -> UIIntentsImpl.get().launchDragHotSeatActivity(this),
+                        DragHotSeatActivity.SHOW_DRAG_HOTSEAT);
             } else {
                 mShowRateAlert = true;
             }

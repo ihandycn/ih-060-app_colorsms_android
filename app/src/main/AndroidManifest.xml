@@ -268,11 +268,6 @@
             android:screenOrientation="portrait"
             android:theme="@style/Theme.AppCompat.Translucent" />
 
-        <activity
-            android:name=".ui.UserSurveyActivity"
-            android:screenOrientation="portrait"
-            android:theme="@style/Theme.AppCompat.Translucent" />
-
         <!-- WebView -->
         <activity
             android:name=".ui.WebViewActivity"

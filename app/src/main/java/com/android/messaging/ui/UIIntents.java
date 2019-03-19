@@ -279,12 +279,6 @@ public abstract class UIIntents {
      */
     public abstract void launchDragHotSeatActivity(Context context);
 
-
-    /**
-     * Launch an activity to display user survey for themecolor fit titlebar
-     */
-    public abstract void launchUserSurveyActivity(Context context);
-
     /**
      * Launch an activity to custom bubbles
      */
