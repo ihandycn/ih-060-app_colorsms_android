@@ -1,15 +1,19 @@
 package com.android.messaging.ui.emoji;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.View;
+import android.view.animation.AlphaAnimation;
 
 import com.android.messaging.R;
 import com.android.messaging.download.Downloader;
 import com.android.messaging.ui.emoji.utils.EmojiManager;
 import com.android.messaging.util.BugleAnalytics;
+import com.android.messaging.util.TextUtil;
 import com.ihs.app.framework.activity.HSAppCompatActivity;
 import com.ihs.commons.notificationcenter.HSGlobalNotificationCenter;
 import com.ihs.commons.utils.HSBundle;
@@ -23,11 +27,28 @@ public class StickerMagicDetailActivity extends HSAppCompatActivity implements V
 
     public final static String NOTIFICATION_SEND_MAGIC_STICKER = "notification_send_magic_sticker";
     public final static String BUNDLE_SEND_MAGIC_STICKER_DATA = "bundle_send_magic_sticker_data";
+    private static final String FROM_WHERE = "from_where";
+    public static final String FROM_EMOJ_STORE = "from_emoj_store";
 
     public static void start(Context context, StickerInfo stickerInfo) {
         Intent starter = new Intent(context, StickerMagicDetailActivity.class);
         starter.putExtra(INTENT_KEY_EMOJI_INFO, stickerInfo);
-        context.startActivity(starter);
+        if (context instanceof Activity) {
+            Activity activity = (Activity) context;
+            activity.startActivity(starter);
+        }
+    }
+
+    public static void start(Context context, StickerInfo stickerInfo, String from) {
+        Intent starter = new Intent(context, StickerMagicDetailActivity.class);
+        starter.putExtra(INTENT_KEY_EMOJI_INFO, stickerInfo);
+        starter.putExtra(FROM_WHERE, from);
+        if (context instanceof Activity) {
+            Activity activity = (Activity) context;
+            activity.startActivity(starter);
+        }
+
+
     }
 
     private StickerInfo mStickerInfo;
@@ -37,10 +58,19 @@ public class StickerMagicDetailActivity extends HSAppCompatActivity implements V
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sticker_magic_layout);
+        String from = "";
+        if (getIntent() != null) {
+            from = getIntent().getStringExtra(FROM_WHERE);
+            mStickerInfo = getIntent().getParcelableExtra(INTENT_KEY_EMOJI_INFO);
+        }
+        if (TextUtils.equals(FROM_EMOJ_STORE, from)) {
+            BugleAnalytics.logEvent("SMSEmoji_Store_Magic_View", true, "type", StickerInfo.getNumFromUrl(mStickerInfo.mMagicUrl));
+            findViewById(R.id.send_btn).setVisibility(View.GONE);
 
+        } else {
+            findViewById(R.id.send_btn).setOnClickListener(this);
+        }
         findViewById(R.id.emoji_show_close).setOnClickListener(this);
-        findViewById(R.id.send_btn).setOnClickListener(this);
-        mStickerInfo = getIntent().getParcelableExtra(INTENT_KEY_EMOJI_INFO);
         BugleAnalytics.logEvent("SMSEmoji_ChatEmoji_Magic_View", true, "type", StickerInfo.getNumFromUrl(mStickerInfo.mMagicUrl));
         File file = Downloader.getInstance().getDownloadFile(mStickerInfo.mMagicUrl);
         if (!file.exists()) {
@@ -82,6 +112,9 @@ public class StickerMagicDetailActivity extends HSAppCompatActivity implements V
     @Override
     protected void onPause() {
         super.onPause();
+        if (mStickerMagicView != null) {
+            mStickerMagicView.getmSoundPlayer().pause();
+        }
         finish();
     }
 

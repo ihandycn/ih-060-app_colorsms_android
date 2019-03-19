@@ -714,6 +714,12 @@
             android:screenOrientation="portrait"
             android:theme="@style/Theme.AppCompat.Translucent"/>
 
+        <activity
+            android:name=".ui.emoji.EmojiLottieDetailActivity"
+            android:excludeFromRecents="true"
+            android:screenOrientation="portrait"
+            android:theme="@style/WindowBgWhiteAndTranslucent" />
+
     </application>
 
 </manifest>

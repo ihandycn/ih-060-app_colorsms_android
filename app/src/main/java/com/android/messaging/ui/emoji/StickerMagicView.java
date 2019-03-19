@@ -38,6 +38,11 @@ public class StickerMagicView {
 
     private GifImageView mGifImageView;
     private LottieAnimationView mLottieAnimationView;
+
+    public MediaPlayer getmSoundPlayer() {
+        return mSoundPlayer;
+    }
+
     private MediaPlayer mSoundPlayer;
     private ViewGroup mContainerView;
     private Context mContext;
@@ -121,7 +126,7 @@ public class StickerMagicView {
                                 HSLog.d(TAG, "GifDuration = " + resource.getDuration() + ", SoundDuration = " + mSoundPlayer.getDuration());
                                 mSoundPlayer.start();
                             }
-                        }else {
+                        } else {
                             resource.stop();
                             this.view.setVisibility(View.GONE);
                         }

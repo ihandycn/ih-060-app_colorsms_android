@@ -118,11 +118,15 @@ public class EmojiPackagePagerAdapter extends PagerAdapter {
         updateTabView();
     }
 
-    void insertThirdItem(EmojiPackageInfo packageInfo) {
-        if (mData.size() < 3) {
+    void insertItem(int position, EmojiPackageInfo packageInfo) {
+        if (position < 0){
+            position = 0;
+        }
+        if (mData.size() < position) {
             mData.add(packageInfo);
         }
-        mData.add(2, packageInfo);
+
+        mData.add(position, packageInfo);
         notifyDataSetChanged();
 
         updateTabView();

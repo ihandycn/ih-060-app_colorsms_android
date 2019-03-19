@@ -4,6 +4,7 @@ package com.android.messaging.ui.emoji;
 import android.annotation.SuppressLint;
 import android.app.Fragment;
 import android.content.Context;
+import android.content.Intent;
 import android.content.res.Resources;
 import android.graphics.Rect;
 import android.graphics.drawable.ColorDrawable;
@@ -19,6 +20,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.airbnb.lottie.LottieAnimationView;
 import com.android.messaging.R;
 import com.android.messaging.glide.GlideApp;
 import com.android.messaging.glide.GlideRequests;
@@ -72,7 +74,8 @@ public class EmojiStoreFragment extends Fragment implements INotificationObserve
     public void setViewPager(ViewPager viewPager) {
         if (viewPager != null) {
             viewPager.addOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
-                @Override public void onPageSelected(int position) {
+                @Override
+                public void onPageSelected(int position) {
                     if (position == 2) {
                         startGif();
                     } else {
@@ -169,8 +172,10 @@ public class EmojiStoreFragment extends Fragment implements INotificationObserve
         HSGlobalNotificationCenter.removeObserver(this);
     }
 
-    private class StoreAdapter extends RecyclerView.Adapter<StoreViewHolder> {
+    private class StoreAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
+        private static final int TYPE_NORMAL = 0;
+        private static final int TYPE_MAGIC_EMOJ = 1;
         private Context mContext;
         private Drawable mColorDrawable = new ColorDrawable(0xFFF7F7F7);
 
@@ -180,9 +185,23 @@ public class EmojiStoreFragment extends Fragment implements INotificationObserve
 
         @Override
         @NonNull
-        public StoreViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-            return new StoreViewHolder(LayoutInflater.from(mContext).
-                    inflate(R.layout.emoji_store_item, parent, false));
+        public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+            if (viewType == TYPE_MAGIC_EMOJ) {
+                return new StoreLottieViewHolder(LayoutInflater.from(mContext).
+                        inflate(R.layout.emoji_store_item_lottie, parent, false));
+            } else {
+                return new StoreViewHolder(LayoutInflater.from(mContext).
+                        inflate(R.layout.emoji_store_item, parent, false));
+            }
+        }
+
+        @Override
+        public int getItemViewType(int position) {
+            if (position == 0) {
+                return TYPE_MAGIC_EMOJ;
+            } else {
+                return TYPE_NORMAL;
+            }
         }
 
         @Override
@@ -192,50 +211,66 @@ public class EmojiStoreFragment extends Fragment implements INotificationObserve
 
         @SuppressLint("ClickableViewAccessibility")
         @Override
-        public void onBindViewHolder(@NonNull StoreViewHolder holder, int position) {
+        public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
             EmojiPackageInfo packageInfo = mStoreEmojiPackageInfoList.get(position);
-
             Resources res = getResources();
-            if (EmojiManager.isTabSticker(packageInfo.mName)) {
-                holder.getBtn.setOnClickListener(null);
-                holder.getBtn.setText(res.getString(R.string.emoji_added));
-                holder.getBtn.setTextColor(0xFFFFFFFF);
-                holder.getBtn.setBackground(BackgroundDrawables.createBackgroundDrawable(0xFFD6D6D6, Dimensions.pxFromDp(15), true));
-            } else {
-                holder.getBtn.setText(res.getString(R.string.emoji_get));
-                holder.getBtn.setTextColor(0xFF333333);
-                holder.getBtn.setBackground(BackgroundDrawables.createBackgroundDrawable(0xFFF4BE3E, 0xFFDAA017, Dimensions.pxFromDp(15), false, true));
-                holder.getBtn.setOnClickListener(v -> {
-                    if (!TextUtils.isEmpty(mSource)) {
-                        BugleAnalytics.logEvent("SMSEmoji_ChatEmoji_StoreList_Get", true, "type", packageInfo.mName, "source", mSource);
+            if (holder.getItemViewType() == TYPE_NORMAL) {
+                StoreViewHolder storeViewHolder = (StoreViewHolder) holder;
+                if (EmojiManager.isTabSticker(packageInfo.mName)) {
+                    storeViewHolder.getBtn.setOnClickListener(null);
+                    storeViewHolder.getBtn.setText(res.getString(R.string.emoji_added));
+                    storeViewHolder.getBtn.setTextColor(0xFFFFFFFF);
+                    storeViewHolder.getBtn.setBackground(BackgroundDrawables.createBackgroundDrawable(0xFFD6D6D6, Dimensions.pxFromDp(15), true));
+                } else {
+                    storeViewHolder.getBtn.setText(res.getString(R.string.emoji_get));
+                    storeViewHolder.getBtn.setTextColor(0xFF333333);
+                    storeViewHolder.getBtn.setBackground(BackgroundDrawables.createBackgroundDrawable(0xFFF4BE3E, 0xFFDAA017, Dimensions.pxFromDp(15), false, true));
+                    storeViewHolder.getBtn.setOnClickListener(v -> {
+                        if (!TextUtils.isEmpty(mSource)) {
+                            BugleAnalytics.logEvent("SMSEmoji_ChatEmoji_StoreList_Get", true, "type", packageInfo.mName, "source", mSource);
+                        }
+                        storeViewHolder.getBtn.setOnClickListener(null);
+                        storeViewHolder.getBtn.setText(res.getString(R.string.emoji_added));
+                        storeViewHolder.getBtn.setTextColor(0xFFFFFFFF);
+                        storeViewHolder.getBtn.setBackground(BackgroundDrawables.createBackgroundDrawable(0xFFD6D6D6, Dimensions.pxFromDp(15), true));
+                        EmojiManager.addTabSticker(packageInfo.mName);
+                        HSBundle bundle = new HSBundle();
+                        bundle.putObject(EmojiPickerFragment.NOTIFICATION_BUNDLE_PACKAGE_INFO, packageInfo);
+                        HSGlobalNotificationCenter.sendNotification(EmojiPickerFragment.NOTIFICATION_ADD_EMOJI_FROM_STORE, bundle);
+                    });
+                }
+
+                storeViewHolder.previewLayout.bindEmojiItems(packageInfo);
+
+                storeViewHolder.itemView.setOnClickListener(v -> {
+                    if (!TextUtils.isEmpty(packageInfo.mName)) {
+                        BugleAnalytics.logEvent("SMSEmoji_ChatEmoji_StoreList_Click", true, "type", packageInfo.mName);
                     }
-                    holder.getBtn.setOnClickListener(null);
-                    holder.getBtn.setText(res.getString(R.string.emoji_added));
-                    holder.getBtn.setTextColor(0xFFFFFFFF);
-                    holder.getBtn.setBackground(BackgroundDrawables.createBackgroundDrawable(0xFFD6D6D6, Dimensions.pxFromDp(15), true));
-                    EmojiManager.addTabSticker(packageInfo.mName);
-                    HSBundle bundle = new HSBundle();
-                    bundle.putObject(EmojiPickerFragment.NOTIFICATION_BUNDLE_PACKAGE_INFO, packageInfo);
-                    HSGlobalNotificationCenter.sendNotification(EmojiPickerFragment.NOTIFICATION_ADD_EMOJI_FROM_STORE, bundle);
+                    EmojiDetailActivity.start(mSource, getActivity(), packageInfo);
+                });
+                GlideRequests imageRequest = GlideApp.with(mContext);
+                imageRequest.asBitmap()
+                        .load(packageInfo.mBannerUrl)
+                        .placeholder(mColorDrawable)
+                        .error(mColorDrawable)
+                        .diskCacheStrategy(DiskCacheStrategy.DATA)
+                        .into(storeViewHolder.image);
+            } else if (holder.getItemViewType() == TYPE_MAGIC_EMOJ) {
+                StoreLottieViewHolder storeViewHolder = (StoreLottieViewHolder) holder;
+                storeViewHolder.getBtn.setOnClickListener(null);
+                storeViewHolder.getBtn.setText(res.getString(R.string.emoji_added));
+                storeViewHolder.getBtn.setTextColor(0xFFFFFFFF);
+                storeViewHolder.getBtn.setBackground(BackgroundDrawables.createBackgroundDrawable(0xFFD6D6D6, Dimensions.pxFromDp(15), true));
+                storeViewHolder.previewLayout.bindEmojiItemsForLottie();
+                storeViewHolder.itemView.setOnClickListener(v -> {
+                    BugleAnalytics.logEvent("SMSEmoji_ChatEmoji_StoreList_Click", true, "type", "Magic Emoji");
+                    Intent intent = new Intent(getActivity(), EmojiLottieDetailActivity.class);
+                    getActivity().startActivity(intent);
+
                 });
             }
 
-            holder.previewLayout.bindEmojiItems(packageInfo);
 
-            holder.itemView.setOnClickListener(v -> {
-                if (!TextUtils.isEmpty(mSource)) {
-                    BugleAnalytics.logEvent("SMSEmoji_ChatEmoji_StoreList_Click", true, "source", mSource);
-                }
-                EmojiDetailActivity.start(mSource, getActivity(), packageInfo);
-            });
-
-            GlideRequests imageRequest = GlideApp.with(mContext);
-            imageRequest.asBitmap()
-                    .load(packageInfo.mBannerUrl)
-                    .placeholder(mColorDrawable)
-                    .error(mColorDrawable)
-                    .diskCacheStrategy(DiskCacheStrategy.DATA)
-                    .into(holder.image);
         }
 
         void updateItem(String name) {
@@ -263,9 +298,24 @@ public class EmojiStoreFragment extends Fragment implements INotificationObserve
         }
     }
 
+    private class StoreLottieViewHolder extends RecyclerView.ViewHolder {
+
+        LottieAnimationView image;
+        TypefacedTextView getBtn;
+        EmojiStorePreviewLayout previewLayout;
+
+        StoreLottieViewHolder(View itemView) {
+            super(itemView);
+            image = itemView.findViewById(R.id.emoji_store_item_lottie);
+            getBtn = itemView.findViewById(R.id.emoji_store_item_get_btn);
+            previewLayout = itemView.findViewById(R.id.preview_layout);
+        }
+    }
+
     private static class StoreItemDecoration extends RecyclerView.ItemDecoration {
 
-        @Override public void getItemOffsets(Rect outRect, View view, RecyclerView parent, RecyclerView.State state) {
+        @Override
+        public void getItemOffsets(Rect outRect, View view, RecyclerView parent, RecyclerView.State state) {
 
             int position = parent.getChildAdapterPosition(view);
             int column = position % MAX_COLUMNS;
