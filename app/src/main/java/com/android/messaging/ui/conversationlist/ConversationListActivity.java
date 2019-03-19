@@ -1,25 +1,7 @@
-/*
- * Copyright (C) 2015 The Android Open Source Project
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-
 package com.android.messaging.ui.conversationlist;
 
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
-import android.animation.ObjectAnimator;
-import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.graphics.drawable.ColorDrawable;
@@ -27,7 +9,6 @@ import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.design.widget.NavigationView;
-import android.support.v4.view.animation.PathInterpolatorCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -42,9 +23,6 @@ import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.Interpolator;
-import android.widget.FrameLayout;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.airbnb.lottie.LottieAnimationView;
@@ -63,7 +41,7 @@ import com.android.messaging.ui.customize.CustomBubblesActivity;
 import com.android.messaging.ui.customize.PrimaryColors;
 import com.android.messaging.ui.dialog.FiveStarRateDialog;
 import com.android.messaging.ui.emoji.EmojiStoreActivity;
-import com.android.messaging.ui.signature.SignatureSettingActivity;
+import com.android.messaging.ui.signature.SignatureSettingDialog;
 import com.android.messaging.ui.wallpaper.WallpaperChooserItem;
 import com.android.messaging.ui.wallpaper.WallpaperDownloader;
 import com.android.messaging.ui.wallpaper.WallpaperManager;
@@ -122,7 +100,6 @@ public class ConversationListActivity extends AbstractConversationListActivity
 
     private TextView mTitleTextView;
     private View mEmojiStoreIconView;
-    private View mEmojiStoreCircleView;
     private LottieAnimationView mGuideContainer;
     private View mTriangleShape;
     private View statusbarInset;
@@ -133,7 +110,6 @@ public class ConversationListActivity extends AbstractConversationListActivity
 
     private static boolean mIsNoActionBack = true;
     private boolean mIsRealCreate = false;
-    private boolean isScreenOn;
     private boolean mShowEndAnimation;
 
     private enum AnimState {
@@ -237,7 +213,7 @@ public class ConversationListActivity extends AbstractConversationListActivity
                         "size", size,
                         "open time", String.valueOf(hour),
                         "signature", String.valueOf(!TextUtils.isEmpty(Preferences.getDefault().getString(
-                                SignatureSettingActivity.PREF_KEY_SIGNATURE_CONTENT, null)))
+                                SignatureSettingDialog.PREF_KEY_SIGNATURE_CONTENT, null)))
                 );
 
                 if (Calendars.getDayDifference(System.currentTimeMillis(), CommonUtils.getAppInstallTimeMillis()) == 1) {
@@ -696,9 +672,6 @@ public class ConversationListActivity extends AbstractConversationListActivity
             }
             if (mTriangleShape != null) {
                 mTriangleShape.setVisibility(View.GONE);
-            }
-            if (mEmojiStoreCircleView != null) {
-                mEmojiStoreCircleView.setVisibility(View.GONE);
             }
             mAnimState = AnimState.NONE;
         }

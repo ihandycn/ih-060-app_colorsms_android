@@ -67,7 +67,7 @@ import com.android.messaging.ui.conversation.ConversationInputManager.Conversati
 import com.android.messaging.ui.customize.PrimaryColors;
 import com.android.messaging.ui.dialog.FiveStarRateDialog;
 import com.android.messaging.ui.emoji.utils.EmojiManager;
-import com.android.messaging.ui.signature.SignatureSettingActivity;
+import com.android.messaging.ui.signature.SignatureSettingDialog;
 import com.android.messaging.util.AccessibilityUtil;
 import com.android.messaging.util.Assert;
 import com.android.messaging.util.AvatarUriUtil;
@@ -213,7 +213,7 @@ public class ComposeMessageView extends LinearLayout
         super(new ContextThemeWrapper(context, R.style.ColorAccentBlueOverrideStyle), attrs);
         mOriginalContext = context;
         mBinding = BindingBase.createBinding(this);
-        mSignatureStr = Preferences.getDefault().getString(SignatureSettingActivity.PREF_KEY_SIGNATURE_CONTENT, null);
+        mSignatureStr = Preferences.getDefault().getString(SignatureSettingDialog.PREF_KEY_SIGNATURE_CONTENT, null);
     }
 
     /**
@@ -793,7 +793,7 @@ public class ComposeMessageView extends LinearLayout
 
         if ((changeFlags & DraftMessageData.MESSAGE_TEXT_CHANGED) ==
                 DraftMessageData.MESSAGE_TEXT_CHANGED) {
-            String signature = Preferences.getDefault().getString(SignatureSettingActivity.PREF_KEY_SIGNATURE_CONTENT, null);
+            String signature = Preferences.getDefault().getString(SignatureSettingDialog.PREF_KEY_SIGNATURE_CONTENT, null);
             if (!TextUtils.isEmpty(signature)) {
                 SpannableString sb = new SpannableString(message + "\n" + signature);
                 sb.setSpan(mSignatureSpan, message.length() + 1, sb.length(), 0);
@@ -904,7 +904,7 @@ public class ComposeMessageView extends LinearLayout
 
         Editable e = mComposeEditText.getText();
         String signature = Preferences.getDefault().
-                getString(SignatureSettingActivity.PREF_KEY_SIGNATURE_CONTENT, null);
+                getString(SignatureSettingDialog.PREF_KEY_SIGNATURE_CONTENT, null);
         String messageText = e.toString();
 
         if (!TextUtils.isEmpty(signature)) {

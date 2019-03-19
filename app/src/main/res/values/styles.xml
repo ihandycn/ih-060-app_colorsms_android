@@ -706,6 +706,16 @@
         <item name="android:windowBackground">@android:color/white</item>
     </style>
 
+    <style name="DialogFullScreen" parent="android:Theme.Translucent.NoTitleBar">
+        <item name="android:windowTranslucentStatus">true</item>
+    </style>
+
+    <style name="MessageViewEditTextTheme" parent="Base.Theme.AppCompat.Light.DarkActionBar">
+        <item name="colorPrimary">@color/primary_color</item>
+        <item name="colorPrimaryDark">@color/primary_color_dark</item>
+        <item name="colorAccent" >#11bd3d</item>
+    </style>
+
     <style name="AcbSmsRecyclerViewTheme" parent="Theme.AppCompat.Light">
         <item name="colorPrimary">@color/message_box_primary_color</item>
     </style>

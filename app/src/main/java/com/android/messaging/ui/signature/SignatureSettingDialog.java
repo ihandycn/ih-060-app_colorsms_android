@@ -1,25 +1,23 @@
 package com.android.messaging.ui.signature;
 
+import android.app.Activity;
+import android.app.DialogFragment;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.view.PagerAdapter;
-import android.support.v4.view.ViewPager;
-import android.text.Editable;
-import android.text.SpannableString;
 import android.text.TextUtils;
-import android.text.TextWatcher;
-import android.text.style.ForegroundColorSpan;
-import android.util.Log;
 import android.view.KeyEvent;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.WindowManager;
-import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.TextView;
 
 import com.android.messaging.R;
+import com.android.messaging.ui.appsettings.SettingGeneralActivity;
 import com.android.messaging.ui.customize.PrimaryColors;
 import com.android.messaging.ui.emoji.BaseEmojiInfo;
 import com.android.messaging.ui.emoji.EmojiInfo;
@@ -29,41 +27,91 @@ import com.android.messaging.ui.emoji.StickerInfo;
 import com.android.messaging.ui.emoji.ViewPagerDotIndicatorView;
 import com.android.messaging.util.BugleAnalytics;
 import com.android.messaging.util.ImeUtil;
-import com.ihs.app.framework.activity.HSAppCompatActivity;
+import com.ihs.app.framework.HSApplication;
 import com.superapps.util.BackgroundDrawables;
 import com.superapps.util.Dimensions;
 import com.superapps.util.Preferences;
 import com.superapps.util.Threads;
 import com.superapps.view.ViewPagerFixed;
 
+import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-public class SignatureSettingActivity extends HSAppCompatActivity {
+
+public class SignatureSettingDialog extends DialogFragment {
+
     public static final String PREF_KEY_SIGNATURE_CONTENT = "pref_key_signature_content";
     private View mEmojiContainer;
-    private EditText mInputEditText;
+    private InterceptBackKeyEditText mInputEditText;
     private boolean mIsEmojiShow, mIsKeyboardShow;
     private Set<String> mInputEmojiSet = new HashSet<>();
+    private View root;
+    private WeakReference<Activity> mActivityReference;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
-        setContentView(R.layout.activity_signature_setting);
+        setStyle(DialogFragment.STYLE_NORMAL, R.style.DialogFullScreen);
+        mActivityReference = new WeakReference<>(getActivity());
+    }
 
-        mEmojiContainer = findViewById(R.id.signature_emoji_container);
+    @Override
+    public void onStart() {
+        super.onStart();
+        if (getDialog().getWindow() != null) {
+            getDialog().getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+        }
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        Threads.postOnMainThreadDelayed(this::showKeyboard, 300);
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        if (mActivityReference.get() != null && mActivityReference.get() instanceof SettingGeneralActivity) {
+            ((SettingGeneralActivity) mActivityReference.get()).clearBackPressedListener();
+        }
+    }
+
+    @Override
+    public void dismiss() {
+        super.dismiss();
+        if (mActivityReference.get() != null && mActivityReference.get() instanceof SettingGeneralActivity) {
+            ((SettingGeneralActivity) mActivityReference.get()).clearBackPressedListener();
+        }
+    }
+
+    @Nullable
+    @Override
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+
+        getDialog().setCanceledOnTouchOutside(false);
+        if (getDialog().getWindow() != null) {
+            getDialog().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
+        }
+        root = inflater.inflate(R.layout.activity_signature_setting, container, false);
+
+        if (getActivity() instanceof SettingGeneralActivity) {
+            ((SettingGeneralActivity) getActivity()).addBackPressListener(this::onBackPressed);
+        }
+
+        mEmojiContainer = root.findViewById(R.id.signature_emoji_container);
         mEmojiContainer.setBackgroundColor(Color.WHITE);
 
-        findViewById(R.id.signature_input_container).setBackground(
+        root.findViewById(R.id.signature_input_container).setBackground(
                 BackgroundDrawables.createBackgroundDrawable(Color.WHITE, Dimensions.pxFromDp(8), false));
-        View cancelBtn = findViewById(R.id.signature_cancel_btn);
+        View cancelBtn = root.findViewById(R.id.signature_cancel_btn);
         cancelBtn.setBackground(BackgroundDrawables.createBackgroundDrawable(0xffebeef3, Dimensions.pxFromDp(3.3f), true));
-        cancelBtn.setOnClickListener(v -> finish());
+        cancelBtn.setOnClickListener(v -> dismiss());
 
-        View saveBtn = findViewById(R.id.signature_save_btn);
+        View saveBtn = root.findViewById(R.id.signature_save_btn);
         saveBtn.setBackground(BackgroundDrawables.createBackgroundDrawable(PrimaryColors.getPrimaryColor(), Dimensions.pxFromDp(3.3f), true));
         saveBtn.setOnClickListener(v -> {
             String signature = mInputEditText.getText().toString();
@@ -77,10 +125,14 @@ public class SignatureSettingActivity extends HSAppCompatActivity {
                 }
             }
             BugleAnalytics.logEvent("SMS_Signature_Change", true, "with_emoji", String.valueOf(hasEmoji));
-            finish();
+
+            if (mActivityReference.get() != null && mActivityReference.get() instanceof SettingGeneralActivity) {
+                ((SettingGeneralActivity) mActivityReference.get()).refreshSignature();
+            }
+            dismiss();
         });
 
-        ImageView emojiBtn = findViewById(R.id.signature_emoji_btn);
+        ImageView emojiBtn = root.findViewById(R.id.signature_emoji_btn);
         emojiBtn.getDrawable().mutate().setColorFilter(0xff3b3e43, PorterDuff.Mode.SRC_ATOP);
         emojiBtn.setOnClickListener(v -> {
             if (!mIsKeyboardShow && !mIsEmojiShow) {
@@ -95,13 +147,11 @@ public class SignatureSettingActivity extends HSAppCompatActivity {
             }
         });
 
-        mInputEditText = findViewById(R.id.signature_input);
+        mInputEditText = root.findViewById(R.id.signature_input);
+        mInputEditText.addBackListener(this::onBackPressed);
         mInputEditText.setOnClickListener(v -> {
-            if (mIsKeyboardShow || mIsEmojiShow) {
-                hideKeyboard();
+            if (!mIsKeyboardShow) {
                 hideEmoji();
-                mEmojiContainer.setVisibility(View.GONE);
-            } else {
                 mEmojiContainer.setVisibility(View.INVISIBLE);
                 showKeyboard();
             }
@@ -116,16 +166,9 @@ public class SignatureSettingActivity extends HSAppCompatActivity {
         BugleAnalytics.logEvent("SMS_Signature_Show", true);
         mEmojiContainer.setVisibility(View.INVISIBLE);
         initEmoji();
-        // initEditText();
+        return root;
     }
 
-    @Override
-    protected void onResume() {
-        super.onResume();
-        Threads.postOnMainThreadDelayed(() -> showKeyboard(), 300);
-    }
-
-    @Override
     public void onBackPressed() {
         mEmojiContainer.setVisibility(View.GONE);
         if (mIsEmojiShow) {
@@ -136,7 +179,7 @@ public class SignatureSettingActivity extends HSAppCompatActivity {
             hideKeyboard();
             return;
         }
-        super.onBackPressed();
+        dismiss();
     }
 
     private List<BaseEmojiInfo> getEmojiList() {
@@ -161,12 +204,12 @@ public class SignatureSettingActivity extends HSAppCompatActivity {
     }
 
     private void showKeyboard() {
-        ImeUtil.get().showImeKeyboard(this, mInputEditText);
+        ImeUtil.get().showImeKeyboard(HSApplication.getContext(), mInputEditText);
         mIsKeyboardShow = true;
     }
 
     private void hideKeyboard() {
-        ImeUtil.get().hideImeKeyboard(this, mInputEditText);
+        ImeUtil.get().hideImeKeyboard(HSApplication.getContext(), mInputEditText);
         mIsKeyboardShow = false;
     }
 
@@ -191,8 +234,8 @@ public class SignatureSettingActivity extends HSAppCompatActivity {
             }
         };
 
-        ViewPagerFixed itemPager = findViewById(R.id.emoji_item_pager);
-        ViewPagerDotIndicatorView dotIndicatorView = findViewById(R.id.dot_indicator_view);
+        ViewPagerFixed itemPager = root.findViewById(R.id.emoji_item_pager);
+        ViewPagerDotIndicatorView dotIndicatorView = root.findViewById(R.id.dot_indicator_view);
         itemPager.addOnPageChangeListener(dotIndicatorView);
         PagerAdapter adapter = new EmojiItemPagerAdapter(getEmojiList(), listener);
         itemPager.setAdapter(adapter);

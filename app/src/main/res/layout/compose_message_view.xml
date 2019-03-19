@@ -179,6 +179,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:hint="@string/compose_message_view_hint_text"
+                    android:theme="@style/MessageViewEditTextTheme"
                     android:imeOptions="actionSend|flagNoEnterAction|flagNoExtractUi" />
 
                 <ImageView

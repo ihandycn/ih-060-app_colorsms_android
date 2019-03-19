@@ -12,6 +12,7 @@ import android.support.annotation.IntDef;
 import android.support.annotation.Nullable;
 import android.support.v4.graphics.drawable.DrawableCompat;
 import android.support.v7.widget.SwitchCompat;
+import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -182,10 +183,14 @@ public class SettingItemView extends FrameLayout {
     }
 
     public void setSummary(String summary) {
-        if (mSummaryView.getVisibility() != VISIBLE) {
-            mSummaryView.setVisibility(VISIBLE);
+        if (TextUtils.isEmpty(summary)) {
+            mSummaryView.setVisibility(GONE);
+        } else {
+            if (mSummaryView.getVisibility() != VISIBLE) {
+                mSummaryView.setVisibility(VISIBLE);
+            }
+            mSummaryView.setText(summary);
         }
-        mSummaryView.setText(summary);
     }
 
     public void setIcon(@DrawableRes int drawableRes) {
