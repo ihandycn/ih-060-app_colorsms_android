@@ -276,9 +276,6 @@ public abstract class BaseStickerItemRecyclerAdapter extends RecyclerView.Adapte
     }
 
     static void releaseListener() {
-        for (DownloadListener listener : mEmojiDownloadListener) {
-            listener = null;
-        }
         mEmojiDownloadListener.clear();
     }
 }
