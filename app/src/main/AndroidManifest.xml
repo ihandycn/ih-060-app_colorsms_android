@@ -187,13 +187,12 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.android.messaging.ui.conversationlist.ConversationListActivity" />
         </activity>
-
         <activity
             android:name=".ui.appsettings.ThemeSelectActivity"
             android:configChanges="orientation|screenSize|keyboardHidden"
             android:label="@string/settings_activity_title"
             android:screenOrientation="portrait"
-            android:theme="@style/SettingsActivity"></activity>
+            android:theme="@style/SettingsActivity" />
 
         <!-- Handles sharing intent -->
         <activity
@@ -254,7 +253,6 @@
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
             android:theme="@style/WelcomeTheme" />
-
         <activity
             android:name=".ui.SetAsDefaultGuideActivity"
             android:excludeFromRecents="true"
@@ -262,7 +260,6 @@
             android:screenOrientation="portrait"
             android:taskAffinity=".setasdefault.guide"
             android:theme="@style/Theme.AppCompat.Translucent" />
-
         <activity
             android:name=".ui.DragHotSeatActivity"
             android:screenOrientation="portrait"
@@ -635,29 +632,24 @@
             android:excludeFromRecents="true"
             android:screenOrientation="portrait"
             android:theme="@style/BaseSettingsActivity" />
-
         <activity
             android:name=".ui.appsettings.ChangeFontActivity"
             android:excludeFromRecents="true"
             android:screenOrientation="portrait"
             android:theme="@style/BaseSettingsActivity" />
-
         <activity android:name=".debug.ChangeThemeColorDebugActivity" />
-
         <activity
             android:name=".ui.customize.CustomBubblesActivity"
             android:excludeFromRecents="true"
             android:screenOrientation="portrait"
             android:theme="@style/BugleTheme.ConversationActivity" />
 
-
-        <!--Lib permanent-->
+        <!-- Lib permanent -->
         <service
             android:name="com.ihs.device.permanent.PermanentService"
             android:label="GuardServiceNew"
             tools:remove="android:process"
             tools:replace="android:label" />
-
         <service
             android:name="com.ihs.device.permanent.PermanentService$PermanentServiceInner"
             tools:remove="android:process" />
@@ -669,7 +661,6 @@
         <service
             android:name="com.ihs.device.permanent.syncaccount.AuthenticationService"
             tools:remove="android:process" />
-
         <service
             android:name="com.ihs.device.permanent.syncaccount.SyncService"
             tools:remove="android:process" />
@@ -685,7 +676,6 @@
         <provider
             android:name="com.ihs.device.permanent.syncaccount.SyncContentProvider"
             tools:remove="android:process" />
-
         <provider
             android:name="com.ihs.device.common.AppInfoProvider"
             tools:remove="android:process" />
@@ -693,7 +683,6 @@
         <activity
             android:name="com.ihs.device.permanent.foreground.ForegroundActivity"
             tools:remove="android:process" />
-
         <activity
             android:name=".ui.wallpaper.WallpaperPreviewActivity"
             android:excludeFromRecents="true"
@@ -719,7 +708,6 @@
             android:excludeFromRecents="true"
             android:screenOrientation="portrait"
             android:theme="@style/WindowBgWhiteAndTranslucent" />
-
     </application>
 
 </manifest>
