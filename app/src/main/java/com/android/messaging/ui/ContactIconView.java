@@ -85,11 +85,13 @@ public class ContactIconView extends AsyncImageView {
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
-        if (event.getActionMasked() == MotionEvent.ACTION_DOWN) {
-            setColorFilter(mColorPressedId);
-        } else if (event.getActionMasked() == MotionEvent.ACTION_CANCEL
-                || event.getActionMasked() == MotionEvent.ACTION_UP) {
-            clearColorFilter();
+        if (isClickable()) {
+            if (event.getActionMasked() == MotionEvent.ACTION_DOWN) {
+                setColorFilter(mColorPressedId);
+            } else if (event.getActionMasked() == MotionEvent.ACTION_CANCEL
+                    || event.getActionMasked() == MotionEvent.ACTION_UP) {
+                clearColorFilter();
+            }
         }
         return super.onTouchEvent(event);
     }
@@ -111,7 +113,7 @@ public class ContactIconView extends AsyncImageView {
     }
 
     public void setImageResourceUri(final Uri uri, final long contactId,
-            final String contactLookupKey, final String normalizedDestination) {
+                                    final String contactLookupKey, final String normalizedDestination) {
         if (uri == null) {
             setImageResourceId(null);
         } else {
@@ -150,7 +152,7 @@ public class ContactIconView extends AsyncImageView {
         mNormalizedDestination = normalizedDestination;
         mAvatarUri = uri;
 
-        maybeInitializeOnClickListener();
+        //maybeInitializeOnClickListener();
     }
 
     protected void maybeInitializeOnClickListener() {
@@ -173,7 +175,5 @@ public class ContactIconView extends AsyncImageView {
             // is the case then absorb the click to prevent propagation.
             setOnClickListener(null);
         }
-
-
     }
 }
