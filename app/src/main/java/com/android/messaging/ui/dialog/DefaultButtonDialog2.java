@@ -4,7 +4,6 @@ import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.res.Resources;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
@@ -73,28 +72,19 @@ public abstract class DefaultButtonDialog2 {
     protected void configDialog(AlertDialog.Builder builder, boolean cancelable) {
         builder.setView(mRootView);
         builder.setCancelable(cancelable);
-        builder.setOnDismissListener(new DialogInterface.OnDismissListener() {
-            @Override
-            public void onDismiss(DialogInterface dialog) {
-                HSLog.d(TAG, "onDismiss");
-                removeDialog();
-                onDismissComplete();
-            }
+        builder.setOnDismissListener(dialog -> {
+            HSLog.d(TAG, "onDismiss");
+            removeDialog();
+            onDismissComplete();
         });
-        builder.setOnCancelListener(new DialogInterface.OnCancelListener() {
-            @Override
-            public void onCancel(DialogInterface dialog) {
-                HSLog.d(TAG, "onCancel");
-                DefaultButtonDialog2.this.onCanceled();
-            }
+        builder.setOnCancelListener(dialog -> {
+            HSLog.d(TAG, "onCancel");
+            DefaultButtonDialog2.this.onCanceled();
         });
         mAlertDialog = builder.create();
-        mAlertDialog.setOnShowListener(new DialogInterface.OnShowListener() {
-            @Override
-            public void onShow(DialogInterface dialog) {
-                HSLog.d(TAG, "OnShow");
-                DefaultButtonDialog2.this.onShow();
-            }
+        mAlertDialog.setOnShowListener(dialog -> {
+            HSLog.d(TAG, "OnShow");
+            DefaultButtonDialog2.this.onShow();
         });
 
         mAlertDialog.setCanceledOnTouchOutside(false);

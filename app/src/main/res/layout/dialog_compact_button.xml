@@ -41,19 +41,20 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/dialog_btn_margin"
             android:layout_marginLeft="25dp"
             android:layout_marginRight="25dp"
             android:layout_marginTop="@dimen/dialog_content_margin_top"
             android:baselineAligned="false"
             android:gravity="end"
-            android:orientation="horizontal"
-            android:paddingBottom="@dimen/dialog_btn_margin">
+            android:orientation="horizontal">
 
             <Button
                 android:id="@+id/ok_btn"
+                style="@style/Widget.AppCompat.Button.Borderless"
                 android:layout_width="match_parent"
                 android:layout_height="43dp"
-                android:background="@drawable/material_compat_button_bg_blue_with_inactivated_state"
+                android:background="@drawable/dialog_button_bg_with_inactivated_state"
                 android:text="@android:string/ok"
                 android:textColor="@android:color/white"
                 android:textSize="16sp" />
