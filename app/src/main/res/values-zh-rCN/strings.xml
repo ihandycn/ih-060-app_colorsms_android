@@ -586,8 +586,13 @@
     <string name="message_box_negative_button">关闭</string>
     <string name="message_box_positive_action">取消</string>
 
-    <string name="message_box_disable_successfully">消息助手已关闭</string>
-    <string name="message_box_alert_title">关闭消息助手？</string>
-    <string name="message_box_alert_message">一旦关闭来电助手，有新消息时将不会收到提醒，确认关闭？</string>
+    <string name="customize_guide_title">个性化功能在这里！</string>
+    <string name="signature">签名</string>
+    <string name="messages">消息</string>
+    <string name="message_box_alert_title">短信弹窗已关闭</string>
+    <string name="message_box_disable_successfully">一旦关闭短信弹窗，有新消息时将不会收到提醒，确认关闭？</string>
+    <string name="menu_new">新功能</string>
+    <string name="message_box_alert_message">关闭短信弹窗？</string>
+    <string name="set_as_default_dialog_title_user_present">将Color SMS设为默认短信应用</string>
 
 </resources>

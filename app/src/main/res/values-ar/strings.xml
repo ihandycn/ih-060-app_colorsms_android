@@ -645,8 +645,13 @@
     <string name="message_box_negative_button">إيقاف التشغيل</string>
     <string name="message_box_positive_action">ليس الآن.</string>
 
-    <string name="message_box_disable_successfully">مساعد الرسائل معطل</string>
-    <string name="message_box_alert_title">إيقاف مساعد الرسائل؟</string>
-    <string name="message_box_alert_message">إذا أوقفت مساعد الرسائل، فلن تحصل على تذكير عند تلقي رسائل. متأكد من أنك تريد إيقاف تشغيله؟</string>
+	<string name="customize_guide_title">أهلاً بالتخصيص!</string>
+	<string name="signature">التوقيع</string>
+	<string name="messages">الرسائل</string>
+	<string name="message_box_alert_title">رسائل قصيرة دون نوافذ منبثقة؟</string>
+	<string name="message_box_disable_successfully">نوافذ الرسائل قصيرة معطلة</string>
+	<string name="menu_new">جديد</string>
+	<string name="message_box_alert_message">إذا أوقفت خاصية النوافذ المنبثقة للرسائل القصيرة، لن تظهر رسائلك القصيرة في نوافذ منبثقة.</string>
+	<string name="set_as_default_dialog_title_user_present">تعيين Color SMS كافتراضي</string>
 
 </resources>

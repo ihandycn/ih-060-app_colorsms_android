@@ -588,7 +588,18 @@
     <string name="message_box_negative_button">DESLIGAR</string>
     <string name="message_box_positive_action">AGORA NÃO</string>
 
-    <string name="message_box_disable_successfully">Assistente de Mensagens desativado</string>
-    <string name="message_box_alert_title">Desativar o Assistente de Mensagens?</string>
-    <string name="message_box_alert_message">Se você desativar o Assistente de Mensagens, não receberá um lembrete quando receber mensagens. Tem certeza de que deseja desativar?</string>
+
+	<string name="customize_guide_title">A personalização está aqui!</string>
+	<string name="signature">Assinatura</string>
+	<string name="messages">Mensagens</string>
+	<string name="message_box_alert_title">Desativar pop-ups de SMS?</string>
+	<string name="message_box_disable_successfully">Pop-ups de SMS desativados</string>
+
+
+	<string name="menu_new">NOVO</string>
+	<string name="message_box_alert_message">Se você desativar os pop-ups de SMS, não receberá um pop-up ao receber mensagens.</string>
+
+
+	<string name="set_as_default_dialog_title_user_present">Defina Color SMS como padrão</string>
+
 </resources>

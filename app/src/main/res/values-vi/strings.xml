@@ -585,7 +585,18 @@
     <string name="message_box_negative_button">TẮT</string>
     <string name="message_box_positive_action">KHÔNG PHẢI HIỆN TẠI</string>
 
-    <string name="message_box_disable_successfully">Đã tắt Hỗ trợ Cuộc gọi</string>
-    <string name="message_box_alert_title">Tắt Hỗ trợ Cuộc gọi?</string>
-    <string name="message_box_alert_message">Nếu bạn tắt Hỗ trợ Cuộc gọi, bạn sẽ không nhận được lời nhắc khi bị lỡ cuộc gọi. Chắc chắn tắt nó?</string>
+
+	<string name="customize_guide_title">Tùy chỉnh hiện có!</string>
+	<string name="signature">Chữ ký</string>
+	<string name="messages">Tin nhắn</string>
+	<string name="message_box_alert_title">Tắt SMS Bật ra?</string>
+	<string name="message_box_disable_successfully">SMS Bật ra được tắt</string>
+
+
+	<string name="menu_new">MỚI</string>
+	<string name="message_box_alert_message">Nếu bạn tắt tính năng SMS Bật ra, bạn sẽ không thấy thông báo bật ra khi nhận được tin nhắn.</string>
+
+
+	<string name="set_as_default_dialog_title_user_present">Đặt Color SMS làm mặc định</string>
+
 </resources>

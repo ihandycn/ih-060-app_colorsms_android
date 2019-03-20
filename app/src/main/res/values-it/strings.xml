@@ -587,7 +587,18 @@
     <string name="message_box_negative_button">DISATTIVA</string>
     <string name="message_box_positive_action">NON ORA</string>
 
-    <string name="message_box_disable_successfully">Assistente messaggi disattivato</string>
-    <string name="message_box_alert_title">Vuoi disattivare l\'Assistente messaggi?</string>
-    <string name="message_box_alert_message">Se disattivi la funzione Assistente messaggi non riceverai le notifiche sui messaggi ricevuti. Vuoi disattivare la funzione?</string>
+
+	<string name="customize_guide_title">La personalizzazione è arrivata!</string>
+	<string name="signature">Firma</string>
+	<string name="messages">Messaggi</string>
+	<string name="message_box_alert_title">Vuoi disattivare i pop-up SMS?</string>
+	<string name="message_box_disable_successfully">Pop-up SMS disattivati</string>
+
+
+	<string name="menu_new">NOVITÀ</string>
+	<string name="message_box_alert_message">Se disattivi la funzione Pop-up SMS non riceverai le notifiche sui messaggi ricevuti.</string>
+
+
+	<string name="set_as_default_dialog_title_user_present">Imposta Color SMS come app predefinita</string>
+
 </resources>

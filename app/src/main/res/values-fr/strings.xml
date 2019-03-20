@@ -585,8 +585,19 @@
     <string name="message_box_disable">Désactiver</string>
     <string name="message_box_negative_button">DÉSACTIVER</string>
     <string name="message_box_positive_action">PAS MAINTENANT</string>
-    <string name="message_box_disable_successfully">Assistant de message désactivé</string>
-    <string name="message_box_alert_title">Désactiver l\'assistant de message ?</string>
-    <string name="message_box_alert_message">Si vous désactivez l\'assistant de message, vous ne recevrez pas de rappel lorsque lors de la réception d\'un message Voulez-vous vraiment le désactiver ?</string>
+
+
+	<string name="customize_guide_title">La personnalisation est là !</string>
+	<string name="signature">Signature</string>
+	<string name="messages">Messages</string>
+	<string name="message_box_alert_title">Désactiver les pop-ups SMS ?</string>
+	<string name="message_box_disable_successfully">Pop-ups SMS désactivés</string>
+
+
+	<string name="menu_new">NOUVEAU</string>
+	<string name="message_box_alert_message">Si vous désactivez les pop-ups SMS, aucun pop-up n\'apparaîtra lorsque vous recevrez des messages.</string>
+
+
+	<string name="set_as_default_dialog_title_user_present">Définir Color SMS par défaut</string>
 
 </resources>

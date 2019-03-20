@@ -588,8 +588,18 @@
     <string name="message_box_negative_button">MATIKAN</string>
     <string name="message_box_positive_action">TIDAK SEKARANG</string>
 
-    <string name="message_box_disable_successfully">Asisten Pesan dinonaktifkan</string>
-    <string name="message_box_alert_title">Nonaktifkan Asisten Pesan?</string>
-    <string name="message_box_alert_message">Jika menonaktifkan Asisten Pesan, Anda tidak akan diingatkan saat menerima pesan. Yakin menonaktifkannya?</string>
+
+	<string name="customize_guide_title">Kustomisasi di sini!</string>
+	<string name="signature">Tanda tangan</string>
+	<string name="messages">Pesan</string>
+	<string name="message_box_alert_title">Nonaktifkan Popup SMS?</string>
+	<string name="message_box_disable_successfully">Popup SMS dinonaktifkan</string>
+
+
+	<string name="menu_new">BARU</string>
+	<string name="message_box_alert_message">Jika Anda menonaktifkan Popup SMS, Anda akan mendapat popup saat menerima pesan.</string>
+
+
+	<string name="set_as_default_dialog_title_user_present">Atur Color SMS sebagai default</string>
 
 </resources>

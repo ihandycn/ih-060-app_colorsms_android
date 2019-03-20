@@ -588,7 +588,18 @@
     <string name="message_box_negative_button">オフにする</string>
     <string name="message_box_positive_action">今はしない</string>
 
-    <string name="message_box_disable_successfully">メッセージアシスタントが無効になりました</string>
-    <string name="message_box_alert_title">メッセージアシスタントをオフにしますか？</string>
-    <string name="message_box_alert_message">メッセージアシスタントをオフにすると、メッセージを受け取った時にお知らせがきません。それでもオフにしますか？</string>
+
+	<string name="customize_guide_title">カスタマイズ機能が新登場！</string>
+	<string name="signature">シグネチャ</string>
+	<string name="messages">メッセージ</string>
+	<string name="message_box_alert_title">SMSポップアップをオフにしますか？</string>
+	<string name="message_box_disable_successfully">SMSポップアップ機能は無効になりました</string>
+
+
+	<string name="menu_new">新規</string>
+	<string name="message_box_alert_message">SMSポップアップ機能をオフにすると、メッセージを受信した際にポップアップは出なくなります。</string>
+
+
+	<string name="set_as_default_dialog_title_user_present">Color SMSをデフォルトとして設定</string>
+
 </resources>

@@ -1078,11 +1078,6 @@
     <string name="message_box_alert_message">If you turn off SMS Pop-ups, you\'ll not get a pop-up when receiving message.</string>
     <string name="message_box_disable_successfully">SMS Pop-ups disabled</string>
 
-    <string name="user_survey_content">Do You Like New Designs?</string>
-    <string name="user_survey_action">The navigation bar is now colored to match the theme color.</string>
-    <string name="dislike">DISLIKE</string>
-    <string name="like">LIKE</string>
-
     <string name="menu_privacy_box">Private Box</string>
     <string name="menu_privacy_box_coming">Coming soon in a few days</string>
 

@@ -587,8 +587,13 @@
     <string name="message_box_negative_button">KAPAT</string>
     <string name="message_box_positive_action">ŞİMDİ DEĞİL</string>
 
-    <string name="message_box_disable_successfully">Mesaj Asistanı devre dışı bırakıldı</string>
-    <string name="message_box_alert_title">Mesaj Asistanı kapatılsın mı?</string>
-    <string name="message_box_alert_message">Mesaj Asistanını kapatırsan, mesaj geldiğinde hatırlatılmaz. Kapatmak istediğinden emin misin?</string>
+	<string name="customize_guide_title">Kişiselleştirme özelliği geldi!</string>
+	<string name="signature">İmza</string>
+	<string name="messages">Mesajlar</string>
+	<string name="message_box_alert_title">SMS penceresi kapatılsın mı?</string>
+	<string name="message_box_disable_successfully">SMS penceresi devre dışı bırakıldı</string>
+	<string name="menu_new">YENİ</string>
+	<string name="message_box_alert_message">SMS penceresini kapatırsan, mesaj geldiğinde pencere açılmaz.</string>
+	<string name="set_as_default_dialog_title_user_present">Color SMS\'i varsayılan olarak ayarla</string>
 
 </resources>

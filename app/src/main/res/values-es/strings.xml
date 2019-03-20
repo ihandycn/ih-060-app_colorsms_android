@@ -588,7 +588,18 @@
     <string name="message_box_negative_button">APAGAR</string>
     <string name="message_box_positive_action">AHORA NO</string>
 
-    <string name="message_box_disable_successfully">Asistente de mensaje deshabilitado</string>
-    <string name="message_box_alert_title">¿Desactivar Asistente de mensaje?</string>
-    <string name="message_box_alert_message">Si desactivas el Asistente de mensaje, no recibirás un recordatorio de mensaje perdido. ¿Seguro que quieres desactivarlo?</string>
+
+	<string name="customize_guide_title">¡Ya puedes personalizar!</string>
+	<string name="signature">Firma</string>
+	<string name="messages">Mensajes</string>
+	<string name="message_box_alert_title">¿Desactivar ventanas de SMS?</string>
+	<string name="message_box_disable_successfully">Ventanas de SMS desactivadas</string>
+
+
+	<string name="menu_new">NUEVO</string>
+	<string name="message_box_alert_message">Si desactivas las ventanas de SMS, no recibirás un mensaje emergente cuando recibas un mensaje.</string>
+
+
+	<string name="set_as_default_dialog_title_user_present">Establecer Color SMS como predeterminado</string>
+
 </resources>

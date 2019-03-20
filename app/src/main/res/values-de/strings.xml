@@ -588,8 +588,18 @@
     <string name="message_box_negative_button">AUSSCHALTEN</string>
     <string name="message_box_positive_action">NICHT JETZ</string>
 
-    <string name="message_box_disable_successfully">Nachrichtenassistent deaktiviert</string>
-    <string name="message_box_alert_title">Nachrichtenassistent deaktivieren?</string>
-    <string name="message_box_alert_message">Wenn Sie den Nachrichtenassistenten deaktivieren, erhalten Sie keine Erinnerung bei entgangenen Nachrichten. Wirklich deaktivieren?</string>
+
+	<string name="customize_guide_title">Möglichkeit zur Benutzerdefinition ist da!</string>
+	<string name="signature">Signatur</string>
+	<string name="messages">Nachrichten</string>
+	<string name="message_box_alert_title">SMS Pop-ups abstellen?</string>
+	<string name="message_box_disable_successfully">SMS Pop-ups deaktiviert</string>
+
+
+	<string name="menu_new">NEU</string>
+	<string name="message_box_alert_message">Wenn Sie SMS Pop-ups abstellen, werden Sie kein Pop-up mehr bekommen beim Eingang einer Nachricht.</string>
+
+
+	<string name="set_as_default_dialog_title_user_present">Color SMS als Standard festlegen</string>
 
 </resources>

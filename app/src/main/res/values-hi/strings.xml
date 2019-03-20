@@ -585,10 +585,21 @@
     <string name="message_box_disable">अक्षम करें</string>
     <string name="message_box_negative_button">बंद करें</string>
     <string name="message_box_positive_action">अभी नहीं</string>
-    <string name="message_box_disable_successfully">कॉल सहायक अक्षम है</string>
-    <string name="message_box_alert_title">कॉल सहायक को बंद करना है?</string>
-    <string name="message_box_alert_message">यदि आप कॉल सहायक को बंद करते हो, तो जब आप कोई कॉल छोड़ देते हो तो तकाजा नहीं पाआेगे। वास्‍तव में इसे बंद करना है?</string>
 
 
+
+
+	<string name="customize_guide_title">अनुकूलन यहांं है!</string>
+	<string name="signature">हस्‍ताक्षर</string>
+	<string name="messages">संदेशों</string>
+	<string name="message_box_alert_title">एसएमएस पॉप-अप बंद करना है?</string>
+	<string name="message_box_disable_successfully">एसएमएस पॉप-अप्‍स अक्षम है</string>
+
+
+	<string name="menu_new">नया</string>
+	<string name="message_box_alert_message">यदि आप एसएमएस पॉप-अप बंद करते हैं, तो आपको संदेश प्राप्त करते समय पॉप-अप नहीं मिलेगा।</string>
+
+
+	<string name="set_as_default_dialog_title_user_present">Color SMS को डिफॉल्‍ट के तौर पर सेट करें</string>
 
 </resources>

@@ -635,8 +635,18 @@
     <string name="message_box_negative_button">ОТКЛЮЧИТЬ</string>
     <string name="message_box_positive_action">НЕ СЕЙЧАС</string>
 
-    <string name="message_box_disable_successfully">Помощник по сообщениям выключен</string>
-    <string name="message_box_alert_title">Выключить помощник по сообщениям?</string>
-    <string name="message_box_alert_message">Если выключить помощник по сообщениям,  вы не будете получать напоминания о входящих сообщениях. Вы действительно хотите выключить его?</string>
+
+	<string name="customize_guide_title">Встречайте новые возможности персонализации!</string>
+	<string name="signature">Подпись</string>
+	<string name="messages">Сообщения</string>
+	<string name="message_box_alert_title">Выключить всплывающие СМС?</string>
+	<string name="message_box_disable_successfully">Всплывающие СМС выключены</string>
+
+
+	<string name="menu_new">НОВОЕ</string>
+	<string name="message_box_alert_message">Если выключить всплывающие СМС, при получении СМС не будут появляться всплывающие уведомления.</string>
+
+
+	<string name="set_as_default_dialog_title_user_present">Сделать Color SMS приложением по умолчанию</string>
 
 </resources>

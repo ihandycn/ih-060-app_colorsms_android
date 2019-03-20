@@ -588,8 +588,18 @@
     <string name="message_box_negative_button">ปิด</string>
     <string name="message_box_positive_action">ไม่ใช่ตอนนี้</string>
 
-    <string name="message_box_disable_successfully">ปิดใช้ผู้ช่วยข้อความ</string>
-    <string name="message_box_alert_title">ปิดใช้ผู้ช่วยข้อความหรือไม่</string>
-    <string name="message_box_alert_message">หากคุณปิดใช้ผู้ช่วยข้อความ คุณจะไม่ได้รับการเตือนเมื่อมีข้อความ แน่ใจหรือไม่ว่าต้องการปิด</string>
+
+	<string name="customize_guide_title">การปรับแต่งเองมาแล้ว!</string>
+	<string name="signature">ลายเซ็น</string>
+	<string name="messages">ข้อความ</string>
+	<string name="message_box_alert_title">ปิดป็อปอัป SMS หรือไม่</string>
+	<string name="message_box_disable_successfully">ป็อปอัป SMS ปิดใช้งาน</string>
+
+
+	<string name="menu_new">ใหม่</string>
+	<string name="message_box_alert_message">หากคุณปิดป็อปอัป SMS คุณก็จะไม่ได้รับป็อปอัปเมื่อมีข้อความ</string>
+
+
+	<string name="set_as_default_dialog_title_user_present">กำหนด Color SMS เป็นค่าเริ่มต้น</string>
 
 </resources>

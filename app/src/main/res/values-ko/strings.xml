@@ -587,7 +587,18 @@
     <string name="message_box_negative_button">끄기</string>
     <string name="message_box_positive_action">나중에</string>
 
-    <string name="message_box_disable_successfully">메시지 보조 비활성화됨</string>
-    <string name="message_box_alert_title">메시지 보조를 끌까요?</string>
-    <string name="message_box_alert_message">메시지 보조를 끄면 메시지를 받았을 때 미리 알림을 받지 못하게 됩니다. 정말로 끌까요?</string>
+
+	<string name="customize_guide_title">커스텀이 찾아왔습니다!</string>
+	<string name="signature">서명</string>
+	<string name="messages">메시지</string>
+	<string name="message_box_alert_title">SMS 팝업을 끌까요?</string>
+	<string name="message_box_disable_successfully">SMS 팝업 비활성화됨</string>
+
+
+	<string name="menu_new">신규</string>
+	<string name="message_box_alert_message">SMS 팝업을 끄면, 메시지를 받을 때 팝업이 열리지 않습니다.</string>
+
+
+	<string name="set_as_default_dialog_title_user_present">Color SMS를 기본으로 설정</string>
+
 </resources>
