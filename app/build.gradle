@@ -46,7 +46,7 @@ android {
             multiDexEnabled true
             ext.enableCrashlytics = true
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.txt'
-            buildConfigField 'String', 'EMOJI_CONFIG', '"http://cdn.appcloudbox.net/smoothappsstudio/apps/bubble/emojiconfig/config-bubble-emoji-1.0.1-15.sa"'
+            buildConfigField 'String', 'EMOJI_CONFIG', '"http://cdn.appcloudbox.net/smoothappsstudio/apps/bubble/emojiconfig/config-bubble-emoji-1.0.1-21.sa"'
         }
     }
 }
