@@ -12,6 +12,7 @@ import android.widget.ImageView;
 
 import com.android.messaging.R;
 import com.android.messaging.glide.GlideApp;
+import com.android.messaging.ui.emoji.utils.EmojiConfig;
 import com.android.messaging.ui.emoji.utils.EmojiManager;
 import com.android.messaging.util.BugleAnalytics;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
@@ -72,6 +73,13 @@ public class EmojiLottieDetailAdapter extends BaseStickerItemRecyclerAdapter {
                     }
                 });
             }
+        }
+    }
+
+    @Override
+    public void onMagicItemLoadingFinish(StickerInfo stickerInfo, StickerViewHolder holder) {
+        if (!stickerInfo.mIsDownloaded && holder.getAdapterPosition() - 1 < EmojiConfig.getInstance().optInteger(0, "MagicPreloadCount")) {
+            downloadMagicEmoji(true, stickerInfo, holder);
         }
     }
 
