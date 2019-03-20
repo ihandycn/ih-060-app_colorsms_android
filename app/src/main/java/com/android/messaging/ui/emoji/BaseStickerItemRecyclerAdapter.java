@@ -1,5 +1,6 @@
 package com.android.messaging.ui.emoji;
 
+import android.app.Activity;
 import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
@@ -228,6 +229,11 @@ public abstract class BaseStickerItemRecyclerAdapter extends RecyclerView.Adapte
                         Uri gifUri = Uri.fromFile(file);
                         EmojiManager.addStickerMagicFileUri(gifUri.toString());
 
+                        if (((Activity) holder.itemView.getContext()).isFinishing()
+                                || ((Activity) holder.itemView.getContext()).isDestroyed()) {
+                            return;
+                        }
+
                         GlideApp.with(holder.itemView.getContext())
                                 .as(GifDrawable.class)
                                 .load(gifUri)
@@ -251,7 +257,6 @@ public abstract class BaseStickerItemRecyclerAdapter extends RecyclerView.Adapte
                                 });
                     }
                 }, 100);
-
             }
 
             @Override
