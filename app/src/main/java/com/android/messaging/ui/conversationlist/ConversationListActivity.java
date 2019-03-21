@@ -126,6 +126,7 @@ public class ConversationListActivity extends AbstractConversationListActivity
     private boolean mIsRealCreate = false;
     private boolean isScreenOn;
     private boolean mShowEndAnimation;
+    private boolean hideAnimation;
 
     private enum AnimState {
         NONE,
@@ -625,6 +626,7 @@ public class ConversationListActivity extends AbstractConversationListActivity
     }
 
     private void hideStoreGuide() {
+        hideAnimation = true;
         mAnimState = AnimState.DISAPPEAR;
         mGuideContainer.setMaxProgress(1f);
         mGuideContainer.resumeAnimation();
@@ -637,7 +639,9 @@ public class ConversationListActivity extends AbstractConversationListActivity
             if (mAnimState == AnimState.SHOWING) {
                 mShowEndAnimation = true;
             } else {
-                hideStoreGuide();
+                if (!hideAnimation) {
+                    hideStoreGuide();
+                }
             }
 
         }

@@ -24,8 +24,10 @@ import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.v4.view.ViewCompat;
 import android.support.v4.view.ViewGroupCompat;
+import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -56,14 +58,21 @@ import com.android.messaging.util.ImeUtil;
 import com.android.messaging.util.LogUtil;
 import com.android.messaging.util.UiUtils;
 import com.google.common.annotations.VisibleForTesting;
+import com.ihs.app.framework.HSApplication;
 import com.ihs.commons.notificationcenter.HSGlobalNotificationCenter;
 import com.superapps.util.BackgroundDrawables;
 import com.superapps.util.Dimensions;
 import com.superapps.util.IntegerBuckets;
 import com.superapps.util.Preferences;
 
+import net.appcloudbox.ads.base.ContainerView.AcbContentLayout;
+import net.appcloudbox.ads.common.utils.AcbError;
+import net.appcloudbox.ads.expressad.AcbExpressAdView;
+
 import java.util.ArrayList;
 import java.util.List;
+
+import static com.android.messaging.ui.conversationlist.ConversationListAdapter.SMS_HOMEPAGE_BANNERAD;
 
 /**
  * Shows a list of conversations.
@@ -77,6 +86,7 @@ public class ConversationListFragment extends Fragment implements ConversationLi
     private boolean mArchiveMode;
     private boolean mBlockedAvailable;
     private boolean mForwardMessageMode;
+    private ViewGroup inflate;
 
     public interface ConversationListFragmentHost {
         void onConversationClick(final ConversationListData listData,
@@ -205,8 +215,12 @@ public class ConversationListFragment extends Fragment implements ConversationLi
             }
         };
         mRecyclerView.setLayoutManager(manager);
+        DefaultItemAnimator defaultItemAnimator = new DefaultItemAnimator();
+        defaultItemAnimator.setAddDuration(500);
+        mRecyclerView.setItemAnimator(defaultItemAnimator);
         mRecyclerView.setHasFixedSize(true);
         mRecyclerView.setAdapter(mAdapter);
+        //initAd();
         mRecyclerView.setOnScrollListener(new RecyclerView.OnScrollListener() {
 
             int mCurrentState = AbsListView.OnScrollListener.SCROLL_STATE_IDLE;
@@ -293,6 +307,34 @@ public class ConversationListFragment extends Fragment implements ConversationLi
         return rootView;
     }
 
+    private void initAd() {
+        if (inflate != null)
+            return;
+        inflate = (ViewGroup) LayoutInflater.from(getActivity()).inflate(R.layout.conversation_list_header, mRecyclerView, false);
+
+        AcbExpressAdView expressAdView = new AcbExpressAdView(HSApplication.getContext(), SMS_HOMEPAGE_BANNERAD);
+        expressAdView.setCustomLayout(new AcbContentLayout(R.layout.custom_banner)
+                .setActionId(R.id.banner_action)
+                .setIconId(R.id.banner_icon)
+                .setTitleId(R.id.banner_title)
+                .setDescriptionId(R.id.banner_des)
+        );
+        expressAdView.setAutoSwitchAd(AcbExpressAdView.AutoSwitchAd_All);
+
+        expressAdView.prepareAd(new AcbExpressAdView.PrepareAdListener() {
+            @Override
+            public void onAdReady(AcbExpressAdView acbExpressAdView) {
+                inflate.addView(expressAdView);
+                mAdapter.setHeader(inflate);
+
+            }
+
+            @Override
+            public void onPrepareAdFailed(AcbExpressAdView acbExpressAdView, AcbError acbError) {
+            }
+        });
+    }
+
     @Override
     public void onAttach(final Activity activity) {
         super.onAttach(activity);
@@ -358,6 +400,7 @@ public class ConversationListFragment extends Fragment implements ConversationLi
 
     public void updateUi() {
         mAdapter.notifyDataSetChanged();
+        initAd();
     }
 
     /**
