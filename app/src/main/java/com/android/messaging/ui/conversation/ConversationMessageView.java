@@ -108,7 +108,6 @@ public class ConversationMessageView extends FrameLayout implements View.OnClick
     private ContactIconView mContactIconView;
     private ConversationMessageBubbleView mMessageBubble;
     private View mSubjectView;
-    private TextView mSubjectLabel;
     private TextView mSubjectText;
     private View mDeliveredBadge;
     private ViewGroup mMessageMetadataView;
@@ -155,7 +154,6 @@ public class ConversationMessageView extends FrameLayout implements View.OnClick
         mSenderNameTextView = findViewById(R.id.message_sender_name);
         mMessageBubble = findViewById(R.id.message_content);
         mSubjectView = findViewById(R.id.subject_container);
-        mSubjectLabel = mSubjectView.findViewById(R.id.subject_label);
         mSubjectText = mSubjectView.findViewById(R.id.subject_text);
         mDeliveredBadge = findViewById(R.id.smsDeliveredBadge);
         mMessageMetadataView = findViewById(R.id.message_metadata);
@@ -897,7 +895,6 @@ public class ConversationMessageView extends FrameLayout implements View.OnClick
         int statusColor = -1;
         int infoColorResId = -1;
         int timestampColorResId;
-        int subjectLabelColorResId;
 
         Resources resources = getResources();
         messageColor = ConversationColors.get().getMessageTextColor(mData.getIsIncoming(), mData.getConversationId());
@@ -906,12 +903,10 @@ public class ConversationMessageView extends FrameLayout implements View.OnClick
             infoColorResId = R.color.message_action_info_text;
             if (shouldShowMessageTextBubble()) {
                 timestampColorResId = R.color.message_action_timestamp_text;
-                subjectLabelColorResId = R.color.message_action_timestamp_text;
             } else {
                 // If there's no text, the timestamp will be shown below the attachments,
                 // against the conversation view background.
                 timestampColorResId = R.color.timestamp_text_outgoing;
-                subjectLabelColorResId = R.color.timestamp_text_outgoing;
             }
         } else {
             statusColor = messageColor;
@@ -921,7 +916,6 @@ public class ConversationMessageView extends FrameLayout implements View.OnClick
                 case MessageData.BUGLE_STATUS_OUTGOING_FAILED:
                 case MessageData.BUGLE_STATUS_OUTGOING_FAILED_EMERGENCY_NUMBER:
                     timestampColorResId = R.color.message_failed_timestamp_text;
-                    subjectLabelColorResId = R.color.timestamp_text_outgoing;
                     break;
 
                 case MessageData.BUGLE_STATUS_OUTGOING_YET_TO_SEND:
@@ -931,14 +925,12 @@ public class ConversationMessageView extends FrameLayout implements View.OnClick
                 case MessageData.BUGLE_STATUS_OUTGOING_COMPLETE:
                 case MessageData.BUGLE_STATUS_OUTGOING_DELIVERED:
                     timestampColorResId = R.color.timestamp_text_outgoing;
-                    subjectLabelColorResId = R.color.timestamp_text_outgoing;
                     break;
 
                 case MessageData.BUGLE_STATUS_INCOMING_EXPIRED_OR_NOT_AVAILABLE:
                 case MessageData.BUGLE_STATUS_INCOMING_DOWNLOAD_FAILED:
                     messageColor = getResources().getColor(R.color.message_text_color_incoming_download_failed);
                     timestampColorResId = R.color.message_download_failed_timestamp_text;
-                    subjectLabelColorResId = R.color.message_text_color_incoming_download_failed;
                     statusColor = resources.getColor(R.color.message_download_failed_status_text);
                     infoColorResId = R.color.message_info_text_incoming_download_failed;
                     break;
@@ -949,14 +941,12 @@ public class ConversationMessageView extends FrameLayout implements View.OnClick
                 case MessageData.BUGLE_STATUS_INCOMING_RETRYING_MANUAL_DOWNLOAD:
                 case MessageData.BUGLE_STATUS_INCOMING_YET_TO_MANUAL_DOWNLOAD:
                     timestampColorResId = R.color.message_text_color_incoming;
-                    subjectLabelColorResId = R.color.message_text_color_incoming;
                     infoColorResId = R.color.timestamp_text_incoming;
                     break;
 
                 case MessageData.BUGLE_STATUS_INCOMING_COMPLETE:
                 default:
                     timestampColorResId = R.color.timestamp_text_incoming;
-                    subjectLabelColorResId = R.color.timestamp_text_incoming;
                     infoColorResId = -1; // Not used
                     break;
             }
@@ -976,7 +966,6 @@ public class ConversationMessageView extends FrameLayout implements View.OnClick
         }
         mStatusTextView.setTextColor(resources.getColor(timestampColorResId));
 
-        mSubjectLabel.setTextColor(resources.getColor(subjectLabelColorResId));
         mSenderNameTextView.setTextColor(resources.getColor(timestampColorResId));
     }
 

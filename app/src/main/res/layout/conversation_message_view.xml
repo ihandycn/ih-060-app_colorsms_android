@@ -100,13 +100,6 @@
                 android:orientation="horizontal">
 
                 <TextView
-                    android:id="@+id/subject_label"
-                    style="@style/ConversationMessage"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/conversation_message_view_subject_text" />
-
-                <TextView
                     android:id="@+id/subject_text"
                     style="@style/ConversationMessage"
                     android:layout_width="wrap_content"
