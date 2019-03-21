@@ -16,23 +16,24 @@
 package com.android.messaging.util;
 
 import android.support.annotation.Nullable;
+import android.text.TextUtils;
 
 public class TextUtil {
     /**
      * Returns true if the string is empty, null or only whitespace.
      */
     public static boolean isAllWhitespace(@Nullable String string) {
-      if (string == null || string.isEmpty()) {
-        return true;
-      }
-
-      for (int i = 0; i < string.length(); ++i) {
-        if (!Character.isWhitespace(string.charAt(i))) {
-          return false;
+        if (string == null || string.isEmpty()) {
+            return true;
         }
-      }
 
-      return true;
+        for (int i = 0; i < string.length(); ++i) {
+            if (!Character.isWhitespace(string.charAt(i))) {
+                return false;
+            }
+        }
+
+        return true;
     }
 
     /**
@@ -43,6 +44,10 @@ public class TextUtil {
      * @return the replaced number.
      */
     public static String replaceUnicodeDigits(String number) {
+        if (TextUtils.isEmpty(number)) {
+            return "";
+        }
+
         StringBuilder normalizedDigits = new StringBuilder(number.length());
         for (char c : number.toCharArray()) {
             int digit = Character.digit(c, 10);
@@ -59,12 +64,13 @@ public class TextUtil {
      * Appends text to the stringBuilder.
      * If stringBuilder already has content, separator is prepended to create a separator between
      * entries.
+     *
      * @param stringBuilder The stringBuilder to add to
-     * @param text The text to append
-     * @param separator The separator to add if there is already text, typically "," or "\n"
+     * @param text          The text to append
+     * @param separator     The separator to add if there is already text, typically "," or "\n"
      */
     public static void appendWithSeparator(final StringBuilder stringBuilder, final String text,
-            final String separator) {
+                                           final String separator) {
         if (stringBuilder.length() > 0) {
             stringBuilder.append(separator);
         }
