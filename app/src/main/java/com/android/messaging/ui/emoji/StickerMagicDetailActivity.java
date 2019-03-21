@@ -7,13 +7,11 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
-import android.view.animation.AlphaAnimation;
 
 import com.android.messaging.R;
 import com.android.messaging.download.Downloader;
 import com.android.messaging.ui.emoji.utils.EmojiManager;
 import com.android.messaging.util.BugleAnalytics;
-import com.android.messaging.util.TextUtil;
 import com.ihs.app.framework.activity.HSAppCompatActivity;
 import com.ihs.commons.notificationcenter.HSGlobalNotificationCenter;
 import com.ihs.commons.utils.HSBundle;
@@ -112,8 +110,8 @@ public class StickerMagicDetailActivity extends HSAppCompatActivity implements V
     @Override
     protected void onPause() {
         super.onPause();
-        if (mStickerMagicView != null) {
-            mStickerMagicView.getmSoundPlayer().pause();
+        if (mStickerMagicView != null && mStickerMagicView.getSoundPlayer() != null) {
+            mStickerMagicView.getSoundPlayer().pause();
         }
         finish();
     }

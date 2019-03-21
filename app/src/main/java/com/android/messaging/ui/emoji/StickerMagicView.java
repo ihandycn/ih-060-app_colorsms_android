@@ -39,9 +39,7 @@ public class StickerMagicView {
     private GifImageView mGifImageView;
     private LottieAnimationView mLottieAnimationView;
 
-    public MediaPlayer getmSoundPlayer() {
-        return mSoundPlayer;
-    }
+
 
     private MediaPlayer mSoundPlayer;
     private ViewGroup mContainerView;
@@ -95,7 +93,9 @@ public class StickerMagicView {
         mLottieAnimationView.useHardwareAcceleration();
 
     }
-
+    public MediaPlayer getSoundPlayer() {
+        return mSoundPlayer;
+    }
 
     private void playGif(boolean isPlay) {
         GlideApp.with(mContext)
