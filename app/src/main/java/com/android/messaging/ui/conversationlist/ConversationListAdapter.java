@@ -19,11 +19,15 @@ package com.android.messaging.ui.conversationlist;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
+import android.view.View;
 import android.view.ViewGroup;
 
 import com.android.messaging.R;
+import com.android.messaging.datamodel.data.AdItemData;
 import com.android.messaging.datamodel.data.ConversationListItemData;
+import com.ihs.commons.config.HSConfig;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -32,12 +36,15 @@ import java.util.List;
  * Provides an interface to expose Conversation List Cursor data to a UI widget like a ListView.
  */
 public class ConversationListAdapter
-        extends RecyclerView.Adapter<ConversationListAdapter.ConversationListViewHolder> {
+        extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     private final ConversationListItemView.HostInterface mClivHostInterface;
 
-    private List<ConversationListItemData> dataList = new ArrayList<>();
+    private List<Object> dataList = new ArrayList<>();
     private Context context;
+    private static final int TYPE_HEADER_VIEW = 0;
+    private static final int TYPE_NORMAL = 1;
+    private View headerView;
 
     public ConversationListAdapter(final Context context,
                                    final ConversationListItemView.HostInterface clivHostInterface) {
@@ -46,29 +53,71 @@ public class ConversationListAdapter
         setHasStableIds(true);
     }
 
-    public void setDataList(List<ConversationListItemData> dataList) {
+    public void setDataList(List<Object> dataList) {
         this.dataList = dataList;
         notifyDataSetChanged();
     }
 
-    @NonNull @Override
-    public ConversationListViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        final LayoutInflater layoutInflater = LayoutInflater.from(context);
-        final ConversationListItemView itemView =
-                (ConversationListItemView) layoutInflater.inflate(
-                        R.layout.conversation_list_item_view, null);
-        return new ConversationListViewHolder(itemView);
+    @NonNull
+    @Override
+    public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        if (viewType == TYPE_NORMAL) {
+            final LayoutInflater layoutInflater = LayoutInflater.from(context);
+            final ConversationListItemView itemView =
+                    (ConversationListItemView) layoutInflater.inflate(
+                            R.layout.conversation_list_item_view, null);
+            return new ConversationListViewHolder(itemView);
+        } else {
+            return new ConversationListAdapter.ConversationListHeaderViewHolder(headerView);
+        }
+
     }
 
     @Override
-    public void onBindViewHolder(@NonNull ConversationListViewHolder holder, int position) {
-        final ConversationListItemView conversationListItemView = holder.mView;
-        conversationListItemView.bind(dataList.get(position), mClivHostInterface);
+    public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
+        if (holder instanceof ConversationListViewHolder) {
+            if (dataList.get(position) instanceof ConversationListItemData) {
+                ConversationListItemData conversationListItemData = (ConversationListItemData) dataList.get(position);
+                ConversationListViewHolder conversationListViewHolder = (ConversationListViewHolder) holder;
+                final ConversationListItemView conversationListItemView = conversationListViewHolder.mView;
+                conversationListItemView.bind(conversationListItemData, mClivHostInterface);
+            }
+
+        }
+
     }
 
-    @Override public int getItemCount() {
+    @Override
+    public int getItemCount() {
         return dataList.size();
     }
+
+    @Override
+    public int getItemViewType(int position) {
+        if (showHeader()) {
+            return isHeader(position) ? TYPE_HEADER_VIEW : TYPE_NORMAL;
+        } else {
+            return TYPE_NORMAL;
+        }
+    }
+
+    private boolean showHeader() {
+        return HSConfig.optBoolean(true, "Application", "SMSAd", "SMSHomepageBannerAd") && headerView != null;
+
+    }
+
+
+    private boolean isHeader(int position) {
+        return dataList.get(position) instanceof AdItemData;
+
+    }
+
+    public void setHeader(View inflate) {
+        headerView = inflate;
+        dataList.add(0,new AdItemData());
+        notifyItemInserted(0);
+    }
+
 
     /**
      * ViewHolder that holds a ConversationListItemView.
@@ -81,4 +130,14 @@ public class ConversationListAdapter
             mView = itemView;
         }
     }
+
+    private static class ConversationListHeaderViewHolder extends RecyclerView.ViewHolder {
+        final View mView;
+
+        public ConversationListHeaderViewHolder(final View frameLayout) {
+            super(frameLayout);
+            mView = frameLayout;
+        }
+    }
+
 }

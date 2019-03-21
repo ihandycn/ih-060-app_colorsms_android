@@ -24,8 +24,10 @@ import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.v4.view.ViewCompat;
 import android.support.v4.view.ViewGroupCompat;
+import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -37,6 +39,7 @@ import android.widget.AbsListView;
 import android.widget.ImageView;
 
 import com.android.messaging.R;
+import com.android.messaging.ad.AdPlacement;
 import com.android.messaging.annotation.VisibleForAnimation;
 import com.android.messaging.datamodel.DataModel;
 import com.android.messaging.datamodel.binding.Binding;
@@ -56,11 +59,16 @@ import com.android.messaging.util.ImeUtil;
 import com.android.messaging.util.LogUtil;
 import com.android.messaging.util.UiUtils;
 import com.google.common.annotations.VisibleForTesting;
+import com.ihs.app.framework.HSApplication;
 import com.ihs.commons.notificationcenter.HSGlobalNotificationCenter;
 import com.superapps.util.BackgroundDrawables;
 import com.superapps.util.Dimensions;
 import com.superapps.util.IntegerBuckets;
 import com.superapps.util.Preferences;
+
+import net.appcloudbox.ads.base.ContainerView.AcbContentLayout;
+import net.appcloudbox.ads.common.utils.AcbError;
+import net.appcloudbox.ads.expressad.AcbExpressAdView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -77,6 +85,10 @@ public class ConversationListFragment extends Fragment implements ConversationLi
     private boolean mArchiveMode;
     private boolean mBlockedAvailable;
     private boolean mForwardMessageMode;
+    private ViewGroup inflate;
+    private AcbExpressAdView expressAdView;
+    private boolean showAd;
+
 
     public interface ConversationListFragmentHost {
         void onConversationClick(final ConversationListData listData,
@@ -169,6 +181,10 @@ public class ConversationListFragment extends Fragment implements ConversationLi
         super.onDestroy();
         mListBinding.unbind();
         mHost = null;
+        if (expressAdView != null) {
+            expressAdView.destroy();
+            expressAdView = null;
+        }
     }
 
     /**
@@ -207,6 +223,8 @@ public class ConversationListFragment extends Fragment implements ConversationLi
         mRecyclerView.setLayoutManager(manager);
         mRecyclerView.setHasFixedSize(true);
         mRecyclerView.setAdapter(mAdapter);
+        DefaultItemAnimator defaultItemAnimator = new DefaultItemAnimator();
+        mRecyclerView.setItemAnimator(defaultItemAnimator);
         mRecyclerView.setOnScrollListener(new RecyclerView.OnScrollListener() {
 
             int mCurrentState = AbsListView.OnScrollListener.SCROLL_STATE_IDLE;
@@ -293,6 +311,50 @@ public class ConversationListFragment extends Fragment implements ConversationLi
         return rootView;
     }
 
+
+    private void initAd() {
+        if (inflate != null) {
+            return;
+        }
+        inflate = (ViewGroup) LayoutInflater.from(getActivity()).inflate(R.layout.conversation_list_header, mRecyclerView, false);
+
+        expressAdView = new AcbExpressAdView(HSApplication.getContext(), AdPlacement.AD_BANNER);
+        expressAdView.setCustomLayout(new AcbContentLayout(R.layout.custom_banner)
+                .setActionId(R.id.banner_action)
+                .setIconId(R.id.banner_icon)
+                .setTitleId(R.id.banner_title)
+                .setDescriptionId(R.id.banner_des)
+        );
+        expressAdView.setAutoSwitchAd(AcbExpressAdView.AutoSwitchAd_All);
+        expressAdView.setExpressAdViewListener(new AcbExpressAdView.AcbExpressAdViewListener() {
+            @Override
+            public void onAdShown(AcbExpressAdView acbExpressAdView) {
+                BugleAnalytics.logEvent("SMS_Messages_BannerAd_Show", true);
+            }
+
+            @Override
+            public void onAdClicked(AcbExpressAdView acbExpressAdView) {
+                BugleAnalytics.logEvent("SMS_Messages_BannerAd_Click", true);
+            }
+        });
+        expressAdView.prepareAd(new AcbExpressAdView.PrepareAdListener() {
+            @Override
+            public void onAdReady(AcbExpressAdView acbExpressAdView) {
+                if (inflate.getChildCount() == 0) {
+                    inflate.addView(expressAdView);
+                }
+                showAd = true;
+                Log.d("zgf", "onAdReady: ");
+                // inflate.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+                mAdapter.setHeader(inflate);
+            }
+
+            @Override
+            public void onPrepareAdFailed(AcbExpressAdView acbExpressAdView, AcbError acbError) {
+            }
+        });
+    }
+
     @Override
     public void onAttach(final Activity activity) {
         super.onAttach(activity);
@@ -336,7 +398,8 @@ public class ConversationListFragment extends Fragment implements ConversationLi
                                                 final Cursor cursor) {
         mListBinding.ensureBound(data);
 
-        List<ConversationListItemData> dataList = new ArrayList<>();
+        ArrayList<Object> dataList = new ArrayList<>();
+
         if (cursor != null && cursor.moveToFirst()) {
             do {
                 ConversationListItemData itemData = new ConversationListItemData();
@@ -345,7 +408,10 @@ public class ConversationListFragment extends Fragment implements ConversationLi
             } while (cursor.moveToNext());
         }
         mAdapter.setDataList(dataList);
-
+        if (showAd && inflate != null) {
+            mAdapter.setHeader(inflate);
+        }
+        initAd();
         updateEmptyListUi(cursor == null || cursor.getCount() == 0);
         if (cursor != null && cursor.getCount() > 0) {
             Preferences.getDefault().doOnce(new Runnable() {
@@ -365,6 +431,7 @@ public class ConversationListFragment extends Fragment implements ConversationLi
 
     public void updateUi() {
         mAdapter.notifyDataSetChanged();
+
     }
 
     /**
