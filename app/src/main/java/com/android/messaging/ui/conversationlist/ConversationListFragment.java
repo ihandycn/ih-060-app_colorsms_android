@@ -60,6 +60,7 @@ import com.android.messaging.util.LogUtil;
 import com.android.messaging.util.UiUtils;
 import com.google.common.annotations.VisibleForTesting;
 import com.ihs.app.framework.HSApplication;
+import com.ihs.commons.config.HSConfig;
 import com.ihs.commons.notificationcenter.HSGlobalNotificationCenter;
 import com.superapps.util.BackgroundDrawables;
 import com.superapps.util.Dimensions;
@@ -85,9 +86,11 @@ public class ConversationListFragment extends Fragment implements ConversationLi
     private boolean mArchiveMode;
     private boolean mBlockedAvailable;
     private boolean mForwardMessageMode;
-    private ViewGroup inflate;
+    private ViewGroup adContainer;
     private AcbExpressAdView expressAdView;
     private boolean showAd;
+    private LinearLayoutManager manager;
+    private boolean adShouldShow;
 
 
     public interface ConversationListFragmentHost {
@@ -152,10 +155,20 @@ public class ConversationListFragment extends Fragment implements ConversationLi
     public void onResume() {
         super.onResume();
 
+        if (mRecyclerView != null) {
+            if (mRecyclerView.canScrollVertically(-1)) {
+                BugleAnalytics.logEvent("SMS_Messages_Show_NotOnTop", true);
+            } else {
+                if (HSConfig.optBoolean(true, "Application", "SMSAd", "SMSHomepageBannerAd")) {
+                    BugleAnalytics.logEvent("SMS_Messages_BannerAd_Should_Show", true);
+                    adShouldShow = true;
+                }
+            }
+        }
         Assert.notNull(mHost);
         setScrolledToNewestConversationIfNeeded();
-
         updateUi();
+
     }
 
     public void setScrolledToNewestConversationIfNeeded() {
@@ -213,7 +226,7 @@ public class ConversationListFragment extends Fragment implements ConversationLi
         // ConversationListFragment; the view in each row should be a width of MATCH_PARENT so that
         // the entire row is tappable.
         final Activity activity = getActivity();
-        final LinearLayoutManager manager = new LinearLayoutManager(activity) {
+        manager = new LinearLayoutManager(activity) {
             @Override
             public RecyclerView.LayoutParams generateDefaultLayoutParams() {
                 return new RecyclerView.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
@@ -243,6 +256,9 @@ public class ConversationListFragment extends Fragment implements ConversationLi
 
                 if (!isFirstConversationVisible && isScrolledToFirstConversation()) {
                     BugleAnalytics.logEvent("SMS_Messages_SlideUpToTop");
+                    if (HSConfig.optBoolean(true, "Application", "SMSAd", "SMSHomepageBannerAd") && adShouldShow) {
+                        BugleAnalytics.logEvent("SMS_Messages_BannerAd_Should_Show", true);
+                    }
                 }
 
                 isFirstConversationVisible = isScrolledToFirstConversation();
@@ -313,11 +329,10 @@ public class ConversationListFragment extends Fragment implements ConversationLi
 
 
     private void initAd() {
-        if (inflate != null) {
+        if (adContainer != null) {
             return;
         }
-        inflate = (ViewGroup) LayoutInflater.from(getActivity()).inflate(R.layout.conversation_list_header, mRecyclerView, false);
-
+        adContainer = (ViewGroup) LayoutInflater.from(getActivity()).inflate(R.layout.conversation_list_header, mRecyclerView, false);
         expressAdView = new AcbExpressAdView(HSApplication.getContext(), AdPlacement.AD_BANNER);
         expressAdView.setCustomLayout(new AcbContentLayout(R.layout.custom_banner)
                 .setActionId(R.id.banner_action)
@@ -340,17 +355,20 @@ public class ConversationListFragment extends Fragment implements ConversationLi
         expressAdView.prepareAd(new AcbExpressAdView.PrepareAdListener() {
             @Override
             public void onAdReady(AcbExpressAdView acbExpressAdView) {
-                if (inflate.getChildCount() == 0) {
-                    inflate.addView(expressAdView);
+                if (adContainer.getChildCount() == 0) {
+                    adContainer.addView(expressAdView);
                 }
                 showAd = true;
-                Log.d("zgf", "onAdReady: ");
-                // inflate.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
-                mAdapter.setHeader(inflate);
+                mAdapter.setHeader(adContainer);
+                if (manager.findFirstCompletelyVisibleItemPosition() == 0) {
+                    mRecyclerView.smoothScrollToPosition(0);
+                }
+
             }
 
             @Override
             public void onPrepareAdFailed(AcbExpressAdView acbExpressAdView, AcbError acbError) {
+
             }
         });
     }
@@ -383,6 +401,7 @@ public class ConversationListFragment extends Fragment implements ConversationLi
         super.onPause();
         mListState = mRecyclerView.getLayoutManager().onSaveInstanceState();
         mListBinding.getData().setScrolledToNewestConversation(false);
+        adShouldShow = false;
     }
 
     /**
@@ -408,10 +427,12 @@ public class ConversationListFragment extends Fragment implements ConversationLi
             } while (cursor.moveToNext());
         }
         mAdapter.setDataList(dataList);
-        if (showAd && inflate != null) {
-            mAdapter.setHeader(inflate);
+        if (showAd && adContainer != null) {
+            mAdapter.setHeader(adContainer);
         }
-        initAd();
+        if (HSConfig.optBoolean(true, "Application", "SMSAd", "SMSHomepageBannerAd")) {
+            initAd();
+        }
         updateEmptyListUi(cursor == null || cursor.getCount() == 0);
         if (cursor != null && cursor.getCount() > 0) {
             Preferences.getDefault().doOnce(new Runnable() {

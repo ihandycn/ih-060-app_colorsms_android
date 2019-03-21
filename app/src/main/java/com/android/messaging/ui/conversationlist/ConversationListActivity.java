@@ -265,10 +265,7 @@ public class ConversationListActivity extends AbstractConversationListActivity
     @Override
     protected void onResume() {
         super.onResume();
-        BugleAnalytics.logEvent("SMS_Messages_Show_Corrected");
-        if (HSConfig.optBoolean(true, "Application", "SMSAd", "SMSHomepageBannerAd")) {
-            BugleAnalytics.logEvent("SMS_Messages_BannerAd_Should_Show", true);
-        }
+        BugleAnalytics.logEvent("SMS_Messages_Show_Corrected", true);
         Preferences.getDefault().incrementAndGetInt(CustomizeGuideController.PREF_KEY_MAIN_PAGE_SHOW_TIME);
         WeakReference<AppCompatActivity> activity = new WeakReference<>(this);
         Threads.postOnMainThreadDelayed(() -> {

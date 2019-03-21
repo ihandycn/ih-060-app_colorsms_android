@@ -82,9 +82,7 @@ public class ConversationListAdapter
                 final ConversationListItemView conversationListItemView = conversationListViewHolder.mView;
                 conversationListItemView.bind(conversationListItemData, mClivHostInterface);
             }
-
         }
-
     }
 
     @Override
@@ -106,7 +104,6 @@ public class ConversationListAdapter
 
     }
 
-
     private boolean isHeader(int position) {
         return dataList.get(position) instanceof AdItemData;
 
@@ -117,7 +114,6 @@ public class ConversationListAdapter
         dataList.add(0,new AdItemData());
         notifyItemInserted(0);
     }
-
 
     /**
      * ViewHolder that holds a ConversationListItemView.
