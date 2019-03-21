@@ -129,7 +129,6 @@ public class ConversationListItemView extends FrameLayout implements OnClickList
     private TextView mConversationNameView;
     private ImageView mWorkProfileIconView;
     private TextView mSnippetTextView;
-    private TextView mSubjectTextView;
     private TextView mTimestampTextView;
     private ContactIconView mContactIconView;
     private ImageView mContactCheckmarkView;
@@ -156,7 +155,6 @@ public class ConversationListItemView extends FrameLayout implements OnClickList
         mSwipeableContent = findViewById(R.id.swipeableContent);
         mConversationNameView = findViewById(R.id.conversation_name);
         mSnippetTextView = findViewById(R.id.conversation_snippet);
-        mSubjectTextView = findViewById(R.id.conversation_subject);
         mWorkProfileIconView = findViewById(R.id.work_profile_icon);
         mTimestampTextView = findViewById(R.id.conversation_timestamp);
         mContactIconView = findViewById(R.id.conversation_icon);
@@ -200,8 +198,6 @@ public class ConversationListItemView extends FrameLayout implements OnClickList
             setContactImage();
         } else if (v == mSnippetTextView) {
             setSnippet();
-        } else if (v == mSubjectTextView) {
-            setSubject();
         }
     }
 
@@ -274,19 +270,6 @@ public class ConversationListItemView extends FrameLayout implements OnClickList
                     .getString(R.string.plus_n);
         }
         return sPlusNString;
-    }
-
-    private void setSubject() {
-        final String subjectText = mData.getShowDraft() ?
-                mData.getDraftSubject() :
-                MmsUtils.cleanseMmsSubject(getContext().getResources(), mData.getSubject());
-        if (!TextUtils.isEmpty(subjectText)) {
-            final String subjectPrepend = getResources().getString(R.string.subject_label);
-            mSubjectTextView.setText(TextUtils.concat(subjectPrepend, subjectText));
-            mSubjectTextView.setVisibility(VISIBLE);
-        } else {
-            mSubjectTextView.setVisibility(GONE);
-        }
     }
 
     private void setSnippet() {
@@ -441,11 +424,9 @@ public class ConversationListItemView extends FrameLayout implements OnClickList
 
         mSnippetTextView.setMaxLines(maxLines);
         mSnippetTextView.setTextColor(color);
-        mSubjectTextView.setTextColor(color);
 
         setSnippet();
         setConversationName();
-        setSubject();
         setWorkProfileIcon();
         setContentDescription(buildContentDescription(resources, mData, mConversationNameView.getPaint()));
 
