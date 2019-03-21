@@ -35,6 +35,7 @@ import android.telephony.CarrierConfigManager;
 import android.text.TextUtils;
 
 import com.android.ex.photo.util.PhotoViewAnalytics;
+import com.android.messaging.ad.AdPlacement;
 import com.android.messaging.datamodel.DataModel;
 import com.android.messaging.debug.BlockCanaryConfig;
 import com.android.messaging.debug.UploadLeakService;
@@ -45,7 +46,6 @@ import com.android.messaging.sms.BugleUserAgentInfoLoader;
 import com.android.messaging.sms.MmsConfig;
 import com.android.messaging.ui.ConversationDrawables;
 import com.android.messaging.ui.SetAsDefaultGuideActivity;
-import com.android.messaging.ui.conversationlist.ConversationListAdapter;
 import com.android.messaging.ui.emoji.utils.EmojiConfig;
 import com.android.messaging.upgrader.Upgrader;
 import com.android.messaging.util.BugleAnalytics;
@@ -93,8 +93,6 @@ import com.superapps.util.Threads;
 
 import net.appcloudbox.AcbAds;
 import net.appcloudbox.ads.expressad.AcbExpressAdManager;
-import net.appcloudbox.ads.interstitialad.AcbInterstitialAdManager;
-import net.appcloudbox.ads.nativead.AcbNativeAdManager;
 import net.appcloudbox.common.utils.AcbApplicationHelper;
 
 import java.io.File;
@@ -173,7 +171,7 @@ public class BugleApplication extends HSApplication implements UncaughtException
         if (isOnMainProcess) {
 
             onMainProcessApplicationCreate();
-            initAd(this);
+            initAd();
         }
 
         initKeepAlive();
@@ -187,15 +185,14 @@ public class BugleApplication extends HSApplication implements UncaughtException
         CommonUtils.getAppInstallTimeMillis();
     }
 
-    private void initAd(BugleApplication bugleApplication) {
+    private void initAd() {
         if (HSGdprConsent.isGdprUser()) {
             if (HSGdprConsent.getConsentState() != HSGdprConsent.ConsentState.ACCEPTED) {
                 AcbAds.getInstance().setGdprInfo(GDPR_USER, GDPR_NOT_GRANTED);
             }
         }
         AcbAds.getInstance().initializeFromGoldenEye(this);
-        AcbExpressAdManager.getInstance().activePlacementInProcess(ConversationListAdapter.SMS_HOMEPAGE_BANNERAD);
-
+        AcbExpressAdManager.getInstance().activePlacementInProcess(AdPlacement.AD_BANNER);
     }
 
     private void onMainProcessApplicationCreate() {
