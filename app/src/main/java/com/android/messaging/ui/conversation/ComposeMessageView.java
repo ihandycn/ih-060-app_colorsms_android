@@ -681,20 +681,20 @@ public class ComposeMessageView extends LinearLayout
             mBinding.getData().setMessageSubject(subject);
 
             boolean includeSignature = false;
-            Editable e = mComposeEditText.getText();
+            Editable inputEditable = mComposeEditText.getText();
             int signatureIndex= 0;
             if (!TextUtils.isEmpty(mSignatureStr)) {
-                signatureIndex = e.getSpanStart(mSignatureSpan);
-                if (signatureIndex < e.length() &&
-                        e.toString().substring(signatureIndex, e.length()).contains(mSignatureStr)) {
+                signatureIndex = inputEditable.getSpanStart(mSignatureSpan);
+                if (signatureIndex >= 0 && signatureIndex < inputEditable.length() &&
+                        inputEditable.toString().substring(signatureIndex, inputEditable.length()).contains(mSignatureStr)) {
                     includeSignature = true;
                 }
             }
 
-            if (mBinding.getData().getIsMms() && !TextUtils.isEmpty(mSignatureStr)) {
+            if (mBinding.getData().getIsMms() && !TextUtils.isEmpty(mSignatureStr) && signatureIndex >= 0) {
                 if (signatureIndex > 1
-                        || !mSignatureStr.equals(e.toString().substring(signatureIndex, e.length()))) {
-                    mBinding.getData().setMessageText(e.toString());
+                        || !mSignatureStr.equals(inputEditable.toString().substring(signatureIndex, inputEditable.length()))) {
+                    mBinding.getData().setMessageText(inputEditable.toString());
                 } else {
                     mBinding.getData().setMessageText("");
                 }
@@ -1013,10 +1013,10 @@ public class ComposeMessageView extends LinearLayout
         boolean hasMessageText = (TextUtils.getTrimmedLength(messageText) > 0);
 
         if (!TextUtils.isEmpty(mSignatureStr)) {
-            Editable e = mComposeEditText.getText();
-            int index = e.getSpanStart(mSignatureSpan);
+            Editable inputEditable = mComposeEditText.getText();
+            int index = inputEditable.getSpanStart(mSignatureSpan);
             if (index >= 0) {
-                boolean signatureChanged = !mSignatureStr.equals(e.toString().substring(index, e.length()));
+                boolean signatureChanged = !mSignatureStr.equals(inputEditable.toString().substring(index, inputEditable.length()));
                 if (index <= 1 && !signatureChanged) {
                     hasMessageText = false;
                 }
