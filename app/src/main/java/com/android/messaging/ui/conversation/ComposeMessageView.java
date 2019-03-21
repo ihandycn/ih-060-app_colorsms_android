@@ -82,6 +82,7 @@ import com.android.messaging.util.ImeUtil;
 import com.android.messaging.util.LogUtil;
 import com.android.messaging.util.MediaUtil;
 import com.android.messaging.util.OsUtil;
+import com.android.messaging.util.TextViewUtil;
 import com.android.messaging.util.UiUtils;
 import com.superapps.font.FontUtils;
 import com.superapps.util.BackgroundDrawables;
@@ -250,6 +251,7 @@ public class ComposeMessageView extends LinearLayout
         super.onFinishInflate();
         mInputLayout = findViewById(R.id.input_layout);
         mComposeEditText = findViewById(R.id.compose_message_text);
+        TextViewUtil.setCursorPointColor(mComposeEditText, PrimaryColors.DEFAULT_PRIMARY_COLOR);
         mComposeEditText.setTypeface(FontUtils.getTypeface());
         mComposeEditText.setOnEditorActionListener(this);
         mComposeEditText.addTextChangedListener(this);

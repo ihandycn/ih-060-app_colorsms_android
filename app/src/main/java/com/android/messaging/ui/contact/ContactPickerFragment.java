@@ -65,6 +65,7 @@ import com.android.messaging.util.ImeUtil;
 import com.android.messaging.util.LogUtil;
 import com.android.messaging.util.OsUtil;
 import com.android.messaging.util.PhoneUtils;
+import com.android.messaging.util.TextViewUtil;
 import com.android.messaging.util.UiUtils;
 import com.google.common.annotations.VisibleForTesting;
 
@@ -149,6 +150,7 @@ public class ContactPickerFragment extends Fragment implements ContactPickerData
                              final Bundle savedInstanceState) {
         final View view = inflater.inflate(R.layout.contact_picker_fragment, container, false);
         mRecipientTextView = view.findViewById(R.id.recipient_text_view);
+        TextViewUtil.setCursorPointColor(mRecipientTextView, PrimaryColors.DEFAULT_PRIMARY_COLOR);
         mRecipientTextView.setUnselectedChipBackgroundColor(PrimaryColors.getPrimaryColor());
         mRecipientTextView.setThreshold(0);
         mRecipientTextView.setDropDownAnchor(R.id.compose_contact_divider);
