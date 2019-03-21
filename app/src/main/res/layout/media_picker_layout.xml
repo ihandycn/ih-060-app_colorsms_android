@@ -81,6 +81,7 @@
                 android:layout_marginTop="12dp"
                 android:text="@string/media_picker_voice"
                 android:textColor="#444444"
+                android:gravity="center_horizontal"
                 android:textSize="11.3sp"
                 app:typeface="@string/custom_font_medium" />
         </LinearLayout>
