@@ -37,6 +37,10 @@ public class ArchivedConversationListActivity extends AbstractConversationListAc
     }
 
     protected void updateActionBar(ActionBar actionBar) {
+        if(actionBar == null){
+            return;
+        }
+
         actionBar.setTitle(getString(R.string.archived_activity_title));
         actionBar.setDisplayShowTitleEnabled(true);
         actionBar.setDisplayHomeAsUpEnabled(true);
