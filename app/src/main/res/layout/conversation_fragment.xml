@@ -42,8 +42,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:clipToPadding="false"
-                android:listSelector="@android:color/transparent"
-                android:paddingTop="@dimen/action_bar_height" />
+                android:listSelector="@android:color/transparent" />
 
             <View
                 android:id="@+id/conversation_compose_divider"
