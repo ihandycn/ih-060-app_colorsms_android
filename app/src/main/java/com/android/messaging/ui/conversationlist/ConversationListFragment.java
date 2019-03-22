@@ -161,7 +161,6 @@ public class ConversationListFragment extends Fragment implements ConversationLi
             } else {
                 if (HSConfig.optBoolean(true, "Application", "SMSAd", "SMSHomepageBannerAd")) {
                     BugleAnalytics.logEvent("SMS_Messages_BannerAd_Should_Show", true);
-                    adShouldShow = true;
                 }
             }
         }
@@ -256,9 +255,12 @@ public class ConversationListFragment extends Fragment implements ConversationLi
 
                 if (!isFirstConversationVisible && isScrolledToFirstConversation()) {
                     BugleAnalytics.logEvent("SMS_Messages_SlideUpToTop");
-                    if (HSConfig.optBoolean(true, "Application", "SMSAd", "SMSHomepageBannerAd") && adShouldShow) {
+                    if (adShouldShow && HSConfig.optBoolean(true, "Application", "SMSAd", "SMSHomepageBannerAd")) {
                         BugleAnalytics.logEvent("SMS_Messages_BannerAd_Should_Show", true);
+                        adShouldShow = false;
                     }
+                    Log.d("zgf", "onScrolled: " + mCurrentState + "dy" + dy);
+
                 }
 
                 isFirstConversationVisible = isScrolledToFirstConversation();
@@ -271,6 +273,7 @@ public class ConversationListFragment extends Fragment implements ConversationLi
                 if (dy != 0) {
                     if (dy > 0 && !mUpDetected) {
                         mUpDetected = true;
+                        adShouldShow = true;
                         BugleAnalytics.logEvent("SMS_Messages_SlideUp");
                     }
                     if (dy < 0 && !mDownDetected) {
@@ -401,7 +404,6 @@ public class ConversationListFragment extends Fragment implements ConversationLi
         super.onPause();
         mListState = mRecyclerView.getLayoutManager().onSaveInstanceState();
         mListBinding.getData().setScrolledToNewestConversation(false);
-        adShouldShow = false;
     }
 
     /**

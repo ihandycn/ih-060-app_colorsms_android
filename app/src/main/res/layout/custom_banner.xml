@@ -3,14 +3,14 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="66dp">
+
     <ImageView
         android:id="@+id/banner_icon"
         android:layout_width="@dimen/conversation_list_contact_icon_size"
         android:layout_height="@dimen/conversation_list_contact_icon_size"
+        android:layout_centerVertical="true"
         android:layout_marginStart="16dp"
-        android:layout_marginTop="14dp"
-        android:layout_marginBottom="14dp"
         android:src="@drawable/icon_ad"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -19,12 +19,11 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="18dp"
-        android:layout_marginLeft="18dp"
-        android:layout_marginTop="14dp"
+        android:layout_centerVertical="true"
+        android:layout_marginStart="14dp"
+        android:layout_marginLeft="14dp"
         android:layout_marginEnd="30dp"
         android:layout_marginRight="30dp"
-        android:layout_marginBottom="14dp"
         android:layout_toStartOf="@+id/banner_action"
         android:layout_toLeftOf="@+id/banner_action"
         android:layout_toEndOf="@id/banner_icon"
@@ -35,16 +34,11 @@
 
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-
             android:ellipsize="end"
             android:includeFontPadding="false"
             android:singleLine="true"
             android:textColor="#19191c"
             android:textSize="16sp"
-            app:layout_constraintEnd_toEndOf="@+id/banner_action"
-            app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintStart_toEndOf="@id/banner_icon"
-            app:layout_constraintTop_toTopOf="parent"
             app:typeface="@string/custom_font_semibold"
             tools:text="Find funny GIFshjhjhjhjhjhjjhjhjh" />
 
@@ -52,9 +46,7 @@
             android:id="@+id/banner_des"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="5dp"
             android:ellipsize="end"
-
             android:includeFontPadding="false"
             android:singleLine="true"
             android:textColor="#878a95"
@@ -70,7 +62,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
         android:layout_centerVertical="true"
-        android:layout_marginEnd="19dp"
+        android:layout_marginEnd="14dp"
         android:gravity="right"
         android:includeFontPadding="false"
         android:textColor="#2caef8"
