@@ -12,7 +12,9 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.airbnb.lottie.LottieAnimationView;
+import com.airbnb.lottie.LottieComposition;
 import com.airbnb.lottie.LottieCompositionFactory;
+import com.airbnb.lottie.LottieListener;
 import com.android.messaging.R;
 import com.android.messaging.download.Downloader;
 import com.android.messaging.glide.GlideApp;
@@ -38,8 +40,6 @@ public class StickerMagicView {
 
     private GifImageView mGifImageView;
     private LottieAnimationView mLottieAnimationView;
-
-
 
     private MediaPlayer mSoundPlayer;
     private ViewGroup mContainerView;
@@ -142,6 +142,10 @@ public class StickerMagicView {
             InputStream inputStream = new FileInputStream(file.getAbsolutePath());
             ZipInputStream zipInputStream = new ZipInputStream(new BufferedInputStream(inputStream));
             LottieCompositionFactory.fromZipStream(zipInputStream, null).addListener(result -> {
+                // load inputStream is an async task if cache not exists
+                if (mLottieAnimationView == null) {
+                    return;
+                }
                 mLottieAnimationView.setComposition(result);
                 mLottieAnimationView.playAnimation();
 
