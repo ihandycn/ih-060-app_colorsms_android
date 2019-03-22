@@ -15,16 +15,15 @@
         <FrameLayout
             android:id="@+id/dialog_image_container"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:translationY="-2dp">
+            android:layout_height="wrap_content">
 
             <com.superapps.view.RoundImageView
                 android:id="@+id/horizontal_top_image"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                app:radius_leftTop="2dp"
-                app:radius_rightTop="2dp" />
+                app:radius_leftTop="8dp"
+                app:radius_rightTop="8dp" />
         </FrameLayout>
 
         <FrameLayout
