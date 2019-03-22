@@ -57,7 +57,7 @@ import com.superapps.util.Notifications;
 
 /**
  * Class that receives incoming SMS messages through android.provider.Telephony.SMS_RECEIVED
- *
+ * <p>
  * This class serves two purposes:
  * - Process phone verification SMS messages
  * - Handle SMS messages when the user has enabled us to be the default SMS app (Pre-KLP)
@@ -154,7 +154,7 @@ public final class SmsReceiver extends BroadcastReceiver {
                     PackageManager.COMPONENT_ENABLED_STATE_ENABLED, PackageManager.DONT_KILL_APP);
         } else {
             if (logv) {
-                LogUtil.v(TAG,  "Disabling SMS/MMS broadcast abort");
+                LogUtil.v(TAG, "Disabling SMS/MMS broadcast abort");
             }
             packageManager.setComponentEnabledSetting(
                     new ComponentName(context, AbortSmsReceiver.class),
@@ -205,13 +205,13 @@ public final class SmsReceiver extends BroadcastReceiver {
     }
 
     public static void deliverSmsMessages(final Context context, final int subId,
-            final int errorCode, final android.telephony.SmsMessage[] messages) {
+                                          final int errorCode, final android.telephony.SmsMessage[] messages) {
         final ContentValues messageValues =
                 MmsUtils.parseReceivedSmsMessage(context, messages, errorCode);
 
         LogUtil.v(TAG, "SmsReceiver.deliverSmsMessages");
 
-        final long nowInMillis =  System.currentTimeMillis();
+        final long nowInMillis = System.currentTimeMillis();
         final long receivedTimestampMs = MmsUtils.getMessageDate(messages[0], nowInMillis);
 
         messageValues.put(Sms.Inbox.DATE, receivedTimestampMs);
@@ -253,6 +253,9 @@ public final class SmsReceiver extends BroadcastReceiver {
         } else if (PhoneUtils.getDefault().isSmsCapable() && isSmsReceiverEnabledWhenDefaultCleared()) {
             // sms supported and default not set, we use SmsReceiver to handle this action
             BugleAnalytics.logEvent("SMS_Received_NoDefault");
+            if (Telephony.Sms.Intents.SMS_RECEIVED_ACTION.equals(intent.getAction())) {
+                BugleAnalytics.logEvent("SMS_Received", true, "type", "sms");
+            }
         }
     }
 
@@ -282,8 +285,8 @@ public final class SmsReceiver extends BroadcastReceiver {
         builder.setContentTitle(resources.getString(R.string.secondary_user_new_message_title))
                 .setTicker(resources.getString(R.string.secondary_user_new_message_ticker))
                 .setSmallIcon(R.drawable.ic_sms_light)
-        // Returning PRIORITY_HIGH causes L to put up a HUD notification. Without it, the ticker
-        // isn't displayed.
+                // Returning PRIORITY_HIGH causes L to put up a HUD notification. Without it, the ticker
+                // isn't displayed.
                 .setPriority(Notification.PRIORITY_HIGH)
                 .setContentIntent(pendingIntent);
 
@@ -340,6 +343,7 @@ public final class SmsReceiver extends BroadcastReceiver {
 
     /**
      * Get the SMS messages from the specified SMS intent.
+     *
      * @return the messages. If there is an error or the message should be ignored, return null.
      */
     public static android.telephony.SmsMessage[] getMessagesFromIntent(Intent intent) {
@@ -376,6 +380,7 @@ public final class SmsReceiver extends BroadcastReceiver {
 
     /**
      * Check the specified SMS intent to see if the message should be ignored
+     *
      * @return true if the message should be ignored
      */
     public static boolean shouldIgnoreMessage(Intent intent) {

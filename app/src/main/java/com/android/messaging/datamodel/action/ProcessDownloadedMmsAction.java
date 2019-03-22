@@ -37,6 +37,7 @@ import com.android.messaging.datamodel.MessagingContentProvider;
 import com.android.messaging.datamodel.MmsFileProvider;
 import com.android.messaging.datamodel.SyncManager;
 import com.android.messaging.datamodel.data.MessageData;
+import com.android.messaging.datamodel.data.MessagePartData;
 import com.android.messaging.datamodel.data.ParticipantData;
 import com.android.messaging.mmslib.SqliteWrapper;
 import com.android.messaging.mmslib.pdu.PduHeaders;
@@ -46,6 +47,7 @@ import com.android.messaging.sms.MmsSender;
 import com.android.messaging.sms.MmsSmsUtils;
 import com.android.messaging.sms.MmsUtils;
 import com.android.messaging.util.Assert;
+import com.android.messaging.util.BugleAnalytics;
 import com.android.messaging.util.LogUtil;
 import com.google.common.io.Files;
 import com.ihs.app.framework.HSApplication;
@@ -480,6 +482,43 @@ public class ProcessDownloadedMmsAction extends Action {
                 // Inform sync that message has been added at local received timestamp
                 final SyncManager syncManager = DataModel.get().getSyncManager();
                 syncManager.onNewMessageInserted(message.getReceivedTimeStamp());
+
+                int isText = 0, isImage = 0, isVideo = 0, isAudio = 0, isVCard = 0;
+                for (MessagePartData part: message.getParts()) {
+                    if (part.isText()) {
+                        isText = 1;
+                    } else if (part.isImage()) {
+                        isImage = 1;
+                    } else if (part.isVideo()) {
+                        isVideo = 1;
+                    } else if (part.isAudio()) {
+                        isAudio = 1;
+                    } else if (part.isVCard()) {
+                        isVCard = 1;
+                    }
+                }
+                String mmsType;
+                if (isText + isImage + isVideo + isAudio + isVCard == 1) {
+                    if (isText == 1) {
+                        mmsType = "text";
+                    } else if (isImage == 1) {
+                        mmsType = "image";
+                    } else if (isVideo == 1) {
+                        mmsType = "video";
+                    } else if (isAudio == 1) {
+                        mmsType = "audio";
+                    } else {
+                        mmsType = "vcard";
+                    }
+                } else if (isText + isImage + isVideo + isAudio + isVCard > 1) {
+                    mmsType = "multi";
+                } else {
+                    mmsType = "other";
+                }
+
+                BugleAnalytics.logEvent("SMS_Received", true,
+                        "type", "mms", "mms_type", mmsType);
+
                 final MessageData current = BugleDatabaseOperations.readMessageData(db, messageId);
                 if (current == null) {
                     LogUtil.w(TAG, "Message deleted prior to update");
