@@ -232,6 +232,7 @@ public class MessageBoxActivity extends BaseActivity implements INotificationObs
     private void initActionView() {
         mActionButtonContainer = findViewById(R.id.actions_button_container);
         mEditTextContainer = findViewById(R.id.edit_text_container);
+        getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
 
         mOpenEditTextButton = findViewById(R.id.open_edit_text_button);
         mNextButton = findViewById(R.id.next_icon);
