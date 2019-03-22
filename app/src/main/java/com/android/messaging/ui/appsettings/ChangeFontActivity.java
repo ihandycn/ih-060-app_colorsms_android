@@ -88,7 +88,27 @@ public class ChangeFontActivity extends BaseActivity implements LevelSeekBar.OnL
     protected void onDestroy() {
         super.onDestroy();
         if (mPrefFontLevel != mCurrentFontLevel) {
-            BugleAnalytics.logEvent("Customize_TextSize_Change", true, "size", getResources().getString(sTextSizeRes[mCurrentFontLevel]));
+            String size;
+            switch (mCurrentFontLevel) {
+                case 0:
+                    size = "Smallest";
+                    break;
+                case 1:
+                    size = "Small";
+                    break;
+                case 3:
+                    size = "Medium";
+                    break;
+                case 4:
+                    size = "Large";
+                    break;
+                case 5:
+                    size = "Largest";
+                    break;
+                default:
+                    size = "Default";
+            }
+            BugleAnalytics.logEvent("Customize_TextSize_Change", true, "size", size);
         }
     }
 
