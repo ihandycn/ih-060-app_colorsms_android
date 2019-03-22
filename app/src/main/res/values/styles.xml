@@ -67,7 +67,7 @@
     <style name="BugleTheme.ConversationListActivity" parent="BugleTheme">
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
-        <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="android:windowBackground">@drawable/conversation_start_bg</item>
         <item name="android:windowTranslucentStatus">true</item>
     </style>
 

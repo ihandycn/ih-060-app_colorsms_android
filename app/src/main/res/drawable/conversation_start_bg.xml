@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:drawable="@color/white" />
+    <item>
+        <bitmap
+            android:width="152dp"
+            android:height="270dp"
+            android:gravity="center"
+            android:src="@drawable/conversation_list_start_bg" />
+    </item>
+</layer-list>
