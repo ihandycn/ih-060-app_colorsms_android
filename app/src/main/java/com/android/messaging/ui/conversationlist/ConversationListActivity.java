@@ -49,6 +49,7 @@ import com.android.messaging.util.BugleAnalytics;
 import com.android.messaging.util.CommonUtils;
 import com.android.messaging.util.MediaUtil;
 import com.android.messaging.util.Trace;
+import com.ihs.commons.config.HSConfig;
 import com.ihs.commons.notificationcenter.HSGlobalNotificationCenter;
 import com.ihs.commons.notificationcenter.INotificationObserver;
 import com.ihs.commons.utils.HSBundle;
@@ -109,6 +110,7 @@ public class ConversationListActivity extends AbstractConversationListActivity
     private static boolean mIsNoActionBack = true;
     private boolean mIsRealCreate = false;
     private boolean mShowEndAnimation;
+    private boolean hideAnimation;
 
     private enum AnimState {
         NONE,
@@ -248,7 +250,7 @@ public class ConversationListActivity extends AbstractConversationListActivity
     @Override
     protected void onResume() {
         super.onResume();
-        BugleAnalytics.logEvent("SMS_Messages_Show_Corrected");
+        BugleAnalytics.logEvent("SMS_Messages_Show_Corrected", true);
         Preferences.getDefault().incrementAndGetInt(CustomizeGuideController.PREF_KEY_MAIN_PAGE_SHOW_TIME);
         WeakReference<AppCompatActivity> activity = new WeakReference<>(this);
         Threads.postOnMainThreadDelayed(() -> {
@@ -610,6 +612,7 @@ public class ConversationListActivity extends AbstractConversationListActivity
     }
 
     private void hideStoreGuide() {
+        hideAnimation = true;
         mAnimState = AnimState.DISAPPEAR;
         mGuideContainer.setMaxProgress(1f);
         mGuideContainer.resumeAnimation();
@@ -622,7 +625,9 @@ public class ConversationListActivity extends AbstractConversationListActivity
             if (mAnimState == AnimState.SHOWING) {
                 mShowEndAnimation = true;
             } else {
-                hideStoreGuide();
+                if (!hideAnimation) {
+                    hideStoreGuide();
+                }
             }
 
         }

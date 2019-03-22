@@ -35,6 +35,7 @@ import android.telephony.CarrierConfigManager;
 import android.text.TextUtils;
 
 import com.android.ex.photo.util.PhotoViewAnalytics;
+import com.android.messaging.ad.AdPlacement;
 import com.android.messaging.datamodel.DataModel;
 import com.android.messaging.debug.BlockCanaryConfig;
 import com.android.messaging.debug.UploadLeakService;
@@ -66,6 +67,7 @@ import com.crashlytics.android.core.CrashlyticsCore;
 import com.github.moduth.blockcanary.BlockCanary;
 import com.google.common.annotations.VisibleForTesting;
 import com.ihs.app.framework.HSApplication;
+import com.ihs.app.framework.HSGdprConsent;
 import com.ihs.app.framework.HSNotificationConstant;
 import com.ihs.app.framework.HSSessionMgr;
 import com.ihs.commons.analytics.publisher.HSPublisherMgr;
@@ -89,6 +91,10 @@ import com.superapps.util.Calendars;
 import com.superapps.util.Preferences;
 import com.superapps.util.Threads;
 
+import net.appcloudbox.AcbAds;
+import net.appcloudbox.ads.expressad.AcbExpressAdManager;
+import net.appcloudbox.common.utils.AcbApplicationHelper;
+
 import java.io.File;
 import java.lang.Thread.UncaughtExceptionHandler;
 import java.util.ArrayList;
@@ -102,6 +108,8 @@ import io.fabric.sdk.android.Fabric;
 import static android.content.IntentFilter.SYSTEM_HIGH_PRIORITY;
 import static com.android.messaging.debug.DebugConfig.ENABLE_BLOCK_CANARY;
 import static com.android.messaging.debug.DebugConfig.ENABLE_LEAK_CANARY;
+import static net.appcloudbox.AcbAds.GDPR_NOT_GRANTED;
+import static net.appcloudbox.AcbAds.GDPR_USER;
 
 /**
  * The application object
@@ -138,7 +146,8 @@ public class BugleApplication extends HSApplication implements UncaughtException
         return sRunningTests;
     }
 
-    @Override protected void attachBaseContext(Context base) {
+    @Override
+    protected void attachBaseContext(Context base) {
         super.attachBaseContext(base);
         MultiDex.install(this);
     }
@@ -147,6 +156,8 @@ public class BugleApplication extends HSApplication implements UncaughtException
     public void onCreate() {
         Trace.beginSection("app.onCreate");
         super.onCreate();
+        AcbApplicationHelper.init(this);
+
 
         if (BuildConfig.DEBUG) {
             StrictMode.setThreadPolicy(new StrictMode.ThreadPolicy.Builder().detectAll().penaltyLog().build());
@@ -158,7 +169,9 @@ public class BugleApplication extends HSApplication implements UncaughtException
         String processName = getProcessName();
         boolean isOnMainProcess = TextUtils.equals(processName, packageName);
         if (isOnMainProcess) {
+
             onMainProcessApplicationCreate();
+            initAd();
         }
 
         initKeepAlive();
@@ -170,6 +183,16 @@ public class BugleApplication extends HSApplication implements UncaughtException
         Trace.endSection();
 
         CommonUtils.getAppInstallTimeMillis();
+    }
+
+    private void initAd() {
+        if (HSGdprConsent.isGdprUser()) {
+            if (HSGdprConsent.getConsentState() != HSGdprConsent.ConsentState.ACCEPTED) {
+                AcbAds.getInstance().setGdprInfo(GDPR_USER, GDPR_NOT_GRANTED);
+            }
+        }
+        AcbAds.getInstance().initializeFromGoldenEye(this);
+        AcbExpressAdManager.getInstance().activePlacementInProcess(AdPlacement.AD_BANNER);
     }
 
     private void onMainProcessApplicationCreate() {
@@ -548,7 +571,8 @@ public class BugleApplication extends HSApplication implements UncaughtException
         }
     }
 
-    @Override public void onReceive(String s, HSBundle hsBundle) {
+    @Override
+    public void onReceive(String s, HSBundle hsBundle) {
         switch (s) {
             case HSNotificationConstant.HS_SESSION_END:
                 Preferences prefs = Preferences.getDefault();

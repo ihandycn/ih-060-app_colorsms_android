@@ -17,7 +17,6 @@ package com.android.messaging.ui.conversationlist;
 
 import android.content.Context;
 import android.content.res.Resources;
-import android.database.Cursor;
 import android.graphics.Color;
 import android.graphics.Rect;
 import android.graphics.Typeface;
@@ -120,7 +119,7 @@ public class ConversationListItemView extends FrameLayout implements OnClickList
         }
     };
 
-    private final ConversationListItemData mData;
+    private ConversationListItemData mData;
 
     private int mAnimatingCount;
     private ViewGroup mSwipeableContainer;
@@ -397,10 +396,10 @@ public class ConversationListItemView extends FrameLayout implements OnClickList
      * @param cursor The cursor from a ConversationList that this view is in, pointing to its
      *               entry.
      */
-    public void bind(final Cursor cursor, final HostInterface hostInterface) {
+    public void bind(final ConversationListItemData data, final HostInterface hostInterface) {
         // Update our UI model
         mHostInterface = hostInterface;
-        mData.bind(cursor);
+        mData = data;
 
         resetAnimatingState();
 

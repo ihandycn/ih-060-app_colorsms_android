@@ -75,7 +75,8 @@
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:supportsRtl="true"
-        android:theme="@style/BugleTheme">
+        android:theme="@style/BugleTheme"
+        tools:replace="android:allowBackup">
         <meta-data
             android:name="com.facebook.sdk.ApplicationId"
             android:value="@string/facebook_app_id" />
@@ -699,10 +700,9 @@
             android:excludeFromRecents="true"
             android:label="@string/app_name"
             android:launchMode="singleTop"
-            android:taskAffinity=".message.box"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="stateAlwaysHidden|adjustResize"
-            android:theme="@style/Theme.AppCompat.Translucent"/>
+            android:theme="@style/Theme.AppCompat.Translucent"
+            android:windowSoftInputMode="stateAlwaysHidden|adjustResize" />
 
         <activity
             android:name=".ui.emoji.EmojiLottieDetailActivity"
