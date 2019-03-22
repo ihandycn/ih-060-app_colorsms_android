@@ -341,7 +341,7 @@ public class ConversationListFragment extends Fragment implements ConversationLi
         expressAdView = new AcbExpressAdView(HSApplication.getContext(), AdPlacement.AD_BANNER);
         expressAdView.setCustomLayout(new AcbContentLayout(R.layout.custom_banner)
                 .setActionId(R.id.banner_action)
-                .setIconId(R.id.banner_icon)
+                .setIconId(R.id.banner_icon_image)
                 .setTitleId(R.id.banner_title)
                 .setDescriptionId(R.id.banner_des)
         );
