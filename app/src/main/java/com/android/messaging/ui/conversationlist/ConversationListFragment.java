@@ -90,7 +90,7 @@ public class ConversationListFragment extends Fragment implements ConversationLi
     private AcbExpressAdView expressAdView;
     private boolean showAd;
     private LinearLayoutManager manager;
-    private boolean adShouldShow;
+    private boolean switchAd;
 
 
     public interface ConversationListFragmentHost {
@@ -161,6 +161,9 @@ public class ConversationListFragment extends Fragment implements ConversationLi
             } else {
                 if (HSConfig.optBoolean(true, "Application", "SMSAd", "SMSHomepageBannerAd")) {
                     BugleAnalytics.logEvent("SMS_Messages_BannerAd_Should_Show", true);
+                    if (expressAdView != null) {
+                        expressAdView.switchAd();
+                    }
                 }
             }
         }
@@ -255,12 +258,11 @@ public class ConversationListFragment extends Fragment implements ConversationLi
 
                 if (!isFirstConversationVisible && isScrolledToFirstConversation()) {
                     BugleAnalytics.logEvent("SMS_Messages_SlideUpToTop");
-                    if (adShouldShow && HSConfig.optBoolean(true, "Application", "SMSAd", "SMSHomepageBannerAd")) {
+                    if (expressAdView != null && switchAd) {
+                        expressAdView.switchAd();
                         BugleAnalytics.logEvent("SMS_Messages_BannerAd_Should_Show", true);
-                        adShouldShow = false;
+                        switchAd = false;
                     }
-                    Log.d("zgf", "onScrolled: " + mCurrentState + "dy" + dy);
-
                 }
 
                 isFirstConversationVisible = isScrolledToFirstConversation();
@@ -273,7 +275,6 @@ public class ConversationListFragment extends Fragment implements ConversationLi
                 if (dy != 0) {
                     if (dy > 0 && !mUpDetected) {
                         mUpDetected = true;
-                        adShouldShow = true;
                         BugleAnalytics.logEvent("SMS_Messages_SlideUp");
                     }
                     if (dy < 0 && !mDownDetected) {
@@ -343,7 +344,7 @@ public class ConversationListFragment extends Fragment implements ConversationLi
                 .setTitleId(R.id.banner_title)
                 .setDescriptionId(R.id.banner_des)
         );
-        expressAdView.setAutoSwitchAd(AcbExpressAdView.AutoSwitchAd_All);
+        expressAdView.setAutoSwitchAd(AcbExpressAdView.AutoSwitchAd_None);
         expressAdView.setExpressAdViewListener(new AcbExpressAdView.AcbExpressAdViewListener() {
             @Override
             public void onAdShown(AcbExpressAdView acbExpressAdView) {
@@ -360,6 +361,7 @@ public class ConversationListFragment extends Fragment implements ConversationLi
             public void onAdReady(AcbExpressAdView acbExpressAdView) {
                 if (adContainer.getChildCount() == 0) {
                     adContainer.addView(expressAdView);
+                    expressAdView.switchAd();
                 }
                 showAd = true;
                 mAdapter.setHeader(adContainer);
@@ -402,6 +404,7 @@ public class ConversationListFragment extends Fragment implements ConversationLi
     @Override
     public void onPause() {
         super.onPause();
+        switchAd = true;
         mListState = mRecyclerView.getLayoutManager().onSaveInstanceState();
         mListBinding.getData().setScrolledToNewestConversation(false);
     }
