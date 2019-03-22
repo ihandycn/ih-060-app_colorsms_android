@@ -320,6 +320,13 @@ public class UiUtils {
         }
     }
 
+    public static void setNavigationBarTransparent(Activity activity) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES
+                .KITKAT) {
+            activity.getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);
+        }
+    }
+
     public static void lockOrientation(final Activity activity) {
         final int orientation = activity.getResources().getConfiguration().orientation;
         final int rotation = activity.getWindowManager().getDefaultDisplay().getRotation();

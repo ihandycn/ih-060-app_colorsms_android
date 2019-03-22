@@ -65,6 +65,7 @@ public class MessageBoxActivity extends BaseActivity implements INotificationObs
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.message_box_activity);
+        UiUtils.setNavigationBarTransparent(this);
 
         initConversationList();
         initEditView();
