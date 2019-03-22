@@ -161,6 +161,7 @@ public class ConversationListFragment extends Fragment implements ConversationLi
             } else {
                 if (HSConfig.optBoolean(true, "Application", "SMSAd", "SMSHomepageBannerAd")) {
                     BugleAnalytics.logEvent("SMS_Messages_BannerAd_Should_Show", true);
+                    switchAd = false;
                     if (expressAdView != null) {
                         expressAdView.switchAd();
                     }
