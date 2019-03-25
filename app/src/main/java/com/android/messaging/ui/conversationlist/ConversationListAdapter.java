@@ -50,7 +50,6 @@ public class ConversationListAdapter
                                    final ConversationListItemView.HostInterface clivHostInterface) {
         this.context = context;
         mClivHostInterface = clivHostInterface;
-        setHasStableIds(true);
     }
 
     public void setDataList(List<Object> dataList) {
