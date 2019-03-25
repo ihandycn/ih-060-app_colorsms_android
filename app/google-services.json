@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "328002957503",
+    "firebase_url": "https://bubble-640d4.firebaseio.com",
+    "project_id": "bubble-640d4",
+    "storage_bucket": "bubble-640d4.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:328002957503:android:2125993bf6fd431c",
+        "android_client_info": {
+          "package_name": "com.color.sms.messages.emoji"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "328002957503-esopu199am676a49s5looistufmnvm5o.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCAytiR8h2iG_tpTXIAh2OR8Rzeg1hRfvg"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
