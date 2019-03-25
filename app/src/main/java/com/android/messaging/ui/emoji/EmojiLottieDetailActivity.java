@@ -80,4 +80,10 @@ public class EmojiLottieDetailActivity extends BaseActivity {
             outRect.bottom = INNER_VERTICAL_SPACING;
         }
     }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        BaseStickerItemRecyclerAdapter.releaseListener();
+    }
 }

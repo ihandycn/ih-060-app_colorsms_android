@@ -50,6 +50,7 @@ public class ConversationListAdapter
                                    final ConversationListItemView.HostInterface clivHostInterface) {
         this.context = context;
         mClivHostInterface = clivHostInterface;
+        setHasStableIds(true);
     }
 
     public void setDataList(List<Object> dataList) {
@@ -69,7 +70,6 @@ public class ConversationListAdapter
         } else {
             return new ConversationListAdapter.ConversationListHeaderViewHolder(headerView);
         }
-
     }
 
     @Override
@@ -90,6 +90,16 @@ public class ConversationListAdapter
     }
 
     @Override
+    public long getItemId(int position) {
+        if (dataList.get(position) instanceof ConversationListItemData) {
+            ConversationListItemData conversationListItemData = (ConversationListItemData) dataList.get(position);
+            return Long.parseLong(conversationListItemData.getConversationId());
+        } else {
+            return 0;
+        }
+    }
+
+    @Override
     public int getItemViewType(int position) {
         if (showHeader()) {
             return isHeader(position) ? TYPE_HEADER_VIEW : TYPE_NORMAL;
@@ -105,12 +115,11 @@ public class ConversationListAdapter
 
     private boolean isHeader(int position) {
         return dataList.get(position) instanceof AdItemData;
-
     }
 
     public void setHeader(View inflate) {
         headerView = inflate;
-        dataList.add(0,new AdItemData());
+        dataList.add(0, new AdItemData());
         notifyItemInserted(0);
     }
 
