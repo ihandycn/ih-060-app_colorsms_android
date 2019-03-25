@@ -100,7 +100,6 @@ public class ConversationListActivity extends AbstractConversationListActivity
     private TextView mTitleTextView;
     private View mEmojiStoreIconView;
     private LottieAnimationView mGuideContainer;
-    private View mTriangleShape;
     private View statusbarInset;
 
     private boolean mShowRateAlert = false;
@@ -519,7 +518,6 @@ public class ConversationListActivity extends AbstractConversationListActivity
         mTitleTextView = findViewById(R.id.toolbar_title);
         mAnimHandler = new Handler();
         mGuideContainer = findViewById(R.id.emoji_store_guide_content);
-        mTriangleShape = findViewById(R.id.emoji_store_guide_triangle);
         mEmojiStoreIconView = findViewById(R.id.emoji_store_icon);
         mEmojiStoreIconView.setScaleX(1f);
         mEmojiStoreIconView.setScaleY(1f);
@@ -661,9 +659,6 @@ public class ConversationListActivity extends AbstractConversationListActivity
         if (mAnimState != AnimState.NONE) {
             if (mGuideContainer != null) {
                 mGuideContainer.setVisibility(View.GONE);
-            }
-            if (mTriangleShape != null) {
-                mTriangleShape.setVisibility(View.GONE);
             }
             mAnimState = AnimState.NONE;
         }
