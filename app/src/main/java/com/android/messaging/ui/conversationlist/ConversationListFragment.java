@@ -44,6 +44,7 @@ import com.android.messaging.annotation.VisibleForAnimation;
 import com.android.messaging.datamodel.DataModel;
 import com.android.messaging.datamodel.binding.Binding;
 import com.android.messaging.datamodel.binding.BindingBase;
+import com.android.messaging.datamodel.data.AdItemData;
 import com.android.messaging.datamodel.data.ConversationListData;
 import com.android.messaging.datamodel.data.ConversationListData.ConversationListDataListener;
 import com.android.messaging.datamodel.data.ConversationListItemData;
@@ -91,6 +92,7 @@ public class ConversationListFragment extends Fragment implements ConversationLi
     private boolean showAd;
     private LinearLayoutManager manager;
     private boolean switchAd;
+    private boolean firstLoading = true;
 
 
     public interface ConversationListFragmentHost {
@@ -154,7 +156,6 @@ public class ConversationListFragment extends Fragment implements ConversationLi
     @Override
     public void onResume() {
         super.onResume();
-
         if (mRecyclerView != null) {
             if (mRecyclerView.canScrollVertically(-1)) {
                 BugleAnalytics.logEvent("SMS_Messages_Show_NotOnTop", true);
@@ -171,7 +172,9 @@ public class ConversationListFragment extends Fragment implements ConversationLi
         Assert.notNull(mHost);
         setScrolledToNewestConversationIfNeeded();
         updateUi();
-
+        if (!firstLoading) {
+            prepareAd();
+        }
     }
 
     public void setScrolledToNewestConversationIfNeeded() {
@@ -223,7 +226,6 @@ public class ConversationListFragment extends Fragment implements ConversationLi
         });
         mEmptyListMessageView = rootView.findViewById(R.id.no_conversations_view);
         mEmptyListMessageView.setImageHint(R.drawable.ic_oobe_conv_list);
-
         // The default behavior for default layout param generation by LinearLayoutManager is to
         // provide width and height of WRAP_CONTENT, but this is not desirable for
         // ConversationListFragment; the view in each row should be a width of MATCH_PARENT so that
@@ -329,14 +331,14 @@ public class ConversationListFragment extends Fragment implements ConversationLi
         ViewGroupCompat.setTransitionGroup(rootView, false);
 
         setHasOptionsMenu(true);
+        if (HSConfig.optBoolean(true, "Application", "SMSAd", "SMSHomepageBannerAd")) {
+            initAd();
+        }
         return rootView;
     }
 
 
     private void initAd() {
-        if (adContainer != null) {
-            return;
-        }
         adContainer = (ViewGroup) LayoutInflater.from(getActivity()).inflate(R.layout.conversation_list_header, mRecyclerView, false);
         expressAdView = new AcbExpressAdView(HSApplication.getContext(), AdPlacement.AD_BANNER);
         expressAdView.setCustomLayout(new AcbContentLayout(R.layout.custom_banner)
@@ -357,18 +359,23 @@ public class ConversationListFragment extends Fragment implements ConversationLi
                 BugleAnalytics.logEvent("SMS_Messages_BannerAd_Click", true);
             }
         });
+        adContainer.addView(expressAdView);
+
+    }
+
+    private void prepareAd() {
+        if (expressAdView == null)
+            return;
         expressAdView.prepareAd(new AcbExpressAdView.PrepareAdListener() {
             @Override
             public void onAdReady(AcbExpressAdView acbExpressAdView) {
-                if (adContainer.getChildCount() == 0) {
-                    adContainer.addView(expressAdView);
-                    expressAdView.switchAd();
+                if (!mAdapter.hasHeader()) {
+                    mAdapter.setHeader(adContainer);
+                    if (manager.findFirstCompletelyVisibleItemPosition() == 0) {
+                        mRecyclerView.smoothScrollToPosition(0);
+                    }
                 }
-                showAd = true;
-                mAdapter.setHeader(adContainer);
-                if (manager.findFirstCompletelyVisibleItemPosition() == 0) {
-                    mRecyclerView.smoothScrollToPosition(0);
-                }
+
 
             }
 
@@ -377,6 +384,7 @@ public class ConversationListFragment extends Fragment implements ConversationLi
 
             }
         });
+        firstLoading = false;
     }
 
     @Override
@@ -432,12 +440,12 @@ public class ConversationListFragment extends Fragment implements ConversationLi
                 dataList.add(itemData);
             } while (cursor.moveToNext());
         }
-        mAdapter.setDataList(dataList);
-        if (showAd && adContainer != null) {
-            mAdapter.setHeader(adContainer);
+        if (mAdapter.hasHeader()) {
+            dataList.add(0, new AdItemData());
         }
-        if (HSConfig.optBoolean(true, "Application", "SMSAd", "SMSHomepageBannerAd")) {
-            initAd();
+        mAdapter.setDataList(dataList);
+        if (firstLoading && !dataList.isEmpty()) {
+            prepareAd();
         }
         updateEmptyListUi(cursor == null || cursor.getCount() == 0);
         if (cursor != null && cursor.getCount() > 0) {

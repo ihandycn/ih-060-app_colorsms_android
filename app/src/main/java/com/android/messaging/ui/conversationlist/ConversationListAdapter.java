@@ -46,6 +46,12 @@ public class ConversationListAdapter
     private static final int TYPE_NORMAL = 1;
     private View headerView;
 
+    public boolean hasHeader() {
+        return hasHeader;
+    }
+
+    private boolean hasHeader;
+
     public ConversationListAdapter(final Context context,
                                    final ConversationListItemView.HostInterface clivHostInterface) {
         this.context = context;
@@ -118,7 +124,10 @@ public class ConversationListAdapter
     }
 
     public void setHeader(View inflate) {
-        headerView = inflate;
+        if (headerView == null) {
+            headerView = inflate;
+        }
+        hasHeader = true;
         dataList.add(0, new AdItemData());
         notifyItemInserted(0);
     }
