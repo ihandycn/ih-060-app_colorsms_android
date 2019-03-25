@@ -68,8 +68,8 @@ public class ChangeFontActivity extends BaseActivity implements LevelSeekBar.OnL
         mChangeFontContainer = findViewById(R.id.change_font_container);
         View changeFontItem = findViewById(R.id.change_font_item);
 
-        mPrefFontLevel = FontStyleManager.getFontScaleLevel();
-        String fontFamily = FontStyleManager.getFontFamily();
+        mPrefFontLevel = FontStyleManager.getInstance().getFontScaleLevel();
+        String fontFamily = FontStyleManager.getInstance().getFontFamily();
 
         mTextFontFamily.setText(fontFamily);
         mTextFontSize.setText(getResources().getString(sTextSizeRes[mPrefFontLevel]));
@@ -125,7 +125,7 @@ public class ChangeFontActivity extends BaseActivity implements LevelSeekBar.OnL
 
     @Override
     public void onLevelChanged(LevelSeekBar seekBar, int oldLevel, int newLevel, boolean fromUser) {
-        FontStyleManager.setFontScaleLevel(newLevel);
+        FontStyleManager.getInstance().setFontScaleLevel(newLevel);
         mTextFontSize.setText(getResources().getString(sTextSizeRes[newLevel]));
         ChangeFontUtils.changeFontSize(mChangeFontContainer, FontStyleManager.getScaleByLevel(newLevel));
 
@@ -134,7 +134,7 @@ public class ChangeFontActivity extends BaseActivity implements LevelSeekBar.OnL
     }
 
     public void onFontChange() {
-        mTextFontFamily.setText(FontStyleManager.getFontFamily());
-        ChangeFontUtils.changeFontTypeface(mChangeFontContainer, FontStyleManager.getFontFamily());
+        mTextFontFamily.setText(FontStyleManager.getInstance().getFontFamily());
+        ChangeFontUtils.changeFontTypeface(mChangeFontContainer, FontStyleManager.getInstance().getFontFamily());
     }
 }

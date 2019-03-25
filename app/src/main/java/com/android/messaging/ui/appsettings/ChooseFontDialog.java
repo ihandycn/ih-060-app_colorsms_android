@@ -52,7 +52,7 @@ public class ChooseFontDialog implements View.OnClickListener{
     ChooseFontDialog(Context activity) {
         this.mActivity = (Activity) activity;
         mWeakActivityReference = new WeakReference<>((ChangeFontActivity)activity);
-        mFontFamily = FontStyleManager.getFontFamily();
+        mFontFamily = FontStyleManager.getInstance().getFontFamily();
     }
 
     private void configDialog(Dialog builder) {
@@ -174,7 +174,7 @@ public class ChooseFontDialog implements View.OnClickListener{
                view.setSelected(true);
                view.refreshRadioStatus();
 
-               FontStyleManager.setFontFamily(fontFamily);
+               FontStyleManager.getInstance().setFontFamily(fontFamily);
                ChangeFontActivity activity = mWeakActivityReference.get();
                if(activity != null && !activity.isDestroyed()) {
                    activity.onFontChange();

@@ -188,7 +188,7 @@ public class ConversationListActivity extends AbstractConversationListActivity
                         "sent text color", ConversationColors.get().getConversationColorEventType(false, false));
 
                 String size;
-                switch (FontStyleManager.getFontScaleLevel()) {
+                switch (FontStyleManager.getInstance().getFontScaleLevel()) {
                     case 0:
                         size = "Smallest";
                         break;
@@ -209,7 +209,7 @@ public class ConversationListActivity extends AbstractConversationListActivity
                 }
 
                 BugleAnalytics.logEvent("SMS_Messages_Show_1", true,
-                        "font", FontStyleManager.getFontFamily(),
+                        "font", FontStyleManager.getInstance().getFontFamily(),
                         "size", size,
                         "open time", String.valueOf(hour),
                         "signature", String.valueOf(!TextUtils.isEmpty(Preferences.getDefault().getString(
@@ -229,8 +229,8 @@ public class ConversationListActivity extends AbstractConversationListActivity
                                 || bubbleSendFontColor != res.getColor(R.color.message_text_color_outgoing)
                                 || bubbleRcvFontColor != res.getColor(R.color.message_text_color_incoming)) {
                             //bubble font color or bg color has been changed
-                            String fontType = FontStyleManager.getFontFamily();
-                            int fontSize = FontStyleManager.getFontScaleLevel();
+                            String fontType = FontStyleManager.getInstance().getFontFamily();
+                            int fontSize = FontStyleManager.getInstance().getFontScaleLevel();
                             int bubbleStyle = BubbleDrawables.getSelectedIdentifier();
                             BugleAnalytics.logEvent("Customize_Analysis", true,
                                     "group" + new Random().nextInt(7),

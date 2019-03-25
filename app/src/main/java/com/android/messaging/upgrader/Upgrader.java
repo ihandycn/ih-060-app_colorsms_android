@@ -30,7 +30,7 @@ public class Upgrader extends BaseUpgrader {
 
         if (oldVersion == 13 && newVersion > 13) {
             int fontLevel = BuglePrefs.getApplicationPrefs().getInt("message_font_scale", 2);
-            FontStyleManager.setFontScaleLevel(fontLevel);
+            FontStyleManager.getInstance().setFontScaleLevel(fontLevel);
         }
     }
 
