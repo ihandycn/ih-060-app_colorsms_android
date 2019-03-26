@@ -675,6 +675,8 @@ public class ConversationListItemView extends FrameLayout implements OnClickList
                 snippetText = resources.getString(R.string.conversation_list_snippet_video);
             } else if (ContentType.isVCardType(previewContentType)) {
                 snippetText = resources.getString(R.string.conversation_list_snippet_vcard);
+            } else if (mData.getMessageStatus() == MessageData.BUGLE_STATUS_INCOMING_YET_TO_MANUAL_DOWNLOAD) {
+                snippetText = resources.getString(R.string.mms_text);
             }
         }
         return snippetText;
