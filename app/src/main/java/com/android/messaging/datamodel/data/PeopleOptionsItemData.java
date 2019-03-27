@@ -21,16 +21,19 @@ import android.media.Ringtone;
 import android.media.RingtoneManager;
 import android.net.Uri;
 
+import com.android.messaging.Factory;
 import com.android.messaging.R;
 import com.android.messaging.datamodel.data.ConversationListItemData.ConversationListViewColumns;
 import com.android.messaging.util.Assert;
+import com.android.messaging.util.BuglePrefs;
 import com.android.messaging.util.RingtoneUtil;
+import com.ihs.app.framework.HSApplication;
 
 public class PeopleOptionsItemData {
     public static final String[] PROJECTION = {
-        ConversationListViewColumns.NOTIFICATION_ENABLED,
-        ConversationListViewColumns.NOTIFICATION_SOUND_URI,
-        ConversationListViewColumns.NOTIFICATION_VIBRATION,
+            ConversationListViewColumns.NOTIFICATION_ENABLED,
+            ConversationListViewColumns.NOTIFICATION_SOUND_URI,
+            ConversationListViewColumns.NOTIFICATION_VIBRATION,
     };
 
     // Column index for query projection.
@@ -110,7 +113,15 @@ public class PeopleOptionsItemData {
 
             case SETTING_NOTIFICATION_VIBRATION:
                 mTitle = mContext.getString(R.string.notification_vibrate_pref_title);
-                mChecked = cursor.getInt(INDEX_NOTIFICATION_VIBRATION) == 1;
+
+                if (cursor.getInt(INDEX_NOTIFICATION_VIBRATION) != -1) {
+                    mChecked = cursor.getInt(INDEX_NOTIFICATION_VIBRATION) == 1;
+                } else {
+                    final String prefKey = HSApplication.getContext().getString(R.string.notification_vibration_pref_key);
+                    final boolean defaultValue = HSApplication.getContext().getResources().getBoolean(
+                            R.bool.notification_vibration_pref_default);
+                    mChecked = BuglePrefs.getApplicationPrefs().getBoolean(prefKey, defaultValue);
+                }
                 mEnabled = notificationEnabled;
                 break;
 
@@ -122,8 +133,8 @@ public class PeopleOptionsItemData {
                 mCheckable = false;
                 break;
 
-             default:
-                 Assert.fail("Unsupported conversation option type!");
+            default:
+                Assert.fail("Unsupported conversation option type!");
         }
     }
 

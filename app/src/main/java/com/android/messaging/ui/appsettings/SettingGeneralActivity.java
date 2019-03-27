@@ -145,12 +145,6 @@ public class SettingGeneralActivity extends BaseActivity {
             BugleAnalytics.logEvent("SMS_Settings_Vibrate_Click", true);
         });
 
-        // go to System setting above Android O;
-        if (OsUtil.isAtLeastO()) {
-            mSoundView.setVisibility(View.GONE);
-            mVibrateView.setVisibility(View.GONE);
-        }
-
         //notification
         mNotificationView = findViewById(R.id.setting_item_notifications);
         String notificationKey = getString(R.string.notifications_enabled_pref_key);
@@ -165,23 +159,15 @@ public class SettingGeneralActivity extends BaseActivity {
         }
         mNotificationView.setChecked(notificationDefaultValue);
         mNotificationView.setOnItemClickListener(() -> {
-                    if (!OsUtil.isAtLeastO()) {
-                        boolean b = mNotificationView.isChecked();
-                        prefs.putBoolean(notificationKey, b);
-                        mPopUpsView.setEnable(b);
-                        mSmsShowView.setEnable(b && mPopUpsView.isChecked());
-                        mSoundView.setEnable(b);
-                        mVibrateView.setEnable(b);
-                    } else {
-                        startSystemNotificationSettings();
-                    }
+                    boolean b = mNotificationView.isChecked();
+                    prefs.putBoolean(notificationKey, b);
+                    mPopUpsView.setEnable(b);
+                    mSmsShowView.setEnable(b && mPopUpsView.isChecked());
+                    mSoundView.setEnable(b);
+                    mVibrateView.setEnable(b);
                     BugleAnalytics.logEvent("SMS_Settings_Notifications_Click", true);
                 }
         );
-
-        if (OsUtil.isAtLeastO()) {
-            mNotificationView.setViewType(NORMAL);
-        }
 
         //blocked contacts
         SettingItemView mBlockedContactsView = findViewById(R.id.setting_item_blocked_contacts);
@@ -292,26 +278,6 @@ public class SettingGeneralActivity extends BaseActivity {
         ringtonePickerIntent.putExtra(RingtoneManager.EXTRA_RINGTONE_TYPE, RingtoneManager.TYPE_NOTIFICATION);
         ringtonePickerIntent.putExtra(RingtoneManager.EXTRA_RINGTONE_TITLE, getTitle()); //title
         startActivityForResult(ringtonePickerIntent, REQUEST_CODE_START_RINGTONE_PICKER);
-    }
-
-    @TargetApi(Build.VERSION_CODES.O)
-    private void startSystemNotificationSettings() {
-        final BuglePrefs prefs = Factory.get().getApplicationPrefs();
-        final long latestNotificationTimestamp = prefs.getLong(
-                BuglePrefsKeys.LATEST_NOTIFICATION_MESSAGE_TIMESTAMP, Long.MIN_VALUE);
-
-        if (latestNotificationTimestamp > Long.MIN_VALUE) {
-            Intent intent = new Intent();
-            intent.setAction(Settings.ACTION_CHANNEL_NOTIFICATION_SETTINGS);
-            intent.putExtra(Settings.EXTRA_CHANNEL_ID, PendingIntentConstants.SMS_NOTIFICATION_CHANNEL_ID);
-            intent.putExtra(Settings.EXTRA_APP_PACKAGE, getPackageName());
-            startActivity(intent);
-        } else {
-            Intent intent = new Intent();
-            intent.setAction(Settings.ACTION_APP_NOTIFICATION_SETTINGS);
-            intent.putExtra(Settings.EXTRA_APP_PACKAGE, getPackageName());
-            startActivity(intent);
-        }
     }
 
     @Override

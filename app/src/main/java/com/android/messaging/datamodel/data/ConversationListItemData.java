@@ -56,7 +56,7 @@ public class ConversationListItemData {
     private int mParticipantCount;
     private boolean mNotificationEnabled;
     private String mNotificationSoundUri;
-    private boolean mNotificationVibrate;
+    private int mNotificationVibrateValue;
     private boolean mIncludeEmailAddress;
     private int mMessageStatus;
     private int mMessageRawTelephonyStatus;
@@ -97,7 +97,7 @@ public class ConversationListItemData {
         mParticipantCount = cursor.getInt(INDEX_PARTICIPANT_COUNT);
         mNotificationEnabled = cursor.getInt(INDEX_NOTIFICATION_ENABLED) == 1;
         mNotificationSoundUri = cursor.getString(INDEX_NOTIFICATION_SOUND_URI);
-        mNotificationVibrate = cursor.getInt(INDEX_NOTIFICATION_VIBRATION) == 1;
+        mNotificationVibrateValue = cursor.getInt(INDEX_NOTIFICATION_VIBRATION);
         mIncludeEmailAddress = cursor.getInt(INDEX_INCLUDE_EMAIL_ADDRESS) == 1;
         mMessageStatus = cursor.getInt(INDEX_MESSAGE_STATUS);
         mMessageRawTelephonyStatus = cursor.getInt(INDEX_MESSAGE_RAW_TELEPHONY_STATUS);
@@ -211,8 +211,11 @@ public class ConversationListItemData {
         return mNotificationSoundUri;
     }
 
+    public boolean isNotificationVibrateChanged() {
+        return  mNotificationVibrateValue != -1;
+    }
     public boolean getNotificationVibrate() {
-        return mNotificationVibrate;
+        return mNotificationVibrateValue == 1;
     }
 
     public final boolean getIsFailedStatus() {

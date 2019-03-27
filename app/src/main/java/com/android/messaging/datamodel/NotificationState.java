@@ -154,6 +154,10 @@ public abstract class NotificationState {
         return false;
     }
 
+    public boolean isNotificationVibrateChanged() {
+        return true;
+    }
+
     public long getLatestReceivedTimestamp() {
         return Long.MIN_VALUE;
     }

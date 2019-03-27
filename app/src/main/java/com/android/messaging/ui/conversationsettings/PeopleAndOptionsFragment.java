@@ -316,9 +316,6 @@ public class PeopleAndOptionsFragment extends Fragment
         }
 
         private boolean isRingtoneEnabled() {
-            if (OsUtil.isAtLeastO()) {
-                return false;
-            }
             String prefKey = getString(R.string.notification_sound_pref_key);
             final BuglePrefs prefs = BuglePrefs.getApplicationPrefs();
 

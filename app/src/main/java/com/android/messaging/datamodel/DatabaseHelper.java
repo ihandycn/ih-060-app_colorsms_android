@@ -187,7 +187,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                     + ConversationColumns.PARTICIPANT_COUNT + " INT DEFAULT(0), "
                     + ConversationColumns.NOTIFICATION_ENABLED + " INT DEFAULT(1), "
                     + ConversationColumns.NOTIFICATION_SOUND_URI + " TEXT, "
-                    + ConversationColumns.NOTIFICATION_VIBRATION + " INT DEFAULT(1), "
+                    + ConversationColumns.NOTIFICATION_VIBRATION + " INT DEFAULT(-1), "
                     + ConversationColumns.INCLUDE_EMAIL_ADDRESS + " INT DEFAULT(0), "
                     + ConversationColumns.SMS_SERVICE_CENTER + " TEXT ,"
                     + ConversationColumns.IS_ENTERPRISE + " INT DEFAULT(0)"

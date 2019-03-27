@@ -17,6 +17,7 @@ package com.android.messaging.datamodel;
 
 import android.annotation.TargetApi;
 import android.app.Notification;
+import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
@@ -48,6 +49,7 @@ import com.android.messaging.datamodel.data.ConversationParticipantsData;
 import com.android.messaging.datamodel.data.MessageData;
 import com.android.messaging.datamodel.data.MessagePartData;
 import com.android.messaging.datamodel.data.ParticipantData;
+import com.android.messaging.datamodel.media.BugleNotificationChannelUtil;
 import com.android.messaging.datamodel.media.VideoThumbnailRequest;
 import com.android.messaging.sms.MmsUtils;
 import com.android.messaging.ui.messagebox.MessageBoxSettings;
@@ -228,6 +230,7 @@ public abstract class MessageNotificationState extends NotificationState {
 
         // Should notifications vibrate for this conversation?
         final boolean mNotificationVibrate;
+        final boolean mIsNotificationVibrateChanged;
 
         // Avatar uri of sender
         final Uri mAvatarUri;
@@ -242,18 +245,19 @@ public abstract class MessageNotificationState extends NotificationState {
         final int mParticipantCount;
 
         public ConversationLineInfo(final String conversationId,
-                final boolean isGroup,
-                final String groupConversationName,
-                final boolean includeEmailAddress,
-                final long receivedTimestamp,
-                final String selfParticipantId,
-                final String ringtoneUri,
-                final boolean notificationEnabled,
-                final boolean notificationVibrate,
-                final Uri avatarUri,
-                final Uri contactUri,
-                final int subId,
-                final int participantCount) {
+                                    final boolean isGroup,
+                                    final String groupConversationName,
+                                    final boolean includeEmailAddress,
+                                    final long receivedTimestamp,
+                                    final String selfParticipantId,
+                                    final String ringtoneUri,
+                                    final boolean notificationEnabled,
+                                    final boolean notificationVibrateChanged,
+                                    final boolean notificationVibrate,
+                                    final Uri avatarUri,
+                                    final Uri contactUri,
+                                    final int subId,
+                                    final int participantCount) {
             mConversationId = conversationId;
             mIsGroup = isGroup;
             mGroupConversationName = groupConversationName;
@@ -266,6 +270,7 @@ public abstract class MessageNotificationState extends NotificationState {
             mAvatarUri = avatarUri;
             mContactUri = contactUri;
             mNotificationEnabled = notificationEnabled;
+            mIsNotificationVibrateChanged = notificationVibrateChanged;
             mNotificationVibrate = notificationVibrate;
             mSubId = subId;
             mParticipantCount = participantCount;
@@ -910,6 +915,7 @@ public abstract class MessageNotificationState extends NotificationState {
                                 convData.getSelfId(),
                                 convData.getNotificationSoundUri(),
                                 convData.getNotificationEnabled(),
+                                convData.isNotificationVibrateChanged(),
                                 convData.getNotificationVibrate(),
                                 avatarUri,
                                 convMessageData.getSenderContactLookupUri(),
@@ -1130,6 +1136,14 @@ public abstract class MessageNotificationState extends NotificationState {
     }
 
     @Override
+    public boolean isNotificationVibrateChanged() {
+        if (mConvList.mConvInfos.size() > 0) {
+            return mConvList.mConvInfos.get(0).mIsNotificationVibrateChanged;
+        }
+        return false;
+    }
+
+    @Override
     public boolean getNotificationVibrate() {
         if (mConvList.mConvInfos.size() > 0) {
             return mConvList.mConvInfos.get(0).mNotificationVibrate;
@@ -1141,7 +1155,7 @@ public abstract class MessageNotificationState extends NotificationState {
         return BugleNotifications.buildColonSeparatedMessage(
                 mTickerSender != null ? mTickerSender : mTitle,
                 mTickerText != null ? mTickerText : (mTickerNoContent ? null : mContent), null,
-                        null);
+                null);
     }
 
     private static CharSequence convertHtmlAndStripUrls(final String s) {
@@ -1185,7 +1199,7 @@ public abstract class MessageNotificationState extends NotificationState {
     }*/
 
     static CharSequence applyWarningTextColor(final Context context,
-            final CharSequence text) {
+                                              final CharSequence text) {
         if (text == null) {
             return null;
         }
@@ -1205,12 +1219,12 @@ public abstract class MessageNotificationState extends NotificationState {
         final DatabaseWrapper db = DataModel.get().getDatabase();
 
         final Cursor messageDataCursor = db.query(DatabaseHelper.MESSAGES_TABLE,
-            MessageData.getProjection(),
-            FailedMessageQuery.FAILED_MESSAGES_WHERE_CLAUSE,
-            null /*selectionArgs*/,
-            null /*groupBy*/,
-            null /*having*/,
-            FailedMessageQuery.FAILED_ORDER_BY);
+                MessageData.getProjection(),
+                FailedMessageQuery.FAILED_MESSAGES_WHERE_CLAUSE,
+                null /*selectionArgs*/,
+                null /*groupBy*/,
+                null /*having*/,
+                FailedMessageQuery.FAILED_ORDER_BY);
 
         try {
             final Context context = Factory.get().getApplicationContext();
@@ -1250,8 +1264,6 @@ public abstract class MessageNotificationState extends NotificationState {
                     LogUtil.d(TAG, "Found " + failedMessages.size() + " failed messages");
                 }
                 if (failedMessages.size() > 0) {
-                    final NotificationCompat.Builder builder =
-                            new NotificationCompat.Builder(context, PendingIntentConstants.SMS_NOTIFICATION_CHANNEL_ID);
 
                     CharSequence line1;
                     CharSequence line2;
@@ -1261,7 +1273,7 @@ public abstract class MessageNotificationState extends NotificationState {
                     if (failedMessages.size() == 1) {
                         messageDataCursor.moveToPosition(cursorPosition);
                         messageData.bind(messageDataCursor);
-                        final String conversationId =  messageData.getConversationId();
+                        final String conversationId = messageData.getConversationId();
 
                         // We have a single conversation, go directly to that conversation.
                         destinationIntent = UIIntents.get()
@@ -1292,7 +1304,7 @@ public abstract class MessageNotificationState extends NotificationState {
                         // We have notifications for multiple conversation, go to the conversation
                         // list.
                         destinationIntent = UIIntents.get()
-                            .getPendingIntentForConversationListActivity(context);
+                                .getPendingIntentForConversationListActivity(context);
 
                         int line1StringId;
                         int line2PluralsId;
@@ -1322,14 +1334,24 @@ public abstract class MessageNotificationState extends NotificationState {
                                     conversationIds,
                                     0);
 
+                    NotificationChannel channel = null;
+                    String channelId = PendingIntentConstants.SMS_NOTIFICATION_CHANNEL_ID;
+                    if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+                        Uri failSound = UriUtil.getUriForResourceId(context, R.raw.message_failure);
+                        channel = BugleNotificationChannelUtil.getSmsNotificationChannel(failSound, true);
+                        channelId = channel.getId();
+                    }
+
+                    final NotificationCompat.Builder builder =
+                            new NotificationCompat.Builder(context, channelId);
                     builder
-                        .setContentTitle(line1)
-                        .setTicker(line1)
-                        .setWhen(when > 0 ? when : System.currentTimeMillis())
-                        .setSmallIcon(R.drawable.ic_failed_light)
-                        .setDeleteIntent(pendingIntentForDelete)
-                        .setContentIntent(destinationIntent)
-                        .setSound(UriUtil.getUriForResourceId(context, R.raw.message_failure));
+                            .setContentTitle(line1)
+                            .setTicker(line1)
+                            .setWhen(when > 0 ? when : System.currentTimeMillis())
+                            .setSmallIcon(R.drawable.ic_failed_light)
+                            .setDeleteIntent(pendingIntentForDelete)
+                            .setContentIntent(destinationIntent)
+                            .setSound(UriUtil.getUriForResourceId(context, R.raw.message_failure));
                     if (isRichContent && !TextUtils.isEmpty(line2)) {
                         final NotificationCompat.InboxStyle inboxStyle =
                                 new NotificationCompat.InboxStyle(builder);
@@ -1344,8 +1366,7 @@ public abstract class MessageNotificationState extends NotificationState {
                     if (builder != null) {
                         Notifications.notifySafely(BugleNotifications.buildNotificationTag(
                                 PendingIntentConstants.MSG_SEND_ERROR, null),
-                                PendingIntentConstants.MSG_SEND_ERROR, builder.build(),
-                                BugleNotifications.getSmsNotificationChannel());
+                                PendingIntentConstants.MSG_SEND_ERROR, builder.build(), channel);
                     }
                 } else {
                     Notifications.cancelSafely(BugleNotifications.buildNotificationTag(PendingIntentConstants.MSG_SEND_ERROR, null),

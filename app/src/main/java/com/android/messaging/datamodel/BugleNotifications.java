@@ -57,6 +57,7 @@ import com.android.messaging.datamodel.action.RedownloadMmsAction;
 import com.android.messaging.datamodel.data.ConversationListItemData;
 import com.android.messaging.datamodel.data.MessageBoxItemData;
 import com.android.messaging.datamodel.media.AvatarRequestDescriptor;
+import com.android.messaging.datamodel.media.BugleNotificationChannelUtil;
 import com.android.messaging.datamodel.media.ImageResource;
 import com.android.messaging.datamodel.media.MediaRequest;
 import com.android.messaging.datamodel.media.MediaResourceManager;
@@ -65,9 +66,9 @@ import com.android.messaging.datamodel.media.UriImageRequestDescriptor;
 import com.android.messaging.datamodel.media.VideoThumbnailRequest;
 import com.android.messaging.sms.MmsSmsUtils;
 import com.android.messaging.sms.MmsUtils;
-import com.android.messaging.ui.messagebox.MessageBoxSettings;
 import com.android.messaging.ui.UIIntents;
 import com.android.messaging.ui.customize.PrimaryColors;
+import com.android.messaging.ui.messagebox.MessageBoxSettings;
 import com.android.messaging.util.Assert;
 import com.android.messaging.util.AvatarUriUtil;
 import com.android.messaging.util.BugleAnalytics;
@@ -86,7 +87,6 @@ import com.android.messaging.util.PhoneUtils;
 import com.android.messaging.util.RingtoneUtil;
 import com.android.messaging.util.ThreadUtil;
 import com.android.messaging.util.UriUtil;
-import com.ihs.app.framework.HSApplication;
 import com.superapps.util.Notifications;
 
 import java.util.HashSet;
@@ -332,8 +332,8 @@ public class BugleNotifications {
     public static boolean shouldVibrate(final NotificationState state) {
         // The notification should vibrate if the global setting is turned on AND
         // the per-conversation setting is turned on (default).
-        if (!state.getNotificationVibrate()) {
-            return false;
+        if (state.isNotificationVibrateChanged()) {
+            return state.getNotificationVibrate();
         } else {
             final BuglePrefs prefs = BuglePrefs.getApplicationPrefs();
             final Context context = Factory.get().getApplicationContext();
@@ -425,15 +425,24 @@ public class BugleNotifications {
     private static void processAndSend(final NotificationState state, final boolean silent,
                                        final boolean softSound) {
         final Context context = Factory.get().getApplicationContext();
-        final NotificationCompat.Builder notifBuilder = new NotificationCompat.Builder(context, PendingIntentConstants.SMS_NOTIFICATION_CHANNEL_ID);
-        final NotificationChannel notificationChannel = getSmsNotificationChannel();
+        final Uri ringtoneUri = RingtoneUtil.getNotificationRingtoneUri(state.getRingtoneUri());
+
+        NotificationChannel notificationChannel = null;
+        String channelId = PendingIntentConstants.SMS_NOTIFICATION_CHANNEL_ID;
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+            notificationChannel = BugleNotificationChannelUtil.getSmsNotificationChannel(ringtoneUri, shouldVibrate(state));
+            channelId = notificationChannel.getId();
+            notificationChannel.setImportance(state.getChannelPriority());
+        }
+
+        final NotificationCompat.Builder notifBuilder = new NotificationCompat.Builder(context, channelId);
+
         if (OsUtil.isAtLeastL()) {
             notifBuilder.setCategory(Notification.CATEGORY_MESSAGE);
         }
         // TODO: Need to fix this for multi conversation notifications to rate limit dings.
         final String conversationId = state.mConversationIds.first();
 
-        final Uri ringtoneUri = RingtoneUtil.getNotificationRingtoneUri(state.getRingtoneUri());
         // If the notification's conversation is currently observable (focused or in the
         // conversation list),  then play a notification beep at a low volume and don't display an
         // actual notification.
@@ -456,7 +465,7 @@ public class BugleNotifications {
             notifBuilder.setDeleteIntent(clearIntent);
         }
 
-        updateBuilderAudioVibrate(state, notifBuilder, silent, notificationChannel, ringtoneUri, conversationId);
+        updateBuilderAudioVibrate(state, notifBuilder, silent, ringtoneUri, conversationId);
 
         // Set the content intent
         PendingIntent destinationIntent;
@@ -474,10 +483,7 @@ public class BugleNotifications {
         notifBuilder.setContentIntent(destinationIntent);
 
         notifBuilder.setPriority(state.getPriority());
-        if (notificationChannel != null) {
-            // if channel is not null, the device is above O
-            notificationChannel.setImportance(state.getChannelPriority());
-        }
+
         // Save the state of the notification in-progress so when the avatar is loaded,
         // we can continue building the notification.
         final NotificationCompat.Style notifStyle = state.build(notifBuilder);
@@ -647,7 +653,7 @@ public class BugleNotifications {
                                     convInfo.mAvatarUri != null ? convInfo.mAvatarUri.toString() : "",
                                     convInfo.mGroupConversationName,
                                     messageLineInfo.mText.toString())
-                            );
+                    );
                     break;
                 }
             }
@@ -656,7 +662,6 @@ public class BugleNotifications {
 
     private static void updateBuilderAudioVibrate(final NotificationState state,
                                                   final NotificationCompat.Builder notifBuilder, final boolean silent,
-                                                  final NotificationChannel channel,
                                                   final Uri ringtoneUri, final String conversationId) {
         int defaults = Notification.DEFAULT_LIGHTS;
         if (!silent) {
@@ -682,17 +687,8 @@ public class BugleNotifications {
                         sLastMessageDingTime.put(conversationId, SystemClock.elapsedRealtime());
                         notifBuilder.setSound(ringtoneUri);
 
-                        if (channel != null) {
-                            // only above android O, channel is not null;
-                            channel.setSound(ringtoneUri, Notification.AUDIO_ATTRIBUTES_DEFAULT);
-                        }
                         if (shouldVibrate(state)) {
                             defaults |= Notification.DEFAULT_VIBRATE;
-                            if (channel != null) {
-                                // only above android O, channel is not null;
-                                channel.enableVibration(true);
-                                channel.setVibrationPattern(new long[]{100, 200, 300});
-                            }
                         }
                     }
                 }
@@ -1218,13 +1214,6 @@ public class BugleNotifications {
         }
     }
 
-    public static NotificationChannel getSmsNotificationChannel() {
-        NotificationChannel channel =  Notifications.getChannel(PendingIntentConstants.SMS_NOTIFICATION_CHANNEL_ID,
-                HSApplication.getContext().getResources().getString(R.string.sms_notification_channel),
-                HSApplication.getContext().getResources().getString(R.string.sms_notification_channel_description));
-        return channel;
-    }
-
     public static void notifyEmergencySmsFailed(final String emergencyNumber,
                                                 final String conversationId) {
         final Context context = Factory.get().getApplicationContext();
@@ -1237,7 +1226,18 @@ public class BugleNotifications {
         final PendingIntent destinationIntent = UIIntents.get()
                 .getPendingIntentForConversationActivity(context, conversationId, null /* draft */);
 
-        final NotificationCompat.Builder builder = new NotificationCompat.Builder(context, PendingIntentConstants.SMS_NOTIFICATION_CHANNEL_ID);
+
+        NotificationChannel channel = null;
+        String channelId = PendingIntentConstants.SMS_NOTIFICATION_CHANNEL_ID;
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+            channel = BugleNotificationChannelUtil.getSmsNotificationChannel(
+                    UriUtil.getUriForResourceId(context, R.raw.message_failure), true);
+            channel.setImportance(NotificationManager.IMPORTANCE_HIGH);
+            channelId = channel.getId();
+        }
+
+        final NotificationCompat.Builder builder;
+        builder = new NotificationCompat.Builder(context, channelId);
         builder.setTicker(line1)
                 .setContentTitle(line1)
                 .setContentText(line2)
@@ -1246,7 +1246,7 @@ public class BugleNotifications {
                 .setContentIntent(destinationIntent)
                 .setSound(UriUtil.getUriForResourceId(context, R.raw.message_failure));
         final String tag = context.getPackageName() + ":emergency_sms_error";
-        Notifications.notifySafely(tag, PendingIntentConstants.MSG_SEND_ERROR, builder.build(), getSmsNotificationChannel());
+        Notifications.notifySafely(tag, PendingIntentConstants.MSG_SEND_ERROR, builder.build(), channel);
     }
 
     public static void cancelAllSmsNotifications() {
