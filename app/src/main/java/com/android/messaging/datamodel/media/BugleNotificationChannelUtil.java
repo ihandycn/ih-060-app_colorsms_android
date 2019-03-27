@@ -23,26 +23,29 @@ public class BugleNotificationChannelUtil {
     @TargetApi(Build.VERSION_CODES.O)
     public static NotificationChannel getSmsNotificationChannel(Uri soundPath, boolean enableVibration) {
         int channelIndex = Preferences.getDefault().getInt(PREF_KEY_NOTIFICATION_CHANNEL_INDEX, 0);
-        NotificationChannel channel = Notifications.getChannel(
+        NotificationManager notifyMgr = (NotificationManager)
+                HSApplication.getContext().getSystemService(Context.NOTIFICATION_SERVICE);
+        NotificationChannel channel = null;
+        if (notifyMgr != null) {
+            channel = notifyMgr.getNotificationChannel(PendingIntentConstants.SMS_NOTIFICATION_CHANNEL_ID + "_" + channelIndex);
+        }
+        if (channel != null
+                && channel.getSound().getPath().equals(soundPath.getPath())
+                && channel.shouldVibrate() == enableVibration) {
+            return channel;
+        }
+
+        deleteNotificationChannels();
+        channelIndex++;
+        Preferences.getDefault().putInt(PREF_KEY_NOTIFICATION_CHANNEL_INDEX, channelIndex);
+        channel = Notifications.createChannel(
                 PendingIntentConstants.SMS_NOTIFICATION_CHANNEL_ID + "_" + channelIndex,
                 HSApplication.getContext().getResources().getString(R.string.sms_notification_channel),
                 HSApplication.getContext().getResources().getString(R.string.sms_notification_channel_description));
-        Uri channelSound = channel.getSound();
-        if ((channelSound != null
-                && !channelSound.getPath().equals(soundPath.getPath()))
-                || channel.shouldVibrate() != enableVibration) {
-            deleteNotificationChannels();
-            channelIndex++;
-            Preferences.getDefault().putInt(PREF_KEY_NOTIFICATION_CHANNEL_INDEX, channelIndex);
-            channel = Notifications.getChannel(
-                    PendingIntentConstants.SMS_NOTIFICATION_CHANNEL_ID + "_" + channelIndex,
-                    HSApplication.getContext().getResources().getString(R.string.sms_notification_channel),
-                    HSApplication.getContext().getResources().getString(R.string.sms_notification_channel_description));
-            channel.setSound(soundPath, Notification.AUDIO_ATTRIBUTES_DEFAULT);
-            channel.enableVibration(enableVibration);
-            if (enableVibration) {
-                channel.setVibrationPattern(new long[]{100, 200, 300});
-            }
+        channel.setSound(soundPath, Notification.AUDIO_ATTRIBUTES_DEFAULT);
+        channel.enableVibration(enableVibration);
+        if (enableVibration) {
+            channel.setVibrationPattern(new long[]{100, 200, 300});
         }
         return channel;
     }
