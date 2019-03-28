@@ -87,4 +87,25 @@
         <attr name="maxHeight" format="dimension" />
     </declare-styleable>
 
+    <declare-styleable name="GestureLockView">
+        <attr name="gesture_lock_node_image" format="color|reference" />
+        <attr name="gesture_lock_node_highlight_image" format="color|reference" />
+        <attr name="gesture_lock_node_failure_image" format="color|reference" />
+        <attr name="gesture_lock_normal_line_color" format="color" />
+        <attr name="gesture_lock_failure_line_color" format="color" />
+        <attr name="gesture_lock_line_width" format="dimension" />
+        <attr name="gesture_lock_padding" format="dimension" />
+        <attr name="gesture_lock_spacing" format="dimension" />
+    </declare-styleable>
+
+    <declare-styleable name="PINIndicatorView">
+        <attr name="pin_indicator_circle" format="integer" />
+        <attr name="pin_indicator_ring" format="integer" />
+    </declare-styleable>
+
+    <declare-styleable name="PINKeyboardView">
+        <attr name="pin_number_color" format="color" />
+        <attr name="pin_circle_color" format="color" />
+        <attr name="pin_btn_back" format="color|reference" />
+    </declare-styleable>
 </resources>

@@ -29,6 +29,7 @@ import com.airbnb.lottie.LottieAnimationView;
 import com.android.messaging.Factory;
 import com.android.messaging.R;
 import com.android.messaging.datamodel.BugleNotifications;
+import com.android.messaging.privatebox.PasswordSetActivity;
 import com.android.messaging.ui.DragHotSeatActivity;
 import com.android.messaging.ui.UIIntents;
 import com.android.messaging.ui.UIIntentsImpl;
@@ -49,7 +50,6 @@ import com.android.messaging.util.BugleAnalytics;
 import com.android.messaging.util.CommonUtils;
 import com.android.messaging.util.MediaUtil;
 import com.android.messaging.util.Trace;
-import com.ihs.commons.config.HSConfig;
 import com.ihs.commons.notificationcenter.HSGlobalNotificationCenter;
 import com.ihs.commons.notificationcenter.INotificationObserver;
 import com.ihs.commons.utils.HSBundle;
@@ -60,7 +60,6 @@ import com.superapps.util.Dimensions;
 import com.superapps.util.Navigations;
 import com.superapps.util.Preferences;
 import com.superapps.util.Threads;
-import com.superapps.util.Toasts;
 
 import java.lang.ref.WeakReference;
 import java.util.Calendar;
@@ -345,6 +344,11 @@ public class ConversationListActivity extends AbstractConversationListActivity
                         Intent intent = new Intent(ConversationListActivity.this, ChangeFontActivity.class);
                         navigationContent.findViewById(R.id.navigation_item_font_new_text).setVisibility(View.GONE);
                         startActivity(intent);
+                        break;
+                    case DRAWER_INDEX_PRIVACY_BOX:
+                        BugleAnalytics.logEvent("Menu_PrivateBox_Click");
+                        Navigations.startActivitySafely(ConversationListActivity.this,
+                                new Intent(ConversationListActivity.this, PasswordSetActivity.class));
                         break;
                     case DRAWER_INDEX_SETTING:
                         UIIntents.get().launchSettingsActivity(ConversationListActivity.this);
@@ -696,11 +700,8 @@ public class ConversationListActivity extends AbstractConversationListActivity
                 drawerLayout.closeDrawer(navigationView);
                 break;
             case R.id.navigation_item_privacy_box:
-                Toasts.showToast(R.string.menu_privacy_box_coming);
-                if (CommonUtils.isNewUser()
-                        && Calendars.isSameDay(CommonUtils.getAppInstallTimeMillis(), System.currentTimeMillis())) {
-                    BugleAnalytics.logEvent("Menu_PrivateBox_Click_NewUser");
-                }
+                drawerClickIndex = DRAWER_INDEX_PRIVACY_BOX;
+                drawerLayout.closeDrawer(navigationView);
                 break;
         }
     }

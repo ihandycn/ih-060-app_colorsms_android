@@ -1083,5 +1083,20 @@
 
     <string name="customize_guide_title">Customization is here!</string>
     <string name="signature">Signature</string>
-    
+
+    <string name="reset_password">Reset Password</string>
+    <string name="set_gesture_sub_prompt">Connect at least 4 dots</string>
+    <string name="gesture_not_confirmed_sub_prompt">Wrong Pattern</string>
+    <string name="draw_unlock_pattern">Draw your unlock pattern</string>
+    <string name="lock_style_pattern">Pattern</string>
+    <string name="lock_style_pin">Passcode</string>
+    <string name="lock_activity_change_to_pin">Change to Passcode</string>
+    <string name="lock_activity_change_to_pattern">Change to Pattern</string>
+    <string name="password_not_confirmed_sub_prompt">Passcode Not Confirmed</string>
+    <string name="confirm_prompt_gesture">Confirm pattern</string>
+    <string name="please_set_password">Please set an unlock pattern</string>
+    <string name="set_password_prompt">Please set an unlock passcode</string>
+    <string name="set_password_sub_prompt">Enter 4 numbers</string>
+    <string name="confirm_prompt_password">Confirm passcode</string>
+
 </resources>

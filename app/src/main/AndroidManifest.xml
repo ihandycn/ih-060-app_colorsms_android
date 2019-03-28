@@ -710,6 +710,12 @@
             android:excludeFromRecents="true"
             android:screenOrientation="portrait"
             android:theme="@style/WindowBgWhiteAndTranslucent" />
+
+        <activity
+            android:name=".privatebox.PasswordSetActivity"
+            android:excludeFromRecents="true"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
     </application>
 
 </manifest>
