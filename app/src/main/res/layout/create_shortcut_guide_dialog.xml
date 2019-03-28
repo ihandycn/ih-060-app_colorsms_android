@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/white_corner_background">
+
+    <com.superapps.view.TypefacedTextView
+        android:id="@+id/title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_marginEnd="40dp"
+        android:layout_marginLeft="24dp"
+        android:layout_marginRight="40dp"
+        android:layout_marginStart="24dp"
+        android:layout_marginTop="18dp"
+        android:layout_toLeftOf="@+id/safe_browsing_shortcut_guide_dismiss_btn"
+        android:layout_toStartOf="@+id/safe_browsing_shortcut_guide_dismiss_btn"
+        android:minHeight="42dp"
+        android:text="@string/safe_browsing_shortcut_guide_title"
+        android:textColor="#484848"
+        android:textSize="18sp"
+        app:typeface="@string/roboto_medium"/>
+
+    <ImageView
+        android:id="@+id/icon"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/title"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="31dp"
+        android:src="@drawable/safe_browsing_shortcut_guide_dialog_icon"/>
+
+    <com.superapps.view.TypefacedTextView
+        android:id="@+id/subtitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/icon"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="12dp"
+        android:text="@string/safe_browsing"
+        android:textColor="#8F939D"
+        android:textSize="14sp"
+        app:typeface="@string/roboto_medium"/>
+
+    <com.fasttrack.security.lockscreen.charging.view.FlashButton
+        android:id="@+id/safe_browsing_shortcut_guide_ok_btn"
+        android:layout_width="match_parent"
+        android:layout_height="54dp"
+        android:layout_below="@+id/subtitle"
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="15dp"
+        android:layout_marginTop="27dp"
+        android:background="@drawable/material_compat_button_bg_blue"
+        android:fontFamily="sans-serif-medium"
+        android:gravity="center"
+        android:text="@string/safe_browsing_shortcut_create_now"
+        android:textColor="@android:color/white"
+        android:textSize="18sp"/>
+
+    <View
+        android:id="@+id/anchor"
+        android:layout_width="15dp"
+        android:layout_height="15dp"
+        android:layout_below="@id/safe_browsing_shortcut_guide_ok_btn"/>
+</RelativeLayout>

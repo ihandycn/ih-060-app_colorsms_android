@@ -710,6 +710,8 @@
             android:excludeFromRecents="true"
             android:screenOrientation="portrait"
             android:theme="@style/WindowBgWhiteAndTranslucent" />
+
+        <receiver android:name=".util.ShortcutReceiver"/>
     </application>
 
 </manifest>

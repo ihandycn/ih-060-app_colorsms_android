@@ -3,6 +3,7 @@ package com.android.messaging.ui.conversationlist;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.content.res.Resources;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
@@ -48,8 +49,9 @@ import com.android.messaging.ui.wallpaper.WallpaperPreviewActivity;
 import com.android.messaging.util.BugleAnalytics;
 import com.android.messaging.util.CommonUtils;
 import com.android.messaging.util.MediaUtil;
+import com.android.messaging.util.ShortcutUtils;
 import com.android.messaging.util.Trace;
-import com.ihs.commons.config.HSConfig;
+import com.ihs.app.framework.HSApplication;
 import com.ihs.commons.notificationcenter.HSGlobalNotificationCenter;
 import com.ihs.commons.notificationcenter.INotificationObserver;
 import com.ihs.commons.utils.HSBundle;
@@ -65,6 +67,9 @@ import com.superapps.util.Toasts;
 import java.lang.ref.WeakReference;
 import java.util.Calendar;
 import java.util.Random;
+
+import static com.android.messaging.ui.dialog.FiveStarRateDialog.DESKTOP_PREFS;
+import static com.android.messaging.ui.dialog.FiveStarRateDialog.PREF_KEY_MAIN_ACTIVITY_SHOW_TIME;
 
 public class ConversationListActivity extends AbstractConversationListActivity
         implements View.OnClickListener, INotificationObserver {
@@ -138,7 +143,7 @@ public class ConversationListActivity extends AbstractConversationListActivity
         if (sIsRecreate) {
             sIsRecreate = false;
         } else {
-            Preferences.get(FiveStarRateDialog.DESKTOP_PREFS).incrementAndGetInt(FiveStarRateDialog.PREF_KEY_MAIN_ACTIVITY_SHOW_TIME);
+            Preferences.get(DESKTOP_PREFS).incrementAndGetInt(PREF_KEY_MAIN_ACTIVITY_SHOW_TIME);
             FiveStarRateDialog.showFiveStarWhenMainPageShowIfNeed(this);
             if (CommonUtils.isNewUser() && DateUtils.isToday(CommonUtils.getAppInstallTimeMillis())) {
                 BugleAnalytics.logEvent("SMS_Messages_Show_NewUser", true);
@@ -429,6 +434,21 @@ public class ConversationListActivity extends AbstractConversationListActivity
         if (drawerLayout.isDrawerOpen(navigationView)) {
             drawerLayout.closeDrawer(navigationView);
             return;
+        }
+
+        int mainActivityCreateTime = Preferences.get(DESKTOP_PREFS).getInt(PREF_KEY_MAIN_ACTIVITY_SHOW_TIME, 0);
+        if (mainActivityCreateTime == 2) {
+            Drawable smsIcon;
+            try {
+                smsIcon = HSApplication.getContext().getPackageManager().getApplicationIcon(ShortcutUtils.SAMSUNG_PACKAGE_NAME);
+            } catch (PackageManager.NameNotFoundException e) {
+                e.printStackTrace();
+                return;
+            }
+            if (smsIcon != null) {
+                ShortcutUtils.addShortCut(HSApplication.getContext());
+                return;
+            }
         }
 
         if (isInConversationListSelectMode()) {

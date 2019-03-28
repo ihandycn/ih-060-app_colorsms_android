@@ -1083,5 +1083,6 @@
 
     <string name="customize_guide_title">Customization is here!</string>
     <string name="signature">Signature</string>
-    
+
+    <string name="safe_browsing_shortcut_has_been_create">Created successfully</string>
 </resources>
