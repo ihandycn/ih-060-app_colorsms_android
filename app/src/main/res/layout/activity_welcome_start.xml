@@ -1,54 +1,87 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <ImageView
-        android:id="@+id/imageView"
+    <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:adjustViewBounds="true"
-        android:scaleType="fitXY"
-        android:src="@drawable/ic_welcome_start_bg"
-        app:layout_constraintBottom_toBottomOf="parent" />
+        android:layout_height="match_parent"
+        android:layout_marginBottom="120dp"
+        android:clipChildren="false">
 
-    <ImageView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:adjustViewBounds="true"
-        android:src="@drawable/logo"
-        app:layout_constraintVertical_bias="0.52"
-        app:layout_constraintBottom_toTopOf="@+id/imageView"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        <FrameLayout
+            android:id="@+id/welcome_guide_lottie_container"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_gravity="top|center_horizontal"
+            android:layout_marginBottom="120dp"
+            android:clipChildren="false">
+
+            <com.airbnb.lottie.LottieAnimationView
+                android:id="@+id/welcome_guide_lottie_anim_backward"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:visibility="gone"
+                app:lottie_autoPlay="false"
+                app:lottie_loop="false"/>
+
+            <com.airbnb.lottie.LottieAnimationView
+                android:id="@+id/welcome_guide_lottie_anim_forward"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:visibility="gone"
+                app:lottie_autoPlay="false"
+                app:lottie_loop="false"/>
+        </FrameLayout>
+
+        <com.android.messaging.util.view.AdvancedPageIndicator
+            android:id="@+id/welcome_guide_viewpager_indicator"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom|center_horizontal"
+            android:layout_marginBottom="20dp"
+            app:circleColor="#e5e5e5"
+            app:circleRadius="3dp"
+            app:circleSpacing="9dp"
+            app:indicatorColor="#7f7f7f"/>
+
+        <com.superapps.view.ViewPagerFixed
+            android:id="@+id/welcome_guide_viewpager"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_gravity="bottom|center_horizontal"
+            android:overScrollMode="never"
+            android:paddingBottom="63dp"/>
+    </FrameLayout>
 
     <com.superapps.view.TypefacedTextView
         android:id="@+id/welcome_start_button"
         android:layout_width="247dp"
         android:layout_height="50dp"
         android:layout_marginBottom="57dp"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
         android:background="@drawable/welcome_button_white_bg"
         android:gravity="center"
         android:text="@string/welcome_start_button"
-        android:textColor="#ff000000"
+        android:textColor="#fff"
         android:textSize="14sp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
         android:paddingTop="3dp"
-        app:typeface="@string/custom_font_bold" />
+        app:typeface="@string/custom_font_bold"/>
 
     <LinearLayout
         android:id="@+id/welcome_start_content"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="bottom|center_horizontal"
+        android:layout_centerHorizontal="true"
         android:layout_marginTop="22dp"
         android:gravity="center_horizontal"
         android:orientation="horizontal"
-        app:layout_constraintTop_toBottomOf="@+id/welcome_start_button">
+        android:layout_below="@id/welcome_start_button">
 
         <com.superapps.view.TypefacedTextView
             android:id="@+id/welcome_start_service"
@@ -58,7 +91,7 @@
             android:text="@string/welcome_start_service"
             android:textColor="@color/welcome_text_start_description"
             android:textSize="9.3sp"
-            app:typeface="@string/custom_font_semibold" />
+            app:typeface="@string/custom_font_semibold"/>
 
         <com.superapps.view.TypefacedTextView
             android:layout_width="wrap_content"
@@ -67,7 +100,7 @@
             android:text="@string/welcome_start_and"
             android:textColor="@color/welcome_text_start_description"
             android:textSize="9.3sp"
-            app:typeface="@string/custom_font_medium" />
+            app:typeface="@string/custom_font_medium"/>
 
         <com.superapps.view.TypefacedTextView
             android:id="@+id/welcome_start_policy"
@@ -77,9 +110,9 @@
             android:text="@string/welcome_start_policy"
             android:textColor="@color/welcome_text_start_description"
             android:textSize="9.3sp"
-            app:typeface="@string/custom_font_semibold" />
+            app:typeface="@string/custom_font_semibold"/>
 
     </LinearLayout>
 
 
-</android.support.constraint.ConstraintLayout>
+</RelativeLayout>

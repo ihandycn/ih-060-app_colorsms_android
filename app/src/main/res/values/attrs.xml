@@ -87,4 +87,14 @@
         <attr name="maxHeight" format="dimension" />
     </declare-styleable>
 
+    <declare-styleable name="AdvancedPageIndicator">
+        <attr name="minRadius" format="dimension" />
+        <attr name="circleRadius" format="dimension" />
+        <attr name="indicatorRadius" format="dimension" />
+        <attr name="circleColor" format="color" />
+        <attr name="indicatorColor" format="color" />
+        <attr name="circleSpacing" format="dimension" />
+        <attr name="circleVerticalPadding" format="dimension" />
+        <attr name="circleHorizontalPadding" format="dimension" />
+    </declare-styleable>
 </resources>

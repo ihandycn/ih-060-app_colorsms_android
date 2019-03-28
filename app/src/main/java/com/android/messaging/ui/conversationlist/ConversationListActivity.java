@@ -49,7 +49,6 @@ import com.android.messaging.util.BugleAnalytics;
 import com.android.messaging.util.CommonUtils;
 import com.android.messaging.util.MediaUtil;
 import com.android.messaging.util.Trace;
-import com.ihs.commons.config.HSConfig;
 import com.ihs.commons.notificationcenter.HSGlobalNotificationCenter;
 import com.ihs.commons.notificationcenter.INotificationObserver;
 import com.ihs.commons.utils.HSBundle;
@@ -127,9 +126,7 @@ public class ConversationListActivity extends AbstractConversationListActivity
     protected void onCreate(final Bundle savedInstanceState) {
         Trace.beginSection("ConversationListActivity.onCreate");
         super.onCreate(savedInstanceState);
-        if (Factory.sIsRedirectToWelcome) {
-            return;
-        }
+
         mIsRealCreate = true;
         setContentView(R.layout.conversation_list_activity);
         configAppBar();

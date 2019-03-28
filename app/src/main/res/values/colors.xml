@@ -178,7 +178,7 @@
     <color name="welcome_text_start_description">#99fffefe</color>
     <color name="welcome_text_permission_list">#ff353535</color>
     <color name="welcome_text_description">#ff4a4a4a</color>
-    <color name="welcome_button_white">#ffffffff</color>
+    <color name="welcome_button_white">#000</color>
     <color name="welcome_button_white_pressed">#ffe0e0e0</color>
     <color name="welcome_button_green">@color/primary_color</color>
     <color name="welcome_button_green_pressed">#ff14ae3c</color>
