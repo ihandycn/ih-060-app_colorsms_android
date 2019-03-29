@@ -13,14 +13,8 @@
     See the License for the specific language governing permissions and
     limitations under the License.
 -->
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/message_compose_view_container"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:background="#f4f7f9"
-    android:orientation="vertical">
+<merge xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <!-- Note it may seem off to have the layout_weight="1" on the compose bar and attachment view
          when it's the media picker that expands, but this is correct because weight also works when
@@ -30,22 +24,15 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_weight="1"
         android:clipChildren="false"
         android:clipToPadding="false"
+        android:background="#f4f7f9"
         android:orientation="vertical">
-
-        <View
-            android:id="@+id/top_margin"
-            android:layout_width="match_parent"
-            android:layout_height="16dp"
-            android:visibility="gone" />
 
         <View
             android:layout_width="match_parent"
             android:layout_height="1px"
             android:background="#e9ebf2" />
-
 
         <FrameLayout
             android:layout_width="match_parent"
@@ -55,7 +42,7 @@
             aligned -->
             <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="50dp"
+                android:layout_height="51dp"
                 android:layout_gravity="bottom">
 
                 <com.android.messaging.ui.conversation.SimIconView
@@ -69,7 +56,7 @@
                     android:importantForAccessibility="no"
                     app:iconSize="normal"
                     app:reveal="true"/>
-                
+
             </RelativeLayout>
 
             <LinearLayout
@@ -78,9 +65,9 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="bottom"
                 android:layout_marginStart="20dp"
-                android:layout_marginTop="7.3dp"
+                android:layout_marginTop="6.7dp"
                 android:layout_marginEnd="63.3dp"
-                android:layout_marginBottom="12dp"
+                android:layout_marginBottom="6.7dp"
                 android:background="@drawable/input_edit_drawable"
                 android:orientation="horizontal">
 
@@ -91,6 +78,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:hint="@string/compose_message_view_hint_text"
+                    android:textSize="13sp"
                     android:imeOptions="actionSend|flagNoEnterAction|flagNoExtractUi"
                     android:includeFontPadding="false"
                     android:maxLines="3"
@@ -114,4 +102,4 @@
 
     </LinearLayout>
 
-</LinearLayout>
+</merge>
