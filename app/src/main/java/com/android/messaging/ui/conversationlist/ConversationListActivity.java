@@ -3,13 +3,13 @@ package com.android.messaging.ui.conversationlist;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.content.res.Resources;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.design.widget.NavigationView;
+import android.support.v4.content.pm.ShortcutManagerCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -437,18 +437,16 @@ public class ConversationListActivity extends AbstractConversationListActivity
         }
 
         int mainActivityCreateTime = Preferences.get(DESKTOP_PREFS).getInt(PREF_KEY_MAIN_ACTIVITY_SHOW_TIME, 0);
-        if (mainActivityCreateTime == 2) {
-            Drawable smsIcon;
-            try {
-                smsIcon = HSApplication.getContext().getPackageManager().getApplicationIcon(ShortcutUtils.SAMSUNG_PACKAGE_NAME);
-            } catch (PackageManager.NameNotFoundException e) {
-                e.printStackTrace();
-                return;
-            }
-            if (smsIcon != null) {
-                ShortcutUtils.addShortCut(HSApplication.getContext());
-                return;
-            }
+        if (mainActivityCreateTime >= 2) {
+            Preferences.getDefault().doOnce(new Runnable() {
+                @Override public void run() {
+                    Drawable smsIcon = ShortcutUtils.getSystemSMSIcon();
+                    if (smsIcon != null && ShortcutManagerCompat.isRequestPinShortcutSupported(HSApplication.getContext())) {
+                        ShortcutUtils.addShortCut(HSApplication.getContext());
+                        return;
+                    }
+                }
+            }, "pref_key_create_shortcut");
         }
 
         if (isInConversationListSelectMode()) {
