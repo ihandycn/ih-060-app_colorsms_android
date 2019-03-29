@@ -16,22 +16,18 @@ import java.util.List;
 
 class WelcomePagerAdapter extends PagerAdapter {
 
-    private final static int GUIDE_VIEWPAGER_COUNT = 5;
+    private final static int GUIDE_VIEWPAGER_COUNT = 3;
 
     private final static int[] VIEWPAGER_ITEMS_IDS_TITLE = new int[]{
             R.string.welcome_viewpager_item_title_0,
             R.string.welcome_viewpager_item_title_1,
-            R.string.welcome_viewpager_item_title_2,
-            R.string.welcome_viewpager_item_title_3,
-            R.string.welcome_viewpager_item_title_4,
+            R.string.welcome_viewpager_item_title_2
     };
 
     private final static int[] VIEWPAGER_ITEMS_IDS_BODY = new int[]{
             R.string.welcome_viewpager_item_body_0,
             R.string.welcome_viewpager_item_body_1,
             R.string.welcome_viewpager_item_body_2,
-            R.string.welcome_viewpager_item_body_3,
-            R.string.welcome_viewpager_item_body_4,
     };
 
     private final List<LinearLayout> mItemList = new ArrayList<>();

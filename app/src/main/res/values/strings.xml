@@ -1084,14 +1084,10 @@
     <string name="customize_guide_title">Customization is here!</string>
     <string name="signature">Signature</string>
 
-    <string name="welcome_viewpager_item_title_0" translatable="false">ME Launcher</string>
-    <string name="welcome_viewpager_item_title_1">Fast</string>
-    <string name="welcome_viewpager_item_title_2">Save Battery</string>
-    <string name="welcome_viewpager_item_title_3">Clean</string>
-    <string name="welcome_viewpager_item_title_4">Themes</string>
-    <string name="welcome_viewpager_item_body_0">Fast, simple, beautiful</string>
-    <string name="welcome_viewpager_item_body_1">ME Launcher boosts your phone\n80\%% faster.</string>
-    <string name="welcome_viewpager_item_body_2">ME Launcher extents your battery life\n by 20\%%.</string>
-    <string name="welcome_viewpager_item_body_3">ME Launcher cleans junk files\n to free up space.</string>
-    <string name="welcome_viewpager_item_body_4">Style up your home screen with\n classic and trendy themes.</string>
+    <string name="welcome_viewpager_item_title_0" translatable="false">1000+ Emojis</string>
+    <string name="welcome_viewpager_item_title_1">Fully Customizable</string>
+    <string name="welcome_viewpager_item_title_2">More Features</string>
+    <string name="welcome_viewpager_item_body_0">Stand out among your social group!</string>
+    <string name="welcome_viewpager_item_body_1">Decorate your chat the way you like.</string>
+    <string name="welcome_viewpager_item_body_2">Come and try a bunch of great features.</string>
 </resources>
