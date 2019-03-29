@@ -30,6 +30,7 @@ import com.airbnb.lottie.LottieAnimationView;
 import com.android.messaging.Factory;
 import com.android.messaging.R;
 import com.android.messaging.datamodel.BugleNotifications;
+import com.android.messaging.ui.CreateShortcutActivity;
 import com.android.messaging.ui.DragHotSeatActivity;
 import com.android.messaging.ui.UIIntents;
 import com.android.messaging.ui.UIIntentsImpl;
@@ -85,6 +86,8 @@ public class ConversationListActivity extends AbstractConversationListActivity
     private static final String PREF_KEY_BACKGROUND_CLICKED = "pref_key_navigation_background_clicked";
     private static final String PREF_KEY_FONT_CLICKED = "pref_key_navigation_font_clicked";
 
+    public static final String EXTRA_FROM_DESKTOP_ICON = "extra_from_desktop_icon";
+
     private static boolean sIsRecreate = false;
 
     private static final int DRAWER_INDEX_NONE = -1;
@@ -139,6 +142,10 @@ public class ConversationListActivity extends AbstractConversationListActivity
         setContentView(R.layout.conversation_list_activity);
         configAppBar();
         mIsNoActionBack = true;
+
+        if(getIntent()!=null && getIntent().getBooleanExtra(EXTRA_FROM_DESKTOP_ICON, false)){
+            BugleAnalytics.logEvent("SMS_Shortcut_Click");
+        }
 
         if (sIsRecreate) {
             sIsRecreate = false;
@@ -438,13 +445,13 @@ public class ConversationListActivity extends AbstractConversationListActivity
 
         int mainActivityCreateTime = Preferences.get(DESKTOP_PREFS).getInt(PREF_KEY_MAIN_ACTIVITY_SHOW_TIME, 0);
         if (mainActivityCreateTime >= 2) {
-            Preferences.getDefault().doOnce(new Runnable() {
-                @Override public void run() {
-                    Drawable smsIcon = ShortcutUtils.getSystemSMSIcon();
-                    if (smsIcon != null && ShortcutManagerCompat.isRequestPinShortcutSupported(HSApplication.getContext())) {
-                        ShortcutUtils.addShortCut(HSApplication.getContext());
-                        return;
-                    }
+            Preferences.getDefault().doOnce(() -> {
+                Drawable smsIcon = ShortcutUtils.getSystemSMSIcon();
+                if (smsIcon != null && ShortcutManagerCompat.isRequestPinShortcutSupported(HSApplication.getContext())) {
+                    Navigations.startActivitySafely(ConversationListActivity.this,
+                            new Intent(ConversationListActivity.this, CreateShortcutActivity.class));
+                    super.onBackPressed();
+                    return;
                 }
             }, "pref_key_create_shortcut");
         }

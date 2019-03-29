@@ -12,7 +12,9 @@ public class ShortcutReceiver extends BroadcastReceiver {
 
     @Override
     public void onReceive(Context context, Intent intent) {
-        Toast.makeText(context, HSApplication.getContext().getResources().getString(R.string.safe_browsing_shortcut_has_been_create)
+        Toast.makeText(context, HSApplication.getContext().getResources().getString(R.string.create_shortcut_has_been_create)
                 , Toast.LENGTH_SHORT).show();
+
+        BugleAnalytics.logEvent("SMS_Shortcut_Creat_Success");
     }
 }
