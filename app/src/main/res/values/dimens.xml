@@ -180,7 +180,8 @@
     <dimen name="bubble_customize_preview_contact_icon_height">40dp</dimen>
     <dimen name="bubble_customize_color_ring_size">40dp</dimen>
 
-    <!--banner -->
+    <dimen name="message_box_background_radius">8dp</dimen>
+
 
     <!-- Feedback -->
     <dimen name="feedback_content_lr_margin">5dp</dimen>

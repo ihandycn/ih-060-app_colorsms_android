@@ -725,6 +725,19 @@
         <item name="colorAccent" >#11bd3d</item>
     </style>
 
+    <style name="MessageBoxActionTextTheme">
+        <item name="android:textColor">@color/primary_color</item>
+        <item name="android:textColorHighlight">@color/primary_color_dark</item>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">40dp</item>
+        <item name="android:gravity">center</item>
+        <item name="android:textSize">12sp</item>
+        <item name="android:paddingStart">12sp</item>
+        <item name="android:paddingEnd">12sp</item>
+        <item name="typeface">@string/custom_font_regular</item>
+    </style>
+
+
     <style name="AcbSmsRecyclerViewTheme" parent="Theme.AppCompat.Light">
         <item name="colorPrimary">@color/message_box_primary_color</item>
     </style>

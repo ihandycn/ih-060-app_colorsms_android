@@ -710,6 +710,18 @@
             android:excludeFromRecents="true"
             android:screenOrientation="portrait"
             android:theme="@style/WindowBgWhiteAndTranslucent" />
+
+        <activity
+            android:name=".ui.messagebox.BoxActivity"
+            android:configChanges="keyboardHidden|orientation|screenSize"
+            android:excludeFromRecents="true"
+            android:label="@string/app_name"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"
+            android:taskAffinity=".message.box"
+            android:theme="@style/Theme.AppCompat.Translucent"
+            android:windowSoftInputMode="stateAlwaysHidden|adjustResize" />
+
     </application>
 
 </manifest>
