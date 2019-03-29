@@ -6,7 +6,6 @@ import android.support.v4.view.PagerAdapter;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.LinearLayout;
 
 import com.android.messaging.R;
 import com.superapps.view.TypefacedTextView;
@@ -30,11 +29,11 @@ class WelcomePagerAdapter extends PagerAdapter {
             R.string.welcome_viewpager_item_body_2,
     };
 
-    private final List<LinearLayout> mItemList = new ArrayList<>();
+    private final List<ViewGroup> mItemList = new ArrayList<>();
 
     WelcomePagerAdapter(Context context) {
         for (int i = 0; i < GUIDE_VIEWPAGER_COUNT; i++) {
-            LinearLayout item = (LinearLayout) LayoutInflater.from(context)
+            ViewGroup item = (ViewGroup) LayoutInflater.from(context)
                     .inflate(R.layout.item_welcome_guide_viewpager, null);
             TypefacedTextView title = item.findViewById(R.id.welcome_guide_viewpager_title);
             TypefacedTextView body = item.findViewById(R.id.welcome_guide_viewpager_body);
