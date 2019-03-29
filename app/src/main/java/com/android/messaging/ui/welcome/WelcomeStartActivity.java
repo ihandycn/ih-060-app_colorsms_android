@@ -16,16 +16,21 @@ import android.view.animation.LinearInterpolator;
 import com.airbnb.lottie.Cancellable;
 import com.airbnb.lottie.LottieAnimationView;
 import com.airbnb.lottie.LottieComposition;
+import com.android.messaging.Factory;
 import com.android.messaging.R;
 import com.android.messaging.ui.UIIntents;
 import com.android.messaging.ui.WebViewActivity;
 import com.android.messaging.util.BugleAnalytics;
 import com.android.messaging.util.BugleAnimUtils;
+import com.android.messaging.util.CommonUtils;
+import com.android.messaging.util.OsUtil;
+import com.android.messaging.util.PhoneUtils;
 import com.android.messaging.util.view.AdvancedPageIndicator;
 import com.android.messaging.util.view.IndicatorMark;
 import com.ihs.commons.config.HSConfig;
 import com.ihs.commons.utils.HSLog;
 import com.superapps.util.BackgroundDrawables;
+import com.superapps.util.Calendars;
 import com.superapps.util.Dimensions;
 import com.superapps.util.Navigations;
 import com.superapps.util.Preferences;
@@ -42,6 +47,7 @@ public class WelcomeStartActivity extends AppCompatActivity implements View.OnCl
     private static final String TAG = WelcomeStartActivity.class.getSimpleName();
 
     private static final String PREF_KEY_START_BUTTON_CLICKED = "PREF_KEY_START_BUTTON_CLICKED";
+    private static final int REQUEST_SET_DEFAULT_SMS_APP = 3;
 
     private final static float[] LOTTIE_ANIMATION_FORWARD_POSITION =
             new float[]{0.348f, 0.622f, 0.948f};
@@ -406,9 +412,8 @@ public class WelcomeStartActivity extends AppCompatActivity implements View.OnCl
             case R.id.welcome_start_button:
                 BugleAnalytics.logEvent("SMS_Start_WelcomePage_BtnClick", true);
                 Preferences.getDefault().putBoolean(PREF_KEY_START_BUTTON_CLICKED, true);
-                Navigations.startActivitySafely(WelcomeStartActivity.this,
-                        new Intent(WelcomeStartActivity.this, WelcomeSetAsDefaultActivity.class));
-                finish();
+                final Intent intent = UIIntents.get().getChangeDefaultSmsAppIntent(WelcomeStartActivity.this);
+                startActivityForResult(intent, REQUEST_SET_DEFAULT_SMS_APP);
                 break;
 
             case R.id.welcome_start_service:
@@ -481,5 +486,28 @@ public class WelcomeStartActivity extends AppCompatActivity implements View.OnCl
             }
         }
         return super.dispatchTouchEvent(ev);
+    }
+
+    @Override
+    public void onActivityResult(final int requestCode, final int resultCode, final Intent data) {
+        if (requestCode == REQUEST_SET_DEFAULT_SMS_APP) {
+            if (PhoneUtils.getDefault().isDefaultSmsApp()) {
+                if (OsUtil.hasRequiredPermissions()) {
+                    Factory.get().onDefaultSmsSetAndPermissionsGranted();
+                    UIIntents.get().launchConversationListActivity(this);
+                } else {
+                    UIIntents.get().launchWelcomePermissionActivity(this);
+                }
+                BugleAnalytics.logEvent("SMS_Start_SetDefault_Success", true);
+                if (Calendars.isSameDay(System.currentTimeMillis(), CommonUtils.getAppInstallTimeMillis())) {
+                    BugleAnalytics.logEvent("SMS_Start_SetDefault_Success_NewUser", true);
+                }
+                finish();
+            } else {
+                Navigations.startActivitySafely(WelcomeStartActivity.this,
+                        new Intent(WelcomeStartActivity.this, WelcomeSetAsDefaultActivity.class));
+                finish();
+            }
+        }
     }
 }

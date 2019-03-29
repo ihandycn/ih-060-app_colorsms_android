@@ -15,9 +15,9 @@
         android:layout_gravity="center_horizontal"
         android:clickable="true"
         android:gravity="center_horizontal"
-        android:textColor="#000000"
-        android:textSize="32sp"
-        app:typeface="@string/custom_font_light"/>
+        android:textColor="#282a31"
+        android:textSize="24sp"
+        app:typeface="@string/custom_font_semibold"/>
 
     <com.superapps.view.TypefacedTextView
         android:id="@+id/welcome_guide_viewpager_body"
@@ -26,12 +26,12 @@
         android:layout_gravity="center_horizontal"
         android:layout_marginLeft="16dp"
         android:layout_marginRight="16dp"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="7dp"
         android:clickable="true"
         android:gravity="center_horizontal"
-        android:lineSpacingExtra="8dp"
+        android:lineSpacingExtra="2dp"
         android:maxLines="2"
         android:textColor="#000000"
-        android:textSize="17sp"
-        app:typeface="@string/custom_font_light"/>
+        android:textSize="16sp"
+        app:typeface="@string/custom_font_regular"/>
 </LinearLayout>
