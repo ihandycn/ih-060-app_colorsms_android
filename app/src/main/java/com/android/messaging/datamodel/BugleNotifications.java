@@ -1219,7 +1219,7 @@ public class BugleNotifications {
     }
 
     public static NotificationChannel getSmsNotificationChannel() {
-        NotificationChannel channel =  Notifications.getChannel(PendingIntentConstants.SMS_NOTIFICATION_CHANNEL_ID,
+        NotificationChannel channel =  Notifications.createChannel(PendingIntentConstants.SMS_NOTIFICATION_CHANNEL_ID,
                 HSApplication.getContext().getResources().getString(R.string.sms_notification_channel),
                 HSApplication.getContext().getResources().getString(R.string.sms_notification_channel_description));
         return channel;
