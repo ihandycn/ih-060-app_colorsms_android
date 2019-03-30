@@ -27,14 +27,12 @@ import android.support.v4.view.ViewGroupCompat;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.view.ViewGroup.MarginLayoutParams;
 import android.view.ViewPropertyAnimator;
-import android.view.ViewTreeObserver;
 import android.widget.AbsListView;
 import android.widget.ImageView;
 
@@ -215,15 +213,6 @@ public class ConversationListFragment extends Fragment implements ConversationLi
         final ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.conversation_list_fragment,
                 container, false);
         mRecyclerView = rootView.findViewById(android.R.id.list);
-        mRecyclerView.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
-            @Override
-            public void onGlobalLayout() {
-                if (mRecyclerView.getAdapter().getItemCount() > 0) {
-                    HSGlobalNotificationCenter.sendNotification(ConversationListActivity.SHOW_EMOJ);
-                    mRecyclerView.getViewTreeObserver().removeOnGlobalLayoutListener(this);
-                }
-            }
-        });
         mEmptyListMessageView = rootView.findViewById(R.id.no_conversations_view);
         mEmptyListMessageView.setImageHint(R.drawable.ic_oobe_conv_list);
         // The default behavior for default layout param generation by LinearLayoutManager is to
@@ -498,7 +487,6 @@ public class ConversationListFragment extends Fragment implements ConversationLi
         if (isEmpty) {
             int emptyListText;
             boolean isFirstSynsCompleted = true;
-            HSGlobalNotificationCenter.sendNotification(ConversationListActivity.SHOW_EMOJ);
             if (!mListBinding.getData().getHasFirstSyncCompleted()) {
                 emptyListText = R.string.conversation_list_first_sync_text;
                 isFirstSynsCompleted = false;
@@ -517,8 +505,8 @@ public class ConversationListFragment extends Fragment implements ConversationLi
             // stop loading animation
             mEmptyListMessageView.setIsLoadingAnimationVisible(false);
             mEmptyListMessageView.setVisibility(View.GONE);
+            HSGlobalNotificationCenter.sendNotification(ConversationListActivity.SHOW_EMOJI);
         }
-
     }
 
     @Override

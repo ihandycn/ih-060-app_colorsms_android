@@ -7,7 +7,6 @@ import android.content.res.Resources;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.design.widget.NavigationView;
 import android.support.v4.content.pm.ShortcutManagerCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -76,7 +75,7 @@ public class ConversationListActivity extends AbstractConversationListActivity
         implements View.OnClickListener, INotificationObserver {
 
     public static final String EVENT_MAINPAGE_RECREATE = "event_mainpage_recreate";
-    public static final String SHOW_EMOJ = "show_emoj";
+    public static final String SHOW_EMOJI = "show_emoji";
 
     private static final String PREF_SHOW_EMOJI_GUIDE = "pref_show_emoji_guide";
     public static final String PREF_KEY_MAIN_DRAWER_OPENED = "pref_key_main_drawer_opened";
@@ -110,10 +109,6 @@ public class ConversationListActivity extends AbstractConversationListActivity
     private View mEmojiStoreIconView;
     private LottieAnimationView mGuideContainer;
     private View statusbarInset;
-
-    private boolean mShowRateAlert = false;
-
-    private Handler mAnimHandler;
 
     private static boolean mIsNoActionBack = true;
     private boolean mIsRealCreate = false;
@@ -153,7 +148,6 @@ public class ConversationListActivity extends AbstractConversationListActivity
             sIsRecreate = false;
         } else {
             Preferences.get(DESKTOP_PREFS).incrementAndGetInt(PREF_KEY_MAIN_ACTIVITY_SHOW_TIME);
-            FiveStarRateDialog.showFiveStarWhenMainPageShowIfNeed(this);
             if (CommonUtils.isNewUser() && DateUtils.isToday(CommonUtils.getAppInstallTimeMillis())) {
                 BugleAnalytics.logEvent("SMS_Messages_Show_NewUser", true);
             }
@@ -166,7 +160,7 @@ public class ConversationListActivity extends AbstractConversationListActivity
         setupDrawer();
 
         HSGlobalNotificationCenter.addObserver(EVENT_MAINPAGE_RECREATE, this);
-        HSGlobalNotificationCenter.addObserver(SHOW_EMOJ, this);
+        HSGlobalNotificationCenter.addObserver(SHOW_EMOJI, this);
         BugleAnalytics.logEvent("SMS_ActiveUsers", true);
 
         if (!sIsRecreate) {
@@ -445,6 +439,11 @@ public class ConversationListActivity extends AbstractConversationListActivity
             return;
         }
 
+        if (isInConversationListSelectMode()) {
+            exitMultiSelectState();
+            return;
+        }
+
         int mainActivityCreateTime = Preferences.get(DESKTOP_PREFS).getInt(PREF_KEY_MAIN_ACTIVITY_SHOW_TIME, 0);
         if (mainActivityCreateTime >= 2 && !Preferences.getDefault().contains(PREF_KEY_CREATE_SHORTCUT_GUIDE_SHOWN)) {
             Drawable smsIcon = CreateShortcutUtils.getSystemSMSIcon();
@@ -456,25 +455,18 @@ public class ConversationListActivity extends AbstractConversationListActivity
                 return;
             }
         }
-        if (shouldShowCreateShortcutGuide) {
-            super.onBackPressed();
+
+        if (!shouldShowCreateShortcutGuide
+                && FiveStarRateDialog.showShowFiveStarRateDialogOnBackToDesktopIfNeed(this)) {
             return;
         }
 
-        if (isInConversationListSelectMode()) {
-            exitMultiSelectState();
-        } else {
-            if (mShowRateAlert || !FiveStarRateDialog.showShowFiveStarRateDialogOnBackToDesktopIfNeed(this)) {
-                BugleAnalytics.logEvent("SMS_Messages_Back", true);
-                super.onBackPressed();
-                overridePendingTransition(0, 0);
-                Preferences.getDefault().doOnce(
-                        () -> UIIntentsImpl.get().launchDragHotSeatActivity(this),
-                        DragHotSeatActivity.SHOW_DRAG_HOTSEAT);
-            } else {
-                mShowRateAlert = true;
-            }
-        }
+        BugleAnalytics.logEvent("SMS_Messages_Back", true);
+        super.onBackPressed();
+        overridePendingTransition(0, 0);
+        Preferences.getDefault().doOnce(
+                () -> UIIntentsImpl.get().launchDragHotSeatActivity(this),
+                DragHotSeatActivity.SHOW_DRAG_HOTSEAT);
     }
 
     @Override
@@ -546,7 +538,6 @@ public class ConversationListActivity extends AbstractConversationListActivity
 
     private void setupToolbarUI() {
         mTitleTextView = findViewById(R.id.toolbar_title);
-        mAnimHandler = new Handler();
         mGuideContainer = findViewById(R.id.emoji_store_guide_content);
         mEmojiStoreIconView = findViewById(R.id.emoji_store_icon);
         mEmojiStoreIconView.setScaleX(1f);
@@ -742,8 +733,8 @@ public class ConversationListActivity extends AbstractConversationListActivity
                 sIsRecreate = true;
                 recreate();
                 break;
-            case SHOW_EMOJ:
-                mAnimHandler.postDelayed(() -> showEmojiStoreGuide(), 500);
+            case SHOW_EMOJI:
+                Threads.postOnMainThreadDelayed(() -> showEmojiStoreGuide(), 500);
                 break;
             default:
                 break;

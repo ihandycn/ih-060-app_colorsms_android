@@ -24,7 +24,7 @@ public class CreateShortcutActivity extends HSAppCompatActivity {
 
         findViewById(R.id.create_shortcut_cancel_btn).setOnClickListener((v) -> finish());
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            ((ImageView) findViewById(R.id.create_shortcut_badge)).setImageResource(R.mipmap.ic_launcher);
+            ((ImageView) findViewById(R.id.create_shortcut_badge)).setImageResource(R.drawable.ic_launcher_with_shadow);
         }
 
         TypefacedTextView gotIt = findViewById(R.id.create_shortcut_btn);

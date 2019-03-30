@@ -26,6 +26,7 @@ import com.airbnb.lottie.LottieComposition;
 import com.android.messaging.R;
 import com.android.messaging.feedback.FeedbackActivity;
 import com.android.messaging.util.BugleAnalytics;
+import com.android.messaging.util.CommonUtils;
 import com.android.messaging.util.ViewUtils;
 import com.ihs.app.framework.HSApplication;
 import com.ihs.app.utils.HSMarketUtils;
@@ -54,6 +55,7 @@ public class FiveStarRateDialog extends DefaultButtonDialog2 implements View.OnC
     public static final String PREF_KEY_BACK_TO_DESKTOP_SHOW_COUNT = "PREF_KEY_BACK_TO_DESKTOP_SHOW_COUNT";
     public static final String PREF_KEY_BACK_TO_DESKTOP_SHOW_TIMES = "PREF_KEY_BACK_TO_DESKTOP_SHOW_TIMES";
     public static final String PREF_KEY_MAIN_ACTIVITY_SHOW_TIME = "PREF_KEY_MAIN_ACTIVITY_SHOW_TIME";
+    public static final String PREF_KEY_MAIN_ACTIVITY_BACK_SHOWN = "PREF_KEY_MAIN_ACTIVITY_BACK_SHOWN";
     private static final long CHANGE_DURATION = 500;
     private static final long ONE_STEP_DURATION = 200;
     private static final long ANIM_DELAY = 200;
@@ -423,13 +425,11 @@ public class FiveStarRateDialog extends DefaultButtonDialog2 implements View.OnC
                 break;
             case QUIT_APP:
                 pref.incrementAndGetInt(FiveStarRateDialog.PREF_KEY_BACK_TO_DESKTOP_SHOW_COUNT);
-                pref.putInt(FiveStarRateDialog.PREF_KEY_BACK_TO_DESKTOP_SHOW_TIMES, pref.getInt(PREF_KEY_BACK_TO_DESKTOP_TIMES, 0));
                 break;
             case SETTING:
             default:
                 countThis = false;
                 break;
-
         }
         if (countThis) {
             pref.incrementAndGetInt(FiveStarRateDialog.PREF_KEY_FIVE_STAR_SHOWED_COUNT);
@@ -475,28 +475,6 @@ public class FiveStarRateDialog extends DefaultButtonDialog2 implements View.OnC
         BugleAnalytics.logEvent("Alert_FiveStar_ViewedFrom", "from", sFiveStarRateTipFrom);
     }
 
-    private static boolean timesCondition() {
-        Preferences pref = Preferences.get(DESKTOP_PREFS);
-        int times = pref.getInt(PREF_KEY_BACK_TO_DESKTOP_TIMES, 0);
-        int lastShowTimes = pref.getInt(PREF_KEY_BACK_TO_DESKTOP_SHOW_TIMES, 0);
-        int count = pref.getInt(PREF_KEY_BACK_TO_DESKTOP_SHOW_COUNT, 0);
-        int shouldShowTimes;
-        switch (count) {
-            case 0:
-                shouldShowTimes = 1;
-                break;
-            case 1:
-                shouldShowTimes = 2;
-                break;
-            default:
-            case 2:
-                shouldShowTimes = 3;
-                break;
-        }
-
-        return (times - lastShowTimes) >= shouldShowTimes;
-    }
-
     private static boolean isHadFiveStarRate() {
         return Preferences.get(DESKTOP_PREFS).getBoolean(PREF_KEY_HAD_FIVE_STAR_RATE, false);
     }
@@ -511,14 +489,17 @@ public class FiveStarRateDialog extends DefaultButtonDialog2 implements View.OnC
     }
 
     private static boolean shouldShowThisTime() {
-        return !isHadFiveStarRate() && isShowFiveStarRateTooMaxTimes() && isShowFiveStarRateMoreThenInterval();
+        return !isHadFiveStarRate()
+                && isShowFiveStarRateTooMaxTimes()
+                && isShowFiveStarRateMoreThenInterval()
+                && System.currentTimeMillis() - CommonUtils.getAppInstallTimeMillis() > DateUtils.HOUR_IN_MILLIS / 2;
     }
 
     public static boolean showShowFiveStarRateDialogOnBackToDesktopIfNeed(Activity context) {
-        Preferences.get(DESKTOP_PREFS).incrementAndGetInt(PREF_KEY_BACK_TO_DESKTOP_TIMES);
-
-        if (shouldShowThisTime() && timesCondition()) {
+        if (shouldShowThisTime()
+                && !Preferences.getDefault().contains(PREF_KEY_MAIN_ACTIVITY_BACK_SHOWN)) {
             showFiveStarRateDialog(context, From.QUIT_APP);
+            Preferences.getDefault().putBoolean(PREF_KEY_MAIN_ACTIVITY_BACK_SHOWN, true);
             return true;
         }
         return false;
@@ -536,15 +517,6 @@ public class FiveStarRateDialog extends DefaultButtonDialog2 implements View.OnC
     public static boolean showFiveStarWhenSendEmojiIfNeed(Activity context) {
         if (shouldShowThisTime() &&
                 !Preferences.get(DESKTOP_PREFS).getBoolean(PREF_KEY_FIVE_STAR_SHOWED_AFTER_SEND_EMOJI, false)) {
-            showFiveStarRateDialog(context, From.SEND_EMOJI);
-            return true;
-        }
-        return false;
-    }
-
-    public static boolean showFiveStarWhenMainPageShowIfNeed(Activity context) {
-        int mainActivityCreateTime = Preferences.get(DESKTOP_PREFS).getInt(PREF_KEY_MAIN_ACTIVITY_SHOW_TIME, 0);
-        if (shouldShowThisTime() && (mainActivityCreateTime == 2 || mainActivityCreateTime == 4)) {
             showFiveStarRateDialog(context, From.SEND_EMOJI);
             return true;
         }
