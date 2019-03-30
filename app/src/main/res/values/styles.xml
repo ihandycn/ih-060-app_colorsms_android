@@ -112,6 +112,7 @@
     <style name="WelcomeTheme" parent="@style/BugleTheme">
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
+        <item name="android:windowLightStatusBar">true</item>
         <item name="android:windowBackground">@drawable/conversation_start_bg</item>
     </style>
 

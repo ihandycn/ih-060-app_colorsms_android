@@ -277,14 +277,6 @@
             android:theme="@style/Theme.AppCompat.Light.NoActionBar"
             android:windowSoftInputMode="adjustPan" />
 
-        <!-- License -->
-        <activity
-            android:name=".ui.LicenseActivity"
-            android:exported="true"
-            android:label="@string/menu_license"
-            android:screenOrientation="portrait"
-            android:theme="@style/WelcomeTheme" />
-
         <!-- Message Forwarding -->
         <activity
             android:name=".ui.conversationlist.ForwardMessageActivity"
