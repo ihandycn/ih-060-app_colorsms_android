@@ -49,8 +49,8 @@ import com.android.messaging.ui.wallpaper.WallpaperManager;
 import com.android.messaging.ui.wallpaper.WallpaperPreviewActivity;
 import com.android.messaging.util.BugleAnalytics;
 import com.android.messaging.util.CommonUtils;
+import com.android.messaging.util.CreateShortcutUtils;
 import com.android.messaging.util.MediaUtil;
-import com.android.messaging.util.ShortcutUtils;
 import com.android.messaging.util.Trace;
 import com.ihs.app.framework.HSApplication;
 import com.ihs.commons.notificationcenter.HSGlobalNotificationCenter;
@@ -87,6 +87,7 @@ public class ConversationListActivity extends AbstractConversationListActivity
     private static final String PREF_KEY_FONT_CLICKED = "pref_key_navigation_font_clicked";
 
     public static final String EXTRA_FROM_DESKTOP_ICON = "extra_from_desktop_icon";
+    public static final String PREF_KEY_CREATE_SHORTCUT_GUIDE_SHOWN = "pref_key_create_shortcut_guide_shown";
 
     private static boolean sIsRecreate = false;
 
@@ -118,6 +119,7 @@ public class ConversationListActivity extends AbstractConversationListActivity
     private boolean mIsRealCreate = false;
     private boolean mShowEndAnimation;
     private boolean hideAnimation;
+    private boolean shouldShowCreateShortcutGuide;
 
     private enum AnimState {
         NONE,
@@ -143,7 +145,7 @@ public class ConversationListActivity extends AbstractConversationListActivity
         configAppBar();
         mIsNoActionBack = true;
 
-        if(getIntent()!=null && getIntent().getBooleanExtra(EXTRA_FROM_DESKTOP_ICON, false)){
+        if (getIntent() != null && getIntent().getBooleanExtra(EXTRA_FROM_DESKTOP_ICON, false)) {
             BugleAnalytics.logEvent("SMS_Shortcut_Click");
         }
 
@@ -444,16 +446,19 @@ public class ConversationListActivity extends AbstractConversationListActivity
         }
 
         int mainActivityCreateTime = Preferences.get(DESKTOP_PREFS).getInt(PREF_KEY_MAIN_ACTIVITY_SHOW_TIME, 0);
-        if (mainActivityCreateTime >= 2) {
-            Preferences.getDefault().doOnce(() -> {
-                Drawable smsIcon = ShortcutUtils.getSystemSMSIcon();
-                if (smsIcon != null && ShortcutManagerCompat.isRequestPinShortcutSupported(HSApplication.getContext())) {
-                    Navigations.startActivitySafely(ConversationListActivity.this,
-                            new Intent(ConversationListActivity.this, CreateShortcutActivity.class));
-                    super.onBackPressed();
-                    return;
-                }
-            }, "pref_key_create_shortcut");
+        if (mainActivityCreateTime >= 2 && !Preferences.getDefault().contains(PREF_KEY_CREATE_SHORTCUT_GUIDE_SHOWN)) {
+            Drawable smsIcon = CreateShortcutUtils.getSystemSMSIcon();
+            if (smsIcon != null && ShortcutManagerCompat.isRequestPinShortcutSupported(HSApplication.getContext())) {
+                shouldShowCreateShortcutGuide = true;
+                Preferences.getDefault().putBoolean(PREF_KEY_CREATE_SHORTCUT_GUIDE_SHOWN, true);
+                Navigations.startActivitySafely(ConversationListActivity.this,
+                        new Intent(ConversationListActivity.this, CreateShortcutActivity.class));
+                return;
+            }
+        }
+        if (shouldShowCreateShortcutGuide) {
+            super.onBackPressed();
+            return;
         }
 
         if (isInConversationListSelectMode()) {

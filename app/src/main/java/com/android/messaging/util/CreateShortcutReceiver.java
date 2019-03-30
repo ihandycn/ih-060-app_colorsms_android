@@ -8,7 +8,7 @@ import android.widget.Toast;
 import com.android.messaging.R;
 import com.ihs.app.framework.HSApplication;
 
-public class ShortcutReceiver extends BroadcastReceiver {
+public class CreateShortcutReceiver extends BroadcastReceiver {
 
     @Override
     public void onReceive(Context context, Intent intent) {

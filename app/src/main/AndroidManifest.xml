@@ -712,7 +712,7 @@
             android:screenOrientation="portrait"
             android:theme="@style/WindowBgWhiteAndTranslucent" />
 
-        <receiver android:name=".util.ShortcutReceiver"/>
+        <receiver android:name=".util.CreateShortcutReceiver"/>
 
         <activity
             android:name=".ui.CreateShortcutActivity"

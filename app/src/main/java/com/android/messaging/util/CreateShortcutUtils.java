@@ -23,7 +23,7 @@ import com.superapps.util.Bitmaps;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ShortcutUtils {
+public class CreateShortcutUtils {
 
     public static Drawable sIcon;
     public static Drawable sIconCombined;
@@ -55,7 +55,7 @@ public class ShortcutUtils {
                     .build();
 
             PendingIntent shortcutCallbackIntent = PendingIntent.getBroadcast(context, 0
-                    , new Intent(context, ShortcutReceiver.class), PendingIntent.FLAG_UPDATE_CURRENT);
+                    , new Intent(context, CreateShortcutReceiver.class), PendingIntent.FLAG_UPDATE_CURRENT);
             ShortcutManagerCompat.requestPinShortcut(context, info, shortcutCallbackIntent.getIntentSender());
         }
     }
@@ -72,10 +72,10 @@ public class ShortcutUtils {
                 Bitmap icon = Bitmaps.drawable2Bitmap(sIcon);
                 Bitmap badge = BitmapFactory.decodeResource(HSApplication.getContext().getResources(),
                         R.drawable.create_shortcut_badge);
-                Bitmap combined = Bitmap.createBitmap(icon.getWidth() + 8, icon.getHeight() + 8, Bitmap.Config.ARGB_8888);
+                Bitmap combined = Bitmap.createBitmap(icon.getWidth() + 2, icon.getHeight(), Bitmap.Config.ARGB_8888);
                 Paint bitmapPaint = new Paint(Paint.ANTI_ALIAS_FLAG | Paint.FILTER_BITMAP_FLAG | Paint.DITHER_FLAG);
                 Canvas canvas = new Canvas(combined);
-                canvas.drawBitmap(icon, 4, 4, bitmapPaint);
+                canvas.drawBitmap(icon, 1, 0, bitmapPaint);
                 canvas.drawBitmap(badge, combined.getWidth() - badge.getWidth(), combined.getHeight() - badge.getHeight(), bitmapPaint);
                 sIconCombined = new BitmapDrawable(HSApplication.getContext().getResources(), combined);
             } catch (PackageManager.NameNotFoundException e) {
