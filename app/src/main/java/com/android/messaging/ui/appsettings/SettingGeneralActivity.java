@@ -15,6 +15,7 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.android.messaging.BaseActivity;
+import com.android.messaging.BugleApplication;
 import com.android.messaging.Factory;
 import com.android.messaging.R;
 import com.android.messaging.feedback.FeedbackActivity;
@@ -295,6 +296,10 @@ public class SettingGeneralActivity extends BaseActivity {
             if (data != null) {
                 Uri uri = data.getParcelableExtra(RingtoneManager.EXTRA_RINGTONE_PICKED_URI);
                 String prefKey = getString(R.string.notification_sound_pref_key);
+                String currentRingtone = prefs.getString(prefKey, Settings.System.DEFAULT_NOTIFICATION_URI.toString());
+                if (currentRingtone != null && !currentRingtone.equals(uri.toString())) {
+                    BugleAnalytics.logEvent("Customize_Notification_Sound_Change", true, "from", "settings");
+                }
                 prefs.putString(prefKey, uri == null ? "" : uri.toString());
                 updateSoundSummary();
             }

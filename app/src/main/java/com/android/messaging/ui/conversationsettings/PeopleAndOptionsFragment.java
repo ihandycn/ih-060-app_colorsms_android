@@ -54,6 +54,7 @@ import com.android.messaging.ui.conversation.ConversationActivity;
 import com.android.messaging.ui.wallpaper.WallpaperManager;
 import com.android.messaging.ui.wallpaper.WallpaperPreviewActivity;
 import com.android.messaging.util.Assert;
+import com.android.messaging.util.BugleAnalytics;
 import com.android.messaging.util.BuglePrefs;
 import com.android.messaging.util.OsUtil;
 
@@ -74,6 +75,7 @@ public class PeopleAndOptionsFragment extends Fragment
     private final Binding<PeopleAndOptionsData> mBinding =
             BindingBase.createBinding(this);
     private String mConversationId;
+    private String mRingtone;
 
     private static final int REQUEST_CODE_RINGTONE_PICKER = 1000;
 
@@ -111,6 +113,10 @@ public class PeopleAndOptionsFragment extends Fragment
                     RingtoneManager.EXTRA_RINGTONE_PICKED_URI);
             final String pickedUri = pick == null ? "" : pick.toString();
             mBinding.getData().setConversationNotificationSound(mBinding, pickedUri);
+
+            if (pickedUri != null && !pickedUri.equals(mRingtone)) {
+                BugleAnalytics.logEvent("Customize_Notification_Sound_Change", true, "from", "chat");
+            }
         }
     }
 
@@ -155,6 +161,7 @@ public class PeopleAndOptionsFragment extends Fragment
                 break;
 
             case SETTING_NOTIFICATION_SOUND_URI:
+                mRingtone = item.getRingtoneUri().toString();
                 final Intent ringtonePickerIntent = UIIntents.get().getRingtonePickerIntent(
                         getString(R.string.notification_sound_pref_title),
                         item.getRingtoneUri(), Settings.System.DEFAULT_NOTIFICATION_URI,
@@ -255,8 +262,6 @@ public class PeopleAndOptionsFragment extends Fragment
         private Cursor mOptionsCursor;
         private ParticipantData mOtherParticipantData;
 
-        private boolean isRingtoneEnabled = isRingtoneEnabled();
-
         public Cursor swapCursor(final Cursor newCursor) {
             final Cursor oldCursor = mOptionsCursor;
             if (newCursor != oldCursor) {
@@ -278,11 +283,6 @@ public class PeopleAndOptionsFragment extends Fragment
             int count = PeopleOptionsItemData.SETTINGS_COUNT;
             if (mOtherParticipantData == null) {
                 count--;
-            }
-
-            if (!isRingtoneEnabled) {
-                // remove SETTING_NOTIFICATION_SOUND_URI and SETTING_NOTIFICATION_VIBRATION
-                count -= 2;
             }
             return mOptionsCursor == null ? 0 : count;
         }
@@ -311,36 +311,8 @@ public class PeopleAndOptionsFragment extends Fragment
             mOptionsCursor.moveToFirst();
 
             itemView.bind(mOptionsCursor, position, mOtherParticipantData,
-                    PeopleAndOptionsFragment.this, isRingtoneEnabled);
+                    PeopleAndOptionsFragment.this);
             return itemView;
-        }
-
-        private boolean isRingtoneEnabled() {
-            String prefKey = getString(R.string.notification_sound_pref_key);
-            final BuglePrefs prefs = BuglePrefs.getApplicationPrefs();
-
-            String ringtoneString = prefs.getString(prefKey, null);
-
-            if (ringtoneString == null) {
-                ringtoneString = Settings.System.DEFAULT_NOTIFICATION_URI.toString();
-                prefs.putString(prefKey, ringtoneString);
-            }
-
-            try {
-                if (!TextUtils.isEmpty(ringtoneString)) {
-                    final Uri ringtoneUri = Uri.parse(ringtoneString);
-                    final Ringtone tone = RingtoneManager.getRingtone(getActivity(), ringtoneUri);
-
-                    if (tone != null) {
-                        tone.getTitle(getActivity());
-                    }
-                    return true;
-                }
-                return false;
-            } catch (SecurityException e) {
-                e.printStackTrace();
-                return false;
-            }
         }
     }
 

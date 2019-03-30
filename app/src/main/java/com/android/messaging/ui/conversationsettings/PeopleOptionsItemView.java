@@ -55,13 +55,8 @@ public class PeopleOptionsItemView extends SettingItemView {
     }
 
     public void bind(final Cursor cursor, int columnIndex, ParticipantData otherParticipant,
-                     final HostInterface hostInterface,
-                     final boolean enableRingtone) {
+                     final HostInterface hostInterface) {
         Assert.isTrue(columnIndex < PeopleOptionsItemData.SETTINGS_COUNT && columnIndex >= 0);
-        if (!enableRingtone && columnIndex == 1) {
-            columnIndex = SETTING_BLOCKED;
-        }
-
 
         mData.bind(cursor, otherParticipant, columnIndex);
         mHostInterface = hostInterface;
