@@ -52,6 +52,7 @@ import com.android.messaging.util.CreateShortcutUtils;
 import com.android.messaging.util.MediaUtil;
 import com.android.messaging.util.Trace;
 import com.ihs.app.framework.HSApplication;
+import com.ihs.commons.config.HSConfig;
 import com.ihs.commons.notificationcenter.HSGlobalNotificationCenter;
 import com.ihs.commons.notificationcenter.INotificationObserver;
 import com.ihs.commons.utils.HSBundle;
@@ -445,7 +446,9 @@ public class ConversationListActivity extends AbstractConversationListActivity
         }
 
         int mainActivityCreateTime = Preferences.get(DESKTOP_PREFS).getInt(PREF_KEY_MAIN_ACTIVITY_SHOW_TIME, 0);
-        if (mainActivityCreateTime >= 2 && !Preferences.getDefault().contains(PREF_KEY_CREATE_SHORTCUT_GUIDE_SHOWN)) {
+        if (mainActivityCreateTime >= 2
+                && !Preferences.getDefault().contains(PREF_KEY_CREATE_SHORTCUT_GUIDE_SHOWN)
+                && HSConfig.optBoolean(false, "Application", "ShortcutLikeSystemSMS")) {
             Drawable smsIcon = CreateShortcutUtils.getSystemSMSIcon();
             if (smsIcon != null && ShortcutManagerCompat.isRequestPinShortcutSupported(HSApplication.getContext())) {
                 shouldShowCreateShortcutGuide = true;
