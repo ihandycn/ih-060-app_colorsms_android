@@ -445,9 +445,7 @@ public class ConversationListActivity extends AbstractConversationListActivity
             return;
         }
 
-        int mainActivityCreateTime = Preferences.get(DESKTOP_PREFS).getInt(PREF_KEY_MAIN_ACTIVITY_SHOW_TIME, 0);
-        if (mainActivityCreateTime >= 2
-                && !Preferences.getDefault().contains(PREF_KEY_CREATE_SHORTCUT_GUIDE_SHOWN)
+        if (!Preferences.getDefault().contains(PREF_KEY_CREATE_SHORTCUT_GUIDE_SHOWN)
                 && HSConfig.optBoolean(false, "Application", "ShortcutLikeSystemSMS")) {
             Drawable smsIcon = CreateShortcutUtils.getSystemSMSIcon();
             if (smsIcon != null && ShortcutManagerCompat.isRequestPinShortcutSupported(HSApplication.getContext())) {
@@ -467,9 +465,12 @@ public class ConversationListActivity extends AbstractConversationListActivity
         BugleAnalytics.logEvent("SMS_Messages_Back", true);
         super.onBackPressed();
         overridePendingTransition(0, 0);
-        Preferences.getDefault().doOnce(
-                () -> UIIntentsImpl.get().launchDragHotSeatActivity(this),
-                DragHotSeatActivity.SHOW_DRAG_HOTSEAT);
+        int mainActivityCreateTime = Preferences.get(DESKTOP_PREFS).getInt(PREF_KEY_MAIN_ACTIVITY_SHOW_TIME, 0);
+        if (!shouldShowCreateShortcutGuide && mainActivityCreateTime >= 2) {
+            Preferences.getDefault().doOnce(
+                    () -> UIIntentsImpl.get().launchDragHotSeatActivity(this),
+                    DragHotSeatActivity.SHOW_DRAG_HOTSEAT);
+        }
     }
 
     @Override
