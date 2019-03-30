@@ -50,15 +50,15 @@ public class WelcomeStartActivity extends AppCompatActivity implements View.OnCl
     private static final int REQUEST_SET_DEFAULT_SMS_APP = 3;
 
     private final static float[] LOTTIE_ANIMATION_FORWARD_POSITION =
-            new float[]{0.348f, 0.622f, 0.948f};
+            new float[]{0.317f, 0.561f, 0.920f};
     private final static float[] LOTTIE_ANIMATION_FORWARD_DRAG_POSITION =
-            new float[]{0, 0.366f, 0.651f, 1.0f};
+            new float[]{0, 0.368f, 0.620f, 1.0f};
 
     private final static float[] LOTTIE_ANIMATION_BACKWARD_POSITION =
-            new float[]{1, 0.395f, 0};
+            new float[]{1, 0.316f, 0};
 
-    private final static int LOTTIE_ANIMATION_FORWARD_DURATION = 6520;
-    private final static int LOTTIE_ANIMATION_BACKWARD_DURATION = 3500;
+    private final static int LOTTIE_ANIMATION_FORWARD_DURATION = 6830;
+    private final static int LOTTIE_ANIMATION_BACKWARD_DURATION = 4533;
 
     private boolean mAllowBackKey = true;
 
@@ -187,12 +187,12 @@ public class WelcomeStartActivity extends AppCompatActivity implements View.OnCl
                     "lottie/welcome_guide_anim_forward.json", lottieComposition -> {
                         mForwardLottieView.setComposition(lottieComposition);
                         mForwardLottieView.setProgress(0f);
-                        playForwardDropAnimation(0);
 
                         findViewById(R.id.root_view).setBackgroundColor(
                                 getResources().getColor(android.R.color.white));
                         findViewById(R.id.root_view).setVisibility(View.VISIBLE);
 
+                        mForwardLottieView.post(() -> playForwardDropAnimation(0));
                     });
         } catch (RejectedExecutionException e) {
             e.printStackTrace();
