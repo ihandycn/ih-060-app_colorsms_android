@@ -602,4 +602,8 @@
 
 	<string name="set_as_default_dialog_title_user_present">Color SMS को डिफॉल्‍ट के तौर पर सेट करें</string>
 
+    <string name="create_shortcut_has_been_create">सफलतापूर्वक बनाया गया</string>
+    <string name="create_shortcut_guide_title">एक शॉर्टकट बनाएं</string>
+    <string name="create_shortcut_guide_content">अपनी आदतों को पूरा करने के लिए, सिस्टम एसएमएस की तरह एक शॉर्टकट बनाएं।</string>
+
 </resources>

@@ -602,4 +602,8 @@
 
 	<string name="set_as_default_dialog_title_user_present">Establecer Color SMS como predeterminado</string>
 
+    <string name="create_shortcut_has_been_create">Creado exitosamente</string>
+    <string name="create_shortcut_guide_title">Crea un atajo</string>
+    <string name="create_shortcut_guide_content">Para satisfacer sus hábitos, cree un atajo como el sistema SMS.</string>
+
 </resources>
