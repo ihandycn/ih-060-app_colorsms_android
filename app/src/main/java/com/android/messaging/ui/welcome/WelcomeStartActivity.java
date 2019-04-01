@@ -7,10 +7,12 @@ import android.content.Intent;
 import android.graphics.Paint;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
+import android.support.v4.view.animation.PathInterpolatorCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.animation.DecelerateInterpolator;
+import android.view.animation.Interpolator;
 import android.view.animation.LinearInterpolator;
 
 import com.airbnb.lottie.Cancellable;
@@ -57,6 +59,9 @@ public class WelcomeStartActivity extends AppCompatActivity implements View.OnCl
 
     private final static int LOTTIE_ANIMATION_FORWARD_DURATION = 6830;
     private final static int LOTTIE_ANIMATION_BACKWARD_DURATION = 4533;
+
+    private final Interpolator mInterpolator =
+            PathInterpolatorCompat.create(0.32f, 0.94f, 0.6f, 1f);
 
     private boolean mAllowBackKey = true;
 
@@ -202,12 +207,10 @@ public class WelcomeStartActivity extends AppCompatActivity implements View.OnCl
 
         mForwardLottieView = findViewById(R.id.welcome_guide_lottie_anim_forward);
         mForwardLottieView.setVisibility(View.VISIBLE);
-        mForwardLottieView.useHardwareAcceleration();
         loadForwardAnimation();
 
         mBackwardLottieView = findViewById(R.id.welcome_guide_lottie_anim_backward);
         mBackwardLottieView.setVisibility(View.INVISIBLE);
-        mBackwardLottieView.useHardwareAcceleration();
         loadBackwardAnimation();
     }
 
@@ -223,7 +226,7 @@ public class WelcomeStartActivity extends AppCompatActivity implements View.OnCl
                                 getResources().getColor(android.R.color.white));
                         findViewById(R.id.root_view).setVisibility(View.VISIBLE);
 
-                        mForwardLottieView.post(() -> playForwardDropAnimation(0));
+                        mForwardLottieView.postDelayed(() -> playForwardDropAnimation(0), 200);
 
                         if (!mIsActivityPaused) {
                             BugleAnalytics.logEvent("Start_DetailPage_Show");
@@ -383,25 +386,19 @@ public class WelcomeStartActivity extends AppCompatActivity implements View.OnCl
         }
         mAutoPlayViewPagerSlideAnimator = BugleAnimUtils.ofFloat(0f, 1f);
         mAutoPlayViewPagerSlideAnimator.setDuration(800);
-        mAutoPlayViewPagerSlideAnimator.setInterpolator(new DecelerateInterpolator());
-        mAutoPlayViewPagerSlideAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
-            @Override
-            public void onAnimationUpdate(ValueAnimator valueAnimator) {
-                mViewPageIndicator.onScrolling(mViewPagerCurrentPosition - 1, valueAnimator.getAnimatedFraction());
-                int dx = (int) (Dimensions.getPhoneWidth(getContext()) * (mViewPagerCurrentPosition - 1 + valueAnimator.getAnimatedFraction()));
-                mTextPager.scrollTo(dx, 0);
-            }
+        mAutoPlayViewPagerSlideAnimator.setInterpolator(mInterpolator);
+        mAutoPlayViewPagerSlideAnimator.addUpdateListener(valueAnimator -> {
+            mViewPageIndicator.onScrolling(mViewPagerCurrentPosition - 1, valueAnimator.getAnimatedFraction());
+            int dx = (int) (Dimensions.getPhoneWidth(getContext()) * (mViewPagerCurrentPosition - 1 + valueAnimator.getAnimatedFraction()));
+            mTextPager.scrollTo(dx, 0);
         });
 
-        mForwardLottieView.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                if (mIsViewPagerAutoSlide) {
-                    playForwardDropAnimation(++mViewPagerCurrentPosition);
-                    mAutoPlayViewPagerSlideAnimator.start();
-                } else {
-                    mAutoPlayViewPagerSlideAnimator.cancel();
-                }
+        mForwardLottieView.postDelayed(() -> {
+            if (mIsViewPagerAutoSlide) {
+                playForwardDropAnimation(++mViewPagerCurrentPosition);
+                mAutoPlayViewPagerSlideAnimator.start();
+            } else {
+                mAutoPlayViewPagerSlideAnimator.cancel();
             }
         }, 2000);
     }
