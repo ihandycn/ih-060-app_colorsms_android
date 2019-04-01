@@ -8,25 +8,30 @@ public class MessageBoxItemData implements Parcelable {
 
     private String mConversationId;
     private String mSelfId;
-    private String mAvatarUri;
+    private String mParticipantId;
+    private String mPhoneNumber;
     private String mConversationName;
-    private String mContent;
+    private String mContent; // we use empty content to indicate MMS;
+    private long mReceivedTimestamp;
 
     public MessageBoxItemData(@NonNull String conversationId,
                               @NonNull String selfId,
-                              @NonNull String avatarUri,
+                              @NonNull String participantId,
+                              @NonNull String phoneNumber,
                               @NonNull String conversationName,
-                              @NonNull String content) {
+                              @NonNull String content,
+                              @NonNull long receivedTimestamp) {
         mConversationId = conversationId;
         mSelfId = selfId;
-        mAvatarUri = avatarUri;
+        mParticipantId = participantId;
+        mPhoneNumber = phoneNumber;
         mConversationName = conversationName;
         mContent = content;
+        mReceivedTimestamp = receivedTimestamp;
     }
 
-
-    public String getAvatarUri() {
-        return mAvatarUri;
+    public String getPhoneNumber() {
+        return mPhoneNumber;
     }
 
     public String getContent() {
@@ -45,21 +50,33 @@ public class MessageBoxItemData implements Parcelable {
         return mConversationName;
     }
 
+    public String getParticipantId() {
+        return mParticipantId;
+    }
+
+    public long getReceivedTimestamp() {
+        return mReceivedTimestamp;
+    }
+
     protected MessageBoxItemData(Parcel in) {
         mConversationId = in.readString();
         mSelfId = in.readString();
-        mAvatarUri = in.readString();
+        mParticipantId = in.readString();
+        mPhoneNumber = in.readString();
         mConversationName = in.readString();
         mContent = in.readString();
+        mReceivedTimestamp = in.readLong();
     }
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeString(mConversationId);
         dest.writeString(mSelfId);
-        dest.writeString(mAvatarUri);
+        dest.writeString(mParticipantId);
+        dest.writeString(mPhoneNumber);
         dest.writeString(mConversationName);
         dest.writeString(mContent);
+        dest.writeLong(mReceivedTimestamp);
     }
 
     @Override

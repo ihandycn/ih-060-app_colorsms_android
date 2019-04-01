@@ -1,41 +1,101 @@
 package com.android.messaging.ui.messagebox;
 
-import android.content.res.ColorStateList;
-import android.graphics.Color;
-import android.graphics.PorterDuff;
+import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.ColorInt;
+import android.support.v4.view.ViewPager;
+import android.text.TextUtils;
+import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.ImageView;
-import android.widget.TextView;
 
 import com.android.messaging.BaseActivity;
 import com.android.messaging.R;
-import com.android.messaging.ui.customize.PrimaryColors;
+import com.android.messaging.datamodel.action.DeleteMessageAction;
+import com.android.messaging.datamodel.data.MessageBoxItemData;
+import com.android.messaging.ui.UIIntents;
+import com.android.messaging.ui.emoji.ViewPagerDotIndicatorView;
 import com.android.messaging.util.BugleAnalytics;
 import com.ihs.commons.notificationcenter.HSGlobalNotificationCenter;
 import com.ihs.commons.notificationcenter.INotificationObserver;
 import com.ihs.commons.utils.HSBundle;
-import com.superapps.util.BackgroundDrawables;
-import com.superapps.util.Dimensions;
 
+import static com.android.messaging.ui.UIIntents.UI_INTENT_EXTRA_MESSAGE_BOX_ITEM;
 import static com.android.messaging.ui.messagebox.MessageBoxActivity.NOTIFICATION_FINISH_MESSAGE_BOX;
 
-public class BoxActivity extends BaseActivity implements INotificationObserver, View.OnClickListener {
+public class BoxActivity extends BaseActivity implements INotificationObserver,
+        View.OnClickListener, ViewPager.OnPageChangeListener {
 
-    @ColorInt
-    private int mPrimaryColor;
-    @ColorInt
-    private int mPrimaryColorDark;
+    private ViewPager mPager;
+    private DynamicalPagerAdapter mPagerAdapter;
+    private ViewPagerDotIndicatorView mIndicator;
+
+    private MessageBoxConversationView mCurrentConversationView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.box_activity);
-        mPrimaryColor = PrimaryColors.getPrimaryColor();
-        mPrimaryColorDark = PrimaryColors.getPrimaryColorDark();
-        initActionBarSimulation();
-        initQuickActions();
+
+        mPager = findViewById(R.id.message_box_conversation_pager);
+        mIndicator = findViewById(R.id.dot_indicator_view);
+
+        MessageBoxItemData data = getIntent().getParcelableExtra(UI_INTENT_EXTRA_MESSAGE_BOX_ITEM);
+        MessageBoxConversationView view = (MessageBoxConversationView) LayoutInflater.from(this).inflate(R.layout.message_box_conversation_view, null, false);
+        view.bind(data);
+
+        mPagerAdapter = new DynamicalPagerAdapter();
+        mPagerAdapter.addView(view);
+        mCurrentConversationView = view;
+
+        mPager.addOnPageChangeListener(mIndicator);
+        mPager.addOnPageChangeListener(this);
+        mPager.setAdapter(mPagerAdapter);
+    }
+
+    @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+
+        final MessageBoxItemData data = intent.getParcelableExtra(UI_INTENT_EXTRA_MESSAGE_BOX_ITEM);
+
+        boolean isNewConversation = true;
+        int viewCount = mPagerAdapter.getCount();
+        MessageBoxConversationView view;
+        for (int i = 0; i < viewCount; i++) {
+            view = (MessageBoxConversationView) mPagerAdapter.getViews().get(i);
+            if (TextUtils.equals(data.getConversationId(), (String) view.getTag())) {
+                isNewConversation = false;
+                view.addNewMessage(data);
+                break;
+            }
+        }
+
+        if (isNewConversation) {
+            MessageBoxConversationView newItem = (MessageBoxConversationView) LayoutInflater.from(this).inflate(R.layout.message_box_conversation_view, null, false);
+            newItem.bind(data);
+            mPagerAdapter.addView(newItem);
+            mPagerAdapter.notifyDataSetChanged();
+        }
+    }
+
+    @Override
+    public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+    }
+
+    /**
+     * This method will be invoked when a new page becomes selected. Animation is not
+     * necessarily complete.
+     *
+     * @param position Position index of the new selected page.
+     */
+    @Override
+    public void onPageSelected(int position) {
+        mCurrentConversationView = (MessageBoxConversationView) mPagerAdapter.getViews().get(position);
+    }
+
+    @Override
+    public void onPageScrollStateChanged(int state) {
+
     }
 
     @Override
@@ -43,54 +103,30 @@ public class BoxActivity extends BaseActivity implements INotificationObserver, 
         int id = v.getId();
         switch (id) {
             case R.id.action_call:
+                mCurrentConversationView.call();
                 break;
-            case R.id.action_close:
-                break;
+
             case R.id.action_delete:
+                DeleteMessageAction.deleteMessage(mCurrentConversationView.getConversationId(),
+                        mCurrentConversationView.getParticipantId(),
+                        mCurrentConversationView.getOldestReceivedTimestamp());
+                break;
+
+            case R.id.action_close:
+                finish();
                 break;
             case R.id.action_unread:
+                mCurrentConversationView.markAsUnread();
                 break;
             case R.id.action_open:
+                UIIntents.get().launchConversationActivity(this, mCurrentConversationView.getConversationId(), null);
+                finish();
+                break;
+
+            case R.id.self_send_icon:
+                mCurrentConversationView.replyMessage();
                 break;
         }
-    }
-
-    private void initActionBarSimulation() {
-        ImageView callActionImage = findViewById(R.id.action_call);
-        callActionImage.setOnClickListener(this);
-        callActionImage.setBackground(BackgroundDrawables.
-                createBackgroundDrawable(mPrimaryColor, mPrimaryColorDark, Dimensions.pxFromDp(21), false, true));
-
-        ImageView closeActionImage = findViewById(R.id.action_close);
-        closeActionImage.setOnClickListener(this);
-        closeActionImage.setBackground(BackgroundDrawables.
-                createBackgroundDrawable(mPrimaryColor, mPrimaryColorDark, Dimensions.pxFromDp(21), false, true));
-        findViewById(R.id.action_bar_simulation).getBackground().setColorFilter(mPrimaryColor, PorterDuff.Mode.SRC_ATOP);
-    }
-
-    private void initQuickActions() {
-        TextView actionDelete = findViewById(R.id.action_delete);
-        TextView actionUnread = findViewById(R.id.action_unread);
-        TextView actionOpen = findViewById(R.id.action_open);
-
-        actionDelete.setOnClickListener(this);
-        actionUnread.setOnClickListener(this);
-        actionOpen.setOnClickListener(this);
-
-        float radius = getResources().getDimension(R.dimen.message_box_background_radius);
-        int rippleColor = getResources().getColor(com.superapps.R.color.ripples_ripple_color);
-        actionDelete.setBackground(
-                BackgroundDrawables.createBackgroundDrawable(
-                        Color.WHITE, rippleColor, 0f, 0f, 0, radius,
-                        false, true));
-        actionUnread.setBackground(
-                BackgroundDrawables.createBackgroundDrawable(
-                        Color.WHITE, rippleColor, 0f, 0f, 0, 0f,
-                        false, true));
-        actionOpen.setBackground(
-                BackgroundDrawables.createBackgroundDrawable(
-                        Color.WHITE, rippleColor, 0f, 0f, radius, 0,
-                        false, true));
     }
 
     @Override
@@ -106,4 +142,5 @@ public class BoxActivity extends BaseActivity implements INotificationObserver, 
         BugleAnalytics.logEvent("SMS_PopUp_Close", true);
         HSGlobalNotificationCenter.removeObserver(this);
     }
+
 }

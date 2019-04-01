@@ -80,7 +80,7 @@ public class MessageBoxActivity extends BaseActivity implements INotificationObs
     @Override
     protected void onRestart() {
         super.onRestart();
-        mConversationPagerAdapter.getView(mConversationPager.getCurrentItem()).updateTimestamp();
+//        mConversationPagerAdapter.getView(mConversationPager.getCurrentItem()).updateTimestamp();
     }
 
     private void initMenu() {
@@ -113,56 +113,7 @@ public class MessageBoxActivity extends BaseActivity implements INotificationObs
 
     }
 
-    private void showCloseDialog() {
-        if (mCloseDialog == null) {
-            AlertDialog.Builder builder = new AlertDialog.Builder(this, R.style.CloseDialogTheme);
-
-            String title = getString(R.string.message_box_alert_title);
-            SpannableString spannableStringTitle = new SpannableString(title);
-            spannableStringTitle.setSpan(
-                    new ForegroundColorSpan(0xDF000000),
-                    0, title.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-            builder.setTitle(spannableStringTitle);
-
-            String message = getString(R.string.message_box_alert_message);
-            SpannableString spannableStringMessage = new SpannableString(message);
-            spannableStringMessage.setSpan(
-                    new ForegroundColorSpan(0x8A000000),
-                    0, message.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-            builder.setMessage(spannableStringMessage);
-
-            builder.setPositiveButton(getString(R.string.message_box_positive_action), (dialogInterface, i) -> {
-                if (mCloseDialog == null) {
-                    return;
-                }
-                mCloseDialog.dismiss();
-                mCloseDialog = null;
-            });
-
-            builder.setNegativeButton(getString(R.string.message_box_negative_button), (dialog, i) -> {
-                if (mCloseDialog == null) {
-                    return;
-                }
-                MessageBoxSettings.setSMSAssistantModuleEnabled(false);
-                mCloseDialog.dismiss();
-                mCloseDialog = null;
-                finish();
-                Toasts.showToast(R.string.message_box_disable_successfully);
-                BugleAnalytics.logEvent("SMS_PopUp_Disable", true);
-            });
-
-            mCloseDialog = builder.create();
-
-            mCloseDialog.setOnShowListener(dialog -> {
-                Button negativeButton = ((AlertDialog) dialog).getButton(DialogInterface.BUTTON_NEGATIVE);
-                negativeButton.setTextColor(0xff999999);
-
-                Button positiveButton = ((AlertDialog) dialog).getButton(DialogInterface.BUTTON_POSITIVE);
-                positiveButton.setTextColor(0xff336bf3);
-            });
-        }
-        mCloseDialog.show();
-    }
+    private void showCloseDialog() {}
 
 
     private void initConversationList() {
@@ -210,15 +161,15 @@ public class MessageBoxActivity extends BaseActivity implements INotificationObs
         boolean isNewConversation = true;
         int viewCount = mConversationPagerAdapter.getCount();
         MessageBoxConversationItemView view;
-        for (int i = 0; i < viewCount; i++) {
-            view = mConversationPagerAdapter.getViews().get(i);
-            if (TextUtils.equals(data.getConversationId(), (String) view.getTag())) {
-                isNewConversation = false;
-                view.addNewMessage(data.getContent());
-                mConversationPager.setCurrentItem(i, true);
-                break;
-            }
-        }
+//        for (int i = 0; i < viewCount; i++) {
+//            view = mConversationPagerAdapter.getViews().get(i);
+//            if (TextUtils.equals(data.getConversationId(), (String) view.getTag())) {
+//                isNewConversation = false;
+//                view.addNewMessage(data.getContent());
+//                mConversationPager.setCurrentItem(i, true);
+//                break;
+//            }
+//        }
 
         if (isNewConversation) {
             MessageBoxConversationItemView newItem = new MessageBoxConversationItemView(this, data);
@@ -295,20 +246,20 @@ public class MessageBoxActivity extends BaseActivity implements INotificationObs
             mReplyIcon.setVisibility(View.GONE);
             mProgressBar.setVisibility(View.VISIBLE);
 
-            Threads.postOnMainThreadDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    mConversationPagerAdapter.getView(mConversationPager.getCurrentItem()).replyMessage(mEditText.getText().toString());
-                    if (mConversationPager.getCurrentItem() < mConversationPagerAdapter.getCount() - 1) {
-                        mConversationPager.setCurrentItem(mConversationPager.getCurrentItem() + 1, true);
-                    } else {
-                        finish();
-                    }
-                    mProgressBar.setVisibility(View.GONE);
-                    mReplyIcon.setClickable(true);
-                    mReplyIcon.setVisibility(View.VISIBLE);
-                }
-            }, 1000L);
+//            Threads.postOnMainThreadDelayed(new Runnable() {
+//                @Override
+//                public void run() {
+//                    mConversationPagerAdapter.getView(mConversationPager.getCurrentItem()).replyMessage(mEditText.getText().toString());
+//                    if (mConversationPager.getCurrentItem() < mConversationPagerAdapter.getCount() - 1) {
+//                        mConversationPager.setCurrentItem(mConversationPager.getCurrentItem() + 1, true);
+//                    } else {
+//                        finish();
+//                    }
+//                    mProgressBar.setVisibility(View.GONE);
+//                    mReplyIcon.setClickable(true);
+//                    mReplyIcon.setVisibility(View.VISIBLE);
+//                }
+//            }, 1000L);
 
         });
 

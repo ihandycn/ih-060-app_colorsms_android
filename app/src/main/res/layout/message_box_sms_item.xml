@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_marginTop="4dp"
+    android:layout_marginTop="15dp"
     >
 
     <android.support.constraint.Guideline
@@ -14,33 +14,33 @@
         android:orientation="vertical"
         app:layout_constraintGuide_percent="0.8" />
 
-    <TextView
+    <com.superapps.view.TypefacedTextView
         android:id="@+id/message_content"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textColor="@android:color/black"
-        android:textSize="15sp"
+        android:textColor="#222327"
+        android:textSize="13.3sp"
         android:background="@drawable/message_box_message_item_background"
-        android:paddingTop="10dp"
-        android:paddingBottom="10dp"
-        android:paddingLeft="20dp"
-        android:paddingRight="20dp"
         android:maxWidth="240dp"
+        android:lineSpacingExtra="3sp"
+        android:layout_marginStart="20dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
+        app:typeface="@string/custom_font_regular"
         tools:text="A you ok? Are you ok Are y o u A r e yo u o k? Ar e y ou ok A re you sd" />
 
-    <TextView
+    <com.superapps.view.TypefacedTextView
         android:id="@+id/message_date"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textColor="#ababab"
-        android:textSize="10sp"
+        android:textSize="10.7sp"
         android:layout_marginStart="10dp"
         android:layout_marginLeft="10dp"
         android:layout_marginBottom="10dp"
         app:layout_constraintLeft_toRightOf="@id/message_content"
         app:layout_constraintBottom_toBottomOf="@id/message_content"
+        app:typeface="@string/custom_font_regular"
         tools:text="2 mins ago" />
 
 </android.support.constraint.ConstraintLayout>

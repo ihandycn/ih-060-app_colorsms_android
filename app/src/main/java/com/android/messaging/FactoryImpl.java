@@ -33,9 +33,9 @@ import com.android.messaging.datamodel.media.BugleMediaCacheManager;
 import com.android.messaging.datamodel.media.MediaCacheManager;
 import com.android.messaging.datamodel.media.MediaResourceManager;
 import com.android.messaging.sms.BugleCarrierConfigValuesLoader;
-import com.android.messaging.ui.messagebox.MessageBoxActivity;
 import com.android.messaging.ui.UIIntents;
 import com.android.messaging.ui.UIIntentsImpl;
+import com.android.messaging.ui.messagebox.BoxActivity;
 import com.android.messaging.util.Assert;
 import com.android.messaging.util.BugleApplicationPrefs;
 import com.android.messaging.util.BugleCustomizePrefs;
@@ -127,7 +127,7 @@ class FactoryImpl extends Factory {
 
             @Override
             public void onActivityResumed(Activity activity) {
-                if (!(activity instanceof MessageBoxActivity)) {
+                if (!(activity instanceof BoxActivity)) {
                     factory.mIsForeground = true;
                 }
                 if (sIsRedirectToWelcome) {
@@ -137,7 +137,7 @@ class FactoryImpl extends Factory {
 
             @Override
             public void onActivityPaused(Activity activity) {
-                if (!(activity instanceof MessageBoxActivity)) {
+                if (!(activity instanceof BoxActivity)) {
                     factory.mIsForeground = false;
                 }
             }

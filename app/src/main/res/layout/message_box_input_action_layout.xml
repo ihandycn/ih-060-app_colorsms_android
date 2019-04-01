@@ -82,6 +82,7 @@
                     android:imeOptions="actionSend|flagNoEnterAction|flagNoExtractUi"
                     android:includeFontPadding="false"
                     android:maxLines="3"
+                    android:inputType="textShortMessage"
                     android:theme="@style/MessageViewEditTextTheme" />
 
                 <ImageView

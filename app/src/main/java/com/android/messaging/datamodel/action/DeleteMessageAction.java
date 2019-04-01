@@ -20,6 +20,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.provider.Telephony;
 import android.text.TextUtils;
 
 import com.android.messaging.datamodel.BugleDatabaseOperations;
@@ -27,8 +28,12 @@ import com.android.messaging.datamodel.DataModel;
 import com.android.messaging.datamodel.DatabaseWrapper;
 import com.android.messaging.datamodel.MessagingContentProvider;
 import com.android.messaging.datamodel.data.MessageData;
+import com.android.messaging.datamodel.data.ParticipantData;
 import com.android.messaging.sms.MmsUtils;
 import com.android.messaging.util.LogUtil;
+import com.ihs.commons.utils.HSLog;
+
+import java.util.ArrayList;
 
 /**
  * Action used to delete a single message.
@@ -41,11 +46,28 @@ public class DeleteMessageAction extends Action implements Parcelable {
         action.start();
     }
 
+    // delete all messages received after timestamp from sendid
+    public static void deleteMessage(final String conversationId, final String senderId, final long timestamp) {
+        final DeleteMessageAction action = new DeleteMessageAction(conversationId, senderId, timestamp);
+        action.start();
+    }
+
     private static final String KEY_MESSAGE_ID = "message_id";
+
+    private static final String KEY_CONVERSATION_ID = "conversation_id";
+    private static final String KEY_PARTICIPANT_ID = "participant_id";
+    private static final String KEY_TIMESTAMP = "timestamp";
 
     private DeleteMessageAction(final String messageId) {
         super();
         actionParameters.putString(KEY_MESSAGE_ID, messageId);
+    }
+
+    private DeleteMessageAction(final String conversationId, final String senderId, final long timestamp) {
+        super();
+        actionParameters.putString(KEY_CONVERSATION_ID, conversationId);
+        actionParameters.putString(KEY_PARTICIPANT_ID, senderId);
+        actionParameters.putLong(KEY_TIMESTAMP, timestamp);
     }
 
     // Doing this work in the background so that we're not competing with sync
@@ -61,6 +83,10 @@ public class DeleteMessageAction extends Action implements Parcelable {
 
         // First find the thread id for this conversation.
         final String messageId = actionParameters.getString(KEY_MESSAGE_ID);
+
+        final String conversationId = actionParameters.getString(KEY_CONVERSATION_ID);
+        final String participantId = actionParameters.getString(KEY_PARTICIPANT_ID);
+        final long timeStamp = actionParameters.getLong(KEY_TIMESTAMP);
 
         if (!TextUtils.isEmpty(messageId)) {
             // Check message still exists
@@ -97,6 +123,40 @@ public class DeleteMessageAction extends Action implements Parcelable {
                 }
             } else {
                 LogUtil.w(TAG, "DeleteMessageAction: Message " + messageId + " no longer exists");
+            }
+        } else if (!TextUtils.isEmpty(conversationId)) {
+
+            final ArrayList<MessageData> messages = BugleDatabaseOperations.readMessageDatas(db, conversationId, participantId, timeStamp);
+
+            HSLog.d("guodong", "conversationId = " + conversationId +
+                    "senderId = " + participantId +
+                    "timestamp = " + timeStamp);
+
+
+            if (!messages.isEmpty()) {
+                for (MessageData messageData : messages) {
+                    int count = BugleDatabaseOperations.deleteMessage(db, messageData.getMessageId());
+                    HSLog.d("guodong", "delete count" + count) ;
+
+                    final Uri messageUri = messageData.getSmsMessageUri();
+
+
+                    HSLog.d("guodong", "messageUri" + messageUri) ;
+
+                    try {
+                        if (messageUri != null) {
+                            MmsUtils.deleteMessage(messageUri);
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+
+                }
+                MessagingContentProvider.notifyMessagesChanged(conversationId);
+                // We may have changed the conversation list
+                MessagingContentProvider.notifyConversationListChanged();
+            } else {
+                HSLog.d("guodong", "destination messages empty");
             }
         }
         return null;

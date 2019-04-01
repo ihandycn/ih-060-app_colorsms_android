@@ -50,6 +50,7 @@ import com.android.messaging.util.PhoneUtils;
 import com.android.messaging.util.UriUtil;
 import com.android.messaging.widget.WidgetConversationProvider;
 import com.google.common.annotations.VisibleForTesting;
+import com.ihs.commons.utils.HSLog;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -1096,6 +1097,47 @@ public class BugleDatabaseOperations {
             }
         }
         return message;
+    }
+
+
+    @DoesNotRunOnMainThread
+    public static ArrayList<MessageData> readMessageDatas(final DatabaseWrapper dbWrapper,
+                                                          final String conversationId,
+                                                          final String participantId,
+                                                          final long timestamp) {
+        Assert.isNotMainThread();
+        MessageData message = null;
+        Cursor cursor = null;
+        ArrayList<MessageData> messages = null;
+
+        try {
+            cursor = dbWrapper.query(DatabaseHelper.MESSAGES_TABLE,
+                    MessageData.getProjection(), MessageColumns.SENDER_PARTICIPANT_ID + "=?"
+                            + " and " + MessageColumns.RECEIVED_TIMESTAMP + ">=?"
+                            + " and " + MessageColumns.CONVERSATION_ID + "=?",
+                    new String[]{participantId, String.valueOf(timestamp), conversationId}, null, null, null);
+
+            messages = new ArrayList<>(cursor.getCount());
+
+            HSLog.d("guodong", "read cursor count = " + cursor.getCount());
+
+            if (cursor.moveToFirst()) {
+                do {
+                    message = new MessageData();
+                    message.bind(cursor);
+                    messages.add(message);
+
+                    HSLog.d("guodong", "add new message");
+                } while (cursor.moveToNext());
+            }
+        } finally {
+            if (cursor != null) {
+                cursor.close();
+            }
+        }
+
+        HSLog.d("guodong", "messages count = " + messages.size());
+        return messages;
     }
 
     /**

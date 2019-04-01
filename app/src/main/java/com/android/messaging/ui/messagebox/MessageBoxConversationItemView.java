@@ -41,32 +41,32 @@ public class MessageBoxConversationItemView extends FrameLayout {
     public MessageBoxConversationItemView(Context context, MessageBoxItemData itemData) {
         super(context, null);
 
-        final LayoutInflater inflater = LayoutInflater.from(context);
-        inflater.inflate(R.layout.message_box_conversation_item, this, true);
-
-        mSelfId = itemData.getSelfId();
-        mConversationId = itemData.getConversationId();
-
-        RecyclerView recyclerView = findViewById(R.id.recycler_view);
-        mAvatar = findViewById(R.id.avatar);
-        TextView mConversationName = findViewById(R.id.conversation_name);
-
-        mConversationName.setText(itemData.getConversationName());
-        loadAvatar(Uri.parse(itemData.getAvatarUri()));
-
-        LinearLayoutManager llm = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false);
-        recyclerView.setLayoutManager(llm);
-
-        ArrayList<String > mMessages = new ArrayList<>();
-        mMessages.add(itemData.getContent());
-        mAdapter = new MessageBoxListItemAdapter(mMessages, mConversationId);
-        recyclerView.setAdapter(mAdapter);
-
-        setTag(mConversationId);
+//        final LayoutInflater inflater = LayoutInflater.from(context);
+//        inflater.inflate(R.layout.message_box_conversation_item, this, true);
+//
+//        mSelfId = itemData.getSelfId();
+//        mConversationId = itemData.getConversationId();
+//
+//        RecyclerView recyclerView = findViewById(R.id.recycler_view);
+//        mAvatar = findViewById(R.id.avatar);
+//        TextView mConversationName = findViewById(R.id.conversation_name);
+//
+//        mConversationName.setText(itemData.getConversationName());
+//        loadAvatar(Uri.parse(itemData.getPhoneNumber()));
+//
+//        LinearLayoutManager llm = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false);
+//        recyclerView.setLayoutManager(llm);
+//
+//        ArrayList<String > mMessages = new ArrayList<>();
+//        mMessages.add(itemData.getContent());
+//        mAdapter = new MessageBoxListItemAdapter(mMessages, mConversationId);
+//        recyclerView.setAdapter(mAdapter);
+//
+//        setTag(mConversationId);
     }
 
     void addNewMessage(String message) {
-        mAdapter.addNewIncomingMessage(message);
+//        mAdapter.addNewIncomingMessage(message);
     }
 
     void replyMessage(String message) {

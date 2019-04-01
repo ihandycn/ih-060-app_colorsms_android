@@ -52,6 +52,7 @@ import com.android.messaging.datamodel.data.MessagePartData;
 import com.android.messaging.datamodel.data.ParticipantData;
 import com.android.messaging.receiver.NotificationReceiver;
 import com.android.messaging.sms.MmsSmsUtils;
+import com.android.messaging.ui.messagebox.BoxActivity;
 import com.android.messaging.ui.messagebox.MessageBoxActivity;
 import com.android.messaging.ui.appsettings.ApnEditorActivity;
 import com.android.messaging.ui.appsettings.ApnSettingsActivity;
@@ -408,7 +409,7 @@ public class UIIntentsImpl extends UIIntents {
 
     @Override
     public void launchMessageBoxActivity(Context context, MessageBoxItemData itemData) {
-        final Intent intent = new Intent(context, MessageBoxActivity.class);
+        final Intent intent = new Intent(context, BoxActivity.class);
         intent.putExtra(UI_INTENT_EXTRA_MESSAGE_BOX_ITEM, itemData);
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         context.startActivity(intent);
