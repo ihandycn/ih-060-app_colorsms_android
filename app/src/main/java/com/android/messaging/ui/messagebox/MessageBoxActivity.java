@@ -1,5 +1,6 @@
 package com.android.messaging.ui.messagebox;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
@@ -9,6 +10,7 @@ import android.view.View;
 
 import com.android.messaging.BaseActivity;
 import com.android.messaging.R;
+import com.android.messaging.datamodel.BugleNotifications;
 import com.android.messaging.datamodel.action.DeleteMessageAction;
 import com.android.messaging.datamodel.data.MessageBoxItemData;
 import com.android.messaging.ui.BaseAlertDialog;
@@ -18,6 +20,7 @@ import com.android.messaging.util.BugleAnalytics;
 import com.ihs.commons.notificationcenter.HSGlobalNotificationCenter;
 import com.ihs.commons.notificationcenter.INotificationObserver;
 import com.ihs.commons.utils.HSBundle;
+import com.ihs.commons.utils.HSLog;
 
 import static com.android.messaging.ui.UIIntents.UI_INTENT_EXTRA_MESSAGE_BOX_ITEM;
 
@@ -94,10 +97,16 @@ public class MessageBoxActivity extends BaseActivity implements INotificationObs
     @Override
     public void onPageSelected(int position) {
         mCurrentConversationView = (MessageBoxConversationView) mPagerAdapter.getViews().get(position);
+
     }
 
     @Override
     public void onPageScrollStateChanged(int state) {
+
+        HSLog.d("guodong", state + "");
+//                SCROLL_STATE_IDLE
+//                SCROLL_STATE_DRAGGING
+//                SCROLL_STATE_SETTLING
 
     }
 
@@ -107,6 +116,8 @@ public class MessageBoxActivity extends BaseActivity implements INotificationObs
         switch (id) {
             case R.id.action_call:
                 mCurrentConversationView.call();
+
+                BugleAnalytics.logEvent("SMS_PopUp_Call_Click");
                 break;
 
             case R.id.action_delete:
@@ -118,10 +129,12 @@ public class MessageBoxActivity extends BaseActivity implements INotificationObs
                                             mCurrentConversationView.getParticipantId(),
                                             mCurrentConversationView.getOldestReceivedTimestamp());
                                     removeCurrentPage();
+                                    BugleAnalytics.logEvent("SMS_PopUp_Delete_Alert_Delete");
                                 })
-                        .setNegativeButton(R.string.delete_conversation_decline_button, null)
+                        .setNegativeButton(R.string.delete_conversation_decline_button,
+                                (dialog, which) -> BugleAnalytics.logEvent("SMS_PopUp_Delete_Alert_Cancel"))
                         .show();
-
+                BugleAnalytics.logEvent("SMS_PopUp_Delete_Click");
                 break;
 
             case R.id.action_close:
@@ -129,10 +142,12 @@ public class MessageBoxActivity extends BaseActivity implements INotificationObs
                 break;
             case R.id.action_unread:
                 mCurrentConversationView.markAsUnread();
+                BugleAnalytics.logEvent("SMS_PopUp_Unread_Click");
                 break;
             case R.id.action_open:
                 UIIntents.get().launchConversationActivity(this, mCurrentConversationView.getConversationId(), null);
                 finish();
+                BugleAnalytics.logEvent("SMS_PopUp_Open_Click");
                 break;
 
             case R.id.self_send_icon:
@@ -166,6 +181,7 @@ public class MessageBoxActivity extends BaseActivity implements INotificationObs
     protected void onDestroy() {
         super.onDestroy();
         BugleAnalytics.logEvent("SMS_PopUp_Close", true);
+        BugleNotifications.markAllMessagesAsSeen();
         HSGlobalNotificationCenter.removeObserver(this);
     }
 

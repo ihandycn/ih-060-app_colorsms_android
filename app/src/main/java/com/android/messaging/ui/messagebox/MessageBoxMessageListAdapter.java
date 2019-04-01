@@ -19,6 +19,7 @@ import com.android.messaging.ui.ConversationDrawables;
 import com.android.messaging.ui.UIIntents;
 import com.android.messaging.ui.customize.BubbleDrawables;
 import com.android.messaging.ui.customize.ConversationColors;
+import com.android.messaging.util.BugleAnalytics;
 import com.android.messaging.util.Dates;
 import com.ihs.commons.notificationcenter.HSGlobalNotificationCenter;
 
@@ -70,7 +71,9 @@ public class MessageBoxMessageListAdapter extends RecyclerView.Adapter<RecyclerV
                 mmsViewHolder.mContentView.setOnClickListener(v -> {
                     UIIntents.get().launchConversationActivity(parent.getContext(), mConversationId, null);
                     HSGlobalNotificationCenter.sendNotification(NOTIFICATION_FINISH_MESSAGE_BOX);
+                    BugleAnalytics.logEvent("SMS_PopUp_MMS_Click");
                 });
+                return mmsViewHolder;
             default:
                 return null;
         }

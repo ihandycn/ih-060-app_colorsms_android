@@ -643,7 +643,7 @@ public class BugleNotifications {
 
                 if (TextUtils.equals(convInfo.mConversationId, conversationId)) {
                     MessageNotificationState.MessageLineInfo messageLineInfo = convInfo.getLatestMessageLineInfo();
-                    if (messageLineInfo == null || TextUtils.isEmpty(messageLineInfo.mText)) {
+                    if (messageLineInfo == null) {
                         return;
                     }
                     final DatabaseWrapper db = DataModel.get().getDatabase();

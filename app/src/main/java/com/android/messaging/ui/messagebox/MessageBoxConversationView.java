@@ -35,6 +35,7 @@ import com.android.messaging.ui.emoji.EmojiItemPagerAdapter;
 import com.android.messaging.ui.emoji.EmojiPackagePagerAdapter;
 import com.android.messaging.ui.emoji.StickerInfo;
 import com.android.messaging.ui.emoji.ViewPagerDotIndicatorView;
+import com.android.messaging.util.BugleAnalytics;
 import com.android.messaging.util.ImeUtil;
 import com.superapps.util.BackgroundDrawables;
 import com.superapps.util.Dimensions;
@@ -50,11 +51,12 @@ public class MessageBoxConversationView extends FrameLayout {
     @ColorInt private int mPrimaryColor;
     @ColorInt private int mPrimaryColorDark;
 
-    private ImageView mCallImage;
 
     private MessageBoxActivity mActivity;
     private MessageBoxInputActionView mInputActionView;
     private MessageBoxMessageListAdapter mAdapter;
+    private ImageView mCallImage;
+    private RecyclerView mRecyclerView;
     private ViewGroup mEmojiContainer;
     private EditText mInputEditText;
 
@@ -94,12 +96,12 @@ public class MessageBoxConversationView extends FrameLayout {
         mSelfId = data.getSelfId();
         mPhoneNumber = data.getPhoneNumber();
 
-        RecyclerView recyclerView = findViewById(R.id.recycler_view);
+        mRecyclerView = findViewById(R.id.recycler_view);
         LinearLayoutManager llm = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false);
-        recyclerView.setLayoutManager(llm);
+        mRecyclerView.setLayoutManager(llm);
 
         mAdapter = new MessageBoxMessageListAdapter(data);
-        recyclerView.setAdapter(mAdapter);
+        mRecyclerView.setAdapter(mAdapter);
         setTag(mConversationId);
 
         if (TextUtils.isEmpty(mPhoneNumber)) {
@@ -115,6 +117,7 @@ public class MessageBoxConversationView extends FrameLayout {
 
     void addNewMessage(MessageBoxItemData data) {
         mAdapter.addNewIncomingMessage(data);
+        mRecyclerView.scrollToPosition(mAdapter.getItemCount() - 1);
     }
 
     void markAsUnread() {
@@ -260,11 +263,14 @@ public class MessageBoxConversationView extends FrameLayout {
                 ImeUtil.get().hideImeKeyboard(getContext(), mInputEditText);
                 mEmojiContainer.setVisibility(View.VISIBLE);
             }
+
+            BugleAnalytics.logEvent("SMS_PopUp_Emoji_Click");
         });
 
         mInputEditText.setOnClickListener(v -> {
             mEmojiContainer.setVisibility(GONE);
             ImeUtil.get().showImeKeyboard(getContext(), mInputEditText);
+            BugleAnalytics.logEvent("SMS_PopUp_TextField_Click");
         });
     }
 
