@@ -6,15 +6,21 @@ import android.graphics.Color;
 import android.graphics.Point;
 import android.graphics.PorterDuff;
 import android.support.annotation.ColorInt;
+import android.support.annotation.NonNull;
+import android.support.v4.view.PagerAdapter;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.telephony.TelephonyManager;
 import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.view.Display;
+import android.view.KeyEvent;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.android.messaging.Factory;
@@ -24,12 +30,23 @@ import com.android.messaging.datamodel.NoConfirmationSmsSendService;
 import com.android.messaging.datamodel.data.MessageBoxItemData;
 import com.android.messaging.ui.UIIntents;
 import com.android.messaging.ui.customize.PrimaryColors;
+import com.android.messaging.ui.emoji.BaseEmojiInfo;
+import com.android.messaging.ui.emoji.EmojiInfo;
+import com.android.messaging.ui.emoji.EmojiItemPagerAdapter;
+import com.android.messaging.ui.emoji.EmojiPackagePagerAdapter;
+import com.android.messaging.ui.emoji.StickerInfo;
+import com.android.messaging.ui.emoji.ViewPagerDotIndicatorView;
+import com.android.messaging.util.ImeUtil;
 import com.superapps.util.BackgroundDrawables;
 import com.superapps.util.Dimensions;
+import com.superapps.view.ViewPagerFixed;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import static com.android.messaging.datamodel.NoConfirmationSmsSendService.EXTRA_SELF_ID;
 
-public class MessageBoxConversationView extends FrameLayout {
+public class MessageBoxConversationView extends LinearLayout {
 
     @ColorInt private int mPrimaryColor;
     @ColorInt private int mPrimaryColorDark;
@@ -39,6 +56,8 @@ public class MessageBoxConversationView extends FrameLayout {
     private BoxActivity mActivity;
     private MessageBoxInputActionView mInputActionView;
     private MessageBoxListItemAdapter mAdapter;
+    private ViewGroup mEmojiContainer;
+    private EditText mInputEditText;
 
     private String mConversationId;
     private String mSelfId;
@@ -62,6 +81,10 @@ public class MessageBoxConversationView extends FrameLayout {
         initActionBarSimulation();
         initQuickActions();
         mInputActionView = findViewById(R.id.message_compose_view_container);
+        mEmojiContainer = findViewById(R.id.emoji_picker_container);
+        mEmojiContainer.setBackgroundColor(Color.WHITE);
+        mInputEditText = mInputActionView.getComposeEditText();
+        initEmoji();
     }
 
     void bind(MessageBoxItemData data) {
@@ -187,6 +210,59 @@ public class MessageBoxConversationView extends FrameLayout {
         sendIntent.putExtra(EXTRA_SELF_ID, mSelfId);
         sendIntent.putExtra(UIIntents.UI_INTENT_EXTRA_CONVERSATION_ID, mConversationId);
         context.startService(sendIntent);
+    }
+
+    private List<BaseEmojiInfo> getEmojiList() {
+        List<BaseEmojiInfo> result = new ArrayList<>();
+        String[] arrays = getResources().getStringArray(R.array.emoji_faces);
+        for (String array : arrays) {
+            EmojiInfo info = new EmojiInfo();
+            info.mEmoji = new String((Character.toChars(Integer.parseInt(array, 16))));
+            result.add(info);
+        }
+        return result;
+    }
+
+    private void initEmoji() {
+        EmojiPackagePagerAdapter.OnEmojiClickListener listener = new EmojiPackagePagerAdapter.OnEmojiClickListener() {
+            @Override
+            public void emojiClick(EmojiInfo emojiInfo) {
+                if (mInputEditText != null) {
+                    mInputEditText.getText().append(emojiInfo.mEmoji);
+                }
+            }
+
+            @Override
+            public void stickerClickExcludeMagic(@NonNull StickerInfo info) {
+
+            }
+
+            @Override
+            public void deleteEmoji() {
+                mInputEditText.dispatchKeyEvent(new KeyEvent(KeyEvent.ACTION_DOWN, KeyEvent.KEYCODE_DEL));
+            }
+        };
+
+        ViewPagerFixed itemPager = findViewById(R.id.emoji_item_pager);
+        ViewPagerDotIndicatorView dotIndicatorView = findViewById(R.id.dot_indicator_view);
+        itemPager.addOnPageChangeListener(dotIndicatorView);
+        PagerAdapter adapter = new EmojiItemPagerAdapter(getEmojiList(), listener);
+        itemPager.setAdapter(adapter);
+        dotIndicatorView.initDot(adapter.getCount(), 0);
+
+        mInputActionView.getEmojiIcon().setOnClickListener(v -> {
+            if (mEmojiContainer.getVisibility() == View.VISIBLE) {
+                mEmojiContainer.setVisibility(View.INVISIBLE);
+            } else {
+                ImeUtil.get().hideImeKeyboard(getContext(), mInputEditText);
+                mEmojiContainer.setVisibility(View.VISIBLE);
+            }
+        });
+
+        mInputEditText.setOnClickListener(v -> {
+            mEmojiContainer.setVisibility(INVISIBLE);
+            ImeUtil.get().showImeKeyboard(getContext(), mInputEditText);
+        });
     }
 
 }

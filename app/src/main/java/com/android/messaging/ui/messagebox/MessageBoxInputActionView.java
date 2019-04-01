@@ -7,6 +7,7 @@ import android.text.Editable;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 
 import com.android.messaging.R;
@@ -21,6 +22,7 @@ class MessageBoxInputActionView extends LinearLayout {
     private SimIconView mSelfSendIcon;
     private BoxActivity mHost;
     private PlainTextEditText mComposeEditText;
+    private ImageView mEmojiIcon;
 
     public MessageBoxInputActionView(Context context, @Nullable AttributeSet attrs) {
         super(context, attrs, 0);
@@ -38,6 +40,8 @@ class MessageBoxInputActionView extends LinearLayout {
 
         mComposeEditText = findViewById(R.id.compose_message_text);
         mComposeEditText.requestFocus();
+
+        mEmojiIcon = findViewById(R.id.emoji_btn);
     }
 
     String getMessage() {
@@ -45,4 +49,11 @@ class MessageBoxInputActionView extends LinearLayout {
         return editable != null ? editable.toString() : null;
     }
 
+    public PlainTextEditText getComposeEditText() {
+        return mComposeEditText;
+    }
+
+    public ImageView getEmojiIcon() {
+        return mEmojiIcon;
+    }
 }

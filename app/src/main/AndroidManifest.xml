@@ -703,7 +703,7 @@
             android:screenOrientation="portrait"
             android:taskAffinity=".message.box"
             android:theme="@style/Theme.AppCompat.Translucent"
-            android:windowSoftInputMode="stateAlwaysHidden|adjustResize" />
+            android:windowSoftInputMode="stateAlwaysHidden|adjustPan" />
 
         <activity
             android:name=".ui.emoji.EmojiLottieDetailActivity"
@@ -720,7 +720,7 @@
             android:screenOrientation="portrait"
             android:taskAffinity=".message.box"
             android:theme="@style/Theme.AppCompat.Translucent"
-            android:windowSoftInputMode="stateAlwaysHidden|adjustResize" />
+            android:windowSoftInputMode="stateAlwaysHidden|adjustPan" />
 
     </application>
 
