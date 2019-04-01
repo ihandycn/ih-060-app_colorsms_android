@@ -128,7 +128,7 @@ public class DeleteMessageAction extends Action implements Parcelable {
 
             final ArrayList<MessageData> messages = BugleDatabaseOperations.readMessageDatas(db, conversationId, participantId, timeStamp);
 
-            HSLog.d("guodong", "conversationId = " + conversationId +
+            HSLog.d(TAG, "conversationId = " + conversationId +
                     "senderId = " + participantId +
                     "timestamp = " + timeStamp);
 
@@ -136,12 +136,12 @@ public class DeleteMessageAction extends Action implements Parcelable {
             if (!messages.isEmpty()) {
                 for (MessageData messageData : messages) {
                     int count = BugleDatabaseOperations.deleteMessage(db, messageData.getMessageId());
-                    HSLog.d("guodong", "delete count" + count) ;
+                    HSLog.d(TAG, "delete count" + count) ;
 
                     final Uri messageUri = messageData.getSmsMessageUri();
 
 
-                    HSLog.d("guodong", "messageUri" + messageUri) ;
+                    HSLog.d(TAG, "messageUri" + messageUri) ;
 
                     try {
                         if (messageUri != null) {
@@ -156,7 +156,7 @@ public class DeleteMessageAction extends Action implements Parcelable {
                 // We may have changed the conversation list
                 MessagingContentProvider.notifyConversationListChanged();
             } else {
-                HSLog.d("guodong", "destination messages empty");
+                HSLog.d(TAG, "destination messages empty");
             }
         }
         return null;

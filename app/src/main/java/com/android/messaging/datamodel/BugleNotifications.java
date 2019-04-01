@@ -630,7 +630,7 @@ public class BugleNotifications {
         if (MessageBoxSettings.shouldPopUp()) {
             popUpMessageBox(state, conversationId);
         } else {
-            HSLog.d("guodong", "should not pop up messagebox");
+            HSLog.d(TAG, "should not pop up messagebox");
         }
         processAndSend(state, silent, softSound);
         BugleAnalytics.logEvent("SMS_Notifications_Pushed", true);
@@ -648,7 +648,7 @@ public class BugleNotifications {
                     }
                     final DatabaseWrapper db = DataModel.get().getDatabase();
 
-                    HSLog.d("guodong", "participantId = " + convInfo.mParticipantId);
+                    HSLog.d(TAG, "participantId = " + convInfo.mParticipantId);
                     ArrayList<String> recipients = BugleDatabaseOperations.getRecipientsForConversation(db, convInfo.mConversationId);
 
                    String attachmentType = state.getAttachmentType();
@@ -674,7 +674,7 @@ public class BugleNotifications {
                 }
             }
         } else {
-            HSLog.d("guodong", "message notification state is not right");
+            HSLog.d(TAG, "message notification state is not right");
         }
     }
 

@@ -11,6 +11,7 @@ import com.android.messaging.BaseActivity;
 import com.android.messaging.R;
 import com.android.messaging.datamodel.action.DeleteMessageAction;
 import com.android.messaging.datamodel.data.MessageBoxItemData;
+import com.android.messaging.ui.BaseAlertDialog;
 import com.android.messaging.ui.UIIntents;
 import com.android.messaging.ui.emoji.ViewPagerDotIndicatorView;
 import com.android.messaging.util.BugleAnalytics;
@@ -20,7 +21,7 @@ import com.ihs.commons.utils.HSBundle;
 
 import static com.android.messaging.ui.UIIntents.UI_INTENT_EXTRA_MESSAGE_BOX_ITEM;
 
-public class BoxActivity extends BaseActivity implements INotificationObserver,
+public class MessageBoxActivity extends BaseActivity implements INotificationObserver,
         View.OnClickListener, ViewPager.OnPageChangeListener {
 
     public static final String NOTIFICATION_FINISH_MESSAGE_BOX = "finish_message_box";
@@ -49,13 +50,11 @@ public class BoxActivity extends BaseActivity implements INotificationObserver,
 
         mPager.addOnPageChangeListener(this);
         mPager.setAdapter(mPagerAdapter);
-
     }
 
     @Override
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
-
         final MessageBoxItemData data = intent.getParcelableExtra(UI_INTENT_EXTRA_MESSAGE_BOX_ITEM);
 
         boolean isNewConversation = true;
@@ -82,16 +81,16 @@ public class BoxActivity extends BaseActivity implements INotificationObserver,
     }
 
     @Override
+    protected void onResume() {
+        super.onResume();
+        mCurrentConversationView.updateTimestamp();
+    }
+
+    @Override
     public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
 
     }
 
-    /**
-     * This method will be invoked when a new page becomes selected. Animation is not
-     * necessarily complete.
-     *
-     * @param position Position index of the new selected page.
-     */
     @Override
     public void onPageSelected(int position) {
         mCurrentConversationView = (MessageBoxConversationView) mPagerAdapter.getViews().get(position);
@@ -111,10 +110,18 @@ public class BoxActivity extends BaseActivity implements INotificationObserver,
                 break;
 
             case R.id.action_delete:
-                DeleteMessageAction.deleteMessage(mCurrentConversationView.getConversationId(),
-                        mCurrentConversationView.getParticipantId(),
-                        mCurrentConversationView.getOldestReceivedTimestamp());
-                removeCurrentPage();
+                new BaseAlertDialog.Builder(this)
+                        .setTitle(getString(R.string.message_box_delete_alert_description))
+                        .setPositiveButton(R.string.delete_conversation_confirmation_button,
+                                (dialog, button) -> {
+                                    DeleteMessageAction.deleteMessage(mCurrentConversationView.getConversationId(),
+                                            mCurrentConversationView.getParticipantId(),
+                                            mCurrentConversationView.getOldestReceivedTimestamp());
+                                    removeCurrentPage();
+                                })
+                        .setNegativeButton(R.string.delete_conversation_decline_button, null)
+                        .show();
+
                 break;
 
             case R.id.action_close:

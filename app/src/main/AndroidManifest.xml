@@ -702,7 +702,7 @@
             android:theme="@style/WindowBgWhiteAndTranslucent" />
 
         <activity
-            android:name=".ui.messagebox.BoxActivity"
+            android:name=".ui.messagebox.MessageBoxActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:excludeFromRecents="true"
             android:label="@string/app_name"

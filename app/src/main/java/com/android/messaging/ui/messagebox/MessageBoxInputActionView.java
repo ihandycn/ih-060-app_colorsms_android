@@ -1,12 +1,10 @@
 package com.android.messaging.ui.messagebox;
 
 import android.content.Context;
-import android.content.res.TypedArray;
 import android.support.annotation.Nullable;
 import android.text.Editable;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
-import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 
@@ -20,14 +18,14 @@ import com.superapps.util.Dimensions;
 class MessageBoxInputActionView extends LinearLayout {
 
     private SimIconView mSelfSendIcon;
-    private BoxActivity mHost;
+    private MessageBoxActivity mHost;
     private PlainTextEditText mComposeEditText;
     private ImageView mEmojiIcon;
 
     public MessageBoxInputActionView(Context context, @Nullable AttributeSet attrs) {
         super(context, attrs, 0);
 
-        mHost = (BoxActivity) context;
+        mHost = (MessageBoxActivity) context;
         final LayoutInflater inflater = LayoutInflater.from(context);
         inflater.inflate(R.layout.message_box_input_action_layout, this, true);
 

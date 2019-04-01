@@ -1,6 +1,7 @@
 package com.android.messaging.ui.messagebox;
 
 
+import android.graphics.drawable.Drawable;
 import android.support.annotation.ColorInt;
 import android.support.annotation.DrawableRes;
 import android.support.annotation.NonNull;
@@ -14,6 +15,7 @@ import android.widget.TextView;
 
 import com.android.messaging.R;
 import com.android.messaging.datamodel.data.MessageBoxItemData;
+import com.android.messaging.ui.ConversationDrawables;
 import com.android.messaging.ui.UIIntents;
 import com.android.messaging.ui.customize.BubbleDrawables;
 import com.android.messaging.ui.customize.ConversationColors;
@@ -22,9 +24,9 @@ import com.ihs.commons.notificationcenter.HSGlobalNotificationCenter;
 
 import java.util.ArrayList;
 
-import static com.android.messaging.ui.messagebox.BoxActivity.NOTIFICATION_FINISH_MESSAGE_BOX;
+import static com.android.messaging.ui.messagebox.MessageBoxActivity.NOTIFICATION_FINISH_MESSAGE_BOX;
 
-public class MessageBoxListItemAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+public class MessageBoxMessageListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     private static final int ITEM_SMS = 0;
     private static final int ITEM_MMS = 1;
@@ -32,17 +34,13 @@ public class MessageBoxListItemAdapter extends RecyclerView.Adapter<RecyclerView
     private ArrayList<MessageBoxItemData> mDataList = new ArrayList<>();
     private String mConversationId;
 
-
-    @DrawableRes
-    private int mIncomingDrawableRes;
     @ColorInt
     private int mIncomingTextColor;
 
-    MessageBoxListItemAdapter(MessageBoxItemData data) {
+    MessageBoxMessageListAdapter(MessageBoxItemData data) {
         mDataList.add(data);
         mConversationId =  data.getConversationId();
         mIncomingTextColor = ConversationColors.get().getMessageTextColor(true, mConversationId);
-        mIncomingDrawableRes = BubbleDrawables.getSelectedDrawable(true, mConversationId);
     }
 
     void addNewIncomingMessage(MessageBoxItemData data) {
@@ -62,7 +60,8 @@ public class MessageBoxListItemAdapter extends RecyclerView.Adapter<RecyclerView
                     HSGlobalNotificationCenter.sendNotification(NOTIFICATION_FINISH_MESSAGE_BOX);
                 });
                 holder.mContentText.setTextColor(mIncomingTextColor);
-                holder.mContentText.setBackgroundResource(mIncomingDrawableRes);
+                holder.mContentText.setBackground(ConversationDrawables.get().getBubbleDrawable(false, true,
+                        true, false, mConversationId));
                 return holder;
             case ITEM_MMS:
                 View mmsViewItem = LayoutInflater.from(parent.getContext()).inflate(R.layout.message_box_mms_item, parent, false);

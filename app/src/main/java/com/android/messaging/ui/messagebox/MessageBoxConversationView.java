@@ -20,7 +20,6 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.android.messaging.Factory;
@@ -53,9 +52,9 @@ public class MessageBoxConversationView extends FrameLayout {
 
     private ImageView mCallImage;
 
-    private BoxActivity mActivity;
+    private MessageBoxActivity mActivity;
     private MessageBoxInputActionView mInputActionView;
-    private MessageBoxListItemAdapter mAdapter;
+    private MessageBoxMessageListAdapter mAdapter;
     private ViewGroup mEmojiContainer;
     private EditText mInputEditText;
 
@@ -69,7 +68,7 @@ public class MessageBoxConversationView extends FrameLayout {
 
     public MessageBoxConversationView(Context context, AttributeSet attrs) {
         super(context, attrs);
-        mActivity = (BoxActivity) context;
+        mActivity = (MessageBoxActivity) context;
     }
 
     @Override
@@ -99,7 +98,7 @@ public class MessageBoxConversationView extends FrameLayout {
         LinearLayoutManager llm = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false);
         recyclerView.setLayoutManager(llm);
 
-        mAdapter = new MessageBoxListItemAdapter(data);
+        mAdapter = new MessageBoxMessageListAdapter(data);
         recyclerView.setAdapter(mAdapter);
         setTag(mConversationId);
 
@@ -108,6 +107,10 @@ public class MessageBoxConversationView extends FrameLayout {
         }
         mOldestReceivedTimestamp = data.getReceivedTimestamp();
         mParticipantId = data.getParticipantId();
+    }
+
+    void updateTimestamp() {
+        mAdapter.notifyDataSetChanged();
     }
 
     void addNewMessage(MessageBoxItemData data) {

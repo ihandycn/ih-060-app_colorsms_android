@@ -1119,7 +1119,7 @@ public class BugleDatabaseOperations {
 
             messages = new ArrayList<>(cursor.getCount());
 
-            HSLog.d("guodong", "read cursor count = " + cursor.getCount());
+            HSLog.d(TAG, "read cursor count = " + cursor.getCount());
 
             if (cursor.moveToFirst()) {
                 do {
@@ -1127,7 +1127,7 @@ public class BugleDatabaseOperations {
                     message.bind(cursor);
                     messages.add(message);
 
-                    HSLog.d("guodong", "add new message");
+                    HSLog.d(TAG, "add new message");
                 } while (cursor.moveToNext());
             }
         } finally {
@@ -1136,7 +1136,7 @@ public class BugleDatabaseOperations {
             }
         }
 
-        HSLog.d("guodong", "messages count = " + messages.size());
+        HSLog.d(TAG, "messages count = " + messages.size());
         return messages;
     }
 

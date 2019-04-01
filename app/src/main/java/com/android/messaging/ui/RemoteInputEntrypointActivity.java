@@ -24,7 +24,7 @@ import com.android.messaging.datamodel.NoConfirmationSmsSendService;
 import com.android.messaging.util.LogUtil;
 import com.ihs.commons.notificationcenter.HSGlobalNotificationCenter;
 
-import static com.android.messaging.ui.messagebox.BoxActivity.NOTIFICATION_FINISH_MESSAGE_BOX;
+import static com.android.messaging.ui.messagebox.MessageBoxActivity.NOTIFICATION_FINISH_MESSAGE_BOX;
 
 public class RemoteInputEntrypointActivity extends BaseBugleActivity {
     private static final String TAG = LogUtil.BUGLE_TAG;
