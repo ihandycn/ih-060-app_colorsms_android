@@ -13,7 +13,9 @@ import com.android.messaging.util.CommonUtils;
 import com.android.messaging.util.OsUtil;
 import com.android.messaging.util.PhoneUtils;
 import com.ihs.commons.config.HSConfig;
+import com.superapps.util.BackgroundDrawables;
 import com.superapps.util.Calendars;
+import com.superapps.util.Dimensions;
 import com.superapps.util.Toasts;
 
 public class WelcomeSetAsDefaultActivity extends AppCompatActivity {
@@ -26,6 +28,8 @@ public class WelcomeSetAsDefaultActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_welcome_set_as_default);
 
+        findViewById(R.id.welcome_set_default_button).setBackgroundDrawable(
+                BackgroundDrawables.createBackgroundDrawable(getResources().getColor(R.color.welcome_button_dark_green), Dimensions.pxFromDp(6.7f), true));
         findViewById(R.id.welcome_set_default_button).setOnClickListener(v -> {
             final Intent intent = UIIntents.get().getChangeDefaultSmsAppIntent(WelcomeSetAsDefaultActivity.this);
             startActivityForResult(intent, REQUEST_SET_DEFAULT_SMS_APP);
