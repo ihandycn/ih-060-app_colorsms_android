@@ -53,7 +53,6 @@ import com.android.messaging.datamodel.data.ParticipantData;
 import com.android.messaging.receiver.NotificationReceiver;
 import com.android.messaging.sms.MmsSmsUtils;
 import com.android.messaging.ui.messagebox.BoxActivity;
-import com.android.messaging.ui.messagebox.MessageBoxActivity;
 import com.android.messaging.ui.appsettings.ApnEditorActivity;
 import com.android.messaging.ui.appsettings.ApnSettingsActivity;
 import com.android.messaging.ui.appsettings.SettingAdvancedActivity;
@@ -80,7 +79,6 @@ import com.android.messaging.util.ConversationIdSet;
 import com.android.messaging.util.LogUtil;
 import com.android.messaging.util.UiUtils;
 import com.android.messaging.util.UriUtil;
-import com.superapps.util.Toasts;
 
 /**
  * A central repository of Intents used to start activities.

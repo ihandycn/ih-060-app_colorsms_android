@@ -21,9 +21,10 @@ import android.telephony.TelephonyManager;
 
 import com.android.messaging.datamodel.BugleNotifications;
 import com.android.messaging.datamodel.NoConfirmationSmsSendService;
-import com.android.messaging.ui.messagebox.MessageBoxActivity;
 import com.android.messaging.util.LogUtil;
 import com.ihs.commons.notificationcenter.HSGlobalNotificationCenter;
+
+import static com.android.messaging.ui.messagebox.BoxActivity.NOTIFICATION_FINISH_MESSAGE_BOX;
 
 public class RemoteInputEntrypointActivity extends BaseBugleActivity {
     private static final String TAG = LogUtil.BUGLE_TAG;
@@ -55,7 +56,7 @@ public class RemoteInputEntrypointActivity extends BaseBugleActivity {
 
             startService(sendIntent);
             setResult(RESULT_OK);
-            HSGlobalNotificationCenter.sendNotification(MessageBoxActivity.NOTIFICATION_FINISH_MESSAGE_BOX);
+            HSGlobalNotificationCenter.sendNotification(NOTIFICATION_FINISH_MESSAGE_BOX);
         } else {
             LogUtil.w(TAG, "Unrecognized intent action: " + action);
             setResult(RESULT_CANCELED);

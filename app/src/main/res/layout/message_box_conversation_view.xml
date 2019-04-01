@@ -7,10 +7,6 @@
     android:orientation="vertical"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <FrameLayout
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1">
 
         <android.support.constraint.ConstraintLayout
             android:layout_width="match_parent"
@@ -103,7 +99,6 @@
             <com.superapps.view.TypefacedTextView
                 android:id="@+id/action_delete"
                 style="@style/MessageBoxActionTextTheme"
-                app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="@id/guideline_start"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/message_view"
@@ -112,7 +107,6 @@
             <com.superapps.view.TypefacedTextView
                 android:id="@+id/action_unread"
                 style="@style/MessageBoxActionTextTheme"
-                app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="@id/guideline_end"
                 app:layout_constraintStart_toStartOf="@id/guideline_start"
                 app:layout_constraintTop_toBottomOf="@id/message_view"
@@ -121,7 +115,6 @@
             <com.superapps.view.TypefacedTextView
                 android:id="@+id/action_open"
                 style="@style/MessageBoxActionTextTheme"
-                app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="@id/guideline_end"
                 app:layout_constraintTop_toBottomOf="@id/message_view"
@@ -144,18 +137,21 @@
                 android:layout_width="2px"
                 android:layout_height="20dp"
                 android:background="#e0e4e7" />
-        </android.support.constraint.ConstraintLayout>
-    </FrameLayout>
 
-    <include
-        android:id="@+id/emoji_picker_container"
-        layout="@layout/emoji_page_item_layout"
-        android:layout_width="match_parent"
-        android:layout_height="197dp"
-        android:layout_gravity="bottom"
-        android:background="@color/white"
-        android:visibility="gone"
-        tools:ignore="IncludeLayoutParam" />
+            <include
+                android:id="@+id/emoji_picker_container"
+                layout="@layout/emoji_page_item_layout"
+                android:layout_width="match_parent"
+                android:layout_height="197dp"
+                android:layout_gravity="bottom"
+                android:background="@color/white"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/action_delete"
+                android:visibility="gone" />
+
+        </android.support.constraint.ConstraintLayout>
+
 
 </com.android.messaging.ui.messagebox.MessageBoxConversationView>
 

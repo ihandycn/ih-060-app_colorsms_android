@@ -46,7 +46,7 @@ import java.util.List;
 
 import static com.android.messaging.datamodel.NoConfirmationSmsSendService.EXTRA_SELF_ID;
 
-public class MessageBoxConversationView extends LinearLayout {
+public class MessageBoxConversationView extends FrameLayout {
 
     @ColorInt private int mPrimaryColor;
     @ColorInt private int mPrimaryColorDark;
@@ -252,7 +252,7 @@ public class MessageBoxConversationView extends LinearLayout {
 
         mInputActionView.getEmojiIcon().setOnClickListener(v -> {
             if (mEmojiContainer.getVisibility() == View.VISIBLE) {
-                mEmojiContainer.setVisibility(View.INVISIBLE);
+                mEmojiContainer.setVisibility(View.GONE);
             } else {
                 ImeUtil.get().hideImeKeyboard(getContext(), mInputEditText);
                 mEmojiContainer.setVisibility(View.VISIBLE);
@@ -260,7 +260,7 @@ public class MessageBoxConversationView extends LinearLayout {
         });
 
         mInputEditText.setOnClickListener(v -> {
-            mEmojiContainer.setVisibility(INVISIBLE);
+            mEmojiContainer.setVisibility(GONE);
             ImeUtil.get().showImeKeyboard(getContext(), mInputEditText);
         });
     }

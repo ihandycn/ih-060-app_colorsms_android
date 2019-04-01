@@ -22,7 +22,7 @@ import com.ihs.commons.notificationcenter.HSGlobalNotificationCenter;
 
 import java.util.ArrayList;
 
-import static com.android.messaging.ui.messagebox.MessageBoxActivity.NOTIFICATION_FINISH_MESSAGE_BOX;
+import static com.android.messaging.ui.messagebox.BoxActivity.NOTIFICATION_FINISH_MESSAGE_BOX;
 
 public class MessageBoxListItemAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 

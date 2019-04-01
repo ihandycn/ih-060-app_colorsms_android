@@ -694,16 +694,6 @@
             android:excludeFromRecents="true"
             android:screenOrientation="portrait"
             android:theme="@style/BaseSettingsActivity" />
-        <activity
-            android:name=".ui.messagebox.MessageBoxActivity"
-            android:configChanges="keyboardHidden|orientation|screenSize"
-            android:excludeFromRecents="true"
-            android:label="@string/app_name"
-            android:launchMode="singleTop"
-            android:screenOrientation="portrait"
-            android:taskAffinity=".message.box"
-            android:theme="@style/Theme.AppCompat.Translucent"
-            android:windowSoftInputMode="stateAlwaysHidden|adjustPan" />
 
         <activity
             android:name=".ui.emoji.EmojiLottieDetailActivity"
@@ -720,7 +710,7 @@
             android:screenOrientation="portrait"
             android:taskAffinity=".message.box"
             android:theme="@style/Theme.AppCompat.Translucent"
-            android:windowSoftInputMode="stateAlwaysHidden|adjustPan" />
+            android:windowSoftInputMode="stateAlwaysHidden|adjustResize" />
 
     </application>
 

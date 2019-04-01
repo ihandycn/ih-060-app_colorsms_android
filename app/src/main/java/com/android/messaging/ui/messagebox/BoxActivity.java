@@ -19,10 +19,11 @@ import com.ihs.commons.notificationcenter.INotificationObserver;
 import com.ihs.commons.utils.HSBundle;
 
 import static com.android.messaging.ui.UIIntents.UI_INTENT_EXTRA_MESSAGE_BOX_ITEM;
-import static com.android.messaging.ui.messagebox.MessageBoxActivity.NOTIFICATION_FINISH_MESSAGE_BOX;
 
 public class BoxActivity extends BaseActivity implements INotificationObserver,
         View.OnClickListener, ViewPager.OnPageChangeListener {
+
+    public static final String NOTIFICATION_FINISH_MESSAGE_BOX = "finish_message_box";
 
     private ViewPager mPager;
     private DynamicalPagerAdapter mPagerAdapter;
@@ -46,9 +47,9 @@ public class BoxActivity extends BaseActivity implements INotificationObserver,
         mPagerAdapter.addView(view);
         mCurrentConversationView = view;
 
-        mPager.addOnPageChangeListener(mIndicator);
         mPager.addOnPageChangeListener(this);
         mPager.setAdapter(mPagerAdapter);
+
     }
 
     @Override
@@ -73,6 +74,9 @@ public class BoxActivity extends BaseActivity implements INotificationObserver,
             MessageBoxConversationView newItem = (MessageBoxConversationView) LayoutInflater.from(this).inflate(R.layout.message_box_conversation_view, null, false);
             newItem.bind(data);
             mPagerAdapter.addView(newItem);
+            mPager.removeOnPageChangeListener(mIndicator);
+            mIndicator.initDot(mPagerAdapter.getCount(), mPager.getCurrentItem());
+            mPager.addOnPageChangeListener(mIndicator);
             mPagerAdapter.notifyDataSetChanged();
         }
     }
@@ -110,6 +114,7 @@ public class BoxActivity extends BaseActivity implements INotificationObserver,
                 DeleteMessageAction.deleteMessage(mCurrentConversationView.getConversationId(),
                         mCurrentConversationView.getParticipantId(),
                         mCurrentConversationView.getOldestReceivedTimestamp());
+                removeCurrentPage();
                 break;
 
             case R.id.action_close:
@@ -125,7 +130,21 @@ public class BoxActivity extends BaseActivity implements INotificationObserver,
 
             case R.id.self_send_icon:
                 mCurrentConversationView.replyMessage();
+                removeCurrentPage();
                 break;
+        }
+    }
+
+    private void removeCurrentPage() {
+        int position  = mPager.getCurrentItem();
+        if (position == mPagerAdapter.getCount() - 1) {
+            finish();
+        } else {
+            mPagerAdapter.removeView(mPager, mCurrentConversationView);
+            mPager.removeOnPageChangeListener(mIndicator);
+            mIndicator.initDot(mPagerAdapter.getCount(), position);
+            mPager.setCurrentItem(position);
+            mPager.addOnPageChangeListener(mIndicator);
         }
     }
 
