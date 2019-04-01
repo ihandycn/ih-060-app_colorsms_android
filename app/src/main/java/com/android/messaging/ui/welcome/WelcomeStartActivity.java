@@ -22,7 +22,6 @@ import com.android.messaging.ui.UIIntents;
 import com.android.messaging.ui.WebViewActivity;
 import com.android.messaging.util.BugleAnalytics;
 import com.android.messaging.util.BugleAnimUtils;
-import com.android.messaging.util.CommonUtils;
 import com.android.messaging.util.OsUtil;
 import com.android.messaging.util.PhoneUtils;
 import com.android.messaging.util.view.AdvancedPageIndicator;
@@ -30,7 +29,6 @@ import com.android.messaging.util.view.IndicatorMark;
 import com.ihs.commons.config.HSConfig;
 import com.ihs.commons.utils.HSLog;
 import com.superapps.util.BackgroundDrawables;
-import com.superapps.util.Calendars;
 import com.superapps.util.Dimensions;
 import com.superapps.util.Navigations;
 import com.superapps.util.Preferences;
@@ -78,6 +76,7 @@ public class WelcomeStartActivity extends AppCompatActivity implements View.OnCl
     private boolean mIsViewPagerAutoSlide = true;
     private boolean mCanViewPagerDrag = true;
     private float mViewPagerEndDragStartX;
+    private boolean mIsActivityPaused = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -107,6 +106,37 @@ public class WelcomeStartActivity extends AppCompatActivity implements View.OnCl
 
         mAllowBackKey = HSConfig.optBoolean(true, "Application", "StartPageAllowBack");
         BugleAnalytics.logEvent("SMS_ActiveUsers", true);
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        BugleAnalytics.logEvent("Start_WelcomePage_Show", true);
+    }
+
+    @Override protected void onResume() {
+        super.onResume();
+        mIsActivityPaused = false;
+    }
+
+    @Override protected void onPause() {
+        super.onPause();
+        mIsActivityPaused = false;
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        cancelForwardAnimationLoadTask();
+        cancelBackwardAnimationLoadTask();
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (mAllowBackKey) {
+            super.onBackPressed();
+            BugleAnalytics.logEvent("Start_DetailPage_Back", true);
+        }
     }
 
     private void initTextPager() {
@@ -155,6 +185,7 @@ public class WelcomeStartActivity extends AppCompatActivity implements View.OnCl
                         mForwardLottieView.setProgress(LOTTIE_ANIMATION_FORWARD_POSITION[positionAbsolute]);
                     }
                     mViewPagerCurrentPosition = positionAbsolute;
+                    BugleAnalytics.logEvent("Start_DetailPage_Slide");
                 }
 
                 @Override
@@ -193,6 +224,10 @@ public class WelcomeStartActivity extends AppCompatActivity implements View.OnCl
                         findViewById(R.id.root_view).setVisibility(View.VISIBLE);
 
                         mForwardLottieView.post(() -> playForwardDropAnimation(0));
+
+                        if (!mIsActivityPaused) {
+                            BugleAnalytics.logEvent("Start_DetailPage_Show");
+                        }
                     });
         } catch (RejectedExecutionException e) {
             e.printStackTrace();
@@ -371,13 +406,6 @@ public class WelcomeStartActivity extends AppCompatActivity implements View.OnCl
         }, 2000);
     }
 
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        cancelForwardAnimationLoadTask();
-        cancelBackwardAnimationLoadTask();
-    }
-
     private void cancelForwardAnimationLoadTask() {
         if (mForwardAnimationLoadTask != null) {
             mForwardAnimationLoadTask.cancel();
@@ -393,24 +421,10 @@ public class WelcomeStartActivity extends AppCompatActivity implements View.OnCl
     }
 
     @Override
-    public void onStart() {
-        super.onStart();
-        BugleAnalytics.logEvent("SMS_Start_WelcomePage_Show", true);
-    }
-
-    @Override
-    public void onBackPressed() {
-        if (mAllowBackKey) {
-            super.onBackPressed();
-            BugleAnalytics.logEvent("SMS_Start_WelcomePage_Back", true);
-        }
-    }
-
-    @Override
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.welcome_start_button:
-                BugleAnalytics.logEvent("SMS_Start_WelcomePage_BtnClick", true);
+                BugleAnalytics.logEvent("Start_DetailPage_Click", true, "Page", String.valueOf(mViewPagerCurrentPosition));
                 Preferences.getDefault().putBoolean(PREF_KEY_START_BUTTON_CLICKED, true);
                 final Intent intent = UIIntents.get().getChangeDefaultSmsAppIntent(WelcomeStartActivity.this);
                 startActivityForResult(intent, REQUEST_SET_DEFAULT_SMS_APP);
@@ -498,14 +512,12 @@ public class WelcomeStartActivity extends AppCompatActivity implements View.OnCl
                 } else {
                     UIIntents.get().launchWelcomePermissionActivity(this);
                 }
-                BugleAnalytics.logEvent("SMS_Start_SetDefault_Success", true);
-                if (Calendars.isSameDay(System.currentTimeMillis(), CommonUtils.getAppInstallTimeMillis())) {
-                    BugleAnalytics.logEvent("SMS_Start_SetDefault_Success_NewUser", true);
-                }
+                BugleAnalytics.logEvent("Start_SetAsDefault_Success", true, "step", "detail page");
                 finish();
             } else {
-                Navigations.startActivitySafely(WelcomeStartActivity.this,
-                        new Intent(WelcomeStartActivity.this, WelcomeSetAsDefaultActivity.class));
+                Intent intent = new Intent(WelcomeStartActivity.this, WelcomeSetAsDefaultActivity.class);
+                intent.putExtra(WelcomeSetAsDefaultActivity.EXTRA_FROM_WELCOME_START, true);
+                Navigations.startActivitySafely(WelcomeStartActivity.this, intent);
                 finish();
             }
         }
