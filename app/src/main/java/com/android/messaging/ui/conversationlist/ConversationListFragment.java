@@ -35,6 +35,7 @@ import android.view.ViewGroup.MarginLayoutParams;
 import android.view.ViewPropertyAnimator;
 import android.widget.AbsListView;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 
 import com.android.messaging.R;
 import com.android.messaging.ad.AdPlacement;
@@ -67,6 +68,7 @@ import com.superapps.util.IntegerBuckets;
 import com.superapps.util.Preferences;
 
 import net.appcloudbox.ads.base.ContainerView.AcbContentLayout;
+import net.appcloudbox.ads.base.ContainerView.AcbNativeAdContainerView;
 import net.appcloudbox.ads.common.utils.AcbError;
 import net.appcloudbox.ads.expressad.AcbExpressAdView;
 
@@ -337,6 +339,23 @@ public class ConversationListFragment extends Fragment implements ConversationLi
                 .setDescriptionId(R.id.banner_des)
         );
         expressAdView.setAutoSwitchAd(AcbExpressAdView.AutoSwitchAd_None);
+        expressAdView.setOnHierarchyChangeListener(new ViewGroup.OnHierarchyChangeListener() {
+            @Override public void onChildViewAdded(View parent, View child) {
+                try {
+                    if (child instanceof RelativeLayout
+                            && ((RelativeLayout) child).getChildCount() == 1
+                            && ((RelativeLayout) child).getChildAt(0) instanceof AcbNativeAdContainerView) {
+                        AcbNativeAdContainerView nativeAdContainerView = (AcbNativeAdContainerView) ((RelativeLayout) child).getChildAt(0);
+                        nativeAdContainerView.getChildAt(1).setVisibility(View.GONE);
+                    }
+                } catch (Exception e) {
+                }
+            }
+
+            @Override public void onChildViewRemoved(View parent, View child) {
+
+            }
+        });
         expressAdView.setExpressAdViewListener(new AcbExpressAdView.AcbExpressAdViewListener() {
             @Override
             public void onAdShown(AcbExpressAdView acbExpressAdView) {
