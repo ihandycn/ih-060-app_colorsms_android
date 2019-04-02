@@ -27,6 +27,15 @@ import static com.android.messaging.ui.UIIntents.UI_INTENT_EXTRA_MESSAGE_BOX_ITE
 public class MessageBoxActivity extends AppCompatActivity implements INotificationObserver,
         View.OnClickListener, ViewPager.OnPageChangeListener {
 
+    private static final String BACK = "back";
+    private static final String OPEN = "open_btn";
+    private static final String HOME = "home";
+    private static final String CLOSE = "close";
+    private static final String DELETE = "delete";
+    private static final String UNREAD = "unread";
+    private static final String REPLY = "reply";
+    private static final String CLICK_CONTENT = "click_content";
+
     public static final String NOTIFICATION_FINISH_MESSAGE_BOX = "finish_message_box";
 
     private static final boolean DEBUGGING_MULTI_CONVERSATIONS = false && BuildConfig.DEBUG;
@@ -56,6 +65,7 @@ public class MessageBoxActivity extends AppCompatActivity implements INotificati
 
         mCurrentConversationView = view;
         MessageBoxAnalytics.setIsMultiConversation(false);
+        HSGlobalNotificationCenter.addObserver(NOTIFICATION_FINISH_MESSAGE_BOX, this);
     }
 
     @Override
@@ -116,7 +126,7 @@ public class MessageBoxActivity extends AppCompatActivity implements INotificati
 
     @Override
     public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-        if (!mLogScrollPaged) {
+        if (!mLogScrollPaged && positionOffset > 0f) {
             BugleAnalytics.logEvent("SMS_PopUp_MultiUser_Slide");
             mLogScrollPaged = true;
         }
@@ -150,7 +160,7 @@ public class MessageBoxActivity extends AppCompatActivity implements INotificati
                                     DeleteMessageAction.deleteMessage(mCurrentConversationView.getConversationId(),
                                             mCurrentConversationView.getParticipantId(),
                                             mCurrentConversationView.getOldestReceivedTimestamp());
-                                    removeCurrentPage();
+                                    removeCurrentPage(DELETE);
                                     BugleAnalytics.logEvent("SMS_PopUp_Delete_Alert_Delete");
                                 })
                         .setNegativeButton(R.string.delete_conversation_decline_button,
@@ -159,31 +169,31 @@ public class MessageBoxActivity extends AppCompatActivity implements INotificati
                 MessageBoxAnalytics.logEvent("SMS_PopUp_Delete_Click");
                 break;
             case R.id.action_close:
-                finish();
+                finish(CLOSE);
                 break;
             case R.id.action_unread:
                 mCurrentConversationView.markAsUnread();
                 Toasts.showToast(R.string.message_box_mark_as_unread);
-                removeCurrentPage();
+                removeCurrentPage(UNREAD);
                 MessageBoxAnalytics.logEvent("SMS_PopUp_Unread_Click");
                 break;
             case R.id.action_open:
                 UIIntents.get().launchConversationActivity(this, mCurrentConversationView.getConversationId(), null);
-                finish();
+                finish(OPEN);
                 MessageBoxAnalytics.logEvent("SMS_PopUp_Open_Click");
                 break;
 
             case R.id.self_send_icon:
                 mCurrentConversationView.replyMessage();
-                removeCurrentPage();
+                removeCurrentPage(REPLY);
                 break;
         }
     }
 
-    private void removeCurrentPage() {
+    private void removeCurrentPage(String source) {
         int position  = mPager.getCurrentItem();
         if (position == mPagerAdapter.getCount() - 1) {
-            finish();
+            finish(source);
         } else {
             mPager.removeOnPageChangeListener(mIndicator);
             mPagerAdapter.removeView(mPager, mCurrentConversationView);
@@ -199,14 +209,27 @@ public class MessageBoxActivity extends AppCompatActivity implements INotificati
     @Override
     public void onReceive(String s, HSBundle hsBundle) {
         if (NOTIFICATION_FINISH_MESSAGE_BOX.equals(s)) {
-            finish();
+            finish(CLICK_CONTENT);
+        }
+    }
+
+    @Override
+    public void onBackPressed() {
+        finish(BACK);
+    }
+
+    private void finish(String source) {
+        finish();
+        if (MessageBoxAnalytics.getIsMultiConversation()) {
+            BugleAnalytics.logEvent("SMS_PopUp_Close_Multifunction_MultiUser", "closeType", source);
+        } else {
+            BugleAnalytics.logEvent("SMS_PopUp_Close_Multifunction_SingleUser", "closeType", source);
         }
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        BugleAnalytics.logEvent("SMS_PopUp_Close", true);
         BugleNotifications.markAllMessagesAsSeen();
         HSGlobalNotificationCenter.removeObserver(this);
     }

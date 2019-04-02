@@ -51,7 +51,6 @@ public class MessageBoxConversationView extends FrameLayout {
     @ColorInt private int mPrimaryColor;
     @ColorInt private int mPrimaryColorDark;
 
-
     private MessageBoxActivity mActivity;
     private MessageBoxInputActionView mInputActionView;
     private MessageBoxMessageListAdapter mAdapter;
@@ -67,6 +66,7 @@ public class MessageBoxConversationView extends FrameLayout {
     private long mOldestReceivedTimestamp;
 
     private boolean mMarkAsUnread;
+    private int mInputEmojiCount;
 
     public MessageBoxConversationView(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -216,6 +216,22 @@ public class MessageBoxConversationView extends FrameLayout {
         sendIntent.putExtra(EXTRA_SELF_ID, mSelfId);
         sendIntent.putExtra(UIIntents.UI_INTENT_EXTRA_CONVERSATION_ID, mConversationId);
         context.startService(sendIntent);
+
+        boolean hasEmoji = false;
+        boolean hasSms = false;
+        if (mInputEditText.getText() != null) {
+            hasEmoji = mInputEmojiCount > 0;
+            hasSms = mInputEditText.getText().length() > mInputEmojiCount;
+        }
+        String type = "";
+        if (hasSms) {
+            type += "sms";
+        }
+        if (hasEmoji) {
+            type += "emoji";
+        }
+        BugleAnalytics.logEvent("SMS_PopUp_Reply_BtnClick_Multifunction",
+                "type", type, "type2", MessageBoxAnalytics.getConversationType());
     }
 
     private List<BaseEmojiInfo> getEmojiList() {
@@ -235,6 +251,7 @@ public class MessageBoxConversationView extends FrameLayout {
             public void emojiClick(EmojiInfo emojiInfo) {
                 if (mInputEditText != null) {
                     mInputEditText.getText().append(emojiInfo.mEmoji);
+                    mInputEmojiCount++;
                 }
             }
 
@@ -246,6 +263,7 @@ public class MessageBoxConversationView extends FrameLayout {
             @Override
             public void deleteEmoji() {
                 mInputEditText.dispatchKeyEvent(new KeyEvent(KeyEvent.ACTION_DOWN, KeyEvent.KEYCODE_DEL));
+                mInputEmojiCount--;
             }
         };
 
@@ -264,13 +282,13 @@ public class MessageBoxConversationView extends FrameLayout {
                 mEmojiContainer.setVisibility(View.VISIBLE);
             }
 
-            BugleAnalytics.logEvent("SMS_PopUp_Emoji_Click");
+            MessageBoxAnalytics.logEvent("SMS_PopUp_Emoji_Click");
         });
 
         mInputEditText.setOnClickListener(v -> {
             mEmojiContainer.setVisibility(GONE);
             ImeUtil.get().showImeKeyboard(getContext(), mInputEditText);
-            BugleAnalytics.logEvent("SMS_PopUp_TextField_Click");
+            MessageBoxAnalytics.logEvent("SMS_PopUp_TextField_Click");
         });
     }
 
