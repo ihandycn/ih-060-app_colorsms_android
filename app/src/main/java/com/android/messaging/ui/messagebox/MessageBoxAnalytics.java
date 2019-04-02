@@ -14,7 +14,7 @@ public class MessageBoxAnalytics {
         sIsMultiConversation = isMultiConversation;
     }
 
-   static String getConversationType() {
+    static String getConversationType() {
         return sIsMultiConversation ? "multicontact" : "singlecontact";
     }
 

@@ -46,6 +46,11 @@ public class MessageBoxActivity extends AppCompatActivity implements INotificati
 
     private MessageBoxConversationView mCurrentConversationView;
 
+    private int mMessagesNum = 1;
+    private int mContactsNum = 1;
+    private boolean mHasSms;
+    private boolean mHasMms;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -66,6 +71,8 @@ public class MessageBoxActivity extends AppCompatActivity implements INotificati
         mCurrentConversationView = view;
         MessageBoxAnalytics.setIsMultiConversation(false);
         HSGlobalNotificationCenter.addObserver(NOTIFICATION_FINISH_MESSAGE_BOX, this);
+
+        recordMessageType(data);
     }
 
     @Override
@@ -102,7 +109,11 @@ public class MessageBoxActivity extends AppCompatActivity implements INotificati
             mPager.addOnPageChangeListener(mIndicator);
 
             MessageBoxAnalytics.setIsMultiConversation(true);
+            mContactsNum++;
         }
+        mMessagesNum++;
+
+        recordMessageType(data);
     }
 
     @Override
@@ -227,11 +238,33 @@ public class MessageBoxActivity extends AppCompatActivity implements INotificati
         }
     }
 
+    private void recordMessageType(MessageBoxItemData data) {
+        boolean isSms = !TextUtils.isEmpty(data.getContent());
+        if (isSms) {
+            mHasSms = true;
+        } else {
+            mHasMms = true;
+        }
+    }
+
     @Override
     protected void onDestroy() {
         super.onDestroy();
         BugleNotifications.markAllMessagesAsSeen();
         HSGlobalNotificationCenter.removeObserver(this);
+
+        String messageType = "";
+        if (mHasMms) {
+            messageType += "mms";
+        }
+        if (mHasSms) {
+            messageType += "sms";
+        }
+
+        BugleAnalytics.logEvent("SMS_PopUp_Show_Multifunction",
+                "msgNum", String.valueOf(mMessagesNum),
+                "contactNum", String.valueOf(mContactsNum) ,
+                "message type", messageType);
     }
 
 }
