@@ -16,17 +16,15 @@
 
         <ImageView
             android:id="@+id/welcome_set_default_banner"
-            android:layout_width="0dp"
+            android:layout_width="wrap_content"
             android:src="@drawable/welcome_set_as_default_banner"
             android:scaleType="centerCrop"
-            android:layout_height="0dp"
+            android:layout_height="wrap_content"
             app:layout_constraintBottom_toTopOf="@+id/welcome_set_default_title"
-            app:layout_constraintDimensionRatio="858:758"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_chainStyle="packed"
-            app:layout_constraintWidth_percent="0.794"/>
+            app:layout_constraintVertical_chainStyle="packed"/>
 
         <com.superapps.view.TypefacedTextView
             android:id="@+id/welcome_set_default_title"
@@ -37,7 +35,6 @@
             android:textColor="#282a31"
             android:textSize="24sp"
             android:gravity="center_horizontal"
-            android:layout_marginTop="22dp"
             android:text="@string/welcome_set_default_title"
             app:layout_constraintBottom_toTopOf="@+id/welcome_guide_viewpager_body"
             app:layout_constraintLeft_toLeftOf="parent"
@@ -55,6 +52,7 @@
             android:text="@string/welcome_set_as_default_title"
             android:textColor="#494b4f"
             android:textSize="13.3sp"
+            android:maxLines="4"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
@@ -72,6 +70,7 @@
         android:textColor="#fff"
         android:textSize="14sp"
         android:layout_height="0dp"
+        android:paddingTop="3dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintDimensionRatio="164:44"
         app:layout_constraintLeft_toLeftOf="parent"
