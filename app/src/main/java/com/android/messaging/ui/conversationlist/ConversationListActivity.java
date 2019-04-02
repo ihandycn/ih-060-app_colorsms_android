@@ -133,9 +133,7 @@ public class ConversationListActivity extends AbstractConversationListActivity
     protected void onCreate(final Bundle savedInstanceState) {
         Trace.beginSection("ConversationListActivity.onCreate");
         super.onCreate(savedInstanceState);
-        if (Factory.sIsRedirectToWelcome) {
-            return;
-        }
+
         mIsRealCreate = true;
         setContentView(R.layout.conversation_list_activity);
         configAppBar();

@@ -2,35 +2,45 @@ package com.android.messaging.ui.welcome;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.widget.Toast;
 
-import com.android.messaging.BaseActivity;
 import com.android.messaging.Factory;
 import com.android.messaging.R;
 import com.android.messaging.ui.UIIntents;
 import com.android.messaging.util.BugleAnalytics;
-import com.android.messaging.util.CommonUtils;
 import com.android.messaging.util.OsUtil;
 import com.android.messaging.util.PhoneUtils;
 import com.ihs.commons.config.HSConfig;
-import com.superapps.util.Calendars;
+import com.superapps.util.BackgroundDrawables;
+import com.superapps.util.Dimensions;
 import com.superapps.util.Toasts;
 
-public class WelcomeSetAsDefaultActivity extends BaseActivity {
+public class WelcomeSetAsDefaultActivity extends AppCompatActivity {
+
+    public static final String EXTRA_FROM_WELCOME_START = "extra_from_welcome_start";
     private static final int REQUEST_SET_DEFAULT_SMS_APP = 3;
     private boolean mAllowBackKey = true;
+    private boolean mIsFromWelcomeStart = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_welcome_set_as_default);
 
+        if (getIntent() != null) {
+            mIsFromWelcomeStart = getIntent().getBooleanExtra(EXTRA_FROM_WELCOME_START, false);
+        }
+
+        findViewById(R.id.welcome_set_default_button).setBackgroundDrawable(
+                BackgroundDrawables.createBackgroundDrawable(getResources().getColor(R.color.welcome_button_dark_green), Dimensions.pxFromDp(6.7f), true));
         findViewById(R.id.welcome_set_default_button).setOnClickListener(v -> {
             final Intent intent = UIIntents.get().getChangeDefaultSmsAppIntent(WelcomeSetAsDefaultActivity.this);
             startActivityForResult(intent, REQUEST_SET_DEFAULT_SMS_APP);
-            BugleAnalytics.logEvent("SMS_Start_SetDefaultPage_Btnclick", true);
-            if (Calendars.isSameDay(System.currentTimeMillis(), CommonUtils.getAppInstallTimeMillis())) {
-                BugleAnalytics.logEvent("SMS_Start_SetDefaultPage_Btnclick_NewUser", true);
+            if (mIsFromWelcomeStart) {
+                BugleAnalytics.logEvent("Start_SetAsDefault_Click", true);
+            } else {
+                BugleAnalytics.logEvent("SetAsDefault_GuidePage_Click", true);
             }
         });
 
@@ -41,9 +51,10 @@ public class WelcomeSetAsDefaultActivity extends BaseActivity {
     @Override
     public void onStart() {
         super.onStart();
-        BugleAnalytics.logEvent("SMS_Start_SetDefaultPage_Show", true);
-        if (Calendars.isSameDay(System.currentTimeMillis(), CommonUtils.getAppInstallTimeMillis())) {
-            BugleAnalytics.logEvent("SMS_Start_SetDefaultPage_Show_NewUser", true);
+        if (mIsFromWelcomeStart) {
+            BugleAnalytics.logEvent("Start_SetAsDefault_Show", true);
+        } else {
+            BugleAnalytics.logEvent("SetAsDefault_GuidePage_Show", true);
         }
     }
 
@@ -51,7 +62,9 @@ public class WelcomeSetAsDefaultActivity extends BaseActivity {
     public void onBackPressed() {
         if (mAllowBackKey) {
             super.onBackPressed();
-            BugleAnalytics.logEvent("SMS_Start_SetDefaultPage_Back", true);
+            if (mIsFromWelcomeStart) {
+                BugleAnalytics.logEvent("Start_SetAsDefault_Back", true);
+            }
         }
     }
 
@@ -65,9 +78,10 @@ public class WelcomeSetAsDefaultActivity extends BaseActivity {
                 } else {
                     UIIntents.get().launchWelcomePermissionActivity(this);
                 }
-                BugleAnalytics.logEvent("SMS_Start_SetDefault_Success", true);
-                if (Calendars.isSameDay(System.currentTimeMillis(), CommonUtils.getAppInstallTimeMillis())) {
-                    BugleAnalytics.logEvent("SMS_Start_SetDefault_Success_NewUser", true);
+                if (mIsFromWelcomeStart) {
+                    BugleAnalytics.logEvent("Start_SetAsDefault_Success", true, "step", "setasdefault page");
+                } else {
+                    BugleAnalytics.logEvent("SetAsDefault_GuidePage_Success");
                 }
                 finish();
             } else {

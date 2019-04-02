@@ -1,129 +1,78 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.constraint.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
+    android:background="@android:color/white"
     android:layout_height="match_parent">
 
-    <com.superapps.view.TypefacedTextView
-        android:id="@+id/welcome_set_default_title"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="24dp"
-        android:layout_marginStart="24dp"
-        android:layout_marginTop="40dp"
-        android:text="@string/welcome_set_default_title"
-        android:textColor="@color/welcome_text_permission_list"
-        android:textSize="25.3sp"
-        app:typeface="@string/custom_font_bold" />
-
-    <com.superapps.view.TypefacedTextView
-        android:id="@+id/welcome_set_default_description"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/welcome_set_default_title"
-        android:layout_marginEnd="24dp"
-        android:layout_marginStart="24dp"
-        android:lineSpacingExtra="6.7sp"
-        android:text="@string/welcome_set_default_description"
-        android:textColor="@color/welcome_text_description"
-        android:textSize="12.7sp"
-        app:typeface="@string/custom_font_medium" />
-
     <android.support.constraint.ConstraintLayout
-        android:id="@+id/welcome_set_default_list"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_above="@+id/welcome_set_default_button"
-        android:layout_below="@+id/welcome_set_default_description"
-        android:layout_marginEnd="16dp"
-        android:layout_marginStart="16dp"
-        android:orientation="vertical">
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toTopOf="@+id/welcome_set_default_button"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
 
-        <com.superapps.view.TypefacedTextView
-            android:id="@+id/welcome_set_default_description_1"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:drawablePadding="11dp"
-            android:drawableStart="@drawable/ic_welcome_set_default_emoji"
-            android:gravity="center_vertical"
-            android:text="@string/welcome_set_default_emoji"
-            android:textColor="@color/welcome_text_permission_list"
-            android:textSize="14.7sp"
-            app:typeface="@string/custom_font_medium"
+        <ImageView
+            android:id="@+id/welcome_set_default_banner"
+            android:layout_width="0dp"
+            android:src="@drawable/welcome_set_as_default_banner"
+            android:scaleType="centerCrop"
+            android:layout_height="0dp"
+            app:layout_constraintBottom_toTopOf="@+id/welcome_set_default_title"
+            app:layout_constraintDimensionRatio="858:758"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_chainStyle="packed"
+            app:layout_constraintWidth_percent="0.794"/>
+
+        <com.superapps.view.TypefacedTextView
+            android:id="@+id/welcome_set_default_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:clickable="true"
+            android:textColor="#282a31"
+            android:textSize="24sp"
+            android:layout_marginTop="22dp"
+            android:text="@string/welcome_set_default_title"
+            app:layout_constraintBottom_toTopOf="@id/welcome_guide_viewpager_body"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/welcome_set_default_banner"
+            app:typeface="@string/custom_font_semibold"/>
+
+        <com.superapps.view.TypefacedTextView
+            android:id="@+id/welcome_guide_viewpager_body"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:clickable="true"
+            android:gravity="center_horizontal"
+            android:text="To make Color SMS work properly with cool features, it needs to be the default SMS app."
+            android:textColor="#494b4f"
+            android:textSize="13.3sp"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintVertical_bias="0.12"/>
-
-        <com.superapps.view.TypefacedTextView
-            android:id="@+id/welcome_set_default_description_2"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="4dp"
-            android:drawablePadding="11dp"
-            android:drawableStart="@drawable/ic_welcome_set_default_music"
-            android:gravity="center_vertical"
-            android:text="@string/welcome_set_default_music"
-            android:textColor="@color/welcome_text_permission_list"
-            android:textSize="14.7sp"
-            app:typeface="@string/custom_font_medium"
-            app:layout_constraintTop_toBottomOf="@+id/welcome_set_default_description_1"/>
-
-        <com.superapps.view.TypefacedTextView
-            android:id="@+id/welcome_set_default_description_3"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="4dp"
-            android:drawablePadding="11dp"
-            android:drawableStart="@drawable/ic_welcome_set_default_group"
-            android:gravity="center_vertical"
-            android:text="@string/welcome_set_default_group"
-            android:textColor="@color/welcome_text_permission_list"
-            android:textSize="14.7sp"
-            app:typeface="@string/custom_font_medium"
-            app:layout_constraintTop_toBottomOf="@+id/welcome_set_default_description_2" />
-
-        <com.superapps.view.TypefacedTextView
-            android:id="@+id/welcome_set_default_description_4"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="4dp"
-            android:drawablePadding="11dp"
-            android:drawableStart="@drawable/ic_welcome_set_default_delete"
-            android:gravity="center_vertical"
-            android:text="@string/welcome_set_default_delete"
-            android:textColor="@color/welcome_text_permission_list"
-            android:textSize="14.7sp"
-            app:typeface="@string/custom_font_medium"
-            app:layout_constraintTop_toBottomOf="@+id/welcome_set_default_description_3" />
-
-        <com.superapps.view.TypefacedTextView
-            android:id="@+id/welcome_set_default_description_5"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="4dp"
-            android:drawablePadding="11dp"
-            android:drawableStart="@drawable/ic_welcome_set_default_feature"
-            android:gravity="center_vertical"
-            android:text="@string/welcome_set_default_feature"
-            android:textColor="@color/welcome_text_permission_list"
-            android:textSize="14.7sp"
-            app:typeface="@string/custom_font_medium"
-            app:layout_constraintTop_toBottomOf="@+id/welcome_set_default_description_4" />
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/welcome_set_default_title"
+            app:layout_constraintWidth_percent="0.7"
+            app:typeface="@string/custom_font_regular"/>
     </android.support.constraint.ConstraintLayout>
 
     <com.superapps.view.TypefacedTextView
         android:id="@+id/welcome_set_default_button"
-        android:layout_width="260.7dp"
-        android:layout_height="46dp"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginBottom="24dp"
-        android:background="@drawable/welcome_button_green_bg"
+        android:layout_width="0dp"
+        android:layout_marginBottom="60dp"
         android:gravity="center"
-        android:paddingTop="1dp"
         android:text="@string/welcome_set_default_button"
-        android:textColor="#ffffffff"
+        android:textColor="#fff"
         android:textSize="14sp"
-        app:typeface="@string/custom_font_bold" />
-
-</RelativeLayout>
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintDimensionRatio="164:44"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintWidth_percent="0.455"
+        app:typeface="@string/custom_font_bold"/>
+</android.support.constraint.ConstraintLayout>
