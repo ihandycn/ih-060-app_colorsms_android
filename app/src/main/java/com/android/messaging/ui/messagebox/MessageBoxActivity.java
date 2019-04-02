@@ -23,6 +23,7 @@ import com.ihs.commons.notificationcenter.INotificationObserver;
 import com.ihs.commons.utils.HSBundle;
 import com.ihs.commons.utils.HSLog;
 import com.superapps.util.Commons;
+import com.superapps.util.Toasts;
 
 import static com.android.messaging.ui.UIIntents.UI_INTENT_EXTRA_MESSAGE_BOX_ITEM;
 
@@ -161,6 +162,7 @@ public class MessageBoxActivity extends BaseActivity implements INotificationObs
                 break;
             case R.id.action_unread:
                 mCurrentConversationView.markAsUnread();
+                Toasts.showToast(R.string.message_box_mark_as_unread);
                 removeCurrentPage();
                 BugleAnalytics.logEvent("SMS_PopUp_Unread_Click");
                 break;
