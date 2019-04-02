@@ -37,13 +37,13 @@
         appcompat:showAsAction="collapseActionView|always" />
     <item
         android:id="@+id/action_pin"
-        android:icon="@drawable/icon_pin"
+        android:icon="@drawable/ic_pin"
         android:orderInCategory="80"
         android:title="@string/action_pin"
         appcompat:showAsAction="collapseActionView|always" />
     <item
         android:id="@+id/action_cancel_pin"
-        android:icon="@drawable/icon_unpin"
+        android:icon="@drawable/ic_unpin"
         android:orderInCategory="90"
         android:title="@string/action_pin"
         appcompat:showAsAction="collapseActionView|always" />

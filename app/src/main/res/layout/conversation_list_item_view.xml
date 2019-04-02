@@ -153,7 +153,7 @@
                             android:background="@android:color/transparent"
                             android:contentDescription="@null"
                             android:importantForAccessibility="no"
-                            android:src="@drawable/ic_notifications"
+                            android:src="@drawable/ic_small_mute"
                             android:visibility="gone" />
                         <ImageView
                             android:id="@+id/conversation_pin"
@@ -164,7 +164,7 @@
                             android:background="@android:color/transparent"
                             android:contentDescription="@null"
                             android:importantForAccessibility="no"
-                            android:src="@drawable/ic_pin"
+                            android:src="@drawable/ic_small_pin"
                             android:visibility="gone" />
 
                         <com.superapps.view.TypefacedTextView
