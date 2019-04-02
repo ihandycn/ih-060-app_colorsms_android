@@ -739,6 +739,6 @@
 
 
     <style name="AcbSmsRecyclerViewTheme" parent="Theme.AppCompat.Light">
-        <item name="colorPrimary">@color/message_box_primary_color</item>
+        <item name="colorPrimary">@color/conversation_edge_effect</item>
     </style>
 </resources>
