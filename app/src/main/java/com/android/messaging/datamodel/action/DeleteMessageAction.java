@@ -27,6 +27,7 @@ import com.android.messaging.datamodel.BugleDatabaseOperations;
 import com.android.messaging.datamodel.DataModel;
 import com.android.messaging.datamodel.DatabaseWrapper;
 import com.android.messaging.datamodel.MessagingContentProvider;
+import com.android.messaging.datamodel.SyncManager;
 import com.android.messaging.datamodel.data.MessageData;
 import com.android.messaging.datamodel.data.ParticipantData;
 import com.android.messaging.sms.MmsUtils;
@@ -124,7 +125,19 @@ public class DeleteMessageAction extends Action implements Parcelable {
             } else {
                 LogUtil.w(TAG, "DeleteMessageAction: Message " + messageId + " no longer exists");
             }
-        } else if (!TextUtils.isEmpty(conversationId)) {
+        }
+        return null;
+    }
+
+    @Override
+    protected Object processBackgroundResponse(Bundle response) {
+
+        final DatabaseWrapper db = DataModel.get().getDatabase();
+        final String conversationId = actionParameters.getString(KEY_CONVERSATION_ID);
+        final String participantId = actionParameters.getString(KEY_PARTICIPANT_ID);
+        final long timeStamp = actionParameters.getLong(KEY_TIMESTAMP);
+
+         if (!TextUtils.isEmpty(conversationId)) {
 
             final ArrayList<MessageData> messages = BugleDatabaseOperations.readMessageDatas(db, conversationId, participantId, timeStamp);
 
@@ -132,23 +145,18 @@ public class DeleteMessageAction extends Action implements Parcelable {
                     "senderId = " + participantId +
                     "timestamp = " + timeStamp);
 
-
             if (!messages.isEmpty()) {
                 for (MessageData messageData : messages) {
                     int count = BugleDatabaseOperations.deleteMessage(db, messageData.getMessageId());
                     HSLog.d(TAG, "delete count" + count) ;
 
+
                     final Uri messageUri = messageData.getSmsMessageUri();
 
+                    HSLog.d(TAG, "delete message Uri = " + messageUri) ;
 
-                    HSLog.d(TAG, "messageUri" + messageUri) ;
-
-                    try {
-                        if (messageUri != null) {
-                            MmsUtils.deleteMessage(messageUri);
-                        }
-                    } catch (Exception e) {
-                        e.printStackTrace();
+                    if (messageUri != null) {
+                        MmsUtils.deleteMessage(messageUri);
                     }
 
                 }
@@ -159,7 +167,8 @@ public class DeleteMessageAction extends Action implements Parcelable {
                 HSLog.d(TAG, "destination messages empty");
             }
         }
-        return null;
+
+        return super.processBackgroundResponse(response);
     }
 
     /**

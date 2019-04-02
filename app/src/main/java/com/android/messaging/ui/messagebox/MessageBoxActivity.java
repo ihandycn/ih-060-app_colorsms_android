@@ -11,6 +11,7 @@ import com.android.messaging.BaseActivity;
 import com.android.messaging.BuildConfig;
 import com.android.messaging.R;
 import com.android.messaging.datamodel.BugleNotifications;
+import com.android.messaging.datamodel.SyncManager;
 import com.android.messaging.datamodel.action.DeleteMessageAction;
 import com.android.messaging.datamodel.data.MessageBoxItemData;
 import com.android.messaging.ui.BaseAlertDialog;
@@ -101,10 +102,6 @@ public class MessageBoxActivity extends BaseActivity implements INotificationObs
             mIndicator.reveal();
             mCurrentConversationView.updateTimestamp();
         }
-        if (!Commons.isKeyguardLocked(this, false)
-                && CommonUtils.isScreenOn(this)) {
-
-        }
     }
 
     @Override
@@ -146,6 +143,7 @@ public class MessageBoxActivity extends BaseActivity implements INotificationObs
                         .setTitle(getString(R.string.message_box_delete_alert_description))
                         .setPositiveButton(R.string.delete_conversation_confirmation_button,
                                 (dialog, button) -> {
+                                    SyncManager.sync();
                                     DeleteMessageAction.deleteMessage(mCurrentConversationView.getConversationId(),
                                             mCurrentConversationView.getParticipantId(),
                                             mCurrentConversationView.getOldestReceivedTimestamp());
