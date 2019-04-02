@@ -55,6 +55,7 @@ public class MessageBoxActivity extends AppCompatActivity implements INotificati
         mPager.setAdapter(mPagerAdapter);
 
         mCurrentConversationView = view;
+        MessageBoxAnalytics.setIsMultiConversation(false);
     }
 
     @Override
@@ -89,6 +90,8 @@ public class MessageBoxActivity extends AppCompatActivity implements INotificati
             mIndicator.removeAllViews();
             mIndicator.initDot(mPagerAdapter.getCount(), mPager.getCurrentItem());
             mPager.addOnPageChangeListener(mIndicator);
+
+            MessageBoxAnalytics.setIsMultiConversation(true);
         }
     }
 
@@ -109,9 +112,14 @@ public class MessageBoxActivity extends AppCompatActivity implements INotificati
         }
     }
 
+    private boolean mLogScrollPaged;
+
     @Override
     public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-
+        if (!mLogScrollPaged) {
+            BugleAnalytics.logEvent("SMS_PopUp_MultiUser_Slide");
+            mLogScrollPaged = true;
+        }
     }
 
     @Override
@@ -130,7 +138,7 @@ public class MessageBoxActivity extends AppCompatActivity implements INotificati
         switch (id) {
             case R.id.action_call:
                 mCurrentConversationView.call();
-                BugleAnalytics.logEvent("SMS_PopUp_Call_Click");
+                MessageBoxAnalytics.logEvent("SMS_PopUp_Call_Click");
                 break;
 
             case R.id.action_delete:
@@ -148,7 +156,7 @@ public class MessageBoxActivity extends AppCompatActivity implements INotificati
                         .setNegativeButton(R.string.delete_conversation_decline_button,
                                 (dialog, which) -> BugleAnalytics.logEvent("SMS_PopUp_Delete_Alert_Cancel"))
                         .show();
-                BugleAnalytics.logEvent("SMS_PopUp_Delete_Click");
+                MessageBoxAnalytics.logEvent("SMS_PopUp_Delete_Click");
                 break;
             case R.id.action_close:
                 finish();
@@ -157,12 +165,12 @@ public class MessageBoxActivity extends AppCompatActivity implements INotificati
                 mCurrentConversationView.markAsUnread();
                 Toasts.showToast(R.string.message_box_mark_as_unread);
                 removeCurrentPage();
-                BugleAnalytics.logEvent("SMS_PopUp_Unread_Click");
+                MessageBoxAnalytics.logEvent("SMS_PopUp_Unread_Click");
                 break;
             case R.id.action_open:
                 UIIntents.get().launchConversationActivity(this, mCurrentConversationView.getConversationId(), null);
                 finish();
-                BugleAnalytics.logEvent("SMS_PopUp_Open_Click");
+                MessageBoxAnalytics.logEvent("SMS_PopUp_Open_Click");
                 break;
 
             case R.id.self_send_icon:

@@ -71,7 +71,7 @@ public class MessageBoxMessageListAdapter extends RecyclerView.Adapter<RecyclerV
                 mmsViewHolder.mContentView.setOnClickListener(v -> {
                     UIIntents.get().launchConversationActivity(parent.getContext(), mConversationId, null);
                     HSGlobalNotificationCenter.sendNotification(NOTIFICATION_FINISH_MESSAGE_BOX);
-                    BugleAnalytics.logEvent("SMS_PopUp_MMS_Click");
+                    MessageBoxAnalytics.logEvent("SMS_PopUp_MMS_Click");
                 });
                 return mmsViewHolder;
             default:
