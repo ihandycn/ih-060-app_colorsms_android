@@ -235,7 +235,9 @@ public class ContactUtil {
                 .appendQueryParameter(Contacts.EXTRA_ADDRESS_BOOK_INDEX, "true")
                 .build();
 
-        return new CursorQueryData(context, uri, PhoneQuery.PROJECTION, null, null,
+        String selectionClause = ContactsContract.RawContacts.ACCOUNT_NAME + " != ?";
+        String[] selectionArgs = {"WhatsApp"};
+        return new CursorQueryData(context, uri, PhoneQuery.PROJECTION, selectionClause, selectionArgs,
                 PhoneQuery.SORT_KEY);
     }
 
