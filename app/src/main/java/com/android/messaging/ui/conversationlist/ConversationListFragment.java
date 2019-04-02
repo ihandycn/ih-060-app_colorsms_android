@@ -380,11 +380,9 @@ public class ConversationListFragment extends Fragment implements ConversationLi
                 if (!mAdapter.hasHeader()) {
                     mAdapter.setHeader(adContainer);
                     if (manager.findFirstCompletelyVisibleItemPosition() == 0) {
-                        mRecyclerView.smoothScrollToPosition(0);
+                        mRecyclerView.scrollToPosition(0);
                     }
                 }
-
-
             }
 
             @Override
