@@ -49,7 +49,7 @@
             android:layout_height="wrap_content"
             android:clickable="true"
             android:gravity="center_horizontal"
-            android:text="To make Color SMS work properly with cool features, it needs to be the default SMS app."
+            android:text="@string/welcome_set_as_default_title"
             android:textColor="#494b4f"
             android:textSize="13.3sp"
             app:layout_constraintBottom_toBottomOf="parent"

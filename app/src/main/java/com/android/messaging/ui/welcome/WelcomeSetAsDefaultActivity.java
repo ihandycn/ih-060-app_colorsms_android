@@ -62,9 +62,9 @@ public class WelcomeSetAsDefaultActivity extends AppCompatActivity {
     public void onBackPressed() {
         if (mAllowBackKey) {
             super.onBackPressed();
-            if (mIsFromWelcomeStart) {
-                BugleAnalytics.logEvent("Start_SetAsDefault_Back", true);
-            }
+        }
+        if (mIsFromWelcomeStart) {
+            BugleAnalytics.logEvent("Start_SetAsDefault_Back", true);
         }
     }
 
@@ -81,7 +81,7 @@ public class WelcomeSetAsDefaultActivity extends AppCompatActivity {
                 if (mIsFromWelcomeStart) {
                     BugleAnalytics.logEvent("Start_SetAsDefault_Success", true, "step", "setasdefault page");
                 } else {
-                    BugleAnalytics.logEvent("SetAsDefault_GuidePage_Success");
+                    BugleAnalytics.logEvent("SetAsDefault_GuidePage_Success", true);
                 }
                 finish();
             } else {

@@ -12,7 +12,8 @@ public abstract class BaseActivity extends AppCompatActivity {
 
     private static final String TAG = BaseActivity.class.getSimpleName();
 
-    private boolean activityJustCreated = true;
+    private boolean mJustCreated = true;
+    protected boolean mShouldFinishThisTime = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -21,10 +22,12 @@ public abstract class BaseActivity extends AppCompatActivity {
         if (!PhoneUtils.getDefault().isDefaultSmsApp()) {
             UIIntents.get().launchWelcomeSetAsDefaultActivity(this);
             finish();
+            mShouldFinishThisTime = true;
             HSLog.d(TAG, "Show welcome set as default");
         } else if (!OsUtil.hasRequiredPermissions()) {
             UIIntents.get().launchWelcomePermissionActivity(this);
             finish();
+            mShouldFinishThisTime = true;
             HSLog.d(TAG, "Show welcome permission");
         }
     }
@@ -32,7 +35,7 @@ public abstract class BaseActivity extends AppCompatActivity {
     @Override protected void onResume() {
         super.onResume();
 
-        if (!activityJustCreated) {
+        if (!mJustCreated) {
             if (!PhoneUtils.getDefault().isDefaultSmsApp()) {
                 UIIntents.get().launchWelcomeSetAsDefaultActivity(this);
                 finish();
@@ -44,7 +47,7 @@ public abstract class BaseActivity extends AppCompatActivity {
             }
         }
 
-        activityJustCreated = false;
+        mJustCreated = false;
     }
 
     @Override

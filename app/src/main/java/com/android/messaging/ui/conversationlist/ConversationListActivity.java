@@ -134,6 +134,10 @@ public class ConversationListActivity extends AbstractConversationListActivity
         Trace.beginSection("ConversationListActivity.onCreate");
         super.onCreate(savedInstanceState);
 
+        if (mShouldFinishThisTime) {
+            return;
+        }
+
         mIsRealCreate = true;
         setContentView(R.layout.conversation_list_activity);
         configAppBar();

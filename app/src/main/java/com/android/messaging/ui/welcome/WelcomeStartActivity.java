@@ -140,8 +140,8 @@ public class WelcomeStartActivity extends AppCompatActivity implements View.OnCl
     public void onBackPressed() {
         if (mAllowBackKey) {
             super.onBackPressed();
-            BugleAnalytics.logEvent("Start_DetailPage_Back", true);
         }
+        BugleAnalytics.logEvent("Start_DetailPage_Back", true);
     }
 
     private void initTextPager() {
@@ -229,7 +229,7 @@ public class WelcomeStartActivity extends AppCompatActivity implements View.OnCl
                         mForwardLottieView.postDelayed(() -> playForwardDropAnimation(0), 200);
 
                         if (!mIsActivityPaused) {
-                            BugleAnalytics.logEvent("Start_DetailPage_Show");
+                            BugleAnalytics.logEvent("Start_DetailPage_Show", true);
                         }
                     });
         } catch (RejectedExecutionException e) {
