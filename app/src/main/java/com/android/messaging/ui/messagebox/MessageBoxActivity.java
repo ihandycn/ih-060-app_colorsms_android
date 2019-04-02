@@ -30,7 +30,7 @@ public class MessageBoxActivity extends BaseActivity implements INotificationObs
 
     public static final String NOTIFICATION_FINISH_MESSAGE_BOX = "finish_message_box";
 
-    private static final boolean DEBUGGING_MULTI_CONVERSATIONS = true && BuildConfig.DEBUG;
+    private static final boolean DEBUGGING_MULTI_CONVERSATIONS = false && BuildConfig.DEBUG;
 
     private ViewPager mPager;
     private DynamicalPagerAdapter mPagerAdapter;
