@@ -596,4 +596,12 @@
 	<string name="message_box_alert_message">SMS penceresini kapatırsan, mesaj geldiğinde pencere açılmaz.</string>
 	<string name="set_as_default_dialog_title_user_present">Color SMS\'i varsayılan olarak ayarla</string>
 
+
+	<string name="welcome_viewpager_item_body_0">Sosyal ortamda göze çarpın!</string>
+	<string name="welcome_viewpager_item_title_1">Tamamen Özelleştirilebilir</string>
+	<string name="welcome_viewpager_item_body_1">Sohbeti beğendiğiniz şekilde süsleyin.</string>
+	<string name="welcome_viewpager_item_title_2">Daha Fazla Özellik</string>
+	<string name="welcome_viewpager_item_body_2">Gel ve bir sürü harika özelliği dene.</string>
+	<string name="welcome_set_as_default_title">Color SMS\'i varsayılan SMS uygulaması olarak ayarlayın, SMS almak/göndermek için bu gereklidir.</string>
+
 </resources>

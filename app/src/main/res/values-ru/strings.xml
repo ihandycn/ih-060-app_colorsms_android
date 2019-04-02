@@ -649,4 +649,12 @@
 
 	<string name="set_as_default_dialog_title_user_present">Сделать Color SMS приложением по умолчанию</string>
 
+
+	<string name="welcome_viewpager_item_body_0">Станьте заметнее в своем кругу!</string>
+	<string name="welcome_viewpager_item_title_1">Максимальная индивидуализация</string>
+	<string name="welcome_viewpager_item_body_1">Украсьте свой чат так, как нравится вам.</string>
+	<string name="welcome_viewpager_item_title_2">Больше функций</string>
+	<string name="welcome_viewpager_item_body_2">Испытайте в деле множество потрясающих функций.</string>
+	<string name="welcome_set_as_default_title">Установите Color SMS в качестве приложения для СМС по умолчанию. Это необходимо для принятия и отправки СМС.</string>
+
 </resources>

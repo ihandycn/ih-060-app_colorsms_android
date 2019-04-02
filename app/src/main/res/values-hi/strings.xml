@@ -605,4 +605,12 @@
     <string name="create_shortcut_has_been_create">सफलतापूर्वक बनाया गया</string>
     <string name="create_shortcut_guide_title">एक शॉर्टकट बनाएं</string>
     <string name="create_shortcut_guide_content">बेहतर एसएमएस का आनंद लेने के लिए, सिस्टम एसएमएस की तरह एक शॉर्टकट बनाएं।</string>
+
+	<string name="welcome_viewpager_item_body_0">अपने सॉशल ग्रूप में अलग बनें!</string>
+	<string name="welcome_viewpager_item_title_1">पूरी तरह से अनुकूलित</string>
+	<string name="welcome_viewpager_item_body_1">अपनी चैट को अपनी पसंद के अनुसार सजाएंं।</string>
+	<string name="welcome_viewpager_item_title_2">अधिक विशेषताएं</string>
+	<string name="welcome_viewpager_item_body_2">आओ और बहुत सारी सुविधाओं को आजमाओ।</string>
+	<string name="welcome_set_as_default_title">कृपया रंगीन एसएमएस को डिफॉल्ट एसएमएस ऐप के रूप में सेट करें, यह एसएमएस भेजने/प्राप्त करने के लिए आवश्यक है।</string>
+
 </resources>

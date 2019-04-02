@@ -602,4 +602,12 @@
 
 	<string name="set_as_default_dialog_title_user_present">Color SMS als Standard festlegen</string>
 
+
+	<string name="welcome_viewpager_item_body_0">Ragen Sie aus Ihrer sozialen Gruppe heraus!</string>
+	<string name="welcome_viewpager_item_title_1">Komplett individuell gestaltbar</string>
+	<string name="welcome_viewpager_item_body_1">Gestalten Sie Ihren Chat so, wie Sie es Ihnen gefällt.</string>
+	<string name="welcome_viewpager_item_title_2">Weitere Funktionen</string>
+	<string name="welcome_viewpager_item_body_2">Los, testen Sie ein Bündel großartiger Funktionen.</string>
+	<string name="welcome_set_as_default_title">Bitte richten Sie Color SMS als Standard-SMS-App ein. Das ist notwendig, um SMS zu senden/empfangen.</string>
+
 </resources>

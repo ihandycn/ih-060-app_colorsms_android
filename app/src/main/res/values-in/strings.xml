@@ -602,4 +602,12 @@
 
 	<string name="set_as_default_dialog_title_user_present">Atur Color SMS sebagai default</string>
 
+
+	<string name="welcome_viewpager_item_body_0">Tampil beda di antara grup sosial Anda!</string>
+	<string name="welcome_viewpager_item_title_1">Dapat Disesuaikan Sepenuhnya</string>
+	<string name="welcome_viewpager_item_body_1">Hiasi obrolan Anda dengan cara yang Anda sukai.</string>
+	<string name="welcome_viewpager_item_title_2">Fitur Lainnya</string>
+	<string name="welcome_viewpager_item_body_2">Cobalah beragam fitur hebat kami.</string>
+	<string name="welcome_set_as_default_title">Atur Color SMS sebagai aplikasi SMS default, aplikasi ini diperlukan untuk mengirim/menerima SMS.</string>
+
 </resources>

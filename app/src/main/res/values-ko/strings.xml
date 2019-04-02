@@ -601,4 +601,12 @@
 
 	<string name="set_as_default_dialog_title_user_present">Color SMS를 기본으로 설정</string>
 
+
+	<string name="welcome_viewpager_item_body_0">소셜 그룹 중에서 최고가 되세요!</string>
+	<string name="welcome_viewpager_item_title_1">완벽한 커스터마이즈</string>
+	<string name="welcome_viewpager_item_body_1">원하는 대로 채팅을 꾸미세요.</string>
+	<string name="welcome_viewpager_item_title_2">추가 기능</string>
+	<string name="welcome_viewpager_item_body_2">오셔서 놀라운 기능들을 사용해보세요.</string>
+	<string name="welcome_set_as_default_title">Color SMS를 기본 SMS 앱으로 설정하세요. SMS 발신/수신에 필요합니다.</string>
+
 </resources>

@@ -602,4 +602,12 @@
 
 	<string name="set_as_default_dialog_title_user_present">Color SMSをデフォルトとして設定</string>
 
+
+	<string name="welcome_viewpager_item_body_0">SNSグループの間で目立ちましょう！</string>
+	<string name="welcome_viewpager_item_title_1">完全にカスタム化が可能</string>
+	<string name="welcome_viewpager_item_body_1">チャットを好きなようにデコレーション</string>
+	<string name="welcome_viewpager_item_title_2">他の機能</string>
+	<string name="welcome_viewpager_item_body_2">たくさんあるすごい機能を試してください。</string>
+	<string name="welcome_set_as_default_title">SMSを送信/受信するには、SMSアプリのデフォルトとしてColor SMSを設定してください。</string>
+
 </resources>

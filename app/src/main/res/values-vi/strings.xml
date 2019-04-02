@@ -599,4 +599,12 @@
 
 	<string name="set_as_default_dialog_title_user_present">Đặt Color SMS làm mặc định</string>
 
+
+	<string name="welcome_viewpager_item_body_0">Nổi bật trong nhóm trò chuyện của bạn!</string>
+	<string name="welcome_viewpager_item_title_1">Tùy chỉnh được hoàn toàn</string>
+	<string name="welcome_viewpager_item_body_1">Trang trí cuộc trò chuyện theo cách bạn muốn.</string>
+	<string name="welcome_viewpager_item_title_2">Thêm tính năng</string>
+	<string name="welcome_viewpager_item_body_2">Hãy đến và thử một loạt các tính năng tuyệt vời.</string>
+	<string name="welcome_set_as_default_title">Vui lòng đặt Color SMS làm ứng dụng SMS mặc định, điều này là bắt buộc để có thể gửi/nhận SMS.</string>
+
 </resources>

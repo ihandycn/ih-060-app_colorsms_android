@@ -605,4 +605,12 @@
     <string name="create_shortcut_has_been_create">Creado exitosamente</string>
     <string name="create_shortcut_guide_title">Crea un atajo</string>
     <string name="create_shortcut_guide_content">Para disfrutar de mejores SMS, cree un acceso directo como el sistema SMS.</string>
+
+	<string name="welcome_viewpager_item_body_0">¡Llama la atención dentro de tu grupo social!</string>
+	<string name="welcome_viewpager_item_title_1">Totalmente personalizable</string>
+	<string name="welcome_viewpager_item_body_1">Decora tu chat como más te guste.</string>
+	<string name="welcome_viewpager_item_title_2">Más características</string>
+	<string name="welcome_viewpager_item_body_2">Ven y prueba un montón de características nuevas.</string>
+	<string name="welcome_set_as_default_title">Establece Color SMS como aplicación de SMS predeterminada. Es obligatorio para poder enviar y recibir SMS.</string>
+
 </resources>
