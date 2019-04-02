@@ -6,14 +6,14 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
-    <com.android.messaging.ui.emoji.ViewPagerDotIndicatorView
+    <com.android.messaging.ui.messagebox.MessageBoxIndicatorView
         android:id="@+id/dot_indicator_view"
         android:layout_width="match_parent"
         android:layout_height="10dp"
         android:layout_gravity="center"
         android:layout_marginBottom="150dp"
         android:gravity="end"
-        android:layout_marginEnd="20dp"
+        android:layout_marginEnd="-28dp"
         android:orientation="horizontal" />
 
     <com.superapps.view.ViewPagerFixed

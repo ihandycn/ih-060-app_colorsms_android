@@ -1,6 +1,5 @@
 package com.android.messaging.ui.messagebox;
 
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
@@ -9,18 +8,20 @@ import android.view.LayoutInflater;
 import android.view.View;
 
 import com.android.messaging.BaseActivity;
+import com.android.messaging.BuildConfig;
 import com.android.messaging.R;
 import com.android.messaging.datamodel.BugleNotifications;
 import com.android.messaging.datamodel.action.DeleteMessageAction;
 import com.android.messaging.datamodel.data.MessageBoxItemData;
 import com.android.messaging.ui.BaseAlertDialog;
 import com.android.messaging.ui.UIIntents;
-import com.android.messaging.ui.emoji.ViewPagerDotIndicatorView;
 import com.android.messaging.util.BugleAnalytics;
+import com.android.messaging.util.CommonUtils;
 import com.ihs.commons.notificationcenter.HSGlobalNotificationCenter;
 import com.ihs.commons.notificationcenter.INotificationObserver;
 import com.ihs.commons.utils.HSBundle;
 import com.ihs.commons.utils.HSLog;
+import com.superapps.util.Commons;
 
 import static com.android.messaging.ui.UIIntents.UI_INTENT_EXTRA_MESSAGE_BOX_ITEM;
 
@@ -29,9 +30,11 @@ public class MessageBoxActivity extends BaseActivity implements INotificationObs
 
     public static final String NOTIFICATION_FINISH_MESSAGE_BOX = "finish_message_box";
 
+    private static final boolean DEBUGGING_MULTI_CONVERSATIONS = true && BuildConfig.DEBUG;
+
     private ViewPager mPager;
     private DynamicalPagerAdapter mPagerAdapter;
-    private ViewPagerDotIndicatorView mIndicator;
+    private MessageBoxIndicatorView mIndicator;
 
     private MessageBoxConversationView mCurrentConversationView;
 
@@ -49,10 +52,10 @@ public class MessageBoxActivity extends BaseActivity implements INotificationObs
 
         mPagerAdapter = new DynamicalPagerAdapter();
         mPagerAdapter.addView(view);
-        mCurrentConversationView = view;
-
         mPager.addOnPageChangeListener(this);
         mPager.setAdapter(mPagerAdapter);
+
+        mCurrentConversationView = view;
     }
 
     @Override
@@ -61,32 +64,55 @@ public class MessageBoxActivity extends BaseActivity implements INotificationObs
         final MessageBoxItemData data = intent.getParcelableExtra(UI_INTENT_EXTRA_MESSAGE_BOX_ITEM);
 
         boolean isNewConversation = true;
-        int viewCount = mPagerAdapter.getCount();
-        MessageBoxConversationView view;
-        for (int i = 0; i < viewCount; i++) {
-            view = (MessageBoxConversationView) mPagerAdapter.getViews().get(i);
-            if (TextUtils.equals(data.getConversationId(), (String) view.getTag())) {
-                isNewConversation = false;
-                view.addNewMessage(data);
-                break;
+
+        if (!DEBUGGING_MULTI_CONVERSATIONS) {
+            int viewCount = mPagerAdapter.getCount();
+            MessageBoxConversationView view;
+            for (int i = 0; i < viewCount; i++) {
+                view = (MessageBoxConversationView) mPagerAdapter.getViews().get(i);
+                if (TextUtils.equals(data.getConversationId(), (String) view.getTag())) {
+                    isNewConversation = false;
+                    view.addNewMessage(data);
+                    break;
+                }
             }
         }
 
-        if (isNewConversation) {
+
+        if (isNewConversation || DEBUGGING_MULTI_CONVERSATIONS) {
             MessageBoxConversationView newItem = (MessageBoxConversationView) LayoutInflater.from(this).inflate(R.layout.message_box_conversation_view, null, false);
             newItem.bind(data);
-            mPagerAdapter.addView(newItem);
+
             mPager.removeOnPageChangeListener(mIndicator);
+            mPagerAdapter.addView(newItem);
+            mPagerAdapter.notifyDataSetChanged();
+
+            mIndicator.removeAllViews();
             mIndicator.initDot(mPagerAdapter.getCount(), mPager.getCurrentItem());
             mPager.addOnPageChangeListener(mIndicator);
-            mPagerAdapter.notifyDataSetChanged();
         }
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        mCurrentConversationView.updateTimestamp();
+
+        if (hasWindowFocus()) {
+            mIndicator.reveal();
+            mCurrentConversationView.updateTimestamp();
+        }
+        if (!Commons.isKeyguardLocked(this, false)
+                && CommonUtils.isScreenOn(this)) {
+
+        }
+    }
+
+    @Override
+    public void onWindowFocusChanged(boolean hasFocus) {
+        super.onWindowFocusChanged(hasFocus);
+        if (hasFocus) {
+            mIndicator.reveal();
+        }
     }
 
     @Override
@@ -102,11 +128,6 @@ public class MessageBoxActivity extends BaseActivity implements INotificationObs
 
     @Override
     public void onPageScrollStateChanged(int state) {
-
-        HSLog.d("guodong", state + "");
-//                SCROLL_STATE_IDLE
-//                SCROLL_STATE_DRAGGING
-//                SCROLL_STATE_SETTLING
 
     }
 
@@ -142,6 +163,7 @@ public class MessageBoxActivity extends BaseActivity implements INotificationObs
                 break;
             case R.id.action_unread:
                 mCurrentConversationView.markAsUnread();
+                removeCurrentPage();
                 BugleAnalytics.logEvent("SMS_PopUp_Unread_Click");
                 break;
             case R.id.action_open:
@@ -162,11 +184,14 @@ public class MessageBoxActivity extends BaseActivity implements INotificationObs
         if (position == mPagerAdapter.getCount() - 1) {
             finish();
         } else {
-            mPagerAdapter.removeView(mPager, mCurrentConversationView);
             mPager.removeOnPageChangeListener(mIndicator);
-            mIndicator.initDot(mPagerAdapter.getCount(), position);
+            mPagerAdapter.removeView(mPager, mCurrentConversationView);
+
+            mIndicator.removeAllViews();
             mPager.setCurrentItem(position);
+            mIndicator.initDot(mPagerAdapter.getCount(), position);
             mPager.addOnPageChangeListener(mIndicator);
+            mIndicator.reveal();
         }
     }
 
