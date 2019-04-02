@@ -96,8 +96,9 @@ public class MessageBoxItemData implements Parcelable {
         }
     };
 
+    // override this method to avoid flurry passing privacy information
     @Override
     public String toString() {
-        return "override this method to avoid flurry passing privacy information";
+        return "xxx";
     }
 }

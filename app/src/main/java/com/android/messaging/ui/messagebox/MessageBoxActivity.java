@@ -3,11 +3,11 @@ package com.android.messaging.ui.messagebox;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
+import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 
-import com.android.messaging.BaseActivity;
 import com.android.messaging.BuildConfig;
 import com.android.messaging.R;
 import com.android.messaging.datamodel.BugleNotifications;
@@ -17,17 +17,14 @@ import com.android.messaging.datamodel.data.MessageBoxItemData;
 import com.android.messaging.ui.BaseAlertDialog;
 import com.android.messaging.ui.UIIntents;
 import com.android.messaging.util.BugleAnalytics;
-import com.android.messaging.util.CommonUtils;
 import com.ihs.commons.notificationcenter.HSGlobalNotificationCenter;
 import com.ihs.commons.notificationcenter.INotificationObserver;
 import com.ihs.commons.utils.HSBundle;
-import com.ihs.commons.utils.HSLog;
-import com.superapps.util.Commons;
 import com.superapps.util.Toasts;
 
 import static com.android.messaging.ui.UIIntents.UI_INTENT_EXTRA_MESSAGE_BOX_ITEM;
 
-public class MessageBoxActivity extends BaseActivity implements INotificationObserver,
+public class MessageBoxActivity extends AppCompatActivity implements INotificationObserver,
         View.OnClickListener, ViewPager.OnPageChangeListener {
 
     public static final String NOTIFICATION_FINISH_MESSAGE_BOX = "finish_message_box";
@@ -72,7 +69,7 @@ public class MessageBoxActivity extends BaseActivity implements INotificationObs
             MessageBoxConversationView view;
             for (int i = 0; i < viewCount; i++) {
                 view = (MessageBoxConversationView) mPagerAdapter.getViews().get(i);
-                if (TextUtils.equals(data.getConversationId(), (String) view.getTag())) {
+                if (TextUtils.equals(data.getConversationId(), view.getConversationId())) {
                     isNewConversation = false;
                     view.addNewMessage(data);
                     break;
@@ -98,7 +95,6 @@ public class MessageBoxActivity extends BaseActivity implements INotificationObs
     @Override
     protected void onResume() {
         super.onResume();
-
         if (hasWindowFocus()) {
             mIndicator.reveal();
             mCurrentConversationView.updateTimestamp();
@@ -121,7 +117,6 @@ public class MessageBoxActivity extends BaseActivity implements INotificationObs
     @Override
     public void onPageSelected(int position) {
         mCurrentConversationView = (MessageBoxConversationView) mPagerAdapter.getViews().get(position);
-
     }
 
     @Override
@@ -135,7 +130,6 @@ public class MessageBoxActivity extends BaseActivity implements INotificationObs
         switch (id) {
             case R.id.action_call:
                 mCurrentConversationView.call();
-
                 BugleAnalytics.logEvent("SMS_PopUp_Call_Click");
                 break;
 
@@ -156,7 +150,6 @@ public class MessageBoxActivity extends BaseActivity implements INotificationObs
                         .show();
                 BugleAnalytics.logEvent("SMS_PopUp_Delete_Click");
                 break;
-
             case R.id.action_close:
                 finish();
                 break;

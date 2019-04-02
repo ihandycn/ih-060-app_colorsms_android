@@ -85,10 +85,6 @@ public class DeleteMessageAction extends Action implements Parcelable {
         // First find the thread id for this conversation.
         final String messageId = actionParameters.getString(KEY_MESSAGE_ID);
 
-        final String conversationId = actionParameters.getString(KEY_CONVERSATION_ID);
-        final String participantId = actionParameters.getString(KEY_PARTICIPANT_ID);
-        final long timeStamp = actionParameters.getLong(KEY_TIMESTAMP);
-
         if (!TextUtils.isEmpty(messageId)) {
             // Check message still exists
             final MessageData message = BugleDatabaseOperations.readMessage(db, messageId);
@@ -150,7 +146,6 @@ public class DeleteMessageAction extends Action implements Parcelable {
                     int count = BugleDatabaseOperations.deleteMessage(db, messageData.getMessageId());
                     HSLog.d(TAG, "delete count" + count) ;
 
-
                     final Uri messageUri = messageData.getSmsMessageUri();
 
                     HSLog.d(TAG, "delete message Uri = " + messageUri) ;
@@ -158,7 +153,6 @@ public class DeleteMessageAction extends Action implements Parcelable {
                     if (messageUri != null) {
                         MmsUtils.deleteMessage(messageUri);
                     }
-
                 }
                 MessagingContentProvider.notifyMessagesChanged(conversationId);
                 // We may have changed the conversation list

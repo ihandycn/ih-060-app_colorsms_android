@@ -82,15 +82,15 @@
                     android:imeOptions="actionSend|flagNoEnterAction|flagNoExtractUi"
                     android:includeFontPadding="false"
                     android:maxLines="3"
-                    android:inputType="textShortMessage"
+                    android:inputType="text"
                     android:theme="@style/MessageViewEditTextTheme" />
 
                 <ImageView
                     android:id="@+id/emoji_btn"
-                    android:layout_width="23dp"
-                    android:layout_height="23dp"
+                    android:layout_width="37dp"
+                    android:layout_height="37dp"
+                    android:padding="7dp"
                     android:layout_gravity="center"
-                    android:layout_marginEnd="7dp"
                     android:src="@drawable/input_emoji_icon" />
 
             </LinearLayout>
