@@ -34,19 +34,25 @@ public class PeopleOptionsItemData {
             ConversationListViewColumns.NOTIFICATION_ENABLED,
             ConversationListViewColumns.NOTIFICATION_SOUND_URI,
             ConversationListViewColumns.NOTIFICATION_VIBRATION,
+            ConversationListViewColumns.PIN_TIMESTAMP
     };
 
     // Column index for query projection.
     private static final int INDEX_NOTIFICATION_ENABLED = 0;
     private static final int INDEX_NOTIFICATION_SOUND_URI = 1;
     private static final int INDEX_NOTIFICATION_VIBRATION = 2;
+    private static final int INDEX_PIN_TIMESTAMP = 3;
 
     // Identification for each setting that's surfaced to the UI layer.
-    public static final int SETTING_NOTIFICATION_ENABLED = 0;
-    public static final int SETTING_NOTIFICATION_SOUND_URI = 1;
-    public static final int SETTING_NOTIFICATION_VIBRATION = 2;
-    public static final int SETTING_BLOCKED = 3;
-    public static final int SETTINGS_COUNT = 4;
+    public static final int SETTINGS_PIN = 0;
+    public static final int SETTING_NOTIFICATION_ENABLED = 1;
+    public static final int SETTING_NOTIFICATION_SOUND_URI = 2;
+    public static final int SETTING_NOTIFICATION_VIBRATION = 3;
+    public static final int SETTING_ADD_CONTANCT = 4;
+    public static final int SETTING_DELETE = 6;
+    public static final int SETTING_BLOCKED = 5;
+    public static final int SETTINGS_COUNT = 7;
+
 
     // Type of UI switch to show for the toggle button.
     public static final int TOGGLE_TYPE_CHECKBOX = 0;
@@ -92,9 +98,7 @@ public class PeopleOptionsItemData {
                 mTitle = mContext.getString(R.string.notification_sound_pref_title);
                 final String ringtoneString = cursor.getString(INDEX_NOTIFICATION_SOUND_URI);
                 Uri ringtoneUri = RingtoneUtil.getNotificationRingtoneUri(ringtoneString);
-
                 mSubtitle = mContext.getString(R.string.silent_ringtone);
-
                 try {
                     if (ringtoneUri != null) {
                         final Ringtone ringtone = RingtoneManager.getRingtone(mContext, ringtoneUri);
@@ -132,9 +136,24 @@ public class PeopleOptionsItemData {
                 mTitle = mContext.getString(resourceId, otherParticipant.getDisplayDestination());
                 mCheckable = false;
                 break;
+            case SETTINGS_PIN:
+                mTitle = mContext.getString(R.string.action_pin);
+                mChecked = cursor.getInt(INDEX_PIN_TIMESTAMP) != 0;
+                break;
+
+            case SETTING_ADD_CONTANCT:
+                mTitle = mContext.getString(R.string.action_add_contact);
+                mCheckable = false;
+                break;
+
+            case SETTING_DELETE:
+                mTitle = mContext.getString(R.string.action_delete);
+                mCheckable = false;
+                break;
 
             default:
                 Assert.fail("Unsupported conversation option type!");
+                break;
         }
     }
 

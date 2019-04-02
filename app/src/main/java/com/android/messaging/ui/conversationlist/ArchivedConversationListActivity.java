@@ -24,6 +24,8 @@ import android.view.MenuItem;
 import com.android.messaging.R;
 import com.android.messaging.util.DebugUtils;
 
+import java.util.Collection;
+
 public class ArchivedConversationListActivity extends AbstractConversationListActivity {
 
     @Override
@@ -91,6 +93,16 @@ public class ArchivedConversationListActivity extends AbstractConversationListAc
     @Override
     public void onActionBarHome() {
         onBackPressed();
+    }
+
+    @Override
+    public void onActionMenu() {
+
+    }
+
+    @Override
+    public void onPin(Collection<MultiSelectActionModeCallback.SelectedConversation> conversations, boolean pin) {
+
     }
 
     @Override

@@ -35,13 +35,22 @@ public class MultiSelectActionModeCallback implements Callback {
 
     public interface Listener {
         void onActionBarDelete(Collection<SelectedConversation> conversations);
+
         void onActionBarArchive(Iterable<SelectedConversation> conversations,
-                boolean isToArchive);
+                                boolean isToArchive);
+
         void onActionBarNotification(Iterable<SelectedConversation> conversations,
-                boolean isNotificationOn);
+                                     boolean isNotificationOn);
+
         void onActionBarAddContact(final SelectedConversation conversation);
-        void onActionBarBlock(final SelectedConversation conversation);
+
+        void onActionBarBlock(final Collection<SelectedConversation> conversation);
+
         void onActionBarHome();
+
+        void onActionMenu();
+
+        void onPin(Collection<SelectedConversation> conversations, boolean pin);
     }
 
     static class SelectedConversation {
@@ -53,6 +62,8 @@ public class MultiSelectActionModeCallback implements Callback {
         public final boolean isGroup;
         public final boolean isArchived;
         public final boolean notificationEnabled;
+        public final boolean isPin;
+
         public SelectedConversation(ConversationListItemData data) {
             conversationId = data.getConversationId();
             timestamp = data.getTimestamp();
@@ -62,6 +73,7 @@ public class MultiSelectActionModeCallback implements Callback {
             isGroup = data.getIsGroup();
             isArchived = data.getIsArchived();
             notificationEnabled = data.getNotificationEnabled();
+            isPin = data.isPinned();
         }
     }
 
@@ -72,6 +84,8 @@ public class MultiSelectActionModeCallback implements Callback {
     private MenuItem mBlockMenuItem;
     private MenuItem mNotificationOnMenuItem;
     private MenuItem mNotificationOffMenuItem;
+    private MenuItem mPinMenuItem;
+    private MenuItem mCancelPinMenuItem;
     private boolean mHasInflated;
 
     public MultiSelectActionModeCallback(final Listener listener) {
@@ -87,6 +101,8 @@ public class MultiSelectActionModeCallback implements Callback {
         mBlockMenuItem = menu.findItem(R.id.action_block);
         mNotificationOffMenuItem = menu.findItem(R.id.action_notification_off);
         mNotificationOnMenuItem = menu.findItem(R.id.action_notification_on);
+        mPinMenuItem = menu.findItem(R.id.action_pin);
+        mCancelPinMenuItem = menu.findItem(R.id.action_cancel_pin);
         mHasInflated = true;
         updateActionIconsVisiblity();
         return true;
@@ -99,7 +115,7 @@ public class MultiSelectActionModeCallback implements Callback {
 
     @Override
     public boolean onActionItemClicked(ActionMode actionMode, MenuItem menuItem) {
-        switch(menuItem.getItemId()) {
+        switch (menuItem.getItemId()) {
             case R.id.action_delete:
                 mListener.onActionBarDelete(mSelectedConversations.values());
                 return true;
@@ -114,11 +130,19 @@ public class MultiSelectActionModeCallback implements Callback {
                 mListener.onActionBarAddContact(mSelectedConversations.valueAt(0));
                 return true;
             case R.id.action_block:
-                Assert.isTrue(mSelectedConversations.size() == 1);
-                mListener.onActionBarBlock(mSelectedConversations.valueAt(0));
+                mListener.onActionBarBlock(mSelectedConversations.values());
                 return true;
             case android.R.id.home:
                 mListener.onActionBarHome();
+                return true;
+            case R.id.action_pin:
+                mListener.onPin(mSelectedConversations.values(), true);
+                return true;
+            case R.id.action_cancel_pin:
+                mListener.onPin(mSelectedConversations.values(), false);
+                return true;
+            case R.id.action_menu:
+                mListener.onActionMenu();
                 return true;
             default:
                 return false;
@@ -170,7 +194,13 @@ public class MultiSelectActionModeCallback implements Callback {
             mBlockMenuItem.setVisible(otherParticipant != null
                     && !mBlockedSet.contains(otherParticipant));
         } else {
-            mBlockMenuItem.setVisible(false);
+            //group conversation  don't show block
+            for (SelectedConversation conversation : mSelectedConversations.values()) {
+                if (TextUtils.isEmpty(conversation.otherParticipantNormalizedDestination)) {
+                    mBlockMenuItem.setVisible(false);
+                    break;
+                }
+            }
             mAddContactMenuItem.setVisible(false);
         }
 
@@ -178,8 +208,15 @@ public class MultiSelectActionModeCallback implements Callback {
         boolean hasCurrentlyUnarchived = false;
         boolean hasCurrentlyOnNotification = false;
         boolean hasCurrentlyOffNotification = false;
+        boolean hasPinConversation = false;
+        boolean hasUnpinConversation = false;
         final Iterable<SelectedConversation> conversations = mSelectedConversations.values();
         for (final SelectedConversation conversation : conversations) {
+            if (conversation.isPin) {
+                hasPinConversation = true;
+            } else {
+                hasUnpinConversation = true;
+            }
             if (conversation.notificationEnabled) {
                 hasCurrentlyOnNotification = true;
             } else {
@@ -202,5 +239,7 @@ public class MultiSelectActionModeCallback implements Callback {
         // conversation we show off button. We can show both if we have a mixture.
         mNotificationOffMenuItem.setVisible(hasCurrentlyOnNotification);
         mNotificationOnMenuItem.setVisible(hasCurrentlyOffNotification);
+        mPinMenuItem.setVisible(hasUnpinConversation);
+        mCancelPinMenuItem.setVisible(hasPinConversation);
     }
 }

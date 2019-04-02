@@ -25,9 +25,9 @@ import com.android.messaging.datamodel.data.ParticipantData;
 import com.android.messaging.datamodel.data.PeopleOptionsItemData;
 import com.android.messaging.ui.appsettings.SettingItemView;
 import com.android.messaging.util.Assert;
-import com.android.messaging.util.OsUtil;
 
-import static com.android.messaging.datamodel.data.PeopleOptionsItemData.SETTING_BLOCKED;
+import static com.android.messaging.datamodel.data.PeopleOptionsItemData.SETTING_ADD_CONTANCT;
+import static com.android.messaging.datamodel.data.PeopleOptionsItemData.SETTING_DELETE;
 
 /**
  * The view for a single entry in the options section of people & options activity.
@@ -54,11 +54,20 @@ public class PeopleOptionsItemView extends SettingItemView {
         setOnItemClickListener(() -> mHostInterface.onOptionsItemViewClicked(mData, !mData.getChecked()));
     }
 
-    public void bind(final Cursor cursor, int columnIndex, ParticipantData otherParticipant,
-                     final HostInterface hostInterface) {
+    public void bind(final Cursor cursor, int columnIndex, ParticipantData otherParticipant, final HostInterface hostInterface, final boolean isGroup, boolean isContactVisible) {
         Assert.isTrue(columnIndex < PeopleOptionsItemData.SETTINGS_COUNT && columnIndex >= 0);
-
+        //group conversation  don't show add contact and block
+        if (isGroup) {
+            if (columnIndex == SETTING_ADD_CONTANCT) {
+                columnIndex = SETTING_DELETE;
+            }
+        } else {
+            if (columnIndex >= SETTING_ADD_CONTANCT && !isContactVisible) {
+                columnIndex++;
+            }
+        }
         mData.bind(cursor, otherParticipant, columnIndex);
+
         mHostInterface = hostInterface;
 
         setTitle(mData.getTitle());

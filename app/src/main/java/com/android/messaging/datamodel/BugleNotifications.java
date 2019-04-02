@@ -51,6 +51,7 @@ import com.android.messaging.datamodel.MessageNotificationState.BundledMessageNo
 import com.android.messaging.datamodel.MessageNotificationState.ConversationLineInfo;
 import com.android.messaging.datamodel.MessageNotificationState.MultiConversationNotificationState;
 import com.android.messaging.datamodel.MessageNotificationState.MultiMessageNotificationState;
+import com.android.messaging.datamodel.action.GetUnreadMessageCountAction;
 import com.android.messaging.datamodel.action.MarkAsReadAction;
 import com.android.messaging.datamodel.action.MarkAsSeenAction;
 import com.android.messaging.datamodel.action.RedownloadMmsAction;
@@ -177,6 +178,7 @@ public class BugleNotifications {
      */
     public static void update(final boolean silent, final String conversationId,
                               final int coverage) {
+        GetUnreadMessageCountAction.refreshUnreadMessageCount();
         if (LogUtil.isLoggable(TAG, LogUtil.VERBOSE)) {
             LogUtil.v(TAG, "Update: silent = " + silent
                     + " conversationId = " + conversationId

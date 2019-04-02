@@ -62,6 +62,7 @@ import com.google.common.annotations.VisibleForTesting;
 import com.ihs.app.framework.HSApplication;
 import com.ihs.commons.config.HSConfig;
 import com.ihs.commons.notificationcenter.HSGlobalNotificationCenter;
+import com.ihs.commons.utils.HSBundle;
 import com.superapps.util.BackgroundDrawables;
 import com.superapps.util.Dimensions;
 import com.superapps.util.IntegerBuckets;
@@ -89,11 +90,10 @@ public class ConversationListFragment extends Fragment implements ConversationLi
     private boolean mForwardMessageMode;
     private ViewGroup adContainer;
     private AcbExpressAdView expressAdView;
-    private boolean showAd;
     private LinearLayoutManager manager;
     private boolean switchAd;
-    private boolean firstLoading = true;
-
+    private boolean adFirstPrepared = true;
+    private boolean conversationFirstUpdated = true;
 
     public interface ConversationListFragmentHost {
         void onConversationClick(final ConversationListData listData,
@@ -172,7 +172,7 @@ public class ConversationListFragment extends Fragment implements ConversationLi
         Assert.notNull(mHost);
         setScrolledToNewestConversationIfNeeded();
         updateUi();
-        if (!firstLoading) {
+        if (!adFirstPrepared) {
             prepareAd();
         }
     }
@@ -390,7 +390,7 @@ public class ConversationListFragment extends Fragment implements ConversationLi
 
             }
         });
-        firstLoading = false;
+        adFirstPrepared = false;
     }
 
     @Override
@@ -446,11 +446,31 @@ public class ConversationListFragment extends Fragment implements ConversationLi
                 dataList.add(itemData);
             } while (cursor.moveToNext());
         }
+
+        if (conversationFirstUpdated) {
+            conversationFirstUpdated = false;
+            boolean hasPinConversation = false;
+            if (!dataList.isEmpty()) {
+                for (Object object : dataList) {
+                    if (object instanceof ConversationListItemData) {
+                        ConversationListItemData itemData = (ConversationListItemData) object;
+                        if (itemData.isPinned()) {
+                            hasPinConversation = true;
+                            break;
+                        }
+                    }
+                }
+            }
+            HSBundle hsBundle = new HSBundle();
+            hsBundle.putBoolean(ConversationListActivity.HAS_PIN_CONVERSATION, hasPinConversation);
+            HSGlobalNotificationCenter.sendNotification(ConversationListActivity.FIRST_LOAD, hsBundle);
+        }
+
         if (mAdapter.hasHeader()) {
             dataList.add(0, new AdItemData());
         }
         mAdapter.setDataList(dataList);
-        if (firstLoading && !dataList.isEmpty()) {
+        if (adFirstPrepared && !dataList.isEmpty()) {
             prepareAd();
         }
         updateEmptyListUi(cursor == null || cursor.getCount() == 0);

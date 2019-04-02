@@ -54,6 +54,7 @@ public class ConversationActivity extends BugleActionBarActivity
         implements ContactPickerFragmentHost, ConversationFragmentHost,
         ConversationActivityUiStateHost {
     public static final int FINISH_RESULT_CODE = 1;
+    public static final int DELETE_CONVERSATION_RESULT_CODE = 2;
     private static final String SAVED_INSTANCE_STATE_UI_STATE_KEY = "uistate";
 
     private ConversationActivityUiState mUiState;
@@ -422,6 +423,10 @@ public class ConversationActivity extends BugleActionBarActivity
                         "AttachmentChooserActivity!");
             }
         } else if (resultCode == FINISH_RESULT_CODE) {
+            finish();
+        } else if (resultCode == DELETE_CONVERSATION_RESULT_CODE) {
+            final ConversationFragment conversationFragment = getConversationFragment();
+            conversationFragment.deleteConversation();
             finish();
         }
     }

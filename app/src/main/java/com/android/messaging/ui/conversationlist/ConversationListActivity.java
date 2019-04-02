@@ -30,6 +30,7 @@ import com.android.messaging.Factory;
 import com.android.messaging.R;
 import com.android.messaging.datamodel.BugleNotifications;
 import com.android.messaging.ui.CreateShortcutActivity;
+import com.android.messaging.datamodel.action.PinConversationAction;
 import com.android.messaging.ui.DragHotSeatActivity;
 import com.android.messaging.ui.UIIntents;
 import com.android.messaging.ui.UIIntentsImpl;
@@ -67,6 +68,7 @@ import com.superapps.util.Toasts;
 
 import java.lang.ref.WeakReference;
 import java.util.Calendar;
+import java.util.Collection;
 import java.util.Random;
 
 import static com.android.messaging.ui.dialog.FiveStarRateDialog.DESKTOP_PREFS;
@@ -76,7 +78,9 @@ public class ConversationListActivity extends AbstractConversationListActivity
         implements View.OnClickListener, INotificationObserver {
 
     public static final String EVENT_MAINPAGE_RECREATE = "event_mainpage_recreate";
-    public static final String SHOW_EMOJI = "show_emoji";
+    public static final String SHOW_EMOJI = "show_emoj";
+    public static final String FIRST_LOAD = "first_load";
+    public static final String HAS_PIN_CONVERSATION = "has_pin_conversation";
 
     private static final String PREF_SHOW_EMOJI_GUIDE = "pref_show_emoji_guide";
     public static final String PREF_KEY_MAIN_DRAWER_OPENED = "pref_key_main_drawer_opened";
@@ -116,6 +120,8 @@ public class ConversationListActivity extends AbstractConversationListActivity
     private boolean mShowEndAnimation;
     private boolean hideAnimation;
     private boolean shouldShowCreateShortcutGuide;
+    private String size;
+
 
     private enum AnimState {
         NONE,
@@ -164,6 +170,7 @@ public class ConversationListActivity extends AbstractConversationListActivity
 
         HSGlobalNotificationCenter.addObserver(EVENT_MAINPAGE_RECREATE, this);
         HSGlobalNotificationCenter.addObserver(SHOW_EMOJI, this);
+        HSGlobalNotificationCenter.addObserver(FIRST_LOAD, this);
         BugleAnalytics.logEvent("SMS_ActiveUsers", true);
 
         if (!sIsRecreate) {
@@ -186,8 +193,6 @@ public class ConversationListActivity extends AbstractConversationListActivity
                     backgroundStr = "colorsms_" + wallpaperIndex;
                 }
 
-                int hour = Calendar.getInstance().get(Calendar.HOUR_OF_DAY);
-
                 BugleAnalytics.logEvent("SMS_Messages_Show", true,
                         "themeColor", String.valueOf(ThemeSelectActivity.getSelectedIndex()),
                         "background", backgroundStr,
@@ -197,7 +202,6 @@ public class ConversationListActivity extends AbstractConversationListActivity
                         "received text color", ConversationColors.get().getConversationColorEventType(false, true),
                         "sent text color", ConversationColors.get().getConversationColorEventType(false, false));
 
-                String size;
                 switch (FontStyleManager.getInstance().getFontScaleLevel()) {
                     case 0:
                         size = "Smallest";
@@ -218,13 +222,6 @@ public class ConversationListActivity extends AbstractConversationListActivity
                         size = "Default";
                 }
 
-                BugleAnalytics.logEvent("SMS_Messages_Show_1", true,
-                        "font", FontStyleManager.getInstance().getFontFamily(),
-                        "size", size,
-                        "open time", String.valueOf(hour),
-                        "signature", String.valueOf(!TextUtils.isEmpty(Preferences.getDefault().getString(
-                                SignatureSettingDialog.PREF_KEY_SIGNATURE_CONTENT, null)))
-                );
 
                 if (Calendars.getDayDifference(System.currentTimeMillis(), CommonUtils.getAppInstallTimeMillis()) == 1) {
                     final int wallpaper = wallpaperIndex;
@@ -510,6 +507,29 @@ public class ConversationListActivity extends AbstractConversationListActivity
     }
 
     @Override
+    public void onActionMenu() {
+        BugleAnalytics.logEvent("SMS_EditMode_More_Click");
+    }
+
+    @Override
+    public void onPin(Collection<MultiSelectActionModeCallback.SelectedConversation> conversations, boolean pin) {
+        if (pin) {
+            BugleAnalytics.logEvent("SMS_EditMode_Pin_Click", true);
+        } else {
+            BugleAnalytics.logEvent("SMS_EditMode_Unpin_Click", true);
+        }
+
+        for (MultiSelectActionModeCallback.SelectedConversation conversation : conversations) {
+            if (pin) {
+                PinConversationAction.pinConversation(conversation.conversationId);
+            } else {
+                PinConversationAction.unpinConversation(conversation.conversationId);
+            }
+        }
+        exitMultiSelectState();
+    }
+
+    @Override
     public boolean isSwipeAnimatable() {
         return !isInConversationListSelectMode();
     }
@@ -742,6 +762,19 @@ public class ConversationListActivity extends AbstractConversationListActivity
             case SHOW_EMOJI:
                 Threads.postOnMainThreadDelayed(() -> showEmojiStoreGuide(), 500);
                 break;
+            case FIRST_LOAD:
+                if (!sIsRecreate && hsBundle != null) {
+                    boolean hasPinConversation = hsBundle.getBoolean(HAS_PIN_CONVERSATION);
+                    int hour = Calendar.getInstance().get(Calendar.HOUR_OF_DAY);
+                    BugleAnalytics.logEvent("SMS_Messages_Show_1", true,
+                            "font", FontStyleManager.getInstance().getFontFamily(),
+                            "size", size,
+                            "open time", String.valueOf(hour),
+                            "signature", String.valueOf(!TextUtils.isEmpty(Preferences.getDefault().getString(
+                                    SignatureSettingDialog.PREF_KEY_SIGNATURE_CONTENT, null))),
+                            "pin", String.valueOf(hasPinConversation));
+                }
+
             default:
                 break;
         }

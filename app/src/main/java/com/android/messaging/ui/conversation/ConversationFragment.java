@@ -35,7 +35,6 @@ import android.content.res.Configuration;
 import android.database.Cursor;
 import android.graphics.Point;
 import android.graphics.Rect;
-import android.graphics.Typeface;
 import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.Bundle;
@@ -48,8 +47,6 @@ import android.support.v4.text.TextDirectionHeuristicsCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.text.Spannable;
-import android.text.SpannableString;
 import android.text.TextUtils;
 import android.view.ActionMode;
 import android.view.Display;
@@ -87,7 +84,6 @@ import com.android.messaging.ui.BugleActionBarActivity;
 import com.android.messaging.ui.ConversationDrawables;
 import com.android.messaging.ui.SnackBar;
 import com.android.messaging.ui.UIIntents;
-import com.android.messaging.ui.contact.AddContactsConfirmationDialog;
 import com.android.messaging.ui.conversation.ComposeMessageView.IComposeMessageViewHost;
 import com.android.messaging.ui.conversation.ConversationInputManager.ConversationInputHost;
 import com.android.messaging.ui.conversation.ConversationMessageView.ConversationMessageViewHost;
@@ -98,7 +94,6 @@ import com.android.messaging.ui.mediapicker.MediaPickerFragment;
 import com.android.messaging.ui.wallpaper.WallpaperManager;
 import com.android.messaging.util.AccessibilityUtil;
 import com.android.messaging.util.Assert;
-import com.android.messaging.util.AvatarUriUtil;
 import com.android.messaging.util.BugleAnalytics;
 import com.android.messaging.util.ChangeDefaultSmsAppHelper;
 import com.android.messaging.util.ContentType;
@@ -114,8 +109,6 @@ import com.google.common.annotations.VisibleForTesting;
 import com.ihs.commons.notificationcenter.HSGlobalNotificationCenter;
 import com.ihs.commons.notificationcenter.INotificationObserver;
 import com.ihs.commons.utils.HSBundle;
-import com.superapps.font.FontUtils;
-import com.superapps.view.CustomTypefaceSpan;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -703,38 +696,9 @@ public class ConversationFragment extends Fragment implements ConversationDataLi
         inflater.inflate(R.menu.conversation_menu, menu);
 
         final ConversationData data = mBinding.getData();
-
-        // Disable the "people & options" item if we haven't loaded participants yet.
-        menu.findItem(R.id.action_people_and_options).setEnabled(data.getParticipantsLoaded());
-
-        // See if we can show add contact action.
-        final ParticipantData participant = data.getOtherParticipant();
-        final boolean addContactActionVisible = (participant != null
-                && TextUtils.isEmpty(participant.getLookupKey()));
-        menu.findItem(R.id.action_add_contact).setVisible(addContactActionVisible);
-
-        // See if we should show archive or unarchive.
-
-        // Conditionally enable the phone call button.
         final boolean supportCallAction = (PhoneUtils.getDefault().isVoiceCapable() &&
                 data.getParticipantPhoneNumber() != null);
         menu.findItem(R.id.action_call).setVisible(supportCallAction);
-
-        initTypeface(menu);
-    }
-
-    private void initTypeface(Menu menu) {
-        Typeface tp = FontUtils.getTypeface();
-
-        applyFontToMenuItem(menu.findItem(R.id.action_people_and_options), tp);
-        applyFontToMenuItem(menu.findItem(R.id.action_delete), tp);
-        applyFontToMenuItem(menu.findItem(R.id.action_add_contact), tp);
-    }
-
-    private void applyFontToMenuItem(MenuItem mi, Typeface font) {
-        SpannableString mNewTitle = new SpannableString(mi.getTitle());
-        mNewTitle.setSpan(new CustomTypefaceSpan("", font), 0, mNewTitle.length(), Spannable.SPAN_INCLUSIVE_INCLUSIVE);
-        mi.setTitle(mNewTitle);
     }
 
     @Override
@@ -742,14 +706,8 @@ public class ConversationFragment extends Fragment implements ConversationDataLi
         switch (item.getItemId()) {
             case R.id.action_menu:
                 BugleAnalytics.logEvent("SMS_DetailsPage_IconSettings_Click", true);
-                return true;
-
-            case R.id.action_people_and_options:
-                Assert.isTrue(mBinding.getData().getParticipantsLoaded());
                 UIIntents.get().launchPeopleAndOptionsActivity(getActivity(), mConversationId);
-                BugleAnalytics.logEvent("SMS_DetailsPage_Settings_PeopleOptions", true);
-                return true;
-
+                return false;
             case R.id.action_call:
                 final String phoneNumber = mBinding.getData().getParticipantPhoneNumber();
                 Assert.notNull(phoneNumber);
@@ -768,32 +726,6 @@ public class ConversationFragment extends Fragment implements ConversationDataLi
                 }
                 UIIntents.get().launchPhoneCallActivity(getActivity(), phoneNumber, centerPoint);
                 BugleAnalytics.logEvent("SMS_DetailsPage_IconCall_Click", true);
-                return true;
-
-            case R.id.action_add_contact:
-                final ParticipantData participant = mBinding.getData().getOtherParticipant();
-                Assert.notNull(participant);
-                final String destination = participant.getNormalizedDestination();
-                final Uri avatarUri = AvatarUriUtil.createAvatarUri(participant);
-                UiUtils.showDialogFragment(getActivity(), AddContactsConfirmationDialog.newInstance(avatarUri, destination));
-                BugleAnalytics.logEvent("SMS_DetailsPage_Settings_AddContact", true);
-                return true;
-
-            case R.id.action_delete:
-                if (isReadyForAction()) {
-                    new BaseAlertDialog.Builder(getActivity())
-                            .setTitle(getResources().getQuantityString(
-                                    R.plurals.delete_conversations_confirmation_dialog_title, 1))
-                            .setPositiveButton(R.string.delete_conversation_confirmation_button,
-                                    (dialog, button) -> deleteConversation())
-                            .setNegativeButton(R.string.delete_conversation_decline_button, null)
-                            .show();
-
-                } else {
-                    warnOfMissingActionConditions(false /*sending*/,
-                            null /*commandToRunAfterActionConditionResolved*/);
-                }
-                BugleAnalytics.logEvent("SMS_DetailsPage_Settings_Delete", true);
                 return true;
         }
         return super.onOptionsItemSelected(item);
