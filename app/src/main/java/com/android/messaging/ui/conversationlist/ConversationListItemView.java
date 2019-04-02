@@ -57,6 +57,7 @@ import com.android.messaging.util.ImageUtils;
 import com.android.messaging.util.OsUtil;
 import com.android.messaging.util.UiUtils;
 import com.android.messaging.util.UriUtil;
+import com.ihs.commons.utils.HSLog;
 import com.superapps.font.FontUtils;
 import com.superapps.util.BackgroundDrawables;
 import com.superapps.util.Dimensions;
@@ -678,6 +679,8 @@ public class ConversationListItemView extends FrameLayout implements OnClickList
             } else if (mData.getMessageStatus() == MessageData.BUGLE_STATUS_INCOMING_YET_TO_MANUAL_DOWNLOAD) {
                 snippetText = resources.getString(R.string.mms_text);
             }
+        } else {
+            snippetText = snippetText.replace("\n", " ").replace("\r", " ");
         }
         return snippetText;
     }
