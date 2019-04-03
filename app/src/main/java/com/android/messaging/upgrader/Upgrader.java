@@ -40,7 +40,7 @@ public class Upgrader extends BaseUpgrader {
 
         if (oldVersion < 25 && newVersion >= 25) {
             addPinColumnInDB();
-        }
+        } 
     }
 
     public static void addPinColumnInDB() {
