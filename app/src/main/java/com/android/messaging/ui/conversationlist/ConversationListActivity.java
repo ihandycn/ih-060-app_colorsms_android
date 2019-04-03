@@ -42,6 +42,7 @@ import com.android.messaging.ui.customize.CustomBubblesActivity;
 import com.android.messaging.ui.customize.PrimaryColors;
 import com.android.messaging.ui.dialog.FiveStarRateDialog;
 import com.android.messaging.ui.emoji.EmojiStoreActivity;
+import com.android.messaging.ui.messagebox.MessageBoxActivity;
 import com.android.messaging.ui.signature.SignatureSettingDialog;
 import com.android.messaging.ui.wallpaper.WallpaperChooserItem;
 import com.android.messaging.ui.wallpaper.WallpaperDownloader;
@@ -265,6 +266,7 @@ public class ConversationListActivity extends AbstractConversationListActivity
                 CustomizeGuideController.showGuideIfNeed(activity.get());
             }
         }, 1000);
+        HSGlobalNotificationCenter.sendNotification(MessageBoxActivity.NOTIFICATION_FINISH_MESSAGE_BOX);
     }
 
     @Override
