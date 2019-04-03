@@ -400,7 +400,7 @@ public class WelcomeStartActivity extends AppCompatActivity implements View.OnCl
             } else {
                 mAutoPlayViewPagerSlideAnimator.cancel();
             }
-        }, 2000);
+        }, 1800);
     }
 
     private void cancelForwardAnimationLoadTask() {
