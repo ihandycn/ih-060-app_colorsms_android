@@ -37,9 +37,13 @@ public class Upgrader extends BaseUpgrader {
             int fontLevel = BuglePrefs.getApplicationPrefs().getInt("message_font_scale", 2);
             FontStyleManager.getInstance().setFontScaleLevel(fontLevel);
         }
+
+        if (oldVersion < 25 && newVersion >= 25) {
+            addPinColumnInDB();
+        }
     }
 
-    public static void updateConversationDatabase() {
+    public static void addPinColumnInDB() {
         final DatabaseWrapper db = DataModel.get().getDatabase();
         Cursor cursor = null;
         try {
