@@ -30,6 +30,7 @@ import com.android.messaging.util.CommonUtils;
 import com.android.messaging.util.ViewUtils;
 import com.ihs.app.framework.HSApplication;
 import com.ihs.app.utils.HSMarketUtils;
+import com.ihs.commons.config.HSConfig;
 import com.superapps.util.Dimensions;
 import com.superapps.util.Preferences;
 import com.superapps.util.Threads;
@@ -492,7 +493,8 @@ public class FiveStarRateDialog extends DefaultButtonDialog2 implements View.OnC
         return !isHadFiveStarRate()
                 && isShowFiveStarRateTooMaxTimes()
                 && isShowFiveStarRateMoreThenInterval()
-                && System.currentTimeMillis() - CommonUtils.getAppInstallTimeMillis() > DateUtils.HOUR_IN_MILLIS / 2;
+                && System.currentTimeMillis() - CommonUtils.getAppInstallTimeMillis()
+                > HSConfig.optInteger(30, "Application", "FiveStarShowTime") * DateUtils.MINUTE_IN_MILLIS;
     }
 
     public static boolean showShowFiveStarRateDialogOnBackToDesktopIfNeed(Activity context) {

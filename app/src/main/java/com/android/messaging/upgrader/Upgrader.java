@@ -8,6 +8,7 @@ import com.android.messaging.datamodel.DatabaseHelper;
 import com.android.messaging.datamodel.DatabaseWrapper;
 import com.android.messaging.datamodel.data.ConversationListItemData;
 import com.android.messaging.ui.conversationlist.ConversationListActivity;
+import com.android.messaging.ui.welcome.WelcomeStartActivity;
 import com.android.messaging.util.BuglePrefs;
 import com.superapps.font.FontStyleManager;
 import com.superapps.util.Preferences;
@@ -40,6 +41,8 @@ public class Upgrader extends BaseUpgrader {
 
         if (oldVersion < 25 && newVersion >= 25) {
             addPinColumnInDB();
+            Preferences.getDefault().putBoolean(WelcomeStartActivity.PREF_KEY_START_BUTTON_CLICKED,
+                    !Preferences.getDefault().getBoolean("pref_key_first_launch", true));
         } 
     }
 

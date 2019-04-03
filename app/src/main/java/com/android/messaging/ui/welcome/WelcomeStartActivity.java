@@ -46,7 +46,7 @@ public class WelcomeStartActivity extends AppCompatActivity implements View.OnCl
 
     private static final String TAG = WelcomeStartActivity.class.getSimpleName();
 
-    private static final String PREF_KEY_START_BUTTON_CLICKED = "PREF_KEY_START_BUTTON_CLICKED";
+    public static final String PREF_KEY_START_BUTTON_CLICKED = "PREF_KEY_START_BUTTON_CLICKED";
     private static final int REQUEST_SET_DEFAULT_SMS_APP = 3;
 
     private final static float[] LOTTIE_ANIMATION_FORWARD_POSITION =
