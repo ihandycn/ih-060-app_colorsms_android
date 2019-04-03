@@ -176,8 +176,12 @@ public class ActionServiceImpl extends IntentService {
                     (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
 
             if (delayMs < Long.MAX_VALUE) {
-                mgr.set(AlarmManager.ELAPSED_REALTIME_WAKEUP,
-                        SystemClock.elapsedRealtime() + delayMs, pendingIntent);
+                try {
+                    mgr.set(AlarmManager.ELAPSED_REALTIME_WAKEUP,
+                            SystemClock.elapsedRealtime() + delayMs, pendingIntent);
+                } catch (SecurityException e) {
+                    e.printStackTrace();
+                }
             } else {
                 mgr.cancel(pendingIntent);
             }

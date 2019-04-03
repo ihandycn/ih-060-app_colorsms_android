@@ -1,11 +1,9 @@
 package com.android.messaging.ui.appsettings;
 
-import android.annotation.TargetApi;
 import android.content.Intent;
 import android.media.Ringtone;
 import android.media.RingtoneManager;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.support.v7.widget.Toolbar;
@@ -15,8 +13,6 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.android.messaging.BaseActivity;
-import com.android.messaging.BugleApplication;
-import com.android.messaging.Factory;
 import com.android.messaging.R;
 import com.android.messaging.feedback.FeedbackActivity;
 import com.android.messaging.smsshow.SmsShowUtils;
@@ -27,15 +23,13 @@ import com.android.messaging.ui.messagebox.MessageBoxSettings;
 import com.android.messaging.ui.signature.SignatureSettingDialog;
 import com.android.messaging.util.BugleAnalytics;
 import com.android.messaging.util.BuglePrefs;
-import com.android.messaging.util.BuglePrefsKeys;
 import com.android.messaging.util.OsUtil;
-import com.android.messaging.util.PendingIntentConstants;
 import com.android.messaging.util.UiUtils;
 import com.ihs.commons.config.HSConfig;
+import com.superapps.util.Navigations;
 import com.superapps.util.Preferences;
 
 import static android.view.View.GONE;
-import static com.android.messaging.ui.appsettings.SettingItemView.NORMAL;
 
 public class SettingGeneralActivity extends BaseActivity {
     private static final int REQUEST_CODE_START_RINGTONE_PICKER = 1;
@@ -278,7 +272,8 @@ public class SettingGeneralActivity extends BaseActivity {
         ringtonePickerIntent.putExtra(RingtoneManager.EXTRA_RINGTONE_SHOW_SILENT, true);
         ringtonePickerIntent.putExtra(RingtoneManager.EXTRA_RINGTONE_TYPE, RingtoneManager.TYPE_NOTIFICATION);
         ringtonePickerIntent.putExtra(RingtoneManager.EXTRA_RINGTONE_TITLE, getTitle()); //title
-        startActivityForResult(ringtonePickerIntent, REQUEST_CODE_START_RINGTONE_PICKER);
+        Navigations.startActivityForResultSafely(SettingGeneralActivity.this,
+                ringtonePickerIntent, REQUEST_CODE_START_RINGTONE_PICKER);
     }
 
     @Override
@@ -293,7 +288,8 @@ public class SettingGeneralActivity extends BaseActivity {
             if (resultCode != RESULT_OK) {
                 return;
             }
-            if (data != null) {
+            if (data != null
+                    && data.getParcelableExtra(RingtoneManager.EXTRA_RINGTONE_PICKED_URI) != null) {
                 Uri uri = data.getParcelableExtra(RingtoneManager.EXTRA_RINGTONE_PICKED_URI);
                 String prefKey = getString(R.string.notification_sound_pref_key);
                 String currentRingtone = prefs.getString(prefKey, Settings.System.DEFAULT_NOTIFICATION_URI.toString());

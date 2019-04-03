@@ -53,18 +53,11 @@ import android.widget.Toast;
 
 import com.android.messaging.Factory;
 import com.android.messaging.R;
-import com.android.messaging.ui.SetAsDefaultGuideActivity;
 import com.android.messaging.ui.SnackBar;
 import com.android.messaging.ui.SnackBar.Placement;
 import com.android.messaging.ui.SnackBarInteraction;
 import com.android.messaging.ui.SnackBarManager;
-import com.android.messaging.ui.UIIntents;
-import com.android.messaging.ui.WebViewActivity;
 import com.android.messaging.ui.customize.PrimaryColors;
-import com.android.messaging.ui.welcome.WelcomePermissionActivity;
-import com.android.messaging.ui.welcome.WelcomeSetAsDefaultActivity;
-import com.android.messaging.ui.welcome.WelcomeStartActivity;
-import com.ihs.commons.utils.HSLog;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;

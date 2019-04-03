@@ -40,6 +40,7 @@ public class ConnectivityUtil {
 
     public interface ConnectivityListener {
         public void onConnectivityStateChanged(final Context context, final Intent intent);
+
         public void onPhoneStateChanged(final Context context, int serviceState);
     }
 
@@ -109,7 +110,11 @@ public class ConnectivityUtil {
                 mCurrentServiceState = ServiceState.STATE_POWER_OFF;
             }
             if (mConnMgr != null) {
-                mContext.unregisterReceiver(mReceiver);
+                try {
+                    mContext.unregisterReceiver(mReceiver);
+                } catch (IllegalArgumentException e) {
+                    // ignore
+                }
             }
         }
         mListener = null;
@@ -223,6 +228,7 @@ public class ConnectivityUtil {
         final int level = (levelDbm < levelEcio) ? levelDbm : levelEcio;
         return level;
     }
+
     /**
      * Get Evdo as level 0..4
      */

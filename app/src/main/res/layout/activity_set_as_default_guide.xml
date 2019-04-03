@@ -4,8 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#b2000000"
-    tools:context="com.android.messaging.ui.SetAsDefaultGuideActivity">
+    android:background="#b2000000">
 
     <android.support.constraint.Guideline
         android:id="@+id/set_as_default_guideline"

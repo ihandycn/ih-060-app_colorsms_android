@@ -21,9 +21,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.database.Cursor;
-import android.media.Ringtone;
 import android.media.RingtoneManager;
-import android.net.Uri;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.provider.Settings;
@@ -55,7 +53,7 @@ import com.android.messaging.ui.wallpaper.WallpaperManager;
 import com.android.messaging.ui.wallpaper.WallpaperPreviewActivity;
 import com.android.messaging.util.Assert;
 import com.android.messaging.util.BugleAnalytics;
-import com.android.messaging.util.BuglePrefs;
+import com.superapps.util.Navigations;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -180,12 +178,13 @@ public class PeopleAndOptionsFragment extends Fragment
                 break;
 
             case SETTING_NOTIFICATION_SOUND_URI:
-                mRingtone = item.getRingtoneUri().toString();
+                mRingtone = item.getRingtoneUri() == null ? "" : item.getRingtoneUri().toString();
                 final Intent ringtonePickerIntent = UIIntents.get().getRingtonePickerIntent(
                         getString(R.string.notification_sound_pref_title),
                         item.getRingtoneUri(), Settings.System.DEFAULT_NOTIFICATION_URI,
                         RingtoneManager.TYPE_NOTIFICATION);
-                startActivityForResult(ringtonePickerIntent, REQUEST_CODE_RINGTONE_PICKER);
+                Navigations.startActivityForResultSafely(getActivity(),
+                        ringtonePickerIntent, REQUEST_CODE_RINGTONE_PICKER);
                 break;
 
             case SETTING_NOTIFICATION_VIBRATION:
