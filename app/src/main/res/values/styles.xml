@@ -738,6 +738,11 @@
         <item name="typeface">@string/custom_font_regular</item>
     </style>
 
+    <style name="MessageBoxProgressBarTheme" parent="Theme.AppCompat.Light">
+        <item name="colorPrimary">@color/primary_color</item>
+    </style>
+
+
 
     <style name="AcbSmsRecyclerViewTheme" parent="Theme.AppCompat.Light">
         <item name="colorPrimary">@color/conversation_edge_effect</item>

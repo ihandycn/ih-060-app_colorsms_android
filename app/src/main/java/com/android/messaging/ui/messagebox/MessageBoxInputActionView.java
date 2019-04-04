@@ -1,12 +1,14 @@
 package com.android.messaging.ui.messagebox;
 
 import android.content.Context;
+import android.graphics.PorterDuff;
 import android.support.annotation.Nullable;
 import android.text.Editable;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 
 import com.android.messaging.R;
 import com.android.messaging.ui.PlainTextEditText;
@@ -22,6 +24,7 @@ class MessageBoxInputActionView extends LinearLayout {
     private MessageBoxActivity mHost;
     private PlainTextEditText mComposeEditText;
     private ImageView mEmojiIcon;
+    private ProgressBar mProgressBar;
 
     public MessageBoxInputActionView(Context context, @Nullable AttributeSet attrs) {
         super(context, attrs, 0);
@@ -41,7 +44,14 @@ class MessageBoxInputActionView extends LinearLayout {
         mComposeEditText.requestFocus();
         mComposeEditText.setTypeface(FontUtils.getTypeface());
 
+        mProgressBar = findViewById(R.id.progress_bar);
+        mProgressBar.getIndeterminateDrawable().setColorFilter(PrimaryColors.getPrimaryColor(), PorterDuff.Mode.SRC_IN);
         mEmojiIcon = findViewById(R.id.emoji_btn);
+    }
+
+    void performReply() {
+        mProgressBar.setVisibility(VISIBLE);
+        mSelfSendIcon.setVisibility(GONE);
     }
 
     String getMessage() {

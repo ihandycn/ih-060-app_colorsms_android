@@ -40,6 +40,8 @@ public class MessageBoxActivity extends AppCompatActivity implements INotificati
     private static final String CLICK_CONTENT = "click_content";
 
     public static final String NOTIFICATION_FINISH_MESSAGE_BOX = "finish_message_box";
+    public static final String NOTIFICATION_MESSAGE_BOX_SEND_SMS_SUCCEDED = "message_box_send_sms_success";
+    public static final String NOTIFICATION_MESSAGE_BOX_SEND_SMS_FAILED = "message_box_send_sms_failed";
 
     private static final boolean DEBUGGING_MULTI_CONVERSATIONS = false && BuildConfig.DEBUG;
 
@@ -76,11 +78,14 @@ public class MessageBoxActivity extends AppCompatActivity implements INotificati
 
         mCurrentConversationView = view;
         MessageBoxAnalytics.setIsMultiConversation(false);
-        HSGlobalNotificationCenter.addObserver(NOTIFICATION_FINISH_MESSAGE_BOX, this);
 
         recordMessageType(data);
         mMarkAsUnReadMap.put(data.getConversationId(), false);
         mConversationIdList.add(data.getConversationId());
+
+        HSGlobalNotificationCenter.addObserver(NOTIFICATION_FINISH_MESSAGE_BOX, this);
+        HSGlobalNotificationCenter.addObserver(NOTIFICATION_MESSAGE_BOX_SEND_SMS_FAILED, this);
+        HSGlobalNotificationCenter.addObserver(NOTIFICATION_MESSAGE_BOX_SEND_SMS_SUCCEDED, this);
     }
 
     @Override
@@ -206,7 +211,6 @@ public class MessageBoxActivity extends AppCompatActivity implements INotificati
 
             case R.id.self_send_icon:
                 mCurrentConversationView.replyMessage();
-                removeCurrentPage(REPLY);
                 break;
         }
     }
@@ -231,6 +235,12 @@ public class MessageBoxActivity extends AppCompatActivity implements INotificati
     public void onReceive(String s, HSBundle hsBundle) {
         if (NOTIFICATION_FINISH_MESSAGE_BOX.equals(s)) {
             finish(CLICK_CONTENT);
+        } else if (NOTIFICATION_MESSAGE_BOX_SEND_SMS_FAILED.equals(s)) {
+            Toasts.showToast(R.string.message_box_send_failed_toast);
+            removeCurrentPage(REPLY);
+        } else if (NOTIFICATION_MESSAGE_BOX_SEND_SMS_SUCCEDED.equals(s)) {
+            Toasts.showToast(R.string.message_box_send_successfully_toast);
+            removeCurrentPage(REPLY);
         }
     }
 
@@ -245,6 +255,7 @@ public class MessageBoxActivity extends AppCompatActivity implements INotificati
 
     private void finish(String source) {
         finish();
+        overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
         if (MessageBoxAnalytics.getIsMultiConversation()) {
             BugleAnalytics.logEvent("SMS_PopUp_Close_Multifunction_MultiUser", "closeType", source);
         } else {

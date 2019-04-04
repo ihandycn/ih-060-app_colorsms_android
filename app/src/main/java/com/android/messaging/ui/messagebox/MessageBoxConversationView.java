@@ -197,6 +197,7 @@ public class MessageBoxConversationView extends FrameLayout {
         if (TextUtils.isEmpty(message)) {
             return;
         }
+        mInputActionView.performReply();
         Context context = Factory.get().getApplicationContext();
         final Intent sendIntent = new Intent(context, NoConfirmationSmsSendService.class);
         sendIntent.setAction(TelephonyManager.ACTION_RESPOND_VIA_MESSAGE);
@@ -277,7 +278,6 @@ public class MessageBoxConversationView extends FrameLayout {
                 ImeUtil.get().hideImeKeyboard(getContext(), mInputEditText);
                 mEmojiContainer.setVisibility(View.VISIBLE);
             }
-
             MessageBoxAnalytics.logEvent("SMS_PopUp_Emoji_Click");
         });
 

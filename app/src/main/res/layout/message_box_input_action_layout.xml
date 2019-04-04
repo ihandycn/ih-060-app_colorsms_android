@@ -40,23 +40,32 @@
 
             <!-- Contains compose message bubble and character counter for SMS which should be left
             aligned -->
-            <RelativeLayout
-                android:layout_width="match_parent"
+            <FrameLayout
+                android:layout_width="wrap_content"
                 android:layout_height="51dp"
-                android:layout_gravity="bottom">
+                android:layout_gravity="end|bottom"
+                android:layout_marginEnd="16dp">
+
+                <ProgressBar
+                    android:id="@+id/progress_bar"
+                    android:layout_width="36.7dp"
+                    android:layout_height="36.7dp"
+                    android:padding="5dp"
+                    android:visibility="gone"
+                    android:layout_gravity="center_vertical"
+                    android:theme="@style/MessageBoxProgressBarTheme"
+                    style="?android:attr/progressBarStyleInverse" />
+
 
                 <ImageView
                     android:id="@+id/self_send_icon"
                     android:layout_width="36.7dp"
                     android:layout_height="36.7dp"
-                    android:layout_alignParentEnd="true"
-                    android:layout_centerVertical="true"
-                    android:layout_marginEnd="16dp"
+                    android:layout_gravity="center_vertical"
                     android:src="@drawable/input_send_message_icon"
-                    android:clickable="true"
                     android:importantForAccessibility="no" />
 
-            </RelativeLayout>
+            </FrameLayout>
 
             <LinearLayout
                 android:id="@+id/input_layout"
