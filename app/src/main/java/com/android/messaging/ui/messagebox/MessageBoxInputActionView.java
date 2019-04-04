@@ -17,7 +17,7 @@ import com.superapps.util.Dimensions;
 
 class MessageBoxInputActionView extends LinearLayout {
 
-    private SimIconView mSelfSendIcon;
+    private ImageView mSelfSendIcon;
     private MessageBoxActivity mHost;
     private PlainTextEditText mComposeEditText;
     private ImageView mEmojiIcon;

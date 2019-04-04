@@ -84,7 +84,6 @@ public class MessageBoxConversationView extends FrameLayout {
         initQuickActions();
         mInputActionView = findViewById(R.id.message_compose_view_container);
         mEmojiContainer = findViewById(R.id.emoji_picker_container);
-        mEmojiContainer.setBackgroundColor(Color.WHITE);
         mInputEditText = mInputActionView.getComposeEditText();
         initEmoji();
     }

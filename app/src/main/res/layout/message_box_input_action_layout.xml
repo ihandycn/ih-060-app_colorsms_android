@@ -45,17 +45,16 @@
                 android:layout_height="51dp"
                 android:layout_gravity="bottom">
 
-                <com.android.messaging.ui.conversation.SimIconView
+                <ImageView
                     android:id="@+id/self_send_icon"
                     android:layout_width="36.7dp"
                     android:layout_height="36.7dp"
                     android:layout_alignParentEnd="true"
                     android:layout_centerVertical="true"
                     android:layout_marginEnd="16dp"
+                    android:src="@drawable/input_send_message_icon"
                     android:clickable="true"
-                    android:importantForAccessibility="no"
-                    app:iconSize="normal"
-                    app:reveal="true"/>
+                    android:importantForAccessibility="no" />
 
             </RelativeLayout>
 

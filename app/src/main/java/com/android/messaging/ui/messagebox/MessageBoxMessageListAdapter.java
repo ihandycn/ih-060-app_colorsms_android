@@ -57,7 +57,7 @@ public class MessageBoxMessageListAdapter extends RecyclerView.Adapter<RecyclerV
                 View smsViewItem = LayoutInflater.from(parent.getContext()).inflate(R.layout.message_box_sms_item, parent, false);
                 SmsViewHolder holder = new SmsViewHolder(smsViewItem);
                 holder.mContentText.setOnClickListener(v1 -> {
-                    UIIntents.get().launchConversationActivity(v1.getContext(), mConversationId, null);
+                    UIIntents.get().launchConversationActivityWithParentStack(v1.getContext(), mConversationId, null);
                     HSGlobalNotificationCenter.sendNotification(NOTIFICATION_FINISH_MESSAGE_BOX);
                 });
                 holder.mContentText.setTextColor(mIncomingTextColor);
@@ -69,7 +69,7 @@ public class MessageBoxMessageListAdapter extends RecyclerView.Adapter<RecyclerV
 
                 MmsViewHolder mmsViewHolder = new MmsViewHolder(mmsViewItem);
                 mmsViewHolder.mContentView.setOnClickListener(v -> {
-                    UIIntents.get().launchConversationActivity(parent.getContext(), mConversationId, null);
+                    UIIntents.get().launchConversationActivityWithParentStack(parent.getContext(), mConversationId, null);
                     HSGlobalNotificationCenter.sendNotification(NOTIFICATION_FINISH_MESSAGE_BOX);
                     MessageBoxAnalytics.logEvent("SMS_PopUp_MMS_Click");
                 });

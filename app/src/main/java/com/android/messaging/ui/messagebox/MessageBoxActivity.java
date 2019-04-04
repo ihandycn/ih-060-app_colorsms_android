@@ -189,7 +189,7 @@ public class MessageBoxActivity extends AppCompatActivity implements INotificati
                 MessageBoxAnalytics.logEvent("SMS_PopUp_Unread_Click");
                 break;
             case R.id.action_open:
-                UIIntents.get().launchConversationActivity(this, mCurrentConversationView.getConversationId(), null);
+                UIIntents.get().launchConversationActivityWithParentStack(this, mCurrentConversationView.getConversationId(), null);
                 finish(OPEN);
                 MessageBoxAnalytics.logEvent("SMS_PopUp_Open_Click");
                 break;
