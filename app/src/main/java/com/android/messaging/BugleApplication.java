@@ -198,9 +198,9 @@ public class BugleApplication extends HSApplication implements UncaughtException
         try {
             List<Task> initWorks = new ArrayList<>();
 
-            initWorks.add(new SyncMainThreadTask("Upgrade", () -> Upgrader.getUpgrader(this).upgrade()));
-
             initWorks.add(new SyncMainThreadTask("InitFactoryImpl", this::initFactoryImpl));
+
+            initWorks.add(new SyncMainThreadTask("Upgrade", () -> Upgrader.getUpgrader(this).upgrade()));
 
             initWorks.add(new SyncMainThreadTask("InitAd", this::initAd));
 
