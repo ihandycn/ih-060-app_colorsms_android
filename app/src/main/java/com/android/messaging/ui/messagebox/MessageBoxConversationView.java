@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.Point;
 import android.graphics.PorterDuff;
+import android.graphics.Rect;
 import android.support.annotation.ColorInt;
 import android.support.annotation.NonNull;
 import android.support.v4.view.PagerAdapter;
@@ -99,6 +100,7 @@ public class MessageBoxConversationView extends FrameLayout {
         mRecyclerView = findViewById(R.id.recycler_view);
         LinearLayoutManager llm = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false);
         mRecyclerView.setLayoutManager(llm);
+        mRecyclerView.addItemDecoration(new MessageItemDecoration());
 
         mAdapter = new MessageBoxMessageListAdapter(data);
         mRecyclerView.setAdapter(mAdapter);
@@ -290,6 +292,23 @@ public class MessageBoxConversationView extends FrameLayout {
             ImeUtil.get().showImeKeyboard(getContext(), mInputEditText);
             MessageBoxAnalytics.logEvent("SMS_PopUp_TextField_Click");
         });
+    }
+
+    private static class MessageItemDecoration extends RecyclerView.ItemDecoration {
+
+        @Override
+        public void getItemOffsets(Rect outRect, View view, RecyclerView parent, RecyclerView.State state) {
+
+            int position = parent.getChildAdapterPosition(view);
+            int count = parent.getChildCount();
+
+            if (position < count - 1) {
+                outRect.top = Dimensions.pxFromDp(14);
+            } else {
+                outRect.top = Dimensions.pxFromDp(14);
+                outRect.bottom = Dimensions.pxFromDp(14);
+            }
+        }
     }
 
 }

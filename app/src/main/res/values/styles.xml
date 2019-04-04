@@ -734,6 +734,7 @@
         <item name="android:textSize">12sp</item>
         <item name="android:paddingStart">12sp</item>
         <item name="android:paddingEnd">12sp</item>
+        <item name="android:includeFontPadding">false</item>
         <item name="typeface">@string/custom_font_regular</item>
     </style>
 
