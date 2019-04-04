@@ -58,6 +58,7 @@ public class MessageBoxConversationView extends FrameLayout {
     private ImageView mCallImage;
     private RecyclerView mRecyclerView;
     private ViewGroup mEmojiContainer;
+    private View mEmojiDivider;
     private EditText mInputEditText;
 
     private String mConversationId;
@@ -83,6 +84,7 @@ public class MessageBoxConversationView extends FrameLayout {
         initQuickActions();
         mInputActionView = findViewById(R.id.message_compose_view_container);
         mEmojiContainer = findViewById(R.id.emoji_picker_container);
+        mEmojiDivider = findViewById(R.id.emoji_divider);
         mInputEditText = mInputActionView.getComposeEditText();
         initEmoji();
     }
@@ -240,6 +242,12 @@ public class MessageBoxConversationView extends FrameLayout {
 
     void hideEmoji() {
         mEmojiContainer.setVisibility(GONE);
+        mEmojiDivider.setVisibility(GONE);
+    }
+
+    void showEmoji() {
+        mEmojiContainer.setVisibility(View.VISIBLE);
+        mEmojiDivider.setVisibility(VISIBLE);
     }
 
     private void initEmoji() {
@@ -273,16 +281,16 @@ public class MessageBoxConversationView extends FrameLayout {
 
         mInputActionView.getEmojiIcon().setOnClickListener(v -> {
             if (mEmojiContainer.getVisibility() == View.VISIBLE) {
-                mEmojiContainer.setVisibility(View.GONE);
+                hideEmoji();
             } else {
                 ImeUtil.get().hideImeKeyboard(getContext(), mInputEditText);
-                mEmojiContainer.setVisibility(View.VISIBLE);
+                showEmoji();
             }
             MessageBoxAnalytics.logEvent("SMS_PopUp_Emoji_Click");
         });
 
         mInputEditText.setOnClickListener(v -> {
-            mEmojiContainer.setVisibility(GONE);
+            hideEmoji();
             ImeUtil.get().showImeKeyboard(getContext(), mInputEditText);
             MessageBoxAnalytics.logEvent("SMS_PopUp_TextField_Click");
         });

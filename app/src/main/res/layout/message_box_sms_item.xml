@@ -35,7 +35,6 @@
         android:textColor="#ababab"
         android:textSize="10.7sp"
         android:layout_marginStart="10dp"
-        app:font_size_changeable="true"
         app:layout_constraintLeft_toRightOf="@id/message_content"
         app:layout_constraintBottom_toBottomOf="@id/message_content"
         app:typeface="@string/custom_font_regular"
