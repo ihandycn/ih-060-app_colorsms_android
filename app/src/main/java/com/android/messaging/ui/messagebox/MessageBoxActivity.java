@@ -22,6 +22,9 @@ import com.ihs.commons.notificationcenter.INotificationObserver;
 import com.ihs.commons.utils.HSBundle;
 import com.superapps.util.Toasts;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+
 import static com.android.messaging.ui.UIIntents.UI_INTENT_EXTRA_MESSAGE_BOX_ITEM;
 
 public class MessageBoxActivity extends AppCompatActivity implements INotificationObserver,
@@ -51,6 +54,9 @@ public class MessageBoxActivity extends AppCompatActivity implements INotificati
     private boolean mHasSms;
     private boolean mHasMms;
 
+    private HashMap<String, Boolean> mMarkAsUnReadMap = new HashMap<>(4);
+    private ArrayList<String> mConversationIdList = new ArrayList<>(4);
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -73,6 +79,8 @@ public class MessageBoxActivity extends AppCompatActivity implements INotificati
         HSGlobalNotificationCenter.addObserver(NOTIFICATION_FINISH_MESSAGE_BOX, this);
 
         recordMessageType(data);
+        mMarkAsUnReadMap.put(data.getConversationId(), false);
+        mConversationIdList.add(data.getConversationId());
     }
 
     @Override
@@ -110,6 +118,8 @@ public class MessageBoxActivity extends AppCompatActivity implements INotificati
 
             MessageBoxAnalytics.setIsMultiConversation(true);
             mContactsNum++;
+            mMarkAsUnReadMap.put(data.getConversationId(), false);
+            mConversationIdList.add(data.getConversationId());
         }
         mMessagesNum++;
 
@@ -183,7 +193,7 @@ public class MessageBoxActivity extends AppCompatActivity implements INotificati
                 finish(CLOSE);
                 break;
             case R.id.action_unread:
-                mCurrentConversationView.markAsUnread();
+                mMarkAsUnReadMap.put(mCurrentConversationView.getConversationId(), true);
                 Toasts.showToast(R.string.message_box_mark_as_unread);
                 removeCurrentPage(UNREAD);
                 MessageBoxAnalytics.logEvent("SMS_PopUp_Unread_Click");
@@ -226,6 +236,10 @@ public class MessageBoxActivity extends AppCompatActivity implements INotificati
 
     @Override
     public void onBackPressed() {
+        if (mCurrentConversationView.getIsEmojiVisible()) {
+            mCurrentConversationView.hideEmoji();
+            return;
+        }
         finish(BACK);
     }
 
@@ -252,6 +266,12 @@ public class MessageBoxActivity extends AppCompatActivity implements INotificati
         super.onDestroy();
         BugleNotifications.markAllMessagesAsSeen();
         HSGlobalNotificationCenter.removeObserver(this);
+
+        for (String conversationId : mConversationIdList) {
+            if (!mMarkAsUnReadMap.get(conversationId)) {
+                BugleNotifications.markMessagesAsRead(conversationId);
+            }
+        }
 
         String messageType = "";
         if (mHasMms) {

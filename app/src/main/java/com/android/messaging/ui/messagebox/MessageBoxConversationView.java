@@ -66,7 +66,6 @@ public class MessageBoxConversationView extends FrameLayout {
     private String mParticipantId;
     private long mOldestReceivedTimestamp;
 
-    private boolean mMarkAsUnread;
     private int mInputEmojiCount;
 
     public MessageBoxConversationView(Context context, AttributeSet attrs) {
@@ -119,18 +118,6 @@ public class MessageBoxConversationView extends FrameLayout {
     void addNewMessage(MessageBoxItemData data) {
         mAdapter.addNewIncomingMessage(data);
         mRecyclerView.scrollToPosition(mAdapter.getItemCount() - 1);
-    }
-
-    void markAsUnread() {
-        mMarkAsUnread = true;
-    }
-
-    @Override
-    protected void onDetachedFromWindow() {
-        super.onDetachedFromWindow();
-        if (!mMarkAsUnread) {
-            BugleNotifications.markMessagesAsRead(mConversationId);
-        }
     }
 
     private void initActionBarSimulation() {
@@ -244,6 +231,14 @@ public class MessageBoxConversationView extends FrameLayout {
             result.add(info);
         }
         return result;
+    }
+
+    boolean getIsEmojiVisible() {
+        return mEmojiContainer.getVisibility() == View.VISIBLE;
+    }
+
+    void hideEmoji() {
+        mEmojiContainer.setVisibility(GONE);
     }
 
     private void initEmoji() {
