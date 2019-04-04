@@ -35,6 +35,7 @@ import android.provider.ContactsContract.Intents;
 import android.provider.MediaStore;
 import android.provider.Telephony;
 import android.support.annotation.Nullable;
+import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.app.TaskStackBuilder;
 import android.support.v4.content.LocalBroadcastManager;
 import android.text.TextUtils;
@@ -410,7 +411,9 @@ public class UIIntentsImpl extends UIIntents {
         final Intent intent = new Intent(context, MessageBoxActivity.class);
         intent.putExtra(UI_INTENT_EXTRA_MESSAGE_BOX_ITEM, itemData);
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        context.startActivity(intent);
+        ActivityOptionsCompat options =
+                ActivityOptionsCompat.makeCustomAnimation(context, android.R.anim.fade_in, android.R.anim.fade_out);
+        context.startActivity(intent, options.toBundle());
     }
 
     @Override
