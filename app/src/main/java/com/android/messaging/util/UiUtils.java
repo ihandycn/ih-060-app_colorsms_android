@@ -53,19 +53,11 @@ import android.widget.Toast;
 
 import com.android.messaging.Factory;
 import com.android.messaging.R;
-import com.android.messaging.ui.SetAsDefaultGuideActivity;
 import com.android.messaging.ui.SnackBar;
 import com.android.messaging.ui.SnackBar.Placement;
 import com.android.messaging.ui.SnackBarInteraction;
 import com.android.messaging.ui.SnackBarManager;
-import com.android.messaging.ui.UIIntents;
-import com.android.messaging.ui.WebViewActivity;
 import com.android.messaging.ui.customize.PrimaryColors;
-import com.android.messaging.ui.welcome.WelcomePermissionActivity;
-import com.android.messaging.ui.welcome.WelcomeSetAsDefaultActivity;
-import com.android.messaging.ui.welcome.WelcomeStartActivity;
-import com.ihs.commons.utils.HSLog;
-import com.superapps.util.Preferences;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
@@ -366,73 +358,6 @@ public class UiUtils {
     public static boolean isRtlMode() {
         return OsUtil.isAtLeastJB_MR2() && Factory.get().getApplicationContext().getResources()
                 .getConfiguration().getLayoutDirection() == View.LAYOUT_DIRECTION_RTL;
-    }
-
-    /**
-     * Judge for welcome pages.
-     */
-    private static final String PREF_KEY_FIRST_TIME_LAUNCH = "pref_key_first_launch";
-
-    private static boolean shouldShowWelcomeStart() {
-        return Preferences.getDefault().getBoolean(PREF_KEY_FIRST_TIME_LAUNCH, true);
-    }
-
-    private static boolean shouldShowWelcomePermission() {
-        return !OsUtil.hasRequiredPermissions();
-    }
-
-    private static boolean shouldShowWelcomeSetDefault() {
-        return !PhoneUtils.getDefault().isDefaultSmsApp();
-    }
-
-    /**
-     * Check if the activity needs to be redirected to permission check
-     *
-     * @return true if {@link Activity#finish()} was called because redirection was performed
-     */
-    public static boolean redirectToWelcomeIfNeeded(final Activity activity) {
-        if (activity instanceof SetAsDefaultGuideActivity) {
-            return false;
-        }
-        if (activity instanceof WelcomeStartActivity) {
-            return false;
-        }
-
-        if (activity instanceof WelcomePermissionActivity) {
-            return false;
-        }
-
-        if (activity instanceof WelcomeSetAsDefaultActivity) {
-            return false;
-        }
-
-        if (activity instanceof WebViewActivity) {
-            return false;
-        }
-
-        if (shouldShowWelcomeStart()) {
-            Preferences.getDefault().putBoolean(PREF_KEY_FIRST_TIME_LAUNCH, false);
-            UIIntents.get().launchWelcomeStartActivity(activity);
-            HSLog.d("UiUtil", "Show welcome start");
-        } else {
-            if (shouldShowWelcomeSetDefault()) {
-                UIIntents.get().launchWelcomeSetAsDefaultActivity(activity);
-                HSLog.d("UiUtil", "Show welcome set as default");
-            } else {
-                if (shouldShowWelcomePermission()) {
-                    UIIntents.get().launchWelcomePermissionActivity(activity);
-                    HSLog.d("UiUtil", "Show welcome permission");
-                } else {
-                    // No redirect performed
-                    return false;
-                }
-            }
-        }
-
-        // Redirect performed
-        activity.finish();
-        HSLog.d("UiUtil", activity.getLocalClassName() + " finish");
-        return true;
     }
 
     /**

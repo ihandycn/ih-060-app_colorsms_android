@@ -601,4 +601,12 @@
 
 	<string name="set_as_default_dialog_title_user_present">Imposta Color SMS come app predefinita</string>
 
+
+	<string name="welcome_viewpager_item_body_0">Mettiti in risalto nei tuoi gruppi social!</string>
+	<string name="welcome_viewpager_item_title_1">Totalmente personalizzabile</string>
+	<string name="welcome_viewpager_item_body_1">Decora la tua chat nel modo che preferisci.</string>
+	<string name="welcome_viewpager_item_title_2">Altre funzioni</string>
+	<string name="welcome_viewpager_item_body_2">Prova tantissime fantastiche funzioni.</string>
+	<string name="welcome_set_as_default_title">Imposta Color SMS come app predefinita per gli SMS per poter inviare e ricevere messaggi.</string>
+
 </resources>

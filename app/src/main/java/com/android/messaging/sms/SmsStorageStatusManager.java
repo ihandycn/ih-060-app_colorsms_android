@@ -16,19 +16,21 @@
 package com.android.messaging.sms;
 
 import android.app.Notification;
+import android.app.NotificationChannel;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.res.Resources;
+import android.net.Uri;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.NotificationManagerCompat;
 
 import com.android.messaging.Factory;
 import com.android.messaging.R;
-import com.android.messaging.datamodel.BugleNotifications;
+import com.android.messaging.datamodel.media.BugleNotificationChannelUtil;
 import com.android.messaging.ui.UIIntents;
-import com.android.messaging.util.BugleAnalytics;
 import com.android.messaging.util.PendingIntentConstants;
 import com.android.messaging.util.PhoneUtils;
+import com.android.messaging.util.UriUtil;
 import com.superapps.util.Notifications;
 
 /**
@@ -68,7 +70,15 @@ public class SmsStorageStatusManager {
         final PendingIntent pendingIntent = UIIntents.get()
                 .getPendingIntentForLowStorageNotifications(context);
 
-        final NotificationCompat.Builder builder = new NotificationCompat.Builder(context, PendingIntentConstants.SMS_NOTIFICATION_CHANNEL_ID);
+        NotificationChannel channel = null;
+        String channelId = PendingIntentConstants.SMS_NOTIFICATION_CHANNEL_ID;
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+            Uri failSound = UriUtil.getUriForResourceId(context, R.raw.message_failure);
+            channel = BugleNotificationChannelUtil.getSmsNotificationChannel(failSound, true);
+            channelId = channel.getId();
+        }
+
+        final NotificationCompat.Builder builder = new NotificationCompat.Builder(context, channelId);
         builder.setContentTitle(resources.getString(R.string.sms_storage_low_title))
                 .setTicker(resources.getString(R.string.sms_storage_low_notification_ticker))
                 .setSmallIcon(R.drawable.ic_failed_light)
@@ -84,7 +94,7 @@ public class SmsStorageStatusManager {
         Notifications.notifySafely(getNotificationTag(),
                 PendingIntentConstants.SMS_STORAGE_LOW_NOTIFICATION_ID,
                 notification,
-                BugleNotifications.getSmsNotificationChannel());
+                channel);
     }
 
     /**

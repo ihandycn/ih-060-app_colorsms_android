@@ -41,7 +41,6 @@ public abstract class Factory {
     protected static boolean sRegistered;
     @VisibleForTesting
     protected static boolean sInitialized;
-    public static boolean sIsRedirectToWelcome = false;
 
     public static Factory get() {
         return sInstance;

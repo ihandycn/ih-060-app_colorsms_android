@@ -27,8 +27,11 @@ import android.net.Uri;
 import android.os.Bundle;
 
 import com.android.messaging.Factory;
+import com.android.messaging.datamodel.binding.Binding;
+import com.android.messaging.datamodel.data.ConversationData;
 import com.android.messaging.datamodel.data.MessageBoxItemData;
 import com.android.messaging.datamodel.data.MessageData;
+import com.android.messaging.datamodel.data.ParticipantData;
 import com.android.messaging.util.ConversationIdSet;
 
 /**
@@ -41,6 +44,8 @@ public abstract class UIIntents {
 
     // Intent extras
     public static final String UI_INTENT_EXTRA_CONVERSATION_ID = "conversation_id";
+    //addContactVisible
+    public static final String UI_INTENT_EXTRA_PARTICIPANTDATA = "ui_intent_extra_participantData";
 
     // Sending draft data (from share intent / message forwarding) to the ConversationActivity.
     public static final String UI_INTENT_EXTRA_DRAFT_DATA = "draft_data";
@@ -133,7 +138,7 @@ public abstract class UIIntents {
      * activity options.
      */
     public void launchConversationActivity(final Context context,
-            final String conversationId, final MessageData draft) {
+                                           final String conversationId, final MessageData draft) {
         launchConversationActivity(context, conversationId, draft, null,
                 false /* withCustomTransition */);
     }
@@ -142,27 +147,27 @@ public abstract class UIIntents {
      * Launch an activity to show a conversation.
      */
     public abstract void launchConversationActivity(final Context context,
-            final String conversationId, final MessageData draft, final Bundle activityOptions,
-            final boolean withCustomTransition);
+                                                    final String conversationId, final MessageData draft, final Bundle activityOptions,
+                                                    final boolean withCustomTransition);
 
 
     /**
      * Launch an activity to show conversation with conversation list in back stack.
      */
     public abstract void launchConversationActivityWithParentStack(Context context,
-            String conversationId, String smsBody);
+                                                                   String conversationId, String smsBody);
 
     /**
      * Launch an activity to show a conversation as a new task.
      */
     public abstract void launchConversationActivityNewTask(final Context context,
-            final String conversationId);
+                                                           final String conversationId);
 
     /**
      * Launch an activity to start a new conversation
      */
     public abstract void launchCreateNewConversationActivity(final Context context,
-            final MessageData draft);
+                                                             final MessageData draft);
 
     /**
      * Launch debug activity to set MMS config options.
@@ -181,6 +186,7 @@ public abstract class UIIntents {
 
     /**
      * Launch an activity to show the document picker to pick an image.
+     *
      * @param fragment the requesting fragment
      */
     public abstract void launchDocumentImagePicker(final Fragment fragment);
@@ -189,11 +195,12 @@ public abstract class UIIntents {
      * Launch an activity to show people & options for a given conversation.
      */
     public abstract void launchPeopleAndOptionsActivity(final Activity context,
-            final String conversationId);
+                                                        final String conversationId);
 
     /**
      * Launch an external activity to handle a phone call
-     * @param phoneNumber the phone number to call
+     *
+     * @param phoneNumber   the phone number to call
      * @param clickPosition is the location tapped to start this launch for transition use
      */
     public abstract void launchPhoneCallActivity(final Context context, final String phoneNumber,
@@ -233,7 +240,7 @@ public abstract class UIIntents {
      * Launch an activity to let the user select & unselect the list of attachments to send.
      */
     public abstract void launchAttachmentChooserActivity(final Activity activity,
-            final String conversationId, final int requestCode);
+                                                         final String conversationId, final int requestCode);
 
     /**
      * Launch full screen video viewer.
@@ -244,14 +251,15 @@ public abstract class UIIntents {
      * Launch full screen photo viewer.
      */
     public abstract void launchFullScreenPhotoViewer(Activity activity, Uri initialPhoto,
-            Rect initialPhotoBounds, Uri photosUri);
+                                                     Rect initialPhotoBounds, Uri photosUri);
 
     /**
      * Launch an activity to show general app settings
+     *
      * @param topLevel indicates whether the app settings is launched as the top-level settings
-     *        activity (instead of SettingsActivity which shows a collapsed view of the app
-     *        settings + one settings item per subscription). This is true when there's only one
-     *        active SIM in the system so we can show this activity directly.
+     *                 activity (instead of SettingsActivity which shows a collapsed view of the app
+     *                 settings + one settings item per subscription). This is true when there's only one
+     *                 active SIM in the system so we can show this activity directly.
      */
     public abstract void launchApplicationSettingsActivity(Context context, boolean topLevel);
 
@@ -259,11 +267,12 @@ public abstract class UIIntents {
      * Launch an activity to show per-subscription settings
      */
     public abstract void launchPerSubscriptionSettingsActivity(Context context, int subId,
-            String settingTitle);
+                                                               String settingTitle);
 
 
     /**
      * Launch an activity to display sms show details full screen
+     *
      * @param id sms show item id {@link com.android.messaging.datamodel.data.SmsShowListItemData}.
      */
     public abstract void launchSmsShowDetailActivity(Context context, int id, String smsShowUrl);
@@ -321,13 +330,14 @@ public abstract class UIIntents {
      * Broadcast conversation self id change so it may be reflected in the message compose UI.
      */
     public abstract void broadcastConversationSelfIdChange(final Context context,
-            final String conversationId, final String conversationSelfId);
+                                                           final String conversationId, final String conversationSelfId);
 
     /**
      * Get a PendingIntent for starting conversation list from notifications.
      */
     public abstract PendingIntent getPendingIntentForConversationListActivity(
             final Context context);
+
     /**
      * Get a PendingIntent for starting conversation list from notifications.
      */
@@ -344,19 +354,19 @@ public abstract class UIIntents {
      * Get a PendingIntent for showing a conversation from notifications.
      */
     public abstract PendingIntent getPendingIntentForConversationActivity(final Context context,
-            final String conversationId, final MessageData draft);
+                                                                          final String conversationId, final MessageData draft);
 
     /**
      * Get a PendingIntent for showing a conversation from notifications.
      */
     public abstract PendingIntent getPendingIntentForConversationActivityFromNotification(final Context context,
-            final String conversationId, final MessageData draft);
+                                                                                          final String conversationId, final MessageData draft);
 
     /**
      * Get an Intent for showing a conversation from the widget.
      */
     public abstract Intent getIntentForConversationActivity(final Context context,
-            final String conversationId, final MessageData draft);
+                                                            final String conversationId, final MessageData draft);
 
     /**
      * Get a PendingIntent for sending a message to a conversation, without opening the Bugle UI.
@@ -374,8 +384,8 @@ public abstract class UIIntents {
      * <p>This is intended to be used by notifications.
      */
     public abstract PendingIntent getPendingIntentForClearingNotifications(final Context context,
-            final int updateTargets, final ConversationIdSet conversationIdSet,
-            final int requestCode);
+                                                                           final int updateTargets, final ConversationIdSet conversationIdSet,
+                                                                           final int requestCode);
 
     /**
      * Get a PendingIntent for showing low storage notifications.
@@ -409,7 +419,7 @@ public abstract class UIIntents {
     public abstract Intent getLaunchConversationActivityIntent(final Context context);
 
     /**
-     *  Tell MediaScanner to re-scan the specified volume.
+     * Tell MediaScanner to re-scan the specified volume.
      */
     public abstract void kickMediaScanner(final Context context, final String volume);
 

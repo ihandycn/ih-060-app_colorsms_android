@@ -21,9 +21,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.database.Cursor;
-import android.media.Ringtone;
 import android.media.RingtoneManager;
-import android.net.Uri;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.provider.Settings;
@@ -38,6 +36,7 @@ import android.widget.TextView;
 
 import com.android.messaging.R;
 import com.android.messaging.datamodel.DataModel;
+import com.android.messaging.datamodel.action.PinConversationAction;
 import com.android.messaging.datamodel.binding.Binding;
 import com.android.messaging.datamodel.binding.BindingBase;
 import com.android.messaging.datamodel.data.ParticipantData;
@@ -50,18 +49,22 @@ import com.android.messaging.ui.BaseAlertDialog;
 import com.android.messaging.ui.CompositeAdapter;
 import com.android.messaging.ui.PersonItemView;
 import com.android.messaging.ui.UIIntents;
-import com.android.messaging.ui.conversation.ConversationActivity;
 import com.android.messaging.ui.wallpaper.WallpaperManager;
 import com.android.messaging.ui.wallpaper.WallpaperPreviewActivity;
 import com.android.messaging.util.Assert;
-import com.android.messaging.util.BuglePrefs;
-import com.android.messaging.util.OsUtil;
+import com.android.messaging.util.BugleAnalytics;
+import com.superapps.util.Navigations;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.android.messaging.datamodel.data.PeopleOptionsItemData.SETTINGS_PIN;
+import static com.android.messaging.datamodel.data.PeopleOptionsItemData.SETTING_ADD_CONTANCT;
+import static com.android.messaging.datamodel.data.PeopleOptionsItemData.SETTING_DELETE;
 import static com.android.messaging.datamodel.data.PeopleOptionsItemData.SETTING_NOTIFICATION_SOUND_URI;
 import static com.android.messaging.datamodel.data.PeopleOptionsItemData.SETTING_NOTIFICATION_VIBRATION;
+import static com.android.messaging.ui.conversation.ConversationActivity.DELETE_CONVERSATION_RESULT_CODE;
+import static com.android.messaging.ui.conversation.ConversationActivity.FINISH_RESULT_CODE;
 
 /**
  * Shows a list of participants of a conversation and displays options.
@@ -74,8 +77,11 @@ public class PeopleAndOptionsFragment extends Fragment
     private final Binding<PeopleAndOptionsData> mBinding =
             BindingBase.createBinding(this);
     private String mConversationId;
+    private String mRingtone;
 
     private static final int REQUEST_CODE_RINGTONE_PICKER = 1000;
+    private boolean conversationDeleted;
+    private ParticipantData mOtherParticipantData;
 
     @Override
     public void onCreate(final Bundle savedInstanceState) {
@@ -111,6 +117,10 @@ public class PeopleAndOptionsFragment extends Fragment
                     RingtoneManager.EXTRA_RINGTONE_PICKED_URI);
             final String pickedUri = pick == null ? "" : pick.toString();
             mBinding.getData().setConversationNotificationSound(mBinding, pickedUri);
+
+            if (pickedUri != null && !pickedUri.equals(mRingtone)) {
+                BugleAnalytics.logEvent("Customize_Notification_Sound_Change", true, "from", "chat");
+            }
         }
     }
 
@@ -131,9 +141,12 @@ public class PeopleAndOptionsFragment extends Fragment
 
     @Override
     public void onOptionsCursorUpdated(final PeopleAndOptionsData data, final Cursor cursor) {
-        Assert.isTrue(cursor == null || cursor.getCount() == 1);
-        mBinding.ensureBound(data);
-        mOptionsListAdapter.swapCursor(cursor);
+        if (!conversationDeleted) {
+            Assert.isTrue(cursor == null || cursor.getCount() == 1);
+            mBinding.ensureBound(data);
+            mOptionsListAdapter.swapCursor(cursor);
+        }
+
     }
 
     @Override
@@ -150,21 +163,38 @@ public class PeopleAndOptionsFragment extends Fragment
     public void onOptionsItemViewClicked(final PeopleOptionsItemData item,
                                          final boolean isChecked) {
         switch (item.getItemId()) {
+            case SETTINGS_PIN:
+                if (isChecked) {
+                    BugleAnalytics.logEvent("SMS_Detailspage_Settings_PinToTop_Click", "Switch", "Pin");
+                    PinConversationAction.pinConversation(mConversationId);
+                } else {
+                    BugleAnalytics.logEvent("SMS_Detailspage_Settings_PinToTop_Click", "Switch", "UnPin");
+                    PinConversationAction.unpinConversation(mConversationId);
+                }
+                break;
+
             case PeopleOptionsItemData.SETTING_NOTIFICATION_ENABLED:
                 mBinding.getData().enableConversationNotifications(mBinding, isChecked);
                 break;
 
             case SETTING_NOTIFICATION_SOUND_URI:
+                mRingtone = item.getRingtoneUri() == null ? "" : item.getRingtoneUri().toString();
                 final Intent ringtonePickerIntent = UIIntents.get().getRingtonePickerIntent(
                         getString(R.string.notification_sound_pref_title),
                         item.getRingtoneUri(), Settings.System.DEFAULT_NOTIFICATION_URI,
                         RingtoneManager.TYPE_NOTIFICATION);
-                startActivityForResult(ringtonePickerIntent, REQUEST_CODE_RINGTONE_PICKER);
+                Navigations.startActivityForResultSafely(getActivity(),
+                        ringtonePickerIntent, REQUEST_CODE_RINGTONE_PICKER);
                 break;
 
             case SETTING_NOTIFICATION_VIBRATION:
                 mBinding.getData().enableConversationNotificationVibration(mBinding,
                         isChecked);
+                break;
+
+            case SETTING_ADD_CONTANCT:
+                BugleAnalytics.logEvent("SMS_Detailspage_Settings_AddContact_Click");
+                UIIntents.get().launchAddContactActivity(getActivity(), mOtherParticipantData.getContactDestination());
                 break;
 
             case PeopleOptionsItemData.SETTING_BLOCKED:
@@ -183,11 +213,29 @@ public class PeopleAndOptionsFragment extends Fragment
                         .setPositiveButton(android.R.string.ok,
                                 (arg0, arg1) -> {
                                     mBinding.getData().setDestinationBlocked(mBinding, true);
-                                    activity.setResult(ConversationActivity.FINISH_RESULT_CODE);
+                                    activity.setResult(FINISH_RESULT_CODE);
                                     activity.finish();
                                 })
                         .show();
                 break;
+            case SETTING_DELETE:
+                BugleAnalytics.logEvent("SMS_Detailspage_Settings_Delete_Click");
+                new BaseAlertDialog.Builder(getActivity())
+                        .setTitle(getResources().getQuantityString(
+                                R.plurals.delete_conversations_confirmation_dialog_title, 1))
+                        .setPositiveButton(R.string.delete_conversation_confirmation_button,
+                                (dialog, button) -> deleteConversation())
+                        .setNegativeButton(R.string.delete_conversation_decline_button, null)
+                        .show();
+                break;
+        }
+    }
+
+    private void deleteConversation() {
+        if (getActivity() != null) {
+            getActivity().setResult(DELETE_CONVERSATION_RESULT_CODE);
+            getActivity().finish();
+            conversationDeleted = true;
         }
     }
 
@@ -253,9 +301,6 @@ public class PeopleAndOptionsFragment extends Fragment
      */
     private class OptionsListAdapter extends BaseAdapter {
         private Cursor mOptionsCursor;
-        private ParticipantData mOtherParticipantData;
-
-        private boolean isRingtoneEnabled = isRingtoneEnabled();
 
         public Cursor swapCursor(final Cursor newCursor) {
             final Cursor oldCursor = mOptionsCursor;
@@ -279,10 +324,12 @@ public class PeopleAndOptionsFragment extends Fragment
             if (mOtherParticipantData == null) {
                 count--;
             }
-
-            if (!isRingtoneEnabled) {
-                // remove SETTING_NOTIFICATION_SOUND_URI and SETTING_NOTIFICATION_VIBRATION
-                count -= 2;
+            if (isGroup()) {
+                count = count - 2;
+            } else {
+                if (!addContactVisble()) {
+                    count--;
+                }
             }
             return mOptionsCursor == null ? 0 : count;
         }
@@ -310,41 +357,19 @@ public class PeopleAndOptionsFragment extends Fragment
             }
             mOptionsCursor.moveToFirst();
 
-            itemView.bind(mOptionsCursor, position, mOtherParticipantData,
-                    PeopleAndOptionsFragment.this, isRingtoneEnabled);
+            itemView.bind(mOptionsCursor, position, mOtherParticipantData, PeopleAndOptionsFragment.this, isGroup(), addContactVisble());
             return itemView;
         }
 
-        private boolean isRingtoneEnabled() {
-            if (OsUtil.isAtLeastO()) {
-                return false;
-            }
-            String prefKey = getString(R.string.notification_sound_pref_key);
-            final BuglePrefs prefs = BuglePrefs.getApplicationPrefs();
-
-            String ringtoneString = prefs.getString(prefKey, null);
-
-            if (ringtoneString == null) {
-                ringtoneString = Settings.System.DEFAULT_NOTIFICATION_URI.toString();
-                prefs.putString(prefKey, ringtoneString);
-            }
-
-            try {
-                if (!TextUtils.isEmpty(ringtoneString)) {
-                    final Uri ringtoneUri = Uri.parse(ringtoneString);
-                    final Ringtone tone = RingtoneManager.getRingtone(getActivity(), ringtoneUri);
-
-                    if (tone != null) {
-                        tone.getTitle(getActivity());
-                    }
-                    return true;
-                }
-                return false;
-            } catch (SecurityException e) {
-                e.printStackTrace();
-                return false;
-            }
+        private boolean addContactVisble() {
+            return (mOtherParticipantData != null
+                    && TextUtils.isEmpty(mOtherParticipantData.getLookupKey()));
         }
+
+        private boolean isGroup() {
+            return mOtherParticipantData == null;
+        }
+
     }
 
     /**

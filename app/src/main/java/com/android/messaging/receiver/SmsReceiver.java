@@ -17,6 +17,8 @@
 package com.android.messaging.receiver;
 
 import android.app.Notification;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.ComponentName;
@@ -42,6 +44,7 @@ import com.android.messaging.datamodel.BugleNotifications;
 import com.android.messaging.datamodel.MessageNotificationState;
 import com.android.messaging.datamodel.NoConfirmationSmsSendService;
 import com.android.messaging.datamodel.action.ReceiveSmsMessageAction;
+import com.android.messaging.datamodel.media.BugleNotificationChannelUtil;
 import com.android.messaging.sms.MmsUtils;
 import com.android.messaging.ui.UIIntents;
 import com.android.messaging.util.BugleAnalytics;
@@ -281,7 +284,15 @@ public final class SmsReceiver extends BroadcastReceiver {
         final PendingIntent pendingIntent = UIIntents.get()
                 .getPendingIntentForSecondaryUserNewMessageNotification(context);
 
-        final NotificationCompat.Builder builder = new NotificationCompat.Builder(context, PendingIntentConstants.SMS_NOTIFICATION_CHANNEL_ID);
+        NotificationChannel channel = null;
+        String channelId = PendingIntentConstants.SMS_NOTIFICATION_CHANNEL_ID;
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+            channel = BugleNotificationChannelUtil.getSmsNotificationChannel(null, true);
+            channel.setImportance(NotificationManager.IMPORTANCE_HIGH);
+            channelId = channel.getId();
+        }
+
+        final NotificationCompat.Builder builder = new NotificationCompat.Builder(context, channelId);
         builder.setContentTitle(resources.getString(R.string.secondary_user_new_message_title))
                 .setTicker(resources.getString(R.string.secondary_user_new_message_ticker))
                 .setSmallIcon(R.drawable.ic_sms_light)
@@ -300,7 +311,10 @@ public final class SmsReceiver extends BroadcastReceiver {
             defaults |= Notification.DEFAULT_VIBRATE;
         }
         notification.defaults = defaults;
-        Notifications.notifySafely(getNotificationTag(), PendingIntentConstants.SMS_SECONDARY_USER_NOTIFICATION_ID, notification, BugleNotifications.getSmsNotificationChannel());
+        Notifications.notifySafely(getNotificationTag(),
+                PendingIntentConstants.SMS_SECONDARY_USER_NOTIFICATION_ID,
+                notification,
+                channel);
     }
 
     /**

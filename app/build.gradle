@@ -1,6 +1,7 @@
 apply plugin: 'com.android.application'
 
 repositories {
+    mavenCentral()
     maven { url 'https://maven.fabric.io/public' }
 }
 
@@ -15,8 +16,8 @@ android {
         applicationId "com.color.sms.messages.emoji"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 23
-        versionName "1.0.11"
+        versionCode 26
+        versionName "1.0.13"
         multiDexEnabled true
     }
 
@@ -93,6 +94,7 @@ dependencies {
     compile "com.ihandy.device:device-permanent.gm:4.5.4.gm"
 
     compile "net.appcloudbox.goldeneye:bubble_a:2019.03.18.001"
+    implementation "me.leolin:ShortcutBadger:1.1.22@aar"
 
     // "D/DebugDB: Open http://xxxxxxxx:8080 in your browser" will appear in your logcat,
     // open it in your browser to see out project tables. Please only  use it to see the table,

@@ -43,17 +43,20 @@ import com.android.messaging.ui.conversation.ConversationActivityUiState.Convers
 import com.android.messaging.ui.conversation.ConversationFragment.ConversationFragmentHost;
 import com.android.messaging.ui.conversationlist.ConversationListActivity;
 import com.android.messaging.ui.customize.PrimaryColors;
+import com.android.messaging.ui.messagebox.MessageBoxActivity;
 import com.android.messaging.util.Assert;
 import com.android.messaging.util.BugleAnalytics;
 import com.android.messaging.util.ContentType;
 import com.android.messaging.util.LogUtil;
 import com.android.messaging.util.OsUtil;
 import com.android.messaging.util.UiUtils;
+import com.ihs.commons.notificationcenter.HSGlobalNotificationCenter;
 
 public class ConversationActivity extends BugleActionBarActivity
         implements ContactPickerFragmentHost, ConversationFragmentHost,
         ConversationActivityUiStateHost {
     public static final int FINISH_RESULT_CODE = 1;
+    public static final int DELETE_CONVERSATION_RESULT_CODE = 2;
     private static final String SAVED_INSTANCE_STATE_UI_STATE_KEY = "uistate";
 
     private ConversationActivityUiState mUiState;
@@ -179,6 +182,7 @@ public class ConversationActivity extends BugleActionBarActivity
         // a previous onStop() instead of an onDestroy().
         mInstanceStateSaved = false;
         mIsPaused = false;
+        HSGlobalNotificationCenter.sendNotification(MessageBoxActivity.NOTIFICATION_FINISH_MESSAGE_BOX);
     }
 
     @Override
@@ -422,6 +426,10 @@ public class ConversationActivity extends BugleActionBarActivity
                         "AttachmentChooserActivity!");
             }
         } else if (resultCode == FINISH_RESULT_CODE) {
+            finish();
+        } else if (resultCode == DELETE_CONVERSATION_RESULT_CODE) {
+            final ConversationFragment conversationFragment = getConversationFragment();
+            conversationFragment.deleteConversation();
             finish();
         }
     }

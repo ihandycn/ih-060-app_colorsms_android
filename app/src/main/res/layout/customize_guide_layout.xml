@@ -4,33 +4,39 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <LinearLayout
+    <FrameLayout
         android:id="@+id/customize_guide_container"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:background="@drawable/customize_guide_bg"
-        android:orientation="vertical"
         android:paddingBottom="32dp"
         android:paddingEnd="30.3dp"
         android:paddingStart="30.3dp"
         android:paddingTop="34.3dp">
 
-        <com.superapps.view.TypefacedTextView
+        <LinearLayout
+            android:id="@+id/customize_guide_clickable_container"
             android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:includeFontPadding="false"
-            android:text="@string/customize_guide_title"
-            android:textColor="#3f4141"
-            android:textSize="15.3sp"
-            app:typeface="@string/custom_font_bold" />
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
 
-        <com.airbnb.lottie.LottieAnimationView
-            android:id="@+id/customize_guide_lottie"
-            android:layout_width="162dp"
-            android:layout_height="32dp"
-            android:layout_gravity="center_horizontal"
-            android:layout_marginTop="12dp"
-            app:lottie_fileName="lottie/customize_guide.json"
-            app:lottie_imageAssetsFolder="lottie/customize_guide" />
-    </LinearLayout>
+            <com.superapps.view.TypefacedTextView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:includeFontPadding="false"
+                android:text="@string/customize_guide_title"
+                android:textColor="#3f4141"
+                android:textSize="15.3sp"
+                app:typeface="@string/custom_font_bold" />
+
+            <com.airbnb.lottie.LottieAnimationView
+                android:id="@+id/customize_guide_lottie"
+                android:layout_width="162dp"
+                android:layout_height="32dp"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="12dp"
+                app:lottie_fileName="lottie/customize_guide.json"
+                app:lottie_imageAssetsFolder="lottie/customize_guide" />
+        </LinearLayout>
+    </FrameLayout>
 </FrameLayout>

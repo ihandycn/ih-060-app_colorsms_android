@@ -20,7 +20,9 @@ import android.app.LoaderManager;
 import android.content.Context;
 import android.content.Loader;
 import android.database.Cursor;
+import android.database.DatabaseUtils;
 import android.os.Bundle;
+import android.util.Log;
 
 import com.android.messaging.datamodel.BoundCursorLoader;
 import com.android.messaging.datamodel.FrequentContactsCursorBuilder;
@@ -41,7 +43,9 @@ public class ContactPickerData extends BindableData implements
         LoaderManager.LoaderCallbacks<Cursor> {
     public interface ContactPickerDataListener {
         void onAllContactsCursorUpdated(Cursor data);
+
         void onFrequentContactsCursorUpdated(Cursor data);
+
         void onContactCustomColorLoaded(ContactPickerData data);
     }
 
@@ -96,6 +100,9 @@ public class ContactPickerData extends BindableData implements
         if (isBound(cursorLoader.getBindingId())) {
             switch (loader.getId()) {
                 case ALL_CONTACTS_LOADER:
+                    if (data != null) {
+                        Log.v("Cursor Object", DatabaseUtils.dumpCursorToString(data));
+                    }
                     mListener.onAllContactsCursorUpdated(data);
                     mFrequentContactsCursorBuilder.setAllContacts(data);
                     break;

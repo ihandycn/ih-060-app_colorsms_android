@@ -21,29 +21,38 @@ import android.media.Ringtone;
 import android.media.RingtoneManager;
 import android.net.Uri;
 
+import com.android.messaging.Factory;
 import com.android.messaging.R;
 import com.android.messaging.datamodel.data.ConversationListItemData.ConversationListViewColumns;
 import com.android.messaging.util.Assert;
+import com.android.messaging.util.BuglePrefs;
 import com.android.messaging.util.RingtoneUtil;
+import com.ihs.app.framework.HSApplication;
 
 public class PeopleOptionsItemData {
     public static final String[] PROJECTION = {
-        ConversationListViewColumns.NOTIFICATION_ENABLED,
-        ConversationListViewColumns.NOTIFICATION_SOUND_URI,
-        ConversationListViewColumns.NOTIFICATION_VIBRATION,
+            ConversationListViewColumns.NOTIFICATION_ENABLED,
+            ConversationListViewColumns.NOTIFICATION_SOUND_URI,
+            ConversationListViewColumns.NOTIFICATION_VIBRATION,
+            ConversationListViewColumns.PIN_TIMESTAMP
     };
 
     // Column index for query projection.
     private static final int INDEX_NOTIFICATION_ENABLED = 0;
     private static final int INDEX_NOTIFICATION_SOUND_URI = 1;
     private static final int INDEX_NOTIFICATION_VIBRATION = 2;
+    private static final int INDEX_PIN_TIMESTAMP = 3;
 
     // Identification for each setting that's surfaced to the UI layer.
-    public static final int SETTING_NOTIFICATION_ENABLED = 0;
-    public static final int SETTING_NOTIFICATION_SOUND_URI = 1;
-    public static final int SETTING_NOTIFICATION_VIBRATION = 2;
-    public static final int SETTING_BLOCKED = 3;
-    public static final int SETTINGS_COUNT = 4;
+    public static final int SETTINGS_PIN = 0;
+    public static final int SETTING_NOTIFICATION_ENABLED = 1;
+    public static final int SETTING_NOTIFICATION_SOUND_URI = 2;
+    public static final int SETTING_NOTIFICATION_VIBRATION = 3;
+    public static final int SETTING_ADD_CONTANCT = 4;
+    public static final int SETTING_DELETE = 6;
+    public static final int SETTING_BLOCKED = 5;
+    public static final int SETTINGS_COUNT = 7;
+
 
     // Type of UI switch to show for the toggle button.
     public static final int TOGGLE_TYPE_CHECKBOX = 0;
@@ -89,9 +98,7 @@ public class PeopleOptionsItemData {
                 mTitle = mContext.getString(R.string.notification_sound_pref_title);
                 final String ringtoneString = cursor.getString(INDEX_NOTIFICATION_SOUND_URI);
                 Uri ringtoneUri = RingtoneUtil.getNotificationRingtoneUri(ringtoneString);
-
                 mSubtitle = mContext.getString(R.string.silent_ringtone);
-
                 try {
                     if (ringtoneUri != null) {
                         final Ringtone ringtone = RingtoneManager.getRingtone(mContext, ringtoneUri);
@@ -110,7 +117,15 @@ public class PeopleOptionsItemData {
 
             case SETTING_NOTIFICATION_VIBRATION:
                 mTitle = mContext.getString(R.string.notification_vibrate_pref_title);
-                mChecked = cursor.getInt(INDEX_NOTIFICATION_VIBRATION) == 1;
+
+                if (cursor.getInt(INDEX_NOTIFICATION_VIBRATION) != -1) {
+                    mChecked = cursor.getInt(INDEX_NOTIFICATION_VIBRATION) == 1;
+                } else {
+                    final String prefKey = HSApplication.getContext().getString(R.string.notification_vibration_pref_key);
+                    final boolean defaultValue = HSApplication.getContext().getResources().getBoolean(
+                            R.bool.notification_vibration_pref_default);
+                    mChecked = BuglePrefs.getApplicationPrefs().getBoolean(prefKey, defaultValue);
+                }
                 mEnabled = notificationEnabled;
                 break;
 
@@ -121,9 +136,24 @@ public class PeopleOptionsItemData {
                 mTitle = mContext.getString(resourceId, otherParticipant.getDisplayDestination());
                 mCheckable = false;
                 break;
+            case SETTINGS_PIN:
+                mTitle = mContext.getString(R.string.action_pin);
+                mChecked = cursor.getInt(INDEX_PIN_TIMESTAMP) != 0;
+                break;
 
-             default:
-                 Assert.fail("Unsupported conversation option type!");
+            case SETTING_ADD_CONTANCT:
+                mTitle = mContext.getString(R.string.action_add_contact);
+                mCheckable = false;
+                break;
+
+            case SETTING_DELETE:
+                mTitle = mContext.getString(R.string.action_delete);
+                mCheckable = false;
+                break;
+
+            default:
+                Assert.fail("Unsupported conversation option type!");
+                break;
         }
     }
 

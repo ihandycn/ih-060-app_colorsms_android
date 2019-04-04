@@ -46,10 +46,13 @@ import com.android.messaging.datamodel.BugleNotifications;
 import com.android.messaging.datamodel.ConversationImagePartsView;
 import com.android.messaging.datamodel.MediaScratchFileProvider;
 import com.android.messaging.datamodel.MessagingContentProvider;
+import com.android.messaging.datamodel.binding.Binding;
+import com.android.messaging.datamodel.data.ConversationData;
 import com.android.messaging.datamodel.data.MessageBoxItemData;
 import com.android.messaging.datamodel.data.MessageData;
 import com.android.messaging.datamodel.data.MessagePartData;
 import com.android.messaging.datamodel.data.ParticipantData;
+import com.android.messaging.datamodel.data.PeopleAndOptionsData;
 import com.android.messaging.receiver.NotificationReceiver;
 import com.android.messaging.sms.MmsSmsUtils;
 import com.android.messaging.ui.messagebox.MessageBoxActivity;
@@ -269,11 +272,10 @@ public class UIIntentsImpl extends UIIntents {
     }
 
     @Override
-    public void launchPeopleAndOptionsActivity(final Activity activity,
-                                               final String conversationId) {
-        final Intent intent = new Intent(activity, PeopleAndOptionsActivity.class);
+    public void launchPeopleAndOptionsActivity(Activity context, String conversationId) {
+        final Intent intent = new Intent(context, PeopleAndOptionsActivity.class);
         intent.putExtra(UI_INTENT_EXTRA_CONVERSATION_ID, conversationId);
-        activity.startActivityForResult(intent, 0);
+        context.startActivityForResult(intent, 0);
     }
 
     @Override

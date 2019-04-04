@@ -41,14 +41,6 @@
                 app:title="@string/setting_sms_pop_ups"
                 app:type="1" />
 
-            <!--SMS Pop-ups-->
-            <com.android.messaging.ui.appsettings.SettingItemView
-                android:id="@+id/setting_item_signature"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                app:title="@string/signature"
-                app:type="0" />
-
             <!--SMS Show-->
             <com.android.messaging.ui.appsettings.SettingItemView
                 android:id="@+id/setting_item_sms_show"
@@ -75,6 +67,14 @@
                 android:key="@string/notification_vibration_pref_key"
                 app:title="@string/notification_vibrate_pref_title"
                 app:type="1" />
+
+            <!--Signature-->
+            <com.android.messaging.ui.appsettings.SettingItemView
+                android:id="@+id/setting_item_signature"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:title="@string/signature"
+                app:type="0" />
 
             <!--Blocked contacts-->
             <com.android.messaging.ui.appsettings.SettingItemView

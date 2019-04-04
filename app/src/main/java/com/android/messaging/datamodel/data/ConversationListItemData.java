@@ -56,7 +56,7 @@ public class ConversationListItemData {
     private int mParticipantCount;
     private boolean mNotificationEnabled;
     private String mNotificationSoundUri;
-    private boolean mNotificationVibrate;
+    private int mNotificationVibrateValue;
     private boolean mIncludeEmailAddress;
     private int mMessageStatus;
     private int mMessageRawTelephonyStatus;
@@ -71,6 +71,7 @@ public class ConversationListItemData {
     private String mSnippetSenderDisplayDestination;
     private boolean mIsEnterprise;
     private int mUnreadCount;
+    private int mPinTime;
 
     public ConversationListItemData() {
     }
@@ -97,7 +98,7 @@ public class ConversationListItemData {
         mParticipantCount = cursor.getInt(INDEX_PARTICIPANT_COUNT);
         mNotificationEnabled = cursor.getInt(INDEX_NOTIFICATION_ENABLED) == 1;
         mNotificationSoundUri = cursor.getString(INDEX_NOTIFICATION_SOUND_URI);
-        mNotificationVibrate = cursor.getInt(INDEX_NOTIFICATION_VIBRATION) == 1;
+        mNotificationVibrateValue = cursor.getInt(INDEX_NOTIFICATION_VIBRATION);
         mIncludeEmailAddress = cursor.getInt(INDEX_INCLUDE_EMAIL_ADDRESS) == 1;
         mMessageStatus = cursor.getInt(INDEX_MESSAGE_STATUS);
         mMessageRawTelephonyStatus = cursor.getInt(INDEX_MESSAGE_RAW_TELEPHONY_STATUS);
@@ -124,6 +125,7 @@ public class ConversationListItemData {
                 cursor.getString(INDEX_SNIPPET_SENDER_DISPLAY_DESTINATION);
         mIsEnterprise = cursor.getInt(INDEX_IS_ENTERPRISE) == 1;
         mUnreadCount = cursor.getInt(INDEX_UNREAD_MESSAGE_COUNT);
+        mPinTime = cursor.getInt(INDEX_PIN_TIMESTAMP);
     }
 
     public String getConversationId() {
@@ -211,8 +213,11 @@ public class ConversationListItemData {
         return mNotificationSoundUri;
     }
 
+    public boolean isNotificationVibrateChanged() {
+        return  mNotificationVibrateValue != -1;
+    }
     public boolean getNotificationVibrate() {
-        return mNotificationVibrate;
+        return mNotificationVibrateValue == 1;
     }
 
     public final boolean getIsFailedStatus() {
@@ -282,6 +287,10 @@ public class ConversationListItemData {
 
     void deleteConversation() {
         DeleteConversationAction.deleteConversation(mConversationId, mTimestamp);
+    }
+
+    public boolean isPinned() {
+        return mPinTime != 0;
     }
 
     /**
@@ -358,7 +367,9 @@ public class ConversationListItemData {
                     + DatabaseHelper.CONVERSATIONS_TABLE + '.' + ConversationColumns.IS_ENTERPRISE
                     + " as " + ConversationListViewColumns.IS_ENTERPRISE + ", "
                     + "IFNULL(" + UNREAD_MESSAGES_NUMBER_TABLE + "." + ConversationListViewColumns.UNREAD_MESSAGE_COUNT
-                    + ",0) as " + ConversationListViewColumns.UNREAD_MESSAGE_COUNT;
+                    + ",0) as " + ConversationListViewColumns.UNREAD_MESSAGE_COUNT + ", "
+                    + DatabaseHelper.CONVERSATIONS_TABLE + '.' + ConversationColumns.PIN_TIMESTAMP
+                    + " as " + ConversationListViewColumns.PIN_TIMESTAMP;
 
     private static final String JOIN_PARTICIPANTS =
             " LEFT JOIN " + DatabaseHelper.PARTICIPANTS_TABLE + " ON ("
@@ -430,6 +441,7 @@ public class ConversationListItemData {
                 "snippet_sender_display_destination";
         static final String IS_ENTERPRISE = ConversationColumns.IS_ENTERPRISE;
         static final String UNREAD_MESSAGE_COUNT = "unread_message_count";
+        static final String PIN_TIMESTAMP = ConversationColumns.PIN_TIMESTAMP;
     }
 
     public static final String[] PROJECTION = {
@@ -464,6 +476,7 @@ public class ConversationListItemData {
             ConversationListViewColumns.SNIPPET_SENDER_DISPLAY_DESTINATION,
             ConversationListViewColumns.IS_ENTERPRISE,
             ConversationListViewColumns.UNREAD_MESSAGE_COUNT,
+            ConversationListViewColumns.PIN_TIMESTAMP
     };
 
     private static final int INDEX_ID = 0;
@@ -497,6 +510,7 @@ public class ConversationListItemData {
     private static final int INDEX_SNIPPET_SENDER_DISPLAY_DESTINATION = 28;
     private static final int INDEX_IS_ENTERPRISE = 29;
     private static final int INDEX_UNREAD_MESSAGE_COUNT = 30;
+    private static final int INDEX_PIN_TIMESTAMP = 31;
 
     private static final String DIVIDER_TEXT = ", ";
 

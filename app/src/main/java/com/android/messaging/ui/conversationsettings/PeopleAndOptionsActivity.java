@@ -18,6 +18,7 @@ package com.android.messaging.ui.conversationsettings;
 
 import android.app.Fragment;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
@@ -25,6 +26,12 @@ import android.widget.TextView;
 
 import com.android.messaging.BaseActivity;
 import com.android.messaging.R;
+import com.android.messaging.datamodel.DataModel;
+import com.android.messaging.datamodel.DatabaseWrapper;
+import com.android.messaging.datamodel.binding.Binding;
+import com.android.messaging.datamodel.data.ConversationData;
+import com.android.messaging.datamodel.data.ConversationListItemData;
+import com.android.messaging.datamodel.data.ParticipantData;
 import com.android.messaging.ui.UIIntents;
 import com.android.messaging.util.Assert;
 import com.android.messaging.util.UiUtils;
@@ -42,7 +49,7 @@ public class PeopleAndOptionsActivity extends BaseActivity {
         Toolbar toolbar = findViewById(R.id.toolbar);
         toolbar.setTitle("");
         TextView title = toolbar.findViewById(R.id.toolbar_title);
-        title.setText(getString(R.string.people_and_options_activity_title));
+        title.setText(getString(R.string.menu_setting));
         UiUtils.setTitleBarBackground(toolbar, this);
         setSupportActionBar(toolbar);
         if (getSupportActionBar() != null) {

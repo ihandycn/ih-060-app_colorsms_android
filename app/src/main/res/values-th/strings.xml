@@ -602,4 +602,12 @@
 
 	<string name="set_as_default_dialog_title_user_present">กำหนด Color SMS เป็นค่าเริ่มต้น</string>
 
+
+	<string name="welcome_viewpager_item_body_0">โดดเด่นขึ้นมากลางหมู่โซเชียล!</string>
+	<string name="welcome_viewpager_item_title_1">ปรับแต่งเองได้เต็มที่</string>
+	<string name="welcome_viewpager_item_body_1">ตกแต่งการสนทนาตามแบบที่คุณชอบ</string>
+	<string name="welcome_viewpager_item_title_2">คุณสมบัติเพิ่มเติม</string>
+	<string name="welcome_viewpager_item_body_2">เข้ามาลองใช้คุณสมบัติดี ๆ ที่มีมากมายเหล่านี้สิ</string>
+	<string name="welcome_set_as_default_title">กรุณาตั้งค่า Color SMS เป็นแอป SMS ค่าเริ่มต้น ซึ่งจำเป็นในการรับส่ง SMS</string>
+
 </resources>

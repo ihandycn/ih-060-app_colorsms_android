@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    app:layout_constraintBottom_toTopOf="@+id/welcome_start_button"
+    app:layout_constraintLeft_toLeftOf="parent"
+    app:layout_constraintRight_toRightOf="parent"
+    app:layout_constraintTop_toTopOf="parent">
+
+    <FrameLayout
+        android:id="@+id/welcome_guide_lottie_container"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:clipChildren="false"
+        app:layout_constraintBottom_toTopOf="@+id/welcome_guide_viewpager_title"
+        app:layout_constraintDimensionRatio="252:219"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_chainStyle="packed"
+        app:layout_constraintWidth_percent="0.7"/>
+
+    <com.superapps.view.TypefacedTextView
+        android:id="@+id/welcome_guide_viewpager_title"
+        android:layout_width="0dp"
+        android:text="@string/welcome_viewpager_item_title_0"
+        android:layout_height="wrap_content"
+        android:clickable="true"
+        android:maxLines="2"
+        android:gravity="center_horizontal"
+        android:textColor="#282a31"
+        android:textSize="24sp"
+        android:layout_marginTop="24dp"
+        app:layout_constraintBottom_toTopOf="@id/welcome_guide_viewpager_body"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintWidth_percent="0.8"
+        app:layout_constraintTop_toBottomOf="@id/welcome_guide_lottie_container"
+        app:typeface="@string/custom_font_semibold"/>
+
+    <com.superapps.view.TypefacedTextView
+        android:id="@+id/welcome_guide_viewpager_body"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:clickable="true"
+        android:layout_marginTop="-4dp"
+        android:gravity="center_horizontal"
+        android:text="@string/welcome_viewpager_item_body_0"
+        android:lineSpacingExtra="2dp"
+        android:lines="2"
+        android:textColor="#494b4f"
+        android:textSize="16sp"
+        app:layout_constraintBottom_toTopOf="@+id/welcome_guide_viewpager_indicator"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/welcome_guide_viewpager_title"
+        app:layout_constraintWidth_percent="0.75"
+        app:typeface="@string/custom_font_regular"/>
+
+    <com.android.messaging.util.view.AdvancedPageIndicator
+        android:id="@+id/welcome_guide_viewpager_indicator"
+        android:layout_width="wrap_content"
+        android:layout_height="8dp"
+        android:layout_marginTop="24dp"
+        android:visibility="invisible"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/welcome_guide_viewpager_body"/>
+</android.support.constraint.ConstraintLayout>

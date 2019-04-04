@@ -33,7 +33,7 @@
         android:orderInCategory="90"
         appcompat:showAsAction="always">
 
-        <menu>
+       <!-- <menu>
             <group>
                 <item
                     android:id="@+id/action_add_contact"
@@ -52,6 +52,6 @@
                     android:title="@string/action_delete"
                     appcompat:showAsAction="never"/>
             </group>
-        </menu>
+        </menu>-->
     </item>
 </menu>

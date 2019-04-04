@@ -1,25 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.constraint.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#b2000000"
-    tools:context="com.android.messaging.ui.SetAsDefaultGuideActivity">
+    android:background="#b2000000">
 
     <android.support.constraint.Guideline
         android:id="@+id/set_as_default_guideline"
         android:layout_width="1dp"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        app:layout_constraintGuide_percent="0.09" />
+        app:layout_constraintGuide_percent="0.09"/>
 
     <android.support.constraint.Guideline
         android:id="@+id/set_as_default_guideline_end"
         android:layout_width="1dp"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        app:layout_constraintGuide_percent="0.91" />
+        app:layout_constraintGuide_percent="0.91"/>
 
     <LinearLayout
         android:id="@+id/linearLayout"
@@ -39,7 +39,7 @@
         <com.airbnb.lottie.LottieAnimationView
             android:id="@+id/lottie_view"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"/>
 
         <com.superapps.view.TypefacedTextView
             android:layout_width="wrap_content"
@@ -50,7 +50,7 @@
             android:text="@string/drag_hotseat_title"
             android:textColor="#3c3c3c"
             android:textSize="@dimen/dialog_content_title_size"
-            app:typeface="@string/custom_font_semibold" />
+            app:typeface="@string/custom_font_semibold"/>
 
         <com.superapps.view.TypefacedTextView
             android:layout_width="wrap_content"
@@ -65,7 +65,7 @@
             android:text="@string/drag_hotseat_content"
             android:textColor="#454545"
             android:textSize="@dimen/dialog_content_text_size"
-            app:typeface="@string/custom_font_medium" />
+            app:typeface="@string/custom_font_medium"/>
 
         <com.superapps.view.TypefacedTextView
             android:id="@+id/drag_hotseat_btn"
@@ -84,7 +84,7 @@
             android:textAllCaps="true"
             android:textColor="@android:color/white"
             android:textSize="@dimen/dialog_ok_btn_text_size"
-            app:typeface="@string/custom_font_bold" />
+            app:typeface="@string/custom_font_bold"/>
 
     </LinearLayout>
 

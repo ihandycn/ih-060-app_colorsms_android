@@ -1084,6 +1084,18 @@
     <string name="customize_guide_title">Customization is here!</string>
     <string name="signature">Signature</string>
 
+    <string name="create_shortcut_has_been_create">Created successfully</string>
+    <string name="create_shortcut_guide_title">Create a Shortcut</string>
+    <string name="create_shortcut_guide_content">To enjoy better SMS, create a shortcut like the system SMS.</string>
+
+    <string name="welcome_viewpager_item_title_0" translatable="false">1000+ Emojis</string>
+    <string name="welcome_viewpager_item_title_1">Fully Customizable</string>
+    <string name="welcome_viewpager_item_title_2">More Features</string>
+    <string name="welcome_viewpager_item_body_0">Stand out among your social group!</string>
+    <string name="welcome_viewpager_item_body_1">Decorate your chat the way you like.</string>
+    <string name="welcome_viewpager_item_body_2">Come and try a bunch of great features.</string>
+    <string name="welcome_set_as_default_title">To make Color SMS work properly with cool features, it needs to be the default SMS app.</string>
+    <string name="action_pin">Pin to Top</string>
     <string name="reset_password">Reset Password</string>
     <string name="set_gesture_sub_prompt">Connect at least 4 dots</string>
     <string name="gesture_not_confirmed_sub_prompt">Wrong Pattern</string>
@@ -1098,5 +1110,4 @@
     <string name="set_password_prompt">Please set an unlock passcode</string>
     <string name="set_password_sub_prompt">Enter 4 numbers</string>
     <string name="confirm_prompt_password">Confirm passcode</string>
-
 </resources>

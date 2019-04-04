@@ -18,13 +18,13 @@ package com.android.messaging.ui.conversationlist;
 import android.app.Activity;
 import android.app.Fragment;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.view.View;
+import android.widget.Toast;
 
 import com.android.messaging.R;
 import com.android.messaging.datamodel.action.DeleteConversationAction;
@@ -57,8 +57,8 @@ import javax.annotation.Nullable;
  * Base class for many Conversation List activities. This will handle the common actions of multi
  * select and common launching of intents.
  */
-public abstract class AbstractConversationListActivity  extends BugleActionBarActivity
-    implements ConversationListFragmentHost, MultiSelectActionModeCallback.Listener {
+public abstract class AbstractConversationListActivity extends BugleActionBarActivity
+        implements ConversationListFragmentHost, MultiSelectActionModeCallback.Listener {
 
     private static final int REQUEST_SET_DEFAULT_SMS_APP = 1;
 
@@ -120,14 +120,14 @@ public abstract class AbstractConversationListActivity  extends BugleActionBarAc
                     getWindow().getDecorView().getRootView(),
                     getString(R.string.requires_default_sms_app),
                     SnackBar.Action.createCustomAction(new Runnable() {
-                            @Override
-                            public void run() {
-                                final Intent intent =
-                                        UIIntents.get().getChangeDefaultSmsAppIntent(activity);
-                                startActivityForResult(intent, REQUEST_SET_DEFAULT_SMS_APP);
-                            }
-                        },
-                        getString(R.string.requires_default_sms_change_button)),
+                                                           @Override
+                                                           public void run() {
+                                                               final Intent intent =
+                                                                       UIIntents.get().getChangeDefaultSmsAppIntent(activity);
+                                                               startActivityForResult(intent, REQUEST_SET_DEFAULT_SMS_APP);
+                                                           }
+                                                       },
+                            getString(R.string.requires_default_sms_change_button)),
                     null /* interactions */,
                     null /* placement */);
             return;
@@ -152,7 +152,7 @@ public abstract class AbstractConversationListActivity  extends BugleActionBarAc
 
     @Override
     public void onActionBarArchive(final Iterable<SelectedConversation> conversations,
-            final boolean isToArchive) {
+                                   final boolean isToArchive) {
         final ArrayList<String> conversationIds = new ArrayList<String>();
         for (final SelectedConversation conversation : conversations) {
             final String conversationId = conversation.conversationId;
@@ -188,7 +188,7 @@ public abstract class AbstractConversationListActivity  extends BugleActionBarAc
 
     @Override
     public void onActionBarNotification(final Iterable<SelectedConversation> conversations,
-            final boolean isNotificationOn) {
+                                        final boolean isNotificationOn) {
 
         for (final SelectedConversation conversation : conversations) {
             UpdateConversationOptionsAction.enableConversationNotifications(
@@ -198,9 +198,8 @@ public abstract class AbstractConversationListActivity  extends BugleActionBarAc
         final int textId = isNotificationOn ?
                 R.string.notification_on_toast_message : R.string.notification_off_toast_message;
         final String message = getResources().getString(textId, 1);
-        UiUtils.showSnackBar(this, findViewById(android.R.id.list), message,
-            null /* undoRunnable */,
-            SnackBar.Action.SNACK_BAR_UNDO, mConversationListFragment.getSnackBarInteractions());
+        UiUtils.showSnackBar(this, findViewById(android.R.id.list), message, null,
+                SnackBar.Action.SNACK_BAR_UNDO, mConversationListFragment.getSnackBarInteractions());
         exitMultiSelectState();
         BugleAnalytics.logEvent("SMS_EditMode_Mute_BtnClick", true);
     }
@@ -221,46 +220,40 @@ public abstract class AbstractConversationListActivity  extends BugleActionBarAc
     }
 
     @Override
-    public void onActionBarBlock(final SelectedConversation conversation) {
+    public void onActionBarBlock(final Collection<SelectedConversation> conversation) {
         final Resources res = getResources();
-        new BaseAlertDialog.Builder(this)
-                .setTitle(res.getString(R.string.block_confirmation_title,
-                        conversation.otherParticipantNormalizedDestination))
-                .setMessage(res.getString(R.string.block_confirmation_message))
-                .setNegativeButton(android.R.string.cancel, null)
-                .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(final DialogInterface arg0, final int arg1) {
-                        final Context context = AbstractConversationListActivity.this;
-                        final View listView = findViewById(android.R.id.list);
-                        final List<SnackBarInteraction> interactions =
-                                mConversationListFragment.getSnackBarInteractions();
-                        final UpdateDestinationBlockedAction.UpdateDestinationBlockedActionListener
-                                undoListener =
-                                        new UpdateDestinationBlockedActionSnackBar(
-                                                context, listView, null /* undoRunnable */,
-                                                interactions);
-                        final Runnable undoRunnable = new Runnable() {
-                            @Override
-                            public void run() {
-                                UpdateDestinationBlockedAction.updateDestinationBlocked(
-                                        conversation.otherParticipantNormalizedDestination, false,
-                                        conversation.conversationId,
-                                        undoListener);
-                            }
-                        };
-                        final UpdateDestinationBlockedAction.UpdateDestinationBlockedActionListener
-                              listener = new UpdateDestinationBlockedActionSnackBar(
-                                      context, listView, undoRunnable, interactions);
-                        UpdateDestinationBlockedAction.updateDestinationBlocked(
-                                conversation.otherParticipantNormalizedDestination, true,
-                                conversation.conversationId,
-                                listener);
-                        exitMultiSelectState();
-                    }
-                })
-                .show();
+        final Context context = AbstractConversationListActivity.this;
+        final View listView = findViewById(android.R.id.list);
+        final List<SnackBarInteraction> interactions =
+                mConversationListFragment.getSnackBarInteractions();
+        final UpdateDestinationBlockedAction.UpdateDestinationBlockedActionListener undoListener =
+                new UpdateDestinationBlockedActionSnackBar(
+                        context, listView, null,
+                        interactions);
+        final Runnable undoRunnable = new Runnable() {
+            @Override
+            public void run() {
+                for (SelectedConversation selectedConversation : conversation) {
+                    UpdateDestinationBlockedAction.updateDestinationBlocked(
+                            selectedConversation.otherParticipantNormalizedDestination, false,
+                            selectedConversation.conversationId,
+                            undoListener);
+                }
+
+            }
+        };
+        final UpdateDestinationBlockedAction.UpdateDestinationBlockedActionListener
+                listener = new UpdateDestinationBlockedActionSnackBar(
+                context, listView, undoRunnable, interactions);
+        for (SelectedConversation selectedConversation : conversation) {
+            UpdateDestinationBlockedAction.updateDestinationBlocked(
+                    selectedConversation.otherParticipantNormalizedDestination, true,
+                    selectedConversation.conversationId,
+                    listener);
+        }
+        exitMultiSelectState();
         BugleAnalytics.logEvent("SMS_EditMode_BlockContact_BtnClick", true);
+        Toast.makeText(this, R.string.update_destination_blocked, Toast.LENGTH_LONG).show();
     }
 
     @Override
@@ -286,8 +279,7 @@ public abstract class AbstractConversationListActivity  extends BugleActionBarAc
                     this, conversationId, null,
                     sceneTransitionAnimationOptions,
                     hasCustomTransitions);
-            BugleAnalytics.logEvent("SMS_Messages_Message_Click", true);
-
+            BugleAnalytics.logEvent("SMS_Messages_Message_Click", true, "Type", conversationListItemData.isPinned() ? "pin" : "unpin");
         }
     }
 
@@ -316,8 +308,8 @@ public abstract class AbstractConversationListActivity  extends BugleActionBarAc
         private final List<SnackBarInteraction> mInteractions;
 
         UpdateDestinationBlockedActionSnackBar(final Context context,
-                @NonNull final View parentView, @Nullable final Runnable undoRunnable,
-                @Nullable List<SnackBarInteraction> interactions) {
+                                               @NonNull final View parentView, @Nullable final Runnable undoRunnable,
+                                               @Nullable List<SnackBarInteraction> interactions) {
             mContext = context;
             mParentView = parentView;
             mUndoRunnable = undoRunnable;
@@ -326,16 +318,9 @@ public abstract class AbstractConversationListActivity  extends BugleActionBarAc
 
         @Override
         public void onUpdateDestinationBlockedAction(
-            final UpdateDestinationBlockedAction action,
-            final boolean success, final boolean block,
-            final String destination) {
-            if (success) {
-                final int messageId = block ? R.string.blocked_toast_message
-                        : R.string.unblocked_toast_message;
-                final String message = mContext.getResources().getString(messageId, 1);
-                UiUtils.showSnackBar(mContext, mParentView, message, mUndoRunnable,
-                        SnackBar.Action.SNACK_BAR_UNDO, mInteractions);
-            }
+                final UpdateDestinationBlockedAction action,
+                final boolean success, final boolean block,
+                final String destination) {
         }
     }
 }

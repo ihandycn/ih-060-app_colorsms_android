@@ -83,7 +83,6 @@ import com.squareup.leakcanary.ExcludedRefs;
 import com.squareup.leakcanary.LeakCanary;
 import com.superapps.broadcast.BroadcastCenter;
 import com.superapps.debug.SharedPreferencesOptimizer;
-import com.superapps.taskrunner.ParallelBackgroundTask;
 import com.superapps.taskrunner.SyncMainThreadTask;
 import com.superapps.taskrunner.Task;
 import com.superapps.taskrunner.TaskRunner;
@@ -171,7 +170,6 @@ public class BugleApplication extends HSApplication implements UncaughtException
         if (isOnMainProcess) {
 
             onMainProcessApplicationCreate();
-            initAd();
         }
 
         initKeepAlive();
@@ -200,9 +198,11 @@ public class BugleApplication extends HSApplication implements UncaughtException
         try {
             List<Task> initWorks = new ArrayList<>();
 
-            initWorks.add(new ParallelBackgroundTask("Upgrade", () -> Upgrader.getUpgrader(this).upgrade()));
-
             initWorks.add(new SyncMainThreadTask("InitFactoryImpl", this::initFactoryImpl));
+
+            initWorks.add(new SyncMainThreadTask("Upgrade", () -> Upgrader.getUpgrader(this).upgrade()));
+
+            initWorks.add(new SyncMainThreadTask("InitAd", this::initAd));
 
             initWorks.add(new SyncMainThreadTask("InitPhotoViewAnalytics", this::initPhotoViewAnalytics));
 

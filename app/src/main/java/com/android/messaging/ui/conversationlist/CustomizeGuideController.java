@@ -11,7 +11,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Interpolator;
 import android.widget.FrameLayout;
-import android.widget.LinearLayout;
 
 import com.airbnb.lottie.LottieAnimationView;
 import com.android.messaging.R;
@@ -45,7 +44,7 @@ public class CustomizeGuideController {
         FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
                 ViewGroup.LayoutParams.MATCH_PARENT);
 
-        LinearLayout guideContainer = customizeGuideView.findViewById(R.id.customize_guide_container);
+        FrameLayout guideContainer = customizeGuideView.findViewById(R.id.customize_guide_container);
         FrameLayout.LayoutParams param = (FrameLayout.LayoutParams) guideContainer.getLayoutParams();
         param.setMarginStart(Dimensions.pxFromDp(31 - 12.7f));
         int actionBarHeight = 0;
@@ -123,7 +122,7 @@ public class CustomizeGuideController {
             }
         });
 
-        guideContainer.setOnClickListener(v -> {
+        customizeGuideView.findViewById(R.id.customize_guide_clickable_container).setOnClickListener(v -> {
             if (guideLottie.isAnimating()) {
                 guideLottie.setProgress(1);
                 guideLottie.cancelAnimation();

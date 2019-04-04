@@ -156,6 +156,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
         // A conversation is enterprise if one of the participant is a enterprise contact.
         public static final String IS_ENTERPRISE = "IS_ENTERPRISE";
+
+        public static final String PIN_TIMESTAMP = "pin_time";
     }
 
     // Conversation table SQL
@@ -187,10 +189,11 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                     + ConversationColumns.PARTICIPANT_COUNT + " INT DEFAULT(0), "
                     + ConversationColumns.NOTIFICATION_ENABLED + " INT DEFAULT(1), "
                     + ConversationColumns.NOTIFICATION_SOUND_URI + " TEXT, "
-                    + ConversationColumns.NOTIFICATION_VIBRATION + " INT DEFAULT(1), "
+                    + ConversationColumns.NOTIFICATION_VIBRATION + " INT DEFAULT(-1), "
                     + ConversationColumns.INCLUDE_EMAIL_ADDRESS + " INT DEFAULT(0), "
                     + ConversationColumns.SMS_SERVICE_CENTER + " TEXT ,"
                     + ConversationColumns.IS_ENTERPRISE + " INT DEFAULT(0)"
+                    + "," + ConversationColumns.PIN_TIMESTAMP + " INT DEFAULT(0)"
                     + ");";
 
     private static final String CONVERSATIONS_TABLE_SMS_THREAD_ID_INDEX_SQL =
@@ -558,7 +561,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             CREATE_MESSAGES_TRIGGER_SQL,
     };
 
-    //创建 conversation_list_view
+    //create conversation_list_view
     // List of all our views
     private static final String[] CREATE_VIEW_SQLS = new String[]{
             ConversationListItemData.getConversationListViewSql(),

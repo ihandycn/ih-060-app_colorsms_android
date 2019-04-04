@@ -629,6 +629,15 @@ public class BugleDatabaseOperations {
         updateConversationRowIfExists(dbWrapper, conversationId, values);
     }
 
+    public static void updateConversationPinStatues(final DatabaseWrapper dbWrapper,
+                                                    final String conversationId, final boolean isPin){
+        Assert.isNotMainThread();
+        Assert.isTrue(dbWrapper.getDatabase().inTransaction());
+        final ContentValues values = new ContentValues();
+        values.put(ConversationColumns.PIN_TIMESTAMP, isPin ? System.currentTimeMillis() : 0);
+        updateConversationRowIfExists(dbWrapper, conversationId, values);
+    }
+
     static void addSnippetTextAndPreviewToContentValues(final MessageData message,
                                                         final boolean showDraft, final ContentValues values) {
         values.put(ConversationColumns.SHOW_DRAFT, showDraft ? 1 : 0);

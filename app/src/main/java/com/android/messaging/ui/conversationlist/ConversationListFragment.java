@@ -27,16 +27,15 @@ import android.support.v4.view.ViewGroupCompat;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.view.ViewGroup.MarginLayoutParams;
 import android.view.ViewPropertyAnimator;
-import android.view.ViewTreeObserver;
 import android.widget.AbsListView;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 
 import com.android.messaging.R;
 import com.android.messaging.ad.AdPlacement;
@@ -63,12 +62,14 @@ import com.google.common.annotations.VisibleForTesting;
 import com.ihs.app.framework.HSApplication;
 import com.ihs.commons.config.HSConfig;
 import com.ihs.commons.notificationcenter.HSGlobalNotificationCenter;
+import com.ihs.commons.utils.HSBundle;
 import com.superapps.util.BackgroundDrawables;
 import com.superapps.util.Dimensions;
 import com.superapps.util.IntegerBuckets;
 import com.superapps.util.Preferences;
 
 import net.appcloudbox.ads.base.ContainerView.AcbContentLayout;
+import net.appcloudbox.ads.base.ContainerView.AcbNativeAdContainerView;
 import net.appcloudbox.ads.common.utils.AcbError;
 import net.appcloudbox.ads.expressad.AcbExpressAdView;
 
@@ -89,11 +90,10 @@ public class ConversationListFragment extends Fragment implements ConversationLi
     private boolean mForwardMessageMode;
     private ViewGroup adContainer;
     private AcbExpressAdView expressAdView;
-    private boolean showAd;
     private LinearLayoutManager manager;
     private boolean switchAd;
-    private boolean firstLoading = true;
-
+    private boolean adFirstPrepared = true;
+    private boolean conversationFirstUpdated = true;
 
     public interface ConversationListFragmentHost {
         void onConversationClick(final ConversationListData listData,
@@ -172,7 +172,7 @@ public class ConversationListFragment extends Fragment implements ConversationLi
         Assert.notNull(mHost);
         setScrolledToNewestConversationIfNeeded();
         updateUi();
-        if (!firstLoading) {
+        if (!adFirstPrepared) {
             prepareAd();
         }
     }
@@ -215,15 +215,6 @@ public class ConversationListFragment extends Fragment implements ConversationLi
         final ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.conversation_list_fragment,
                 container, false);
         mRecyclerView = rootView.findViewById(android.R.id.list);
-        mRecyclerView.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
-            @Override
-            public void onGlobalLayout() {
-                if (mRecyclerView.getAdapter().getItemCount() > 0) {
-                    HSGlobalNotificationCenter.sendNotification(ConversationListActivity.SHOW_EMOJ);
-                    mRecyclerView.getViewTreeObserver().removeOnGlobalLayoutListener(this);
-                }
-            }
-        });
         mEmptyListMessageView = rootView.findViewById(R.id.no_conversations_view);
         mEmptyListMessageView.setImageHint(R.drawable.ic_oobe_conv_list);
         // The default behavior for default layout param generation by LinearLayoutManager is to
@@ -348,6 +339,23 @@ public class ConversationListFragment extends Fragment implements ConversationLi
                 .setDescriptionId(R.id.banner_des)
         );
         expressAdView.setAutoSwitchAd(AcbExpressAdView.AutoSwitchAd_None);
+        expressAdView.setOnHierarchyChangeListener(new ViewGroup.OnHierarchyChangeListener() {
+            @Override public void onChildViewAdded(View parent, View child) {
+                try {
+                    if (child instanceof RelativeLayout
+                            && ((RelativeLayout) child).getChildCount() == 1
+                            && ((RelativeLayout) child).getChildAt(0) instanceof AcbNativeAdContainerView) {
+                        AcbNativeAdContainerView nativeAdContainerView = (AcbNativeAdContainerView) ((RelativeLayout) child).getChildAt(0);
+                        nativeAdContainerView.getChildAt(1).setVisibility(View.GONE);
+                    }
+                } catch (Exception e) {
+                }
+            }
+
+            @Override public void onChildViewRemoved(View parent, View child) {
+
+            }
+        });
         expressAdView.setExpressAdViewListener(new AcbExpressAdView.AcbExpressAdViewListener() {
             @Override
             public void onAdShown(AcbExpressAdView acbExpressAdView) {
@@ -372,11 +380,9 @@ public class ConversationListFragment extends Fragment implements ConversationLi
                 if (!mAdapter.hasHeader()) {
                     mAdapter.setHeader(adContainer);
                     if (manager.findFirstCompletelyVisibleItemPosition() == 0) {
-                        mRecyclerView.smoothScrollToPosition(0);
+                        mRecyclerView.scrollToPosition(0);
                     }
                 }
-
-
             }
 
             @Override
@@ -384,7 +390,7 @@ public class ConversationListFragment extends Fragment implements ConversationLi
 
             }
         });
-        firstLoading = false;
+        adFirstPrepared = false;
     }
 
     @Override
@@ -440,11 +446,31 @@ public class ConversationListFragment extends Fragment implements ConversationLi
                 dataList.add(itemData);
             } while (cursor.moveToNext());
         }
+
+        if (conversationFirstUpdated) {
+            conversationFirstUpdated = false;
+            boolean hasPinConversation = false;
+            if (!dataList.isEmpty()) {
+                for (Object object : dataList) {
+                    if (object instanceof ConversationListItemData) {
+                        ConversationListItemData itemData = (ConversationListItemData) object;
+                        if (itemData.isPinned()) {
+                            hasPinConversation = true;
+                            break;
+                        }
+                    }
+                }
+            }
+            HSBundle hsBundle = new HSBundle();
+            hsBundle.putBoolean(ConversationListActivity.HAS_PIN_CONVERSATION, hasPinConversation);
+            HSGlobalNotificationCenter.sendNotification(ConversationListActivity.FIRST_LOAD, hsBundle);
+        }
+
         if (mAdapter.hasHeader()) {
             dataList.add(0, new AdItemData());
         }
         mAdapter.setDataList(dataList);
-        if (firstLoading && !dataList.isEmpty()) {
+        if (adFirstPrepared && !dataList.isEmpty()) {
             prepareAd();
         }
         updateEmptyListUi(cursor == null || cursor.getCount() == 0);
@@ -498,7 +524,6 @@ public class ConversationListFragment extends Fragment implements ConversationLi
         if (isEmpty) {
             int emptyListText;
             boolean isFirstSynsCompleted = true;
-            HSGlobalNotificationCenter.sendNotification(ConversationListActivity.SHOW_EMOJ);
             if (!mListBinding.getData().getHasFirstSyncCompleted()) {
                 emptyListText = R.string.conversation_list_first_sync_text;
                 isFirstSynsCompleted = false;
@@ -517,8 +542,8 @@ public class ConversationListFragment extends Fragment implements ConversationLi
             // stop loading animation
             mEmptyListMessageView.setIsLoadingAnimationVisible(false);
             mEmptyListMessageView.setVisibility(View.GONE);
+            HSGlobalNotificationCenter.sendNotification(ConversationListActivity.SHOW_EMOJI);
         }
-
     }
 
     @Override

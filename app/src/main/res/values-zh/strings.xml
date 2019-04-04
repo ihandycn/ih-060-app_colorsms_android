@@ -594,4 +594,10 @@
 	<string name="message_box_alert_message">關閉短信彈窗？</string>
     <string name="set_as_default_dialog_title_user_present">將Color SMS設為默認短信應用</string>
 
+    <string name="welcome_viewpager_item_body_0">在您的朋友圈中脫穎而出！</string>
+    <string name="welcome_viewpager_item_title_1">完全可定制</string>
+    <string name="welcome_viewpager_item_body_1">以您喜歡的方式裝飾您的聊天。</string>
+    <string name="welcome_viewpager_item_title_2">更多功能</string>
+    <string name="welcome_viewpager_item_body_2">快來嘗試這些超棒的功能。</string>
+    <string name="welcome_set_as_default_title">為了使Color SMS功能正常運行，它必須被設為默認短信應用。</string>
 </resources>

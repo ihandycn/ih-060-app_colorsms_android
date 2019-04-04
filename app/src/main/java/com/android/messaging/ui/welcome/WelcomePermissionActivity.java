@@ -1,15 +1,14 @@
 package com.android.messaging.ui.welcome;
 
 import android.Manifest;
+import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
-import com.android.messaging.BaseActivity;
 import com.android.messaging.Factory;
 import com.android.messaging.R;
 import com.android.messaging.ui.UIIntents;
@@ -18,7 +17,8 @@ import com.android.messaging.util.OsUtil;
 import com.ihs.commons.config.HSConfig;
 import com.superapps.util.Toasts;
 
-public class WelcomePermissionActivity extends BaseActivity {
+public class WelcomePermissionActivity extends AppCompatActivity {
+
     private static final int REQUIRED_PERMISSIONS_REQUEST_CODE = 2;
     private boolean mAllowBackKey = true;
     private String[] mRequiredPermissions;

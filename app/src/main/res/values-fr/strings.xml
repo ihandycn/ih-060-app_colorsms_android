@@ -600,4 +600,12 @@
 
 	<string name="set_as_default_dialog_title_user_present">Définir Color SMS par défaut</string>
 
+
+	<string name="welcome_viewpager_item_body_0">Démarquez-vous au sein de votre groupe social !</string>
+	<string name="welcome_viewpager_item_title_1">Totalement personnalisable</string>
+	<string name="welcome_viewpager_item_body_1">Décorez votre chat comme vous voulez</string>
+	<string name="welcome_viewpager_item_title_2">Plus de fonctionnalités</string>
+	<string name="welcome_viewpager_item_body_2">Venez essayez des super fonctionnalités</string>
+	<string name="welcome_set_as_default_title">Veuillez définir Color SMS comme application SMS par défaut, c\'est obligatoire pour envoyer/recevoir des SMS.</string>
+
 </resources>

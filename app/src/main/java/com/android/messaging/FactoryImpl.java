@@ -116,12 +116,11 @@ class FactoryImpl extends Factory {
 
             @Override
             public void onActivityCreated(Activity activity, Bundle savedInstanceState) {
-                sIsRedirectToWelcome = UiUtils.redirectToWelcomeIfNeeded(activity);
+
             }
 
             @Override
             public void onActivityStarted(Activity activity) {
-
 
             }
 
@@ -129,9 +128,6 @@ class FactoryImpl extends Factory {
             public void onActivityResumed(Activity activity) {
                 if (!(activity instanceof MessageBoxActivity)) {
                     factory.mIsForeground = true;
-                }
-                if (sIsRedirectToWelcome) {
-                    sIsRedirectToWelcome = false;
                 }
             }
 

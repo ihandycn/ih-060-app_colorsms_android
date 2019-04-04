@@ -108,4 +108,15 @@
         <attr name="pin_circle_color" format="color" />
         <attr name="pin_btn_back" format="color|reference" />
     </declare-styleable>
+
+    <declare-styleable name="AdvancedPageIndicator">
+        <attr name="minRadius" format="dimension" />
+        <attr name="circleRadius" format="dimension" />
+        <attr name="indicatorRadius" format="dimension" />
+        <attr name="circleColor" format="color" />
+        <attr name="indicatorColor" format="color" />
+        <attr name="circleSpacing" format="dimension" />
+        <attr name="circleVerticalPadding" format="dimension" />
+        <attr name="circleHorizontalPadding" format="dimension" />
+    </declare-styleable>
 </resources>

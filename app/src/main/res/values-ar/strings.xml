@@ -702,4 +702,12 @@
     <string name="sms_notification_channel_description">Show a notification when received SMS</string>
     <string name="menu_rate">5 Star Rating</string>
 
+
+	<string name="welcome_viewpager_item_body_0">تميّز بين أصدقائك!</string>
+	<string name="welcome_viewpager_item_title_1">تخصيص شامل</string>
+	<string name="welcome_viewpager_item_body_1">زيّن دردشاتك بأي شكل يعجبك.</string>
+	<string name="welcome_viewpager_item_title_2">ميزات عديدة</string>
+	<string name="welcome_viewpager_item_body_2">تعال وجرّب مجموعة رائعة من الميزات.</string>
+	<string name="welcome_set_as_default_title">عيّن Color SMS كتطبيق افتراضي للرسائل القصيرة، هذا الإجراء مطلوب لإرسال واستقبال الرسائل القصيرة.</string>
+
 </resources>
