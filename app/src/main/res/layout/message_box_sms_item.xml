@@ -24,6 +24,7 @@
         android:layout_marginStart="20dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
+        app:font_size_changeable="true"
         app:typeface="@string/custom_font_regular"
         tools:text="A you ok? Are you ok Are y o u A r e yo u o k? Ar e y ou ok A re you sd" />
 
@@ -34,6 +35,7 @@
         android:textColor="#ababab"
         android:textSize="10.7sp"
         android:layout_marginStart="10dp"
+        app:font_size_changeable="true"
         app:layout_constraintLeft_toRightOf="@id/message_content"
         app:layout_constraintBottom_toBottomOf="@id/message_content"
         app:typeface="@string/custom_font_regular"

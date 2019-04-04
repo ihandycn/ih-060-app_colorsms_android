@@ -12,6 +12,7 @@ import com.android.messaging.R;
 import com.android.messaging.ui.PlainTextEditText;
 import com.android.messaging.ui.conversation.SimIconView;
 import com.android.messaging.ui.customize.PrimaryColors;
+import com.superapps.font.FontUtils;
 import com.superapps.util.BackgroundDrawables;
 import com.superapps.util.Dimensions;
 
@@ -38,6 +39,7 @@ class MessageBoxInputActionView extends LinearLayout {
 
         mComposeEditText = findViewById(R.id.compose_message_text);
         mComposeEditText.requestFocus();
+        mComposeEditText.setTypeface(FontUtils.getTypeface());
 
         mEmojiIcon = findViewById(R.id.emoji_btn);
     }
