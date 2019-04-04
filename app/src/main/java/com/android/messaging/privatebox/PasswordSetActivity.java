@@ -1,7 +1,6 @@
 package com.android.messaging.privatebox;
 
 import android.content.Intent;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v7.widget.Toolbar;
@@ -20,12 +19,10 @@ import com.android.messaging.R;
 import com.android.messaging.privatebox.view.GestureLockView;
 import com.android.messaging.privatebox.view.PINIndicatorView;
 import com.android.messaging.privatebox.view.PINKeyboardView;
+import com.android.messaging.ui.customize.PrimaryColors;
 import com.android.messaging.util.BugleAnalytics;
-import com.ihs.app.framework.inner.SessionMgr;
-import com.ihs.commons.notificationcenter.HSGlobalNotificationCenter;
+import com.android.messaging.util.UiUtils;
 import com.ihs.commons.utils.HSLog;
-import com.superapps.util.Navigations;
-import com.superapps.util.Permissions;
 
 public class PasswordSetActivity extends BaseActivity implements View.OnClickListener {
 
@@ -127,29 +124,29 @@ public class PasswordSetActivity extends BaseActivity implements View.OnClickLis
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_lock_password);
 
         if (null != getIntent()) {
             isResetPassword = getIntent().getBooleanExtra(INTENT_EXTRA_RESET_PASSWORD, false);
             isForgetPassword = getIntent().getBooleanExtra(INTENT_EXTRA_FORGET_PASSWORD, false);
         }
-
-        HSLog.d(TAG, "onCreate()");
-
         currentPasswordStyle = PrivateBoxSettings.getLockStyle();
 
-        setContentView(R.layout.activity_lock_password);
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.KITKAT) {
-            findViewById(R.id.status_bar_stub).setVisibility(View.GONE);
-        }
-        Toolbar toolbar = findViewById(R.id.lock_toolbar);
-        if (isForgetPassword) {
-            toolbar.setTitle(getString(R.string.reset_password));
-        } else {
-            toolbar.setTitle("");
-        }
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        toolbar.setTitle("");
+        UiUtils.setTitleBarBackground(toolbar, this);
+        TextView title = toolbar.findViewById(R.id.toolbar_title);
+        title.setText(isForgetPassword ?
+                getString(R.string.reset_password) : getString(R.string.menu_privacy_box));
         setSupportActionBar(toolbar);
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        }
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
+        findViewById(R.id.top_container).setBackgroundColor(PrimaryColors.getPrimaryColor());
 
         operationTv = findViewById(R.id.operation_tv);
+        operationTv.setTextColor(PrimaryColors.getPrimaryColor());
         operationTv.setOnClickListener(this);
 
         patternGuideView = findViewById(R.id.set_lock_pattern_guide);

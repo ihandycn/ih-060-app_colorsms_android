@@ -66,6 +66,7 @@ public class ThemeSelectActivity extends BaseActivity {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         }
         getSupportActionBar().setDisplayShowHomeEnabled(true);
+
         // setup color select
         for (int i = 0; i < COLORS.length; i++) {
             findViewById(COLOR_IMG_IDS[i]).setBackground(
