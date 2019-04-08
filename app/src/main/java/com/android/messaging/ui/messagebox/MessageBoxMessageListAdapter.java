@@ -1,9 +1,7 @@
 package com.android.messaging.ui.messagebox;
 
 
-import android.graphics.drawable.Drawable;
 import android.support.annotation.ColorInt;
-import android.support.annotation.DrawableRes;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
@@ -12,14 +10,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-
 import com.android.messaging.R;
 import com.android.messaging.datamodel.data.MessageBoxItemData;
 import com.android.messaging.ui.ConversationDrawables;
 import com.android.messaging.ui.UIIntents;
-import com.android.messaging.ui.customize.BubbleDrawables;
 import com.android.messaging.ui.customize.ConversationColors;
-import com.android.messaging.util.BugleAnalytics;
 import com.android.messaging.util.Dates;
 import com.ihs.commons.notificationcenter.HSGlobalNotificationCenter;
 

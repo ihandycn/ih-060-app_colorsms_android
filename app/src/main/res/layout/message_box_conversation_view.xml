@@ -12,8 +12,8 @@
             android:id="@+id/content"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginStart="6.7dp"
-            android:layout_marginEnd="6.7dp"
+            android:layout_marginStart="@dimen/message_box_start_margin"
+            android:layout_marginEnd="@dimen/message_box_end_margin"
             android:layout_gravity="center"
             android:background="@drawable/message_box_background">
 
