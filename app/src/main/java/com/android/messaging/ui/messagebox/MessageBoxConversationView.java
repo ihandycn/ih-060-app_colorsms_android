@@ -251,11 +251,13 @@ public class MessageBoxConversationView extends FrameLayout {
     void hideEmoji() {
         mEmojiContainer.setVisibility(GONE);
         mEmojiDivider.setVisibility(GONE);
+        mEmojiContainer.post(() -> mActivity.reLayoutIndicatorView());
     }
 
     void showEmoji() {
         mEmojiContainer.setVisibility(View.VISIBLE);
         mEmojiDivider.setVisibility(VISIBLE);
+        mEmojiContainer.post(() -> mActivity.reLayoutIndicatorView());
     }
 
     private void initEmoji() {
