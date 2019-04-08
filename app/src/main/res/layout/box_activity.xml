@@ -1,25 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#cc000000"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools">
+    android:background="#cc000000">
 
     <com.android.messaging.ui.messagebox.MessageBoxIndicatorView
         android:id="@+id/dot_indicator_view"
         android:layout_width="match_parent"
         android:layout_height="10dp"
         android:layout_gravity="center"
+        android:layout_marginEnd="-32dp"
         android:layout_marginBottom="148dp"
         android:gravity="end"
-        android:layout_marginEnd="-30dp"
         android:orientation="horizontal" />
 
     <com.superapps.view.ViewPagerFixed
         android:id="@+id/message_box_conversation_pager"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
-
+        android:layout_height="match_parent" />
 
 </FrameLayout>

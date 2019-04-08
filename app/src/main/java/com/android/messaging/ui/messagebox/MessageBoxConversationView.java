@@ -1,5 +1,6 @@
 package com.android.messaging.ui.messagebox;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
@@ -16,6 +17,7 @@ import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.view.Display;
 import android.view.KeyEvent;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
@@ -260,6 +262,7 @@ public class MessageBoxConversationView extends FrameLayout {
         mEmojiContainer.post(() -> mActivity.reLayoutIndicatorView());
     }
 
+    @SuppressLint("ClickableViewAccessibility")
     private void initEmoji() {
         EmojiPackagePagerAdapter.OnEmojiClickListener listener = new EmojiPackagePagerAdapter.OnEmojiClickListener() {
             @Override
@@ -300,9 +303,18 @@ public class MessageBoxConversationView extends FrameLayout {
         });
 
         mInputEditText.setOnClickListener(v -> {
-            hideEmoji();
-            ImeUtil.get().showImeKeyboard(getContext(), mInputEditText);
             MessageBoxAnalytics.logEvent("SMS_PopUp_TextField_Click");
+        });
+
+        mInputEditText.setOnTouchListener((v, event) -> {
+            if (mEmojiContainer.getVisibility() == VISIBLE && event.getAction() == MotionEvent.ACTION_UP) {
+                hideEmoji();
+                postDelayed(() -> ImeUtil.get().showImeKeyboard(getContext(), mInputEditText), 500L);
+                MessageBoxAnalytics.logEvent("SMS_PopUp_TextField_Click");
+                return true;
+            } else {
+                return false;
+            }
         });
     }
 

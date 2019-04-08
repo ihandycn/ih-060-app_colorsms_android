@@ -59,13 +59,12 @@ public class MessageBoxIndicatorView extends LinearLayout implements ViewPager.O
         if (!mReveal) {
             int count = getChildCount();
             for (int i = 0; i < count; i++) {
-                float translationX = -Dimensions.pxFromDp((count - i) * 8 + 60);
+                float translationX = -Dimensions.pxFromDp((count - i) * 6.5f + 60f);
                 getChildAt(i).animate()
                         .translationXBy(translationX)
                         .setDuration(250L)
                         .setStartDelay(40L * i)
                         .setInterpolator(new OvershootInterpolator(3)).start();
-
                 mReveal = true;
             }
         }

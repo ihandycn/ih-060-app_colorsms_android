@@ -173,7 +173,7 @@ public class MessageBoxActivity extends AppCompatActivity implements INotificati
 
     void reLayoutIndicatorView() {
         FrameLayout.LayoutParams params = (FrameLayout.LayoutParams) mIndicator.getLayoutParams();
-        params.bottomMargin = mCurrentConversationView.getContentHeight() / 2 + Dimensions.pxFromDp(15);
+        params.bottomMargin = mCurrentConversationView.getContentHeight() / 2 + Dimensions.pxFromDp(18);
         mIndicator.setLayoutParams(params);
     }
 
