@@ -600,5 +600,12 @@
 
 
 	<string name="set_as_default_dialog_title_user_present">Color SMS를 기본으로 설정</string>
+    
+    <string name="message_box_unread">읽지 않음</string>
+    <string name="message_box_send_successfully_toast">전송 성공</string>
+    <string name="message_box_send_failed_toast">전송 실패</string>
+    <string name="message_box_delete_alert_description">메시지를 삭제할까요?</string>
+    <string name="message_box_mark_as_unread">읽지 않음으로 표시</string>
+    <string name="message_box_open">열다</string>
 
 </resources>

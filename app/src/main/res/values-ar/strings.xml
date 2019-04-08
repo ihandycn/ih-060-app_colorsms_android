@@ -701,5 +701,12 @@
     <string name="sms_notification_channel">SMS Notification</string>
     <string name="sms_notification_channel_description">Show a notification when received SMS</string>
     <string name="menu_rate">5 Star Rating</string>
+    
+    <string name="message_box_unread">غير مقروءة</string>
+    <string name="message_box_send_successfully_toast">أُرسلت بنجاح</string>
+    <string name="message_box_send_failed_toast">فشل الإرسال</string>
+    <string name="message_box_delete_alert_description">حذف الرسائل؟</string>
+    <string name="message_box_mark_as_unread">تعيين كغير مقوءة</string>
+    <string name="message_box_open">افتح</string>
 
 </resources>

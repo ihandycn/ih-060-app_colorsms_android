@@ -1081,7 +1081,7 @@
     <string name="message_box_unread">UNREAD</string>
     <string name="message_box_open">OPEN</string>
     <string name="message_box_click_to_view">Click to View</string>
-    <string name="message_box_delete_alert_description">Delete the messages</string>
+    <string name="message_box_delete_alert_description">Delete the messages?</string>
     <string name="message_box_mark_as_unread">Marked as unread</string>
     <string name="message_box_send_successfully_toast">Sent successfully</string>
     <string name="message_box_send_failed_toast">Failed to send</string>

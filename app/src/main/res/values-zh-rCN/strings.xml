@@ -594,5 +594,12 @@
     <string name="menu_new">新功能</string>
     <string name="message_box_alert_message">关闭短信弹窗？</string>
     <string name="set_as_default_dialog_title_user_present">将Color SMS设为默认短信应用</string>
+    
+    <string name="message_box_unread">未读</string>
+    <string name="message_box_send_successfully_toast">发送成功</string>
+    <string name="message_box_send_failed_toast">发送失败</string>
+    <string name="message_box_delete_alert_description">删除信息？</string>
+    <string name="message_box_mark_as_unread">已标记为未读</string>
+    <string name="message_box_open">打开</string>
 
 </resources>

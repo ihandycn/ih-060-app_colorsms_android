@@ -598,5 +598,12 @@
 
 
 	<string name="set_as_default_dialog_title_user_present">Đặt Color SMS làm mặc định</string>
+    
+    <string name="message_box_unread">CHƯA ĐỌC</string>
+    <string name="message_box_send_successfully_toast">Đã gửi thành công</string>
+    <string name="message_box_send_failed_toast">Gửi không thành công</string>
+    <string name="message_box_delete_alert_description">Xóa các tin nhắn?</string>
+    <string name="message_box_mark_as_unread">Đã đánh dấu là chưa đọc</string>
+    <string name="message_box_open">MỞ</string>
 
 </resources>

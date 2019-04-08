@@ -601,5 +601,14 @@
 
 
 	<string name="set_as_default_dialog_title_user_present">Atur Color SMS sebagai default</string>
+    
+    <string name="message_box_unread">BELUM DIBACA</string>
+    <string name="message_box_send_successfully_toast">Berhasil dikirim</string>
+    <string name="message_box_send_failed_toast">Gagal mengirim</string>
+    <string name="message_box_delete_alert_description">Hapus pesan?</string>
+    <string name="message_box_mark_as_unread">Ditandai belum dibaca</string>
+    <string name="message_box_open">BUKA</string>
+    
+    
 
 </resources>

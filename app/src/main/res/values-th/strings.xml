@@ -601,5 +601,12 @@
 
 
 	<string name="set_as_default_dialog_title_user_present">กำหนด Color SMS เป็นค่าเริ่มต้น</string>
+    
+    <string name="message_box_unread">ไม่ได้อ่าน</string>
+    <string name="message_box_send_successfully_toast">ส่งสำเร็จ</string>
+    <string name="message_box_send_failed_toast">ส่งไม่สำเร็จ</string>
+    <string name="message_box_delete_alert_description">ลบข้อความหรือไม่</string>
+    <string name="message_box_mark_as_unread">ทำเครื่องหมายว่าไม่ได้อ่าน</string>
+    <string name="message_box_open">เปิด</string>
 
 </resources>

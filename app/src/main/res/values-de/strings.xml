@@ -601,5 +601,12 @@
 
 
 	<string name="set_as_default_dialog_title_user_present">Color SMS als Standard festlegen</string>
+    <string name="message_box_unread">UNGELESEN</string>
+    <string name="message_box_send_successfully_toast">Erfolgreich gesendet</string>
+    <string name="message_box_send_failed_toast">Senden fehlgeschlagen</string>
+    <string name="message_box_delete_alert_description">Nachrichten löschen?</string>
+    <string name="message_box_mark_as_unread">Als ungelesen markiert</string>
+    <string name="message_box_open">ÖFFNEN</string>
+    
 
 </resources>
