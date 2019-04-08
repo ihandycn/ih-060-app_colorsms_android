@@ -29,9 +29,11 @@ import com.airbnb.lottie.LottieAnimationView;
 import com.android.messaging.Factory;
 import com.android.messaging.R;
 import com.android.messaging.datamodel.BugleNotifications;
-import com.android.messaging.privatebox.PrivateBoxSetPasswordActivity;
-import com.android.messaging.ui.CreateShortcutActivity;
 import com.android.messaging.datamodel.action.PinConversationAction;
+import com.android.messaging.privatebox.PrivateBoxSetPasswordActivity;
+import com.android.messaging.privatebox.PrivateBoxSettings;
+import com.android.messaging.privatebox.SelfVerifyActivity;
+import com.android.messaging.ui.CreateShortcutActivity;
 import com.android.messaging.ui.DragHotSeatActivity;
 import com.android.messaging.ui.UIIntents;
 import com.android.messaging.ui.UIIntentsImpl;
@@ -358,8 +360,13 @@ public class ConversationListActivity extends AbstractConversationListActivity
                         break;
                     case DRAWER_INDEX_PRIVACY_BOX:
                         BugleAnalytics.logEvent("Menu_PrivateBox_Click");
-                        Navigations.startActivitySafely(ConversationListActivity.this,
-                                new Intent(ConversationListActivity.this, PrivateBoxSetPasswordActivity.class));
+                        if (PrivateBoxSettings.isAnyPasswordSetted()) {
+                            Navigations.startActivitySafely(ConversationListActivity.this,
+                                    new Intent(ConversationListActivity.this, SelfVerifyActivity.class));
+                        } else {
+                            Navigations.startActivitySafely(ConversationListActivity.this,
+                                    new Intent(ConversationListActivity.this, PrivateBoxSetPasswordActivity.class));
+                        }
                         break;
                     case DRAWER_INDEX_SETTING:
                         UIIntents.get().launchSettingsActivity(ConversationListActivity.this);

@@ -1,0 +1,126 @@
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/lock_container"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:clipChildren="false">
+
+    <View
+        android:id="@+id/background"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="56dp"
+        android:orientation="horizontal">
+    </LinearLayout>
+
+    <android.support.percent.PercentRelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="56dp">
+
+        <RelativeLayout
+            android:id="@+id/panel_area_rl"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:paddingLeft="40dp"
+            android:paddingRight="40dp"
+            app:layout_heightPercent="21%">
+
+            <TextView
+                android:id="@+id/panel_desc_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:alpha="0.6"
+                android:gravity="center"
+                android:text="@string/app_lock_verify_identity"
+                android:textColor="@android:color/white"
+                android:textSize="20sp"/>
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@id/panel_area_rl"
+            android:background="@android:color/white"
+            android:layoutDirection="ltr">
+
+            <LinearLayout
+                android:id="@+id/fingerprint_top_tip_container"
+                android:layout_width="wrap_content"
+                android:layout_height="43dp"
+                android:layout_alignParentBottom="true"
+                android:layout_centerHorizontal="true"
+                android:orientation="horizontal">
+            </LinearLayout>
+
+            <com.android.messaging.privatebox.view.PINIndicatorView
+                android:id="@+id/pin_indicator_view"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="34dp"
+                android:orientation="horizontal"
+                app:pin_indicator_circle="@drawable/shape_pin_circle_dark"
+                app:pin_indicator_ring="@drawable/shape_pin_circle_light"/>
+
+            <com.android.messaging.privatebox.view.PINKeyboardView
+                android:id="@+id/pin_unlock_view"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_above="@id/fingerprint_top_tip_container"
+                android:layout_below="@id/pin_indicator_view"
+                android:layout_marginBottom="20dp"
+                android:layout_marginLeft="25dp"
+                android:layout_marginRight="25dp"
+                android:layout_marginTop="10dp"
+                android:gravity="center"
+                android:orientation="vertical"
+                app:pin_btn_back="@drawable/app_lock_pin_back"
+                app:pin_circle_color="#142471e2"
+                app:pin_number_color="#2671d7"/>
+
+            <com.android.messaging.privatebox.view.GestureLockView
+                android:id="@+id/gesture_unlock_view"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_above="@id/fingerprint_top_tip_container"
+                android:layout_below="@id/pin_indicator_view"
+                android:layout_centerInParent="true"
+                app:gesture_lock_failure_line_color="#ffff3e3e"
+                app:gesture_lock_line_width="3dp"
+                app:gesture_lock_node_failure_image="@drawable/app_lock_pattern_error"
+                app:gesture_lock_node_highlight_image="@drawable/app_lock_pattern_touch"
+                app:gesture_lock_node_image="@drawable/app_lock_pattern_normal"
+                app:gesture_lock_normal_line_color="@color/primary_color"
+                app:gesture_lock_padding="55dp"
+                app:gesture_lock_spacing="50dp"/>
+
+            <View
+                android:id="@+id/bottom_space"
+                android:layout_width="1dp"
+                android:layout_height="27dp"
+                android:layout_alignParentBottom="true"></View>
+
+            <TextView
+                android:id="@+id/use_passcode_btn"
+                android:layout_width="wrap_content"
+                android:layout_height="38dp"
+                android:layout_above="@id/bottom_space"
+                android:layout_centerHorizontal="true"
+                android:alpha="0.5"
+                android:fontFamily="sans-serif-medium"
+                android:gravity="center"
+                android:paddingLeft="33dp"
+                android:paddingRight="33dp"
+                android:text="@string/lock_style_pin"
+                android:textAllCaps="true"
+                android:textColor="@color/primary_color"
+                android:textSize="15sp"/>
+        </RelativeLayout>
+    </android.support.percent.PercentRelativeLayout>
+</RelativeLayout>

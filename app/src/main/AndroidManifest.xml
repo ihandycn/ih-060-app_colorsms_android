@@ -726,6 +726,11 @@
             android:excludeFromRecents="true"
             android:screenOrientation="portrait"
             android:theme="@style/SettingsActivity" />
-    </application>
 
+        <activity
+            android:name=".privatebox.SelfVerifyActivity"
+            android:excludeFromRecents="true"
+            android:screenOrientation="portrait"
+            android:theme="@style/SettingsActivity" />
+    </application>
 </manifest>
