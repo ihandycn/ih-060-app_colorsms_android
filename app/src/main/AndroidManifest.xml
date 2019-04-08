@@ -716,7 +716,13 @@
             android:theme="@style/Theme.AppCompat.Translucent"/>
 
         <activity
-            android:name=".privatebox.PasswordSetActivity"
+            android:name=".privatebox.PrivateBoxSetPasswordActivity"
+            android:excludeFromRecents="true"
+            android:screenOrientation="portrait"
+            android:theme="@style/SettingsActivity" />
+
+        <activity
+            android:name=".privatebox.PrivateBoxListActivity"
             android:excludeFromRecents="true"
             android:screenOrientation="portrait"
             android:theme="@style/SettingsActivity" />

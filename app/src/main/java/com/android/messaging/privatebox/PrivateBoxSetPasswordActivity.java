@@ -24,7 +24,7 @@ import com.android.messaging.util.BugleAnalytics;
 import com.android.messaging.util.UiUtils;
 import com.ihs.commons.utils.HSLog;
 
-public class PasswordSetActivity extends BaseActivity implements View.OnClickListener {
+public class PrivateBoxSetPasswordActivity extends BaseActivity implements View.OnClickListener {
 
     private enum PasswordSetMode {
         NORMAL_FIRST_SET,
@@ -35,7 +35,6 @@ public class PasswordSetActivity extends BaseActivity implements View.OnClickLis
     public static final String INTENT_EXTRA_RESET_PASSWORD = "INTENT_EXTRA_RESET_PASSWORD";
     public static final String INTENT_EXTRA_FORGET_PASSWORD = "INTENT_EXTRA_FORGET_PASSWORD";
     public static final String INTENT_KER_PASSWORD_STATUS = "key_password_status";
-    public static final String INTENT_EXTRA_FROM_RESULT_PAGE = "INTENT_EXTRA_FROM_RESULT_PAGE";
     public static final String RESET_PASSWORD = "reset_password";
     public static final String SET_PASSWORD = "set_password";
     private String password = PrivateBoxSettings.PASSWORD_PLACEHOLDER;
@@ -79,7 +78,7 @@ public class PasswordSetActivity extends BaseActivity implements View.OnClickLis
                 }
             } else {
                 passwordSetMode = PasswordSetMode.NORMAL_SECOND_SET;
-                PasswordSetActivity.this.password = password;
+                PrivateBoxSetPasswordActivity.this.password = password;
 
                 currentPasswordStyle = PrivateBoxSettings.PasswordStyle.PATTERN;
                 updateCurrentProtectionUI(currentPasswordStyle, false);
@@ -288,7 +287,7 @@ public class PasswordSetActivity extends BaseActivity implements View.OnClickLis
 
     private void performShakeAnimation(final String msg, boolean isPromptSubLine) {
         if (shakeAnimation == null) {
-            shakeAnimation = AnimationUtils.loadAnimation(PasswordSetActivity.this, R.anim.left_right_shake);
+            shakeAnimation = AnimationUtils.loadAnimation(PrivateBoxSetPasswordActivity.this, R.anim.left_right_shake);
             shakeAnimation.setAnimationListener(new Animation.AnimationListener() {
                 @Override public void onAnimationStart(Animation animation) {
 
