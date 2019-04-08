@@ -277,7 +277,6 @@ public class ProcessSentMessageAction extends Action {
         boolean failed;
         if (status == MmsUtils.MMS_REQUEST_SUCCEEDED) {
             message.markMessageSent(timestamp);
-            BugleAnalytics.logEvent("SMS_DetailsPage_IconSend_Click", true, "Type", isSms ? "SMS" : "MMS");
             failed = false;
         } else if (status == MmsUtils.MMS_REQUEST_AUTO_RETRY
                 && message.getInResendWindow(timestamp)) {

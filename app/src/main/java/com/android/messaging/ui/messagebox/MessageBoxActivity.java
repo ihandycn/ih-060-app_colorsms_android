@@ -7,6 +7,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.FrameLayout;
 
 import com.android.messaging.BuildConfig;
 import com.android.messaging.R;
@@ -20,6 +21,7 @@ import com.android.messaging.util.BugleAnalytics;
 import com.ihs.commons.notificationcenter.HSGlobalNotificationCenter;
 import com.ihs.commons.notificationcenter.INotificationObserver;
 import com.ihs.commons.utils.HSBundle;
+import com.superapps.util.Dimensions;
 import com.superapps.util.Toasts;
 
 import java.util.ArrayList;
@@ -161,11 +163,18 @@ public class MessageBoxActivity extends AppCompatActivity implements INotificati
     @Override
     public void onPageSelected(int position) {
         mCurrentConversationView = (MessageBoxConversationView) mPagerAdapter.getViews().get(position);
+        reLayoutIndicatorView();
     }
 
     @Override
     public void onPageScrollStateChanged(int state) {
 
+    }
+
+    void reLayoutIndicatorView() {
+        FrameLayout.LayoutParams params = (FrameLayout.LayoutParams) mIndicator.getLayoutParams();
+        params.bottomMargin = mCurrentConversationView.getContentHeight() + Dimensions.pxFromDp(15);
+        mIndicator.setLayoutParams(params);
     }
 
     @Override
@@ -275,7 +284,6 @@ public class MessageBoxActivity extends AppCompatActivity implements INotificati
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        BugleNotifications.markAllMessagesAsSeen();
         HSGlobalNotificationCenter.removeObserver(this);
 
         for (String conversationId : mConversationIdList) {

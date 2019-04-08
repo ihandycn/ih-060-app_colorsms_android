@@ -654,7 +654,8 @@ public class BugleNotifications {
                    String attachmentType = state.getAttachmentType();
                    boolean isMms = false;
 
-                    if (ContentType.isImageType(attachmentType)
+                    if (TextUtils.isEmpty(messageLineInfo.mText)
+                            || ContentType.isImageType(attachmentType)
                             || ContentType.isVideoType(attachmentType)
                             || ContentType.isAudioType(attachmentType)) {
                         isMms = true;

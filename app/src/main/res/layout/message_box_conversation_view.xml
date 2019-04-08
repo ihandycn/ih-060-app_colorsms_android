@@ -9,6 +9,7 @@
 
 
         <android.support.constraint.ConstraintLayout
+            android:id="@+id/content"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="6.7dp"
@@ -101,7 +102,7 @@
                 app:layout_constraintEnd_toEndOf="@id/guideline_start"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/message_view"
-                android:text="@string/message_box_delete" />
+                android:text="@string/delete_conversation_confirmation_button" />
 
             <com.superapps.view.TypefacedTextView
                 android:id="@+id/action_unread"

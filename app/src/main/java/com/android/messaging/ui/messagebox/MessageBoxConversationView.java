@@ -53,6 +53,7 @@ public class MessageBoxConversationView extends FrameLayout {
     @ColorInt private int mPrimaryColorDark;
 
     private MessageBoxActivity mActivity;
+    private ViewGroup mContent;
     private MessageBoxInputActionView mInputActionView;
     private MessageBoxMessageListAdapter mAdapter;
     private ImageView mCallImage;
@@ -60,6 +61,7 @@ public class MessageBoxConversationView extends FrameLayout {
     private ViewGroup mEmojiContainer;
     private View mEmojiDivider;
     private EditText mInputEditText;
+
 
     private String mConversationId;
     private String mSelfId;
@@ -82,6 +84,7 @@ public class MessageBoxConversationView extends FrameLayout {
 
         initActionBarSimulation();
         initQuickActions();
+        mContent = findViewById(R.id.content);
         mInputActionView = findViewById(R.id.message_compose_view_container);
         mEmojiContainer = findViewById(R.id.emoji_picker_container);
         mEmojiDivider = findViewById(R.id.emoji_divider);
@@ -122,6 +125,10 @@ public class MessageBoxConversationView extends FrameLayout {
         mRecyclerView.scrollToPosition(mAdapter.getItemCount() - 1);
     }
 
+    int getContentHeight() {
+        return mContent.getHeight();
+    }
+
     private void initActionBarSimulation() {
         mCallImage = findViewById(R.id.action_call);
         mCallImage.setOnClickListener(mActivity);
@@ -148,6 +155,7 @@ public class MessageBoxConversationView extends FrameLayout {
         actionUnread.setTextColor(mPrimaryColor);
         actionOpen.setTextColor(mPrimaryColor);
 
+        actionDelete.setText(actionDelete.getText().toString().toUpperCase());
         float radius = getResources().getDimension(R.dimen.message_box_background_radius);
         int rippleColor = getResources().getColor(com.superapps.R.color.ripples_ripple_color);
         actionDelete.setBackground(
