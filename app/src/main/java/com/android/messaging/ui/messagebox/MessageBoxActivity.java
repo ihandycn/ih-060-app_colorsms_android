@@ -234,6 +234,7 @@ public class MessageBoxActivity extends AppCompatActivity implements INotificati
 
             mIndicator.removeAllViews();
             mPager.setCurrentItem(position);
+            mCurrentConversationView = (MessageBoxConversationView) mPagerAdapter.getViews().get(position);
             mIndicator.initDot(mPagerAdapter.getCount(), position);
             mPager.addOnPageChangeListener(mIndicator);
             mIndicator.reveal();

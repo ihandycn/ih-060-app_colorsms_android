@@ -13,14 +13,13 @@
         android:layout_gravity="center"
         android:layout_marginBottom="148dp"
         android:gravity="end"
-        android:layout_marginEnd="-28dp"
+        android:layout_marginEnd="-30dp"
         android:orientation="horizontal" />
 
     <com.superapps.view.ViewPagerFixed
         android:id="@+id/message_box_conversation_pager"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
-    </com.superapps.view.ViewPagerFixed>
+        android:layout_height="match_parent"/>
 
 
 </FrameLayout>

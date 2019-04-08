@@ -94,7 +94,6 @@ public class MessageBoxMessageListAdapter extends RecyclerView.Adapter<RecyclerV
         }
     }
 
-
     @Override
     public int getItemViewType(int position) {
         return TextUtils.isEmpty(mDataList.get(position).getContent()) ? ITEM_MMS : ITEM_SMS;
