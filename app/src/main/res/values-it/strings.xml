@@ -600,6 +600,13 @@
 
 
 	<string name="set_as_default_dialog_title_user_present">Imposta Color SMS come app predefinita</string>
+    
+    <string name="message_box_unread">NON LETTO</string>
+    <string name="message_box_send_successfully_toast">Invio riuscito</string>
+    <string name="message_box_send_failed_toast">Invio non riuscito</string>
+    <string name="message_box_delete_alert_description">Vuoi eliminare i messaggi?</string>
+    <string name="message_box_mark_as_unread">Contrassegnato come non letto</string>
+    <string name="message_box_open">APRIRE</string>
 
 
 	<string name="welcome_viewpager_item_body_0">Mettiti in risalto nei tuoi gruppi social!</string>

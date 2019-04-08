@@ -91,7 +91,7 @@ public class ConversationMessageAdapter extends
     }
 
     /**
-    * ViewHolder that holds a ConversationMessageView.
+    * SmsViewHolder that holds a ConversationMessageView.
     */
     public static class ConversationMessageViewHolder extends RecyclerView.ViewHolder {
         final View mView;

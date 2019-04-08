@@ -599,6 +599,13 @@
 
 
 	<string name="set_as_default_dialog_title_user_present">Définir Color SMS par défaut</string>
+    
+    <string name="message_box_unread">NON LU</string>
+    <string name="message_box_send_successfully_toast">Envoyé avec succès</string>
+    <string name="message_box_send_failed_toast">Échec de l\'envoi</string>
+    <string name="message_box_delete_alert_description">Supprimer les messages ?</string>
+    <string name="message_box_mark_as_unread">Marqué(s) comme non lu(s)</string>
+    <string name="message_box_open">OUVRIR</string>
 
 
 	<string name="welcome_viewpager_item_body_0">Démarquez-vous au sein de votre groupe social !</string>

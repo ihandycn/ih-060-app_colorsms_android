@@ -595,6 +595,13 @@
 	<string name="menu_new">YENİ</string>
 	<string name="message_box_alert_message">SMS penceresini kapatırsan, mesaj geldiğinde pencere açılmaz.</string>
 	<string name="set_as_default_dialog_title_user_present">Color SMS\'i varsayılan olarak ayarla</string>
+    
+    <string name="message_box_unread">OKUNMAMIŞ</string>
+    <string name="message_box_send_successfully_toast">Başarıyla gönderildi</string>
+    <string name="message_box_send_failed_toast">Gönderilemedi</string>
+    <string name="message_box_delete_alert_description">Mesajlar silinsin mi?</string>
+    <string name="message_box_mark_as_unread">Okunmamış olarak işaretle</string>
+    <string name="message_box_open">AÇIK</string>
 
 
 	<string name="welcome_viewpager_item_body_0">Sosyal ortamda göze çarpın!</string>

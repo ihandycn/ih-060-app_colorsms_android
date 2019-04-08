@@ -601,6 +601,15 @@
 
 
 	<string name="set_as_default_dialog_title_user_present">Defina Color SMS como padrão</string>
+    
+    <string name="message_box_unread">NÃO LIDA</string>
+    <string name="message_box_send_successfully_toast">Enviado com sucesso</string>
+    <string name="message_box_send_failed_toast">Falha ao enviar</string>
+    <string name="message_box_delete_alert_description">Excluir as mensagens?</string>
+    <string name="message_box_mark_as_unread">Marcada como não lida</string>
+    <string name="message_box_open">ABRIR</string>
+    <string name="message_box_click_to_view">Clique para Ver</string>
+    
 
     <string name="create_shortcut_has_been_create">Criado com sucesso</string>
     <string name="create_shortcut_guide_title">Crie um atalho</string>

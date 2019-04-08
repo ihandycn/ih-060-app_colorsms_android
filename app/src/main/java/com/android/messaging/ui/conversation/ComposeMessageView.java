@@ -700,9 +700,11 @@ public class ComposeMessageView extends LinearLayout
                 } else {
                     mBinding.getData().setMessageText("");
                 }
+                BugleAnalytics.logEvent("SMS_DetailsPage_IconSend_Click", true,"MMS");
             } else {
                 final String messageToSend = mComposeEditText.getText().toString();
                 mBinding.getData().setMessageText(messageToSend);
+                BugleAnalytics.logEvent("SMS_DetailsPage_IconSend_Click", true,"SMS");
             }
             // Asynchronously check the draft against various requirements before sending.
             boolean finalIncludeSignature = includeSignature;

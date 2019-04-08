@@ -58,7 +58,7 @@
         <com.android.messaging.ui.customize.CustomMessagePreviewView
             android:id="@+id/custom_message_preview"
             android:layout_width="match_parent"
-            android:layout_height="match_parent" />
+            android:layout_height="wrap_content" />
     </ScrollView>
 
     <View

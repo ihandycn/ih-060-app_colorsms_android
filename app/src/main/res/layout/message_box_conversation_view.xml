@@ -1,0 +1,168 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<com.android.messaging.ui.messagebox.MessageBoxConversationView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+
+        <android.support.constraint.ConstraintLayout
+            android:id="@+id/content"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="6.7dp"
+            android:layout_marginEnd="6.7dp"
+            android:layout_gravity="center"
+            android:background="@drawable/message_box_background">
+
+            <LinearLayout
+                android:id="@+id/action_bar_simulation"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                android:layout_width="match_parent"
+                android:layout_height="43dp"
+                android:background="@drawable/message_box_action_bar_simulation_background"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <com.superapps.view.TypefacedTextView
+                    android:id="@+id/conversation_name"
+                    app:typeface="@string/custom_font_bold"
+                    tools:text="Maria"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="20dp"
+                    android:layout_weight="1"
+                    android:textColor="#ffffff"
+                    android:includeFontPadding="false"
+                    android:textSize="18sp" />
+
+                <ImageView
+                    android:id="@+id/action_call"
+                    android:layout_width="29dp"
+                    android:layout_height="29dp"
+                    android:layout_marginEnd="12dp"
+                    android:src="@drawable/ic_call" />
+
+                <ImageView
+                    android:id="@+id/action_close"
+                    android:layout_width="29dp"
+                    android:layout_height="29dp"
+                    android:layout_marginEnd="12dp"
+                    android:padding="6.7dp"
+                    android:src="@drawable/ic_message_box_close" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/message_view"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/action_bar_simulation"
+                android:layout_width="match_parent"
+                android:layout_height="180dp"
+                android:orientation="vertical">
+
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/recycler_view"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="1"
+                    android:scrollbarSize="4dp"
+                    android:scrollbarStyle="outsideInset"
+                    android:scrollbarThumbVertical="@drawable/message_box_scrollbar"
+                    android:scrollbars="vertical"
+                    android:theme="@style/AcbSmsRecyclerViewTheme" />
+
+                <com.android.messaging.ui.messagebox.MessageBoxInputActionView
+                    android:id="@+id/message_compose_view_container"
+                    tools:layout_height="50dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+            </LinearLayout>
+
+            <android.support.constraint.Guideline
+                android:id="@+id/guideline_start"
+                app:layout_constraintGuide_percent="0.299"
+                android:layout_width="1dp"
+                android:layout_height="wrap_content"
+                android:orientation="vertical" />
+
+            <android.support.constraint.Guideline
+                android:id="@+id/guideline_end"
+                app:layout_constraintGuide_percent="0.701"
+                android:layout_width="1dp"
+                android:layout_height="wrap_content"
+                android:orientation="vertical" />
+
+            <com.superapps.view.TypefacedTextView
+                android:id="@+id/action_delete"
+                style="@style/MessageBoxActionTextTheme"
+                app:layout_constraintEnd_toEndOf="@id/guideline_start"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/message_view"
+                android:text="@string/delete_conversation_confirmation_button" />
+
+            <com.superapps.view.TypefacedTextView
+                android:id="@+id/action_unread"
+                style="@style/MessageBoxActionTextTheme"
+                app:layout_constraintEnd_toEndOf="@id/guideline_end"
+                app:layout_constraintStart_toStartOf="@id/guideline_start"
+                app:layout_constraintTop_toBottomOf="@id/message_view"
+                android:text="@string/message_box_unread" />
+
+            <com.superapps.view.TypefacedTextView
+                android:id="@+id/action_open"
+                style="@style/MessageBoxActionTextTheme"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="@id/guideline_end"
+                app:layout_constraintTop_toBottomOf="@id/message_view"
+                android:text="@string/message_box_open" />
+
+            <View
+                app:layout_constraintBottom_toBottomOf="@id/action_delete"
+                app:layout_constraintStart_toStartOf="@id/guideline_start"
+                app:layout_constraintTop_toTopOf="@id/action_delete"
+                tools:ignore="PxUsage"
+                android:layout_width="2px"
+                android:layout_height="20dp"
+                android:background="#e0e4e7" />
+
+            <View
+                app:layout_constraintBottom_toBottomOf="@id/action_delete"
+                app:layout_constraintStart_toStartOf="@id/guideline_end"
+                app:layout_constraintTop_toTopOf="@id/action_delete"
+                tools:ignore="PxUsage"
+                android:layout_width="2px"
+                android:layout_height="20dp"
+                android:background="#e0e4e7" />
+
+            <View
+                android:id="@+id/emoji_divider"
+                app:layout_constraintTop_toBottomOf="@id/action_delete"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                tools:ignore="PxUsage"
+                android:layout_width="0dp"
+                android:layout_height="2px"
+                android:visibility="gone"
+                android:background="#e0e4e7" />
+
+            <include
+                android:id="@+id/emoji_picker_container"
+                layout="@layout/emoji_page_item_layout"
+                android:layout_width="match_parent"
+                android:layout_height="197dp"
+                android:layout_gravity="bottom"
+                android:background="@color/white"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/action_delete"
+                android:visibility="gone" />
+
+        </android.support.constraint.ConstraintLayout>
+
+
+</com.android.messaging.ui.messagebox.MessageBoxConversationView>
+

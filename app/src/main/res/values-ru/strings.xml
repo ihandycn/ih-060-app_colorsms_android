@@ -648,6 +648,12 @@
 
 
 	<string name="set_as_default_dialog_title_user_present">Сделать Color SMS приложением по умолчанию</string>
+    <string name="message_box_unread">НЕ ПРОЧИТАНО</string>
+    <string name="message_box_send_successfully_toast">Отправлено</string>
+    <string name="message_box_send_failed_toast">Ошибка отправки</string>
+    <string name="message_box_delete_alert_description">Удалить сообщения?</string>
+    <string name="message_box_mark_as_unread">Отмечено как непрочитанное</string>
+    <string name="message_box_open">ОТКРЫТЬ</string>
 
 
 	<string name="welcome_viewpager_item_body_0">Станьте заметнее в своем кругу!</string>

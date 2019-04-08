@@ -591,8 +591,15 @@
 	<string name="message_box_alert_title">短信彈窗已關閉</string>
 	<string name="message_box_disable_successfully">一旦關閉短信彈窗，有新消息時將不會收到提醒，確認關閉？</string>
 	<string name="menu_new">新功能</string>
+    
 	<string name="message_box_alert_message">關閉短信彈窗？</string>
     <string name="set_as_default_dialog_title_user_present">將Color SMS設為默認短信應用</string>
+    <string name="message_box_unread">未读</string>
+    <string name="message_box_send_successfully_toast">發送成功</string>
+    <string name="message_box_send_failed_toast">發送失敗</string>
+    <string name="message_box_delete_alert_description">刪除信息？</string>
+    <string name="message_box_mark_as_unread">已標記為未讀</string>
+    <string name="message_box_open">打開</string>
 
     <string name="welcome_viewpager_item_body_0">在您的朋友圈中脫穎而出！</string>
     <string name="welcome_viewpager_item_title_1">完全可定制</string>

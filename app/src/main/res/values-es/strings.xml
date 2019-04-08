@@ -601,6 +601,14 @@
 
 
 	<string name="set_as_default_dialog_title_user_present">Establecer Color SMS como predeterminado</string>
+    
+    <string name="message_box_unread">NO LEÍDO</string>
+    <string name="message_box_send_successfully_toast">Enviado correctamente</string>
+    <string name="message_box_send_failed_toast">Error al enviar</string>
+    <string name="message_box_delete_alert_description">¿Eliminar los mensajes?</string>
+    <string name="message_box_mark_as_unread">Marcado como no leído</string>
+    <string name="message_box_open">ABRE</string>
+    <string name="message_box_click_to_view">Click para Ver</string>
 
     <string name="create_shortcut_has_been_create">Creado exitosamente</string>
     <string name="create_shortcut_guide_title">Crea un atajo</string>

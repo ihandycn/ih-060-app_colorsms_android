@@ -83,10 +83,6 @@
         <attr name="scaleMarkColor" format="color" />
     </declare-styleable>
 
-    <declare-styleable name="MaxHeightRecyclerView">
-        <attr name="maxHeight" format="dimension" />
-    </declare-styleable>
-
     <declare-styleable name="AdvancedPageIndicator">
         <attr name="minRadius" format="dimension" />
         <attr name="circleRadius" format="dimension" />
@@ -97,4 +93,5 @@
         <attr name="circleVerticalPadding" format="dimension" />
         <attr name="circleHorizontalPadding" format="dimension" />
     </declare-styleable>
+
 </resources>

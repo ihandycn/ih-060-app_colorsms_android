@@ -691,6 +691,13 @@
             android:excludeFromRecents="true"
             android:screenOrientation="portrait"
             android:theme="@style/BaseSettingsActivity" />
+
+        <activity
+            android:name=".ui.emoji.EmojiLottieDetailActivity"
+            android:excludeFromRecents="true"
+            android:screenOrientation="portrait"
+            android:theme="@style/WindowBgWhiteAndTranslucent" />
+
         <activity
             android:name=".ui.messagebox.MessageBoxActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
@@ -701,12 +708,6 @@
             android:taskAffinity=".message.box"
             android:theme="@style/Theme.AppCompat.Translucent"
             android:windowSoftInputMode="stateAlwaysHidden|adjustResize" />
-
-        <activity
-            android:name=".ui.emoji.EmojiLottieDetailActivity"
-            android:excludeFromRecents="true"
-            android:screenOrientation="portrait"
-            android:theme="@style/WindowBgWhiteAndTranslucent" />
 
         <receiver android:name=".util.CreateShortcutReceiver"/>
 

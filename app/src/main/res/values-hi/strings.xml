@@ -601,6 +601,13 @@
 
 
 	<string name="set_as_default_dialog_title_user_present">Color SMS को डिफॉल्‍ट के तौर पर सेट करें</string>
+    
+    <string name="message_box_unread">अपठित</string>
+    <string name="message_box_send_successfully_toast">सफलतापूर्वक भेज दिए</string>
+    <string name="message_box_send_failed_toast">भेजने में विफल</string>
+    <string name="message_box_delete_alert_description">संदेशों को हटाना है?</string>
+    <string name="message_box_mark_as_unread">अपठित मार्क करें</string>
+    <string name="message_box_open">खुला</string>
 
     <string name="create_shortcut_has_been_create">सफलतापूर्वक बनाया गया</string>
     <string name="create_shortcut_guide_title">एक शॉर्टकट बनाएं</string>

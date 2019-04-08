@@ -601,6 +601,13 @@
 
 
 	<string name="set_as_default_dialog_title_user_present">Color SMSをデフォルトとして設定</string>
+    
+    <string name="message_box_unread">未読</string>
+    <string name="message_box_send_successfully_toast">送信に成功</string>
+    <string name="message_box_send_failed_toast">送信に失敗</string>
+    <string name="message_box_delete_alert_description">メッセージを削除しますか？</string>
+    <string name="message_box_mark_as_unread">未読としてマーキングする</string>
+    <string name="message_box_open">開いた</string>
 
 
 	<string name="welcome_viewpager_item_body_0">SNSグループの間で目立ちましょう！</string>
