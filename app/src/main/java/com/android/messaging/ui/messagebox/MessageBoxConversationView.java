@@ -311,8 +311,10 @@ public class MessageBoxConversationView extends FrameLayout {
                 hideEmoji();
                 postDelayed(() -> ImeUtil.get().showImeKeyboard(getContext(), mInputEditText), 500L);
                 MessageBoxAnalytics.logEvent("SMS_PopUp_TextField_Click");
+                mInputEditText.setLongClickable(false);
                 return true;
             } else {
+                mInputEditText.setLongClickable(true);
                 return false;
             }
         });
