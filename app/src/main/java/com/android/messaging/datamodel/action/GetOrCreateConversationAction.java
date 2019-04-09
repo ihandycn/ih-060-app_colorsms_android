@@ -30,6 +30,7 @@ import com.android.messaging.datamodel.data.ParticipantData;
 import com.android.messaging.sms.MmsUtils;
 import com.android.messaging.util.Assert;
 import com.android.messaging.util.Assert.RunsOnMainThread;
+import com.android.messaging.util.CheckPermissionUtil;
 import com.android.messaging.util.LogUtil;
 import com.android.messaging.util.OsUtil;
 
@@ -45,11 +46,11 @@ public class GetOrCreateConversationAction extends Action implements Parcelable 
     public interface GetOrCreateConversationActionListener {
         @RunsOnMainThread
         abstract void onGetOrCreateConversationSucceeded(final ActionMonitor monitor,
-                final Object data, final String conversationId);
+                                                         final Object data, final String conversationId);
 
         @RunsOnMainThread
         abstract void onGetOrCreateConversationFailed(final ActionMonitor monitor,
-                final Object data);
+                                                      final Object data);
     }
 
     public static GetOrCreateConversationActionMonitor getOrCreateConversation(
@@ -81,7 +82,7 @@ public class GetOrCreateConversationAction extends Action implements Parcelable 
     private static final String KEY_PARTICIPANTS_LIST = "participants_list";
 
     private GetOrCreateConversationAction(final ArrayList<ParticipantData> participants,
-            final String actionKey) {
+                                          final String actionKey) {
         super(actionKey);
         actionParameters.putParcelableArrayList(KEY_PARTICIPANTS_LIST, participants);
     }
@@ -94,6 +95,11 @@ public class GetOrCreateConversationAction extends Action implements Parcelable 
         if (!OsUtil.hasSmsPermission()) {
             return null;
         }
+
+        if (!CheckPermissionUtil.isSmsPermissionGranted()) {
+            return null;
+        }
+        
         final DatabaseWrapper db = DataModel.get().getDatabase();
 
         // First find the thread id for this list of participants.
@@ -127,7 +133,7 @@ public class GetOrCreateConversationAction extends Action implements Parcelable 
         private final GetOrCreateConversationActionListener mListener;
 
         GetOrCreateConversationActionMonitor(final Object data,
-                final GetOrCreateConversationActionListener listener) {
+                                             final GetOrCreateConversationActionListener listener) {
             super(STATE_CREATED, generateUniqueActionKey("GetOrCreateConversationAction"), data);
             setCompletedListener(this);
             mListener = listener;
@@ -135,7 +141,7 @@ public class GetOrCreateConversationAction extends Action implements Parcelable 
 
         @Override
         public void onActionSucceeded(final ActionMonitor monitor,
-                final Action action, final Object data, final Object result) {
+                                      final Action action, final Object data, final Object result) {
             if (result == null) {
                 mListener.onGetOrCreateConversationFailed(monitor, data);
             } else {
@@ -145,7 +151,7 @@ public class GetOrCreateConversationAction extends Action implements Parcelable 
 
         @Override
         public void onActionFailed(final ActionMonitor monitor,
-                final Action action, final Object data, final Object result) {
+                                   final Action action, final Object data, final Object result) {
             // TODO: Currently onActionFailed is only called if there is an error in
             // processing requests, not for errors in the local processing.
             Assert.fail("Unreachable");
