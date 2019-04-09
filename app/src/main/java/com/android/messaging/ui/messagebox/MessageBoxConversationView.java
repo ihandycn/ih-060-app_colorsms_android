@@ -235,7 +235,6 @@ public class MessageBoxConversationView extends FrameLayout {
     @SuppressLint("ClickableViewAccessibility")
     private void initInputAction() {
         mInputActionView.getEmojiIcon().setOnClickListener(v -> {
-            mInputEditText.requestFocus();
             if (mActivity.getIsEmojiVisible()) {
                 mActivity.hideEmoji();
             } else {
