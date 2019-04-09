@@ -70,7 +70,6 @@ public class MessageBoxConversationView extends FrameLayout {
     private String mPhoneNumber;
     private String mParticipantId;
     private long mOldestReceivedTimestamp;
-    private long mNewestReceivedTimestamp;
 
     private int mInputEmojiCount;
 
@@ -116,7 +115,6 @@ public class MessageBoxConversationView extends FrameLayout {
             mCallImage.setVisibility(GONE);
         }
         mOldestReceivedTimestamp = data.getReceivedTimestamp();
-        mNewestReceivedTimestamp = data.getReceivedTimestamp();
         mParticipantId = data.getParticipantId();
     }
 
@@ -126,7 +124,6 @@ public class MessageBoxConversationView extends FrameLayout {
 
     void addNewMessage(MessageBoxItemData data) {
         mAdapter.addNewIncomingMessage(data);
-        mNewestReceivedTimestamp = data.getReceivedTimestamp();
         mRecyclerView.scrollToPosition(mAdapter.getItemCount() - 1);
     }
 
