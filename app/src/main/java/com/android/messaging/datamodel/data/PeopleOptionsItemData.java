@@ -21,7 +21,6 @@ import android.media.Ringtone;
 import android.media.RingtoneManager;
 import android.net.Uri;
 
-import com.android.messaging.Factory;
 import com.android.messaging.R;
 import com.android.messaging.datamodel.data.ConversationListItemData.ConversationListViewColumns;
 import com.android.messaging.util.Assert;
@@ -80,6 +79,10 @@ public class PeopleOptionsItemData {
      */
     public void bind(
             final Cursor cursor, final ParticipantData otherParticipant, final int settingType) {
+        if (cursor == null || cursor.getCount() == 0) {
+            return;
+        }
+
         mSubtitle = null;
         mRingtoneUri = null;
         mCheckable = true;

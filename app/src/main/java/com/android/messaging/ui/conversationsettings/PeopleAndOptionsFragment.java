@@ -141,12 +141,8 @@ public class PeopleAndOptionsFragment extends Fragment
 
     @Override
     public void onOptionsCursorUpdated(final PeopleAndOptionsData data, final Cursor cursor) {
-        if (!conversationDeleted) {
-            Assert.isTrue(cursor == null || cursor.getCount() == 1);
-            mBinding.ensureBound(data);
-            mOptionsListAdapter.swapCursor(cursor);
-        }
-
+        mBinding.ensureBound(data);
+        mOptionsListAdapter.swapCursor(cursor);
     }
 
     @Override
