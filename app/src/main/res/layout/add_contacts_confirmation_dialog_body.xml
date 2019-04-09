@@ -29,7 +29,7 @@
         android:importantForAccessibility="no"
         app:iconSize="large" />
 
-    <com.superapps.view.TypefacedTextView
+    <com.superapps.view.MessagesTextView
         android:id="@+id/participant_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

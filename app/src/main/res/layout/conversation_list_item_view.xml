@@ -167,7 +167,7 @@
                             android:src="@drawable/ic_small_pin"
                             android:visibility="gone" />
 
-                        <com.superapps.view.TypefacedTextView
+                        <com.superapps.view.MessagesTextView
                             android:id="@+id/conversation_name"
                             style="@style/ConversationListItemViewConversationNameStyle"
                             android:layout_width="match_parent"
@@ -194,7 +194,7 @@
                     android:layout_height="match_parent"
                     android:gravity="bottom">
 
-                    <com.superapps.view.TypefacedTextView
+                    <com.superapps.view.MessagesTextView
                         android:id="@+id/conversation_snippet"
                         style="@style/ConversationListItemViewTextStyle"
                         android:layout_width="match_parent"
@@ -235,13 +235,13 @@
                     android:visibility="gone"
                     app:layoutMode="subcompact" />
 
-                <com.superapps.view.TypefacedTextView
+                <com.superapps.view.MessagesTextView
                     android:id="@+id/conversation_timestamp"
                     style="@style/ConversationListItemViewTextTimeStampStyle"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content" />
 
-                <com.superapps.view.TypefacedTextView
+                <com.superapps.view.MessagesTextView
                     android:id="@+id/conversation_unread_messages_count"
                     android:layout_width="17dp"
                     android:layout_height="17dp"

@@ -10,7 +10,7 @@ import com.android.messaging.util.CreateShortcutUtils;
 import com.ihs.app.framework.HSApplication;
 import com.ihs.app.framework.activity.HSAppCompatActivity;
 import com.superapps.util.BackgroundDrawables;
-import com.superapps.view.TypefacedTextView;
+import com.superapps.view.MessagesTextView;
 
 public class CreateShortcutActivity extends HSAppCompatActivity {
 
@@ -27,7 +27,7 @@ public class CreateShortcutActivity extends HSAppCompatActivity {
             ((ImageView) findViewById(R.id.create_shortcut_badge)).setImageResource(R.drawable.ic_launcher_with_shadow);
         }
 
-        TypefacedTextView gotIt = findViewById(R.id.create_shortcut_btn);
+        MessagesTextView gotIt = findViewById(R.id.create_shortcut_btn);
         gotIt.setBackground(BackgroundDrawables.createBackgroundDrawable(getResources().getColor(R.color.primary_color), getResources().getDimensionPixelSize(R.dimen.dialog_btn_corner_radius), true));
         gotIt.setOnClickListener(v -> {
             CreateShortcutUtils.addShortCut(HSApplication.getContext());

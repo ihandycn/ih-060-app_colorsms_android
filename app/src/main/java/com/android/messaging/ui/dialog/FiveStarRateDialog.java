@@ -34,7 +34,7 @@ import com.ihs.commons.config.HSConfig;
 import com.superapps.util.Dimensions;
 import com.superapps.util.Preferences;
 import com.superapps.util.Threads;
-import com.superapps.view.TypefacedTextView;
+import com.superapps.view.MessagesTextView;
 
 import java.util.concurrent.RejectedExecutionException;
 
@@ -133,7 +133,7 @@ public class FiveStarRateDialog extends DefaultButtonDialog2 implements View.OnC
     private LottieAnimationView mAnimationView;
     private Cancellable mAnimationLoadTask;
     private ImageView mStillView;
-    private TypefacedTextView mStarDescView;
+    private MessagesTextView mStarDescView;
     private ImageView mHandImageView;
     private int mCurrentPosition = INVALID_POSITION;
     private TextView mDescTv;

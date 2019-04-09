@@ -34,7 +34,7 @@ import com.superapps.util.BackgroundDrawables;
 import com.superapps.util.Dimensions;
 import com.superapps.util.Navigations;
 import com.superapps.util.Preferences;
-import com.superapps.view.TypefacedTextView;
+import com.superapps.view.MessagesTextView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -98,11 +98,11 @@ public class WelcomeStartActivity extends AppCompatActivity implements View.OnCl
         findViewById(R.id.welcome_start_button).setBackgroundDrawable(
                 BackgroundDrawables.createBackgroundDrawable(getResources().getColor(R.color.welcome_button_dark_green), Dimensions.pxFromDp(6.7f), true));
 
-        TypefacedTextView serviceText = findViewById(R.id.welcome_start_service);
+        MessagesTextView serviceText = findViewById(R.id.welcome_start_service);
         serviceText.getPaint().setFlags(Paint.UNDERLINE_TEXT_FLAG);
         serviceText.setOnClickListener(this);
 
-        TypefacedTextView policyText = findViewById(R.id.welcome_start_policy);
+        MessagesTextView policyText = findViewById(R.id.welcome_start_policy);
         policyText.getPaint().setFlags(Paint.UNDERLINE_TEXT_FLAG);
         policyText.setOnClickListener(this);
 

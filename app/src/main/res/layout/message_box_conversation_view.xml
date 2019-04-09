@@ -28,7 +28,7 @@
                 android:gravity="center_vertical"
                 android:orientation="horizontal">
 
-                <com.superapps.view.TypefacedTextView
+                <com.superapps.view.MessagesTextView
                     android:id="@+id/conversation_name"
                     app:typeface="@string/custom_font_bold"
                     tools:text="Maria"
@@ -96,7 +96,7 @@
                 android:layout_height="wrap_content"
                 android:orientation="vertical" />
 
-            <com.superapps.view.TypefacedTextView
+            <com.superapps.view.MessagesTextView
                 android:id="@+id/action_delete"
                 style="@style/MessageBoxActionTextTheme"
                 app:layout_constraintEnd_toEndOf="@id/guideline_start"
@@ -104,7 +104,7 @@
                 app:layout_constraintTop_toBottomOf="@id/message_view"
                 android:text="@string/delete_conversation_confirmation_button" />
 
-            <com.superapps.view.TypefacedTextView
+            <com.superapps.view.MessagesTextView
                 android:id="@+id/action_unread"
                 style="@style/MessageBoxActionTextTheme"
                 app:layout_constraintEnd_toEndOf="@id/guideline_end"
@@ -112,7 +112,7 @@
                 app:layout_constraintTop_toBottomOf="@id/message_view"
                 android:text="@string/message_box_unread" />
 
-            <com.superapps.view.TypefacedTextView
+            <com.superapps.view.MessagesTextView
                 android:id="@+id/action_open"
                 style="@style/MessageBoxActionTextTheme"
                 app:layout_constraintEnd_toEndOf="parent"

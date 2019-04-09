@@ -23,7 +23,7 @@
         android:src="@drawable/sticker_magic_close_btn"
         tools:ignore="RtlHardcoded" />
 
-    <com.superapps.view.TypefacedTextView
+    <com.superapps.view.MessagesTextView
         android:id="@+id/send_btn"
         android:layout_width="match_parent"
         android:layout_height="39dp"

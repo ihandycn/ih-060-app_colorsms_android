@@ -12,13 +12,13 @@
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
-        <com.superapps.view.TypefacedTextView
+        <com.superapps.view.MessagesTextView
             android:id="@+id/dialog_title"
             style="@style/DialogTitleText"
             android:layout_marginBottom="@dimen/dialog_content_text_margin"
             tools:text="Boost+"/>
 
-        <com.superapps.view.TypefacedTextView
+        <com.superapps.view.MessagesTextView
             android:id="@+id/dialog_desc"
             style="@style/DialogDescText"
             tools:text="Open Accessibility by one step, Boost+ will be activated."/>

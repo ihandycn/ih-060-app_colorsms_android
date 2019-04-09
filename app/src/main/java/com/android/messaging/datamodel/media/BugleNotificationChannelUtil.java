@@ -38,7 +38,8 @@ public class BugleNotificationChannelUtil {
         deleteNotificationChannels();
         channelIndex++;
         Preferences.getDefault().putInt(PREF_KEY_NOTIFICATION_CHANNEL_INDEX, channelIndex);
-        channel = Notifications.createChannel(
+        // create channel id
+        channel = Notifications.getChannel(
                 PendingIntentConstants.SMS_NOTIFICATION_CHANNEL_ID + "_" + channelIndex,
                 HSApplication.getContext().getResources().getString(R.string.sms_notification_channel),
                 HSApplication.getContext().getResources().getString(R.string.sms_notification_channel_description));

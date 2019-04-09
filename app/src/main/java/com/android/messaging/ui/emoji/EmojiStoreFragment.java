@@ -35,7 +35,7 @@ import com.ihs.commons.utils.HSBundle;
 import com.superapps.util.BackgroundDrawables;
 import com.superapps.util.Dimensions;
 import com.superapps.view.RoundImageView;
-import com.superapps.view.TypefacedTextView;
+import com.superapps.view.MessagesTextView;
 
 import java.util.List;
 
@@ -287,7 +287,7 @@ public class EmojiStoreFragment extends Fragment implements INotificationObserve
     private class StoreViewHolder extends RecyclerView.ViewHolder {
 
         RoundImageView image;
-        TypefacedTextView getBtn;
+        MessagesTextView getBtn;
         EmojiStorePreviewLayout previewLayout;
 
         StoreViewHolder(View itemView) {
@@ -301,7 +301,7 @@ public class EmojiStoreFragment extends Fragment implements INotificationObserve
     private class StoreLottieViewHolder extends RecyclerView.ViewHolder {
 
         LottieAnimationView image;
-        TypefacedTextView getBtn;
+        MessagesTextView getBtn;
         EmojiStorePreviewLayout previewLayout;
 
         StoreLottieViewHolder(View itemView) {
