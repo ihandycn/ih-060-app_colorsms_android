@@ -41,6 +41,7 @@ public class SettingGeneralActivity extends BaseActivity {
     private SettingItemView mSignature;
     private SettingItemView mSoundView;
     private SettingItemView mVibrateView;
+    private SettingItemView mPrivacyModeView;
     private BackPressedListener mBackListener;
     final BuglePrefs prefs = BuglePrefs.getApplicationPrefs();
 
@@ -112,6 +113,14 @@ public class SettingGeneralActivity extends BaseActivity {
             MessageBoxSettings.setSMSAssistantModuleEnabled(b);
             mSmsShowView.setEnable(b);
             BugleAnalytics.logEvent("SMS_Settings_Popups_Click", true);
+        });
+
+        mPrivacyModeView = findViewById(R.id.setting_item_privacy_mode);
+        mPrivacyModeView.setOnItemClickListener(new SettingItemView.OnSettingItemClickListener() {
+            @Override
+            public void onClick() {
+
+            }
         });
 
         //signature

@@ -1085,6 +1085,10 @@
     <string name="message_box_send_successfully_toast">Sent successfully</string>
     <string name="message_box_send_failed_toast">Failed to send</string>
 
+    <string name="privacy_mode_settings">Privacy Mode</string>
+    <string name="privacy_mode_disable">None</string>
+    <string name="privacy_mode_hide_message_only">Hide message only</string>
+    <string name="privacy_mode_hide_contact_and_message">Hide contact and message</string>
 
     <string name="menu_privacy_box">Private Box</string>
     <string name="menu_privacy_box_coming">Coming soon in a few days</string>
