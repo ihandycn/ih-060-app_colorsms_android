@@ -14,6 +14,7 @@ import com.android.messaging.R;
 import com.android.messaging.datamodel.BugleNotifications;
 import com.android.messaging.datamodel.SyncManager;
 import com.android.messaging.datamodel.action.DeleteMessageAction;
+import com.android.messaging.datamodel.action.MarkAsReadAction;
 import com.android.messaging.datamodel.data.MessageBoxItemData;
 import com.android.messaging.ui.BaseAlertDialog;
 import com.android.messaging.ui.UIIntents;
@@ -59,6 +60,7 @@ public class MessageBoxActivity extends AppCompatActivity implements INotificati
     private boolean mHasMms;
 
     private HashMap<String, Boolean> mMarkAsUnReadMap = new HashMap<>(4);
+    private HashMap<String, MessageBoxItemData> mDataMap = new HashMap<>(4);
     private ArrayList<String> mConversationIdList = new ArrayList<>(4);
 
     @Override
@@ -84,6 +86,7 @@ public class MessageBoxActivity extends AppCompatActivity implements INotificati
         recordMessageType(data);
         mMarkAsUnReadMap.put(data.getConversationId(), false);
         mConversationIdList.add(data.getConversationId());
+        mDataMap.put(data.getConversationId(), data);
 
         HSGlobalNotificationCenter.addObserver(NOTIFICATION_FINISH_MESSAGE_BOX, this);
         HSGlobalNotificationCenter.addObserver(NOTIFICATION_MESSAGE_BOX_SEND_SMS_FAILED, this);
@@ -126,6 +129,7 @@ public class MessageBoxActivity extends AppCompatActivity implements INotificati
             MessageBoxAnalytics.setIsMultiConversation(true);
             mContactsNum++;
             mMarkAsUnReadMap.put(data.getConversationId(), false);
+            mDataMap.put(data.getConversationId(), data);
             mConversationIdList.add(data.getConversationId());
         }
         mMessagesNum++;
@@ -289,7 +293,8 @@ public class MessageBoxActivity extends AppCompatActivity implements INotificati
 
         for (String conversationId : mConversationIdList) {
             if (!mMarkAsUnReadMap.get(conversationId)) {
-                BugleNotifications.markMessagesAsRead(conversationId);
+                MessageBoxItemData data = mDataMap.get(conversationId);
+                MarkAsReadAction.markAsRead(conversationId, data.getParticipantId(), data.getReceivedTimestamp());
             }
         }
 

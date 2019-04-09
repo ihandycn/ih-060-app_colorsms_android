@@ -1423,6 +1423,37 @@ public class MmsUtils {
     }
 
     /**
+     * Update the read status of SMS/MMS messages by thread and timestamp
+     *
+     * @param threadId The thread of sms/mms to change
+     * @param startTimestampInMillis Change the status before this timestamp
+     * @param endTimestampInMillis Change the status before this timestamp
+     */
+    public static void updateSmsReadStatus(final long threadId,
+                                           final long startTimestampInMillis,
+                                           final long endTimestampInMillis) {
+        final ContentResolver resolver = Factory.get().getApplicationContext().getContentResolver();
+        final ContentValues values = new ContentValues();
+        values.put("read", 1);
+        values.put("seen", 1); /* If you read it you saw it */
+        final String smsSelection = String.format(
+                Locale.US,
+                "%s=%d AND %s>=%d AND %s<=%d AND %s=0",
+                Sms.THREAD_ID,
+                threadId,
+                Sms.DATE,
+                startTimestampInMillis,
+                Sms.DATE,
+                endTimestampInMillis,
+                Sms.READ);
+        resolver.update(
+                Sms.CONTENT_URI,
+                values,
+                smsSelection,
+                null/*selectionArgs*/);
+    }
+
+    /**
      * Update the read status of a single MMS message by its URI
      *
      * @param mmsUri
