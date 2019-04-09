@@ -539,7 +539,7 @@ public class ConversationListItemView extends FrameLayout implements OnClickList
 
         final int notificationBellVisibility = mData.getNotificationEnabled() ? GONE : VISIBLE;
         mNotificationBellView.setVisibility(notificationBellVisibility);
-        mPinView.setVisibility(mData.isPinned()?VISIBLE:GONE);
+        mPinView.setVisibility(mData.isPinned() ? VISIBLE : GONE);
     }
 
     public boolean isSwipeAnimatable() {
