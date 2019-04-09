@@ -29,6 +29,8 @@ import android.text.TextUtils;
 import android.view.ActionMode;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 import android.widget.TextView;
 
 import com.android.messaging.R;
@@ -51,10 +53,11 @@ import com.android.messaging.util.LogUtil;
 import com.android.messaging.util.OsUtil;
 import com.android.messaging.util.UiUtils;
 import com.ihs.commons.notificationcenter.HSGlobalNotificationCenter;
+import com.superapps.util.Dimensions;
 
 public class ConversationActivity extends BugleActionBarActivity
         implements ContactPickerFragmentHost, ConversationFragmentHost,
-        ConversationActivityUiStateHost {
+        ConversationActivityUiStateHost, ViewTreeObserver.OnGlobalLayoutListener {
     public static final int FINISH_RESULT_CODE = 1;
     public static final int DELETE_CONVERSATION_RESULT_CODE = 2;
     private static final String SAVED_INSTANCE_STATE_UI_STATE_KEY = "uistate";
@@ -70,6 +73,11 @@ public class ConversationActivity extends BugleActionBarActivity
     // Tracks whether onPause is called.
     private boolean mIsPaused;
     private TextView mTitleTextView;
+    private ViewGroup mContainer;
+
+    private int mStatusBarHeight;
+    private int mKeyboardHeight;
+    private int mNavigationBarHeight;
 
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
@@ -118,14 +126,16 @@ public class ConversationActivity extends BugleActionBarActivity
         // Don't animate UI state change for initial setup.
         updateUiState(false /* animate */);
 
+        mContainer = findViewById(R.id.conversation_and_compose_container);
+        mContainer.getViewTreeObserver().addOnGlobalLayoutListener(this);
+
         // See if we're getting called from a widget to directly display an image or video
         final String extraToDisplay =
                 intent.getStringExtra(UIIntents.UI_INTENT_EXTRA_ATTACHMENT_URI);
         if (!TextUtils.isEmpty(extraToDisplay)) {
             final String contentType =
                     intent.getStringExtra(UIIntents.UI_INTENT_EXTRA_ATTACHMENT_TYPE);
-            final Rect bounds = UiUtils.getMeasuredBoundsOnScreen(
-                    findViewById(R.id.conversation_and_compose_container));
+            final Rect bounds = UiUtils.getMeasuredBoundsOnScreen(mContainer);
             if (ContentType.isImageType(contentType)) {
                 final Uri imagesUri = MessagingContentProvider.buildConversationImagesUri(
                         mUiState.getConversationId());
@@ -137,6 +147,24 @@ public class ConversationActivity extends BugleActionBarActivity
         }
 
         BugleAnalytics.logEvent("SMS_ActiveUsers", true);
+
+        mStatusBarHeight = Dimensions.getStatusBarHeight(this);
+        mNavigationBarHeight = Dimensions.getNavigationBarHeight(this);
+        mKeyboardHeight = UiUtils.getKeyboardHeight();
+    }
+
+    @Override
+    public void onGlobalLayout() {
+        Rect r = new Rect();
+        mContainer.getWindowVisibleDisplayFrame(r);
+
+        int screenHeight = mContainer.getRootView().getHeight();
+        int heightDiff = screenHeight - (r.bottom - r.top);
+
+        if (mKeyboardHeight == 0 && heightDiff > mStatusBarHeight + mNavigationBarHeight + Dimensions.pxFromDp(20)) {
+            mKeyboardHeight = heightDiff - mStatusBarHeight - mNavigationBarHeight;
+            UiUtils.updateKeyboardHeight(mKeyboardHeight);
+        }
     }
 
     @Override
@@ -214,6 +242,7 @@ public class ConversationActivity extends BugleActionBarActivity
         if (mUiState != null) {
             mUiState.setHost(null);
         }
+        mContainer.getViewTreeObserver().removeOnGlobalLayoutListener(this);
     }
 
     @Override

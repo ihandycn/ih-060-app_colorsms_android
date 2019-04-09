@@ -5,6 +5,7 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.constraint.ConstraintLayout;
+import android.support.constraint.Guideline;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
@@ -12,6 +13,7 @@ import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 
 import com.android.messaging.BuildConfig;
 import com.android.messaging.R;
@@ -28,6 +30,7 @@ import com.android.messaging.ui.emoji.EmojiPackagePagerAdapter;
 import com.android.messaging.ui.emoji.StickerInfo;
 import com.android.messaging.ui.emoji.ViewPagerDotIndicatorView;
 import com.android.messaging.util.BugleAnalytics;
+import com.android.messaging.util.UiUtils;
 import com.ihs.commons.notificationcenter.HSGlobalNotificationCenter;
 import com.ihs.commons.notificationcenter.INotificationObserver;
 import com.ihs.commons.utils.HSBundle;
@@ -72,7 +75,7 @@ public class MessageBoxActivity extends AppCompatActivity implements INotificati
     private boolean mHasSms;
     private boolean mHasMms;
 
-    private HashMap<String, Boolean> mMarkAsUnReadMap = new HashMap<>(4);
+    private HashMap<String, Boolean> mMarkAsReadMap = new HashMap<>(4);
     private HashMap<String, MessageBoxItemData> mDataMap = new HashMap<>(4);
     private ArrayList<String> mConversationIdList = new ArrayList<>(4);
 
@@ -94,21 +97,21 @@ public class MessageBoxActivity extends AppCompatActivity implements INotificati
         mPagerAdapter.addView(view);
         mPager.addOnPageChangeListener(this);
         mPager.setAdapter(mPagerAdapter);
-        initEmoji();
+        initEmojiKeyboradSimulation();
 
         mCurrentConversationView = view;
         MessageBoxAnalytics.setIsMultiConversation(false);
 
         recordMessageType(data);
-        mMarkAsUnReadMap.put(data.getConversationId(), false);
+        mMarkAsReadMap.put(data.getConversationId(), true);
         mConversationIdList.add(data.getConversationId());
         mDataMap.put(data.getConversationId(), data);
 
         HSGlobalNotificationCenter.addObserver(NOTIFICATION_FINISH_MESSAGE_BOX, this);
         HSGlobalNotificationCenter.addObserver(NOTIFICATION_MESSAGE_BOX_SEND_SMS_FAILED, this);
         HSGlobalNotificationCenter.addObserver(NOTIFICATION_MESSAGE_BOX_SEND_SMS_SUCCEDED, this);
-
     }
+
 
     @Override
     protected void onNewIntent(Intent intent) {
@@ -130,7 +133,6 @@ public class MessageBoxActivity extends AppCompatActivity implements INotificati
             }
         }
 
-
         if (isNewConversation || DEBUGGING_MULTI_CONVERSATIONS) {
             MessageBoxConversationView newItem = (MessageBoxConversationView) LayoutInflater.from(this).inflate(R.layout.message_box_conversation_view, null, false);
             newItem.bind(data);
@@ -145,7 +147,6 @@ public class MessageBoxActivity extends AppCompatActivity implements INotificati
 
             MessageBoxAnalytics.setIsMultiConversation(true);
             mContactsNum++;
-            mMarkAsUnReadMap.put(data.getConversationId(), false);
             mDataMap.put(data.getConversationId(), data);
             mConversationIdList.add(data.getConversationId());
         }
@@ -185,6 +186,7 @@ public class MessageBoxActivity extends AppCompatActivity implements INotificati
     public void onPageSelected(int position) {
         mCurrentConversationView = (MessageBoxConversationView) mPagerAdapter.getViews().get(position);
         reLayoutIndicatorView();
+        mMarkAsReadMap.put(mCurrentConversationView.getConversationId(), true);
     }
 
     @Override
@@ -198,7 +200,7 @@ public class MessageBoxActivity extends AppCompatActivity implements INotificati
         mIndicator.setLayoutParams(params);
     }
 
-    private void initEmoji() {
+    private void initEmojiKeyboradSimulation() {
         EmojiPackagePagerAdapter.OnEmojiClickListener listener = new EmojiPackagePagerAdapter.OnEmojiClickListener() {
             @Override
             public void emojiClick(EmojiInfo emojiInfo) {
@@ -266,7 +268,7 @@ public class MessageBoxActivity extends AppCompatActivity implements INotificati
                 finish(CLOSE);
                 break;
             case R.id.action_unread:
-                mMarkAsUnReadMap.put(mCurrentConversationView.getConversationId(), true);
+                mMarkAsReadMap.put(mCurrentConversationView.getConversationId(), false);
                 Toasts.showToast(R.string.message_box_mark_as_unread);
                 removeCurrentPage(UNREAD);
                 MessageBoxAnalytics.logEvent("SMS_PopUp_Unread_Click");
@@ -292,13 +294,27 @@ public class MessageBoxActivity extends AppCompatActivity implements INotificati
     }
 
     void hideEmoji() {
+        adjustKeyboardGuideline(false);
         mEmojiContainer.setVisibility(View.INVISIBLE);
         mEmojiContainer.post(this::reLayoutIndicatorView);
     }
 
     void showEmoji() {
+        adjustKeyboardGuideline(true);
         mEmojiContainer.setVisibility(View.VISIBLE);
         mEmojiContainer.post(this::reLayoutIndicatorView);
+    }
+
+    private void adjustKeyboardGuideline(boolean showEmoji) {
+        if (getIsEmojiVisibilityGone()) {
+            Guideline keyboradGuideline = findViewById(R.id.keyboard_guideline);
+            int keyboardHeight = UiUtils.getKeyboardHeight();
+            if (keyboardHeight > 0) {
+                keyboradGuideline.setGuidelineEnd(keyboardHeight);
+            } else if (showEmoji) {
+                keyboradGuideline.setGuidelineEnd(Dimensions.dpFromPx(197));
+            }
+        }
     }
 
     private void removeCurrentPage(String source) {
@@ -366,9 +382,8 @@ public class MessageBoxActivity extends AppCompatActivity implements INotificati
     protected void onDestroy() {
         super.onDestroy();
         HSGlobalNotificationCenter.removeObserver(this);
-
         for (String conversationId : mConversationIdList) {
-            if (!mMarkAsUnReadMap.get(conversationId)) {
+            if (mMarkAsReadMap.get(conversationId)) {
                 MessageBoxItemData data = mDataMap.get(conversationId);
                 MarkAsReadAction.markAsRead(conversationId, data.getParticipantId(), data.getReceivedTimestamp());
             }

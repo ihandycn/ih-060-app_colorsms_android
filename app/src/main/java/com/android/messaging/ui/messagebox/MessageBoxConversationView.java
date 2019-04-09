@@ -32,6 +32,7 @@ import com.android.messaging.ui.customize.PrimaryColors;
 import com.android.messaging.ui.emoji.EmojiInfo;
 import com.android.messaging.util.BugleAnalytics;
 import com.android.messaging.util.ImeUtil;
+import com.android.messaging.util.UiUtils;
 import com.superapps.util.BackgroundDrawables;
 import com.superapps.util.Dimensions;
 
@@ -234,6 +235,7 @@ public class MessageBoxConversationView extends FrameLayout {
     @SuppressLint("ClickableViewAccessibility")
     private void initInputAction() {
         mInputActionView.getEmojiIcon().setOnClickListener(v -> {
+            mInputEditText.requestFocus();
             if (mActivity.getIsEmojiVisible()) {
                 mActivity.hideEmoji();
             } else {
@@ -242,7 +244,6 @@ public class MessageBoxConversationView extends FrameLayout {
             }
             MessageBoxAnalytics.logEvent("SMS_PopUp_Emoji_Click");
         });
-
 
         mInputEditText.setOnClickListener(v -> {
             mActivity.hideEmoji();
