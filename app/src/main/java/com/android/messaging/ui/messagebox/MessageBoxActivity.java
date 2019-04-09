@@ -23,6 +23,7 @@ import com.ihs.commons.notificationcenter.HSGlobalNotificationCenter;
 import com.ihs.commons.notificationcenter.INotificationObserver;
 import com.ihs.commons.utils.HSBundle;
 import com.superapps.util.Dimensions;
+import com.superapps.util.Threads;
 import com.superapps.util.Toasts;
 
 import java.util.ArrayList;
@@ -247,15 +248,18 @@ public class MessageBoxActivity extends AppCompatActivity implements INotificati
 
     @Override
     public void onReceive(String s, HSBundle hsBundle) {
-        if (NOTIFICATION_FINISH_MESSAGE_BOX.equals(s)) {
-            finish(CLICK_CONTENT);
-        } else if (NOTIFICATION_MESSAGE_BOX_SEND_SMS_FAILED.equals(s)) {
-            Toasts.showToast(R.string.message_box_send_failed_toast);
-            removeCurrentPage(REPLY);
-        } else if (NOTIFICATION_MESSAGE_BOX_SEND_SMS_SUCCEDED.equals(s)) {
-            Toasts.showToast(R.string.message_box_send_successfully_toast);
-            removeCurrentPage(REPLY);
-        }
+        Threads.postOnMainThread(() -> {
+            if (NOTIFICATION_FINISH_MESSAGE_BOX.equals(s)) {
+                finish(CLICK_CONTENT);
+            } else if (NOTIFICATION_MESSAGE_BOX_SEND_SMS_FAILED.equals(s)) {
+                Toasts.showToast(R.string.message_box_send_failed_toast);
+                removeCurrentPage(REPLY);
+            } else if (NOTIFICATION_MESSAGE_BOX_SEND_SMS_SUCCEDED.equals(s)) {
+                Toasts.showToast(R.string.message_box_send_successfully_toast);
+                removeCurrentPage(REPLY);
+            }
+        });
+
     }
 
     @Override
