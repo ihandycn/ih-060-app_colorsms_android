@@ -138,28 +138,6 @@
                 android:layout_height="20dp"
                 android:background="#e0e4e7" />
 
-            <View
-                android:id="@+id/emoji_divider"
-                app:layout_constraintTop_toBottomOf="@id/action_delete"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                tools:ignore="PxUsage"
-                android:layout_width="0dp"
-                android:layout_height="2px"
-                android:visibility="gone"
-                android:background="#e0e4e7" />
-
-            <include
-                android:id="@+id/emoji_picker_container"
-                layout="@layout/emoji_page_item_layout"
-                android:layout_width="match_parent"
-                android:layout_height="197dp"
-                android:layout_gravity="bottom"
-                android:background="@color/white"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/action_delete"
-                android:visibility="gone" />
 
         </android.support.constraint.ConstraintLayout>
 

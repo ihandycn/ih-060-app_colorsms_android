@@ -707,7 +707,7 @@
             android:screenOrientation="portrait"
             android:taskAffinity=".message.box"
             android:theme="@style/Theme.AppCompat.Translucent"
-            android:windowSoftInputMode="stateAlwaysHidden|adjustResize" />
+            android:windowSoftInputMode="stateAlwaysHidden|adjustPan" />
 
         <receiver android:name=".util.CreateShortcutReceiver"/>
 

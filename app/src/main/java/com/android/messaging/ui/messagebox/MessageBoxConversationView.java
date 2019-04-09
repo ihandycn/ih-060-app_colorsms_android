@@ -8,8 +8,6 @@ import android.graphics.Point;
 import android.graphics.PorterDuff;
 import android.graphics.Rect;
 import android.support.annotation.ColorInt;
-import android.support.annotation.NonNull;
-import android.support.v4.view.PagerAdapter;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.telephony.TelephonyManager;
@@ -27,25 +25,15 @@ import android.widget.TextView;
 
 import com.android.messaging.Factory;
 import com.android.messaging.R;
-import com.android.messaging.datamodel.BugleNotifications;
 import com.android.messaging.datamodel.NoConfirmationSmsSendService;
 import com.android.messaging.datamodel.data.MessageBoxItemData;
 import com.android.messaging.ui.UIIntents;
 import com.android.messaging.ui.customize.PrimaryColors;
-import com.android.messaging.ui.emoji.BaseEmojiInfo;
 import com.android.messaging.ui.emoji.EmojiInfo;
-import com.android.messaging.ui.emoji.EmojiItemPagerAdapter;
-import com.android.messaging.ui.emoji.EmojiPackagePagerAdapter;
-import com.android.messaging.ui.emoji.StickerInfo;
-import com.android.messaging.ui.emoji.ViewPagerDotIndicatorView;
 import com.android.messaging.util.BugleAnalytics;
 import com.android.messaging.util.ImeUtil;
 import com.superapps.util.BackgroundDrawables;
 import com.superapps.util.Dimensions;
-import com.superapps.view.ViewPagerFixed;
-
-import java.util.ArrayList;
-import java.util.List;
 
 import static com.android.messaging.datamodel.NoConfirmationSmsSendService.EXTRA_SELF_ID;
 
@@ -60,10 +48,7 @@ public class MessageBoxConversationView extends FrameLayout {
     private MessageBoxMessageListAdapter mAdapter;
     private ImageView mCallImage;
     private RecyclerView mRecyclerView;
-    private ViewGroup mEmojiContainer;
-    private View mEmojiDivider;
     private EditText mInputEditText;
-
 
     private String mConversationId;
     private String mSelfId;
@@ -88,10 +73,8 @@ public class MessageBoxConversationView extends FrameLayout {
         initQuickActions();
         mContent = findViewById(R.id.content);
         mInputActionView = findViewById(R.id.message_compose_view_container);
-        mEmojiContainer = findViewById(R.id.emoji_picker_container);
-        mEmojiDivider = findViewById(R.id.emoji_divider);
         mInputEditText = mInputActionView.getComposeEditText();
-        initEmoji();
+        initInputAction();
     }
 
     void bind(MessageBoxItemData data) {
@@ -231,92 +214,40 @@ public class MessageBoxConversationView extends FrameLayout {
         if (hasEmoji) {
             type += "emoji";
         }
+
         BugleAnalytics.logEvent("SMS_PopUp_Reply_BtnClick_Multifunction",
                 "type", type, "type2", MessageBoxAnalytics.getConversationType());
     }
 
-    private List<BaseEmojiInfo> getEmojiList() {
-        List<BaseEmojiInfo> result = new ArrayList<>();
-        String[] arrays = getResources().getStringArray(R.array.emoji_faces);
-        for (String array : arrays) {
-            EmojiInfo info = new EmojiInfo();
-            info.mEmoji = new String((Character.toChars(Integer.parseInt(array, 16))));
-            result.add(info);
+    void emojiClick(EmojiInfo emojiInfo) {
+        if (mInputEditText != null) {
+            mInputEditText.getText().append(emojiInfo.mEmoji);
+            mInputEmojiCount++;
         }
-        return result;
     }
 
-    boolean getIsEmojiVisible() {
-        return mEmojiContainer.getVisibility() == View.VISIBLE;
-    }
-
-    void hideEmoji() {
-        mEmojiContainer.setVisibility(GONE);
-        mEmojiDivider.setVisibility(GONE);
-        mEmojiContainer.post(() -> mActivity.reLayoutIndicatorView());
-    }
-
-    void showEmoji() {
-        mEmojiContainer.setVisibility(View.VISIBLE);
-        mEmojiDivider.setVisibility(VISIBLE);
-        mEmojiContainer.post(() -> mActivity.reLayoutIndicatorView());
+    void deleteEmoji() {
+        mInputEditText.dispatchKeyEvent(new KeyEvent(KeyEvent.ACTION_DOWN, KeyEvent.KEYCODE_DEL));
+        mInputEmojiCount--;
     }
 
     @SuppressLint("ClickableViewAccessibility")
-    private void initEmoji() {
-        EmojiPackagePagerAdapter.OnEmojiClickListener listener = new EmojiPackagePagerAdapter.OnEmojiClickListener() {
-            @Override
-            public void emojiClick(EmojiInfo emojiInfo) {
-                if (mInputEditText != null) {
-                    mInputEditText.getText().append(emojiInfo.mEmoji);
-                    mInputEmojiCount++;
-                }
-            }
-
-            @Override
-            public void stickerClickExcludeMagic(@NonNull StickerInfo info) {
-
-            }
-
-            @Override
-            public void deleteEmoji() {
-                mInputEditText.dispatchKeyEvent(new KeyEvent(KeyEvent.ACTION_DOWN, KeyEvent.KEYCODE_DEL));
-                mInputEmojiCount--;
-            }
-        };
-
-        ViewPagerFixed itemPager = findViewById(R.id.emoji_item_pager);
-        ViewPagerDotIndicatorView dotIndicatorView = findViewById(R.id.dot_indicator_view);
-        itemPager.addOnPageChangeListener(dotIndicatorView);
-        PagerAdapter adapter = new EmojiItemPagerAdapter(getEmojiList(), listener);
-        itemPager.setAdapter(adapter);
-        dotIndicatorView.initDot(adapter.getCount(), 0);
-
+    private void initInputAction() {
         mInputActionView.getEmojiIcon().setOnClickListener(v -> {
-            if (mEmojiContainer.getVisibility() == View.VISIBLE) {
-                hideEmoji();
+            if (mActivity.getIsEmojiVisible()) {
+                mActivity.hideEmoji();
             } else {
                 ImeUtil.get().hideImeKeyboard(getContext(), mInputEditText);
-                showEmoji();
+                mActivity.showEmoji();
             }
             MessageBoxAnalytics.logEvent("SMS_PopUp_Emoji_Click");
         });
 
-        mInputEditText.setOnClickListener(v -> {
-            MessageBoxAnalytics.logEvent("SMS_PopUp_TextField_Click");
-        });
 
-        mInputEditText.setOnTouchListener((v, event) -> {
-            if (mEmojiContainer.getVisibility() == VISIBLE && event.getAction() == MotionEvent.ACTION_UP) {
-                hideEmoji();
-                postDelayed(() -> ImeUtil.get().showImeKeyboard(getContext(), mInputEditText), 500L);
-                MessageBoxAnalytics.logEvent("SMS_PopUp_TextField_Click");
-                mInputEditText.setLongClickable(false);
-                return true;
-            } else {
-                mInputEditText.setLongClickable(true);
-                return false;
-            }
+        mInputEditText.setOnClickListener(v -> {
+            mActivity.hideEmoji();
+            post(() -> ImeUtil.get().showImeKeyboard(getContext(), mInputEditText));
+            MessageBoxAnalytics.logEvent("SMS_PopUp_TextField_Click");
         });
     }
 

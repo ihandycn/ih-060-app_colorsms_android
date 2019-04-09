@@ -1,23 +1,32 @@
 package com.android.messaging.ui.messagebox;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.constraint.ConstraintLayout;
+import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.FrameLayout;
+import android.view.ViewGroup;
 
 import com.android.messaging.BuildConfig;
 import com.android.messaging.R;
-import com.android.messaging.datamodel.BugleNotifications;
 import com.android.messaging.datamodel.SyncManager;
 import com.android.messaging.datamodel.action.DeleteMessageAction;
 import com.android.messaging.datamodel.action.MarkAsReadAction;
 import com.android.messaging.datamodel.data.MessageBoxItemData;
 import com.android.messaging.ui.BaseAlertDialog;
 import com.android.messaging.ui.UIIntents;
+import com.android.messaging.ui.emoji.BaseEmojiInfo;
+import com.android.messaging.ui.emoji.EmojiInfo;
+import com.android.messaging.ui.emoji.EmojiItemPagerAdapter;
+import com.android.messaging.ui.emoji.EmojiPackagePagerAdapter;
+import com.android.messaging.ui.emoji.StickerInfo;
+import com.android.messaging.ui.emoji.ViewPagerDotIndicatorView;
 import com.android.messaging.util.BugleAnalytics;
 import com.ihs.commons.notificationcenter.HSGlobalNotificationCenter;
 import com.ihs.commons.notificationcenter.INotificationObserver;
@@ -25,9 +34,11 @@ import com.ihs.commons.utils.HSBundle;
 import com.superapps.util.Dimensions;
 import com.superapps.util.Threads;
 import com.superapps.util.Toasts;
+import com.superapps.view.ViewPagerFixed;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 import static com.android.messaging.ui.UIIntents.UI_INTENT_EXTRA_MESSAGE_BOX_ITEM;
 
@@ -52,6 +63,7 @@ public class MessageBoxActivity extends AppCompatActivity implements INotificati
     private ViewPager mPager;
     private DynamicalPagerAdapter mPagerAdapter;
     private MessageBoxIndicatorView mIndicator;
+    private ViewGroup mEmojiContainer;
 
     private MessageBoxConversationView mCurrentConversationView;
 
@@ -70,7 +82,9 @@ public class MessageBoxActivity extends AppCompatActivity implements INotificati
         setContentView(R.layout.box_activity);
 
         mPager = findViewById(R.id.message_box_conversation_pager);
-        mIndicator = findViewById(R.id.dot_indicator_view);
+        mIndicator = findViewById(R.id.multi_conversation_indicator_view);
+        mEmojiContainer = findViewById(R.id.emoji_picker_container);
+        mEmojiContainer.setBackgroundColor(Color.WHITE);
 
         MessageBoxItemData data = getIntent().getParcelableExtra(UI_INTENT_EXTRA_MESSAGE_BOX_ITEM);
         MessageBoxConversationView view = (MessageBoxConversationView) LayoutInflater.from(this).inflate(R.layout.message_box_conversation_view, null, false);
@@ -80,6 +94,7 @@ public class MessageBoxActivity extends AppCompatActivity implements INotificati
         mPagerAdapter.addView(view);
         mPager.addOnPageChangeListener(this);
         mPager.setAdapter(mPagerAdapter);
+        initEmoji();
 
         mCurrentConversationView = view;
         MessageBoxAnalytics.setIsMultiConversation(false);
@@ -92,6 +107,7 @@ public class MessageBoxActivity extends AppCompatActivity implements INotificati
         HSGlobalNotificationCenter.addObserver(NOTIFICATION_FINISH_MESSAGE_BOX, this);
         HSGlobalNotificationCenter.addObserver(NOTIFICATION_MESSAGE_BOX_SEND_SMS_FAILED, this);
         HSGlobalNotificationCenter.addObserver(NOTIFICATION_MESSAGE_BOX_SEND_SMS_SUCCEDED, this);
+
     }
 
     @Override
@@ -177,10 +193,48 @@ public class MessageBoxActivity extends AppCompatActivity implements INotificati
     }
 
     void reLayoutIndicatorView() {
-        FrameLayout.LayoutParams params = (FrameLayout.LayoutParams) mIndicator.getLayoutParams();
-        params.bottomMargin = mCurrentConversationView.getContentHeight() / 2 + Dimensions.pxFromDp(18);
+        ConstraintLayout.LayoutParams params = (ConstraintLayout.LayoutParams) mIndicator.getLayoutParams();
+        params.bottomMargin = mCurrentConversationView.getContentHeight() + Dimensions.pxFromDp(22);
         mIndicator.setLayoutParams(params);
     }
+
+    private void initEmoji() {
+        EmojiPackagePagerAdapter.OnEmojiClickListener listener = new EmojiPackagePagerAdapter.OnEmojiClickListener() {
+            @Override
+            public void emojiClick(EmojiInfo emojiInfo) {
+                mCurrentConversationView.emojiClick(emojiInfo);
+            }
+
+            @Override
+            public void stickerClickExcludeMagic(@NonNull StickerInfo info) {
+
+            }
+
+            @Override
+            public void deleteEmoji() {
+                mCurrentConversationView.deleteEmoji();
+            }
+        };
+
+        ViewPagerFixed itemPager = findViewById(R.id.emoji_item_pager);
+        ViewPagerDotIndicatorView dotIndicatorView = findViewById(R.id.dot_indicator_view);
+        itemPager.addOnPageChangeListener(dotIndicatorView);
+        PagerAdapter adapter = new EmojiItemPagerAdapter(getEmojiList(), listener);
+        itemPager.setAdapter(adapter);
+        dotIndicatorView.initDot(adapter.getCount(), 0);
+    }
+
+    private List<BaseEmojiInfo> getEmojiList() {
+        List<BaseEmojiInfo> result = new ArrayList<>();
+        String[] arrays = getResources().getStringArray(R.array.emoji_faces);
+        for (String array : arrays) {
+            EmojiInfo info = new EmojiInfo();
+            info.mEmoji = new String((Character.toChars(Integer.parseInt(array, 16))));
+            result.add(info);
+        }
+        return result;
+    }
+
 
     @Override
     public void onClick(View v) {
@@ -229,6 +283,24 @@ public class MessageBoxActivity extends AppCompatActivity implements INotificati
         }
     }
 
+    boolean getIsEmojiVisible() {
+        return mEmojiContainer.getVisibility() == View.VISIBLE;
+    }
+
+    boolean getIsEmojiVisibilityGone() {
+        return mEmojiContainer.getVisibility() == View.GONE;
+    }
+
+    void hideEmoji() {
+        mEmojiContainer.setVisibility(View.INVISIBLE);
+        mEmojiContainer.post(this::reLayoutIndicatorView);
+    }
+
+    void showEmoji() {
+        mEmojiContainer.setVisibility(View.VISIBLE);
+        mEmojiContainer.post(this::reLayoutIndicatorView);
+    }
+
     private void removeCurrentPage(String source) {
         int position  = mPager.getCurrentItem();
         if (position == mPagerAdapter.getCount() - 1) {
@@ -264,8 +336,8 @@ public class MessageBoxActivity extends AppCompatActivity implements INotificati
 
     @Override
     public void onBackPressed() {
-        if (mCurrentConversationView.getIsEmojiVisible()) {
-            mCurrentConversationView.hideEmoji();
+        if (getIsEmojiVisible()) {
+            hideEmoji();
             return;
         }
         finish(BACK);
