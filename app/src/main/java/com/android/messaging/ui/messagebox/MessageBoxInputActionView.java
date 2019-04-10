@@ -62,6 +62,7 @@ class MessageBoxInputActionView extends LinearLayout {
             sb.setSpan(signatureSpan, 1, sb.length(), 0);
             sb.setSpan(new AbsoluteSizeSpan(13, true), 1, sb.length(), 0);
             mComposeEditText.setText(sb, TextView.BufferType.SPANNABLE);
+            mComposeEditText.setSelection(0);
         }
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             mComposeEditText.setShowSoftInputOnFocus(false);
