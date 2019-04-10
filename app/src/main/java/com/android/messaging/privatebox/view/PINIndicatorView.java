@@ -2,12 +2,16 @@ package com.android.messaging.privatebox.view;
 
 import android.content.Context;
 import android.content.res.TypedArray;
+import android.graphics.Color;
+import android.graphics.PorterDuff;
+import android.graphics.PorterDuffColorFilter;
 import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 
 import com.android.messaging.R;
+import com.android.messaging.ui.customize.PrimaryColors;
 import com.superapps.util.Dimensions;
 
 import java.util.ArrayList;
@@ -49,7 +53,14 @@ public class PINIndicatorView extends LinearLayout {
         this.context = context;
         final TypedArray typedArray = getContext().obtainStyledAttributes(attrs, R.styleable.PINIndicatorView, 0, 0);
         shapePinCircle = typedArray.getDrawable(R.styleable.PINIndicatorView_pin_indicator_circle);
+        shapePinCircle.setColorFilter(new PorterDuffColorFilter(PrimaryColors.getPrimaryColor(), PorterDuff.Mode.MULTIPLY));
         shapePinRing = typedArray.getDrawable(R.styleable.PINIndicatorView_pin_indicator_ring);
+        int color = PrimaryColors.getPrimaryColor();
+        int blendedRed = Color.red(color);
+        int blendedGreen = Color.green(color);
+        int blendedBlue = Color.blue(color);
+        int ringColor = Color.rgb(255 - (255 - blendedRed) / 2, 255 - (255 - blendedGreen) / 2, 255 - (255 - blendedBlue) / 2);
+        shapePinRing.setColorFilter(new PorterDuffColorFilter(ringColor, PorterDuff.Mode.MULTIPLY));
         typedArray.recycle();
         init();
     }

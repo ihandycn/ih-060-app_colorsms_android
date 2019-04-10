@@ -66,7 +66,7 @@ public class PrivateBoxSettings {
     }
 
     public static boolean isAnyPasswordSetted() {
-        return !PASSWORD_PLACEHOLDER.equals(getUnlockGesture()) && !PASSWORD_PLACEHOLDER.equals(getUnlockPIN());
+        return !PASSWORD_PLACEHOLDER.equals(getUnlockGesture()) || !PASSWORD_PLACEHOLDER.equals(getUnlockPIN());
     }
 
     public static int getLockDefaultStyle() {

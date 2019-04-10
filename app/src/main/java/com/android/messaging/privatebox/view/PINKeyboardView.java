@@ -16,6 +16,7 @@ import android.widget.TableRow;
 import android.widget.TextView;
 
 import com.android.messaging.R;
+import com.android.messaging.util.Typefaces;
 import com.superapps.util.Dimensions;
 
 import java.util.ArrayList;
@@ -125,6 +126,8 @@ public class PINKeyboardView extends TableLayout {
 
             if (view instanceof ClickableTextView) {
                 final ClickableTextView clickableTextView = (ClickableTextView) view;
+                clickableTextView.setTextSize(33);
+                clickableTextView.setTypeface(Typefaces.getCustomRegular());
                 views.get(i).setOnTouchListener(new OnTouchListener() {
                     @Override
                     public boolean onTouch(View v, MotionEvent event) {

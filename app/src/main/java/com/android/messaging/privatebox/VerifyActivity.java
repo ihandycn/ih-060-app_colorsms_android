@@ -5,7 +5,6 @@ import android.animation.AnimatorListenerAdapter;
 import android.animation.ObjectAnimator;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
-import android.os.Build;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.KeyEvent;
@@ -40,7 +39,6 @@ public abstract class VerifyActivity extends BaseActivity
 
     protected View background;
 
-    protected boolean isSelfLock = false;
     protected boolean fromLockActivity = false;  //true: activity上push一个lock activity，后台回前台，锁屏回来等；false：从main activity 入口进入，先push lock activity，然后push installed app activity
 
     public static final String INTENT_KEY_FROM_LOCK_ACTIVITY = "INTENT_KEY_FROM_LOCK_ACTIVITY";
@@ -57,9 +55,6 @@ public abstract class VerifyActivity extends BaseActivity
         setContentView(getLayoutResId());
 
         mainContainer = findViewById(R.id.lock_container);
-        mainContainer.setPadding(0, Dimensions.getStatusBarInset(this),
-                0, (isSelfLock || Build.VERSION.SDK_INT < Build.VERSION_CODES.KITKAT) ?
-                        0 : Dimensions.getNavigationBarHeight(this));
 
         background = findViewById(R.id.background);
 

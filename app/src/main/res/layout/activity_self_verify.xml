@@ -11,11 +11,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"/>
 
-    <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="56dp"
-        android:orientation="horizontal">
-    </LinearLayout>
+    <include layout="@layout/top_tool_bar_view"/>
 
     <android.support.percent.PercentRelativeLayout
         android:layout_width="match_parent"
@@ -81,8 +77,8 @@
                 android:gravity="center"
                 android:orientation="vertical"
                 app:pin_btn_back="@drawable/app_lock_pin_back"
-                app:pin_circle_color="#142471e2"
-                app:pin_number_color="#2671d7"/>
+                app:pin_circle_color="#14000000"
+                app:pin_number_color="#222327"/>
 
             <com.android.messaging.privatebox.view.GestureLockView
                 android:id="@+id/gesture_unlock_view"
@@ -105,22 +101,6 @@
                 android:layout_width="1dp"
                 android:layout_height="27dp"
                 android:layout_alignParentBottom="true"></View>
-
-            <TextView
-                android:id="@+id/use_passcode_btn"
-                android:layout_width="wrap_content"
-                android:layout_height="38dp"
-                android:layout_above="@id/bottom_space"
-                android:layout_centerHorizontal="true"
-                android:alpha="0.5"
-                android:fontFamily="sans-serif-medium"
-                android:gravity="center"
-                android:paddingLeft="33dp"
-                android:paddingRight="33dp"
-                android:text="@string/lock_style_pin"
-                android:textAllCaps="true"
-                android:textColor="@color/primary_color"
-                android:textSize="15sp"/>
         </RelativeLayout>
     </android.support.percent.PercentRelativeLayout>
 </RelativeLayout>

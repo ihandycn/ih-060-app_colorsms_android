@@ -6,6 +6,8 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Paint.Style;
+import android.graphics.PorterDuff;
+import android.graphics.PorterDuffColorFilter;
 import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
 import android.os.Vibrator;
@@ -19,6 +21,7 @@ import android.view.animation.Interpolator;
 
 import com.android.messaging.R;
 import com.android.messaging.privatebox.PrivateBoxSettings;
+import com.android.messaging.ui.customize.PrimaryColors;
 import com.android.messaging.util.ViewUtils;
 import com.ihs.commons.utils.HSLog;
 import com.superapps.util.Dimensions;
@@ -204,6 +207,7 @@ public class GestureLockView extends ViewGroup {
 
         nodeDrawable = typedArray.getDrawable(R.styleable.GestureLockView_gesture_lock_node_image);
         nodeHighlightDrawable = typedArray.getDrawable(R.styleable.GestureLockView_gesture_lock_node_highlight_image);
+        nodeHighlightDrawable.setColorFilter(new PorterDuffColorFilter(PrimaryColors.getPrimaryColor(), PorterDuff.Mode.MULTIPLY));
         nodeFailureDrawable = typedArray.getDrawable(R.styleable.GestureLockView_gesture_lock_node_failure_image);
         lineColor = typedArray.getColor(R.styleable.GestureLockView_gesture_lock_normal_line_color, Color.argb(0, 0, 0, 0));
         failureColor = typedArray.getColor(R.styleable.GestureLockView_gesture_lock_failure_line_color, Color.argb(0, 0, 0, 0));

@@ -2,12 +2,14 @@ package com.android.messaging.privatebox;
 
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.view.KeyEvent;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import com.android.messaging.R;
-import com.ihs.commons.utils.HSLog;
+import com.android.messaging.util.UiUtils;
 
 public class SelfVerifyActivity extends VerifyActivity {
 
@@ -20,7 +22,6 @@ public class SelfVerifyActivity extends VerifyActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        isSelfLock = true;
         if (getIntent() != null) {
             mDontLockAppPackageName = getIntent().getStringExtra(EXTRA_TO_DONT_LOCK_APP);
             mIsToLockMode = getIntent().getBooleanExtra(EXTRA_TO_LOCK_MODE, false);
@@ -30,7 +31,17 @@ public class SelfVerifyActivity extends VerifyActivity {
         }
         super.onCreate(savedInstanceState);
 
-        HSLog.d(TAG, "onCreate");
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        toolbar.setTitle("");
+        UiUtils.setTitleBarBackground(toolbar, this);
+        TextView title = toolbar.findViewById(R.id.toolbar_title);
+        title.setText(getString(R.string.menu_privacy_box));
+        setSupportActionBar(toolbar);
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        }
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
+        UiUtils.setTitleBarBackground(toolbar, this);
 
         RelativeLayout mainContainer = findViewById(R.id.lock_container);
         mainContainer.setBackgroundResource(R.color.primary_color);
@@ -39,23 +50,6 @@ public class SelfVerifyActivity extends VerifyActivity {
 
     @Override protected int getLayoutResId() {
         return R.layout.activity_self_verify;
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        isSelfLock = true;
-    }
-
-    @Override
-    protected void onStop() {
-        HSLog.d(TAG, "onStop");
-        super.onStop();
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
     }
 
     @Override
@@ -87,7 +81,6 @@ public class SelfVerifyActivity extends VerifyActivity {
         super.onUnlockSucceed();
 
         finish();
-
     }
 
 
