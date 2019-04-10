@@ -8,7 +8,7 @@ import android.view.ViewGroup;
 import com.android.messaging.Factory;
 import com.ihs.commons.utils.HSLog;
 import com.superapps.font.FontUtils;
-import com.superapps.view.TypefacedTextView;
+import com.superapps.view.MessagesTextView;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
@@ -16,8 +16,8 @@ import java.lang.reflect.Method;
 public class ChangeFontUtils {
 
     public static void changeFontSize(View view, float scale) {
-        if (view instanceof TypefacedTextView) {
-            changeTextSize((TypefacedTextView) view, scale);
+        if (view instanceof MessagesTextView) {
+            changeTextSize((MessagesTextView) view, scale);
         } else {
             if (view instanceof RecyclerView) {
                 clearRecyclerView((RecyclerView) view);
@@ -32,7 +32,7 @@ public class ChangeFontUtils {
         }
     }
 
-    private static void changeTextSize(TypefacedTextView textView, float mScale) {
+    private static void changeTextSize(MessagesTextView textView, float mScale) {
         if (null == textView) {
             return;
         }
@@ -44,8 +44,8 @@ public class ChangeFontUtils {
 
 
     public static void changeFontTypeface(View view, String typeName) {
-        if (view instanceof TypefacedTextView) {
-            changeTypeface((TypefacedTextView) view, typeName);
+        if (view instanceof MessagesTextView) {
+            changeTypeface((MessagesTextView) view, typeName);
         } else {
             if (view instanceof RecyclerView) {
                 clearRecyclerView((RecyclerView) view);
@@ -60,7 +60,7 @@ public class ChangeFontUtils {
         }
     }
 
-    private static void changeTypeface(TypefacedTextView textView, String typeName) {
+    private static void changeTypeface(MessagesTextView textView, String typeName) {
         if (textView.fontFamilyChangeable()) {
             int weight = textView.getFontWeight();
             if (typeName.equals(FontUtils.MESSAGE_FONT_FAMILY_DEFAULT_VALUE)) {

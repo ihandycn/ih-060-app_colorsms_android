@@ -27,7 +27,7 @@
                 android:layout_marginTop="30dp"
                 android:src="@drawable/ic_media_camera" />
 
-            <com.superapps.view.TypefacedTextView
+            <com.superapps.view.MessagesTextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="12dp"
@@ -51,7 +51,7 @@
                 android:layout_marginTop="30dp"
                 android:src="@drawable/ic_media_gallery" />
 
-            <com.superapps.view.TypefacedTextView
+            <com.superapps.view.MessagesTextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="12dp"
@@ -75,7 +75,7 @@
                 android:layout_marginTop="30dp"
                 android:src="@drawable/ic_media_voice" />
 
-            <com.superapps.view.TypefacedTextView
+            <com.superapps.view.MessagesTextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="12dp"

@@ -20,7 +20,7 @@
         android:orientation="vertical">
 
         <!-- Title -->
-        <com.superapps.view.TypefacedTextView
+        <com.superapps.view.MessagesTextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="21.7dp"
@@ -73,7 +73,7 @@
             android:textSize="14sp" />
 
         <!-- Submit button -->
-        <com.superapps.view.TypefacedTextView
+        <com.superapps.view.MessagesTextView
             android:id="@+id/feedback_submit_btn"
             android:layout_width="match_parent"
             android:layout_height="76.7dp"

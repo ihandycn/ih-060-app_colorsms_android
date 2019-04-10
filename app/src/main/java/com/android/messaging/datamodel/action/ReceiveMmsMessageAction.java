@@ -35,6 +35,7 @@ import com.android.messaging.mmslib.pdu.PduHeaders;
 import com.android.messaging.sms.DatabaseMessages;
 import com.android.messaging.sms.MmsSmsUtils;
 import com.android.messaging.sms.MmsUtils;
+import com.android.messaging.util.CheckPermissionUtil;
 import com.android.messaging.util.LogUtil;
 import com.android.messaging.util.OsUtil;
 import com.ihs.app.framework.HSApplication;
@@ -63,6 +64,10 @@ public class ReceiveMmsMessageAction extends Action implements Parcelable {
     @Override
     protected Object executeAction() {
         if (!OsUtil.hasSmsPermission()) {
+            return null;
+        }
+
+        if (!CheckPermissionUtil.isSmsPermissionGranted()) {
             return null;
         }
 

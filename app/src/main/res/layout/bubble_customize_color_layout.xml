@@ -23,7 +23,7 @@
                 android:layout_height="21dp"
                 android:src="@drawable/ic_bubble_color"/>
 
-            <com.superapps.view.TypefacedTextView
+            <com.superapps.view.MessagesTextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/bubble_customize_bubble_color"
@@ -42,7 +42,7 @@
             android:gravity="center_vertical"
             style="@style/CustomColorEntryItem">
 
-            <com.superapps.view.TypefacedTextView
+            <com.superapps.view.MessagesTextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textSize="14.7sp"
@@ -77,7 +77,7 @@
             android:gravity="center_vertical"
             style="@style/CustomColorEntryItem">
 
-            <com.superapps.view.TypefacedTextView
+            <com.superapps.view.MessagesTextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textSize="14.7sp"
@@ -108,7 +108,7 @@
                 android:layout_height="21dp"
                 android:src="@drawable/ic_text_color"/>
 
-            <com.superapps.view.TypefacedTextView
+            <com.superapps.view.MessagesTextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/bubble_customize_text_color"
@@ -127,7 +127,7 @@
             android:gravity="center_vertical"
             style="@style/CustomColorEntryItem">
 
-            <com.superapps.view.TypefacedTextView
+            <com.superapps.view.MessagesTextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textSize="14.7sp"
@@ -162,7 +162,7 @@
             android:gravity="center_vertical"
             style="@style/CustomColorEntryItem">
 
-            <com.superapps.view.TypefacedTextView
+            <com.superapps.view.MessagesTextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textSize="14.7sp"

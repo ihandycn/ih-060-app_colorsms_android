@@ -58,10 +58,13 @@ import com.android.messaging.ui.SnackBar.Placement;
 import com.android.messaging.ui.SnackBarInteraction;
 import com.android.messaging.ui.SnackBarManager;
 import com.android.messaging.ui.customize.PrimaryColors;
+import com.superapps.util.Preferences;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
+
+import static com.android.messaging.util.BuglePrefsKeys.PREFS_KEY_KEYBOARD_HEIGHT;
 
 public class UiUtils {
     /**
@@ -512,6 +515,14 @@ public class UiUtils {
             view = new View(activity);
         }
         imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+    }
+
+    public static int getKeyboardHeight() {
+        return BuglePrefs.getApplicationPrefs().getInt(PREFS_KEY_KEYBOARD_HEIGHT, 0);
+    }
+
+    public static void updateKeyboardHeight(int height) {
+        BuglePrefs.getApplicationPrefs().putInt(PREFS_KEY_KEYBOARD_HEIGHT, height);
     }
 
     /**

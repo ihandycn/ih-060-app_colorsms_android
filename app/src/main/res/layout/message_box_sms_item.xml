@@ -12,7 +12,7 @@
         android:orientation="vertical"
         app:layout_constraintGuide_percent="0.8" />
 
-    <com.superapps.view.TypefacedTextView
+    <com.superapps.view.MessagesTextView
         android:id="@+id/message_content"
         android:layout_width="wrap_content"
         android:layout_height="0dp"
@@ -28,7 +28,7 @@
         app:typeface="@string/custom_font_regular"
         tools:text="A you ok? Are you ok Are y o u A r e yo u o k? Ar e y ou ok A re you sd" />
 
-    <com.superapps.view.TypefacedTextView
+    <com.superapps.view.MessagesTextView
         android:id="@+id/message_date"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

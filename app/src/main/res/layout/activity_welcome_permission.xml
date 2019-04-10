@@ -6,7 +6,7 @@
     android:background="@android:color/white"
     android:layout_height="match_parent">
 
-    <com.superapps.view.TypefacedTextView
+    <com.superapps.view.MessagesTextView
         android:id="@+id/welcome_permission_title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -20,7 +20,7 @@
         app:layout_constraintTop_toTopOf="parent"
         app:typeface="@string/custom_font_bold"/>
 
-    <com.superapps.view.TypefacedTextView
+    <com.superapps.view.MessagesTextView
         android:id="@+id/welcome_permission_description"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -52,7 +52,7 @@
 
     </LinearLayout>
 
-    <com.superapps.view.TypefacedTextView
+    <com.superapps.view.MessagesTextView
         android:id="@+id/welcome_permission_button"
         android:layout_width="260.7dp"
         android:layout_height="46dp"

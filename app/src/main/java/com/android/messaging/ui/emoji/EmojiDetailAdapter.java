@@ -18,7 +18,7 @@ import com.ihs.commons.notificationcenter.HSGlobalNotificationCenter;
 import com.ihs.commons.utils.HSBundle;
 import com.superapps.util.BackgroundDrawables;
 import com.superapps.util.Dimensions;
-import com.superapps.view.TypefacedTextView;
+import com.superapps.view.MessagesTextView;
 
 public class EmojiDetailAdapter extends BaseStickerItemRecyclerAdapter {
 
@@ -55,7 +55,7 @@ public class EmojiDetailAdapter extends BaseStickerItemRecyclerAdapter {
         }
     }
 
-    private void setupImageAndText(ImageView image, TypefacedTextView text) {
+    private void setupImageAndText(ImageView image, MessagesTextView text) {
         GlideApp.with(image)
                 .asBitmap()
                 .load(mEmojiPackageInfo.mBannerUrl)
@@ -66,7 +66,7 @@ public class EmojiDetailAdapter extends BaseStickerItemRecyclerAdapter {
         text.setText(mEmojiPackageInfo.mName);
     }
 
-    private void setupGetButton(TypefacedTextView getBtn) {
+    private void setupGetButton(MessagesTextView getBtn) {
         Resources res = getBtn.getResources();
         if (EmojiManager.isTabSticker(mEmojiPackageInfo.mName)) {
             getBtn.setText(res.getString(R.string.emoji_added));
@@ -110,8 +110,8 @@ public class EmojiDetailAdapter extends BaseStickerItemRecyclerAdapter {
 
     private static class HeaderViewHolder extends RecyclerView.ViewHolder {
         ImageView image;
-        TypefacedTextView text;
-        TypefacedTextView button;
+        MessagesTextView text;
+        MessagesTextView button;
 
         HeaderViewHolder(View itemView) {
             super(itemView);

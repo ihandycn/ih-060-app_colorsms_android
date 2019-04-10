@@ -13,7 +13,7 @@
         android:layout_height="0dp"
         android:layout_weight="46" />
 
-    <com.superapps.view.TypefacedTextView
+    <com.superapps.view.MessagesTextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"

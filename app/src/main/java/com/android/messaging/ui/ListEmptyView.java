@@ -20,19 +20,17 @@ import android.util.AttributeSet;
 import android.view.Gravity;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.LinearLayout.LayoutParams;
-import android.widget.TextView;
 
 import com.airbnb.lottie.LottieAnimationView;
 import com.android.messaging.R;
-import com.superapps.view.TypefacedTextView;
+import com.superapps.view.MessagesTextView;
 
 /**
  * A common reusable view that shows a hint image and text for an empty list view.
  */
 public class ListEmptyView extends LinearLayout {
     private ImageView mEmptyImageHint;
-    private TypefacedTextView mEmptyTextHint;
+    private MessagesTextView mEmptyTextHint;
     private LottieAnimationView mLoadingAnimationView;
 
     public ListEmptyView(final Context context, final AttributeSet attrs) {
@@ -44,7 +42,7 @@ public class ListEmptyView extends LinearLayout {
         super.onFinishInflate();
 
         mEmptyImageHint = (ImageView) findViewById(R.id.empty_image_hint);
-        mEmptyTextHint = (TypefacedTextView) findViewById(R.id.empty_text_hint);
+        mEmptyTextHint = (MessagesTextView) findViewById(R.id.empty_text_hint);
         mLoadingAnimationView = (LottieAnimationView) findViewById(R.id.loading_image_hint);
     }
 

@@ -43,7 +43,7 @@
             android:paddingBottom="16dp"
             android:paddingTop="16dp">
 
-            <com.superapps.view.TypefacedTextView
+            <com.superapps.view.MessagesTextView
                 android:id="@+id/title"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -53,7 +53,7 @@
                 android:textSize="16sp"
                 app:typeface="@string/custom_font_medium" />
 
-            <com.superapps.view.TypefacedTextView
+            <com.superapps.view.MessagesTextView
                 android:id="@+id/summary"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

@@ -99,4 +99,7 @@ public final class BuglePrefsKeys {
     public static final String PREFS_KEY_MESSAGE_TEXT_COLOR_OUTGOING = "message_text_color_outgoing";
 
 
+    public static final String PREFS_KEY_KEYBOARD_HEIGHT = "keyboard_height";
+
+
 }

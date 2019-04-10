@@ -2,6 +2,7 @@ package com.android.messaging.ui.messagebox;
 
 import android.content.Context;
 import android.graphics.PorterDuff;
+import android.os.Build;
 import android.support.annotation.Nullable;
 import android.text.Editable;
 import android.text.SpannableString;
@@ -62,6 +63,11 @@ class MessageBoxInputActionView extends LinearLayout {
             sb.setSpan(new AbsoluteSizeSpan(13, true), 1, sb.length(), 0);
             mComposeEditText.setText(sb, TextView.BufferType.SPANNABLE);
         }
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            mComposeEditText.setShowSoftInputOnFocus(false);
+        }
+        mComposeEditText.requestFocus();
+
     }
 
     void performReply() {
