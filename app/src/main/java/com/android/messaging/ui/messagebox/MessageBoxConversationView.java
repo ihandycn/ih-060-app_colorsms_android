@@ -248,6 +248,8 @@ public class MessageBoxConversationView extends FrameLayout {
             mActivity.hideEmoji();
             post(() -> ImeUtil.get().showImeKeyboard(getContext(), mInputEditText));
             MessageBoxAnalytics.logEvent("SMS_PopUp_TextField_Click");
+            BugleAnalytics.logEvent("SMS_PopUp_TextField_Click_Keyboard", "hasKeyboardHeight",
+                    String.valueOf(UiUtils.getKeyboardHeight() > 0));
         });
     }
 
