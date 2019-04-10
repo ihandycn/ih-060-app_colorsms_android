@@ -1,5 +1,8 @@
 package com.android.messaging.ui.messagebox;
 
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
+import android.animation.ValueAnimator;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
@@ -8,6 +11,8 @@ import android.graphics.Point;
 import android.graphics.PorterDuff;
 import android.graphics.Rect;
 import android.support.annotation.ColorInt;
+import android.support.constraint.Group;
+import android.support.constraint.Guideline;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.telephony.TelephonyManager;
@@ -15,9 +20,9 @@ import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.view.Display;
 import android.view.KeyEvent;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewStub;
 import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
@@ -31,8 +36,8 @@ import com.android.messaging.ui.UIIntents;
 import com.android.messaging.ui.customize.PrimaryColors;
 import com.android.messaging.ui.emoji.EmojiInfo;
 import com.android.messaging.util.BugleAnalytics;
+import com.android.messaging.util.Dates;
 import com.android.messaging.util.ImeUtil;
-import com.android.messaging.util.UiUtils;
 import com.superapps.util.BackgroundDrawables;
 import com.superapps.util.Dimensions;
 
@@ -45,11 +50,21 @@ public class MessageBoxConversationView extends FrameLayout {
 
     private MessageBoxActivity mActivity;
     private ViewGroup mContent;
+    private ViewGroup mMessageView;
+    private Guideline mBottomGuideline;
     private MessageBoxInputActionView mInputActionView;
     private MessageBoxMessageListAdapter mAdapter;
     private ImageView mCallImage;
+    private TextView mConversationName;
     private RecyclerView mRecyclerView;
     private EditText mInputEditText;
+    private Group mActionsGroup;
+
+    // privacy mode
+    private TextView mPrivacyConversationName;
+    private View mPrivacyContainer;
+    private TextView mPrivacyTitle;
+    private TextView mPrivacyTimestamp;
 
     private String mConversationId;
     private String mSelfId;
@@ -74,13 +89,18 @@ public class MessageBoxConversationView extends FrameLayout {
         initQuickActions();
         mContent = findViewById(R.id.content);
         mInputActionView = findViewById(R.id.message_compose_view_container);
+        mActionsGroup = findViewById(R.id.action_group);
+        mMessageView = findViewById(R.id.message_view);
+        mBottomGuideline = findViewById(R.id.guideline_bottom);
+        mPrivacyConversationName = findViewById(R.id.privacy_conversation_name);
+
         mInputEditText = mInputActionView.getComposeEditText();
         initInputAction();
     }
 
     void bind(MessageBoxItemData data) {
-        TextView conversationName = findViewById(R.id.conversation_name);
-        conversationName.setText(data.getConversationName());
+        mConversationName = findViewById(R.id.conversation_name);
+        mConversationName.setText(data.getConversationName());
 
         mConversationId = data.getConversationId();
         mSelfId = data.getSelfId();
@@ -100,6 +120,7 @@ public class MessageBoxConversationView extends FrameLayout {
         }
         mOldestReceivedTimestamp = data.getReceivedTimestamp();
         mParticipantId = data.getParticipantId();
+        inflatePrivacyModePageIfNeeded();
     }
 
     void updateTimestamp() {
@@ -249,6 +270,122 @@ public class MessageBoxConversationView extends FrameLayout {
             post(() -> ImeUtil.get().showImeKeyboard(getContext(), mInputEditText));
             MessageBoxAnalytics.logEvent("SMS_PopUp_TextField_Click");
         });
+    }
+
+    private void inflatePrivacyModePageIfNeeded() {
+        if (!hideMessagesForThisMessage()) {
+            return;
+        }
+
+        mMessageView.setVisibility(INVISIBLE);
+        mMessageView.setAlpha(0f);
+        mActionsGroup.setVisibility(GONE);
+        mActionsGroup.setAlpha(0f);
+        ViewStub stub = findViewById(R.id.privacy_stub);
+        mPrivacyContainer = stub.inflate();
+        mPrivacyContainer.setClickable(true);
+
+        mPrivacyTitle = mPrivacyContainer.findViewById(R.id.privacy_title);
+        mPrivacyTimestamp = mPrivacyContainer.findViewById(R.id.privacy_date);
+        TextView showMessageTextView = mPrivacyContainer.findViewById(R.id.privacy_show_message);
+
+        showMessageTextView.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                revealMessages();
+                showMessageTextView.setClickable(false);
+            }
+        });
+
+        if (hideContactForThisMessage()) {
+            mConversationName.setVisibility(GONE);
+            mConversationName.setAlpha(0f);
+            mPrivacyConversationName.setVisibility(VISIBLE);
+        }
+
+        mCallImage.setAlpha(0f);
+
+        updatePrivacyTitleAndTimestamp();
+    }
+
+    private void updatePrivacyTitleAndTimestamp() {
+        if (mPrivacyTitle != null) {
+            String title = mActivity.getResources().getQuantityString(
+                    R.plurals.notification_new_messages, mAdapter.getItemCount(), mAdapter.getItemCount());
+            mPrivacyTitle.setText(title);
+            mPrivacyTimestamp.setText(Dates.getConversationTimeString(System.currentTimeMillis()));
+        }
+    }
+
+    private void revealMessages() {
+        // height
+        ValueAnimator heightAnimator = ValueAnimator.ofInt(0, Dimensions.pxFromDp(40));
+        heightAnimator.addUpdateListener(animation -> mBottomGuideline.setGuidelineEnd((Integer) animation.getAnimatedValue()));
+        heightAnimator.setDuration(200L);
+        heightAnimator.start();
+        mPrivacyContainer.animate().alpha(0f).setDuration(120L).start();
+        mMessageView.setVisibility(VISIBLE);
+
+        // main content
+        ValueAnimator revealAnimator = ValueAnimator.ofFloat(0f, 1f);
+        revealAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+            private float alpha;
+            private View[] actionGroupViews = getActionGroupViewArray();
+            @Override
+            public void onAnimationUpdate(ValueAnimator animation) {
+                alpha = (float) animation.getAnimatedValue();
+                mMessageView.setAlpha(alpha);
+                for (View view : actionGroupViews) {
+                    view.setAlpha(alpha);
+                }
+            }
+        });
+
+        revealAnimator.addListener(new AnimatorListenerAdapter() {
+            @Override
+            public void onAnimationStart(Animator animation) {
+                super.onAnimationStart(animation);
+                mActionsGroup.setVisibility(VISIBLE);
+            }
+
+            @Override
+            public void onAnimationEnd(Animator animation) {
+                super.onAnimationEnd(animation);
+                mPrivacyContainer.setVisibility(GONE);
+                mInputEditText.requestFocus();
+            }
+        });
+        revealAnimator.setStartDelay(120L);
+        revealAnimator.setDuration(280L);
+        revealAnimator.start();
+
+
+        // action bar simulation
+        if (hideContactForThisMessage()) {
+            mPrivacyConversationName.animate().alpha(0f).setDuration(200L).start();
+            mConversationName.setVisibility(VISIBLE);
+            mConversationName.animate().alpha(1f).setDuration(200L).start();
+        }
+        mCallImage.animate().alpha(1f).setDuration(200L).start();
+    }
+
+    private View[] getActionGroupViewArray() {
+        int[] ids = mActionsGroup.getReferencedIds();
+        View[] views = new View[ids.length];
+        for (int i = 0; i < ids.length; ++i) {
+            int id = ids[i];
+            View view = findViewById(id);
+            views[i] = view;
+        }
+        return views;
+    }
+
+    private boolean hideContactForThisMessage() {
+        return true;
+    }
+
+    private boolean hideMessagesForThisMessage() {
+        return true;
     }
 
     private static class MessageItemDecoration extends RecyclerView.ItemDecoration {

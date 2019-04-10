@@ -36,9 +36,6 @@ import java.util.List;
 
 public class ChoosePrivacyModeDialog implements View.OnClickListener{
 
-    private static final String[] PRIVACY_MODE_LIST= {
-            "Krub", "Mali", "ExpletusSans", "SourceSerifPro"
-    };
 
     private static final String TAG = ChoosePrivacyModeDialog.class.getSimpleName();
     private Activity mActivity;
@@ -46,11 +43,16 @@ public class ChoosePrivacyModeDialog implements View.OnClickListener{
     private Dialog mDialog;
     private View mRootView;
     private String mFontFamily;
-    private List<ChooseFontItem> mItemViewList = new ArrayList<>();
+    private List<ChooseFontItem> mItemViewList = new ArrayList<>(3);
+    private List<String> mPrivacyModeList = new ArrayList<>(3);
 
     ChoosePrivacyModeDialog(Context activity) {
         this.mActivity = (Activity) activity;
         mWeakActivityReference = new WeakReference<>((ChangeFontActivity)activity);
+
+        mPrivacyModeList.add(mActivity.getString(R.string.privacy_mode_disable));
+        mPrivacyModeList.add(mActivity.getString(R.string.privacy_mode_hide_message_only));
+        mPrivacyModeList.add(mActivity.getString(R.string.privacy_mode_hide_contact_and_message));
     }
 
     private void configDialog(Dialog builder) {
@@ -74,7 +76,6 @@ public class ChoosePrivacyModeDialog implements View.OnClickListener{
                 window.addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
             }
         }
-
     }
 
     @SuppressLint("InflateParams")
@@ -132,16 +133,15 @@ public class ChoosePrivacyModeDialog implements View.OnClickListener{
         lp.bottomMargin = Dimensions.pxFromDp(32);
         v.setLayoutParams(lp);
 
-        List<String> choicesList = Arrays.asList(PRIVACY_MODE_LIST);
-        int checkedIndex = choicesList.indexOf(mFontFamily);
+        int checkedIndex = mPrivacyModeList.indexOf(mFontFamily);
         if (checkedIndex == -1) {
             checkedIndex = 0;
         }
 
         LinearLayout scrollContent = view.findViewById(R.id.scroll_content);
-        for (int i = 0; i < choicesList.size(); i++) {
+        for (int i = 0; i < mPrivacyModeList.size(); i++) {
             ChooseFontItem item = (ChooseFontItem) LayoutInflater.from(mActivity).inflate(R.layout.new_dialog_select_item, scrollContent, false);
-            item.setFontFamily(choicesList.get(i));
+            item.setFontFamily(mPrivacyModeList.get(i));
             if (checkedIndex == i) {
                 item.setSelected(true);
             }
@@ -166,7 +166,7 @@ public class ChoosePrivacyModeDialog implements View.OnClickListener{
         for (int i = 0 ; i < mItemViewList.size(); i ++) {
             ChooseFontItem view = mItemViewList.get(i);
             if (v == view) {
-                String fontFamily = PRIVACY_MODE_LIST[i];
+                String fontFamily = mPrivacyModeList.get(i);
                 mFontFamily = fontFamily;
 
                 view.setSelected(true);

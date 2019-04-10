@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:gravity="center_horizontal">
+
+    <ImageView
+        android:layout_width="26.7dp"
+        android:layout_height="26.7dp"
+        android:layout_marginTop="28dp"
+        android:src="@drawable/ic_invalid_name" />
+
+    <com.superapps.view.MessagesTextView
+        android:id="@+id/privacy_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="16.7sp"
+        android:textColor="@color/text_primary_color"
+        android:layout_marginTop="10dp"
+        app:typeface="@string/custom_font_semibold"
+        tools:text="One New message"/>
+
+    <com.superapps.view.MessagesTextView
+        android:id="@+id/privacy_date"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="#afb1bf"
+        android:layout_marginTop="2dp"
+        android:textSize="11sp"
+        app:typeface="@string/custom_font_regular"
+        tools:text="2 mins ago" />
+
+    <com.superapps.view.MessagesTextView
+        android:id="@+id/privacy_show_message"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="26.7dp"
+        android:layout_marginEnd="26.7dp"
+        android:layout_marginTop="26dp"
+        android:textColor="@color/primary_color"
+        app:typeface="@string/custom_font_semibold"
+        android:text="@string/privacy_mode_show_messages"/>
+
+</LinearLayout>

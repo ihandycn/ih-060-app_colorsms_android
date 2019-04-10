@@ -26,9 +26,11 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.airbnb.lottie.LottieAnimationView;
+import com.android.messaging.BuildConfig;
 import com.android.messaging.Factory;
 import com.android.messaging.R;
 import com.android.messaging.datamodel.BugleNotifications;
+import com.android.messaging.datamodel.data.MessageBoxItemData;
 import com.android.messaging.ui.CreateShortcutActivity;
 import com.android.messaging.datamodel.action.PinConversationAction;
 import com.android.messaging.ui.DragHotSeatActivity;
@@ -339,7 +341,14 @@ public class ConversationListActivity extends AbstractConversationListActivity
                         if (CommonUtils.isNewUser() && DateUtils.isToday(CommonUtils.getAppInstallTimeMillis())) {
                             BugleAnalytics.logEvent("Menu_Bubble_Click_NewUser", true);
                         }
-                        Navigations.startActivity(ConversationListActivity.this, CustomBubblesActivity.class);
+
+                        if (BuildConfig.DEBUG) {
+                            UIIntents.get().launchMessageBoxActivity(getApplicationContext(), new MessageBoxItemData("asd",
+                                    "asd", "asd", "asd", "asd", "heihei", 123L));
+                        } else {
+                            Navigations.startActivity(ConversationListActivity.this, CustomBubblesActivity.class);
+                        }
+
                         navigationContent.findViewById(R.id.navigation_item_bubble_new_text).setVisibility(View.GONE);
                         break;
                     case DRAWER_INDEX_CHAT_BACKGROUND:
