@@ -51,13 +51,16 @@ import com.android.messaging.util.LogUtil;
 import com.android.messaging.util.OsUtil;
 import com.android.messaging.util.UiUtils;
 import com.ihs.commons.notificationcenter.HSGlobalNotificationCenter;
+import com.ihs.commons.notificationcenter.INotificationObserver;
+import com.ihs.commons.utils.HSBundle;
 
 public class ConversationActivity extends BugleActionBarActivity
         implements ContactPickerFragmentHost, ConversationFragmentHost,
-        ConversationActivityUiStateHost {
+        ConversationActivityUiStateHost, INotificationObserver {
     public static final int FINISH_RESULT_CODE = 1;
     public static final int DELETE_CONVERSATION_RESULT_CODE = 2;
     private static final String SAVED_INSTANCE_STATE_UI_STATE_KEY = "uistate";
+    public static final String MESSAGE_LONG_CLICK = "message_long_click";
 
     private ConversationActivityUiState mUiState;
 
@@ -70,6 +73,7 @@ public class ConversationActivity extends BugleActionBarActivity
     // Tracks whether onPause is called.
     private boolean mIsPaused;
     private TextView mTitleTextView;
+    private Toolbar toolbar;
 
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
@@ -137,6 +141,7 @@ public class ConversationActivity extends BugleActionBarActivity
         }
 
         BugleAnalytics.logEvent("SMS_ActiveUsers", true);
+        HSGlobalNotificationCenter.addObserver(MESSAGE_LONG_CLICK, this);
     }
 
     @Override
@@ -153,7 +158,7 @@ public class ConversationActivity extends BugleActionBarActivity
     }
 
     private void initActionBar() {
-        Toolbar toolbar = findViewById(R.id.toolbar);
+        toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         mTitleTextView = findViewById(R.id.toolbar_title);
         invalidateActionBar();
@@ -214,6 +219,7 @@ public class ConversationActivity extends BugleActionBarActivity
         if (mUiState != null) {
             mUiState.setHost(null);
         }
+        HSGlobalNotificationCenter.removeObserver(this);
     }
 
     @Override
@@ -242,6 +248,7 @@ public class ConversationActivity extends BugleActionBarActivity
     @Override
     public boolean onOptionsItemSelected(final MenuItem menuItem) {
         if (super.onOptionsItemSelected(menuItem)) {
+            HSGlobalNotificationCenter.sendNotification(ConversationFragment.RESET_ITEM);
             return true;
         }
         if (menuItem.getItemId() == android.R.id.home) {
@@ -263,12 +270,6 @@ public class ConversationActivity extends BugleActionBarActivity
 
     @Override
     public void onBackPressed() {
-        // If action mode is active dismiss it
-        if (getActionMode() != null) {
-            dismissActionMode();
-            return;
-        }
-
         // Let the conversation fragment handle the back press.
         final ConversationFragment conversationFragment = getConversationFragment();
         if (conversationFragment != null && conversationFragment.onBackPressed()) {
@@ -431,6 +432,14 @@ public class ConversationActivity extends BugleActionBarActivity
             final ConversationFragment conversationFragment = getConversationFragment();
             conversationFragment.deleteConversation();
             finish();
+        }
+    }
+
+    @Override
+    public void onReceive(String s, HSBundle hsBundle) {
+        switch (s) {
+            case MESSAGE_LONG_CLICK:
+                toolbar.setBackground(new ColorDrawable(PrimaryColors.getMultiSelectToolbarColor()));
         }
     }
 }

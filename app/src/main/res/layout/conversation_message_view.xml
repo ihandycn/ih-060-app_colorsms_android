@@ -17,7 +17,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     style="@style/ConversationMessageViewStyle"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    >
 
     <com.android.messaging.ui.ContactIconView
         android:id="@+id/conversation_icon"
@@ -28,10 +29,17 @@
         android:importantForAccessibility="no"
         app:iconSize="normal" />
 
+    <ImageView
+        android:id="@+id/check_box"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/ic_choose"
+        android:visibility="gone" />
+
     <com.android.messaging.ui.conversation.ConversationMessageBubbleView
         android:id="@+id/message_content"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:layout_gravity="center_vertical"
         android:orientation="vertical">
 
@@ -56,8 +64,8 @@
                 android:layout_gravity="center_vertical"
                 android:adjustViewBounds="true"
                 android:contentDescription="@string/message_image_content_description"
-                android:minHeight="@dimen/conversation_message_photo_min_size"
                 android:minWidth="@dimen/conversation_message_photo_min_size"
+                android:minHeight="@dimen/conversation_message_photo_min_size"
                 android:scaleType="fitCenter"
                 android:visibility="gone"
                 app:cornerRadius="@dimen/attachment_rounded_corner_radius"
@@ -70,6 +78,7 @@
             android:layout_height="wrap_content"
             android:gravity="center_vertical"
             android:orientation="vertical">
+
 
             <LinearLayout
                 android:id="@+id/message_title_layout"
@@ -111,10 +120,10 @@
                 style="@style/ConversationMessage"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:importantForAccessibility="no"
-                android:visibility="gone"
                 android:layout_gravity="center"
+                android:importantForAccessibility="no"
                 android:includeFontPadding="false"
+                android:visibility="gone"
                 app:font_size_changeable="true"
                 app:typeface="@string/custom_font_regular" />
         </com.android.messaging.ui.conversation.MessageBubbleBackground>
@@ -123,8 +132,8 @@
             android:id="@+id/message_metadata"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="6dp"
             android:layout_marginTop="2dp"
+            android:layout_marginBottom="6dp"
             android:gravity="center_vertical"
             android:importantForAccessibility="noHideDescendants"
             android:orientation="horizontal">
@@ -145,10 +154,10 @@
                 android:layout_height="16dp"
                 android:gravity="center"
                 android:includeFontPadding="false"
-                android:paddingEnd="7dp"
-                android:paddingLeft="7dp"
-                android:paddingRight="7dp"
                 android:paddingStart="7dp"
+                android:paddingLeft="7dp"
+                android:paddingEnd="7dp"
+                android:paddingRight="7dp"
                 android:visibility="gone"
                 app:typeface="@string/custom_font_regular" />
 
@@ -170,5 +179,9 @@
                 android:src="@drawable/ic_sms_delivery_ok"
                 android:visibility="gone" />
         </com.android.messaging.ui.LineWrapLayout>
+
     </com.android.messaging.ui.conversation.ConversationMessageBubbleView>
+
 </com.android.messaging.ui.conversation.ConversationMessageView>
+
+
