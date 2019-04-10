@@ -20,7 +20,6 @@ import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.content.Intent;
 import android.graphics.Rect;
-import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
@@ -45,6 +44,7 @@ import com.android.messaging.ui.conversation.ConversationActivityUiState.Convers
 import com.android.messaging.ui.conversation.ConversationFragment.ConversationFragmentHost;
 import com.android.messaging.ui.conversationlist.ConversationListActivity;
 import com.android.messaging.ui.customize.PrimaryColors;
+import com.android.messaging.ui.customize.ToolbarDrawables;
 import com.android.messaging.ui.messagebox.MessageBoxActivity;
 import com.android.messaging.util.Assert;
 import com.android.messaging.util.BugleAnalytics;
@@ -181,7 +181,20 @@ public class ConversationActivity extends BugleActionBarActivity
     }
 
     private void initActionBar() {
+        View accessoryContainer = findViewById(R.id.accessory_container);
+        if (ToolbarDrawables.getToolbarBg() != null) {
+            accessoryContainer.setBackground(ToolbarDrawables.getToolbarBg());
+        } else {
+            accessoryContainer.setBackgroundColor(PrimaryColors.getPrimaryColor());
+        }
+
+        View statusbarInset = findViewById(R.id.status_bar_inset);
+        ViewGroup.LayoutParams layoutParams = statusbarInset.getLayoutParams();
+        layoutParams.height = Dimensions.getStatusBarHeight(ConversationActivity.this);
+        statusbarInset.setLayoutParams(layoutParams);
+
         Toolbar toolbar = findViewById(R.id.toolbar);
+        toolbar.setBackground(ToolbarDrawables.getToolbarBg());
         setSupportActionBar(toolbar);
         mTitleTextView = findViewById(R.id.toolbar_title);
         invalidateActionBar();
@@ -255,17 +268,6 @@ public class ConversationActivity extends BugleActionBarActivity
         } else if (conversation != null && mUiState.shouldShowConversationFragment()) {
             conversation.updateActionBar(actionBar, mTitleTextView);
         }
-
-        try {
-            actionBar.setBackgroundDrawable(new ColorDrawable(PrimaryColors.getPrimaryColor()));
-            UiUtils.setStatusBarColor(this, PrimaryColors.getPrimaryColorDark());
-
-        } catch (IllegalArgumentException e) {
-            actionBar.setBackgroundDrawable(new ColorDrawable(getResources().getColor(R.color.action_bar_background_color)));
-            UiUtils.setStatusBarColor(this, PrimaryColors.getPrimaryColorDark());
-
-        }
-
     }
 
     @Override

@@ -49,6 +49,8 @@ import com.android.messaging.ui.AudioAttachmentView;
 import com.android.messaging.ui.ContactIconView;
 import com.android.messaging.ui.SnackBar;
 import com.android.messaging.ui.SnackBarInteraction;
+import com.android.messaging.ui.customize.AvatarBgDrawables;
+import com.android.messaging.ui.customize.ConversationColors;
 import com.android.messaging.ui.customize.PrimaryColors;
 import com.android.messaging.util.Assert;
 import com.android.messaging.util.BugleAnalytics;
@@ -57,7 +59,6 @@ import com.android.messaging.util.ImageUtils;
 import com.android.messaging.util.OsUtil;
 import com.android.messaging.util.UiUtils;
 import com.android.messaging.util.UriUtil;
-import com.ihs.commons.utils.HSLog;
 import com.superapps.font.FontUtils;
 import com.superapps.util.BackgroundDrawables;
 import com.superapps.util.Dimensions;
@@ -73,6 +74,7 @@ public class ConversationListItemView extends FrameLayout implements OnClickList
     static final int ERROR_MESSAGE_LINE_COUNT = 1;
     private int mConversationNameColor;
     private int mSnippetColor;
+    private int mTimestampColor;
     private static String sPlusOneString;
     private static String sPlusNString;
 
@@ -173,18 +175,15 @@ public class ConversationListItemView extends FrameLayout implements OnClickList
         mConversationNameView.addOnLayoutChangeListener(this);
         mSnippetTextView.addOnLayoutChangeListener(this);
 
-        final Resources resources = getContext().getResources();
-        mConversationNameColor = resources.getColor(R.color.conversation_list_item_conversation);
-        mSnippetColor = resources.getColor(R.color.conversation_list_item_snippet);
+        mConversationNameColor = ConversationColors.get().getListTitleColor();
+        mSnippetColor = ConversationColors.get().getListSubtitleColor();
+        mTimestampColor = ConversationColors.get().getListTimeColor();
 
-        //initTypeface();
-        //setTypeface
+        ImageView conversationIconBg = findViewById(R.id.conversation_icon_bg);
+        conversationIconBg.setImageDrawable(AvatarBgDrawables.getAvatarBg());
 
         mContactCheckmarkView.setBackgroundDrawable(BackgroundDrawables.
                 createBackgroundDrawable(PrimaryColors.getPrimaryColor(), Dimensions.pxFromDp(28), false));
-
-        mSwipeableContent.setBackgroundDrawable(BackgroundDrawables.
-                createBackgroundDrawable(getResources().getColor(R.color.action_bar_background_color), 0, true));
 
         if (OsUtil.isAtLeastL()) {
             setTransitionGroup(true);
@@ -426,6 +425,8 @@ public class ConversationListItemView extends FrameLayout implements OnClickList
 
         mSnippetTextView.setMaxLines(maxLines);
         mSnippetTextView.setTextColor(color);
+
+        mTimestampTextView.setTextColor(mTimestampColor);
 
         setSnippet();
         setConversationName();

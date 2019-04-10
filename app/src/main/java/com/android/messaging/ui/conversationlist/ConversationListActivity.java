@@ -4,7 +4,6 @@ import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.content.Intent;
 import android.content.res.Resources;
-import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
@@ -29,8 +28,8 @@ import com.airbnb.lottie.LottieAnimationView;
 import com.android.messaging.Factory;
 import com.android.messaging.R;
 import com.android.messaging.datamodel.BugleNotifications;
-import com.android.messaging.ui.CreateShortcutActivity;
 import com.android.messaging.datamodel.action.PinConversationAction;
+import com.android.messaging.ui.CreateShortcutActivity;
 import com.android.messaging.ui.DragHotSeatActivity;
 import com.android.messaging.ui.UIIntents;
 import com.android.messaging.ui.UIIntentsImpl;
@@ -40,6 +39,7 @@ import com.android.messaging.ui.customize.BubbleDrawables;
 import com.android.messaging.ui.customize.ConversationColors;
 import com.android.messaging.ui.customize.CustomBubblesActivity;
 import com.android.messaging.ui.customize.PrimaryColors;
+import com.android.messaging.ui.customize.ToolbarDrawables;
 import com.android.messaging.ui.dialog.FiveStarRateDialog;
 import com.android.messaging.ui.emoji.EmojiStoreActivity;
 import com.android.messaging.ui.messagebox.MessageBoxActivity;
@@ -114,7 +114,6 @@ public class ConversationListActivity extends AbstractConversationListActivity
     private TextView mTitleTextView;
     private View mEmojiStoreIconView;
     private LottieAnimationView mGuideContainer;
-    private View statusbarInset;
 
     private static boolean mIsNoActionBack = true;
     private boolean mIsRealCreate = false;
@@ -271,13 +270,13 @@ public class ConversationListActivity extends AbstractConversationListActivity
 
     @Override
     protected void updateActionBar(final ActionBar actionBar) {
-        statusbarInset.setBackgroundColor(PrimaryColors.getPrimaryColor());
+//        statusbarInset.setBackgroundColor(PrimaryColors.getPrimaryColor());
 
         actionBar.setTitle("");
         actionBar.setDisplayShowTitleEnabled(false);
         actionBar.setDisplayHomeAsUpEnabled(false);
         actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
-        actionBar.setBackgroundDrawable(new ColorDrawable(PrimaryColors.getPrimaryColor()));
+//        actionBar.setBackgroundDrawable(new ColorDrawable(PrimaryColors.getPrimaryColor()));
         actionBar.show();
 
         if (mTitleTextView != null && mTitleTextView.getVisibility() == View.GONE) {
@@ -550,7 +549,14 @@ public class ConversationListActivity extends AbstractConversationListActivity
     }
 
     private void configAppBar() {
-        statusbarInset = findViewById(R.id.status_bar_inset);
+        View accessoryContainer = findViewById(R.id.accessory_container);
+        if (ToolbarDrawables.getToolbarBg() != null) {
+            accessoryContainer.setBackground(ToolbarDrawables.getToolbarBg());
+        } else {
+            accessoryContainer.setBackgroundColor(PrimaryColors.getPrimaryColor());
+        }
+
+        View statusbarInset = findViewById(R.id.status_bar_inset);
         ViewGroup.LayoutParams layoutParams = statusbarInset.getLayoutParams();
         layoutParams.height = Dimensions.getStatusBarHeight(ConversationListActivity.this);
         statusbarInset.setLayoutParams(layoutParams);

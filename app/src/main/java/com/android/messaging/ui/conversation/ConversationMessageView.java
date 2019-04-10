@@ -37,6 +37,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.FrameLayout;
+import android.widget.ImageView;
 import android.widget.ImageView.ScaleType;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -61,6 +62,7 @@ import com.android.messaging.ui.MultiAttachmentLayout.OnAttachmentClickListener;
 import com.android.messaging.ui.PersonItemView;
 import com.android.messaging.ui.UIIntents;
 import com.android.messaging.ui.VideoThumbnailView;
+import com.android.messaging.ui.customize.AvatarBgDrawables;
 import com.android.messaging.ui.customize.ConversationColors;
 import com.android.messaging.util.AccessibilityUtil;
 import com.android.messaging.util.Assert;
@@ -106,6 +108,8 @@ public class ConversationMessageView extends FrameLayout implements View.OnClick
     private LinearLayout mMessageTitleLayout;
     private TextView mSenderNameTextView;
     private ContactIconView mContactIconView;
+    private ViewGroup mContactIconContainer;
+    private ImageView mContactIconBg;
     private ConversationMessageBubbleView mMessageBubble;
     private View mSubjectView;
     private TextView mSubjectText;
@@ -128,6 +132,9 @@ public class ConversationMessageView extends FrameLayout implements View.OnClick
         super.onFinishInflate();
 
         mContactIconView = findViewById(R.id.conversation_icon);
+        mContactIconBg = findViewById(R.id.conversation_icon_bg);
+        mContactIconBg.setImageDrawable(AvatarBgDrawables.getAvatarBg());
+        mContactIconContainer = findViewById(R.id.conversation_icon_container);
         mContactIconView.setOnLongClickListener(view -> {
             ConversationMessageView.this.performLongClick();
             return true;
@@ -165,12 +172,12 @@ public class ConversationMessageView extends FrameLayout implements View.OnClick
     protected void onMeasure(final int widthMeasureSpec, final int heightMeasureSpec) {
         final int horizontalSpace = MeasureSpec.getSize(widthMeasureSpec);
         final int iconSize = getResources()
-                .getDimensionPixelSize(R.dimen.conversation_message_contact_icon_size);
+                .getDimensionPixelSize(R.dimen.conversation_message_contact_icon_container_size);
 
         final int unspecifiedMeasureSpec = MeasureSpec.makeMeasureSpec(0, MeasureSpec.UNSPECIFIED);
         final int iconMeasureSpec = MeasureSpec.makeMeasureSpec(iconSize, MeasureSpec.EXACTLY);
 
-        mContactIconView.measure(iconMeasureSpec, iconMeasureSpec);
+        mContactIconContainer.measure(iconMeasureSpec, iconMeasureSpec);
 
         final int arrowWidth =
                 getResources().getDimensionPixelSize(R.dimen.message_bubble_arrow_width);
@@ -178,14 +185,14 @@ public class ConversationMessageView extends FrameLayout implements View.OnClick
         // We need to subtract contact icon width twice from the horizontal space to get
         // the max leftover space because we want the message bubble to extend no further than the
         // starting position of the message bubble in the opposite direction.
-        final int maxLeftoverSpace = horizontalSpace - mContactIconView.getMeasuredWidth() * 2
+        final int maxLeftoverSpace = horizontalSpace - mContactIconContainer.getMeasuredWidth() * 2
                 - arrowWidth - getPaddingLeft() - getPaddingRight();
         final int messageContentWidthMeasureSpec = MeasureSpec.makeMeasureSpec(maxLeftoverSpace,
                 MeasureSpec.AT_MOST);
 
         mMessageBubble.measure(messageContentWidthMeasureSpec, unspecifiedMeasureSpec);
 
-        final int maxHeight = Math.max(mContactIconView.getMeasuredHeight(),
+        final int maxHeight = Math.max(mContactIconContainer.getMeasuredHeight(),
                 mMessageBubble.getMeasuredHeight());
         setMeasuredDimension(horizontalSpace, maxHeight + getPaddingBottom() + getPaddingTop());
     }
@@ -195,8 +202,8 @@ public class ConversationMessageView extends FrameLayout implements View.OnClick
                             final int bottom) {
         final boolean isRtl = AccessibilityUtil.isLayoutRtl(this);
 
-        final int iconWidth = mContactIconView.getMeasuredWidth();
-        final int iconHeight = mContactIconView.getMeasuredHeight();
+        final int iconWidth = mContactIconContainer.getMeasuredWidth();
+        final int iconHeight = mContactIconContainer.getMeasuredHeight();
         final int iconTop = getPaddingTop();
         final int iconBubbleMargin = getResources()
                 .getDimensionPixelSize(R.dimen.conversation_message_contact_bubble_margin);
@@ -224,7 +231,7 @@ public class ConversationMessageView extends FrameLayout implements View.OnClick
             }
         }
 
-        mContactIconView.layout(iconLeft, iconTop, iconLeft + iconWidth, iconTop + iconHeight);
+        mContactIconContainer.layout(iconLeft, iconTop, iconLeft + iconWidth, iconTop + iconHeight);
 
         mMessageBubble.layout(contentLeft, contentTop, contentLeft + contentWidth,
                 contentTop + contentHeight);
@@ -474,10 +481,10 @@ public class ConversationMessageView extends FrameLayout implements View.OnClick
                 messageTextAndOrInfoVisible ? View.VISIBLE : View.GONE);
 
         if (shouldShowSimplifiedVisualStyle()) {
-            mContactIconView.setVisibility(View.GONE);
+            mContactIconContainer.setVisibility(View.GONE);
             mContactIconView.setImageResourceUri(null);
         } else {
-            mContactIconView.setVisibility(mData.getIsIncoming() ? View.VISIBLE : View.GONE);
+            mContactIconContainer.setVisibility(mData.getIsIncoming() ? View.VISIBLE : View.GONE);
             final Uri avatarUri = AvatarUriUtil.createAvatarUri(
                     mData.getSenderProfilePhotoUri(),
                     mData.getSenderFullName(),
@@ -1032,10 +1039,6 @@ public class ConversationMessageView extends FrameLayout implements View.OnClick
     public boolean onAttachmentClick(final MessagePartData attachment,
                                      final Rect viewBoundsOnScreen, final boolean longPress) {
         return mHost.onAttachmentClick(this, attachment, viewBoundsOnScreen, longPress);
-    }
-
-    public ContactIconView getContactIconView() {
-        return mContactIconView;
     }
 
     // Sort photos in MultiAttachLayout in the same order as the ConversationImagePartsView

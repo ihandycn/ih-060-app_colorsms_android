@@ -36,6 +36,7 @@ import android.database.Cursor;
 import android.graphics.Point;
 import android.graphics.Rect;
 import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
@@ -87,6 +88,7 @@ import com.android.messaging.ui.UIIntents;
 import com.android.messaging.ui.conversation.ComposeMessageView.IComposeMessageViewHost;
 import com.android.messaging.ui.conversation.ConversationInputManager.ConversationInputHost;
 import com.android.messaging.ui.conversation.ConversationMessageView.ConversationMessageViewHost;
+import com.android.messaging.ui.customize.WallpaperDrawables;
 import com.android.messaging.ui.dialog.FiveStarRateDialog;
 import com.android.messaging.ui.emoji.EmojiPickerFragment;
 import com.android.messaging.ui.mediapicker.CameraGalleryFragment;
@@ -648,11 +650,19 @@ public class ConversationFragment extends Fragment implements ConversationDataLi
     public void onResume() {
         super.onResume();
 
-        String wallpaperPath = WallpaperManager.getWallpaperPathByThreadId(mConversationId);
-        if (!TextUtils.isEmpty(wallpaperPath)) {
-            mWallpaperView.setImageDrawable(new BitmapDrawable(wallpaperPath));
+        if (!TextUtils.isEmpty(WallpaperManager.getThreadWallpaperPath(mConversationId))) {
+            mWallpaperView.setImageDrawable(
+                    new BitmapDrawable(WallpaperManager.getThreadWallpaperPath(mConversationId)));
         } else {
-            mWallpaperView.setImageDrawable(null);
+            Drawable wallpaperDrawable = WallpaperDrawables.getWallpaperBg();
+            if (wallpaperDrawable != null) {
+                mWallpaperView.setImageDrawable(wallpaperDrawable);
+            } else if (!TextUtils.isEmpty(WallpaperManager.getWallpaperPathByThreadId(mConversationId))) {
+                mWallpaperView.setImageDrawable(
+                        new BitmapDrawable(WallpaperManager.getWallpaperPathByThreadId(mConversationId)));
+            } else {
+                mWallpaperView.setImageDrawable(null);
+            }
         }
 
         if (mIncomingDraft == null) {
@@ -1473,8 +1483,6 @@ public class ConversationFragment extends Fragment implements ConversationDataLi
 
         actionBar.show();
         actionBar.setDisplayShowTitleEnabled(false);
-        actionBar.setBackgroundDrawable(getResources().getDrawable(R.drawable.actionbar_underline_bg));
-        UiUtils.setStatusBarColor(getActivity(), getResources().getColor(R.color.action_bar_background_color));
     }
 
     @Override

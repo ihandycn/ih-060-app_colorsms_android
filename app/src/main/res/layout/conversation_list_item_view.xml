@@ -14,9 +14,9 @@
     limitations under the License.
 -->
 <com.android.messaging.ui.conversationlist.ConversationListItemView xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+                                                                    xmlns:app="http://schemas.android.com/apk/res-auto"
+                                                                    android:layout_width="match_parent"
+                                                                    android:layout_height="wrap_content">
 
     <!-- The background displayed when the conversation is swiped sideways -->
     <LinearLayout
@@ -42,12 +42,12 @@
             android:gravity="center_vertical|left"
             android:importantForAccessibility="no"
             android:src="@drawable/ic_archive_small_dark"
-            android:visibility="gone" />
+            android:visibility="gone"/>
 
         <FrameLayout
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_weight="1" />
+            android:layout_weight="1"/>
 
         <ImageView
             android:id="@+id/crossSwipeArchiveIconRight"
@@ -57,7 +57,7 @@
             android:contentDescription="@null"
             android:importantForAccessibility="no"
             android:src="@drawable/ic_archive_small_dark"
-            android:visibility="gone" />
+            android:visibility="gone"/>
     </LinearLayout>
 
     <FrameLayout
@@ -74,21 +74,25 @@
             android:clipChildren="false"
             android:clipToPadding="false"
             android:duplicateParentState="true"
+            android:paddingLeft="2dp"
             android:orientation="horizontal"
-            android:paddingStart="@dimen/conversation_list_item_view_padding"
-            android:paddingTop="@dimen/conversation_list_item_view_padding_top"
-            android:paddingEnd="@dimen/conversation_list_item_view_padding"
-            android:paddingBottom="@dimen/conversation_list_item_view_padding_top">
+            android:paddingEnd="@dimen/conversation_list_item_view_padding">
 
             <!-- Contact avatar on the left side of the view -->
             <FrameLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="66dp"
+                android:layout_height="66dp"
                 android:background="@android:color/transparent">
 
+                <ImageView
+                    android:id="@+id/conversation_icon_bg"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:scaleType="centerCrop"/>
+
                 <com.android.messaging.ui.ContactIconView
-                    android:layout_gravity="center_vertical"
                     android:id="@+id/conversation_icon"
+                    android:layout_gravity="center"
                     android:layout_width="@dimen/conversation_list_contact_icon_size"
                     android:layout_height="@dimen/conversation_list_contact_icon_size"
                     android:background="@android:color/transparent"
@@ -96,15 +100,16 @@
                     android:importantForAccessibility="no"
                     app:fadeIn="false"
                     app:iconSize="large"
-                    app:reveal="false" />
+                    app:reveal="false"/>
 
                 <ImageView
                     android:id="@+id/conversation_checkmark"
                     android:layout_width="@dimen/conversation_list_contact_icon_size"
                     android:layout_height="@dimen/conversation_list_contact_icon_size"
+                    android:layout_gravity="center"
                     android:importantForAccessibility="no"
                     android:src="@drawable/ic_checkmark_circle_blue"
-                    android:visibility="gone" />
+                    android:visibility="gone"/>
 
                 <ImageView
                     android:id="@+id/conversation_failed_status_icon"
@@ -118,7 +123,7 @@
                     android:contentDescription="@null"
                     android:importantForAccessibility="no"
                     android:src="@drawable/ic_failed_status_red"
-                    android:visibility="gone" />
+                    android:visibility="gone"/>
             </FrameLayout>
 
             <!-- The conversation name, message preview, etc -->
@@ -128,6 +133,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="top"
                 android:layout_weight="1"
+                android:layout_marginTop="@dimen/conversation_list_item_view_padding_top"
                 android:background="@android:color/transparent"
                 android:clipChildren="false"
                 android:orientation="vertical">
@@ -154,7 +160,8 @@
                             android:contentDescription="@null"
                             android:importantForAccessibility="no"
                             android:src="@drawable/ic_small_mute"
-                            android:visibility="gone" />
+                            android:visibility="gone"/>
+
                         <ImageView
                             android:id="@+id/conversation_pin"
                             style="@style/ConversationListNotificationBellPaddingStyle"
@@ -165,7 +172,7 @@
                             android:contentDescription="@null"
                             android:importantForAccessibility="no"
                             android:src="@drawable/ic_small_pin"
-                            android:visibility="gone" />
+                            android:visibility="gone"/>
 
                         <com.superapps.view.MessagesTextView
                             android:id="@+id/conversation_name"
@@ -175,7 +182,7 @@
                             android:layout_gravity="center_vertical"
                             android:includeFontPadding="false"
                             android:singleLine="true"
-                            app:typeface="@string/custom_font_semibold" />
+                            app:typeface="@string/custom_font_semibold"/>
                     </LinearLayout>
 
                     <ImageView
@@ -186,7 +193,7 @@
                         android:background="@android:color/transparent"
                         android:scaleType="center"
                         android:src="@drawable/ic_work_profile"
-                        android:visibility="gone" />
+                        android:visibility="gone"/>
                 </LinearLayout>
 
                 <LinearLayout
@@ -203,7 +210,7 @@
                         android:includeFontPadding="false"
                         android:textColor="#878a95"
                         android:textSize="13sp"
-                        app:typeface="@string/custom_font_regular" />
+                        app:typeface="@string/custom_font_regular"/>
                 </LinearLayout>
 
 
@@ -225,7 +232,7 @@
                     android:contentDescription="@string/message_image_content_description"
                     android:scaleType="centerCrop"
                     android:visibility="gone"
-                    app:cornerRadius="@dimen/conversation_list_image_preview_corner_radius" />
+                    app:cornerRadius="@dimen/conversation_list_image_preview_corner_radius"/>
 
                 <com.android.messaging.ui.AudioAttachmentView
                     android:id="@+id/audio_attachment_view"
@@ -233,13 +240,13 @@
                     android:layout_height="@dimen/conversation_list_image_preview_size"
                     android:background="@android:color/transparent"
                     android:visibility="gone"
-                    app:layoutMode="subcompact" />
+                    app:layoutMode="subcompact"/>
 
                 <com.superapps.view.MessagesTextView
                     android:id="@+id/conversation_timestamp"
                     style="@style/ConversationListItemViewTextTimeStampStyle"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
+                    android:layout_height="wrap_content"/>
 
                 <com.superapps.view.MessagesTextView
                     android:id="@+id/conversation_unread_messages_count"
@@ -251,7 +258,7 @@
                     android:textColor="@android:color/white"
                     android:textSize="12sp"
                     android:visibility="gone"
-                    app:typeface="@string/custom_font_semibold" />
+                    app:typeface="@string/custom_font_semibold"/>
             </FrameLayout>
         </LinearLayout>
     </FrameLayout>

@@ -52,6 +52,7 @@ import com.android.messaging.ui.ListEmptyView;
 import com.android.messaging.ui.SnackBarInteraction;
 import com.android.messaging.ui.UIIntents;
 import com.android.messaging.ui.customize.PrimaryColors;
+import com.android.messaging.ui.customize.WallpaperDrawables;
 import com.android.messaging.util.AccessibilityUtil;
 import com.android.messaging.util.Assert;
 import com.android.messaging.util.BugleAnalytics;
@@ -217,6 +218,8 @@ public class ConversationListFragment extends Fragment implements ConversationLi
         mRecyclerView = rootView.findViewById(android.R.id.list);
         mEmptyListMessageView = rootView.findViewById(R.id.no_conversations_view);
         mEmptyListMessageView.setImageHint(R.drawable.ic_oobe_conv_list);
+        ImageView conversationListBg = rootView.findViewById(R.id.conversation_list_bg);
+        conversationListBg.setImageDrawable(WallpaperDrawables.getWallpaperBg());
         // The default behavior for default layout param generation by LinearLayoutManager is to
         // provide width and height of WRAP_CONTENT, but this is not desirable for
         // ConversationListFragment; the view in each row should be a width of MATCH_PARENT so that

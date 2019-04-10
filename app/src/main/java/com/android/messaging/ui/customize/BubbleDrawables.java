@@ -53,16 +53,6 @@ public class BubbleDrawables {
         return prefs.getInt(PREFS_KEY_BUBBLE_DRAWABLE_IDENTIFIER, DEFAULT_DRAWABLE_IDENTIFIER);
     }
 
-    static int getSelectedIndex() {
-        int selectedIdentifier = getSelectedIdentifier();
-        for (int i = 0; i < IDENTIFIER.length; i++) {
-            if (IDENTIFIER[i] == selectedIdentifier) {
-                return i;
-            }
-        }
-        return -1;
-    }
-
     static int getSelectedIndex(String conversationId) {
         int selectedIdentifier =
                 prefs.getInt(PREFS_KEY_BUBBLE_DRAWABLE_IDENTIFIER + "_" + conversationId,
@@ -75,7 +65,7 @@ public class BubbleDrawables {
         return -1;
     }
 
-    static void setSelectedIndex(int index) {
+    public static void setSelectedIndex(int index) {
         prefs.putInt(PREFS_KEY_BUBBLE_DRAWABLE_IDENTIFIER, IDENTIFIER[index]);
     }
 
@@ -88,17 +78,20 @@ public class BubbleDrawables {
     }
 
     @DrawableRes
-    public static int getSelectedDrawable(boolean incoming) {
-        if (incoming) {
-            return BUBBLES_INCOMING[getSelectedIndex()];
-        } else {
-            return BUBBLES_OUTGOING[getSelectedIndex()];
-        }
-    }
-
-    @DrawableRes
     public static int getSelectedDrawable(boolean incoming, String conversationId) {
-        return getSelectedDrawable(getSelectedIndex(conversationId), incoming);
+        int selectedIdentifier =
+                prefs.getInt(PREFS_KEY_BUBBLE_DRAWABLE_IDENTIFIER + "_" + conversationId, -1);
+        int selectedIndex = -1;
+        for (int i = 0; i < IDENTIFIER.length; i++) {
+            if (IDENTIFIER[i] == selectedIdentifier) {
+                selectedIndex = i;
+            }
+        }
+        if (selectedIndex != -1) {
+            return getSelectedDrawable(selectedIndex, incoming);
+        } else {
+            return getSelectedDrawable(getSelectedIndex(conversationId), incoming);
+        }
     }
 
     @DrawableRes

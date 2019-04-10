@@ -73,6 +73,18 @@ public class WallpaperManager {
         }
     }
 
+    public static String getThreadWallpaperPath(String threadId){
+        String threadWallpaperPath = sPrefs.
+                getString(PREF_KEY_WALLPAPER_PATH + "_" + threadId, "");
+        if (!TextUtils.isEmpty(threadWallpaperPath)) {
+            if (threadWallpaperPath.equals("empty")) {
+                return null;
+            }
+            return threadWallpaperPath;
+        }
+        return null;
+    }
+
     private static String getWallpaperPath() {
         String wallpaperPath = sPrefs.
                 getString(PREF_KEY_WALLPAPER_PATH, "");

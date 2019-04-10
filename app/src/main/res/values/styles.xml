@@ -13,7 +13,7 @@
     See the License for the specific language governing permissions and
     limitations under the License.
 -->
-<resources xmlns:tools="http://schemas.android.com/tools">
+<resources>
     <!--
         Base application theme, dependent on API level. This theme is replaced
         by BugleBaseTheme from res/values-vXX/styles.xml on newer devices.
@@ -42,6 +42,7 @@
     <style name="BugleTheme.ConversationActivity" parent="@style/BugleTheme.ConversationActivityBase">
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
+        <item name="android:windowTranslucentStatus">true</item>
     </style>
 
     <style name="BugleTheme.AttachmentChooserActivity" parent="@style/BugleTheme">
@@ -274,7 +275,7 @@
     </style>
 
     <style name="ConversationListItemViewPaddingStyle">
-        <item name="android:paddingLeft">@dimen/conversation_list_item_view_padding</item>
+        <item name="android:paddingLeft">2dp</item>
         <item name="android:paddingRight">@dimen/conversation_list_item_view_padding</item>
     </style>
 
@@ -319,7 +320,7 @@
     </style>
 
     <style name="ConversationMessageViewStyle">
-        <item name="android:paddingLeft">16dp</item>
+        <item name="android:paddingLeft">2dp</item>
         <item name="android:paddingRight">16dp</item>
     </style>
 

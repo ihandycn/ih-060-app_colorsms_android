@@ -2,30 +2,36 @@ package com.android.messaging.ui.customize;
 
 import android.content.res.Resources;
 import android.graphics.Color;
-import android.provider.CalendarContract;
 import android.support.annotation.ColorInt;
 import android.text.TextUtils;
 
 import com.android.messaging.Factory;
 import com.android.messaging.R;
-import com.android.messaging.ui.appsettings.ThemeSelectActivity;
-import com.android.messaging.util.BugleApplicationPrefs;
 import com.android.messaging.util.BuglePrefs;
 
 import static com.android.messaging.ui.appsettings.ThemeSelectActivity.COLORS;
 import static com.android.messaging.util.BuglePrefsKeys.PREFS_KEY_BUBBLE_BACKGROUND_COLOR_INCOMING;
 import static com.android.messaging.util.BuglePrefsKeys.PREFS_KEY_BUBBLE_BACKGROUND_COLOR_OUTGOING;
+import static com.android.messaging.util.BuglePrefsKeys.PREFS_KEY_CONVERSATION_LIST_SUBTITLE_COLOR;
+import static com.android.messaging.util.BuglePrefsKeys.PREFS_KEY_CONVERSATION_LIST_TIME_COLOR;
+import static com.android.messaging.util.BuglePrefsKeys.PREFS_KEY_CONVERSATION_LIST_TITLE_COLOR;
 import static com.android.messaging.util.BuglePrefsKeys.PREFS_KEY_MESSAGE_TEXT_COLOR_INCOMING;
 import static com.android.messaging.util.BuglePrefsKeys.PREFS_KEY_MESSAGE_TEXT_COLOR_OUTGOING;
 
 public class ConversationColors {
+
     private static ConversationColors sInstance;
     private final BuglePrefs mPrefs = Factory.get().getCustomizePrefs();
+
     private int mIncomingBubbleBackgroundColor;
     private int mOutgoingBubbleBackgroundColor;
     private int mIncomingTextColor;
     private int mOutgoingTextColor;
-    
+
+    private int mListTitleColor;
+    private int mListSubtitleColor;
+    private int mListTimeColor;
+
     public static ConversationColors get() {
         if (sInstance == null) {
             sInstance = new ConversationColors();
@@ -52,6 +58,15 @@ public class ConversationColors {
 
         mOutgoingTextColor = mPrefs.getInt(PREFS_KEY_MESSAGE_TEXT_COLOR_OUTGOING,
                 res.getColor(R.color.message_text_color_outgoing));
+
+        mListTitleColor = mPrefs.getInt(PREFS_KEY_CONVERSATION_LIST_TITLE_COLOR,
+                res.getColor(R.color.conversation_list_item_conversation));
+
+        mListSubtitleColor = mPrefs.getInt(PREFS_KEY_CONVERSATION_LIST_SUBTITLE_COLOR,
+                res.getColor(R.color.conversation_list_item_snippet));
+
+        mListTimeColor = mPrefs.getInt(PREFS_KEY_CONVERSATION_LIST_TIME_COLOR,
+                res.getColor(R.color.conversation_list_timestamp));
     }
 
     @ColorInt
@@ -94,7 +109,19 @@ public class ConversationColors {
         }
     }
 
-    void setBubbleBackgroundColor(boolean incoming, @ColorInt int color) {
+    @ColorInt public int getListTitleColor() {
+        return mListTitleColor;
+    }
+
+    @ColorInt public int getListSubtitleColor() {
+        return mListSubtitleColor;
+    }
+
+    @ColorInt public int getListTimeColor() {
+        return mListTimeColor;
+    }
+
+    public void setBubbleBackgroundColor(boolean incoming, @ColorInt int color) {
         if (incoming) {
             if (mIncomingBubbleBackgroundColor != color) {
                 mPrefs.putInt(PREFS_KEY_BUBBLE_BACKGROUND_COLOR_INCOMING, color);
@@ -108,7 +135,7 @@ public class ConversationColors {
         }
     }
 
-    void setBubbleBackgroundColor(boolean incoming, @ColorInt int color, String conversationId) {
+    public void setBubbleBackgroundColor(boolean incoming, @ColorInt int color, String conversationId) {
         if (TextUtils.isEmpty(conversationId)) {
             setBubbleBackgroundColor(incoming, color);
         } else if (incoming) {
@@ -118,7 +145,7 @@ public class ConversationColors {
         }
     }
 
-    void setMessageTextColor(boolean incoming, @ColorInt int color) {
+    public void setMessageTextColor(boolean incoming, @ColorInt int color) {
         if (incoming) {
             if (mIncomingTextColor != color) {
                 mPrefs.putInt(PREFS_KEY_MESSAGE_TEXT_COLOR_INCOMING, color);
@@ -132,7 +159,7 @@ public class ConversationColors {
         }
     }
 
-    void setMessageTextColor(boolean incoming, @ColorInt int color, String conversationId) {
+    public void setMessageTextColor(boolean incoming, @ColorInt int color, String conversationId) {
         if (TextUtils.isEmpty(conversationId)) {
             setMessageTextColor(incoming, color);
         } else if (incoming) {
@@ -140,6 +167,21 @@ public class ConversationColors {
         } else {
             mPrefs.putInt(PREFS_KEY_MESSAGE_TEXT_COLOR_OUTGOING + "_" + conversationId, color);
         }
+    }
+
+    public void setListTitleColor(@ColorInt int color) {
+        mPrefs.putInt(PREFS_KEY_CONVERSATION_LIST_TITLE_COLOR, color);
+        mListTitleColor = color;
+    }
+
+    public void setListSubTitleColor(@ColorInt int color) {
+        mPrefs.putInt(PREFS_KEY_CONVERSATION_LIST_SUBTITLE_COLOR, color);
+        mListSubtitleColor = color;
+    }
+
+    public void setListTimeColor(@ColorInt int color) {
+        mPrefs.putInt(PREFS_KEY_CONVERSATION_LIST_TIME_COLOR, color);
+        mListTimeColor = color;
     }
 
     public String getConversationColorEventType(boolean isBubble, boolean incoming) {
