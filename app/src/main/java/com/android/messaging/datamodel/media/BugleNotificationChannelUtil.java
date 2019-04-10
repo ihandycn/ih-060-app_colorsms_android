@@ -7,6 +7,7 @@ import android.app.NotificationManager;
 import android.content.Context;
 import android.net.Uri;
 import android.os.Build;
+import android.text.TextUtils;
 
 import com.android.messaging.R;
 import com.android.messaging.util.PendingIntentConstants;
@@ -29,7 +30,14 @@ public class BugleNotificationChannelUtil {
         if (notifyMgr != null) {
             channel = notifyMgr.getNotificationChannel(PendingIntentConstants.SMS_NOTIFICATION_CHANNEL_ID + "_" + channelIndex);
         }
-        if (channel != null
+
+        if (soundPath == null) {
+            if (channel != null
+                    && (channel.getSound() == null || TextUtils.isEmpty(channel.getSound().getPath()))
+                    && channel.shouldVibrate() == enableVibration) {
+                return channel;
+            }
+        } else if (channel != null
                 && channel.getSound().getPath().equals(soundPath.getPath())
                 && channel.shouldVibrate() == enableVibration) {
             return channel;
