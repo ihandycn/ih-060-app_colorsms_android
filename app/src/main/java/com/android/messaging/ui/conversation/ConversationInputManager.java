@@ -499,7 +499,10 @@ public class ConversationInputManager implements ConversationInput.ConversationI
                 @Override
                 public void addEmoji(String emojiStr) {
                     if (mSink != null && mSink.getComposeEditText() != null) {
-                        mSink.getComposeEditText().append(emojiStr);
+                        EditText editText = mSink.getComposeEditText();
+                        int start = editText.getSelectionStart();
+                        int end = editText.getSelectionEnd();
+                        editText.getText().replace(start, end, emojiStr);
                         mSink.logEmoji(emojiStr);
                     }
                 }

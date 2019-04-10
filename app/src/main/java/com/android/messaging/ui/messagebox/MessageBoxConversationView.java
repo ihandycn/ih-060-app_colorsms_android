@@ -222,7 +222,9 @@ public class MessageBoxConversationView extends FrameLayout {
 
     void emojiClick(EmojiInfo emojiInfo) {
         if (mInputEditText != null) {
-            mInputEditText.getText().append(emojiInfo.mEmoji);
+            int start = mInputEditText.getSelectionStart();
+            int end = mInputEditText.getSelectionEnd();
+            mInputEditText.getText().replace(start, end, emojiInfo.mEmoji);
             mInputEmojiCount++;
         }
     }
