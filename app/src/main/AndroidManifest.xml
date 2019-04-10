@@ -701,7 +701,6 @@
             android:taskAffinity=".message.box"
             android:theme="@style/Theme.AppCompat.Translucent"
             android:windowSoftInputMode="stateAlwaysHidden|adjustResize" />
-
         <activity
             android:name=".ui.emoji.EmojiLottieDetailActivity"
             android:excludeFromRecents="true"
@@ -720,6 +719,18 @@
             android:excludeFromRecents="true"
             android:screenOrientation="portrait"
             android:theme="@style/SettingsActivity" />
+
+        <activity
+            android:name=".privatebox.ui.PrivateConversationListActivity"
+            android:configChanges="orientation|screenSize|keyboardHidden"
+            android:screenOrientation="portrait"
+            android:theme="@style/BugleTheme.ConversationListActivity" />
+
+        <provider
+            android:name=".privatebox.PrivateMessageContentProvider"
+            android:authorities="com.color.sms.messages"
+            android:enabled="true"
+            android:exported="false" />
 
         <activity
             android:name=".privatebox.PrivateBoxListActivity"

@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@android:id/list"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:dividerHeight="0px"
+        android:listSelector="?android:attr/listSelector" />
+
+    <LinearLayout
+        android:id="@+id/private_box_empty_container"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:visibility="gone">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/private_box_empty" />
+
+        <com.superapps.view.TypefacedTextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="30dp"
+            android:layout_marginTop="30dp"
+            android:text="@string/private_box_add_private_contacts"
+            android:textColor="#56575c"
+            android:textSize="15.3sp"
+            app:typeface="@string/custom_font_medium" />
+
+        <com.superapps.view.TypefacedTextView
+            android:id="@+id/private_box_empty_view_add_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="36dp"
+            android:gravity="center"
+            android:includeFontPadding="false"
+            android:paddingLeft="13.7dp"
+            android:paddingRight="13.7dp"
+            android:text="@string/private_box_add_now"
+            android:textColor="@color/white"
+            android:textSize="13.3sp"
+            app:typeface="@string/custom_font_medium" />
+    </LinearLayout>
+
+    <ImageView
+        android:id="@+id/start_new_conversation_button"
+        style="@style/ConversationListFragmentStartNewButtonStyle"
+        android:layout_width="@dimen/fab_size"
+        android:layout_height="@dimen/fab_size"
+        android:layout_gravity="bottom|end"
+        android:layout_marginBottom="@dimen/fab_bottom_margin"
+        android:contentDescription="@string/start_new_conversation"
+        android:elevation="@dimen/fab_elevation"
+        android:paddingBottom="@dimen/fab_padding_bottom"
+        android:scaleType="center"
+        android:src="@drawable/ic_new_conversation_white"
+        android:stateListAnimator="@animator/fab_anim"
+        tools:background="@drawable/fab_new_message_bg" />
+</FrameLayout>

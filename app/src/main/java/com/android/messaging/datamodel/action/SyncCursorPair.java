@@ -26,12 +26,13 @@ import android.text.TextUtils;
 
 import com.android.messaging.Factory;
 import com.android.messaging.datamodel.DatabaseHelper;
+import com.android.messaging.datamodel.DatabaseHelper.MessageColumns;
 import com.android.messaging.datamodel.DatabaseWrapper;
 import com.android.messaging.datamodel.SyncManager;
-import com.android.messaging.datamodel.DatabaseHelper.MessageColumns;
 import com.android.messaging.datamodel.SyncManager.ThreadInfoCache;
 import com.android.messaging.datamodel.data.MessageData;
 import com.android.messaging.mmslib.SqliteWrapper;
+import com.android.messaging.privatebox.PrivateMessageManager;
 import com.android.messaging.sms.DatabaseMessages;
 import com.android.messaging.sms.DatabaseMessages.DatabaseMessage;
 import com.android.messaging.sms.DatabaseMessages.LocalDatabaseMessage;
@@ -175,13 +176,15 @@ class SyncCursorPair {
                         localMessage.getTimestampInMillis()
                             > remoteMessage.getTimestampInMillis())) {
                 // Found a local message that is not in remote db
-                // Delete the local message
-                messagesToDelete.add((LocalDatabaseMessage) localMessage);
-                lastTimestampMillis = Math.min(lastTimestampMillis,
-                        localMessage.getTimestampInMillis());
-                // Advance to next local message
-                localMessage = mLocalCursorIterator.next();
-                localCount += 1;
+                if (!PrivateMessageManager.getInstance().isPrivateUri(localMessage.getUri())){
+                    // Delete the local message
+                    messagesToDelete.add((LocalDatabaseMessage) localMessage);
+                    lastTimestampMillis = Math.min(lastTimestampMillis,
+                            localMessage.getTimestampInMillis());
+                    // Advance to next local message
+                    localMessage = mLocalCursorIterator.next();
+                    localCount += 1;
+                }
             } else if ((localMessage == null && remoteMessage != null) ||
                     (localMessage != null && remoteMessage != null &&
                         localMessage.getTimestampInMillis()

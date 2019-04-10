@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <com.superapps.view.TypefacedTextView
+        android:id="@+id/private_toolbar_title"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:gravity="center_vertical"
+        android:includeFontPadding="false"
+        android:text="@string/menu_privacy_box"
+        android:textColor="@color/action_bar_title_text_color"
+        android:textSize="@dimen/action_bar_page_title_text_size"
+        app:typeface="@string/custom_font_semibold" />
+
+    <ImageView
+        android:id="@+id/private_toolbar_setting_icon"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
+        android:layout_marginEnd="20dp"
+        android:layout_marginRight="20dp"
+        android:src="@drawable/ic_emoji" />
+
+    <ImageView
+        android:id="@+id/private_toolbar_add_icon"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignEnd="@id/private_toolbar_setting_icon"
+        android:layout_alignRight="@id/private_toolbar_setting_icon"
+        android:layout_centerVertical="true"
+        android:layout_marginEnd="20dp"
+        android:layout_marginRight="20dp"
+        android:src="@drawable/ic_emoji" />
+</RelativeLayout>
+

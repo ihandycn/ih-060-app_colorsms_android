@@ -69,6 +69,52 @@ public class Upgrader extends BaseUpgrader {
                 ConversationListItemData.getConversationListViewSql());
     }
 
+    public static void updateConversationDatabase() {
+        final DatabaseWrapper db = DataModel.get().getDatabase();
+        Cursor cursor = null;
+        try {
+            cursor = db.rawQuery("SELECT * FROM " + DatabaseHelper.CONVERSATIONS_TABLE + " LIMIT 0"
+                    , null);
+            if (cursor != null && cursor.getColumnIndex(DatabaseHelper.ConversationColumns.PIN_TIMESTAMP) == -1) {
+                db.execSQL("ALTER TABLE " + DatabaseHelper.CONVERSATIONS_TABLE
+                        + " ADD COLUMN " + DatabaseHelper.ConversationColumns.PIN_TIMESTAMP
+                        + " INT DEFAULT(0)");
+            }
+        } catch (Exception e) {
+
+        } finally {
+            if (null != cursor && !cursor.isClosed()) {
+                cursor.close();
+            }
+        }
+
+        DatabaseHelper.rebuildView(db, ConversationListItemData.getConversationListView(),
+                ConversationListItemData.getConversationListViewSql());
+    }
+
+    public static void addIsPrivateColumnInConversationTable() {
+        final DatabaseWrapper db = DataModel.get().getDatabase();
+        Cursor cursor = null;
+        try {
+            cursor = db.rawQuery("SELECT * FROM " + DatabaseHelper.CONVERSATIONS_TABLE + " LIMIT 0"
+                    , null);
+            if (cursor != null && cursor.getColumnIndex(DatabaseHelper.ConversationColumns.IS_PRIVATE) == -1) {
+                db.execSQL("ALTER TABLE " + DatabaseHelper.CONVERSATIONS_TABLE
+                        + " ADD COLUMN " + DatabaseHelper.ConversationColumns.IS_PRIVATE
+                        + " INT DEFAULT(0)");
+            }
+        } catch (Exception e) {
+
+        } finally {
+            if (null != cursor && !cursor.isClosed()) {
+                cursor.close();
+            }
+        }
+
+        DatabaseHelper.rebuildView(db, ConversationListItemData.getConversationListView(),
+                ConversationListItemData.getConversationListViewSql());
+    }
+
     private void migrateLong(Preferences from, Preferences to, String key) {
         to.putLong(key, from.getLong(key, 0L));
     }

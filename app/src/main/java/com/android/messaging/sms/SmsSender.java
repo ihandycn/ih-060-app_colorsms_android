@@ -42,7 +42,7 @@ import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * Class that sends chat message via SMS.
- *
+ * <p>
  * The interface emulates a blocking sending similar to making an HTTP request.
  * It calls the SmsManager to send a (potentially multipart) message and waits
  * on the sent status on each part. The waiting has a timeout so it won't wait
@@ -60,7 +60,7 @@ public class SmsSender {
      * A map for pending sms messages. The key is the random request UUID.
      */
     private static ConcurrentHashMap<Uri, SendResult> sPendingMessageMap =
-            new ConcurrentHashMap<Uri, SendResult>();
+            new ConcurrentHashMap<>();
 
     private static final Random RANDOM = new Random();
 
@@ -138,7 +138,7 @@ public class SmsSender {
     }
 
     public static void setResult(final Uri requestId, final int resultCode,
-            final int errorCode, final int partId, int subId) {
+                                 final int errorCode, final int partId, int subId) {
         if (resultCode != Activity.RESULT_OK) {
             LogUtil.e(TAG, "SmsSender: failure in sending message part. "
                     + " requestId=" + requestId + " partId=" + partId
@@ -170,7 +170,7 @@ public class SmsSender {
     }
 
     private static String getSendErrorToastMessage(final Context context, final int subId,
-            final int errorCode) {
+                                                   final int errorCode) {
         final String carrierName = PhoneUtils.get(subId).getCarrierName();
         if (TextUtils.isEmpty(carrierName)) {
             return context.getString(R.string.carrier_send_error_unknown_carrier, errorCode);
@@ -180,9 +180,9 @@ public class SmsSender {
     }
 
     // This should be called from a RequestWriter queue thread
-    public static SendResult sendMessage(final Context context,  final int subId, String dest,
-            String message, final String serviceCenter, final boolean requireDeliveryReport,
-            final Uri messageUri) throws SmsException {
+    public static SendResult sendMessage(final Context context, final int subId, String dest,
+                                         String message, final String serviceCenter, final boolean requireDeliveryReport,
+                                         final Uri messageUri) throws SmsException {
         if (LogUtil.isLoggable(TAG, LogUtil.VERBOSE)) {
             LogUtil.v(TAG, "SmsSender: sending message. " +
                     "dest=" + dest + " message=" + message +
@@ -252,13 +252,13 @@ public class SmsSender {
 
     // Actually sending the message using SmsManager
     private static void sendInternal(final Context context, final int subId, String dest,
-            final ArrayList<String> messages, final String serviceCenter,
-            final boolean requireDeliveryReport, final Uri messageUri) throws SmsException {
+                                     final ArrayList<String> messages, final String serviceCenter,
+                                     final boolean requireDeliveryReport, final Uri messageUri) throws SmsException {
         Assert.notNull(context);
         final SmsManager smsManager = PhoneUtils.get(subId).getSmsManager();
         final int messageCount = messages.size();
-        final ArrayList<PendingIntent> deliveryIntents = new ArrayList<PendingIntent>(messageCount);
-        final ArrayList<PendingIntent> sentIntents = new ArrayList<PendingIntent>(messageCount);
+        final ArrayList<PendingIntent> deliveryIntents = new ArrayList<>(messageCount);
+        final ArrayList<PendingIntent> sentIntents = new ArrayList<>(messageCount);
         for (int i = 0; i < messageCount; i++) {
             // Make pending intents different for each message part
             final int partId = (messageCount <= 1 ? 0 : i + 1);
@@ -305,7 +305,7 @@ public class SmsSender {
     }
 
     private static Intent getSendStatusIntent(final Context context, final String action,
-            final Uri requestUri, final int partId, final int subId) {
+                                              final Uri requestUri, final int partId, final int subId) {
         // Encode requestId in intent data
         final Intent intent = new Intent(action, requestUri, context, SendStatusReceiver.class);
         intent.putExtra(SendStatusReceiver.EXTRA_PART_ID, partId);
