@@ -25,6 +25,7 @@ import com.android.messaging.R;
 import com.android.messaging.util.DebugUtils;
 
 import java.util.Collection;
+import java.util.List;
 
 public class ArchivedConversationListActivity extends AbstractConversationListActivity {
 
@@ -102,6 +103,11 @@ public class ArchivedConversationListActivity extends AbstractConversationListAc
 
     @Override
     public void onPin(Collection<MultiSelectActionModeCallback.SelectedConversation> conversations, boolean pin) {
+
+    }
+
+    @Override
+    public void onAddToPrivateBox(List<String> conversations) {
 
     }
 

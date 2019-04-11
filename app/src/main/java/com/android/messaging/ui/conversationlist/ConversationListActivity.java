@@ -30,6 +30,7 @@ import com.android.messaging.Factory;
 import com.android.messaging.R;
 import com.android.messaging.datamodel.BugleNotifications;
 import com.android.messaging.datamodel.action.PinConversationAction;
+import com.android.messaging.privatebox.MessagesMoveManager;
 import com.android.messaging.privatebox.PrivateSettingManager;
 import com.android.messaging.privatebox.ui.PrivateBoxSetPasswordActivity;
 import com.android.messaging.privatebox.PrivateBoxSettings;
@@ -73,6 +74,7 @@ import com.superapps.util.Threads;
 import java.lang.ref.WeakReference;
 import java.util.Calendar;
 import java.util.Collection;
+import java.util.List;
 import java.util.Random;
 
 import static com.android.messaging.ui.dialog.FiveStarRateDialog.DESKTOP_PREFS;
@@ -553,6 +555,22 @@ public class ConversationListActivity extends AbstractConversationListActivity
             }
         }
         exitMultiSelectState();
+    }
+
+    @Override
+    public void onAddToPrivateBox(List<String> conversations) {
+        MessagesMoveManager.moveConversations(conversations, false,
+                new MessagesMoveManager.MessagesMoveListener() {
+            @Override
+            public void onMoveStart() {
+
+            }
+
+            @Override
+            public void onMoveEnd() {
+
+            }
+        });
     }
 
     @Override

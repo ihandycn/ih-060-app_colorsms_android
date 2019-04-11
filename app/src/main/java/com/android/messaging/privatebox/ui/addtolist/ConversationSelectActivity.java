@@ -16,6 +16,7 @@ import android.widget.TextView;
 import com.android.messaging.R;
 import com.android.messaging.datamodel.MessagingContentProvider;
 import com.android.messaging.datamodel.data.ConversationListItemData;
+import com.android.messaging.privatebox.MessagesMoveManager;
 import com.android.messaging.ui.customize.PrimaryColors;
 import com.android.messaging.util.UiUtils;
 import com.ihs.app.framework.activity.HSAppCompatActivity;
@@ -37,7 +38,8 @@ public class ConversationSelectActivity extends HSAppCompatActivity
     private ConversationSelectAdapter mAdapter;
     private LoaderManager mLoaderManager;
 
-    @Override protected void onCreate(Bundle savedInstanceState) {
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_call_blocker);
@@ -74,11 +76,24 @@ public class ConversationSelectActivity extends HSAppCompatActivity
             public void onClick(View v) {
                 List<String> addList = new ArrayList<>();
                 HashMap<ConversationListItemData, Boolean> selectedMap = mAdapter.getSelectedMap();
-                for(ConversationListItemData data : selectedMap.keySet()){
-                    if(selectedMap.get(data)){
+                for (ConversationListItemData data : selectedMap.keySet()) {
+                    if (selectedMap.get(data)) {
                         addList.add(data.getConversationId());
                     }
                 }
+
+                MessagesMoveManager.moveConversations(addList, false,
+                        new MessagesMoveManager.MessagesMoveListener() {
+                            @Override
+                            public void onMoveStart() {
+
+                            }
+
+                            @Override
+                            public void onMoveEnd() {
+
+                            }
+                        });
 
                 onBackPressed();
             }
@@ -98,7 +113,8 @@ public class ConversationSelectActivity extends HSAppCompatActivity
     }
 
 
-    @Override public Loader<Cursor> onCreateLoader(int id, Bundle args) {
+    @Override
+    public Loader<Cursor> onCreateLoader(int id, Bundle args) {
         Loader<Cursor> loader = new CursorLoader(ConversationSelectActivity.this,
                 MessagingContentProvider.CONVERSATIONS_URI,
                 ConversationListItemData.PROJECTION,
@@ -108,20 +124,24 @@ public class ConversationSelectActivity extends HSAppCompatActivity
         return loader;
     }
 
-    @Override public void onLoadFinished(Loader<Cursor> loader, Cursor cursor) {
+    @Override
+    public void onLoadFinished(Loader<Cursor> loader, Cursor cursor) {
         List<ConversationListItemData> dataList = new ArrayList<>();
         if (cursor != null && cursor.moveToFirst()) {
             do {
                 ConversationListItemData itemData = new ConversationListItemData();
                 itemData.bind(cursor);
-                dataList.add(itemData);
+                if (!itemData.isPrivate()) {
+                    dataList.add(itemData);
+                }
             } while (cursor.moveToNext());
         }
 
         mAdapter.updateData(dataList);
     }
 
-    @Override public void onLoaderReset(Loader<Cursor> loader) {
+    @Override
+    public void onLoaderReset(Loader<Cursor> loader) {
 
     }
 }

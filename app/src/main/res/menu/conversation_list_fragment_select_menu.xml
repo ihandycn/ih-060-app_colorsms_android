@@ -36,6 +36,12 @@
         android:title="@string/action_notification_on"
         appcompat:showAsAction="collapseActionView|always" />
     <item
+        android:id="@+id/action_add_to_private_box"
+        android:icon="@drawable/private_lock"
+        android:orderInCategory="81"
+        android:title="@string/action_pin"
+        appcompat:showAsAction="collapseActionView|always" />
+    <item
         android:id="@+id/action_pin"
         android:icon="@drawable/ic_pin"
         android:orderInCategory="80"

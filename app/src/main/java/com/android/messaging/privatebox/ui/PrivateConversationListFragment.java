@@ -2,6 +2,7 @@ package com.android.messaging.privatebox.ui;
 
 import android.app.Activity;
 import android.app.Fragment;
+import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Rect;
 import android.net.Uri;
@@ -26,6 +27,9 @@ import com.android.messaging.datamodel.binding.BindingBase;
 import com.android.messaging.datamodel.data.ConversationListData;
 import com.android.messaging.datamodel.data.ConversationListData.ConversationListDataListener;
 import com.android.messaging.datamodel.data.ConversationListItemData;
+import com.android.messaging.privatebox.ui.addtolist.AddToListDialog;
+import com.android.messaging.privatebox.ui.addtolist.ContactsSelectActivity;
+import com.android.messaging.privatebox.ui.addtolist.ConversationSelectActivity;
 import com.android.messaging.ui.BugleAnimationTags;
 import com.android.messaging.ui.SnackBarInteraction;
 import com.android.messaging.ui.UIIntents;
@@ -37,6 +41,7 @@ import com.android.messaging.util.ImeUtil;
 import com.google.common.annotations.VisibleForTesting;
 import com.superapps.util.BackgroundDrawables;
 import com.superapps.util.Dimensions;
+import com.superapps.util.Navigations;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -285,8 +290,25 @@ public class PrivateConversationListFragment extends Fragment
             addNowBtn.setBackground(
                     BackgroundDrawables.createBackgroundDrawable(PrimaryColors.getPrimaryColor(),
                             Dimensions.pxFromDp(18), true));
-            addNowBtn.setOnClickListener( v -> {
-                //todo : add private conversation item
+            addNowBtn.setOnClickListener(v -> {
+                final AddToListDialog addToBlackListDialog = new AddToListDialog(getActivity());
+                addToBlackListDialog.setOnButtonClickListener(new AddToListDialog.OnButtonClickListener() {
+                    @Override
+                    public void onFromConversationClick() {
+                        Navigations.startActivitySafely(getActivity(),
+                                new Intent(getActivity(), ConversationSelectActivity.class));
+                        addToBlackListDialog.dismiss();
+                    }
+
+                    @Override
+                    public void onFromContactsClick() {
+                        Navigations.startActivitySafely(getActivity(),
+                                new Intent(getActivity(), ContactsSelectActivity.class));
+                        addToBlackListDialog.dismiss();
+                    }
+                });
+
+                addToBlackListDialog.show();
             });
         } else {
             mEmptyListMessageView.setVisibility(View.GONE);
