@@ -137,7 +137,7 @@ public class PrivateBoxSetPasswordActivity extends BaseActivity implements View.
         toolbar.setTitle("");
         UiUtils.setTitleBarBackground(toolbar, this);
         TextView title = toolbar.findViewById(R.id.toolbar_title);
-        title.setText(isForgetPassword ?
+        title.setText(isResetPassword ?
                 getString(R.string.reset_password) : getString(R.string.menu_privacy_box));
         setSupportActionBar(toolbar);
         if (getSupportActionBar() != null) {

@@ -37,7 +37,9 @@ public class PrivateSettingActivity extends BaseActivity {
     private void initItemViews() {
         SettingItemView securityView = findViewById(R.id.private_setting_security);
         securityView.setOnItemClickListener(() -> {
-
+            Intent intent = new Intent(PrivateSettingActivity.this, PrivateBoxSetPasswordActivity.class);
+            intent.putExtra(PrivateBoxSetPasswordActivity.INTENT_EXTRA_RESET_PASSWORD, true);
+            Navigations.startActivitySafely(PrivateSettingActivity.this, intent);
         });
 
         SettingItemView entranceView = findViewById(R.id.private_setting_entrance);
