@@ -457,7 +457,9 @@ public class ConversationListFragment extends Fragment implements ConversationLi
             do {
                 ConversationListItemData itemData = new ConversationListItemData();
                 itemData.bind(cursor);
-                dataList.add(itemData);
+                if (!itemData.isPrivate()) {
+                    dataList.add(itemData);
+                }
             } while (cursor.moveToNext());
         }
 
