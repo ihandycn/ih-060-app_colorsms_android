@@ -281,9 +281,13 @@ public class PrivateConversationListFragment extends Fragment
     private void updateEmptyListUi(final boolean isEmpty) {
         if (isEmpty) {
             mEmptyListMessageView.setVisibility(View.VISIBLE);
-            mEmptyListMessageView.setBackground(
+            View addNowBtn = mEmptyListMessageView.findViewById(R.id.private_box_empty_view_add_btn);
+            addNowBtn.setBackground(
                     BackgroundDrawables.createBackgroundDrawable(PrimaryColors.getPrimaryColor(),
                             Dimensions.pxFromDp(18), true));
+            addNowBtn.setOnClickListener( v -> {
+                //todo : add private conversation item
+            });
         } else {
             mEmptyListMessageView.setVisibility(View.GONE);
         }
