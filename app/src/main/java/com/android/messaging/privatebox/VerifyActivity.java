@@ -9,7 +9,6 @@ import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.KeyEvent;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.ImageView;
 
 import com.android.messaging.BaseActivity;
@@ -25,10 +24,9 @@ import com.ihs.commons.utils.HSLog;
 import com.superapps.util.Dimensions;
 import com.superapps.util.Navigations;
 
-public abstract class VerifyActivity extends BaseActivity
-        implements INotificationObserver {
+public abstract class VerifyActivity extends BaseActivity implements INotificationObserver {
 
-    private static final String TAG = "LockBaseActivity";
+    private static final String TAG = "VerifyActivity";
 
     public static final String EVENT_UNLOCK_APP_SUCCESS = "EVENT_UNLOCK_APP_SUCCESS";
 
@@ -39,22 +37,11 @@ public abstract class VerifyActivity extends BaseActivity
 
     protected View background;
 
-    protected boolean fromLockActivity = false;  //true: activity上push一个lock activity，后台回前台，锁屏回来等；false：从main activity 入口进入，先push lock activity，然后push installed app activity
-
-    public static final String INTENT_KEY_FROM_LOCK_ACTIVITY = "INTENT_KEY_FROM_LOCK_ACTIVITY";
-
-    protected boolean mIsDontLockApp = false;
-    protected boolean mIsToLockMode = false;
-
-    private ViewGroup mainContainer;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         setContentView(getLayoutResId());
-
-        mainContainer = findViewById(R.id.lock_container);
 
         background = findViewById(R.id.background);
 
@@ -65,12 +52,6 @@ public abstract class VerifyActivity extends BaseActivity
         pinIndicatorView = findViewById(R.id.pin_indicator_view);
 
         pinUnlockView.setOnKeyboardClickListener(i -> {
-//            if (fingerprintTopTipContainer.getVisibility() == View.VISIBLE) {
-//                if (!isSelfLock) {
-//                    fingerprintTopTipContainer.setVisibility(View.INVISIBLE);
-//                }
-//                pinIndicatorView.setVisibility(View.VISIBLE);
-//            }
             if (i >= 0) {
                 pinIndicatorView.inc(i);
             } else {
@@ -194,30 +175,6 @@ public abstract class VerifyActivity extends BaseActivity
             }
         });
         animator.start();
-    }
-
-    private void performDismissAnimation(View view, Runnable endRunnable) {
-        view.animate().alpha(0f).setDuration(200).setListener(new AnimatorListenerAdapter() {
-            @Override public void onAnimationEnd(Animator animation) {
-                view.setVisibility(View.INVISIBLE);
-                view.setAlpha(1f);
-
-                if (endRunnable != null) {
-                    endRunnable.run();
-                }
-            }
-        }).start();
-    }
-
-    private void performEnterAnimation(View view) {
-        view.setTranslationY(Dimensions.pxFromDp(148));
-        view.setAlpha(0f);
-        view.animate().translationY(0).alpha(1f).setDuration(300).start();
-    }
-
-    private void performAlphaEnterAnimation(View view) {
-        view.setAlpha(0f);
-        view.animate().alpha(1f).setDuration(320).start();
     }
 
     private void resetUnlockUI() {

@@ -733,12 +733,6 @@
             android:exported="false" />
 
         <activity
-            android:name=".privatebox.PrivateBoxListActivity"
-            android:excludeFromRecents="true"
-            android:screenOrientation="portrait"
-            android:theme="@style/SettingsActivity" />
-
-        <activity
             android:name=".privatebox.SelfVerifyActivity"
             android:excludeFromRecents="true"
             android:screenOrientation="portrait"

@@ -16,6 +16,7 @@ import android.widget.TextView;
 import com.airbnb.lottie.LottieAnimationView;
 import com.android.messaging.BaseActivity;
 import com.android.messaging.R;
+import com.android.messaging.privatebox.ui.PrivateConversationListActivity;
 import com.android.messaging.privatebox.view.GestureLockView;
 import com.android.messaging.privatebox.view.PINIndicatorView;
 import com.android.messaging.privatebox.view.PINKeyboardView;
@@ -23,6 +24,7 @@ import com.android.messaging.ui.customize.PrimaryColors;
 import com.android.messaging.util.BugleAnalytics;
 import com.android.messaging.util.UiUtils;
 import com.ihs.commons.utils.HSLog;
+import com.superapps.util.Navigations;
 
 public class PrivateBoxSetPasswordActivity extends BaseActivity implements View.OnClickListener {
 
@@ -421,6 +423,8 @@ public class PrivateBoxSetPasswordActivity extends BaseActivity implements View.
 
     private void onPasswordSetSucceed() {
         if (!isResetPassword && !isForgetPassword) {
+            Navigations.startActivitySafely(PrivateBoxSetPasswordActivity.this,
+                    new Intent(PrivateBoxSetPasswordActivity.this, PrivateConversationListActivity.class));
         }
     }
 }
