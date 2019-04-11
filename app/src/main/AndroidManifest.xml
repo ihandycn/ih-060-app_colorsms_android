@@ -744,6 +744,12 @@
             android:excludeFromRecents="true"
             android:screenOrientation="portrait"
             android:theme="@style/BaseSettingsActivity" />
+
+        <activity
+            android:name=".privatebox.ui.addtolist.ContactsSelectActivity"
+            android:excludeFromRecents="true"
+            android:screenOrientation="portrait"
+            android:theme="@style/SettingsActivity" />
     </application>
 
 </manifest>

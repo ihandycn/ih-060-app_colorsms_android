@@ -12,13 +12,12 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.android.messaging.R;
-import com.android.messaging.privatebox.PrivateSettingManager;
 import com.android.messaging.privatebox.ui.addtolist.AddToListDialog;
+import com.android.messaging.privatebox.ui.addtolist.ContactsSelectActivity;
 import com.android.messaging.ui.SnackBarInteraction;
 import com.android.messaging.ui.customize.PrimaryColors;
 import com.superapps.util.Dimensions;
 import com.superapps.util.Navigations;
-import com.superapps.util.Toasts;
 
 import java.util.List;
 
@@ -147,7 +146,8 @@ public class PrivateConversationListActivity extends MultiSelectConversationList
 
                     @Override
                     public void onFromContactsClick() {
-
+                        Navigations.startActivitySafely(PrivateConversationListActivity.this,
+                                new Intent(PrivateConversationListActivity.this, ContactsSelectActivity.class));
                         addToBlackListDialog.dismiss();
                     }
                 });

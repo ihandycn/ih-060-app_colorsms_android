@@ -1125,5 +1125,7 @@
     <string name="add_to_private_list_dialog_title">Add private contact</string>
     <string name="add_to_private_list_dialog_from_conversation">From conversation list</string>
     <string name="add_to_private_list_dialog_from_contacts_list">From contacts list</string>
+    <string name="conversation_list">Conversation List</string>
+    <string name="contacts">Contacts</string>
     <string name="private_box_setting">Private box setting</string>
 </resources>
