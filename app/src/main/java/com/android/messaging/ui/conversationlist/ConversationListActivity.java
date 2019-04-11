@@ -34,12 +34,13 @@ import com.android.messaging.ui.DragHotSeatActivity;
 import com.android.messaging.ui.UIIntents;
 import com.android.messaging.ui.UIIntentsImpl;
 import com.android.messaging.ui.appsettings.ChangeFontActivity;
-import com.android.messaging.ui.appsettings.ThemeSelectActivity;
+import com.android.messaging.ui.appsettings.ThemeColorSelectActivity;
 import com.android.messaging.ui.customize.BubbleDrawables;
 import com.android.messaging.ui.customize.ConversationColors;
 import com.android.messaging.ui.customize.CustomBubblesActivity;
 import com.android.messaging.ui.customize.PrimaryColors;
 import com.android.messaging.ui.customize.ToolbarDrawables;
+import com.android.messaging.ui.customize.theme.ChooseThemeActivity;
 import com.android.messaging.ui.dialog.FiveStarRateDialog;
 import com.android.messaging.ui.emoji.EmojiStoreActivity;
 import com.android.messaging.ui.messagebox.MessageBoxActivity;
@@ -48,6 +49,7 @@ import com.android.messaging.ui.wallpaper.WallpaperChooserItem;
 import com.android.messaging.ui.wallpaper.WallpaperDownloader;
 import com.android.messaging.ui.wallpaper.WallpaperManager;
 import com.android.messaging.ui.wallpaper.WallpaperPreviewActivity;
+import com.android.messaging.ui.welcome.WelcomeChooseThemeActivity;
 import com.android.messaging.util.BugleAnalytics;
 import com.android.messaging.util.CommonUtils;
 import com.android.messaging.util.CreateShortcutUtils;
@@ -86,6 +88,7 @@ public class ConversationListActivity extends AbstractConversationListActivity
     private static final String PREF_SHOW_EMOJI_GUIDE = "pref_show_emoji_guide";
     public static final String PREF_KEY_MAIN_DRAWER_OPENED = "pref_key_main_drawer_opened";
 
+    private static final String PREF_KEY_THEME_CLICKED = "pref_key_navigation_theme_clicked";
     private static final String PREF_KEY_THEME_COLOR_CLICKED = "pref_key_navigation_theme_color_clicked";
     private static final String PREF_KEY_BUBBLE_CLICKED = "pref_key_navigation_bubble_clicked";
     private static final String PREF_KEY_BACKGROUND_CLICKED = "pref_key_navigation_background_clicked";
@@ -97,13 +100,14 @@ public class ConversationListActivity extends AbstractConversationListActivity
     private static boolean sIsRecreate = false;
 
     private static final int DRAWER_INDEX_NONE = -1;
-    private static final int DRAWER_INDEX_THEME_COLOR = 0;
-    private static final int DRAWER_INDEX_BUBBLE = 1;
-    private static final int DRAWER_INDEX_CHAT_BACKGROUND = 2;
-    private static final int DRAWER_INDEX_SETTING = 3;
-    private static final int DRAWER_INDEX_RATE = 4;
-    private static final int DRAWER_INDEX_CHANGE_FONT = 5;
-    private static final int DRAWER_INDEX_PRIVACY_BOX = 6;
+    private static final int DRAWER_INDEX_THEME = 0;
+    private static final int DRAWER_INDEX_THEME_COLOR = 1;
+    private static final int DRAWER_INDEX_BUBBLE = 2;
+    private static final int DRAWER_INDEX_CHAT_BACKGROUND = 3;
+    private static final int DRAWER_INDEX_SETTING = 4;
+    private static final int DRAWER_INDEX_RATE = 5;
+    private static final int DRAWER_INDEX_CHANGE_FONT = 6;
+    private static final int DRAWER_INDEX_PRIVACY_BOX = 7;
 
     private int drawerClickIndex = DRAWER_INDEX_NONE;
 
@@ -194,7 +198,7 @@ public class ConversationListActivity extends AbstractConversationListActivity
                 }
 
                 BugleAnalytics.logEvent("SMS_Messages_Show", true,
-                        "themeColor", String.valueOf(ThemeSelectActivity.getSelectedIndex()),
+                        "themeColor", String.valueOf(ThemeColorSelectActivity.getSelectedIndex()),
                         "background", backgroundStr,
                         "bubbleStyle", String.valueOf(BubbleDrawables.getSelectedIdentifier()),
                         "received bubble color", ConversationColors.get().getConversationColorEventType(true, true),
@@ -244,7 +248,7 @@ public class ConversationListActivity extends AbstractConversationListActivity
                                     bubbleSendFontColor + "|" + bubbleSendBgColor + "|"
                                             + bubbleRcvFontColor + "|" + bubbleRcvBgColor + "|"
                                             + fontType + "|" + fontSize + "|" + bubbleStyle + "|"
-                                            + wallpaper + "|" + ThemeSelectActivity.getSelectedIndex());
+                                            + wallpaper + "|" + ThemeColorSelectActivity.getSelectedIndex());
                         }
                     }, "pref_key_customize_config_has_send");
                 }
@@ -325,13 +329,19 @@ public class ConversationListActivity extends AbstractConversationListActivity
                 super.onDrawerClosed(drawerView);
 
                 switch (drawerClickIndex) {
+                    case DRAWER_INDEX_THEME:
+                        BugleAnalytics.logEvent("Menu_Theme_Click");
+                        Navigations.startActivity(ConversationListActivity.this, ChooseThemeActivity.class);
+                        navigationContent.findViewById(R.id.navigation_item_theme_new_text).setVisibility(View.GONE);
+                        break;
+
                     case DRAWER_INDEX_THEME_COLOR:
                         BugleAnalytics.logEvent("Menu_ThemeColor_Click");
                         if (CommonUtils.isNewUser() && DateUtils.isToday(CommonUtils.getAppInstallTimeMillis())) {
                             BugleAnalytics.logEvent("Menu_ThemeColor_Click_NewUser", true);
                         }
-                        Navigations.startActivity(ConversationListActivity.this, ThemeSelectActivity.class);
-                        navigationContent.findViewById(R.id.navigation_item_theme_new_text).setVisibility(View.GONE);
+                        Navigations.startActivity(ConversationListActivity.this, ThemeColorSelectActivity.class);
+                        navigationContent.findViewById(R.id.navigation_item_theme_color_new_text).setVisibility(View.GONE);
                         break;
                     case DRAWER_INDEX_BUBBLE:
                         BugleAnalytics.logEvent("Menu_Bubble_Click", true);
@@ -378,8 +388,16 @@ public class ConversationListActivity extends AbstractConversationListActivity
         navigationView.addView(navigationContent);
 
         if (CommonUtils.isNewUser()) {
-            if (!Preferences.getDefault().getBoolean(PREF_KEY_THEME_COLOR_CLICKED, false)) {
+            if (!Preferences.getDefault().getBoolean(PREF_KEY_THEME_CLICKED, false)) {
                 View newMark = navigationContent.findViewById(R.id.navigation_item_theme_new_text);
+                newMark.setVisibility(View.VISIBLE);
+                newMark.setBackground(BackgroundDrawables.createBackgroundDrawable(0xffea6126,
+                        Dimensions.pxFromDp(8.7f), false));
+            }
+
+
+            if (!Preferences.getDefault().getBoolean(PREF_KEY_THEME_COLOR_CLICKED, false)) {
+                View newMark = navigationContent.findViewById(R.id.navigation_item_theme_color_new_text);
                 newMark.setVisibility(View.VISIBLE);
                 newMark.setBackground(BackgroundDrawables.createBackgroundDrawable(0xffea6126,
                         Dimensions.pxFromDp(8.7f), false));
@@ -400,6 +418,7 @@ public class ConversationListActivity extends AbstractConversationListActivity
             }
         }
 
+        navigationContent.findViewById(R.id.navigation_item_theme).setOnClickListener(this);
         navigationContent.findViewById(R.id.navigation_item_theme_color).setOnClickListener(this);
         navigationContent.findViewById(R.id.navigation_item_bubble).setOnClickListener(this);
         navigationContent.findViewById(R.id.navigation_item_chat_background).setOnClickListener(this);
@@ -722,6 +741,12 @@ public class ConversationListActivity extends AbstractConversationListActivity
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
+            case R.id.navigation_item_theme:
+                drawerClickIndex = DRAWER_INDEX_THEME;
+                drawerLayout.closeDrawer(navigationView);
+                Preferences.getDefault().putBoolean(PREF_KEY_THEME_CLICKED, true);
+                break;
+
             case R.id.navigation_item_theme_color:
                 drawerClickIndex = DRAWER_INDEX_THEME_COLOR;
                 drawerLayout.closeDrawer(navigationView);

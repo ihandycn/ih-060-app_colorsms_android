@@ -3,7 +3,6 @@ package com.android.messaging.ui.customize;
 import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.drawable.ColorDrawable;
-import android.graphics.drawable.Drawable;
 import android.support.annotation.ColorInt;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
@@ -16,7 +15,7 @@ import com.android.messaging.R;
 import com.android.messaging.glide.GlideApp;
 import com.bumptech.glide.request.RequestOptions;
 
-import static com.android.messaging.ui.appsettings.ThemeSelectActivity.COLORS;
+import static com.android.messaging.ui.appsettings.ThemeColorSelectActivity.COLORS;
 
 public class ChooseMessageColorRecommendAdapter extends RecyclerView.Adapter<ChooseMessageColorRecommendAdapter.ViewHolder> {
 

@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<merge xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <com.superapps.view.ViewPagerFixed
+        android:id="@+id/pager"
+        android:layout_width="match_parent"
+        android:layout_height="397dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="19dp"
+        android:clipToPadding="false"
+        android:paddingEnd="@dimen/choose_theme_pager_padding"
+        android:paddingStart="@dimen/choose_theme_pager_padding"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/apply" />
+
+    <ImageView
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:paddingEnd="@dimen/choose_theme_pager_padding"
+        android:paddingStart="@dimen/choose_theme_pager_padding"
+        android:src="@drawable/choose_theme_phone_border"
+        app:layout_constraintStart_toStartOf="@id/pager"
+        app:layout_constraintEnd_toEndOf="@id/pager"
+        app:layout_constraintTop_toTopOf="@id/pager"
+        app:layout_constraintBottom_toBottomOf="@id/pager" />
+
+    <com.superapps.view.MessagesTextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="76dp"
+        android:background="@drawable/choose_theme_current_theme"
+        android:text="@string/welcome_choose_theme_current"
+        android:textColor="#322d2d"
+        android:textSize="13.3sp"
+        app:layout_constraintStart_toStartOf="@id/pager"
+        app:layout_constraintTop_toTopOf="@id/pager"
+        android:layout_marginTop="26dp" />
+
+
+    <com.superapps.view.MessagesTextView
+        android:id="@+id/apply"
+        android:layout_width="164dp"
+        android:layout_height="44dp"
+        android:textSize="14.7sp"
+        android:textColor="#ffffff"
+        android:text="@string/sms_show_apply"
+        android:gravity="center"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginBottom="30dp"
+        app:typeface="@string/custom_font_semibold"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"/>
+
+
+</merge>

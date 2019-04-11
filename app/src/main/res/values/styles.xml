@@ -117,6 +117,11 @@
         <item name="android:windowBackground">@drawable/conversation_start_bg</item>
     </style>
 
+    <style name="WelcomeChooseThemeActivity" parent="@style/WelcomeTheme">
+        <item name="android:windowBackground">@color/white</item>
+    </style>
+
+
     <style name="BuglePhotoViewTheme" parent="PhotoViewTheme.Translucent">
         <item name="actionModeShareDrawable">@drawable/ic_share_light</item>
     </style>

@@ -18,7 +18,7 @@ import com.ihs.commons.notificationcenter.HSGlobalNotificationCenter;
 import com.superapps.util.BackgroundDrawables;
 import com.superapps.util.Dimensions;
 
-public class ThemeSelectActivity extends BaseActivity {
+public class ThemeColorSelectActivity extends BaseActivity {
 
     private static int[] COLOR_IMG_IDS = new int[]{
             R.id.iv_theme_select_1,
