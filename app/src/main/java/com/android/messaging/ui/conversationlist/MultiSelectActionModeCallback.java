@@ -107,6 +107,7 @@ public class MultiSelectActionModeCallback implements Callback {
         mNotificationOnMenuItem = menu.findItem(R.id.action_notification_on);
         mPinMenuItem = menu.findItem(R.id.action_pin);
         mCancelPinMenuItem = menu.findItem(R.id.action_cancel_pin);
+        menu.findItem(R.id.action_move_from_private_box).setVisible(false);
         mHasInflated = true;
         updateActionIconsVisiblity();
         return true;

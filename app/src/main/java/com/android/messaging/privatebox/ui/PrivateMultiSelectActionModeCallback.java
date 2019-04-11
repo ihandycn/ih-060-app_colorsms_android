@@ -8,35 +8,30 @@ import android.view.ActionMode;
 import android.view.ActionMode.Callback;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.Toast;
 
 import com.android.messaging.R;
 import com.android.messaging.datamodel.action.DeleteConversationAction;
-import com.android.messaging.datamodel.action.UpdateConversationOptionsAction;
-import com.android.messaging.datamodel.action.UpdateDestinationBlockedAction;
+import com.android.messaging.datamodel.action.PinConversationAction;
 import com.android.messaging.datamodel.data.ConversationListData;
 import com.android.messaging.datamodel.data.ConversationListItemData;
+import com.android.messaging.privatebox.MessagesMoveManager;
 import com.android.messaging.ui.BaseAlertDialog;
 import com.android.messaging.ui.SnackBar;
-import com.android.messaging.ui.SnackBarInteraction;
 import com.android.messaging.ui.UIIntents;
 import com.android.messaging.ui.contact.AddContactsConfirmationDialog;
 import com.android.messaging.util.Assert;
-import com.android.messaging.util.BugleAnalytics;
 import com.android.messaging.util.PhoneUtils;
 import com.android.messaging.util.UiUtils;
 import com.ihs.app.framework.HSApplication;
 
 import java.lang.ref.WeakReference;
+import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashSet;
 import java.util.List;
 
 import static com.android.messaging.util.DisplayUtils.getString;
 
 public class PrivateMultiSelectActionModeCallback implements Callback {
-    private HashSet<String> mBlockedSet;
 
     public static class SelectedConversation {
         public final String conversationId;
@@ -66,9 +61,6 @@ public class PrivateMultiSelectActionModeCallback implements Callback {
 
     private WeakReference<MultiSelectConversationListActivity> mWeakActivity;
     private MenuItem mAddContactMenuItem;
-    private MenuItem mBlockMenuItem;
-    private MenuItem mNotificationOnMenuItem;
-    private MenuItem mNotificationOffMenuItem;
     private MenuItem mPinMenuItem;
     private MenuItem mCancelPinMenuItem;
     private boolean mHasInflated;
@@ -82,11 +74,12 @@ public class PrivateMultiSelectActionModeCallback implements Callback {
     public boolean onCreateActionMode(ActionMode actionMode, Menu menu) {
         actionMode.getMenuInflater().inflate(R.menu.conversation_list_fragment_select_menu, menu);
         mAddContactMenuItem = menu.findItem(R.id.action_add_contact);
-        mBlockMenuItem = menu.findItem(R.id.action_block);
-        mNotificationOffMenuItem = menu.findItem(R.id.action_notification_off);
-        mNotificationOnMenuItem = menu.findItem(R.id.action_notification_on);
         mPinMenuItem = menu.findItem(R.id.action_pin);
         mCancelPinMenuItem = menu.findItem(R.id.action_cancel_pin);
+        menu.findItem(R.id.action_notification_off).setVisible(false);
+        menu.findItem(R.id.action_block).setVisible(false);
+        menu.findItem(R.id.action_notification_on).setVisible(false);
+        menu.findItem(R.id.action_add_to_private_box).setVisible(false);
         mHasInflated = true;
         updateActionIconsVisibility();
         return true;
@@ -103,29 +96,27 @@ public class PrivateMultiSelectActionModeCallback implements Callback {
             case R.id.action_delete:
                 onActionBarDelete(mSelectedConversations.values());
                 return true;
-            case R.id.action_notification_off:
-                onActionBarNotification(mSelectedConversations.values(), false);
-                return true;
-            case R.id.action_notification_on:
-                onActionBarNotification(mSelectedConversations.values(), true);
-                return true;
             case R.id.action_add_contact:
                 Assert.isTrue(mSelectedConversations.size() == 1);
                 onActionBarAddContact(mSelectedConversations.valueAt(0));
-                return true;
-            case R.id.action_block:
-                onActionBarBlock(mSelectedConversations.values());
                 return true;
             case android.R.id.home:
                 mWeakActivity.get().exitMultiSelectState();
                 return true;
             case R.id.action_pin:
-                onPin(mSelectedConversations.values(), true);
+                onPin(true);
                 return true;
             case R.id.action_cancel_pin:
-                onPin(mSelectedConversations.values(), false);
+                onPin(false);
                 return true;
             case R.id.action_menu:
+                return true;
+            case R.id.action_add_to_private_box:
+                List<String> conversationIdList = new ArrayList<>();
+                for (PrivateMultiSelectActionModeCallback.SelectedConversation conversation : mSelectedConversations.values()) {
+                    conversationIdList.add(conversation.conversationId);
+                }
+                onMoveToTelephony(conversationIdList);
                 return true;
             default:
                 return false;
@@ -141,7 +132,6 @@ public class PrivateMultiSelectActionModeCallback implements Callback {
     public void toggleSelect(final ConversationListData listData,
                              final ConversationListItemData conversationListItemData) {
         Assert.notNull(conversationListItemData);
-        mBlockedSet = listData.getBlockedParticipants();
         final String id = conversationListItemData.getConversationId();
         if (mSelectedConversations.containsKey(id)) {
             mSelectedConversations.remove(id);
@@ -173,23 +163,10 @@ public class PrivateMultiSelectActionModeCallback implements Callback {
             // we know that the participant is already in contacts.
             final boolean isInContacts = !TextUtils.isEmpty(conversation.participantLookupKey);
             mAddContactMenuItem.setVisible(!conversation.isGroup && !isInContacts);
-            // ParticipantNormalizedDestination is always null for group conversations.
-            final String otherParticipant = conversation.otherParticipantNormalizedDestination;
-            mBlockMenuItem.setVisible(otherParticipant != null
-                    && !mBlockedSet.contains(otherParticipant));
         } else {
-            //group conversation  don't show block
-            for (SelectedConversation conversation : mSelectedConversations.values()) {
-                if (TextUtils.isEmpty(conversation.otherParticipantNormalizedDestination)) {
-                    mBlockMenuItem.setVisible(false);
-                    break;
-                }
-            }
             mAddContactMenuItem.setVisible(false);
         }
 
-        boolean hasCurrentlyOnNotification = false;
-        boolean hasCurrentlyOffNotification = false;
         boolean hasPinConversation = false;
         boolean hasUnpinConversation = false;
         final Iterable<SelectedConversation> conversations = mSelectedConversations.values();
@@ -199,21 +176,12 @@ public class PrivateMultiSelectActionModeCallback implements Callback {
             } else {
                 hasUnpinConversation = true;
             }
-            if (conversation.notificationEnabled) {
-                hasCurrentlyOnNotification = true;
-            } else {
-                hasCurrentlyOffNotification = true;
-            }
         }
-        // If we have notification off conversations we show on button, if we have notification on
-        // conversation we show off button. We can show both if we have a mixture.
-        mNotificationOffMenuItem.setVisible(hasCurrentlyOnNotification);
-        mNotificationOnMenuItem.setVisible(hasCurrentlyOffNotification);
         mPinMenuItem.setVisible(hasUnpinConversation);
         mCancelPinMenuItem.setVisible(hasPinConversation);
     }
 
-    public void onActionBarDelete(final Collection<PrivateMultiSelectActionModeCallback.SelectedConversation> conversations) {
+    private void onActionBarDelete(final Collection<PrivateMultiSelectActionModeCallback.SelectedConversation> conversations) {
 
         final MultiSelectConversationListActivity activity = mWeakActivity.get();
         if (activity == null) {
@@ -248,27 +216,7 @@ public class PrivateMultiSelectActionModeCallback implements Callback {
                 .show();
     }
 
-    public void onActionBarNotification(final Iterable<PrivateMultiSelectActionModeCallback.SelectedConversation> conversations,
-                                        final boolean isNotificationOn) {
-
-        for (final PrivateMultiSelectActionModeCallback.SelectedConversation conversation : conversations) {
-            UpdateConversationOptionsAction.enableConversationNotifications(
-                    conversation.conversationId, isNotificationOn);
-        }
-        final MultiSelectConversationListActivity activity = mWeakActivity.get();
-        if (activity == null) {
-            return;
-        }
-
-        final int textId = isNotificationOn ?
-                R.string.notification_on_toast_message : R.string.notification_off_toast_message;
-        final String message = HSApplication.getContext().getResources().getString(textId, 1);
-        UiUtils.showSnackBar(activity, activity.findViewById(android.R.id.list), message, null,
-                SnackBar.Action.SNACK_BAR_UNDO, activity.getSnackBarInteractions());
-        activity.exitMultiSelectState();
-    }
-
-    public void onActionBarAddContact(final PrivateMultiSelectActionModeCallback.SelectedConversation conversation) {
+    private void onActionBarAddContact(final PrivateMultiSelectActionModeCallback.SelectedConversation conversation) {
         final MultiSelectConversationListActivity activity = mWeakActivity.get();
         if (activity == null) {
             return;
@@ -284,26 +232,34 @@ public class PrivateMultiSelectActionModeCallback implements Callback {
                 AddContactsConfirmationDialog.newInstance(avatarUri, conversation.otherParticipantNormalizedDestination);
         UiUtils.showDialogFragment(activity, dialog);
         activity.exitMultiSelectState();
-        BugleAnalytics.logEvent("SMS_EditMode_AddContact_BtnClick", true);
     }
 
-    public void onActionBarBlock(final Collection<PrivateMultiSelectActionModeCallback.SelectedConversation> conversation) {
+    private void onPin(boolean pin) {
+        for (PrivateMultiSelectActionModeCallback.SelectedConversation conversation : mSelectedConversations.values()) {
+            if (pin) {
+                PinConversationAction.pinConversation(conversation.conversationId);
+            } else {
+                PinConversationAction.unpinConversation(conversation.conversationId);
+            }
+        }
         final MultiSelectConversationListActivity activity = mWeakActivity.get();
-        if (activity == null) {
-            return;
+        if (activity != null) {
+            activity.exitMultiSelectState();
         }
-        for (PrivateMultiSelectActionModeCallback.SelectedConversation selectedConversation : conversation) {
-            UpdateDestinationBlockedAction.updateDestinationBlocked(
-                    selectedConversation.otherParticipantNormalizedDestination, true,
-                    selectedConversation.conversationId,
-                    (action, success, block, destination) -> {
-                    });
-        }
-        activity.exitMultiSelectState();
-        Toast.makeText(activity, R.string.update_destination_blocked, Toast.LENGTH_LONG).show();
     }
 
-    public void onPin(Collection<PrivateMultiSelectActionModeCallback.SelectedConversation> conversations, boolean pin) {
+    private void onMoveToTelephony(List<String> conversationIdList) {
+        MessagesMoveManager.moveConversations(conversationIdList, true,
+                new MessagesMoveManager.MessagesMoveListener() {
+                    @Override
+                    public void onMoveStart() {
 
+                    }
+
+                    @Override
+                    public void onMoveEnd() {
+
+                    }
+                });
     }
 }
