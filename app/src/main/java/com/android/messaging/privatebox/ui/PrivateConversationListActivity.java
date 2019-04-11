@@ -14,6 +14,7 @@ import android.view.ViewGroup;
 import com.android.messaging.R;
 import com.android.messaging.privatebox.ui.addtolist.AddToListDialog;
 import com.android.messaging.privatebox.ui.addtolist.ContactsSelectActivity;
+import com.android.messaging.privatebox.ui.addtolist.ConversationSelectActivity;
 import com.android.messaging.ui.SnackBarInteraction;
 import com.android.messaging.ui.customize.PrimaryColors;
 import com.superapps.util.Dimensions;
@@ -140,7 +141,8 @@ public class PrivateConversationListActivity extends MultiSelectConversationList
                 addToBlackListDialog.setOnButtonClickListener(new AddToListDialog.OnButtonClickListener() {
                     @Override
                     public void onFromConversationClick() {
-
+                        Navigations.startActivitySafely(PrivateConversationListActivity.this,
+                                new Intent(PrivateConversationListActivity.this, ConversationSelectActivity.class));
                         addToBlackListDialog.dismiss();
                     }
 
