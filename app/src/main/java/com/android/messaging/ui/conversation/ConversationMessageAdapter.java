@@ -43,7 +43,7 @@ public class ConversationMessageAdapter extends
     private final View.OnLongClickListener mViewLongClickListener;
     private boolean mOneOnOne;
     private String mSelectedMessageId;
-    private boolean multiSelectMode;
+    private static boolean multiSelectMode;
     public static final int NORMAL = 1000;
     public static final int SLIDE = 2000;
     public static int mState;
@@ -126,7 +126,7 @@ public class ConversationMessageAdapter extends
         this.multiSelectMode = multiSelectMode;
     }
 
-    public boolean isMultiSelectMode() {
+    public static boolean isMultiSelectMode() {
         return multiSelectMode;
     }
 

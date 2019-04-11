@@ -1139,14 +1139,12 @@ public class ConversationFragment extends Fragment implements ConversationDataLi
             builder.setOnDismissListener(new OnDismissListener() {
                 @Override
                 public void onDismiss(DialogInterface dialog) {
-                    resetActionModeAndAnimation();
                 }
             });
             builder.show();
         } else {
             warnOfMissingActionConditions(false /*sending*/,
                     null /*commandToRunAfterActionConditionResolved*/);
-            resetActionModeAndAnimation();
         }
     }
 

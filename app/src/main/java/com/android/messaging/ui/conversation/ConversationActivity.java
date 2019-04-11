@@ -248,7 +248,9 @@ public class ConversationActivity extends BugleActionBarActivity
     @Override
     public boolean onOptionsItemSelected(final MenuItem menuItem) {
         if (super.onOptionsItemSelected(menuItem)) {
-            HSGlobalNotificationCenter.sendNotification(ConversationFragment.RESET_ITEM);
+            if (TextUtils.isEmpty(menuItem.getTitle())) {
+                HSGlobalNotificationCenter.sendNotification(ConversationFragment.RESET_ITEM);
+            }
             return true;
         }
         if (menuItem.getItemId() == android.R.id.home) {
