@@ -31,13 +31,15 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="76dp"
-        android:layout_marginTop="28dp"
+        android:layout_marginTop="27dp"
         android:background="@drawable/choose_theme_current_theme"
         android:text="@string/welcome_choose_theme_current"
+        android:includeFontPadding="false"
         android:textColor="#322d2d"
         android:textSize="13.3sp"
         app:layout_constraintStart_toStartOf="@id/pager"
-        app:layout_constraintTop_toTopOf="@id/pager" />
+        app:layout_constraintTop_toTopOf="@id/pager"
+        app:typeface="@string/custom_font_bold"/>
 
 
     <com.superapps.view.MessagesTextView
@@ -48,11 +50,13 @@
         android:textColor="#ffffff"
         android:text="@string/sms_show_apply"
         android:gravity="center"
+        android:includeFontPadding="false"
+        app:layout_constraintVertical_bias="0.91"
         android:layout_gravity="center_horizontal"
-        android:layout_marginBottom="30dp"
         app:typeface="@string/custom_font_semibold"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"/>
 
 
