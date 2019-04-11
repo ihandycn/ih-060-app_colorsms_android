@@ -237,8 +237,11 @@ public class ConversationMessageView extends RelativeLayout implements View.OnCl
 
         mMessageBubble.layout(contentLeft, contentTop, contentLeft + contentWidth,
                 contentTop + contentHeight);
-        checkBox.layout(getMeasuredWidth() - Dimensions.pxFromDp(45), contentHeight / 2, getMeasuredWidth() - 20,
-                contentHeight / 2 + Dimensions.pxFromDp(19));
+        int bubbleBgHeight = mMessageBubble.findViewById(R.id.message_text_and_info).getMeasuredHeight();
+        checkBox.layout(right - Dimensions.pxFromDp(37),
+                contentTop + bubbleBgHeight / 2 - Dimensions.pxFromDp(20) / 2,
+                right - Dimensions.pxFromDp(17),
+                contentTop + bubbleBgHeight / 2 + Dimensions.pxFromDp(20) / 2);
     }
 
     /**
@@ -1199,15 +1202,14 @@ public class ConversationMessageView extends RelativeLayout implements View.OnCl
     }
 
     public void open() {
-        if (mData.getIsIncoming())
-            return;
-        mMessageBubble.scrollTo(mOffset, 0);
+        if (mData.getIsIncoming()) {
+            mMessageBubble.scrollTo(0, 0);
+        } else {
+            mMessageBubble.scrollTo(mOffset, 0);
+        }
     }
 
     public void close() {
-        if (mData.getIsIncoming())
-            return;
         mMessageBubble.scrollTo(0, 0);
-
     }
 }

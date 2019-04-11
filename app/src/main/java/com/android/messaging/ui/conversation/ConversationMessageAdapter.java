@@ -15,27 +15,20 @@
  */
 package com.android.messaging.ui.conversation;
 
-import android.animation.LayoutTransition;
 import android.content.Context;
 import android.database.Cursor;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
 import com.android.messaging.R;
-import com.android.messaging.datamodel.data.ConversationData;
 import com.android.messaging.datamodel.data.ConversationMessageData;
 import com.android.messaging.ui.AsyncImageView.AsyncImageViewDelayLoader;
 import com.android.messaging.ui.CursorRecyclerAdapter;
 import com.android.messaging.ui.conversation.ConversationMessageView.ConversationMessageViewHost;
 import com.android.messaging.util.Assert;
-import com.superapps.util.Threads;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Provides an interface to expose Conversation Message Cursor data to a UI widget like a
@@ -87,7 +80,6 @@ public class ConversationMessageAdapter extends
             }
         } else {
             checkbox.setVisibility(View.GONE);
-
         }
         holder.bind();
     }
