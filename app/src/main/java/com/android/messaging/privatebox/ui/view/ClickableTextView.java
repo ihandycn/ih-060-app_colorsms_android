@@ -1,4 +1,4 @@
-package com.android.messaging.privatebox.view;
+package com.android.messaging.privatebox.ui.view;
 
 import android.content.Context;
 import android.graphics.Canvas;

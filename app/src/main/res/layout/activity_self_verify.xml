@@ -54,7 +54,7 @@
                 android:orientation="horizontal">
             </LinearLayout>
 
-            <com.android.messaging.privatebox.view.PINIndicatorView
+            <com.android.messaging.privatebox.ui.view.PINIndicatorView
                 android:id="@+id/pin_indicator_view"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -64,7 +64,7 @@
                 app:pin_indicator_circle="@drawable/shape_pin_circle_dark"
                 app:pin_indicator_ring="@drawable/shape_pin_circle_light"/>
 
-            <com.android.messaging.privatebox.view.PINKeyboardView
+            <com.android.messaging.privatebox.ui.view.PINKeyboardView
                 android:id="@+id/pin_unlock_view"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
@@ -80,7 +80,7 @@
                 app:pin_circle_color="#14000000"
                 app:pin_number_color="#222327"/>
 
-            <com.android.messaging.privatebox.view.GestureLockView
+            <com.android.messaging.privatebox.ui.view.GestureLockView
                 android:id="@+id/gesture_unlock_view"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"

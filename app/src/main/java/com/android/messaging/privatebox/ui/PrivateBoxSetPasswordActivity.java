@@ -1,4 +1,4 @@
-package com.android.messaging.privatebox;
+package com.android.messaging.privatebox.ui;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -16,10 +16,10 @@ import android.widget.TextView;
 import com.airbnb.lottie.LottieAnimationView;
 import com.android.messaging.BaseActivity;
 import com.android.messaging.R;
-import com.android.messaging.privatebox.ui.PrivateConversationListActivity;
-import com.android.messaging.privatebox.view.GestureLockView;
-import com.android.messaging.privatebox.view.PINIndicatorView;
-import com.android.messaging.privatebox.view.PINKeyboardView;
+import com.android.messaging.privatebox.PrivateBoxSettings;
+import com.android.messaging.privatebox.ui.view.GestureLockView;
+import com.android.messaging.privatebox.ui.view.PINIndicatorView;
+import com.android.messaging.privatebox.ui.view.PINKeyboardView;
 import com.android.messaging.ui.customize.PrimaryColors;
 import com.android.messaging.util.BugleAnalytics;
 import com.android.messaging.util.UiUtils;

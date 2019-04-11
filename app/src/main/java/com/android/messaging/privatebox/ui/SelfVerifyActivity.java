@@ -1,4 +1,4 @@
-package com.android.messaging.privatebox;
+package com.android.messaging.privatebox.ui;
 
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
@@ -9,7 +9,6 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.android.messaging.R;
-import com.android.messaging.privatebox.ui.PrivateConversationListActivity;
 import com.android.messaging.util.UiUtils;
 import com.superapps.util.Navigations;
 

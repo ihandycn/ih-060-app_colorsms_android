@@ -1,4 +1,4 @@
-package com.android.messaging.privatebox.view;
+package com.android.messaging.privatebox.ui.view;
 
 /**
  * Created by lz on 22/07/2017.

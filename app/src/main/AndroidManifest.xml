@@ -715,7 +715,7 @@
             android:theme="@style/Theme.AppCompat.Translucent"/>
 
         <activity
-            android:name=".privatebox.PrivateBoxSetPasswordActivity"
+            android:name=".privatebox.ui.PrivateBoxSetPasswordActivity"
             android:excludeFromRecents="true"
             android:screenOrientation="portrait"
             android:theme="@style/SettingsActivity" />
@@ -733,7 +733,7 @@
             android:exported="false" />
 
         <activity
-            android:name=".privatebox.SelfVerifyActivity"
+            android:name=".privatebox.ui.SelfVerifyActivity"
             android:excludeFromRecents="true"
             android:screenOrientation="portrait"
             android:theme="@style/SettingsActivity" />

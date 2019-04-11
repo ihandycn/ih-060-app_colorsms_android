@@ -1,4 +1,4 @@
-package com.android.messaging.privatebox;
+package com.android.messaging.privatebox.ui;
 
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
@@ -13,9 +13,10 @@ import android.widget.ImageView;
 
 import com.android.messaging.BaseActivity;
 import com.android.messaging.R;
-import com.android.messaging.privatebox.view.GestureLockView;
-import com.android.messaging.privatebox.view.PINIndicatorView;
-import com.android.messaging.privatebox.view.PINKeyboardView;
+import com.android.messaging.privatebox.PrivateBoxSettings;
+import com.android.messaging.privatebox.ui.view.GestureLockView;
+import com.android.messaging.privatebox.ui.view.PINIndicatorView;
+import com.android.messaging.privatebox.ui.view.PINKeyboardView;
 import com.android.messaging.util.ViewUtils;
 import com.ihs.commons.notificationcenter.HSGlobalNotificationCenter;
 import com.ihs.commons.notificationcenter.INotificationObserver;
