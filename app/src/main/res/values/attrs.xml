@@ -57,10 +57,10 @@
         </attr>
     </declare-styleable>
     <declare-styleable name="SettingItemView">
-        <attr name="type" format="integer">
-            <enum name="normal" value="3" />
+        <attr name="type" format="enum">
             <enum name="switchView" value="1" />
             <enum name="withTriangle" value="2"/>
+            <enum name="normal" value="3" />
         </attr>
         <attr name="title"/>
         <attr name="summary" format="reference" />

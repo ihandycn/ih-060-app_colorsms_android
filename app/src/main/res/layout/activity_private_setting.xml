@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <include layout="@layout/top_tool_bar_view" />
+
+    <!--Security-->
+    <com.android.messaging.ui.appsettings.SettingItemView
+        android:id="@+id/private_setting_security"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:summary="@string/private_box_setting_security_summary"
+        app:title="@string/private_box_setting_security"
+        app:type="withTriangle" />
+
+    <!--Entrance-->
+    <com.android.messaging.ui.appsettings.SettingItemView
+        android:id="@+id/private_setting_entrance"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:summary="@string/private_box_setting_entrance_summary"
+        app:title="@string/private_box_setting_entrance"
+        app:type="withTriangle" />
+
+    <!--Notifications-->
+    <com.android.messaging.ui.appsettings.SettingItemView
+        android:id="@+id/private_setting_notifications"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:summary="@string/private_box_setting_notification_summary"
+        app:title="@string/private_box_setting_notification"
+        app:type="switchView" />
+</LinearLayout>

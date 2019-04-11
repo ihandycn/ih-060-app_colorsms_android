@@ -19,7 +19,7 @@
         android:layout_height="wrap_content"
         app:summary="@string/auto_retrieve_mms_pref_summary"
         app:title="@string/auto_retrieve_mms_pref_title"
-        app:type="1" />
+        app:type="switchView" />
 
     <com.android.messaging.ui.appsettings.SettingItemView
         android:id="@+id/setting_advanced_roaming_auto_retrieve"
@@ -27,7 +27,7 @@
         android:layout_height="wrap_content"
         app:summary="@string/auto_retrieve_mms_when_roaming_pref_summary"
         app:title="@string/auto_retrieve_mms_when_roaming_pref_title"
-        app:type="1" />
+        app:type="switchView" />
 
     <com.android.messaging.ui.appsettings.SettingItemView
         android:id="@+id/setting_advanced_delivery_reports"
@@ -35,5 +35,5 @@
         android:layout_height="wrap_content"
         app:summary="@string/delivery_reports_pref_summary"
         app:title="@string/delivery_reports_pref_title"
-        app:type="1" />
+        app:type="switchView" />
 </LinearLayout>

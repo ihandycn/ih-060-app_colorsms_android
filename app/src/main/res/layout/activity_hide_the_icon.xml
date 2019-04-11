@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <include layout="@layout/top_tool_bar_view" />
+
+    <com.airbnb.lottie.LottieAnimationView
+        android:id="@+id/private_hide_icon_lottie"
+        android:layout_width="match_parent"
+        android:layout_height="250dp"
+        app:lottie_fileName="lottie/private_hide_the_icon.json"
+        app:lottie_imageAssetsFolder="lottie/private_hide_the_icon"/>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0.7dp"
+        android:background="#e9ecef"/>
+
+    <com.android.messaging.ui.appsettings.SettingItemView
+        android:id="@+id/private_hide_icon_item"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:summary="@string/private_box_hide_icon_summary"
+        app:title="@string/private_box_hide_icon"
+        app:type="switchView" />
+</LinearLayout>

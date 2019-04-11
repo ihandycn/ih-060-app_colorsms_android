@@ -1114,7 +1114,16 @@
 
     <string name="private_box_add_private_contacts">Please add private contacts!</string>
     <string name="private_box_add_now">Add Now</string>
+    <string name="private_box_setting_security">Security</string>
+    <string name="private_box_setting_security_summary">Modify Password</string>
+    <string name="private_box_setting_entrance">Entrance</string>
+    <string name="private_box_setting_entrance_summary">Hide the icon</string>
+    <string name="private_box_setting_notification">Enable Notifications</string>
+    <string name="private_box_setting_notification_summary">When disable this option,Messages from private contact will not pop up any notification.</string>
+    <string name="private_box_hide_icon">Hide private box</string>
+    <string name="private_box_hide_icon_summary">Long press the create icon on home page to enter private box</string>
     <string name="add_to_private_list_dialog_title">Add private contact</string>
     <string name="add_to_private_list_dialog_from_conversation">From conversation list</string>
     <string name="add_to_private_list_dialog_from_contacts_list">From contacts list</string>
+    <string name="private_box_setting">Private box setting</string>
 </resources>
