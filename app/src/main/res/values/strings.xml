@@ -1114,4 +1114,7 @@
 
     <string name="private_box_add_private_contacts">Please add private contacts!</string>
     <string name="private_box_add_now">Add Now</string>
+    <string name="add_to_private_list_dialog_title">Add private contact</string>
+    <string name="add_to_private_list_dialog_from_conversation">From conversation list</string>
+    <string name="add_to_private_list_dialog_from_contacts_list">From contacts list</string>
 </resources>

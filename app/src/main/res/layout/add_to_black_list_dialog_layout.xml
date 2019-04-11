@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@android:color/white"
+    android:orientation="vertical"
+    android:paddingBottom="17dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="64dp">
+
+        <com.superapps.view.TypefacedTextView
+            android:id="@+id/dialog_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="24dp"
+            android:layout_marginStart="24dp"
+            android:layout_marginTop="24dp"
+            android:text="@string/add_to_private_list_dialog_title"
+            android:textColor="#aaadb2"
+            android:textSize="13sp"
+            app:typeface="@string/custom_font_medium"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/from_conversation_layout"
+        android:layout_width="match_parent"
+        android:layout_height="44dp"
+        android:orientation="horizontal">
+
+        <com.superapps.view.TypefacedTextView
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_marginLeft="24dp"
+            android:layout_marginStart="24dp"
+            android:text="@string/add_to_private_list_dialog_from_conversation"
+            android:textColor="#2b2d2f"
+            android:textSize="16sp"
+            app:typeface="@string/custom_font_medium"/>
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="24dp"
+            android:layout_marginEnd="24dp"
+            android:src="@drawable/private_box_add_to_list_dialog_arrow"
+            android:layout_gravity="center_vertical"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/from_contacts_list_layout"
+        android:layout_width="match_parent"
+        android:layout_height="44dp"
+        android:orientation="horizontal">
+
+        <com.superapps.view.TypefacedTextView
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_marginLeft="24dp"
+            android:layout_marginStart="24dp"
+            android:text="@string/add_to_private_list_dialog_from_contacts_list"
+            android:textColor="#2b2d2f"
+            android:textSize="16sp"
+            app:typeface="@string/custom_font_medium"/>
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="24dp"
+            android:layout_marginEnd="24dp"
+            android:src="@drawable/private_box_add_to_list_dialog_arrow"
+            android:layout_gravity="center_vertical"/>
+    </LinearLayout>
+</LinearLayout>

@@ -11,6 +11,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.android.messaging.R;
+import com.android.messaging.privatebox.ui.addtolist.AddToListDialog;
 import com.android.messaging.ui.SnackBarInteraction;
 import com.android.messaging.ui.customize.PrimaryColors;
 import com.superapps.util.Dimensions;
@@ -115,7 +116,22 @@ public class PrivateConversationListActivity extends MultiSelectConversationList
         });
 
         mToolbarAddIcon.setOnClickListener(v -> {
+            final AddToListDialog addToBlackListDialog = new AddToListDialog(PrivateConversationListActivity.this);
+            addToBlackListDialog.setOnButtonClickListener(new AddToListDialog.OnButtonClickListener() {
+                @Override
+                public void onFromConversationClick() {
 
+                    addToBlackListDialog.dismiss();
+                }
+
+                @Override
+                public void onFromContactsClick() {
+
+                    addToBlackListDialog.dismiss();
+                }
+            });
+
+            addToBlackListDialog.show();
         });
 
         invalidateActionBar();
