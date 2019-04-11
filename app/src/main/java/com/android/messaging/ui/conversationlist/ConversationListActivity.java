@@ -2,6 +2,7 @@ package com.android.messaging.ui.conversationlist;
 
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
+import android.app.Activity;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.graphics.drawable.ColorDrawable;
@@ -37,7 +38,9 @@ import com.android.messaging.ui.DragHotSeatActivity;
 import com.android.messaging.ui.UIIntents;
 import com.android.messaging.ui.UIIntentsImpl;
 import com.android.messaging.ui.appsettings.ChangeFontActivity;
+import com.android.messaging.ui.appsettings.SelectPrivacyModeDialog;
 import com.android.messaging.ui.appsettings.ThemeSelectActivity;
+import com.android.messaging.ui.conversation.ConversationActivity;
 import com.android.messaging.ui.customize.BubbleDrawables;
 import com.android.messaging.ui.customize.ConversationColors;
 import com.android.messaging.ui.customize.CustomBubblesActivity;
@@ -55,6 +58,7 @@ import com.android.messaging.util.CommonUtils;
 import com.android.messaging.util.CreateShortcutUtils;
 import com.android.messaging.util.MediaUtil;
 import com.android.messaging.util.Trace;
+import com.android.messaging.util.UiUtils;
 import com.ihs.app.framework.HSApplication;
 import com.ihs.commons.config.HSConfig;
 import com.ihs.commons.notificationcenter.HSGlobalNotificationCenter;
@@ -343,8 +347,11 @@ public class ConversationListActivity extends AbstractConversationListActivity
                         }
 
                         if (BuildConfig.DEBUG) {
-                            UIIntents.get().launchMessageBoxActivity(getApplicationContext(), new MessageBoxItemData("asd",
-                                    "asd", "asd", "asd", "asd", "heihei", 123L));
+                            SelectPrivacyModeDialog dialog = new SelectPrivacyModeDialog();
+                            UiUtils.showDialogFragment(ConversationListActivity.this, dialog);
+
+//                            UIIntents.get().launchMessageBoxActivity(getApplicationContext(), new MessageBoxItemData("asd",
+//                                    "asd", "asd", "asd", "asd", "heihei", 123L));
                         } else {
                             Navigations.startActivity(ConversationListActivity.this, CustomBubblesActivity.class);
                         }

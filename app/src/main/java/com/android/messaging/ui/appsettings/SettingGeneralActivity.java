@@ -1,5 +1,6 @@
 package com.android.messaging.ui.appsettings;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.media.Ringtone;
 import android.media.RingtoneManager;
@@ -17,6 +18,7 @@ import com.android.messaging.R;
 import com.android.messaging.feedback.FeedbackActivity;
 import com.android.messaging.smsshow.SmsShowUtils;
 import com.android.messaging.ui.BaseAlertDialog;
+import com.android.messaging.ui.BaseDialogFragment;
 import com.android.messaging.ui.UIIntents;
 import com.android.messaging.ui.WebViewActivity;
 import com.android.messaging.ui.messagebox.MessageBoxSettings;
@@ -116,11 +118,22 @@ public class SettingGeneralActivity extends BaseActivity {
         });
 
         mPrivacyModeView = findViewById(R.id.setting_item_privacy_mode);
-        mPrivacyModeView.setOnItemClickListener(new SettingItemView.OnSettingItemClickListener() {
-            @Override
-            public void onClick() {
+        updatePrivacyModeSummary();
+        mPrivacyModeView.setOnItemClickListener(() -> {
+            SelectPrivacyModeDialog dialog = new SelectPrivacyModeDialog();
+            dialog.setOnDismissOrCancelListener(new BaseDialogFragment.OnDismissOrCancelListener() {
 
-            }
+                @Override
+                public void onDismiss(DialogInterface dialog) {
+                    updatePrivacyModeSummary();
+                }
+                @Override
+                public void onCancel(DialogInterface dialog) {
+
+                }
+            });
+            UiUtils.showDialogFragment(SettingGeneralActivity.this, dialog);
+            BugleAnalytics.logEvent("SMS_Settings_Privacy_Click");
         });
 
         //signature
@@ -169,6 +182,7 @@ public class SettingGeneralActivity extends BaseActivity {
                     mSmsShowView.setEnable(b && mPopUpsView.isChecked());
                     mSoundView.setEnable(b);
                     mVibrateView.setEnable(b);
+                    mPrivacyModeView.setEnable(b);
                     BugleAnalytics.logEvent("SMS_Settings_Notifications_Click", true);
                 }
         );
@@ -269,6 +283,21 @@ public class SettingGeneralActivity extends BaseActivity {
             return;
         }
         mSoundView.setSummary(ringtoneName);
+    }
+
+
+    private void updatePrivacyModeSummary() {
+        switch (PrivacyModeSettings.getPrivacyMode()) {
+            case PrivacyModeSettings.NONE:
+                mPrivacyModeView.setSummary(getString(R.string.privacy_mode_disable));
+                break;
+            case PrivacyModeSettings.HIDE_MESSAGE_ONLY:
+                mPrivacyModeView.setSummary(getString(R.string.privacy_mode_hide_message_only));
+                break;
+            case PrivacyModeSettings.HIDE_CONTACT_AND_MESSAGE:
+                mPrivacyModeView.setSummary(getString(R.string.privacy_mode_hide_contact_and_message));
+                break;
+        }
     }
 
     private void onSoundItemClick() {

@@ -33,6 +33,7 @@ import com.android.messaging.R;
 import com.android.messaging.datamodel.NoConfirmationSmsSendService;
 import com.android.messaging.datamodel.data.MessageBoxItemData;
 import com.android.messaging.ui.UIIntents;
+import com.android.messaging.ui.appsettings.PrivacyModeSettings;
 import com.android.messaging.ui.customize.PrimaryColors;
 import com.android.messaging.ui.emoji.EmojiInfo;
 import com.android.messaging.util.BugleAnalytics;
@@ -294,6 +295,7 @@ public class MessageBoxConversationView extends FrameLayout {
             public void onClick(View v) {
                 revealMessages();
                 showMessageTextView.setClickable(false);
+                BugleAnalytics.logEvent("SMS_PrivacyPopUp_Show_Click");
             }
         });
 
@@ -381,11 +383,11 @@ public class MessageBoxConversationView extends FrameLayout {
     }
 
     private boolean hideContactForThisMessage() {
-        return true;
+        return PrivacyModeSettings.getPrivacyMode(mConversationId) == PrivacyModeSettings.HIDE_CONTACT_AND_MESSAGE;
     }
 
     private boolean hideMessagesForThisMessage() {
-        return true;
+        return PrivacyModeSettings.getPrivacyMode(mConversationId) != PrivacyModeSettings.NONE;
     }
 
     private static class MessageItemDecoration extends RecyclerView.ItemDecoration {

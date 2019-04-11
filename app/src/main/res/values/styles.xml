@@ -726,6 +726,19 @@
         <item name="colorAccent" >#11bd3d</item>
     </style>
 
+    <style name="SelectPrivacyModeRadioGroup">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:paddingLeft">21dp</item>
+        <item name="android:layout_marginTop">17dp</item>
+        <item name="android:layout_marginStart">5dp</item>
+        <item name="android:textColor">@color/text_primary_color</item>
+        <item name="android:checked">false</item>
+        <item name="android:textSize">17.3sp</item>
+        <item name="typeface">@string/custom_font_regular</item>
+    </style>
+
+
     <style name="MessageBoxActionTextTheme">
         <item name="android:textColor">@color/primary_color</item>
         <item name="android:textColorHighlight">@color/primary_color_dark</item>
