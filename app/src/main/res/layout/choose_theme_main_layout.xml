@@ -31,13 +31,13 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="76dp"
+        android:layout_marginTop="28dp"
         android:background="@drawable/choose_theme_current_theme"
         android:text="@string/welcome_choose_theme_current"
         android:textColor="#322d2d"
         android:textSize="13.3sp"
         app:layout_constraintStart_toStartOf="@id/pager"
-        app:layout_constraintTop_toTopOf="@id/pager"
-        android:layout_marginTop="26dp" />
+        app:layout_constraintTop_toTopOf="@id/pager" />
 
 
     <com.superapps.view.MessagesTextView

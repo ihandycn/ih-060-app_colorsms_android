@@ -505,7 +505,7 @@ public class WelcomeStartActivity extends AppCompatActivity implements View.OnCl
             if (PhoneUtils.getDefault().isDefaultSmsApp()) {
                 if (OsUtil.hasRequiredPermissions()) {
                     Factory.get().onDefaultSmsSetAndPermissionsGranted();
-                    UIIntents.get().launchConversationListActivity(this);
+                    Navigations.startActivitySafely(this, new Intent(this, WelcomeChooseThemeActivity.class));
                 } else {
                     UIIntents.get().launchWelcomePermissionActivity(this);
                 }

@@ -75,9 +75,7 @@ public class WelcomeSetAsDefaultActivity extends AppCompatActivity {
             if (PhoneUtils.getDefault().isDefaultSmsApp()) {
                 if (OsUtil.hasRequiredPermissions()) {
                     Factory.get().onDefaultSmsSetAndPermissionsGranted();
-
-                    Navigations.startActivitySafely(this, new Intent(this, WelcomeChooseThemeActivity.class));
-
+                    UIIntents.get().launchConversationListActivity(this);
                 } else {
                     UIIntents.get().launchWelcomePermissionActivity(this);
                 }
