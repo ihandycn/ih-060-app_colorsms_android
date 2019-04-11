@@ -38,9 +38,9 @@ public class WelcomeSetAsDefaultActivity extends AppCompatActivity {
             final Intent intent = UIIntents.get().getChangeDefaultSmsAppIntent(WelcomeSetAsDefaultActivity.this);
             startActivityForResult(intent, REQUEST_SET_DEFAULT_SMS_APP);
             if (mIsFromWelcomeStart) {
-                BugleAnalytics.logEvent("Start_SetAsDefault_Click", true);
+                BugleAnalytics.logEvent("Start_SetAsDefault_Click", true, true);
             } else {
-                BugleAnalytics.logEvent("SetAsDefault_GuidePage_Click", true);
+                BugleAnalytics.logEvent("SetAsDefault_GuidePage_Click", true, true);
             }
         });
 
@@ -52,9 +52,9 @@ public class WelcomeSetAsDefaultActivity extends AppCompatActivity {
     public void onStart() {
         super.onStart();
         if (mIsFromWelcomeStart) {
-            BugleAnalytics.logEvent("Start_SetAsDefault_Show", true);
+            BugleAnalytics.logEvent("Start_SetAsDefault_Show", true, true);
         } else {
-            BugleAnalytics.logEvent("SetAsDefault_GuidePage_Show", true);
+            BugleAnalytics.logEvent("SetAsDefault_GuidePage_Show", true, true);
         }
     }
 
@@ -79,9 +79,9 @@ public class WelcomeSetAsDefaultActivity extends AppCompatActivity {
                     UIIntents.get().launchWelcomePermissionActivity(this);
                 }
                 if (mIsFromWelcomeStart) {
-                    BugleAnalytics.logEvent("Start_SetAsDefault_Success", true, "step", "setasdefault page");
+                    BugleAnalytics.logEvent("Start_SetAsDefault_Success", true, true, "step", "setasdefault page");
                 } else {
-                    BugleAnalytics.logEvent("SetAsDefault_GuidePage_Success", true);
+                    BugleAnalytics.logEvent("SetAsDefault_GuidePage_Success", true, true);
                 }
                 finish();
             } else {

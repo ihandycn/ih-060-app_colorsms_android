@@ -119,7 +119,7 @@ public class PeopleAndOptionsFragment extends Fragment
             mBinding.getData().setConversationNotificationSound(mBinding, pickedUri);
 
             if (pickedUri != null && !pickedUri.equals(mRingtone)) {
-                BugleAnalytics.logEvent("Customize_Notification_Sound_Change", true, "from", "chat");
+                BugleAnalytics.logEvent("Customize_Notification_Sound_Change", true, true, "from", "chat");
             }
         }
     }

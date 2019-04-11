@@ -430,7 +430,7 @@ public class ConversationFragment extends Fragment implements ConversationDataLi
         @Override
         public void onDestroyActionMode(final ActionMode actionMode) {
             selectMessage(null);
-            BugleAnalytics.logEvent("SMS_DetailsPage_LongPress_Close", true);
+            BugleAnalytics.logEvent("SMS_DetailsPage_LongPress_Close", true, true);
         }
     };
 
@@ -458,7 +458,7 @@ public class ConversationFragment extends Fragment implements ConversationDataLi
         HSGlobalNotificationCenter.addObserver(EVENT_SHOW_OPTION_MENU, this);
         HSGlobalNotificationCenter.addObserver(EVENT_SHOW_OPTION_MENU, this);
         HSGlobalNotificationCenter.addObserver(EVENT_HIDE_MEDIA_PICKER, this);
-        BugleAnalytics.logEvent("SMS_DetailsPage_Show", true);
+        BugleAnalytics.logEvent("SMS_DetailsPage_Show", true, true);
     }
 
     /**
@@ -705,7 +705,7 @@ public class ConversationFragment extends Fragment implements ConversationDataLi
     public boolean onOptionsItemSelected(final MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_menu:
-                BugleAnalytics.logEvent("SMS_DetailsPage_IconSettings_Click", true);
+                BugleAnalytics.logEvent("SMS_DetailsPage_IconSettings_Click", true, true);
                 UIIntents.get().launchPeopleAndOptionsActivity(getActivity(), mConversationId);
                 return false;
             case R.id.action_call:
@@ -725,7 +725,7 @@ public class ConversationFragment extends Fragment implements ConversationDataLi
                     centerPoint = new Point(display.getWidth() / 2, display.getHeight() / 2);
                 }
                 UIIntents.get().launchPhoneCallActivity(getActivity(), phoneNumber, centerPoint);
-                BugleAnalytics.logEvent("SMS_DetailsPage_IconCall_Click", true);
+                BugleAnalytics.logEvent("SMS_DetailsPage_IconCall_Click", true, true);
                 return true;
         }
         return super.onOptionsItemSelected(item);
@@ -917,7 +917,7 @@ public class ConversationFragment extends Fragment implements ConversationDataLi
                 String name = mBinding.getData().getConversationName();
                 if (!TextUtils.isEmpty(name)) {
                     String[] count = name.split(",");
-                    BugleAnalytics.logEvent("SMS_SendPeopleAmount_Statistics", true, "type", String.valueOf(count.length));
+                    BugleAnalytics.logEvent("SMS_SendPeopleAmount_Statistics", true, true, "type", String.valueOf(count.length));
                 }
 
                 // Merge the caption text from attachments into the text body of the messages

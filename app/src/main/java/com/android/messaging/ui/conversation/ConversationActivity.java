@@ -88,7 +88,7 @@ public class ConversationActivity extends BugleActionBarActivity
         final Intent intent = getIntent();
 
         if (getIntent() != null && getIntent().getBooleanExtra(BugleNotifications.EXTRA_FROM_NOTIFICATION, false)) {
-            BugleAnalytics.logEvent("SMS_Notifications_Clicked", true);
+            BugleAnalytics.logEvent("SMS_Notifications_Clicked", true, true);
         }
 
         // Do our best to restore UI state from saved instance state.

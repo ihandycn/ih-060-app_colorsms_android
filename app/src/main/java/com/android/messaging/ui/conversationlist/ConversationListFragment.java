@@ -161,7 +161,7 @@ public class ConversationListFragment extends Fragment implements ConversationLi
                 BugleAnalytics.logEvent("SMS_Messages_Show_NotOnTop", true);
             } else {
                 if (HSConfig.optBoolean(true, "Application", "SMSAd", "SMSHomepageBannerAd")) {
-                    BugleAnalytics.logEvent("SMS_Messages_BannerAd_Should_Show", true);
+                    BugleAnalytics.logEvent("SMS_Messages_BannerAd_Should_Show", true, true);
                     switchAd = false;
                     if (expressAdView != null) {
                         expressAdView.switchAd();
@@ -254,7 +254,7 @@ public class ConversationListFragment extends Fragment implements ConversationLi
                     BugleAnalytics.logEvent("SMS_Messages_SlideUpToTop");
                     if (expressAdView != null && switchAd) {
                         expressAdView.switchAd();
-                        BugleAnalytics.logEvent("SMS_Messages_BannerAd_Should_Show", true);
+                        BugleAnalytics.logEvent("SMS_Messages_BannerAd_Should_Show", true, true);
                         switchAd = false;
                     }
                 }
@@ -308,7 +308,7 @@ public class ConversationListFragment extends Fragment implements ConversationLi
                 @Override
                 public void onClick(final View clickView) {
                     ConversationListActivity.logFirstComeInClickEvent("create");
-                    BugleAnalytics.logEvent("SMS_CreateMessage_ButtonClick", true);
+                    BugleAnalytics.logEvent("SMS_CreateMessage_ButtonClick", true, true);
                     mHost.onCreateConversationClick();
                 }
             });
@@ -359,12 +359,12 @@ public class ConversationListFragment extends Fragment implements ConversationLi
         expressAdView.setExpressAdViewListener(new AcbExpressAdView.AcbExpressAdViewListener() {
             @Override
             public void onAdShown(AcbExpressAdView acbExpressAdView) {
-                BugleAnalytics.logEvent("SMS_Messages_BannerAd_Show", true);
+                BugleAnalytics.logEvent("SMS_Messages_BannerAd_Show", true, true);
             }
 
             @Override
             public void onAdClicked(AcbExpressAdView acbExpressAdView) {
-                BugleAnalytics.logEvent("SMS_Messages_BannerAd_Click", true);
+                BugleAnalytics.logEvent("SMS_Messages_BannerAd_Click", true, true);
             }
         });
         adContainer.addView(expressAdView);

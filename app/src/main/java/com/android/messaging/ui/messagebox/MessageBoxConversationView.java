@@ -15,7 +15,6 @@ import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.view.Display;
 import android.view.KeyEvent;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
@@ -40,8 +39,10 @@ import static com.android.messaging.datamodel.NoConfirmationSmsSendService.EXTRA
 
 public class MessageBoxConversationView extends FrameLayout {
 
-    @ColorInt private int mPrimaryColor;
-    @ColorInt private int mPrimaryColorDark;
+    @ColorInt
+    private int mPrimaryColor;
+    @ColorInt
+    private int mPrimaryColorDark;
 
     private MessageBoxActivity mActivity;
     private ViewGroup mContent;
@@ -216,7 +217,7 @@ public class MessageBoxConversationView extends FrameLayout {
             type += "emoji";
         }
 
-        BugleAnalytics.logEvent("SMS_PopUp_Reply_BtnClick_Multifunction",
+        BugleAnalytics.logEvent("SMS_PopUp_Reply_BtnClick_Multifunction", false, true,
                 "type", type, "type2", MessageBoxAnalytics.getConversationType());
     }
 

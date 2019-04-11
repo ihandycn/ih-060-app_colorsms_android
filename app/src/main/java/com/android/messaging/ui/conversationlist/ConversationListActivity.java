@@ -29,8 +29,8 @@ import com.airbnb.lottie.LottieAnimationView;
 import com.android.messaging.Factory;
 import com.android.messaging.R;
 import com.android.messaging.datamodel.BugleNotifications;
-import com.android.messaging.ui.CreateShortcutActivity;
 import com.android.messaging.datamodel.action.PinConversationAction;
+import com.android.messaging.ui.CreateShortcutActivity;
 import com.android.messaging.ui.DragHotSeatActivity;
 import com.android.messaging.ui.UIIntents;
 import com.android.messaging.ui.UIIntentsImpl;
@@ -164,7 +164,7 @@ public class ConversationListActivity extends AbstractConversationListActivity
         }
 
         if (getIntent() != null && getIntent().getBooleanExtra(BugleNotifications.EXTRA_FROM_NOTIFICATION, false)) {
-            BugleAnalytics.logEvent("SMS_Notifications_Clicked", true);
+            BugleAnalytics.logEvent("SMS_Notifications_Clicked", true, true);
         }
 
         setupDrawer();
@@ -194,7 +194,7 @@ public class ConversationListActivity extends AbstractConversationListActivity
                     backgroundStr = "colorsms_" + wallpaperIndex;
                 }
 
-                BugleAnalytics.logEvent("SMS_Messages_Show", true,
+                BugleAnalytics.logEvent("SMS_Messages_Show", true, true,
                         "themeColor", String.valueOf(ThemeSelectActivity.getSelectedIndex()),
                         "background", backgroundStr,
                         "bubbleStyle", String.valueOf(BubbleDrawables.getSelectedIdentifier()),
@@ -258,7 +258,7 @@ public class ConversationListActivity extends AbstractConversationListActivity
     @Override
     protected void onResume() {
         super.onResume();
-        BugleAnalytics.logEvent("SMS_Messages_Show_Corrected", true);
+        BugleAnalytics.logEvent("SMS_Messages_Show_Corrected", true, true);
         Preferences.getDefault().incrementAndGetInt(CustomizeGuideController.PREF_KEY_MAIN_PAGE_SHOW_TIME);
         WeakReference<AppCompatActivity> activity = new WeakReference<>(this);
         Threads.postOnMainThreadDelayed(() -> {
@@ -312,7 +312,7 @@ public class ConversationListActivity extends AbstractConversationListActivity
                 drawerClickIndex = DRAWER_INDEX_NONE;
                 Preferences.getDefault().putBoolean(PREF_KEY_MAIN_DRAWER_OPENED, true);
                 setDrawerMenuIcon();
-                BugleAnalytics.logEvent("Menu_Show", true);
+                BugleAnalytics.logEvent("Menu_Show", true, true);
                 if (CommonUtils.isNewUser()
                         && Calendars.isSameDay(CommonUtils.getAppInstallTimeMillis(), System.currentTimeMillis())) {
                     BugleAnalytics.logEvent("Menu_Show_NewUser_TestPrivateBox");
@@ -327,7 +327,7 @@ public class ConversationListActivity extends AbstractConversationListActivity
 
                 switch (drawerClickIndex) {
                     case DRAWER_INDEX_THEME_COLOR:
-                        BugleAnalytics.logEvent("Menu_ThemeColor_Click");
+                        BugleAnalytics.logEvent("Menu_ThemeColor_Click", true);
                         if (CommonUtils.isNewUser() && DateUtils.isToday(CommonUtils.getAppInstallTimeMillis())) {
                             BugleAnalytics.logEvent("Menu_ThemeColor_Click_NewUser", true);
                         }
@@ -335,7 +335,7 @@ public class ConversationListActivity extends AbstractConversationListActivity
                         navigationContent.findViewById(R.id.navigation_item_theme_new_text).setVisibility(View.GONE);
                         break;
                     case DRAWER_INDEX_BUBBLE:
-                        BugleAnalytics.logEvent("Menu_Bubble_Click", true);
+                        BugleAnalytics.logEvent("Menu_Bubble_Click", true, true);
                         if (CommonUtils.isNewUser() && DateUtils.isToday(CommonUtils.getAppInstallTimeMillis())) {
                             BugleAnalytics.logEvent("Menu_Bubble_Click_NewUser", true);
                         }
@@ -343,7 +343,7 @@ public class ConversationListActivity extends AbstractConversationListActivity
                         navigationContent.findViewById(R.id.navigation_item_bubble_new_text).setVisibility(View.GONE);
                         break;
                     case DRAWER_INDEX_CHAT_BACKGROUND:
-                        BugleAnalytics.logEvent("Menu_ChatBackground_Click", true);
+                        BugleAnalytics.logEvent("Menu_ChatBackground_Click", true, true);
                         if (CommonUtils.isNewUser() && DateUtils.isToday(CommonUtils.getAppInstallTimeMillis())) {
                             BugleAnalytics.logEvent("Menu_ChatBackground_Click_NewUser", true);
                         }
@@ -358,11 +358,11 @@ public class ConversationListActivity extends AbstractConversationListActivity
                         break;
                     case DRAWER_INDEX_SETTING:
                         UIIntents.get().launchSettingsActivity(ConversationListActivity.this);
-                        BugleAnalytics.logEvent("Menu_Settings_Click", true);
+                        BugleAnalytics.logEvent("Menu_Settings_Click", true, true);
                         break;
                     case DRAWER_INDEX_RATE:
                         FiveStarRateDialog.showFiveStarFromSetting(ConversationListActivity.this);
-                        BugleAnalytics.logEvent("Menu_FiveStart_Click", true);
+                        BugleAnalytics.logEvent("Menu_FiveStart_Click", true, true);
                         break;
                     case DRAWER_INDEX_NONE:
                     default:
@@ -499,7 +499,7 @@ public class ConversationListActivity extends AbstractConversationListActivity
         mTitleTextView.setVisibility(View.GONE);
         stopEmojiStoreGuide();
         mEmojiStoreIconView.setVisibility(View.GONE);
-        BugleAnalytics.logEvent("SMS_EditMode_Show", true);
+        BugleAnalytics.logEvent("SMS_EditMode_Show", true, true);
         return super.startActionMode(callback);
     }
 
@@ -575,7 +575,7 @@ public class ConversationListActivity extends AbstractConversationListActivity
                 return;
             }
             logFirstComeInClickEvent("emojistore");
-            BugleAnalytics.logEvent("SMS_Messages_Emojistore_Click", true);
+            BugleAnalytics.logEvent("SMS_Messages_Emojistore_Click", true, true);
             if (mAnimState == AnimState.DISAPPEAR) {
                 mIsEmojiStoreClickable = false;
                 Threads.postOnMainThreadDelayed(() -> {
@@ -688,7 +688,7 @@ public class ConversationListActivity extends AbstractConversationListActivity
         Preferences.getDefault().doOnce(new Runnable() {
             @Override
             public void run() {
-                BugleAnalytics.logEvent("SMS_Messages_First_Click", true, "type", type);
+                BugleAnalytics.logEvent("SMS_Messages_First_Click", true, true, "type", type);
             }
         }, "pref_first_come_in_click_event");
     }

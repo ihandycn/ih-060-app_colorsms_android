@@ -84,7 +84,8 @@ public class ThemeSelectActivity extends BaseActivity {
                 // notify main page recreate
                 HSGlobalNotificationCenter.sendNotification(ConversationListActivity.EVENT_MAINPAGE_RECREATE);
 
-                BugleAnalytics.logEvent("Customize_ThemeColor_Change", true, "color", String.valueOf(getSelectedIndex()));
+                BugleAnalytics.logEvent("Customize_ThemeColor_Change", true, true,
+                        "color", String.valueOf(getSelectedIndex()));
                 UiUtils.setTitleBarBackground(toolbar, this);
 
             });
@@ -93,7 +94,7 @@ public class ThemeSelectActivity extends BaseActivity {
         // initial refresh
         refreshSelectStatus();
 
-        BugleAnalytics.logEvent("Customize_ThemeColor_Show", true);
+        BugleAnalytics.logEvent("Customize_ThemeColor_Show", true, true);
     }
 
 

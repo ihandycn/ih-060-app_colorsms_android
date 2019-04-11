@@ -87,13 +87,13 @@ public class ChooseMessageColorEntryViewHolder extends BasePagerViewHolder imple
         mMessageTextColorOutgoingContainer.setOnClickListener(this);
 
         mBubbleBackgroundColorIncomingContainer.setBackground(
-                BackgroundDrawables.createBackgroundDrawable(Color.WHITE, 0xffd6d7da, 0,false, true));
+                BackgroundDrawables.createBackgroundDrawable(Color.WHITE, 0xffd6d7da, 0, false, true));
         mBubbleBackgroundColorOutgoingContainer.setBackground(
-                BackgroundDrawables.createBackgroundDrawable(Color.WHITE, 0xffd6d7da, 0,false, true));
+                BackgroundDrawables.createBackgroundDrawable(Color.WHITE, 0xffd6d7da, 0, false, true));
         mMessageTextColorIncomingContainer.setBackground(
-                BackgroundDrawables.createBackgroundDrawable(Color.WHITE, 0xffd6d7da, 0,false, true));
+                BackgroundDrawables.createBackgroundDrawable(Color.WHITE, 0xffd6d7da, 0, false, true));
         mMessageTextColorOutgoingContainer.setBackground(
-                BackgroundDrawables.createBackgroundDrawable(Color.WHITE, 0xffd6d7da, 0,false, true));
+                BackgroundDrawables.createBackgroundDrawable(Color.WHITE, 0xffd6d7da, 0, false, true));
 
         mDefaultPreviewDrawable = mContext.getResources().getDrawable(R.drawable.custom_message_color_default_preview_drawable);
         initAppearance();
@@ -159,6 +159,6 @@ public class ChooseMessageColorEntryViewHolder extends BasePagerViewHolder imple
 
     @Override
     public void onPageSelected() {
-        BugleAnalytics.logEvent("Customize_Bubble_Color_Show");
+        BugleAnalytics.logEvent("Customize_Bubble_Color_Show", false, true);
     }
 }

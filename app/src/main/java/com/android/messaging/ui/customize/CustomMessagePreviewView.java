@@ -120,7 +120,7 @@ public class CustomMessagePreviewView extends ConstraintLayout {
         if (mPreviewBubbleDrawableIndex != BubbleDrawables.getSelectedIndex(mConversationId)) {
             BubbleDrawables.setSelectedIndex(mPreviewBubbleDrawableIndex, mConversationId);
             bubbleDrawableChanged = true;
-            BugleAnalytics.logEvent("Customize_Bubble_Style_Change", "style",
+            BugleAnalytics.logEvent("Customize_Bubble_Style_Change", false, true, "style",
                     String.valueOf(BubbleDrawables.getSelectedIdentifier()));
         }
 
@@ -146,11 +146,11 @@ public class CustomMessagePreviewView extends ConstraintLayout {
 
         String from = TextUtils.isEmpty(mConversationId) ? "settings" : "chat";
 
-        BugleAnalytics.logEvent("Customize_Bubble_Change", true, "from", from, "type",
+        BugleAnalytics.logEvent("Customize_Bubble_Change", true, true, "from", from, "type",
                 getBubbleChangeString(bubbleDrawableChanged, bubbleBackgroundColorChanged || bubbleTextColorChanged));
 
         if (bubbleBackgroundColorChanged || bubbleTextColorChanged) {
-            BugleAnalytics.logEvent("Customize_Bubble_Color_Change", "type",
+            BugleAnalytics.logEvent("Customize_Bubble_Color_Change", false, true, "type",
                     getBubbleColorChangeString(bubbleBackgroundColorChanged, bubbleTextColorChanged));
         }
     }

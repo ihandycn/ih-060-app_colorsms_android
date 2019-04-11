@@ -157,9 +157,9 @@ public class WallpaperPreviewActivity extends BaseActivity implements WallpaperM
         String threadId = getIntent().getStringExtra("thread_id");
         if (threadId != null) {
             mThreadId = threadId;
-            BugleAnalytics.logEvent("SMS_ChatBackground_Show", true, "from", "Options");
+            BugleAnalytics.logEvent("SMS_ChatBackground_Show", true, true, "from", "Options");
         } else {
-            BugleAnalytics.logEvent("SMS_ChatBackground_Show", true, "from", "Menu");
+            BugleAnalytics.logEvent("SMS_ChatBackground_Show", true, true, "from", "Menu");
         }
 
         mWallpaperPreviewImg = findViewById(R.id.wallpaper_preview);
@@ -251,7 +251,7 @@ public class WallpaperPreviewActivity extends BaseActivity implements WallpaperM
                     pickIntent.setDataAndType(android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI, "image/*");
                     Intent chooserIntent = Intent.createChooser(pickIntent, "Select Image");
                     Navigations.startActivityForResultSafely((Activity) mContext, chooserIntent, REQUEST_CODE_PICK_WALLPAPER);
-                    BugleAnalytics.logEvent("SMS_ChatBackground_AddPhotos_Clicked", true,
+                    BugleAnalytics.logEvent("SMS_ChatBackground_AddPhotos_Clicked", true, true,
                             "from", TextUtils.isEmpty(mThreadId) ? "Menu" : "Options");
                 });
             } else if (item.getItemType() == WallpaperChooserItem.TYPE_EMPTY) {
@@ -267,9 +267,9 @@ public class WallpaperPreviewActivity extends BaseActivity implements WallpaperM
                     } else {
                         WallpaperManager.setWallpaperPath(mThreadId, "empty");
                     }
-                    BugleAnalytics.logEvent("SMS_ChatBackground_Backgrounds_Clicked", true,
+                    BugleAnalytics.logEvent("SMS_ChatBackground_Backgrounds_Clicked", true, true,
                             "from", TextUtils.isEmpty(mThreadId) ? "Menu" : "Options");
-                    BugleAnalytics.logEvent("SMS_ChatBackground_Backgrounds_Applied", true,
+                    BugleAnalytics.logEvent("SMS_ChatBackground_Backgrounds_Applied", true, true,
                             "from", TextUtils.isEmpty(mThreadId) ? "Menu" : "Options");
                 });
                 if (TextUtils.isEmpty(wallpaperPath)) {
@@ -291,7 +291,7 @@ public class WallpaperPreviewActivity extends BaseActivity implements WallpaperM
                             setPreviewImage(item.getLocalPath());
                             WallpaperManager.setWallpaperPath(mThreadId, item.getAbsolutePath());
                             WallpaperManager.onOnlineWallpaperChanged();
-                            BugleAnalytics.logEvent("SMS_ChatBackground_Backgrounds_Applied", true,
+                            BugleAnalytics.logEvent("SMS_ChatBackground_Backgrounds_Applied", true, true,
                                     "from", TextUtils.isEmpty(mThreadId) ? "Menu" : "Options");
                         }
                     } else {
@@ -312,7 +312,7 @@ public class WallpaperPreviewActivity extends BaseActivity implements WallpaperM
                                         setPreviewImage(item.getLocalPath());
                                         WallpaperManager.setWallpaperPath(mThreadId, item.getAbsolutePath());
                                         WallpaperManager.onOnlineWallpaperChanged();
-                                        BugleAnalytics.logEvent("SMS_ChatBackground_Backgrounds_Applied", true,
+                                        BugleAnalytics.logEvent("SMS_ChatBackground_Backgrounds_Applied", true, true,
                                                 "from", TextUtils.isEmpty(mThreadId) ? "Menu" : "Options");
                                     }
                                 });
@@ -325,7 +325,7 @@ public class WallpaperPreviewActivity extends BaseActivity implements WallpaperM
                             }
                         }, item.getRemoteUrl());
                     }
-                    BugleAnalytics.logEvent("SMS_ChatBackground_Backgrounds_Clicked", true,
+                    BugleAnalytics.logEvent("SMS_ChatBackground_Backgrounds_Clicked", true, true,
                             "from", TextUtils.isEmpty(mThreadId) ? "Menu" : "Options");
                 });
             }

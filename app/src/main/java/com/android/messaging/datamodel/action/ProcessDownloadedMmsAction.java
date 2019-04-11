@@ -484,7 +484,7 @@ public class ProcessDownloadedMmsAction extends Action {
                 syncManager.onNewMessageInserted(message.getReceivedTimeStamp());
 
                 int isText = 0, isImage = 0, isVideo = 0, isAudio = 0, isVCard = 0;
-                for (MessagePartData part: message.getParts()) {
+                for (MessagePartData part : message.getParts()) {
                     if (part.isText()) {
                         isText = 1;
                     } else if (part.isImage()) {
@@ -516,7 +516,7 @@ public class ProcessDownloadedMmsAction extends Action {
                     mmsType = "other";
                 }
 
-                BugleAnalytics.logEvent("SMS_Received", true,
+                BugleAnalytics.logEvent("SMS_Received", true, true,
                         "type", "mms", "mms_type", mmsType);
 
                 final MessageData current = BugleDatabaseOperations.readMessageData(db, messageId);

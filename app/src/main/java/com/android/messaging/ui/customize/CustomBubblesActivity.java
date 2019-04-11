@@ -94,7 +94,7 @@ public class CustomBubblesActivity extends BaseActivity implements CustomMessage
         customHeaderViewPager.setBackgroundColor(getResources().getColor(R.color.contact_picker_background));
         customHeaderViewPager.setCurrentItem(0);
 
-        BugleAnalytics.logEvent("Customize_Bubble_Show", true, "from", getOpenSourceType());
+        BugleAnalytics.logEvent("Customize_Bubble_Show", true, true, "from", getOpenSourceType());
     }
 
     @Override
