@@ -12,6 +12,7 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.android.messaging.R;
+import com.android.messaging.privatebox.PrivateContactsManager;
 import com.android.messaging.ui.customize.PrimaryColors;
 import com.android.messaging.util.UiUtils;
 import com.ihs.app.framework.activity.HSAppCompatActivity;
@@ -94,6 +95,7 @@ public class ContactsSelectActivity extends HSAppCompatActivity {
 
                 switch (moduleType) {
                     case MODE_CONTACTS_LIST_FOR_BLACKLIST:
+                        PrivateContactsManager.getInstance().addUserToPrivateBox(addList);
                         break;
                 }
 

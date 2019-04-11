@@ -234,7 +234,7 @@ public class PrivateConversationListFragment extends Fragment
             do {
                 ConversationListItemData itemData = new ConversationListItemData();
                 itemData.bind(cursor);
-                if (!itemData.isPrivate()) {
+                if (itemData.isPrivate()) {
                     dataList.add(itemData);
                 }
             } while (cursor.moveToNext());

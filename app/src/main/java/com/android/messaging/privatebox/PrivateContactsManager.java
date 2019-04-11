@@ -1,13 +1,15 @@
 package com.android.messaging.privatebox;
 
-import android.content.ContentValues;
 import android.database.Cursor;
+import android.support.annotation.NonNull;
 
 import com.android.messaging.datamodel.BugleDatabaseOperations;
 import com.android.messaging.datamodel.DataModel;
 import com.android.messaging.datamodel.DatabaseWrapper;
 import com.android.messaging.sms.MmsSmsUtils;
 import com.ihs.app.framework.HSApplication;
+
+import java.util.List;
 
 public class PrivateContactsManager {
     public static final PrivateContactsManager sInstance = new PrivateContactsManager();
@@ -21,6 +23,7 @@ public class PrivateContactsManager {
     }
 
     public boolean isPrivateRecipient(String recipient) {
+        //todo: check permission before use getOrCreateThreadId
         long threadId = MmsSmsUtils.Threads.getOrCreateThreadId(HSApplication.getContext(), recipient);
         if (threadId < 0) {
             return false;
@@ -38,30 +41,18 @@ public class PrivateContactsManager {
         return cursor.getCount() > 0;
     }
 
-    public boolean addPrivateUser(String phoneNum) {
-        long threadId = MmsSmsUtils.Threads.getOrCreateThreadId(HSApplication.getContext(), phoneNum);
-        if (threadId < 0) {
-            return false;
+    public boolean addUserToPrivateBox(@NonNull List<String> recipients) {
+        //todo : check permission for no grant exception
+        for (String recipient : recipients) {
+            long threadId = MmsSmsUtils.Threads.getOrCreateThreadId(HSApplication.getContext(), recipient);
+            if (threadId < 0) {
+                continue;
+            }
+            AddPrivateContactAction.addPrivateContact(threadId, recipient);
         }
-        return addThreadId(threadId, phoneNum);
+        return true;
     }
 
-    public boolean addThreadId(long threadId, String recipient) {
-        DatabaseWrapper db = DataModel.get().getDatabase();
-        Cursor cursor = db.query(PRIVATE_CONTACTS_TABLE, sProjection, THREAD_ID + "=?",
-                new String[]{String.valueOf(threadId)}, null, null, null);
-        if (cursor == null) {
-            return false;
-        }
-        if (cursor.getCount() > 0) {
-            return true;
-        } else {
-            ContentValues values = new ContentValues();
-            values.put(THREAD_ID, threadId);
-            values.put(PHONE_NUMBER, recipient);
-            return db.insert(PRIVATE_CONTACTS_TABLE, null, values) >= 0;
-        }
-    }
 
     public void removeThreadId(long threadId) {
         DatabaseWrapper db = DataModel.get().getDatabase();
@@ -71,7 +62,7 @@ public class PrivateContactsManager {
     public void updatePrivateContactsByConversationId(String conversationId, boolean isPrivate) {
         long threadId = BugleDatabaseOperations.getThreadId(DataModel.get().getDatabase(), conversationId);
         if (isPrivate) {
-            addThreadId(threadId, null);
+            AddPrivateContactAction.addPrivateContact(threadId, null);
         } else {
             removeThreadId(threadId);
         }
@@ -82,11 +73,11 @@ public class PrivateContactsManager {
     public static final String CONTACT_ID = "contact_id";
     public static final String THREAD_ID = "thread_id";
 
-    private static final String[] sProjection = {
+    public static final String[] sProjection = {
             _ID, PHONE_NUMBER, CONTACT_ID, THREAD_ID
     };
 
-    private static final String PRIVATE_CONTACTS_TABLE = "private_contact_table";
+    public static final String PRIVATE_CONTACTS_TABLE = "private_contact_table";
 
     public static final String CREATE_PRIVATE_CONTACTS_TABLE_SQL =
             "CREATE TABLE " + PRIVATE_CONTACTS_TABLE + "("
