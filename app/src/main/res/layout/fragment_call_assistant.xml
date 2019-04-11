@@ -14,16 +14,12 @@
         android:scrollbars="none"/>
 
     <LinearLayout
+        android:id="@+id/bottom_container"
         android:layout_width="match_parent"
         android:layout_height="54dp"
         android:layout_alignParentBottom="true"
         android:orientation="vertical"
         android:gravity="center">
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="0.66dp"
-            android:background="#ebedf1"/>
 
         <LinearLayout
             android:id="@+id/fragment_call_assistant_button"
@@ -31,7 +27,7 @@
             android:layout_height="40dp"
             android:layout_marginLeft="16dp"
             android:layout_marginRight="16dp"
-            android:layout_marginTop="6.7dp"
+            android:layout_gravity="center_vertical"
             android:gravity="center">
 
             <com.superapps.view.TypefacedTextView
@@ -45,4 +41,10 @@
                 app:typeface="@string/custom_font_semibold"/>
         </LinearLayout>
     </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0.66dp"
+        android:layout_alignTop="@id/bottom_container"
+        android:background="#ebedf1"/>
 </RelativeLayout>
