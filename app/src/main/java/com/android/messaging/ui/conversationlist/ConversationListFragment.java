@@ -17,6 +17,7 @@ package com.android.messaging.ui.conversationlist;
 
 import android.app.Activity;
 import android.app.Fragment;
+import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Rect;
 import android.net.Uri;
@@ -47,6 +48,9 @@ import com.android.messaging.datamodel.data.AdItemData;
 import com.android.messaging.datamodel.data.ConversationListData;
 import com.android.messaging.datamodel.data.ConversationListData.ConversationListDataListener;
 import com.android.messaging.datamodel.data.ConversationListItemData;
+import com.android.messaging.privatebox.PrivateBoxSettings;
+import com.android.messaging.privatebox.ui.PrivateBoxSetPasswordActivity;
+import com.android.messaging.privatebox.ui.SelfVerifyActivity;
 import com.android.messaging.ui.BugleAnimationTags;
 import com.android.messaging.ui.ListEmptyView;
 import com.android.messaging.ui.SnackBarInteraction;
@@ -66,6 +70,7 @@ import com.ihs.commons.utils.HSBundle;
 import com.superapps.util.BackgroundDrawables;
 import com.superapps.util.Dimensions;
 import com.superapps.util.IntegerBuckets;
+import com.superapps.util.Navigations;
 import com.superapps.util.Preferences;
 
 import net.appcloudbox.ads.base.ContainerView.AcbContentLayout;
@@ -304,13 +309,20 @@ public class ConversationListFragment extends Fragment implements ConversationLi
             mStartNewConversationButton.setVisibility(View.GONE);
         } else {
             mStartNewConversationButton.setVisibility(View.VISIBLE);
-            mStartNewConversationButton.setOnClickListener(new OnClickListener() {
-                @Override
-                public void onClick(final View clickView) {
-                    ConversationListActivity.logFirstComeInClickEvent("create");
-                    BugleAnalytics.logEvent("SMS_CreateMessage_ButtonClick", true);
-                    mHost.onCreateConversationClick();
+            mStartNewConversationButton.setOnClickListener(clickView -> {
+                ConversationListActivity.logFirstComeInClickEvent("create");
+                BugleAnalytics.logEvent("SMS_CreateMessage_ButtonClick", true);
+                mHost.onCreateConversationClick();
+            });
+            mStartNewConversationButton.setOnLongClickListener(v -> {
+                if (PrivateBoxSettings.isAnyPasswordSetted()) {
+                    Navigations.startActivitySafely(getActivity(),
+                            new Intent(getActivity(), SelfVerifyActivity.class));
+                } else {
+                    Navigations.startActivitySafely(getActivity(),
+                            new Intent(getActivity(), PrivateBoxSetPasswordActivity.class));
                 }
+                return true;
             });
         }
         ViewCompat.setTransitionName(mStartNewConversationButton, BugleAnimationTags.TAG_FABICON);
@@ -340,7 +352,8 @@ public class ConversationListFragment extends Fragment implements ConversationLi
         );
         expressAdView.setAutoSwitchAd(AcbExpressAdView.AutoSwitchAd_None);
         expressAdView.setOnHierarchyChangeListener(new ViewGroup.OnHierarchyChangeListener() {
-            @Override public void onChildViewAdded(View parent, View child) {
+            @Override
+            public void onChildViewAdded(View parent, View child) {
                 try {
                     if (child instanceof RelativeLayout
                             && ((RelativeLayout) child).getChildCount() == 1
@@ -352,7 +365,8 @@ public class ConversationListFragment extends Fragment implements ConversationLi
                 }
             }
 
-            @Override public void onChildViewRemoved(View parent, View child) {
+            @Override
+            public void onChildViewRemoved(View parent, View child) {
 
             }
         });

@@ -15,6 +15,7 @@ import com.superapps.util.Threads;
 
 public class HideTheIconActivity extends BaseActivity {
 
+    private LottieAnimationView mLottie;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -34,9 +35,17 @@ public class HideTheIconActivity extends BaseActivity {
         initItemViews();
     }
 
+    @Override
+    protected void onDestroy() {
+        if (mLottie != null) {
+            mLottie.cancelAnimation();
+        }
+        super.onDestroy();
+    }
+
     private void initItemViews() {
-        LottieAnimationView lottie = findViewById(R.id.private_hide_icon_lottie);
-        Threads.postOnMainThreadDelayed(lottie::playAnimation, 300);
+        mLottie = findViewById(R.id.private_hide_icon_lottie);
+        Threads.postOnMainThreadDelayed(mLottie::playAnimation, 300);
 
         SettingItemView hideIconView = findViewById(R.id.private_hide_icon_item);
         hideIconView.setChecked(PrivateSettingManager.isPrivateBoxIconHidden());

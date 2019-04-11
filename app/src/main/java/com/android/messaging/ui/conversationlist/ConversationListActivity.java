@@ -30,6 +30,7 @@ import com.android.messaging.Factory;
 import com.android.messaging.R;
 import com.android.messaging.datamodel.BugleNotifications;
 import com.android.messaging.datamodel.action.PinConversationAction;
+import com.android.messaging.privatebox.PrivateSettingManager;
 import com.android.messaging.privatebox.ui.PrivateBoxSetPasswordActivity;
 import com.android.messaging.privatebox.PrivateBoxSettings;
 import com.android.messaging.privatebox.ui.SelfVerifyActivity;
@@ -124,6 +125,7 @@ public class ConversationListActivity extends AbstractConversationListActivity
     private boolean hideAnimation;
     private boolean shouldShowCreateShortcutGuide;
     private String size;
+    private View mPrivateBoxEntrance;
 
 
     private enum AnimState {
@@ -260,6 +262,13 @@ public class ConversationListActivity extends AbstractConversationListActivity
     @Override
     protected void onResume() {
         super.onResume();
+        if (mPrivateBoxEntrance != null) {
+            if (PrivateSettingManager.isPrivateBoxIconHidden()) {
+                mPrivateBoxEntrance.setVisibility(View.GONE);
+            } else {
+                mPrivateBoxEntrance.setVisibility(View.VISIBLE);
+            }
+        }
         BugleAnalytics.logEvent("SMS_Messages_Show_Corrected", true);
         Preferences.getDefault().incrementAndGetInt(CustomizeGuideController.PREF_KEY_MAIN_PAGE_SHOW_TIME);
         WeakReference<AppCompatActivity> activity = new WeakReference<>(this);
@@ -286,7 +295,6 @@ public class ConversationListActivity extends AbstractConversationListActivity
             mTitleTextView.setVisibility(View.VISIBLE);
             mEmojiStoreIconView.setVisibility(View.VISIBLE);
         }
-
 
         super.updateActionBar(actionBar);
 
@@ -419,7 +427,11 @@ public class ConversationListActivity extends AbstractConversationListActivity
         navigationContent.findViewById(R.id.navigation_item_change_font).setOnClickListener(this);
         navigationContent.findViewById(R.id.navigation_item_setting).setOnClickListener(this);
         navigationContent.findViewById(R.id.navigation_item_rate).setOnClickListener(this);
-        navigationContent.findViewById(R.id.navigation_item_privacy_box).setOnClickListener(this);
+        mPrivateBoxEntrance = navigationContent.findViewById(R.id.navigation_item_privacy_box);
+        mPrivateBoxEntrance.setOnClickListener(this);
+        if (PrivateSettingManager.isPrivateBoxIconHidden()) {
+            mPrivateBoxEntrance.setVisibility(View.GONE);
+        }
 
         setDrawerMenuIcon();
     }

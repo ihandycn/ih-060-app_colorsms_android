@@ -134,11 +134,14 @@
                     app:typeface="@string/custom_font_bold" />
             </RelativeLayout>
 
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="35dp"/>
+
             <!-- Privacy Box -->
             <RelativeLayout
                 android:id="@+id/navigation_item_privacy_box"
-                style="@style/DrawerMenuItem"
-                android:layout_marginTop="35dp">
+                style="@style/DrawerMenuItem">
 
                 <android.support.v7.widget.AppCompatImageView
                     style="@style/DrawerMenuIcon"
