@@ -65,7 +65,7 @@ public class PrivateBoxSettings {
         return PasswordStyle.valueOf(Preferences.get(BugleFiles.PRIVATE_BOX_PREFS).getInt(PREF_KEY_PASSWORD_STYLE, getLockDefaultStyle()));
     }
 
-    public static boolean isAnyPasswordSetted() {
+    public static boolean isAnyPasswordSet() {
         return !PASSWORD_PLACEHOLDER.equals(getUnlockGesture()) || !PASSWORD_PLACEHOLDER.equals(getUnlockPIN());
     }
 

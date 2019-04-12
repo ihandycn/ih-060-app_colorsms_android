@@ -30,7 +30,6 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.view.ViewGroup.MarginLayoutParams;
 import android.view.ViewPropertyAnimator;
@@ -315,7 +314,7 @@ public class ConversationListFragment extends Fragment implements ConversationLi
                 mHost.onCreateConversationClick();
             });
             mStartNewConversationButton.setOnLongClickListener(v -> {
-                if (PrivateBoxSettings.isAnyPasswordSetted()) {
+                if (PrivateBoxSettings.isAnyPasswordSet()) {
                     Navigations.startActivitySafely(getActivity(),
                             new Intent(getActivity(), SelfVerifyActivity.class));
                 } else {

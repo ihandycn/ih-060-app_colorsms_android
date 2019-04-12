@@ -6,21 +6,27 @@ import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.widget.Toolbar;
 import android.view.ActionMode;
+import android.view.Choreographer;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ProgressBar;
 
 import com.android.messaging.R;
+import com.android.messaging.privatebox.MessagesMoveManager;
 import com.android.messaging.privatebox.ui.addtolist.AddToListDialog;
 import com.android.messaging.privatebox.ui.addtolist.ContactsSelectActivity;
 import com.android.messaging.privatebox.ui.addtolist.ConversationSelectActivity;
 import com.android.messaging.ui.SnackBarInteraction;
+import com.android.messaging.ui.conversationlist.ConversationListActivity;
 import com.android.messaging.ui.customize.PrimaryColors;
 import com.superapps.util.Dimensions;
 import com.superapps.util.Navigations;
 import com.superapps.util.Preferences;
+import com.superapps.util.Toasts;
 
+import java.util.Arrays;
 import java.util.List;
 
 public class PrivateConversationListActivity extends MultiSelectConversationListActivity {
@@ -30,6 +36,14 @@ public class PrivateConversationListActivity extends MultiSelectConversationList
     private View mStatusBarInset;
     private View mTitle;
 
+    private volatile boolean mIsMessageMoving;
+    private View mProcessBarContainer;
+    private ProgressBar mProgressBar;
+
+    private long mStartTime;
+    private Choreographer mChoreographer;
+    private Choreographer.FrameCallback mFrameCallback;
+
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -37,6 +51,53 @@ public class PrivateConversationListActivity extends MultiSelectConversationList
         configActionBar();
         mConversationListFragment = (PrivateConversationListFragment) getFragmentManager().
                 findFragmentById(R.id.private_conversation_list_fragment);
+
+        if (getIntent().hasExtra(ConversationListActivity.INTENT_KEY_PRIVATE_CONVERSATION_LIST)) {
+            String[] conversationList = getIntent().getStringArrayExtra(ConversationListActivity.INTENT_KEY_PRIVATE_CONVERSATION_LIST);
+            addAndMoveConversations(Arrays.asList(conversationList));
+        }
+    }
+
+    private void addAndMoveConversations(List<String> conversationList) {
+        mProcessBarContainer = findViewById(R.id.private_progress_bar_container);
+        mProgressBar = findViewById(R.id.private_move_progress_bar);
+
+        mChoreographer = Choreographer.getInstance();
+        mFrameCallback = new Choreographer.FrameCallback() {
+            @Override
+            public void doFrame(long frameTimeNanos) {
+                if (mIsMessageMoving) {
+                    mProgressBar.setProgress((int) ((System.currentTimeMillis() - mStartTime) / 10));
+                    mChoreographer.postFrameCallback(this);
+                }
+            }
+        };
+        if (conversationList.size() > 0) {
+            MessagesMoveManager.moveConversations(conversationList, false,
+                    new MessagesMoveManager.MessagesMoveListener() {
+                        @Override
+                        public void onMoveStart() {
+                            if (mIsMessageMoving) {
+                                return;
+                            }
+                            mStartTime = System.currentTimeMillis();
+                            mIsMessageMoving = true;
+                            mProcessBarContainer.setVisibility(View.VISIBLE);
+                            mChoreographer.postFrameCallback(mFrameCallback);
+                        }
+
+                        @Override
+                        public void onMoveEnd() {
+                            if (!mIsMessageMoving) {
+                                return;
+                            }
+                            mIsMessageMoving = false;
+                            mChoreographer.removeFrameCallback(mFrameCallback);
+                            mProcessBarContainer.setVisibility(View.GONE);
+                            Toasts.showToast(R.string.private_box_add_success);
+                        }
+                    });
+        }
     }
 
     @Override
@@ -73,6 +134,8 @@ public class PrivateConversationListActivity extends MultiSelectConversationList
     public void onBackPressed() {
         if (isInConversationListSelectMode()) {
             exitMultiSelectState();
+        } else if (mIsMessageMoving) {
+
         } else {
             super.onBackPressed();
         }

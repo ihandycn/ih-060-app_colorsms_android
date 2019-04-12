@@ -20,6 +20,7 @@ import com.android.messaging.privatebox.PrivateBoxSettings;
 import com.android.messaging.privatebox.ui.view.GestureLockView;
 import com.android.messaging.privatebox.ui.view.PINIndicatorView;
 import com.android.messaging.privatebox.ui.view.PINKeyboardView;
+import com.android.messaging.ui.conversationlist.ConversationListActivity;
 import com.android.messaging.ui.customize.PrimaryColors;
 import com.android.messaging.util.BugleAnalytics;
 import com.android.messaging.util.UiUtils;
@@ -153,7 +154,8 @@ public class PrivateBoxSetPasswordActivity extends BaseActivity implements View.
         patternGuideView = findViewById(R.id.set_lock_pattern_guide);
         patternGuideView.loop(false);
         handler.postDelayed(new Runnable() {
-            @Override public void run() {
+            @Override
+            public void run() {
                 patternGuideView.playAnimation();
                 handler.postDelayed(this, 1500);
             }
@@ -291,17 +293,20 @@ public class PrivateBoxSetPasswordActivity extends BaseActivity implements View.
         if (shakeAnimation == null) {
             shakeAnimation = AnimationUtils.loadAnimation(PrivateBoxSetPasswordActivity.this, R.anim.left_right_shake);
             shakeAnimation.setAnimationListener(new Animation.AnimationListener() {
-                @Override public void onAnimationStart(Animation animation) {
+                @Override
+                public void onAnimationStart(Animation animation) {
 
                 }
 
-                @Override public void onAnimationEnd(Animation animation) {
+                @Override
+                public void onAnimationEnd(Animation animation) {
                     if (pinIndicatorView != null) {
                         pinIndicatorView.clear();
                     }
                 }
 
-                @Override public void onAnimationRepeat(Animation animation) {
+                @Override
+                public void onAnimationRepeat(Animation animation) {
 
                 }
             });
@@ -334,7 +339,7 @@ public class PrivateBoxSetPasswordActivity extends BaseActivity implements View.
                 switch (passwordSetMode) {
 
                     case NORMAL_FIRST_SET:
-                        if (PrivateBoxSettings.isAnyPasswordSetted()) {
+                        if (PrivateBoxSettings.isAnyPasswordSet()) {
                             promptLine.setText(getString(R.string.draw_unlock_pattern));
                         } else {
                             promptLine.setText(getString(R.string.please_set_password));
@@ -362,7 +367,7 @@ public class PrivateBoxSetPasswordActivity extends BaseActivity implements View.
 
                 switch (passwordSetMode) {
                     case NORMAL_FIRST_SET:
-                        if (PrivateBoxSettings.isAnyPasswordSetted()) {
+                        if (PrivateBoxSettings.isAnyPasswordSet()) {
                             promptLine.setText(getString(R.string.set_password_prompt));
                         } else {
                             promptLine.setText(getString(R.string.set_password_prompt));
@@ -423,8 +428,13 @@ public class PrivateBoxSetPasswordActivity extends BaseActivity implements View.
 
     private void onPasswordSetSucceed() {
         if (!isResetPassword && !isForgetPassword) {
-            Navigations.startActivitySafely(PrivateBoxSetPasswordActivity.this,
-                    new Intent(PrivateBoxSetPasswordActivity.this, PrivateConversationListActivity.class));
+            Intent intent = new Intent(PrivateBoxSetPasswordActivity.this, PrivateConversationListActivity.class);
+            if (getIntent().hasExtra(ConversationListActivity.INTENT_KEY_PRIVATE_CONVERSATION_LIST)) {
+                intent.putExtra(ConversationListActivity.INTENT_KEY_PRIVATE_CONVERSATION_LIST,
+                        getIntent().getStringArrayExtra(ConversationListActivity.INTENT_KEY_PRIVATE_CONVERSATION_LIST)
+                );
+            }
+            Navigations.startActivitySafely(PrivateBoxSetPasswordActivity.this, intent);
         }
     }
 }

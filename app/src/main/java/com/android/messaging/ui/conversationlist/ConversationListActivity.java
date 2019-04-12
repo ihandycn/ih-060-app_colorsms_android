@@ -2,6 +2,7 @@ package com.android.messaging.ui.conversationlist;
 
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.graphics.drawable.ColorDrawable;
@@ -35,6 +36,7 @@ import com.android.messaging.privatebox.PrivateSettingManager;
 import com.android.messaging.privatebox.ui.PrivateBoxSetPasswordActivity;
 import com.android.messaging.privatebox.PrivateBoxSettings;
 import com.android.messaging.privatebox.ui.SelfVerifyActivity;
+import com.android.messaging.ui.BaseAlertDialog;
 import com.android.messaging.ui.CreateShortcutActivity;
 import com.android.messaging.ui.DragHotSeatActivity;
 import com.android.messaging.ui.UIIntents;
@@ -70,6 +72,7 @@ import com.superapps.util.Dimensions;
 import com.superapps.util.Navigations;
 import com.superapps.util.Preferences;
 import com.superapps.util.Threads;
+import com.superapps.util.Toasts;
 
 import java.lang.ref.WeakReference;
 import java.util.Calendar;
@@ -82,6 +85,8 @@ import static com.android.messaging.ui.dialog.FiveStarRateDialog.PREF_KEY_MAIN_A
 
 public class ConversationListActivity extends AbstractConversationListActivity
         implements View.OnClickListener, INotificationObserver {
+
+    public static final String INTENT_KEY_PRIVATE_CONVERSATION_LIST = "conversation_list";
 
     public static final String EVENT_MAINPAGE_RECREATE = "event_mainpage_recreate";
     public static final String SHOW_EMOJI = "show_emoj";
@@ -370,7 +375,7 @@ public class ConversationListActivity extends AbstractConversationListActivity
                         break;
                     case DRAWER_INDEX_PRIVACY_BOX:
                         BugleAnalytics.logEvent("Menu_PrivateBox_Click");
-                        if (PrivateBoxSettings.isAnyPasswordSetted()) {
+                        if (PrivateBoxSettings.isAnyPasswordSet()) {
                             Navigations.startActivitySafely(ConversationListActivity.this,
                                     new Intent(ConversationListActivity.this, SelfVerifyActivity.class));
                         } else {
@@ -559,18 +564,30 @@ public class ConversationListActivity extends AbstractConversationListActivity
 
     @Override
     public void onAddToPrivateBox(List<String> conversations) {
-        MessagesMoveManager.moveConversations(conversations, false,
-                new MessagesMoveManager.MessagesMoveListener() {
-            @Override
-            public void onMoveStart() {
+        if (!PrivateBoxSettings.isAnyPasswordSet()) {
+            new BaseAlertDialog.Builder(ConversationListActivity.this)
+                    .setTitle(R.string.private_start_box_tip)
+                    .setPositiveButton(R.string.welcome_set_default_button, (dialog, which) -> {
+                        Intent intent = new Intent(ConversationListActivity.this, PrivateBoxSetPasswordActivity.class);
+                        intent.putExtra(INTENT_KEY_PRIVATE_CONVERSATION_LIST, conversations.toArray(new String[conversations.size()]));
+                        Navigations.startActivitySafely(ConversationListActivity.this, intent);
+                    })
+                    .setNegativeButton(R.string.delete_conversation_decline_button, null)
+                    .show();
+        } else {
+            MessagesMoveManager.moveConversations(conversations, false,
+                    new MessagesMoveManager.MessagesMoveListener() {
+                        @Override
+                        public void onMoveStart() {
 
-            }
+                        }
 
-            @Override
-            public void onMoveEnd() {
-
-            }
-        });
+                        @Override
+                        public void onMoveEnd() {
+                            Toasts.showToast(R.string.private_box_add_success);
+                        }
+                    });
+        }
     }
 
     @Override
