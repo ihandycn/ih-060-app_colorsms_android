@@ -24,6 +24,7 @@ import com.android.messaging.ui.BugleActionBarActivity;
 import com.android.messaging.ui.SnackBarInteraction;
 import com.android.messaging.ui.UIIntents;
 import com.android.messaging.ui.conversationlist.ConversationListItemView;
+import com.android.messaging.util.BugleAnalytics;
 
 import java.util.List;
 
@@ -59,6 +60,7 @@ public abstract class MultiSelectConversationListActivity extends BugleActionBar
 
     protected void startMultiSelectActionMode() {
         startActionMode(new PrivateMultiSelectActionModeCallback(this));
+        BugleAnalytics.logEvent("PrivateBox_EditMode_Show");
     }
 
     public void exitMultiSelectState() {
@@ -96,8 +98,9 @@ public abstract class MultiSelectConversationListActivity extends BugleActionBar
             multiSelectActionMode.toggleSelect(listData, conversationListItemData);
             mConversationListFragment.updateUi();
         } else {
+            BugleAnalytics.logEvent("PrivateBox_Messages_Click");
             final String conversationId = conversationListItemData.getConversationId();
-
+            BugleAnalytics.logEvent("PrivateBox_DetailPage_Show", true);
             UIIntents.get().launchConversationActivity(
                     this, conversationId, null,
                     null,

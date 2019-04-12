@@ -20,6 +20,7 @@ import com.android.messaging.ui.SnackBar;
 import com.android.messaging.ui.UIIntents;
 import com.android.messaging.ui.contact.AddContactsConfirmationDialog;
 import com.android.messaging.util.Assert;
+import com.android.messaging.util.BugleAnalytics;
 import com.android.messaging.util.PhoneUtils;
 import com.android.messaging.util.UiUtils;
 import com.ihs.app.framework.HSApplication;
@@ -94,6 +95,7 @@ public class PrivateMultiSelectActionModeCallback implements Callback {
     public boolean onActionItemClicked(ActionMode actionMode, MenuItem menuItem) {
         switch (menuItem.getItemId()) {
             case R.id.action_delete:
+                BugleAnalytics.logEvent("PrivateBox_EditMode_Act", "Action", "Delete");
                 onActionBarDelete(mSelectedConversations.values());
                 return true;
             case R.id.action_add_contact:
@@ -111,7 +113,8 @@ public class PrivateMultiSelectActionModeCallback implements Callback {
                 return true;
             case R.id.action_menu:
                 return true;
-            case R.id.action_add_to_private_box:
+            case R.id.action_move_from_private_box:
+                BugleAnalytics.logEvent("PrivateBox_EditMode_Act", "Action", "Remove");
                 List<String> conversationIdList = new ArrayList<>();
                 for (PrivateMultiSelectActionModeCallback.SelectedConversation conversation : mSelectedConversations.values()) {
                     conversationIdList.add(conversation.conversationId);

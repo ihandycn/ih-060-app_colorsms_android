@@ -77,7 +77,7 @@ public class PrivateBoxSetPasswordActivity extends BaseActivity implements View.
                 performShakeAnimation(getString(R.string.set_gesture_sub_prompt), true);
                 if (isResetPassword) {
                 } else {
-                    BugleAnalytics.logEvent("AppLock_Setpassword_First_Input", "State", "fail");
+//                    BugleAnalytics.logEvent("AppLock_Setpassword_First_Input", "State", "fail");
                 }
             } else {
                 passwordSetMode = PasswordSetMode.NORMAL_SECOND_SET;
@@ -87,8 +87,9 @@ public class PrivateBoxSetPasswordActivity extends BaseActivity implements View.
                 updateCurrentProtectionUI(currentPasswordStyle, false);
                 if (isResetPassword) {
                 } else {
-                    BugleAnalytics.logEvent("AppLock_Setpassword_First_Input", "State", "success");
-                    BugleAnalytics.logEvent("AppLock_Setpassword_Second_Shown", "Type", "Pattern");
+//                    BugleAnalytics.logEvent("AppLock_Setpassword_First_Input", "State", "success");
+//                    BugleAnalytics.logEvent("AppLock_Setpassword_Second_Shown", "Type", "Pattern");
+                    BugleAnalytics.logEvent("PrivateBox_ConfirmPassword_Show");
                 }
             }
         }
@@ -103,21 +104,22 @@ public class PrivateBoxSetPasswordActivity extends BaseActivity implements View.
                 if (isResetPassword) {
                     intent.putExtra(INTENT_KER_PASSWORD_STATUS, RESET_PASSWORD);
                 } else {
-                    BugleAnalytics.logEvent("AppLock_Setpassword_Second_Input", "State", "success");
-                    BugleAnalytics.logEvent("AppLock_Setpassword_Success", "Type", "pattern");
+                    //BugleAnalytics.logEvent("AppLock_Setpassword_Second_Input", "State", "success");
+                   // BugleAnalytics.logEvent("AppLock_Setpassword_Success", "Type", "pattern");
+
                     intent.putExtra(INTENT_KER_PASSWORD_STATUS, SET_PASSWORD);
                 }
 
                 onPasswordSetSucceed();
                 setResult(RESULT_OK, intent);
                 finish();
-                HSLog.i("onGestureFinish(), NORMAL_SECOND_SET, finish");
+                //HSLog.i("onGestureFinish(), NORMAL_SECOND_SET, finish");
             } else {
                 performShakeAnimation(getString(R.string.gesture_not_confirmed_sub_prompt), false);
                 promptSubLine.setText("");
                 if (isResetPassword) {
                 } else {
-                    BugleAnalytics.logEvent("AppLock_Setpassword_Second_Input", "State", "fail");
+                    //BugleAnalytics.logEvent("AppLock_Setpassword_Second_Input", "State", "fail");
                 }
             }
         }
@@ -203,8 +205,7 @@ public class PrivateBoxSetPasswordActivity extends BaseActivity implements View.
                         updateCurrentProtectionUI(currentPasswordStyle, false);
                         if (isResetPassword) {
                         } else {
-                            BugleAnalytics.logEvent("AppLock_Setpassword_First_Input", "State", "success");
-                            BugleAnalytics.logEvent("AppLock_Setpassword_Second_Shown", "Type", "Pin");
+                            BugleAnalytics.logEvent("PrivateBox_ConfirmPassword_Show");
                         }
                         break;
                     case NORMAL_SECOND_SET:
@@ -216,8 +217,7 @@ public class PrivateBoxSetPasswordActivity extends BaseActivity implements View.
                             if (isResetPassword) {
                                 intent.putExtra(INTENT_KER_PASSWORD_STATUS, RESET_PASSWORD);
                             } else {
-                                BugleAnalytics.logEvent("AppLock_Setpassword_Second_Input", "State", "success");
-                                BugleAnalytics.logEvent("AppLock_Setpassword_Success", "Type", "number");
+                                //BugleAnalytics.logEvent("PrivateBox_Password_SetSuccess");
                                 intent.putExtra(INTENT_KER_PASSWORD_STATUS, SET_PASSWORD);
                             }
 
@@ -228,7 +228,7 @@ public class PrivateBoxSetPasswordActivity extends BaseActivity implements View.
                             performShakeAnimation(getString(R.string.password_not_confirmed_sub_prompt), false);
                             if (isResetPassword) {
                             } else {
-                                BugleAnalytics.logEvent("AppLock_Setpassword_Second_Input", "State", "fail");
+                                //BugleAnalytics.logEvent("AppLock_Setpassword_Second_Input", "State", "fail");
                             }
                         }
                         break;
@@ -242,7 +242,7 @@ public class PrivateBoxSetPasswordActivity extends BaseActivity implements View.
 
         updateCurrentProtectionUI(currentPasswordStyle, true);
 
-        BugleAnalytics.logEvent("AppLock_Setpassword_Shown");
+        BugleAnalytics.logEvent("PrivateBox_SetPassword_Show");
     }
 
     @Override
@@ -405,7 +405,7 @@ public class PrivateBoxSetPasswordActivity extends BaseActivity implements View.
                     }
                 }
 
-                BugleAnalytics.logEvent("AppLock_Setpassword_ChangeType_Clicked", "Type", currentPasswordStyle.toString());
+              //  BugleAnalytics.logEvent("AppLock_Setpassword_ChangeType_Clicked", "Type", currentPasswordStyle.toString());
                 switch (currentPasswordStyle) {
                     case PATTERN:
                         currentPasswordStyle = PrivateBoxSettings.PasswordStyle.PIN;
@@ -427,6 +427,7 @@ public class PrivateBoxSetPasswordActivity extends BaseActivity implements View.
     }
 
     private void onPasswordSetSucceed() {
+        BugleAnalytics.logEvent("PrivateBox_Password_SetSuccess");
         if (!isResetPassword && !isForgetPassword) {
             Intent intent = new Intent(PrivateBoxSetPasswordActivity.this, PrivateConversationListActivity.class);
             if (getIntent().hasExtra(ConversationListActivity.INTENT_KEY_PRIVATE_CONVERSATION_LIST)) {

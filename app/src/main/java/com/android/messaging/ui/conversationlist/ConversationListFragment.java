@@ -315,8 +315,9 @@ public class ConversationListFragment extends Fragment implements ConversationLi
             });
             mStartNewConversationButton.setOnLongClickListener(v -> {
                 if (PrivateBoxSettings.isAnyPasswordSet()) {
-                    Navigations.startActivitySafely(getActivity(),
-                            new Intent(getActivity(), SelfVerifyActivity.class));
+                    Intent intent = new Intent(getActivity(), SelfVerifyActivity.class);
+                    intent.putExtra(SelfVerifyActivity.INTENT_KEY_ACTIVITY_ENTRANCE,"CreateIcon");
+                    Navigations.startActivitySafely(getActivity(), intent);
                 } else {
                     Navigations.startActivitySafely(getActivity(),
                             new Intent(getActivity(), PrivateBoxSetPasswordActivity.class));

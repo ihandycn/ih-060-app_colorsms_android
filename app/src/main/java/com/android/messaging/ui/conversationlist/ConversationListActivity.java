@@ -330,6 +330,7 @@ public class ConversationListActivity extends AbstractConversationListActivity
                 Preferences.getDefault().putBoolean(PREF_KEY_MAIN_DRAWER_OPENED, true);
                 setDrawerMenuIcon();
                 BugleAnalytics.logEvent("Menu_Show", true);
+                BugleAnalytics.logEvent("Menu_Show_NewVersion", true);
                 if (CommonUtils.isNewUser()
                         && Calendars.isSameDay(CommonUtils.getAppInstallTimeMillis(), System.currentTimeMillis())) {
                     BugleAnalytics.logEvent("Menu_Show_NewUser_TestPrivateBox");
@@ -374,10 +375,11 @@ public class ConversationListActivity extends AbstractConversationListActivity
                         startActivity(intent);
                         break;
                     case DRAWER_INDEX_PRIVACY_BOX:
-                        BugleAnalytics.logEvent("Menu_PrivateBox_Click");
+                        BugleAnalytics.logEvent("Menu_PrivateBox_Click", true);
                         if (PrivateBoxSettings.isAnyPasswordSet()) {
-                            Navigations.startActivitySafely(ConversationListActivity.this,
-                                    new Intent(ConversationListActivity.this, SelfVerifyActivity.class));
+                            Intent intent1 = new Intent(ConversationListActivity.this, SelfVerifyActivity.class);
+                            intent1.putExtra(SelfVerifyActivity.INTENT_KEY_ACTIVITY_ENTRANCE, "Menu");
+                            Navigations.startActivitySafely(ConversationListActivity.this, intent1);
                         } else {
                             Navigations.startActivitySafely(ConversationListActivity.this,
                                     new Intent(ConversationListActivity.this, PrivateBoxSetPasswordActivity.class));

@@ -9,10 +9,12 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.android.messaging.R;
+import com.android.messaging.util.BugleAnalytics;
 import com.android.messaging.util.UiUtils;
 import com.superapps.util.Navigations;
 
 public class SelfVerifyActivity extends VerifyActivity {
+    public static final String INTENT_KEY_ACTIVITY_ENTRANCE = "entrance";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,9 +34,12 @@ public class SelfVerifyActivity extends VerifyActivity {
 
         RelativeLayout mainContainer = findViewById(R.id.lock_container);
         mainContainer.setBackgroundResource(R.color.primary_color);
+        BugleAnalytics.logEvent("PrivateBox_UnlockPage_Show", true,
+                "entrance", getIntent().getStringExtra(INTENT_KEY_ACTIVITY_ENTRANCE));
     }
 
-    @Override protected int getLayoutResId() {
+    @Override
+    protected int getLayoutResId() {
         return R.layout.activity_self_verify;
     }
 
@@ -58,14 +63,16 @@ public class SelfVerifyActivity extends VerifyActivity {
         return getResources().getDrawable(R.mipmap.ic_launcher);
     }
 
-    @Override protected int getFingerprintTipColor() {
+    @Override
+    protected int getFingerprintTipColor() {
         return 0xff376FE4;
     }
 
     @Override
     protected void onUnlockSucceed() {
         super.onUnlockSucceed();
-
+        BugleAnalytics.logEvent("PrivateBox_UnlockPage_Unlock", true,
+                "entrance", getIntent().getStringExtra(INTENT_KEY_ACTIVITY_ENTRANCE));
         Navigations.startActivitySafely(SelfVerifyActivity.this,
                 new Intent(SelfVerifyActivity.this, PrivateConversationListActivity.class));
         finish();

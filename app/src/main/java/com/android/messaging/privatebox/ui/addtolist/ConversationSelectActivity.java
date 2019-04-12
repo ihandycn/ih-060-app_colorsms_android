@@ -23,6 +23,7 @@ import com.android.messaging.privatebox.MessagesMoveManager;
 import com.android.messaging.privatebox.ui.PrivateMultiSelectActionModeCallback;
 import com.android.messaging.ui.BaseAlertDialog;
 import com.android.messaging.ui.customize.PrimaryColors;
+import com.android.messaging.util.BugleAnalytics;
 import com.android.messaging.util.UiUtils;
 import com.ihs.app.framework.HSApplication;
 import com.ihs.app.framework.activity.HSAppCompatActivity;
@@ -96,7 +97,11 @@ public class ConversationSelectActivity extends HSAppCompatActivity
             } else {
                 new BaseAlertDialog.Builder(ConversationSelectActivity.this)
                         .setTitle(R.string.private_move_tip)
-                        .setPositiveButton(R.string.welcome_set_default_button, (dialog, button) -> addAndMoveConversations())
+                        .setPositiveButton(R.string.welcome_set_default_button, (dialog, button) -> {
+                            BugleAnalytics.logEvent("PrivateBox_AddContactAlert_BtnClick",
+                                    "type", "Conversation");
+                            addAndMoveConversations();
+                        })
                         .setNegativeButton(R.string.delete_conversation_decline_button, null)
                         .show();
                 Preferences.getDefault().putBoolean(ConversationSelectActivity.PREF_KEY_ADD_PRIVATE_DIALOG_HAS_PROMPT, true);

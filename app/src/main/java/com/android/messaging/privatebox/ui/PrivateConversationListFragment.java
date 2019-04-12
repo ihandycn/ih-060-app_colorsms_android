@@ -37,6 +37,7 @@ import com.android.messaging.ui.conversationlist.ConversationListAdapter;
 import com.android.messaging.ui.conversationlist.ConversationListItemView;
 import com.android.messaging.ui.customize.PrimaryColors;
 import com.android.messaging.util.Assert;
+import com.android.messaging.util.BugleAnalytics;
 import com.android.messaging.util.ImeUtil;
 import com.google.common.annotations.VisibleForTesting;
 import com.superapps.util.BackgroundDrawables;
@@ -291,10 +292,12 @@ public class PrivateConversationListFragment extends Fragment
                     BackgroundDrawables.createBackgroundDrawable(PrimaryColors.getPrimaryColor(),
                             Dimensions.pxFromDp(18), true));
             addNowBtn.setOnClickListener(v -> {
+                BugleAnalytics.logEvent("PrivateBox_Homepage_AddContact_BtnClick");
                 final AddToListDialog addToBlackListDialog = new AddToListDialog(getActivity());
                 addToBlackListDialog.setOnButtonClickListener(new AddToListDialog.OnButtonClickListener() {
                     @Override
                     public void onFromConversationClick() {
+                        BugleAnalytics.logEvent("PrivateBox_AddContactAlert_BtnClick", "type", "conversation");
                         Navigations.startActivitySafely(getActivity(),
                                 new Intent(getActivity(), ConversationSelectActivity.class));
                         addToBlackListDialog.dismiss();
@@ -302,6 +305,7 @@ public class PrivateConversationListFragment extends Fragment
 
                     @Override
                     public void onFromContactsClick() {
+                        BugleAnalytics.logEvent("PrivateBox_AddContactAlert_BtnClick", "type", "contact");
                         Navigations.startActivitySafely(getActivity(),
                                 new Intent(getActivity(), ContactsSelectActivity.class));
                         addToBlackListDialog.dismiss();

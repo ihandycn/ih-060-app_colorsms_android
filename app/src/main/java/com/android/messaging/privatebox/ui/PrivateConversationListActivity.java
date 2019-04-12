@@ -15,12 +15,14 @@ import android.widget.ProgressBar;
 
 import com.android.messaging.R;
 import com.android.messaging.privatebox.MessagesMoveManager;
+import com.android.messaging.privatebox.PrivateSettingManager;
 import com.android.messaging.privatebox.ui.addtolist.AddToListDialog;
 import com.android.messaging.privatebox.ui.addtolist.ContactsSelectActivity;
 import com.android.messaging.privatebox.ui.addtolist.ConversationSelectActivity;
 import com.android.messaging.ui.SnackBarInteraction;
 import com.android.messaging.ui.conversationlist.ConversationListActivity;
 import com.android.messaging.ui.customize.PrimaryColors;
+import com.android.messaging.util.BugleAnalytics;
 import com.superapps.util.Dimensions;
 import com.superapps.util.Navigations;
 import com.superapps.util.Preferences;
@@ -52,6 +54,8 @@ public class PrivateConversationListActivity extends MultiSelectConversationList
         mConversationListFragment = (PrivateConversationListFragment) getFragmentManager().
                 findFragmentById(R.id.private_conversation_list_fragment);
 
+        BugleAnalytics.logEvent("PrivateBox_Homepage_Show", true,
+                "HideTheIcon", String.valueOf(PrivateSettingManager.isPrivateBoxIconHidden()));
         if (getIntent().hasExtra(ConversationListActivity.INTENT_KEY_PRIVATE_CONVERSATION_LIST)) {
             String[] conversationList = getIntent().getStringArrayExtra(ConversationListActivity.INTENT_KEY_PRIVATE_CONVERSATION_LIST);
             addAndMoveConversations(Arrays.asList(conversationList));
@@ -205,10 +209,12 @@ public class PrivateConversationListActivity extends MultiSelectConversationList
                 finish();
                 return true;
             case R.id.private_action_add:
+                BugleAnalytics.logEvent("PrivateBox_Homepage_AddContact_BtnClick");
                 final AddToListDialog addToBlackListDialog = new AddToListDialog(PrivateConversationListActivity.this);
                 addToBlackListDialog.setOnButtonClickListener(new AddToListDialog.OnButtonClickListener() {
                     @Override
                     public void onFromConversationClick() {
+                        BugleAnalytics.logEvent("PrivateBox_AddContactAlert_BtnClick", "type", "conversation");
                         Navigations.startActivitySafely(PrivateConversationListActivity.this,
                                 new Intent(PrivateConversationListActivity.this, ConversationSelectActivity.class));
                         addToBlackListDialog.dismiss();
@@ -216,6 +222,7 @@ public class PrivateConversationListActivity extends MultiSelectConversationList
 
                     @Override
                     public void onFromContactsClick() {
+                        BugleAnalytics.logEvent("PrivateBox_AddContactAlert_BtnClick", "type", "contact");
                         Navigations.startActivitySafely(PrivateConversationListActivity.this,
                                 new Intent(PrivateConversationListActivity.this, ContactsSelectActivity.class));
                         addToBlackListDialog.dismiss();

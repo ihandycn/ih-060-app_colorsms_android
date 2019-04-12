@@ -10,12 +10,14 @@ import com.android.messaging.BaseActivity;
 import com.android.messaging.R;
 import com.android.messaging.privatebox.PrivateSettingManager;
 import com.android.messaging.ui.appsettings.SettingItemView;
+import com.android.messaging.util.BugleAnalytics;
 import com.android.messaging.util.UiUtils;
 import com.superapps.util.Threads;
 
 public class HideTheIconActivity extends BaseActivity {
 
     private LottieAnimationView mLottie;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -49,7 +51,11 @@ public class HideTheIconActivity extends BaseActivity {
 
         SettingItemView hideIconView = findViewById(R.id.private_hide_icon_item);
         hideIconView.setChecked(PrivateSettingManager.isPrivateBoxIconHidden());
-        hideIconView.setOnItemClickListener(() -> PrivateSettingManager.setIconHidden(hideIconView.isChecked()));
+        hideIconView.setOnItemClickListener(() -> {
+            PrivateSettingManager.setIconHidden(hideIconView.isChecked());
+            BugleAnalytics.logEvent("PrivateBox_HideTheIcon_BtnClick", "type",
+                    hideIconView.isChecked() ? "ON" : "OFF");
+        });
     }
 
     @Override

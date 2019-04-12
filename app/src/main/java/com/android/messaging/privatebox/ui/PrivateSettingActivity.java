@@ -10,6 +10,7 @@ import com.android.messaging.BaseActivity;
 import com.android.messaging.R;
 import com.android.messaging.privatebox.PrivateSettingManager;
 import com.android.messaging.ui.appsettings.SettingItemView;
+import com.android.messaging.util.BugleAnalytics;
 import com.android.messaging.util.UiUtils;
 import com.superapps.util.Navigations;
 
@@ -32,6 +33,7 @@ public class PrivateSettingActivity extends BaseActivity {
         getSupportActionBar().setDisplayShowHomeEnabled(true);
 
         initItemViews();
+        BugleAnalytics.logEvent("PrivateBox_Settings_Show");
     }
 
     private void initItemViews() {
@@ -40,16 +42,24 @@ public class PrivateSettingActivity extends BaseActivity {
             Intent intent = new Intent(PrivateSettingActivity.this, PrivateBoxSetPasswordActivity.class);
             intent.putExtra(PrivateBoxSetPasswordActivity.INTENT_EXTRA_RESET_PASSWORD, true);
             Navigations.startActivitySafely(PrivateSettingActivity.this, intent);
+            BugleAnalytics.logEvent("PrivateBox_Settings_ModifyPassword_Click");
         });
 
         SettingItemView entranceView = findViewById(R.id.private_setting_entrance);
         entranceView.setOnItemClickListener(
-                () -> Navigations.startActivitySafely(this,
-                        new Intent(this, HideTheIconActivity.class)));
+                () -> {
+                    Navigations.startActivitySafely(this,
+                            new Intent(this, HideTheIconActivity.class));
+                    BugleAnalytics.logEvent("PrivateBox_Settings_HideTheIcon_Click");
+                });
 
         SettingItemView notificationView = findViewById(R.id.private_setting_notifications);
         notificationView.setChecked(PrivateSettingManager.isNotificationEnable());
-        notificationView.setOnItemClickListener(() -> PrivateSettingManager.setNotificationEnable(notificationView.isChecked()));
+        notificationView.setOnItemClickListener(() -> {
+            PrivateSettingManager.setNotificationEnable(notificationView.isChecked());
+            BugleAnalytics.logEvent("PrivateBox_Settings_EnableNotifications_Click",
+                    "type", notificationView.isChecked() ? "ON" : "OFF");
+        });
     }
 
     @Override
