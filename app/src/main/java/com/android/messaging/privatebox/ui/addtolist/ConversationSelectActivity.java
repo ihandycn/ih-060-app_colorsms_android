@@ -8,20 +8,30 @@ import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.view.Choreographer;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.android.messaging.R;
 import com.android.messaging.datamodel.MessagingContentProvider;
+import com.android.messaging.datamodel.action.DeleteConversationAction;
 import com.android.messaging.datamodel.data.ConversationListItemData;
 import com.android.messaging.privatebox.MessagesMoveManager;
+import com.android.messaging.privatebox.ui.PrivateMultiSelectActionModeCallback;
+import com.android.messaging.ui.BaseAlertDialog;
 import com.android.messaging.ui.customize.PrimaryColors;
 import com.android.messaging.util.UiUtils;
+import com.ihs.app.framework.HSApplication;
 import com.ihs.app.framework.activity.HSAppCompatActivity;
+import com.ihs.commons.notificationcenter.HSGlobalNotificationCenter;
+import com.ihs.commons.notificationcenter.INotificationObserver;
 import com.superapps.util.BackgroundDrawables;
 import com.superapps.util.Dimensions;
+import com.superapps.util.Preferences;
+import com.superapps.util.Toasts;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -34,9 +44,18 @@ public class ConversationSelectActivity extends HSAppCompatActivity
         implements LoaderManager.LoaderCallbacks<Cursor> {
 
     private static final int CONVERSATION_LIST_LOADER = 1;
+    public static final String PREF_KEY_ADD_PRIVATE_DIALOG_HAS_PROMPT = "pref_key_add_private_dialog_has_prompt";
 
     private ConversationSelectAdapter mAdapter;
     private LoaderManager mLoaderManager;
+
+    private volatile boolean mIsMessageMoving;
+    private View mProcessBarContainer;
+    private ProgressBar mProgressBar;
+
+    private long mStartTime;
+    private Choreographer mChoreographer;
+    private Choreographer.FrameCallback mFrameCallback;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -71,36 +90,89 @@ public class ConversationSelectActivity extends HSAppCompatActivity
             }
         });
 
-        actionButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                List<String> addList = new ArrayList<>();
-                HashMap<ConversationListItemData, Boolean> selectedMap = mAdapter.getSelectedMap();
-                for (ConversationListItemData data : selectedMap.keySet()) {
-                    if (selectedMap.get(data)) {
-                        addList.add(data.getConversationId());
-                    }
-                }
-
-                MessagesMoveManager.moveConversations(addList, false,
-                        new MessagesMoveManager.MessagesMoveListener() {
-                            @Override
-                            public void onMoveStart() {
-
-                            }
-
-                            @Override
-                            public void onMoveEnd() {
-
-                            }
-                        });
-
-                onBackPressed();
+        actionButton.setOnClickListener(v -> {
+            if (Preferences.getDefault().getBoolean(PREF_KEY_ADD_PRIVATE_DIALOG_HAS_PROMPT, false)) {
+                addAndMoveConversations();
+            } else {
+                new BaseAlertDialog.Builder(ConversationSelectActivity.this)
+                        .setTitle(R.string.private_move_tip)
+                        .setPositiveButton(R.string.welcome_set_default_button, (dialog, button) -> addAndMoveConversations())
+                        .setNegativeButton(R.string.delete_conversation_decline_button, null)
+                        .show();
+                Preferences.getDefault().putBoolean(ConversationSelectActivity.PREF_KEY_ADD_PRIVATE_DIALOG_HAS_PROMPT, true);
             }
         });
 
         mLoaderManager = getLoaderManager();
         mLoaderManager.initLoader(CONVERSATION_LIST_LOADER, null, this);
+
+        mProcessBarContainer = findViewById(R.id.private_progress_bar_container);
+        mProgressBar = findViewById(R.id.private_move_progress_bar);
+
+        mChoreographer = Choreographer.getInstance();
+        mFrameCallback = new Choreographer.FrameCallback() {
+            @Override
+            public void doFrame(long frameTimeNanos) {
+                if (mIsMessageMoving) {
+                    mProgressBar.setProgress((int) ((System.currentTimeMillis() - mStartTime) / 10));
+                    mChoreographer.postFrameCallback(this);
+                }
+            }
+        };
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (mIsMessageMoving) {
+            return;
+        }
+        super.onBackPressed();
+    }
+
+    private void addAndMoveConversations() {
+        List<String> addList = new ArrayList<>();
+        HashMap<ConversationListItemData, Boolean> selectedMap = mAdapter.getSelectedMap();
+        for (ConversationListItemData data : selectedMap.keySet()) {
+            if (selectedMap.get(data)) {
+                addList.add(data.getConversationId());
+            }
+        }
+
+        if (addList.size() > 0) {
+            MessagesMoveManager.moveConversations(addList, false,
+                    new MessagesMoveManager.MessagesMoveListener() {
+                        @Override
+                        public void onMoveStart() {
+                            startMessagesMoveProgress();
+                        }
+
+                        @Override
+                        public void onMoveEnd() {
+                            stopMessageMoveProgress();
+                            onBackPressed();
+                        }
+                    });
+        }
+    }
+
+    private void startMessagesMoveProgress() {
+        if (mIsMessageMoving) {
+            return;
+        }
+        mStartTime = System.currentTimeMillis();
+        mIsMessageMoving = true;
+        mProcessBarContainer.setVisibility(View.VISIBLE);
+        mChoreographer.postFrameCallback(mFrameCallback);
+    }
+
+    private void stopMessageMoveProgress() {
+        if (!mIsMessageMoving) {
+            return;
+        }
+        mIsMessageMoving = false;
+        mChoreographer.removeFrameCallback(mFrameCallback);
+        mProcessBarContainer.setVisibility(View.GONE);
+        Toasts.showToast(R.string.private_box_add_success);
     }
 
     @Override

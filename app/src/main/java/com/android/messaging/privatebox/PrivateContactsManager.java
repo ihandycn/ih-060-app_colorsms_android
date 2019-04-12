@@ -6,8 +6,10 @@ import android.support.annotation.NonNull;
 import com.android.messaging.datamodel.BugleDatabaseOperations;
 import com.android.messaging.datamodel.DataModel;
 import com.android.messaging.datamodel.DatabaseWrapper;
+import com.android.messaging.privatebox.ui.addtolist.ContactsSelectActivity;
 import com.android.messaging.sms.MmsSmsUtils;
 import com.ihs.app.framework.HSApplication;
+import com.ihs.commons.notificationcenter.HSGlobalNotificationCenter;
 
 import java.util.List;
 
@@ -37,11 +39,14 @@ public class PrivateContactsManager {
                 new String[]{String.valueOf(threadId)}, null, null, null);
         if (cursor == null) {
             return false;
+        } else {
+            boolean isPrivate = cursor.getCount() > 0;
+            cursor.close();
+            return isPrivate;
         }
-        return cursor.getCount() > 0;
     }
 
-    public boolean addUserToPrivateBox(@NonNull List<String> recipients) {
+    public void addUserToPrivateBox(@NonNull List<String> recipients) {
         //todo : check permission for no grant exception
         for (String recipient : recipients) {
             long threadId = MmsSmsUtils.Threads.getOrCreateThreadId(HSApplication.getContext(), recipient);
@@ -50,7 +55,8 @@ public class PrivateContactsManager {
             }
             AddPrivateContactAction.addPrivateContact(threadId, recipient);
         }
-        return true;
+        HSGlobalNotificationCenter.sendNotification(ContactsSelectActivity.EVENT_MESSAGES_MOVE_END);
+        
     }
 
 

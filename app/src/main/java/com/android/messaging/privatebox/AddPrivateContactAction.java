@@ -9,6 +9,11 @@ import com.android.messaging.datamodel.DataModel;
 import com.android.messaging.datamodel.DatabaseHelper;
 import com.android.messaging.datamodel.DatabaseWrapper;
 import com.android.messaging.datamodel.action.Action;
+import com.android.messaging.privatebox.ui.addtolist.ContactsSelectActivity;
+import com.android.messaging.ui.conversationlist.ConversationListActivity;
+import com.ihs.commons.notificationcenter.HSGlobalNotificationCenter;
+import com.superapps.util.Notifications;
+import com.superapps.util.Threads;
 
 import static com.android.messaging.privatebox.PrivateContactsManager.PHONE_NUMBER;
 import static com.android.messaging.privatebox.PrivateContactsManager.PRIVATE_CONTACTS_TABLE;
@@ -54,6 +59,7 @@ public class AddPrivateContactAction extends Action {
             values.put(PHONE_NUMBER, recipient);
             insertSuccess = db.insert(PRIVATE_CONTACTS_TABLE, null, values) >= 0;
         }
+        cursor.close();
 
         ContentValues privateValues = new ContentValues();
         privateValues.put(DatabaseHelper.ConversationColumns.IS_PRIVATE, 1);
@@ -62,6 +68,7 @@ public class AddPrivateContactAction extends Action {
                 new String[]{String.valueOf(threadId)});
         //if count > 0, move messages to private box;
         if (count > 0) {
+            HSGlobalNotificationCenter.sendNotification(ContactsSelectActivity.EVENT_MESSAGES_MOVE_START);
             String conversationId = BugleDatabaseOperations.getExistingConversation(db, threadId, false);
             if (conversationId != null) {
                 MoveConversationToPrivateBoxAction.makeConversationPrivate(conversationId);
