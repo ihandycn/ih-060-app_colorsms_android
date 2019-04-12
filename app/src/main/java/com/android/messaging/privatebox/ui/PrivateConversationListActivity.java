@@ -19,11 +19,13 @@ import com.android.messaging.ui.SnackBarInteraction;
 import com.android.messaging.ui.customize.PrimaryColors;
 import com.superapps.util.Dimensions;
 import com.superapps.util.Navigations;
+import com.superapps.util.Preferences;
 
 import java.util.List;
 
 public class PrivateConversationListActivity extends MultiSelectConversationListActivity {
 
+    private static final String PREF_KEY_ADD_BUTTON_CLICKED = "pref_key_private_toolbar_add_button_clicked";
     private PrivateConversationListFragment mConversationListFragment;
     private View mStatusBarInset;
     private View mTitle;
@@ -61,6 +63,9 @@ public class PrivateConversationListActivity extends MultiSelectConversationList
             return super.onCreateOptionsMenu(menu);
         }
         getMenuInflater().inflate(R.menu.private_list_conversation_list_menu, menu);
+        if (!Preferences.getDefault().getBoolean(PREF_KEY_ADD_BUTTON_CLICKED, false)) {
+            menu.findItem(R.id.private_action_add).setIcon(R.drawable.private_add_btn_unclick);
+        }
         return true;
     }
 
@@ -155,6 +160,8 @@ public class PrivateConversationListActivity extends MultiSelectConversationList
                 });
 
                 addToBlackListDialog.show();
+                Preferences.getDefault().putBoolean(PREF_KEY_ADD_BUTTON_CLICKED, true);
+                menuItem.setIcon(R.drawable.private_add_btn);
                 break;
             case R.id.private_action_setting:
                 Navigations.startActivitySafely(this, new Intent(this, PrivateSettingActivity.class));
