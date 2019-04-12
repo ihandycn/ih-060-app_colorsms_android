@@ -287,17 +287,7 @@ public class SettingGeneralActivity extends BaseActivity {
 
 
     private void updatePrivacyModeSummary() {
-        switch (PrivacyModeSettings.getPrivacyMode()) {
-            case PrivacyModeSettings.NONE:
-                mPrivacyModeView.setSummary(getString(R.string.privacy_mode_disable));
-                break;
-            case PrivacyModeSettings.HIDE_MESSAGE_ONLY:
-                mPrivacyModeView.setSummary(getString(R.string.privacy_mode_hide_message_only));
-                break;
-            case PrivacyModeSettings.HIDE_CONTACT_AND_MESSAGE:
-                mPrivacyModeView.setSummary(getString(R.string.privacy_mode_hide_contact_and_message));
-                break;
-        }
+        mPrivacyModeView.setSummary(PrivacyModeSettings.getPrivacyModeDescription(null));
     }
 
     private void onSoundItemClick() {

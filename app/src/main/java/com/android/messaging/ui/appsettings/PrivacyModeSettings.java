@@ -1,9 +1,11 @@
 package com.android.messaging.ui.appsettings;
 
+import android.content.Context;
 import android.support.annotation.IntDef;
 import android.text.TextUtils;
 
 import com.android.messaging.Factory;
+import com.android.messaging.R;
 import com.android.messaging.util.BugleCustomizePrefs;
 import com.android.messaging.util.BuglePrefs;
 import com.superapps.util.Preferences;
@@ -45,4 +47,19 @@ public class PrivacyModeSettings {
     public static void setPrivacyMode(@PrivacyMode int mode) {
         sPrefs.putInt(PREF_KEY_PRIVACY_MODE, mode);
     }
+
+    public static String getPrivacyModeDescription(String conversationId) {
+        Context context = Factory.get().getApplicationContext();
+        switch (getPrivacyMode(conversationId)) {
+            case PrivacyModeSettings.NONE:
+                return context.getString(R.string.privacy_mode_disable);
+            case PrivacyModeSettings.HIDE_MESSAGE_ONLY:
+                return context.getString(R.string.privacy_mode_hide_message_only);
+            case PrivacyModeSettings.HIDE_CONTACT_AND_MESSAGE:
+                return context.getString(R.string.privacy_mode_hide_contact_and_message);
+        }
+        return context.getString(R.string.privacy_mode_disable);
+    }
 }
+
+

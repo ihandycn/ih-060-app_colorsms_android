@@ -18,6 +18,7 @@ package com.android.messaging.ui.conversationsettings;
 import android.app.Activity;
 import android.app.Fragment;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.database.Cursor;
@@ -46,20 +47,23 @@ import com.android.messaging.datamodel.data.PeopleAndOptionsData.PeopleAndOption
 import com.android.messaging.datamodel.data.PeopleOptionsItemData;
 import com.android.messaging.datamodel.data.PersonItemData;
 import com.android.messaging.ui.BaseAlertDialog;
+import com.android.messaging.ui.BaseDialogFragment;
 import com.android.messaging.ui.CompositeAdapter;
 import com.android.messaging.ui.PersonItemView;
 import com.android.messaging.ui.UIIntents;
+import com.android.messaging.ui.appsettings.SelectPrivacyModeDialog;
 import com.android.messaging.ui.wallpaper.WallpaperManager;
 import com.android.messaging.ui.wallpaper.WallpaperPreviewActivity;
 import com.android.messaging.util.Assert;
 import com.android.messaging.util.BugleAnalytics;
+import com.android.messaging.util.UiUtils;
 import com.superapps.util.Navigations;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import static com.android.messaging.datamodel.data.PeopleOptionsItemData.SETTINGS_PIN;
-import static com.android.messaging.datamodel.data.PeopleOptionsItemData.SETTING_ADD_CONTANCT;
+import static com.android.messaging.datamodel.data.PeopleOptionsItemData.SETTING_ADD_CONTACT;
 import static com.android.messaging.datamodel.data.PeopleOptionsItemData.SETTING_DELETE;
 import static com.android.messaging.datamodel.data.PeopleOptionsItemData.SETTING_NOTIFICATION_SOUND_URI;
 import static com.android.messaging.datamodel.data.PeopleOptionsItemData.SETTING_NOTIFICATION_VIBRATION;
@@ -80,7 +84,6 @@ public class PeopleAndOptionsFragment extends Fragment
     private String mRingtone;
 
     private static final int REQUEST_CODE_RINGTONE_PICKER = 1000;
-    private boolean conversationDeleted;
     private ParticipantData mOtherParticipantData;
 
     @Override
@@ -173,6 +176,22 @@ public class PeopleAndOptionsFragment extends Fragment
                 mBinding.getData().enableConversationNotifications(mBinding, isChecked);
                 break;
 
+            case PeopleOptionsItemData.SETTING_PRIVACY_MODE:
+                SelectPrivacyModeDialog selectPrivacyModeDialog = SelectPrivacyModeDialog.newInstance(mConversationId);
+                selectPrivacyModeDialog.setOnDismissOrCancelListener(new BaseDialogFragment.OnDismissOrCancelListener() {
+                    @Override
+                    public void onDismiss(DialogInterface dialog) {
+                        mOptionsListAdapter.notifyDataSetChanged();
+                    }
+
+                    @Override
+                    public void onCancel(DialogInterface dialog) {
+
+                    }
+                });
+                UiUtils.showDialogFragment(getActivity(), selectPrivacyModeDialog);
+                break;
+
             case SETTING_NOTIFICATION_SOUND_URI:
                 mRingtone = item.getRingtoneUri() == null ? "" : item.getRingtoneUri().toString();
                 final Intent ringtonePickerIntent = UIIntents.get().getRingtonePickerIntent(
@@ -188,7 +207,7 @@ public class PeopleAndOptionsFragment extends Fragment
                         isChecked);
                 break;
 
-            case SETTING_ADD_CONTANCT:
+            case SETTING_ADD_CONTACT:
                 BugleAnalytics.logEvent("SMS_Detailspage_Settings_AddContact_Click");
                 UIIntents.get().launchAddContactActivity(getActivity(), mOtherParticipantData.getContactDestination());
                 break;
@@ -231,7 +250,6 @@ public class PeopleAndOptionsFragment extends Fragment
         if (getActivity() != null) {
             getActivity().setResult(DELETE_CONVERSATION_RESULT_CODE);
             getActivity().finish();
-            conversationDeleted = true;
         }
     }
 
@@ -353,7 +371,8 @@ public class PeopleAndOptionsFragment extends Fragment
             }
             mOptionsCursor.moveToFirst();
 
-            itemView.bind(mOptionsCursor, position, mOtherParticipantData, PeopleAndOptionsFragment.this, isGroup(), addContactVisble());
+            itemView.bind(mOptionsCursor, position, mOtherParticipantData, PeopleAndOptionsFragment.this,
+                    isGroup(), addContactVisble(), mConversationId);
             return itemView;
         }
 
