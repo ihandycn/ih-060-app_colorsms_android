@@ -103,12 +103,14 @@ import com.android.messaging.util.OsUtil;
 import com.android.messaging.util.PhoneUtils;
 import com.android.messaging.util.SafeAsyncTask;
 import com.android.messaging.util.TextUtil;
+import com.android.messaging.util.ThreadUtil;
 import com.android.messaging.util.UiUtils;
 import com.android.messaging.util.UriUtil;
 import com.google.common.annotations.VisibleForTesting;
 import com.ihs.commons.notificationcenter.HSGlobalNotificationCenter;
 import com.ihs.commons.notificationcenter.INotificationObserver;
 import com.ihs.commons.utils.HSBundle;
+import com.superapps.util.Threads;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -268,12 +270,10 @@ public class ConversationFragment extends Fragment implements ConversationDataLi
 
     private void resetActionModeAndAnimation() {
         mAdapter.setMultiSelectMode(false);
-        selectMessages.clear();
         selectMessageIds.clear();
         mHost.dismissActionMode();
         mAdapter.closeItemAnimation();
     }
-
     private int mScrollToDismissThreshold;
     private final RecyclerView.OnScrollListener mListScrollListener =
             new RecyclerView.OnScrollListener() {
@@ -709,6 +709,7 @@ public class ConversationFragment extends Fragment implements ConversationDataLi
             HSGlobalNotificationCenter.sendNotification(ConversationActivity.MESSAGE_LONG_CLICK);
             ImageView checkBox = messageView.findViewById(R.id.check_box);
             checkBox.setSelected(true);
+            selectMessages.clear();
             selectMessages.add(messageView);
             selectMessageIds.add(data.getMessageId());
             mAdapter.openItemAnimation();
@@ -824,7 +825,6 @@ public class ConversationFragment extends Fragment implements ConversationDataLi
                                                     final Cursor cursor, final ConversationMessageData newestMessage,
                                                     final boolean isSync) {
         mBinding.ensureBound(data);
-
         // This needs to be determined before swapping cursor, which may change the scroll state.
         final boolean scrolledToBottom = isScrolledToBottom();
         final int positionFromBottom = getScrollPositionFromBottom();
@@ -1129,13 +1129,12 @@ public class ConversationFragment extends Fragment implements ConversationDataLi
                             new OnClickListener() {
                                 @Override
                                 public void onClick(final DialogInterface dialog, final int which) {
-                                    for (ConversationMessageView messageView : selectMessages) {
-                                        mBinding.getData().deleteMessage(mBinding, messageView.getData().getMessageId());
-                                    }
                                     resetActionModeAndAnimation();
+                                    Threads.postOnMainThreadDelayed(() -> deleteSelectMessage(), 500);
                                 }
                             })
                     .setNegativeButton(android.R.string.cancel, null);
+
             builder.setOnDismissListener(new OnDismissListener() {
                 @Override
                 public void onDismiss(DialogInterface dialog) {
@@ -1145,6 +1144,12 @@ public class ConversationFragment extends Fragment implements ConversationDataLi
         } else {
             warnOfMissingActionConditions(false /*sending*/,
                     null /*commandToRunAfterActionConditionResolved*/);
+        }
+    }
+
+    private void deleteSelectMessage() {
+        for (ConversationMessageView messageView : selectMessages) {
+            mBinding.getData().deleteMessage(mBinding, messageView.getData().getMessageId());
         }
     }
 
