@@ -957,7 +957,9 @@ public class ComposeMessageView extends LinearLayout
                 String messageStr = messageText.substring(0, index);
                 String signatureStr = messageText.substring(index, e.length());
                 if (signature.equals(signatureStr)) {
-                    if (messageStr.charAt(messageStr.length() - 1) == '\n') {
+                    if (messageStr.length() == 0) {
+                        messageText = signatureStr;
+                    } else if (messageStr.charAt(messageStr.length() - 1) == '\n') {
                         messageText = messageStr.substring(0, messageStr.length() - 1);
                     } else {
                         messageText = messageStr;

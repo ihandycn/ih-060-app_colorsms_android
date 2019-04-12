@@ -32,7 +32,7 @@ public class ChooseThemePagerView extends ConstraintLayout {
         mPager = findViewById(R.id.pager);
         mPager.setAdapter(new ThemePagerAdapter(getContext()));
         mPager.setPageTransformer(false, new ThemePagerTransformer(getContext()));
-        mPager.setPageMargin(Dimensions.pxFromDp(11));
+        mPager.setPageMargin(Dimensions.pxFromDp(16));
 
         TextView applyTextView = findViewById(R.id.apply);
         applyTextView.setBackground(BackgroundDrawables.createBackgroundDrawable(
