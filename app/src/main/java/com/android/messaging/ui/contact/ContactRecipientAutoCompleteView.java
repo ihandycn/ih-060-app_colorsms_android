@@ -52,7 +52,9 @@ import java.util.concurrent.Executors;
 public class ContactRecipientAutoCompleteView extends RecipientEditTextView {
     public interface ContactChipsChangeListener {
         void onContactChipsChanged(int oldCount, int newCount);
+
         void onInvalidContactChipsPruned(int prunedCount);
+
         void onEntryComplete();
     }
 
@@ -72,12 +74,12 @@ public class ContactRecipientAutoCompleteView extends RecipientEditTextView {
 
         @Override
         public void onTextChanged(final CharSequence s, final int start, final int before,
-                final int count) {
+                                  final int count) {
         }
 
         @Override
         public void beforeTextChanged(final CharSequence s, final int start, final int count,
-                final int after) {
+                                      final int after) {
             // We don't take mLastChipsCount from here but from the last afterTextChanged() run.
             // The reason is because at this point, any chip spans to be removed is already removed
             // from s in the chips text view.
@@ -127,7 +129,7 @@ public class ContactRecipientAutoCompleteView extends RecipientEditTextView {
         public final RecipientEntry replacedChipEntry;
 
         public ChipReplacementTuple(final DrawableRecipientChip removedChip,
-                final RecipientEntry replacedChipEntry) {
+                                    final RecipientEntry replacedChipEntry) {
             this.removedChip = removedChip;
             this.replacedChipEntry = replacedChipEntry;
         }
@@ -162,7 +164,7 @@ public class ContactRecipientAutoCompleteView extends RecipientEditTextView {
                                         ContactUtil.createRecipientEntryForPhoneQuery(
                                                 lookupResult, true)));
                             } else if (PhoneUtils.isValidSmsMmsDestination(
-                                    entry.getDestination())){
+                                    entry.getDestination())) {
                                 // No match was found, but we have a valid destination so let's at
                                 // least create an entry that shows an avatar.
                                 publishProgress(new ChipReplacementTuple(recipient,
@@ -172,6 +174,9 @@ public class ContactRecipientAutoCompleteView extends RecipientEditTextView {
                                 // Not a valid contact. Remove and show an error.
                                 publishProgress(new ChipReplacementTuple(recipient, null));
                                 invalidChipsRemoved++;
+                            }
+                            if (lookupResult != null) {
+                                lookupResult.close();
                             }
                         }
                     } else {
@@ -224,7 +229,7 @@ public class ContactRecipientAutoCompleteView extends RecipientEditTextView {
      * 1. Remove invalid chips.
      * 2. Attempt to resolve unknown contacts to known local contacts.
      * 3. Convert still unknown chips to chips with generated avatar.
-     *
+     * <p>
      * Note that we don't need to perform this synchronously since we can
      * resolve any unknown contacts to local contacts when needed.
      */
@@ -257,7 +262,8 @@ public class ContactRecipientAutoCompleteView extends RecipientEditTextView {
         return contacts;
     }
 
-    /**c
+    /**
+     * c
      * Gets a set of currently selected chips' emails/phone numbers. This will facilitate the
      * consumer with determining quickly whether a contact is currently selected.
      */
