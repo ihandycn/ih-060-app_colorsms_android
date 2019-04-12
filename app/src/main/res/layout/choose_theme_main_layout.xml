@@ -7,7 +7,7 @@
     <com.superapps.view.ViewPagerFixed
         android:id="@+id/pager"
         android:layout_width="match_parent"
-        android:layout_height="397dp"
+        android:layout_height="417dp"
         android:layout_marginTop="10dp"
         android:layout_marginBottom="19dp"
         android:clipToPadding="false"
@@ -30,7 +30,7 @@
     <com.superapps.view.MessagesTextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="76dp"
+        android:layout_marginStart="70dp"
         android:layout_marginTop="27dp"
         android:background="@drawable/choose_theme_current_theme"
         android:text="@string/welcome_choose_theme_current"
@@ -51,7 +51,7 @@
         android:text="@string/sms_show_apply"
         android:gravity="center"
         android:includeFontPadding="false"
-        app:layout_constraintVertical_bias="0.91"
+        app:layout_constraintVertical_bias="0.93"
         android:layout_gravity="center_horizontal"
         app:typeface="@string/custom_font_semibold"
         app:layout_constraintStart_toStartOf="parent"

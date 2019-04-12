@@ -23,7 +23,7 @@ public class ChooseThemeActivity extends AppCompatActivity {
         toolbar.setTitle("");
         UiUtils.setTitleBarBackground(toolbar, this);
         TextView title = toolbar.findViewById(R.id.toolbar_title);
-        title.setText(getString(R.string.menu_theme_color));
+        title.setText(getString(R.string.menu_theme));
         setSupportActionBar(toolbar);
         if (getSupportActionBar() != null) {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
