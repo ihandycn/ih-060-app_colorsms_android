@@ -104,7 +104,7 @@ import java.util.UUID;
 public class MmsUtils {
     private static final String TAG = LogUtil.BUGLE_TAG;
 
-    public static final boolean DEFAULT_DELIVERY_REPORT_MODE  = false;
+    public static final boolean DEFAULT_DELIVERY_REPORT_MODE = false;
     public static final boolean DEFAULT_READ_REPORT_MODE = false;
     public static final long DEFAULT_EXPIRY_TIME_IN_SECONDS = 7 * 24 * 60 * 60;
     public static final int DEFAULT_PRIORITY = PduHeaders.PRIORITY_NORMAL;
@@ -205,84 +205,84 @@ public class MmsUtils {
 
     private static final String sSmilImagePart =
             "<par dur=\"" + DEFAULT_DURATION + "ms\">" +
-                "<img src=\"%s\" region=\"Image\" />" +
-            "</par>";
+                    "<img src=\"%s\" region=\"Image\" />" +
+                    "</par>";
 
     private static final String sSmilVideoPart =
             "<par dur=\"%2$dms\">" +
-                "<video src=\"%1$s\" dur=\"%2$dms\" region=\"Image\" />" +
-            "</par>";
+                    "<video src=\"%1$s\" dur=\"%2$dms\" region=\"Image\" />" +
+                    "</par>";
 
     private static final String sSmilAudioPart =
             "<par dur=\"%2$dms\">" +
                     "<audio src=\"%1$s\" dur=\"%2$dms\" />" +
-            "</par>";
+                    "</par>";
 
     private static final String sSmilTextPart =
             "<par dur=\"" + DEFAULT_DURATION + "ms\">" +
-                "<text src=\"%s\" region=\"Text\" />" +
-            "</par>";
+                    "<text src=\"%s\" region=\"Text\" />" +
+                    "</par>";
 
     private static final String sSmilPart =
             "<par dur=\"" + DEFAULT_DURATION + "ms\">" +
-                "<ref src=\"%s\" />" +
-            "</par>";
+                    "<ref src=\"%s\" />" +
+                    "</par>";
 
     private static final String sSmilTextOnly =
             "<smil>" +
-                "<head>" +
+                    "<head>" +
                     "<layout>" +
-                        "<root-layout/>" +
-                        "<region id=\"Text\" top=\"0\" left=\"0\" "
-                          + "height=\"100%%\" width=\"100%%\"/>" +
+                    "<root-layout/>" +
+                    "<region id=\"Text\" top=\"0\" left=\"0\" "
+                    + "height=\"100%%\" width=\"100%%\"/>" +
                     "</layout>" +
-                "</head>" +
-                "<body>" +
-                       "%s" +  // constructed body goes here
-                "</body>" +
-            "</smil>";
+                    "</head>" +
+                    "<body>" +
+                    "%s" +  // constructed body goes here
+                    "</body>" +
+                    "</smil>";
 
     private static final String sSmilVisualAttachmentsOnly =
             "<smil>" +
-                "<head>" +
+                    "<head>" +
                     "<layout>" +
-                        "<root-layout/>" +
-                        "<region id=\"Image\" fit=\"meet\" top=\"0\" left=\"0\" "
-                          + "height=\"100%%\" width=\"100%%\"/>" +
+                    "<root-layout/>" +
+                    "<region id=\"Image\" fit=\"meet\" top=\"0\" left=\"0\" "
+                    + "height=\"100%%\" width=\"100%%\"/>" +
                     "</layout>" +
-                "</head>" +
-                "<body>" +
-                       "%s" +  // constructed body goes here
-                "</body>" +
-            "</smil>";
+                    "</head>" +
+                    "<body>" +
+                    "%s" +  // constructed body goes here
+                    "</body>" +
+                    "</smil>";
 
     private static final String sSmilVisualAttachmentsWithText =
             "<smil>" +
-                "<head>" +
+                    "<head>" +
                     "<layout>" +
-                        "<root-layout/>" +
-                        "<region id=\"Image\" fit=\"meet\" top=\"0\" left=\"0\" "
-                          + "height=\"80%%\" width=\"100%%\"/>" +
-                        "<region id=\"Text\" top=\"80%%\" left=\"0\" height=\"20%%\" "
-                          + "width=\"100%%\"/>" +
+                    "<root-layout/>" +
+                    "<region id=\"Image\" fit=\"meet\" top=\"0\" left=\"0\" "
+                    + "height=\"80%%\" width=\"100%%\"/>" +
+                    "<region id=\"Text\" top=\"80%%\" left=\"0\" height=\"20%%\" "
+                    + "width=\"100%%\"/>" +
                     "</layout>" +
-                "</head>" +
-                "<body>" +
-                       "%s" +  // constructed body goes here
-                "</body>" +
-            "</smil>";
+                    "</head>" +
+                    "<body>" +
+                    "%s" +  // constructed body goes here
+                    "</body>" +
+                    "</smil>";
 
     private static final String sSmilNonVisualAttachmentsOnly =
             "<smil>" +
-                "<head>" +
+                    "<head>" +
                     "<layout>" +
-                        "<root-layout/>" +
+                    "<root-layout/>" +
                     "</layout>" +
-                "</head>" +
-                "<body>" +
-                       "%s" +  // constructed body goes here
-                "</body>" +
-            "</smil>";
+                    "</head>" +
+                    "<body>" +
+                    "%s" +  // constructed body goes here
+                    "</body>" +
+                    "</smil>";
 
     private static final String sSmilNonVisualAttachmentsWithText = sSmilTextOnly;
 
@@ -294,7 +294,7 @@ public class MmsUtils {
     public static final int MAX_VIDEO_ATTACHMENT_COUNT = 1;
 
     public static MmsInfo makePduBody(final Context context, final MessageData message,
-            final int subId) {
+                                      final int subId) {
         final PduBody pb = new PduBody();
 
         // Compute data size requirements for this message: count up images and total size of
@@ -397,7 +397,7 @@ public class MmsUtils {
     }
 
     private static int getMediaDurationMs(final Context context, final MessagePartData part,
-            final int defaultDurationMs) {
+                                          final int defaultDurationMs) {
         Assert.notNull(context);
         Assert.notNull(part);
         Assert.isTrue(ContentType.isAudioType(part.getContentType()) ||
@@ -427,7 +427,7 @@ public class MmsUtils {
     }
 
     private static int addTextPart(final Context context, final PduBody pb,
-            final String text, final String srcName) {
+                                   final String text, final String srcName) {
         final PduPart part = new PduPart();
 
         // Set Charset if it's a text media.
@@ -447,8 +447,8 @@ public class MmsUtils {
     }
 
     private static int addPicturePart(final Context context, final PduBody pb, final int index,
-            final MessagePartData messagePart, int widthLimit, int heightLimit,
-            final int maxPartSize, final String srcName, final String contentType) {
+                                      final MessagePartData messagePart, int widthLimit, int heightLimit,
+                                      final int maxPartSize, final String srcName, final String contentType) {
         final Uri imageUri = messagePart.getContentUri();
         final int width = messagePart.getWidth();
         final int height = messagePart.getHeight();
@@ -485,7 +485,7 @@ public class MmsUtils {
                 width <= widthLimit &&
                 height <= heightLimit &&
                 (orientation == android.media.ExifInterface.ORIENTATION_UNDEFINED ||
-                orientation == android.media.ExifInterface.ORIENTATION_NORMAL)) {
+                        orientation == android.media.ExifInterface.ORIENTATION_NORMAL)) {
             if (LogUtil.isLoggable(TAG, LogUtil.VERBOSE)) {
                 LogUtil.v(TAG, "addPicturePart - already sized");
             }
@@ -515,7 +515,7 @@ public class MmsUtils {
     }
 
     private static void addPartForUri(final Context context, final PduBody pb,
-            final String srcName, final Uri uri, final String contentType) {
+                                      final String srcName, final Uri uri, final String contentType) {
         final PduPart part = new PduPart();
         part.setDataUri(uri);
         part.setContentType(contentType.getBytes());
@@ -526,7 +526,7 @@ public class MmsUtils {
     }
 
     private static int addVCardPart(final Context context, final PduBody pb,
-            final MessagePartData messagePart, final String srcName) {
+                                    final MessagePartData messagePart, final String srcName) {
         final Uri vcardUri = messagePart.getContentUri();
         final String contentType = messagePart.getContentType();
         final int vcardSize = getDataLength(context, vcardUri);
@@ -549,7 +549,7 @@ public class MmsUtils {
      * added.
      */
     private static int addVideoPart(final Context context, final PduBody pb,
-            final MessagePartData messagePart, final String srcName) {
+                                    final MessagePartData messagePart, final String srcName) {
         final Uri attachmentUri = messagePart.getContentUri();
         String contentType = messagePart.getContentType();
 
@@ -566,7 +566,7 @@ public class MmsUtils {
     }
 
     private static int addOtherPart(final Context context, final PduBody pb,
-            final MessagePartData messagePart, final String srcName) {
+                                    final MessagePartData messagePart, final String srcName) {
         final Uri attachmentUri = messagePart.getContentUri();
         final String contentType = messagePart.getContentType();
 
@@ -582,7 +582,7 @@ public class MmsUtils {
     }
 
     private static void addSmilPart(final PduBody pb, final String smilTemplate,
-            final String smilBody) {
+                                    final String smilBody) {
         final PduPart smilPart = new PduPart();
         smilPart.setContentId("smil".getBytes());
         smilPart.setContentLocation("smil.xml".getBytes());
@@ -593,7 +593,7 @@ public class MmsUtils {
     }
 
     private static String getSmilTemplate(final boolean hasVisualAttachments,
-            final boolean hasNonVisualAttachments, final boolean hasText) {
+                                          final boolean hasNonVisualAttachments, final boolean hasText) {
         if (hasVisualAttachments) {
             return hasText ? sSmilVisualAttachmentsWithText : sSmilVisualAttachmentsOnly;
         }
@@ -629,10 +629,10 @@ public class MmsUtils {
     /**
      * Returns {@code true} if group mms is turned on,
      * {@code false} otherwise.
-     *
+     * <p>
      * For the group mms feature to be enabled, the following must be true:
-     *  1. the feature is enabled in mms_config.xml (currently on by default)
-     *  2. the feature is enabled in the SMS settings page
+     * 1. the feature is enabled in mms_config.xml (currently on by default)
+     * 2. the feature is enabled in the SMS settings page
      *
      * @return true if group mms is supported
      */
@@ -651,20 +651,20 @@ public class MmsUtils {
      * that the content type of the resulting PduPart may not be the same as the content type of
      * this UriImage; always call {@link PduPart#getContentType()} to get the new content type.
      *
-     * @param widthLimit The width limit, in pixels
+     * @param widthLimit  The width limit, in pixels
      * @param heightLimit The height limit, in pixels
-     * @param byteLimit The binary size limit, in bytes
-     * @param width The image width, in pixels
-     * @param height The image height, in pixels
+     * @param byteLimit   The binary size limit, in bytes
+     * @param width       The image width, in pixels
+     * @param height      The image height, in pixels
      * @param orientation Orientation constant from ExifInterface for rotating or flipping the
      *                    image
-     * @param imageUri Uri to the image data
-     * @param context Needed to open the image
+     * @param imageUri    Uri to the image data
+     * @param context     Needed to open the image
      * @return A new PduPart containing the resized image data
      */
     private static PduPart getResizedImageAsPart(final int widthLimit,
-            final int heightLimit, final int byteLimit, final int width, final int height,
-            final int orientation, final Uri imageUri, final Context context, final String contentType) {
+                                                 final int heightLimit, final int byteLimit, final int width, final int height,
+                                                 final int orientation, final Uri imageUri, final Context context, final String contentType) {
         final PduPart part = new PduPart();
 
         final byte[] data = ImageResizer.getResizedImageData(width, height, orientation,
@@ -717,11 +717,11 @@ public class MmsUtils {
             Threads.CONTENT_URI.buildUpon().appendQueryParameter("simple", "true").build();
 
     private static final String[] RECIPIENTS_PROJECTION = {
-        Threads._ID,
-        Threads.RECIPIENT_IDS
+            Threads._ID,
+            Threads.RECIPIENT_IDS
     };
 
-    private static final int RECIPIENT_IDS  = 1;
+    private static final int RECIPIENT_IDS = 1;
 
     public static List<String> getRecipientsByThread(final long threadId) {
         final String spaceSepIds = getRawRecipientIdsForThread(threadId);
@@ -742,7 +742,7 @@ public class MmsUtils {
         final ContentResolver cr = context.getContentResolver();
         final Cursor thread = cr.query(
                 ALL_THREADS_URI,
-                RECIPIENTS_PROJECTION, "_id=?", new String[] { String.valueOf(threadId) }, null);
+                RECIPIENTS_PROJECTION, "_id=?", new String[]{String.valueOf(threadId)}, null);
         if (thread != null) {
             try {
                 if (thread.moveToFirst()) {
@@ -840,20 +840,20 @@ public class MmsUtils {
      * Add an SMS to the given URI with thread_id specified.
      *
      * @param resolver the content resolver to use
-     * @param uri the URI to add the message to
-     * @param subId subId for the receiving sim
-     * @param address the address of the sender
-     * @param body the body of the message
-     * @param subject the psuedo-subject of the message
-     * @param date the timestamp for the message
-     * @param read true if the message has been read, false if not
+     * @param uri      the URI to add the message to
+     * @param subId    subId for the receiving sim
+     * @param address  the address of the sender
+     * @param body     the body of the message
+     * @param subject  the psuedo-subject of the message
+     * @param date     the timestamp for the message
+     * @param read     true if the message has been read, false if not
      * @param threadId the thread_id of the message
      * @return the URI for the new message
      */
-    private static Uri addMessageToUri(final ContentResolver resolver,
-            final Uri uri, final int subId, final String address, final String body,
-            final String subject, final Long date, final boolean read, final boolean seen,
-            final int status, final int type, final long threadId) {
+    public static Uri addMessageToUri(final ContentResolver resolver,
+                                      final Uri uri, final int subId, final String address, final String body,
+                                      final String subject, final Long date, final boolean read, final boolean seen,
+                                      final int status, final int type, final long threadId) {
         final ContentValues values = new ContentValues(7);
 
         values.put(Telephony.Sms.ADDRESS, address);
@@ -881,8 +881,8 @@ public class MmsUtils {
 
     // Insert an SMS message to telephony
     public static Uri insertSmsMessage(final Context context, final Uri uri, final int subId,
-            final String dest, final String text, final long timestamp, final int status,
-            final int type, final long threadId) {
+                                       final String dest, final String text, final long timestamp, final int status,
+                                       final int type, final long threadId) {
         Uri response = null;
         try {
             response = addMessageToUri(context.getContentResolver(), uri, subId, dest,
@@ -902,7 +902,7 @@ public class MmsUtils {
 
     // Update SMS message type in telephony; returns true if it succeeded.
     public static boolean updateSmsMessageSendingStatus(final Context context, final Uri uri,
-            final int type, final long date) {
+                                                        final int type, final long date) {
         try {
             final ContentResolver resolver = context.getContentResolver();
             final ContentValues values = new ContentValues(2);
@@ -951,8 +951,8 @@ public class MmsUtils {
 
     // Persist a received MMS message in telephony
     public static Uri insertReceivedMmsMessage(final Context context,
-            final RetrieveConf retrieveConf, final int subId, final String subPhoneNumber,
-            final long receivedTimestampInSeconds, final String contentLocation) {
+                                               final RetrieveConf retrieveConf, final int subId, final String subPhoneNumber,
+                                               final long receivedTimestampInSeconds, final String contentLocation) {
         final PduPersister persister = PduPersister.getPduPersister(context);
         Uri uri = null;
         try {
@@ -985,7 +985,7 @@ public class MmsUtils {
 
     // Update MMS message type in telephony; returns true if it succeeded.
     public static boolean updateMmsMessageSendingStatus(final Context context, final Uri uri,
-            final int box, final long timestampInMillis) {
+                                                        final int box, final long timestampInMillis) {
         try {
             final ContentResolver resolver = context.getContentResolver();
             final ContentValues values = new ContentValues();
@@ -1013,8 +1013,8 @@ public class MmsUtils {
      * Parse values from a received sms message
      *
      * @param context
-     * @param msgs The received sms message content
-     * @param error The received sms error
+     * @param msgs    The received sms message content
+     * @param error   The received sms error
      * @return Parsed values from the message
      */
     public static ContentValues parseReceivedSmsMessage(
@@ -1085,8 +1085,9 @@ public class MmsUtils {
     /**
      * cleanseMmsSubject will take a subject that's says, "<Subject: no subject>", and return
      * a null string. Otherwise it will return the original subject string.
+     *
      * @param resources So the function can grab string resources
-     * @param subject the raw subject
+     * @param subject   the raw subject
      * @return
      */
     public static String cleanseMmsSubject(final Resources resources, final String subject) {
@@ -1117,10 +1118,11 @@ public class MmsUtils {
     }
 
     // This function was lifted from Telephony.PhoneNumberUtils because it was @hide
+
     /**
      * Replace arabic/unicode digits with decimal digits.
-     * @param number
-     *            the number to be normalized.
+     *
+     * @param number the number to be normalized.
      * @return the replaced number.
      */
     private static String replaceUnicodeDigits(final String number) {
@@ -1205,7 +1207,7 @@ public class MmsUtils {
      * @param timeSentInMillis
      */
     public static void updateSmsStatusAndDateSent(final Uri smsMessageUri, final int status,
-            final long timeSentInMillis) {
+                                                  final long timeSentInMillis) {
         if (smsMessageUri == null) {
             return;
         }
@@ -1220,12 +1222,12 @@ public class MmsUtils {
 
     /**
      * Get the SQL selection statement for matching messages with media.
-     *
+     * <p>
      * Example for MMS part table:
      * "((ct LIKE 'image/%')
-     *   OR (ct LIKE 'video/%')
-     *   OR (ct LIKE 'audio/%')
-     *   OR (ct='application/ogg'))
+     * OR (ct LIKE 'video/%')
+     * OR (ct LIKE 'audio/%')
+     * OR (ct='application/ogg'))
      *
      * @param contentTypeColumn The content-type column name
      * @return The SQL selection statement for matching media types: image, video, audio
@@ -1249,7 +1251,7 @@ public class MmsUtils {
 
     /**
      * Delete MMS messages with media parts.
-     *
+     * <p>
      * Because the telephony provider constraints, we can't use JOIN and delete messages in one
      * shot. We have to do a query first and then batch delete the messages based on IDs.
      *
@@ -1271,7 +1273,7 @@ public class MmsUtils {
                 getMediaTypeSelectionSql(Mms.Part.CONTENT_TYPE));
         final ContentResolver resolver = Factory.get().getApplicationContext().getContentResolver();
         final Cursor cursor = resolver.query(Mms.CONTENT_URI,
-                new String[]{ Mms._ID },
+                new String[]{Mms._ID},
                 selection,
                 null/*selectionArgs*/,
                 null/*sortOrder*/);
@@ -1338,7 +1340,7 @@ public class MmsUtils {
     /**
      * Get the args for SQL IN operator from a long ID array
      *
-     * @param ids The original long id array
+     * @param ids   The original long id array
      * @param start Start of the ids to fill the args
      * @param count Number of ids to pack
      * @return The long array with the id args
@@ -1386,7 +1388,7 @@ public class MmsUtils {
     /**
      * Update the read status of SMS/MMS messages by thread and timestamp
      *
-     * @param threadId The thread of sms/mms to change
+     * @param threadId          The thread of sms/mms to change
      * @param timestampInMillis Change the status before this timestamp
      */
     public static void updateSmsReadStatus(final long threadId, final long timestampInMillis) {
@@ -1480,8 +1482,9 @@ public class MmsUtils {
         }
     }
 
-    private static final String[] TEST_DATE_SENT_PROJECTION = new String[] { Sms.DATE_SENT };
+    private static final String[] TEST_DATE_SENT_PROJECTION = new String[]{Sms.DATE_SENT};
     private static Boolean sHasSmsDateSentColumn = null;
+
     /**
      * Check if date_sent column exists on ICS and above devices. We need to do a test
      * query to figure that out since on some ICS+ devices, somehow the date_sent column does
@@ -1517,8 +1520,9 @@ public class MmsUtils {
     }
 
     private static final String[] TEST_CARRIERS_PROJECTION =
-            new String[] { Telephony.Carriers.MMSC };
+            new String[]{Telephony.Carriers.MMSC};
     private static Boolean sUseSystemApn = null;
+
     /**
      * Check if we can access the APN data in the Telephony provider. Access was restricted in
      * JB MR1 (and some JB MR2) devices. If we can't access the APN, we have to fall back and use
@@ -1668,7 +1672,7 @@ public class MmsUtils {
                     MMS_PART_CONTENT_URI,
                     DatabaseMessages.MmsPart.PROJECTION,
                     selection,
-                    new String[] { Long.toString(rowId) },
+                    new String[]{Long.toString(rowId)},
                     null/*sortOrder*/);
             if (cursor != null) {
                 while (cursor.moveToNext()) {
@@ -1689,7 +1693,7 @@ public class MmsUtils {
      * Get the sender of an MMS message
      *
      * @param recipients The recipient list of the message
-     * @param mmsUri The pdu uri of the MMS
+     * @param mmsUri     The pdu uri of the MMS
      * @return The sender phone number of the MMS
      */
     public static String getMmsSender(final List<String> recipients, final String mmsUri) {
@@ -1705,7 +1709,7 @@ public class MmsUtils {
                 context,
                 context.getContentResolver(),
                 Uri.withAppendedPath(Uri.parse(mmsUri), "addr"),
-                new String[] { Mms.Addr.ADDRESS, Mms.Addr.CHARSET },
+                new String[]{Mms.Addr.ADDRESS, Mms.Addr.CHARSET},
                 Mms.Addr.TYPE + "=" + PduHeaders.FROM,
                 null/*selectionArgs*/,
                 null/*sortOrder*/);
@@ -1722,7 +1726,7 @@ public class MmsUtils {
     }
 
     public static int bugleStatusForMms(final boolean isOutgoing, final boolean isNotification,
-            final int messageBox) {
+                                        final int messageBox) {
         int bugleStatus = MessageData.BUGLE_STATUS_UNKNOWN;
         // For a message we sync either
         if (isOutgoing) {
@@ -1744,8 +1748,8 @@ public class MmsUtils {
     }
 
     public static MessageData createMmsMessage(final DatabaseMessages.MmsMessage mms,
-            final String conversationId, final String participantId, final String selfId,
-            final int bugleStatus) {
+                                               final String conversationId, final String participantId, final String selfId,
+                                               final int bugleStatus) {
         Assert.notNull(mms);
         final boolean isNotification = (mms.mMmsMessageType ==
                 PduHeaders.MESSAGE_TYPE_NOTIFICATION_IND);
@@ -1815,7 +1819,7 @@ public class MmsUtils {
         }
 
         public StatusPlusUri(final int status, final int rawStatus, final Uri uri,
-                final int resultCode) {
+                             final int resultCode) {
             this.status = status;
             this.rawStatus = rawStatus;
             this.uri = uri;
@@ -1840,9 +1844,9 @@ public class MmsUtils {
     public static final StatusPlusUri STATUS_PENDING = new StatusPlusUri(-1, -1, null);
 
     public static StatusPlusUri downloadMmsMessage(final Context context, final Uri notificationUri,
-            final int subId, final String subPhoneNumber, final String transactionId,
-            final String contentLocation, final boolean autoDownload,
-            final long receivedTimestampInSeconds, Bundle extras) {
+                                                   final int subId, final String subPhoneNumber, final String transactionId,
+                                                   final String contentLocation, final boolean autoDownload,
+                                                   final long receivedTimestampInSeconds, Bundle extras) {
         if (TextUtils.isEmpty(contentLocation)) {
             LogUtil.e(TAG, "MmsUtils: Download from empty content location URL");
             return new StatusPlusUri(
@@ -1911,10 +1915,10 @@ public class MmsUtils {
     }
 
     public static StatusPlusUri insertDownloadedMessageAndSendResponse(final Context context,
-            final Uri notificationUri, final int subId, final String subPhoneNumber,
-            final String transactionId, final String contentLocation,
-            final boolean autoDownload, final long receivedTimestampInSeconds,
-            final RetrieveConf retrieveConf) {
+                                                                       final Uri notificationUri, final int subId, final String subPhoneNumber,
+                                                                       final String transactionId, final String contentLocation,
+                                                                       final boolean autoDownload, final long receivedTimestampInSeconds,
+                                                                       final RetrieveConf retrieveConf) {
         final byte[] transactionIdBytes = stringToBytes(transactionId, "UTF-8");
         Uri messageUri = null;
         int status = MMS_REQUEST_MANUAL_RETRY;
@@ -1964,7 +1968,7 @@ public class MmsUtils {
      * Send response for MMS download - catches and ignores errors
      */
     public static void sendNotifyResponseForMmsDownload(final Context context, final int subId,
-            final byte[] transactionId, final String contentLocation, final int status) {
+                                                        final byte[] transactionId, final String contentLocation, final int status) {
         try {
             if (LogUtil.isLoggable(TAG, LogUtil.DEBUG)) {
                 LogUtil.d(TAG, "MmsUtils: Sending M-NotifyResp.ind for received MMS, status: "
@@ -1995,7 +1999,7 @@ public class MmsUtils {
      * Send acknowledge for mms download - catched and ignores errors
      */
     public static void sendAcknowledgeForMmsDownload(final Context context, final int subId,
-            final byte[] transactionId, final String contentLocation) {
+                                                     final byte[] transactionId, final String contentLocation) {
         try {
             if (LogUtil.isLoggable(TAG, LogUtil.DEBUG)) {
                 LogUtil.d(TAG, "MmsUtils: Sending M-Acknowledge.ind for received MMS");
@@ -2085,7 +2089,7 @@ public class MmsUtils {
     }
 
     public static StatusPlusUri sendMmsMessage(final Context context, final int subId,
-            final Uri messageUri, final Bundle extras) {
+                                               final Uri messageUri, final Bundle extras) {
         int status = MMS_REQUEST_MANUAL_RETRY;
         int rawStatus = MessageData.RAW_TELEPHONY_STATUS_UNDEFINED;
         if (!isMmsDataAvailable(subId)) {
@@ -2125,7 +2129,7 @@ public class MmsUtils {
     }
 
     public static StatusPlusUri updateSentMmsMessageStatus(final Context context,
-            final Uri messageUri, final SendConf sendConf) {
+                                                           final Uri messageUri, final SendConf sendConf) {
         int status = MMS_REQUEST_MANUAL_RETRY;
         final int respStatus = sendConf.getResponseStatus();
 
@@ -2158,7 +2162,7 @@ public class MmsUtils {
         final ContentValues values = new ContentValues(1);
         values.putNull(Mms.STATUS);
         SqliteWrapper.update(context, context.getContentResolver(),
-                    uri, values, null, null);
+                uri, values, null, null);
     }
 
     // Selection for new dedup algorithm:
@@ -2175,6 +2179,7 @@ public class MmsUtils {
             "(" + Mms.MESSAGE_TYPE + "=?) AND (" + Mms.CONTENT_LOCATION + "=?)";
 
     private static final int MAX_RETURN = 32;
+
     private static String[] getDupNotifications(final Context context, final NotificationInd nInd) {
         final byte[] rawLocation = nInd.getContentLocation();
         if (rawLocation != null) {
@@ -2196,7 +2201,7 @@ public class MmsUtils {
                 // Need upper bound to protect against clock change so that a message has a time
                 // stamp in the future
                 final long timeUpperBoundSecs = nowSecs + timeLimit;
-                selectionArgs = new String[] {
+                selectionArgs = new String[]{
                         Integer.toString(PduHeaders.MESSAGE_TYPE_NOTIFICATION_IND),
                         Long.toString(nowSecs),
                         Long.toString(timeLowerBoundSecs),
@@ -2207,7 +2212,7 @@ public class MmsUtils {
                 // If time limit is 0, we revert back to old behavior in case the new
                 // dedup algorithm behaves badly
                 selection = DUP_NOTIFICATION_QUERY_SELECTION_OLD;
-                selectionArgs = new String[] {
+                selectionArgs = new String[]{
                         Integer.toString(PduHeaders.MESSAGE_TYPE_NOTIFICATION_IND),
                         location
                 };
@@ -2216,7 +2221,7 @@ public class MmsUtils {
             try {
                 cursor = SqliteWrapper.query(
                         context, context.getContentResolver(),
-                        Mms.CONTENT_URI, new String[] { Mms._ID },
+                        Mms.CONTENT_URI, new String[]{Mms._ID},
                         selection, selectionArgs, null);
                 final int dupCount = cursor.getCount();
                 if (dupCount > 0) {
@@ -2261,7 +2266,7 @@ public class MmsUtils {
     }
 
     public static DatabaseMessages.MmsMessage processReceivedPdu(final Context context,
-            final byte[] pushData, final int subId, final String subPhoneNumber) {
+                                                                 final byte[] pushData, final int subId, final String subPhoneNumber) {
         // Parse data
 
         // Insert placeholder row to telephony and local db
@@ -2303,12 +2308,12 @@ public class MmsUtils {
                 final NotificationInd nInd = (NotificationInd) pdu;
 
                 if (MmsConfig.get(subId).getTransIdEnabled()) {
-                    final byte [] contentLocationTemp = nInd.getContentLocation();
+                    final byte[] contentLocationTemp = nInd.getContentLocation();
                     if ('=' == contentLocationTemp[contentLocationTemp.length - 1]) {
-                        final byte [] transactionIdTemp = nInd.getTransactionId();
-                        final byte [] contentLocationWithId =
-                                new byte [contentLocationTemp.length
-                                                                  + transactionIdTemp.length];
+                        final byte[] transactionIdTemp = nInd.getTransactionId();
+                        final byte[] contentLocationWithId =
+                                new byte[contentLocationTemp.length
+                                        + transactionIdTemp.length];
                         System.arraycopy(contentLocationTemp, 0, contentLocationWithId,
                                 0, contentLocationTemp.length);
                         System.arraycopy(transactionIdTemp, 0, contentLocationWithId,
@@ -2392,7 +2397,7 @@ public class MmsUtils {
     }
 
     public static MessageData readSendingMmsMessage(final Uri messageUri,
-            final String conversationId, final String participantId, final String selfId) {
+                                                    final String conversationId, final String participantId, final String selfId) {
         MessageData message = null;
         if (messageUri != null) {
             final DatabaseMessages.MmsMessage mms = MmsUtils.loadMms(messageUri);
@@ -2414,9 +2419,9 @@ public class MmsUtils {
      * @throws MmsException
      */
     private static SendReq createMmsSendReq(final Context context, final int subId,
-            final String[] recipients, final MessageData message,
-            final boolean requireDeliveryReport, final boolean requireReadReport,
-            final long expiryTime, final int priority, final long timestampMillis) {
+                                            final String[] recipients, final MessageData message,
+                                            final boolean requireDeliveryReport, final boolean requireReadReport,
+                                            final long expiryTime, final int priority, final long timestampMillis) {
         Assert.notNull(context);
         if (recipients == null || recipients.length < 1) {
             throw new IllegalArgumentException("MMS sendReq no recipient");
@@ -2475,10 +2480,10 @@ public class MmsUtils {
      * @throws InvalidHeaderValueException if there is any error in parsing the input
      */
     static SendReq createSendReq(final Context context, final int subId,
-            final String[] recipients, final MessageData message,
-            final boolean requireDeliveryReport,
-            final boolean requireReadReport, final long expiryTime, final int priority,
-            final long timestampMillis)
+                                 final String[] recipients, final MessageData message,
+                                 final boolean requireDeliveryReport,
+                                 final boolean requireReadReport, final long expiryTime, final int priority,
+                                 final long timestampMillis)
             throws InvalidHeaderValueException {
         final SendReq req = new SendReq();
         // From, per spec
@@ -2528,8 +2533,8 @@ public class MmsUtils {
     }
 
     public static int sendSmsMessage(final String recipient, final String messageText,
-            final Uri requestUri, final int subId,
-            final String smsServiceCenter, final boolean requireDeliveryReport) {
+                                     final Uri requestUri, final int subId,
+                                     final String smsServiceCenter, final boolean requireDeliveryReport) {
         if (!isSmsDataAvailable(subId)) {
             LogUtil.w(TAG, "MmsUtils: can't send SMS without radio");
             return MMS_REQUEST_MANUAL_RETRY;
@@ -2581,7 +2586,7 @@ public class MmsUtils {
         final Uri threadUri = ContentUris.withAppendedId(Telephony.Threads.CONTENT_URI, threadId);
         if (cutOffTimestampInMillis < Long.MAX_VALUE) {
             return resolver.delete(threadUri, Sms.DATE + "<=?",
-                    new String[] { Long.toString(cutOffTimestampInMillis) });
+                    new String[]{Long.toString(cutOffTimestampInMillis)});
         } else {
             return resolver.delete(threadUri, null /* smsSelection */, null /* selectionArgs */);
         }
@@ -2638,12 +2643,12 @@ public class MmsUtils {
         switch (rawStatus) {
             case PduHeaders.RESPONSE_STATUS_ERROR_SERVICE_DENIED:
             case PduHeaders.RESPONSE_STATUS_ERROR_PERMANENT_SERVICE_DENIED:
-            //case PduHeaders.RESPONSE_STATUS_ERROR_PERMANENT_REPLY_CHARGING_LIMITATIONS_NOT_MET:
-            //case PduHeaders.RESPONSE_STATUS_ERROR_PERMANENT_REPLY_CHARGING_REQUEST_NOT_ACCEPTED:
-            //case PduHeaders.RESPONSE_STATUS_ERROR_PERMANENT_REPLY_CHARGING_FORWARDING_DENIED:
-            //case PduHeaders.RESPONSE_STATUS_ERROR_PERMANENT_REPLY_CHARGING_NOT_SUPPORTED:
-            //case PduHeaders.RESPONSE_STATUS_ERROR_PERMANENT_ADDRESS_HIDING_NOT_SUPPORTED:
-            //case PduHeaders.RESPONSE_STATUS_ERROR_PERMANENT_LACK_OF_PREPAID:
+                //case PduHeaders.RESPONSE_STATUS_ERROR_PERMANENT_REPLY_CHARGING_LIMITATIONS_NOT_MET:
+                //case PduHeaders.RESPONSE_STATUS_ERROR_PERMANENT_REPLY_CHARGING_REQUEST_NOT_ACCEPTED:
+                //case PduHeaders.RESPONSE_STATUS_ERROR_PERMANENT_REPLY_CHARGING_FORWARDING_DENIED:
+                //case PduHeaders.RESPONSE_STATUS_ERROR_PERMANENT_REPLY_CHARGING_NOT_SUPPORTED:
+                //case PduHeaders.RESPONSE_STATUS_ERROR_PERMANENT_ADDRESS_HIDING_NOT_SUPPORTED:
+                //case PduHeaders.RESPONSE_STATUS_ERROR_PERMANENT_LACK_OF_PREPAID:
                 stringResId = R.string.mms_failure_outgoing_service;
                 break;
             case PduHeaders.RESPONSE_STATUS_ERROR_SENDING_ADDRESS_UNRESOLVED:
@@ -2660,8 +2665,8 @@ public class MmsUtils {
                 stringResId = R.string.mms_failure_outgoing_content;
                 break;
             case PduHeaders.RESPONSE_STATUS_ERROR_UNSUPPORTED_MESSAGE:
-            //case PduHeaders.RESPONSE_STATUS_ERROR_MESSAGE_NOT_FOUND:
-            //case PduHeaders.RESPONSE_STATUS_ERROR_TRANSIENT_MESSAGE_NOT_FOUND:
+                //case PduHeaders.RESPONSE_STATUS_ERROR_MESSAGE_NOT_FOUND:
+                //case PduHeaders.RESPONSE_STATUS_ERROR_TRANSIENT_MESSAGE_NOT_FOUND:
                 stringResId = R.string.mms_failure_outgoing_unsupported;
                 break;
             case MessageData.RAW_TELEPHONY_STATUS_MESSAGE_TOO_BIG:
@@ -2695,7 +2700,7 @@ public class MmsUtils {
      * Dump the raw MMS data into a file
      *
      * @param rawPdu The raw pdu data
-     * @param pdu The parsed pdu, used to construct a dump file name
+     * @param pdu    The parsed pdu, used to construct a dump file name
      */
     public static void dumpPdu(final byte[] rawPdu, final GenericPdu pdu) {
         if (rawPdu == null || rawPdu.length < 1) {
