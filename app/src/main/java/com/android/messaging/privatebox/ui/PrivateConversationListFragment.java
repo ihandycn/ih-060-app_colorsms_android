@@ -139,7 +139,7 @@ public class PrivateConversationListFragment extends Fragment
             @Override
             public RecyclerView.LayoutParams generateDefaultLayoutParams() {
                 return new RecyclerView.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
-                        ViewGroup.LayoutParams.MATCH_PARENT);
+                        ViewGroup.LayoutParams.WRAP_CONTENT);
             }
         };
         mRecyclerView.setLayoutManager(manager);
