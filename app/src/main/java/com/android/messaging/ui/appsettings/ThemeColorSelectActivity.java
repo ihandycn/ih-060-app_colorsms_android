@@ -82,7 +82,7 @@ public class ThemeColorSelectActivity extends BaseActivity implements OnColorCha
             @Override
             public void onPageSelected(int position) {
                 if (position == POSITION_ADVANCE) {
-                    BugleAnalytics.logEvent("Customize_ThemeColor_Advance_Click");
+                    BugleAnalytics.logEvent("Customize_ThemeColor_Advance_Click", true);
                 }
             }
 
