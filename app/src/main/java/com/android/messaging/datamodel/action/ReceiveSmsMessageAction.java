@@ -33,7 +33,11 @@ import com.android.messaging.datamodel.MessagingContentProvider;
 import com.android.messaging.datamodel.SyncManager;
 import com.android.messaging.datamodel.data.MessageData;
 import com.android.messaging.datamodel.data.ParticipantData;
+import com.android.messaging.privatebox.PrivateMessageManager;
+import com.android.messaging.privatebox.PrivateSettingManager;
+import com.android.messaging.privatebox.PrivateSmsEntry;
 import com.android.messaging.sms.MmsSmsUtils;
+import com.android.messaging.util.BugleAnalytics;
 import com.android.messaging.util.LogUtil;
 import com.android.messaging.util.OsUtil;
 
@@ -172,6 +176,9 @@ public class ReceiveSmsMessageAction extends Action implements Parcelable {
         // Show a notification to let the user know a new message has arrived
         BugleNotifications.update(false/*silent*/, conversationId, BugleNotifications.UPDATE_ALL);
 
+        if (isPrivateMessage && PrivateSettingManager.isNotificationEnable()) {
+            BugleAnalytics.logEvent("Notifications_Received_PrivateBox");
+        }
         MessagingContentProvider.notifyMessagesChanged(conversationId);
         MessagingContentProvider.notifyPartsChanged();
 

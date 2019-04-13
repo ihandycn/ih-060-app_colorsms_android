@@ -378,7 +378,8 @@ public class ConversationListActivity extends AbstractConversationListActivity
                         BugleAnalytics.logEvent("Menu_PrivateBox_Click", true);
                         if (PrivateBoxSettings.isAnyPasswordSet()) {
                             Intent intent1 = new Intent(ConversationListActivity.this, SelfVerifyActivity.class);
-                            intent1.putExtra(SelfVerifyActivity.INTENT_KEY_ACTIVITY_ENTRANCE, "Menu");
+                            intent1.putExtra(SelfVerifyActivity.INTENT_KEY_ACTIVITY_ENTRANCE,
+                                    SelfVerifyActivity.ENTRANCE_MENU);
                             Navigations.startActivitySafely(ConversationListActivity.this, intent1);
                         } else {
                             Navigations.startActivitySafely(ConversationListActivity.this,

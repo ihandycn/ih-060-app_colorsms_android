@@ -363,6 +363,11 @@ public abstract class UIIntents {
                                                                                           final String conversationId, final MessageData draft);
 
     /**
+     * Get a PendingIntent for showing a conversation from notifications.
+     */
+    public abstract PendingIntent getPendingIntentForPrivateConversationActivityFromNotification(final Context context, final String conversationId);
+
+    /**
      * Get an Intent for showing a conversation from the widget.
      */
     public abstract Intent getIntentForConversationActivity(final Context context,

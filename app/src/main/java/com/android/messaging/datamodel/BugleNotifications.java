@@ -65,6 +65,8 @@ import com.android.messaging.datamodel.media.MediaResourceManager;
 import com.android.messaging.datamodel.media.MessagePartVideoThumbnailRequestDescriptor;
 import com.android.messaging.datamodel.media.UriImageRequestDescriptor;
 import com.android.messaging.datamodel.media.VideoThumbnailRequest;
+import com.android.messaging.privatebox.PrivateMessageManager;
+import com.android.messaging.privatebox.PrivateSettingManager;
 import com.android.messaging.sms.MmsSmsUtils;
 import com.android.messaging.sms.MmsUtils;
 import com.android.messaging.ui.UIIntents;
@@ -88,6 +90,7 @@ import com.android.messaging.util.PhoneUtils;
 import com.android.messaging.util.RingtoneUtil;
 import com.android.messaging.util.ThreadUtil;
 import com.android.messaging.util.UriUtil;
+import com.ihs.app.framework.HSApplication;
 import com.superapps.util.Notifications;
 
 import java.util.HashSet;
@@ -444,6 +447,7 @@ public class BugleNotifications {
         }
         // TODO: Need to fix this for multi conversation notifications to rate limit dings.
         final String conversationId = state.mConversationIds.first();
+        boolean isPrivateConversation = PrivateMessageManager.getInstance().isPrivateConversationId(conversationId);
 
         // If the notification's conversation is currently observable (focused or in the
         // conversation list),  then play a notification beep at a low volume and don't display an
@@ -477,10 +481,16 @@ public class BugleNotifications {
                     .getPendingIntentForConversationListActivityFromNotification(context);
         } else {
             // We have a single conversation, go directly to that conversation.
-            destinationIntent = UIIntents.get()
-                    .getPendingIntentForConversationActivityFromNotification(context,
-                            state.mConversationIds.first(),
-                            null /*draft*/);
+            if (isPrivateConversation) {
+                destinationIntent = UIIntents.get()
+                        .getPendingIntentForPrivateConversationActivityFromNotification(context,
+                                conversationId);
+            } else {
+                destinationIntent = UIIntents.get()
+                        .getPendingIntentForConversationActivityFromNotification(context,
+                                state.mConversationIds.first(),
+                                null /*draft*/);
+            }
         }
         notifBuilder.setContentIntent(destinationIntent);
 
@@ -492,6 +502,12 @@ public class BugleNotifications {
         state.mNotificationBuilder = notifBuilder;
         state.mNotificationStyle = notifStyle;
         state.mChannel = notificationChannel;
+
+        if (isPrivateConversation) {
+            sendNotification(state, null, null);
+            return;
+        }
+
         if (!state.mPeople.isEmpty()) {
             final Bundle people = new Bundle();
             people.putStringArray(NotificationCompat.EXTRA_PEOPLE,
@@ -631,12 +647,14 @@ public class BugleNotifications {
             }
             return;
         }
-
-        if (MessageBoxSettings.shouldPopUp()) {
+        boolean isPrivateConversation = PrivateMessageManager.getInstance().isPrivateConversationId(conversationId);
+        if (MessageBoxSettings.shouldPopUp() && !isPrivateConversation) {
             popUpMessageBox(state, conversationId);
         }
-        processAndSend(state, silent, softSound);
-        BugleAnalytics.logEvent("SMS_Notifications_Pushed", true);
+        if (!isPrivateConversation || PrivateSettingManager.isNotificationEnable()) {
+            processAndSend(state, silent, softSound);
+            BugleAnalytics.logEvent("SMS_Notifications_Pushed", true);
+        }
 
     }
 
@@ -1000,7 +1018,6 @@ public class BugleNotifications {
         notification.defaults |= Notification.DEFAULT_LIGHTS;
 
         Notifications.notifySafely(notificationTag, type, notification, notificationState.mChannel);
-
         LogUtil.i(TAG, "Notifying for conversation " + conversationId + "; "
                 + "tag = " + notificationTag + ", type = " + type);
     }

@@ -148,7 +148,7 @@ public class ContactsSelectActivity extends HSAppCompatActivity {
         if (mIsMessageMoving) {
             return;
         }
-        super.onBackPressed();
+        finish();
     }
 
     private void addContactToPrivate(int moduleType) {
