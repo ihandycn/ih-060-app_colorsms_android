@@ -29,6 +29,10 @@ public class ChooseThemeActivity extends AppCompatActivity {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         }
         getSupportActionBar().setDisplayShowHomeEnabled(true);
+
+        ChooseThemePagerView pagerView = findViewById(R.id.pager_view);
+
+        pagerView.setOnPageSelectedListener((position, themeColor) -> UiUtils.setTitleBarBackground(toolbar, ChooseThemeActivity.this, themeColor));
     }
 
     @Override

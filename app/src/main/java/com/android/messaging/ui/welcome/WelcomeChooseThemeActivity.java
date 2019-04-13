@@ -19,8 +19,15 @@ public class WelcomeChooseThemeActivity extends AppCompatActivity {
         setContentView(R.layout.welcome_choose_theme_activity);
 
         ChooseThemePagerView chooseThemePagerView = findViewById(R.id.choose_theme_pager_view);
-        chooseThemePagerView.setOnApplyClickListener(v ->
-                UIIntents.get().launchConversationListActivity(WelcomeChooseThemeActivity.this));
+        chooseThemePagerView.setOnApplyClickListener((View v) -> {
+            UIIntents.get().launchConversationListActivity(WelcomeChooseThemeActivity.this);
+            finish();
+        });
+    }
+
+    @Override
+    public void onBackPressed() {
+
     }
 
     @Override

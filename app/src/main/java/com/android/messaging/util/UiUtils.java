@@ -28,6 +28,7 @@ import android.graphics.Rect;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
+import android.support.annotation.ColorInt;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.app.ActionBar;
@@ -582,5 +583,25 @@ public class UiUtils {
             toolbar.setBackground(new ColorDrawable(activity.getResources().getColor(R.color.action_bar_background_color)));
             setStatusBarColor(activity, activity.getResources().getColor(R.color.action_bar_background_color));
         }
+    }
+
+    public static void setTitleBarBackground(Toolbar toolbar, Activity activity, int color) {
+        try {
+            toolbar.setBackground(new ColorDrawable(color));
+            setStatusBarColor(activity, getColorDark(color));
+
+        } catch (IllegalArgumentException e) {
+            toolbar.setBackground(new ColorDrawable(activity.getResources().getColor(R.color.action_bar_background_color)));
+            setStatusBarColor(activity, activity.getResources().getColor(R.color.action_bar_background_color));
+        }
+    }
+
+
+    @ColorInt
+    public static int getColorDark(int color) {
+        final int blendedRed = (int) Math.floor(0.8 * Color.red(color));
+        final int blendedGreen = (int) Math.floor(0.8 * Color.green(color));
+        final int blendedBlue = (int) Math.floor(0.8 * Color.blue(color));
+        return Color.rgb(blendedRed, blendedGreen, blendedBlue);
     }
 }

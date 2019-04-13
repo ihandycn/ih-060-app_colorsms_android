@@ -1,5 +1,7 @@
 package com.android.messaging.ui.customize.theme;
 
+import android.support.annotation.DrawableRes;
+
 import com.ihs.commons.config.HSConfig;
 
 import java.util.ArrayList;
@@ -44,6 +46,9 @@ public class ThemeInfo {
     public String fontUrl;
 
     public String fontName;
+
+    @DrawableRes
+    public int drawableRes;
 
     public static ThemeInfo ofConfig(String name, Map<String, ?> themeConfig) {
         ThemeInfo themeInfo = new ThemeInfo();
