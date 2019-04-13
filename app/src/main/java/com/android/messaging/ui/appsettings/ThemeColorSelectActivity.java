@@ -2,6 +2,7 @@ package com.android.messaging.ui.appsettings;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.support.v4.view.ViewPager;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.widget.TextView;
@@ -24,11 +25,15 @@ import com.ihs.commons.notificationcenter.HSGlobalNotificationCenter;
 import static com.android.messaging.ui.appsettings.ChooseThemeColorRecommendViewHolder.getSelectedIndex;
 
 public class ThemeColorSelectActivity extends BaseActivity implements OnColorChangedListener {
-    private Toolbar mToolbar;
+    private static final int POSITION_RECOMMEND = 0;
+    private static final int POSITION_ADVANCE = 1;
 
+    private Toolbar mToolbar;
     private CustomFooterViewPager mCustomFooterViewPager;
     private ChooseThemeColorRecommendViewHolder mThemeColorRecommendViewHolder;
     private ChooseMessageColorAdvanceViewHolder mThemeColorAdvanceViewHolder;
+
+    private int mPrePrimaryColor = PrimaryColors.getPrimaryColor();
 
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
@@ -68,11 +73,29 @@ public class ThemeColorSelectActivity extends BaseActivity implements OnColorCha
         mCustomFooterViewPager.setViewPagerTabHeight(CustomViewPager.DEFAULT_TAB_STRIP_SIZE);
         mCustomFooterViewPager.setBackgroundColor(getResources().getColor(R.color.contact_picker_background));
         mCustomFooterViewPager.setCurrentItem(0);
+        mCustomFooterViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+                if (position == POSITION_ADVANCE) {
+                    BugleAnalytics.logEvent("Customize_ThemeColor_Advance_Click");
+                }
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+
+            }
+        });
     }
 
     @Override
     public void onColorChanged(int color) {
-        if (mCustomFooterViewPager.getSelectedItemPosition() == 0) {
+        if (mCustomFooterViewPager.getSelectedItemPosition() == POSITION_RECOMMEND) {
             mThemeColorAdvanceViewHolder.setColor(color);
         } else {
             mThemeColorRecommendViewHolder.refreshSelectStatus();
@@ -86,15 +109,15 @@ public class ThemeColorSelectActivity extends BaseActivity implements OnColorCha
 
         UiUtils.setTitleBarBackground(mToolbar, this);
         mCustomFooterViewPager.updatePrimaryColor();
-
-        BugleAnalytics.logEvent("Customize_ThemeColor_Change", true, "color", String.valueOf(getSelectedIndex()));
     }
 
     @Override
     public void onBackPressed() {
         super.onBackPressed();
-        // notify main page recreate
-        HSGlobalNotificationCenter.sendNotification(ConversationListActivity.EVENT_MAINPAGE_RECREATE);
+        if (mPrePrimaryColor != PrimaryColors.getPrimaryColor()) {
+            BugleAnalytics.logEvent("Customize_ThemeColor_Change", true, "color", String.valueOf(getSelectedIndex()));
+            HSGlobalNotificationCenter.sendNotification(ConversationListActivity.EVENT_MAINPAGE_RECREATE);
+        }
     }
 
     @Override
