@@ -34,6 +34,7 @@ import com.android.messaging.ui.DragHotSeatActivity;
 import com.android.messaging.ui.UIIntents;
 import com.android.messaging.ui.UIIntentsImpl;
 import com.android.messaging.ui.appsettings.ChangeFontActivity;
+import com.android.messaging.ui.appsettings.ChooseThemeColorRecommendViewHolder;
 import com.android.messaging.ui.appsettings.ThemeColorSelectActivity;
 import com.android.messaging.ui.customize.BubbleDrawables;
 import com.android.messaging.ui.customize.ConversationColors;
@@ -197,7 +198,7 @@ public class ConversationListActivity extends AbstractConversationListActivity
                 }
 
                 BugleAnalytics.logEvent("SMS_Messages_Show", true,
-                        "themeColor", String.valueOf(ThemeColorSelectActivity.getSelectedIndex()),
+                        "themeColor", String.valueOf(ChooseThemeColorRecommendViewHolder.getSelectedIndex()),
                         "background", backgroundStr,
                         "bubbleStyle", String.valueOf(BubbleDrawables.getSelectedIdentifier()),
                         "received bubble color", ConversationColors.get().getConversationColorEventType(true, true),
@@ -247,7 +248,7 @@ public class ConversationListActivity extends AbstractConversationListActivity
                                     bubbleSendFontColor + "|" + bubbleSendBgColor + "|"
                                             + bubbleRcvFontColor + "|" + bubbleRcvBgColor + "|"
                                             + fontType + "|" + fontSize + "|" + bubbleStyle + "|"
-                                            + wallpaper + "|" + ThemeColorSelectActivity.getSelectedIndex());
+                                            + wallpaper + "|" + ChooseThemeColorRecommendViewHolder.getSelectedIndex());
                         }
                     }, "pref_key_customize_config_has_send");
                 }

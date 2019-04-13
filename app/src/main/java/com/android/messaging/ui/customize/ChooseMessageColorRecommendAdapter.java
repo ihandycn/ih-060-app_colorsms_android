@@ -15,7 +15,8 @@ import com.android.messaging.R;
 import com.android.messaging.glide.GlideApp;
 import com.bumptech.glide.request.RequestOptions;
 
-import static com.android.messaging.ui.appsettings.ThemeColorSelectActivity.COLORS;
+import static com.android.messaging.ui.appsettings.ChooseThemeColorRecommendViewHolder.COLORS;
+
 
 public class ChooseMessageColorRecommendAdapter extends RecyclerView.Adapter<ChooseMessageColorRecommendAdapter.ViewHolder> {
 

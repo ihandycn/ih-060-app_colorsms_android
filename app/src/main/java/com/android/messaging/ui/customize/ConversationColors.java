@@ -9,7 +9,7 @@ import com.android.messaging.Factory;
 import com.android.messaging.R;
 import com.android.messaging.util.BuglePrefs;
 
-import static com.android.messaging.ui.appsettings.ThemeColorSelectActivity.COLORS;
+import static com.android.messaging.ui.appsettings.ChooseThemeColorRecommendViewHolder.COLORS;
 import static com.android.messaging.util.BuglePrefsKeys.PREFS_KEY_BUBBLE_BACKGROUND_COLOR_INCOMING;
 import static com.android.messaging.util.BuglePrefsKeys.PREFS_KEY_BUBBLE_BACKGROUND_COLOR_OUTGOING;
 import static com.android.messaging.util.BuglePrefsKeys.PREFS_KEY_CONVERSATION_LIST_SUBTITLE_COLOR;
