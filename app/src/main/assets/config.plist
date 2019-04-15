@@ -218,7 +218,7 @@
 					<key>ListTitleColor</key>
 					<string>#ffffff</string>
 					<key>NewConversationIconUrl</key>
-					<string></string>
+					<string>assets://themes/diamond/create.png</string>
 					<key>OutgoingBubbleBgColor</key>
 					<string>#5191d4</string>
 					<key>OutgoingBubbleTextColor</key>
@@ -274,25 +274,25 @@
 					<key>AvatarUrl</key>
 					<string>assets://themes/waterdrop/avatar.png</string>
 					<key>BubbleIncomingUrl</key>
-					<string>5</string>
+					<string>assets://themes/waterdrop/bubble_incoming.png</string>
 					<key>BubbleOutgoingUrl</key>
-					<string>5</string>
+					<string>assets://themes/waterdrop/bubble_outgoing.png</string>
 					<key>FontName</key>
-					<string>Mali</string>
+					<string>Krub</string>
 					<key>FontUrl</key>
 					<string></string>
 					<key>IncomingBubbleBgColor</key>
 					<string>#ffffff</string>
 					<key>IncomingBubbleTextColor</key>
-					<string>#272d32</string>
+					<string>#ffffff</string>
 					<key>ListSubtitleColor</key>
-					<string>#8194a4</string>
+					<string>#e4f6da</string>
 					<key>ListTimeColor</key>
-					<string>#92a9bc</string>
+					<string>#ffffff</string>
 					<key>ListTitleColor</key>
-					<string>#222528</string>
+					<string>#f8ffef</string>
 					<key>NewConversationIconUrl</key>
-					<string></string>
+					<string>assets://themes/waterdrop/create.png</string>
 					<key>OutgoingBubbleBgColor</key>
 					<string>#5191d4</string>
 					<key>OutgoingBubbleTextColor</key>
@@ -300,7 +300,7 @@
 					<key>PreviewUrl</key>
 					<string>assets://themes/waterdrop/wallpaper.jpg</string>
 					<key>ThemeColor</key>
-					<string>#5191d4</string>
+					<string>#7bbe25</string>
 					<key>ToolbarBgUrl</key>
 					<string>assets://themes/waterdrop/toolbar.png</string>
 					<key>WallpaperUrl</key>
