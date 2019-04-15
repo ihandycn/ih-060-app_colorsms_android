@@ -200,9 +200,9 @@
 					<key>AvatarUrl</key>
 					<string>assets://themes/diamond/avatar.png</string>
 					<key>BubbleIncomingUrl</key>
-					<string>5</string>
+					<string>assets://themes/diamond/bubble_incoming.png</string>
 					<key>BubbleOutgoingUrl</key>
-					<string>5</string>
+					<string>assets://themes/diamond/bubble_outgoing.png</string>
 					<key>FontName</key>
 					<string>Mali</string>
 					<key>FontUrl</key>
@@ -212,11 +212,11 @@
 					<key>IncomingBubbleTextColor</key>
 					<string>#272d32</string>
 					<key>ListSubtitleColor</key>
-					<string>#8194a4</string>
+					<string>#feeef5</string>
 					<key>ListTimeColor</key>
-					<string>#92a9bc</string>
+					<string>#fdd6e6</string>
 					<key>ListTitleColor</key>
-					<string>#222528</string>
+					<string>#ffffff</string>
 					<key>NewConversationIconUrl</key>
 					<string></string>
 					<key>OutgoingBubbleBgColor</key>
@@ -226,7 +226,7 @@
 					<key>PreviewUrl</key>
 					<string>assets://themes/diamond/wallpaper.jpg</string>
 					<key>ThemeColor</key>
-					<string>#5191d4</string>
+					<string>#e45eb4</string>
 					<key>ToolbarBgUrl</key>
 					<string>assets://themes/diamond/toolbar.png</string>
 					<key>WallpaperUrl</key>
