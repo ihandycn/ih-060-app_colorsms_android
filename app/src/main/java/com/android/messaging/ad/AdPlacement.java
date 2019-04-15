@@ -7,4 +7,8 @@ package com.android.messaging.ad;
 public class AdPlacement {
 
     public static final String AD_BANNER = "SMSHomepageBannerAd";
+
+    public static final String AD_WIRE = "SMSDetailWire";
+
+    public static final String AD_DETAIL_NATIVE = "SMSDetailNative";
 }

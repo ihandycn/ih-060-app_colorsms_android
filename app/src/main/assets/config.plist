@@ -12,6 +12,15 @@
 			<string>http://cdn.appcloudbox.net/smoothappsstudio/apps/bubble/privacy.html</string>
 			<key>SMSAd</key>
 			<dict>
+				<key>SMSDetailspageFullAd</key>
+				<dict>
+					<key>ShowAfterInstall</key>
+					<integer>2</integer>
+					<key>MinInterval</key>
+					<integer>5</integer>
+					<key>Enabled</key>
+					<true/>
+				</dict>
 				<key>SMSHomepageBannerAd</key>
 				<true/>
 			</dict>

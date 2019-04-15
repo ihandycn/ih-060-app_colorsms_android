@@ -25,6 +25,7 @@ import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
+import android.text.format.DateUtils;
 import android.view.ActionMode;
 import android.view.MenuItem;
 import android.view.View;
@@ -33,6 +34,7 @@ import android.view.ViewTreeObserver;
 import android.widget.TextView;
 
 import com.android.messaging.R;
+import com.android.messaging.ad.AdPlacement;
 import com.android.messaging.datamodel.BugleNotifications;
 import com.android.messaging.datamodel.MessagingContentProvider;
 import com.android.messaging.datamodel.data.MessageData;
@@ -48,12 +50,22 @@ import com.android.messaging.ui.customize.ToolbarDrawables;
 import com.android.messaging.ui.messagebox.MessageBoxActivity;
 import com.android.messaging.util.Assert;
 import com.android.messaging.util.BugleAnalytics;
+import com.android.messaging.util.CommonUtils;
 import com.android.messaging.util.ContentType;
 import com.android.messaging.util.LogUtil;
 import com.android.messaging.util.OsUtil;
 import com.android.messaging.util.UiUtils;
+import com.ihs.commons.config.HSConfig;
 import com.ihs.commons.notificationcenter.HSGlobalNotificationCenter;
 import com.superapps.util.Dimensions;
+import com.superapps.util.IntegerBuckets;
+import com.superapps.util.Preferences;
+
+import net.appcloudbox.ads.base.AcbInterstitialAd;
+import net.appcloudbox.ads.common.utils.AcbError;
+import net.appcloudbox.ads.interstitialad.AcbInterstitialAdManager;
+
+import java.util.List;
 
 public class ConversationActivity extends BugleActionBarActivity
         implements ContactPickerFragmentHost, ConversationFragmentHost,
@@ -61,6 +73,9 @@ public class ConversationActivity extends BugleActionBarActivity
     public static final int FINISH_RESULT_CODE = 1;
     public static final int DELETE_CONVERSATION_RESULT_CODE = 2;
     private static final String SAVED_INSTANCE_STATE_UI_STATE_KEY = "uistate";
+
+    private static final String PREF_KEY_CONVERSATION_ACTIVITY_SHOW_TIME = "pref_key_conversation_activity_show_time";
+    private static final String PREF_KEY_WIRE_AD_SHOW_TIME = "pref_key_wire_ad_show_time";
 
     private ConversationActivityUiState mUiState;
 
@@ -78,6 +93,9 @@ public class ConversationActivity extends BugleActionBarActivity
     private int mStatusBarHeight;
     private int mKeyboardHeight;
     private int mNavigationBarHeight;
+
+    private AcbInterstitialAd mInterstitialAd;
+    private long mCreateTime;
 
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
@@ -151,6 +169,15 @@ public class ConversationActivity extends BugleActionBarActivity
         mStatusBarHeight = Dimensions.getStatusBarHeight(this);
         mNavigationBarHeight = Dimensions.getNavigationBarHeight(this);
         mKeyboardHeight = UiUtils.getKeyboardHeight();
+
+        long lastShowTime = Preferences.getDefault().getLong(PREF_KEY_CONVERSATION_ACTIVITY_SHOW_TIME, -1);
+        if (lastShowTime != -1) {
+            IntegerBuckets buckets = new IntegerBuckets(5, 10, 30, 60, 300, 600, 1800, 3600, 7200);
+            BugleAnalytics.logEvent("Detailspage_Show_Interval", "interval",
+                    buckets.getBucket((int) ((System.currentTimeMillis() - lastShowTime) / 1000)));
+        }
+        Preferences.getDefault().putLong(PREF_KEY_CONVERSATION_ACTIVITY_SHOW_TIME, System.currentTimeMillis());
+        mCreateTime = System.currentTimeMillis();
     }
 
     @Override
@@ -289,6 +316,7 @@ public class ConversationActivity extends BugleActionBarActivity
         if (conversationFragment != null && conversationFragment.onNavigationUpPressed()) {
             return;
         }
+        showInterstitialAd();
         onFinishCurrentConversation();
     }
 
@@ -305,7 +333,54 @@ public class ConversationActivity extends BugleActionBarActivity
         if (conversationFragment != null && conversationFragment.onBackPressed()) {
             return;
         }
+
+        showInterstitialAd();
+        if (conversationFragment != null) {
+            BugleAnalytics.logEvent("Detailspage_Back", "type", "back");
+        }
         super.onBackPressed();
+    }
+
+    private void showInterstitialAd() {
+        final ConversationFragment conversationFragment = getConversationFragment();
+        if (conversationFragment != null) {
+            IntegerBuckets integerBuckets = new IntegerBuckets(5, 10, 15, 20, 30, 60, 120, 180, 300);
+            BugleAnalytics.logEvent("Detailspage_Show_Details",
+                    "length", integerBuckets.getBucket((int) ((System.currentTimeMillis() - mCreateTime) / 1000)),
+                    "sendmessage", String.valueOf(conversationFragment.hasSentMessages()));
+        }
+        if (conversationFragment != null
+                && HSConfig.optBoolean(false, "Application", "SMSAd", "SMSDetailspageFullAd", "Enabled")
+                && System.currentTimeMillis() - Preferences.getDefault().getLong(PREF_KEY_WIRE_AD_SHOW_TIME, -1)
+                > HSConfig.optInteger(5, "Application", "SMSAd", "SMSDetailspageFullAd", "MinInterval") * DateUtils.MINUTE_IN_MILLIS
+                && System.currentTimeMillis() - CommonUtils.getAppInstallTimeMillis()
+                > HSConfig.optInteger(2, "Application", "SMSAd", "SMSDetailspageFullAd", "ShowAfterInstall") * DateUtils.HOUR_IN_MILLIS) {
+            List<AcbInterstitialAd> ads = AcbInterstitialAdManager.fetch(AdPlacement.AD_WIRE, 1);
+            if (ads.size() > 0) {
+                mInterstitialAd = ads.get(0);
+                mInterstitialAd.setInterstitialAdListener(new AcbInterstitialAd.IAcbInterstitialAdListener() {
+                    @Override public void onAdDisplayed() {
+
+                    }
+
+                    @Override public void onAdClicked() {
+                        BugleAnalytics.logEvent("Detailspage_FullAd_Click");
+                    }
+
+                    @Override public void onAdClosed() {
+                        mInterstitialAd.release();
+                    }
+
+                    @Override public void onAdDisplayFailed(AcbError acbError) {
+
+                    }
+                });
+                mInterstitialAd.show();
+                BugleAnalytics.logEvent("Detailspage_FullAd_Show", true);
+                Preferences.getDefault().putLong(PREF_KEY_WIRE_AD_SHOW_TIME, System.currentTimeMillis());
+            }
+            BugleAnalytics.logEvent("Detailspage_FullAd_Should_Show", true);
+        }
     }
 
     private ContactPickerFragment getContactPicker() {
@@ -392,6 +467,13 @@ public class ConversationActivity extends BugleActionBarActivity
                 conversationFragment = new ConversationFragment();
                 fragmentTransaction.add(R.id.conversation_fragment_container,
                         conversationFragment, ConversationFragment.FRAGMENT_TAG);
+                if (HSConfig.optBoolean(false, "Application", "SMSAd", "SMSDetailspageFullAd", "Enabled")
+                        && System.currentTimeMillis() - Preferences.getDefault().getLong(PREF_KEY_WIRE_AD_SHOW_TIME, -1)
+                        > HSConfig.optInteger(5, "Application", "SMSAd", "SMSDetailspageFullAd", "MinInterval") * DateUtils.MINUTE_IN_MILLIS
+                        && System.currentTimeMillis() - CommonUtils.getAppInstallTimeMillis()
+                        > HSConfig.optInteger(2, "Application", "SMSAd", "SMSDetailspageFullAd", "ShowAfterInstall") * DateUtils.HOUR_IN_MILLIS) {
+                    AcbInterstitialAdManager.preload(1, AdPlacement.AD_WIRE);
+                }
             }
             final MessageData draftData = intent.getParcelableExtra(
                     UIIntents.UI_INTENT_EXTRA_DRAFT_DATA);
@@ -437,6 +519,7 @@ public class ConversationActivity extends BugleActionBarActivity
         } else {
             finish();
         }
+        BugleAnalytics.logEvent("Detailspage_Back", "type", "back_icon");
     }
 
     @Override

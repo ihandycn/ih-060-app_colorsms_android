@@ -436,6 +436,8 @@ public class ConversationFragment extends Fragment implements ConversationDataLi
         }
     };
 
+    private boolean mHasSentMessages;
+
     /**
      * {@inheritDoc} from Fragment
      */
@@ -691,6 +693,10 @@ public class ConversationFragment extends Fragment implements ConversationDataLi
                 new IntentFilter(UIIntents.CONVERSATION_SELF_ID_CHANGE_BROADCAST_ACTION));
     }
 
+    public boolean hasSentMessages() {
+        return mHasSentMessages;
+    }
+
     void setConversationFocus() {
         if (mHost.isActiveAndFocused()) {
             mBinding.getData().setFocus();
@@ -934,6 +940,8 @@ public class ConversationFragment extends Fragment implements ConversationDataLi
                 message.consolidateText();
 
                 mBinding.getData().sendMessage(mBinding, message);
+
+                mHasSentMessages = true;
             } else {
                 LogUtil.w(LogUtil.BUGLE_TAG, "Message can't be sent: conv participants not loaded");
             }
