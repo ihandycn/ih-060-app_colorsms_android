@@ -2,7 +2,10 @@ package com.android.messaging.privatebox;
 
 import android.content.ContentUris;
 import android.net.Uri;
+import android.provider.BaseColumns;
 import android.provider.Telephony;
+
+import com.android.messaging.util.TextUtil;
 
 import static com.android.messaging.privatebox.PrivateMessageContentProvider.BASE_CONTENT_URI;
 import static com.android.messaging.privatebox.PrivateMessageContentProvider.MMS_PATH;
@@ -48,45 +51,45 @@ public class PrivateMmsEntry {
                 CONTENT_URI = PrivateMmsEntry.CONTENT_URI.buildUpon().appendPath("outbox").build();
     }
 
-    public static String _ID = "_id";
-    public static String THREAD_ID = Telephony.Mms.THREAD_ID;
-    public static String DATE = Telephony.Mms.DATE;
+    static String _ID = "_id";
+    static String THREAD_ID = Telephony.Mms.THREAD_ID;
+    static String DATE = Telephony.Mms.DATE;
     static String DATE_SENT = Telephony.Mms.DATE_SENT;
     static String MESSAGE_BOX = Telephony.Mms.MESSAGE_BOX;
-    public static String READ = Telephony.Mms.READ;
-    public static String MESSAGE_ID = Telephony.Mms.MESSAGE_ID;
-    public static String SUBJECT = Telephony.Mms.SUBJECT;
+    static String READ = Telephony.Mms.READ;
+    static String MESSAGE_ID = Telephony.Mms.MESSAGE_ID;
+    static String SUBJECT = Telephony.Mms.SUBJECT;
     static String SUBJECT_CHARSET = Telephony.Mms.SUBJECT_CHARSET;
-    public static String CONTENT_TYPE = Telephony.Mms.CONTENT_TYPE;
-    public static String CONTENT_LOCATION = Telephony.Mms.CONTENT_LOCATION;
-    public static String EXPIRY = Telephony.Mms.EXPIRY;
-    public static String MESSAGE_CLASS = Telephony.Mms.MESSAGE_CLASS;
-    public static String MESSAGE_TYPE = Telephony.Mms.MESSAGE_TYPE;
-    public static String MMS_VERSION = Telephony.Mms.MMS_VERSION;
-    public static String MESSAGE_SIZE = Telephony.Mms.MESSAGE_SIZE;
-    public static String PRIORITY = Telephony.Mms.PRIORITY;
-    public static String READ_REPORT = Telephony.Mms.READ_REPORT;
-    public static String REPORT_ALLOWED = Telephony.Mms.REPORT_ALLOWED;
-    public static String RESPONSE_STATUS = Telephony.Mms.RESPONSE_STATUS;
-    public static String STATUS = Telephony.Mms.STATUS;
-    public static String TRANSACTION_ID = Telephony.Mms.TRANSACTION_ID;
-    public static String RETRIEVE_STATUS = Telephony.Mms.RETRIEVE_STATUS;
-    public static String RETRIEVE_TEXT = Telephony.Mms.RETRIEVE_TEXT;
+    static String CONTENT_TYPE = Telephony.Mms.CONTENT_TYPE;
+    static String CONTENT_LOCATION = Telephony.Mms.CONTENT_LOCATION;
+    static String EXPIRY = Telephony.Mms.EXPIRY;
+    static String MESSAGE_CLASS = Telephony.Mms.MESSAGE_CLASS;
+    static String MESSAGE_TYPE = Telephony.Mms.MESSAGE_TYPE;
+    static String MMS_VERSION = Telephony.Mms.MMS_VERSION;
+    static String MESSAGE_SIZE = Telephony.Mms.MESSAGE_SIZE;
+    static String PRIORITY = Telephony.Mms.PRIORITY;
+    static String READ_REPORT = Telephony.Mms.READ_REPORT;
+    static String REPORT_ALLOWED = Telephony.Mms.REPORT_ALLOWED;
+    static String RESPONSE_STATUS = Telephony.Mms.RESPONSE_STATUS;
+    static String STATUS = Telephony.Mms.STATUS;
+    static String TRANSACTION_ID = Telephony.Mms.TRANSACTION_ID;
+    static String RETRIEVE_STATUS = Telephony.Mms.RETRIEVE_STATUS;
+    static String RETRIEVE_TEXT = Telephony.Mms.RETRIEVE_TEXT;
     static String RETRIEVE_TEXT_CHARSET = Telephony.Mms.RETRIEVE_TEXT_CHARSET;
-    public static String READ_STATUS = Telephony.Mms.READ_STATUS;
-    public static String CONTENT_CLASS = Telephony.Mms.CONTENT_CLASS;
+    static String READ_STATUS = Telephony.Mms.READ_STATUS;
+    static String CONTENT_CLASS = Telephony.Mms.CONTENT_CLASS;
     static String RESPONSE_TEXT = Telephony.Mms.RESPONSE_TEXT;
     static String DELIVERY_TIME = Telephony.Mms.DELIVERY_TIME;
     static String DELIVERY_REPORT = Telephony.Mms.DELIVERY_REPORT;
     static String LOCKED = Telephony.Mms.LOCKED;
     //Telephony.Mms.SUBSCRIPTION_ID
-    public static String SUBSCRIPTION_ID = "sub_id";
-    public static String SEEN = Telephony.Mms.SEEN;
+    static String SUBSCRIPTION_ID = "sub_id";
+    static String SEEN = Telephony.Mms.SEEN;
     //Telephony.Mms.CREATOR
-    public static String CREATOR = "creator";
+    static String CREATOR = "creator";
     static String TEXT_ONLY = Telephony.Mms.TEXT_ONLY;
 
-    public static String[] sProjection = {
+    static String[] sProjection = {
             _ID,
             THREAD_ID,
             DATE,
@@ -161,4 +164,27 @@ public class PrivateMmsEntry {
                     + SEEN + " TEXT, "
                     + CREATOR + " TEXT, "
                     + TEXT_ONLY + " TEXT )";
+
+    public static final class Addr implements BaseColumns {
+        static final String MMS_MESSAGE_ADDRESS_TABLE = "mms_message_address_table";
+        public static final String _ID = "_id";
+        public static final String MSG_ID = Telephony.Mms.Addr.MSG_ID;
+        public static final String CONTACT_ID = Telephony.Mms.Addr.CONTACT_ID;
+        public static final String ADDRESS = Telephony.Mms.Addr.ADDRESS;
+        public static final String TYPE = Telephony.Mms.Addr.TYPE;
+        public static final String CHARSET = Telephony.Mms.Addr.CHARSET;
+
+        public static final String[] sAddressProjections = {
+                _ID, MSG_ID, CONTACT_ID, ADDRESS, TYPE, CHARSET
+        };
+
+        public static final String CREATE_MMS_ADDRESS_TABLE_SQL =
+                "CREATE TABLE " + MMS_MESSAGE_ADDRESS_TABLE + "("
+                        + _ID + " INTEGER PRIMARY KEY AUTOINCREMENT,"
+                        + MSG_ID + " INTEGER,"
+                        + CONTACT_ID + " INTEGER,"
+                        + ADDRESS + " TEXT,"
+                        + TYPE + " INTEGER,"
+                        + CHARSET + " INTEGER)";
+    }
 }

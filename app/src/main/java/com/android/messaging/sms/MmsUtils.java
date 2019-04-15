@@ -46,6 +46,7 @@ import com.android.messaging.Factory;
 import com.android.messaging.R;
 import com.android.messaging.datamodel.MediaScratchFileProvider;
 import com.android.messaging.datamodel.action.DownloadMmsAction;
+import com.android.messaging.datamodel.action.ProcessDownloadedMmsAction;
 import com.android.messaging.datamodel.action.SendMessageAction;
 import com.android.messaging.datamodel.data.MessageData;
 import com.android.messaging.datamodel.data.MessagePartData;
@@ -66,6 +67,8 @@ import com.android.messaging.mmslib.pdu.PduPersister;
 import com.android.messaging.mmslib.pdu.RetrieveConf;
 import com.android.messaging.mmslib.pdu.SendConf;
 import com.android.messaging.mmslib.pdu.SendReq;
+import com.android.messaging.privatebox.PrivateMessageManager;
+import com.android.messaging.privatebox.PrivateMmsEntry;
 import com.android.messaging.sms.SmsSender.SendResult;
 import com.android.messaging.util.Assert;
 import com.android.messaging.util.BugleGservices;
@@ -926,15 +929,15 @@ public class MmsUtils {
     }
 
     // Persist a sent MMS message in telephony
-    private static Uri insertSendReq(final Context context, final GenericPdu pdu, final int subId,
-            final String subPhoneNumber) {
+    private static Uri insertSendReq(final Context context, final Uri contentUri, final GenericPdu pdu, final int subId,
+                                     final String subPhoneNumber) {
         final PduPersister persister = PduPersister.getPduPersister(context);
         Uri uri = null;
         try {
             // Persist the PDU
             uri = persister.persist(
                     pdu,
-                    Mms.Sent.CONTENT_URI,
+                    contentUri,
                     subId,
                     subPhoneNumber,
                     null/*preOpenedFiles*/);
@@ -1638,6 +1641,7 @@ public class MmsUtils {
         final ContentResolver resolver = context.getContentResolver();
         DatabaseMessages.MmsMessage mms = null;
         Cursor cursor = null;
+        boolean isPrivateMessage = PrivateMessageManager.getInstance().isPrivateUri(mmsUri.toString());
         // Load pdu first
         try {
             cursor = SqliteWrapper.query(context, resolver,
@@ -1645,7 +1649,11 @@ public class MmsUtils {
                     DatabaseMessages.MmsMessage.getProjection(),
                     null/*selection*/, null/*selectionArgs*/, null/*sortOrder*/);
             if (cursor != null && cursor.moveToFirst()) {
-                mms = DatabaseMessages.MmsMessage.get(cursor);
+                if (isPrivateMessage) {
+                    mms = DatabaseMessages.MmsMessage.getPrivateMms(cursor);
+                } else {
+                    mms = DatabaseMessages.MmsMessage.get(cursor);
+                }
             }
         } catch (final SQLiteException e) {
             LogUtil.e(TAG, "MmsLoader: query pdu failure: " + e, e);
@@ -1672,7 +1680,7 @@ public class MmsUtils {
                     MMS_PART_CONTENT_URI,
                     DatabaseMessages.MmsPart.PROJECTION,
                     selection,
-                    new String[]{Long.toString(rowId)},
+                    new String[]{Long.toString(rowId * (isPrivateMessage ? -1 : 1))},
                     null/*sortOrder*/);
             if (cursor != null) {
                 while (cursor.moveToNext()) {
@@ -1953,7 +1961,9 @@ public class MmsUtils {
             // Insert downloaded message into telephony
             final Uri inboxUri = MmsUtils.insertReceivedMmsMessage(context, retrieveConf, subId,
                     subPhoneNumber, receivedTimestampInSeconds, contentLocation);
-            messageUri = ContentUris.withAppendedId(Mms.CONTENT_URI, ContentUris.parseId(inboxUri));
+            boolean isPrivateMsg = PrivateMessageManager.getInstance().isPrivateUri(inboxUri.toString());
+            messageUri = ContentUris.withAppendedId(
+                    isPrivateMsg ? PrivateMmsEntry.CONTENT_URI : Mms.CONTENT_URI, ContentUris.parseId(inboxUri));
         } else if (status == MMS_REQUEST_AUTO_RETRY) {
             // For a retry do nothing
         } else if (status == MMS_REQUEST_MANUAL_RETRY && autoDownload) {
@@ -2343,9 +2353,14 @@ public class MmsUtils {
 
                     Uri inboxUri = null;
                     try {
-                        inboxUri = p.persist(pdu, Mms.Inbox.CONTENT_URI, subId, subPhoneNumber,
-                                null);
-                        messageUri = ContentUris.withAppendedId(Mms.CONTENT_URI,
+                        //we don't know if the message is a private here,
+                        //so use Mms.Inbox.CONTENT_URI to save the mms,
+                        //when persist the mms,wo can get the thread id and change URI
+                        inboxUri = p.persist(pdu, Mms.Inbox.CONTENT_URI,
+                                subId, subPhoneNumber, null);
+                        messageUri = ContentUris.withAppendedId(
+                                PrivateMessageManager.getInstance().isPrivateUri(inboxUri.toString())
+                                        ? PrivateMmsEntry.CONTENT_URI : Mms.CONTENT_URI,
                                 ContentUris.parseId(inboxUri));
                     } catch (final MmsException e) {
                         LogUtil.e(TAG, "Failed to save the data from PUSH: type=" + type, e);
@@ -2370,8 +2385,8 @@ public class MmsUtils {
     }
 
     public static Uri insertSendingMmsMessage(final Context context, final List<String> recipients,
-            final MessageData content, final int subId, final String subPhoneNumber,
-            final long timestamp) {
+                                              final MessageData content, final int subId, final String subPhoneNumber,
+                                              final long timestamp) {
         final SendReq sendReq = createMmsSendReq(
                 context, subId, recipients.toArray(new String[recipients.size()]), content,
                 DEFAULT_DELIVERY_REPORT_MODE,
@@ -2381,9 +2396,13 @@ public class MmsUtils {
                 timestamp);
         Uri messageUri = null;
         if (sendReq != null) {
-            final Uri outboxUri = MmsUtils.insertSendReq(context, sendReq, subId, subPhoneNumber);
+            boolean isPrivateMsg = PrivateMessageManager.getInstance().isPrivateConversationId(content.getConversationId());
+            final Uri outboxUri = MmsUtils.insertSendReq(context,
+                    isPrivateMsg ? PrivateMmsEntry.Sent.CONTENT_URI : Mms.Sent.CONTENT_URI,
+                    sendReq, subId, subPhoneNumber);
             if (outboxUri != null) {
-                messageUri = ContentUris.withAppendedId(Telephony.Mms.CONTENT_URI,
+                messageUri = ContentUris.withAppendedId(
+                        isPrivateMsg ? PrivateMmsEntry.CONTENT_URI : Telephony.Mms.CONTENT_URI,
                         ContentUris.parseId(outboxUri));
                 if (LogUtil.isLoggable(TAG, LogUtil.DEBUG)) {
                     LogUtil.d(TAG, "Mmsutils: Inserted sending MMS message into telephony, uri: "

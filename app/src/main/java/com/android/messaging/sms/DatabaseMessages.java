@@ -37,6 +37,7 @@ import com.android.messaging.Factory;
 import com.android.messaging.datamodel.data.MessageData;
 import com.android.messaging.datamodel.media.VideoThumbnailRequest;
 import com.android.messaging.mmslib.pdu.CharacterSets;
+import com.android.messaging.privatebox.PrivateMmsEntry;
 import com.android.messaging.util.Assert;
 import com.android.messaging.util.ContentType;
 import com.android.messaging.util.LogUtil;
@@ -388,6 +389,41 @@ public class DatabaseMessages {
             mSubId = PhoneUtils.getDefault().getSubIdFromTelephony(cursor, INDEX_SUB_ID);
         }
 
+        public void loadCursorInPrivateBox(final Cursor cursor) {
+            mRowId = cursor.getLong(INDEX_ID);
+            mType = cursor.getInt(INDEX_MESSAGE_BOX);
+            mSubject = cursor.getString(INDEX_SUBJECT);
+            mSubjectCharset = cursor.getInt(INDEX_SUBJECT_CHARSET);
+            if (!TextUtils.isEmpty(mSubject)) {
+                // PduPersister stores the subject using ISO_8859_1
+                // Let's load it using that encoding and convert it back to its original
+                // See PduPersister.persist and PduPersister.toIsoString
+                // (Refer to bug b/11162476)
+                mSubject = getDecodedString(
+                        getStringBytes(mSubject, CharacterSets.ISO_8859_1), mSubjectCharset);
+            }
+            mSize = cursor.getLong(INDEX_MESSAGE_SIZE);
+            // MMS db times are in seconds
+            mTimestampInMillis = cursor.getLong(INDEX_DATE) * 1000;
+            mSentTimestampInMillis = cursor.getLong(INDEX_DATE_SENT) * 1000;
+            mThreadId = cursor.getLong(INDEX_THREAD_ID);
+            mPriority = cursor.getInt(INDEX_PRIORITY);
+            mStatus = cursor.getInt(INDEX_STATUS);
+            mRead = cursor.getInt(INDEX_READ) == 0 ? false : true;
+            mSeen = cursor.getInt(INDEX_SEEN) == 0 ? false : true;
+            mContentLocation = cursor.getString(INDEX_CONTENT_LOCATION);
+            mTransactionId = cursor.getString(INDEX_TRANSACTION_ID);
+            mMmsMessageType = cursor.getInt(INDEX_MESSAGE_TYPE);
+            mExpiryInMillis = cursor.getLong(INDEX_EXPIRY) * 1000;
+            mResponseStatus = cursor.getInt(INDEX_RESPONSE_STATUS);
+            mRetrieveStatus = cursor.getInt(INDEX_RETRIEVE_STATUS);
+            // Clear all parts in case we reuse this object
+            mParts.clear();
+            mPartsProcessed = false;
+            mUri = ContentUris.withAppendedId(PrivateMmsEntry.CONTENT_URI, mRowId).toString();
+            mSubId = PhoneUtils.getDefault().getSubIdFromTelephony(cursor, INDEX_SUB_ID);
+        }
+
         /**
          * Get a new MmsMessage by loading from the cursor of a query
          * that returns the MMS to import
@@ -398,6 +434,12 @@ public class DatabaseMessages {
         public static MmsMessage get(final Cursor cursor) {
             final MmsMessage msg = new MmsMessage();
             msg.load(cursor);
+            return msg;
+        }
+
+        public static MmsMessage getPrivateMms(final Cursor cursor) {
+            final MmsMessage msg = new MmsMessage();
+            msg.loadCursorInPrivateBox(cursor);
             return msg;
         }
         /**

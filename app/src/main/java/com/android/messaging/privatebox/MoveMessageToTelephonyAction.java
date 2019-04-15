@@ -16,6 +16,7 @@ import com.android.messaging.datamodel.DataModel;
 import com.android.messaging.datamodel.DatabaseHelper;
 import com.android.messaging.datamodel.DatabaseWrapper;
 import com.android.messaging.datamodel.action.Action;
+import com.android.messaging.util.UriUtil;
 import com.ihs.app.framework.HSApplication;
 
 import java.util.ArrayList;
@@ -126,6 +127,20 @@ public class MoveMessageToTelephonyAction extends Action {
                 for (String partUri : partUris) {
                     HSApplication.getContext().getContentResolver()
                             .update(Uri.parse(partUri), values, null, null);
+                }
+                //copy address data
+                long telephonyMsgId = ContentUris.parseId(uri);
+                Uri localUri = Uri.parse(PrivateMmsEntry.CONTENT_URI + "/" + msgId + "/addr");
+                Uri telephonyUri = Uri.parse("content://mms/" + telephonyMsgId + "/addr");
+                cursor = resolver.query(localUri, null, null, null, null);
+                if (cursor != null) {
+                    while (cursor.moveToNext()) {
+                        values.clear();
+                        bindMmsValues(values, cursor);
+                        resolver.insert(telephonyUri, values);
+                    }
+                    cursor.close();
+                    resolver.delete(localUri, null, null);
                 }
             }
             localMmsCursor.close();
@@ -251,6 +266,19 @@ public class MoveMessageToTelephonyAction extends Action {
             values.put(Telephony.Sms.CREATOR,
                     localCursor.getString(localCursor.getColumnIndex(PrivateSmsEntry.CREATOR)));
         }
+    }
+
+    private static void bindMmsAddrValues(ContentValues values, Cursor cursor) {
+        values.put(PrivateMmsEntry.Addr.ADDRESS,
+                cursor.getString(cursor.getColumnIndex(Telephony.Mms.Addr.ADDRESS)));
+        values.put(PrivateMmsEntry.Addr.CHARSET,
+                cursor.getString(cursor.getColumnIndex(Telephony.Mms.Addr.CHARSET)));
+        values.put(PrivateMmsEntry.Addr.CONTACT_ID,
+                cursor.getString(cursor.getColumnIndex(Telephony.Mms.Addr.CONTACT_ID)));
+        values.put(PrivateMmsEntry.Addr.MSG_ID,
+                cursor.getString(cursor.getColumnIndex(Telephony.Mms.Addr.MSG_ID)));
+        values.put(PrivateMmsEntry.Addr.TYPE,
+                cursor.getString(cursor.getColumnIndex(Telephony.Mms.Addr.TYPE)));
     }
 
     private MoveMessageToTelephonyAction(final Parcel in) {

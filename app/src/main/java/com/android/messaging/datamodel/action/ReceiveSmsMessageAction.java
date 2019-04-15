@@ -100,6 +100,7 @@ public class ReceiveSmsMessageAction extends Action implements Parcelable {
         final boolean messageInObservableConversation =
                 DataModel.get().isNewMessageObservable(conversationId);
 
+        boolean isPrivateMessage = PrivateMessageManager.getInstance().isPrivateThreadId(threadId);
         MessageData message = null;
         // Only the primary user gets to insert the message into the telephony db and into bugle's
         // db. The secondary user goes through this path, but skips doing the actual insert. It
@@ -117,7 +118,8 @@ public class ReceiveSmsMessageAction extends Action implements Parcelable {
             messageValues.put(Sms.Inbox.SEEN, 1);
 
             // Insert into telephony
-            final Uri messageUri = context.getContentResolver().insert(Sms.Inbox.CONTENT_URI,
+            Uri messageUri = context.getContentResolver().insert(
+                    isPrivateMessage ? PrivateSmsEntry.CONTENT_URI : Sms.Inbox.CONTENT_URI,
                     messageValues);
 
             if (messageUri != null) {
@@ -175,7 +177,6 @@ public class ReceiveSmsMessageAction extends Action implements Parcelable {
         }
         // Show a notification to let the user know a new message has arrived
         BugleNotifications.update(false/*silent*/, conversationId, BugleNotifications.UPDATE_ALL);
-
         if (isPrivateMessage && PrivateSettingManager.isNotificationEnable()) {
             BugleAnalytics.logEvent("Notifications_Received_PrivateBox");
         }

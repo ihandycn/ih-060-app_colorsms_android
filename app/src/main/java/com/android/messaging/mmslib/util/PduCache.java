@@ -25,6 +25,9 @@ import android.support.v4.util.SimpleArrayMap;
 import android.util.Log;
 import android.util.SparseArray;
 
+import com.android.messaging.privatebox.PrivateMessageContentProvider;
+import com.android.messaging.privatebox.PrivateMmsEntry;
+
 import java.util.HashSet;
 
 public final class PduCache extends AbstractCache<Uri, PduCacheEntry> {
@@ -43,6 +46,17 @@ public final class PduCache extends AbstractCache<Uri, PduCacheEntry> {
     private static final int MMS_OUTBOX_ID       = 9;
     private static final int MMS_CONVERSATION    = 10;
     private static final int MMS_CONVERSATION_ID = 11;
+
+    private static final int PRIVATE_MMS_ALL = 100;
+    private static final int PRIVATE_MMS_ALL_ID = 101;
+    private static final int PRIVATE_MMS_INBOX = 102;
+    private static final int PRIVATE_MMS_INBOX_ID = 103;
+    private static final int PRIVATE_MMS_SENT = 104;
+    private static final int PRIVATE_MMS_SENT_ID = 105;
+    private static final int PRIVATE_MMS_DRAFTS = 106;
+    private static final int PRIVATE_MMS_DRAFTS_ID = 107;
+    private static final int PRIVATE_MMS_OUTBOX = 108;
+    private static final int PRIVATE_MMS_OUTBOX_ID = 109;
 
     private static final UriMatcher URI_MATCHER;
     private static final SparseArray<Integer> MATCH_TO_MSGBOX_ID_MAP;
@@ -64,11 +78,28 @@ public final class PduCache extends AbstractCache<Uri, PduCacheEntry> {
         URI_MATCHER.addURI("mms-sms", "conversations",   MMS_CONVERSATION);
         URI_MATCHER.addURI("mms-sms", "conversations/#", MMS_CONVERSATION_ID);
 
+        URI_MATCHER.addURI(PrivateMessageContentProvider.CONTENT_AUTHORITY, "mms", PRIVATE_MMS_ALL);
+        URI_MATCHER.addURI(PrivateMessageContentProvider.CONTENT_AUTHORITY, "mms/#", PRIVATE_MMS_ALL_ID);
+        URI_MATCHER.addURI(PrivateMessageContentProvider.CONTENT_AUTHORITY, "mms/inbox", PRIVATE_MMS_INBOX);
+        URI_MATCHER.addURI(PrivateMessageContentProvider.CONTENT_AUTHORITY, "mms/inbox/#", PRIVATE_MMS_INBOX_ID);
+        URI_MATCHER.addURI(PrivateMessageContentProvider.CONTENT_AUTHORITY, "mms/sent", PRIVATE_MMS_SENT);
+        URI_MATCHER.addURI(PrivateMessageContentProvider.CONTENT_AUTHORITY, "mms/sent/#", PRIVATE_MMS_SENT_ID);
+        URI_MATCHER.addURI(PrivateMessageContentProvider.CONTENT_AUTHORITY, "mms/drafts", PRIVATE_MMS_DRAFTS);
+        URI_MATCHER.addURI(PrivateMessageContentProvider.CONTENT_AUTHORITY, "mms/drafts/#", PRIVATE_MMS_DRAFTS_ID);
+        URI_MATCHER.addURI(PrivateMessageContentProvider.CONTENT_AUTHORITY, "mms/outbox", PRIVATE_MMS_OUTBOX);
+        URI_MATCHER.addURI(PrivateMessageContentProvider.CONTENT_AUTHORITY, "mms/outbox/#", PRIVATE_MMS_OUTBOX_ID);
+
+
         MATCH_TO_MSGBOX_ID_MAP = new SparseArray<Integer>();
         MATCH_TO_MSGBOX_ID_MAP.put(MMS_INBOX,  Mms.MESSAGE_BOX_INBOX);
         MATCH_TO_MSGBOX_ID_MAP.put(MMS_SENT,   Mms.MESSAGE_BOX_SENT);
         MATCH_TO_MSGBOX_ID_MAP.put(MMS_DRAFTS, Mms.MESSAGE_BOX_DRAFTS);
         MATCH_TO_MSGBOX_ID_MAP.put(MMS_OUTBOX, Mms.MESSAGE_BOX_OUTBOX);
+
+        MATCH_TO_MSGBOX_ID_MAP.put(PRIVATE_MMS_INBOX, Mms.MESSAGE_BOX_INBOX);
+        MATCH_TO_MSGBOX_ID_MAP.put(PRIVATE_MMS_SENT, Mms.MESSAGE_BOX_SENT);
+        MATCH_TO_MSGBOX_ID_MAP.put(PRIVATE_MMS_DRAFTS, Mms.MESSAGE_BOX_DRAFTS);
+        MATCH_TO_MSGBOX_ID_MAP.put(PRIVATE_MMS_OUTBOX, Mms.MESSAGE_BOX_OUTBOX);
     }
 
     private final SparseArray<HashSet<Uri>> mMessageBoxes;
@@ -134,6 +165,7 @@ public final class PduCache extends AbstractCache<Uri, PduCacheEntry> {
         int match = URI_MATCHER.match(uri);
         switch (match) {
             case MMS_ALL_ID:
+            case PRIVATE_MMS_ALL_ID:
                 return purgeSingleEntry(uri);
             case MMS_INBOX_ID:
             case MMS_SENT_ID:
@@ -141,11 +173,22 @@ public final class PduCache extends AbstractCache<Uri, PduCacheEntry> {
             case MMS_OUTBOX_ID:
                 String msgId = uri.getLastPathSegment();
                 return purgeSingleEntry(Uri.withAppendedPath(Mms.CONTENT_URI, msgId));
+            case PRIVATE_MMS_INBOX_ID:
+            case PRIVATE_MMS_SENT_ID:
+            case PRIVATE_MMS_DRAFTS_ID:
+            case PRIVATE_MMS_OUTBOX_ID:
+                String messageId = uri.getLastPathSegment();
+                return purgeSingleEntry(Uri.withAppendedPath(PrivateMmsEntry.CONTENT_URI, messageId));
             // Implicit batch of purge, return null.
             case MMS_ALL:
+            case PRIVATE_MMS_ALL:
             case MMS_CONVERSATION:
                 purgeAll();
                 return null;
+            case PRIVATE_MMS_INBOX:
+            case PRIVATE_MMS_SENT:
+            case PRIVATE_MMS_DRAFTS:
+            case PRIVATE_MMS_OUTBOX:
             case MMS_INBOX:
             case MMS_SENT:
             case MMS_DRAFTS:
@@ -189,6 +232,7 @@ public final class PduCache extends AbstractCache<Uri, PduCacheEntry> {
         Uri normalizedKey = null;
 
         switch (match) {
+            case PRIVATE_MMS_ALL_ID:
             case MMS_ALL_ID:
                 normalizedKey = uri;
                 break;
@@ -198,6 +242,13 @@ public final class PduCache extends AbstractCache<Uri, PduCacheEntry> {
             case MMS_OUTBOX_ID:
                 String msgId = uri.getLastPathSegment();
                 normalizedKey = Uri.withAppendedPath(Mms.CONTENT_URI, msgId);
+                break;
+            case PRIVATE_MMS_INBOX_ID:
+            case PRIVATE_MMS_SENT_ID:
+            case PRIVATE_MMS_DRAFTS_ID:
+            case PRIVATE_MMS_OUTBOX_ID:
+                String messageId = uri.getLastPathSegment();
+                normalizedKey = Uri.withAppendedPath(PrivateMmsEntry.CONTENT_URI, messageId);
                 break;
             default:
                 return null;

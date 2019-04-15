@@ -39,6 +39,7 @@ import android.util.Log;
 import android.util.SparseArray;
 import android.util.SparseIntArray;
 
+import com.android.messaging.datamodel.action.ProcessDownloadedMmsAction;
 import com.android.messaging.datamodel.data.ParticipantData;
 import com.android.messaging.mmslib.InvalidHeaderValueException;
 import com.android.messaging.mmslib.MmsException;
@@ -47,6 +48,8 @@ import com.android.messaging.mmslib.util.DownloadDrmHelper;
 import com.android.messaging.mmslib.util.DrmConvertSession;
 import com.android.messaging.mmslib.util.PduCache;
 import com.android.messaging.mmslib.util.PduCacheEntry;
+import com.android.messaging.privatebox.PrivateMessageManager;
+import com.android.messaging.privatebox.PrivateMmsEntry;
 import com.android.messaging.sms.MmsSmsUtils;
 import com.android.messaging.util.Assert;
 import com.android.messaging.util.ContentType;
@@ -62,6 +65,7 @@ import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -167,7 +171,7 @@ public class PduPersister {
     public static final int PDU_COLUMN_READ                  = 27;
     public static final int PDU_COLUMN_SEEN                  = 28;
 
-    private static final String[] PART_PROJECTION = new String[] {
+    private static final String[] PART_PROJECTION = new String[]{
             Part._ID,
             Part.CHARSET,
             Part.CONTENT_DISPOSITION,
@@ -218,6 +222,11 @@ public class PduPersister {
         MESSAGE_BOX_MAP.put(Mms.Sent.CONTENT_URI, Mms.MESSAGE_BOX_SENT);
         MESSAGE_BOX_MAP.put(Mms.Draft.CONTENT_URI, Mms.MESSAGE_BOX_DRAFTS);
         MESSAGE_BOX_MAP.put(Mms.Outbox.CONTENT_URI, Mms.MESSAGE_BOX_OUTBOX);
+        MESSAGE_BOX_MAP.put(PrivateMmsEntry.Inbox.CONTENT_URI, Mms.MESSAGE_BOX_INBOX);
+        MESSAGE_BOX_MAP.put(PrivateMmsEntry.Sent.CONTENT_URI, Mms.MESSAGE_BOX_SENT);
+        MESSAGE_BOX_MAP.put(PrivateMmsEntry.Draft.CONTENT_URI, Mms.MESSAGE_BOX_DRAFTS);
+        MESSAGE_BOX_MAP.put(PrivateMmsEntry.Outbox.CONTENT_URI, Mms.MESSAGE_BOX_OUTBOX);
+        MESSAGE_BOX_MAP.put(PrivateMmsEntry.CONTENT_URI, Mms.MESSAGE_BOX_ALL);
 
         CHARSET_COLUMN_INDEX_MAP = new SparseIntArray();
         CHARSET_COLUMN_INDEX_MAP.put(PduHeaders.SUBJECT, PDU_COLUMN_SUBJECT_CHARSET);
@@ -303,7 +312,9 @@ public class PduPersister {
         mContentResolver = context.getContentResolver();
     }
 
-    /** Get(or create if not exist) an instance of PduPersister */
+    /**
+     * Get(or create if not exist) an instance of PduPersister
+     */
     public static PduPersister getPduPersister(final Context context) {
         if ((sPersister == null) || !context.equals(sPersister.mContext)) {
             sPersister = new PduPersister(context);
@@ -496,11 +507,19 @@ public class PduPersister {
         return parts;
     }
 
-    private void loadAddress(final long msgId, final PduHeaders headers) {
-        final Cursor c = SqliteWrapper.query(mContext, mContentResolver,
-                Uri.parse("content://mms/" + msgId + "/addr"),
-                new String[]{Addr.ADDRESS, Addr.CHARSET, Addr.TYPE},
-                null, null, null);
+    private void loadAddress(boolean isPrivateMessage, final long msgId, final PduHeaders headers) {
+        final Cursor c;
+        if (isPrivateMessage) {
+            c = SqliteWrapper.query(mContext, mContentResolver,
+                    Uri.parse(PrivateMmsEntry.CONTENT_URI.toString() + "/" + msgId + "/addr"),
+                    new String[]{Addr.ADDRESS, Addr.CHARSET, Addr.TYPE},
+                    null, null, null);
+        } else {
+            c = SqliteWrapper.query(mContext, mContentResolver,
+                    Uri.parse("content://mms/" + msgId + "/addr"),
+                    new String[]{Addr.ADDRESS, Addr.CHARSET, Addr.TYPE},
+                    null, null, null);
+        }
 
         if (c != null) {
             try {
@@ -545,7 +564,8 @@ public class PduPersister {
         // Fill in the headers from the PDU columns
         loadHeadersFromCursor(c, headers);
         // Load address information of the MM.
-        loadAddress(msgId, headers);
+        long threadId = c.getLong(PDU_COLUMN_THREAD_ID);
+        loadAddress(PrivateMessageManager.getInstance().isPrivateThreadId(threadId), msgId, headers);
         // Load parts for the PDU body
         final int msgType = headers.getOctet(PduHeaders.MESSAGE_TYPE);
         final PduBody body = loadBody(msgId, msgType);
@@ -555,7 +575,7 @@ public class PduPersister {
     /**
      * Load a PDU from storage by given Uri.
      *
-     * @param uri            The Uri of the PDU to be loaded.
+     * @param uri The Uri of the PDU to be loaded.
      * @return A generic PDU object, it may be cast to dedicated PDU.
      * @throws MmsException Failed to load some fields of a PDU.
      */
@@ -613,7 +633,7 @@ public class PduPersister {
             }
 
             // Load address information of the MM.
-            loadAddress(msgId, headers);
+            loadAddress(PrivateMessageManager.getInstance().isPrivateUri(uri.toString()), msgId, headers);
 
             final int msgType = headers.getOctet(PduHeaders.MESSAGE_TYPE);
             final PduBody body = loadBody(msgId, msgType);
@@ -720,8 +740,8 @@ public class PduPersister {
         return body;
     }
 
-    private void persistAddress(
-            final long msgId, final int type, final EncodedStringValue[] array) {
+    private void persistAddress(boolean isPrivateMessage,
+                                final long msgId, final int type, final EncodedStringValue[] array) {
         final ContentValues values = new ContentValues(3);
 
         for (final EncodedStringValue addr : array) {
@@ -729,8 +749,12 @@ public class PduPersister {
             values.put(Addr.ADDRESS, toIsoString(addr.getTextString()));
             values.put(Addr.CHARSET, addr.getCharacterSet());
             values.put(Addr.TYPE, type);
-
-            final Uri uri = Uri.parse("content://mms/" + msgId + "/addr");
+            final Uri uri;
+            if (isPrivateMessage) {
+                uri = Uri.parse(PrivateMmsEntry.CONTENT_URI.toString() + "/" + msgId + "/addr");
+            } else {
+                uri = Uri.parse("content://mms/" + msgId + "/addr");
+            }
             SqliteWrapper.insert(mContext, mContentResolver, uri, values);
         }
     }
@@ -767,7 +791,7 @@ public class PduPersister {
     }
 
     public Uri persistPart(final PduPart part, final long msgId,
-            final Map<Uri, InputStream> preOpenedFiles) throws MmsException {
+                           final Map<Uri, InputStream> preOpenedFiles) throws MmsException {
         final Uri uri = Uri.parse("content://mms/" + msgId + "/part");
         final ContentValues values = new ContentValues(8);
 
@@ -855,8 +879,8 @@ public class PduPersister {
      * @throws MmsException Cannot find source data or error occurred
      *                      while saving the data.
      */
-    private void persistData(final PduPart part, final Uri uri,
-            final String contentType, final Map<Uri, InputStream> preOpenedFiles)
+    public void persistData(final PduPart part, final Uri uri,
+                            final String contentType, final Map<Uri, InputStream> preOpenedFiles)
             throws MmsException {
         OutputStream os = null;
         InputStream is = null;
@@ -1007,10 +1031,10 @@ public class PduPersister {
 
     /**
      * This method expects uri in the following format
-     *     content://media/<table_name>/<row_index> (or)
-     *     file://sdcard/test.mp4
-     *     http://test.com/test.mp4
-     *
+     * content://media/<table_name>/<row_index> (or)
+     * file://sdcard/test.mp4
+     * http://test.com/test.mp4
+     * <p>
      * Here <table_name> shall be "video" or "audio" or "images"
      * <row_index> the index of the content in given table
      */
@@ -1026,7 +1050,7 @@ public class PduPersister {
                 path = uri.toString();
 
             } else if (scheme.equals(ContentResolver.SCHEME_CONTENT)) {
-                final String[] projection = new String[] {MediaStore.MediaColumns.DATA};
+                final String[] projection = new String[]{MediaStore.MediaColumns.DATA};
                 Cursor cursor = null;
                 try {
                     cursor = context.getContentResolver().query(uri, projection, null,
@@ -1053,21 +1077,26 @@ public class PduPersister {
         return path;
     }
 
-    private void updateAddress(
-            final long msgId, final int type, final EncodedStringValue[] array) {
+    private void updateAddress(boolean isPrivateMessage,
+                               final long msgId, final int type, final EncodedStringValue[] array) {
         // Delete old address information and then insert new ones.
-        SqliteWrapper.delete(mContext, mContentResolver,
-                Uri.parse("content://mms/" + msgId + "/addr"),
-                Addr.TYPE + "=" + type, null);
+        if (isPrivateMessage) {
+            SqliteWrapper.delete(mContext, mContentResolver,
+                    Uri.parse(PrivateMmsEntry.CONTENT_URI.toString() + "/" + msgId + "/addr"),
+                    Addr.TYPE + "=" + type, null);
+        } else {
+            SqliteWrapper.delete(mContext, mContentResolver,
+                    Uri.parse("content://mms/" + msgId + "/addr"),
+                    Addr.TYPE + "=" + type, null);
+        }
 
-        persistAddress(msgId, type, array);
+        persistAddress(isPrivateMessage, msgId, type, array);
     }
 
     /**
      * Update headers of a SendReq.
      *
      * @param uri The PDU which need to be updated.
-     * @param pdu New headers.
      * @throws MmsException Bad URI or updating failed.
      */
     public void updateHeaders(final Uri uri, final SendReq sendReq) {
@@ -1177,7 +1206,7 @@ public class PduPersister {
 
 
     private void updatePart(final Uri uri, final PduPart part,
-            final Map<Uri, InputStream> preOpenedFiles)
+                            final Map<Uri, InputStream> preOpenedFiles)
             throws MmsException {
         final ContentValues values = new ContentValues(7);
 
@@ -1216,7 +1245,7 @@ public class PduPersister {
      * @throws MmsException Bad URI or updating failed.
      */
     public void updateParts(final Uri uri, final PduBody body,
-            final Map<Uri, InputStream> preOpenedFiles)
+                            final Map<Uri, InputStream> preOpenedFiles)
             throws MmsException {
         try {
             PduCacheEntry cacheEntry;
@@ -1294,15 +1323,15 @@ public class PduPersister {
     /**
      * Persist a PDU object to specific location in the storage.
      *
-     * @param pdu             The PDU object to be stored.
-     * @param uri             Where to store the given PDU object.
-     * @param subId           Subscription id associated with this message.
+     * @param pdu            The PDU object to be stored.
+     * @param uri            Where to store the given PDU object.
+     * @param subId          Subscription id associated with this message.
      * @param subPhoneNumber TODO
-     * @param preOpenedFiles  if not null, a map of preopened InputStreams for the parts.
+     * @param preOpenedFiles if not null, a map of preopened InputStreams for the parts.
      * @return A Uri which can be used to access the stored PDU.
      */
     public Uri persist(final GenericPdu pdu, final Uri uri, final int subId,
-            final String subPhoneNumber, final Map<Uri, InputStream> preOpenedFiles)
+                       final String subPhoneNumber, final Map<Uri, InputStream> preOpenedFiles)
             throws MmsException {
         if (uri == null) {
             throw new MmsException("Uri may not be null.");
@@ -1320,7 +1349,7 @@ public class PduPersister {
                     "Bad destination, must be one of "
                             + "content://mms/inbox, content://mms/sent, "
                             + "content://mms/drafts, content://mms/outbox, "
-                            + "content://mms/temp."
+                            + "content://mms/temp, content://com.color.sms.messages/mms ..."
             );
         }
         synchronized (PDU_CACHE_INSTANCE) {
@@ -1405,6 +1434,7 @@ public class PduPersister {
         // M-Retrieve.conf and M-Send.req.
         // Some of other PDU types may be allocated a thread ID outside
         // this scope.
+        long threadId = -1L;
         if ((msgType == PduHeaders.MESSAGE_TYPE_NOTIFICATION_IND)
                 || (msgType == PduHeaders.MESSAGE_TYPE_RETRIEVE_CONF)
                 || (msgType == PduHeaders.MESSAGE_TYPE_SEND_REQ)) {
@@ -1426,7 +1456,6 @@ public class PduPersister {
                     loadRecipients(PduHeaders.TO, recipients, addressMap);
                     break;
             }
-            long threadId = -1L;
             if (!recipients.isEmpty()) {
                 // Given all the recipients associated with this message, find (or create) the
                 // correct thread.
@@ -1464,7 +1493,6 @@ public class PduPersister {
                 for (int i = 0; i < partsNum; i++) {
                     final PduPart part = body.getPart(i);
                     persistPart(part, dummyId, preOpenedFiles);
-
                     // If we've got anything besides text/plain or SMIL part, then we've got
                     // an mms message with some other type of attachment.
                     final String contentType = getPartContentType(part);
@@ -1491,12 +1519,23 @@ public class PduPersister {
             Assert.equals(ParticipantData.DEFAULT_SELF_SUB_ID, subId);
         }
 
+        boolean isPrivateMessage;
+        boolean isPrivateUri = PrivateMessageManager.getInstance().isPrivateUri(uri.toString());
+        if (isPrivateUri) {
+            //uris like "content://com.color.sms.messages/mms"
+            isPrivateMessage = true;
+        } else {
+            //if we receive a mms, we don't know if it's private util we get the thread_id
+            isPrivateMessage = PrivateMessageManager.getInstance().isPrivateThreadId(threadId);
+        }
         Uri res = null;
         if (existingUri) {
             res = uri;
             SqliteWrapper.update(mContext, mContentResolver, res, values, null, null);
         } else {
-            res = SqliteWrapper.insert(mContext, mContentResolver, uri, values);
+            res = SqliteWrapper.insert(mContext, mContentResolver,
+                    isPrivateMessage ? PrivateMmsEntry.CONTENT_URI : uri, values);
+
             if (res == null) {
                 throw new MmsException("persist() failed: return null.");
             }
@@ -1506,7 +1545,16 @@ public class PduPersister {
         }
 
         values = new ContentValues(1);
-        values.put(Part.MSG_ID, msgId);
+
+        if (!isPrivateMessage) {
+            values.put(Part.MSG_ID, msgId);
+        } else {
+            values.put(Part.MSG_ID, -1 * msgId);
+        }
+
+        //content://mms/**/part -> ** is message id
+        //content://mms/part/** -> ** is part id in telephony
+
         SqliteWrapper.update(mContext, mContentResolver,
                 Uri.parse("content://mms/" + dummyId + "/part"),
                 values, null, null);
@@ -1516,14 +1564,18 @@ public class PduPersister {
         // instead of "content://mms/8".
         // TODO: Should the MmsProvider be responsible for this???
         if (!existingUri) {
-            res = Uri.parse(uri + "/" + msgId);
+            if (isPrivateMessage) {
+                res = Uri.parse(PrivateMmsEntry.CONTENT_URI + "/" + msgId);
+            } else {
+                res = Uri.parse(uri + "/" + msgId);
+            }
         }
 
         // Save address information.
         for (final int addrType : ADDRESS_FIELDS) {
             final EncodedStringValue[] array = addressMap.get(addrType);
             if (array != null) {
-                persistAddress(msgId, addrType, array);
+                persistAddress(isPrivateMessage, msgId, addrType, array);
             }
         }
 
@@ -1533,13 +1585,13 @@ public class PduPersister {
     /**
      * For a given address type, extract the recipients from the headers.
      *
-     * @param addressType     can be PduHeaders.FROM or PduHeaders.TO
-     * @param recipients      a HashSet that is loaded with the recipients from the FROM or TO
-     *                        headers
-     * @param addressMap      a HashMap of the addresses from the ADDRESS_FIELDS header
+     * @param addressType can be PduHeaders.FROM or PduHeaders.TO
+     * @param recipients  a HashSet that is loaded with the recipients from the FROM or TO
+     *                    headers
+     * @param addressMap  a HashMap of the addresses from the ADDRESS_FIELDS header
      */
     private void loadRecipients(final int addressType, final HashSet<String> recipients,
-            final SparseArray<EncodedStringValue[]> addressMap) {
+                                final SparseArray<EncodedStringValue[]> addressMap) {
         final EncodedStringValue[] array = addressMap.get(addressType);
         if (array == null) {
             return;
@@ -1558,13 +1610,13 @@ public class PduPersister {
     /**
      * For a given address type, extract the recipients from the headers.
      *
-     * @param recipients      a HashSet that is loaded with the recipients from the FROM or TO
-     *                        headers
-     * @param addressMap      a HashMap of the addresses from the ADDRESS_FIELDS header
-     * @param selfNumber      self phone number
+     * @param recipients a HashSet that is loaded with the recipients from the FROM or TO
+     *                   headers
+     * @param addressMap a HashMap of the addresses from the ADDRESS_FIELDS header
+     * @param selfNumber self phone number
      */
     private void checkAndLoadToCcRecipients(final HashSet<String> recipients,
-            final SparseArray<EncodedStringValue[]> addressMap, final String selfNumber) {
+                                            final SparseArray<EncodedStringValue[]> addressMap, final String selfNumber) {
         final EncodedStringValue[] arrayTo = addressMap.get(PduHeaders.TO);
         final EncodedStringValue[] arrayCc = addressMap.get(PduHeaders.CC);
         final ArrayList<String> numbers = new ArrayList<String>();
@@ -1672,7 +1724,7 @@ public class PduPersister {
         final String selection = PendingMessages.ERROR_TYPE + " < ?"
                 + " AND " + PendingMessages.DUE_TIME + " <= ?";
 
-        final String[] selectionArgs = new String[] {
+        final String[] selectionArgs = new String[]{
                 String.valueOf(MmsSms.ERR_TYPE_GENERIC_PERMANENT),
                 String.valueOf(dueTime)
         };

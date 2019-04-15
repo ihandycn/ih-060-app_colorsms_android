@@ -550,7 +550,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             CREATE_CONVERSATION_PARTICIPANTS_TABLE_SQL,
             PrivateMmsEntry.CREATE_MMS_TABLE_SQL,
             PrivateSmsEntry.CREATE_SMS_TABLE_SQL,
-            PrivateContactsManager.CREATE_PRIVATE_CONTACTS_TABLE_SQL
+            PrivateContactsManager.CREATE_PRIVATE_CONTACTS_TABLE_SQL,
+            PrivateMmsEntry.Addr.CREATE_MMS_ADDRESS_TABLE_SQL
     };
 
     // List of all our indices

@@ -1,11 +1,9 @@
 package com.android.messaging.privatebox;
 
-import android.database.Cursor;
-import android.net.Uri;
+import android.text.TextUtils;
 
 import com.android.messaging.datamodel.BugleDatabaseOperations;
 import com.android.messaging.datamodel.DataModel;
-import com.android.messaging.datamodel.DatabaseHelper;
 import com.android.messaging.datamodel.DatabaseWrapper;
 
 public class PrivateMessageManager {
@@ -20,19 +18,10 @@ public class PrivateMessageManager {
     }
 
     public boolean isPrivateConversationId(String conversationId) {
+        if (TextUtils.isEmpty(conversationId)) {
+            return false;
+        }
         DatabaseWrapper db = DataModel.get().getDatabase();
-//        Cursor cursor = db.query(DatabaseHelper.CONVERSATIONS_TABLE,
-//                new String[]{DatabaseHelper.ConversationColumns.IS_PRIVATE},
-//                DatabaseHelper.ConversationColumns._ID + "=?", new String[]{conversationId},
-//                null, null, null);
-//        int privateValue = 0;
-//        if (cursor != null && cursor.moveToFirst()) {
-//            privateValue = cursor.getInt(0);
-//        }
-//        if (cursor != null) {
-//            cursor.close();
-//        }
-//        return privateValue == 1;
         long threadId = BugleDatabaseOperations.getThreadId(db, conversationId);
         return PrivateContactsManager.getInstance().isPrivateThreadId(threadId);
     }

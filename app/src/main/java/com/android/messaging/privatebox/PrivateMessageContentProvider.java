@@ -9,9 +9,12 @@ import android.net.Uri;
 import android.provider.Telephony;
 import android.support.annotation.NonNull;
 import android.text.TextUtils;
+import android.util.Log;
 
 import com.android.messaging.datamodel.DataModel;
 import com.android.messaging.datamodel.DatabaseWrapper;
+
+import java.util.List;
 
 public class PrivateMessageContentProvider extends ContentProvider {
     public static final String CONTENT_AUTHORITY = "com.color.sms.messages";
@@ -26,6 +29,8 @@ public class PrivateMessageContentProvider extends ContentProvider {
     private static final int SMS_MESSAGE = 7;
     private static final int MMS_MESSAGE = 8;
 
+    private static final int MMS_ADDRESS_BY_MESSAGE = 9;
+
     public static final String SMS_PATH = "sms";
     public static final String MMS_PATH = "mms";
     public static final String SMS_MESSAGE_PATH = "sms/#";
@@ -34,6 +39,8 @@ public class PrivateMessageContentProvider extends ContentProvider {
     public static final String MMS_SENT_PATH = "mms/sent";
     public static final String MMS_DRAFTS_PATH = "mms/drafts";
     public static final String MMS_OUTBOX_PATH = "mms/outbox";
+
+    public static final String MMS_ADDRESS_PATH_BY_MESSAGE = "mms/#/addr";
 
     public PrivateMessageContentProvider() {
 
@@ -49,13 +56,14 @@ public class PrivateMessageContentProvider extends ContentProvider {
         matcher.addURI(CONTENT_AUTHORITY, MMS_SENT_PATH, MMS_SENT);
         matcher.addURI(CONTENT_AUTHORITY, MMS_DRAFTS_PATH, MMS_DRAFT);
         matcher.addURI(CONTENT_AUTHORITY, MMS_OUTBOX_PATH, MMS_OUTBOX);
+
+        matcher.addURI(CONTENT_AUTHORITY, MMS_ADDRESS_PATH_BY_MESSAGE, MMS_ADDRESS_BY_MESSAGE);
         return matcher;
     }
 
     @Override
     public int delete(@NonNull Uri uri, String selection, String[] selectionArgs) {
         DatabaseWrapper db = DataModel.get().getDatabase();
-        long id = ContentUris.parseId(uri);
         int count = 0;
         switch (buildUriMatcher().match(uri)) {
             case SMS:
@@ -70,13 +78,22 @@ public class PrivateMessageContentProvider extends ContentProvider {
                 break;
             case SMS_MESSAGE:
                 count = db.delete(PrivateSmsEntry.SMS_MESSAGE_TABLE,
-                        PrivateSmsEntry._ID + " =? ", new String[]{String.valueOf(id)});
+                        PrivateSmsEntry._ID + " =? ", new String[]{String.valueOf(ContentUris.parseId(uri))});
                 break;
             case MMS_MESSAGE:
                 count = db.delete(PrivateMmsEntry.MMS_MESSAGE_TABLE,
-                        PrivateMmsEntry._ID + " =? ", new String[]{String.valueOf(id)});
+                        PrivateMmsEntry._ID + " =? ", new String[]{String.valueOf(ContentUris.parseId(uri))});
                 break;
+            case MMS_ADDRESS_BY_MESSAGE:
+                List<String> path = uri.getPathSegments();
+                try {
+                    int messageId = Integer.parseInt(path.get(path.size() - 2));
+                    count = db.delete(PrivateMmsEntry.Addr.MMS_MESSAGE_ADDRESS_TABLE,
+                            PrivateMmsEntry.Addr.MSG_ID + "=?", new String[]{String.valueOf(messageId)});
+                } catch (Exception ignored) {
 
+                }
+                break;
         }
         return count;
     }
@@ -95,16 +112,25 @@ public class PrivateMessageContentProvider extends ContentProvider {
         long id;
         switch (buildUriMatcher().match(uri)) {
             case SMS:
+                if (!values.containsKey(Telephony.Mms.DATE)) {
+                    values.put(Telephony.Mms.DATE, System.currentTimeMillis());
+                }
                 id = db.insert(PrivateSmsEntry.SMS_MESSAGE_TABLE, null, values);
                 resultUri = PrivateSmsEntry.buildUri(id);
                 break;
             case MMS:
+                if (!values.containsKey(Telephony.Mms.DATE)) {
+                    values.put(Telephony.Mms.DATE, System.currentTimeMillis());
+                }
                 id = db.insert(PrivateMmsEntry.MMS_MESSAGE_TABLE, null, values);
                 resultUri = PrivateMmsEntry.buildUri(id);
                 break;
             case MMS_INBOX:
                 if (values != null) {
                     values.put(Telephony.Mms.MESSAGE_BOX, Telephony.Mms.MESSAGE_BOX_INBOX);
+                    if (!values.containsKey(Telephony.Mms.DATE)) {
+                        values.put(Telephony.Mms.DATE, System.currentTimeMillis());
+                    }
                 }
                 id = db.insert(PrivateMmsEntry.MMS_MESSAGE_TABLE, null, values);
                 resultUri = PrivateMmsEntry.buildUri(id);
@@ -112,6 +138,9 @@ public class PrivateMessageContentProvider extends ContentProvider {
             case MMS_SENT:
                 if (values != null) {
                     values.put(Telephony.Mms.MESSAGE_BOX, Telephony.Mms.MESSAGE_BOX_SENT);
+                    if (!values.containsKey(Telephony.Mms.DATE)) {
+                        values.put(Telephony.Mms.DATE, System.currentTimeMillis());
+                    }
                 }
                 id = db.insert(PrivateMmsEntry.MMS_MESSAGE_TABLE, null, values);
                 resultUri = PrivateMmsEntry.buildUri(id);
@@ -119,6 +148,9 @@ public class PrivateMessageContentProvider extends ContentProvider {
             case MMS_OUTBOX:
                 if (values != null) {
                     values.put(Telephony.Mms.MESSAGE_BOX, Telephony.Mms.MESSAGE_BOX_OUTBOX);
+                    if (!values.containsKey(Telephony.Mms.DATE)) {
+                        values.put(Telephony.Mms.DATE, System.currentTimeMillis());
+                    }
                 }
                 id = db.insert(PrivateMmsEntry.MMS_MESSAGE_TABLE, null, values);
                 resultUri = PrivateMmsEntry.buildUri(id);
@@ -130,8 +162,19 @@ public class PrivateMessageContentProvider extends ContentProvider {
                 id = db.insert(PrivateMmsEntry.MMS_MESSAGE_TABLE, null, values);
                 resultUri = PrivateMmsEntry.buildUri(id);
                 break;
-        }
+            case MMS_ADDRESS_BY_MESSAGE:
+                List<String> path = uri.getPathSegments();
+                try {
+                    int messageId = Integer.parseInt(path.get(path.size() - 2));
+                    if (!values.containsKey(PrivateMmsEntry.Addr.MSG_ID)) {
+                        values.put(PrivateMmsEntry.Addr.MSG_ID, messageId);
+                    }
+                    id = db.insert(PrivateMmsEntry.Addr.MMS_MESSAGE_ADDRESS_TABLE, null, values);
+                } catch (Exception ignored) {
 
+                }
+                break;
+        }
         return resultUri;
     }
 
@@ -146,20 +189,14 @@ public class PrivateMessageContentProvider extends ContentProvider {
                         String[] selectionArgs, String sortOrder) {
         DatabaseWrapper db = DataModel.get().getDatabase();
         Cursor resultCursor = null;
-        long id = ContentUris.parseId(uri);
         switch (buildUriMatcher().match(uri)) {
             case SMS:
                 if (projection == null) {
                     projection = PrivateSmsEntry.sProjection;
                 }
-                if (TextUtils.isEmpty(selection)) {
-                    resultCursor = db.query(PrivateSmsEntry.SMS_MESSAGE_TABLE, projection,
-                            PrivateSmsEntry._ID + " =? ", new String[]{String.valueOf(id)},
-                            sortOrder, null, null, null);
-                } else {
-                    resultCursor = db.query(PrivateSmsEntry.SMS_MESSAGE_TABLE, projection,
-                            selection, selectionArgs, sortOrder, null, null, null);
-                }
+                resultCursor = db.query(PrivateSmsEntry.SMS_MESSAGE_TABLE, projection,
+                        selection, selectionArgs, sortOrder, null, null, null);
+
                 break;
             case MMS_INBOX:
             case MMS_SENT:
@@ -169,21 +206,16 @@ public class PrivateMessageContentProvider extends ContentProvider {
                 if (projection == null) {
                     projection = PrivateMmsEntry.sProjection;
                 }
-                if (TextUtils.isEmpty(selection)) {
-                    resultCursor = db.query(PrivateMmsEntry.MMS_MESSAGE_TABLE, projection,
-                            PrivateMmsEntry._ID + " =? ", new String[]{String.valueOf(id)},
-                            sortOrder, null, null, null);
-                } else {
-                    resultCursor = db.query(PrivateMmsEntry.MMS_MESSAGE_TABLE, projection,
-                            selection, selectionArgs, sortOrder, null, null, null);
-                }
+                resultCursor = db.query(PrivateMmsEntry.MMS_MESSAGE_TABLE, projection,
+                        selection, selectionArgs, sortOrder, null, null, null);
+
                 break;
             case SMS_MESSAGE:
                 if (projection == null) {
                     projection = PrivateSmsEntry.sProjection;
                 }
                 resultCursor = db.query(PrivateSmsEntry.SMS_MESSAGE_TABLE, projection,
-                        PrivateSmsEntry._ID + " =? ", new String[]{String.valueOf(id)},
+                        PrivateSmsEntry._ID + " =? ", new String[]{String.valueOf(ContentUris.parseId(uri))},
                         sortOrder, null, null, null);
                 break;
             case MMS_MESSAGE:
@@ -191,10 +223,20 @@ public class PrivateMessageContentProvider extends ContentProvider {
                     projection = PrivateMmsEntry.sProjection;
                 }
                 resultCursor = db.query(PrivateMmsEntry.MMS_MESSAGE_TABLE, projection,
-                        PrivateMmsEntry._ID + " =? ", new String[]{String.valueOf(id)},
+                        PrivateMmsEntry._ID + " =? ", new String[]{String.valueOf(ContentUris.parseId(uri))},
                         sortOrder, null, null, null);
                 break;
+            case MMS_ADDRESS_BY_MESSAGE:
+                List<String> path = uri.getPathSegments();
+                try {
+                    int messageId = Integer.parseInt(path.get(path.size() - 2));
+                    resultCursor = db.query(PrivateMmsEntry.Addr.MMS_MESSAGE_ADDRESS_TABLE, projection,
+                            PrivateMmsEntry.Addr.MSG_ID + "=?", new String[]{String.valueOf(messageId)},
+                            null, null, null);
+                } catch (Exception ignored) {
 
+                }
+                break;
         }
         return resultCursor;
     }
@@ -203,16 +245,10 @@ public class PrivateMessageContentProvider extends ContentProvider {
     public int update(@NonNull Uri uri, ContentValues values, String selection,
                       String[] selectionArgs) {
         DatabaseWrapper db = DataModel.get().getDatabase();
-        long id = ContentUris.parseId(uri);
         int count = 0;
         switch (buildUriMatcher().match(uri)) {
             case SMS:
-                if (TextUtils.isEmpty(selection)) {
-                    count = db.update(PrivateSmsEntry.SMS_MESSAGE_TABLE, values, selection, selectionArgs);
-                } else {
-                    count = db.update(PrivateSmsEntry.SMS_MESSAGE_TABLE, values,
-                            PrivateSmsEntry._ID + " =? ", new String[]{String.valueOf(id)});
-                }
+                count = db.update(PrivateSmsEntry.SMS_MESSAGE_TABLE, values, selection, selectionArgs);
                 break;
             case MMS_INBOX:
             case MMS_SENT:
@@ -223,11 +259,22 @@ public class PrivateMessageContentProvider extends ContentProvider {
                 break;
             case SMS_MESSAGE:
                 count = db.update(PrivateSmsEntry.SMS_MESSAGE_TABLE, values,
-                        PrivateSmsEntry._ID + " =? ", new String[]{String.valueOf(id)});
+                        PrivateSmsEntry._ID + " =? ", new String[]{String.valueOf(ContentUris.parseId(uri))});
                 break;
             case MMS_MESSAGE:
                 count = db.update(PrivateMmsEntry.MMS_MESSAGE_TABLE, values,
-                        PrivateMmsEntry._ID + " =? ", new String[]{String.valueOf(id)});
+                        PrivateMmsEntry._ID + " =? ", new String[]{String.valueOf(ContentUris.parseId(uri))});
+                break;
+
+            case MMS_ADDRESS_BY_MESSAGE:
+                List<String> path = uri.getPathSegments();
+                try {
+                    int messageId = Integer.parseInt(path.get(path.size() - 2));
+                    count = db.update(PrivateMmsEntry.Addr.MMS_MESSAGE_ADDRESS_TABLE, values,
+                            PrivateMmsEntry.Addr.MSG_ID + "=?", new String[]{String.valueOf(messageId)});
+                } catch (Exception ignored) {
+
+                }
                 break;
         }
         return count;

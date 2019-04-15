@@ -1,6 +1,7 @@
 package com.android.messaging.privatebox;
 
 import android.content.ContentResolver;
+import android.content.ContentUris;
 import android.content.ContentValues;
 import android.database.Cursor;
 import android.net.Uri;
@@ -105,17 +106,31 @@ public class MoveMessageToPrivateBoxAction extends Action {
 
                 if (partCursor != null && partCursor.moveToFirst()) {
                     values.clear();
-                    values.put(Telephony.Mms.Part.MSG_ID, -1);
+                    values.put(Telephony.Mms.Part.MSG_ID, -1 * ContentUris.parseId(localUri));
                     do {
-                        HSApplication.getContext().getContentResolver().update(
-                                Uri.parse(partCursor.getString(0)), values,
-                                null, null);
-
+                        if (partCursor.getString(0) != null) {
+                            HSApplication.getContext().getContentResolver().update(
+                                    Uri.parse(partCursor.getString(0)), values,
+                                    null, null);
+                        }
                     } while (partCursor.moveToNext());
                 }
 
                 if (partCursor != null) {
                     cursor.close();
+                }
+                //copy message addr
+                Uri telephonyAddrUri = Uri.parse("content://mms/" + telephonyUri.getLastPathSegment() + "/addr");
+                Uri localAddrUri = Uri.parse(PrivateMmsEntry.CONTENT_URI + "/" + localUri.getLastPathSegment() + "/addr");
+                Cursor addressCursor = HSApplication.getContext().getContentResolver().query(
+                        telephonyAddrUri, null, null, null, null);
+                if (addressCursor != null) {
+                    while (addressCursor.moveToFirst()) {
+                        values.clear();
+                        bindMmsAddrValues(values, addressCursor);
+                        resolver.insert(localAddrUri, values);
+                    }
+                    addressCursor.close();
                 }
 
                 MmsUtils.deleteMessage(telephonyUri);
@@ -245,6 +260,17 @@ public class MoveMessageToPrivateBoxAction extends Action {
             values.put(Telephony.Mms.CREATOR,
                     localCursor.getString(localCursor.getColumnIndex(PrivateMmsEntry.CREATOR)));
         }
+    }
+
+    private static void bindMmsAddrValues(ContentValues values, Cursor cursor) {
+        values.put(PrivateMmsEntry.Addr.ADDRESS,
+                cursor.getString(cursor.getColumnIndex(Telephony.Mms.Addr.ADDRESS)));
+        values.put(PrivateMmsEntry.Addr.CHARSET,
+                cursor.getString(cursor.getColumnIndex(Telephony.Mms.Addr.CHARSET)));
+        values.put(PrivateMmsEntry.Addr.CONTACT_ID,
+                cursor.getString(cursor.getColumnIndex(Telephony.Mms.Addr.CONTACT_ID)));
+        values.put(PrivateMmsEntry.Addr.TYPE,
+                cursor.getString(cursor.getColumnIndex(Telephony.Mms.Addr.TYPE)));
     }
 
     private MoveMessageToPrivateBoxAction(final Parcel in) {
