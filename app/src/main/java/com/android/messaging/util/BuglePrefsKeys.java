@@ -113,6 +113,11 @@ public final class BuglePrefsKeys {
      */
     public static final String PREFS_KEY_CONVERSATION_LIST_TIME_COLOR = "conversation_list_time_color";
 
+    /**
+     * theme name
+     */
+    public static final String PREFS_KEY_THEME_NAME = "bugle_theme_name";
+
 
     public static final String PREFS_KEY_KEYBOARD_HEIGHT = "keyboard_height";
 

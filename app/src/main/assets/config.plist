@@ -150,7 +150,7 @@
 					<key>OutgoingBubbleTextColor</key>
 					<string>#ffffff</string>
 					<key>PreviewUrl</key>
-					<string>assets://themes/simplebusiness/wallpaper.jpg</string>
+					<string>assets://themes/default/image_default_theme.png</string>
 					<key>ThemeColor</key>
 					<string>#37a63b</string>
 					<key>ToolbarBgUrl</key>
@@ -158,10 +158,10 @@
 					<key>WallpaperUrl</key>
 					<string></string>
 				</dict>
-				<key>SimpleBusiness</key>
+				<key>Diamond</key>
 				<dict>
 					<key>AvatarUrl</key>
-					<string>assets://themes/simplebusiness/avatar.png</string>
+					<string>assets://themes/diamond/avatar.png</string>
 					<key>BubbleIncomingUrl</key>
 					<string>assets://themes/simplebusiness/bubble_incoming.png</string>
 					<key>BubbleOutgoingUrl</key>
@@ -187,48 +187,11 @@
 					<key>OutgoingBubbleTextColor</key>
 					<string>#ffffff</string>
 					<key>PreviewUrl</key>
-					<string>assets://themes/simplebusiness/wallpaper.jpg</string>
+					<string>assets://themes/diamond/image_diamond_theme.png</string>
 					<key>ThemeColor</key>
 					<string>#5191d4</string>
 					<key>ToolbarBgUrl</key>
-					<string>assets://themes/simplebusiness/toolbar.png</string>
-					<key>WallpaperUrl</key>
-					<string>assets://themes/simplebusiness/wallpaper.jpg</string>
-				</dict>
-				<key>Diamond</key>
-				<dict>
-					<key>AvatarUrl</key>
-					<string>assets://themes/diamond/avatar.png</string>
-					<key>BubbleIncomingUrl</key>
-					<string>assets://themes/diamond/bubble_incoming.png</string>
-					<key>BubbleOutgoingUrl</key>
-					<string>assets://themes/diamond/bubble_outgoing.png</string>
-					<key>FontName</key>
-					<string>Mali</string>
-					<key>FontUrl</key>
-					<string></string>
-					<key>IncomingBubbleBgColor</key>
-					<string>#ffffff</string>
-					<key>IncomingBubbleTextColor</key>
-					<string>#272d32</string>
-					<key>ListSubtitleColor</key>
-					<string>#feeef5</string>
-					<key>ListTimeColor</key>
-					<string>#fdd6e6</string>
-					<key>ListTitleColor</key>
-					<string>#ffffff</string>
-					<key>NewConversationIconUrl</key>
-					<string>assets://themes/diamond/create.png</string>
-					<key>OutgoingBubbleBgColor</key>
-					<string>#5191d4</string>
-					<key>OutgoingBubbleTextColor</key>
-					<string>#ffffff</string>
-					<key>PreviewUrl</key>
-					<string>assets://themes/diamond/wallpaper.jpg</string>
-					<key>ThemeColor</key>
-					<string>#e45eb4</string>
-					<key>ToolbarBgUrl</key>
-					<string>assets://themes/diamond/toolbar.jpg</string>
+					<string>assets://themes/diamond/toolbar.png</string>
 					<key>WallpaperUrl</key>
 					<string>assets://themes/diamond/wallpaper.jpg</string>
 				</dict>
@@ -261,13 +224,50 @@
 					<key>OutgoingBubbleTextColor</key>
 					<string>#ffffff</string>
 					<key>PreviewUrl</key>
-					<string>assets://themes/neon/wallpaper.jpg</string>
+					<string>assets://themes/neon/image_neon_theme.png</string>
 					<key>ThemeColor</key>
 					<string>#5f1ef3</string>
 					<key>ToolbarBgUrl</key>
 					<string>assets://themes/neon/toolbar.jpg</string>
 					<key>WallpaperUrl</key>
 					<string>assets://themes/neon/wallpaper.jpg</string>
+				</dict>
+				<key>SimpleBusiness</key>
+				<dict>
+					<key>AvatarUrl</key>
+					<string>assets://themes/simplebusiness/avatar.png</string>
+					<key>BubbleIncomingUrl</key>
+					<string>5</string>
+					<key>BubbleOutgoingUrl</key>
+					<string>5</string>
+					<key>FontName</key>
+					<string>Mali</string>
+					<key>FontUrl</key>
+					<string></string>
+					<key>IncomingBubbleBgColor</key>
+					<string>#ffffff</string>
+					<key>IncomingBubbleTextColor</key>
+					<string>#272d32</string>
+					<key>ListSubtitleColor</key>
+					<string>#8194a4</string>
+					<key>ListTimeColor</key>
+					<string>#92a9bc</string>
+					<key>ListTitleColor</key>
+					<string>#222528</string>
+					<key>NewConversationIconUrl</key>
+					<string></string>
+					<key>OutgoingBubbleBgColor</key>
+					<string>#5191d4</string>
+					<key>OutgoingBubbleTextColor</key>
+					<string>#ffffff</string>
+					<key>PreviewUrl</key>
+					<string>assets://themes/simplebusiness/image_simple_theme.png</string>
+					<key>ThemeColor</key>
+					<string>#5191d4</string>
+					<key>ToolbarBgUrl</key>
+					<string>assets://themes/simplebusiness/toolbar.png</string>
+					<key>WallpaperUrl</key>
+					<string>assets://themes/simplebusiness/wallpaper.jpg</string>
 				</dict>
 				<key>WaterDrop</key>
 				<dict>
@@ -298,7 +298,7 @@
 					<key>OutgoingBubbleTextColor</key>
 					<string>#ffffff</string>
 					<key>PreviewUrl</key>
-					<string>assets://themes/waterdrop/wallpaper.jpg</string>
+					<string>assets://themes/waterdrop/image_waterdrop_theme.png</string>
 					<key>ThemeColor</key>
 					<string>#7bbe25</string>
 					<key>ToolbarBgUrl</key>

@@ -1,14 +1,23 @@
 package com.android.messaging.ui.customize.theme;
 
 import android.graphics.Color;
+import android.graphics.drawable.Drawable;
 
+import com.android.messaging.BugleApplication;
+import com.android.messaging.Factory;
 import com.android.messaging.ui.customize.AvatarBgDrawables;
 import com.android.messaging.ui.customize.BubbleDrawables;
 import com.android.messaging.ui.customize.ConversationColors;
 import com.android.messaging.ui.customize.PrimaryColors;
 import com.android.messaging.ui.customize.ToolbarDrawables;
 import com.android.messaging.ui.customize.WallpaperDrawables;
+import com.android.messaging.util.BugleApplicationPrefs;
+import com.android.messaging.util.BuglePrefsKeys;
+import com.ihs.app.framework.HSApplication;
 import com.superapps.font.FontStyleManager;
+
+import java.io.IOException;
+import java.io.InputStream;
 
 public class ThemeUtils {
 
@@ -37,5 +46,23 @@ public class ThemeUtils {
             BubbleDrawables.setSelectedIndex(Integer.parseInt(themeInfo.bubbleIncomingUrl));
         }
         FontStyleManager.getInstance().setFontFamily(themeInfo.fontName);
+
+        Factory.get().getCustomizePrefs().putString(BuglePrefsKeys.PREFS_KEY_THEME_NAME, themeInfo.name);
+    }
+
+    public static String getCurrentThemeName() {
+        return Factory.get().getCustomizePrefs().getString(BuglePrefsKeys.PREFS_KEY_THEME_NAME, "Default");
+    }
+
+    public static Drawable getDrawableFromUrl(String url) {
+        if (url.startsWith("assets://")) {
+            try {
+                InputStream ims = HSApplication.getContext().getAssets().open(url.replace("assets://", ""));
+                return Drawable.createFromStream(ims, null);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        return null;
     }
 }

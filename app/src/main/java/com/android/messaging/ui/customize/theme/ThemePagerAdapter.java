@@ -13,35 +13,44 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import static com.android.messaging.ui.customize.theme.ThemeUtils.getDrawableFromUrl;
 
 public class ThemePagerAdapter extends PagerAdapter {
 
     private final int mCount;
 
     private final List<View> mItemList;
-    private final List<ThemeItem> mThemeItemList;
-    private final ThemeItem mDefaultThemeItem;
+    private final List<ThemeInfo> mShuffledThemeItemList;
+    private ThemeInfo mCurrentTheme;
 
     public ThemePagerAdapter(Context context) {
-        mCount = 5;
+        List<ThemeInfo> themeInfos = ThemeInfo.getAllThemes();
+        mCount = themeInfos.size();
+
         mItemList = new ArrayList<>(mCount);
-        mThemeItemList = new ArrayList<>(mCount - 1);
-        mDefaultThemeItem = new ThemeItem(ThemeName.THEME_DEFAULT, R.drawable.image_default_theme);
+        mShuffledThemeItemList = new ArrayList<>(mCount - 1);
 
-        mThemeItemList.add(new ThemeItem(ThemeName.THEME_DIAMOND, R.drawable.image_diamond_theme));
-        mThemeItemList.add(new ThemeItem(ThemeName.THEME_NEON, R.drawable.image_neon_theme));
-        mThemeItemList.add(new ThemeItem(ThemeName.THEME_SIMPLE, R.drawable.image_simple_theme));
-        mThemeItemList.add(new ThemeItem(ThemeName.THEME_WATER_DROP, R.drawable.image_waterdrop_theme));
+        mCurrentTheme = themeInfos.get(0);
 
-        Collections.shuffle(mThemeItemList);
+        String currentThemeName = ThemeUtils.getCurrentThemeName();
+
+        for (ThemeInfo themeInfo : themeInfos) {
+            if (currentThemeName.equals(themeInfo.name)) {
+                mCurrentTheme = themeInfo;
+            } else {
+                mShuffledThemeItemList.add(themeInfo);
+            }
+        }
+
+        Collections.shuffle(mShuffledThemeItemList);
 
         for (int i = 0; i < mCount; i++) {
             View item = LayoutInflater.from(context).inflate(R.layout.choose_theme_pager_item, null);
             ImageView imageView = item.findViewById(R.id.theme_preview_image);
             if (i == 0) {
-                imageView.setImageResource(mDefaultThemeItem.mDrawableRes);
+                imageView.setImageDrawable(getDrawableFromUrl(mCurrentTheme.previewUrl));
             } else {
-                imageView.setImageResource(mThemeItemList.get(i - 1).mDrawableRes);
+                imageView.setImageDrawable(getDrawableFromUrl(mShuffledThemeItemList.get(i - 1).previewUrl));
             }
             mItemList.add(item);
         }
@@ -59,9 +68,9 @@ public class ThemePagerAdapter extends PagerAdapter {
 
     public ThemeInfo getThemeInfo(int index) {
         if (index == 0) {
-            return mDefaultThemeItem.mThemeInfo;
+            return mCurrentTheme;
         } else {
-            return mThemeItemList.get(index - 1).mThemeInfo;
+            return mShuffledThemeItemList.get(index - 1);
         }
     }
 
@@ -76,13 +85,4 @@ public class ThemePagerAdapter extends PagerAdapter {
         container.removeView(mItemList.get(position));
     }
 
-    private static class ThemeItem {
-        private ThemeInfo mThemeInfo;
-        private int mDrawableRes;
-
-        ThemeItem(String themeName, int drawableRes) {
-            mThemeInfo = ThemeInfo.getThemeInfo(themeName);
-            mDrawableRes = drawableRes;
-        }
-    }
 }
