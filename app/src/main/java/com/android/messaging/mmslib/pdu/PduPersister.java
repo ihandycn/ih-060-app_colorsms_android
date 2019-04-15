@@ -1186,7 +1186,8 @@ public class PduPersister {
 
             if (array != null) {
                 final long msgId = ContentUris.parseId(uri);
-                updateAddress(msgId, addrType, array);
+                //todo: update isPrivateMessage if use
+                updateAddress( false, msgId, addrType, array);
                 if (addrType == PduHeaders.TO) {
                     for (final EncodedStringValue v : array) {
                         if (v != null) {
