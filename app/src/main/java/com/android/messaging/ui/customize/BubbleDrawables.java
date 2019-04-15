@@ -13,7 +13,7 @@ public class BubbleDrawables {
     private static final BuglePrefs prefs = Factory.get().getCustomizePrefs();
 
     // R.drawable.style_01,
-    private static final int DEFAULT_DRAWABLE_IDENTIFIER = 1;
+    private static final int THEME_DRAWABLE_IDENTIFIER = -1;
 
     public static final int[] BUBBLES_INCOMING = new int[]{
             R.drawable.style_01,
@@ -50,7 +50,7 @@ public class BubbleDrawables {
     };
 
     public static int getSelectedIdentifier() {
-        return prefs.getInt(PREFS_KEY_BUBBLE_DRAWABLE_IDENTIFIER, DEFAULT_DRAWABLE_IDENTIFIER);
+        return prefs.getInt(PREFS_KEY_BUBBLE_DRAWABLE_IDENTIFIER, THEME_DRAWABLE_IDENTIFIER);
     }
 
     static int getSelectedIndex(String conversationId) {
@@ -79,19 +79,26 @@ public class BubbleDrawables {
 
     @DrawableRes
     public static int getSelectedDrawable(boolean incoming, String conversationId) {
-        int selectedIdentifier =
-                prefs.getInt(PREFS_KEY_BUBBLE_DRAWABLE_IDENTIFIER + "_" + conversationId, -1);
-        int selectedIndex = -1;
-        for (int i = 0; i < IDENTIFIER.length; i++) {
-            if (IDENTIFIER[i] == selectedIdentifier) {
-                selectedIndex = i;
-            }
-        }
-        if (selectedIndex != -1) {
-            return getSelectedDrawable(selectedIndex, incoming);
-        } else {
-            return getSelectedDrawable(getSelectedIndex(conversationId), incoming);
-        }
+//        int selectedIdentifier =
+//                prefs.getInt(PREFS_KEY_BUBBLE_DRAWABLE_IDENTIFIER + "_" + conversationId, getSelectedIdentifier());
+//        int selectedIndex = -1;
+//        for (int i = 0; i < IDENTIFIER.length; i++) {
+//            if (IDENTIFIER[i] == selectedIdentifier) {
+//                selectedIndex = i;
+//            }
+//        }
+//        if (selectedIndex != -1) {
+//            return getSelectedDrawable(selectedIndex, incoming);
+//        } else {
+//            return -1;
+//        }
+
+        return -1;
+    }
+
+
+    public static void useThemeBubble() {
+        prefs.putInt(PREFS_KEY_BUBBLE_DRAWABLE_IDENTIFIER, THEME_DRAWABLE_IDENTIFIER);
     }
 
     @DrawableRes

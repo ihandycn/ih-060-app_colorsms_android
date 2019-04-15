@@ -1,7 +1,13 @@
 package com.android.messaging.ui.customize.theme;
 
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
+import android.graphics.NinePatch;
+import android.graphics.Rect;
+import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
+import android.graphics.drawable.NinePatchDrawable;
 
 import com.android.messaging.BugleApplication;
 import com.android.messaging.Factory;
@@ -41,18 +47,48 @@ public class ThemeUtils {
         AvatarBgDrawables.applyAvatarBg(themeInfo.avatarUrl);
 
         if (themeInfo.bubbleIncomingUrl.startsWith("assets://")) {
-
+            BubbleDrawables.useThemeBubble();
         } else {
             BubbleDrawables.setSelectedIndex(Integer.parseInt(themeInfo.bubbleIncomingUrl));
         }
         FontStyleManager.getInstance().setFontFamily(themeInfo.fontName);
 
         Factory.get().getCustomizePrefs().putString(BuglePrefsKeys.PREFS_KEY_THEME_NAME, themeInfo.name);
+
+
     }
 
     public static String getCurrentThemeName() {
         return Factory.get().getCustomizePrefs().getString(BuglePrefsKeys.PREFS_KEY_THEME_NAME, "Default");
     }
+
+    public static Drawable getSelectedDrawable(String url) {
+        Bitmap bitmap = null;
+
+        if (url.startsWith("assets://")) {
+            try {
+                InputStream ims = HSApplication.getContext().getAssets().open(url.replace("assets://", ""));
+
+                bitmap = BitmapFactory.decodeStream(ims);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+
+        Drawable drawable = null;
+        if (bitmap != null) {
+            byte[] chunk = bitmap.getNinePatchChunk();
+            if (NinePatch.isNinePatchChunk(chunk)) {
+                drawable = new NinePatchDrawable(bitmap, chunk, NinePatchChunk.deserialize(chunk).mPaddings, null);
+            } else {
+                drawable = new BitmapDrawable(bitmap);
+            }
+        }
+
+        return drawable;
+
+    }
+
 
     public static Drawable getDrawableFromUrl(String url) {
         if (url.startsWith("assets://")) {

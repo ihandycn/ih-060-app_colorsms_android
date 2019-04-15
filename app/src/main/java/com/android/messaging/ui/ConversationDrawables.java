@@ -25,6 +25,8 @@ import com.android.messaging.R;
 import com.android.messaging.ui.customize.BubbleDrawables;
 import com.android.messaging.ui.customize.ConversationColors;
 import com.android.messaging.ui.customize.PrimaryColors;
+import com.android.messaging.ui.customize.theme.ThemeInfo;
+import com.android.messaging.ui.customize.theme.ThemeUtils;
 import com.android.messaging.util.ImageUtils;
 import com.superapps.util.BackgroundDrawables;
 
@@ -37,6 +39,9 @@ public class ConversationDrawables {
 
     // Cache the color filtered bubble drawables so that we don't need to create a
     // new one for each ConversationMessageView.
+
+    private Drawable mThemeIncomingBubbleDrawable;
+    private Drawable mThemeOutgoingBubbleDrawable;
     private Drawable mIncomingErrorBubbleDrawable;
     private Drawable mIncomingBubbleNoArrowDrawable;
     private Drawable mOutgoingBubbleNoArrowDrawable;
@@ -75,6 +80,8 @@ public class ConversationDrawables {
     public void updateDrawables() {
         final Resources resources = mContext.getResources();
 
+        updateThemeBubbleDrawables();
+
         mIncomingBubbleNoArrowDrawable =
                 resources.getDrawable(R.drawable.message_bubble_incoming_no_arrow);
         mIncomingErrorBubbleDrawable = resources.getDrawable(R.drawable.msg_bubble_error);
@@ -109,10 +116,22 @@ public class ConversationDrawables {
         final Resources resources = mContext.getResources();
         if (needArrow) {
             if (incoming) {
-                protoDrawable = isError && !selected ?
-                        mIncomingErrorBubbleDrawable : resources.getDrawable(BubbleDrawables.getSelectedDrawable(true, conversationId));
+                int incomingdDrawableRes = BubbleDrawables.getSelectedDrawable(false, conversationId);
+                Drawable incomingDrawable;
+                if (incomingdDrawableRes != -1) {
+                    incomingDrawable = resources.getDrawable(incomingdDrawableRes);
+                } else {
+                    incomingDrawable = mThemeIncomingBubbleDrawable;
+                }
+                protoDrawable = isError && !selected ? mIncomingErrorBubbleDrawable : incomingDrawable;
             } else {
-                protoDrawable = resources.getDrawable(BubbleDrawables.getSelectedDrawable(false, conversationId));
+                int drawableRes = BubbleDrawables.getSelectedDrawable(false, conversationId);
+
+                if (drawableRes != -1) {
+                    protoDrawable = resources.getDrawable(drawableRes);
+                } else {
+                    protoDrawable = mThemeOutgoingBubbleDrawable;
+                }
             }
         } else if (incoming) {
             protoDrawable = mIncomingBubbleNoArrowDrawable;
@@ -146,6 +165,11 @@ public class ConversationDrawables {
 
     private int getAudioButtonColor(final boolean incoming) {
         return incoming ? mThemeColor : 0xffffffff;
+    }
+
+    public void updateThemeBubbleDrawables() {
+        mThemeIncomingBubbleDrawable = ThemeUtils.getSelectedDrawable(ThemeInfo.getThemeInfo(ThemeUtils.getCurrentThemeName()).bubbleIncomingUrl);
+        mThemeOutgoingBubbleDrawable = ThemeUtils.getSelectedDrawable(ThemeInfo.getThemeInfo(ThemeUtils.getCurrentThemeName()).bubbleOutgoingUrl);
     }
 
     public Drawable getPlayButtonDrawable(final boolean incoming) {
