@@ -117,7 +117,7 @@ public class MoveMessageToPrivateBoxAction extends Action {
                 }
 
                 if (partCursor != null) {
-                    cursor.close();
+                    partCursor.close();
                 }
                 //copy message addr
                 Uri telephonyAddrUri = Uri.parse("content://mms/" + telephonyUri.getLastPathSegment() + "/addr");

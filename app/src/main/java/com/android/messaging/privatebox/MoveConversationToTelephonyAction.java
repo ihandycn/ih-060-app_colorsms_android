@@ -58,12 +58,8 @@ public class MoveConversationToTelephonyAction extends Action {
         }
         while (cursor.moveToNext()) {
             String messageId = cursor.getString(0);
-            try {
-                if (!TextUtils.isEmpty(messageId)) {
-                    messageIdList.add(messageId);
-                }
-            } catch (Exception e) {
-
+            if (!TextUtils.isEmpty(messageId)) {
+                messageIdList.add(messageId);
             }
         }
 
