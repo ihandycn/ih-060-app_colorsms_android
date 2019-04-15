@@ -283,6 +283,14 @@ public class PeopleAndOptionsFragment extends Fragment
                 WallpaperPreviewActivity.startWallpaperPreviewByThreadId(mContext, mConversationId);
             });
 
+            itemView.findViewById(R.id.reset_customization).setOnClickListener(v -> {
+                new BaseAlertDialog.Builder(getActivity())
+                        .setTitle(getResources().getString(R.string.setting_reset_customization_title))
+                        .setPositiveButton(R.string.reset_customization_confirmation_button,null)
+                        .setNegativeButton(R.string.reset_customization_decline_button, null)
+                        .show();
+            });
+
             itemView.findViewById(R.id.chat_bubble).setOnClickListener(v ->
                     UIIntents.get().launchCustomBubblesActivity(mContext, mConversationId));
             return itemView;

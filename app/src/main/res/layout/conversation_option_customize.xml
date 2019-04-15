@@ -52,5 +52,14 @@
             android:layout_gravity="bottom"
             android:background="@color/divider_color" />
     </FrameLayout>
+
+    <com.android.messaging.ui.appsettings.SettingItemView
+        android:id="@+id/reset_customization"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:summary="@string/setting_reset_customization_summary"
+        app:title="@string/menu_reset_customization"
+        app:type="0" />
+
 </LinearLayout>
 
