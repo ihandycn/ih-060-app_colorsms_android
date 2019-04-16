@@ -358,12 +358,15 @@ public class ConversationListFragment extends Fragment implements ConversationLi
                 } catch (Exception e) {
                 }
 
-                Threads.postOnMainThread(() -> {
-                    TextView title = expressAdView.findViewById(R.id.banner_title);
-                    title.setTextColor(ConversationColors.get().getListTitleColor());
-                    TextView subtitle = expressAdView.findViewById(R.id.banner_des);
-                    subtitle.setTextColor(ConversationColors.get().getListSubtitleColor());
-                });
+                try {
+                    Threads.postOnMainThread(() -> {
+                        TextView title = expressAdView.findViewById(R.id.banner_title);
+                        title.setTextColor(ConversationColors.get().getListTitleColor());
+                        TextView subtitle = expressAdView.findViewById(R.id.banner_des);
+                        subtitle.setTextColor(ConversationColors.get().getListSubtitleColor());
+                    });
+                } catch (Exception e) {
+                }
             }
 
             @Override public void onChildViewRemoved(View parent, View child) {
