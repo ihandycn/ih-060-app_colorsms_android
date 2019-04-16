@@ -5,6 +5,7 @@ import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.TextView;
 
 import com.android.messaging.R;
@@ -32,7 +33,9 @@ public class ChooseThemeActivity extends AppCompatActivity {
 
         ChooseThemePagerView pagerView = findViewById(R.id.pager_view);
 
-        pagerView.setOnPageSelectedListener((position, themeColor) -> UiUtils.setTitleBarBackground(toolbar, ChooseThemeActivity.this, themeColor));
+        pagerView.setOnPageSelectedListener((position, themeColor) ->
+                UiUtils.setTitleBarBackground(toolbar, ChooseThemeActivity.this, themeColor));
+        pagerView.setOnApplyClickListener(v -> finish());
     }
 
     @Override

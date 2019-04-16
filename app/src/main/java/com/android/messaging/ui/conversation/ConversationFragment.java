@@ -737,20 +737,7 @@ public class ConversationFragment extends Fragment implements ConversationDataLi
     public void onResume() {
         super.onResume();
 
-        if (!TextUtils.isEmpty(WallpaperManager.getThreadWallpaperPath(mConversationId))) {
-            mWallpaperView.setImageDrawable(
-                    new BitmapDrawable(WallpaperManager.getThreadWallpaperPath(mConversationId)));
-        } else {
-            Drawable wallpaperDrawable = WallpaperDrawables.getWallpaperBg();
-            if (wallpaperDrawable != null) {
-                mWallpaperView.setImageDrawable(wallpaperDrawable);
-            } else if (!TextUtils.isEmpty(WallpaperManager.getWallpaperPathByThreadId(mConversationId))) {
-                mWallpaperView.setImageDrawable(
-                        new BitmapDrawable(WallpaperManager.getWallpaperPathByThreadId(mConversationId)));
-            } else {
-                mWallpaperView.setImageDrawable(null);
-            }
-        }
+        WallpaperManager.setWallPaperOnView(mWallpaperView, mConversationId);
 
         if (mIncomingDraft == null) {
             mComposeMessageView.requestDraftMessage(mClearLocalDraft);

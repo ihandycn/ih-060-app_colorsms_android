@@ -2,18 +2,23 @@ package com.android.messaging.ui.customize;
 
 import android.content.Context;
 import android.graphics.PorterDuff;
+import android.graphics.drawable.Drawable;
 import android.support.annotation.ColorInt;
 import android.support.constraint.ConstraintLayout;
 import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.android.messaging.R;
 import com.android.messaging.ui.ConversationDrawables;
 import com.android.messaging.util.BugleAnalytics;
+import com.android.messaging.util.ImageUtils;
 import com.superapps.util.BackgroundDrawables;
 import com.superapps.util.Dimensions;
+
+import org.w3c.dom.Text;
 
 public class CustomMessagePreviewView extends ConstraintLayout {
     private String mConversationId;
@@ -56,6 +61,12 @@ public class CustomMessagePreviewView extends ConstraintLayout {
         findViewById(R.id.message_preview_timestamp_2).setBackground(BackgroundDrawables.createBackgroundDrawable(
                 getResources().getColor(R.color.white_40_transparent), Dimensions.pxFromDp(16), false
         ));
+
+        TextView contactIcon = findViewById(R.id.contact_icon);
+        Drawable avatar = AvatarBgDrawables.getAvatarBg();
+        if (avatar != null) {
+            contactIcon.setBackground(avatar);
+        }
     }
 
     public void setIsFontPreview() {

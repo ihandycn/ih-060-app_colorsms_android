@@ -47,11 +47,14 @@ public class ThemePagerAdapter extends PagerAdapter {
 
         for (int i = 0; i < mCount; i++) {
             View item = LayoutInflater.from(context).inflate(R.layout.choose_theme_pager_item, null);
+
             ImageView imageView = item.findViewById(R.id.theme_preview_image);
             TextView currentThemeTag = item.findViewById(R.id.current_theme_tag);
             if (i == 0) {
                 imageView.setImageDrawable(getDrawableFromUrl(mCurrentTheme.previewUrl));
-                currentThemeTag.setVisibility(View.VISIBLE);
+                if (context instanceof ChooseThemeActivity) {
+                    currentThemeTag.setVisibility(View.VISIBLE);
+                }
             } else {
                 imageView.setImageDrawable(getDrawableFromUrl(mShuffledThemeItemList.get(i - 1).previewUrl));
             }
