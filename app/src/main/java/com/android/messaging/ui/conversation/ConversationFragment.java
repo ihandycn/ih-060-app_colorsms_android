@@ -277,6 +277,7 @@ public class ConversationFragment extends Fragment implements ConversationDataLi
         mHost.dismissActionMode();
         mAdapter.closeItemAnimation();
     }
+
     private int mScrollToDismissThreshold;
     private final RecyclerView.OnScrollListener mListScrollListener =
             new RecyclerView.OnScrollListener() {
@@ -428,7 +429,6 @@ public class ConversationFragment extends Fragment implements ConversationDataLi
                     return true;
                 case R.id.share_message_menu:
                     shareMessage(data);
-                    resetActionModeAndAnimation();
                     return true;
                 case R.id.forward_message_menu:
                     // TODO: Currently we are forwarding one part at a time, instead of
@@ -474,6 +474,7 @@ public class ConversationFragment extends Fragment implements ConversationDataLi
             }
             final CharSequence title = getResources().getText(R.string.action_share);
             startActivity(Intent.createChooser(shareIntent, title));
+            Threads.postOnMainThreadDelayed(() -> resetActionModeAndAnimation(), 500);
         }
 
         @Override
@@ -1288,7 +1289,6 @@ public class ConversationFragment extends Fragment implements ConversationDataLi
                 // selecting
                 warnOfMissingActionConditions(false /*sending*/,
                         null /*commandToRunAfterActionConditionResolved*/);
-                selectMessage(null);
             }
         }
     }
