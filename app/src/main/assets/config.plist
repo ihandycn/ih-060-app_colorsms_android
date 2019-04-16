@@ -184,13 +184,13 @@
 					<key>IncomingBubbleTextColor</key>
 					<string>#272d32</string>
 					<key>ListSubtitleColor</key>
-					<string>#8194a4</string>
+					<string>#feeef5</string>
 					<key>ListTimeColor</key>
-					<string>#92a9bc</string>
+					<string>#fdd6e6</string>
 					<key>ListTitleColor</key>
-					<string>#222528</string>
+					<string>#ffffff</string>
 					<key>NewConversationIconUrl</key>
-					<string></string>
+					<string>assets://themes/diamond/create.png</string>
 					<key>OutgoingBubbleBgColor</key>
 					<string>#00000000</string>
 					<key>OutgoingBubbleTextColor</key>
@@ -246,11 +246,11 @@
 					<key>AvatarUrl</key>
 					<string>assets://themes/simplebusiness/avatar.png</string>
 					<key>BubbleIncomingUrl</key>
-					<string>5</string>
+					<string>6</string>
 					<key>BubbleOutgoingUrl</key>
-					<string>5</string>
+					<string>6</string>
 					<key>FontName</key>
-					<string>Mali</string>
+					<string>Default</string>
 					<key>FontUrl</key>
 					<string></string>
 					<key>IncomingBubbleBgColor</key>
