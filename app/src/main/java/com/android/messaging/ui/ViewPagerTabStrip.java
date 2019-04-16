@@ -61,6 +61,12 @@ public class ViewPagerTabStrip extends LinearLayout {
         invalidate();
     }
 
+    public void updateUnderLinePaintColor() {
+        int underlineColor = PrimaryColors.getPrimaryColor();
+        mSelectedUnderlinePaint.setColor(underlineColor);
+        invalidate();
+    }
+
     /**
      * Notifies this view that view pager has been scrolled. We save the tab index
      * and selection offset for interpolating the position and width of selection

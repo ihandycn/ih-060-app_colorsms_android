@@ -36,6 +36,7 @@ import android.view.ViewPropertyAnimator;
 import android.widget.AbsListView;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import com.android.messaging.R;
 import com.android.messaging.ad.AdPlacement;
@@ -51,10 +52,13 @@ import com.android.messaging.ui.BugleAnimationTags;
 import com.android.messaging.ui.ListEmptyView;
 import com.android.messaging.ui.SnackBarInteraction;
 import com.android.messaging.ui.UIIntents;
+import com.android.messaging.ui.customize.ConversationColors;
 import com.android.messaging.ui.customize.PrimaryColors;
+import com.android.messaging.ui.customize.WallpaperDrawables;
 import com.android.messaging.util.AccessibilityUtil;
 import com.android.messaging.util.Assert;
 import com.android.messaging.util.BugleAnalytics;
+import com.android.messaging.util.HierarchyTreeChangeListener;
 import com.android.messaging.util.ImeUtil;
 import com.android.messaging.util.LogUtil;
 import com.android.messaging.util.UiUtils;
@@ -67,6 +71,7 @@ import com.superapps.util.BackgroundDrawables;
 import com.superapps.util.Dimensions;
 import com.superapps.util.IntegerBuckets;
 import com.superapps.util.Preferences;
+import com.superapps.util.Threads;
 
 import net.appcloudbox.ads.base.ContainerView.AcbContentLayout;
 import net.appcloudbox.ads.base.ContainerView.AcbNativeAdContainerView;
@@ -217,6 +222,8 @@ public class ConversationListFragment extends Fragment implements ConversationLi
         mRecyclerView = rootView.findViewById(android.R.id.list);
         mEmptyListMessageView = rootView.findViewById(R.id.no_conversations_view);
         mEmptyListMessageView.setImageHint(R.drawable.ic_oobe_conv_list);
+        ImageView conversationListBg = rootView.findViewById(R.id.conversation_list_bg);
+        conversationListBg.setImageDrawable(WallpaperDrawables.getWallpaperBg());
         // The default behavior for default layout param generation by LinearLayoutManager is to
         // provide width and height of WRAP_CONTENT, but this is not desirable for
         // ConversationListFragment; the view in each row should be a width of MATCH_PARENT so that
@@ -339,7 +346,7 @@ public class ConversationListFragment extends Fragment implements ConversationLi
                 .setDescriptionId(R.id.banner_des)
         );
         expressAdView.setAutoSwitchAd(AcbExpressAdView.AutoSwitchAd_None);
-        expressAdView.setOnHierarchyChangeListener(new ViewGroup.OnHierarchyChangeListener() {
+        expressAdView.setOnHierarchyChangeListener(HierarchyTreeChangeListener.wrap(new ViewGroup.OnHierarchyChangeListener() {
             @Override public void onChildViewAdded(View parent, View child) {
                 try {
                     if (child instanceof RelativeLayout
@@ -350,12 +357,22 @@ public class ConversationListFragment extends Fragment implements ConversationLi
                     }
                 } catch (Exception e) {
                 }
+
+                Threads.postOnMainThread(() -> {
+                    try {
+                        TextView title = expressAdView.findViewById(R.id.banner_title);
+                        title.setTextColor(ConversationColors.get().getListTitleColor());
+                        TextView subtitle = expressAdView.findViewById(R.id.banner_des);
+                        subtitle.setTextColor(ConversationColors.get().getListSubtitleColor());
+                    } catch (Exception e) {
+                    }
+                });
             }
 
             @Override public void onChildViewRemoved(View parent, View child) {
 
             }
-        });
+        }));
         expressAdView.setExpressAdViewListener(new AcbExpressAdView.AcbExpressAdViewListener() {
             @Override
             public void onAdShown(AcbExpressAdView acbExpressAdView) {

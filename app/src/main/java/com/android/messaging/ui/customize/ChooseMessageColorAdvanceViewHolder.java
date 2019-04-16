@@ -15,9 +15,9 @@ public class ChooseMessageColorAdvanceViewHolder extends BasePagerViewHolder imp
     private Context mContext;
     private OnColorChangedListener mListener;
 
-    private AnyColorPickerView mColorPickerView;
+    private PaletteView mColorPickerView;
 
-    ChooseMessageColorAdvanceViewHolder(final Context context) {
+    public ChooseMessageColorAdvanceViewHolder(final Context context) {
         mContext = context;
     }
 
@@ -30,16 +30,17 @@ public class ChooseMessageColorAdvanceViewHolder extends BasePagerViewHolder imp
                 false /* attachToRoot */);
 
         mColorPickerView = view.findViewById(R.id.color_picker_view);
+        mColorPickerView.setColor(PrimaryColors.getPrimaryColor());
         mColorPickerView.setOnColorChangedListener(color -> mListener.onColorChanged(color));
 
         return view;
     }
 
-    void setOnColorChangedListener(OnColorChangedListener listener) {
+    public void setOnColorChangedListener(OnColorChangedListener listener) {
         mListener = listener;
     }
 
-    void setColor(@ColorInt int color) {
+    public void setColor(@ColorInt int color) {
         mColorPickerView.setColor(color);
     }
 

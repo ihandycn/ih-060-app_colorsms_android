@@ -1,8 +1,13 @@
 package com.android.messaging.ui.wallpaper;
 
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.text.TextUtils;
+import android.view.View;
+import android.widget.ImageView;
 
 import com.android.messaging.Factory;
+import com.android.messaging.ui.customize.WallpaperDrawables;
 import com.android.messaging.util.BuglePrefs;
 
 import java.io.File;
@@ -60,6 +65,31 @@ public class WallpaperManager {
         }
     }
 
+
+    public static void setWallPaperOnView(final ImageView view, String conversationId) {
+        if (!TextUtils.isEmpty(WallpaperManager.getThreadWallpaperPath(conversationId))) {
+            view.setImageDrawable(
+                    new BitmapDrawable(WallpaperManager.getThreadWallpaperPath(conversationId)));
+        } else {
+            Drawable wallpaperDrawable = WallpaperDrawables.getWallpaperBg();
+            if (wallpaperDrawable != null) {
+                view.setImageDrawable(wallpaperDrawable);
+            } else if (!TextUtils.isEmpty(WallpaperManager.getWallpaperPathByThreadId(conversationId))) {
+                view.setImageDrawable(
+                        new BitmapDrawable(WallpaperManager.getWallpaperPathByThreadId(conversationId)));
+            } else {
+                view.setImageDrawable(null);
+            }
+        }
+    }
+
+    public static boolean hasWallpaper(String conversationId) {
+        if (TextUtils.isEmpty(WallpaperManager.getWallpaperPathByThreadId(conversationId))) {
+            return WallpaperDrawables.hasWallpaper();
+        }
+        return false;
+    }
+
     public static String getWallpaperPathByThreadId(String threadId) {
         String threadWallpaperPath = sPrefs.
                 getString(PREF_KEY_WALLPAPER_PATH + "_" + threadId, "");
@@ -71,6 +101,23 @@ public class WallpaperManager {
         } else {
             return getWallpaperPath();
         }
+    }
+
+
+    public static String getThreadWallpaperPath(String threadId) {
+        String threadWallpaperPath = sPrefs.
+                getString(PREF_KEY_WALLPAPER_PATH + "_" + threadId, "");
+        if (!TextUtils.isEmpty(threadWallpaperPath)) {
+            if (threadWallpaperPath.equals("empty")) {
+                return null;
+            }
+            return threadWallpaperPath;
+        }
+        return null;
+    }
+
+    public static void resetConversationCustomization(String threadId) {
+        sPrefs.remove(PREF_KEY_WALLPAPER_PATH + "_" + threadId);
     }
 
     private static String getWallpaperPath() {

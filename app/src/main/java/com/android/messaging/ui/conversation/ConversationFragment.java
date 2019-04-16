@@ -36,6 +36,7 @@ import android.database.Cursor;
 import android.graphics.Point;
 import android.graphics.Rect;
 import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
@@ -87,6 +88,7 @@ import com.android.messaging.ui.UIIntents;
 import com.android.messaging.ui.conversation.ComposeMessageView.IComposeMessageViewHost;
 import com.android.messaging.ui.conversation.ConversationInputManager.ConversationInputHost;
 import com.android.messaging.ui.conversation.ConversationMessageView.ConversationMessageViewHost;
+import com.android.messaging.ui.customize.WallpaperDrawables;
 import com.android.messaging.ui.dialog.FiveStarRateDialog;
 import com.android.messaging.ui.emoji.EmojiPickerFragment;
 import com.android.messaging.ui.mediapicker.CameraGalleryFragment;
@@ -139,6 +141,7 @@ public class ConversationFragment extends Fragment implements ConversationDataLi
     }
 
     private static ArrayList<String> selectMessageIds = new ArrayList<>();
+    public static final String EVENT_UPDATE_BUBBLE_DRAWABLE = "event_update_bubble_drawable";
 
     public interface ConversationFragmentHost extends ImeUtil.ImeStateHost {
         void onStartComposeMessage();
@@ -274,6 +277,7 @@ public class ConversationFragment extends Fragment implements ConversationDataLi
         mHost.dismissActionMode();
         mAdapter.closeItemAnimation();
     }
+
     private int mScrollToDismissThreshold;
     private final RecyclerView.OnScrollListener mListScrollListener =
             new RecyclerView.OnScrollListener() {
@@ -425,7 +429,6 @@ public class ConversationFragment extends Fragment implements ConversationDataLi
                     return true;
                 case R.id.share_message_menu:
                     shareMessage(data);
-                    resetActionModeAndAnimation();
                     return true;
                 case R.id.forward_message_menu:
                     // TODO: Currently we are forwarding one part at a time, instead of
@@ -471,6 +474,7 @@ public class ConversationFragment extends Fragment implements ConversationDataLi
             }
             final CharSequence title = getResources().getText(R.string.action_share);
             startActivity(Intent.createChooser(shareIntent, title));
+            Threads.postOnMainThreadDelayed(() -> resetActionModeAndAnimation(), 500);
         }
 
         @Override
@@ -478,6 +482,8 @@ public class ConversationFragment extends Fragment implements ConversationDataLi
             BugleAnalytics.logEvent("SMS_DetailsPage_LongPress_Close", true, true);
         }
     };
+
+    private boolean mHasSentMessages;
 
     private boolean singleMessageSelected() {
         return selectMessages.size() == 1;
@@ -529,8 +535,9 @@ public class ConversationFragment extends Fragment implements ConversationDataLi
         HSGlobalNotificationCenter.addObserver(EVENT_SHOW_OPTION_MENU, this);
         HSGlobalNotificationCenter.addObserver(EVENT_SHOW_OPTION_MENU, this);
         HSGlobalNotificationCenter.addObserver(EVENT_HIDE_MEDIA_PICKER, this);
-        BugleAnalytics.logEvent("SMS_DetailsPage_Show", true, true);
         HSGlobalNotificationCenter.addObserver(RESET_ITEM, this);
+        HSGlobalNotificationCenter.addObserver(EVENT_UPDATE_BUBBLE_DRAWABLE, this);
+        BugleAnalytics.logEvent("SMS_DetailsPage_Show", true, true);
     }
 
     /**
@@ -705,7 +712,6 @@ public class ConversationFragment extends Fragment implements ConversationDataLi
             mSelectedAttachment = attachment;
             ConversationMessageData data = messageView.getData();
             mAdapter.setSelectedMessage(data.getMessageId());
-            HSGlobalNotificationCenter.sendNotification(ConversationActivity.MESSAGE_LONG_CLICK);
             ImageView checkBox = messageView.findViewById(R.id.check_box);
             checkBox.setSelected(true);
             selectMessages.clear();
@@ -731,12 +737,7 @@ public class ConversationFragment extends Fragment implements ConversationDataLi
     public void onResume() {
         super.onResume();
 
-        String wallpaperPath = WallpaperManager.getWallpaperPathByThreadId(mConversationId);
-        if (!TextUtils.isEmpty(wallpaperPath)) {
-            mWallpaperView.setImageDrawable(new BitmapDrawable(wallpaperPath));
-        } else {
-            mWallpaperView.setImageDrawable(null);
-        }
+        WallpaperManager.setWallPaperOnView(mWallpaperView, mConversationId);
 
         if (mIncomingDraft == null) {
             mComposeMessageView.requestDraftMessage(mClearLocalDraft);
@@ -762,6 +763,10 @@ public class ConversationFragment extends Fragment implements ConversationDataLi
         LocalBroadcastManager.getInstance(getActivity()).registerReceiver(
                 mConversationSelfIdChangeReceiver,
                 new IntentFilter(UIIntents.CONVERSATION_SELF_ID_CHANGE_BROADCAST_ACTION));
+    }
+
+    public boolean hasSentMessages() {
+        return mHasSentMessages;
     }
 
     void setConversationFocus() {
@@ -1008,6 +1013,8 @@ public class ConversationFragment extends Fragment implements ConversationDataLi
                 message.consolidateText();
 
                 mBinding.getData().sendMessage(mBinding, message);
+
+                mHasSentMessages = true;
             } else {
                 LogUtil.w(LogUtil.BUGLE_TAG, "Message can't be sent: conv participants not loaded");
             }
@@ -1281,7 +1288,6 @@ public class ConversationFragment extends Fragment implements ConversationDataLi
                 // selecting
                 warnOfMissingActionConditions(false /*sending*/,
                         null /*commandToRunAfterActionConditionResolved*/);
-                selectMessage(null);
             }
         }
     }
@@ -1564,8 +1570,6 @@ public class ConversationFragment extends Fragment implements ConversationDataLi
 
         actionBar.show();
         actionBar.setDisplayShowTitleEnabled(false);
-        actionBar.setBackgroundDrawable(getResources().getDrawable(R.drawable.actionbar_underline_bg));
-        UiUtils.setStatusBarColor(getActivity(), getResources().getColor(R.color.action_bar_background_color));
     }
 
     @Override
@@ -1649,7 +1653,9 @@ public class ConversationFragment extends Fragment implements ConversationDataLi
             case RESET_ITEM:
                 resetActionModeAndAnimation();
                 break;
-            default:
+            case EVENT_UPDATE_BUBBLE_DRAWABLE:
+                // update all drawables
+                mAdapter.notifyDataSetChanged();
                 break;
         }
     }

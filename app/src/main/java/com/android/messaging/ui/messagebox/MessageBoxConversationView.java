@@ -29,6 +29,7 @@ import com.android.messaging.datamodel.data.MessageBoxItemData;
 import com.android.messaging.ui.UIIntents;
 import com.android.messaging.ui.customize.PrimaryColors;
 import com.android.messaging.ui.emoji.EmojiInfo;
+import com.android.messaging.ui.wallpaper.WallpaperManager;
 import com.android.messaging.util.BugleAnalytics;
 import com.android.messaging.util.ImeUtil;
 import com.android.messaging.util.UiUtils;
@@ -101,6 +102,9 @@ public class MessageBoxConversationView extends FrameLayout {
         }
         mOldestReceivedTimestamp = data.getReceivedTimestamp();
         mParticipantId = data.getParticipantId();
+
+        ImageView background = findViewById(R.id.message_background);
+        WallpaperManager.setWallPaperOnView(background, mConversationId);
     }
 
     void updateTimestamp() {

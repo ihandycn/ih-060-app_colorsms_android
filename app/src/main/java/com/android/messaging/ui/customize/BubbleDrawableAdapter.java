@@ -64,7 +64,7 @@ public class BubbleDrawableAdapter extends RecyclerView.Adapter<BubbleDrawableAd
 
     @Override
     public int getItemCount() {
-        return BubbleDrawables.BUBBLES_INCOMING.length;
+        return BubbleDrawables.CUSTOM_BUBBLES_COUNT;
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {

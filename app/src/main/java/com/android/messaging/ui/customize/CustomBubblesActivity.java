@@ -63,12 +63,8 @@ public class CustomBubblesActivity extends BaseActivity implements CustomMessage
 
         mConversationId = getIntent().getStringExtra(UIIntents.UI_INTENT_EXTRA_CONVERSATION_ID);
 
-        String bgPath = WallpaperManager.getWallpaperPathByThreadId(mConversationId);
-        if (!TextUtils.isEmpty(bgPath)) {
-            ImageView bg = findViewById(R.id.customize_bubbles_bg);
-            bg.setImageURI(Uri.fromFile(new File(bgPath)));
-            findViewById(R.id.divider).setVisibility(View.INVISIBLE);
-        }
+        ImageView bg = findViewById(R.id.customize_bubbles_bg);
+        WallpaperManager.setWallPaperOnView(bg, mConversationId);
 
         mChooseMessageColorPagerView = findViewById(R.id.choose_message_color_view);
         mCustomMessagePreview = findViewById(R.id.custom_message_preview);

@@ -49,8 +49,11 @@ import com.android.messaging.ui.AudioAttachmentView;
 import com.android.messaging.ui.ContactIconView;
 import com.android.messaging.ui.SnackBar;
 import com.android.messaging.ui.SnackBarInteraction;
+import com.android.messaging.ui.customize.AvatarBgDrawables;
+import com.android.messaging.ui.customize.ConversationColors;
 import com.android.messaging.ui.customize.PrimaryColors;
 import com.android.messaging.util.Assert;
+import com.android.messaging.util.AvatarUriUtil;
 import com.android.messaging.util.BugleAnalytics;
 import com.android.messaging.util.ContentType;
 import com.android.messaging.util.ImageUtils;
@@ -73,6 +76,7 @@ public class ConversationListItemView extends FrameLayout implements OnClickList
     static final int ERROR_MESSAGE_LINE_COUNT = 1;
     private int mConversationNameColor;
     private int mSnippetColor;
+    private int mTimestampColor;
     private static String sPlusOneString;
     private static String sPlusNString;
 
@@ -131,6 +135,7 @@ public class ConversationListItemView extends FrameLayout implements OnClickList
     private TextView mSnippetTextView;
     private TextView mTimestampTextView;
     private ContactIconView mContactIconView;
+    private ImageView mContactBackground;
     private ImageView mContactCheckmarkView;
     private ImageView mNotificationBellView;
     private ImageView mPinView;
@@ -173,18 +178,12 @@ public class ConversationListItemView extends FrameLayout implements OnClickList
         mConversationNameView.addOnLayoutChangeListener(this);
         mSnippetTextView.addOnLayoutChangeListener(this);
 
-        final Resources resources = getContext().getResources();
-        mConversationNameColor = resources.getColor(R.color.conversation_list_item_conversation);
-        mSnippetColor = resources.getColor(R.color.conversation_list_item_snippet);
+        mConversationNameColor = ConversationColors.get().getListTitleColor();
+        mSnippetColor = ConversationColors.get().getListSubtitleColor();
+        mTimestampColor = ConversationColors.get().getListTimeColor();
 
-        //initTypeface();
-        //setTypeface
-
-        mContactCheckmarkView.setBackgroundDrawable(BackgroundDrawables.
-                createBackgroundDrawable(PrimaryColors.getPrimaryColor(), Dimensions.pxFromDp(28), false));
-
-        mSwipeableContent.setBackgroundDrawable(BackgroundDrawables.
-                createBackgroundDrawable(getResources().getColor(R.color.action_bar_background_color), 0, true));
+        mContactBackground = findViewById(R.id.conversation_icon_bg);
+        mContactBackground.setImageDrawable(AvatarBgDrawables.getAvatarBg());
 
         if (OsUtil.isAtLeastL()) {
             setTransitionGroup(true);
@@ -208,11 +207,10 @@ public class ConversationListItemView extends FrameLayout implements OnClickList
     }
 
     private void setConversationName() {
+        mConversationNameView.setTextColor(mConversationNameColor);
         if (mData.getIsRead() || mData.getShowDraft()) {
-            mConversationNameView.setTextColor(mConversationNameColor);
             mConversationNameView.setTypeface(FontUtils.getTypeface(FontUtils.MEDIUM));
         } else {
-            mConversationNameView.setTextColor(mSnippetColor);
             mConversationNameView.setTypeface(FontUtils.getTypeface(FontUtils.SEMI_BOLD));
         }
 
@@ -253,9 +251,11 @@ public class ConversationListItemView extends FrameLayout implements OnClickList
             iconUri = Uri.parse(imgUri);
         }
 
+        if (iconUri != null && AvatarUriUtil.TYPE_LOCAL_RESOURCE_URI.equals(AvatarUriUtil.getAvatarType(iconUri))) {
+            mContactBackground.setVisibility(GONE);
+        }
         mContactIconView.setImageResourceUri(iconUri, mData.getParticipantContactId(),
                 mData.getParticipantLookupKey(), mData.getOtherParticipantNormalizedDestination(), contactIconBackgroundColor);
-
     }
 
     private static String getPlusOneString() {
@@ -396,8 +396,6 @@ public class ConversationListItemView extends FrameLayout implements OnClickList
     /**
      * Fills in the data associated with this view.
      *
-     * @param cursor The cursor from a ConversationList that this view is in, pointing to its
-     *               entry.
      */
     public void bind(final ConversationListItemData data, final HostInterface hostInterface) {
         // Update our UI model
@@ -426,6 +424,8 @@ public class ConversationListItemView extends FrameLayout implements OnClickList
 
         mSnippetTextView.setMaxLines(maxLines);
         mSnippetTextView.setTextColor(color);
+
+        mTimestampTextView.setTextColor(mTimestampColor);
 
         setSnippet();
         setConversationName();

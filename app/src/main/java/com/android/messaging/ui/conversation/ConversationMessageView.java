@@ -19,6 +19,7 @@ import android.animation.LayoutTransition;
 import android.content.Context;
 import android.content.res.Resources;
 import android.database.Cursor;
+import android.graphics.Color;
 import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
@@ -63,7 +64,10 @@ import com.android.messaging.ui.MultiAttachmentLayout.OnAttachmentClickListener;
 import com.android.messaging.ui.PersonItemView;
 import com.android.messaging.ui.UIIntents;
 import com.android.messaging.ui.VideoThumbnailView;
+import com.android.messaging.ui.customize.AvatarBgDrawables;
 import com.android.messaging.ui.customize.ConversationColors;
+import com.android.messaging.ui.customize.PrimaryColors;
+import com.android.messaging.ui.wallpaper.WallpaperManager;
 import com.android.messaging.util.AccessibilityUtil;
 import com.android.messaging.util.Assert;
 import com.android.messaging.util.AvatarUriUtil;
@@ -108,6 +112,8 @@ public class ConversationMessageView extends RelativeLayout implements View.OnCl
     private LinearLayout mMessageTitleLayout;
     private TextView mSenderNameTextView;
     private ContactIconView mContactIconView;
+    private ViewGroup mContactIconContainer;
+    private ImageView mContactIconBg;
     private ConversationMessageBubbleView mMessageBubble;
     private View mSubjectView;
     private TextView mSubjectText;
@@ -131,6 +137,9 @@ public class ConversationMessageView extends RelativeLayout implements View.OnCl
         super.onFinishInflate();
 
         mContactIconView = findViewById(R.id.conversation_icon);
+        mContactIconBg = findViewById(R.id.conversation_icon_bg);
+        mContactIconBg.setImageDrawable(AvatarBgDrawables.getAvatarBg());
+        mContactIconContainer = findViewById(R.id.conversation_icon_container);
         mContactIconView.setOnLongClickListener(view -> {
             ConversationMessageView.this.performLongClick();
             return true;
@@ -147,9 +156,11 @@ public class ConversationMessageView extends RelativeLayout implements View.OnCl
         mMessageTextView.setOnClickListener(this);
         IgnoreLinkLongClickHelper.ignoreLinkLongClick(mMessageTextView, this);
 
+        int color = PrimaryColors.getPrimaryColor();
         mStatusTextView = findViewById(R.id.message_status);
         mStatusTextView.setBackground(BackgroundDrawables.createBackgroundDrawable(
-                getResources().getColor(R.color.white_40_transparent), Dimensions.pxFromDp(16), false));
+                Color.argb(51, Color.red(color), Color.green(color), Color.blue(color)), Dimensions.pxFromDp(16), false));
+
         mTitleTextView = findViewById(R.id.message_title);
         mMmsInfoTextView = findViewById(R.id.mms_info);
         mMessageTitleLayout = findViewById(R.id.message_title_layout);
@@ -176,27 +187,28 @@ public class ConversationMessageView extends RelativeLayout implements View.OnCl
     protected void onMeasure(final int widthMeasureSpec, final int heightMeasureSpec) {
         final int horizontalSpace = MeasureSpec.getSize(widthMeasureSpec);
         final int iconSize = getResources()
-                .getDimensionPixelSize(R.dimen.conversation_message_contact_icon_size);
+                .getDimensionPixelSize(R.dimen.conversation_message_contact_icon_container_size);
 
         final int unspecifiedMeasureSpec = MeasureSpec.makeMeasureSpec(0, MeasureSpec.UNSPECIFIED);
         final int iconMeasureSpec = MeasureSpec.makeMeasureSpec(iconSize, MeasureSpec.EXACTLY);
 
-        mContactIconView.measure(iconMeasureSpec, iconMeasureSpec);
+        mContactIconContainer.measure(iconMeasureSpec, iconMeasureSpec);
+
         final int arrowWidth =
                 getResources().getDimensionPixelSize(R.dimen.message_bubble_arrow_width);
 
         // We need to subtract contact icon width twice from the horizontal space to get
         // the max leftover space because we want the message bubble to extend no further than the
         // starting position of the message bubble in the opposite direction.
-        final int maxLeftoverSpace = horizontalSpace - mContactIconView.getMeasuredWidth() * 2
-                - arrowWidth - getPaddingLeft() - getPaddingRight();
+        final int maxLeftoverSpace = horizontalSpace - mContactIconContainer.getMeasuredWidth() * 2
+                - arrowWidth - getPaddingLeft() - getPaddingRight() + Dimensions.pxFromDp(15);
         final int messageContentWidthMeasureSpec = MeasureSpec.makeMeasureSpec(maxLeftoverSpace,
                 MeasureSpec.AT_MOST);
 
         mMessageBubble.measure(messageContentWidthMeasureSpec, unspecifiedMeasureSpec);
 
-        final int maxHeight = Math.max(mContactIconView.getMeasuredHeight(),
-                mMessageBubble.getMeasuredHeight());
+        final int maxHeight =  Math.max(mContactIconContainer.getMeasuredHeight(),
+                mMessageBubble.getMeasuredHeight() + ((int) getResources().getDimension(R.dimen.conversation_message_bubble_top_margin)));
         setMeasuredDimension(horizontalSpace, maxHeight + getPaddingBottom() + getPaddingTop());
     }
 
@@ -205,14 +217,14 @@ public class ConversationMessageView extends RelativeLayout implements View.OnCl
                             final int bottom) {
         final boolean isRtl = AccessibilityUtil.isLayoutRtl(this);
 
-        final int iconWidth = mContactIconView.getMeasuredWidth();
-        final int iconHeight = mContactIconView.getMeasuredHeight();
+        final int iconWidth = mContactIconContainer.getMeasuredWidth();
+        final int iconHeight = mContactIconContainer.getMeasuredHeight();
         final int iconTop = getPaddingTop();
         final int iconBubbleMargin = getResources()
                 .getDimensionPixelSize(R.dimen.conversation_message_contact_bubble_margin);
         final int contentWidth = (right - left) - iconWidth - getPaddingLeft() - getPaddingRight();
         final int contentHeight = mMessageBubble.getMeasuredHeight();
-        final int contentTop = iconTop;
+        final int contentTop = iconTop + (int) getResources().getDimension(R.dimen.conversation_message_bubble_top_margin);
 
         final int iconLeft;
         final int contentLeft;
@@ -233,23 +245,20 @@ public class ConversationMessageView extends RelativeLayout implements View.OnCl
                 contentLeft = iconLeft - contentWidth;
             }
         }
-        mContactIconView.layout(iconLeft, iconTop, iconLeft + iconWidth, iconTop + iconHeight);
+
+        mContactIconContainer.layout(iconLeft, iconTop, iconLeft + iconWidth, iconTop + iconHeight);
 
         mMessageBubble.layout(contentLeft, contentTop, contentLeft + contentWidth,
                 contentTop + contentHeight);
-        int bubbleBgHeight = mMessageBubble.findViewById(R.id.message_text_and_info).getMeasuredHeight();
+        View messageTextAndInfo = mMessageBubble.findViewById(R.id.message_text_and_info);
+        View messageAttachment = mMessageBubble.findViewById(R.id.message_attachments);
+        int bubbleBgHeight = (messageTextAndInfo.getVisibility() == View.VISIBLE ? messageTextAndInfo.getMeasuredHeight() : 0)
+                + (messageAttachment.getVisibility() == View.VISIBLE ? messageAttachment.getMeasuredHeight() : 0);
         checkBox.layout(right - Dimensions.pxFromDp(37),
                 contentTop + bubbleBgHeight / 2 - Dimensions.pxFromDp(20) / 2,
                 right - Dimensions.pxFromDp(17),
                 contentTop + bubbleBgHeight / 2 + Dimensions.pxFromDp(20) / 2);
     }
-
-    /**
-     * Fills in the data associated with this view.
-     *
-     * @param cursor The cursor from a MessageList that this view is in, pointing to its entry.
-     */
-
 
     /**
      * Fills in the data associated with this view.
@@ -484,10 +493,10 @@ public class ConversationMessageView extends RelativeLayout implements View.OnCl
                 messageTextAndOrInfoVisible ? View.VISIBLE : View.GONE);
 
         if (shouldShowSimplifiedVisualStyle()) {
-            mContactIconView.setVisibility(View.GONE);
+            mContactIconContainer.setVisibility(View.GONE);
             mContactIconView.setImageResourceUri(null);
         } else {
-            mContactIconView.setVisibility(mData.getIsIncoming() ? View.VISIBLE : View.GONE);
+            mContactIconContainer.setVisibility(mData.getIsIncoming() ? View.VISIBLE : View.GONE);
             final Uri avatarUri = AvatarUriUtil.createAvatarUri(
                     mData.getSenderProfilePhotoUri(),
                     mData.getSenderFullName(),
@@ -921,6 +930,8 @@ public class ConversationMessageView extends RelativeLayout implements View.OnCl
         } else {
             statusColor = messageColor;
             infoColorResId = R.color.timestamp_text_incoming;
+
+            boolean hasWallPaper = WallpaperManager.hasWallpaper(mData.getConversationId());
             switch (mData.getStatus()) {
 
                 case MessageData.BUGLE_STATUS_OUTGOING_FAILED:
@@ -934,7 +945,11 @@ public class ConversationMessageView extends RelativeLayout implements View.OnCl
                 case MessageData.BUGLE_STATUS_OUTGOING_AWAITING_RETRY:
                 case MessageData.BUGLE_STATUS_OUTGOING_COMPLETE:
                 case MessageData.BUGLE_STATUS_OUTGOING_DELIVERED:
-                    timestampColorResId = R.color.timestamp_text_outgoing;
+                    if (hasWallPaper) {
+                        timestampColorResId = R.color.white;
+                    } else {
+                        timestampColorResId = R.color.timestamp_text_outgoing;
+                    }
                     break;
 
                 case MessageData.BUGLE_STATUS_INCOMING_EXPIRED_OR_NOT_AVAILABLE:
@@ -950,7 +965,11 @@ public class ConversationMessageView extends RelativeLayout implements View.OnCl
                 case MessageData.BUGLE_STATUS_INCOMING_RETRYING_AUTO_DOWNLOAD:
                 case MessageData.BUGLE_STATUS_INCOMING_RETRYING_MANUAL_DOWNLOAD:
                 case MessageData.BUGLE_STATUS_INCOMING_YET_TO_MANUAL_DOWNLOAD:
-                    timestampColorResId = R.color.message_text_color_incoming;
+                    if (hasWallPaper) {
+                        timestampColorResId = R.color.white;
+                    } else {
+                        timestampColorResId = R.color.timestamp_text_incoming;
+                    }
                     infoColorResId = R.color.timestamp_text_incoming;
                     break;
 
@@ -1042,10 +1061,6 @@ public class ConversationMessageView extends RelativeLayout implements View.OnCl
     public boolean onAttachmentClick(final MessagePartData attachment,
                                      final Rect viewBoundsOnScreen, final boolean longPress) {
         return mHost.onAttachmentClick(this, attachment, viewBoundsOnScreen, longPress);
-    }
-
-    public ContactIconView getContactIconView() {
-        return mContactIconView;
     }
 
     // Sort photos in MultiAttachLayout in the same order as the ConversationImagePartsView

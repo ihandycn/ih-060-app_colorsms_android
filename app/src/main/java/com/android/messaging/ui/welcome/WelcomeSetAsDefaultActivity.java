@@ -14,6 +14,7 @@ import com.android.messaging.util.PhoneUtils;
 import com.ihs.commons.config.HSConfig;
 import com.superapps.util.BackgroundDrawables;
 import com.superapps.util.Dimensions;
+import com.superapps.util.Navigations;
 import com.superapps.util.Toasts;
 
 public class WelcomeSetAsDefaultActivity extends AppCompatActivity {
