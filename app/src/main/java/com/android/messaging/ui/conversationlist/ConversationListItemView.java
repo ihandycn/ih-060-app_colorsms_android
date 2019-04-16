@@ -53,12 +53,14 @@ import com.android.messaging.ui.customize.AvatarBgDrawables;
 import com.android.messaging.ui.customize.ConversationColors;
 import com.android.messaging.ui.customize.PrimaryColors;
 import com.android.messaging.util.Assert;
+import com.android.messaging.util.AvatarUriUtil;
 import com.android.messaging.util.BugleAnalytics;
 import com.android.messaging.util.ContentType;
 import com.android.messaging.util.ImageUtils;
 import com.android.messaging.util.OsUtil;
 import com.android.messaging.util.UiUtils;
 import com.android.messaging.util.UriUtil;
+import com.ihs.commons.utils.HSLog;
 import com.superapps.font.FontUtils;
 import com.superapps.util.BackgroundDrawables;
 import com.superapps.util.Dimensions;
@@ -133,6 +135,7 @@ public class ConversationListItemView extends FrameLayout implements OnClickList
     private TextView mSnippetTextView;
     private TextView mTimestampTextView;
     private ContactIconView mContactIconView;
+    private ImageView mContactBackground;
     private ImageView mContactCheckmarkView;
     private ImageView mNotificationBellView;
     private ImageView mPinView;
@@ -179,8 +182,8 @@ public class ConversationListItemView extends FrameLayout implements OnClickList
         mSnippetColor = ConversationColors.get().getListSubtitleColor();
         mTimestampColor = ConversationColors.get().getListTimeColor();
 
-        ImageView conversationIconBg = findViewById(R.id.conversation_icon_bg);
-        conversationIconBg.setImageDrawable(AvatarBgDrawables.getAvatarBg());
+        mContactBackground = findViewById(R.id.conversation_icon_bg);
+        mContactBackground.setImageDrawable(AvatarBgDrawables.getAvatarBg());
 
         if (OsUtil.isAtLeastL()) {
             setTransitionGroup(true);
@@ -248,9 +251,11 @@ public class ConversationListItemView extends FrameLayout implements OnClickList
             iconUri = Uri.parse(imgUri);
         }
 
+        if (iconUri != null && AvatarUriUtil.TYPE_LOCAL_RESOURCE_URI.equals(AvatarUriUtil.getAvatarType(iconUri))) {
+            mContactBackground.setVisibility(GONE);
+        }
         mContactIconView.setImageResourceUri(iconUri, mData.getParticipantContactId(),
                 mData.getParticipantLookupKey(), mData.getOtherParticipantNormalizedDestination(), contactIconBackgroundColor);
-
     }
 
     private static String getPlusOneString() {
@@ -391,8 +396,6 @@ public class ConversationListItemView extends FrameLayout implements OnClickList
     /**
      * Fills in the data associated with this view.
      *
-     * @param cursor The cursor from a ConversationList that this view is in, pointing to its
-     *               entry.
      */
     public void bind(final ConversationListItemData data, final HostInterface hostInterface) {
         // Update our UI model
