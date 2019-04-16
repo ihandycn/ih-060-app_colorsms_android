@@ -202,8 +202,8 @@ public class ConversationMessageView extends RelativeLayout implements View.OnCl
 
         mMessageBubble.measure(messageContentWidthMeasureSpec, unspecifiedMeasureSpec);
 
-        final int maxHeight = Math.max(mContactIconContainer.getMeasuredHeight(),
-                mMessageBubble.getMeasuredHeight());
+        final int maxHeight =  Math.max(mContactIconContainer.getMeasuredHeight(),
+                mMessageBubble.getMeasuredHeight() + ((int) getResources().getDimension(R.dimen.conversation_message_bubble_top_margin)));
         setMeasuredDimension(horizontalSpace, maxHeight + getPaddingBottom() + getPaddingTop());
     }
 
@@ -219,7 +219,7 @@ public class ConversationMessageView extends RelativeLayout implements View.OnCl
                 .getDimensionPixelSize(R.dimen.conversation_message_contact_bubble_margin);
         final int contentWidth = (right - left) - iconWidth - getPaddingLeft() - getPaddingRight();
         final int contentHeight = mMessageBubble.getMeasuredHeight();
-        final int contentTop = iconTop + Dimensions.pxFromDp(13);
+        final int contentTop = iconTop + (int) getResources().getDimension(R.dimen.conversation_message_bubble_top_margin);
 
         final int iconLeft;
         final int contentLeft;

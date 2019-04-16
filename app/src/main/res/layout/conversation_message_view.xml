@@ -92,7 +92,6 @@
             android:gravity="center_vertical"
             android:orientation="vertical">
 
-
             <LinearLayout
                 android:id="@+id/message_title_layout"
                 android:layout_width="wrap_content"
