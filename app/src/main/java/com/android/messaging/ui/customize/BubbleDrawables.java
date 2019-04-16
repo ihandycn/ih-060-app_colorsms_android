@@ -1,10 +1,13 @@
 package com.android.messaging.ui.customize;
 
 import android.support.annotation.DrawableRes;
+import android.support.annotation.NonNull;
 import android.text.TextUtils;
 
 import com.android.messaging.Factory;
 import com.android.messaging.R;
+import com.android.messaging.ui.customize.theme.ThemeInfo;
+import com.android.messaging.ui.customize.theme.ThemeUtils;
 import com.android.messaging.util.BuglePrefs;
 
 import static com.android.messaging.util.BuglePrefsKeys.PREFS_KEY_BUBBLE_DRAWABLE_IDENTIFIER;
@@ -62,6 +65,12 @@ public class BubbleDrawables {
 
     public static int getSelectedIdentifier() {
         return prefs.getInt(PREFS_KEY_BUBBLE_DRAWABLE_IDENTIFIER, THEME_DRAWABLE_IDENTIFIER);
+    }
+
+    public static void resetConversationCustomization(@NonNull String conversationId) {
+        ThemeInfo themeInfo = ThemeInfo.getThemeInfo(ThemeUtils.getCurrentThemeName());
+        BubbleDrawables.setSelectedIdentifier(Integer.parseInt(themeInfo.bubbleIncomingUrl));
+        prefs.remove(PREFS_KEY_BUBBLE_DRAWABLE_IDENTIFIER + "_" + conversationId);
     }
 
     public static void setSelectedIdentifier(int identifier) {

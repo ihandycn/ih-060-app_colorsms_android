@@ -141,6 +141,7 @@ public class ConversationFragment extends Fragment implements ConversationDataLi
     }
 
     private static ArrayList<String> selectMessageIds = new ArrayList<>();
+    public static final String EVENT_UPDATE_BUBBLE_DRAWABLE = "event_update_bubble_drawable";
 
     public interface ConversationFragmentHost extends ImeUtil.ImeStateHost {
         void onStartComposeMessage();
@@ -535,6 +536,7 @@ public class ConversationFragment extends Fragment implements ConversationDataLi
         HSGlobalNotificationCenter.addObserver(EVENT_SHOW_OPTION_MENU, this);
         HSGlobalNotificationCenter.addObserver(EVENT_HIDE_MEDIA_PICKER, this);
         HSGlobalNotificationCenter.addObserver(RESET_ITEM, this);
+        HSGlobalNotificationCenter.addObserver(EVENT_UPDATE_BUBBLE_DRAWABLE, this);
         BugleAnalytics.logEvent("SMS_DetailsPage_Show", true);
     }
 
@@ -1665,7 +1667,9 @@ public class ConversationFragment extends Fragment implements ConversationDataLi
             case RESET_ITEM:
                 resetActionModeAndAnimation();
                 break;
-            default:
+            case EVENT_UPDATE_BUBBLE_DRAWABLE:
+                // update all drawables
+                mAdapter.notifyDataSetChanged();
                 break;
         }
     }

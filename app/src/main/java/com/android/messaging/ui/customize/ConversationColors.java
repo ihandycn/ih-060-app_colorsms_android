@@ -4,6 +4,7 @@ import android.content.res.Resources;
 import android.graphics.Color;
 import android.support.annotation.ColorInt;
 import android.support.annotation.IntRange;
+import android.support.annotation.NonNull;
 import android.text.TextUtils;
 
 import com.android.messaging.Factory;
@@ -183,6 +184,13 @@ public class ConversationColors {
     public void setListTimeColor(@ColorInt int color) {
         mPrefs.putInt(PREFS_KEY_CONVERSATION_LIST_TIME_COLOR, color);
         mListTimeColor = color;
+    }
+
+    public void resetConversationCustomization(@NonNull String conversationId) {
+        mPrefs.remove(PREFS_KEY_MESSAGE_TEXT_COLOR_INCOMING + "_" + conversationId);
+        mPrefs.remove(PREFS_KEY_MESSAGE_TEXT_COLOR_OUTGOING + "_" + conversationId);
+        mPrefs.remove(PREFS_KEY_BUBBLE_BACKGROUND_COLOR_INCOMING + "_" + conversationId);
+        mPrefs.remove(PREFS_KEY_BUBBLE_BACKGROUND_COLOR_OUTGOING + "_" + conversationId);
     }
 
     public String getConversationColorEventType(boolean isBubble, boolean incoming) {

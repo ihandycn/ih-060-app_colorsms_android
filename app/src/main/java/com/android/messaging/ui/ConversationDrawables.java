@@ -40,8 +40,6 @@ public class ConversationDrawables {
     // Cache the color filtered bubble drawables so that we don't need to create a
     // new one for each ConversationMessageView.
 
-    private Drawable mThemeIncomingBubbleDrawable;
-    private Drawable mThemeOutgoingBubbleDrawable;
     private Drawable mIncomingErrorBubbleDrawable;
     private Drawable mIncomingBubbleNoArrowDrawable;
     private Drawable mOutgoingBubbleNoArrowDrawable;
@@ -79,8 +77,6 @@ public class ConversationDrawables {
 
     public void updateDrawables() {
         final Resources resources = mContext.getResources();
-
-        updateThemeBubbleDrawables();
 
         mIncomingBubbleNoArrowDrawable =
                 resources.getDrawable(R.drawable.message_bubble_incoming_no_arrow);
@@ -153,11 +149,6 @@ public class ConversationDrawables {
 
     private int getAudioButtonColor(final boolean incoming) {
         return incoming ? mThemeColor : 0xffffffff;
-    }
-
-    public void updateThemeBubbleDrawables() {
-        mThemeIncomingBubbleDrawable = ThemeUtils.getSelectedDrawable(ThemeInfo.getThemeInfo(ThemeUtils.getCurrentThemeName()).bubbleIncomingUrl);
-        mThemeOutgoingBubbleDrawable = ThemeUtils.getSelectedDrawable(ThemeInfo.getThemeInfo(ThemeUtils.getCurrentThemeName()).bubbleOutgoingUrl);
     }
 
     public Drawable getPlayButtonDrawable(final boolean incoming) {

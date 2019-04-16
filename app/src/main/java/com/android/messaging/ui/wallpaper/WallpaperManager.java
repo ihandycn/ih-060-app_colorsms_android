@@ -85,6 +85,10 @@ public class WallpaperManager {
         return null;
     }
 
+    public static void resetConversationCustomization(String threadId) {
+        sPrefs.remove(PREF_KEY_WALLPAPER_PATH + "_" + threadId);
+    }
+
     private static String getWallpaperPath() {
         String wallpaperPath = sPrefs.
                 getString(PREF_KEY_WALLPAPER_PATH, "");

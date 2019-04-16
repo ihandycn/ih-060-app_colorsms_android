@@ -18,9 +18,11 @@ package com.android.messaging.ui.conversationsettings;
 import android.app.Activity;
 import android.app.Fragment;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.database.Cursor;
+import android.graphics.Color;
 import android.media.RingtoneManager;
 import android.os.Bundle;
 import android.os.Parcelable;
@@ -47,12 +49,18 @@ import com.android.messaging.datamodel.data.PeopleOptionsItemData;
 import com.android.messaging.datamodel.data.PersonItemData;
 import com.android.messaging.ui.BaseAlertDialog;
 import com.android.messaging.ui.CompositeAdapter;
+import com.android.messaging.ui.ConversationDrawables;
 import com.android.messaging.ui.PersonItemView;
 import com.android.messaging.ui.UIIntents;
+import com.android.messaging.ui.customize.BubbleDrawables;
+import com.android.messaging.ui.customize.ConversationColors;
+import com.android.messaging.ui.customize.theme.ThemeInfo;
+import com.android.messaging.ui.customize.theme.ThemeUtils;
 import com.android.messaging.ui.wallpaper.WallpaperManager;
 import com.android.messaging.ui.wallpaper.WallpaperPreviewActivity;
 import com.android.messaging.util.Assert;
 import com.android.messaging.util.BugleAnalytics;
+import com.ihs.commons.notificationcenter.HSGlobalNotificationCenter;
 import com.superapps.util.Navigations;
 
 import java.util.ArrayList;
@@ -65,6 +73,7 @@ import static com.android.messaging.datamodel.data.PeopleOptionsItemData.SETTING
 import static com.android.messaging.datamodel.data.PeopleOptionsItemData.SETTING_NOTIFICATION_VIBRATION;
 import static com.android.messaging.ui.conversation.ConversationActivity.DELETE_CONVERSATION_RESULT_CODE;
 import static com.android.messaging.ui.conversation.ConversationActivity.FINISH_RESULT_CODE;
+import static com.android.messaging.ui.conversation.ConversationFragment.EVENT_UPDATE_BUBBLE_DRAWABLE;
 
 /**
  * Shows a list of participants of a conversation and displays options.
@@ -278,7 +287,6 @@ public class PeopleAndOptionsFragment extends Fragment
                     .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             View itemView = inflater.inflate(R.layout.conversation_option_customize, parent, false);
 
-
             itemView.findViewById(R.id.chat_background).setOnClickListener(v -> {
                 WallpaperPreviewActivity.startWallpaperPreviewByThreadId(mContext, mConversationId);
             });
@@ -286,7 +294,16 @@ public class PeopleAndOptionsFragment extends Fragment
             itemView.findViewById(R.id.reset_customization).setOnClickListener(v -> {
                 new BaseAlertDialog.Builder(getActivity())
                         .setTitle(getResources().getString(R.string.setting_reset_customization_title))
-                        .setPositiveButton(R.string.reset_customization_confirmation_button,null)
+                        .setPositiveButton(R.string.reset_customization_confirmation_button, new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                ConversationColors.get().resetConversationCustomization(mConversationId);
+                                BubbleDrawables.resetConversationCustomization(mConversationId);
+                                WallpaperManager.resetConversationCustomization(mConversationId);
+
+                                HSGlobalNotificationCenter.sendNotification(EVENT_UPDATE_BUBBLE_DRAWABLE);
+                            }
+                        })
                         .setNegativeButton(R.string.reset_customization_decline_button, null)
                         .show();
             });
