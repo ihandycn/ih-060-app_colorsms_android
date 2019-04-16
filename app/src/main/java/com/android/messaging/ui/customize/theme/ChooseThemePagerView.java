@@ -22,6 +22,7 @@ public class ChooseThemePagerView extends ConstraintLayout {
     }
 
     private ViewPager mPager;
+    private ThemePagerAdapter mAdapter;
 
     private OnClickListener mApplyClickListener;
     private OnPageSelectedListener mOnPageSelectedListener;
@@ -38,8 +39,8 @@ public class ChooseThemePagerView extends ConstraintLayout {
         TextView applyTextView = findViewById(R.id.apply);
 
         mPager = findViewById(R.id.pager);
-        ThemePagerAdapter adapter = new ThemePagerAdapter(getContext());
-        mPager.setAdapter(adapter);
+        mAdapter = new ThemePagerAdapter(getContext());
+        mPager.setAdapter(mAdapter);
         mPager.setPageTransformer(false, new ThemePagerTransformer(getContext()));
         mPager.setPageMargin(Dimensions.pxFromDp(16));
         mPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
@@ -50,7 +51,7 @@ public class ChooseThemePagerView extends ConstraintLayout {
 
             @Override
             public void onPageSelected(int position) {
-                int themeColor = Color.parseColor(adapter.getThemeInfo(position).themeColor);
+                int themeColor = Color.parseColor(mAdapter.getThemeInfo(position).themeColor);
                 applyTextView.setBackground(BackgroundDrawables.createBackgroundDrawable(
                         themeColor, Dimensions.pxFromDp(6.7f), true));
 
@@ -66,15 +67,15 @@ public class ChooseThemePagerView extends ConstraintLayout {
         });
 
         applyTextView.setBackground(BackgroundDrawables.createBackgroundDrawable(
-                PrimaryColors.getPrimaryColor(), Dimensions.pxFromDp(6.7f), true));
+                Color.parseColor(mAdapter.getThemeInfo(0).themeColor), Dimensions.pxFromDp(6.7f), true));
 
         applyTextView.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                ThemeUtils.applyTheme(adapter.getThemeInfo(mPager.getCurrentItem()));
                 if (mApplyClickListener != null) {
                     mApplyClickListener.onClick(applyTextView);
                 }
+                ThemeUtils.applyTheme(mAdapter.getThemeInfo(mPager.getCurrentItem()));
             }
         });
     }
@@ -86,6 +87,7 @@ public class ChooseThemePagerView extends ConstraintLayout {
 
     public void setOnPageSelectedListener(OnPageSelectedListener listener) {
         mOnPageSelectedListener = listener;
+        mOnPageSelectedListener.onPageSelected(0, Color.parseColor(mAdapter.getThemeInfo(0).themeColor));
     }
 
 }

@@ -63,9 +63,12 @@ public class CustomMessagePreviewView extends ConstraintLayout {
         ));
 
         TextView contactIcon = findViewById(R.id.contact_icon);
+        ImageView contactBackground = findViewById(R.id.contact_background);
         Drawable avatar = AvatarBgDrawables.getAvatarBg();
         if (avatar != null) {
-            contactIcon.setBackground(avatar);
+            contactBackground.setBackground(avatar);
+        } else {
+            contactIcon.setBackgroundResource(R.drawable.bubble_customize_preview_contact_icon_background);
         }
     }
 

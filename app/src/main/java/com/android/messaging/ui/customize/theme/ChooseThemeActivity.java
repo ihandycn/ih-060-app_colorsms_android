@@ -22,7 +22,6 @@ public class ChooseThemeActivity extends AppCompatActivity {
 
         Toolbar toolbar = findViewById(R.id.toolbar);
         toolbar.setTitle("");
-        UiUtils.setTitleBarBackground(toolbar, this);
         TextView title = toolbar.findViewById(R.id.toolbar_title);
         title.setText(getString(R.string.menu_theme));
         setSupportActionBar(toolbar);
@@ -40,8 +39,19 @@ public class ChooseThemeActivity extends AppCompatActivity {
 
     @Override
     protected void onDestroy() {
-        BugleActivityUtil.cancelAdaptScreen(this);
         super.onDestroy();
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        BugleActivityUtil.cancelAdaptScreen(this);
+    }
+
+    @Override
+    public void finish() {
+        super.finish();
+        BugleActivityUtil.cancelAdaptScreen(this);
     }
 
     @Override

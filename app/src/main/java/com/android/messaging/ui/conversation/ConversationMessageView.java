@@ -219,7 +219,7 @@ public class ConversationMessageView extends RelativeLayout implements View.OnCl
                 .getDimensionPixelSize(R.dimen.conversation_message_contact_bubble_margin);
         final int contentWidth = (right - left) - iconWidth - getPaddingLeft() - getPaddingRight();
         final int contentHeight = mMessageBubble.getMeasuredHeight();
-        final int contentTop = iconTop;
+        final int contentTop = iconTop + Dimensions.pxFromDp(13);
 
         final int iconLeft;
         final int contentLeft;

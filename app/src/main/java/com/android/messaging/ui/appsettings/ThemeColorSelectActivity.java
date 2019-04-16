@@ -57,9 +57,7 @@ public class ThemeColorSelectActivity extends BaseActivity implements OnColorCha
 
         BugleAnalytics.logEvent("Customize_ThemeColor_Show", true);
 
-        if (!ThemeUtils.isDefaultTheme()) {
-            UiUtils.setTitleBarBackground(mToolbar, this);
-        }
+        UiUtils.setTitleBarBackground(mToolbar, this);
     }
 
     private void initPager(Context context) {

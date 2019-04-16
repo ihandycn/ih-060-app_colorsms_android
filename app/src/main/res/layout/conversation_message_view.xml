@@ -18,13 +18,12 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     style="@style/ConversationMessageViewStyle"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    >
+    android:layout_height="wrap_content">
 
     <FrameLayout
         android:id="@+id/conversation_icon_container"
-        android:layout_width="66dp"
-        android:layout_height="66dp">
+        android:layout_width="@dimen/conversation_message_contact_icon_container_size"
+        android:layout_height="@dimen/conversation_message_contact_icon_container_size">
 
         <ImageView
             android:id="@+id/conversation_icon_bg"
