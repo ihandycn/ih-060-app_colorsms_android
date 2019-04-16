@@ -1,5 +1,6 @@
 package com.android.messaging.ui.customize.theme;
 
+import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
@@ -11,6 +12,7 @@ import android.graphics.drawable.NinePatchDrawable;
 
 import com.android.messaging.BugleApplication;
 import com.android.messaging.Factory;
+import com.android.messaging.ui.conversationlist.ConversationListActivity;
 import com.android.messaging.ui.customize.AvatarBgDrawables;
 import com.android.messaging.ui.customize.BubbleDrawables;
 import com.android.messaging.ui.customize.ConversationColors;
@@ -20,6 +22,7 @@ import com.android.messaging.ui.customize.WallpaperDrawables;
 import com.android.messaging.util.BugleApplicationPrefs;
 import com.android.messaging.util.BuglePrefsKeys;
 import com.ihs.app.framework.HSApplication;
+import com.ihs.commons.notificationcenter.HSGlobalNotificationCenter;
 import com.superapps.font.FontStyleManager;
 
 import java.io.IOException;
@@ -52,6 +55,8 @@ public class ThemeUtils {
 
         Factory.get().getCustomizePrefs().putString(BuglePrefsKeys.PREFS_KEY_THEME_NAME, themeInfo.name);
 
+        HSGlobalNotificationCenter.sendNotification(ConversationListActivity.EVENT_MAINPAGE_RECREATE);
+        Factory.get().reclaimMemory();
 
     }
 

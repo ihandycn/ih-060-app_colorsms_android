@@ -102,10 +102,7 @@ public class ThemeColorSelectActivity extends BaseActivity implements OnColorCha
         }
 
         PrimaryColors.changePrimaryColor(color);
-        // clear media caches
-        Factory.get().reclaimMemory();
-        // update drawable color cache
-        ConversationDrawables.get().updateDrawables();
+
 
         UiUtils.setTitleBarBackground(mToolbar, this);
         mCustomFooterViewPager.updatePrimaryColor();
@@ -115,6 +112,11 @@ public class ThemeColorSelectActivity extends BaseActivity implements OnColorCha
     public void onBackPressed() {
         super.onBackPressed();
         if (mPrePrimaryColor != PrimaryColors.getPrimaryColor()) {
+
+            // clear media caches
+            Factory.get().reclaimMemory();
+            // update drawable color cache
+            ConversationDrawables.get().updateDrawables();
             BugleAnalytics.logEvent("Customize_ThemeColor_Change", true, "color", String.valueOf(getSelectedIndex()));
             HSGlobalNotificationCenter.sendNotification(ConversationListActivity.EVENT_MAINPAGE_RECREATE);
         }
