@@ -180,7 +180,7 @@
 					<key>FontUrl</key>
 					<string></string>
 					<key>IncomingBubbleBgColor</key>
-					<string>#ffffff</string>
+					<string>#00000000</string>
 					<key>IncomingBubbleTextColor</key>
 					<string>#272d32</string>
 					<key>ListSubtitleColor</key>
@@ -192,7 +192,7 @@
 					<key>NewConversationIconUrl</key>
 					<string></string>
 					<key>OutgoingBubbleBgColor</key>
-					<string>#5191d4</string>
+					<string>#00000000</string>
 					<key>OutgoingBubbleTextColor</key>
 					<string>#ffffff</string>
 					<key>PreviewUrl</key>
@@ -291,7 +291,7 @@
 					<key>FontUrl</key>
 					<string></string>
 					<key>IncomingBubbleBgColor</key>
-					<string>#ffffff</string>
+					<string>#00000000</string>
 					<key>IncomingBubbleTextColor</key>
 					<string>#ffffff</string>
 					<key>ListSubtitleColor</key>
@@ -303,7 +303,7 @@
 					<key>NewConversationIconUrl</key>
 					<string>assets://themes/waterdrop/create.png</string>
 					<key>OutgoingBubbleBgColor</key>
-					<string>#5191d4</string>
+					<string>#00000000</string>
 					<key>OutgoingBubbleTextColor</key>
 					<string>#ffffff</string>
 					<key>PreviewUrl</key>
