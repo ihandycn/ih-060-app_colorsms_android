@@ -161,12 +161,7 @@ public class WallpaperPreviewActivity extends BaseActivity implements WallpaperM
         } else {
             BugleAnalytics.logEvent("SMS_ChatBackground_Show", true, "from", "Menu");
         }
-
-        mWallpaperPreviewImg = findViewById(R.id.wallpaper_preview);
-        String wallpaperPath = WallpaperManager.getWallpaperPathByThreadId(mThreadId);
-        if (!TextUtils.isEmpty(wallpaperPath)) {
-            mWallpaperPreviewImg.setImageURI(Uri.fromFile(new File(wallpaperPath)));
-        }
+        WallpaperManager.setWallPaperOnView(mWallpaperPreviewImg, mThreadId);
 
         ((CustomMessagePreviewView) findViewById(R.id.wallpaper_chooser_add_preview_message)).updateBubbleDrawables(mThreadId);
 
