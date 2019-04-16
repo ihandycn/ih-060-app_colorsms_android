@@ -639,6 +639,15 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         }
     }
 
+    DatabaseWrapper getDatabaseWithoutMainThreadCheck() {
+        synchronized (mDatabaseWrapperLock) {
+            if (mDatabaseWrapper == null) {
+                mDatabaseWrapper = new DatabaseWrapper(mApplicationContext, getWritableDatabase());
+            }
+            return mDatabaseWrapper;
+        }
+    }
+
     @Override
     public void onDowngrade(final SQLiteDatabase db, final int oldVersion, final int newVersion) {
         mUpgradeHelper.onDowngrade(db, oldVersion, newVersion);

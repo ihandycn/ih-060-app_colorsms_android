@@ -47,7 +47,7 @@ public class Upgrader extends BaseUpgrader {
     }
 
     public static void addPinColumnInDB() {
-        final DatabaseWrapper db = DataModel.get().getDatabase();
+        final DatabaseWrapper db = DataModel.get().getDatabaseWithoutMainCheck();
         Cursor cursor = null;
         try {
             cursor = db.rawQuery("SELECT * FROM " + DatabaseHelper.CONVERSATIONS_TABLE + " LIMIT 0"
