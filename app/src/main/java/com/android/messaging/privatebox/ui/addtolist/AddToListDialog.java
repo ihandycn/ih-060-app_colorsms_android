@@ -17,12 +17,10 @@ public class AddToListDialog extends AlertDialog {
         void onFromContactsClick();
     }
 
-    private Activity activity;
     private OnButtonClickListener listener;
 
     public AddToListDialog(Activity activity) {
-        super(activity);
-        this.activity = activity;
+        super(activity, R.style.DefaultCompatDialog);
     }
 
     public void setOnButtonClickListener(OnButtonClickListener listener) {
