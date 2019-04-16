@@ -68,7 +68,6 @@ public class PrivateConversationListFragment extends Fragment
 
     private PrivateSelectModeHost mHost;
     private RecyclerView mRecyclerView;
-    private ImageView mStartNewConversationButton;
     private View mEmptyListMessageView;
     private ConversationListAdapter mAdapter;
 
@@ -176,19 +175,6 @@ public class PrivateConversationListFragment extends Fragment
             mListState = savedInstanceState.getParcelable(SAVED_INSTANCE_STATE_LIST_VIEW_STATE_KEY);
         }
 
-        mStartNewConversationButton = rootView.findViewById(R.id.start_new_conversation_button);
-        mStartNewConversationButton.setBackgroundDrawable(BackgroundDrawables.
-                createBackgroundDrawable(PrimaryColors.getEditButtonColor(),
-                        Dimensions.pxFromDp(28),
-                        true));
-
-        mStartNewConversationButton.setVisibility(View.VISIBLE);
-        mStartNewConversationButton.setOnClickListener(clickView -> {
-            UIIntents.get().launchCreateNewConversationActivity(getActivity(), null);
-        });
-
-        ViewCompat.setTransitionName(mStartNewConversationButton, BugleAnimationTags.TAG_FABICON);
-
         ViewGroupCompat.setTransitionGroup(rootView, false);
 
         setHasOptionsMenu(true);
@@ -283,6 +269,11 @@ public class PrivateConversationListFragment extends Fragment
         return mHost.isSelectionMode();
     }
 
+    @Override
+    public List<SnackBarInteraction> getSnackBarInteractions() {
+        return null;
+    }
+
     // Show and hide empty list UI as needed with appropriate text based on view specifics
     private void updateEmptyListUi(final boolean isEmpty) {
         if (isEmpty) {
@@ -317,15 +308,6 @@ public class PrivateConversationListFragment extends Fragment
         } else {
             mEmptyListMessageView.setVisibility(View.GONE);
         }
-    }
-
-    @Override
-    public List<SnackBarInteraction> getSnackBarInteractions() {
-        final List<SnackBarInteraction> interactions = new ArrayList<SnackBarInteraction>(1);
-        final SnackBarInteraction fabInteraction =
-                new SnackBarInteraction.BasicSnackBarInteraction(mStartNewConversationButton);
-        interactions.add(fabInteraction);
-        return interactions;
     }
 
     @VisibleForAnimation

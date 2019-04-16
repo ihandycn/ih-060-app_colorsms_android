@@ -168,11 +168,6 @@ public class PrivateConversationListActivity extends MultiSelectConversationList
         }
     }
 
-    @Override
-    public List<SnackBarInteraction> getSnackBarInteractions() {
-        return mConversationListFragment.getSnackBarInteractions();
-    }
-
     private void configActionBar() {
         mStatusBarInset = findViewById(R.id.status_bar_inset);
         ViewGroup.LayoutParams layoutParams = mStatusBarInset.getLayoutParams();

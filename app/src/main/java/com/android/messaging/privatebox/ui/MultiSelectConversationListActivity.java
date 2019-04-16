@@ -108,8 +108,6 @@ public abstract class MultiSelectConversationListActivity extends BugleActionBar
         }
     }
 
-    public abstract List<SnackBarInteraction> getSnackBarInteractions();
-
     @Override
     public boolean isConversationSelected(final String conversationId) {
         return isInConversationListSelectMode() &&
