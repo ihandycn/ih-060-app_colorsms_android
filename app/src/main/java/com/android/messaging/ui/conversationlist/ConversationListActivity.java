@@ -809,7 +809,7 @@ public class ConversationListActivity extends AbstractConversationListActivity
                             "open time", String.valueOf(hour),
                             "signature", String.valueOf(!TextUtils.isEmpty(Preferences.getDefault().getString(
                                     SignatureSettingDialog.PREF_KEY_SIGNATURE_CONTENT, null))),
-                            "pin", String.valueOf(hasPinConversation));
+                            "pin", String.valueOf(hasPinConversation), "defaultlauncher", getPackageName());
                 }
 
             default:

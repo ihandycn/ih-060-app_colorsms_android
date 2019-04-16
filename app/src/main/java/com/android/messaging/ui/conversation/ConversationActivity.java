@@ -98,6 +98,7 @@ public class ConversationActivity extends BugleActionBarActivity
 
     private AcbInterstitialAd mInterstitialAd;
     private long mCreateTime;
+    private Toolbar toolbar;
 
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
@@ -229,7 +230,7 @@ public class ConversationActivity extends BugleActionBarActivity
         layoutParams.height = Dimensions.getStatusBarHeight(ConversationActivity.this);
         statusbarInset.setLayoutParams(layoutParams);
 
-        Toolbar toolbar = findViewById(R.id.toolbar);
+        toolbar = findViewById(R.id.toolbar);
         toolbar.setBackground(ToolbarDrawables.getToolbarBg());
         setSupportActionBar(toolbar);
         mTitleTextView = findViewById(R.id.toolbar_title);
@@ -313,6 +314,9 @@ public class ConversationActivity extends BugleActionBarActivity
     @Override
     public boolean onOptionsItemSelected(final MenuItem menuItem) {
         if (super.onOptionsItemSelected(menuItem)) {
+            if (TextUtils.isEmpty(menuItem.getTitle())) {
+                HSGlobalNotificationCenter.sendNotification(ConversationFragment.RESET_ITEM);
+            }
             return true;
         }
         if (menuItem.getItemId() == android.R.id.home) {
@@ -335,12 +339,6 @@ public class ConversationActivity extends BugleActionBarActivity
 
     @Override
     public void onBackPressed() {
-        // If action mode is active dismiss it
-        if (getActionMode() != null) {
-            dismissActionMode();
-            return;
-        }
-
         // Let the conversation fragment handle the back press.
         final ConversationFragment conversationFragment = getConversationFragment();
         if (conversationFragment != null && conversationFragment.onBackPressed()) {

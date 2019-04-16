@@ -15,6 +15,7 @@
  */
 package com.android.messaging.ui.conversation;
 
+import android.animation.LayoutTransition;
 import android.content.Context;
 import android.content.res.Resources;
 import android.database.Cursor;
@@ -36,10 +37,10 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
-import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.ImageView.ScaleType;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.android.messaging.R;
@@ -84,8 +85,9 @@ import java.util.List;
 /**
  * The view for a single entry in a conversation.
  */
-public class ConversationMessageView extends FrameLayout implements View.OnClickListener,
+public class ConversationMessageView extends RelativeLayout implements View.OnClickListener,
         View.OnLongClickListener, OnAttachmentClickListener {
+
     public interface ConversationMessageViewHost {
         boolean onAttachmentClick(ConversationMessageView view, MessagePartData attachment,
                                   Rect imageBounds, boolean longPress);
@@ -94,8 +96,7 @@ public class ConversationMessageView extends FrameLayout implements View.OnClick
                                                                      boolean excludeDefault);
     }
 
-    private final ConversationMessageData mData;
-
+    private ConversationMessageData mData;
     private LinearLayout mMessageAttachmentsView;
     private MultiAttachmentLayout mMultiAttachmentView;
     private AsyncImageView mMessageImageView;
@@ -117,9 +118,10 @@ public class ConversationMessageView extends FrameLayout implements View.OnClick
     private ViewGroup mMessageMetadataView;
     private ViewGroup mMessageTextAndInfoView;
     private TextView mSimNameView;
-
     private boolean mOneOnOne;
     private ConversationMessageViewHost mHost;
+    private ImageView checkBox;
+    private int mOffset;
 
     public ConversationMessageView(final Context context, final AttributeSet attrs) {
         super(context, attrs);
@@ -139,7 +141,6 @@ public class ConversationMessageView extends FrameLayout implements View.OnClick
             ConversationMessageView.this.performLongClick();
             return true;
         });
-
         mMessageAttachmentsView = findViewById(R.id.message_attachments);
         mMultiAttachmentView = findViewById(R.id.multiple_attachments);
         mMultiAttachmentView.setOnAttachmentClickListener(this);
@@ -166,6 +167,15 @@ public class ConversationMessageView extends FrameLayout implements View.OnClick
         mMessageMetadataView = findViewById(R.id.message_metadata);
         mMessageTextAndInfoView = findViewById(R.id.message_text_and_info);
         mSimNameView = findViewById(R.id.sim_name);
+        checkBox = findViewById(R.id.check_box);
+        LayoutTransition layoutTransition = new LayoutTransition();
+        layoutTransition.disableTransitionType(LayoutTransition.DISAPPEARING);
+        this.setLayoutTransition(layoutTransition);
+        setOffset(30);
+    }
+
+    public void setOffset(int offset) {
+        mOffset = (int) (getContext().getResources().getDisplayMetrics().density * offset + 0.5f);
     }
 
     @Override
@@ -178,6 +188,8 @@ public class ConversationMessageView extends FrameLayout implements View.OnClick
         final int iconMeasureSpec = MeasureSpec.makeMeasureSpec(iconSize, MeasureSpec.EXACTLY);
 
         mContactIconContainer.measure(iconMeasureSpec, iconMeasureSpec);
+
+        mContactIconView.measure(iconMeasureSpec, iconMeasureSpec);
 
         final int arrowWidth =
                 getResources().getDimensionPixelSize(R.dimen.message_bubble_arrow_width);
@@ -233,8 +245,15 @@ public class ConversationMessageView extends FrameLayout implements View.OnClick
 
         mContactIconContainer.layout(iconLeft, iconTop, iconLeft + iconWidth, iconTop + iconHeight);
 
+        mContactIconView.layout(iconLeft, iconTop, iconLeft + iconWidth, iconTop + iconHeight);
+
         mMessageBubble.layout(contentLeft, contentTop, contentLeft + contentWidth,
                 contentTop + contentHeight);
+        int bubbleBgHeight = mMessageBubble.findViewById(R.id.message_text_and_info).getMeasuredHeight();
+        checkBox.layout(right - Dimensions.pxFromDp(37),
+                contentTop + bubbleBgHeight / 2 - Dimensions.pxFromDp(20) / 2,
+                right - Dimensions.pxFromDp(17),
+                contentTop + bubbleBgHeight / 2 + Dimensions.pxFromDp(20) / 2);
     }
 
     /**
@@ -242,9 +261,7 @@ public class ConversationMessageView extends FrameLayout implements View.OnClick
      *
      * @param cursor The cursor from a MessageList that this view is in, pointing to its entry.
      */
-    public void bind(final Cursor cursor) {
-        bind(cursor, true, null);
-    }
+
 
     /**
      * Fills in the data associated with this view.
@@ -253,13 +270,11 @@ public class ConversationMessageView extends FrameLayout implements View.OnClick
      * @param oneOnOne Whether this is a 1:1 conversation
      */
     public void bind(final Cursor cursor,
-                     final boolean oneOnOne, final String selectedMessageId) {
+                     final boolean oneOnOne, boolean isMultiSelected) {
         mOneOnOne = oneOnOne;
 
         // Update our UI model
         mData.bind(cursor);
-        setSelected(TextUtils.equals(mData.getMessageId(), selectedMessageId));
-
         // Update text and image content for the view.
         updateViewContent();
 
@@ -906,7 +921,7 @@ public class ConversationMessageView extends FrameLayout implements View.OnClick
         Resources resources = getResources();
         messageColor = ConversationColors.get().getMessageTextColor(mData.getIsIncoming(), mData.getConversationId());
         if (isSelected()) {
-            statusColor =  resources.getColor(R.color.message_action_status_text);
+            statusColor = resources.getColor(R.color.message_action_status_text);
             infoColorResId = R.color.message_action_info_text;
             if (shouldShowMessageTextBubble()) {
                 timestampColorResId = R.color.message_action_timestamp_text;
@@ -1192,5 +1207,17 @@ public class ConversationMessageView extends FrameLayout implements View.OnClick
             }
             return false;
         }
+    }
+
+    public void open() {
+        if (mData.getIsIncoming()) {
+            mMessageBubble.scrollTo(0, 0);
+        } else {
+            mMessageBubble.scrollTo(mOffset, 0);
+        }
+    }
+
+    public void close() {
+        mMessageBubble.scrollTo(0, 0);
     }
 }
