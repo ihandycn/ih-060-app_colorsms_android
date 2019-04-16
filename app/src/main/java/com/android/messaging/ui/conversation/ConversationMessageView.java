@@ -189,8 +189,6 @@ public class ConversationMessageView extends RelativeLayout implements View.OnCl
 
         mContactIconContainer.measure(iconMeasureSpec, iconMeasureSpec);
 
-        mContactIconView.measure(iconMeasureSpec, iconMeasureSpec);
-
         final int arrowWidth =
                 getResources().getDimensionPixelSize(R.dimen.message_bubble_arrow_width);
 
@@ -244,8 +242,6 @@ public class ConversationMessageView extends RelativeLayout implements View.OnCl
         }
 
         mContactIconContainer.layout(iconLeft, iconTop, iconLeft + iconWidth, iconTop + iconHeight);
-
-        mContactIconView.layout(iconLeft, iconTop, iconLeft + iconWidth, iconTop + iconHeight);
 
         mMessageBubble.layout(contentLeft, contentTop, contentLeft + contentWidth,
                 contentTop + contentHeight);

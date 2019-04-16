@@ -231,7 +231,6 @@ public class ConversationActivity extends BugleActionBarActivity
         statusbarInset.setLayoutParams(layoutParams);
 
         toolbar = findViewById(R.id.toolbar);
-        toolbar.setBackground(ToolbarDrawables.getToolbarBg());
         setSupportActionBar(toolbar);
         mTitleTextView = findViewById(R.id.toolbar_title);
         invalidateActionBar();
