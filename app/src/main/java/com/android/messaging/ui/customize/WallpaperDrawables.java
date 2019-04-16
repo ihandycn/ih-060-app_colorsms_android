@@ -4,6 +4,7 @@ import android.graphics.drawable.Drawable;
 import android.text.TextUtils;
 
 import com.android.messaging.Factory;
+import com.android.messaging.ui.wallpaper.WallpaperManager;
 import com.ihs.app.framework.HSApplication;
 
 import java.io.IOException;
@@ -15,6 +16,9 @@ public class WallpaperDrawables {
 
     public static void applyWallpaperBg(String url) {
         Factory.get().getCustomizePrefs().putString(PREF_KEY_CUSTOMIZE_WALLPAPER_BACKGROUND, url);
+        if (!TextUtils.isEmpty(url)) {
+            WallpaperManager.resetGlobalWallpaper();
+        }
     }
 
     public static Drawable getWallpaperBg() {
