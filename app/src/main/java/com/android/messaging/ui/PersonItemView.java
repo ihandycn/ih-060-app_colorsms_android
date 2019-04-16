@@ -38,7 +38,7 @@ import com.android.messaging.util.UiUtils;
 /**
  * Shows a view for a "person" - could be a contact or a participant. This always shows a
  * contact icon on the left, and the person's display name on the right.
- *
+ * <p>
  * This view is always bound to an abstract PersonItemData class, so to use it for a specific
  * scenario, all you need to do is to create a concrete PersonItemData subclass that bridges
  * between the underlying data (e.g. ParticipantData) and what the UI wants (e.g. display name).
@@ -47,6 +47,7 @@ public class PersonItemView extends LinearLayout implements PersonItemDataListen
         OnLayoutChangeListener {
     public interface PersonItemViewListener {
         void onPersonClicked(PersonItemData data);
+
         boolean onPersonLongClicked(PersonItemData data);
     }
 
@@ -90,6 +91,7 @@ public class PersonItemView extends LinearLayout implements PersonItemDataListen
 
     /**
      * Binds to a person item data which will provide us info to be displayed.
+     *
      * @param personData the PersonItemData to be bound to.
      */
     public void bind(final PersonItemData personData) {
@@ -137,8 +139,8 @@ public class PersonItemView extends LinearLayout implements PersonItemDataListen
 
     @Override
     public void onLayoutChange(final View v, final int left, final int top, final int right,
-            final int bottom, final int oldLeft, final int oldTop, final int oldRight,
-            final int oldBottom) {
+                               final int bottom, final int oldLeft, final int oldTop, final int oldRight,
+                               final int oldBottom) {
         if (mBinding.isBound() && v == mNameTextView) {
             setNameTextView();
         }

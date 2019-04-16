@@ -182,9 +182,6 @@ public class ConversationListItemView extends FrameLayout implements OnClickList
         ImageView conversationIconBg = findViewById(R.id.conversation_icon_bg);
         conversationIconBg.setImageDrawable(AvatarBgDrawables.getAvatarBg());
 
-        mContactCheckmarkView.setBackgroundDrawable(BackgroundDrawables.
-                createBackgroundDrawable(PrimaryColors.getPrimaryColor(), Dimensions.pxFromDp(28), false));
-
         if (OsUtil.isAtLeastL()) {
             setTransitionGroup(true);
         }

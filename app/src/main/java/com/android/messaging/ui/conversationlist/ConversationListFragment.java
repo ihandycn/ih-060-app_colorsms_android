@@ -36,6 +36,7 @@ import android.view.ViewPropertyAnimator;
 import android.widget.AbsListView;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import com.android.messaging.R;
 import com.android.messaging.ad.AdPlacement;
@@ -51,6 +52,7 @@ import com.android.messaging.ui.BugleAnimationTags;
 import com.android.messaging.ui.ListEmptyView;
 import com.android.messaging.ui.SnackBarInteraction;
 import com.android.messaging.ui.UIIntents;
+import com.android.messaging.ui.customize.ConversationColors;
 import com.android.messaging.ui.customize.PrimaryColors;
 import com.android.messaging.ui.customize.WallpaperDrawables;
 import com.android.messaging.util.AccessibilityUtil;
@@ -350,6 +352,23 @@ public class ConversationListFragment extends Fragment implements ConversationLi
                             && ((RelativeLayout) child).getChildAt(0) instanceof AcbNativeAdContainerView) {
                         AcbNativeAdContainerView nativeAdContainerView = (AcbNativeAdContainerView) ((RelativeLayout) child).getChildAt(0);
                         nativeAdContainerView.getChildAt(1).setVisibility(View.GONE);
+                        ((ViewGroup) child).setOnHierarchyChangeListener(new ViewGroup.OnHierarchyChangeListener() {
+                            @Override public void onChildViewAdded(View parent, View child) {
+                                TextView title = expressAdView.findViewById(R.id.banner_title);
+                                title.setTextColor(ConversationColors.get().getListTitleColor());
+                                TextView subtitle = expressAdView.findViewById(R.id.banner_des);
+                                subtitle.setTextColor(ConversationColors.get().getListSubtitleColor());
+                            }
+
+                            @Override public void onChildViewRemoved(View parent, View child) {
+
+                            }
+                        });
+
+                        TextView title = expressAdView.findViewById(R.id.banner_title);
+                        title.setTextColor(ConversationColors.get().getListTitleColor());
+                        TextView subtitle = expressAdView.findViewById(R.id.banner_des);
+                        subtitle.setTextColor(ConversationColors.get().getListSubtitleColor());
                     }
                 } catch (Exception e) {
                 }

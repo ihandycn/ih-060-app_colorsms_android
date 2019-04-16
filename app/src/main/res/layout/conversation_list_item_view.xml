@@ -225,13 +225,13 @@
 
                 <com.android.messaging.ui.AsyncImageView
                     android:id="@+id/conversation_image_preview"
-                    style="@style/ConversationListItemViewPaddingStyle"
                     android:layout_width="@dimen/conversation_list_image_preview_size"
                     android:layout_height="@dimen/conversation_list_image_preview_size"
                     android:background="@android:color/transparent"
                     android:contentDescription="@string/message_image_content_description"
                     android:scaleType="centerCrop"
                     android:visibility="gone"
+                    android:layout_gravity="center_vertical"
                     app:cornerRadius="@dimen/conversation_list_image_preview_corner_radius"/>
 
                 <com.android.messaging.ui.AudioAttachmentView
@@ -240,12 +240,14 @@
                     android:layout_height="@dimen/conversation_list_image_preview_size"
                     android:background="@android:color/transparent"
                     android:visibility="gone"
+                    android:layout_gravity="center_vertical"
                     app:layoutMode="subcompact"/>
 
                 <com.superapps.view.MessagesTextView
                     android:id="@+id/conversation_timestamp"
                     style="@style/ConversationListItemViewTextTimeStampStyle"
                     android:layout_width="wrap_content"
+                    android:layout_marginTop="14dp"
                     android:layout_height="wrap_content"/>
 
                 <com.superapps.view.MessagesTextView
@@ -255,6 +257,7 @@
                     android:layout_gravity="bottom|end"
                     android:gravity="center"
                     android:includeFontPadding="false"
+                    android:layout_marginBottom="14dp"
                     android:textColor="@android:color/white"
                     android:textSize="12sp"
                     android:visibility="gone"
