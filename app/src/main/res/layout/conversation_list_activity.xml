@@ -15,11 +15,19 @@
         android:background="@color/action_bar_background_color"
         android:orientation="vertical">
 
-        <LinearLayout
+        <RelativeLayout
             android:id="@+id/accessory_container"
             android:layout_width="match_parent"
-            android:orientation="vertical"
-            android:layout_height="wrap_content">
+            android:layout_height="56dp">
+
+            <View
+                android:id="@+id/selection_mode_bg"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:visibility="gone"
+                android:background="@color/black_20_transparent"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentBottom="true"/>
 
             <View
                 android:id="@+id/status_bar_inset"
@@ -29,11 +37,12 @@
             <android.support.v7.widget.Toolbar
                 android:id="@+id/toolbar"
                 android:clipChildren="false"
+                android:layout_below="@id/status_bar_inset"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/action_bar_height"
                 app:elevation="@dimen/action_bar_elevation"
                 app:popupTheme="@style/PopupMenu"/>
-        </LinearLayout>
+        </RelativeLayout>
 
         <fragment
             android:id="@+id/conversation_list_fragment"

@@ -203,6 +203,7 @@ public class ConversationActivity extends BugleActionBarActivity
     public ActionMode startActionMode(ActionMode.Callback callback) {
         // set custom title visibility gone, when start MultiSelectActionMode etc.
         mTitleTextView.setVisibility(View.GONE);
+        findViewById(R.id.selection_mode_bg).setVisibility(View.VISIBLE);
         return super.startActionMode(callback);
     }
 
@@ -214,6 +215,9 @@ public class ConversationActivity extends BugleActionBarActivity
 
     private void initActionBar() {
         View accessoryContainer = findViewById(R.id.accessory_container);
+        ViewGroup.LayoutParams layoutParams = accessoryContainer.getLayoutParams();
+        layoutParams.height = Dimensions.getStatusBarHeight(ConversationActivity.this) + Dimensions.pxFromDp(56);
+        accessoryContainer.setLayoutParams(layoutParams);
         if (ToolbarDrawables.getToolbarBg() != null) {
             accessoryContainer.setBackground(ToolbarDrawables.getToolbarBg());
         } else {
@@ -221,7 +225,7 @@ public class ConversationActivity extends BugleActionBarActivity
         }
 
         View statusbarInset = findViewById(R.id.status_bar_inset);
-        ViewGroup.LayoutParams layoutParams = statusbarInset.getLayoutParams();
+        layoutParams = statusbarInset.getLayoutParams();
         layoutParams.height = Dimensions.getStatusBarHeight(ConversationActivity.this);
         statusbarInset.setLayoutParams(layoutParams);
 
@@ -299,6 +303,10 @@ public class ConversationActivity extends BugleActionBarActivity
             contactPicker.updateActionBar(actionBar);
         } else if (conversation != null && mUiState.shouldShowConversationFragment()) {
             conversation.updateActionBar(actionBar, mTitleTextView);
+        }
+
+        if (getActionMode() == null) {
+            findViewById(R.id.selection_mode_bg).setVisibility(View.INVISIBLE);
         }
     }
 

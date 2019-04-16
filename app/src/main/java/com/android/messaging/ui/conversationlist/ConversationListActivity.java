@@ -274,13 +274,10 @@ public class ConversationListActivity extends AbstractConversationListActivity
 
     @Override
     protected void updateActionBar(final ActionBar actionBar) {
-//        statusbarInset.setBackgroundColor(PrimaryColors.getPrimaryColor());
-
         actionBar.setTitle("");
         actionBar.setDisplayShowTitleEnabled(false);
         actionBar.setDisplayHomeAsUpEnabled(false);
         actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
-//        actionBar.setBackgroundDrawable(new ColorDrawable(PrimaryColors.getPrimaryColor()));
         actionBar.show();
 
         if (mTitleTextView != null && mTitleTextView.getVisibility() == View.GONE) {
@@ -288,6 +285,9 @@ public class ConversationListActivity extends AbstractConversationListActivity
             mEmojiStoreIconView.setVisibility(View.VISIBLE);
         }
 
+        if (getActionMode() == null) {
+            findViewById(R.id.selection_mode_bg).setVisibility(View.INVISIBLE);
+        }
 
         super.updateActionBar(actionBar);
 
@@ -517,6 +517,7 @@ public class ConversationListActivity extends AbstractConversationListActivity
         mTitleTextView.setVisibility(View.GONE);
         stopEmojiStoreGuide();
         mEmojiStoreIconView.setVisibility(View.GONE);
+        findViewById(R.id.selection_mode_bg).setVisibility(View.VISIBLE);
         BugleAnalytics.logEvent("SMS_EditMode_Show", true);
         return super.startActionMode(callback);
     }
@@ -569,6 +570,9 @@ public class ConversationListActivity extends AbstractConversationListActivity
 
     private void configAppBar() {
         View accessoryContainer = findViewById(R.id.accessory_container);
+        ViewGroup.LayoutParams layoutParams = accessoryContainer.getLayoutParams();
+        layoutParams.height = Dimensions.getStatusBarHeight(ConversationListActivity.this) + Dimensions.pxFromDp(56);
+        accessoryContainer.setLayoutParams(layoutParams);
         if (ToolbarDrawables.getToolbarBg() != null) {
             accessoryContainer.setBackground(ToolbarDrawables.getToolbarBg());
         } else {
@@ -576,7 +580,7 @@ public class ConversationListActivity extends AbstractConversationListActivity
         }
 
         View statusbarInset = findViewById(R.id.status_bar_inset);
-        ViewGroup.LayoutParams layoutParams = statusbarInset.getLayoutParams();
+        layoutParams = statusbarInset.getLayoutParams();
         layoutParams.height = Dimensions.getStatusBarHeight(ConversationListActivity.this);
         statusbarInset.setLayoutParams(layoutParams);
 
