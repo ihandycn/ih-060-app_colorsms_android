@@ -34,9 +34,10 @@ public class MoveConversationToTelephonyAction extends Action {
         final String conversationId = actionParameters.getString(KEY_CONVERSATION_ID);
         if (!TextUtils.isEmpty(conversationId)) {
             if (BugleDatabaseOperations.updateConversationPrivateStatue(conversationId, false)) {
+                PrivateContactsManager.getInstance().updatePrivateContactsByConversationId(conversationId, false);
                 MessagingContentProvider.notifyConversationListChanged();
+                moveMessagesToTelephony(conversationId);
             }
-            moveMessagesToTelephony(conversationId);
         }
         return null;
     }

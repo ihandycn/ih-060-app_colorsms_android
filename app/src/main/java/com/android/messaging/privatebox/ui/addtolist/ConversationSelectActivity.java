@@ -83,13 +83,6 @@ public class ConversationSelectActivity extends HSAppCompatActivity
         View actionButton = findViewById(R.id.fragment_call_assistant_button);
         actionButton.setBackground(BackgroundDrawables.createBackgroundDrawable(PrimaryColors.getPrimaryColor(),
                 Dimensions.pxFromDp(3.3f), true));
-        actionButton.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View view, MotionEvent event) {
-                view.setPressed(true);
-                return false;
-            }
-        });
 
         actionButton.setOnClickListener(v -> {
             if (Preferences.getDefault().getBoolean(PREF_KEY_ADD_PRIVATE_DIALOG_HAS_PROMPT, false)) {

@@ -1,6 +1,5 @@
 package com.android.messaging.privatebox;
 
-import com.superapps.util.Threads;
 
 import java.lang.ref.WeakReference;
 import java.util.List;
@@ -26,7 +25,7 @@ public class MessagesMoveManager {
             }
         } else {
             for (String conversationId : conversationIdList) {
-                MoveConversationToPrivateBoxAction.makeConversationPrivate(conversationId);
+                MoveConversationToPrivateBoxAction.moveAndUpdatePrivateContact(conversationId);
             }
             if (reference.get() != null) {
                 reference.get().onMoveEnd();

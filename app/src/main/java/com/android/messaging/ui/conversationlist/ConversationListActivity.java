@@ -591,6 +591,7 @@ public class ConversationListActivity extends AbstractConversationListActivity
                         }
                     });
         }
+        exitMultiSelectState();
     }
 
     @Override

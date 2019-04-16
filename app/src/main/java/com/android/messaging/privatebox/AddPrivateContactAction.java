@@ -10,10 +10,7 @@ import com.android.messaging.datamodel.DatabaseHelper;
 import com.android.messaging.datamodel.DatabaseWrapper;
 import com.android.messaging.datamodel.action.Action;
 import com.android.messaging.privatebox.ui.addtolist.ContactsSelectActivity;
-import com.android.messaging.ui.conversationlist.ConversationListActivity;
 import com.ihs.commons.notificationcenter.HSGlobalNotificationCenter;
-import com.superapps.util.Notifications;
-import com.superapps.util.Threads;
 
 import static com.android.messaging.privatebox.PrivateContactsManager.PHONE_NUMBER;
 import static com.android.messaging.privatebox.PrivateContactsManager.PRIVATE_CONTACTS_TABLE;
@@ -22,30 +19,47 @@ import static com.android.messaging.privatebox.PrivateContactsManager.sProjectio
 
 public class AddPrivateContactAction extends Action {
 
-    public static void addPrivateContact(final long threadId, final String recipient) {
-        new AddPrivateContactAction(threadId, recipient).start();
+    public static void addPrivateContact(final long threadId) {
+        AddPrivateContactAction action = new AddPrivateContactAction();
+        action.actionParameters.putLong(KEY_THREAD_ID, threadId);
+        action.actionParameters.putString(KEY_RECIPIENT, null);
+        action.start();
+    }
+
+    public static void addPrivateContactAndMoveMessages(final long threadId, final String recipient,
+                                                        boolean sendGlobalNotification) {
+        AddPrivateContactAction action = new AddPrivateContactAction();
+        action.actionParameters.putLong(KEY_THREAD_ID, threadId);
+        action.actionParameters.putString(KEY_RECIPIENT, recipient);
+        action.actionParameters.putBoolean(KEY_SHOULD_SEND_GLOBAL_NOTIFICATION, sendGlobalNotification);
+        action.actionParameters.putBoolean(KEY_SHOULD_MOVE_MESSAGES, true);
+        action.start();
+    }
+
+    private AddPrivateContactAction() {
+        super();
     }
 
     private static final String KEY_THREAD_ID = "thread_id";
     private static final String KEY_RECIPIENT = "recipient";
-
-    private AddPrivateContactAction(long threadId, String recipient) {
-        super();
-        actionParameters.putLong(KEY_THREAD_ID, threadId);
-        actionParameters.putString(KEY_RECIPIENT, recipient);
-    }
+    private static final String KEY_SHOULD_SEND_GLOBAL_NOTIFICATION = "send_notification";
+    private static final String KEY_SHOULD_MOVE_MESSAGES = "move_message";
 
     @Override
     protected Object executeAction() {
-        long threadId = actionParameters.getLong(KEY_THREAD_ID);
-        String recipient = actionParameters.getString(KEY_RECIPIENT);
-        addThreadId(threadId, recipient);
+        addThreadId();
         return null;
     }
 
-    public boolean addThreadId(long threadId, String recipient) {
+    private boolean addThreadId() {
+        long threadId = actionParameters.getLong(KEY_THREAD_ID);
+        String recipient = actionParameters.getString(KEY_RECIPIENT);
+        boolean shouldSendNotification = actionParameters.getBoolean(KEY_SHOULD_SEND_GLOBAL_NOTIFICATION, false);
+        boolean shouldMoveMessages = actionParameters.getBoolean(KEY_SHOULD_MOVE_MESSAGES, false);
+
         boolean insertSuccess;
         DatabaseWrapper db = DataModel.get().getDatabase();
+        //check if the thread_id is in the table
         Cursor cursor = db.query(PRIVATE_CONTACTS_TABLE, sProjection, THREAD_ID + "=?",
                 new String[]{String.valueOf(threadId)}, null, null, null);
         if (cursor == null) {
@@ -61,17 +75,26 @@ public class AddPrivateContactAction extends Action {
         }
         cursor.close();
 
-        ContentValues privateValues = new ContentValues();
-        privateValues.put(DatabaseHelper.ConversationColumns.IS_PRIVATE, 1);
-        int count = db.update(DatabaseHelper.CONVERSATIONS_TABLE, privateValues,
-                DatabaseHelper.ConversationColumns.SMS_THREAD_ID + "=?",
-                new String[]{String.valueOf(threadId)});
-        //if count > 0, move messages to private box;
-        if (count > 0) {
-            HSGlobalNotificationCenter.sendNotification(ContactsSelectActivity.EVENT_MESSAGES_MOVE_START);
-            String conversationId = BugleDatabaseOperations.getExistingConversation(db, threadId, false);
-            if (conversationId != null) {
-                MoveConversationToPrivateBoxAction.makeConversationPrivate(conversationId);
+        if (shouldMoveMessages) {
+            Cursor cursor1 = db.query(DatabaseHelper.CONVERSATIONS_TABLE, new String[]{"count(*)"},
+                    DatabaseHelper.ConversationColumns.SMS_THREAD_ID + "=?",
+                    new String[]{String.valueOf(threadId)}, null, null, null);
+            int count = 0;
+            if (cursor1 != null) {
+                if (cursor1.moveToFirst()) {
+                    count = cursor1.getInt(0);
+                }
+                cursor1.close();
+            }
+            //if count > 0, move messages to private box;
+            if (count > 0) {
+                if (shouldSendNotification) {
+                    HSGlobalNotificationCenter.sendNotification(ContactsSelectActivity.EVENT_MESSAGES_MOVE_START);
+                }
+                String conversationId = BugleDatabaseOperations.getExistingConversation(db, threadId, false);
+                if (conversationId != null) {
+                    MoveConversationToPrivateBoxAction.move(conversationId);
+                }
             }
         }
         return insertSuccess;

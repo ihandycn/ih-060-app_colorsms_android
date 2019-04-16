@@ -643,7 +643,6 @@ public class BugleDatabaseOperations {
 
     public static boolean updateConversationPrivateStatue(final String conversationId, final boolean isPrivate) {
         Assert.isNotMainThread();
-        PrivateContactsManager.getInstance().updatePrivateContactsByConversationId(conversationId, isPrivate);
         final ContentValues values = new ContentValues();
         values.put(ConversationColumns.IS_PRIVATE, isPrivate ? 1 : 0);
         final DatabaseWrapper dbWrapper = DataModel.get().getDatabase();

@@ -19,12 +19,20 @@ import java.util.List;
 
 public class MoveConversationToPrivateBoxAction extends Action implements Parcelable {
 
-    public static void makeConversationPrivate(final String conversationId) {
+    public static void moveAndUpdatePrivateContact(final String conversationId) {
         final MoveConversationToPrivateBoxAction action = new MoveConversationToPrivateBoxAction(conversationId);
+        action.actionParameters.putBoolean(KEY_UPDATE_PRIVATE_CONTACT, true);
+        action.start();
+    }
+
+    public static void move(final String conversationId) {
+        final MoveConversationToPrivateBoxAction action = new MoveConversationToPrivateBoxAction(conversationId);
+        action.actionParameters.putBoolean(KEY_UPDATE_PRIVATE_CONTACT, false);
         action.start();
     }
 
     private static final String KEY_CONVERSATION_ID = "conversation_id";
+    private static final String KEY_UPDATE_PRIVATE_CONTACT = "update_contact";
 
     private MoveConversationToPrivateBoxAction(final String conversationId) {
         super();
@@ -34,12 +42,15 @@ public class MoveConversationToPrivateBoxAction extends Action implements Parcel
     @Override
     protected Object executeAction() {
         final String conversationId = actionParameters.getString(KEY_CONVERSATION_ID);
-
+        boolean updatePrivateContact = actionParameters.getBoolean(KEY_UPDATE_PRIVATE_CONTACT, true);
         if (!TextUtils.isEmpty(conversationId)) {
             if (BugleDatabaseOperations.updateConversationPrivateStatue(conversationId, true)) {
                 MessagingContentProvider.notifyConversationListChanged();
+                if (updatePrivateContact) {
+                    PrivateContactsManager.getInstance().updatePrivateContactsByConversationId(conversationId, true);
+                }
+                moveMessagesToPrivateBox(conversationId);
             }
-            moveMessagesToPrivateBox(conversationId);
         }
         return null;
     }

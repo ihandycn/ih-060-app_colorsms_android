@@ -7,7 +7,6 @@ import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.view.Choreographer;
 import android.view.MenuItem;
-import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -155,7 +154,7 @@ public class ContactsSelectActivity extends HSAppCompatActivity {
 
         switch (moduleType) {
             case MODE_CONTACTS_LIST_FOR_BLACKLIST:
-                PrivateContactsManager.getInstance().addUserToPrivateBox(addList);
+                PrivateContactsManager.getInstance().addUserToPrivateBoxWithGlobalNotification(addList);
                 break;
         }
     }

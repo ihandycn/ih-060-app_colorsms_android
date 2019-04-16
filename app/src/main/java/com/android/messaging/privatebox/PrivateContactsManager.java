@@ -46,19 +46,18 @@ public class PrivateContactsManager {
         }
     }
 
-    public void addUserToPrivateBox(@NonNull List<String> recipients) {
+    public void addUserToPrivateBoxWithGlobalNotification(@NonNull List<String> recipients) {
         //todo : check permission for no grant exception
         for (String recipient : recipients) {
             long threadId = MmsSmsUtils.Threads.getOrCreateThreadId(HSApplication.getContext(), recipient);
             if (threadId < 0) {
                 continue;
             }
-            AddPrivateContactAction.addPrivateContact(threadId, recipient);
+            AddPrivateContactAction.addPrivateContactAndMoveMessages(threadId, recipient, true);
         }
         HSGlobalNotificationCenter.sendNotification(ContactsSelectActivity.EVENT_MESSAGES_MOVE_END);
-        
-    }
 
+    }
 
     public void removeThreadId(long threadId) {
         DatabaseWrapper db = DataModel.get().getDatabase();
@@ -68,7 +67,7 @@ public class PrivateContactsManager {
     public void updatePrivateContactsByConversationId(String conversationId, boolean isPrivate) {
         long threadId = BugleDatabaseOperations.getThreadId(DataModel.get().getDatabase(), conversationId);
         if (isPrivate) {
-            AddPrivateContactAction.addPrivateContact(threadId, null);
+            AddPrivateContactAction.addPrivateContact(threadId);
         } else {
             removeThreadId(threadId);
         }

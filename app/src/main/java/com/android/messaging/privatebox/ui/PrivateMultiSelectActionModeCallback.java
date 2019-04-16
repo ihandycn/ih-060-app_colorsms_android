@@ -120,6 +120,10 @@ public class PrivateMultiSelectActionModeCallback implements Callback {
                     conversationIdList.add(conversation.conversationId);
                 }
                 onMoveToTelephony(conversationIdList);
+                final MultiSelectConversationListActivity activity = mWeakActivity.get();
+                if (activity != null) {
+                    activity.exitMultiSelectState();
+                }
                 return true;
             default:
                 return false;
