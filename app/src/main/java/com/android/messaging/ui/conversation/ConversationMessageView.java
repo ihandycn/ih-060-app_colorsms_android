@@ -200,15 +200,22 @@ public class ConversationMessageView extends RelativeLayout implements View.OnCl
         // We need to subtract contact icon width twice from the horizontal space to get
         // the max leftover space because we want the message bubble to extend no further than the
         // starting position of the message bubble in the opposite direction.
-        final int maxLeftoverSpace = horizontalSpace - mContactIconContainer.getMeasuredWidth() * 2
-                - arrowWidth - getPaddingLeft() - getPaddingRight() + Dimensions.pxFromDp(15);
+        final int maxLeftoverSpace = horizontalSpace - mContactIconView.getMeasuredWidth() * 2
+                - arrowWidth - getPaddingLeft() - getPaddingRight();
         final int messageContentWidthMeasureSpec = MeasureSpec.makeMeasureSpec(maxLeftoverSpace,
                 MeasureSpec.AT_MOST);
 
         mMessageBubble.measure(messageContentWidthMeasureSpec, unspecifiedMeasureSpec);
 
-        final int maxHeight =  Math.max(mContactIconContainer.getMeasuredHeight(),
-                mMessageBubble.getMeasuredHeight() + ((int) getResources().getDimension(R.dimen.conversation_message_bubble_top_margin)));
+        int maxHeight;
+
+        if (mData.getIsIncoming()) {
+            maxHeight = Math.max(mContactIconContainer.getMeasuredHeight(),
+                    mMessageBubble.getMeasuredHeight() + (int) getResources().getDimension(R.dimen.conversation_message_bubble_incoming_top_margin));
+        } else {
+            maxHeight = mMessageBubble.getMeasuredHeight();
+        }
+
         setMeasuredDimension(horizontalSpace, maxHeight + getPaddingBottom() + getPaddingTop());
     }
 
@@ -224,7 +231,7 @@ public class ConversationMessageView extends RelativeLayout implements View.OnCl
                 .getDimensionPixelSize(R.dimen.conversation_message_contact_bubble_margin);
         final int contentWidth = (right - left) - iconWidth - getPaddingLeft() - getPaddingRight();
         final int contentHeight = mMessageBubble.getMeasuredHeight();
-        final int contentTop = iconTop + (int) getResources().getDimension(R.dimen.conversation_message_bubble_top_margin);
+        final int contentTop = iconTop + (!mData.getIsIncoming() ? 0 : (int) getResources().getDimension(R.dimen.conversation_message_bubble_incoming_top_margin));
 
         final int iconLeft;
         final int contentLeft;
@@ -975,7 +982,11 @@ public class ConversationMessageView extends RelativeLayout implements View.OnCl
 
                 case MessageData.BUGLE_STATUS_INCOMING_COMPLETE:
                 default:
-                    timestampColorResId = R.color.timestamp_text_incoming;
+                    if (hasWallPaper) {
+                        timestampColorResId = R.color.white;
+                    } else {
+                        timestampColorResId = R.color.timestamp_text_incoming;
+                    }
                     infoColorResId = -1; // Not used
                     break;
             }

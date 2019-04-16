@@ -11,6 +11,7 @@ import android.widget.TextView;
 import com.android.messaging.R;
 import com.android.messaging.util.BugleActivityUtil;
 import com.android.messaging.util.UiUtils;
+import com.superapps.util.Toasts;
 
 public class ChooseThemeActivity extends AppCompatActivity {
 
@@ -34,7 +35,10 @@ public class ChooseThemeActivity extends AppCompatActivity {
 
         pagerView.setOnPageSelectedListener((position, themeColor) ->
                 UiUtils.setTitleBarBackground(toolbar, ChooseThemeActivity.this, themeColor));
-        pagerView.setOnApplyClickListener(v -> finish());
+        pagerView.setOnApplyClickListener(v -> {
+            Toasts.showToast(R.string.apply_theme_success);
+            finish();
+        });
     }
 
     @Override
