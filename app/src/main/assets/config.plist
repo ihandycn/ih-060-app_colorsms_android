@@ -200,7 +200,7 @@
 					<key>ThemeColor</key>
 					<string>#e45eb4</string>
 					<key>ToolbarBgUrl</key>
-					<string>assets://themes/diamond/toolbar.png</string>
+					<string>assets://themes/diamond/toolbar.jpg</string>
 					<key>WallpaperUrl</key>
 					<string>assets://themes/diamond/wallpaper.jpg</string>
 				</dict>
