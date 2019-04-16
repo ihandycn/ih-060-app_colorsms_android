@@ -28,7 +28,7 @@ public class BubbleDrawables {
             R.drawable.style_08,
             R.drawable.bubble_diamond_incoming,
             R.drawable.bubble_neon_incoming,
-            R.drawable.bubble_waterdrop_bubble_incoming
+            R.drawable.bubble_waterdrop_incoming
     };
 
     public static final int[] BUBBLES_OUTGOING = new int[]{

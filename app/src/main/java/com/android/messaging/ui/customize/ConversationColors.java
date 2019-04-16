@@ -3,6 +3,7 @@ package com.android.messaging.ui.customize;
 import android.content.res.Resources;
 import android.graphics.Color;
 import android.support.annotation.ColorInt;
+import android.support.annotation.IntRange;
 import android.text.TextUtils;
 
 import com.android.messaging.Factory;
@@ -221,9 +222,23 @@ public class ConversationColors {
     }
 
     private int getColorDark(@ColorInt int color) {
+        int blenedAlpha = (int) Math.floor(Color.alpha(color));
+        if (blenedAlpha == 0) {
+            blenedAlpha = 128;
+        }
         final int blendedRed = (int) Math.floor(0.8 * Color.red(color));
         final int blendedGreen = (int) Math.floor(0.8 * Color.green(color));
         final int blendedBlue = (int) Math.floor(0.8 * Color.blue(color));
-        return Color.rgb(blendedRed, blendedGreen, blendedBlue);
+        return argb(blenedAlpha, blendedRed, blendedGreen, blendedBlue);
     }
+
+    @ColorInt
+    private static int argb(
+            @IntRange(from = 0, to = 255) int alpha,
+            @IntRange(from = 0, to = 255) int red,
+            @IntRange(from = 0, to = 255) int green,
+            @IntRange(from = 0, to = 255) int blue) {
+        return (alpha << 24) | (red << 16) | (green << 8) | blue;
+    }
+
 }

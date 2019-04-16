@@ -18,6 +18,7 @@ import com.android.messaging.ui.conversationlist.ConversationListActivity;
 import com.android.messaging.ui.customize.ChooseMessageColorAdvanceViewHolder;
 import com.android.messaging.ui.customize.OnColorChangedListener;
 import com.android.messaging.ui.customize.PrimaryColors;
+import com.android.messaging.ui.customize.theme.ThemeUtils;
 import com.android.messaging.util.BugleAnalytics;
 import com.android.messaging.util.UiUtils;
 import com.ihs.commons.notificationcenter.HSGlobalNotificationCenter;
@@ -43,7 +44,7 @@ public class ThemeColorSelectActivity extends BaseActivity implements OnColorCha
 
         mToolbar = findViewById(R.id.toolbar);
         mToolbar.setTitle("");
-        UiUtils.setTitleBarBackground(mToolbar, this);
+
         TextView title = mToolbar.findViewById(R.id.toolbar_title);
         title.setText(getString(R.string.menu_theme_color));
         setSupportActionBar(mToolbar);
@@ -55,6 +56,10 @@ public class ThemeColorSelectActivity extends BaseActivity implements OnColorCha
         initPager(this);
 
         BugleAnalytics.logEvent("Customize_ThemeColor_Show", true);
+
+        if (!ThemeUtils.isDefaultTheme()) {
+            UiUtils.setTitleBarBackground(mToolbar, this);
+        }
     }
 
     private void initPager(Context context) {
@@ -102,7 +107,6 @@ public class ThemeColorSelectActivity extends BaseActivity implements OnColorCha
         }
 
         PrimaryColors.changePrimaryColor(color);
-
 
         UiUtils.setTitleBarBackground(mToolbar, this);
         mCustomFooterViewPager.updatePrimaryColor();

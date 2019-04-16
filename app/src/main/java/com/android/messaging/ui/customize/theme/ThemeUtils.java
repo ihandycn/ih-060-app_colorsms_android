@@ -64,6 +64,10 @@ public class ThemeUtils {
         return Factory.get().getCustomizePrefs().getString(BuglePrefsKeys.PREFS_KEY_THEME_NAME, "Default");
     }
 
+    public static boolean isDefaultTheme() {
+        return Factory.get().getCustomizePrefs().getString(BuglePrefsKeys.PREFS_KEY_THEME_NAME, "Default").equals("Default");
+    }
+
     public static Drawable getSelectedDrawable(String url) {
         Bitmap bitmap = null;
 

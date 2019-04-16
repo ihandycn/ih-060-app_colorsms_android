@@ -186,7 +186,7 @@ public class ConversationMessageView extends FrameLayout implements View.OnClick
         // the max leftover space because we want the message bubble to extend no further than the
         // starting position of the message bubble in the opposite direction.
         final int maxLeftoverSpace = horizontalSpace - mContactIconContainer.getMeasuredWidth() * 2
-                - arrowWidth - getPaddingLeft() - getPaddingRight();
+                - arrowWidth - getPaddingLeft() - getPaddingRight() + Dimensions.pxFromDp(15);
         final int messageContentWidthMeasureSpec = MeasureSpec.makeMeasureSpec(maxLeftoverSpace,
                 MeasureSpec.AT_MOST);
 
