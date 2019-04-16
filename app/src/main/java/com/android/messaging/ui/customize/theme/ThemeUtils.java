@@ -46,11 +46,8 @@ public class ThemeUtils {
         WallpaperDrawables.applyWallpaperBg(themeInfo.wallpaperUrl);
         AvatarBgDrawables.applyAvatarBg(themeInfo.avatarUrl);
 
-        if (themeInfo.bubbleIncomingUrl.startsWith("assets://")) {
-            BubbleDrawables.useThemeBubble();
-        } else {
-            BubbleDrawables.setSelectedIndex(Integer.parseInt(themeInfo.bubbleIncomingUrl));
-        }
+        BubbleDrawables.setSelectedIdentifier(Integer.parseInt(themeInfo.bubbleIncomingUrl));
+
         FontStyleManager.getInstance().setFontFamily(themeInfo.fontName);
 
         Factory.get().getCustomizePrefs().putString(BuglePrefsKeys.PREFS_KEY_THEME_NAME, themeInfo.name);

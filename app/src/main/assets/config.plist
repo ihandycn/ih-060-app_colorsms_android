@@ -14,12 +14,12 @@
 			<dict>
 				<key>SMSDetailspageFullAd</key>
 				<dict>
-					<key>ShowAfterInstall</key>
-					<integer>2</integer>
-					<key>MinInterval</key>
-					<integer>5</integer>
 					<key>Enabled</key>
 					<true/>
+					<key>MinInterval</key>
+					<integer>5</integer>
+					<key>ShowAfterInstall</key>
+					<integer>2</integer>
 				</dict>
 				<key>SMSHomepageBannerAd</key>
 				<true/>
@@ -135,7 +135,7 @@
 					<key>AvatarUrl</key>
 					<string>assets://themes/simplebusiness/avatar.png</string>
 					<key>BubbleIncomingUrl</key>
-					<string>0</string>
+					<string>1</string>
 					<key>BubbleOutgoingUrl</key>
 					<string>0</string>
 					<key>FontName</key>
@@ -172,9 +172,9 @@
 					<key>AvatarUrl</key>
 					<string>assets://themes/diamond/avatar.png</string>
 					<key>BubbleIncomingUrl</key>
-					<string>assets://themes/simplebusiness/bubble_incoming.png</string>
+					<string>9</string>
 					<key>BubbleOutgoingUrl</key>
-					<string>assets://themes/simplebusiness/bubble_outgoing.png</string>
+					<string>9</string>
 					<key>FontName</key>
 					<string>Mali</string>
 					<key>FontUrl</key>
@@ -209,9 +209,9 @@
 					<key>AvatarUrl</key>
 					<string>assets://themes/neon/avatar.png</string>
 					<key>BubbleIncomingUrl</key>
-					<string>assets://themes/neon/bubble_incoming.9.png</string>
+					<string>10</string>
 					<key>BubbleOutgoingUrl</key>
-					<string>assets://themes/neon/bubble_outgoing.9.png</string>
+					<string>10</string>
 					<key>FontName</key>
 					<string>Mali</string>
 					<key>FontUrl</key>
@@ -283,9 +283,9 @@
 					<key>AvatarUrl</key>
 					<string>assets://themes/waterdrop/avatar.png</string>
 					<key>BubbleIncomingUrl</key>
-					<string>assets://themes/waterdrop/bubble_incoming.9.png</string>
+					<string>11</string>
 					<key>BubbleOutgoingUrl</key>
-					<string>assets://themes/waterdrop/bubble_outgoing.9.png</string>
+					<string>11</string>
 					<key>FontName</key>
 					<string>Krub</string>
 					<key>FontUrl</key>

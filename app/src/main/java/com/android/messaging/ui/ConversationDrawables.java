@@ -116,22 +116,10 @@ public class ConversationDrawables {
         final Resources resources = mContext.getResources();
         if (needArrow) {
             if (incoming) {
-                int incomingdDrawableRes = BubbleDrawables.getSelectedDrawable(false, conversationId);
-                Drawable incomingDrawable;
-                if (incomingdDrawableRes != -1) {
-                    incomingDrawable = resources.getDrawable(incomingdDrawableRes);
-                } else {
-                    incomingDrawable = mThemeIncomingBubbleDrawable;
-                }
-                protoDrawable = isError && !selected ? mIncomingErrorBubbleDrawable : incomingDrawable;
+                protoDrawable = isError && !selected ? mIncomingErrorBubbleDrawable :
+                        resources.getDrawable(BubbleDrawables.getSelectedDrawable(true, conversationId));
             } else {
-                int drawableRes = BubbleDrawables.getSelectedDrawable(false, conversationId);
-
-                if (drawableRes != -1) {
-                    protoDrawable = resources.getDrawable(drawableRes);
-                } else {
-                    protoDrawable = mThemeOutgoingBubbleDrawable;
-                }
+                protoDrawable = resources.getDrawable(BubbleDrawables.getSelectedDrawable(false, conversationId));
             }
         } else if (incoming) {
             protoDrawable = mIncomingBubbleNoArrowDrawable;
