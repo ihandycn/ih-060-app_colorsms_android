@@ -245,19 +245,13 @@ public class ConversationMessageView extends RelativeLayout implements View.OnCl
 
         mMessageBubble.layout(contentLeft, contentTop, contentLeft + contentWidth,
                 contentTop + contentHeight);
-        int bubbleBgHeight = mMessageBubble.findViewById(R.id.message_text_and_info).getMeasuredHeight();
+        int bubbleBgHeight = mMessageBubble.findViewById(R.id.message_text_and_info).getMeasuredHeight()
+                + mMessageBubble.findViewById(R.id.message_attachments).getMeasuredHeight();
         checkBox.layout(right - Dimensions.pxFromDp(37),
                 contentTop + bubbleBgHeight / 2 - Dimensions.pxFromDp(20) / 2,
                 right - Dimensions.pxFromDp(17),
                 contentTop + bubbleBgHeight / 2 + Dimensions.pxFromDp(20) / 2);
     }
-
-    /**
-     * Fills in the data associated with this view.
-     *
-     * @param cursor The cursor from a MessageList that this view is in, pointing to its entry.
-     */
-
 
     /**
      * Fills in the data associated with this view.
