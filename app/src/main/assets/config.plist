@@ -133,7 +133,7 @@
 				<key>Default</key>
 				<dict>
 					<key>AvatarUrl</key>
-					<string>assets://themes/simplebusiness/avatar.png</string>
+					<string>assets://themes/default/avatar.png</string>
 					<key>BubbleIncomingUrl</key>
 					<string>1</string>
 					<key>BubbleOutgoingUrl</key>
