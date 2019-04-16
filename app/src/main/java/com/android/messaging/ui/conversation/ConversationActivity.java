@@ -179,7 +179,7 @@ public class ConversationActivity extends BugleActionBarActivity
         long lastShowTime = Preferences.getDefault().getLong(PREF_KEY_CONVERSATION_ACTIVITY_SHOW_TIME, -1);
         if (lastShowTime != -1) {
             IntegerBuckets buckets = new IntegerBuckets(5, 10, 30, 60, 300, 600, 1800, 3600, 7200);
-            BugleAnalytics.logEvent("Detailspage_Show_Interval", "interval",
+            BugleAnalytics.logEvent("Detailspage_Show_Interval", false, true, "interval",
                     buckets.getBucket((int) ((System.currentTimeMillis() - lastShowTime) / 1000)));
         }
         Preferences.getDefault().putLong(PREF_KEY_CONVERSATION_ACTIVITY_SHOW_TIME, System.currentTimeMillis());
@@ -346,7 +346,7 @@ public class ConversationActivity extends BugleActionBarActivity
 
         showInterstitialAd();
         if (conversationFragment != null) {
-            BugleAnalytics.logEvent("Detailspage_Back", "type", "back");
+            BugleAnalytics.logEvent("Detailspage_Back", false, true, "type", "back");
         }
         super.onBackPressed();
     }
@@ -355,7 +355,7 @@ public class ConversationActivity extends BugleActionBarActivity
         final ConversationFragment conversationFragment = getConversationFragment();
         if (conversationFragment != null) {
             IntegerBuckets integerBuckets = new IntegerBuckets(5, 10, 15, 20, 30, 60, 120, 180, 300);
-            BugleAnalytics.logEvent("Detailspage_Show_Details",
+            BugleAnalytics.logEvent("Detailspage_Show_Details", false, true,
                     "length", integerBuckets.getBucket((int) ((System.currentTimeMillis() - mCreateTime) / 1000)),
                     "sendmessage", String.valueOf(conversationFragment.hasSentMessages()));
         }
@@ -374,7 +374,7 @@ public class ConversationActivity extends BugleActionBarActivity
                     }
 
                     @Override public void onAdClicked() {
-                        BugleAnalytics.logEvent("Detailspage_FullAd_Click");
+                        BugleAnalytics.logEvent("Detailspage_FullAd_Click", true, true);
                     }
 
                     @Override public void onAdClosed() {
@@ -386,10 +386,10 @@ public class ConversationActivity extends BugleActionBarActivity
                     }
                 });
                 mInterstitialAd.show();
-                BugleAnalytics.logEvent("Detailspage_FullAd_Show", true);
+                BugleAnalytics.logEvent("Detailspage_FullAd_Show", true, true);
                 Preferences.getDefault().putLong(PREF_KEY_WIRE_AD_SHOW_TIME, System.currentTimeMillis());
             }
-            BugleAnalytics.logEvent("Detailspage_FullAd_Should_Show", true);
+            BugleAnalytics.logEvent("Detailspage_FullAd_Should_Show", true, true);
         }
     }
 
@@ -529,7 +529,7 @@ public class ConversationActivity extends BugleActionBarActivity
         } else {
             finish();
         }
-        BugleAnalytics.logEvent("Detailspage_Back", "type", "back_icon");
+        BugleAnalytics.logEvent("Detailspage_Back", false, true, "type", "back_icon");
     }
 
     @Override
