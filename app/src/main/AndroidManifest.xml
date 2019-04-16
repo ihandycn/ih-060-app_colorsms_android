@@ -599,7 +599,7 @@
             android:name=".ui.emoji.EmojiStoreActivity"
             android:excludeFromRecents="true"
             android:screenOrientation="portrait"
-            android:theme="@style/BugleTheme.ConversationActivity" />
+            android:theme="@style/BaseSettingsActivity" />
         <activity
             android:name=".ui.emoji.EmojiDetailActivity"
             android:excludeFromRecents="true"
@@ -640,7 +640,7 @@
             android:name=".ui.customize.CustomBubblesActivity"
             android:excludeFromRecents="true"
             android:screenOrientation="portrait"
-            android:theme="@style/BugleTheme.ConversationActivity" />
+            android:theme="@style/BaseSettingsActivity" />
 
         <!-- Lib permanent -->
         <service

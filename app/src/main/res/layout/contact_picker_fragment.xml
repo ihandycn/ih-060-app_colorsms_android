@@ -18,6 +18,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
+    android:fitsSystemWindows="true"
     android:layout_height="match_parent"
     android:orientation="vertical">
 
@@ -52,11 +53,11 @@
                 app:chipHeight="@dimen/compose_message_chip_height"
                 app:chipPadding="@dimen/compose_message_chip_padding"
                 app:imageSpanAlignment="baseline"
-                app:unselectedChipTextColor="@color/chips_text_color"
-                app:unselectedChipBackgroundColor="@color/chips_background_color">
+                app:unselectedChipBackgroundColor="@color/chips_background_color"
+                app:unselectedChipTextColor="@color/chips_text_color">
 
                 <!-- Put focus on the chips view by default so soft keyboard can be shown -->
-                <requestFocus />
+                <requestFocus/>
             </com.android.messaging.ui.contact.ContactRecipientAutoCompleteView>
 
         </com.android.messaging.ui.MaxHeightScrollView>

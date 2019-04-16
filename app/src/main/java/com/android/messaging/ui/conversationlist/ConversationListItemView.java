@@ -204,11 +204,10 @@ public class ConversationListItemView extends FrameLayout implements OnClickList
     }
 
     private void setConversationName() {
+        mConversationNameView.setTextColor(mConversationNameColor);
         if (mData.getIsRead() || mData.getShowDraft()) {
-            mConversationNameView.setTextColor(mConversationNameColor);
             mConversationNameView.setTypeface(FontUtils.getTypeface(FontUtils.MEDIUM));
         } else {
-            mConversationNameView.setTextColor(mSnippetColor);
             mConversationNameView.setTypeface(FontUtils.getTypeface(FontUtils.SEMI_BOLD));
         }
 

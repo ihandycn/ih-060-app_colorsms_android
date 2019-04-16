@@ -55,6 +55,8 @@ import com.android.messaging.util.ContentType;
 import com.android.messaging.util.LogUtil;
 import com.android.messaging.util.OsUtil;
 import com.android.messaging.util.UiUtils;
+import com.android.messaging.util.ViewUtils;
+import com.ihs.app.framework.HSApplication;
 import com.ihs.commons.config.HSConfig;
 import com.ihs.commons.notificationcenter.HSGlobalNotificationCenter;
 import com.superapps.util.Dimensions;
@@ -140,6 +142,9 @@ public class ConversationActivity extends BugleActionBarActivity
         mInstanceStateSaved = false;
 
         initActionBar();
+
+        ViewUtils.setMargins(findViewById(R.id.conversation_fragment_container),
+                0, -Dimensions.getStatusBarHeight(HSApplication.getContext()), 0, 0);
 
         // Don't animate UI state change for initial setup.
         updateUiState(false /* animate */);
