@@ -1,5 +1,6 @@
 package com.android.messaging.privatebox.ui;
 
+import android.animation.ValueAnimator;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
@@ -47,6 +48,7 @@ public class HideTheIconActivity extends BaseActivity {
 
     private void initItemViews() {
         mLottie = findViewById(R.id.private_hide_icon_lottie);
+        mLottie.setRepeatCount(ValueAnimator.INFINITE);
         Threads.postOnMainThreadDelayed(mLottie::playAnimation, 300);
 
         SettingItemView hideIconView = findViewById(R.id.private_hide_icon_item);
