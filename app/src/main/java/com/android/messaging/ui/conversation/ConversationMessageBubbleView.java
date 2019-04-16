@@ -20,6 +20,7 @@ import android.animation.Animator.AnimatorListener;
 import android.animation.ObjectAnimator;
 import android.content.Context;
 import android.util.AttributeSet;
+import android.view.MotionEvent;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 
@@ -52,6 +53,14 @@ public class ConversationMessageBubbleView extends LinearLayout {
     protected void onFinishInflate() {
         super.onFinishInflate();
         mBubbleBackground = (ViewGroup) findViewById(R.id.message_text_and_info);
+    }
+
+    @Override
+    public boolean onInterceptTouchEvent(MotionEvent ev) {
+        if (ConversationMessageAdapter.isMultiSelectMode()) {
+            return true;
+        }
+        return super.onInterceptTouchEvent(ev);
     }
 
     @Override

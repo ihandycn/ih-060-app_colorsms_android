@@ -45,13 +45,21 @@ public class PrimaryColors {
         return Color.HSVToColor(hsv);
     }
 
-
     @ColorInt
     public static int getEditButtonColor() {
         float[] hsv = new float[3];
         Color.colorToHSV(getPrimaryColor(), hsv); // convert to hsv
         hsv[1] = hsv[1] / 1.13f;
         hsv[2] = hsv[2] * 1.26f;
+        return Color.HSVToColor(hsv);
+    }
+
+    @ColorInt
+    public static int getMultiSelectToolbarColor() {
+        float[] hsv = new float[3];
+        Color.colorToHSV(getPrimaryColor(), hsv);
+        //darker than primary
+        hsv[2] = hsv[2] / 1.3f;
         return Color.HSVToColor(hsv);
     }
 }
