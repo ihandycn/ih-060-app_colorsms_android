@@ -67,9 +67,9 @@ public class WallpaperManager {
 
 
     public static void setWallPaperOnView(final ImageView view, String conversationId) {
-        if (!TextUtils.isEmpty(WallpaperManager.getThreadWallpaperPath(conversationId))) {
+        if (!TextUtils.isEmpty(WallpaperManager.getWallpaperPathByThreadId(conversationId))) {
             view.setImageDrawable(
-                    new BitmapDrawable(WallpaperManager.getThreadWallpaperPath(conversationId)));
+                    new BitmapDrawable(WallpaperManager.getWallpaperPathByThreadId(conversationId)));
         } else {
             Drawable wallpaperDrawable = WallpaperDrawables.getWallpaperBg();
             if (wallpaperDrawable != null) {
