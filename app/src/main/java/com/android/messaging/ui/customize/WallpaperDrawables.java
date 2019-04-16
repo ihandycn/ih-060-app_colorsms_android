@@ -34,4 +34,8 @@ public class WallpaperDrawables {
 
         return null;
     }
+
+    public static boolean hasWallpaper() {
+        return !TextUtils.isEmpty(Factory.get().getCustomizePrefs().getString(PREF_KEY_CUSTOMIZE_WALLPAPER_BACKGROUND, ""));
+    }
 }

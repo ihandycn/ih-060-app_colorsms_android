@@ -19,6 +19,7 @@ import android.animation.LayoutTransition;
 import android.content.Context;
 import android.content.res.Resources;
 import android.database.Cursor;
+import android.graphics.Color;
 import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
@@ -65,6 +66,8 @@ import com.android.messaging.ui.UIIntents;
 import com.android.messaging.ui.VideoThumbnailView;
 import com.android.messaging.ui.customize.AvatarBgDrawables;
 import com.android.messaging.ui.customize.ConversationColors;
+import com.android.messaging.ui.customize.PrimaryColors;
+import com.android.messaging.ui.wallpaper.WallpaperManager;
 import com.android.messaging.util.AccessibilityUtil;
 import com.android.messaging.util.Assert;
 import com.android.messaging.util.AvatarUriUtil;
@@ -153,9 +156,11 @@ public class ConversationMessageView extends RelativeLayout implements View.OnCl
         mMessageTextView.setOnClickListener(this);
         IgnoreLinkLongClickHelper.ignoreLinkLongClick(mMessageTextView, this);
 
+        int color = PrimaryColors.getPrimaryColor();
         mStatusTextView = findViewById(R.id.message_status);
         mStatusTextView.setBackground(BackgroundDrawables.createBackgroundDrawable(
-                getResources().getColor(R.color.white_40_transparent), Dimensions.pxFromDp(16), false));
+                Color.argb(51, Color.red(color), Color.green(color), Color.blue(color)), Dimensions.pxFromDp(16), false));
+
         mTitleTextView = findViewById(R.id.message_title);
         mMmsInfoTextView = findViewById(R.id.mms_info);
         mMessageTitleLayout = findViewById(R.id.message_title_layout);
@@ -925,6 +930,8 @@ public class ConversationMessageView extends RelativeLayout implements View.OnCl
         } else {
             statusColor = messageColor;
             infoColorResId = R.color.timestamp_text_incoming;
+
+            boolean hasWallPaper = WallpaperManager.hasWallpaper(mData.getConversationId());
             switch (mData.getStatus()) {
 
                 case MessageData.BUGLE_STATUS_OUTGOING_FAILED:
@@ -938,7 +945,11 @@ public class ConversationMessageView extends RelativeLayout implements View.OnCl
                 case MessageData.BUGLE_STATUS_OUTGOING_AWAITING_RETRY:
                 case MessageData.BUGLE_STATUS_OUTGOING_COMPLETE:
                 case MessageData.BUGLE_STATUS_OUTGOING_DELIVERED:
-                    timestampColorResId = R.color.timestamp_text_outgoing;
+                    if (hasWallPaper) {
+                        timestampColorResId = R.color.white;
+                    } else {
+                        timestampColorResId = R.color.timestamp_text_outgoing;
+                    }
                     break;
 
                 case MessageData.BUGLE_STATUS_INCOMING_EXPIRED_OR_NOT_AVAILABLE:
@@ -954,7 +965,11 @@ public class ConversationMessageView extends RelativeLayout implements View.OnCl
                 case MessageData.BUGLE_STATUS_INCOMING_RETRYING_AUTO_DOWNLOAD:
                 case MessageData.BUGLE_STATUS_INCOMING_RETRYING_MANUAL_DOWNLOAD:
                 case MessageData.BUGLE_STATUS_INCOMING_YET_TO_MANUAL_DOWNLOAD:
-                    timestampColorResId = R.color.message_text_color_incoming;
+                    if (hasWallPaper) {
+                        timestampColorResId = R.color.white;
+                    } else {
+                        timestampColorResId = R.color.timestamp_text_incoming;
+                    }
                     infoColorResId = R.color.timestamp_text_incoming;
                     break;
 

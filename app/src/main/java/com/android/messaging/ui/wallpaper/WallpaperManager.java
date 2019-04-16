@@ -67,17 +67,27 @@ public class WallpaperManager {
 
 
     public static void setWallPaperOnView(final ImageView view, String conversationId) {
-        if (!TextUtils.isEmpty(WallpaperManager.getWallpaperPathByThreadId(conversationId))) {
+        if (!TextUtils.isEmpty(WallpaperManager.getThreadWallpaperPath(conversationId))) {
             view.setImageDrawable(
-                    new BitmapDrawable(WallpaperManager.getWallpaperPathByThreadId(conversationId)));
+                    new BitmapDrawable(WallpaperManager.getThreadWallpaperPath(conversationId)));
         } else {
             Drawable wallpaperDrawable = WallpaperDrawables.getWallpaperBg();
             if (wallpaperDrawable != null) {
                 view.setImageDrawable(wallpaperDrawable);
+            } else if (!TextUtils.isEmpty(WallpaperManager.getWallpaperPathByThreadId(conversationId))) {
+                view.setImageDrawable(
+                        new BitmapDrawable(WallpaperManager.getWallpaperPathByThreadId(conversationId)));
             } else {
                 view.setImageDrawable(null);
             }
         }
+    }
+
+    public static boolean hasWallpaper(String conversationId) {
+        if (TextUtils.isEmpty(WallpaperManager.getWallpaperPathByThreadId(conversationId))) {
+            return WallpaperDrawables.hasWallpaper();
+        }
+        return false;
     }
 
     public static String getWallpaperPathByThreadId(String threadId) {
