@@ -58,6 +58,7 @@ import com.android.messaging.ui.customize.WallpaperDrawables;
 import com.android.messaging.util.AccessibilityUtil;
 import com.android.messaging.util.Assert;
 import com.android.messaging.util.BugleAnalytics;
+import com.android.messaging.util.HierarchyTreeChangeListener;
 import com.android.messaging.util.ImeUtil;
 import com.android.messaging.util.LogUtil;
 import com.android.messaging.util.UiUtils;
@@ -70,6 +71,7 @@ import com.superapps.util.BackgroundDrawables;
 import com.superapps.util.Dimensions;
 import com.superapps.util.IntegerBuckets;
 import com.superapps.util.Preferences;
+import com.superapps.util.Threads;
 
 import net.appcloudbox.ads.base.ContainerView.AcbContentLayout;
 import net.appcloudbox.ads.base.ContainerView.AcbNativeAdContainerView;
@@ -344,7 +346,7 @@ public class ConversationListFragment extends Fragment implements ConversationLi
                 .setDescriptionId(R.id.banner_des)
         );
         expressAdView.setAutoSwitchAd(AcbExpressAdView.AutoSwitchAd_None);
-        expressAdView.setOnHierarchyChangeListener(new ViewGroup.OnHierarchyChangeListener() {
+        expressAdView.setOnHierarchyChangeListener(HierarchyTreeChangeListener.wrap(new ViewGroup.OnHierarchyChangeListener() {
             @Override public void onChildViewAdded(View parent, View child) {
                 try {
                     if (child instanceof RelativeLayout
@@ -352,32 +354,22 @@ public class ConversationListFragment extends Fragment implements ConversationLi
                             && ((RelativeLayout) child).getChildAt(0) instanceof AcbNativeAdContainerView) {
                         AcbNativeAdContainerView nativeAdContainerView = (AcbNativeAdContainerView) ((RelativeLayout) child).getChildAt(0);
                         nativeAdContainerView.getChildAt(1).setVisibility(View.GONE);
-                        ((ViewGroup) child).setOnHierarchyChangeListener(new ViewGroup.OnHierarchyChangeListener() {
-                            @Override public void onChildViewAdded(View parent, View child) {
-                                TextView title = expressAdView.findViewById(R.id.banner_title);
-                                title.setTextColor(ConversationColors.get().getListTitleColor());
-                                TextView subtitle = expressAdView.findViewById(R.id.banner_des);
-                                subtitle.setTextColor(ConversationColors.get().getListSubtitleColor());
-                            }
-
-                            @Override public void onChildViewRemoved(View parent, View child) {
-
-                            }
-                        });
-
-                        TextView title = expressAdView.findViewById(R.id.banner_title);
-                        title.setTextColor(ConversationColors.get().getListTitleColor());
-                        TextView subtitle = expressAdView.findViewById(R.id.banner_des);
-                        subtitle.setTextColor(ConversationColors.get().getListSubtitleColor());
                     }
                 } catch (Exception e) {
                 }
+
+                Threads.postOnMainThread(() -> {
+                    TextView title = expressAdView.findViewById(R.id.banner_title);
+                    title.setTextColor(ConversationColors.get().getListTitleColor());
+                    TextView subtitle = expressAdView.findViewById(R.id.banner_des);
+                    subtitle.setTextColor(ConversationColors.get().getListSubtitleColor());
+                });
             }
 
             @Override public void onChildViewRemoved(View parent, View child) {
 
             }
-        });
+        }));
         expressAdView.setExpressAdViewListener(new AcbExpressAdView.AcbExpressAdViewListener() {
             @Override
             public void onAdShown(AcbExpressAdView acbExpressAdView) {
