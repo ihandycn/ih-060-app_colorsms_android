@@ -83,13 +83,10 @@ public class ContactsSelectAdapter extends RecyclerView.Adapter<ContactsSelectAd
 
         if (isWhitelistMode) {
             holder.checkBoxView.setVisibility(View.GONE);
-            holder.itemView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
+            holder.itemView.setOnClickListener(v -> {
 
-                    if (listener != null) {
-                        listener.onItemViewClicked(contactInfo.name, contactInfo.number, contactInfo.avatarUriStr);
-                    }
+                if (listener != null) {
+                    listener.onItemViewClicked(contactInfo.name, contactInfo.number, contactInfo.avatarUriStr);
                 }
             });
         } else {
@@ -99,16 +96,13 @@ public class ContactsSelectAdapter extends RecyclerView.Adapter<ContactsSelectAd
                 holder.checkBoxView.setImageResource(R.drawable.ic_all_unchecked);
             }
 
-            holder.itemView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    if (contactInfo.customInfo.equals(Boolean.TRUE)) {
-                        contactInfo.customInfo = Boolean.FALSE;
-                        holder.checkBoxView.setImageResource(R.drawable.ic_all_unchecked);
-                    } else {
-                        contactInfo.customInfo = Boolean.TRUE;
-                        holder.checkBoxView.setImageResource(R.drawable.ic_all_checked);
-                    }
+            holder.itemView.setOnClickListener(view -> {
+                if (contactInfo.customInfo.equals(Boolean.TRUE)) {
+                    contactInfo.customInfo = Boolean.FALSE;
+                    holder.checkBoxView.setImageResource(R.drawable.ic_all_unchecked);
+                } else {
+                    contactInfo.customInfo = Boolean.TRUE;
+                    holder.checkBoxView.setImageResource(R.drawable.ic_all_checked);
                 }
             });
         }

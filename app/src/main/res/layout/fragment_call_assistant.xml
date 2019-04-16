@@ -20,26 +20,19 @@
         android:gravity="center"
         android:orientation="vertical">
 
-        <LinearLayout
+        <com.superapps.view.TypefacedTextView
             android:id="@+id/fragment_call_assistant_button"
             android:layout_width="match_parent"
             android:layout_height="40dp"
-            android:layout_gravity="center_vertical"
+            android:layout_gravity="center"
             android:layout_marginLeft="16dp"
             android:layout_marginRight="16dp"
-            android:gravity="center">
-
-            <com.superapps.view.TypefacedTextView
-                android:id="@+id/button_text_view"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:fontFamily="sans-serif-medium"
-                android:includeFontPadding="false"
-                android:text="@string/dialog_add_contact_confirmation"
-                android:textColor="@android:color/white"
-                android:textSize="16sp"
-                app:typeface="@string/custom_font_semibold" />
-        </LinearLayout>
+            android:gravity="center"
+            android:includeFontPadding="false"
+            android:text="@string/dialog_add_contact_confirmation"
+            android:textColor="@android:color/white"
+            android:textSize="16sp"
+            app:typeface="@string/custom_font_semibold" />
     </LinearLayout>
 
     <View

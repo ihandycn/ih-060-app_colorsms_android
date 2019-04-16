@@ -79,23 +79,13 @@ public class ContactsSelectActivity extends HSAppCompatActivity {
         recyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
         recyclerView.setAdapter(adapter);
 
-        adapter.setOnButtonClickListener(new ContactsSelectAdapter.OnButtonClickListener() {
-            @Override
-            public void onItemViewClicked(String name, final String number, String avatarUriStr) {
+        adapter.setOnButtonClickListener((name, number, avatarUriStr) -> {
 
-            }
         });
 
         View actionButton = findViewById(R.id.fragment_call_assistant_button);
         actionButton.setBackground(BackgroundDrawables.createBackgroundDrawable(PrimaryColors.getPrimaryColor(),
                 Dimensions.pxFromDp(3.3f), true));
-        actionButton.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View view, MotionEvent event) {
-                view.setPressed(true);
-                return false;
-            }
-        });
 
         actionButton.setOnClickListener(v -> {
             if (Preferences.getDefault().getBoolean(ConversationSelectActivity.PREF_KEY_ADD_PRIVATE_DIALOG_HAS_PROMPT, false)) {
