@@ -450,7 +450,7 @@ public class ComposeMessageView extends LinearLayout
 
                 }
             }
-        }, "pref_key_emoji_lottie_guide", 3);
+        }, "pref_key_emoji_lottie_guide", 1);
         mEmojiPickerLayout = findViewById(R.id.emoji_picker_container);
         mEmojiKeyboardBtn = findViewById(R.id.emoji_btn);
         mEmojiKeyboardBtn.setOnClickListener(v -> {
