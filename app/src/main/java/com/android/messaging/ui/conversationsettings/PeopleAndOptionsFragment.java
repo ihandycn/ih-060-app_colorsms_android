@@ -199,7 +199,7 @@ public class PeopleAndOptionsFragment extends Fragment
 
             case SETTING_ADD_CONTANCT:
                 BugleAnalytics.logEvent("SMS_Detailspage_Settings_AddContact_Click");
-                UIIntents.get().launchAddContactActivity(getActivity(), mOtherParticipantData.getContactDestination());
+                UIIntents.get().launchAddContactActivity(getActivity(), mOtherParticipantData.getDisplayDestination());
                 break;
 
             case PeopleOptionsItemData.SETTING_BLOCKED:
