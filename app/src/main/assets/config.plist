@@ -166,6 +166,8 @@
 					<string></string>
 					<key>WallpaperUrl</key>
 					<string></string>
+					<key>ListWallpaperUrl</key>
+					<string></string>
 				</dict>
 				<key>Diamond</key>
 				<dict>
@@ -202,6 +204,8 @@
 					<key>ToolbarBgUrl</key>
 					<string>assets://themes/diamond/toolbar.jpg</string>
 					<key>WallpaperUrl</key>
+					<string>assets://themes/diamond/wallpaper.jpg</string>
+					<key>ListWallpaperUrl</key>
 					<string>assets://themes/diamond/wallpaper.jpg</string>
 				</dict>
 				<key>Neno</key>
@@ -240,6 +244,8 @@
 					<string>assets://themes/neon/toolbar.jpg</string>
 					<key>WallpaperUrl</key>
 					<string>assets://themes/neon/wallpaper.jpg</string>
+					<key>ListWallpaperUrl</key>
+					<string>assets://themes/neon/wallpaper.jpg</string>
 				</dict>
 				<key>SimpleBusiness</key>
 				<dict>
@@ -277,6 +283,8 @@
 					<string>assets://themes/simplebusiness/toolbar.png</string>
 					<key>WallpaperUrl</key>
 					<string>assets://themes/simplebusiness/wallpaper.jpg</string>
+					<key>ListWallpaperUrl</key>
+					<string>assets://themes/simplebusiness/wallpaper.jpg</string>
 				</dict>
 				<key>WaterDrop</key>
 				<dict>
@@ -313,6 +321,8 @@
 					<key>ToolbarBgUrl</key>
 					<string>assets://themes/waterdrop/toolbar.jpg</string>
 					<key>WallpaperUrl</key>
+					<string>assets://themes/waterdrop/wallpaper.jpg</string>
+					<key>ListWallpaperUrl</key>
 					<string>assets://themes/waterdrop/wallpaper.jpg</string>
 				</dict>
 			</dict>

@@ -31,6 +31,8 @@ public class ThemeInfo {
 
     public String wallpaperUrl;
 
+    public String listWallpaperUrl;
+
     public String bubbleIncomingUrl;
 
     public String bubbleOutgoingUrl;
@@ -63,6 +65,7 @@ public class ThemeInfo {
         themeInfo.listTimeColor = (String) themeConfig.get("ListTimeColor");
         themeInfo.newConversationIconUrl = (String) themeConfig.get("NewConversationIconUrl");
         themeInfo.wallpaperUrl = (String) themeConfig.get("WallpaperUrl");
+        themeInfo.listWallpaperUrl = (String) themeConfig.get("ListWallpaperUrl");
         themeInfo.bubbleIncomingUrl = (String) themeConfig.get("BubbleIncomingUrl");
         themeInfo.bubbleOutgoingUrl = (String) themeConfig.get("BubbleOutgoingUrl");
         themeInfo.incomingBubbleBgColor = (String) themeConfig.get("IncomingBubbleBgColor");

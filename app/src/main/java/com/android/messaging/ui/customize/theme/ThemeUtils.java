@@ -1,16 +1,13 @@
 package com.android.messaging.ui.customize.theme;
 
-import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.NinePatch;
-import android.graphics.Rect;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.NinePatchDrawable;
 
-import com.android.messaging.BugleApplication;
 import com.android.messaging.Factory;
 import com.android.messaging.ui.conversationlist.ConversationListActivity;
 import com.android.messaging.ui.customize.AvatarBgDrawables;
@@ -19,7 +16,6 @@ import com.android.messaging.ui.customize.ConversationColors;
 import com.android.messaging.ui.customize.PrimaryColors;
 import com.android.messaging.ui.customize.ToolbarDrawables;
 import com.android.messaging.ui.customize.WallpaperDrawables;
-import com.android.messaging.util.BugleApplicationPrefs;
 import com.android.messaging.util.BuglePrefsKeys;
 import com.ihs.app.framework.HSApplication;
 import com.ihs.commons.notificationcenter.HSGlobalNotificationCenter;
@@ -47,6 +43,7 @@ public class ThemeUtils {
 
         ToolbarDrawables.applyToolbarBg(themeInfo.toolbarBgUrl);
         WallpaperDrawables.applyWallpaperBg(themeInfo.wallpaperUrl);
+        WallpaperDrawables.applyListWallpaperBg(themeInfo.listWallpaperUrl);
         AvatarBgDrawables.applyAvatarBg(themeInfo.avatarUrl);
 
         BubbleDrawables.setSelectedIdentifier(Integer.parseInt(themeInfo.bubbleIncomingUrl));
