@@ -147,6 +147,33 @@ public class ConversationDrawables {
         return ImageUtils.getTintedDrawable(mContext, protoDrawable, color);
     }
 
+    public Drawable getAudioBackgroundDrawable(final boolean selected,
+                                               final boolean incoming,
+                                               final boolean isError) {
+        final Drawable protoDrawable;
+        final Resources resources = mContext.getResources();
+        if (incoming) {
+            protoDrawable = isError && !selected ? mIncomingErrorBubbleDrawable :
+                    resources.getDrawable(R.drawable.style_01);
+        } else {
+            protoDrawable = resources.getDrawable(R.drawable.style_01_outgoing);
+        }
+
+        int color;
+        if (isError) {
+            color = mIncomingErrorBubbleColor;
+        } else if (selected) {
+            // incoming selected bubble color
+            color = PrimaryColors.getPrimaryColorDark();
+        } else {
+            // incoming bubble color
+            color = PrimaryColors.getPrimaryColor();
+        }
+
+        return ImageUtils.getTintedDrawable(mContext, protoDrawable, color);
+    }
+
+
     private int getAudioButtonColor(final boolean incoming) {
         return incoming ? mThemeColor : 0xffffffff;
     }

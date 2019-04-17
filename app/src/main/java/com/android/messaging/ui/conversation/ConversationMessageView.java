@@ -1143,9 +1143,8 @@ public class ConversationMessageView extends RelativeLayout implements View.OnCl
         public void bindView(final View view, final MessagePartData attachment) {
             final AudioAttachmentView audioView = (AudioAttachmentView) view;
             audioView.bindMessagePartData(attachment, mData.getIsIncoming(), isSelected());
-            audioView.setBackground(ConversationDrawables.get().getBubbleDrawable(
-                    isSelected(), mData.getIsIncoming(), true /* needArrow */,
-                    mData.hasIncomingErrorStatus(), mData.getConversationId()));
+            audioView.setBackground(ConversationDrawables.get().getAudioBackgroundDrawable(
+                    isSelected(), mData.getIsIncoming(), mData.hasIncomingErrorStatus()));
         }
 
         @Override
