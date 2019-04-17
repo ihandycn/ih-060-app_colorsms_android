@@ -17,7 +17,6 @@ package com.android.messaging.ui.conversationlist;
 
 import android.content.Context;
 import android.content.res.Resources;
-import android.graphics.Color;
 import android.graphics.Rect;
 import android.graphics.Typeface;
 import android.net.Uri;
@@ -561,7 +560,7 @@ public class ConversationListItemView extends FrameLayout implements OnClickList
             mCrossSwipeArchiveLeftImageView.setVisibility(GONE);
             mCrossSwipeArchiveRightImageView.setVisibility(GONE);
 
-            mSwipeableContainer.setBackgroundColor(Color.TRANSPARENT);
+            mSwipeableContainer.setBackgroundResource(R.drawable.conversation_list_item_bg);
         } else {
             mCrossSwipeBackground.setVisibility(View.VISIBLE);
             if (translationX > 0) {
