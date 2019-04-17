@@ -62,7 +62,7 @@ public class CustomMessagePreviewView extends ConstraintLayout {
                 getResources().getColor(R.color.white_40_transparent), Dimensions.pxFromDp(16), false
         ));
 
-        TextView contactIcon = findViewById(R.id.contact_icon);
+        TextView contactIcon = findViewById(R.id.contact_text);
         ImageView contactBackground = findViewById(R.id.contact_background);
         Drawable avatar = AvatarBgDrawables.getAvatarBg();
         if (avatar != null) {

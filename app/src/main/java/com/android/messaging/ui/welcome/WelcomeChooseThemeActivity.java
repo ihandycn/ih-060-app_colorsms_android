@@ -20,6 +20,7 @@ public class WelcomeChooseThemeActivity extends AppCompatActivity {
 
         ChooseThemePagerView chooseThemePagerView = findViewById(R.id.choose_theme_pager_view);
         chooseThemePagerView.setOnApplyClickListener((View v) -> {
+            BugleActivityUtil.cancelAdaptScreen(this);
             UIIntents.get().launchConversationListActivity(WelcomeChooseThemeActivity.this);
             finish();
         });
@@ -32,7 +33,6 @@ public class WelcomeChooseThemeActivity extends AppCompatActivity {
 
     @Override
     protected void onDestroy() {
-        BugleActivityUtil.cancelAdaptScreen(this);
         super.onDestroy();
     }
 }

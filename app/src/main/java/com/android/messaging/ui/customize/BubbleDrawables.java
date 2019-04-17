@@ -118,7 +118,6 @@ public class BubbleDrawables {
         }
     }
 
-
     @DrawableRes
     public static int getSelectedDrawable(int index, boolean incoming) {
         if (incoming) {
