@@ -60,7 +60,6 @@ import com.android.messaging.util.ImageUtils;
 import com.android.messaging.util.OsUtil;
 import com.android.messaging.util.UiUtils;
 import com.android.messaging.util.UriUtil;
-import com.ihs.commons.utils.HSLog;
 import com.superapps.font.FontUtils;
 import com.superapps.util.BackgroundDrawables;
 import com.superapps.util.Dimensions;
@@ -251,9 +250,13 @@ public class ConversationListItemView extends FrameLayout implements OnClickList
             iconUri = Uri.parse(imgUri);
         }
 
-        if (iconUri != null && AvatarUriUtil.TYPE_LOCAL_RESOURCE_URI.equals(AvatarUriUtil.getAvatarType(iconUri))) {
+        if (iconUri != null
+                && AvatarUriUtil.TYPE_LOCAL_RESOURCE_URI.equals(AvatarUriUtil.getAvatarType(iconUri))) {
             mContactBackground.setVisibility(GONE);
+        } else {
+            mContactBackground.setVisibility(View.VISIBLE);
         }
+
         mContactIconView.setImageResourceUri(iconUri, mData.getParticipantContactId(),
                 mData.getParticipantLookupKey(), mData.getOtherParticipantNormalizedDestination(), contactIconBackgroundColor);
     }
@@ -395,7 +398,6 @@ public class ConversationListItemView extends FrameLayout implements OnClickList
 
     /**
      * Fills in the data associated with this view.
-     *
      */
     public void bind(final ConversationListItemData data, final HostInterface hostInterface) {
         // Update our UI model
