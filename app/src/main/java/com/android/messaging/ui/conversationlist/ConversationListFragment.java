@@ -476,7 +476,7 @@ public class ConversationListFragment extends Fragment implements ConversationLi
 
         IntegerBuckets buckets = new IntegerBuckets(0, 1, 2, 3, 4, 5, 10, 20, 30);
         if (cursor != null) {
-            BugleAnalytics.logEvent("Sms_Has_Local_Contact_Avatar", "count",  buckets.getBucket(localAvatarCount));
+            BugleAnalytics.logEvent("Sms_Local_Contact_Avatar_Count", "count",  buckets.getBucket(localAvatarCount));
         }
 
         if (conversationFirstUpdated) {
