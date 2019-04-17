@@ -42,6 +42,7 @@ import com.android.messaging.ui.customize.CustomBubblesActivity;
 import com.android.messaging.ui.customize.PrimaryColors;
 import com.android.messaging.ui.customize.ToolbarDrawables;
 import com.android.messaging.ui.customize.theme.ChooseThemeActivity;
+import com.android.messaging.ui.customize.theme.ThemeUtils;
 import com.android.messaging.ui.dialog.FiveStarRateDialog;
 import com.android.messaging.ui.emoji.EmojiStoreActivity;
 import com.android.messaging.ui.messagebox.MessageBoxActivity;
@@ -204,7 +205,8 @@ public class ConversationListActivity extends AbstractConversationListActivity
                         "received bubble color", ConversationColors.get().getConversationColorEventType(true, true),
                         "sent bubble color", ConversationColors.get().getConversationColorEventType(true, false),
                         "received text color", ConversationColors.get().getConversationColorEventType(false, true),
-                        "sent text color", ConversationColors.get().getConversationColorEventType(false, false));
+                        "sent text color", ConversationColors.get().getConversationColorEventType(false, false),
+                        "theme", ThemeUtils.getCurrentThemeName());
 
                 switch (FontStyleManager.getInstance().getFontScaleLevel()) {
                     case 0:

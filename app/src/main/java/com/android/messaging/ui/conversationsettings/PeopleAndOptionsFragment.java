@@ -300,6 +300,7 @@ public class PeopleAndOptionsFragment extends Fragment
                                 ConversationColors.get().resetConversationCustomization(mConversationId);
                                 BubbleDrawables.resetConversationCustomization(mConversationId);
                                 WallpaperManager.resetConversationCustomization(mConversationId);
+                                BugleAnalytics.logEvent("Customize_Chat_Reset", true);
 
                                 HSGlobalNotificationCenter.sendNotification(EVENT_UPDATE_BUBBLE_DRAWABLE);
                             }
