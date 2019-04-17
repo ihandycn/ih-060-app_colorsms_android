@@ -903,7 +903,7 @@ public class ComposeMessageView extends LinearLayout
     @Override
     public void onPendingAttachmentAdded(final PendingAttachmentData pendingItem) {
         mBinding.getData().addPendingAttachment(pendingItem, mBinding);
-        resumeComposeMessage();
+        resumeComposeMessage(true);
     }
 
     private void announceMediaItemState(final boolean isSelected) {
@@ -928,9 +928,13 @@ public class ComposeMessageView extends LinearLayout
     }
 
     @Override
-    public void resumeComposeMessage() {
+    public void resumeComposeMessage(boolean showKeyboard) {
         mComposeEditText.requestFocus();
-        mInputManager.showHideImeKeyboard(true, true);
+        if (showKeyboard) {
+            mInputManager.showHideImeKeyboard(true, true);
+        } else {
+            hideKeyboard();
+        }
         announceAttachmentState();
     }
 

@@ -13,13 +13,12 @@
         android:textColor="#282a31"
         android:gravity="center"
         app:typeface="@string/custom_font_medium"
-        android:layout_marginTop="18dp"
+        android:layout_marginTop="13dp"
         android:text="@string/welcome_choose_theme_title"
         app:layout_constraintVertical_bias="1"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"/>
-
 
     <com.android.messaging.ui.customize.theme.ChooseThemePagerView
         android:id="@+id/choose_theme_pager_view"

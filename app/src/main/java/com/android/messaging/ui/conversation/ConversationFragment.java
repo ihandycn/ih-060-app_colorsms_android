@@ -751,7 +751,7 @@ public class ConversationFragment extends Fragment implements ConversationDataLi
         // may happen when the user commits the contact selection for a group conversation and
         // goes from compose back to the conversation fragment.
         if (mHost.shouldResumeComposeMessage()) {
-            mComposeMessageView.resumeComposeMessage();
+            mComposeMessageView.resumeComposeMessage(false);
         }
 
         setConversationFocus();
@@ -1717,7 +1717,7 @@ public class ConversationFragment extends Fragment implements ConversationDataLi
                 mHost.invalidateActionBar();
                 if (resumeCompose) {
                     hideMediaPicker();
-                    mComposeMessageView.resumeComposeMessage();
+                    mComposeMessageView.resumeComposeMessage(true);
                 }
             }
 
@@ -1730,7 +1730,7 @@ public class ConversationFragment extends Fragment implements ConversationDataLi
             @Override
             public void onConfirmItemSelection() {
                 hideMediaPicker();
-                mComposeMessageView.resumeComposeMessage();
+                mComposeMessageView.resumeComposeMessage(true);
             }
 
             @Override

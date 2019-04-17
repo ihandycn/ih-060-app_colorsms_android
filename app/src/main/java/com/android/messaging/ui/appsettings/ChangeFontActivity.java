@@ -52,11 +52,8 @@ public class ChangeFontActivity extends BaseActivity implements LevelSeekBar.OnL
 
         UiUtils.setTitleBarBackground(toolbar, this);
 
-        String bgPath = WallpaperManager.getWallpaperPathByThreadId(null);
-        if (!TextUtils.isEmpty(bgPath)) {
-            ((ImageView) findViewById(R.id.change_font_bg)).setImageURI(Uri.fromFile(new File(bgPath)));
-            findViewById(R.id.divider).setVisibility(View.INVISIBLE);
-        }
+        ImageView background = findViewById(R.id.change_font_bg);
+        WallpaperManager.setWallPaperOnView(background, "");
 
         CustomMessagePreviewView customMessagePreviewView = findViewById(R.id.message_preview_view);
         customMessagePreviewView.setIsFontPreview();
