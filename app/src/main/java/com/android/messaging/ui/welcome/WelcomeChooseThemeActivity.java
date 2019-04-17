@@ -28,7 +28,6 @@ public class WelcomeChooseThemeActivity extends AppCompatActivity {
         chooseThemePagerView.setOnApplyClickListener((View v) -> {
             BugleActivityUtil.cancelAdaptScreen(this);
             UIIntents.get().launchConversationListActivity(WelcomeChooseThemeActivity.this);
-            BugleAnalytics.logEvent("Start_ChooseTheme_Apply", true);
             finish();
         });
 

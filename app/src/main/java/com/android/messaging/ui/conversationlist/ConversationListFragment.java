@@ -27,6 +27,7 @@ import android.support.v4.view.ViewGroupCompat;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -57,6 +58,7 @@ import com.android.messaging.ui.customize.PrimaryColors;
 import com.android.messaging.ui.customize.WallpaperDrawables;
 import com.android.messaging.util.AccessibilityUtil;
 import com.android.messaging.util.Assert;
+import com.android.messaging.util.AvatarUriUtil;
 import com.android.messaging.util.BugleAnalytics;
 import com.android.messaging.util.HierarchyTreeChangeListener;
 import com.android.messaging.util.ImeUtil;
@@ -80,6 +82,8 @@ import net.appcloudbox.ads.expressad.AcbExpressAdView;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import static com.android.messaging.datamodel.data.ConversationListItemData.INDEX_CONVERSATION_ICON;
 
 /**
  * Shows a list of conversations.
@@ -456,12 +460,23 @@ public class ConversationListFragment extends Fragment implements ConversationLi
 
         ArrayList<Object> dataList = new ArrayList<>();
 
+        int localAvatarCount = 0;
         if (cursor != null && cursor.moveToFirst()) {
             do {
                 ConversationListItemData itemData = new ConversationListItemData();
                 itemData.bind(cursor);
+
+                if (TextUtils.equals(AvatarUriUtil.TYPE_LOCAL_RESOURCE_URI, AvatarUriUtil.getAvatarType(Uri.parse(cursor.getString(INDEX_CONVERSATION_ICON))))) {
+                    localAvatarCount ++;
+                }
+
                 dataList.add(itemData);
             } while (cursor.moveToNext());
+        }
+
+        IntegerBuckets buckets = new IntegerBuckets(0, 1, 2, 3, 4, 5, 10, 20, 30);
+        if (cursor != null) {
+            BugleAnalytics.logEvent("Sms_Has_Local_Contact_Avatar", "count",  buckets.getBucket(localAvatarCount));
         }
 
         if (conversationFirstUpdated) {

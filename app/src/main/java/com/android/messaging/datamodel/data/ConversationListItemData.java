@@ -481,7 +481,7 @@ public class ConversationListItemData {
 
     private static final int INDEX_ID = 0;
     private static final int INDEX_CONVERSATION_NAME = 1;
-    private static final int INDEX_CONVERSATION_ICON = 2;
+    public static final int INDEX_CONVERSATION_ICON = 2;
     private static final int INDEX_SNIPPET_TEXT = 3;
     private static final int INDEX_SORT_TIMESTAMP = 4;
     private static final int INDEX_READ = 5;
