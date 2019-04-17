@@ -27,6 +27,7 @@ import com.android.messaging.BaseActivity;
 import com.android.messaging.R;
 import com.android.messaging.glide.GlideApp;
 import com.android.messaging.ui.customize.CustomMessagePreviewView;
+import com.android.messaging.ui.customize.WallpaperDrawables;
 import com.android.messaging.util.BugleAnalytics;
 import com.android.messaging.util.UiUtils;
 import com.bumptech.glide.request.target.ImageViewTarget;
@@ -268,7 +269,8 @@ public class WallpaperPreviewActivity extends BaseActivity implements WallpaperM
                     BugleAnalytics.logEvent("SMS_ChatBackground_Backgrounds_Applied", true, true,
                             "from", TextUtils.isEmpty(mThreadId) ? "Menu" : "Options");
                 });
-                if (TextUtils.isEmpty(wallpaperPath)) {
+                if (TextUtils.isEmpty(wallpaperPath)
+                        && WallpaperDrawables.getWallpaperBg() == null) {
                     onItemSelected(view);
                 }
             } else {
