@@ -398,12 +398,12 @@ public class ConversationListActivity extends AbstractConversationListActivity
             }
 
 
-            if (!Preferences.getDefault().getBoolean(PREF_KEY_THEME_COLOR_CLICKED, false)) {
-                View newMark = navigationContent.findViewById(R.id.navigation_item_theme_color_new_text);
-                newMark.setVisibility(View.VISIBLE);
-                newMark.setBackground(BackgroundDrawables.createBackgroundDrawable(0xffea6126,
-                        Dimensions.pxFromDp(8.7f), false));
-            }
+//            if (!Preferences.getDefault().getBoolean(PREF_KEY_THEME_COLOR_CLICKED, false)) {
+//                View newMark = navigationContent.findViewById(R.id.navigation_item_theme_color_new_text);
+//                newMark.setVisibility(View.VISIBLE);
+//                newMark.setBackground(BackgroundDrawables.createBackgroundDrawable(0xffea6126,
+//                        Dimensions.pxFromDp(8.7f), false));
+//            }
 
             if (!Preferences.getDefault().getBoolean(PREF_KEY_BUBBLE_CLICKED, false)) {
                 View bubbleNewMark = navigationContent.findViewById(R.id.navigation_item_bubble_new_text);
@@ -412,12 +412,12 @@ public class ConversationListActivity extends AbstractConversationListActivity
                         Dimensions.pxFromDp(8.7f), false));
             }
 
-            if (!Preferences.getDefault().getBoolean(PREF_KEY_BACKGROUND_CLICKED, false)) {
-                View newMark = navigationContent.findViewById(R.id.navigation_item_background_new_text);
-                newMark.setVisibility(View.VISIBLE);
-                newMark.setBackground(BackgroundDrawables.createBackgroundDrawable(0xffea6126,
-                        Dimensions.pxFromDp(8.7f), false));
-            }
+//            if (!Preferences.getDefault().getBoolean(PREF_KEY_BACKGROUND_CLICKED, false)) {
+//                View newMark = navigationContent.findViewById(R.id.navigation_item_background_new_text);
+//                newMark.setVisibility(View.VISIBLE);
+//                newMark.setBackground(BackgroundDrawables.createBackgroundDrawable(0xffea6126,
+//                        Dimensions.pxFromDp(8.7f), false));
+//            }
         }
 
         navigationContent.findViewById(R.id.navigation_item_theme).setOnClickListener(this);
