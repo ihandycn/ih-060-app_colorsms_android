@@ -617,4 +617,12 @@
 	<string name="welcome_viewpager_item_body_2">Los, testen Sie ein Bündel großartiger Funktionen.</string>
 	<string name="welcome_set_as_default_title">Bitte richten Sie Color SMS als Standard-SMS-App ein. Das ist notwendig, um SMS zu senden/empfangen.</string>
 
+
+	<string name="menu_theme">Design</string>
+	<string name="welcome_choose_theme_title">Design auswählen, das dir gefällt</string>
+	<string name="welcome_choose_theme_current">AKTUELL</string>
+	<string name="setting_reset_customization_title">Anpassung zurücksetzen</string>
+	<string name="setting_reset_customization_summary">Anpassung in diesem Chat entfernen.</string>
+	<string name="action_pin">Nach oben schieben</string>
+
 </resources>

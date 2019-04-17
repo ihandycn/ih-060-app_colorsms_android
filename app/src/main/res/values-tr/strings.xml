@@ -611,4 +611,12 @@
 	<string name="welcome_viewpager_item_body_2">Gel ve bir sürü harika özelliği dene.</string>
 	<string name="welcome_set_as_default_title">Color SMS\'i varsayılan SMS uygulaması olarak ayarlayın, SMS almak/göndermek için bu gereklidir.</string>
 
+
+	<string name="menu_theme">Tema</string>
+	<string name="welcome_choose_theme_title">Beğendiğin Temayı Seç</string>
+	<string name="welcome_choose_theme_current">MEVCUT</string>
+	<string name="setting_reset_customization_title">Özelleştirmeyi Sıfırla</string>
+	<string name="setting_reset_customization_summary">Bu sohbetteki özelleştirmeyi silin.</string>
+	<string name="action_pin">En Üste Sabitle</string>
+
 </resources>

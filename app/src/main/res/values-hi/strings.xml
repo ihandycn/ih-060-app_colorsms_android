@@ -620,4 +620,12 @@
 	<string name="welcome_viewpager_item_body_2">आओ और बहुत सारी सुविधाओं को आजमाओ।</string>
 	<string name="welcome_set_as_default_title">कृपया रंगीन एसएमएस को डिफॉल्ट एसएमएस ऐप के रूप में सेट करें, यह एसएमएस भेजने/प्राप्त करने के लिए आवश्यक है।</string>
 
+
+	<string name="menu_theme">थीम</string>
+	<string name="welcome_choose_theme_title">अपनी पसंद की एक थीम चुनें</string>
+	<string name="welcome_choose_theme_current">मौजूदा</string>
+	<string name="setting_reset_customization_title">अनुकूलन दुबारा सेट करें</string>
+	<string name="setting_reset_customization_summary">इस चैट में अनुकूलन मिटाएं</string>
+	<string name="action_pin">शीर्ष पर पिन करें</string>
+
 </resources>

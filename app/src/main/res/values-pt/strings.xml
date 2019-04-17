@@ -622,4 +622,12 @@
 	<string name="welcome_viewpager_item_body_2">Venha e teste vários ótimos recursos.</string>
 	<string name="welcome_set_as_default_title">Defina o Color SMS como o app padrão de SMS. Isso é necessário para enviar/receber SMS.</string>
 
+
+	<string name="menu_theme">Tema</string>
+	<string name="welcome_choose_theme_title">Escolha o tema que deseja</string>
+	<string name="welcome_choose_theme_current">ATUAL</string>
+	<string name="setting_reset_customization_title">Redefinir personalização</string>
+	<string name="setting_reset_customization_summary">Apagar a personalização nesta conversa.</string>
+	<string name="action_pin">Marcar no topo</string>
+
 </resources>

@@ -616,4 +616,12 @@
 	<string name="welcome_viewpager_item_body_2">오셔서 놀라운 기능들을 사용해보세요.</string>
 	<string name="welcome_set_as_default_title">Color SMS를 기본 SMS 앱으로 설정하세요. SMS 발신/수신에 필요합니다.</string>
 
+
+	<string name="menu_theme">테마</string>
+	<string name="welcome_choose_theme_title">좋아하는 테마 선택</string>
+	<string name="welcome_choose_theme_current">현재</string>
+	<string name="setting_reset_customization_title">커스터마이제이션 재설정</string>
+	<string name="setting_reset_customization_summary">이 채팅에서 커스터마이제이션을 지우세요.</string>
+	<string name="action_pin">위에 고정</string>
+
 </resources>

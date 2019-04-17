@@ -619,4 +619,12 @@
 	<string name="welcome_viewpager_item_body_2">Cobalah beragam fitur hebat kami.</string>
 	<string name="welcome_set_as_default_title">Atur Color SMS sebagai aplikasi SMS default, aplikasi ini diperlukan untuk mengirim/menerima SMS.</string>
 
+
+	<string name="menu_theme">Tema</string>
+	<string name="welcome_choose_theme_title">Pilih Tema yang Anda Sukai</string>
+	<string name="welcome_choose_theme_current">SEKARANG</string>
+	<string name="setting_reset_customization_title">Atur Ulang Kustomisasi</string>
+	<string name="setting_reset_customization_summary">Hapus kustomisasi di percakapan ini.</string>
+	<string name="action_pin">Sematkan ke Atas</string>
+
 </resources>

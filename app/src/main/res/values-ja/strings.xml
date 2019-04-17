@@ -617,4 +617,12 @@
 	<string name="welcome_viewpager_item_body_2">たくさんあるすごい機能を試してください。</string>
 	<string name="welcome_set_as_default_title">SMSを送信/受信するには、SMSアプリのデフォルトとしてColor SMSを設定してください。</string>
 
+
+	<string name="menu_theme">テーマ</string>
+	<string name="welcome_choose_theme_title">お好きなテーマを選択</string>
+	<string name="welcome_choose_theme_current">現在</string>
+	<string name="setting_reset_customization_title">カスタマイズをリセット</string>
+	<string name="setting_reset_customization_summary">このチャットのカスタマイズを消去する。</string>
+	<string name="action_pin">ピン付けしてトップに移動する</string>
+
 </resources>
