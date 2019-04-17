@@ -15,6 +15,7 @@ import com.ihs.commons.config.HSConfig;
 import com.superapps.util.BackgroundDrawables;
 import com.superapps.util.Dimensions;
 import com.superapps.util.Navigations;
+import com.superapps.util.Preferences;
 import com.superapps.util.Toasts;
 
 public class WelcomeSetAsDefaultActivity extends AppCompatActivity {
@@ -75,7 +76,11 @@ public class WelcomeSetAsDefaultActivity extends AppCompatActivity {
             if (PhoneUtils.getDefault().isDefaultSmsApp()) {
                 if (OsUtil.hasRequiredPermissions()) {
                     Factory.get().onDefaultSmsSetAndPermissionsGranted();
-                    UIIntents.get().launchConversationListActivity(this);
+                    if (!Preferences.getDefault().contains(WelcomeChooseThemeActivity.PREF_KEY_WELCOME_CHOOSE_THEME_SHOWN)) {
+                        Navigations.startActivitySafely(this, new Intent(this, WelcomeChooseThemeActivity.class));
+                    } else {
+                        UIIntents.get().launchConversationListActivity(this);
+                    }
                 } else {
                     UIIntents.get().launchWelcomePermissionActivity(this);
                 }

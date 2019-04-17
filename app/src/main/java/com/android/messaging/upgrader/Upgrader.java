@@ -9,6 +9,7 @@ import com.android.messaging.datamodel.DatabaseWrapper;
 import com.android.messaging.datamodel.data.ConversationListItemData;
 import com.android.messaging.ui.conversationlist.ConversationListActivity;
 import com.android.messaging.ui.customize.AvatarBgDrawables;
+import com.android.messaging.ui.welcome.WelcomeChooseThemeActivity;
 import com.android.messaging.ui.welcome.WelcomeStartActivity;
 import com.android.messaging.util.BuglePrefs;
 import com.ihs.commons.config.HSConfig;
@@ -48,6 +49,7 @@ public class Upgrader extends BaseUpgrader {
         }
         if (oldVersion < 28 && newVersion >= 28) {
             AvatarBgDrawables.applyAvatarBg(HSConfig.optString("", "Application", "Themes", "Default", "AvatarUrl"));
+            Preferences.getDefault().putBoolean(WelcomeChooseThemeActivity.PREF_KEY_WELCOME_CHOOSE_THEME_SHOWN, true);
         }
     }
 
