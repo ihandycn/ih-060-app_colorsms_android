@@ -927,6 +927,7 @@ public class ConversationMessageView extends RelativeLayout implements View.OnCl
         int statusColor = -1;
         int infoColorResId = -1;
         int timestampColorResId;
+        boolean hasWallPaper = WallpaperManager.hasWallpaper(mData.getConversationId());
 
         Resources resources = getResources();
         messageColor = ConversationColors.get().getMessageTextColor(mData.getIsIncoming(), mData.getConversationId());
@@ -944,7 +945,6 @@ public class ConversationMessageView extends RelativeLayout implements View.OnCl
             statusColor = messageColor;
             infoColorResId = R.color.timestamp_text_incoming;
 
-            boolean hasWallPaper = WallpaperManager.hasWallpaper(mData.getConversationId());
             switch (mData.getStatus()) {
 
                 case MessageData.BUGLE_STATUS_OUTGOING_FAILED:
@@ -1009,6 +1009,10 @@ public class ConversationMessageView extends RelativeLayout implements View.OnCl
         if (timestampColorResId == R.color.timestamp_text_incoming &&
                 mData.hasAttachments() && !shouldShowMessageTextBubble()) {
             timestampColorResId = R.color.timestamp_text_outgoing;
+        }
+
+        if (!hasWallPaper) {
+            mStatusTextView.setBackground(null);
         }
         mStatusTextView.setTextColor(resources.getColor(timestampColorResId));
 

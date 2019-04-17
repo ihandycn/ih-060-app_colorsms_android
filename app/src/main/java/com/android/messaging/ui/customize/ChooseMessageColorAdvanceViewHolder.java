@@ -63,6 +63,8 @@ public class ChooseMessageColorAdvanceViewHolder extends BasePagerViewHolder imp
 
     @Override
     public void onPageSelected() {
-        BugleAnalytics.logEvent("Customize_Bubble_Color_Advance_Click");
+        if (mContext instanceof CustomBubblesActivity) {
+            BugleAnalytics.logEvent("Customize_Bubble_Color_Advance_Click");
+        }
     }
 }

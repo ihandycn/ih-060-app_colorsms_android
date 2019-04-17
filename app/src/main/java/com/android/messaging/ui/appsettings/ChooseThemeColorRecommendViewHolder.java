@@ -83,6 +83,7 @@ public class ChooseThemeColorRecommendViewHolder extends BasePagerViewHolder imp
 
             });
         }
+        refreshSelectStatus();
         return view;
     }
 
