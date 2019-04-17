@@ -10,6 +10,7 @@ import android.widget.TextView;
 
 import com.android.messaging.R;
 import com.android.messaging.util.BugleActivityUtil;
+import com.android.messaging.util.BugleAnalytics;
 import com.android.messaging.util.UiUtils;
 import com.superapps.util.Toasts;
 
@@ -39,6 +40,8 @@ public class ChooseThemeActivity extends AppCompatActivity {
             Toasts.showToast(R.string.apply_theme_success);
             finish();
         });
+
+        BugleAnalytics.logEvent("Customize_Theme_Show", true);
     }
 
     @Override

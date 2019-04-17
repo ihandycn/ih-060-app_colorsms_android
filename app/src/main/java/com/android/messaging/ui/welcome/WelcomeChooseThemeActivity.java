@@ -9,6 +9,7 @@ import com.android.messaging.R;
 import com.android.messaging.ui.UIIntents;
 import com.android.messaging.ui.customize.theme.ChooseThemePagerView;
 import com.android.messaging.util.BugleActivityUtil;
+import com.android.messaging.util.BugleAnalytics;
 
 public class WelcomeChooseThemeActivity extends AppCompatActivity {
 
@@ -22,8 +23,11 @@ public class WelcomeChooseThemeActivity extends AppCompatActivity {
         chooseThemePagerView.setOnApplyClickListener((View v) -> {
             BugleActivityUtil.cancelAdaptScreen(this);
             UIIntents.get().launchConversationListActivity(WelcomeChooseThemeActivity.this);
+            BugleAnalytics.logEvent("Start_ChooseTheme_Apply", true);
             finish();
         });
+
+        BugleAnalytics.logEvent("Start_ChooseTheme_Show", true);
     }
 
     @Override

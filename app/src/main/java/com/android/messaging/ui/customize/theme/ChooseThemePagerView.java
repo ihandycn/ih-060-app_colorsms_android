@@ -12,6 +12,8 @@ import android.widget.TextView;
 import com.android.messaging.R;
 import com.android.messaging.ui.UIIntents;
 import com.android.messaging.ui.customize.PrimaryColors;
+import com.android.messaging.ui.welcome.WelcomeChooseThemeActivity;
+import com.android.messaging.util.BugleAnalytics;
 import com.superapps.util.BackgroundDrawables;
 import com.superapps.util.Dimensions;
 
@@ -47,6 +49,7 @@ public class ChooseThemePagerView extends ConstraintLayout {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
 
+
             }
 
             @Override
@@ -57,6 +60,12 @@ public class ChooseThemePagerView extends ConstraintLayout {
 
                 if (mOnPageSelectedListener != null) {
                     mOnPageSelectedListener.onPageSelected(position, themeColor);
+                }
+
+                if (getContext() instanceof WelcomeChooseThemeActivity) {
+                    BugleAnalytics.logEvent("Start_ChooseTheme_Slide", true);
+                } else if (getContext() instanceof  ChooseThemeActivity) {
+                    BugleAnalytics.logEvent("Customize_Theme_Slide", true);
                 }
             }
 
@@ -75,7 +84,20 @@ public class ChooseThemePagerView extends ConstraintLayout {
                 if (mApplyClickListener != null) {
                     mApplyClickListener.onClick(applyTextView);
                 }
+
+                String preTheme = ThemeUtils.getCurrentThemeName();
                 ThemeUtils.applyTheme(mAdapter.getThemeInfo(mPager.getCurrentItem()));
+
+                if (getContext() instanceof WelcomeChooseThemeActivity) {
+                    BugleAnalytics.logEvent("Start_ChooseTheme_Apply", true, "theme", ThemeUtils.getCurrentThemeName());
+                } else if (getContext() instanceof ChooseThemeActivity) {
+                    BugleAnalytics.logEvent("Customize_Theme_Apply_Click", true, "theme", ThemeUtils.getCurrentThemeName());
+                }
+                if (!ThemeUtils.getCurrentThemeName().equals(preTheme)) {
+                    if (getContext() instanceof ChooseThemeActivity) {
+                        BugleAnalytics.logEvent("Customize_Theme_Change", true, "theme", ThemeUtils.getCurrentThemeName());
+                    }
+                }
             }
         });
     }
