@@ -14,19 +14,30 @@
     See the License for the specific language governing permissions and
     limitations under the License.
 -->
-<merge xmlns:android="http://schemas.android.com/apk/res/android"
+<merge
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="horizontal">
 
-    <com.android.messaging.ui.ContactIconView
-        android:id="@+id/contact_icon"
+    <FrameLayout
         android:layout_width="@dimen/contact_list_icon_size"
-        android:layout_height="@dimen/contact_list_icon_size"
         android:layout_gravity="center_vertical"
-        android:importantForAccessibility="no"
-        app:iconSize="normal" />
+        android:layout_height="@dimen/contact_list_icon_size">
+
+        <View
+            android:id="@+id/contact_bg"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"/>
+
+        <com.android.messaging.ui.ContactIconView
+            android:id="@+id/contact_icon"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:importantForAccessibility="no"
+            app:iconSize="normal"/>
+    </FrameLayout>
 
     <LinearLayout
         android:id="@+id/details_container"
@@ -61,6 +72,6 @@
             android:maxLines="2"
             android:textColor="@color/contact_list_text_type"
             android:textSize="@dimen/contact_list_detail_type_text_size"
-            app:typeface="@string/custom_font_regular" />
+            app:typeface="@string/custom_font_regular"/>
     </LinearLayout>
 </merge>

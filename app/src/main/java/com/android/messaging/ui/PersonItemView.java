@@ -34,6 +34,8 @@ import com.android.messaging.datamodel.data.PersonItemData;
 import com.android.messaging.datamodel.data.PersonItemData.PersonItemDataListener;
 import com.android.messaging.util.AccessibilityUtil;
 import com.android.messaging.util.UiUtils;
+import com.superapps.util.BackgroundDrawables;
+import com.superapps.util.Dimensions;
 
 /**
  * Shows a view for a "person" - could be a contact or a participant. This always shows a
@@ -71,6 +73,8 @@ public class PersonItemView extends LinearLayout implements PersonItemDataListen
         mNameTextView = findViewById(R.id.name);
         mDetailsTextView = findViewById(R.id.details);
         mContactIconView = findViewById(R.id.contact_icon);
+        findViewById(R.id.contact_bg).setBackground(
+                BackgroundDrawables.createBackgroundDrawable(0xffd1d6dc, Dimensions.pxFromDp(20), false));
         mDetailsContainer = findViewById(R.id.details_container);
         mNameTextView.addOnLayoutChangeListener(this);
     }
