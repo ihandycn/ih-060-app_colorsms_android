@@ -27,11 +27,11 @@ import android.view.ViewGroup;
 import android.widget.ListView;
 
 import com.android.messaging.R;
+import com.android.messaging.datamodel.DataModel;
 import com.android.messaging.datamodel.binding.Binding;
 import com.android.messaging.datamodel.binding.BindingBase;
 import com.android.messaging.datamodel.data.BlockedParticipantsData;
 import com.android.messaging.datamodel.data.BlockedParticipantsData.BlockedParticipantsDataListener;
-import com.android.messaging.datamodel.DataModel;
 import com.android.messaging.ui.customize.PrimaryColors;
 import com.android.messaging.util.Assert;
 import com.superapps.util.BackgroundDrawables;
@@ -87,6 +87,8 @@ public class BlockedParticipantsFragment extends Fragment
         public View newView(Context context, Cursor cursor, ViewGroup parent) {
             View v = LayoutInflater.from(context)
                     .inflate(R.layout.blocked_participant_list_item_view, parent, false);
+            v.findViewById(R.id.contact_bg).setBackground(
+                    BackgroundDrawables.createBackgroundDrawable(0xffd1d6dc, Dimensions.pxFromDp(20), false));
             v.findViewById(R.id.tap_to_unblock).setBackground(
                     BackgroundDrawables.createBackgroundDrawable(
                             PrimaryColors.getPrimaryColor(), Dimensions.pxFromDp(16), true)

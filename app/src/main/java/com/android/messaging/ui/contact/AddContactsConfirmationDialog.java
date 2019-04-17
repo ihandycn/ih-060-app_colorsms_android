@@ -24,11 +24,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.android.messaging.ui.BaseDialogFragment;
 import com.android.messaging.R;
+import com.android.messaging.ui.BaseDialogFragment;
 import com.android.messaging.ui.ContactIconView;
 import com.android.messaging.ui.UIIntents;
 import com.android.messaging.util.AccessibilityUtil;
+import com.superapps.util.BackgroundDrawables;
+import com.superapps.util.Dimensions;
 
 public class AddContactsConfirmationDialog extends BaseDialogFragment {
 
@@ -96,6 +98,8 @@ public class AddContactsConfirmationDialog extends BaseDialogFragment {
         final View view = LayoutInflater.from(getActivity()).inflate(
                 R.layout.add_contacts_confirmation_dialog_body, null);
         final ContactIconView iconView = view.findViewById(R.id.contact_icon);
+        view.findViewById(R.id.contact_bg).setBackground(
+                BackgroundDrawables.createBackgroundDrawable(0xffd1d6dc, Dimensions.pxFromDp(20), false));
         if (TextUtils.isEmpty(mAvatarUri)) {
             iconView.setImageResourceUri(null);
         } else {

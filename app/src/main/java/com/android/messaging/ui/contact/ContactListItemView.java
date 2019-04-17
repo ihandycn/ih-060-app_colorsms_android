@@ -70,7 +70,8 @@ public class ContactListItemView extends LinearLayout implements OnClickListener
         mContactDetailsTextView = (TextView) findViewById(R.id.contact_details);
         mContactDetailTypeTextView = (TextView) findViewById(R.id.contact_detail_type);
         mContactIconView = (ContactIconView) findViewById(R.id.contact_icon);
-        findViewById(R.id.contact_bg).setBackground(BackgroundDrawables.createBackgroundDrawable(0xffd1d6dc, Dimensions.pxFromDp(20), false));
+        findViewById(R.id.contact_bg).setBackground(
+                BackgroundDrawables.createBackgroundDrawable(0xffd1d6dc, Dimensions.pxFromDp(20), false));
         mContactCheckmarkView = (ImageView) findViewById(R.id.contact_checkmark);
         mContactCheckmarkView.setBackground(BackgroundDrawables.
                 createBackgroundDrawable(PrimaryColors.getPrimaryColor(), Dimensions.pxFromDp(28), false));
