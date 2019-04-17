@@ -47,16 +47,12 @@ import com.android.messaging.datamodel.BugleNotifications;
 import com.android.messaging.datamodel.ConversationImagePartsView;
 import com.android.messaging.datamodel.MediaScratchFileProvider;
 import com.android.messaging.datamodel.MessagingContentProvider;
-import com.android.messaging.datamodel.binding.Binding;
-import com.android.messaging.datamodel.data.ConversationData;
 import com.android.messaging.datamodel.data.MessageBoxItemData;
 import com.android.messaging.datamodel.data.MessageData;
 import com.android.messaging.datamodel.data.MessagePartData;
 import com.android.messaging.datamodel.data.ParticipantData;
-import com.android.messaging.datamodel.data.PeopleAndOptionsData;
 import com.android.messaging.receiver.NotificationReceiver;
 import com.android.messaging.sms.MmsSmsUtils;
-import com.android.messaging.ui.messagebox.MessageBoxActivity;
 import com.android.messaging.ui.appsettings.ApnEditorActivity;
 import com.android.messaging.ui.appsettings.ApnSettingsActivity;
 import com.android.messaging.ui.appsettings.SettingAdvancedActivity;
@@ -71,6 +67,7 @@ import com.android.messaging.ui.conversationlist.ForwardMessageActivity;
 import com.android.messaging.ui.conversationsettings.PeopleAndOptionsActivity;
 import com.android.messaging.ui.customize.CustomBubblesActivity;
 import com.android.messaging.ui.debug.DebugMmsConfigActivity;
+import com.android.messaging.ui.messagebox.MessageBoxActivity;
 import com.android.messaging.ui.photoviewer.BuglePhotoViewActivity;
 import com.android.messaging.ui.smsshow.SmsShowActivity;
 import com.android.messaging.ui.smsshow.SmsShowDetailActivity;
@@ -83,6 +80,7 @@ import com.android.messaging.util.ConversationIdSet;
 import com.android.messaging.util.LogUtil;
 import com.android.messaging.util.UiUtils;
 import com.android.messaging.util.UriUtil;
+import com.superapps.util.Navigations;
 
 /**
  * A central repository of Intents used to start activities.
@@ -600,12 +598,7 @@ public class UIIntentsImpl extends UIIntents {
      * Provides a safe way to handle external activities which may not exist.
      */
     private void startExternalActivity(final Context context, final Intent intent) {
-        try {
-            context.startActivity(intent);
-        } catch (final ActivityNotFoundException ex) {
-            LogUtil.w(LogUtil.BUGLE_TAG, "Couldn't find activity:", ex);
-            UiUtils.showToastAtBottom(R.string.activity_not_found_message);
-        }
+        Navigations.startActivitySafely(context, intent);
     }
 
     private Intent getPerSubscriptionSettingsIntent(final Context context, final int subId, @Nullable final String settingTitle) {
