@@ -23,7 +23,7 @@ import com.android.messaging.util.BugleAnalytics;
 import com.android.messaging.util.UiUtils;
 import com.ihs.commons.notificationcenter.HSGlobalNotificationCenter;
 
-import static com.android.messaging.ui.appsettings.ChooseThemeColorRecommendViewHolder.getSelectedIndex;
+import static com.android.messaging.ui.appsettings.ChooseThemeColorRecommendViewHolder.getPrimaryColorType;
 
 public class ThemeColorSelectActivity extends BaseActivity implements OnColorChangedListener {
     private static final int POSITION_RECOMMEND = 0;
@@ -55,7 +55,8 @@ public class ThemeColorSelectActivity extends BaseActivity implements OnColorCha
 
         initPager(this);
 
-        BugleAnalytics.logEvent("Customize_ThemeColor_Show", true);
+        BugleAnalytics.logEvent("Customize_ThemeColor_Show", true, true,
+                "withTheme", String.valueOf(!ThemeUtils.isDefaultTheme()));
 
         UiUtils.setTitleBarBackground(mToolbar, this);
     }
@@ -84,9 +85,7 @@ public class ThemeColorSelectActivity extends BaseActivity implements OnColorCha
 
             @Override
             public void onPageSelected(int position) {
-                if (position == POSITION_ADVANCE) {
-                    BugleAnalytics.logEvent("Customize_ThemeColor_Advance_Click", true);
-                }
+                BugleAnalytics.logEvent("Customize_ThemeColor_Tab_Click", true);
             }
 
             @Override
@@ -119,7 +118,8 @@ public class ThemeColorSelectActivity extends BaseActivity implements OnColorCha
             Factory.get().reclaimMemory();
             // update drawable color cache
             ConversationDrawables.get().updateDrawables();
-            BugleAnalytics.logEvent("Customize_ThemeColor_Change", true, "color", String.valueOf(getSelectedIndex()));
+            BugleAnalytics.logEvent("Customize_ThemeColor_Change", true, "color",
+                    String.valueOf(getPrimaryColorType()), "withTheme", String.valueOf(!ThemeUtils.isDefaultTheme()));
             HSGlobalNotificationCenter.sendNotification(ConversationListActivity.EVENT_MAINPAGE_RECREATE);
         }
     }

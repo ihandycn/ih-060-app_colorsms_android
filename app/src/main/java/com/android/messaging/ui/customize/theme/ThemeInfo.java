@@ -11,6 +11,8 @@ import java.util.Set;
 
 public class ThemeInfo {
 
+    private static List<ThemeInfo> sThemeInfoList;
+
     public String name;
 
     public String previewUrl;
@@ -83,15 +85,16 @@ public class ThemeInfo {
     }
 
     public static List<ThemeInfo> getAllThemes() {
-        Map<String, ?> themeMap = HSConfig.getMap("Application", "Themes");
-        List<ThemeInfo> themeInfoList = new ArrayList<>();
-        Set<String> themeNames = themeMap.keySet();
+        if (sThemeInfoList == null) {
+            Map<String, ?> themeMap = HSConfig.getMap("Application", "Themes");
+            sThemeInfoList = new ArrayList<>();
+            Set<String> themeNames = themeMap.keySet();
 
-        for (String themeName : themeNames) {
-            ThemeInfo themeInfo = ThemeInfo.ofConfig(themeName, (Map<String, ?>) themeMap.get(themeName));
-            themeInfoList.add(themeInfo);
+            for (String themeName : themeNames) {
+                ThemeInfo themeInfo = ThemeInfo.ofConfig(themeName, (Map<String, ?>) themeMap.get(themeName));
+                sThemeInfoList.add(themeInfo);
+            }
         }
-
-        return themeInfoList;
+        return sThemeInfoList;
     }
 }

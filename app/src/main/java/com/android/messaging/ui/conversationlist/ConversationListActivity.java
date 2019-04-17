@@ -198,7 +198,7 @@ public class ConversationListActivity extends AbstractConversationListActivity
                 }
 
                 BugleAnalytics.logEvent("SMS_Messages_Show", true, true,
-                        "themeColor", String.valueOf(ChooseThemeColorRecommendViewHolder.getSelectedIndex()),
+                        "themeColor", String.valueOf(ChooseThemeColorRecommendViewHolder.getPrimaryColorType()),
                         "background", backgroundStr,
                         "bubbleStyle", String.valueOf(BubbleDrawables.getSelectedIdentifier()),
                         "received bubble color", ConversationColors.get().getConversationColorEventType(true, true),
@@ -248,7 +248,7 @@ public class ConversationListActivity extends AbstractConversationListActivity
                                     bubbleSendFontColor + "|" + bubbleSendBgColor + "|"
                                             + bubbleRcvFontColor + "|" + bubbleRcvBgColor + "|"
                                             + fontType + "|" + fontSize + "|" + bubbleStyle + "|"
-                                            + wallpaper + "|" + ChooseThemeColorRecommendViewHolder.getSelectedIndex());
+                                            + wallpaper + "|" + ChooseThemeColorRecommendViewHolder.getPrimaryColorType());
                         }
                     }, "pref_key_customize_config_has_send");
                 }

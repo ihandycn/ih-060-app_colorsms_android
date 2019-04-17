@@ -1,6 +1,7 @@
 package com.android.messaging.ui.appsettings;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,6 +16,7 @@ import com.android.messaging.ui.conversationlist.ConversationListActivity;
 import com.android.messaging.ui.customize.ChooseMessageColorRecommendAdapter;
 import com.android.messaging.ui.customize.OnColorChangedListener;
 import com.android.messaging.ui.customize.PrimaryColors;
+import com.android.messaging.ui.customize.theme.ThemeInfo;
 import com.android.messaging.util.BugleAnalytics;
 import com.android.messaging.util.UiUtils;
 import com.ihs.commons.notificationcenter.HSGlobalNotificationCenter;
@@ -116,12 +118,20 @@ public class ChooseThemeColorRecommendViewHolder extends BasePagerViewHolder imp
 
     }
 
-    public static int getSelectedIndex() {
+    public static String getPrimaryColorType() {
+
+        int primaryColor = PrimaryColors.getPrimaryColor();
         for (int i = 0; i < COLORS.length; i++) {
-            if (COLORS[i] == PrimaryColors.getPrimaryColor()) {
-                return i;
+            if (COLORS[i] == primaryColor) {
+                return String.valueOf(i);
             }
         }
-        return -1;
+
+        for (ThemeInfo themeInfo : ThemeInfo.getAllThemes()) {
+            if (primaryColor == Color.parseColor(themeInfo.themeColor)) {
+                return "theme";
+            }
+        }
+        return "advance";
     }
 }
