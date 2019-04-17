@@ -511,6 +511,12 @@ public class ConversationMessageView extends RelativeLayout implements View.OnCl
                     mData.getSenderContactLookupKey());
             mContactIconView.setImageResourceUri(avatarUri, mData.getSenderContactId(),
                     mData.getSenderContactLookupKey(), mData.getSenderNormalizedDestination());
+            if (avatarUri != null
+                    && AvatarUriUtil.TYPE_LOCAL_RESOURCE_URI.equals(AvatarUriUtil.getAvatarType(avatarUri))) {
+                mContactIconBg.setVisibility(GONE);
+            } else {
+                mContactIconBg.setVisibility(View.VISIBLE);
+            }
         }
     }
 

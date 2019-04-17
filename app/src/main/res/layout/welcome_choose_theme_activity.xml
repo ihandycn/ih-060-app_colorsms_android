@@ -8,14 +8,13 @@
     <com.superapps.view.MessagesTextView
         android:id="@+id/title"
         android:layout_width="265dp"
-        android:layout_height="60dp"
+        android:layout_height="55dp"
         android:textSize="20sp"
         android:textColor="#282a31"
         android:gravity="center"
         app:typeface="@string/custom_font_medium"
         android:layout_marginTop="13dp"
         android:text="@string/welcome_choose_theme_title"
-        app:layout_constraintVertical_bias="1"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"/>
