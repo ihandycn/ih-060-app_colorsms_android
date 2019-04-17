@@ -135,4 +135,14 @@ public class ChooseThemeColorRecommendViewHolder extends BasePagerViewHolder imp
         }
         return "advance";
     }
+
+    public boolean getIsPrimaryColorRecommendedColor() {
+        int primaryColor = PrimaryColors.getPrimaryColor();
+        for (int i = 0; i < COLORS.length; i++) {
+            if (COLORS[i] == primaryColor) {
+                return true;
+            }
+        }
+        return false;
+    }
 }

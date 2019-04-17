@@ -76,7 +76,7 @@ public class ThemeColorSelectActivity extends BaseActivity implements OnColorCha
         mCustomFooterViewPager.setViewHolders(viewHolders);
         mCustomFooterViewPager.setViewPagerTabHeight(CustomViewPager.DEFAULT_TAB_STRIP_SIZE);
         mCustomFooterViewPager.setBackgroundColor(getResources().getColor(R.color.contact_picker_background));
-        mCustomFooterViewPager.setCurrentItem(0);
+        mCustomFooterViewPager.setCurrentItem(mThemeColorRecommendViewHolder.getIsPrimaryColorRecommendedColor() ? POSITION_RECOMMEND : POSITION_ADVANCE);
         mCustomFooterViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
