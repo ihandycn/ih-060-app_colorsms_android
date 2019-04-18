@@ -40,7 +40,8 @@ public class PrivacyModeSettings {
         if (TextUtils.isEmpty(conversationId)) {
             sPrefs.putInt(PREF_KEY_PRIVACY_MODE, mode);
         } else {
-            sPrefs.putInt(PREF_KEY_PRIVACY_MODE + conversationId, mode);
+            sPrefs.putInt(PREF_KEY_PRIVACY_MODE + conversationId
+                    , mode);
         }
     }
 

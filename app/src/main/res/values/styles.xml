@@ -733,17 +733,19 @@
     </style>
 
     <style name="SelectPrivacyModeRadioGroup">
-        <item name="android:layout_width">wrap_content</item>
-        <item name="android:layout_height">wrap_content</item>
-        <item name="android:paddingLeft">21dp</item>
-        <item name="android:layout_marginTop">17dp</item>
-        <item name="android:layout_marginStart">5dp</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">38dp</item>
+        <item name="android:gravity">start|center_vertical</item>
+        <item name="android:paddingStart">19dp</item>
         <item name="android:textColor">@color/text_primary_color</item>
         <item name="android:checked">false</item>
-        <item name="android:textSize">17.3sp</item>
-        <item name="typeface">@string/custom_font_regular</item>
+        <item name="android:drawableLeft">?android:attr/listChoiceIndicatorSingle</item>
+        <item name="android:drawablePadding">12dp</item>
+        <item name="android:textSize">15.3sp</item>
+        <item name="android:includeFontPadding">false</item>
+        <item name="android:background">?selectableItemBackground</item>
+        <item name="android:button">@null</item>
     </style>
-
 
     <style name="MessageBoxActionTextTheme">
         <item name="android:textColor">@color/primary_color</item>
@@ -761,8 +763,6 @@
     <style name="MessageBoxProgressBarTheme" parent="Theme.AppCompat.Light">
         <item name="colorPrimary">@color/primary_color</item>
     </style>
-
-
 
     <style name="AcbSmsRecyclerViewTheme" parent="Theme.AppCompat.Light">
         <item name="colorPrimary">@color/conversation_edge_effect</item>

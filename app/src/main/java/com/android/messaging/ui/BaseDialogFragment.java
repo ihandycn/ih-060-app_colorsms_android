@@ -25,6 +25,8 @@ public abstract class BaseDialogFragment extends DialogFragment {
     private View.OnClickListener mNegativeClickListener;
     private View.OnClickListener mPositiveClickListener;
 
+    private FrameLayout mContentContainer;
+
     public void setOnDismissOrCancelListener(OnDismissOrCancelListener onDismissOrCancelListener) {
         this.mOnDismissOrCancelListener = onDismissOrCancelListener;
     }
@@ -72,13 +74,15 @@ public abstract class BaseDialogFragment extends DialogFragment {
         } else {
             titleTextView.setText(getTitle());
         }
-
+        mContentContainer = root.findViewById(R.id.content_view);
         if (TextUtils.isEmpty(getMessages())) {
-            FrameLayout contentViewContainer = root.findViewById(R.id.content_view);
-            contentViewContainer.removeAllViews();
+
+            mContentContainer.removeAllViews();
             View contentView = getContentView();
+
             if (contentView != null) {
-                contentViewContainer.addView(contentView);
+                mContentContainer.addView(contentView);
+                onContentViewAdded();
             }
         } else {
             ((TextView) root.findViewById(R.id.dialog_content)).setText(getMessages());
@@ -140,6 +144,19 @@ public abstract class BaseDialogFragment extends DialogFragment {
         if (mOnDismissOrCancelListener != null) {
             mOnDismissOrCancelListener.onCancel(dialog);
         }
+    }
+
+    protected void removeDialogContentHorizontalMargin() {
+        if (mContentContainer != null) {
+            ViewGroup.MarginLayoutParams params = (ViewGroup.MarginLayoutParams) mContentContainer.getLayoutParams();
+            params.leftMargin = 0;
+            params.rightMargin = 0;
+            mContentContainer.setLayoutParams(params);
+        }
+    }
+
+    protected void onContentViewAdded() {
+
     }
 
     @Override

@@ -1,8 +1,8 @@
 package com.android.messaging.ui.appsettings;
 
 import android.content.res.ColorStateList;
+import android.graphics.ColorFilter;
 import android.graphics.Typeface;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.widget.AppCompatRadioButton;
 import android.view.LayoutInflater;
@@ -12,6 +12,7 @@ import android.widget.RadioGroup;
 import com.android.messaging.R;
 import com.android.messaging.ui.BaseDialogFragment;
 import com.android.messaging.ui.customize.PrimaryColors;
+import com.android.messaging.util.OsUtil;
 import com.superapps.util.Fonts;
 import com.superapps.util.Threads;
 
@@ -19,6 +20,7 @@ public class SelectPrivacyModeDialog extends BaseDialogFragment {
     private static final String BUNDLE_KEY_CONVERSATION_ID = "conversation_id";
 
     private String mConversationId;
+    private View mContentView;
 
     @Override
     protected CharSequence getMessages() {
@@ -61,26 +63,28 @@ public class SelectPrivacyModeDialog extends BaseDialogFragment {
     }
 
     private View createBodyView() {
-        final View view = LayoutInflater.from(getActivity()).inflate(
+        mContentView = LayoutInflater.from(getActivity()).inflate(
                 R.layout.dialog_choose_privacy_mode, null);
-
         ColorStateList colorStateList = new ColorStateList(
-                new int[][]{
+                new int[][] {
                         new int[]{-android.R.attr.state_checked},
                         new int[]{android.R.attr.state_checked}
                 },
-                new int[]{
+                new int[] {
                         0xffa5abb1
                         , PrimaryColors.getPrimaryColor(),
                 }
         );
 
-        RadioGroup radioGroup = view.findViewById(R.id.radio_group);
-        Typeface font = Fonts.getTypeface(Fonts.Font.CUSTOM_FONT_SEMIBOLD);
+        RadioGroup radioGroup = mContentView.findViewById(R.id.radio_group);
+        Typeface font = Fonts.getTypeface(Fonts.Font.CUSTOM_FONT_MEDIUM);
+
         for (int i = 0; i < 3; i++) {
             AppCompatRadioButton rb = ((AppCompatRadioButton) radioGroup.getChildAt(i));
             rb.setTypeface(font);
-            rb.setSupportButtonTintList(colorStateList);
+            if (OsUtil.isAtLeastL()) {
+                rb.getCompoundDrawables()[0].setTintList(colorStateList); // Applying tint to drawable at left. '0' to get drawable at bottom
+            }
         }
 
         radioGroup.setOnCheckedChangeListener((group, checkedId) -> {
@@ -97,6 +101,12 @@ public class SelectPrivacyModeDialog extends BaseDialogFragment {
             }
             Threads.postOnMainThreadDelayed(this::dismiss, 340L);
         });
-        return view;
+        return mContentView;
+    }
+
+    @Override
+    protected void onContentViewAdded() {
+        super.onContentViewAdded();
+        removeDialogContentHorizontalMargin();
     }
 }
