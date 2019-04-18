@@ -30,6 +30,7 @@ public class MoveMessageToTelephonyAction extends Action {
     }
 
     private MoveMessageToTelephonyAction(String messageId) {
+        super();
         actionParameters.putString("message_id", messageId);
     }
 
@@ -228,8 +229,11 @@ public class MoveMessageToTelephonyAction extends Action {
                 localCursor.getLong(localCursor.getColumnIndex(PrivateSmsEntry.THREAD_ID)));
         values.put(Telephony.Sms.ADDRESS,
                 localCursor.getString(localCursor.getColumnIndex(PrivateSmsEntry.ADDRESS)));
-        values.put(Telephony.Sms.PERSON,
-                localCursor.getInt(localCursor.getColumnIndex(PrivateSmsEntry.PERSON)));
+        //Telephony.Sms.Inbox.PERSON relates to the id of the deprecated Contacts.People._ID
+        String personId = localCursor.getString(localCursor.getColumnIndex(PrivateSmsEntry.PERSON));
+        if (!TextUtils.isEmpty(personId)) {
+            values.put(Telephony.Sms.PERSON, personId);
+        }
         values.put(Telephony.Sms.DATE,
                 localCursor.getLong(localCursor.getColumnIndex(PrivateSmsEntry.DATE)));
         values.put(Telephony.Sms.DATE_SENT,

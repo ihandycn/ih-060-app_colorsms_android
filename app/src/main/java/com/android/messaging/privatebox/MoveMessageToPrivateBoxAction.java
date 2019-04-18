@@ -9,6 +9,7 @@ import android.os.Build;
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.provider.Telephony;
+import android.text.TextUtils;
 
 import com.android.messaging.datamodel.BugleDatabaseOperations;
 import com.android.messaging.datamodel.DataModel;
@@ -147,8 +148,10 @@ public class MoveMessageToPrivateBoxAction extends Action {
                 localCursor.getString(localCursor.getColumnIndex(Telephony.Sms.THREAD_ID)));
         values.put(Telephony.Sms.ADDRESS,
                 localCursor.getString(localCursor.getColumnIndex(PrivateSmsEntry.ADDRESS)));
-        values.put(Telephony.Sms.PERSON,
-                localCursor.getString(localCursor.getColumnIndex(PrivateSmsEntry.PERSON)));
+        String peopleId = localCursor.getString(localCursor.getColumnIndex(Telephony.Sms.PERSON));
+        if (!TextUtils.isEmpty(peopleId)) {
+            values.put(PrivateSmsEntry.PERSON, peopleId);
+        }
         values.put(Telephony.Sms.DATE,
                 localCursor.getString(localCursor.getColumnIndex(PrivateSmsEntry.DATE)));
         values.put(Telephony.Sms.DATE_SENT,
