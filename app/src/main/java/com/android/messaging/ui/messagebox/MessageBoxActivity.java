@@ -51,8 +51,6 @@ public class MessageBoxActivity extends AppCompatActivity implements INotificati
     private static final String OPEN = "open_btn";
     private static final String HOME = "home";
     private static final String CLOSE = "close";
-    private static final String DELETE = "delete";
-    private static final String UNREAD = "unread";
     private static final String REPLY = "reply";
     private static final String CLICK_CONTENT = "click_content";
 
@@ -73,10 +71,6 @@ public class MessageBoxActivity extends AppCompatActivity implements INotificati
     private int mContactsNum = 1;
     private boolean mHasSms;
     private boolean mHasMms;
-
-    private HashMap<String, Boolean> mMarkAsReadMap = new HashMap<>(4);
-    private HashMap<String, MessageBoxItemData> mDataMap = new HashMap<>(4);
-    private ArrayList<String> mConversationIdList = new ArrayList<>(4);
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -102,9 +96,6 @@ public class MessageBoxActivity extends AppCompatActivity implements INotificati
         MessageBoxAnalytics.setIsMultiConversation(false);
 
         recordMessageType(data);
-        mMarkAsReadMap.put(data.getConversationId(), true);
-        mConversationIdList.add(data.getConversationId());
-        mDataMap.put(data.getConversationId(), data);
 
         HSGlobalNotificationCenter.addObserver(NOTIFICATION_FINISH_MESSAGE_BOX, this);
         HSGlobalNotificationCenter.addObserver(NOTIFICATION_MESSAGE_BOX_SEND_SMS_FAILED, this);
@@ -146,8 +137,6 @@ public class MessageBoxActivity extends AppCompatActivity implements INotificati
 
             MessageBoxAnalytics.setIsMultiConversation(true);
             mContactsNum++;
-            mDataMap.put(data.getConversationId(), data);
-            mConversationIdList.add(data.getConversationId());
         }
         mMessagesNum++;
 
@@ -185,7 +174,6 @@ public class MessageBoxActivity extends AppCompatActivity implements INotificati
     public void onPageSelected(int position) {
         mCurrentConversationView = (MessageBoxConversationView) mPagerAdapter.getViews().get(position);
         reLayoutIndicatorView();
-        mMarkAsReadMap.put(mCurrentConversationView.getConversationId(), true);
     }
 
     @Override
@@ -241,42 +229,14 @@ public class MessageBoxActivity extends AppCompatActivity implements INotificati
     public void onClick(View v) {
         int id = v.getId();
         switch (id) {
-            case R.id.action_call:
-                mCurrentConversationView.call();
-                MessageBoxAnalytics.logEvent("SMS_PopUp_Call_Click");
-                break;
-
-            case R.id.action_delete:
-                new BaseAlertDialog.Builder(this)
-                        .setTitle(getString(R.string.message_box_delete_alert_description))
-                        .setPositiveButton(R.string.delete_conversation_confirmation_button,
-                                (dialog, button) -> {
-                                    SyncManager.sync();
-                                    DeleteMessageAction.deleteMessage(mCurrentConversationView.getConversationId(),
-                                            mCurrentConversationView.getParticipantId(),
-                                            mCurrentConversationView.getOldestReceivedTimestamp());
-                                    removeCurrentPage(DELETE);
-                                    BugleAnalytics.logEvent("SMS_PopUp_Delete_Alert_Delete");
-                                })
-                        .setNegativeButton(R.string.delete_conversation_decline_button,
-                                (dialog, which) -> BugleAnalytics.logEvent("SMS_PopUp_Delete_Alert_Cancel"))
-                        .show();
-                MessageBoxAnalytics.logEvent("SMS_PopUp_Delete_Click");
-                break;
             case R.id.action_close:
                 finish(CLOSE);
                 break;
-            case R.id.action_unread:
-                mMarkAsReadMap.put(mCurrentConversationView.getConversationId(), false);
-                Toasts.showToast(R.string.message_box_mark_as_unread);
-                removeCurrentPage(UNREAD);
-                MessageBoxAnalytics.logEvent("SMS_PopUp_Unread_Click");
-                break;
-            case R.id.action_open:
-                UIIntents.get().launchConversationActivityWithParentStack(this, mCurrentConversationView.getConversationId(), null);
-                finish(OPEN);
-                MessageBoxAnalytics.logEvent("SMS_PopUp_Open_Click");
-                break;
+//            case R.id.action_open:
+//                UIIntents.get().launchConversationActivityWithParentStack(this, mCurrentConversationView.getConversationId(), null);
+//                finish(OPEN);
+//                MessageBoxAnalytics.logEvent("SMS_PopUp_Open_Click");
+//                break;
 
             case R.id.self_send_icon:
                 mCurrentConversationView.replyMessage();
@@ -381,13 +341,6 @@ public class MessageBoxActivity extends AppCompatActivity implements INotificati
     protected void onDestroy() {
         super.onDestroy();
         HSGlobalNotificationCenter.removeObserver(this);
-        for (String conversationId : mConversationIdList) {
-            Boolean markAsRead = mMarkAsReadMap.get(conversationId);
-            if (markAsRead != null && markAsRead) {
-                MessageBoxItemData data = mDataMap.get(conversationId);
-                MarkAsReadAction.markAsRead(conversationId, data.getParticipantId(), data.getReceivedTimestamp());
-            }
-        }
 
         String messageType = "";
         if (mHasMms) {

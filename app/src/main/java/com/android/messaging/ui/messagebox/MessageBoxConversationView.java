@@ -6,13 +6,10 @@ import android.animation.ValueAnimator;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Color;
 import android.graphics.Point;
 import android.graphics.PorterDuff;
 import android.graphics.Rect;
 import android.support.annotation.ColorInt;
-import android.support.constraint.Group;
-import android.support.constraint.Guideline;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.telephony.TelephonyManager;
@@ -56,14 +53,11 @@ public class MessageBoxConversationView extends FrameLayout {
     private MessageBoxActivity mActivity;
     private ViewGroup mContent;
     private ViewGroup mMessageView;
-    private Guideline mBottomGuideline;
     private MessageBoxInputActionView mInputActionView;
     private MessageBoxMessageListAdapter mAdapter;
-    private ImageView mCallImage;
     private TextView mConversationName;
     private RecyclerView mRecyclerView;
     private EditText mInputEditText;
-    private Group mActionsGroup;
 
     // privacy mode
     private TextView mPrivacyConversationName;
@@ -91,12 +85,9 @@ public class MessageBoxConversationView extends FrameLayout {
         mPrimaryColorDark = PrimaryColors.getPrimaryColorDark();
 
         initActionBarSimulation();
-        initQuickActions();
         mContent = findViewById(R.id.content);
         mInputActionView = findViewById(R.id.message_compose_view_container);
-        mActionsGroup = findViewById(R.id.action_group);
         mMessageView = findViewById(R.id.message_view);
-        mBottomGuideline = findViewById(R.id.guideline_bottom);
         mPrivacyConversationName = findViewById(R.id.privacy_conversation_name);
 
         mInputEditText = mInputActionView.getComposeEditText();
@@ -120,9 +111,6 @@ public class MessageBoxConversationView extends FrameLayout {
         mRecyclerView.setAdapter(mAdapter);
         setTag(mConversationId);
 
-        if (TextUtils.isEmpty(mPhoneNumber)) {
-            mCallImage.setVisibility(GONE);
-        }
         mOldestReceivedTimestamp = data.getReceivedTimestamp();
         mParticipantId = data.getParticipantId();
         inflatePrivacyModePageIfNeeded();
@@ -145,46 +133,11 @@ public class MessageBoxConversationView extends FrameLayout {
     }
 
     private void initActionBarSimulation() {
-        mCallImage = findViewById(R.id.action_call);
-        mCallImage.setOnClickListener(mActivity);
-        mCallImage.setBackground(BackgroundDrawables.
-                createBackgroundDrawable(mPrimaryColor, mPrimaryColorDark, Dimensions.pxFromDp(21), false, true));
-
         ImageView closeActionImage = findViewById(R.id.action_close);
         closeActionImage.setOnClickListener(mActivity);
         closeActionImage.setBackground(BackgroundDrawables.
                 createBackgroundDrawable(mPrimaryColor, mPrimaryColorDark, Dimensions.pxFromDp(21), false, true));
         findViewById(R.id.action_bar_simulation).getBackground().setColorFilter(mPrimaryColor, PorterDuff.Mode.SRC_ATOP);
-    }
-
-    private void initQuickActions() {
-        TextView actionDelete = findViewById(R.id.action_delete);
-        TextView actionUnread = findViewById(R.id.action_unread);
-        TextView actionOpen = findViewById(R.id.action_open);
-
-        actionDelete.setOnClickListener(mActivity);
-        actionUnread.setOnClickListener(mActivity);
-        actionOpen.setOnClickListener(mActivity);
-
-        actionDelete.setTextColor(mPrimaryColor);
-        actionUnread.setTextColor(mPrimaryColor);
-        actionOpen.setTextColor(mPrimaryColor);
-
-        actionDelete.setText(actionDelete.getText().toString().toUpperCase());
-        float radius = getResources().getDimension(R.dimen.message_box_background_radius);
-        int rippleColor = getResources().getColor(com.superapps.R.color.ripples_ripple_color);
-        actionDelete.setBackground(
-                BackgroundDrawables.createBackgroundDrawable(
-                        Color.WHITE, rippleColor, 0f, 0f, 0, radius,
-                        false, true));
-        actionUnread.setBackground(
-                BackgroundDrawables.createBackgroundDrawable(
-                        Color.WHITE, rippleColor, 0f, 0f, 0, 0f,
-                        false, true));
-        actionOpen.setBackground(
-                BackgroundDrawables.createBackgroundDrawable(
-                        Color.WHITE, rippleColor, 0f, 0f, radius, 0,
-                        false, true));
     }
 
     String getConversationId() {
@@ -291,8 +244,6 @@ public class MessageBoxConversationView extends FrameLayout {
 
         mMessageView.setVisibility(INVISIBLE);
         mMessageView.setAlpha(0f);
-        mActionsGroup.setVisibility(GONE);
-        mActionsGroup.setAlpha(0f);
         ViewStub stub = findViewById(R.id.privacy_stub);
         mPrivacyContainer = stub.inflate();
         mPrivacyContainer.setClickable(true);
@@ -316,8 +267,6 @@ public class MessageBoxConversationView extends FrameLayout {
             mPrivacyConversationName.setVisibility(VISIBLE);
         }
 
-        mCallImage.setAlpha(0f);
-
         updatePrivacyTitleAndTimestamp();
     }
 
@@ -333,7 +282,6 @@ public class MessageBoxConversationView extends FrameLayout {
     private void revealMessages() {
         // height
         ValueAnimator heightAnimator = ValueAnimator.ofInt(0, Dimensions.pxFromDp(40));
-        heightAnimator.addUpdateListener(animation -> mBottomGuideline.setGuidelineEnd((Integer) animation.getAnimatedValue()));
         heightAnimator.setDuration(200L);
         heightAnimator.start();
         mPrivacyContainer.animate().alpha(0f).setDuration(120L).start();
@@ -343,14 +291,10 @@ public class MessageBoxConversationView extends FrameLayout {
         ValueAnimator revealAnimator = ValueAnimator.ofFloat(0f, 1f);
         revealAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
             private float alpha;
-            private View[] actionGroupViews = getActionGroupViewArray();
             @Override
             public void onAnimationUpdate(ValueAnimator animation) {
                 alpha = (float) animation.getAnimatedValue();
                 mMessageView.setAlpha(alpha);
-                for (View view : actionGroupViews) {
-                    view.setAlpha(alpha);
-                }
             }
         });
 
@@ -358,7 +302,6 @@ public class MessageBoxConversationView extends FrameLayout {
             @Override
             public void onAnimationStart(Animator animation) {
                 super.onAnimationStart(animation);
-                mActionsGroup.setVisibility(VISIBLE);
             }
 
             @Override
@@ -372,25 +315,12 @@ public class MessageBoxConversationView extends FrameLayout {
         revealAnimator.setDuration(280L);
         revealAnimator.start();
 
-
         // action bar simulation
         if (hideContactForThisMessage()) {
             mPrivacyConversationName.animate().alpha(0f).setDuration(200L).start();
             mConversationName.setVisibility(VISIBLE);
             mConversationName.animate().alpha(1f).setDuration(200L).start();
         }
-        mCallImage.animate().alpha(1f).setDuration(200L).start();
-    }
-
-    private View[] getActionGroupViewArray() {
-        int[] ids = mActionsGroup.getReferencedIds();
-        View[] views = new View[ids.length];
-        for (int i = 0; i < ids.length; ++i) {
-            int id = ids[i];
-            View view = findViewById(id);
-            views[i] = view;
-        }
-        return views;
     }
 
     private boolean hideContactForThisMessage() {

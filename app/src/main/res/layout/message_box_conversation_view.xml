@@ -59,14 +59,6 @@
 
                 </FrameLayout>
 
-
-                <ImageView
-                    android:id="@+id/action_call"
-                    android:layout_width="29dp"
-                    android:layout_height="29dp"
-                    android:layout_marginEnd="12dp"
-                    android:src="@drawable/ic_call" />
-
                 <ImageView
                     android:id="@+id/action_close"
                     android:layout_width="29dp"
@@ -122,85 +114,6 @@
                 app:layout_constraintEnd_toEndOf="@id/message_view"
                 app:layout_constraintTop_toTopOf="@id/message_view"
                 app:layout_constraintBottom_toBottomOf="@id/message_view"/>
-
-            <android.support.constraint.Guideline
-                android:id="@+id/guideline_start"
-                app:layout_constraintGuide_percent="0.299"
-                android:layout_width="1dp"
-                android:layout_height="wrap_content"
-                android:orientation="vertical" />
-
-            <android.support.constraint.Guideline
-                android:id="@+id/guideline_end"
-                app:layout_constraintGuide_percent="0.701"
-                android:layout_width="1dp"
-                android:layout_height="wrap_content"
-                android:orientation="vertical" />
-
-            <com.superapps.view.MessagesTextView
-                android:id="@+id/action_delete"
-                style="@style/MessageBoxActionTextTheme"
-                app:layout_constraintEnd_toEndOf="@id/guideline_start"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/message_view"
-                android:text="@string/delete_conversation_confirmation_button" />
-
-            <com.superapps.view.MessagesTextView
-                android:id="@+id/action_unread"
-                style="@style/MessageBoxActionTextTheme"
-                app:layout_constraintEnd_toEndOf="@id/guideline_end"
-                app:layout_constraintStart_toStartOf="@id/guideline_start"
-                app:layout_constraintTop_toBottomOf="@id/message_view"
-                android:text="@string/message_box_unread" />
-
-            <com.superapps.view.MessagesTextView
-                android:id="@+id/action_open"
-                style="@style/MessageBoxActionTextTheme"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="@id/guideline_end"
-                app:layout_constraintTop_toBottomOf="@id/message_view"
-                android:text="@string/message_box_open" />
-
-            <View
-                android:id="@+id/start_action_divider"
-                app:layout_constraintBottom_toBottomOf="@id/action_delete"
-                app:layout_constraintStart_toStartOf="@id/guideline_start"
-                app:layout_constraintTop_toTopOf="@id/action_delete"
-                tools:ignore="PxUsage"
-                android:layout_width="2px"
-                android:layout_height="20dp"
-                android:background="#e0e4e7" />
-
-            <View
-                android:id="@+id/end_action_divider"
-                app:layout_constraintBottom_toBottomOf="@id/action_delete"
-                app:layout_constraintStart_toStartOf="@id/guideline_end"
-                app:layout_constraintTop_toTopOf="@id/action_delete"
-                tools:ignore="PxUsage"
-                android:layout_width="2px"
-                android:layout_height="20dp"
-                android:background="#e0e4e7" />
-
-            <Space
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                app:layout_constraintTop_toBottomOf="@id/message_view"
-                app:layout_constraintBottom_toBottomOf="@id/guideline_bottom" />
-
-            <android.support.constraint.Guideline
-                android:id="@+id/guideline_bottom"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                app:layout_constraintTop_toBottomOf="@id/message_view"
-                app:layout_constraintGuide_end="0dp"/>
-            
-            <android.support.constraint.Group
-                android:id="@+id/action_group"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                app:constraint_referenced_ids="action_delete, action_open, action_unread,
-                start_action_divider, end_action_divider" />
 
         </android.support.constraint.ConstraintLayout>
 
