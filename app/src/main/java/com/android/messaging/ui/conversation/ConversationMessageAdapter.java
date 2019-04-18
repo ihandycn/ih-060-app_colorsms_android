@@ -17,6 +17,7 @@ package com.android.messaging.ui.conversation;
 
 import android.content.Context;
 import android.database.Cursor;
+import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -26,34 +27,35 @@ import android.widget.ImageView;
 import com.android.messaging.R;
 import com.android.messaging.datamodel.data.ConversationMessageData;
 import com.android.messaging.ui.AsyncImageView.AsyncImageViewDelayLoader;
-import com.android.messaging.ui.CursorRecyclerAdapter;
 import com.android.messaging.ui.conversation.ConversationMessageView.ConversationMessageViewHost;
 import com.android.messaging.util.Assert;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Provides an interface to expose Conversation Message Cursor data to a UI widget like a
  * RecyclerView.
  */
 public class ConversationMessageAdapter extends
-        CursorRecyclerAdapter<ConversationMessageAdapter.ConversationMessageViewHolder> {
+        RecyclerView.Adapter<ConversationMessageAdapter.ConversationMessageViewHolder> {
 
     private final ConversationMessageViewHost mHost;
     private final AsyncImageViewDelayLoader mImageViewDelayLoader;
     private final View.OnClickListener mViewClickListener;
     private final View.OnLongClickListener mViewLongClickListener;
     private boolean mOneOnOne;
-    private String mSelectedMessageId;
     private static boolean multiSelectMode;
     public static final int NORMAL = 1000;
     public static final int SLIDE = 2000;
     public static int mState;
 
-    public ConversationMessageAdapter(final Context context, final Cursor cursor,
-                                      final ConversationMessageViewHost host,
+    private List<ConversationMessageData> mDataList = new ArrayList<>();
+
+    public ConversationMessageAdapter(final ConversationMessageViewHost host,
                                       final AsyncImageViewDelayLoader imageViewDelayLoader,
                                       final View.OnClickListener viewClickListener,
                                       final View.OnLongClickListener longClickListener) {
-        super(context, cursor, 0);
         mHost = host;
         mViewClickListener = viewClickListener;
         mViewLongClickListener = longClickListener;
@@ -61,40 +63,9 @@ public class ConversationMessageAdapter extends
         setHasStableIds(true);
     }
 
-    @Override
-    public void bindViewHolder(final ConversationMessageViewHolder holder,
-                               final Context context, final Cursor cursor) {
-        Assert.isTrue(holder.mView instanceof ConversationMessageView);
-        final ConversationMessageView conversationMessageView =
-                (ConversationMessageView) holder.mView;
-        ImageView checkbox = conversationMessageView.findViewById(R.id.check_box);
-        conversationMessageView.bind(cursor, mOneOnOne, multiSelectMode);
-        ConversationMessageData data = conversationMessageView.getData();
-
-        if (multiSelectMode && !ConversationFragment.getSelectMessageIds().isEmpty()) {
-            checkbox.setVisibility(View.VISIBLE);
-            if (ConversationFragment.getSelectMessageIds().contains(data.getMessageId())) {
-                checkbox.setImageResource(R.drawable.ic_choosen);
-            } else {
-                checkbox.setImageResource(R.drawable.ic_choose);
-            }
-        } else {
-            checkbox.setVisibility(View.GONE);
-        }
-        holder.bind();
-    }
-
-    @Override
-    public ConversationMessageViewHolder createViewHolder(final Context context,
-                                                          final ViewGroup parent, final int viewType) {
-        final LayoutInflater layoutInflater = LayoutInflater.from(context);
-        final ConversationMessageView conversationMessageView = (ConversationMessageView)
-                layoutInflater.inflate(R.layout.conversation_message_view, null);
-        conversationMessageView.setHost(mHost);
-        conversationMessageView.setImageViewDelayLoader(mImageViewDelayLoader);
-        ConversationMessageViewHolder conversationMessageViewHolder = new ConversationMessageViewHolder(conversationMessageView,
-                mViewClickListener, mViewLongClickListener);
-        return conversationMessageViewHolder;
+    public void setDataList(List<ConversationMessageData> dataList) {
+        mDataList = dataList;
+        notifyDataSetChanged();
     }
 
     public void openItemAnimation() {
@@ -106,11 +77,6 @@ public class ConversationMessageAdapter extends
         mState = NORMAL;
         notifyDataSetChanged();
         setMultiSelectMode(false);
-    }
-
-    public void setSelectedMessage(final String messageId) {
-        mSelectedMessageId = messageId;
-        notifyDataSetChanged();
     }
 
     public void setOneOnOne(final boolean oneOnOne, final boolean invalidate) {
@@ -130,9 +96,57 @@ public class ConversationMessageAdapter extends
         return multiSelectMode;
     }
 
+    @NonNull @Override
+    public ConversationMessageViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        final LayoutInflater layoutInflater = LayoutInflater.from(parent.getContext());
+        final ConversationMessageView conversationMessageView = (ConversationMessageView)
+                layoutInflater.inflate(R.layout.conversation_message_view, null);
+        conversationMessageView.setHost(mHost);
+        conversationMessageView.setImageViewDelayLoader(mImageViewDelayLoader);
+        ConversationMessageViewHolder conversationMessageViewHolder = new ConversationMessageViewHolder(conversationMessageView,
+                mViewClickListener, mViewLongClickListener);
+        return conversationMessageViewHolder;
+    }
+
+    @Override
+    public void onBindViewHolder(@NonNull ConversationMessageViewHolder holder, int position) {
+        Assert.isTrue(holder.mView instanceof ConversationMessageView);
+        final ConversationMessageView conversationMessageView =
+                (ConversationMessageView) holder.mView;
+        ImageView checkbox = conversationMessageView.findViewById(R.id.check_box);
+        conversationMessageView.bind(mDataList.get(position), mOneOnOne, multiSelectMode);
+        ConversationMessageData data = conversationMessageView.getData();
+
+        if (multiSelectMode && !ConversationFragment.getSelectMessageIds().isEmpty()) {
+            checkbox.setVisibility(View.VISIBLE);
+            if (ConversationFragment.getSelectMessageIds().contains(data.getMessageId())) {
+                checkbox.setImageResource(R.drawable.ic_choosen);
+            } else {
+                checkbox.setImageResource(R.drawable.ic_choose);
+            }
+        } else {
+            checkbox.setVisibility(View.GONE);
+        }
+        holder.bind();
+    }
+
+    @Override public int getItemCount() {
+        return mDataList.size();
+    }
+
+    @Override
+    public long getItemId(int position) {
+        if (mDataList.get(position) instanceof ConversationMessageData) {
+            ConversationMessageData messageData = mDataList.get(position);
+            return Long.parseLong(messageData.getMessageId());
+        } else {
+            return 0;
+        }
+    }
+
     /**
-    * SmsViewHolder that holds a ConversationMessageView.
-    */
+     * SmsViewHolder that holds a ConversationMessageView.
+     */
     public static class ConversationMessageViewHolder extends RecyclerView.ViewHolder {
         final View mView;
 
@@ -147,8 +161,6 @@ public class ConversationMessageAdapter extends
             mView = itemView;
             mView.setOnClickListener(viewClickListener);
             mView.setOnLongClickListener(viewLongClickListener);
-
-
         }
 
         public void bind() {

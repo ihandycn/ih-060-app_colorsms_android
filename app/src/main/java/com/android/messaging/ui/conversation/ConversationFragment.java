@@ -35,8 +35,6 @@ import android.content.res.Configuration;
 import android.database.Cursor;
 import android.graphics.Point;
 import android.graphics.Rect;
-import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
@@ -88,7 +86,6 @@ import com.android.messaging.ui.UIIntents;
 import com.android.messaging.ui.conversation.ComposeMessageView.IComposeMessageViewHost;
 import com.android.messaging.ui.conversation.ConversationInputManager.ConversationInputHost;
 import com.android.messaging.ui.conversation.ConversationMessageView.ConversationMessageViewHost;
-import com.android.messaging.ui.customize.WallpaperDrawables;
 import com.android.messaging.ui.dialog.FiveStarRateDialog;
 import com.android.messaging.ui.emoji.EmojiPickerFragment;
 import com.android.messaging.ui.mediapicker.CameraGalleryFragment;
@@ -105,7 +102,6 @@ import com.android.messaging.util.OsUtil;
 import com.android.messaging.util.PhoneUtils;
 import com.android.messaging.util.SafeAsyncTask;
 import com.android.messaging.util.TextUtil;
-import com.android.messaging.util.ThreadUtil;
 import com.android.messaging.util.UiUtils;
 import com.android.messaging.util.UriUtil;
 import com.google.common.annotations.VisibleForTesting;
@@ -134,10 +130,6 @@ public class ConversationFragment extends Fragment implements ConversationDataLi
 
     public static ArrayList<String> getSelectMessageIds() {
         return selectMessageIds;
-    }
-
-    public static void setSelectMessageIds(ArrayList<String> selectMessageIds) {
-        ConversationFragment.selectMessageIds = selectMessageIds;
     }
 
     private static ArrayList<String> selectMessageIds = new ArrayList<>();
@@ -501,8 +493,7 @@ public class ConversationFragment extends Fragment implements ConversationDataLi
         if (selectMessageIds != null) {
             selectMessageIds.clear();
         }
-        mAdapter = new ConversationMessageAdapter(getActivity(), null, this,
-                null,
+        mAdapter = new ConversationMessageAdapter(this, null,
                 // Sets the item click listener on the Recycler item views.
                 v -> {
                     final ConversationMessageView messageView = (ConversationMessageView) v;
@@ -705,13 +696,13 @@ public class ConversationFragment extends Fragment implements ConversationDataLi
             mAdapter.setMultiSelectMode(true);
             mSelectedMessage = messageView;
             if (mSelectedMessage == null) {
-                mAdapter.setSelectedMessage(null);
+                mAdapter.notifyDataSetChanged();
                 mSelectedAttachment = null;
                 return;
             }
             mSelectedAttachment = attachment;
             ConversationMessageData data = messageView.getData();
-            mAdapter.setSelectedMessage(data.getMessageId());
+            mAdapter.notifyDataSetChanged();
             ImageView checkBox = messageView.findViewById(R.id.check_box);
             checkBox.setSelected(true);
             selectMessages.clear();
@@ -840,16 +831,16 @@ public class ConversationFragment extends Fragment implements ConversationDataLi
 
         // Ensure that the action bar is updated with the current data.
         invalidateOptionsMenu();
-        final Cursor oldCursor = mAdapter.swapCursor(cursor);
 
-        if (cursor != null && oldCursor == null) {
-            if (mListState != null) {
-                mRecyclerView.getLayoutManager().onRestoreInstanceState(mListState);
-                // RecyclerView restores scroll states without triggering scroll change events, so
-                // we need to manually ensure that they are correctly handled.
-                mListScrollListener.onScrolled(mRecyclerView, 0, 0);
-            }
+        ArrayList<ConversationMessageData> dataList = new ArrayList<>();
+        if (cursor != null && cursor.moveToFirst()) {
+            do {
+                ConversationMessageData messageData = new ConversationMessageData();
+                messageData.bind(cursor);
+                dataList.add(messageData);
+            } while (cursor.moveToNext());
         }
+        mAdapter.setDataList(dataList);
 
         if (isSync) {
             // This is a message sync. Syncing messages changes cursor item count, which would
