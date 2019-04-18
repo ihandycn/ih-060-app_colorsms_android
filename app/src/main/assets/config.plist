@@ -159,7 +159,7 @@
 					<key>OutgoingBubbleTextColor</key>
 					<string>#ffffff</string>
 					<key>PreviewUrl</key>
-					<string>assets://themes/default/image_default_theme.png</string>
+					<string>assets://themes/default/image_default_theme.jpg</string>
 					<key>ThemeColor</key>
 					<string>#37a63b</string>
 					<key>ToolbarBgUrl</key>
@@ -198,7 +198,7 @@
 					<key>OutgoingBubbleTextColor</key>
 					<string>#ffffff</string>
 					<key>PreviewUrl</key>
-					<string>assets://themes/diamond/image_diamond_theme.png</string>
+					<string>assets://themes/diamond/image_diamond_theme.jpg</string>
 					<key>ThemeColor</key>
 					<string>#e45eb4</string>
 					<key>ToolbarBgUrl</key>
@@ -237,7 +237,7 @@
 					<key>OutgoingBubbleTextColor</key>
 					<string>#ffffff</string>
 					<key>PreviewUrl</key>
-					<string>assets://themes/neon/image_neon_theme.png</string>
+					<string>assets://themes/neon/image_neon_theme.jpg</string>
 					<key>ThemeColor</key>
 					<string>#5f1ef3</string>
 					<key>ToolbarBgUrl</key>
@@ -276,7 +276,7 @@
 					<key>OutgoingBubbleTextColor</key>
 					<string>#ffffff</string>
 					<key>PreviewUrl</key>
-					<string>assets://themes/simplebusiness/image_simple_theme.png</string>
+					<string>assets://themes/simplebusiness/image_simple_theme.jpg</string>
 					<key>ThemeColor</key>
 					<string>#5191d4</string>
 					<key>ToolbarBgUrl</key>
@@ -315,7 +315,7 @@
 					<key>OutgoingBubbleTextColor</key>
 					<string>#ffffff</string>
 					<key>PreviewUrl</key>
-					<string>assets://themes/waterdrop/image_waterdrop_theme.png</string>
+					<string>assets://themes/waterdrop/image_waterdrop_theme.jpg</string>
 					<key>ThemeColor</key>
 					<string>#7bbe25</string>
 					<key>ToolbarBgUrl</key>
