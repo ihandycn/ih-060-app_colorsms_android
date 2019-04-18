@@ -66,8 +66,6 @@ public abstract class BaseDialogFragment extends DialogFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
         final View root = inflater.inflate(R.layout.layout_base_dialog, container, false);
-
-
         TextView titleTextView = root.findViewById(R.id.dialog_title);
         if (TextUtils.isEmpty(getTitle())) {
             titleTextView.setVisibility(View.GONE);

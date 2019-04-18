@@ -99,7 +99,7 @@ public class SelectPrivacyModeDialog extends BaseDialogFragment {
                     PrivacyModeSettings.setPrivacyMode(mConversationId, PrivacyModeSettings.HIDE_CONTACT_AND_MESSAGE);
                     break;
             }
-            Threads.postOnMainThreadDelayed(this::dismiss, 340L);
+            Threads.postOnMainThreadDelayed(this::dismissAllowingStateLoss, 340L);
         });
         return mContentView;
     }
