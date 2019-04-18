@@ -40,6 +40,7 @@ public class ThemeUtils {
         ConversationColors.get().setListTitleColor(Color.parseColor(themeInfo.listTitleColor));
         ConversationColors.get().setListSubTitleColor(Color.parseColor(themeInfo.listSubtitleColor));
         ConversationColors.get().setListTimeColor(Color.parseColor(themeInfo.listTimeColor));
+        ConversationColors.get().setAdActionColor(Color.parseColor(themeInfo.bubbleAdColor));
 
         ToolbarDrawables.applyToolbarBg(themeInfo.toolbarBgUrl);
         WallpaperDrawables.applyWallpaperBg(themeInfo.wallpaperUrl);

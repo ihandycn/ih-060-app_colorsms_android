@@ -27,6 +27,7 @@ import android.widget.TextView;
 import com.airbnb.lottie.LottieAnimationView;
 import com.android.messaging.Factory;
 import com.android.messaging.R;
+import com.android.messaging.ad.AdPlacement;
 import com.android.messaging.datamodel.BugleNotifications;
 import com.android.messaging.datamodel.action.PinConversationAction;
 import com.android.messaging.ui.CreateShortcutActivity;
@@ -69,6 +70,8 @@ import com.superapps.util.Navigations;
 import com.superapps.util.Preferences;
 import com.superapps.util.Threads;
 import com.superapps.util.Toasts;
+
+import net.appcloudbox.ads.nativead.AcbNativeAdManager;
 
 import java.lang.ref.WeakReference;
 import java.util.Calendar;
@@ -255,6 +258,10 @@ public class ConversationListActivity extends AbstractConversationListActivity
                     }, "pref_key_customize_config_has_send");
                 }
             });
+
+            if (HSConfig.optBoolean(false, "Application", "SMSAd", "SMSDetailspageBannerAd", "Enabled")) {
+                AcbNativeAdManager.preload(1, AdPlacement.AD_DETAIL_NATIVE);
+            }
         }
 
         Trace.endSection();

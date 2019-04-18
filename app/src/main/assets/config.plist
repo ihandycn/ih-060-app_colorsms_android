@@ -21,6 +21,13 @@
 					<key>ShowAfterInstall</key>
 					<integer>2</integer>
 				</dict>
+				<key>SMSDetailspageBannerAd</key>
+				<dict>
+					<key>Enabled</key>
+					<true/>
+					<key>ShowAfterCloseTheKeyboard</key>
+					<true/>
+				</dict>
 				<key>SMSHomepageBannerAd</key>
 				<true/>
 			</dict>
@@ -158,6 +165,8 @@
 					<string>#37a63b</string>
 					<key>OutgoingBubbleTextColor</key>
 					<string>#ffffff</string>
+					<key>BubbleAdColor</key>
+					<string>#2caef8</string>
 					<key>PreviewUrl</key>
 					<string>assets://themes/default/image_default_theme.jpg</string>
 					<key>ThemeColor</key>
@@ -197,6 +206,8 @@
 					<string>#00ffffff</string>
 					<key>OutgoingBubbleTextColor</key>
 					<string>#ffffff</string>
+					<key>BubbleAdColor</key>
+					<string>#e3187b</string>
 					<key>PreviewUrl</key>
 					<string>assets://themes/diamond/image_diamond_theme.jpg</string>
 					<key>ThemeColor</key>
@@ -236,6 +247,8 @@
 					<string>#00ffffff</string>
 					<key>OutgoingBubbleTextColor</key>
 					<string>#ffffff</string>
+					<key>BubbleAdColor</key>
+					<string>#42d9ff</string>
 					<key>PreviewUrl</key>
 					<string>assets://themes/neon/image_neon_theme.jpg</string>
 					<key>ThemeColor</key>
@@ -275,6 +288,8 @@
 					<string>#5191d4</string>
 					<key>OutgoingBubbleTextColor</key>
 					<string>#ffffff</string>
+					<key>BubbleAdColor</key>
+					<string>#2caef8</string>
 					<key>PreviewUrl</key>
 					<string>assets://themes/simplebusiness/image_simple_theme.jpg</string>
 					<key>ThemeColor</key>
@@ -313,6 +328,8 @@
 					<key>OutgoingBubbleBgColor</key>
 					<string>#00000000</string>
 					<key>OutgoingBubbleTextColor</key>
+					<string>#ffffff</string>
+					<key>BubbleAdColor</key>
 					<string>#ffffff</string>
 					<key>PreviewUrl</key>
 					<string>assets://themes/waterdrop/image_waterdrop_theme.jpg</string>

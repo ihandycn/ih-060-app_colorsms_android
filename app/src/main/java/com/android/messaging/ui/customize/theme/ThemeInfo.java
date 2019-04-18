@@ -47,6 +47,8 @@ public class ThemeInfo {
 
     public String outgoingBubbleTextColor;
 
+    public String bubbleAdColor;
+
     public String fontUrl;
 
     public String fontName;
@@ -74,6 +76,7 @@ public class ThemeInfo {
         themeInfo.outgoingBubbleBgColor = (String) themeConfig.get("OutgoingBubbleBgColor");
         themeInfo.incomingBubbleTextColor = (String) themeConfig.get("IncomingBubbleTextColor");
         themeInfo.outgoingBubbleTextColor = (String) themeConfig.get("OutgoingBubbleTextColor");
+        themeInfo.bubbleAdColor = (String) themeConfig.get("BubbleAdColor");
         themeInfo.fontUrl = (String) themeConfig.get("FontUrl");
         themeInfo.fontName = (String) themeConfig.get("FontName");
 

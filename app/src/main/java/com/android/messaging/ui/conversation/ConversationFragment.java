@@ -56,11 +56,13 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewConfiguration;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.android.messaging.R;
+import com.android.messaging.ad.AdPlacement;
 import com.android.messaging.datamodel.BugleNotifications;
 import com.android.messaging.datamodel.DataModel;
 import com.android.messaging.datamodel.MessagingContentProvider;
@@ -105,10 +107,17 @@ import com.android.messaging.util.TextUtil;
 import com.android.messaging.util.UiUtils;
 import com.android.messaging.util.UriUtil;
 import com.google.common.annotations.VisibleForTesting;
+import com.ihs.commons.config.HSConfig;
 import com.ihs.commons.notificationcenter.HSGlobalNotificationCenter;
 import com.ihs.commons.notificationcenter.INotificationObserver;
 import com.ihs.commons.utils.HSBundle;
+import com.ihs.commons.utils.HSLog;
 import com.superapps.util.Threads;
+
+import net.appcloudbox.ads.base.AcbNativeAd;
+import net.appcloudbox.ads.common.utils.AcbError;
+import net.appcloudbox.ads.nativead.AcbNativeAdLoader;
+import net.appcloudbox.ads.nativead.AcbNativeAdManager;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -481,6 +490,37 @@ public class ConversationFragment extends Fragment implements ConversationDataLi
         return selectMessages.size() == 1;
     }
 
+    private List<Object> mMessageDataList = new ArrayList<>();
+    private AcbNativeAdLoader mNativeAdLoader;
+    private AcbNativeAd mNativeAd;
+    private boolean shouldAddNativeAdToList = true;
+    private int composeEditTextInitialPos = -1;
+    private boolean isAdShowLogged = false;
+
+    private ViewTreeObserver.OnGlobalLayoutListener globalLayoutListener = new ViewTreeObserver.OnGlobalLayoutListener() {
+        @Override public void onGlobalLayout() {
+            int[] pos = new int[2];
+            mComposeMessageView.getComposeEditText().getLocationOnScreen(pos);
+            int bottomPos = pos[1] + mComposeMessageView.getComposeEditText().getMeasuredHeight();
+            HSLog.d("compose message view bottom position: " + bottomPos);
+            if (composeEditTextInitialPos == -1) {
+                composeEditTextInitialPos = bottomPos;
+            }
+            if (shouldAddNativeAdToList) {
+                if (composeEditTextInitialPos != bottomPos) {
+                    shouldAddNativeAdToList = false;
+                    updateAdapterData();
+                }
+            } else {
+                if (composeEditTextInitialPos == bottomPos
+                        && HSConfig.optBoolean(false, "Application", "SMSAd", "SMSDetailspageBannerAd", "ShowAfterCloseTheKeyboard")) {
+                    shouldAddNativeAdToList = true;
+                    updateAdapterData();
+                }
+            }
+        }
+    };
+
     /**
      * {@inheritDoc} from Fragment
      */
@@ -523,6 +563,36 @@ public class ConversationFragment extends Fragment implements ConversationDataLi
                     return true;
                 }
         );
+
+        if (HSConfig.optBoolean(false, "Application", "SMSAd", "SMSDetailspageBannerAd", "Enabled")) {
+            BugleAnalytics.logEvent("Detailspage_NativeAd_Should_Show", true, true);
+            List<AcbNativeAd> nativeAds = AcbNativeAdManager.fetch(AdPlacement.AD_DETAIL_NATIVE, 1);
+            if (nativeAds.size() > 0) {
+                mNativeAd = nativeAds.get(0);
+                mNativeAd.setNativeClickListener(
+                        acbAd -> BugleAnalytics.logEvent("Detailspage_NativeAd_Click", true, true));
+                updateAdapterData();
+            } else {
+                mNativeAdLoader = AcbNativeAdManager.createLoaderWithPlacement(AdPlacement.AD_DETAIL_NATIVE);
+                mNativeAdLoader.load(1, new AcbNativeAdLoader.AcbNativeAdLoadListener() {
+                    @Override
+                    public void onAdReceived(AcbNativeAdLoader acbNativeAdLoader, List<AcbNativeAd> list) {
+                        if (list.size() > 0) {
+                            mNativeAd = list.get(0);
+                            mNativeAd.setNativeClickListener(
+                                    acbAd -> BugleAnalytics.logEvent("Detailspage_NativeAd_Click", true, true));
+                            updateAdapterData();
+                        }
+                    }
+
+                    @Override
+                    public void onAdFinished(AcbNativeAdLoader acbNativeAdLoader, AcbError acbError) {
+
+                    }
+                });
+            }
+        }
+
         HSGlobalNotificationCenter.addObserver(EVENT_SHOW_OPTION_MENU, this);
         HSGlobalNotificationCenter.addObserver(EVENT_SHOW_OPTION_MENU, this);
         HSGlobalNotificationCenter.addObserver(EVENT_HIDE_MEDIA_PICKER, this);
@@ -554,6 +624,7 @@ public class ConversationFragment extends Fragment implements ConversationDataLi
                 mBinding, mComposeMessageView.getDraftDataModel(), savedInstanceState);
         mComposeMessageView.setInputManager(inputManager);
         mComposeMessageView.setConversationDataModel(BindingBase.createBindingReference(mBinding));
+        mComposeMessageView.getComposeEditText().getViewTreeObserver().addOnGlobalLayoutListener(globalLayoutListener);
         mHost.invalidateActionBar();
 
         mDraftMessageDataModel =
@@ -832,15 +903,15 @@ public class ConversationFragment extends Fragment implements ConversationDataLi
         // Ensure that the action bar is updated with the current data.
         invalidateOptionsMenu();
 
-        ArrayList<ConversationMessageData> dataList = new ArrayList<>();
+        mMessageDataList.clear();
         if (cursor != null && cursor.moveToFirst()) {
             do {
                 ConversationMessageData messageData = new ConversationMessageData();
                 messageData.bind(cursor);
-                dataList.add(messageData);
+                mMessageDataList.add(messageData);
             } while (cursor.moveToNext());
         }
-        mAdapter.setDataList(dataList);
+        updateAdapterData();
 
         if (isSync) {
             // This is a message sync. Syncing messages changes cursor item count, which would
@@ -896,6 +967,27 @@ public class ConversationFragment extends Fragment implements ConversationDataLi
         mHost.invalidateActionBar();
     }
 
+    private void updateAdapterData() {
+        List<Object> list = new ArrayList<>();
+        list.addAll(mMessageDataList);
+        boolean adAttached = false;
+        if (mMessageDataList.size() > 0
+                && mNativeAd != null
+                && shouldAddNativeAdToList) {
+            list.add(mNativeAd);
+            adAttached = true;
+            if (!isAdShowLogged) {
+                BugleAnalytics.logEvent("Detailspage_NativeAd_Show", true, true);
+                isAdShowLogged = true;
+            }
+            BugleAnalytics.logEvent("Detailspage_NativeAd_RealShow");
+        }
+        mAdapter.setDataList(list);
+        if (adAttached) {
+            scrollToBottom(false);
+        }
+    }
+
     /**
      * {@inheritDoc} from ConversationDataListener
      */
@@ -941,12 +1033,20 @@ public class ConversationFragment extends Fragment implements ConversationDataLi
         // Unbind all the views that we bound to data
         if (mComposeMessageView != null) {
             mComposeMessageView.unbind();
+            mComposeMessageView.getComposeEditText().getViewTreeObserver().removeOnGlobalLayoutListener(globalLayoutListener);
         }
         mRecyclerView.setAdapter(null);
 
         // And unbind this fragment from its data
         mBinding.unbind();
         mConversationId = null;
+
+        if (mNativeAd != null) {
+            mNativeAd.release();
+        }
+        if (mNativeAdLoader != null) {
+            mNativeAdLoader.cancel();
+        }
 
         HSGlobalNotificationCenter.removeObserver(this);
         FiveStarRateDialog.dismissDialogs();
