@@ -7,7 +7,7 @@
 		<key>Application</key>
 		<dict>
 			<key>FiveStarShowTime</key>
-			<integer>30</integer>
+			<integer>5</integer>
 			<key>PrivacyPolicyUrl</key>
 			<string>http://cdn.appcloudbox.net/smoothappsstudio/apps/bubble/privacy.html</string>
 			<key>SMSAd</key>
