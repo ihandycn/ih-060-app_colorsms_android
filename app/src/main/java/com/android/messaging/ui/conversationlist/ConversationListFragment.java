@@ -490,7 +490,7 @@ public class ConversationListFragment extends Fragment implements ConversationLi
         if (adFirstPrepared && !dataList.isEmpty()) {
             prepareAd();
         }
-        updateEmptyListUi(cursor == null || cursor.getCount() == 0);
+        updateEmptyListUi(cursor == null || dataList.size() == 0);
         if (cursor != null && cursor.getCount() > 0) {
             Preferences.getDefault().doOnce(new Runnable() {
                 @Override
