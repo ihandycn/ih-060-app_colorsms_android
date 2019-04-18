@@ -2,18 +2,23 @@ package com.android.messaging.ui.customize;
 
 import android.content.Context;
 import android.graphics.PorterDuff;
+import android.graphics.drawable.Drawable;
 import android.support.annotation.ColorInt;
 import android.support.constraint.ConstraintLayout;
 import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.android.messaging.R;
 import com.android.messaging.ui.ConversationDrawables;
 import com.android.messaging.util.BugleAnalytics;
+import com.android.messaging.util.ImageUtils;
 import com.superapps.util.BackgroundDrawables;
 import com.superapps.util.Dimensions;
+
+import org.w3c.dom.Text;
 
 public class CustomMessagePreviewView extends ConstraintLayout {
     private String mConversationId;
@@ -56,6 +61,15 @@ public class CustomMessagePreviewView extends ConstraintLayout {
         findViewById(R.id.message_preview_timestamp_2).setBackground(BackgroundDrawables.createBackgroundDrawable(
                 getResources().getColor(R.color.white_40_transparent), Dimensions.pxFromDp(16), false
         ));
+
+        TextView contactIcon = findViewById(R.id.contact_text);
+        ImageView contactBackground = findViewById(R.id.contact_background);
+        Drawable avatar = AvatarBgDrawables.getAvatarBg();
+        if (avatar != null) {
+            contactBackground.setBackground(avatar);
+        } else {
+            contactIcon.setBackgroundResource(R.drawable.bubble_customize_preview_contact_icon_background);
+        }
     }
 
     public void setIsFontPreview() {
@@ -120,7 +134,7 @@ public class CustomMessagePreviewView extends ConstraintLayout {
         if (mPreviewBubbleDrawableIndex != BubbleDrawables.getSelectedIndex(mConversationId)) {
             BubbleDrawables.setSelectedIndex(mPreviewBubbleDrawableIndex, mConversationId);
             bubbleDrawableChanged = true;
-            BugleAnalytics.logEvent("Customize_Bubble_Style_Change", "style",
+            BugleAnalytics.logEvent("Customize_Bubble_Style_Change", false, true, "style",
                     String.valueOf(BubbleDrawables.getSelectedIdentifier()));
         }
 
@@ -146,11 +160,11 @@ public class CustomMessagePreviewView extends ConstraintLayout {
 
         String from = TextUtils.isEmpty(mConversationId) ? "settings" : "chat";
 
-        BugleAnalytics.logEvent("Customize_Bubble_Change", true, "from", from, "type",
+        BugleAnalytics.logEvent("Customize_Bubble_Change", true, true, "from", from, "type",
                 getBubbleChangeString(bubbleDrawableChanged, bubbleBackgroundColorChanged || bubbleTextColorChanged));
 
         if (bubbleBackgroundColorChanged || bubbleTextColorChanged) {
-            BugleAnalytics.logEvent("Customize_Bubble_Color_Change", "type",
+            BugleAnalytics.logEvent("Customize_Bubble_Color_Change", false, true, "type",
                     getBubbleColorChangeString(bubbleBackgroundColorChanged, bubbleTextColorChanged));
         }
     }

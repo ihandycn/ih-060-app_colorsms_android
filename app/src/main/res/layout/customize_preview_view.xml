@@ -1,31 +1,44 @@
 <?xml version="1.0" encoding="utf-8"?>
-<merge xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
        xmlns:app="http://schemas.android.com/apk/res-auto"
        xmlns:tools="http://schemas.android.com/tools"
        android:layout_width="match_parent"
        android:layout_height="match_parent">
 
-    <com.superapps.view.MessagesTextView
-        android:id="@+id/contact_icon"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="24dp"
-        android:layout_marginTop="24dp"
-        android:background="@drawable/bubble_customize_preview_contact_icon_background"
-        android:gravity="center"
-        android:text="E"
-        android:textColor="@android:color/white"
-        android:textSize="23sp"
-        android:includeFontPadding="false"
+
+    <FrameLayout
+        android:id="@+id/contact_container"
+        android:layout_width="@dimen/conversation_message_contact_icon_container_size"
+        android:layout_height="@dimen/conversation_message_contact_icon_container_size"
+        android:layout_marginTop="5dp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:typeface="@string/custom_font_bold"/>
+        app:layout_constraintTop_toTopOf="parent">
+
+        <ImageView
+            android:id="@+id/contact_background"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+        <com.superapps.view.MessagesTextView
+            android:id="@+id/contact_text"
+            android:layout_width="@dimen/conversation_message_contact_icon_size"
+            android:layout_height="@dimen/conversation_message_contact_icon_size"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:includeFontPadding="false"
+            android:text="E"
+            android:textColor="@android:color/white"
+            android:textSize="23sp"
+            app:typeface="@string/custom_font_bold" />
+
+    </FrameLayout>
 
     <com.superapps.view.MessagesTextView
         android:id="@+id/incoming_message_preview_item"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="11dp"
+        android:layout_marginTop="16dp"
         android:ellipsize="none"
         android:gravity="center_vertical"
         android:maxLines="3"
@@ -36,8 +49,8 @@
         android:textSize="13sp"
         android:includeFontPadding="false"
         app:font_size_changeable="true"
-        app:layout_constraintStart_toEndOf="@id/contact_icon"
-        app:layout_constraintTop_toTopOf="@id/contact_icon"
+        app:layout_constraintStart_toEndOf="@id/contact_container"
+        app:layout_constraintTop_toTopOf="@id/contact_container"
         app:typeface="@string/custom_font_medium"
         tools:background="@color/primary_color"/>
 
@@ -94,4 +107,4 @@
         app:layout_constraintEnd_toEndOf="@id/outgoing_message_preview_item"
         app:layout_constraintTop_toBottomOf="@id/outgoing_message_preview_item"
         app:typeface="@string/custom_font_medium"/>
-</merge>
+</android.support.constraint.ConstraintLayout>

@@ -124,6 +124,8 @@ public abstract class DataModel {
     @DoesNotRunOnMainThread
     public abstract DatabaseWrapper getDatabase();
 
+    public abstract DatabaseWrapper getDatabaseWithoutMainCheck();
+
     // Allow DataModel to coordinate with activity lifetime events.
     public abstract void onActivityResume();
 

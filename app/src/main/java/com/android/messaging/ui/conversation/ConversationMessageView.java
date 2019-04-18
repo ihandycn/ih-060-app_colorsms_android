@@ -15,9 +15,11 @@
  */
 package com.android.messaging.ui.conversation;
 
+import android.animation.LayoutTransition;
 import android.content.Context;
 import android.content.res.Resources;
 import android.database.Cursor;
+import android.graphics.Color;
 import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
@@ -36,9 +38,10 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
-import android.widget.FrameLayout;
+import android.widget.ImageView;
 import android.widget.ImageView.ScaleType;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.android.messaging.R;
@@ -61,7 +64,10 @@ import com.android.messaging.ui.MultiAttachmentLayout.OnAttachmentClickListener;
 import com.android.messaging.ui.PersonItemView;
 import com.android.messaging.ui.UIIntents;
 import com.android.messaging.ui.VideoThumbnailView;
+import com.android.messaging.ui.customize.AvatarBgDrawables;
 import com.android.messaging.ui.customize.ConversationColors;
+import com.android.messaging.ui.customize.PrimaryColors;
+import com.android.messaging.ui.wallpaper.WallpaperManager;
 import com.android.messaging.util.AccessibilityUtil;
 import com.android.messaging.util.Assert;
 import com.android.messaging.util.AvatarUriUtil;
@@ -82,8 +88,9 @@ import java.util.List;
 /**
  * The view for a single entry in a conversation.
  */
-public class ConversationMessageView extends FrameLayout implements View.OnClickListener,
+public class ConversationMessageView extends RelativeLayout implements View.OnClickListener,
         View.OnLongClickListener, OnAttachmentClickListener {
+
     public interface ConversationMessageViewHost {
         boolean onAttachmentClick(ConversationMessageView view, MessagePartData attachment,
                                   Rect imageBounds, boolean longPress);
@@ -92,8 +99,7 @@ public class ConversationMessageView extends FrameLayout implements View.OnClick
                                                                      boolean excludeDefault);
     }
 
-    private final ConversationMessageData mData;
-
+    private ConversationMessageData mData;
     private LinearLayout mMessageAttachmentsView;
     private MultiAttachmentLayout mMultiAttachmentView;
     private AsyncImageView mMessageImageView;
@@ -106,6 +112,8 @@ public class ConversationMessageView extends FrameLayout implements View.OnClick
     private LinearLayout mMessageTitleLayout;
     private TextView mSenderNameTextView;
     private ContactIconView mContactIconView;
+    private ViewGroup mContactIconContainer;
+    private ImageView mContactIconBg;
     private ConversationMessageBubbleView mMessageBubble;
     private View mSubjectView;
     private TextView mSubjectText;
@@ -113,9 +121,10 @@ public class ConversationMessageView extends FrameLayout implements View.OnClick
     private ViewGroup mMessageMetadataView;
     private ViewGroup mMessageTextAndInfoView;
     private TextView mSimNameView;
-
     private boolean mOneOnOne;
     private ConversationMessageViewHost mHost;
+    private ImageView checkBox;
+    private int mOffset;
 
     public ConversationMessageView(final Context context, final AttributeSet attrs) {
         super(context, attrs);
@@ -128,11 +137,13 @@ public class ConversationMessageView extends FrameLayout implements View.OnClick
         super.onFinishInflate();
 
         mContactIconView = findViewById(R.id.conversation_icon);
+        mContactIconBg = findViewById(R.id.conversation_icon_bg);
+        mContactIconBg.setImageDrawable(AvatarBgDrawables.getAvatarBg());
+        mContactIconContainer = findViewById(R.id.conversation_icon_container);
         mContactIconView.setOnLongClickListener(view -> {
             ConversationMessageView.this.performLongClick();
             return true;
         });
-
         mMessageAttachmentsView = findViewById(R.id.message_attachments);
         mMultiAttachmentView = findViewById(R.id.multiple_attachments);
         mMultiAttachmentView.setOnAttachmentClickListener(this);
@@ -145,9 +156,11 @@ public class ConversationMessageView extends FrameLayout implements View.OnClick
         mMessageTextView.setOnClickListener(this);
         IgnoreLinkLongClickHelper.ignoreLinkLongClick(mMessageTextView, this);
 
+        int color = PrimaryColors.getPrimaryColor();
         mStatusTextView = findViewById(R.id.message_status);
         mStatusTextView.setBackground(BackgroundDrawables.createBackgroundDrawable(
-                getResources().getColor(R.color.white_40_transparent), Dimensions.pxFromDp(16), false));
+                Color.argb(51, Color.red(color), Color.green(color), Color.blue(color)), Dimensions.pxFromDp(16), false));
+
         mTitleTextView = findViewById(R.id.message_title);
         mMmsInfoTextView = findViewById(R.id.mms_info);
         mMessageTitleLayout = findViewById(R.id.message_title_layout);
@@ -159,18 +172,27 @@ public class ConversationMessageView extends FrameLayout implements View.OnClick
         mMessageMetadataView = findViewById(R.id.message_metadata);
         mMessageTextAndInfoView = findViewById(R.id.message_text_and_info);
         mSimNameView = findViewById(R.id.sim_name);
+        checkBox = findViewById(R.id.check_box);
+        LayoutTransition layoutTransition = new LayoutTransition();
+        layoutTransition.disableTransitionType(LayoutTransition.DISAPPEARING);
+        this.setLayoutTransition(layoutTransition);
+        setOffset(30);
+    }
+
+    public void setOffset(int offset) {
+        mOffset = (int) (getContext().getResources().getDisplayMetrics().density * offset + 0.5f);
     }
 
     @Override
     protected void onMeasure(final int widthMeasureSpec, final int heightMeasureSpec) {
         final int horizontalSpace = MeasureSpec.getSize(widthMeasureSpec);
         final int iconSize = getResources()
-                .getDimensionPixelSize(R.dimen.conversation_message_contact_icon_size);
+                .getDimensionPixelSize(R.dimen.conversation_message_contact_icon_container_size);
 
         final int unspecifiedMeasureSpec = MeasureSpec.makeMeasureSpec(0, MeasureSpec.UNSPECIFIED);
         final int iconMeasureSpec = MeasureSpec.makeMeasureSpec(iconSize, MeasureSpec.EXACTLY);
 
-        mContactIconView.measure(iconMeasureSpec, iconMeasureSpec);
+        mContactIconContainer.measure(iconMeasureSpec, iconMeasureSpec);
 
         final int arrowWidth =
                 getResources().getDimensionPixelSize(R.dimen.message_bubble_arrow_width);
@@ -185,8 +207,15 @@ public class ConversationMessageView extends FrameLayout implements View.OnClick
 
         mMessageBubble.measure(messageContentWidthMeasureSpec, unspecifiedMeasureSpec);
 
-        final int maxHeight = Math.max(mContactIconView.getMeasuredHeight(),
-                mMessageBubble.getMeasuredHeight());
+        int maxHeight;
+
+        if (mData.getIsIncoming()) {
+            maxHeight = Math.max(mContactIconContainer.getMeasuredHeight(),
+                    mMessageBubble.getMeasuredHeight() + (int) getResources().getDimension(R.dimen.conversation_message_bubble_incoming_top_margin));
+        } else {
+            maxHeight = mMessageBubble.getMeasuredHeight();
+        }
+
         setMeasuredDimension(horizontalSpace, maxHeight + getPaddingBottom() + getPaddingTop());
     }
 
@@ -195,14 +224,14 @@ public class ConversationMessageView extends FrameLayout implements View.OnClick
                             final int bottom) {
         final boolean isRtl = AccessibilityUtil.isLayoutRtl(this);
 
-        final int iconWidth = mContactIconView.getMeasuredWidth();
-        final int iconHeight = mContactIconView.getMeasuredHeight();
+        final int iconWidth = mContactIconContainer.getMeasuredWidth();
+        final int iconHeight = mContactIconContainer.getMeasuredHeight();
         final int iconTop = getPaddingTop();
         final int iconBubbleMargin = getResources()
                 .getDimensionPixelSize(R.dimen.conversation_message_contact_bubble_margin);
         final int contentWidth = (right - left) - iconWidth - getPaddingLeft() - getPaddingRight();
         final int contentHeight = mMessageBubble.getMeasuredHeight();
-        final int contentTop = iconTop;
+        final int contentTop = iconTop + (!mData.getIsIncoming() ? 0 : (int) getResources().getDimension(R.dimen.conversation_message_bubble_incoming_top_margin));
 
         final int iconLeft;
         final int contentLeft;
@@ -224,19 +253,18 @@ public class ConversationMessageView extends FrameLayout implements View.OnClick
             }
         }
 
-        mContactIconView.layout(iconLeft, iconTop, iconLeft + iconWidth, iconTop + iconHeight);
+        mContactIconContainer.layout(iconLeft, iconTop, iconLeft + iconWidth, iconTop + iconHeight);
 
         mMessageBubble.layout(contentLeft, contentTop, contentLeft + contentWidth,
                 contentTop + contentHeight);
-    }
-
-    /**
-     * Fills in the data associated with this view.
-     *
-     * @param cursor The cursor from a MessageList that this view is in, pointing to its entry.
-     */
-    public void bind(final Cursor cursor) {
-        bind(cursor, true, null);
+        View messageTextAndInfo = mMessageBubble.findViewById(R.id.message_text_and_info);
+        View messageAttachment = mMessageBubble.findViewById(R.id.message_attachments);
+        int bubbleBgHeight = (messageTextAndInfo.getVisibility() == View.VISIBLE ? messageTextAndInfo.getMeasuredHeight() : 0)
+                + (messageAttachment.getVisibility() == View.VISIBLE ? messageAttachment.getMeasuredHeight() : 0);
+        checkBox.layout(right - Dimensions.pxFromDp(37),
+                contentTop + bubbleBgHeight / 2 - Dimensions.pxFromDp(20) / 2,
+                right - Dimensions.pxFromDp(17),
+                contentTop + bubbleBgHeight / 2 + Dimensions.pxFromDp(20) / 2);
     }
 
     /**
@@ -246,13 +274,11 @@ public class ConversationMessageView extends FrameLayout implements View.OnClick
      * @param oneOnOne Whether this is a 1:1 conversation
      */
     public void bind(final Cursor cursor,
-                     final boolean oneOnOne, final String selectedMessageId) {
+                     final boolean oneOnOne, boolean isMultiSelected) {
         mOneOnOne = oneOnOne;
 
         // Update our UI model
         mData.bind(cursor);
-        setSelected(TextUtils.equals(mData.getMessageId(), selectedMessageId));
-
         // Update text and image content for the view.
         updateViewContent();
 
@@ -474,10 +500,10 @@ public class ConversationMessageView extends FrameLayout implements View.OnClick
                 messageTextAndOrInfoVisible ? View.VISIBLE : View.GONE);
 
         if (shouldShowSimplifiedVisualStyle()) {
-            mContactIconView.setVisibility(View.GONE);
+            mContactIconContainer.setVisibility(View.GONE);
             mContactIconView.setImageResourceUri(null);
         } else {
-            mContactIconView.setVisibility(mData.getIsIncoming() ? View.VISIBLE : View.GONE);
+            mContactIconContainer.setVisibility(mData.getIsIncoming() ? View.VISIBLE : View.GONE);
             final Uri avatarUri = AvatarUriUtil.createAvatarUri(
                     mData.getSenderProfilePhotoUri(),
                     mData.getSenderFullName(),
@@ -485,6 +511,12 @@ public class ConversationMessageView extends FrameLayout implements View.OnClick
                     mData.getSenderContactLookupKey());
             mContactIconView.setImageResourceUri(avatarUri, mData.getSenderContactId(),
                     mData.getSenderContactLookupKey(), mData.getSenderNormalizedDestination());
+            if (avatarUri != null
+                    && AvatarUriUtil.TYPE_LOCAL_RESOURCE_URI.equals(AvatarUriUtil.getAvatarType(avatarUri))) {
+                mContactIconBg.setVisibility(GONE);
+            } else {
+                mContactIconBg.setVisibility(View.VISIBLE);
+            }
         }
     }
 
@@ -895,11 +927,12 @@ public class ConversationMessageView extends FrameLayout implements View.OnClick
         int statusColor = -1;
         int infoColorResId = -1;
         int timestampColorResId;
+        boolean hasWallPaper = WallpaperManager.hasWallpaper(mData.getConversationId());
 
         Resources resources = getResources();
         messageColor = ConversationColors.get().getMessageTextColor(mData.getIsIncoming(), mData.getConversationId());
         if (isSelected()) {
-            statusColor =  resources.getColor(R.color.message_action_status_text);
+            statusColor = resources.getColor(R.color.message_action_status_text);
             infoColorResId = R.color.message_action_info_text;
             if (shouldShowMessageTextBubble()) {
                 timestampColorResId = R.color.message_action_timestamp_text;
@@ -911,6 +944,7 @@ public class ConversationMessageView extends FrameLayout implements View.OnClick
         } else {
             statusColor = messageColor;
             infoColorResId = R.color.timestamp_text_incoming;
+
             switch (mData.getStatus()) {
 
                 case MessageData.BUGLE_STATUS_OUTGOING_FAILED:
@@ -924,7 +958,11 @@ public class ConversationMessageView extends FrameLayout implements View.OnClick
                 case MessageData.BUGLE_STATUS_OUTGOING_AWAITING_RETRY:
                 case MessageData.BUGLE_STATUS_OUTGOING_COMPLETE:
                 case MessageData.BUGLE_STATUS_OUTGOING_DELIVERED:
-                    timestampColorResId = R.color.timestamp_text_outgoing;
+                    if (hasWallPaper) {
+                        timestampColorResId = R.color.white;
+                    } else {
+                        timestampColorResId = R.color.timestamp_text_outgoing;
+                    }
                     break;
 
                 case MessageData.BUGLE_STATUS_INCOMING_EXPIRED_OR_NOT_AVAILABLE:
@@ -940,13 +978,21 @@ public class ConversationMessageView extends FrameLayout implements View.OnClick
                 case MessageData.BUGLE_STATUS_INCOMING_RETRYING_AUTO_DOWNLOAD:
                 case MessageData.BUGLE_STATUS_INCOMING_RETRYING_MANUAL_DOWNLOAD:
                 case MessageData.BUGLE_STATUS_INCOMING_YET_TO_MANUAL_DOWNLOAD:
-                    timestampColorResId = R.color.message_text_color_incoming;
+                    if (hasWallPaper) {
+                        timestampColorResId = R.color.white;
+                    } else {
+                        timestampColorResId = R.color.timestamp_text_incoming;
+                    }
                     infoColorResId = R.color.timestamp_text_incoming;
                     break;
 
                 case MessageData.BUGLE_STATUS_INCOMING_COMPLETE:
                 default:
-                    timestampColorResId = R.color.timestamp_text_incoming;
+                    if (hasWallPaper) {
+                        timestampColorResId = R.color.white;
+                    } else {
+                        timestampColorResId = R.color.timestamp_text_incoming;
+                    }
                     infoColorResId = -1; // Not used
                     break;
             }
@@ -963,6 +1009,10 @@ public class ConversationMessageView extends FrameLayout implements View.OnClick
         if (timestampColorResId == R.color.timestamp_text_incoming &&
                 mData.hasAttachments() && !shouldShowMessageTextBubble()) {
             timestampColorResId = R.color.timestamp_text_outgoing;
+        }
+
+        if (!hasWallPaper) {
+            mStatusTextView.setBackground(null);
         }
         mStatusTextView.setTextColor(resources.getColor(timestampColorResId));
 
@@ -1034,10 +1084,6 @@ public class ConversationMessageView extends FrameLayout implements View.OnClick
         return mHost.onAttachmentClick(this, attachment, viewBoundsOnScreen, longPress);
     }
 
-    public ContactIconView getContactIconView() {
-        return mContactIconView;
-    }
-
     // Sort photos in MultiAttachLayout in the same order as the ConversationImagePartsView
     static final Comparator<MessagePartData> sImageComparator = new Comparator<MessagePartData>() {
         @Override
@@ -1097,9 +1143,8 @@ public class ConversationMessageView extends FrameLayout implements View.OnClick
         public void bindView(final View view, final MessagePartData attachment) {
             final AudioAttachmentView audioView = (AudioAttachmentView) view;
             audioView.bindMessagePartData(attachment, mData.getIsIncoming(), isSelected());
-            audioView.setBackground(ConversationDrawables.get().getBubbleDrawable(
-                    isSelected(), mData.getIsIncoming(), true /* needArrow */,
-                    mData.hasIncomingErrorStatus(), mData.getConversationId()));
+            audioView.setBackground(ConversationDrawables.get().getAudioBackgroundDrawable(
+                    isSelected(), mData.getIsIncoming(), mData.hasIncomingErrorStatus()));
         }
 
         @Override
@@ -1189,5 +1234,17 @@ public class ConversationMessageView extends FrameLayout implements View.OnClick
             }
             return false;
         }
+    }
+
+    public void open() {
+        if (mData.getIsIncoming()) {
+            mMessageBubble.scrollTo(0, 0);
+        } else {
+            mMessageBubble.scrollTo(mOffset, 0);
+        }
+    }
+
+    public void close() {
+        mMessageBubble.scrollTo(0, 0);
     }
 }

@@ -616,4 +616,12 @@
 	<string name="welcome_viewpager_item_body_2">Prova tantissime fantastiche funzioni.</string>
 	<string name="welcome_set_as_default_title">Imposta Color SMS come app predefinita per gli SMS per poter inviare e ricevere messaggi.</string>
 
+
+	<string name="menu_theme">Tema</string>
+	<string name="welcome_choose_theme_title">Scegli un tema</string>
+	<string name="welcome_choose_theme_current">IN USO</string>
+	<string name="setting_reset_customization_title">Ripristina personalizzazione</string>
+	<string name="setting_reset_customization_summary">Annulla la personalizzazione della chat.</string>
+	<string name="action_pin">Blocca in alto</string>
+
 </resources>

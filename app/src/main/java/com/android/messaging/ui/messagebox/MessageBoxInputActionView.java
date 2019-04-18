@@ -54,6 +54,7 @@ class MessageBoxInputActionView extends LinearLayout {
         mProgressBar = findViewById(R.id.progress_bar);
         mProgressBar.getIndeterminateDrawable().setColorFilter(PrimaryColors.getPrimaryColor(), PorterDuff.Mode.SRC_IN);
         mEmojiIcon = findViewById(R.id.emoji_btn);
+        mComposeEditText.requestFocus();
 
         ForegroundColorSpan signatureSpan = new ForegroundColorSpan(0xb3222327);
         String signature = Preferences.getDefault().getString(SignatureSettingDialog.PREF_KEY_SIGNATURE_CONTENT, null);
@@ -62,11 +63,11 @@ class MessageBoxInputActionView extends LinearLayout {
             sb.setSpan(signatureSpan, 1, sb.length(), 0);
             sb.setSpan(new AbsoluteSizeSpan(13, true), 1, sb.length(), 0);
             mComposeEditText.setText(sb, TextView.BufferType.SPANNABLE);
+            mComposeEditText.setSelection(0);
         }
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             mComposeEditText.setShowSoftInputOnFocus(false);
         }
-        mComposeEditText.requestFocus();
 
     }
 

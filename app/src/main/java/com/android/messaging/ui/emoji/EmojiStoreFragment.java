@@ -34,8 +34,8 @@ import com.ihs.commons.notificationcenter.INotificationObserver;
 import com.ihs.commons.utils.HSBundle;
 import com.superapps.util.BackgroundDrawables;
 import com.superapps.util.Dimensions;
-import com.superapps.view.RoundImageView;
 import com.superapps.view.MessagesTextView;
+import com.superapps.view.RoundImageView;
 
 import java.util.List;
 
@@ -227,7 +227,7 @@ public class EmojiStoreFragment extends Fragment implements INotificationObserve
                     storeViewHolder.getBtn.setBackground(BackgroundDrawables.createBackgroundDrawable(0xFFF4BE3E, 0xFFDAA017, Dimensions.pxFromDp(15), false, true));
                     storeViewHolder.getBtn.setOnClickListener(v -> {
                         if (!TextUtils.isEmpty(mSource)) {
-                            BugleAnalytics.logEvent("SMSEmoji_ChatEmoji_StoreList_Get", true, "type", packageInfo.mName, "source", mSource);
+                            BugleAnalytics.logEvent("SMSEmoji_ChatEmoji_StoreList_Get", true, true, "type", packageInfo.mName, "source", mSource);
                         }
                         storeViewHolder.getBtn.setOnClickListener(null);
                         storeViewHolder.getBtn.setText(res.getString(R.string.emoji_added));

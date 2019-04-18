@@ -25,6 +25,8 @@ import com.android.messaging.R;
 import com.android.messaging.ui.customize.BubbleDrawables;
 import com.android.messaging.ui.customize.ConversationColors;
 import com.android.messaging.ui.customize.PrimaryColors;
+import com.android.messaging.ui.customize.theme.ThemeInfo;
+import com.android.messaging.ui.customize.theme.ThemeUtils;
 import com.android.messaging.util.ImageUtils;
 import com.superapps.util.BackgroundDrawables;
 
@@ -37,6 +39,7 @@ public class ConversationDrawables {
 
     // Cache the color filtered bubble drawables so that we don't need to create a
     // new one for each ConversationMessageView.
+
     private Drawable mIncomingErrorBubbleDrawable;
     private Drawable mIncomingBubbleNoArrowDrawable;
     private Drawable mOutgoingBubbleNoArrowDrawable;
@@ -109,8 +112,8 @@ public class ConversationDrawables {
         final Resources resources = mContext.getResources();
         if (needArrow) {
             if (incoming) {
-                protoDrawable = isError && !selected ?
-                        mIncomingErrorBubbleDrawable : resources.getDrawable(BubbleDrawables.getSelectedDrawable(true, conversationId));
+                protoDrawable = isError && !selected ? mIncomingErrorBubbleDrawable :
+                        resources.getDrawable(BubbleDrawables.getSelectedDrawable(true, conversationId));
             } else {
                 protoDrawable = resources.getDrawable(BubbleDrawables.getSelectedDrawable(false, conversationId));
             }
@@ -143,6 +146,33 @@ public class ConversationDrawables {
 
         return ImageUtils.getTintedDrawable(mContext, protoDrawable, color);
     }
+
+    public Drawable getAudioBackgroundDrawable(final boolean selected,
+                                               final boolean incoming,
+                                               final boolean isError) {
+        final Drawable protoDrawable;
+        final Resources resources = mContext.getResources();
+        if (incoming) {
+            protoDrawable = isError && !selected ? mIncomingErrorBubbleDrawable :
+                    resources.getDrawable(R.drawable.style_01);
+        } else {
+            protoDrawable = resources.getDrawable(R.drawable.style_01_outgoing);
+        }
+
+        int color;
+        if (isError) {
+            color = mIncomingErrorBubbleColor;
+        } else if (selected) {
+            // incoming selected bubble color
+            color = PrimaryColors.getPrimaryColorDark();
+        } else {
+            // incoming bubble color
+            color = PrimaryColors.getPrimaryColor();
+        }
+
+        return ImageUtils.getTintedDrawable(mContext, protoDrawable, color);
+    }
+
 
     private int getAudioButtonColor(final boolean incoming) {
         return incoming ? mThemeColor : 0xffffffff;

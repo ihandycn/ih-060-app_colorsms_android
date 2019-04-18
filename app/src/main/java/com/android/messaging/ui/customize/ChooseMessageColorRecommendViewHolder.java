@@ -22,7 +22,7 @@ public class ChooseMessageColorRecommendViewHolder extends BasePagerViewHolder i
     private OnColorChangedListener mListener;
     private ChooseMessageColorRecommendAdapter mAdapter;
 
-    ChooseMessageColorRecommendViewHolder(final Context context) {
+    public ChooseMessageColorRecommendViewHolder(final Context context) {
         mContext = context;
     }
 
@@ -52,7 +52,7 @@ public class ChooseMessageColorRecommendViewHolder extends BasePagerViewHolder i
         Threads.postOnMainThread(() -> mAdapter.updatePresetColors(firstPositionColor, secondPositionColor, selectedColor));
     }
 
-    void setOnColorChangedListener(OnColorChangedListener listener) {
+    public void setOnColorChangedListener(OnColorChangedListener listener) {
         mListener = listener;
     }
 

@@ -23,12 +23,12 @@ import android.widget.TextView;
 
 import com.android.messaging.R;
 import com.android.messaging.glide.GlideApp;
+import com.android.messaging.ui.wallpaper.crop.CropImageOptions;
+import com.android.messaging.ui.wallpaper.crop.CropOverlayView;
 import com.android.messaging.util.BugleActivityUtil;
 import com.android.messaging.util.BugleAnalytics;
 import com.android.messaging.util.CommonUtils;
 import com.android.messaging.util.ViewUtils;
-import com.android.messaging.ui.wallpaper.crop.CropImageOptions;
-import com.android.messaging.ui.wallpaper.crop.CropOverlayView;
 import com.bumptech.glide.request.target.ImageViewTarget;
 import com.bumptech.glide.request.transition.Transition;
 import com.ihs.app.framework.activity.HSAppCompatActivity;
@@ -397,7 +397,7 @@ public class WallpaperEditActivity extends HSAppCompatActivity implements View.O
                 apply();
                 WallpaperManager.onWallpaperChanged();
                 finish();
-                BugleAnalytics.logEvent("SMS_ChatBackground_CutPage_Applied", true,
+                BugleAnalytics.logEvent("SMS_ChatBackground_CutPage_Applied", true, true,
                         "from", TextUtils.isEmpty(mThreadId) ? "Menu" : "Options");
                 break;
             case R.id.wallpaper_view_return:
@@ -505,7 +505,7 @@ public class WallpaperEditActivity extends HSAppCompatActivity implements View.O
         PointF pointF = new PointF();
         pointF.x = Dimensions.getPhoneWidth(this);
         pointF.y = Dimensions.getPhoneHeight(this) - Dimensions.getStatusBarHeight(this)
-                 - Dimensions.pxFromDp(56 + 48);
+                - Dimensions.pxFromDp(56 + 48);
         return pointF;
     }
 }

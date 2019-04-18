@@ -31,7 +31,6 @@ import android.graphics.Typeface;
 import android.media.AudioManager;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Looper;
 import android.os.SystemClock;
 import android.provider.ContactsContract;
 import android.provider.ContactsContract.Contacts;
@@ -89,7 +88,6 @@ import com.android.messaging.util.PhoneUtils;
 import com.android.messaging.util.RingtoneUtil;
 import com.android.messaging.util.ThreadUtil;
 import com.android.messaging.util.UriUtil;
-import com.ihs.app.framework.HSApplication;
 import com.ihs.commons.utils.HSLog;
 import com.superapps.util.Notifications;
 
@@ -642,7 +640,7 @@ public class BugleNotifications {
             HSLog.d(TAG, "should not pop up messagebox");
         }
         processAndSend(state, silent, softSound);
-        BugleAnalytics.logEvent("SMS_Notifications_Pushed", true);
+        BugleAnalytics.logEvent("SMS_Notifications_Pushed", true, true);
 
     }
 

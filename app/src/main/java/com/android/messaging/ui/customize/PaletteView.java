@@ -33,7 +33,7 @@ import java.lang.annotation.RetentionPolicy;
  * @author Relish Wang
  * @since 2017/08/02
  */
-public class AnyColorPickerView extends View {
+public class PaletteView extends View {
 
     @IntDef({PANEL.SAT_VAL, PANEL.HUE})
     @Retention(RetentionPolicy.SOURCE)
@@ -153,15 +153,15 @@ public class AnyColorPickerView extends View {
 
     private OnColorChangedListener mListener;
 
-    public AnyColorPickerView(Context context) {
+    public PaletteView(Context context) {
         this(context, null);
     }
 
-    public AnyColorPickerView(Context context, AttributeSet attrs) {
+    public PaletteView(Context context, AttributeSet attrs) {
         this(context, attrs, 0);
     }
 
-    public AnyColorPickerView(Context context, AttributeSet attrs, int defStyle) {
+    public PaletteView(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
         init();
     }
@@ -232,6 +232,9 @@ public class AnyColorPickerView extends View {
 
         widthAllowed = isUnspecified(widthMode) ? (int) mPreferredWidth : widthAllowed;
         heightAllowed = isUnspecified(heightMode) ? (int) mPreferredHeight : heightAllowed;
+
+        // 85% 的宽度
+        widthAllowed = (widthAllowed * 108) >> 7;
 
         int width = widthAllowed;
         int height = (int) (widthAllowed - mPanelSpacing - mHuePanelWidth);

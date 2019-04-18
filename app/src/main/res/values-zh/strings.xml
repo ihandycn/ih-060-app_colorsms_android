@@ -607,4 +607,12 @@
     <string name="welcome_viewpager_item_title_2">更多功能</string>
     <string name="welcome_viewpager_item_body_2">快來嘗試這些超棒的功能。</string>
     <string name="welcome_set_as_default_title">為了使Color SMS功能正常運行，它必須被設為默認短信應用。</string>
+
+    <string name="menu_theme">主題</string>
+    <string name="welcome_choose_theme_title">選擇一個你喜歡的主題</string>
+    <string name="welcome_choose_theme_current">當前</string>
+    <string name="setting_reset_customization_title">重置自定義內容？ </string>
+    <string name="setting_reset_customization_summary">這將重置此會話的所有自定義內容。 </string>
+    <string name="action_pin">置頂</string>
+
 </resources>

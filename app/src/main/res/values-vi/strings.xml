@@ -614,4 +614,12 @@
 	<string name="welcome_viewpager_item_body_2">Hãy đến và thử một loạt các tính năng tuyệt vời.</string>
 	<string name="welcome_set_as_default_title">Vui lòng đặt Color SMS làm ứng dụng SMS mặc định, điều này là bắt buộc để có thể gửi/nhận SMS.</string>
 
+
+	<string name="menu_theme">Chủ đề</string>
+	<string name="welcome_choose_theme_title">Chọn một chủ đề bạn thích</string>
+	<string name="welcome_choose_theme_current">HIỆN TẠI</string>
+	<string name="setting_reset_customization_title">Đặt lại Tùy chỉnh</string>
+	<string name="setting_reset_customization_summary">Xóa các tùy chỉnh trong cuộc trò chuyện này.</string>
+	<string name="action_pin">Ghim vào Trên cùng</string>
+
 </resources>

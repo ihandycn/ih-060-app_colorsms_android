@@ -36,9 +36,11 @@ import com.android.messaging.ui.UIIntents;
 import com.android.messaging.ui.appsettings.PrivacyModeSettings;
 import com.android.messaging.ui.customize.PrimaryColors;
 import com.android.messaging.ui.emoji.EmojiInfo;
+import com.android.messaging.ui.wallpaper.WallpaperManager;
 import com.android.messaging.util.BugleAnalytics;
 import com.android.messaging.util.Dates;
 import com.android.messaging.util.ImeUtil;
+import com.android.messaging.util.UiUtils;
 import com.superapps.util.BackgroundDrawables;
 import com.superapps.util.Dimensions;
 
@@ -46,8 +48,10 @@ import static com.android.messaging.datamodel.NoConfirmationSmsSendService.EXTRA
 
 public class MessageBoxConversationView extends FrameLayout {
 
-    @ColorInt private int mPrimaryColor;
-    @ColorInt private int mPrimaryColorDark;
+    @ColorInt
+    private int mPrimaryColor;
+    @ColorInt
+    private int mPrimaryColorDark;
 
     private MessageBoxActivity mActivity;
     private ViewGroup mContent;
@@ -122,6 +126,9 @@ public class MessageBoxConversationView extends FrameLayout {
         mOldestReceivedTimestamp = data.getReceivedTimestamp();
         mParticipantId = data.getParticipantId();
         inflatePrivacyModePageIfNeeded();
+
+        ImageView background = findViewById(R.id.message_background);
+        WallpaperManager.setWallPaperOnView(background, mConversationId);
     }
 
     void updateTimestamp() {
@@ -238,13 +245,15 @@ public class MessageBoxConversationView extends FrameLayout {
             type += "emoji";
         }
 
-        BugleAnalytics.logEvent("SMS_PopUp_Reply_BtnClick_Multifunction",
+        BugleAnalytics.logEvent("SMS_PopUp_Reply_BtnClick_Multifunction", false, true,
                 "type", type, "type2", MessageBoxAnalytics.getConversationType());
     }
 
     void emojiClick(EmojiInfo emojiInfo) {
         if (mInputEditText != null) {
-            mInputEditText.getText().append(emojiInfo.mEmoji);
+            int start = mInputEditText.getSelectionStart();
+            int end = mInputEditText.getSelectionEnd();
+            mInputEditText.getText().replace(start, end, emojiInfo.mEmoji);
             mInputEmojiCount++;
         }
     }
@@ -270,6 +279,8 @@ public class MessageBoxConversationView extends FrameLayout {
             mActivity.hideEmoji();
             post(() -> ImeUtil.get().showImeKeyboard(getContext(), mInputEditText));
             MessageBoxAnalytics.logEvent("SMS_PopUp_TextField_Click");
+            BugleAnalytics.logEvent("SMS_PopUp_TextField_Click_Keyboard", "hasKeyboardHeight",
+                    String.valueOf(UiUtils.getKeyboardHeight() > 0));
         });
     }
 

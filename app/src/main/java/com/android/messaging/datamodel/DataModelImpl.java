@@ -199,6 +199,11 @@ public class DataModelImpl extends DataModel {
     }
 
     @Override
+    public DatabaseWrapper getDatabaseWithoutMainCheck() {
+        return mDatabaseHelper.getDatabase();
+    }
+
+    @Override
     public ConnectivityUtil getConnectivityUtil() {
         return mConnectivityUtil;
     }

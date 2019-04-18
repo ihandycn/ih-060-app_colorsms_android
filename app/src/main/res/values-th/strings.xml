@@ -617,4 +617,12 @@
 	<string name="welcome_viewpager_item_body_2">เข้ามาลองใช้คุณสมบัติดี ๆ ที่มีมากมายเหล่านี้สิ</string>
 	<string name="welcome_set_as_default_title">กรุณาตั้งค่า Color SMS เป็นแอป SMS ค่าเริ่มต้น ซึ่งจำเป็นในการรับส่ง SMS</string>
 
+
+	<string name="menu_theme">ธีม</string>
+	<string name="welcome_choose_theme_title">เลือกธีมที่คุณต้องการ</string>
+	<string name="welcome_choose_theme_current">ปัจจุบัน</string>
+	<string name="setting_reset_customization_title">รีเซ็ตรายการกำหนดเอง</string>
+	<string name="setting_reset_customization_summary">ลบรายการกำหนดเองในการสนทนานี้</string>
+	<string name="action_pin">ปักหมุดบนสุด</string>
+
 </resources>

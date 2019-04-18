@@ -76,6 +76,16 @@
                     android:src="@drawable/ic_message_box_close" />
             </LinearLayout>
 
+            <ImageView
+                android:id="@+id/message_background"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/message_view"
+                app:layout_constraintBottom_toBottomOf="@+id/message_view"
+                android:scaleType="centerCrop" />
+
             <LinearLayout
                 android:id="@+id/message_view"
                 app:layout_constraintStart_toStartOf="parent"

@@ -13,7 +13,6 @@ import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.ViewTreeObserver;
 
 import com.android.messaging.BuildConfig;
 import com.android.messaging.R;
@@ -318,7 +317,7 @@ public class MessageBoxActivity extends AppCompatActivity implements INotificati
     }
 
     private void removeCurrentPage(String source) {
-        int position  = mPager.getCurrentItem();
+        int position = mPager.getCurrentItem();
         if (position == mPagerAdapter.getCount() - 1) {
             finish(source);
         } else {
@@ -363,9 +362,9 @@ public class MessageBoxActivity extends AppCompatActivity implements INotificati
         finish();
         overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
         if (MessageBoxAnalytics.getIsMultiConversation()) {
-            BugleAnalytics.logEvent("SMS_PopUp_Close_Multifunction_MultiUser", "closeType", source);
+            BugleAnalytics.logEvent("SMS_PopUp_Close_Multifunction_MultiUser", false, true, "closeType", source);
         } else {
-            BugleAnalytics.logEvent("SMS_PopUp_Close_Multifunction_SingleUser", "closeType", source);
+            BugleAnalytics.logEvent("SMS_PopUp_Close_Multifunction_SingleUser", false, true, "closeType", source);
         }
     }
 
@@ -383,7 +382,8 @@ public class MessageBoxActivity extends AppCompatActivity implements INotificati
         super.onDestroy();
         HSGlobalNotificationCenter.removeObserver(this);
         for (String conversationId : mConversationIdList) {
-            if (mMarkAsReadMap.get(conversationId)) {
+            Boolean markAsRead = mMarkAsReadMap.get(conversationId);
+            if (markAsRead != null && markAsRead) {
                 MessageBoxItemData data = mDataMap.get(conversationId);
                 MarkAsReadAction.markAsRead(conversationId, data.getParticipantId(), data.getReceivedTimestamp());
             }
@@ -397,10 +397,9 @@ public class MessageBoxActivity extends AppCompatActivity implements INotificati
             messageType += "sms";
         }
 
-        BugleAnalytics.logEvent("SMS_PopUp_Show_Multifunction",
+        BugleAnalytics.logEvent("SMS_PopUp_Show_Multifunction", false, true,
                 "msgNum", String.valueOf(mMessagesNum),
-                "contactNum", String.valueOf(mContactsNum) ,
+                "contactNum", String.valueOf(mContactsNum),
                 "message type", messageType);
     }
-
 }

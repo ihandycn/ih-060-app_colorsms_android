@@ -22,6 +22,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.database.Cursor;
+import android.graphics.Color;
 import android.media.RingtoneManager;
 import android.os.Bundle;
 import android.os.Parcelable;
@@ -52,11 +53,14 @@ import com.android.messaging.ui.CompositeAdapter;
 import com.android.messaging.ui.PersonItemView;
 import com.android.messaging.ui.UIIntents;
 import com.android.messaging.ui.appsettings.SelectPrivacyModeDialog;
+import com.android.messaging.ui.customize.BubbleDrawables;
+import com.android.messaging.ui.customize.ConversationColors;
 import com.android.messaging.ui.wallpaper.WallpaperManager;
 import com.android.messaging.ui.wallpaper.WallpaperPreviewActivity;
 import com.android.messaging.util.Assert;
 import com.android.messaging.util.BugleAnalytics;
 import com.android.messaging.util.UiUtils;
+import com.ihs.commons.notificationcenter.HSGlobalNotificationCenter;
 import com.superapps.util.Navigations;
 
 import java.util.ArrayList;
@@ -69,6 +73,7 @@ import static com.android.messaging.datamodel.data.PeopleOptionsItemData.SETTING
 import static com.android.messaging.datamodel.data.PeopleOptionsItemData.SETTING_NOTIFICATION_VIBRATION;
 import static com.android.messaging.ui.conversation.ConversationActivity.DELETE_CONVERSATION_RESULT_CODE;
 import static com.android.messaging.ui.conversation.ConversationActivity.FINISH_RESULT_CODE;
+import static com.android.messaging.ui.conversation.ConversationFragment.EVENT_UPDATE_BUBBLE_DRAWABLE;
 
 /**
  * Shows a list of participants of a conversation and displays options.
@@ -122,7 +127,7 @@ public class PeopleAndOptionsFragment extends Fragment
             mBinding.getData().setConversationNotificationSound(mBinding, pickedUri);
 
             if (pickedUri != null && !pickedUri.equals(mRingtone)) {
-                BugleAnalytics.logEvent("Customize_Notification_Sound_Change", true, "from", "chat");
+                BugleAnalytics.logEvent("Customize_Notification_Sound_Change", true, true, "from", "chat");
             }
         }
     }
@@ -209,7 +214,7 @@ public class PeopleAndOptionsFragment extends Fragment
 
             case SETTING_ADD_CONTACT:
                 BugleAnalytics.logEvent("SMS_Detailspage_Settings_AddContact_Click");
-                UIIntents.get().launchAddContactActivity(getActivity(), mOtherParticipantData.getContactDestination());
+                UIIntents.get().launchAddContactActivity(getActivity(), mOtherParticipantData.getDisplayDestination());
                 break;
 
             case PeopleOptionsItemData.SETTING_BLOCKED:
@@ -296,9 +301,26 @@ public class PeopleAndOptionsFragment extends Fragment
                     .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             View itemView = inflater.inflate(R.layout.conversation_option_customize, parent, false);
 
-
             itemView.findViewById(R.id.chat_background).setOnClickListener(v -> {
                 WallpaperPreviewActivity.startWallpaperPreviewByThreadId(mContext, mConversationId);
+            });
+
+            itemView.findViewById(R.id.reset_customization).setOnClickListener(v -> {
+                new BaseAlertDialog.Builder(getActivity())
+                        .setTitle(getResources().getString(R.string.setting_reset_customization_title))
+                        .setPositiveButton(R.string.reset_customization_confirmation_button, new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                ConversationColors.get().resetConversationCustomization(mConversationId);
+                                BubbleDrawables.resetConversationCustomization(mConversationId);
+                                WallpaperManager.resetConversationCustomization(mConversationId);
+                                BugleAnalytics.logEvent("Customize_Chat_Reset", true);
+
+                                HSGlobalNotificationCenter.sendNotification(EVENT_UPDATE_BUBBLE_DRAWABLE);
+                            }
+                        })
+                        .setNegativeButton(R.string.reset_customization_decline_button, null)
+                        .show();
             });
 
             itemView.findViewById(R.id.chat_bubble).setOnClickListener(v ->

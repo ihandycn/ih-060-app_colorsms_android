@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <ImageView
+        android:id="@+id/theme_preview_image"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+    <com.superapps.view.MessagesTextView
+        android:id="@+id/current_theme_tag"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="9dp"
+        android:layout_marginTop="27dp"
+        android:background="@drawable/choose_theme_current_theme"
+        android:text="@string/welcome_choose_theme_current"
+        android:includeFontPadding="false"
+        android:textColor="#322d2d"
+        android:textSize="13.3sp"
+        android:visibility="gone"
+        app:typeface="@string/custom_font_bold"/>
+
+</FrameLayout>
+

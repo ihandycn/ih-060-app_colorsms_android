@@ -99,7 +99,7 @@ public class EmojiPickerFragment extends Fragment implements INotificationObserv
             public void onTabSelected(TabLayout.Tab tab) {
                 EmojiPackageInfo packageInfo = getPackageInfo(tab);
                 if (packageInfo != null) {
-                    BugleAnalytics.logEvent("SMSEmoji_ChatEmoji_Tab_Click", true, "type", packageInfo.mName);
+                    BugleAnalytics.logEvent("SMSEmoji_ChatEmoji_Tab_Click", true, true, "type", packageInfo.mName);
                 }
             }
 
@@ -134,7 +134,7 @@ public class EmojiPickerFragment extends Fragment implements INotificationObserv
         mEmojiPackagePagerAdapter.update(initData());
         mEmojiPager.setCurrentItem(2);
         view.findViewById(R.id.emoji_store_btn).setOnClickListener(v -> {
-            BugleAnalytics.logEvent("SMSEmoji_ChatEmoji_Store_Click", true, "type", "chat_tab");
+            BugleAnalytics.logEvent("SMSEmoji_ChatEmoji_Store_Click", true, true, "type", "chat_tab");
             EmojiStoreActivity.start(getActivity());
         });
     }

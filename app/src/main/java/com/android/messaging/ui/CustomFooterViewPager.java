@@ -12,6 +12,12 @@ public class CustomFooterViewPager extends CustomViewPager {
         mTabstrip.setUnderlineThickness(Dimensions.pxFromDp(5));
     }
 
+
+    public void updatePrimaryColor() {
+        mTabstrip.updatePrimaryColor();
+    }
+
+
     @Override
     protected int getLayoutRes() {
         return R.layout.custom_footer_view_pager;
