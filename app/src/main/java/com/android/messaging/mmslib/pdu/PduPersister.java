@@ -39,7 +39,6 @@ import android.util.Log;
 import android.util.SparseArray;
 import android.util.SparseIntArray;
 
-import com.android.messaging.datamodel.action.ProcessDownloadedMmsAction;
 import com.android.messaging.datamodel.data.ParticipantData;
 import com.android.messaging.mmslib.InvalidHeaderValueException;
 import com.android.messaging.mmslib.MmsException;
@@ -65,7 +64,6 @@ import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -1635,12 +1633,17 @@ public class PduPersister {
                 }
             }
         }
-        for (final String number : numbers) {
-            // Only add numbers which aren't my own number.
-            if (TextUtils.isEmpty(selfNumber) || !PhoneNumberUtils.compare(number, selfNumber)) {
-                if (!recipients.contains(number)) {
-                    // Only add numbers which aren't already included.
-                    recipients.add(number);
+        //if the list 'numbers' size is 1, the number is my own number,
+        // so we shouldn't add the number to recipient list
+        // (sometimes we cannot get own number from telephony，e.x. if cmcc card, the self is null)
+        if (numbers.size() > 1) {
+            for (final String number : numbers) {
+                // Only add numbers which aren't my own number.
+                if (TextUtils.isEmpty(selfNumber) || !PhoneNumberUtils.compare(number, selfNumber)) {
+                    if (!recipients.contains(number)) {
+                        // Only add numbers which aren't already included.
+                        recipients.add(number);
+                    }
                 }
             }
         }
