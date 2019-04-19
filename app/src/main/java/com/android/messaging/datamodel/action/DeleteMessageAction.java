@@ -16,10 +16,12 @@
 
 package com.android.messaging.datamodel.action;
 
+import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.provider.Telephony;
 import android.text.TextUtils;
 
 import com.android.messaging.datamodel.BugleDatabaseOperations;
@@ -27,8 +29,11 @@ import com.android.messaging.datamodel.DataModel;
 import com.android.messaging.datamodel.DatabaseWrapper;
 import com.android.messaging.datamodel.MessagingContentProvider;
 import com.android.messaging.datamodel.data.MessageData;
+import com.android.messaging.mmslib.SqliteWrapper;
+import com.android.messaging.privatebox.PrivateMessageManager;
 import com.android.messaging.sms.MmsUtils;
 import com.android.messaging.util.LogUtil;
+import com.ihs.app.framework.HSApplication;
 
 /**
  * Action used to delete a single message.
@@ -90,6 +95,23 @@ public class DeleteMessageAction extends Action implements Parcelable {
                         LogUtil.w(TAG, "DeleteMessageAction: Could not delete message from "
                                 + "telephony: messageId = " + messageId + ", telephony uri = "
                                 + messageUri);
+                    }
+                    //if private message, delete parts in telephony manually
+                    boolean isPrivateMessage = PrivateMessageManager.getInstance().isPrivateUri(messageUri.toString());
+                    if (isPrivateMessage) {
+                        //the Telephony.Mms.Part.MSG_ID is minus
+                        final Cursor c = SqliteWrapper.query(HSApplication.getContext(), HSApplication.getContext().getContentResolver(),
+                                Uri.parse("content://mms/part"), new String[]{Telephony.Mms.Part._ID},
+                                Telephony.Mms.Part.MSG_ID + "= -" + messageId,
+                                null, null);
+                        if (c != null) {
+                            while (c.moveToNext()) {
+                                SqliteWrapper.delete(HSApplication.getContext(),
+                                        HSApplication.getContext().getContentResolver(),
+                                        Uri.parse("content://mms/part/" + c.getInt(0)), null, null);
+                            }
+                            c.close();
+                        }
                     }
                 } else {
                     LogUtil.i(TAG, "DeleteMessageAction: Local message " + messageId
