@@ -723,7 +723,7 @@
             android:configChanges="orientation|screenSize|keyboardHidden"
             android:screenOrientation="portrait"
             android:theme="@style/WelcomeChooseThemeActivity"/>
-        
+
         <receiver
             android:name="com.ihs.device.permanent.PermanentReceiver"
             android:enabled="true"
