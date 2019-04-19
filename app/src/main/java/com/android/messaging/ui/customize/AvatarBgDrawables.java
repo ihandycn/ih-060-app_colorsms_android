@@ -21,13 +21,13 @@ public class AvatarBgDrawables {
         Factory.get().getCustomizePrefs().putString(PREF_KEY_CUSTOMIZE_AVATARBG_BACKGROUND, url);
     }
 
-    public static Drawable getAvatarBg() {
+    public static Drawable getAvatarBg(boolean forceCreate) {
         String url = Factory.get().getCustomizePrefs().getString(PREF_KEY_CUSTOMIZE_AVATARBG_BACKGROUND, "");
         if (TextUtils.isEmpty(url)) {
             return null;
         }
 
-        if (sAvatarBg != null) {
+        if (sAvatarBg != null && !forceCreate) {
             return sAvatarBg;
         }
 

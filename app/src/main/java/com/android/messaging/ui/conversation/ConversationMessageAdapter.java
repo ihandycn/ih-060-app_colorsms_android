@@ -147,8 +147,6 @@ public class ConversationMessageAdapter extends
             mView = itemView;
             mView.setOnClickListener(viewClickListener);
             mView.setOnLongClickListener(viewLongClickListener);
-
-
         }
 
         public void bind() {

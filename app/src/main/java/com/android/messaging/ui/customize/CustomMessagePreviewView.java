@@ -14,11 +14,8 @@ import android.widget.TextView;
 import com.android.messaging.R;
 import com.android.messaging.ui.ConversationDrawables;
 import com.android.messaging.util.BugleAnalytics;
-import com.android.messaging.util.ImageUtils;
 import com.superapps.util.BackgroundDrawables;
 import com.superapps.util.Dimensions;
-
-import org.w3c.dom.Text;
 
 public class CustomMessagePreviewView extends ConstraintLayout {
     private String mConversationId;
@@ -64,7 +61,7 @@ public class CustomMessagePreviewView extends ConstraintLayout {
 
         TextView contactIcon = findViewById(R.id.contact_text);
         ImageView contactBackground = findViewById(R.id.contact_background);
-        Drawable avatar = AvatarBgDrawables.getAvatarBg();
+        Drawable avatar = AvatarBgDrawables.getAvatarBg(true);
         if (avatar != null) {
             contactBackground.setBackground(avatar);
         } else {

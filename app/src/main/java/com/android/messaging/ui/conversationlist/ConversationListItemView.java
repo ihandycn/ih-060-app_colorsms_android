@@ -52,7 +52,6 @@ import com.android.messaging.ui.customize.AvatarBgDrawables;
 import com.android.messaging.ui.customize.ConversationColors;
 import com.android.messaging.ui.customize.PrimaryColors;
 import com.android.messaging.util.Assert;
-import com.android.messaging.util.AvatarUriUtil;
 import com.android.messaging.util.BugleAnalytics;
 import com.android.messaging.util.ContentType;
 import com.android.messaging.util.ImageUtils;
@@ -181,7 +180,7 @@ public class ConversationListItemView extends FrameLayout implements OnClickList
         mTimestampColor = ConversationColors.get().getListTimeColor();
 
         mContactBackground = findViewById(R.id.conversation_icon_bg);
-        mContactBackground.setImageDrawable(AvatarBgDrawables.getAvatarBg());
+        mContactBackground.setImageDrawable(AvatarBgDrawables.getAvatarBg(false));
 
         if (OsUtil.isAtLeastL()) {
             setTransitionGroup(true);

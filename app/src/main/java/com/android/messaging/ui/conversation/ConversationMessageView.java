@@ -138,7 +138,7 @@ public class ConversationMessageView extends RelativeLayout implements View.OnCl
 
         mContactIconView = findViewById(R.id.conversation_icon);
         mContactIconBg = findViewById(R.id.conversation_icon_bg);
-        mContactIconBg.setImageDrawable(AvatarBgDrawables.getAvatarBg());
+        mContactIconBg.setImageDrawable(AvatarBgDrawables.getAvatarBg(false));
         mContactIconContainer = findViewById(R.id.conversation_icon_container);
         mContactIconView.setOnLongClickListener(view -> {
             ConversationMessageView.this.performLongClick();
