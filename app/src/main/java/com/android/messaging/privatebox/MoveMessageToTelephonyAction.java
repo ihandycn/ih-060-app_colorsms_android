@@ -137,7 +137,7 @@ public class MoveMessageToTelephonyAction extends Action {
                 if (cursor != null) {
                     while (cursor.moveToNext()) {
                         values.clear();
-                        bindMmsValues(values, cursor);
+                        bindMmsAddrValues(values, cursor);
                         resolver.insert(telephonyUri, values);
                     }
                     cursor.close();

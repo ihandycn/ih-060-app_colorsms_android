@@ -104,10 +104,10 @@ public class ContactsSelectActivity extends HSAppCompatActivity {
         mContactMoveObserver = (s, hsBundle) -> {
             switch (s) {
                 case EVENT_MESSAGES_MOVE_START:
-                    startMessagesMoveProgress();
+                    Threads.runOnMainThread(this::startMessagesMoveProgress);
                     break;
                 case EVENT_MESSAGES_MOVE_END:
-                    stopMessageMoveProgress();
+                    Threads.runOnMainThread(this::stopMessageMoveProgress);
                     break;
             }
         };
