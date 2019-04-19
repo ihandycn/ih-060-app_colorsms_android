@@ -4,7 +4,6 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:tools="http://schemas.android.com/tools"
-    android:orientation="vertical"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
         <android.support.constraint.ConstraintLayout
@@ -16,7 +15,7 @@
             android:layout_gravity="center"
             android:background="@drawable/message_box_background">
 
-            <com.superapps.view.RoundImageView
+            <com.android.messaging.ui.messagebox.BottomCropImage
                 android:id="@+id/action_bar_simulation_background"
                 android:layout_width="0dp"
                 android:layout_height="0dp"
@@ -24,8 +23,6 @@
                 app:layout_constraintBottom_toBottomOf="@+id/action_bar_simulation"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:radius_leftTop="@dimen/message_box_background_radius"
-                app:radius_rightTop="@dimen/message_box_background_radius"
                 android:src="@drawable/message_box_action_bar_simulation_background"
                 tools:background="@color/primary_color"/>
 
@@ -71,7 +68,7 @@
 
                 </FrameLayout>
 
-                <ImageView
+                <android.support.v7.widget.AppCompatImageView
                     android:id="@+id/action_close"
                     android:layout_width="29dp"
                     android:layout_height="29dp"

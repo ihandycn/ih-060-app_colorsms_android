@@ -6,18 +6,18 @@ import android.animation.ValueAnimator;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.ColorStateList;
 import android.graphics.Color;
-import android.graphics.Point;
-import android.graphics.PorterDuff;
 import android.graphics.Rect;
 import android.graphics.drawable.ColorDrawable;
+import android.graphics.drawable.Drawable;
 import android.support.annotation.ColorInt;
+import android.support.v7.widget.AppCompatImageView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.telephony.TelephonyManager;
 import android.text.TextUtils;
 import android.util.AttributeSet;
-import android.view.Display;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.ViewGroup;
@@ -31,7 +31,6 @@ import com.android.messaging.Factory;
 import com.android.messaging.R;
 import com.android.messaging.datamodel.NoConfirmationSmsSendService;
 import com.android.messaging.datamodel.data.MessageBoxItemData;
-import com.android.messaging.glide.GlideApp;
 import com.android.messaging.ui.UIIntents;
 import com.android.messaging.ui.appsettings.PrivacyModeSettings;
 import com.android.messaging.ui.customize.ConversationColors;
@@ -52,8 +51,6 @@ public class MessageBoxConversationView extends FrameLayout {
 
     @ColorInt
     private int mPrimaryColor;
-    @ColorInt
-    private int mPrimaryColorDark;
 
     private MessageBoxActivity mActivity;
     private ViewGroup mContent;
@@ -85,7 +82,6 @@ public class MessageBoxConversationView extends FrameLayout {
     protected void onFinishInflate() {
         super.onFinishInflate();
         mPrimaryColor = PrimaryColors.getPrimaryColor();
-        mPrimaryColorDark = PrimaryColors.getPrimaryColorDark();
 
         initActionBarSimulation();
         mContent = findViewById(R.id.content);
@@ -133,19 +129,29 @@ public class MessageBoxConversationView extends FrameLayout {
         return mContent.getHeight();
     }
 
+    @SuppressLint("RestrictedApi")
     private void initActionBarSimulation() {
-        ImageView closeActionImage = findViewById(R.id.action_close);
+        AppCompatImageView closeActionImage = findViewById(R.id.action_close);
         closeActionImage.setOnClickListener(mActivity);
-        closeActionImage.setBackground(BackgroundDrawables.
-                createBackgroundDrawable(mPrimaryColor, mPrimaryColorDark, Dimensions.pxFromDp(21), false, true));
-        ImageView background = findViewById(R.id.action_bar_simulation_background);
+        int[][] states = new int[][]{
+                new int[]{-android.R.attr.state_pressed},
+                new int[]{android.R.attr.state_pressed}
+        };
 
-        if (ToolbarDrawables.getToolbarBg() != null) {
-            GlideApp.with(mActivity).load(ToolbarDrawables.getToolbarBg()).centerCrop().into(background);
+        int[] colors = new int[]{
+                Color.WHITE,
+                UiUtils.getColorDark(Color.WHITE)
+        };
+        ColorStateList state = new ColorStateList(states, colors);
+        closeActionImage.setSupportImageTintList(state);
+
+        ImageView background = findViewById(R.id.action_bar_simulation_background);
+        Drawable toolbarBg = ToolbarDrawables.getToolbarBg();
+        if (toolbarBg != null) {
+            background.setImageDrawable(toolbarBg);
         } else {
             background.setImageDrawable(new ColorDrawable(mPrimaryColor));
         }
-
     }
 
     String getConversationId() {
