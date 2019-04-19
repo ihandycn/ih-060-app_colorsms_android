@@ -8,9 +8,12 @@
     android:gravity="center_horizontal">
 
     <ImageView
-        android:layout_width="26.7dp"
-        android:layout_height="26.7dp"
-        android:layout_marginTop="28dp"
+        android:id="@+id/app_icon"
+        android:layout_width="42dp"
+        android:layout_height="42dp"
+        android:layout_marginTop="25dp"
+        android:padding="10dp"
+        android:scaleType="fitXY"
         android:src="@drawable/ic_invalid_name" />
 
     <com.superapps.view.MessagesTextView
@@ -19,7 +22,7 @@
         android:layout_height="wrap_content"
         android:textSize="16.7sp"
         android:textColor="@color/text_primary_color"
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="6dp"
         app:typeface="@string/custom_font_semibold"
         tools:text="One New message"/>
 
@@ -35,11 +38,13 @@
 
     <com.superapps.view.MessagesTextView
         android:id="@+id/privacy_show_message"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:layout_height="37dp"
         android:layout_marginStart="26.7dp"
         android:layout_marginEnd="26.7dp"
-        android:layout_marginTop="26dp"
+        android:layout_marginTop="25dp"
+        android:gravity="center"
+        android:includeFontPadding="false"
         android:textColor="@color/primary_color"
         app:typeface="@string/custom_font_semibold"
         android:text="@string/privacy_mode_show_messages"/>

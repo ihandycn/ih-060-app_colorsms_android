@@ -22,17 +22,12 @@
          When the media picker goes full screen, it fills the parent, leaving no room for the compose
          bar -->
     <LinearLayout
+        android:id="@+id/edit_text_container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:clipChildren="false"
         android:clipToPadding="false"
-        android:background="#f4f7f9"
         android:orientation="vertical">
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="2px"
-            android:background="#e9ebf2" />
 
         <FrameLayout
             android:layout_width="match_parent"
@@ -102,11 +97,6 @@
 
             </LinearLayout>
         </FrameLayout>
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="2px"
-            android:background="#e9ebf2"/>
 
     </LinearLayout>
 

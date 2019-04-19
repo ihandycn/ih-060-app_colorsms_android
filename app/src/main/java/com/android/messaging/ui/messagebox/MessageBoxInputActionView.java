@@ -11,6 +11,7 @@ import android.text.style.AbsoluteSizeSpan;
 import android.text.style.ForegroundColorSpan;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
@@ -20,6 +21,7 @@ import com.android.messaging.R;
 import com.android.messaging.ui.PlainTextEditText;
 import com.android.messaging.ui.conversation.SimIconView;
 import com.android.messaging.ui.customize.PrimaryColors;
+import com.android.messaging.ui.customize.theme.ThemeUtils;
 import com.android.messaging.ui.signature.SignatureSettingDialog;
 import com.superapps.font.FontUtils;
 import com.superapps.util.BackgroundDrawables;
@@ -67,6 +69,17 @@ class MessageBoxInputActionView extends LinearLayout {
         }
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             mComposeEditText.setShowSoftInputOnFocus(false);
+        }
+
+        View container  = findViewById(R.id.edit_text_container);
+        if (!ThemeUtils.isDefaultTheme()) {
+            container.setBackground(null);
+        } else {
+            float radius = getResources().getDimension(R.dimen.message_box_background_radius);
+            container.setBackground(
+                    BackgroundDrawables.createBackgroundDrawable(0xfff4f7f9, 0xfff4f7f9,
+                            0f, 0f, radius, radius,
+                            false, false));
         }
 
     }

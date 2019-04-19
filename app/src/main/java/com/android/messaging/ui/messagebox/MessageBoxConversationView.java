@@ -6,9 +6,11 @@ import android.animation.ValueAnimator;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.graphics.Point;
 import android.graphics.PorterDuff;
 import android.graphics.Rect;
+import android.graphics.drawable.ColorDrawable;
 import android.support.annotation.ColorInt;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -29,9 +31,12 @@ import com.android.messaging.Factory;
 import com.android.messaging.R;
 import com.android.messaging.datamodel.NoConfirmationSmsSendService;
 import com.android.messaging.datamodel.data.MessageBoxItemData;
+import com.android.messaging.glide.GlideApp;
 import com.android.messaging.ui.UIIntents;
 import com.android.messaging.ui.appsettings.PrivacyModeSettings;
+import com.android.messaging.ui.customize.ConversationColors;
 import com.android.messaging.ui.customize.PrimaryColors;
+import com.android.messaging.ui.customize.ToolbarDrawables;
 import com.android.messaging.ui.emoji.EmojiInfo;
 import com.android.messaging.ui.wallpaper.WallpaperManager;
 import com.android.messaging.util.BugleAnalytics;
@@ -67,9 +72,7 @@ public class MessageBoxConversationView extends FrameLayout {
 
     private String mConversationId;
     private String mSelfId;
-    private String mPhoneNumber;
     private String mParticipantId;
-    private long mOldestReceivedTimestamp;
 
     private int mInputEmojiCount;
 
@@ -100,7 +103,6 @@ public class MessageBoxConversationView extends FrameLayout {
 
         mConversationId = data.getConversationId();
         mSelfId = data.getSelfId();
-        mPhoneNumber = data.getPhoneNumber();
 
         mRecyclerView = findViewById(R.id.recycler_view);
         LinearLayoutManager llm = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false);
@@ -111,7 +113,6 @@ public class MessageBoxConversationView extends FrameLayout {
         mRecyclerView.setAdapter(mAdapter);
         setTag(mConversationId);
 
-        mOldestReceivedTimestamp = data.getReceivedTimestamp();
         mParticipantId = data.getParticipantId();
         inflatePrivacyModePageIfNeeded();
 
@@ -137,37 +138,22 @@ public class MessageBoxConversationView extends FrameLayout {
         closeActionImage.setOnClickListener(mActivity);
         closeActionImage.setBackground(BackgroundDrawables.
                 createBackgroundDrawable(mPrimaryColor, mPrimaryColorDark, Dimensions.pxFromDp(21), false, true));
-        findViewById(R.id.action_bar_simulation).getBackground().setColorFilter(mPrimaryColor, PorterDuff.Mode.SRC_ATOP);
+        ImageView background = findViewById(R.id.action_bar_simulation_background);
+
+        if (ToolbarDrawables.getToolbarBg() != null) {
+            GlideApp.with(mActivity).load(ToolbarDrawables.getToolbarBg()).centerCrop().into(background);
+        } else {
+            background.setImageDrawable(new ColorDrawable(mPrimaryColor));
+        }
+
     }
 
     String getConversationId() {
         return mConversationId;
     }
 
-    long getOldestReceivedTimestamp() {
-        return mOldestReceivedTimestamp;
-    }
-
     String getParticipantId() {
         return mParticipantId;
-    }
-
-    void call() {
-        final String phoneNumber = mPhoneNumber;
-        final View targetView = findViewById(R.id.action_call);
-        Point centerPoint;
-        if (targetView != null) {
-            final int screenLocation[] = new int[2];
-            targetView.getLocationOnScreen(screenLocation);
-            final int centerX = screenLocation[0] + targetView.getWidth() / 2;
-            final int centerY = screenLocation[1] + targetView.getHeight() / 2;
-            centerPoint = new Point(centerX, centerY);
-        } else {
-            // In the overflow menu, just use the center of the screen.
-            final Display display = mActivity.getWindowManager().getDefaultDisplay();
-            centerPoint = new Point(display.getWidth() / 2, display.getHeight() / 2);
-        }
-        UIIntents.get().launchPhoneCallActivity(mActivity, phoneNumber, centerPoint);
     }
 
     void replyMessage() {
@@ -248,17 +234,24 @@ public class MessageBoxConversationView extends FrameLayout {
         mPrivacyContainer = stub.inflate();
         mPrivacyContainer.setClickable(true);
 
+        ImageView appIcon = mPrivacyContainer.findViewById(R.id.app_icon);
+        appIcon.setBackground(BackgroundDrawables.createBackgroundDrawable(Color.WHITE, Dimensions.pxFromDp(25), false));
+
         mPrivacyTitle = mPrivacyContainer.findViewById(R.id.privacy_title);
         mPrivacyTimestamp = mPrivacyContainer.findViewById(R.id.privacy_date);
         TextView showMessageTextView = mPrivacyContainer.findViewById(R.id.privacy_show_message);
 
-        showMessageTextView.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                revealMessages();
-                showMessageTextView.setClickable(false);
-                BugleAnalytics.logEvent("SMS_PrivacyPopUp_Show_Click");
-            }
+        mPrivacyTitle.setTextColor(ConversationColors.get().getListTitleColor());
+        mPrivacyTimestamp.setTextColor(ConversationColors.get().getListTimeColor());
+        showMessageTextView.setTextColor(mPrimaryColor);
+        showMessageTextView.setBackground(
+                BackgroundDrawables.createBackgroundDrawable(Color.WHITE,
+                        UiUtils.getColorDark(Color.WHITE),
+                        Dimensions.pxFromDp(1), mPrimaryColor, Dimensions.pxFromDp(25), false, true));
+        showMessageTextView.setOnClickListener(v -> {
+            revealMessages();
+            showMessageTextView.setClickable(false);
+            BugleAnalytics.logEvent("SMS_PrivacyPopUp_Show_Click");
         });
 
         if (hideContactForThisMessage()) {
