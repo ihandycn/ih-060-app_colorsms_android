@@ -46,6 +46,7 @@ import android.support.v4.text.TextDirectionHeuristicsCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.SimpleItemAnimator;
 import android.text.TextUtils;
 import android.view.ActionMode;
 import android.view.Display;
@@ -296,7 +297,7 @@ public class ConversationFragment extends Fragment implements ConversationDataLi
                         mCumulativeScrollDelta = 0;
                         mScrollToDismissHandled = false;
                     } else if (newState == RecyclerView.SCROLL_STATE_DRAGGING) {
-                        mRecyclerView.getItemAnimator().endAnimations();
+//                        mRecyclerView.getItemAnimator().endAnimations();
                     }
                     mScrollState = newState;
                 }
@@ -681,7 +682,7 @@ public class ConversationFragment extends Fragment implements ConversationDataLi
         mRecyclerView.setHasFixedSize(true);
         mRecyclerView.setLayoutManager(manager);
         mRecyclerView.setAdapter(mAdapter);
-
+        mRecyclerView.setItemAnimator(null);
         if (savedInstanceState != null) {
             mListState = savedInstanceState.getParcelable(SAVED_INSTANCE_STATE_LIST_VIEW_STATE_KEY);
         }
@@ -982,6 +983,7 @@ public class ConversationFragment extends Fragment implements ConversationDataLi
             }
             BugleAnalytics.logEvent("Detailspage_NativeAd_RealShow");
         }
+        mAdapter.setConversationId(mConversationId);
         mAdapter.setDataList(list);
         if (adAttached) {
             scrollToBottom(false);
@@ -1047,6 +1049,9 @@ public class ConversationFragment extends Fragment implements ConversationDataLi
         if (mNativeAdLoader != null) {
             mNativeAdLoader.cancel();
         }
+        if (HSConfig.optBoolean(false, "Application", "SMSAd", "SMSDetailspageBannerAd", "Enabled")) {
+            AcbNativeAdManager.preload(1, AdPlacement.AD_DETAIL_NATIVE);
+        }
 
         HSGlobalNotificationCenter.removeObserver(this);
         FiveStarRateDialog.dismissDialogs();
@@ -1073,7 +1078,6 @@ public class ConversationFragment extends Fragment implements ConversationDataLi
     @Override
     public void onConfigurationChanged(final Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
-        mRecyclerView.getItemAnimator().endAnimations();
     }
 
     // TODO: Remove isBound and replace it with ensureBound after b/15704674.

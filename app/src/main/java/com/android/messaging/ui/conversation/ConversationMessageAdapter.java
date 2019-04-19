@@ -33,6 +33,7 @@ import com.android.messaging.ui.ConversationDrawables;
 import com.android.messaging.ui.conversation.ConversationMessageView.ConversationMessageViewHost;
 import com.android.messaging.ui.customize.ConversationColors;
 import com.android.messaging.util.ViewUtils;
+import com.superapps.util.Dimensions;
 
 import net.appcloudbox.ads.base.AcbNativeAd;
 import net.appcloudbox.ads.base.ContainerView.AcbNativeAdContainerView;
@@ -60,6 +61,7 @@ public class ConversationMessageAdapter extends
 
     private static final int TYPE_MESSAGE = 0;
     private static final int TYPE_AD = 1;
+    private String mConversationId;
 
     private List<Object> mDataList = new ArrayList<>();
 
@@ -77,6 +79,10 @@ public class ConversationMessageAdapter extends
     public void setDataList(List<Object> dataList) {
         mDataList = dataList;
         notifyDataSetChanged();
+    }
+
+    public void setConversationId(String conversationId) {
+        mConversationId = conversationId;
     }
 
     public void openItemAnimation() {
@@ -149,6 +155,8 @@ public class ConversationMessageAdapter extends
             AcbNativeAd ad = (AcbNativeAd) mDataList.get(position);
             AcbNativeAdContainerView adContainerView = ((ConversationAdViewHolder) holder).mAdContentView;
             adContainerView.hideAdCorner();
+            ((ConversationAdViewHolder) holder).contentBg.setBackground(
+                    ConversationDrawables.get().getBubbleDrawable(false, true, true, false, mConversationId));
             adContainerView.fillNativeAd(ad);
         }
     }
@@ -209,18 +217,19 @@ public class ConversationMessageAdapter extends
 
     public static class ConversationAdViewHolder extends RecyclerView.ViewHolder {
 
-        AcbNativeAdContainerView mAdContentView;
+        private AcbNativeAdContainerView mAdContentView;
+        private View contentBg;
 
         public ConversationAdViewHolder(ViewGroup container, View adView) {
             super(container);
 
             mAdContentView = new AcbNativeAdContainerView(container.getContext());
             mAdContentView.addContentView(adView);
-
-            adView.findViewById(R.id.content_container).setBackground(
-                    ConversationDrawables.get().getBubbleDrawable(false, true, true, false, ""));
+            contentBg = adView.findViewById(R.id.content_container);
 
             AcbNativeAdIconView icon = ViewUtils.findViewById(adView, R.id.ad_icon);
+            icon.setShapeMode(1);
+            icon.setRadius(Dimensions.pxFromDp(20));
             mAdContentView.setAdIconView(icon);
             TextView title = ViewUtils.findViewById(adView, R.id.ad_title);
             title.setTextColor(ConversationColors.get().getMessageTextColor(true));
@@ -230,6 +239,7 @@ public class ConversationMessageAdapter extends
             mAdContentView.setAdBodyView(description);
             TextView actionBtn = ViewUtils.findViewById(adView, R.id.ad_action);
             actionBtn.setTextColor(ConversationColors.get().getAdActionColor());
+            actionBtn.setBackgroundResource(R.drawable.conversation_ad_action_pressed_bg);
             ((ImageView) adView.findViewById(R.id.action_bg)).setColorFilter(ConversationColors.get().getAdActionColor(), PorterDuff.Mode.MULTIPLY);
             mAdContentView.setAdActionView(actionBtn);
             FrameLayout choice = ViewUtils.findViewById(adView, R.id.ad_choice);
