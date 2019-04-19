@@ -34,9 +34,6 @@
     <uses-permission android:name="android.permission.INTERNET"/>
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
     <uses-permission android:name="android.permission.CHANGE_NETWORK_STATE"/>
-    <!-- Application needs CONTACT permissions -->
-    <uses-permission android:name="android.permission.READ_CONTACTS"/>
-    <uses-permission android:name="android.permission.WRITE_CONTACTS"/>
     <!-- Application needs to read profiles for the user itself from CP2 -->
     <uses-permission android:name="android.permission.READ_PROFILE"/>
     <uses-permission android:name="android.permission.GET_ACCOUNTS"/>
@@ -51,6 +48,9 @@
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
     <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW"/>
     <uses-permission android:name="com.android.launcher.permission.INSTALL_SHORTCUT"/>
+    <!-- Application needs CONTACT permissions -->
+    <uses-permission android:name="android.permission.READ_CONTACTS"/>
+    <uses-permission android:name="android.permission.WRITE_CONTACTS"/>
 
     <!-- Optional features -->
     <uses-feature
@@ -723,49 +723,5 @@
             android:configChanges="orientation|screenSize|keyboardHidden"
             android:screenOrientation="portrait"
             android:theme="@style/WelcomeChooseThemeActivity"/>
-
-        <receiver
-            android:name="com.ihs.device.permanent.PermanentReceiver"
-            android:enabled="true"
-            android:exported="true"
-            tools:node="replace">
-            <intent-filter>
-                <data android:scheme="package"/>
-
-                <action android:name="android.intent.action.PACKAGE_ADDED"/>
-                <action android:name="android.intent.action.PACKAGE_REMOVED"/>
-            </intent-filter>
-            <intent-filter>
-                <action android:name="android.intent.action.QUICKBOOT_POWERON"/>
-                <action android:name="android.bluetooth.adapter.action.STATE_CHANGED"/>
-                <action android:name="android.net.wifi.WIFI_STATE_CHANGED"/>
-            </intent-filter>
-            <intent-filter android:priority="999">
-                <action android:name="android.net.conn.CONNECTIVITY_CHANGE"/>
-                <action android:name="android.intent.action.BOOT_COMPLETED"/>
-                <action android:name="android.intent.action.USER_PRESENT"/>
-                <action android:name="android.intent.action.WALLPAPER_CHANGED"/>
-            </intent-filter>
-            <intent-filter>
-                <action android:name="android.intent.action.PACKAGE_RESTARTED"/>
-                <action android:name="android.intent.action.PACKAGE_REPLACED"/>
-
-                <data android:scheme="package"/>
-            </intent-filter>
-            <intent-filter android:priority="99999">
-                <action android:name="android.provider.Telephony.SECRET_CODE"/>
-
-                <data android:scheme="android_secret_code"/>
-            </intent-filter>
-            <intent-filter>
-                <action android:name="android.intent.action.MEDIA_MOUNTED"/>
-                <action android:name="android.intent.action.MEDIA_UNMOUNTED"/>
-
-                <data android:scheme="file"/>
-            </intent-filter>
-            <intent-filter>
-                <action android:name="ihs.device.permanent.GUARD_PERMANENT"/>
-            </intent-filter>
-        </receiver>
     </application>
 </manifest>
