@@ -380,8 +380,8 @@ public class PduPersister {
 
     private PduPart[] loadParts(final long msgId) throws MmsException {
         final Cursor c = SqliteWrapper.query(mContext, mContentResolver,
-                Uri.parse("content://mms/" + msgId + "/part"),
-                PART_PROJECTION, null, null, null);
+                Uri.parse("content://mms/part"),
+                PART_PROJECTION, Part.MSG_ID + "=?" , new String[]{String.valueOf(msgId)}, null);
 
         PduPart[] parts = null;
 
@@ -563,10 +563,11 @@ public class PduPersister {
         loadHeadersFromCursor(c, headers);
         // Load address information of the MM.
         long threadId = c.getLong(PDU_COLUMN_THREAD_ID);
-        loadAddress(PrivateMessageManager.getInstance().isPrivateThreadId(threadId), msgId, headers);
+        boolean isPrivateMessage = PrivateMessageManager.getInstance().isPrivateThreadId(threadId);
+        loadAddress(isPrivateMessage, msgId, headers);
         // Load parts for the PDU body
         final int msgType = headers.getOctet(PduHeaders.MESSAGE_TYPE);
-        final PduBody body = loadBody(msgId, msgType);
+        final PduBody body = loadBody(msgId, msgType, isPrivateMessage);
         return createPdu(msgType, headers, body);
     }
 
@@ -630,11 +631,12 @@ public class PduPersister {
                 throw new MmsException("Error! ID of the message: -1.");
             }
 
+            boolean isPrivateMessage = PrivateMessageManager.getInstance().isPrivateUri(uri.toString());
             // Load address information of the MM.
-            loadAddress(PrivateMessageManager.getInstance().isPrivateUri(uri.toString()), msgId, headers);
+            loadAddress(isPrivateMessage, msgId, headers);
 
             final int msgType = headers.getOctet(PduHeaders.MESSAGE_TYPE);
-            final PduBody body = loadBody(msgId, msgType);
+            final PduBody body = loadBody(msgId, msgType, isPrivateMessage);
             pdu = createPdu(msgType, headers, body);
         } finally {
             synchronized (PDU_CACHE_INSTANCE) {
@@ -719,14 +721,14 @@ public class PduPersister {
         }
     }
 
-    private PduBody loadBody(final long msgId, final int msgType) throws MmsException {
+    private PduBody loadBody(final long msgId, final int msgType, final boolean isPrivateMessage) throws MmsException {
         final PduBody body = new PduBody();
 
         // For PDU which type is M_retrieve.conf or Send.req, we should
         // load multiparts and put them into the body of the PDU.
         if ((msgType == PduHeaders.MESSAGE_TYPE_RETRIEVE_CONF)
                 || (msgType == PduHeaders.MESSAGE_TYPE_SEND_REQ)) {
-            final PduPart[] parts = loadParts(msgId);
+            final PduPart[] parts = loadParts(msgId * (isPrivateMessage ? -1 : 1));
             if (parts != null) {
                 final int partsNum = parts.length;
                 for (int i = 0; i < partsNum; i++) {
@@ -1533,7 +1535,7 @@ public class PduPersister {
             SqliteWrapper.update(mContext, mContentResolver, res, values, null, null);
         } else {
             res = SqliteWrapper.insert(mContext, mContentResolver,
-                    isPrivateMessage ? PrivateMmsEntry.CONTENT_URI : uri, values);
+                    isPrivateMessage ? PrivateMmsEntry.Sent.CONTENT_URI : uri, values);
 
             if (res == null) {
                 throw new MmsException("persist() failed: return null.");

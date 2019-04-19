@@ -100,6 +100,9 @@ public class ContactsSelectActivity extends HSAppCompatActivity {
         });
 
         mProcessBarContainer = findViewById(R.id.private_progress_bar_container);
+        mProcessBarContainer.setOnClickListener(v -> {
+            
+        });
         mProgressBar = findViewById(R.id.private_move_progress_bar);
         mContactMoveObserver = (s, hsBundle) -> {
             switch (s) {
