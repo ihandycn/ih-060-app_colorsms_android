@@ -51,9 +51,9 @@ public class MessageBoxIndicatorView extends LinearLayout {
 
         int[] colors = new int[]{
                 Color.WHITE,
-                getResources().getColor(R.color.white_70_transparent),
+                getResources().getColor(R.color.white_40_transparent),
                 Color.WHITE,
-                getResources().getColor(R.color.white_70_transparent),
+                getResources().getColor(R.color.white_40_transparent),
 
         };
         ColorStateList state = new ColorStateList(states, colors);
