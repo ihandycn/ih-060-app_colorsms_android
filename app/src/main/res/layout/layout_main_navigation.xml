@@ -136,7 +136,7 @@
 
             <View
                 android:layout_width="match_parent"
-                android:layout_height="35dp"/>
+                android:layout_height="35dp" />
 
             <!-- Privacy Box -->
             <RelativeLayout
@@ -183,6 +183,22 @@
                     style="@style/DrawerMenuTitle"
                     android:includeFontPadding="false"
                     android:text="@string/menu_rate"
+                    app:typeface="@string/custom_font_medium" />
+            </RelativeLayout>
+
+            <!-- Item Rate -->
+            <RelativeLayout
+                android:id="@+id/navigation_item_clear_private_parts"
+                style="@style/DrawerMenuItem">
+
+                <android.support.v7.widget.AppCompatImageView
+                    style="@style/DrawerMenuIcon"
+                    app:srcCompat="@drawable/ic_menu_rate" />
+
+                <com.superapps.view.TypefacedTextView
+                    style="@style/DrawerMenuTitle"
+                    android:includeFontPadding="false"
+                    android:text="清除手机所有隐私parts"
                     app:typeface="@string/custom_font_medium" />
             </RelativeLayout>
         </LinearLayout>

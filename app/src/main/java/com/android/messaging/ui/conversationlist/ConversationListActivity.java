@@ -5,9 +5,12 @@ import android.animation.AnimatorListenerAdapter;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Resources;
+import android.database.Cursor;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.Telephony;
 import android.support.design.widget.NavigationView;
 import android.support.v4.content.pm.ShortcutManagerCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -18,6 +21,7 @@ import android.support.v7.widget.AppCompatDrawableManager;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.text.format.DateUtils;
+import android.util.Log;
 import android.view.ActionMode;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -31,6 +35,7 @@ import com.android.messaging.Factory;
 import com.android.messaging.R;
 import com.android.messaging.datamodel.BugleNotifications;
 import com.android.messaging.datamodel.action.PinConversationAction;
+import com.android.messaging.mmslib.SqliteWrapper;
 import com.android.messaging.privatebox.MessagesMoveManager;
 import com.android.messaging.privatebox.PrivateSettingManager;
 import com.android.messaging.privatebox.ui.PrivateBoxSetPasswordActivity;
@@ -75,6 +80,7 @@ import com.superapps.util.Threads;
 import com.superapps.util.Toasts;
 
 import java.lang.ref.WeakReference;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collection;
 import java.util.List;
@@ -437,6 +443,35 @@ public class ConversationListActivity extends AbstractConversationListActivity
         navigationContent.findViewById(R.id.navigation_item_change_font).setOnClickListener(this);
         navigationContent.findViewById(R.id.navigation_item_setting).setOnClickListener(this);
         navigationContent.findViewById(R.id.navigation_item_rate).setOnClickListener(this);
+        //this item is used to delete dirty mms parts in telephony
+        navigationContent.findViewById(R.id.navigation_item_clear_private_parts).setVisibility(View.GONE);
+        navigationContent.findViewById(R.id.navigation_item_clear_private_parts).setOnClickListener(v -> {
+            Threads.postOnSingleThreadExecutor(() -> {
+                List<Integer> privatePartIdList = new ArrayList<>();
+                final Cursor c = SqliteWrapper.query(HSApplication.getContext(), HSApplication.getContext().getContentResolver(),
+                        Uri.parse("content://mms/part"),
+                        new String[]{Telephony.Mms.Part._ID, Telephony.Mms.Part.MSG_ID},
+                        Telephony.Mms.Part.MSG_ID + "< 0",
+                        null, null);
+                if (c != null) {
+                    while (c.moveToNext()) {
+                        privatePartIdList.add(c.getInt(0));
+                        Log.d("---->>>>", "find private message " + c.getString(1) + " parts : \n part id is :"
+                                + c.getInt(0));
+                    }
+                    c.close();
+                }
+                for (int i = 0; i < privatePartIdList.size(); i++) {
+                    int k = SqliteWrapper.delete(HSApplication.getContext(),
+                            HSApplication.getContext().getContentResolver(),
+                            Uri.parse("content://mms/part/" + privatePartIdList.get(i)), null, null);
+                    if (k > 0) {
+                        Log.d("---->>>>", "delete part : id = " + privatePartIdList.get(i));
+                    }
+                }
+            });
+
+        });
         mPrivateBoxEntrance = navigationContent.findViewById(R.id.navigation_item_privacy_box);
         mPrivateBoxEntrance.setOnClickListener(this);
         if (PrivateSettingManager.isPrivateBoxIconHidden()) {
