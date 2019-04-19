@@ -1092,6 +1092,7 @@
     <string name="message_box_mark_as_unread">Marked as unread</string>
     <string name="message_box_send_successfully_toast">Sent successfully</string>
     <string name="message_box_send_failed_toast">Failed to send</string>
+    <string name="message_box_indicator">%1$d \/ %2$d</string>
 
     <string name="privacy_mode_settings">Privacy Mode</string>
     <string name="privacy_mode_disable">None</string>

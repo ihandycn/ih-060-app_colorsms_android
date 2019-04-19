@@ -17,14 +17,13 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toTopOf="@+id/keyboard_guideline"/>
 
+
     <com.android.messaging.ui.messagebox.MessageBoxIndicatorView
         android:id="@+id/multi_conversation_indicator_view"
-        android:layout_width="match_parent"
-        android:layout_height="19dp"
-        android:layout_marginEnd="-42dp"
-        android:layout_marginBottom="285dp"
-        android:gravity="end"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:orientation="horizontal"
+        android:layout_marginTop="285dp"
         app:layout_constraintBottom_toBottomOf="@+id/message_box_conversation_pager"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

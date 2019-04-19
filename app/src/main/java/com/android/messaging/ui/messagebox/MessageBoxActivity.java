@@ -13,6 +13,7 @@ import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 
 import com.android.messaging.BuildConfig;
 import com.android.messaging.R;
@@ -100,6 +101,20 @@ public class MessageBoxActivity extends AppCompatActivity implements INotificati
         HSGlobalNotificationCenter.addObserver(NOTIFICATION_FINISH_MESSAGE_BOX, this);
         HSGlobalNotificationCenter.addObserver(NOTIFICATION_MESSAGE_BOX_SEND_SMS_FAILED, this);
         HSGlobalNotificationCenter.addObserver(NOTIFICATION_MESSAGE_BOX_SEND_SMS_SUCCEDED, this);
+
+        mIndicator.setOnIndicatorClickListener(new MessageBoxIndicatorView.OnIndicatorClickListener() {
+            @Override
+            public void onClickLeft() {
+                mPager.setCurrentItem(mPager.getCurrentItem() - 1);
+                mIndicator.updateIndicator(mPager.getCurrentItem(), mPagerAdapter.getCount());
+            }
+
+            @Override
+            public void onClickRight() {
+                mPager.setCurrentItem(mPager.getCurrentItem() + 1);
+                mIndicator.updateIndicator(mPager.getCurrentItem(), mPagerAdapter.getCount());
+            }
+        });
     }
 
 
@@ -127,16 +142,11 @@ public class MessageBoxActivity extends AppCompatActivity implements INotificati
             MessageBoxConversationView newItem = (MessageBoxConversationView) LayoutInflater.from(this).inflate(R.layout.message_box_conversation_view, null, false);
             newItem.bind(data);
 
-            mPager.removeOnPageChangeListener(mIndicator);
             mPagerAdapter.addView(newItem);
             mPagerAdapter.notifyDataSetChanged();
-
-            mIndicator.removeAllViews();
-            mIndicator.initDot(mPagerAdapter.getCount(), mPager.getCurrentItem());
-            mPager.addOnPageChangeListener(mIndicator);
-
             MessageBoxAnalytics.setIsMultiConversation(true);
             mContactsNum++;
+            mIndicator.updateIndicator(mPager.getCurrentItem(), mPagerAdapter.getCount());
         }
         mMessagesNum++;
 
@@ -147,16 +157,7 @@ public class MessageBoxActivity extends AppCompatActivity implements INotificati
     protected void onResume() {
         super.onResume();
         if (hasWindowFocus()) {
-            mIndicator.reveal();
             mCurrentConversationView.updateTimestamp();
-        }
-    }
-
-    @Override
-    public void onWindowFocusChanged(boolean hasFocus) {
-        super.onWindowFocusChanged(hasFocus);
-        if (hasFocus) {
-            mIndicator.reveal();
         }
     }
 
@@ -174,6 +175,7 @@ public class MessageBoxActivity extends AppCompatActivity implements INotificati
     public void onPageSelected(int position) {
         mCurrentConversationView = (MessageBoxConversationView) mPagerAdapter.getViews().get(position);
         reLayoutIndicatorView();
+        mIndicator.updateIndicator(position, mPagerAdapter.getCount());
     }
 
     @Override
@@ -183,7 +185,7 @@ public class MessageBoxActivity extends AppCompatActivity implements INotificati
 
     void reLayoutIndicatorView() {
         ConstraintLayout.LayoutParams params = (ConstraintLayout.LayoutParams) mIndicator.getLayoutParams();
-        params.bottomMargin = mCurrentConversationView.getContentHeight() + Dimensions.pxFromDp(22);
+        params.topMargin = mCurrentConversationView.getContentHeight() + Dimensions.pxFromDp(42);
         mIndicator.setLayoutParams(params);
     }
 
@@ -281,15 +283,10 @@ public class MessageBoxActivity extends AppCompatActivity implements INotificati
         if (position == mPagerAdapter.getCount() - 1) {
             finish(source);
         } else {
-            mPager.removeOnPageChangeListener(mIndicator);
             mPagerAdapter.removeView(mPager, mCurrentConversationView);
-
-            mIndicator.removeAllViews();
             mPager.setCurrentItem(position);
             mCurrentConversationView = (MessageBoxConversationView) mPagerAdapter.getViews().get(position);
-            mIndicator.initDot(mPagerAdapter.getCount(), position);
-            mPager.addOnPageChangeListener(mIndicator);
-            mIndicator.reveal();
+            mIndicator.updateIndicator(mPager.getCurrentItem(), mPagerAdapter.getCount());
         }
     }
 
