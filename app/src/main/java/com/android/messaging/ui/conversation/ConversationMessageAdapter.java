@@ -230,6 +230,7 @@ public class ConversationMessageAdapter extends
             AcbNativeAdIconView icon = ViewUtils.findViewById(adView, R.id.ad_icon);
             icon.setShapeMode(1);
             icon.setRadius(Dimensions.pxFromDp(20));
+            icon.setDefaultIcon(container.getContext().getResources().getDrawable(R.drawable.default_ad_icon));
             mAdContentView.setAdIconView(icon);
             TextView title = ViewUtils.findViewById(adView, R.id.ad_title);
             title.setTextColor(ConversationColors.get().getMessageTextColor(true));
