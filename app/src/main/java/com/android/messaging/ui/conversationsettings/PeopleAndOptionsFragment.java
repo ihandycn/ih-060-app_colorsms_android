@@ -17,12 +17,12 @@ package com.android.messaging.ui.conversationsettings;
 
 import android.app.Activity;
 import android.app.Fragment;
+import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.database.Cursor;
-import android.graphics.Color;
 import android.media.RingtoneManager;
 import android.os.Bundle;
 import android.os.Parcelable;
@@ -49,19 +49,16 @@ import com.android.messaging.datamodel.data.PeopleOptionsItemData;
 import com.android.messaging.datamodel.data.PersonItemData;
 import com.android.messaging.ui.BaseAlertDialog;
 import com.android.messaging.ui.CompositeAdapter;
-import com.android.messaging.ui.ConversationDrawables;
 import com.android.messaging.ui.PersonItemView;
 import com.android.messaging.ui.UIIntents;
 import com.android.messaging.ui.customize.BubbleDrawables;
 import com.android.messaging.ui.customize.ConversationColors;
-import com.android.messaging.ui.customize.theme.ThemeInfo;
-import com.android.messaging.ui.customize.theme.ThemeUtils;
 import com.android.messaging.ui.wallpaper.WallpaperManager;
 import com.android.messaging.ui.wallpaper.WallpaperPreviewActivity;
 import com.android.messaging.util.Assert;
 import com.android.messaging.util.BugleAnalytics;
 import com.ihs.commons.notificationcenter.HSGlobalNotificationCenter;
-import com.superapps.util.Navigations;
+import com.superapps.util.Toasts;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -126,7 +123,6 @@ public class PeopleAndOptionsFragment extends Fragment
                     RingtoneManager.EXTRA_RINGTONE_PICKED_URI);
             final String pickedUri = pick == null ? "" : pick.toString();
             mBinding.getData().setConversationNotificationSound(mBinding, pickedUri);
-
             if (pickedUri != null && !pickedUri.equals(mRingtone)) {
                 BugleAnalytics.logEvent("Customize_Notification_Sound_Change", true, true, "from", "chat");
             }
@@ -188,8 +184,12 @@ public class PeopleAndOptionsFragment extends Fragment
                         getString(R.string.notification_sound_pref_title),
                         item.getRingtoneUri(), Settings.System.DEFAULT_NOTIFICATION_URI,
                         RingtoneManager.TYPE_NOTIFICATION);
-                Navigations.startActivityForResultSafely(getActivity(),
-                        ringtonePickerIntent, REQUEST_CODE_RINGTONE_PICKER);
+
+                try {
+                    startActivityForResult(ringtonePickerIntent, REQUEST_CODE_RINGTONE_PICKER);
+                } catch (ActivityNotFoundException | SecurityException e) {
+                    Toasts.showToast(com.superapps.R.string.setting_device_not_support_message);
+                }
                 break;
 
             case SETTING_NOTIFICATION_VIBRATION:

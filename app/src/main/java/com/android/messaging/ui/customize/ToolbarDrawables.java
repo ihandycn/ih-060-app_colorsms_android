@@ -1,5 +1,8 @@
 package com.android.messaging.ui.customize;
 
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.text.TextUtils;
 
@@ -13,6 +16,8 @@ public class ToolbarDrawables {
 
     private static final String PREF_KEY_CUSTOMIZE_TOOLBAR_BACKGROUND = "pref_key_customize_toolbar_background";
 
+    public static Drawable sToolbarBg;
+
     public static void applyToolbarBg(String url) {
         Factory.get().getCustomizePrefs().putString(PREF_KEY_CUSTOMIZE_TOOLBAR_BACKGROUND, url);
     }
@@ -23,10 +28,16 @@ public class ToolbarDrawables {
             return null;
         }
 
+        if (sToolbarBg != null) {
+            return sToolbarBg;
+        }
+
         if (url.startsWith("assets://")) {
             try {
                 InputStream ims = HSApplication.getContext().getAssets().open(url.replace("assets://", ""));
-                return Drawable.createFromStream(ims, null);
+                Bitmap bitmap = BitmapFactory.decodeStream(ims);
+                sToolbarBg = new BitmapDrawable(HSApplication.getContext().getResources(), bitmap);
+                return sToolbarBg;
             } catch (IOException e) {
                 e.printStackTrace();
             }

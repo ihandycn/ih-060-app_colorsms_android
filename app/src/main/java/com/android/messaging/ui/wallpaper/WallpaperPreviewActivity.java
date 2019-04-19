@@ -24,6 +24,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.android.messaging.BaseActivity;
+import com.android.messaging.Factory;
 import com.android.messaging.R;
 import com.android.messaging.glide.GlideApp;
 import com.android.messaging.ui.customize.CustomMessagePreviewView;
@@ -270,7 +271,8 @@ public class WallpaperPreviewActivity extends BaseActivity implements WallpaperM
                             "from", TextUtils.isEmpty(mThreadId) ? "Menu" : "Options");
                 });
                 if (TextUtils.isEmpty(wallpaperPath)
-                        && WallpaperDrawables.getWallpaperBg() == null) {
+                        && TextUtils.isEmpty(Factory.get().getCustomizePrefs().getString(
+                        WallpaperDrawables.PREF_KEY_CUSTOMIZE_WALLPAPER_BACKGROUND, ""))) {
                     onItemSelected(view);
                 }
             } else {
