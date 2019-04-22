@@ -52,8 +52,8 @@ import com.android.messaging.datamodel.data.ParticipantData;
 import com.android.messaging.datamodel.media.BugleNotificationChannelUtil;
 import com.android.messaging.datamodel.media.VideoThumbnailRequest;
 import com.android.messaging.sms.MmsUtils;
-import com.android.messaging.ui.messagebox.MessageBoxSettings;
 import com.android.messaging.ui.UIIntents;
+import com.android.messaging.ui.messagebox.MessageBoxSettings;
 import com.android.messaging.util.Assert;
 import com.android.messaging.util.AvatarUriUtil;
 import com.android.messaging.util.BugleGservices;
@@ -64,7 +64,9 @@ import com.android.messaging.util.ConversationIdSet;
 import com.android.messaging.util.LogUtil;
 import com.android.messaging.util.PendingIntentConstants;
 import com.android.messaging.util.UriUtil;
+import com.crashlytics.android.core.CrashlyticsCore;
 import com.google.common.collect.Lists;
+import com.superapps.debug.CrashlyticsLog;
 import com.superapps.util.Notifications;
 
 import java.util.ArrayList;
@@ -754,6 +756,7 @@ public abstract class MessageNotificationState extends NotificationState {
                         displayName = convMessageData.getSenderDisplayDestination();
                         if (TextUtils.isEmpty(displayName)) {
                             displayName = context.getString(R.string.unknown_sender);
+                            CrashlyticsCore.getInstance().logException(new CrashlyticsLog("Notification_Show_Unknown_Sender"));
                         }
                     } else {
                         displayName = context.getString(R.string.unknown_self_participant);

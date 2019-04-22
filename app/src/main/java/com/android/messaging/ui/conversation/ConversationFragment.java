@@ -106,12 +106,14 @@ import com.android.messaging.util.SafeAsyncTask;
 import com.android.messaging.util.TextUtil;
 import com.android.messaging.util.UiUtils;
 import com.android.messaging.util.UriUtil;
+import com.crashlytics.android.core.CrashlyticsCore;
 import com.google.common.annotations.VisibleForTesting;
 import com.ihs.commons.config.HSConfig;
 import com.ihs.commons.notificationcenter.HSGlobalNotificationCenter;
 import com.ihs.commons.notificationcenter.INotificationObserver;
 import com.ihs.commons.utils.HSBundle;
 import com.ihs.commons.utils.HSLog;
+import com.superapps.debug.CrashlyticsLog;
 import com.superapps.util.Threads;
 
 import net.appcloudbox.ads.base.AcbNativeAd;
@@ -1187,9 +1189,8 @@ public class ConversationFragment extends Fragment implements ConversationDataLi
 
         final ConversationParticipantsData participants = conversationData.getParticipants();
         for (final ParticipantData participant : participants) {
-
-
             if (participant.isUnknownSender()) {
+                CrashlyticsCore.getInstance().logException(new CrashlyticsLog("Send_Message_Unknown_Sender"));
                 UiUtils.showToast(R.string.unknown_sender);
                 return false;
             }

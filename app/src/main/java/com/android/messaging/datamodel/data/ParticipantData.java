@@ -34,8 +34,11 @@ import com.android.messaging.datamodel.DatabaseHelper.ParticipantColumns;
 import com.android.messaging.datamodel.DatabaseWrapper;
 import com.android.messaging.sms.MmsSmsUtils;
 import com.android.messaging.util.Assert;
+import com.android.messaging.util.BugleAnalytics;
 import com.android.messaging.util.PhoneUtils;
 import com.android.messaging.util.TextUtil;
+import com.crashlytics.android.core.CrashlyticsCore;
+import com.superapps.debug.CrashlyticsLog;
 
 /**
  * A class that encapsulates all of the data for a specific participant in a conversation.
@@ -288,6 +291,7 @@ public class ParticipantData implements Parcelable {
             // on the fly rather than relying on the version in the database.
             final Resources resources = Factory.get().getApplicationContext().getResources();
             mDisplayDestination = resources.getString(R.string.unknown_sender);
+            CrashlyticsCore.getInstance().logException(new CrashlyticsLog("maybeSetupUnknownSender"));
             mFullName = mDisplayDestination;
         }
     }
@@ -340,8 +344,8 @@ public class ParticipantData implements Parcelable {
             return mDisplayDestination;
         }
 
-        return Factory.get().getApplicationContext().getResources().getString(
-                R.string.unknown_sender);
+        CrashlyticsCore.getInstance().logException(new CrashlyticsLog("Display_Name_Unknown_Sender"));
+        return Factory.get().getApplicationContext().getResources().getString(R.string.unknown_sender);
     }
 
     public String getProfilePhotoUri() {
