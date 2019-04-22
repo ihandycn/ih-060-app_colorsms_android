@@ -22,14 +22,14 @@
         android:minSdkVersion="19"
         android:targetSdkVersion="26"/>
     
+    <!-- Application holds CPU wakelock while working in background -->
+    <uses-permission android:name="android.permission.WAKE_LOCK"/>
     <!-- Application needs SMS/MMS permissions -->
     <uses-permission android:name="android.permission.READ_SMS"/>
     <uses-permission android:name="android.permission.WRITE_SMS"/>
     <uses-permission android:name="android.permission.RECEIVE_SMS"/>
     <uses-permission android:name="android.permission.RECEIVE_MMS"/>
     <uses-permission android:name="android.permission.SEND_SMS"/>
-    <!-- Application holds CPU wakelock while working in background -->
-    <uses-permission android:name="android.permission.WAKE_LOCK"/>
     <!-- Application needs CONTACT permissions -->
     <uses-permission android:name="android.permission.READ_CONTACTS"/>
     <uses-permission android:name="android.permission.WRITE_CONTACTS"/>
