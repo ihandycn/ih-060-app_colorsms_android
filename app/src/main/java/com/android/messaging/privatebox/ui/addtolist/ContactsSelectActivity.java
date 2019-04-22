@@ -5,6 +5,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.Choreographer;
 import android.view.MenuItem;
 import android.view.View;
@@ -12,6 +13,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.android.messaging.R;
+import com.android.messaging.privatebox.AddPrivateContactAction;
 import com.android.messaging.privatebox.PrivateContactsManager;
 import com.android.messaging.ui.BaseAlertDialog;
 import com.android.messaging.ui.customize.PrimaryColors;
@@ -50,6 +52,9 @@ public class ContactsSelectActivity extends HSAppCompatActivity {
     private long mStartTime;
     private Choreographer mChoreographer;
     private Choreographer.FrameCallback mFrameCallback;
+    private long mResponseCode = System.currentTimeMillis();
+    private String mMoveStartKey = EVENT_MESSAGES_MOVE_START + mResponseCode;
+    private String mMoveEndKey = EVENT_MESSAGES_MOVE_END + mResponseCode;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -105,13 +110,10 @@ public class ContactsSelectActivity extends HSAppCompatActivity {
         });
         mProgressBar = findViewById(R.id.private_move_progress_bar);
         mContactMoveObserver = (s, hsBundle) -> {
-            switch (s) {
-                case EVENT_MESSAGES_MOVE_START:
-                    Threads.runOnMainThread(this::startMessagesMoveProgress);
-                    break;
-                case EVENT_MESSAGES_MOVE_END:
-                    Threads.runOnMainThread(this::stopMessageMoveProgress);
-                    break;
+            if (mMoveStartKey.equals(s)) {
+                Threads.runOnMainThread(this::startMessagesMoveProgress);
+            } else if (mMoveEndKey.equals(s)) {
+                Threads.runOnMainThread(this::stopMessageMoveProgress);
             }
         };
 
@@ -125,8 +127,8 @@ public class ContactsSelectActivity extends HSAppCompatActivity {
                 }
             }
         };
-        HSGlobalNotificationCenter.addObserver(EVENT_MESSAGES_MOVE_START, mContactMoveObserver);
-        HSGlobalNotificationCenter.addObserver(EVENT_MESSAGES_MOVE_END, mContactMoveObserver);
+        HSGlobalNotificationCenter.addObserver(mMoveStartKey, mContactMoveObserver);
+        HSGlobalNotificationCenter.addObserver(mMoveEndKey, mContactMoveObserver);
     }
 
     @Override
@@ -157,7 +159,7 @@ public class ContactsSelectActivity extends HSAppCompatActivity {
 
         switch (moduleType) {
             case MODE_CONTACTS_LIST_FOR_BLACKLIST:
-                PrivateContactsManager.getInstance().addUserToPrivateBoxWithGlobalNotification(addList);
+                AddPrivateContactAction.addPrivateRecipientsAndMoveMessages(addList, mResponseCode);
                 break;
         }
     }
@@ -173,9 +175,6 @@ public class ContactsSelectActivity extends HSAppCompatActivity {
     }
 
     private void stopMessageMoveProgress() {
-        if (!mIsMessageMoving) {
-            return;
-        }
         mIsMessageMoving = false;
         mChoreographer.removeFrameCallback(mFrameCallback);
         mProcessBarContainer.setVisibility(View.GONE);

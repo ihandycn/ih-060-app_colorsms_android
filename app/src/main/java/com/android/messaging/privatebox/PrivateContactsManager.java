@@ -1,17 +1,12 @@
 package com.android.messaging.privatebox;
 
 import android.database.Cursor;
-import android.support.annotation.NonNull;
 
 import com.android.messaging.datamodel.BugleDatabaseOperations;
 import com.android.messaging.datamodel.DataModel;
 import com.android.messaging.datamodel.DatabaseWrapper;
-import com.android.messaging.privatebox.ui.addtolist.ContactsSelectActivity;
 import com.android.messaging.sms.MmsSmsUtils;
 import com.ihs.app.framework.HSApplication;
-import com.ihs.commons.notificationcenter.HSGlobalNotificationCenter;
-
-import java.util.List;
 
 public class PrivateContactsManager {
     public static final PrivateContactsManager sInstance = new PrivateContactsManager();
@@ -46,19 +41,6 @@ public class PrivateContactsManager {
         }
     }
 
-    public void addUserToPrivateBoxWithGlobalNotification(@NonNull List<String> recipients) {
-        //todo : check permission for no grant exception
-        for (String recipient : recipients) {
-            long threadId = MmsSmsUtils.Threads.getOrCreateThreadId(HSApplication.getContext(), recipient);
-            if (threadId < 0) {
-                continue;
-            }
-            AddPrivateContactAction.addPrivateContactAndMoveMessages(threadId, recipient, true);
-        }
-        HSGlobalNotificationCenter.sendNotification(ContactsSelectActivity.EVENT_MESSAGES_MOVE_END);
-
-    }
-
     public void removeThreadId(long threadId) {
         DatabaseWrapper db = DataModel.get().getDatabase();
         db.delete(PRIVATE_CONTACTS_TABLE, THREAD_ID + "=?", new String[]{String.valueOf(threadId)});
@@ -67,7 +49,7 @@ public class PrivateContactsManager {
     public void updatePrivateContactsByConversationId(String conversationId, boolean isPrivate) {
         long threadId = BugleDatabaseOperations.getThreadId(DataModel.get().getDatabase(), conversationId);
         if (isPrivate) {
-            AddPrivateContactAction.addPrivateContact(threadId);
+            AddPrivateContactAction.addPrivateThreadId(threadId);
         } else {
             removeThreadId(threadId);
         }
