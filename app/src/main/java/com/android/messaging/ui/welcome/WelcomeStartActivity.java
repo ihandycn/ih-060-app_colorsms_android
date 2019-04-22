@@ -6,6 +6,8 @@ import android.animation.ValueAnimator;
 import android.content.Intent;
 import android.graphics.Paint;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.support.v4.view.ViewPager;
 import android.support.v4.view.animation.PathInterpolatorCompat;
 import android.support.v7.app.AppCompatActivity;
@@ -24,6 +26,7 @@ import com.android.messaging.ui.UIIntents;
 import com.android.messaging.ui.WebViewActivity;
 import com.android.messaging.util.BugleAnalytics;
 import com.android.messaging.util.BugleAnimUtils;
+import com.android.messaging.util.OsUtil;
 import com.android.messaging.util.PhoneUtils;
 import com.android.messaging.util.view.AdvancedPageIndicator;
 import com.android.messaging.util.view.IndicatorMark;
@@ -82,6 +85,26 @@ public class WelcomeStartActivity extends AppCompatActivity implements View.OnCl
     private boolean mCanViewPagerDrag = true;
     private float mViewPagerEndDragStartX;
     private boolean mIsActivityPaused = true;
+
+    private static final int EVENT_RETRY_NAVIGATION = 0;
+    private Handler mHandler = new Handler() {
+        @Override public void handleMessage(Message msg) {
+            super.handleMessage(msg);
+
+            if (msg.what == EVENT_RETRY_NAVIGATION) {
+                if (OsUtil.hasRequiredPermissions()) {
+                    Factory.get().onDefaultSmsSetAndPermissionsGranted();
+                    Navigations.startActivitySafely(WelcomeStartActivity.this,
+                            new Intent(WelcomeStartActivity.this, WelcomeChooseThemeActivity.class));
+                    Toasts.showToast(R.string.set_as_default_success);
+                    BugleAnalytics.logEvent("Start_SetAsDefault_Success", true, true, "step", "detail page");
+                    finish();
+                } else {
+                    sendEmptyMessageDelayed(EVENT_RETRY_NAVIGATION, 100);
+                }
+            }
+        }
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -503,11 +526,7 @@ public class WelcomeStartActivity extends AppCompatActivity implements View.OnCl
     public void onActivityResult(final int requestCode, final int resultCode, final Intent data) {
         if (requestCode == REQUEST_SET_DEFAULT_SMS_APP) {
             if (PhoneUtils.getDefault().isDefaultSmsApp()) {
-                Factory.get().onDefaultSmsSetAndPermissionsGranted();
-                Navigations.startActivitySafely(this, new Intent(this, WelcomeChooseThemeActivity.class));
-                Toasts.showToast(R.string.set_as_default_success);
-                BugleAnalytics.logEvent("Start_SetAsDefault_Success", true, true, "step", "detail page");
-                finish();
+                mHandler.sendEmptyMessageDelayed(EVENT_RETRY_NAVIGATION, 100);
             } else {
                 Intent intent = new Intent(WelcomeStartActivity.this, WelcomeSetAsDefaultActivity.class);
                 intent.putExtra(WelcomeSetAsDefaultActivity.EXTRA_FROM_WELCOME_START, true);

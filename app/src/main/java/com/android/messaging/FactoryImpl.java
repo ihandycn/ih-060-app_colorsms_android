@@ -165,11 +165,15 @@ class FactoryImpl extends Factory {
         Assert.initializeGservices(factory.mBugleGservices);
         LogUtil.initializeGservices(factory.mBugleGservices);
 
-        if (PhoneUtils.getDefault().isDefaultSmsApp()) {
+        if (PhoneUtils.getDefault().isDefaultSmsApp() && OsUtil.hasRequiredPermissions()) {
             factory.onDefaultSmsSetAndPermissionsGranted();
         }
         PhoneUtils.getDefault().registerDefaultSmsPackageChange(
-                () -> factory.onDefaultSmsSetAndPermissionsGranted(),
+                () -> {
+                    if (OsUtil.hasRequiredPermissions()) {
+                        factory.onDefaultSmsSetAndPermissionsGranted();
+                    }
+                },
                 () -> BugleApplication.updateAppConfig(factory.getApplicationContext(), false));
 
         return factory;

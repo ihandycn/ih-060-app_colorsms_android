@@ -2,6 +2,8 @@ package com.android.messaging.ui.welcome;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.support.v7.app.AppCompatActivity;
 import android.widget.Toast;
 
@@ -9,6 +11,7 @@ import com.android.messaging.Factory;
 import com.android.messaging.R;
 import com.android.messaging.ui.UIIntents;
 import com.android.messaging.util.BugleAnalytics;
+import com.android.messaging.util.OsUtil;
 import com.android.messaging.util.PhoneUtils;
 import com.ihs.commons.config.HSConfig;
 import com.superapps.util.BackgroundDrawables;
@@ -23,6 +26,31 @@ public class WelcomeSetAsDefaultActivity extends AppCompatActivity {
     private static final int REQUEST_SET_DEFAULT_SMS_APP = 3;
     private boolean mAllowBackKey = true;
     private boolean mIsFromWelcomeStart = false;
+
+    private static final int EVENT_RETRY_NAVIGATION = 0;
+    private Handler mHandler = new Handler() {
+        @Override public void handleMessage(Message msg) {
+            super.handleMessage(msg);
+
+            if (OsUtil.hasRequiredPermissions()) {
+                Factory.get().onDefaultSmsSetAndPermissionsGranted();
+                if (!Preferences.getDefault().contains(WelcomeChooseThemeActivity.PREF_KEY_WELCOME_CHOOSE_THEME_SHOWN)) {
+                    Navigations.startActivitySafely(WelcomeSetAsDefaultActivity.this,
+                            new Intent(WelcomeSetAsDefaultActivity.this, WelcomeChooseThemeActivity.class));
+                } else {
+                    UIIntents.get().launchConversationListActivity(WelcomeSetAsDefaultActivity.this);
+                }
+                if (mIsFromWelcomeStart) {
+                    BugleAnalytics.logEvent("Start_SetAsDefault_Success", true, true, "step", "setasdefault page");
+                } else {
+                    BugleAnalytics.logEvent("SetAsDefault_GuidePage_Success", true, true);
+                }
+                finish();
+            } else {
+                sendEmptyMessageDelayed(EVENT_RETRY_NAVIGATION, 100);
+            }
+        }
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -73,18 +101,7 @@ public class WelcomeSetAsDefaultActivity extends AppCompatActivity {
     public void onActivityResult(final int requestCode, final int resultCode, final Intent data) {
         if (requestCode == REQUEST_SET_DEFAULT_SMS_APP) {
             if (PhoneUtils.getDefault().isDefaultSmsApp()) {
-                Factory.get().onDefaultSmsSetAndPermissionsGranted();
-                if (!Preferences.getDefault().contains(WelcomeChooseThemeActivity.PREF_KEY_WELCOME_CHOOSE_THEME_SHOWN)) {
-                    Navigations.startActivitySafely(this, new Intent(this, WelcomeChooseThemeActivity.class));
-                } else {
-                    UIIntents.get().launchConversationListActivity(this);
-                }
-                if (mIsFromWelcomeStart) {
-                    BugleAnalytics.logEvent("Start_SetAsDefault_Success", true, true, "step", "setasdefault page");
-                } else {
-                    BugleAnalytics.logEvent("SetAsDefault_GuidePage_Success", true, true);
-                }
-                finish();
+                mHandler.sendEmptyMessageDelayed(EVENT_RETRY_NAVIGATION, 100);
             } else {
                 Toasts.showToast(R.string.welcome_set_default_failed_toast, Toast.LENGTH_LONG);
             }
