@@ -175,6 +175,7 @@ public class ConversationFragment extends Fragment implements ConversationDataLi
     // We animate the message from draft to message list, if we the message doesn't show up in the
     // list within this time limit, then we just do a fade in animation instead
     public static final int MESSAGE_ANIMATION_MAX_WAIT = 500;
+    public static final int MESSAGE_DONT_SHOW_AD = 100;
 
     private ComposeMessageView mComposeMessageView;
     private RecyclerView mRecyclerView;
@@ -972,7 +973,8 @@ public class ConversationFragment extends Fragment implements ConversationDataLi
         boolean adAttached = false;
         if (mMessageDataList.size() > 0
                 && mNativeAd != null
-                && shouldAddNativeAdToList) {
+                && shouldAddNativeAdToList
+                && !mHandler.hasMessages(MESSAGE_DONT_SHOW_AD)) {
             list.add(mNativeAd);
             adAttached = true;
             if (!isAdShowLogged) {
@@ -1691,13 +1693,12 @@ public class ConversationFragment extends Fragment implements ConversationDataLi
     }
 
     @Override
-    public int overrideCounterColor() {
-        return -1;      // don't override the color
-    }
-
-    @Override
     public void onAttachmentsChanged(final boolean haveAttachments) {
         // no-op for now
+    }
+
+    @Override public void onClickMediaOrEmoji() {
+        mHandler.sendEmptyMessageDelayed(MESSAGE_DONT_SHOW_AD, 1000);
     }
 
     @Override
