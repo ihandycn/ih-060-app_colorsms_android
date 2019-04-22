@@ -500,6 +500,10 @@ public class ConversationFragment extends Fragment implements ConversationDataLi
 
     private ViewTreeObserver.OnGlobalLayoutListener globalLayoutListener = new ViewTreeObserver.OnGlobalLayoutListener() {
         @Override public void onGlobalLayout() {
+            if (mHandler.hasMessages(MESSAGE_DONT_SHOW_AD)) {
+                return;
+            }
+
             int[] pos = new int[2];
             mComposeMessageView.getComposeEditText().getLocationOnScreen(pos);
             int bottomPos = pos[1] + mComposeMessageView.getComposeEditText().getMeasuredHeight();
@@ -973,8 +977,7 @@ public class ConversationFragment extends Fragment implements ConversationDataLi
         boolean adAttached = false;
         if (mMessageDataList.size() > 0
                 && mNativeAd != null
-                && shouldAddNativeAdToList
-                && !mHandler.hasMessages(MESSAGE_DONT_SHOW_AD)) {
+                && shouldAddNativeAdToList) {
             list.add(mNativeAd);
             adAttached = true;
             if (!isAdShowLogged) {
