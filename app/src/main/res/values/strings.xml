@@ -1114,6 +1114,5 @@
 
     <string name="welcome_choose_theme_title">Choose a Theme You Like</string>
     <string name="welcome_choose_theme_current">Current</string>
-    <string name="apply_theme_success">Apply Success</string>
-    
+    <string name="apply_theme_success">Apply Success</string>    
 </resources>
