@@ -49,7 +49,6 @@ import com.android.messaging.util.MediaUtil;
 import com.android.messaging.util.MediaUtilImpl;
 import com.android.messaging.util.OsUtil;
 import com.android.messaging.util.PhoneUtils;
-import com.android.messaging.util.UiUtils;
 import com.superapps.util.Compats;
 import com.superapps.util.Threads;
 
@@ -166,15 +165,11 @@ class FactoryImpl extends Factory {
         Assert.initializeGservices(factory.mBugleGservices);
         LogUtil.initializeGservices(factory.mBugleGservices);
 
-        if (PhoneUtils.getDefault().isDefaultSmsApp() && OsUtil.hasRequiredPermissions()) {
+        if (PhoneUtils.getDefault().isDefaultSmsApp()) {
             factory.onDefaultSmsSetAndPermissionsGranted();
         }
         PhoneUtils.getDefault().registerDefaultSmsPackageChange(
-                () -> {
-                    if (OsUtil.hasRequiredPermissions()) {
-                        factory.onDefaultSmsSetAndPermissionsGranted();
-                    }
-                },
+                () -> factory.onDefaultSmsSetAndPermissionsGranted(),
                 () -> BugleApplication.updateAppConfig(factory.getApplicationContext(), false));
 
         return factory;

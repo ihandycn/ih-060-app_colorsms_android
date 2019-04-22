@@ -42,7 +42,13 @@ public class MessageTextStats {
     }
 
     public void updateMessageTextStats(final int selfSubId, final String messageText) {
-        final int[] params = SmsMessage.calculateLength(messageText, false);
+        int[] params;
+        try {
+            params = SmsMessage.calculateLength(messageText, false);
+        } catch (Exception e) {
+            return;
+        }
+        
         /* SmsMessage.calculateLength returns an int[4] with:
          *   int[0] being the number of SMS's required,
          *   int[1] the number of code points used,
