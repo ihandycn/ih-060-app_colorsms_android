@@ -35,6 +35,8 @@ import com.android.messaging.util.BugleGservicesKeys;
 import com.android.messaging.util.LogUtil;
 import com.android.messaging.util.PhoneUtils;
 import com.android.messaging.util.UiUtils;
+import com.crashlytics.android.core.CrashlyticsCore;
+import com.superapps.debug.CrashlyticsLog;
 
 import java.util.ArrayList;
 import java.util.Random;
@@ -42,7 +44,7 @@ import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * Class that sends chat message via SMS.
- *
+ * <p>
  * The interface emulates a blocking sending similar to making an HTTP request.
  * It calls the SmsManager to send a (potentially multipart) message and waits
  * on the sent status on each part. The waiting has a timeout so it won't wait
@@ -138,7 +140,7 @@ public class SmsSender {
     }
 
     public static void setResult(final Uri requestId, final int resultCode,
-            final int errorCode, final int partId, int subId) {
+                                 final int errorCode, final int partId, int subId) {
         if (resultCode != Activity.RESULT_OK) {
             LogUtil.e(TAG, "SmsSender: failure in sending message part. "
                     + " requestId=" + requestId + " partId=" + partId
@@ -170,7 +172,7 @@ public class SmsSender {
     }
 
     private static String getSendErrorToastMessage(final Context context, final int subId,
-            final int errorCode) {
+                                                   final int errorCode) {
         final String carrierName = PhoneUtils.get(subId).getCarrierName();
         if (TextUtils.isEmpty(carrierName)) {
             return context.getString(R.string.carrier_send_error_unknown_carrier, errorCode);
@@ -180,9 +182,9 @@ public class SmsSender {
     }
 
     // This should be called from a RequestWriter queue thread
-    public static SendResult sendMessage(final Context context,  final int subId, String dest,
-            String message, final String serviceCenter, final boolean requireDeliveryReport,
-            final Uri messageUri) throws SmsException {
+    public static SendResult sendMessage(final Context context, final int subId, String dest,
+                                         String message, final String serviceCenter, final boolean requireDeliveryReport,
+                                         final Uri messageUri) throws SmsException {
         if (LogUtil.isLoggable(TAG, LogUtil.VERBOSE)) {
             LogUtil.v(TAG, "SmsSender: sending message. " +
                     "dest=" + dest + " message=" + message +
@@ -195,21 +197,29 @@ public class SmsSender {
         }
         // Get the real dest and message for email or alias if dest is email or alias
         // Or sanitize the dest if dest is a number
+        String addressForLog = dest;
         if (!TextUtils.isEmpty(MmsConfig.get(subId).getEmailGateway()) &&
                 (MmsSmsUtils.isEmailAddress(dest) || MmsSmsUtils.isAlias(dest, subId))) {
             // The original destination (email address) goes with the message
             message = dest + " " + message;
             // the new address is the email gateway #
             dest = MmsConfig.get(subId).getEmailGateway();
+            if (TextUtils.isEmpty(dest)) {
+                CrashlyticsCore.getInstance().logException(new CrashlyticsLog("empty email : " + addressForLog
+                        + ", dest get from MmsConfig is : >" + dest + "<"));
+                throw new SmsException("SmsSender: empty destination address");
+            }
         } else {
             // remove spaces and dashes from destination number
             // (e.g. "801 555 1212" -> "8015551212")
             // (e.g. "+8211-123-4567" -> "+82111234567")
             dest = PhoneNumberUtils.stripSeparators(dest);
+            if (TextUtils.isEmpty(dest)) {
+                CrashlyticsCore.getInstance().logException(new CrashlyticsLog("empty number : " + addressForLog));
+                throw new SmsException("SmsSender: empty destination address");
+            }
         }
-        if (TextUtils.isEmpty(dest)) {
-            throw new SmsException("SmsSender: empty destination address");
-        }
+
         // Divide the input message by SMS length limit
         final SmsManager smsManager = PhoneUtils.get(subId).getSmsManager();
         final ArrayList<String> messages = smsManager.divideMessage(message);
@@ -252,8 +262,8 @@ public class SmsSender {
 
     // Actually sending the message using SmsManager
     private static void sendInternal(final Context context, final int subId, String dest,
-            final ArrayList<String> messages, final String serviceCenter,
-            final boolean requireDeliveryReport, final Uri messageUri) throws SmsException {
+                                     final ArrayList<String> messages, final String serviceCenter,
+                                     final boolean requireDeliveryReport, final Uri messageUri) throws SmsException {
         Assert.notNull(context);
         final SmsManager smsManager = PhoneUtils.get(subId).getSmsManager();
         final int messageCount = messages.size();
@@ -305,7 +315,7 @@ public class SmsSender {
     }
 
     private static Intent getSendStatusIntent(final Context context, final String action,
-            final Uri requestUri, final int partId, final int subId) {
+                                              final Uri requestUri, final int partId, final int subId) {
         // Encode requestId in intent data
         final Intent intent = new Intent(action, requestUri, context, SendStatusReceiver.class);
         intent.putExtra(SendStatusReceiver.EXTRA_PART_ID, partId);

@@ -81,7 +81,9 @@ import com.android.messaging.util.LogUtil;
 import com.android.messaging.util.MediaMetadataRetrieverWrapper;
 import com.android.messaging.util.OsUtil;
 import com.android.messaging.util.PhoneUtils;
+import com.crashlytics.android.core.CrashlyticsCore;
 import com.google.common.base.Joiner;
+import com.superapps.debug.CrashlyticsLog;
 
 import java.io.BufferedOutputStream;
 import java.io.File;
@@ -2600,6 +2602,7 @@ public class MmsUtils {
             }
         } catch (final Exception e) {
             BugleAnalytics.logEvent("SMS_Send_Failed", "reason", e.getMessage());
+            CrashlyticsCore.getInstance().logException(new CrashlyticsLog("send fail : " + e.getMessage()));
             LogUtil.e(TAG, "MmsUtils: failed to send SMS " + e, e);
         }
         return status;
