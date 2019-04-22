@@ -14,6 +14,7 @@ import com.android.messaging.util.BuglePrefs;
 import static com.android.messaging.ui.appsettings.ChooseThemeColorRecommendViewHolder.COLORS;
 import static com.android.messaging.util.BuglePrefsKeys.PREFS_KEY_BUBBLE_BACKGROUND_COLOR_INCOMING;
 import static com.android.messaging.util.BuglePrefsKeys.PREFS_KEY_BUBBLE_BACKGROUND_COLOR_OUTGOING;
+import static com.android.messaging.util.BuglePrefsKeys.PREFS_KEY_CONVERSATION_AD_ACTION_COLOR;
 import static com.android.messaging.util.BuglePrefsKeys.PREFS_KEY_CONVERSATION_LIST_SUBTITLE_COLOR;
 import static com.android.messaging.util.BuglePrefsKeys.PREFS_KEY_CONVERSATION_LIST_TIME_COLOR;
 import static com.android.messaging.util.BuglePrefsKeys.PREFS_KEY_CONVERSATION_LIST_TITLE_COLOR;
@@ -33,6 +34,7 @@ public class ConversationColors {
     private int mListTitleColor;
     private int mListSubtitleColor;
     private int mListTimeColor;
+    private int mAdActionColor;
 
     public static ConversationColors get() {
         if (sInstance == null) {
@@ -69,6 +71,9 @@ public class ConversationColors {
 
         mListTimeColor = mPrefs.getInt(PREFS_KEY_CONVERSATION_LIST_TIME_COLOR,
                 res.getColor(R.color.conversation_list_timestamp));
+
+        mAdActionColor = mPrefs.getInt(PREFS_KEY_CONVERSATION_AD_ACTION_COLOR,
+                res.getColor(R.color.conversation_ad_action));
     }
 
     @ColorInt
@@ -121,6 +126,10 @@ public class ConversationColors {
 
     @ColorInt public int getListTimeColor() {
         return mListTimeColor;
+    }
+
+    @ColorInt public int getAdActionColor() {
+        return mAdActionColor;
     }
 
     public void setBubbleBackgroundColor(boolean incoming, @ColorInt int color) {
@@ -184,6 +193,11 @@ public class ConversationColors {
     public void setListTimeColor(@ColorInt int color) {
         mPrefs.putInt(PREFS_KEY_CONVERSATION_LIST_TIME_COLOR, color);
         mListTimeColor = color;
+    }
+
+    public void setAdActionColor(@ColorInt int color) {
+        mPrefs.putInt(PREFS_KEY_CONVERSATION_AD_ACTION_COLOR, color);
+        mAdActionColor = color;
     }
 
     public void resetConversationCustomization(@NonNull String conversationId) {

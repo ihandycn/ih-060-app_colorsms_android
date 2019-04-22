@@ -93,7 +93,7 @@ dependencies {
 
     compile "com.ihandy.device:device-permanent.gm:4.5.4.gm"
 
-    compile "net.appcloudbox.goldeneye:bubble_a:2019.04.15.001"
+    compile "net.appcloudbox.goldeneye:bubble_a:2019.04.16.002"
     implementation "me.leolin:ShortcutBadger:1.1.22@aar"
 
     // "D/DebugDB: Open http://xxxxxxxx:8080 in your browser" will appear in your logcat,

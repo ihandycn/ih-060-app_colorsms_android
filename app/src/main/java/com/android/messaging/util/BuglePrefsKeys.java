@@ -114,6 +114,11 @@ public final class BuglePrefsKeys {
     public static final String PREFS_KEY_CONVERSATION_LIST_TIME_COLOR = "conversation_list_time_color";
 
     /**
+     * conversation ad action text color
+     */
+    public static final String PREFS_KEY_CONVERSATION_AD_ACTION_COLOR = "conversation_ad_action_color";
+
+    /**
      * theme name
      */
     public static final String PREFS_KEY_THEME_NAME = "bugle_theme_name";

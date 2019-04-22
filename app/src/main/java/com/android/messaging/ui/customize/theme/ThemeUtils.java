@@ -38,6 +38,7 @@ public class ThemeUtils {
         ConversationColors.get().setListTitleColor(Color.parseColor(themeInfo.listTitleColor));
         ConversationColors.get().setListSubTitleColor(Color.parseColor(themeInfo.listSubtitleColor));
         ConversationColors.get().setListTimeColor(Color.parseColor(themeInfo.listTimeColor));
+        ConversationColors.get().setAdActionColor(Color.parseColor(themeInfo.bubbleAdColor));
 
         ToolbarDrawables.sToolbarBg = null;
         ToolbarDrawables.applyToolbarBg(themeInfo.toolbarBgUrl);
