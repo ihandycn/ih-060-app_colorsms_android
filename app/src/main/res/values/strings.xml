@@ -1131,7 +1131,9 @@
     <string name="private_move_tip">To protect your privacy, private messages will be moved to our private box and be not accessed by other SMS apps.Unless you move them to public box, you may lose your data after you uninstall us.</string>
     <string name="private_start_box_tip">Messages would be moved to Private Box. Please set a password for Private Box first.</string>
     <string name="private_box_add_success">Add success</string>
-    <string name="notification_title_in_private_box_single">New message</string>
-    <string name="notification_title_in_private_box">New messages</string>
-    <string name="notification_sender_in_private_box">private sender</string>
+    <plurals name="notification_title_in_private_box">
+        <item quantity="one">New message</item>
+        <item quantity="other">%1$d unread messages</item>
+    </plurals>
+    <string name="notification_sender_in_private_box">Private Contact</string>
 </resources>

@@ -53,8 +53,8 @@ import com.android.messaging.datamodel.media.BugleNotificationChannelUtil;
 import com.android.messaging.datamodel.media.VideoThumbnailRequest;
 import com.android.messaging.privatebox.PrivateMessageManager;
 import com.android.messaging.sms.MmsUtils;
-import com.android.messaging.ui.messagebox.MessageBoxSettings;
 import com.android.messaging.ui.UIIntents;
+import com.android.messaging.ui.messagebox.MessageBoxSettings;
 import com.android.messaging.util.Assert;
 import com.android.messaging.util.AvatarUriUtil;
 import com.android.messaging.util.BugleGservices;
@@ -464,9 +464,10 @@ public abstract class MessageNotificationState extends NotificationState {
                 } else {
                     inboxStyle.addLine(BugleNotifications.formatInboxMessage(
                             context.getString(R.string.notification_sender_in_private_box),
-                            null, null, null
+                            context.getResources().getQuantityString(R.plurals.notification_title_in_private_box, 1),
+                            null, null
                     ));
-                    //senders.append("private sender");
+                    senders.append(context.getString(R.string.notification_sender_in_private_box));
                 }
             }
             // for collapsed state
@@ -565,13 +566,16 @@ public abstract class MessageNotificationState extends NotificationState {
             String conversationId = convInfo.mConversationId;
             boolean isPrivateConversation = PrivateMessageManager.getInstance().isPrivateConversationId(conversationId);
             if (isPrivateConversation) {
+                builder.setContentTitle(HSApplication.getContext().getString(R.string.notification_sender_in_private_box));
                 if (messageCount == 1) {
-                    String title = HSApplication.getContext().getString(R.string.notification_title_in_private_box_single);
-                    builder.setContentTitle(title);
+                    String content = HSApplication.getContext().getResources()
+                            .getQuantityString(R.plurals.notification_title_in_private_box, 1);
+                    builder.setContentText(content);
                     notifStyle = new NotificationCompat.BigTextStyle(builder);
                 } else {
-                    String title = HSApplication.getContext().getString(R.string.notification_title_in_private_box);
-                    builder.setContentTitle(title);
+                    String content = HSApplication.getContext().getResources()
+                            .getQuantityString(R.plurals.notification_title_in_private_box, messageCount, messageCount);
+                    builder.setContentText(content);
                     notifStyle = new NotificationCompat.BigTextStyle(builder);
                 }
                 builder.setWhen(convInfo.mReceivedTimestamp);
