@@ -32,11 +32,14 @@ public class MessageBoxMessageListAdapter extends RecyclerView.Adapter<RecyclerV
 
     @ColorInt
     private int mIncomingTextColor;
+    @ColorInt
+    private int mIncomingTimestampColor;
 
     MessageBoxMessageListAdapter(MessageBoxItemData data) {
         mDataList.add(data);
         mConversationId =  data.getConversationId();
         mIncomingTextColor = ConversationColors.get().getMessageTextColor(true, mConversationId);
+        mIncomingTimestampColor = ConversationColors.get().getListTimeColor();
     }
 
     void addNewIncomingMessage(MessageBoxItemData data) {
@@ -58,6 +61,7 @@ public class MessageBoxMessageListAdapter extends RecyclerView.Adapter<RecyclerV
                 holder.mContentText.setTextColor(mIncomingTextColor);
                 holder.mContentText.setBackground(ConversationDrawables.get().getBubbleDrawable(false, true,
                         true, false, mConversationId));
+                holder.mDateText.setTextColor(mIncomingTimestampColor);
                 return holder;
             case ITEM_MMS:
                 View mmsViewItem = LayoutInflater.from(parent.getContext()).inflate(R.layout.message_box_mms_item, parent, false);

@@ -1100,6 +1100,7 @@
     <string name="privacy_mode_hide_contact_and_message">Hide contact and message</string>
     <string name="privacy_mode_show_messages">SHOW MESSAGES</string>
     <string name="privacy_mode_conversation_name">****</string>
+    <string name="privacy_mode_open_button_text">OPEN</string>
 
     <string name="menu_privacy_box">Private Box</string>
     <string name="menu_privacy_box_coming">Coming soon in a few days</string>

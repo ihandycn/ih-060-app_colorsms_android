@@ -68,6 +68,39 @@
 
                 </FrameLayout>
 
+                <LinearLayout
+                    android:id="@+id/action_open"
+                    android:layout_width="wrap_content"
+                    android:layout_height="26dp"
+                    android:layout_marginEnd="26.7dp"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:background="@drawable/ic_message_box_open"
+                    android:orientation="horizontal">
+
+                    <com.superapps.view.MessagesTextView
+                        android:id="@+id/open_btn"
+                        app:typeface="@string/custom_font_bold"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:singleLine="true"
+                        android:layout_marginStart="11.7dp"
+                        android:layout_gravity="center_vertical"
+                        android:text="@string/privacy_mode_open_button_text"
+                        android:textSize="12.7sp"
+                        android:textColor="#ffffff"
+                        android:includeFontPadding="false"/>
+
+                    <ImageView
+                        android:id="@+id/open_arrow"
+                        android:layout_width="4.7dp"
+                        android:layout_height="9.3dp"
+                        android:layout_gravity="center_vertical"
+                        android:layout_marginStart="11.7dp"
+                        android:layout_marginEnd="11dp"
+                        android:src="@drawable/ic_message_box_open_btn_right_arrow" />
+                </LinearLayout>
+
                 <android.support.v7.widget.AppCompatImageView
                     android:id="@+id/action_close"
                     android:layout_width="29dp"

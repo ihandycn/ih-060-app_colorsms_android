@@ -234,12 +234,11 @@ public class MessageBoxActivity extends AppCompatActivity implements INotificati
             case R.id.action_close:
                 finish(CLOSE);
                 break;
-//            case R.id.action_open:
-//                UIIntents.get().launchConversationActivityWithParentStack(this, mCurrentConversationView.getConversationId(), null);
-//                finish(OPEN);
-//                MessageBoxAnalytics.logEvent("SMS_PopUp_Open_Click");
-//                break;
-
+            case R.id.action_open:
+                UIIntents.get().launchConversationActivityWithParentStack(this, mCurrentConversationView.getConversationId(), null);
+                finish(OPEN);
+                MessageBoxAnalytics.logEvent("SMS_PopUp_Open_Click");
+                break;
             case R.id.self_send_icon:
                 mCurrentConversationView.replyMessage();
                 break;

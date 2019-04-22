@@ -25,6 +25,7 @@ import android.view.ViewStub;
 import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.android.messaging.Factory;
@@ -132,6 +133,9 @@ public class MessageBoxConversationView extends FrameLayout {
     @SuppressLint("RestrictedApi")
     private void initActionBarSimulation() {
         AppCompatImageView closeActionImage = findViewById(R.id.action_close);
+
+        LinearLayout openActionContainer = findViewById(R.id.action_open);
+        openActionContainer.setOnClickListener(mActivity);
         closeActionImage.setOnClickListener(mActivity);
         int[][] states = new int[][]{
                 new int[]{-android.R.attr.state_pressed},
@@ -290,6 +294,7 @@ public class MessageBoxConversationView extends FrameLayout {
         ValueAnimator revealAnimator = ValueAnimator.ofFloat(0f, 1f);
         revealAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
             private float alpha;
+
             @Override
             public void onAnimationUpdate(ValueAnimator animation) {
                 alpha = (float) animation.getAnimatedValue();
