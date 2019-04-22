@@ -34,6 +34,7 @@ import com.superapps.util.BackgroundDrawables;
 import com.superapps.util.Dimensions;
 import com.superapps.util.Navigations;
 import com.superapps.util.Preferences;
+import com.superapps.util.Toasts;
 import com.superapps.view.MessagesTextView;
 
 import java.util.ArrayList;
@@ -506,6 +507,7 @@ public class WelcomeStartActivity extends AppCompatActivity implements View.OnCl
                 if (OsUtil.hasRequiredPermissions()) {
                     Factory.get().onDefaultSmsSetAndPermissionsGranted();
                     Navigations.startActivitySafely(this, new Intent(this, WelcomeChooseThemeActivity.class));
+                    Toasts.showToast(R.string.set_as_default_success);
                 } else {
                     UIIntents.get().launchWelcomePermissionActivity(this);
                 }
