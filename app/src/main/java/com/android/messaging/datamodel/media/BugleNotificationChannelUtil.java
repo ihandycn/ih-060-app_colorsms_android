@@ -37,7 +37,7 @@ public class BugleNotificationChannelUtil {
                     && channel.shouldVibrate() == enableVibration) {
                 return channel;
             }
-        } else if (channel != null
+        } else if (channel != null && channel.getSound() != null
                 && channel.getSound().getPath().equals(soundPath.getPath())
                 && channel.shouldVibrate() == enableVibration) {
             return channel;
