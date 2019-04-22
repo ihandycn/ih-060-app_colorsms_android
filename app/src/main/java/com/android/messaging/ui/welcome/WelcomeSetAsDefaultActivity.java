@@ -9,7 +9,6 @@ import com.android.messaging.Factory;
 import com.android.messaging.R;
 import com.android.messaging.ui.UIIntents;
 import com.android.messaging.util.BugleAnalytics;
-import com.android.messaging.util.OsUtil;
 import com.android.messaging.util.PhoneUtils;
 import com.ihs.commons.config.HSConfig;
 import com.superapps.util.BackgroundDrawables;
@@ -74,15 +73,11 @@ public class WelcomeSetAsDefaultActivity extends AppCompatActivity {
     public void onActivityResult(final int requestCode, final int resultCode, final Intent data) {
         if (requestCode == REQUEST_SET_DEFAULT_SMS_APP) {
             if (PhoneUtils.getDefault().isDefaultSmsApp()) {
-                if (OsUtil.hasRequiredPermissions()) {
-                    Factory.get().onDefaultSmsSetAndPermissionsGranted();
-                    if (!Preferences.getDefault().contains(WelcomeChooseThemeActivity.PREF_KEY_WELCOME_CHOOSE_THEME_SHOWN)) {
-                        Navigations.startActivitySafely(this, new Intent(this, WelcomeChooseThemeActivity.class));
-                    } else {
-                        UIIntents.get().launchConversationListActivity(this);
-                    }
+                Factory.get().onDefaultSmsSetAndPermissionsGranted();
+                if (!Preferences.getDefault().contains(WelcomeChooseThemeActivity.PREF_KEY_WELCOME_CHOOSE_THEME_SHOWN)) {
+                    Navigations.startActivitySafely(this, new Intent(this, WelcomeChooseThemeActivity.class));
                 } else {
-                    UIIntents.get().launchWelcomePermissionActivity(this);
+                    UIIntents.get().launchConversationListActivity(this);
                 }
                 if (mIsFromWelcomeStart) {
                     BugleAnalytics.logEvent("Start_SetAsDefault_Success", true, true, "step", "setasdefault page");

@@ -24,7 +24,6 @@ import com.android.messaging.ui.UIIntents;
 import com.android.messaging.ui.WebViewActivity;
 import com.android.messaging.util.BugleAnalytics;
 import com.android.messaging.util.BugleAnimUtils;
-import com.android.messaging.util.OsUtil;
 import com.android.messaging.util.PhoneUtils;
 import com.android.messaging.util.view.AdvancedPageIndicator;
 import com.android.messaging.util.view.IndicatorMark;
@@ -504,13 +503,9 @@ public class WelcomeStartActivity extends AppCompatActivity implements View.OnCl
     public void onActivityResult(final int requestCode, final int resultCode, final Intent data) {
         if (requestCode == REQUEST_SET_DEFAULT_SMS_APP) {
             if (PhoneUtils.getDefault().isDefaultSmsApp()) {
-                if (OsUtil.hasRequiredPermissions()) {
-                    Factory.get().onDefaultSmsSetAndPermissionsGranted();
-                    Navigations.startActivitySafely(this, new Intent(this, WelcomeChooseThemeActivity.class));
-                    Toasts.showToast(R.string.set_as_default_success);
-                } else {
-                    UIIntents.get().launchWelcomePermissionActivity(this);
-                }
+                Factory.get().onDefaultSmsSetAndPermissionsGranted();
+                Navigations.startActivitySafely(this, new Intent(this, WelcomeChooseThemeActivity.class));
+                Toasts.showToast(R.string.set_as_default_success);
                 BugleAnalytics.logEvent("Start_SetAsDefault_Success", true, true, "step", "detail page");
                 finish();
             } else {
