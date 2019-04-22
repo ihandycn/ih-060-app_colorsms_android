@@ -15,7 +15,7 @@
 				<key>SMSDetailspageFullAd</key>
 				<dict>
 					<key>Enabled</key>
-					<false/>
+					<true/>
 					<key>MinInterval</key>
 					<integer>5</integer>
 					<key>ShowAfterInstall</key>
@@ -26,7 +26,7 @@
 					<key>Enabled</key>
 					<true/>
 					<key>ShowAfterCloseTheKeyboard</key>
-					<true/>
+					<false/>
 				</dict>
 				<key>SMSHomepageBannerAd</key>
 				<true/>
