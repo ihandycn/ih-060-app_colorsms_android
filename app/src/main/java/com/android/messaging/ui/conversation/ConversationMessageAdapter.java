@@ -153,6 +153,10 @@ public class ConversationMessageAdapter extends
             ((ConversationMessageViewHolder) holder).bind();
         } else {
             AcbNativeAd ad = (AcbNativeAd) mDataList.get(position);
+            if (((ConversationAdViewHolder) holder).alreadyFilled) {
+                return;
+            }
+            ((ConversationAdViewHolder) holder).alreadyFilled = true;
             AcbNativeAdContainerView adContainerView = ((ConversationAdViewHolder) holder).mAdContentView;
             adContainerView.hideAdCorner();
             ((ConversationAdViewHolder) holder).contentBg.setBackground(
@@ -219,6 +223,7 @@ public class ConversationMessageAdapter extends
 
         private AcbNativeAdContainerView mAdContentView;
         private View contentBg;
+        private boolean alreadyFilled = false;
 
         public ConversationAdViewHolder(ViewGroup container, View adView) {
             super(container);
