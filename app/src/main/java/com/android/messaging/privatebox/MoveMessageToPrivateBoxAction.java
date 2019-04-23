@@ -181,122 +181,122 @@ public class MoveMessageToPrivateBoxAction extends Action {
     private static void bindSmsValues(ContentValues values, Cursor localCursor) {
         values.put(PrivateSmsEntry.THREAD_ID,
                 localCursor.getString(localCursor.getColumnIndex(Telephony.Sms.THREAD_ID)));
-        values.put(Telephony.Sms.ADDRESS,
-                localCursor.getString(localCursor.getColumnIndex(PrivateSmsEntry.ADDRESS)));
+        values.put(PrivateSmsEntry.ADDRESS,
+                localCursor.getString(localCursor.getColumnIndex(Telephony.Sms.ADDRESS)));
         String peopleId = localCursor.getString(localCursor.getColumnIndex(Telephony.Sms.PERSON));
         if (!TextUtils.isEmpty(peopleId)) {
             values.put(PrivateSmsEntry.PERSON, peopleId);
         }
-        values.put(Telephony.Sms.DATE,
-                localCursor.getString(localCursor.getColumnIndex(PrivateSmsEntry.DATE)));
-        values.put(Telephony.Sms.DATE_SENT,
-                localCursor.getString(localCursor.getColumnIndex(PrivateSmsEntry.DATE_SEND)));
-        values.put(Telephony.Sms.PROTOCOL,
-                localCursor.getString(localCursor.getColumnIndex(PrivateSmsEntry.PROTOCOL)));
-        values.put(Telephony.Sms.READ,
-                localCursor.getString(localCursor.getColumnIndex(PrivateSmsEntry.READ)));
-        values.put(Telephony.Sms.STATUS,
-                localCursor.getString(localCursor.getColumnIndex(PrivateSmsEntry.STATUS)));
-        values.put(Telephony.Sms.TYPE,
-                localCursor.getString(localCursor.getColumnIndex(PrivateSmsEntry.TYPE)));
-        values.put(Telephony.Sms.REPLY_PATH_PRESENT,
-                localCursor.getString(localCursor.getColumnIndex(PrivateSmsEntry.REPLY_PATH_PRESENT)));
-        values.put(Telephony.Sms.SUBJECT,
-                localCursor.getString(localCursor.getColumnIndex(PrivateSmsEntry.SUBJECT)));
-        values.put(Telephony.Sms.BODY,
-                localCursor.getString(localCursor.getColumnIndex(PrivateSmsEntry.BODY)));
-        values.put(Telephony.Sms.SERVICE_CENTER,
-                localCursor.getString(localCursor.getColumnIndex(PrivateSmsEntry.SERVICE_CENTER)));
-        values.put(Telephony.Sms.LOCKED,
-                localCursor.getString(localCursor.getColumnIndex(PrivateSmsEntry.LOCKED)));
-        values.put(Telephony.Sms.ERROR_CODE,
-                localCursor.getString(localCursor.getColumnIndex(PrivateSmsEntry.ERROR_CODE)));
-        values.put(Telephony.Sms.SEEN,
-                localCursor.getString(localCursor.getColumnIndex(PrivateSmsEntry.SEEN)));
+        values.put(PrivateSmsEntry.DATE,
+                localCursor.getString(localCursor.getColumnIndex(Telephony.Sms.DATE)));
+        values.put(PrivateSmsEntry.DATE_SEND,
+                localCursor.getString(localCursor.getColumnIndex(Telephony.Sms.DATE_SENT)));
+        values.put(PrivateSmsEntry.PROTOCOL,
+                localCursor.getString(localCursor.getColumnIndex(Telephony.Sms.PROTOCOL)));
+        values.put(PrivateSmsEntry.READ,
+                localCursor.getString(localCursor.getColumnIndex(Telephony.Sms.READ)));
+        values.put(PrivateSmsEntry.STATUS,
+                localCursor.getString(localCursor.getColumnIndex(Telephony.Sms.STATUS)));
+        values.put(PrivateSmsEntry.TYPE,
+                localCursor.getString(localCursor.getColumnIndex(Telephony.Sms.TYPE)));
+        values.put(PrivateSmsEntry.REPLY_PATH_PRESENT,
+                localCursor.getString(localCursor.getColumnIndex(Telephony.Sms.REPLY_PATH_PRESENT)));
+        values.put(PrivateSmsEntry.SUBJECT,
+                localCursor.getString(localCursor.getColumnIndex(Telephony.Sms.SUBJECT)));
+        values.put(PrivateSmsEntry.BODY,
+                localCursor.getString(localCursor.getColumnIndex(Telephony.Sms.BODY)));
+        values.put(PrivateSmsEntry.SERVICE_CENTER,
+                localCursor.getString(localCursor.getColumnIndex(Telephony.Sms.SERVICE_CENTER)));
+        values.put(PrivateSmsEntry.LOCKED,
+                localCursor.getString(localCursor.getColumnIndex(Telephony.Sms.LOCKED)));
+        values.put(PrivateSmsEntry.ERROR_CODE,
+                localCursor.getString(localCursor.getColumnIndex(Telephony.Sms.ERROR_CODE)));
+        values.put(PrivateSmsEntry.SEEN,
+                localCursor.getString(localCursor.getColumnIndex(Telephony.Sms.SEEN)));
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP_MR1) {
-            values.put(Telephony.Sms.SUBSCRIPTION_ID,
-                    localCursor.getString(localCursor.getColumnIndex(PrivateSmsEntry.SUBSCRIPTION_ID)));
+            values.put(PrivateSmsEntry.SUBSCRIPTION_ID,
+                    localCursor.getString(localCursor.getColumnIndex(Telephony.Sms.SUBSCRIPTION_ID)));
         }
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            values.put(Telephony.Sms.CREATOR,
-                    localCursor.getString(localCursor.getColumnIndex(PrivateSmsEntry.CREATOR)));
+            values.put(PrivateSmsEntry.CREATOR,
+                    localCursor.getString(localCursor.getColumnIndex(Telephony.Sms.CREATOR)));
         }
     }
 
     private static void bindMmsValues(ContentValues values, Cursor localCursor) {
-        values.put(Telephony.Mms.THREAD_ID,
-                localCursor.getString(localCursor.getColumnIndex(PrivateMmsEntry.THREAD_ID)));
-        values.put(Telephony.Mms.DATE,
-                localCursor.getString(localCursor.getColumnIndex(PrivateMmsEntry.DATE)));
-        values.put(Telephony.Mms.DATE_SENT,
-                localCursor.getString(localCursor.getColumnIndex(PrivateMmsEntry.DATE_SENT)));
-        values.put(Telephony.Mms.MESSAGE_BOX,
-                localCursor.getString(localCursor.getColumnIndex(PrivateMmsEntry.MESSAGE_BOX)));
-        values.put(Telephony.Mms.READ,
-                localCursor.getString(localCursor.getColumnIndex(PrivateMmsEntry.READ)));
-        values.put(Telephony.Mms.MESSAGE_ID,
-                localCursor.getString(localCursor.getColumnIndex(PrivateMmsEntry.MESSAGE_ID)));
-        values.put(Telephony.Mms.SUBJECT,
-                localCursor.getString(localCursor.getColumnIndex(PrivateMmsEntry.SUBJECT)));
-        values.put(Telephony.Mms.SUBJECT_CHARSET,
-                localCursor.getString(localCursor.getColumnIndex(PrivateMmsEntry.SUBJECT_CHARSET)));
-        values.put(Telephony.Mms.CONTENT_TYPE,
-                localCursor.getString(localCursor.getColumnIndex(PrivateMmsEntry.CONTENT_TYPE)));
-        values.put(Telephony.Mms.CONTENT_LOCATION,
-                localCursor.getString(localCursor.getColumnIndex(PrivateMmsEntry.CONTENT_LOCATION)));
-        values.put(Telephony.Mms.EXPIRY,
-                localCursor.getString(localCursor.getColumnIndex(PrivateMmsEntry.EXPIRY)));
-        values.put(Telephony.Mms.MESSAGE_CLASS,
-                localCursor.getString(localCursor.getColumnIndex(PrivateMmsEntry.MESSAGE_CLASS)));
-        values.put(Telephony.Mms.MESSAGE_TYPE,
-                localCursor.getString(localCursor.getColumnIndex(PrivateMmsEntry.MESSAGE_TYPE)));
-        values.put(Telephony.Mms.MMS_VERSION,
-                localCursor.getString(localCursor.getColumnIndex(PrivateMmsEntry.MMS_VERSION)));
-        values.put(Telephony.Mms.MESSAGE_SIZE,
-                localCursor.getString(localCursor.getColumnIndex(PrivateMmsEntry.MESSAGE_SIZE)));
-        values.put(Telephony.Mms.PRIORITY,
-                localCursor.getString(localCursor.getColumnIndex(PrivateMmsEntry.PRIORITY)));
-        values.put(Telephony.Mms.READ_REPORT,
-                localCursor.getString(localCursor.getColumnIndex(PrivateMmsEntry.READ_REPORT)));
-        values.put(Telephony.Mms.REPORT_ALLOWED,
-                localCursor.getString(localCursor.getColumnIndex(PrivateMmsEntry.REPORT_ALLOWED)));
-        values.put(Telephony.Mms.RESPONSE_STATUS,
-                localCursor.getString(localCursor.getColumnIndex(PrivateMmsEntry.RESPONSE_STATUS)));
-        values.put(Telephony.Mms.STATUS,
-                localCursor.getString(localCursor.getColumnIndex(PrivateMmsEntry.STATUS)));
-        values.put(Telephony.Mms.TRANSACTION_ID,
-                localCursor.getString(localCursor.getColumnIndex(PrivateMmsEntry.TRANSACTION_ID)));
-        values.put(Telephony.Mms.RETRIEVE_STATUS,
-                localCursor.getString(localCursor.getColumnIndex(PrivateMmsEntry.RETRIEVE_STATUS)));
-        values.put(Telephony.Mms.RETRIEVE_TEXT,
-                localCursor.getString(localCursor.getColumnIndex(PrivateMmsEntry.RETRIEVE_TEXT)));
-        values.put(Telephony.Mms.RETRIEVE_TEXT_CHARSET,
-                localCursor.getString(localCursor.getColumnIndex(PrivateMmsEntry.RETRIEVE_TEXT_CHARSET)));
-        values.put(Telephony.Mms.READ_STATUS,
-                localCursor.getString(localCursor.getColumnIndex(PrivateMmsEntry.READ_STATUS)));
-        values.put(Telephony.Mms.CONTENT_CLASS,
-                localCursor.getString(localCursor.getColumnIndex(PrivateMmsEntry.CONTENT_CLASS)));
-        values.put(Telephony.Mms.RESPONSE_TEXT,
-                localCursor.getString(localCursor.getColumnIndex(PrivateMmsEntry.RESPONSE_TEXT)));
-        values.put(Telephony.Mms.DELIVERY_TIME,
-                localCursor.getString(localCursor.getColumnIndex(PrivateMmsEntry.DELIVERY_TIME)));
-        values.put(Telephony.Mms.DELIVERY_REPORT,
-                localCursor.getString(localCursor.getColumnIndex(PrivateMmsEntry.DELIVERY_REPORT)));
-        values.put(Telephony.Mms.LOCKED,
-                localCursor.getString(localCursor.getColumnIndex(PrivateMmsEntry.LOCKED)));
-        values.put(Telephony.Mms.SEEN,
-                localCursor.getString(localCursor.getColumnIndex(PrivateMmsEntry.SEEN)));
-        values.put(Telephony.Mms.TEXT_ONLY,
-                localCursor.getString(localCursor.getColumnIndex(PrivateMmsEntry.TEXT_ONLY)));
+        values.put(PrivateMmsEntry.THREAD_ID,
+                localCursor.getString(localCursor.getColumnIndex(Telephony.Mms.THREAD_ID)));
+        values.put(PrivateMmsEntry.DATE,
+                localCursor.getString(localCursor.getColumnIndex(Telephony.Mms.DATE)));
+        values.put(PrivateMmsEntry.DATE_SENT,
+                localCursor.getString(localCursor.getColumnIndex(Telephony.Mms.DATE_SENT)));
+        values.put(PrivateMmsEntry.MESSAGE_BOX,
+                localCursor.getString(localCursor.getColumnIndex(Telephony.Mms.MESSAGE_BOX)));
+        values.put(PrivateMmsEntry.READ,
+                localCursor.getString(localCursor.getColumnIndex(Telephony.Mms.READ)));
+        values.put(PrivateMmsEntry.MESSAGE_ID,
+                localCursor.getString(localCursor.getColumnIndex(Telephony.Mms.MESSAGE_ID)));
+        values.put(PrivateMmsEntry.SUBJECT,
+                localCursor.getString(localCursor.getColumnIndex(Telephony.Mms.SUBJECT)));
+        values.put(PrivateMmsEntry.SUBJECT_CHARSET,
+                localCursor.getString(localCursor.getColumnIndex(Telephony.Mms.SUBJECT_CHARSET)));
+        values.put(PrivateMmsEntry.CONTENT_TYPE,
+                localCursor.getString(localCursor.getColumnIndex(Telephony.Mms.CONTENT_TYPE)));
+        values.put(PrivateMmsEntry.CONTENT_LOCATION,
+                localCursor.getString(localCursor.getColumnIndex(Telephony.Mms.CONTENT_LOCATION)));
+        values.put(PrivateMmsEntry.EXPIRY,
+                localCursor.getString(localCursor.getColumnIndex(Telephony.Mms.EXPIRY)));
+        values.put(PrivateMmsEntry.MESSAGE_CLASS,
+                localCursor.getString(localCursor.getColumnIndex(Telephony.Mms.MESSAGE_CLASS)));
+        values.put(PrivateMmsEntry.MESSAGE_TYPE,
+                localCursor.getString(localCursor.getColumnIndex(Telephony.Mms.MESSAGE_TYPE)));
+        values.put(PrivateMmsEntry.MMS_VERSION,
+                localCursor.getString(localCursor.getColumnIndex(Telephony.Mms.MMS_VERSION)));
+        values.put(PrivateMmsEntry.MESSAGE_SIZE,
+                localCursor.getString(localCursor.getColumnIndex(Telephony.Mms.MESSAGE_SIZE)));
+        values.put(PrivateMmsEntry.PRIORITY,
+                localCursor.getString(localCursor.getColumnIndex(Telephony.Mms.PRIORITY)));
+        values.put(PrivateMmsEntry.READ_REPORT,
+                localCursor.getString(localCursor.getColumnIndex(Telephony.Mms.READ_REPORT)));
+        values.put(PrivateMmsEntry.REPORT_ALLOWED,
+                localCursor.getString(localCursor.getColumnIndex(Telephony.Mms.REPORT_ALLOWED)));
+        values.put(PrivateMmsEntry.RESPONSE_STATUS,
+                localCursor.getString(localCursor.getColumnIndex(Telephony.Mms.RESPONSE_STATUS)));
+        values.put(PrivateMmsEntry.STATUS,
+                localCursor.getString(localCursor.getColumnIndex(Telephony.Mms.STATUS)));
+        values.put(PrivateMmsEntry.TRANSACTION_ID,
+                localCursor.getString(localCursor.getColumnIndex(Telephony.Mms.TRANSACTION_ID)));
+        values.put(PrivateMmsEntry.RETRIEVE_STATUS,
+                localCursor.getString(localCursor.getColumnIndex(Telephony.Mms.RETRIEVE_STATUS)));
+        values.put(PrivateMmsEntry.RETRIEVE_TEXT,
+                localCursor.getString(localCursor.getColumnIndex(Telephony.Mms.RETRIEVE_TEXT)));
+        values.put(PrivateMmsEntry.RETRIEVE_TEXT_CHARSET,
+                localCursor.getString(localCursor.getColumnIndex(Telephony.Mms.RETRIEVE_TEXT_CHARSET)));
+        values.put(PrivateMmsEntry.READ_STATUS,
+                localCursor.getString(localCursor.getColumnIndex(Telephony.Mms.READ_STATUS)));
+        values.put(PrivateMmsEntry.CONTENT_CLASS,
+                localCursor.getString(localCursor.getColumnIndex(Telephony.Mms.CONTENT_CLASS)));
+        values.put(PrivateMmsEntry.RESPONSE_TEXT,
+                localCursor.getString(localCursor.getColumnIndex(Telephony.Mms.RESPONSE_TEXT)));
+        values.put(PrivateMmsEntry.DELIVERY_TIME,
+                localCursor.getString(localCursor.getColumnIndex(Telephony.Mms.DELIVERY_TIME)));
+        values.put(PrivateMmsEntry.DELIVERY_REPORT,
+                localCursor.getString(localCursor.getColumnIndex(Telephony.Mms.DELIVERY_REPORT)));
+        values.put(PrivateMmsEntry.LOCKED,
+                localCursor.getString(localCursor.getColumnIndex(Telephony.Mms.LOCKED)));
+        values.put(PrivateMmsEntry.SEEN,
+                localCursor.getString(localCursor.getColumnIndex(Telephony.Mms.SEEN)));
+        values.put(PrivateMmsEntry.TEXT_ONLY,
+                localCursor.getString(localCursor.getColumnIndex(Telephony.Mms.TEXT_ONLY)));
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP_MR1) {
-            values.put(Telephony.Mms.SUBSCRIPTION_ID,
-                    localCursor.getString(localCursor.getColumnIndex(PrivateMmsEntry.SUBSCRIPTION_ID)));
+            values.put(PrivateMmsEntry.SUBSCRIPTION_ID,
+                    localCursor.getString(localCursor.getColumnIndex(Telephony.Mms.SUBSCRIPTION_ID)));
         }
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            values.put(Telephony.Mms.CREATOR,
-                    localCursor.getString(localCursor.getColumnIndex(PrivateMmsEntry.CREATOR)));
+            values.put(PrivateMmsEntry.CREATOR,
+                    localCursor.getString(localCursor.getColumnIndex(Telephony.Mms.CREATOR)));
         }
     }
 
