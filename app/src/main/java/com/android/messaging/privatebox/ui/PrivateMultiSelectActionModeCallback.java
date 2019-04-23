@@ -24,9 +24,6 @@ import com.android.messaging.util.BugleAnalytics;
 import com.android.messaging.util.PhoneUtils;
 import com.android.messaging.util.UiUtils;
 import com.ihs.app.framework.HSApplication;
-import com.ihs.commons.notificationcenter.HSGlobalNotificationCenter;
-import com.ihs.commons.notificationcenter.INotificationObserver;
-import com.superapps.util.Toasts;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
@@ -36,7 +33,6 @@ import java.util.List;
 import static com.android.messaging.util.DisplayUtils.getString;
 
 public class PrivateMultiSelectActionModeCallback implements Callback {
-    private static final String NOTIFICATION_NAME_MOVE_END = "move_from_private_box_end";
 
     public static class SelectedConversation {
         public final String conversationId;
@@ -69,8 +65,6 @@ public class PrivateMultiSelectActionModeCallback implements Callback {
     private MenuItem mPinMenuItem;
     private MenuItem mCancelPinMenuItem;
     private boolean mHasInflated;
-    private INotificationObserver mMoveNotificationObserver;
-    private boolean mIsMessageMoving;
 
     public PrivateMultiSelectActionModeCallback(final MultiSelectConversationListActivity activity) {
         mWeakActivity = new WeakReference<>(activity);
@@ -89,17 +83,6 @@ public class PrivateMultiSelectActionModeCallback implements Callback {
         menu.findItem(R.id.action_add_to_private_box).setVisible(false);
         mHasInflated = true;
         updateActionIconsVisibility();
-        mMoveNotificationObserver = (s, hsBundle) -> {
-            switch (s) {
-                case NOTIFICATION_NAME_MOVE_END:
-                    if (mIsMessageMoving) {
-                        Toasts.showToast(R.string.private_box_add_success);
-                    }
-                    mIsMessageMoving = false;
-                    break;
-            }
-        };
-        HSGlobalNotificationCenter.addObserver(NOTIFICATION_NAME_MOVE_END, mMoveNotificationObserver);
         return true;
     }
 
@@ -151,7 +134,6 @@ public class PrivateMultiSelectActionModeCallback implements Callback {
     public void onDestroyActionMode(ActionMode actionMode) {
         mSelectedConversations.clear();
         mHasInflated = false;
-        HSGlobalNotificationCenter.removeObserver(mMoveNotificationObserver);
     }
 
     public void toggleSelect(final ConversationListData listData,
@@ -274,9 +256,7 @@ public class PrivateMultiSelectActionModeCallback implements Callback {
     }
 
     private void onMoveToTelephony(List<String> conversationIdList) {
-        mIsMessageMoving = true;
-        for (String conversationId : conversationIdList) {
-            MoveConversationToTelephonyAction.moveToTelephony(conversationId);
-        }
+        MoveConversationToTelephonyAction.moveToTelephony((ArrayList<String>) conversationIdList,
+                null, null);
     }
 }

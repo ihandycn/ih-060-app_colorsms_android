@@ -26,7 +26,7 @@
             android:paddingRight="40dp"
             app:layout_heightPercent="21%">
 
-            <TextView
+            <com.superapps.view.MessagesTextView
                 android:id="@+id/panel_desc_tv"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -35,7 +35,8 @@
                 android:gravity="center"
                 android:text="@string/app_lock_verify_identity"
                 android:textColor="@android:color/white"
-                android:textSize="20sp"/>
+                android:textSize="20sp"
+                app:typeface="@string/custom_font_regular"/>
         </RelativeLayout>
 
         <RelativeLayout
