@@ -10,22 +10,18 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.Choreographer;
 import android.view.MenuItem;
-import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.android.messaging.R;
 import com.android.messaging.datamodel.MessagingContentProvider;
-import com.android.messaging.datamodel.action.DeleteConversationAction;
 import com.android.messaging.datamodel.data.ConversationListItemData;
-import com.android.messaging.privatebox.MessagesMoveManager;
-import com.android.messaging.privatebox.ui.PrivateMultiSelectActionModeCallback;
+import com.android.messaging.privatebox.MoveConversationToPrivateBoxAction;
 import com.android.messaging.ui.BaseAlertDialog;
 import com.android.messaging.ui.customize.PrimaryColors;
 import com.android.messaging.util.BugleAnalytics;
 import com.android.messaging.util.UiUtils;
-import com.ihs.app.framework.HSApplication;
 import com.ihs.app.framework.activity.HSAppCompatActivity;
 import com.ihs.commons.notificationcenter.HSGlobalNotificationCenter;
 import com.ihs.commons.notificationcenter.INotificationObserver;
@@ -44,6 +40,9 @@ import static com.android.messaging.datamodel.data.ConversationListData.SORT_ORD
 public class ConversationSelectActivity extends HSAppCompatActivity
         implements LoaderManager.LoaderCallbacks<Cursor> {
 
+    private static final String NOTIFICATION_KEY_MESSAGE_MOVE_START = "conversation_select_activity_move_start";
+    private static final String NOTIFICATION_KEY_MESSAGE_MOVE_END = "conversation_select_activity_move_end";
+
     private static final int CONVERSATION_LIST_LOADER = 1;
     public static final String PREF_KEY_ADD_PRIVATE_DIALOG_HAS_PROMPT = "pref_key_add_private_dialog_has_prompt";
 
@@ -57,6 +56,7 @@ public class ConversationSelectActivity extends HSAppCompatActivity
     private long mStartTime;
     private Choreographer mChoreographer;
     private Choreographer.FrameCallback mFrameCallback;
+    private INotificationObserver mNotificationObserver;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -117,6 +117,26 @@ public class ConversationSelectActivity extends HSAppCompatActivity
                 }
             }
         };
+
+        mNotificationObserver = (s, hsBundle) -> {
+            switch (s) {
+                case NOTIFICATION_KEY_MESSAGE_MOVE_START:
+                    startMessagesMoveProgress();
+                    break;
+                case NOTIFICATION_KEY_MESSAGE_MOVE_END:
+                    stopMessageMoveProgress();
+                    onBackPressed();
+                    break;
+            }
+        };
+        HSGlobalNotificationCenter.addObserver(NOTIFICATION_KEY_MESSAGE_MOVE_START, mNotificationObserver);
+        HSGlobalNotificationCenter.addObserver(NOTIFICATION_KEY_MESSAGE_MOVE_END, mNotificationObserver);
+    }
+
+    @Override
+    protected void onDestroy() {
+        HSGlobalNotificationCenter.removeObserver(mNotificationObserver);
+        super.onDestroy();
     }
 
     @Override
@@ -137,19 +157,8 @@ public class ConversationSelectActivity extends HSAppCompatActivity
         }
 
         if (addList.size() > 0) {
-            MessagesMoveManager.moveConversations(addList, false,
-                    new MessagesMoveManager.MessagesMoveListener() {
-                        @Override
-                        public void onMoveStart() {
-                            startMessagesMoveProgress();
-                        }
-
-                        @Override
-                        public void onMoveEnd() {
-                            stopMessageMoveProgress();
-                            onBackPressed();
-                        }
-                    });
+            MoveConversationToPrivateBoxAction.moveAndUpdatePrivateContact(addList,
+                    NOTIFICATION_KEY_MESSAGE_MOVE_START, NOTIFICATION_KEY_MESSAGE_MOVE_END);
         }
     }
 
@@ -164,9 +173,6 @@ public class ConversationSelectActivity extends HSAppCompatActivity
     }
 
     private void stopMessageMoveProgress() {
-        if (!mIsMessageMoving) {
-            return;
-        }
         mIsMessageMoving = false;
         mChoreographer.removeFrameCallback(mFrameCallback);
         mProcessBarContainer.setVisibility(View.GONE);

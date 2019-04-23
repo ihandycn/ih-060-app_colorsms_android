@@ -12,54 +12,113 @@ import com.android.messaging.datamodel.DatabaseHelper.MessageColumns;
 import com.android.messaging.datamodel.DatabaseWrapper;
 import com.android.messaging.datamodel.MessagingContentProvider;
 import com.android.messaging.datamodel.action.Action;
+import com.android.messaging.sms.MmsSmsUtils;
 import com.android.messaging.util.Assert;
+import com.ihs.app.framework.HSApplication;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class MoveConversationToPrivateBoxAction extends Action implements Parcelable {
+    private static final String KEY_CONVERSATION_ID_LIST = "conversation_id";
+    private static final String KEY_UPDATE_PRIVATE_CONTACT = "update_contact";
+    private static final String KEY_START_NOTIFICATION = "key_start_notification";
+    private static final String KEY_END_NOTIFICATION = "key_end_notification";
+    private static final String KEY_THREAD_ID_LIST = "key_thread_id_list";
 
-    public static void moveAndUpdatePrivateContact(final String conversationId) {
-        final MoveConversationToPrivateBoxAction action = new MoveConversationToPrivateBoxAction(conversationId);
+    public static void moveAndUpdatePrivateContact(final List<String> conversationIdList, final String moveStartNotification,
+                                                   final String moveEndNotification) {
+        final MoveConversationToPrivateBoxAction action = new MoveConversationToPrivateBoxAction(conversationIdList);
         action.actionParameters.putBoolean(KEY_UPDATE_PRIVATE_CONTACT, true);
+        action.actionParameters.putString(KEY_START_NOTIFICATION, moveStartNotification);
+        action.actionParameters.putString(KEY_END_NOTIFICATION, moveEndNotification);
         action.start();
     }
 
-    public static void move(final String conversationId) {
+    public static void move(final List<String> conversationId) {
         final MoveConversationToPrivateBoxAction action = new MoveConversationToPrivateBoxAction(conversationId);
         action.actionParameters.putBoolean(KEY_UPDATE_PRIVATE_CONTACT, false);
         action.start();
     }
 
-    private static final String KEY_CONVERSATION_ID = "conversation_id";
-    private static final String KEY_UPDATE_PRIVATE_CONTACT = "update_contact";
+    public static void moveByContact(List<String> contactList, final String moveStartNotification,
+                                      final String moveEndNotification) {
+        ArrayList<Long> threadIdList = new ArrayList<>();
+        //todo : check permission for no grant exception
+        for (String recipient : contactList) {
+            long threadId = MmsSmsUtils.Threads.getOrCreateThreadId(HSApplication.getContext(), recipient);
+            if (threadId < 0) {
+                continue;
+            }
+            threadIdList.add(threadId);
+        }
+        long[] threadIdArray = new long[threadIdList.size()];
+        for (int i = 0; i < threadIdList.size(); i++) {
+            threadIdArray[i] = threadIdList.get(i);
+        }
 
-    private MoveConversationToPrivateBoxAction(final String conversationId) {
+        final MoveConversationToPrivateBoxAction action = new MoveConversationToPrivateBoxAction();
+        action.actionParameters.putLongArray(KEY_THREAD_ID_LIST, threadIdArray);
+        action.actionParameters.putString(KEY_START_NOTIFICATION, moveStartNotification);
+        action.actionParameters.putString(KEY_END_NOTIFICATION, moveEndNotification);
+        action.start();
+    }
+
+    private MoveConversationToPrivateBoxAction(final List<String> conversationId) {
         super();
-        actionParameters.putString(KEY_CONVERSATION_ID, conversationId);
+        actionParameters.putStringArrayList(KEY_CONVERSATION_ID_LIST, (ArrayList<String>) conversationId);
+    }
+
+    private MoveConversationToPrivateBoxAction() {
+        super();
     }
 
     @Override
     protected Object executeAction() {
-        final String conversationId = actionParameters.getString(KEY_CONVERSATION_ID);
+        final List<String> conversationIdList;
         boolean updatePrivateContact = actionParameters.getBoolean(KEY_UPDATE_PRIVATE_CONTACT, true);
-        if (!TextUtils.isEmpty(conversationId)) {
-            if (BugleDatabaseOperations.updateConversationPrivateStatue(conversationId, true)) {
-                MessagingContentProvider.notifyConversationListChanged();
-                if (updatePrivateContact) {
-                    PrivateContactsManager.getInstance().updatePrivateContactsByConversationId(conversationId, true);
+        final List<String> messagesList = new ArrayList<>();
+
+        if (actionParameters.containsKey(KEY_THREAD_ID_LIST)) {
+            long[] threadArray = actionParameters.getLongArray(KEY_THREAD_ID_LIST);
+            conversationIdList = new ArrayList<>();
+            DatabaseWrapper db = DataModel.get().getDatabase();
+            assert threadArray != null;
+            for (long threadId : threadArray) {
+                String conversationId = BugleDatabaseOperations.getExistingConversation(db, threadId, false);
+                if (!TextUtils.isEmpty(conversationId)) {
+                    conversationIdList.add(conversationId);
                 }
-                moveMessagesToPrivateBox(conversationId);
+            }
+        } else {
+            conversationIdList = actionParameters.getStringArrayList(KEY_CONVERSATION_ID_LIST);
+        }
+
+        assert conversationIdList != null;
+        for (String conversationId : conversationIdList) {
+            if (!TextUtils.isEmpty(conversationId)) {
+                if (BugleDatabaseOperations.updateConversationPrivateStatue(conversationId, true)) {
+                    if (updatePrivateContact) {
+                        PrivateContactsManager.getInstance().updatePrivateContactsByConversationId(conversationId, true);
+                    }
+
+                    addMessagesByConversationId(conversationId, messagesList);
+                }
             }
         }
+        MessagingContentProvider.notifyConversationListChanged();
+
+        String startNotification = actionParameters.getString(KEY_START_NOTIFICATION);
+        String endNotification = actionParameters.getString(KEY_END_NOTIFICATION);
+
+        MoveMessageToPrivateBoxAction.moveMessagesToPrivateBox(messagesList, startNotification, endNotification);
         return null;
     }
 
-    private void moveMessagesToPrivateBox(final String conversationId) {
+    private void addMessagesByConversationId(final String conversationId, final List<String> messageList) {
         final DatabaseWrapper db = DataModel.get().getDatabase();
         Assert.notNull(conversationId);
 
-        final List<String> messageIdList = new ArrayList<>();
         Cursor cursor = db.query(DatabaseHelper.MESSAGES_TABLE,
                 new String[]{MessageColumns._ID},
                 MessageColumns.CONVERSATION_ID + "=?",
@@ -72,15 +131,10 @@ public class MoveConversationToPrivateBoxAction extends Action implements Parcel
         while (cursor.moveToNext()) {
             String messageId = cursor.getString(0);
             if (!TextUtils.isEmpty(messageId)) {
-                messageIdList.add(messageId);
+                messageList.add(messageId);
             }
         }
-
         cursor.close();
-
-        for (String messageId : messageIdList) {
-            MoveMessageToPrivateBoxAction.moveMessageToPrivateBox(messageId);
-        }
     }
 
     private MoveConversationToPrivateBoxAction(final Parcel in) {

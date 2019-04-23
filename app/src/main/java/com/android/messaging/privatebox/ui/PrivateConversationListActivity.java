@@ -14,24 +14,27 @@ import android.view.ViewGroup;
 import android.widget.ProgressBar;
 
 import com.android.messaging.R;
-import com.android.messaging.privatebox.MessagesMoveManager;
+import com.android.messaging.privatebox.MoveConversationToPrivateBoxAction;
 import com.android.messaging.privatebox.PrivateSettingManager;
 import com.android.messaging.privatebox.ui.addtolist.AddToListDialog;
 import com.android.messaging.privatebox.ui.addtolist.ContactsSelectActivity;
 import com.android.messaging.privatebox.ui.addtolist.ConversationSelectActivity;
-import com.android.messaging.ui.SnackBarInteraction;
 import com.android.messaging.ui.conversationlist.ConversationListActivity;
 import com.android.messaging.ui.customize.PrimaryColors;
 import com.android.messaging.util.BugleAnalytics;
+import com.ihs.commons.notificationcenter.INotificationObserver;
 import com.superapps.util.Dimensions;
 import com.superapps.util.Navigations;
 import com.superapps.util.Preferences;
 import com.superapps.util.Toasts;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
 public class PrivateConversationListActivity extends MultiSelectConversationListActivity {
+    private static final String NOTIFICATION_KEY_MESSAGES_MOVE_START = "conversations_move_to_private_start";
+    private static final String NOTIFICATION_KEY_MESSAGES_MOVE_END = "conversations_move_to_private_end";
 
     private static final String PREF_KEY_ADD_BUTTON_CLICKED = "pref_key_private_toolbar_add_button_clicked";
     private PrivateConversationListFragment mConversationListFragment;
@@ -45,6 +48,7 @@ public class PrivateConversationListActivity extends MultiSelectConversationList
     private long mStartTime;
     private Choreographer mChoreographer;
     private Choreographer.FrameCallback mFrameCallback;
+    private INotificationObserver mNotificationObserver;
 
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
@@ -58,11 +62,11 @@ public class PrivateConversationListActivity extends MultiSelectConversationList
                 "HideTheIcon", String.valueOf(PrivateSettingManager.isPrivateBoxIconHidden()));
         if (getIntent().hasExtra(ConversationListActivity.INTENT_KEY_PRIVATE_CONVERSATION_LIST)) {
             String[] conversationList = getIntent().getStringArrayExtra(ConversationListActivity.INTENT_KEY_PRIVATE_CONVERSATION_LIST);
-            addAndMoveConversations(Arrays.asList(conversationList));
+            List<String> list = new ArrayList<>();
+            list.addAll(Arrays.asList(conversationList));
+            addAndMoveConversations(list);
         }
-    }
 
-    private void addAndMoveConversations(List<String> conversationList) {
         mProcessBarContainer = findViewById(R.id.private_progress_bar_container);
         mProgressBar = findViewById(R.id.private_move_progress_bar);
 
@@ -76,31 +80,32 @@ public class PrivateConversationListActivity extends MultiSelectConversationList
                 }
             }
         };
-        if (conversationList.size() > 0) {
-            MessagesMoveManager.moveConversations(conversationList, false,
-                    new MessagesMoveManager.MessagesMoveListener() {
-                        @Override
-                        public void onMoveStart() {
-                            if (mIsMessageMoving) {
-                                return;
-                            }
-                            mStartTime = System.currentTimeMillis();
-                            mIsMessageMoving = true;
-                            mProcessBarContainer.setVisibility(View.VISIBLE);
-                            mChoreographer.postFrameCallback(mFrameCallback);
-                        }
 
-                        @Override
-                        public void onMoveEnd() {
-                            if (!mIsMessageMoving) {
-                                return;
-                            }
-                            mIsMessageMoving = false;
-                            mChoreographer.removeFrameCallback(mFrameCallback);
-                            mProcessBarContainer.setVisibility(View.GONE);
-                            Toasts.showToast(R.string.private_box_add_success);
-                        }
-                    });
+        mNotificationObserver = (s, hsBundle) -> {
+            switch (s) {
+                case NOTIFICATION_KEY_MESSAGES_MOVE_START:
+                    if (mIsMessageMoving) {
+                        return;
+                    }
+                    mStartTime = System.currentTimeMillis();
+                    mIsMessageMoving = true;
+                    mProcessBarContainer.setVisibility(View.VISIBLE);
+                    mChoreographer.postFrameCallback(mFrameCallback);
+                    break;
+                case NOTIFICATION_KEY_MESSAGES_MOVE_END:
+                    mIsMessageMoving = false;
+                    mChoreographer.removeFrameCallback(mFrameCallback);
+                    mProcessBarContainer.setVisibility(View.GONE);
+                    Toasts.showToast(R.string.private_box_add_success);
+                    break;
+            }
+        };
+    }
+
+    private void addAndMoveConversations(List<String> conversationList) {
+        if (conversationList.size() > 0) {
+            MoveConversationToPrivateBoxAction.moveAndUpdatePrivateContact(conversationList,
+                    NOTIFICATION_KEY_MESSAGES_MOVE_START, NOTIFICATION_KEY_MESSAGES_MOVE_END);
         }
     }
 

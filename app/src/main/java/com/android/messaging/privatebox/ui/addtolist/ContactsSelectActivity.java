@@ -14,6 +14,7 @@ import android.widget.TextView;
 
 import com.android.messaging.R;
 import com.android.messaging.privatebox.AddPrivateContactAction;
+import com.android.messaging.privatebox.MoveConversationToPrivateBoxAction;
 import com.android.messaging.privatebox.PrivateContactsManager;
 import com.android.messaging.ui.BaseAlertDialog;
 import com.android.messaging.ui.customize.PrimaryColors;
@@ -106,7 +107,7 @@ public class ContactsSelectActivity extends HSAppCompatActivity {
 
         mProcessBarContainer = findViewById(R.id.private_progress_bar_container);
         mProcessBarContainer.setOnClickListener(v -> {
-            
+
         });
         mProgressBar = findViewById(R.id.private_move_progress_bar);
         mContactMoveObserver = (s, hsBundle) -> {
@@ -159,7 +160,12 @@ public class ContactsSelectActivity extends HSAppCompatActivity {
 
         switch (moduleType) {
             case MODE_CONTACTS_LIST_FOR_BLACKLIST:
-                AddPrivateContactAction.addPrivateRecipientsAndMoveMessages(addList, mResponseCode);
+                //1.update contact in private contact table
+                AddPrivateContactAction.addPrivateRecipientsAndMoveMessages(addList);
+                //2.move conversations and messages if need
+                MoveConversationToPrivateBoxAction.moveByContact(addList,
+                        EVENT_MESSAGES_MOVE_START + mResponseCode,
+                        EVENT_MESSAGES_MOVE_END + mResponseCode);
                 break;
         }
     }

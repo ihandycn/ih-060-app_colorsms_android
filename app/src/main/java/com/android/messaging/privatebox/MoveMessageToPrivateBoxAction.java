@@ -10,6 +10,7 @@ import android.os.Parcel;
 import android.os.Parcelable;
 import android.provider.Telephony;
 import android.text.TextUtils;
+import android.util.Log;
 
 import com.android.messaging.datamodel.BugleDatabaseOperations;
 import com.android.messaging.datamodel.DataModel;
@@ -28,21 +29,17 @@ import static com.android.messaging.datamodel.data.MessageData.PROTOCOL_SMS;
 
 
 public class MoveMessageToPrivateBoxAction extends Action {
+    public static final String MESSAGES_MOVE_START_NOTIFICATION = "messages_move_start_notification";
+    public static final String MESSAGES_MOVE_END_NOTIFICATION = "messages_move_end_notification";
+
     private static final String KEY_MESSAGE_LIST = "message_list";
-    private static final String KEY_RESPONSE_CODE = "response_code";
 
-    static void moveMessageToPrivateBox(String messageId) {
-        MoveMessageToPrivateBoxAction action = new MoveMessageToPrivateBoxAction();
-        ArrayList<String> list = new ArrayList<>();
-        list.add(messageId);
-        action.actionParameters.putStringArrayList(KEY_MESSAGE_LIST, list);
-        action.start();
-    }
-
-    static void moveMessagesToPrivateBox(List<String> messageList, long responseCode) {
+    static void moveMessagesToPrivateBox(List<String> messageList, final String moveStartNotification,
+                                         final String moveEndNotification) {
         MoveMessageToPrivateBoxAction action = new MoveMessageToPrivateBoxAction();
         action.actionParameters.putStringArrayList(KEY_MESSAGE_LIST, (ArrayList<String>) messageList);
-        action.actionParameters.putLong(KEY_RESPONSE_CODE, responseCode);
+        action.actionParameters.putString(MESSAGES_MOVE_START_NOTIFICATION, moveStartNotification);
+        action.actionParameters.putString(MESSAGES_MOVE_END_NOTIFICATION, moveEndNotification);
         action.start();
     }
 
@@ -63,109 +60,120 @@ public class MoveMessageToPrivateBoxAction extends Action {
         if (messageList == null) {
             return;
         }
-        for (String messageId : messageList) {
-            Cursor cursor = db.query(DatabaseHelper.MESSAGES_TABLE,
-                    new String[]{DatabaseHelper.MessageColumns.SMS_MESSAGE_URI, DatabaseHelper.MessageColumns.PROTOCOL},
-                    DatabaseHelper.MessageColumns._ID + " =?", new String[]{messageId},
-                    null, null, null);
-
-            if (cursor == null) {
-                continue;
-            }
-
-            if (!cursor.moveToFirst()) {
-                cursor.close();
-                continue;
-            }
-
-            Uri telephonyUri = Uri.parse(cursor.getString(0));
-            int protocol = cursor.getInt(1);
-            boolean isSms = (protocol == PROTOCOL_SMS);
-            cursor.close();
-
-            if (isSms) {
-                Cursor smsCursor = resolver.query(telephonyUri, PrivateSmsEntry.sProjection,
-                        null, null, null);
-
-                if (smsCursor != null && smsCursor.moveToFirst()) {
-                    ContentValues values = new ContentValues();
-                    bindSmsValues(values, smsCursor);
-                    Uri localUri = resolver.insert(PrivateSmsEntry.CONTENT_URI, values);
-                    if (localUri == null) {
-                        smsCursor.close();
-                        continue;
-                    }
-                    values.clear();
-                    values.put(DatabaseHelper.MessageColumns.SMS_MESSAGE_URI, localUri.toString());
-                    BugleDatabaseOperations.updateMessageRow(db, messageId, values);
-                    MmsUtils.deleteMessage(telephonyUri);
-                }
-                if (smsCursor != null) {
-                    smsCursor.close();
-                }
-
-            } else {
-                Cursor mmsCursor = resolver.query(telephonyUri, PrivateMmsEntry.sProjection,
-                        null, null, null);
-
-                if (mmsCursor != null && mmsCursor.moveToFirst()) {
-                    //1. copy data in message table & update uri
-                    ContentValues values = new ContentValues();
-                    bindMmsValues(values, mmsCursor);
-                    Uri localUri = resolver.insert(PrivateMmsEntry.CONTENT_URI, values);
-                    if (localUri == null) {
-                        mmsCursor.close();
-                        continue;
-                    }
-                    values.clear();
-                    values.put(DatabaseHelper.MessageColumns.SMS_MESSAGE_URI, localUri.toString());
-                    BugleDatabaseOperations.updateMessageRow(db, messageId, values);
-
-                    //2. change msg_id in part table in telephony
-                    Cursor partCursor = db.query(DatabaseHelper.PARTS_TABLE, new String[]{DatabaseHelper.PartColumns.CONTENT_URI},
-                            DatabaseHelper.PartColumns.MESSAGE_ID + "=?", new String[]{messageId},
-                            null, null, null);
-
-                    if (partCursor != null && partCursor.moveToFirst()) {
-                        values.clear();
-                        values.put(Telephony.Mms.Part.MSG_ID, -1 * ContentUris.parseId(localUri));
-                        do {
-                            if (partCursor.getString(0) != null) {
-                                HSApplication.getContext().getContentResolver().update(
-                                        Uri.parse(partCursor.getString(0)), values,
-                                        null, null);
-                            }
-                        } while (partCursor.moveToNext());
-                    }
-
-                    if (partCursor != null) {
-                        partCursor.close();
-                    }
-
-                    //3. copy data in addr table
-                    Uri telephonyAddrUri = Uri.parse("content://mms/" + telephonyUri.getLastPathSegment() + "/addr");
-                    Uri localAddrUri = Uri.parse(PrivateMmsEntry.CONTENT_URI + "/" + localUri.getLastPathSegment() + "/addr");
-                    Cursor addressCursor = HSApplication.getContext().getContentResolver().query(
-                            telephonyAddrUri, null, null, null, null);
-                    if (addressCursor != null) {
-                        while (addressCursor.moveToFirst()) {
-                            values.clear();
-                            bindMmsAddrValues(values, addressCursor);
-                            resolver.insert(localAddrUri, values);
-                        }
-                        addressCursor.close();
-                    }
-
-                    MmsUtils.deleteMessage(telephonyUri);
-                }
-                if (mmsCursor != null) {
-                    mmsCursor.close();
-                }
+        if (messageList.size() > 0 &&
+                actionParameters.containsKey(MESSAGES_MOVE_START_NOTIFICATION)) {
+            String notificationName = actionParameters.getString(MESSAGES_MOVE_START_NOTIFICATION);
+            if (!TextUtils.isEmpty(notificationName)) {
+                HSGlobalNotificationCenter.sendNotification(notificationName);
             }
         }
-        if (actionParameters.containsKey(KEY_RESPONSE_CODE)) {
-            long responseCode = actionParameters.getLong(KEY_RESPONSE_CODE, 0);
-            HSGlobalNotificationCenter.sendNotification(ContactsSelectActivity.EVENT_MESSAGES_MOVE_END + responseCode);
+        try {
+            for (String messageId : messageList) {
+                Cursor cursor = db.query(DatabaseHelper.MESSAGES_TABLE,
+                        new String[]{DatabaseHelper.MessageColumns.SMS_MESSAGE_URI, DatabaseHelper.MessageColumns.PROTOCOL},
+                        DatabaseHelper.MessageColumns._ID + " =?", new String[]{messageId},
+                        null, null, null);
+
+                if (cursor == null) {
+                    continue;
+                }
+
+                if (!cursor.moveToFirst()) {
+                    cursor.close();
+                    continue;
+                }
+                Uri telephonyUri = Uri.parse(cursor.getString(0));
+                int protocol = cursor.getInt(1);
+                boolean isSms = (protocol == PROTOCOL_SMS);
+                cursor.close();
+
+                if (isSms) {
+                    Cursor smsCursor = resolver.query(telephonyUri, PrivateSmsEntry.sProjection,
+                            null, null, null);
+
+                    if (smsCursor != null && smsCursor.moveToFirst()) {
+                        ContentValues values = new ContentValues();
+                        bindSmsValues(values, smsCursor);
+                        Uri localUri = resolver.insert(PrivateSmsEntry.CONTENT_URI, values);
+                        if (localUri == null) {
+                            smsCursor.close();
+                            continue;
+                        }
+                        values.clear();
+                        values.put(DatabaseHelper.MessageColumns.SMS_MESSAGE_URI, localUri.toString());
+                        BugleDatabaseOperations.updateMessageRow(db, messageId, values);
+                        MmsUtils.deleteMessage(telephonyUri);
+                    }
+                    if (smsCursor != null) {
+                        smsCursor.close();
+                    }
+
+                } else {
+                    Cursor mmsCursor = resolver.query(telephonyUri, PrivateMmsEntry.sProjection,
+                            null, null, null);
+
+                    if (mmsCursor != null && mmsCursor.moveToFirst()) {
+                        //1. copy data in message table & update uri
+                        ContentValues values = new ContentValues();
+                        bindMmsValues(values, mmsCursor);
+                        Uri localUri = resolver.insert(PrivateMmsEntry.CONTENT_URI, values);
+                        if (localUri == null) {
+                            mmsCursor.close();
+                            continue;
+                        }
+                        values.clear();
+                        values.put(DatabaseHelper.MessageColumns.SMS_MESSAGE_URI, localUri.toString());
+                        BugleDatabaseOperations.updateMessageRow(db, messageId, values);
+
+                        //2. change msg_id in part table in telephony
+                        Cursor partCursor = db.query(DatabaseHelper.PARTS_TABLE, new String[]{DatabaseHelper.PartColumns.CONTENT_URI},
+                                DatabaseHelper.PartColumns.MESSAGE_ID + "=?", new String[]{messageId},
+                                null, null, null);
+
+                        if (partCursor != null && partCursor.moveToFirst()) {
+                            values.clear();
+                            values.put(Telephony.Mms.Part.MSG_ID, -1 * ContentUris.parseId(localUri));
+                            do {
+                                if (partCursor.getString(0) != null) {
+                                    HSApplication.getContext().getContentResolver().update(
+                                            Uri.parse(partCursor.getString(0)), values,
+                                            null, null);
+                                }
+                            } while (partCursor.moveToNext());
+                        }
+
+                        if (partCursor != null) {
+                            partCursor.close();
+                        }
+
+                        //3. copy data in addr table
+                        Uri telephonyAddrUri = Uri.parse("content://mms/" + telephonyUri.getLastPathSegment() + "/addr");
+                        Uri localAddrUri = Uri.parse(PrivateMmsEntry.CONTENT_URI + "/" + localUri.getLastPathSegment() + "/addr");
+                        Cursor addressCursor = HSApplication.getContext().getContentResolver().query(
+                                telephonyAddrUri, null, null, null, null);
+                        if (addressCursor != null) {
+                            while (addressCursor.moveToFirst()) {
+                                values.clear();
+                                bindMmsAddrValues(values, addressCursor);
+                                resolver.insert(localAddrUri, values);
+                            }
+                            addressCursor.close();
+                        }
+
+                        MmsUtils.deleteMessage(telephonyUri);
+                    }
+                    if (mmsCursor != null) {
+                        mmsCursor.close();
+                    }
+                }
+            }
+        } finally {
+            if (actionParameters.containsKey(MESSAGES_MOVE_END_NOTIFICATION)) {
+                String notificationName = actionParameters.getString(MESSAGES_MOVE_END_NOTIFICATION);
+                if (!TextUtils.isEmpty(notificationName)) {
+                    HSGlobalNotificationCenter.sendNotification(notificationName);
+                }
+            }
         }
     }
 

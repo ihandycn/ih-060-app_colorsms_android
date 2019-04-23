@@ -1,5 +1,6 @@
 package com.android.messaging.privatebox;
 
+import android.content.ContentValues;
 import android.database.Cursor;
 
 import com.android.messaging.datamodel.BugleDatabaseOperations;
@@ -46,10 +47,27 @@ public class PrivateContactsManager {
         db.delete(PRIVATE_CONTACTS_TABLE, THREAD_ID + "=?", new String[]{String.valueOf(threadId)});
     }
 
+    private void addThreadId(long threadId) {
+        //check if the thread_id is in the table
+        DatabaseWrapper db = DataModel.get().getDatabase();
+        Cursor cursor = db.query(PRIVATE_CONTACTS_TABLE, sProjection, THREAD_ID + "=?",
+                new String[]{String.valueOf(threadId)}, null, null, null);
+        if (cursor == null) {
+            return;
+        }
+        if (cursor.getCount() <= 0) {
+            ContentValues values = new ContentValues();
+            values.put(THREAD_ID, threadId);
+            db.insert(PRIVATE_CONTACTS_TABLE, null, values);
+        }
+        cursor.close();
+    }
+
     public void updatePrivateContactsByConversationId(String conversationId, boolean isPrivate) {
         long threadId = BugleDatabaseOperations.getThreadId(DataModel.get().getDatabase(), conversationId);
         if (isPrivate) {
-            AddPrivateContactAction.addPrivateThreadId(threadId);
+            //AddPrivateContactAction.addPrivateThreadId(new long[]{threadId});
+            addThreadId(threadId);
         } else {
             removeThreadId(threadId);
         }

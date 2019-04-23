@@ -4,15 +4,11 @@ import android.content.ContentValues;
 import android.database.Cursor;
 import android.os.Parcel;
 
-import com.android.messaging.datamodel.BugleDatabaseOperations;
 import com.android.messaging.datamodel.DataModel;
-import com.android.messaging.datamodel.DatabaseHelper;
 import com.android.messaging.datamodel.DatabaseWrapper;
 import com.android.messaging.datamodel.action.Action;
-import com.android.messaging.privatebox.ui.addtolist.ContactsSelectActivity;
 import com.android.messaging.sms.MmsSmsUtils;
 import com.ihs.app.framework.HSApplication;
-import com.ihs.commons.notificationcenter.HSGlobalNotificationCenter;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,18 +20,9 @@ import static com.android.messaging.privatebox.PrivateContactsManager.sProjectio
 
 public class AddPrivateContactAction extends Action {
     private static final String KEY_THREAD_ID = "thread_id";
-    private static final String KEY_RESPONSE_CODE = "response_code";
     private static final String KEY_RECIPIENT = "recipient";
-    private static final String KEY_SHOULD_SEND_GLOBAL_NOTIFICATION = "send_notification";
-    private static final String KEY_SHOULD_MOVE_MESSAGES = "move_message";
 
-    static void addPrivateThreadId(final long threadId) {
-        AddPrivateContactAction action = new AddPrivateContactAction();
-        action.actionParameters.putLongArray(KEY_THREAD_ID, new long[]{threadId});
-        action.start();
-    }
-
-    public static void addPrivateRecipientsAndMoveMessages(final List<String> recipients, final long responseCode) {
+    public static void addPrivateRecipientsAndMoveMessages(final List<String> recipients) {
         ArrayList<Long> threadIdList = new ArrayList<>();
         //todo : check permission for no grant exception
         for (String recipient : recipients) {
@@ -46,15 +33,13 @@ public class AddPrivateContactAction extends Action {
             threadIdList.add(threadId);
         }
 
-        AddPrivateContactAction action = new AddPrivateContactAction();
-        action.actionParameters.putBoolean(KEY_SHOULD_SEND_GLOBAL_NOTIFICATION, true);
-        action.actionParameters.putBoolean(KEY_SHOULD_MOVE_MESSAGES, true);
         long[] threadIdArray = new long[threadIdList.size()];
         for (int i = 0; i < threadIdList.size(); i++) {
             threadIdArray[i] = threadIdList.get(i);
         }
+
+        AddPrivateContactAction action = new AddPrivateContactAction();
         action.actionParameters.putLongArray(KEY_THREAD_ID, threadIdArray);
-        action.actionParameters.putLong(KEY_RESPONSE_CODE, responseCode);
         action.actionParameters.putStringArrayList(KEY_RECIPIENT, (ArrayList<String>) recipients);
         action.start();
     }
@@ -70,61 +55,12 @@ public class AddPrivateContactAction extends Action {
         if (actionParameters.containsKey(KEY_RECIPIENT)) {
             recipients = actionParameters.getStringArrayList(KEY_RECIPIENT);
         }
-        boolean shouldSendNotification = actionParameters.getBoolean(KEY_SHOULD_SEND_GLOBAL_NOTIFICATION, false);
-        boolean shouldMoveMessages = actionParameters.getBoolean(KEY_SHOULD_MOVE_MESSAGES, false);
-        long responseCode = actionParameters.getLong(KEY_RESPONSE_CODE, 0);
 
         DatabaseWrapper db = DataModel.get().getDatabase();
         assert threadIdList != null;
 
-        //1. add thread id into private table
         for (int i = 0; i < threadIdList.length; i++) {
             addThreadIdToPrivateTable(db, threadIdList[i], recipients == null ? null : recipients.get(i));
-        }
-
-        //2. move messages if need
-        if (shouldMoveMessages) {
-            List<String> messageList = new ArrayList<>();
-            // get all messages need to be moved;
-            for (long threadId : threadIdList) {
-                Cursor cursor = db.query(DatabaseHelper.CONVERSATIONS_TABLE, new String[]{"count(*)"},
-                        DatabaseHelper.ConversationColumns.SMS_THREAD_ID + "=?",
-                        new String[]{String.valueOf(threadId)}, null, null, null);
-                int count = 0;
-                if (cursor != null) {
-                    if (cursor.moveToFirst()) {
-                        count = cursor.getInt(0);
-                    }
-                    cursor.close();
-                }
-                //if count > 0, conversation and messages need to be moved;
-                if (count > 0) {
-                    String conversationId = BugleDatabaseOperations.getExistingConversation(db, threadId, false);
-                    cursor = db.query(DatabaseHelper.MESSAGES_TABLE, new String[]{DatabaseHelper.MessageColumns._ID},
-                            DatabaseHelper.MessageColumns.CONVERSATION_ID + "=" + conversationId,
-                            null, null, null, null);
-                    if (cursor != null) {
-                        while (cursor.moveToNext()) {
-                            messageList.add(cursor.getString(0));
-                        }
-                        cursor.close();
-                    }
-                    if (conversationId != null) {
-                        MoveConversationToPrivateBoxAction.move(conversationId);
-                    }
-                }
-            }
-
-            if (messageList.size() > 0) {
-                if (shouldSendNotification) {
-                    HSGlobalNotificationCenter.sendNotification(ContactsSelectActivity.EVENT_MESSAGES_MOVE_START + responseCode);
-                }
-                MoveMessageToPrivateBoxAction.moveMessagesToPrivateBox(messageList, responseCode);
-            } else {
-                if (shouldSendNotification) {
-                    HSGlobalNotificationCenter.sendNotification(ContactsSelectActivity.EVENT_MESSAGES_MOVE_END + responseCode);
-                }
-            }
         }
         return null;
     }

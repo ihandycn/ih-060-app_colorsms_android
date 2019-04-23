@@ -2,7 +2,6 @@ package com.android.messaging.ui.conversationlist;
 
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.database.Cursor;
@@ -21,7 +20,6 @@ import android.support.v7.widget.AppCompatDrawableManager;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.text.format.DateUtils;
-import android.util.Log;
 import android.view.ActionMode;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -36,10 +34,10 @@ import com.android.messaging.R;
 import com.android.messaging.datamodel.BugleNotifications;
 import com.android.messaging.datamodel.action.PinConversationAction;
 import com.android.messaging.mmslib.SqliteWrapper;
-import com.android.messaging.privatebox.MessagesMoveManager;
+import com.android.messaging.privatebox.MoveConversationToPrivateBoxAction;
+import com.android.messaging.privatebox.PrivateBoxSettings;
 import com.android.messaging.privatebox.PrivateSettingManager;
 import com.android.messaging.privatebox.ui.PrivateBoxSetPasswordActivity;
-import com.android.messaging.privatebox.PrivateBoxSettings;
 import com.android.messaging.privatebox.ui.SelfVerifyActivity;
 import com.android.messaging.ui.BaseAlertDialog;
 import com.android.messaging.ui.CreateShortcutActivity;
@@ -70,6 +68,7 @@ import com.ihs.commons.config.HSConfig;
 import com.ihs.commons.notificationcenter.HSGlobalNotificationCenter;
 import com.ihs.commons.notificationcenter.INotificationObserver;
 import com.ihs.commons.utils.HSBundle;
+import com.ihs.commons.utils.HSLog;
 import com.superapps.font.FontStyleManager;
 import com.superapps.util.BackgroundDrawables;
 import com.superapps.util.Calendars;
@@ -110,6 +109,8 @@ public class ConversationListActivity extends AbstractConversationListActivity
     public static final String EXTRA_FROM_DESKTOP_ICON = "extra_from_desktop_icon";
     public static final String PREF_KEY_CREATE_SHORTCUT_GUIDE_SHOWN = "pref_key_create_shortcut_guide_shown";
 
+    private static final String NOTIFICATION_NAME_MESSAGES_MOVE_END = "conversation_list_move_end";
+
     private static boolean sIsRecreate = false;
 
     private static final int DRAWER_INDEX_NONE = -1;
@@ -140,6 +141,7 @@ public class ConversationListActivity extends AbstractConversationListActivity
     private String size;
     private View mPrivateBoxEntrance;
 
+    private boolean mIsMessageMoving;
 
     private enum AnimState {
         NONE,
@@ -189,6 +191,7 @@ public class ConversationListActivity extends AbstractConversationListActivity
         HSGlobalNotificationCenter.addObserver(EVENT_MAINPAGE_RECREATE, this);
         HSGlobalNotificationCenter.addObserver(SHOW_EMOJI, this);
         HSGlobalNotificationCenter.addObserver(FIRST_LOAD, this);
+        HSGlobalNotificationCenter.addObserver(NOTIFICATION_NAME_MESSAGES_MOVE_END, this);
         BugleAnalytics.logEvent("SMS_ActiveUsers", true);
 
         if (!sIsRecreate) {
@@ -443,6 +446,7 @@ public class ConversationListActivity extends AbstractConversationListActivity
         navigationContent.findViewById(R.id.navigation_item_change_font).setOnClickListener(this);
         navigationContent.findViewById(R.id.navigation_item_setting).setOnClickListener(this);
         navigationContent.findViewById(R.id.navigation_item_rate).setOnClickListener(this);
+        //test code
         //this item is used to delete dirty mms parts in telephony
         navigationContent.findViewById(R.id.navigation_item_clear_private_parts).setVisibility(View.GONE);
         navigationContent.findViewById(R.id.navigation_item_clear_private_parts).setOnClickListener(v -> {
@@ -456,7 +460,7 @@ public class ConversationListActivity extends AbstractConversationListActivity
                 if (c != null) {
                     while (c.moveToNext()) {
                         privatePartIdList.add(c.getInt(0));
-                        Log.d("---->>>>", "find private message " + c.getString(1) + " parts : \n part id is :"
+                        HSLog.d("---->>>>", "find private message " + c.getString(1) + " parts : \n part id is :"
                                 + c.getInt(0));
                     }
                     c.close();
@@ -466,7 +470,7 @@ public class ConversationListActivity extends AbstractConversationListActivity
                             HSApplication.getContext().getContentResolver(),
                             Uri.parse("content://mms/part/" + privatePartIdList.get(i)), null, null);
                     if (k > 0) {
-                        Log.d("---->>>>", "delete part : id = " + privatePartIdList.get(i));
+                        HSLog.d("---->>>>", "delete part : id = " + privatePartIdList.get(i));
                     }
                 }
             });
@@ -613,18 +617,9 @@ public class ConversationListActivity extends AbstractConversationListActivity
                     .setNegativeButton(R.string.delete_conversation_decline_button, null)
                     .show();
         } else {
-            MessagesMoveManager.moveConversations(conversations, false,
-                    new MessagesMoveManager.MessagesMoveListener() {
-                        @Override
-                        public void onMoveStart() {
-
-                        }
-
-                        @Override
-                        public void onMoveEnd() {
-                            Toasts.showToast(R.string.private_box_add_success);
-                        }
-                    });
+            mIsMessageMoving = true;
+            MoveConversationToPrivateBoxAction.moveAndUpdatePrivateContact(conversations,
+                    null, NOTIFICATION_NAME_MESSAGES_MOVE_END);
         }
         exitMultiSelectState();
     }
@@ -871,7 +866,13 @@ public class ConversationListActivity extends AbstractConversationListActivity
                                     SignatureSettingDialog.PREF_KEY_SIGNATURE_CONTENT, null))),
                             "pin", String.valueOf(hasPinConversation));
                 }
-
+                break;
+            case NOTIFICATION_NAME_MESSAGES_MOVE_END:
+                if (mIsMessageMoving) {
+                    mIsMessageMoving = false;
+                    Toasts.showToast(R.string.private_box_add_success);
+                }
+                break;
             default:
                 break;
         }
