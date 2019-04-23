@@ -5,7 +5,6 @@ import android.animation.AnimatorListenerAdapter;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.database.Cursor;
-import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
@@ -29,10 +28,12 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.airbnb.lottie.LottieAnimationView;
+import com.android.messaging.BuildConfig;
 import com.android.messaging.Factory;
 import com.android.messaging.R;
 import com.android.messaging.datamodel.BugleNotifications;
 import com.android.messaging.datamodel.action.PinConversationAction;
+import com.android.messaging.datamodel.data.MessageBoxItemData;
 import com.android.messaging.mmslib.SqliteWrapper;
 import com.android.messaging.privatebox.MoveConversationToPrivateBoxAction;
 import com.android.messaging.privatebox.PrivateBoxSettings;
@@ -45,11 +46,15 @@ import com.android.messaging.ui.DragHotSeatActivity;
 import com.android.messaging.ui.UIIntents;
 import com.android.messaging.ui.UIIntentsImpl;
 import com.android.messaging.ui.appsettings.ChangeFontActivity;
-import com.android.messaging.ui.appsettings.ThemeSelectActivity;
+import com.android.messaging.ui.appsettings.ChooseThemeColorRecommendViewHolder;
+import com.android.messaging.ui.appsettings.ThemeColorSelectActivity;
 import com.android.messaging.ui.customize.BubbleDrawables;
 import com.android.messaging.ui.customize.ConversationColors;
 import com.android.messaging.ui.customize.CustomBubblesActivity;
 import com.android.messaging.ui.customize.PrimaryColors;
+import com.android.messaging.ui.customize.ToolbarDrawables;
+import com.android.messaging.ui.customize.theme.ChooseThemeActivity;
+import com.android.messaging.ui.customize.theme.ThemeUtils;
 import com.android.messaging.ui.dialog.FiveStarRateDialog;
 import com.android.messaging.ui.emoji.EmojiStoreActivity;
 import com.android.messaging.ui.messagebox.MessageBoxActivity;
@@ -92,6 +97,7 @@ public class ConversationListActivity extends AbstractConversationListActivity
         implements View.OnClickListener, INotificationObserver {
 
     public static final String INTENT_KEY_PRIVATE_CONVERSATION_LIST = "conversation_list";
+    private static final boolean DEBUGGING_MESSAGE_BOX = true && BuildConfig.DEBUG;
 
     public static final String EVENT_MAINPAGE_RECREATE = "event_mainpage_recreate";
     public static final String SHOW_EMOJI = "show_emoj";
@@ -101,6 +107,7 @@ public class ConversationListActivity extends AbstractConversationListActivity
     private static final String PREF_SHOW_EMOJI_GUIDE = "pref_show_emoji_guide";
     public static final String PREF_KEY_MAIN_DRAWER_OPENED = "pref_key_main_drawer_opened";
 
+    private static final String PREF_KEY_THEME_CLICKED = "pref_key_navigation_theme_clicked";
     private static final String PREF_KEY_THEME_COLOR_CLICKED = "pref_key_navigation_theme_color_clicked";
     private static final String PREF_KEY_BUBBLE_CLICKED = "pref_key_navigation_bubble_clicked";
     private static final String PREF_KEY_BACKGROUND_CLICKED = "pref_key_navigation_background_clicked";
@@ -114,13 +121,14 @@ public class ConversationListActivity extends AbstractConversationListActivity
     private static boolean sIsRecreate = false;
 
     private static final int DRAWER_INDEX_NONE = -1;
-    private static final int DRAWER_INDEX_THEME_COLOR = 0;
-    private static final int DRAWER_INDEX_BUBBLE = 1;
-    private static final int DRAWER_INDEX_CHAT_BACKGROUND = 2;
-    private static final int DRAWER_INDEX_SETTING = 3;
-    private static final int DRAWER_INDEX_RATE = 4;
-    private static final int DRAWER_INDEX_CHANGE_FONT = 5;
-    private static final int DRAWER_INDEX_PRIVACY_BOX = 6;
+    private static final int DRAWER_INDEX_THEME = 0;
+    private static final int DRAWER_INDEX_THEME_COLOR = 1;
+    private static final int DRAWER_INDEX_BUBBLE = 2;
+    private static final int DRAWER_INDEX_CHAT_BACKGROUND = 3;
+    private static final int DRAWER_INDEX_SETTING = 4;
+    private static final int DRAWER_INDEX_RATE = 5;
+    private static final int DRAWER_INDEX_CHANGE_FONT = 6;
+    private static final int DRAWER_INDEX_PRIVACY_BOX = 7;
 
     private int drawerClickIndex = DRAWER_INDEX_NONE;
 
@@ -131,7 +139,6 @@ public class ConversationListActivity extends AbstractConversationListActivity
     private TextView mTitleTextView;
     private View mEmojiStoreIconView;
     private LottieAnimationView mGuideContainer;
-    private View statusbarInset;
 
     private static boolean mIsNoActionBack = true;
     private boolean mIsRealCreate = false;
@@ -169,6 +176,7 @@ public class ConversationListActivity extends AbstractConversationListActivity
         configAppBar();
         mIsNoActionBack = true;
 
+
         if (getIntent() != null && getIntent().getBooleanExtra(EXTRA_FROM_DESKTOP_ICON, false)) {
             BugleAnalytics.logEvent("SMS_Shortcut_Click");
         }
@@ -183,7 +191,7 @@ public class ConversationListActivity extends AbstractConversationListActivity
         }
 
         if (getIntent() != null && getIntent().getBooleanExtra(BugleNotifications.EXTRA_FROM_NOTIFICATION, false)) {
-            BugleAnalytics.logEvent("SMS_Notifications_Clicked", true);
+            BugleAnalytics.logEvent("SMS_Notifications_Clicked", true, true);
         }
 
         setupDrawer();
@@ -214,14 +222,15 @@ public class ConversationListActivity extends AbstractConversationListActivity
                     backgroundStr = "colorsms_" + wallpaperIndex;
                 }
 
-                BugleAnalytics.logEvent("SMS_Messages_Show", true,
-                        "themeColor", String.valueOf(ThemeSelectActivity.getSelectedIndex()),
+                BugleAnalytics.logEvent("SMS_Messages_Show", true, true,
+                        "themeColor", String.valueOf(ChooseThemeColorRecommendViewHolder.getPrimaryColorType()),
                         "background", backgroundStr,
                         "bubbleStyle", String.valueOf(BubbleDrawables.getSelectedIdentifier()),
                         "received bubble color", ConversationColors.get().getConversationColorEventType(true, true),
                         "sent bubble color", ConversationColors.get().getConversationColorEventType(true, false),
                         "received text color", ConversationColors.get().getConversationColorEventType(false, true),
-                        "sent text color", ConversationColors.get().getConversationColorEventType(false, false));
+                        "sent text color", ConversationColors.get().getConversationColorEventType(false, false),
+                        "theme", ThemeUtils.getCurrentThemeName());
 
                 switch (FontStyleManager.getInstance().getFontScaleLevel()) {
                     case 0:
@@ -265,7 +274,7 @@ public class ConversationListActivity extends AbstractConversationListActivity
                                     bubbleSendFontColor + "|" + bubbleSendBgColor + "|"
                                             + bubbleRcvFontColor + "|" + bubbleRcvBgColor + "|"
                                             + fontType + "|" + fontSize + "|" + bubbleStyle + "|"
-                                            + wallpaper + "|" + ThemeSelectActivity.getSelectedIndex());
+                                            + wallpaper + "|" + ChooseThemeColorRecommendViewHolder.getPrimaryColorType());
                         }
                     }, "pref_key_customize_config_has_send");
                 }
@@ -285,7 +294,7 @@ public class ConversationListActivity extends AbstractConversationListActivity
                 mPrivateBoxEntrance.setVisibility(View.VISIBLE);
             }
         }
-        BugleAnalytics.logEvent("SMS_Messages_Show_Corrected", true);
+        BugleAnalytics.logEvent("SMS_Messages_Show_Corrected", true, true);
         Preferences.getDefault().incrementAndGetInt(CustomizeGuideController.PREF_KEY_MAIN_PAGE_SHOW_TIME);
         WeakReference<AppCompatActivity> activity = new WeakReference<>(this);
         Threads.postOnMainThreadDelayed(() -> {
@@ -298,18 +307,19 @@ public class ConversationListActivity extends AbstractConversationListActivity
 
     @Override
     protected void updateActionBar(final ActionBar actionBar) {
-        statusbarInset.setBackgroundColor(PrimaryColors.getPrimaryColor());
-
         actionBar.setTitle("");
         actionBar.setDisplayShowTitleEnabled(false);
         actionBar.setDisplayHomeAsUpEnabled(false);
         actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
-        actionBar.setBackgroundDrawable(new ColorDrawable(PrimaryColors.getPrimaryColor()));
         actionBar.show();
 
         if (mTitleTextView != null && mTitleTextView.getVisibility() == View.GONE) {
             mTitleTextView.setVisibility(View.VISIBLE);
             mEmojiStoreIconView.setVisibility(View.VISIBLE);
+        }
+
+        if (getActionMode() == null) {
+            findViewById(R.id.selection_mode_bg).setVisibility(View.INVISIBLE);
         }
 
         super.updateActionBar(actionBar);
@@ -338,8 +348,8 @@ public class ConversationListActivity extends AbstractConversationListActivity
                 drawerClickIndex = DRAWER_INDEX_NONE;
                 Preferences.getDefault().putBoolean(PREF_KEY_MAIN_DRAWER_OPENED, true);
                 setDrawerMenuIcon();
-                BugleAnalytics.logEvent("Menu_Show", true);
                 BugleAnalytics.logEvent("Menu_Show_NewVersion", true);
+                BugleAnalytics.logEvent("Menu_Show", true, true);
                 if (CommonUtils.isNewUser()
                         && Calendars.isSameDay(CommonUtils.getAppInstallTimeMillis(), System.currentTimeMillis())) {
                     BugleAnalytics.logEvent("Menu_Show_NewUser_TestPrivateBox");
@@ -353,24 +363,37 @@ public class ConversationListActivity extends AbstractConversationListActivity
                 super.onDrawerClosed(drawerView);
 
                 switch (drawerClickIndex) {
+                    case DRAWER_INDEX_THEME:
+                        BugleAnalytics.logEvent("Menu_Theme_Click");
+                        Navigations.startActivity(ConversationListActivity.this, ChooseThemeActivity.class);
+                        navigationContent.findViewById(R.id.navigation_item_theme_new_text).setVisibility(View.GONE);
+                        break;
+
                     case DRAWER_INDEX_THEME_COLOR:
-                        BugleAnalytics.logEvent("Menu_ThemeColor_Click");
+                        BugleAnalytics.logEvent("Menu_ThemeColor_Click", true);
                         if (CommonUtils.isNewUser() && DateUtils.isToday(CommonUtils.getAppInstallTimeMillis())) {
                             BugleAnalytics.logEvent("Menu_ThemeColor_Click_NewUser", true);
                         }
-                        Navigations.startActivity(ConversationListActivity.this, ThemeSelectActivity.class);
-                        navigationContent.findViewById(R.id.navigation_item_theme_new_text).setVisibility(View.GONE);
+                        Navigations.startActivity(ConversationListActivity.this, ThemeColorSelectActivity.class);
+                        navigationContent.findViewById(R.id.navigation_item_theme_color_new_text).setVisibility(View.GONE);
                         break;
                     case DRAWER_INDEX_BUBBLE:
-                        BugleAnalytics.logEvent("Menu_Bubble_Click", true);
+                        BugleAnalytics.logEvent("Menu_Bubble_Click", true, true);
                         if (CommonUtils.isNewUser() && DateUtils.isToday(CommonUtils.getAppInstallTimeMillis())) {
                             BugleAnalytics.logEvent("Menu_Bubble_Click_NewUser", true);
                         }
-                        Navigations.startActivity(ConversationListActivity.this, CustomBubblesActivity.class);
+
+                        if (DEBUGGING_MESSAGE_BOX) {
+                            UIIntents.get().launchMessageBoxActivity(getApplicationContext(), new MessageBoxItemData("asd",
+                                    "asd", "asd", "asd", "asd", "heihei", 123L));
+                        } else {
+                            Navigations.startActivity(ConversationListActivity.this, CustomBubblesActivity.class);
+                        }
+
                         navigationContent.findViewById(R.id.navigation_item_bubble_new_text).setVisibility(View.GONE);
                         break;
                     case DRAWER_INDEX_CHAT_BACKGROUND:
-                        BugleAnalytics.logEvent("Menu_ChatBackground_Click", true);
+                        BugleAnalytics.logEvent("Menu_ChatBackground_Click", true, true);
                         if (CommonUtils.isNewUser() && DateUtils.isToday(CommonUtils.getAppInstallTimeMillis())) {
                             BugleAnalytics.logEvent("Menu_ChatBackground_Click_NewUser", true);
                         }
@@ -397,11 +420,11 @@ public class ConversationListActivity extends AbstractConversationListActivity
                         break;
                     case DRAWER_INDEX_SETTING:
                         UIIntents.get().launchSettingsActivity(ConversationListActivity.this);
-                        BugleAnalytics.logEvent("Menu_Settings_Click", true);
+                        BugleAnalytics.logEvent("Menu_Settings_Click", true, true);
                         break;
                     case DRAWER_INDEX_RATE:
                         FiveStarRateDialog.showFiveStarFromSetting(ConversationListActivity.this);
-                        BugleAnalytics.logEvent("Menu_FiveStart_Click", true);
+                        BugleAnalytics.logEvent("Menu_FiveStart_Click", true, true);
                         break;
                     case DRAWER_INDEX_NONE:
                     default:
@@ -418,12 +441,20 @@ public class ConversationListActivity extends AbstractConversationListActivity
         navigationView.addView(navigationContent);
 
         if (CommonUtils.isNewUser()) {
-            if (!Preferences.getDefault().getBoolean(PREF_KEY_THEME_COLOR_CLICKED, false)) {
+            if (!Preferences.getDefault().getBoolean(PREF_KEY_THEME_CLICKED, false)) {
                 View newMark = navigationContent.findViewById(R.id.navigation_item_theme_new_text);
                 newMark.setVisibility(View.VISIBLE);
                 newMark.setBackground(BackgroundDrawables.createBackgroundDrawable(0xffea6126,
                         Dimensions.pxFromDp(8.7f), false));
             }
+
+
+//            if (!Preferences.getDefault().getBoolean(PREF_KEY_THEME_COLOR_CLICKED, false)) {
+//                View newMark = navigationContent.findViewById(R.id.navigation_item_theme_color_new_text);
+//                newMark.setVisibility(View.VISIBLE);
+//                newMark.setBackground(BackgroundDrawables.createBackgroundDrawable(0xffea6126,
+//                        Dimensions.pxFromDp(8.7f), false));
+//            }
 
             if (!Preferences.getDefault().getBoolean(PREF_KEY_BUBBLE_CLICKED, false)) {
                 View bubbleNewMark = navigationContent.findViewById(R.id.navigation_item_bubble_new_text);
@@ -432,14 +463,15 @@ public class ConversationListActivity extends AbstractConversationListActivity
                         Dimensions.pxFromDp(8.7f), false));
             }
 
-            if (!Preferences.getDefault().getBoolean(PREF_KEY_BACKGROUND_CLICKED, false)) {
-                View newMark = navigationContent.findViewById(R.id.navigation_item_background_new_text);
-                newMark.setVisibility(View.VISIBLE);
-                newMark.setBackground(BackgroundDrawables.createBackgroundDrawable(0xffea6126,
-                        Dimensions.pxFromDp(8.7f), false));
-            }
+//            if (!Preferences.getDefault().getBoolean(PREF_KEY_BACKGROUND_CLICKED, false)) {
+//                View newMark = navigationContent.findViewById(R.id.navigation_item_background_new_text);
+//                newMark.setVisibility(View.VISIBLE);
+//                newMark.setBackground(BackgroundDrawables.createBackgroundDrawable(0xffea6126,
+//                        Dimensions.pxFromDp(8.7f), false));
+//            }
         }
 
+        navigationContent.findViewById(R.id.navigation_item_theme).setOnClickListener(this);
         navigationContent.findViewById(R.id.navigation_item_theme_color).setOnClickListener(this);
         navigationContent.findViewById(R.id.navigation_item_bubble).setOnClickListener(this);
         navigationContent.findViewById(R.id.navigation_item_chat_background).setOnClickListener(this);
@@ -572,7 +604,8 @@ public class ConversationListActivity extends AbstractConversationListActivity
         mTitleTextView.setVisibility(View.GONE);
         stopEmojiStoreGuide();
         mEmojiStoreIconView.setVisibility(View.GONE);
-        BugleAnalytics.logEvent("SMS_EditMode_Show", true);
+        findViewById(R.id.selection_mode_bg).setVisibility(View.VISIBLE);
+        BugleAnalytics.logEvent("SMS_EditMode_Show", true, true);
         return super.startActionMode(callback);
     }
 
@@ -643,8 +676,18 @@ public class ConversationListActivity extends AbstractConversationListActivity
     }
 
     private void configAppBar() {
-        statusbarInset = findViewById(R.id.status_bar_inset);
-        ViewGroup.LayoutParams layoutParams = statusbarInset.getLayoutParams();
+        View accessoryContainer = findViewById(R.id.accessory_container);
+        ViewGroup.LayoutParams layoutParams = accessoryContainer.getLayoutParams();
+        layoutParams.height = Dimensions.getStatusBarHeight(ConversationListActivity.this) + Dimensions.pxFromDp(56);
+        accessoryContainer.setLayoutParams(layoutParams);
+        if (ToolbarDrawables.getToolbarBg() != null) {
+            accessoryContainer.setBackground(ToolbarDrawables.getToolbarBg());
+        } else {
+            accessoryContainer.setBackgroundColor(PrimaryColors.getPrimaryColor());
+        }
+
+        View statusbarInset = findViewById(R.id.status_bar_inset);
+        layoutParams = statusbarInset.getLayoutParams();
         layoutParams.height = Dimensions.getStatusBarHeight(ConversationListActivity.this);
         statusbarInset.setLayoutParams(layoutParams);
 
@@ -668,7 +711,7 @@ public class ConversationListActivity extends AbstractConversationListActivity
                 return;
             }
             logFirstComeInClickEvent("emojistore");
-            BugleAnalytics.logEvent("SMS_Messages_Emojistore_Click", true);
+            BugleAnalytics.logEvent("SMS_Messages_Emojistore_Click", true, true);
             if (mAnimState == AnimState.DISAPPEAR) {
                 mIsEmojiStoreClickable = false;
                 Threads.postOnMainThreadDelayed(() -> {
@@ -781,7 +824,7 @@ public class ConversationListActivity extends AbstractConversationListActivity
         Preferences.getDefault().doOnce(new Runnable() {
             @Override
             public void run() {
-                BugleAnalytics.logEvent("SMS_Messages_First_Click", true, "type", type);
+                BugleAnalytics.logEvent("SMS_Messages_First_Click", true, true, "type", type);
             }
         }, "pref_first_come_in_click_event");
     }
@@ -809,6 +852,12 @@ public class ConversationListActivity extends AbstractConversationListActivity
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
+            case R.id.navigation_item_theme:
+                drawerClickIndex = DRAWER_INDEX_THEME;
+                drawerLayout.closeDrawer(navigationView);
+                Preferences.getDefault().putBoolean(PREF_KEY_THEME_CLICKED, true);
+                break;
+
             case R.id.navigation_item_theme_color:
                 drawerClickIndex = DRAWER_INDEX_THEME_COLOR;
                 drawerLayout.closeDrawer(navigationView);
@@ -864,7 +913,7 @@ public class ConversationListActivity extends AbstractConversationListActivity
                             "open time", String.valueOf(hour),
                             "signature", String.valueOf(!TextUtils.isEmpty(Preferences.getDefault().getString(
                                     SignatureSettingDialog.PREF_KEY_SIGNATURE_CONTENT, null))),
-                            "pin", String.valueOf(hasPinConversation));
+                            "pin", String.valueOf(hasPinConversation), "defaultlauncher", getPackageName());
                 }
                 break;
             case NOTIFICATION_NAME_MESSAGES_MOVE_END:

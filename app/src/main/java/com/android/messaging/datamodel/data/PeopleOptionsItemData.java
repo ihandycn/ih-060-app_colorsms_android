@@ -21,9 +21,9 @@ import android.media.Ringtone;
 import android.media.RingtoneManager;
 import android.net.Uri;
 
-import com.android.messaging.Factory;
 import com.android.messaging.R;
 import com.android.messaging.datamodel.data.ConversationListItemData.ConversationListViewColumns;
+import com.android.messaging.ui.appsettings.PrivacyModeSettings;
 import com.android.messaging.util.Assert;
 import com.android.messaging.util.BuglePrefs;
 import com.android.messaging.util.RingtoneUtil;
@@ -46,12 +46,14 @@ public class PeopleOptionsItemData {
     // Identification for each setting that's surfaced to the UI layer.
     public static final int SETTINGS_PIN = 0;
     public static final int SETTING_NOTIFICATION_ENABLED = 1;
-    public static final int SETTING_NOTIFICATION_SOUND_URI = 2;
-    public static final int SETTING_NOTIFICATION_VIBRATION = 3;
-    public static final int SETTING_ADD_CONTANCT = 4;
-    public static final int SETTING_DELETE = 6;
-    public static final int SETTING_BLOCKED = 5;
-    public static final int SETTINGS_COUNT = 7;
+    public static final int SETTING_PRIVACY_MODE = 2;
+    public static final int SETTING_NOTIFICATION_SOUND_URI = 3;
+    public static final int SETTING_NOTIFICATION_VIBRATION = 4;
+    public static final int SETTING_ADD_CONTACT = 5;
+    public static final int SETTING_BLOCKED = 6;
+    public static final int SETTING_DELETE = 7;
+
+    public static final int SETTINGS_COUNT = 8;
 
 
     // Type of UI switch to show for the toggle button.
@@ -79,7 +81,11 @@ public class PeopleOptionsItemData {
      * separate options to display for the conversation, e.g. notification settings).
      */
     public void bind(
-            final Cursor cursor, final ParticipantData otherParticipant, final int settingType) {
+            final Cursor cursor, final ParticipantData otherParticipant, final int settingType, String conversationId) {
+        if (cursor == null || cursor.getCount() == 0) {
+            return;
+        }
+
         mSubtitle = null;
         mRingtoneUri = null;
         mCheckable = true;
@@ -92,6 +98,13 @@ public class PeopleOptionsItemData {
             case SETTING_NOTIFICATION_ENABLED:
                 mTitle = mContext.getString(R.string.notifications_enabled_conversation_pref_title);
                 mChecked = notificationEnabled;
+                break;
+
+            case SETTING_PRIVACY_MODE:
+                mTitle = mContext.getString(R.string.privacy_mode_settings);
+                mSubtitle = PrivacyModeSettings.getPrivacyModeDescription(conversationId);
+                mEnabled = notificationEnabled;
+                mCheckable = false;
                 break;
 
             case SETTING_NOTIFICATION_SOUND_URI:
@@ -141,7 +154,7 @@ public class PeopleOptionsItemData {
                 mChecked = cursor.getInt(INDEX_PIN_TIMESTAMP) != 0;
                 break;
 
-            case SETTING_ADD_CONTANCT:
+            case SETTING_ADD_CONTACT:
                 mTitle = mContext.getString(R.string.action_add_contact);
                 mCheckable = false;
                 break;

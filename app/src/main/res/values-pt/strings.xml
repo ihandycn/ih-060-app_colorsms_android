@@ -601,6 +601,15 @@
 
 
 	<string name="set_as_default_dialog_title_user_present">Defina Color SMS como padrão</string>
+    
+    <string name="message_box_unread">NÃO LIDA</string>
+    <string name="message_box_send_successfully_toast">Enviado com sucesso</string>
+    <string name="message_box_send_failed_toast">Falha ao enviar</string>
+    <string name="message_box_delete_alert_description">Excluir as mensagens?</string>
+    <string name="message_box_mark_as_unread">Marcada como não lida</string>
+    <string name="message_box_open">ABRIR</string>
+    <string name="message_box_click_to_view">Clique para Ver</string>
+    
 
     <string name="create_shortcut_has_been_create">Criado com sucesso</string>
     <string name="create_shortcut_guide_title">Crie um atalho</string>
@@ -612,5 +621,13 @@
 	<string name="welcome_viewpager_item_title_2">Mais Recursos</string>
 	<string name="welcome_viewpager_item_body_2">Venha e teste vários ótimos recursos.</string>
 	<string name="welcome_set_as_default_title">Defina o Color SMS como o app padrão de SMS. Isso é necessário para enviar/receber SMS.</string>
+
+
+	<string name="menu_theme">Tema</string>
+	<string name="welcome_choose_theme_title">Escolha o tema que deseja</string>
+	<string name="welcome_choose_theme_current">ATUAL</string>
+	<string name="setting_reset_customization_title">Redefinir personalização</string>
+	<string name="setting_reset_customization_summary">Apagar a personalização nesta conversa.</string>
+	<string name="action_pin">Marcar no topo</string>
 
 </resources>

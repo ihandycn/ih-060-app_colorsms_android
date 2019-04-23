@@ -71,6 +71,7 @@ import com.android.messaging.privatebox.PrivateMessageManager;
 import com.android.messaging.privatebox.PrivateMmsEntry;
 import com.android.messaging.sms.SmsSender.SendResult;
 import com.android.messaging.util.Assert;
+import com.android.messaging.util.BugleAnalytics;
 import com.android.messaging.util.BugleGservices;
 import com.android.messaging.util.BugleGservicesKeys;
 import com.android.messaging.util.BuglePrefs;
@@ -1428,6 +1429,37 @@ public class MmsUtils {
     }
 
     /**
+     * Update the read status of SMS/MMS messages by thread and timestamp
+     *
+     * @param threadId The thread of sms/mms to change
+     * @param startTimestampInMillis Change the status before this timestamp
+     * @param endTimestampInMillis Change the status before this timestamp
+     */
+    public static void updateSmsReadStatus(final long threadId,
+                                           final long startTimestampInMillis,
+                                           final long endTimestampInMillis) {
+        final ContentResolver resolver = Factory.get().getApplicationContext().getContentResolver();
+        final ContentValues values = new ContentValues();
+        values.put("read", 1);
+        values.put("seen", 1); /* If you read it you saw it */
+        final String smsSelection = String.format(
+                Locale.US,
+                "%s=%d AND %s>=%d AND %s<=%d AND %s=0",
+                Sms.THREAD_ID,
+                threadId,
+                Sms.DATE,
+                startTimestampInMillis,
+                Sms.DATE,
+                endTimestampInMillis,
+                Sms.READ);
+        resolver.update(
+                Sms.CONTENT_URI,
+                values,
+                smsSelection,
+                null/*selectionArgs*/);
+    }
+
+    /**
      * Update the read status of a single MMS message by its URI
      *
      * @param mmsUri
@@ -2556,6 +2588,7 @@ public class MmsUtils {
                                      final String smsServiceCenter, final boolean requireDeliveryReport) {
         if (!isSmsDataAvailable(subId)) {
             LogUtil.w(TAG, "MmsUtils: can't send SMS without radio");
+            BugleAnalytics.logEvent("SMS_Send_Failed", "reason", "can't send SMS without radio");
             return MMS_REQUEST_MANUAL_RETRY;
         }
         final Context context = Factory.get().getApplicationContext();
@@ -2590,6 +2623,7 @@ public class MmsUtils {
                 LogUtil.e(TAG, "MmsUtils: sending SMS timed out");
             }
         } catch (final Exception e) {
+            BugleAnalytics.logEvent("SMS_Send_Failed", "reason", e.getMessage());
             LogUtil.e(TAG, "MmsUtils: failed to send SMS " + e, e);
         }
         return status;

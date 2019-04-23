@@ -257,11 +257,15 @@
         <item quantity="one">Delete this conversation?</item>
         <item quantity="other">Delete these conversations?</item>
     </plurals>
-
     <!-- Alert dialog accept deleting this conversation button. -->
     <string name="delete_conversation_confirmation_button">Delete</string>
     <!-- Alert dialog decline deleting this conversation button. -->
     <string name="delete_conversation_decline_button">Cancel</string>
+
+    <!-- Alert dialog accept resetting customization button. -->
+    <string name="reset_customization_confirmation_button">YES</string>
+    <!-- Alert dialog decline resetting customization button. -->
+    <string name="reset_customization_decline_button">NO</string>
 
     <!-- Hint text for the recipient chips text box when it's empty -->
     <string name="recipient_hint">To</string>
@@ -1008,6 +1012,8 @@
     <string name="setting_sms_pop_ups_summary">Pop up a window when receiving messages</string>
     <string name="setting_sms_show">SMS Show</string>
     <string name="setting_sms_show_summary">Beautify SMS reminder effects</string>
+    <string name="setting_reset_customization_summary">This will erase the customization in this chat.</string>
+    <string name="setting_reset_customization_title">Reset Customization?</string>
     <string name="setting_sms_show_close_dialog_title">Confirm to turn off?</string>
     <string name="setting_sms_show_close_dialog_content">You will lose the beautiful SMS reminder themes, really want to close it?</string>
     <string name="setting_sms_show_close_dialog_ok">OK</string>
@@ -1040,7 +1046,9 @@
     <string name="menu_change_font">Font &#038; Font Size</string>
     <string name="menu_theme_color">Theme Color</string>
     <string name="menu_bubble">Bubble</string>
+    <string name="menu_theme">Theme</string>
     <string name="menu_chat_background">Chat Background</string>
+    <string name="menu_reset_customization">Reset Customization</string>
     <string name="menu_setting">Settings</string>
     <string name="menu_rate">5 Star Rating</string>
     <string name="menu_new">new</string>
@@ -1077,10 +1085,26 @@
     <string name="message_box_alert_title">Turn Off SMS Pop-ups?</string>
     <string name="message_box_alert_message">If you turn off SMS Pop-ups, you\'ll not get a pop-up when receiving message.</string>
     <string name="message_box_disable_successfully">SMS Pop-ups disabled</string>
+    <string name="message_box_unread">UNREAD</string>
+    <string name="message_box_open">OPEN</string>
+    <string name="message_box_click_to_view">Click to View</string>
+    <string name="message_box_delete_alert_description">Delete the messages?</string>
+    <string name="message_box_mark_as_unread">Marked as unread</string>
+    <string name="message_box_send_successfully_toast">Sent successfully</string>
+    <string name="message_box_send_failed_toast">Failed to send</string>
+    <string name="message_box_indicator">%1$d \/ %2$d</string>
+
+    <string name="privacy_mode_settings">Privacy Mode</string>
+    <string name="privacy_mode_disable">None</string>
+    <string name="privacy_mode_hide_message_only">Hide message only</string>
+    <string name="privacy_mode_hide_contact_and_message">Hide contact and message</string>
+    <string name="privacy_mode_show_messages">SHOW MESSAGES</string>
+    <string name="privacy_mode_conversation_name">****</string>
+    <string name="privacy_mode_open_button_text">OPEN</string>
 
     <string name="menu_privacy_box">Private Box</string>
     <string name="menu_privacy_box_coming">Coming soon in a few days</string>
-
+    
     <string name="customize_guide_title">Customization is here!</string>
     <string name="signature">Signature</string>
 
@@ -1095,6 +1119,7 @@
     <string name="welcome_viewpager_item_body_1">Decorate your chat the way you like.</string>
     <string name="welcome_viewpager_item_body_2">Come and try a bunch of great features.</string>
     <string name="welcome_set_as_default_title">To make Color SMS work properly with cool features, it needs to be the default SMS app.</string>
+
     <string name="action_pin">Pin to Top</string>
     <string name="reset_password">Reset Password</string>
     <string name="set_gesture_sub_prompt">Connect at least 4 dots</string>
@@ -1136,4 +1161,8 @@
         <item quantity="other">%1$d unread messages</item>
     </plurals>
     <string name="notification_sender_in_private_box">Private Contact</string>
+
+    <string name="welcome_choose_theme_title">Choose a Theme You Like</string>
+    <string name="welcome_choose_theme_current">Current</string>
+    <string name="apply_theme_success">Apply Success</string>
 </resources>

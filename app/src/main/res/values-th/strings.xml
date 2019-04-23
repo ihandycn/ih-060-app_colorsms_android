@@ -601,6 +601,13 @@
 
 
 	<string name="set_as_default_dialog_title_user_present">กำหนด Color SMS เป็นค่าเริ่มต้น</string>
+    
+    <string name="message_box_unread">ไม่ได้อ่าน</string>
+    <string name="message_box_send_successfully_toast">ส่งสำเร็จ</string>
+    <string name="message_box_send_failed_toast">ส่งไม่สำเร็จ</string>
+    <string name="message_box_delete_alert_description">ลบข้อความหรือไม่</string>
+    <string name="message_box_mark_as_unread">ทำเครื่องหมายว่าไม่ได้อ่าน</string>
+    <string name="message_box_open">เปิด</string>
 
 
 	<string name="welcome_viewpager_item_body_0">โดดเด่นขึ้นมากลางหมู่โซเชียล!</string>
@@ -609,5 +616,13 @@
 	<string name="welcome_viewpager_item_title_2">คุณสมบัติเพิ่มเติม</string>
 	<string name="welcome_viewpager_item_body_2">เข้ามาลองใช้คุณสมบัติดี ๆ ที่มีมากมายเหล่านี้สิ</string>
 	<string name="welcome_set_as_default_title">กรุณาตั้งค่า Color SMS เป็นแอป SMS ค่าเริ่มต้น ซึ่งจำเป็นในการรับส่ง SMS</string>
+
+
+	<string name="menu_theme">ธีม</string>
+	<string name="welcome_choose_theme_title">เลือกธีมที่คุณต้องการ</string>
+	<string name="welcome_choose_theme_current">ปัจจุบัน</string>
+	<string name="setting_reset_customization_title">รีเซ็ตรายการกำหนดเอง</string>
+	<string name="setting_reset_customization_summary">ลบรายการกำหนดเองในการสนทนานี้</string>
+	<string name="action_pin">ปักหมุดบนสุด</string>
 
 </resources>

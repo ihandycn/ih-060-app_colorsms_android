@@ -34,6 +34,9 @@ import com.android.messaging.privatebox.PrivateMessageManager;
 import com.android.messaging.sms.MmsUtils;
 import com.android.messaging.util.LogUtil;
 import com.ihs.app.framework.HSApplication;
+import com.ihs.commons.utils.HSLog;
+
+import java.util.ArrayList;
 
 /**
  * Action used to delete a single message.
@@ -46,11 +49,28 @@ public class DeleteMessageAction extends Action implements Parcelable {
         action.start();
     }
 
+    // delete all messages received after timestamp from sendid
+    public static void deleteMessage(final String conversationId, final String senderId, final long timestamp) {
+        final DeleteMessageAction action = new DeleteMessageAction(conversationId, senderId, timestamp);
+        action.start();
+    }
+
     private static final String KEY_MESSAGE_ID = "message_id";
+
+    private static final String KEY_CONVERSATION_ID = "conversation_id";
+    private static final String KEY_PARTICIPANT_ID = "participant_id";
+    private static final String KEY_TIMESTAMP = "timestamp";
 
     private DeleteMessageAction(final String messageId) {
         super();
         actionParameters.putString(KEY_MESSAGE_ID, messageId);
+    }
+
+    private DeleteMessageAction(final String conversationId, final String senderId, final long timestamp) {
+        super();
+        actionParameters.putString(KEY_CONVERSATION_ID, conversationId);
+        actionParameters.putString(KEY_PARTICIPANT_ID, senderId);
+        actionParameters.putLong(KEY_TIMESTAMP, timestamp);
     }
 
     // Doing this work in the background so that we're not competing with sync
@@ -122,6 +142,46 @@ public class DeleteMessageAction extends Action implements Parcelable {
             }
         }
         return null;
+    }
+
+    @Override
+    protected Object processBackgroundResponse(Bundle response) {
+
+        final DatabaseWrapper db = DataModel.get().getDatabase();
+        final String conversationId = actionParameters.getString(KEY_CONVERSATION_ID);
+        final String participantId = actionParameters.getString(KEY_PARTICIPANT_ID);
+        final long timeStamp = actionParameters.getLong(KEY_TIMESTAMP);
+
+         if (!TextUtils.isEmpty(conversationId)) {
+
+            final ArrayList<MessageData> messages = BugleDatabaseOperations.readMessageDatas(db, conversationId, participantId, timeStamp);
+
+            HSLog.d(TAG, "conversationId = " + conversationId +
+                    "senderId = " + participantId +
+                    "timestamp = " + timeStamp);
+
+            if (!messages.isEmpty()) {
+                for (MessageData messageData : messages) {
+                    int count = BugleDatabaseOperations.deleteMessage(db, messageData.getMessageId());
+                    HSLog.d(TAG, "delete count" + count) ;
+
+                    final Uri messageUri = messageData.getSmsMessageUri();
+
+                    HSLog.d(TAG, "delete message Uri = " + messageUri) ;
+
+                    if (messageUri != null) {
+                        MmsUtils.deleteMessage(messageUri);
+                    }
+                }
+                MessagingContentProvider.notifyMessagesChanged(conversationId);
+                // We may have changed the conversation list
+                MessagingContentProvider.notifyConversationListChanged();
+            } else {
+                HSLog.d(TAG, "destination messages empty");
+            }
+        }
+
+        return super.processBackgroundResponse(response);
     }
 
     /**

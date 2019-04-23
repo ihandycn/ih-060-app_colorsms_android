@@ -33,7 +33,7 @@
             android:layout_marginTop="8dp"
             android:orientation="vertical">
 
-            <com.superapps.view.TypefacedTextView
+            <com.superapps.view.MessagesTextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="6dp"
@@ -46,6 +46,28 @@
                 android:textSize="14sp"
                 app:typeface="@string/custom_font_medium" />
 
+            <RelativeLayout
+                android:id="@+id/navigation_item_theme"
+                style="@style/DrawerMenuItem">
+
+                <android.support.v7.widget.AppCompatImageView
+                    style="@style/DrawerMenuIcon"
+                    app:srcCompat="@drawable/ic_menu_theme" />
+
+                <com.superapps.view.MessagesTextView
+                    style="@style/DrawerMenuTitle"
+                    android:includeFontPadding="false"
+                    android:text="@string/menu_theme"
+                    app:typeface="@string/custom_font_medium" />
+
+                <com.superapps.view.MessagesTextView
+                    android:id="@+id/navigation_item_theme_new_text"
+                    style="@style/DrawerMenuNewMark"
+                    app:textAllCaps="true"
+                    app:typeface="@string/custom_font_bold" />
+            </RelativeLayout>
+
+
             <!-- Item Theme Color -->
             <RelativeLayout
                 android:id="@+id/navigation_item_theme_color"
@@ -53,16 +75,16 @@
 
                 <android.support.v7.widget.AppCompatImageView
                     style="@style/DrawerMenuIcon"
-                    app:srcCompat="@drawable/ic_menu_theme" />
+                    app:srcCompat="@drawable/ic_menu_theme_color" />
 
-                <com.superapps.view.TypefacedTextView
+                <com.superapps.view.MessagesTextView
                     style="@style/DrawerMenuTitle"
                     android:includeFontPadding="false"
                     android:text="@string/menu_theme_color"
                     app:typeface="@string/custom_font_medium" />
 
-                <com.superapps.view.TypefacedTextView
-                    android:id="@+id/navigation_item_theme_new_text"
+                <com.superapps.view.MessagesTextView
+                    android:id="@+id/navigation_item_theme_color_new_text"
                     style="@style/DrawerMenuNewMark"
                     app:textAllCaps="true"
                     app:typeface="@string/custom_font_bold" />
@@ -77,13 +99,13 @@
                     style="@style/DrawerMenuIcon"
                     app:srcCompat="@drawable/ic_menu_bubble" />
 
-                <com.superapps.view.TypefacedTextView
+                <com.superapps.view.MessagesTextView
                     style="@style/DrawerMenuTitle"
                     android:includeFontPadding="false"
                     android:text="@string/menu_bubble"
                     app:typeface="@string/custom_font_medium" />
 
-                <com.superapps.view.TypefacedTextView
+                <com.superapps.view.MessagesTextView
                     android:id="@+id/navigation_item_bubble_new_text"
                     style="@style/DrawerMenuNewMark"
                     app:textAllCaps="true"
@@ -99,13 +121,13 @@
                     style="@style/DrawerMenuIcon"
                     app:srcCompat="@drawable/ic_menu_chat" />
 
-                <com.superapps.view.TypefacedTextView
+                <com.superapps.view.MessagesTextView
                     style="@style/DrawerMenuTitle"
                     android:includeFontPadding="false"
                     android:text="@string/menu_chat_background"
                     app:typeface="@string/custom_font_medium" />
 
-                <com.superapps.view.TypefacedTextView
+                <com.superapps.view.MessagesTextView
                     android:id="@+id/navigation_item_background_new_text"
                     style="@style/DrawerMenuNewMark"
                     app:textAllCaps="true"
@@ -121,13 +143,13 @@
                     style="@style/DrawerMenuIcon"
                     app:srcCompat="@drawable/ic_menu_font" />
 
-                <com.superapps.view.TypefacedTextView
+                <com.superapps.view.MessagesTextView
                     style="@style/DrawerMenuTitle"
                     android:includeFontPadding="false"
                     android:text="@string/menu_change_font"
                     app:typeface="@string/custom_font_medium" />
 
-                <com.superapps.view.TypefacedTextView
+                <com.superapps.view.MessagesTextView
                     android:id="@+id/navigation_item_font_new_text"
                     style="@style/DrawerMenuNewMark"
                     app:textAllCaps="true"
@@ -147,7 +169,7 @@
                     style="@style/DrawerMenuIcon"
                     app:srcCompat="@drawable/menu_icon_private_box" />
 
-                <com.superapps.view.TypefacedTextView
+                <com.superapps.view.MessagesTextView
                     style="@style/DrawerMenuTitle"
                     android:includeFontPadding="false"
                     android:text="@string/menu_privacy_box"
@@ -163,7 +185,7 @@
                     style="@style/DrawerMenuIcon"
                     app:srcCompat="@drawable/ic_menu_setting" />
 
-                <com.superapps.view.TypefacedTextView
+                <com.superapps.view.MessagesTextView
                     style="@style/DrawerMenuTitle"
                     android:includeFontPadding="false"
                     android:text="@string/menu_setting"
@@ -179,7 +201,7 @@
                     style="@style/DrawerMenuIcon"
                     app:srcCompat="@drawable/ic_menu_rate" />
 
-                <com.superapps.view.TypefacedTextView
+                <com.superapps.view.MessagesTextView
                     style="@style/DrawerMenuTitle"
                     android:includeFontPadding="false"
                     android:text="@string/menu_rate"

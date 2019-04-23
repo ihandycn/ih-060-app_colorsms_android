@@ -92,6 +92,7 @@ import com.superapps.util.Threads;
 
 import net.appcloudbox.AcbAds;
 import net.appcloudbox.ads.expressad.AcbExpressAdManager;
+import net.appcloudbox.ads.interstitialad.AcbInterstitialAdManager;
 import net.appcloudbox.common.utils.AcbApplicationHelper;
 
 import java.io.File;
@@ -191,6 +192,7 @@ public class BugleApplication extends HSApplication implements UncaughtException
         }
         AcbAds.getInstance().initializeFromGoldenEye(this);
         AcbExpressAdManager.getInstance().activePlacementInProcess(AdPlacement.AD_BANNER);
+        AcbInterstitialAdManager.getInstance().activePlacementInProcess(AdPlacement.AD_WIRE);
     }
 
     private void onMainProcessApplicationCreate() {

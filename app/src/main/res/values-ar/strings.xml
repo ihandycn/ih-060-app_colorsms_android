@@ -701,6 +701,13 @@
     <string name="sms_notification_channel">SMS Notification</string>
     <string name="sms_notification_channel_description">Show a notification when received SMS</string>
     <string name="menu_rate">5 Star Rating</string>
+    
+    <string name="message_box_unread">غير مقروءة</string>
+    <string name="message_box_send_successfully_toast">أُرسلت بنجاح</string>
+    <string name="message_box_send_failed_toast">فشل الإرسال</string>
+    <string name="message_box_delete_alert_description">حذف الرسائل؟</string>
+    <string name="message_box_mark_as_unread">تعيين كغير مقوءة</string>
+    <string name="message_box_open">افتح</string>
 
 
 	<string name="welcome_viewpager_item_body_0">تميّز بين أصدقائك!</string>
@@ -709,5 +716,13 @@
 	<string name="welcome_viewpager_item_title_2">ميزات عديدة</string>
 	<string name="welcome_viewpager_item_body_2">تعال وجرّب مجموعة رائعة من الميزات.</string>
 	<string name="welcome_set_as_default_title">عيّن Color SMS كتطبيق افتراضي للرسائل القصيرة، هذا الإجراء مطلوب لإرسال واستقبال الرسائل القصيرة.</string>
+
+
+	<string name="menu_theme">التصميم</string>
+	<string name="welcome_choose_theme_title">اختر التصميم الذي يعجبك</string>
+	<string name="welcome_choose_theme_current">الحالي</string>
+	<string name="setting_reset_customization_title">إعادة ضبط التخصيص</string>
+	<string name="setting_reset_customization_summary">مسح التخصيص من هذه الدردشة.</string>
+	<string name="action_pin">تثبيت في الأعلى</string>
 
 </resources>

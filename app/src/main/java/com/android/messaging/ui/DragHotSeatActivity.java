@@ -1,7 +1,6 @@
 package com.android.messaging.ui;
 
 import android.os.Bundle;
-import android.view.View;
 import android.view.ViewGroup;
 
 import com.airbnb.lottie.LottieAnimationView;
@@ -10,7 +9,7 @@ import com.android.messaging.util.BugleAnalytics;
 import com.ihs.app.framework.activity.HSAppCompatActivity;
 import com.superapps.util.BackgroundDrawables;
 import com.superapps.util.Dimensions;
-import com.superapps.view.TypefacedTextView;
+import com.superapps.view.MessagesTextView;
 
 public class DragHotSeatActivity extends HSAppCompatActivity {
 
@@ -22,7 +21,7 @@ public class DragHotSeatActivity extends HSAppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_drag_hotseat);
         BugleAnalytics.logEvent("SMS_DockGuide_Show", true);
-        TypefacedTextView gotIt = findViewById(R.id.drag_hotseat_btn);
+        MessagesTextView gotIt = findViewById(R.id.drag_hotseat_btn);
         gotIt.setBackground(BackgroundDrawables.createBackgroundDrawable(getResources().getColor(R.color.primary_color), getResources().getDimensionPixelSize(R.dimen.dialog_btn_corner_radius), true));
         gotIt.setOnClickListener(v -> {
             finish();

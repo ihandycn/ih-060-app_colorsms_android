@@ -598,6 +598,13 @@
 
 
 	<string name="set_as_default_dialog_title_user_present">Đặt Color SMS làm mặc định</string>
+    
+    <string name="message_box_unread">CHƯA ĐỌC</string>
+    <string name="message_box_send_successfully_toast">Đã gửi thành công</string>
+    <string name="message_box_send_failed_toast">Gửi không thành công</string>
+    <string name="message_box_delete_alert_description">Xóa các tin nhắn?</string>
+    <string name="message_box_mark_as_unread">Đã đánh dấu là chưa đọc</string>
+    <string name="message_box_open">MỞ</string>
 
 
 	<string name="welcome_viewpager_item_body_0">Nổi bật trong nhóm trò chuyện của bạn!</string>
@@ -606,5 +613,13 @@
 	<string name="welcome_viewpager_item_title_2">Thêm tính năng</string>
 	<string name="welcome_viewpager_item_body_2">Hãy đến và thử một loạt các tính năng tuyệt vời.</string>
 	<string name="welcome_set_as_default_title">Vui lòng đặt Color SMS làm ứng dụng SMS mặc định, điều này là bắt buộc để có thể gửi/nhận SMS.</string>
+
+
+	<string name="menu_theme">Chủ đề</string>
+	<string name="welcome_choose_theme_title">Chọn một chủ đề bạn thích</string>
+	<string name="welcome_choose_theme_current">HIỆN TẠI</string>
+	<string name="setting_reset_customization_title">Đặt lại Tùy chỉnh</string>
+	<string name="setting_reset_customization_summary">Xóa các tùy chỉnh trong cuộc trò chuyện này.</string>
+	<string name="action_pin">Ghim vào Trên cùng</string>
 
 </resources>

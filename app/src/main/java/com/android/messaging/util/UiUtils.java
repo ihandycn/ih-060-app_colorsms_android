@@ -28,6 +28,7 @@ import android.graphics.Rect;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
+import android.support.annotation.ColorInt;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.app.ActionBar;
@@ -58,10 +59,13 @@ import com.android.messaging.ui.SnackBar.Placement;
 import com.android.messaging.ui.SnackBarInteraction;
 import com.android.messaging.ui.SnackBarManager;
 import com.android.messaging.ui.customize.PrimaryColors;
+import com.superapps.util.Preferences;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
+
+import static com.android.messaging.util.BuglePrefsKeys.PREFS_KEY_KEYBOARD_HEIGHT;
 
 public class UiUtils {
     /**
@@ -514,6 +518,14 @@ public class UiUtils {
         imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
     }
 
+    public static int getKeyboardHeight() {
+        return BuglePrefs.getApplicationPrefs().getInt(PREFS_KEY_KEYBOARD_HEIGHT, 0);
+    }
+
+    public static void updateKeyboardHeight(int height) {
+        BuglePrefs.getApplicationPrefs().putInt(PREFS_KEY_KEYBOARD_HEIGHT, height);
+    }
+
     /**
      * Given a coordinate relative to the descendant, find the coordinate in a parent view's
      * coordinates.
@@ -565,5 +577,25 @@ public class UiUtils {
     public static void setTitleBarBackground(Toolbar toolbar, Activity activity) {
         toolbar.setBackground(new ColorDrawable(PrimaryColors.getPrimaryColor()));
         setStatusBarColor(activity, PrimaryColors.getPrimaryColorDark());
+    }
+
+    public static void setTitleBarBackground(Toolbar toolbar, Activity activity, int color) {
+        try {
+            toolbar.setBackground(new ColorDrawable(color));
+            setStatusBarColor(activity, getColorDark(color));
+
+        } catch (IllegalArgumentException e) {
+            toolbar.setBackground(new ColorDrawable(activity.getResources().getColor(R.color.action_bar_background_color)));
+            setStatusBarColor(activity, activity.getResources().getColor(R.color.action_bar_background_color));
+        }
+    }
+
+
+    @ColorInt
+    public static int getColorDark(int color) {
+        final int blendedRed = (int) Math.floor(0.8 * Color.red(color));
+        final int blendedGreen = (int) Math.floor(0.8 * Color.green(color));
+        final int blendedBlue = (int) Math.floor(0.8 * Color.blue(color));
+        return Color.rgb(blendedRed, blendedGreen, blendedBlue);
     }
 }

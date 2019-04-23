@@ -104,7 +104,7 @@ public class BackgroundWorkerThread {
             final boolean retry = false;
             LogUtil.e(TAG, "Error in background worker", exception);
             if (!(exception instanceof DataModelException)) {
-                Assert.fail("Unexpected error in background worker - abort");
+                Assert.fail(exception.getMessage());
             }
             if (retry) {
                 action.markBackgroundWorkQueued();

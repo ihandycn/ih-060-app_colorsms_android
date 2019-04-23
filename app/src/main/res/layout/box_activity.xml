@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/root_view"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#cc000000">
+
+
+    <com.superapps.view.ViewPagerFixed
+        android:id="@+id/message_box_conversation_pager"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/keyboard_guideline"/>
+
+
+    <com.android.messaging.ui.messagebox.MessageBoxIndicatorView
+        android:id="@+id/multi_conversation_indicator_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginTop="285dp"
+        app:layout_constraintBottom_toBottomOf="@+id/message_box_conversation_pager"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/message_box_conversation_pager" />
+
+
+    <include
+        android:id="@+id/emoji_picker_container"
+        layout="@layout/emoji_page_item_layout"
+        android:layout_width="match_parent"
+        android:layout_height="197dp"
+        android:layout_gravity="bottom"
+        android:background="@color/white"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:visibility="gone" />
+
+    <android.support.constraint.Guideline
+        android:id="@+id/keyboard_guideline"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:orientation="horizontal"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintGuide_end="0dp" />
+
+
+</android.support.constraint.ConstraintLayout>

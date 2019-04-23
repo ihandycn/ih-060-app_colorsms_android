@@ -90,9 +90,10 @@ import com.android.messaging.util.PhoneUtils;
 import com.android.messaging.util.RingtoneUtil;
 import com.android.messaging.util.ThreadUtil;
 import com.android.messaging.util.UriUtil;
-import com.ihs.app.framework.HSApplication;
+import com.ihs.commons.utils.HSLog;
 import com.superapps.util.Notifications;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
@@ -650,33 +651,54 @@ public class BugleNotifications {
         boolean isPrivateConversation = PrivateMessageManager.getInstance().isPrivateConversationId(conversationId);
         if (MessageBoxSettings.shouldPopUp() && !isPrivateConversation) {
             popUpMessageBox(state, conversationId);
+        } else {
+            HSLog.d(TAG, "should not pop up messagebox");
         }
         if (!isPrivateConversation || PrivateSettingManager.isNotificationEnable()) {
             processAndSend(state, silent, softSound);
             BugleAnalytics.logEvent("SMS_Notifications_Pushed", true);
         }
-
     }
 
     private static void popUpMessageBox(final NotificationState state, final String conversationId) {
         if (state instanceof MessageNotificationState) {
             for (ConversationLineInfo convInfo : ((MessageNotificationState) state).mConvList.mConvInfos) {
+
                 if (TextUtils.equals(convInfo.mConversationId, conversationId)) {
                     MessageNotificationState.MessageLineInfo messageLineInfo = convInfo.getLatestMessageLineInfo();
-                    if (messageLineInfo == null || TextUtils.isEmpty(messageLineInfo.mText)) {
+                    if (messageLineInfo == null) {
                         return;
+                    }
+                    final DatabaseWrapper db = DataModel.get().getDatabase();
+
+                    HSLog.d(TAG, "participantId = " + convInfo.mParticipantId);
+                    ArrayList<String> recipients = BugleDatabaseOperations.getRecipientsForConversation(db, convInfo.mConversationId);
+
+                   String attachmentType = state.getAttachmentType();
+                   boolean isMms = false;
+
+                    if (TextUtils.isEmpty(messageLineInfo.mText)
+                            || ContentType.isImageType(attachmentType)
+                            || ContentType.isVideoType(attachmentType)
+                            || ContentType.isAudioType(attachmentType)) {
+                        isMms = true;
                     }
 
                     UIIntents.get().launchMessageBoxActivity(Factory.get().getApplicationContext(),
                             new MessageBoxItemData(conversationId,
                                     convInfo.mSelfParticipantId,
-                                    convInfo.mAvatarUri != null ? convInfo.mAvatarUri.toString() : "",
+                                    convInfo.mParticipantId,
+                                    // only if there is only one recipient in this conversation, we can make a call
+                                    recipients.size() == 1 ? recipients.get(0) : "",
                                     convInfo.mGroupConversationName,
-                                    messageLineInfo.mText.toString())
-                    );
+                                    isMms ? "" : messageLineInfo.mText.toString(),
+                                    convInfo.mReceivedTimestamp)
+                            );
                     break;
                 }
             }
+        } else {
+            HSLog.d(TAG, "message notification state is not right");
         }
     }
 

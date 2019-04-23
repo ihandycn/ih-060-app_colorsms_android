@@ -34,7 +34,7 @@ import com.superapps.util.BackgroundDrawables;
 import com.superapps.util.Dimensions;
 import com.superapps.util.Navigations;
 import com.superapps.util.Preferences;
-import com.superapps.view.TypefacedTextView;
+import com.superapps.view.MessagesTextView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -98,11 +98,11 @@ public class WelcomeStartActivity extends AppCompatActivity implements View.OnCl
         findViewById(R.id.welcome_start_button).setBackgroundDrawable(
                 BackgroundDrawables.createBackgroundDrawable(getResources().getColor(R.color.welcome_button_dark_green), Dimensions.pxFromDp(6.7f), true));
 
-        TypefacedTextView serviceText = findViewById(R.id.welcome_start_service);
+        MessagesTextView serviceText = findViewById(R.id.welcome_start_service);
         serviceText.getPaint().setFlags(Paint.UNDERLINE_TEXT_FLAG);
         serviceText.setOnClickListener(this);
 
-        TypefacedTextView policyText = findViewById(R.id.welcome_start_policy);
+        MessagesTextView policyText = findViewById(R.id.welcome_start_policy);
         policyText.getPaint().setFlags(Paint.UNDERLINE_TEXT_FLAG);
         policyText.setOnClickListener(this);
 
@@ -116,7 +116,7 @@ public class WelcomeStartActivity extends AppCompatActivity implements View.OnCl
     @Override
     public void onStart() {
         super.onStart();
-        BugleAnalytics.logEvent("Start_WelcomePage_Show", true);
+        BugleAnalytics.logEvent("Start_WelcomePage_Show", true, true);
     }
 
     @Override protected void onResume() {
@@ -229,7 +229,7 @@ public class WelcomeStartActivity extends AppCompatActivity implements View.OnCl
                         mForwardLottieView.postDelayed(() -> playForwardDropAnimation(0), 200);
 
                         if (!mIsActivityPaused) {
-                            BugleAnalytics.logEvent("Start_DetailPage_Show", true);
+                            BugleAnalytics.logEvent("Start_DetailPage_Show", true, true);
                         }
                     });
         } catch (RejectedExecutionException e) {
@@ -400,7 +400,7 @@ public class WelcomeStartActivity extends AppCompatActivity implements View.OnCl
             } else {
                 mAutoPlayViewPagerSlideAnimator.cancel();
             }
-        }, 1800);
+        }, 1500);
     }
 
     private void cancelForwardAnimationLoadTask() {
@@ -421,7 +421,7 @@ public class WelcomeStartActivity extends AppCompatActivity implements View.OnCl
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.welcome_start_button:
-                BugleAnalytics.logEvent("Start_DetailPage_Click", true, "Page", String.valueOf(mViewPagerCurrentPosition));
+                BugleAnalytics.logEvent("Start_DetailPage_Click", true, true, "Page", String.valueOf(mViewPagerCurrentPosition));
                 Preferences.getDefault().putBoolean(PREF_KEY_START_BUTTON_CLICKED, true);
                 final Intent intent = UIIntents.get().getChangeDefaultSmsAppIntent(WelcomeStartActivity.this);
                 startActivityForResult(intent, REQUEST_SET_DEFAULT_SMS_APP);
@@ -505,11 +505,11 @@ public class WelcomeStartActivity extends AppCompatActivity implements View.OnCl
             if (PhoneUtils.getDefault().isDefaultSmsApp()) {
                 if (OsUtil.hasRequiredPermissions()) {
                     Factory.get().onDefaultSmsSetAndPermissionsGranted();
-                    UIIntents.get().launchConversationListActivity(this);
+                    Navigations.startActivitySafely(this, new Intent(this, WelcomeChooseThemeActivity.class));
                 } else {
                     UIIntents.get().launchWelcomePermissionActivity(this);
                 }
-                BugleAnalytics.logEvent("Start_SetAsDefault_Success", true, "step", "detail page");
+                BugleAnalytics.logEvent("Start_SetAsDefault_Success", true, true, "step", "detail page");
                 finish();
             } else {
                 Intent intent = new Intent(WelcomeStartActivity.this, WelcomeSetAsDefaultActivity.class);

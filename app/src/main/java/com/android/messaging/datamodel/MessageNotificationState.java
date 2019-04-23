@@ -217,6 +217,9 @@ public abstract class MessageNotificationState extends NotificationState {
         // Self participant id.
         final String mSelfParticipantId;
 
+        // participant id.
+        final String mParticipantId;
+
         // List of individual line notifications to be parsed later.
         final List<NotificationLineInfo> mLineInfos;
 
@@ -252,6 +255,7 @@ public abstract class MessageNotificationState extends NotificationState {
                                     final boolean includeEmailAddress,
                                     final long receivedTimestamp,
                                     final String selfParticipantId,
+                                    final String participantId,
                                     final String ringtoneUri,
                                     final boolean notificationEnabled,
                                     final boolean notificationVibrateChanged,
@@ -266,6 +270,7 @@ public abstract class MessageNotificationState extends NotificationState {
             mIncludeEmailAddress = includeEmailAddress;
             mReceivedTimestamp = receivedTimestamp;
             mSelfParticipantId = selfParticipantId;
+            mParticipantId = participantId;
             mLineInfos = new ArrayList<NotificationLineInfo>();
             mTotalMessageCount = 0;
             mRingtoneUri = ringtoneUri;
@@ -944,6 +949,7 @@ public abstract class MessageNotificationState extends NotificationState {
                                 convData.getIncludeEmailAddress(),
                                 convMessageData.getReceivedTimeStamp(),
                                 convData.getSelfId(),
+                                convMessageData.getParticipantId(),
                                 convData.getNotificationSoundUri(),
                                 convData.getNotificationEnabled(),
                                 convData.isNotificationVibrateChanged(),

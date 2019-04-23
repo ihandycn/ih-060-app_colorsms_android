@@ -28,7 +28,7 @@
             android:paddingStart="24.7dp"
             android:paddingTop="23.3dp">
 
-            <com.superapps.view.TypefacedTextView
+            <com.superapps.view.MessagesTextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="3dp"
@@ -82,7 +82,7 @@
                 android:layout_marginTop="27.7dp"
                 android:orientation="horizontal">
 
-                <com.superapps.view.TypefacedTextView
+                <com.superapps.view.MessagesTextView
                     android:id="@+id/signature_cancel_btn"
                     android:layout_width="0dp"
                     android:layout_height="41.3dp"
@@ -96,7 +96,7 @@
                     app:textAllCaps="true"
                     app:typeface="@string/custom_font_semibold" />
 
-                <com.superapps.view.TypefacedTextView
+                <com.superapps.view.MessagesTextView
                     android:id="@+id/signature_save_btn"
                     android:layout_width="0dp"
                     android:layout_height="41.3dp"

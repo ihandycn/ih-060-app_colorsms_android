@@ -279,7 +279,8 @@ public abstract class AbstractConversationListActivity extends BugleActionBarAct
                     this, conversationId, null,
                     sceneTransitionAnimationOptions,
                     hasCustomTransitions);
-            BugleAnalytics.logEvent("SMS_Messages_Message_Click", true, "Type", conversationListItemData.isPinned() ? "pin" : "unpin");
+            BugleAnalytics.logEvent("SMS_Messages_Message_Click", true, true,
+                    "Type", conversationListItemData.isPinned() ? "pin" : "unpin");
         }
     }
 

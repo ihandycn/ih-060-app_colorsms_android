@@ -14,14 +14,11 @@ import com.android.messaging.R;
 import com.android.messaging.glide.GlideApp;
 import com.android.messaging.ui.emoji.utils.EmojiConfig;
 import com.android.messaging.ui.emoji.utils.EmojiManager;
-import com.android.messaging.util.BugleAnalytics;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
-import com.ihs.commons.notificationcenter.HSGlobalNotificationCenter;
-import com.ihs.commons.utils.HSBundle;
 import com.superapps.util.BackgroundDrawables;
 import com.superapps.util.Dimensions;
 import com.superapps.util.Threads;
-import com.superapps.view.TypefacedTextView;
+import com.superapps.view.MessagesTextView;
 
 import java.util.List;
 
@@ -102,7 +99,7 @@ public class EmojiLottieDetailAdapter extends BaseStickerItemRecyclerAdapter {
         }
     }
 
-    private void setupImageAndText(ImageView image, TypefacedTextView text) {
+    private void setupImageAndText(ImageView image, MessagesTextView text) {
         GlideApp.with(image)
                 .asBitmap()
                 .load(R.drawable.icon_emoji_banner)
@@ -113,7 +110,7 @@ public class EmojiLottieDetailAdapter extends BaseStickerItemRecyclerAdapter {
         text.setText("Magic Emoji");
     }
 
-    private void setupGetButton(TypefacedTextView getBtn) {
+    private void setupGetButton(MessagesTextView getBtn) {
         Resources res = getBtn.getResources();
         getBtn.setText(res.getString(R.string.emoji_added));
         getBtn.setTextColor(0xFFFFFFFF);
@@ -136,8 +133,8 @@ public class EmojiLottieDetailAdapter extends BaseStickerItemRecyclerAdapter {
 
     private static class HeaderViewHolder extends RecyclerView.ViewHolder {
         ImageView image;
-        TypefacedTextView text;
-        TypefacedTextView button;
+        MessagesTextView text;
+        MessagesTextView button;
 
         HeaderViewHolder(View itemView) {
             super(itemView);

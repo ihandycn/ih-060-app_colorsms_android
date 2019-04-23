@@ -52,11 +52,8 @@ public class ChangeFontActivity extends BaseActivity implements LevelSeekBar.OnL
 
         UiUtils.setTitleBarBackground(toolbar, this);
 
-        String bgPath = WallpaperManager.getWallpaperPathByThreadId(null);
-        if (!TextUtils.isEmpty(bgPath)) {
-            ((ImageView) findViewById(R.id.change_font_bg)).setImageURI(Uri.fromFile(new File(bgPath)));
-            findViewById(R.id.divider).setVisibility(View.INVISIBLE);
-        }
+        ImageView background = findViewById(R.id.change_font_bg);
+        WallpaperManager.setWallPaperOnView(background, "");
 
         CustomMessagePreviewView customMessagePreviewView = findViewById(R.id.message_preview_view);
         customMessagePreviewView.setIsFontPreview();
@@ -81,7 +78,7 @@ public class ChangeFontActivity extends BaseActivity implements LevelSeekBar.OnL
             new ChooseFontDialog(ChangeFontActivity.this).show();
             BugleAnalytics.logEvent("Customize_TextFont_Click", true, "request", "success");
         });
-        BugleAnalytics.logEvent("Customize_Font_Show", true);
+        BugleAnalytics.logEvent("Customize_Font_Show", true, true);
     }
 
     @Override
@@ -108,7 +105,7 @@ public class ChangeFontActivity extends BaseActivity implements LevelSeekBar.OnL
                 default:
                     size = "Default";
             }
-            BugleAnalytics.logEvent("Customize_TextSize_Change", true, "size", size);
+            BugleAnalytics.logEvent("Customize_TextSize_Change", true, true, "size", size);
         }
     }
 

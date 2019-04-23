@@ -137,6 +137,19 @@ public class ViewPagerTabs extends HorizontalScrollView implements ViewPager.OnP
         mTabStrip.setUnderlineThickness(thickness);
     }
 
+    public void updatePrimaryColor() {
+        int childCount = mTabStrip.getChildCount();
+        ColorStateList textColor = getTextColor();
+
+        for (int i = 0; i < childCount; i++) {
+            View child = mTabStrip.getChildAt(i);
+            if (child instanceof TextView) {
+                ((TextView) child).setTextColor(textColor);
+            }
+        }
+        mTabStrip.updateUnderLinePaintColor();
+    }
+
     private void addTabs(PagerAdapter adapter) {
         mTabStrip.removeAllViews();
 

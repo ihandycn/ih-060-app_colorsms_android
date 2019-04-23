@@ -2,6 +2,7 @@ package com.android.messaging.ui.messagebox;
 
 import android.support.annotation.NonNull;
 import android.support.v4.view.PagerAdapter;
+import android.support.v4.view.ViewPager;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -9,7 +10,7 @@ import java.util.ArrayList;
 
 public class DynamicalPagerAdapter extends PagerAdapter {
     // This holds all the currently displayable views, in order from left to right.
-    private ArrayList<MessageBoxConversationItemView> views = new ArrayList<>();
+    private ArrayList<View> views = new ArrayList<>(3);
 
     //-----------------------------------------------------------------------------
     // Used by ViewPager.  "Object" represents the page; tell the ViewPager where the
@@ -32,7 +33,7 @@ public class DynamicalPagerAdapter extends PagerAdapter {
     @NonNull
     @Override
     public Object instantiateItem(@NonNull ViewGroup container, int position) {
-        MessageBoxConversationItemView v = views.get(position);
+        View v = views.get(position);
         container.addView(v);
         return v;
     }
@@ -67,7 +68,7 @@ public class DynamicalPagerAdapter extends PagerAdapter {
     // Add "view" to right end of "views".
     // Returns the position of the new view.
     // The app should call this to add pages; not used by ViewPager.
-    public int addView(MessageBoxConversationItemView v) {
+    public int addView(View v) {
         return addView(v, views.size());
     }
 
@@ -75,20 +76,42 @@ public class DynamicalPagerAdapter extends PagerAdapter {
     // Add "view" at "position" to "views".
     // Returns position of new view.
     // The app should call this to add pages; not used by ViewPager.
-    public int addView(MessageBoxConversationItemView v, int position) {
+    public int addView(View v, int position) {
         views.add(position, v);
         return position;
     }
 
 
-    public ArrayList<MessageBoxConversationItemView> getViews() {
+    public ArrayList<View> getViews() {
         return views;
     }
+
+    public int removeView(ViewPager pager, View v) {
+        return removeView(pager, views.indexOf(v));
+    }
+
+    //-----------------------------------------------------------------------------
+    // Removes the "view" at "position" from "views".
+    // Retuns position of removed view.
+    // The app should call this to remove pages; not used by ViewPager.
+    public int removeView(ViewPager pager, int position) {
+        // ViewPager doesn't have a delete method; the closest is to set the adapter
+        // again.  When doing so, it deletes all its views.  Then we can delete the view
+        // from from the adapter and finally set the adapter to the pager again.  Note
+        // that we set the adapter to null before removing the view from "views" - that's
+        // because while ViewPager deletes all its views, it will call destroyItem which
+        // will in turn cause a null pointer ref.
+        pager.setAdapter(null);
+        views.remove(position);
+        pager.setAdapter(this);
+        return position;
+    }
+
 
     //-----------------------------------------------------------------------------
     // Returns the "view" at "position".
     // The app should call this to retrieve a view; not used by ViewPager.
-    public MessageBoxConversationItemView getView(int position) {
+    public View getView(int position) {
         return views.get(position);
     }
 

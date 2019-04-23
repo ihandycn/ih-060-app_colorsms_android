@@ -8,8 +8,11 @@ import com.android.messaging.datamodel.DatabaseHelper;
 import com.android.messaging.datamodel.DatabaseWrapper;
 import com.android.messaging.datamodel.data.ConversationListItemData;
 import com.android.messaging.ui.conversationlist.ConversationListActivity;
+import com.android.messaging.ui.customize.AvatarBgDrawables;
+import com.android.messaging.ui.welcome.WelcomeChooseThemeActivity;
 import com.android.messaging.ui.welcome.WelcomeStartActivity;
 import com.android.messaging.util.BuglePrefs;
+import com.ihs.commons.config.HSConfig;
 import com.superapps.font.FontStyleManager;
 import com.superapps.util.Preferences;
 
@@ -43,11 +46,15 @@ public class Upgrader extends BaseUpgrader {
             addPinColumnInDB();
             Preferences.getDefault().putBoolean(WelcomeStartActivity.PREF_KEY_START_BUTTON_CLICKED,
                     !Preferences.getDefault().getBoolean("pref_key_first_launch", true));
-        } 
+        }
+        if (oldVersion < 28 && newVersion >= 28) {
+            AvatarBgDrawables.applyAvatarBg(HSConfig.optString("", "Application", "Themes", "Default", "AvatarUrl"));
+            Preferences.getDefault().putBoolean(WelcomeChooseThemeActivity.PREF_KEY_WELCOME_CHOOSE_THEME_SHOWN, true);
+        }
     }
 
     public static void addPinColumnInDB() {
-        final DatabaseWrapper db = DataModel.get().getDatabase();
+        final DatabaseWrapper db = DataModel.get().getDatabaseWithoutMainCheck();
         Cursor cursor = null;
         try {
             cursor = db.rawQuery("SELECT * FROM " + DatabaseHelper.CONVERSATIONS_TABLE + " LIMIT 0"

@@ -8,7 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.android.messaging.R;
-import com.superapps.view.TypefacedTextView;
+import com.superapps.view.MessagesTextView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -35,8 +35,8 @@ class WelcomePagerAdapter extends PagerAdapter {
         for (int i = 0; i < GUIDE_VIEWPAGER_COUNT; i++) {
             ViewGroup item = (ViewGroup) LayoutInflater.from(context)
                     .inflate(R.layout.item_welcome_guide_viewpager, null);
-            TypefacedTextView title = item.findViewById(R.id.welcome_guide_viewpager_title);
-            TypefacedTextView body = item.findViewById(R.id.welcome_guide_viewpager_body);
+            MessagesTextView title = item.findViewById(R.id.welcome_guide_viewpager_title);
+            MessagesTextView body = item.findViewById(R.id.welcome_guide_viewpager_body);
 
             title.setText(context.getResources().getString(VIEWPAGER_ITEMS_IDS_TITLE[i]));
             body.setText(context.getResources().getString(VIEWPAGER_ITEMS_IDS_BODY[i]));

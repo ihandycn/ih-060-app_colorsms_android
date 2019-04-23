@@ -28,6 +28,7 @@ import android.support.v4.view.ViewGroupCompat;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -36,6 +37,7 @@ import android.view.ViewPropertyAnimator;
 import android.widget.AbsListView;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import com.android.messaging.R;
 import com.android.messaging.ad.AdPlacement;
@@ -54,10 +56,14 @@ import com.android.messaging.ui.BugleAnimationTags;
 import com.android.messaging.ui.ListEmptyView;
 import com.android.messaging.ui.SnackBarInteraction;
 import com.android.messaging.ui.UIIntents;
+import com.android.messaging.ui.customize.ConversationColors;
 import com.android.messaging.ui.customize.PrimaryColors;
+import com.android.messaging.ui.customize.WallpaperDrawables;
 import com.android.messaging.util.AccessibilityUtil;
 import com.android.messaging.util.Assert;
+import com.android.messaging.util.AvatarUriUtil;
 import com.android.messaging.util.BugleAnalytics;
+import com.android.messaging.util.HierarchyTreeChangeListener;
 import com.android.messaging.util.ImeUtil;
 import com.android.messaging.util.LogUtil;
 import com.android.messaging.util.UiUtils;
@@ -71,6 +77,7 @@ import com.superapps.util.Dimensions;
 import com.superapps.util.IntegerBuckets;
 import com.superapps.util.Navigations;
 import com.superapps.util.Preferences;
+import com.superapps.util.Threads;
 
 import net.appcloudbox.ads.base.ContainerView.AcbContentLayout;
 import net.appcloudbox.ads.base.ContainerView.AcbNativeAdContainerView;
@@ -79,6 +86,8 @@ import net.appcloudbox.ads.expressad.AcbExpressAdView;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import static com.android.messaging.datamodel.data.ConversationListItemData.INDEX_CONVERSATION_ICON;
 
 /**
  * Shows a list of conversations.
@@ -165,7 +174,7 @@ public class ConversationListFragment extends Fragment implements ConversationLi
                 BugleAnalytics.logEvent("SMS_Messages_Show_NotOnTop", true);
             } else {
                 if (HSConfig.optBoolean(true, "Application", "SMSAd", "SMSHomepageBannerAd")) {
-                    BugleAnalytics.logEvent("SMS_Messages_BannerAd_Should_Show", true);
+                    BugleAnalytics.logEvent("SMS_Messages_BannerAd_Should_Show", true, true);
                     switchAd = false;
                     if (expressAdView != null) {
                         expressAdView.switchAd();
@@ -221,6 +230,8 @@ public class ConversationListFragment extends Fragment implements ConversationLi
         mRecyclerView = rootView.findViewById(android.R.id.list);
         mEmptyListMessageView = rootView.findViewById(R.id.no_conversations_view);
         mEmptyListMessageView.setImageHint(R.drawable.ic_oobe_conv_list);
+        ImageView conversationListBg = rootView.findViewById(R.id.conversation_list_bg);
+        conversationListBg.setImageDrawable(WallpaperDrawables.getListWallpaperBg());
         // The default behavior for default layout param generation by LinearLayoutManager is to
         // provide width and height of WRAP_CONTENT, but this is not desirable for
         // ConversationListFragment; the view in each row should be a width of MATCH_PARENT so that
@@ -258,7 +269,7 @@ public class ConversationListFragment extends Fragment implements ConversationLi
                     BugleAnalytics.logEvent("SMS_Messages_SlideUpToTop");
                     if (expressAdView != null && switchAd) {
                         expressAdView.switchAd();
-                        BugleAnalytics.logEvent("SMS_Messages_BannerAd_Should_Show", true);
+                        BugleAnalytics.logEvent("SMS_Messages_BannerAd_Should_Show", true, true);
                         switchAd = false;
                     }
                 }
@@ -310,7 +321,7 @@ public class ConversationListFragment extends Fragment implements ConversationLi
             mStartNewConversationButton.setVisibility(View.VISIBLE);
             mStartNewConversationButton.setOnClickListener(clickView -> {
                 ConversationListActivity.logFirstComeInClickEvent("create");
-                BugleAnalytics.logEvent("SMS_CreateMessage_ButtonClick", true);
+                BugleAnalytics.logEvent("SMS_CreateMessage_ButtonClick", true, true);
                 mHost.onCreateConversationClick();
             });
             mStartNewConversationButton.setOnLongClickListener(v -> {
@@ -352,7 +363,8 @@ public class ConversationListFragment extends Fragment implements ConversationLi
                 .setDescriptionId(R.id.banner_des)
         );
         expressAdView.setAutoSwitchAd(AcbExpressAdView.AutoSwitchAd_None);
-        expressAdView.setOnHierarchyChangeListener(new ViewGroup.OnHierarchyChangeListener() {
+
+        expressAdView.setOnHierarchyChangeListener(HierarchyTreeChangeListener.wrap(new ViewGroup.OnHierarchyChangeListener() {
             @Override
             public void onChildViewAdded(View parent, View child) {
                 try {
@@ -364,22 +376,32 @@ public class ConversationListFragment extends Fragment implements ConversationLi
                     }
                 } catch (Exception e) {
                 }
+
+                Threads.postOnMainThread(() -> {
+                    try {
+                        TextView title = expressAdView.findViewById(R.id.banner_title);
+                        title.setTextColor(ConversationColors.get().getListTitleColor());
+                        TextView subtitle = expressAdView.findViewById(R.id.banner_des);
+                        subtitle.setTextColor(ConversationColors.get().getListSubtitleColor());
+                    } catch (Exception e) {
+                    }
+                });
             }
 
             @Override
             public void onChildViewRemoved(View parent, View child) {
 
             }
-        });
+        }));
         expressAdView.setExpressAdViewListener(new AcbExpressAdView.AcbExpressAdViewListener() {
             @Override
             public void onAdShown(AcbExpressAdView acbExpressAdView) {
-                BugleAnalytics.logEvent("SMS_Messages_BannerAd_Show", true);
+                BugleAnalytics.logEvent("SMS_Messages_BannerAd_Show", true, true);
             }
 
             @Override
             public void onAdClicked(AcbExpressAdView acbExpressAdView) {
-                BugleAnalytics.logEvent("SMS_Messages_BannerAd_Click", true);
+                BugleAnalytics.logEvent("SMS_Messages_BannerAd_Click", true, true);
             }
         });
         adContainer.addView(expressAdView);
@@ -454,14 +476,23 @@ public class ConversationListFragment extends Fragment implements ConversationLi
 
         ArrayList<Object> dataList = new ArrayList<>();
 
+        int localAvatarCount = 0;
         if (cursor != null && cursor.moveToFirst()) {
             do {
                 ConversationListItemData itemData = new ConversationListItemData();
                 itemData.bind(cursor);
                 if (!itemData.isPrivate()) {
                     dataList.add(itemData);
+                    if (TextUtils.equals(AvatarUriUtil.TYPE_LOCAL_RESOURCE_URI, AvatarUriUtil.getAvatarType(Uri.parse(cursor.getString(INDEX_CONVERSATION_ICON))))) {
+                        localAvatarCount++;
+                    }
                 }
             } while (cursor.moveToNext());
+        }
+
+        IntegerBuckets buckets = new IntegerBuckets(0, 1, 2, 3, 4, 5, 10, 20, 30);
+        if (cursor != null) {
+            BugleAnalytics.logEvent("Sms_Local_Contact_Avatar_Count", "count", buckets.getBucket(localAvatarCount));
         }
 
         if (conversationFirstUpdated) {

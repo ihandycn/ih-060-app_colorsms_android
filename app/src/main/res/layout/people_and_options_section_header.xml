@@ -12,7 +12,7 @@
         android:layout_height="1dp"
         android:background="@color/people_and_options_list_divider" />
 
-    <com.superapps.view.TypefacedTextView
+    <com.superapps.view.MessagesTextView
         android:id="@+id/header_text"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

@@ -119,4 +119,5 @@
         <attr name="circleVerticalPadding" format="dimension" />
         <attr name="circleHorizontalPadding" format="dimension" />
     </declare-styleable>
+
 </resources>

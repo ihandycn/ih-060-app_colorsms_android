@@ -13,7 +13,7 @@
     See the License for the specific language governing permissions and
     limitations under the License.
 -->
-<resources xmlns:tools="http://schemas.android.com/tools">
+<resources>
     <!--
         Base application theme, dependent on API level. This theme is replaced
         by BugleBaseTheme from res/values-vXX/styles.xml on newer devices.
@@ -42,6 +42,7 @@
     <style name="BugleTheme.ConversationActivity" parent="@style/BugleTheme.ConversationActivityBase">
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
+        <item name="android:windowTranslucentStatus">true</item>
     </style>
 
     <style name="BugleTheme.AttachmentChooserActivity" parent="@style/BugleTheme">
@@ -115,6 +116,11 @@
         <item name="android:windowLightStatusBar">true</item>
         <item name="android:windowBackground">@drawable/conversation_start_bg</item>
     </style>
+
+    <style name="WelcomeChooseThemeActivity" parent="@style/WelcomeTheme">
+        <item name="android:windowBackground">@color/white</item>
+    </style>
+
 
     <style name="BuglePhotoViewTheme" parent="PhotoViewTheme.Translucent">
         <item name="actionModeShareDrawable">@drawable/ic_share_light</item>
@@ -274,7 +280,7 @@
     </style>
 
     <style name="ConversationListItemViewPaddingStyle">
-        <item name="android:paddingLeft">@dimen/conversation_list_item_view_padding</item>
+        <item name="android:paddingLeft">2dp</item>
         <item name="android:paddingRight">@dimen/conversation_list_item_view_padding</item>
     </style>
 
@@ -319,7 +325,7 @@
     </style>
 
     <style name="ConversationMessageViewStyle">
-        <item name="android:paddingLeft">16dp</item>
+        <item name="android:paddingLeft">2dp</item>
         <item name="android:paddingRight">16dp</item>
     </style>
 
@@ -726,7 +732,39 @@
         <item name="colorAccent" >#11bd3d</item>
     </style>
 
+    <style name="SelectPrivacyModeRadioGroup">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">38dp</item>
+        <item name="android:gravity">start|center_vertical</item>
+        <item name="android:paddingStart">19dp</item>
+        <item name="android:textColor">@color/text_primary_color</item>
+        <item name="android:checked">false</item>
+        <item name="android:drawableLeft">?android:attr/listChoiceIndicatorSingle</item>
+        <item name="android:drawablePadding">12dp</item>
+        <item name="android:textSize">15.3sp</item>
+        <item name="android:includeFontPadding">false</item>
+        <item name="android:background">?selectableItemBackground</item>
+        <item name="android:button">@null</item>
+    </style>
+
+    <style name="MessageBoxActionTextTheme">
+        <item name="android:textColor">@color/primary_color</item>
+        <item name="android:textColorHighlight">@color/primary_color_dark</item>
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">40dp</item>
+        <item name="android:gravity">center</item>
+        <item name="android:textSize">12sp</item>
+        <item name="android:paddingStart">12sp</item>
+        <item name="android:paddingEnd">12sp</item>
+        <item name="android:includeFontPadding">false</item>
+        <item name="typeface">@string/custom_font_regular</item>
+    </style>
+
+    <style name="MessageBoxProgressBarTheme" parent="Theme.AppCompat.Light">
+        <item name="colorPrimary">@color/primary_color</item>
+    </style>
+
     <style name="AcbSmsRecyclerViewTheme" parent="Theme.AppCompat.Light">
-        <item name="colorPrimary">@color/message_box_primary_color</item>
+        <item name="colorPrimary">@color/conversation_edge_effect</item>
     </style>
 </resources>

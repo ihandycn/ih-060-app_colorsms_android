@@ -90,12 +90,6 @@ public class AvatarRequest extends UriImageRequest<AvatarRequestDescriptor> {
 
         final int width = mDescriptor.desiredWidth;
         final int height = mDescriptor.desiredHeight;
-        int backgroundColor;
-        if (mDescriptor instanceof AvatarRequestDescriptor && mDescriptor.backgroundColor != null) {
-            backgroundColor = mDescriptor.backgroundColor;
-        } else {
-            backgroundColor = getBackgroundColor();
-        }
         // Check to see if we already got the bitmap. If not get a fallback avatar
         if (bitmap == null) {
             Uri generatedUri = mDescriptor.uri;
@@ -112,17 +106,16 @@ public class AvatarRequest extends UriImageRequest<AvatarRequestDescriptor> {
             avatarType = AvatarUriUtil.getAvatarType(generatedUri);
             if (AvatarUriUtil.TYPE_LETTER_TILE_URI.equals(avatarType)) {
                 final String name = AvatarUriUtil.getName(generatedUri);
-                bitmap = renderLetterTile(name, width, height, backgroundColor);
+                bitmap = renderLetterTile(name, width, height);
             } else {
-                bitmap = renderDefaultAvatar(width, height, backgroundColor);
+                bitmap = renderDefaultAvatar(width, height);
             }
         }
         return new DecodedImageResource(getKey(), bitmap, orientation);
     }
 
-    private Bitmap renderDefaultAvatar(final int width, final int height, int backgroundColor) {
-        final Bitmap bitmap = getBitmapPool().createOrReuseBitmap(width, height,
-                backgroundColor);
+    private Bitmap renderDefaultAvatar(final int width, final int height) {
+        final Bitmap bitmap = getBitmapPool().createOrReuseBitmap(width, height);
         final Canvas canvas = new Canvas(bitmap);
 
         if (sDefaultPersonBitmap == null) {
@@ -159,12 +152,11 @@ public class AvatarRequest extends UriImageRequest<AvatarRequestDescriptor> {
         return bitmap;
     }
 
-    private Bitmap renderLetterTile(final String name, final int width, final int height,int backgroundColor) {
+    private Bitmap renderLetterTile(final String name, final int width, final int height) {
         final float halfWidth = width / 2;
         final float halfHeight = height / 2;
         final int minOfWidthAndHeight = Math.min(width, height);
-        final Bitmap bitmap = getBitmapPool().createOrReuseBitmap(width, height,
-                backgroundColor);
+        final Bitmap bitmap = getBitmapPool().createOrReuseBitmap(width, height);
         final Resources resources = mContext.getResources();
         final Paint paint = new Paint(Paint.ANTI_ALIAS_FLAG);
         paint.setTypeface(Typefaces.getCustomSemiBold());

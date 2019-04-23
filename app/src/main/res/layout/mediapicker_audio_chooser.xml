@@ -26,7 +26,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <com.superapps.view.TypefacedTextView
+        <com.superapps.view.MessagesTextView
             android:id="@+id/hint_text"
             style="@style/AudioPickerHintText"
             android:layout_width="wrap_content"

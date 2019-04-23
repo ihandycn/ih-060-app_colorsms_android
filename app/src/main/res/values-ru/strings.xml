@@ -648,6 +648,12 @@
 
 
 	<string name="set_as_default_dialog_title_user_present">Сделать Color SMS приложением по умолчанию</string>
+    <string name="message_box_unread">НЕ ПРОЧИТАНО</string>
+    <string name="message_box_send_successfully_toast">Отправлено</string>
+    <string name="message_box_send_failed_toast">Ошибка отправки</string>
+    <string name="message_box_delete_alert_description">Удалить сообщения?</string>
+    <string name="message_box_mark_as_unread">Отмечено как непрочитанное</string>
+    <string name="message_box_open">ОТКРЫТЬ</string>
 
 
 	<string name="welcome_viewpager_item_body_0">Станьте заметнее в своем кругу!</string>
@@ -656,5 +662,13 @@
 	<string name="welcome_viewpager_item_title_2">Больше функций</string>
 	<string name="welcome_viewpager_item_body_2">Испытайте в деле множество потрясающих функций.</string>
 	<string name="welcome_set_as_default_title">Установите Color SMS в качестве приложения для СМС по умолчанию. Это необходимо для принятия и отправки СМС.</string>
+
+
+	<string name="menu_theme">Тема</string>
+	<string name="welcome_choose_theme_title">Выберите понравившуюся тему</string>
+	<string name="welcome_choose_theme_current">ТЕКУЩАЯ</string>
+	<string name="setting_reset_customization_title">Сброс индивидуальных настроек</string>
+	<string name="setting_reset_customization_summary">Стереть индивидуальные настройки данного чата.</string>
+	<string name="action_pin">Закрепить сверху</string>
 
 </resources>

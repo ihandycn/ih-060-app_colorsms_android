@@ -34,7 +34,7 @@ import com.ihs.commons.config.HSConfig;
 import com.superapps.util.Dimensions;
 import com.superapps.util.Preferences;
 import com.superapps.util.Threads;
-import com.superapps.view.TypefacedTextView;
+import com.superapps.view.MessagesTextView;
 
 import java.util.concurrent.RejectedExecutionException;
 
@@ -133,7 +133,7 @@ public class FiveStarRateDialog extends DefaultButtonDialog2 implements View.OnC
     private LottieAnimationView mAnimationView;
     private Cancellable mAnimationLoadTask;
     private ImageView mStillView;
-    private TypefacedTextView mStarDescView;
+    private MessagesTextView mStarDescView;
     private ImageView mHandImageView;
     private int mCurrentPosition = INVALID_POSITION;
     private TextView mDescTv;
@@ -239,7 +239,7 @@ public class FiveStarRateDialog extends DefaultButtonDialog2 implements View.OnC
     @Override
     protected void onClickPositiveButton(View v) {
         if (mCurrentPosition >= 0) {
-            BugleAnalytics.logEvent("Alert_FiveStar_Submit_BtnClicked", "type", (mCurrentPosition + 1) + "star");
+            BugleAnalytics.logEvent("Alert_FiveStar_Submit_BtnClicked", false, true, "type", (mCurrentPosition + 1) + "star");
             if (mCurrentPosition >= MAX_POSITION) {
                 HSMarketUtils.browseAPP();
                 PermissionGuideManager.getInstance().showPermissionGuide(HSApplication.getContext(),
@@ -457,7 +457,7 @@ public class FiveStarRateDialog extends DefaultButtonDialog2 implements View.OnC
     }
 
     private void logStarClick(int position) {
-        BugleAnalytics.logEvent("Alert_FiveStar_Star_Clicked", "type", (position + 1) + "star",
+        BugleAnalytics.logEvent("Alert_FiveStar_Star_Clicked", false, true, "type", (position + 1) + "star",
                 "from", sFiveStarRateTipFrom);
     }
 
@@ -473,7 +473,7 @@ public class FiveStarRateDialog extends DefaultButtonDialog2 implements View.OnC
         if (from != null) {
             sFiveStarRateTipFrom = from;
         }
-        BugleAnalytics.logEvent("Alert_FiveStar_ViewedFrom", "from", sFiveStarRateTipFrom);
+        BugleAnalytics.logEvent("Alert_FiveStar_ViewedFrom", false, true, "from", sFiveStarRateTipFrom);
     }
 
     private static boolean isHadFiveStarRate() {

@@ -599,6 +599,13 @@
 
 
 	<string name="set_as_default_dialog_title_user_present">Définir Color SMS par défaut</string>
+    
+    <string name="message_box_unread">NON LU</string>
+    <string name="message_box_send_successfully_toast">Envoyé avec succès</string>
+    <string name="message_box_send_failed_toast">Échec de l\'envoi</string>
+    <string name="message_box_delete_alert_description">Supprimer les messages ?</string>
+    <string name="message_box_mark_as_unread">Marqué(s) comme non lu(s)</string>
+    <string name="message_box_open">OUVRIR</string>
 
 
 	<string name="welcome_viewpager_item_body_0">Démarquez-vous au sein de votre groupe social !</string>
@@ -607,5 +614,13 @@
 	<string name="welcome_viewpager_item_title_2">Plus de fonctionnalités</string>
 	<string name="welcome_viewpager_item_body_2">Venez essayez des super fonctionnalités</string>
 	<string name="welcome_set_as_default_title">Veuillez définir Color SMS comme application SMS par défaut, c\'est obligatoire pour envoyer/recevoir des SMS.</string>
+
+
+	<string name="menu_theme">Thème</string>
+	<string name="welcome_choose_theme_title">Choisissez un thème que vous aimez</string>
+	<string name="welcome_choose_theme_current">ACTUEL</string>
+	<string name="setting_reset_customization_title">Réinitialiser la personnalisation</string>
+	<string name="setting_reset_customization_summary">Effacer la personnalisation de ce chat.</string>
+	<string name="action_pin">Épingler en haut</string>
 
 </resources>

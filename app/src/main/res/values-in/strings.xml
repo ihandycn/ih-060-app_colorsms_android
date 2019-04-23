@@ -601,6 +601,15 @@
 
 
 	<string name="set_as_default_dialog_title_user_present">Atur Color SMS sebagai default</string>
+    
+    <string name="message_box_unread">BELUM DIBACA</string>
+    <string name="message_box_send_successfully_toast">Berhasil dikirim</string>
+    <string name="message_box_send_failed_toast">Gagal mengirim</string>
+    <string name="message_box_delete_alert_description">Hapus pesan?</string>
+    <string name="message_box_mark_as_unread">Ditandai belum dibaca</string>
+    <string name="message_box_open">BUKA</string>
+    
+    
 
 
 	<string name="welcome_viewpager_item_body_0">Tampil beda di antara grup sosial Anda!</string>
@@ -609,5 +618,13 @@
 	<string name="welcome_viewpager_item_title_2">Fitur Lainnya</string>
 	<string name="welcome_viewpager_item_body_2">Cobalah beragam fitur hebat kami.</string>
 	<string name="welcome_set_as_default_title">Atur Color SMS sebagai aplikasi SMS default, aplikasi ini diperlukan untuk mengirim/menerima SMS.</string>
+
+
+	<string name="menu_theme">Tema</string>
+	<string name="welcome_choose_theme_title">Pilih Tema yang Anda Sukai</string>
+	<string name="welcome_choose_theme_current">SEKARANG</string>
+	<string name="setting_reset_customization_title">Atur Ulang Kustomisasi</string>
+	<string name="setting_reset_customization_summary">Hapus kustomisasi di percakapan ini.</string>
+	<string name="action_pin">Sematkan ke Atas</string>
 
 </resources>

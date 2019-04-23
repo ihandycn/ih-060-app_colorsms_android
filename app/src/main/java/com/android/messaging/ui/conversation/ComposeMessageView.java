@@ -269,7 +269,7 @@ public class ComposeMessageView extends LinearLayout
                 if (mHost.shouldHideAttachmentsWhenSimSelectorShown()) {
                     hideSimSelector();
                 }
-                BugleAnalytics.logEvent("SMS_DetailsPage_DialogBox_Click", true);
+                BugleAnalytics.logEvent("SMS_DetailsPage_DialogBox_Click", true, true);
             }
         });
 
@@ -406,7 +406,7 @@ public class ComposeMessageView extends LinearLayout
             } else {
                 showMediaPicker();
             }
-            BugleAnalytics.logEvent("SMS_DetailsPage_IconPlus_Click", true);
+            BugleAnalytics.logEvent("SMS_DetailsPage_IconPlus_Click", true, true);
         });
 
         mAttachmentPreview = (AttachmentPreview) findViewById(R.id.attachment_draft_view);
@@ -450,7 +450,7 @@ public class ComposeMessageView extends LinearLayout
 
                 }
             }
-        }, "pref_key_emoji_lottie_guide", 3);
+        }, "pref_key_emoji_lottie_guide", 1);
         mEmojiPickerLayout = findViewById(R.id.emoji_picker_container);
         mEmojiKeyboardBtn = findViewById(R.id.emoji_btn);
         mEmojiKeyboardBtn.setOnClickListener(v -> {
@@ -524,7 +524,7 @@ public class ComposeMessageView extends LinearLayout
     }
 
     private void showEmojiPicker() {
-        BugleAnalytics.logEvent("SMSEmoji_Chat_Emoji_Click", true);
+        BugleAnalytics.logEvent("SMSEmoji_Chat_Emoji_Click", true, true);
         if (EmojiManager.isShowEmojiGuide()) {
             EmojiManager.recordAlreadyShowEmojiGuide();
             mEmojiGuideView.setVisibility(GONE);
@@ -551,7 +551,7 @@ public class ComposeMessageView extends LinearLayout
             String message = mComposeEditText.getText().toString();
             for (String code : mEmojiLogCodeList) {
                 if (message.contains(code)) {
-                    BugleAnalytics.logEvent("SMSEmoji_ChatEmoji_LittleEmoji_Send", true, "type", code);
+                    BugleAnalytics.logEvent("SMSEmoji_ChatEmoji_LittleEmoji_Send", true, true, "type", code);
                     hasLittleEmoji = true;
                 }
             }
@@ -560,13 +560,13 @@ public class ComposeMessageView extends LinearLayout
         boolean hasSticker = mStickerLogNameList != null && !mStickerLogNameList.isEmpty();
         boolean hasMagicSticker = mMagicStickerLogNameList != null && !mMagicStickerLogNameList.isEmpty();
         if (hasLittleEmoji && !hasSticker && !hasMagicSticker) {
-            BugleAnalytics.logEvent("SMSEmoji_ChatEmoji_Emoji_Send", true, "type", "emoji");
+            BugleAnalytics.logEvent("SMSEmoji_ChatEmoji_Emoji_Send", true, true, "type", "emoji");
         } else if (!hasLittleEmoji && hasSticker && !hasMagicSticker) {
-            BugleAnalytics.logEvent("SMSEmoji_ChatEmoji_Emoji_Send", true, "type", "sticker");
+            BugleAnalytics.logEvent("SMSEmoji_ChatEmoji_Emoji_Send", true, true, "type", "sticker");
         } else if (!hasLittleEmoji && !hasSticker && hasMagicSticker) {
-            BugleAnalytics.logEvent("SMSEmoji_ChatEmoji_Emoji_Send", true, "type", "magic");
+            BugleAnalytics.logEvent("SMSEmoji_ChatEmoji_Emoji_Send", true, true, "type", "magic");
         } else if (hasLittleEmoji || hasSticker || hasMagicSticker) {
-            BugleAnalytics.logEvent("SMSEmoji_ChatEmoji_Emoji_Send", true, "type", "other");
+            BugleAnalytics.logEvent("SMSEmoji_ChatEmoji_Emoji_Send", true, true, "type", "other");
         }
         logEvent("SMSEmoji_ChatEmoji_Tab_Send", mStickerLogNameList);
         logEvent("SMSEmoji_ChatEmoji_Magic_Send", mMagicStickerLogNameList);
@@ -575,7 +575,11 @@ public class ComposeMessageView extends LinearLayout
     private void logEvent(String eventName, List<String> data) {
         if (data != null && !data.isEmpty()) {
             for (String type : data) {
-                BugleAnalytics.logEvent(eventName, true, "type", type);
+                if (eventName.contains("Send")) {
+                    BugleAnalytics.logEvent(eventName, true, true, "type", type);
+                } else {
+                    BugleAnalytics.logEvent(eventName, true, "type", type);
+                }
             }
 
             data.clear();
@@ -684,7 +688,7 @@ public class ComposeMessageView extends LinearLayout
 
             boolean includeSignature = false;
             Editable inputEditable = mComposeEditText.getText();
-            int signatureIndex= 0;
+            int signatureIndex = 0;
             if (!TextUtils.isEmpty(mSignatureStr)) {
                 signatureIndex = inputEditable.getSpanStart(mSignatureSpan);
                 if (signatureIndex >= 0 && signatureIndex < inputEditable.length() &&
@@ -700,9 +704,11 @@ public class ComposeMessageView extends LinearLayout
                 } else {
                     mBinding.getData().setMessageText("");
                 }
+                BugleAnalytics.logEvent("SMS_DetailsPage_IconSend_Click", true, true, "Type", "MMS");
             } else {
                 final String messageToSend = mComposeEditText.getText().toString();
                 mBinding.getData().setMessageText(messageToSend);
+                BugleAnalytics.logEvent("SMS_DetailsPage_IconSend_Click", true, true, "Type", "SMS");
             }
             // Asynchronously check the draft against various requirements before sending.
             boolean finalIncludeSignature = includeSignature;
@@ -897,7 +903,7 @@ public class ComposeMessageView extends LinearLayout
     @Override
     public void onPendingAttachmentAdded(final PendingAttachmentData pendingItem) {
         mBinding.getData().addPendingAttachment(pendingItem, mBinding);
-        resumeComposeMessage();
+        resumeComposeMessage(true);
     }
 
     private void announceMediaItemState(final boolean isSelected) {
@@ -922,9 +928,13 @@ public class ComposeMessageView extends LinearLayout
     }
 
     @Override
-    public void resumeComposeMessage() {
+    public void resumeComposeMessage(boolean showKeyboard) {
         mComposeEditText.requestFocus();
-        mInputManager.showHideImeKeyboard(true, true);
+        if (showKeyboard) {
+            mInputManager.showHideImeKeyboard(true, true);
+        } else {
+            hideKeyboard();
+        }
         announceAttachmentState();
     }
 
@@ -955,7 +965,9 @@ public class ComposeMessageView extends LinearLayout
                 String messageStr = messageText.substring(0, index);
                 String signatureStr = messageText.substring(index, e.length());
                 if (signature.equals(signatureStr)) {
-                    if (messageStr.charAt(messageStr.length() - 1) == '\n') {
+                    if (messageStr.length() == 0) {
+                        messageText = signatureStr;
+                    } else if (messageStr.charAt(messageStr.length() - 1) == '\n') {
                         messageText = messageStr.substring(0, messageStr.length() - 1);
                     } else {
                         messageText = messageStr;

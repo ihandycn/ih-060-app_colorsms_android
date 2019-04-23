@@ -34,6 +34,7 @@ public class ViewPagerDotIndicatorView extends LinearLayout implements ViewPager
         if (count < 2) {
             return;
         }
+        removeAllViews();
         for (int i = 0; i < count; i++) {
             FrameLayout layout = new FrameLayout(getContext());
             int size = Dimensions.pxFromDp(7);

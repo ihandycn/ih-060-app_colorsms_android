@@ -1,8 +1,14 @@
 package com.android.messaging.ui.wallpaper;
 
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.text.TextUtils;
+import android.view.View;
+import android.widget.ImageView;
 
 import com.android.messaging.Factory;
+import com.android.messaging.ui.customize.WallpaperDrawables;
+import com.android.messaging.ui.customize.theme.ThemeUtils;
 import com.android.messaging.util.BuglePrefs;
 
 import java.io.File;
@@ -60,6 +66,31 @@ public class WallpaperManager {
         }
     }
 
+
+    public static void setWallPaperOnView(final ImageView view, String conversationId) {
+        if (TextUtils.isEmpty(conversationId)) {
+            String wallpaperPath = sPrefs.getString(PREF_KEY_WALLPAPER_PATH, "");
+
+            if (!isWallpaperPathEmpty(wallpaperPath)) {
+                view.setImageDrawable(new BitmapDrawable(wallpaperPath));
+                return;
+            }
+        } else if (!TextUtils.isEmpty(WallpaperManager.getWallpaperPathByThreadId(conversationId))) {
+            view.setImageDrawable(new BitmapDrawable(WallpaperManager.getWallpaperPathByThreadId(conversationId)));
+            return;
+        }
+
+        Drawable wallpaperDrawable = WallpaperDrawables.getWallpaperBg();
+        view.setImageDrawable(wallpaperDrawable);
+    }
+
+    public static boolean hasWallpaper(String conversationId) {
+        if (TextUtils.isEmpty(WallpaperManager.getWallpaperPathByThreadId(conversationId))) {
+            return WallpaperDrawables.hasWallpaper();
+        }
+        return true;
+    }
+
     public static String getWallpaperPathByThreadId(String threadId) {
         String threadWallpaperPath = sPrefs.
                 getString(PREF_KEY_WALLPAPER_PATH + "_" + threadId, "");
@@ -71,6 +102,30 @@ public class WallpaperManager {
         } else {
             return getWallpaperPath();
         }
+    }
+
+    private static boolean isWallpaperPathEmpty(String path) {
+        return TextUtils.isEmpty(path) || path.equals("empty");
+    }
+
+    public static String getThreadWallpaperPath(String threadId) {
+        String threadWallpaperPath = sPrefs.
+                getString(PREF_KEY_WALLPAPER_PATH + "_" + threadId, "");
+        if (!TextUtils.isEmpty(threadWallpaperPath)) {
+            if (threadWallpaperPath.equals("empty")) {
+                return null;
+            }
+            return threadWallpaperPath;
+        }
+        return null;
+    }
+
+    public static void resetConversationCustomization(String threadId) {
+        sPrefs.remove(PREF_KEY_WALLPAPER_PATH + "_" + threadId);
+    }
+
+    public static void resetGlobalWallpaper() {
+        sPrefs.remove(PREF_KEY_WALLPAPER_PATH);
     }
 
     private static String getWallpaperPath() {
@@ -88,6 +143,7 @@ public class WallpaperManager {
             sPrefs.putString(PREF_KEY_WALLPAPER_PATH + "_" + threadId, path);
         } else {
             sPrefs.putString(PREF_KEY_WALLPAPER_PATH, path);
+            WallpaperDrawables.applyWallpaperBg("");
         }
     }
 

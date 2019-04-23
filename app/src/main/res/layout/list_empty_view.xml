@@ -41,7 +41,7 @@
         app:lottie_fileName="lottie/loading.json"
         app:lottie_loop="true" />
 
-    <com.superapps.view.TypefacedTextView
+    <com.superapps.view.MessagesTextView
         android:id="@+id/empty_text_hint"
         style="@style/ListEmptyText"
         android:layout_width="wrap_content"

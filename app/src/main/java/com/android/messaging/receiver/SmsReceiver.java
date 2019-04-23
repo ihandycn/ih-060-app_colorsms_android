@@ -34,10 +34,6 @@ import android.support.v4.app.NotificationCompat.Builder;
 import android.support.v4.app.NotificationCompat.Style;
 import android.support.v4.app.NotificationManagerCompat;
 
-import java.util.ArrayList;
-import java.util.regex.Pattern;
-import java.util.regex.PatternSyntaxException;
-
 import com.android.messaging.Factory;
 import com.android.messaging.R;
 import com.android.messaging.datamodel.BugleNotifications;
@@ -57,6 +53,10 @@ import com.android.messaging.util.PendingIntentConstants;
 import com.android.messaging.util.PhoneUtils;
 import com.ihs.commons.config.HSConfig;
 import com.superapps.util.Notifications;
+
+import java.util.ArrayList;
+import java.util.regex.Pattern;
+import java.util.regex.PatternSyntaxException;
 
 /**
  * Class that receives incoming SMS messages through android.provider.Telephony.SMS_RECEIVED
@@ -255,9 +255,9 @@ public final class SmsReceiver extends BroadcastReceiver {
             }
         } else if (PhoneUtils.getDefault().isSmsCapable() && isSmsReceiverEnabledWhenDefaultCleared()) {
             // sms supported and default not set, we use SmsReceiver to handle this action
-            BugleAnalytics.logEvent("SMS_Received_NoDefault");
+            BugleAnalytics.logEvent("SMS_Received_NoDefault", false, true);
             if (Telephony.Sms.Intents.SMS_RECEIVED_ACTION.equals(intent.getAction())) {
-                BugleAnalytics.logEvent("SMS_Received", true, "type", "sms");
+                BugleAnalytics.logEvent("SMS_Received", true, true, "type", "sms");
             }
         }
     }

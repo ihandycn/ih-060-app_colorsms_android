@@ -98,7 +98,7 @@ public class ConversationInputManager implements ConversationInput.ConversationI
 
         void onPendingAttachmentAdded(PendingAttachmentData pendingItem);
 
-        void resumeComposeMessage();
+        void resumeComposeMessage(boolean showKeyboard);
 
         EditText getComposeEditText();
 
@@ -437,7 +437,7 @@ public class ConversationInputManager implements ConversationInput.ConversationI
                     mSink.onMediaItemsSelected(items);
 
                     mHost.invalidateActionBar();
-                    mSink.resumeComposeMessage();
+                    mSink.resumeComposeMessage(true);
                 }
             });
         }
@@ -499,7 +499,10 @@ public class ConversationInputManager implements ConversationInput.ConversationI
                 @Override
                 public void addEmoji(String emojiStr) {
                     if (mSink != null && mSink.getComposeEditText() != null) {
-                        mSink.getComposeEditText().append(emojiStr);
+                        EditText editText = mSink.getComposeEditText();
+                        int start = editText.getSelectionStart();
+                        int end = editText.getSelectionEnd();
+                        editText.getText().replace(start, end, emojiStr);
                         mSink.logEmoji(emojiStr);
                     }
                 }

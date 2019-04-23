@@ -33,9 +33,11 @@
     <dimen name="conversation_list_image_preview_size">41dp</dimen>
     <dimen name="conversation_list_contact_icon_size">40dp</dimen>
     <dimen name="conversation_list_error_icon_size">18.7dp</dimen>
+    <dimen name="conversation_message_bubble_incoming_top_margin">20dp</dimen>
+    <dimen name="conversation_message_contact_icon_container_size">66dp</dimen>
     <dimen name="conversation_message_contact_icon_size">42dp</dimen>
     <dimen name="conversation_message_info_min_height">36dp</dimen>
-    <dimen name="conversation_message_contact_bubble_margin">11dp</dimen>
+    <dimen name="conversation_message_contact_bubble_margin">0dp</dimen>
     <dimen name="conversation_message_photo_min_size">96dp</dimen>
     <dimen name="conversation_list_notification_bell_padding">4dp</dimen>
     <dimen name="conversation_list_empty_text_bottom_margin">30dp</dimen>
@@ -180,7 +182,11 @@
     <dimen name="bubble_customize_preview_contact_icon_height">40dp</dimen>
     <dimen name="bubble_customize_color_ring_size">40dp</dimen>
 
-    <!--banner -->
+    <dimen name="message_box_background_radius">8dp</dimen>
+    <dimen name="message_box_start_margin">6.7dp</dimen>
+    <dimen name="message_box_end_margin">6.7dp</dimen>
+
+    <dimen name="choose_theme_pager_padding">60dp</dimen>
 
     <!-- Feedback -->
     <dimen name="feedback_content_lr_margin">5dp</dimen>

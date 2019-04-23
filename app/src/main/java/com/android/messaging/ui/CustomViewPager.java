@@ -2,6 +2,7 @@ package com.android.messaging.ui;
 
 import android.content.Context;
 import android.support.annotation.LayoutRes;
+import android.support.annotation.NonNull;
 import android.support.v4.view.ViewPager;
 import android.util.AttributeSet;
 import android.util.TypedValue;
@@ -66,6 +67,10 @@ public abstract class CustomViewPager extends LinearLayout {
                 mTabstrip.onPageSelected(position);
             }
         });
+    }
+
+    public void addOnPageChangeListener(@NonNull ViewPager.OnPageChangeListener listener) {
+        mViewPager.addOnPageChangeListener(listener);
     }
 
     public int getSelectedItemPosition() {

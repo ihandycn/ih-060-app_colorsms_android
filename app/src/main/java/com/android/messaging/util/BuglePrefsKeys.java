@@ -98,5 +98,28 @@ public final class BuglePrefsKeys {
      */
     public static final String PREFS_KEY_MESSAGE_TEXT_COLOR_OUTGOING = "message_text_color_outgoing";
 
+    /**
+     * conversation list title text color
+     */
+    public static final String PREFS_KEY_CONVERSATION_LIST_TITLE_COLOR = "conversation_list_title_color";
+
+    /**
+     * conversation list subtitle text color
+     */
+    public static final String PREFS_KEY_CONVERSATION_LIST_SUBTITLE_COLOR = "conversation_list_subtitle_color";
+
+    /**
+     * conversation list time text color
+     */
+    public static final String PREFS_KEY_CONVERSATION_LIST_TIME_COLOR = "conversation_list_time_color";
+
+    /**
+     * theme name
+     */
+    public static final String PREFS_KEY_THEME_NAME = "bugle_theme_name";
+
+
+    public static final String PREFS_KEY_KEYBOARD_HEIGHT = "keyboard_height";
+
 
 }

@@ -1,5 +1,6 @@
 package com.android.messaging.ui.appsettings;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.media.Ringtone;
 import android.media.RingtoneManager;
@@ -17,6 +18,7 @@ import com.android.messaging.R;
 import com.android.messaging.feedback.FeedbackActivity;
 import com.android.messaging.smsshow.SmsShowUtils;
 import com.android.messaging.ui.BaseAlertDialog;
+import com.android.messaging.ui.BaseDialogFragment;
 import com.android.messaging.ui.UIIntents;
 import com.android.messaging.ui.WebViewActivity;
 import com.android.messaging.ui.messagebox.MessageBoxSettings;
@@ -41,6 +43,7 @@ public class SettingGeneralActivity extends BaseActivity {
     private SettingItemView mSignature;
     private SettingItemView mSoundView;
     private SettingItemView mVibrateView;
+    private SettingItemView mPrivacyModeView;
     private BackPressedListener mBackListener;
     final BuglePrefs prefs = BuglePrefs.getApplicationPrefs();
 
@@ -114,6 +117,25 @@ public class SettingGeneralActivity extends BaseActivity {
             BugleAnalytics.logEvent("SMS_Settings_Popups_Click", true);
         });
 
+        mPrivacyModeView = findViewById(R.id.setting_item_privacy_mode);
+        updatePrivacyModeSummary();
+        mPrivacyModeView.setOnItemClickListener(() -> {
+            SelectPrivacyModeDialog dialog = new SelectPrivacyModeDialog();
+            dialog.setOnDismissOrCancelListener(new BaseDialogFragment.OnDismissOrCancelListener() {
+
+                @Override
+                public void onDismiss(DialogInterface dialog) {
+                    updatePrivacyModeSummary();
+                }
+                @Override
+                public void onCancel(DialogInterface dialog) {
+
+                }
+            });
+            UiUtils.showDialogFragment(SettingGeneralActivity.this, dialog);
+            BugleAnalytics.logEvent("SMS_Settings_Privacy_Click");
+        });
+
         //signature
         mSignature = findViewById(R.id.setting_item_signature);
         refreshSignature();
@@ -160,6 +182,7 @@ public class SettingGeneralActivity extends BaseActivity {
                     mSmsShowView.setEnable(b && mPopUpsView.isChecked());
                     mSoundView.setEnable(b);
                     mVibrateView.setEnable(b);
+                    mPrivacyModeView.setEnable(b);
                     BugleAnalytics.logEvent("SMS_Settings_Notifications_Click", true);
                 }
         );
@@ -262,6 +285,11 @@ public class SettingGeneralActivity extends BaseActivity {
         mSoundView.setSummary(ringtoneName);
     }
 
+
+    private void updatePrivacyModeSummary() {
+        mPrivacyModeView.setSummary(PrivacyModeSettings.getPrivacyModeDescription(null));
+    }
+
     private void onSoundItemClick() {
         Intent ringtonePickerIntent = new Intent(RingtoneManager.ACTION_RINGTONE_PICKER);
         ringtonePickerIntent.putExtra(RingtoneManager.EXTRA_RINGTONE_EXISTING_URI,
@@ -294,7 +322,7 @@ public class SettingGeneralActivity extends BaseActivity {
                 String prefKey = getString(R.string.notification_sound_pref_key);
                 String currentRingtone = prefs.getString(prefKey, Settings.System.DEFAULT_NOTIFICATION_URI.toString());
                 if (currentRingtone != null && !currentRingtone.equals(uri.toString())) {
-                    BugleAnalytics.logEvent("Customize_Notification_Sound_Change", true, "from", "settings");
+                    BugleAnalytics.logEvent("Customize_Notification_Sound_Change", true, true, "from", "settings");
                 }
                 prefs.putString(prefKey, uri == null ? "" : uri.toString());
                 updateSoundSummary();

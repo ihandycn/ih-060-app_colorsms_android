@@ -601,6 +601,13 @@
 
 
 	<string name="set_as_default_dialog_title_user_present">Color SMSをデフォルトとして設定</string>
+    
+    <string name="message_box_unread">未読</string>
+    <string name="message_box_send_successfully_toast">送信に成功</string>
+    <string name="message_box_send_failed_toast">送信に失敗</string>
+    <string name="message_box_delete_alert_description">メッセージを削除しますか？</string>
+    <string name="message_box_mark_as_unread">未読としてマーキングする</string>
+    <string name="message_box_open">開いた</string>
 
 
 	<string name="welcome_viewpager_item_body_0">SNSグループの間で目立ちましょう！</string>
@@ -609,5 +616,13 @@
 	<string name="welcome_viewpager_item_title_2">他の機能</string>
 	<string name="welcome_viewpager_item_body_2">たくさんあるすごい機能を試してください。</string>
 	<string name="welcome_set_as_default_title">SMSを送信/受信するには、SMSアプリのデフォルトとしてColor SMSを設定してください。</string>
+
+
+	<string name="menu_theme">テーマ</string>
+	<string name="welcome_choose_theme_title">お好きなテーマを選択</string>
+	<string name="welcome_choose_theme_current">現在</string>
+	<string name="setting_reset_customization_title">カスタマイズをリセット</string>
+	<string name="setting_reset_customization_summary">このチャットのカスタマイズを消去する。</string>
+	<string name="action_pin">ピン付けしてトップに移動する</string>
 
 </resources>

@@ -601,6 +601,13 @@
 
 
 	<string name="set_as_default_dialog_title_user_present">Color SMS को डिफॉल्‍ट के तौर पर सेट करें</string>
+    
+    <string name="message_box_unread">अपठित</string>
+    <string name="message_box_send_successfully_toast">सफलतापूर्वक भेज दिए</string>
+    <string name="message_box_send_failed_toast">भेजने में विफल</string>
+    <string name="message_box_delete_alert_description">संदेशों को हटाना है?</string>
+    <string name="message_box_mark_as_unread">अपठित मार्क करें</string>
+    <string name="message_box_open">खुला</string>
 
     <string name="create_shortcut_has_been_create">सफलतापूर्वक बनाया गया</string>
     <string name="create_shortcut_guide_title">एक शॉर्टकट बनाएं</string>
@@ -612,5 +619,13 @@
 	<string name="welcome_viewpager_item_title_2">अधिक विशेषताएं</string>
 	<string name="welcome_viewpager_item_body_2">आओ और बहुत सारी सुविधाओं को आजमाओ।</string>
 	<string name="welcome_set_as_default_title">कृपया रंगीन एसएमएस को डिफॉल्ट एसएमएस ऐप के रूप में सेट करें, यह एसएमएस भेजने/प्राप्त करने के लिए आवश्यक है।</string>
+
+
+	<string name="menu_theme">थीम</string>
+	<string name="welcome_choose_theme_title">अपनी पसंद की एक थीम चुनें</string>
+	<string name="welcome_choose_theme_current">मौजूदा</string>
+	<string name="setting_reset_customization_title">अनुकूलन दुबारा सेट करें</string>
+	<string name="setting_reset_customization_summary">इस चैट में अनुकूलन मिटाएं</string>
+	<string name="action_pin">शीर्ष पर पिन करें</string>
 
 </resources>

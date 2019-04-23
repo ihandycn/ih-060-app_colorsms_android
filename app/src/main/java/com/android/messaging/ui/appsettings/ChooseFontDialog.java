@@ -34,7 +34,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class ChooseFontDialog implements View.OnClickListener{
+public class ChooseFontDialog implements View.OnClickListener {
 
     private static final String[] sSupportGoogleFonts = {
             FontUtils.MESSAGE_FONT_FAMILY_DEFAULT_VALUE,
@@ -51,7 +51,7 @@ public class ChooseFontDialog implements View.OnClickListener{
 
     ChooseFontDialog(Context activity) {
         this.mActivity = (Activity) activity;
-        mWeakActivityReference = new WeakReference<>((ChangeFontActivity)activity);
+        mWeakActivityReference = new WeakReference<>((ChangeFontActivity) activity);
         mFontFamily = FontStyleManager.getInstance().getFontFamily();
     }
 
@@ -165,27 +165,27 @@ public class ChooseFontDialog implements View.OnClickListener{
 
     @Override
     public void onClick(View v) {
-       for (int i = 0 ; i < mItemViewList.size(); i ++) {
-           ChooseFontItem view = mItemViewList.get(i);
-           if (v == view) {
-               String fontFamily = sSupportGoogleFonts[i];
-               mFontFamily = fontFamily;
+        for (int i = 0; i < mItemViewList.size(); i++) {
+            ChooseFontItem view = mItemViewList.get(i);
+            if (v == view) {
+                String fontFamily = sSupportGoogleFonts[i];
+                mFontFamily = fontFamily;
 
-               view.setSelected(true);
-               view.refreshRadioStatus();
+                view.setSelected(true);
+                view.refreshRadioStatus();
 
-               FontStyleManager.getInstance().setFontFamily(fontFamily);
-               ChangeFontActivity activity = mWeakActivityReference.get();
-               if(activity != null && !activity.isDestroyed()) {
-                   activity.onFontChange();
-               }
-               new Handler().postDelayed(this::dismissSafely, 1);
-               BugleAnalytics.logEvent("Customize_TextFont_Change", true, "font", fontFamily);
-               HSGlobalNotificationCenter.sendNotification(ConversationListActivity.EVENT_MAINPAGE_RECREATE);
-           } else {
-               view.setSelected(false);
-               view.refreshRadioStatus();
-           }
-       }
+                FontStyleManager.getInstance().setFontFamily(fontFamily);
+                ChangeFontActivity activity = mWeakActivityReference.get();
+                if (activity != null && !activity.isDestroyed()) {
+                    activity.onFontChange();
+                }
+                new Handler().postDelayed(this::dismissSafely, 1);
+                BugleAnalytics.logEvent("Customize_TextFont_Change", true, true, "font", fontFamily);
+                HSGlobalNotificationCenter.sendNotification(ConversationListActivity.EVENT_MAINPAGE_RECREATE);
+            } else {
+                view.setSelected(false);
+                view.refreshRadioStatus();
+            }
+        }
     }
 }

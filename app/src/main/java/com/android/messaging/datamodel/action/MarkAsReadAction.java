@@ -19,6 +19,7 @@ package com.android.messaging.datamodel.action;
 import android.content.ContentValues;
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.text.TextUtils;
 
 import com.android.messaging.datamodel.BugleDatabaseOperations;
 import com.android.messaging.datamodel.BugleNotifications;
@@ -31,12 +32,15 @@ import com.android.messaging.sms.MmsUtils;
 import com.android.messaging.util.LogUtil;
 
 /**
- * Action used to mark all the messages in a conversation as read
+ * Action used to mark messages in a conversation as read
  */
 public class MarkAsReadAction extends Action implements Parcelable {
     private static final String TAG = LogUtil.BUGLE_DATAMODEL_TAG;
 
     private static final String KEY_CONVERSATION_ID = "conversation_id";
+
+    private static final String KEY_PARTICIPANT_ID = "participant_id";
+    private static final String KEY_RECEIVED_TIMESTAMP = "received_timestamp";
 
     /**
      * Mark all the messages as read for a particular conversation.
@@ -46,43 +50,93 @@ public class MarkAsReadAction extends Action implements Parcelable {
         action.start();
     }
 
+    public static void markAsRead(final String conversationId,
+                                  final String participantId,
+                                  final long receivedTimestamp) {
+        final MarkAsReadAction action = new MarkAsReadAction(conversationId, participantId, receivedTimestamp);
+        action.start();
+    }
+
     private MarkAsReadAction(final String conversationId) {
         actionParameters.putString(KEY_CONVERSATION_ID, conversationId);
+    }
+
+    private MarkAsReadAction(final String conversationId,
+                             final String participantId,
+                             final long receivedTimestamp) {
+        actionParameters.putString(KEY_CONVERSATION_ID, conversationId);
+        actionParameters.putString(KEY_PARTICIPANT_ID, participantId);
+        actionParameters.putLong(KEY_RECEIVED_TIMESTAMP, receivedTimestamp);
     }
 
     @Override
     protected Object executeAction() {
         final String conversationId = actionParameters.getString(KEY_CONVERSATION_ID);
 
+        final String participantId = actionParameters.getString(KEY_PARTICIPANT_ID);
+        final long timeStamp = actionParameters.getLong(KEY_RECEIVED_TIMESTAMP);
+
         // TODO: Consider doing this in background service to avoid delaying other actions
         final DatabaseWrapper db = DataModel.get().getDatabase();
-
-        // Mark all messages in thread as read in telephony
-        final long threadId = BugleDatabaseOperations.getThreadId(db, conversationId);
-        if (threadId != -1) {
-            MmsUtils.updateSmsReadStatus(threadId, Long.MAX_VALUE);
-        }
-
-        // Update local db
-        db.beginTransaction();
-        try {
-            final ContentValues values = new ContentValues();
-            values.put(MessageColumns.CONVERSATION_ID, conversationId);
-            values.put(MessageColumns.READ, 1);
-            values.put(MessageColumns.SEEN, 1);     // if they read it, they saw it
-
-            final int count = db.update(DatabaseHelper.MESSAGES_TABLE, values,
-                    "(" + MessageColumns.READ + " !=1 OR " +
-                            MessageColumns.SEEN + " !=1 ) AND " +
-                            MessageColumns.CONVERSATION_ID + "=?",
-                    new String[] { conversationId });
-            if (count > 0) {
-                MessagingContentProvider.notifyMessagesChanged(conversationId);
+        if (TextUtils.isEmpty(participantId)) {
+            // Mark all messages in thread as read in telephony
+            final long threadId = BugleDatabaseOperations.getThreadId(db, conversationId);
+            if (threadId != -1) {
+                MmsUtils.updateSmsReadStatus(threadId, Long.MAX_VALUE);
             }
-            db.setTransactionSuccessful();
-        } finally {
-            db.endTransaction();
+
+            // Update local db
+            db.beginTransaction();
+            try {
+                final ContentValues values = new ContentValues();
+                values.put(MessageColumns.CONVERSATION_ID, conversationId);
+                values.put(MessageColumns.READ, 1);
+                values.put(MessageColumns.SEEN, 1);     // if they read it, they saw it
+
+                final int count = db.update(DatabaseHelper.MESSAGES_TABLE, values,
+                        "(" + MessageColumns.READ + " !=1 OR " +
+                                MessageColumns.SEEN + " !=1 ) AND " +
+                                MessageColumns.CONVERSATION_ID + "=?",
+                        new String[] { conversationId });
+                if (count > 0) {
+                    MessagingContentProvider.notifyMessagesChanged(conversationId);
+                }
+                db.setTransactionSuccessful();
+            } finally {
+                db.endTransaction();
+            }
+        } else {
+            final long threadId = BugleDatabaseOperations.getThreadId(db, conversationId);
+            if (threadId != -1) {
+                MmsUtils.updateSmsReadStatus(threadId, timeStamp, Long.MAX_VALUE);
+            }
+
+            db.beginTransaction();
+            try {
+                final ContentValues values = new ContentValues();
+                values.put(MessageColumns.CONVERSATION_ID, conversationId);
+                values.put(MessageColumns.SENDER_PARTICIPANT_ID, participantId);
+                values.put(MessageColumns.RECEIVED_TIMESTAMP, timeStamp);
+                values.put(MessageColumns.READ, 1);
+                values.put(MessageColumns.SEEN, 1);     // if they read it, they saw it
+
+                final int count = db.update(DatabaseHelper.MESSAGES_TABLE, values,
+                        "(" + MessageColumns.READ + " !=1 OR " +
+                                MessageColumns.SEEN + " !=1 ) AND " +
+                                MessageColumns.CONVERSATION_ID + "=? AND " +
+                                MessageColumns.SENDER_PARTICIPANT_ID + "=? AND " +
+                                MessageColumns.RECEIVED_TIMESTAMP + ">=?",
+                        new String[]{conversationId, participantId, String.valueOf(timeStamp)});
+                if (count > 0) {
+                    MessagingContentProvider.notifyMessagesChanged(conversationId);
+                }
+                db.setTransactionSuccessful();
+            } finally {
+                db.endTransaction();
+            }
+
         }
+
         // After marking messages as read, update the notifications. This will
         // clear the now stale notifications.
         BugleNotifications.update(false/*silent*/, BugleNotifications.UPDATE_ALL);

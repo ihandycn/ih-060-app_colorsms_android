@@ -1,0 +1,166 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<com.android.messaging.ui.messagebox.MessageBoxConversationView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+        <android.support.constraint.ConstraintLayout
+            android:id="@+id/content"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/message_box_start_margin"
+            android:layout_marginEnd="@dimen/message_box_end_margin"
+            android:layout_gravity="center"
+            android:background="@drawable/message_box_background">
+
+            <com.android.messaging.ui.messagebox.BottomCropImage
+                android:id="@+id/action_bar_simulation_background"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                app:layout_constraintTop_toTopOf="@+id/action_bar_simulation"
+                app:layout_constraintBottom_toBottomOf="@+id/action_bar_simulation"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                android:src="@drawable/message_box_action_bar_simulation_background"
+                tools:background="@color/primary_color"/>
+
+            <LinearLayout
+                android:id="@+id/action_bar_simulation"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                android:layout_width="match_parent"
+                android:layout_height="43dp"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <FrameLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="20dp"
+                    android:layout_weight="1">
+
+                    <com.superapps.view.MessagesTextView
+                        android:id="@+id/conversation_name"
+                        app:typeface="@string/custom_font_bold"
+                        tools:text="Maria"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:textColor="#ffffff"
+                        android:includeFontPadding="false"
+                        android:textSize="18sp" />
+
+                    <com.superapps.view.MessagesTextView
+                        android:id="@+id/privacy_conversation_name"
+                        app:typeface="@string/custom_font_bold"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:textColor="#ffffff"
+                        android:visibility="gone"
+                        android:textSize="18sp"
+                        android:text="@string/privacy_mode_conversation_name"
+                        tools:visibility="visible"
+                        tools:text="****" />
+
+                </FrameLayout>
+
+                <LinearLayout
+                    android:id="@+id/action_open"
+                    android:layout_width="wrap_content"
+                    android:layout_height="26dp"
+                    android:layout_marginEnd="26.7dp"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:background="@drawable/ic_message_box_open"
+                    android:orientation="horizontal">
+
+                    <com.superapps.view.MessagesTextView
+                        android:id="@+id/open_btn"
+                        app:typeface="@string/custom_font_bold"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:singleLine="true"
+                        android:layout_marginStart="11.7dp"
+                        android:layout_gravity="center_vertical"
+                        android:text="@string/privacy_mode_open_button_text"
+                        android:textSize="12.7sp"
+                        android:textColor="#ffffff"
+                        android:includeFontPadding="false"/>
+
+                    <ImageView
+                        android:id="@+id/open_arrow"
+                        android:layout_width="4.7dp"
+                        android:layout_height="9.3dp"
+                        android:layout_gravity="center_vertical"
+                        android:layout_marginStart="11.7dp"
+                        android:layout_marginEnd="11dp"
+                        android:src="@drawable/ic_message_box_open_btn_right_arrow" />
+                </LinearLayout>
+
+                <android.support.v7.widget.AppCompatImageView
+                    android:id="@+id/action_close"
+                    android:layout_width="29dp"
+                    android:layout_height="29dp"
+                    android:layout_marginEnd="12dp"
+                    android:padding="6.7dp"
+                    android:src="@drawable/ic_message_box_close" />
+            </LinearLayout>
+
+            <com.superapps.view.RoundImageView
+                android:id="@+id/message_background"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/message_view"
+                app:layout_constraintBottom_toBottomOf="@+id/message_view"
+                app:radius_leftBottom="@dimen/message_box_background_radius"
+                app:radius_rightBottom="@dimen/message_box_background_radius"
+                android:scaleType="centerCrop" />
+
+            <LinearLayout
+                android:id="@+id/message_view"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/action_bar_simulation"
+                android:layout_width="match_parent"
+                android:layout_height="200dp"
+                android:orientation="vertical">
+
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/recycler_view"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="1"
+                    android:scrollbarSize="4dp"
+                    android:scrollbarStyle="outsideInset"
+                    android:scrollbarThumbVertical="@drawable/message_box_scrollbar"
+                    android:scrollbars="vertical"
+                    android:theme="@style/AcbSmsRecyclerViewTheme" />
+
+                <com.android.messaging.ui.messagebox.MessageBoxInputActionView
+                    android:id="@+id/message_compose_view_container"
+                    tools:layout_height="50dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+            </LinearLayout>
+
+            <ViewStub
+                android:id="@+id/privacy_stub"
+                android:inflatedId="@+id/privacy_container"
+                android:layout="@layout/message_box_privacy_mode_layout"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                app:layout_constraintStart_toStartOf="@id/message_view"
+                app:layout_constraintEnd_toEndOf="@id/message_view"
+                app:layout_constraintTop_toTopOf="@id/message_view"
+                app:layout_constraintBottom_toBottomOf="@id/message_view"/>
+
+        </android.support.constraint.ConstraintLayout>
+
+
+</com.android.messaging.ui.messagebox.MessageBoxConversationView>
+
