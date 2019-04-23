@@ -51,14 +51,14 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
  * Utility class for refreshing participant information based on matching contact. This updates
- *     1. name, photo_uri, matching contact_id of participants.
- *     2. generated_name of conversations.
- *
+ * 1. name, photo_uri, matching contact_id of participants.
+ * 2. generated_name of conversations.
+ * <p>
  * There are two kinds of participant refreshes,
- *     1. Full refresh, this is triggered at application start or activity resumes after contact
- *        change is detected.
- *     2. Partial refresh, this is triggered when a participant is added to a conversation. This
- *        normally happens during SMS sync.
+ * 1. Full refresh, this is triggered at application start or activity resumes after contact
+ * change is detected.
+ * 2. Partial refresh, this is triggered when a participant is added to a conversation. This
+ * normally happens during SMS sync.
  */
 @VisibleForTesting
 public class ParticipantRefresh {
@@ -80,15 +80,15 @@ public class ParticipantRefresh {
     public static final int REFRESH_MODE_SELF_ONLY = 2;
 
     public static class ConversationParticipantsQuery {
-        public static final String[] PROJECTION = new String[] {
-            ConversationParticipantsColumns._ID,
-            ConversationParticipantsColumns.CONVERSATION_ID,
-            ConversationParticipantsColumns.PARTICIPANT_ID
+        public static final String[] PROJECTION = new String[]{
+                ConversationParticipantsColumns._ID,
+                ConversationParticipantsColumns.CONVERSATION_ID,
+                ConversationParticipantsColumns.PARTICIPANT_ID
         };
 
-        public static final int INDEX_ID                        = 0;
-        public static final int INDEX_CONVERSATION_ID           = 1;
-        public static final int INDEX_PARTICIPANT_ID            = 2;
+        public static final int INDEX_ID = 0;
+        public static final int INDEX_CONVERSATION_ID = 1;
+        public static final int INDEX_PARTICIPANT_ID = 2;
     }
 
     // Track whether observer is initialized or not.
@@ -100,7 +100,9 @@ public class ParticipantRefresh {
         public void run() {
             final boolean oldScheduled = sFullRefreshScheduled.getAndSet(false);
             Assert.isTrue(oldScheduled);
-            refreshParticipants(REFRESH_MODE_FULL);
+            if (OsUtil.hasRequiredPermissions()) {
+                refreshParticipants(REFRESH_MODE_FULL);
+            }
         }
     };
     private static final Runnable sSelfOnlyRefreshRunnable = new Runnable() {
@@ -204,10 +206,10 @@ public class ParticipantRefresh {
      * Refresh participants in Bugle.
      *
      * @param refreshMode the refresh mode desired. See {@link #REFRESH_MODE_FULL},
-     *        {@link #REFRESH_MODE_INCREMENTAL}, and {@link #REFRESH_MODE_SELF_ONLY}
+     *                    {@link #REFRESH_MODE_INCREMENTAL}, and {@link #REFRESH_MODE_SELF_ONLY}
      */
-     @VisibleForTesting
-     static void refreshParticipants(final int refreshMode) {
+    @VisibleForTesting
+    static void refreshParticipants(final int refreshMode) {
         Assert.inRange(refreshMode, REFRESH_MODE_FULL, REFRESH_MODE_SELF_ONLY);
         if (LogUtil.isLoggable(TAG, LogUtil.VERBOSE)) {
             switch (refreshMode) {
@@ -248,8 +250,8 @@ public class ParticipantRefresh {
         if (refreshMode == REFRESH_MODE_INCREMENTAL) {
             // In case of incremental refresh, filter out participants that are already resolved.
             selection = ParticipantColumns.CONTACT_ID + "=?";
-            selectionArgs = new String[] {
-                    String.valueOf(ParticipantData.PARTICIPANT_CONTACT_ID_NOT_RESOLVED) };
+            selectionArgs = new String[]{
+                    String.valueOf(ParticipantData.PARTICIPANT_CONTACT_ID_NOT_RESOLVED)};
         } else if (refreshMode == REFRESH_MODE_SELF_ONLY) {
             // In case of self-only refresh, filter out non-self participants.
             selection = SELF_PARTICIPANTS_CLAUSE;
@@ -336,13 +338,13 @@ public class ParticipantRefresh {
 
     private static final String UPDATE_SELF_PARTICIPANT_SUBSCRIPTION_SQL =
             "UPDATE " + DatabaseHelper.PARTICIPANTS_TABLE + " SET "
-            +  ParticipantColumns.SIM_SLOT_ID + " = %d, "
-            +  ParticipantColumns.SUBSCRIPTION_COLOR + " = %d, "
-            +  ParticipantColumns.SUBSCRIPTION_NAME + " = %s "
-            + " WHERE %s";
+                    + ParticipantColumns.SIM_SLOT_ID + " = %d, "
+                    + ParticipantColumns.SUBSCRIPTION_COLOR + " = %d, "
+                    + ParticipantColumns.SUBSCRIPTION_NAME + " = %s "
+                    + " WHERE %s";
 
     static String getUpdateSelfParticipantSubscriptionInfoSql(final int slotId,
-            final int subscriptionColor, final String subscriptionName, final String where) {
+                                                              final int subscriptionColor, final String subscriptionName, final String where) {
         return String.format((Locale) null /* construct SQL string without localization */,
                 UPDATE_SELF_PARTICIPANT_SUBSCRIPTION_SQL,
                 slotId, subscriptionColor, subscriptionName, where);
@@ -399,7 +401,7 @@ public class ParticipantRefresh {
             db.execSQL(getUpdateSelfParticipantSubscriptionInfoSql(
                     ParticipantData.INVALID_SLOT_ID, Color.TRANSPARENT, "''",
                     ParticipantColumns.SUB_ID + " NOT IN (" +
-                    Joiner.on(", ").join(activeSubscriptionIdToRecordMap.keySet()) + ")"));
+                            Joiner.on(", ").join(activeSubscriptionIdToRecordMap.keySet()) + ")"));
             db.setTransactionSuccessful();
         } finally {
             db.endTransaction();
@@ -411,10 +413,11 @@ public class ParticipantRefresh {
 
     /**
      * Refresh one participant.
+     *
      * @return true if the ParticipantData was changed
      */
     public static boolean refreshParticipant(final DatabaseWrapper db,
-            final ParticipantData participantData) {
+                                             final ParticipantData participantData) {
         boolean updated = false;
 
         if (participantData.isSelf()) {
@@ -438,7 +441,7 @@ public class ParticipantRefresh {
     private static final int SELF_PROFILE_EXISTS = 2;
 
     private static int refreshFromSelfProfile(final DatabaseWrapper db,
-            final ParticipantData participantData) {
+                                              final ParticipantData participantData) {
         int changed = 0;
         // Refresh the phone number based on information from telephony
         if (participantData.updatePhoneNumberForSelfIfChanged()) {
@@ -488,7 +491,7 @@ public class ParticipantRefresh {
     }
 
     private static boolean refreshFromContacts(final DatabaseWrapper db,
-            final ParticipantData participantData) {
+                                               final ParticipantData participantData) {
         final String normalizedDestination = participantData.getNormalizedDestination();
         final long currentContactId = participantData.getContactId();
         final String currentDisplayName = participantData.getFullName();
@@ -595,7 +598,7 @@ public class ParticipantRefresh {
      * Update participant with matching contact's contactId, displayName and photoUri.
      */
     private static void updateParticipant(final DatabaseWrapper db,
-            final ParticipantData participantData) {
+                                          final ParticipantData participantData) {
         final ContentValues values = new ContentValues();
         if (participantData.isSelf()) {
             // Self participants can refresh their normalized phone numbers
@@ -615,7 +618,7 @@ public class ParticipantRefresh {
         db.beginTransaction();
         try {
             db.update(DatabaseHelper.PARTICIPANTS_TABLE, values, ParticipantColumns._ID + "=?",
-                    new String[] { participantData.getId() });
+                    new String[]{participantData.getId()});
             db.setTransactionSuccessful();
         } finally {
             db.endTransaction();
@@ -634,8 +637,8 @@ public class ParticipantRefresh {
         Cursor cursor = null;
         try {
             cursor = db.query(DatabaseHelper.PARTICIPANTS_TABLE,
-                    new String[] { ParticipantColumns._ID },
-                    selection, new String[] { String.valueOf(ParticipantData.INVALID_SLOT_ID) },
+                    new String[]{ParticipantColumns._ID},
+                    selection, new String[]{String.valueOf(ParticipantData.INVALID_SLOT_ID)},
                     null, null, null);
 
             if (cursor != null) {
@@ -672,7 +675,7 @@ public class ParticipantRefresh {
             final String selection =
                     ConversationColumns.CURRENT_SELF_ID + " IN (" + selectionList + ")";
             cursor = db.query(DatabaseHelper.CONVERSATIONS_TABLE,
-                    new String[] { ConversationColumns._ID },
+                    new String[]{ConversationColumns._ID},
                     selection, selfIds.toArray(new String[0]),
                     null, null, null);
 
@@ -694,7 +697,7 @@ public class ParticipantRefresh {
      * Refresh one conversation's self id.
      */
     private static void updateConversationSelfId(final String conversationId,
-            final String selfId) {
+                                                 final String selfId) {
         final DatabaseWrapper db = DataModel.get().getDatabase();
 
         db.beginTransaction();

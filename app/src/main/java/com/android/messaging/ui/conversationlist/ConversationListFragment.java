@@ -468,7 +468,8 @@ public class ConversationListFragment extends Fragment implements ConversationLi
                 dataList.add(itemData);
 
                 if (!TextUtils.isEmpty(cursor.getString(INDEX_CONVERSATION_ICON))
-                        && TextUtils.equals(AvatarUriUtil.TYPE_LOCAL_RESOURCE_URI, AvatarUriUtil.getAvatarType(Uri.parse()))) {
+                        && TextUtils.equals(AvatarUriUtil.TYPE_LOCAL_RESOURCE_URI,
+                        AvatarUriUtil.getAvatarType(Uri.parse(cursor.getString(INDEX_CONVERSATION_ICON))))) {
                     localAvatarCount++;
                 }
             } while (cursor.moveToNext());
