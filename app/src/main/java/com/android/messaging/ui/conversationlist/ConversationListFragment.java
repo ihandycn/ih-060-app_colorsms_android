@@ -465,18 +465,18 @@ public class ConversationListFragment extends Fragment implements ConversationLi
             do {
                 ConversationListItemData itemData = new ConversationListItemData();
                 itemData.bind(cursor);
-
-                if (TextUtils.equals(AvatarUriUtil.TYPE_LOCAL_RESOURCE_URI, AvatarUriUtil.getAvatarType(Uri.parse(cursor.getString(INDEX_CONVERSATION_ICON))))) {
-                    localAvatarCount ++;
-                }
-
                 dataList.add(itemData);
+
+                if (!TextUtils.isEmpty(cursor.getString(INDEX_CONVERSATION_ICON))
+                        && TextUtils.equals(AvatarUriUtil.TYPE_LOCAL_RESOURCE_URI, AvatarUriUtil.getAvatarType(Uri.parse()))) {
+                    localAvatarCount++;
+                }
             } while (cursor.moveToNext());
         }
 
         IntegerBuckets buckets = new IntegerBuckets(0, 1, 2, 3, 4, 5, 10, 20, 30);
         if (cursor != null) {
-            BugleAnalytics.logEvent("Sms_Local_Contact_Avatar_Count", "count",  buckets.getBucket(localAvatarCount));
+            BugleAnalytics.logEvent("Sms_Local_Contact_Avatar_Count", "count", buckets.getBucket(localAvatarCount));
         }
 
         if (conversationFirstUpdated) {
