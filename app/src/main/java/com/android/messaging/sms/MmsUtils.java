@@ -745,7 +745,7 @@ public class MmsUtils {
         final ContentResolver cr = context.getContentResolver();
         final Cursor thread = cr.query(
                 ALL_THREADS_URI,
-                RECIPIENTS_PROJECTION, "_id=?", new String[] { String.valueOf(threadId) }, null);
+                RECIPIENTS_PROJECTION, Threads._ID + "=" + threadId, null, null);
         if (thread != null) {
             try {
                 if (thread.moveToFirst()) {
