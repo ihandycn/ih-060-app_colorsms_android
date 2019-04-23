@@ -37,6 +37,7 @@ import com.android.messaging.ui.appsettings.PrivacyModeSettings;
 import com.android.messaging.ui.customize.ConversationColors;
 import com.android.messaging.ui.customize.PrimaryColors;
 import com.android.messaging.ui.customize.ToolbarDrawables;
+import com.android.messaging.ui.customize.theme.ThemeUtils;
 import com.android.messaging.ui.emoji.EmojiInfo;
 import com.android.messaging.ui.wallpaper.WallpaperManager;
 import com.android.messaging.util.BugleAnalytics;
@@ -195,7 +196,8 @@ public class MessageBoxConversationView extends FrameLayout {
         }
 
         BugleAnalytics.logEvent("SMS_PopUp_Reply_BtnClick_Multifunction", false, true,
-                "type", type, "type2", MessageBoxAnalytics.getConversationType());
+                "type", type, "type2", MessageBoxAnalytics.getConversationType(),
+                "withTheme", String.valueOf(!ThemeUtils.isDefaultTheme()));
     }
 
     void emojiClick(EmojiInfo emojiInfo) {

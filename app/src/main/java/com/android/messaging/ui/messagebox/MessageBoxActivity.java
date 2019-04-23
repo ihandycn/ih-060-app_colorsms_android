@@ -23,6 +23,7 @@ import com.android.messaging.datamodel.action.MarkAsReadAction;
 import com.android.messaging.datamodel.data.MessageBoxItemData;
 import com.android.messaging.ui.BaseAlertDialog;
 import com.android.messaging.ui.UIIntents;
+import com.android.messaging.ui.customize.theme.ThemeUtils;
 import com.android.messaging.ui.emoji.BaseEmojiInfo;
 import com.android.messaging.ui.emoji.EmojiInfo;
 import com.android.messaging.ui.emoji.EmojiItemPagerAdapter;
@@ -349,6 +350,11 @@ public class MessageBoxActivity extends AppCompatActivity implements INotificati
         BugleAnalytics.logEvent("SMS_PopUp_Show_Multifunction", false, true,
                 "msgNum", String.valueOf(mMessagesNum),
                 "contactNum", String.valueOf(mContactsNum),
-                "message type", messageType);
+                "message type", messageType,
+                "withTheme", String.valueOf(!ThemeUtils.isDefaultTheme()));
+        if (mContactsNum > 1) {
+            BugleAnalytics.logEvent("SMS_PopUp_MultiUser_Show", false, true);
+        }
+
     }
 }
