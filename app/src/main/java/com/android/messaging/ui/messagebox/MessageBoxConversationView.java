@@ -118,6 +118,10 @@ public class MessageBoxConversationView extends FrameLayout {
         WallpaperManager.setWallPaperOnView(background, mConversationId);
     }
 
+    void requestEditTextFocus() {
+        mInputEditText.requestFocus();
+    }
+
     void updateTimestamp() {
         mAdapter.notifyDataSetChanged();
     }
@@ -133,22 +137,11 @@ public class MessageBoxConversationView extends FrameLayout {
 
     @SuppressLint("RestrictedApi")
     private void initActionBarSimulation() {
-        AppCompatImageView closeActionImage = findViewById(R.id.action_close);
-
+        ImageView closeActionImage = findViewById(R.id.action_close);
         LinearLayout openActionContainer = findViewById(R.id.action_open);
+
         openActionContainer.setOnClickListener(mActivity);
         closeActionImage.setOnClickListener(mActivity);
-        int[][] states = new int[][]{
-                new int[]{-android.R.attr.state_pressed},
-                new int[]{android.R.attr.state_pressed}
-        };
-
-        int[] colors = new int[]{
-                Color.WHITE,
-                UiUtils.getColorDark(Color.WHITE)
-        };
-        ColorStateList state = new ColorStateList(states, colors);
-        closeActionImage.setSupportImageTintList(state);
 
         ImageView background = findViewById(R.id.action_bar_simulation_background);
         Drawable toolbarBg = ToolbarDrawables.getToolbarBg();

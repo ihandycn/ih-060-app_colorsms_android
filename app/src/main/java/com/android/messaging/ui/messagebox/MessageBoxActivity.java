@@ -160,6 +160,7 @@ public class MessageBoxActivity extends AppCompatActivity implements INotificati
         if (hasWindowFocus()) {
             mCurrentConversationView.updateTimestamp();
         }
+        mCurrentConversationView.requestEditTextFocus();
     }
 
     private boolean mLogScrollPaged;
@@ -287,6 +288,7 @@ public class MessageBoxActivity extends AppCompatActivity implements INotificati
             mPager.setCurrentItem(position);
             mCurrentConversationView = (MessageBoxConversationView) mPagerAdapter.getViews().get(position);
             mIndicator.updateIndicator(mPager.getCurrentItem(), mPagerAdapter.getCount());
+            mCurrentConversationView.requestEditTextFocus();
         }
     }
 

@@ -183,8 +183,8 @@
     <dimen name="bubble_customize_color_ring_size">40dp</dimen>
 
     <dimen name="message_box_background_radius">8dp</dimen>
-    <dimen name="message_box_start_margin">6.7dp</dimen>
-    <dimen name="message_box_end_margin">6.7dp</dimen>
+    <dimen name="message_box_start_margin">13.3dp</dimen>
+    <dimen name="message_box_end_margin">13.3dp</dimen>
 
     <dimen name="choose_theme_pager_padding">60dp</dimen>
 

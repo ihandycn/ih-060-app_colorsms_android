@@ -101,12 +101,14 @@
                         android:src="@drawable/ic_message_box_open_btn_right_arrow" />
                 </LinearLayout>
 
-                <android.support.v7.widget.AppCompatImageView
+                <ImageView
                     android:id="@+id/action_close"
                     android:layout_width="29dp"
                     android:layout_height="29dp"
                     android:layout_marginEnd="12dp"
                     android:padding="6.7dp"
+                    android:background="@drawable/material_close_btn_bg_round"
+                    android:tint="@color/white"
                     android:src="@drawable/ic_message_box_close" />
             </LinearLayout>
 
