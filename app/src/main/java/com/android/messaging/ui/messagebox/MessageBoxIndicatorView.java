@@ -13,6 +13,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.android.messaging.R;
+import com.android.messaging.util.BugleAnalytics;
 
 public class MessageBoxIndicatorView extends LinearLayout {
 
@@ -63,12 +64,15 @@ public class MessageBoxIndicatorView extends LinearLayout {
         mLeftIndicator.setOnClickListener(v -> {
             if (mOnIndicatorClickListener != null) {
                 mOnIndicatorClickListener.onClickLeft();
+                BugleAnalytics.logEvent("SMS_PopUp_MultiUser_Next_Click");
             }
+
         });
 
         mRightIndicator.setOnClickListener(v -> {
             if (mOnIndicatorClickListener != null) {
                 mOnIndicatorClickListener.onClickRight();
+                BugleAnalytics.logEvent("SMS_PopUp_MultiUser_Next_Click");
             }
         });
         setVisibility(GONE);
