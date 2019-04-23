@@ -36,6 +36,7 @@ import com.android.messaging.ui.UIIntents;
 import com.android.messaging.ui.conversationlist.ConversationListAdapter;
 import com.android.messaging.ui.conversationlist.ConversationListItemView;
 import com.android.messaging.ui.customize.PrimaryColors;
+import com.android.messaging.ui.customize.WallpaperDrawables;
 import com.android.messaging.util.Assert;
 import com.android.messaging.util.BugleAnalytics;
 import com.android.messaging.util.ImeUtil;
@@ -130,6 +131,8 @@ public class PrivateConversationListFragment extends Fragment
                              final Bundle savedInstanceState) {
         final ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.private_conversation_list_fragment,
                 container, false);
+        ImageView conversationListBg = rootView.findViewById(R.id.private_conversation_list_bg);
+        conversationListBg.setImageDrawable(WallpaperDrawables.getListWallpaperBg());
         mEmptyListMessageView = rootView.findViewById(R.id.private_box_empty_container);
         mRecyclerView = rootView.findViewById(android.R.id.list);
         mRecyclerView.setHasFixedSize(true);

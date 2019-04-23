@@ -21,6 +21,7 @@ import com.android.messaging.privatebox.ui.addtolist.ContactsSelectActivity;
 import com.android.messaging.privatebox.ui.addtolist.ConversationSelectActivity;
 import com.android.messaging.ui.conversationlist.ConversationListActivity;
 import com.android.messaging.ui.customize.PrimaryColors;
+import com.android.messaging.ui.customize.ToolbarDrawables;
 import com.android.messaging.util.BugleAnalytics;
 import com.ihs.commons.notificationcenter.INotificationObserver;
 import com.superapps.util.Dimensions;
@@ -49,6 +50,7 @@ public class PrivateConversationListActivity extends MultiSelectConversationList
     private Choreographer mChoreographer;
     private Choreographer.FrameCallback mFrameCallback;
     private INotificationObserver mNotificationObserver;
+    private boolean hasTheme;
 
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
@@ -111,15 +113,19 @@ public class PrivateConversationListActivity extends MultiSelectConversationList
 
     @Override
     protected void updateActionBar(final ActionBar actionBar) {
-        mStatusBarInset.setBackgroundColor(PrimaryColors.getPrimaryColor());
+        //mStatusBarInset.setBackgroundColor(PrimaryColors.getPrimaryColor());
 
         actionBar.setTitle("");
         actionBar.setDisplayShowTitleEnabled(false);
         actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
-        actionBar.setBackgroundDrawable(new ColorDrawable(PrimaryColors.getPrimaryColor()));
+        //actionBar.setBackgroundDrawable(new ColorDrawable(PrimaryColors.getPrimaryColor()));
         actionBar.show();
         if (mTitle != null && mActionMode == null) {
             mTitle.setVisibility(View.VISIBLE);
+        }
+
+        if (getActionMode() == null) {
+            findViewById(R.id.selection_mode_bg).setVisibility(View.INVISIBLE);
         }
 
         if (mActionMode == null && getSupportActionBar() != null) {
@@ -160,6 +166,9 @@ public class PrivateConversationListActivity extends MultiSelectConversationList
         if (mTitle != null) {
             mTitle.setVisibility(View.GONE);
         }
+        if (hasTheme) {
+            findViewById(R.id.selection_mode_bg).setVisibility(View.VISIBLE);
+        }
         return super.startActionMode(callback);
     }
 
@@ -174,6 +183,17 @@ public class PrivateConversationListActivity extends MultiSelectConversationList
     }
 
     private void configActionBar() {
+        View accessoryContainer = findViewById(R.id.accessory_container);
+        ViewGroup.LayoutParams lp = accessoryContainer.getLayoutParams();
+        lp.height = Dimensions.getStatusBarHeight(PrivateConversationListActivity.this) + Dimensions.pxFromDp(56);
+        accessoryContainer.setLayoutParams(lp);
+        if (ToolbarDrawables.getToolbarBg() != null) {
+            hasTheme = true;
+            accessoryContainer.setBackground(ToolbarDrawables.getToolbarBg());
+        } else {
+            accessoryContainer.setBackgroundColor(PrimaryColors.getPrimaryColor());
+        }
+
         mStatusBarInset = findViewById(R.id.status_bar_inset);
         ViewGroup.LayoutParams layoutParams = mStatusBarInset.getLayoutParams();
         layoutParams.height = Dimensions.getStatusBarHeight(this);
@@ -182,7 +202,6 @@ public class PrivateConversationListActivity extends MultiSelectConversationList
         Toolbar toolbar = findViewById(R.id.toolbar);
         toolbar.setTitle("");
         mTitle = findViewById(R.id.private_conversation_title);
-        toolbar.setBackgroundDrawable(new ColorDrawable(PrimaryColors.getPrimaryColor()));
         setSupportActionBar(toolbar);
 
         if (getSupportActionBar() != null) {
