@@ -49,8 +49,10 @@ import com.android.messaging.util.OsUtil;
 import com.android.messaging.util.PhoneUtils;
 import com.android.messaging.util.UriUtil;
 import com.android.messaging.widget.WidgetConversationProvider;
+import com.crashlytics.android.core.CrashlyticsCore;
 import com.google.common.annotations.VisibleForTesting;
 import com.ihs.commons.utils.HSLog;
+import com.superapps.debug.CrashlyticsLog;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -1821,6 +1823,12 @@ public class BugleDatabaseOperations {
         if (!participant.isContactIdResolved()) {
             // Refresh participant's name and avatar with matching contact in CP2.
             ParticipantRefresh.refreshParticipant(dbWrapper, participant);
+        }
+
+        //add for to find "unknown sender" reason
+        if (TextUtils.equals(participant.getSendDestination(), ParticipantData.getUnknownSenderDestination())) {
+            CrashlyticsCore.getInstance().logException(new CrashlyticsLog(
+                    "Insert unknown sender into db"));
         }
 
         // Insert the participant into the participants table
