@@ -23,6 +23,7 @@ import com.android.messaging.ui.conversationlist.ConversationListActivity;
 import com.android.messaging.ui.customize.PrimaryColors;
 import com.android.messaging.ui.customize.ToolbarDrawables;
 import com.android.messaging.util.BugleAnalytics;
+import com.ihs.commons.notificationcenter.HSGlobalNotificationCenter;
 import com.ihs.commons.notificationcenter.INotificationObserver;
 import com.superapps.util.Dimensions;
 import com.superapps.util.Navigations;
@@ -98,10 +99,19 @@ public class PrivateConversationListActivity extends MultiSelectConversationList
                     mIsMessageMoving = false;
                     mChoreographer.removeFrameCallback(mFrameCallback);
                     mProcessBarContainer.setVisibility(View.GONE);
-                    Toasts.showToast(R.string.private_box_add_success);
                     break;
             }
         };
+        HSGlobalNotificationCenter.addObserver(NOTIFICATION_KEY_MESSAGES_MOVE_START, mNotificationObserver);
+        HSGlobalNotificationCenter.addObserver(NOTIFICATION_KEY_MESSAGES_MOVE_END, mNotificationObserver);
+    }
+
+    @Override
+    protected void onDestroy() {
+        mIsMessageMoving = false;
+        mChoreographer.removeFrameCallback(mFrameCallback);
+        HSGlobalNotificationCenter.removeObserver(mNotificationObserver);
+        super.onDestroy();
     }
 
     private void addAndMoveConversations(List<String> conversationList) {

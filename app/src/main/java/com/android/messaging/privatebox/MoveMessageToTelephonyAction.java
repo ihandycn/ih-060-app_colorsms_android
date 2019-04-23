@@ -88,6 +88,7 @@ public class MoveMessageToTelephonyAction extends Action {
                         return;
                     }
                     if (localSmsCursor.moveToFirst()) {
+                        values.clear();
                         bindSmsValues(values, localSmsCursor);
                         //insert sms into telephony
                         Uri uri = resolver.insert(Telephony.Sms.CONTENT_URI, values);
@@ -110,6 +111,7 @@ public class MoveMessageToTelephonyAction extends Action {
                         return;
                     }
                     if (localMmsCursor.moveToFirst()) {
+                        values.clear();
                         bindMmsValues(values, localMmsCursor);
                         //insert into telephony
                         Uri uri = resolver.insert(Telephony.Mms.CONTENT_URI, values);

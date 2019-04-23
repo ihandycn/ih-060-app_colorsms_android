@@ -5,6 +5,7 @@ import android.os.Parcel;
 import android.os.Parcelable;
 import android.text.TextUtils;
 
+import com.android.messaging.R;
 import com.android.messaging.datamodel.BugleDatabaseOperations;
 import com.android.messaging.datamodel.DataModel;
 import com.android.messaging.datamodel.DatabaseHelper;
@@ -15,6 +16,8 @@ import com.android.messaging.datamodel.action.Action;
 import com.android.messaging.sms.MmsSmsUtils;
 import com.android.messaging.util.Assert;
 import com.ihs.app.framework.HSApplication;
+import com.ihs.commons.notificationcenter.HSGlobalNotificationCenter;
+import com.superapps.util.Toasts;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -35,14 +38,8 @@ public class MoveConversationToPrivateBoxAction extends Action implements Parcel
         action.start();
     }
 
-    public static void move(final List<String> conversationId) {
-        final MoveConversationToPrivateBoxAction action = new MoveConversationToPrivateBoxAction(conversationId);
-        action.actionParameters.putBoolean(KEY_UPDATE_PRIVATE_CONTACT, false);
-        action.start();
-    }
-
     public static void moveByContact(List<String> contactList, final String moveStartNotification,
-                                      final String moveEndNotification) {
+                                     final String moveEndNotification) {
         ArrayList<Long> threadIdList = new ArrayList<>();
         //todo : check permission for no grant exception
         for (String recipient : contactList) {
@@ -78,6 +75,8 @@ public class MoveConversationToPrivateBoxAction extends Action implements Parcel
         final List<String> conversationIdList;
         boolean updatePrivateContact = actionParameters.getBoolean(KEY_UPDATE_PRIVATE_CONTACT, true);
         final List<String> messagesList = new ArrayList<>();
+        String startNotification = actionParameters.getString(KEY_START_NOTIFICATION);
+        String endNotification = actionParameters.getString(KEY_END_NOTIFICATION);
 
         if (actionParameters.containsKey(KEY_THREAD_ID_LIST)) {
             long[] threadArray = actionParameters.getLongArray(KEY_THREAD_ID_LIST);
@@ -89,6 +88,13 @@ public class MoveConversationToPrivateBoxAction extends Action implements Parcel
                 if (!TextUtils.isEmpty(conversationId)) {
                     conversationIdList.add(conversationId);
                 }
+            }
+            if (conversationIdList.size() == 0) {
+                Toasts.showToast(R.string.private_box_add_success);
+                if (!TextUtils.isEmpty(endNotification)) {
+                    HSGlobalNotificationCenter.sendNotification(endNotification);
+                }
+                return null;
             }
         } else {
             conversationIdList = actionParameters.getStringArrayList(KEY_CONVERSATION_ID_LIST);
@@ -108,10 +114,14 @@ public class MoveConversationToPrivateBoxAction extends Action implements Parcel
         }
         MessagingContentProvider.notifyConversationListChanged();
 
-        String startNotification = actionParameters.getString(KEY_START_NOTIFICATION);
-        String endNotification = actionParameters.getString(KEY_END_NOTIFICATION);
-
-        MoveMessageToPrivateBoxAction.moveMessagesToPrivateBox(messagesList, startNotification, endNotification);
+        if (messagesList.size() == 0) {
+            Toasts.showToast(R.string.private_box_add_success);
+            if (!TextUtils.isEmpty(endNotification)) {
+                HSGlobalNotificationCenter.sendNotification(endNotification);
+            }
+        } else {
+            MoveMessageToPrivateBoxAction.moveMessagesToPrivateBox(messagesList, startNotification, endNotification);
+        }
         return null;
     }
 

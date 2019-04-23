@@ -135,6 +135,8 @@ public class ConversationSelectActivity extends HSAppCompatActivity
 
     @Override
     protected void onDestroy() {
+        mIsMessageMoving = false;
+        mChoreographer.removeFrameCallback(mFrameCallback);
         HSGlobalNotificationCenter.removeObserver(mNotificationObserver);
         super.onDestroy();
     }
@@ -176,7 +178,6 @@ public class ConversationSelectActivity extends HSAppCompatActivity
         mIsMessageMoving = false;
         mChoreographer.removeFrameCallback(mFrameCallback);
         mProcessBarContainer.setVisibility(View.GONE);
-        Toasts.showToast(R.string.private_box_add_success);
     }
 
     @Override

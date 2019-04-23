@@ -10,17 +10,17 @@ import android.os.Parcel;
 import android.os.Parcelable;
 import android.provider.Telephony;
 import android.text.TextUtils;
-import android.util.Log;
 
+import com.android.messaging.R;
 import com.android.messaging.datamodel.BugleDatabaseOperations;
 import com.android.messaging.datamodel.DataModel;
 import com.android.messaging.datamodel.DatabaseHelper;
 import com.android.messaging.datamodel.DatabaseWrapper;
 import com.android.messaging.datamodel.action.Action;
-import com.android.messaging.privatebox.ui.addtolist.ContactsSelectActivity;
 import com.android.messaging.sms.MmsUtils;
 import com.ihs.app.framework.HSApplication;
 import com.ihs.commons.notificationcenter.HSGlobalNotificationCenter;
+import com.superapps.util.Toasts;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,8 +29,8 @@ import static com.android.messaging.datamodel.data.MessageData.PROTOCOL_SMS;
 
 
 public class MoveMessageToPrivateBoxAction extends Action {
-    public static final String MESSAGES_MOVE_START_NOTIFICATION = "messages_move_start_notification";
-    public static final String MESSAGES_MOVE_END_NOTIFICATION = "messages_move_end_notification";
+    private static final String MESSAGES_MOVE_START_NOTIFICATION = "messages_move_start_notification";
+    private static final String MESSAGES_MOVE_END_NOTIFICATION = "messages_move_end_notification";
 
     private static final String KEY_MESSAGE_LIST = "message_list";
 
@@ -174,6 +174,7 @@ public class MoveMessageToPrivateBoxAction extends Action {
                     HSGlobalNotificationCenter.sendNotification(notificationName);
                 }
             }
+            Toasts.showToast(R.string.private_box_add_success);
         }
     }
 
