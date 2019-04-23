@@ -97,7 +97,7 @@ public class ConversationListActivity extends AbstractConversationListActivity
         implements View.OnClickListener, INotificationObserver {
 
     public static final String INTENT_KEY_PRIVATE_CONVERSATION_LIST = "conversation_list";
-    private static final boolean DEBUGGING_MESSAGE_BOX = true && BuildConfig.DEBUG;
+    private static final boolean DEBUGGING_MESSAGE_BOX = false && BuildConfig.DEBUG;
 
     public static final String EVENT_MAINPAGE_RECREATE = "event_mainpage_recreate";
     public static final String SHOW_EMOJI = "show_emoj";
