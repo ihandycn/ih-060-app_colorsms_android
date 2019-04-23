@@ -56,7 +56,6 @@ class MessageBoxInputActionView extends LinearLayout {
         mProgressBar = findViewById(R.id.progress_bar);
         mProgressBar.getIndeterminateDrawable().setColorFilter(PrimaryColors.getPrimaryColor(), PorterDuff.Mode.SRC_IN);
         mEmojiIcon = findViewById(R.id.emoji_btn);
-        mComposeEditText.requestFocus();
 
         ForegroundColorSpan signatureSpan = new ForegroundColorSpan(0xb3222327);
         String signature = Preferences.getDefault().getString(SignatureSettingDialog.PREF_KEY_SIGNATURE_CONTENT, null);
