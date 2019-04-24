@@ -16,6 +16,7 @@ import android.view.ViewGroup;
 
 import com.android.messaging.BuildConfig;
 import com.android.messaging.R;
+import com.android.messaging.datamodel.action.MarkAsReadAction;
 import com.android.messaging.datamodel.data.MessageBoxItemData;
 import com.android.messaging.ui.UIIntents;
 import com.android.messaging.ui.appsettings.PrivacyModeSettings;
@@ -37,6 +38,7 @@ import com.superapps.util.Toasts;
 import com.superapps.view.ViewPagerFixed;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import static com.android.messaging.ui.UIIntents.UI_INTENT_EXTRA_MESSAGE_BOX_ITEM;
@@ -69,6 +71,10 @@ public class MessageBoxActivity extends AppCompatActivity implements INotificati
     private boolean mHasSms;
     private boolean mHasMms;
     private boolean mHasPrivacyModeConversation;
+
+    private HashMap<String, Boolean> mMarkAsReadMap = new HashMap<>(4);
+    private HashMap<String, MessageBoxItemData> mDataMap = new HashMap<>(4);
+    private ArrayList<String> mConversationIdList = new ArrayList<>(4);
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -113,6 +119,9 @@ public class MessageBoxActivity extends AppCompatActivity implements INotificati
             }
         });
 
+        mMarkAsReadMap.put(data.getConversationId(), true);
+        mConversationIdList.add(data.getConversationId());
+        mDataMap.put(data.getConversationId(), data);
         mHasPrivacyModeConversation = PrivacyModeSettings.getPrivacyMode(data.getConversationId()) != PrivacyModeSettings.NONE;
     }
 
@@ -146,6 +155,9 @@ public class MessageBoxActivity extends AppCompatActivity implements INotificati
             MessageBoxAnalytics.setIsMultiConversation(true);
             mContactsNum++;
             mIndicator.updateIndicator(mPager.getCurrentItem(), mPagerAdapter.getCount());
+
+            mDataMap.put(data.getConversationId(), data);
+            mConversationIdList.add(data.getConversationId());
         }
         mMessagesNum++;
         mHasPrivacyModeConversation |= PrivacyModeSettings.getPrivacyMode(data.getConversationId()) != PrivacyModeSettings.NONE;
@@ -176,6 +188,7 @@ public class MessageBoxActivity extends AppCompatActivity implements INotificati
         mCurrentConversationView = (MessageBoxConversationView) mPagerAdapter.getViews().get(position);
         reLayoutIndicatorView();
         mIndicator.updateIndicator(position, mPagerAdapter.getCount());
+        mMarkAsReadMap.put(mCurrentConversationView.getConversationId(), true);
     }
 
     @Override
@@ -339,6 +352,14 @@ public class MessageBoxActivity extends AppCompatActivity implements INotificati
         super.onDestroy();
         HSGlobalNotificationCenter.removeObserver(this);
 
+        for (String conversationId : mConversationIdList) {
+            Boolean markAsRead = mMarkAsReadMap.get(conversationId);
+            if (markAsRead != null && markAsRead) {
+                MessageBoxItemData data = mDataMap.get(conversationId);
+                MarkAsReadAction.markAsRead(conversationId, data.getParticipantId(), data.getReceivedTimestamp());
+            }
+        }
+
         String messageType = "";
         if (mHasMms) {
             messageType += "mms";
@@ -353,6 +374,7 @@ public class MessageBoxActivity extends AppCompatActivity implements INotificati
                 "message type", messageType,
                 "withTheme", String.valueOf(!ThemeUtils.isDefaultTheme()),
                 "privacyMode", String.valueOf(mHasPrivacyModeConversation));
+
         if (mContactsNum > 1) {
             BugleAnalytics.logEvent("SMS_PopUp_MultiUser_Show", false, true);
         }
