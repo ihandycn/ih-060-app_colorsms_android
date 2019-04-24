@@ -83,7 +83,7 @@ import static com.android.messaging.ui.dialog.FiveStarRateDialog.PREF_KEY_MAIN_A
 public class ConversationListActivity extends AbstractConversationListActivity
         implements View.OnClickListener, INotificationObserver {
 
-    private static final boolean DEBUGGING_MESSAGE_BOX = true && BuildConfig.DEBUG;
+    private static final boolean DEBUGGING_MESSAGE_BOX = false && BuildConfig.DEBUG;
 
     public static final String EVENT_MAINPAGE_RECREATE = "event_mainpage_recreate";
     public static final String SHOW_EMOJI = "show_emoj";
