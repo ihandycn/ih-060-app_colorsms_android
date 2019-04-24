@@ -87,7 +87,7 @@ import static com.android.messaging.ui.dialog.FiveStarRateDialog.PREF_KEY_MAIN_A
 public class ConversationListActivity extends AbstractConversationListActivity
         implements View.OnClickListener, INotificationObserver {
 
-    private static final boolean DEBUGGING_MESSAGE_BOX = false && BuildConfig.DEBUG;
+    private static final boolean DEBUGGING_MESSAGE_BOX = true && BuildConfig.DEBUG;
 
     public static final String EVENT_MAINPAGE_RECREATE = "event_mainpage_recreate";
     public static final String SHOW_EMOJI = "show_emoj";
@@ -274,6 +274,12 @@ public class ConversationListActivity extends AbstractConversationListActivity
     }
 
     @Override
+    protected void onStart() {
+        super.onStart();
+        HSGlobalNotificationCenter.sendNotification(MessageBoxActivity.NOTIFICATION_FINISH_MESSAGE_BOX);
+    }
+
+    @Override
     protected void onResume() {
         super.onResume();
         BugleAnalytics.logEvent("SMS_Messages_Show_Corrected", true, true);
@@ -284,7 +290,7 @@ public class ConversationListActivity extends AbstractConversationListActivity
                 CustomizeGuideController.showGuideIfNeed(activity.get());
             }
         }, 1000);
-        HSGlobalNotificationCenter.sendNotification(MessageBoxActivity.NOTIFICATION_FINISH_MESSAGE_BOX);
+
     }
 
     @Override

@@ -6,8 +6,11 @@
         android:id="@+id/left_indicator"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:padding="5dp"
         android:src="@drawable/more_icon_settings"
+        android:paddingStart="6.5dp"
+        android:paddingEnd="6.5dp"
+        android:paddingTop="2.5dp"
+        android:paddingBottom="2.5dp"
         android:rotation="180" />
 
     <com.superapps.view.MessagesTextView
@@ -26,7 +29,10 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="30dp"
-        android:padding="5dp"
+        android:paddingStart="6.5dp"
+        android:paddingEnd="6.5dp"
+        android:paddingTop="2.5dp"
+        android:paddingBottom="2.5dp"
         android:src="@drawable/more_icon_settings" />
 
 </merge>

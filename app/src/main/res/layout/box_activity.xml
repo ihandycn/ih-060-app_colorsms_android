@@ -16,7 +16,6 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toTopOf="@+id/keyboard_guideline"/>
 
-
     <com.android.messaging.ui.messagebox.MessageBoxIndicatorView
         android:id="@+id/multi_conversation_indicator_view"
         android:layout_width="wrap_content"
@@ -27,7 +26,6 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/message_box_conversation_pager" />
-
 
     <include
         android:id="@+id/emoji_picker_container"

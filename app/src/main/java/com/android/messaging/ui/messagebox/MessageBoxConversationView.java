@@ -127,6 +127,7 @@ public class MessageBoxConversationView extends FrameLayout {
     void addNewMessage(MessageBoxItemData data) {
         mAdapter.addNewIncomingMessage(data);
         mRecyclerView.scrollToPosition(mAdapter.getItemCount() - 1);
+        updatePrivacyTitleAndTimestamp();
     }
 
     int getContentHeight() {
@@ -144,7 +145,7 @@ public class MessageBoxConversationView extends FrameLayout {
         ImageView background = findViewById(R.id.action_bar_simulation_background);
         Drawable toolbarBg = ToolbarDrawables.getToolbarBg();
         if (toolbarBg != null) {
-            background.setImageDrawable(toolbarBg);
+            background.setImageDrawable(toolbarBg.mutate());
         } else {
             background.setImageDrawable(new ColorDrawable(mPrimaryColor));
         }

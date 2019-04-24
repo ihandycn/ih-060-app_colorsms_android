@@ -16,8 +16,8 @@
 
         <ImageView
             android:id="@+id/app_icon"
-            android:layout_width="42dp"
-            android:layout_height="42dp"
+            android:layout_width="46dp"
+            android:layout_height="46dp"
             android:padding="10dp"
             android:scaleType="fitXY"
             android:src="@drawable/ic_invalid_name" />
@@ -28,7 +28,7 @@
             android:layout_height="wrap_content"
             android:textSize="16.7sp"
             android:textColor="@color/text_primary_color"
-            android:layout_marginTop="6dp"
+            android:layout_marginTop="-2dp"
             app:typeface="@string/custom_font_semibold"
             tools:text="One New message"/>
 
@@ -37,7 +37,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textColor="#afb1bf"
-            android:layout_marginTop="2dp"
+            android:includeFontPadding="false"
+            android:layout_marginTop="-2dp"
             android:textSize="11sp"
             app:typeface="@string/custom_font_regular"
             tools:text="2 mins ago" />
@@ -48,7 +49,7 @@
     <com.superapps.view.MessagesTextView
         android:id="@+id/privacy_show_message"
         android:layout_width="match_parent"
-        android:layout_height="37dp"
+        android:layout_height="39dp"
         android:layout_marginStart="26.7dp"
         android:layout_marginEnd="26.7dp"
         android:gravity="center"
