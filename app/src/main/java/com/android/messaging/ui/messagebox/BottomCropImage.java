@@ -40,7 +40,7 @@ public class BottomCropImage extends AppCompatImageView {
     }
 
     private void setup() {
-        setScaleType(ScaleType.CENTER_CROP);
+        setScaleType(ScaleType.MATRIX);
         post(() -> {
 
             // bottom crop

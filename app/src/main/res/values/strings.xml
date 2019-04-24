@@ -219,6 +219,12 @@
         <item quantity="other"><xliff:g id="messages">%d</xliff:g> new messages</item>
     </plurals>
 
+    <plurals name="notification_title_in_privacy_mode">
+        <item quantity="one">New message</item>
+        <item quantity="other">%1$d unread messages</item>
+    </plurals>
+    <string name="notification_sender_in_privacy_mode">Contact</string>
+
     <!-- Text for starting a new conversation button in the compose UI -->
 
     <string name="camera_error_opening">Camera not available</string>
@@ -1099,7 +1105,7 @@
     <string name="privacy_mode_hide_message_only">Hide message only</string>
     <string name="privacy_mode_hide_contact_and_message">Hide contact and message</string>
     <string name="privacy_mode_show_messages">SHOW MESSAGES</string>
-    <string name="privacy_mode_conversation_name">****</string>
+    <string name="privacy_mode_conversation_name">Contact</string>
     <string name="privacy_mode_open_button_text">OPEN</string>
 
     <string name="menu_privacy_box">Private Box</string>

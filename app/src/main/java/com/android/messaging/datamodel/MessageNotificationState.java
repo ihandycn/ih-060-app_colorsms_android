@@ -52,8 +52,9 @@ import com.android.messaging.datamodel.data.ParticipantData;
 import com.android.messaging.datamodel.media.BugleNotificationChannelUtil;
 import com.android.messaging.datamodel.media.VideoThumbnailRequest;
 import com.android.messaging.sms.MmsUtils;
-import com.android.messaging.ui.messagebox.MessageBoxSettings;
 import com.android.messaging.ui.UIIntents;
+import com.android.messaging.ui.appsettings.PrivacyModeSettings;
+import com.android.messaging.ui.messagebox.MessageBoxSettings;
 import com.android.messaging.util.Assert;
 import com.android.messaging.util.AvatarUriUtil;
 import com.android.messaging.util.BugleGservices;
@@ -65,6 +66,7 @@ import com.android.messaging.util.LogUtil;
 import com.android.messaging.util.PendingIntentConstants;
 import com.android.messaging.util.UriUtil;
 import com.google.common.collect.Lists;
+import com.ihs.app.framework.HSApplication;
 import com.superapps.util.Notifications;
 
 import java.util.ArrayList;
@@ -75,23 +77,25 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+import static com.android.messaging.ui.appsettings.PrivacyModeSettings.NONE;
+
 /**
  * Notification building class for conversation messages.
- *
+ * <p>
  * Message Notifications are built in several stages with several utility classes.
  * 1) Perform a database query and fill a data structure with information on messages and
- *    conversations which need to be notified.
+ * conversations which need to be notified.
  * 2) Based on the data structure choose an appropriate NotificationState subclass to
- *    represent all the notifications.
- *    -- For one or more messages in one conversation: MultiMessageNotificationState.
- *    -- For multiple messages in multiple conversations: MultiConversationNotificationState
- *
- *  A three level structure is used to coalesce the data from the database. From bottom to top:
- *  1) NotificationLineInfo - A single message that needs to be notified.
- *  2) ConversationLineInfo - A list of NotificationLineInfo in a single conversation.
- *  3) ConversationInfoList - A list of ConversationLineInfo and the total number of messages.
- *
- *  The createConversationInfoList function performs the query and creates the data structure.
+ * represent all the notifications.
+ * -- For one or more messages in one conversation: MultiMessageNotificationState.
+ * -- For multiple messages in multiple conversations: MultiConversationNotificationState
+ * <p>
+ * A three level structure is used to coalesce the data from the database. From bottom to top:
+ * 1) NotificationLineInfo - A single message that needs to be notified.
+ * 2) ConversationLineInfo - A list of NotificationLineInfo in a single conversation.
+ * 3) ConversationInfoList - A list of ConversationLineInfo and the total number of messages.
+ * <p>
+ * The createConversationInfoList function performs the query and creates the data structure.
  */
 public abstract class MessageNotificationState extends NotificationState {
     // Logging
@@ -178,9 +182,9 @@ public abstract class MessageNotificationState extends NotificationState {
         final String mMessageId;
 
         MessageLineInfo(final boolean isGroup, final String authorFullName,
-                final String authorFirstName, final CharSequence text, final Uri attachmentUrl,
-                final String attachmentType, final boolean isManualDownloadNeeded,
-                final String messageId) {
+                        final String authorFirstName, final CharSequence text, final Uri attachmentUrl,
+                        final String attachmentType, final boolean isManualDownloadNeeded,
+                        final String messageId) {
             super(BugleNotifications.LOCAL_SMS_NOTIFICATION);
             mAuthorFullName = authorFullName;
             mAuthorFirstName = authorFirstName;
@@ -320,6 +324,7 @@ public abstract class MessageNotificationState extends NotificationState {
     public static class ConversationInfoList {
         final int mMessageCount;
         final List<ConversationLineInfo> mConvInfos;
+
         public ConversationInfoList(final int count, final List<ConversationLineInfo> infos) {
             mMessageCount = count;
             mConvInfos = infos;
@@ -334,7 +339,7 @@ public abstract class MessageNotificationState extends NotificationState {
         if (convList != null && convList.mConvInfos != null && convList.mConvInfos.size() > 0) {
             set = new ConversationIdSet();
             for (final ConversationLineInfo info : convList.mConvInfos) {
-                    set.add(info.mConversationId);
+                set.add(info.mConversationId);
             }
         }
         return set;
@@ -376,10 +381,10 @@ public abstract class MessageNotificationState extends NotificationState {
     @Override
     public PendingIntent getClearIntent() {
         return UIIntents.get().getPendingIntentForClearingNotifications(
-                    Factory.get().getApplicationContext(),
-                    BugleNotifications.UPDATE_MESSAGES,
-                    mConversationIds,
-                    getClearIntentRequestCode());
+                Factory.get().getApplicationContext(),
+                BugleNotifications.UPDATE_MESSAGES,
+                mConversationIds,
+                getClearIntentRequestCode());
     }
 
     /**
@@ -439,35 +444,44 @@ public abstract class MessageNotificationState extends NotificationState {
                     when = convInfo.mReceivedTimestamp;
                 }
                 String sender;
-                CharSequence text;
-                final NotificationLineInfo lineInfo = convInfo.mLineInfos.get(0);
-                final MessageLineInfo messageLineInfo = (MessageLineInfo) lineInfo;
-                if (convInfo.mIsGroup) {
-                    sender = (convInfo.mGroupConversationName.length() >
-                            MAX_CHARACTERS_IN_GROUP_NAME) ?
-                                    truncateGroupMessageName(convInfo.mGroupConversationName)
-                                    : convInfo.mGroupConversationName;
-                } else {
-                    sender = messageLineInfo.mAuthorFullName;
-                }
-                text = messageLineInfo.mText;
-                mAttachmentUri = messageLineInfo.mAttachmentUri;
-                mAttachmentType = messageLineInfo.mAttachmentType;
-
-                inboxStyle.addLine(BugleNotifications.formatInboxMessage(
-                        sender, text, mAttachmentUri, mAttachmentType));
-                if (sender != null) {
-                    if (senders.length() > 0) {
-                        senders.append(separator);
+                if (PrivacyModeSettings.getPrivacyMode(convInfo.mConversationId) == NONE) {
+                    CharSequence text;
+                    final NotificationLineInfo lineInfo = convInfo.mLineInfos.get(0);
+                    final MessageLineInfo messageLineInfo = (MessageLineInfo) lineInfo;
+                    if (convInfo.mIsGroup) {
+                        sender = (convInfo.mGroupConversationName.length() >
+                                MAX_CHARACTERS_IN_GROUP_NAME) ?
+                                truncateGroupMessageName(convInfo.mGroupConversationName)
+                                : convInfo.mGroupConversationName;
+                    } else {
+                        sender = messageLineInfo.mAuthorFullName;
                     }
-                    senders.append(sender);
+                    text = messageLineInfo.mText;
+                    mAttachmentUri = messageLineInfo.mAttachmentUri;
+                    mAttachmentType = messageLineInfo.mAttachmentType;
+
+                    inboxStyle.addLine(BugleNotifications.formatInboxMessage(
+                            sender, text, mAttachmentUri, mAttachmentType));
+                    if (sender != null) {
+                        if (senders.length() > 0) {
+                            senders.append(separator);
+                        }
+                        senders.append(sender);
+                    }
+                } else {
+                    inboxStyle.addLine(BugleNotifications.formatInboxMessage(
+                            context.getString(R.string.notification_sender_in_privacy_mode),
+                            context.getResources().getQuantityString(R.plurals.notification_title_in_privacy_mode, 1, 1),
+                            null, null
+                    ));
+                    senders.append(context.getString(R.string.notification_sender_in_privacy_mode));
                 }
             }
             // for collapsed state
             mContent = senders;
             builder.setContentText(senders)
-                .setTicker(getTicker())
-                .setWhen(when);
+                    .setTicker(getTicker())
+                    .setWhen(when);
 
             return inboxStyle;
         }
@@ -552,13 +566,24 @@ public abstract class MessageNotificationState extends NotificationState {
 
         @Override
         protected NotificationCompat.Style build(final Builder builder) {
-            builder.setContentTitle(mTitle)
-                .setTicker(getTicker());
-
             NotificationCompat.Style notifStyle = null;
             final ConversationLineInfo convInfo = mConvList.mConvInfos.get(0);
             final List<NotificationLineInfo> lineInfos = convInfo.mLineInfos;
             final int messageCount = lineInfos.size();
+            String conversationId = convInfo.mConversationId;
+            boolean isPrivateConversation = PrivacyModeSettings.getPrivacyMode(conversationId) != NONE;
+            if (isPrivateConversation) {
+                builder.setContentTitle(HSApplication.getContext().getString(R.string.notification_sender_in_privacy_mode));
+                String content = HSApplication.getContext().getResources()
+                        .getQuantityString(R.plurals.notification_title_in_privacy_mode, messageCount, messageCount);
+                builder.setContentText(content);
+                notifStyle = new NotificationCompat.BigTextStyle(builder);
+                builder.setWhen(convInfo.mReceivedTimestamp);
+                return notifStyle;
+            }
+
+            builder.setContentTitle(mTitle)
+                    .setTicker(getTicker());
             // At this point, all the messages come from the same conversation. We need to load
             // the sender's avatar and then finish building the notification on a callback.
 
@@ -591,13 +616,13 @@ public abstract class MessageNotificationState extends NotificationState {
                     builder.setTicker(tickerTag);
 
                     notifStyle = new NotificationCompat.BigPictureStyle(builder)
-                        .setSummaryText(BugleNotifications.formatInboxMessage(
-                                authorFirstName,
-                                null, null,
-                                null));  // expanded state, just show sender
+                            .setSummaryText(BugleNotifications.formatInboxMessage(
+                                    authorFirstName,
+                                    null, null,
+                                    null));  // expanded state, just show sender
                 } else {
                     notifStyle = new NotificationCompat.BigTextStyle(builder)
-                    .bigText(mContent);
+                            .bigText(mContent);
                 }
             } else {
                 // We've got multiple messages for the same sender.
@@ -692,7 +717,7 @@ public abstract class MessageNotificationState extends NotificationState {
     // Essentially, we're building a list of the past 20 messages for this conversation to display
     // on the wearable.
     public static Notification buildConversationPageForWearable(final String conversationId,
-            int participantCount) {
+                                                                int participantCount) {
         final Context context = Factory.get().getApplicationContext();
 
         // Limit the number of messages to show. We just want enough to provide context for the
@@ -709,7 +734,7 @@ public abstract class MessageNotificationState extends NotificationState {
         try {
             final DatabaseWrapper db = DataModel.get().getDatabase();
 
-            final String[] queryArgs = { conversationId };
+            final String[] queryArgs = {conversationId};
             final String convPageSql = ConversationMessageData.getWearableQuerySql() + " LIMIT " +
                     limit;
             convMessageCursor = db.rawQuery(
@@ -837,8 +862,9 @@ public abstract class MessageNotificationState extends NotificationState {
      */
     public static class BundledMessageNotificationState extends MultiMessageNotificationState {
         public int mGroupOrder;
+
         public BundledMessageNotificationState(final ConversationInfoList convList,
-                final int groupOrder) {
+                                               final int groupOrder) {
             super(convList);
             mGroupOrder = groupOrder;
         }
@@ -970,7 +996,7 @@ public abstract class MessageNotificationState extends NotificationState {
                             spanBuilder.append(context.getString(R.string.notification_subject,
                                     subjectLabel, subjectText));
                             spanBuilder.setSpan(new TextAppearanceSpan(
-                                    context, R.style.NotificationSubjectText), 0,
+                                            context, R.style.NotificationSubjectText), 0,
                                     subjectLabel.length(),
                                     Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
                             if (!TextUtils.isEmpty(text)) {
@@ -1014,10 +1040,11 @@ public abstract class MessageNotificationState extends NotificationState {
     /**
      * Scans all the attachments for a message and returns the most interesting one that we'll
      * show in a notification. By order of importance, in case there are multiple attachments:
-     *      1- an image (because we can show the image as a BigPictureNotification)
-     *      2- a video (because we can show a video frame as a BigPictureNotification)
-     *      3- a vcard
-     *      4- an audio attachment
+     * 1- an image (because we can show the image as a BigPictureNotification)
+     * 2- a video (because we can show a video frame as a BigPictureNotification)
+     * 3- a vcard
+     * 4- an audio attachment
+     *
      * @return MessagePartData for the most interesting part. Can be null.
      */
     private static MessagePartData getMostInterestingAttachment(
@@ -1074,6 +1101,7 @@ public abstract class MessageNotificationState extends NotificationState {
      * Scans the database for messages that need to go into notifications. Creates the appropriate
      * MessageNotificationState depending on if there are multiple senders, or
      * messages from one sender.
+     *
      * @return NotificationState for the notification created.
      */
     public static NotificationState getNotificationState() {

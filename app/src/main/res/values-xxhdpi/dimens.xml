@@ -14,6 +14,5 @@
     limitations under the License.
 -->
 <resources>
-    <dimen name="message_box_start_margin">6.7dp</dimen>
-    <dimen name="message_box_end_margin">6.7dp</dimen>
+    <dimen name="message_box_message_view_height">200dp</dimen>
 </resources>

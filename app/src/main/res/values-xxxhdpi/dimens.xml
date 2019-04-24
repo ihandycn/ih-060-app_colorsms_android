@@ -15,7 +15,5 @@
 -->
 <resources>
 
-    <dimen name="message_box_start_margin">25dp</dimen>
-    <dimen name="message_box_end_margin">25dp</dimen>
-
+    <dimen name="message_box_message_view_height">240dp</dimen>
 </resources>

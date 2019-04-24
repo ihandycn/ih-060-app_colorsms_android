@@ -6,13 +6,11 @@ import android.animation.ValueAnimator;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
-import android.content.res.ColorStateList;
 import android.graphics.Color;
 import android.graphics.Rect;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.support.annotation.ColorInt;
-import android.support.v7.widget.AppCompatImageView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.telephony.TelephonyManager;
@@ -256,7 +254,7 @@ public class MessageBoxConversationView extends FrameLayout {
         showMessageTextView.setOnClickListener(v -> {
             revealMessages();
             showMessageTextView.setClickable(false);
-            BugleAnalytics.logEvent("SMS_PrivacyPopUp_Show_Click");
+            MessageBoxAnalytics.logEvent("SMS_PrivacyPopUp_Show_Click");
         });
 
         if (hideContactForThisMessage()) {

@@ -13,16 +13,12 @@ import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.LinearLayout;
 
 import com.android.messaging.BuildConfig;
 import com.android.messaging.R;
-import com.android.messaging.datamodel.SyncManager;
-import com.android.messaging.datamodel.action.DeleteMessageAction;
-import com.android.messaging.datamodel.action.MarkAsReadAction;
 import com.android.messaging.datamodel.data.MessageBoxItemData;
-import com.android.messaging.ui.BaseAlertDialog;
 import com.android.messaging.ui.UIIntents;
+import com.android.messaging.ui.appsettings.PrivacyModeSettings;
 import com.android.messaging.ui.customize.theme.ThemeUtils;
 import com.android.messaging.ui.emoji.BaseEmojiInfo;
 import com.android.messaging.ui.emoji.EmojiInfo;
@@ -41,7 +37,6 @@ import com.superapps.util.Toasts;
 import com.superapps.view.ViewPagerFixed;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 import static com.android.messaging.ui.UIIntents.UI_INTENT_EXTRA_MESSAGE_BOX_ITEM;
@@ -73,6 +68,7 @@ public class MessageBoxActivity extends AppCompatActivity implements INotificati
     private int mContactsNum = 1;
     private boolean mHasSms;
     private boolean mHasMms;
+    private boolean mHasPrivacyModeConversation;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -116,6 +112,8 @@ public class MessageBoxActivity extends AppCompatActivity implements INotificati
                 mIndicator.updateIndicator(mPager.getCurrentItem(), mPagerAdapter.getCount());
             }
         });
+
+        mHasPrivacyModeConversation = PrivacyModeSettings.getPrivacyMode(data.getConversationId()) != PrivacyModeSettings.NONE;
     }
 
 
@@ -150,7 +148,7 @@ public class MessageBoxActivity extends AppCompatActivity implements INotificati
             mIndicator.updateIndicator(mPager.getCurrentItem(), mPagerAdapter.getCount());
         }
         mMessagesNum++;
-
+        mHasPrivacyModeConversation |= PrivacyModeSettings.getPrivacyMode(data.getConversationId()) != PrivacyModeSettings.NONE;
         recordMessageType(data);
     }
 
@@ -353,10 +351,13 @@ public class MessageBoxActivity extends AppCompatActivity implements INotificati
                 "msgNum", String.valueOf(mMessagesNum),
                 "contactNum", String.valueOf(mContactsNum),
                 "message type", messageType,
-                "withTheme", String.valueOf(!ThemeUtils.isDefaultTheme()));
+                "withTheme", String.valueOf(!ThemeUtils.isDefaultTheme()),
+                "privacyMode", String.valueOf(mHasPrivacyModeConversation));
         if (mContactsNum > 1) {
             BugleAnalytics.logEvent("SMS_PopUp_MultiUser_Show", false, true);
         }
-
+        if (mHasPrivacyModeConversation) {
+            MessageBoxAnalytics.logEvent("SMS_PrivacyPopUp_Show");
+        }
     }
 }

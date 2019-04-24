@@ -133,7 +133,7 @@ public class SettingGeneralActivity extends BaseActivity {
                 }
             });
             UiUtils.showDialogFragment(SettingGeneralActivity.this, dialog);
-            BugleAnalytics.logEvent("SMS_Settings_Privacy_Click");
+
         });
 
         //signature
