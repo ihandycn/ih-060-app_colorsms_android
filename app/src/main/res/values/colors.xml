@@ -96,6 +96,8 @@
     <!-- Base color used for color filtering. -->
     <color name="color_filter_base_color">#ff0000</color>
 
+    <color name="transparent_black_pressed_color">#40000000</color>
+
     <!-- Activity background color -->
 
     <color name="contact_avatar_pressed_color">#40000000</color>
