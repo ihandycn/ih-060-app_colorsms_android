@@ -752,6 +752,8 @@ public class MmsUtils {
                     // recipientIds will be a space-separated list of ids into the
                     // canonical addresses table.
                     return thread.getString(RECIPIENT_IDS);
+                } else {
+                    CrashlyticsCore.getInstance().logException(new CrashlyticsLog("get null recipient by thread id"));
                 }
             } finally {
                 thread.close();
