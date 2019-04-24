@@ -33,6 +33,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.android.messaging.R;
@@ -222,9 +223,12 @@ public class ConversationActivity extends BugleActionBarActivity
         layoutParams.height = Dimensions.getStatusBarHeight(ConversationActivity.this) + Dimensions.pxFromDp(56);
         accessoryContainer.setLayoutParams(layoutParams);
         if (ToolbarDrawables.getToolbarBg() != null) {
-            accessoryContainer.setBackground(ToolbarDrawables.getToolbarBg());
+            ImageView ivAccessoryBg = accessoryContainer.findViewById(R.id.accessory_bg);
+            ivAccessoryBg.setVisibility(View.VISIBLE);
+            ivAccessoryBg.setImageDrawable(ToolbarDrawables.getToolbarBg());
         } else {
             accessoryContainer.setBackgroundColor(PrimaryColors.getPrimaryColor());
+            accessoryContainer.findViewById(R.id.accessory_bg).setVisibility(View.GONE);
         }
 
         View statusbarInset = findViewById(R.id.status_bar_inset);

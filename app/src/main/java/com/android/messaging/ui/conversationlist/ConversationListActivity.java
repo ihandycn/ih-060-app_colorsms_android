@@ -22,6 +22,7 @@ import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.airbnb.lottie.LottieAnimationView;
@@ -30,9 +31,9 @@ import com.android.messaging.Factory;
 import com.android.messaging.R;
 import com.android.messaging.ad.AdPlacement;
 import com.android.messaging.datamodel.BugleNotifications;
+import com.android.messaging.datamodel.action.PinConversationAction;
 import com.android.messaging.datamodel.data.MessageBoxItemData;
 import com.android.messaging.ui.CreateShortcutActivity;
-import com.android.messaging.datamodel.action.PinConversationAction;
 import com.android.messaging.ui.DragHotSeatActivity;
 import com.android.messaging.ui.UIIntents;
 import com.android.messaging.ui.UIIntentsImpl;
@@ -595,9 +596,12 @@ public class ConversationListActivity extends AbstractConversationListActivity
         layoutParams.height = Dimensions.getStatusBarHeight(ConversationListActivity.this) + Dimensions.pxFromDp(56);
         accessoryContainer.setLayoutParams(layoutParams);
         if (ToolbarDrawables.getToolbarBg() != null) {
-            accessoryContainer.setBackground(ToolbarDrawables.getToolbarBg());
+            ImageView ivAccessoryBg = accessoryContainer.findViewById(R.id.accessory_bg);
+            ivAccessoryBg.setVisibility(View.VISIBLE);
+            ivAccessoryBg.setImageDrawable(ToolbarDrawables.getToolbarBg());
         } else {
             accessoryContainer.setBackgroundColor(PrimaryColors.getPrimaryColor());
+            accessoryContainer.findViewById(R.id.accessory_bg).setVisibility(View.GONE);
         }
 
         View statusbarInset = findViewById(R.id.status_bar_inset);
