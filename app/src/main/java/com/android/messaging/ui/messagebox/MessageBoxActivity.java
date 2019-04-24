@@ -16,12 +16,10 @@ import android.view.ViewGroup;
 
 import com.android.messaging.BuildConfig;
 import com.android.messaging.R;
-import com.android.messaging.datamodel.SyncManager;
-import com.android.messaging.datamodel.action.DeleteMessageAction;
-import com.android.messaging.datamodel.action.MarkAsReadAction;
 import com.android.messaging.datamodel.data.MessageBoxItemData;
-import com.android.messaging.ui.BaseAlertDialog;
 import com.android.messaging.ui.UIIntents;
+import com.android.messaging.ui.appsettings.PrivacyModeSettings;
+import com.android.messaging.ui.customize.theme.ThemeUtils;
 import com.android.messaging.ui.emoji.BaseEmojiInfo;
 import com.android.messaging.ui.emoji.EmojiInfo;
 import com.android.messaging.ui.emoji.EmojiItemPagerAdapter;
@@ -39,7 +37,6 @@ import com.superapps.util.Toasts;
 import com.superapps.view.ViewPagerFixed;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 import static com.android.messaging.ui.UIIntents.UI_INTENT_EXTRA_MESSAGE_BOX_ITEM;
@@ -51,8 +48,6 @@ public class MessageBoxActivity extends AppCompatActivity implements INotificati
     private static final String OPEN = "open_btn";
     private static final String HOME = "home";
     private static final String CLOSE = "close";
-    private static final String DELETE = "delete";
-    private static final String UNREAD = "unread";
     private static final String REPLY = "reply";
     private static final String CLICK_CONTENT = "click_content";
 
@@ -73,10 +68,7 @@ public class MessageBoxActivity extends AppCompatActivity implements INotificati
     private int mContactsNum = 1;
     private boolean mHasSms;
     private boolean mHasMms;
-
-    private HashMap<String, Boolean> mMarkAsReadMap = new HashMap<>(4);
-    private HashMap<String, MessageBoxItemData> mDataMap = new HashMap<>(4);
-    private ArrayList<String> mConversationIdList = new ArrayList<>(4);
+    private boolean mHasPrivacyModeConversation;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -102,13 +94,26 @@ public class MessageBoxActivity extends AppCompatActivity implements INotificati
         MessageBoxAnalytics.setIsMultiConversation(false);
 
         recordMessageType(data);
-        mMarkAsReadMap.put(data.getConversationId(), true);
-        mConversationIdList.add(data.getConversationId());
-        mDataMap.put(data.getConversationId(), data);
 
         HSGlobalNotificationCenter.addObserver(NOTIFICATION_FINISH_MESSAGE_BOX, this);
         HSGlobalNotificationCenter.addObserver(NOTIFICATION_MESSAGE_BOX_SEND_SMS_FAILED, this);
         HSGlobalNotificationCenter.addObserver(NOTIFICATION_MESSAGE_BOX_SEND_SMS_SUCCEDED, this);
+
+        mIndicator.setOnIndicatorClickListener(new MessageBoxIndicatorView.OnIndicatorClickListener() {
+            @Override
+            public void onClickLeft() {
+                mPager.setCurrentItem(mPager.getCurrentItem() - 1);
+                mIndicator.updateIndicator(mPager.getCurrentItem(), mPagerAdapter.getCount());
+            }
+
+            @Override
+            public void onClickRight() {
+                mPager.setCurrentItem(mPager.getCurrentItem() + 1);
+                mIndicator.updateIndicator(mPager.getCurrentItem(), mPagerAdapter.getCount());
+            }
+        });
+
+        mHasPrivacyModeConversation = PrivacyModeSettings.getPrivacyMode(data.getConversationId()) != PrivacyModeSettings.NONE;
     }
 
 
@@ -136,21 +141,14 @@ public class MessageBoxActivity extends AppCompatActivity implements INotificati
             MessageBoxConversationView newItem = (MessageBoxConversationView) LayoutInflater.from(this).inflate(R.layout.message_box_conversation_view, null, false);
             newItem.bind(data);
 
-            mPager.removeOnPageChangeListener(mIndicator);
             mPagerAdapter.addView(newItem);
             mPagerAdapter.notifyDataSetChanged();
-
-            mIndicator.removeAllViews();
-            mIndicator.initDot(mPagerAdapter.getCount(), mPager.getCurrentItem());
-            mPager.addOnPageChangeListener(mIndicator);
-
             MessageBoxAnalytics.setIsMultiConversation(true);
             mContactsNum++;
-            mDataMap.put(data.getConversationId(), data);
-            mConversationIdList.add(data.getConversationId());
+            mIndicator.updateIndicator(mPager.getCurrentItem(), mPagerAdapter.getCount());
         }
         mMessagesNum++;
-
+        mHasPrivacyModeConversation |= PrivacyModeSettings.getPrivacyMode(data.getConversationId()) != PrivacyModeSettings.NONE;
         recordMessageType(data);
     }
 
@@ -158,17 +156,9 @@ public class MessageBoxActivity extends AppCompatActivity implements INotificati
     protected void onResume() {
         super.onResume();
         if (hasWindowFocus()) {
-            mIndicator.reveal();
             mCurrentConversationView.updateTimestamp();
         }
-    }
-
-    @Override
-    public void onWindowFocusChanged(boolean hasFocus) {
-        super.onWindowFocusChanged(hasFocus);
-        if (hasFocus) {
-            mIndicator.reveal();
-        }
+        mCurrentConversationView.requestEditTextFocus();
     }
 
     private boolean mLogScrollPaged;
@@ -185,7 +175,7 @@ public class MessageBoxActivity extends AppCompatActivity implements INotificati
     public void onPageSelected(int position) {
         mCurrentConversationView = (MessageBoxConversationView) mPagerAdapter.getViews().get(position);
         reLayoutIndicatorView();
-        mMarkAsReadMap.put(mCurrentConversationView.getConversationId(), true);
+        mIndicator.updateIndicator(position, mPagerAdapter.getCount());
     }
 
     @Override
@@ -195,7 +185,7 @@ public class MessageBoxActivity extends AppCompatActivity implements INotificati
 
     void reLayoutIndicatorView() {
         ConstraintLayout.LayoutParams params = (ConstraintLayout.LayoutParams) mIndicator.getLayoutParams();
-        params.bottomMargin = mCurrentConversationView.getContentHeight() + Dimensions.pxFromDp(22);
+        params.topMargin = mCurrentConversationView.getContentHeight() + Dimensions.pxFromDp(42);
         mIndicator.setLayoutParams(params);
     }
 
@@ -241,43 +231,14 @@ public class MessageBoxActivity extends AppCompatActivity implements INotificati
     public void onClick(View v) {
         int id = v.getId();
         switch (id) {
-            case R.id.action_call:
-                mCurrentConversationView.call();
-                MessageBoxAnalytics.logEvent("SMS_PopUp_Call_Click");
-                break;
-
-            case R.id.action_delete:
-                new BaseAlertDialog.Builder(this)
-                        .setTitle(getString(R.string.message_box_delete_alert_description))
-                        .setPositiveButton(R.string.delete_conversation_confirmation_button,
-                                (dialog, button) -> {
-                                    SyncManager.sync();
-                                    DeleteMessageAction.deleteMessage(mCurrentConversationView.getConversationId(),
-                                            mCurrentConversationView.getParticipantId(),
-                                            mCurrentConversationView.getOldestReceivedTimestamp());
-                                    removeCurrentPage(DELETE);
-                                    BugleAnalytics.logEvent("SMS_PopUp_Delete_Alert_Delete");
-                                })
-                        .setNegativeButton(R.string.delete_conversation_decline_button,
-                                (dialog, which) -> BugleAnalytics.logEvent("SMS_PopUp_Delete_Alert_Cancel"))
-                        .show();
-                MessageBoxAnalytics.logEvent("SMS_PopUp_Delete_Click");
-                break;
             case R.id.action_close:
                 finish(CLOSE);
-                break;
-            case R.id.action_unread:
-                mMarkAsReadMap.put(mCurrentConversationView.getConversationId(), false);
-                Toasts.showToast(R.string.message_box_mark_as_unread);
-                removeCurrentPage(UNREAD);
-                MessageBoxAnalytics.logEvent("SMS_PopUp_Unread_Click");
                 break;
             case R.id.action_open:
                 UIIntents.get().launchConversationActivityWithParentStack(this, mCurrentConversationView.getConversationId(), null);
                 finish(OPEN);
                 MessageBoxAnalytics.logEvent("SMS_PopUp_Open_Click");
                 break;
-
             case R.id.self_send_icon:
                 mCurrentConversationView.replyMessage();
                 break;
@@ -321,15 +282,11 @@ public class MessageBoxActivity extends AppCompatActivity implements INotificati
         if (position == mPagerAdapter.getCount() - 1) {
             finish(source);
         } else {
-            mPager.removeOnPageChangeListener(mIndicator);
             mPagerAdapter.removeView(mPager, mCurrentConversationView);
-
-            mIndicator.removeAllViews();
             mPager.setCurrentItem(position);
             mCurrentConversationView = (MessageBoxConversationView) mPagerAdapter.getViews().get(position);
-            mIndicator.initDot(mPagerAdapter.getCount(), position);
-            mPager.addOnPageChangeListener(mIndicator);
-            mIndicator.reveal();
+            mIndicator.updateIndicator(mPager.getCurrentItem(), mPagerAdapter.getCount());
+            mCurrentConversationView.requestEditTextFocus();
         }
     }
 
@@ -381,13 +338,6 @@ public class MessageBoxActivity extends AppCompatActivity implements INotificati
     protected void onDestroy() {
         super.onDestroy();
         HSGlobalNotificationCenter.removeObserver(this);
-        for (String conversationId : mConversationIdList) {
-            Boolean markAsRead = mMarkAsReadMap.get(conversationId);
-            if (markAsRead != null && markAsRead) {
-                MessageBoxItemData data = mDataMap.get(conversationId);
-                MarkAsReadAction.markAsRead(conversationId, data.getParticipantId(), data.getReceivedTimestamp());
-            }
-        }
 
         String messageType = "";
         if (mHasMms) {
@@ -400,6 +350,14 @@ public class MessageBoxActivity extends AppCompatActivity implements INotificati
         BugleAnalytics.logEvent("SMS_PopUp_Show_Multifunction", false, true,
                 "msgNum", String.valueOf(mMessagesNum),
                 "contactNum", String.valueOf(mContactsNum),
-                "message type", messageType);
+                "message type", messageType,
+                "withTheme", String.valueOf(!ThemeUtils.isDefaultTheme()),
+                "privacyMode", String.valueOf(mHasPrivacyModeConversation));
+        if (mContactsNum > 1) {
+            BugleAnalytics.logEvent("SMS_PopUp_MultiUser_Show", false, true);
+        }
+        if (mHasPrivacyModeConversation) {
+            MessageBoxAnalytics.logEvent("SMS_PrivacyPopUp_Show");
+        }
     }
 }

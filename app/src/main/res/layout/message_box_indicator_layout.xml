@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<merge xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <android.support.v7.widget.AppCompatImageView
+        android:id="@+id/left_indicator"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="5dp"
+        android:src="@drawable/more_icon_settings"
+        android:rotation="180" />
+
+    <com.superapps.view.MessagesTextView
+        android:id="@+id/indicator_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="12sp"
+        android:textColor="@color/white"
+        android:layout_marginStart="30dp"
+        android:layout_gravity="center_vertical"
+        android:includeFontPadding="false"
+        app:typeface="@string/custom_font_semibold" />
+
+    <android.support.v7.widget.AppCompatImageView
+        android:id="@+id/right_indicator"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="30dp"
+        android:padding="5dp"
+        android:src="@drawable/more_icon_settings" />
+
+</merge>

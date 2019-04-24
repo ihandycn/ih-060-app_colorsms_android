@@ -41,6 +41,14 @@
                 app:title="@string/setting_sms_pop_ups"
                 app:type="1" />
 
+            <com.android.messaging.ui.appsettings.SettingItemView
+                android:id="@+id/setting_item_privacy_mode"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:title="@string/privacy_mode_settings"
+                app:type="2" />
+
+
             <!--SMS Show-->
             <com.android.messaging.ui.appsettings.SettingItemView
                 android:id="@+id/setting_item_sms_show"

@@ -5,6 +5,7 @@
     android:id="@+id/dialog_root_view"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:clipChildren="false"
     android:background="@color/dialog_background">
 
     <LinearLayout
@@ -13,6 +14,8 @@
         android:background="@drawable/dialog_bg"
         android:clickable="true"
         android:orientation="vertical"
+        android:clipChildren="false"
+        android:clipToPadding="false"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
@@ -46,6 +49,7 @@
             android:layout_marginStart="@dimen/dialog_content_margin_left"
             android:layout_marginTop="13dp"
             android:clipChildren="false"
+            android:clipToPadding="false"
             tools:ignore="RelativeOverlap">
 
             <com.superapps.view.MessagesTextView

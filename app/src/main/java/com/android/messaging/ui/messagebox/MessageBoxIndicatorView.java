@@ -1,118 +1,109 @@
 package com.android.messaging.ui.messagebox;
 
 
+import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.res.ColorStateList;
+import android.graphics.Color;
 import android.support.annotation.Nullable;
-import android.support.v4.view.ViewPager;
+import android.support.v7.widget.AppCompatImageView;
 import android.util.AttributeSet;
-import android.view.Gravity;
-import android.view.View;
-import android.view.animation.OvershootInterpolator;
-import android.widget.FrameLayout;
+import android.view.LayoutInflater;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import com.android.messaging.R;
-import com.superapps.util.Dimensions;
+import com.android.messaging.util.BugleAnalytics;
 
-public class MessageBoxIndicatorView extends LinearLayout implements ViewPager.OnPageChangeListener {
+public class MessageBoxIndicatorView extends LinearLayout {
 
-    private final static float MAX_RATIO = 1.26f;
+    public interface OnIndicatorClickListener {
+        void onClickLeft();
+        void onClickRight();
+    }
 
-    private boolean mReveal;
+    private AppCompatImageView mLeftIndicator;
+    private TextView mTextIndicator;
+    private AppCompatImageView mRightIndicator;
+
+    private OnIndicatorClickListener mOnIndicatorClickListener;
 
     public MessageBoxIndicatorView(Context context) {
         super(context);
     }
 
+    @SuppressLint("RestrictedApi")
     public MessageBoxIndicatorView(Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
-    }
 
-    public MessageBoxIndicatorView(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
-        super(context, attrs, defStyleAttr);
-    }
+        final LayoutInflater inflater = LayoutInflater.from(context);
+        inflater.inflate(R.layout.message_box_indicator_layout, this, true);
 
-    private int mLastPosition = -1;
+        mLeftIndicator = findViewById(R.id.left_indicator);
+        mTextIndicator = findViewById(R.id.indicator_text);
+        mRightIndicator = findViewById(R.id.right_indicator);
 
-    public void initDot(int count, int selectedPosition) {
-        if (count < 2) {
-            return;
-        }
-        for (int i = 0; i < count; i++) {
-            FrameLayout layout = new FrameLayout(getContext());
-            int size = Dimensions.pxFromDp(7);
-            LayoutParams params = new LayoutParams(size, size);
-            addView(layout, params);
+        int[][] states = new int[][]{
+                new int[]{android.R.attr.state_enabled},
+                new int[]{-android.R.attr.state_enabled},
+                new int[]{-android.R.attr.state_pressed},
+                new int[]{android.R.attr.state_pressed}
+        };
 
-            View view = new View(getContext());
-            view.setBackgroundResource(R.drawable.message_box_dot_bg_drawable);
-            int dotSize = Dimensions.pxFromDp(5f);
-            FrameLayout.LayoutParams dotParams = new FrameLayout.LayoutParams(dotSize, dotSize);
-            dotParams.gravity = Gravity.CENTER;
-            layout.addView(view, dotParams);
-        }
+        int[] colors = new int[]{
+                Color.WHITE,
+                getResources().getColor(R.color.white_40_transparent),
+                Color.WHITE,
+                getResources().getColor(R.color.white_40_transparent),
 
-        selectStatus(selectedPosition);
-    }
+        };
+        ColorStateList state = new ColorStateList(states, colors);
+        mLeftIndicator.setSupportImageTintList(state);
+        mRightIndicator.setSupportImageTintList(state);
 
-    public void reveal() {
-        if (!mReveal) {
-            int count = getChildCount();
-            for (int i = 0; i < count; i++) {
-                float translationX = -Dimensions.pxFromDp((count - i) * 6.5f + 60f);
-                getChildAt(i).animate()
-                        .translationXBy(translationX)
-                        .setDuration(250L)
-                        .setStartDelay(40L * i)
-                        .setInterpolator(new OvershootInterpolator(3)).start();
-                mReveal = true;
+        mLeftIndicator.setOnClickListener(v -> {
+            if (mOnIndicatorClickListener != null) {
+                mOnIndicatorClickListener.onClickLeft();
+                BugleAnalytics.logEvent("SMS_PopUp_MultiUser_Next_Click");
             }
+
+        });
+
+        mRightIndicator.setOnClickListener(v -> {
+            if (mOnIndicatorClickListener != null) {
+                mOnIndicatorClickListener.onClickRight();
+                BugleAnalytics.logEvent("SMS_PopUp_MultiUser_Next_Click");
+            }
+        });
+        setVisibility(GONE);
+    }
+
+    void setOnIndicatorClickListener(OnIndicatorClickListener listener) {
+        mOnIndicatorClickListener = listener;
+    }
+
+
+    void updateIndicator(int position, int totalCount) {
+        mTextIndicator.setText(String.format(getResources().getString(R.string.message_box_indicator), position + 1, totalCount));
+
+        if (position  == 0) {
+            mLeftIndicator.setEnabled(false);
+        } else {
+            mLeftIndicator.setEnabled(true);
+        }
+
+        if (position == totalCount - 1) {
+            mRightIndicator.setEnabled(false);
+        } else {
+            mRightIndicator.setEnabled(true);
+        }
+
+        if (totalCount == 1) {
+            setVisibility(GONE);
+        } else {
+            setVisibility(VISIBLE);
         }
     }
 
-    @Override
-    public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-
-    }
-
-    @Override
-    public void onPageSelected(int position) {
-        if (mLastPosition != position) {
-            unSelectStatus(mLastPosition);
-            selectStatus(position);
-
-        }
-    }
-
-    private void selectStatus(int position) {
-        if (position < getChildCount()) {
-            View currentView = getChildAt(position);
-            currentView.setSelected(true);
-            currentView.setScaleY(MAX_RATIO);
-            currentView.setScaleX(MAX_RATIO);
-            mLastPosition = position;
-        }
-    }
-
-    private void unSelectStatus(int position) {
-        if (position < getChildCount() && position >= 0) {
-            View lastView = getChildAt(position);
-            lastView.setSelected(false);
-            lastView.setScaleX(1f);
-            lastView.setScaleY(1f);
-        }
-    }
-
-    @Override
-    public void removeAllViews() {
-        super.removeAllViews();
-        mLastPosition = -1;
-        mReveal = false;
-    }
-
-    @Override
-    public void onPageScrollStateChanged(int state) {
-
-    }
 }
 

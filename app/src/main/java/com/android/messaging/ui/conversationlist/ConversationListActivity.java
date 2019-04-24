@@ -25,12 +25,14 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.airbnb.lottie.LottieAnimationView;
+import com.android.messaging.BuildConfig;
 import com.android.messaging.Factory;
 import com.android.messaging.R;
 import com.android.messaging.ad.AdPlacement;
 import com.android.messaging.datamodel.BugleNotifications;
-import com.android.messaging.datamodel.action.PinConversationAction;
+import com.android.messaging.datamodel.data.MessageBoxItemData;
 import com.android.messaging.ui.CreateShortcutActivity;
+import com.android.messaging.datamodel.action.PinConversationAction;
 import com.android.messaging.ui.DragHotSeatActivity;
 import com.android.messaging.ui.UIIntents;
 import com.android.messaging.ui.UIIntentsImpl;
@@ -83,6 +85,8 @@ import static com.android.messaging.ui.dialog.FiveStarRateDialog.PREF_KEY_MAIN_A
 
 public class ConversationListActivity extends AbstractConversationListActivity
         implements View.OnClickListener, INotificationObserver {
+
+    private static final boolean DEBUGGING_MESSAGE_BOX = false && BuildConfig.DEBUG;
 
     public static final String EVENT_MAINPAGE_RECREATE = "event_mainpage_recreate";
     public static final String SHOW_EMOJI = "show_emoj";
@@ -156,6 +160,7 @@ public class ConversationListActivity extends AbstractConversationListActivity
         setContentView(R.layout.conversation_list_activity);
         configAppBar();
         mIsNoActionBack = true;
+
 
         if (getIntent() != null && getIntent().getBooleanExtra(EXTRA_FROM_DESKTOP_ICON, false)) {
             BugleAnalytics.logEvent("SMS_Shortcut_Click");
@@ -357,7 +362,14 @@ public class ConversationListActivity extends AbstractConversationListActivity
                         if (CommonUtils.isNewUser() && DateUtils.isToday(CommonUtils.getAppInstallTimeMillis())) {
                             BugleAnalytics.logEvent("Menu_Bubble_Click_NewUser", true);
                         }
-                        Navigations.startActivity(ConversationListActivity.this, CustomBubblesActivity.class);
+
+                        if (DEBUGGING_MESSAGE_BOX) {
+                            UIIntents.get().launchMessageBoxActivity(getApplicationContext(), new MessageBoxItemData("asd",
+                                    "asd", "asd", "asd", "asd", "heihei", 123L));
+                        } else {
+                            Navigations.startActivity(ConversationListActivity.this, CustomBubblesActivity.class);
+                        }
+
                         navigationContent.findViewById(R.id.navigation_item_bubble_new_text).setVisibility(View.GONE);
                         break;
                     case DRAWER_INDEX_CHAT_BACKGROUND:

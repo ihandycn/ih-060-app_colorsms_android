@@ -25,6 +25,8 @@ public abstract class BaseDialogFragment extends DialogFragment {
     private View.OnClickListener mNegativeClickListener;
     private View.OnClickListener mPositiveClickListener;
 
+    private FrameLayout mContentContainer;
+
     public void setOnDismissOrCancelListener(OnDismissOrCancelListener onDismissOrCancelListener) {
         this.mOnDismissOrCancelListener = onDismissOrCancelListener;
     }
@@ -64,18 +66,26 @@ public abstract class BaseDialogFragment extends DialogFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
         final View root = inflater.inflate(R.layout.layout_base_dialog, container, false);
-        ((TextView) root.findViewById(R.id.dialog_title)).setText(getTitle());
-
+        TextView titleTextView = root.findViewById(R.id.dialog_title);
+        if (TextUtils.isEmpty(getTitle())) {
+            titleTextView.setVisibility(View.GONE);
+        } else {
+            titleTextView.setText(getTitle());
+        }
+        mContentContainer = root.findViewById(R.id.content_view);
         if (TextUtils.isEmpty(getMessages())) {
-            FrameLayout contentViewContainer = root.findViewById(R.id.content_view);
-            contentViewContainer.removeAllViews();
+
+            mContentContainer.removeAllViews();
             View contentView = getContentView();
+
             if (contentView != null) {
-                contentViewContainer.addView(contentView);
+                mContentContainer.addView(contentView);
+                onContentViewAdded();
             }
         } else {
             ((TextView) root.findViewById(R.id.dialog_content)).setText(getMessages());
         }
+
 
         final TextView negativeButton = root.findViewById(R.id.negative_btn);
         if (TextUtils.isEmpty(getNegativeButtonText())) {
@@ -94,7 +104,17 @@ public abstract class BaseDialogFragment extends DialogFragment {
 
 
         final TextView positiveButton = root.findViewById(R.id.ok_btn);
-        positiveButton.setText(getPositiveButtonText());
+
+        if (TextUtils.isEmpty(getPositiveButtonText())) {
+            positiveButton.setVisibility(View.GONE);
+        } else {
+            positiveButton.setText(getPositiveButtonText());
+        }
+
+        if (TextUtils.isEmpty(getPositiveButtonText()) && TextUtils.isEmpty(getNegativeButtonText())) {
+            root.findViewById(R.id.btn_group_horizontal).setVisibility(View.GONE);
+        }
+
         positiveButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -122,6 +142,19 @@ public abstract class BaseDialogFragment extends DialogFragment {
         if (mOnDismissOrCancelListener != null) {
             mOnDismissOrCancelListener.onCancel(dialog);
         }
+    }
+
+    protected void removeDialogContentHorizontalMargin() {
+        if (mContentContainer != null) {
+            ViewGroup.MarginLayoutParams params = (ViewGroup.MarginLayoutParams) mContentContainer.getLayoutParams();
+            params.leftMargin = 0;
+            params.rightMargin = 0;
+            mContentContainer.setLayoutParams(params);
+        }
+    }
+
+    protected void onContentViewAdded() {
+
     }
 
     @Override

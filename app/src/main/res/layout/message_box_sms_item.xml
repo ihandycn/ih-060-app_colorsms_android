@@ -16,28 +16,29 @@
         android:id="@+id/message_content"
         android:layout_width="wrap_content"
         android:layout_height="0dp"
-        android:textColor="#222327"
+        android:textColor="#272d32"
         android:textSize="13.3sp"
         android:background="@drawable/message_box_message_item_background"
-        android:maxWidth="240dp"
+        android:maxWidth="235.7dp"
         android:lineSpacingExtra="3sp"
-        android:layout_marginStart="20dp"
+        android:layout_marginStart="15.3dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:font_size_changeable="true"
         app:typeface="@string/custom_font_regular"
-        tools:text="A you ok? Are you ok Are y o u A r e yo u o k? Ar e y ou ok A re you sd" />
+        tools:text="Apply this deluxe diamond theme to decorate your SMS!" />
 
     <com.superapps.view.MessagesTextView
         android:id="@+id/message_date"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textColor="#ababab"
+        android:textColor="#afb1be"
         android:textSize="10.7sp"
-        android:layout_marginStart="10dp"
+        android:layout_marginStart="26dp"
+        android:layout_marginTop="2dp"
         android:includeFontPadding="false"
-        app:layout_constraintLeft_toRightOf="@id/message_content"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/message_content"
         app:typeface="@string/custom_font_regular"
         tools:text="2 mins ago" />
 

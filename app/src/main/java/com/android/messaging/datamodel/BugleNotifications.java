@@ -68,6 +68,7 @@ import com.android.messaging.datamodel.media.VideoThumbnailRequest;
 import com.android.messaging.sms.MmsSmsUtils;
 import com.android.messaging.sms.MmsUtils;
 import com.android.messaging.ui.UIIntents;
+import com.android.messaging.ui.appsettings.PrivacyModeSettings;
 import com.android.messaging.ui.customize.PrimaryColors;
 import com.android.messaging.ui.messagebox.MessageBoxSettings;
 import com.android.messaging.util.Assert;
@@ -640,7 +641,11 @@ public class BugleNotifications {
             HSLog.d(TAG, "should not pop up messagebox");
         }
         processAndSend(state, silent, softSound);
-        BugleAnalytics.logEvent("SMS_Notifications_Pushed", true, true);
+        boolean isPrivacyMode = PrivacyModeSettings.getPrivacyMode(conversationId) != PrivacyModeSettings.NONE;
+        BugleAnalytics.logEvent("SMS_Notifications_Pushed", true, true, "PrivacyMode", String.valueOf(isPrivacyMode));
+        if (isPrivacyMode) {
+            BugleAnalytics.logEvent("SMS_PrivacyNotifications_Pushed", false, true);
+        }
 
     }
 
