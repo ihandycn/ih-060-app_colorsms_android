@@ -25,11 +25,20 @@ android {
         }
         mergeAssets.dependsOn encodePlistArchives
 
+        def scope = variant.variantData.getScope()
+        String mergeResourcesTaskName = scope.getMergeResourcesTask().name
+        def mergeResourcesTask = tasks.getByName(mergeResourcesTaskName)
+        Task deleteDuplicatedResources = tasks.create(name: "delete${taskMiddleName}DuplicatedResources",
+                type: Exec,
+                group: 'Color SMS') {
+            commandLine 'python', './tools/delete-duplicated-resources.py', mergeResourcesTask.outputDir
+        }
+        mergeResourcesTask.finalizedBy deleteDuplicatedResources
+
         if (buildType == 'release') {
             Task signApk = tasks.create(name: "sign${taskMiddleName}Apk",
                     type: Exec,
-                    group: 'Themes',
-                    description: 'Sign theme apk.') {
+                    group: 'Color SMS') {
                 commandLine './sign_message/sign_message.sh', variant.mergedFlavor.versionName
             }
             variant.assemble.finalizedBy signApk
