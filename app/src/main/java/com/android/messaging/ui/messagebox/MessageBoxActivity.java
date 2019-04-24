@@ -95,6 +95,7 @@ public class MessageBoxActivity extends AppCompatActivity implements INotificati
         mPager.addOnPageChangeListener(this);
         mPager.setAdapter(mPagerAdapter);
         initEmojiKeyboradSimulation();
+        mPager.post(this::reLayoutIndicatorView);
 
         mCurrentConversationView = view;
         MessageBoxAnalytics.setIsMultiConversation(false);
@@ -123,6 +124,7 @@ public class MessageBoxActivity extends AppCompatActivity implements INotificati
         mConversationIdList.add(data.getConversationId());
         mDataMap.put(data.getConversationId(), data);
         mHasPrivacyModeConversation = PrivacyModeSettings.getPrivacyMode(data.getConversationId()) != PrivacyModeSettings.NONE;
+
     }
 
 
@@ -171,6 +173,7 @@ public class MessageBoxActivity extends AppCompatActivity implements INotificati
             mCurrentConversationView.updateTimestamp();
         }
         mCurrentConversationView.requestEditTextFocus();
+
     }
 
     private boolean mLogScrollPaged;

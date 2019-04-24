@@ -15,5 +15,5 @@
 -->
 <resources>
 
-    <dimen name="message_box_message_view_height">240dp</dimen>
+    <dimen name="message_box_message_view_height">230dp</dimen>
 </resources>
