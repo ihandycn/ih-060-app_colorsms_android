@@ -151,8 +151,8 @@ class SyncMessageBatch {
         // A forced resync of all messages should still keep the archived states.
         // The database upgrade code notifies sync manager of this. We need to
         // honor the original customization to this conversation if created.
-        final String conversationId = mCache.getOrCreateConversation(db, sms.mThreadId, sms.mSubId,
-                DataModel.get().getSyncManager().getCustomizationForThread(sms.mThreadId));
+        final String conversationId = mCache.getOrCreateConversation(db, sms.mThreadId, sms.mAddress,
+                sms.mSubId, DataModel.get().getSyncManager().getCustomizationForThread(sms.mThreadId));
         if (conversationId == null) {
             // Cannot create conversation for this message? This should not happen.
             LogUtil.e(TAG, "SyncMessageBatch: Failed to create conversation for SMS thread "

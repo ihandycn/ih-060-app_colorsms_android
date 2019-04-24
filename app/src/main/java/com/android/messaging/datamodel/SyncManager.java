@@ -417,7 +417,9 @@ public class SyncManager {
          * @return The existing conversation id or new conversation id
          */
         public synchronized String getOrCreateConversation(final DatabaseWrapper db,
-                                                           final long threadId, int refSubId, final ConversationCustomization customization) {
+                                                           final long threadId,
+                                                           final String address,
+                                                           int refSubId, final ConversationCustomization customization) {
             // This function has several components which need to be atomic.
             Assert.isTrue(db.getDatabase().inTransaction());
 
@@ -428,6 +430,11 @@ public class SyncManager {
             }
 
             final List<String> recipients = getThreadRecipients(threadId);
+            if (recipients.size() == 1
+                    && recipients.get(0).equals(ParticipantData.getUnknownSenderDestination())) {
+                recipients.clear();
+                recipients.add(address);
+            }
             final ArrayList<ParticipantData> participants =
                     BugleDatabaseOperations.getConversationParticipantsFromRecipients(recipients,
                             refSubId);
