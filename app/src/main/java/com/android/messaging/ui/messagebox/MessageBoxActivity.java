@@ -122,7 +122,6 @@ public class MessageBoxActivity extends AppCompatActivity implements INotificati
             }
         });
 
-        mMarkAsReadMap.put(data.getConversationId(), true);
         mConversationIdList.add(data.getConversationId());
         mDataMap.put(data.getConversationId(), data);
         mHasPrivacyModeConversation = PrivacyModeSettings.getPrivacyMode(data.getConversationId()) != PrivacyModeSettings.NONE;
@@ -193,7 +192,6 @@ public class MessageBoxActivity extends AppCompatActivity implements INotificati
         mCurrentConversationView = (MessageBoxConversationView) mPagerAdapter.getViews().get(position);
         reLayoutIndicatorView();
         mIndicator.updateIndicator(position, mPagerAdapter.getCount());
-        mMarkAsReadMap.put(mCurrentConversationView.getConversationId(), true);
     }
 
     @Override
@@ -285,6 +283,10 @@ public class MessageBoxActivity extends AppCompatActivity implements INotificati
         mEmojiContainer.post(this::reLayoutIndicatorView);
     }
 
+    void markAsRead(String mConversationId) {
+        mMarkAsReadMap.put(mConversationId, true);
+    }
+
     private void adjustKeyboardGuideline(boolean showEmoji) {
         if (getIsEmojiVisibilityGone()) {
             Guideline keyboradGuideline = findViewById(R.id.keyboard_guideline);
@@ -365,13 +367,9 @@ public class MessageBoxActivity extends AppCompatActivity implements INotificati
         for (String conversationId : mConversationIdList) {
             Boolean markAsRead = mMarkAsReadMap.get(conversationId);
             if (markAsRead != null) {
-                if (PrivacyModeSettings.getPrivacyMode(conversationId) == PrivacyModeSettings.NONE) {
-                    if (markAsRead) {
-                        MessageBoxItemData data = mDataMap.get(conversationId);
-                        MarkAsReadAction.markAsRead(conversationId, data.getParticipantId(), data.getReceivedTimestamp());
-                    }
-                } else {
-                    MarkAsSeenAction.markAsSeen(conversationId);
+                if (markAsRead) {
+                    MessageBoxItemData data = mDataMap.get(conversationId);
+                    MarkAsReadAction.markAsRead(conversationId, data.getParticipantId(), data.getReceivedTimestamp());
                 }
             }
         }

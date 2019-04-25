@@ -11,6 +11,7 @@ import android.graphics.Rect;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.support.annotation.ColorInt;
+import android.support.annotation.NonNull;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.telephony.TelephonyManager;
@@ -46,6 +47,7 @@ import com.superapps.util.BackgroundDrawables;
 import com.superapps.util.Dimensions;
 
 import static com.android.messaging.datamodel.NoConfirmationSmsSendService.EXTRA_SELF_ID;
+import static com.android.messaging.ui.appsettings.PrivacyModeSettings.NONE;
 
 public class MessageBoxConversationView extends FrameLayout {
 
@@ -71,6 +73,7 @@ public class MessageBoxConversationView extends FrameLayout {
     private String mSelfId;
     private String mParticipantId;
 
+    private boolean mMarkAsRead;
     private int mInputEmojiCount;
 
     public MessageBoxConversationView(Context context, AttributeSet attrs) {
@@ -114,6 +117,10 @@ public class MessageBoxConversationView extends FrameLayout {
 
         ImageView background = findViewById(R.id.message_background);
         WallpaperManager.setWallPaperOnView(background, mConversationId);
+
+        if (PrivacyModeSettings.getPrivacyMode(mConversationId) == NONE) {
+            markAsRead();
+        }
     }
 
     void requestEditTextFocus() {
@@ -319,6 +326,25 @@ public class MessageBoxConversationView extends FrameLayout {
             mConversationName.setVisibility(VISIBLE);
             mConversationName.animate().alpha(1f).setDuration(200L).start();
         }
+        markAsRead();
+    }
+
+    @Override
+    protected void onVisibilityChanged(@NonNull View changedView, int visibility) {
+        super.onVisibilityChanged(changedView, visibility);
+
+        if (visibility == VISIBLE) {
+            if (PrivacyModeSettings.getPrivacyMode(mConversationId) == NONE) {
+                markAsRead();
+            }
+        }
+
+    }
+
+    void markAsRead() {
+        if (!TextUtils.isEmpty(mConversationId)) {
+            mActivity.markAsRead(mConversationId);
+        }
     }
 
     private boolean hideContactForThisMessage() {
@@ -326,7 +352,7 @@ public class MessageBoxConversationView extends FrameLayout {
     }
 
     private boolean hideMessagesForThisMessage() {
-        return PrivacyModeSettings.getPrivacyMode(mConversationId) != PrivacyModeSettings.NONE;
+        return PrivacyModeSettings.getPrivacyMode(mConversationId) != NONE;
     }
 
     private static class MessageItemDecoration extends RecyclerView.ItemDecoration {
