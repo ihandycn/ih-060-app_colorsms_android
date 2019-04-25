@@ -935,6 +935,7 @@
     <string name="media_picker_camera">Camera</string>
     <string name="media_picker_photo">Photo</string>
     <string name="media_picker_voice">Voice</string>
+    
     <string name="dialog_add_contact_confirmation">Add</string>
     <string name="emoji_store_title">Emoji Store</string>
     <string name="emoji_get">GET</string>
