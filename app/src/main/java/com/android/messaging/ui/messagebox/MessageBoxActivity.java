@@ -127,6 +127,7 @@ public class MessageBoxActivity extends AppCompatActivity implements INotificati
         mConversationIdList.add(data.getConversationId());
         mDataMap.put(data.getConversationId(), data);
         mHasPrivacyModeConversation = PrivacyModeSettings.getPrivacyMode(data.getConversationId()) != PrivacyModeSettings.NONE;
+        mHomeKeyWatcher = new HomeKeyWatcher(this);
         mHomeKeyWatcher.setOnHomePressedListener(new HomeKeyWatcher.OnHomePressedListener() {
             @Override
             public void onHomePressed() {
