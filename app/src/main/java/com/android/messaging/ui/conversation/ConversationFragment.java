@@ -852,9 +852,13 @@ public class ConversationFragment extends Fragment implements ConversationDataLi
 
         inflater.inflate(R.menu.conversation_menu, menu);
 
-        final ConversationData data = mBinding.getData();
-        final boolean supportCallAction = (PhoneUtils.getDefault().isVoiceCapable() &&
-                data.getParticipantPhoneNumber() != null);
+        boolean supportCallAction = false;
+        try {
+            final ConversationData data = mBinding.getData();
+            supportCallAction = (PhoneUtils.getDefault().isVoiceCapable() &&
+                    data.getParticipantPhoneNumber() != null);
+        } catch (IllegalStateException e) {
+        }
         menu.findItem(R.id.action_call).setVisible(supportCallAction);
     }
 
