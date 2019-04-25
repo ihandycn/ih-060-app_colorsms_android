@@ -588,6 +588,12 @@ public abstract class MessageNotificationState extends NotificationState {
 
             builder.setContentText(mContent);   // for collapsed state
 
+            if (privacyMode != NONE) {
+                notifStyle = new NotificationCompat.BigTextStyle(builder);
+                builder.setWhen(convInfo.mReceivedTimestamp);
+                return notifStyle;
+            }
+
             if (messageCount == 1) {
                 final boolean shouldShowImage = ContentType.isImageType(mAttachmentType)
                         || (ContentType.isVideoType(mAttachmentType)
