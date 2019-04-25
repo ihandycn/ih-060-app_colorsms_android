@@ -446,40 +446,36 @@ public abstract class MessageNotificationState extends NotificationState {
                     when = convInfo.mReceivedTimestamp;
                 }
                 String sender;
-                if (PrivacyModeSettings.getPrivacyMode(convInfo.mConversationId) == NONE) {
-                    CharSequence text;
-                    final NotificationLineInfo lineInfo = convInfo.mLineInfos.get(0);
-                    final MessageLineInfo messageLineInfo = (MessageLineInfo) lineInfo;
-                    if (convInfo.mIsGroup) {
-                        sender = (convInfo.mGroupConversationName.length() >
-                                MAX_CHARACTERS_IN_GROUP_NAME) ?
-                                truncateGroupMessageName(convInfo.mGroupConversationName)
-                                : convInfo.mGroupConversationName;
-                    } else {
-                        sender = messageLineInfo.mAuthorFullName;
-                    }
-                    text = messageLineInfo.mText;
-                    mAttachmentUri = messageLineInfo.mAttachmentUri;
-                    mAttachmentType = messageLineInfo.mAttachmentType;
-
-                    inboxStyle.addLine(BugleNotifications.formatInboxMessage(
-                            sender, text, mAttachmentUri, mAttachmentType));
-                    if (sender != null) {
-                        if (senders.length() > 0) {
-                            senders.append(separator);
-                        }
-                        senders.append(sender);
-                    }
+                CharSequence text;
+                final NotificationLineInfo lineInfo = convInfo.mLineInfos.get(0);
+                final MessageLineInfo messageLineInfo = (MessageLineInfo) lineInfo;
+                if (convInfo.mIsGroup) {
+                    sender = (convInfo.mGroupConversationName.length() >
+                            MAX_CHARACTERS_IN_GROUP_NAME) ?
+                            truncateGroupMessageName(convInfo.mGroupConversationName)
+                            : convInfo.mGroupConversationName;
                 } else {
-                    inboxStyle.addLine(BugleNotifications.formatInboxMessage(
-                            context.getString(R.string.notification_sender_in_privacy_mode),
-                            context.getResources().getQuantityString(R.plurals.notification_title_in_privacy_mode, 1, 1),
-                            null, null
-                    ));
+                    sender = messageLineInfo.mAuthorFullName;
+                }
+                text = messageLineInfo.mText;
+                mAttachmentUri = messageLineInfo.mAttachmentUri;
+                mAttachmentType = messageLineInfo.mAttachmentType;
+
+                int privacyMode = PrivacyModeSettings.getPrivacyMode(convInfo.mConversationId);
+                if (privacyMode == PrivacyModeSettings.HIDE_CONTACT_AND_MESSAGE) {
+                    sender = context.getString(R.string.notification_sender_in_privacy_mode);
+                    text = context.getResources().getQuantityString(R.plurals.notification_title_in_privacy_mode, 1, 1);
+                } else if (privacyMode == PrivacyModeSettings.HIDE_MESSAGE_ONLY) {
+                    text = context.getResources().getQuantityString(R.plurals.notification_title_in_privacy_mode, 1, 1);
+                }
+
+                inboxStyle.addLine(BugleNotifications.formatInboxMessage(
+                        sender, text, mAttachmentUri, mAttachmentType));
+                if (sender != null) {
                     if (senders.length() > 0) {
                         senders.append(separator);
                     }
-                    senders.append(context.getString(R.string.notification_sender_in_privacy_mode));
+                    senders.append(sender);
                 }
             }
             // for collapsed state
@@ -575,16 +571,14 @@ public abstract class MessageNotificationState extends NotificationState {
             final ConversationLineInfo convInfo = mConvList.mConvInfos.get(0);
             final List<NotificationLineInfo> lineInfos = convInfo.mLineInfos;
             final int messageCount = lineInfos.size();
-            String conversationId = convInfo.mConversationId;
-            boolean isPrivateConversation = PrivacyModeSettings.getPrivacyMode(conversationId) != NONE;
-            if (isPrivateConversation) {
-                builder.setContentTitle(HSApplication.getContext().getString(R.string.notification_sender_in_privacy_mode));
-                String content = HSApplication.getContext().getResources()
-                        .getQuantityString(R.plurals.notification_title_in_privacy_mode, messageCount, messageCount);
-                builder.setContentText(content);
-                notifStyle = new NotificationCompat.BigTextStyle(builder);
-                builder.setWhen(convInfo.mReceivedTimestamp);
-                return notifStyle;
+
+            Context context = HSApplication.getContext();
+            int privacyMode = PrivacyModeSettings.getPrivacyMode(convInfo.mConversationId);
+            if (privacyMode == PrivacyModeSettings.HIDE_CONTACT_AND_MESSAGE) {
+                mTitle = context.getString(R.string.notification_sender_in_privacy_mode);
+                mContent = context.getResources().getQuantityString(R.plurals.notification_title_in_privacy_mode, messageCount, messageCount);
+            } else if (privacyMode == PrivacyModeSettings.HIDE_MESSAGE_ONLY) {
+                mContent = context.getResources().getQuantityString(R.plurals.notification_title_in_privacy_mode, messageCount, messageCount);
             }
 
             builder.setContentTitle(mTitle)
