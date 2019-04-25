@@ -42,6 +42,7 @@ import java.util.HashMap;
 import java.util.List;
 
 import static com.android.messaging.ui.UIIntents.UI_INTENT_EXTRA_MESSAGE_BOX_ITEM;
+import static com.android.messaging.ui.messagebox.MessageBoxAnalytics.getConversationType;
 
 public class MessageBoxActivity extends AppCompatActivity implements INotificationObserver,
         View.OnClickListener, ViewPager.OnPageChangeListener {
@@ -95,7 +96,7 @@ public class MessageBoxActivity extends AppCompatActivity implements INotificati
         mPager.addOnPageChangeListener(this);
         mPager.setAdapter(mPagerAdapter);
         initEmojiKeyboradSimulation();
-        mPager.post(this::reLayoutIndicatorView);
+
 
         mCurrentConversationView = view;
         MessageBoxAnalytics.setIsMultiConversation(false);
@@ -173,7 +174,7 @@ public class MessageBoxActivity extends AppCompatActivity implements INotificati
             mCurrentConversationView.updateTimestamp();
         }
         mCurrentConversationView.requestEditTextFocus();
-
+        mCurrentConversationView.post(this::reLayoutIndicatorView);
     }
 
     private boolean mLogScrollPaged;
@@ -253,7 +254,9 @@ public class MessageBoxActivity extends AppCompatActivity implements INotificati
             case R.id.action_open:
                 UIIntents.get().launchConversationActivityWithParentStack(this, mCurrentConversationView.getConversationId(), null);
                 finish(OPEN);
-                MessageBoxAnalytics.logEvent("SMS_PopUp_Open_Click");
+                BugleAnalytics.logEvent("SMS_PopUp_Open_Click",
+                        false, true, "type", getConversationType(),
+                        "privacyMode", String.valueOf(mHasPrivacyModeConversation));
                 break;
             case R.id.self_send_icon:
                 mCurrentConversationView.replyMessage();
@@ -332,6 +335,9 @@ public class MessageBoxActivity extends AppCompatActivity implements INotificati
     }
 
     private void finish(String source) {
+        if (isFinishing()) {
+            return;
+        }
         finish();
         overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
         if (MessageBoxAnalytics.getIsMultiConversation()) {

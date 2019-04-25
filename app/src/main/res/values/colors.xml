@@ -133,6 +133,7 @@
     <color name="wearable_notification_participants_count">#a2a2a2</color>
     <color name="notification_warning_color">#ff0000</color>
     <color name="notification_subject_color">#99aaaaaa</color>
+    <color name="notification_avatar_background_color">#dadee3</color>
 
     <color name="participant_list_text_primary">#222327</color>
     <color name="people_and_options_header_text">#56575c</color>

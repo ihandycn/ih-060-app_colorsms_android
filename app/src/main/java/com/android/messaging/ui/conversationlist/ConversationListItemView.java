@@ -17,6 +17,7 @@ package com.android.messaging.ui.conversationlist;
 
 import android.content.Context;
 import android.content.res.Resources;
+import android.graphics.Color;
 import android.graphics.Rect;
 import android.graphics.Typeface;
 import android.net.Uri;
@@ -232,23 +233,17 @@ public class ConversationListItemView extends FrameLayout implements OnClickList
     private void setContactImage() {
         Uri iconUri = null;
         String imgUri = mData.getIcon();
-        int contactIconBackgroundColor;
-        if (mData.getIsRead()) {
-            //read
-            contactIconBackgroundColor = 0xffd4d9de;
-        } else {
+        if (!mData.getIsRead()) {
             //unread
-            contactIconBackgroundColor = PrimaryColors.getContactIconColor();
             if (!TextUtils.isEmpty(imgUri)) {
                 imgUri = imgUri.concat("unread");
             }
         }
-
         if (!TextUtils.isEmpty(imgUri)) {
             iconUri = Uri.parse(imgUri);
         }
         mContactIconView.setImageResourceUri(iconUri, mData.getParticipantContactId(),
-                mData.getParticipantLookupKey(), mData.getOtherParticipantNormalizedDestination(), contactIconBackgroundColor);
+                mData.getParticipantLookupKey(), mData.getOtherParticipantNormalizedDestination(), Color.TRANSPARENT);
     }
 
     private static String getPlusOneString() {

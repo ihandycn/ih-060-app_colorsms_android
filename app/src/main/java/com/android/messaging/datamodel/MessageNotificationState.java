@@ -476,6 +476,9 @@ public abstract class MessageNotificationState extends NotificationState {
                             context.getResources().getQuantityString(R.plurals.notification_title_in_privacy_mode, 1, 1),
                             null, null
                     ));
+                    if (senders.length() > 0) {
+                        senders.append(separator);
+                    }
                     senders.append(context.getString(R.string.notification_sender_in_privacy_mode));
                 }
             }

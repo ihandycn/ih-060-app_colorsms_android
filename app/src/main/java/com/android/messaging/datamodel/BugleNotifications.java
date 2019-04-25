@@ -505,7 +505,7 @@ public class BugleNotifications {
         if (state.mParticipantAvatarsUris != null) {
             final Uri avatarUri = state.mParticipantAvatarsUris.get(0);
             final AvatarRequestDescriptor descriptor = new AvatarRequestDescriptor(avatarUri,
-                    sIconWidth, sIconHeight, OsUtil.isAtLeastL());
+                    sIconWidth, sIconHeight, context.getResources().getColor(R.color.notification_avatar_background_color));
             final MediaRequest<ImageResource> imageRequest = descriptor.buildSyncMediaRequest(
                     context);
 
@@ -516,6 +516,7 @@ public class BugleNotifications {
             // Synchronously load the avatar.
             final ImageResource avatarImage =
                     MediaResourceManager.get().requestMediaResourceSync(imageRequest);
+
             if (avatarImage != null) {
                 ImageResource avatarHiRes = null;
                 try {
@@ -533,7 +534,8 @@ public class BugleNotifications {
                                             sWearableImageWidth,
                                             sWearableImageHeight,
                                             false /* cropToCircle */,
-                                            true /* isWearBackground */);
+                                            true /* isWearBackground */,
+                                            context.getResources().getColor(R.color.notification_avatar_background_color));
                             avatarHiRes = MediaResourceManager.get().requestMediaResourceSync(
                                     hiResDesc.buildSyncMediaRequest(context));
                         }
@@ -546,6 +548,7 @@ public class BugleNotifications {
                     Bitmap avatarHiResBitmap = (avatarHiRes != null) ?
                             Bitmap.createBitmap(avatarHiRes.getBitmap()) : null;
                     sendNotification(state, avatarBitmap, avatarHiResBitmap);
+
                     return;
                 } finally {
                     avatarImage.release();

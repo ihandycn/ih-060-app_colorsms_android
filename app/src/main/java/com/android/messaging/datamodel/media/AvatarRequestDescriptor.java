@@ -57,6 +57,18 @@ public class AvatarRequestDescriptor extends UriImageRequestDescriptor {
         this.isWearBackground = isWearBackground;
     }
 
+    public AvatarRequestDescriptor(final Uri uri, final int desiredWidth,
+                                   final int desiredHeight, boolean cropToCircle, boolean isWearBackground, int backgroundColor) {
+        super(uri, desiredWidth, desiredHeight, false /* allowCompression */, true /* isStatic */,
+                cropToCircle,
+                backgroundColor /* circleBackgroundColor */,
+                ImageUtils.DEFAULT_CIRCLE_STROKE_COLOR /* circleStrokeColor */);
+        Assert.isTrue(uri == null || UriUtil.isLocalResourceUri(uri) ||
+                AvatarUriUtil.isAvatarUri(uri));
+        this.isWearBackground = isWearBackground;
+    }
+
+
     @Override
     public MediaRequest<ImageResource> buildSyncMediaRequest(final Context context) {
         final String avatarType = uri == null ? null : AvatarUriUtil.getAvatarType(uri);
