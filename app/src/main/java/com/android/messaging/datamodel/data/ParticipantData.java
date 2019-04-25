@@ -34,7 +34,7 @@ import com.android.messaging.datamodel.DatabaseHelper.ParticipantColumns;
 import com.android.messaging.datamodel.DatabaseWrapper;
 import com.android.messaging.sms.MmsSmsUtils;
 import com.android.messaging.util.Assert;
-import com.android.messaging.util.BugleAnalytics;
+import com.android.messaging.util.CommonUtils;
 import com.android.messaging.util.PhoneUtils;
 import com.android.messaging.util.TextUtil;
 import com.crashlytics.android.core.CrashlyticsCore;
@@ -58,39 +58,39 @@ public class ParticipantData implements Parcelable {
     public static final long PARTICIPANT_CONTACT_ID_NOT_FOUND = -2;
 
     public static class ParticipantsQuery {
-        public static final String[] PROJECTION = new String[] {
-            ParticipantColumns._ID,
-            ParticipantColumns.SUB_ID,
-            ParticipantColumns.SIM_SLOT_ID,
-            ParticipantColumns.NORMALIZED_DESTINATION,
-            ParticipantColumns.SEND_DESTINATION,
-            ParticipantColumns.DISPLAY_DESTINATION,
-            ParticipantColumns.FULL_NAME,
-            ParticipantColumns.FIRST_NAME,
-            ParticipantColumns.PROFILE_PHOTO_URI,
-            ParticipantColumns.CONTACT_ID,
-            ParticipantColumns.LOOKUP_KEY,
-            ParticipantColumns.BLOCKED,
-            ParticipantColumns.SUBSCRIPTION_COLOR,
-            ParticipantColumns.SUBSCRIPTION_NAME,
-            ParticipantColumns.CONTACT_DESTINATION,
+        public static final String[] PROJECTION = new String[]{
+                ParticipantColumns._ID,
+                ParticipantColumns.SUB_ID,
+                ParticipantColumns.SIM_SLOT_ID,
+                ParticipantColumns.NORMALIZED_DESTINATION,
+                ParticipantColumns.SEND_DESTINATION,
+                ParticipantColumns.DISPLAY_DESTINATION,
+                ParticipantColumns.FULL_NAME,
+                ParticipantColumns.FIRST_NAME,
+                ParticipantColumns.PROFILE_PHOTO_URI,
+                ParticipantColumns.CONTACT_ID,
+                ParticipantColumns.LOOKUP_KEY,
+                ParticipantColumns.BLOCKED,
+                ParticipantColumns.SUBSCRIPTION_COLOR,
+                ParticipantColumns.SUBSCRIPTION_NAME,
+                ParticipantColumns.CONTACT_DESTINATION,
         };
 
-        public static final int INDEX_ID                        = 0;
-        public static final int INDEX_SUB_ID                    = 1;
-        public static final int INDEX_SIM_SLOT_ID               = 2;
-        public static final int INDEX_NORMALIZED_DESTINATION    = 3;
-        public static final int INDEX_SEND_DESTINATION          = 4;
-        public static final int INDEX_DISPLAY_DESTINATION       = 5;
-        public static final int INDEX_FULL_NAME                 = 6;
-        public static final int INDEX_FIRST_NAME                = 7;
-        public static final int INDEX_PROFILE_PHOTO_URI         = 8;
-        public static final int INDEX_CONTACT_ID                = 9;
-        public static final int INDEX_LOOKUP_KEY                = 10;
-        public static final int INDEX_BLOCKED                   = 11;
-        public static final int INDEX_SUBSCRIPTION_COLOR        = 12;
-        public static final int INDEX_SUBSCRIPTION_NAME         = 13;
-        public static final int INDEX_CONTACT_DESTINATION       = 14;
+        public static final int INDEX_ID = 0;
+        public static final int INDEX_SUB_ID = 1;
+        public static final int INDEX_SIM_SLOT_ID = 2;
+        public static final int INDEX_NORMALIZED_DESTINATION = 3;
+        public static final int INDEX_SEND_DESTINATION = 4;
+        public static final int INDEX_DISPLAY_DESTINATION = 5;
+        public static final int INDEX_FULL_NAME = 6;
+        public static final int INDEX_FIRST_NAME = 7;
+        public static final int INDEX_PROFILE_PHOTO_URI = 8;
+        public static final int INDEX_CONTACT_ID = 9;
+        public static final int INDEX_LOOKUP_KEY = 10;
+        public static final int INDEX_BLOCKED = 11;
+        public static final int INDEX_SUBSCRIPTION_COLOR = 12;
+        public static final int INDEX_SUBSCRIPTION_NAME = 13;
+        public static final int INDEX_CONTACT_DESTINATION = 14;
     }
 
     /**
@@ -147,13 +147,13 @@ public class ParticipantData implements Parcelable {
     }
 
     public static ParticipantData getFromId(final DatabaseWrapper dbWrapper,
-            final String participantId) {
+                                            final String participantId) {
         Cursor cursor = null;
         try {
             cursor = dbWrapper.query(DatabaseHelper.PARTICIPANTS_TABLE,
                     ParticipantsQuery.PROJECTION,
                     ParticipantColumns._ID + " =?",
-                    new String[] { participantId }, null, null, null);
+                    new String[]{participantId}, null, null, null);
 
             if (cursor.moveToFirst()) {
                 return ParticipantData.getFromCursor(cursor);
@@ -221,7 +221,7 @@ public class ParticipantData implements Parcelable {
 
     /**
      * Get an instance from a raw phone number and using system locale to normalize it.
-     *
+     * <p>
      * Use this when creating a participant that is for displaying UI and not associated
      * with a specific SIM. For example, when creating a conversation using user entered
      * phone number.
@@ -243,7 +243,7 @@ public class ParticipantData implements Parcelable {
 
     /**
      * Get an instance from a raw phone number and using SIM or system locale to normalize it.
-     *
+     * <p>
      * Use this when creating a participant that is associated with a specific SIM. For example,
      * the sender of a received message or the recipient of a sending message that is already
      * targeted at a specific SIM.
@@ -292,6 +292,9 @@ public class ParticipantData implements Parcelable {
             final Resources resources = Factory.get().getApplicationContext().getResources();
             mDisplayDestination = resources.getString(R.string.unknown_sender);
             CrashlyticsCore.getInstance().logException(new CrashlyticsLog("maybeSetupUnknownSender"));
+            if (CommonUtils.isNewUser()) {
+                CrashlyticsCore.getInstance().logException(new CrashlyticsLog("new user: unknown sender"));
+            }
             mFullName = mDisplayDestination;
         }
     }
@@ -435,7 +438,7 @@ public class ParticipantData implements Parcelable {
 
     /**
      * @return whether this sub is active. Note that {@link ParticipantData#DEFAULT_SELF_SUB_ID} is
-     *         is considered as active if there is any active SIM.
+     * is considered as active if there is any active SIM.
      */
     public boolean isActiveSubscription() {
         return mSlotId != INVALID_SLOT_ID;
@@ -559,7 +562,7 @@ public class ParticipantData implements Parcelable {
     }
 
     public static final Parcelable.Creator<ParticipantData> CREATOR
-    = new Parcelable.Creator<ParticipantData>() {
+            = new Parcelable.Creator<ParticipantData>() {
         @Override
         public ParticipantData createFromParcel(final Parcel in) {
             return new ParticipantData(in);

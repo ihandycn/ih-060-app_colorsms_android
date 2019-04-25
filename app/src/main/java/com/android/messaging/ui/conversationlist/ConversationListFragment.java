@@ -69,6 +69,7 @@ import com.ihs.app.framework.HSApplication;
 import com.ihs.commons.config.HSConfig;
 import com.ihs.commons.notificationcenter.HSGlobalNotificationCenter;
 import com.ihs.commons.utils.HSBundle;
+import com.ihs.commons.utils.HSLog;
 import com.superapps.util.BackgroundDrawables;
 import com.superapps.util.Dimensions;
 import com.superapps.util.IntegerBuckets;
@@ -554,6 +555,7 @@ public class ConversationListFragment extends Fragment implements ConversationLi
 
     // Show and hide empty list UI as needed with appropriate text based on view specifics
     private void updateEmptyListUi(final boolean isEmpty) {
+        HSLog.d("update empty list " + isEmpty);
         if (isEmpty) {
             int emptyListText;
             boolean isFirstSynsCompleted = true;

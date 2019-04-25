@@ -27,9 +27,6 @@ public class CustomizeGuideController {
 
     @SuppressLint("ClickableViewAccessibility")
     public static void showGuideIfNeed(AppCompatActivity activity) {
-        if (Preferences.getDefault().getInt(PREF_KEY_MAIN_PAGE_SHOW_TIME, 0) != 2) {
-            return;
-        }
         if (!Preferences.getDefault().getBoolean(PREF_KEY_SHOULD_SHOW_CUSTOMIZE_GUIDE, true)) {
             return;
         }

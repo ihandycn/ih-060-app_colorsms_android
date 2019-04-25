@@ -282,15 +282,12 @@ public class ConversationListActivity extends AbstractConversationListActivity
     @Override
     protected void onResume() {
         super.onResume();
+
         BugleAnalytics.logEvent("SMS_Messages_Show_Corrected", true, true);
         Preferences.getDefault().incrementAndGetInt(CustomizeGuideController.PREF_KEY_MAIN_PAGE_SHOW_TIME);
-        WeakReference<AppCompatActivity> activity = new WeakReference<>(this);
-        Threads.postOnMainThreadDelayed(() -> {
-            if (!isFinishing() && activity.get() != null) {
-                CustomizeGuideController.showGuideIfNeed(activity.get());
-            }
-        }, 1000);
-
+        if (Preferences.getDefault().getInt(CustomizeGuideController.PREF_KEY_MAIN_PAGE_SHOW_TIME, 0) == 2) {
+            Threads.postOnMainThreadDelayed(() -> showEmojiStoreGuide(), 500);
+        }
     }
 
     @Override
@@ -828,7 +825,12 @@ public class ConversationListActivity extends AbstractConversationListActivity
                 recreate();
                 break;
             case SHOW_EMOJI:
-                Threads.postOnMainThreadDelayed(() -> showEmojiStoreGuide(), 500);
+                WeakReference<AppCompatActivity> activity = new WeakReference<>(this);
+                Threads.postOnMainThreadDelayed(() -> {
+                    if (!isFinishing() && activity.get() != null) {
+                        CustomizeGuideController.showGuideIfNeed(activity.get());
+                    }
+                }, 1000);
                 break;
             case FIRST_LOAD:
                 if (!sIsRecreate && hsBundle != null) {
