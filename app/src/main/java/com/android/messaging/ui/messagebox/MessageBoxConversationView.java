@@ -116,19 +116,16 @@ public class MessageBoxConversationView extends FrameLayout {
         mParticipantId = data.getParticipantId();
         inflatePrivacyModePageIfNeeded();
 
-        ImageView background = findViewById(R.id.message_background);
-        WallpaperManager.setWallPaperOnView(background, mConversationId);
-
         if (PrivacyModeSettings.getPrivacyMode(mConversationId) == NONE) {
             markAsRead();
         }
 
+        ImageView background = findViewById(R.id.message_background);
         Drawable wallpaperDrawable = WallpaperDrawables.getWallpaperBg();
-
         if (wallpaperDrawable != null) {
             background.setImageDrawable(wallpaperDrawable);
         } else {
-            background.setBackground(null);
+            background.setImageDrawable(null);
         }
     }
 
