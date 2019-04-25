@@ -17,7 +17,6 @@ import android.view.ViewGroup;
 import com.android.messaging.BuildConfig;
 import com.android.messaging.R;
 import com.android.messaging.datamodel.action.MarkAsReadAction;
-import com.android.messaging.datamodel.action.MarkAsSeenAction;
 import com.android.messaging.datamodel.data.MessageBoxItemData;
 import com.android.messaging.ui.UIIntents;
 import com.android.messaging.ui.appsettings.PrivacyModeSettings;
@@ -34,6 +33,7 @@ import com.ihs.commons.notificationcenter.HSGlobalNotificationCenter;
 import com.ihs.commons.notificationcenter.INotificationObserver;
 import com.ihs.commons.utils.HSBundle;
 import com.superapps.util.Dimensions;
+import com.superapps.util.HomeKeyWatcher;
 import com.superapps.util.Threads;
 import com.superapps.util.Toasts;
 import com.superapps.view.ViewPagerFixed;
@@ -51,6 +51,7 @@ public class MessageBoxActivity extends AppCompatActivity implements INotificati
     private static final String BACK = "back";
     private static final String OPEN = "open_btn";
     private static final String HOME = "home";
+    private static final String RECENT = "recent";
     private static final String CLOSE = "close";
     private static final String REPLY = "reply";
     private static final String CLICK_CONTENT = "click_content";
@@ -65,7 +66,6 @@ public class MessageBoxActivity extends AppCompatActivity implements INotificati
     private DynamicalPagerAdapter mPagerAdapter;
     private MessageBoxIndicatorView mIndicator;
     private ViewGroup mEmojiContainer;
-
     private MessageBoxConversationView mCurrentConversationView;
 
     private int mMessagesNum = 1;
@@ -77,6 +77,8 @@ public class MessageBoxActivity extends AppCompatActivity implements INotificati
     private HashMap<String, Boolean> mMarkAsReadMap = new HashMap<>(4);
     private HashMap<String, MessageBoxItemData> mDataMap = new HashMap<>(4);
     private ArrayList<String> mConversationIdList = new ArrayList<>(4);
+
+    private HomeKeyWatcher mHomeKeyWatcher;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -125,7 +127,19 @@ public class MessageBoxActivity extends AppCompatActivity implements INotificati
         mConversationIdList.add(data.getConversationId());
         mDataMap.put(data.getConversationId(), data);
         mHasPrivacyModeConversation = PrivacyModeSettings.getPrivacyMode(data.getConversationId()) != PrivacyModeSettings.NONE;
+        mHomeKeyWatcher.setOnHomePressedListener(new HomeKeyWatcher.OnHomePressedListener() {
+            @Override
+            public void onHomePressed() {
+                finish(HOME);
+            }
 
+            @Override
+            public void onRecentsPressed() {
+                finish(RECENT);
+            }
+        });
+
+        BugleAnalytics.logEvent("SMS_PopUp_Show", false, true);
     }
 
 
@@ -395,5 +409,7 @@ public class MessageBoxActivity extends AppCompatActivity implements INotificati
         if (mHasPrivacyModeConversation) {
             MessageBoxAnalytics.logEvent("SMS_PrivacyPopUp_Show");
         }
+        mHomeKeyWatcher.stopWatch();
+        mHomeKeyWatcher = null;
     }
 }
