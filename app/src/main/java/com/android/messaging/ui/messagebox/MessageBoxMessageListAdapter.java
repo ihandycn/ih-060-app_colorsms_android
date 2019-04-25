@@ -1,7 +1,9 @@
 package com.android.messaging.ui.messagebox;
 
 
+import android.graphics.Color;
 import android.support.annotation.ColorInt;
+import android.support.annotation.ColorRes;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
@@ -15,8 +17,12 @@ import com.android.messaging.datamodel.data.MessageBoxItemData;
 import com.android.messaging.ui.ConversationDrawables;
 import com.android.messaging.ui.UIIntents;
 import com.android.messaging.ui.customize.ConversationColors;
+import com.android.messaging.ui.customize.PrimaryColors;
+import com.android.messaging.ui.wallpaper.WallpaperManager;
 import com.android.messaging.util.Dates;
 import com.ihs.commons.notificationcenter.HSGlobalNotificationCenter;
+import com.superapps.util.BackgroundDrawables;
+import com.superapps.util.Dimensions;
 
 import java.util.ArrayList;
 
@@ -29,17 +35,30 @@ public class MessageBoxMessageListAdapter extends RecyclerView.Adapter<RecyclerV
 
     private ArrayList<MessageBoxItemData> mDataList = new ArrayList<>();
     private String mConversationId;
+    private boolean mHasWallpaper;
 
     @ColorInt
     private int mIncomingTextColor;
-    @ColorInt
+    @ColorRes
     private int mIncomingTimestampColor;
+
+    @ColorInt
+    private int mPrimaryColor;
+
 
     MessageBoxMessageListAdapter(MessageBoxItemData data) {
         mDataList.add(data);
         mConversationId =  data.getConversationId();
         mIncomingTextColor = ConversationColors.get().getMessageTextColor(true, mConversationId);
-        mIncomingTimestampColor = ConversationColors.get().getListTimeColor();
+
+        mHasWallpaper = WallpaperManager.hasWallpaper(mConversationId);
+        if (mHasWallpaper) {
+            mIncomingTimestampColor = R.color.white;
+        } else {
+            mIncomingTimestampColor = R.color.timestamp_text_incoming;
+        }
+        mPrimaryColor = PrimaryColors.getPrimaryColor();
+
     }
 
     void addNewIncomingMessage(MessageBoxItemData data) {
@@ -61,7 +80,13 @@ public class MessageBoxMessageListAdapter extends RecyclerView.Adapter<RecyclerV
                 holder.mContentText.setTextColor(mIncomingTextColor);
                 holder.mContentText.setBackground(ConversationDrawables.get().getBubbleDrawable(false, true,
                         true, false, mConversationId));
-                holder.mDateText.setTextColor(mIncomingTimestampColor);
+                holder.mDateText.setTextColor(parent.getContext().getResources().getColor(mIncomingTimestampColor));
+                if (!mHasWallpaper) {
+                    holder.mDateText.setBackground(null);
+                } else {
+                    holder.mDateText.setBackground(BackgroundDrawables.createBackgroundDrawable(
+                            Color.argb(51, Color.red(mPrimaryColor), Color.green(mPrimaryColor), Color.blue(mPrimaryColor)), Dimensions.pxFromDp(16), false));
+                }
                 return holder;
             case ITEM_MMS:
                 View mmsViewItem = LayoutInflater.from(parent.getContext()).inflate(R.layout.message_box_mms_item, parent, false);
@@ -72,6 +97,13 @@ public class MessageBoxMessageListAdapter extends RecyclerView.Adapter<RecyclerV
                     HSGlobalNotificationCenter.sendNotification(NOTIFICATION_FINISH_MESSAGE_BOX);
                     MessageBoxAnalytics.logEvent("SMS_PopUp_MMS_Click");
                 });
+
+                if (!mHasWallpaper) {
+                    mmsViewHolder.mDateText.setBackground(null);
+                } else {
+                    mmsViewHolder.mDateText.setBackground(BackgroundDrawables.createBackgroundDrawable(
+                            Color.argb(51, Color.red(mPrimaryColor), Color.green(mPrimaryColor), Color.blue(mPrimaryColor)), Dimensions.pxFromDp(16), false));
+                }
                 return mmsViewHolder;
             default:
                 return null;
