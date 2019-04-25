@@ -83,7 +83,7 @@ public class ConversationData extends BindableData {
         final Cursor c = new ConversationData.ReversedCursor(
                 DataModel.get().getDatabase().rawQuery(
                         ConversationMessageData.getConversationMessageIdsQuerySql(),
-                        new String [] { conversationId }));
+                        new String[]{conversationId}));
         if (c != null) {
             try {
                 final Set<Long> idsSet = new HashSet<Long>(ids);
@@ -105,10 +105,14 @@ public class ConversationData extends BindableData {
 
     public interface ConversationDataListener {
         public void onConversationMessagesCursorUpdated(ConversationData data, Cursor cursor,
-                @Nullable ConversationMessageData newestMessage, boolean isSync);
+                                                        @Nullable ConversationMessageData newestMessage, boolean isSync);
+
         public void onConversationMetadataUpdated(ConversationData data);
+
         public void closeConversation(String conversationId);
+
         public void onConversationParticipantDataLoaded(ConversationData data);
+
         public void onSubscriptionListDataLoaded(ConversationData data);
     }
 
@@ -412,7 +416,7 @@ public class ConversationData extends BindableData {
                         MessagingContentProvider.PARTICIPANTS_URI,
                         ParticipantData.ParticipantsQuery.PROJECTION,
                         ParticipantColumns.SUB_ID + " <> ?",
-                        new String[] { String.valueOf(ParticipantData.OTHER_THAN_SELF_SUB_ID) },
+                        new String[]{String.valueOf(ParticipantData.OTHER_THAN_SELF_SUB_ID)},
                         null);
             } else {
                 LogUtil.w(TAG, "Creating self loader after unbinding mConversationId = " +
@@ -467,7 +471,7 @@ public class ConversationData extends BindableData {
     private String mLastMessageId;
 
     public ConversationData(final Context context, final ConversationDataListener listener,
-            final String conversationId) {
+                            final String conversationId) {
         Assert.isTrue(conversationId != null);
         mContext = context;
         mConversationId = conversationId;
@@ -527,7 +531,7 @@ public class ConversationData extends BindableData {
     private static final int SELF_PARTICIPANT_LOADER = 4;
 
     public void init(final LoaderManager loaderManager,
-            final BindingBase<ConversationData> binding) {
+                     final BindingBase<ConversationData> binding) {
         // Remember the binding id so that loader callbacks can check if data is still bound
         // to same ui component
         final Bundle args = new Bundle();
@@ -591,7 +595,7 @@ public class ConversationData extends BindableData {
     }
 
     public void sendMessage(final BindingBase<ConversationData> binding,
-            final MessageData message) {
+                            final MessageData message) {
         Assert.isTrue(TextUtils.equals(mConversationId, message.getConversationId()));
         Assert.isTrue(binding.getData() == this);
 
@@ -626,7 +630,8 @@ public class ConversationData extends BindableData {
             }
         }
 
-        if (ContactUtil.hasReadContactsPermission()) {
+        if (ContactUtil.hasReadContactsPermission()
+                && ContactUtil.hasWriteContactsPermission()) {
             SafeAsyncTask.executeOnThreadPool(new Runnable() {
                 @Override
                 public void run() {
@@ -648,7 +653,7 @@ public class ConversationData extends BindableData {
     }
 
     public void downloadMessage(final BindingBase<ConversationData> binding,
-            final String messageId) {
+                                final String messageId) {
         Assert.isTrue(binding.getData() == this);
         Assert.notNull(messageId);
         RedownloadMmsAction.redownloadMessage(messageId);
@@ -693,8 +698,9 @@ public class ConversationData extends BindableData {
 
     /**
      * Returns a dialable phone number for the participant if we are in a 1-1 conversation.
+     *
      * @return the participant phone number, or null if the phone number is not valid or if there
-     *         are more than one participant.
+     * are more than one participant.
      */
     public String getParticipantPhoneNumber() {
         final ParticipantData participant = this.getOtherParticipant();
@@ -787,21 +793,25 @@ public class ConversationData extends BindableData {
 
         @Override
         public void onConversationMessagesCursorUpdated(final ConversationData data, final Cursor cursor,
-                @Nullable
-                        final
-                ConversationMessageData newestMessage, final boolean isSync) {}
+                                                        @Nullable final
+                                                        ConversationMessageData newestMessage, final boolean isSync) {
+        }
 
         @Override
-        public void onConversationMetadataUpdated(final ConversationData data) {}
+        public void onConversationMetadataUpdated(final ConversationData data) {
+        }
 
         @Override
-        public void closeConversation(final String conversationId) {}
+        public void closeConversation(final String conversationId) {
+        }
 
         @Override
-        public void onConversationParticipantDataLoaded(final ConversationData data) {}
+        public void onConversationParticipantDataLoaded(final ConversationData data) {
+        }
 
         @Override
-        public void onSubscriptionListDataLoaded(final ConversationData data) {}
+        public void onSubscriptionListDataLoaded(final ConversationData data) {
+        }
 
     }
 
@@ -811,8 +821,7 @@ public class ConversationData extends BindableData {
 
         @Override
         public void onConversationMessagesCursorUpdated(final ConversationData data, final Cursor cursor,
-                @Nullable
-                        final ConversationMessageData newestMessage, final boolean isSync) {
+                                                        @Nullable final ConversationMessageData newestMessage, final boolean isSync) {
             for (final ConversationDataListener listener : this) {
                 listener.onConversationMessagesCursorUpdated(data, cursor, newestMessage, isSync);
             }
