@@ -36,6 +36,7 @@ import com.android.messaging.ui.appsettings.PrivacyModeSettings;
 import com.android.messaging.ui.customize.ConversationColors;
 import com.android.messaging.ui.customize.PrimaryColors;
 import com.android.messaging.ui.customize.ToolbarDrawables;
+import com.android.messaging.ui.customize.WallpaperDrawables;
 import com.android.messaging.ui.customize.theme.ThemeUtils;
 import com.android.messaging.ui.emoji.EmojiInfo;
 import com.android.messaging.ui.wallpaper.WallpaperManager;
@@ -120,6 +121,14 @@ public class MessageBoxConversationView extends FrameLayout {
 
         if (PrivacyModeSettings.getPrivacyMode(mConversationId) == NONE) {
             markAsRead();
+        }
+
+        Drawable wallpaperDrawable = WallpaperDrawables.getWallpaperBg();
+
+        if (wallpaperDrawable != null) {
+            background.setImageDrawable(wallpaperDrawable);
+        } else {
+            background.setBackground(null);
         }
     }
 
