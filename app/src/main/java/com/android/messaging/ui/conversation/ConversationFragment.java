@@ -497,6 +497,7 @@ public class ConversationFragment extends Fragment implements ConversationDataLi
     private AcbNativeAdLoader mNativeAdLoader;
     private AcbNativeAd mNativeAd;
     private boolean shouldAddNativeAdToList = true;
+    private boolean isAdShownLastTime = false;
     private int composeEditTextInitialPos = -1;
     private boolean isAdShowLogged = false;
 
@@ -986,7 +987,12 @@ public class ConversationFragment extends Fragment implements ConversationDataLi
                 BugleAnalytics.logEvent("Detailspage_NativeAd_Show", true, true);
                 isAdShowLogged = true;
             }
-            BugleAnalytics.logEvent("Detailspage_NativeAd_RealShow");
+            if (!isAdShownLastTime) {
+                BugleAnalytics.logEvent("Detailspage_NativeAd_RealShow");
+            }
+            isAdShownLastTime = true;
+        } else {
+            isAdShownLastTime = false;
         }
         mAdapter.setConversationId(mConversationId);
         mAdapter.setDataList(list);
