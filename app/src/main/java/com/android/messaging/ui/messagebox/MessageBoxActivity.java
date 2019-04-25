@@ -17,6 +17,7 @@ import android.view.ViewGroup;
 import com.android.messaging.BuildConfig;
 import com.android.messaging.R;
 import com.android.messaging.datamodel.action.MarkAsReadAction;
+import com.android.messaging.datamodel.action.MarkAsSeenAction;
 import com.android.messaging.datamodel.data.MessageBoxItemData;
 import com.android.messaging.ui.UIIntents;
 import com.android.messaging.ui.appsettings.PrivacyModeSettings;
@@ -363,9 +364,15 @@ public class MessageBoxActivity extends AppCompatActivity implements INotificati
 
         for (String conversationId : mConversationIdList) {
             Boolean markAsRead = mMarkAsReadMap.get(conversationId);
-            if (markAsRead != null && markAsRead) {
-                MessageBoxItemData data = mDataMap.get(conversationId);
-                MarkAsReadAction.markAsRead(conversationId, data.getParticipantId(), data.getReceivedTimestamp());
+            if (markAsRead != null) {
+                if (PrivacyModeSettings.getPrivacyMode(conversationId) == PrivacyModeSettings.NONE) {
+                    if (markAsRead) {
+                        MessageBoxItemData data = mDataMap.get(conversationId);
+                        MarkAsReadAction.markAsRead(conversationId, data.getParticipantId(), data.getReceivedTimestamp());
+                    }
+                } else {
+                    MarkAsSeenAction.markAsSeen(conversationId);
+                }
             }
         }
 
