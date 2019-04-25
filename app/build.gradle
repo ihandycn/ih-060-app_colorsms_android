@@ -16,8 +16,8 @@ android {
         applicationId "com.color.sms.messages.emoji"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 32
-        versionName "1.0.16"
+        versionCode 33
+        versionName "1.0.17"
         multiDexEnabled true
     }
 
