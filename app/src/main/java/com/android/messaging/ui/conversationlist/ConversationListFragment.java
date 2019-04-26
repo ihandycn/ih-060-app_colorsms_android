@@ -18,6 +18,7 @@ package com.android.messaging.ui.conversationlist;
 import android.app.Activity;
 import android.app.Fragment;
 import android.database.Cursor;
+import android.graphics.PorterDuff;
 import android.graphics.Rect;
 import android.net.Uri;
 import android.os.Bundle;
@@ -344,7 +345,7 @@ public class ConversationListFragment extends Fragment implements ConversationLi
     private void initAd() {
         adContainer = (ViewGroup) LayoutInflater.from(getActivity()).inflate(R.layout.conversation_list_header, mRecyclerView, false);
         expressAdView = new AcbExpressAdView(HSApplication.getContext(), AdPlacement.AD_BANNER);
-        expressAdView.setCustomLayout(new AcbContentLayout(R.layout.custom_banner)
+        expressAdView.setCustomLayout(new AcbContentLayout(R.layout.item_conversation_list_ad)
                 .setActionId(R.id.banner_action)
                 .setIconId(R.id.banner_icon_image)
                 .setTitleId(R.id.banner_title)
@@ -359,6 +360,8 @@ public class ConversationListFragment extends Fragment implements ConversationLi
                             && ((RelativeLayout) child).getChildAt(0) instanceof AcbNativeAdContainerView) {
                         AcbNativeAdContainerView nativeAdContainerView = (AcbNativeAdContainerView) ((RelativeLayout) child).getChildAt(0);
                         nativeAdContainerView.getChildAt(1).setVisibility(View.GONE);
+                        ImageView ivAdPreview = expressAdView.findViewById(R.id.icon_ad_preview);
+                        ivAdPreview.getDrawable().setColorFilter(ConversationColors.get().getListTimeColor(), PorterDuff.Mode.SRC_ATOP);
                     }
                 } catch (Exception e) {
                 }

@@ -18,6 +18,7 @@ package com.android.messaging.ui.conversationlist;
 import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Color;
+import android.graphics.PorterDuff;
 import android.graphics.Rect;
 import android.graphics.Typeface;
 import android.net.Uri;
@@ -164,7 +165,11 @@ public class ConversationListItemView extends FrameLayout implements OnClickList
         mContactIconView = findViewById(R.id.conversation_icon);
         mContactCheckmarkView = findViewById(R.id.conversation_checkmark);
         mNotificationBellView = findViewById(R.id.conversation_notification_bell);
+        mNotificationBellView.getDrawable().setColorFilter(
+                ConversationColors.get().getListTimeColor(), PorterDuff.Mode.SRC_ATOP);
         mPinView = findViewById(R.id.conversation_pin);
+        mPinView.getDrawable().setColorFilter(
+                ConversationColors.get().getListTimeColor(), PorterDuff.Mode.SRC_ATOP);
         mFailedStatusIconView = findViewById(R.id.conversation_failed_status_icon);
         mCrossSwipeArchiveLeftImageView = findViewById(R.id.crossSwipeArchiveIconLeft);
         mCrossSwipeArchiveRightImageView =
