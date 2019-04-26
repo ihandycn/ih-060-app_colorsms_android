@@ -1131,4 +1131,5 @@
     <string name="welcome_choose_theme_current">Current</string>
     <string name="apply_theme_success">Apply Success</string>
     <string name="set_as_default_success">Changed Successfully</string>
+    
 </resources>
