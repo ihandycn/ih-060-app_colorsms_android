@@ -625,4 +625,12 @@
 	<string name="setting_reset_customization_summary">このチャットのカスタマイズを消去する。</string>
 	<string name="action_pin">ピン付けしてトップに移動する</string>
 
+
+	<string name="privacy_mode_settings">プライバシーモード</string>
+	<string name="privacy_mode_disable">なし</string>
+	<string name="privacy_mode_hide_message_only">メッセージのみ非表示にする</string>
+	<string name="privacy_mode_hide_contact_and_message">連絡先とメッセージを非表示にする</string>
+	<string name="privacy_mode_show_messages">メッセージを表示する</string>
+	<string name="notification_sender_in_privacy_mode">連絡先</string>
+
 </resources>

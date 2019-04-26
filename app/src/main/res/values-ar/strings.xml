@@ -725,4 +725,12 @@
 	<string name="setting_reset_customization_summary">مسح التخصيص من هذه الدردشة.</string>
 	<string name="action_pin">تثبيت في الأعلى</string>
 
+
+	<string name="privacy_mode_settings">وضع الخصوصية</string>
+	<string name="privacy_mode_disable">بدون</string>
+	<string name="privacy_mode_hide_message_only">إخفاء الرسائل فقط</string>
+	<string name="privacy_mode_hide_contact_and_message">إخفاء الرسائل واسم المرسِل</string>
+	<string name="privacy_mode_show_messages">إظهار الرسائل</string>
+	<string name="notification_sender_in_privacy_mode">جهة الاتصال</string>
+
 </resources>

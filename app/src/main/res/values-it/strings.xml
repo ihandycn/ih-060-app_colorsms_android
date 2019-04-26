@@ -624,4 +624,12 @@
 	<string name="setting_reset_customization_summary">Annulla la personalizzazione della chat.</string>
 	<string name="action_pin">Blocca in alto</string>
 
+
+	<string name="privacy_mode_settings">Modalità privata</string>
+	<string name="privacy_mode_disable">Nessuno</string>
+	<string name="privacy_mode_hide_message_only">Nascondi solo il messaggio</string>
+	<string name="privacy_mode_hide_contact_and_message">Nascondi contatto e messaggio</string>
+	<string name="privacy_mode_show_messages">MOSTRA MESSAGGI</string>
+	<string name="notification_sender_in_privacy_mode">Contatto</string>
+
 </resources>

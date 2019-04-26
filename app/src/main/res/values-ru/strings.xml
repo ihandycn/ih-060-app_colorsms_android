@@ -671,4 +671,12 @@
 	<string name="setting_reset_customization_summary">Стереть индивидуальные настройки данного чата.</string>
 	<string name="action_pin">Закрепить сверху</string>
 
+
+	<string name="privacy_mode_settings">Приватный режим</string>
+	<string name="privacy_mode_disable">Нет</string>
+	<string name="privacy_mode_hide_message_only">Скрывать только сообщение</string>
+	<string name="privacy_mode_hide_contact_and_message">Скрывать контакт и сообщение</string>
+	<string name="privacy_mode_show_messages">ПОКАЗАТЬ  СООБЩЕНИЯ</string>
+	<string name="notification_sender_in_privacy_mode">Контакт</string>
+
 </resources>

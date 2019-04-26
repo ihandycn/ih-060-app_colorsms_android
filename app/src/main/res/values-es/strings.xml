@@ -629,4 +629,12 @@
 	<string name="setting_reset_customization_summary">Borrar la personalización de este chat.</string>
 	<string name="action_pin">Fijar en la parte superior</string>
 
+
+	<string name="privacy_mode_settings">Modo privado</string>
+	<string name="privacy_mode_disable">Ninguno</string>
+	<string name="privacy_mode_hide_message_only">Ocultar solo mensaje</string>
+	<string name="privacy_mode_hide_contact_and_message">Ocultar contacto y mensaje</string>
+	<string name="privacy_mode_show_messages">MOSTRAR MENSAJES</string>
+	<string name="notification_sender_in_privacy_mode">Contacto</string>
+
 </resources>

@@ -619,4 +619,12 @@
 	<string name="setting_reset_customization_summary">Bu sohbetteki özelleştirmeyi silin.</string>
 	<string name="action_pin">En Üste Sabitle</string>
 
+
+	<string name="privacy_mode_settings">Gizlilik Modu</string>
+	<string name="privacy_mode_disable">Hiçbiri</string>
+	<string name="privacy_mode_hide_message_only">Sadece mesajları gizle</string>
+	<string name="privacy_mode_hide_contact_and_message">Kişiyi ve mesajı gizle</string>
+	<string name="privacy_mode_show_messages">MESAJLARI GÖSTER</string>
+	<string name="notification_sender_in_privacy_mode">Kişi</string>
+
 </resources>

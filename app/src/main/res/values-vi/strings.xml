@@ -622,4 +622,12 @@
 	<string name="setting_reset_customization_summary">Xóa các tùy chỉnh trong cuộc trò chuyện này.</string>
 	<string name="action_pin">Ghim vào Trên cùng</string>
 
+
+	<string name="privacy_mode_settings">Chế độ Riêng tư</string>
+	<string name="privacy_mode_disable">Không có</string>
+	<string name="privacy_mode_hide_message_only">Chỉ ẩn tin nhắn</string>
+	<string name="privacy_mode_hide_contact_and_message">Ẩn liên hệ và tin nhắn</string>
+	<string name="privacy_mode_show_messages">HIỆN TIN NHẮN</string>
+	<string name="notification_sender_in_privacy_mode">Liên hệ</string>
+
 </resources>

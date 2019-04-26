@@ -630,4 +630,12 @@
 	<string name="setting_reset_customization_summary">Apagar a personalização nesta conversa.</string>
 	<string name="action_pin">Marcar no topo</string>
 
+
+	<string name="privacy_mode_settings">Modo de Privacidade</string>
+	<string name="privacy_mode_disable">Nenhum</string>
+	<string name="privacy_mode_hide_message_only">Ocultar apenas mensagem</string>
+	<string name="privacy_mode_hide_contact_and_message">Ocultar contato e mensagem</string>
+	<string name="privacy_mode_show_messages">MOSTRAR MENSAGENS</string>
+	<string name="notification_sender_in_privacy_mode">Contato</string>
+
 </resources>

@@ -624,4 +624,12 @@
 	<string name="setting_reset_customization_summary">이 채팅에서 커스터마이제이션을 지우세요.</string>
 	<string name="action_pin">위에 고정</string>
 
+
+	<string name="privacy_mode_settings">개인 정보 모드</string>
+	<string name="privacy_mode_disable">없음</string>
+	<string name="privacy_mode_hide_message_only">메시지만 숨기기</string>
+	<string name="privacy_mode_hide_contact_and_message">연락처 및 메시지 숨기기</string>
+	<string name="privacy_mode_show_messages">메시지 표시</string>
+	<string name="notification_sender_in_privacy_mode">연락처</string>
+
 </resources>

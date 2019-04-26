@@ -625,4 +625,12 @@
 	<string name="setting_reset_customization_summary">Anpassung in diesem Chat entfernen.</string>
 	<string name="action_pin">Nach oben schieben</string>
 
+
+	<string name="privacy_mode_settings">Modus ,Privatsphäre‘</string>
+	<string name="privacy_mode_disable">Keine</string>
+	<string name="privacy_mode_hide_message_only">Nur Nachricht verbergen</string>
+	<string name="privacy_mode_hide_contact_and_message">Kontakt und Nachricht verbergen</string>
+	<string name="privacy_mode_show_messages">NACHRICHTEN ZEIGEN</string>
+	<string name="notification_sender_in_privacy_mode">Kontakt</string>
+
 </resources>

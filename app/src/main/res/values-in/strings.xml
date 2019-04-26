@@ -627,4 +627,12 @@
 	<string name="setting_reset_customization_summary">Hapus kustomisasi di percakapan ini.</string>
 	<string name="action_pin">Sematkan ke Atas</string>
 
+
+	<string name="privacy_mode_settings">Mode Privasi</string>
+	<string name="privacy_mode_disable">Tidak Ada</string>
+	<string name="privacy_mode_hide_message_only">Sembunyikan pesan saja</string>
+	<string name="privacy_mode_hide_contact_and_message">Sembunyikan kontak dan pesan</string>
+	<string name="privacy_mode_show_messages">TAMPILKAN PESAN</string>
+	<string name="notification_sender_in_privacy_mode">Kontak</string>
+
 </resources>

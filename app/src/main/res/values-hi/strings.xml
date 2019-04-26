@@ -628,4 +628,12 @@
 	<string name="setting_reset_customization_summary">इस चैट में अनुकूलन मिटाएं</string>
 	<string name="action_pin">शीर्ष पर पिन करें</string>
 
+
+	<string name="privacy_mode_settings">गोपनीय मोड</string>
+	<string name="privacy_mode_disable">नहीं</string>
+	<string name="privacy_mode_hide_message_only">केवल संदेश छिपाएं</string>
+	<string name="privacy_mode_hide_contact_and_message">संपर्क और संदेश छिपाएं</string>
+	<string name="privacy_mode_show_messages">संदेशों को दर्शाएं</string>
+	<string name="notification_sender_in_privacy_mode">संपर्क</string>
+
 </resources>

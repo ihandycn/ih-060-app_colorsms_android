@@ -625,4 +625,12 @@
 	<string name="setting_reset_customization_summary">ลบรายการกำหนดเองในการสนทนานี้</string>
 	<string name="action_pin">ปักหมุดบนสุด</string>
 
+
+	<string name="privacy_mode_settings">โหมดส่วนตัว</string>
+	<string name="privacy_mode_disable">ไม่มี</string>
+	<string name="privacy_mode_hide_message_only">ซ่อนเฉพาะข้อความ</string>
+	<string name="privacy_mode_hide_contact_and_message">ซ่อนรายชื่อติดต่อและข้อความ</string>
+	<string name="privacy_mode_show_messages">แสดงข้อความ</string>
+	<string name="notification_sender_in_privacy_mode">รายชื่อติดต่อ</string>
+
 </resources>

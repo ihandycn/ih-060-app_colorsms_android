@@ -623,4 +623,12 @@
 	<string name="setting_reset_customization_summary">Effacer la personnalisation de ce chat.</string>
 	<string name="action_pin">Épingler en haut</string>
 
+
+	<string name="privacy_mode_settings">Mode confidentiel</string>
+	<string name="privacy_mode_disable">Aucun</string>
+	<string name="privacy_mode_hide_message_only">Masque le message uniquemetn</string>
+	<string name="privacy_mode_hide_contact_and_message">Masquer le contact et le message</string>
+	<string name="privacy_mode_show_messages">AFFICHER LES MESSAGES</string>
+	<string name="notification_sender_in_privacy_mode">Contact</string>
+
 </resources>
