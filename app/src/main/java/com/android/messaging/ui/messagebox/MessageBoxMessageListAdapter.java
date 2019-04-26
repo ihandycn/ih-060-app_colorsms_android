@@ -18,6 +18,7 @@ import com.android.messaging.ui.ConversationDrawables;
 import com.android.messaging.ui.UIIntents;
 import com.android.messaging.ui.customize.ConversationColors;
 import com.android.messaging.ui.customize.PrimaryColors;
+import com.android.messaging.ui.customize.WallpaperDrawables;
 import com.android.messaging.ui.wallpaper.WallpaperManager;
 import com.android.messaging.util.Dates;
 import com.ihs.commons.notificationcenter.HSGlobalNotificationCenter;
@@ -51,7 +52,7 @@ public class MessageBoxMessageListAdapter extends RecyclerView.Adapter<RecyclerV
         mConversationId =  data.getConversationId();
         mIncomingTextColor = ConversationColors.get().getMessageTextColor(true, mConversationId);
 
-        mHasWallpaper = WallpaperManager.hasWallpaper(mConversationId);
+        mHasWallpaper = WallpaperDrawables.getListWallpaperBg() != null;
         if (mHasWallpaper) {
             mIncomingTimestampColor = R.color.white;
         } else {
