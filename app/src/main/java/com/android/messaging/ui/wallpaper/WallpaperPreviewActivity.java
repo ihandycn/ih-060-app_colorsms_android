@@ -262,6 +262,7 @@ public class WallpaperPreviewActivity extends BaseActivity implements WallpaperM
                     mWallpaperPreviewImg.setImageBitmap(null);
                     if (mThreadId == null) {
                         WallpaperManager.setWallpaperPath(null, "");
+                        WallpaperManager.onOnlineWallpaperChanged();
                     } else {
                         WallpaperManager.setWallpaperPath(mThreadId, "empty");
                     }

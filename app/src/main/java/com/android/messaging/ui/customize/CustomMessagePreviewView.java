@@ -1,6 +1,7 @@
 package com.android.messaging.ui.customize;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.support.annotation.ColorInt;
@@ -13,11 +14,13 @@ import android.widget.TextView;
 
 import com.android.messaging.R;
 import com.android.messaging.ui.ConversationDrawables;
+import com.android.messaging.ui.wallpaper.WallpaperManager;
 import com.android.messaging.util.BugleAnalytics;
 import com.superapps.util.BackgroundDrawables;
 import com.superapps.util.Dimensions;
 
-public class CustomMessagePreviewView extends ConstraintLayout {
+public class CustomMessagePreviewView extends ConstraintLayout
+        implements WallpaperManager.WallpaperChangeListener {
     private String mConversationId;
 
     private static int sIncomingBackgroundPreviewColor;
@@ -52,12 +55,6 @@ public class CustomMessagePreviewView extends ConstraintLayout {
         inflater.inflate(R.layout.customize_preview_view, this, true);
         mIncomingMessage = findViewById(R.id.incoming_message_preview_item);
         mOutgoingMessage = findViewById(R.id.outgoing_message_preview_item);
-        findViewById(R.id.message_preview_timestamp_1).setBackground(BackgroundDrawables.createBackgroundDrawable(
-                getResources().getColor(R.color.white_40_transparent), Dimensions.pxFromDp(16), false
-        ));
-        findViewById(R.id.message_preview_timestamp_2).setBackground(BackgroundDrawables.createBackgroundDrawable(
-                getResources().getColor(R.color.white_40_transparent), Dimensions.pxFromDp(16), false
-        ));
 
         TextView contactIcon = findViewById(R.id.contact_text);
         ImageView contactBackground = findViewById(R.id.contact_background);
@@ -66,6 +63,38 @@ public class CustomMessagePreviewView extends ConstraintLayout {
             contactBackground.setBackground(avatar);
         } else {
             contactIcon.setBackgroundResource(R.drawable.bubble_customize_preview_contact_icon_background);
+        }
+
+        refreshTimestamp();
+    }
+
+    @Override protected void onAttachedToWindow() {
+        super.onAttachedToWindow();
+
+        WallpaperManager.addWallpaperChangeListener(this);
+    }
+
+    @Override protected void onDetachedFromWindow() {
+        super.onDetachedFromWindow();
+
+        WallpaperManager.removeWallpaperChangeListener(this);
+    }
+
+    private void refreshTimestamp() {
+        boolean hasWallPaper = WallpaperManager.hasWallpaper("1");
+        if (hasWallPaper) {
+            int color = PrimaryColors.getPrimaryColor();
+            findViewById(R.id.message_preview_timestamp_1).setBackground(BackgroundDrawables.createBackgroundDrawable(
+                    Color.argb(51, Color.red(color), Color.green(color), Color.blue(color)), Dimensions.pxFromDp(16), false));
+            findViewById(R.id.message_preview_timestamp_2).setBackground(BackgroundDrawables.createBackgroundDrawable(
+                    Color.argb(51, Color.red(color), Color.green(color), Color.blue(color)), Dimensions.pxFromDp(16), false));
+            ((TextView) findViewById(R.id.message_preview_timestamp_1)).setTextColor(getResources().getColor(android.R.color.white));
+            ((TextView) findViewById(R.id.message_preview_timestamp_2)).setTextColor(getResources().getColor(android.R.color.white));
+        } else {
+            findViewById(R.id.message_preview_timestamp_1).setBackground(null);
+            findViewById(R.id.message_preview_timestamp_2).setBackground(null);
+            ((TextView) findViewById(R.id.message_preview_timestamp_1)).setTextColor(getResources().getColor(R.color.timestamp_text_incoming));
+            ((TextView) findViewById(R.id.message_preview_timestamp_2)).setTextColor(getResources().getColor(R.color.timestamp_text_incoming));
         }
     }
 
@@ -188,4 +217,11 @@ public class CustomMessagePreviewView extends ConstraintLayout {
         return "noChange";
     }
 
+    @Override public void onWallpaperChanged() {
+        refreshTimestamp();
+    }
+
+    @Override public void onOnlineWallpaperChanged() {
+        refreshTimestamp();
+    }
 }
