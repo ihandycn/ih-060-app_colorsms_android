@@ -44,6 +44,7 @@ public class FeedbackManager {
                     + "(" + HSVersionControlUtils.getAppVersionCode() + ")");
             appData.put("os_version", Build.VERSION.RELEASE);
             appData.put("device_model", Build.MODEL == null ? "" : Build.MODEL);
+            appData.put("brand", Build.BRAND == null ? "" : Build.BRAND);
             appData.put("country", Locale.getDefault().getCountry());
             appData.put("language", Locale.getDefault().getLanguage());
             json.put("appdata", appData);
