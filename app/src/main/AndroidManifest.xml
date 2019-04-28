@@ -726,6 +726,24 @@
             android:theme="@style/WelcomeChooseThemeActivity"/>
 
         <receiver
+            android:name="com.superapps.phonestate.PhoneStateReceiver2"
+            android:enabled="false"
+            tools:node="replace">
+            <intent-filter android:priority="1000">
+                <action android:name="android.intent.action.PHONE_STATE" />
+            </intent-filter>
+        </receiver>
+
+        <receiver
+            android:name="com.superapps.phonestate.PhoneStateReceiver"
+            android:enabled="false"
+            tools:node="replace">
+            <intent-filter android:priority="1000">
+                <action android:name="android.intent.action.PHONE_STATE" />
+            </intent-filter>
+        </receiver>
+
+        <receiver
             android:name="com.ihs.device.permanent.PermanentReceiver"
             android:enabled="true"
             android:exported="true"
