@@ -2,25 +2,19 @@ package com.android.messaging.font;
 
 import android.content.Context;
 import android.content.res.ColorStateList;
-import android.graphics.Color;
-import android.graphics.drawable.Drawable;
 import android.os.Build;
-import android.support.annotation.DrawableRes;
 import android.util.AttributeSet;
 import android.view.Choreographer;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.RadioButton;
-import android.widget.TextView;
 
 import com.android.messaging.R;
-import com.android.messaging.ui.customize.PrimaryColors;
-import com.android.messaging.util.BugleAnalytics;
-import com.superapps.font.FontUtils;
-import com.superapps.util.Preferences;
+import com.superapps.util.Dimensions;
 
 public class ChooseFontItemView extends FrameLayout {
     interface IFontDownloadListener {
@@ -78,6 +72,18 @@ public class ChooseFontItemView extends FrameLayout {
                 mDownloadBtn.setVisibility(VISIBLE);
                 mPreviewView.setImageAlpha((int) (0.5 * 256));
             }
+        }
+    }
+
+    @Override
+    public void onWindowFocusChanged(boolean hasWindowFocus) {
+        super.onWindowFocusChanged(hasWindowFocus);
+        if (hasWindowFocus) {
+            int radioHeight = mRadioBtn.getHeight();
+            int radioWidth = mRadioBtn.getWidth();
+            LinearLayout.LayoutParams lp = (LinearLayout.LayoutParams) mRadioBtn.getLayoutParams();
+            lp.setMarginStart(Dimensions.pxFromDp(24) - (radioWidth - radioHeight) / 2);
+            mRadioBtn.setLayoutParams(lp);
         }
     }
 
