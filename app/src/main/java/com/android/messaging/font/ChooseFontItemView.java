@@ -121,22 +121,25 @@ public class ChooseFontItemView extends FrameLayout {
         FontDownloadManager.downloadFont(mFontInfo, new FontDownloadManager.FontDownloadListener() {
             @Override
             public void onDownloadSuccess() {
-                mIsFontDownloading = false;
+                if (mChoreographer != null) {
+                    mChoreographer.removeFrameCallback(mFrameCallback);
+                }
                 mPreviewView.setImageAlpha(255);
                 mProgressBar.setVisibility(GONE);
                 if (mIsPreSelected && mListener != null) {
                     mListener.onFontDownloadSuccess(ChooseFontItemView.this);
                 }
+                mIsFontDownloading = false;
             }
 
             @Override
             public void onDownloadFailed() {
-                mIsFontDownloading = false;
                 if (mChoreographer != null) {
                     mChoreographer.removeFrameCallback(mFrameCallback);
                 }
                 mDownloadBtn.setVisibility(VISIBLE);
                 mProgressBar.setVisibility(GONE);
+                mIsFontDownloading = false;
             }
         });
         mFrameCallback = frameTimeNanos -> {

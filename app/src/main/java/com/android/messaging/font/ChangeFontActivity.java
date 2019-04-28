@@ -14,7 +14,10 @@ import com.android.messaging.ui.view.LevelSeekBar;
 import com.android.messaging.ui.wallpaper.WallpaperManager;
 import com.android.messaging.util.BugleAnalytics;
 import com.android.messaging.util.UiUtils;
+import com.google.common.base.Joiner;
 import com.superapps.font.FontStyleManager;
+
+import java.util.Arrays;
 
 public class ChangeFontActivity extends BaseActivity implements LevelSeekBar.OnLevelChangeListener {
 
@@ -63,7 +66,7 @@ public class ChangeFontActivity extends BaseActivity implements LevelSeekBar.OnL
         mPrefFontLevel = FontStyleManager.getInstance().getFontScaleLevel();
         String fontFamily = FontStyleManager.getInstance().getFontFamily();
 
-        mTextFontFamily.setText(fontFamily);
+        mTextFontFamily.setText(formatString(fontFamily));
         mTextFontSize.setText(getResources().getString(sTextSizeRes[mPrefFontLevel]));
         mSeekBar.setOnLevelChangeListener(this);
         mSeekBar.setLevel(mPrefFontLevel);
@@ -126,7 +129,29 @@ public class ChangeFontActivity extends BaseActivity implements LevelSeekBar.OnL
     }
 
     public void onFontChange() {
-        mTextFontFamily.setText(FontStyleManager.getInstance().getFontFamily());
+        mTextFontFamily.setText(formatString(FontStyleManager.getInstance().getFontFamily()));
         ChangeFontUtils.changeFontTypeface(mChangeFontContainer, FontStyleManager.getInstance().getFontFamily());
+    }
+
+    private String formatString(String str) {
+        char[] chs = str.toCharArray();
+        if (chs[0] <= 'z' && chs[0] >= 'a') {
+            chs[0] += 'A' - 'a';
+        }
+
+        for (int i = 0; i < chs.length; i++) {
+            if (chs[i] == '_' || chs[i] == '-') {
+                chs[i] = ' ';
+            }
+
+            if (i < chs.length - 1) {
+                if ((chs[i] <= '9' && chs[i] >= '0') || chs[i] == ' ') {
+                    if (i + 1 < chs.length && chs[i + 1] <= 'z' && chs[i + 1] >= 'a') {
+                        chs[i + 1] += 'A' - 'a';
+                    }
+                }
+            }
+        }
+        return String.valueOf(chs);
     }
 }
