@@ -170,7 +170,6 @@ public class BugleApplication extends HSApplication implements UncaughtException
         String processName = getProcessName();
         boolean isOnMainProcess = TextUtils.equals(processName, packageName);
         if (isOnMainProcess) {
-
             onMainProcessApplicationCreate();
         }
 
@@ -386,7 +385,10 @@ public class BugleApplication extends HSApplication implements UncaughtException
 
         // Update conversation drawables when changing writing systems
         // (Right-To-Left / Left-To-Right)
-        ConversationDrawables.get().updateDrawables();
+        boolean isOnMainProcess = TextUtils.equals(getPackageName(), getProcessName());
+        if (isOnMainProcess) {
+            ConversationDrawables.get().updateDrawables();
+        }
     }
 
     // Called by the "real" factory from FactoryImpl.register() (i.e. not run in tests)
