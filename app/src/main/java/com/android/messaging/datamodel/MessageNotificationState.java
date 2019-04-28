@@ -691,6 +691,9 @@ public abstract class MessageNotificationState extends NotificationState {
                 uri, ParticipantData.ParticipantsQuery.PROJECTION, null, null, null);
         final ConversationParticipantsData participantsData = new ConversationParticipantsData();
         participantsData.bind(participantsCursor);
+        if (participantsCursor != null) {
+            participantsCursor.close();
+        }
         final Iterator<ParticipantData> iter = participantsData.iterator();
 
         final HashMap<String, Integer> firstNames = new HashMap<String, Integer>();
