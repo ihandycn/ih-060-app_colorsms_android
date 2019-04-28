@@ -1,9 +1,7 @@
-package com.android.messaging.ui.appsettings;
+package com.android.messaging.font;
 
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
-import android.text.TextUtils;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
@@ -11,15 +9,12 @@ import android.widget.TextView;
 
 import com.android.messaging.BaseActivity;
 import com.android.messaging.R;
-import com.android.messaging.font.ChangeFontUtils;
 import com.android.messaging.ui.customize.CustomMessagePreviewView;
 import com.android.messaging.ui.view.LevelSeekBar;
 import com.android.messaging.ui.wallpaper.WallpaperManager;
 import com.android.messaging.util.BugleAnalytics;
 import com.android.messaging.util.UiUtils;
 import com.superapps.font.FontStyleManager;
-
-import java.io.File;
 
 public class ChangeFontActivity extends BaseActivity implements LevelSeekBar.OnLevelChangeListener {
 

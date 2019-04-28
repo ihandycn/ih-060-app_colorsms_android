@@ -1,13 +1,15 @@
-package com.android.messaging.ui.appsettings;
+package com.android.messaging.font;
 
 import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
+import android.content.res.ColorStateList;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Handler;
+import android.support.v7.widget.AppCompatRadioButton;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,6 +22,7 @@ import android.widget.TextView;
 
 import com.android.messaging.R;
 import com.android.messaging.ui.conversationlist.ConversationListActivity;
+import com.android.messaging.ui.customize.PrimaryColors;
 import com.android.messaging.util.BugleAnalytics;
 import com.android.messaging.util.ViewUtils;
 import com.ihs.commons.notificationcenter.HSGlobalNotificationCenter;
@@ -34,12 +37,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class ChooseFontDialog implements View.OnClickListener {
-
-    private static final String[] sSupportGoogleFonts = {
-            FontUtils.MESSAGE_FONT_FAMILY_DEFAULT_VALUE,
-            "Krub", "Mali", "ExpletusSans", "SourceSerifPro"
-    };
+public class ChooseFontDialog {
 
     private static final String TAG = "ChooseFontDialog";
     private Activity mActivity;
@@ -47,7 +45,8 @@ public class ChooseFontDialog implements View.OnClickListener {
     private Dialog mDialog;
     private View mRootView;
     private String mFontFamily;
-    private List<ChooseFontItem> mItemViewList = new ArrayList<>();
+    private boolean mDialogDismiss;
+    private List<ChooseFontItemView> mItemViewList = new ArrayList<>();
 
     ChooseFontDialog(Context activity) {
         this.mActivity = (Activity) activity;
@@ -59,7 +58,10 @@ public class ChooseFontDialog implements View.OnClickListener {
         mDialog = builder;
         builder.setContentView(mRootView);
         builder.setCancelable(true);
-        builder.setOnDismissListener(dialog -> HSLog.d(TAG, "onDismiss"));
+        builder.setOnDismissListener(dialog -> {
+            mDialogDismiss = true;
+            HSLog.d(TAG, "onDismiss");
+        });
         builder.setOnCancelListener(dialog -> {
             HSLog.d(TAG, "onCancel");
             dismissSafely();
@@ -122,7 +124,6 @@ public class ChooseFontDialog implements View.OnClickListener {
         configRadioGroup(v);
         TextView mTitleTv = ViewUtils.findViewById(v, R.id.dialog_title);
         mTitleTv.setText(R.string.setting_text_font);
-
         return v;
     }
 
@@ -134,25 +135,89 @@ public class ChooseFontDialog implements View.OnClickListener {
         lp.bottomMargin = Dimensions.pxFromDp(32);
         v.setLayoutParams(lp);
 
-        List<String> choicesList = Arrays.asList(sSupportGoogleFonts);
-        int checkedIndex = choicesList.indexOf(mFontFamily);
-        if (checkedIndex == -1) {
-            checkedIndex = 0;
+        List<String> choicesList = Arrays.asList(FontUtils.sSupportGoogleFonts);
+
+        List<FontInfo> fontList = new ArrayList<>();
+        for (String fontName : choicesList) {
+            FontInfo local = new FontInfo(FontInfo.LOCAL_FONT, fontName);
+            fontList.add(local);
         }
 
-        LinearLayout scrollContent = view.findViewById(R.id.scroll_content);
-        for (int i = 0; i < choicesList.size(); i++) {
-            ChooseFontItem item = (ChooseFontItem) LayoutInflater.from(mActivity).inflate(R.layout.new_dialog_select_item, scrollContent, false);
-            item.setFontFamily(choicesList.get(i));
-            if (checkedIndex == i) {
-                item.setSelected(true);
-            }
-            item.loadFont();
-            mItemViewList.add(item);
-            item.setOnClickListener(this);
+        fontList.addAll(FontDownloadManager.getRemoteFonts());
 
+        ColorStateList colorStateList = new ColorStateList(
+                new int[][]{
+                        new int[]{-android.R.attr.state_checked},
+                        new int[]{android.R.attr.state_checked}
+                },
+                new int[]{
+                        0xffa5abb1
+                        , PrimaryColors.getPrimaryColor(),
+                }
+        );
+
+        ChooseFontItemView.IFontDownloadListener fontDownloadListener = view12 -> {
+            for (ChooseFontItemView itemView : mItemViewList) {
+                itemView.setPreSelect(false);
+                if (itemView != view12) {
+                    itemView.setSelected(false);
+                } else {
+                    itemView.setSelected(true);
+                    if (!mDialogDismiss) {
+                        onFontChanged(itemView.getFontFamily());
+                    }
+                }
+            }
+        };
+
+        //local
+        LinearLayout scrollContent = view.findViewById(R.id.scroll_content);
+        for (int i = 0; i < fontList.size(); i++) {
+            ChooseFontItemView item = new ChooseFontItemView(mActivity, fontList.get(i));
+            LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(
+                    ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+            item.setLayoutParams(layoutParams);
+
+            AppCompatRadioButton radioButton = item.findViewById(R.id.font_choose_item_radio_button);
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                radioButton.getCompoundDrawablesRelative()[0].setTintList(colorStateList);
+            }
+
+            item.checkSettingFont(mFontFamily);
+            item.setOnClickListener(view1 -> {
+                for (ChooseFontItemView button : mItemViewList) {
+                    if (button != item) {
+                        button.setPreSelect(false);
+                    }
+                }
+
+                if (item.setPreSelect(true)) {
+                    //font downloaded, change choose state
+                    for (ChooseFontItemView button : mItemViewList) {
+                        if (button != item) {
+                            button.setSelected(false);
+                        }
+                    }
+                    item.setSelected(true);
+                    onFontChanged(item.getFontFamily());
+                    new Handler().postDelayed(this::dismissSafely, 200);
+                }
+            });
+            item.addFontDownloadedListener(fontDownloadListener);
+            mItemViewList.add(item);
             scrollContent.addView(item);
         }
+    }
+
+    private void onFontChanged(String font) {
+        mFontFamily = font;
+        FontStyleManager.getInstance().setFontFamily(font);
+        ChangeFontActivity activity = mWeakActivityReference.get();
+        if (activity != null && !activity.isDestroyed()) {
+            activity.onFontChange();
+        }
+        BugleAnalytics.logEvent("Customize_TextFont_Change", true, true, "font", font);
+        HSGlobalNotificationCenter.sendNotification(ConversationListActivity.EVENT_MAINPAGE_RECREATE);
     }
 
     private void dismissSafely() {
@@ -160,32 +225,6 @@ public class ChooseFontDialog implements View.OnClickListener {
             mDialog.dismiss();
         } catch (Exception e) {
             e.printStackTrace();
-        }
-    }
-
-    @Override
-    public void onClick(View v) {
-        for (int i = 0; i < mItemViewList.size(); i++) {
-            ChooseFontItem view = mItemViewList.get(i);
-            if (v == view) {
-                String fontFamily = sSupportGoogleFonts[i];
-                mFontFamily = fontFamily;
-
-                view.setSelected(true);
-                view.refreshRadioStatus();
-
-                FontStyleManager.getInstance().setFontFamily(fontFamily);
-                ChangeFontActivity activity = mWeakActivityReference.get();
-                if (activity != null && !activity.isDestroyed()) {
-                    activity.onFontChange();
-                }
-                new Handler().postDelayed(this::dismissSafely, 1);
-                BugleAnalytics.logEvent("Customize_TextFont_Change", true, true, "font", fontFamily);
-                HSGlobalNotificationCenter.sendNotification(ConversationListActivity.EVENT_MAINPAGE_RECREATE);
-            } else {
-                view.setSelected(false);
-                view.refreshRadioStatus();
-            }
         }
     }
 }
