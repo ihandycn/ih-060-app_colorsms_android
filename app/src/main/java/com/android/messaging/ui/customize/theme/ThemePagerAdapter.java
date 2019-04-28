@@ -9,6 +9,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.android.messaging.R;
+import com.android.messaging.ui.welcome.WelcomeChooseThemeActivity;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -43,7 +44,9 @@ public class ThemePagerAdapter extends PagerAdapter {
             }
         }
 
-        Collections.shuffle(mShuffledThemeItemList);
+        if (context instanceof WelcomeChooseThemeActivity) {
+            Collections.shuffle(mShuffledThemeItemList);
+        }
 
         for (int i = 0; i < mCount; i++) {
             View item = LayoutInflater.from(context).inflate(R.layout.choose_theme_pager_item, null);
