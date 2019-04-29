@@ -86,7 +86,12 @@ public class WallpaperChooserItemView extends FrameLayout {
             mAddPhotosContainer.setVisibility(View.VISIBLE);
             mWallpaperIv.setVisibility(View.GONE);
         } else if (viewType == WallpaperChooserItem.TYPE_EMPTY) {
-            mWallpaperIv.setBackground(WallpaperDrawables.getWallpaperBg());
+            if (WallpaperDrawables.getWallpaperBg() != null) {
+                mWallpaperIv.setBackground(WallpaperDrawables.getWallpaperBg());
+            } else {
+                mWallpaperIv.setBackground(BackgroundDrawables.createBackgroundDrawable(
+                        0xffffffff, Dimensions.pxFromDp(3.3f), false));
+            }
         } else {
             setThumbnail(item.getThumbnailResId());
         }
