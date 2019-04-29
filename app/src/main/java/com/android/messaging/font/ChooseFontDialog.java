@@ -66,7 +66,6 @@ public class ChooseFontDialog {
             HSLog.d(TAG, "onCancel");
             dismissSafely();
         });
-        mDialog.setOnShowListener(dialog -> HSLog.d(TAG, "OnShow"));
         mDialog.setCanceledOnTouchOutside(true);
 
         Window window = mDialog.getWindow();
@@ -170,6 +169,7 @@ public class ChooseFontDialog {
             }
         };
 
+        int selectIndex = 0;
         //local
         LinearLayout scrollContent = view.findViewById(R.id.scroll_content);
         for (int i = 0; i < fontList.size(); i++) {
@@ -184,6 +184,9 @@ public class ChooseFontDialog {
             }
 
             item.checkSettingFont(mFontFamily);
+            if (fontList.get(i).getFontName().equals(mFontFamily)) {
+                selectIndex = i;
+            }
             item.setOnClickListener(view1 -> {
                 for (ChooseFontItemView button : mItemViewList) {
                     if (button != item) {
@@ -207,6 +210,25 @@ public class ChooseFontDialog {
             mItemViewList.add(item);
             scrollContent.addView(item);
         }
+
+        final int scrollerPosition;
+        //view height 38dp; list height 300dp;
+        int viewHeight = 38;
+        int scrollerHeight = 300;
+        int totalHeight = viewHeight * fontList.size();
+        int expectedPosition = selectIndex * viewHeight + viewHeight / 2 - scrollerHeight / 2;
+        if (expectedPosition < 0) {
+            scrollerPosition = 0;
+        } else if (expectedPosition > totalHeight - scrollerHeight) {
+            scrollerPosition = totalHeight - scrollerHeight;
+        } else {
+            scrollerPosition = expectedPosition;
+        }
+
+        mDialog.setOnShowListener(dialog -> {
+            HSLog.d(TAG, "OnShow");
+            view.findViewById(R.id.dialog_scroller_view).scrollTo(0, Dimensions.pxFromDp(scrollerPosition));
+        });
     }
 
     private void onFontChanged(String font) {

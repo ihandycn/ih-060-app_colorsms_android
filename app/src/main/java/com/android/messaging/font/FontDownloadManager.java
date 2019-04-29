@@ -37,7 +37,7 @@ public class FontDownloadManager {
 
     private static Map<String, FontDownloadListener> sListeners = new HashMap<>();
 
-    public static void removeListener(String fontName) {
+    static void removeListener(String fontName) {
         if (TextUtils.isEmpty(fontName)) {
             return;
         }
@@ -48,7 +48,7 @@ public class FontDownloadManager {
         }
     }
 
-    public static List<FontInfo> getRemoteFonts() {
+    static List<FontInfo> getRemoteFonts() {
         List<FontInfo> list = new ArrayList<>();
         List<Map<String, ?>> fontList = (List<Map<String, ?>>) HSConfig.getList("Application", "Fonts", "FontList");
         for (Map item : fontList) {
@@ -60,7 +60,7 @@ public class FontDownloadManager {
         return list;
     }
 
-    public static boolean isFontDownloaded(FontInfo font) {
+    static boolean isFontDownloaded(FontInfo font) {
         for (String style : font.getFontWeights()) {
             File file = new File(CommonUtils.getDirectory(LOCAL_DIRECTORY + font.getFontName()), style + ".ttf");
             if (!file.exists()) {
@@ -70,10 +70,9 @@ public class FontDownloadManager {
         return true;
     }
 
-    public static void downloadFont(FontInfo font, FontDownloadListener listener) {
+    static void downloadFont(FontInfo font, FontDownloadListener listener) {
         if (isFontDownloaded(font)) {
             listener.onDownloadSuccess();
-            return;
         } else {
             if (!Networks.isNetworkAvailable(-1)) {
                 listener.onDownloadFailed();
@@ -95,7 +94,7 @@ public class FontDownloadManager {
     }
 
 
-    public static void downloadFontSync(String basePath, String font, List<String> weights) {
+    private static void downloadFontSync(String basePath, String font, List<String> weights) {
         Threads.postOnThreadPoolExecutor(() -> {
             String weight = weights.remove(0);
 
@@ -117,7 +116,6 @@ public class FontDownloadManager {
                                         if (listener != null) {
                                             listener.onDownloadSuccess();
                                         }
-                                        FontDownloadManager.removeListener(font);
                                     }
                                 }
                             });
@@ -131,7 +129,6 @@ public class FontDownloadManager {
                                     if (listener != null) {
                                         listener.onDownloadFailed();
                                     }
-                                    FontDownloadManager.removeListener(font);
                                 }
                             }
                             Toasts.showToast(R.string.network_error);
@@ -148,7 +145,6 @@ public class FontDownloadManager {
                                 if (listener != null) {
                                     listener.onDownloadFailed();
                                 }
-                                FontDownloadManager.removeListener(font);
                             }
                         }
                         Toasts.showToast(R.string.network_error);
@@ -159,11 +155,11 @@ public class FontDownloadManager {
         });
     }
 
-    public static String getBaseRemoteUrl() {
+    private static String getBaseRemoteUrl() {
         return HSConfig.getString("Application", "Fonts", "BasePath");
     }
 
-    public static Drawable getDrawableByName(String fontName) {
+    static Drawable getDrawableByName(String fontName) {
         try {
             InputStream ims = HSApplication.getContext().getAssets().open("font_preview/font_preview_" + fontName + ".jpg");
             Bitmap bitmap = BitmapFactory.decodeStream(ims);
