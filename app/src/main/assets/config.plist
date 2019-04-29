@@ -13,7 +13,7 @@
 			<key>Fonts</key>
 			<dict>
 				<key>BasePath</key>
-				<string>https://s3.amazonaws.com/superapps-dev/ColorSMS/Fonts</string>
+				<string>http://cdn.appcloudbox.net/smoothappsstudio/apps/bubble/Fonts</string>
 				<key>FontList</key>
 				<array>
 					<dict>
