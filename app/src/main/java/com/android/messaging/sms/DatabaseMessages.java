@@ -51,17 +51,13 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
  * Class contains various SMS/MMS database entities from telephony provider
  */
 public class DatabaseMessages {
     private static final String TAG = LogUtil.BUGLE_TAG;
-    public static Map<String, Long> sThreadIdMap = new HashMap<>();
-
 
     public abstract static class DatabaseMessage {
         public abstract int getProtocol();
@@ -168,11 +164,7 @@ public class DatabaseMessages {
             // Before ICS, there is no "date_sent" so use copy of "date" value
             mTimestampSentInMillis = cursor.getLong(INDEX_DATE_SENT);
             mType = cursor.getInt(INDEX_TYPE);
-            if (sThreadIdMap.containsKey(mAddress)) {
-                mThreadId = sThreadIdMap.get(mAddress);
-            } else {
-                mThreadId = cursor.getLong(INDEX_THREAD_ID);
-            }
+            mThreadId = cursor.getLong(INDEX_THREAD_ID);
             mStatus = cursor.getInt(INDEX_STATUS);
             mRead = cursor.getInt(INDEX_READ) == 0 ? false : true;
             mSeen = cursor.getInt(INDEX_SEEN) == 0 ? false : true;
