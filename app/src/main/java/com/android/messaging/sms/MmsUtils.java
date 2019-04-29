@@ -2573,7 +2573,6 @@ public class MmsUtils {
                                      final String smsServiceCenter, final boolean requireDeliveryReport) {
         if (!isSmsDataAvailable(subId)) {
             LogUtil.w(TAG, "MmsUtils: can't send SMS without radio");
-            BugleAnalytics.logEvent("SMS_Send_Failed", "reason", "can't send SMS without radio");
             return MMS_REQUEST_MANUAL_RETRY;
         }
         final Context context = Factory.get().getApplicationContext();
@@ -2608,7 +2607,6 @@ public class MmsUtils {
                 LogUtil.e(TAG, "MmsUtils: sending SMS timed out");
             }
         } catch (final Exception e) {
-            BugleAnalytics.logEvent("SMS_Send_Failed", "reason", e.getMessage());
             CrashlyticsCore.getInstance().logException(new CrashlyticsLog("send fail : " + e.getMessage()));
             LogUtil.e(TAG, "MmsUtils: failed to send SMS " + e, e);
         }

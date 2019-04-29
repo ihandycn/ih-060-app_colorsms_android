@@ -19,6 +19,7 @@ package com.android.messaging.datamodel.action;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteException;
+import android.os.Build;
 import android.provider.Telephony.Mms;
 import android.provider.Telephony.Sms;
 import android.support.v4.util.LongSparseArray;
@@ -26,9 +27,9 @@ import android.text.TextUtils;
 
 import com.android.messaging.Factory;
 import com.android.messaging.datamodel.DatabaseHelper;
+import com.android.messaging.datamodel.DatabaseHelper.MessageColumns;
 import com.android.messaging.datamodel.DatabaseWrapper;
 import com.android.messaging.datamodel.SyncManager;
-import com.android.messaging.datamodel.DatabaseHelper.MessageColumns;
 import com.android.messaging.datamodel.SyncManager.ThreadInfoCache;
 import com.android.messaging.datamodel.data.MessageData;
 import com.android.messaging.mmslib.SqliteWrapper;
@@ -40,9 +41,12 @@ import com.android.messaging.sms.DatabaseMessages.SmsMessage;
 import com.android.messaging.sms.MmsUtils;
 import com.android.messaging.util.Assert;
 import com.android.messaging.util.LogUtil;
+import com.crashlytics.android.core.CrashlyticsCore;
 import com.google.common.collect.Sets;
+import com.superapps.debug.CrashlyticsLog;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
 import java.util.Set;
@@ -67,7 +71,7 @@ class SyncCursorPair {
     /**
      * Check if SMS has been synchronized. We compare the counts of messages on both
      * sides and return true if they are equal.
-     *
+     * <p>
      * Note that this may not be the most reliable way to tell if messages are in sync.
      * For example, the local misses one message and has one obsolete message.
      * However, we have background sms sync once a while, also some other events might
@@ -147,10 +151,10 @@ class SyncCursorPair {
     }
 
     long scan(final int maxMessagesToScan,
-            final int maxMessagesToUpdate, final ArrayList<SmsMessage> smsToAdd,
-            final LongSparseArray<MmsMessage> mmsToAdd,
-            final ArrayList<LocalDatabaseMessage> messagesToDelete,
-            final SyncManager.ThreadInfoCache threadInfoCache) {
+              final int maxMessagesToUpdate, final ArrayList<SmsMessage> smsToAdd,
+              final LongSparseArray<MmsMessage> mmsToAdd,
+              final ArrayList<LocalDatabaseMessage> messagesToDelete,
+              final SyncManager.ThreadInfoCache threadInfoCache) {
         // Set of local messages matched with the timestamp of a remote message
         final Set<DatabaseMessage> matchedLocalMessages = Sets.newHashSet();
         // Set of remote messages matched with the timestamp of a local message
@@ -172,8 +176,8 @@ class SyncCursorPair {
                 break;
             } else if ((remoteMessage == null && localMessage != null) ||
                     (localMessage != null && remoteMessage != null &&
-                        localMessage.getTimestampInMillis()
-                            > remoteMessage.getTimestampInMillis())) {
+                            localMessage.getTimestampInMillis()
+                                    > remoteMessage.getTimestampInMillis())) {
                 // Found a local message that is not in remote db
                 // Delete the local message
                 messagesToDelete.add((LocalDatabaseMessage) localMessage);
@@ -184,8 +188,8 @@ class SyncCursorPair {
                 localCount += 1;
             } else if ((localMessage == null && remoteMessage != null) ||
                     (localMessage != null && remoteMessage != null &&
-                        localMessage.getTimestampInMillis()
-                            < remoteMessage.getTimestampInMillis())) {
+                            localMessage.getTimestampInMillis()
+                                    < remoteMessage.getTimestampInMillis())) {
                 // Found a remote message that is not in local db
                 // Add the remote message
                 saveMessageToAdd(smsToAdd, mmsToAdd, remoteMessage, threadInfoCache);
@@ -211,7 +215,7 @@ class SyncCursorPair {
                 if ((remoteMessagePeek == null ||
                         remoteMessagePeek.getTimestampInMillis() != matchedTimestamp) &&
                         (localMessagePeek == null ||
-                            localMessagePeek.getTimestampInMillis() != matchedTimestamp)) {
+                                localMessagePeek.getTimestampInMillis() != matchedTimestamp)) {
                     // Optimize the common case where only one message on each side
                     // that matches the same timestamp
                     if (!remoteMessage.equals(localMessage)) {
@@ -235,7 +239,7 @@ class SyncCursorPair {
                     remoteCount += 1;
                     remoteMessage = remoteMessagePeek;
                     while (remoteMessage != null &&
-                        remoteMessage.getTimestampInMillis() == matchedTimestamp) {
+                            remoteMessage.getTimestampInMillis() == matchedTimestamp) {
                         Assert.isTrue(!matchedRemoteMessages.contains(remoteMessage));
                         matchedRemoteMessages.add(remoteMessage);
                         remoteCount += 1;
@@ -307,14 +311,17 @@ class SyncCursorPair {
          * @return The next element (which becomes the current)
          */
         public DatabaseMessage next();
+
         /**
          * Close the cursor
          */
         public void close();
+
         /**
          * Get the position
          */
         public int getPosition();
+
         /**
          * Get the count
          */
@@ -334,7 +341,7 @@ class SyncCursorPair {
 
     // TODO : This should move into the provider
     private static class LocalMessageQuery {
-        private static final String[] PROJECTION = new String[] {
+        private static final String[] PROJECTION = new String[]{
                 MessageColumns._ID,
                 MessageColumns.RECEIVED_TIMESTAMP,
                 MessageColumns.SMS_MESSAGE_URI,
@@ -456,6 +463,10 @@ class SyncCursorPair {
                             + "need to cancel sync");
                     throw new RuntimeException("Null cursor from remote SMS query");
                 }
+
+                mergeThreadIdByRecipients();
+                mSmsCursor.moveToPosition(-1);
+
                 if (LogUtil.isLoggable(TAG, LogUtil.VERBOSE)) {
                     LogUtil.v(TAG, "SyncCursorPair: Querying for remote MMS; selection = "
                             + mmsSelection);
@@ -486,6 +497,27 @@ class SyncCursorPair {
             }
         }
 
+        private void mergeThreadIdByRecipients() {
+            DatabaseMessages.sThreadIdMap.clear();
+            while (mSmsCursor.moveToNext()) {
+                long threadId = mSmsCursor.getLong(mSmsCursor.getColumnIndex(Sms.THREAD_ID));
+                String address = mSmsCursor.getString(mSmsCursor.getColumnIndex(Sms.ADDRESS));
+                if (DatabaseMessages.sThreadIdMap.containsKey(address)) {
+                    String oldRecipient = MmsUtils.getRawRecipientIdsForThread(DatabaseMessages.sThreadIdMap.get(address));
+                    String recipient = MmsUtils.getRawRecipientIdsForThread(threadId);
+                    if (!TextUtils.isEmpty(recipient)) {
+                        DatabaseMessages.sThreadIdMap.put(address, threadId);
+                    }
+                    CrashlyticsCore.getInstance().logException(new CrashlyticsLog(
+                            "merge thread id: device " + Build.MANUFACTURER));
+                    CrashlyticsCore.getInstance().logException(new CrashlyticsLog(
+                            "merge thread id " + threadId + ", old : " + oldRecipient + ", new : " + recipient));
+                } else {
+                    DatabaseMessages.sThreadIdMap.put(address, threadId);
+                }
+            }
+        }
+
         @Override
         public DatabaseMessage next() {
             DatabaseMessage result = null;
@@ -511,6 +543,19 @@ class SyncCursorPair {
 
         private DatabaseMessage getSmsCursorNext() {
             if (mSmsCursor != null && mSmsCursor.moveToNext()) {
+                try {
+                    long threadId = mSmsCursor.getLong(mSmsCursor.getColumnIndex(Sms.THREAD_ID));
+                    String address = mSmsCursor.getString(mSmsCursor.getColumnIndex(Sms.ADDRESS));
+                    if (threadId == 0 || TextUtils.isEmpty(address)) {
+                        CrashlyticsCore.getInstance().logException(new CrashlyticsLog(
+                                "threadId is 0 or address is null in query cursor, add "
+                                        + address + ",threadId " + threadId));
+                        CrashlyticsCore.getInstance().logException(new CrashlyticsLog(
+                                "all column names " + Arrays.toString(mSmsCursor.getColumnNames())));
+                    }
+                } catch (Exception e) {
+                    CrashlyticsCore.getInstance().logException(new CrashlyticsLog("get threadId|address from telephony DB error"));
+                }
                 return SmsMessage.get(mSmsCursor);
             }
             return null;
@@ -560,7 +605,7 @@ class SyncCursorPair {
 
     /**
      * Type selection for importing mms messages.
-     *
+     * <p>
      * Criteria:
      * MESSAGE_BOX is INBOX, SENT or OUTBOX
      * MESSAGE_TYPE is SEND_REQ (sent), RETRIEVE_CONF (received) or NOTIFICATION_IND (download)
@@ -577,13 +622,13 @@ class SyncCursorPair {
      * The limits are not applied if the value is < 0
      *
      * @param typeSelection The existing selection
-     * @param from The inclusive lower bound
-     * @param to The exclusive upper bound
+     * @param from          The inclusive lower bound
+     * @param to            The exclusive upper bound
      * @return The created SQL selection
      */
     private static String getTimeConstrainedQuery(final String typeSelection,
-            final String timeColumn, final long from, final long to,
-            final String threadColumn, final String threadId) {
+                                                  final String timeColumn, final long from, final long to,
+                                                  final String threadColumn, final String threadId) {
         final StringBuilder queryBuilder = new StringBuilder();
         queryBuilder.append(typeSelection);
         if (from > 0) {
@@ -598,7 +643,7 @@ class SyncCursorPair {
         return queryBuilder.toString();
     }
 
-    private static final String[] COUNT_PROJECTION = new String[] { "count()" };
+    private static final String[] COUNT_PROJECTION = new String[]{"count()"};
 
     private static int getCountFromCursor(final Cursor cursor) {
         if (cursor != null && cursor.moveToFirst()) {
@@ -616,8 +661,8 @@ class SyncCursorPair {
     }
 
     private void saveMessageToAdd(final List<SmsMessage> smsToAdd,
-            final LongSparseArray<MmsMessage> mmsToAdd, final DatabaseMessage message,
-            final ThreadInfoCache threadInfoCache) {
+                                  final LongSparseArray<MmsMessage> mmsToAdd, final DatabaseMessage message,
+                                  final ThreadInfoCache threadInfoCache) {
         long threadId;
         if (message.getProtocol() == MessageData.PROTOCOL_MMS) {
             final MmsMessage mms = (MmsMessage) message;
@@ -635,7 +680,7 @@ class SyncCursorPair {
     /**
      * Check if SMS has been synchronized. We compare the counts of messages on both
      * sides and return true if they are equal.
-     *
+     * <p>
      * Note that this may not be the most reliable way to tell if messages are in sync.
      * For example, the local misses one message and has one obsolete message.
      * However, we have background sms sync once a while, also some other events might
@@ -645,9 +690,9 @@ class SyncCursorPair {
      * @return If sms is in sync with telephony sms/mms providers
      */
     private static boolean isSynchronized(final DatabaseWrapper db, final String localSelection,
-            final String[] localSelectionArgs, final String smsSelection,
-            final String[] smsSelectionArgs, final String mmsSelection,
-            final String[] mmsSelectionArgs) {
+                                          final String[] localSelectionArgs, final String smsSelection,
+                                          final String[] smsSelectionArgs, final String mmsSelection,
+                                          final String[] mmsSelectionArgs) {
         final Context context = Factory.get().getApplicationContext();
         Cursor localCursor = null;
         Cursor remoteSmsCursor = null;

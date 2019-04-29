@@ -51,17 +51,23 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Class contains various SMS/MMS database entities from telephony provider
  */
 public class DatabaseMessages {
     private static final String TAG = LogUtil.BUGLE_TAG;
+    public static Map<String, Long> sThreadIdMap = new HashMap<>();
+
 
     public abstract static class DatabaseMessage {
         public abstract int getProtocol();
+
         public abstract String getUri();
+
         public abstract long getTimestampInMillis();
 
         @Override
@@ -104,7 +110,7 @@ public class DatabaseMessages {
 
         public static String[] getProjection() {
             if (sProjection == null) {
-                String[] projection = new String[] {
+                String[] projection = new String[]{
                         Sms._ID,
                         Sms.TYPE,
                         Sms.ADDRESS,
@@ -116,7 +122,7 @@ public class DatabaseMessages {
                         Sms.SEEN,
                         Sms.DATE_SENT,
                         Sms.SUBSCRIPTION_ID,
-                    };
+                };
                 if (!MmsUtils.hasSmsDateSentColumn()) {
                     projection[INDEX_DATE_SENT] = Sms.DATE;
                 }
@@ -162,7 +168,11 @@ public class DatabaseMessages {
             // Before ICS, there is no "date_sent" so use copy of "date" value
             mTimestampSentInMillis = cursor.getLong(INDEX_DATE_SENT);
             mType = cursor.getInt(INDEX_TYPE);
-            mThreadId = cursor.getLong(INDEX_THREAD_ID);
+            if (sThreadIdMap.containsKey(mAddress)) {
+                mThreadId = sThreadIdMap.get(mAddress);
+            } else {
+                mThreadId = cursor.getLong(INDEX_THREAD_ID);
+            }
             mStatus = cursor.getInt(INDEX_STATUS);
             mRead = cursor.getInt(INDEX_READ) == 0 ? false : true;
             mSeen = cursor.getInt(INDEX_SEEN) == 0 ? false : true;
@@ -285,26 +295,26 @@ public class DatabaseMessages {
 
         public static String[] getProjection() {
             if (sProjection == null) {
-                String[] projection = new String[] {
-                    Mms._ID,
-                    Mms.MESSAGE_BOX,
-                    Mms.SUBJECT,
-                    Mms.SUBJECT_CHARSET,
-                    Mms.MESSAGE_SIZE,
-                    Mms.DATE,
-                    Mms.DATE_SENT,
-                    Mms.THREAD_ID,
-                    Mms.PRIORITY,
-                    Mms.STATUS,
-                    Mms.READ,
-                    Mms.SEEN,
-                    Mms.CONTENT_LOCATION,
-                    Mms.TRANSACTION_ID,
-                    Mms.MESSAGE_TYPE,
-                    Mms.EXPIRY,
-                    Mms.RESPONSE_STATUS,
-                    Mms.RETRIEVE_STATUS,
-                    Mms.SUBSCRIPTION_ID,
+                String[] projection = new String[]{
+                        Mms._ID,
+                        Mms.MESSAGE_BOX,
+                        Mms.SUBJECT,
+                        Mms.SUBJECT_CHARSET,
+                        Mms.MESSAGE_SIZE,
+                        Mms.DATE,
+                        Mms.DATE_SENT,
+                        Mms.THREAD_ID,
+                        Mms.PRIORITY,
+                        Mms.STATUS,
+                        Mms.READ,
+                        Mms.SEEN,
+                        Mms.CONTENT_LOCATION,
+                        Mms.TRANSACTION_ID,
+                        Mms.MESSAGE_TYPE,
+                        Mms.EXPIRY,
+                        Mms.RESPONSE_STATUS,
+                        Mms.RETRIEVE_STATUS,
+                        Mms.SUBSCRIPTION_ID,
                 };
 
                 if (!OsUtil.isAtLeastL_MR1()) {
@@ -400,6 +410,7 @@ public class DatabaseMessages {
             msg.load(cursor);
             return msg;
         }
+
         /**
          * Add a loaded MMS part
          *
@@ -559,12 +570,12 @@ public class DatabaseMessages {
      * Part of an MMS message
      */
     public static class MmsPart implements Parcelable {
-        public static final String[] PROJECTION = new String[] {
-            Mms.Part._ID,
-            Mms.Part.MSG_ID,
-            Mms.Part.CHARSET,
-            Mms.Part.CONTENT_TYPE,
-            Mms.Part.TEXT,
+        public static final String[] PROJECTION = new String[]{
+                Mms.Part._ID,
+                Mms.Part.MSG_ID,
+                Mms.Part.CHARSET,
+                Mms.Part.CONTENT_TYPE,
+                Mms.Part.TEXT,
         };
         private static int sIota = 0;
         public static final int INDEX_ID = sIota++;
@@ -878,7 +889,7 @@ public class DatabaseMessages {
         private final String mConversationId;
 
         public LocalDatabaseMessage(final long localId, final int protocol, final String uri,
-                final long timestamp, final String conversationId) {
+                                    final long timestamp, final String conversationId) {
             mLocalId = localId;
             mProtocol = protocol;
             mUri = uri;
@@ -949,9 +960,9 @@ public class DatabaseMessages {
      * Address for MMS message
      */
     public static class MmsAddr {
-        public static final String[] PROJECTION = new String[] {
-            Mms.Addr.ADDRESS,
-            Mms.Addr.CHARSET,
+        public static final String[] PROJECTION = new String[]{
+                Mms.Addr.ADDRESS,
+                Mms.Addr.CHARSET,
         };
         private static int sIota = 0;
         public static final int INDEX_ADDRESS = sIota++;
@@ -971,7 +982,7 @@ public class DatabaseMessages {
     /**
      * Decoded string by character set
      */
-    public static String getDecodedString(final byte[] data, final int charset)  {
+    public static String getDecodedString(final byte[] data, final int charset) {
         if (CharacterSets.ANY_CHARSET == charset) {
             return new String(data); // system default encoding.
         } else {
