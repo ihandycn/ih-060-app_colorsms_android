@@ -1,7 +1,5 @@
 package com.android.messaging.ui.wallpaper;
 
-import android.animation.Animator;
-import android.animation.AnimatorListenerAdapter;
 import android.animation.ObjectAnimator;
 import android.app.Activity;
 import android.content.Context;
@@ -24,7 +22,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.android.messaging.BaseActivity;
-import com.android.messaging.Factory;
 import com.android.messaging.R;
 import com.android.messaging.glide.GlideApp;
 import com.android.messaging.ui.customize.CustomMessagePreviewView;
@@ -104,17 +101,8 @@ public class WallpaperPreviewActivity extends BaseActivity implements WallpaperM
                             if (isDestroyed()) {
                                 return;
                             }
-                            mWallpaperPreviewImg.setVisibility(View.INVISIBLE);
                             mWallpaperPreviewImg.setImageBitmap(resource);
-                            ObjectAnimator animator = ObjectAnimator.ofFloat(mWallpaperPreviewImg, "alpha", 0f, 1f);
-                            animator.setDuration(200);
-                            animator.addListener(new AnimatorListenerAdapter() {
-                                @Override
-                                public void onAnimationStart(Animator animation) {
-                                    mWallpaperPreviewImg.setVisibility(View.VISIBLE);
-                                }
-                            });
-                            animator.start();
+                            startPreviewTransitionAnimation();
                         });
                     }
 
@@ -134,6 +122,17 @@ public class WallpaperPreviewActivity extends BaseActivity implements WallpaperM
                         super.onLoadCleared(placeholder);
                     }
                 });
+    }
+
+    public void setPreviewDrawable(Drawable drawable) {
+        mWallpaperPreviewImg.setImageDrawable(drawable);
+        startPreviewTransitionAnimation();
+    }
+
+    private void startPreviewTransitionAnimation() {
+        ObjectAnimator animator = ObjectAnimator.ofFloat(mWallpaperPreviewImg, "alpha", 0f, 1f);
+        animator.setDuration(200);
+        animator.start();
     }
 
     @Override
@@ -259,7 +258,7 @@ public class WallpaperPreviewActivity extends BaseActivity implements WallpaperM
                         return;
                     }
                     onItemSelected(view);
-                    mWallpaperPreviewImg.setImageBitmap(null);
+                    setPreviewDrawable(WallpaperDrawables.getWallpaperBg());
                     if (mThreadId == null) {
                         WallpaperManager.setWallpaperPath(null, "");
                         WallpaperManager.onOnlineWallpaperChanged();
@@ -271,9 +270,7 @@ public class WallpaperPreviewActivity extends BaseActivity implements WallpaperM
                     BugleAnalytics.logEvent("SMS_ChatBackground_Backgrounds_Applied", true, true,
                             "from", TextUtils.isEmpty(mThreadId) ? "Menu" : "Options");
                 });
-                if (TextUtils.isEmpty(wallpaperPath)
-                        && TextUtils.isEmpty(Factory.get().getCustomizePrefs().getString(
-                        WallpaperDrawables.PREF_KEY_CUSTOMIZE_WALLPAPER_BACKGROUND, ""))) {
+                if (TextUtils.isEmpty(wallpaperPath)) {
                     onItemSelected(view);
                 }
             } else {

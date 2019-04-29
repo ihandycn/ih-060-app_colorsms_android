@@ -141,7 +141,6 @@ public class WallpaperManager {
             sPrefs.putString(PREF_KEY_WALLPAPER_PATH + "_" + threadId, path);
         } else {
             sPrefs.putString(PREF_KEY_WALLPAPER_PATH, path);
-            WallpaperDrawables.applyWallpaperBg("");
         }
     }
 
