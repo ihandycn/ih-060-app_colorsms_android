@@ -1,6 +1,6 @@
 package com.android.messaging.ui.customize;
 
-import android.net.Uri;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.ColorInt;
 import android.support.annotation.Nullable;
@@ -22,14 +22,14 @@ import com.android.messaging.ui.CustomPagerViewHolder;
 import com.android.messaging.ui.CustomViewPager;
 import com.android.messaging.ui.UIIntents;
 import com.android.messaging.ui.conversationlist.ConversationListActivity;
+import com.android.messaging.ui.customize.theme.ThemeInfo;
+import com.android.messaging.ui.customize.theme.ThemeUtils;
 import com.android.messaging.ui.wallpaper.WallpaperManager;
 import com.android.messaging.util.BugleAnalytics;
 import com.android.messaging.util.UiUtils;
 import com.ihs.commons.notificationcenter.HSGlobalNotificationCenter;
 import com.superapps.util.BackgroundDrawables;
 import com.superapps.util.Dimensions;
-
-import java.io.File;
 
 import static com.android.messaging.ui.customize.ChooseMessageColorEntryViewHolder.CustomColor.BUBBLE_COLOR_INCOMING;
 import static com.android.messaging.ui.customize.ChooseMessageColorEntryViewHolder.CustomColor.BUBBLE_COLOR_OUTGOING;
@@ -40,7 +40,6 @@ import static com.android.messaging.ui.customize.ChooseMessageColorEntryViewHold
 public class CustomBubblesActivity extends BaseActivity implements CustomMessageHost {
 
     private static final String[] COLOR_TYPES = {"bubble_color_incoming", "bubble_color_outgoing", "message_text_incoming", "message_text_outgoing"};
-
 
     private ChooseMessageColorPagerView mChooseMessageColorPagerView;
     private CustomMessagePreviewView mCustomMessagePreview;
@@ -53,6 +52,7 @@ public class CustomBubblesActivity extends BaseActivity implements CustomMessage
     private String mConversationId;
 
     private boolean mHasChanged;
+    private boolean mHasCustomBubbleClicked;
 
 
     @Override
@@ -131,6 +131,21 @@ public class CustomBubblesActivity extends BaseActivity implements CustomMessage
 
     @Override
     public void previewCustomBubbleDrawable(int index) {
+        if (!mHasCustomBubbleClicked) {
+            ThemeInfo themeInfo = ThemeInfo.getThemeInfo(ThemeUtils.getCurrentThemeName());
+            ThemeInfo defaultTheme = ThemeInfo.getThemeInfo("Default");
+            if (Integer.parseInt(themeInfo.bubbleIncomingUrl) == BubbleDrawables.getSelectedIdentifier(mConversationId)) {
+                mCustomMessagePreview.previewCustomBubbleBackgroundColor(true, Color.parseColor(defaultTheme.incomingBubbleBgColor));
+                mCustomMessagePreview.previewCustomBubbleBackgroundColor(false, Color.parseColor(defaultTheme.outgoingBubbleBgColor));
+                mCustomMessagePreview.previewCustomTextColor(true, Color.parseColor(defaultTheme.incomingBubbleTextColor));
+                mCustomMessagePreview.previewCustomTextColor(false, Color.parseColor(defaultTheme.outgoingBubbleTextColor));
+                mChooseMessageColorEntryViewHolder.previewCustomColor(BUBBLE_COLOR_INCOMING, Color.parseColor(defaultTheme.incomingBubbleBgColor));
+                mChooseMessageColorEntryViewHolder.previewCustomColor(BUBBLE_COLOR_OUTGOING, Color.parseColor(defaultTheme.outgoingBubbleBgColor));
+                mChooseMessageColorEntryViewHolder.previewCustomColor(TEXT_COLOR_INCOMING, Color.parseColor(defaultTheme.incomingBubbleTextColor));
+                mChooseMessageColorEntryViewHolder.previewCustomColor(TEXT_COLOR_OUTGOING, Color.parseColor(defaultTheme.outgoingBubbleTextColor));
+            }
+        }
+        mHasCustomBubbleClicked = true;
         mCustomMessagePreview.previewCustomBubbleDrawables(index);
         mHasChanged = true;
         enableSaveButton();

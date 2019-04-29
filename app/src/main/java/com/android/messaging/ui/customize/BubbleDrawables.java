@@ -89,6 +89,13 @@ public class BubbleDrawables {
         return -1;
     }
 
+    public static int getSelectedIdentifier(String conversationId) {
+        int selectedIdentifier =
+                prefs.getInt(PREFS_KEY_BUBBLE_DRAWABLE_IDENTIFIER + "_" + conversationId,
+                        getSelectedIdentifier());
+        return selectedIdentifier;
+    }
+
     public static void setSelectedIndex(int index) {
         prefs.putInt(PREFS_KEY_BUBBLE_DRAWABLE_IDENTIFIER, IDENTIFIER[index]);
     }
