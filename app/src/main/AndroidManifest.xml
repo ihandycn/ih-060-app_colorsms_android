@@ -633,7 +633,7 @@
             android:screenOrientation="portrait"
             android:theme="@style/BaseSettingsActivity"/>
         <activity
-            android:name=".ui.appsettings.ChangeFontActivity"
+            android:name=".font.ChangeFontActivity"
             android:excludeFromRecents="true"
             android:screenOrientation="portrait"
             android:theme="@style/BaseSettingsActivity"/>
