@@ -15,7 +15,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="12dp"
         android:maxLines="1"
-        android:text="@string/emoji_recent_empty_description"
+        android:text="@string/sms_emoji_recent_empty_description"
         android:textColor="#646262"
         android:textSize="18sp" />
 

@@ -25,7 +25,7 @@
     <com.superapps.view.MessagesTextView
         android:id="@+id/welcome_guide_viewpager_title"
         android:layout_width="0dp"
-        android:text="@string/welcome_viewpager_item_title_0"
+        android:text="@string/message_welcome_viewpager_item_title_0"
         android:layout_height="wrap_content"
         android:clickable="true"
         android:maxLines="2"
@@ -47,7 +47,7 @@
         android:clickable="true"
         android:layout_marginTop="-4dp"
         android:gravity="center_horizontal"
-        android:text="@string/welcome_viewpager_item_body_0"
+        android:text="@string/message_welcome_viewpager_item_body_0"
         android:lineSpacingExtra="2dp"
         android:lines="2"
         android:textColor="#494b4f"

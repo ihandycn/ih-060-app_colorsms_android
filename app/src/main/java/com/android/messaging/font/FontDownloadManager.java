@@ -76,7 +76,7 @@ public class FontDownloadManager {
         } else {
             if (!Networks.isNetworkAvailable(-1)) {
                 listener.onDownloadFailed();
-                Toasts.showToast(R.string.network_error);
+                Toasts.showToast(R.string.sms_network_error);
                 return;
             }
             synchronized (FontDownloadManager.class) {
@@ -131,7 +131,7 @@ public class FontDownloadManager {
                                     }
                                 }
                             }
-                            Toasts.showToast(R.string.network_error);
+                            Toasts.showToast(R.string.sms_network_error);
                         });
                     }
                 }
@@ -147,7 +147,7 @@ public class FontDownloadManager {
                                 }
                             }
                         }
-                        Toasts.showToast(R.string.network_error);
+                        Toasts.showToast(R.string.sms_network_error);
                     });
                 }
             });

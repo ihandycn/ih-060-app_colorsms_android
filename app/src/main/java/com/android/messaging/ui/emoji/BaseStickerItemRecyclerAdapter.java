@@ -191,7 +191,7 @@ public abstract class BaseStickerItemRecyclerAdapter extends RecyclerView.Adapte
         }
 
         if (!Networks.isNetworkAvailable(-1)) {
-            Toasts.showToast(R.string.network_error);
+            Toasts.showToast(R.string.sms_network_error);
             return;
         }
         Downloader.getInstance().download(stickerInfo.mSoundUrl, null);
@@ -281,7 +281,7 @@ public abstract class BaseStickerItemRecyclerAdapter extends RecyclerView.Adapte
                 }
                 holder.progressLayout.setVisibility(View.GONE);
                 holder.magicStatusView.setVisibility(View.VISIBLE);
-                Toasts.showToast(R.string.network_error);
+                Toasts.showToast(R.string.sms_network_error);
             }
         };
         if (!TextUtils.isEmpty(stickerInfo.mLottieZipUrl)) {

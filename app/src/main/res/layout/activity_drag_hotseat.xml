@@ -80,7 +80,7 @@
             android:background="@drawable/drag_hotseat_btn_bg"
             android:gravity="center"
             android:includeFontPadding="false"
-            android:text="@string/got_it"
+            android:text="@string/sms_got_it"
             android:textAllCaps="true"
             android:textColor="@android:color/white"
             android:textSize="@dimen/dialog_ok_btn_text_size"

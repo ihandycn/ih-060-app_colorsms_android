@@ -510,25 +510,25 @@
     <string name="link_display_format" msgid="8700344957248709584">"<xliff:g id="TEXT">%1$s</xliff:g> (<xliff:g id="URL">%2$s</xliff:g>)"</string>
     <string name="selected_sim_content_message" msgid="4504796674843354505">"SIM-карта выбрана: <xliff:g id="SELECTED_SIM">%s</xliff:g>"</string>
 
-    <string name="five_star_hint_text">Вам понравилось наше приложение?</string>
-    <string name="five_star_five_text">Очень понравилось</string>
-    <string name="five_star_four_text">Понравилось</string>
-    <string name="five_star_three_text">Нормально</string>
-    <string name="five_star_two_text">Не понравилось</string>
-    <string name="five_star_one_text">Совсем не понравилось</string>
-    <string name="five_star_positive_text">Отправить</string>
+    <string name="sms_five_star_hint_text">Вам понравилось наше приложение?</string>
+    <string name="message_five_star_five_text">Очень понравилось</string>
+    <string name="message_five_star_four_text">Понравилось</string>
+    <string name="message_five_star_three_text">Нормально</string>
+    <string name="message_five_star_two_text">Не понравилось</string>
+    <string name="message_five_star_one_text">Совсем не понравилось</string>
+    <string name="sms_five_star_positive_text">Отправить</string>
 
-    <string name="loved_it_desc">Спасибо! Оставьте отзыв со словами: хорошее, полезное, стильное…</string>
-    <string name="liked_it_desc">Расскажите, что вам не понравилось. Мы приложим все усилия, чтобы исправить это!</string>
-    <string name="five_star_rate">Поставьте 5 звезд.</string>
+    <string name="sms_loved_it_desc">Спасибо! Оставьте отзыв со словами: хорошее, полезное, стильное…</string>
+    <string name="sms_liked_it_desc">Расскажите, что вам не понравилось. Мы приложим все усилия, чтобы исправить это!</string>
+    <string name="sms_five_star_rate">Поставьте 5 звезд.</string>
 
-    <string name="feedback_title">Обратная связь</string>
-    <string name="feedback_content_placeholder">" Ваши отзывы помогают нам вносить улучшения"</string>
-    <string name="feedback_email_placeholder"> " Пожалуйста, введите ваш адрес электронной почты"</string>
-    <string name="feedback_submit_btn">Отправить</string>
-    <string name="feedback_toast_empty_content">Пожалуйста, напишите свой отзыв</string>
-    <string name="feedback_toast_invalid_email">Пожалуйста, введите действительный адрес электронной почты</string>
-    <string name="feedback_toast_send_success">Спасибо за ваш отзыв!</string>
+    <string name="sms_feedback_title">Обратная связь</string>
+    <string name="sms_feedback_content_placeholder">" Ваши отзывы помогают нам вносить улучшения"</string>
+    <string name="sms_feedback_email_placeholder"> " Пожалуйста, введите ваш адрес электронной почты"</string>
+    <string name="sms_feedback_submit_btn">Отправить</string>
+    <string name="sms_feedback_toast_empty_content">Пожалуйста, напишите свой отзыв</string>
+    <string name="sms_feedback_toast_invalid_email">Пожалуйста, введите действительный адрес электронной почты</string>
+    <string name="sms_feedback_toast_send_success">Спасибо за ваш отзыв!</string>
 
     <string name="setting_sms_show">СМС-шоу</string>
     <string name="setting_sms_show_close_dialog_content">Вы потеряете красивые темы с напоминаниями об СМС. Закрыть эту функцию?</string>
@@ -560,13 +560,13 @@
     <string name="welcome_set_default_button">OK</string>
     <string name="welcome_start_policy">Политика конфиденциальности</string>
     <string name="welcome_start_service">Условия обслуживания</string>
-    <string name="emoji_get">ПОЛУЧИТЬ</string>
-    <string name="emoji_added">ДОБАВЛЕНО</string>
-    <string name="emoji_store_title">Магазин эмотиконов</string>
+    <string name="sms_emoji_get">ПОЛУЧИТЬ</string>
+    <string name="sms_emoji_added">ДОБАВЛЕНО</string>
+    <string name="sms_emoji_store_title">Магазин эмотиконов</string>
     <string name="setting_sms_show_close_dialog_ok">OK</string>
 
     <string name="welcome_permission_contacts_title">Контакты</string>
-    <string name="welcome_start_button">НАЧАТЬ</string>
+    <string name="sms_welcome_start_button">НАЧАТЬ</string>
     <string name="welcome_permission_phone_title">Телефон</string>
     <string name="sms_show_apply">Применить</string>
     <string name="media_picker_camera">Камера</string>
@@ -574,9 +574,9 @@
     <string name="welcome_permission_button">РАЗРЕШАТЬ</string>
     <string name="setting_sms_show_close_dialog_title">Вы действительно хотите выключить эту опцию?</string>
     <string name="sms_show_current_theme">Текущая тема</string>
-    <string name="emoji_recent_empty_description">Нет избранного</string>
+    <string name="sms_emoji_recent_empty_description">Нет избранного</string>
 
-    <string name="emoji_add_more">Больше эмотиконов</string>
+    <string name="sms_emoji_add_more">Больше эмотиконов</string>
 
     <string name="menu_group_customization">Настроить</string>
     <string name="menu_theme_color">Цвет темы</string>
@@ -617,10 +617,10 @@
     <string name="drag_hotseat_title">Сделайте Color SMS главным приложением</string>
     <string name="drag_hotseat_content">Через Color SMS удобнее отправлять забавные эмотиконы и стикеры.</string>
     <string name="set_as_default_dialog_button_ok_default_change">Установить</string>
-    <string name="got_it">Понятно</string>
+    <string name="sms_got_it">Понятно</string>
     <string name="welcome_set_default_failed_toast">Приложение Color SMS установлено неправильно</string>
     <string name="dialog_add_contact_confirmation">Добавить</string>
-    <string name="network_error">Ошибка сети.</string>
+    <string name="sms_network_error">Ошибка сети.</string>
     <string name="reload">Перезагрузить</string>
     <string name="sms_notification_channel">Уведомление об СМС</string>
     <string name="sms_notification_channel_description">Показывать уведомления о входящих СМС</string>
@@ -656,12 +656,12 @@
     <string name="message_box_open">ОТКРЫТЬ</string>
 
 
-	<string name="welcome_viewpager_item_body_0">Станьте заметнее в своем кругу!</string>
-	<string name="welcome_viewpager_item_title_1">Максимальная индивидуализация</string>
-	<string name="welcome_viewpager_item_body_1">Украсьте свой чат так, как нравится вам.</string>
-	<string name="welcome_viewpager_item_title_2">Больше функций</string>
-	<string name="welcome_viewpager_item_body_2">Испытайте в деле множество потрясающих функций.</string>
-	<string name="welcome_set_as_default_title">Установите Color SMS в качестве приложения для СМС по умолчанию. Это необходимо для принятия и отправки СМС.</string>
+	<string name="message_welcome_viewpager_item_body_0">Станьте заметнее в своем кругу!</string>
+	<string name="message_welcome_viewpager_item_title_1">Максимальная индивидуализация</string>
+	<string name="message_welcome_viewpager_item_body_1">Украсьте свой чат так, как нравится вам.</string>
+	<string name="message_welcome_viewpager_item_title_2">Больше функций</string>
+	<string name="message_welcome_viewpager_item_body_2">Испытайте в деле множество потрясающих функций.</string>
+	<string name="message_welcome_set_as_default_title">Установите Color SMS в качестве приложения для СМС по умолчанию. Это необходимо для принятия и отправки СМС.</string>
 
 
 	<string name="menu_theme">Тема</string>

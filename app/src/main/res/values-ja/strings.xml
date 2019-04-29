@@ -458,25 +458,25 @@
     <string name="link_display_format" msgid="8700344957248709584">"<xliff:g id="TEXT">%1$s</xliff:g>（<xliff:g id="URL">%2$s</xliff:g>）"</string>
     <string name="selected_sim_content_message" msgid="4504796674843354505">"<xliff:g id="SELECTED_SIM">%s</xliff:g>が選択されています"</string>
 
-    <string name="five_star_hint_text">感想をお聞かせください。</string>
-    <string name="five_star_positive_text">提出</string>
-    <string name="five_star_one_text">嫌い</string>
-    <string name="five_star_two_text">気に入らなかった</string>
-    <string name="five_star_three_text">まぁまぁ</string>
-    <string name="five_star_four_text">好き</string>
-    <string name="five_star_five_text">大好き</string>
+    <string name="sms_five_star_hint_text">感想をお聞かせください。</string>
+    <string name="sms_five_star_positive_text">提出</string>
+    <string name="message_five_star_one_text">嫌い</string>
+    <string name="message_five_star_two_text">気に入らなかった</string>
+    <string name="message_five_star_three_text">まぁまぁ</string>
+    <string name="message_five_star_four_text">好き</string>
+    <string name="message_five_star_five_text">大好き</string>
 
-    <string name="loved_it_desc">ありがとう！すばらしい、便利、おしゃれ…などの言葉で評価してください。</string>
-    <string name="liked_it_desc">気に入らないことを教えてください。改善するために全力を尽くします！</string>
-    <string name="five_star_rate">スライドアップして5つ星の評価をする。</string>
+    <string name="sms_loved_it_desc">ありがとう！すばらしい、便利、おしゃれ…などの言葉で評価してください。</string>
+    <string name="sms_liked_it_desc">気に入らないことを教えてください。改善するために全力を尽くします！</string>
+    <string name="sms_five_star_rate">スライドアップして5つ星の評価をする。</string>
 
-    <string name="feedback_title">フィードバック</string>
-    <string name="feedback_content_placeholder">" あなたのフィードバックはME Launcherの改善につながります"</string>
-    <string name="feedback_email_placeholder">" あなたのメールアドレスを入力してください"</string>
-    <string name="feedback_submit_btn">送信</string>
-    <string name="feedback_toast_empty_content">フィードバックを書いてください</string>
-    <string name="feedback_toast_invalid_email">有効なメールアドレスを入力してください</string>
-    <string name="feedback_toast_send_success">フィードバックをありがとうございました！</string>
+    <string name="sms_feedback_title">フィードバック</string>
+    <string name="sms_feedback_content_placeholder">" あなたのフィードバックはME Launcherの改善につながります"</string>
+    <string name="sms_feedback_email_placeholder">" あなたのメールアドレスを入力してください"</string>
+    <string name="sms_feedback_submit_btn">送信</string>
+    <string name="sms_feedback_toast_empty_content">フィードバックを書いてください</string>
+    <string name="sms_feedback_toast_invalid_email">有効なメールアドレスを入力してください</string>
+    <string name="sms_feedback_toast_send_success">フィードバックをありがとうございました！</string>
 
     <string name="setting_sms_show">SMS表示</string>
     <string name="setting_sms_show_close_dialog_content">美しいSMSリマインダーテーマを失います、本当に閉じますか？</string>
@@ -508,22 +508,22 @@
     <string name="welcome_set_default_button">OK</string>
     <string name="welcome_start_policy">プライバシー規約</string>
     <string name="welcome_start_service">利用規約</string>
-    <string name="emoji_get">入手</string>
-    <string name="emoji_added">追加済み</string>
-    <string name="emoji_store_title">絵文字ストア</string>
+    <string name="sms_emoji_get">入手</string>
+    <string name="sms_emoji_added">追加済み</string>
+    <string name="sms_emoji_store_title">絵文字ストア</string>
     <string name="setting_sms_show_close_dialog_ok">OK</string>
 
     <string name="welcome_permission_contacts_title">連絡先</string>
-    <string name="welcome_start_button">開始</string>
+    <string name="sms_welcome_start_button">開始</string>
     <string name="welcome_permission_phone_title">電話</string>
     <string name="sms_show_apply">適用</string>
     <string name="media_picker_camera">カメラ</string>
     <string name="media_picker_photo">写真</string>
     <string name="welcome_permission_button">許可する</string>
     <string name="setting_sms_show_close_dialog_title">オフにしてよろしいですか？</string>
-    <string name="emoji_recent_empty_description">お気に入りなし</string>
+    <string name="sms_emoji_recent_empty_description">お気に入りなし</string>
 
-    <string name="emoji_add_more">もっと絵文字</string>
+    <string name="sms_emoji_add_more">もっと絵文字</string>
 
     <string name="sms_show_current_theme">現在のテーマ</string>
 
@@ -569,10 +569,10 @@
     <string name="drag_hotseat_title">Color SMSをメインパネルにドラッグする</string>
     <string name="drag_hotseat_content">Color SMSを介した方が、面白い絵文字やステッカーを送信するのに簡単になります。</string>
     <string name="set_as_default_dialog_button_ok_default_change">今すぐ設定する</string>
-    <string name="got_it">了解</string>
+    <string name="sms_got_it">了解</string>
     <string name="welcome_set_default_failed_toast">Color SMSは正しくセットアップされませんでした</string>
     <string name="dialog_add_contact_confirmation">追加</string>
-    <string name="network_error">ネットワークエラー。</string>
+    <string name="sms_network_error">ネットワークエラー。</string>
     <string name="reload">リロード</string>
     <string name="sms_notification_channel">SMS通知</string>
     <string name="sms_notification_channel_description">SMSを受信した時に通知を表示する</string>
@@ -610,12 +610,12 @@
     <string name="message_box_open">開いた</string>
 
 
-	<string name="welcome_viewpager_item_body_0">SNSグループの間で目立ちましょう！</string>
-	<string name="welcome_viewpager_item_title_1">完全にカスタム化が可能</string>
-	<string name="welcome_viewpager_item_body_1">チャットを好きなようにデコレーション</string>
-	<string name="welcome_viewpager_item_title_2">他の機能</string>
-	<string name="welcome_viewpager_item_body_2">たくさんあるすごい機能を試してください。</string>
-	<string name="welcome_set_as_default_title">SMSを送信/受信するには、SMSアプリのデフォルトとしてColor SMSを設定してください。</string>
+	<string name="message_welcome_viewpager_item_body_0">SNSグループの間で目立ちましょう！</string>
+	<string name="message_welcome_viewpager_item_title_1">完全にカスタム化が可能</string>
+	<string name="message_welcome_viewpager_item_body_1">チャットを好きなようにデコレーション</string>
+	<string name="message_welcome_viewpager_item_title_2">他の機能</string>
+	<string name="message_welcome_viewpager_item_body_2">たくさんあるすごい機能を試してください。</string>
+	<string name="message_welcome_set_as_default_title">SMSを送信/受信するには、SMSアプリのデフォルトとしてColor SMSを設定してください。</string>
 
 
 	<string name="menu_theme">テーマ</string>

@@ -458,25 +458,25 @@
     <string name="link_display_format" msgid="8700344957248709584">"<xliff:g id="TEXT">%1$s</xliff:g> (<xliff:g id="URL">%2$s</xliff:g>)"</string>
     <string name="selected_sim_content_message" msgid="4504796674843354505">"<xliff:g id="SELECTED_SIM">%s</xliff:g> seçildi"</string>
 
-    <string name="five_star_hint_text">Bizden memnun kaldınız mı?</string>
-    <string name="five_star_five_text">Bayıldım</string>
-    <string name="five_star_four_text">Beğendim</string>
-    <string name="five_star_three_text">Eh işte</string>
-    <string name="five_star_two_text">Beğenmedim</string>
-    <string name="five_star_one_text">Nefret ettim</string>
-    <string name="five_star_positive_text">Gönder</string>
+    <string name="sms_five_star_hint_text">Bizden memnun kaldınız mı?</string>
+    <string name="message_five_star_five_text">Bayıldım</string>
+    <string name="message_five_star_four_text">Beğendim</string>
+    <string name="message_five_star_three_text">Eh işte</string>
+    <string name="message_five_star_two_text">Beğenmedim</string>
+    <string name="message_five_star_one_text">Nefret ettim</string>
+    <string name="sms_five_star_positive_text">Gönder</string>
 
-    <string name="loved_it_desc">Teşekkürler! Lütfen Güzel, Kullanışlı, Tarz gibi sözcüklerle puan verin.</string>
-    <string name="liked_it_desc">Neleri beğenmediğinizi söyleyin. İyileştirmek için elimizden geleni yapalım.</string>
-    <string name="five_star_rate">5 yıldız vermek için yukarı kaydırın</string>
+    <string name="sms_loved_it_desc">Teşekkürler! Lütfen Güzel, Kullanışlı, Tarz gibi sözcüklerle puan verin.</string>
+    <string name="sms_liked_it_desc">Neleri beğenmediğinizi söyleyin. İyileştirmek için elimizden geleni yapalım.</string>
+    <string name="sms_five_star_rate">5 yıldız vermek için yukarı kaydırın</string>
 
-    <string name="feedback_title">Geri Bildirim</string>
-    <string name="feedback_content_placeholder">" Geri bildiriminiz daha iyi hale gelmemize yardımcı olur"</string>
-    <string name="feedback_email_placeholder">" Lütfen e-posta adresinizi girin"</string>
-    <string name="feedback_submit_btn">Gönder</string>
-    <string name="feedback_toast_empty_content">Lütfen geri bildiriminizi yazın</string>
-    <string name="feedback_toast_invalid_email">Lütfen geçerli bir e-posta adresi girin</string>
-    <string name="feedback_toast_send_success">Geri bildiriminiz için teşekkürler!</string>
+    <string name="sms_feedback_title">Geri Bildirim</string>
+    <string name="sms_feedback_content_placeholder">" Geri bildiriminiz daha iyi hale gelmemize yardımcı olur"</string>
+    <string name="sms_feedback_email_placeholder">" Lütfen e-posta adresinizi girin"</string>
+    <string name="sms_feedback_submit_btn">Gönder</string>
+    <string name="sms_feedback_toast_empty_content">Lütfen geri bildiriminizi yazın</string>
+    <string name="sms_feedback_toast_invalid_email">Lütfen geçerli bir e-posta adresi girin</string>
+    <string name="sms_feedback_toast_send_success">Geri bildiriminiz için teşekkürler!</string>
 
     <string name="setting_sms_show">SMS Gösterimi</string>
     <string name="setting_sms_show_close_dialog_content">Bu güzel SMS hatırlatma temaları kaybolacak, gerçekten kapatmak istiyor musun?</string>
@@ -508,13 +508,13 @@
     <string name="welcome_set_default_button">TAMAM</string>
     <string name="welcome_start_policy">Gizlilik Politikası</string>
     <string name="welcome_start_service">Hizmet Koşulları</string>
-    <string name="emoji_get">AL</string>
-    <string name="emoji_added">EKLENDİ</string>
-    <string name="emoji_store_title">Emoji Mağazası</string>
+    <string name="sms_emoji_get">AL</string>
+    <string name="sms_emoji_added">EKLENDİ</string>
+    <string name="sms_emoji_store_title">Emoji Mağazası</string>
     <string name="setting_sms_show_close_dialog_ok">TAMAM</string>
 
     <string name="welcome_permission_contacts_title">Kişiler</string>
-    <string name="welcome_start_button">BAŞLAT</string>
+    <string name="sms_welcome_start_button">BAŞLAT</string>
     <string name="welcome_permission_phone_title">Telefon</string>
     <string name="sms_show_apply">Uygula</string>
     <string name="media_picker_camera">Kamera</string>
@@ -522,9 +522,9 @@
     <string name="welcome_permission_button">İZİN VER</string>
     <string name="setting_sms_show_close_dialog_title">Kapatmayı onaylıyor musun?</string>
     <string name="sms_show_current_theme">Geçerli Tema</string>
-    <string name="emoji_recent_empty_description">Sık kullanılan yok</string>
+    <string name="sms_emoji_recent_empty_description">Sık kullanılan yok</string>
 
-    <string name="emoji_add_more">Daha fazla emoji</string>
+    <string name="sms_emoji_add_more">Daha fazla emoji</string>
 
 
     <string name="menu_group_customization">Özelleştir</string>
@@ -566,10 +566,10 @@
     <string name="drag_hotseat_title">Color SMS\'i Ana Çubuğa Sürükle</string>
     <string name="drag_hotseat_content">Color SMS ile komik emojileri ve çıkartmaları göndermek daha kolay.</string>
     <string name="set_as_default_dialog_button_ok_default_change">Hemen Ayarla</string>
-    <string name="got_it">Anladım</string>
+    <string name="sms_got_it">Anladım</string>
     <string name="welcome_set_default_failed_toast">Color SMS düzgün ayarlanmadı</string>
     <string name="dialog_add_contact_confirmation">Ekle</string>
-    <string name="network_error">Ağ hatası.</string>
+    <string name="sms_network_error">Ağ hatası.</string>
     <string name="reload">Tekrar Yükle</string>
     <string name="sms_notification_channel">SMS Bildirimi</string>
     <string name="sms_notification_channel_description">SMS alındığında bildirim göster</string>
@@ -604,12 +604,12 @@
     <string name="message_box_open">AÇIK</string>
 
 
-	<string name="welcome_viewpager_item_body_0">Sosyal ortamda göze çarpın!</string>
-	<string name="welcome_viewpager_item_title_1">Tamamen Özelleştirilebilir</string>
-	<string name="welcome_viewpager_item_body_1">Sohbeti beğendiğiniz şekilde süsleyin.</string>
-	<string name="welcome_viewpager_item_title_2">Daha Fazla Özellik</string>
-	<string name="welcome_viewpager_item_body_2">Gel ve bir sürü harika özelliği dene.</string>
-	<string name="welcome_set_as_default_title">Color SMS\'i varsayılan SMS uygulaması olarak ayarlayın, SMS almak/göndermek için bu gereklidir.</string>
+	<string name="message_welcome_viewpager_item_body_0">Sosyal ortamda göze çarpın!</string>
+	<string name="message_welcome_viewpager_item_title_1">Tamamen Özelleştirilebilir</string>
+	<string name="message_welcome_viewpager_item_body_1">Sohbeti beğendiğiniz şekilde süsleyin.</string>
+	<string name="message_welcome_viewpager_item_title_2">Daha Fazla Özellik</string>
+	<string name="message_welcome_viewpager_item_body_2">Gel ve bir sürü harika özelliği dene.</string>
+	<string name="message_welcome_set_as_default_title">Color SMS\'i varsayılan SMS uygulaması olarak ayarlayın, SMS almak/göndermek için bu gereklidir.</string>
 
 
 	<string name="menu_theme">Tema</string>

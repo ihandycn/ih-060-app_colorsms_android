@@ -458,25 +458,25 @@
     <string name="link_display_format" msgid="8700344957248709584">"<xliff:g id="TEXT">%1$s</xliff:g> (<xliff:g id="URL">%2$s</xliff:g>)"</string>
     <string name="selected_sim_content_message" msgid="4504796674843354505">"<xliff:g id="SELECTED_SIM">%s</xliff:g> sélectionnée"</string>
 
-    <string name="five_star_hint_text">Qu\'avez-vous pensé de votre expérience ?</string>
-    <string name="five_star_positive_text">Soumettre</string>
-    <string name="five_star_one_text">J\'ai détesté</string>
-    <string name="five_star_two_text">Je n\'ai pas aimé</string>
-    <string name="five_star_three_text">C\'était OK</string>
-    <string name="five_star_four_text">J\'ai aimé</string>
-    <string name="five_star_five_text">J\'ai adoré</string>
+    <string name="sms_five_star_hint_text">Qu\'avez-vous pensé de votre expérience ?</string>
+    <string name="sms_five_star_positive_text">Soumettre</string>
+    <string name="message_five_star_one_text">J\'ai détesté</string>
+    <string name="message_five_star_two_text">Je n\'ai pas aimé</string>
+    <string name="message_five_star_three_text">C\'était OK</string>
+    <string name="message_five_star_four_text">J\'ai aimé</string>
+    <string name="message_five_star_five_text">J\'ai adoré</string>
 
-    <string name="loved_it_desc">Merci ! Veuillez nous noter en utilisant des mots tels que sympa, utile, stylée…</string>
-    <string name="liked_it_desc">Dites-nous ce que vous n\'aimez pas et nous essaierons de l\'améliorer !</string>
-    <string name="five_star_rate">Tirez vers le haut pour nous noter 5 étoiles.</string>
+    <string name="sms_loved_it_desc">Merci ! Veuillez nous noter en utilisant des mots tels que sympa, utile, stylée…</string>
+    <string name="sms_liked_it_desc">Dites-nous ce que vous n\'aimez pas et nous essaierons de l\'améliorer !</string>
+    <string name="sms_five_star_rate">Tirez vers le haut pour nous noter 5 étoiles.</string>
 
-    <string name="feedback_title">Réaction</string>
-    <string name="feedback_content_placeholder">Vos commentaires nous aident à apporter des améliorations</string>
-    <string name="feedback_email_placeholder">Veuillez saisir votre adresse e-mail</string>
-    <string name="feedback_submit_btn">ENVOYER</string>
-    <string name="feedback_toast_empty_content">Écrivez des commentaires</string>
-    <string name="feedback_toast_invalid_email">Saisissez une adresse e-mail valide</string>
-    <string name="feedback_toast_send_success">Merci pour vos commentaires !</string>
+    <string name="sms_feedback_title">Réaction</string>
+    <string name="sms_feedback_content_placeholder">Vos commentaires nous aident à apporter des améliorations</string>
+    <string name="sms_feedback_email_placeholder">Veuillez saisir votre adresse e-mail</string>
+    <string name="sms_feedback_submit_btn">ENVOYER</string>
+    <string name="sms_feedback_toast_empty_content">Écrivez des commentaires</string>
+    <string name="sms_feedback_toast_invalid_email">Saisissez une adresse e-mail valide</string>
+    <string name="sms_feedback_toast_send_success">Merci pour vos commentaires !</string>
 
     <string name="setting_sms_show">Show SMS</string>
     <string name="setting_sms_show_close_dialog_content">Vous allez perdre tous vos sublimes thèmes SMS, voulez-vous vraiment la fermer ?</string>
@@ -508,22 +508,22 @@
     <string name="welcome_set_default_button">OK</string>
     <string name="welcome_start_policy">Politique de confidentialité</string>
     <string name="welcome_start_service">Conditions d\'utilisation</string>
-    <string name="emoji_get">OBTENIR</string>
-    <string name="emoji_added">AJOUTÉ</string>
-    <string name="emoji_store_title">Boutique d\'emojis</string>
+    <string name="sms_emoji_get">OBTENIR</string>
+    <string name="sms_emoji_added">AJOUTÉ</string>
+    <string name="sms_emoji_store_title">Boutique d\'emojis</string>
     <string name="setting_sms_show_close_dialog_ok">OK</string>
 
     <string name="welcome_permission_contacts_title">Contacts</string>
-    <string name="welcome_start_button">COMMENCER</string>
+    <string name="sms_welcome_start_button">COMMENCER</string>
     <string name="welcome_permission_phone_title">Téléphone</string>
     <string name="sms_show_apply">APPLIQUER</string>
     <string name="media_picker_camera">Appareil photo</string>
     <string name="media_picker_photo">Photo</string>
     <string name="welcome_permission_button">AUTORISER</string>
     <string name="setting_sms_show_close_dialog_title">Confirmer pour désactiver ?</string>
-    <string name="emoji_recent_empty_description">Aucun favori</string>
+    <string name="sms_emoji_recent_empty_description">Aucun favori</string>
 
-    <string name="emoji_add_more">Plus d\'emojis</string>
+    <string name="sms_emoji_add_more">Plus d\'emojis</string>
 
     <string name="sms_show_current_theme">Thème actuel</string>
 
@@ -569,10 +569,10 @@
     <string name="drag_hotseat_title">Glissez Color SMS vers l\'accès rapide</string>
     <string name="drag_hotseat_content">C\'est plus facile pour vous d\'envoyer des emojis et des autocollants amusants via Color SMS.</string>
     <string name="set_as_default_dialog_button_ok_default_change">Définir maintenant</string>
-    <string name="got_it">D\'accord</string>
+    <string name="sms_got_it">D\'accord</string>
     <string name="welcome_set_default_failed_toast">Color SMS n\'a pas été défini correctement</string>
     <string name="dialog_add_contact_confirmation">Ajouter</string>
-    <string name="network_error">Erreur réseau.</string>
+    <string name="sms_network_error">Erreur réseau.</string>
     <string name="reload">Recharger</string>
     <string name="sms_notification_channel">Notification SMS</string>
     <string name="sms_notification_channel_description">Afficher une notification lors de la réception d\'un SMS</string>
@@ -608,12 +608,12 @@
     <string name="message_box_open">OUVRIR</string>
 
 
-	<string name="welcome_viewpager_item_body_0">Démarquez-vous au sein de votre groupe social !</string>
-	<string name="welcome_viewpager_item_title_1">Totalement personnalisable</string>
-	<string name="welcome_viewpager_item_body_1">Décorez votre chat comme vous voulez</string>
-	<string name="welcome_viewpager_item_title_2">Plus de fonctionnalités</string>
-	<string name="welcome_viewpager_item_body_2">Venez essayez des super fonctionnalités</string>
-	<string name="welcome_set_as_default_title">Veuillez définir Color SMS comme application SMS par défaut, c\'est obligatoire pour envoyer/recevoir des SMS.</string>
+	<string name="message_welcome_viewpager_item_body_0">Démarquez-vous au sein de votre groupe social !</string>
+	<string name="message_welcome_viewpager_item_title_1">Totalement personnalisable</string>
+	<string name="message_welcome_viewpager_item_body_1">Décorez votre chat comme vous voulez</string>
+	<string name="message_welcome_viewpager_item_title_2">Plus de fonctionnalités</string>
+	<string name="message_welcome_viewpager_item_body_2">Venez essayez des super fonctionnalités</string>
+	<string name="message_welcome_set_as_default_title">Veuillez définir Color SMS comme application SMS par défaut, c\'est obligatoire pour envoyer/recevoir des SMS.</string>
 
 
 	<string name="menu_theme">Thème</string>

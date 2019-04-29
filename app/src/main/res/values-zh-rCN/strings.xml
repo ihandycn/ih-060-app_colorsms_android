@@ -458,25 +458,25 @@
     <string name="link_display_format" msgid="8700344957248709584">"<xliff:g id="TEXT">%1$s</xliff:g> (<xliff:g id="URL">%2$s</xliff:g>)"</string>
     <string name="selected_sim_content_message" msgid="4504796674843354505">"已选择<xliff:g id="SELECTED_SIM">%s</xliff:g>"</string>
 
-    <string name="five_star_hint_text">觉得Color SMS如何？</string>
-    <string name="five_star_positive_text">提交</string>
-    <string name="five_star_one_text">讨厌</string>
-    <string name="five_star_two_text">不喜欢</string>
-    <string name="five_star_three_text">一般</string>
-    <string name="five_star_four_text">喜欢</string>
-    <string name="five_star_five_text">喜爱</string>
+    <string name="sms_five_star_hint_text">觉得Color SMS如何？</string>
+    <string name="sms_five_star_positive_text">提交</string>
+    <string name="message_five_star_one_text">讨厌</string>
+    <string name="message_five_star_two_text">不喜欢</string>
+    <string name="message_five_star_three_text">一般</string>
+    <string name="message_five_star_four_text">喜欢</string>
+    <string name="message_five_star_five_text">喜爱</string>
 
-    <string name="loved_it_desc">非常感谢，请为我们评价。推荐您使用这些词：好看、有用、时尚…</string>
-    <string name="liked_it_desc">请给我们反馈您不喜欢的功能，我们会尽力优化的！</string>
-    <string name="five_star_rate">向上滑动去写5星好评</string>
+    <string name="sms_loved_it_desc">非常感谢，请为我们评价。推荐您使用这些词：好看、有用、时尚…</string>
+    <string name="sms_liked_it_desc">请给我们反馈您不喜欢的功能，我们会尽力优化的！</string>
+    <string name="sms_five_star_rate">向上滑动去写5星好评</string>
 
-    <string name="feedback_title">反馈</string>
-    <string name="feedback_content_placeholder">"您的宝贵建议有助于我们改进"</string>
-    <string name="feedback_email_placeholder">"请输入您的电子邮箱地址"</string>
-    <string name="feedback_submit_btn">发送</string>
-    <string name="feedback_toast_empty_content">请输入您的反馈建议</string>
-    <string name="feedback_toast_invalid_email">请输入有效邮箱地址</string>
-    <string name="feedback_toast_send_success">感谢您的反馈！</string>
+    <string name="sms_feedback_title">反馈</string>
+    <string name="sms_feedback_content_placeholder">"您的宝贵建议有助于我们改进"</string>
+    <string name="sms_feedback_email_placeholder">"请输入您的电子邮箱地址"</string>
+    <string name="sms_feedback_submit_btn">发送</string>
+    <string name="sms_feedback_toast_empty_content">请输入您的反馈建议</string>
+    <string name="sms_feedback_toast_invalid_email">请输入有效邮箱地址</string>
+    <string name="sms_feedback_toast_send_success">感谢您的反馈！</string>
 
     <string name="setting_sms_show">短信秀</string>
     <string name="setting_sms_show_close_dialog_content">你将不再拥有精美的短信提醒主题，确认要关闭它吗？</string>
@@ -508,13 +508,13 @@
     <string name="welcome_set_default_button">好的</string>
     <string name="welcome_start_policy">隐私协议</string>
     <string name="welcome_start_service">服务条款</string>
-    <string name="emoji_get">获取</string>
-    <string name="emoji_added">已添加</string>
-    <string name="emoji_store_title">表情商店</string>
+    <string name="sms_emoji_get">获取</string>
+    <string name="sms_emoji_added">已添加</string>
+    <string name="sms_emoji_store_title">表情商店</string>
     <string name="setting_sms_show_close_dialog_ok">好的</string>
 
     <string name="welcome_permission_contacts_title">联系人</string>
-    <string name="welcome_start_button">开启</string>
+    <string name="sms_welcome_start_button">开启</string>
     <string name="welcome_permission_phone_title">电话</string>
     <string name="sms_show_apply">应用</string>
     <string name="media_picker_camera">相机</string>
@@ -522,9 +522,9 @@
     <string name="welcome_permission_button">开启</string>
     <string name="setting_sms_show_close_dialog_title">确定关闭？</string>
     <string name="sms_show_current_theme">当前的主题</string>
-    <string name="emoji_recent_empty_description">暂无收藏</string>
+    <string name="sms_emoji_recent_empty_description">暂无收藏</string>
 
-    <string name="emoji_add_more">更多表情</string>
+    <string name="sms_emoji_add_more">更多表情</string>
 
     <string name="menu_group_customization">个性化</string>
     <string name="menu_theme_color">主题色</string>
@@ -565,10 +565,10 @@
     <string name="drag_hotseat_title">将Color SMS拖动到Dock栏</string>
     <string name="drag_hotseat_content">更方便的通过Color SMS给朋友发送有趣的Emoji、贴纸和动图。</string>
     <string name="set_as_default_dialog_button_ok_default_change">现在设置</string>
-    <string name="got_it">了解</string>
+    <string name="sms_got_it">了解</string>
     <string name="welcome_set_default_failed_toast">未能成功将Color SMS设为默认</string>
     <string name="dialog_add_contact_confirmation">添加</string>
-    <string name="network_error">网络错误</string>
+    <string name="sms_network_error">网络错误</string>
     <string name="reload">重新加载</string>
     <string name="sms_notification_channel">短信通知</string>
     <string name="sms_notification_channel_description">当收到短信时，显示通知消息</string>
@@ -602,12 +602,12 @@
     <string name="message_box_mark_as_unread">已标记为未读</string>
     <string name="message_box_open">打开</string>
 
-    <string name="welcome_viewpager_item_body_0">在您的朋友圈中脱颖而出！</string>
-    <string name="welcome_viewpager_item_title_1">完全可定制</string>
-    <string name="welcome_viewpager_item_body_1">以您喜欢的方式装饰您的聊天。</string>
-    <string name="welcome_viewpager_item_title_2">更多功能</string>
-    <string name="welcome_viewpager_item_body_2">快来尝试这些超棒的功能。</string>
-    <string name="welcome_set_as_default_title">为了使Color SMS功能正常运行，它必须被设为默认短信应用。</string>
+    <string name="message_welcome_viewpager_item_body_0">在您的朋友圈中脱颖而出！</string>
+    <string name="message_welcome_viewpager_item_title_1">完全可定制</string>
+    <string name="message_welcome_viewpager_item_body_1">以您喜欢的方式装饰您的聊天。</string>
+    <string name="message_welcome_viewpager_item_title_2">更多功能</string>
+    <string name="message_welcome_viewpager_item_body_2">快来尝试这些超棒的功能。</string>
+    <string name="message_welcome_set_as_default_title">为了使Color SMS功能正常运行，它必须被设为默认短信应用。</string>
 
     <string name="menu_theme">主题</string>
     <string name="welcome_choose_theme_title">选择一个你喜欢的主题</string>

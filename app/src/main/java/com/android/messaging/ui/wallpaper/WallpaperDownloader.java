@@ -41,7 +41,7 @@ public class WallpaperDownloader {
                         HSLog.d(TAG, "File download failed");
                         Threads.postOnMainThread(() -> {
                             listener.onDownloadFailed();
-                            Toasts.showToast(R.string.network_error);
+                            Toasts.showToast(R.string.sms_network_error);
                         });
                     }
                 }
@@ -51,7 +51,7 @@ public class WallpaperDownloader {
                     HSLog.d(TAG, "File download failed error = " + hsError.getMessage());
                     Threads.postOnMainThread(() -> {
                         listener.onDownloadFailed();
-                        Toasts.showToast(R.string.network_error);
+                        Toasts.showToast(R.string.sms_network_error);
                     });
                 }
             });

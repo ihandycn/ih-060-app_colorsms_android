@@ -112,7 +112,7 @@ public class EmojiLottieDetailAdapter extends BaseStickerItemRecyclerAdapter {
 
     private void setupGetButton(MessagesTextView getBtn) {
         Resources res = getBtn.getResources();
-        getBtn.setText(res.getString(R.string.emoji_added));
+        getBtn.setText(res.getString(R.string.sms_emoji_added));
         getBtn.setTextColor(0xFFFFFFFF);
         getBtn.setBackground(BackgroundDrawables.createBackgroundDrawable(0xFFD6D6D6, Dimensions.pxFromDp(20), true));
     }

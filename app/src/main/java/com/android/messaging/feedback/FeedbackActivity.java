@@ -20,7 +20,6 @@ import com.android.messaging.BaseActivity;
 import com.android.messaging.R;
 import com.android.messaging.util.BugleAnalytics;
 import com.android.messaging.util.UiUtils;
-import com.ihs.app.framework.activity.HSAppCompatActivity;
 import com.superapps.util.Fonts;
 import com.superapps.util.Toasts;
 
@@ -116,12 +115,12 @@ public class FeedbackActivity extends BaseActivity implements View.OnClickListen
             String email = mEmailInput.getText().toString().trim();
             String content = mContentInput.getText().toString();
             if (content.isEmpty()) {
-                Toasts.showToast(R.string.feedback_toast_empty_content);
+                Toasts.showToast(R.string.sms_feedback_toast_empty_content);
                 return;
             }
             if (!email.isEmpty()) {
                 if (!Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
-                    Toasts.showToast(R.string.feedback_toast_invalid_email);
+                    Toasts.showToast(R.string.sms_feedback_toast_invalid_email);
                     return;
                 }
             }
@@ -130,7 +129,7 @@ public class FeedbackActivity extends BaseActivity implements View.OnClickListen
             feedback.put("email", email);
             feedback.put("content", content);
             FeedbackManager.sendFeedback(feedback);
-            Toasts.showToast(R.string.feedback_toast_send_success);
+            Toasts.showToast(R.string.sms_feedback_toast_send_success);
             finish();
         }
     }

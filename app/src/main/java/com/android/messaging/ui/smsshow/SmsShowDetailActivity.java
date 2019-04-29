@@ -1,6 +1,5 @@
 package com.android.messaging.ui.smsshow;
 
-import android.animation.ValueAnimator;
 import android.graphics.Bitmap;
 import android.graphics.drawable.Animatable;
 import android.graphics.drawable.Drawable;
@@ -114,7 +113,7 @@ public class SmsShowDetailActivity extends HSAppCompatActivity {
                     @Override
                     public void onLoadFailed(@Nullable Drawable errorDrawable) {
                         super.onLoadFailed(errorDrawable);
-                        Toasts.showToast(R.string.network_error);
+                        Toasts.showToast(R.string.sms_network_error);
                     }
                 });
 
