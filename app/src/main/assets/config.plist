@@ -63,15 +63,6 @@
 					</dict>
 					<dict>
 						<key>Name</key>
-						<string>amita</string>
-						<key>Weight</key>
-						<array>
-							<string>SemiBold</string>
-							<string>Regular</string>
-						</array>
-					</dict>
-					<dict>
-						<key>Name</key>
 						<string>caveat</string>
 						<key>Weight</key>
 						<array>
@@ -109,15 +100,6 @@
 					<dict>
 						<key>Name</key>
 						<string>allan</string>
-						<key>Weight</key>
-						<array>
-							<string>SemiBold</string>
-							<string>Regular</string>
-						</array>
-					</dict>
-					<dict>
-						<key>Name</key>
-						<string>ranga</string>
 						<key>Weight</key>
 						<array>
 							<string>SemiBold</string>

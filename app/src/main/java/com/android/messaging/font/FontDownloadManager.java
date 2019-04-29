@@ -14,6 +14,7 @@ import com.ihs.commons.config.HSConfig;
 import com.ihs.commons.connection.HSHttpConnection;
 import com.ihs.commons.connection.httplib.HttpRequest;
 import com.ihs.commons.utils.HSError;
+import com.superapps.util.Networks;
 import com.superapps.util.Threads;
 import com.superapps.util.Toasts;
 
@@ -74,6 +75,11 @@ public class FontDownloadManager {
             listener.onDownloadSuccess();
             return;
         } else {
+            if (!Networks.isNetworkAvailable(-1)) {
+                listener.onDownloadFailed();
+                Toasts.showToast(R.string.network_error);
+                return;
+            }
             synchronized (FontDownloadManager.class) {
                 if (sListeners.containsKey(font.getFontName())) {
                     sListeners.remove(font.getFontName());
