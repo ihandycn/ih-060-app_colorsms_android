@@ -165,6 +165,7 @@ public class ChooseFontItemView extends FrameLayout {
             mChoreographer.removeFrameCallback(mFrameCallback);
             mIsFontDownloading = false;
         }
+        FontDownloadManager.removeListener(mFontInfo.getFontName());
     }
 
     public boolean isSelected() {

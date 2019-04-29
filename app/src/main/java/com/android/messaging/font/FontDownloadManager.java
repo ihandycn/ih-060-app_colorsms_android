@@ -4,6 +4,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
+import android.text.TextUtils;
 
 import com.android.messaging.R;
 import com.android.messaging.util.BugleAnalytics;
@@ -19,8 +20,8 @@ import com.superapps.util.Toasts;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
-import java.lang.ref.WeakReference;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -31,6 +32,19 @@ public class FontDownloadManager {
         void onDownloadSuccess();
 
         void onDownloadFailed();
+    }
+
+    private static Map<String, FontDownloadListener> sListeners = new HashMap<>();
+
+    public static void removeListener(String fontName) {
+        if (TextUtils.isEmpty(fontName)) {
+            return;
+        }
+        synchronized (FontDownloadManager.class) {
+            if (sListeners.containsKey(fontName)) {
+                sListeners.remove(fontName);
+            }
+        }
     }
 
     public static List<FontInfo> getRemoteFonts() {
@@ -60,18 +74,22 @@ public class FontDownloadManager {
             listener.onDownloadSuccess();
             return;
         } else {
+            synchronized (FontDownloadManager.class) {
+                if (sListeners.containsKey(font.getFontName())) {
+                    sListeners.remove(font.getFontName());
+                }
+                sListeners.put(font.getFontName(), listener);
+            }
             String basePath = getBaseRemoteUrl();
-            WeakReference<FontDownloadListener> listenerWeakReference = new WeakReference<>(listener);
             if (font.getFontWeights() != null && font.getFontWeights().size() > 0) {
-                downloadFontSync(basePath, font.getFontName(), font.getFontWeights(), listenerWeakReference);
+                downloadFontSync(basePath, font.getFontName(), font.getFontWeights());
                 BugleAnalytics.logEvent("Customize_TextFont_Download");
             }
         }
     }
 
 
-    public static void downloadFontSync(String basePath, String font, List<String> weights,
-                                        WeakReference<FontDownloadListener> listenerWeakReference) {
+    public static void downloadFontSync(String basePath, String font, List<String> weights) {
         Threads.postOnThreadPoolExecutor(() -> {
             String weight = weights.remove(0);
 
@@ -84,19 +102,31 @@ public class FontDownloadManager {
                 public void onConnectionFinished(HSHttpConnection hsHttpConnection) {
                     if (hsHttpConnection.isSucceeded()) {
                         if (weights.size() > 0) {
-                            downloadFontSync(basePath, font, weights, listenerWeakReference);
+                            downloadFontSync(basePath, font, weights);
                         } else {
                             Threads.postOnMainThread(() -> {
-                                if (listenerWeakReference.get() != null) {
-                                    listenerWeakReference.get().onDownloadSuccess();
+                                synchronized (FontDownloadManager.class) {
+                                    if (sListeners.containsKey(font)) {
+                                        FontDownloadListener listener = sListeners.get(font);
+                                        if (listener != null) {
+                                            listener.onDownloadSuccess();
+                                        }
+                                        FontDownloadManager.removeListener(font);
+                                    }
                                 }
                             });
                             BugleAnalytics.logEvent("Customize_TextFont_DownloadSuccess");
                         }
                     } else {
                         Threads.postOnMainThread(() -> {
-                            if (listenerWeakReference.get() != null) {
-                                listenerWeakReference.get().onDownloadFailed();
+                            synchronized (FontDownloadManager.class) {
+                                if (sListeners.containsKey(font)) {
+                                    FontDownloadListener listener = sListeners.get(font);
+                                    if (listener != null) {
+                                        listener.onDownloadFailed();
+                                    }
+                                    FontDownloadManager.removeListener(font);
+                                }
                             }
                             Toasts.showToast(R.string.network_error);
                         });
@@ -106,8 +136,14 @@ public class FontDownloadManager {
                 @Override
                 public void onConnectionFailed(HSHttpConnection hsHttpConnection, HSError hsError) {
                     Threads.postOnMainThread(() -> {
-                        if (listenerWeakReference.get() != null) {
-                            listenerWeakReference.get().onDownloadFailed();
+                        synchronized (FontDownloadManager.class) {
+                            if (sListeners.containsKey(font)) {
+                                FontDownloadListener listener = sListeners.get(font);
+                                if (listener != null) {
+                                    listener.onDownloadFailed();
+                                }
+                                FontDownloadManager.removeListener(font);
+                            }
                         }
                         Toasts.showToast(R.string.network_error);
                     });
