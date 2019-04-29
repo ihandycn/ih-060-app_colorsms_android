@@ -6,14 +6,12 @@ import android.support.constraint.ConstraintLayout;
 import android.support.v4.view.ViewPager;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
-import android.view.View;
 import android.widget.TextView;
 
 import com.android.messaging.R;
-import com.android.messaging.ui.UIIntents;
-import com.android.messaging.ui.customize.PrimaryColors;
 import com.android.messaging.ui.welcome.WelcomeChooseThemeActivity;
 import com.android.messaging.util.BugleAnalytics;
+import com.superapps.font.FontUtils;
 import com.superapps.util.BackgroundDrawables;
 import com.superapps.util.Dimensions;
 
@@ -78,25 +76,23 @@ public class ChooseThemePagerView extends ConstraintLayout {
         applyTextView.setBackground(BackgroundDrawables.createBackgroundDrawable(
                 Color.parseColor(mAdapter.getThemeInfo(0).themeColor), Dimensions.pxFromDp(6.7f), true));
 
-        applyTextView.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (mApplyClickListener != null) {
-                    mApplyClickListener.onClick(applyTextView);
-                }
+        applyTextView.setOnClickListener(v -> {
+            if (mApplyClickListener != null) {
+                mApplyClickListener.onClick(applyTextView);
+            }
 
-                String preTheme = ThemeUtils.getCurrentThemeName();
-                ThemeUtils.applyTheme(mAdapter.getThemeInfo(mPager.getCurrentItem()));
+            String preTheme = ThemeUtils.getCurrentThemeName();
+            ThemeUtils.applyTheme(mAdapter.getThemeInfo(mPager.getCurrentItem()));
+            FontUtils.onFontTypefaceChanged();
 
-                if (getContext() instanceof WelcomeChooseThemeActivity) {
-                    BugleAnalytics.logEvent("Start_ChooseTheme_Apply", true, "theme", ThemeUtils.getCurrentThemeName());
-                } else if (getContext() instanceof ChooseThemeActivity) {
-                    BugleAnalytics.logEvent("Customize_Theme_Apply_Click", true, "theme", ThemeUtils.getCurrentThemeName());
-                }
-                if (!ThemeUtils.getCurrentThemeName().equals(preTheme)) {
-                    if (getContext() instanceof ChooseThemeActivity) {
-                        BugleAnalytics.logEvent("Customize_Theme_Change", true, "theme", ThemeUtils.getCurrentThemeName());
-                    }
+            if (getContext() instanceof WelcomeChooseThemeActivity) {
+                BugleAnalytics.logEvent("Start_ChooseTheme_Apply", true, "theme", ThemeUtils.getCurrentThemeName());
+            } else if (getContext() instanceof ChooseThemeActivity) {
+                BugleAnalytics.logEvent("Customize_Theme_Apply_Click", true, "theme", ThemeUtils.getCurrentThemeName());
+            }
+            if (!ThemeUtils.getCurrentThemeName().equals(preTheme)) {
+                if (getContext() instanceof ChooseThemeActivity) {
+                    BugleAnalytics.logEvent("Customize_Theme_Change", true, "theme", ThemeUtils.getCurrentThemeName());
                 }
             }
         });
@@ -105,7 +101,6 @@ public class ChooseThemePagerView extends ConstraintLayout {
     public void setOnApplyClickListener(OnClickListener listener) {
         mApplyClickListener = listener;
     }
-
 
     public void setOnPageSelectedListener(OnPageSelectedListener listener) {
         mOnPageSelectedListener = listener;

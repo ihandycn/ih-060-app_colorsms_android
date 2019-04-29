@@ -46,12 +46,13 @@ public class ChooseFontDialog {
     private View mRootView;
     private String mFontFamily;
     private boolean mDialogDismiss;
+    private String mDefaultFamily;
     private List<ChooseFontItemView> mItemViewList = new ArrayList<>();
 
     ChooseFontDialog(Context activity) {
         this.mActivity = (Activity) activity;
         mWeakActivityReference = new WeakReference<>((ChangeFontActivity) activity);
-        mFontFamily = FontStyleManager.getInstance().getFontFamily();
+        mFontFamily = mDefaultFamily = FontStyleManager.getInstance().getFontFamily();
     }
 
     private void configDialog(Dialog builder) {
@@ -61,6 +62,10 @@ public class ChooseFontDialog {
         builder.setOnDismissListener(dialog -> {
             mDialogDismiss = true;
             HSLog.d(TAG, "onDismiss");
+            if (!mDefaultFamily.equals(mFontFamily)) {
+                HSGlobalNotificationCenter.sendNotification(ConversationListActivity.EVENT_MAINPAGE_RECREATE);
+                FontUtils.onFontTypefaceChanged();
+            }
         });
         builder.setOnCancelListener(dialog -> {
             HSLog.d(TAG, "onCancel");
@@ -239,7 +244,6 @@ public class ChooseFontDialog {
             activity.onFontChange();
         }
         BugleAnalytics.logEvent("Customize_TextFont_Change", true, true, "font", font);
-        HSGlobalNotificationCenter.sendNotification(ConversationListActivity.EVENT_MAINPAGE_RECREATE);
     }
 
     private void dismissSafely() {

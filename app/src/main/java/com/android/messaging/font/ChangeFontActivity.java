@@ -14,10 +14,7 @@ import com.android.messaging.ui.view.LevelSeekBar;
 import com.android.messaging.ui.wallpaper.WallpaperManager;
 import com.android.messaging.util.BugleAnalytics;
 import com.android.messaging.util.UiUtils;
-import com.google.common.base.Joiner;
 import com.superapps.font.FontStyleManager;
-
-import java.util.Arrays;
 
 public class ChangeFontActivity extends BaseActivity implements LevelSeekBar.OnLevelChangeListener {
 
@@ -64,9 +61,8 @@ public class ChangeFontActivity extends BaseActivity implements LevelSeekBar.OnL
         View changeFontItem = findViewById(R.id.change_font_item);
 
         mPrefFontLevel = FontStyleManager.getInstance().getFontScaleLevel();
-        String fontFamily = FontStyleManager.getInstance().getFontFamily();
 
-        mTextFontFamily.setText(formatString(fontFamily));
+        mTextFontFamily.setText(formatString(FontStyleManager.getInstance().getFontFamily()));
         mTextFontSize.setText(getResources().getString(sTextSizeRes[mPrefFontLevel]));
         mSeekBar.setOnLevelChangeListener(this);
         mSeekBar.setLevel(mPrefFontLevel);

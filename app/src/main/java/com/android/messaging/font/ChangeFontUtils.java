@@ -14,11 +14,14 @@ import com.superapps.view.MessagesTextView;
 import java.io.File;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
+import java.util.HashMap;
+import java.util.Map;
 
 import static com.android.messaging.font.FontDownloadManager.LOCAL_DIRECTORY;
 import static com.superapps.font.FontUtils.sSupportGoogleFonts;
 
 public class ChangeFontUtils {
+    public static Map<String, Typeface> sTypefaceMap = new HashMap<>();
 
     public static void changeFontSize(View view, float scale) {
         if (view instanceof MessagesTextView) {
@@ -47,8 +50,12 @@ public class ChangeFontUtils {
         textView.setTextScale(mScale);
     }
 
+    public static void changeFontTypeface(View view, String typename) {
+        loadAndChangeFontTypeface(view, typename);
+        sTypefaceMap.clear();
+    }
 
-    public static void changeFontTypeface(View view, String typeName) {
+    private static void loadAndChangeFontTypeface(View view, String typeName) {
         if (view instanceof MessagesTextView) {
             if (((MessagesTextView) view).getText().length() > 0) {
                 changeTypeface((MessagesTextView) view, typeName);
@@ -61,7 +68,7 @@ public class ChangeFontUtils {
             if (view instanceof ViewGroup) {
                 ViewGroup viewGroup = (ViewGroup) view;
                 for (int i = 0; i < viewGroup.getChildCount(); i++) {
-                    changeFontTypeface(viewGroup.getChildAt(i), typeName);
+                    loadAndChangeFontTypeface(viewGroup.getChildAt(i), typeName);
                 }
             }
         }
@@ -70,6 +77,25 @@ public class ChangeFontUtils {
     private static void changeTypeface(MessagesTextView textView, String typeName) {
         if (textView.fontFamilyChangeable()) {
             int weight = textView.getFontWeight();
+            String weightStr;
+            switch (weight) {
+                case FontUtils.MEDIUM:
+                    weightStr = "Medium.ttf";
+                    break;
+                case FontUtils.SEMI_BOLD:
+                case FontUtils.BOLD:
+                case FontUtils.BLACK:
+                    weightStr = "Semibold.ttf";
+                    break;
+                default:
+                    weightStr = "Regular.ttf";
+            }
+
+            if (sTypefaceMap.containsKey(weightStr)) {
+                textView.setTypeface(sTypefaceMap.get(weightStr));
+                return;
+            }
+
             boolean isLocalFont = false;
             for (String s : sSupportGoogleFonts) {
                 if (s.equals(typeName)) {
@@ -82,50 +108,33 @@ public class ChangeFontUtils {
                 if (typeName.equals(FontUtils.MESSAGE_FONT_FAMILY_DEFAULT_VALUE)) {
                     typeName = "Custom";
                 }
-                switch (weight) {
-                    case 100:
-                    case 300:
-                    case 400:
-                        Typeface tp = Typeface.createFromAsset(Factory.get().getApplicationContext().getAssets(),
-                                "fonts/" + typeName + "-Regular.ttf");
-                        textView.setTypeface(tp);
-                        break;
-                    case 500:
-                        Typeface tp1 = Typeface.createFromAsset(Factory.get().getApplicationContext().getAssets(),
-                                "fonts/" + typeName + "-Medium.ttf");
-                        textView.setTypeface(tp1);
-                        break;
-                    case 600:
-                    case 700:
-                    case 900:
-                        Typeface tp2 = Typeface.createFromAsset(Factory.get().getApplicationContext().getAssets(),
-                                "fonts/" + typeName + "-Semibold.ttf");
-                        textView.setTypeface(tp2);
-                        break;
-                }
+
+                Typeface tp = Typeface.createFromAsset(Factory.get().getApplicationContext().getAssets(),
+                        "fonts/" + typeName + "-" + weightStr);
+                sTypefaceMap.put(weightStr, tp);
+                textView.setTypeface(tp);
+
             } else {
-                switch (weight) {
-                    case FontUtils.MEDIUM:
-                        File mediumFile = new File(CommonUtils.getDirectory(LOCAL_DIRECTORY + typeName), "Medium.ttf");
-                        if (mediumFile.exists()) {
-                            textView.setTypeface(Typeface.createFromFile(mediumFile));
+                File file;
+                switch (weightStr) {
+                    case "Medium.ttf":
+                        file = new File(CommonUtils.getDirectory(LOCAL_DIRECTORY + typeName), "Medium.ttf");
+                        if (file.exists()) {
                             break;
                         }
-                    case FontUtils.SEMI_BOLD:
-                    case FontUtils.BOLD:
-                    case FontUtils.BLACK:
-                        File semiBoldFile = new File(CommonUtils.getDirectory(LOCAL_DIRECTORY + typeName), "SemiBold.ttf");
-                        if (semiBoldFile.exists()) {
-                            textView.setTypeface(Typeface.createFromFile(semiBoldFile));
+                    case "Semibold.ttf":
+                        file = new File(CommonUtils.getDirectory(LOCAL_DIRECTORY + typeName), "SemiBold.ttf");
+                        if (file.exists()) {
                             break;
                         }
-                    case FontUtils.THIN:
-                    case FontUtils.EXTRA_LIGHT:
-                    case FontUtils.LIGHT:
-                    case FontUtils.REGULAR:
-                        File regularFile = new File(CommonUtils.getDirectory(LOCAL_DIRECTORY + typeName), "Regular.ttf");
-                        textView.setTypeface(Typeface.createFromFile(regularFile));
-                        break;
+                    default:
+                        file = new File(CommonUtils.getDirectory(LOCAL_DIRECTORY + typeName), "Regular.ttf");
+                }
+
+                if (file.exists()) {
+                    Typeface tp = Typeface.createFromFile(file);
+                    sTypefaceMap.put(weightStr, tp);
+                    textView.setTypeface(tp);
                 }
             }
         }
