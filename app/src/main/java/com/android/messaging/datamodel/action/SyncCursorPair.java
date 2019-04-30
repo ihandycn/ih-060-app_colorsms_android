@@ -527,7 +527,8 @@ class SyncCursorPair {
                     String address = mSmsCursor.getString(SmsMessage.INDEX_ADDRESS);
                     long threadId = mSmsCursor.getLong(SmsMessage.INDEX_THREAD_ID);
 
-                    if (!mAddressThreadMap.containsKey(address)) {
+                    if (!mAddressThreadMap.containsKey(address)
+                            && mAddressThreadMap.get(address) == threadId) {
                         mAddressThreadMap.put(address, threadId);
                     } else {
                         CrashlyticsCore.getInstance().logException(
