@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:background="@color/black_60_transparent"
+    android:layout_height="match_parent">
+
+    <com.superapps.view.RoundCornerContainer
+        android:layout_marginTop="60dp"
+        android:layout_marginBottom="60dp"
+        android:orientation="vertical"
+        android:clipChildren="false"
+        android:clipToPadding="false"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintWidth_percent="0.82"
+        app:radiusX="3.3dp"
+        app:radiusY="3.3dp">
+
+        <com.superapps.view.MessagesTextView
+            android:layout_width="match_parent"
+            android:layout_height="56dp"
+            android:background="@android:color/white"
+            android:text="@string/forward_message_activity_title"
+            android:textColor="@android:color/black"
+            android:gravity="center_vertical"
+            android:textSize="18sp"
+            android:paddingLeft="32dp"
+            app:typeface="@string/custom_font_semibold"/>
+
+        <FrameLayout
+            android:id="@+id/fragment_container"
+            android:layout_height="match_parent"
+            android:layout_marginTop="56dp"
+            android:layout_width="match_parent"/>
+    </com.superapps.view.RoundCornerContainer>
+</android.support.constraint.ConstraintLayout>

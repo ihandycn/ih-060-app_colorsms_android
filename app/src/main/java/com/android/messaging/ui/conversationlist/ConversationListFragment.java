@@ -313,7 +313,7 @@ public class ConversationListFragment extends Fragment implements ConversationLi
                 createBackgroundDrawable(PrimaryColors.getEditButtonColor(),
                         Dimensions.pxFromDp(28),
                         true));
-        if (mArchiveMode) {
+        if (mArchiveMode || mForwardMessageMode) {
             mStartNewConversationButton.setVisibility(View.GONE);
         } else {
             mStartNewConversationButton.setVisibility(View.VISIBLE);
