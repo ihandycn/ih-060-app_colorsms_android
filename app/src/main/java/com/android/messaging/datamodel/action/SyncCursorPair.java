@@ -527,12 +527,13 @@ class SyncCursorPair {
                     String address = mSmsCursor.getString(SmsMessage.INDEX_ADDRESS);
                     long threadId = mSmsCursor.getLong(SmsMessage.INDEX_THREAD_ID);
 
-                    if (!mAddressThreadMap.containsKey(address)
-                            && mAddressThreadMap.get(address) == threadId) {
+                    if (!mAddressThreadMap.containsKey(address)) {
                         mAddressThreadMap.put(address, threadId);
                     } else {
-                        CrashlyticsCore.getInstance().logException(
-                                new CrashlyticsLog("duplicated address!!!"));
+                        if (mAddressThreadMap.get(address) != threadId) {
+                            CrashlyticsCore.getInstance().logException(
+                                    new CrashlyticsLog("duplicated address!!!"));
+                        }
                     }
 
                     if (threadId == 0 || TextUtils.isEmpty(address)) {
