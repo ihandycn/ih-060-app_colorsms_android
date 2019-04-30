@@ -92,7 +92,9 @@ public class ChangeFontUtils {
             }
 
             if (sTypefaceMap.containsKey(weightStr)) {
-                textView.setTypeface(sTypefaceMap.get(weightStr));
+                if (sTypefaceMap.get(weightStr) != null) {
+                    textView.setTypeface(sTypefaceMap.get(weightStr));
+                }
                 return;
             }
 
@@ -132,9 +134,14 @@ public class ChangeFontUtils {
                 }
 
                 if (file.exists()) {
-                    Typeface tp = Typeface.createFromFile(file);
+                    Typeface tp = null;
+                    try {
+                        tp = Typeface.createFromFile(file);
+                        textView.setTypeface(tp);
+                    } catch (Exception e) {
+
+                    }
                     sTypefaceMap.put(weightStr, tp);
-                    textView.setTypeface(tp);
                 }
             }
         }
