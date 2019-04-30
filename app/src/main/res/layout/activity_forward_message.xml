@@ -30,12 +30,13 @@
             android:textColor="@android:color/black"
             android:gravity="center_vertical"
             android:textSize="18sp"
-            android:paddingLeft="32dp"
+            android:paddingLeft="24dp"
             app:typeface="@string/custom_font_semibold"/>
 
         <FrameLayout
             android:id="@+id/fragment_container"
             android:layout_height="match_parent"
+            android:background="@android:color/white"
             android:layout_marginTop="56dp"
             android:layout_width="match_parent"/>
     </com.superapps.view.RoundCornerContainer>
