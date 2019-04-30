@@ -30,7 +30,7 @@
             android:textColor="@android:color/black"
             android:gravity="center_vertical"
             android:textSize="18sp"
-            android:paddingLeft="24dp"
+            android:paddingStart="24dp"
             app:typeface="@string/custom_font_semibold"/>
 
         <FrameLayout

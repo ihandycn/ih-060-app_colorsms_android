@@ -26,7 +26,7 @@
         android:layout_width="match_parent"
         android:layout_height="@dimen/widget_header_height"
         android:orientation="horizontal"
-        android:paddingLeft="8dip"
+        android:paddingStart="8dip"
         android:background="@drawable/widget_top_background"
         android:gravity="center_vertical">
         <TextView
@@ -45,7 +45,7 @@
             android:src="@drawable/ic_add_white"
             android:background="?android:attr/selectableItemBackground"
             android:contentDescription="@string/widget_new_conversation_content_description"
-            android:paddingRight="8dip"
+            android:paddingEnd="8dip"
             android:paddingBottom="4dip" />
     </LinearLayout>
     <ImageView

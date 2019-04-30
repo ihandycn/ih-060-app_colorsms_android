@@ -156,8 +156,8 @@
         <item name="android:textSize">14sp</item>
         <item name="android:gravity">center_vertical</item>
         <item name="android:fontFamily">sans-serif</item>
-        <item name="android:paddingLeft">13.7dp</item>
-        <item name="android:paddingRight">13.7dp</item>
+        <item name="android:paddingStart">13.7dp</item>
+        <item name="android:paddingEnd">13.7dp</item>
         <item name="android:paddingBottom">9dp</item>
         <item name="android:paddingTop">9dp</item>
         <item name="android:minHeight">37.3dp</item>
@@ -171,8 +171,8 @@
     </style>
 
     <style name="ConversationComposeSubjectText" parent="ConversationComposeSendText">
-        <item name="android:paddingLeft">18dp</item>
-        <item name="android:layout_marginLeft">@dimen/compose_message_subject_cancel_left_margin
+        <item name="android:paddingStart">18dp</item>
+        <item name="android:layout_marginStart">@dimen/compose_message_subject_cancel_left_margin
         </item>
     </style>
 
@@ -189,7 +189,7 @@
     </style>
 
     <style name="ContactListItemDetailType" parent="ContactListItemDetail">
-        <item name="android:paddingLeft">12dp</item>
+        <item name="android:paddingStart">12dp</item>
         <item name="android:textSize">@dimen/contact_list_detail_type_text_size</item>
         <item name="android:textColor">@color/contact_list_text_type</item>
     </style>
@@ -199,8 +199,8 @@
         <item name="android:textColor">@color/compose_contact_text</item>
         <item name="android:textColorHint">@color/compose_contact_faint_text</item>
         <item name="android:fontFamily">sans-serif</item>
-        <item name="android:paddingLeft">4dp</item>
-        <item name="android:paddingRight">4dp</item>
+        <item name="android:paddingStart">4dp</item>
+        <item name="android:paddingEnd">4dp</item>
     </style>
 
     <style name="PagerTabHeader">
@@ -231,18 +231,18 @@
     </style>
 
     <style name="AudioAttachmentViewStyle">
-        <item name="android:paddingRight">16dp</item>
-        <item name="android:paddingLeft">16dp</item>
+        <item name="android:paddingEnd">16dp</item>
+        <item name="android:paddingStart">16dp</item>
     </style>
 
     <style name="VcardAttachmentSingleStyle">
-        <item name="android:paddingRight">@dimen/message_text_left_right_padding</item>
-        <item name="android:paddingLeft">@dimen/message_text_left_right_padding</item>
+        <item name="android:paddingEnd">@dimen/message_text_left_right_padding</item>
+        <item name="android:paddingStart">@dimen/message_text_left_right_padding</item>
     </style>
 
     <style name="MessageVcardAttachmentStyle">
-        <item name="android:paddingRight">@dimen/message_text_left_right_padding</item>
-        <item name="android:paddingLeft">@dimen/message_text_left_right_padding</item>
+        <item name="android:paddingEnd">@dimen/message_text_left_right_padding</item>
+        <item name="android:paddingStart">@dimen/message_text_left_right_padding</item>
     </style>
 
     <style name="NotificationSenderText">
@@ -267,21 +267,21 @@
     </style>
 
     <style name="CameraChooserFrameStyle">
-        <item name="android:paddingLeft">16dp</item>
+        <item name="android:paddingStart">16dp</item>
     </style>
 
     <style name="ContactListItemViewStyle">
-        <item name="android:paddingLeft">16.7dp</item>
+        <item name="android:paddingStart">16.7dp</item>
     </style>
 
     <style name="ContactListItemLinearLayoutStyle">
-        <item name="android:paddingLeft">15dp</item>
-        <item name="android:paddingRight">19dp</item>
+        <item name="android:paddingStart">15dp</item>
+        <item name="android:paddingEnd">19dp</item>
     </style>
 
     <style name="ConversationListItemViewPaddingStyle">
-        <item name="android:paddingLeft">2dp</item>
-        <item name="android:paddingRight">@dimen/conversation_list_item_view_padding</item>
+        <item name="android:paddingStart">2dp</item>
+        <item name="android:paddingEnd">@dimen/conversation_list_item_view_padding</item>
     </style>
 
     <style name="ConversationListItemViewTextStyle">
@@ -304,34 +304,34 @@
     </style>
 
     <style name="ConversationListNotificationBellPaddingStyle">
-        <item name="android:paddingRight">@dimen/conversation_list_notification_bell_padding</item>
+        <item name="android:paddingEnd">@dimen/conversation_list_notification_bell_padding</item>
     </style>
 
     <style name="ConversationListFragmentStartNewButtonStyle">
-        <item name="android:layout_marginRight">@dimen/fab_left_right_margin</item>
+        <item name="android:layout_marginEnd">@dimen/fab_left_right_margin</item>
     </style>
 
     <style name="GalleryGridItemViewCheckBoxStyle">
-        <item name="android:paddingRight">22dp</item>
+        <item name="android:paddingEnd">22dp</item>
     </style>
 
     <style name="AttachmentPreviewAttachmentStyle">
-        <item name="android:layout_marginLeft">10dp</item>
+        <item name="android:layout_marginStart">10dp</item>
     </style>
 
     <style name="ComposeMessageViewDraftViewStyle">
-        <item name="android:layout_marginLeft">53dp</item>
-        <item name="android:layout_marginRight">63dp</item>
+        <item name="android:layout_marginStart">53dp</item>
+        <item name="android:layout_marginEnd">63dp</item>
     </style>
 
     <style name="ConversationMessageViewStyle">
-        <item name="android:paddingLeft">2dp</item>
-        <item name="android:paddingRight">16dp</item>
+        <item name="android:paddingStart">2dp</item>
+        <item name="android:paddingEnd">16dp</item>
     </style>
 
     <style name="SubjectViewStyle">
-        <item name="android:paddingLeft">@dimen/compose_message_subject_left_padding</item>
-        <item name="android:paddingRight">@dimen/compose_message_subject_right_padding</item>
+        <item name="android:paddingStart">@dimen/compose_message_subject_left_padding</item>
+        <item name="android:paddingEnd">@dimen/compose_message_subject_right_padding</item>
     </style>
 
     <style name="ParticipantListItem">
@@ -342,12 +342,12 @@
     </style>
 
     <style name="CopyContactDialogTextStyle" parent="ParticipantListItem">
-        <item name="android:paddingLeft">@dimen/copy_contact_dialog_left_padding</item>
-        <item name="android:paddingRight">@dimen/copy_contact_dialog_right_padding</item>
+        <item name="android:paddingStart">@dimen/copy_contact_dialog_left_padding</item>
+        <item name="android:paddingEnd">@dimen/copy_contact_dialog_right_padding</item>
     </style>
 
     <style name="PeopleListItemViewStyle">
-        <item name="android:paddingLeft">16dp</item>
+        <item name="android:paddingStart">16dp</item>
     </style>
 
     <style name="DropDownListViewStyle">
@@ -366,8 +366,8 @@
     </style>
 
     <style name="SnackBarMessageWrapper">
-        <item name="android:layout_marginLeft">@dimen/snack_bar_left_right_margin</item>
-        <item name="android:layout_marginRight">0dp</item>
+        <item name="android:layout_marginStart">@dimen/snack_bar_left_right_margin</item>
+        <item name="android:layout_marginEnd">0dp</item>
     </style>
 
     <style name="SnackBarText">
@@ -377,15 +377,15 @@
     </style>
 
     <style name="SmsDeliverdBadge">
-        <item name="android:layout_marginLeft">4dp</item>
+        <item name="android:layout_marginStart">4dp</item>
     </style>
 
     <style name="ChipDeleteIconStyle">
-        <item name="android:paddingLeft">8dp</item>
+        <item name="android:paddingStart">8dp</item>
     </style>
 
     <style name="ChipIconStyle">
-        <item name="android:layout_marginRight">12dp</item>
+        <item name="android:layout_marginEnd">12dp</item>
     </style>
 
     <style name="SimSelectorItem">
@@ -403,12 +403,12 @@
     </style>
 
     <style name="SimSelectorItemLinearLayoutStyle">
-        <item name="android:paddingRight">12dp</item>
+        <item name="android:paddingEnd">12dp</item>
     </style>
 
     <style name="MessageSimIndicator">
         <item name="android:textSize">@dimen/conversation_status_text_size</item>
-        <item name="android:layout_marginLeft">4dp</item>
+        <item name="android:layout_marginStart">4dp</item>
     </style>
 
     <style name="ColorAccentBlueOverrideStyle">
@@ -424,24 +424,24 @@
     </style>
 
     <style name="ApnPreferenceLayoutStyle">
-        <item name="android:paddingLeft">?android:attr/listPreferredItemPaddingStart</item>
-        <item name="android:paddingRight">?android:attr/listPreferredItemPaddingEnd</item>
+        <item name="android:paddingStart">?android:attr/listPreferredItemPaddingStart</item>
+        <item name="android:paddingEnd">?android:attr/listPreferredItemPaddingEnd</item>
     </style>
 
     <style name="GroupMmsSettingItem">
         <item name="android:textSize">@dimen/group_mms_setting_text_size</item>
         <item name="android:textColor">@color/group_mms_setting_text_color</item>
-        <item name="android:layout_marginLeft">20dp</item>
-        <item name="android:layout_marginRight">20dp</item>
+        <item name="android:layout_marginStart">20dp</item>
+        <item name="android:layout_marginEnd">20dp</item>
         <item name="android:layout_marginTop">16dp</item>
-        <item name="android:paddingLeft">10dp</item>
-        <item name="android:paddingRight">10dp</item>
+        <item name="android:paddingStart">10dp</item>
+        <item name="android:paddingEnd">10dp</item>
         <item name="android:background">?android:attr/selectableItemBackground</item>
     </style>
 
     <style name="DebugMmsConfigItemStyle">
-        <item name="android:paddingLeft">16dp</item>
-        <item name="android:paddingRight">16dp</item>
+        <item name="android:paddingStart">16dp</item>
+        <item name="android:paddingEnd">16dp</item>
     </style>
 
     <style name="WidgetTitle" parent="@android:style/TextAppearance.Holo.Widget.ActionBar.Title">
@@ -453,7 +453,7 @@
     <style name="WidgetConversationTitle" parent="@android:style/TextAppearance.Holo.Widget.ActionBar.Title">
         <item name="android:textColor">@color/widget_conversation_title_color</item>
         <item name="android:singleLine">true</item>
-        <item name="android:layout_marginRight">8dp</item>
+        <item name="android:layout_marginEnd">8dp</item>
         <item name="android:textSize">@dimen/widget_conversation_title_size</item>
         <item name="android:shadowColor">#000000</item>
         <item name="android:shadowDx">0</item>
@@ -477,7 +477,7 @@
     </style>
 
     <style name="WidgetConversationItemAvatarOutgoing">
-        <item name="android:layout_marginRight">8dp</item>
+        <item name="android:layout_marginEnd">8dp</item>
         <item name="android:layout_alignParentRight">true</item>
     </style>
 
@@ -490,16 +490,16 @@
     </style>
 
     <style name="WidgetConversationItemIncomingAvatarShadow">
-        <item name="android:layout_marginLeft">4dp</item>
+        <item name="android:layout_marginStart">4dp</item>
     </style>
 
     <style name="WidgetConversationItemOutgoingAvatarShadow">
-        <item name="android:layout_marginLeft">-4dp</item>
+        <item name="android:layout_marginStart">-4dp</item>
     </style>
 
     <style name="WidgetConversationItemDate">
-        <item name="android:layout_marginRight">8dp</item>
-        <item name="android:layout_marginLeft">5dp</item>
+        <item name="android:layout_marginEnd">8dp</item>
+        <item name="android:layout_marginStart">5dp</item>
         <item name="android:layout_alignParentLeft">true</item>
     </style>
 
@@ -512,8 +512,8 @@
     </style>
 
     <style name="WidgetConversationItemWidget">
-        <item name="android:layout_marginRight">8dp</item>
-        <item name="android:layout_marginLeft">5dp</item>
+        <item name="android:layout_marginEnd">8dp</item>
+        <item name="android:layout_marginStart">5dp</item>
         <item name="android:layout_alignParentLeft">true</item>
     </style>
 
@@ -522,18 +522,18 @@
     </style>
 
     <style name="WidgetConversationListItemFrom">
-        <item name="android:layout_marginRight">5dp</item>
+        <item name="android:layout_marginEnd">5dp</item>
         <item name="android:layout_alignParentLeft">true</item>
     </style>
 
     <style name="WidgetConversationListItemDate">
-        <item name="android:layout_marginRight">8dp</item>
-        <item name="android:layout_marginLeft">5dp</item>
+        <item name="android:layout_marginEnd">8dp</item>
+        <item name="android:layout_marginStart">5dp</item>
         <item name="android:layout_gravity">right</item>
     </style>
 
     <style name="WidgetLoading">
-        <item name="android:layout_marginLeft">16dp</item>
+        <item name="android:layout_marginStart">16dp</item>
     </style>
 
     <style name="WidgetConversationListItemStyle">
@@ -541,13 +541,13 @@
     </style>
 
     <style name="AttachmentGridItemViewCheckBoxStyle">
-        <item name="android:paddingRight">7dp</item>
+        <item name="android:paddingEnd">7dp</item>
     </style>
 
     <style name="DirectoryHeaderStyle">
-        <item name="android:paddingLeft">@dimen/directory_header_padding_start</item>
         <item name="android:paddingStart">@dimen/directory_header_padding_start</item>
-        <item name="android:paddingRight">@dimen/directory_header_padding_end</item>
+        <item name="android:paddingStart">@dimen/directory_header_padding_start</item>
+        <item name="android:paddingEnd">@dimen/directory_header_padding_end</item>
         <item name="android:paddingEnd">@dimen/directory_header_padding_end</item>
         <item name="android:paddingTop">@dimen/directory_header_padding_top</item>
         <item name="android:paddingBottom">@dimen/directory_header_padding_bottom</item>
@@ -621,8 +621,8 @@
         <item name="android:layout_height">wrap_content</item>
         <item name="android:paddingTop">4dp</item>
         <item name="android:paddingBottom">4dp</item>
-        <item name="android:paddingLeft">@dimen/dialog_btn_padding</item>
-        <item name="android:paddingRight">@dimen/dialog_btn_padding</item>
+        <item name="android:paddingStart">@dimen/dialog_btn_padding</item>
+        <item name="android:paddingEnd">@dimen/dialog_btn_padding</item>
         <item name="android:textAllCaps">true</item>
         <item name="android:textSize">14sp</item>
     </style>
@@ -689,7 +689,7 @@
         <item name="android:layout_width">21dp</item>
         <item name="android:layout_height">21dp</item>
         <item name="android:layout_centerVertical">true</item>
-        <item name="android:layout_marginLeft">28dp</item>
+        <item name="android:layout_marginStart">28dp</item>
         <item name="android:scaleType">centerInside</item>
     </style>
 
@@ -697,7 +697,7 @@
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_marginTop">12dp</item>
-        <item name="android:layout_marginLeft">65dp</item>
+        <item name="android:layout_marginStart">65dp</item>
         <item name="android:textColor">#222327</item>
         <item name="android:textSize">14sp</item>
     </style>

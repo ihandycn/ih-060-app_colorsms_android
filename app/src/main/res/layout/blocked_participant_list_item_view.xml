@@ -48,7 +48,7 @@
         android:layout_weight="1"
         android:background="@null"
         android:ellipsize="end"
-        android:gravity="left|center_vertical"
+        android:gravity="start|center_vertical"
         android:maxLines="1"
         android:padding="@dimen/blocked_participant_list_item_view_padding"
         android:paddingTop="2dp"

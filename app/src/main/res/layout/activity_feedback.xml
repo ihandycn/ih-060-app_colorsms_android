@@ -27,7 +27,7 @@
             android:layout_marginLeft="@dimen/feedback_content_lr_margin"
             android:layout_marginRight="@dimen/feedback_content_lr_margin"
             android:layout_marginTop="9.7dp"
-            android:drawableLeft="@drawable/feedback_titlebar_ic"
+            android:drawableStart="@drawable/feedback_titlebar_ic"
             android:drawablePadding="8dp"
             android:gravity="center_vertical"
             android:text="@string/sms_feedback_title"
