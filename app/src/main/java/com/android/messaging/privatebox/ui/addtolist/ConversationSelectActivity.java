@@ -28,6 +28,7 @@ import com.ihs.commons.notificationcenter.INotificationObserver;
 import com.superapps.util.BackgroundDrawables;
 import com.superapps.util.Dimensions;
 import com.superapps.util.Preferences;
+import com.superapps.util.Threads;
 import com.superapps.util.Toasts;
 
 import java.util.ArrayList;
@@ -121,11 +122,13 @@ public class ConversationSelectActivity extends HSAppCompatActivity
         mNotificationObserver = (s, hsBundle) -> {
             switch (s) {
                 case NOTIFICATION_KEY_MESSAGE_MOVE_START:
-                    startMessagesMoveProgress();
+                    Threads.runOnMainThread(this::startMessagesMoveProgress);
                     break;
                 case NOTIFICATION_KEY_MESSAGE_MOVE_END:
-                    stopMessageMoveProgress();
-                    onBackPressed();
+                    Threads.runOnMainThread(() -> {
+                        stopMessageMoveProgress();
+                        onBackPressed();
+                    });
                     break;
             }
         };
