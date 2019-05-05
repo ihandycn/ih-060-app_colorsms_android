@@ -130,7 +130,7 @@ public class MoveConversationToPrivateBoxAction extends Action implements Parcel
         Assert.notNull(conversationId);
 
         Cursor cursor = db.query(DatabaseHelper.MESSAGES_TABLE,
-                new String[]{MessageColumns._ID},
+                new String[]{MessageColumns._ID, MessageColumns.SMS_MESSAGE_URI},
                 MessageColumns.CONVERSATION_ID + "=?",
                 new String[]{conversationId},
                 null, null, null);
@@ -139,9 +139,12 @@ public class MoveConversationToPrivateBoxAction extends Action implements Parcel
             return;
         }
         while (cursor.moveToNext()) {
-            String messageId = cursor.getString(0);
-            if (!TextUtils.isEmpty(messageId)) {
-                messageList.add(messageId);
+            String messageUri = cursor.getString(1);
+            if (!PrivateMessageManager.getInstance().isPrivateUri(messageUri)) {
+                String messageId = cursor.getString(0);
+                if (!TextUtils.isEmpty(messageId)) {
+                    messageList.add(messageId);
+                }
             }
         }
         cursor.close();

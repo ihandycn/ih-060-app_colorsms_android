@@ -5,7 +5,6 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.Choreographer;
 import android.view.MenuItem;
 import android.view.View;
@@ -16,6 +15,7 @@ import com.android.messaging.R;
 import com.android.messaging.privatebox.AddPrivateContactAction;
 import com.android.messaging.privatebox.MoveConversationToPrivateBoxAction;
 import com.android.messaging.privatebox.PrivateContactsManager;
+import com.android.messaging.privatebox.PrivateMessageManager;
 import com.android.messaging.ui.BaseAlertDialog;
 import com.android.messaging.ui.customize.PrimaryColors;
 import com.android.messaging.util.UiUtils;
@@ -35,16 +35,10 @@ import java.util.List;
 
 public class ContactsSelectActivity extends HSAppCompatActivity {
 
-    public final static String EXTRA_MODE_TYPE = "EXTRA_MODE_TYPE";
     public final static String EVENT_MESSAGES_MOVE_START = "event_contact_messages_move_start";
     public final static String EVENT_MESSAGES_MOVE_END = "event_contact_messages_move_end";
 
-    public static final int MODE_CONTACTS_LIST_FOR_BLACKLIST = 0;
-    public static final int MODE_WHITELIST = 4;
-
-    private static final int WHITELIST_REQUEST_CODE = 1111;
-
-    private ContactsSelectAdapter adapter;
+    private ContactsSelectAdapter mAdapter;
     private volatile boolean mIsMessageMoving;
     private View mProcessBarContainer;
     private ProgressBar mProgressBar;
@@ -63,11 +57,9 @@ public class ContactsSelectActivity extends HSAppCompatActivity {
 
         setContentView(R.layout.activity_call_blocker);
 
-        final int moduleType = getIntent().getIntExtra(EXTRA_MODE_TYPE, MODE_CONTACTS_LIST_FOR_BLACKLIST);
+        startQueryData();
 
-        startQueryData(moduleType);
-
-        adapter = new ContactsSelectAdapter(moduleType == MODE_WHITELIST);
+        mAdapter = new ContactsSelectAdapter();
 
         Toolbar toolbar = findViewById(R.id.toolbar);
         toolbar.setTitle("");
@@ -82,11 +74,7 @@ public class ContactsSelectActivity extends HSAppCompatActivity {
 
         RecyclerView recyclerView = findViewById(R.id.fragment_missed_calls_recyclerview);
         recyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
-        recyclerView.setAdapter(adapter);
-
-        adapter.setOnButtonClickListener((name, number, avatarUriStr) -> {
-
-        });
+        recyclerView.setAdapter(mAdapter);
 
         View actionButton = findViewById(R.id.fragment_call_assistant_button);
         actionButton.setBackground(BackgroundDrawables.createBackgroundDrawable(PrimaryColors.getPrimaryColor(),
@@ -94,11 +82,11 @@ public class ContactsSelectActivity extends HSAppCompatActivity {
 
         actionButton.setOnClickListener(v -> {
             if (Preferences.getDefault().getBoolean(ConversationSelectActivity.PREF_KEY_ADD_PRIVATE_DIALOG_HAS_PROMPT, false)) {
-                addContactToPrivate(moduleType);
+                addContactToPrivate();
             } else {
                 new BaseAlertDialog.Builder(ContactsSelectActivity.this)
                         .setTitle(R.string.private_move_tip)
-                        .setPositiveButton(R.string.welcome_set_default_button, (dialog, button) -> addContactToPrivate(moduleType))
+                        .setPositiveButton(R.string.welcome_set_default_button, (dialog, button) -> addContactToPrivate())
                         .setNegativeButton(R.string.delete_conversation_decline_button, null)
                         .show();
                 Preferences.getDefault().putBoolean(ConversationSelectActivity.PREF_KEY_ADD_PRIVATE_DIALOG_HAS_PROMPT, true);
@@ -146,9 +134,9 @@ public class ContactsSelectActivity extends HSAppCompatActivity {
         finish();
     }
 
-    private void addContactToPrivate(int moduleType) {
+    private void addContactToPrivate() {
         List<String> addList = new ArrayList<>();
-        for (CallAssistantUtils.ContactInfo contactInfo : adapter.getRecyclerDataList()) {
+        for (CallAssistantUtils.ContactInfo contactInfo : mAdapter.getRecyclerDataList()) {
             if (contactInfo.customInfo.equals(Boolean.TRUE) && !TextUtils.isEmpty(contactInfo.number)) {
                 addList.add(contactInfo.number);
             }
@@ -158,16 +146,12 @@ public class ContactsSelectActivity extends HSAppCompatActivity {
             return;
         }
 
-        switch (moduleType) {
-            case MODE_CONTACTS_LIST_FOR_BLACKLIST:
-                //1.update contact in private contact table
-                AddPrivateContactAction.addPrivateRecipientsAndMoveMessages(addList);
-                //2.move conversations and messages if need
-                MoveConversationToPrivateBoxAction.moveByContact(addList,
-                        EVENT_MESSAGES_MOVE_START + mResponseCode,
-                        EVENT_MESSAGES_MOVE_END + mResponseCode);
-                break;
-        }
+        //1.update contact in private contact table
+        AddPrivateContactAction.addPrivateRecipientsAndMoveMessages(addList);
+        //2.move conversations and messages if need
+        MoveConversationToPrivateBoxAction.moveByContact(addList,
+                EVENT_MESSAGES_MOVE_START + mResponseCode,
+                EVENT_MESSAGES_MOVE_END + mResponseCode);
     }
 
     private void startMessagesMoveProgress() {
@@ -188,19 +172,23 @@ public class ContactsSelectActivity extends HSAppCompatActivity {
         onBackPressed();
     }
 
-    private void startQueryData(final int moduleType) {
+    private void startQueryData() {
         Threads.postOnThreadPoolExecutor(() -> {
             final List<CallAssistantUtils.ContactInfo> list = new ArrayList<>();
 
-            switch (moduleType) {
-                case MODE_CONTACTS_LIST_FOR_BLACKLIST:
-                    List<CallAssistantUtils.ContactInfo> contactsList = CallAssistantUtils.getAllContactsFromPhoneBook();
-                    Collections.sort(contactsList, (o1, o2) -> Collator.getInstance().compare(o1.toString(), o2.toString()));
-                    list.addAll(contactsList);
-                    break;
+            List<CallAssistantUtils.ContactInfo> contactsList = CallAssistantUtils.getAllContactsFromPhoneBook();
+            // filter contact which is already private
+            List<CallAssistantUtils.ContactInfo> filterContactsList = new ArrayList<>();
+            for (CallAssistantUtils.ContactInfo info : contactsList) {
+                String recipient = info.number;
+                if (!PrivateContactsManager.getInstance().isPrivateRecipient(recipient)) {
+                    filterContactsList.add(info);
+                }
             }
+            Collections.sort(filterContactsList, (o1, o2) -> Collator.getInstance().compare(o1.toString(), o2.toString()));
+            list.addAll(filterContactsList);
 
-            Threads.postOnMainThread(() -> adapter.updateData(list));
+            Threads.postOnMainThread(() -> mAdapter.updateData(list));
         });
     }
 

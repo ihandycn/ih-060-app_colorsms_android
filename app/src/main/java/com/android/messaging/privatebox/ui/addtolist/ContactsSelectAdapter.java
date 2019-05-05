@@ -16,12 +16,7 @@ import java.util.List;
 
 public class ContactsSelectAdapter extends RecyclerView.Adapter<ContactsSelectAdapter.ViewHolder> {
 
-    public interface OnButtonClickListener {
-        void onItemViewClicked(String contactName, String contactNumber, String avatarUriStr);
-    }
-
     static class ViewHolder extends RecyclerView.ViewHolder {
-
         TextView mainTitle, subTitle;
         ImageView checkBoxView, avatarImageView;
 
@@ -41,21 +36,11 @@ public class ContactsSelectAdapter extends RecyclerView.Adapter<ContactsSelectAd
     }
 
     private List<CallAssistantUtils.ContactInfo> recyclerDataList = new ArrayList<>();
-    private OnButtonClickListener listener;
-    private boolean isWhitelistMode;
-
-    public ContactsSelectAdapter(boolean isWhitelistMode) {
-        this.isWhitelistMode = isWhitelistMode;
-    }
 
     public void updateData(List<CallAssistantUtils.ContactInfo> data) {
         this.recyclerDataList.clear();
         this.recyclerDataList.addAll(data);
         notifyDataSetChanged();
-    }
-
-    public void setOnButtonClickListener(OnButtonClickListener listener) {
-        this.listener = listener;
     }
 
     public List<CallAssistantUtils.ContactInfo> getRecyclerDataList() {
@@ -81,31 +66,21 @@ public class ContactsSelectAdapter extends RecyclerView.Adapter<ContactsSelectAd
             holder.subTitle.setVisibility(View.VISIBLE);
         }
 
-        if (isWhitelistMode) {
-            holder.checkBoxView.setVisibility(View.GONE);
-            holder.itemView.setOnClickListener(v -> {
-
-                if (listener != null) {
-                    listener.onItemViewClicked(contactInfo.name, contactInfo.number, contactInfo.avatarUriStr);
-                }
-            });
+        if (contactInfo.customInfo.equals(Boolean.TRUE)) {
+            holder.checkBoxView.setImageResource(R.drawable.ic_all_checked);
         } else {
-            if (contactInfo.customInfo.equals(Boolean.TRUE)) {
-                holder.checkBoxView.setImageResource(R.drawable.ic_all_checked);
-            } else {
-                holder.checkBoxView.setImageResource(R.drawable.ic_all_unchecked);
-            }
-
-            holder.itemView.setOnClickListener(view -> {
-                if (contactInfo.customInfo.equals(Boolean.TRUE)) {
-                    contactInfo.customInfo = Boolean.FALSE;
-                    holder.checkBoxView.setImageResource(R.drawable.ic_all_unchecked);
-                } else {
-                    contactInfo.customInfo = Boolean.TRUE;
-                    holder.checkBoxView.setImageResource(R.drawable.ic_all_checked);
-                }
-            });
+            holder.checkBoxView.setImageResource(R.drawable.ic_all_unchecked);
         }
+
+        holder.itemView.setOnClickListener(view -> {
+            if (contactInfo.customInfo.equals(Boolean.TRUE)) {
+                contactInfo.customInfo = Boolean.FALSE;
+                holder.checkBoxView.setImageResource(R.drawable.ic_all_unchecked);
+            } else {
+                contactInfo.customInfo = Boolean.TRUE;
+                holder.checkBoxView.setImageResource(R.drawable.ic_all_checked);
+            }
+        });
 
         CallAssistantUtils.displayRoundCornerAvatar(holder.avatarImageView, contactInfo.avatarUriStr);
     }
