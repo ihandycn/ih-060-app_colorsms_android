@@ -551,35 +551,6 @@ public class ConversationFragment extends Fragment implements ConversationDataLi
                 }
         );
 
-        if (HSConfig.optBoolean(false, "Application", "SMSAd", "SMSDetailspageTopAd", "Enabled")) {
-            BugleAnalytics.logEvent("Detailspage_TopAd_Should_Show", true, true);
-            List<AcbNativeAd> nativeAds = AcbNativeAdManager.fetch(AdPlacement.AD_DETAIL_NATIVE, 1);
-            if (nativeAds.size() > 0) {
-                mNativeAd = nativeAds.get(0);
-                mNativeAd.setNativeClickListener(
-                        acbAd -> BugleAnalytics.logEvent("Detailspage_TopAd_Click", true, false));
-                showTopBannerAd();
-            } else {
-                mNativeAdLoader = AcbNativeAdManager.createLoaderWithPlacement(AdPlacement.AD_DETAIL_NATIVE);
-                mNativeAdLoader.load(1, new AcbNativeAdLoader.AcbNativeAdLoadListener() {
-                    @Override
-                    public void onAdReceived(AcbNativeAdLoader acbNativeAdLoader, List<AcbNativeAd> list) {
-                        if (list.size() > 0) {
-                            mNativeAd = list.get(0);
-                            mNativeAd.setNativeClickListener(
-                                    acbAd -> BugleAnalytics.logEvent("Detailspage_TopAd_Click", true, false));
-                            showTopBannerAd();
-                        }
-                    }
-
-                    @Override
-                    public void onAdFinished(AcbNativeAdLoader acbNativeAdLoader, AcbError acbError) {
-
-                    }
-                });
-            }
-        }
-
         HSGlobalNotificationCenter.addObserver(EVENT_SHOW_OPTION_MENU, this);
         HSGlobalNotificationCenter.addObserver(EVENT_SHOW_OPTION_MENU, this);
         HSGlobalNotificationCenter.addObserver(EVENT_HIDE_MEDIA_PICKER, this);
@@ -729,6 +700,35 @@ public class ConversationFragment extends Fragment implements ConversationDataLi
 
         mMediaLayout = view.findViewById(R.id.camera_photo_layout);
         mWallpaperView = view.findViewById(R.id.conversation_fragment_wallpaper);
+
+        if (HSConfig.optBoolean(false, "Application", "SMSAd", "SMSDetailspageTopAd", "Enabled")) {
+            BugleAnalytics.logEvent("Detailspage_TopAd_Should_Show", true, true);
+            List<AcbNativeAd> nativeAds = AcbNativeAdManager.fetch(AdPlacement.AD_DETAIL_NATIVE, 1);
+            if (nativeAds.size() > 0) {
+                mNativeAd = nativeAds.get(0);
+                mNativeAd.setNativeClickListener(
+                        acbAd -> BugleAnalytics.logEvent("Detailspage_TopAd_Click", true, false));
+                showTopBannerAd();
+            } else {
+                mNativeAdLoader = AcbNativeAdManager.createLoaderWithPlacement(AdPlacement.AD_DETAIL_NATIVE);
+                mNativeAdLoader.load(1, new AcbNativeAdLoader.AcbNativeAdLoadListener() {
+                    @Override
+                    public void onAdReceived(AcbNativeAdLoader acbNativeAdLoader, List<AcbNativeAd> list) {
+                        if (list.size() > 0) {
+                            mNativeAd = list.get(0);
+                            mNativeAd.setNativeClickListener(
+                                    acbAd -> BugleAnalytics.logEvent("Detailspage_TopAd_Click", true, false));
+                            showTopBannerAd();
+                        }
+                    }
+
+                    @Override
+                    public void onAdFinished(AcbNativeAdLoader acbNativeAdLoader, AcbError acbError) {
+
+                    }
+                });
+            }
+        }
         return view;
     }
 
