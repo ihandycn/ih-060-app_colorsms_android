@@ -23,9 +23,7 @@
         <net.appcloudbox.ads.base.ContainerView.AcbNativeAdIconView
             android:id="@+id/banner_icon_image"
             android:layout_width="@dimen/conversation_list_contact_icon_size"
-            android:layout_height="@dimen/conversation_list_contact_icon_size"
-
-            />
+            android:layout_height="@dimen/conversation_list_contact_icon_size"/>
     </com.superapps.view.RoundCornerContainer>
 
 
@@ -96,4 +94,10 @@
         app:layout_constraintTop_toTopOf="parent"
         app:typeface="@string/custom_font_medium"/>
 
+    <FrameLayout
+        android:id="@+id/ad_choice"
+        android:layout_width="10dp"
+        android:layout_height="10dp"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentTop="true"></FrameLayout>
 </RelativeLayout>

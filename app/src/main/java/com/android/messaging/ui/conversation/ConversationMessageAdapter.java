@@ -15,7 +15,6 @@
  */
 package com.android.messaging.ui.conversation;
 
-import android.graphics.PorterDuff;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -230,7 +229,6 @@ public class ConversationMessageAdapter extends
 
             mAdContentView = new AcbNativeAdContainerView(container.getContext());
             mAdContentView.addContentView(adView);
-            contentBg = adView.findViewById(R.id.content_container);
 
             AcbNativeAdIconView icon = ViewUtils.findViewById(adView, R.id.ad_icon);
             icon.setShapeMode(1);
@@ -245,7 +243,6 @@ public class ConversationMessageAdapter extends
             TextView actionBtn = ViewUtils.findViewById(adView, R.id.ad_action);
             actionBtn.setTextColor(ConversationColors.get().getAdActionColor());
             actionBtn.setBackgroundResource(R.drawable.conversation_ad_action_pressed_bg);
-            ((ImageView) adView.findViewById(R.id.action_bg)).setColorFilter(ConversationColors.get().getAdActionColor(), PorterDuff.Mode.MULTIPLY);
             mAdContentView.setAdActionView(actionBtn);
             FrameLayout choice = ViewUtils.findViewById(adView, R.id.ad_choice);
             mAdContentView.setAdChoiceView(choice);

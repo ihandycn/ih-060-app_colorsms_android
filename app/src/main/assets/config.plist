@@ -189,6 +189,11 @@
 					<key>ShowAfterCloseTheKeyboard</key>
 					<false/>
 				</dict>
+				<key>SMSDetailspageTopAd</key>
+				<dict>
+					<key>Enabled</key>
+					<true/>
+				</dict>
 				<key>SMSDetailspageFullAd</key>
 				<dict>
 					<key>Enabled</key>

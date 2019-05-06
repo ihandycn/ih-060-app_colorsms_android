@@ -266,6 +266,8 @@ public class ComposeMessageView extends LinearLayout
         mComposeEditText.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View arg0) {
+                mHost.onClickMediaOrEmoji();
+
                 if (mHost.shouldHideAttachmentsWhenSimSelectorShown()) {
                     hideSimSelector();
                 }
@@ -395,6 +397,8 @@ public class ComposeMessageView extends LinearLayout
                 findViewById(R.id.media_btn);
         mAttachMediaButton.setBackground(BackgroundDrawables.createBackgroundDrawable(0xfff4f7f9, 0x1935363b, Dimensions.pxFromDp(20), false, true));
         mAttachMediaButton.setOnClickListener(v -> {
+            mHost.onClickMediaOrEmoji();
+
             if (isMediaPickerShowing()) {
                 showKeyboard();
             } else if (isEmojiPickerShowing()) {
@@ -402,7 +406,6 @@ public class ComposeMessageView extends LinearLayout
                 showMediaPicker();
             } else if (isKeyboardVisible()) {
                 mIsMediaPendingShow = true;
-                mHost.onClickMediaOrEmoji();
                 hideKeyboard();
             } else {
                 showMediaPicker();
@@ -455,6 +458,8 @@ public class ComposeMessageView extends LinearLayout
         mEmojiPickerLayout = findViewById(R.id.emoji_picker_container);
         mEmojiKeyboardBtn = findViewById(R.id.emoji_btn);
         mEmojiKeyboardBtn.setOnClickListener(v -> {
+            mHost.onClickMediaOrEmoji();
+
             mEmojiLottieGuideView.setVisibility(View.GONE);
             mEmojiGuideView.setVisibility(View.GONE);
             if (isEmojiPickerShowing()) {
@@ -465,7 +470,6 @@ public class ComposeMessageView extends LinearLayout
                 showEmojiPicker();
             } else if (isKeyboardVisible()) {
                 mIsEmojiPendingShow = true;
-                mHost.onClickMediaOrEmoji();
                 hideKeyboard();
             } else {
                 showEmojiPicker();
