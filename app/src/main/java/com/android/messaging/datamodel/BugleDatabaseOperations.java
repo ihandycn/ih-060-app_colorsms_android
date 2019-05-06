@@ -414,7 +414,11 @@ public class BugleDatabaseOperations {
         if (!TextUtils.isEmpty(soundUri)) {
             values.put(ConversationColumns.NOTIFICATION_SOUND_URI, soundUri);
         }
-        values.put(ConversationColumns.IS_PRIVATE, PrivateContactsManager.getInstance().isPrivateThreadId(threadId));
+        List<String> participantList = new ArrayList<>();
+        for (ParticipantData participantData: participants) {
+            participantList.add(participantData.getNormalizedDestination());
+        }
+        values.put(ConversationColumns.IS_PRIVATE, PrivateContactsManager.getInstance().isPrivateRecipient(participantList));
 
         fillParticipantData(values, participants);
 

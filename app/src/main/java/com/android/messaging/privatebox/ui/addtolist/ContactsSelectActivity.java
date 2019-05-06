@@ -180,7 +180,8 @@ public class ContactsSelectActivity extends HSAppCompatActivity {
             // filter contact which is already private
             List<CallAssistantUtils.ContactInfo> filterContactsList = new ArrayList<>();
             for (CallAssistantUtils.ContactInfo info : contactsList) {
-                String recipient = info.number;
+                List<String> recipient = new ArrayList<>();
+                recipient.add(info.number);
                 if (!PrivateContactsManager.getInstance().isPrivateRecipient(recipient)) {
                     filterContactsList.add(info);
                 }

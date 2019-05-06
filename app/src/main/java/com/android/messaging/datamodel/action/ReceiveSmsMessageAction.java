@@ -33,7 +33,7 @@ import com.android.messaging.datamodel.MessagingContentProvider;
 import com.android.messaging.datamodel.SyncManager;
 import com.android.messaging.datamodel.data.MessageData;
 import com.android.messaging.datamodel.data.ParticipantData;
-import com.android.messaging.privatebox.PrivateMessageManager;
+import com.android.messaging.privatebox.PrivateContactsManager;
 import com.android.messaging.privatebox.PrivateSettingManager;
 import com.android.messaging.privatebox.PrivateSmsEntry;
 import com.android.messaging.sms.MmsSmsUtils;
@@ -41,6 +41,9 @@ import com.android.messaging.util.BugleAnalytics;
 import com.android.messaging.util.CheckPermissionUtil;
 import com.android.messaging.util.LogUtil;
 import com.android.messaging.util.OsUtil;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Action used to "receive" an incoming message
@@ -105,7 +108,9 @@ public class ReceiveSmsMessageAction extends Action implements Parcelable {
         final boolean messageInObservableConversation =
                 DataModel.get().isNewMessageObservable(conversationId);
 
-        boolean isPrivateMessage = PrivateMessageManager.getInstance().isPrivateThreadId(threadId);
+        List<String> recipients = new ArrayList<>();
+        recipients.add(address);
+        boolean isPrivateMessage = PrivateContactsManager.getInstance().isPrivateRecipient(recipients);
         MessageData message = null;
         // Only the primary user gets to insert the message into the telephony db and into bugle's
         // db. The secondary user goes through this path, but skips doing the actual insert. It

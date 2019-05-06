@@ -134,9 +134,10 @@ public class MoveMessageToPrivateBoxAction extends Action {
                             values.clear();
                             values.put(Telephony.Mms.Part.MSG_ID, -1 * ContentUris.parseId(localUri));
                             do {
-                                if (partCursor.getString(0) != null) {
+                                String partUri = partCursor.getString(0);
+                                if (!TextUtils.isEmpty(partUri) && partUri.contains("content://mms/part")) {
                                     HSApplication.getContext().getContentResolver().update(
-                                            Uri.parse(partCursor.getString(0)), values,
+                                            Uri.parse(partUri), values,
                                             null, null);
                                 }
                             } while (partCursor.moveToNext());
