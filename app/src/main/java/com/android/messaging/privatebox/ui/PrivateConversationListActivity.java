@@ -28,6 +28,7 @@ import com.ihs.commons.notificationcenter.INotificationObserver;
 import com.superapps.util.Dimensions;
 import com.superapps.util.Navigations;
 import com.superapps.util.Preferences;
+import com.superapps.util.Threads;
 import com.superapps.util.Toasts;
 
 import java.util.ArrayList;
@@ -90,15 +91,22 @@ public class PrivateConversationListActivity extends MultiSelectConversationList
                     if (mIsMessageMoving) {
                         return;
                     }
-                    mStartTime = System.currentTimeMillis();
-                    mIsMessageMoving = true;
-                    mProcessBarContainer.setVisibility(View.VISIBLE);
-                    mChoreographer.postFrameCallback(mFrameCallback);
+                    Threads.postOnMainThread(() -> {
+                        if (mIsMessageMoving) {
+                            return;
+                        }
+                        mStartTime = System.currentTimeMillis();
+                        mIsMessageMoving = true;
+                        mProcessBarContainer.setVisibility(View.VISIBLE);
+                        mChoreographer.postFrameCallback(mFrameCallback);
+                    });
                     break;
                 case NOTIFICATION_KEY_MESSAGES_MOVE_END:
-                    mIsMessageMoving = false;
-                    mChoreographer.removeFrameCallback(mFrameCallback);
-                    mProcessBarContainer.setVisibility(View.GONE);
+                    Threads.postOnMainThread(() -> {
+                        mIsMessageMoving = false;
+                        mChoreographer.removeFrameCallback(mFrameCallback);
+                        mProcessBarContainer.setVisibility(View.GONE);
+                    });
                     break;
             }
         };

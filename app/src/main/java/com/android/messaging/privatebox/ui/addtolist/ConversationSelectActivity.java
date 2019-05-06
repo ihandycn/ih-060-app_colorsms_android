@@ -29,7 +29,6 @@ import com.superapps.util.BackgroundDrawables;
 import com.superapps.util.Dimensions;
 import com.superapps.util.Preferences;
 import com.superapps.util.Threads;
-import com.superapps.util.Toasts;
 
 import java.util.ArrayList;
 import java.util.HashMap;

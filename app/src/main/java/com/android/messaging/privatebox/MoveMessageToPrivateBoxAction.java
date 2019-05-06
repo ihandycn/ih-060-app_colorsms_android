@@ -152,7 +152,7 @@ public class MoveMessageToPrivateBoxAction extends Action {
                         Cursor addressCursor = HSApplication.getContext().getContentResolver().query(
                                 telephonyAddrUri, null, null, null, null);
                         if (addressCursor != null) {
-                            while (addressCursor.moveToFirst()) {
+                            if (addressCursor.moveToNext()) {
                                 values.clear();
                                 bindMmsAddrValues(values, addressCursor);
                                 resolver.insert(localAddrUri, values);
