@@ -209,7 +209,8 @@ public class GestureLockView extends ViewGroup {
         nodeHighlightDrawable = typedArray.getDrawable(R.styleable.GestureLockView_gesture_lock_node_highlight_image);
         nodeHighlightDrawable.setColorFilter(new PorterDuffColorFilter(PrimaryColors.getPrimaryColor(), PorterDuff.Mode.MULTIPLY));
         nodeFailureDrawable = typedArray.getDrawable(R.styleable.GestureLockView_gesture_lock_node_failure_image);
-        lineColor = typedArray.getColor(R.styleable.GestureLockView_gesture_lock_normal_line_color, Color.argb(0, 0, 0, 0));
+        //lineColor = typedArray.getColor(R.styleable.GestureLockView_gesture_lock_normal_line_color, Color.argb(0, 0, 0, 0));
+        lineColor = PrimaryColors.getPrimaryColor();
         failureColor = typedArray.getColor(R.styleable.GestureLockView_gesture_lock_failure_line_color, Color.argb(0, 0, 0, 0));
         lineWidth = typedArray.getDimension(R.styleable.GestureLockView_gesture_lock_line_width, 0);
         padding = typedArray.getDimension(R.styleable.GestureLockView_gesture_lock_padding, 0);

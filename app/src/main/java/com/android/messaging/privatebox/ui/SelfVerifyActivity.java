@@ -37,9 +37,6 @@ public class SelfVerifyActivity extends VerifyActivity {
         }
         getSupportActionBar().setDisplayShowHomeEnabled(true);
         UiUtils.setTitleBarBackground(toolbar, this);
-
-        RelativeLayout mainContainer = findViewById(R.id.lock_container);
-        mainContainer.setBackgroundResource(R.color.primary_color);
         BugleAnalytics.logEvent("PrivateBox_UnlockPage_Show", true,
                 "entrance", getIntent().getStringExtra(INTENT_KEY_ACTIVITY_ENTRANCE));
         Intent intent = getIntent();
@@ -53,11 +50,6 @@ public class SelfVerifyActivity extends VerifyActivity {
     @Override
     protected int getLayoutResId() {
         return R.layout.activity_self_verify;
-    }
-
-    @Override
-    protected Drawable getBackgroundDrawable() {
-        return getResources().getDrawable(R.color.primary_color);
     }
 
     @Override

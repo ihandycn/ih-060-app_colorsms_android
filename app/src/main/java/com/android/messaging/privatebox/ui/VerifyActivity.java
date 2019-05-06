@@ -17,6 +17,7 @@ import com.android.messaging.privatebox.PrivateBoxSettings;
 import com.android.messaging.privatebox.ui.view.GestureLockView;
 import com.android.messaging.privatebox.ui.view.PINIndicatorView;
 import com.android.messaging.privatebox.ui.view.PINKeyboardView;
+import com.android.messaging.ui.customize.PrimaryColors;
 import com.android.messaging.util.ViewUtils;
 import com.ihs.commons.notificationcenter.HSGlobalNotificationCenter;
 import com.ihs.commons.notificationcenter.INotificationObserver;
@@ -36,15 +37,13 @@ public abstract class VerifyActivity extends BaseActivity implements INotificati
     private PINIndicatorView pinIndicatorView;
     protected ImageView panelAppIcon;
 
-    protected View background;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         setContentView(getLayoutResId());
 
-        background = findViewById(R.id.background);
+        findViewById(R.id.background).setBackgroundColor(PrimaryColors.getPrimaryColor());
 
         gestureLockView = findViewById(R.id.gesture_unlock_view);
         gestureLockView.setPasswordOrAppUnLock(false);
@@ -112,8 +111,6 @@ public abstract class VerifyActivity extends BaseActivity implements INotificati
     protected abstract Drawable getProtectedAppIcon();
 
     protected abstract String getProtectedAppName();
-
-    protected abstract Drawable getBackgroundDrawable();
 
     protected abstract Drawable getPanelAppIcon();
 
