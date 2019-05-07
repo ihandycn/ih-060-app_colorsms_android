@@ -311,6 +311,8 @@
 				<dict>
 					<key>AvatarUrl</key>
 					<string>assets://themes/unicorn/avatar.png</string>
+					<key>AvatarForegroundColor</key>
+					<string>#fc85d1</string>
 					<key>BubbleAdColor</key>
 					<string>#e3187b</string>
 					<key>BubbleIncomingUrl</key>
@@ -350,6 +352,8 @@
 				</dict>
 				<key>Technology</key>
 				<dict>
+					<key>AvatarForegroundColor</key>
+					<string>#ffffff</string>
 					<key>AvatarUrl</key>
 					<string>assets://themes/technology/avatar.png</string>
 					<key>BubbleAdColor</key>
@@ -391,6 +395,8 @@
 				</dict>
 				<key>GoldenDiamond</key>
 				<dict>
+					<key>AvatarForegroundColor</key>
+					<string>#ffffff</string>
 					<key>AvatarUrl</key>
 					<string>assets://themes/goldendiamond/avatar.png</string>
 					<key>BubbleAdColor</key>
@@ -432,6 +438,8 @@
 				</dict>
 				<key>Default</key>
 				<dict>
+					<key>AvatarForegroundColor</key>
+					<string>#ffffff</string>
 					<key>AvatarUrl</key>
 					<string>assets://themes/default/avatar.png</string>
 					<key>BubbleAdColor</key>
@@ -473,6 +481,8 @@
 				</dict>
 				<key>Diamond</key>
 				<dict>
+					<key>AvatarForegroundColor</key>
+					<string>#ffffff</string>
 					<key>AvatarUrl</key>
 					<string>assets://themes/diamond/avatar.png</string>
 					<key>BubbleAdColor</key>
@@ -514,6 +524,8 @@
 				</dict>
 				<key>Neno</key>
 				<dict>
+					<key>AvatarForegroundColor</key>
+					<string>#ffffff</string>
 					<key>AvatarUrl</key>
 					<string>assets://themes/neon/avatar.png</string>
 					<key>BubbleAdColor</key>
@@ -555,6 +567,8 @@
 				</dict>
 				<key>SimpleBusiness</key>
 				<dict>
+					<key>AvatarForegroundColor</key>
+					<string>#ffffff</string>
 					<key>AvatarUrl</key>
 					<string>assets://themes/simplebusiness/avatar.png</string>
 					<key>BubbleAdColor</key>
@@ -596,6 +610,8 @@
 				</dict>
 				<key>WaterDrop</key>
 				<dict>
+					<key>AvatarForegroundColor</key>
+					<string>#ffffff</string>
 					<key>AvatarUrl</key>
 					<string>assets://themes/waterdrop/avatar.png</string>
 					<key>BubbleAdColor</key>

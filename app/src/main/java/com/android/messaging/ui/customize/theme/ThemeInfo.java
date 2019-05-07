@@ -23,6 +23,8 @@ public class ThemeInfo {
 
     public String avatarUrl;
 
+    public String avatarForegroundColor;
+
     public String listTitleColor;
 
     public String listSubtitleColor;
@@ -62,6 +64,7 @@ public class ThemeInfo {
         themeInfo.name = name;
         themeInfo.previewUrl = (String) themeConfig.get("PreviewUrl");
         themeInfo.themeColor = (String) themeConfig.get("ThemeColor");
+        themeInfo.avatarForegroundColor = (String) themeConfig.get("AvatarForegroundColor");
         themeInfo.toolbarBgUrl = (String) themeConfig.get("ToolbarBgUrl");
         themeInfo.avatarUrl = (String) themeConfig.get("AvatarUrl");
         themeInfo.listTitleColor = (String) themeConfig.get("ListTitleColor");

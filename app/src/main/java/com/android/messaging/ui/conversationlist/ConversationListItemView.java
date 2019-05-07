@@ -53,6 +53,8 @@ import com.android.messaging.ui.SnackBarInteraction;
 import com.android.messaging.ui.customize.AvatarBgDrawables;
 import com.android.messaging.ui.customize.ConversationColors;
 import com.android.messaging.ui.customize.PrimaryColors;
+import com.android.messaging.ui.customize.theme.ThemeInfo;
+import com.android.messaging.ui.customize.theme.ThemeUtils;
 import com.android.messaging.util.Assert;
 import com.android.messaging.util.BugleAnalytics;
 import com.android.messaging.util.ContentType;
@@ -164,6 +166,9 @@ public class ConversationListItemView extends FrameLayout implements OnClickList
         mTimestampTextView = findViewById(R.id.conversation_timestamp);
         mContactIconView = findViewById(R.id.conversation_icon);
         mContactCheckmarkView = findViewById(R.id.conversation_checkmark);
+        mContactCheckmarkView.getDrawable().setColorFilter(
+                Color.parseColor(ThemeInfo.getThemeInfo(ThemeUtils.getCurrentThemeName()).avatarForegroundColor),
+                PorterDuff.Mode.SRC_ATOP);
         mNotificationBellView = findViewById(R.id.conversation_notification_bell);
         mNotificationBellView.getDrawable().setColorFilter(
                 ConversationColors.get().getListTimeColor(), PorterDuff.Mode.SRC_ATOP);
