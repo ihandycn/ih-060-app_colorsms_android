@@ -67,7 +67,7 @@ public class ChooseFontItemView extends FrameLayout {
         mRadioBtn.setClickable(false);
         mFontFamily = mFontInfo.getFontName();
         if (mFontInfo != null) {
-            mPreviewView.setImageDrawable(FontDownloadManager.getDrawableByName(mFontInfo.getFontName()));
+            mPreviewView.setImageDrawable(FontDownloadManager.getDrawableByName(mFontFamily));
             if (!mFontInfo.isFontDownloaded()) {
                 mDownloadBtn.setVisibility(VISIBLE);
                 mPreviewView.setImageAlpha((int) (0.5 * 256));

@@ -17,15 +17,6 @@
 				<key>FontList</key>
 				<array>
 					<dict>
-						<key>Name</key>
-						<string>sarpanch</string>
-						<key>Weight</key>
-						<array>
-							<string>SemiBold</string>
-							<string>Regular</string>
-						</array>
-					</dict>
-					<dict>
 						<key>Weight</key>
 						<array>
 							<string>SemiBold</string>
@@ -136,15 +127,6 @@
 					<dict>
 						<key>Name</key>
 						<string>trochut</string>
-						<key>Weight</key>
-						<array>
-							<string>SemiBold</string>
-							<string>Regular</string>
-						</array>
-					</dict>
-					<dict>
-						<key>Name</key>
-						<string>merienda</string>
 						<key>Weight</key>
 						<array>
 							<string>SemiBold</string>
