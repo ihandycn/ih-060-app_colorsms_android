@@ -8,6 +8,7 @@ import com.crashlytics.android.answers.CustomEvent;
 import com.google.firebase.analytics.FirebaseAnalytics;
 import com.ihs.app.analytics.HSAnalytics;
 import com.ihs.app.framework.HSApplication;
+import com.ihs.app.framework.HSGdprConsent;
 import com.ihs.commons.utils.HSLog;
 
 import java.util.HashMap;
@@ -78,6 +79,10 @@ public class BugleAnalytics {
     }
 
     public static void logEvent(final String eventID, boolean alsoLogToFlurry, boolean alsoLogToFirebase, final Map<String, String> eventValues) {
+        if (HSGdprConsent.getConsentState() != HSGdprConsent.ConsentState.ACCEPTED) {
+            return;
+        }
+
         try {
             CustomEvent event = new CustomEvent(eventID);
             for (Map.Entry<String, String> entry : eventValues.entrySet()) {
