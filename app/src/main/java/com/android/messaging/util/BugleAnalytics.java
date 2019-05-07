@@ -8,6 +8,7 @@ import com.crashlytics.android.answers.CustomEvent;
 import com.google.firebase.analytics.FirebaseAnalytics;
 import com.ihs.app.analytics.HSAnalytics;
 import com.ihs.app.framework.HSApplication;
+import com.ihs.app.framework.HSGdprConsent;
 import com.ihs.commons.utils.HSLog;
 
 import java.util.HashMap;
@@ -21,7 +22,11 @@ public class BugleAnalytics {
 
     private static final String TAG = BugleAnalytics.class.getSimpleName();
 
-    private static FirebaseAnalytics sFirebaseAnalytics;
+    public static FirebaseAnalytics sFirebaseAnalytics;
+
+    static {
+        sFirebaseAnalytics = FirebaseAnalytics.getInstance(HSApplication.getContext());
+    }
 
     public static void logEvent(String eventID) {
         logEvent(eventID, false);
@@ -74,6 +79,10 @@ public class BugleAnalytics {
     }
 
     public static void logEvent(final String eventID, boolean alsoLogToFlurry, boolean alsoLogToFirebase, final Map<String, String> eventValues) {
+        if (HSGdprConsent.getConsentState() != HSGdprConsent.ConsentState.ACCEPTED) {
+            return;
+        }
+
         try {
             CustomEvent event = new CustomEvent(eventID);
             for (Map.Entry<String, String> entry : eventValues.entrySet()) {
@@ -90,10 +99,6 @@ public class BugleAnalytics {
             }
 
             if (alsoLogToFirebase) {
-                if (sFirebaseAnalytics == null) {
-                    sFirebaseAnalytics = FirebaseAnalytics.getInstance(HSApplication.getContext());
-                }
-
                 Bundle params = new Bundle();
                 for (Map.Entry<String, String> entry : eventValues.entrySet()) {
                     params.putString(entry.getKey(), entry.getValue());

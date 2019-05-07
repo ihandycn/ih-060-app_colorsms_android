@@ -218,11 +218,11 @@ public class EmojiStoreFragment extends Fragment implements INotificationObserve
                 StoreViewHolder storeViewHolder = (StoreViewHolder) holder;
                 if (EmojiManager.isTabSticker(packageInfo.mName)) {
                     storeViewHolder.getBtn.setOnClickListener(null);
-                    storeViewHolder.getBtn.setText(res.getString(R.string.emoji_added));
+                    storeViewHolder.getBtn.setText(res.getString(R.string.sms_emoji_added));
                     storeViewHolder.getBtn.setTextColor(0xFFFFFFFF);
                     storeViewHolder.getBtn.setBackground(BackgroundDrawables.createBackgroundDrawable(0xFFD6D6D6, Dimensions.pxFromDp(15), true));
                 } else {
-                    storeViewHolder.getBtn.setText(res.getString(R.string.emoji_get));
+                    storeViewHolder.getBtn.setText(res.getString(R.string.sms_emoji_get));
                     storeViewHolder.getBtn.setTextColor(0xFF333333);
                     storeViewHolder.getBtn.setBackground(BackgroundDrawables.createBackgroundDrawable(0xFFF4BE3E, 0xFFDAA017, Dimensions.pxFromDp(15), false, true));
                     storeViewHolder.getBtn.setOnClickListener(v -> {
@@ -230,7 +230,7 @@ public class EmojiStoreFragment extends Fragment implements INotificationObserve
                             BugleAnalytics.logEvent("SMSEmoji_ChatEmoji_StoreList_Get", true, true, "type", packageInfo.mName, "source", mSource);
                         }
                         storeViewHolder.getBtn.setOnClickListener(null);
-                        storeViewHolder.getBtn.setText(res.getString(R.string.emoji_added));
+                        storeViewHolder.getBtn.setText(res.getString(R.string.sms_emoji_added));
                         storeViewHolder.getBtn.setTextColor(0xFFFFFFFF);
                         storeViewHolder.getBtn.setBackground(BackgroundDrawables.createBackgroundDrawable(0xFFD6D6D6, Dimensions.pxFromDp(15), true));
                         EmojiManager.addTabSticker(packageInfo.mName);
@@ -258,7 +258,7 @@ public class EmojiStoreFragment extends Fragment implements INotificationObserve
             } else if (holder.getItemViewType() == TYPE_MAGIC_EMOJ) {
                 StoreLottieViewHolder storeViewHolder = (StoreLottieViewHolder) holder;
                 storeViewHolder.getBtn.setOnClickListener(null);
-                storeViewHolder.getBtn.setText(res.getString(R.string.emoji_added));
+                storeViewHolder.getBtn.setText(res.getString(R.string.sms_emoji_added));
                 storeViewHolder.getBtn.setTextColor(0xFFFFFFFF);
                 storeViewHolder.getBtn.setBackground(BackgroundDrawables.createBackgroundDrawable(0xFFD6D6D6, Dimensions.pxFromDp(15), true));
                 storeViewHolder.previewLayout.bindEmojiItemsForLottie();

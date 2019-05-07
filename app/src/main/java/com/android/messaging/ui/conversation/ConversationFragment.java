@@ -35,8 +35,6 @@ import android.content.res.Configuration;
 import android.database.Cursor;
 import android.graphics.Point;
 import android.graphics.Rect;
-import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
@@ -58,11 +56,13 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewConfiguration;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.android.messaging.R;
+import com.android.messaging.ad.AdPlacement;
 import com.android.messaging.datamodel.BugleNotifications;
 import com.android.messaging.datamodel.DataModel;
 import com.android.messaging.datamodel.MessagingContentProvider;
@@ -88,7 +88,6 @@ import com.android.messaging.ui.UIIntents;
 import com.android.messaging.ui.conversation.ComposeMessageView.IComposeMessageViewHost;
 import com.android.messaging.ui.conversation.ConversationInputManager.ConversationInputHost;
 import com.android.messaging.ui.conversation.ConversationMessageView.ConversationMessageViewHost;
-import com.android.messaging.ui.customize.WallpaperDrawables;
 import com.android.messaging.ui.dialog.FiveStarRateDialog;
 import com.android.messaging.ui.emoji.EmojiPickerFragment;
 import com.android.messaging.ui.mediapicker.CameraGalleryFragment;
@@ -105,14 +104,22 @@ import com.android.messaging.util.OsUtil;
 import com.android.messaging.util.PhoneUtils;
 import com.android.messaging.util.SafeAsyncTask;
 import com.android.messaging.util.TextUtil;
-import com.android.messaging.util.ThreadUtil;
 import com.android.messaging.util.UiUtils;
 import com.android.messaging.util.UriUtil;
+import com.crashlytics.android.core.CrashlyticsCore;
 import com.google.common.annotations.VisibleForTesting;
+import com.ihs.commons.config.HSConfig;
 import com.ihs.commons.notificationcenter.HSGlobalNotificationCenter;
 import com.ihs.commons.notificationcenter.INotificationObserver;
 import com.ihs.commons.utils.HSBundle;
+import com.ihs.commons.utils.HSLog;
+import com.superapps.debug.CrashlyticsLog;
 import com.superapps.util.Threads;
+
+import net.appcloudbox.ads.base.AcbNativeAd;
+import net.appcloudbox.ads.common.utils.AcbError;
+import net.appcloudbox.ads.nativead.AcbNativeAdLoader;
+import net.appcloudbox.ads.nativead.AcbNativeAdManager;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -134,10 +141,6 @@ public class ConversationFragment extends Fragment implements ConversationDataLi
 
     public static ArrayList<String> getSelectMessageIds() {
         return selectMessageIds;
-    }
-
-    public static void setSelectMessageIds(ArrayList<String> selectMessageIds) {
-        ConversationFragment.selectMessageIds = selectMessageIds;
     }
 
     private static ArrayList<String> selectMessageIds = new ArrayList<>();
@@ -174,6 +177,7 @@ public class ConversationFragment extends Fragment implements ConversationDataLi
     // We animate the message from draft to message list, if we the message doesn't show up in the
     // list within this time limit, then we just do a fade in animation instead
     public static final int MESSAGE_ANIMATION_MAX_WAIT = 500;
+    public static final int MESSAGE_DONT_SHOW_AD = 100;
 
     private ComposeMessageView mComposeMessageView;
     private RecyclerView mRecyclerView;
@@ -295,7 +299,7 @@ public class ConversationFragment extends Fragment implements ConversationDataLi
                         mCumulativeScrollDelta = 0;
                         mScrollToDismissHandled = false;
                     } else if (newState == RecyclerView.SCROLL_STATE_DRAGGING) {
-                        mRecyclerView.getItemAnimator().endAnimations();
+//                        mRecyclerView.getItemAnimator().endAnimations();
                     }
                     mScrollState = newState;
                 }
@@ -489,6 +493,42 @@ public class ConversationFragment extends Fragment implements ConversationDataLi
         return selectMessages.size() == 1;
     }
 
+    private List<Object> mMessageDataList = new ArrayList<>();
+    private AcbNativeAdLoader mNativeAdLoader;
+    private AcbNativeAd mNativeAd;
+    private boolean shouldAddNativeAdToList = true;
+    private boolean isAdShownLastTime = false;
+    private int composeEditTextInitialPos = -1;
+    private boolean isAdShowLogged = false;
+
+    private ViewTreeObserver.OnGlobalLayoutListener globalLayoutListener = new ViewTreeObserver.OnGlobalLayoutListener() {
+        @Override public void onGlobalLayout() {
+            if (mHandler.hasMessages(MESSAGE_DONT_SHOW_AD)) {
+                return;
+            }
+
+            int[] pos = new int[2];
+            mComposeMessageView.getComposeEditText().getLocationOnScreen(pos);
+            int bottomPos = pos[1] + mComposeMessageView.getComposeEditText().getMeasuredHeight();
+            HSLog.d("compose message view bottom position: " + bottomPos);
+            if (composeEditTextInitialPos == -1) {
+                composeEditTextInitialPos = bottomPos;
+            }
+            if (shouldAddNativeAdToList) {
+                if (composeEditTextInitialPos != bottomPos) {
+                    shouldAddNativeAdToList = false;
+                    updateAdapterData();
+                }
+            } else {
+                if (composeEditTextInitialPos == bottomPos
+                        && HSConfig.optBoolean(false, "Application", "SMSAd", "SMSDetailspageBannerAd", "ShowAfterCloseTheKeyboard")) {
+                    shouldAddNativeAdToList = true;
+                    updateAdapterData();
+                }
+            }
+        }
+    };
+
     /**
      * {@inheritDoc} from Fragment
      */
@@ -501,8 +541,7 @@ public class ConversationFragment extends Fragment implements ConversationDataLi
         if (selectMessageIds != null) {
             selectMessageIds.clear();
         }
-        mAdapter = new ConversationMessageAdapter(getActivity(), null, this,
-                null,
+        mAdapter = new ConversationMessageAdapter(this, null,
                 // Sets the item click listener on the Recycler item views.
                 v -> {
                     final ConversationMessageView messageView = (ConversationMessageView) v;
@@ -532,6 +571,36 @@ public class ConversationFragment extends Fragment implements ConversationDataLi
                     return true;
                 }
         );
+
+        if (HSConfig.optBoolean(false, "Application", "SMSAd", "SMSDetailspageBannerAd", "Enabled")) {
+            BugleAnalytics.logEvent("Detailspage_NativeAd_Should_Show", true, true);
+            List<AcbNativeAd> nativeAds = AcbNativeAdManager.fetch(AdPlacement.AD_DETAIL_NATIVE, 1);
+            if (nativeAds.size() > 0) {
+                mNativeAd = nativeAds.get(0);
+                mNativeAd.setNativeClickListener(
+                        acbAd -> BugleAnalytics.logEvent("Detailspage_NativeAd_Click", true, true));
+                updateAdapterData();
+            } else {
+                mNativeAdLoader = AcbNativeAdManager.createLoaderWithPlacement(AdPlacement.AD_DETAIL_NATIVE);
+                mNativeAdLoader.load(1, new AcbNativeAdLoader.AcbNativeAdLoadListener() {
+                    @Override
+                    public void onAdReceived(AcbNativeAdLoader acbNativeAdLoader, List<AcbNativeAd> list) {
+                        if (list.size() > 0) {
+                            mNativeAd = list.get(0);
+                            mNativeAd.setNativeClickListener(
+                                    acbAd -> BugleAnalytics.logEvent("Detailspage_NativeAd_Click", true, true));
+                            updateAdapterData();
+                        }
+                    }
+
+                    @Override
+                    public void onAdFinished(AcbNativeAdLoader acbNativeAdLoader, AcbError acbError) {
+
+                    }
+                });
+            }
+        }
+
         HSGlobalNotificationCenter.addObserver(EVENT_SHOW_OPTION_MENU, this);
         HSGlobalNotificationCenter.addObserver(EVENT_SHOW_OPTION_MENU, this);
         HSGlobalNotificationCenter.addObserver(EVENT_HIDE_MEDIA_PICKER, this);
@@ -563,6 +632,7 @@ public class ConversationFragment extends Fragment implements ConversationDataLi
                 mBinding, mComposeMessageView.getDraftDataModel(), savedInstanceState);
         mComposeMessageView.setInputManager(inputManager);
         mComposeMessageView.setConversationDataModel(BindingBase.createBindingReference(mBinding));
+        mComposeMessageView.getComposeEditText().getViewTreeObserver().addOnGlobalLayoutListener(globalLayoutListener);
         mHost.invalidateActionBar();
 
         mDraftMessageDataModel =
@@ -619,7 +689,6 @@ public class ConversationFragment extends Fragment implements ConversationDataLi
         mRecyclerView.setHasFixedSize(true);
         mRecyclerView.setLayoutManager(manager);
         mRecyclerView.setAdapter(mAdapter);
-
         if (savedInstanceState != null) {
             mListState = savedInstanceState.getParcelable(SAVED_INSTANCE_STATE_LIST_VIEW_STATE_KEY);
         }
@@ -705,13 +774,13 @@ public class ConversationFragment extends Fragment implements ConversationDataLi
             mAdapter.setMultiSelectMode(true);
             mSelectedMessage = messageView;
             if (mSelectedMessage == null) {
-                mAdapter.setSelectedMessage(null);
+                mAdapter.notifyDataSetChanged();
                 mSelectedAttachment = null;
                 return;
             }
             mSelectedAttachment = attachment;
             ConversationMessageData data = messageView.getData();
-            mAdapter.setSelectedMessage(data.getMessageId());
+            mAdapter.notifyDataSetChanged();
             ImageView checkBox = messageView.findViewById(R.id.check_box);
             checkBox.setSelected(true);
             selectMessages.clear();
@@ -783,9 +852,13 @@ public class ConversationFragment extends Fragment implements ConversationDataLi
 
         inflater.inflate(R.menu.conversation_menu, menu);
 
-        final ConversationData data = mBinding.getData();
-        final boolean supportCallAction = (PhoneUtils.getDefault().isVoiceCapable() &&
-                data.getParticipantPhoneNumber() != null);
+        boolean supportCallAction = false;
+        try {
+            final ConversationData data = mBinding.getData();
+            supportCallAction = (PhoneUtils.getDefault().isVoiceCapable() &&
+                    data.getParticipantPhoneNumber() != null);
+        } catch (IllegalStateException e) {
+        }
         menu.findItem(R.id.action_call).setVisible(supportCallAction);
     }
 
@@ -840,16 +913,16 @@ public class ConversationFragment extends Fragment implements ConversationDataLi
 
         // Ensure that the action bar is updated with the current data.
         invalidateOptionsMenu();
-        final Cursor oldCursor = mAdapter.swapCursor(cursor);
 
-        if (cursor != null && oldCursor == null) {
-            if (mListState != null) {
-                mRecyclerView.getLayoutManager().onRestoreInstanceState(mListState);
-                // RecyclerView restores scroll states without triggering scroll change events, so
-                // we need to manually ensure that they are correctly handled.
-                mListScrollListener.onScrolled(mRecyclerView, 0, 0);
-            }
+        mMessageDataList.clear();
+        if (cursor != null && cursor.moveToFirst()) {
+            do {
+                ConversationMessageData messageData = new ConversationMessageData();
+                messageData.bind(cursor);
+                mMessageDataList.add(messageData);
+            } while (cursor.moveToNext());
         }
+        updateAdapterData();
 
         if (isSync) {
             // This is a message sync. Syncing messages changes cursor item count, which would
@@ -905,6 +978,33 @@ public class ConversationFragment extends Fragment implements ConversationDataLi
         mHost.invalidateActionBar();
     }
 
+    private void updateAdapterData() {
+        List<Object> list = new ArrayList<>();
+        list.addAll(mMessageDataList);
+        boolean adAttached = false;
+        if (mMessageDataList.size() > 0
+                && mNativeAd != null
+                && shouldAddNativeAdToList) {
+            list.add(mNativeAd);
+            adAttached = true;
+            if (!isAdShowLogged) {
+                BugleAnalytics.logEvent("Detailspage_NativeAd_Show", true, true);
+                isAdShowLogged = true;
+            }
+            if (!isAdShownLastTime) {
+                BugleAnalytics.logEvent("Detailspage_NativeAd_RealShow");
+            }
+            isAdShownLastTime = true;
+        } else {
+            isAdShownLastTime = false;
+        }
+        mAdapter.setConversationId(mConversationId);
+        mAdapter.setDataList(list);
+        if (adAttached) {
+            scrollToBottom(false);
+        }
+    }
+
     /**
      * {@inheritDoc} from ConversationDataListener
      */
@@ -950,12 +1050,23 @@ public class ConversationFragment extends Fragment implements ConversationDataLi
         // Unbind all the views that we bound to data
         if (mComposeMessageView != null) {
             mComposeMessageView.unbind();
+            mComposeMessageView.getComposeEditText().getViewTreeObserver().removeOnGlobalLayoutListener(globalLayoutListener);
         }
         mRecyclerView.setAdapter(null);
 
         // And unbind this fragment from its data
         mBinding.unbind();
         mConversationId = null;
+
+        if (mNativeAd != null) {
+            mNativeAd.release();
+        }
+        if (mNativeAdLoader != null) {
+            mNativeAdLoader.cancel();
+        }
+        if (HSConfig.optBoolean(false, "Application", "SMSAd", "SMSDetailspageBannerAd", "Enabled")) {
+            AcbNativeAdManager.preload(1, AdPlacement.AD_DETAIL_NATIVE);
+        }
 
         HSGlobalNotificationCenter.removeObserver(this);
         FiveStarRateDialog.dismissDialogs();
@@ -982,7 +1093,6 @@ public class ConversationFragment extends Fragment implements ConversationDataLi
     @Override
     public void onConfigurationChanged(final Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
-        mRecyclerView.getItemAnimator().endAnimations();
     }
 
     // TODO: Remove isBound and replace it with ensureBound after b/15704674.
@@ -1089,9 +1199,8 @@ public class ConversationFragment extends Fragment implements ConversationDataLi
 
         final ConversationParticipantsData participants = conversationData.getParticipants();
         for (final ParticipantData participant : participants) {
-
-
             if (participant.isUnknownSender()) {
+                CrashlyticsCore.getInstance().logException(new CrashlyticsLog("Send_Message_Unknown_Sender"));
                 UiUtils.showToast(R.string.unknown_sender);
                 return false;
             }
@@ -1598,13 +1707,12 @@ public class ConversationFragment extends Fragment implements ConversationDataLi
     }
 
     @Override
-    public int overrideCounterColor() {
-        return -1;      // don't override the color
-    }
-
-    @Override
     public void onAttachmentsChanged(final boolean haveAttachments) {
         // no-op for now
+    }
+
+    @Override public void onClickMediaOrEmoji() {
+        mHandler.sendEmptyMessageDelayed(MESSAGE_DONT_SHOW_AD, 1000);
     }
 
     @Override

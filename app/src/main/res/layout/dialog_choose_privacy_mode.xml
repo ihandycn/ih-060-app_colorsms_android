@@ -14,18 +14,16 @@
         android:textColor="#6e717b"
         android:lineSpacingExtra="3.3sp"
         android:layout_marginStart="@dimen/dialog_btn_margin_left"
-        android:layout_marginTop="10dp"
         app:typeface="@string/custom_font_medium"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-
     <RadioGroup
         android:id="@+id/radio_group"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="15dp"
         android:layout_marginBottom="25dp"
         android:clipChildren="false"
         android:clipToPadding="false"

@@ -15,45 +15,60 @@
  */
 package com.android.messaging.ui.conversation;
 
-import android.content.Context;
-import android.database.Cursor;
+import android.graphics.PorterDuff;
+import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import com.android.messaging.R;
 import com.android.messaging.datamodel.data.ConversationMessageData;
 import com.android.messaging.ui.AsyncImageView.AsyncImageViewDelayLoader;
-import com.android.messaging.ui.CursorRecyclerAdapter;
+import com.android.messaging.ui.ConversationDrawables;
 import com.android.messaging.ui.conversation.ConversationMessageView.ConversationMessageViewHost;
-import com.android.messaging.util.Assert;
+import com.android.messaging.ui.customize.ConversationColors;
+import com.android.messaging.util.ViewUtils;
+import com.superapps.util.Dimensions;
+
+import net.appcloudbox.ads.base.AcbNativeAd;
+import net.appcloudbox.ads.base.ContainerView.AcbNativeAdContainerView;
+import net.appcloudbox.ads.base.ContainerView.AcbNativeAdIconView;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Provides an interface to expose Conversation Message Cursor data to a UI widget like a
  * RecyclerView.
  */
 public class ConversationMessageAdapter extends
-        CursorRecyclerAdapter<ConversationMessageAdapter.ConversationMessageViewHolder> {
+        RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     private final ConversationMessageViewHost mHost;
     private final AsyncImageViewDelayLoader mImageViewDelayLoader;
     private final View.OnClickListener mViewClickListener;
     private final View.OnLongClickListener mViewLongClickListener;
     private boolean mOneOnOne;
-    private String mSelectedMessageId;
     private static boolean multiSelectMode;
     public static final int NORMAL = 1000;
     public static final int SLIDE = 2000;
     public static int mState;
 
-    public ConversationMessageAdapter(final Context context, final Cursor cursor,
-                                      final ConversationMessageViewHost host,
+    private static final int TYPE_MESSAGE = 0;
+    private static final int TYPE_AD = 1;
+    private String mConversationId;
+
+    private List<Object> mDataList = new ArrayList<>();
+
+    public ConversationMessageAdapter(final ConversationMessageViewHost host,
                                       final AsyncImageViewDelayLoader imageViewDelayLoader,
                                       final View.OnClickListener viewClickListener,
                                       final View.OnLongClickListener longClickListener) {
-        super(context, cursor, 0);
         mHost = host;
         mViewClickListener = viewClickListener;
         mViewLongClickListener = longClickListener;
@@ -61,40 +76,13 @@ public class ConversationMessageAdapter extends
         setHasStableIds(true);
     }
 
-    @Override
-    public void bindViewHolder(final ConversationMessageViewHolder holder,
-                               final Context context, final Cursor cursor) {
-        Assert.isTrue(holder.mView instanceof ConversationMessageView);
-        final ConversationMessageView conversationMessageView =
-                (ConversationMessageView) holder.mView;
-        ImageView checkbox = conversationMessageView.findViewById(R.id.check_box);
-        conversationMessageView.bind(cursor, mOneOnOne, multiSelectMode);
-        ConversationMessageData data = conversationMessageView.getData();
-
-        if (multiSelectMode && !ConversationFragment.getSelectMessageIds().isEmpty()) {
-            checkbox.setVisibility(View.VISIBLE);
-            if (ConversationFragment.getSelectMessageIds().contains(data.getMessageId())) {
-                checkbox.setImageResource(R.drawable.ic_choosen);
-            } else {
-                checkbox.setImageResource(R.drawable.ic_choose);
-            }
-        } else {
-            checkbox.setVisibility(View.GONE);
-        }
-        holder.bind();
+    public void setDataList(List<Object> dataList) {
+        mDataList = dataList;
+        notifyDataSetChanged();
     }
 
-    @Override
-    public ConversationMessageViewHolder createViewHolder(final Context context,
-                                                          final ViewGroup parent, final int viewType) {
-        final LayoutInflater layoutInflater = LayoutInflater.from(context);
-        final ConversationMessageView conversationMessageView = (ConversationMessageView)
-                layoutInflater.inflate(R.layout.conversation_message_view, null);
-        conversationMessageView.setHost(mHost);
-        conversationMessageView.setImageViewDelayLoader(mImageViewDelayLoader);
-        ConversationMessageViewHolder conversationMessageViewHolder = new ConversationMessageViewHolder(conversationMessageView,
-                mViewClickListener, mViewLongClickListener);
-        return conversationMessageViewHolder;
+    public void setConversationId(String conversationId) {
+        mConversationId = conversationId;
     }
 
     public void openItemAnimation() {
@@ -106,11 +94,6 @@ public class ConversationMessageAdapter extends
         mState = NORMAL;
         notifyDataSetChanged();
         setMultiSelectMode(false);
-    }
-
-    public void setSelectedMessage(final String messageId) {
-        mSelectedMessageId = messageId;
-        notifyDataSetChanged();
     }
 
     public void setOneOnOne(final boolean oneOnOne, final boolean invalidate) {
@@ -130,9 +113,83 @@ public class ConversationMessageAdapter extends
         return multiSelectMode;
     }
 
+    @NonNull @Override
+    public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        if (viewType == TYPE_MESSAGE) {
+            final LayoutInflater layoutInflater = LayoutInflater.from(parent.getContext());
+            final ConversationMessageView conversationMessageView = (ConversationMessageView)
+                    layoutInflater.inflate(R.layout.conversation_message_view, null);
+            conversationMessageView.setHost(mHost);
+            conversationMessageView.setImageViewDelayLoader(mImageViewDelayLoader);
+            return new ConversationMessageViewHolder(conversationMessageView,
+                    mViewClickListener, mViewLongClickListener);
+        } else {
+            final LinearLayout container = (LinearLayout) LayoutInflater.from(parent.getContext())
+                    .inflate(R.layout.native_ad_container, parent, false);
+            final View adView = LayoutInflater.from(parent.getContext()).inflate(R.layout.conversation_ad_view, container, false);
+            return new ConversationAdViewHolder(container, adView);
+        }
+    }
+
+    @Override
+    public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
+        if (getItemViewType(position) == TYPE_MESSAGE) {
+            final ConversationMessageView conversationMessageView =
+                    (ConversationMessageView) ((ConversationMessageViewHolder) holder).mView;
+            ImageView checkbox = conversationMessageView.findViewById(R.id.check_box);
+            conversationMessageView.bind((ConversationMessageData) mDataList.get(position), mOneOnOne, multiSelectMode);
+            ConversationMessageData data = conversationMessageView.getData();
+
+            if (multiSelectMode && !ConversationFragment.getSelectMessageIds().isEmpty()) {
+                checkbox.setVisibility(View.VISIBLE);
+                if (ConversationFragment.getSelectMessageIds().contains(data.getMessageId())) {
+                    checkbox.setImageResource(R.drawable.ic_choosen);
+                } else {
+                    checkbox.setImageResource(R.drawable.ic_choose);
+                }
+            } else {
+                checkbox.setVisibility(View.GONE);
+            }
+            ((ConversationMessageViewHolder) holder).bind();
+        } else {
+            AcbNativeAd ad = (AcbNativeAd) mDataList.get(position);
+            if (((ConversationAdViewHolder) holder).alreadyFilled) {
+                return;
+            }
+            ((ConversationAdViewHolder) holder).alreadyFilled = true;
+            AcbNativeAdContainerView adContainerView = ((ConversationAdViewHolder) holder).mAdContentView;
+            adContainerView.hideAdCorner();
+            ((ConversationAdViewHolder) holder).contentBg.setBackground(
+                    ConversationDrawables.get().getBubbleDrawable(false, true, true, false, mConversationId));
+            adContainerView.fillNativeAd(ad);
+        }
+    }
+
+    @Override public int getItemCount() {
+        return mDataList.size();
+    }
+
+    @Override public int getItemViewType(int position) {
+        if (mDataList.get(position) instanceof ConversationMessageData) {
+            return TYPE_MESSAGE;
+        } else {
+            return TYPE_AD;
+        }
+    }
+
+    @Override
+    public long getItemId(int position) {
+        if (mDataList.get(position) instanceof ConversationMessageData) {
+            ConversationMessageData messageData = (ConversationMessageData) mDataList.get(position);
+            return Long.parseLong(messageData.getMessageId());
+        } else {
+            return 0;
+        }
+    }
+
     /**
-    * SmsViewHolder that holds a ConversationMessageView.
-    */
+     * SmsViewHolder that holds a ConversationMessageView.
+     */
     public static class ConversationMessageViewHolder extends RecyclerView.ViewHolder {
         final View mView;
 
@@ -147,8 +204,6 @@ public class ConversationMessageAdapter extends
             mView = itemView;
             mView.setOnClickListener(viewClickListener);
             mView.setOnLongClickListener(viewLongClickListener);
-
-
         }
 
         public void bind() {
@@ -162,6 +217,39 @@ public class ConversationMessageAdapter extends
                     break;
             }
         }
+    }
 
+    public static class ConversationAdViewHolder extends RecyclerView.ViewHolder {
+
+        private AcbNativeAdContainerView mAdContentView;
+        private View contentBg;
+        private boolean alreadyFilled = false;
+
+        public ConversationAdViewHolder(ViewGroup container, View adView) {
+            super(container);
+
+            mAdContentView = new AcbNativeAdContainerView(container.getContext());
+            mAdContentView.addContentView(adView);
+            contentBg = adView.findViewById(R.id.content_container);
+
+            AcbNativeAdIconView icon = ViewUtils.findViewById(adView, R.id.ad_icon);
+            icon.setShapeMode(1);
+            icon.setRadius(Dimensions.pxFromDp(20));
+            mAdContentView.setAdIconView(icon);
+            TextView title = ViewUtils.findViewById(adView, R.id.ad_title);
+            title.setTextColor(ConversationColors.get().getMessageTextColor(true));
+            mAdContentView.setAdTitleView(title);
+            TextView description = ViewUtils.findViewById(adView, R.id.ad_subtitle);
+            description.setTextColor(ConversationColors.get().getMessageTextColor(true));
+            mAdContentView.setAdBodyView(description);
+            TextView actionBtn = ViewUtils.findViewById(adView, R.id.ad_action);
+            actionBtn.setTextColor(ConversationColors.get().getAdActionColor());
+            actionBtn.setBackgroundResource(R.drawable.conversation_ad_action_pressed_bg);
+            ((ImageView) adView.findViewById(R.id.action_bg)).setColorFilter(ConversationColors.get().getAdActionColor(), PorterDuff.Mode.MULTIPLY);
+            mAdContentView.setAdActionView(actionBtn);
+            FrameLayout choice = ViewUtils.findViewById(adView, R.id.ad_choice);
+            mAdContentView.setAdChoiceView(choice);
+            container.addView(mAdContentView);
+        }
     }
 }

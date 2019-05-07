@@ -19,6 +19,7 @@ import android.app.Activity;
 import android.app.Fragment;
 import android.content.Intent;
 import android.database.Cursor;
+import android.graphics.PorterDuff;
 import android.graphics.Rect;
 import android.net.Uri;
 import android.os.Bundle;
@@ -72,6 +73,7 @@ import com.ihs.app.framework.HSApplication;
 import com.ihs.commons.config.HSConfig;
 import com.ihs.commons.notificationcenter.HSGlobalNotificationCenter;
 import com.ihs.commons.utils.HSBundle;
+import com.ihs.commons.utils.HSLog;
 import com.superapps.util.BackgroundDrawables;
 import com.superapps.util.Dimensions;
 import com.superapps.util.IntegerBuckets;
@@ -309,13 +311,13 @@ public class ConversationListFragment extends Fragment implements ConversationLi
             mListState = savedInstanceState.getParcelable(SAVED_INSTANCE_STATE_LIST_VIEW_STATE_KEY);
         }
 
-        mStartNewConversationButton = (ImageView) rootView.findViewById(
+        mStartNewConversationButton = rootView.findViewById(
                 R.id.start_new_conversation_button);
         mStartNewConversationButton.setBackgroundDrawable(BackgroundDrawables.
                 createBackgroundDrawable(PrimaryColors.getEditButtonColor(),
                         Dimensions.pxFromDp(28),
                         true));
-        if (mArchiveMode) {
+        if (mArchiveMode || mForwardMessageMode) {
             mStartNewConversationButton.setVisibility(View.GONE);
         } else {
             mStartNewConversationButton.setVisibility(View.VISIBLE);
@@ -356,7 +358,7 @@ public class ConversationListFragment extends Fragment implements ConversationLi
     private void initAd() {
         adContainer = (ViewGroup) LayoutInflater.from(getActivity()).inflate(R.layout.conversation_list_header, mRecyclerView, false);
         expressAdView = new AcbExpressAdView(HSApplication.getContext(), AdPlacement.AD_BANNER);
-        expressAdView.setCustomLayout(new AcbContentLayout(R.layout.custom_banner)
+        expressAdView.setCustomLayout(new AcbContentLayout(R.layout.item_conversation_list_ad)
                 .setActionId(R.id.banner_action)
                 .setIconId(R.id.banner_icon_image)
                 .setTitleId(R.id.banner_title)
@@ -373,6 +375,8 @@ public class ConversationListFragment extends Fragment implements ConversationLi
                             && ((RelativeLayout) child).getChildAt(0) instanceof AcbNativeAdContainerView) {
                         AcbNativeAdContainerView nativeAdContainerView = (AcbNativeAdContainerView) ((RelativeLayout) child).getChildAt(0);
                         nativeAdContainerView.getChildAt(1).setVisibility(View.GONE);
+                        ImageView ivAdPreview = expressAdView.findViewById(R.id.icon_ad_preview);
+                        ivAdPreview.getDrawable().setColorFilter(ConversationColors.get().getListTimeColor(), PorterDuff.Mode.SRC_ATOP);
                     }
                 } catch (Exception e) {
                 }
@@ -483,7 +487,9 @@ public class ConversationListFragment extends Fragment implements ConversationLi
                 itemData.bind(cursor);
                 if (!itemData.isPrivate()) {
                     dataList.add(itemData);
-                    if (TextUtils.equals(AvatarUriUtil.TYPE_LOCAL_RESOURCE_URI, AvatarUriUtil.getAvatarType(Uri.parse(cursor.getString(INDEX_CONVERSATION_ICON))))) {
+                    if (!TextUtils.isEmpty(cursor.getString(INDEX_CONVERSATION_ICON))
+                            && TextUtils.equals(AvatarUriUtil.TYPE_LOCAL_RESOURCE_URI,
+                            AvatarUriUtil.getAvatarType(Uri.parse(cursor.getString(INDEX_CONVERSATION_ICON))))) {
                         localAvatarCount++;
                     }
                 }
@@ -569,6 +575,7 @@ public class ConversationListFragment extends Fragment implements ConversationLi
 
     // Show and hide empty list UI as needed with appropriate text based on view specifics
     private void updateEmptyListUi(final boolean isEmpty) {
+        HSLog.d("update empty list " + isEmpty);
         if (isEmpty) {
             int emptyListText;
             boolean isFirstSynsCompleted = true;

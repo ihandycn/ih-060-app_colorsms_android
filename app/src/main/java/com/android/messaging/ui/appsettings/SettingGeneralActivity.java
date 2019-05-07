@@ -27,6 +27,7 @@ import com.android.messaging.util.BugleAnalytics;
 import com.android.messaging.util.BuglePrefs;
 import com.android.messaging.util.OsUtil;
 import com.android.messaging.util.UiUtils;
+import com.ihs.app.framework.HSGdprConsent;
 import com.ihs.commons.config.HSConfig;
 import com.superapps.util.Navigations;
 import com.superapps.util.Preferences;
@@ -127,13 +128,14 @@ public class SettingGeneralActivity extends BaseActivity {
                 public void onDismiss(DialogInterface dialog) {
                     updatePrivacyModeSummary();
                 }
+
                 @Override
                 public void onCancel(DialogInterface dialog) {
 
                 }
             });
             UiUtils.showDialogFragment(SettingGeneralActivity.this, dialog);
-            BugleAnalytics.logEvent("SMS_Settings_Privacy_Click");
+
         });
 
         //signature
@@ -232,6 +234,18 @@ public class SettingGeneralActivity extends BaseActivity {
                     false, false);
             startActivity(termsOfServiceIntent);
         });
+
+        // gdpr
+        SettingItemView mGdpr = findViewById(R.id.setting_item_analytics_advertising);
+        mGdpr.setOnItemClickListener(() -> {
+            Navigations.startActivitySafely(SettingGeneralActivity.this,
+                    new Intent(SettingGeneralActivity.this, GDPRSettingsActivity.class));
+        });
+        if (HSGdprConsent.isGdprUser()) {
+            mGdpr.setVisibility(View.VISIBLE);
+        } else {
+            mGdpr.setVisibility(View.GONE);
+        }
     }
 
     public void addBackPressListener(BackPressedListener listener) {

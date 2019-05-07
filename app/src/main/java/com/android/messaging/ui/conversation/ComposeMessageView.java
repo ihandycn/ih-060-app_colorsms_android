@@ -133,11 +133,11 @@ public class ComposeMessageView extends LinearLayout
 
         Uri getSelfSendButtonIconUri();
 
-        int overrideCounterColor();
-
         int getAttachmentsClearedFlags();
 
         boolean isCameraOrGalleryShowing();
+
+        void onClickMediaOrEmoji();
     }
 
     private static final int DISTANCE_SLOP = Dimensions.pxFromDp(90);
@@ -402,6 +402,7 @@ public class ComposeMessageView extends LinearLayout
                 showMediaPicker();
             } else if (isKeyboardVisible()) {
                 mIsMediaPendingShow = true;
+                mHost.onClickMediaOrEmoji();
                 hideKeyboard();
             } else {
                 showMediaPicker();
@@ -464,6 +465,7 @@ public class ComposeMessageView extends LinearLayout
                 showEmojiPicker();
             } else if (isKeyboardVisible()) {
                 mIsEmojiPendingShow = true;
+                mHost.onClickMediaOrEmoji();
                 hideKeyboard();
             } else {
                 showEmojiPicker();

@@ -16,6 +16,7 @@ import android.widget.ImageView;
 
 import com.airbnb.lottie.LottieAnimationView;
 import com.android.messaging.R;
+import com.android.messaging.ui.customize.WallpaperDrawables;
 import com.superapps.util.BackgroundDrawables;
 import com.superapps.util.Dimensions;
 
@@ -85,9 +86,12 @@ public class WallpaperChooserItemView extends FrameLayout {
             mAddPhotosContainer.setVisibility(View.VISIBLE);
             mWallpaperIv.setVisibility(View.GONE);
         } else if (viewType == WallpaperChooserItem.TYPE_EMPTY) {
-            mWallpaperIv.setBackground(BackgroundDrawables.createBackgroundDrawable(
-                    0xffffffff, Dimensions.pxFromDp(3.3f), false
-            ));
+            if (WallpaperDrawables.getWallpaperBg() != null) {
+                mWallpaperIv.setBackground(WallpaperDrawables.getWallpaperBg());
+            } else {
+                mWallpaperIv.setBackground(BackgroundDrawables.createBackgroundDrawable(
+                        0xffffffff, Dimensions.pxFromDp(3.3f), false));
+            }
         } else {
             setThumbnail(item.getThumbnailResId());
         }

@@ -32,7 +32,7 @@
         android:layout_marginTop="13dp"
         android:gravity="center"
         android:includeFontPadding="false"
-        android:text="@string/emoji_get"
+        android:text="@string/sms_emoji_get"
         android:textColor="#FF343433"
         android:textSize="14sp"
         app:typeface="@string/custom_font_semibold"

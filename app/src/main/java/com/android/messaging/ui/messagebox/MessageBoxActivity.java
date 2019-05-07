@@ -13,16 +13,13 @@ import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.LinearLayout;
 
 import com.android.messaging.BuildConfig;
 import com.android.messaging.R;
-import com.android.messaging.datamodel.SyncManager;
-import com.android.messaging.datamodel.action.DeleteMessageAction;
 import com.android.messaging.datamodel.action.MarkAsReadAction;
 import com.android.messaging.datamodel.data.MessageBoxItemData;
-import com.android.messaging.ui.BaseAlertDialog;
 import com.android.messaging.ui.UIIntents;
+import com.android.messaging.ui.appsettings.PrivacyModeSettings;
 import com.android.messaging.ui.customize.theme.ThemeUtils;
 import com.android.messaging.ui.emoji.BaseEmojiInfo;
 import com.android.messaging.ui.emoji.EmojiInfo;
@@ -36,6 +33,7 @@ import com.ihs.commons.notificationcenter.HSGlobalNotificationCenter;
 import com.ihs.commons.notificationcenter.INotificationObserver;
 import com.ihs.commons.utils.HSBundle;
 import com.superapps.util.Dimensions;
+import com.superapps.util.HomeKeyWatcher;
 import com.superapps.util.Threads;
 import com.superapps.util.Toasts;
 import com.superapps.view.ViewPagerFixed;
@@ -45,6 +43,7 @@ import java.util.HashMap;
 import java.util.List;
 
 import static com.android.messaging.ui.UIIntents.UI_INTENT_EXTRA_MESSAGE_BOX_ITEM;
+import static com.android.messaging.ui.messagebox.MessageBoxAnalytics.getConversationType;
 
 public class MessageBoxActivity extends AppCompatActivity implements INotificationObserver,
         View.OnClickListener, ViewPager.OnPageChangeListener {
@@ -52,6 +51,7 @@ public class MessageBoxActivity extends AppCompatActivity implements INotificati
     private static final String BACK = "back";
     private static final String OPEN = "open_btn";
     private static final String HOME = "home";
+    private static final String RECENT = "recent";
     private static final String CLOSE = "close";
     private static final String REPLY = "reply";
     private static final String CLICK_CONTENT = "click_content";
@@ -66,13 +66,19 @@ public class MessageBoxActivity extends AppCompatActivity implements INotificati
     private DynamicalPagerAdapter mPagerAdapter;
     private MessageBoxIndicatorView mIndicator;
     private ViewGroup mEmojiContainer;
-
     private MessageBoxConversationView mCurrentConversationView;
 
     private int mMessagesNum = 1;
     private int mContactsNum = 1;
     private boolean mHasSms;
     private boolean mHasMms;
+    private boolean mHasPrivacyModeConversation;
+
+    private HashMap<String, Boolean> mMarkAsReadMap = new HashMap<>(4);
+    private HashMap<String, MessageBoxItemData> mDataMap = new HashMap<>(4);
+    private ArrayList<String> mConversationIdList = new ArrayList<>(4);
+
+    private HomeKeyWatcher mHomeKeyWatcher;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -93,6 +99,7 @@ public class MessageBoxActivity extends AppCompatActivity implements INotificati
         mPager.addOnPageChangeListener(this);
         mPager.setAdapter(mPagerAdapter);
         initEmojiKeyboradSimulation();
+
 
         mCurrentConversationView = view;
         MessageBoxAnalytics.setIsMultiConversation(false);
@@ -116,6 +123,24 @@ public class MessageBoxActivity extends AppCompatActivity implements INotificati
                 mIndicator.updateIndicator(mPager.getCurrentItem(), mPagerAdapter.getCount());
             }
         });
+
+        mConversationIdList.add(data.getConversationId());
+        mDataMap.put(data.getConversationId(), data);
+        mHasPrivacyModeConversation = PrivacyModeSettings.getPrivacyMode(data.getConversationId()) != PrivacyModeSettings.NONE;
+        mHomeKeyWatcher = new HomeKeyWatcher(this);
+        mHomeKeyWatcher.setOnHomePressedListener(new HomeKeyWatcher.OnHomePressedListener() {
+            @Override
+            public void onHomePressed() {
+                finish(HOME);
+            }
+
+            @Override
+            public void onRecentsPressed() {
+                finish(RECENT);
+            }
+        });
+
+        BugleAnalytics.logEvent("SMS_PopUp_Show", false, true);
     }
 
 
@@ -148,9 +173,12 @@ public class MessageBoxActivity extends AppCompatActivity implements INotificati
             MessageBoxAnalytics.setIsMultiConversation(true);
             mContactsNum++;
             mIndicator.updateIndicator(mPager.getCurrentItem(), mPagerAdapter.getCount());
+
+            mDataMap.put(data.getConversationId(), data);
+            mConversationIdList.add(data.getConversationId());
         }
         mMessagesNum++;
-
+        mHasPrivacyModeConversation |= PrivacyModeSettings.getPrivacyMode(data.getConversationId()) != PrivacyModeSettings.NONE;
         recordMessageType(data);
     }
 
@@ -161,6 +189,7 @@ public class MessageBoxActivity extends AppCompatActivity implements INotificati
             mCurrentConversationView.updateTimestamp();
         }
         mCurrentConversationView.requestEditTextFocus();
+        mCurrentConversationView.post(this::reLayoutIndicatorView);
     }
 
     private boolean mLogScrollPaged;
@@ -239,7 +268,9 @@ public class MessageBoxActivity extends AppCompatActivity implements INotificati
             case R.id.action_open:
                 UIIntents.get().launchConversationActivityWithParentStack(this, mCurrentConversationView.getConversationId(), null);
                 finish(OPEN);
-                MessageBoxAnalytics.logEvent("SMS_PopUp_Open_Click");
+                BugleAnalytics.logEvent("SMS_PopUp_Open_Click",
+                        false, true, "type", getConversationType(),
+                        "privacyMode", String.valueOf(mHasPrivacyModeConversation));
                 break;
             case R.id.self_send_icon:
                 mCurrentConversationView.replyMessage();
@@ -265,6 +296,10 @@ public class MessageBoxActivity extends AppCompatActivity implements INotificati
         adjustKeyboardGuideline(true);
         mEmojiContainer.setVisibility(View.VISIBLE);
         mEmojiContainer.post(this::reLayoutIndicatorView);
+    }
+
+    void markAsRead(String mConversationId) {
+        mMarkAsReadMap.put(mConversationId, true);
     }
 
     private void adjustKeyboardGuideline(boolean showEmoji) {
@@ -318,6 +353,9 @@ public class MessageBoxActivity extends AppCompatActivity implements INotificati
     }
 
     private void finish(String source) {
+        if (isFinishing()) {
+            return;
+        }
         finish();
         overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
         if (MessageBoxAnalytics.getIsMultiConversation()) {
@@ -341,6 +379,16 @@ public class MessageBoxActivity extends AppCompatActivity implements INotificati
         super.onDestroy();
         HSGlobalNotificationCenter.removeObserver(this);
 
+        for (String conversationId : mConversationIdList) {
+            Boolean markAsRead = mMarkAsReadMap.get(conversationId);
+            if (markAsRead != null) {
+                if (markAsRead) {
+                    MessageBoxItemData data = mDataMap.get(conversationId);
+                    MarkAsReadAction.markAsRead(conversationId, data.getParticipantId(), data.getReceivedTimestamp());
+                }
+            }
+        }
+
         String messageType = "";
         if (mHasMms) {
             messageType += "mms";
@@ -353,10 +401,16 @@ public class MessageBoxActivity extends AppCompatActivity implements INotificati
                 "msgNum", String.valueOf(mMessagesNum),
                 "contactNum", String.valueOf(mContactsNum),
                 "message type", messageType,
-                "withTheme", String.valueOf(!ThemeUtils.isDefaultTheme()));
+                "withTheme", String.valueOf(!ThemeUtils.isDefaultTheme()),
+                "privacyMode", String.valueOf(mHasPrivacyModeConversation));
+
         if (mContactsNum > 1) {
             BugleAnalytics.logEvent("SMS_PopUp_MultiUser_Show", false, true);
         }
-
+        if (mHasPrivacyModeConversation) {
+            MessageBoxAnalytics.logEvent("SMS_PrivacyPopUp_Show");
+        }
+        mHomeKeyWatcher.stopWatch();
+        mHomeKeyWatcher = null;
     }
 }

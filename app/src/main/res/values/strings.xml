@@ -219,6 +219,12 @@
         <item quantity="other"><xliff:g id="messages">%d</xliff:g> new messages</item>
     </plurals>
 
+    <plurals name="notification_title_in_privacy_mode">
+        <item quantity="one">New message</item>
+        <item quantity="other">%1$d unread messages</item>
+    </plurals>
+    <string name="notification_sender_in_privacy_mode">Contact</string>
+
     <!-- Text for starting a new conversation button in the compose UI -->
 
     <string name="camera_error_opening">Camera not available</string>
@@ -924,25 +930,24 @@
     <string name="selected_sim_content_message"><xliff:g id="selected_sim">%s</xliff:g> selected</string>
 
     <string name="action_bar_title_typeface" translatable="false">Montserrat-SemiBold.ttf</string>
-    <string name="network_error">Network error.</string>
+    <string name="sms_network_error">Network error.</string>
     <string name="sticker_send_msg">SELECT</string>
     <string name="media_picker_camera">Camera</string>
     <string name="media_picker_photo">Photo</string>
     <string name="media_picker_voice">Voice</string>
-
     <string name="dialog_add_contact_confirmation">Add</string>
-    <string name="emoji_store_title">Emoji Store</string>
-    <string name="emoji_get">GET</string>
-    <string name="emoji_added">ADDED</string>
-    <string name="emoji_add_more">More emojis</string>
-    <string name="emoji_recent_empty_description">Click an emoji to share with friends.</string>
+    <string name="sms_emoji_store_title">Emoji Store</string>
+    <string name="sms_emoji_get">GET</string>
+    <string name="sms_emoji_added">ADDED</string>
+    <string name="sms_emoji_add_more">More emojis</string>
+    <string name="sms_emoji_recent_empty_description">Click an emoji to share with friends.</string>
 
     <!--sms show-->
     <string name="sms_show_apply">APPLY</string>
     <string name="sms_show_current_theme">CURRENT THEME</string>
 
     <!-- Welcome-->
-    <string name="welcome_start_button">START</string>
+    <string name="sms_welcome_start_button">START</string>
     <string name="welcome_start_service">Terms of Service</string>
     <string name="welcome_start_and" translatable="false">&#038;</string>
     <string name="welcome_start_policy">Privacy Policy</string>
@@ -975,31 +980,32 @@
     <string name="reload">Reload</string>
 
     <!-- 5-star rating -->
-    <string name="five_star_hint_text">How was your experience with us?</string>
-    <string name="five_star_positive_text">SUBMIT</string>
-    <string name="five_star_one_text">Hated it</string>
-    <string name="five_star_two_text">Disliked it</string>
-    <string name="five_star_three_text">It was OK</string>
-    <string name="five_star_four_text">Liked it</string>
-    <string name="five_star_five_text">Loved it</string>
+    <string name="sms_five_star_hint_text">How was your experience with us?</string>
+    <string name="sms_five_star_positive_text">SUBMIT</string>
+    <string name="message_five_star_one_text">Hated it</string>
+    <string name="message_five_star_two_text">Disliked it</string>
+    <string name="message_five_star_three_text">It was OK</string>
+    <string name="message_five_star_four_text">Liked it</string>
+    <string name="message_five_star_five_text">Loved it</string>
 
-    <string name="loved_it_desc">Thanks! Please rate with words like Nice, Useful, Stylish…</string>
-    <string name="liked_it_desc">Please tell us what you dislike. We will try our best to improve it!</string>
-    <string name="five_star_rate">Scroll up to rate 5 stars.</string>
+    <string name="sms_loved_it_desc">Thanks! Please rate with words like Nice, Useful, Stylish…</string>
+    <string name="sms_liked_it_desc">Please tell us what you dislike. We will try our best to improve it!</string>
+    <string name="sms_five_star_rate">Scroll up to rate 5 stars.</string>
 
     <!-- Feedback -->
-    <string name="feedback_title">Feedback</string>
-    <string name="feedback_content_placeholder">" Your feedback helps us make improvements"</string>
-    <string name="feedback_email_placeholder">" Please enter your email address"</string>
-    <string name="feedback_submit_btn">SEND</string>
-    <string name="feedback_toast_empty_content">Please write your feedback</string>
-    <string name="feedback_toast_invalid_email">Please enter a valid email address</string>
-    <string name="feedback_toast_send_success">Thanks for your feedback!</string>
+    <string name="sms_feedback_title">Feedback</string>
+    <string name="sms_feedback_content_placeholder">" Your feedback helps us make improvements"</string>
+    <string name="sms_feedback_email_placeholder">" Please enter your email address"</string>
+    <string name="sms_feedback_submit_btn">SEND</string>
+    <string name="sms_feedback_toast_empty_content">Please write your feedback</string>
+    <string name="sms_feedback_toast_invalid_email">Please enter a valid email address</string>
+    <string name="sms_feedback_toast_send_success">Thanks for your feedback!</string>
 
     <!--Setting-->
     <string name="setting_feedback">Feedback</string>
     <string name="setting_privacy_policy">Privacy Policy</string>
     <string name="setting_terms_of_service">Terms of Service</string>
+    <string name="setting_gdpr">Analytics &amp; Advertising</string>
     <string name="setting_text_font">Font</string>
     <string name="setting_text_size">Font Size</string>
     <string name="setting_text_size_hint_larger">Largest</string>
@@ -1017,6 +1023,11 @@
     <string name="setting_sms_show_close_dialog_title">Confirm to turn off?</string>
     <string name="setting_sms_show_close_dialog_content">You will lose the beautiful SMS reminder themes, really want to close it?</string>
     <string name="setting_sms_show_close_dialog_ok">OK</string>
+
+    <string name="gdpr_share_data">Share data with developers</string>
+    <string name="gdpr_dialog_title">Confirm to turn off?</string>
+    <string name="gdpr_dialog_content">These data are collected and used to help the developer improve the apps for better using experience.</string>
+    <string name="restarting">Restarting</string>
 
     <!--notification channel-->
     <string name="sms_notification_channel">SMS Notification</string>
@@ -1060,7 +1071,7 @@
     <string name="set_as_default_dialog_title_user_present">Set Color SMS as Default</string>
     <string name="set_as_default_dialog_description_user_present">Send funny emojis, stickers and GIFs to friends via Color SMS.</string>
     <string name="set_as_default_dialog_button_ok_user_present">OK</string>
-    <string name="got_it">Got it</string>
+    <string name="sms_got_it">Got it</string>
     <string name="drag_hotseat_content">Easier for you to send funny emojis and stickers via Color SMS.</string>
     <string name="drag_hotseat_title">Drag Color SMS to the Hotseat</string>
 
@@ -1071,7 +1082,6 @@
     <string name="wallpaper_add_photos">Add Photos</string>
 
     <string name="messages">Messages</string>
-
     <string name="message_box_next_num" translatable="false">(%1$d)</string>
     <string name="message_box_reply_hint">" REPLY"</string>
     <string name="message_box_reply">REPLY</string>
@@ -1099,7 +1109,7 @@
     <string name="privacy_mode_hide_message_only">Hide message only</string>
     <string name="privacy_mode_hide_contact_and_message">Hide contact and message</string>
     <string name="privacy_mode_show_messages">SHOW MESSAGES</string>
-    <string name="privacy_mode_conversation_name">****</string>
+    <string name="privacy_mode_conversation_name">Contact</string>
     <string name="privacy_mode_open_button_text">OPEN</string>
 
     <string name="menu_privacy_box">Private Box</string>
@@ -1112,13 +1122,13 @@
     <string name="create_shortcut_guide_title">Create a Shortcut</string>
     <string name="create_shortcut_guide_content">To enjoy better SMS, create a shortcut like the system SMS.</string>
 
-    <string name="welcome_viewpager_item_title_0" translatable="false">1000+ Emojis</string>
-    <string name="welcome_viewpager_item_title_1">Fully Customizable</string>
-    <string name="welcome_viewpager_item_title_2">More Features</string>
-    <string name="welcome_viewpager_item_body_0">Stand out among your social group!</string>
-    <string name="welcome_viewpager_item_body_1">Decorate your chat the way you like.</string>
-    <string name="welcome_viewpager_item_body_2">Come and try a bunch of great features.</string>
-    <string name="welcome_set_as_default_title">To make Color SMS work properly with cool features, it needs to be the default SMS app.</string>
+    <string name="message_welcome_viewpager_item_title_0" translatable="false">1000+ Emojis</string>
+    <string name="message_welcome_viewpager_item_title_1">Fully Customizable</string>
+    <string name="message_welcome_viewpager_item_title_2">More Features</string>
+    <string name="message_welcome_viewpager_item_body_0">Stand out among your social group!</string>
+    <string name="message_welcome_viewpager_item_body_1">Decorate your chat the way you like.</string>
+    <string name="message_welcome_viewpager_item_body_2">Come and try a bunch of great features.</string>
+    <string name="message_welcome_set_as_default_title">To make Color SMS work properly with cool features, it needs to be the default SMS app.</string>
 
     <string name="action_pin">Pin to Top</string>
     <string name="reset_password">Reset Password</string>
@@ -1165,4 +1175,6 @@
     <string name="welcome_choose_theme_title">Choose a Theme You Like</string>
     <string name="welcome_choose_theme_current">Current</string>
     <string name="apply_theme_success">Apply Success</string>
+
+    <string name="set_as_default_success">Changed Successfully</string>
 </resources>

@@ -44,18 +44,15 @@ public class MessageBoxIndicatorView extends LinearLayout {
         mRightIndicator = findViewById(R.id.right_indicator);
 
         int[][] states = new int[][]{
+                new int[]{android.R.attr.state_pressed},
                 new int[]{android.R.attr.state_enabled},
                 new int[]{-android.R.attr.state_enabled},
-                new int[]{-android.R.attr.state_pressed},
-                new int[]{android.R.attr.state_pressed}
         };
 
         int[] colors = new int[]{
-                Color.WHITE,
                 getResources().getColor(R.color.white_40_transparent),
                 Color.WHITE,
                 getResources().getColor(R.color.white_40_transparent),
-
         };
         ColorStateList state = new ColorStateList(states, colors);
         mLeftIndicator.setSupportImageTintList(state);

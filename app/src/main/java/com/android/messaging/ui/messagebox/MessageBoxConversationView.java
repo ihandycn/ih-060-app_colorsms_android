@@ -6,13 +6,12 @@ import android.animation.ValueAnimator;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
-import android.content.res.ColorStateList;
 import android.graphics.Color;
 import android.graphics.Rect;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.support.annotation.ColorInt;
-import android.support.v7.widget.AppCompatImageView;
+import android.support.annotation.NonNull;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.telephony.TelephonyManager;
@@ -37,9 +36,9 @@ import com.android.messaging.ui.appsettings.PrivacyModeSettings;
 import com.android.messaging.ui.customize.ConversationColors;
 import com.android.messaging.ui.customize.PrimaryColors;
 import com.android.messaging.ui.customize.ToolbarDrawables;
+import com.android.messaging.ui.customize.WallpaperDrawables;
 import com.android.messaging.ui.customize.theme.ThemeUtils;
 import com.android.messaging.ui.emoji.EmojiInfo;
-import com.android.messaging.ui.wallpaper.WallpaperManager;
 import com.android.messaging.util.BugleAnalytics;
 import com.android.messaging.util.Dates;
 import com.android.messaging.util.ImeUtil;
@@ -48,6 +47,7 @@ import com.superapps.util.BackgroundDrawables;
 import com.superapps.util.Dimensions;
 
 import static com.android.messaging.datamodel.NoConfirmationSmsSendService.EXTRA_SELF_ID;
+import static com.android.messaging.ui.appsettings.PrivacyModeSettings.NONE;
 
 public class MessageBoxConversationView extends FrameLayout {
 
@@ -114,8 +114,17 @@ public class MessageBoxConversationView extends FrameLayout {
         mParticipantId = data.getParticipantId();
         inflatePrivacyModePageIfNeeded();
 
+        if (PrivacyModeSettings.getPrivacyMode(mConversationId) == NONE) {
+            markAsRead();
+        }
+
         ImageView background = findViewById(R.id.message_background);
-        WallpaperManager.setWallPaperOnView(background, mConversationId);
+        Drawable wallpaperDrawable = WallpaperDrawables.getListWallpaperBg();
+        if (wallpaperDrawable != null) {
+            background.setImageDrawable(wallpaperDrawable);
+        } else {
+            background.setImageDrawable(null);
+        }
     }
 
     void requestEditTextFocus() {
@@ -129,6 +138,7 @@ public class MessageBoxConversationView extends FrameLayout {
     void addNewMessage(MessageBoxItemData data) {
         mAdapter.addNewIncomingMessage(data);
         mRecyclerView.scrollToPosition(mAdapter.getItemCount() - 1);
+        updatePrivacyTitleAndTimestamp();
     }
 
     int getContentHeight() {
@@ -146,7 +156,7 @@ public class MessageBoxConversationView extends FrameLayout {
         ImageView background = findViewById(R.id.action_bar_simulation_background);
         Drawable toolbarBg = ToolbarDrawables.getToolbarBg();
         if (toolbarBg != null) {
-            background.setImageDrawable(toolbarBg);
+            background.setImageDrawable(toolbarBg.mutate());
         } else {
             background.setImageDrawable(new ColorDrawable(mPrimaryColor));
         }
@@ -256,7 +266,7 @@ public class MessageBoxConversationView extends FrameLayout {
         showMessageTextView.setOnClickListener(v -> {
             revealMessages();
             showMessageTextView.setClickable(false);
-            BugleAnalytics.logEvent("SMS_PrivacyPopUp_Show_Click");
+            MessageBoxAnalytics.logEvent("SMS_PrivacyPopUp_Show_Click");
         });
 
         if (hideContactForThisMessage()) {
@@ -320,6 +330,25 @@ public class MessageBoxConversationView extends FrameLayout {
             mConversationName.setVisibility(VISIBLE);
             mConversationName.animate().alpha(1f).setDuration(200L).start();
         }
+        markAsRead();
+    }
+
+    @Override
+    protected void onVisibilityChanged(@NonNull View changedView, int visibility) {
+        super.onVisibilityChanged(changedView, visibility);
+
+        if (visibility == VISIBLE) {
+            if (PrivacyModeSettings.getPrivacyMode(mConversationId) == NONE) {
+                markAsRead();
+            }
+        }
+
+    }
+
+    void markAsRead() {
+        if (!TextUtils.isEmpty(mConversationId)) {
+            mActivity.markAsRead(mConversationId);
+        }
     }
 
     private boolean hideContactForThisMessage() {
@@ -327,7 +356,7 @@ public class MessageBoxConversationView extends FrameLayout {
     }
 
     private boolean hideMessagesForThisMessage() {
-        return PrivacyModeSettings.getPrivacyMode(mConversationId) != PrivacyModeSettings.NONE;
+        return PrivacyModeSettings.getPrivacyMode(mConversationId) != NONE;
     }
 
     private static class MessageItemDecoration extends RecyclerView.ItemDecoration {

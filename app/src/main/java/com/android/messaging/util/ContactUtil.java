@@ -547,6 +547,10 @@ public class ContactUtil {
         return OsUtil.hasPermission(Manifest.permission.READ_CONTACTS);
     }
 
+    public static boolean hasWriteContactsPermission() {
+        return OsUtil.hasPermission(Manifest.permission.WRITE_CONTACTS);
+    }
+
     private static Uri buildDirectorySearchUri(final Uri uri, final String query,
             final long directoryId) {
         return uri.buildUpon()

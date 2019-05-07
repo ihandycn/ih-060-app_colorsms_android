@@ -18,7 +18,6 @@ package com.android.messaging.ui.conversation;
 import android.animation.LayoutTransition;
 import android.content.Context;
 import android.content.res.Resources;
-import android.database.Cursor;
 import android.graphics.Color;
 import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
@@ -138,7 +137,7 @@ public class ConversationMessageView extends RelativeLayout implements View.OnCl
 
         mContactIconView = findViewById(R.id.conversation_icon);
         mContactIconBg = findViewById(R.id.conversation_icon_bg);
-        mContactIconBg.setImageDrawable(AvatarBgDrawables.getAvatarBg());
+        mContactIconBg.setImageDrawable(AvatarBgDrawables.getAvatarBg(false));
         mContactIconContainer = findViewById(R.id.conversation_icon_container);
         mContactIconView.setOnLongClickListener(view -> {
             ConversationMessageView.this.performLongClick();
@@ -270,15 +269,14 @@ public class ConversationMessageView extends RelativeLayout implements View.OnCl
     /**
      * Fills in the data associated with this view.
      *
-     * @param cursor   The cursor from a MessageList that this view is in, pointing to its entry.
      * @param oneOnOne Whether this is a 1:1 conversation
      */
-    public void bind(final Cursor cursor,
+    public void bind(final ConversationMessageData data,
                      final boolean oneOnOne, boolean isMultiSelected) {
         mOneOnOne = oneOnOne;
 
         // Update our UI model
-        mData.bind(cursor);
+        mData = data;
         // Update text and image content for the view.
         updateViewContent();
 

@@ -1,9 +1,7 @@
-package com.android.messaging.ui.appsettings;
+package com.android.messaging.font;
 
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
-import android.text.TextUtils;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
@@ -11,15 +9,12 @@ import android.widget.TextView;
 
 import com.android.messaging.BaseActivity;
 import com.android.messaging.R;
-import com.android.messaging.font.ChangeFontUtils;
 import com.android.messaging.ui.customize.CustomMessagePreviewView;
 import com.android.messaging.ui.view.LevelSeekBar;
 import com.android.messaging.ui.wallpaper.WallpaperManager;
 import com.android.messaging.util.BugleAnalytics;
 import com.android.messaging.util.UiUtils;
 import com.superapps.font.FontStyleManager;
-
-import java.io.File;
 
 public class ChangeFontActivity extends BaseActivity implements LevelSeekBar.OnLevelChangeListener {
 
@@ -66,9 +61,8 @@ public class ChangeFontActivity extends BaseActivity implements LevelSeekBar.OnL
         View changeFontItem = findViewById(R.id.change_font_item);
 
         mPrefFontLevel = FontStyleManager.getInstance().getFontScaleLevel();
-        String fontFamily = FontStyleManager.getInstance().getFontFamily();
 
-        mTextFontFamily.setText(fontFamily);
+        mTextFontFamily.setText(formatString(FontStyleManager.getInstance().getFontFamily()));
         mTextFontSize.setText(getResources().getString(sTextSizeRes[mPrefFontLevel]));
         mSeekBar.setOnLevelChangeListener(this);
         mSeekBar.setLevel(mPrefFontLevel);
@@ -131,7 +125,29 @@ public class ChangeFontActivity extends BaseActivity implements LevelSeekBar.OnL
     }
 
     public void onFontChange() {
-        mTextFontFamily.setText(FontStyleManager.getInstance().getFontFamily());
+        mTextFontFamily.setText(formatString(FontStyleManager.getInstance().getFontFamily()));
         ChangeFontUtils.changeFontTypeface(mChangeFontContainer, FontStyleManager.getInstance().getFontFamily());
+    }
+
+    private String formatString(String str) {
+        char[] chs = str.toCharArray();
+        if (chs[0] <= 'z' && chs[0] >= 'a') {
+            chs[0] += 'A' - 'a';
+        }
+
+        for (int i = 0; i < chs.length; i++) {
+            if (chs[i] == '_' || chs[i] == '-') {
+                chs[i] = ' ';
+            }
+
+            if (i < chs.length - 1) {
+                if ((chs[i] <= '9' && chs[i] >= '0') || chs[i] == ' ') {
+                    if (i + 1 < chs.length && chs[i + 1] <= 'z' && chs[i + 1] >= 'a') {
+                        chs[i + 1] += 'A' - 'a';
+                    }
+                }
+            }
+        }
+        return String.valueOf(chs);
     }
 }

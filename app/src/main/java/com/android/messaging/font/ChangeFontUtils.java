@@ -6,14 +6,22 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.android.messaging.Factory;
+import com.android.messaging.util.CommonUtils;
 import com.ihs.commons.utils.HSLog;
 import com.superapps.font.FontUtils;
 import com.superapps.view.MessagesTextView;
 
+import java.io.File;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
+import java.util.HashMap;
+import java.util.Map;
+
+import static com.android.messaging.font.FontDownloadManager.LOCAL_DIRECTORY;
+import static com.superapps.font.FontUtils.sSupportGoogleFonts;
 
 public class ChangeFontUtils {
+    public static Map<String, Typeface> sTypefaceMap = new HashMap<>();
 
     public static void changeFontSize(View view, float scale) {
         if (view instanceof MessagesTextView) {
@@ -42,10 +50,16 @@ public class ChangeFontUtils {
         textView.setTextScale(mScale);
     }
 
+    public static void changeFontTypeface(View view, String typename) {
+        loadAndChangeFontTypeface(view, typename);
+        sTypefaceMap.clear();
+    }
 
-    public static void changeFontTypeface(View view, String typeName) {
+    private static void loadAndChangeFontTypeface(View view, String typeName) {
         if (view instanceof MessagesTextView) {
-            changeTypeface((MessagesTextView) view, typeName);
+            if (((MessagesTextView) view).getText().length() > 0) {
+                changeTypeface((MessagesTextView) view, typeName);
+            }
         } else {
             if (view instanceof RecyclerView) {
                 clearRecyclerView((RecyclerView) view);
@@ -54,7 +68,7 @@ public class ChangeFontUtils {
             if (view instanceof ViewGroup) {
                 ViewGroup viewGroup = (ViewGroup) view;
                 for (int i = 0; i < viewGroup.getChildCount(); i++) {
-                    changeFontTypeface(viewGroup.getChildAt(i), typeName);
+                    loadAndChangeFontTypeface(viewGroup.getChildAt(i), typeName);
                 }
             }
         }
@@ -63,29 +77,72 @@ public class ChangeFontUtils {
     private static void changeTypeface(MessagesTextView textView, String typeName) {
         if (textView.fontFamilyChangeable()) {
             int weight = textView.getFontWeight();
-            if (typeName.equals(FontUtils.MESSAGE_FONT_FAMILY_DEFAULT_VALUE)) {
-                typeName = "Custom";
-            }
+            String weightStr;
             switch (weight) {
-                case 100:
-                case 300:
-                case 400:
-                    Typeface tp = Typeface.createFromAsset(Factory.get().getApplicationContext().getAssets(),
-                            "fonts/" + typeName + "-Regular.ttf");
-                    textView.setTypeface(tp);
+                case FontUtils.MEDIUM:
+                    weightStr = "Medium.ttf";
                     break;
-                case 500:
-                    Typeface tp1 = Typeface.createFromAsset(Factory.get().getApplicationContext().getAssets(),
-                            "fonts/" + typeName + "-Medium.ttf");
-                    textView.setTypeface(tp1);
+                case FontUtils.SEMI_BOLD:
+                case FontUtils.BOLD:
+                case FontUtils.BLACK:
+                    weightStr = "Semibold.ttf";
                     break;
-                case 600:
-                case 700:
-                case 900:
-                    Typeface tp2 = Typeface.createFromAsset(Factory.get().getApplicationContext().getAssets(),
-                            "fonts/" + typeName + "-Semibold.ttf");
-                    textView.setTypeface(tp2);
+                default:
+                    weightStr = "Regular.ttf";
+            }
+
+            if (sTypefaceMap.containsKey(weightStr)) {
+                if (sTypefaceMap.get(weightStr) != null) {
+                    textView.setTypeface(sTypefaceMap.get(weightStr));
+                }
+                return;
+            }
+
+            boolean isLocalFont = false;
+            for (String s : sSupportGoogleFonts) {
+                if (s.equals(typeName)) {
+                    isLocalFont = true;
                     break;
+                }
+            }
+            //local fonts
+            if (isLocalFont) {
+                if (typeName.equals(FontUtils.MESSAGE_FONT_FAMILY_DEFAULT_VALUE)) {
+                    typeName = "Custom";
+                }
+
+                Typeface tp = Typeface.createFromAsset(Factory.get().getApplicationContext().getAssets(),
+                        "fonts/" + typeName + "-" + weightStr);
+                sTypefaceMap.put(weightStr, tp);
+                textView.setTypeface(tp);
+
+            } else {
+                File file;
+                switch (weightStr) {
+                    case "Medium.ttf":
+                        file = new File(CommonUtils.getDirectory(LOCAL_DIRECTORY + typeName), "Medium.ttf");
+                        if (file.exists()) {
+                            break;
+                        }
+                    case "Semibold.ttf":
+                        file = new File(CommonUtils.getDirectory(LOCAL_DIRECTORY + typeName), "SemiBold.ttf");
+                        if (file.exists()) {
+                            break;
+                        }
+                    default:
+                        file = new File(CommonUtils.getDirectory(LOCAL_DIRECTORY + typeName), "Regular.ttf");
+                }
+
+                if (file.exists()) {
+                    Typeface tp = null;
+                    try {
+                        tp = Typeface.createFromFile(file);
+                        textView.setTypeface(tp);
+                    } catch (Exception e) {
+
+                    }
+                    sTypefaceMap.put(weightStr, tp);
+                }
             }
         }
     }

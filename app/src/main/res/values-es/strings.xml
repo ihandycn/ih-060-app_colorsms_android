@@ -458,25 +458,25 @@
     <string name="link_display_format" msgid="8700344957248709584">"<xliff:g id="TEXT">%1$s</xliff:g> (<xliff:g id="URL">%2$s</xliff:g>)"</string>
     <string name="selected_sim_content_message" msgid="4504796674843354505">"<xliff:g id="SELECTED_SIM">%s</xliff:g> seleccionada"</string>
 
-    <string name="five_star_hint_text">¿Cómo valoras tu experiencia con nosotros?</string>
-    <string name="five_star_five_text">Me encantó</string>
-    <string name="five_star_four_text">Me gustó</string>
-    <string name="five_star_three_text">Estuvo bien</string>
-    <string name="five_star_two_text">No me gustó</string>
-    <string name="five_star_one_text">Horrible</string>
-    <string name="five_star_positive_text">Enviar</string>
+    <string name="sms_five_star_hint_text">¿Cómo valoras tu experiencia con nosotros?</string>
+    <string name="message_five_star_five_text">Me encantó</string>
+    <string name="message_five_star_four_text">Me gustó</string>
+    <string name="message_five_star_three_text">Estuvo bien</string>
+    <string name="message_five_star_two_text">No me gustó</string>
+    <string name="message_five_star_one_text">Horrible</string>
+    <string name="sms_five_star_positive_text">Enviar</string>
 
-    <string name="loved_it_desc">¡Gracias! Valóranos con palabras como genial, útil, elegante…</string>
-    <string name="liked_it_desc">Dinos qué es lo que no te gusta. ¡Haremos lo que podamos para mejorarlo!</string>
-    <string name="five_star_rate">Desliza hacia arriba para valorar con 5 estrellas.</string>
+    <string name="sms_loved_it_desc">¡Gracias! Valóranos con palabras como genial, útil, elegante…</string>
+    <string name="sms_liked_it_desc">Dinos qué es lo que no te gusta. ¡Haremos lo que podamos para mejorarlo!</string>
+    <string name="sms_five_star_rate">Desliza hacia arriba para valorar con 5 estrellas.</string>
 
-    <string name="feedback_title">Comentarios</string>
-    <string name="feedback_content_placeholder">" Tus comentarios nos ayudan a mejorar"</string>
-    <string name="feedback_email_placeholder">" Escribe tu dirección de email"</string>
-    <string name="feedback_submit_btn">Enviar</string>
-    <string name="feedback_toast_empty_content">Escribe tu comentario</string>
-    <string name="feedback_toast_invalid_email">Introduce una dirección de email válida</string>
-    <string name="feedback_toast_send_success">¡Gracias por tu comentario!</string>
+    <string name="sms_feedback_title">Comentarios</string>
+    <string name="sms_feedback_content_placeholder">" Tus comentarios nos ayudan a mejorar"</string>
+    <string name="sms_feedback_email_placeholder">" Escribe tu dirección de email"</string>
+    <string name="sms_feedback_submit_btn">Enviar</string>
+    <string name="sms_feedback_toast_empty_content">Escribe tu comentario</string>
+    <string name="sms_feedback_toast_invalid_email">Introduce una dirección de email válida</string>
+    <string name="sms_feedback_toast_send_success">¡Gracias por tu comentario!</string>
 
     <string name="setting_sms_show">Espectáculo SMS</string>
     <string name="setting_sms_show_close_dialog_content">Perderás los fantásticos temas de recordatorio de SMS. ¿Quieres cerrar?</string>
@@ -508,22 +508,22 @@
     <string name="welcome_set_default_button">ACEPTAR</string>
     <string name="welcome_start_policy">Política de privacidad</string>
     <string name="welcome_start_service">Términos de servicios</string>
-    <string name="emoji_get">OBTENER</string>
-    <string name="emoji_added">AÑADIDO</string>
-    <string name="emoji_store_title">Tienda de emojis</string>
+    <string name="sms_emoji_get">OBTENER</string>
+    <string name="sms_emoji_added">AÑADIDO</string>
+    <string name="sms_emoji_store_title">Tienda de emojis</string>
     <string name="setting_sms_show_close_dialog_ok">ACEPTAR</string>
 
     <string name="welcome_permission_contacts_title">Contactos</string>
-    <string name="welcome_start_button">EMPEZAR</string>
+    <string name="sms_welcome_start_button">EMPEZAR</string>
     <string name="welcome_permission_phone_title">Teléfono</string>
     <string name="sms_show_apply">Aplicar</string>
     <string name="media_picker_camera">Cámara</string>
     <string name="media_picker_photo">Fotografía</string>
     <string name="welcome_permission_button">PERMITIR</string>
     <string name="setting_sms_show_close_dialog_title">¿Confirmas que quieres desactivar?</string>
-    <string name="emoji_recent_empty_description">No hay favoritos</string>
+    <string name="sms_emoji_recent_empty_description">No hay favoritos</string>
 
-    <string name="emoji_add_more">Más emojis</string>
+    <string name="sms_emoji_add_more">Más emojis</string>
 
     <string name="sms_show_current_theme">Tema actual</string>
 
@@ -569,10 +569,10 @@
     <string name="drag_hotseat_title">Arrastra Color SMS a la barra principal.</string>
     <string name="drag_hotseat_content">Te resultará más fácil enviar emojis y pegatinas divertidas a tus amigos por Color SMS.</string>
     <string name="set_as_default_dialog_button_ok_default_change">Establecer ahora</string>
-    <string name="got_it">Entendido</string>
+    <string name="sms_got_it">Entendido</string>
     <string name="welcome_set_default_failed_toast">Color SMS no se estableció correctamente.</string>
     <string name="dialog_add_contact_confirmation">Añadir</string>
-    <string name="network_error">Error de red.</string>
+    <string name="sms_network_error">Error de red.</string>
     <string name="reload">Recargar</string>
     <string name="sms_notification_channel">Notificación SMS</string>
     <string name="sms_notification_channel_description">Muestra una notificación cuando se recibe un SMS.</string>
@@ -614,12 +614,12 @@
     <string name="create_shortcut_guide_title">Crea un atajo</string>
     <string name="create_shortcut_guide_content">Para disfrutar de mejores SMS, cree un acceso directo como el sistema SMS.</string>
 
-	<string name="welcome_viewpager_item_body_0">¡Llama la atención dentro de tu grupo social!</string>
-	<string name="welcome_viewpager_item_title_1">Totalmente personalizable</string>
-	<string name="welcome_viewpager_item_body_1">Decora tu chat como más te guste.</string>
-	<string name="welcome_viewpager_item_title_2">Más características</string>
-	<string name="welcome_viewpager_item_body_2">Ven y prueba un montón de características nuevas.</string>
-	<string name="welcome_set_as_default_title">Establece Color SMS como aplicación de SMS predeterminada. Es obligatorio para poder enviar y recibir SMS.</string>
+	<string name="message_welcome_viewpager_item_body_0">¡Llama la atención dentro de tu grupo social!</string>
+	<string name="message_welcome_viewpager_item_title_1">Totalmente personalizable</string>
+	<string name="message_welcome_viewpager_item_body_1">Decora tu chat como más te guste.</string>
+	<string name="message_welcome_viewpager_item_title_2">Más características</string>
+	<string name="message_welcome_viewpager_item_body_2">Ven y prueba un montón de características nuevas.</string>
+	<string name="message_welcome_set_as_default_title">Establece Color SMS como aplicación de SMS predeterminada. Es obligatorio para poder enviar y recibir SMS.</string>
 
 
 	<string name="menu_theme">Tema</string>
@@ -628,5 +628,13 @@
 	<string name="setting_reset_customization_title">Restablecer personalización</string>
 	<string name="setting_reset_customization_summary">Borrar la personalización de este chat.</string>
 	<string name="action_pin">Fijar en la parte superior</string>
+
+
+	<string name="privacy_mode_settings">Modo privado</string>
+	<string name="privacy_mode_disable">Ninguno</string>
+	<string name="privacy_mode_hide_message_only">Ocultar solo mensaje</string>
+	<string name="privacy_mode_hide_contact_and_message">Ocultar contacto y mensaje</string>
+	<string name="privacy_mode_show_messages">MOSTRAR MENSAJES</string>
+	<string name="notification_sender_in_privacy_mode">Contacto</string>
 
 </resources>

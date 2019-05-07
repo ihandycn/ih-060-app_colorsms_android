@@ -47,6 +47,8 @@ import com.android.messaging.util.BuglePrefsKeys;
 import com.android.messaging.util.ContentType;
 import com.android.messaging.util.LogUtil;
 import com.android.messaging.util.OsUtil;
+import com.crashlytics.android.core.CrashlyticsCore;
+import com.superapps.debug.CrashlyticsLog;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -590,6 +592,8 @@ public class SyncMessagesAction extends Action implements Parcelable {
                     LogUtil.w(TAG, "SyncMessagesAction: Could not find sender of incoming MMS "
                             + "message " + mms.getUri() + "; using 'unknown sender' instead");
                     senderId = ParticipantData.getUnknownSenderDestination();
+                    CrashlyticsCore.getInstance().logException(new CrashlyticsLog(
+                            "SyncMessagesAction use unknown sender, setMmsSenders "));
                 }
             }
             mms.setSender(senderId);

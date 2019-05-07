@@ -84,7 +84,9 @@ import com.android.messaging.util.LogUtil;
 import com.android.messaging.util.MediaMetadataRetrieverWrapper;
 import com.android.messaging.util.OsUtil;
 import com.android.messaging.util.PhoneUtils;
+import com.crashlytics.android.core.CrashlyticsCore;
 import com.google.common.base.Joiner;
+import com.superapps.debug.CrashlyticsLog;
 
 import java.io.BufferedOutputStream;
 import java.io.File;
@@ -746,13 +748,15 @@ public class MmsUtils {
         final ContentResolver cr = context.getContentResolver();
         final Cursor thread = cr.query(
                 ALL_THREADS_URI,
-                RECIPIENTS_PROJECTION, "_id=?", new String[]{String.valueOf(threadId)}, null);
+                RECIPIENTS_PROJECTION, Threads._ID + "=" + threadId, null, null);
         if (thread != null) {
             try {
                 if (thread.moveToFirst()) {
                     // recipientIds will be a space-separated list of ids into the
                     // canonical addresses table.
                     return thread.getString(RECIPIENT_IDS);
+                } else {
+                    CrashlyticsCore.getInstance().logException(new CrashlyticsLog("get null recipient by thread id"));
                 }
             } finally {
                 thread.close();
@@ -854,10 +858,10 @@ public class MmsUtils {
      * @param threadId the thread_id of the message
      * @return the URI for the new message
      */
-    public static Uri addMessageToUri(final ContentResolver resolver,
-                                      final Uri uri, final int subId, final String address, final String body,
-                                      final String subject, final Long date, final boolean read, final boolean seen,
-                                      final int status, final int type, final long threadId) {
+    private static Uri addMessageToUri(final ContentResolver resolver,
+                                       final Uri uri, final int subId, final String address, final String body,
+                                       final String subject, final Long date, final boolean read, final boolean seen,
+                                       final int status, final int type, final long threadId) {
         final ContentValues values = new ContentValues(7);
 
         values.put(Telephony.Sms.ADDRESS, address);
@@ -1431,9 +1435,9 @@ public class MmsUtils {
     /**
      * Update the read status of SMS/MMS messages by thread and timestamp
      *
-     * @param threadId The thread of sms/mms to change
+     * @param threadId               The thread of sms/mms to change
      * @param startTimestampInMillis Change the status before this timestamp
-     * @param endTimestampInMillis Change the status before this timestamp
+     * @param endTimestampInMillis   Change the status before this timestamp
      */
     public static void updateSmsReadStatus(final long threadId,
                                            final long startTimestampInMillis,
@@ -2588,7 +2592,6 @@ public class MmsUtils {
                                      final String smsServiceCenter, final boolean requireDeliveryReport) {
         if (!isSmsDataAvailable(subId)) {
             LogUtil.w(TAG, "MmsUtils: can't send SMS without radio");
-            BugleAnalytics.logEvent("SMS_Send_Failed", "reason", "can't send SMS without radio");
             return MMS_REQUEST_MANUAL_RETRY;
         }
         final Context context = Factory.get().getApplicationContext();
@@ -2623,7 +2626,7 @@ public class MmsUtils {
                 LogUtil.e(TAG, "MmsUtils: sending SMS timed out");
             }
         } catch (final Exception e) {
-            BugleAnalytics.logEvent("SMS_Send_Failed", "reason", e.getMessage());
+            CrashlyticsCore.getInstance().logException(new CrashlyticsLog("send fail : " + e.getMessage()));
             LogUtil.e(TAG, "MmsUtils: failed to send SMS " + e, e);
         }
         return status;

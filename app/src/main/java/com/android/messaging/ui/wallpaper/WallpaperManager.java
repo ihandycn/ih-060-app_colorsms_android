@@ -3,12 +3,10 @@ package com.android.messaging.ui.wallpaper;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.text.TextUtils;
-import android.view.View;
 import android.widget.ImageView;
 
 import com.android.messaging.Factory;
 import com.android.messaging.ui.customize.WallpaperDrawables;
-import com.android.messaging.ui.customize.theme.ThemeUtils;
 import com.android.messaging.util.BuglePrefs;
 
 import java.io.File;
@@ -128,7 +126,7 @@ public class WallpaperManager {
         sPrefs.remove(PREF_KEY_WALLPAPER_PATH);
     }
 
-    private static String getWallpaperPath() {
+    public static String getWallpaperPath() {
         String wallpaperPath = sPrefs.
                 getString(PREF_KEY_WALLPAPER_PATH, "");
         if (wallpaperPath != null && !wallpaperPath.equals("")) {
@@ -143,7 +141,6 @@ public class WallpaperManager {
             sPrefs.putString(PREF_KEY_WALLPAPER_PATH + "_" + threadId, path);
         } else {
             sPrefs.putString(PREF_KEY_WALLPAPER_PATH, path);
-            WallpaperDrawables.applyWallpaperBg("");
         }
     }
 

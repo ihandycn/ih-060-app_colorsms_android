@@ -39,7 +39,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:contentDescription="@null"
-            android:gravity="center_vertical|left"
+            android:gravity="center_vertical|start"
             android:importantForAccessibility="no"
             android:src="@drawable/ic_archive_small_dark"
             android:visibility="gone"/>
@@ -53,7 +53,7 @@
             android:id="@+id/crossSwipeArchiveIconRight"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical|right"
+            android:layout_gravity="center_vertical|end"
             android:contentDescription="@null"
             android:importantForAccessibility="no"
             android:src="@drawable/ic_archive_small_dark"
@@ -74,7 +74,7 @@
             android:clipChildren="false"
             android:clipToPadding="false"
             android:duplicateParentState="true"
-            android:paddingLeft="2dp"
+            android:paddingStart="2dp"
             android:orientation="horizontal"
             android:paddingEnd="@dimen/conversation_list_item_view_padding">
 
@@ -117,7 +117,6 @@
                     android:layout_height="@dimen/conversation_list_error_icon_size"
                     android:layout_gravity="bottom|end"
                     android:layout_marginEnd="10dp"
-                    android:layout_marginRight="10dp"
                     android:layout_marginBottom="10dp"
                     android:background="@android:color/transparent"
                     android:contentDescription="@null"
@@ -189,7 +188,7 @@
                         android:id="@+id/work_profile_icon"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_gravity="right"
+                        android:layout_gravity="end"
                         android:background="@android:color/transparent"
                         android:scaleType="center"
                         android:src="@drawable/ic_work_profile"

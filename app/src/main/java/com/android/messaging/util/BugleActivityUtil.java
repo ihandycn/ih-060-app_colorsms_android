@@ -41,14 +41,17 @@ public class BugleActivityUtil {
     /**
      * Determine if the requirements for the app to run are met. Log any Activity startup
      * analytics.
+     *
      * @param context
      * @param activity is used to launch an error Dialog if necessary
      * @return true if resume should continue normally. Returns false if some requirements to run
      * are not met.
      */
     public static boolean onActivityResume(Context context, Activity activity) {
-        DataModel.get().onActivityResume();
-        Factory.get().onActivityResume();
+        if (OsUtil.hasRequiredPermissions()) {
+            DataModel.get().onActivityResume();
+            Factory.get().onActivityResume();
+        }
 
         // Validate all requirements to run are met
         return checkHasSmsPermissionsForUser(context, activity);
@@ -57,7 +60,8 @@ public class BugleActivityUtil {
     /**
      * Determine if the user doesn't have SMS permissions. This can happen if you are not the phone
      * owner and the owner has disabled your SMS permissions.
-     * @param context is the Context used to resolve the user permissions
+     *
+     * @param context  is the Context used to resolve the user permissions
      * @param activity is the Activity used to launch an error Dialog if necessary
      * @return true if the user has SMS permissions, otherwise false.
      */
@@ -75,7 +79,7 @@ public class BugleActivityUtil {
                             new DialogInterface.OnClickListener() {
                                 @Override
                                 public void onClick(final DialogInterface dialog,
-                                        final int button) {
+                                                    final int button) {
                                     System.exit(0);
                                 }
                             })
@@ -126,6 +130,7 @@ public class BugleActivityUtil {
                                                  final int designWidthInPx) {
         adaptScreen(activity, designWidthInPx, true);
     }
+
     /**
      * Adapt the screen for horizontal slide.
      *
@@ -136,6 +141,7 @@ public class BugleActivityUtil {
                                                    final int designHeightInPx) {
         adaptScreen(activity, designHeightInPx, false);
     }
+
     /**
      * Reference from: https://mp.weixin.qq.com/s/d9QCoBP6kV9VSWvVldVVwA
      */
@@ -173,6 +179,7 @@ public class BugleActivityUtil {
         appDm.scaledDensity = systemDm.scaledDensity;
         appDm.densityDpi = systemDm.densityDpi;
     }
+
     /**
      * Return whether adapt screen.
      *

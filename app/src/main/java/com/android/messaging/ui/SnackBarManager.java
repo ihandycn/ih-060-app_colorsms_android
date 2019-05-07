@@ -44,7 +44,9 @@ import com.android.messaging.util.LogUtil;
 import com.android.messaging.util.OsUtil;
 import com.android.messaging.util.TextUtil;
 import com.android.messaging.util.UiUtils;
+import com.crashlytics.android.core.CrashlyticsCore;
 import com.google.common.base.Joiner;
+import com.superapps.debug.CrashlyticsLog;
 
 import java.util.List;
 
@@ -160,8 +162,13 @@ public class SnackBarManager {
             final OnGlobalLayoutListener listener = new OnGlobalLayoutListener() {
                 @Override
                 public void onGlobalLayout() {
-                    mPopupWindow.update(anchorView, 0, getRelativeOffset(snackBar),
-                            anchorView.getWidth(), LayoutParams.WRAP_CONTENT);
+                    if (mPopupWindow != null) {
+                        mPopupWindow.update(anchorView, 0, getRelativeOffset(snackBar),
+                                anchorView.getWidth(), LayoutParams.WRAP_CONTENT);
+                    } else {
+                        CrashlyticsCore.getInstance().logException(
+                                new CrashlyticsLog("Snack bar manager error"));
+                    }
                 }
             };
             anchorView.getViewTreeObserver().addOnGlobalLayoutListener(listener);

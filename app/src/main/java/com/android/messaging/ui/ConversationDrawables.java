@@ -17,7 +17,6 @@ package com.android.messaging.ui;
 
 import android.content.Context;
 import android.content.res.Resources;
-import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 
 import com.android.messaging.Factory;
@@ -25,10 +24,7 @@ import com.android.messaging.R;
 import com.android.messaging.ui.customize.BubbleDrawables;
 import com.android.messaging.ui.customize.ConversationColors;
 import com.android.messaging.ui.customize.PrimaryColors;
-import com.android.messaging.ui.customize.theme.ThemeInfo;
-import com.android.messaging.ui.customize.theme.ThemeUtils;
 import com.android.messaging.util.ImageUtils;
-import com.superapps.util.BackgroundDrawables;
 
 /**
  * A singleton cache that holds tinted drawable resources for displaying messages, such as
@@ -122,6 +118,7 @@ public class ConversationDrawables {
         } else {
             protoDrawable = mOutgoingBubbleNoArrowDrawable;
         }
+        protoDrawable.setAutoMirrored(true);
 
         int color;
         if (incoming) {

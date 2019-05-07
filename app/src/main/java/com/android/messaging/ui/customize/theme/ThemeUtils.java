@@ -3,10 +3,8 @@ package com.android.messaging.ui.customize.theme;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
-import android.graphics.NinePatch;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
-import android.graphics.drawable.NinePatchDrawable;
 
 import com.android.messaging.Factory;
 import com.android.messaging.ui.conversationlist.ConversationListActivity;
@@ -40,10 +38,14 @@ public class ThemeUtils {
         ConversationColors.get().setListTitleColor(Color.parseColor(themeInfo.listTitleColor));
         ConversationColors.get().setListSubTitleColor(Color.parseColor(themeInfo.listSubtitleColor));
         ConversationColors.get().setListTimeColor(Color.parseColor(themeInfo.listTimeColor));
+        ConversationColors.get().setAdActionColor(Color.parseColor(themeInfo.bubbleAdColor));
 
+        ToolbarDrawables.sToolbarBg = null;
         ToolbarDrawables.applyToolbarBg(themeInfo.toolbarBgUrl);
+        WallpaperDrawables.sListWallpaperBg = null;
         WallpaperDrawables.applyWallpaperBg(themeInfo.wallpaperUrl);
         WallpaperDrawables.applyListWallpaperBg(themeInfo.listWallpaperUrl);
+        AvatarBgDrawables.sAvatarBg = null;
         AvatarBgDrawables.applyAvatarBg(themeInfo.avatarUrl);
 
         BubbleDrawables.setSelectedIdentifier(Integer.parseInt(themeInfo.bubbleIncomingUrl));
@@ -65,39 +67,12 @@ public class ThemeUtils {
         return Factory.get().getCustomizePrefs().getString(BuglePrefsKeys.PREFS_KEY_THEME_NAME, "Default").equals("Default");
     }
 
-    public static Drawable getSelectedDrawable(String url) {
-        Bitmap bitmap = null;
-
-        if (url.startsWith("assets://")) {
-            try {
-                InputStream ims = HSApplication.getContext().getAssets().open(url.replace("assets://", ""));
-
-                bitmap = BitmapFactory.decodeStream(ims);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-
-        Drawable drawable = null;
-        if (bitmap != null) {
-            byte[] chunk = bitmap.getNinePatchChunk();
-            if (NinePatch.isNinePatchChunk(chunk)) {
-                drawable = new NinePatchDrawable(bitmap, chunk, NinePatchChunk.deserialize(chunk).mPaddings, null);
-            } else {
-                drawable = new BitmapDrawable(bitmap);
-            }
-        }
-
-        return drawable;
-
-    }
-
-
     public static Drawable getDrawableFromUrl(String url) {
         if (url.startsWith("assets://")) {
             try {
                 InputStream ims = HSApplication.getContext().getAssets().open(url.replace("assets://", ""));
-                return Drawable.createFromStream(ims, null);
+                Bitmap bitmap = BitmapFactory.decodeStream(ims);
+                return new BitmapDrawable(HSApplication.getContext().getResources(), bitmap);
             } catch (IOException e) {
                 e.printStackTrace();
             }

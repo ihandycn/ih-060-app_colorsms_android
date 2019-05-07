@@ -35,6 +35,8 @@ import com.android.messaging.util.BugleGservicesKeys;
 import com.android.messaging.util.LogUtil;
 import com.android.messaging.util.PhoneUtils;
 import com.android.messaging.util.UiUtils;
+import com.crashlytics.android.core.CrashlyticsCore;
+import com.superapps.debug.CrashlyticsLog;
 
 import java.util.ArrayList;
 import java.util.Random;
@@ -195,21 +197,29 @@ public class SmsSender {
         }
         // Get the real dest and message for email or alias if dest is email or alias
         // Or sanitize the dest if dest is a number
+        String addressForLog = dest;
         if (!TextUtils.isEmpty(MmsConfig.get(subId).getEmailGateway()) &&
                 (MmsSmsUtils.isEmailAddress(dest) || MmsSmsUtils.isAlias(dest, subId))) {
             // The original destination (email address) goes with the message
             message = dest + " " + message;
             // the new address is the email gateway #
             dest = MmsConfig.get(subId).getEmailGateway();
+            if (TextUtils.isEmpty(dest)) {
+                CrashlyticsCore.getInstance().logException(new CrashlyticsLog("empty email : " + addressForLog
+                        + ", dest get from MmsConfig is : >" + dest + "<"));
+                throw new SmsException("SmsSender: empty destination address");
+            }
         } else {
             // remove spaces and dashes from destination number
             // (e.g. "801 555 1212" -> "8015551212")
             // (e.g. "+8211-123-4567" -> "+82111234567")
             dest = PhoneNumberUtils.stripSeparators(dest);
+            if (TextUtils.isEmpty(dest)) {
+                CrashlyticsCore.getInstance().logException(new CrashlyticsLog("empty number : " + addressForLog));
+                throw new SmsException("SmsSender: empty destination address");
+            }
         }
-        if (TextUtils.isEmpty(dest)) {
-            throw new SmsException("SmsSender: empty destination address");
-        }
+
         // Divide the input message by SMS length limit
         final SmsManager smsManager = PhoneUtils.get(subId).getSmsManager();
         final ArrayList<String> messages = smsManager.divideMessage(message);

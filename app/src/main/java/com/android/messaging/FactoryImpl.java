@@ -49,7 +49,6 @@ import com.android.messaging.util.MediaUtil;
 import com.android.messaging.util.MediaUtilImpl;
 import com.android.messaging.util.OsUtil;
 import com.android.messaging.util.PhoneUtils;
-import com.android.messaging.util.UiUtils;
 import com.superapps.util.Compats;
 import com.superapps.util.Threads;
 

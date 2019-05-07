@@ -25,12 +25,14 @@ import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.airbnb.lottie.LottieAnimationView;
 import com.android.messaging.BuildConfig;
 import com.android.messaging.Factory;
 import com.android.messaging.R;
+import com.android.messaging.ad.AdPlacement;
 import com.android.messaging.datamodel.BugleNotifications;
 import com.android.messaging.datamodel.action.PinConversationAction;
 import com.android.messaging.datamodel.data.MessageBoxItemData;
@@ -45,7 +47,7 @@ import com.android.messaging.ui.CreateShortcutActivity;
 import com.android.messaging.ui.DragHotSeatActivity;
 import com.android.messaging.ui.UIIntents;
 import com.android.messaging.ui.UIIntentsImpl;
-import com.android.messaging.ui.appsettings.ChangeFontActivity;
+import com.android.messaging.font.ChangeFontActivity;
 import com.android.messaging.ui.appsettings.ChooseThemeColorRecommendViewHolder;
 import com.android.messaging.ui.appsettings.ThemeColorSelectActivity;
 import com.android.messaging.ui.customize.BubbleDrawables;
@@ -82,6 +84,8 @@ import com.superapps.util.Navigations;
 import com.superapps.util.Preferences;
 import com.superapps.util.Threads;
 import com.superapps.util.Toasts;
+
+import net.appcloudbox.ads.nativead.AcbNativeAdManager;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
@@ -279,9 +283,19 @@ public class ConversationListActivity extends AbstractConversationListActivity
                     }, "pref_key_customize_config_has_send");
                 }
             });
+
+            if (HSConfig.optBoolean(false, "Application", "SMSAd", "SMSDetailspageBannerAd", "Enabled")) {
+                AcbNativeAdManager.preload(1, AdPlacement.AD_DETAIL_NATIVE);
+            }
         }
 
         Trace.endSection();
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        HSGlobalNotificationCenter.sendNotification(MessageBoxActivity.NOTIFICATION_FINISH_MESSAGE_BOX);
     }
 
     @Override
@@ -294,15 +308,12 @@ public class ConversationListActivity extends AbstractConversationListActivity
                 mPrivateBoxEntrance.setVisibility(View.VISIBLE);
             }
         }
+
         BugleAnalytics.logEvent("SMS_Messages_Show_Corrected", true, true);
         Preferences.getDefault().incrementAndGetInt(CustomizeGuideController.PREF_KEY_MAIN_PAGE_SHOW_TIME);
-        WeakReference<AppCompatActivity> activity = new WeakReference<>(this);
-        Threads.postOnMainThreadDelayed(() -> {
-            if (!isFinishing() && activity.get() != null) {
-                CustomizeGuideController.showGuideIfNeed(activity.get());
-            }
-        }, 1000);
-        HSGlobalNotificationCenter.sendNotification(MessageBoxActivity.NOTIFICATION_FINISH_MESSAGE_BOX);
+        if (Preferences.getDefault().getInt(CustomizeGuideController.PREF_KEY_MAIN_PAGE_SHOW_TIME, 0) == 2) {
+            Threads.postOnMainThreadDelayed(() -> showEmojiStoreGuide(), 500);
+        }
     }
 
     @Override
@@ -681,9 +692,12 @@ public class ConversationListActivity extends AbstractConversationListActivity
         layoutParams.height = Dimensions.getStatusBarHeight(ConversationListActivity.this) + Dimensions.pxFromDp(56);
         accessoryContainer.setLayoutParams(layoutParams);
         if (ToolbarDrawables.getToolbarBg() != null) {
-            accessoryContainer.setBackground(ToolbarDrawables.getToolbarBg());
+            ImageView ivAccessoryBg = accessoryContainer.findViewById(R.id.accessory_bg);
+            ivAccessoryBg.setVisibility(View.VISIBLE);
+            ivAccessoryBg.setImageDrawable(ToolbarDrawables.getToolbarBg());
         } else {
             accessoryContainer.setBackgroundColor(PrimaryColors.getPrimaryColor());
+            accessoryContainer.findViewById(R.id.accessory_bg).setVisibility(View.GONE);
         }
 
         View statusbarInset = findViewById(R.id.status_bar_inset);
@@ -901,7 +915,12 @@ public class ConversationListActivity extends AbstractConversationListActivity
                 recreate();
                 break;
             case SHOW_EMOJI:
-                Threads.postOnMainThreadDelayed(() -> showEmojiStoreGuide(), 500);
+                WeakReference<AppCompatActivity> activity = new WeakReference<>(this);
+                Threads.postOnMainThreadDelayed(() -> {
+                    if (!isFinishing() && activity.get() != null) {
+                        CustomizeGuideController.showGuideIfNeed(activity.get());
+                    }
+                }, 1000);
                 break;
             case FIRST_LOAD:
                 if (!sIsRecreate && hsBundle != null) {

@@ -93,6 +93,7 @@ import com.superapps.util.Threads;
 import net.appcloudbox.AcbAds;
 import net.appcloudbox.ads.expressad.AcbExpressAdManager;
 import net.appcloudbox.ads.interstitialad.AcbInterstitialAdManager;
+import net.appcloudbox.ads.nativead.AcbNativeAdManager;
 import net.appcloudbox.common.utils.AcbApplicationHelper;
 
 import java.io.File;
@@ -169,19 +170,29 @@ public class BugleApplication extends HSApplication implements UncaughtException
         String processName = getProcessName();
         boolean isOnMainProcess = TextUtils.equals(processName, packageName);
         if (isOnMainProcess) {
-
             onMainProcessApplicationCreate();
         }
 
         initKeepAlive();
-
-        initFabric();
 
         sSystemUncaughtExceptionHandler = Thread.getDefaultUncaughtExceptionHandler();
         Thread.setDefaultUncaughtExceptionHandler(this);
         Trace.endSection();
 
         CommonUtils.getAppInstallTimeMillis();
+
+        HSLog.d("gdpr", "app create add listener");
+        HSGdprConsent.addListener((oldState, newState) -> {
+            HSLog.d("gdpr", "listener changed : " + oldState + " -> " + newState);
+            if (newState == HSGdprConsent.ConsentState.ACCEPTED) {
+                initFabric();
+                BugleAnalytics.sFirebaseAnalytics.setAnalyticsCollectionEnabled(true);
+            }
+
+            if (oldState == HSGdprConsent.ConsentState.ACCEPTED && newState == HSGdprConsent.ConsentState.DECLINED) {
+                Threads.postOnMainThreadDelayed(() -> System.exit(0), 800);
+            }
+        });
     }
 
     private void initAd() {
@@ -193,12 +204,24 @@ public class BugleApplication extends HSApplication implements UncaughtException
         AcbAds.getInstance().initializeFromGoldenEye(this);
         AcbExpressAdManager.getInstance().activePlacementInProcess(AdPlacement.AD_BANNER);
         AcbInterstitialAdManager.getInstance().activePlacementInProcess(AdPlacement.AD_WIRE);
+        AcbNativeAdManager.getInstance().activePlacementInProcess(AdPlacement.AD_DETAIL_NATIVE);
     }
 
     private void onMainProcessApplicationCreate() {
         TraceCompat.beginSection("Application#onMainProcessApplicationCreate");
         try {
             List<Task> initWorks = new ArrayList<>();
+
+            initWorks.add(new SyncMainThreadTask("InitFabric", () -> {
+                if (HSGdprConsent.getConsentState() == HSGdprConsent.ConsentState.ACCEPTED) {
+                    HSLog.d("gdpr", "app start with permission");
+                    initFabric();
+                    BugleAnalytics.sFirebaseAnalytics.setAnalyticsCollectionEnabled(true);
+                } else {
+                    HSLog.d("gdpr", "app start with no permission");
+                    BugleAnalytics.sFirebaseAnalytics.setAnalyticsCollectionEnabled(false);
+                }
+            }));
 
             initWorks.add(new SyncMainThreadTask("InitFactoryImpl", this::initFactoryImpl));
 
@@ -384,7 +407,10 @@ public class BugleApplication extends HSApplication implements UncaughtException
 
         // Update conversation drawables when changing writing systems
         // (Right-To-Left / Left-To-Right)
-        ConversationDrawables.get().updateDrawables();
+        boolean isOnMainProcess = TextUtils.equals(getPackageName(), getProcessName());
+        if (isOnMainProcess) {
+            ConversationDrawables.get().updateDrawables();
+        }
     }
 
     // Called by the "real" factory from FactoryImpl.register() (i.e. not run in tests)

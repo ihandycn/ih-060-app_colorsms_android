@@ -361,7 +361,12 @@ public final class SmsReceiver extends BroadcastReceiver {
      * @return the messages. If there is an error or the message should be ignored, return null.
      */
     public static android.telephony.SmsMessage[] getMessagesFromIntent(Intent intent) {
-        final android.telephony.SmsMessage[] messages = Sms.Intents.getMessagesFromIntent(intent);
+        android.telephony.SmsMessage[] messages = null;
+        try {
+            messages = Sms.Intents.getMessagesFromIntent(intent);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
         // Check messages for validity
         if (messages == null || messages.length < 1) {

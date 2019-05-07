@@ -54,6 +54,7 @@ import com.android.messaging.datamodel.media.VideoThumbnailRequest;
 import com.android.messaging.privatebox.PrivateMessageManager;
 import com.android.messaging.sms.MmsUtils;
 import com.android.messaging.ui.UIIntents;
+import com.android.messaging.ui.appsettings.PrivacyModeSettings;
 import com.android.messaging.ui.messagebox.MessageBoxSettings;
 import com.android.messaging.util.Assert;
 import com.android.messaging.util.AvatarUriUtil;
@@ -65,7 +66,9 @@ import com.android.messaging.util.ConversationIdSet;
 import com.android.messaging.util.LogUtil;
 import com.android.messaging.util.PendingIntentConstants;
 import com.android.messaging.util.UriUtil;
+import com.crashlytics.android.core.CrashlyticsCore;
 import com.google.common.collect.Lists;
+import com.superapps.debug.CrashlyticsLog;
 import com.ihs.app.framework.HSApplication;
 import com.superapps.util.Notifications;
 
@@ -76,6 +79,8 @@ import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+
+import static com.android.messaging.ui.appsettings.PrivacyModeSettings.NONE;
 
 /**
  * Notification building class for conversation messages.
@@ -443,6 +448,7 @@ public abstract class MessageNotificationState extends NotificationState {
                 }
                 String sender;
                 if (!PrivateMessageManager.getInstance().isPrivateConversationId(convInfo.mConversationId)) {
+
                     CharSequence text;
                     final NotificationLineInfo lineInfo = convInfo.mLineInfos.get(0);
                     final MessageLineInfo messageLineInfo = (MessageLineInfo) lineInfo;
@@ -458,13 +464,33 @@ public abstract class MessageNotificationState extends NotificationState {
                     mAttachmentUri = messageLineInfo.mAttachmentUri;
                     mAttachmentType = messageLineInfo.mAttachmentType;
 
+                    int privacyMode = PrivacyModeSettings.getPrivacyMode(convInfo.mConversationId);
+                    if (privacyMode == PrivacyModeSettings.HIDE_CONTACT_AND_MESSAGE) {
+                        sender = context.getString(R.string.notification_sender_in_privacy_mode);
+                        text = context.getResources().getQuantityString(R.plurals.notification_title_in_privacy_mode, 1, 1);
+                    } else if (privacyMode == PrivacyModeSettings.HIDE_MESSAGE_ONLY) {
+                        text = context.getResources().getQuantityString(R.plurals.notification_title_in_privacy_mode, 1, 1);
+                    }
+
                     inboxStyle.addLine(BugleNotifications.formatInboxMessage(
                             sender, text, mAttachmentUri, mAttachmentType));
                     if (sender != null) {
                         if (senders.length() > 0) {
                             senders.append(separator);
+
                         }
-                        senders.append(sender);
+                        text = messageLineInfo.mText;
+                        mAttachmentUri = messageLineInfo.mAttachmentUri;
+                        mAttachmentType = messageLineInfo.mAttachmentType;
+
+                        inboxStyle.addLine(BugleNotifications.formatInboxMessage(
+                                sender, text, mAttachmentUri, mAttachmentType));
+                        if (sender != null) {
+                            if (senders.length() > 0) {
+                                senders.append(separator);
+                            }
+                            senders.append(sender);
+                        }
                     }
                 } else {
                     inboxStyle.addLine(BugleNotifications.formatInboxMessage(
@@ -587,12 +613,27 @@ public abstract class MessageNotificationState extends NotificationState {
                 return notifStyle;
             }
 
+            Context context = HSApplication.getContext();
+            int privacyMode = PrivacyModeSettings.getPrivacyMode(convInfo.mConversationId);
+            if (privacyMode == PrivacyModeSettings.HIDE_CONTACT_AND_MESSAGE) {
+                mTitle = context.getString(R.string.notification_sender_in_privacy_mode);
+                mContent = context.getResources().getQuantityString(R.plurals.notification_title_in_privacy_mode, messageCount, messageCount);
+            } else if (privacyMode == PrivacyModeSettings.HIDE_MESSAGE_ONLY) {
+                mContent = context.getResources().getQuantityString(R.plurals.notification_title_in_privacy_mode, messageCount, messageCount);
+            }
+
             builder.setContentTitle(mTitle)
                     .setTicker(getTicker());
             // At this point, all the messages come from the same conversation. We need to load
             // the sender's avatar and then finish building the notification on a callback.
 
             builder.setContentText(mContent);   // for collapsed state
+
+            if (privacyMode != NONE) {
+                notifStyle = new NotificationCompat.BigTextStyle(builder);
+                builder.setWhen(convInfo.mReceivedTimestamp);
+                return notifStyle;
+            }
 
             if (messageCount == 1) {
                 final boolean shouldShowImage = ContentType.isImageType(mAttachmentType)
@@ -691,6 +732,9 @@ public abstract class MessageNotificationState extends NotificationState {
                 uri, ParticipantData.ParticipantsQuery.PROJECTION, null, null, null);
         final ConversationParticipantsData participantsData = new ConversationParticipantsData();
         participantsData.bind(participantsCursor);
+        if (participantsCursor != null) {
+            participantsCursor.close();
+        }
         final Iterator<ParticipantData> iter = participantsData.iterator();
 
         final HashMap<String, Integer> firstNames = new HashMap<String, Integer>();
@@ -784,6 +828,7 @@ public abstract class MessageNotificationState extends NotificationState {
                         displayName = convMessageData.getSenderDisplayDestination();
                         if (TextUtils.isEmpty(displayName)) {
                             displayName = context.getString(R.string.unknown_sender);
+                            CrashlyticsCore.getInstance().logException(new CrashlyticsLog("Notification_Show_Unknown_Sender"));
                         }
                     } else {
                         displayName = context.getString(R.string.unknown_self_participant);

@@ -113,15 +113,15 @@ public class FiveStarRateDialog extends DefaultButtonDialog2 implements View.OnC
             PERCENT_ZERO, PERCENT_ONE_STAR, PERCENT_TWO_STAR, PERCENT_THREE_STAR, PERCENT_FOUR_STAR, PERCENT_FIVE_STAR
     };
     private static final int[] mDescTexts = {
-            R.string.five_star_one_text, R.string.five_star_two_text, R.string.five_star_three_text,
-            R.string.five_star_four_text, R.string.five_star_five_text
+            R.string.message_five_star_one_text, R.string.message_five_star_two_text, R.string.message_five_star_three_text,
+            R.string.message_five_star_four_text, R.string.message_five_star_five_text
     };
     private static final int[] mDialogDescTexts = {
-            R.string.liked_it_desc,
-            R.string.liked_it_desc,
-            R.string.liked_it_desc,
-            R.string.liked_it_desc,
-            R.string.loved_it_desc
+            R.string.sms_liked_it_desc,
+            R.string.sms_liked_it_desc,
+            R.string.sms_liked_it_desc,
+            R.string.sms_liked_it_desc,
+            R.string.sms_loved_it_desc
     };
 
     private boolean mAnimViewShowed = false;
@@ -164,7 +164,7 @@ public class FiveStarRateDialog extends DefaultButtonDialog2 implements View.OnC
     protected View createContentView(LayoutInflater inflater, ViewGroup root) {
         View v = inflater.inflate(R.layout.dialog_five_star, root, false);
         mDescTv = ViewUtils.findViewById(v, R.id.dialog_desc);
-        mDescTv.setText(getResources().getString(R.string.five_star_hint_text));
+        mDescTv.setText(getResources().getString(R.string.sms_five_star_hint_text));
 
         // Add LottieAnimationView into TopImage container.
         View faceView = inflater.inflate(R.layout.dialog_five_start_face, root, false);
@@ -229,7 +229,7 @@ public class FiveStarRateDialog extends DefaultButtonDialog2 implements View.OnC
 
     @Override
     protected int getPositiveButtonStringId() {
-        return R.string.five_star_positive_text;
+        return R.string.sms_five_star_positive_text;
     }
 
     @Override protected int getNegativeButtonStringId() {

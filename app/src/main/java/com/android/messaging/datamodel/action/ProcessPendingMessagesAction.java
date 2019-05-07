@@ -311,7 +311,8 @@ public class ProcessPendingMessagesAction extends Action implements Parcelable {
                     null,
                     null,
                     DatabaseHelper.MessageColumns.RECEIVED_TIMESTAMP + " ASC");
-            final boolean messageCurrentlySending = sending.moveToNext();
+            //final boolean messageCurrentlySending = sending.moveToNext();
+            final boolean messageCurrentlySending = false;
             sendingCnt = sending.getCount();
             // Look for messages we could send
             final ContentValues values = new ContentValues();

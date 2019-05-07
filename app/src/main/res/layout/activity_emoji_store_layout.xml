@@ -29,7 +29,7 @@
             android:layout_marginLeft="17dp"
             android:layout_toRightOf="@+id/emoji_store_back_btn"
             android:includeFontPadding="false"
-            android:text="@string/emoji_store_title"
+            android:text="@string/sms_emoji_store_title"
             android:textColor="@color/action_bar_title_text_color"
             android:textSize="16.7sp"
             app:font_style="bold"

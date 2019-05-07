@@ -1875,6 +1875,12 @@ public class BugleDatabaseOperations {
             ParticipantRefresh.refreshParticipant(dbWrapper, participant);
         }
 
+        //add for to find "unknown sender" reason
+        if (TextUtils.equals(participant.getSendDestination(), ParticipantData.getUnknownSenderDestination())) {
+            CrashlyticsCore.getInstance().logException(new CrashlyticsLog(
+                    "Insert unknown sender into db"));
+        }
+
         // Insert the participant into the participants table
         final ContentValues values = participant.toContentValues();
         final long participantRow = dbWrapper.insert(DatabaseHelper.PARTICIPANTS_TABLE, null,

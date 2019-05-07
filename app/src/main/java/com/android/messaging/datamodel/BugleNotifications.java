@@ -70,6 +70,7 @@ import com.android.messaging.privatebox.PrivateSettingManager;
 import com.android.messaging.sms.MmsSmsUtils;
 import com.android.messaging.sms.MmsUtils;
 import com.android.messaging.ui.UIIntents;
+import com.android.messaging.ui.appsettings.PrivacyModeSettings;
 import com.android.messaging.ui.customize.PrimaryColors;
 import com.android.messaging.ui.messagebox.MessageBoxSettings;
 import com.android.messaging.util.Assert;
@@ -519,7 +520,7 @@ public class BugleNotifications {
         if (state.mParticipantAvatarsUris != null) {
             final Uri avatarUri = state.mParticipantAvatarsUris.get(0);
             final AvatarRequestDescriptor descriptor = new AvatarRequestDescriptor(avatarUri,
-                    sIconWidth, sIconHeight, OsUtil.isAtLeastL());
+                    sIconWidth, sIconHeight, context.getResources().getColor(R.color.notification_avatar_background_color));
             final MediaRequest<ImageResource> imageRequest = descriptor.buildSyncMediaRequest(
                     context);
 
@@ -530,6 +531,7 @@ public class BugleNotifications {
             // Synchronously load the avatar.
             final ImageResource avatarImage =
                     MediaResourceManager.get().requestMediaResourceSync(imageRequest);
+
             if (avatarImage != null) {
                 ImageResource avatarHiRes = null;
                 try {
@@ -547,7 +549,8 @@ public class BugleNotifications {
                                             sWearableImageWidth,
                                             sWearableImageHeight,
                                             false /* cropToCircle */,
-                                            true /* isWearBackground */);
+                                            true /* isWearBackground */,
+                                            context.getResources().getColor(R.color.notification_avatar_background_color));
                             avatarHiRes = MediaResourceManager.get().requestMediaResourceSync(
                                     hiResDesc.buildSyncMediaRequest(context));
                         }
@@ -560,6 +563,7 @@ public class BugleNotifications {
                     Bitmap avatarHiResBitmap = (avatarHiRes != null) ?
                             Bitmap.createBitmap(avatarHiRes.getBitmap()) : null;
                     sendNotification(state, avatarBitmap, avatarHiResBitmap);
+
                     return;
                 } finally {
                     avatarImage.release();
@@ -656,7 +660,11 @@ public class BugleNotifications {
         }
         if (!isPrivateConversation || PrivateSettingManager.isNotificationEnable()) {
             processAndSend(state, silent, softSound);
-            BugleAnalytics.logEvent("SMS_Notifications_Pushed", true);
+            boolean isPrivacyMode = PrivacyModeSettings.getPrivacyMode(conversationId) != PrivacyModeSettings.NONE;
+            BugleAnalytics.logEvent("SMS_Notifications_Pushed", true, true, "PrivacyMode", String.valueOf(isPrivacyMode));
+            if (isPrivacyMode) {
+                BugleAnalytics.logEvent("SMS_PrivacyNotifications_Pushed", false, true);
+            }
         }
     }
 
@@ -674,8 +682,8 @@ public class BugleNotifications {
                     HSLog.d(TAG, "participantId = " + convInfo.mParticipantId);
                     ArrayList<String> recipients = BugleDatabaseOperations.getRecipientsForConversation(db, convInfo.mConversationId);
 
-                   String attachmentType = state.getAttachmentType();
-                   boolean isMms = false;
+                    String attachmentType = state.getAttachmentType();
+                    boolean isMms = false;
 
                     if (TextUtils.isEmpty(messageLineInfo.mText)
                             || ContentType.isImageType(attachmentType)
@@ -693,7 +701,7 @@ public class BugleNotifications {
                                     convInfo.mGroupConversationName,
                                     isMms ? "" : messageLineInfo.mText.toString(),
                                     convInfo.mReceivedTimestamp)
-                            );
+                    );
                     break;
                 }
             }

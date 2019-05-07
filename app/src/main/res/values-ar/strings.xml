@@ -562,25 +562,25 @@
     <string name="link_display_format" msgid="8700344957248709584">"<xliff:g id="TEXT">%1$s</xliff:g> (<xliff:g id="URL">%2$s</xliff:g>)"</string>
     <string name="selected_sim_content_message" msgid="4504796674843354505">"تم اختيار <xliff:g id="SELECTED_SIM">%s</xliff:g>"</string>
 
-    <string name="five_star_hint_text">كيف كانت تجربتك معنا؟</string>
-    <string name="five_star_five_text">أعجبني كثيراً</string>
-    <string name="five_star_four_text">أعجبني</string>
-    <string name="five_star_three_text">لا بأس به</string>
-    <string name="five_star_two_text">لم يعجبني</string>
-    <string name="five_star_one_text">كرهته</string>
-    <string name="five_star_positive_text">إرسال</string>
+    <string name="sms_five_star_hint_text">كيف كانت تجربتك معنا؟</string>
+    <string name="message_five_star_five_text">أعجبني كثيراً</string>
+    <string name="message_five_star_four_text">أعجبني</string>
+    <string name="message_five_star_three_text">لا بأس به</string>
+    <string name="message_five_star_two_text">لم يعجبني</string>
+    <string name="message_five_star_one_text">كرهته</string>
+    <string name="sms_five_star_positive_text">إرسال</string>
 
-    <string name="loved_it_desc">شكراً! يرجى التقييم وإضافة كلمات مثل جميل، جيد، مفيد…</string>
-    <string name="liked_it_desc">أخبرنا ما لم يعجبك، من فضلك. سنبذل قصارى جهدنا لتحسينه!</string>
-    <string name="five_star_rate">اسحب لأعلى للتقييم بـ 5 نجوم.</string>
+    <string name="sms_loved_it_desc">شكراً! يرجى التقييم وإضافة كلمات مثل جميل، جيد، مفيد…</string>
+    <string name="sms_liked_it_desc">أخبرنا ما لم يعجبك، من فضلك. سنبذل قصارى جهدنا لتحسينه!</string>
+    <string name="sms_five_star_rate">اسحب لأعلى للتقييم بـ 5 نجوم.</string>
 
-    <string name="feedback_title">ردود الفعل</string>
-    <string name="feedback_content_placeholder">" ملاحظاتك تساعدنا على إجراء تحسينات"</string>
-    <string name="feedback_email_placeholder">" برجاء إدخال عنوان بريدك الإلكتروني"</string>
-    <string name="feedback_submit_btn">إرسال</string>
-    <string name="feedback_toast_empty_content">برجاء كتابة ملاحظاتك</string>
-    <string name="feedback_toast_invalid_email">برجاء إدخال عنوان بريد إلكتروني صالح</string>
-    <string name="feedback_toast_send_success">شكرًا على ملاحظاتك!</string>
+    <string name="sms_feedback_title">ردود الفعل</string>
+    <string name="sms_feedback_content_placeholder">" ملاحظاتك تساعدنا على إجراء تحسينات"</string>
+    <string name="sms_feedback_email_placeholder">" برجاء إدخال عنوان بريدك الإلكتروني"</string>
+    <string name="sms_feedback_submit_btn">إرسال</string>
+    <string name="sms_feedback_toast_empty_content">برجاء كتابة ملاحظاتك</string>
+    <string name="sms_feedback_toast_invalid_email">برجاء إدخال عنوان بريد إلكتروني صالح</string>
+    <string name="sms_feedback_toast_send_success">شكرًا على ملاحظاتك!</string>
 
     <string name="setting_sms_show">عرض الرسائل القصيرة</string>
     <string name="setting_sms_show_close_dialog_content">ستخسر تنبيهات ثيمات الرسائل القصيرة الرائعة، هل تريد الغلق؟</string>
@@ -612,22 +612,22 @@
     <string name="welcome_set_default_button">موافق</string>
     <string name="welcome_start_policy">سياسة الخصوصية</string>
     <string name="welcome_start_service">شروط الخدمة</string>
-    <string name="emoji_get">احصل عليه</string>
-    <string name="emoji_added">مضاف</string>
-    <string name="emoji_store_title">متجر الإيموجي</string>
+    <string name="sms_emoji_get">احصل عليه</string>
+    <string name="sms_emoji_added">مضاف</string>
+    <string name="sms_emoji_store_title">متجر الإيموجي</string>
     <string name="setting_sms_show_close_dialog_ok">موافق</string>
 
     <string name="welcome_permission_contacts_title">جهات الاتصال</string>
-    <string name="welcome_start_button">ابدأ</string>
+    <string name="sms_welcome_start_button">ابدأ</string>
     <string name="welcome_permission_phone_title">الهاتف</string>
     <string name="sms_show_apply">تفعيل</string>
     <string name="media_picker_camera">الكاميرا</string>
     <string name="media_picker_photo">التصوير</string>
     <string name="welcome_permission_button">السماح</string>
     <string name="setting_sms_show_close_dialog_title">تأكيد الإيقاف؟</string>
-    <string name="emoji_recent_empty_description">لا مفضلات</string>
+    <string name="sms_emoji_recent_empty_description">لا مفضلات</string>
 
-    <string name="emoji_add_more">المزيد من الإيموجي</string>
+    <string name="sms_emoji_add_more">المزيد من الإيموجي</string>
 
     <string name="sms_show_current_theme">القالب الحالي</string>
 
@@ -693,10 +693,10 @@
     <string name="drag_hotseat_title">Drag Color SMS to the Hotseat</string>
     <string name="drag_hotseat_content">Easier for you to send funny emojis and stickers via Color SMS.</string>
     <string name="set_as_default_dialog_button_ok_default_change">Set Now</string>
-    <string name="got_it">Got it</string>
+    <string name="sms_got_it">Got it</string>
     <string name="welcome_set_default_failed_toast">Color SMS was not set up properly</string>
     <string name="dialog_add_contact_confirmation">Add</string>
-    <string name="network_error">Network error.</string>
+    <string name="sms_network_error">Network error.</string>
     <string name="reload">Reload</string>
     <string name="sms_notification_channel">SMS Notification</string>
     <string name="sms_notification_channel_description">Show a notification when received SMS</string>
@@ -710,12 +710,12 @@
     <string name="message_box_open">افتح</string>
 
 
-	<string name="welcome_viewpager_item_body_0">تميّز بين أصدقائك!</string>
-	<string name="welcome_viewpager_item_title_1">تخصيص شامل</string>
-	<string name="welcome_viewpager_item_body_1">زيّن دردشاتك بأي شكل يعجبك.</string>
-	<string name="welcome_viewpager_item_title_2">ميزات عديدة</string>
-	<string name="welcome_viewpager_item_body_2">تعال وجرّب مجموعة رائعة من الميزات.</string>
-	<string name="welcome_set_as_default_title">عيّن Color SMS كتطبيق افتراضي للرسائل القصيرة، هذا الإجراء مطلوب لإرسال واستقبال الرسائل القصيرة.</string>
+	<string name="message_welcome_viewpager_item_body_0">تميّز بين أصدقائك!</string>
+	<string name="message_welcome_viewpager_item_title_1">تخصيص شامل</string>
+	<string name="message_welcome_viewpager_item_body_1">زيّن دردشاتك بأي شكل يعجبك.</string>
+	<string name="message_welcome_viewpager_item_title_2">ميزات عديدة</string>
+	<string name="message_welcome_viewpager_item_body_2">تعال وجرّب مجموعة رائعة من الميزات.</string>
+	<string name="message_welcome_set_as_default_title">عيّن Color SMS كتطبيق افتراضي للرسائل القصيرة، هذا الإجراء مطلوب لإرسال واستقبال الرسائل القصيرة.</string>
 
 
 	<string name="menu_theme">التصميم</string>
@@ -724,5 +724,13 @@
 	<string name="setting_reset_customization_title">إعادة ضبط التخصيص</string>
 	<string name="setting_reset_customization_summary">مسح التخصيص من هذه الدردشة.</string>
 	<string name="action_pin">تثبيت في الأعلى</string>
+
+
+	<string name="privacy_mode_settings">وضع الخصوصية</string>
+	<string name="privacy_mode_disable">بدون</string>
+	<string name="privacy_mode_hide_message_only">إخفاء الرسائل فقط</string>
+	<string name="privacy_mode_hide_contact_and_message">إخفاء الرسائل واسم المرسِل</string>
+	<string name="privacy_mode_show_messages">إظهار الرسائل</string>
+	<string name="notification_sender_in_privacy_mode">جهة الاتصال</string>
 
 </resources>

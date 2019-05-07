@@ -17,6 +17,8 @@ package com.android.messaging.ui.conversationlist;
 
 import android.content.Context;
 import android.content.res.Resources;
+import android.graphics.Color;
+import android.graphics.PorterDuff;
 import android.graphics.Rect;
 import android.graphics.Typeface;
 import android.net.Uri;
@@ -52,7 +54,6 @@ import com.android.messaging.ui.customize.AvatarBgDrawables;
 import com.android.messaging.ui.customize.ConversationColors;
 import com.android.messaging.ui.customize.PrimaryColors;
 import com.android.messaging.util.Assert;
-import com.android.messaging.util.AvatarUriUtil;
 import com.android.messaging.util.BugleAnalytics;
 import com.android.messaging.util.ContentType;
 import com.android.messaging.util.ImageUtils;
@@ -164,7 +165,11 @@ public class ConversationListItemView extends FrameLayout implements OnClickList
         mContactIconView = findViewById(R.id.conversation_icon);
         mContactCheckmarkView = findViewById(R.id.conversation_checkmark);
         mNotificationBellView = findViewById(R.id.conversation_notification_bell);
+        mNotificationBellView.getDrawable().setColorFilter(
+                ConversationColors.get().getListTimeColor(), PorterDuff.Mode.SRC_ATOP);
         mPinView = findViewById(R.id.conversation_pin);
+        mPinView.getDrawable().setColorFilter(
+                ConversationColors.get().getListTimeColor(), PorterDuff.Mode.SRC_ATOP);
         mFailedStatusIconView = findViewById(R.id.conversation_failed_status_icon);
         mCrossSwipeArchiveLeftImageView = findViewById(R.id.crossSwipeArchiveIconLeft);
         mCrossSwipeArchiveRightImageView =
@@ -181,7 +186,7 @@ public class ConversationListItemView extends FrameLayout implements OnClickList
         mTimestampColor = ConversationColors.get().getListTimeColor();
 
         mContactBackground = findViewById(R.id.conversation_icon_bg);
-        mContactBackground.setImageDrawable(AvatarBgDrawables.getAvatarBg());
+        mContactBackground.setImageDrawable(AvatarBgDrawables.getAvatarBg(false));
 
         if (OsUtil.isAtLeastL()) {
             setTransitionGroup(true);
@@ -233,23 +238,17 @@ public class ConversationListItemView extends FrameLayout implements OnClickList
     private void setContactImage() {
         Uri iconUri = null;
         String imgUri = mData.getIcon();
-        int contactIconBackgroundColor;
-        if (mData.getIsRead()) {
-            //read
-            contactIconBackgroundColor = 0xffd4d9de;
-        } else {
+        if (!mData.getIsRead()) {
             //unread
-            contactIconBackgroundColor = PrimaryColors.getContactIconColor();
             if (!TextUtils.isEmpty(imgUri)) {
                 imgUri = imgUri.concat("unread");
             }
         }
-
         if (!TextUtils.isEmpty(imgUri)) {
             iconUri = Uri.parse(imgUri);
         }
         mContactIconView.setImageResourceUri(iconUri, mData.getParticipantContactId(),
-                mData.getParticipantLookupKey(), mData.getOtherParticipantNormalizedDestination(), contactIconBackgroundColor);
+                mData.getParticipantLookupKey(), mData.getOtherParticipantNormalizedDestination(), Color.TRANSPARENT);
     }
 
     private static String getPlusOneString() {

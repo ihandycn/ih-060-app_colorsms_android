@@ -40,31 +40,7 @@ public class BottomCropImage extends AppCompatImageView {
     }
 
     private void setup() {
-        setScaleType(ScaleType.CENTER_CROP);
-        post(() -> {
-
-            // bottom crop
-            Matrix matrix = getImageMatrix();
-
-            float scale;
-            int viewWidth = getWidth() - getPaddingLeft() - getPaddingRight();
-            int viewHeight = getHeight() - getPaddingTop() - getPaddingBottom();
-            int drawableWidth = getDrawable().getIntrinsicWidth();
-            int drawableHeight = getDrawable().getIntrinsicHeight();
-
-            //Get the scale
-            if (drawableWidth * viewHeight > drawableHeight * viewWidth) {
-                scale = (float) viewHeight / (float) drawableHeight;
-            } else {
-                scale = (float) viewWidth / (float) drawableWidth;
-            }
-
-            //Define the rect to take image portion from
-            RectF drawableRect = new RectF(0, drawableHeight - (viewHeight / scale), drawableWidth, drawableHeight);
-            RectF viewRect = new RectF(0, 0, viewWidth, viewHeight);
-            matrix.setRectToRect(drawableRect, viewRect, Matrix.ScaleToFit.FILL);
-            setImageMatrix(matrix);
-        });
+        setScaleType(ScaleType.MATRIX);
 
         mRadii = new float[]{
                 topLeftRadius, topLeftRadius,
@@ -80,6 +56,27 @@ public class BottomCropImage extends AppCompatImageView {
     protected void onSizeChanged(int w, int h, int oldw, int oldh) {
         super.onSizeChanged(w, h, oldw, oldh);
         mDrawRect = new RectF(0, 0, w, h);
+
+        Matrix matrix = getImageMatrix();
+
+        float scale;
+        int viewWidth = w - getPaddingLeft() - getPaddingRight();
+        int viewHeight = h - getPaddingTop() - getPaddingBottom();
+        int drawableWidth = getDrawable().getIntrinsicWidth();
+        int drawableHeight = getDrawable().getIntrinsicHeight();
+
+        //Get the scale
+        if (drawableWidth * viewHeight > drawableHeight * viewWidth) {
+            scale = (float) viewHeight / (float) drawableHeight;
+        } else {
+            scale = (float) viewWidth / (float) drawableWidth;
+        }
+
+        //Define the rect to take image portion from
+        RectF drawableRect = new RectF(0, drawableHeight - (viewHeight / scale), drawableWidth, drawableHeight);
+        RectF viewRect = new RectF(0, 0, viewWidth, viewHeight);
+        matrix.setRectToRect(drawableRect, viewRect, Matrix.ScaleToFit.FILL);
+        setImageMatrix(matrix);
     }
 
     @Override

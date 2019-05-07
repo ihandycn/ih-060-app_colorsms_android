@@ -39,6 +39,8 @@ import com.android.messaging.sms.DatabaseMessages.SmsMessage;
 import com.android.messaging.sms.MmsUtils;
 import com.android.messaging.util.Assert;
 import com.android.messaging.util.LogUtil;
+import com.crashlytics.android.core.CrashlyticsCore;
+import com.superapps.debug.CrashlyticsLog;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -137,6 +139,8 @@ class SyncMessageBatch {
             LogUtil.e(TAG, "SyncMessageBatch: SMS has no address; using unknown sender");
             // try to fix it
             sms.mAddress = ParticipantData.getUnknownSenderDestination();
+            CrashlyticsCore.getInstance().logException(new CrashlyticsLog(
+                    "SyncMessageBatch storeSms use unknown sender, sms.mAddress is empty "));
         }
 
         // TODO : We need to also deal with messages in a failed/retry state
@@ -147,8 +151,8 @@ class SyncMessageBatch {
         // A forced resync of all messages should still keep the archived states.
         // The database upgrade code notifies sync manager of this. We need to
         // honor the original customization to this conversation if created.
-        final String conversationId = mCache.getOrCreateConversation(db, sms.mThreadId, sms.mSubId,
-                DataModel.get().getSyncManager().getCustomizationForThread(sms.mThreadId));
+        final String conversationId = mCache.getOrCreateConversation(db, sms.mThreadId, sms.mAddress,
+                sms.mSubId, DataModel.get().getSyncManager().getCustomizationForThread(sms.mThreadId));
         if (conversationId == null) {
             // Cannot create conversation for this message? This should not happen.
             LogUtil.e(TAG, "SyncMessageBatch: Failed to create conversation for SMS thread "
