@@ -626,7 +626,7 @@
             android:name=".ui.appsettings.SettingGeneralActivity"
             android:excludeFromRecents="true"
             android:screenOrientation="portrait"
-            android:theme="@style/BaseSettingsActivity"/>
+            android:theme="@style/SettingGeneralActivityTheme"/>
         <activity
             android:name=".ui.appsettings.GDPRSettingsActivity"
             android:excludeFromRecents="true"

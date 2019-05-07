@@ -83,6 +83,10 @@
         <item name="android:windowBackground">@android:color/background_light</item>
     </style>
 
+    <style name="SettingGeneralActivityTheme" parent="BaseSettingsActivity">
+        <item name="android:windowBackground">@drawable/conversation_start_bg</item>
+    </style>
+
     <style name="SettingsActivity" parent="BaseSettingsActivity">
         <item name="android:textSize">@dimen/settings_list_text_size</item>
     </style>

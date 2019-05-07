@@ -190,7 +190,7 @@ public class BugleApplication extends HSApplication implements UncaughtException
             }
 
             if (oldState == HSGdprConsent.ConsentState.ACCEPTED && newState == HSGdprConsent.ConsentState.DECLINED) {
-                System.exit(0);
+                Threads.postOnMainThreadDelayed(() -> System.exit(0), 800);
             }
         });
     }

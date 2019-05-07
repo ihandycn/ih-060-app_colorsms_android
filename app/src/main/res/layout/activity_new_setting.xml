@@ -1,11 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
+    android:background="@android:color/white"
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <include layout="@layout/top_tool_bar_view" />
+    <include layout="@layout/top_tool_bar_view"/>
 
     <ScrollView
         android:layout_width="match_parent"
@@ -22,7 +24,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 app:title="@string/send_sound_pref_title"
-                app:type="1" />
+                app:type="1"/>
 
             <!--Notifications-->
             <com.android.messaging.ui.appsettings.SettingItemView
@@ -30,7 +32,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 app:title="@string/notifications_enabled_pref_title"
-                app:type="1" />
+                app:type="1"/>
 
             <!--SMS Pop-ups-->
             <com.android.messaging.ui.appsettings.SettingItemView
@@ -39,14 +41,14 @@
                 android:layout_height="wrap_content"
                 app:summary="@string/setting_sms_pop_ups_summary"
                 app:title="@string/setting_sms_pop_ups"
-                app:type="1" />
+                app:type="1"/>
 
             <com.android.messaging.ui.appsettings.SettingItemView
                 android:id="@+id/setting_item_privacy_mode"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 app:title="@string/privacy_mode_settings"
-                app:type="2" />
+                app:type="2"/>
 
 
             <!--SMS Show-->
@@ -57,7 +59,7 @@
                 android:visibility="gone"
                 app:summary="@string/setting_sms_show_summary"
                 app:title="@string/setting_sms_show"
-                app:type="1" />
+                app:type="1"/>
 
             <!--Sound-->
             <com.android.messaging.ui.appsettings.SettingItemView
@@ -65,7 +67,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 app:title="@string/notification_sound_pref_title"
-                app:type="2" />
+                app:type="2"/>
 
             <!--Vibrate-->
             <com.android.messaging.ui.appsettings.SettingItemView
@@ -74,7 +76,7 @@
                 android:layout_height="wrap_content"
                 android:key="@string/notification_vibration_pref_key"
                 app:title="@string/notification_vibrate_pref_title"
-                app:type="1" />
+                app:type="1"/>
 
             <!--Signature-->
             <com.android.messaging.ui.appsettings.SettingItemView
@@ -82,7 +84,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 app:title="@string/signature"
-                app:type="0" />
+                app:type="0"/>
 
             <!--Blocked contacts-->
             <com.android.messaging.ui.appsettings.SettingItemView
@@ -90,7 +92,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 app:title="@string/blocked_contacts_title"
-                app:type="2" />
+                app:type="2"/>
 
             <!--Advanced-->
             <com.android.messaging.ui.appsettings.SettingItemView
@@ -98,14 +100,14 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 app:title="@string/advanced_settings"
-                app:type="2" />
+                app:type="2"/>
 
             <!--feedback-->
             <com.android.messaging.ui.appsettings.SettingItemView
                 android:id="@+id/setting_item_feedback"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:title="@string/setting_feedback" />
+                app:title="@string/setting_feedback"/>
 
             <!--privacy policy-->
             <com.android.messaging.ui.appsettings.SettingItemView
@@ -113,7 +115,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 app:title="@string/setting_privacy_policy"
-                app:type="0" />
+                app:type="0"/>
 
             <!--terms of services-->
             <com.android.messaging.ui.appsettings.SettingItemView
@@ -121,7 +123,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 app:title="@string/setting_terms_of_service"
-                app:type="0" />
+                app:type="0"/>
 
             <!--analytics and advertising-->
             <com.android.messaging.ui.appsettings.SettingItemView
@@ -129,7 +131,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 app:title="@string/setting_gdpr"
-                app:type="0" />
+                app:type="0"/>
         </LinearLayout>
     </ScrollView>
 </LinearLayout>

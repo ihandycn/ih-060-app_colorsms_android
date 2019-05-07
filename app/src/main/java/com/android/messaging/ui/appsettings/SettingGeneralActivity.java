@@ -27,6 +27,7 @@ import com.android.messaging.util.BugleAnalytics;
 import com.android.messaging.util.BuglePrefs;
 import com.android.messaging.util.OsUtil;
 import com.android.messaging.util.UiUtils;
+import com.ihs.app.framework.HSGdprConsent;
 import com.ihs.commons.config.HSConfig;
 import com.superapps.util.Navigations;
 import com.superapps.util.Preferences;
@@ -240,6 +241,11 @@ public class SettingGeneralActivity extends BaseActivity {
             Navigations.startActivitySafely(SettingGeneralActivity.this,
                     new Intent(SettingGeneralActivity.this, GDPRSettingsActivity.class));
         });
+        if (HSGdprConsent.isGdprUser()) {
+            mGdpr.setVisibility(View.VISIBLE);
+        } else {
+            mGdpr.setVisibility(View.GONE);
+        }
     }
 
     public void addBackPressListener(BackPressedListener listener) {
