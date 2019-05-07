@@ -193,6 +193,8 @@
 				<dict>
 					<key>Enabled</key>
 					<true/>
+					<key>ShowAfterSlide</key>
+					<true/>
 				</dict>
 				<key>SMSDetailspageFullAd</key>
 				<dict>
