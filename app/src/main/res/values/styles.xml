@@ -110,7 +110,7 @@
         <item name="android:lines">1</item>
     </style>
 
-    <style name="WelcomeTheme" parent="@style/BugleTheme">
+    <style name="WelcomeTheme" parent="Theme.AppCompat.Light">
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
         <item name="android:windowLightStatusBar">true</item>

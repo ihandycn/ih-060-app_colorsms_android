@@ -1005,6 +1005,7 @@
     <string name="setting_feedback">Feedback</string>
     <string name="setting_privacy_policy">Privacy Policy</string>
     <string name="setting_terms_of_service">Terms of Service</string>
+    <string name="setting_gdpr">Analytics &amp; Advertising</string>
     <string name="setting_text_font">Font</string>
     <string name="setting_text_size">Font Size</string>
     <string name="setting_text_size_hint_larger">Largest</string>
@@ -1022,6 +1023,11 @@
     <string name="setting_sms_show_close_dialog_title">Confirm to turn off?</string>
     <string name="setting_sms_show_close_dialog_content">You will lose the beautiful SMS reminder themes, really want to close it?</string>
     <string name="setting_sms_show_close_dialog_ok">OK</string>
+
+    <string name="gdpr_share_data">Share data with developers</string>
+    <string name="gdpr_dialog_title">Confirm to turn off?</string>
+    <string name="gdpr_dialog_content">These data are collected and used to help the developer improve the apps for better using experience.</string>
+    <string name="restarting">Restarting</string>
 
     <!--notification channel-->
     <string name="sms_notification_channel">SMS Notification</string>

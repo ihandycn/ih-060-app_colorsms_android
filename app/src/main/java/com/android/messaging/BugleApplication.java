@@ -175,13 +175,24 @@ public class BugleApplication extends HSApplication implements UncaughtException
 
         initKeepAlive();
 
-        initFabric();
-
         sSystemUncaughtExceptionHandler = Thread.getDefaultUncaughtExceptionHandler();
         Thread.setDefaultUncaughtExceptionHandler(this);
         Trace.endSection();
 
         CommonUtils.getAppInstallTimeMillis();
+
+        HSLog.d("gdpr", "app create add listener");
+        HSGdprConsent.addListener((oldState, newState) -> {
+            HSLog.d("gdpr", "listener changed : " + oldState + " -> " + newState);
+            if (newState == HSGdprConsent.ConsentState.ACCEPTED) {
+                initFabric();
+                BugleAnalytics.sFirebaseAnalytics.setAnalyticsCollectionEnabled(true);
+            }
+
+            if (oldState == HSGdprConsent.ConsentState.ACCEPTED && newState == HSGdprConsent.ConsentState.DECLINED) {
+                System.exit(0);
+            }
+        });
     }
 
     private void initAd() {
@@ -200,6 +211,17 @@ public class BugleApplication extends HSApplication implements UncaughtException
         TraceCompat.beginSection("Application#onMainProcessApplicationCreate");
         try {
             List<Task> initWorks = new ArrayList<>();
+
+            initWorks.add(new SyncMainThreadTask("InitFabric", () -> {
+                if (HSGdprConsent.getConsentState() == HSGdprConsent.ConsentState.ACCEPTED) {
+                    HSLog.d("gdpr", "app start with permission");
+                    initFabric();
+                    BugleAnalytics.sFirebaseAnalytics.setAnalyticsCollectionEnabled(true);
+                } else {
+                    HSLog.d("gdpr", "app start with no permission");
+                    BugleAnalytics.sFirebaseAnalytics.setAnalyticsCollectionEnabled(false);
+                }
+            }));
 
             initWorks.add(new SyncMainThreadTask("InitFactoryImpl", this::initFactoryImpl));
 

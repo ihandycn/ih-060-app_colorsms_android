@@ -122,6 +122,14 @@
                 android:layout_height="wrap_content"
                 app:title="@string/setting_terms_of_service"
                 app:type="0" />
+
+            <!--analytics and advertising-->
+            <com.android.messaging.ui.appsettings.SettingItemView
+                android:id="@+id/setting_item_analytics_advertising"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:title="@string/setting_gdpr"
+                app:type="0" />
         </LinearLayout>
     </ScrollView>
 </LinearLayout>

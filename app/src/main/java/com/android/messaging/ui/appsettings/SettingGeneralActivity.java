@@ -127,6 +127,7 @@ public class SettingGeneralActivity extends BaseActivity {
                 public void onDismiss(DialogInterface dialog) {
                     updatePrivacyModeSummary();
                 }
+
                 @Override
                 public void onCancel(DialogInterface dialog) {
 
@@ -231,6 +232,13 @@ public class SettingGeneralActivity extends BaseActivity {
                     HSConfig.optString("", "Application", "TermsOfServiceUrl"),
                     false, false);
             startActivity(termsOfServiceIntent);
+        });
+
+        // gdpr
+        SettingItemView mGdpr = findViewById(R.id.setting_item_analytics_advertising);
+        mGdpr.setOnItemClickListener(() -> {
+            Navigations.startActivitySafely(SettingGeneralActivity.this,
+                    new Intent(SettingGeneralActivity.this, GDPRSettingsActivity.class));
         });
     }
 

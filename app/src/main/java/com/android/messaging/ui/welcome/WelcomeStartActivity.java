@@ -30,12 +30,14 @@ import com.android.messaging.util.OsUtil;
 import com.android.messaging.util.PhoneUtils;
 import com.android.messaging.util.view.AdvancedPageIndicator;
 import com.android.messaging.util.view.IndicatorMark;
+import com.ihs.app.framework.HSGdprConsent;
 import com.ihs.commons.config.HSConfig;
 import com.ihs.commons.utils.HSLog;
 import com.superapps.util.BackgroundDrawables;
 import com.superapps.util.Dimensions;
 import com.superapps.util.Navigations;
 import com.superapps.util.Preferences;
+import com.superapps.util.Threads;
 import com.superapps.util.Toasts;
 import com.superapps.view.MessagesTextView;
 
@@ -134,6 +136,20 @@ public class WelcomeStartActivity extends AppCompatActivity implements View.OnCl
 
         mAllowBackKey = HSConfig.optBoolean(true, "Application", "StartPageAllowBack");
         BugleAnalytics.logEvent("SMS_ActiveUsers", true);
+
+        HSGdprConsent.ConsentState consentState = HSGdprConsent.getConsentState();
+        if (consentState == HSGdprConsent.ConsentState.TO_BE_CONFIRMED) {
+            HSGdprConsent.showConsentAlert(this, HSGdprConsent.AlertStyle.AGREE_STYLE,
+                    HSConfig.optString("", "Application", "PrivacyPolicyUrl"), new HSGdprConsent.GDPRAlertListener() {
+                        @Override public void onAccept() {
+                            Threads.postOnMainThread(() -> BugleAnalytics.logEvent("GDPR_Alert_Agree", true));
+                        }
+
+                        @Override public void onDecline() {
+
+                        }
+                    });
+        }
     }
 
     @Override
