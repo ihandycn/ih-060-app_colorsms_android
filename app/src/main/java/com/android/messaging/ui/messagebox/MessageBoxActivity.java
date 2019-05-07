@@ -139,6 +139,7 @@ public class MessageBoxActivity extends AppCompatActivity implements INotificati
                 finish(RECENT);
             }
         });
+        mHomeKeyWatcher.startWatch();
 
         BugleAnalytics.logEvent("SMS_PopUp_Show", false, true);
     }
