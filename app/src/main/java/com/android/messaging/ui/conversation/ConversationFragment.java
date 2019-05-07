@@ -565,7 +565,7 @@ public class ConversationFragment extends Fragment implements ConversationDataLi
             return;
         }
 
-        final View adView = LayoutInflater.from(getContext()).inflate(R.layout.conversation_ad_view, mAdContainer, false);
+        final View adView = LayoutInflater.from(getActivity()).inflate(R.layout.conversation_ad_view, mAdContainer, false);
 
         mAdContentView = new AcbNativeAdContainerView(mAdContainer.getContext());
         mAdContentView.addContentView(adView);
