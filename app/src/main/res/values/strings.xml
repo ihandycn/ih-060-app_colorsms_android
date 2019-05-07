@@ -1153,7 +1153,7 @@
     <string name="conversation_list">Conversation List</string>
     <string name="contacts">Contacts</string>
     <string name="private_box_setting">Private box setting</string>
-    <string name="private_move_tip">To protect your privacy, private messages will be moved to our private box and be not accessed by other SMS apps.Unless you move them to public box, you may lose your data after you uninstall us.</string>
+    <string name="private_move_tip">Messages will be moved to Private Box and be not accessed by other SMS apps.</string>
     <string name="private_start_box_tip">Messages would be moved to Private Box. Please set a password for Private Box first.</string>
     <string name="private_box_add_success">Add success</string>
     <plurals name="notification_title_in_private_box">
