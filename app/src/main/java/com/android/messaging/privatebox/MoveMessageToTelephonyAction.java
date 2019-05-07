@@ -193,6 +193,9 @@ public class MoveMessageToTelephonyAction extends Action {
         if (recipientList != null && recipientList.size() > 0) {
             return threadId;
         } else {
+            if (TextUtils.isEmpty(conversationId)) {
+                return threadId;
+            }
             List<String> recipients = BugleDatabaseOperations.getRecipientsForConversation(db, conversationId);
             return MmsSmsUtils.Threads.getOrCreateThreadId(HSApplication.getContext(), new HashSet<>(recipients));
         }

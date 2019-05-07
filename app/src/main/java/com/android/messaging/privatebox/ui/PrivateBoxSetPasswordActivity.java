@@ -106,7 +106,6 @@ public class PrivateBoxSetPasswordActivity extends BaseActivity implements View.
                 } else {
                     //BugleAnalytics.logEvent("AppLock_Setpassword_Second_Input", "State", "success");
                    // BugleAnalytics.logEvent("AppLock_Setpassword_Success", "Type", "pattern");
-
                     intent.putExtra(INTENT_KER_PASSWORD_STATUS, SET_PASSWORD);
                 }
 
@@ -117,10 +116,10 @@ public class PrivateBoxSetPasswordActivity extends BaseActivity implements View.
             } else {
                 performShakeAnimation(getString(R.string.gesture_not_confirmed_sub_prompt), false);
                 promptSubLine.setText("");
-                if (isResetPassword) {
-                } else {
-                    //BugleAnalytics.logEvent("AppLock_Setpassword_Second_Input", "State", "fail");
-                }
+//                if (isResetPassword) {
+//                } else {
+//                    //BugleAnalytics.logEvent("AppLock_Setpassword_Second_Input", "State", "fail");
+//                }
             }
         }
     }
@@ -174,65 +173,59 @@ public class PrivateBoxSetPasswordActivity extends BaseActivity implements View.
         gestureLockView.setOnGestureFinishListener(new GestureListener());
 
         pinUnlockView = findViewById(R.id.pin_unlock_view);
-        pinUnlockView.setOnKeyboardClickListener(new PINKeyboardView.OnKeyboardClickListener() {
-            @Override
-            public void onKeyboardClick(int i) {
-                if (i >= 0) {
-                    pinIndicatorView.inc(i);
-                } else {
-                    pinIndicatorView.dec();
-                }
+        pinUnlockView.setOnKeyboardClickListener(i -> {
+            if (i >= 0) {
+                pinIndicatorView.inc(i);
+            } else {
+                pinIndicatorView.dec();
             }
         });
 
         pinIndicatorView = findViewById(R.id.pin_indicator_view);
-        pinIndicatorView.setOnPINFinishedListener(new PINIndicatorView.OnPINFinishedListener() {
-            @Override
-            public void onPINFinished(String decodedPIN) {
-                if (null != operationTv) {
-                    operationTv.setText(R.string.reset_password);
-                    operationTv.setTag(getString(R.string.reset_password));
-                }
+        pinIndicatorView.setOnPINFinishedListener(decodedPIN -> {
+            if (null != operationTv) {
+                operationTv.setText(R.string.reset_password);
+                operationTv.setTag(getString(R.string.reset_password));
+            }
 
-                switch (passwordSetMode) {
-                    case NORMAL_FIRST_SET:
-                        passwordSetMode = PasswordSetMode.NORMAL_SECOND_SET;
+            switch (passwordSetMode) {
+                case NORMAL_FIRST_SET:
+                    passwordSetMode = PasswordSetMode.NORMAL_SECOND_SET;
 
-                        password = decodedPIN;
+                    password = decodedPIN;
 
-                        pinIndicatorView.clear();
+                    pinIndicatorView.clear();
+                    currentPasswordStyle = PrivateBoxSettings.PasswordStyle.PIN;
+                    updateCurrentProtectionUI(currentPasswordStyle, false);
+                    if (isResetPassword) {
+                    } else {
+                        BugleAnalytics.logEvent("PrivateBox_ConfirmPassword_Show");
+                    }
+                    break;
+                case NORMAL_SECOND_SET:
+                    if (decodedPIN.equals(password)) {
+                        PrivateBoxSettings.setUnlockPIN(password);
                         currentPasswordStyle = PrivateBoxSettings.PasswordStyle.PIN;
-                        updateCurrentProtectionUI(currentPasswordStyle, false);
+                        PrivateBoxSettings.setLockStyle(currentPasswordStyle);
+                        Intent intent = new Intent();
                         if (isResetPassword) {
+                            intent.putExtra(INTENT_KER_PASSWORD_STATUS, RESET_PASSWORD);
                         } else {
-                            BugleAnalytics.logEvent("PrivateBox_ConfirmPassword_Show");
+                            //BugleAnalytics.logEvent("PrivateBox_Password_SetSuccess");
+                            intent.putExtra(INTENT_KER_PASSWORD_STATUS, SET_PASSWORD);
                         }
-                        break;
-                    case NORMAL_SECOND_SET:
-                        if (decodedPIN.equals(password)) {
-                            PrivateBoxSettings.setUnlockPIN(password);
-                            currentPasswordStyle = PrivateBoxSettings.PasswordStyle.PIN;
-                            PrivateBoxSettings.setLockStyle(currentPasswordStyle);
-                            Intent intent = new Intent();
-                            if (isResetPassword) {
-                                intent.putExtra(INTENT_KER_PASSWORD_STATUS, RESET_PASSWORD);
-                            } else {
-                                //BugleAnalytics.logEvent("PrivateBox_Password_SetSuccess");
-                                intent.putExtra(INTENT_KER_PASSWORD_STATUS, SET_PASSWORD);
-                            }
 
-                            onPasswordSetSucceed();
-                            setResult(RESULT_OK, intent);
-                            finish();
-                        } else {
-                            performShakeAnimation(getString(R.string.password_not_confirmed_sub_prompt), false);
-                            if (isResetPassword) {
-                            } else {
-                                //BugleAnalytics.logEvent("AppLock_Setpassword_Second_Input", "State", "fail");
-                            }
-                        }
-                        break;
-                }
+                        onPasswordSetSucceed();
+                        setResult(RESULT_OK, intent);
+                        finish();
+                    } else {
+                        performShakeAnimation(getString(R.string.password_not_confirmed_sub_prompt), false);
+//                        if (isResetPassword) {
+//                        } else {
+//                            //BugleAnalytics.logEvent("AppLock_Setpassword_Second_Input", "State", "fail");
+//                        }
+                    }
+                    break;
             }
         });
 
