@@ -39,6 +39,7 @@ import com.android.messaging.datamodel.data.MessageData;
 import com.android.messaging.datamodel.data.MessagePartData;
 import com.android.messaging.datamodel.data.ParticipantData;
 import com.android.messaging.privatebox.PrivateContactsManager;
+import com.android.messaging.privatebox.PrivateMessageManager;
 import com.android.messaging.sms.MmsUtils;
 import com.android.messaging.ui.UIIntents;
 import com.android.messaging.util.Assert;
@@ -50,8 +51,10 @@ import com.android.messaging.util.OsUtil;
 import com.android.messaging.util.PhoneUtils;
 import com.android.messaging.util.UriUtil;
 import com.android.messaging.widget.WidgetConversationProvider;
+import com.crashlytics.android.core.CrashlyticsCore;
 import com.google.common.annotations.VisibleForTesting;
 import com.ihs.commons.utils.HSLog;
+import com.superapps.debug.CrashlyticsLog;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -59,7 +62,6 @@ import java.util.HashSet;
 import java.util.List;
 
 import javax.annotation.Nullable;
-
 
 /**
  * This class manages updating our local database
@@ -230,6 +232,32 @@ public class BugleDatabaseOperations {
         // Check to see if this conversation is already in out local db cache
         String conversationId = BugleDatabaseOperations.getExistingConversation(db, threadId,
                 false);
+
+        if (conversationId == null) {
+            List<String> list = new ArrayList<>();
+            db.beginTransaction();
+            try {
+                for (ParticipantData pd : participants) {
+                    list.add(BugleDatabaseOperations.getOrCreateParticipantInTransaction(db, pd));
+                }
+                db.setTransactionSuccessful();
+            } finally {
+                db.endTransaction();
+            }
+            conversationId = getConversationIdForParticipantsGroup(list);
+            //cannot find conversation by thread_id,
+            //update conversations data
+            if (conversationId != null) {
+                CrashlyticsCore.getInstance().logException(
+                        new CrashlyticsLog("merge conversations" +
+                        " (different thread_id but same participants)"));
+                long validThreadId = PrivateMessageManager.getInstance().getValidThreadId(threadId, db, conversationId);
+                ContentValues values = new ContentValues();
+                values.put(ConversationColumns.SMS_THREAD_ID, validThreadId);
+                db.update(DatabaseHelper.CONVERSATIONS_TABLE, values,
+                        ConversationColumns._ID + "=" + conversationId, null);
+            }
+        }
 
         if (conversationId == null) {
             final String conversationName = ConversationListItemData.generateConversationName(
@@ -415,7 +443,7 @@ public class BugleDatabaseOperations {
             values.put(ConversationColumns.NOTIFICATION_SOUND_URI, soundUri);
         }
         List<String> participantList = new ArrayList<>();
-        for (ParticipantData participantData: participants) {
+        for (ParticipantData participantData : participants) {
             participantList.add(participantData.getNormalizedDestination());
         }
         values.put(ConversationColumns.IS_PRIVATE, PrivateContactsManager.getInstance().isPrivateRecipient(participantList));
@@ -638,7 +666,7 @@ public class BugleDatabaseOperations {
     }
 
     public static void updateConversationPinStatues(final DatabaseWrapper dbWrapper,
-                                                    final String conversationId, final boolean isPin){
+                                                    final String conversationId, final boolean isPin) {
         Assert.isNotMainThread();
         Assert.isTrue(dbWrapper.getDatabase().inTransaction());
         final ContentValues values = new ContentValues();
@@ -811,7 +839,7 @@ public class BugleDatabaseOperations {
 
     @DoesNotRunOnMainThread
     public static boolean updateConversationRowIfExists(final DatabaseWrapper dbWrapper,
-            final String conversationId, final ContentValues values) {
+                                                        final String conversationId, final ContentValues values) {
         Assert.isNotMainThread();
         return updateRowIfExists(dbWrapper, DatabaseHelper.CONVERSATIONS_TABLE,
                 ConversationColumns._ID, conversationId, values);
@@ -819,7 +847,7 @@ public class BugleDatabaseOperations {
 
     @DoesNotRunOnMainThread
     public static void updateConversationRow(final DatabaseWrapper dbWrapper,
-            final String conversationId, final ContentValues values) {
+                                             final String conversationId, final ContentValues values) {
         Assert.isNotMainThread();
         final boolean exists = updateConversationRowIfExists(dbWrapper, conversationId, values);
         Assert.isTrue(exists);
@@ -827,7 +855,7 @@ public class BugleDatabaseOperations {
 
     @DoesNotRunOnMainThread
     public static boolean updateMessageRowIfExists(final DatabaseWrapper dbWrapper,
-            final String messageId, final ContentValues values) {
+                                                   final String messageId, final ContentValues values) {
         Assert.isNotMainThread();
         return updateRowIfExists(dbWrapper, DatabaseHelper.MESSAGES_TABLE, MessageColumns._ID,
                 messageId, values);
@@ -835,7 +863,7 @@ public class BugleDatabaseOperations {
 
     @DoesNotRunOnMainThread
     public static void updateMessageRow(final DatabaseWrapper dbWrapper,
-            final String messageId, final ContentValues values) {
+                                        final String messageId, final ContentValues values) {
         Assert.isNotMainThread();
         final boolean exists = updateMessageRowIfExists(dbWrapper, messageId, values);
         Assert.isTrue(exists);
@@ -843,7 +871,7 @@ public class BugleDatabaseOperations {
 
     @DoesNotRunOnMainThread
     public static boolean updatePartRowIfExists(final DatabaseWrapper dbWrapper,
-            final String partId, final ContentValues values) {
+                                                final String partId, final ContentValues values) {
         Assert.isNotMainThread();
         return updateRowIfExists(dbWrapper, DatabaseHelper.PARTS_TABLE, PartColumns._ID,
                 partId, values);
@@ -1033,7 +1061,7 @@ public class BugleDatabaseOperations {
                             + ParticipantColumns._ID
                             + " FROM " + DatabaseHelper.CONVERSATION_PARTICIPANTS_TABLE
                             + " WHERE " + ConversationParticipantsColumns.CONVERSATION_ID + " =? )",
-                            new String[] { conversationId }, null, null, null);
+                    new String[]{conversationId}, null, null, null);
 
             while (cursor.moveToNext()) {
                 participants.add(ParticipantData.getFromCursor(cursor));
@@ -1216,12 +1244,12 @@ public class BugleDatabaseOperations {
     /**
      * Write a message part to our local database
      *
-     * @param dbWrapper     The database
-     * @param messagePart   The message part to insert
+     * @param dbWrapper   The database
+     * @param messagePart The message part to insert
      * @return The row id of the newly inserted part
      */
     static String insertNewMessagePartInTransaction(final DatabaseWrapper dbWrapper,
-            final MessagePartData messagePart, final String conversationId) {
+                                                    final MessagePartData messagePart, final String conversationId) {
         Assert.isTrue(dbWrapper.getDatabase().inTransaction());
         Assert.isTrue(!TextUtils.isEmpty(messagePart.getMessageId()));
 
@@ -1243,7 +1271,7 @@ public class BugleDatabaseOperations {
      */
     @DoesNotRunOnMainThread
     public static void insertNewMessageInTransaction(final DatabaseWrapper dbWrapper,
-            final MessageData message) {
+                                                     final MessageData message) {
         Assert.isNotMainThread();
         Assert.isTrue(dbWrapper.getDatabase().inTransaction());
 
@@ -1266,7 +1294,7 @@ public class BugleDatabaseOperations {
      */
     @DoesNotRunOnMainThread
     public static void updateMessageInTransaction(final DatabaseWrapper dbWrapper,
-            final MessageData message) {
+                                                  final MessageData message) {
         Assert.isNotMainThread();
         Assert.isTrue(dbWrapper.getDatabase().inTransaction());
         final String messageId = message.getMessageId();
@@ -1291,7 +1319,7 @@ public class BugleDatabaseOperations {
 
     @DoesNotRunOnMainThread
     public static void updateMessageAndPartsInTransaction(final DatabaseWrapper dbWrapper,
-            final MessageData message, final List<MessagePartData> partsToUpdate) {
+                                                          final MessageData message, final List<MessagePartData> partsToUpdate) {
         Assert.isNotMainThread();
         Assert.isTrue(dbWrapper.getDatabase().inTransaction());
         final ContentValues values = new ContentValues();
@@ -1309,10 +1337,10 @@ public class BugleDatabaseOperations {
      * Delete all parts for a message
      */
     static void deletePartsForMessage(final DatabaseWrapper dbWrapper,
-            final String messageId) {
+                                      final String messageId) {
         final int cnt = dbWrapper.delete(DatabaseHelper.PARTS_TABLE,
                 PartColumns.MESSAGE_ID + " =?",
-                new String[] { messageId });
+                new String[]{messageId});
         Assert.inRange(cnt, 0, Integer.MAX_VALUE);
     }
 
@@ -1334,7 +1362,7 @@ public class BugleDatabaseOperations {
                 final String conversationId = message.getConversationId();
                 // Delete message
                 count = dbWrapper.delete(DatabaseHelper.MESSAGES_TABLE,
-                        MessageColumns._ID + "=?", new String[] { messageId });
+                        MessageColumns._ID + "=?", new String[]{messageId});
 
                 if (!deleteConversationIfEmptyInTransaction(dbWrapper, conversationId)) {
                     // TODO: Should we leave the conversation sort timestamp alone?
@@ -1927,6 +1955,38 @@ public class BugleDatabaseOperations {
         }
 
         return conversationIds;
+    }
+
+    /**
+     * Get a list of conversations that contain all participants specified.
+     */
+    private static String getConversationIdForParticipantsGroup(
+            final List<String> participantIds) {
+        DatabaseWrapper db = DataModel.get().getDatabase();
+
+        final StringBuilder selection = new StringBuilder();
+        selection.append(ConversationParticipantsColumns.PARTICIPANT_ID + " in (");
+        for (int i = 0; i < participantIds.size(); i++) {
+            if (i > 0) {
+                selection.append(",");
+            }
+            selection.append(participantIds.get(i));
+        }
+        selection.append(")");
+
+        final Cursor cursor = db.query(DatabaseHelper.CONVERSATION_PARTICIPANTS_TABLE,
+                new String[]{ConversationParticipantsColumns.CONVERSATION_ID,},
+                selection.toString(), null, ConversationParticipantsColumns.CONVERSATION_ID,
+                "COUNT(*)=" + participantIds.size(), null);
+
+        String conversationId = null;
+        if (cursor != null) {
+            if (cursor.moveToNext()) {
+                conversationId = cursor.getString(0);
+            }
+            cursor.close();
+        }
+        return conversationId;
     }
 
     /**

@@ -96,7 +96,7 @@ public class MoveMessageToTelephonyAction extends Action {
                     }
                     if (localSmsCursor.moveToFirst()) {
                         values.clear();
-                        values.put(Telephony.Sms.THREAD_ID, getValidThreadId(
+                        values.put(Telephony.Sms.THREAD_ID, PrivateMessageManager.getInstance().getValidThreadId(
                                 localSmsCursor.getLong(PrivateSmsEntry.THREAD_ID_INDEX), db, conversationId));
                         bindSmsValues(values, localSmsCursor);
                         //insert sms into telephony
@@ -121,7 +121,7 @@ public class MoveMessageToTelephonyAction extends Action {
                     }
                     if (localMmsCursor.moveToFirst()) {
                         values.clear();
-                        values.put(Telephony.Mms.THREAD_ID, getValidThreadId(
+                        values.put(Telephony.Mms.THREAD_ID, PrivateMessageManager.getInstance().getValidThreadId(
                                 localMmsCursor.getLong(PrivateMmsEntry.THREAD_ID_INDEX), db, conversationId));
                         bindMmsValues(values, localMmsCursor);
                         //insert into telephony
@@ -185,19 +185,6 @@ public class MoveMessageToTelephonyAction extends Action {
                 }
             }
             Toasts.showToast(R.string.private_box_add_success);
-        }
-    }
-
-    private long getValidThreadId(long threadId, DatabaseWrapper db, String conversationId) {
-        List<String> recipientList = MmsUtils.getRecipientsByThread(threadId);
-        if (recipientList != null && recipientList.size() > 0) {
-            return threadId;
-        } else {
-            if (TextUtils.isEmpty(conversationId)) {
-                return threadId;
-            }
-            List<String> recipients = BugleDatabaseOperations.getRecipientsForConversation(db, conversationId);
-            return MmsSmsUtils.Threads.getOrCreateThreadId(HSApplication.getContext(), new HashSet<>(recipients));
         }
     }
 
