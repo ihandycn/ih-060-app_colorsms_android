@@ -17,11 +17,14 @@ import com.android.messaging.datamodel.DataModel;
 import com.android.messaging.datamodel.DatabaseHelper;
 import com.android.messaging.datamodel.DatabaseWrapper;
 import com.android.messaging.datamodel.action.Action;
+import com.android.messaging.sms.MmsSmsUtils;
+import com.android.messaging.sms.MmsUtils;
 import com.ihs.app.framework.HSApplication;
 import com.ihs.commons.notificationcenter.HSGlobalNotificationCenter;
 import com.superapps.util.Toasts;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 
 public class MoveMessageToTelephonyAction extends Action {
@@ -64,15 +67,19 @@ public class MoveMessageToTelephonyAction extends Action {
         try {
             for (String msgId : msgIdList) {
                 Cursor c = db.query(DatabaseHelper.MESSAGES_TABLE,
-                        new String[]{DatabaseHelper.MessageColumns.SMS_MESSAGE_URI},
+                        new String[]{DatabaseHelper.MessageColumns.SMS_MESSAGE_URI,
+                                DatabaseHelper.MessageColumns.CONVERSATION_ID},
                         DatabaseHelper.MessageColumns._ID + " =? ", new String[]{msgId},
                         null, null, null);
 
                 Uri messageUri = null;
+                String conversationId = null;
                 if (c != null && c.moveToFirst()) {
-                    if (!TextUtils.isEmpty(c.getString(0))) {
-                        messageUri = Uri.parse(c.getString(0));
+                    String uriValue = c.getString(0);
+                    if (!TextUtils.isEmpty(uriValue)) {
+                        messageUri = Uri.parse(uriValue);
                     }
+                    conversationId = c.getString(1);
                 }
                 if (c != null) {
                     c.close();
@@ -83,12 +90,14 @@ public class MoveMessageToTelephonyAction extends Action {
 
                 if (!messageUri.toString().contains("mms")) {
                     Cursor localSmsCursor = resolver.query(messageUri,
-                            PrivateSmsEntry.sProjection, null, null, null);
+                            PrivateSmsEntry.getProjection(), null, null, null);
                     if (localSmsCursor == null) {
                         return;
                     }
                     if (localSmsCursor.moveToFirst()) {
                         values.clear();
+                        values.put(Telephony.Sms.THREAD_ID, getValidThreadId(
+                                localSmsCursor.getLong(PrivateSmsEntry.THREAD_ID_INDEX), db, conversationId));
                         bindSmsValues(values, localSmsCursor);
                         //insert sms into telephony
                         Uri uri = resolver.insert(Telephony.Sms.CONTENT_URI, values);
@@ -105,13 +114,15 @@ public class MoveMessageToTelephonyAction extends Action {
                     }
                     localSmsCursor.close();
                 } else {
-                    Cursor localMmsCursor = resolver.query(messageUri, PrivateMmsEntry.sProjection,
+                    Cursor localMmsCursor = resolver.query(messageUri, PrivateMmsEntry.getProjection(),
                             null, null, null);
                     if (localMmsCursor == null) {
                         return;
                     }
                     if (localMmsCursor.moveToFirst()) {
                         values.clear();
+                        values.put(Telephony.Mms.THREAD_ID, getValidThreadId(
+                                localMmsCursor.getLong(PrivateMmsEntry.THREAD_ID_INDEX), db, conversationId));
                         bindMmsValues(values, localMmsCursor);
                         //insert into telephony
                         Uri uri = resolver.insert(Telephony.Mms.CONTENT_URI, values);
@@ -166,7 +177,7 @@ public class MoveMessageToTelephonyAction extends Action {
                     localMmsCursor.close();
                 }
             }
-        }finally {
+        } finally {
             if (actionParameters.containsKey(NOTIFICATION_KEY_MOVE_END)) {
                 String end = actionParameters.getString(NOTIFICATION_KEY_MOVE_END);
                 if (!TextUtils.isEmpty(end)) {
@@ -177,126 +188,100 @@ public class MoveMessageToTelephonyAction extends Action {
         }
     }
 
-    private static void bindMmsValues(ContentValues values, Cursor localCursor) {
-        values.put(Telephony.Mms.THREAD_ID,
-                localCursor.getLong(localCursor.getColumnIndex(PrivateMmsEntry.THREAD_ID)));
-        values.put(Telephony.Mms.DATE,
-                localCursor.getLong(localCursor.getColumnIndex(PrivateMmsEntry.DATE)));
-        values.put(Telephony.Mms.DATE_SENT,
-                localCursor.getLong(localCursor.getColumnIndex(PrivateMmsEntry.DATE_SENT)));
-        values.put(Telephony.Mms.MESSAGE_BOX,
-                localCursor.getInt(localCursor.getColumnIndex(PrivateMmsEntry.MESSAGE_BOX)));
-        values.put(Telephony.Mms.READ,
-                localCursor.getInt(localCursor.getColumnIndex(PrivateMmsEntry.READ)));
-        values.put(Telephony.Mms.MESSAGE_ID,
-                localCursor.getString(localCursor.getColumnIndex(PrivateMmsEntry.MESSAGE_ID)));
-        values.put(Telephony.Mms.SUBJECT,
-                localCursor.getString(localCursor.getColumnIndex(PrivateMmsEntry.SUBJECT)));
-        values.put(Telephony.Mms.SUBJECT_CHARSET,
-                localCursor.getInt(localCursor.getColumnIndex(PrivateMmsEntry.SUBJECT_CHARSET)));
-        values.put(Telephony.Mms.CONTENT_TYPE,
-                localCursor.getString(localCursor.getColumnIndex(PrivateMmsEntry.CONTENT_TYPE)));
-        values.put(Telephony.Mms.CONTENT_LOCATION,
-                localCursor.getString(localCursor.getColumnIndex(PrivateMmsEntry.CONTENT_LOCATION)));
-        values.put(Telephony.Mms.EXPIRY,
-                localCursor.getInt(localCursor.getColumnIndex(PrivateMmsEntry.EXPIRY)));
-        values.put(Telephony.Mms.MESSAGE_CLASS,
-                localCursor.getString(localCursor.getColumnIndex(PrivateMmsEntry.MESSAGE_CLASS)));
-        values.put(Telephony.Mms.MESSAGE_TYPE,
-                localCursor.getInt(localCursor.getColumnIndex(PrivateMmsEntry.MESSAGE_TYPE)));
-        values.put(Telephony.Mms.MMS_VERSION,
-                localCursor.getInt(localCursor.getColumnIndex(PrivateMmsEntry.MMS_VERSION)));
-        values.put(Telephony.Mms.MESSAGE_SIZE,
-                localCursor.getInt(localCursor.getColumnIndex(PrivateMmsEntry.MESSAGE_SIZE)));
-        values.put(Telephony.Mms.PRIORITY,
-                localCursor.getInt(localCursor.getColumnIndex(PrivateMmsEntry.PRIORITY)));
-        values.put(Telephony.Mms.READ_REPORT,
-                localCursor.getInt(localCursor.getColumnIndex(PrivateMmsEntry.READ_REPORT)));
-        values.put(Telephony.Mms.REPORT_ALLOWED,
-                localCursor.getInt(localCursor.getColumnIndex(PrivateMmsEntry.REPORT_ALLOWED)));
-        values.put(Telephony.Mms.RESPONSE_STATUS,
-                localCursor.getInt(localCursor.getColumnIndex(PrivateMmsEntry.RESPONSE_STATUS)));
-        values.put(Telephony.Mms.STATUS,
-                localCursor.getInt(localCursor.getColumnIndex(PrivateMmsEntry.STATUS)));
-        values.put(Telephony.Mms.TRANSACTION_ID,
-                localCursor.getString(localCursor.getColumnIndex(PrivateMmsEntry.TRANSACTION_ID)));
-        values.put(Telephony.Mms.RETRIEVE_STATUS,
-                localCursor.getInt(localCursor.getColumnIndex(PrivateMmsEntry.RETRIEVE_STATUS)));
-        values.put(Telephony.Mms.RETRIEVE_TEXT,
-                localCursor.getString(localCursor.getColumnIndex(PrivateMmsEntry.RETRIEVE_TEXT)));
-        values.put(Telephony.Mms.RETRIEVE_TEXT_CHARSET,
-                localCursor.getInt(localCursor.getColumnIndex(PrivateMmsEntry.RETRIEVE_TEXT_CHARSET)));
-        values.put(Telephony.Mms.READ_STATUS,
-                localCursor.getInt(localCursor.getColumnIndex(PrivateMmsEntry.READ_STATUS)));
-        values.put(Telephony.Mms.CONTENT_CLASS,
-                localCursor.getInt(localCursor.getColumnIndex(PrivateMmsEntry.CONTENT_CLASS)));
-        values.put(Telephony.Mms.RESPONSE_TEXT,
-                localCursor.getString(localCursor.getColumnIndex(PrivateMmsEntry.RESPONSE_TEXT)));
-        values.put(Telephony.Mms.DELIVERY_TIME,
-                localCursor.getInt(localCursor.getColumnIndex(PrivateMmsEntry.DELIVERY_TIME)));
-        values.put(Telephony.Mms.DELIVERY_REPORT,
-                localCursor.getInt(localCursor.getColumnIndex(PrivateMmsEntry.DELIVERY_REPORT)));
-        values.put(Telephony.Mms.LOCKED,
-                localCursor.getInt(localCursor.getColumnIndex(PrivateMmsEntry.LOCKED)));
-        values.put(Telephony.Mms.SEEN,
-                localCursor.getInt(localCursor.getColumnIndex(PrivateMmsEntry.SEEN)));
-        values.put(Telephony.Mms.TEXT_ONLY,
-                localCursor.getInt(localCursor.getColumnIndex(PrivateMmsEntry.TEXT_ONLY)));
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP_MR1) {
-            values.put(Telephony.Mms.SUBSCRIPTION_ID,
-                    localCursor.getLong(localCursor.getColumnIndex(PrivateMmsEntry.SUBSCRIPTION_ID)));
+    private long getValidThreadId(long threadId, DatabaseWrapper db, String conversationId) {
+        List<String> recipientList = MmsUtils.getRecipientsByThread(threadId);
+        if (recipientList != null && recipientList.size() > 0) {
+            return threadId;
+        } else {
+            List<String> recipients = BugleDatabaseOperations.getRecipientsForConversation(db, conversationId);
+            return MmsSmsUtils.Threads.getOrCreateThreadId(HSApplication.getContext(), new HashSet<>(recipients));
         }
+    }
+
+    private static void bindMmsValues(ContentValues values, Cursor localCursor) {
+        values.put(Telephony.Mms.DATE, localCursor.getLong(PrivateMmsEntry.DATE_INDEX));
+        values.put(Telephony.Mms.DATE_SENT, localCursor.getLong(PrivateMmsEntry.DATE_SENT_INDEX));
+        values.put(Telephony.Mms.MESSAGE_BOX, localCursor.getInt(PrivateMmsEntry.MESSAGE_BOX_INDEX));
+        values.put(Telephony.Mms.READ, localCursor.getInt(PrivateMmsEntry.READ_INDEX));
+        values.put(Telephony.Mms.MESSAGE_ID, localCursor.getString(PrivateMmsEntry.MESSAGE_ID_INDEX));
+        values.put(Telephony.Mms.SUBJECT, localCursor.getString(PrivateMmsEntry.SUBJECT_INDEX));
+        values.put(Telephony.Mms.SUBJECT_CHARSET, localCursor.getInt(PrivateMmsEntry.SUBJECT_CHARSET_INDEX));
+        values.put(Telephony.Mms.CONTENT_TYPE, localCursor.getString(PrivateMmsEntry.CONTENT_TYPE_INDEX));
+        values.put(Telephony.Mms.CONTENT_LOCATION, localCursor.getString(PrivateMmsEntry.CONTENT_LOCATION_INDEX));
+        values.put(Telephony.Mms.EXPIRY, localCursor.getInt(PrivateMmsEntry.EXPIRY_INDEX));
+        values.put(Telephony.Mms.MESSAGE_CLASS, localCursor.getString(PrivateMmsEntry.MESSAGE_CLASS_INDEX));
+        values.put(Telephony.Mms.MESSAGE_TYPE, localCursor.getInt(PrivateMmsEntry.MESSAGE_TYPE_INDEX));
+        values.put(Telephony.Mms.MMS_VERSION, localCursor.getInt(PrivateMmsEntry.MMS_VERSION_INDEX));
+        values.put(Telephony.Mms.MESSAGE_SIZE, localCursor.getInt(PrivateMmsEntry.MESSAGE_SIZE_INDEX));
+        values.put(Telephony.Mms.PRIORITY, localCursor.getInt(PrivateMmsEntry.PRIORITY_INDEX));
+        values.put(Telephony.Mms.READ_REPORT, localCursor.getInt(PrivateMmsEntry.READ_REPORT_INDEX));
+        values.put(Telephony.Mms.REPORT_ALLOWED, localCursor.getInt(PrivateMmsEntry.REPORT_ALLOWED_INDEX));
+        values.put(Telephony.Mms.RESPONSE_STATUS, localCursor.getInt(PrivateMmsEntry.RESPONSE_STATUS_INDEX));
+        values.put(Telephony.Mms.STATUS, localCursor.getInt(PrivateMmsEntry.STATUS_INDEX));
+        values.put(Telephony.Mms.TRANSACTION_ID, localCursor.getString(PrivateMmsEntry.TRANSACTION_ID_INDEX));
+        values.put(Telephony.Mms.RETRIEVE_STATUS, localCursor.getInt(PrivateMmsEntry.RETRIEVE_STATUS_INDEX));
+        values.put(Telephony.Mms.RETRIEVE_TEXT, localCursor.getString(PrivateMmsEntry.RETRIEVE_TEXT_INDEX));
+        values.put(Telephony.Mms.RETRIEVE_TEXT_CHARSET, localCursor.getInt(PrivateMmsEntry.RETRIEVE_TEXT_CHARSET_INDEX));
+        values.put(Telephony.Mms.READ_STATUS, localCursor.getInt(PrivateMmsEntry.READ_STATUS_INDEX));
+        values.put(Telephony.Mms.CONTENT_CLASS, localCursor.getInt(PrivateMmsEntry.CONTENT_CLASS_INDEX));
+        values.put(Telephony.Mms.RESPONSE_TEXT, localCursor.getString(PrivateMmsEntry.RESPONSE_TEXT_INDEX));
+        values.put(Telephony.Mms.DELIVERY_TIME, localCursor.getInt(PrivateMmsEntry.DELIVERY_TIME_INDEX));
+        values.put(Telephony.Mms.DELIVERY_REPORT, localCursor.getInt(PrivateMmsEntry.DELIVERY_REPORT_INDEX));
+        values.put(Telephony.Mms.LOCKED, localCursor.getInt(PrivateMmsEntry.LOCKED_INDEX));
+        values.put(Telephony.Mms.SEEN, localCursor.getInt(PrivateMmsEntry.SEEN_INDEX));
+        values.put(Telephony.Mms.TEXT_ONLY, localCursor.getInt(PrivateMmsEntry.TEXT_ONLY_INDEX));
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            values.put(Telephony.Mms.CREATOR,
-                    localCursor.getString(localCursor.getColumnIndex(PrivateMmsEntry.CREATOR)));
+            values.put(Telephony.Mms.CREATOR, localCursor.getString(PrivateMmsEntry.CREATOR_INDEX));
+        }
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP_MR1) {
+            values.put(Telephony.Mms.SUBSCRIPTION_ID, localCursor.getLong(PrivateMmsEntry.SUBSCRIPTION_ID_INDEX));
         }
     }
 
     private static void bindSmsValues(ContentValues values, Cursor localCursor) {
-        values.put(Telephony.Sms.THREAD_ID,
-                localCursor.getLong(localCursor.getColumnIndex(PrivateSmsEntry.THREAD_ID)));
         values.put(Telephony.Sms.ADDRESS,
-                localCursor.getString(localCursor.getColumnIndex(PrivateSmsEntry.ADDRESS)));
+                localCursor.getString(PrivateSmsEntry.ADDRESS_INDEX));
         //Telephony.Sms.Inbox.PERSON relates to the id of the deprecated Contacts.People._ID
-        String personId = localCursor.getString(localCursor.getColumnIndex(PrivateSmsEntry.PERSON));
+        String personId = localCursor.getString(PrivateSmsEntry.PERSON_INDEX);
         if (!TextUtils.isEmpty(personId)) {
             values.put(Telephony.Sms.PERSON, personId);
         }
         values.put(Telephony.Sms.DATE,
-                localCursor.getLong(localCursor.getColumnIndex(PrivateSmsEntry.DATE)));
+                localCursor.getLong(PrivateSmsEntry.DATE_INDEX));
         values.put(Telephony.Sms.DATE_SENT,
-                localCursor.getLong(localCursor.getColumnIndex(PrivateSmsEntry.DATE_SEND)));
+                localCursor.getLong(PrivateSmsEntry.DATE_SEND_INDEX));
         values.put(Telephony.Sms.PROTOCOL,
-                localCursor.getInt(localCursor.getColumnIndex(PrivateSmsEntry.PROTOCOL)));
+                localCursor.getInt(PrivateSmsEntry.PROTOCOL_INDEX));
         values.put(Telephony.Sms.READ,
-                localCursor.getInt(localCursor.getColumnIndex(PrivateSmsEntry.READ)));
+                localCursor.getInt(PrivateSmsEntry.READ_INDEX));
         values.put(Telephony.Sms.STATUS,
-                localCursor.getInt(localCursor.getColumnIndex(PrivateSmsEntry.STATUS)));
+                localCursor.getInt(PrivateSmsEntry.STATUS_INDEX));
         values.put(Telephony.Sms.TYPE,
-                localCursor.getInt(localCursor.getColumnIndex(PrivateSmsEntry.TYPE)));
+                localCursor.getInt(PrivateSmsEntry.TYPE_INDEX));
         values.put(Telephony.Sms.REPLY_PATH_PRESENT,
-                localCursor.getInt(localCursor.getColumnIndex(PrivateSmsEntry.REPLY_PATH_PRESENT)));
+                localCursor.getInt(PrivateSmsEntry.REPLY_PATH_PRESENT_INDEX));
         values.put(Telephony.Sms.SUBJECT,
-                localCursor.getString(localCursor.getColumnIndex(PrivateSmsEntry.SUBJECT)));
+                localCursor.getString(PrivateSmsEntry.SUBJECT_INDEX));
         values.put(Telephony.Sms.BODY,
-                localCursor.getString(localCursor.getColumnIndex(PrivateSmsEntry.BODY)));
+                localCursor.getString(PrivateSmsEntry.BODY_INDEX));
         values.put(Telephony.Sms.SERVICE_CENTER,
-                localCursor.getString(localCursor.getColumnIndex(PrivateSmsEntry.SERVICE_CENTER)));
+                localCursor.getString(PrivateSmsEntry.SERVICE_CENTER_INDEX));
         values.put(Telephony.Sms.LOCKED,
-                localCursor.getInt(localCursor.getColumnIndex(PrivateSmsEntry.LOCKED)));
+                localCursor.getInt(PrivateSmsEntry.LOCKED_INDEX));
         values.put(Telephony.Sms.ERROR_CODE,
-                localCursor.getInt(localCursor.getColumnIndex(PrivateSmsEntry.ERROR_CODE)));
+                localCursor.getInt(PrivateSmsEntry.ERROR_CODE_INDEX));
         values.put(Telephony.Sms.SEEN,
-                localCursor.getInt(localCursor.getColumnIndex(PrivateSmsEntry.SEEN)));
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP_MR1) {
-            values.put(Telephony.Sms.SUBSCRIPTION_ID,
-                    localCursor.getLong(localCursor.getColumnIndex(PrivateSmsEntry.SUBSCRIPTION_ID)));
-        }
+                localCursor.getInt(PrivateSmsEntry.SEEN_INDEX));
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             values.put(Telephony.Sms.CREATOR,
-                    localCursor.getString(localCursor.getColumnIndex(PrivateSmsEntry.CREATOR)));
+                    localCursor.getString(PrivateSmsEntry.CREATOR_INDEX));
+        }
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP_MR1) {
+            values.put(Telephony.Sms.SUBSCRIPTION_ID,
+                    localCursor.getLong(PrivateSmsEntry.SUBSCRIPTION_ID_INDEX));
         }
     }
 

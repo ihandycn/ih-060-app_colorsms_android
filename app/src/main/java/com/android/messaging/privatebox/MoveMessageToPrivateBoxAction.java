@@ -88,7 +88,7 @@ public class MoveMessageToPrivateBoxAction extends Action {
                 cursor.close();
 
                 if (isSms) {
-                    Cursor smsCursor = resolver.query(telephonyUri, PrivateSmsEntry.sProjection,
+                    Cursor smsCursor = resolver.query(telephonyUri, PrivateSmsEntry.getProjection(),
                             null, null, null);
 
                     if (smsCursor != null && smsCursor.moveToFirst()) {
@@ -109,7 +109,7 @@ public class MoveMessageToPrivateBoxAction extends Action {
                     }
 
                 } else {
-                    Cursor mmsCursor = resolver.query(telephonyUri, PrivateMmsEntry.sProjection,
+                    Cursor mmsCursor = resolver.query(telephonyUri, PrivateMmsEntry.getProjection(),
                             null, null, null);
 
                     if (mmsCursor != null && mmsCursor.moveToFirst()) {
@@ -215,14 +215,13 @@ public class MoveMessageToPrivateBoxAction extends Action {
         values.put(PrivateSmsEntry.SEEN,
                 localCursor.getString(localCursor.getColumnIndex(Telephony.Sms.SEEN)));
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP_MR1) {
-            values.put(PrivateSmsEntry.SUBSCRIPTION_ID,
-                    localCursor.getString(localCursor.getColumnIndex(Telephony.Sms.SUBSCRIPTION_ID)));
-        }
-
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             values.put(PrivateSmsEntry.CREATOR,
                     localCursor.getString(localCursor.getColumnIndex(Telephony.Sms.CREATOR)));
+        }
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP_MR1) {
+            values.put(PrivateSmsEntry.SUBSCRIPTION_ID,
+                    localCursor.getString(localCursor.getColumnIndex(Telephony.Sms.SUBSCRIPTION_ID)));
         }
     }
 
@@ -291,13 +290,13 @@ public class MoveMessageToPrivateBoxAction extends Action {
                 localCursor.getString(localCursor.getColumnIndex(Telephony.Mms.SEEN)));
         values.put(PrivateMmsEntry.TEXT_ONLY,
                 localCursor.getString(localCursor.getColumnIndex(Telephony.Mms.TEXT_ONLY)));
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP_MR1) {
-            values.put(PrivateMmsEntry.SUBSCRIPTION_ID,
-                    localCursor.getString(localCursor.getColumnIndex(Telephony.Mms.SUBSCRIPTION_ID)));
-        }
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             values.put(PrivateMmsEntry.CREATOR,
                     localCursor.getString(localCursor.getColumnIndex(Telephony.Mms.CREATOR)));
+        }
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP_MR1) {
+            values.put(PrivateMmsEntry.SUBSCRIPTION_ID,
+                    localCursor.getString(localCursor.getColumnIndex(Telephony.Mms.SUBSCRIPTION_ID)));
         }
     }
 

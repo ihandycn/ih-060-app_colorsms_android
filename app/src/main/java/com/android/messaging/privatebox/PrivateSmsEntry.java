@@ -2,8 +2,11 @@ package com.android.messaging.privatebox;
 
 import android.content.ContentUris;
 import android.net.Uri;
+import android.os.Build;
 import android.provider.BaseColumns;
 import android.provider.Telephony;
+
+import java.util.Arrays;
 
 import static com.android.messaging.privatebox.PrivateMessageContentProvider.BASE_CONTENT_URI;
 import static com.android.messaging.privatebox.PrivateMessageContentProvider.SMS_PATH;
@@ -40,6 +43,27 @@ public class PrivateSmsEntry implements BaseColumns {
     static final String CREATOR = "creator";
     static final String SEEN = Telephony.Sms.SEEN;
 
+    private static int s = 0;
+    public static int _ID_INDEX = s++;
+    public static int THREAD_ID_INDEX = s++;
+    public static int ADDRESS_INDEX = s++;
+    public static int PERSON_INDEX = s++;
+    public static int DATE_INDEX = s++;
+    public static int DATE_SEND_INDEX = s++;
+    public static int PROTOCOL_INDEX = s++;
+    public static int READ_INDEX = s++;
+    public static int STATUS_INDEX = s++;
+    public static int TYPE_INDEX = s++;
+    public static int REPLY_PATH_PRESENT_INDEX = s++;
+    public static int SUBJECT_INDEX = s++;
+    public static int BODY_INDEX = s++;
+    public static int SERVICE_CENTER_INDEX = s++;
+    public static int LOCKED_INDEX = s++;
+    public static int ERROR_CODE_INDEX = s++;
+    public static int SEEN_INDEX = s++;
+    public static int CREATOR_INDEX = s++;
+    public static int SUBSCRIPTION_ID_INDEX = s++;
+
     public static final String[] sProjection = {
             _ID,
             THREAD_ID,
@@ -56,11 +80,24 @@ public class PrivateSmsEntry implements BaseColumns {
             BODY,
             SERVICE_CENTER,
             LOCKED,
-            SUBSCRIPTION_ID,
             ERROR_CODE,
+            SEEN,
+            //target Build.VERSION_CODES.LOLLIPOP
             CREATOR,
-            SEEN
+            //target Build.VERSION_CODES.LOLLIPOP_MR1
+            SUBSCRIPTION_ID,
     };
+
+    public static String[] getProjection() {
+        int length = sProjection.length;
+        if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.LOLLIPOP_MR1) {
+            length--;
+        }
+        if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.LOLLIPOP) {
+            length--;
+        }
+        return Arrays.copyOfRange(sProjection, 0, length);
+    }
 
     public static final String CREATE_SMS_TABLE_SQL =
             "CREATE TABLE " + SMS_MESSAGE_TABLE + "("

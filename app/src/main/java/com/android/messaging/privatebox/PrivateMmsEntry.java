@@ -2,10 +2,11 @@ package com.android.messaging.privatebox;
 
 import android.content.ContentUris;
 import android.net.Uri;
+import android.os.Build;
 import android.provider.BaseColumns;
 import android.provider.Telephony;
 
-import com.android.messaging.util.TextUtil;
+import java.util.Arrays;
 
 import static com.android.messaging.privatebox.PrivateMessageContentProvider.BASE_CONTENT_URI;
 import static com.android.messaging.privatebox.PrivateMessageContentProvider.MMS_PATH;
@@ -121,11 +122,64 @@ public class PrivateMmsEntry {
             DELIVERY_TIME,
             DELIVERY_REPORT,
             LOCKED,
-            SUBSCRIPTION_ID,
             SEEN,
+            TEXT_ONLY,
+            //target Build.VERSION_CODES.LOLLIPOP
             CREATOR,
-            TEXT_ONLY
+            //target Build.VERSION_CODES.LOLLIPOP_MR1
+            SUBSCRIPTION_ID
     };
+
+    public static String[] getProjection() {
+        int length = sProjection.length;
+        if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.LOLLIPOP_MR1) {
+            length--;
+        }
+        if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.LOLLIPOP) {
+            length--;
+        }
+        return Arrays.copyOfRange(sProjection, 0, length);
+    }
+
+    private static int s = 0;
+    public static int _ID_INDEX = s++;
+    public static int THREAD_ID_INDEX = s++;
+    public static int DATE_INDEX = s++;
+    public static int DATE_SENT_INDEX = s++;
+    public static int MESSAGE_BOX_INDEX = s++;
+    public static int READ_INDEX = s++;
+    public static int MESSAGE_ID_INDEX = s++;
+    public static int SUBJECT_INDEX = s++;
+    public static int SUBJECT_CHARSET_INDEX = s++;
+    public static int CONTENT_TYPE_INDEX = s++;
+    public static int CONTENT_LOCATION_INDEX = s++;
+    public static int EXPIRY_INDEX = s++;
+    public static int MESSAGE_CLASS_INDEX = s++;
+    public static int MESSAGE_TYPE_INDEX = s++;
+    public static int MMS_VERSION_INDEX = s++;
+    public static int MESSAGE_SIZE_INDEX = s++;
+    public static int PRIORITY_INDEX = s++;
+    public static int READ_REPORT_INDEX = s++;
+    public static int REPORT_ALLOWED_INDEX = s++;
+    public static int RESPONSE_STATUS_INDEX = s++;
+    public static int STATUS_INDEX = s++;
+    public static int TRANSACTION_ID_INDEX = s++;
+    public static int RETRIEVE_STATUS_INDEX = s++;
+    public static int RETRIEVE_TEXT_INDEX = s++;
+    public static int RETRIEVE_TEXT_CHARSET_INDEX = s++;
+    public static int READ_STATUS_INDEX = s++;
+    public static int CONTENT_CLASS_INDEX = s++;
+    public static int RESPONSE_TEXT_INDEX = s++;
+    public static int DELIVERY_TIME_INDEX = s++;
+    public static int DELIVERY_REPORT_INDEX = s++;
+    public static int LOCKED_INDEX = s++;
+    public static int SEEN_INDEX = s++;
+    public static int TEXT_ONLY_INDEX = s++;
+
+    //@target Build.VERSION_CODES.LOLLIPOP
+    public static int CREATOR_INDEX = s++;
+    //@target Build.VERSION_CODES.LOLLIPOP_MR1
+    public static int SUBSCRIPTION_ID_INDEX = s++;
 
     public static final String CREATE_MMS_TABLE_SQL =
             "CREATE TABLE " + MMS_MESSAGE_TABLE + "("
