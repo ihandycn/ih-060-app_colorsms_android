@@ -31,7 +31,10 @@ public class BubbleDrawables {
             R.drawable.style_08,
             R.drawable.bubble_diamond_incoming,
             R.drawable.bubble_neon_incoming,
-            R.drawable.bubble_waterdrop_incoming
+            R.drawable.bubble_waterdrop_incoming,
+            R.drawable.bubble_unicorn_incoming,
+            R.drawable.bubble_goldendiamond_incoming,
+            R.drawable.bubble_technology_incoming
     };
 
     public static final int[] BUBBLES_OUTGOING = new int[]{
@@ -45,7 +48,10 @@ public class BubbleDrawables {
             R.drawable.style_08_outgoing,
             R.drawable.bubble_diamond_outgoing,
             R.drawable.bubble_neon_outgoing,
-            R.drawable.bubble_waterdrop_outging
+            R.drawable.bubble_waterdrop_outging,
+            R.drawable.bubble_unicorn_outgoing,
+            R.drawable.bubble_goldendiamond_outgoing,
+            R.drawable.bubble_technology_outgoing
     };
 
     // each identifier matches one style
@@ -60,7 +66,10 @@ public class BubbleDrawables {
             8,
             9,
             10,
-            11
+            11,
+            12,
+            13,
+            14
     };
 
     public static int getSelectedIdentifier() {
