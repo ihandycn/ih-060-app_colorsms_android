@@ -14,6 +14,8 @@ import android.widget.TextView;
 
 import com.android.messaging.R;
 import com.android.messaging.ui.ConversationDrawables;
+import com.android.messaging.ui.customize.theme.ThemeInfo;
+import com.android.messaging.ui.customize.theme.ThemeUtils;
 import com.android.messaging.ui.wallpaper.WallpaperManager;
 import com.android.messaging.util.BugleAnalytics;
 import com.superapps.util.BackgroundDrawables;
@@ -57,6 +59,9 @@ public class CustomMessagePreviewView extends ConstraintLayout
         mOutgoingMessage = findViewById(R.id.outgoing_message_preview_item);
 
         TextView contactIcon = findViewById(R.id.contact_text);
+        contactIcon.setTextColor(
+                Color.parseColor(
+                        ThemeInfo.getThemeInfo(ThemeUtils.getCurrentThemeName()).avatarForegroundColor));
         ImageView contactBackground = findViewById(R.id.contact_background);
         Drawable avatar = AvatarBgDrawables.getAvatarBg(true);
         if (avatar != null) {
