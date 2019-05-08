@@ -33,7 +33,6 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.res.Configuration;
 import android.database.Cursor;
-import android.graphics.Matrix;
 import android.graphics.Point;
 import android.graphics.Rect;
 import android.net.Uri;
@@ -108,18 +107,17 @@ import com.android.messaging.util.SafeAsyncTask;
 import com.android.messaging.util.TextUtil;
 import com.android.messaging.util.UiUtils;
 import com.android.messaging.util.UriUtil;
-import com.crashlytics.android.core.CrashlyticsCore;
 import com.google.common.annotations.VisibleForTesting;
 import com.ihs.commons.config.HSConfig;
 import com.ihs.commons.notificationcenter.HSGlobalNotificationCenter;
 import com.ihs.commons.notificationcenter.INotificationObserver;
 import com.ihs.commons.utils.HSBundle;
 import com.ihs.commons.utils.HSLog;
-import com.superapps.debug.CrashlyticsLog;
 import com.superapps.util.Threads;
 
 import net.appcloudbox.ads.base.AcbNativeAd;
 import net.appcloudbox.ads.common.utils.AcbError;
+import net.appcloudbox.ads.expressad.AcbExpressAdManager;
 import net.appcloudbox.ads.nativead.AcbNativeAdLoader;
 import net.appcloudbox.ads.nativead.AcbNativeAdManager;
 
@@ -710,6 +708,11 @@ public class ConversationFragment extends Fragment implements ConversationDataLi
 
         mMediaLayout = view.findViewById(R.id.camera_photo_layout);
         mWallpaperView = view.findViewById(R.id.conversation_fragment_wallpaper);
+        
+        if (HSConfig.optBoolean(true, "Application", "SMSAd", "SMSHomepageBannerAd")) {
+            AcbExpressAdManager.preload(1, AdPlacement.AD_BANNER);
+        }
+
         return view;
     }
 
