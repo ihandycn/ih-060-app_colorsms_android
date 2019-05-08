@@ -48,11 +48,10 @@ import com.android.messaging.sms.MmsSmsUtils;
 import com.android.messaging.sms.MmsUtils;
 import com.android.messaging.util.Assert;
 import com.android.messaging.util.BugleAnalytics;
+import com.android.messaging.util.FabricUtils;
 import com.android.messaging.util.LogUtil;
-import com.crashlytics.android.core.CrashlyticsCore;
 import com.google.common.io.Files;
 import com.ihs.app.framework.HSApplication;
-import com.superapps.debug.CrashlyticsLog;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -453,11 +452,10 @@ public class ProcessDownloadedMmsAction extends Action {
                             sb.append(recipient);
                         }
                     }
-                    CrashlyticsCore.getInstance().logException(new CrashlyticsLog(
-                            "ProcessDownloadMmsAction use unknown sender, recipients : " +
-                                    (recipients == null ? "null" : sb.toString())
-                                    + ", thread id : " + mms.mThreadId
-                                    + ", uri : " + mms.getUri()));
+                    FabricUtils.logNonFatal("ProcessDownloadMmsAction use unknown sender, recipients : " +
+                            (recipients == null ? "null" : sb.toString())
+                            + ", thread id : " + mms.mThreadId
+                            + ", uri : " + mms.getUri());
                 }
                 final ParticipantData sender = ParticipantData.getFromRawPhoneBySimLocale(from,
                         subId);

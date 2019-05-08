@@ -39,10 +39,9 @@ import com.android.messaging.sms.DatabaseMessages.MmsMessage;
 import com.android.messaging.sms.DatabaseMessages.SmsMessage;
 import com.android.messaging.sms.MmsUtils;
 import com.android.messaging.util.Assert;
+import com.android.messaging.util.FabricUtils;
 import com.android.messaging.util.LogUtil;
-import com.crashlytics.android.core.CrashlyticsCore;
 import com.google.common.collect.Sets;
-import com.superapps.debug.CrashlyticsLog;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -531,22 +530,19 @@ class SyncCursorPair {
                         mAddressThreadMap.put(address, threadId);
                     } else {
                         if (mAddressThreadMap.get(address) != threadId) {
-                            CrashlyticsCore.getInstance().logException(
-                                    new CrashlyticsLog("duplicated address!!!"));
+                            FabricUtils.logNonFatal("duplicated address!!!");
                         }
                     }
 
                     if (threadId == 0 || TextUtils.isEmpty(address)) {
-                        CrashlyticsCore.getInstance().logException(new CrashlyticsLog(
-                                "threadId is 0 or address is null in query cursor, add: " + address
-                                        + ", threadId: " + threadId
-                                        + ", threadId column number: " + mSmsCursor.getColumnIndex(Sms.THREAD_ID)
-                                        + ", adderss column number: " + mSmsCursor.getColumnIndex(Sms.ADDRESS)
-                                        + ", all column names " + Arrays.toString(mSmsCursor.getColumnNames())));
+                        FabricUtils.logNonFatal("threadId is 0 or address is null in query cursor, add: " + address
+                                + ", threadId: " + threadId
+                                + ", threadId column number: " + mSmsCursor.getColumnIndex(Sms.THREAD_ID)
+                                + ", adderss column number: " + mSmsCursor.getColumnIndex(Sms.ADDRESS)
+                                + ", all column names " + Arrays.toString(mSmsCursor.getColumnNames()));
                     }
                 } catch (Exception e) {
-                    CrashlyticsCore.getInstance().logException(
-                            new CrashlyticsLog("get threadId|address from telephony DB error" + e.getMessage()));
+                    FabricUtils.logNonFatal("get threadId|address from telephony DB error" + e.getMessage());
                 }
                 return SmsMessage.get(mSmsCursor);
             }

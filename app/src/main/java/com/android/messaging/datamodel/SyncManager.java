@@ -32,13 +32,12 @@ import com.android.messaging.util.BugleGservices;
 import com.android.messaging.util.BugleGservicesKeys;
 import com.android.messaging.util.BuglePrefs;
 import com.android.messaging.util.BuglePrefsKeys;
+import com.android.messaging.util.FabricUtils;
 import com.android.messaging.util.LogUtil;
 import com.android.messaging.util.OsUtil;
 import com.android.messaging.util.PhoneUtils;
-import com.crashlytics.android.core.CrashlyticsCore;
 import com.google.common.collect.Lists;
 import com.ihs.app.framework.HSApplication;
-import com.superapps.debug.CrashlyticsLog;
 import com.superapps.util.rom.RomUtils;
 
 import java.util.ArrayList;
@@ -442,8 +441,7 @@ public class SyncManager {
                 } else {
                     //recreate threadId
                     //threadId = MmsSmsUtils.Threads.getOrCreateThreadId(HSApplication.getContext(), address);
-                    CrashlyticsCore.getInstance().logException(new CrashlyticsLog(
-                            "ignore sms , thread is " + threadId + " , address is " + address));
+                    FabricUtils.logNonFatal("ignore sms , thread is " + threadId + " , address is " + address);
                     return null;
                 }
             }
@@ -499,8 +497,7 @@ public class SyncManager {
                 threadId = MmsSmsUtils.Threads.getOrCreateThreadId(HSApplication.getContext(), sender);
             }
             if (recipients.size() == 0 && TextUtils.isEmpty(sender)) {
-                CrashlyticsCore.getInstance().logException(new CrashlyticsLog(
-                        "ignore mms, recipients size is 0"));
+                FabricUtils.logNonFatal("ignore mms, recipients size is 0");
                 return null;
             }
             final ArrayList<ParticipantData> participants =

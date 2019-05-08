@@ -36,11 +36,10 @@ import com.android.messaging.sms.DatabaseMessages;
 import com.android.messaging.sms.MmsSmsUtils;
 import com.android.messaging.sms.MmsUtils;
 import com.android.messaging.util.CheckPermissionUtil;
+import com.android.messaging.util.FabricUtils;
 import com.android.messaging.util.LogUtil;
 import com.android.messaging.util.OsUtil;
-import com.crashlytics.android.core.CrashlyticsCore;
 import com.ihs.app.framework.HSApplication;
-import com.superapps.debug.CrashlyticsLog;
 
 import java.util.List;
 
@@ -101,11 +100,10 @@ public class ReceiveMmsMessageAction extends Action implements Parcelable {
                         sb.append(recipient);
                     }
                 }
-                CrashlyticsCore.getInstance().logException(new CrashlyticsLog(
-                        "ReceiveMmsMessageAction use unknown sender, recipients : " +
-                                (recipients == null ? "null" : sb.toString())
-                                + ", thread id : " + mms.mThreadId
-                                + ", uri : " + mms.getUri()));
+                FabricUtils.logNonFatal("ReceiveMmsMessageAction use unknown sender, recipients : " +
+                        (recipients == null ? "null" : sb.toString())
+                        + ", thread id : " + mms.mThreadId
+                        + ", uri : " + mms.getUri());
                 LogUtil.w(TAG, "Received an MMS without sender address; using unknown sender.");
                 from = ParticipantData.getUnknownSenderDestination();
             }

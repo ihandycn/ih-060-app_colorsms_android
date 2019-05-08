@@ -508,6 +508,7 @@ public class ConversationListFragment extends Fragment implements ConversationLi
             dataList.add(0, new AdItemData());
         }
         mAdapter.setDataList(dataList);
+        HSLog.d("conversation list has : " + dataList.size());
         if (adFirstPrepared && !dataList.isEmpty()) {
             prepareAd();
         }

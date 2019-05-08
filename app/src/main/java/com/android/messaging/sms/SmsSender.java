@@ -32,11 +32,10 @@ import com.android.messaging.receiver.SendStatusReceiver;
 import com.android.messaging.util.Assert;
 import com.android.messaging.util.BugleGservices;
 import com.android.messaging.util.BugleGservicesKeys;
+import com.android.messaging.util.FabricUtils;
 import com.android.messaging.util.LogUtil;
 import com.android.messaging.util.PhoneUtils;
 import com.android.messaging.util.UiUtils;
-import com.crashlytics.android.core.CrashlyticsCore;
-import com.superapps.debug.CrashlyticsLog;
 
 import java.util.ArrayList;
 import java.util.Random;
@@ -205,8 +204,8 @@ public class SmsSender {
             // the new address is the email gateway #
             dest = MmsConfig.get(subId).getEmailGateway();
             if (TextUtils.isEmpty(dest)) {
-                CrashlyticsCore.getInstance().logException(new CrashlyticsLog("empty email : " + addressForLog
-                        + ", dest get from MmsConfig is : >" + dest + "<"));
+                FabricUtils.logNonFatal("empty email : " + addressForLog
+                        + ", dest get from MmsConfig is : >" + dest + "<");
                 throw new SmsException("SmsSender: empty destination address");
             }
         } else {
@@ -215,7 +214,7 @@ public class SmsSender {
             // (e.g. "+8211-123-4567" -> "+82111234567")
             dest = PhoneNumberUtils.stripSeparators(dest);
             if (TextUtils.isEmpty(dest)) {
-                CrashlyticsCore.getInstance().logException(new CrashlyticsLog("empty number : " + addressForLog));
+                FabricUtils.logNonFatal("empty number : " + addressForLog);
                 throw new SmsException("SmsSender: empty destination address");
             }
         }

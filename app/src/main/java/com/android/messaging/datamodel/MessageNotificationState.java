@@ -62,12 +62,11 @@ import com.android.messaging.util.BugleGservicesKeys;
 import com.android.messaging.util.CommonUtils;
 import com.android.messaging.util.ContentType;
 import com.android.messaging.util.ConversationIdSet;
+import com.android.messaging.util.FabricUtils;
 import com.android.messaging.util.LogUtil;
 import com.android.messaging.util.PendingIntentConstants;
 import com.android.messaging.util.UriUtil;
-import com.crashlytics.android.core.CrashlyticsCore;
 import com.google.common.collect.Lists;
-import com.superapps.debug.CrashlyticsLog;
 import com.ihs.app.framework.HSApplication;
 import com.superapps.util.Notifications;
 
@@ -787,7 +786,7 @@ public abstract class MessageNotificationState extends NotificationState {
                         displayName = convMessageData.getSenderDisplayDestination();
                         if (TextUtils.isEmpty(displayName)) {
                             displayName = context.getString(R.string.unknown_sender);
-                            CrashlyticsCore.getInstance().logException(new CrashlyticsLog("Notification_Show_Unknown_Sender"));
+                            FabricUtils.logNonFatal("Notification_Show_Unknown_Sender");
                         }
                     } else {
                         displayName = context.getString(R.string.unknown_self_participant);

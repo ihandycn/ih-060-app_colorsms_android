@@ -99,6 +99,7 @@ import com.android.messaging.util.Assert;
 import com.android.messaging.util.BugleAnalytics;
 import com.android.messaging.util.ChangeDefaultSmsAppHelper;
 import com.android.messaging.util.ContentType;
+import com.android.messaging.util.FabricUtils;
 import com.android.messaging.util.ImeUtil;
 import com.android.messaging.util.LogUtil;
 import com.android.messaging.util.OsUtil;
@@ -1201,7 +1202,7 @@ public class ConversationFragment extends Fragment implements ConversationDataLi
         final ConversationParticipantsData participants = conversationData.getParticipants();
         for (final ParticipantData participant : participants) {
             if (participant.isUnknownSender()) {
-                CrashlyticsCore.getInstance().logException(new CrashlyticsLog("Send_Message_Unknown_Sender"));
+                FabricUtils.logNonFatal("Send_Message_Unknown_Sender");
                 UiUtils.showToast(R.string.unknown_sender);
                 return false;
             }

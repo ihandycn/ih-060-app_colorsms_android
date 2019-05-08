@@ -35,6 +35,7 @@ import com.android.messaging.datamodel.DatabaseWrapper;
 import com.android.messaging.sms.MmsSmsUtils;
 import com.android.messaging.util.Assert;
 import com.android.messaging.util.CommonUtils;
+import com.android.messaging.util.FabricUtils;
 import com.android.messaging.util.PhoneUtils;
 import com.android.messaging.util.TextUtil;
 import com.crashlytics.android.core.CrashlyticsCore;
@@ -291,9 +292,9 @@ public class ParticipantData implements Parcelable {
             // on the fly rather than relying on the version in the database.
             final Resources resources = Factory.get().getApplicationContext().getResources();
             mDisplayDestination = resources.getString(R.string.unknown_sender);
-            CrashlyticsCore.getInstance().logException(new CrashlyticsLog("maybeSetupUnknownSender"));
+            FabricUtils.logNonFatal("maybeSetupUnknownSender");
             if (CommonUtils.isNewUser()) {
-                CrashlyticsCore.getInstance().logException(new CrashlyticsLog("new user: unknown sender"));
+                FabricUtils.logNonFatal("new user: unknown sender");
             }
             mFullName = mDisplayDestination;
         }
@@ -347,7 +348,7 @@ public class ParticipantData implements Parcelable {
             return mDisplayDestination;
         }
 
-        CrashlyticsCore.getInstance().logException(new CrashlyticsLog("Display_Name_Unknown_Sender"));
+        FabricUtils.logNonFatal("Display_Name_Unknown_Sender");
         return Factory.get().getApplicationContext().getResources().getString(R.string.unknown_sender);
     }
 
