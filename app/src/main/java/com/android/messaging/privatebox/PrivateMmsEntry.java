@@ -7,6 +7,7 @@ import android.provider.BaseColumns;
 import android.provider.Telephony;
 
 import java.util.Arrays;
+import java.util.List;
 
 import static com.android.messaging.privatebox.PrivateMessageContentProvider.BASE_CONTENT_URI;
 import static com.android.messaging.privatebox.PrivateMessageContentProvider.MMS_PATH;
@@ -229,8 +230,10 @@ public class PrivateMmsEntry {
         public static final String CHARSET = Telephony.Mms.Addr.CHARSET;
 
         public static final String[] sAddressProjections = {
-                _ID, MSG_ID, CONTACT_ID, ADDRESS, TYPE, CHARSET
+                 MSG_ID, CONTACT_ID, ADDRESS, TYPE, CHARSET
         };
+
+        public static final List<String> sSupportedFields = Arrays.asList(CONTACT_ID, ADDRESS, TYPE, CHARSET);
 
         public static final String CREATE_MMS_ADDRESS_TABLE_SQL =
                 "CREATE TABLE " + MMS_MESSAGE_ADDRESS_TABLE + "("

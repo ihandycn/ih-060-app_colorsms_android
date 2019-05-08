@@ -133,7 +133,7 @@ public class ReceiveSmsMessageAction extends Action implements Parcelable {
 
             // Insert into telephony
             Uri messageUri = context.getContentResolver().insert(
-                    isPrivateMessage ? PrivateSmsEntry.CONTENT_URI : Sms.Inbox.CONTENT_URI,
+                    isPrivateMessage ? PrivateSmsEntry.Inbox.CONTENT_URI : Sms.Inbox.CONTENT_URI,
                     messageValues);
 
             if (messageUri != null) {

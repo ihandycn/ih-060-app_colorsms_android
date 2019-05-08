@@ -46,23 +46,6 @@ public class PrivateSmsEntry implements BaseColumns {
     private static int s = 0;
     public static int _ID_INDEX = s++;
     public static int THREAD_ID_INDEX = s++;
-    public static int ADDRESS_INDEX = s++;
-    public static int PERSON_INDEX = s++;
-    public static int DATE_INDEX = s++;
-    public static int DATE_SEND_INDEX = s++;
-    public static int PROTOCOL_INDEX = s++;
-    public static int READ_INDEX = s++;
-    public static int STATUS_INDEX = s++;
-    public static int TYPE_INDEX = s++;
-    public static int REPLY_PATH_PRESENT_INDEX = s++;
-    public static int SUBJECT_INDEX = s++;
-    public static int BODY_INDEX = s++;
-    public static int SERVICE_CENTER_INDEX = s++;
-    public static int LOCKED_INDEX = s++;
-    public static int ERROR_CODE_INDEX = s++;
-    public static int SEEN_INDEX = s++;
-    public static int CREATOR_INDEX = s++;
-    public static int SUBSCRIPTION_ID_INDEX = s++;
 
     public static final String[] sProjection = {
             _ID,
@@ -120,4 +103,12 @@ public class PrivateSmsEntry implements BaseColumns {
                     + ERROR_CODE + " TEXT, "
                     + CREATOR + " TEXT, "
                     + SEEN + " TEXT)";
+
+    public static final class Inbox {
+        private Inbox() {
+        }
+
+        public static final Uri
+                CONTENT_URI = PrivateSmsEntry.CONTENT_URI.buildUpon().appendPath("inbox").build();
+    }
 }

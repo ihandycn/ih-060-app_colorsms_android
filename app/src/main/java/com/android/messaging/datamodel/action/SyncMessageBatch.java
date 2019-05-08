@@ -36,10 +36,12 @@ import com.android.messaging.mmslib.pdu.PduHeaders;
 import com.android.messaging.sms.DatabaseMessages.LocalDatabaseMessage;
 import com.android.messaging.sms.DatabaseMessages.MmsMessage;
 import com.android.messaging.sms.DatabaseMessages.SmsMessage;
+import com.android.messaging.sms.MmsSmsUtils;
 import com.android.messaging.sms.MmsUtils;
 import com.android.messaging.util.Assert;
 import com.android.messaging.util.LogUtil;
 import com.crashlytics.android.core.CrashlyticsCore;
+import com.ihs.app.framework.HSApplication;
 import com.superapps.debug.CrashlyticsLog;
 
 import java.util.ArrayList;
@@ -147,11 +149,25 @@ class SyncMessageBatch {
         final boolean isOutgoing = sms.mType != Sms.MESSAGE_TYPE_INBOX;
 
         final String otherPhoneNumber = sms.mAddress;
+        long threadId = sms.mThreadId;
+        final List<String> recipients = mCache.getThreadRecipients(threadId);
+        if (recipients.size() == 1
+                && recipients.get(0).equals(ParticipantData.getUnknownSenderDestination())) {
+            if (!TextUtils.isEmpty(sms.mAddress)) {
+                recipients.clear();
+                recipients.add(sms.mAddress);
+                //the threadId is invalid, recreate threadId
+                threadId = MmsSmsUtils.Threads.getOrCreateThreadId(HSApplication.getContext(), sms.mAddress);
+                sms.mThreadId = threadId;
+            } else {
+                return;
+            }
+        }
 
         // A forced resync of all messages should still keep the archived states.
         // The database upgrade code notifies sync manager of this. We need to
         // honor the original customization to this conversation if created.
-        final String conversationId = mCache.getOrCreateConversation(db, sms.mThreadId, sms.mAddress,
+        final String conversationId = mCache.getOrCreateConversation(db, sms.mThreadId, recipients,
                 sms.mSubId, DataModel.get().getSyncManager().getCustomizationForThread(sms.mThreadId));
         if (conversationId == null) {
             // Cannot create conversation for this message? This should not happen.
@@ -242,11 +258,28 @@ class SyncMessageBatch {
                 PduHeaders.MESSAGE_TYPE_NOTIFICATION_IND);
 
         final String senderId = mms.mSender;
+        final List<String> recipients = mCache.getThreadRecipients(mms.mThreadId);
+
+        if (recipients.size() == 2 && !TextUtils.isEmpty(senderId)) {
+            recipients.clear();
+            recipients.add(senderId);
+            mms.mThreadId = MmsSmsUtils.Threads.getOrCreateThreadId(HSApplication.getContext(), mms.mSender);
+        }
+
+        if (recipients.get(0).equals(ParticipantData.getUnknownSenderDestination())) {
+            if (TextUtils.isEmpty(senderId)) {
+                return;
+            } else {
+                recipients.clear();
+                recipients.add(senderId);
+                mms.mThreadId = MmsSmsUtils.Threads.getOrCreateThreadId(HSApplication.getContext(), mms.mSender);
+            }
+        }
 
         // A forced resync of all messages should still keep the archived states.
         // The database upgrade code notifies sync manager of this. We need to
         // honor the original customization to this conversation if created.
-        final String conversationId = mCache.getOrCreateConversationForMms(db, senderId, mms.mThreadId, mms.mSubId,
+        final String conversationId = mCache.getOrCreateConversationForMms(db, recipients, mms.mThreadId, mms.mSubId,
                 DataModel.get().getSyncManager().getCustomizationForThread(mms.mThreadId));
         if (conversationId == null) {
             LogUtil.e(TAG, "SyncMessageBatch: Failed to create conversation for MMS thread "

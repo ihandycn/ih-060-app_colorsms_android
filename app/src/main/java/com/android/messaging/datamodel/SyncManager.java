@@ -25,7 +25,6 @@ import android.text.TextUtils;
 
 import com.android.messaging.datamodel.action.SyncMessagesAction;
 import com.android.messaging.datamodel.data.ParticipantData;
-import com.android.messaging.sms.MmsSmsUtils;
 import com.android.messaging.sms.MmsUtils;
 import com.android.messaging.util.Assert;
 import com.android.messaging.util.BugleGservices;
@@ -37,7 +36,6 @@ import com.android.messaging.util.OsUtil;
 import com.android.messaging.util.PhoneUtils;
 import com.crashlytics.android.core.CrashlyticsCore;
 import com.google.common.collect.Lists;
-import com.ihs.app.framework.HSApplication;
 import com.superapps.debug.CrashlyticsLog;
 import com.superapps.util.rom.RomUtils;
 
@@ -422,7 +420,7 @@ public class SyncManager {
          */
         public synchronized String getOrCreateConversation(final DatabaseWrapper db,
                                                            long threadId,
-                                                           final String address,
+                                                           List<String> recipients,
                                                            int refSubId, final ConversationCustomization customization) {
             // This function has several components which need to be atomic.
             Assert.isTrue(db.getDatabase().inTransaction());
@@ -433,20 +431,6 @@ public class SyncManager {
                 return conversationId;
             }
 
-            final List<String> recipients = getThreadRecipients(threadId);
-            if (recipients.size() == 1
-                    && recipients.get(0).equals(ParticipantData.getUnknownSenderDestination())) {
-                if (RomUtils.checkIsHuaweiRom()) {
-                    recipients.clear();
-                    recipients.add(address);
-                } else {
-                    //recreate threadId
-                    //threadId = MmsSmsUtils.Threads.getOrCreateThreadId(HSApplication.getContext(), address);
-                    CrashlyticsCore.getInstance().logException(new CrashlyticsLog(
-                            "ignore sms , thread is " + threadId + " , address is " + address));
-                    return null;
-                }
-            }
             final ArrayList<ParticipantData> participants =
                     BugleDatabaseOperations.getConversationParticipantsFromRecipients(recipients,
                             refSubId);
@@ -481,7 +465,7 @@ public class SyncManager {
          * @param customization The user setting customization to the conversation if any
          * @return The existing conversation id or new conversation id
          */
-        public synchronized String getOrCreateConversationForMms(final DatabaseWrapper db, String sender,
+        public synchronized String getOrCreateConversationForMms(final DatabaseWrapper db, List<String> recipients,
                                                                  long threadId, int refSubId, final ConversationCustomization customization) {
             // This function has several components which need to be atomic.
             Assert.isTrue(db.getDatabase().inTransaction());
@@ -492,17 +476,6 @@ public class SyncManager {
                 return conversationId;
             }
 
-            final List<String> recipients = getThreadRecipients(threadId);
-            if (recipients.size() <= 2 && sender != null) {
-                recipients.clear();
-                recipients.add(sender);
-                threadId = MmsSmsUtils.Threads.getOrCreateThreadId(HSApplication.getContext(), sender);
-            }
-            if (recipients.size() == 0 && TextUtils.isEmpty(sender)) {
-                CrashlyticsCore.getInstance().logException(new CrashlyticsLog(
-                        "ignore mms, recipients size is 0"));
-                return null;
-            }
             final ArrayList<ParticipantData> participants =
                     BugleDatabaseOperations.getConversationParticipantsFromRecipients(recipients,
                             refSubId);
