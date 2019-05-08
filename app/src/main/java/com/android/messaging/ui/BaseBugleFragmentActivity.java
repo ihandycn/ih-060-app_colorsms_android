@@ -16,7 +16,7 @@
 
 package com.android.messaging.ui;
 
-import android.app.Activity;
+import android.support.v7.app.AppCompatActivity;
 
 import com.android.messaging.util.BugleActivityUtil;
 import com.android.messaging.util.LogUtil;
@@ -25,7 +25,7 @@ import com.android.messaging.util.LogUtil;
  * Base class for app activities that would normally derive from FragmentActivity. Responsible for
  * ensuring app requirements are met during onResume()
  */
-public class BaseBugleFragmentActivity extends Activity {
+public class BaseBugleFragmentActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();

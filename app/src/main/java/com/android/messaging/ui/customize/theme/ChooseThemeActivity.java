@@ -2,19 +2,18 @@ package com.android.messaging.ui.customize.theme;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
-import android.view.View;
 import android.widget.TextView;
 
 import com.android.messaging.R;
+import com.android.messaging.ui.BaseBugleFragmentActivity;
 import com.android.messaging.util.BugleActivityUtil;
 import com.android.messaging.util.BugleAnalytics;
 import com.android.messaging.util.UiUtils;
 import com.superapps.util.Toasts;
 
-public class ChooseThemeActivity extends AppCompatActivity {
+public class ChooseThemeActivity extends BaseBugleFragmentActivity {
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
