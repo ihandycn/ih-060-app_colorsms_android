@@ -31,16 +31,16 @@
         </ScrollView>
     </FrameLayout>
 
+    <View
+        android:id="@+id/divider"
+        android:layout_width="match_parent"
+        android:layout_height="8dp"
+        android:background="@color/customize_bubble_divider" />
+
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="305dp"
+        android:layout_height="297dp"
         android:orientation="vertical">
-
-        <View
-            android:id="@+id/divider"
-            android:layout_width="match_parent"
-            android:layout_height="8dp"
-            android:background="@color/customize_bubble_divider" />
 
         <RelativeLayout
             android:id="@+id/change_font_item"

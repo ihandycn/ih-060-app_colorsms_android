@@ -49,6 +49,9 @@ public class ChangeFontActivity extends BaseActivity implements LevelSeekBar.OnL
 
         ImageView background = findViewById(R.id.change_font_bg);
         WallpaperManager.setWallPaperOnView(background, "");
+        if (background.getDrawable() != null) {
+            findViewById(R.id.divider).setVisibility(View.GONE);
+        }
 
         CustomMessagePreviewView customMessagePreviewView = findViewById(R.id.message_preview_view);
         customMessagePreviewView.setIsFontPreview();
