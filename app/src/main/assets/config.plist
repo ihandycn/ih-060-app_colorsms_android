@@ -408,7 +408,7 @@
 					<key>OutgoingBubbleBgColor</key>
 					<string>#00000000</string>
 					<key>OutgoingBubbleTextColor</key>
-					<string>#ffffff</string>
+					<string>#fff9c6</string>
 					<key>PreviewUrl</key>
 					<string>assets://themes/goldendiamond/image_goldendiamond_theme.jpg</string>
 					<key>ThemeColor</key>
