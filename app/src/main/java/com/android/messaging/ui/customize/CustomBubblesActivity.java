@@ -65,6 +65,9 @@ public class CustomBubblesActivity extends BaseActivity implements CustomMessage
 
         ImageView bg = findViewById(R.id.customize_bubbles_bg);
         WallpaperManager.setWallPaperOnView(bg, mConversationId);
+        if (bg.getDrawable() != null) {
+            findViewById(R.id.divider).setVisibility(View.INVISIBLE);
+        }
 
         mChooseMessageColorPagerView = findViewById(R.id.choose_message_color_view);
         mCustomMessagePreview = findViewById(R.id.custom_message_preview);
