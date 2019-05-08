@@ -45,6 +45,13 @@
                 android:clipToPadding="false"
                 android:listSelector="@android:color/transparent"/>
 
+            <FrameLayout
+                android:id="@+id/top_banner_ad_container"
+                android:layout_width="match_parent"
+                android:layout_height="53dp">
+
+            </FrameLayout>
+
             <View
                 android:id="@+id/conversation_compose_divider"
                 android:layout_width="match_parent"

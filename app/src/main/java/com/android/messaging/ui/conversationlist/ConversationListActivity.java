@@ -33,11 +33,11 @@ import com.android.messaging.ad.AdPlacement;
 import com.android.messaging.datamodel.BugleNotifications;
 import com.android.messaging.datamodel.action.PinConversationAction;
 import com.android.messaging.datamodel.data.MessageBoxItemData;
+import com.android.messaging.font.ChangeFontActivity;
 import com.android.messaging.ui.CreateShortcutActivity;
 import com.android.messaging.ui.DragHotSeatActivity;
 import com.android.messaging.ui.UIIntents;
 import com.android.messaging.ui.UIIntentsImpl;
-import com.android.messaging.font.ChangeFontActivity;
 import com.android.messaging.ui.appsettings.ChooseThemeColorRecommendViewHolder;
 import com.android.messaging.ui.appsettings.ThemeColorSelectActivity;
 import com.android.messaging.ui.customize.BubbleDrawables;
@@ -265,7 +265,8 @@ public class ConversationListActivity extends AbstractConversationListActivity
                 }
             });
 
-            if (HSConfig.optBoolean(false, "Application", "SMSAd", "SMSDetailspageBannerAd", "Enabled")) {
+            if (HSConfig.optBoolean(false, "Application", "SMSAd", "SMSDetailspageTopAd", "Enabled")
+                    && HSApplication.getFirstLaunchInfo().appVersionCode >= 38) {
                 AcbNativeAdManager.preload(1, AdPlacement.AD_DETAIL_NATIVE);
             }
         }
