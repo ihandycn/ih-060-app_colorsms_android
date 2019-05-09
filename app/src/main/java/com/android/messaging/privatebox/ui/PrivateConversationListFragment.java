@@ -18,6 +18,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.android.messaging.R;
 import com.android.messaging.annotation.VisibleForAnimation;
@@ -35,6 +36,7 @@ import com.android.messaging.ui.SnackBarInteraction;
 import com.android.messaging.ui.UIIntents;
 import com.android.messaging.ui.conversationlist.ConversationListAdapter;
 import com.android.messaging.ui.conversationlist.ConversationListItemView;
+import com.android.messaging.ui.customize.ConversationColors;
 import com.android.messaging.ui.customize.PrimaryColors;
 import com.android.messaging.ui.customize.WallpaperDrawables;
 import com.android.messaging.util.Assert;
@@ -308,6 +310,8 @@ public class PrivateConversationListFragment extends Fragment
 
                 addToBlackListDialog.show();
             });
+            ((TextView)mEmptyListMessageView.findViewById(R.id.private_box_empty_view_description))
+                    .setTextColor(ConversationColors.get().getListTitleColor());
         } else {
             mEmptyListMessageView.setVisibility(View.GONE);
         }

@@ -32,6 +32,7 @@
             android:src="@drawable/private_box_empty" />
 
         <com.superapps.view.MessagesTextView
+            android:id="@+id/private_box_empty_view_description"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="30dp"
