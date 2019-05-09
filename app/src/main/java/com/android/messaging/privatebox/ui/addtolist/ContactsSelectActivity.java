@@ -15,7 +15,6 @@ import com.android.messaging.R;
 import com.android.messaging.privatebox.AddPrivateContactAction;
 import com.android.messaging.privatebox.MoveConversationToPrivateBoxAction;
 import com.android.messaging.privatebox.PrivateContactsManager;
-import com.android.messaging.privatebox.PrivateMessageManager;
 import com.android.messaging.ui.BaseAlertDialog;
 import com.android.messaging.ui.customize.PrimaryColors;
 import com.android.messaging.util.PhoneUtils;
@@ -44,6 +43,7 @@ public class ContactsSelectActivity extends HSAppCompatActivity {
     private View mProcessBarContainer;
     private ProgressBar mProgressBar;
     private INotificationObserver mContactMoveObserver;
+    private View mActionButton;
 
     private long mStartTime;
     private Choreographer mChoreographer;
@@ -77,11 +77,11 @@ public class ContactsSelectActivity extends HSAppCompatActivity {
         recyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
         recyclerView.setAdapter(mAdapter);
 
-        View actionButton = findViewById(R.id.fragment_call_assistant_button);
-        actionButton.setBackground(BackgroundDrawables.createBackgroundDrawable(PrimaryColors.getPrimaryColor(),
+        mActionButton = findViewById(R.id.private_box_add_btn);
+        mActionButton.setBackground(BackgroundDrawables.createBackgroundDrawable(PrimaryColors.getPrimaryColor(),
                 Dimensions.pxFromDp(3.3f), true));
 
-        actionButton.setOnClickListener(v -> {
+        mActionButton.setOnClickListener(v -> {
             if (Preferences.getDefault().getBoolean(ConversationSelectActivity.PREF_KEY_ADD_PRIVATE_DIALOG_HAS_PROMPT, false)) {
                 addContactToPrivate();
             } else {
@@ -146,6 +146,8 @@ public class ContactsSelectActivity extends HSAppCompatActivity {
         if (addList.size() <= 0) {
             return;
         }
+        mActionButton.setEnabled(false);
+        startMessagesMoveProgress();
 
         //1.update contact in private contact table
         AddPrivateContactAction.addPrivateRecipientsAndMoveMessages(addList);
@@ -181,7 +183,7 @@ public class ContactsSelectActivity extends HSAppCompatActivity {
             List<String> privateRecipients = PrivateContactsManager.getInstance().getPrivateRecipientList();
             List<CallAssistantUtils.ContactInfo> filterContactsList = new ArrayList<>();
             for (CallAssistantUtils.ContactInfo info : contactsList) {
-                String recipient = PhoneUtils.getDefault().getCanonicalBySimLocale(info.name.trim());
+                String recipient = PhoneUtils.getDefault().getCanonicalBySimLocale(info.number.trim());
                 if (!privateRecipients.contains(recipient)) {
                     filterContactsList.add(info);
                 }

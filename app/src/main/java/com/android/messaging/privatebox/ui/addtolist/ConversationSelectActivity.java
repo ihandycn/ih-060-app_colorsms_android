@@ -52,6 +52,7 @@ public class ConversationSelectActivity extends HSAppCompatActivity
     private volatile boolean mIsMessageMoving;
     private View mProcessBarContainer;
     private ProgressBar mProgressBar;
+    private View mActionButton;
 
     private long mStartTime;
     private Choreographer mChoreographer;
@@ -80,11 +81,11 @@ public class ConversationSelectActivity extends HSAppCompatActivity
         mAdapter = new ConversationSelectAdapter();
         recyclerView.setAdapter(mAdapter);
 
-        View actionButton = findViewById(R.id.fragment_call_assistant_button);
-        actionButton.setBackground(BackgroundDrawables.createBackgroundDrawable(PrimaryColors.getPrimaryColor(),
+        mActionButton = findViewById(R.id.private_box_add_btn);
+        mActionButton.setBackground(BackgroundDrawables.createBackgroundDrawable(PrimaryColors.getPrimaryColor(),
                 Dimensions.pxFromDp(3.3f), true));
 
-        actionButton.setOnClickListener(v -> {
+        mActionButton.setOnClickListener(v -> {
             if (Preferences.getDefault().getBoolean(PREF_KEY_ADD_PRIVATE_DIALOG_HAS_PROMPT, false)) {
                 addAndMoveConversations();
             } else {
@@ -161,6 +162,8 @@ public class ConversationSelectActivity extends HSAppCompatActivity
         }
 
         if (addList.size() > 0) {
+            mActionButton.setEnabled(false);
+            startMessagesMoveProgress();
             MoveConversationToPrivateBoxAction.moveAndUpdatePrivateContact(addList,
                     NOTIFICATION_KEY_MESSAGE_MOVE_START, NOTIFICATION_KEY_MESSAGE_MOVE_END);
         }
