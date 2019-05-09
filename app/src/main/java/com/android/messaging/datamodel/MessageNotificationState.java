@@ -477,20 +477,8 @@ public abstract class MessageNotificationState extends NotificationState {
                     if (sender != null) {
                         if (senders.length() > 0) {
                             senders.append(separator);
-
                         }
-                        text = messageLineInfo.mText;
-                        mAttachmentUri = messageLineInfo.mAttachmentUri;
-                        mAttachmentType = messageLineInfo.mAttachmentType;
-
-                        inboxStyle.addLine(BugleNotifications.formatInboxMessage(
-                                sender, text, mAttachmentUri, mAttachmentType));
-                        if (sender != null) {
-                            if (senders.length() > 0) {
-                                senders.append(separator);
-                            }
-                            senders.append(sender);
-                        }
+                        senders.append(sender);
                     }
                 } else {
                     inboxStyle.addLine(BugleNotifications.formatInboxMessage(
@@ -498,6 +486,9 @@ public abstract class MessageNotificationState extends NotificationState {
                             context.getResources().getString(R.string.notification_title_in_private_box_single),
                             null, null
                     ));
+                    if (senders.length() > 0) {
+                        senders.append(separator);
+                    }
                     senders.append(context.getString(R.string.notification_sender_in_private_box));
                 }
             }
