@@ -311,7 +311,7 @@ public class InsertNewMessageAction extends Action implements Parcelable {
 
         final String messageText = message.getMessageText();
         // Insert message into telephony database sms message table
-        boolean isPrivateMessage = PrivateMessageManager.getInstance().isPrivateThreadId(threadId);
+        boolean isPrivateMessage = PrivateMessageManager.getInstance().isPrivateConversationId(conversationId);
         final Uri messageUri = MmsUtils.insertSmsMessage(context,
                 isPrivateMessage ? PrivateSmsEntry.CONTENT_URI : Telephony.Sms.CONTENT_URI,
                 subId,
@@ -383,7 +383,7 @@ public class InsertNewMessageAction extends Action implements Parcelable {
         final String messageText = content.getMessageText();
 
         // Insert message into telephony database sms message table
-        boolean isPrivateMessage = PrivateMessageManager.getInstance().isPrivateThreadId(threadId);
+        boolean isPrivateMessage = PrivateMessageManager.getInstance().isPrivateConversationId(conversationId);
 
         final Uri messageUri = MmsUtils.insertSmsMessage(context,
                 isPrivateMessage ? PrivateSmsEntry.CONTENT_URI : Telephony.Sms.CONTENT_URI,

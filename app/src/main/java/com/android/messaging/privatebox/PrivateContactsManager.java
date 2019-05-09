@@ -56,7 +56,7 @@ public class PrivateContactsManager {
         List<String> recipients = new ArrayList<>();
         DatabaseWrapper db = DataModel.get().getDatabase();
         Cursor cursor = db.query(PRIVATE_CONTACTS_TABLE, new String[]{RECIPIENTS},
-                null,null, null, null, null);
+                null, null, null, null, null);
         if (cursor != null) {
             while (cursor.moveToNext()) {
                 recipients.add(cursor.getString(0));
@@ -141,7 +141,8 @@ public class PrivateContactsManager {
 
     public void updatePrivateContactsByConversationId(String conversationId, boolean isPrivate) {
         long threadId = BugleDatabaseOperations.getThreadId(DataModel.get().getDatabase(), conversationId);
-        List<String> recipients = MmsUtils.getRecipientsByThread(threadId);
+        List<String> recipients = BugleDatabaseOperations.getRecipientsForConversation(
+                DataModel.get().getDatabase(), conversationId);
         if (isPrivate) {
             addPrivateRecipient(threadId, recipients);
         } else {

@@ -9,6 +9,7 @@ import com.android.messaging.sms.MmsSmsUtils;
 import com.android.messaging.sms.MmsUtils;
 import com.ihs.app.framework.HSApplication;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 
@@ -28,8 +29,8 @@ public class PrivateMessageManager {
             return false;
         }
         DatabaseWrapper db = DataModel.get().getDatabase();
-        long threadId = BugleDatabaseOperations.getThreadId(db, conversationId);
-        return PrivateContactsManager.getInstance().isPrivateThreadId(threadId);
+        List<String> recipients = BugleDatabaseOperations.getRecipientsForConversation(db, conversationId);
+        return PrivateContactsManager.getInstance().isPrivateRecipient(recipients);
     }
 
     public boolean isPrivateUri(String messageUri) {

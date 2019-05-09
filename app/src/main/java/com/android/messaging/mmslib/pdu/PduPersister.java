@@ -47,6 +47,7 @@ import com.android.messaging.mmslib.util.DownloadDrmHelper;
 import com.android.messaging.mmslib.util.DrmConvertSession;
 import com.android.messaging.mmslib.util.PduCache;
 import com.android.messaging.mmslib.util.PduCacheEntry;
+import com.android.messaging.privatebox.PrivateContactsManager;
 import com.android.messaging.privatebox.PrivateMessageManager;
 import com.android.messaging.privatebox.PrivateMmsEntry;
 import com.android.messaging.sms.MmsSmsUtils;
@@ -1527,7 +1528,8 @@ public class PduPersister {
             isPrivateMessage = true;
         } else {
             //if we receive a mms, we don't know if it's private util we get the thread_id
-            isPrivateMessage = PrivateMessageManager.getInstance().isPrivateThreadId(threadId);
+
+            isPrivateMessage = PrivateContactsManager.getInstance().isPrivateRecipient(new ArrayList<>(recipients));
         }
         Uri res = null;
         if (existingUri) {
