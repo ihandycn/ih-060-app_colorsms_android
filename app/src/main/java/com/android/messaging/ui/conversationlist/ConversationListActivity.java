@@ -207,14 +207,14 @@ public class ConversationListActivity extends AbstractConversationListActivity
                     backgroundStr = "colorsms_" + wallpaperIndex;
                 }
 
-                BugleAnalytics.logEvent("SMS_Messages_Show", true, true,
+                BugleAnalytics.logEvent("SMS_Messages_Create", true, true,
                         "themeColor", String.valueOf(ChooseThemeColorRecommendViewHolder.getPrimaryColorType()),
                         "background", backgroundStr,
                         "bubbleStyle", String.valueOf(BubbleDrawables.getSelectedIdentifier()),
-                        "received bubble color", ConversationColors.get().getConversationColorEventType(true, true),
-                        "sent bubble color", ConversationColors.get().getConversationColorEventType(true, false),
-                        "received text color", ConversationColors.get().getConversationColorEventType(false, true),
-                        "sent text color", ConversationColors.get().getConversationColorEventType(false, false),
+                        "received_bubble_color", ConversationColors.get().getConversationColorEventType(true, true),
+                        "sent_bubble_color", ConversationColors.get().getConversationColorEventType(true, false),
+                        "received_text_color", ConversationColors.get().getConversationColorEventType(false, true),
+                        "sent_text_color", ConversationColors.get().getConversationColorEventType(false, false),
                         "theme", ThemeUtils.getCurrentThemeName());
 
                 switch (FontStyleManager.getInstance().getFontScaleLevel()) {
