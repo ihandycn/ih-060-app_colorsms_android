@@ -495,7 +495,7 @@ public abstract class MessageNotificationState extends NotificationState {
                 } else {
                     inboxStyle.addLine(BugleNotifications.formatInboxMessage(
                             context.getString(R.string.notification_sender_in_private_box),
-                            context.getResources().getQuantityString(R.plurals.notification_title_in_private_box, 1),
+                            context.getResources().getString(R.string.notification_title_in_private_box_single),
                             null, null
                     ));
                     senders.append(context.getString(R.string.notification_sender_in_private_box));
@@ -600,12 +600,12 @@ public abstract class MessageNotificationState extends NotificationState {
                 builder.setContentTitle(HSApplication.getContext().getString(R.string.notification_sender_in_private_box));
                 if (messageCount == 1) {
                     String content = HSApplication.getContext().getResources()
-                            .getQuantityString(R.plurals.notification_title_in_private_box, 1);
+                            .getString(R.string.notification_title_in_private_box_single);
                     builder.setContentText(content);
                     notifStyle = new NotificationCompat.BigTextStyle(builder);
                 } else {
                     String content = HSApplication.getContext().getResources()
-                            .getQuantityString(R.plurals.notification_title_in_private_box, messageCount, messageCount);
+                            .getString(R.string.notification_title_in_private_box_other, messageCount);
                     builder.setContentText(content);
                     notifStyle = new NotificationCompat.BigTextStyle(builder);
                 }
