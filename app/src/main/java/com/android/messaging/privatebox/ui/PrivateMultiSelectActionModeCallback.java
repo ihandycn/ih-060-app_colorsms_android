@@ -81,6 +81,7 @@ public class PrivateMultiSelectActionModeCallback implements Callback {
         menu.findItem(R.id.action_block).setVisible(false);
         menu.findItem(R.id.action_notification_on).setVisible(false);
         menu.findItem(R.id.action_add_to_private_box).setVisible(false);
+        menu.findItem(R.id.action_menu).setVisible(false);
         mHasInflated = true;
         updateActionIconsVisibility();
         return true;
