@@ -52,6 +52,20 @@ public class PrivateContactsManager {
         }
     }
 
+    public List<String> getPrivateRecipientList() {
+        List<String> recipients = new ArrayList<>();
+        DatabaseWrapper db = DataModel.get().getDatabase();
+        Cursor cursor = db.query(PRIVATE_CONTACTS_TABLE, new String[]{RECIPIENTS},
+                null,null, null, null, null);
+        if (cursor != null) {
+            while (cursor.moveToNext()) {
+                recipients.add(cursor.getString(0));
+            }
+            cursor.close();
+        }
+        return recipients;
+    }
+
     public boolean isPrivateThreadId(long threadId) {
         DatabaseWrapper db = DataModel.get().getDatabase();
         Cursor cursor = db.query(PRIVATE_CONTACTS_TABLE, sProjection, THREAD_ID + "=?",

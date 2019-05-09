@@ -78,7 +78,7 @@ public class MoveMessageToPrivateBoxAction extends Action {
                     continue;
                 }
 
-                if (!cursor.moveToFirst()) {
+                if (!cursor.moveToFirst() || TextUtils.isEmpty(cursor.getString(0))) {
                     cursor.close();
                     continue;
                 }

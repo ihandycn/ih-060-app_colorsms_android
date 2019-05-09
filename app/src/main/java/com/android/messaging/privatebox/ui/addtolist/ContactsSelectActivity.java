@@ -18,6 +18,7 @@ import com.android.messaging.privatebox.PrivateContactsManager;
 import com.android.messaging.privatebox.PrivateMessageManager;
 import com.android.messaging.ui.BaseAlertDialog;
 import com.android.messaging.ui.customize.PrimaryColors;
+import com.android.messaging.util.PhoneUtils;
 import com.android.messaging.util.UiUtils;
 import com.ihs.app.framework.activity.HSAppCompatActivity;
 import com.ihs.commons.notificationcenter.HSGlobalNotificationCenter;
@@ -175,14 +176,13 @@ public class ContactsSelectActivity extends HSAppCompatActivity {
     private void startQueryData() {
         Threads.postOnThreadPoolExecutor(() -> {
             final List<CallAssistantUtils.ContactInfo> list = new ArrayList<>();
-
             List<CallAssistantUtils.ContactInfo> contactsList = CallAssistantUtils.getAllContactsFromPhoneBook();
             // filter contact which is already private
+            List<String> privateRecipients = PrivateContactsManager.getInstance().getPrivateRecipientList();
             List<CallAssistantUtils.ContactInfo> filterContactsList = new ArrayList<>();
             for (CallAssistantUtils.ContactInfo info : contactsList) {
-                List<String> recipient = new ArrayList<>();
-                recipient.add(info.number);
-                if (!PrivateContactsManager.getInstance().isPrivateRecipient(recipient)) {
+                String recipient = PhoneUtils.getDefault().getCanonicalBySimLocale(info.name.trim());
+                if (!privateRecipients.contains(recipient)) {
                     filterContactsList.add(info);
                 }
             }
