@@ -13,7 +13,7 @@ import com.android.messaging.ui.welcome.WelcomeChooseThemeActivity;
 import com.android.messaging.ui.welcome.WelcomeStartActivity;
 import com.android.messaging.util.BuglePrefs;
 import com.ihs.commons.config.HSConfig;
-import com.superapps.font.FontStyleManager;
+import com.android.messaging.font.FontStyleManager;
 import com.superapps.util.Preferences;
 
 public class Upgrader extends BaseUpgrader {

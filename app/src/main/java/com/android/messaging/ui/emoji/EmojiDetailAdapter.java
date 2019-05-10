@@ -18,7 +18,7 @@ import com.ihs.commons.notificationcenter.HSGlobalNotificationCenter;
 import com.ihs.commons.utils.HSBundle;
 import com.superapps.util.BackgroundDrawables;
 import com.superapps.util.Dimensions;
-import com.superapps.view.MessagesTextView;
+import com.android.messaging.ui.view.MessagesTextView;
 
 public class EmojiDetailAdapter extends BaseStickerItemRecyclerAdapter {
 

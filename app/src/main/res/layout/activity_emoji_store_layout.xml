@@ -22,7 +22,7 @@
             android:src="@drawable/ic_back"
             tools:ignore="RtlHardcoded" />
 
-        <com.superapps.view.MessagesTextView
+        <com.android.messaging.ui.view.MessagesTextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"

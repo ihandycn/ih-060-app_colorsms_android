@@ -39,7 +39,7 @@ import com.superapps.util.Navigations;
 import com.superapps.util.Preferences;
 import com.superapps.util.Threads;
 import com.superapps.util.Toasts;
-import com.superapps.view.MessagesTextView;
+import com.android.messaging.ui.view.MessagesTextView;
 
 import java.util.ArrayList;
 import java.util.List;

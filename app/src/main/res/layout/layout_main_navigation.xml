@@ -33,7 +33,7 @@
             android:layout_marginTop="8dp"
             android:orientation="vertical">
 
-            <com.superapps.view.MessagesTextView
+            <com.android.messaging.ui.view.MessagesTextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="6dp"
@@ -53,13 +53,13 @@
                     style="@style/DrawerMenuIcon"
                     app:srcCompat="@drawable/ic_menu_theme"/>
 
-                <com.superapps.view.MessagesTextView
+                <com.android.messaging.ui.view.MessagesTextView
                     style="@style/DrawerMenuTitle"
                     android:includeFontPadding="false"
                     android:text="@string/menu_theme"
                     app:typeface="@string/custom_font_medium"/>
 
-                <com.superapps.view.MessagesTextView
+                <com.android.messaging.ui.view.MessagesTextView
                     android:id="@+id/navigation_item_theme_new_text"
                     style="@style/DrawerMenuNewMark"
                     app:textAllCaps="true"
@@ -76,13 +76,13 @@
                     style="@style/DrawerMenuIcon"
                     app:srcCompat="@drawable/ic_menu_theme_color"/>
 
-                <com.superapps.view.MessagesTextView
+                <com.android.messaging.ui.view.MessagesTextView
                     style="@style/DrawerMenuTitle"
                     android:includeFontPadding="false"
                     android:text="@string/menu_theme_color"
                     app:typeface="@string/custom_font_medium"/>
 
-                <com.superapps.view.MessagesTextView
+                <com.android.messaging.ui.view.MessagesTextView
                     android:id="@+id/navigation_item_theme_color_new_text"
                     style="@style/DrawerMenuNewMark"
                     app:textAllCaps="true"
@@ -98,13 +98,13 @@
                     style="@style/DrawerMenuIcon"
                     app:srcCompat="@drawable/ic_menu_bubble"/>
 
-                <com.superapps.view.MessagesTextView
+                <com.android.messaging.ui.view.MessagesTextView
                     style="@style/DrawerMenuTitle"
                     android:includeFontPadding="false"
                     android:text="@string/menu_bubble"
                     app:typeface="@string/custom_font_medium"/>
 
-                <com.superapps.view.MessagesTextView
+                <com.android.messaging.ui.view.MessagesTextView
                     android:id="@+id/navigation_item_bubble_new_text"
                     style="@style/DrawerMenuNewMark"
                     app:textAllCaps="true"
@@ -120,13 +120,13 @@
                     style="@style/DrawerMenuIcon"
                     app:srcCompat="@drawable/ic_menu_chat"/>
 
-                <com.superapps.view.MessagesTextView
+                <com.android.messaging.ui.view.MessagesTextView
                     style="@style/DrawerMenuTitle"
                     android:includeFontPadding="false"
                     android:text="@string/menu_chat_background"
                     app:typeface="@string/custom_font_medium"/>
 
-                <com.superapps.view.MessagesTextView
+                <com.android.messaging.ui.view.MessagesTextView
                     android:id="@+id/navigation_item_background_new_text"
                     style="@style/DrawerMenuNewMark"
                     app:textAllCaps="true"
@@ -142,13 +142,13 @@
                     style="@style/DrawerMenuIcon"
                     app:srcCompat="@drawable/ic_menu_font"/>
 
-                <com.superapps.view.MessagesTextView
+                <com.android.messaging.ui.view.MessagesTextView
                     style="@style/DrawerMenuTitle"
                     android:includeFontPadding="false"
                     android:text="@string/menu_change_font"
                     app:typeface="@string/custom_font_medium"/>
 
-                <com.superapps.view.MessagesTextView
+                <com.android.messaging.ui.view.MessagesTextView
                     android:id="@+id/navigation_item_font_new_text"
                     style="@style/DrawerMenuNewMark"
                     app:textAllCaps="true"
@@ -169,7 +169,7 @@
                     style="@style/DrawerMenuIcon"
                     app:srcCompat="@drawable/menu_icon_private_box"/>
 
-                <com.superapps.view.MessagesTextView
+                <com.android.messaging.ui.view.MessagesTextView
                     style="@style/DrawerMenuTitle"
                     android:includeFontPadding="false"
                     android:text="@string/menu_privacy_box"
@@ -185,7 +185,7 @@
                     style="@style/DrawerMenuIcon"
                     app:srcCompat="@drawable/ic_menu_setting"/>
 
-                <com.superapps.view.MessagesTextView
+                <com.android.messaging.ui.view.MessagesTextView
                     style="@style/DrawerMenuTitle"
                     android:includeFontPadding="false"
                     android:text="@string/menu_setting"
@@ -201,7 +201,7 @@
                     style="@style/DrawerMenuIcon"
                     app:srcCompat="@drawable/ic_menu_rate"/>
 
-                <com.superapps.view.MessagesTextView
+                <com.android.messaging.ui.view.MessagesTextView
                     style="@style/DrawerMenuTitle"
                     android:includeFontPadding="false"
                     android:text="@string/menu_rate"

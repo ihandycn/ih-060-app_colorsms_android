@@ -34,7 +34,7 @@ import com.ihs.commons.config.HSConfig;
 import com.superapps.util.Dimensions;
 import com.superapps.util.Preferences;
 import com.superapps.util.Threads;
-import com.superapps.view.MessagesTextView;
+import com.android.messaging.ui.view.MessagesTextView;
 
 import java.util.concurrent.RejectedExecutionException;
 

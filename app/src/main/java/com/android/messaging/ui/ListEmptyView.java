@@ -23,7 +23,7 @@ import android.widget.LinearLayout;
 
 import com.airbnb.lottie.LottieAnimationView;
 import com.android.messaging.R;
-import com.superapps.view.MessagesTextView;
+import com.android.messaging.ui.view.MessagesTextView;
 
 /**
  * A common reusable view that shows a hint image and text for an empty list view.

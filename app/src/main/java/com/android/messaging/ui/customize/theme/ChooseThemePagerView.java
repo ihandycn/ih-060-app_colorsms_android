@@ -11,7 +11,7 @@ import android.widget.TextView;
 import com.android.messaging.R;
 import com.android.messaging.ui.welcome.WelcomeChooseThemeActivity;
 import com.android.messaging.util.BugleAnalytics;
-import com.superapps.font.FontUtils;
+import com.android.messaging.font.FontUtils;
 import com.superapps.util.BackgroundDrawables;
 import com.superapps.util.Dimensions;
 

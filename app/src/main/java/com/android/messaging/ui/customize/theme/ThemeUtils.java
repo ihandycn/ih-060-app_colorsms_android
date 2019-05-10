@@ -17,7 +17,7 @@ import com.android.messaging.ui.customize.WallpaperDrawables;
 import com.android.messaging.util.BuglePrefsKeys;
 import com.ihs.app.framework.HSApplication;
 import com.ihs.commons.notificationcenter.HSGlobalNotificationCenter;
-import com.superapps.font.FontStyleManager;
+import com.android.messaging.font.FontStyleManager;
 
 import java.io.IOException;
 import java.io.InputStream;
