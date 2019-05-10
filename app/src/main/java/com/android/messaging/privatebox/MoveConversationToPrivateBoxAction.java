@@ -13,13 +13,13 @@ import com.android.messaging.datamodel.DatabaseHelper.MessageColumns;
 import com.android.messaging.datamodel.DatabaseWrapper;
 import com.android.messaging.datamodel.MessagingContentProvider;
 import com.android.messaging.datamodel.action.Action;
-import com.android.messaging.sms.MmsSmsUtils;
 import com.android.messaging.util.Assert;
-import com.ihs.app.framework.HSApplication;
+import com.android.messaging.util.PhoneUtils;
 import com.ihs.commons.notificationcenter.HSGlobalNotificationCenter;
 import com.superapps.util.Toasts;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class MoveConversationToPrivateBoxAction extends Action implements Parcelable {
@@ -27,7 +27,7 @@ public class MoveConversationToPrivateBoxAction extends Action implements Parcel
     private static final String KEY_UPDATE_PRIVATE_CONTACT = "update_contact";
     private static final String KEY_START_NOTIFICATION = "key_start_notification";
     private static final String KEY_END_NOTIFICATION = "key_end_notification";
-    private static final String KEY_THREAD_ID_LIST = "key_thread_id_list";
+    private static final String KEY_CONTACT_LIST = "key_contact_list";
 
     public static void moveAndUpdatePrivateContact(final List<String> conversationIdList, final String moveStartNotification,
                                                    final String moveEndNotification) {
@@ -40,24 +40,10 @@ public class MoveConversationToPrivateBoxAction extends Action implements Parcel
 
     public static void moveByContact(List<String> contactList, final String moveStartNotification,
                                      final String moveEndNotification) {
-        ArrayList<Long> threadIdList = new ArrayList<>();
-        //todo : check permission for no grant exception
-        for (String recipient : contactList) {
-            long threadId = MmsSmsUtils.Threads.getOrCreateThreadId(HSApplication.getContext(), recipient);
-            if (threadId < 0) {
-                continue;
-            }
-            threadIdList.add(threadId);
-        }
-        long[] threadIdArray = new long[threadIdList.size()];
-        for (int i = 0; i < threadIdList.size(); i++) {
-            threadIdArray[i] = threadIdList.get(i);
-        }
-
         final MoveConversationToPrivateBoxAction action = new MoveConversationToPrivateBoxAction();
-        action.actionParameters.putLongArray(KEY_THREAD_ID_LIST, threadIdArray);
         action.actionParameters.putString(KEY_START_NOTIFICATION, moveStartNotification);
         action.actionParameters.putString(KEY_END_NOTIFICATION, moveEndNotification);
+        action.actionParameters.putStringArrayList(KEY_CONTACT_LIST, (ArrayList<String>) contactList);
         action.start();
     }
 
@@ -78,15 +64,29 @@ public class MoveConversationToPrivateBoxAction extends Action implements Parcel
         String startNotification = actionParameters.getString(KEY_START_NOTIFICATION);
         String endNotification = actionParameters.getString(KEY_END_NOTIFICATION);
 
-        if (actionParameters.containsKey(KEY_THREAD_ID_LIST)) {
-            long[] threadArray = actionParameters.getLongArray(KEY_THREAD_ID_LIST);
+        if (actionParameters.containsKey(KEY_CONTACT_LIST)) {
             conversationIdList = new ArrayList<>();
-            DatabaseWrapper db = DataModel.get().getDatabase();
-            assert threadArray != null;
-            for (long threadId : threadArray) {
-                String conversationId = BugleDatabaseOperations.getExistingConversation(db, threadId, false);
+            List<String> contactList = actionParameters.getStringArrayList(KEY_CONTACT_LIST);
+            assert contactList != null;
+            for (String recipient : contactList) {
+                String phoneNumBySim = PhoneUtils.getDefault().getCanonicalBySimLocale(recipient);
+                String phoneNumBySystem = PhoneUtils.getDefault().getCanonicalBySystemLocale(recipient);
+
+                String participantId = BugleDatabaseOperations.getParticipantIdByName(phoneNumBySim);
+                String conversationId =
+                        BugleDatabaseOperations.getConversationIdForParticipantsGroup(Collections.singletonList(participantId));
                 if (!TextUtils.isEmpty(conversationId)) {
                     conversationIdList.add(conversationId);
+                }
+
+                if (!phoneNumBySim.equals(phoneNumBySystem)) {
+                    String conversationId1 =
+                            BugleDatabaseOperations.getConversationIdForParticipantsGroup(
+                                    Collections.singletonList(
+                                            BugleDatabaseOperations.getParticipantIdByName(phoneNumBySim)));
+                    if (!TextUtils.isEmpty(conversationId1)) {
+                        conversationIdList.add(conversationId1);
+                    }
                 }
             }
             if (conversationIdList.size() == 0) {

@@ -250,7 +250,7 @@ public class BugleDatabaseOperations {
             if (conversationId != null) {
                 CrashlyticsCore.getInstance().logException(
                         new CrashlyticsLog("merge conversations" +
-                        " (different thread_id but same participants)"));
+                                " (different thread_id but same participants)"));
                 long validThreadId = PrivateMessageManager.getInstance().getValidThreadId(threadId, db, conversationId);
                 ContentValues values = new ContentValues();
                 values.put(ConversationColumns.SMS_THREAD_ID, validThreadId);
@@ -1966,7 +1966,7 @@ public class BugleDatabaseOperations {
     /**
      * Get a list of conversations that contain all participants specified.
      */
-    private static String getConversationIdForParticipantsGroup(
+    public static String getConversationIdForParticipantsGroup(
             final List<String> participantIds) {
         DatabaseWrapper db = DataModel.get().getDatabase();
 
@@ -1993,6 +1993,22 @@ public class BugleDatabaseOperations {
             cursor.close();
         }
         return conversationId;
+    }
+
+    public static String getParticipantIdByName(final String participant) {
+        DatabaseWrapper db = DataModel.get().getDatabase();
+        final Cursor cursor = db.query(DatabaseHelper.PARTICIPANTS_TABLE,
+                new String[]{ParticipantColumns._ID, ParticipantColumns.NORMALIZED_DESTINATION},
+                ParticipantColumns.NORMALIZED_DESTINATION + "=?", new String[]{participant},
+                null, null, null);
+        String participantId = null;
+        if (cursor != null) {
+            if (cursor.moveToNext()) {
+                participantId = cursor.getString(0);
+            }
+            cursor.close();
+        }
+        return participantId;
     }
 
     /**
