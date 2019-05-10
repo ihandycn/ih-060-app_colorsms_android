@@ -105,8 +105,7 @@ public class SelfVerifyActivity extends VerifyActivity {
     public void onBackPressed() {
         if (ENTRANCE_NOTIFICATION.equals(getIntent().getStringExtra(INTENT_KEY_ACTIVITY_ENTRANCE))) {
             UIIntentsImpl.get().launchConversationListActivity(this);
-        } else {
-            finish();
         }
+        finish();
     }
 }
