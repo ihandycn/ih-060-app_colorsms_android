@@ -320,7 +320,7 @@ public class ConversationListActivity extends AbstractConversationListActivity
         View navigationContent = getLayoutInflater().inflate(R.layout.layout_main_navigation, navigationView, false);
 
         drawerLayout = findViewById(R.id.main_drawer_layout);
-        drawerLayout.setBackgroundColor(PrimaryColors.getPrimaryColor());
+        //drawerLayout.setBackgroundColor(PrimaryColors.getPrimaryColor());
         ActionBarDrawerToggle drawerToggle = new ActionBarDrawerToggle(this, drawerLayout, R.string.drawer_open, R.string.drawer_close) {
             @Override
             public void onDrawerStateChanged(int newState) {

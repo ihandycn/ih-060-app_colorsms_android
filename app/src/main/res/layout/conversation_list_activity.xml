@@ -5,14 +5,12 @@
     android:id="@+id/main_drawer_layout"
     android:layout_width="match_parent"
     android:fitsSystemWindows="false"
-    android:background="@color/primary_color"
     android:layout_height="match_parent">
 
     <LinearLayout
         android:id="@+id/audio_attachment_background"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/action_bar_background_color"
         android:orientation="vertical">
 
         <RelativeLayout

@@ -18,8 +18,10 @@ package com.android.messaging.ui.conversationlist;
 import android.app.Activity;
 import android.app.Fragment;
 import android.database.Cursor;
+import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.graphics.Rect;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Parcelable;
@@ -229,7 +231,13 @@ public class ConversationListFragment extends Fragment implements ConversationLi
         mEmptyListMessageView = rootView.findViewById(R.id.no_conversations_view);
         mEmptyListMessageView.setImageHint(R.drawable.ic_oobe_conv_list);
         ImageView conversationListBg = rootView.findViewById(R.id.conversation_list_bg);
-        conversationListBg.setImageDrawable(WallpaperDrawables.getListWallpaperBg());
+        Drawable bgDrawable = WallpaperDrawables.getListWallpaperBg();
+        getActivity().getWindow().getDecorView().setBackground(null);
+        if (bgDrawable == null) {
+            getActivity().getWindow().getDecorView().setBackgroundColor(Color.WHITE);
+        } else {
+            conversationListBg.setImageDrawable(bgDrawable);
+        }
 
         // The default behavior for default layout param generation by LinearLayoutManager is to
         // provide width and height of WRAP_CONTENT, but this is not desirable for
@@ -354,7 +362,8 @@ public class ConversationListFragment extends Fragment implements ConversationLi
         );
         expressAdView.setAutoSwitchAd(AcbExpressAdView.AutoSwitchAd_None);
         expressAdView.setOnHierarchyChangeListener(HierarchyTreeChangeListener.wrap(new ViewGroup.OnHierarchyChangeListener() {
-            @Override public void onChildViewAdded(View parent, View child) {
+            @Override
+            public void onChildViewAdded(View parent, View child) {
                 try {
                     if (child instanceof RelativeLayout
                             && ((RelativeLayout) child).getChildCount() == 1
@@ -378,7 +387,8 @@ public class ConversationListFragment extends Fragment implements ConversationLi
                 });
             }
 
-            @Override public void onChildViewRemoved(View parent, View child) {
+            @Override
+            public void onChildViewRemoved(View parent, View child) {
 
             }
         }));
