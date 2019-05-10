@@ -27,15 +27,21 @@ import com.android.messaging.util.BugleAnalytics;
 import com.android.messaging.util.BuglePrefs;
 import com.android.messaging.util.OsUtil;
 import com.android.messaging.util.UiUtils;
+import com.firebase.ui.auth.AuthUI;
+import com.google.firebase.auth.FirebaseAuth;
 import com.ihs.app.framework.HSGdprConsent;
 import com.ihs.commons.config.HSConfig;
 import com.superapps.util.Navigations;
 import com.superapps.util.Preferences;
+import com.superapps.util.Toasts;
+
+import java.util.Collections;
 
 import static android.view.View.GONE;
 
 public class SettingGeneralActivity extends BaseActivity {
     private static final int REQUEST_CODE_START_RINGTONE_PICKER = 1;
+    private static final int RC_SIGN_IN = 12;
 
     private SettingItemView mSmsShowView;
     private SettingItemView mOutgoingSoundView;
@@ -45,6 +51,7 @@ public class SettingGeneralActivity extends BaseActivity {
     private SettingItemView mSoundView;
     private SettingItemView mVibrateView;
     private SettingItemView mPrivacyModeView;
+    private SettingItemView mSyncSettingsView;
     private BackPressedListener mBackListener;
     final BuglePrefs prefs = BuglePrefs.getApplicationPrefs();
 
@@ -72,15 +79,7 @@ public class SettingGeneralActivity extends BaseActivity {
         getSupportActionBar().setDisplayShowHomeEnabled(true);
 
         //outgoing message sounds
-        mOutgoingSoundView = findViewById(R.id.setting_item_outgoing_message_sounds);
-        final String prefKey = getString(R.string.send_sound_pref_key);
-        final boolean defaultValue = getResources().getBoolean(
-                R.bool.send_sound_pref_default);
-        mOutgoingSoundView.setChecked(prefs.getBoolean(prefKey, defaultValue));
-        mOutgoingSoundView.setOnItemClickListener(() -> {
-            prefs.putBoolean(prefKey, mOutgoingSoundView.isChecked());
-            BugleAnalytics.logEvent("SMS_Settings_MessageSounds_Click", true);
-        });
+        setUpOutgoingSoundView();
 
         //sms show
         mSmsShowView = findViewById(R.id.setting_item_sms_show);
@@ -105,18 +104,7 @@ public class SettingGeneralActivity extends BaseActivity {
         });
 
         //pop ups
-        mPopUpsView = findViewById(R.id.setting_item_sms_pop_ups);
-        boolean defaultV = MessageBoxSettings.isSMSAssistantModuleEnabled();
-        mPopUpsView.setChecked(defaultV);
-        if (!defaultV) {
-            mSmsShowView.setEnable(false);
-        }
-        mPopUpsView.setOnItemClickListener(() -> {
-            boolean b = mPopUpsView.isChecked();
-            MessageBoxSettings.setSMSAssistantModuleEnabled(b);
-            mSmsShowView.setEnable(b);
-            BugleAnalytics.logEvent("SMS_Settings_Popups_Click", true);
-        });
+        setUpPopUpsView();
 
         mPrivacyModeView = findViewById(R.id.setting_item_privacy_mode);
         updatePrivacyModeSummary();
@@ -135,7 +123,6 @@ public class SettingGeneralActivity extends BaseActivity {
                 }
             });
             UiUtils.showDialogFragment(SettingGeneralActivity.this, dialog);
-
         });
 
         //signature
@@ -147,7 +134,6 @@ public class SettingGeneralActivity extends BaseActivity {
 
         //sounds
         mSoundView = findViewById(R.id.setting_item_sound);
-
         updateSoundSummary();
         mSoundView.setOnItemClickListener(() -> {
             onSoundItemClick();
@@ -155,39 +141,10 @@ public class SettingGeneralActivity extends BaseActivity {
         });
 
         //vibrate
-        mVibrateView = findViewById(R.id.setting_item_vibrate);
-        final String vibratePrefKey = getString(R.string.notification_vibration_pref_key);
-        final boolean vibrateDefaultValue = getResources().getBoolean(R.bool.notification_vibration_pref_default);
-        mVibrateView.setChecked(prefs.getBoolean(vibratePrefKey, vibrateDefaultValue));
-        mVibrateView.setOnItemClickListener(() -> {
-            prefs.putBoolean(vibratePrefKey, mVibrateView.isChecked());
-            BugleAnalytics.logEvent("SMS_Settings_Vibrate_Click", true);
-        });
+        setUpVibrateView();
 
         //notification
-        mNotificationView = findViewById(R.id.setting_item_notifications);
-        String notificationKey = getString(R.string.notifications_enabled_pref_key);
-        boolean notificationDefaultValue = prefs.getBoolean(
-                notificationKey,
-                getResources().getBoolean(R.bool.notifications_enabled_pref_default));
-        if (!notificationDefaultValue && !OsUtil.isAtLeastO()) {
-            mSmsShowView.setEnable(false);
-            mPopUpsView.setEnable(false);
-            mSoundView.setEnable(false);
-            mVibrateView.setEnable(false);
-        }
-        mNotificationView.setChecked(notificationDefaultValue);
-        mNotificationView.setOnItemClickListener(() -> {
-                    boolean b = mNotificationView.isChecked();
-                    prefs.putBoolean(notificationKey, b);
-                    mPopUpsView.setEnable(b);
-                    mSmsShowView.setEnable(b && mPopUpsView.isChecked());
-                    mSoundView.setEnable(b);
-                    mVibrateView.setEnable(b);
-                    mPrivacyModeView.setEnable(b);
-                    BugleAnalytics.logEvent("SMS_Settings_Notifications_Click", true);
-                }
-        );
+        setUpNotificationView();
 
         //blocked contacts
         SettingItemView mBlockedContactsView = findViewById(R.id.setting_item_blocked_contacts);
@@ -246,6 +203,8 @@ public class SettingGeneralActivity extends BaseActivity {
         } else {
             mGdpr.setVisibility(View.GONE);
         }
+
+        setUpSyncSettingsView();
     }
 
     public void addBackPressListener(BackPressedListener listener) {
@@ -268,6 +227,109 @@ public class SettingGeneralActivity extends BaseActivity {
     public void refreshSignature() {
         String signature = Preferences.getDefault().getString(SignatureSettingDialog.PREF_KEY_SIGNATURE_CONTENT, null);
         mSignature.setSummary(signature);
+    }
+
+    private void setUpNotificationView() {
+        mNotificationView = findViewById(R.id.setting_item_notifications);
+        String notificationKey = getString(R.string.notifications_enabled_pref_key);
+        boolean notificationDefaultValue = prefs.getBoolean(
+                notificationKey,
+                getResources().getBoolean(R.bool.notifications_enabled_pref_default));
+        if (!notificationDefaultValue && !OsUtil.isAtLeastO()) {
+            mSmsShowView.setEnable(false);
+            mPopUpsView.setEnable(false);
+            mSoundView.setEnable(false);
+            mVibrateView.setEnable(false);
+        }
+        mNotificationView.setChecked(notificationDefaultValue);
+        mNotificationView.setOnItemClickListener(() -> {
+                    boolean b = mNotificationView.isChecked();
+                    prefs.putBoolean(notificationKey, b);
+                    mPopUpsView.setEnable(b);
+                    mSmsShowView.setEnable(b && mPopUpsView.isChecked());
+                    mSoundView.setEnable(b);
+                    mVibrateView.setEnable(b);
+                    mPrivacyModeView.setEnable(b);
+                    GeneralSettingSyncManager.uploadNotificationSwitchToServer(b);
+                    BugleAnalytics.logEvent("SMS_Settings_Notifications_Click", true);
+                }
+        );
+    }
+
+    private void setUpPopUpsView() {
+        mPopUpsView = findViewById(R.id.setting_item_sms_pop_ups);
+        boolean defaultV = MessageBoxSettings.isSMSAssistantModuleEnabled();
+        mPopUpsView.setChecked(defaultV);
+        if (!defaultV) {
+            mSmsShowView.setEnable(false);
+        }
+        mPopUpsView.setOnItemClickListener(() -> {
+            boolean b = mPopUpsView.isChecked();
+            MessageBoxSettings.setSMSAssistantModuleEnabled(b);
+            mSmsShowView.setEnable(b);
+            GeneralSettingSyncManager.uploadMessageBoxSwitchToServer(b);
+            BugleAnalytics.logEvent("SMS_Settings_Popups_Click", true);
+        });
+
+    }
+
+    private void setUpVibrateView() {
+        mVibrateView = findViewById(R.id.setting_item_vibrate);
+        final String vibratePrefKey = getString(R.string.notification_vibration_pref_key);
+        final boolean vibrateDefaultValue = getResources().getBoolean(R.bool.notification_vibration_pref_default);
+        mVibrateView.setChecked(prefs.getBoolean(vibratePrefKey, vibrateDefaultValue));
+        mVibrateView.setOnItemClickListener(() -> {
+            prefs.putBoolean(vibratePrefKey, mVibrateView.isChecked());
+            GeneralSettingSyncManager.uploadVibrateSwitchToServer(mVibrateView.isChecked());
+            BugleAnalytics.logEvent("SMS_Settings_Vibrate_Click", true);
+        });
+    }
+
+    private void setUpOutgoingSoundView() {
+        mOutgoingSoundView = findViewById(R.id.setting_item_outgoing_message_sounds);
+        final String prefKey = getString(R.string.send_sound_pref_key);
+        final boolean defaultValue = getResources().getBoolean(
+                R.bool.send_sound_pref_default);
+        mOutgoingSoundView.setChecked(prefs.getBoolean(prefKey, defaultValue));
+        mOutgoingSoundView.setOnItemClickListener(() -> {
+            prefs.putBoolean(prefKey, mOutgoingSoundView.isChecked());
+            GeneralSettingSyncManager.uploadOutgoingMessageSoundsSwitchToServer(mOutgoingSoundView.isChecked());
+            BugleAnalytics.logEvent("SMS_Settings_MessageSounds_Click", true);
+        });
+    }
+
+    private void setUpSyncSettingsView() {
+        mSyncSettingsView = findViewById(R.id.sync_settings_item);
+        if (FirebaseAuth.getInstance().getCurrentUser() != null) {
+            mSyncSettingsView.setSummary(getString(R.string.firebase_sync_desktop_settings_description_logged_in));
+        }
+
+        mSyncSettingsView.setOnItemClickListener(() -> {
+            if (FirebaseAuth.getInstance().getCurrentUser() == null) {
+                startActivityForResult(
+                        AuthUI.getInstance()
+                                .createSignInIntentBuilder()
+                                .setAvailableProviders(Collections.singletonList(
+                                        new AuthUI.IdpConfig.GoogleBuilder().build()))
+                                .build(),
+                        RC_SIGN_IN);
+                BugleAnalytics.logEvent("SyncDesktopSettings_Icon_Click", "type", "loggedOut");
+            } else {
+                new BaseAlertDialog.Builder(SettingGeneralActivity.this)
+                        .setTitle(R.string.firebase_login_out_title)
+                        .setPositiveButton(R.string.firebase_login_out, (dialog, which) -> {
+                            FirebaseAuth.getInstance().signOut();
+                            dialog.dismiss();
+                            BugleAnalytics.logEvent("SyncDesktopSettings_LogOut");
+                            Toasts.showToast(R.string.firebase_login_out_succeed);
+                            mSyncSettingsView.setSummary(getString(R.string.firebase_sync_desktop_settings_description_logged_out));
+                        })
+                        .setNegativeButton(android.R.string.cancel, (dialog, which) -> dialog.dismiss())
+                        .show();
+                BugleAnalytics.logEvent("SyncDesktopSettings_LogOut_PopUp_Show");
+                BugleAnalytics.logEvent("SyncDesktopSettings_Icon_Click", "type", "loggedIn");
+            }
+        });
     }
 
     private void updateSoundSummary() {
@@ -340,6 +402,19 @@ public class SettingGeneralActivity extends BaseActivity {
                 }
                 prefs.putString(prefKey, uri == null ? "" : uri.toString());
                 updateSoundSummary();
+            }
+        } else if (requestCode == RC_SIGN_IN) {
+            if (resultCode == RESULT_OK) {
+                GeneralSettingSyncManager.overrideLocalData(() -> {
+                    setUpNotificationView();
+                    setUpOutgoingSoundView();
+                    setUpPopUpsView();
+                    setUpVibrateView();
+                });
+                Toasts.showToast(R.string.firebase_login_succeed);
+                mSyncSettingsView.setSummary(getString(R.string.firebase_sync_desktop_settings_description_logged_in));
+            } else {
+                Toasts.showToast(R.string.firebase_login_failed);
             }
         }
     }
