@@ -71,22 +71,20 @@ import com.android.messaging.privatebox.PrivateMessageManager;
 import com.android.messaging.privatebox.PrivateMmsEntry;
 import com.android.messaging.sms.SmsSender.SendResult;
 import com.android.messaging.util.Assert;
-import com.android.messaging.util.BugleAnalytics;
 import com.android.messaging.util.BugleGservices;
 import com.android.messaging.util.BugleGservicesKeys;
 import com.android.messaging.util.BuglePrefs;
 import com.android.messaging.util.ContentType;
 import com.android.messaging.util.DebugUtils;
 import com.android.messaging.util.EmailAddress;
+import com.android.messaging.util.FabricUtils;
 import com.android.messaging.util.ImageUtils;
 import com.android.messaging.util.ImageUtils.ImageResizer;
 import com.android.messaging.util.LogUtil;
 import com.android.messaging.util.MediaMetadataRetrieverWrapper;
 import com.android.messaging.util.OsUtil;
 import com.android.messaging.util.PhoneUtils;
-import com.crashlytics.android.core.CrashlyticsCore;
 import com.google.common.base.Joiner;
-import com.superapps.debug.CrashlyticsLog;
 
 import java.io.BufferedOutputStream;
 import java.io.File;
@@ -756,7 +754,7 @@ public class MmsUtils {
                     // canonical addresses table.
                     return thread.getString(RECIPIENT_IDS);
                 } else {
-                    CrashlyticsCore.getInstance().logException(new CrashlyticsLog("get null recipient by thread id"));
+                    FabricUtils.logNonFatal("get null recipient by thread id");
                 }
             } finally {
                 thread.close();
@@ -2626,7 +2624,7 @@ public class MmsUtils {
                 LogUtil.e(TAG, "MmsUtils: sending SMS timed out");
             }
         } catch (final Exception e) {
-            CrashlyticsCore.getInstance().logException(new CrashlyticsLog("send fail : " + e.getMessage()));
+            FabricUtils.logNonFatal("send fail : " + e.getMessage());
             LogUtil.e(TAG, "MmsUtils: failed to send SMS " + e, e);
         }
         return status;

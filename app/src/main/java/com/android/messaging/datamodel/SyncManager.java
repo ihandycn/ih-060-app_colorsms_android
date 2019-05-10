@@ -21,7 +21,6 @@ import android.database.ContentObserver;
 import android.net.Uri;
 import android.provider.Telephony;
 import android.support.v4.util.LongSparseArray;
-import android.text.TextUtils;
 
 import com.android.messaging.datamodel.action.SyncMessagesAction;
 import com.android.messaging.datamodel.data.ParticipantData;
@@ -34,10 +33,7 @@ import com.android.messaging.util.BuglePrefsKeys;
 import com.android.messaging.util.LogUtil;
 import com.android.messaging.util.OsUtil;
 import com.android.messaging.util.PhoneUtils;
-import com.crashlytics.android.core.CrashlyticsCore;
 import com.google.common.collect.Lists;
-import com.superapps.debug.CrashlyticsLog;
-import com.superapps.util.rom.RomUtils;
 
 import java.util.ArrayList;
 import java.util.HashSet;

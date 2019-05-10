@@ -39,10 +39,9 @@ import com.android.messaging.privatebox.PrivateSmsEntry;
 import com.android.messaging.sms.MmsSmsUtils;
 import com.android.messaging.util.BugleAnalytics;
 import com.android.messaging.util.CheckPermissionUtil;
+import com.android.messaging.util.FabricUtils;
 import com.android.messaging.util.LogUtil;
 import com.android.messaging.util.OsUtil;
-import com.crashlytics.android.core.CrashlyticsCore;
-import com.superapps.debug.CrashlyticsLog;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -85,8 +84,7 @@ public class ReceiveSmsMessageAction extends Action implements Parcelable {
         String address = messageValues.getAsString(Sms.ADDRESS);
         if (TextUtils.isEmpty(address)) {
             LogUtil.w(TAG, "Received an SMS without an address; using unknown sender.");
-            CrashlyticsCore.getInstance().logException(new CrashlyticsLog(
-                    "ReceiveSmsMessageAction use unknown sender, address is null "));
+            FabricUtils.logNonFatal("ReceiveSmsMessageAction use unknown sender, address is null");
             address = ParticipantData.getUnknownSenderDestination();
             messageValues.put(Sms.ADDRESS, address);
         }

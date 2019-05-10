@@ -46,15 +46,14 @@ import com.android.messaging.util.Assert;
 import com.android.messaging.util.Assert.DoesNotRunOnMainThread;
 import com.android.messaging.util.AvatarUriUtil;
 import com.android.messaging.util.ContentType;
+import com.android.messaging.util.FabricUtils;
 import com.android.messaging.util.LogUtil;
 import com.android.messaging.util.OsUtil;
 import com.android.messaging.util.PhoneUtils;
 import com.android.messaging.util.UriUtil;
 import com.android.messaging.widget.WidgetConversationProvider;
-import com.crashlytics.android.core.CrashlyticsCore;
 import com.google.common.annotations.VisibleForTesting;
 import com.ihs.commons.utils.HSLog;
-import com.superapps.debug.CrashlyticsLog;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -1877,8 +1876,7 @@ public class BugleDatabaseOperations {
 
         //add for to find "unknown sender" reason
         if (TextUtils.equals(participant.getSendDestination(), ParticipantData.getUnknownSenderDestination())) {
-            CrashlyticsCore.getInstance().logException(new CrashlyticsLog(
-                    "Insert unknown sender into db"));
+            FabricUtils.logNonFatal("Insert unknown sender into db");
         }
 
         // Insert the participant into the participants table

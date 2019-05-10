@@ -16,8 +16,8 @@ android {
         applicationId "com.color.sms.messages.emoji"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 37
-        versionName "1.0.19"
+        versionCode 39
+        versionName "1.0.21"
         multiDexEnabled true
     }
 
@@ -97,7 +97,7 @@ dependencies {
 
     implementation "com.ihandy.device:device-permanent.gm:4.5.4.gm"
 
-    implementation "net.appcloudbox.goldeneye:bubble_a:2019.04.16.002"
+    implementation "net.appcloudbox.goldeneye:bubble_a:2019.05.06.001"
     implementation "me.leolin:ShortcutBadger:1.1.22@aar"
     implementation 'net.appcloudbox.autopilot:libAutoPilot.gm:5.5.1.gm'
 

@@ -39,10 +39,9 @@ import com.android.messaging.sms.DatabaseMessages.SmsMessage;
 import com.android.messaging.sms.MmsSmsUtils;
 import com.android.messaging.sms.MmsUtils;
 import com.android.messaging.util.Assert;
+import com.android.messaging.util.FabricUtils;
 import com.android.messaging.util.LogUtil;
-import com.crashlytics.android.core.CrashlyticsCore;
 import com.ihs.app.framework.HSApplication;
-import com.superapps.debug.CrashlyticsLog;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -141,8 +140,7 @@ class SyncMessageBatch {
             LogUtil.e(TAG, "SyncMessageBatch: SMS has no address; using unknown sender");
             // try to fix it
             sms.mAddress = ParticipantData.getUnknownSenderDestination();
-            CrashlyticsCore.getInstance().logException(new CrashlyticsLog(
-                    "SyncMessageBatch storeSms use unknown sender, sms.mAddress is empty "));
+            FabricUtils.logNonFatal("SyncMessageBatch storeSms use unknown sender, sms.mAddress is empty ");
         }
 
         // TODO : We need to also deal with messages in a failed/retry state

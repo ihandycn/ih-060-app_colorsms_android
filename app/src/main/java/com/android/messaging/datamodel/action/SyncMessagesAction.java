@@ -45,10 +45,9 @@ import com.android.messaging.util.BugleGservicesKeys;
 import com.android.messaging.util.BuglePrefs;
 import com.android.messaging.util.BuglePrefsKeys;
 import com.android.messaging.util.ContentType;
+import com.android.messaging.util.FabricUtils;
 import com.android.messaging.util.LogUtil;
 import com.android.messaging.util.OsUtil;
-import com.crashlytics.android.core.CrashlyticsCore;
-import com.superapps.debug.CrashlyticsLog;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -107,7 +106,7 @@ public class SyncMessagesAction extends Action implements Parcelable {
 
     /**
      * Start an incremental sync when the application starts up (no back off as not yet
-     *  sending/receiving).
+     * sending/receiving).
      */
     public static void immediateSync() {
         final long now = System.currentTimeMillis();
@@ -126,7 +125,7 @@ public class SyncMessagesAction extends Action implements Parcelable {
         final BuglePrefs prefs = BuglePrefs.getApplicationPrefs();
         // Lower bound is end of previous sync
         final long syncLowerBoundTimeMillis = prefs.getLong(BuglePrefsKeys.LAST_SYNC_TIME,
-                    BuglePrefsKeys.LAST_SYNC_TIME_DEFAULT);
+                BuglePrefsKeys.LAST_SYNC_TIME_DEFAULT);
 
         final SyncMessagesAction action = new SyncMessagesAction(syncLowerBoundTimeMillis,
                 startTimestamp, 0, startTimestamp);
@@ -134,7 +133,7 @@ public class SyncMessagesAction extends Action implements Parcelable {
     }
 
     private SyncMessagesAction(final long lowerBound, final long upperBound,
-            final int maxMessagesToUpdate, final long startTimestamp) {
+                               final int maxMessagesToUpdate, final long startTimestamp) {
         actionParameters.putLong(KEY_LOWER_BOUND, lowerBound);
         actionParameters.putLong(KEY_UPPER_BOUND, upperBound);
         actionParameters.putInt(KEY_MAX_UPDATE, maxMessagesToUpdate);
@@ -267,20 +266,21 @@ public class SyncMessagesAction extends Action implements Parcelable {
 
     /**
      * Compare messages based on timestamp and uri
-     * @param db local database wrapper
-     * @param cursors cursor pair holding references to local and remote messages
-     * @param smsToAdd newly found sms messages to add
-     * @param mmsToAdd newly found mms messages to add
-     * @param messagesToDelete messages not found needing deletion
-     * @param maxMessagesToScan max messages to scan for changes
+     *
+     * @param db                  local database wrapper
+     * @param cursors             cursor pair holding references to local and remote messages
+     * @param smsToAdd            newly found sms messages to add
+     * @param mmsToAdd            newly found mms messages to add
+     * @param messagesToDelete    messages not found needing deletion
+     * @param maxMessagesToScan   max messages to scan for changes
      * @param maxMessagesToUpdate max messages to return for updates
-     * @param cache cache for conversation id / thread id / recipient set mapping
+     * @param cache               cache for conversation id / thread id / recipient set mapping
      * @return timestamp of the oldest message seen during the sync scan
      */
     private long syncCursorPair(final DatabaseWrapper db, final SyncCursorPair cursors,
-            final ArrayList<SmsMessage> smsToAdd, final LongSparseArray<MmsMessage> mmsToAdd,
-            final ArrayList<LocalDatabaseMessage> messagesToDelete, final int maxMessagesToScan,
-            final int maxMessagesToUpdate, final ThreadInfoCache cache) {
+                                final ArrayList<SmsMessage> smsToAdd, final LongSparseArray<MmsMessage> mmsToAdd,
+                                final ArrayList<LocalDatabaseMessage> messagesToDelete, final int maxMessagesToScan,
+                                final int maxMessagesToUpdate, final ThreadInfoCache cache) {
         long lastTimestampMillis;
         final long startTimeMillis = SystemClock.elapsedRealtime();
 
@@ -506,8 +506,9 @@ public class SyncMessagesAction extends Action implements Parcelable {
 
     /**
      * Decide the next batch size based on the stats we collected with past batch
+     *
      * @param messagesUpdated number of messages updated in this batch
-     * @param txnTimeMillis time the transaction took in ms
+     * @param txnTimeMillis   time the transaction took in ms
      * @return Target number of messages to sync for next batch
      */
     private static int nextBatchSize(final int messagesUpdated, final long txnTimeMillis) {
@@ -523,7 +524,7 @@ public class SyncMessagesAction extends Action implements Parcelable {
         // the average sync time calculated based on the stats we collected
         // in previous batch
         return (int) ((double) (messagesUpdated) / (double) txnTimeMillis
-                        * smsSyncSubsequentBatchTimeLimitMillis);
+                * smsSyncSubsequentBatchTimeLimitMillis);
     }
 
     /**
@@ -578,7 +579,7 @@ public class SyncMessagesAction extends Action implements Parcelable {
      * Batch loading MMS sender for the messages in current batch
      */
     private void setMmsSenders(final LongSparseArray<MmsMessage> mmses,
-            final ThreadInfoCache cache) {
+                               final ThreadInfoCache cache) {
         // Store all the MMS messages
         for (int i = 0; i < mmses.size(); i++) {
             final MmsMessage mms = mmses.valueAt(i);
@@ -592,8 +593,7 @@ public class SyncMessagesAction extends Action implements Parcelable {
                     LogUtil.w(TAG, "SyncMessagesAction: Could not find sender of incoming MMS "
                             + "message " + mms.getUri() + "; using 'unknown sender' instead");
                     senderId = ParticipantData.getUnknownSenderDestination();
-                    CrashlyticsCore.getInstance().logException(new CrashlyticsLog(
-                            "SyncMessagesAction use unknown sender, setMmsSenders "));
+                    FabricUtils.logNonFatal("SyncMessagesAction use unknown sender, setMmsSenders ");
                 }
             }
             mms.setSender(senderId);

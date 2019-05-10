@@ -1,103 +1,96 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
+<RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    style="@style/ConversationMessageViewStyle"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:orientation="horizontal"
-    android:layout_height="wrap_content">
+    android:layout_height="53dp">
 
-    <FrameLayout
-        android:id="@+id/conversation_icon_container"
-        android:layout_width="@dimen/conversation_message_contact_icon_container_size"
-        android:layout_height="@dimen/conversation_message_contact_icon_container_size">
+    <com.superapps.view.RoundCornerContainer
+        android:id="@+id/banner_icon"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_marginStart="10dp"
+        app:radiusX="20dp"
+        app:radiusY="20dp">
+
+        <ImageView
+            android:layout_width="@dimen/conversation_list_contact_icon_size"
+            android:layout_height="@dimen/conversation_list_contact_icon_size"
+            android:src="@drawable/icon_ad"/>
 
         <net.appcloudbox.ads.base.ContainerView.AcbNativeAdIconView
-            android:id="@+id/ad_icon"
-            android:layout_width="40dp"
-            android:background="@drawable/default_ad_icon"
-            android:layout_height="40dp"
-            android:layout_gravity="center"/>
-    </FrameLayout>
+            android:id="@+id/banner_icon_image"
+            android:layout_width="@dimen/conversation_list_contact_icon_size"
+            android:layout_height="@dimen/conversation_list_contact_icon_size"/>
+    </com.superapps.view.RoundCornerContainer>
 
-    <RelativeLayout
-        android:id="@+id/content_container"
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_marginTop="@dimen/conversation_message_bubble_incoming_top_margin"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_marginStart="14dp"
+        android:layout_marginEnd="14dp"
+        android:layout_toStartOf="@+id/banner_action"
+        android:layout_toEndOf="@id/banner_icon"
+        android:orientation="vertical">
 
-        <RelativeLayout
-            android:id="@+id/title_container"
+        <com.superapps.view.MessagesTextView
+            android:id="@+id/banner_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:ellipsize="end"
+            android:includeFontPadding="false"
+            android:singleLine="true"
+            android:textColor="#19191c"
+            android:textSize="16sp"
+            app:typeface="@string/custom_font_semibold"
+            tools:text="Find funny GIFshjhjhjhjhjhjjhjhjh"/>
+
+        <LinearLayout
             android:layout_width="match_parent"
             android:orientation="horizontal"
-            android:layout_marginTop="1dp"
+            android:gravity="center_vertical"
             android:layout_height="wrap_content">
 
             <ImageView
-                android:id="@+id/ad_corner"
+                android:id="@+id/icon_ad_preview"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_centerVertical="true"
-                android:src="@drawable/icon_ad_chat"/>
+                android:src="@drawable/icon_ad_preview"/>
 
             <com.superapps.view.MessagesTextView
-                android:id="@+id/ad_title"
-                android:layout_width="match_parent"
-                android:layout_toEndOf="@id/ad_corner"
-                android:textSize="13.3dp"
-                android:textColor="#fff"
-                android:layout_marginStart="8dp"
+                android:id="@+id/banner_des"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:singleLine="true"
                 android:ellipsize="end"
-                app:font_size_changeable="true"
-                app:typeface="@string/custom_font_medium"/>
-        </RelativeLayout>
+                android:layout_marginStart="4dp"
+                android:gravity="center_vertical"
+                android:includeFontPadding="false"
+                android:singleLine="true"
+                android:textColor="#878a95"
+                android:textSize="12sp"
+                app:typeface="@string/custom_font_regular"
+                tools:text="memes &amp; watch vir..."/>
+        </LinearLayout>
+    </LinearLayout>
 
-        <com.superapps.view.MessagesTextView
-            android:id="@+id/ad_subtitle"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/title_container"
-            android:textColor="#fff"
-            android:textSize="13.3dp"
-            android:maxLines="2"
-            android:ellipsize="end"
-            app:font_size_changeable="true"
-            app:typeface="@string/custom_font_regular"/>
-
-        <com.superapps.view.MessagesTextView
-            android:id="@+id/ad_action"
-            android:layout_width="wrap_content"
-            android:layout_height="28dp"
-            android:layout_marginTop="6dp"
-            android:layout_below="@id/ad_subtitle"
-            android:paddingLeft="15dp"
-            android:layout_marginBottom="6dp"
-            android:gravity="center"
-            android:clickable="true"
-            android:paddingRight="15dp"
-            app:font_size_changeable="false"
-            app:typeface="@string/custom_font_medium"/>
-
-        <ImageView
-            android:id="@+id/action_bg"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_alignTop="@id/ad_action"
-            android:alpha="0.5"
-            android:layout_alignBottom="@id/ad_action"
-            android:src="@drawable/conversation_ad_action_bg"
-            android:layout_alignStart="@id/ad_action"
-            android:layout_alignEnd="@id/ad_action"/>
-
-        <FrameLayout
-            android:id="@+id/ad_choice"
-            android:layout_width="wrap_content"
-            android:layout_marginEnd="30dp"
-            android:layout_marginTop="20dp"
-            android:layout_height="wrap_content"/>
-    </RelativeLayout>
-</LinearLayout>
-
-
+    <com.superapps.view.MessagesTextView
+        android:id="@+id/banner_action"
+        android:layout_width="wrap_content"
+        android:layout_height="32dp"
+        android:layout_alignParentEnd="true"
+        android:layout_centerVertical="true"
+        android:paddingLeft="15dp"
+        android:paddingRight="15dp"
+        android:layout_marginEnd="15dp"
+        android:gravity="center"
+        android:includeFontPadding="false"
+        android:textColor="#2fa0ff"
+        android:textSize="13sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:typeface="@string/custom_font_medium"/>
+</RelativeLayout>

@@ -51,6 +51,7 @@ public class ChangeFontUtils {
     }
 
     public static void changeFontTypeface(View view, String typename) {
+        sTypefaceMap.clear();
         loadAndChangeFontTypeface(view, typename);
         sTypefaceMap.clear();
     }
@@ -80,15 +81,15 @@ public class ChangeFontUtils {
             String weightStr;
             switch (weight) {
                 case FontUtils.MEDIUM:
-                    weightStr = "Medium.ttf";
+                    weightStr = "Medium";
                     break;
                 case FontUtils.SEMI_BOLD:
                 case FontUtils.BOLD:
                 case FontUtils.BLACK:
-                    weightStr = "Semibold.ttf";
+                    weightStr = "Semibold";
                     break;
                 default:
-                    weightStr = "Regular.ttf";
+                    weightStr = "Regular";
             }
 
             if (sTypefaceMap.containsKey(weightStr)) {
@@ -98,52 +99,11 @@ public class ChangeFontUtils {
                 return;
             }
 
-            boolean isLocalFont = false;
-            for (String s : sSupportGoogleFonts) {
-                if (s.equals(typeName)) {
-                    isLocalFont = true;
-                    break;
-                }
-            }
-            //local fonts
-            if (isLocalFont) {
-                if (typeName.equals(FontUtils.MESSAGE_FONT_FAMILY_DEFAULT_VALUE)) {
-                    typeName = "Custom";
-                }
-
-                Typeface tp = Typeface.createFromAsset(Factory.get().getApplicationContext().getAssets(),
-                        "fonts/" + typeName + "-" + weightStr);
+            Typeface tp = FontUtils.loadTypeface(typeName, weightStr);
+            if (tp != null) {
                 sTypefaceMap.put(weightStr, tp);
-                textView.setTypeface(tp);
-
-            } else {
-                File file;
-                switch (weightStr) {
-                    case "Medium.ttf":
-                        file = new File(CommonUtils.getDirectory(LOCAL_DIRECTORY + typeName), "Medium.ttf");
-                        if (file.exists()) {
-                            break;
-                        }
-                    case "Semibold.ttf":
-                        file = new File(CommonUtils.getDirectory(LOCAL_DIRECTORY + typeName), "SemiBold.ttf");
-                        if (file.exists()) {
-                            break;
-                        }
-                    default:
-                        file = new File(CommonUtils.getDirectory(LOCAL_DIRECTORY + typeName), "Regular.ttf");
-                }
-
-                if (file.exists()) {
-                    Typeface tp = null;
-                    try {
-                        tp = Typeface.createFromFile(file);
-                        textView.setTypeface(tp);
-                    } catch (Exception e) {
-
-                    }
-                    sTypefaceMap.put(weightStr, tp);
-                }
             }
+            textView.setTypeface(tp);
         }
     }
 

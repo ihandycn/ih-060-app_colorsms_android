@@ -165,9 +165,6 @@ public class SnackBarManager {
                     if (mPopupWindow != null) {
                         mPopupWindow.update(anchorView, 0, getRelativeOffset(snackBar),
                                 anchorView.getWidth(), LayoutParams.WRAP_CONTENT);
-                    } else {
-                        CrashlyticsCore.getInstance().logException(
-                                new CrashlyticsLog("Snack bar manager error"));
                     }
                 }
             };

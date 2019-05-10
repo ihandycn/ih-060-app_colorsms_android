@@ -56,7 +56,6 @@ public class ThemeUtils {
 
         HSGlobalNotificationCenter.sendNotification(ConversationListActivity.EVENT_MAINPAGE_RECREATE);
         Factory.get().reclaimMemory();
-
     }
 
     public static String getCurrentThemeName() {

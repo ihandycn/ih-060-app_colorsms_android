@@ -17,15 +17,6 @@
 				<key>FontList</key>
 				<array>
 					<dict>
-						<key>Name</key>
-						<string>sarpanch</string>
-						<key>Weight</key>
-						<array>
-							<string>SemiBold</string>
-							<string>Regular</string>
-						</array>
-					</dict>
-					<dict>
 						<key>Weight</key>
 						<array>
 							<string>SemiBold</string>
@@ -144,15 +135,6 @@
 					</dict>
 					<dict>
 						<key>Name</key>
-						<string>merienda</string>
-						<key>Weight</key>
-						<array>
-							<string>SemiBold</string>
-							<string>Regular</string>
-						</array>
-					</dict>
-					<dict>
-						<key>Name</key>
 						<string>laila</string>
 						<key>Weight</key>
 						<array>
@@ -188,6 +170,13 @@
 					<false/>
 					<key>ShowAfterCloseTheKeyboard</key>
 					<false/>
+				</dict>
+				<key>SMSDetailspageTopAd</key>
+				<dict>
+					<key>Enabled</key>
+					<true/>
+					<key>ShowAfterSlide</key>
+					<true/>
 				</dict>
 				<key>SMSDetailspageFullAd</key>
 				<dict>
@@ -307,8 +296,139 @@
 			<string>http://cdn.appcloudbox.net/smoothappsstudio/apps/bubble/terms-of-use.html</string>
 			<key>Themes</key>
 			<dict>
+				<key>Unicorn</key>
+				<dict>
+					<key>AvatarUrl</key>
+					<string>assets://themes/unicorn/avatar.png</string>
+					<key>AvatarForegroundColor</key>
+					<string>#fc85d1</string>
+					<key>BubbleAdColor</key>
+					<string>#e3187b</string>
+					<key>BubbleIncomingUrl</key>
+					<string>12</string>
+					<key>BubbleOutgoingUrl</key>
+					<string>12</string>
+					<key>FontName</key>
+					<string>Mali</string>
+					<key>FontUrl</key>
+					<string></string>
+					<key>IncomingBubbleBgColor</key>
+					<string>#00000000</string>
+					<key>IncomingBubbleTextColor</key>
+					<string>#272d32</string>
+					<key>ListSubtitleColor</key>
+					<string>#ffffff</string>
+					<key>ListTimeColor</key>
+					<string>#ffeefc</string>
+					<key>ListTitleColor</key>
+					<string>#ffffff</string>
+					<key>ListWallpaperUrl</key>
+					<string>assets://themes/unicorn/wallpaper.jpg</string>
+					<key>NewConversationIconUrl</key>
+					<string>assets://themes/unicorn/create.png</string>
+					<key>OutgoingBubbleBgColor</key>
+					<string>#00000000</string>
+					<key>OutgoingBubbleTextColor</key>
+					<string>#272d32</string>
+					<key>PreviewUrl</key>
+					<string>assets://themes/unicorn/image_unicorn_theme.jpg</string>
+					<key>ThemeColor</key>
+					<string>#fc85d1</string>
+					<key>ToolbarBgUrl</key>
+					<string>assets://themes/unicorn/toolbar.jpg</string>
+					<key>WallpaperUrl</key>
+					<string>assets://themes/unicorn/wallpaper.jpg</string>
+				</dict>
+				<key>Technology</key>
+				<dict>
+					<key>AvatarForegroundColor</key>
+					<string>#ffffff</string>
+					<key>AvatarUrl</key>
+					<string>assets://themes/technology/avatar.png</string>
+					<key>BubbleAdColor</key>
+					<string>#e3187b</string>
+					<key>BubbleIncomingUrl</key>
+					<string>14</string>
+					<key>BubbleOutgoingUrl</key>
+					<string>14</string>
+					<key>FontName</key>
+					<string>Sarpanch</string>
+					<key>FontUrl</key>
+					<string></string>
+					<key>IncomingBubbleBgColor</key>
+					<string>#00000000</string>
+					<key>IncomingBubbleTextColor</key>
+					<string>#a1f3ff</string>
+					<key>ListSubtitleColor</key>
+					<string>#7a94d8</string>
+					<key>ListTimeColor</key>
+					<string>#465f9e</string>
+					<key>ListTitleColor</key>
+					<string>#e4edff</string>
+					<key>ListWallpaperUrl</key>
+					<string>assets://themes/technology/wallpaper.jpg</string>
+					<key>NewConversationIconUrl</key>
+					<string>assets://themes/technology/create.png</string>
+					<key>OutgoingBubbleBgColor</key>
+					<string>#00000000</string>
+					<key>OutgoingBubbleTextColor</key>
+					<string>#5cd2ff</string>
+					<key>PreviewUrl</key>
+					<string>assets://themes/technology/image_technology_theme.jpg</string>
+					<key>ThemeColor</key>
+					<string>#263f8c</string>
+					<key>ToolbarBgUrl</key>
+					<string>assets://themes/technology/toolbar.jpg</string>
+					<key>WallpaperUrl</key>
+					<string>assets://themes/technology/wallpaper.jpg</string>
+				</dict>
+				<key>GoldenDiamond</key>
+				<dict>
+					<key>AvatarForegroundColor</key>
+					<string>#ffffff</string>
+					<key>AvatarUrl</key>
+					<string>assets://themes/goldendiamond/avatar.png</string>
+					<key>BubbleAdColor</key>
+					<string>#e3187b</string>
+					<key>BubbleIncomingUrl</key>
+					<string>13</string>
+					<key>BubbleOutgoingUrl</key>
+					<string>13</string>
+					<key>FontName</key>
+					<string>Merienda</string>
+					<key>FontUrl</key>
+					<string></string>
+					<key>IncomingBubbleBgColor</key>
+					<string>#00000000</string>
+					<key>IncomingBubbleTextColor</key>
+					<string>#fff9c6</string>
+					<key>ListSubtitleColor</key>
+					<string>#764815</string>
+					<key>ListTimeColor</key>
+					<string>#764815</string>
+					<key>ListTitleColor</key>
+					<string>#492d19</string>
+					<key>ListWallpaperUrl</key>
+					<string>assets://themes/goldendiamond/wallpaper.jpg</string>
+					<key>NewConversationIconUrl</key>
+					<string></string>
+					<key>OutgoingBubbleBgColor</key>
+					<string>#00000000</string>
+					<key>OutgoingBubbleTextColor</key>
+					<string>#fff9c6</string>
+					<key>PreviewUrl</key>
+					<string>assets://themes/goldendiamond/image_goldendiamond_theme.jpg</string>
+					<key>ThemeColor</key>
+					<string>#81471a</string>
+					<key>ToolbarBgUrl</key>
+					<string>assets://themes/goldendiamond/toolbar.jpg</string>
+					<key>WallpaperUrl</key>
+					<string>assets://themes/goldendiamond/wallpaper.jpg</string>
+				</dict>
 				<key>Default</key>
 				<dict>
+					<key>AvatarForegroundColor</key>
+					<string>#ffffff</string>
 					<key>AvatarUrl</key>
 					<string>assets://themes/default/avatar.png</string>
 					<key>BubbleAdColor</key>
@@ -350,6 +470,8 @@
 				</dict>
 				<key>Diamond</key>
 				<dict>
+					<key>AvatarForegroundColor</key>
+					<string>#ffffff</string>
 					<key>AvatarUrl</key>
 					<string>assets://themes/diamond/avatar.png</string>
 					<key>BubbleAdColor</key>
@@ -391,6 +513,8 @@
 				</dict>
 				<key>Neno</key>
 				<dict>
+					<key>AvatarForegroundColor</key>
+					<string>#ffffff</string>
 					<key>AvatarUrl</key>
 					<string>assets://themes/neon/avatar.png</string>
 					<key>BubbleAdColor</key>
@@ -432,6 +556,8 @@
 				</dict>
 				<key>SimpleBusiness</key>
 				<dict>
+					<key>AvatarForegroundColor</key>
+					<string>#ffffff</string>
 					<key>AvatarUrl</key>
 					<string>assets://themes/simplebusiness/avatar.png</string>
 					<key>BubbleAdColor</key>
@@ -473,6 +599,8 @@
 				</dict>
 				<key>WaterDrop</key>
 				<dict>
+					<key>AvatarForegroundColor</key>
+					<string>#ffffff</string>
 					<key>AvatarUrl</key>
 					<string>assets://themes/waterdrop/avatar.png</string>
 					<key>BubbleAdColor</key>

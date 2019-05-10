@@ -32,11 +32,10 @@
             android:layout_height="match_parent"
             android:layout_weight="1">
 
-            <com.android.messaging.ui.wallpaper.BackgroundImageView
+            <com.android.messaging.ui.view.CenterTopImageView
                 android:id="@+id/conversation_fragment_wallpaper"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:scaleType="centerCrop"/>
+                android:layout_height="match_parent"/>
 
             <!-- Message list -->
             <android.support.v7.widget.RecyclerView
@@ -45,6 +44,13 @@
                 android:layout_height="match_parent"
                 android:clipToPadding="false"
                 android:listSelector="@android:color/transparent"/>
+
+            <FrameLayout
+                android:id="@+id/top_banner_ad_container"
+                android:layout_width="match_parent"
+                android:layout_height="53dp">
+
+            </FrameLayout>
 
             <View
                 android:id="@+id/conversation_compose_divider"

@@ -551,6 +551,10 @@ public class ConversationActivity extends BugleActionBarActivity
         return mUiState.shouldResumeComposeMessage();
     }
 
+    public boolean shouldShowContactPickerFragment() {
+        return mUiState.shouldShowContactPickerFragment();
+    }
+
     @Override
     protected void onActivityResult(final int requestCode, final int resultCode,
                                     final Intent data) {

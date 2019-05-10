@@ -43,11 +43,11 @@ import com.android.messaging.privatebox.PrivateSettingManager;
 import com.android.messaging.privatebox.ui.PrivateBoxSetPasswordActivity;
 import com.android.messaging.privatebox.ui.SelfVerifyActivity;
 import com.android.messaging.ui.BaseAlertDialog;
+import com.android.messaging.font.ChangeFontActivity;
 import com.android.messaging.ui.CreateShortcutActivity;
 import com.android.messaging.ui.DragHotSeatActivity;
 import com.android.messaging.ui.UIIntents;
 import com.android.messaging.ui.UIIntentsImpl;
-import com.android.messaging.font.ChangeFontActivity;
 import com.android.messaging.ui.appsettings.ChooseThemeColorRecommendViewHolder;
 import com.android.messaging.ui.appsettings.ThemeColorSelectActivity;
 import com.android.messaging.ui.customize.BubbleDrawables;
@@ -226,14 +226,14 @@ public class ConversationListActivity extends AbstractConversationListActivity
                     backgroundStr = "colorsms_" + wallpaperIndex;
                 }
 
-                BugleAnalytics.logEvent("SMS_Messages_Show", true, true,
+                BugleAnalytics.logEvent("SMS_Messages_Create", true, true,
                         "themeColor", String.valueOf(ChooseThemeColorRecommendViewHolder.getPrimaryColorType()),
                         "background", backgroundStr,
                         "bubbleStyle", String.valueOf(BubbleDrawables.getSelectedIdentifier()),
-                        "received bubble color", ConversationColors.get().getConversationColorEventType(true, true),
-                        "sent bubble color", ConversationColors.get().getConversationColorEventType(true, false),
-                        "received text color", ConversationColors.get().getConversationColorEventType(false, true),
-                        "sent text color", ConversationColors.get().getConversationColorEventType(false, false),
+                        "received_bubble_color", ConversationColors.get().getConversationColorEventType(true, true),
+                        "sent_bubble_color", ConversationColors.get().getConversationColorEventType(true, false),
+                        "received_text_color", ConversationColors.get().getConversationColorEventType(false, true),
+                        "sent_text_color", ConversationColors.get().getConversationColorEventType(false, false),
                         "theme", ThemeUtils.getCurrentThemeName());
 
                 switch (FontStyleManager.getInstance().getFontScaleLevel()) {
@@ -284,7 +284,8 @@ public class ConversationListActivity extends AbstractConversationListActivity
                 }
             });
 
-            if (HSConfig.optBoolean(false, "Application", "SMSAd", "SMSDetailspageBannerAd", "Enabled")) {
+            if (HSConfig.optBoolean(false, "Application", "SMSAd", "SMSDetailspageTopAd", "Enabled")
+                    && HSApplication.getFirstLaunchInfo().appVersionCode >= 38) {
                 AcbNativeAdManager.preload(1, AdPlacement.AD_DETAIL_NATIVE);
             }
         }
