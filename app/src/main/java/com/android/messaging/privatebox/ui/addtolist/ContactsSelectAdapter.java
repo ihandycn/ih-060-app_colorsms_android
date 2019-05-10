@@ -10,9 +10,12 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.android.messaging.R;
+import com.android.messaging.util.PhoneUtils;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class ContactsSelectAdapter extends RecyclerView.Adapter<ContactsSelectAdapter.ViewHolder> {
 
@@ -39,7 +42,14 @@ public class ContactsSelectAdapter extends RecyclerView.Adapter<ContactsSelectAd
 
     public void updateData(List<CallAssistantUtils.ContactInfo> data) {
         this.recyclerDataList.clear();
-        this.recyclerDataList.addAll(data);
+        Map<String, String> dataMap = new HashMap<>();
+        for (CallAssistantUtils.ContactInfo info : data) {
+            String address = PhoneUtils.getDefault().getCanonicalBySimLocale(info.number);
+            if (!dataMap.containsKey(address) || !dataMap.get(address).equals(info.name)) {
+                dataMap.put(address, info.name);
+                this.recyclerDataList.add(info);
+            }
+        }
         notifyDataSetChanged();
     }
 

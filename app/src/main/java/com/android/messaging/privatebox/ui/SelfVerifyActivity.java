@@ -5,11 +5,11 @@ import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.KeyEvent;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.android.messaging.R;
 import com.android.messaging.ui.UIIntents;
+import com.android.messaging.ui.UIIntentsImpl;
 import com.android.messaging.util.BugleAnalytics;
 import com.android.messaging.util.UiUtils;
 import com.superapps.util.Navigations;
@@ -92,17 +92,21 @@ public class SelfVerifyActivity extends VerifyActivity {
         finish();
     }
 
-
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if (keyCode == KeyEvent.KEYCODE_BACK) {
-            backPressed();
+            onBackPressed();
             return true;
         }
         return super.onKeyDown(keyCode, event);
     }
 
-    private void backPressed() {
-        finish();
+    @Override
+    public void onBackPressed() {
+        if (ENTRANCE_NOTIFICATION.equals(getIntent().getStringExtra(INTENT_KEY_ACTIVITY_ENTRANCE))) {
+            UIIntentsImpl.get().launchConversationListActivity(this);
+        } else {
+            finish();
+        }
     }
 }
