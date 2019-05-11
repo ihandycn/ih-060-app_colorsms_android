@@ -296,6 +296,135 @@
 			<string>http://cdn.appcloudbox.net/smoothappsstudio/apps/bubble/terms-of-use.html</string>
 			<key>Themes</key>
 			<dict>
+				<key>CuteGraffiti</key>
+				<dict>
+					<key>AvatarUrl</key>
+					<string>assets://themes/cutegraffiti/avatar.png</string>
+					<key>AvatarForegroundColor</key>
+					<string>#000000</string>
+					<key>BubbleAdColor</key>
+					<string>#e3187b</string>
+					<key>BubbleIncomingUrl</key>
+					<string>17</string>
+					<key>BubbleOutgoingUrl</key>
+					<string>17</string>
+					<key>FontName</key>
+					<string>K2D</string>
+					<key>FontUrl</key>
+					<string></string>
+					<key>IncomingBubbleBgColor</key>
+					<string>#00000000</string>
+					<key>IncomingBubbleTextColor</key>
+					<string>#000000</string>
+					<key>ListSubtitleColor</key>
+					<string>#000000</string>
+					<key>ListTimeColor</key>
+					<string>#000000</string>
+					<key>ListTitleColor</key>
+					<string>#000000</string>
+					<key>ListWallpaperUrl</key>
+					<string>assets://themes/cutegraffiti/wallpaper.jpg</string>
+					<key>NewConversationIconUrl</key>
+					<string></string>
+					<key>OutgoingBubbleBgColor</key>
+					<string>#00000000</string>
+					<key>OutgoingBubbleTextColor</key>
+					<string>#000000</string>
+					<key>PreviewUrl</key>
+					<string>assets://themes/cutegraffiti/image_cutegraffiti_theme.jpg</string>
+					<key>ThemeColor</key>
+					<string>#31dbb8</string>
+					<key>ToolbarBgUrl</key>
+					<string>assets://themes/cutegraffiti/toolbar.jpg</string>
+					<key>WallpaperUrl</key>
+					<string>assets://themes/cutegraffiti/wallpaper.jpg</string>
+				</dict>
+				<key>CoolGraffiti</key>
+				<dict>
+					<key>AvatarUrl</key>
+					<string>assets://themes/coolgraffiti/avatar.png</string>
+					<key>AvatarForegroundColor</key>
+					<string>#ffffff</string>
+					<key>BubbleAdColor</key>
+					<string>#e3187b</string>
+					<key>BubbleIncomingUrl</key>
+					<string>16</string>
+					<key>BubbleOutgoingUrl</key>
+					<string>16</string>
+					<key>FontName</key>
+					<string>K2D</string>
+					<key>FontUrl</key>
+					<string></string>
+					<key>IncomingBubbleBgColor</key>
+					<string>#00000000</string>
+					<key>IncomingBubbleTextColor</key>
+					<string>#121111</string>
+					<key>ListSubtitleColor</key>
+					<string>#d0c2c0</string>
+					<key>ListTimeColor</key>
+					<string>#bda7a3</string>
+					<key>ListTitleColor</key>
+					<string>#ffffff</string>
+					<key>ListWallpaperUrl</key>
+					<string>assets://themes/coolgraffiti/wallpaper.jpg</string>
+					<key>NewConversationIconUrl</key>
+					<string></string>
+					<key>OutgoingBubbleBgColor</key>
+					<string>#00000000</string>
+					<key>OutgoingBubbleTextColor</key>
+					<string>#121111</string>
+					<key>PreviewUrl</key>
+					<string>assets://themes/coolgraffiti/image_coolgraffiti_theme.jpg</string>
+					<key>ThemeColor</key>
+					<string>#654a41</string>
+					<key>ToolbarBgUrl</key>
+					<string>assets://themes/coolgraffiti/toolbar.jpg</string>
+					<key>WallpaperUrl</key>
+					<string>assets://themes/coolgraffiti/wallpaper.jpg</string>
+				</dict>
+				<key>Starry</key>
+				<dict>
+					<key>AvatarUrl</key>
+					<string>assets://themes/starry/avatar.png</string>
+					<key>AvatarForegroundColor</key>
+					<string>#ffffff</string>
+					<key>BubbleAdColor</key>
+					<string>#e3187b</string>
+					<key>BubbleIncomingUrl</key>
+					<string>15</string>
+					<key>BubbleOutgoingUrl</key>
+					<string>15</string>
+					<key>FontName</key>
+					<string>ElMessiri</string>
+					<key>FontUrl</key>
+					<string></string>
+					<key>IncomingBubbleBgColor</key>
+					<string>#00000000</string>
+					<key>IncomingBubbleTextColor</key>
+					<string>#ffffff</string>
+					<key>ListSubtitleColor</key>
+					<string>#e4e4e4</string>
+					<key>ListTimeColor</key>
+					<string>#c7d6e2</string>
+					<key>ListTitleColor</key>
+					<string>#ffffff</string>
+					<key>ListWallpaperUrl</key>
+					<string>assets://themes/starry/wallpaper.jpg</string>
+					<key>NewConversationIconUrl</key>
+					<string></string>
+					<key>OutgoingBubbleBgColor</key>
+					<string>#00000000</string>
+					<key>OutgoingBubbleTextColor</key>
+					<string>#ffffff</string>
+					<key>PreviewUrl</key>
+					<string>assets://themes/starry/image_starry_theme.jpg</string>
+					<key>ThemeColor</key>
+					<string>#4a34e0</string>
+					<key>ToolbarBgUrl</key>
+					<string>assets://themes/starry/toolbar.jpg</string>
+					<key>WallpaperUrl</key>
+					<string>assets://themes/starry/wallpaper.jpg</string>
+				</dict>
 				<key>Unicorn</key>
 				<dict>
 					<key>AvatarUrl</key>
@@ -325,7 +454,7 @@
 					<key>ListWallpaperUrl</key>
 					<string>assets://themes/unicorn/wallpaper.jpg</string>
 					<key>NewConversationIconUrl</key>
-					<string>assets://themes/unicorn/create.png</string>
+					<string></string>
 					<key>OutgoingBubbleBgColor</key>
 					<string>#00000000</string>
 					<key>OutgoingBubbleTextColor</key>
@@ -368,7 +497,7 @@
 					<key>ListWallpaperUrl</key>
 					<string>assets://themes/technology/wallpaper.jpg</string>
 					<key>NewConversationIconUrl</key>
-					<string>assets://themes/technology/create.png</string>
+					<string></string>
 					<key>OutgoingBubbleBgColor</key>
 					<string>#00000000</string>
 					<key>OutgoingBubbleTextColor</key>
