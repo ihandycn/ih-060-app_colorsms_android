@@ -21,7 +21,8 @@ public class FontUtils {
 
     public static final String[] sSupportGoogleFonts = {
             FontUtils.MESSAGE_FONT_FAMILY_DEFAULT_VALUE,
-            "Krub", "Mali", "ExpletusSans", "SourceSerifPro", "Merienda", "Sarpanch"
+            "Krub", "Mali", "ExpletusSans", "SourceSerifPro",
+            "Merienda", "Sarpanch", "K2D", "El_Messiri"
     };
 
     private static Map<String, Typeface> sTypefaceMap = new HashMap<>();
