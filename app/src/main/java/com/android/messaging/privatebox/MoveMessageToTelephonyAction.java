@@ -5,7 +5,6 @@ import android.content.ContentUris;
 import android.content.ContentValues;
 import android.database.Cursor;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.provider.Telephony;
@@ -17,14 +16,11 @@ import com.android.messaging.datamodel.DataModel;
 import com.android.messaging.datamodel.DatabaseHelper;
 import com.android.messaging.datamodel.DatabaseWrapper;
 import com.android.messaging.datamodel.action.Action;
-import com.android.messaging.sms.MmsSmsUtils;
-import com.android.messaging.sms.MmsUtils;
 import com.ihs.app.framework.HSApplication;
 import com.ihs.commons.notificationcenter.HSGlobalNotificationCenter;
 import com.superapps.util.Toasts;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
 
 public class MoveMessageToTelephonyAction extends Action {
@@ -185,7 +181,7 @@ public class MoveMessageToTelephonyAction extends Action {
                     HSGlobalNotificationCenter.sendNotification(end);
                 }
             }
-            Toasts.showToast(R.string.private_box_add_success);
+            Toasts.showToast(R.string.private_box_move_from_success);
         }
     }
 

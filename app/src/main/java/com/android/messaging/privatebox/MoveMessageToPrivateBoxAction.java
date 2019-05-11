@@ -5,7 +5,6 @@ import android.content.ContentUris;
 import android.content.ContentValues;
 import android.database.Cursor;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.provider.Telephony;
@@ -175,7 +174,7 @@ public class MoveMessageToPrivateBoxAction extends Action {
                     HSGlobalNotificationCenter.sendNotification(notificationName);
                 }
             }
-            Toasts.showToast(R.string.private_box_add_success);
+            Toasts.showToast(R.string.private_box_add_to_success);
         }
     }
 

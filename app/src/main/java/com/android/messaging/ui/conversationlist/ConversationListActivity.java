@@ -939,7 +939,7 @@ public class ConversationListActivity extends AbstractConversationListActivity
             case NOTIFICATION_NAME_MESSAGES_MOVE_END:
                 if (mIsMessageMoving) {
                     mIsMessageMoving = false;
-                    Toasts.showToast(R.string.private_box_add_success);
+                    Toasts.showToast(R.string.private_box_add_to_success);
                 }
                 break;
             default:

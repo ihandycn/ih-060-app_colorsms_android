@@ -171,7 +171,7 @@ public class ContactsSelectActivity extends HSAppCompatActivity {
         mIsMessageMoving = false;
         mChoreographer.removeFrameCallback(mFrameCallback);
         mProcessBarContainer.setVisibility(View.GONE);
-        Toasts.showToast(R.string.private_box_add_success);
+        Toasts.showToast(R.string.private_box_add_to_success);
         onBackPressed();
     }
 

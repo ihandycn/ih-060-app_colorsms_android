@@ -90,7 +90,7 @@ public class MoveConversationToPrivateBoxAction extends Action implements Parcel
                 }
             }
             if (conversationIdList.size() == 0) {
-                Toasts.showToast(R.string.private_box_add_success);
+                Toasts.showToast(R.string.private_box_add_to_success);
                 if (!TextUtils.isEmpty(endNotification)) {
                     HSGlobalNotificationCenter.sendNotification(endNotification);
                 }
@@ -115,7 +115,7 @@ public class MoveConversationToPrivateBoxAction extends Action implements Parcel
         MessagingContentProvider.notifyConversationListChanged();
 
         if (messagesList.size() == 0) {
-            Toasts.showToast(R.string.private_box_add_success);
+            Toasts.showToast(R.string.private_box_add_to_success);
             if (!TextUtils.isEmpty(endNotification)) {
                 HSGlobalNotificationCenter.sendNotification(endNotification);
             }
