@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.Fragment;
 import android.content.Intent;
 import android.database.Cursor;
+import android.graphics.Color;
 import android.graphics.Rect;
 import android.net.Uri;
 import android.os.Bundle;
@@ -42,6 +43,7 @@ import com.android.messaging.ui.customize.WallpaperDrawables;
 import com.android.messaging.util.Assert;
 import com.android.messaging.util.BugleAnalytics;
 import com.android.messaging.util.ImeUtil;
+import com.android.messaging.util.UiUtils;
 import com.google.common.annotations.VisibleForTesting;
 import com.superapps.util.BackgroundDrawables;
 import com.superapps.util.Dimensions;
@@ -186,6 +188,14 @@ public class PrivateConversationListFragment extends Fragment
         return rootView;
     }
 
+    public void onThemeChanged(boolean hasTheme) {
+        if (mEmptyListMessageView != null) {
+            ((ImageView) mEmptyListMessageView.findViewById(R.id.private_box_empty_bg))
+                    .setImageResource(hasTheme ? R.drawable.private_box_theme_empty
+                            : R.drawable.private_box_empty);
+        }
+    }
+
     @Override
     public void onAttach(final Activity activity) {
         super.onAttach(activity);
@@ -283,10 +293,13 @@ public class PrivateConversationListFragment extends Fragment
     private void updateEmptyListUi(final boolean isEmpty) {
         if (isEmpty) {
             mEmptyListMessageView.setVisibility(View.VISIBLE);
-            View addNowBtn = mEmptyListMessageView.findViewById(R.id.private_box_empty_view_add_btn);
+            TextView addNowBtn = mEmptyListMessageView.findViewById(R.id.private_box_empty_view_add_btn);
             addNowBtn.setBackground(
-                    BackgroundDrawables.createBackgroundDrawable(PrimaryColors.getPrimaryColor(),
-                            Dimensions.pxFromDp(18), true));
+                    BackgroundDrawables.createBackgroundDrawable(Color.WHITE,
+                            UiUtils.getColorDark(Color.WHITE),
+                            Dimensions.pxFromDp(1), PrimaryColors.getPrimaryColor(),
+                            Dimensions.pxFromDp(18), false, true));
+            addNowBtn.setTextColor(PrimaryColors.getPrimaryColor());
             addNowBtn.setOnClickListener(v -> {
                 BugleAnalytics.logEvent("PrivateBox_Homepage_AddContact_BtnClick");
                 final AddToListDialog addToBlackListDialog = new AddToListDialog(getActivity());
@@ -310,7 +323,7 @@ public class PrivateConversationListFragment extends Fragment
 
                 addToBlackListDialog.show();
             });
-            ((TextView)mEmptyListMessageView.findViewById(R.id.private_box_empty_view_description))
+            ((TextView) mEmptyListMessageView.findViewById(R.id.private_box_empty_view_description))
                     .setTextColor(ConversationColors.get().getListTitleColor());
         } else {
             mEmptyListMessageView.setVisibility(View.GONE);

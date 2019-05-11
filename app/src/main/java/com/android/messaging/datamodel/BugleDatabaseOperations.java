@@ -247,9 +247,8 @@ public class BugleDatabaseOperations {
             //cannot find conversation by thread_id,
             //update conversations data
             if (conversationId != null) {
-                CrashlyticsCore.getInstance().logException(
-                        new CrashlyticsLog("merge conversations" +
-                                " (different thread_id but same participants)"));
+                FabricUtils.logNonFatal("merge conversations" +
+                                " (different thread_id but same participants)");
                 long validThreadId = PrivateMessageManager.getInstance().getValidThreadId(threadId, db, conversationId);
                 ContentValues values = new ContentValues();
                 values.put(ConversationColumns.SMS_THREAD_ID, validThreadId);

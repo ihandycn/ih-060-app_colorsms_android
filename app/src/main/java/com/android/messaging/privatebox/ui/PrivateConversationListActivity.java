@@ -1,7 +1,6 @@
 package com.android.messaging.privatebox.ui;
 
 import android.content.Intent;
-import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.widget.Toolbar;
@@ -29,7 +28,6 @@ import com.superapps.util.Dimensions;
 import com.superapps.util.Navigations;
 import com.superapps.util.Preferences;
 import com.superapps.util.Threads;
-import com.superapps.util.Toasts;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -52,15 +50,15 @@ public class PrivateConversationListActivity extends MultiSelectConversationList
     private Choreographer mChoreographer;
     private Choreographer.FrameCallback mFrameCallback;
     private INotificationObserver mNotificationObserver;
-    private boolean hasTheme;
+    private boolean mHasTheme;
 
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.private_conversation_list_activity);
-        configActionBar();
         mConversationListFragment = (PrivateConversationListFragment) getFragmentManager().
                 findFragmentById(R.id.private_conversation_list_fragment);
+        configActionBar();
 
         BugleAnalytics.logEvent("PrivateBox_Homepage_Show", true,
                 "HideTheIcon", String.valueOf(PrivateSettingManager.isPrivateBoxIconHidden()));
@@ -184,7 +182,7 @@ public class PrivateConversationListActivity extends MultiSelectConversationList
         if (mTitle != null) {
             mTitle.setVisibility(View.GONE);
         }
-        if (hasTheme) {
+        if (mHasTheme) {
             findViewById(R.id.selection_mode_bg).setVisibility(View.VISIBLE);
         }
         return super.startActionMode(callback);
@@ -206,11 +204,12 @@ public class PrivateConversationListActivity extends MultiSelectConversationList
         lp.height = Dimensions.getStatusBarHeight(PrivateConversationListActivity.this) + Dimensions.pxFromDp(56);
         accessoryContainer.setLayoutParams(lp);
         if (ToolbarDrawables.getToolbarBg() != null) {
-            hasTheme = true;
+            mHasTheme = true;
             accessoryContainer.setBackground(ToolbarDrawables.getToolbarBg());
         } else {
             accessoryContainer.setBackgroundColor(PrimaryColors.getPrimaryColor());
         }
+        mConversationListFragment.onThemeChanged(mHasTheme);
 
         mStatusBarInset = findViewById(R.id.status_bar_inset);
         ViewGroup.LayoutParams layoutParams = mStatusBarInset.getLayoutParams();
