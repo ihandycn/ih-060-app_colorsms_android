@@ -22,7 +22,7 @@
         app:radiusX="3.3dp"
         app:radiusY="3.3dp">
 
-        <com.superapps.view.MessagesTextView
+        <com.android.messaging.ui.view.MessagesTextView
             android:layout_width="match_parent"
             android:layout_height="56dp"
             android:background="@android:color/white"
