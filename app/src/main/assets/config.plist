@@ -315,7 +315,7 @@
 					<key>OutgoingBubbleTextColor</key>
 					<string>#000000</string>
 					<key>BannerAdBgColor</key>
-					<string>#33000000</string>
+					<string>#b3ffffff</string>
 					<key>BannerAdActionColor</key>
 					<string>#80000000</string>
 					<key>PreviewUrl</key>
@@ -334,9 +334,9 @@
 					<key>AvatarForegroundColor</key>
 					<string>#ffffff</string>
 					<key>BannerAdBgColor</key>
-					<string>#33000000</string>
+					<string>#40ffffff</string>
 					<key>BannerAdActionColor</key>
-					<string>#80000000</string>
+					<string>#ffd0c2c0</string>
 					<key>BubbleAdColor</key>
 					<string>#e3187b</string>
 					<key>BubbleIncomingUrl</key>
@@ -381,9 +381,9 @@
 					<key>AvatarForegroundColor</key>
 					<string>#ffffff</string>
 					<key>BannerAdBgColor</key>
-					<string>#33000000</string>
+					<string>#40000000</string>
 					<key>BannerAdActionColor</key>
-					<string>#80000000</string>
+					<string>#80ffffff</string>
 					<key>BubbleAdColor</key>
 					<string>#e3187b</string>
 					<key>BubbleIncomingUrl</key>
@@ -428,9 +428,9 @@
 					<key>AvatarForegroundColor</key>
 					<string>#fc85d1</string>
 					<key>BannerAdBgColor</key>
-					<string>#33000000</string>
+					<string>#26000000</string>
 					<key>BannerAdActionColor</key>
-					<string>#80000000</string>
+					<string>#ffffffff</string>
 					<key>BubbleAdColor</key>
 					<string>#e3187b</string>
 					<key>BubbleIncomingUrl</key>
@@ -475,9 +475,9 @@
 					<key>AvatarUrl</key>
 					<string>assets://themes/technology/avatar.png</string>
 					<key>BannerAdBgColor</key>
-					<string>#33000000</string>
+					<string>#33ffffff</string>
 					<key>BannerAdActionColor</key>
-					<string>#80000000</string>
+					<string>#ff8298d0</string>
 					<key>BubbleAdColor</key>
 					<string>#e3187b</string>
 					<key>BubbleIncomingUrl</key>
@@ -522,9 +522,9 @@
 					<key>AvatarUrl</key>
 					<string>assets://themes/goldendiamond/avatar.png</string>
 					<key>BannerAdBgColor</key>
-					<string>#33000000</string>
+					<string>#80ffffff</string>
 					<key>BannerAdActionColor</key>
-					<string>#80000000</string>
+					<string>#80764815</string>
 					<key>BubbleAdColor</key>
 					<string>#e3187b</string>
 					<key>BubbleIncomingUrl</key>
@@ -569,9 +569,9 @@
 					<key>AvatarUrl</key>
 					<string>assets://themes/default/avatar.png</string>
 					<key>BannerAdBgColor</key>
-					<string>#33000000</string>
+					<string>#0dff0000</string>
 					<key>BannerAdActionColor</key>
-					<string>#80000000</string>
+					<string>#ff2fa0ff</string>
 					<key>BubbleAdColor</key>
 					<string>#2caef8</string>
 					<key>BubbleIncomingUrl</key>
@@ -618,7 +618,7 @@
 					<key>BannerAdBgColor</key>
 					<string>#33000000</string>
 					<key>BannerAdActionColor</key>
-					<string>#80000000</string>
+					<string>#80ffffff</string>
 					<key>BubbleAdColor</key>
 					<string>#e3187b</string>
 					<key>BubbleIncomingUrl</key>
@@ -759,7 +759,7 @@
 					<key>BannerAdBgColor</key>
 					<string>#33000000</string>
 					<key>BannerAdActionColor</key>
-					<string>#80000000</string>
+					<string>#80ffffff</string>
 					<key>BubbleAdColor</key>
 					<string>#ffffff</string>
 					<key>BubbleIncomingUrl</key>
