@@ -313,21 +313,21 @@ public class SettingGeneralActivity extends BaseActivity {
                                         new AuthUI.IdpConfig.GoogleBuilder().build()))
                                 .build(),
                         RC_SIGN_IN);
-                BugleAnalytics.logEvent("SyncDesktopSettings_Icon_Click", "type", "loggedOut");
+                BugleAnalytics.logEvent("SyncSettings_Icon_Click", "type", "loggedOut");
             } else {
                 new BaseAlertDialog.Builder(SettingGeneralActivity.this)
                         .setTitle(R.string.firebase_login_out_title)
                         .setPositiveButton(R.string.firebase_login_out, (dialog, which) -> {
                             FirebaseAuth.getInstance().signOut();
                             dialog.dismiss();
-                            BugleAnalytics.logEvent("SyncDesktopSettings_LogOut");
+                            BugleAnalytics.logEvent("SyncSettings_LogOut");
                             Toasts.showToast(R.string.firebase_login_out_succeed);
                             mSyncSettingsView.setSummary(getString(R.string.firebase_sync_desktop_settings_description_logged_out));
                         })
                         .setNegativeButton(android.R.string.cancel, (dialog, which) -> dialog.dismiss())
                         .show();
-                BugleAnalytics.logEvent("SyncDesktopSettings_LogOut_PopUp_Show");
-                BugleAnalytics.logEvent("SyncDesktopSettings_Icon_Click", "type", "loggedIn");
+                BugleAnalytics.logEvent("SyncSettings_LogOut_PopUp_Show");
+                BugleAnalytics.logEvent("SyncSettings_Icon_Click", "type", "loggedIn");
             }
         });
     }
