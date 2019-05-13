@@ -36,15 +36,6 @@
 					</dict>
 					<dict>
 						<key>Name</key>
-						<string>ei_messiri</string>
-						<key>Weight</key>
-						<array>
-							<string>SemiBold</string>
-							<string>Regular</string>
-						</array>
-					</dict>
-					<dict>
-						<key>Name</key>
 						<string>quicksand</string>
 						<key>Weight</key>
 						<array>
@@ -136,15 +127,6 @@
 					<dict>
 						<key>Name</key>
 						<string>laila</string>
-						<key>Weight</key>
-						<array>
-							<string>SemiBold</string>
-							<string>Regular</string>
-						</array>
-					</dict>
-					<dict>
-						<key>Name</key>
-						<string>k2d</string>
 						<key>Weight</key>
 						<array>
 							<string>SemiBold</string>
