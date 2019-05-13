@@ -209,8 +209,8 @@ public class ConversationMessageView extends RelativeLayout implements View.OnCl
         int maxHeight;
 
         if (mData.getIsIncoming()) {
-            maxHeight = Math.max(mContactIconContainer.getMeasuredHeight(),
-                    mMessageBubble.getMeasuredHeight() + (int) getResources().getDimension(R.dimen.conversation_message_bubble_incoming_top_margin));
+            maxHeight = Math.max(shouldShowSimplifiedVisualStyle() ? 0 : mContactIconContainer.getMeasuredHeight(),
+                    mMessageBubble.getMeasuredHeight() + getTextTopPadding());
         } else {
             maxHeight = mMessageBubble.getMeasuredHeight();
         }
@@ -230,7 +230,7 @@ public class ConversationMessageView extends RelativeLayout implements View.OnCl
                 .getDimensionPixelSize(R.dimen.conversation_message_contact_bubble_margin);
         final int contentWidth = (right - left) - iconWidth - getPaddingLeft() - getPaddingRight();
         final int contentHeight = mMessageBubble.getMeasuredHeight();
-        final int contentTop = iconTop + (!mData.getIsIncoming() ? 0 : (int) getResources().getDimension(R.dimen.conversation_message_bubble_incoming_top_margin));
+        final int contentTop = iconTop + (!mData.getIsIncoming() ? 0 : getTextTopPadding());
 
         final int iconLeft;
         final int contentLeft;
@@ -333,6 +333,12 @@ public class ConversationMessageView extends RelativeLayout implements View.OnCl
             return true;
         }
         return false;
+    }
+
+    private int getTextTopPadding() {
+        return shouldShowSimplifiedVisualStyle() ?
+                (int) getResources().getDimension(R.dimen.conversation_message_bubble_incoming_simple_style_top_padding) :
+                (int) getResources().getDimension(R.dimen.conversation_message_bubble_incoming_top_padding);
     }
 
     private void updateViewContent() {
