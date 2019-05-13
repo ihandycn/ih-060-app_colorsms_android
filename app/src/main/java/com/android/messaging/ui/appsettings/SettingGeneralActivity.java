@@ -412,6 +412,7 @@ public class SettingGeneralActivity extends BaseActivity {
                     setUpVibrateView();
                 });
                 Toasts.showToast(R.string.firebase_login_succeed);
+                BugleAnalytics.logEvent("SyncSettings_LogIn_Success");
                 mSyncSettingsView.setSummary(getString(R.string.firebase_sync_desktop_settings_description_logged_in));
             } else {
                 Toasts.showToast(R.string.firebase_login_failed);
