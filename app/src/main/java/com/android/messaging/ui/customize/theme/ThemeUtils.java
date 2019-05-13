@@ -55,6 +55,7 @@ public class ThemeUtils {
         Factory.get().getCustomizePrefs().putString(BuglePrefsKeys.PREFS_KEY_THEME_NAME, themeInfo.name);
 
         HSGlobalNotificationCenter.sendNotification(ConversationListActivity.EVENT_MAINPAGE_RECREATE);
+        WallpaperSizeManager.getInstance().loadWallpaperParams();
         Factory.get().reclaimMemory();
     }
 

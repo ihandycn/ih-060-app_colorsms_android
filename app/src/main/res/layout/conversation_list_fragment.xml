@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--
+<?xml version="1.0" encoding="utf-8"?><!--
     Copyright (C) 2015 The Android Open Source Project
 
     Licensed under the Apache License, Version 2.0 (the "License");
@@ -14,29 +13,28 @@
     See the License for the specific language governing permissions and
     limitations under the License.
 -->
-<FrameLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <com.android.messaging.ui.view.CenterTopImageView
+    <com.android.messaging.ui.customize.theme.WallpaperBackgroundImageView
         android:id="@+id/conversation_list_bg"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+        android:layout_height="match_parent"
+        android:scaleType="fitXY" />
 
     <android.support.v7.widget.RecyclerView
         android:id="@android:id/list"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:listSelector="?android:attr/listSelector"
-        android:dividerHeight="0px"/>
+        android:dividerHeight="0px"
+        android:listSelector="?android:attr/listSelector" />
 
     <include
         android:id="@+id/no_conversations_view"
         layout="@layout/list_empty_view"
-        android:visibility="gone"
-        />
+        android:visibility="gone" />
 
     <ImageView
         android:id="@+id/start_new_conversation_button"
@@ -45,12 +43,12 @@
         android:layout_height="@dimen/fab_size"
         android:layout_gravity="bottom|end"
         android:layout_marginBottom="@dimen/fab_bottom_margin"
-        android:paddingBottom="@dimen/fab_padding_bottom"
+        android:contentDescription="@string/start_new_conversation"
         android:elevation="@dimen/fab_elevation"
+        android:paddingBottom="@dimen/fab_padding_bottom"
         android:scaleType="center"
         android:src="@drawable/ic_new_conversation_white"
         android:stateListAnimator="@animator/fab_anim"
-        android:contentDescription="@string/start_new_conversation"
-        tools:background="@drawable/fab_new_message_bg"/>
+        tools:background="@drawable/fab_new_message_bg" />
 
 </FrameLayout>

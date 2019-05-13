@@ -18,8 +18,9 @@
             android:layout_width="match_parent"
             android:layout_height="56dp">
 
-            <com.android.messaging.ui.view.CenterBottomImageView
+            <com.android.messaging.ui.customize.theme.ToolbarBackgroundImageView
                 android:id="@+id/accessory_bg"
+                android:scaleType="fitXY"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"/>
 
