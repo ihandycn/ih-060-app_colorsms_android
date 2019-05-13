@@ -22,7 +22,9 @@ import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
+import android.graphics.drawable.LayerDrawable;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.v4.view.ViewCompat;
@@ -59,6 +61,8 @@ import com.android.messaging.ui.UIIntents;
 import com.android.messaging.ui.customize.ConversationColors;
 import com.android.messaging.ui.customize.PrimaryColors;
 import com.android.messaging.ui.customize.WallpaperDrawables;
+import com.android.messaging.ui.customize.theme.ThemeInfo;
+import com.android.messaging.ui.customize.theme.ThemeUtils;
 import com.android.messaging.util.AccessibilityUtil;
 import com.android.messaging.util.Assert;
 import com.android.messaging.util.AvatarUriUtil;
@@ -382,6 +386,20 @@ public class ConversationListFragment extends Fragment implements ConversationLi
                         title.setTextColor(ConversationColors.get().getListTitleColor());
                         TextView subtitle = expressAdView.findViewById(R.id.banner_des);
                         subtitle.setTextColor(ConversationColors.get().getListSubtitleColor());
+                        if (HSConfig.optBoolean(true, "Application", "SMSAd", "SMSHomepageBannerAdFacebookEnabled")) {
+                            View adRoot = expressAdView.findViewById(R.id.ad_root);
+                            adRoot.setBackgroundColor(Color.parseColor(ThemeInfo.getThemeInfo(ThemeUtils.getCurrentThemeName()).bannerAdBgColor));
+                            TextView action = expressAdView.findViewById(R.id.banner_action);
+                            action.setTextColor(Color.parseColor(ThemeInfo.getThemeInfo(ThemeUtils.getCurrentThemeName()).bannerAdActionColor));
+                            Drawable actionBg = getResources().getDrawable(R.drawable.conversation_list_ad_action_pressed_bg);
+                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                                ((LayerDrawable) actionBg).getDrawable(1)
+                                        .setColorFilter(
+                                                Color.parseColor(ThemeInfo.getThemeInfo(ThemeUtils.getCurrentThemeName()).bannerAdActionColor),
+                                                PorterDuff.Mode.SRC_IN);
+                            }
+                            action.setBackgroundDrawable(actionBg);
+                        }
                     } catch (Exception e) {
                     }
                 });
