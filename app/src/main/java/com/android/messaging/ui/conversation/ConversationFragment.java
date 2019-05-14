@@ -715,6 +715,7 @@ public class ConversationFragment extends Fragment implements ConversationDataLi
         manager.setReverseLayout(false);
         mRecyclerView.setHasFixedSize(true);
         mRecyclerView.setLayoutManager(manager);
+        mRecyclerView.setItemAnimator(null);
         mRecyclerView.setAdapter(mAdapter);
         if (savedInstanceState != null) {
             mListState = savedInstanceState.getParcelable(SAVED_INSTANCE_STATE_LIST_VIEW_STATE_KEY);
