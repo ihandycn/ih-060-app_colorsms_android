@@ -81,6 +81,9 @@ public class SelfVerifyActivity extends VerifyActivity {
         if (intent.hasExtra(INTENT_KEY_ACTIVITY_ENTRANCE)
                 && intent.hasExtra(INTENT_KEY_ENTRANCE_CONVERSATION_ID)
                 && ENTRANCE_NOTIFICATION.equals(intent.getStringExtra(INTENT_KEY_ACTIVITY_ENTRANCE))) {
+            UIIntents.get().launchConversationListActivity(this);
+            Navigations.startActivitySafely(this,
+                    new Intent(this, PrivateConversationListActivity.class));
             UIIntents.get().launchConversationActivity(
                     this, intent.getStringExtra(INTENT_KEY_ENTRANCE_CONVERSATION_ID), null,
                     null,

@@ -90,6 +90,7 @@ public class PrivateConversationListFragment extends Fragment
     private LinearLayoutManager mLayoutManager;
     private boolean mShouldSwitchAd;
     private boolean mAdFirstPrepared = true;
+    private boolean mIsConversationListEmpty = true;
 
     // Saved Instance State Data - only for temporal data which is nice to maintain but not
     // critical for correctness.
@@ -114,11 +115,8 @@ public class PrivateConversationListFragment extends Fragment
     public void onResume() {
         super.onResume();
         if (mRecyclerView != null) {
-            if (mRecyclerView.canScrollVertically(-1)) {
-                //BugleAnalytics.logEvent("SMS_Messages_Show_NotOnTop", true);
-            } else {
+            if (!mRecyclerView.canScrollVertically(-1)) {
                 if (HSConfig.optBoolean(true, "Application", "SMSAd", "SMSHomepageBannerAd")) {
-                    BugleAnalytics.logEvent("PrivateBox_BannerAd_Should_Show", true, false);
                     mShouldSwitchAd = false;
                     if (mExpressAdView != null) {
                         mExpressAdView.switchAd();
@@ -202,7 +200,6 @@ public class PrivateConversationListFragment extends Fragment
                 if (!isFirstConversationVisible && isScrolledToFirstConversation()) {
                     if (mExpressAdView != null && mShouldSwitchAd) {
                         mExpressAdView.switchAd();
-
                         mShouldSwitchAd = false;
                     }
                 }
@@ -291,6 +288,8 @@ public class PrivateConversationListFragment extends Fragment
                 }
             } while (cursor.moveToNext());
         }
+
+        mIsConversationListEmpty = (dataList.size() <= 0);
 
         if (dataList.size() > 0 && mAdapter.hasHeader()) {
             dataList.add(0, new AdItemData());
@@ -398,8 +397,13 @@ public class PrivateConversationListFragment extends Fragment
     }
 
     private void prepareAd() {
-        if (mExpressAdView == null)
+        if (!mIsConversationListEmpty) {
+            logAdChance();
+        }
+
+        if (mExpressAdView == null) {
             return;
+        }
         mExpressAdView.prepareAd(new AcbExpressAdView.PrepareAdListener() {
             @Override
             public void onAdReady(AcbExpressAdView acbExpressAdView) {
@@ -480,5 +484,11 @@ public class PrivateConversationListFragment extends Fragment
     @Override
     public boolean isSelectionMode() {
         return mHost != null && mHost.isSelectionMode();
+    }
+
+    private void logAdChance() {
+        if (HSConfig.optBoolean(true, "Application", "SMSAd", "SMSHomepageBannerAd")) {
+            BugleAnalytics.logEvent("PrivateBox_BannerAd_Should_Show", true, false);
+        }
     }
 }
