@@ -292,7 +292,7 @@ public class PrivateConversationListFragment extends Fragment
             } while (cursor.moveToNext());
         }
 
-        if (mAdapter.hasHeader()) {
+        if (dataList.size() > 0 && mAdapter.hasHeader()) {
             dataList.add(0, new AdItemData());
         }
         mAdapter.setDataList(dataList);

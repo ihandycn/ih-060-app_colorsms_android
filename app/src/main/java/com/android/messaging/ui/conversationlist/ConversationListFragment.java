@@ -529,7 +529,7 @@ public class ConversationListFragment extends Fragment implements ConversationLi
             HSGlobalNotificationCenter.sendNotification(ConversationListActivity.FIRST_LOAD, hsBundle);
         }
 
-        if (mAdapter.hasHeader()) {
+        if (dataList.size() > 0 && mAdapter.hasHeader()) {
             dataList.add(0, new AdItemData());
         }
         mAdapter.setDataList(dataList);
