@@ -20,7 +20,7 @@
         android:gravity="center"
         android:orientation="vertical">
 
-        <com.superapps.view.MessagesTextView
+        <com.android.messaging.ui.view.MessagesTextView
             android:id="@+id/private_box_add_btn"
             android:layout_width="match_parent"
             android:layout_height="40dp"

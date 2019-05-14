@@ -109,6 +109,15 @@
                 app:title="@string/setting_feedback"
                 app:type="normal"/>
 
+            <com.android.messaging.ui.appsettings.SettingItemView
+                android:id="@+id/sync_settings_item"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:title="@string/firebase_sync_desktop_settings_title"
+                app:summary="@string/firebase_sync_desktop_settings_description_logged_out"
+                app:type="normal"/>
+
+
             <!--privacy policy-->
             <com.android.messaging.ui.appsettings.SettingItemView
                 android:id="@+id/setting_item_privacy_policy"
@@ -132,6 +141,7 @@
                 android:layout_height="wrap_content"
                 app:title="@string/setting_gdpr"
                 app:type="normal"/>
+
         </LinearLayout>
     </ScrollView>
 </LinearLayout>

@@ -58,7 +58,7 @@
             android:src="@drawable/ic_apply_checkmark"
             android:visibility="gone" />
 
-        <com.superapps.view.MessagesTextView
+        <com.android.messaging.ui.view.MessagesTextView
             android:id="@+id/apply_text"
             android:layout_width="wrap_content"
             android:layout_height="@dimen/sms_show_apply_button_height"

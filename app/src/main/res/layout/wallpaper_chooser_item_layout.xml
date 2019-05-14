@@ -24,7 +24,7 @@
             android:src="@drawable/wallpaper_add_photos"
             tools:ignore="ContentDescription"/>
 
-        <com.superapps.view.MessagesTextView
+        <com.android.messaging.ui.view.MessagesTextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="11dp"

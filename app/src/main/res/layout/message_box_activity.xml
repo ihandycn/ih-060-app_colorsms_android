@@ -91,7 +91,7 @@
                         android:padding="10dp"
                         android:src="@drawable/message_box_reply_white_icon"/>
 
-                    <com.superapps.view.MessagesTextView
+                    <com.android.messaging.ui.view.MessagesTextView
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
                         android:gravity="center"
@@ -105,7 +105,7 @@
 
                 </LinearLayout>
 
-                <com.superapps.view.MessagesTextView
+                <com.android.messaging.ui.view.MessagesTextView
                     android:id="@+id/next_icon"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
@@ -199,7 +199,7 @@
     </RelativeLayout>
 
 
-    <com.superapps.view.MessagesTextView
+    <com.android.messaging.ui.view.MessagesTextView
         android:id="@+id/customize_app_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

@@ -18,7 +18,7 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.superapps.util.BackgroundDrawables;
 import com.superapps.util.Dimensions;
 import com.superapps.util.Threads;
-import com.superapps.view.MessagesTextView;
+import com.android.messaging.ui.view.MessagesTextView;
 
 import java.util.List;
 

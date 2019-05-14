@@ -33,7 +33,7 @@
         android:layout_weight="1"
         android:orientation="vertical">
 
-        <com.superapps.view.MessagesTextView
+        <com.android.messaging.ui.view.MessagesTextView
             android:id="@+id/name"
             style="@style/SimSelectorItem"
             android:layout_width="wrap_content"
@@ -43,7 +43,7 @@
             android:singleLine="true"
             app:typeface="@string/custom_font_medium"/>
 
-        <com.superapps.view.MessagesTextView
+        <com.android.messaging.ui.view.MessagesTextView
             android:id="@+id/details"
             style="@style/SimSelectorItemDetail"
             android:layout_width="wrap_content"

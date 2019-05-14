@@ -54,6 +54,27 @@ public class WallpaperDrawables {
         return null;
     }
 
+    public static Bitmap getWallpaperBgBitmap() {
+        String url = Factory.get().getCustomizePrefs().getString(PREF_KEY_CUSTOMIZE_WALLPAPER_BACKGROUND, "");
+        if (TextUtils.isEmpty(url)) {
+            return null;
+        }
+
+        if (url.startsWith("assets://")) {
+            try {
+                InputStream ims = HSApplication.getContext().getAssets().open(url.replace("assets://", ""));
+                Bitmap bitmap = BitmapFactory.decodeStream(ims);
+                sListWallpaperBg = new BitmapDrawable(HSApplication.getContext().getResources(), bitmap);
+                return bitmap;
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+
+        return null;
+    }
+
+
     public static Drawable getListWallpaperBg() {
         String url = Factory.get().getCustomizePrefs().getString(PREF_KEY_CUSTOMIZE_LIST_WALLPAPER_BACKGROUND, "");
         if (TextUtils.isEmpty(url)) {

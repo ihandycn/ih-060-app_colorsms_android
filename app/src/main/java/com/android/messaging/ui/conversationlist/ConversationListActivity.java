@@ -36,6 +36,8 @@ import com.android.messaging.ad.AdPlacement;
 import com.android.messaging.datamodel.BugleNotifications;
 import com.android.messaging.datamodel.action.PinConversationAction;
 import com.android.messaging.datamodel.data.MessageBoxItemData;
+import com.android.messaging.font.ChangeFontActivity;
+import com.android.messaging.font.FontStyleManager;
 import com.android.messaging.mmslib.SqliteWrapper;
 import com.android.messaging.privatebox.MoveConversationToPrivateBoxAction;
 import com.android.messaging.privatebox.PrivateBoxSettings;
@@ -43,7 +45,6 @@ import com.android.messaging.privatebox.PrivateSettingManager;
 import com.android.messaging.privatebox.ui.PrivateBoxSetPasswordActivity;
 import com.android.messaging.privatebox.ui.SelfVerifyActivity;
 import com.android.messaging.ui.BaseAlertDialog;
-import com.android.messaging.font.ChangeFontActivity;
 import com.android.messaging.ui.CreateShortcutActivity;
 import com.android.messaging.ui.DragHotSeatActivity;
 import com.android.messaging.ui.UIIntents;
@@ -76,7 +77,6 @@ import com.ihs.commons.notificationcenter.HSGlobalNotificationCenter;
 import com.ihs.commons.notificationcenter.INotificationObserver;
 import com.ihs.commons.utils.HSBundle;
 import com.ihs.commons.utils.HSLog;
-import com.superapps.font.FontStyleManager;
 import com.superapps.util.BackgroundDrawables;
 import com.superapps.util.Calendars;
 import com.superapps.util.Dimensions;
@@ -346,7 +346,7 @@ public class ConversationListActivity extends AbstractConversationListActivity
         View navigationContent = getLayoutInflater().inflate(R.layout.layout_main_navigation, navigationView, false);
 
         drawerLayout = findViewById(R.id.main_drawer_layout);
-        drawerLayout.setBackgroundColor(PrimaryColors.getPrimaryColor());
+        //drawerLayout.setBackgroundColor(PrimaryColors.getPrimaryColor());
         ActionBarDrawerToggle drawerToggle = new ActionBarDrawerToggle(this, drawerLayout, R.string.drawer_open, R.string.drawer_close) {
             @Override
             public void onDrawerStateChanged(int newState) {

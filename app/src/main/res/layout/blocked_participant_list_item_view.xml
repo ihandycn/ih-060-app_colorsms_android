@@ -40,7 +40,7 @@
             app:iconSize="normal"/>
     </FrameLayout>
 
-    <com.superapps.view.MessagesTextView
+    <com.android.messaging.ui.view.MessagesTextView
         android:id="@+id/name"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
@@ -57,7 +57,7 @@
         android:textSize="15.3sp"
         app:typeface="@string/custom_font_medium"/>
 
-    <com.superapps.view.MessagesTextView
+    <com.android.messaging.ui.view.MessagesTextView
         android:id="@+id/tap_to_unblock"
         android:layout_width="wrap_content"
         android:layout_height="32dp"

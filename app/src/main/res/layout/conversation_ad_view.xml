@@ -36,7 +36,7 @@
         android:layout_toEndOf="@id/banner_icon"
         android:orientation="vertical">
 
-        <com.superapps.view.MessagesTextView
+        <com.android.messaging.ui.view.MessagesTextView
             android:id="@+id/banner_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -60,7 +60,7 @@
                 android:layout_height="wrap_content"
                 android:src="@drawable/icon_ad_preview"/>
 
-            <com.superapps.view.MessagesTextView
+            <com.android.messaging.ui.view.MessagesTextView
                 android:id="@+id/banner_des"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -76,7 +76,7 @@
         </LinearLayout>
     </LinearLayout>
 
-    <com.superapps.view.MessagesTextView
+    <com.android.messaging.ui.view.MessagesTextView
         android:id="@+id/banner_action"
         android:layout_width="wrap_content"
         android:layout_height="32dp"

@@ -52,7 +52,7 @@
                 app:lottie_loop="false"/>
         </FrameLayout>
 
-        <com.superapps.view.MessagesTextView
+        <com.android.messaging.ui.view.MessagesTextView
             android:id="@+id/welcome_guide_viewpager_title"
             android:layout_width="0dp"
             android:text="@string/message_welcome_viewpager_item_title_0"
@@ -71,7 +71,7 @@
             app:layout_constraintWidth_percent="0.8"
             app:typeface="@string/custom_font_semibold"/>
 
-        <com.superapps.view.MessagesTextView
+        <com.android.messaging.ui.view.MessagesTextView
             android:id="@+id/welcome_guide_viewpager_body"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -117,7 +117,7 @@
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent"/>
 
-    <com.superapps.view.MessagesTextView
+    <com.android.messaging.ui.view.MessagesTextView
         android:id="@+id/welcome_start_button"
         android:layout_width="0dp"
         android:layout_marginBottom="60dp"
@@ -144,7 +144,7 @@
         android:layout_marginBottom="21dp"
         app:layout_constraintBottom_toBottomOf="parent">
 
-        <com.superapps.view.MessagesTextView
+        <com.android.messaging.ui.view.MessagesTextView
             android:id="@+id/welcome_start_service"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -154,7 +154,7 @@
             android:textSize="9.3sp"
             app:typeface="@string/custom_font_semibold"/>
 
-        <com.superapps.view.MessagesTextView
+        <com.android.messaging.ui.view.MessagesTextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="1dp"
@@ -163,7 +163,7 @@
             android:textSize="9.3sp"
             app:typeface="@string/custom_font_medium"/>
 
-        <com.superapps.view.MessagesTextView
+        <com.android.messaging.ui.view.MessagesTextView
             android:id="@+id/welcome_start_policy"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

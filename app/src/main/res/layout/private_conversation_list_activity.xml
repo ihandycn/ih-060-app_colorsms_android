@@ -39,7 +39,7 @@
                 app:elevation="@dimen/action_bar_elevation"
                 app:popupTheme="@style/PopupMenu">
 
-                <com.superapps.view.MessagesTextView
+                <com.android.messaging.ui.view.MessagesTextView
                     android:id="@+id/private_conversation_title"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"

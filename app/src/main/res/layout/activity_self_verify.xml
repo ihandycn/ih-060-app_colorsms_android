@@ -26,7 +26,7 @@
             android:paddingRight="40dp"
             app:layout_heightPercent="21%">
 
-            <com.superapps.view.MessagesTextView
+            <com.android.messaging.ui.view.MessagesTextView
                 android:id="@+id/panel_desc_tv"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

@@ -17,7 +17,7 @@ import com.android.messaging.ui.customize.WallpaperDrawables;
 import com.android.messaging.util.BuglePrefsKeys;
 import com.ihs.app.framework.HSApplication;
 import com.ihs.commons.notificationcenter.HSGlobalNotificationCenter;
-import com.superapps.font.FontStyleManager;
+import com.android.messaging.font.FontStyleManager;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -55,6 +55,7 @@ public class ThemeUtils {
         Factory.get().getCustomizePrefs().putString(BuglePrefsKeys.PREFS_KEY_THEME_NAME, themeInfo.name);
 
         HSGlobalNotificationCenter.sendNotification(ConversationListActivity.EVENT_MAINPAGE_RECREATE);
+        WallpaperSizeManager.getInstance().loadWallpaperParams();
         Factory.get().reclaimMemory();
     }
 

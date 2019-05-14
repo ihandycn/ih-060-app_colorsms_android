@@ -22,7 +22,7 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintWidth_percent="0.82">
 
-        <com.superapps.view.MessagesTextView
+        <com.android.messaging.ui.view.MessagesTextView
             android:id="@+id/dialog_title"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -51,7 +51,7 @@
             android:clipToPadding="false"
             tools:ignore="RelativeOverlap">
 
-            <com.superapps.view.MessagesTextView
+            <com.android.messaging.ui.view.MessagesTextView
                 android:id="@+id/dialog_content"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -77,7 +77,7 @@
             android:gravity="center_horizontal"
             android:orientation="horizontal">
 
-            <com.superapps.view.MessagesTextView
+            <com.android.messaging.ui.view.MessagesTextView
                 android:id="@+id/negative_btn"
                 android:layout_width="0dp"
                 android:layout_height="@dimen/dialog_btn_height"
@@ -94,7 +94,7 @@
                 android:textSize="@dimen/dialog_ok_btn_text_size"
                 app:typeface="@string/custom_font_semibold" />
 
-            <com.superapps.view.MessagesTextView
+            <com.android.messaging.ui.view.MessagesTextView
                 android:id="@+id/ok_btn"
                 android:layout_width="0dp"
                 android:layout_height="@dimen/dialog_btn_height"

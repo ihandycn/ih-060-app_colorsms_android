@@ -27,8 +27,6 @@ import com.android.messaging.util.BugleAnalytics;
 import com.android.messaging.util.ViewUtils;
 import com.ihs.commons.notificationcenter.HSGlobalNotificationCenter;
 import com.ihs.commons.utils.HSLog;
-import com.superapps.font.FontStyleManager;
-import com.superapps.font.FontUtils;
 import com.superapps.util.BackgroundDrawables;
 import com.superapps.util.Dimensions;
 

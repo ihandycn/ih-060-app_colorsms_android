@@ -5,20 +5,13 @@ import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.android.messaging.Factory;
-import com.android.messaging.util.CommonUtils;
 import com.ihs.commons.utils.HSLog;
-import com.superapps.font.FontUtils;
-import com.superapps.view.MessagesTextView;
+import com.android.messaging.ui.view.MessagesTextView;
 
-import java.io.File;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.Map;
-
-import static com.android.messaging.font.FontDownloadManager.LOCAL_DIRECTORY;
-import static com.superapps.font.FontUtils.sSupportGoogleFonts;
 
 public class ChangeFontUtils {
     public static Map<String, Typeface> sTypefaceMap = new HashMap<>();

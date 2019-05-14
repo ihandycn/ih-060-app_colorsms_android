@@ -45,4 +45,24 @@ public class ToolbarDrawables {
 
         return null;
     }
+
+    public static Bitmap getToolbarBgBitmap() {
+        String url = Factory.get().getCustomizePrefs().getString(PREF_KEY_CUSTOMIZE_TOOLBAR_BACKGROUND, "");
+        if (TextUtils.isEmpty(url)) {
+            return null;
+        }
+
+        if (url.startsWith("assets://")) {
+            try {
+                InputStream ims = HSApplication.getContext().getAssets().open(url.replace("assets://", ""));
+                Bitmap bitmap = BitmapFactory.decodeStream(ims);
+                sToolbarBg = new BitmapDrawable(HSApplication.getContext().getResources(), bitmap);
+                return bitmap;
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+
+        return null;
+    }
 }

@@ -14,7 +14,6 @@ import com.android.messaging.ui.view.LevelSeekBar;
 import com.android.messaging.ui.wallpaper.WallpaperManager;
 import com.android.messaging.util.BugleAnalytics;
 import com.android.messaging.util.UiUtils;
-import com.superapps.font.FontStyleManager;
 
 public class ChangeFontActivity extends BaseActivity implements LevelSeekBar.OnLevelChangeListener {
 

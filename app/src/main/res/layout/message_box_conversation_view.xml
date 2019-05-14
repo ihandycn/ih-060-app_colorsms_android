@@ -42,7 +42,7 @@
                     android:layout_marginStart="20dp"
                     android:layout_weight="1">
 
-                    <com.superapps.view.MessagesTextView
+                    <com.android.messaging.ui.view.MessagesTextView
                         android:id="@+id/conversation_name"
                         app:typeface="@string/custom_font_bold"
                         tools:text="Maria"
@@ -53,7 +53,7 @@
                         android:includeFontPadding="false"
                         android:textSize="18sp" />
 
-                    <com.superapps.view.MessagesTextView
+                    <com.android.messaging.ui.view.MessagesTextView
                         android:id="@+id/privacy_conversation_name"
                         app:typeface="@string/custom_font_bold"
                         android:layout_width="match_parent"
@@ -78,7 +78,7 @@
                     android:background="@drawable/message_box_open_background"
                     android:orientation="horizontal">
 
-                    <com.superapps.view.MessagesTextView
+                    <com.android.messaging.ui.view.MessagesTextView
                         android:id="@+id/open_btn"
                         app:typeface="@string/custom_font_bold"
                         android:layout_width="wrap_content"

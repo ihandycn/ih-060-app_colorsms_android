@@ -13,11 +13,10 @@
     See the License for the specific language governing permissions and
     limitations under the License.
 -->
-<FrameLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:fitsSystemWindows="true"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -32,10 +31,11 @@
             android:layout_height="match_parent"
             android:layout_weight="1">
 
-            <com.android.messaging.ui.view.CenterTopImageView
+            <com.android.messaging.ui.customize.theme.WallpaperBackgroundImageView
                 android:id="@+id/conversation_fragment_wallpaper"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"/>
+                android:layout_height="match_parent"
+                android:scaleType="fitXY" />
 
             <!-- Message list -->
             <android.support.v7.widget.RecyclerView
@@ -43,7 +43,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:clipToPadding="false"
-                android:listSelector="@android:color/transparent"/>
+                android:listSelector="@android:color/transparent" />
 
             <FrameLayout
                 android:id="@+id/top_banner_ad_container"
@@ -59,14 +59,14 @@
                 android:layout_gravity="bottom"
                 android:alpha="0"
                 android:background="@color/transparent"
-                android:importantForAccessibility="no"/>
+                android:importantForAccessibility="no" />
 
             <include
                 android:id="@+id/sim_selector"
                 layout="@layout/sim_selector_view"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:visibility="gone"/>
+                android:visibility="gone" />
         </FrameLayout>
 
         <!-- Attachments to send, compose message view, media picker. -->
@@ -74,13 +74,13 @@
             android:id="@+id/message_compose_view_container"
             layout="@layout/compose_message_view"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
+            android:layout_height="wrap_content" />
     </LinearLayout>
 
     <FrameLayout
         android:id="@+id/camera_photo_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:visibility="gone"/>
+        android:visibility="gone" />
 
 </FrameLayout>
