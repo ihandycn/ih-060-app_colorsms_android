@@ -235,7 +235,7 @@ public class ConversationListFragment extends Fragment implements ConversationLi
         mEmptyListMessageView = rootView.findViewById(R.id.no_conversations_view);
         mEmptyListMessageView.setImageHint(R.drawable.ic_oobe_conv_list);
         ImageView conversationListBg = rootView.findViewById(R.id.conversation_list_bg);
-        Drawable bgDrawable = WallpaperDrawables.getListWallpaperBg();
+        Drawable bgDrawable = WallpaperDrawables.getConversationListWallpaperDrawable();
         getActivity().getWindow().getDecorView().setBackground(null);
         if (bgDrawable == null) {
             getActivity().getWindow().getDecorView().setBackgroundColor(Color.WHITE);

@@ -14,10 +14,12 @@ import java.io.IOException;
 import java.io.InputStream;
 
 public class WallpaperDrawables {
-
+    //ConversationActivity Wallpaper
     public static final String PREF_KEY_CUSTOMIZE_WALLPAPER_BACKGROUND = "pref_key_customize_wallpaper_background";
+    //ConversationListActivity Wallpaper
     private static final String PREF_KEY_CUSTOMIZE_LIST_WALLPAPER_BACKGROUND = "pref_key_customize_list_wallpaper_background";
-    public static Drawable sListWallpaperBg;
+    public static Bitmap sConversationWallpaperBitmap;
+    public static Bitmap sConversationListWallpaperBitmap;
 
     public static void applyWallpaperBg(String url) {
         Factory.get().getCustomizePrefs().putString(PREF_KEY_CUSTOMIZE_WALLPAPER_BACKGROUND, url);
@@ -30,22 +32,22 @@ public class WallpaperDrawables {
         Factory.get().getCustomizePrefs().putString(PREF_KEY_CUSTOMIZE_LIST_WALLPAPER_BACKGROUND, url);
     }
 
-    public static Drawable getWallpaperBg() {
+    public static Drawable getConversationWallpaperBg() {
+        if (sConversationWallpaperBitmap != null) {
+            return new BitmapDrawable(HSApplication.getContext().getResources(), sConversationWallpaperBitmap);
+        }
+
         String url = Factory.get().getCustomizePrefs().getString(PREF_KEY_CUSTOMIZE_WALLPAPER_BACKGROUND, "");
         if (TextUtils.isEmpty(url)) {
             return null;
-        }
-
-        if (sListWallpaperBg != null) {
-            return sListWallpaperBg;
         }
 
         if (url.startsWith("assets://")) {
             try {
                 InputStream ims = HSApplication.getContext().getAssets().open(url.replace("assets://", ""));
                 Bitmap bitmap = BitmapFactory.decodeStream(ims);
-                sListWallpaperBg = new BitmapDrawable(HSApplication.getContext().getResources(), bitmap);
-                return sListWallpaperBg;
+                sConversationWallpaperBitmap = bitmap;
+                return new BitmapDrawable(HSApplication.getContext().getResources(), bitmap);
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -54,8 +56,12 @@ public class WallpaperDrawables {
         return null;
     }
 
-    public static Bitmap getWallpaperBgBitmap() {
-        String url = Factory.get().getCustomizePrefs().getString(PREF_KEY_CUSTOMIZE_WALLPAPER_BACKGROUND, "");
+    public static Bitmap getConversationListWallpaperBitmap() {
+        if (sConversationListWallpaperBitmap != null) {
+            return sConversationListWallpaperBitmap;
+        }
+
+        String url = Factory.get().getCustomizePrefs().getString(PREF_KEY_CUSTOMIZE_LIST_WALLPAPER_BACKGROUND, "");
         if (TextUtils.isEmpty(url)) {
             return null;
         }
@@ -64,7 +70,7 @@ public class WallpaperDrawables {
             try {
                 InputStream ims = HSApplication.getContext().getAssets().open(url.replace("assets://", ""));
                 Bitmap bitmap = BitmapFactory.decodeStream(ims);
-                sListWallpaperBg = new BitmapDrawable(HSApplication.getContext().getResources(), bitmap);
+                sConversationListWallpaperBitmap = bitmap;
                 return bitmap;
             } catch (IOException e) {
                 e.printStackTrace();
@@ -74,26 +80,11 @@ public class WallpaperDrawables {
         return null;
     }
 
+    public static Drawable getConversationListWallpaperDrawable() {
+        getConversationListWallpaperBitmap();
 
-    public static Drawable getListWallpaperBg() {
-        String url = Factory.get().getCustomizePrefs().getString(PREF_KEY_CUSTOMIZE_LIST_WALLPAPER_BACKGROUND, "");
-        if (TextUtils.isEmpty(url)) {
-            return null;
-        }
-
-        if (sListWallpaperBg != null) {
-            return sListWallpaperBg;
-        }
-
-        if (url.startsWith("assets://")) {
-            try {
-                InputStream ims = HSApplication.getContext().getAssets().open(url.replace("assets://", ""));
-                Bitmap bitmap = BitmapFactory.decodeStream(ims);
-                sListWallpaperBg = new BitmapDrawable(HSApplication.getContext().getResources(), bitmap);
-                return sListWallpaperBg;
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+        if (sConversationListWallpaperBitmap != null) {
+            return new BitmapDrawable(HSApplication.getContext().getResources(), sConversationListWallpaperBitmap);
         }
 
         return null;

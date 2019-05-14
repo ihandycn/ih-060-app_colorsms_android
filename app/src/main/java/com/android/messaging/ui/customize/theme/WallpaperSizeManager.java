@@ -1,9 +1,6 @@
 package com.android.messaging.ui.customize.theme;
 
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.drawable.Drawable;
-import android.util.Log;
 
 import com.android.messaging.ui.customize.ToolbarDrawables;
 import com.android.messaging.ui.customize.WallpaperDrawables;
@@ -48,7 +45,7 @@ public class WallpaperSizeManager {
             mToolbarDrawableWidth = toolbarBg.getWidth();
             mToolbarDrawableHeight = toolbarBg.getHeight();
 
-            Bitmap bg = WallpaperDrawables.getWallpaperBgBitmap();
+            Bitmap bg = WallpaperDrawables.getConversationListWallpaperBitmap();
             if (bg != null) {
                 mWallpaperDrawableWidth = bg.getWidth();
                 mWallpaperDrawableHeight = bg.getHeight();

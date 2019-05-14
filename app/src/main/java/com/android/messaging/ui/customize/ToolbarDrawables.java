@@ -16,31 +16,17 @@ public class ToolbarDrawables {
 
     private static final String PREF_KEY_CUSTOMIZE_TOOLBAR_BACKGROUND = "pref_key_customize_toolbar_background";
 
-    public static Drawable sToolbarBg;
+    public static Bitmap sToolbarBgBitmap;
 
     public static void applyToolbarBg(String url) {
         Factory.get().getCustomizePrefs().putString(PREF_KEY_CUSTOMIZE_TOOLBAR_BACKGROUND, url);
     }
 
     public static Drawable getToolbarBg() {
-        String url = Factory.get().getCustomizePrefs().getString(PREF_KEY_CUSTOMIZE_TOOLBAR_BACKGROUND, "");
-        if (TextUtils.isEmpty(url)) {
-            return null;
-        }
+        getToolbarBgBitmap();
 
-        if (sToolbarBg != null) {
-            return sToolbarBg;
-        }
-
-        if (url.startsWith("assets://")) {
-            try {
-                InputStream ims = HSApplication.getContext().getAssets().open(url.replace("assets://", ""));
-                Bitmap bitmap = BitmapFactory.decodeStream(ims);
-                sToolbarBg = new BitmapDrawable(HSApplication.getContext().getResources(), bitmap);
-                return sToolbarBg;
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+        if (sToolbarBgBitmap != null) {
+            return new BitmapDrawable(HSApplication.getContext().getResources(), sToolbarBgBitmap);
         }
 
         return null;
@@ -56,7 +42,7 @@ public class ToolbarDrawables {
             try {
                 InputStream ims = HSApplication.getContext().getAssets().open(url.replace("assets://", ""));
                 Bitmap bitmap = BitmapFactory.decodeStream(ims);
-                sToolbarBg = new BitmapDrawable(HSApplication.getContext().getResources(), bitmap);
+                sToolbarBgBitmap = bitmap;
                 return bitmap;
             } catch (IOException e) {
                 e.printStackTrace();

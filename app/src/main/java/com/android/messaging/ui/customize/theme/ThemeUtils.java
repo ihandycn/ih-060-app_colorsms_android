@@ -40,9 +40,10 @@ public class ThemeUtils {
         ConversationColors.get().setListTimeColor(Color.parseColor(themeInfo.listTimeColor));
         ConversationColors.get().setAdActionColor(Color.parseColor(themeInfo.bubbleAdColor));
 
-        ToolbarDrawables.sToolbarBg = null;
+        ToolbarDrawables.sToolbarBgBitmap = null;
         ToolbarDrawables.applyToolbarBg(themeInfo.toolbarBgUrl);
-        WallpaperDrawables.sListWallpaperBg = null;
+        WallpaperDrawables.sConversationListWallpaperBitmap = null;
+        WallpaperDrawables.sConversationWallpaperBitmap = null;
         WallpaperDrawables.applyWallpaperBg(themeInfo.wallpaperUrl);
         WallpaperDrawables.applyListWallpaperBg(themeInfo.listWallpaperUrl);
         AvatarBgDrawables.sAvatarBg = null;

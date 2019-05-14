@@ -171,7 +171,7 @@ public class PrivateConversationListFragment extends Fragment
         final ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.private_conversation_list_fragment,
                 container, false);
         ImageView conversationListBg = rootView.findViewById(R.id.private_conversation_list_bg);
-        conversationListBg.setImageDrawable(WallpaperDrawables.getListWallpaperBg());
+        conversationListBg.setImageDrawable(WallpaperDrawables.getConversationListWallpaperDrawable());
         mEmptyListMessageView = rootView.findViewById(R.id.private_box_empty_container);
         mRecyclerView = rootView.findViewById(android.R.id.list);
         mRecyclerView.setHasFixedSize(true);
