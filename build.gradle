@@ -30,6 +30,15 @@ allprojects {
                 cacheDynamicVersionsFor 0, 'seconds'
                 // 确保gradle sync的时候总是会去拉取最新的积木版本。默认情况下gradle 每24小时才回去更新缓存
             }
+
+            resolutionStrategy.eachDependency { DependencyResolveDetails details ->
+                def requested = details.requested
+                if (requested.group == 'com.android.support') {
+                    if (!requested.name.startsWith("multidex")) {
+                        details.useVersion "27.1.1"
+                    }
+                }
+            }
         }
     }
 }
