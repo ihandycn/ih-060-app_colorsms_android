@@ -118,7 +118,7 @@ public class PrivateConversationListFragment extends Fragment
                 //BugleAnalytics.logEvent("SMS_Messages_Show_NotOnTop", true);
             } else {
                 if (HSConfig.optBoolean(true, "Application", "SMSAd", "SMSHomepageBannerAd")) {
-                   // BugleAnalytics.logEvent("SMS_Messages_BannerAd_Should_Show", true, true);
+                    BugleAnalytics.logEvent("PrivateBox_BannerAd_Should_Show", true, false);
                     mShouldSwitchAd = false;
                     if (mExpressAdView != null) {
                         mExpressAdView.switchAd();
@@ -385,12 +385,12 @@ public class PrivateConversationListFragment extends Fragment
         mExpressAdView.setExpressAdViewListener(new AcbExpressAdView.AcbExpressAdViewListener() {
             @Override
             public void onAdShown(AcbExpressAdView acbExpressAdView) {
-              //  BugleAnalytics.logEvent("SMS_Messages_BannerAd_Show", true, true);
+                BugleAnalytics.logEvent("PrivateBox_BannerAd_Show", true, false);
             }
 
             @Override
             public void onAdClicked(AcbExpressAdView acbExpressAdView) {
-              //  BugleAnalytics.logEvent("SMS_Messages_BannerAd_Click", true, true);
+                BugleAnalytics.logEvent("PrivateBox_BannerAd_Click", true, false);
             }
         });
         mAdContainer.addView(mExpressAdView);

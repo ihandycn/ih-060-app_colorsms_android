@@ -16,6 +16,12 @@
             android:layout_width="match_parent"
             android:layout_height="56dp">
 
+            <com.android.messaging.ui.customize.theme.ToolbarBackgroundImageView
+                android:id="@+id/accessory_bg"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:scaleType="fitXY" />
+
             <View
                 android:id="@+id/selection_mode_bg"
                 android:layout_width="match_parent"

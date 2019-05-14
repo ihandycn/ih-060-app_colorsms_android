@@ -205,9 +205,10 @@ public class PrivateConversationListActivity extends MultiSelectConversationList
         accessoryContainer.setLayoutParams(lp);
         if (ToolbarDrawables.getToolbarBg() != null) {
             mHasTheme = true;
-            accessoryContainer.setBackground(ToolbarDrawables.getToolbarBg());
+            findViewById(R.id.accessory_bg).setBackground(ToolbarDrawables.getToolbarBg());
         } else {
             accessoryContainer.setBackgroundColor(PrimaryColors.getPrimaryColor());
+            findViewById(R.id.accessory_bg).setVisibility(View.GONE);
         }
         mConversationListFragment.onThemeChanged(mHasTheme);
 
