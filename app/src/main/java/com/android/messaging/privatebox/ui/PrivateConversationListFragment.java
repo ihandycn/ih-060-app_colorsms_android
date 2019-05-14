@@ -384,7 +384,9 @@ public class PrivateConversationListFragment extends Fragment
         mExpressAdView.setExpressAdViewListener(new AcbExpressAdView.AcbExpressAdViewListener() {
             @Override
             public void onAdShown(AcbExpressAdView acbExpressAdView) {
-                BugleAnalytics.logEvent("PrivateBox_BannerAd_Show", true, false);
+                if (!mIsConversationListEmpty) {
+                    BugleAnalytics.logEvent("PrivateBox_BannerAd_Show", true, false);
+                }
             }
 
             @Override

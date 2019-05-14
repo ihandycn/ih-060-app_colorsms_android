@@ -364,7 +364,6 @@ public class ConversationListActivity extends AbstractConversationListActivity
                 BugleAnalytics.logEvent("Menu_Show", true, true);
                 if (CommonUtils.isNewUser()
                         && Calendars.isSameDay(CommonUtils.getAppInstallTimeMillis(), System.currentTimeMillis())) {
-                    BugleAnalytics.logEvent("Menu_Show_NewUser_TestPrivateBox");
                     BugleAnalytics.logEvent("Menu_Show_NewUser", true);
                 }
                 super.onDrawerOpened(drawerView);
