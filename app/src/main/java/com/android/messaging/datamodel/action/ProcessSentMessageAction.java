@@ -41,7 +41,6 @@ import com.android.messaging.sms.MmsSender;
 import com.android.messaging.sms.MmsUtils;
 import com.android.messaging.ui.emoji.utils.EmojiManager;
 import com.android.messaging.util.Assert;
-import com.android.messaging.util.BugleAnalytics;
 import com.android.messaging.util.LogUtil;
 import com.ihs.commons.notificationcenter.HSGlobalNotificationCenter;
 
@@ -50,7 +49,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static com.android.messaging.ui.messagebox.MessageBoxActivity.NOTIFICATION_MESSAGE_BOX_SEND_SMS_FAILED;
-import static com.android.messaging.ui.messagebox.MessageBoxActivity.NOTIFICATION_MESSAGE_BOX_SEND_SMS_SUCCEDED;
+import static com.android.messaging.ui.messagebox.MessageBoxActivity.NOTIFICATION_MESSAGE_BOX_SEND_SMS_SUCCEED;
 
 /**
  * Update message status to reflect success or failure
@@ -314,7 +313,7 @@ public class ProcessSentMessageAction extends Action {
                 BugleNotifications.update(false, BugleNotifications.UPDATE_ERRORS);
                 HSGlobalNotificationCenter.sendNotification(NOTIFICATION_MESSAGE_BOX_SEND_SMS_FAILED);
             } else {
-                HSGlobalNotificationCenter.sendNotification(NOTIFICATION_MESSAGE_BOX_SEND_SMS_SUCCEDED);
+                HSGlobalNotificationCenter.sendNotification(NOTIFICATION_MESSAGE_BOX_SEND_SMS_SUCCEED);
             }
             BugleActionToasts.onSendMessageOrManualDownloadActionCompleted(
                     conversationId, !failed, status, isSms, subId, true/*isSend*/);

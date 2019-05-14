@@ -10,9 +10,11 @@ import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.android.messaging.BuildConfig;
 import com.android.messaging.R;
@@ -29,6 +31,7 @@ import com.android.messaging.ui.emoji.StickerInfo;
 import com.android.messaging.ui.emoji.ViewPagerDotIndicatorView;
 import com.android.messaging.util.BugleAnalytics;
 import com.android.messaging.util.UiUtils;
+import com.ihs.app.framework.HSApplication;
 import com.ihs.commons.notificationcenter.HSGlobalNotificationCenter;
 import com.ihs.commons.notificationcenter.INotificationObserver;
 import com.ihs.commons.utils.HSBundle;
@@ -57,10 +60,10 @@ public class MessageBoxActivity extends AppCompatActivity implements INotificati
     private static final String CLICK_CONTENT = "click_content";
 
     public static final String NOTIFICATION_FINISH_MESSAGE_BOX = "finish_message_box";
-    public static final String NOTIFICATION_MESSAGE_BOX_SEND_SMS_SUCCEDED = "message_box_send_sms_success";
+    public static final String NOTIFICATION_MESSAGE_BOX_SEND_SMS_SUCCEED = "message_box_send_sms_success";
     public static final String NOTIFICATION_MESSAGE_BOX_SEND_SMS_FAILED = "message_box_send_sms_failed";
 
-    private static final boolean DEBUGGING_MULTI_CONVERSATIONS = false && BuildConfig.DEBUG;
+    private static final boolean DEBUGGING_MULTI_CONVERSATIONS = true && BuildConfig.DEBUG;
 
     private ViewPager mPager;
     private DynamicalPagerAdapter mPagerAdapter;
@@ -108,7 +111,7 @@ public class MessageBoxActivity extends AppCompatActivity implements INotificati
 
         HSGlobalNotificationCenter.addObserver(NOTIFICATION_FINISH_MESSAGE_BOX, this);
         HSGlobalNotificationCenter.addObserver(NOTIFICATION_MESSAGE_BOX_SEND_SMS_FAILED, this);
-        HSGlobalNotificationCenter.addObserver(NOTIFICATION_MESSAGE_BOX_SEND_SMS_SUCCEDED, this);
+        HSGlobalNotificationCenter.addObserver(NOTIFICATION_MESSAGE_BOX_SEND_SMS_SUCCEED, this);
 
         mIndicator.setOnIndicatorClickListener(new MessageBoxIndicatorView.OnIndicatorClickListener() {
             @Override
@@ -336,8 +339,10 @@ public class MessageBoxActivity extends AppCompatActivity implements INotificati
             } else if (NOTIFICATION_MESSAGE_BOX_SEND_SMS_FAILED.equals(s)) {
                 Toasts.showToast(R.string.message_box_send_failed_toast);
                 removeCurrentPage(REPLY);
-            } else if (NOTIFICATION_MESSAGE_BOX_SEND_SMS_SUCCEDED.equals(s)) {
-                Toasts.showToast(R.string.message_box_send_successfully_toast);
+            } else if (NOTIFICATION_MESSAGE_BOX_SEND_SMS_SUCCEED.equals(s)) {
+                Toast toast = Toast.makeText(HSApplication.getContext(), R.string.message_box_send_successfully_toast, Toast.LENGTH_SHORT);
+                toast.setGravity(Gravity.BOTTOM, 0, Dimensions.pxFromDp(44));
+                toast.show();
                 removeCurrentPage(REPLY);
             }
         });
