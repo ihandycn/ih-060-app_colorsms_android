@@ -5,13 +5,12 @@ import android.app.Fragment;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Color;
+import android.graphics.PorterDuff;
 import android.graphics.Rect;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Parcelable;
-import android.support.v4.view.ViewCompat;
 import android.support.v4.view.ViewGroupCompat;
-import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -19,20 +18,22 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.android.messaging.R;
+import com.android.messaging.ad.AdPlacement;
 import com.android.messaging.annotation.VisibleForAnimation;
 import com.android.messaging.datamodel.DataModel;
 import com.android.messaging.datamodel.binding.Binding;
 import com.android.messaging.datamodel.binding.BindingBase;
+import com.android.messaging.datamodel.data.AdItemData;
 import com.android.messaging.datamodel.data.ConversationListData;
 import com.android.messaging.datamodel.data.ConversationListData.ConversationListDataListener;
 import com.android.messaging.datamodel.data.ConversationListItemData;
 import com.android.messaging.privatebox.ui.addtolist.AddToListDialog;
 import com.android.messaging.privatebox.ui.addtolist.ContactsSelectActivity;
 import com.android.messaging.privatebox.ui.addtolist.ConversationSelectActivity;
-import com.android.messaging.ui.BugleAnimationTags;
 import com.android.messaging.ui.SnackBarInteraction;
 import com.android.messaging.ui.UIIntents;
 import com.android.messaging.ui.conversationlist.ConversationListAdapter;
@@ -42,12 +43,21 @@ import com.android.messaging.ui.customize.PrimaryColors;
 import com.android.messaging.ui.customize.WallpaperDrawables;
 import com.android.messaging.util.Assert;
 import com.android.messaging.util.BugleAnalytics;
+import com.android.messaging.util.HierarchyTreeChangeListener;
 import com.android.messaging.util.ImeUtil;
 import com.android.messaging.util.UiUtils;
 import com.google.common.annotations.VisibleForTesting;
+import com.ihs.app.framework.HSApplication;
+import com.ihs.commons.config.HSConfig;
 import com.superapps.util.BackgroundDrawables;
 import com.superapps.util.Dimensions;
 import com.superapps.util.Navigations;
+import com.superapps.util.Threads;
+
+import net.appcloudbox.ads.base.ContainerView.AcbContentLayout;
+import net.appcloudbox.ads.base.ContainerView.AcbNativeAdContainerView;
+import net.appcloudbox.ads.common.utils.AcbError;
+import net.appcloudbox.ads.expressad.AcbExpressAdView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -75,6 +85,11 @@ public class PrivateConversationListFragment extends Fragment
     private RecyclerView mRecyclerView;
     private View mEmptyListMessageView;
     private ConversationListAdapter mAdapter;
+    private ViewGroup mAdContainer;
+    private AcbExpressAdView mExpressAdView;
+    private LinearLayoutManager mLayoutManager;
+    private boolean mShouldSwitchAd;
+    private boolean mAdFirstPrepared = true;
 
     // Saved Instance State Data - only for temporal data which is nice to maintain but not
     // critical for correctness.
@@ -98,9 +113,25 @@ public class PrivateConversationListFragment extends Fragment
     @Override
     public void onResume() {
         super.onResume();
+        if (mRecyclerView != null) {
+            if (mRecyclerView.canScrollVertically(-1)) {
+                //BugleAnalytics.logEvent("SMS_Messages_Show_NotOnTop", true);
+            } else {
+                if (HSConfig.optBoolean(true, "Application", "SMSAd", "SMSHomepageBannerAd")) {
+                   // BugleAnalytics.logEvent("SMS_Messages_BannerAd_Should_Show", true, true);
+                    mShouldSwitchAd = false;
+                    if (mExpressAdView != null) {
+                        mExpressAdView.switchAd();
+                    }
+                }
+            }
+        }
         Assert.notNull(mHost);
         setScrolledToNewestConversationIfNeeded();
         updateUi();
+        if (!mAdFirstPrepared) {
+            prepareAd();
+        }
     }
 
     public void setScrolledToNewestConversationIfNeeded() {
@@ -125,6 +156,10 @@ public class PrivateConversationListFragment extends Fragment
         super.onDestroy();
         mListBinding.unbind();
         mHost = null;
+        if (mExpressAdView != null) {
+            mExpressAdView.destroy();
+            mExpressAdView = null;
+        }
     }
 
     /**
@@ -141,16 +176,16 @@ public class PrivateConversationListFragment extends Fragment
         mRecyclerView = rootView.findViewById(android.R.id.list);
         mRecyclerView.setHasFixedSize(true);
         final Activity activity = getActivity();
-        LinearLayoutManager manager = new LinearLayoutManager(activity) {
+        mLayoutManager = new LinearLayoutManager(activity) {
             @Override
             public RecyclerView.LayoutParams generateDefaultLayoutParams() {
                 return new RecyclerView.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
                         ViewGroup.LayoutParams.WRAP_CONTENT);
             }
         };
-        mRecyclerView.setLayoutManager(manager);
+        mRecyclerView.setLayoutManager(mLayoutManager);
         mRecyclerView.setAdapter(mAdapter);
-        mRecyclerView.setItemAnimator(new DefaultItemAnimator());
+        //mRecyclerView.setItemAnimator(new DefaultItemAnimator());
         mRecyclerView.setOnScrollListener(new RecyclerView.OnScrollListener() {
 
             int mCurrentState = AbsListView.OnScrollListener.SCROLL_STATE_IDLE;
@@ -162,6 +197,14 @@ public class PrivateConversationListFragment extends Fragment
                 if (mCurrentState == AbsListView.OnScrollListener.SCROLL_STATE_TOUCH_SCROLL
                         || mCurrentState == AbsListView.OnScrollListener.SCROLL_STATE_FLING) {
                     ImeUtil.get().hideImeKeyboard(getActivity(), mRecyclerView);
+                }
+
+                if (!isFirstConversationVisible && isScrolledToFirstConversation()) {
+                    if (mExpressAdView != null && mShouldSwitchAd) {
+                        mExpressAdView.switchAd();
+
+                        mShouldSwitchAd = false;
+                    }
                 }
 
                 isFirstConversationVisible = isScrolledToFirstConversation();
@@ -185,6 +228,9 @@ public class PrivateConversationListFragment extends Fragment
         ViewGroupCompat.setTransitionGroup(rootView, false);
 
         setHasOptionsMenu(true);
+        if (HSConfig.optBoolean(true, "Application", "SMSAd", "SMSHomepageBannerAd")) {
+            initAd();
+        }
         return rootView;
     }
 
@@ -220,6 +266,7 @@ public class PrivateConversationListFragment extends Fragment
         super.onPause();
         mListState = mRecyclerView.getLayoutManager().onSaveInstanceState();
         mListBinding.getData().setScrolledToNewestConversation(false);
+        mShouldSwitchAd = true;
     }
 
     /**
@@ -234,9 +281,7 @@ public class PrivateConversationListFragment extends Fragment
     public void onConversationListCursorUpdated(final ConversationListData data,
                                                 final Cursor cursor) {
         mListBinding.ensureBound(data);
-
         ArrayList<Object> dataList = new ArrayList<>();
-
         if (cursor != null && cursor.moveToFirst()) {
             do {
                 ConversationListItemData itemData = new ConversationListItemData();
@@ -247,7 +292,13 @@ public class PrivateConversationListFragment extends Fragment
             } while (cursor.moveToNext());
         }
 
+        if (mAdapter.hasHeader()) {
+            dataList.add(0, new AdItemData());
+        }
         mAdapter.setDataList(dataList);
+        if (mAdFirstPrepared && !dataList.isEmpty()) {
+            prepareAd();
+        }
         updateEmptyListUi(dataList.isEmpty());
     }
 
@@ -287,6 +338,85 @@ public class PrivateConversationListFragment extends Fragment
     @Override
     public List<SnackBarInteraction> getSnackBarInteractions() {
         return null;
+    }
+
+    private void initAd() {
+        mAdContainer = (ViewGroup) LayoutInflater.from(getActivity()).inflate(R.layout.conversation_list_header, mRecyclerView, false);
+        mExpressAdView = new AcbExpressAdView(HSApplication.getContext(), AdPlacement.AD_BANNER);
+        mExpressAdView.setCustomLayout(new AcbContentLayout(R.layout.item_conversation_list_ad)
+                .setActionId(R.id.banner_action)
+                .setIconId(R.id.banner_icon_image)
+                .setTitleId(R.id.banner_title)
+                .setDescriptionId(R.id.banner_des)
+        );
+        mExpressAdView.setAutoSwitchAd(AcbExpressAdView.AutoSwitchAd_None);
+
+        mExpressAdView.setOnHierarchyChangeListener(HierarchyTreeChangeListener.wrap(new ViewGroup.OnHierarchyChangeListener() {
+            @Override
+            public void onChildViewAdded(View parent, View child) {
+                try {
+                    if (child instanceof RelativeLayout
+                            && ((RelativeLayout) child).getChildCount() == 1
+                            && ((RelativeLayout) child).getChildAt(0) instanceof AcbNativeAdContainerView) {
+                        AcbNativeAdContainerView nativeAdContainerView = (AcbNativeAdContainerView) ((RelativeLayout) child).getChildAt(0);
+                        nativeAdContainerView.getChildAt(1).setVisibility(View.GONE);
+                        ImageView ivAdPreview = mExpressAdView.findViewById(R.id.icon_ad_preview);
+                        ivAdPreview.getDrawable().setColorFilter(ConversationColors.get().getListTimeColor(), PorterDuff.Mode.SRC_ATOP);
+                    }
+                } catch (Exception e) {
+                }
+
+                Threads.postOnMainThread(() -> {
+                    try {
+                        TextView title = mExpressAdView.findViewById(R.id.banner_title);
+                        title.setTextColor(ConversationColors.get().getListTitleColor());
+                        TextView subtitle = mExpressAdView.findViewById(R.id.banner_des);
+                        subtitle.setTextColor(ConversationColors.get().getListSubtitleColor());
+                    } catch (Exception e) {
+                    }
+                });
+            }
+
+            @Override
+            public void onChildViewRemoved(View parent, View child) {
+
+            }
+        }));
+        mExpressAdView.setExpressAdViewListener(new AcbExpressAdView.AcbExpressAdViewListener() {
+            @Override
+            public void onAdShown(AcbExpressAdView acbExpressAdView) {
+              //  BugleAnalytics.logEvent("SMS_Messages_BannerAd_Show", true, true);
+            }
+
+            @Override
+            public void onAdClicked(AcbExpressAdView acbExpressAdView) {
+              //  BugleAnalytics.logEvent("SMS_Messages_BannerAd_Click", true, true);
+            }
+        });
+        mAdContainer.addView(mExpressAdView);
+
+    }
+
+    private void prepareAd() {
+        if (mExpressAdView == null)
+            return;
+        mExpressAdView.prepareAd(new AcbExpressAdView.PrepareAdListener() {
+            @Override
+            public void onAdReady(AcbExpressAdView acbExpressAdView) {
+                if (!mAdapter.hasHeader()) {
+                    mAdapter.setHeader(mAdContainer);
+                    if (mLayoutManager.findFirstCompletelyVisibleItemPosition() == 0) {
+                        mRecyclerView.scrollToPosition(0);
+                    }
+                }
+            }
+
+            @Override
+            public void onPrepareAdFailed(AcbExpressAdView acbExpressAdView, AcbError acbError) {
+
+            }
+        });
+        mAdFirstPrepared = false;
     }
 
     // Show and hide empty list UI as needed with appropriate text based on view specifics
