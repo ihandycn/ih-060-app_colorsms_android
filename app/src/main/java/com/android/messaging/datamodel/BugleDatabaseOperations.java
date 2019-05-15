@@ -248,7 +248,7 @@ public class BugleDatabaseOperations {
             //update conversations data
             if (conversationId != null) {
                 FabricUtils.logNonFatal("merge conversations" +
-                                " (different thread_id but same participants)");
+                        " (different thread_id but same participants)");
                 long validThreadId = PrivateMessageManager.getInstance().getValidThreadId(threadId, db, conversationId);
                 ContentValues values = new ContentValues();
                 values.put(ConversationColumns.SMS_THREAD_ID, validThreadId);
@@ -564,6 +564,9 @@ public class BugleDatabaseOperations {
             }
 
             if (conversationMessagesDeleted) {
+                dbWrapper.delete(DatabaseHelper.CONVERSATION_PARTICIPANTS_TABLE,
+                        ConversationParticipantsColumns.CONVERSATION_ID + "=?",
+                        new String[]{conversationId});
                 // Delete conversation row
                 final int count = dbWrapper.delete(DatabaseHelper.CONVERSATIONS_TABLE,
                         ConversationColumns._ID + "=?", new String[]{conversationId});
