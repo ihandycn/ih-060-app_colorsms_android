@@ -105,6 +105,8 @@ public class SelectPrivacyModeDialog extends BaseDialogFragment {
             if (OsUtil.isAtLeastL()) {
                 rb.getCompoundDrawables()[0].setTintList(colorStateList); // Applying tint to drawable at left. '0' to get drawable at bottom
             }
+
+            rb.setOnClickListener(v -> Threads.postOnMainThreadDelayed(this::dismissAllowingStateLoss, 340L));
         }
 
         radioGroup.setOnCheckedChangeListener((group, checkedId) -> {
@@ -127,8 +129,8 @@ public class SelectPrivacyModeDialog extends BaseDialogFragment {
                 BugleAnalytics.logEvent("SMS_DetailsPage_Privacy_Click", false, true,
                         "type", PrivacyModeSettings.getPrivacyModeDescription(mConversationId));
             }
-            Threads.postOnMainThreadDelayed(this::dismissAllowingStateLoss, 340L);
         });
+
         return mContentView;
     }
 
