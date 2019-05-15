@@ -23,6 +23,9 @@ import android.content.res.Resources;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.v4.text.BidiFormatter;
+import android.support.v4.text.TextDirectionHeuristicsCompat;
+import android.text.TextPaint;
 import android.view.View;
 import android.widget.Toast;
 
@@ -275,10 +278,22 @@ public abstract class AbstractConversationListActivity extends BugleActionBarAct
             Bundle sceneTransitionAnimationOptions = null;
             boolean hasCustomTransitions = false;
 
+            final String conversationName = conversationListItemData.getName();
+            // RTL : To format conversation title if it happens to be phone numbers.
+            final BidiFormatter bidiFormatter = BidiFormatter.getInstance();
+            final String formattedName = bidiFormatter.unicodeWrap(
+                    UiUtils.commaEllipsize(
+                            conversationName,
+                            new TextPaint(),
+                            conversationName.length(),
+                            getString(R.string.plus_one),
+                            getString(R.string.plus_n)).toString(),
+                    TextDirectionHeuristicsCompat.LTR);
+
             UIIntents.get().launchConversationActivity(
                     this, conversationId, null,
                     sceneTransitionAnimationOptions,
-                    hasCustomTransitions);
+                    hasCustomTransitions, formattedName);
             BugleAnalytics.logEvent("SMS_Messages_Message_Click", true, true,
                     "Type", conversationListItemData.isPinned() ? "pin" : "unpin");
         }

@@ -55,6 +55,7 @@ import com.android.messaging.util.OsUtil;
 import com.android.messaging.util.PhoneUtils;
 import com.android.messaging.util.SafeAsyncTask;
 import com.android.messaging.widget.WidgetConversationProvider;
+import com.ihs.commons.utils.HSLog;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -252,6 +253,8 @@ public class ConversationData extends BindableData {
     private class MessagesLoaderCallbacks implements LoaderManager.LoaderCallbacks<Cursor> {
         @Override
         public Loader<Cursor> onCreateLoader(final int id, final Bundle args) {
+            HSLog.d("message list start load : " + System.currentTimeMillis());
+
             Assert.equals(CONVERSATION_MESSAGES_LOADER, id);
             Loader<Cursor> loader = null;
 
@@ -273,6 +276,8 @@ public class ConversationData extends BindableData {
 
         @Override
         public void onLoadFinished(final Loader<Cursor> generic, final Cursor rawData) {
+            HSLog.d("message list end load : " + System.currentTimeMillis());
+
             final BoundCursorLoader loader = (BoundCursorLoader) generic;
 
             // Check if data still bound to the requesting ui element

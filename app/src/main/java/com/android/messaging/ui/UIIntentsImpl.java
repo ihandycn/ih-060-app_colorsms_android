@@ -19,7 +19,6 @@ import android.app.Activity;
 import android.app.Fragment;
 import android.app.PendingIntent;
 import android.appwidget.AppWidgetManager;
-import android.content.ActivityNotFoundException;
 import android.content.ClipData;
 import android.content.ComponentName;
 import android.content.ContentValues;
@@ -77,8 +76,6 @@ import com.android.messaging.ui.welcome.WelcomeStartActivity;
 import com.android.messaging.util.Assert;
 import com.android.messaging.util.ContentType;
 import com.android.messaging.util.ConversationIdSet;
-import com.android.messaging.util.LogUtil;
-import com.android.messaging.util.UiUtils;
 import com.android.messaging.util.UriUtil;
 import com.superapps.util.Navigations;
 
@@ -102,6 +99,13 @@ public class UIIntentsImpl extends UIIntents {
     private Intent getConversationActivityIntent(final Context context,
                                                  final String conversationId, final MessageData draft,
                                                  final boolean withCustomTransition) {
+        return getConversationActivityIntent(context, conversationId, draft, withCustomTransition, "");
+    }
+
+    private Intent getConversationActivityIntent(final Context context,
+                                                 final String conversationId, final MessageData draft,
+                                                 final boolean withCustomTransition,
+                                                 final String conversationName) {
         final Intent intent = new Intent(context, ConversationActivity.class);
 
         // Always try to reuse the same ConversationActivity in the current task so that we don't
@@ -111,6 +115,9 @@ public class UIIntentsImpl extends UIIntents {
         // Otherwise we're starting a new conversation
         if (conversationId != null) {
             intent.putExtra(UI_INTENT_EXTRA_CONVERSATION_ID, conversationId);
+        }
+        if(!TextUtils.isEmpty(conversationName)){
+            intent.putExtra(UI_INTENT_EXTRA_CONVERSATION_NAME, conversationName);
         }
         if (draft != null) {
             intent.putExtra(UI_INTENT_EXTRA_DRAFT_DATA, draft);
@@ -193,6 +200,17 @@ public class UIIntentsImpl extends UIIntents {
         Assert.isTrue(!withCustomTransition || activityOptions != null);
         final Intent intent = getConversationActivityIntent(context, conversationId, draft,
                 withCustomTransition);
+        context.startActivity(intent, activityOptions);
+    }
+
+    @Override
+    public void launchConversationActivity(final Context context,
+                                           final String conversationId, final MessageData draft, final Bundle activityOptions,
+                                           final boolean withCustomTransition,
+                                           final String conversationName) {
+        Assert.isTrue(!withCustomTransition || activityOptions != null);
+        final Intent intent = getConversationActivityIntent(context, conversationId, draft,
+                withCustomTransition, conversationName);
         context.startActivity(intent, activityOptions);
     }
 

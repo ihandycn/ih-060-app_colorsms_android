@@ -707,6 +707,8 @@ public class ConversationFragment extends Fragment implements ConversationDataLi
     @Override
     public View onCreateView(final LayoutInflater inflater, final ViewGroup container,
                              final Bundle savedInstanceState) {
+        HSLog.d("message list create : " + System.currentTimeMillis());
+
         final View view = inflater.inflate(R.layout.conversation_fragment, container, false);
         mRecyclerView = view.findViewById(android.R.id.list);
         mAdContainer = view.findViewById(R.id.top_banner_ad_container);
@@ -962,6 +964,7 @@ public class ConversationFragment extends Fragment implements ConversationDataLi
     public void onConversationMessagesCursorUpdated(final ConversationData data,
                                                     final Cursor cursor, final ConversationMessageData newestMessage,
                                                     final boolean isSync) {
+        HSLog.d("message list show : " + System.currentTimeMillis());
         mBinding.ensureBound(data);
         // This needs to be determined before swapping cursor, which may change the scroll state.
         final boolean scrolledToBottom = isScrolledToBottom();
@@ -1692,28 +1695,31 @@ public class ConversationFragment extends Fragment implements ConversationDataLi
         // Reset the back arrow to its default
         actionBar.setHomeAsUpIndicator(R.drawable.ic_back);
 
-        final String conversationName = getConversationName();
-        if (!TextUtils.isEmpty(conversationName)) {
-            // RTL : To format conversation title if it happens to be phone numbers.
-            final BidiFormatter bidiFormatter = BidiFormatter.getInstance();
-            final String formattedName = bidiFormatter.unicodeWrap(
-                    UiUtils.commaEllipsize(
-                            conversationName,
-                            tvTitle.getPaint(),
-                            tvTitle.getWidth(),
-                            getString(R.string.plus_one),
-                            getString(R.string.plus_n)).toString(),
-                    TextDirectionHeuristicsCompat.LTR);
-            tvTitle.setText(formattedName);
-            // In case phone numbers are mixed in the conversation name, we need to vocalize it.
-            final String vocalizedConversationName =
-                    AccessibilityUtil.getVocalizedPhoneNumber(getResources(), conversationName);
-            tvTitle.setContentDescription(vocalizedConversationName);
+        if (!TextUtils.isEmpty(((ConversationActivity) getActivity()).getConversationName())) {
+            tvTitle.setText(((ConversationActivity) getActivity()).getConversationName());
         } else {
-            final String appName = getString(R.string.app_name);
-            tvTitle.setText(appName);
+            final String conversationName = getConversationName();
+            if (!TextUtils.isEmpty(conversationName)) {
+                // RTL : To format conversation title if it happens to be phone numbers.
+                final BidiFormatter bidiFormatter = BidiFormatter.getInstance();
+                final String formattedName = bidiFormatter.unicodeWrap(
+                        UiUtils.commaEllipsize(
+                                conversationName,
+                                tvTitle.getPaint(),
+                                tvTitle.getWidth(),
+                                getString(R.string.plus_one),
+                                getString(R.string.plus_n)).toString(),
+                        TextDirectionHeuristicsCompat.LTR);
+                tvTitle.setText(formattedName);
+                // In case phone numbers are mixed in the conversation name, we need to vocalize it.
+                final String vocalizedConversationName =
+                        AccessibilityUtil.getVocalizedPhoneNumber(getResources(), conversationName);
+                tvTitle.setContentDescription(vocalizedConversationName);
+            } else {
+                final String appName = getString(R.string.app_name);
+                tvTitle.setText(appName);
+            }
         }
-
         actionBar.show();
         actionBar.setDisplayShowTitleEnabled(false);
     }
