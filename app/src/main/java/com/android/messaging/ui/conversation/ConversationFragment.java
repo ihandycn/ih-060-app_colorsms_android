@@ -870,7 +870,7 @@ public class ConversationFragment extends Fragment implements ConversationDataLi
     public void onResume() {
         super.onResume();
 
-        WallpaperManager.setConversationWallPaper(mWallpaperView, mThemeWallpaperView, mConversationId);
+        //WallpaperManager.setConversationWallPaper(mWallpaperView, mThemeWallpaperView, mConversationId);
 
         if (mIncomingDraft == null) {
             mComposeMessageView.requestDraftMessage(mClearLocalDraft);
@@ -888,7 +888,7 @@ public class ConversationFragment extends Fragment implements ConversationDataLi
         }
 
         setConversationFocus();
-        BugleNotifications.markMessagesAsRead(mConversationId);
+        //BugleNotifications.markMessagesAsRead(mConversationId);
 
         // On resume, invalidate all message views to show the updated timestamp.
         mAdapter.notifyDataSetChanged();
@@ -987,7 +987,7 @@ public class ConversationFragment extends Fragment implements ConversationDataLi
             } while (cursor.moveToNext());
         }
 
-        mAdapter.setConversationId(mConversationId);
+        mAdapter.setConversationId("40");
         mAdapter.setDataList(mMessageDataList);
 
         if (isSync) {
@@ -1075,6 +1075,7 @@ public class ConversationFragment extends Fragment implements ConversationDataLi
         // TODO: Eventually I would like the Factory to implement
         // Factory.get().bindConversationData(mBinding, getActivity(), this, conversationId));
         if (!mBinding.isBound()) {
+            //这个conversation 的事
             mConversationId = conversationId;
             mIncomingDraft = draftData;
             mBinding.bind(DataModel.get().createConversationData(context, this, conversationId));
@@ -1321,7 +1322,7 @@ public class ConversationFragment extends Fragment implements ConversationDataLi
 
     @Override
     public void closeConversation(final String conversationId) {
-        if (TextUtils.equals(conversationId, mConversationId)) {
+        if (TextUtils.equals(conversationId, "40")) {
             mHost.onFinishCurrentConversation();
             // TODO: Explicitly transition to ConversationList (or just go back)?
         }
@@ -1677,7 +1678,7 @@ public class ConversationFragment extends Fragment implements ConversationDataLi
 
     @Override
     public void showAttachmentChooser() {
-        showAttachmentChooser(mConversationId, getActivity());
+        //showAttachmentChooser(mConversationId, getActivity());
     }
 
     public static void showAttachmentChooser(final String conversationId,

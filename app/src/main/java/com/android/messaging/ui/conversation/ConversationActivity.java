@@ -27,6 +27,7 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.text.format.DateUtils;
+import android.util.Log;
 import android.view.ActionMode;
 import android.view.MenuItem;
 import android.view.View;
@@ -412,6 +413,7 @@ public class ConversationActivity extends BugleActionBarActivity
     @Override // From ContactPickerFragmentHost
     public void onGetOrCreateNewConversation(final String conversationId) {
         Assert.isTrue(conversationId != null);
+        Log.d("---->>>>", "onGetOrCreateNewConversation: " + conversationId);
         mUiState.onGetOrCreateConversation(conversationId);
     }
 
@@ -458,11 +460,13 @@ public class ConversationActivity extends BugleActionBarActivity
     public void onConversationContactPickerUiStateChanged(final int oldState, final int newState,
                                                           final boolean animate) {
         Assert.isTrue(oldState != newState);
+        Log.d("---->>>>", "onConversationContactPickerUiStateChanged: ");
         updateUiState(animate);
     }
 
     private void updateUiState(final boolean animate) {
         if (mInstanceStateSaved || mIsPaused) {
+            Log.d("---->>>>", "updateUiState: ");
             return;
         }
         Assert.notNull(mUiState);
@@ -508,11 +512,15 @@ public class ConversationActivity extends BugleActionBarActivity
             }
             conversationFragment.setHost(this);
             conversationFragment.setConversationInfo(this, conversationId, draftData);
+            Log.d("---->>>>", "updateUiState: 1");
         } else if (conversationFragment != null) {
             // Don't save draft to DB when removing conversation fragment and switching to
             // contact picking mode.  The draft is intended for the new group.
             conversationFragment.suppressWriteDraft();
             fragmentTransaction.remove(conversationFragment);
+            Log.d("---->>>>", "updateUiState: 2");
+        } else {
+            Log.d("---->>>>", "updateUiState: 3");
         }
 
         // Set up the contact picker fragment.
@@ -526,8 +534,12 @@ public class ConversationActivity extends BugleActionBarActivity
             contactPickerFragment.setHost(this);
             contactPickerFragment.setContactPickingMode(mUiState.getDesiredContactPickingMode(),
                     animate);
+            Log.d("---->>>>", "updateUiState: xx1");
         } else if (contactPickerFragment != null) {
             fragmentTransaction.remove(contactPickerFragment);
+            Log.d("---->>>>", "updateUiState: xx2");
+        } else {
+            Log.d("---->>>>", "updateUiState: xx3");
         }
 
         fragmentTransaction.commit();

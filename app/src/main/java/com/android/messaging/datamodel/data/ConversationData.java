@@ -26,6 +26,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
+import android.util.Log;
 
 import com.android.common.contacts.DataUsageStatUpdater;
 import com.android.messaging.Factory;
@@ -218,6 +219,7 @@ public class ConversationData extends BindableData {
                     LogUtil.w(TAG, "Meta data loader returned nothing for mConversationId = " +
                             mConversationId);
                     mListeners.closeConversation(mConversationId);
+                    Log.d("---->>>>", "onLoadFinished: kjnljk" + mConversationId);
                     // Notify the widget the conversation is deleted so it can go into its
                     // configure state.
                     WidgetConversationProvider.notifyConversationDeleted(
@@ -838,6 +840,7 @@ public class ConversationData extends BindableData {
         public void closeConversation(final String conversationId) {
             for (final ConversationDataListener listener : this) {
                 listener.closeConversation(conversationId);
+                Log.d("---->>>>", "closeConversation: cdcd");
             }
         }
 

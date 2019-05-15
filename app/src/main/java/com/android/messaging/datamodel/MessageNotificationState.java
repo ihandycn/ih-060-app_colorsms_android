@@ -40,6 +40,7 @@ import android.text.style.ForegroundColorSpan;
 import android.text.style.StyleSpan;
 import android.text.style.TextAppearanceSpan;
 import android.text.style.URLSpan;
+import android.util.Log;
 
 import com.android.messaging.Factory;
 import com.android.messaging.R;
@@ -964,6 +965,7 @@ public abstract class MessageNotificationState extends NotificationState {
                     }
                     ConversationLineInfo currConvInfo = convLineInfos.get(convId);
                     if (currConvInfo == null) {
+                        Log.d("---->>>>", "id: " + convId);
                         final ConversationListItemData convData =
                                 ConversationListItemData.getExistingConversation(db, convId);
                         if (!convData.getNotificationEnabled()) {
