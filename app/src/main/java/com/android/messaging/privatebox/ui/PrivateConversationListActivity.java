@@ -18,6 +18,7 @@ import com.android.messaging.privatebox.PrivateSettingManager;
 import com.android.messaging.privatebox.ui.addtolist.AddToListDialog;
 import com.android.messaging.privatebox.ui.addtolist.ContactsSelectActivity;
 import com.android.messaging.privatebox.ui.addtolist.ConversationSelectActivity;
+import com.android.messaging.ui.BaseAlertDialog;
 import com.android.messaging.ui.conversationlist.ConversationListActivity;
 import com.android.messaging.ui.customize.PrimaryColors;
 import com.android.messaging.ui.customize.ToolbarDrawables;
@@ -168,8 +169,24 @@ public class PrivateConversationListActivity extends MultiSelectConversationList
         } else if (mIsMessageMoving) {
 
         } else {
-            super.onBackPressed();
+            if (!showUninstallNoticeDialog()) {
+                super.onBackPressed();
+            }
         }
+    }
+
+    public boolean showUninstallNoticeDialog() {
+        if (mConversationListFragment != null &&
+                !mConversationListFragment.isConversationListEmpty() &&
+                !Preferences.getDefault().getBoolean("pref_key_uninstall_dialog_shown", false)) {
+            new BaseAlertDialog.Builder(this)
+                    .setTitle(R.string.private_box_uninstall_notice)
+                    .setPositiveButton(R.string.welcome_set_default_button, (dialog, button) -> finish())
+                    .show();
+            Preferences.getDefault().putBoolean("pref_key_uninstall_dialog_shown", true);
+            return true;
+        }
+        return false;
     }
 
     @Override
@@ -243,7 +260,9 @@ public class PrivateConversationListActivity extends MultiSelectConversationList
                     dismissActionMode();
                     return true;
                 }
-                finish();
+                if (!showUninstallNoticeDialog()) {
+                    finish();
+                }
                 return true;
             case R.id.private_action_add:
                 BugleAnalytics.logEvent("PrivateBox_Homepage_AddContact_BtnClick");

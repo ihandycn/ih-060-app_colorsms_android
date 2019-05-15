@@ -160,6 +160,10 @@ public class PrivateConversationListFragment extends Fragment
         }
     }
 
+    public boolean isConversationListEmpty() {
+        return mIsConversationListEmpty;
+    }
+
     /**
      * {@inheritDoc} from Fragment
      */
