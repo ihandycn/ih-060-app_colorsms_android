@@ -107,6 +107,6 @@ dependencies {
 //     "D/DebugDB: Open http://xxxxxxxx:8080 in your browser" will appear in your logcat,
 //     open it in your browser to see out project tables. Please only  use it to see the table,
 //     because it may affect our features.
-    debugImplementation 'com.amitshekhar.android:debug-db:1.0.3'
+//    debugImplementation 'com.amitshekhar.android:debug-db:1.0.3'
 }
 apply plugin: 'com.google.gms.google-services'

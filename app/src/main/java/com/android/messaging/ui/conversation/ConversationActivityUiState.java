@@ -17,7 +17,6 @@ package com.android.messaging.ui.conversation;
 
 import android.os.Parcel;
 import android.os.Parcelable;
-import android.util.Log;
 
 import com.android.messaging.ui.contact.ContactPickerFragment;
 import com.android.messaging.util.Assert;
@@ -158,7 +157,6 @@ public class ConversationActivityUiState implements Parcelable, Cloneable {
             // modes.
             Assert.fail("Invalid conversation activity state: can't create conversation!");
         }
-        Log.d("---->>>>>", "xxx: " + conversationId + "  " + newState);
         mConversationId = conversationId;
         performUiStateUpdate(newState, true);
     }

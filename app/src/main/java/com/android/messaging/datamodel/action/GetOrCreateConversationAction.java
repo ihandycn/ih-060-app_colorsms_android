@@ -19,7 +19,6 @@ package com.android.messaging.datamodel.action;
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.text.TextUtils;
-import android.util.Log;
 
 import com.android.messaging.Factory;
 import com.android.messaging.datamodel.BugleDatabaseOperations;
@@ -137,17 +136,14 @@ public class GetOrCreateConversationAction extends Action implements Parcelable 
                                              final GetOrCreateConversationActionListener listener) {
             super(STATE_CREATED, generateUniqueActionKey("GetOrCreateConversationAction"), data);
             setCompletedListener(this);
-            Log.d("---->>>>", "GetOrCreateConversationActionMonitor: ");
             mListener = listener;
         }
 
         @Override
         public void onActionSucceeded(final ActionMonitor monitor,
                                       final Action action, final Object data, final Object result) {
-            Log.d("---->>>>", "onActionSucceeded: ");
             if (result == null) {
                 mListener.onGetOrCreateConversationFailed(monitor, data);
-                Log.d("---->>>>", "onActionSucceeded: xx");
             } else {
                 mListener.onGetOrCreateConversationSucceeded(monitor, data, (String) result);
             }
@@ -157,7 +153,6 @@ public class GetOrCreateConversationAction extends Action implements Parcelable 
         public void onActionFailed(final ActionMonitor monitor,
                                    final Action action, final Object data, final Object result) {
             // TODO: Currently onActionFailed is only called if there is an error in
-            Log.d("---->>>>", "onActionFailed: ");
             // processing requests, not for errors in the local processing.
             Assert.fail("Unreachable");
             mListener.onGetOrCreateConversationFailed(monitor, data);
