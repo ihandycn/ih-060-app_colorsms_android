@@ -105,7 +105,7 @@ public class PrivateBoxSetPasswordActivity extends BaseActivity implements View.
                     intent.putExtra(INTENT_KER_PASSWORD_STATUS, RESET_PASSWORD);
                 } else {
                     //BugleAnalytics.logEvent("AppLock_Setpassword_Second_Input", "State", "success");
-                   // BugleAnalytics.logEvent("AppLock_Setpassword_Success", "Type", "pattern");
+                    // BugleAnalytics.logEvent("AppLock_Setpassword_Success", "Type", "pattern");
                     intent.putExtra(INTENT_KER_PASSWORD_STATUS, SET_PASSWORD);
                 }
 
@@ -241,17 +241,13 @@ public class PrivateBoxSetPasswordActivity extends BaseActivity implements View.
     @Override
     protected void onStart() {
         super.onStart();
-
         HSLog.d(TAG, "onStart()");
     }
 
     @Override
     protected void onStop() {
         super.onStop();
-        HSLog.d(TAG, "onStop()");
-        if (isForgetPassword) {
-            finish();
-        }
+        finish();
     }
 
     @Override
@@ -398,7 +394,7 @@ public class PrivateBoxSetPasswordActivity extends BaseActivity implements View.
                     }
                 }
 
-              //  BugleAnalytics.logEvent("AppLock_Setpassword_ChangeType_Clicked", "Type", currentPasswordStyle.toString());
+                //  BugleAnalytics.logEvent("AppLock_Setpassword_ChangeType_Clicked", "Type", currentPasswordStyle.toString());
                 switch (currentPasswordStyle) {
                     case PATTERN:
                         currentPasswordStyle = PrivateBoxSettings.PasswordStyle.PIN;

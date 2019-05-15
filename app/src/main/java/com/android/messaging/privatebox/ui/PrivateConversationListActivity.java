@@ -13,6 +13,7 @@ import android.view.ViewGroup;
 import android.widget.ProgressBar;
 
 import com.android.messaging.R;
+import com.android.messaging.privatebox.AppPrivateLockManager;
 import com.android.messaging.privatebox.MoveConversationToPrivateBoxAction;
 import com.android.messaging.privatebox.PrivateSettingManager;
 import com.android.messaging.privatebox.ui.addtolist.AddToListDialog;
@@ -111,6 +112,12 @@ public class PrivateConversationListActivity extends MultiSelectConversationList
         };
         HSGlobalNotificationCenter.addObserver(NOTIFICATION_KEY_MESSAGES_MOVE_START, mNotificationObserver);
         HSGlobalNotificationCenter.addObserver(NOTIFICATION_KEY_MESSAGES_MOVE_END, mNotificationObserver);
+    }
+
+    @Override
+    protected void onStart() {
+        AppPrivateLockManager.getInstance().checkLockStateAndSelfVerify();
+        super.onStart();
     }
 
     @Override

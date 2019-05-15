@@ -116,7 +116,7 @@ public class PrivateConversationListFragment extends Fragment
         super.onResume();
         if (mRecyclerView != null) {
             if (!mRecyclerView.canScrollVertically(-1)) {
-                if (HSConfig.optBoolean(true, "Application", "SMSAd", "SMSHomepageBannerAd")) {
+                if (HSConfig.optBoolean(true, "Application", "SMSAd", "SMSPrivateBoxBannerAd")) {
                     mShouldSwitchAd = false;
                     if (mExpressAdView != null) {
                         mExpressAdView.switchAd();
@@ -229,7 +229,7 @@ public class PrivateConversationListFragment extends Fragment
         ViewGroupCompat.setTransitionGroup(rootView, false);
 
         setHasOptionsMenu(true);
-        if (HSConfig.optBoolean(true, "Application", "SMSAd", "SMSHomepageBannerAd")) {
+        if (HSConfig.optBoolean(true, "Application", "SMSAd", "SMSPrivateBoxBannerAd ")) {
             initAd();
         }
         return rootView;
@@ -493,7 +493,7 @@ public class PrivateConversationListFragment extends Fragment
     }
 
     private void logAdChance() {
-        if (HSConfig.optBoolean(true, "Application", "SMSAd", "SMSHomepageBannerAd")) {
+        if (HSConfig.optBoolean(true, "Application", "SMSAd", "SMSPrivateBoxBannerAd")) {
             BugleAnalytics.logEvent("PrivateBox_BannerAd_Should_Show", true, false);
         }
     }

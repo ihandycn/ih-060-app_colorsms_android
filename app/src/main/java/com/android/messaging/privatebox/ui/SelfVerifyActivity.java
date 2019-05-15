@@ -8,10 +8,12 @@ import android.view.KeyEvent;
 import android.widget.TextView;
 
 import com.android.messaging.R;
+import com.android.messaging.privatebox.AppPrivateLockManager;
 import com.android.messaging.ui.UIIntents;
 import com.android.messaging.ui.UIIntentsImpl;
 import com.android.messaging.util.BugleAnalytics;
 import com.android.messaging.util.UiUtils;
+import com.ihs.app.framework.HSApplication;
 import com.superapps.util.Navigations;
 
 public class SelfVerifyActivity extends VerifyActivity {
@@ -21,6 +23,15 @@ public class SelfVerifyActivity extends VerifyActivity {
     public static final String ENTRANCE_NOTIFICATION = "Notification";
     public static final String ENTRANCE_MENU = "Menu";
     public static final String ENTRANCE_CREATE_ICON = "CreateIcon";
+    public static final String ENTRANCE_APPLICATION_STOP = "ApplicationStop";
+
+    private String mEntrance;
+
+    public static void startVerifyActivityForAppLocked() {
+        Intent intent = new Intent(HSApplication.getContext(), SelfVerifyActivity.class);
+        intent.putExtra(INTENT_KEY_ACTIVITY_ENTRANCE, ENTRANCE_APPLICATION_STOP);
+        Navigations.startActivitySafely(HSApplication.getContext(), intent);
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,9 +51,11 @@ public class SelfVerifyActivity extends VerifyActivity {
         BugleAnalytics.logEvent("PrivateBox_UnlockPage_Show", true,
                 "entrance", getIntent().getStringExtra(INTENT_KEY_ACTIVITY_ENTRANCE));
         Intent intent = getIntent();
-        if (intent.hasExtra(INTENT_KEY_ACTIVITY_ENTRANCE)
-                && intent.hasExtra(INTENT_KEY_ENTRANCE_CONVERSATION_ID)
-                && ENTRANCE_NOTIFICATION.equals(intent.getStringExtra(INTENT_KEY_ACTIVITY_ENTRANCE))) {
+        if (intent.hasExtra(INTENT_KEY_ACTIVITY_ENTRANCE)) {
+            mEntrance = intent.getStringExtra(INTENT_KEY_ACTIVITY_ENTRANCE);
+        }
+        if (intent.hasExtra(INTENT_KEY_ENTRANCE_CONVERSATION_ID)
+                && ENTRANCE_NOTIFICATION.equals(mEntrance)) {
             BugleAnalytics.logEvent("Notifications_Clicked_PrivateBox");
         }
     }
@@ -75,12 +88,12 @@ public class SelfVerifyActivity extends VerifyActivity {
     @Override
     protected void onUnlockSucceed() {
         super.onUnlockSucceed();
+        AppPrivateLockManager.getInstance().unlockAppLock();
         BugleAnalytics.logEvent("PrivateBox_UnlockPage_Unlock", true,
                 "entrance", getIntent().getStringExtra(INTENT_KEY_ACTIVITY_ENTRANCE));
         Intent intent = getIntent();
-        if (intent.hasExtra(INTENT_KEY_ACTIVITY_ENTRANCE)
-                && intent.hasExtra(INTENT_KEY_ENTRANCE_CONVERSATION_ID)
-                && ENTRANCE_NOTIFICATION.equals(intent.getStringExtra(INTENT_KEY_ACTIVITY_ENTRANCE))) {
+        if (intent.hasExtra(INTENT_KEY_ENTRANCE_CONVERSATION_ID)
+                && ENTRANCE_NOTIFICATION.equals(mEntrance)) {
             UIIntents.get().launchConversationListActivity(this);
             Navigations.startActivitySafely(this,
                     new Intent(this, PrivateConversationListActivity.class));
@@ -88,6 +101,8 @@ public class SelfVerifyActivity extends VerifyActivity {
                     this, intent.getStringExtra(INTENT_KEY_ENTRANCE_CONVERSATION_ID), null,
                     null,
                     false);
+        } else if (ENTRANCE_APPLICATION_STOP.equals(intent.getStringExtra(mEntrance))) {
+            //do nothing
         } else {
             Navigations.startActivitySafely(SelfVerifyActivity.this,
                     new Intent(SelfVerifyActivity.this, PrivateConversationListActivity.class));
@@ -106,7 +121,8 @@ public class SelfVerifyActivity extends VerifyActivity {
 
     @Override
     public void onBackPressed() {
-        if (ENTRANCE_NOTIFICATION.equals(getIntent().getStringExtra(INTENT_KEY_ACTIVITY_ENTRANCE))) {
+        if (ENTRANCE_NOTIFICATION.equals(mEntrance)
+                || ENTRANCE_APPLICATION_STOP.equals(mEntrance)) {
             UIIntentsImpl.get().launchConversationListActivity(this);
         }
         finish();

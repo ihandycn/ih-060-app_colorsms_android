@@ -171,6 +171,8 @@
 				</dict>
 				<key>SMSHomepageBannerAd</key>
 				<true/>
+				<key>SMSPrivateBoxBannerAd</key>
+                <true/>
 			</dict>
 			<key>SMSPopUps</key>
 			<dict>

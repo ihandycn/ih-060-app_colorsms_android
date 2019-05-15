@@ -9,6 +9,7 @@ import android.widget.TextView;
 import com.airbnb.lottie.LottieAnimationView;
 import com.android.messaging.BaseActivity;
 import com.android.messaging.R;
+import com.android.messaging.privatebox.AppPrivateLockManager;
 import com.android.messaging.privatebox.PrivateSettingManager;
 import com.android.messaging.ui.appsettings.SettingItemView;
 import com.android.messaging.util.BugleAnalytics;
@@ -44,6 +45,12 @@ public class HideTheIconActivity extends BaseActivity {
             mLottie.cancelAnimation();
         }
         super.onDestroy();
+    }
+
+    @Override
+    protected void onStart() {
+        AppPrivateLockManager.getInstance().checkLockStateAndSelfVerify();
+        super.onStart();
     }
 
     private void initItemViews() {

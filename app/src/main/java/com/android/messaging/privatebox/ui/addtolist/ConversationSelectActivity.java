@@ -17,6 +17,7 @@ import android.widget.TextView;
 import com.android.messaging.R;
 import com.android.messaging.datamodel.MessagingContentProvider;
 import com.android.messaging.datamodel.data.ConversationListItemData;
+import com.android.messaging.privatebox.AppPrivateLockManager;
 import com.android.messaging.privatebox.MoveConversationToPrivateBoxAction;
 import com.android.messaging.ui.BaseAlertDialog;
 import com.android.messaging.ui.customize.PrimaryColors;
@@ -142,6 +143,12 @@ public class ConversationSelectActivity extends HSAppCompatActivity
         mChoreographer.removeFrameCallback(mFrameCallback);
         HSGlobalNotificationCenter.removeObserver(mNotificationObserver);
         super.onDestroy();
+    }
+
+    @Override
+    protected void onStart() {
+        AppPrivateLockManager.getInstance().checkLockStateAndSelfVerify();
+        super.onStart();
     }
 
     @Override

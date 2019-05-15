@@ -8,6 +8,7 @@ import android.widget.TextView;
 
 import com.android.messaging.BaseActivity;
 import com.android.messaging.R;
+import com.android.messaging.privatebox.AppPrivateLockManager;
 import com.android.messaging.privatebox.PrivateSettingManager;
 import com.android.messaging.ui.appsettings.SettingItemView;
 import com.android.messaging.util.BugleAnalytics;
@@ -34,6 +35,12 @@ public class PrivateSettingActivity extends BaseActivity {
 
         initItemViews();
         BugleAnalytics.logEvent("PrivateBox_Settings_Show");
+    }
+
+    @Override
+    protected void onStart() {
+        AppPrivateLockManager.getInstance().checkLockStateAndSelfVerify();
+        super.onStart();
     }
 
     private void initItemViews() {

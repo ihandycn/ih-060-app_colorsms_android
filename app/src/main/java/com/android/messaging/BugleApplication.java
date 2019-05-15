@@ -39,6 +39,7 @@ import com.android.messaging.ad.AdPlacement;
 import com.android.messaging.datamodel.DataModel;
 import com.android.messaging.debug.BlockCanaryConfig;
 import com.android.messaging.debug.UploadLeakService;
+import com.android.messaging.privatebox.AppPrivateLockManager;
 import com.android.messaging.receiver.SmsReceiver;
 import com.android.messaging.sms.ApnDatabase;
 import com.android.messaging.sms.BugleApnSettingsLoader;
@@ -83,6 +84,7 @@ import com.squareup.leakcanary.ExcludedRefs;
 import com.squareup.leakcanary.LeakCanary;
 import com.superapps.broadcast.BroadcastCenter;
 import com.superapps.debug.SharedPreferencesOptimizer;
+import com.superapps.taskrunner.ParallelBackgroundTask;
 import com.superapps.taskrunner.SyncMainThreadTask;
 import com.superapps.taskrunner.Task;
 import com.superapps.taskrunner.TaskRunner;
@@ -247,7 +249,8 @@ public class BugleApplication extends HSApplication implements UncaughtException
                 HSGlobalNotificationCenter.addObserver(HSNotificationConstant.HS_CONFIG_LOAD_FINISHED, this);
                 HSGlobalNotificationCenter.addObserver(HSNotificationConstant.HS_CONFIG_CHANGED, this);
             }));
-
+            initWorks.add(new ParallelBackgroundTask("AppLockObserver", () ->
+                    AppPrivateLockManager.getInstance().startAppLockWatch()));
             TaskRunner.run(initWorks);
         } finally {
             TraceCompat.endSection();
@@ -632,5 +635,11 @@ public class BugleApplication extends HSApplication implements UncaughtException
                     "user_level", "" + HSConfig.optString("not_configured", "UserLevel"),
                     "version_code", "" + HSApplication.getCurrentLaunchInfo().appVersionCode);
         }
+    }
+
+    @Override
+    public void onTerminate() {
+        AppPrivateLockManager.getInstance().stopAppLockWatch();
+        super.onTerminate();
     }
 }

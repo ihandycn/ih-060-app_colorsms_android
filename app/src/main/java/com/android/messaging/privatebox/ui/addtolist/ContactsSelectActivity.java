@@ -13,6 +13,7 @@ import android.widget.TextView;
 
 import com.android.messaging.R;
 import com.android.messaging.privatebox.AddPrivateContactAction;
+import com.android.messaging.privatebox.AppPrivateLockManager;
 import com.android.messaging.privatebox.MoveConversationToPrivateBoxAction;
 import com.android.messaging.privatebox.PrivateContactsManager;
 import com.android.messaging.ui.BaseAlertDialog;
@@ -125,6 +126,12 @@ public class ContactsSelectActivity extends HSAppCompatActivity {
     protected void onDestroy() {
         HSGlobalNotificationCenter.removeObserver(mContactMoveObserver);
         super.onDestroy();
+    }
+
+    @Override
+    protected void onStart() {
+        AppPrivateLockManager.getInstance().checkLockStateAndSelfVerify();
+        super.onStart();
     }
 
     @Override
