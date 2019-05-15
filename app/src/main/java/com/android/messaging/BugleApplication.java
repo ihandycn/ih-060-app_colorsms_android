@@ -94,6 +94,7 @@ import net.appcloudbox.AcbAds;
 import net.appcloudbox.ads.expressad.AcbExpressAdManager;
 import net.appcloudbox.ads.interstitialad.AcbInterstitialAdManager;
 import net.appcloudbox.ads.nativead.AcbNativeAdManager;
+import net.appcloudbox.autopilot.AutopilotConfig;
 import net.appcloudbox.common.utils.AcbApplicationHelper;
 
 import java.io.File;
@@ -101,6 +102,7 @@ import java.lang.Thread.UncaughtExceptionHandler;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
@@ -223,6 +225,10 @@ public class BugleApplication extends HSApplication implements UncaughtException
                 }
             }));
 
+            initWorks.add(new SyncMainThreadTask("InitAutoPilot", () -> {
+                initAutopilot(this);
+            }));
+
             initWorks.add(new SyncMainThreadTask("InitFactoryImpl", this::initFactoryImpl));
 
             initWorks.add(new SyncMainThreadTask("Upgrade", () -> Upgrader.getUpgrader(this).upgrade()));
@@ -267,6 +273,12 @@ public class BugleApplication extends HSApplication implements UncaughtException
                 FabricUtils.logQueueEvent();
             });
         }
+    }
+
+    private void initAutopilot(HSApplication application) {
+        AutopilotConfig.initialize(application, "autopilot-topics.json");
+        AutopilotConfig.setAudienceProperty("device_language",
+                "english".equalsIgnoreCase(Locale.getDefault().getDisplayLanguage()) ? "english" : "non-english");
     }
 
     public static boolean isFabricInited() {
