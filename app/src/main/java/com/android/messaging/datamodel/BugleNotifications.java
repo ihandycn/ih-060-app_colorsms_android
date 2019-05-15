@@ -1214,6 +1214,16 @@ public class BugleNotifications {
         resetLastMessageDing(null);     // reset the ding timeout for all conversations
     }
 
+    public static void markAllPrivateMessagesAsSeen() {
+        MarkAsSeenAction.markAllPrivateAsSeen();
+        resetLastMessageDing(null);     // reset the ding timeout for all conversations
+    }
+
+    public static void markAllNormalMessagesAsSeen() {
+        MarkAsSeenAction.markAllNormalAsSeen();
+        resetLastMessageDing(null);
+    }
+
     /**
      * When we open a particular conversation, call this to mark all messages as read.
      */

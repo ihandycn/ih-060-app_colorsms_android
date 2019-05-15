@@ -136,7 +136,7 @@ public class PrivateConversationListFragment extends Fragment
         if (!mForwardMessageMode
                 && isScrolledToFirstConversation()
                 && getActivity().hasWindowFocus()) {
-            mListBinding.getData().setScrolledToNewestConversation(true);
+            mListBinding.getData().setScrolledToNewestPrivateConversation(true);
         }
     }
 
@@ -212,7 +212,7 @@ public class PrivateConversationListFragment extends Fragment
                 if (isFirstConversationVisible) {
                     setScrolledToNewestConversationIfNeeded();
                 } else {
-                    mListBinding.getData().setScrolledToNewestConversation(false);
+                    mListBinding.getData().setScrolledToNewestPrivateConversation(false);
                 }
             }
 
@@ -266,7 +266,7 @@ public class PrivateConversationListFragment extends Fragment
     public void onPause() {
         super.onPause();
         mListState = mRecyclerView.getLayoutManager().onSaveInstanceState();
-        mListBinding.getData().setScrolledToNewestConversation(false);
+        mListBinding.getData().setScrolledToNewestPrivateConversation(false);
         mShouldSwitchAd = true;
     }
 

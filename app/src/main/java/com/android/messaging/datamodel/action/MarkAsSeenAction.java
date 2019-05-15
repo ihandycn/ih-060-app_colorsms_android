@@ -17,17 +17,24 @@
 package com.android.messaging.datamodel.action;
 
 import android.content.ContentValues;
+import android.database.Cursor;
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.text.TextUtils;
 
+import com.android.messaging.datamodel.BugleDatabaseOperations;
 import com.android.messaging.datamodel.BugleNotifications;
 import com.android.messaging.datamodel.DataModel;
 import com.android.messaging.datamodel.DatabaseHelper;
 import com.android.messaging.datamodel.DatabaseHelper.MessageColumns;
 import com.android.messaging.datamodel.DatabaseWrapper;
 import com.android.messaging.datamodel.MessagingContentProvider;
+import com.android.messaging.privatebox.PrivateContactsManager;
+import com.android.messaging.privatebox.PrivateMessageManager;
 import com.android.messaging.util.LogUtil;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Action used to mark all messages as seen
@@ -35,12 +42,26 @@ import com.android.messaging.util.LogUtil;
 public class MarkAsSeenAction extends Action implements Parcelable {
     private static final String TAG = LogUtil.BUGLE_DATAMODEL_TAG;
     private static final String KEY_CONVERSATION_ID = "conversation_id";
+    private static final String KEY_JUST_PRIVATE_CONVERSATIONS = "just_move_private_conversation";
+    private static final String KEY_JUST_NORMAL_CONVERSATIONS = "just_move_normal_conversation";
 
     /**
      * Mark all messages as seen.
      */
     public static void markAllAsSeen() {
         final MarkAsSeenAction action = new MarkAsSeenAction((String) null/*conversationId*/);
+        action.start();
+    }
+
+    public static void markAllPrivateAsSeen() {
+        final MarkAsSeenAction action = new MarkAsSeenAction((String) null/*conversationId*/);
+        action.actionParameters.putBoolean(KEY_JUST_PRIVATE_CONVERSATIONS, true);
+        action.start();
+    }
+
+    public static void markAllNormalAsSeen() {
+        final MarkAsSeenAction action = new MarkAsSeenAction((String) null/*conversationId*/);
+        action.actionParameters.putBoolean(KEY_JUST_NORMAL_CONVERSATIONS, true);
         action.start();
     }
 
@@ -54,8 +75,9 @@ public class MarkAsSeenAction extends Action implements Parcelable {
 
     /**
      * ctor for MarkAsSeenAction.
+     *
      * @param conversationId the conversation id for which to mark as seen, or null to mark all
-     *        messages as seen
+     *                       messages as seen
      */
     public MarkAsSeenAction(final String conversationId) {
         actionParameters.putString(KEY_CONVERSATION_ID, conversationId);
@@ -83,13 +105,85 @@ public class MarkAsSeenAction extends Action implements Parcelable {
                 final int count = db.update(DatabaseHelper.MESSAGES_TABLE, values,
                         MessageColumns.SEEN + " != 1 AND " +
                                 MessageColumns.CONVERSATION_ID + "=?",
-                        new String[] { conversationId });
+                        new String[]{conversationId});
                 if (count > 0) {
                     MessagingContentProvider.notifyMessagesChanged(conversationId);
                 }
             } else {
-                db.update(DatabaseHelper.MESSAGES_TABLE, values,
-                        MessageColumns.SEEN + " != 1", null/*selectionArgs*/);
+                if (actionParameters.containsKey(KEY_JUST_PRIVATE_CONVERSATIONS)) {
+                    Cursor cursor = db.query(DatabaseHelper.MESSAGES_TABLE,
+                            new String[]{MessageColumns.CONVERSATION_ID},
+                            MessageColumns.SEEN + " != 1 ", null,
+                            MessageColumns.CONVERSATION_ID, null, null);
+                    if (cursor != null) {
+                        List<String> list = new ArrayList<>();
+                        while (cursor.moveToNext()) {
+                            String covId = cursor.getString(0);
+                            List<String> recipients = BugleDatabaseOperations.getRecipientsForConversation(db, covId);
+                            boolean isPrivate = PrivateContactsManager.getInstance().isPrivateRecipient(recipients);
+                            if (isPrivate) {
+                                list.add(covId);
+                            }
+                        }
+                        cursor.close();
+                        StringBuilder sb = new StringBuilder();
+                        if (list.size() > 0) {
+                            for (String covId : list) {
+                                if (sb.length() > 0) {
+                                    sb.append(",");
+                                }
+                                sb.append(covId);
+                            }
+
+                            int count = db.update(DatabaseHelper.MESSAGES_TABLE, values,
+                                    MessageColumns.SEEN + "!= 1 AND "
+                                            + MessageColumns.CONVERSATION_ID + " IN (" +
+                                            sb.toString() + ")",
+                                    null);
+                            if (count > 0) {
+                                MessagingContentProvider.notifyMessagesChanged(conversationId);
+                            }
+                        }
+                    }
+                } else if (actionParameters.containsKey(KEY_JUST_NORMAL_CONVERSATIONS)) {
+                    Cursor cursor = db.query(DatabaseHelper.MESSAGES_TABLE,
+                            new String[]{MessageColumns.CONVERSATION_ID},
+                            MessageColumns.SEEN + " != 1 ", null,
+                            MessageColumns.CONVERSATION_ID, null, null);
+                    if (cursor != null) {
+                        List<String> list = new ArrayList<>();
+                        while (cursor.moveToNext()) {
+                            String covId = cursor.getString(0);
+                            List<String> recipients = BugleDatabaseOperations.getRecipientsForConversation(db, covId);
+                            boolean isPrivate = PrivateContactsManager.getInstance().isPrivateRecipient(recipients);
+                            if (isPrivate) {
+                                list.add(covId);
+                            }
+                        }
+                        cursor.close();
+                        StringBuilder sb = new StringBuilder();
+                        if (list.size() > 0) {
+                            for (String covId : list) {
+                                if (sb.length() > 0) {
+                                    sb.append(",");
+                                }
+                                sb.append(covId);
+                            }
+
+                            int count = db.update(DatabaseHelper.MESSAGES_TABLE, values,
+                                    MessageColumns.SEEN + " != 1 AND "
+                                            + MessageColumns.CONVERSATION_ID + " NOT IN (" +
+                                            sb.toString() + ")",
+                                    null);
+                            if (count > 0) {
+                                MessagingContentProvider.notifyMessagesChanged(conversationId);
+                            }
+                        }
+                    }
+                } else {
+                    db.update(DatabaseHelper.MESSAGES_TABLE, values,
+                            MessageColumns.SEEN + " != 1", null/*selectionArgs*/);
+                }
             }
 
             db.setTransactionSuccessful();

@@ -51,6 +51,7 @@ import com.android.messaging.datamodel.data.SmsShowListData;
 import com.android.messaging.datamodel.data.SmsShowListItemData;
 import com.android.messaging.datamodel.data.SubscriptionListData;
 import com.android.messaging.datamodel.data.VCardContactItemData;
+import com.android.messaging.privatebox.PrivateMessageManager;
 import com.android.messaging.util.Assert.DoesNotRunOnMainThread;
 import com.android.messaging.util.ConnectivityUtil;
 
@@ -59,6 +60,7 @@ import java.util.HashSet;
 public abstract class DataModel {
     private String mFocusedConversation;
     private boolean mConversationListScrolledToNewestConversation;
+    private boolean mPrivateConversationListScrolledToNewestConversation;
 
     public static DataModel get() {
         return Factory.get().getDataModel();
@@ -149,12 +151,25 @@ public abstract class DataModel {
         return mConversationListScrolledToNewestConversation;
     }
 
+    public void setPrivateConversationListScrolledToNewestConversation(
+            final boolean scrolledToNewestConversation) {
+        mPrivateConversationListScrolledToNewestConversation = scrolledToNewestConversation;
+    }
+
+    public boolean isPrivateConversationListScrolledToNewestConversation() {
+        return mPrivateConversationListScrolledToNewestConversation;
+    }
+
     /**
      * If a new message is received in the specified conversation, will the user be able to
      * observe it in some UI within the app?
      * @param conversationId conversation with the new incoming message
      */
     public boolean isNewMessageObservable(final String conversationId) {
+        if (PrivateMessageManager.getInstance().isPrivateConversationId(conversationId)) {
+            return isPrivateConversationListScrolledToNewestConversation()
+                    || isFocusedConversation(conversationId);
+        }
         return isConversationListScrolledToNewestConversation()
                 || isFocusedConversation(conversationId);
     }
