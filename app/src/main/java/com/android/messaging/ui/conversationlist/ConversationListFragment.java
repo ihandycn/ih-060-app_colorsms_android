@@ -390,7 +390,7 @@ public class ConversationListFragment extends Fragment implements ConversationLi
                             View adRoot = expressAdView.findViewById(R.id.ad_root);
                             adRoot.setBackgroundColor(Color.parseColor(ThemeInfo.getThemeInfo(ThemeUtils.getCurrentThemeName()).bannerAdBgColor));
                             TextView action = expressAdView.findViewById(R.id.banner_action);
-                            action.setTextColor(Color.parseColor(ThemeInfo.getThemeInfo(ThemeUtils.getCurrentThemeName()).bannerAdActionColor));
+                            action.setTextColor(Color.parseColor(ThemeInfo.getThemeInfo(ThemeUtils.getCurrentThemeName()).bannerAdActionTextColor));
                             Drawable actionBg = getResources().getDrawable(R.drawable.conversation_list_ad_action_pressed_bg);
                             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                                 ((LayerDrawable) actionBg).getDrawable(1)

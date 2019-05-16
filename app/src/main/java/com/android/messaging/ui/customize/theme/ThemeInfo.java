@@ -57,6 +57,8 @@ public class ThemeInfo {
 
     public String bannerAdActionColor;
 
+    public String bannerAdActionTextColor;
+
     public static ThemeInfo ofConfig(String name, Map<String, ?> themeConfig) {
         ThemeInfo themeInfo = new ThemeInfo();
 
@@ -83,6 +85,7 @@ public class ThemeInfo {
         themeInfo.fontName = (String) themeConfig.get("FontName");
         themeInfo.bannerAdBgColor = (String) themeConfig.get("BannerAdBgColor");
         themeInfo.bannerAdActionColor = (String) themeConfig.get("BannerAdActionColor");
+        themeInfo.bannerAdActionTextColor = (String) themeConfig.get("BannerAdActionTextColor");
 
         return themeInfo;
     }
