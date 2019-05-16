@@ -769,7 +769,7 @@ public class ConversationFragment extends Fragment implements ConversationDataLi
             }
         }
         if (HSConfig.optBoolean(true, "Application", "SMSAd", "SMSHomepageBannerAd")) {
-            AcbExpressAdManager.preload(1, AdPlacement.AD_BANNER);
+            AcbNativeAdManager.preload(1, AdPlacement.AD_BANNER);
         }
         return view;
     }
