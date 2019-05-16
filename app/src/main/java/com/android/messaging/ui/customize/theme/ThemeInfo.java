@@ -1,7 +1,5 @@
 package com.android.messaging.ui.customize.theme;
 
-import android.support.annotation.DrawableRes;
-
 import com.ihs.commons.config.HSConfig;
 
 import java.util.ArrayList;
@@ -55,8 +53,9 @@ public class ThemeInfo {
 
     public String fontName;
 
-    @DrawableRes
-    public int drawableRes;
+    public String bannerAdBgColor;
+
+    public String bannerAdActionColor;
 
     public static ThemeInfo ofConfig(String name, Map<String, ?> themeConfig) {
         ThemeInfo themeInfo = new ThemeInfo();
@@ -82,6 +81,8 @@ public class ThemeInfo {
         themeInfo.bubbleAdColor = (String) themeConfig.get("BubbleAdColor");
         themeInfo.fontUrl = (String) themeConfig.get("FontUrl");
         themeInfo.fontName = (String) themeConfig.get("FontName");
+        themeInfo.bannerAdBgColor = (String) themeConfig.get("BannerAdBgColor");
+        themeInfo.bannerAdActionColor = (String) themeConfig.get("BannerAdActionColor");
 
         return themeInfo;
     }

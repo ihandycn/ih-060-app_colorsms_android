@@ -171,6 +171,8 @@
 				</dict>
 				<key>SMSHomepageBannerAd</key>
 				<true/>
+				<key>SMSHomepageBannerAdFacebookEnabled</key>
+				<true/>
 			</dict>
 			<key>SMSPopUps</key>
 			<dict>
@@ -312,6 +314,10 @@
 					<string>#00000000</string>
 					<key>OutgoingBubbleTextColor</key>
 					<string>#000000</string>
+					<key>BannerAdBgColor</key>
+					<string>#b3ffffff</string>
+					<key>BannerAdActionColor</key>
+					<string>#80000000</string>
 					<key>PreviewUrl</key>
 					<string>assets://themes/cutegraffiti/image_cutegraffiti_theme.jpg</string>
 					<key>ThemeColor</key>
@@ -327,6 +333,10 @@
 					<string>assets://themes/coolgraffiti/avatar.png</string>
 					<key>AvatarForegroundColor</key>
 					<string>#ffffff</string>
+					<key>BannerAdBgColor</key>
+					<string>#40ffffff</string>
+					<key>BannerAdActionColor</key>
+					<string>#ffd0c2c0</string>
 					<key>BubbleAdColor</key>
 					<string>#e3187b</string>
 					<key>BubbleIncomingUrl</key>
@@ -370,6 +380,10 @@
 					<string>assets://themes/starry/avatar.png</string>
 					<key>AvatarForegroundColor</key>
 					<string>#ffffff</string>
+					<key>BannerAdBgColor</key>
+					<string>#40000000</string>
+					<key>BannerAdActionColor</key>
+					<string>#80ffffff</string>
 					<key>BubbleAdColor</key>
 					<string>#e3187b</string>
 					<key>BubbleIncomingUrl</key>
@@ -413,6 +427,10 @@
 					<string>assets://themes/unicorn/avatar.png</string>
 					<key>AvatarForegroundColor</key>
 					<string>#fc85d1</string>
+					<key>BannerAdBgColor</key>
+					<string>#26000000</string>
+					<key>BannerAdActionColor</key>
+					<string>#ffffffff</string>
 					<key>BubbleAdColor</key>
 					<string>#e3187b</string>
 					<key>BubbleIncomingUrl</key>
@@ -456,6 +474,10 @@
 					<string>#ffffff</string>
 					<key>AvatarUrl</key>
 					<string>assets://themes/technology/avatar.png</string>
+					<key>BannerAdBgColor</key>
+					<string>#33ffffff</string>
+					<key>BannerAdActionColor</key>
+					<string>#ff8298d0</string>
 					<key>BubbleAdColor</key>
 					<string>#e3187b</string>
 					<key>BubbleIncomingUrl</key>
@@ -499,6 +521,10 @@
 					<string>#ffffff</string>
 					<key>AvatarUrl</key>
 					<string>assets://themes/goldendiamond/avatar.png</string>
+					<key>BannerAdBgColor</key>
+					<string>#80ffffff</string>
+					<key>BannerAdActionColor</key>
+					<string>#80764815</string>
 					<key>BubbleAdColor</key>
 					<string>#e3187b</string>
 					<key>BubbleIncomingUrl</key>
@@ -542,6 +568,10 @@
 					<string>#ffffff</string>
 					<key>AvatarUrl</key>
 					<string>assets://themes/default/avatar.png</string>
+					<key>BannerAdBgColor</key>
+					<string>#0dff0000</string>
+					<key>BannerAdActionColor</key>
+					<string>#ff2fa0ff</string>
 					<key>BubbleAdColor</key>
 					<string>#2caef8</string>
 					<key>BubbleIncomingUrl</key>
@@ -585,6 +615,10 @@
 					<string>#ffffff</string>
 					<key>AvatarUrl</key>
 					<string>assets://themes/diamond/avatar.png</string>
+					<key>BannerAdBgColor</key>
+					<string>#33000000</string>
+					<key>BannerAdActionColor</key>
+					<string>#80ffffff</string>
 					<key>BubbleAdColor</key>
 					<string>#e3187b</string>
 					<key>BubbleIncomingUrl</key>
@@ -628,6 +662,10 @@
 					<string>#ffffff</string>
 					<key>AvatarUrl</key>
 					<string>assets://themes/neon/avatar.png</string>
+					<key>BannerAdBgColor</key>
+					<string>#40ffffff</string>
+					<key>BannerAdActionColor</key>
+					<string>#80ffffff</string>
 					<key>BubbleAdColor</key>
 					<string>#42d9ff</string>
 					<key>BubbleIncomingUrl</key>
@@ -671,6 +709,10 @@
 					<string>#ffffff</string>
 					<key>AvatarUrl</key>
 					<string>assets://themes/simplebusiness/avatar.png</string>
+					<key>BannerAdBgColor</key>
+					<string>#ccffffff</string>
+					<key>BannerAdActionColor</key>
+					<string>#2caef8</string>
 					<key>BubbleAdColor</key>
 					<string>#2caef8</string>
 					<key>BubbleIncomingUrl</key>
@@ -714,6 +756,10 @@
 					<string>#ffffff</string>
 					<key>AvatarUrl</key>
 					<string>assets://themes/waterdrop/avatar.png</string>
+					<key>BannerAdBgColor</key>
+					<string>#33000000</string>
+					<key>BannerAdActionColor</key>
+					<string>#80ffffff</string>
 					<key>BubbleAdColor</key>
 					<string>#ffffff</string>
 					<key>BubbleIncomingUrl</key>
