@@ -5,7 +5,6 @@ import android.app.Fragment;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Color;
-import android.graphics.PorterDuff;
 import android.graphics.Rect;
 import android.net.Uri;
 import android.os.Bundle;
@@ -18,16 +17,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
 import android.widget.ImageView;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.android.messaging.R;
-import com.android.messaging.ad.AdPlacement;
 import com.android.messaging.annotation.VisibleForAnimation;
 import com.android.messaging.datamodel.DataModel;
 import com.android.messaging.datamodel.binding.Binding;
 import com.android.messaging.datamodel.binding.BindingBase;
-import com.android.messaging.datamodel.data.AdItemData;
 import com.android.messaging.datamodel.data.ConversationListData;
 import com.android.messaging.datamodel.data.ConversationListData.ConversationListDataListener;
 import com.android.messaging.datamodel.data.ConversationListItemData;
@@ -43,21 +39,12 @@ import com.android.messaging.ui.customize.PrimaryColors;
 import com.android.messaging.ui.customize.WallpaperDrawables;
 import com.android.messaging.util.Assert;
 import com.android.messaging.util.BugleAnalytics;
-import com.android.messaging.util.HierarchyTreeChangeListener;
 import com.android.messaging.util.ImeUtil;
 import com.android.messaging.util.UiUtils;
 import com.google.common.annotations.VisibleForTesting;
-import com.ihs.app.framework.HSApplication;
-import com.ihs.commons.config.HSConfig;
 import com.superapps.util.BackgroundDrawables;
 import com.superapps.util.Dimensions;
 import com.superapps.util.Navigations;
-import com.superapps.util.Threads;
-
-import net.appcloudbox.ads.base.ContainerView.AcbContentLayout;
-import net.appcloudbox.ads.base.ContainerView.AcbNativeAdContainerView;
-import net.appcloudbox.ads.common.utils.AcbError;
-import net.appcloudbox.ads.expressad.AcbExpressAdView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -85,11 +72,7 @@ public class PrivateConversationListFragment extends Fragment
     private RecyclerView mRecyclerView;
     private View mEmptyListMessageView;
     private ConversationListAdapter mAdapter;
-    private ViewGroup mAdContainer;
-    private AcbExpressAdView mExpressAdView;
     private LinearLayoutManager mLayoutManager;
-    private boolean mShouldSwitchAd;
-    private boolean mAdFirstPrepared = true;
     private boolean mIsConversationListEmpty = true;
 
     // Saved Instance State Data - only for temporal data which is nice to maintain but not
@@ -114,22 +97,9 @@ public class PrivateConversationListFragment extends Fragment
     @Override
     public void onResume() {
         super.onResume();
-        if (mRecyclerView != null) {
-            if (!mRecyclerView.canScrollVertically(-1)) {
-                if (HSConfig.optBoolean(true, "Application", "SMSAd", "SMSPrivateBoxBannerAd")) {
-                    mShouldSwitchAd = false;
-                    if (mExpressAdView != null) {
-                        mExpressAdView.switchAd();
-                    }
-                }
-            }
-        }
         Assert.notNull(mHost);
         setScrolledToNewestConversationIfNeeded();
         updateUi();
-        if (!mAdFirstPrepared) {
-            prepareAd();
-        }
     }
 
     public void setScrolledToNewestConversationIfNeeded() {
@@ -154,10 +124,6 @@ public class PrivateConversationListFragment extends Fragment
         super.onDestroy();
         mListBinding.unbind();
         mHost = null;
-        if (mExpressAdView != null) {
-            mExpressAdView.destroy();
-            mExpressAdView = null;
-        }
     }
 
     public boolean isConversationListEmpty() {
@@ -201,13 +167,6 @@ public class PrivateConversationListFragment extends Fragment
                     ImeUtil.get().hideImeKeyboard(getActivity(), mRecyclerView);
                 }
 
-                if (!isFirstConversationVisible && isScrolledToFirstConversation()) {
-                    if (mExpressAdView != null && mShouldSwitchAd) {
-                        mExpressAdView.switchAd();
-                        mShouldSwitchAd = false;
-                    }
-                }
-
                 isFirstConversationVisible = isScrolledToFirstConversation();
                 if (isFirstConversationVisible) {
                     setScrolledToNewestConversationIfNeeded();
@@ -229,9 +188,6 @@ public class PrivateConversationListFragment extends Fragment
         ViewGroupCompat.setTransitionGroup(rootView, false);
 
         setHasOptionsMenu(true);
-        if (HSConfig.optBoolean(false, "Application", "SMSAd", "SMSPrivateBoxBannerAd ")) {
-            initAd();
-        }
         return rootView;
     }
 
@@ -267,7 +223,6 @@ public class PrivateConversationListFragment extends Fragment
         super.onPause();
         mListState = mRecyclerView.getLayoutManager().onSaveInstanceState();
         mListBinding.getData().setScrolledToNewestPrivateConversation(false);
-        mShouldSwitchAd = true;
     }
 
     /**
@@ -294,16 +249,7 @@ public class PrivateConversationListFragment extends Fragment
         }
 
         mIsConversationListEmpty = (dataList.size() <= 0);
-
-        if (dataList.size() > 0 && mAdapter.hasHeader()) {
-            dataList.add(0, new AdItemData());
-        }
         mAdapter.setDataList(dataList);
-        if (mAdFirstPrepared && !dataList.isEmpty()) {
-            if (HSConfig.optBoolean(false, "Application", "SMSAd", "SMSPrivateBoxBannerAd ")) {
-                prepareAd();
-            }
-        }
         updateEmptyListUi(dataList.isEmpty());
     }
 
@@ -345,91 +291,7 @@ public class PrivateConversationListFragment extends Fragment
         return null;
     }
 
-    private void initAd() {
-        mAdContainer = (ViewGroup) LayoutInflater.from(getActivity()).inflate(R.layout.conversation_list_header, mRecyclerView, false);
-        mExpressAdView = new AcbExpressAdView(HSApplication.getContext(), AdPlacement.AD_BANNER);
-        mExpressAdView.setCustomLayout(new AcbContentLayout(R.layout.item_conversation_list_ad)
-                .setActionId(R.id.banner_action)
-                .setIconId(R.id.banner_icon_image)
-                .setTitleId(R.id.banner_title)
-                .setDescriptionId(R.id.banner_des)
-        );
-        mExpressAdView.setAutoSwitchAd(AcbExpressAdView.AutoSwitchAd_None);
 
-        mExpressAdView.setOnHierarchyChangeListener(HierarchyTreeChangeListener.wrap(new ViewGroup.OnHierarchyChangeListener() {
-            @Override
-            public void onChildViewAdded(View parent, View child) {
-                try {
-                    if (child instanceof RelativeLayout
-                            && ((RelativeLayout) child).getChildCount() == 1
-                            && ((RelativeLayout) child).getChildAt(0) instanceof AcbNativeAdContainerView) {
-                        AcbNativeAdContainerView nativeAdContainerView = (AcbNativeAdContainerView) ((RelativeLayout) child).getChildAt(0);
-                        nativeAdContainerView.getChildAt(1).setVisibility(View.GONE);
-                        ImageView ivAdPreview = mExpressAdView.findViewById(R.id.icon_ad_preview);
-                        ivAdPreview.getDrawable().setColorFilter(ConversationColors.get().getListTimeColor(), PorterDuff.Mode.SRC_ATOP);
-                    }
-                } catch (Exception e) {
-                }
-
-                Threads.postOnMainThread(() -> {
-                    try {
-                        TextView title = mExpressAdView.findViewById(R.id.banner_title);
-                        title.setTextColor(ConversationColors.get().getListTitleColor());
-                        TextView subtitle = mExpressAdView.findViewById(R.id.banner_des);
-                        subtitle.setTextColor(ConversationColors.get().getListSubtitleColor());
-                    } catch (Exception e) {
-                    }
-                });
-            }
-
-            @Override
-            public void onChildViewRemoved(View parent, View child) {
-
-            }
-        }));
-        mExpressAdView.setExpressAdViewListener(new AcbExpressAdView.AcbExpressAdViewListener() {
-            @Override
-            public void onAdShown(AcbExpressAdView acbExpressAdView) {
-                if (!mIsConversationListEmpty) {
-                    BugleAnalytics.logEvent("PrivateBox_BannerAd_Show", true, false);
-                }
-            }
-
-            @Override
-            public void onAdClicked(AcbExpressAdView acbExpressAdView) {
-                BugleAnalytics.logEvent("PrivateBox_BannerAd_Click", true, false);
-            }
-        });
-        mAdContainer.addView(mExpressAdView);
-
-    }
-
-    private void prepareAd() {
-        if (!mIsConversationListEmpty) {
-            logAdChance();
-        }
-
-        if (mExpressAdView == null) {
-            return;
-        }
-        mExpressAdView.prepareAd(new AcbExpressAdView.PrepareAdListener() {
-            @Override
-            public void onAdReady(AcbExpressAdView acbExpressAdView) {
-                if (!mAdapter.hasHeader()) {
-                    mAdapter.setHeader(mAdContainer);
-                    if (mLayoutManager.findFirstCompletelyVisibleItemPosition() == 0) {
-                        mRecyclerView.scrollToPosition(0);
-                    }
-                }
-            }
-
-            @Override
-            public void onPrepareAdFailed(AcbExpressAdView acbExpressAdView, AcbError acbError) {
-
-            }
-        });
-        mAdFirstPrepared = false;
-    }
 
     // Show and hide empty list UI as needed with appropriate text based on view specifics
     private void updateEmptyListUi(final boolean isEmpty) {
@@ -492,11 +354,5 @@ public class PrivateConversationListFragment extends Fragment
     @Override
     public boolean isSelectionMode() {
         return mHost != null && mHost.isSelectionMode();
-    }
-
-    private void logAdChance() {
-        if (HSConfig.optBoolean(true, "Application", "SMSAd", "SMSPrivateBoxBannerAd")) {
-            BugleAnalytics.logEvent("PrivateBox_BannerAd_Should_Show", true, false);
-        }
     }
 }
