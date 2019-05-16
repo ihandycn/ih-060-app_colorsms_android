@@ -95,6 +95,7 @@ import net.appcloudbox.ads.expressad.AcbExpressAdManager;
 import net.appcloudbox.ads.interstitialad.AcbInterstitialAdManager;
 import net.appcloudbox.ads.nativead.AcbNativeAdManager;
 import net.appcloudbox.autopilot.AutopilotConfig;
+import net.appcloudbox.common.analytics.publisher.AcbPublisherMgr;
 import net.appcloudbox.common.utils.AcbApplicationHelper;
 
 import java.io.File;
@@ -375,9 +376,10 @@ public class BugleApplication extends HSApplication implements UncaughtException
     }
 
     private void recordInstallType() {
-        HSPublisherMgr.PublisherData data = HSPublisherMgr.getPublisherData(BugleApplication.this);
+        AcbPublisherMgr.PublisherData data = AcbPublisherMgr.getPublisherData(BugleApplication.this);
         BugleAnalytics.logUserProperty("MediaSource", data.getMediaSource());
         BugleAnalytics.logUserProperty("Compaign", data.getCampaign());
+        BugleAnalytics.logUserProperty("Channel", data.getAfChannel());
 
         Map<String, String> parameters = new HashMap<>();
         String installType = data.getInstallMode().name();
@@ -390,12 +392,15 @@ public class BugleApplication extends HSApplication implements UncaughtException
         BugleAnalytics.logEvent("install_type", false, parameters);
 
         Threads.postOnMainThreadDelayed(() -> {
+            AcbPublisherMgr.PublisherData publisherData = AcbPublisherMgr.getPublisherData(BugleApplication.this);
+            BugleAnalytics.logUserProperty("MediaSource", publisherData.getMediaSource());
+            BugleAnalytics.logUserProperty("Compaign", publisherData.getCampaign());
+            BugleAnalytics.logUserProperty("Channel", publisherData.getAfChannel());
             BugleAnalytics.logEvent("Agency_Info", false,
                     "install_type", installType,
-                    "campaign_id", "" + data.getCampaignID(),
+                    "campaign_id", "" + publisherData.getCampaignID(),
+                    "campaign", "" + publisherData.getCampaign(),
                     "user_level", "" + HSConfig.optString("not_configured", "UserLevel"));
-            BugleAnalytics.logUserProperty("MediaSource", data.getMediaSource());
-            BugleAnalytics.logUserProperty("Compaign", data.getCampaign());
         }, 10 * 1000L);
 
         if (CommonUtils.isNewUser()) {
