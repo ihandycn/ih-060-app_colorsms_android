@@ -229,7 +229,7 @@ public class PrivateConversationListFragment extends Fragment
         ViewGroupCompat.setTransitionGroup(rootView, false);
 
         setHasOptionsMenu(true);
-        if (HSConfig.optBoolean(true, "Application", "SMSAd", "SMSPrivateBoxBannerAd ")) {
+        if (HSConfig.optBoolean(false, "Application", "SMSAd", "SMSPrivateBoxBannerAd ")) {
             initAd();
         }
         return rootView;
@@ -300,7 +300,9 @@ public class PrivateConversationListFragment extends Fragment
         }
         mAdapter.setDataList(dataList);
         if (mAdFirstPrepared && !dataList.isEmpty()) {
-            prepareAd();
+            if (HSConfig.optBoolean(false, "Application", "SMSAd", "SMSPrivateBoxBannerAd ")) {
+                prepareAd();
+            }
         }
         updateEmptyListUi(dataList.isEmpty());
     }
