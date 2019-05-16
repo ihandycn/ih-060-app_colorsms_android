@@ -110,6 +110,7 @@ public class PrivateBoxSetPasswordActivity extends BaseActivity implements View.
                     intent.putExtra(INTENT_KER_PASSWORD_STATUS, SET_PASSWORD);
                 }
 
+                AppPrivateLockManager.getInstance().unlockAppLock();
                 onPasswordSetSucceed();
                 setResult(RESULT_OK, intent);
                 finish();
