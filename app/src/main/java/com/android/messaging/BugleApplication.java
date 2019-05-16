@@ -376,6 +376,8 @@ public class BugleApplication extends HSApplication implements UncaughtException
 
     private void recordInstallType() {
         HSPublisherMgr.PublisherData data = HSPublisherMgr.getPublisherData(BugleApplication.this);
+        BugleAnalytics.logUserProperty("MediaSource", data.getMediaSource());
+        BugleAnalytics.logUserProperty("Compaign", data.getCampaign());
 
         Map<String, String> parameters = new HashMap<>();
         String installType = data.getInstallMode().name();
@@ -387,7 +389,14 @@ public class BugleApplication extends HSApplication implements UncaughtException
         parameters.put("publisher_debug_info", debugInfo);
         BugleAnalytics.logEvent("install_type", false, parameters);
 
-        Threads.postOnMainThreadDelayed(() -> BugleAnalytics.logEvent("Agency_Info", false, "install_type", installType, "campaign_id", "" + data.getCampaignID(), "user_level", "" + HSConfig.optString("not_configured", "UserLevel")), 10 * 1000L);
+        Threads.postOnMainThreadDelayed(() -> {
+            BugleAnalytics.logEvent("Agency_Info", false,
+                    "install_type", installType,
+                    "campaign_id", "" + data.getCampaignID(),
+                    "user_level", "" + HSConfig.optString("not_configured", "UserLevel"));
+            BugleAnalytics.logUserProperty("MediaSource", data.getMediaSource());
+            BugleAnalytics.logUserProperty("Compaign", data.getCampaign());
+        }, 10 * 1000L);
 
         if (CommonUtils.isNewUser()) {
             Preferences.getDefault().doOnce(() -> {
