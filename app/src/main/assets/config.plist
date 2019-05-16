@@ -172,7 +172,7 @@
 				<key>SMSHomepageBannerAd</key>
 				<true/>
 				<key>SMSPrivateBoxBannerAd</key>
-                <true/>
+				<false/>
 			</dict>
 			<key>SMSPopUps</key>
 			<dict>
