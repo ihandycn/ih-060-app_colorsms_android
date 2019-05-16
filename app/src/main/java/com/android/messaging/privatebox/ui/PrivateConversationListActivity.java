@@ -53,6 +53,7 @@ public class PrivateConversationListActivity extends MultiSelectConversationList
     private Choreographer.FrameCallback mFrameCallback;
     private INotificationObserver mNotificationObserver;
     private boolean mHasTheme;
+    private boolean mIsActivityFirstStart = true;
 
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
@@ -116,7 +117,10 @@ public class PrivateConversationListActivity extends MultiSelectConversationList
 
     @Override
     protected void onStart() {
-        AppPrivateLockManager.getInstance().checkLockStateAndSelfVerify();
+        if (!mIsActivityFirstStart) {
+            AppPrivateLockManager.getInstance().checkLockStateAndSelfVerify();
+        }
+        mIsActivityFirstStart = false;
         super.onStart();
     }
 
