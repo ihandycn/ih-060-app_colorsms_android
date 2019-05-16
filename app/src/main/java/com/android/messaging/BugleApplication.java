@@ -102,7 +102,6 @@ import java.lang.Thread.UncaughtExceptionHandler;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
@@ -277,8 +276,8 @@ public class BugleApplication extends HSApplication implements UncaughtException
 
     private void initAutopilot(HSApplication application) {
         AutopilotConfig.initialize(application, "autopilot-topics.json");
-        AutopilotConfig.setAudienceProperty("device_language",
-                "english".equalsIgnoreCase(Locale.getDefault().getDisplayLanguage()) ? "english" : "non-english");
+//        AutopilotConfig.setAudienceProperty("device_language",
+//                "english".equalsIgnoreCase(Locale.getDefault().getDisplayLanguage()) ? "english" : "non-english");
     }
 
     public static boolean isFabricInited() {
