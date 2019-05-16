@@ -297,13 +297,13 @@ public class ConversationListActivity extends AbstractConversationListActivity
     @Override
     protected void onStart() {
         super.onStart();
-        AppPrivateLockManager.getInstance().lockAppLock();
         HSGlobalNotificationCenter.sendNotification(MessageBoxActivity.NOTIFICATION_FINISH_MESSAGE_BOX);
     }
 
     @Override
     protected void onResume() {
         super.onResume();
+        AppPrivateLockManager.getInstance().lockAppLock();
         if (mPrivateBoxEntrance != null) {
             if (PrivateSettingManager.isPrivateBoxIconHidden()) {
                 mPrivateBoxEntrance.setVisibility(View.GONE);
