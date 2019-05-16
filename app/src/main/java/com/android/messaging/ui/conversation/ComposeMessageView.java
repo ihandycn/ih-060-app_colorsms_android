@@ -703,6 +703,9 @@ public class ComposeMessageView extends LinearLayout
                 }
             }
 
+            String isContactValue = mBinding.getData().getIsGroupConversation() ? "group"
+                    : mBinding.getData().getIsInContact() ? "true" : "false";
+
             if (mBinding.getData().getIsMms() && !TextUtils.isEmpty(mSignatureStr) && signatureIndex >= 0) {
                 if (signatureIndex > 1
                         || !mSignatureStr.equals(inputEditable.toString().substring(signatureIndex, inputEditable.length()))) {
@@ -710,11 +713,13 @@ public class ComposeMessageView extends LinearLayout
                 } else {
                     mBinding.getData().setMessageText("");
                 }
-                BugleAnalytics.logEvent("SMS_DetailsPage_IconSend_Click", true, true, "Type", "MMS");
+                BugleAnalytics.logEvent("SMS_DetailsPage_IconSend_Click", true, true, "Type", "MMS",
+                        "isContact", isContactValue);
             } else {
                 final String messageToSend = mComposeEditText.getText().toString();
                 mBinding.getData().setMessageText(messageToSend);
-                BugleAnalytics.logEvent("SMS_DetailsPage_IconSend_Click", true, true, "Type", "SMS");
+                BugleAnalytics.logEvent("SMS_DetailsPage_IconSend_Click", true, true, "Type", "SMS",
+                        "isContact", isContactValue);
             }
             // Asynchronously check the draft against various requirements before sending.
             boolean finalIncludeSignature = includeSignature;
