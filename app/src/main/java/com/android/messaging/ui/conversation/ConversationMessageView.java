@@ -1031,25 +1031,12 @@ public class ConversationMessageView extends RelativeLayout implements View.OnCl
     private void adjustImageViewBounds(final MessagePartData imageAttachment) {
         Assert.isTrue(ContentType.isImageType(imageAttachment.getContentType()));
         final ViewGroup.LayoutParams layoutParams = mMessageImageView.getLayoutParams();
-        if (imageAttachment.getWidth() == MessagePartData.UNSPECIFIED_SIZE ||
-                imageAttachment.getHeight() == MessagePartData.UNSPECIFIED_SIZE) {
-            // We don't know the size of the image attachment, enable letterboxing on the image
-            // and show a fixed sized attachment. This should happen at most once per image since
-            // after the image is loaded we then save the image dimensions to the db so that the
-            // next time we can display the full size.
-            layoutParams.width = getResources()
-                    .getDimensionPixelSize(R.dimen.image_attachment_fallback_width);
-            layoutParams.height = getResources()
-                    .getDimensionPixelSize(R.dimen.image_attachment_fallback_height);
-            mMessageImageView.setScaleType(ScaleType.CENTER_CROP);
-        } else {
-            layoutParams.width = ViewGroup.LayoutParams.MATCH_PARENT;
-            layoutParams.height = ViewGroup.LayoutParams.WRAP_CONTENT;
-            // ScaleType.CENTER_INSIDE and FIT_CENTER behave similarly for most images. However,
-            // FIT_CENTER works better for small images as it enlarges the image such that the
-            // minimum size ("android:minWidth" etc) is honored.
-            mMessageImageView.setScaleType(ScaleType.FIT_CENTER);
-        }
+        layoutParams.width = ViewGroup.LayoutParams.MATCH_PARENT;
+        layoutParams.height = ViewGroup.LayoutParams.WRAP_CONTENT;
+        // ScaleType.CENTER_INSIDE and FIT_CENTER behave similarly for most images. However,
+        // FIT_CENTER works better for small images as it enlarges the image such that the
+        // minimum size ("android:minWidth" etc) is honored.
+        mMessageImageView.setScaleType(ScaleType.FIT_CENTER);
     }
 
     @Override
