@@ -39,6 +39,7 @@ import com.android.messaging.datamodel.data.MessageBoxItemData;
 import com.android.messaging.font.ChangeFontActivity;
 import com.android.messaging.font.FontStyleManager;
 import com.android.messaging.mmslib.SqliteWrapper;
+import com.android.messaging.privatebox.AppPrivateLockManager;
 import com.android.messaging.privatebox.MoveConversationToPrivateBoxAction;
 import com.android.messaging.privatebox.PrivateBoxSettings;
 import com.android.messaging.privatebox.PrivateSettingManager;
@@ -296,6 +297,7 @@ public class ConversationListActivity extends AbstractConversationListActivity
     @Override
     protected void onStart() {
         super.onStart();
+        AppPrivateLockManager.getInstance().lockAppLock();
         HSGlobalNotificationCenter.sendNotification(MessageBoxActivity.NOTIFICATION_FINISH_MESSAGE_BOX);
     }
 

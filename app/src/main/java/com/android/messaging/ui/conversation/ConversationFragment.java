@@ -975,10 +975,6 @@ public class ConversationFragment extends Fragment implements ConversationDataLi
     public void onConversationMessagesCursorUpdated(final ConversationData data,
                                                     final Cursor cursor, final ConversationMessageData newestMessage,
                                                     final boolean isSync) {
-        if (data.isPrivate()){
-            mIsPrivateConversation = true;
-            AppPrivateLockManager.getInstance().checkLockStateAndSelfVerify();
-        }
         mBinding.ensureBound(data);
         // This needs to be determined before swapping cursor, which may change the scroll state.
         final boolean scrolledToBottom = isScrolledToBottom();
@@ -1063,6 +1059,12 @@ public class ConversationFragment extends Fragment implements ConversationDataLi
      */
     @Override
     public void onConversationMetadataUpdated(final ConversationData conversationData) {
+        if (conversationData != null && conversationData.isPrivate()) {
+            mIsPrivateConversation = true;
+            if (!getActivity().isFinishing()) {
+                AppPrivateLockManager.getInstance().checkLockStateAndSelfVerify();
+            }
+        }
         mBinding.ensureBound(conversationData);
 
         if (mSelectedMessage != null && mSelectedAttachment != null) {

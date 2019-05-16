@@ -101,7 +101,7 @@ public class SelfVerifyActivity extends VerifyActivity {
                     this, intent.getStringExtra(INTENT_KEY_ENTRANCE_CONVERSATION_ID), null,
                     null,
                     false);
-        } else if (ENTRANCE_APPLICATION_STOP.equals(intent.getStringExtra(mEntrance))) {
+        } else if (ENTRANCE_APPLICATION_STOP.equals(mEntrance)) {
             //do nothing
         } else {
             Navigations.startActivitySafely(SelfVerifyActivity.this,

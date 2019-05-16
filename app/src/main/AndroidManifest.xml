@@ -735,6 +735,7 @@
 
         <activity
             android:name=".privatebox.ui.SelfVerifyActivity"
+            android:launchMode="singleInstance"
             android:excludeFromRecents="true"
             android:screenOrientation="portrait"
             android:theme="@style/SettingsActivity" />

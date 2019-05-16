@@ -21,7 +21,6 @@ import android.database.Cursor;
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.text.TextUtils;
-import android.util.Log;
 
 import com.android.messaging.datamodel.BugleDatabaseOperations;
 import com.android.messaging.datamodel.BugleNotifications;
@@ -31,7 +30,6 @@ import com.android.messaging.datamodel.DatabaseHelper.MessageColumns;
 import com.android.messaging.datamodel.DatabaseWrapper;
 import com.android.messaging.datamodel.MessagingContentProvider;
 import com.android.messaging.privatebox.PrivateContactsManager;
-import com.android.messaging.privatebox.PrivateMessageManager;
 import com.android.messaging.util.LogUtil;
 
 import java.util.ArrayList;
@@ -194,7 +192,6 @@ public class MarkAsSeenAction extends Action implements Parcelable {
         }
         // After marking messages as seen, update the notifications. This will
         // clear the now stale notifications.
-        Log.d("---->>>>", "executeAction: .. " + updateCount);
         if (updateCount > 0) {
             BugleNotifications.update(false/*silent*/, BugleNotifications.UPDATE_ALL);
         }

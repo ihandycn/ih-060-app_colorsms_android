@@ -58,6 +58,10 @@ public class AppPrivateLockManager {
         mIsAppLocked = false;
     }
 
+    public void lockAppLock() {
+        mIsAppLocked = true;
+    }
+
     class LockScreenReceiver extends BroadcastReceiver {
         @Override
         public void onReceive(Context context, Intent intent) {
