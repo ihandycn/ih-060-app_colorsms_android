@@ -16,6 +16,7 @@ import android.widget.TextView;
 import com.airbnb.lottie.LottieAnimationView;
 import com.android.messaging.BaseActivity;
 import com.android.messaging.R;
+import com.android.messaging.privatebox.AppPrivateLockManager;
 import com.android.messaging.privatebox.PrivateBoxSettings;
 import com.android.messaging.privatebox.ui.view.GestureLockView;
 import com.android.messaging.privatebox.ui.view.PINIndicatorView;
@@ -216,6 +217,7 @@ public class PrivateBoxSetPasswordActivity extends BaseActivity implements View.
                         }
 
                         onPasswordSetSucceed();
+                        AppPrivateLockManager.getInstance().unlockAppLock();
                         setResult(RESULT_OK, intent);
                         finish();
                     } else {

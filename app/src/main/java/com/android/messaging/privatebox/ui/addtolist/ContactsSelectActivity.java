@@ -83,12 +83,24 @@ public class ContactsSelectActivity extends HSAppCompatActivity {
                 Dimensions.pxFromDp(3.3f), true));
 
         mActionButton.setOnClickListener(v -> {
+            List<String> addList = new ArrayList<>();
+            for (CallAssistantUtils.ContactInfo contactInfo : mAdapter.getRecyclerDataList()) {
+                if (contactInfo.customInfo.equals(Boolean.TRUE) && !TextUtils.isEmpty(contactInfo.number)) {
+                    addList.add(contactInfo.number);
+                }
+            }
+
+            if (addList.size() <= 0) {
+                return;
+            }
+
             if (Preferences.getDefault().getBoolean(ConversationSelectActivity.PREF_KEY_ADD_PRIVATE_DIALOG_HAS_PROMPT, false)) {
-                addContactToPrivate();
+                addContactToPrivate(addList);
             } else {
                 new BaseAlertDialog.Builder(ContactsSelectActivity.this)
-                        .setTitle(R.string.private_move_tip)
-                        .setPositiveButton(R.string.welcome_set_default_button, (dialog, button) -> addContactToPrivate())
+                        .setTitle(R.string.tips)
+                        .setMessage(R.string.private_move_tip)
+                        .setPositiveButton(R.string.welcome_set_default_button, (dialog, button) -> addContactToPrivate(addList))
                         .setNegativeButton(R.string.delete_conversation_decline_button, null)
                         .show();
                 Preferences.getDefault().putBoolean(ConversationSelectActivity.PREF_KEY_ADD_PRIVATE_DIALOG_HAS_PROMPT, true);
@@ -142,17 +154,7 @@ public class ContactsSelectActivity extends HSAppCompatActivity {
         finish();
     }
 
-    private void addContactToPrivate() {
-        List<String> addList = new ArrayList<>();
-        for (CallAssistantUtils.ContactInfo contactInfo : mAdapter.getRecyclerDataList()) {
-            if (contactInfo.customInfo.equals(Boolean.TRUE) && !TextUtils.isEmpty(contactInfo.number)) {
-                addList.add(contactInfo.number);
-            }
-        }
-
-        if (addList.size() <= 0) {
-            return;
-        }
+    private void addContactToPrivate(List<String> addList) {
         mActionButton.setEnabled(false);
         startMessagesMoveProgress();
 

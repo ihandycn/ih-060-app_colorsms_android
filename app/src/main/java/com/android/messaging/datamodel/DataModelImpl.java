@@ -200,7 +200,7 @@ public class DataModelImpl extends DataModel {
 
     @Override
     public DatabaseWrapper getDatabaseWithoutMainCheck() {
-        return mDatabaseHelper.getDatabase();
+        return mDatabaseHelper.getDatabaseWithoutMainThreadCheck();
     }
 
     @Override

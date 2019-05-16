@@ -652,7 +652,8 @@ public class ConversationListActivity extends AbstractConversationListActivity
     public void onAddToPrivateBox(List<String> conversations) {
         if (!PrivateBoxSettings.isAnyPasswordSet()) {
             new BaseAlertDialog.Builder(ConversationListActivity.this)
-                    .setTitle(R.string.private_start_box_tip)
+                    .setTitle(R.string.tips)
+                    .setMessage(R.string.private_start_box_tip)
                     .setPositiveButton(R.string.welcome_set_default_button, (dialog, which) -> {
                         Intent intent = new Intent(ConversationListActivity.this, PrivateBoxSetPasswordActivity.class);
                         intent.putExtra(INTENT_KEY_PRIVATE_CONVERSATION_LIST, conversations.toArray(new String[conversations.size()]));

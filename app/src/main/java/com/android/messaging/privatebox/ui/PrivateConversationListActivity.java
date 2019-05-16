@@ -187,7 +187,8 @@ public class PrivateConversationListActivity extends MultiSelectConversationList
                 !mConversationListFragment.isConversationListEmpty() &&
                 !Preferences.getDefault().getBoolean("pref_key_uninstall_dialog_shown", false)) {
             new BaseAlertDialog.Builder(this)
-                    .setTitle(R.string.private_box_uninstall_notice)
+                    .setTitle(R.string.tips)
+                    .setMessage(R.string.private_box_uninstall_notice)
                     .setPositiveButton(R.string.welcome_set_default_button, (dialog, button) -> finish())
                     .show();
             Preferences.getDefault().putBoolean("pref_key_uninstall_dialog_shown", true);

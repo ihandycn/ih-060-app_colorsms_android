@@ -87,15 +87,28 @@ public class ConversationSelectActivity extends HSAppCompatActivity
                 Dimensions.pxFromDp(3.3f), true));
 
         mActionButton.setOnClickListener(v -> {
+            List<String> addList = new ArrayList<>();
+            HashMap<ConversationListItemData, Boolean> selectedMap = mAdapter.getSelectedMap();
+            for (ConversationListItemData data : selectedMap.keySet()) {
+                if (selectedMap.get(data)) {
+                    addList.add(data.getConversationId());
+                }
+            }
+
+            if (addList.size() <= 0) {
+                return;
+            }
+
             if (Preferences.getDefault().getBoolean(PREF_KEY_ADD_PRIVATE_DIALOG_HAS_PROMPT, false)) {
-                addAndMoveConversations();
+                addAndMoveConversations(addList);
             } else {
                 new BaseAlertDialog.Builder(ConversationSelectActivity.this)
-                        .setTitle(R.string.private_move_tip)
+                        .setTitle(R.string.tips)
+                        .setMessage(R.string.private_move_tip)
                         .setPositiveButton(R.string.welcome_set_default_button, (dialog, button) -> {
                             BugleAnalytics.logEvent("PrivateBox_AddContactAlert_BtnClick",
                                     "type", "Conversation");
-                            addAndMoveConversations();
+                            addAndMoveConversations(addList);
                         })
                         .setNegativeButton(R.string.delete_conversation_decline_button, null)
                         .show();
@@ -159,21 +172,11 @@ public class ConversationSelectActivity extends HSAppCompatActivity
         super.onBackPressed();
     }
 
-    private void addAndMoveConversations() {
-        List<String> addList = new ArrayList<>();
-        HashMap<ConversationListItemData, Boolean> selectedMap = mAdapter.getSelectedMap();
-        for (ConversationListItemData data : selectedMap.keySet()) {
-            if (selectedMap.get(data)) {
-                addList.add(data.getConversationId());
-            }
-        }
-
-        if (addList.size() > 0) {
-            mActionButton.setEnabled(false);
-            startMessagesMoveProgress();
-            MoveConversationToPrivateBoxAction.moveAndUpdatePrivateContact(addList,
-                    NOTIFICATION_KEY_MESSAGE_MOVE_START, NOTIFICATION_KEY_MESSAGE_MOVE_END);
-        }
+    private void addAndMoveConversations(List<String> addList) {
+        mActionButton.setEnabled(false);
+        startMessagesMoveProgress();
+        MoveConversationToPrivateBoxAction.moveAndUpdatePrivateContact(addList,
+                NOTIFICATION_KEY_MESSAGE_MOVE_START, NOTIFICATION_KEY_MESSAGE_MOVE_END);
     }
 
     private void startMessagesMoveProgress() {

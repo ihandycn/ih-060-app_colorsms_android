@@ -81,6 +81,8 @@ import com.android.messaging.datamodel.data.MessagePartData;
 import com.android.messaging.datamodel.data.ParticipantData;
 import com.android.messaging.datamodel.data.PendingAttachmentData;
 import com.android.messaging.datamodel.data.SubscriptionListData.SubscriptionListEntry;
+import com.android.messaging.privatebox.AppPrivateLockManager;
+import com.android.messaging.privatebox.PrivateMessageManager;
 import com.android.messaging.ui.BaseAlertDialog;
 import com.android.messaging.ui.BugleActionBarActivity;
 import com.android.messaging.ui.ConversationDrawables;
@@ -227,6 +229,8 @@ public class ConversationFragment extends Fragment implements ConversationDataLi
 
     // Attachment data for the attachment within the selected message that was long pressed
     private MessagePartData mSelectedAttachment;
+
+    private boolean mIsPrivateConversation = false;
 
     // Normally, as soon as draft message is loaded, we trust the UI state held in
     // ComposeMessageView to be the only source of truth (incl. the conversation self id). However,
@@ -668,6 +672,12 @@ public class ConversationFragment extends Fragment implements ConversationDataLi
         mDraftMessageDataModel.getData().addListener(this);
     }
 
+    public void onActivityStart() {
+        if (mIsPrivateConversation) {
+            AppPrivateLockManager.getInstance().checkLockStateAndSelfVerify();
+        }
+    }
+
     public void onAttachmentChoosen() {
         // Attachment has been choosen in the AttachmentChooserActivity, so clear local draft
         // and reload draft on resume.
@@ -965,6 +975,10 @@ public class ConversationFragment extends Fragment implements ConversationDataLi
     public void onConversationMessagesCursorUpdated(final ConversationData data,
                                                     final Cursor cursor, final ConversationMessageData newestMessage,
                                                     final boolean isSync) {
+        if (data.isPrivate()){
+            mIsPrivateConversation = true;
+            AppPrivateLockManager.getInstance().checkLockStateAndSelfVerify();
+        }
         mBinding.ensureBound(data);
         // This needs to be determined before swapping cursor, which may change the scroll state.
         final boolean scrolledToBottom = isScrolledToBottom();

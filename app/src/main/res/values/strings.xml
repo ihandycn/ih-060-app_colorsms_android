@@ -1175,6 +1175,8 @@
     <string name="notification_title_in_private_box_other">%1$d unread messages</string>
     <string name="notification_sender_in_private_box">Private Contact</string>
 
+    <string name="tips">Tips</string>
+
     <string name="welcome_choose_theme_title">Choose a Theme You Like</string>
     <string name="welcome_choose_theme_current">Current</string>
     <string name="apply_theme_success">Apply Success</string>
