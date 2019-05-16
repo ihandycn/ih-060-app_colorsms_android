@@ -367,9 +367,15 @@ public class SettingGeneralActivity extends BaseActivity {
     }
 
     private void onSoundItemClick() {
+        String prefKey = getString(R.string.notification_sound_pref_key);
+        String ringtoneString = prefs.getString(prefKey, null);
+        if (ringtoneString == null) {
+            ringtoneString = Settings.System.DEFAULT_NOTIFICATION_URI.toString();
+            prefs.putString(prefKey, ringtoneString);
+        }
+
         Intent ringtonePickerIntent = new Intent(RingtoneManager.ACTION_RINGTONE_PICKER);
-        ringtonePickerIntent.putExtra(RingtoneManager.EXTRA_RINGTONE_EXISTING_URI,
-                RingtoneManager.getActualDefaultRingtoneUri(this, RingtoneManager.TYPE_NOTIFICATION));
+        ringtonePickerIntent.putExtra(RingtoneManager.EXTRA_RINGTONE_EXISTING_URI, Uri.parse(ringtoneString));
         ringtonePickerIntent.putExtra(RingtoneManager.EXTRA_RINGTONE_SHOW_DEFAULT, true);
         ringtonePickerIntent.putExtra(RingtoneManager.EXTRA_RINGTONE_DEFAULT_URI,
                 RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION));
