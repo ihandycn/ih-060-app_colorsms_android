@@ -78,6 +78,7 @@ public class MarkAsReadAction extends Action implements Parcelable {
 
         // TODO: Consider doing this in background service to avoid delaying other actions
         final DatabaseWrapper db = DataModel.get().getDatabase();
+        int count = 0;
         if (TextUtils.isEmpty(participantId)) {
             // Mark all messages in thread as read in telephony
             final long threadId = BugleDatabaseOperations.getThreadId(db, conversationId);
@@ -93,11 +94,11 @@ public class MarkAsReadAction extends Action implements Parcelable {
                 values.put(MessageColumns.READ, 1);
                 values.put(MessageColumns.SEEN, 1);     // if they read it, they saw it
 
-                final int count = db.update(DatabaseHelper.MESSAGES_TABLE, values,
+                count = db.update(DatabaseHelper.MESSAGES_TABLE, values,
                         "(" + MessageColumns.READ + " !=1 OR " +
                                 MessageColumns.SEEN + " !=1 ) AND " +
                                 MessageColumns.CONVERSATION_ID + "=?",
-                        new String[] { conversationId });
+                        new String[]{conversationId});
                 if (count > 0) {
                     MessagingContentProvider.notifyMessagesChanged(conversationId);
                 }
@@ -120,7 +121,7 @@ public class MarkAsReadAction extends Action implements Parcelable {
                 values.put(MessageColumns.READ, 1);
                 values.put(MessageColumns.SEEN, 1);     // if they read it, they saw it
 
-                final int count = db.update(DatabaseHelper.MESSAGES_TABLE, values,
+                count = db.update(DatabaseHelper.MESSAGES_TABLE, values,
                         "(" + MessageColumns.READ + " !=1 OR " +
                                 MessageColumns.SEEN + " !=1 ) AND " +
                                 MessageColumns.CONVERSATION_ID + "=? AND " +
@@ -139,7 +140,9 @@ public class MarkAsReadAction extends Action implements Parcelable {
 
         // After marking messages as read, update the notifications. This will
         // clear the now stale notifications.
-        BugleNotifications.update(false/*silent*/, BugleNotifications.UPDATE_ALL);
+        if (count > 0) {
+            BugleNotifications.update(false/*silent*/, BugleNotifications.UPDATE_ALL);
+        }
         return null;
     }
 

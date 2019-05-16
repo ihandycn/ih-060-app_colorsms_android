@@ -21,6 +21,7 @@ import android.database.Cursor;
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.text.TextUtils;
+import android.util.Log;
 
 import com.android.messaging.datamodel.BugleDatabaseOperations;
 import com.android.messaging.datamodel.BugleNotifications;
@@ -96,17 +97,18 @@ public class MarkAsSeenAction extends Action implements Parcelable {
         // Now mark the messages as seen in the bugle db
         final DatabaseWrapper db = DataModel.get().getDatabase();
         db.beginTransaction();
+        int updateCount = 0;
 
         try {
             final ContentValues values = new ContentValues();
             values.put(MessageColumns.SEEN, 1);
 
             if (hasSpecificConversation) {
-                final int count = db.update(DatabaseHelper.MESSAGES_TABLE, values,
+                updateCount = db.update(DatabaseHelper.MESSAGES_TABLE, values,
                         MessageColumns.SEEN + " != 1 AND " +
                                 MessageColumns.CONVERSATION_ID + "=?",
                         new String[]{conversationId});
-                if (count > 0) {
+                if (updateCount > 0) {
                     MessagingContentProvider.notifyMessagesChanged(conversationId);
                 }
             } else {
@@ -135,12 +137,12 @@ public class MarkAsSeenAction extends Action implements Parcelable {
                                 sb.append(covId);
                             }
 
-                            int count = db.update(DatabaseHelper.MESSAGES_TABLE, values,
-                                    MessageColumns.SEEN + "!= 1 AND "
+                            updateCount = db.update(DatabaseHelper.MESSAGES_TABLE, values,
+                                    MessageColumns.SEEN + " != 1 AND "
                                             + MessageColumns.CONVERSATION_ID + " IN (" +
                                             sb.toString() + ")",
                                     null);
-                            if (count > 0) {
+                            if (updateCount > 0) {
                                 MessagingContentProvider.notifyMessagesChanged(conversationId);
                             }
                         }
@@ -170,12 +172,12 @@ public class MarkAsSeenAction extends Action implements Parcelable {
                                 sb.append(covId);
                             }
 
-                            int count = db.update(DatabaseHelper.MESSAGES_TABLE, values,
+                            updateCount = db.update(DatabaseHelper.MESSAGES_TABLE, values,
                                     MessageColumns.SEEN + " != 1 AND "
                                             + MessageColumns.CONVERSATION_ID + " NOT IN (" +
                                             sb.toString() + ")",
                                     null);
-                            if (count > 0) {
+                            if (updateCount > 0) {
                                 MessagingContentProvider.notifyMessagesChanged(conversationId);
                             }
                         }
@@ -192,7 +194,10 @@ public class MarkAsSeenAction extends Action implements Parcelable {
         }
         // After marking messages as seen, update the notifications. This will
         // clear the now stale notifications.
-        BugleNotifications.update(false/*silent*/, BugleNotifications.UPDATE_ALL);
+        Log.d("---->>>>", "executeAction: .. " + updateCount);
+        if (updateCount > 0) {
+            BugleNotifications.update(false/*silent*/, BugleNotifications.UPDATE_ALL);
+        }
         return null;
     }
 
