@@ -528,8 +528,7 @@ public class ProcessDownloadedMmsAction extends Action {
                     mmsType = "other";
                 }
 
-                BugleAnalytics.logEvent("SMS_Received", true, true,
-                        "type", "mms", "mms_type", mmsType);
+                BugleAnalytics.logEvent("MMS_Received", true, true, "mms_type", mmsType);
 
                 final MessageData current = BugleDatabaseOperations.readMessageData(db, messageId);
                 if (current == null) {

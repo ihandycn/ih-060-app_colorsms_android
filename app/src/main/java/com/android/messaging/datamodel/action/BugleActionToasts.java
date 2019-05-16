@@ -26,6 +26,7 @@ import com.android.messaging.datamodel.data.MessageData;
 import com.android.messaging.datamodel.data.ParticipantData;
 import com.android.messaging.sms.MmsUtils;
 import com.android.messaging.util.AccessibilityUtil;
+import com.android.messaging.util.BugleAnalytics;
 import com.android.messaging.util.PhoneUtils;
 import com.android.messaging.util.ThreadUtil;
 
@@ -38,12 +39,13 @@ import javax.annotation.Nullable;
 public class BugleActionToasts {
     /**
      * Called when SendMessageAction or DownloadMmsAction finishes
+     *
      * @param conversationId the conversation of the sent or downloaded message
-     * @param success did the action succeed
-     * @param status the message sending status
-     * @param isSms whether the message is sent using SMS
-     * @param subId the subId of the SIM related to this send
-     * @param isSend whether it is a send (false for download)
+     * @param success        did the action succeed
+     * @param status         the message sending status
+     * @param isSms          whether the message is sent using SMS
+     * @param subId          the subId of the SIM related to this send
+     * @param isSend         whether it is a send (false for download)
      */
     static void onSendMessageOrManualDownloadActionCompleted(
             final String conversationId,
@@ -96,8 +98,11 @@ public class BugleActionToasts {
     }
 
     public static void onMessageReceived(final String conversationId,
-            @Nullable final ParticipantData sender, @Nullable final MessageData message) {
+                                         @Nullable final ParticipantData sender, @Nullable final MessageData message) {
         final Context context = Factory.get().getApplicationContext();
+        BugleAnalytics.logEvent("SMS_Received", true, true,
+                "type", message != null && message.getIsMms() ? "mms" : "sms",
+                "isContact", sender != null && sender.getContactId() > 0 ? "true" : "false");
         if (AccessibilityUtil.isTouchExplorationEnabled(context)) {
             final boolean isFocusedConversation = DataModel.get().isFocusedConversation(
                     conversationId);
@@ -166,7 +171,7 @@ public class BugleActionToasts {
     }
 
     public static UpdateDestinationBlockedAction.UpdateDestinationBlockedActionListener
-            makeUpdateDestinationBlockedActionListener(final Context context) {
+    makeUpdateDestinationBlockedActionListener(final Context context) {
         return new UpdateDestinationBlockedActionToast(context);
     }
 }

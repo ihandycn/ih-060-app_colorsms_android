@@ -93,6 +93,7 @@ public class DraftMessageData extends BindableData implements ReadDraftDataActio
     private String mSelfId;
     private MessageTextStats mMessageTextStats;
     private boolean mSending;
+    private boolean mIsInContact;
 
     /**
      * Keeps track of completed attachments in the message draft. This data is persisted to db
@@ -245,6 +246,14 @@ public class DraftMessageData extends BindableData implements ReadDraftDataActio
                 (mIsGroupConversation && MmsUtils.groupMmsEnabled(selfSubId)) ||
                 mMessageTextStats.getMessageLengthRequiresMms() || !mAttachments.isEmpty() ||
                 !TextUtils.isEmpty(mMessageSubject);
+    }
+
+    public boolean getIsInContact(){
+        return mIsInContact;
+    }
+
+    public boolean getIsGroupConversation() {
+        return mIsGroupConversation;
     }
 
     public boolean getIsGroupMmsConversation() {
@@ -649,6 +658,7 @@ public class DraftMessageData extends BindableData implements ReadDraftDataActio
         if (isBound(bindingId)) {
             mSelfId = message.getSelfId();
             mIsGroupConversation = conversation.getIsGroup();
+            mIsInContact = conversation.getParticipantContactId() > 0;
             mIncludeEmailAddress = conversation.getIncludeEmailAddress();
             updateFromMessageData(message, bindingId);
             LogUtil.d(LogUtil.BUGLE_TAG, "DraftMessageData: draft loaded. "

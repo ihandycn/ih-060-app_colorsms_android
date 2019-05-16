@@ -1,0 +1,170 @@
+{
+  "custom_audience_properties": [],
+  "console_url": "https://ap-console.appcloudbox.net",
+  "app_meta": {
+    "is_support_languages": false
+  },
+  "app_events": [
+    {
+      "name": "active"
+    },
+    {
+      "name": "main_app_open"
+    },
+    {
+      "name": "main_app_close"
+    },
+    {
+      "name": "extended_active"
+    },
+    {
+      "name": "ad_click_native"
+    },
+    {
+      "name": "ad_click_interstitial"
+    },
+    {
+      "name": "ad_click_rewarded_video"
+    },
+    {
+      "name": "ad_click_banner"
+    },
+    {
+      "name": "ad_show"
+    },
+    {
+      "name": "iap"
+    },
+    {
+      "name": "extended_deactive"
+    },
+    {
+      "name": "get_remote_config"
+    },
+    {
+      "name": "daily_active"
+    },
+    {
+      "name": "initial_completed"
+    },
+    {
+      "name": "ad_click"
+    }
+  ],
+  "topics": {
+    "topic-rp-73fiu9zuo": {
+      "topic_type": "one_time",
+      "topic_name": "RTOT Popup",
+      "variations": {
+        "body": {
+          "values": [
+            {
+              "value": ""
+            }
+          ],
+          "type": "string",
+          "value": "",
+          "strategy": "sole"
+        },
+        "button1_text": {
+          "values": [
+            {
+              "value": ""
+            }
+          ],
+          "type": "string",
+          "value": "",
+          "strategy": "sole"
+        },
+        "title": {
+          "values": [
+            {
+              "value": ""
+            }
+          ],
+          "type": "string",
+          "value": "",
+          "strategy": "sole"
+        },
+        "start_time": {
+          "values": [
+            ""
+          ],
+          "type": "string",
+          "value": "",
+          "strategy": "sole"
+        },
+        "button2_text": {
+          "values": [
+            {
+              "value": ""
+            }
+          ],
+          "type": "string",
+          "value": "",
+          "strategy": "sole"
+        },
+        "end_time": {
+          "values": [
+            ""
+          ],
+          "type": "string",
+          "value": "",
+          "strategy": "sole"
+        },
+        "button1_url": {
+          "values": [
+            {
+              "value": ""
+            }
+          ],
+          "type": "string",
+          "value": "",
+          "strategy": "sole"
+        },
+        "button2_url": {
+          "values": [
+            {
+              "value": ""
+            }
+          ],
+          "type": "string",
+          "value": "",
+          "strategy": "sole"
+        }
+      },
+      "events": [
+        {
+          "name": "test"
+        },
+        {
+          "name": "show"
+        },
+        {
+          "name": "button1_click"
+        },
+        {
+          "name": "button2_click"
+        }
+      ],
+      "topic_id": "topic-rp-73fiu9zuo"
+    },
+    "topic-74azpj82p": {
+      "topic_type": "one_day",
+      "topic_name": "To Export Config",
+      "variations": {},
+      "events": [
+        {
+          "name": "test"
+        }
+      ],
+      "topic_id": "topic-74azpj82p"
+    }
+  },
+  "autopilot_id": 10104,
+  "service_url": "https://ap.appcloudbox.net",
+  "other_app_events": [],
+  "json_id": "d7b15643-1344-4375-827d-122621ff5dcd",
+  "autopilot_name": "Bubble_A",
+  "autopilot_type": "app"
+}

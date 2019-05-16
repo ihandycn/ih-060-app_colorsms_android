@@ -256,9 +256,6 @@ public final class SmsReceiver extends BroadcastReceiver {
         } else if (PhoneUtils.getDefault().isSmsCapable() && isSmsReceiverEnabledWhenDefaultCleared()) {
             // sms supported and default not set, we use SmsReceiver to handle this action
             BugleAnalytics.logEvent("SMS_Received_NoDefault", false, true);
-            if (Telephony.Sms.Intents.SMS_RECEIVED_ACTION.equals(intent.getAction())) {
-                BugleAnalytics.logEvent("SMS_Received", true, true, "type", "sms");
-            }
         }
     }
 

@@ -27,11 +27,8 @@ import android.net.Uri;
 import android.os.Bundle;
 
 import com.android.messaging.Factory;
-import com.android.messaging.datamodel.binding.Binding;
-import com.android.messaging.datamodel.data.ConversationData;
 import com.android.messaging.datamodel.data.MessageBoxItemData;
 import com.android.messaging.datamodel.data.MessageData;
-import com.android.messaging.datamodel.data.ParticipantData;
 import com.android.messaging.util.ConversationIdSet;
 
 /**
@@ -44,6 +41,8 @@ public abstract class UIIntents {
 
     // Intent extras
     public static final String UI_INTENT_EXTRA_CONVERSATION_ID = "conversation_id";
+    // Intent extras
+    public static final String UI_INTENT_EXTRA_CONVERSATION_NAME = "conversation_name";
     //addContactVisible
     public static final String UI_INTENT_EXTRA_PARTICIPANTDATA = "ui_intent_extra_participantData";
 
@@ -149,6 +148,14 @@ public abstract class UIIntents {
     public abstract void launchConversationActivity(final Context context,
                                                     final String conversationId, final MessageData draft, final Bundle activityOptions,
                                                     final boolean withCustomTransition);
+
+    /**
+     * Launch an activity to show a conversation.
+     */
+    public abstract void launchConversationActivity(final Context context,
+                                                    final String conversationId, final MessageData draft, final Bundle activityOptions,
+                                                    final boolean withCustomTransition,
+                                                    final String conversationName);
 
 
     /**

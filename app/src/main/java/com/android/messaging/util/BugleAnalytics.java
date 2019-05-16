@@ -119,6 +119,10 @@ public class BugleAnalytics {
         }
     }
 
+    public static void logUserProperty(String key, String value) {
+        sFirebaseAnalytics.setUserProperty(key, value);
+    }
+
     private static String getEventInfoDescription(String eventID, boolean alsoLogToFlurry, Map<String, String> eventValues) {
         String scope = (alsoLogToFlurry ? "F" : " ") + "|A";
         StringBuilder values = new StringBuilder();

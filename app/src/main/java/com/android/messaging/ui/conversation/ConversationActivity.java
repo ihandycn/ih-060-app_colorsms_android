@@ -470,6 +470,10 @@ public class ConversationActivity extends BugleActionBarActivity
         updateUiState(animate);
     }
 
+    public String getConversationName() {
+        return getIntent().getStringExtra(UIIntents.UI_INTENT_EXTRA_CONVERSATION_NAME);
+    }
+
     private void updateUiState(final boolean animate) {
         if (mInstanceStateSaved || mIsPaused) {
             return;

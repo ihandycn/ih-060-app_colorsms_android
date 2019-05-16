@@ -96,6 +96,8 @@ import net.appcloudbox.AcbAds;
 import net.appcloudbox.ads.expressad.AcbExpressAdManager;
 import net.appcloudbox.ads.interstitialad.AcbInterstitialAdManager;
 import net.appcloudbox.ads.nativead.AcbNativeAdManager;
+import net.appcloudbox.autopilot.AutopilotConfig;
+import net.appcloudbox.common.analytics.publisher.AcbPublisherMgr;
 import net.appcloudbox.common.utils.AcbApplicationHelper;
 
 import java.io.File;
@@ -225,6 +227,10 @@ public class BugleApplication extends HSApplication implements UncaughtException
                 }
             }));
 
+            initWorks.add(new SyncMainThreadTask("InitAutoPilot", () -> {
+                initAutopilot(this);
+            }));
+
             initWorks.add(new SyncMainThreadTask("InitFactoryImpl", this::initFactoryImpl));
 
             initWorks.add(new SyncMainThreadTask("Upgrade", () -> Upgrader.getUpgrader(this).upgrade()));
@@ -270,6 +276,12 @@ public class BugleApplication extends HSApplication implements UncaughtException
                 FabricUtils.logQueueEvent();
             });
         }
+    }
+
+    private void initAutopilot(HSApplication application) {
+        AutopilotConfig.initialize(application, "autopilot-topics.json");
+//        AutopilotConfig.setAudienceProperty("device_language",
+//                "english".equalsIgnoreCase(Locale.getDefault().getDisplayLanguage()) ? "english" : "non-english");
     }
 
     public static boolean isFabricInited() {
@@ -367,7 +379,10 @@ public class BugleApplication extends HSApplication implements UncaughtException
     }
 
     private void recordInstallType() {
-        HSPublisherMgr.PublisherData data = HSPublisherMgr.getPublisherData(BugleApplication.this);
+        AcbPublisherMgr.PublisherData data = AcbPublisherMgr.getPublisherData(BugleApplication.this);
+        BugleAnalytics.logUserProperty("MediaSource", data.getMediaSource());
+        BugleAnalytics.logUserProperty("Compaign", data.getCampaign());
+        BugleAnalytics.logUserProperty("Channel", data.getAfChannel());
 
         Map<String, String> parameters = new HashMap<>();
         String installType = data.getInstallMode().name();
@@ -379,7 +394,17 @@ public class BugleApplication extends HSApplication implements UncaughtException
         parameters.put("publisher_debug_info", debugInfo);
         BugleAnalytics.logEvent("install_type", false, parameters);
 
-        Threads.postOnMainThreadDelayed(() -> BugleAnalytics.logEvent("Agency_Info", false, "install_type", installType, "campaign_id", "" + data.getCampaignID(), "user_level", "" + HSConfig.optString("not_configured", "UserLevel")), 10 * 1000L);
+        Threads.postOnMainThreadDelayed(() -> {
+            AcbPublisherMgr.PublisherData publisherData = AcbPublisherMgr.getPublisherData(BugleApplication.this);
+            BugleAnalytics.logUserProperty("MediaSource", publisherData.getMediaSource());
+            BugleAnalytics.logUserProperty("Compaign", publisherData.getCampaign());
+            BugleAnalytics.logUserProperty("Channel", publisherData.getAfChannel());
+            BugleAnalytics.logEvent("Agency_Info", false,
+                    "install_type", installType,
+                    "campaign_id", "" + publisherData.getCampaignID(),
+                    "campaign", "" + publisherData.getCampaign(),
+                    "user_level", "" + HSConfig.optString("not_configured", "UserLevel"));
+        }, 10 * 1000L);
 
         if (CommonUtils.isNewUser()) {
             Preferences.getDefault().doOnce(() -> {
