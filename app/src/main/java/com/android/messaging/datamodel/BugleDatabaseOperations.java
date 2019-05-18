@@ -1979,15 +1979,36 @@ public class BugleDatabaseOperations {
             selection.append(participantIds.get(i));
         }
         selection.append(")");
+        String conversationSelect = " ( SELECT " + ConversationParticipantsColumns.CONVERSATION_ID +
+                " FROM " + DatabaseHelper.CONVERSATION_PARTICIPANTS_TABLE
+                + " GROUP BY " + ConversationParticipantsColumns.CONVERSATION_ID
+                + " HAVING COUNT(*)= " + participantIds.size() + " ) ";
 
-        final Cursor cursor = db.query(DatabaseHelper.CONVERSATION_PARTICIPANTS_TABLE,
-                new String[]{ConversationParticipantsColumns.CONVERSATION_ID,},
+        String table = "( SELECT * FROM " + DatabaseHelper.CONVERSATION_PARTICIPANTS_TABLE
+                + " WHERE " + ConversationParticipantsColumns.CONVERSATION_ID
+                + " IN " + conversationSelect + " ) ";
+
+        final Cursor cursor = db.query(table,
+                new String[]{ConversationParticipantsColumns.CONVERSATION_ID,
+                        ConversationParticipantsColumns.PARTICIPANT_ID},
                 selection.toString(), null, ConversationParticipantsColumns.CONVERSATION_ID,
-                "COUNT(*)=" + participantIds.size(), null);
-
+                "COUNT(*) = " + participantIds.size(), null);
         String conversationId = null;
         if (cursor != null) {
-            if (cursor.moveToNext()) {
+            List<String> list = new ArrayList<>();
+            while (cursor.moveToNext()) {
+                list.add(cursor.getString(1));
+            }
+
+            boolean participantsMatched = true;
+            for (String s : participantIds) {
+                if (!list.contains(s)) {
+                    participantsMatched = false;
+                }
+            }
+
+            if (participantsMatched) {
+                cursor.moveToFirst();
                 conversationId = cursor.getString(0);
             }
             cursor.close();
