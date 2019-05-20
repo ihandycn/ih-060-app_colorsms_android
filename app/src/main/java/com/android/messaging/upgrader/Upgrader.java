@@ -45,20 +45,22 @@ public class Upgrader extends BaseUpgrader {
             FontStyleManager.getInstance().setFontScaleLevel(fontLevel);
         }
 
+        if (oldVersion < 42 && newVersion >= 42) {
+            addIsPrivateColumnInConversationTable();
+            createPrivateBoxTables();
+        }
+
         if (oldVersion < 25 && newVersion >= 25) {
             addPinColumnInDB();
             Preferences.getDefault().putBoolean(WelcomeStartActivity.PREF_KEY_START_BUTTON_CLICKED,
                     !Preferences.getDefault().getBoolean("pref_key_first_launch", true));
         }
+
         if (oldVersion < 28 && newVersion >= 28) {
             AvatarBgDrawables.applyAvatarBg(HSConfig.optString("", "Application", "Themes", "Default", "AvatarUrl"));
             Preferences.getDefault().putBoolean(WelcomeChooseThemeActivity.PREF_KEY_WELCOME_CHOOSE_THEME_SHOWN, true);
         }
 
-        if (oldVersion < 42 && newVersion >= 42) {
-            addIsPrivateColumnInConversationTable();
-            createPrivateBoxTables();
-        }
     }
 
     public static void addPinColumnInDB() {
