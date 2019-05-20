@@ -151,7 +151,15 @@ public class MessageBoxActivity extends AppCompatActivity implements INotificati
     @Override
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
+        if (isFinishing()) {
+            return;
+        }
+
         final MessageBoxItemData data = intent.getParcelableExtra(UI_INTENT_EXTRA_MESSAGE_BOX_ITEM);
+        if (data == null) {
+            BugleAnalytics.logEvent("MessageBox_GetItemIsNull_FromOnNewIntent");
+            return;
+        }
 
         boolean isNewConversation = true;
 
