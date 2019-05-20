@@ -21,6 +21,7 @@ public class SelfVerifyActivity extends VerifyActivity {
     public static final String INTENT_KEY_ENTRANCE_CONVERSATION_ID = "conversation_id";
 
     public static final String ENTRANCE_NOTIFICATION = "Notification";
+    public static final String ENTRANCE_NOTIFICATION_TO_CONVERSATION_LIST = "Notification to list";
     public static final String ENTRANCE_MENU = "Menu";
     public static final String ENTRANCE_CREATE_ICON = "CreateIcon";
     public static final String ENTRANCE_APPLICATION_STOP = "ApplicationStop";
@@ -54,8 +55,9 @@ public class SelfVerifyActivity extends VerifyActivity {
         if (intent.hasExtra(INTENT_KEY_ACTIVITY_ENTRANCE)) {
             mEntrance = intent.getStringExtra(INTENT_KEY_ACTIVITY_ENTRANCE);
         }
-        if (intent.hasExtra(INTENT_KEY_ENTRANCE_CONVERSATION_ID)
-                && ENTRANCE_NOTIFICATION.equals(mEntrance)) {
+        if ((intent.hasExtra(INTENT_KEY_ENTRANCE_CONVERSATION_ID)
+                && ENTRANCE_NOTIFICATION.equals(mEntrance))
+                || ENTRANCE_NOTIFICATION_TO_CONVERSATION_LIST.equals(mEntrance)) {
             BugleAnalytics.logEvent("Notifications_Clicked_PrivateBox");
         }
     }
@@ -101,6 +103,10 @@ public class SelfVerifyActivity extends VerifyActivity {
                     this, intent.getStringExtra(INTENT_KEY_ENTRANCE_CONVERSATION_ID), null,
                     null,
                     false);
+        } else if (ENTRANCE_NOTIFICATION_TO_CONVERSATION_LIST.equals(mEntrance)) {
+            UIIntents.get().launchConversationListActivity(this);
+            Navigations.startActivitySafely(this,
+                    new Intent(this, PrivateConversationListActivity.class));
         } else if (ENTRANCE_APPLICATION_STOP.equals(mEntrance)) {
             //do nothing
         } else {
@@ -122,6 +128,7 @@ public class SelfVerifyActivity extends VerifyActivity {
     @Override
     public void onBackPressed() {
         if (ENTRANCE_NOTIFICATION.equals(mEntrance)
+                || ENTRANCE_NOTIFICATION_TO_CONVERSATION_LIST.equals(mEntrance)
                 || ENTRANCE_APPLICATION_STOP.equals(mEntrance)) {
             UIIntentsImpl.get().launchConversationListActivity(this);
         }

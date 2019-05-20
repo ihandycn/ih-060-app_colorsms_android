@@ -479,8 +479,14 @@ public class BugleNotifications {
         PendingIntent destinationIntent;
         if (state.mConversationIds.size() > 1) {
             // We have notifications for multiple conversation, go to the conversation list.
-            destinationIntent = UIIntents.get()
-                    .getPendingIntentForConversationListActivityFromNotification(context);
+            if (state instanceof MultiConversationNotificationState
+                    && ((MultiConversationNotificationState) state).mIsAllPrivateConversations) {
+                destinationIntent = UIIntents.get()
+                        .getPendingIntentForPrivateConversationListActivityFromNotification(context);
+            } else {
+                destinationIntent = UIIntents.get()
+                        .getPendingIntentForConversationListActivityFromNotification(context);
+            }
         } else {
             // We have a single conversation, go directly to that conversation.
             if (isPrivateConversation) {

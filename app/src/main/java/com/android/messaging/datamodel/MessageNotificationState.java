@@ -396,6 +396,7 @@ public abstract class MessageNotificationState extends NotificationState {
 
         public final List<MessageNotificationState>
                 mChildren = new ArrayList<MessageNotificationState>();
+        public boolean mIsAllPrivateConversations = true;
 
         public MultiConversationNotificationState(
                 final ConversationInfoList convList, final MessageNotificationState state) {
@@ -447,7 +448,7 @@ public abstract class MessageNotificationState extends NotificationState {
                 }
                 String sender;
                 if (!PrivateMessageManager.getInstance().isPrivateConversationId(convInfo.mConversationId)) {
-
+                    mIsAllPrivateConversations = false;
                     CharSequence text;
                     final NotificationLineInfo lineInfo = convInfo.mLineInfos.get(0);
                     final MessageLineInfo messageLineInfo = (MessageLineInfo) lineInfo;

@@ -351,6 +351,9 @@ public abstract class UIIntents {
     public abstract PendingIntent getPendingIntentForConversationListActivityFromNotification(
             final Context context);
 
+    public abstract PendingIntent getPendingIntentForPrivateConversationListActivityFromNotification(
+            final Context context);
+
     /**
      * Get a PendingIntent for starting conversation list from widget.
      */
