@@ -7,6 +7,9 @@ import com.android.messaging.datamodel.DataModel;
 import com.android.messaging.datamodel.DatabaseHelper;
 import com.android.messaging.datamodel.DatabaseWrapper;
 import com.android.messaging.datamodel.data.ConversationListItemData;
+import com.android.messaging.privatebox.PrivateContactsManager;
+import com.android.messaging.privatebox.PrivateMmsEntry;
+import com.android.messaging.privatebox.PrivateSmsEntry;
 import com.android.messaging.ui.conversationlist.ConversationListActivity;
 import com.android.messaging.ui.customize.AvatarBgDrawables;
 import com.android.messaging.ui.welcome.WelcomeChooseThemeActivity;
@@ -54,6 +57,7 @@ public class Upgrader extends BaseUpgrader {
 
         if (oldVersion < 42 && newVersion >= 42) {
             addIsPrivateColumnInConversationTable();
+            createPrivateBoxTables();
         }
     }
 
@@ -101,6 +105,18 @@ public class Upgrader extends BaseUpgrader {
 
         DatabaseHelper.rebuildView(db, ConversationListItemData.getConversationListView(),
                 ConversationListItemData.getConversationListViewSql());
+    }
+
+    public static void createPrivateBoxTables() {
+        final DatabaseWrapper db = DataModel.get().getDatabaseWithoutMainCheck();
+        try {
+            db.execSQL(PrivateMmsEntry.CREATE_MMS_TABLE_SQL);
+            db.execSQL(PrivateSmsEntry.CREATE_SMS_TABLE_SQL);
+            db.execSQL(PrivateContactsManager.CREATE_PRIVATE_CONTACTS_TABLE_SQL);
+            db.execSQL(PrivateMmsEntry.Addr.CREATE_MMS_ADDRESS_TABLE_SQL);
+        } catch (Exception e) {
+
+        }
     }
 
     private void migrateLong(Preferences from, Preferences to, String key) {
