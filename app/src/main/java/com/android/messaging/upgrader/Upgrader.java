@@ -51,33 +51,14 @@ public class Upgrader extends BaseUpgrader {
             AvatarBgDrawables.applyAvatarBg(HSConfig.optString("", "Application", "Themes", "Default", "AvatarUrl"));
             Preferences.getDefault().putBoolean(WelcomeChooseThemeActivity.PREF_KEY_WELCOME_CHOOSE_THEME_SHOWN, true);
         }
+
+        if (oldVersion < 42 && newVersion >= 42) {
+            addIsPrivateColumnInConversationTable();
+        }
     }
 
     public static void addPinColumnInDB() {
         final DatabaseWrapper db = DataModel.get().getDatabaseWithoutMainCheck();
-        Cursor cursor = null;
-        try {
-            cursor = db.rawQuery("SELECT * FROM " + DatabaseHelper.CONVERSATIONS_TABLE + " LIMIT 0"
-                    , null);
-            if (cursor != null && cursor.getColumnIndex(DatabaseHelper.ConversationColumns.PIN_TIMESTAMP) == -1) {
-                db.execSQL("ALTER TABLE " + DatabaseHelper.CONVERSATIONS_TABLE
-                        + " ADD COLUMN " + DatabaseHelper.ConversationColumns.PIN_TIMESTAMP
-                        + " INT DEFAULT(0)");
-            }
-        } catch (Exception e) {
-
-        } finally {
-            if (null != cursor && !cursor.isClosed()) {
-                cursor.close();
-            }
-        }
-
-        DatabaseHelper.rebuildView(db, ConversationListItemData.getConversationListView(),
-                ConversationListItemData.getConversationListViewSql());
-    }
-
-    public static void updateConversationDatabase() {
-        final DatabaseWrapper db = DataModel.get().getDatabase();
         Cursor cursor = null;
         try {
             cursor = db.rawQuery("SELECT * FROM " + DatabaseHelper.CONVERSATIONS_TABLE + " LIMIT 0"
