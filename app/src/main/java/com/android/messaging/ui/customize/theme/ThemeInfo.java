@@ -90,6 +90,10 @@ public class ThemeInfo {
         return themeInfo;
     }
 
+    public boolean isDownloaded() {
+        return false;
+    }
+
     public static ThemeInfo getThemeInfo(String themeName) {
         return ThemeInfo.ofConfig(themeName, HSConfig.getMap("Application", "Themes", themeName));
     }

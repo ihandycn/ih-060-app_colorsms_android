@@ -60,7 +60,7 @@ public class FontDownloadManager {
         return list;
     }
 
-    static boolean isFontDownloaded(FontInfo font) {
+    public static boolean isFontDownloaded(FontInfo font) {
         for (String style : font.getFontWeights()) {
             File file = new File(CommonUtils.getDirectory(LOCAL_DIRECTORY + font.getFontName()), style + ".ttf");
             if (!file.exists()) {

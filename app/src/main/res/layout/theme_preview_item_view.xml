@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.android.messaging.ui.customize.theme.ThemePreviewItemView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingBottom="21dp">
+
+    <com.superapps.view.RoundImageView
+        android:id="@+id/theme_thumbnail"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        app:border_color="@color/solid_black"
+        app:border_size="2dp"
+        app:layout_constraintDimensionRatio="H,1:2"
+        app:radius="8.3dp"
+        tools:ignore="ContentDescription" />
+
+    <com.android.messaging.ui.view.MessagesTextView
+        android:id="@+id/theme_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="12dp"
+        android:includeFontPadding="false"
+        android:textColor="#333333"
+        android:textSize="13.3sp"
+        app:layout_constraintStart_toStartOf="@id/theme_thumbnail"
+        app:layout_constraintTop_toBottomOf="@id/theme_thumbnail"
+        app:typeface="@string/custom_font_semibold" />
+
+    <LinearLayout
+        android:id="@+id/theme_download_times_container"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="7dp"
+        android:orientation="horizontal"
+        app:layout_constraintStart_toStartOf="@id/theme_name"
+        app:layout_constraintTop_toBottomOf="@id/theme_name">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:src="@drawable/theme_download_small" />
+
+        <com.android.messaging.ui.view.MessagesTextView
+            android:id="@+id/theme_downloaded_times"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginStart="5.3dp"
+            android:includeFontPadding="false"
+            android:textColor="#afb1be"
+            android:textSize="10.7sp"
+            app:typeface="@string/custom_font_regular" />
+    </LinearLayout>
+
+    <FrameLayout
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintEnd_toEndOf="@id/theme_thumbnail"
+        app:layout_constraintBottom_toBottomOf="@id/theme_download_times_container"
+        app:layout_constraintDimensionRatio="1:1"
+        app:layout_constraintTop_toTopOf="@id/theme_name">
+
+        <ImageView
+            android:id="@+id/theme_state"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:src="@drawable/theme_downloaded"
+            tools:ignore="ContentDescription" />
+    </FrameLayout>
+</com.android.messaging.ui.customize.theme.ThemePreviewItemView>
