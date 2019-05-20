@@ -171,8 +171,6 @@
 				</dict>
 				<key>SMSHomepageBannerAd</key>
 				<true/>
-				<key>SMSPrivateBoxBannerAd</key>
-				<false/>
 				<key>SMSHomepageBannerAdFacebookEnabled</key>
 				<true/>
 			</dict>
