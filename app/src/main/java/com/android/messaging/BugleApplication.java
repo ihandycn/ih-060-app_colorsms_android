@@ -388,14 +388,21 @@ public class BugleApplication extends HSApplication implements UncaughtException
         String debugInfo = "" + installType + "|" + data.getMediaSource() + "|" + data.getAdset();
         parameters.put("install_type", installType);
         parameters.put("publisher_debug_info", debugInfo);
-        BugleAnalytics.logEvent("install_type", false, parameters);
+        BugleAnalytics.logEvent("install_type", true, parameters);
+
+        long lastLogProcessStart = Preferences.getDefault().getLong("pref_key_last_log_process_start", -1);
+        if (!Calendars.isSameDay(System.currentTimeMillis(), lastLogProcessStart)) {
+            BugleAnalytics.logEvent("process_start_daily", true, true,
+                    "isDefault", String.valueOf(PhoneUtils.getDefault().isDefaultSmsApp()));
+            Preferences.getDefault().putLong("pref_key_last_log_process_start", System.currentTimeMillis());
+        }
 
         Threads.postOnMainThreadDelayed(() -> {
             AcbPublisherMgr.PublisherData publisherData = AcbPublisherMgr.getPublisherData(BugleApplication.this);
             BugleAnalytics.logUserProperty("MediaSource", publisherData.getMediaSource());
             BugleAnalytics.logUserProperty("Compaign", publisherData.getCampaign());
             BugleAnalytics.logUserProperty("Channel", publisherData.getAfChannel());
-            BugleAnalytics.logEvent("Agency_Info", false,
+            BugleAnalytics.logEvent("Agency_Info", true,
                     "install_type", installType,
                     "campaign_id", "" + publisherData.getCampaignID(),
                     "campaign", "" + publisherData.getCampaign(),
