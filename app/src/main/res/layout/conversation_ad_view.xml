@@ -82,15 +82,19 @@
         android:layout_height="32dp"
         android:layout_alignParentEnd="true"
         android:layout_centerVertical="true"
-        android:paddingLeft="15dp"
-        android:paddingRight="15dp"
-        android:layout_marginEnd="15dp"
+        android:layout_marginEnd="14dp"
         android:gravity="center"
         android:includeFontPadding="false"
-        android:textColor="#2fa0ff"
+        android:textColor="#2caef8"
         android:textSize="13sp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
+        android:paddingLeft="16dp"
+        android:paddingRight="16dp"
         app:typeface="@string/custom_font_medium"/>
+
+    <FrameLayout
+        android:id="@+id/ad_choice"
+        android:layout_width="10dp"
+        android:layout_height="10dp"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentTop="true"></FrameLayout>
 </RelativeLayout>

@@ -33,10 +33,14 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.res.Configuration;
 import android.database.Cursor;
+import android.graphics.Color;
 import android.graphics.Point;
 import android.graphics.PorterDuff;
 import android.graphics.Rect;
+import android.graphics.drawable.Drawable;
+import android.graphics.drawable.LayerDrawable;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
@@ -90,6 +94,8 @@ import com.android.messaging.ui.conversation.ComposeMessageView.IComposeMessageV
 import com.android.messaging.ui.conversation.ConversationInputManager.ConversationInputHost;
 import com.android.messaging.ui.conversation.ConversationMessageView.ConversationMessageViewHost;
 import com.android.messaging.ui.customize.ConversationColors;
+import com.android.messaging.ui.customize.theme.ThemeInfo;
+import com.android.messaging.ui.customize.theme.ThemeUtils;
 import com.android.messaging.ui.dialog.FiveStarRateDialog;
 import com.android.messaging.ui.emoji.EmojiPickerFragment;
 import com.android.messaging.ui.mediapicker.CameraGalleryFragment;
@@ -124,7 +130,6 @@ import net.appcloudbox.ads.base.AcbNativeAd;
 import net.appcloudbox.ads.base.ContainerView.AcbNativeAdContainerView;
 import net.appcloudbox.ads.base.ContainerView.AcbNativeAdIconView;
 import net.appcloudbox.ads.common.utils.AcbError;
-import net.appcloudbox.ads.expressad.AcbExpressAdManager;
 import net.appcloudbox.ads.nativead.AcbNativeAdLoader;
 import net.appcloudbox.ads.nativead.AcbNativeAdManager;
 
@@ -612,8 +617,20 @@ public class ConversationFragment extends Fragment implements ConversationDataLi
         description.setTextColor(ConversationColors.get().getListSubtitleColor());
         mAdContentView.setAdBodyView(description);
         TextView actionBtn = ViewUtils.findViewById(adView, R.id.banner_action);
-        actionBtn.setBackgroundResource(R.drawable.conversation_ad_action_pressed_bg);
         mAdContentView.setAdActionView(actionBtn);
+        if (HSConfig.optBoolean(true, "Application", "SMSAd", "SMSHomepageBannerAdFacebookEnabled")) {
+            adView.setBackgroundColor(Color.parseColor(ThemeInfo.getThemeInfo(ThemeUtils.getCurrentThemeName()).bannerAdBgColor));
+            actionBtn.setTextColor(Color.parseColor(ThemeInfo.getThemeInfo(ThemeUtils.getCurrentThemeName()).bannerAdActionTextColor));
+            Drawable actionBg = getResources().getDrawable(R.drawable.conversation_list_ad_action_pressed_bg);
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                ((LayerDrawable) actionBg).getDrawable(1)
+                        .setColorFilter(
+                                Color.parseColor(ThemeInfo.getThemeInfo(ThemeUtils.getCurrentThemeName()).bannerAdActionColor),
+                                PorterDuff.Mode.SRC_IN);
+            }
+            actionBtn.setBackgroundDrawable(actionBg);
+        }
+
         FrameLayout choice = ViewUtils.findViewById(adView, R.id.ad_choice);
         mAdContentView.setAdChoiceView(choice);
         mAdContainer.addView(mAdContentView);
@@ -739,8 +756,7 @@ public class ConversationFragment extends Fragment implements ConversationDataLi
         mMediaLayout = view.findViewById(R.id.camera_photo_layout);
         mWallpaperView = view.findViewById(R.id.conversation_fragment_wallpaper);
 
-        if (HSConfig.optBoolean(false, "Application", "SMSAd", "SMSDetailspageTopAd", "Enabled")
-                && HSApplication.getFirstLaunchInfo().appVersionCode >= 38) {
+        if (HSConfig.optBoolean(false, "Application", "SMSAd", "SMSDetailspageTopAd", "Enabled")) {
             BugleAnalytics.logEvent("Detailspage_TopAd_Should_Show", true, true);
             List<AcbNativeAd> nativeAds = AcbNativeAdManager.fetch(AdPlacement.AD_DETAIL_NATIVE, 1);
             if (nativeAds.size() > 0) {
@@ -1103,8 +1119,7 @@ public class ConversationFragment extends Fragment implements ConversationDataLi
         if (mNativeAdLoader != null) {
             mNativeAdLoader.cancel();
         }
-        if (HSConfig.optBoolean(false, "Application", "SMSAd", "SMSDetailspageTopAd", "Enabled")
-                && HSApplication.getFirstLaunchInfo().appVersionCode >= 38) {
+        if (HSConfig.optBoolean(false, "Application", "SMSAd", "SMSDetailspageTopAd", "Enabled")) {
             AcbNativeAdManager.preload(1, AdPlacement.AD_DETAIL_NATIVE);
         }
 
