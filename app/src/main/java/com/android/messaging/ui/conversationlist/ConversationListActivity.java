@@ -285,8 +285,7 @@ public class ConversationListActivity extends AbstractConversationListActivity
                 }
             });
 
-            if (HSConfig.optBoolean(false, "Application", "SMSAd", "SMSDetailspageTopAd", "Enabled")
-                    && HSApplication.getFirstLaunchInfo().appVersionCode >= 38) {
+            if (HSConfig.optBoolean(false, "Application", "SMSAd", "SMSDetailspageTopAd", "Enabled")) {
                 AcbNativeAdManager.preload(1, AdPlacement.AD_DETAIL_NATIVE);
             }
         }

@@ -40,8 +40,8 @@ import android.view.ViewGroup;
 import android.view.ViewGroup.MarginLayoutParams;
 import android.view.ViewPropertyAnimator;
 import android.widget.AbsListView;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.android.messaging.R;
@@ -70,12 +70,11 @@ import com.android.messaging.util.AccessibilityUtil;
 import com.android.messaging.util.Assert;
 import com.android.messaging.util.AvatarUriUtil;
 import com.android.messaging.util.BugleAnalytics;
-import com.android.messaging.util.HierarchyTreeChangeListener;
 import com.android.messaging.util.ImeUtil;
 import com.android.messaging.util.LogUtil;
 import com.android.messaging.util.UiUtils;
+import com.android.messaging.util.ViewUtils;
 import com.google.common.annotations.VisibleForTesting;
-import com.ihs.app.framework.HSApplication;
 import com.ihs.commons.config.HSConfig;
 import com.ihs.commons.notificationcenter.HSGlobalNotificationCenter;
 import com.ihs.commons.utils.HSBundle;
@@ -85,12 +84,13 @@ import com.superapps.util.Dimensions;
 import com.superapps.util.IntegerBuckets;
 import com.superapps.util.Navigations;
 import com.superapps.util.Preferences;
-import com.superapps.util.Threads;
 
-import net.appcloudbox.ads.base.ContainerView.AcbContentLayout;
+import net.appcloudbox.ads.base.AcbNativeAd;
 import net.appcloudbox.ads.base.ContainerView.AcbNativeAdContainerView;
+import net.appcloudbox.ads.base.ContainerView.AcbNativeAdIconView;
 import net.appcloudbox.ads.common.utils.AcbError;
-import net.appcloudbox.ads.expressad.AcbExpressAdView;
+import net.appcloudbox.ads.nativead.AcbNativeAdLoader;
+import net.appcloudbox.ads.nativead.AcbNativeAdManager;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -109,12 +109,15 @@ public class ConversationListFragment extends Fragment implements ConversationLi
     private boolean mArchiveMode;
     private boolean mBlockedAvailable;
     private boolean mForwardMessageMode;
-    private ViewGroup adContainer;
-    private AcbExpressAdView expressAdView;
+    private ViewGroup mAdContainer;
     private LinearLayoutManager manager;
     private boolean switchAd;
     private boolean adFirstPrepared = true;
     private boolean conversationFirstUpdated = true;
+    private boolean isFirstOnResume = true;
+
+    private AcbNativeAd mNativeAd;
+    private AcbNativeAdLoader mNativeAdLoader;
 
     public interface ConversationListFragmentHost {
         void onConversationClick(final ConversationListData listData,
@@ -181,21 +184,16 @@ public class ConversationListFragment extends Fragment implements ConversationLi
             if (mRecyclerView.canScrollVertically(-1)) {
                 BugleAnalytics.logEvent("SMS_Messages_Show_NotOnTop", true);
             } else {
-                if (HSConfig.optBoolean(true, "Application", "SMSAd", "SMSHomepageBannerAd")) {
-                    BugleAnalytics.logEvent("SMS_Messages_BannerAd_Should_Show", true, true);
-                    switchAd = false;
-                    if (expressAdView != null) {
-                        expressAdView.switchAd();
-                    }
+                switchAd = false;
+                if (!isFirstOnResume) {
+                    tryShowTopNativeAd();
                 }
             }
         }
         Assert.notNull(mHost);
         setScrolledToNewestConversationIfNeeded();
         updateUi();
-        if (!adFirstPrepared) {
-            prepareAd();
-        }
+        isFirstOnResume = false;
     }
 
     public void setScrolledToNewestConversationIfNeeded() {
@@ -221,9 +219,11 @@ public class ConversationListFragment extends Fragment implements ConversationLi
         super.onDestroy();
         mListBinding.unbind();
         mHost = null;
-        if (expressAdView != null) {
-            expressAdView.destroy();
-            expressAdView = null;
+        if (mNativeAdLoader != null) {
+            mNativeAdLoader.cancel();
+        }
+        if (mNativeAd != null) {
+            mNativeAd.release();
         }
     }
 
@@ -282,9 +282,8 @@ public class ConversationListFragment extends Fragment implements ConversationLi
 
                 if (!isFirstConversationVisible && isScrolledToFirstConversation()) {
                     BugleAnalytics.logEvent("SMS_Messages_SlideUpToTop");
-                    if (expressAdView != null && switchAd) {
-                        expressAdView.switchAd();
-                        BugleAnalytics.logEvent("SMS_Messages_BannerAd_Should_Show", true, true);
+                    if (switchAd) {
+                        tryShowTopNativeAd();
                         switchAd = false;
                     }
                 }
@@ -362,103 +361,116 @@ public class ConversationListFragment extends Fragment implements ConversationLi
 
         setHasOptionsMenu(true);
         if (HSConfig.optBoolean(true, "Application", "SMSAd", "SMSHomepageBannerAd")) {
-            initAd();
+            AcbNativeAdManager.preload(1, AdPlacement.AD_BANNER);
         }
         return rootView;
     }
 
+    private boolean isAdLoading = false;
 
-    private void initAd() {
-        adContainer = (ViewGroup) LayoutInflater.from(getActivity()).inflate(R.layout.conversation_list_header, mRecyclerView, false);
-        expressAdView = new AcbExpressAdView(HSApplication.getContext(), AdPlacement.AD_BANNER);
-        expressAdView.setCustomLayout(new AcbContentLayout(R.layout.item_conversation_list_ad)
-                .setActionId(R.id.banner_action)
-                .setIconId(R.id.banner_icon_image)
-                .setTitleId(R.id.banner_title)
-                .setDescriptionId(R.id.banner_des)
-        );
-        expressAdView.setAutoSwitchAd(AcbExpressAdView.AutoSwitchAd_None);
+    private void tryShowTopNativeAd() {
+        HSLog.d("try show top native ad");
+        if (!HSConfig.optBoolean(true, "Application", "SMSAd", "SMSHomepageBannerAd")) {
+            return;
+        }
+        if (isAdLoading) {
+            return;
+        }
+        if (mNativeAd != null) {
+            mNativeAd.release();
+        }
+        if (mNativeAdLoader != null) {
+            mNativeAdLoader.cancel();
+        }
 
-        expressAdView.setOnHierarchyChangeListener(HierarchyTreeChangeListener.wrap(new ViewGroup.OnHierarchyChangeListener() {
-            @Override
-            public void onChildViewAdded(View parent, View child) {
-                try {
-                    if (child instanceof RelativeLayout
-                            && ((RelativeLayout) child).getChildCount() == 1
-                            && ((RelativeLayout) child).getChildAt(0) instanceof AcbNativeAdContainerView) {
-                        AcbNativeAdContainerView nativeAdContainerView = (AcbNativeAdContainerView) ((RelativeLayout) child).getChildAt(0);
-                        nativeAdContainerView.getChildAt(1).setVisibility(View.GONE);
-                        ImageView ivAdPreview = expressAdView.findViewById(R.id.icon_ad_preview);
-                        ivAdPreview.getDrawable().setColorFilter(ConversationColors.get().getListTimeColor(), PorterDuff.Mode.SRC_ATOP);
+        BugleAnalytics.logEvent("SMS_Messages_BannerAd_Should_Show", true, true);
+        List<AcbNativeAd> nativeAds = AcbNativeAdManager.fetch(AdPlacement.AD_BANNER, 1);
+        if (nativeAds.size() > 0) {
+            mNativeAd = nativeAds.get(0);
+            mNativeAd.setNativeClickListener(
+                    acbAd -> BugleAnalytics.logEvent("SMS_Messages_BannerAd_Click", true, true));
+            showTopNativeAd();
+        } else {
+            mNativeAdLoader = AcbNativeAdManager.createLoaderWithPlacement(AdPlacement.AD_BANNER);
+            mNativeAdLoader.load(1, new AcbNativeAdLoader.AcbNativeAdLoadListener() {
+                @Override
+                public void onAdReceived(AcbNativeAdLoader acbNativeAdLoader, List<AcbNativeAd> list) {
+                    if (list.size() > 0) {
+                        mNativeAd = list.get(0);
+                        mNativeAd.setNativeClickListener(
+                                acbAd -> BugleAnalytics.logEvent("SMS_Messages_BannerAd_Click", true, true));
+                        showTopNativeAd();
                     }
-                } catch (Exception e) {
+                    isAdLoading = false;
                 }
 
-                Threads.postOnMainThread(() -> {
-                    try {
-                        TextView title = expressAdView.findViewById(R.id.banner_title);
-                        title.setTextColor(ConversationColors.get().getListTitleColor());
-                        TextView subtitle = expressAdView.findViewById(R.id.banner_des);
-                        subtitle.setTextColor(ConversationColors.get().getListSubtitleColor());
-                        if (HSConfig.optBoolean(true, "Application", "SMSAd", "SMSHomepageBannerAdFacebookEnabled")) {
-                            View adRoot = expressAdView.findViewById(R.id.ad_root);
-                            adRoot.setBackgroundColor(Color.parseColor(ThemeInfo.getThemeInfo(ThemeUtils.getCurrentThemeName()).bannerAdBgColor));
-                            TextView action = expressAdView.findViewById(R.id.banner_action);
-                            action.setTextColor(Color.parseColor(ThemeInfo.getThemeInfo(ThemeUtils.getCurrentThemeName()).bannerAdActionTextColor));
-                            Drawable actionBg = getResources().getDrawable(R.drawable.conversation_list_ad_action_pressed_bg);
-                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                                ((LayerDrawable) actionBg).getDrawable(1)
-                                        .setColorFilter(
-                                                Color.parseColor(ThemeInfo.getThemeInfo(ThemeUtils.getCurrentThemeName()).bannerAdActionColor),
-                                                PorterDuff.Mode.SRC_IN);
-                            }
-                            action.setBackgroundDrawable(actionBg);
-                        }
-                    } catch (Exception e) {
-                    }
-                });
-            }
-
-            @Override
-            public void onChildViewRemoved(View parent, View child) {
-
-            }
-        }));
-        expressAdView.setExpressAdViewListener(new AcbExpressAdView.AcbExpressAdViewListener() {
-            @Override
-            public void onAdShown(AcbExpressAdView acbExpressAdView) {
-                BugleAnalytics.logEvent("SMS_Messages_BannerAd_Show", true, true);
-            }
-
-            @Override
-            public void onAdClicked(AcbExpressAdView acbExpressAdView) {
-                BugleAnalytics.logEvent("SMS_Messages_BannerAd_Click", true, true);
-            }
-        });
-        adContainer.addView(expressAdView);
-
+                @Override
+                public void onAdFinished(AcbNativeAdLoader acbNativeAdLoader, AcbError acbError) {
+                    isAdLoading = false;
+                }
+            });
+            isAdLoading = true;
+        }
     }
 
-    private void prepareAd() {
-        if (expressAdView == null)
+    private void showTopNativeAd() {
+        HSLog.d("show top native ad");
+
+        if (mNativeAd == null) {
             return;
-        expressAdView.prepareAd(new AcbExpressAdView.PrepareAdListener() {
-            @Override
-            public void onAdReady(AcbExpressAdView acbExpressAdView) {
-                if (!mAdapter.hasHeader()) {
-                    mAdapter.setHeader(adContainer);
-                    if (manager.findFirstCompletelyVisibleItemPosition() == 0) {
-                        mRecyclerView.scrollToPosition(0);
-                    }
-                }
-            }
+        }
+        if (mAdContainer == null) {
+            mAdContainer = (ViewGroup) LayoutInflater.from(getActivity()).inflate(R.layout.conversation_list_header, mRecyclerView, false);
+        }
+        final View adView = LayoutInflater.from(getActivity()).inflate(R.layout.item_conversation_list_ad, mAdContainer, false);
 
-            @Override
-            public void onPrepareAdFailed(AcbExpressAdView acbExpressAdView, AcbError acbError) {
+        AcbNativeAdContainerView mAdContentView = new AcbNativeAdContainerView(mAdContainer.getContext());
+        mAdContentView.addContentView(adView);
 
+        AcbNativeAdIconView icon = ViewUtils.findViewById(adView, R.id.banner_icon_image);
+        icon.setShapeMode(1);
+        icon.setRadius(Dimensions.pxFromDp(20));
+        mAdContentView.setAdIconView(icon);
+        TextView title = ViewUtils.findViewById(adView, R.id.banner_title);
+        title.setTextColor(ConversationColors.get().getListTitleColor());
+        mAdContentView.setAdTitleView(title);
+        TextView description = ViewUtils.findViewById(adView, R.id.banner_des);
+        description.setTextColor(ConversationColors.get().getListSubtitleColor());
+        mAdContentView.setAdBodyView(description);
+
+        TextView actionBtn = ViewUtils.findViewById(adView, R.id.banner_action);
+        mAdContentView.setAdActionView(actionBtn);
+        if (HSConfig.optBoolean(true, "Application", "SMSAd", "SMSHomepageBannerAdFacebookEnabled")) {
+            adView.setBackgroundColor(Color.parseColor(ThemeInfo.getThemeInfo(ThemeUtils.getCurrentThemeName()).bannerAdBgColor));
+            actionBtn.setTextColor(Color.parseColor(ThemeInfo.getThemeInfo(ThemeUtils.getCurrentThemeName()).bannerAdActionTextColor));
+            Drawable actionBg = getResources().getDrawable(R.drawable.conversation_list_ad_action_pressed_bg);
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                ((LayerDrawable) actionBg).getDrawable(1)
+                        .setColorFilter(
+                                Color.parseColor(ThemeInfo.getThemeInfo(ThemeUtils.getCurrentThemeName()).bannerAdActionColor),
+                                PorterDuff.Mode.SRC_IN);
             }
-        });
-        adFirstPrepared = false;
+            actionBtn.setBackgroundDrawable(actionBg);
+        }
+
+        FrameLayout choice = ViewUtils.findViewById(adView, R.id.ad_choice);
+        mAdContentView.setAdChoiceView(choice);
+        mAdContainer.removeAllViews();
+        mAdContainer.addView(mAdContentView);
+
+        ImageView ivAdPreview = adView.findViewById(R.id.icon_ad_preview);
+        ivAdPreview.getDrawable().setColorFilter(ConversationColors.get().getListTimeColor(), PorterDuff.Mode.SRC_ATOP);
+
+        mAdContentView.hideAdCorner();
+        mAdContentView.fillNativeAd(mNativeAd);
+
+        if (!mAdapter.hasHeader()) {
+            mAdapter.setHeader(mAdContainer);
+            if (manager.findFirstCompletelyVisibleItemPosition() == 0) {
+                mRecyclerView.scrollToPosition(0);
+            }
+        }
+        BugleAnalytics.logEvent("SMS_Messages_BannerAd_Show", true, true);
     }
 
     @Override
@@ -487,9 +499,14 @@ public class ConversationListFragment extends Fragment implements ConversationLi
     @Override
     public void onPause() {
         super.onPause();
-        switchAd = true;
         mListState = mRecyclerView.getLayoutManager().onSaveInstanceState();
         mListBinding.getData().setScrolledToNewestConversation(false);
+
+        if (mNativeAdLoader != null) {
+            mNativeAdLoader.cancel();
+            isAdLoading = false;
+        }
+        switchAd = true;
     }
 
     /**
@@ -553,7 +570,8 @@ public class ConversationListFragment extends Fragment implements ConversationLi
         mAdapter.setDataList(dataList);
         HSLog.d("conversation list has : " + dataList.size());
         if (adFirstPrepared && !dataList.isEmpty()) {
-            prepareAd();
+            tryShowTopNativeAd();
+            adFirstPrepared = false;
         }
         updateEmptyListUi(cursor == null || dataList.size() == 0);
         if (cursor != null && cursor.getCount() > 0) {

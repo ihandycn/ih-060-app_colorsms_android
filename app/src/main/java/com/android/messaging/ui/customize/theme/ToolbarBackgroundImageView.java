@@ -1,10 +1,16 @@
 package com.android.messaging.ui.customize.theme;
 
 import android.content.Context;
+import android.graphics.Canvas;
 import android.support.v7.widget.AppCompatImageView;
 import android.util.AttributeSet;
 
 public class ToolbarBackgroundImageView extends AppCompatImageView {
+
+    private int mLeft;
+    private int mRight;
+    private int mTop;
+    private int mBottom;
 
     public ToolbarBackgroundImageView(Context context) {
         super(context);
@@ -19,11 +25,6 @@ public class ToolbarBackgroundImageView extends AppCompatImageView {
     }
 
     @Override
-    protected void onLayout(boolean changed, int left, int top, int right, int bottom) {
-        super.onLayout(changed, left, top, right, bottom);
-    }
-
-    @Override
     public void layout(int l, int t, int r, int b) {
         int[] params = WallpaperSizeManager.getInstance().getToolbarFrameSize();
         if (params != null) {
@@ -33,7 +34,17 @@ public class ToolbarBackgroundImageView extends AppCompatImageView {
             l = l - (width - r + l1) / 2;
             r = r + (width - r + l1) / 2;
             t = t - (height - (b - t));
+            mLeft = l;
+            mRight = r;
+            mTop = t;
+            mBottom = b;
         }
         super.layout(l, t, r, b);
+    }
+
+    @Override
+    protected void onDraw(Canvas canvas) {
+        setFrame(mLeft, mTop, mRight, mBottom);
+        super.onDraw(canvas);
     }
 }
