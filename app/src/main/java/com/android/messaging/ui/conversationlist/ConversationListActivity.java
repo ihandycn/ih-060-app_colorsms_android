@@ -46,7 +46,6 @@ import com.android.messaging.ui.customize.CustomBubblesActivity;
 import com.android.messaging.ui.customize.PrimaryColors;
 import com.android.messaging.ui.customize.ToolbarDrawables;
 import com.android.messaging.ui.customize.theme.ChooseThemeActivity;
-import com.android.messaging.ui.customize.theme.ThemeSelectActivity;
 import com.android.messaging.ui.customize.theme.ThemeUtils;
 import com.android.messaging.ui.dialog.FiveStarRateDialog;
 import com.android.messaging.ui.emoji.EmojiStoreActivity;
@@ -396,10 +395,8 @@ public class ConversationListActivity extends AbstractConversationListActivity
                         BugleAnalytics.logEvent("Menu_Settings_Click", true, true);
                         break;
                     case DRAWER_INDEX_RATE:
-//                        FiveStarRateDialog.showFiveStarFromSetting(ConversationListActivity.this);
-//                        BugleAnalytics.logEvent("Menu_FiveStart_Click", true, true);
-                        Intent o = new Intent(ConversationListActivity.this, ThemeSelectActivity.class);
-                        startActivity(o);
+                        FiveStarRateDialog.showFiveStarFromSetting(ConversationListActivity.this);
+                        BugleAnalytics.logEvent("Menu_FiveStart_Click", true, true);
                         break;
                     case DRAWER_INDEX_NONE:
                     default:
