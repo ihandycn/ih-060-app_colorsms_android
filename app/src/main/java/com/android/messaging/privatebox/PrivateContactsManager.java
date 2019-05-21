@@ -8,7 +8,7 @@ import com.android.messaging.datamodel.BugleDatabaseOperations;
 import com.android.messaging.datamodel.DataModel;
 import com.android.messaging.datamodel.DatabaseWrapper;
 import com.android.messaging.sms.MmsSmsUtils;
-import com.android.messaging.sms.MmsUtils;
+import com.android.messaging.util.CheckPermissionUtil;
 import com.android.messaging.util.PhoneUtils;
 import com.google.common.base.Joiner;
 import com.ihs.app.framework.HSApplication;
@@ -30,7 +30,10 @@ public class PrivateContactsManager {
     }
 
     public boolean isPrivateRecipient(List<String> recipients) {
-        //todo: check permission before use getOrCreateThreadId
+        if (!CheckPermissionUtil.isSmsPermissionGranted()) {
+            return false;
+        }
+
         List<String> recipientList = new ArrayList<>();
         for (String recipient : recipients) {
             recipientList.add(PhoneUtils.getDefault().getCanonicalBySimLocale(recipient.trim()));
