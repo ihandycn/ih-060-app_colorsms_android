@@ -1979,14 +1979,19 @@ public class BugleDatabaseOperations {
             selection.append(participantIds.get(i));
         }
         selection.append(")");
-        String conversationSelect = " ( SELECT " + ConversationParticipantsColumns.CONVERSATION_ID +
+        String conversationsInParticipant = " ( SELECT " + ConversationParticipantsColumns.CONVERSATION_ID +
                 " FROM " + DatabaseHelper.CONVERSATION_PARTICIPANTS_TABLE
                 + " GROUP BY " + ConversationParticipantsColumns.CONVERSATION_ID
                 + " HAVING COUNT(*)= " + participantIds.size() + " ) ";
 
+        String conversationsInConversationTable = " ( SELECT " + ConversationColumns._ID +
+                " FROM " + DatabaseHelper.CONVERSATIONS_TABLE + " ) ";
+
         String table = "( SELECT * FROM " + DatabaseHelper.CONVERSATION_PARTICIPANTS_TABLE
                 + " WHERE " + ConversationParticipantsColumns.CONVERSATION_ID
-                + " IN " + conversationSelect + " ) ";
+                + " IN " + conversationsInParticipant + " AND "
+                + ConversationParticipantsColumns.CONVERSATION_ID
+                + " IN " + conversationsInConversationTable + " ) ";
 
         final Cursor cursor = db.query(table,
                 new String[]{ConversationParticipantsColumns.CONVERSATION_ID,

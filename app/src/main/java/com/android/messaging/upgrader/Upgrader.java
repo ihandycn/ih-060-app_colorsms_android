@@ -46,7 +46,7 @@ public class Upgrader extends BaseUpgrader {
         }
 
         if (oldVersion < 42 && newVersion >= 42) {
-            addIsPrivateColumnInConversationTable();
+            addIsPrivateColumnInConversationTable(oldVersion >= 25);
             createPrivateBoxTables();
         }
 
@@ -86,8 +86,8 @@ public class Upgrader extends BaseUpgrader {
                 ConversationListItemData.getConversationListViewSql());
     }
 
-    public static void addIsPrivateColumnInConversationTable() {
-        final DatabaseWrapper db = DataModel.get().getDatabase();
+    public static void addIsPrivateColumnInConversationTable(boolean rebuildView) {
+        final DatabaseWrapper db = DataModel.get().getDatabaseWithoutMainCheck();
         Cursor cursor = null;
         try {
             cursor = db.rawQuery("SELECT * FROM " + DatabaseHelper.CONVERSATIONS_TABLE + " LIMIT 0"
@@ -105,8 +105,10 @@ public class Upgrader extends BaseUpgrader {
             }
         }
 
-        DatabaseHelper.rebuildView(db, ConversationListItemData.getConversationListView(),
-                ConversationListItemData.getConversationListViewSql());
+        if (rebuildView) {
+            DatabaseHelper.rebuildView(db, ConversationListItemData.getConversationListView(),
+                    ConversationListItemData.getConversationListViewSql());
+        }
     }
 
     public static void createPrivateBoxTables() {

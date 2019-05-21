@@ -40,9 +40,16 @@ public class PrivateContactsManager {
 
         long threadId = MmsSmsUtils.Threads.getOrCreateThreadId(HSApplication.getContext(), new HashSet<>(recipients));
         DatabaseWrapper db = DataModel.get().getDatabase();
-        Cursor cursor = db.query(PRIVATE_CONTACTS_TABLE, sProjection,
-                RECIPIENTS + "=? or " + THREAD_ID + "=?",
-                new String[]{recipientStr, String.valueOf(threadId)}, null, null, null);
+        Cursor cursor;
+
+        try {
+            cursor = db.query(PRIVATE_CONTACTS_TABLE, sProjection,
+                    RECIPIENTS + "=? or " + THREAD_ID + "=?",
+                    new String[]{recipientStr, String.valueOf(threadId)}, null, null, null);
+        } catch (Exception e) {
+            return false;
+        }
+
         if (cursor == null) {
             return false;
         } else {
