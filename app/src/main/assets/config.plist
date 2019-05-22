@@ -338,9 +338,9 @@
 						<key>NewConversationIconUrl</key>
 						<string></string>
 						<key>BubbleIncomingUrl</key>
-						<string>incoming.9.png</string>
+						<string></string>
 						<key>BubbleOutgoingUrl</key>
-						<string>outgoing.9.png</string>
+						<string></string>
 					</dict>
 					<key>cutegraffiti</key>
 					<dict>
@@ -742,7 +742,7 @@
 						<key>WallpaperUrl</key>
 						<string>wallpaper.jpg</string>
 						<key>NewConversationIconUrl</key>
-						<string></string>
+						<string>create.png</string>
 						<key>BubbleIncomingUrl</key>
 						<string>incoming.9.png</string>
 						<key>BubbleOutgoingUrl</key>
@@ -800,7 +800,7 @@
 						<key>WallpaperUrl</key>
 						<string>wallpaper.jpg</string>
 						<key>NewConversationIconUrl</key>
-						<string></string>
+						<string>create.png</string>
 						<key>BubbleIncomingUrl</key>
 						<string>incoming.9.png</string>
 						<key>BubbleOutgoingUrl</key>
@@ -858,11 +858,11 @@
 						<key>WallpaperUrl</key>
 						<string>wallpaper.jpg</string>
 						<key>NewConversationIconUrl</key>
-						<string></string>
+						<string>create.png</string>
 						<key>BubbleIncomingUrl</key>
-						<string>incoming.9.png</string>
+						<string></string>
 						<key>BubbleOutgoingUrl</key>
-						<string>outgoing.9.png</string>
+						<string></string>
 					</dict>
 					<key>waterdrop</key>
 					<dict>
@@ -916,7 +916,7 @@
 						<key>WallpaperUrl</key>
 						<string>wallpaper.jpg</string>
 						<key>NewConversationIconUrl</key>
-						<string></string>
+						<string>create.png</string>
 						<key>BubbleIncomingUrl</key>
 						<string>incoming.9.png</string>
 						<key>BubbleOutgoingUrl</key>
