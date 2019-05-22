@@ -84,7 +84,8 @@ class FactoryImpl extends Factory {
     private FactoryImpl() {
     }
 
-    public static Factory registerDB(final Context applicationContext) {
+    public static Factory registerDB(final Context applicationContext,
+                                     final BugleApplication application) {
         // This only gets called once (from BugleApplication.onCreate), but its not called in tests.
         Assert.isTrue(!sRegistered);
         Assert.isNull(Factory.get());
@@ -93,15 +94,6 @@ class FactoryImpl extends Factory {
         Factory.setInstance(factory);
         sRegistered = true;
 
-        factory.mDataModel = new DataModelImpl(applicationContext);
-        return factory;
-    }
-
-    public static Factory register(final Context applicationContext,
-                                   final BugleApplication application) {
-        FactoryImpl factory = (FactoryImpl) Factory.get();
-        // At this point Factory is published. Services can now get initialized and depend on
-        // Factory.get().
         factory.mApplication = application;
         factory.mApplicationContext = applicationContext;
         factory.mMemoryCacheManager = new MemoryCacheManager();
@@ -109,6 +101,16 @@ class FactoryImpl extends Factory {
         factory.mMediaResourceManager = new MediaResourceManager();
         factory.mBugleGservices = new BugleGservicesImpl(applicationContext);
         factory.mBugleApplicationPrefs = new BugleApplicationPrefs(applicationContext);
+        factory.mDataModel = new DataModelImpl(applicationContext);
+        return factory;
+    }
+
+    public static Factory register(final Context applicationContext,
+                                   final BugleApplication application) {
+
+        FactoryImpl factory = (FactoryImpl) Factory.get();
+        // At this point Factory is published. Services can now get initialized and depend on
+        // Factory.get().
         factory.mBugleWidgetPrefs = new BugleWidgetPrefs(applicationContext);
         factory.mBugleCustomizePrefs = new BugleCustomizePrefs(applicationContext);
         factory.mUIIntents = new UIIntentsImpl();

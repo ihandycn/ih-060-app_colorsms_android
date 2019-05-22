@@ -293,7 +293,7 @@ public class BugleApplication extends HSApplication implements UncaughtException
         // Note onCreate is called in both test and real application environments
         if (!sRunningTests) {
             // Only create the factory if not running tests
-            FactoryImpl.registerDB(getApplicationContext());
+            FactoryImpl.registerDB(getApplicationContext(), this);
         } else {
             LogUtil.e(TAG, "BugleApplication.onCreate: FactoryImpl.register skipped for test run");
         }
