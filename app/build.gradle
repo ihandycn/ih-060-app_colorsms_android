@@ -26,6 +26,10 @@ android {
         targetCompatibility JavaVersion.VERSION_1_8
     }
 
+    aaptOptions {
+        ignoreAssetsPattern "!*.plist:!.DS_Store"
+    }
+
     dexOptions {
         javaMaxHeapSize "4g"
     }
