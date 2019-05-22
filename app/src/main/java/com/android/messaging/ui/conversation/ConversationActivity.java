@@ -75,7 +75,7 @@ import net.appcloudbox.ads.interstitialad.AcbInterstitialAdManager;
 import java.util.List;
 
 public class ConversationActivity extends BugleActionBarActivity
-        implements ContactPickerFragmentHost, ConversationFragmentHost,
+        implements ConversationFragmentHost,
         ConversationActivityUiStateHost, ViewTreeObserver.OnGlobalLayoutListener {
     public static final int FINISH_RESULT_CODE = 1;
     public static final int DELETE_CONVERSATION_RESULT_CODE = 2;
@@ -307,10 +307,7 @@ public class ConversationActivity extends BugleActionBarActivity
     public void updateActionBar(final ActionBar actionBar) {
         super.updateActionBar(actionBar);
         final ConversationFragment conversation = getConversationFragment();
-        final ContactPickerFragment contactPicker = getContactPicker();
-        if (contactPicker != null && mUiState.shouldShowContactPickerFragment()) {
-            contactPicker.updateActionBar(actionBar);
-        } else if (conversation != null && mUiState.shouldShowConversationFragment()) {
+        if (conversation != null && mUiState.shouldShowConversationFragment()) {
             conversation.updateActionBar(actionBar, mTitleTextView);
         }
 
@@ -406,36 +403,9 @@ public class ConversationActivity extends BugleActionBarActivity
         }
     }
 
-    private ContactPickerFragment getContactPicker() {
-        return (ContactPickerFragment) getFragmentManager().findFragmentByTag(
-                ContactPickerFragment.FRAGMENT_TAG);
-    }
-
     public ConversationFragment getConversationFragment() {
         return (ConversationFragment) getFragmentManager().findFragmentByTag(
                 ConversationFragment.FRAGMENT_TAG);
-    }
-
-    @Override // From ContactPickerFragmentHost
-    public void onGetOrCreateNewConversation(final String conversationId) {
-        Assert.isTrue(conversationId != null);
-        mUiState.onGetOrCreateConversation(conversationId);
-    }
-
-    @Override // From ContactPickerFragmentHost
-    public void onBackButtonPressed() {
-        onBackPressed();
-    }
-
-    @Override // From ContactPickerFragmentHost
-    public void onInitiateAddMoreParticipants() {
-        mUiState.onAddMoreParticipants();
-    }
-
-
-    @Override
-    public void onParticipantCountChanged(final boolean canAddMoreParticipants) {
-        mUiState.onParticipantCountUpdated(canAddMoreParticipants);
     }
 
     @Override // From ConversationFragmentHost
@@ -483,63 +453,41 @@ public class ConversationActivity extends BugleActionBarActivity
         final FragmentManager fragmentManager = getFragmentManager();
         final FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
 
-        final boolean needConversationFragment = mUiState.shouldShowConversationFragment();
-        final boolean needContactPickerFragment = mUiState.shouldShowContactPickerFragment();
+//        final boolean needConversationFragment = mUiState.shouldShowConversationFragment();
+//        final boolean needContactPickerFragment = mUiState.shouldShowContactPickerFragment();
         ConversationFragment conversationFragment = getConversationFragment();
 
         // Set up the conversation fragment.
-        if (needConversationFragment) {
-            Assert.notNull(conversationId);
-            if (conversationFragment == null) {
-                conversationFragment = new ConversationFragment();
-                fragmentTransaction.add(R.id.conversation_fragment_container,
-                        conversationFragment, ConversationFragment.FRAGMENT_TAG);
-                if (HSConfig.optBoolean(false, "Application", "SMSAd", "SMSDetailspageFullAd", "Enabled")
-                        && System.currentTimeMillis() - Preferences.getDefault().getLong(PREF_KEY_WIRE_AD_SHOW_TIME, -1)
-                        > HSConfig.optInteger(5, "Application", "SMSAd", "SMSDetailspageFullAd", "MinInterval") * DateUtils.MINUTE_IN_MILLIS
-                        && System.currentTimeMillis() - CommonUtils.getAppInstallTimeMillis()
-                        > HSConfig.optInteger(2, "Application", "SMSAd", "SMSDetailspageFullAd", "ShowAfterInstall") * DateUtils.HOUR_IN_MILLIS) {
-                    AcbInterstitialAdManager.preload(1, AdPlacement.AD_WIRE);
-                }
+        Assert.notNull(conversationId);
+        if (conversationFragment == null) {
+            conversationFragment = new ConversationFragment();
+            fragmentTransaction.add(R.id.conversation_fragment_container,
+                    conversationFragment, ConversationFragment.FRAGMENT_TAG);
+            if (HSConfig.optBoolean(false, "Application", "SMSAd", "SMSDetailspageFullAd", "Enabled")
+                    && System.currentTimeMillis() - Preferences.getDefault().getLong(PREF_KEY_WIRE_AD_SHOW_TIME, -1)
+                    > HSConfig.optInteger(5, "Application", "SMSAd", "SMSDetailspageFullAd", "MinInterval") * DateUtils.MINUTE_IN_MILLIS
+                    && System.currentTimeMillis() - CommonUtils.getAppInstallTimeMillis()
+                    > HSConfig.optInteger(2, "Application", "SMSAd", "SMSDetailspageFullAd", "ShowAfterInstall") * DateUtils.HOUR_IN_MILLIS) {
+                AcbInterstitialAdManager.preload(1, AdPlacement.AD_WIRE);
+            }
 
-                // todo @zhe.li.1 重构新建短信的代码，这块暂时隐藏键盘
-                InputMethodManager imm = (InputMethodManager) getSystemService(Activity.INPUT_METHOD_SERVICE);
-                View view = getCurrentFocus();
-                if (view == null) {
-                    view = new View(this);
-                }
-                imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+            // todo @zhe.li.1 重构新建短信的代码，这块暂时隐藏键盘
+            InputMethodManager imm = (InputMethodManager) getSystemService(Activity.INPUT_METHOD_SERVICE);
+            View view = getCurrentFocus();
+            if (view == null) {
+                view = new View(this);
             }
-            final MessageData draftData = intent.getParcelableExtra(
-                    UIIntents.UI_INTENT_EXTRA_DRAFT_DATA);
-            if (!needContactPickerFragment) {
-                // Once the user has committed the audience,remove the draft data from the
-                // intent to prevent reuse
-                intent.removeExtra(UIIntents.UI_INTENT_EXTRA_DRAFT_DATA);
-            }
-            conversationFragment.setHost(this);
-            conversationFragment.setConversationInfo(this, conversationId, draftData);
-        } else if (conversationFragment != null) {
-            // Don't save draft to DB when removing conversation fragment and switching to
-            // contact picking mode.  The draft is intended for the new group.
-            conversationFragment.suppressWriteDraft();
-            fragmentTransaction.remove(conversationFragment);
+            imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
         }
-
-        // Set up the contact picker fragment.
-        ContactPickerFragment contactPickerFragment = getContactPicker();
-        if (needContactPickerFragment) {
-            if (contactPickerFragment == null) {
-                contactPickerFragment = new ContactPickerFragment();
-                fragmentTransaction.add(R.id.contact_picker_fragment_container,
-                        contactPickerFragment, ContactPickerFragment.FRAGMENT_TAG);
-            }
-            contactPickerFragment.setHost(this);
-            contactPickerFragment.setContactPickingMode(mUiState.getDesiredContactPickingMode(),
-                    animate);
-        } else if (contactPickerFragment != null) {
-            fragmentTransaction.remove(contactPickerFragment);
-        }
+        final MessageData draftData = intent.getParcelableExtra(
+                UIIntents.UI_INTENT_EXTRA_DRAFT_DATA);
+//      if (!needContactPickerFragment) {
+        // Once the user has committed the audience,remove the draft data from the
+        // intent to prevent reuse
+        intent.removeExtra(UIIntents.UI_INTENT_EXTRA_DRAFT_DATA);
+//      }
+        conversationFragment.setHost(this);
+        conversationFragment.setConversationInfo(this, conversationId, draftData);
 
         fragmentTransaction.commit();
         invalidateActionBar();
