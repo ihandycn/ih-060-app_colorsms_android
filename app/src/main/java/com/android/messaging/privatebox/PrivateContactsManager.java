@@ -30,9 +30,6 @@ public class PrivateContactsManager {
     }
 
     public boolean isPrivateRecipient(List<String> recipients) {
-        if (!CheckPermissionUtil.isSmsPermissionGranted()) {
-            return false;
-        }
 
         List<String> recipientList = new ArrayList<>();
         for (String recipient : recipients) {
@@ -41,7 +38,12 @@ public class PrivateContactsManager {
         Collections.sort(recipientList, String::compareTo);
         String recipientStr = Joiner.on(",").join(recipientList);
 
-        long threadId = MmsSmsUtils.Threads.getOrCreateThreadId(HSApplication.getContext(), new HashSet<>(recipients));
+        long threadId = -1;
+        try {
+            threadId = MmsSmsUtils.Threads.getOrCreateThreadId(HSApplication.getContext(), new HashSet<>(recipients));
+        } catch (Exception e) {
+
+        }
         DatabaseWrapper db = DataModel.get().getDatabase();
         Cursor cursor;
 

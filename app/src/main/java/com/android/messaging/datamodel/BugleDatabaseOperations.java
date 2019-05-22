@@ -52,8 +52,10 @@ import com.android.messaging.util.OsUtil;
 import com.android.messaging.util.PhoneUtils;
 import com.android.messaging.util.UriUtil;
 import com.android.messaging.widget.WidgetConversationProvider;
+import com.crashlytics.android.core.CrashlyticsCore;
 import com.google.common.annotations.VisibleForTesting;
 import com.ihs.commons.utils.HSLog;
+import com.superapps.debug.CrashlyticsLog;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -454,6 +456,10 @@ public class BugleDatabaseOperations {
         Assert.isTrue(conversationRowId != -1);
         if (conversationRowId == -1) {
             LogUtil.e(TAG, "BugleDatabaseOperations : failed to insert conversation into table");
+            if (FabricUtils.isFabricInited()) {
+                CrashlyticsCore.getInstance().logException(
+                        new CrashlyticsLog("failed to insert conversation into table"));
+            }
             return null;
         }
 

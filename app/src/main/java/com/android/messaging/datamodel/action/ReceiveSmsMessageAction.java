@@ -42,6 +42,9 @@ import com.android.messaging.util.CheckPermissionUtil;
 import com.android.messaging.util.FabricUtils;
 import com.android.messaging.util.LogUtil;
 import com.android.messaging.util.OsUtil;
+import com.android.messaging.util.TextUtil;
+import com.crashlytics.android.core.CrashlyticsCore;
+import com.superapps.debug.CrashlyticsLog;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -104,6 +107,15 @@ public class ReceiveSmsMessageAction extends Action implements Parcelable {
                 db, rawSender.getNormalizedDestination());
         final String conversationId = BugleDatabaseOperations.
                 getOrCreateConversationFromRecipient(db, threadId, blocked, rawSender);
+
+        if (TextUtils.isEmpty(conversationId)) {
+            if (FabricUtils.isFabricInited()) {
+                CrashlyticsCore.getInstance().logException(
+                        new CrashlyticsLog("conversation is null, thread = " + threadId
+                                + "  sender empty ? " + TextUtils.isEmpty(rawSender.getNormalizedDestination())));
+            }
+            return null;
+        }
 
         final boolean messageInFocusedConversation =
                 DataModel.get().isFocusedConversation(conversationId);
