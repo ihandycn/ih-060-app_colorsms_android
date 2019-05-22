@@ -101,7 +101,11 @@ public class MoveMessageToPrivateBoxAction extends Action {
                         values.clear();
                         values.put(DatabaseHelper.MessageColumns.SMS_MESSAGE_URI, localUri.toString());
                         BugleDatabaseOperations.updateMessageRow(db, messageId, values);
-                        MmsUtils.deleteMessage(telephonyUri);
+                        try {
+                            MmsUtils.deleteMessage(telephonyUri);
+                        } catch (Exception e) {
+
+                        }
                     }
                     if (smsCursor != null) {
                         smsCursor.close();
@@ -195,7 +199,7 @@ public class MoveMessageToPrivateBoxAction extends Action {
     }
 
     private static void bindMmsAddrValues(ContentValues values, Cursor cursor) {
-        for(int i = 0; i < cursor.getColumnCount(); i++) {
+        for (int i = 0; i < cursor.getColumnCount(); i++) {
             if (!cursor.isNull(i) && PrivateMmsEntry.Addr.sSupportedFields.contains(cursor.getColumnName(i))) {
                 values.put(cursor.getColumnName(i), cursor.getString(i));
             }

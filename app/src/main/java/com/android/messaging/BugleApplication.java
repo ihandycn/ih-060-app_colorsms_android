@@ -230,9 +230,11 @@ public class BugleApplication extends HSApplication implements UncaughtException
                 initAutopilot(this);
             }));
 
-            initWorks.add(new SyncMainThreadTask("InitFactoryImpl", this::initFactoryImpl));
+            initWorks.add(new SyncMainThreadTask("InitFactoryImplDB", this::initFactoryImplDB));
 
             initWorks.add(new SyncMainThreadTask("Upgrade", () -> Upgrader.getUpgrader(this).upgrade()));
+
+            initWorks.add(new SyncMainThreadTask("InitFactoryImpl", this::initFactoryImpl));
 
             initWorks.add(new SyncMainThreadTask("InitAd", this::initAd));
 
@@ -285,6 +287,16 @@ public class BugleApplication extends HSApplication implements UncaughtException
 
     public static boolean isFabricInited() {
         return isFabricInited;
+    }
+
+    private void initFactoryImplDB() {
+        // Note onCreate is called in both test and real application environments
+        if (!sRunningTests) {
+            // Only create the factory if not running tests
+            FactoryImpl.registerDB(getApplicationContext());
+        } else {
+            LogUtil.e(TAG, "BugleApplication.onCreate: FactoryImpl.register skipped for test run");
+        }
     }
 
     private void initFactoryImpl() {

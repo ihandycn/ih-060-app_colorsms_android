@@ -67,8 +67,10 @@ import com.android.messaging.util.FabricUtils;
 import com.android.messaging.util.LogUtil;
 import com.android.messaging.util.PendingIntentConstants;
 import com.android.messaging.util.UriUtil;
+import com.crashlytics.android.core.CrashlyticsCore;
 import com.google.common.collect.Lists;
 import com.ihs.app.framework.HSApplication;
+import com.superapps.debug.CrashlyticsLog;
 import com.superapps.util.Notifications;
 
 import java.util.ArrayList;
@@ -967,6 +969,13 @@ public abstract class MessageNotificationState extends NotificationState {
                     if (currConvInfo == null) {
                         final ConversationListItemData convData =
                                 ConversationListItemData.getExistingConversation(db, convId);
+                        if (convData == null) {
+                            if (FabricUtils.isFabricInited()) {
+                                CrashlyticsCore.getInstance().logException(
+                                        new CrashlyticsLog("install version " + HSApplication.getFirstLaunchInfo().appVersionCode));
+                            }
+                            continue;
+                        }
                         if (!convData.getNotificationEnabled()) {
                             // Skip conversations that have notifications disabled.
                             continue;
