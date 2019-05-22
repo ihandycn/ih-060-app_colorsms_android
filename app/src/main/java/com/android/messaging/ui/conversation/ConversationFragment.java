@@ -86,7 +86,6 @@ import com.android.messaging.datamodel.data.ParticipantData;
 import com.android.messaging.datamodel.data.PendingAttachmentData;
 import com.android.messaging.datamodel.data.SubscriptionListData.SubscriptionListEntry;
 import com.android.messaging.privatebox.AppPrivateLockManager;
-import com.android.messaging.privatebox.PrivateMessageManager;
 import com.android.messaging.ui.BaseAlertDialog;
 import com.android.messaging.ui.BugleActionBarActivity;
 import com.android.messaging.ui.ConversationDrawables;
@@ -119,7 +118,6 @@ import com.android.messaging.util.UiUtils;
 import com.android.messaging.util.UriUtil;
 import com.android.messaging.util.ViewUtils;
 import com.google.common.annotations.VisibleForTesting;
-import com.ihs.app.framework.HSApplication;
 import com.ihs.commons.config.HSConfig;
 import com.ihs.commons.notificationcenter.HSGlobalNotificationCenter;
 import com.ihs.commons.notificationcenter.INotificationObserver;
@@ -624,17 +622,17 @@ public class ConversationFragment extends Fragment implements ConversationDataLi
         mAdContentView.setAdBodyView(description);
         TextView actionBtn = ViewUtils.findViewById(adView, R.id.banner_action);
         mAdContentView.setAdActionView(actionBtn);
-        if (HSConfig.optBoolean(true, "Application", "SMSAd", "SMSHomepageBannerAdFacebookEnabled")) {
+        actionBtn.setTextColor(Color.parseColor(ThemeInfo.getThemeInfo(ThemeUtils.getCurrentThemeName()).bannerAdActionTextColor));
+        Drawable actionBg = getResources().getDrawable(R.drawable.conversation_list_ad_action_pressed_bg);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            ((LayerDrawable) actionBg).getDrawable(1)
+                    .setColorFilter(
+                            Color.parseColor(ThemeInfo.getThemeInfo(ThemeUtils.getCurrentThemeName()).bannerAdActionColor),
+                            PorterDuff.Mode.SRC_IN);
+        }
+        actionBtn.setBackgroundDrawable(actionBg);
+        if (HSConfig.optBoolean(true, "Application", "SMSAd", "SMSDetailspageTopAd", "FacebookEnabled")) {
             adView.setBackgroundColor(Color.parseColor(ThemeInfo.getThemeInfo(ThemeUtils.getCurrentThemeName()).bannerAdBgColor));
-            actionBtn.setTextColor(Color.parseColor(ThemeInfo.getThemeInfo(ThemeUtils.getCurrentThemeName()).bannerAdActionTextColor));
-            Drawable actionBg = getResources().getDrawable(R.drawable.conversation_list_ad_action_pressed_bg);
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                ((LayerDrawable) actionBg).getDrawable(1)
-                        .setColorFilter(
-                                Color.parseColor(ThemeInfo.getThemeInfo(ThemeUtils.getCurrentThemeName()).bannerAdActionColor),
-                                PorterDuff.Mode.SRC_IN);
-            }
-            actionBtn.setBackgroundDrawable(actionBg);
         }
 
         FrameLayout choice = ViewUtils.findViewById(adView, R.id.ad_choice);
