@@ -1056,7 +1056,7 @@
 						<key>FontName</key>
 						<string>K2D</string>
 						<key>AvatarForegroundColor</key>
-						<string>10002b</string>
+						<string>#10002b</string>
 						<key>ListTitleColor</key>
 						<string>#10002b</string>
 						<key>ListSubtitleColor</key>
@@ -1114,7 +1114,7 @@
 						<key>FontName</key>
 						<string>Kalam</string>
 						<key>AvatarForegroundColor</key>
-						<string>10002b</string>
+						<string>#10002b</string>
 						<key>ListTitleColor</key>
 						<string>#ffffff</string>
 						<key>ListSubtitleColor</key>
@@ -1172,7 +1172,7 @@
 						<key>FontName</key>
 						<string>Kalam</string>
 						<key>AvatarForegroundColor</key>
-						<string>10002b</string>
+						<string>#10002b</string>
 						<key>ListTitleColor</key>
 						<string>#ffffff</string>
 						<key>ListSubtitleColor</key>
@@ -1230,7 +1230,7 @@
 						<key>FontName</key>
 						<string>Poppins</string>
 						<key>AvatarForegroundColor</key>
-						<string>10002b</string>
+						<string>#10002b</string>
 						<key>ListTitleColor</key>
 						<string>#ffffff</string>
 						<key>ListSubtitleColor</key>
@@ -1288,7 +1288,7 @@
 						<key>FontName</key>
 						<string>AveriaLibre</string>
 						<key>AvatarForegroundColor</key>
-						<string>10002b</string>
+						<string>#10002b</string>
 						<key>ListTitleColor</key>
 						<string>#f8ffef</string>
 						<key>ListSubtitleColor</key>
@@ -1346,7 +1346,7 @@
 						<key>FontName</key>
 						<string>AveriaLibre</string>
 						<key>AvatarForegroundColor</key>
-						<string>10002b</string>
+						<string>#10002b</string>
 						<key>ListTitleColor</key>
 						<string>#19191c</string>
 						<key>ListSubtitleColor</key>
@@ -1404,7 +1404,7 @@
 						<key>FontName</key>
 						<string>Poppins</string>
 						<key>AvatarForegroundColor</key>
-						<string>10002b</string>
+						<string>#10002b</string>
 						<key>ListTitleColor</key>
 						<string>#ffffff</string>
 						<key>ListSubtitleColor</key>
@@ -1462,7 +1462,7 @@
 						<key>FontName</key>
 						<string>AveriaLibre</string>
 						<key>AvatarForegroundColor</key>
-						<string>10002b</string>
+						<string>#10002b</string>
 						<key>ListTitleColor</key>
 						<string>#ac3c53</string>
 						<key>ListSubtitleColor</key>
