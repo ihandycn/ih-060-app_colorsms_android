@@ -29,7 +29,8 @@ import com.google.common.annotations.VisibleForTesting;
  * implements Parcelable and it's persisted across activity tear down and relaunch.
  */
 public class ConversationActivityUiState implements Parcelable, Cloneable {
-    interface ConversationActivityUiStateHost {
+    public interface ConversationActivityUiStateHost {
+        //当从ContactPicker跳转到Conversation时执行该方法
         void onConversationContactPickerUiStateChanged(int oldState, int newState, boolean animate);
     }
 
@@ -79,7 +80,7 @@ public class ConversationActivityUiState implements Parcelable, Cloneable {
     /**
      * Create a new instance with an initial conversation id.
      */
-    ConversationActivityUiState(final String conversationId) {
+    public ConversationActivityUiState(final String conversationId) {
         // The conversation activity may be initialized with only one of two states:
         // Conversation-only (when there's a conversation id) or picking initial contact
         // (when no conversation id is given).
@@ -141,6 +142,7 @@ public class ConversationActivityUiState implements Parcelable, Cloneable {
     public String getConversationId() {
         return mConversationId;
     }
+
 
     /**
      * Called whenever the contact picker fragment successfully fetched or created a conversation.
@@ -286,7 +288,7 @@ public class ConversationActivityUiState implements Parcelable, Cloneable {
     };
 
     @Override
-    protected ConversationActivityUiState clone() {
+    public ConversationActivityUiState clone() {
         try {
             return (ConversationActivityUiState) super.clone();
         } catch (CloneNotSupportedException e) {

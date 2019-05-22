@@ -42,6 +42,7 @@ import com.android.messaging.ui.SnackBar;
 import com.android.messaging.ui.SnackBarInteraction;
 import com.android.messaging.ui.UIIntents;
 import com.android.messaging.ui.contact.AddContactsConfirmationDialog;
+import com.android.messaging.ui.contact.ContactPickerActivity;
 import com.android.messaging.ui.conversationlist.ConversationListFragment.ConversationListFragmentHost;
 import com.android.messaging.ui.conversationlist.MultiSelectActionModeCallback.SelectedConversation;
 import com.android.messaging.util.BugleAnalytics;
@@ -301,7 +302,9 @@ public abstract class AbstractConversationListActivity extends BugleActionBarAct
 
     @Override
     public void onCreateConversationClick() {
-        UIIntents.get().launchCreateNewConversationActivity(this, null);
+//        UIIntents.get().launchCreateNewConversationActivity(this, null);
+        Intent intent = new Intent(this, ContactPickerActivity.class);
+        startActivity(intent);
     }
 
 

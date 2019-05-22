@@ -27,6 +27,7 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.text.format.DateUtils;
+import android.util.Log;
 import android.view.ActionMode;
 import android.view.MenuItem;
 import android.view.View;
@@ -43,6 +44,7 @@ import com.android.messaging.datamodel.MessagingContentProvider;
 import com.android.messaging.datamodel.data.MessageData;
 import com.android.messaging.ui.BugleActionBarActivity;
 import com.android.messaging.ui.UIIntents;
+import com.android.messaging.ui.contact.ContactPickerActivity;
 import com.android.messaging.ui.contact.ContactPickerFragment;
 import com.android.messaging.ui.contact.ContactPickerFragment.ContactPickerFragmentHost;
 import com.android.messaging.ui.conversation.ConversationActivityUiState.ConversationActivityUiStateHost;
@@ -102,6 +104,7 @@ public class ConversationActivity extends BugleActionBarActivity
     private AcbInterstitialAd mInterstitialAd;
     private long mCreateTime;
     private Toolbar toolbar;
+    private final String TAG = "conversation_act";
 
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
@@ -375,19 +378,23 @@ public class ConversationActivity extends BugleActionBarActivity
             if (ads.size() > 0) {
                 mInterstitialAd = ads.get(0);
                 mInterstitialAd.setInterstitialAdListener(new AcbInterstitialAd.IAcbInterstitialAdListener() {
-                    @Override public void onAdDisplayed() {
+                    @Override
+                    public void onAdDisplayed() {
 
                     }
 
-                    @Override public void onAdClicked() {
+                    @Override
+                    public void onAdClicked() {
                         BugleAnalytics.logEvent("Detailspage_FullAd_Click", true, true);
                     }
 
-                    @Override public void onAdClosed() {
+                    @Override
+                    public void onAdClosed() {
                         mInterstitialAd.release();
                     }
 
-                    @Override public void onAdDisplayFailed(AcbError acbError) {
+                    @Override
+                    public void onAdDisplayFailed(AcbError acbError) {
 
                     }
                 });
@@ -579,4 +586,6 @@ public class ConversationActivity extends BugleActionBarActivity
             finish();
         }
     }
+
+
 }

@@ -32,6 +32,7 @@ import android.transition.Explode;
 import android.transition.Transition;
 import android.transition.Transition.EpicenterCallback;
 import android.transition.TransitionManager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -108,6 +109,7 @@ public class ContactPickerFragment extends Fragment implements ContactPickerData
         void onParticipantCountChanged(boolean canAddMoreParticipants);
 
         void invalidateActionBar();
+
     }
 
     @VisibleForTesting
@@ -468,7 +470,7 @@ public class ContactPickerFragment extends Fragment implements ContactPickerData
     public void onContactChipsChanged(final int oldCount, final int newCount) {
         Assert.isTrue(oldCount != newCount);
         if (mContactPickingMode == MODE_PICK_INITIAL_CONTACT) {
-            // Initial picking mode. Start a conversation once a recipient has been picked.
+            Log.i("contact_pick_frag", "onContactChipsChanged: ");
             maybeGetOrCreateConversation();
         } else if (mContactPickingMode == MODE_CHIPS_ONLY) {
             // oldCount == 0 means we are restoring from savedInstanceState to add the existing
