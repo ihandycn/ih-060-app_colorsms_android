@@ -102,6 +102,11 @@ class FactoryImpl extends Factory {
         factory.mBugleGservices = new BugleGservicesImpl(applicationContext);
         factory.mBugleApplicationPrefs = new BugleApplicationPrefs(applicationContext);
         factory.mDataModel = new DataModelImpl(applicationContext);
+        factory.mBugleWidgetPrefs = new BugleWidgetPrefs(applicationContext);
+        factory.mBugleCustomizePrefs = new BugleCustomizePrefs(applicationContext);
+        factory.mSubscriptionPrefs = new SparseArray<BugleSubscriptionPrefs>();
+        factory.mMediaUtil = new MediaUtilImpl();
+        factory.mUIIntents = new UIIntentsImpl();
         return factory;
     }
 
@@ -111,12 +116,7 @@ class FactoryImpl extends Factory {
         FactoryImpl factory = (FactoryImpl) Factory.get();
         // At this point Factory is published. Services can now get initialized and depend on
         // Factory.get().
-        factory.mBugleWidgetPrefs = new BugleWidgetPrefs(applicationContext);
-        factory.mBugleCustomizePrefs = new BugleCustomizePrefs(applicationContext);
-        factory.mUIIntents = new UIIntentsImpl();
         factory.mContactContentObserver = new ContactContentObserver();
-        factory.mMediaUtil = new MediaUtilImpl();
-        factory.mSubscriptionPrefs = new SparseArray<BugleSubscriptionPrefs>();
         factory.mCarrierConfigValuesLoader = new BugleCarrierConfigValuesLoader(applicationContext);
         application.registerActivityLifecycleCallbacks(new Application.ActivityLifecycleCallbacks() {
 

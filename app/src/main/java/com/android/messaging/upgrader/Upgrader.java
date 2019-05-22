@@ -45,7 +45,7 @@ public class Upgrader extends BaseUpgrader {
             FontStyleManager.getInstance().setFontScaleLevel(fontLevel);
         }
 
-        if (oldVersion < 42 && newVersion >= 42) {
+        if (oldVersion < 45 && newVersion >= 45) {
             addIsPrivateColumnInConversationTable(oldVersion >= 25);
             createPrivateBoxTables();
         }
