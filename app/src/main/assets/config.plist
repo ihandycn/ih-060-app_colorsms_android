@@ -287,7 +287,7 @@
 					<key>flash</key>
 					<dict>
 					    <key>IsLocalTheme</key>
-					    <false>
+					    <false/>
 						<key>PreviewList</key>
 						<array>
 							<string>0.jpg</string>
@@ -349,9 +349,9 @@
 							<string>0.jpg</string>
 						</array>
 						<key>Hot</key>
-						<real>9999</real>
+						<integer>9999</integer>
 						<key>IsLocalTheme</key>
-                        <false>
+                        <false/>
 						<key>Name</key>
 						<string>CoolGraffiti</string>
 						<key>AvatarUrl</key>
