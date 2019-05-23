@@ -2,7 +2,6 @@ package com.android.messaging.ui.appsettings;
 
 import android.content.Context;
 import android.support.annotation.IntDef;
-import android.text.TextUtils;
 
 import com.android.messaging.Factory;
 import com.android.messaging.R;
@@ -32,33 +31,16 @@ public class SendDelaySettings {
 
     @SendDelay
     public static int getSendDelay() {
-        return getSendDelay("");
-    }
-
-    @SendDelay
-    public static int getSendDelay(String conversationId) {
-        if (TextUtils.isEmpty(conversationId)) {
-            return sPrefs.getInt(PREF_KEY_SEND_DELAY, NO_DELAY);
-        }
-        return sPrefs.getInt(PREF_KEY_SEND_DELAY + conversationId, getSendDelay());
-    }
-
-    public static void setSendDelay(String conversationId, @SendDelay int mode) {
-        if (TextUtils.isEmpty(conversationId)) {
-            sPrefs.putInt(PREF_KEY_SEND_DELAY, mode);
-        } else {
-            sPrefs.putInt(PREF_KEY_SEND_DELAY + conversationId
-                    , mode);
-        }
+        return sPrefs.getInt(PREF_KEY_SEND_DELAY, NO_DELAY);
     }
 
     public static void setSendDelay(@SendDelay int mode) {
-        sPrefs.putInt(PREF_KEY_SEND_DELAY, mode);
+            sPrefs.putInt(PREF_KEY_SEND_DELAY, mode);
     }
 
-    public static String getSendDelayDescription(String conversationId) {
+    public static String getSendDelayDescription() {
         Context context = Factory.get().getApplicationContext();
-        switch (getSendDelay(conversationId)) {
+        switch (getSendDelay()) {
             case SendDelaySettings.NO_DELAY:
                 return context.getString(R.string.send_delay_no_delay);
             case SendDelaySettings.ONE_SECOND:

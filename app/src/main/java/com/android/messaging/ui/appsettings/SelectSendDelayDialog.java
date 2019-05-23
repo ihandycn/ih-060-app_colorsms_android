@@ -5,7 +5,6 @@ import android.content.res.ColorStateList;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v7.widget.AppCompatRadioButton;
-import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.RadioGroup;
@@ -14,14 +13,10 @@ import com.android.messaging.Factory;
 import com.android.messaging.R;
 import com.android.messaging.ui.BaseDialogFragment;
 import com.android.messaging.ui.customize.PrimaryColors;
-import com.android.messaging.util.BugleAnalytics;
 import com.android.messaging.util.OsUtil;
 import com.superapps.util.Fonts;
 import com.superapps.util.Threads;
 
-import static com.android.messaging.ui.appsettings.PrivacyModeSettings.HIDE_CONTACT_AND_MESSAGE;
-import static com.android.messaging.ui.appsettings.PrivacyModeSettings.HIDE_MESSAGE_ONLY;
-import static com.android.messaging.ui.appsettings.PrivacyModeSettings.NONE;
 import static com.android.messaging.ui.appsettings.SendDelaySettings.EIGHT_SECONDS;
 import static com.android.messaging.ui.appsettings.SendDelaySettings.FIVE_SECONDS;
 import static com.android.messaging.ui.appsettings.SendDelaySettings.FOUR_SECONDS;
@@ -36,8 +31,6 @@ import static com.android.messaging.ui.appsettings.SendDelaySettings.TWO_SECONDS
 public class SelectSendDelayDialog extends BaseDialogFragment {
 
     private static final String BUNDLE_KEY_CONVERSATION_ID = "conversation_id";
-
-    private String mConversationId;
     private View mContentView;
 
     @Override
@@ -77,7 +70,6 @@ public class SelectSendDelayDialog extends BaseDialogFragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mConversationId = getArguments() != null ? getArguments().getString(BUNDLE_KEY_CONVERSATION_ID) : null;
     }
 
     private View createBodyView() {
@@ -97,7 +89,7 @@ public class SelectSendDelayDialog extends BaseDialogFragment {
         RadioGroup radioGroup = mContentView.findViewById(R.id.radio_group);
         Typeface font = Fonts.getTypeface(Fonts.Font.CUSTOM_FONT_MEDIUM);
 
-        int mode = SendDelaySettings.getSendDelay(mConversationId);
+        int mode = SendDelaySettings.getSendDelay();
 
         switch (mode) {
             case NO_DELAY:
@@ -151,34 +143,34 @@ public class SelectSendDelayDialog extends BaseDialogFragment {
         radioGroup.setOnCheckedChangeListener((group, checkedId) -> {
             switch (checkedId) {
                 case R.id.no_delay:
-                    SendDelaySettings.setSendDelay(mConversationId, NO_DELAY);
+                    SendDelaySettings.setSendDelay(NO_DELAY);
                     break;
                 case R.id.one_second:
-                    SendDelaySettings.setSendDelay(mConversationId, ONE_SECOND);
+                    SendDelaySettings.setSendDelay(ONE_SECOND);
                     break;
                 case R.id.two_seconds:
-                    SendDelaySettings.setSendDelay(mConversationId, TWO_SECONDS);
+                    SendDelaySettings.setSendDelay(TWO_SECONDS);
                     break;
                 case R.id.three_seconds:
-                    SendDelaySettings.setSendDelay(mConversationId, THREE_SECONDS);
+                    SendDelaySettings.setSendDelay(THREE_SECONDS);
                     break;
                 case R.id.four_seconds:
-                    SendDelaySettings.setSendDelay(mConversationId, FOUR_SECONDS);
+                    SendDelaySettings.setSendDelay(FOUR_SECONDS);
                     break;
                 case R.id.five_seconds:
-                    SendDelaySettings.setSendDelay(mConversationId, FIVE_SECONDS);
+                    SendDelaySettings.setSendDelay(FIVE_SECONDS);
                     break;
                 case R.id.six_seconds:
-                    SendDelaySettings.setSendDelay(mConversationId, SIX_SECONDS);
+                    SendDelaySettings.setSendDelay(SIX_SECONDS);
                     break;
                 case R.id.seven_seconds:
-                    SendDelaySettings.setSendDelay(mConversationId, SEVEN_SECONDS);
+                    SendDelaySettings.setSendDelay(SEVEN_SECONDS);
                     break;
                 case R.id.eight_seconds:
-                    SendDelaySettings.setSendDelay(mConversationId, EIGHT_SECONDS);
+                    SendDelaySettings.setSendDelay(EIGHT_SECONDS);
                     break;
                 case R.id.nine_seconds:
-                    SendDelaySettings.setSendDelay(mConversationId, NINE_SECONDS);
+                    SendDelaySettings.setSendDelay(NINE_SECONDS);
                     break;
             }
 

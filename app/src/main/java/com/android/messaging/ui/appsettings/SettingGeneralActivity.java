@@ -389,7 +389,7 @@ public class SettingGeneralActivity extends BaseActivity {
     }
 
     private void updateSendDelaySummary() {
-        mSendDelayView.setSummary(SendDelaySettings.getSendDelayDescription(null));
+        mSendDelayView.setSummary(SendDelaySettings.getSendDelayDescription());
     }
 
     private void onSoundItemClick() {
