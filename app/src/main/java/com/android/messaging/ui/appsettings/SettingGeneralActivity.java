@@ -52,6 +52,7 @@ public class SettingGeneralActivity extends BaseActivity {
     private SettingItemView mVibrateView;
     private SettingItemView mPrivacyModeView;
     private SettingItemView mSyncSettingsView;
+    private SettingItemView mSendDelayView;
     private BackPressedListener mBackListener;
     final BuglePrefs prefs = BuglePrefs.getApplicationPrefs();
 
@@ -124,6 +125,27 @@ public class SettingGeneralActivity extends BaseActivity {
             });
             UiUtils.showDialogFragment(SettingGeneralActivity.this, dialog);
         });
+
+        //send delay
+        mSendDelayView = findViewById(R.id.setting_item_send_delay);
+        updateSendDelaySummary();
+        mSendDelayView.setOnItemClickListener(() -> {
+            SelectSendDelayDialog dialog = new SelectSendDelayDialog();
+            dialog.setOnDismissOrCancelListener(new BaseDialogFragment.OnDismissOrCancelListener() {
+
+                @Override
+                public void onDismiss(DialogInterface dialog) {
+                    updateSendDelaySummary();
+                }
+
+                @Override
+                public void onCancel(DialogInterface dialog) {
+
+                }
+            });
+            UiUtils.showDialogFragment(SettingGeneralActivity.this, dialog);
+        });
+
 
         //signature
         mSignature = findViewById(R.id.setting_item_signature);
@@ -364,6 +386,10 @@ public class SettingGeneralActivity extends BaseActivity {
 
     private void updatePrivacyModeSummary() {
         mPrivacyModeView.setSummary(PrivacyModeSettings.getPrivacyModeDescription(null));
+    }
+
+    private void updateSendDelaySummary() {
+        mSendDelayView.setSummary(SendDelaySettings.getSendDelayDescription(null));
     }
 
     private void onSoundItemClick() {

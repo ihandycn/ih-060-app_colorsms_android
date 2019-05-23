@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <com.android.messaging.ui.view.MessagesTextView
+        android:id="@id/title"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="@string/send_delay_settings"
+        android:textSize="13.3sp"
+        android:textColor="#6e717b"
+        android:lineSpacingExtra="3.3sp"
+        android:layout_marginStart="@dimen/dialog_btn_margin_left"
+        app:typeface="@string/custom_font_medium"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <RadioGroup
+        android:id="@+id/radio_group"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="15dp"
+        android:layout_marginBottom="25dp"
+        android:clipChildren="false"
+        android:clipToPadding="false"
+        app:layout_constraintTop_toBottomOf="@id/title"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent">
+
+        <android.support.v7.widget.AppCompatRadioButton
+            android:id="@+id/no_delay"
+            style="@style/SelectSendDelayRadioGroup" />
+
+        <android.support.v7.widget.AppCompatRadioButton
+            android:id="@+id/one_second"
+            style="@style/SelectSendDelayRadioGroup" />
+
+        <android.support.v7.widget.AppCompatRadioButton
+            android:id="@+id/two_seconds"
+            style="@style/SelectSendDelayRadioGroup" />
+
+        <android.support.v7.widget.AppCompatRadioButton
+            android:id="@+id/three_seconds"
+            style="@style/SelectSendDelayRadioGroup" />
+
+        <android.support.v7.widget.AppCompatRadioButton
+            android:id="@+id/four_seconds"
+            style="@style/SelectSendDelayRadioGroup" />
+
+        <android.support.v7.widget.AppCompatRadioButton
+            android:id="@+id/five_seconds"
+            style="@style/SelectSendDelayRadioGroup" />
+
+        <android.support.v7.widget.AppCompatRadioButton
+            android:id="@+id/six_seconds"
+            style="@style/SelectSendDelayRadioGroup" />
+
+        <android.support.v7.widget.AppCompatRadioButton
+            android:id="@+id/seven_seconds"
+            style="@style/SelectSendDelayRadioGroup" />
+
+        <android.support.v7.widget.AppCompatRadioButton
+            android:id="@+id/eight_seconds"
+            style="@style/SelectSendDelayRadioGroup" />
+
+        <android.support.v7.widget.AppCompatRadioButton
+            android:id="@+id/nine_seconds"
+            style="@style/SelectSendDelayRadioGroup" />
+
+    </RadioGroup>
+
+
+</android.support.constraint.ConstraintLayout>

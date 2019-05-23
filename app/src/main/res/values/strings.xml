@@ -1145,5 +1145,12 @@
     <string name="firebase_sync_desktop_settings_title">Sync settings</string>
     <string name="firebase_sync_desktop_settings_description_logged_out">After logging in, you can sync your sms settings across multiple devices</string>
     <string name="firebase_sync_desktop_settings_description_logged_in">Sync succeed</string>
+
+    <string name="send_delay_settings">Send Delay</string>
+    <string name="send_delay_no_delay">No Delay</string>
+    <plurals name="send_delay_seconds">
+        <item quantity="one">%s Second</item>
+        <item quantity="other">%s Seconds</item>
+    </plurals>
     
 </resources>
