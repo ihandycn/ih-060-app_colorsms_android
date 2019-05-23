@@ -91,8 +91,6 @@ public class ContactsSelectAdapter extends RecyclerView.Adapter<ContactsSelectAd
                 holder.checkBoxView.setImageResource(R.drawable.ic_all_checked);
             }
         });
-
-        CallAssistantUtils.displayRoundCornerAvatar(holder.avatarImageView, contactInfo.avatarUriStr);
     }
 
     @Override
