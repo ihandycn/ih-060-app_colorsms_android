@@ -21,6 +21,7 @@ import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 import android.os.Build;
+import android.os.Handler;
 import android.telephony.SubscriptionManager;
 
 import com.android.messaging.datamodel.action.ActionService;
@@ -236,6 +237,11 @@ public class DataModelImpl extends DataModel {
         FixupMessageStatusOnStartupAction.fixupMessageStatus();
         ProcessPendingMessagesAction.processFirstPendingMessage();
         SyncManager.immediateSync();
+        final Handler handler = new Handler();
+        final Runnable refresh = () -> {
+            MmsConfig.loadAsync();
+            ParticipantRefresh.refreshSelfParticipants();
+        };
 
         if (OsUtil.isAtLeastL_MR1()) {
             // Start listening for subscription change events for refreshing self participants.
@@ -247,8 +253,8 @@ public class DataModelImpl extends DataModel {
                             // currently using. It may cause inconsistency in some cases. We need
                             // to check the usage of mms config and handle the dynamic change
                             // gracefully
-                            MmsConfig.loadAsync();
-                            ParticipantRefresh.refreshSelfParticipants();
+                            handler.removeCallbacks(refresh);
+                            handler.postDelayed(refresh, 300);
                         }
                     });
         }
