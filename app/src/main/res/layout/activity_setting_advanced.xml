@@ -8,6 +8,12 @@
     <include layout="@layout/top_tool_bar_view" />
 
     <com.android.messaging.ui.appsettings.SettingItemView
+        android:id="@+id/setting_advanced_group_mms"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:title="@string/group_mms_pref_title" />
+
+    <com.android.messaging.ui.appsettings.SettingItemView
         android:id="@+id/setting_advanced_phone_number"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
