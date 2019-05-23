@@ -1,5 +1,6 @@
 package com.android.messaging.ui.conversationlist;
 
+import android.Manifest;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.content.Intent;
@@ -9,6 +10,7 @@ import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.Telephony;
+import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.v4.content.pm.ShortcutManagerCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -83,6 +85,7 @@ import com.superapps.util.Calendars;
 import com.superapps.util.Dimensions;
 import com.superapps.util.Navigations;
 import com.superapps.util.Preferences;
+import com.superapps.util.RuntimePermissions;
 import com.superapps.util.Threads;
 import com.superapps.util.Toasts;
 
@@ -122,6 +125,7 @@ public class ConversationListActivity extends AbstractConversationListActivity
     public static final String PREF_KEY_CREATE_SHORTCUT_GUIDE_SHOWN = "pref_key_create_shortcut_guide_shown";
 
     private static final String NOTIFICATION_NAME_MESSAGES_MOVE_END = "conversation_list_move_end";
+    private static final int REQUEST_PERMISSION_CODE = 1001;
 
     private static boolean sIsRecreate = false;
 
@@ -431,8 +435,15 @@ public class ConversationListActivity extends AbstractConversationListActivity
                         }
                         break;
                     case DRAWER_INDEX_SETTING:
-                        UIIntents.get().launchSettingsActivity(ConversationListActivity.this);
-                        BugleAnalytics.logEvent("Menu_Settings_Click", true, true);
+                        boolean granted = RuntimePermissions.checkSelfPermission(ConversationListActivity.this,
+                                Manifest.permission.READ_PHONE_STATE) == RuntimePermissions.PERMISSION_GRANTED;
+                        if (granted) {
+                            UIIntents.get().launchSettingsActivity(ConversationListActivity.this);
+                            BugleAnalytics.logEvent("Menu_Settings_Click", true, true);
+                        } else {
+                            RuntimePermissions.requestPermissions(ConversationListActivity.this,
+                                    new String[]{Manifest.permission.READ_PHONE_STATE}, REQUEST_PERMISSION_CODE);
+                        }
                         break;
                     case DRAWER_INDEX_RATE:
                         FiveStarRateDialog.showFiveStarFromSetting(ConversationListActivity.this);
@@ -541,6 +552,15 @@ public class ConversationListActivity extends AbstractConversationListActivity
             drawable = AppCompatDrawableManager.get().getDrawable(this, R.drawable.ic_navigation_drawer);
         }
         getSupportActionBar().setHomeAsUpIndicator(drawable);
+    }
+
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+
+        RuntimePermissions.onRequestPermissionsResult(ConversationListActivity.this,
+                requestCode, permissions, grantResults);
     }
 
     @Override

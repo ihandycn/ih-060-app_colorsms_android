@@ -50,7 +50,6 @@ import com.android.messaging.datamodel.data.MessageBoxItemData;
 import com.android.messaging.datamodel.data.MessageData;
 import com.android.messaging.datamodel.data.MessagePartData;
 import com.android.messaging.datamodel.data.ParticipantData;
-import com.android.messaging.privatebox.ui.PrivateConversationListActivity;
 import com.android.messaging.privatebox.ui.SelfVerifyActivity;
 import com.android.messaging.receiver.NotificationReceiver;
 import com.android.messaging.sms.MmsSmsUtils;
