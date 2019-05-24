@@ -45,6 +45,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.android.messaging.R;
+import com.android.messaging.ad.AdConfig;
 import com.android.messaging.ad.AdPlacement;
 import com.android.messaging.annotation.VisibleForAnimation;
 import com.android.messaging.datamodel.DataModel;
@@ -360,7 +361,7 @@ public class ConversationListFragment extends Fragment implements ConversationLi
         ViewGroupCompat.setTransitionGroup(rootView, false);
 
         setHasOptionsMenu(true);
-        if (HSConfig.optBoolean(true, "Application", "SMSAd", "SMSHomepageBannerAd")) {
+        if (AdConfig.isHomepageBannerAdEnabled()) {
             AcbNativeAdManager.preload(1, AdPlacement.AD_BANNER);
         }
         return rootView;
@@ -370,7 +371,7 @@ public class ConversationListFragment extends Fragment implements ConversationLi
 
     private void tryShowTopNativeAd() {
         HSLog.d("try show top native ad");
-        if (!HSConfig.optBoolean(true, "Application", "SMSAd", "SMSHomepageBannerAd")) {
+        if (!AdConfig.isHomepageBannerAdEnabled()) {
             return;
         }
         if (isAdLoading) {
@@ -440,7 +441,7 @@ public class ConversationListFragment extends Fragment implements ConversationLi
 
         TextView actionBtn = ViewUtils.findViewById(adView, R.id.banner_action);
         mAdContentView.setAdActionView(actionBtn);
-        if (HSConfig.optBoolean(true, "Application", "SMSAd", "SMSHomepageBannerAdFacebookEnabled")) {
+        if (HSConfig.optBoolean(true, "Application", "SMSAd", "SMSHomepageBannerAd", "SMSHomepageBannerAdFacebookEnabled")) {
             adView.setBackgroundColor(Color.parseColor(ThemeInfo.getThemeInfo(ThemeUtils.getCurrentThemeName()).bannerAdBgColor));
             actionBtn.setTextColor(Color.parseColor(ThemeInfo.getThemeInfo(ThemeUtils.getCurrentThemeName()).bannerAdActionTextColor));
             Drawable actionBg = getResources().getDrawable(R.drawable.conversation_list_ad_action_pressed_bg);

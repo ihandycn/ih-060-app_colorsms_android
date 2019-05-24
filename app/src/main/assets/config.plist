@@ -146,17 +146,12 @@
 			</dict>
 			<key>SMSAd</key>
 			<dict>
-				<key>SMSDetailspageBannerAd</key>
-				<dict>
-					<key>Enabled</key>
-					<false/>
-					<key>ShowAfterCloseTheKeyboard</key>
-					<false/>
-				</dict>
 				<key>SMSDetailspageTopAd</key>
 				<dict>
 					<key>Enabled</key>
 					<true/>
+					<key>ShowAfterInstall</key>
+					<integer>30</integer>
 					<key>ShowAfterSlide</key>
 					<true/>
 					<key>FacebookEnabled</key>
@@ -172,9 +167,14 @@
 					<integer>2</integer>
 				</dict>
 				<key>SMSHomepageBannerAd</key>
-				<true/>
-				<key>SMSHomepageBannerAdFacebookEnabled</key>
-				<true/>
+				<dict>
+					<key>Enabled</key>
+					<true/>
+					<key>ShowAfterInstall</key>
+					<integer>30</integer>
+					<key>SMSHomepageBannerAdFacebookEnabled</key>
+					<true/>
+				</dict>
 			</dict>
 			<key>SMSPopUps</key>
 			<dict>

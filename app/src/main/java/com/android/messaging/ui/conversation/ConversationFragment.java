@@ -67,6 +67,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.android.messaging.R;
+import com.android.messaging.ad.AdConfig;
 import com.android.messaging.ad.AdPlacement;
 import com.android.messaging.datamodel.BugleNotifications;
 import com.android.messaging.datamodel.DataModel;
@@ -631,7 +632,7 @@ public class ConversationFragment extends Fragment implements ConversationDataLi
                             PorterDuff.Mode.SRC_IN);
         }
         actionBtn.setBackgroundDrawable(actionBg);
-        if (HSConfig.optBoolean(true, "Application", "SMSAd", "SMSDetailspageTopAd", "FacebookEnabled")) {
+        if (HSConfig.optBoolean(true, "Application", "SMSAd", "SMSHomepageBannerAd", "SMSHomepageBannerAdFacebookEnabled")) {
             adView.setBackgroundColor(Color.parseColor(ThemeInfo.getThemeInfo(ThemeUtils.getCurrentThemeName()).bannerAdBgColor));
         }
 
@@ -767,7 +768,7 @@ public class ConversationFragment extends Fragment implements ConversationDataLi
         mWallpaperView = view.findViewById(R.id.conversation_fragment_wallpaper);
         mThemeWallpaperView = view.findViewById(R.id.conversation_fragment_theme_wallpaper);
 
-        if (HSConfig.optBoolean(false, "Application", "SMSAd", "SMSDetailspageTopAd", "Enabled")) {
+        if (AdConfig.isDetailpageTopAdEnabled()) {
             BugleAnalytics.logEvent("Detailspage_TopAd_Should_Show", true, true);
             List<AcbNativeAd> nativeAds = AcbNativeAdManager.fetch(AdPlacement.AD_DETAIL_NATIVE, 1);
             if (nativeAds.size() > 0) {
@@ -795,7 +796,7 @@ public class ConversationFragment extends Fragment implements ConversationDataLi
                 });
             }
         }
-        if (HSConfig.optBoolean(true, "Application", "SMSAd", "SMSHomepageBannerAd")) {
+        if (AdConfig.isHomepageBannerAdEnabled()) {
             AcbNativeAdManager.preload(1, AdPlacement.AD_BANNER);
         }
         return view;
@@ -1136,7 +1137,7 @@ public class ConversationFragment extends Fragment implements ConversationDataLi
         if (mNativeAdLoader != null) {
             mNativeAdLoader.cancel();
         }
-        if (HSConfig.optBoolean(false, "Application", "SMSAd", "SMSDetailspageTopAd", "Enabled")) {
+        if (AdConfig.isDetailpageTopAdEnabled()) {
             AcbNativeAdManager.preload(1, AdPlacement.AD_DETAIL_NATIVE);
         }
 
