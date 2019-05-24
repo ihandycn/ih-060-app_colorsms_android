@@ -196,6 +196,11 @@
         <item name="android:textColor">@color/contact_list_text_type</item>
     </style>
 
+    <style name="ContactPickerTheme" parent="BugleTheme">
+        <!-- All customizations that are NOT specific to a particular API-level can go here. -->
+        <item name="android:windowLightStatusBar">true</item>
+    </style>
+
     <style name="RecipientEditTextView">
         <item name="android:textSize">@dimen/recipient_edit_text_size</item>
         <item name="android:textColor">@color/compose_contact_text</item>

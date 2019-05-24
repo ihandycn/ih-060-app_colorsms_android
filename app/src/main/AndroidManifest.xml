@@ -58,7 +58,9 @@
         android:supportsRtl="true"
         android:theme="@style/BugleTheme"
         tools:replace="android:allowBackup">
-        <activity android:name=".ui.contact.ContactPickerActivity"></activity>
+        <activity
+            android:name=".ui.contact.ContactPickerActivity"
+            android:theme="@style/ContactPickerTheme"/>
 
         <meta-data
             android:name="com.facebook.sdk.ApplicationId"

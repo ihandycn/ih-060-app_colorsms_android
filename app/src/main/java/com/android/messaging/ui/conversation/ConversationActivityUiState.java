@@ -36,9 +36,13 @@ public class ConversationActivityUiState implements Parcelable, Cloneable {
 
     /*------ Overall UI states (conversation & contact picker) ------*/
 
-    /** Only a full screen conversation is showing. */
+    /**
+     * Only a full screen conversation is showing.
+     */
     public static final int STATE_CONVERSATION_ONLY = 1;
-    /** Only a full screen contact picker is showing asking user to pick the initial contact. */
+    /**
+     * Only a full screen contact picker is showing asking user to pick the initial contact.
+     */
     public static final int STATE_CONTACT_PICKER_ONLY_INITIAL_CONTACT = 2;
     /**
      * Only a full screen contact picker is showing asking user to pick more participants. This
@@ -154,6 +158,10 @@ public class ConversationActivityUiState implements Parcelable, Cloneable {
         } else if (mConversationContactUiState == STATE_CONTACT_PICKER_ONLY_ADD_MORE_CONTACTS ||
                 mConversationContactUiState == STATE_CONTACT_PICKER_ONLY_MAX_PARTICIPANTS) {
             newState = STATE_CONVERSATION_ONLY;
+        } else if (mConversationContactUiState == STATE_HYBRID_WITH_CONVERSATION_AND_CHIPS_VIEW) {
+            // when ContactPicker is turning to Conversation, do nothing
+            // if not do return , the app will crash because of Assert.fail()
+            return;
         } else {
             // New conversation should only be created when we are in one of the contact picking
             // modes.
@@ -275,7 +283,7 @@ public class ConversationActivityUiState implements Parcelable, Cloneable {
     }
 
     public static final Parcelable.Creator<ConversationActivityUiState> CREATOR
-        = new Parcelable.Creator<ConversationActivityUiState>() {
+            = new Parcelable.Creator<ConversationActivityUiState>() {
         @Override
         public ConversationActivityUiState createFromParcel(final Parcel in) {
             return new ConversationActivityUiState(in);

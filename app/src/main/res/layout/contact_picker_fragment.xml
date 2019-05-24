@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--
+<?xml version="1.0" encoding="utf-8"?><!--
     Copyright (C) 2015 The Android Open Source Project
 
     Licensed under the Apache License, Version 2.0 (the "License");
@@ -14,20 +13,19 @@
     See the License for the specific language governing permissions and
     limitations under the License.
 -->
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:fitsSystemWindows="true"
     android:layout_height="match_parent"
+    android:fitsSystemWindows="true"
     android:orientation="vertical">
 
     <android.support.v7.widget.Toolbar
         android:id="@+id/toolbar"
-        android:layout_height="wrap_content"
         android:layout_width="match_parent"
-        android:minHeight="?attr/actionBarSize"
+        android:layout_height="wrap_content"
         android:background="@color/action_bar_background_color"
+        android:minHeight="?attr/actionBarSize"
         app:theme="@style/ThemeOverlay.AppCompat.ActionBar">
 
         <com.android.messaging.ui.MaxHeightScrollView
@@ -43,12 +41,12 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
                 android:drawableBottom="@drawable/chip_autocomplete_bottom_line"
-                android:textCursorDrawable="@drawable/chip_autocomplete_cursor"
                 android:drawablePadding="4dp"
-                android:minHeight="@dimen/compose_message_contacts_height"
-                android:popupBackground="@drawable/contact_popup_background"
                 android:dropDownWidth="match_parent"
                 android:hint="@string/recipient_hint"
+                android:minHeight="@dimen/compose_message_contacts_height"
+                android:popupBackground="@drawable/contact_popup_background"
+                android:textCursorDrawable="@drawable/chip_autocomplete_cursor"
                 app:avatarPosition="start"
                 app:chipHeight="@dimen/compose_message_chip_height"
                 app:chipPadding="@dimen/compose_message_chip_padding"
@@ -57,7 +55,7 @@
                 app:unselectedChipTextColor="@color/chips_text_color">
 
                 <!-- Put focus on the chips view by default so soft keyboard can be shown -->
-                <requestFocus/>
+                <requestFocus />
             </com.android.messaging.ui.contact.ContactRecipientAutoCompleteView>
 
         </com.android.messaging.ui.MaxHeightScrollView>
@@ -69,16 +67,17 @@
         android:layout_height="0dp"
         android:layout_weight="1">
 
-        <com.android.messaging.ui.CustomHeaderViewPager
+
+        <android.support.v4.view.ViewPager
             android:id="@+id/contact_pager"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"/>
+            android:layout_height="match_parent" />
 
         <View
             android:id="@+id/compose_contact_divider"
             android:layout_width="match_parent"
             android:layout_height="1px"
             android:layout_gravity="top"
-            android:background="#e9ebf2"/>
+            android:background="#e9ebf2" />
     </FrameLayout>
 </LinearLayout>

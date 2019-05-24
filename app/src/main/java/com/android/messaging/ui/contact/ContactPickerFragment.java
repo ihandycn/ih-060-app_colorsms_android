@@ -21,6 +21,7 @@ import android.app.Fragment;
 import android.database.Cursor;
 import android.graphics.Rect;
 import android.os.Bundle;
+import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.widget.Toolbar;
 import android.support.v7.widget.Toolbar.OnMenuItemClickListener;
@@ -55,6 +56,7 @@ import com.android.messaging.datamodel.data.ParticipantData;
 import com.android.messaging.ui.CustomPagerViewHolder;
 import com.android.messaging.ui.CustomHeaderViewPager;
 import com.android.messaging.ui.CustomViewPager;
+import com.android.messaging.ui.CustomViewPagerAdapter;
 import com.android.messaging.ui.animation.ViewGroupItemVerticalExplodeAnimation;
 import com.android.messaging.ui.contact.ContactRecipientAutoCompleteView.ContactChipsChangeListener;
 import com.android.messaging.ui.customize.PrimaryColors;
@@ -79,7 +81,8 @@ import java.util.Set;
  */
 public class ContactPickerFragment extends Fragment implements ContactPickerDataListener,
         ContactListItemView.HostInterface, ContactChipsChangeListener, OnMenuItemClickListener,
-        GetOrCreateConversationActionListener {
+        GetOrCreateConversationActionListener,
+        ContactListAdapter.SelectGroupMessageHost {
     public static final String FRAGMENT_TAG = "contactpicker";
 
     // Undefined contact picker mode. We should never be in this state after the host activity has
@@ -117,14 +120,15 @@ public class ContactPickerFragment extends Fragment implements ContactPickerData
 
     private ContactPickerFragmentHost mHost;
     private ContactRecipientAutoCompleteView mRecipientTextView;
-    private CustomHeaderViewPager mCustomHeaderViewPager;
+    private ViewPager mViewPager;
     private AllContactsListViewHolder mAllContactsListViewHolder;
-    private FrequentContactsListViewHolder mFrequentContactsListViewHolder;
     private View mRootView;
     private View mPendingExplodeView;
     private View mComposeDivider;
     private Toolbar mToolbar;
     private int mContactPickingMode = MODE_UNDEFINED;
+
+    private final String TAG = "contact_picker_test";
 
     // Keeps track of the currently selected phone numbers in the chips view to enable fast lookup.
     private Set<String> mSelectedPhoneNumbers = null;
@@ -135,13 +139,21 @@ public class ContactPickerFragment extends Fragment implements ContactPickerData
     @Override
     public void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mAllContactsListViewHolder = new AllContactsListViewHolder(getActivity(), this);
-        mFrequentContactsListViewHolder = new FrequentContactsListViewHolder(getActivity(), this);
+        ContactListAdapter adapter = new ContactListAdapter(this, true);
+        adapter.setSelectGroupMessageHost(this);
+        mAllContactsListViewHolder = new AllContactsListViewHolder(getActivity(), adapter);
 
         if (ContactUtil.hasReadContactsPermission()) {
             mBinding.bind(DataModel.get().createContactPickerData(getActivity(), this));
             mBinding.getData().init(getLoaderManager(), mBinding);
         }
+    }
+
+
+    @Override // from SelectGroupMessageHost
+    public void onSelectGroupMessage() {
+        mContactPickingMode = MODE_CHIPS_ONLY;
+        setContactPickingMode(MODE_PICK_MORE_CONTACTS, true);
     }
 
     /**
@@ -179,18 +191,17 @@ public class ContactPickerFragment extends Fragment implements ContactPickerData
         });
 
         final CustomPagerViewHolder[] viewHolders = {
-                mFrequentContactsListViewHolder,
                 mAllContactsListViewHolder};
 
-        mCustomHeaderViewPager = (CustomHeaderViewPager) view.findViewById(R.id.contact_pager);
-        mCustomHeaderViewPager.setViewHolders(viewHolders);
-        mCustomHeaderViewPager.setViewPagerTabHeight(CustomViewPager.DEFAULT_TAB_STRIP_SIZE);
-        mCustomHeaderViewPager.setBackgroundColor(getResources()
+        mViewPager = (ViewPager) view.findViewById(R.id.contact_pager);
+
+
+        mViewPager.setBackgroundColor(getResources()
                 .getColor(R.color.contact_picker_background));
 
         // The view pager defaults to the frequent contacts page.
-        mCustomHeaderViewPager.setCurrentItem(0);
-
+        mViewPager.setCurrentItem(0);
+        setPageViewHolders(viewHolders);
         mToolbar = (Toolbar) view.findViewById(R.id.toolbar);
         mToolbar.setNavigationIcon(R.drawable.ic_arrow_back_light);
         mToolbar.setNavigationContentDescription(R.string.back);
@@ -207,6 +218,28 @@ public class ContactPickerFragment extends Fragment implements ContactPickerData
         mComposeDivider = view.findViewById(R.id.compose_contact_divider);
         mRootView = view;
         return view;
+    }
+
+    private void setPageViewHolders(CustomPagerViewHolder[] viewHolders) {
+        Assert.notNull(mViewPager);
+        final CustomViewPagerAdapter adapter = new CustomViewPagerAdapter(viewHolders);
+        mViewPager.setAdapter(adapter);
+        mViewPager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+            }
+
+            @Override
+            public void onPageScrolled(int position, float positionOffset,
+                                       int positionOffsetPixels) {
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+                viewHolders[position].onPageSelected();
+            }
+        });
     }
 
     /**
@@ -280,18 +313,6 @@ public class ContactPickerFragment extends Fragment implements ContactPickerData
     public void onAllContactsCursorUpdated(final Cursor data) {
         mBinding.ensureBound();
         mAllContactsListViewHolder.onContactsCursorUpdated(data);
-    }
-
-    @Override // From ContactPickerDataListener
-    public void onFrequentContactsCursorUpdated(final Cursor data) {
-        mBinding.ensureBound();
-        mFrequentContactsListViewHolder.onContactsCursorUpdated(data);
-        if (data != null && data.getCount() == 0) {
-            // Show the all contacts list when there's no frequents.
-            mCustomHeaderViewPager.setCurrentItem(1);
-        } else if (data != null) {
-            BugleAnalytics.logEvent("SMS_ContactsTabPage_Show", true, "type", "Frequents");
-        }
     }
 
     @Override // From ContactListItemView.HostInterface
@@ -370,7 +391,7 @@ public class ContactPickerFragment extends Fragment implements ContactPickerData
                 case MODE_PICK_INITIAL_CONTACT:
                     addMoreParticipantsItem.setVisible(false);
                     confirmParticipantsItem.setVisible(false);
-                    mCustomHeaderViewPager.setVisibility(View.VISIBLE);
+                    mViewPager.setVisibility(View.VISIBLE);
                     mComposeDivider.setVisibility(View.INVISIBLE);
                     mRecipientTextView.setEnabled(true);
                     showImeKeyboard();
@@ -386,11 +407,11 @@ public class ContactPickerFragment extends Fragment implements ContactPickerData
                         startExplodeTransitionForContactLists(false /* show */);
 
                         ViewGroupItemVerticalExplodeAnimation.startAnimationForView(
-                                mCustomHeaderViewPager, mPendingExplodeView, mRootView,
+                                mViewPager, mPendingExplodeView, mRootView,
                                 true /* snapshotView */, UiUtils.COMPOSE_TRANSITION_DURATION);
                         showHideContactPagerWithAnimation(false /* show */);
                     } else {
-                        mCustomHeaderViewPager.setVisibility(View.GONE);
+                        mViewPager.setVisibility(View.GONE);
                     }
 
                     addMoreParticipantsItem.setVisible(true);
@@ -404,13 +425,13 @@ public class ContactPickerFragment extends Fragment implements ContactPickerData
                         // Correctly set the start visibility state for the view pager and
                         // individual list items (hidden initially), so that the transition
                         // manager can properly track the visibility change for the explode.
-                        mCustomHeaderViewPager.setVisibility(View.VISIBLE);
+                        mViewPager.setVisibility(View.VISIBLE);
                         toggleContactListItemsVisibilityForPendingTransition(false /* show */);
                         startExplodeTransitionForContactLists(true /* show */);
                     }
                     addMoreParticipantsItem.setVisible(false);
                     confirmParticipantsItem.setVisible(true);
-                    mCustomHeaderViewPager.setVisibility(View.VISIBLE);
+                    mViewPager.setVisibility(View.VISIBLE);
                     mComposeDivider.setVisibility(View.INVISIBLE);
                     mRecipientTextView.setEnabled(true);
                     showImeKeyboard();
@@ -419,7 +440,7 @@ public class ContactPickerFragment extends Fragment implements ContactPickerData
                 case MODE_PICK_MAX_PARTICIPANTS:
                     addMoreParticipantsItem.setVisible(false);
                     confirmParticipantsItem.setVisible(true);
-                    mCustomHeaderViewPager.setVisibility(View.VISIBLE);
+                    mViewPager.setVisibility(View.VISIBLE);
                     mComposeDivider.setVisibility(View.INVISIBLE);
                     // TODO: Verify that this is okay for accessibility
                     mRecipientTextView.setEnabled(false);
@@ -454,6 +475,7 @@ public class ContactPickerFragment extends Fragment implements ContactPickerData
     private void maybeGetOrCreateConversation() {
         final ArrayList<ParticipantData> participants =
                 mRecipientTextView.getRecipientParticipantDataForConversationCreation();
+        LogUtil.d("contact_picker_test", "maybeGetOrCreateConversation: " + participants.size()+"  "+participants.get(0).getContactDestination()+"  ");
         if (ContactPickerData.isTooManyParticipants(participants.size())) {
             UiUtils.showToast(R.string.too_many_participants);
         } else if (participants.size() > 0 && mMonitor == null) {
@@ -469,12 +491,13 @@ public class ContactPickerFragment extends Fragment implements ContactPickerData
     @Override
     public void onContactChipsChanged(final int oldCount, final int newCount) {
         Assert.isTrue(oldCount != newCount);
+        LogUtil.d(TAG, "onContactChipsChange: " + mContactPickingMode);
         if (mContactPickingMode == MODE_PICK_INITIAL_CONTACT) {
-            Log.i("contact_pick_frag", "onContactChipsChanged: ");
             maybeGetOrCreateConversation();
         } else if (mContactPickingMode == MODE_CHIPS_ONLY) {
             // oldCount == 0 means we are restoring from savedInstanceState to add the existing
             // chips, don't switch to "add more participants" mode in this case.
+            LogUtil.d(TAG, "onContactChipsChange: add_more" + mContactPickingMode);
             if (oldCount > 0 && mRecipientTextView.isFocused()) {
                 // Chips only mode. The user may have picked an additional contact or deleted the
                 // only existing contact. Either way, switch to picking more participants mode.
@@ -514,7 +537,6 @@ public class ContactPickerFragment extends Fragment implements ContactPickerData
 
     private void invalidateContactLists() {
         mAllContactsListViewHolder.invalidateList();
-        mFrequentContactsListViewHolder.invalidateList();
     }
 
     /**
@@ -543,7 +565,7 @@ public class ContactPickerFragment extends Fragment implements ContactPickerData
         // Kick off the delayed scene explode transition. Anything happens after this line in this
         // method before the next frame will be tracked by the transition manager for visibility
         // changes and animated accordingly.
-        TransitionManager.beginDelayedTransition(mCustomHeaderViewPager,
+        TransitionManager.beginDelayedTransition(mViewPager,
                 transition);
 
         toggleContactListItemsVisibilityForPendingTransition(show);
@@ -559,30 +581,28 @@ public class ContactPickerFragment extends Fragment implements ContactPickerData
             return;
         }
         mAllContactsListViewHolder.toggleVisibilityForPendingTransition(show, mPendingExplodeView);
-        mFrequentContactsListViewHolder.toggleVisibilityForPendingTransition(show,
-                mPendingExplodeView);
     }
 
     private void showHideContactPagerWithAnimation(final boolean show) {
-        final boolean isPagerVisible = (mCustomHeaderViewPager.getVisibility() == View.VISIBLE);
+        final boolean isPagerVisible = (mViewPager.getVisibility() == View.VISIBLE);
         if (show == isPagerVisible) {
             return;
         }
 
-        mCustomHeaderViewPager.animate().alpha(show ? 1F : 0F)
+        mViewPager.animate().alpha(show ? 1F : 0F)
                 .setStartDelay(!show ? UiUtils.COMPOSE_TRANSITION_DURATION : 0)
                 .withStartAction(new Runnable() {
                     @Override
                     public void run() {
-                        mCustomHeaderViewPager.setVisibility(View.VISIBLE);
-                        mCustomHeaderViewPager.setAlpha(show ? 0F : 1F);
+                        mViewPager.setVisibility(View.VISIBLE);
+                        mViewPager.setAlpha(show ? 0F : 1F);
                     }
                 })
                 .withEndAction(new Runnable() {
                     @Override
                     public void run() {
-                        mCustomHeaderViewPager.setVisibility(show ? View.VISIBLE : View.GONE);
-                        mCustomHeaderViewPager.setAlpha(1F);
+                        mViewPager.setVisibility(show ? View.VISIBLE : View.GONE);
+                        mViewPager.setAlpha(1F);
                     }
                 });
     }
@@ -597,8 +617,6 @@ public class ContactPickerFragment extends Fragment implements ContactPickerData
         // Hide the action bar for contact picker mode. The custom ToolBar containing chips UI
         // etc. will take the spot of the action bar.
         actionBar.hide();
-        UiUtils.setStatusBarColor(getActivity(),
-                PrimaryColors.getPrimaryColorDark());
     }
 
     private GetOrCreateConversationActionMonitor mMonitor;

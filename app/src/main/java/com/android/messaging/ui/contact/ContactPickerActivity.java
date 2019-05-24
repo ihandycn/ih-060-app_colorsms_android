@@ -70,8 +70,6 @@ public class ContactPickerActivity extends BugleActionBarActivity implements
     private int mKeyboardHeight;
     private int mNavigationBarHeight;
     
-    private final String TAG = "contact_picker_test";
-    
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -141,7 +139,6 @@ public class ContactPickerActivity extends BugleActionBarActivity implements
 
 
     private void updateUiState(final boolean animate) {
-        Log.i(TAG, "updateUiState: ");
         if (mInstanceStateSaved || mIsPaused) {
             return;
         }
