@@ -40,7 +40,7 @@ public class ChooseThemeActivity extends BaseBugleFragmentActivity {
             finish();
         });
 
-        BugleAnalytics.logEvent("Customize_Theme_Show", true);
+        BugleAnalytics.logEvent("Customize_Theme_Show", true, true);
     }
 
     @Override
