@@ -55,6 +55,41 @@ public class ThemeSelectItemView extends ConstraintLayout implements ThemeUtils.
         mButtonGroupContainer = findViewById(R.id.theme_button_group_container);
     }
 
+    public void resetStateByTheme() {
+        ThemeInfo info = ThemeInfo.getDownloadingTheme(mThemeInfo);
+        if (info != null) {
+            mThemeInfo = info;
+        }
+
+        if (mThemeInfo.isDownloaded()) {
+            mDownloadingView.updatePercent(0);
+            if (mThemeInfo.mThemeKey.equals(ThemeUtils.getCurrentTheme().mThemeKey)) {
+                setSelectedState();
+            } else {
+                setDownloadedState();
+            }
+        } else {
+            mThemeDownloadListener = new ThemeDownloadManager.IThemeDownloadListener() {
+                @Override
+                public void onDownloadSuccess() {
+                    Threads.postOnMainThread(() -> setDownloadSuccessState());
+                }
+
+                @Override
+                public void onDownloadFailed() {
+                    Threads.postOnMainThread(() -> setNormalState());
+                }
+
+                @Override
+                public void onDownloadUpdate(float process) {
+                    Threads.postOnMainThread(() -> mDownloadingView.updatePercent(process));
+                }
+            };
+            mThemeInfo.addDownloadListener(mThemeDownloadListener);
+            setNormalState();
+        }
+    }
+
     public void setThemeData(ThemeInfo info) {
         mThemeInfo = info;
         if (info.mThemeKey.equals(ThemeUtils.DEFAULT_THEME_KEY)) {
@@ -200,6 +235,6 @@ public class ThemeSelectItemView extends ConstraintLayout implements ThemeUtils.
 
     @Override
     public void onThemeChanged() {
-        setThemeData(mThemeInfo);
+        resetStateByTheme();
     }
 }

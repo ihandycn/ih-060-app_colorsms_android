@@ -996,7 +996,7 @@
 						<key>ThemeColor</key>
 						<string>#bf3acd</string>
 						<key>FontName</key>
-						<string>Laila</string>
+						<string>laila</string>
 						<key>AvatarForegroundColor</key>
 						<string>#ffffff</string>
 						<key>ListTitleColor</key>
@@ -1112,7 +1112,7 @@
 						<key>ThemeColor</key>
 						<string>#ed4864</string>
 						<key>FontName</key>
-						<string>Kalam</string>
+						<string>kalam</string>
 						<key>AvatarForegroundColor</key>
 						<string>#10002b</string>
 						<key>ListTitleColor</key>
@@ -1170,7 +1170,7 @@
 						<key>ThemeColor</key>
 						<string>#ce1232</string>
 						<key>FontName</key>
-						<string>Kalam</string>
+						<string>kalam</string>
 						<key>AvatarForegroundColor</key>
 						<string>#10002b</string>
 						<key>ListTitleColor</key>
@@ -1286,7 +1286,7 @@
 						<key>ThemeColor</key>
 						<string>#1c9cb7</string>
 						<key>FontName</key>
-						<string>AveriaLibre</string>
+						<string>averia_libre</string>
 						<key>AvatarForegroundColor</key>
 						<string>#10002b</string>
 						<key>ListTitleColor</key>
@@ -1344,7 +1344,7 @@
 						<key>ThemeColor</key>
 						<string>#ff4a91</string>
 						<key>FontName</key>
-						<string>AveriaLibre</string>
+						<string>averia_libre</string>
 						<key>AvatarForegroundColor</key>
 						<string>#10002b</string>
 						<key>ListTitleColor</key>
@@ -1460,7 +1460,7 @@
 						<key>ThemeColor</key>
 						<string>#f2645f</string>
 						<key>FontName</key>
-						<string>AveriaLibre</string>
+						<string>averia_libre</string>
 						<key>AvatarForegroundColor</key>
 						<string>#10002b</string>
 						<key>ListTitleColor</key>

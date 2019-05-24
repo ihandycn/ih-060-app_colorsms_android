@@ -25,6 +25,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ThemeSelectActivity extends BaseBugleFragmentActivity {
+    private ThemeAdapter mAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,26 +45,45 @@ public class ThemeSelectActivity extends BaseBugleFragmentActivity {
         getSupportActionBar().setDisplayShowHomeEnabled(true);
 
         RecyclerView mRecyclerView = findViewById(R.id.theme_select_recycler_view);
+        mRecyclerView.setNestedScrollingEnabled(false);
+        mAdapter = new ThemeAdapter(ThemeInfo.getAllThemes());
         GridLayoutManager layoutManager =
                 new GridLayoutManager(getBaseContext(), 2,
                         StaggeredGridLayoutManager.VERTICAL, false);
+        layoutManager.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
+            @Override
+            public int getSpanSize(int position) {
+                int viewType = mAdapter.getItemViewType(position);
+                switch (viewType) {
+                    case ThemeAdapter.THEME:
+                        return 1;
+                    case ThemeAdapter.BOTTOM:
+                        return 2;
+                }
+                return 0;
+            }
+        });
         mRecyclerView.setLayoutManager(layoutManager);
         mRecyclerView.addItemDecoration(new RecyclerView.ItemDecoration() {
             @Override
             public void getItemOffsets(Rect outRect, View view, RecyclerView parent, RecyclerView.State state) {
                 super.getItemOffsets(outRect, view, parent, state);
-                if (parent.getChildAdapterPosition(view) % 2 == 0) {
-                    outRect.left = Dimensions.pxFromDp(16);
-                    outRect.right = Dimensions.pxFromDp(6);
-                } else {
-                    outRect.left = Dimensions.pxFromDp(6);
-                    outRect.right = Dimensions.pxFromDp(16);
+                int position = parent.getChildAdapterPosition(view);
+                int viewType = mAdapter.getItemViewType(position);
+                if (viewType == ThemeAdapter.THEME) {
+                    if (position % 2 == 0) {
+                        outRect.left = Dimensions.pxFromDp(16);
+                        outRect.right = Dimensions.pxFromDp(6);
+                    } else {
+                        outRect.left = Dimensions.pxFromDp(6);
+                        outRect.right = Dimensions.pxFromDp(16);
+                    }
+                    outRect.top = Dimensions.pxFromDp(6.3f);
+                    outRect.bottom = Dimensions.pxFromDp(15);
                 }
-                outRect.top = Dimensions.pxFromDp(6.3f);
-                outRect.bottom = Dimensions.pxFromDp(15);
             }
         });
-        mRecyclerView.setAdapter(new ThemeAdapter(ThemeInfo.getAllThemes()));
+        mRecyclerView.setAdapter(mAdapter);
 
         mRecyclerView.setOnScrollListener(new RecyclerView.OnScrollListener() {
 
@@ -93,6 +113,12 @@ public class ThemeSelectActivity extends BaseBugleFragmentActivity {
     }
 
     @Override
+    protected void onRestart() {
+        super.onRestart();
+        mAdapter.refreshThemeState();
+    }
+
+    @Override
     public boolean onOptionsItemSelected(final MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
@@ -102,7 +128,15 @@ public class ThemeSelectActivity extends BaseBugleFragmentActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    class ThemeAdapter extends RecyclerView.Adapter<ThemePreviewViewHolder> {
+    class ThemeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+
+        public static final int THEME = 1;
+        public static final int BOTTOM = 2;
+
+        class BottomThemeInfo extends ThemeInfo {
+
+        }
+
         List<ThemeInfo> mDataList;
         List<ThemeSelectItemView> mViewList = new ArrayList<>();
         ThemeUtils.IThemeChangeListener mListener = () -> {
@@ -113,22 +147,45 @@ public class ThemeSelectActivity extends BaseBugleFragmentActivity {
 
         ThemeAdapter(List<ThemeInfo> dataList) {
             mDataList = dataList;
+            mDataList.add(new BottomThemeInfo());
+        }
+
+        void refreshThemeState() {
+            mListener.onThemeChanged();
         }
 
         @NonNull
         @Override
-        public ThemePreviewViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-            @SuppressLint("InflateParams")
-            ThemeSelectItemView view = (ThemeSelectItemView) LayoutInflater.from(getBaseContext())
-                    .inflate(R.layout.theme_preview_item_view, null, false);
-            return new ThemePreviewViewHolder(view);
+        public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+            if (viewType == THEME) {
+                @SuppressLint("InflateParams")
+                ThemeSelectItemView view = (ThemeSelectItemView) LayoutInflater.from(getBaseContext())
+                        .inflate(R.layout.theme_preview_item_view, null, false);
+                return new ThemePreviewViewHolder(view);
+            } else {
+                @SuppressLint("InflateParams")
+                View view = LayoutInflater.from(getBaseContext())
+                        .inflate(R.layout.theme_preview_item_bottom_view, null, false);
+                return new BottomViewHolder(view);
+            }
         }
 
         @Override
-        public void onBindViewHolder(@NonNull ThemePreviewViewHolder holder, int position) {
-            holder.mView.setThemeData(mDataList.get(position));
-            holder.mView.addThemeChangeListener(mListener);
-            mViewList.add(holder.mView);
+        public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
+            if (holder instanceof ThemePreviewViewHolder) {
+                ((ThemePreviewViewHolder) holder).mView.setThemeData(mDataList.get(position));
+                ((ThemePreviewViewHolder) holder).mView.addThemeChangeListener(mListener);
+                mViewList.add(((ThemePreviewViewHolder) holder).mView);
+            }
+        }
+
+        @Override
+        public int getItemViewType(int position) {
+            if (mDataList.get(position) instanceof BottomThemeInfo) {
+                return BOTTOM;
+            } else {
+                return THEME;
+            }
         }
 
         @Override
@@ -143,6 +200,12 @@ public class ThemeSelectActivity extends BaseBugleFragmentActivity {
         ThemePreviewViewHolder(View itemView) {
             super(itemView);
             mView = (ThemeSelectItemView) itemView;
+        }
+    }
+
+    class BottomViewHolder extends RecyclerView.ViewHolder {
+        BottomViewHolder(View itemView) {
+            super(itemView);
         }
     }
 }

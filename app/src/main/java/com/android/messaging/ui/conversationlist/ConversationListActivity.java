@@ -350,7 +350,8 @@ public class ConversationListActivity extends AbstractConversationListActivity
                 switch (drawerClickIndex) {
                     case DRAWER_INDEX_THEME:
                         BugleAnalytics.logEvent("Menu_Theme_Click");
-                        Navigations.startActivity(ConversationListActivity.this, ChooseThemeActivity.class);
+                        //Navigations.startActivity(ConversationListActivity.this, ChooseThemeActivity.class);
+                        Navigations.startActivity(ConversationListActivity.this, ThemeSelectActivity.class);
                         navigationContent.findViewById(R.id.navigation_item_theme_new_text).setVisibility(View.GONE);
                         break;
 
@@ -359,8 +360,7 @@ public class ConversationListActivity extends AbstractConversationListActivity
                         if (CommonUtils.isNewUser() && DateUtils.isToday(CommonUtils.getAppInstallTimeMillis())) {
                             BugleAnalytics.logEvent("Menu_ThemeColor_Click_NewUser", true);
                         }
-                        Navigations.startActivity(ConversationListActivity.this, ThemeSelectActivity.class);
-                        //Navigations.startActivity(ConversationListActivity.this, ThemeColorSelectActivity.class);
+                        Navigations.startActivity(ConversationListActivity.this, ThemeColorSelectActivity.class);
                         navigationContent.findViewById(R.id.navigation_item_theme_color_new_text).setVisibility(View.GONE);
                         break;
                     case DRAWER_INDEX_BUBBLE:

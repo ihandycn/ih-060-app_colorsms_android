@@ -7,6 +7,7 @@ import android.graphics.drawable.Drawable;
 import android.support.constraint.ConstraintLayout;
 import android.support.v4.view.ViewPager;
 import android.util.AttributeSet;
+import android.view.Choreographer;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -27,6 +28,12 @@ public class ThemePreviewPagerView extends ConstraintLayout {
     private ThemeInfo mThemeInfo;
     private ThemeDownloadManager.IThemeDownloadListener mDownloadListener;
     private TextView mButton;
+    private float mTargetDownloadRate;
+    private float mCurrentRate;
+    private boolean mIsThemeDownloading;
+    private Choreographer.FrameCallback mFrameCallback;
+    private Choreographer mChoreographer;
+    private final float[] mSpeed = {0};
 
     public ThemePreviewPagerView(Context context) {
         super(context);
@@ -57,30 +64,34 @@ public class ThemePreviewPagerView extends ConstraintLayout {
         mDownloadListener = new ThemeDownloadManager.IThemeDownloadListener() {
             @Override
             public void onDownloadSuccess() {
+                mIsThemeDownloading = false;
                 clipBg.setLevel(10000);
                 changeThemeState();
             }
 
             @Override
             public void onDownloadFailed() {
+                mIsThemeDownloading = false;
                 clipBg.setLevel(10000);
                 changeThemeState();
             }
 
             @Override
             public void onDownloadUpdate(float rate) {
-                clipBg.setLevel((int) (10000 * rate));
+                mTargetDownloadRate = rate;
+                if (rate > mCurrentRate) {
+                    mSpeed[0] = (rate - mCurrentRate) / 30;
+                }
             }
         };
-        mThemeInfo.addDownloadListener(mDownloadListener);
 
         //set view pager
         List<View> guideViewList = new ArrayList<>();
         Drawable selectedDrawable = BackgroundDrawables.createBackgroundDrawable(
-                Color.parseColor(mThemeInfo.themeColor), Dimensions.pxFromDp(7.3f /2), false);
+                Color.parseColor(mThemeInfo.themeColor), Dimensions.pxFromDp(7.3f / 2), false);
         Drawable unselectedDrawable = BackgroundDrawables.createBackgroundDrawable(
-                0xffffffff, 0xffffffff, Dimensions.pxFromDp(0.7f),0xff848694,
-                Dimensions.pxFromDp(7.3f/2),false,false
+                0xffffffff, 0xffffffff, Dimensions.pxFromDp(0.7f), 0xff848694,
+                Dimensions.pxFromDp(7.3f / 2), false, false
         );
 
         ViewPager mPager = findViewById(R.id.pager);
@@ -155,6 +166,8 @@ public class ThemePreviewPagerView extends ConstraintLayout {
             mButton.setText(R.string.get_now);
             mButton.setEnabled(true);
             mButton.setOnClickListener(v -> {
+                mIsThemeDownloading = true;
+                mChoreographer.postFrameCallback(mFrameCallback);
                 mThemeInfo.downloadTheme();
                 BugleAnalytics.logEvent("Customize_ThemeCenter_Theme_Download", true,
                         "theme", mThemeInfo.mThemeKey, "from", "detail");
@@ -169,10 +182,42 @@ public class ThemePreviewPagerView extends ConstraintLayout {
     }
 
     @Override
+    protected void onAttachedToWindow() {
+        super.onAttachedToWindow();
+        mThemeInfo.addDownloadListener(mDownloadListener);
+        if (mThemeInfo.isDownloading() || !mThemeInfo.isDownloaded()) {
+            mChoreographer = Choreographer.getInstance();
+            mFrameCallback = frameTimeNanos -> {
+                if (mIsThemeDownloading) {
+                    if (1 - mCurrentRate < 0.00001) {
+                        mButton.getBackground().setLevel(10000);
+                        mCurrentRate = 1;
+                        mIsThemeDownloading = false;
+                    }
+                    if (mCurrentRate < mTargetDownloadRate) {
+                        mCurrentRate += mSpeed[0];
+                        mButton.getBackground().setLevel((int) (mCurrentRate * 10000));
+                    }
+                    mChoreographer.postFrameCallback(mFrameCallback);
+                }
+            };
+            if (mThemeInfo.isDownloading()) {
+                mIsThemeDownloading = true;
+                mButton.getBackground().setLevel(10);
+                mChoreographer.postFrameCallback(mFrameCallback);
+            }
+        }
+    }
+
+    @Override
     protected void onDetachedFromWindow() {
         super.onDetachedFromWindow();
         if (mThemeInfo != null && mDownloadListener != null) {
             mThemeInfo.removeDownloadListener(mDownloadListener);
+        }
+        if (mFrameCallback != null && mChoreographer != null) {
+            mIsThemeDownloading = false;
+            mChoreographer.removeFrameCallback(mFrameCallback);
         }
     }
 }

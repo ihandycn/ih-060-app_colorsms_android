@@ -137,6 +137,11 @@ public class ThemeInfo {
         mDownloadListeners.remove(listener);
     }
 
+    public static ThemeInfo getDownloadingTheme(ThemeInfo info) {
+        return sDownloadingThemeList.containsKey(info.mThemeKey)
+                ? sDownloadingThemeList.get(info.mThemeKey) : null;
+    }
+
     public static ThemeInfo getThemeInfo(String themeKey) {
         if (sDownloadingThemeList.containsKey(themeKey)) {
             return sDownloadingThemeList.get(themeKey);
