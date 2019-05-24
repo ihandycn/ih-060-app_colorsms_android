@@ -233,4 +233,7 @@
     <color name="close_icon">#f0f2f8</color>
     <color name="like_icon">#e33232</color>
     <color name="dislike_icon">#31394d</color>
+
+    <!--send delay-->
+    <color name="inside_circle_color">#e1e3e7</color>
 </resources>

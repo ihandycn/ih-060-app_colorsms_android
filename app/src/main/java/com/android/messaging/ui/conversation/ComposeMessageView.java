@@ -16,12 +16,15 @@
 package com.android.messaging.ui.conversation;
 
 import android.animation.Animator;
+import android.animation.ObjectAnimator;
 import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Rect;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.CountDownTimer;
 import android.os.Handler;
+import android.support.v4.view.animation.PathInterpolatorCompat;
 import android.support.v7.app.ActionBar;
 import android.text.Editable;
 import android.text.Html;
@@ -37,6 +40,8 @@ import android.view.ContextThemeWrapper;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.accessibility.AccessibilityEvent;
+import android.view.animation.Interpolator;
+import android.view.animation.LinearInterpolator;
 import android.view.inputmethod.EditorInfo;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
@@ -66,6 +71,7 @@ import com.android.messaging.sms.MmsConfig;
 import com.android.messaging.ui.AttachmentPreview;
 import com.android.messaging.ui.BugleActionBarActivity;
 import com.android.messaging.ui.PlainTextEditText;
+import com.android.messaging.ui.appsettings.SendDelaySettings;
 import com.android.messaging.ui.conversation.ConversationInputManager.ConversationInputSink;
 import com.android.messaging.ui.customize.PrimaryColors;
 import com.android.messaging.ui.dialog.FiveStarRateDialog;
@@ -85,6 +91,7 @@ import com.android.messaging.util.OsUtil;
 import com.android.messaging.util.TextViewUtil;
 import com.android.messaging.util.UiUtils;
 import com.android.messaging.font.FontUtils;
+import com.ihs.commons.utils.HSLog;
 import com.superapps.util.BackgroundDrawables;
 import com.superapps.util.Dimensions;
 import com.superapps.util.Preferences;
@@ -140,6 +147,7 @@ public class ComposeMessageView extends LinearLayout
         void onClickMediaOrEmoji();
     }
 
+    private static final String TAG = "ComposeMessageView";
     private static final int DISTANCE_SLOP = Dimensions.pxFromDp(90);
 
     // There is no draft and there is no need for the SIM selector
@@ -154,6 +162,8 @@ public class ComposeMessageView extends LinearLayout
     private TextView mMmsIndicator;
     private SimIconView mSelfSendIcon;
     private ImageView mSendButton;
+    private ImageView mDelayCloseButton;
+    private SendDelayCircleBarView mSendDelayCircleBarView;
     private View mSubjectView;
     private ImageButton mDeleteSubjectButton;
     private AttachmentPreview mAttachmentPreview;
@@ -177,6 +187,8 @@ public class ComposeMessageView extends LinearLayout
     private final Context mOriginalContext;
     private int mSendWidgetMode = SEND_WIDGET_MODE_SELF_AVATAR;
     private String mSignatureStr;
+    private CountDownTimer mCountDownTimer;
+    private boolean mIsSendDelayCircleBarAnimating;
     ForegroundColorSpan mSignatureSpan = new ForegroundColorSpan(0xb3222327);
 
     // Shared data model object binding from the conversation.
@@ -310,6 +322,7 @@ public class ComposeMessageView extends LinearLayout
 
         mSelfSendIcon = findViewById(R.id.self_send_icon);
         mSelfSendIcon.setOnClickListener(v -> {
+            HSLog.d(TAG,"mSelfSendIcon.setOnClickListener Run");
             SubscriptionListEntry entry = getSelfSubscriptionListEntry();
             boolean shown = false;
             if (entry != null) {
@@ -353,15 +366,93 @@ public class ComposeMessageView extends LinearLayout
         });
 
         mSubjectView = findViewById(R.id.subject_view);
-
         mSendButton = findViewById(R.id.send_message_button);
+        mDelayCloseButton = findViewById(R.id.delay_close_button);
+        mSendDelayCircleBarView = findViewById(R.id.send_delay_circle_bar);
+
+        Interpolator scaleStartInterpolator =
+                PathInterpolatorCompat.create(0.0f, 0.0f, 0.58f, 1.0f);
+
+        Interpolator scaleEndInterpolator =
+                PathInterpolatorCompat.create(0.17f, 0.0f, 0.83f, 1.0f);
+
+        ObjectAnimator sendButtonDisappearAnimator = ObjectAnimator.ofFloat(mSendButton,"alpha",1.0f, 0.0f);
+        sendButtonDisappearAnimator.setDuration(120);
+        sendButtonDisappearAnimator.setStartDelay(120);
+        sendButtonDisappearAnimator.addListener(new Animator.AnimatorListener() {
+            @Override
+            public void onAnimationStart(Animator animation) {
+
+            }
+
+            @Override
+            public void onAnimationEnd(Animator animation) {
+                mIsSendDelayCircleBarAnimating = true;
+                mSendDelayCircleBarView.startAnimation(SendDelaySettings.getSendDelay());
+                mCountDownTimer.start();
+                mSendButton.setVisibility(View.GONE);
+            }
+
+            @Override
+            public void onAnimationCancel(Animator animation) {
+
+            }
+
+            @Override
+            public void onAnimationRepeat(Animator animation) {
+
+            }
+        });
+
+//        mSelfSendIcon.animate().alpha(1.0f).scaleX(1.0f).scaleY(1.0f).setDuration(160).setInterpolator(scaleEndInterpolator).start();
+
         mSendButton.setBackground(BackgroundDrawables.createBackgroundDrawable(PrimaryColors.getPrimaryColor(),
                 PrimaryColors.getPrimaryColorDark(),
                 Dimensions.pxFromDp(29), false, true));
         mSendButton.setOnClickListener(clickView -> {
-            logEmojiEvent();
-            sendMessageInternal(true /* checkMessageSize */);
+
+            mCountDownTimer = new CountDownTimer(1000 * SendDelaySettings.getSendDelay(), 1000) {
+                @Override
+                public void onTick(long millisUntilFinished) {
+                    HSLog.d(TAG, "Seconds remaining: " + millisUntilFinished / 1000);
+                }
+
+                @Override
+                public void onFinish() {
+                    logEmojiEvent();
+                    sendMessageInternal(true /* checkMessageSize */);
+                    mDelayCloseButton.setVisibility(View.GONE);
+                    mSendDelayCircleBarView.setVisibility(View.GONE);
+                    mSelfSendIcon.setVisibility(View.VISIBLE);
+                    mIsSendDelayCircleBarAnimating = false;
+                    mCountDownTimer.cancel();
+                    updateVisualsOnDraftChanged();
+                    resetDelaySendAnimation();
+                }
+            };
+
+            HSLog.d(TAG, "mSendButton.setOnClickListener Run");
+            mDelayCloseButton.setVisibility(View.VISIBLE);
+            mSendDelayCircleBarView.setVisibility(View.VISIBLE);
+            mSelfSendIcon.setVisibility(View.GONE);
+
+            sendButtonDisappearAnimator.start();
+            mSendButton.animate().scaleX(0.8f).scaleY(0.8f).setDuration(160).setStartDelay(80).setInterpolator(scaleStartInterpolator).start();
+            mDelayCloseButton.animate().alpha(1.0f).setDuration(160).setStartDelay(80).start();
+            mSendDelayCircleBarView.animate().alpha(1.0f).scaleX(1.0f).scaleY(1.0f).setDuration(160).setStartDelay(80).setInterpolator(scaleStartInterpolator).start();
+
+            mDelayCloseButton.setOnClickListener(clickedView -> {
+                HSLog.d(TAG, "mDelayCloseButton.setOnClickListener");
+                mDelayCloseButton.setVisibility(View.GONE);
+                mSendDelayCircleBarView.setVisibility(View.GONE);
+                mSelfSendIcon.setVisibility(View.VISIBLE);
+                mIsSendDelayCircleBarAnimating = false;
+                mCountDownTimer.cancel();
+                updateVisualsOnDraftChanged();
+                resetDelaySendAnimation();
+            });
         });
+
         mSendButton.setOnLongClickListener(arg0 -> {
             SubscriptionListEntry entry = getSelfSubscriptionListEntry();
             boolean shown = false;
@@ -475,6 +566,17 @@ public class ComposeMessageView extends LinearLayout
                 showEmojiPicker();
             }
         });
+    }
+
+    private void resetDelaySendAnimation(){
+        mDelayCloseButton.setAlpha(0.0f);
+        mSendDelayCircleBarView.setAlpha(0.0f);
+        mSendDelayCircleBarView.setScaleX(0.8f);
+        mSendDelayCircleBarView.setScaleY(0.8f);
+        mSendDelayCircleBarView.resetAnimation();
+        mSendButton.setScaleX(1.0f);
+        mSendButton.setScaleY(1.0f);
+        mSendButton.setAlpha(1.0f);
     }
 
     private boolean isMediaPickerShowing() {
@@ -1069,8 +1171,10 @@ public class ComposeMessageView extends LinearLayout
             if (hasWorkingDraft && isDataLoadedForMessageSend()) {
                 if (selfSendButtonUri != null) {
                     UiUtils.revealOrHideViewWithAnimation(mSendButton, VISIBLE, null);
-                } else {
-                    mSendButton.setVisibility(View.VISIBLE);
+                    HSLog.d(TAG,"UiUtils.revealOrHideViewWithAnimation(mSendButton, VISIBLE, null);");
+                } else if(! mIsSendDelayCircleBarAnimating) {
+                        mSendButton.setVisibility(View.VISIBLE);
+                        HSLog.d(TAG, "mSendButton.setVisibility(View.VISIBLE);");
                 }
                 if (isOverriddenAvatarAGroup()) {
                     // If the host has overriden the avatar to show a group avatar where the
@@ -1078,6 +1182,7 @@ public class ComposeMessageView extends LinearLayout
                     // than the send button and pieces of the avatar will stick out from behind
                     // the send button.
                     UiUtils.revealOrHideViewWithAnimation(mSelfSendIcon, GONE, null);
+                    HSLog.d(TAG,"UiUtils.revealOrHideViewWithAnimation(mSelfSendIcon, GONE, null);");
                 }
                 mMmsIndicator.setVisibility(draftMessageData.getIsMms() ? VISIBLE : INVISIBLE);
                 sendWidgetMode = SEND_WIDGET_MODE_SEND_BUTTON;
@@ -1093,8 +1198,10 @@ public class ComposeMessageView extends LinearLayout
                 }
                 if (isOverriddenAvatarAGroup()) {
                     UiUtils.revealOrHideViewWithAnimation(mSelfSendIcon, VISIBLE, null);
+                    HSLog.d(TAG,"UiUtils.revealOrHideViewWithAnimation(mSelfSendIcon, VISIBLE, null);");
                 }
                 UiUtils.revealOrHideViewWithAnimation(mSendButton, GONE, null);
+                HSLog.d(TAG,"UiUtils.revealOrHideViewWithAnimation(mSendButton, GONE, null);");
                 mMmsIndicator.setVisibility(INVISIBLE);
                 if (mConversationDataModel != null && shouldShowSimSelector(mConversationDataModel.getData())) {
                     sendWidgetMode = SEND_WIDGET_MODE_SIM_SELECTOR;
