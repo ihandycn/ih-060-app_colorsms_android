@@ -61,6 +61,7 @@ import com.android.messaging.ui.UIIntents;
 import com.android.messaging.ui.customize.ConversationColors;
 import com.android.messaging.ui.customize.PrimaryColors;
 import com.android.messaging.ui.customize.WallpaperDrawables;
+import com.android.messaging.ui.customize.theme.CreateIconDrawable;
 import com.android.messaging.ui.customize.theme.ThemeInfo;
 import com.android.messaging.ui.customize.theme.ThemeUtils;
 import com.android.messaging.util.AccessibilityUtil;
@@ -321,6 +322,12 @@ public class ConversationListFragment extends Fragment implements ConversationLi
 
         mStartNewConversationButton = (ImageView) rootView.findViewById(
                 R.id.start_new_conversation_button);
+        Drawable drawable = CreateIconDrawable.getCreateIconDrawable();
+        if (drawable != null) {
+            mStartNewConversationButton.setImageDrawable(drawable);
+        } else {
+            mStartNewConversationButton.setImageResource(R.drawable.ic_new_conversation_white);
+        }
         mStartNewConversationButton.setBackgroundDrawable(BackgroundDrawables.
                 createBackgroundDrawable(PrimaryColors.getEditButtonColor(),
                         Dimensions.pxFromDp(28),

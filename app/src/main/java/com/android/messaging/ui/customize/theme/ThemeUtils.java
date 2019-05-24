@@ -7,6 +7,7 @@ import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 
 import com.android.messaging.Factory;
+import com.android.messaging.font.FontUtils;
 import com.android.messaging.ui.conversationlist.ConversationListActivity;
 import com.android.messaging.ui.customize.AvatarBgDrawables;
 import com.android.messaging.ui.customize.BubbleDrawables;
@@ -23,12 +24,18 @@ import java.io.IOException;
 import java.io.InputStream;
 
 public class ThemeUtils {
+    public static final String DEFAULT_THEME_KEY = "default";
 
-    public static void downloadTheme(ThemeInfo themeInfo) {
-
+    interface IThemeChangeListener{
+        void onThemeChanged();
     }
 
+    private static ThemeInfo sCurrentTheme;
+
     public static void applyTheme(ThemeInfo themeInfo) {
+        sCurrentTheme = themeInfo;
+        Factory.get().getCustomizePrefs().putString(BuglePrefsKeys.PREFS_KEY_THEME_NAME, themeInfo.mThemeKey);
+
         PrimaryColors.changePrimaryColor(Color.parseColor(themeInfo.themeColor));
 
         ConversationColors.get().setBubbleBackgroundColor(true, Color.parseColor(themeInfo.incomingBubbleBgColor));
@@ -40,19 +47,40 @@ public class ThemeUtils {
         ConversationColors.get().setListTimeColor(Color.parseColor(themeInfo.listTimeColor));
         ConversationColors.get().setAdActionColor(Color.parseColor(themeInfo.bubbleAdColor));
 
-        ToolbarDrawables.sToolbarBg = null;
-        ToolbarDrawables.applyToolbarBg(themeInfo.toolbarBgUrl);
-        WallpaperDrawables.sListWallpaperBg = null;
+        ToolbarDrawables.sToolbarBitmap = null;
+        ToolbarDrawables.applyToolbarBg();
+        WallpaperDrawables.sListWallpaperBitmap = null;
+        WallpaperDrawables.sWallpaperBitmap = null;
         WallpaperDrawables.applyWallpaperBg(themeInfo.wallpaperUrl);
-        WallpaperDrawables.applyListWallpaperBg(themeInfo.listWallpaperUrl);
+        WallpaperDrawables.applyListWallpaperBg();
         AvatarBgDrawables.sAvatarBg = null;
-        AvatarBgDrawables.applyAvatarBg(themeInfo.avatarUrl);
+        AvatarBgDrawables.applyAvatarBg();
+        CreateIconDrawable.sCreateIconBitmap = null;
+        CreateIconDrawable.applyCreateIcon();
 
-        BubbleDrawables.setSelectedIdentifier(Integer.parseInt(themeInfo.bubbleIncomingUrl));
+        ThemeManager.getInstance().clearCacheDrawable();
+
+        if (!themeInfo.mThemeKey.equals(ThemeUtils.DEFAULT_THEME_KEY)) {
+            BubbleDrawables.setSelectedIdentifier(-1);
+        }
+
+        if (themeInfo.mIsLocalTheme && !themeInfo.isInLocalFolder()) {
+            ThemeDownloadManager.getInstance().copyFileFromAssetsAsync(themeInfo,
+                    new ThemeDownloadManager.IThemeMoveListener() {
+                        @Override
+                        public void onMoveSuccess() {
+
+                        }
+
+                        @Override
+                        public void onMoveFailed() {
+
+                        }
+                    });
+        }
 
         FontStyleManager.getInstance().setFontFamily(themeInfo.fontName);
-
-        Factory.get().getCustomizePrefs().putString(BuglePrefsKeys.PREFS_KEY_THEME_NAME, themeInfo.name);
+        FontUtils.onFontTypefaceChanged();
 
         HSGlobalNotificationCenter.sendNotification(ConversationListActivity.EVENT_MAINPAGE_RECREATE);
         WallpaperSizeManager.getInstance().loadWallpaperParams();
@@ -60,23 +88,31 @@ public class ThemeUtils {
     }
 
     public static String getCurrentThemeName() {
-        return Factory.get().getCustomizePrefs().getString(BuglePrefsKeys.PREFS_KEY_THEME_NAME, "Default");
+        return getCurrentTheme().mThemeKey;
+    }
+
+    public static ThemeInfo getCurrentTheme() {
+        // Default theme is not null
+        if (sCurrentTheme == null) {
+            String themeKey = Factory.get().getCustomizePrefs().getString(BuglePrefsKeys.PREFS_KEY_THEME_NAME, DEFAULT_THEME_KEY);
+            sCurrentTheme = ThemeInfo.getThemeInfo(themeKey);
+        }
+        return sCurrentTheme;
     }
 
     public static boolean isDefaultTheme() {
-        return Factory.get().getCustomizePrefs().getString(BuglePrefsKeys.PREFS_KEY_THEME_NAME, "Default").equals("Default");
+        return getCurrentTheme().mThemeKey.equals(DEFAULT_THEME_KEY);
     }
 
-    public static Drawable getDrawableFromUrl(String url) {
-        if (url.startsWith("assets://")) {
-            try {
-                InputStream ims = HSApplication.getContext().getAssets().open(url.replace("assets://", ""));
-                Bitmap bitmap = BitmapFactory.decodeStream(ims);
-                return new BitmapDrawable(HSApplication.getContext().getResources(), bitmap);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+    static Drawable getLocalThemeDrawableFromPath(String path) {
+        try {
+            InputStream ims = HSApplication.getContext().getAssets().open("themes/" + path);
+            Bitmap bitmap = BitmapFactory.decodeStream(ims);
+            return new BitmapDrawable(HSApplication.getContext().getResources(), bitmap);
+        } catch (IOException e) {
+            e.printStackTrace();
         }
+
         return null;
     }
 }

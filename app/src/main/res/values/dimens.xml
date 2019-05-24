@@ -188,7 +188,7 @@
     <dimen name="message_box_end_margin">13.3dp</dimen>
     <dimen name="message_box_message_view_height">200dp</dimen>
 
-    <dimen name="choose_theme_pager_padding">60dp</dimen>
+    <dimen name="choose_theme_pager_padding">60.3dp</dimen>
 
     <!-- Feedback -->
     <dimen name="feedback_content_lr_margin">5dp</dimen>

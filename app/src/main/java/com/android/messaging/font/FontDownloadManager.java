@@ -14,6 +14,7 @@ import com.ihs.commons.config.HSConfig;
 import com.ihs.commons.connection.HSHttpConnection;
 import com.ihs.commons.connection.httplib.HttpRequest;
 import com.ihs.commons.utils.HSError;
+import com.superapps.util.Fonts;
 import com.superapps.util.Networks;
 import com.superapps.util.Threads;
 import com.superapps.util.Toasts;
@@ -29,10 +30,12 @@ import java.util.Map;
 public class FontDownloadManager {
     static final String LOCAL_DIRECTORY = "fonts" + File.separator;
 
-    interface FontDownloadListener {
+    public interface FontDownloadListener {
         void onDownloadSuccess();
 
         void onDownloadFailed();
+
+        void onDownloadUpdate(float rate);
     }
 
     private static Map<String, FontDownloadListener> sListeners = new HashMap<>();
@@ -60,7 +63,23 @@ public class FontDownloadManager {
         return list;
     }
 
-    static boolean isFontDownloaded(FontInfo font) {
+    public static FontInfo getFont(String fontName) {
+        for (String s : FontUtils.sSupportGoogleFonts) {
+            if (s.equals(fontName)) {
+                return new FontInfo(FontInfo.LOCAL_FONT, fontName);
+            }
+        }
+
+        for (FontInfo info : getRemoteFonts()) {
+            if (info.getFontName().equals(fontName)) {
+                return info;
+            }
+        }
+
+        return null;
+    }
+
+    public static boolean isFontDownloaded(FontInfo font) {
         for (String style : font.getFontWeights()) {
             File file = new File(CommonUtils.getDirectory(LOCAL_DIRECTORY + font.getFontName()), style + ".ttf");
             if (!file.exists()) {
@@ -70,7 +89,7 @@ public class FontDownloadManager {
         return true;
     }
 
-    static void downloadFont(FontInfo font, FontDownloadListener listener) {
+    public static void downloadFont(FontInfo font, FontDownloadListener listener) {
         if (isFontDownloaded(font)) {
             listener.onDownloadSuccess();
         } else {
@@ -87,14 +106,14 @@ public class FontDownloadManager {
             }
             String basePath = getBaseRemoteUrl();
             if (font.getFontWeights() != null && font.getFontWeights().size() > 0) {
-                downloadFontSync(basePath, font.getFontName(), font.getFontWeights());
+                downloadFontSync(basePath, font.getFontName(), font.getFontWeights(), font.getFontWeights().size());
                 BugleAnalytics.logEvent("Customize_TextFont_Download");
             }
         }
     }
 
 
-    private static void downloadFontSync(String basePath, String font, List<String> weights) {
+    private static void downloadFontSync(String basePath, String font, List<String> weights, int weightCount) {
         Threads.postOnThreadPoolExecutor(() -> {
             String weight = weights.remove(0);
 
@@ -107,7 +126,7 @@ public class FontDownloadManager {
                 public void onConnectionFinished(HSHttpConnection hsHttpConnection) {
                     if (hsHttpConnection.isSucceeded()) {
                         if (weights.size() > 0) {
-                            downloadFontSync(basePath, font, weights);
+                            downloadFontSync(basePath, font, weights, weightCount);
                         } else {
                             Threads.postOnMainThread(() -> {
                                 synchronized (FontDownloadManager.class) {
@@ -149,6 +168,18 @@ public class FontDownloadManager {
                         }
                         Toasts.showToast(R.string.sms_network_error);
                     });
+                }
+            });
+
+            float partRate = 1.0f / weightCount;
+            float start = partRate * (weightCount - weights.size() - 1);
+            connection.setDataReceivedListener((hsHttpConnection, bytes, l, l1) -> {
+                if (sListeners.containsKey(font)) {
+                    FontDownloadListener listener = sListeners.get(font);
+                    if (listener != null) {
+                        float rate = start + partRate * l / l1;
+                        listener.onDownloadUpdate(rate);
+                    }
                 }
             });
             connection.startSync();

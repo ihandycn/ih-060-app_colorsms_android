@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<merge xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <com.superapps.view.ViewPagerFixed
+        android:id="@+id/pager"
+        android:layout_width="match_parent"
+        android:layout_height="417dp"
+        android:layout_marginBottom="19dp"
+        android:layout_marginTop="10dp"
+        android:clipToPadding="false"
+        android:paddingEnd="@dimen/choose_theme_pager_padding"
+        android:paddingStart="@dimen/choose_theme_pager_padding"
+        app:layout_constraintBottom_toTopOf="@+id/apply"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <ImageView
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:paddingEnd="@dimen/choose_theme_pager_padding"
+        android:paddingStart="@dimen/choose_theme_pager_padding"
+        android:src="@drawable/choose_theme_phone_border"
+        app:layout_constraintBottom_toBottomOf="@id/pager"
+        app:layout_constraintEnd_toEndOf="@id/pager"
+        app:layout_constraintStart_toStartOf="@id/pager"
+        app:layout_constraintTop_toTopOf="@id/pager"
+        tools:ignore="ContentDescription" />
+
+    <LinearLayout
+        android:id="@+id/pager_guide"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="15dp"
+        android:orientation="horizontal"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/pager" />
+
+    <View
+        android:id="@+id/apply_bg"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+
+        app:layout_constraintBottom_toBottomOf="@id/apply"
+        app:layout_constraintEnd_toEndOf="@id/apply"
+        app:layout_constraintStart_toStartOf="@id/apply"
+        app:layout_constraintTop_toTopOf="@id/apply" />
+
+    <com.android.messaging.ui.view.MessagesTextView
+        android:id="@+id/apply"
+        android:layout_width="164dp"
+        android:layout_height="44dp"
+        android:layout_gravity="center_horizontal"
+        android:gravity="center"
+        android:includeFontPadding="false"
+        android:textColor="#ffffff"
+        android:textSize="14.7sp"
+        app:font_family_changeable="false"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.935"
+        app:textAllCaps="true"
+        app:typeface="@string/custom_font_semibold" />
+</merge>

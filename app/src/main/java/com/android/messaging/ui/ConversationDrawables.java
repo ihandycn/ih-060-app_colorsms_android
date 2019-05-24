@@ -109,9 +109,9 @@ public class ConversationDrawables {
         if (needArrow) {
             if (incoming) {
                 protoDrawable = isError && !selected ? mIncomingErrorBubbleDrawable :
-                        resources.getDrawable(BubbleDrawables.getSelectedDrawable(true, conversationId));
+                        BubbleDrawables.getSelectedDrawable(true, conversationId);
             } else {
-                protoDrawable = resources.getDrawable(BubbleDrawables.getSelectedDrawable(false, conversationId));
+                protoDrawable = BubbleDrawables.getSelectedDrawable(false, conversationId);
             }
         } else if (incoming) {
             protoDrawable = mIncomingBubbleNoArrowDrawable;

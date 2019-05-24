@@ -792,5 +792,17 @@
                 <action android:name="ihs.device.permanent.GUARD_PERMANENT"/>
             </intent-filter>
         </receiver>
+
+        <activity
+            android:name=".ui.customize.theme.ThemeSelectActivity"
+            android:excludeFromRecents="true"
+            android:screenOrientation="portrait"
+            android:theme="@style/SettingsActivity" />
+        <activity
+            android:name=".ui.customize.theme.ThemePreviewActivity"
+            android:excludeFromRecents="true"
+            android:screenOrientation="portrait"
+            android:theme="@style/SettingsActivity" />
     </application>
+
 </manifest>

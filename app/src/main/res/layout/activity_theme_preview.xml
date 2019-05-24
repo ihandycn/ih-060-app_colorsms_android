@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/action_bar_height"
+        android:elevation="0dp"
+        app:navigationIcon="@drawable/theme_themecenter_back"
+        tools:ignore="UnusedAttribute">
+
+        <com.android.messaging.ui.view.MessagesTextView
+            android:id="@+id/toolbar_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:includeFontPadding="false"
+            android:textColor="#4d4d4f"
+            android:textSize="18.7sp"
+            app:font_family_changeable="false"
+            app:typeface="@string/custom_font_semibold" />
+    </android.support.v7.widget.Toolbar>
+
+    <com.android.messaging.ui.customize.theme.ThemePreviewPagerView
+        android:id="@+id/pager_view"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/toolbar" />
+</android.support.constraint.ConstraintLayout>

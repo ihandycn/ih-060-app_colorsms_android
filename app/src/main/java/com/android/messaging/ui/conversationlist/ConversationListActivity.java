@@ -46,6 +46,7 @@ import com.android.messaging.ui.customize.CustomBubblesActivity;
 import com.android.messaging.ui.customize.PrimaryColors;
 import com.android.messaging.ui.customize.ToolbarDrawables;
 import com.android.messaging.ui.customize.theme.ChooseThemeActivity;
+import com.android.messaging.ui.customize.theme.ThemeSelectActivity;
 import com.android.messaging.ui.customize.theme.ThemeUtils;
 import com.android.messaging.ui.dialog.FiveStarRateDialog;
 import com.android.messaging.ui.emoji.EmojiStoreActivity;
@@ -358,7 +359,8 @@ public class ConversationListActivity extends AbstractConversationListActivity
                         if (CommonUtils.isNewUser() && DateUtils.isToday(CommonUtils.getAppInstallTimeMillis())) {
                             BugleAnalytics.logEvent("Menu_ThemeColor_Click_NewUser", true);
                         }
-                        Navigations.startActivity(ConversationListActivity.this, ThemeColorSelectActivity.class);
+                        Navigations.startActivity(ConversationListActivity.this, ThemeSelectActivity.class);
+                        //Navigations.startActivity(ConversationListActivity.this, ThemeColorSelectActivity.class);
                         navigationContent.findViewById(R.id.navigation_item_theme_color_new_text).setVisibility(View.GONE);
                         break;
                     case DRAWER_INDEX_BUBBLE:

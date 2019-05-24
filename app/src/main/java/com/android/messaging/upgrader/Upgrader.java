@@ -48,7 +48,6 @@ public class Upgrader extends BaseUpgrader {
                     !Preferences.getDefault().getBoolean("pref_key_first_launch", true));
         }
         if (oldVersion < 28 && newVersion >= 28) {
-            AvatarBgDrawables.applyAvatarBg(HSConfig.optString("", "Application", "Themes", "Default", "AvatarUrl"));
             Preferences.getDefault().putBoolean(WelcomeChooseThemeActivity.PREF_KEY_WELCOME_CHOOSE_THEME_SHOWN, true);
         }
     }
