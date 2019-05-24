@@ -330,7 +330,7 @@
 						<key>ToolbarBgUrl</key>
 						<string></string>
 						<key>AvatarUrl</key>
-						<string></string>
+						<string>avatar.png</string>
 						<key>ListWallpaperUrl</key>
 						<string></string>
 						<key>WallpaperUrl</key>
