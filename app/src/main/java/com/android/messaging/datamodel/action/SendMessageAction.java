@@ -56,12 +56,12 @@ public class SendMessageAction extends Action implements Parcelable {
      * Queue sending of existing message (can only be called during execute of action)
      */
     static boolean queueForSendInBackground(final String messageId,
-            final Action processingAction) {
+                                            final Action processingAction) {
         final SendMessageAction action = new SendMessageAction();
         return action.queueAction(messageId, processingAction);
     }
 
-    public static final boolean DEFAULT_DELIVERY_REPORT_MODE  = false;
+    public static final boolean DEFAULT_DELIVERY_REPORT_MODE = false;
     public static final int MAX_SMS_RETRY = 3;
 
     // Core parameters needed for all types of message
@@ -228,7 +228,7 @@ public class SendMessageAction extends Action implements Parcelable {
                         LogUtil.v(TAG, "SendMessageAction: Updated message " + messageId
                                 + " with new uri " + messageUri);
                     }
-                 }
+                }
             }
             if (messageUri != null) {
                 // Actually send the MMS
@@ -302,13 +302,14 @@ public class SendMessageAction extends Action implements Parcelable {
 
     /**
      * Update the message status (and message itself if necessary)
-     * @param isSms whether this is an SMS or MMS
-     * @param message message to update
+     *
+     * @param isSms             whether this is an SMS or MMS
+     * @param message           message to update
      * @param updatedMessageUri message uri for newly-inserted messages; null otherwise
-     * @param clearSeen whether the message 'seen' status should be reset if error occurs
+     * @param clearSeen         whether the message 'seen' status should be reset if error occurs
      */
     public static boolean updateMessageAndStatus(final boolean isSms, final MessageData message,
-            final Uri updatedMessageUri, final boolean clearSeen) {
+                                                 final Uri updatedMessageUri, final boolean clearSeen) {
         final Context context = Factory.get().getApplicationContext();
         final DatabaseWrapper db = DataModel.get().getDatabase();
 
@@ -324,7 +325,7 @@ public class SendMessageAction extends Action implements Parcelable {
         boolean updatedTelephony = true;
         int messageBox;
         int type;
-        switch(message.getStatus()) {
+        switch (message.getStatus()) {
             case MessageData.BUGLE_STATUS_OUTGOING_COMPLETE:
             case MessageData.BUGLE_STATUS_OUTGOING_DELIVERED:
                 type = Sms.MESSAGE_TYPE_SENT;

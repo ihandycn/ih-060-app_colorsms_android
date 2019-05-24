@@ -32,9 +32,12 @@ import com.android.messaging.datamodel.SyncManager;
 import com.android.messaging.datamodel.data.MessageData;
 import com.android.messaging.datamodel.data.ParticipantData;
 import com.android.messaging.mmslib.pdu.PduHeaders;
+import com.android.messaging.privatebox.PrivateMessageManager;
+import com.android.messaging.privatebox.PrivateSettingManager;
 import com.android.messaging.sms.DatabaseMessages;
 import com.android.messaging.sms.MmsSmsUtils;
 import com.android.messaging.sms.MmsUtils;
+import com.android.messaging.util.BugleAnalytics;
 import com.android.messaging.util.CheckPermissionUtil;
 import com.android.messaging.util.FabricUtils;
 import com.android.messaging.util.LogUtil;
@@ -164,9 +167,12 @@ public class ReceiveMmsMessageAction extends Action implements Parcelable {
                 MessagingContentProvider.notifyPartsChanged();
 
                 // Show a notification to let the user know a new message has arrived
+                boolean isPrivateConversation = PrivateMessageManager.getInstance().isPrivateConversationId(conversationId);
                 BugleNotifications.update(false/*silent*/, conversationId,
                         BugleNotifications.UPDATE_ALL);
-
+                if (isPrivateConversation && PrivateSettingManager.isNotificationEnable()) {
+                    BugleAnalytics.logEvent("Notifications_Received_PrivateBox");
+                }
                 // Send the NotifyRespInd with DEFERRED status since no auto download
                 actionParameters.putString(KEY_TRANSACTION_ID, mms.mTransactionId);
                 actionParameters.putString(KEY_CONTENT_LOCATION, mms.mContentLocation);

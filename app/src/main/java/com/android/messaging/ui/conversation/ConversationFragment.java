@@ -85,6 +85,7 @@ import com.android.messaging.datamodel.data.MessagePartData;
 import com.android.messaging.datamodel.data.ParticipantData;
 import com.android.messaging.datamodel.data.PendingAttachmentData;
 import com.android.messaging.datamodel.data.SubscriptionListData.SubscriptionListEntry;
+import com.android.messaging.privatebox.AppPrivateLockManager;
 import com.android.messaging.ui.BaseAlertDialog;
 import com.android.messaging.ui.BugleActionBarActivity;
 import com.android.messaging.ui.ConversationDrawables;
@@ -117,7 +118,6 @@ import com.android.messaging.util.UiUtils;
 import com.android.messaging.util.UriUtil;
 import com.android.messaging.util.ViewUtils;
 import com.google.common.annotations.VisibleForTesting;
-import com.ihs.app.framework.HSApplication;
 import com.ihs.commons.config.HSConfig;
 import com.ihs.commons.notificationcenter.HSGlobalNotificationCenter;
 import com.ihs.commons.notificationcenter.INotificationObserver;
@@ -196,6 +196,7 @@ public class ConversationFragment extends Fragment implements ConversationDataLi
     private ConversationMessageAdapter mAdapter;
     private ConversationFastScroller mFastScroller;
     private ImageView mWallpaperView;
+    private ImageView mThemeWallpaperView;
 
 
     private View mConversationComposeDivider;
@@ -231,6 +232,8 @@ public class ConversationFragment extends Fragment implements ConversationDataLi
 
     // Attachment data for the attachment within the selected message that was long pressed
     private MessagePartData mSelectedAttachment;
+
+    private boolean mIsPrivateConversation = false;
 
     // Normally, as soon as draft message is loaded, we trust the UI state held in
     // ComposeMessageView to be the only source of truth (incl. the conversation self id). However,
@@ -516,7 +519,8 @@ public class ConversationFragment extends Fragment implements ConversationDataLi
     private AcbNativeAdContainerView mAdContentView;
     private int composeEditTextInitialPos = -1;
     private ViewTreeObserver.OnGlobalLayoutListener globalLayoutListener = new ViewTreeObserver.OnGlobalLayoutListener() {
-        @Override public void onGlobalLayout() {
+        @Override
+        public void onGlobalLayout() {
 
             int[] pos = new int[2];
             mComposeMessageView.getComposeEditText().getLocationOnScreen(pos);
@@ -618,17 +622,17 @@ public class ConversationFragment extends Fragment implements ConversationDataLi
         mAdContentView.setAdBodyView(description);
         TextView actionBtn = ViewUtils.findViewById(adView, R.id.banner_action);
         mAdContentView.setAdActionView(actionBtn);
-        if (HSConfig.optBoolean(true, "Application", "SMSAd", "SMSHomepageBannerAdFacebookEnabled")) {
+        actionBtn.setTextColor(Color.parseColor(ThemeInfo.getThemeInfo(ThemeUtils.getCurrentThemeName()).bannerAdActionTextColor));
+        Drawable actionBg = getResources().getDrawable(R.drawable.conversation_list_ad_action_pressed_bg);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            ((LayerDrawable) actionBg).getDrawable(1)
+                    .setColorFilter(
+                            Color.parseColor(ThemeInfo.getThemeInfo(ThemeUtils.getCurrentThemeName()).bannerAdActionColor),
+                            PorterDuff.Mode.SRC_IN);
+        }
+        actionBtn.setBackgroundDrawable(actionBg);
+        if (HSConfig.optBoolean(true, "Application", "SMSAd", "SMSDetailspageTopAd", "FacebookEnabled")) {
             adView.setBackgroundColor(Color.parseColor(ThemeInfo.getThemeInfo(ThemeUtils.getCurrentThemeName()).bannerAdBgColor));
-            actionBtn.setTextColor(Color.parseColor(ThemeInfo.getThemeInfo(ThemeUtils.getCurrentThemeName()).bannerAdActionTextColor));
-            Drawable actionBg = getResources().getDrawable(R.drawable.conversation_list_ad_action_pressed_bg);
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                ((LayerDrawable) actionBg).getDrawable(1)
-                        .setColorFilter(
-                                Color.parseColor(ThemeInfo.getThemeInfo(ThemeUtils.getCurrentThemeName()).bannerAdActionColor),
-                                PorterDuff.Mode.SRC_IN);
-            }
-            actionBtn.setBackgroundDrawable(actionBg);
         }
 
         FrameLayout choice = ViewUtils.findViewById(adView, R.id.ad_choice);
@@ -681,6 +685,12 @@ public class ConversationFragment extends Fragment implements ConversationDataLi
         mDraftMessageDataModel =
                 BindingBase.createBindingReference(mComposeMessageView.getDraftDataModel());
         mDraftMessageDataModel.getData().addListener(this);
+    }
+
+    public void onActivityStart() {
+        if (mIsPrivateConversation) {
+            AppPrivateLockManager.getInstance().checkLockStateAndSelfVerify();
+        }
     }
 
     public void onAttachmentChoosen() {
@@ -755,6 +765,7 @@ public class ConversationFragment extends Fragment implements ConversationDataLi
 
         mMediaLayout = view.findViewById(R.id.camera_photo_layout);
         mWallpaperView = view.findViewById(R.id.conversation_fragment_wallpaper);
+        mThemeWallpaperView = view.findViewById(R.id.conversation_fragment_theme_wallpaper);
 
         if (HSConfig.optBoolean(false, "Application", "SMSAd", "SMSDetailspageTopAd", "Enabled")) {
             BugleAnalytics.logEvent("Detailspage_TopAd_Should_Show", true, true);
@@ -885,7 +896,7 @@ public class ConversationFragment extends Fragment implements ConversationDataLi
     public void onResume() {
         super.onResume();
 
-        WallpaperManager.setWallPaperOnView(mWallpaperView, mConversationId);
+        WallpaperManager.setConversationWallPaper(mWallpaperView, mThemeWallpaperView, mConversationId);
 
         if (mIncomingDraft == null) {
             mComposeMessageView.requestDraftMessage(mClearLocalDraft);
@@ -1065,6 +1076,12 @@ public class ConversationFragment extends Fragment implements ConversationDataLi
      */
     @Override
     public void onConversationMetadataUpdated(final ConversationData conversationData) {
+        if (conversationData != null && conversationData.isPrivate()) {
+            mIsPrivateConversation = true;
+            if (!getActivity().isFinishing()) {
+                AppPrivateLockManager.getInstance().checkLockStateAndSelfVerify();
+            }
+        }
         mBinding.ensureBound(conversationData);
 
         if (mSelectedMessage != null && mSelectedAttachment != null) {
@@ -1769,7 +1786,8 @@ public class ConversationFragment extends Fragment implements ConversationDataLi
         // no-op for now
     }
 
-    @Override public void onClickMediaOrEmoji() {
+    @Override
+    public void onClickMediaOrEmoji() {
     }
 
     @Override

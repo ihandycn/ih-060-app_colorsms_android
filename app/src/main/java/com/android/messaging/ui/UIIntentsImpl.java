@@ -50,6 +50,7 @@ import com.android.messaging.datamodel.data.MessageBoxItemData;
 import com.android.messaging.datamodel.data.MessageData;
 import com.android.messaging.datamodel.data.MessagePartData;
 import com.android.messaging.datamodel.data.ParticipantData;
+import com.android.messaging.privatebox.ui.SelfVerifyActivity;
 import com.android.messaging.receiver.NotificationReceiver;
 import com.android.messaging.sms.MmsSmsUtils;
 import com.android.messaging.ui.appsettings.ApnEditorActivity;
@@ -116,7 +117,7 @@ public class UIIntentsImpl extends UIIntents {
         if (conversationId != null) {
             intent.putExtra(UI_INTENT_EXTRA_CONVERSATION_ID, conversationId);
         }
-        if(!TextUtils.isEmpty(conversationName)){
+        if (!TextUtils.isEmpty(conversationName)) {
             intent.putExtra(UI_INTENT_EXTRA_CONVERSATION_NAME, conversationName);
         }
         if (draft != null) {
@@ -463,6 +464,14 @@ public class UIIntentsImpl extends UIIntents {
     }
 
     @Override
+    public PendingIntent getPendingIntentForPrivateConversationListActivityFromNotification(final Context context) {
+        final Intent intent = new Intent(context, SelfVerifyActivity.class);
+        intent.putExtra(SelfVerifyActivity.INTENT_KEY_ACTIVITY_ENTRANCE,
+                SelfVerifyActivity.ENTRANCE_NOTIFICATION_TO_CONVERSATION_LIST);
+        return getPendingIntentWithParentStack(context, intent, 0);
+    }
+
+    @Override
     public PendingIntent getPendingIntentForConversationActivity(final Context context,
                                                                  final String conversationId, final MessageData draft) {
         final Intent intent = getConversationActivityIntent(context, conversationId, draft,
@@ -480,6 +489,15 @@ public class UIIntentsImpl extends UIIntents {
         // Ensure that the platform doesn't reuse PendingIntents across conversations
         intent.setData(MessagingContentProvider.buildConversationMetadataUri(conversationId));
         intent.putExtra(BugleNotifications.EXTRA_FROM_NOTIFICATION, true);
+        return getPendingIntentWithParentStack(context, intent, 0);
+    }
+
+    @Override
+    public PendingIntent getPendingIntentForPrivateConversationActivityFromNotification(final Context context, final String conversationId) {
+        final Intent intent = new Intent(context, SelfVerifyActivity.class);
+        intent.putExtra(SelfVerifyActivity.INTENT_KEY_ACTIVITY_ENTRANCE,
+                SelfVerifyActivity.ENTRANCE_NOTIFICATION);
+        intent.putExtra(SelfVerifyActivity.INTENT_KEY_ENTRANCE_CONVERSATION_ID, conversationId);
         return getPendingIntentWithParentStack(context, intent, 0);
     }
 

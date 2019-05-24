@@ -59,7 +59,7 @@
         android:layout_height="wrap_content"
         app:summary="@string/setting_reset_customization_summary"
         app:title="@string/menu_reset_customization"
-        app:type="0" />
+        app:type="normal" />
 
 </LinearLayout>
 

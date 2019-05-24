@@ -258,7 +258,7 @@ public class WallpaperPreviewActivity extends BaseActivity implements WallpaperM
                         return;
                     }
                     onItemSelected(view);
-                    setPreviewDrawable(WallpaperDrawables.getWallpaperBg());
+                    setPreviewDrawable(WallpaperDrawables.getConversationWallpaperBg());
                     if (mThreadId == null) {
                         WallpaperManager.setWallpaperPath(null, "");
                         WallpaperManager.onOnlineWallpaperChanged();

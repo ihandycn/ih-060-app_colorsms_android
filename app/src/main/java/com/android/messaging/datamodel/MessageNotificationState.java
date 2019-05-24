@@ -51,6 +51,7 @@ import com.android.messaging.datamodel.data.MessagePartData;
 import com.android.messaging.datamodel.data.ParticipantData;
 import com.android.messaging.datamodel.media.BugleNotificationChannelUtil;
 import com.android.messaging.datamodel.media.VideoThumbnailRequest;
+import com.android.messaging.privatebox.PrivateMessageManager;
 import com.android.messaging.sms.MmsUtils;
 import com.android.messaging.ui.UIIntents;
 import com.android.messaging.ui.appsettings.PrivacyModeSettings;
@@ -66,8 +67,10 @@ import com.android.messaging.util.FabricUtils;
 import com.android.messaging.util.LogUtil;
 import com.android.messaging.util.PendingIntentConstants;
 import com.android.messaging.util.UriUtil;
+import com.crashlytics.android.core.CrashlyticsCore;
 import com.google.common.collect.Lists;
 import com.ihs.app.framework.HSApplication;
+import com.superapps.debug.CrashlyticsLog;
 import com.superapps.util.Notifications;
 
 import java.util.ArrayList;
@@ -395,6 +398,7 @@ public abstract class MessageNotificationState extends NotificationState {
 
         public final List<MessageNotificationState>
                 mChildren = new ArrayList<MessageNotificationState>();
+        public boolean mIsAllPrivateConversations = true;
 
         public MultiConversationNotificationState(
                 final ConversationInfoList convList, final MessageNotificationState state) {
@@ -445,36 +449,49 @@ public abstract class MessageNotificationState extends NotificationState {
                     when = convInfo.mReceivedTimestamp;
                 }
                 String sender;
-                CharSequence text;
-                final NotificationLineInfo lineInfo = convInfo.mLineInfos.get(0);
-                final MessageLineInfo messageLineInfo = (MessageLineInfo) lineInfo;
-                if (convInfo.mIsGroup) {
-                    sender = (convInfo.mGroupConversationName.length() >
-                            MAX_CHARACTERS_IN_GROUP_NAME) ?
-                            truncateGroupMessageName(convInfo.mGroupConversationName)
-                            : convInfo.mGroupConversationName;
+                if (!PrivateMessageManager.getInstance().isPrivateConversationId(convInfo.mConversationId)) {
+                    mIsAllPrivateConversations = false;
+                    CharSequence text;
+                    final NotificationLineInfo lineInfo = convInfo.mLineInfos.get(0);
+                    final MessageLineInfo messageLineInfo = (MessageLineInfo) lineInfo;
+                    if (convInfo.mIsGroup) {
+                        sender = (convInfo.mGroupConversationName.length() >
+                                MAX_CHARACTERS_IN_GROUP_NAME) ?
+                                truncateGroupMessageName(convInfo.mGroupConversationName)
+                                : convInfo.mGroupConversationName;
+                    } else {
+                        sender = messageLineInfo.mAuthorFullName;
+                    }
+                    text = messageLineInfo.mText;
+                    mAttachmentUri = messageLineInfo.mAttachmentUri;
+                    mAttachmentType = messageLineInfo.mAttachmentType;
+
+                    int privacyMode = PrivacyModeSettings.getPrivacyMode(convInfo.mConversationId);
+                    if (privacyMode == PrivacyModeSettings.HIDE_CONTACT_AND_MESSAGE) {
+                        sender = context.getString(R.string.notification_sender_in_privacy_mode);
+                        text = context.getResources().getQuantityString(R.plurals.notification_title_in_privacy_mode, 1, 1);
+                    } else if (privacyMode == PrivacyModeSettings.HIDE_MESSAGE_ONLY) {
+                        text = context.getResources().getQuantityString(R.plurals.notification_title_in_privacy_mode, 1, 1);
+                    }
+
+                    inboxStyle.addLine(BugleNotifications.formatInboxMessage(
+                            sender, text, mAttachmentUri, mAttachmentType));
+                    if (sender != null) {
+                        if (senders.length() > 0) {
+                            senders.append(separator);
+                        }
+                        senders.append(sender);
+                    }
                 } else {
-                    sender = messageLineInfo.mAuthorFullName;
-                }
-                text = messageLineInfo.mText;
-                mAttachmentUri = messageLineInfo.mAttachmentUri;
-                mAttachmentType = messageLineInfo.mAttachmentType;
-
-                int privacyMode = PrivacyModeSettings.getPrivacyMode(convInfo.mConversationId);
-                if (privacyMode == PrivacyModeSettings.HIDE_CONTACT_AND_MESSAGE) {
-                    sender = context.getString(R.string.notification_sender_in_privacy_mode);
-                    text = context.getResources().getQuantityString(R.plurals.notification_title_in_privacy_mode, 1, 1);
-                } else if (privacyMode == PrivacyModeSettings.HIDE_MESSAGE_ONLY) {
-                    text = context.getResources().getQuantityString(R.plurals.notification_title_in_privacy_mode, 1, 1);
-                }
-
-                inboxStyle.addLine(BugleNotifications.formatInboxMessage(
-                        sender, text, mAttachmentUri, mAttachmentType));
-                if (sender != null) {
+                    inboxStyle.addLine(BugleNotifications.formatInboxMessage(
+                            context.getString(R.string.notification_sender_in_private_box),
+                            context.getResources().getString(R.string.notification_title_in_private_box_single),
+                            null, null
+                    ));
                     if (senders.length() > 0) {
                         senders.append(separator);
                     }
-                    senders.append(sender);
+                    senders.append(context.getString(R.string.notification_sender_in_private_box));
                 }
             }
             // for collapsed state
@@ -570,6 +587,24 @@ public abstract class MessageNotificationState extends NotificationState {
             final ConversationLineInfo convInfo = mConvList.mConvInfos.get(0);
             final List<NotificationLineInfo> lineInfos = convInfo.mLineInfos;
             final int messageCount = lineInfos.size();
+            String conversationId = convInfo.mConversationId;
+            boolean isPrivateConversation = PrivateMessageManager.getInstance().isPrivateConversationId(conversationId);
+            if (isPrivateConversation) {
+                builder.setContentTitle(HSApplication.getContext().getString(R.string.notification_sender_in_private_box));
+                if (messageCount == 1) {
+                    String content = HSApplication.getContext().getResources()
+                            .getString(R.string.notification_title_in_private_box_single);
+                    builder.setContentText(content);
+                    notifStyle = new NotificationCompat.BigTextStyle(builder);
+                } else {
+                    String content = HSApplication.getContext().getResources()
+                            .getString(R.string.notification_title_in_private_box_other, messageCount);
+                    builder.setContentText(content);
+                    notifStyle = new NotificationCompat.BigTextStyle(builder);
+                }
+                builder.setWhen(convInfo.mReceivedTimestamp);
+                return notifStyle;
+            }
 
             Context context = HSApplication.getContext();
             int privacyMode = PrivacyModeSettings.getPrivacyMode(convInfo.mConversationId);
@@ -934,6 +969,13 @@ public abstract class MessageNotificationState extends NotificationState {
                     if (currConvInfo == null) {
                         final ConversationListItemData convData =
                                 ConversationListItemData.getExistingConversation(db, convId);
+                        if (convData == null) {
+                            if (FabricUtils.isFabricInited()) {
+                                CrashlyticsCore.getInstance().logException(
+                                        new CrashlyticsLog("install version " + HSApplication.getFirstLaunchInfo().appVersionCode));
+                            }
+                            continue;
+                        }
                         if (!convData.getNotificationEnabled()) {
                             // Skip conversations that have notifications disabled.
                             continue;

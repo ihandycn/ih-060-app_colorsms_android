@@ -511,6 +511,10 @@ public class ConversationData extends BindableData {
         return mConversationMetadata.getIcon();
     }
 
+    public boolean isPrivate() {
+        return mConversationMetadata.isPrivate();
+    }
+
     public String getConversationId() {
         return mConversationId;
     }

@@ -7,6 +7,9 @@ import com.android.messaging.datamodel.DataModel;
 import com.android.messaging.datamodel.DatabaseHelper;
 import com.android.messaging.datamodel.DatabaseWrapper;
 import com.android.messaging.datamodel.data.ConversationListItemData;
+import com.android.messaging.privatebox.PrivateContactsManager;
+import com.android.messaging.privatebox.PrivateMmsEntry;
+import com.android.messaging.privatebox.PrivateSmsEntry;
 import com.android.messaging.ui.conversationlist.ConversationListActivity;
 import com.android.messaging.ui.customize.AvatarBgDrawables;
 import com.android.messaging.ui.welcome.WelcomeChooseThemeActivity;
@@ -42,15 +45,22 @@ public class Upgrader extends BaseUpgrader {
             FontStyleManager.getInstance().setFontScaleLevel(fontLevel);
         }
 
+        if (oldVersion < 45 && newVersion >= 45) {
+            addIsPrivateColumnInConversationTable(oldVersion >= 25);
+            createPrivateBoxTables();
+        }
+
         if (oldVersion < 25 && newVersion >= 25) {
             addPinColumnInDB();
             Preferences.getDefault().putBoolean(WelcomeStartActivity.PREF_KEY_START_BUTTON_CLICKED,
                     !Preferences.getDefault().getBoolean("pref_key_first_launch", true));
         }
+
         if (oldVersion < 28 && newVersion >= 28) {
             AvatarBgDrawables.applyAvatarBg(HSConfig.optString("", "Application", "Themes", "Default", "AvatarUrl"));
             Preferences.getDefault().putBoolean(WelcomeChooseThemeActivity.PREF_KEY_WELCOME_CHOOSE_THEME_SHOWN, true);
         }
+
     }
 
     public static void addPinColumnInDB() {
@@ -74,6 +84,43 @@ public class Upgrader extends BaseUpgrader {
 
         DatabaseHelper.rebuildView(db, ConversationListItemData.getConversationListView(),
                 ConversationListItemData.getConversationListViewSql());
+    }
+
+    public static void addIsPrivateColumnInConversationTable(boolean rebuildView) {
+        final DatabaseWrapper db = DataModel.get().getDatabaseWithoutMainCheck();
+        Cursor cursor = null;
+        try {
+            cursor = db.rawQuery("SELECT * FROM " + DatabaseHelper.CONVERSATIONS_TABLE + " LIMIT 0"
+                    , null);
+            if (cursor != null && cursor.getColumnIndex(DatabaseHelper.ConversationColumns.IS_PRIVATE) == -1) {
+                db.execSQL("ALTER TABLE " + DatabaseHelper.CONVERSATIONS_TABLE
+                        + " ADD COLUMN " + DatabaseHelper.ConversationColumns.IS_PRIVATE
+                        + " INT DEFAULT(0)");
+            }
+        } catch (Exception e) {
+
+        } finally {
+            if (null != cursor && !cursor.isClosed()) {
+                cursor.close();
+            }
+        }
+
+        if (rebuildView) {
+            DatabaseHelper.rebuildView(db, ConversationListItemData.getConversationListView(),
+                    ConversationListItemData.getConversationListViewSql());
+        }
+    }
+
+    public static void createPrivateBoxTables() {
+        final DatabaseWrapper db = DataModel.get().getDatabaseWithoutMainCheck();
+        try {
+            db.execSQL(PrivateMmsEntry.CREATE_MMS_TABLE_SQL);
+            db.execSQL(PrivateSmsEntry.CREATE_SMS_TABLE_SQL);
+            db.execSQL(PrivateContactsManager.CREATE_PRIVATE_CONTACTS_TABLE_SQL);
+            db.execSQL(PrivateMmsEntry.Addr.CREATE_MMS_ADDRESS_TABLE_SQL);
+        } catch (Exception e) {
+
+        }
     }
 
     private void migrateLong(Preferences from, Preferences to, String key) {

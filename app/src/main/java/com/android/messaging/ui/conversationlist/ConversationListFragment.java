@@ -17,6 +17,7 @@ package com.android.messaging.ui.conversationlist;
 
 import android.app.Activity;
 import android.app.Fragment;
+import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
@@ -35,7 +36,6 @@ import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.view.ViewGroup.MarginLayoutParams;
 import android.view.ViewPropertyAnimator;
@@ -54,6 +54,9 @@ import com.android.messaging.datamodel.data.AdItemData;
 import com.android.messaging.datamodel.data.ConversationListData;
 import com.android.messaging.datamodel.data.ConversationListData.ConversationListDataListener;
 import com.android.messaging.datamodel.data.ConversationListItemData;
+import com.android.messaging.privatebox.PrivateBoxSettings;
+import com.android.messaging.privatebox.ui.PrivateBoxSetPasswordActivity;
+import com.android.messaging.privatebox.ui.SelfVerifyActivity;
 import com.android.messaging.ui.BugleAnimationTags;
 import com.android.messaging.ui.ListEmptyView;
 import com.android.messaging.ui.SnackBarInteraction;
@@ -79,6 +82,7 @@ import com.ihs.commons.utils.HSLog;
 import com.superapps.util.BackgroundDrawables;
 import com.superapps.util.Dimensions;
 import com.superapps.util.IntegerBuckets;
+import com.superapps.util.Navigations;
 import com.superapps.util.Preferences;
 
 import net.appcloudbox.ads.base.AcbNativeAd;
@@ -235,7 +239,7 @@ public class ConversationListFragment extends Fragment implements ConversationLi
         mEmptyListMessageView = rootView.findViewById(R.id.no_conversations_view);
         mEmptyListMessageView.setImageHint(R.drawable.ic_oobe_conv_list);
         ImageView conversationListBg = rootView.findViewById(R.id.conversation_list_bg);
-        Drawable bgDrawable = WallpaperDrawables.getListWallpaperBg();
+        Drawable bgDrawable = WallpaperDrawables.getConversationListWallpaperDrawable();
         getActivity().getWindow().getDecorView().setBackground(null);
         if (bgDrawable == null) {
             getActivity().getWindow().getDecorView().setBackgroundColor(Color.WHITE);
@@ -319,7 +323,7 @@ public class ConversationListFragment extends Fragment implements ConversationLi
             mListState = savedInstanceState.getParcelable(SAVED_INSTANCE_STATE_LIST_VIEW_STATE_KEY);
         }
 
-        mStartNewConversationButton = (ImageView) rootView.findViewById(
+        mStartNewConversationButton = rootView.findViewById(
                 R.id.start_new_conversation_button);
         mStartNewConversationButton.setBackgroundDrawable(BackgroundDrawables.
                 createBackgroundDrawable(PrimaryColors.getEditButtonColor(),
@@ -329,13 +333,22 @@ public class ConversationListFragment extends Fragment implements ConversationLi
             mStartNewConversationButton.setVisibility(View.GONE);
         } else {
             mStartNewConversationButton.setVisibility(View.VISIBLE);
-            mStartNewConversationButton.setOnClickListener(new OnClickListener() {
-                @Override
-                public void onClick(final View clickView) {
-                    ConversationListActivity.logFirstComeInClickEvent("create");
-                    BugleAnalytics.logEvent("SMS_CreateMessage_ButtonClick", true, true);
-                    mHost.onCreateConversationClick();
+            mStartNewConversationButton.setOnClickListener(clickView -> {
+                ConversationListActivity.logFirstComeInClickEvent("create");
+                BugleAnalytics.logEvent("SMS_CreateMessage_ButtonClick", true, true);
+                mHost.onCreateConversationClick();
+            });
+            mStartNewConversationButton.setOnLongClickListener(v -> {
+                if (PrivateBoxSettings.isAnyPasswordSet()) {
+                    Intent intent = new Intent(getActivity(), SelfVerifyActivity.class);
+                    intent.putExtra(SelfVerifyActivity.INTENT_KEY_ACTIVITY_ENTRANCE,
+                            SelfVerifyActivity.ENTRANCE_CREATE_ICON);
+                    Navigations.startActivitySafely(getActivity(), intent);
+                } else {
+                    Navigations.startActivitySafely(getActivity(),
+                            new Intent(getActivity(), PrivateBoxSetPasswordActivity.class));
                 }
+                return true;
             });
         }
         ViewCompat.setTransitionName(mStartNewConversationButton, BugleAnimationTags.TAG_FABICON);
@@ -516,12 +529,13 @@ public class ConversationListFragment extends Fragment implements ConversationLi
             do {
                 ConversationListItemData itemData = new ConversationListItemData();
                 itemData.bind(cursor);
-                dataList.add(itemData);
-
-                if (!TextUtils.isEmpty(cursor.getString(INDEX_CONVERSATION_ICON))
-                        && TextUtils.equals(AvatarUriUtil.TYPE_LOCAL_RESOURCE_URI,
-                        AvatarUriUtil.getAvatarType(Uri.parse(cursor.getString(INDEX_CONVERSATION_ICON))))) {
-                    localAvatarCount++;
+                if (!itemData.isPrivate()) {
+                    dataList.add(itemData);
+                    if (!TextUtils.isEmpty(cursor.getString(INDEX_CONVERSATION_ICON))
+                            && TextUtils.equals(AvatarUriUtil.TYPE_LOCAL_RESOURCE_URI,
+                            AvatarUriUtil.getAvatarType(Uri.parse(cursor.getString(INDEX_CONVERSATION_ICON))))) {
+                        localAvatarCount++;
+                    }
                 }
             } while (cursor.moveToNext());
         }
@@ -550,7 +564,7 @@ public class ConversationListFragment extends Fragment implements ConversationLi
             HSGlobalNotificationCenter.sendNotification(ConversationListActivity.FIRST_LOAD, hsBundle);
         }
 
-        if (mAdapter.hasHeader()) {
+        if (dataList.size() > 0 && mAdapter.hasHeader()) {
             dataList.add(0, new AdItemData());
         }
         mAdapter.setDataList(dataList);
@@ -559,7 +573,7 @@ public class ConversationListFragment extends Fragment implements ConversationLi
             tryShowTopNativeAd();
             adFirstPrepared = false;
         }
-        updateEmptyListUi(cursor == null || cursor.getCount() == 0);
+        updateEmptyListUi(cursor == null || dataList.size() == 0);
         if (cursor != null && cursor.getCount() > 0) {
             Preferences.getDefault().doOnce(new Runnable() {
                 @Override

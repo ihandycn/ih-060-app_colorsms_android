@@ -32,6 +32,8 @@ import com.android.messaging.datamodel.SyncManager;
 import com.android.messaging.datamodel.SyncManager.ThreadInfoCache;
 import com.android.messaging.datamodel.data.MessageData;
 import com.android.messaging.mmslib.SqliteWrapper;
+import com.android.messaging.privatebox.PrivateMessageContentProvider;
+import com.android.messaging.privatebox.PrivateMessageManager;
 import com.android.messaging.sms.DatabaseMessages;
 import com.android.messaging.sms.DatabaseMessages.DatabaseMessage;
 import com.android.messaging.sms.DatabaseMessages.LocalDatabaseMessage;
@@ -178,13 +180,15 @@ class SyncCursorPair {
                             localMessage.getTimestampInMillis()
                                     > remoteMessage.getTimestampInMillis())) {
                 // Found a local message that is not in remote db
-                // Delete the local message
-                messagesToDelete.add((LocalDatabaseMessage) localMessage);
-                lastTimestampMillis = Math.min(lastTimestampMillis,
-                        localMessage.getTimestampInMillis());
-                // Advance to next local message
-                localMessage = mLocalCursorIterator.next();
-                localCount += 1;
+                if (!PrivateMessageManager.getInstance().isPrivateUri(localMessage.getUri())){
+                    // Delete the local message
+                    messagesToDelete.add((LocalDatabaseMessage) localMessage);
+                    lastTimestampMillis = Math.min(lastTimestampMillis,
+                            localMessage.getTimestampInMillis());
+                    // Advance to next local message
+                    localMessage = mLocalCursorIterator.next();
+                    localCount += 1;
+                }
             } else if ((localMessage == null && remoteMessage != null) ||
                     (localMessage != null && remoteMessage != null &&
                             localMessage.getTimestampInMillis()
@@ -330,9 +334,13 @@ class SyncCursorPair {
     private static final String ORDER_BY_DATE_DESC = "date DESC";
 
     // A subquery that selects SMS/MMS messages in Bugle which are also in telephony
+    // for private box :filter the "sms_message_uri" column
+    // where not like content://com.color.sms.messages
+    // to make sure the private messages not be synced
     private static final String LOCAL_MESSAGES_SELECTION = String.format(
             Locale.US,
-            "(%s NOTNULL)",
+            "(%s NOTNULL) AND " + MessageColumns.SMS_MESSAGE_URI + " NOT LIKE '"
+                    + PrivateMessageContentProvider.BASE_CONTENT_URI.toString() + "%%' ",
             MessageColumns.SMS_MESSAGE_URI);
 
     private static final String ORDER_BY_TIMESTAMP_DESC =

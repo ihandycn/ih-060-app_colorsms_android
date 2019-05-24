@@ -202,7 +202,22 @@ public class ConversationListData extends BindableData
         DataModel.get().setConversationListScrolledToNewestConversation(
                 scrolledToNewestConversation);
         if (scrolledToNewestConversation) {
-            handleMessagesSeen();
+            //handleMessagesSeen();
+            BugleNotifications.markAllNormalMessagesAsSeen();
+
+            SmsReceiver.cancelSecondaryUserNotification();
+        }
+    }
+
+    public void setScrolledToNewestPrivateConversation(boolean scrolledToNewestConversation) {
+        DataModel.get().setPrivateConversationListScrolledToNewestConversation(
+                scrolledToNewestConversation);
+        if (scrolledToNewestConversation) {
+            //todo : handle private message as seen
+            //handleMessagesSeen();
+            BugleNotifications.markAllPrivateMessagesAsSeen();
+
+            SmsReceiver.cancelSecondaryUserNotification();
         }
     }
 

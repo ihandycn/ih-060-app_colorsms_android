@@ -32,10 +32,17 @@
             android:layout_weight="1">
 
             <com.android.messaging.ui.customize.theme.WallpaperBackgroundImageView
+                android:id="@+id/conversation_fragment_theme_wallpaper"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:scaleType="fitXY"
+                android:visibility="gone" />
+
+            <com.android.messaging.ui.view.CenterTopImageView
                 android:id="@+id/conversation_fragment_wallpaper"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:scaleType="fitXY" />
+                android:visibility="gone" />
 
             <!-- Message list -->
             <android.support.v7.widget.RecyclerView

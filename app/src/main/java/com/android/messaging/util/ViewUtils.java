@@ -7,9 +7,12 @@ import android.graphics.Rect;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
+import android.os.Build;
 import android.support.annotation.NonNull;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.ScaleAnimation;
 import android.widget.ImageView;
 
 import com.superapps.util.Dimensions;
@@ -126,5 +129,18 @@ public class ViewUtils {
 
     public interface MeasuredDimensionSetter {
         void setMeasuredDimension(int width, int height);
+    }
+
+    public static void setViewScale(View view, float scale) {
+        if (Build.VERSION.SDK_INT > 10) {
+            view.setScaleX(scale);
+            view.setScaleY(scale);
+        } else {
+            ScaleAnimation scaleAnimation = new ScaleAnimation(1.0f, scale, 1.0f, scale,
+                    Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f);
+            scaleAnimation.setDuration(0);
+            scaleAnimation.setFillAfter(true);
+            view.startAnimation(scaleAnimation);
+        }
     }
 }

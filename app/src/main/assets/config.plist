@@ -159,6 +159,8 @@
 					<true/>
 					<key>ShowAfterSlide</key>
 					<true/>
+					<key>FacebookEnabled</key>
+					<false/>
 				</dict>
 				<key>SMSDetailspageFullAd</key>
 				<dict>

@@ -26,6 +26,7 @@ public class MarkAllAsReadAction extends Action {
         Assert.isNotMainThread();
 
         final DatabaseWrapper db = DataModel.get().getDatabase();
+        int count = 0;
 
         // Update local db
         db.beginTransaction();
@@ -34,7 +35,7 @@ public class MarkAllAsReadAction extends Action {
             values.put(DatabaseHelper.MessageColumns.READ, 1);
             values.put(DatabaseHelper.MessageColumns.SEEN, 1);     // if they read it, they saw it
 
-            db.update(DatabaseHelper.MESSAGES_TABLE, values,
+            count = db.update(DatabaseHelper.MESSAGES_TABLE, values,
                     "(" + DatabaseHelper.MessageColumns.READ + " !=1 OR " +
                             DatabaseHelper.MessageColumns.SEEN + " !=1 )", null);
             db.setTransactionSuccessful();
@@ -44,7 +45,9 @@ public class MarkAllAsReadAction extends Action {
         // After marking messages as read, update the notifications. This will
         // clear the now stale notifications.
         MessagingContentProvider.notifyConversationListChanged();
-        BugleNotifications.update(false/*silent*/, BugleNotifications.UPDATE_ALL);
+        if (count > 0) {
+            BugleNotifications.update(false/*silent*/, BugleNotifications.UPDATE_ALL);
+        }
         return null;
     }
 

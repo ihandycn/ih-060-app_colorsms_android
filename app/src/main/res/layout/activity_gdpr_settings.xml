@@ -12,5 +12,5 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:title="@string/gdpr_share_data"
-        app:type="1" />
+        app:type="switchView" />
 </LinearLayout>

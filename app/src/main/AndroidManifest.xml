@@ -38,6 +38,7 @@
     <uses-permission android:name="android.permission.RECEIVE_MMS"/>
     <uses-permission android:name="android.permission.SEND_SMS"/>
     <!-- Application needs to read profiles for the user itself from CP2 -->
+
     <uses-permission android:name="android.permission.VIBRATE"/>
     <uses-permission android:name="android.permission.CALL_PHONE"/>
     <uses-permission android:name="android.permission.READ_PROFILE"/>
@@ -51,7 +52,6 @@
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
     <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW"/>
     <uses-permission android:name="com.android.launcher.permission.INSTALL_SHORTCUT"/>
-
 
     <!-- Optional features -->
     <uses-feature
@@ -92,11 +92,10 @@
         <activity
             android:name=".ui.conversationlist.ConversationListActivity"
             android:configChanges="orientation|screenSize|keyboardHidden"
-            android:label="@string/app_name"
             android:exported="true"
+            android:label="@string/app_name"
             android:screenOrientation="portrait"
-            android:theme="@style/BugleTheme.ConversationListActivity">
-        </activity>
+            android:theme="@style/BugleTheme.ConversationListActivity" />
 
         <!-- Launches a conversation (ensures correct app name shown in recents) -->
         <activity
@@ -241,7 +240,6 @@
             android:configChanges="orientation|screenSize|keyboardHidden"
             android:screenOrientation="portrait"
             android:theme="@style/WelcomeTheme">
-
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
 
@@ -250,7 +248,6 @@
                 <category android:name="android.intent.category.APP_MESSAGING"/>
             </intent-filter>
         </activity>
-
         <activity
             android:name=".ui.welcome.WelcomePermissionActivity"
             android:configChanges="orientation|screenSize|keyboardHidden"
@@ -713,12 +710,59 @@
             android:theme="@style/Theme.AppCompat.Translucent"
             android:windowSoftInputMode="stateAlwaysHidden|adjustPan"/>
 
-        <receiver android:name=".util.CreateShortcutReceiver"/>
+        <receiver android:name=".util.CreateShortcutReceiver" />
 
         <activity
             android:name=".ui.CreateShortcutActivity"
             android:screenOrientation="portrait"
-            android:theme="@style/Theme.AppCompat.Translucent"/>
+            android:theme="@style/Theme.AppCompat.Translucent" />
+        <activity
+            android:name=".privatebox.ui.PrivateBoxSetPasswordActivity"
+            android:excludeFromRecents="true"
+            android:screenOrientation="portrait"
+            android:theme="@style/SettingsActivity" />
+        <activity
+            android:name=".privatebox.ui.PrivateConversationListActivity"
+            android:configChanges="orientation|screenSize|keyboardHidden"
+            android:screenOrientation="portrait"
+            android:theme="@style/BugleTheme.ConversationListActivity" />
+
+        <provider
+            android:name=".privatebox.PrivateMessageContentProvider"
+            android:authorities="com.color.sms.messages"
+            android:enabled="true"
+            android:exported="false" />
+
+        <activity
+            android:name=".privatebox.ui.SelfVerifyActivity"
+            android:launchMode="singleInstance"
+            android:excludeFromRecents="true"
+            android:screenOrientation="portrait"
+            android:theme="@style/SettingsActivity" />
+
+        <activity
+            android:name=".privatebox.ui.PrivateSettingActivity"
+            android:excludeFromRecents="true"
+            android:screenOrientation="portrait"
+            android:theme="@style/BaseSettingsActivity" />
+
+        <activity
+            android:name=".privatebox.ui.HideTheIconActivity"
+            android:excludeFromRecents="true"
+            android:screenOrientation="portrait"
+            android:theme="@style/BaseSettingsActivity" />
+
+        <activity
+            android:name=".privatebox.ui.addtolist.ContactsSelectActivity"
+            android:excludeFromRecents="true"
+            android:screenOrientation="portrait"
+            android:theme="@style/SettingsActivity" />
+
+        <activity
+            android:name=".privatebox.ui.addtolist.ConversationSelectActivity"
+            android:excludeFromRecents="true"
+            android:screenOrientation="portrait"
+            android:theme="@style/SettingsActivity" />
 
         <activity
             android:name=".ui.customize.theme.ChooseThemeActivity"

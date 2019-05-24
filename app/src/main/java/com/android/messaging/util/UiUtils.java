@@ -575,14 +575,8 @@ public class UiUtils {
     }
 
     public static void setTitleBarBackground(Toolbar toolbar, Activity activity) {
-        try {
-            toolbar.setBackground(new ColorDrawable(PrimaryColors.getPrimaryColor()));
-            setStatusBarColor(activity, PrimaryColors.getPrimaryColorDark());
-
-        } catch (IllegalArgumentException e) {
-            toolbar.setBackground(new ColorDrawable(activity.getResources().getColor(R.color.action_bar_background_color)));
-            setStatusBarColor(activity, activity.getResources().getColor(R.color.action_bar_background_color));
-        }
+        toolbar.setBackground(new ColorDrawable(PrimaryColors.getPrimaryColor()));
+        setStatusBarColor(activity, PrimaryColors.getPrimaryColorDark());
     }
 
     public static void setTitleBarBackground(Toolbar toolbar, Activity activity, int color) {

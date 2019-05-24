@@ -16,7 +16,18 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:appcompat="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
-
+    <item
+        android:id="@+id/action_add_to_private_box"
+        android:icon="@drawable/private_lock"
+        android:orderInCategory="58"
+        android:title="@string/private_box_move_to_box"
+        appcompat:showAsAction="collapseActionView|always" />
+    <item
+        android:id="@+id/action_move_from_private_box"
+        android:icon="@drawable/private_unlock"
+        android:orderInCategory="59"
+        android:title="@string/private_box_remove_from_box"
+        appcompat:showAsAction="collapseActionView|always" />
     <item
         android:id="@+id/action_delete"
         android:icon="@drawable/ic_conversation_delete"

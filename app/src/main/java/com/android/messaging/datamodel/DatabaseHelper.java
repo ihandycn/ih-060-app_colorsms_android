@@ -28,6 +28,9 @@ import com.android.messaging.R;
 import com.android.messaging.datamodel.data.ConversationListItemData;
 import com.android.messaging.datamodel.data.MessageData;
 import com.android.messaging.datamodel.data.ParticipantData;
+import com.android.messaging.privatebox.PrivateContactsManager;
+import com.android.messaging.privatebox.PrivateMmsEntry;
+import com.android.messaging.privatebox.PrivateSmsEntry;
 import com.android.messaging.util.Assert;
 import com.android.messaging.util.Assert.DoesNotRunOnMainThread;
 import com.android.messaging.util.LogUtil;
@@ -158,6 +161,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         public static final String IS_ENTERPRISE = "IS_ENTERPRISE";
 
         public static final String PIN_TIMESTAMP = "pin_time";
+
+        public static final String IS_PRIVATE = "is_private";
     }
 
     // Conversation table SQL
@@ -192,8 +197,9 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                     + ConversationColumns.NOTIFICATION_VIBRATION + " INT DEFAULT(-1), "
                     + ConversationColumns.INCLUDE_EMAIL_ADDRESS + " INT DEFAULT(0), "
                     + ConversationColumns.SMS_SERVICE_CENTER + " TEXT ,"
-                    + ConversationColumns.IS_ENTERPRISE + " INT DEFAULT(0)"
-                    + "," + ConversationColumns.PIN_TIMESTAMP + " INT DEFAULT(0)"
+                    + ConversationColumns.IS_ENTERPRISE + " INT DEFAULT(0), "
+                    + ConversationColumns.PIN_TIMESTAMP + " INT DEFAULT(0), "
+                    + ConversationColumns.IS_PRIVATE + " INT DEFAULT(0)"
                     + ");";
 
     private static final String CONVERSATIONS_TABLE_SMS_THREAD_ID_INDEX_SQL =
@@ -542,6 +548,10 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             CREATE_PARTS_TABLE_SQL,
             CREATE_PARTICIPANTS_TABLE_SQL,
             CREATE_CONVERSATION_PARTICIPANTS_TABLE_SQL,
+            PrivateMmsEntry.CREATE_MMS_TABLE_SQL,
+            PrivateSmsEntry.CREATE_SMS_TABLE_SQL,
+            PrivateContactsManager.CREATE_PRIVATE_CONTACTS_TABLE_SQL,
+            PrivateMmsEntry.Addr.CREATE_MMS_ADDRESS_TABLE_SQL
     };
 
     // List of all our indices

@@ -3,6 +3,7 @@ package com.android.messaging.ui.wallpaper;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.text.TextUtils;
+import android.view.View;
 import android.widget.ImageView;
 
 import com.android.messaging.Factory;
@@ -78,8 +79,28 @@ public class WallpaperManager {
             return;
         }
 
-        Drawable wallpaperDrawable = WallpaperDrawables.getWallpaperBg();
+        Drawable wallpaperDrawable = WallpaperDrawables.getConversationWallpaperBg();
         view.setImageDrawable(wallpaperDrawable);
+    }
+
+    public static void setConversationWallPaper(final ImageView bgView,ImageView themeBgView, String conversationId) {
+        if (TextUtils.isEmpty(conversationId)) {
+            String wallpaperPath = sPrefs.getString(PREF_KEY_WALLPAPER_PATH, "");
+
+            if (!isWallpaperPathEmpty(wallpaperPath)) {
+                bgView.setVisibility(View.VISIBLE);
+                bgView.setImageDrawable(new BitmapDrawable(wallpaperPath));
+                return;
+            }
+        } else if (!TextUtils.isEmpty(WallpaperManager.getWallpaperPathByThreadId(conversationId))) {
+            bgView.setVisibility(View.VISIBLE);
+            bgView.setImageDrawable(new BitmapDrawable(WallpaperManager.getWallpaperPathByThreadId(conversationId)));
+            return;
+        }
+
+        Drawable wallpaperDrawable = WallpaperDrawables.getConversationWallpaperBg();
+        themeBgView.setVisibility(View.VISIBLE);
+        themeBgView.setImageDrawable(wallpaperDrawable);
     }
 
     public static boolean hasWallpaper(String conversationId) {
