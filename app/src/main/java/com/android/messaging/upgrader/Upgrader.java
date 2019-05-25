@@ -158,6 +158,9 @@ public class Upgrader extends BaseUpgrader {
                 case "WaterDrop":
                     newKey = "waterdrop";
                     break;
+                case "GoldenDiamond":
+                    newKey = "goldendiamond";
+                    break;
             }
             Factory.get().getCustomizePrefs()
                     .putString(BuglePrefsKeys.PREFS_KEY_THEME_NAME, newKey);
