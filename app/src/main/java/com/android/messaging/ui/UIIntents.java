@@ -120,6 +120,9 @@ public abstract class UIIntents {
 
     public static final String UI_INTENT_EXTRA_MESSAGE_BOX_ITEM = "message_box_item";
 
+    public static final String SHOW_KEYBOARD = "show_keyboard";
+
+
 
     /**
      * Launch the welcome activity
@@ -155,8 +158,7 @@ public abstract class UIIntents {
     public abstract void launchConversationActivity(final Context context,
                                                     final String conversationId, final MessageData draft, final Bundle activityOptions,
                                                     final boolean withCustomTransition,
-                                                    final String conversationName);
-
+                                                    final String conversationName, final boolean showKeyboard);
 
     /**
      * Launch an activity to show conversation with conversation list in back stack.

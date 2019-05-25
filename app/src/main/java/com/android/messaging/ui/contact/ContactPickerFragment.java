@@ -475,7 +475,6 @@ public class ContactPickerFragment extends Fragment implements ContactPickerData
     private void maybeGetOrCreateConversation() {
         final ArrayList<ParticipantData> participants =
                 mRecipientTextView.getRecipientParticipantDataForConversationCreation();
-        LogUtil.d("contact_picker_test", "maybeGetOrCreateConversation: " + participants.size()+"  "+participants.get(0).getContactDestination()+"  ");
         if (ContactPickerData.isTooManyParticipants(participants.size())) {
             UiUtils.showToast(R.string.too_many_participants);
         } else if (participants.size() > 0 && mMonitor == null) {
@@ -491,7 +490,6 @@ public class ContactPickerFragment extends Fragment implements ContactPickerData
     @Override
     public void onContactChipsChanged(final int oldCount, final int newCount) {
         Assert.isTrue(oldCount != newCount);
-        LogUtil.d(TAG, "onContactChipsChange: " + mContactPickingMode);
         if (mContactPickingMode == MODE_PICK_INITIAL_CONTACT) {
             maybeGetOrCreateConversation();
         } else if (mContactPickingMode == MODE_CHIPS_ONLY) {

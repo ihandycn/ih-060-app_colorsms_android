@@ -21,6 +21,7 @@ import android.widget.ImageView;
 import com.android.messaging.R;
 import com.android.messaging.datamodel.BugleNotifications;
 import com.android.messaging.datamodel.MessagingContentProvider;
+import com.android.messaging.datamodel.data.MessageData;
 import com.android.messaging.ui.BugleActionBarActivity;
 import com.android.messaging.ui.UIIntents;
 import com.android.messaging.ui.conversation.ConversationActivity;
@@ -32,6 +33,7 @@ import com.android.messaging.ui.messagebox.MessageBoxActivity;
 import com.android.messaging.util.Assert;
 import com.android.messaging.util.BugleAnalytics;
 import com.android.messaging.util.ContentType;
+import com.android.messaging.util.LogUtil;
 import com.android.messaging.util.UiUtils;
 import com.android.messaging.util.ViewUtils;
 import com.ihs.app.framework.HSApplication;
@@ -69,6 +71,8 @@ public class ContactPickerActivity extends BugleActionBarActivity implements
     private int mStatusBarHeight;
     private int mKeyboardHeight;
     private int mNavigationBarHeight;
+
+    private final String TAG = "contact_picker_test";
     
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -205,16 +209,10 @@ public class ContactPickerActivity extends BugleActionBarActivity implements
 
 
         final String conversationId = mUiState.getConversationId();
-        Bundle sceneTransitionAnimationOptions = null;
-        boolean hasCustomTransitions = false;
-
         UIIntents.get().launchConversationActivity(
                 this, conversationId, null,
-                sceneTransitionAnimationOptions,
-                hasCustomTransitions, "");
+                null, false, "", true);
         finish();
-
-
     }
 
 
