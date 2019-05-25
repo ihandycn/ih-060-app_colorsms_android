@@ -18,6 +18,7 @@ import com.android.messaging.R;
 import com.android.messaging.util.BugleAnalytics;
 import com.superapps.util.BackgroundDrawables;
 import com.superapps.util.Dimensions;
+import com.superapps.util.Threads;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -65,15 +66,19 @@ public class ThemePreviewPagerView extends ConstraintLayout {
             @Override
             public void onDownloadSuccess() {
                 mIsThemeDownloading = false;
-                clipBg.setLevel(10000);
-                changeThemeState();
+                Threads.postOnMainThread(() -> {
+                    clipBg.setLevel(10000);
+                    changeThemeState();
+                });
             }
 
             @Override
             public void onDownloadFailed() {
                 mIsThemeDownloading = false;
-                clipBg.setLevel(10000);
-                changeThemeState();
+                Threads.postOnMainThread(() -> {
+                    clipBg.setLevel(10000);
+                    changeThemeState();
+                });
             }
 
             @Override
