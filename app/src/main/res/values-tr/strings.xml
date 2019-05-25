@@ -627,4 +627,27 @@
 	<string name="privacy_mode_show_messages">MESAJLARI GÖSTER</string>
 	<string name="notification_sender_in_privacy_mode">Kişi</string>
 
+
+	<string name="private_box_setting">Özel Kutu Ayarları</string>
+	<string name="private_box_setting_security_summary">Parolayı Değiştir</string>
+	<string name="private_box_setting_entrance">Giriş</string>
+	<string name="private_box_setting_entrance_summary">Simgeyi gizle</string>
+	<string name="private_box_hide_icon">Özel Kutuyu Gizle</string>
+	<string name="private_box_hide_icon_summary">Özel kutuya girmek için ana sayfadaki oluştur imgesini basılı tutun.</string>
+	<string name="tips">İpuçları</string>
+	<string name="private_box_add_to_success">Özel kutuya taşındı</string>
+	<string name="private_box_move_from_success">Genel kutuya taşındı</string>
+	<string name="private_box_setting_security">güvenlik</string>
+	<string name="private_box_add_now">Hemen Ekle</string>
+	<string name="add_to_private_list_dialog_title">Özel kişi ekle</string>
+	<string name="add_to_private_list_dialog_from_conversation">konuşma listesinden</string>
+	<string name="add_to_private_list_dialog_from_contacts_list">Kişiler listesinden</string>
+	<string name="conversation_list">Konuşma Listesi</string>
+	<string name="menu_privacy_box">Özel Kutu</string>
+	<string name="private_start_box_tip">Mesajlar Özel Kutuya taşınacak. Önce lütfen Özel Kutu için bir parola belirleyin.</string>
+	<string name="private_box_setting_notification">Bildirimleri Etkinleştir</string>
+	<string name="private_box_setting_notification_summary">Bu seçenek devre dışı bırakıldığında, özel kişilerden gelen mesajlarda bildirim gelmez.</string>
+	<string name="private_move_tip">Mesajlar Özel Kutuya taşınacak ve diğer SMS uygulamaları tarafından erişilmeyecektir.</string>
+	<string name="private_box_uninstall_notice">Mesajları genel kutuya taşımazsanız, uygulamamızı kaldırdıktan sonra verilerinizi kaybedebilirsiniz.</string>
+
 </resources>

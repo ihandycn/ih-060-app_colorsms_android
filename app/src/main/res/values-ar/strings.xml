@@ -733,4 +733,27 @@
 	<string name="privacy_mode_show_messages">إظهار الرسائل</string>
 	<string name="notification_sender_in_privacy_mode">جهة الاتصال</string>
 
+
+	<string name="private_box_setting">إعدادات الصندوق الخاص</string>
+	<string name="private_box_setting_security_summary">تعديل كلمة المرور</string>
+	<string name="private_box_setting_entrance">الدخول</string>
+	<string name="private_box_setting_entrance_summary">إخفاء الأيقونة</string>
+	<string name="private_box_hide_icon">إخفاء الصندوق الخاص</string>
+	<string name="private_box_hide_icon_summary">اضغط مطولاً لإنشاء أيقونة اختصار على الشاشة الرئيسية لدخول الصندوق الخاص.</string>
+	<string name="tips">نصائح</string>
+	<string name="private_box_add_to_success">نُقلت إلى الصندوق الخاص</string>
+	<string name="private_box_move_from_success">نُقلت إلى الصندوق العام</string>
+	<string name="private_box_setting_security">الأمان</string>
+	<string name="private_box_add_now">أضف الآن</string>
+	<string name="add_to_private_list_dialog_title">أضف جهة اتصال خاصة</string>
+	<string name="add_to_private_list_dialog_from_conversation">من قائمة المحادثات</string>
+	<string name="add_to_private_list_dialog_from_contacts_list">من جهات الاتصال</string>
+	<string name="conversation_list">قائمة المحادثات</string>
+	<string name="menu_privacy_box">الصندوق الخاص</string>
+	<string name="private_start_box_tip">ستُنقل الرسائل إلى الصندوق الخاص. يرجى تعيين كلمة مرور للصندوق الخاص أولاً.</string>
+	<string name="private_box_setting_notification">تمكين الإخطارات</string>
+	<string name="private_box_setting_notification_summary">عند تعطيل هذا الخيار، لن تظهر أي إخطارات بالرسائل المتلقاة من جهات الاتصال الخاصة.</string>
+	<string name="private_move_tip">سوف تُنقل الرسائل إلى الصندوق الخاص ولا يمكن الوصول إليها عبر تطبيقات الرسائل القصيرة الأُخرى.</string>
+	<string name="private_box_uninstall_notice">قد تفقد بياناتك عند إلغاء التثبيت ما لم تنقلها إلى الصندوق العام أولاً.</string>
+
 </resources>

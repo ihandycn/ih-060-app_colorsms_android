@@ -635,4 +635,27 @@
 	<string name="privacy_mode_show_messages">TAMPILKAN PESAN</string>
 	<string name="notification_sender_in_privacy_mode">Kontak</string>
 
+
+	<string name="private_box_setting">Pengaturan Kotak Pribadi</string>
+	<string name="private_box_setting_security_summary">Ubah Kata Sandi</string>
+	<string name="private_box_setting_entrance">Pintu Masuk</string>
+	<string name="private_box_setting_entrance_summary">Sembunyikan ikon</string>
+	<string name="private_box_hide_icon">Sembunyikan Kotak Pribadi</string>
+	<string name="private_box_hide_icon_summary">Tekan lama ikon buat di halaman beranda untuk masuk kotak pribadi.</string>
+	<string name="tips">Tips</string>
+	<string name="private_box_add_to_success">Dipindahkan ke kotak pribadi</string>
+	<string name="private_box_move_from_success">Dipindahkan ke kotak publik</string>
+	<string name="private_box_setting_security">keamanan</string>
+	<string name="private_box_add_now">Tambahkan Sekarang</string>
+	<string name="add_to_private_list_dialog_title">Tambahkan kotak pribadi</string>
+	<string name="add_to_private_list_dialog_from_conversation">Dari daftar percakapan</string>
+	<string name="add_to_private_list_dialog_from_contacts_list">Dari daftar kontak</string>
+	<string name="conversation_list">Daftar Percakapan</string>
+	<string name="menu_privacy_box">Kotak Pribadi</string>
+	<string name="private_start_box_tip">Pesan akan dipindahkan ke Kotak Pribadi. Atur kata sandi untuk Kotak Pribadi terlebih dahulu.</string>
+	<string name="private_box_setting_notification">Aktifkan Notifikasi</string>
+	<string name="private_box_setting_notification_summary">Jika menonaktifkan opsi ini, pesan dari kontak pribadi tidak akan memunculkan notifikasi apa pun.</string>
+	<string name="private_move_tip">Pesan akan dipindahkan ke Kotak Pribadi dan tidak akan diakses oleh aplikasi SMS lainnya.</string>
+	<string name="private_box_uninstall_notice">Kecuali jika Anda memindahkan pesan ke kotak publik, Anda mungkin kehilangan data Anda setelah menghapus aplikasi kami.</string>
+
 </resources>

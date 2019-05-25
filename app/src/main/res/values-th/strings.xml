@@ -633,4 +633,27 @@
 	<string name="privacy_mode_show_messages">แสดงข้อความ</string>
 	<string name="notification_sender_in_privacy_mode">รายชื่อติดต่อ</string>
 
+
+	<string name="private_box_setting">ตั้งค่ากล่องส่วนตัว</string>
+	<string name="private_box_setting_security_summary">แก้ไขรหัสผ่าน</string>
+	<string name="private_box_setting_entrance">ทางเข้า</string>
+	<string name="private_box_setting_entrance_summary">ซ่อนไอคอน</string>
+	<string name="private_box_hide_icon">ซ่อนกล่องส่วนตัว</string>
+	<string name="private_box_hide_icon_summary">กดที่ไอคอนสร้างในหน้าหลักค้างไว้เพื่อเข้าสู่กล่องส่วนตัว</string>
+	<string name="tips">เคล็ดลับ</string>
+	<string name="private_box_add_to_success">ย้ายไปยังกล่องส่วนตัวแล้ว</string>
+	<string name="private_box_move_from_success">ย้ายไปยังกล่องสาธารณะแล้ว</string>
+	<string name="private_box_setting_security">ความปลอดภัย</string>
+	<string name="private_box_add_now">เพิ่มทันที</string>
+	<string name="add_to_private_list_dialog_title">เพิ่มรายชื่อติดต่อส่วนตัว</string>
+	<string name="add_to_private_list_dialog_from_conversation">จากรายการสนทนา</string>
+	<string name="add_to_private_list_dialog_from_contacts_list">จากรายชื่อติดต่อ</string>
+	<string name="conversation_list">รายการสนทนา</string>
+	<string name="menu_privacy_box">กล่องส่วนตัว</string>
+	<string name="private_start_box_tip">ข้อความจะถูกย้ายไปยังกล่องส่วนตัว กรุณาตั้งรหัสผ่านกล่องส่วนตัวก่อน</string>
+	<string name="private_box_setting_notification">เปิดใช้การแจ้งเตือน</string>
+	<string name="private_box_setting_notification_summary">เมื่อปิดใช้ตัวเลือกนี้ ข้อความจากรายชื่อติดต่อส่วนตัวจะไม่เด้งการแจ้งเตือนขึ้นมา</string>
+	<string name="private_move_tip">ข้อความจะถูกย้ายไปยังกล่องส่วนตัว และแอป SMS อื่นจะไม่สามารถเข้าถึงได้</string>
+	<string name="private_box_uninstall_notice">หากคุณไม่ย้ายข้อความไปยังกล่องส่วนตัว คุณก็อาจสูญเสียข้อมูลหลังจากถอนการติดตั้งเราได้</string>
+
 </resources>

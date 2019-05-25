@@ -633,4 +633,27 @@
 	<string name="privacy_mode_show_messages">メッセージを表示する</string>
 	<string name="notification_sender_in_privacy_mode">連絡先</string>
 
+
+	<string name="private_box_setting">プライベート受信箱設定</string>
+	<string name="private_box_setting_security_summary">パスワードの変更</string>
+	<string name="private_box_setting_entrance">入口</string>
+	<string name="private_box_setting_entrance_summary">アイコンを非表示にする</string>
+	<string name="private_box_hide_icon">プライベート受信箱を非表示にする</string>
+	<string name="private_box_hide_icon_summary">プライベート受信箱を入力するには、ホームページの作成アイコンを長押しします。</string>
+	<string name="tips">ヒント</string>
+	<string name="private_box_add_to_success">プライベート受信箱に移動しました</string>
+	<string name="private_box_move_from_success">一般の受信箱に移動しました</string>
+	<string name="private_box_setting_security">セキュリティ</string>
+	<string name="private_box_add_now">今すぐ追加</string>
+	<string name="add_to_private_list_dialog_title">プライベートな連絡先を追加</string>
+	<string name="add_to_private_list_dialog_from_conversation">会話リストから</string>
+	<string name="add_to_private_list_dialog_from_contacts_list">連絡先のリストから</string>
+	<string name="conversation_list">会話リスト</string>
+	<string name="menu_privacy_box">プライベート受信箱</string>
+	<string name="private_start_box_tip">メッセージはプライベート受信箱に移動されます。先にプライベート受信箱のパスワードを設定してください。</string>
+	<string name="private_box_setting_notification">通知を有効にする</string>
+	<string name="private_box_setting_notification_summary">このオプションを無効にすると、プライベートな連絡先からのメッセージは通知をポップアップしません。</string>
+	<string name="private_move_tip">メッセージはプライベート受信箱に移動され、他のSMSアプリからはアクセスされません。</string>
+	<string name="private_box_uninstall_notice">メッセージを一般の受信箱に移動しない限り、アンインストール後にデータが失われる可能性があります。</string>
+
 </resources>

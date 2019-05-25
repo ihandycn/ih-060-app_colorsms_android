@@ -679,4 +679,27 @@
 	<string name="privacy_mode_show_messages">ПОКАЗАТЬ  СООБЩЕНИЯ</string>
 	<string name="notification_sender_in_privacy_mode">Контакт</string>
 
+
+	<string name="private_box_setting">Настройки личных сообщений</string>
+	<string name="private_box_setting_security_summary">Изменить пароль</string>
+	<string name="private_box_setting_entrance">Вход</string>
+	<string name="private_box_setting_entrance_summary">Скрыть значок</string>
+	<string name="private_box_hide_icon">Скрыть личные сообщения</string>
+	<string name="private_box_hide_icon_summary">Нажмите и удерживайте кнопку «Создать» для входа в личные сообщения.</string>
+	<string name="tips">Советы</string>
+	<string name="private_box_add_to_success">Перенесено в личные сообщения</string>
+	<string name="private_box_move_from_success">Перенесено в публичные сообщения</string>
+	<string name="private_box_setting_security">безопасность</string>
+	<string name="private_box_add_now">Добавить сейчас</string>
+	<string name="add_to_private_list_dialog_title">Добавить личный контакт</string>
+	<string name="add_to_private_list_dialog_from_conversation">Из списка диалогов</string>
+	<string name="add_to_private_list_dialog_from_contacts_list">Из списка контактов</string>
+	<string name="conversation_list">Список диалогов</string>
+	<string name="menu_privacy_box">Личные сообщения</string>
+	<string name="private_start_box_tip">Сообщения будут перемещены в личные сообщения. Сначала установите пароль для личных сообщений.</string>
+	<string name="private_box_setting_notification">Включить уведомления</string>
+	<string name="private_box_setting_notification_summary">При отключении этой опции сообщения от личных контактов не будут всплывать в виде уведомлений.</string>
+	<string name="private_move_tip">Сообщения будут перемещены в личные сообщения и не будут доступны в других приложениях для обмена СМС.</string>
+	<string name="private_box_uninstall_notice">Если сообщения не будут перенесены в публичные сообщения, в случае удаления нашего приложения данные могут быть потеряны.</string>
+
 </resources>

@@ -638,4 +638,27 @@
 	<string name="privacy_mode_show_messages">MOSTRAR MENSAGENS</string>
 	<string name="notification_sender_in_privacy_mode">Contato</string>
 
+
+	<string name="private_box_setting">Configurações da Caixa Privada</string>
+	<string name="private_box_setting_security_summary">Modificar a senha</string>
+	<string name="private_box_setting_entrance">Entrada</string>
+	<string name="private_box_setting_entrance_summary">Ocultar o ícone</string>
+	<string name="private_box_hide_icon">Ocultar a Caixa Privada</string>
+	<string name="private_box_hide_icon_summary">Mantenha o ícone de criação na página inicial pressionado para entrar na Caixa Privada.</string>
+	<string name="tips">Dicas</string>
+	<string name="private_box_add_to_success">Movido para a Caixa Privada</string>
+	<string name="private_box_move_from_success">Movido para a Caixa Pública</string>
+	<string name="private_box_setting_security">segurança</string>
+	<string name="private_box_add_now">Adicionar agora</string>
+	<string name="add_to_private_list_dialog_title">Adicionar contato privado</string>
+	<string name="add_to_private_list_dialog_from_conversation">Da lista de conversa</string>
+	<string name="add_to_private_list_dialog_from_contacts_list">Da lista de contatos</string>
+	<string name="conversation_list">Lista de conversa</string>
+	<string name="menu_privacy_box">Caixa Privada</string>
+	<string name="private_start_box_tip">As mensagens serão movidas para a Caixa Privada. Primeiro defina uma senha para a Caixa Privada.</string>
+	<string name="private_box_setting_notification">Ativar notificações</string>
+	<string name="private_box_setting_notification_summary">Quando esta opção estiver desativada, as mensagens de contatos privados não aparecerão como pop-up em nenhuma notificação.</string>
+	<string name="private_move_tip">As mensagens serão movidas para a Caixa Privada e não serão acessadas por outros aplicativos de SMS.</string>
+	<string name="private_box_uninstall_notice">Se as mensagens não forem movidas para a caixa pública, você pode perder seus dados após a desinstalação.</string>
+
 </resources>

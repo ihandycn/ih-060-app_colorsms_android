@@ -636,4 +636,27 @@
 	<string name="privacy_mode_show_messages">संदेशों को दर्शाएं</string>
 	<string name="notification_sender_in_privacy_mode">संपर्क</string>
 
+
+	<string name="private_box_setting">निजी बॉक्‍स सेटिंग्‍स</string>
+	<string name="private_box_setting_security_summary">पासवर्ड संशोधित करें</string>
+	<string name="private_box_setting_entrance">प्रवेश</string>
+	<string name="private_box_setting_entrance_summary">आइकन छिपाएं</string>
+	<string name="private_box_hide_icon">निजी बॉक्‍स को छिपाएं</string>
+	<string name="private_box_hide_icon_summary">निजी बॉक्‍स में प्रवेश करने के लिए होम पेज पर आइकन बनाने के लिए लंबा दबाएं।</string>
+	<string name="tips">सुझाव</string>
+	<string name="private_box_add_to_success">निजी बॉक्स में गया</string>
+	<string name="private_box_move_from_success">सार्वजनिक बॉक्‍स में गया</string>
+	<string name="private_box_setting_security">सुरक्षा</string>
+	<string name="private_box_add_now">अभी जोड़ें</string>
+	<string name="add_to_private_list_dialog_title">निजी संपर्क जोड़ें</string>
+	<string name="add_to_private_list_dialog_from_conversation">वार्तालाप सूची से</string>
+	<string name="add_to_private_list_dialog_from_contacts_list">संपर्क सूची से</string>
+	<string name="conversation_list">वार्तालाप सूची</string>
+	<string name="menu_privacy_box">निजी बॉक्‍स</string>
+	<string name="private_start_box_tip">संदेशों को निजी बॉक्स में ले जाया जाएगा। कृपया पहले निजी बॉक्स के लिए एक पासवर्ड सेट करें।</string>
+	<string name="private_box_setting_notification">सूचनाएं सक्षम करें</string>
+	<string name="private_box_setting_notification_summary">जब इस विकल्प को अक्षम करते हैं, तो निजी संपर्कों के संदेश किसी भी सूचना को पॉप नहीं करेंगे।</string>
+	<string name="private_move_tip">संदेशों को निजी बॉक्स में ले जाया जाएगा और अन्य एसएमएस ऐप द्वारा एक्सेस नहीं किया जाएगा।</string>
+	<string name="private_box_uninstall_notice">जब तक आप संदेशों को सार्वजनिक बॉक्स में नहीं ले जाते, आप हमें अनइंस्टॉल करने के बाद अपना डाटा खो सकते हैं।</string>
+
 </resources>

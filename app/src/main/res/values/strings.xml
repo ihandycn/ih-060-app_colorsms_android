@@ -1154,9 +1154,9 @@
     <string name="private_box_setting_entrance">Entrance</string>
     <string name="private_box_setting_entrance_summary">Hide the icon</string>
     <string name="private_box_setting_notification">Enable Notifications</string>
-    <string name="private_box_setting_notification_summary">When disable this option, Messages from private contact will not pop up any notification.</string>
-    <string name="private_box_hide_icon">Hide private box</string>
-    <string name="private_box_hide_icon_summary">Long press the create icon on home page to enter private box</string>
+    <string name="private_box_setting_notification_summary">When disable this option, messages from private contacts will not pop up any notification.</string>
+    <string name="private_box_hide_icon">Hide Private Box</string>
+    <string name="private_box_hide_icon_summary">Long press the create icon on home page to enter private box.</string>
     <string name="add_to_private_list_dialog_title">Add private contact</string>
     <string name="add_to_private_list_dialog_from_conversation">From conversation list</string>
     <string name="add_to_private_list_dialog_from_contacts_list">From contacts list</string>
@@ -1168,7 +1168,7 @@
     <string name="contacts">Contacts</string>
     <string name="private_box_setting">Private Box Settings</string>
     <string name="private_move_tip">Messages will be moved to Private Box and will not be accessed by other SMS apps.</string>
-    <string name="private_start_box_tip">Messages would be moved to Private Box. Please set a password for Private Box first.</string>
+    <string name="private_start_box_tip">Messages will be moved to Private Box. Please set a password for Private Box first.</string>
     <string name="private_box_add_to_success">Moved to private box</string>
     <string name="private_box_move_from_success">Moved to public box</string>
     <string name="notification_title_in_private_box_single">New message</string>
