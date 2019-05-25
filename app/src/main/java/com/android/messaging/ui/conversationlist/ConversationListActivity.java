@@ -119,6 +119,7 @@ public class ConversationListActivity extends AbstractConversationListActivity
     private static final String PREF_KEY_THEME_CLICKED = "pref_key_navigation_theme_clicked";
     private static final String PREF_KEY_THEME_COLOR_CLICKED = "pref_key_navigation_theme_color_clicked";
     private static final String PREF_KEY_BUBBLE_CLICKED = "pref_key_navigation_bubble_clicked";
+    private static final String PREF_KEY_PRIVATE_BOX_CLICKED = "pref_key_navigation_private_box_clicked";
     private static final String PREF_KEY_BACKGROUND_CLICKED = "pref_key_navigation_background_clicked";
     private static final String PREF_KEY_FONT_CLICKED = "pref_key_navigation_font_clicked";
 
@@ -406,8 +407,6 @@ public class ConversationListActivity extends AbstractConversationListActivity
                         } else {
                             Navigations.startActivity(ConversationListActivity.this, CustomBubblesActivity.class);
                         }
-
-                        navigationContent.findViewById(R.id.navigation_item_bubble_new_text).setVisibility(View.GONE);
                         break;
                     case DRAWER_INDEX_CHAT_BACKGROUND:
                         BugleAnalytics.logEvent("Menu_ChatBackground_Click", true, true);
@@ -434,6 +433,7 @@ public class ConversationListActivity extends AbstractConversationListActivity
                             Navigations.startActivitySafely(ConversationListActivity.this,
                                     new Intent(ConversationListActivity.this, PrivateBoxSetPasswordActivity.class));
                         }
+                        navigationContent.findViewById(R.id.navigation_item_private_box_new_text).setVisibility(View.GONE);
                         break;
                     case DRAWER_INDEX_SETTING:
                         boolean granted = RuntimePermissions.checkSelfPermission(ConversationListActivity.this,
@@ -472,27 +472,12 @@ public class ConversationListActivity extends AbstractConversationListActivity
                         Dimensions.pxFromDp(8.7f), false));
             }
 
-
-//            if (!Preferences.getDefault().getBoolean(PREF_KEY_THEME_COLOR_CLICKED, false)) {
-//                View newMark = navigationContent.findViewById(R.id.navigation_item_theme_color_new_text);
-//                newMark.setVisibility(View.VISIBLE);
-//                newMark.setBackground(BackgroundDrawables.createBackgroundDrawable(0xffea6126,
-//                        Dimensions.pxFromDp(8.7f), false));
-//            }
-
-            if (!Preferences.getDefault().getBoolean(PREF_KEY_BUBBLE_CLICKED, false)) {
-                View bubbleNewMark = navigationContent.findViewById(R.id.navigation_item_bubble_new_text);
+            if (!Preferences.getDefault().getBoolean(PREF_KEY_PRIVATE_BOX_CLICKED, false)) {
+                View bubbleNewMark = navigationContent.findViewById(R.id.navigation_item_private_box_new_text);
                 bubbleNewMark.setVisibility(View.VISIBLE);
                 bubbleNewMark.setBackground(BackgroundDrawables.createBackgroundDrawable(0xffea6126,
                         Dimensions.pxFromDp(8.7f), false));
             }
-
-//            if (!Preferences.getDefault().getBoolean(PREF_KEY_BACKGROUND_CLICKED, false)) {
-//                View newMark = navigationContent.findViewById(R.id.navigation_item_background_new_text);
-//                newMark.setVisibility(View.VISIBLE);
-//                newMark.setBackground(BackgroundDrawables.createBackgroundDrawable(0xffea6126,
-//                        Dimensions.pxFromDp(8.7f), false));
-//            }
         }
 
         navigationContent.findViewById(R.id.navigation_item_theme).setOnClickListener(this);
@@ -840,7 +825,6 @@ public class ConversationListActivity extends AbstractConversationListActivity
 
     @Override
     public boolean dispatchTouchEvent(MotionEvent event) {
-
         if (mGuideContainer.getVisibility() == View.VISIBLE) {
             if (mAnimState == AnimState.SHOWING) {
                 mShowEndAnimation = true;

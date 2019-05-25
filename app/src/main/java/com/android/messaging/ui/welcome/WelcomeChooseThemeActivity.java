@@ -31,7 +31,7 @@ public class WelcomeChooseThemeActivity extends AppCompatActivity {
             finish();
         });
 
-        BugleAnalytics.logEvent("Start_ChooseTheme_Show", true);
+        BugleAnalytics.logEvent("Start_ChooseTheme_Show", true, true);
         Preferences.getDefault().putBoolean(PREF_KEY_WELCOME_CHOOSE_THEME_SHOWN, true);
     }
 
