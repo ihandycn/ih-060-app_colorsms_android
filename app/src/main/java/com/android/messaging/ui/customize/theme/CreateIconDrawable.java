@@ -15,10 +15,6 @@ import java.io.InputStream;
 public class CreateIconDrawable {
     public static Bitmap sCreateIconBitmap;
 
-    public static void applyCreateIcon() {
-        getCreateIconDrawable();
-    }
-
     public static Drawable getCreateIconDrawable() {
         if (sCreateIconBitmap != null ) {
             return new BitmapDrawable(HSApplication.getContext().getResources(), sCreateIconBitmap);

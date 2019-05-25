@@ -28,10 +28,6 @@ public class WallpaperDrawables {
         }
     }
 
-    public static void applyListWallpaperBg() {
-        getWallpaperBg();
-    }
-
     public static Drawable getWallpaperBg() {
         if (sWallpaperBitmap != null) {
             return new BitmapDrawable(HSApplication.getContext().getResources(), sWallpaperBitmap);

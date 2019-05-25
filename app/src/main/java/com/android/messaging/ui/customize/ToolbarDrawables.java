@@ -19,10 +19,6 @@ import java.io.InputStream;
 public class ToolbarDrawables {
     public static Bitmap sToolbarBitmap;
 
-    public static void applyToolbarBg() {
-        getToolbarBgBitmap();
-    }
-
     public static Drawable getToolbarBg() {
         if (sToolbarBitmap != null) {
             return new BitmapDrawable(HSApplication.getContext().getResources(), sToolbarBitmap);

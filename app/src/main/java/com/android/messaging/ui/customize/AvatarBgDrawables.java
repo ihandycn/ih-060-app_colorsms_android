@@ -18,10 +18,6 @@ import java.io.InputStream;
 public class AvatarBgDrawables {
     public static Drawable sAvatarBg;
 
-    public static void applyAvatarBg() {
-        getAvatarBg(false);
-    }
-
     public static Drawable getAvatarBg(boolean forceCreate) {
         if (sAvatarBg != null && !forceCreate) {
             return sAvatarBg;

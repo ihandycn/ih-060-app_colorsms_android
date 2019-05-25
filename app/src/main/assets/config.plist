@@ -880,7 +880,7 @@
 						<key>ThemeColor</key>
 						<string>#df32f4</string>
 						<key>FontName</key>
-						<string>Lato</string>
+						<string>lato</string>
 						<key>AvatarForegroundColor</key>
 						<string>#ffffff</string>
 						<key>ListTitleColor</key>

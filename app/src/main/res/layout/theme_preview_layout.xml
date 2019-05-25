@@ -20,8 +20,9 @@
     <ImageView
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:paddingEnd="@dimen/choose_theme_pager_padding"
-        android:paddingStart="@dimen/choose_theme_pager_padding"
+        android:layout_marginTop="0.6dp"
+        android:paddingEnd="@dimen/choose_theme_pager_border_padding"
+        android:paddingStart="@dimen/choose_theme_pager_border_padding"
         android:src="@drawable/choose_theme_phone_border"
         app:layout_constraintBottom_toBottomOf="@id/pager"
         app:layout_constraintEnd_toEndOf="@id/pager"
@@ -29,14 +30,14 @@
         app:layout_constraintTop_toTopOf="@id/pager"
         tools:ignore="ContentDescription" />
 
-        <!--bias 407/417-->
+    <!--bias 407/417-->
     <Space
         android:id="@+id/space"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:layout_constraintVertical_bias="0.9760"
+        app:layout_constraintBottom_toBottomOf="@id/pager"
         app:layout_constraintTop_toTopOf="@id/pager"
-        app:layout_constraintBottom_toBottomOf="@id/pager"/>
+        app:layout_constraintVertical_bias="0.9760" />
 
     <LinearLayout
         android:id="@+id/pager_guide"
@@ -65,6 +66,7 @@
         android:layout_gravity="center_horizontal"
         android:gravity="center"
         android:includeFontPadding="false"
+        android:maxLines="1"
         android:textColor="#ffffff"
         android:textSize="14.7sp"
         app:font_family_changeable="false"

@@ -82,7 +82,7 @@ public class ChooseThemePagerView extends ConstraintLayout {
             }
 
             String preTheme = ThemeUtils.getCurrentThemeName();
-            ThemeUtils.applyTheme(mAdapter.getThemeInfo(mPager.getCurrentItem()));
+            ThemeUtils.applyTheme(mAdapter.getThemeInfo(mPager.getCurrentItem()), 0);
             FontUtils.onFontTypefaceChanged();
 
             if (getContext() instanceof WelcomeChooseThemeActivity) {

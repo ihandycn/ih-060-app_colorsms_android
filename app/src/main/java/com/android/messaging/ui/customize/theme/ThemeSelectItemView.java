@@ -1,12 +1,16 @@
 package com.android.messaging.ui.customize.theme;
 
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
 import android.content.Context;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.support.annotation.Nullable;
 import android.support.constraint.ConstraintLayout;
+import android.support.v4.view.animation.PathInterpolatorCompat;
 import android.util.AttributeSet;
 import android.view.View;
+import android.view.animation.Interpolator;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -15,7 +19,6 @@ import com.android.messaging.R;
 import com.android.messaging.glide.GlideApp;
 import com.android.messaging.util.BugleAnalytics;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
-import com.superapps.util.BackgroundDrawables;
 import com.superapps.util.Threads;
 import com.superapps.util.Toasts;
 
@@ -32,6 +35,7 @@ public class ThemeSelectItemView extends ConstraintLayout implements ThemeUtils.
     private ThemeDownloadManager.IThemeDownloadListener mThemeDownloadListener;
     private View mButtonGroupContainer;
     private ThemeUtils.IThemeChangeListener mThemeChangeListener;
+    private boolean mIsSelectAnimationPlaying;
 
     public ThemeSelectItemView(Context context) {
         super(context);
@@ -64,7 +68,9 @@ public class ThemeSelectItemView extends ConstraintLayout implements ThemeUtils.
         if (mThemeInfo.isDownloaded()) {
             mDownloadingView.updatePercent(0);
             if (mThemeInfo.mThemeKey.equals(ThemeUtils.getCurrentTheme().mThemeKey)) {
+                //    if (!mIsSelectState) {
                 setSelectedState();
+                //  }
             } else {
                 setDownloadedState();
             }
@@ -183,6 +189,8 @@ public class ThemeSelectItemView extends ConstraintLayout implements ThemeUtils.
     }
 
     private void setDownloadedState() {
+        mDownloadingView.setVisibility(VISIBLE);
+        mButtonGroupContainer.setVisibility(VISIBLE);
         mThemeState.setImageDrawable(null);
         mDownloadingView.updatePercent(0);
         mDownloadSuccessLottie.setVisibility(VISIBLE);
@@ -192,18 +200,34 @@ public class ThemeSelectItemView extends ConstraintLayout implements ThemeUtils.
     }
 
     private void setSelectedState() {
-        mDownloadSuccessLottie.setVisibility(INVISIBLE);
-        mThemeState.setImageResource(R.drawable.theme_applied);
-        mButtonGroupContainer.setEnabled(false);
+        if (!mIsSelectAnimationPlaying) {
+            mDownloadingView.setVisibility(INVISIBLE);
+            mDownloadSuccessLottie.setVisibility(INVISIBLE);
+            mThemeState.setImageResource(R.drawable.theme_applied);
+            mButtonGroupContainer.setEnabled(false);
+        }
     }
 
     private void applyTheme() {
         setSelectedState();
-        ThemeUtils.applyTheme(mThemeInfo);
         Toasts.showToast(R.string.apply_theme_success);
+        ThemeUtils.applyTheme(mThemeInfo, 160);
+
         if (mThemeChangeListener != null) {
             mThemeChangeListener.onThemeChanged();
         }
+
+        mIsSelectAnimationPlaying = true;
+        Interpolator interpolator
+                = PathInterpolatorCompat.create(0, 0, 0.58f, 1);
+        mThemeState.setScaleX(0.7f);
+        mThemeState.setScaleY(0.7f);
+        mThemeState.animate().scaleX(1f).scaleY(1f).setInterpolator(interpolator).setDuration(160).setListener(new AnimatorListenerAdapter() {
+            @Override
+            public void onAnimationEnd(Animator animation) {
+                mIsSelectAnimationPlaying = false;
+            }
+        }).start();
         BugleAnalytics.logEvent("Customize_ThemeCenter_Theme_Apply", true,
                 "theme", mThemeInfo.mThemeKey, "from", "list");
     }
@@ -219,17 +243,6 @@ public class ThemeSelectItemView extends ConstraintLayout implements ThemeUtils.
         super.onDetachedFromWindow();
         if (mThemeInfo != null && mThemeDownloadListener != null) {
             mThemeInfo.removeDownloadListener(mThemeDownloadListener);
-        }
-    }
-
-    @Override
-    public void onWindowFocusChanged(boolean hasWindowFocus) {
-        super.onWindowFocusChanged(hasWindowFocus);
-        if (hasWindowFocus) {
-            if (mButtonGroupContainer != null) {
-                mButtonGroupContainer.setBackground(BackgroundDrawables.createBackgroundDrawable(0xffffffff,
-                        mButtonGroupContainer.getWidth() / 2, true));
-            }
         }
     }
 

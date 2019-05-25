@@ -137,7 +137,7 @@ public class CustomBubblesActivity extends BaseActivity implements CustomMessage
         if (!mHasCustomBubbleClicked) {
             ThemeInfo themeInfo = ThemeInfo.getThemeInfo(ThemeUtils.getCurrentThemeName());
             ThemeInfo defaultTheme = ThemeInfo.getThemeInfo(ThemeUtils.DEFAULT_THEME_KEY);
-            if (Integer.parseInt(themeInfo.bubbleIncomingUrl) == BubbleDrawables.getSelectedIdentifier(mConversationId)) {
+            if (BubbleDrawables.getSelectedIdentifier(mConversationId) <= 0) {
                 mCustomMessagePreview.previewCustomBubbleBackgroundColor(true, Color.parseColor(defaultTheme.incomingBubbleBgColor));
                 mCustomMessagePreview.previewCustomBubbleBackgroundColor(false, Color.parseColor(defaultTheme.outgoingBubbleBgColor));
                 mCustomMessagePreview.previewCustomTextColor(true, Color.parseColor(defaultTheme.incomingBubbleTextColor));

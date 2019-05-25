@@ -62,8 +62,6 @@ public class BubbleDrawables {
     }
 
     public static void resetConversationCustomization(@NonNull String conversationId) {
-        ThemeInfo themeInfo = ThemeUtils.getCurrentTheme();
-        BubbleDrawables.setSelectedIdentifier(Integer.parseInt(themeInfo.bubbleIncomingUrl));
         prefs.remove(PREFS_KEY_BUBBLE_DRAWABLE_IDENTIFIER + "_" + conversationId);
     }
 

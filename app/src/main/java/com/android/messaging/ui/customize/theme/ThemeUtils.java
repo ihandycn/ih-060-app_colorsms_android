@@ -7,6 +7,7 @@ import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 
 import com.android.messaging.Factory;
+import com.android.messaging.font.FontStyleManager;
 import com.android.messaging.font.FontUtils;
 import com.android.messaging.ui.conversationlist.ConversationListActivity;
 import com.android.messaging.ui.customize.AvatarBgDrawables;
@@ -18,7 +19,7 @@ import com.android.messaging.ui.customize.WallpaperDrawables;
 import com.android.messaging.util.BuglePrefsKeys;
 import com.ihs.app.framework.HSApplication;
 import com.ihs.commons.notificationcenter.HSGlobalNotificationCenter;
-import com.android.messaging.font.FontStyleManager;
+import com.superapps.util.Threads;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -26,65 +27,63 @@ import java.io.InputStream;
 public class ThemeUtils {
     public static final String DEFAULT_THEME_KEY = "default";
 
-    interface IThemeChangeListener{
+    interface IThemeChangeListener {
         void onThemeChanged();
     }
 
     private static ThemeInfo sCurrentTheme;
 
-    public static void applyTheme(ThemeInfo themeInfo) {
+    public static void applyTheme(ThemeInfo themeInfo, int delay) {
         sCurrentTheme = themeInfo;
         Factory.get().getCustomizePrefs().putString(BuglePrefsKeys.PREFS_KEY_THEME_NAME, themeInfo.mThemeKey);
 
-        PrimaryColors.changePrimaryColor(Color.parseColor(themeInfo.themeColor));
+        Threads.postOnMainThreadDelayed(() -> {
+            PrimaryColors.changePrimaryColor(Color.parseColor(themeInfo.themeColor));
 
-        ConversationColors.get().setBubbleBackgroundColor(true, Color.parseColor(themeInfo.incomingBubbleBgColor));
-        ConversationColors.get().setBubbleBackgroundColor(false, Color.parseColor(themeInfo.outgoingBubbleBgColor));
-        ConversationColors.get().setMessageTextColor(true, Color.parseColor(themeInfo.incomingBubbleTextColor));
-        ConversationColors.get().setMessageTextColor(false, Color.parseColor(themeInfo.outgoingBubbleTextColor));
-        ConversationColors.get().setListTitleColor(Color.parseColor(themeInfo.listTitleColor));
-        ConversationColors.get().setListSubTitleColor(Color.parseColor(themeInfo.listSubtitleColor));
-        ConversationColors.get().setListTimeColor(Color.parseColor(themeInfo.listTimeColor));
-        ConversationColors.get().setAdActionColor(Color.parseColor(themeInfo.bubbleAdColor));
+            ConversationColors.get().setBubbleBackgroundColor(true, Color.parseColor(themeInfo.incomingBubbleBgColor));
+            ConversationColors.get().setBubbleBackgroundColor(false, Color.parseColor(themeInfo.outgoingBubbleBgColor));
+            ConversationColors.get().setMessageTextColor(true, Color.parseColor(themeInfo.incomingBubbleTextColor));
+            ConversationColors.get().setMessageTextColor(false, Color.parseColor(themeInfo.outgoingBubbleTextColor));
+            ConversationColors.get().setListTitleColor(Color.parseColor(themeInfo.listTitleColor));
+            ConversationColors.get().setListSubTitleColor(Color.parseColor(themeInfo.listSubtitleColor));
+            ConversationColors.get().setListTimeColor(Color.parseColor(themeInfo.listTimeColor));
+            ConversationColors.get().setAdActionColor(Color.parseColor(themeInfo.bubbleAdColor));
 
-        ToolbarDrawables.sToolbarBitmap = null;
-        ToolbarDrawables.applyToolbarBg();
-        WallpaperDrawables.sListWallpaperBitmap = null;
-        WallpaperDrawables.sWallpaperBitmap = null;
-        WallpaperDrawables.applyWallpaperBg(themeInfo.wallpaperUrl);
-        WallpaperDrawables.applyListWallpaperBg();
-        AvatarBgDrawables.sAvatarBg = null;
-        AvatarBgDrawables.applyAvatarBg();
-        CreateIconDrawable.sCreateIconBitmap = null;
-        CreateIconDrawable.applyCreateIcon();
+            ToolbarDrawables.sToolbarBitmap = null;
+            WallpaperDrawables.sListWallpaperBitmap = null;
+            WallpaperDrawables.sWallpaperBitmap = null;
+            WallpaperDrawables.applyWallpaperBg(themeInfo.wallpaperUrl);
+            AvatarBgDrawables.sAvatarBg = null;
+            CreateIconDrawable.sCreateIconBitmap = null;
 
-        ThemeManager.getInstance().clearCacheDrawable();
+            ThemeManager.getInstance().clearCacheDrawable();
 
-        if (!themeInfo.mThemeKey.equals(ThemeUtils.DEFAULT_THEME_KEY)) {
-            BubbleDrawables.setSelectedIdentifier(-1);
-        }
+            if (!themeInfo.mThemeKey.equals(ThemeUtils.DEFAULT_THEME_KEY)) {
+                BubbleDrawables.setSelectedIdentifier(-1);
+            }
 
-        if (themeInfo.mIsLocalTheme && !themeInfo.isInLocalFolder()) {
-            ThemeDownloadManager.getInstance().copyFileFromAssetsAsync(themeInfo,
-                    new ThemeDownloadManager.IThemeMoveListener() {
-                        @Override
-                        public void onMoveSuccess() {
+            if (themeInfo.mIsLocalTheme && !themeInfo.isInLocalFolder()) {
+                ThemeDownloadManager.getInstance().copyFileFromAssetsAsync(themeInfo,
+                        new ThemeDownloadManager.IThemeMoveListener() {
+                            @Override
+                            public void onMoveSuccess() {
 
-                        }
+                            }
 
-                        @Override
-                        public void onMoveFailed() {
+                            @Override
+                            public void onMoveFailed() {
 
-                        }
-                    });
-        }
+                            }
+                        });
+            }
 
-        FontStyleManager.getInstance().setFontFamily(themeInfo.fontName);
-        FontUtils.onFontTypefaceChanged();
+            FontStyleManager.getInstance().setFontFamily(themeInfo.fontName);
+            FontUtils.onFontTypefaceChanged();
 
-        HSGlobalNotificationCenter.sendNotification(ConversationListActivity.EVENT_MAINPAGE_RECREATE);
-        WallpaperSizeManager.getInstance().loadWallpaperParams();
-        Factory.get().reclaimMemory();
+            HSGlobalNotificationCenter.sendNotification(ConversationListActivity.EVENT_MAINPAGE_RECREATE);
+            WallpaperSizeManager.getInstance().loadWallpaperParams();
+            Factory.get().reclaimMemory();
+        }, delay);
     }
 
     public static String getCurrentThemeName() {

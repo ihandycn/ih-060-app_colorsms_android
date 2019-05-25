@@ -37,7 +37,7 @@ public class ThemeSelectActivity extends BaseBugleFragmentActivity {
         Toolbar toolbar = findViewById(R.id.toolbar);
         toolbar.setTitle("");
         TextView title = toolbar.findViewById(R.id.toolbar_title);
-        title.setText(R.string.theme_store);
+        title.setText(R.string.menu_theme);
         setSupportActionBar(toolbar);
         if (getSupportActionBar() != null) {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -160,7 +160,9 @@ public class ThemeSelectActivity extends BaseBugleFragmentActivity {
                 @SuppressLint("InflateParams")
                 ThemeSelectItemView view = (ThemeSelectItemView) LayoutInflater.from(getBaseContext())
                         .inflate(R.layout.theme_preview_item_view, null, false);
-                return new ThemePreviewViewHolder(view);
+                RecyclerView.ViewHolder holder = new ThemePreviewViewHolder(view);
+                holder.setIsRecyclable(false);
+                return holder;
             } else {
                 @SuppressLint("InflateParams")
                 View view = LayoutInflater.from(getBaseContext())

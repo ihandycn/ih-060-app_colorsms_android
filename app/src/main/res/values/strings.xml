@@ -1146,7 +1146,6 @@
     <string name="firebase_sync_desktop_settings_description_logged_out">After logging in, you can sync your sms settings across multiple devices</string>
     <string name="firebase_sync_desktop_settings_description_logged_in">Sync succeed</string>
 
-    <string name="theme_store">Theme store</string>
     <string name="get_now">Get Now</string>
     <string name="downloading">Downloading …</string>
     <string name="theme_coming">More themes coming soon...</string>
