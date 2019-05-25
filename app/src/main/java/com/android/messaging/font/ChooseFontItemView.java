@@ -141,6 +141,11 @@ public class ChooseFontItemView extends FrameLayout {
                 mProgressBar.setVisibility(GONE);
                 mIsFontDownloading = false;
             }
+
+            @Override
+            public void onDownloadUpdate(float rate) {
+
+            }
         });
         mFrameCallback = frameTimeNanos -> {
             if (mIsFontDownloading) {

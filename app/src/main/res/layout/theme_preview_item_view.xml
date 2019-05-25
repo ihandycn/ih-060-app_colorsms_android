@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.android.messaging.ui.customize.theme.ThemeSelectItemView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <com.superapps.view.RoundImageView
+        android:id="@+id/theme_thumbnail"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        app:border_color="#e5edf2"
+        app:border_size="0.7dp"
+        app:layout_constraintDimensionRatio="H,474:796"
+        app:radius="8.3dp"
+        tools:ignore="ContentDescription" />
+
+    <com.android.messaging.ui.view.MessagesTextView
+        android:id="@+id/theme_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="4dp"
+        android:layout_marginTop="12dp"
+        android:includeFontPadding="false"
+        android:textColor="#333333"
+        android:textSize="13.3sp"
+        app:font_family_changeable="false"
+        app:layout_constraintStart_toStartOf="@id/theme_thumbnail"
+        app:layout_constraintTop_toBottomOf="@id/theme_thumbnail"
+        app:typeface="@string/custom_font_semibold" />
+
+    <LinearLayout
+        android:id="@+id/theme_download_times_container"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintStart_toStartOf="@id/theme_name"
+        app:layout_constraintTop_toBottomOf="@id/theme_name">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:src="@drawable/theme_download_small"
+            tools:ignore="ContentDescription" />
+
+        <com.android.messaging.ui.view.MessagesTextView
+            android:id="@+id/theme_downloaded_times"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginStart="5.3dp"
+            android:includeFontPadding="false"
+            android:textColor="#afb1be"
+            android:textSize="10.7sp"
+            app:font_family_changeable="false"
+            app:typeface="@string/custom_font_regular" />
+    </LinearLayout>
+
+    <FrameLayout
+        android:id="@+id/theme_button_group_container"
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        android:paddingEnd="4dp"
+        app:layout_constraintBottom_toBottomOf="@id/theme_download_times_container"
+        app:layout_constraintDimensionRatio="1:1"
+        app:layout_constraintEnd_toEndOf="@id/theme_thumbnail"
+        app:layout_constraintTop_toTopOf="@id/theme_name">
+
+        <com.android.messaging.ui.customize.theme.ThemeDownloadingView
+            android:id="@+id/theme_downloading_view"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:layout_gravity="center" />
+
+        <ImageView
+            android:id="@+id/theme_state"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:layout_gravity="center"
+            tools:ignore="ContentDescription" />
+
+        <com.airbnb.lottie.LottieAnimationView
+            android:id="@+id/theme_download_success"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:layout_gravity="center"
+            app:lottie_fileName="lottie/theme/download_success.json" />
+    </FrameLayout>
+</com.android.messaging.ui.customize.theme.ThemeSelectItemView>

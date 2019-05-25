@@ -160,7 +160,7 @@ public class AvatarRequest extends UriImageRequest<AvatarRequestDescriptor> {
         matrix.setRectToRect(source, dest, Matrix.ScaleToFit.FILL);
 
         paint.setColorFilter(new PorterDuffColorFilter(
-                Color.parseColor(ThemeInfo.getThemeInfo(ThemeUtils.getCurrentThemeName()).avatarForegroundColor),
+                Color.parseColor(ThemeUtils.getCurrentTheme().avatarForegroundColor),
                 PorterDuff.Mode.SRC_IN));
         canvas.drawBitmap(defaultPerson, matrix, paint);
 
@@ -177,7 +177,7 @@ public class AvatarRequest extends UriImageRequest<AvatarRequestDescriptor> {
         final Resources resources = mContext.getResources();
         final Paint paint = new Paint(Paint.ANTI_ALIAS_FLAG);
         paint.setTypeface(Typefaces.getCustomSemiBold());
-        paint.setColor(Color.parseColor(ThemeInfo.getThemeInfo(ThemeUtils.getCurrentThemeName()).avatarForegroundColor));
+        paint.setColor(Color.parseColor(ThemeUtils.getCurrentTheme().avatarForegroundColor));
         final float letterToTileRatio = resources.getFraction(R.dimen.letter_to_tile_ratio, 1, 1);
         paint.setTextSize(letterToTileRatio * minOfWidthAndHeight);
 

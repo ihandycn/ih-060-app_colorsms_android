@@ -61,6 +61,7 @@ import com.android.messaging.ui.customize.CustomBubblesActivity;
 import com.android.messaging.ui.customize.PrimaryColors;
 import com.android.messaging.ui.customize.ToolbarDrawables;
 import com.android.messaging.ui.customize.theme.ChooseThemeActivity;
+import com.android.messaging.ui.customize.theme.ThemeSelectActivity;
 import com.android.messaging.ui.customize.theme.ThemeUtils;
 import com.android.messaging.ui.dialog.FiveStarRateDialog;
 import com.android.messaging.ui.emoji.EmojiStoreActivity;
@@ -383,7 +384,8 @@ public class ConversationListActivity extends AbstractConversationListActivity
                 switch (drawerClickIndex) {
                     case DRAWER_INDEX_THEME:
                         BugleAnalytics.logEvent("Menu_Theme_Click");
-                        Navigations.startActivity(ConversationListActivity.this, ChooseThemeActivity.class);
+                        //Navigations.startActivity(ConversationListActivity.this, ChooseThemeActivity.class);
+                        Navigations.startActivity(ConversationListActivity.this, ThemeSelectActivity.class);
                         navigationContent.findViewById(R.id.navigation_item_theme_new_text).setVisibility(View.GONE);
                         break;
 

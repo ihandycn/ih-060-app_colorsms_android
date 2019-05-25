@@ -1,5 +1,6 @@
 package com.android.messaging.ui.customize;
 
+import android.graphics.drawable.Drawable;
 import android.support.annotation.DrawableRes;
 import android.support.annotation.NonNull;
 import android.text.TextUtils;
@@ -7,8 +8,10 @@ import android.text.TextUtils;
 import com.android.messaging.Factory;
 import com.android.messaging.R;
 import com.android.messaging.ui.customize.theme.ThemeInfo;
+import com.android.messaging.ui.customize.theme.ThemeManager;
 import com.android.messaging.ui.customize.theme.ThemeUtils;
 import com.android.messaging.util.BuglePrefs;
+import com.ihs.app.framework.HSApplication;
 
 import static com.android.messaging.util.BuglePrefsKeys.PREFS_KEY_BUBBLE_DRAWABLE_IDENTIFIER;
 
@@ -28,16 +31,7 @@ public class BubbleDrawables {
             R.drawable.style_05,
             R.drawable.style_06,
             R.drawable.style_07,
-            R.drawable.style_08,
-            R.drawable.bubble_diamond_incoming,
-            R.drawable.bubble_neon_incoming,
-            R.drawable.bubble_waterdrop_incoming,
-            R.drawable.bubble_unicorn_incoming,
-            R.drawable.bubble_goldendiamond_incoming,
-            R.drawable.bubble_technology_incoming,
-            R.drawable.bubble_starry_incoming,
-            R.drawable.bubble_coolgraffiti_incoming,
-            R.drawable.bubble_cutegraffiti_incoming
+            R.drawable.style_08
     };
 
     public static final int[] BUBBLES_OUTGOING = new int[]{
@@ -48,16 +42,7 @@ public class BubbleDrawables {
             R.drawable.style_05_outgoing,
             R.drawable.style_06_outgoing,
             R.drawable.style_07_outgoing,
-            R.drawable.style_08_outgoing,
-            R.drawable.bubble_diamond_outgoing,
-            R.drawable.bubble_neon_outgoing,
-            R.drawable.bubble_waterdrop_outging,
-            R.drawable.bubble_unicorn_outgoing,
-            R.drawable.bubble_goldendiamond_outgoing,
-            R.drawable.bubble_technology_outgoing,
-            R.drawable.bubble_starry_outgoing,
-            R.drawable.bubble_coolgraffiti_outgoing,
-            R.drawable.bubble_cutegraffiti_outgoing
+            R.drawable.style_08_outgoing
     };
 
     // each identifier matches one style
@@ -70,15 +55,6 @@ public class BubbleDrawables {
             6,
             7,
             8,
-            9,
-            10,
-            11,
-            12,
-            13,
-            14,
-            15,
-            16,
-            17
     };
 
     public static int getSelectedIdentifier() {
@@ -86,8 +62,6 @@ public class BubbleDrawables {
     }
 
     public static void resetConversationCustomization(@NonNull String conversationId) {
-        ThemeInfo themeInfo = ThemeInfo.getThemeInfo(ThemeUtils.getCurrentThemeName());
-        BubbleDrawables.setSelectedIdentifier(Integer.parseInt(themeInfo.bubbleIncomingUrl));
         prefs.remove(PREFS_KEY_BUBBLE_DRAWABLE_IDENTIFIER + "_" + conversationId);
     }
 
@@ -126,8 +100,7 @@ public class BubbleDrawables {
         }
     }
 
-    @DrawableRes
-    public static int getSelectedDrawable(boolean incoming, String conversationId) {
+    public static Drawable getSelectedDrawable(boolean incoming, String conversationId) {
         int selectedIdentifier =
                 prefs.getInt(PREFS_KEY_BUBBLE_DRAWABLE_IDENTIFIER + "_" + conversationId, getSelectedIdentifier());
         int selectedIndex = -1;
@@ -136,11 +109,21 @@ public class BubbleDrawables {
                 selectedIndex = i;
             }
         }
+        //change bubble after choose theme
         if (selectedIndex != -1) {
-            return getSelectedDrawable(selectedIndex, incoming);
-        } else {
-            return getSelectedDrawable(0, incoming);
+            return HSApplication.getContext().getResources()
+                    .getDrawable(getSelectedDrawable(selectedIndex, incoming));
+        } else if (!ThemeUtils.isDefaultTheme()) {
+            //set theme and clear customize bubble, show theme bubble
+            Drawable drawable = incoming ? ThemeManager.getInstance().getIncomingBubbleDrawable()
+                    : ThemeManager.getInstance().getOutgoingBubbleDrawable();
+            if (drawable != null) {
+                return drawable;
+            }
         }
+        //return default bubble
+        return HSApplication.getContext().getResources()
+                .getDrawable(getSelectedDrawable(0, incoming));
     }
 
     @DrawableRes

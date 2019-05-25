@@ -1114,7 +1114,7 @@
 
     <string name="menu_privacy_box">Private Box</string>
     <string name="menu_privacy_box_coming">Coming soon in a few days</string>
-    
+
     <string name="customize_guide_title">Customization is here!</string>
     <string name="signature">Signature</string>
 
@@ -1191,5 +1191,8 @@
     <string name="firebase_sync_desktop_settings_title">Sync settings</string>
     <string name="firebase_sync_desktop_settings_description_logged_out">After logging in, you can sync your sms settings across multiple devices</string>
     <string name="firebase_sync_desktop_settings_description_logged_in">Sync succeed</string>
-    
+
+    <string name="get_now">Get Now</string>
+    <string name="downloading">Downloading …</string>
+    <string name="theme_coming">More themes coming soon...</string>
 </resources>

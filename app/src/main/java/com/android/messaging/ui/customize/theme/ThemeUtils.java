@@ -7,6 +7,8 @@ import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 
 import com.android.messaging.Factory;
+import com.android.messaging.font.FontStyleManager;
+import com.android.messaging.font.FontUtils;
 import com.android.messaging.ui.conversationlist.ConversationListActivity;
 import com.android.messaging.ui.customize.AvatarBgDrawables;
 import com.android.messaging.ui.customize.BubbleDrawables;
@@ -17,67 +19,99 @@ import com.android.messaging.ui.customize.WallpaperDrawables;
 import com.android.messaging.util.BuglePrefsKeys;
 import com.ihs.app.framework.HSApplication;
 import com.ihs.commons.notificationcenter.HSGlobalNotificationCenter;
-import com.android.messaging.font.FontStyleManager;
+import com.superapps.util.Threads;
 
 import java.io.IOException;
 import java.io.InputStream;
 
 public class ThemeUtils {
+    public static final String DEFAULT_THEME_KEY = "default";
 
-    public static void downloadTheme(ThemeInfo themeInfo) {
-
+    interface IThemeChangeListener {
+        void onThemeChanged();
     }
 
-    public static void applyTheme(ThemeInfo themeInfo) {
-        PrimaryColors.changePrimaryColor(Color.parseColor(themeInfo.themeColor));
+    private static ThemeInfo sCurrentTheme;
 
-        ConversationColors.get().setBubbleBackgroundColor(true, Color.parseColor(themeInfo.incomingBubbleBgColor));
-        ConversationColors.get().setBubbleBackgroundColor(false, Color.parseColor(themeInfo.outgoingBubbleBgColor));
-        ConversationColors.get().setMessageTextColor(true, Color.parseColor(themeInfo.incomingBubbleTextColor));
-        ConversationColors.get().setMessageTextColor(false, Color.parseColor(themeInfo.outgoingBubbleTextColor));
-        ConversationColors.get().setListTitleColor(Color.parseColor(themeInfo.listTitleColor));
-        ConversationColors.get().setListSubTitleColor(Color.parseColor(themeInfo.listSubtitleColor));
-        ConversationColors.get().setListTimeColor(Color.parseColor(themeInfo.listTimeColor));
-        ConversationColors.get().setAdActionColor(Color.parseColor(themeInfo.bubbleAdColor));
+    public static void applyTheme(ThemeInfo themeInfo, int delay) {
+        sCurrentTheme = themeInfo;
+        Factory.get().getCustomizePrefs().putString(BuglePrefsKeys.PREFS_KEY_THEME_NAME, themeInfo.mThemeKey);
 
-        ToolbarDrawables.sToolbarBgBitmap = null;
-        ToolbarDrawables.applyToolbarBg(themeInfo.toolbarBgUrl);
-        WallpaperDrawables.sConversationListWallpaperBitmap = null;
-        WallpaperDrawables.sConversationWallpaperBitmap = null;
-        WallpaperDrawables.applyWallpaperBg(themeInfo.wallpaperUrl);
-        WallpaperDrawables.applyListWallpaperBg(themeInfo.listWallpaperUrl);
-        AvatarBgDrawables.sAvatarBg = null;
-        AvatarBgDrawables.applyAvatarBg(themeInfo.avatarUrl);
+        Threads.postOnMainThreadDelayed(() -> {
+            PrimaryColors.changePrimaryColor(Color.parseColor(themeInfo.themeColor));
 
-        BubbleDrawables.setSelectedIdentifier(Integer.parseInt(themeInfo.bubbleIncomingUrl));
+            ConversationColors.get().setBubbleBackgroundColor(true, Color.parseColor(themeInfo.incomingBubbleBgColor));
+            ConversationColors.get().setBubbleBackgroundColor(false, Color.parseColor(themeInfo.outgoingBubbleBgColor));
+            ConversationColors.get().setMessageTextColor(true, Color.parseColor(themeInfo.incomingBubbleTextColor));
+            ConversationColors.get().setMessageTextColor(false, Color.parseColor(themeInfo.outgoingBubbleTextColor));
+            ConversationColors.get().setListTitleColor(Color.parseColor(themeInfo.listTitleColor));
+            ConversationColors.get().setListSubTitleColor(Color.parseColor(themeInfo.listSubtitleColor));
+            ConversationColors.get().setListTimeColor(Color.parseColor(themeInfo.listTimeColor));
+            ConversationColors.get().setAdActionColor(Color.parseColor(themeInfo.bubbleAdColor));
 
-        FontStyleManager.getInstance().setFontFamily(themeInfo.fontName);
+            ToolbarDrawables.sToolbarBitmap = null;
+            WallpaperDrawables.sListWallpaperBitmap = null;
+            WallpaperDrawables.sWallpaperBitmap = null;
+            WallpaperDrawables.applyWallpaperBg(themeInfo.wallpaperUrl);
+            AvatarBgDrawables.sAvatarBg = null;
+            CreateIconDrawable.sCreateIconBitmap = null;
 
-        Factory.get().getCustomizePrefs().putString(BuglePrefsKeys.PREFS_KEY_THEME_NAME, themeInfo.name);
+            ThemeManager.getInstance().clearCacheDrawable();
 
-        HSGlobalNotificationCenter.sendNotification(ConversationListActivity.EVENT_MAINPAGE_RECREATE);
-        WallpaperSizeManager.getInstance().loadWallpaperParams();
-        Factory.get().reclaimMemory();
+            if (!themeInfo.mThemeKey.equals(ThemeUtils.DEFAULT_THEME_KEY)) {
+                BubbleDrawables.setSelectedIdentifier(-1);
+            }
+
+            if (themeInfo.mIsLocalTheme && !themeInfo.isInLocalFolder()) {
+                ThemeDownloadManager.getInstance().copyFileFromAssetsAsync(themeInfo,
+                        new ThemeDownloadManager.IThemeMoveListener() {
+                            @Override
+                            public void onMoveSuccess() {
+
+                            }
+
+                            @Override
+                            public void onMoveFailed() {
+
+                            }
+                        });
+            }
+
+            FontStyleManager.getInstance().setFontFamily(themeInfo.fontName);
+            FontUtils.onFontTypefaceChanged();
+
+            HSGlobalNotificationCenter.sendNotification(ConversationListActivity.EVENT_MAINPAGE_RECREATE);
+            WallpaperSizeManager.getInstance().loadWallpaperParams();
+            Factory.get().reclaimMemory();
+        }, delay);
     }
 
     public static String getCurrentThemeName() {
-        return Factory.get().getCustomizePrefs().getString(BuglePrefsKeys.PREFS_KEY_THEME_NAME, "Default");
+        return getCurrentTheme().mThemeKey;
+    }
+
+    public static ThemeInfo getCurrentTheme() {
+        // Default theme is not null
+        if (sCurrentTheme == null) {
+            String themeKey = Factory.get().getCustomizePrefs().getString(BuglePrefsKeys.PREFS_KEY_THEME_NAME, DEFAULT_THEME_KEY);
+            sCurrentTheme = ThemeInfo.getThemeInfo(themeKey);
+        }
+        return sCurrentTheme;
     }
 
     public static boolean isDefaultTheme() {
-        return Factory.get().getCustomizePrefs().getString(BuglePrefsKeys.PREFS_KEY_THEME_NAME, "Default").equals("Default");
+        return getCurrentTheme().mThemeKey.equals(DEFAULT_THEME_KEY);
     }
 
-    public static Drawable getDrawableFromUrl(String url) {
-        if (url.startsWith("assets://")) {
-            try {
-                InputStream ims = HSApplication.getContext().getAssets().open(url.replace("assets://", ""));
-                Bitmap bitmap = BitmapFactory.decodeStream(ims);
-                return new BitmapDrawable(HSApplication.getContext().getResources(), bitmap);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+    static Drawable getLocalThemeDrawableFromPath(String path) {
+        try {
+            InputStream ims = HSApplication.getContext().getAssets().open("themes/" + path);
+            Bitmap bitmap = BitmapFactory.decodeStream(ims);
+            return new BitmapDrawable(HSApplication.getContext().getResources(), bitmap);
+        } catch (IOException e) {
+            e.printStackTrace();
         }
+
         return null;
     }
 }
