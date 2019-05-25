@@ -3,17 +3,18 @@ package com.android.messaging.upgrader;
 import android.content.Context;
 import android.database.Cursor;
 
+import com.android.messaging.Factory;
 import com.android.messaging.datamodel.DataModel;
 import com.android.messaging.datamodel.DatabaseHelper;
 import com.android.messaging.datamodel.DatabaseWrapper;
 import com.android.messaging.datamodel.data.ConversationListItemData;
+import com.android.messaging.font.FontStyleManager;
 import com.android.messaging.ui.conversationlist.ConversationListActivity;
-import com.android.messaging.ui.customize.AvatarBgDrawables;
+import com.android.messaging.ui.customize.theme.ThemeUtils;
 import com.android.messaging.ui.welcome.WelcomeChooseThemeActivity;
 import com.android.messaging.ui.welcome.WelcomeStartActivity;
 import com.android.messaging.util.BuglePrefs;
-import com.ihs.commons.config.HSConfig;
-import com.android.messaging.font.FontStyleManager;
+import com.android.messaging.util.BuglePrefsKeys;
 import com.superapps.util.Preferences;
 
 public class Upgrader extends BaseUpgrader {
@@ -50,9 +51,13 @@ public class Upgrader extends BaseUpgrader {
         if (oldVersion < 28 && newVersion >= 28) {
             Preferences.getDefault().putBoolean(WelcomeChooseThemeActivity.PREF_KEY_WELCOME_CHOOSE_THEME_SHOWN, true);
         }
+
+        if (oldVersion < 46 && newVersion >= 46) {
+            updateThemeKey();
+        }
     }
 
-    public static void addPinColumnInDB() {
+    private void addPinColumnInDB() {
         final DatabaseWrapper db = DataModel.get().getDatabaseWithoutMainCheck();
         Cursor cursor = null;
         try {
@@ -73,6 +78,45 @@ public class Upgrader extends BaseUpgrader {
 
         DatabaseHelper.rebuildView(db, ConversationListItemData.getConversationListView(),
                 ConversationListItemData.getConversationListViewSql());
+    }
+
+    private void updateThemeKey() {
+        String themeName = Factory.get().getCustomizePrefs()
+                .getString(BuglePrefsKeys.PREFS_KEY_THEME_NAME, ThemeUtils.DEFAULT_THEME_KEY);
+        if (ThemeUtils.DEFAULT_THEME_KEY.equals(themeName)) {
+            String newKey = "default";
+            switch (themeName) {
+                case "CuteGraffiti":
+                    newKey = "cutegraffiti";
+                    break;
+                case "CoolGraffiti":
+                    newKey = "coolgraffiti";
+                    break;
+                case "Starry":
+                    newKey = "starry";
+                    break;
+                case "Unicorn":
+                    newKey = "unicorn";
+                    break;
+                case "Technology":
+                    newKey = "technology";
+                    break;
+                case "Diamond":
+                    newKey = "diamond";
+                    break;
+                case "Neno":
+                    newKey = "neon";
+                    break;
+                case "SimpleBusiness":
+                    newKey = "simplebusiness";
+                    break;
+                case "WaterDrop":
+                    newKey = "waterdrop";
+                    break;
+            }
+            Factory.get().getCustomizePrefs()
+                    .putString(BuglePrefsKeys.PREFS_KEY_THEME_NAME, newKey);
+        }
     }
 
     private void migrateLong(Preferences from, Preferences to, String key) {
