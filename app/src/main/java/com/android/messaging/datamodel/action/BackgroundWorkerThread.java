@@ -80,7 +80,11 @@ public class BackgroundWorkerThread {
 
     private void releaseWakeLock() {
         if (mWakeLock != null) {
-            mWakeLock.release();
+            try {
+                mWakeLock.release();
+            } catch (Exception ignored) {
+
+            }
         }
     }
 

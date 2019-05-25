@@ -128,7 +128,7 @@ public class Upgrader extends BaseUpgrader {
     private void updateThemeKey() {
         String themeName = Factory.get().getCustomizePrefs()
                 .getString(BuglePrefsKeys.PREFS_KEY_THEME_NAME, ThemeUtils.DEFAULT_THEME_KEY);
-        if (ThemeUtils.DEFAULT_THEME_KEY.equals(themeName)) {
+        if (!ThemeUtils.DEFAULT_THEME_KEY.equals(themeName)) {
             String newKey = "default";
             switch (themeName) {
                 case "CuteGraffiti":
