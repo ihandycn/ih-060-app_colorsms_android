@@ -45,7 +45,6 @@ public class ThemeSelectActivity extends BaseBugleFragmentActivity {
         getSupportActionBar().setDisplayShowHomeEnabled(true);
 
         RecyclerView mRecyclerView = findViewById(R.id.theme_select_recycler_view);
-        mRecyclerView.setNestedScrollingEnabled(false);
         mAdapter = new ThemeAdapter(ThemeInfo.getAllThemes());
         GridLayoutManager layoutManager =
                 new GridLayoutManager(getBaseContext(), 2,
