@@ -155,8 +155,12 @@ class SyncMessageBatch {
                 recipients.clear();
                 recipients.add(sms.mAddress);
                 //the threadId is invalid, recreate threadId
-                threadId = MmsSmsUtils.Threads.getOrCreateThreadId(HSApplication.getContext(), sms.mAddress);
-                sms.mThreadId = threadId;
+                try {
+                    threadId = MmsSmsUtils.Threads.getOrCreateThreadId(HSApplication.getContext(), sms.mAddress);
+                    sms.mThreadId = threadId;
+                } catch (Exception ignored) {
+                    return;
+                }
             } else {
                 return;
             }

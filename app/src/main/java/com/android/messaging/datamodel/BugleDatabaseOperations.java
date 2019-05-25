@@ -2018,8 +2018,7 @@ public class BugleDatabaseOperations {
                 }
             }
 
-            if (participantsMatched) {
-                cursor.moveToFirst();
+            if (cursor.moveToFirst() && participantsMatched) {
                 conversationId = cursor.getString(0);
             }
             cursor.close();
