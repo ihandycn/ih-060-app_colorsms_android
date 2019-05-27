@@ -595,7 +595,7 @@ public class ComposeMessageView extends LinearLayout
         }
         mSendDelayCircleBarView.startAnimation(SendDelaySettings.getSendDelay() - (mMillisecondsAnimated / 1000));
         mMillisecondsAnimated = 0;
-        mDelayCloseButton.setOnClickListener(clickedView -> {
+        mSendDelayCircleBarView.setOnClickListener(clickedView -> {
             HSLog.d(TAG, "mDelayCloseButton.setOnClickListener");
             mDelayCloseButton.setVisibility(View.GONE);
             mSendDelayCircleBarView.setVisibility(View.GONE);
