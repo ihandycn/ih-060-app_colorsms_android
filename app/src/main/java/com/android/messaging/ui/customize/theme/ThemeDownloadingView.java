@@ -44,7 +44,6 @@ public class ThemeDownloadingView extends View {
         mPaint.setAntiAlias(true);
         mPaint.setStyle(Paint.Style.STROKE);
         mPaint.setStrokeWidth(mBorderSize);
-
         mThemeColor = getResources().getColor(R.color.primary_color);
     }
 
