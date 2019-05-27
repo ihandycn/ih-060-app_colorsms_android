@@ -10,15 +10,15 @@ import android.view.MenuItem;
 import android.widget.TextView;
 
 import com.android.messaging.R;
-import com.android.messaging.ui.BaseBugleFragmentActivity;
 import com.android.messaging.ui.UIIntents;
 import com.android.messaging.util.BugleActivityUtil;
 import com.android.messaging.util.UiUtils;
+import com.ihs.app.framework.activity.HSAppCompatActivity;
 import com.superapps.util.Navigations;
 import com.superapps.util.Threads;
 import com.superapps.util.Toasts;
 
-public class ThemePreviewActivity extends BaseBugleFragmentActivity {
+public class ThemePreviewActivity extends HSAppCompatActivity {
 
     public static void startThemePreviewActivity(Context context, ThemeInfo themeInfo) {
         Intent intent = new Intent(context, ThemePreviewActivity.class);

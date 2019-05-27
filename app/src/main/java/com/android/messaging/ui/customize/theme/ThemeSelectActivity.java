@@ -16,15 +16,15 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.android.messaging.R;
-import com.android.messaging.ui.BaseBugleFragmentActivity;
 import com.android.messaging.util.BugleAnalytics;
 import com.android.messaging.util.UiUtils;
+import com.ihs.app.framework.activity.HSAppCompatActivity;
 import com.superapps.util.Dimensions;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class ThemeSelectActivity extends BaseBugleFragmentActivity {
+public class ThemeSelectActivity extends HSAppCompatActivity {
     private ThemeAdapter mAdapter;
 
     @Override
@@ -47,7 +47,7 @@ public class ThemeSelectActivity extends BaseBugleFragmentActivity {
         RecyclerView mRecyclerView = findViewById(R.id.theme_select_recycler_view);
         mAdapter = new ThemeAdapter(ThemeInfo.getAllThemes());
         GridLayoutManager layoutManager =
-                new GridLayoutManager(getBaseContext(), 2,
+                new GridLayoutManager(this, 2,
                         StaggeredGridLayoutManager.VERTICAL, false);
         layoutManager.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
             @Override
@@ -158,7 +158,7 @@ public class ThemeSelectActivity extends BaseBugleFragmentActivity {
         public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
             if (viewType == THEME) {
                 @SuppressLint("InflateParams")
-                ThemeSelectItemView view = (ThemeSelectItemView) LayoutInflater.from(getBaseContext())
+                ThemeSelectItemView view = (ThemeSelectItemView) LayoutInflater.from(ThemeSelectActivity.this)
                         .inflate(R.layout.theme_preview_item_view, null, false);
                 RecyclerView.ViewHolder holder = new ThemePreviewViewHolder(view);
                 holder.setIsRecyclable(false);
