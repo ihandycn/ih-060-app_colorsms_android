@@ -632,7 +632,7 @@ public class ConversationFragment extends Fragment implements ConversationDataLi
                             PorterDuff.Mode.SRC_IN);
         }
         actionBtn.setBackgroundDrawable(actionBg);
-        if (HSConfig.optBoolean(true, "Application", "SMSAd", "SMSHomepageBannerAd", "SMSHomepageBannerAdFacebookEnabled")) {
+        if (HSConfig.optBoolean(true, "Application", "SMSAd", "SMSDetailspageTopAd", "FacebookEnabled")) {
             adView.setBackgroundColor(Color.parseColor(ThemeInfo.getThemeInfo(ThemeUtils.getCurrentThemeName()).bannerAdBgColor));
         }
 
