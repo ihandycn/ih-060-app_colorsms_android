@@ -70,6 +70,7 @@ import com.android.messaging.ui.wallpaper.WallpaperManager;
 import com.android.messaging.util.AccessibilityUtil;
 import com.android.messaging.util.Assert;
 import com.android.messaging.util.AvatarUriUtil;
+import com.android.messaging.util.BugleAnalytics;
 import com.android.messaging.util.ContentType;
 import com.android.messaging.util.ImageUtils;
 import com.android.messaging.util.OsUtil;
@@ -407,6 +408,7 @@ public class ConversationMessageView extends RelativeLayout implements View.OnCl
                         statusResId = MmsUtils.mapRawStatusToErrorResourceId(
                                 mData.getStatus(), mData.getRawTelephonyStatus());
                     }
+                    BugleAnalytics.logEvent("SMS_Send_Failed", false, true, "status", getResources().getString(statusResId));
                     break;
                 }
                 // FALL THROUGH HERE
