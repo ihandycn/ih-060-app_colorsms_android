@@ -152,7 +152,7 @@
                             android:alpha="0"
                             android:visibility="gone"/>
 
-                        <com.android.messaging.ui.conversation.SendDelayCircleBarView
+                        <com.android.messaging.ui.SendDelayCircleBarView
                             android:id="@+id/send_delay_circle_bar"
                             android:layout_width="36.7dp"
                             android:layout_height="36.7dp"

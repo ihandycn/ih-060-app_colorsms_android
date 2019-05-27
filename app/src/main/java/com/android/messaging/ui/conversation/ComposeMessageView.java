@@ -16,15 +16,12 @@
 package com.android.messaging.ui.conversation;
 
 import android.animation.Animator;
-import android.animation.ObjectAnimator;
 import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Rect;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.CountDownTimer;
 import android.os.Handler;
-import android.os.Message;
 import android.support.v4.view.animation.PathInterpolatorCompat;
 import android.support.v7.app.ActionBar;
 import android.text.Editable;
@@ -42,7 +39,6 @@ import android.view.KeyEvent;
 import android.view.View;
 import android.view.accessibility.AccessibilityEvent;
 import android.view.animation.Interpolator;
-import android.view.animation.LinearInterpolator;
 import android.view.inputmethod.EditorInfo;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
@@ -72,6 +68,7 @@ import com.android.messaging.sms.MmsConfig;
 import com.android.messaging.ui.AttachmentPreview;
 import com.android.messaging.ui.BugleActionBarActivity;
 import com.android.messaging.ui.PlainTextEditText;
+import com.android.messaging.ui.SendDelayCircleBarView;
 import com.android.messaging.ui.appsettings.SendDelaySettings;
 import com.android.messaging.ui.conversation.ConversationInputManager.ConversationInputSink;
 import com.android.messaging.ui.customize.PrimaryColors;
@@ -245,12 +242,12 @@ public class ComposeMessageView extends LinearLayout
     public void bind(final DraftMessageData data, final IComposeMessageViewHost host) {
         HSLog.d(TAG,"bind ");
         HSLog.d(TAG, "mIsMessageSended = " + mIsMessageSended);
-        if (!mIsMessageSended) {
+//        if (!mIsMessageSended) {
             mHost = host;
             mBinding.bind(data);
             data.addListener(this);
             data.setSubscriptionDataProvider(host);
-        }
+//        }
 //        else {
 ////            mBinding.unbind();
 //            mHost = host;
@@ -287,6 +284,15 @@ public class ComposeMessageView extends LinearLayout
     protected boolean getIsMessageSendFlag(){
         return mIsMessageSended;
     }
+
+    protected Handler getSendDelayHandler(){
+        return mSendDelayHandler;
+    }
+
+    protected Runnable getSendDelayRunnable(){
+        return mSendDelayRunnable;
+    }
+
 
     @Override
     protected void onDetachedFromWindow() {
@@ -578,6 +584,8 @@ public class ComposeMessageView extends LinearLayout
         if(mMillisecondsAnimated != 0){
             HSLog.d(TAG, "mMillisecondsAnimated = " + mMillisecondsAnimated );
             mSendDelayCircleBarView.setProgress(100 - (float)((mMillisecondsAnimated  * 100 ) / (1000 * SendDelaySettings.getSendDelay())));
+            mSendDelayHandler.postDelayed(mSendDelayRunnable, 1000 * SendDelaySettings.getSendDelay() - mMillisecondsAnimated);
+            Preferences.getDefault().putLong(PREF_KEY_SEND_DELAY_SYSTEM_TIME, System.currentTimeMillis());
             HSLog.d(TAG, "if(mMillisecondsAnimated != 0    mSendDelayCircleBarView.getProgress() =    )" + ((mMillisecondsAnimated  * 100 ) / (1000 * SendDelaySettings.getSendDelay())));
         } else {
             HSLog.d(TAG, "mMillisecondsAnimated == 0");

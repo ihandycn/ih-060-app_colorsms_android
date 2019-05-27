@@ -1138,17 +1138,20 @@ public class ConversationFragment extends Fragment implements ConversationDataLi
         super.onDestroy();
         HSLog.d("ComposeMessageView","onDestroy");
         // Unbind all the views that we bound to data
+
         if (mComposeMessageView != null) {
-            if (! mComposeMessageView.getIsMessageSendFlag()) {
+//            if (! mComposeMessageView.getIsMessageSendFlag()) {
+                HSLog.d("ComposeMessageView","if (mComposeMessageView != null) {");
+                mComposeMessageView.getSendDelayHandler().removeCallbacks(mComposeMessageView.getSendDelayRunnable());
                 mComposeMessageView.getViewTreeObserver().removeOnGlobalLayoutListener(globalLayoutListener);
                 mComposeMessageView.unbind();
-            }
+//            }
         }
         mRecyclerView.setAdapter(null);
-        if (! mComposeMessageView.getIsMessageSendFlag()){
+//        if (! mComposeMessageView.getIsMessageSendFlag()){
             mBinding.unbind();
             mConversationId = null;
-        }
+//        }
         if (mNativeAd != null) {
             mNativeAd.release();
         }

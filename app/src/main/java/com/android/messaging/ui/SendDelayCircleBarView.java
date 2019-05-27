@@ -1,4 +1,4 @@
-package com.android.messaging.ui.conversation;
+package com.android.messaging.ui;
 
 import android.animation.ValueAnimator;
 import android.content.Context;
