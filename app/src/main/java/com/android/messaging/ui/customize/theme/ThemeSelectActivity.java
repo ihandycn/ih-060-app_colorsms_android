@@ -71,7 +71,7 @@ public class ThemeSelectActivity extends HSAppCompatActivity {
                 int position = parent.getChildAdapterPosition(view);
                 int viewType = mAdapter.getItemViewType(position);
                 if (viewType == ThemeAdapter.THEME) {
-                    if (isRtl) {
+                    if (!isRtl) {
                         if (position % 2 == 0) {
                             outRect.left = Dimensions.pxFromDp(16);
                             outRect.right = Dimensions.pxFromDp(6);
