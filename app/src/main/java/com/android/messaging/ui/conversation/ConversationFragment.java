@@ -144,6 +144,7 @@ import java.util.List;
 public class ConversationFragment extends Fragment implements ConversationDataListener,
         IComposeMessageViewHost, ConversationMessageViewHost, ConversationInputHost,
         DraftMessageDataListener, INotificationObserver {
+    private static final String TAG = "ConversationFragment";
 
     public static final String EVENT_SHOW_OPTION_MENU = "event_show_option_menu";
     public static final String EVENT_HIDE_OPTION_MENU = "event_hide_option_menu";
@@ -541,6 +542,7 @@ public class ConversationFragment extends Fragment implements ConversationDataLi
     @Override
     public void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        HSLog.d("ComposeMessageView","onCreate");
         mFastFlingThreshold = getResources().getDimensionPixelOffset(
                 R.dimen.conversation_fast_fling_threshold);
         selectMessages = new ArrayList<>();
@@ -664,6 +666,7 @@ public class ConversationFragment extends Fragment implements ConversationDataLi
     @Override
     public void onActivityCreated(final Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+        HSLog.d("ComposeMessageView","onActivityCreated");
         // Delay showing the message list until the participant list is loaded.
         mRecyclerView.setVisibility(View.INVISIBLE);
         mBinding.ensureBound();
@@ -725,7 +728,7 @@ public class ConversationFragment extends Fragment implements ConversationDataLi
     public View onCreateView(final LayoutInflater inflater, final ViewGroup container,
                              final Bundle savedInstanceState) {
         HSLog.d("message list create : " + System.currentTimeMillis());
-
+        HSLog.d("ComposeMessageView","onCreateView");
         final View view = inflater.inflate(R.layout.conversation_fragment, container, false);
         mRecyclerView = view.findViewById(android.R.id.list);
         mAdContainer = view.findViewById(R.id.top_banner_ad_container);
@@ -884,7 +887,7 @@ public class ConversationFragment extends Fragment implements ConversationDataLi
     @Override
     public void onResume() {
         super.onResume();
-
+        HSLog.d("ComposeMessageView","onResume");
         WallpaperManager.setWallPaperOnView(mWallpaperView, mConversationId);
 
         if (mIncomingDraft == null) {
@@ -1099,20 +1102,53 @@ public class ConversationFragment extends Fragment implements ConversationDataLi
         }
     }
 
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        HSLog.d("ComposeMessageView","onDestroyView");
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        HSLog.d("ComposeMessageView","onStop");
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        HSLog.d("ComposeMessageView","onDetach");
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        HSLog.d("ComposeMessageView","onStart");
+    }
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        HSLog.d("ComposeMessageView","onAttach");
+    }
+
     @Override
     public void onDestroy() {
         super.onDestroy();
+        HSLog.d("ComposeMessageView","onDestroy");
         // Unbind all the views that we bound to data
         if (mComposeMessageView != null) {
-            mComposeMessageView.getViewTreeObserver().removeOnGlobalLayoutListener(globalLayoutListener);
-            mComposeMessageView.unbind();
+            if (! mComposeMessageView.getIsMessageSendFlag()) {
+                mComposeMessageView.getViewTreeObserver().removeOnGlobalLayoutListener(globalLayoutListener);
+                mComposeMessageView.unbind();
+            }
         }
         mRecyclerView.setAdapter(null);
-
-        // And unbind this fragment from its data
-        mBinding.unbind();
-        mConversationId = null;
-
+        if (! mComposeMessageView.getIsMessageSendFlag()){
+            mBinding.unbind();
+            mConversationId = null;
+        }
         if (mNativeAd != null) {
             mNativeAd.release();
         }
@@ -1134,6 +1170,7 @@ public class ConversationFragment extends Fragment implements ConversationDataLi
     @Override
     public void onPause() {
         super.onPause();
+        HSLog.d("ComposeMessageView","onPause");
         if (mComposeMessageView != null && !mSuppressWriteDraft) {
             mComposeMessageView.writeDraftMessage();
         }

@@ -24,6 +24,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.os.Handler;
+import android.os.Message;
 import android.support.v4.view.animation.PathInterpolatorCompat;
 import android.support.v7.app.ActionBar;
 import android.text.Editable;
@@ -148,6 +149,8 @@ public class ComposeMessageView extends LinearLayout
     }
 
     private static final String TAG = "ComposeMessageView";
+    private static final String PREF_KEY_SEND_DELAY_CLOSE_PROGRESS = "send_delay_close_progress";
+    private static final String PREF_KEY_SEND_DELAY_SYSTEM_TIME = "send_delay_system_time";
     private static final int DISTANCE_SLOP = Dimensions.pxFromDp(90);
 
     // There is no draft and there is no need for the SIM selector
@@ -187,8 +190,11 @@ public class ComposeMessageView extends LinearLayout
     private final Context mOriginalContext;
     private int mSendWidgetMode = SEND_WIDGET_MODE_SELF_AVATAR;
     private String mSignatureStr;
-    private CountDownTimer mCountDownTimer;
     private boolean mIsSendDelayCircleBarAnimating;
+    private Handler mSendDelayHandler;
+    private Runnable mSendDelayRunnable;
+    private long mMillisecondsAnimated;
+    private static boolean mIsMessageSended;
     ForegroundColorSpan mSignatureSpan = new ForegroundColorSpan(0xb3222327);
 
     // Shared data model object binding from the conversation.
@@ -237,19 +243,49 @@ public class ComposeMessageView extends LinearLayout
      * Host calls this to bind view to DraftMessageData object
      */
     public void bind(final DraftMessageData data, final IComposeMessageViewHost host) {
-        mHost = host;
-        mBinding.bind(data);
-        data.addListener(this);
-        data.setSubscriptionDataProvider(host);
+        HSLog.d(TAG,"bind ");
+        HSLog.d(TAG, "mIsMessageSended = " + mIsMessageSended);
+        if (!mIsMessageSended) {
+            mHost = host;
+            mBinding.bind(data);
+            data.addListener(this);
+            data.setSubscriptionDataProvider(host);
+        }
+//        else {
+////            mBinding.unbind();
+//            mHost = host;
+//            mBinding.bind(data);
+//            data.addListener(this);
+//            data.setSubscriptionDataProvider(host);
+//        }
+
+        long lastSystemTime = Preferences.getDefault().getLong(PREF_KEY_SEND_DELAY_SYSTEM_TIME, 0);
+        if (lastSystemTime != 0) {
+            Preferences.getDefault().putLong(PREF_KEY_SEND_DELAY_SYSTEM_TIME, 0);
+            mMillisecondsAnimated = System.currentTimeMillis() - lastSystemTime;
+            if (mMillisecondsAnimated <= 1000 * SendDelaySettings.getSendDelay()) {
+                HSLog.d(TAG, "mMillisecondsAnimated <= 1000 * SendDelaySettings.getSendDelay()");
+                sendDelayAnimation();
+            } else {
+                Preferences.getDefault().putLong(PREF_KEY_SEND_DELAY_SYSTEM_TIME, 0);
+                mMillisecondsAnimated = 0;
+            }
+        }
     }
 
     /**
      * Host calls this to unbind view
      */
     public void unbind() {
+        HSLog.d(TAG, "unbind");
+        HSLog.d(TAG, "mIsMessageSended = " + mIsMessageSended);
         mBinding.unbind();
         mHost = null;
         mInputManager.onDetach();
+    }
+
+    protected boolean getIsMessageSendFlag(){
+        return mIsMessageSended;
     }
 
     @Override
@@ -370,87 +406,33 @@ public class ComposeMessageView extends LinearLayout
         mDelayCloseButton = findViewById(R.id.delay_close_button);
         mSendDelayCircleBarView = findViewById(R.id.send_delay_circle_bar);
 
-        Interpolator scaleStartInterpolator =
-                PathInterpolatorCompat.create(0.0f, 0.0f, 0.58f, 1.0f);
+        mSendDelayHandler = new Handler();
+        mSendDelayRunnable = () -> {
 
-        Interpolator scaleEndInterpolator =
-                PathInterpolatorCompat.create(0.17f, 0.0f, 0.83f, 1.0f);
+            HSLog.d(TAG, "mSendDelayRunnable");
+            logEmojiEvent();
+            sendMessageInternal(true /* checkMessageSize */);
 
-        ObjectAnimator sendButtonDisappearAnimator = ObjectAnimator.ofFloat(mSendButton,"alpha",1.0f, 0.0f);
-        sendButtonDisappearAnimator.setDuration(120);
-        sendButtonDisappearAnimator.setStartDelay(120);
-        sendButtonDisappearAnimator.addListener(new Animator.AnimatorListener() {
-            @Override
-            public void onAnimationStart(Animator animation) {
+//            final MessageData message = mBinding.getData()
+//                    .prepareMessageForSending(mBinding);
+//            playSentSound();
+//            mHost.sendMessage(message);
 
-            }
+            mDelayCloseButton.setVisibility(View.GONE);
+            mSendDelayCircleBarView.setVisibility(View.GONE);
+            mSelfSendIcon.setVisibility(View.VISIBLE);
+            mIsSendDelayCircleBarAnimating = false;
 
-            @Override
-            public void onAnimationEnd(Animator animation) {
-                mIsSendDelayCircleBarAnimating = true;
-                mSendDelayCircleBarView.startAnimation(SendDelaySettings.getSendDelay());
-                mCountDownTimer.start();
-                mSendButton.setVisibility(View.GONE);
-            }
-
-            @Override
-            public void onAnimationCancel(Animator animation) {
-
-            }
-
-            @Override
-            public void onAnimationRepeat(Animator animation) {
-
-            }
-        });
-
-//        mSelfSendIcon.animate().alpha(1.0f).scaleX(1.0f).scaleY(1.0f).setDuration(160).setInterpolator(scaleEndInterpolator).start();
-
+            mSendDelayHandler.removeCallbacks(mSendDelayRunnable);
+            updateVisualsOnDraftChanged();
+            resetDelaySendAnimation();
+        };
         mSendButton.setBackground(BackgroundDrawables.createBackgroundDrawable(PrimaryColors.getPrimaryColor(),
                 PrimaryColors.getPrimaryColorDark(),
                 Dimensions.pxFromDp(29), false, true));
         mSendButton.setOnClickListener(clickView -> {
-
-            mCountDownTimer = new CountDownTimer(1000 * SendDelaySettings.getSendDelay(), 1000) {
-                @Override
-                public void onTick(long millisUntilFinished) {
-                    HSLog.d(TAG, "Seconds remaining: " + millisUntilFinished / 1000);
-                }
-
-                @Override
-                public void onFinish() {
-                    logEmojiEvent();
-                    sendMessageInternal(true /* checkMessageSize */);
-                    mDelayCloseButton.setVisibility(View.GONE);
-                    mSendDelayCircleBarView.setVisibility(View.GONE);
-                    mSelfSendIcon.setVisibility(View.VISIBLE);
-                    mIsSendDelayCircleBarAnimating = false;
-                    mCountDownTimer.cancel();
-                    updateVisualsOnDraftChanged();
-                    resetDelaySendAnimation();
-                }
-            };
-
             HSLog.d(TAG, "mSendButton.setOnClickListener Run");
-            mDelayCloseButton.setVisibility(View.VISIBLE);
-            mSendDelayCircleBarView.setVisibility(View.VISIBLE);
-            mSelfSendIcon.setVisibility(View.GONE);
-
-            sendButtonDisappearAnimator.start();
-            mSendButton.animate().scaleX(0.8f).scaleY(0.8f).setDuration(160).setStartDelay(80).setInterpolator(scaleStartInterpolator).start();
-            mDelayCloseButton.animate().alpha(1.0f).setDuration(160).setStartDelay(80).start();
-            mSendDelayCircleBarView.animate().alpha(1.0f).scaleX(1.0f).scaleY(1.0f).setDuration(160).setStartDelay(80).setInterpolator(scaleStartInterpolator).start();
-
-            mDelayCloseButton.setOnClickListener(clickedView -> {
-                HSLog.d(TAG, "mDelayCloseButton.setOnClickListener");
-                mDelayCloseButton.setVisibility(View.GONE);
-                mSendDelayCircleBarView.setVisibility(View.GONE);
-                mSelfSendIcon.setVisibility(View.VISIBLE);
-                mIsSendDelayCircleBarAnimating = false;
-                mCountDownTimer.cancel();
-                updateVisualsOnDraftChanged();
-                resetDelaySendAnimation();
-            });
+            sendDelayAnimation();
         });
 
         mSendButton.setOnLongClickListener(arg0 -> {
@@ -569,6 +551,7 @@ public class ComposeMessageView extends LinearLayout
     }
 
     private void resetDelaySendAnimation(){
+        HSLog.d(TAG, "resetDelaySendAnimation()");
         mDelayCloseButton.setAlpha(0.0f);
         mSendDelayCircleBarView.setAlpha(0.0f);
         mSendDelayCircleBarView.setScaleX(0.8f);
@@ -577,6 +560,43 @@ public class ComposeMessageView extends LinearLayout
         mSendButton.setScaleX(1.0f);
         mSendButton.setScaleY(1.0f);
         mSendButton.setAlpha(1.0f);
+        mIsMessageSended = false;
+        mSendDelayCircleBarView.setProgress(100);
+    }
+
+    private void sendDelayAnimation(){
+        mDelayCloseButton.setVisibility(View.VISIBLE);
+        mSendDelayCircleBarView.setVisibility(View.VISIBLE);
+        mSelfSendIcon.setVisibility(View.GONE);
+
+        mDelayCloseButton.animate().alpha(1.0f).setDuration(160).setStartDelay(80).start();
+        Interpolator scaleStartInterpolator =
+                PathInterpolatorCompat.create(0.0f, 0.0f, 0.58f, 1.0f);
+        mSendDelayCircleBarView.animate().alpha(1.0f).scaleX(1.0f).scaleY(1.0f).setDuration(160).setStartDelay(80).setInterpolator(scaleStartInterpolator).start();
+        mIsSendDelayCircleBarAnimating = true;
+        mSendButton.setVisibility(View.GONE);
+        if(mMillisecondsAnimated != 0){
+            HSLog.d(TAG, "mMillisecondsAnimated = " + mMillisecondsAnimated );
+            mSendDelayCircleBarView.setProgress(100 - (float)((mMillisecondsAnimated  * 100 ) / (1000 * SendDelaySettings.getSendDelay())));
+            HSLog.d(TAG, "if(mMillisecondsAnimated != 0    mSendDelayCircleBarView.getProgress() =    )" + ((mMillisecondsAnimated  * 100 ) / (1000 * SendDelaySettings.getSendDelay())));
+        } else {
+            HSLog.d(TAG, "mMillisecondsAnimated == 0");
+            mSendDelayHandler.postDelayed(mSendDelayRunnable, 1000 * SendDelaySettings.getSendDelay());
+            Preferences.getDefault().putLong(PREF_KEY_SEND_DELAY_SYSTEM_TIME, System.currentTimeMillis());
+            mIsMessageSended = true;
+        }
+        mSendDelayCircleBarView.startAnimation(SendDelaySettings.getSendDelay() - (mMillisecondsAnimated / 1000));
+        mMillisecondsAnimated = 0;
+        mDelayCloseButton.setOnClickListener(clickedView -> {
+            HSLog.d(TAG, "mDelayCloseButton.setOnClickListener");
+            mDelayCloseButton.setVisibility(View.GONE);
+            mSendDelayCircleBarView.setVisibility(View.GONE);
+            mSelfSendIcon.setVisibility(View.VISIBLE);
+            mIsSendDelayCircleBarAnimating = false;
+            mSendDelayHandler.removeCallbacks(mSendDelayRunnable);
+            updateVisualsOnDraftChanged();
+            resetDelaySendAnimation();
+        });
     }
 
     private boolean isMediaPickerShowing() {

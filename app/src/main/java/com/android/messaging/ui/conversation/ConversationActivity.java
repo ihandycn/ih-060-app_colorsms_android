@@ -62,6 +62,7 @@ import com.android.messaging.util.ViewUtils;
 import com.ihs.app.framework.HSApplication;
 import com.ihs.commons.config.HSConfig;
 import com.ihs.commons.notificationcenter.HSGlobalNotificationCenter;
+import com.ihs.commons.utils.HSLog;
 import com.superapps.util.Dimensions;
 import com.superapps.util.IntegerBuckets;
 import com.superapps.util.Preferences;
@@ -75,6 +76,8 @@ import java.util.List;
 public class ConversationActivity extends BugleActionBarActivity
         implements ContactPickerFragmentHost, ConversationFragmentHost,
         ConversationActivityUiStateHost, ViewTreeObserver.OnGlobalLayoutListener {
+    private static final String TAG = "Conversation_Activity";
+
     public static final int FINISH_RESULT_CODE = 1;
     public static final int DELETE_CONVERSATION_RESULT_CODE = 2;
     private static final String SAVED_INSTANCE_STATE_UI_STATE_KEY = "uistate";
@@ -298,6 +301,8 @@ public class ConversationActivity extends BugleActionBarActivity
             mUiState.setHost(null);
         }
         mContainer.getViewTreeObserver().removeOnGlobalLayoutListener(this);
+
+        HSLog.d(TAG, "onDestroy");
     }
 
     @Override
@@ -326,6 +331,7 @@ public class ConversationActivity extends BugleActionBarActivity
         }
         if (menuItem.getItemId() == android.R.id.home) {
             onNavigationUpPressed();
+            HSLog.d(TAG, "onNavigationUpPressed");
             return true;
         }
         BugleAnalytics.logEvent("SMS_DetailsPage_IconBack_Click", true);
@@ -338,8 +344,10 @@ public class ConversationActivity extends BugleActionBarActivity
         if (conversationFragment != null && conversationFragment.onNavigationUpPressed()) {
             return;
         }
+        HSLog.d(TAG, "before showInterstitialAd");
         showInterstitialAd();
         onFinishCurrentConversation();
+        HSLog.d(TAG, "after onFinishCurrentConversation");
     }
 
     @Override

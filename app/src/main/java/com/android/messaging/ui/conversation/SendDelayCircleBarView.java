@@ -27,6 +27,7 @@ public class SendDelayCircleBarView extends View {
     private float mDirection;
     private int mCirclePoint;
     private RectF mOval;
+    private float mInitialProgress;
 
     private Paint mPaint;
     private ValueAnimator mSendDelayCircleBarAnimator;
@@ -50,18 +51,11 @@ public class SendDelayCircleBarView extends View {
         mMaxProgress = sendDelayCircleProgressBar.getInt(R.styleable.SendDelayCircleProgressBar_max_progress, 100);
         mDirection = sendDelayCircleProgressBar.getFloat(R.styleable.SendDelayCircleProgressBar_direction, 270.0f);
 
+        mInitialProgress = 0;
         sendDelayCircleProgressBar.recycle();
         mPaint = new Paint();
         mOval = new RectF(mCirclePoint - mOutsideRadius, mCirclePoint - mOutsideRadius, mCirclePoint + mOutsideRadius, mCirclePoint + mOutsideRadius);
-        Interpolator sendDelayCircleBarInterpolator = PathInterpolatorCompat.create(0.33f,0.00f,0.67f,1.00f);
-
-        mSendDelayCircleBarAnimator = ValueAnimator.ofFloat(0, mMaxProgress);
-        mSendDelayCircleBarAnimator.addUpdateListener(animation -> {
-            mProgress = (float) mSendDelayCircleBarAnimator.getAnimatedValue();
-            postInvalidate();
-        });
-        mSendDelayCircleBarAnimator.setInterpolator(sendDelayCircleBarInterpolator);
-        mSendDelayCircleBarAnimator.setStartDelay(240);
+        setProgress(mMaxProgress);
     }
 
     @Override
@@ -102,6 +96,7 @@ public class SendDelayCircleBarView extends View {
         canvas.drawCircle(mCirclePoint, mCirclePoint, mOutsideRadius, mPaint);
 
         mPaint.setColor(mOutsideColor);
+        canvas.drawArc(mOval, 270.0f, 360 * (mInitialProgress / mMaxProgress),false, mPaint);
         canvas.drawArc(mOval, mDirection, 360 * (mProgress / mMaxProgress), false, mPaint);
 
     }
@@ -116,7 +111,28 @@ public class SendDelayCircleBarView extends View {
     public void resetAnimation (){
         mSendDelayCircleBarAnimator.end();
         mProgress = 0;
+        mInitialProgress = 0;
+        postInvalidate();
+    }
+
+    public boolean isRunning(){
+        return mSendDelayCircleBarAnimator.isRunning();
+    }
+
+    public float getProgress(){
+        return mProgress;
+    }
+
+    public void setProgress(float progress){
+        Interpolator sendDelayCircleBarInterpolator = PathInterpolatorCompat.create(0.33f,0.00f,0.67f,1.00f);
+        mSendDelayCircleBarAnimator = ValueAnimator.ofFloat(0, progress);
+        mInitialProgress = 100 - progress;
+        mDirection = 270 + mInitialProgress * 3.6f;
+        mSendDelayCircleBarAnimator.addUpdateListener(animation -> {
+            mProgress = (float) mSendDelayCircleBarAnimator.getAnimatedValue();
+            postInvalidate();
+        });
+        mSendDelayCircleBarAnimator.setInterpolator(sendDelayCircleBarInterpolator);
         postInvalidate();
     }
 }
-
