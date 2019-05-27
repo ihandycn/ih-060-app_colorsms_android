@@ -152,6 +152,7 @@ public class ThemeSelectItemView extends ConstraintLayout implements ThemeUtils.
     }
 
     private void setNormalState() {
+        mDownloadingView.setVisibility(VISIBLE);
         mDownloadingView.updatePercent(0);
         mThemeState.setVisibility(VISIBLE);
         mThemeState.setImageResource(R.drawable.theme_need_download);
@@ -166,6 +167,7 @@ public class ThemeSelectItemView extends ConstraintLayout implements ThemeUtils.
     }
 
     private void setDownloadSuccessState() {
+        mDownloadingView.setVisibility(VISIBLE);
         mThemeState.setImageDrawable(null);
         mDownloadingView.updatePercent(0);
         mDownloadSuccessLottie.setVisibility(VISIBLE);
