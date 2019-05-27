@@ -383,7 +383,6 @@ public class ConversationListActivity extends AbstractConversationListActivity
                 switch (drawerClickIndex) {
                     case DRAWER_INDEX_THEME:
                         BugleAnalytics.logEvent("Menu_Theme_Click");
-                        //Navigations.startActivity(ConversationListActivity.this, ChooseThemeActivity.class);
                         Navigations.startActivity(ConversationListActivity.this, ThemeSelectActivity.class);
                         navigationContent.findViewById(R.id.navigation_item_theme_new_text).setVisibility(View.GONE);
                         break;
@@ -911,6 +910,7 @@ public class ConversationListActivity extends AbstractConversationListActivity
             case R.id.navigation_item_privacy_box:
                 drawerClickIndex = DRAWER_INDEX_PRIVACY_BOX;
                 drawerLayout.closeDrawer(navigationView);
+                Preferences.getDefault().putBoolean(PREF_KEY_PRIVATE_BOX_CLICKED, true);
                 break;
         }
     }
