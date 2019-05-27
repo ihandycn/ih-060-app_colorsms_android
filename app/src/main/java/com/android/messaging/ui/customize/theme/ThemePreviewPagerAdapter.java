@@ -29,16 +29,16 @@ public class ThemePreviewPagerAdapter extends PagerAdapter {
 
         for (int i = 0; i < mCount; i++) {
             @SuppressLint("InflateParams")
-            View item = LayoutInflater.from(context).inflate(R.layout.choose_theme_pager_item, null,false);
+            View item = LayoutInflater.from(context).inflate(R.layout.choose_theme_pager_item, null, false);
 
             ImageView imageView = item.findViewById(R.id.theme_preview_image);
             item.findViewById(R.id.current_theme_tag).setVisibility(View.GONE);
-            if (theme.mIsLocalTheme) {
+            if (theme.mIsLocalTheme && i == 0) {
                 imageView.setImageDrawable(ThemeUtils.getLocalThemeDrawableFromPath(
                         theme.mThemeKey + "/" + theme.mPreviewList.get(i)));
             } else {
                 Drawable placeholder = context.getResources().getDrawable(R.drawable.theme_detail_placeholder);
-                placeholder.setBounds(0,0, Dimensions.pxFromDp(30), Dimensions.pxFromDp(30));
+                placeholder.setBounds(0, 0, Dimensions.pxFromDp(30), Dimensions.pxFromDp(30));
                 GlideApp.with(context)
                         .asBitmap()
                         .load(ThemeDownloadManager.getBaseRemoteUrl()

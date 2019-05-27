@@ -3,8 +3,6 @@ package com.android.messaging.ui.customize.theme;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.content.Context;
-import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.Drawable;
 import android.support.annotation.Nullable;
 import android.support.constraint.ConstraintLayout;
 import android.support.v4.view.animation.PathInterpolatorCompat;
@@ -21,8 +19,6 @@ import com.android.messaging.util.BugleAnalytics;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.superapps.util.Threads;
 import com.superapps.util.Toasts;
-
-import java.io.IOException;
 
 public class ThemeSelectItemView extends ConstraintLayout implements ThemeUtils.IThemeChangeListener {
     private ImageView mThemePreviewImg;
@@ -141,24 +137,14 @@ public class ThemeSelectItemView extends ConstraintLayout implements ThemeUtils.
         mThemeNameTv.setText(info.name);
         mThemeDownloadTimes.setText(String.valueOf(info.mThemeDownloadTimes));
 
-        if (info.mIsLocalTheme) {
-            Drawable drawable = null;
-            try {
-                drawable = new BitmapDrawable(getResources(), getResources().getAssets()
-                        .open("themes/" + info.mThemeKey + "/" + info.previewUrl));
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            mThemePreviewImg.setImageDrawable(drawable);
-        } else {
-            GlideApp.with(getContext())
-                    .asBitmap()
-                    .load(ThemeDownloadManager.getBaseRemoteUrl() + info.mThemeKey + "/" + info.previewUrl)
-                    .placeholder(R.drawable.theme_placeholder)
-                    .diskCacheStrategy(DiskCacheStrategy.ALL)
-                    .error(R.drawable.theme_glide_failed)
-                    .into(mThemePreviewImg);
-        }
+        GlideApp.with(getContext())
+                .asBitmap()
+                .load(ThemeDownloadManager.getBaseRemoteUrl() + info.mThemeKey + "/" + info.previewUrl)
+                .placeholder(R.drawable.theme_placeholder)
+                .diskCacheStrategy(DiskCacheStrategy.ALL)
+                .error(R.drawable.theme_glide_failed)
+                .into(mThemePreviewImg);
+
     }
 
     public void addThemeChangeListener(ThemeUtils.IThemeChangeListener listener) {

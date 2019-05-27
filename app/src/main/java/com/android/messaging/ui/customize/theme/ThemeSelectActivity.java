@@ -63,6 +63,7 @@ public class ThemeSelectActivity extends HSAppCompatActivity {
             }
         });
         mRecyclerView.setLayoutManager(layoutManager);
+        boolean isRtl = UiUtils.isRtlMode();
         mRecyclerView.addItemDecoration(new RecyclerView.ItemDecoration() {
             @Override
             public void getItemOffsets(Rect outRect, View view, RecyclerView parent, RecyclerView.State state) {
@@ -70,12 +71,22 @@ public class ThemeSelectActivity extends HSAppCompatActivity {
                 int position = parent.getChildAdapterPosition(view);
                 int viewType = mAdapter.getItemViewType(position);
                 if (viewType == ThemeAdapter.THEME) {
-                    if (position % 2 == 0) {
-                        outRect.left = Dimensions.pxFromDp(16);
-                        outRect.right = Dimensions.pxFromDp(6);
+                    if (isRtl) {
+                        if (position % 2 == 0) {
+                            outRect.left = Dimensions.pxFromDp(16);
+                            outRect.right = Dimensions.pxFromDp(6);
+                        } else {
+                            outRect.left = Dimensions.pxFromDp(6);
+                            outRect.right = Dimensions.pxFromDp(16);
+                        }
                     } else {
-                        outRect.left = Dimensions.pxFromDp(6);
-                        outRect.right = Dimensions.pxFromDp(16);
+                        if (position % 2 == 1) {
+                            outRect.left = Dimensions.pxFromDp(16);
+                            outRect.right = Dimensions.pxFromDp(6);
+                        } else {
+                            outRect.left = Dimensions.pxFromDp(6);
+                            outRect.right = Dimensions.pxFromDp(16);
+                        }
                     }
                     outRect.top = Dimensions.pxFromDp(6.3f);
                     outRect.bottom = Dimensions.pxFromDp(15);
