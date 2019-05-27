@@ -60,7 +60,6 @@ import com.android.messaging.ui.customize.ConversationColors;
 import com.android.messaging.ui.customize.CustomBubblesActivity;
 import com.android.messaging.ui.customize.PrimaryColors;
 import com.android.messaging.ui.customize.ToolbarDrawables;
-import com.android.messaging.ui.customize.theme.ChooseThemeActivity;
 import com.android.messaging.ui.customize.theme.ThemeSelectActivity;
 import com.android.messaging.ui.customize.theme.ThemeUtils;
 import com.android.messaging.ui.dialog.FiveStarRateDialog;

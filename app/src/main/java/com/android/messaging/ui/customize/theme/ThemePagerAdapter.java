@@ -54,9 +54,6 @@ public class ThemePagerAdapter extends PagerAdapter {
             if (i == 0) {
                 imageView.setImageDrawable(ThemeUtils.getLocalThemeDrawableFromPath(
                         mCurrentTheme.mThemeKey + "/" + mCurrentTheme.mPreviewList.get(0)));
-                if (context instanceof ChooseThemeActivity) {
-                    currentThemeTag.setVisibility(View.VISIBLE);
-                }
             } else {
                 imageView.setImageDrawable(ThemeUtils.getLocalThemeDrawableFromPath(
                         mShuffledThemeItemList.get(i - 1).mThemeKey

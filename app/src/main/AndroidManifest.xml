@@ -765,11 +765,6 @@
             android:theme="@style/SettingsActivity" />
 
         <activity
-            android:name=".ui.customize.theme.ChooseThemeActivity"
-            android:screenOrientation="portrait"
-            android:theme="@style/SettingsActivity"/>
-
-        <activity
             android:name=".ui.welcome.WelcomeChooseThemeActivity"
             android:configChanges="orientation|screenSize|keyboardHidden"
             android:screenOrientation="portrait"
