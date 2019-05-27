@@ -1194,5 +1194,10 @@
 
     <string name="get_now">Get Now</string>
     <string name="downloading">Downloading …</string>
-    <string name="theme_coming">More themes coming soon...</string>
+    <string name="theme_coming">More themes coming soon…</string>
+
+    <string name="menu_invite_friends">Invite Friends</string>
+
+
+
 </resources>

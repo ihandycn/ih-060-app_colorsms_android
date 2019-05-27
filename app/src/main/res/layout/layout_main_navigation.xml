@@ -191,6 +191,24 @@
                     app:typeface="@string/custom_font_medium"/>
             </RelativeLayout>
 
+
+            <!-- Item Invite Friends -->
+            <RelativeLayout
+                android:id="@+id/navigation_item_invite_friends"
+                style="@style/DrawerMenuItem">
+
+                <android.support.v7.widget.AppCompatImageView
+                    style="@style/DrawerMenuIcon"
+                    app:srcCompat="@drawable/ic_menu_rate"/>
+
+                <com.android.messaging.ui.view.MessagesTextView
+                    style="@style/DrawerMenuTitle"
+                    android:includeFontPadding="false"
+                    android:text="@string/menu_invite_friends"
+                    app:typeface="@string/custom_font_medium"/>
+            </RelativeLayout>
+
+
             <!-- Item Rate -->
             <RelativeLayout
                 android:id="@+id/navigation_item_rate"

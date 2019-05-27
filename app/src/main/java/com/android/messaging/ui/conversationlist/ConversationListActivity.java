@@ -140,6 +140,7 @@ public class ConversationListActivity extends AbstractConversationListActivity
     private static final int DRAWER_INDEX_RATE = 5;
     private static final int DRAWER_INDEX_CHANGE_FONT = 6;
     private static final int DRAWER_INDEX_PRIVACY_BOX = 7;
+    private static final int DRAWER_INDEX_INVITE_FRIENDS = 8;
 
     private int drawerClickIndex = DRAWER_INDEX_NONE;
 
@@ -422,6 +423,8 @@ public class ConversationListActivity extends AbstractConversationListActivity
                         navigationContent.findViewById(R.id.navigation_item_font_new_text).setVisibility(View.GONE);
                         startActivity(intent);
                         break;
+
+
                     case DRAWER_INDEX_PRIVACY_BOX:
                         BugleAnalytics.logEvent("Menu_PrivateBox_Click", true);
                         if (PrivateBoxSettings.isAnyPasswordSet()) {
@@ -446,6 +449,12 @@ public class ConversationListActivity extends AbstractConversationListActivity
                             RuntimePermissions.requestPermissions(ConversationListActivity.this,
                                     new String[]{Manifest.permission.READ_PHONE_STATE}, REQUEST_PERMISSION_CODE);
                         }
+                        break;
+
+                    case DRAWER_INDEX_INVITE_FRIENDS:
+                        BugleAnalytics.logEvent("Menu_InviteFriends_Click");
+                        Intent inviteFriendsIntent = new Intent(ConversationListActivity.this, ChangeFontActivity.class);
+                        startActivity(inviteFriendsIntent);
                         break;
                     case DRAWER_INDEX_RATE:
                         FiveStarRateDialog.showFiveStarFromSetting(ConversationListActivity.this);
@@ -488,6 +497,8 @@ public class ConversationListActivity extends AbstractConversationListActivity
         navigationContent.findViewById(R.id.navigation_item_change_font).setOnClickListener(this);
         navigationContent.findViewById(R.id.navigation_item_setting).setOnClickListener(this);
         navigationContent.findViewById(R.id.navigation_item_rate).setOnClickListener(this);
+        navigationContent.findViewById(R.id.navigation_item_invite_friends).setOnClickListener(this);
+
         //test code
         //this item is used to delete dirty mms parts in telephony
         navigationContent.findViewById(R.id.navigation_item_clear_private_parts).setVisibility(View.GONE);
@@ -902,6 +913,11 @@ public class ConversationListActivity extends AbstractConversationListActivity
                 break;
             case R.id.navigation_item_setting:
                 drawerClickIndex = DRAWER_INDEX_SETTING;
+                drawerLayout.closeDrawer(navigationView);
+                break;
+
+            case R.id.navigation_item_invite_friends:
+                drawerClickIndex = DRAWER_INDEX_INVITE_FRIENDS;
                 drawerLayout.closeDrawer(navigationView);
                 break;
             case R.id.navigation_item_rate:
