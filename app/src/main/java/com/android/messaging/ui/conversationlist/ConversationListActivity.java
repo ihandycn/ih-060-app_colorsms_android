@@ -433,6 +433,7 @@ public class ConversationListActivity extends AbstractConversationListActivity
                             Navigations.startActivitySafely(ConversationListActivity.this,
                                     new Intent(ConversationListActivity.this, PrivateBoxSetPasswordActivity.class));
                         }
+                        Preferences.getDefault().putBoolean(PREF_KEY_PRIVATE_BOX_CLICKED, true);
                         navigationContent.findViewById(R.id.navigation_item_private_box_new_text).setVisibility(View.GONE);
                         break;
                     case DRAWER_INDEX_SETTING:
