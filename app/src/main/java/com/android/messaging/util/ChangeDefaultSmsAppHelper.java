@@ -64,15 +64,15 @@ public class ChangeDefaultSmsAppHelper {
             UiUtils.showToast(R.string.sms_disabled);
             if (FabricUtils.isFabricInited()) {
                 CrashlyticsCore.getInstance().logException(new CrashlyticsLog("send message error: sms diabled!"));
-                BugleAnalytics.logEvent("SMS_Send_Failed", false, true, "deny", "sms diabled!");
             }
+            BugleAnalytics.logEvent("SMS_Send_Failed", false, true, "deny", "sms diabled!");
             // Has a preferred sim?
         } else if (!hasPreferredSmsSim) {
             UiUtils.showToast(R.string.no_preferred_sim_selected);
             if (FabricUtils.isFabricInited()) {
                 CrashlyticsCore.getInstance().logException(new CrashlyticsLog("send message error: no_preferred_sim_selected!"));
-                BugleAnalytics.logEvent("SMS_Send_Failed", false, true, "deny", "no preferred sim selected!");
             }
+            BugleAnalytics.logEvent("SMS_Send_Failed", false, true, "deny", "no preferred sim selected!");
             // Is the default sms app?
         } else if (!isDefaultSmsApp) {
             mChangeSmsAppSettingRunnable = new ChangeSmsAppSettingRunnable(activity, fragment);
