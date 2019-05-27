@@ -8,10 +8,10 @@ import com.android.messaging.datamodel.DataModel;
 import com.android.messaging.datamodel.DatabaseHelper;
 import com.android.messaging.datamodel.DatabaseWrapper;
 import com.android.messaging.datamodel.data.ConversationListItemData;
+import com.android.messaging.font.FontStyleManager;
 import com.android.messaging.privatebox.PrivateContactsManager;
 import com.android.messaging.privatebox.PrivateMmsEntry;
 import com.android.messaging.privatebox.PrivateSmsEntry;
-import com.android.messaging.font.FontStyleManager;
 import com.android.messaging.ui.conversationlist.ConversationListActivity;
 import com.android.messaging.ui.customize.theme.ThemeUtils;
 import com.android.messaging.ui.welcome.WelcomeChooseThemeActivity;
@@ -129,7 +129,7 @@ public class Upgrader extends BaseUpgrader {
         String themeName = Factory.get().getCustomizePrefs()
                 .getString(BuglePrefsKeys.PREFS_KEY_THEME_NAME, ThemeUtils.DEFAULT_THEME_KEY);
         if (!ThemeUtils.DEFAULT_THEME_KEY.equals(themeName)) {
-            String newKey = "default";
+            String newKey = ThemeUtils.DEFAULT_THEME_KEY;
             switch (themeName) {
                 case "CuteGraffiti":
                     newKey = "cutegraffiti";

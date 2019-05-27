@@ -16,13 +16,16 @@ import com.android.messaging.ui.customize.ConversationColors;
 import com.android.messaging.ui.customize.PrimaryColors;
 import com.android.messaging.ui.customize.ToolbarDrawables;
 import com.android.messaging.ui.customize.WallpaperDrawables;
+import com.android.messaging.util.BugleAnalytics;
 import com.android.messaging.util.BuglePrefsKeys;
 import com.ihs.app.framework.HSApplication;
+import com.ihs.commons.config.HSConfig;
 import com.ihs.commons.notificationcenter.HSGlobalNotificationCenter;
 import com.superapps.util.Threads;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Map;
 
 public class ThemeUtils {
     public static final String DEFAULT_THEME_KEY = "default";
@@ -94,6 +97,11 @@ public class ThemeUtils {
         // Default theme is not null
         if (sCurrentTheme == null) {
             String themeKey = Factory.get().getCustomizePrefs().getString(BuglePrefsKeys.PREFS_KEY_THEME_NAME, DEFAULT_THEME_KEY);
+            Map<String, ?> map = HSConfig.getMap("Application", "Themes", "ThemeList", themeKey);
+            if (map.isEmpty()) {
+                BugleAnalytics.logEvent("Error_Theme_Key", "key", themeKey);
+                themeKey = DEFAULT_THEME_KEY;
+            }
             sCurrentTheme = ThemeInfo.getThemeInfo(themeKey);
         }
         return sCurrentTheme;
