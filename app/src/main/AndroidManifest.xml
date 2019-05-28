@@ -262,9 +262,7 @@
         <activity
             android:name=".ui.SetAsDefaultGuideActivity"
             android:excludeFromRecents="true"
-            android:launchMode="singleTask"
             android:screenOrientation="portrait"
-            android:taskAffinity=".setasdefault.guide"
             android:theme="@style/Theme.AppCompat.Translucent"/>
         <activity
             android:name=".ui.DragHotSeatActivity"
