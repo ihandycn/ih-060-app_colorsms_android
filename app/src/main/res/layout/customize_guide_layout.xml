@@ -35,8 +35,8 @@
                 android:layout_height="32dp"
                 android:layout_gravity="center_horizontal"
                 android:layout_marginTop="12dp"
-                app:lottie_fileName="lottie/customize_guide.json"
-                app:lottie_imageAssetsFolder="lottie/customize_guide" />
+                app:lottie_imageAssetsFolder="lottie/customize_guide/"
+                app:lottie_fileName="lottie/customize_guide.json" />
         </LinearLayout>
     </FrameLayout>
 </FrameLayout>
