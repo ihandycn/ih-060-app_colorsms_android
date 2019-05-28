@@ -21,7 +21,8 @@
     android:layout_height="60dp"
     android:background="?android:attr/selectableItemBackground"
     android:orientation="horizontal"
-    android:paddingTop="10dp">
+    android:paddingTop="5dp"
+    android:paddingBottom="5dp">
 
     <FrameLayout
         android:layout_width="wrap_content"

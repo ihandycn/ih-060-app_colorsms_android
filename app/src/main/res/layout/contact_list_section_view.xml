@@ -4,6 +4,7 @@
     android:layout_height="40dp"
     android:paddingStart="21dp"
     android:paddingTop="18dp"
+    android:clickable="false"
     android:paddingBottom="3dp"
     android:textAllCaps="true"
     android:textSize="18.7sp" />

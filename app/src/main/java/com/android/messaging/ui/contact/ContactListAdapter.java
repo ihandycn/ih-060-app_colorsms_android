@@ -25,6 +25,7 @@ import android.widget.TextView;
 import com.android.messaging.R;
 import com.android.messaging.ui.CustomCursorAdapter;
 import com.android.messaging.ui.customize.PrimaryColors;
+import com.android.messaging.util.BugleAnalytics;
 import com.android.messaging.util.LogUtil;
 
 public class ContactListAdapter extends CustomCursorAdapter {
@@ -103,6 +104,7 @@ public class ContactListAdapter extends CustomCursorAdapter {
                     public void onClick(View v) {
                         isSelectSingleMode = false;
                         notifyDataSetChanged();
+                        BugleAnalytics.logEvent("CreatMessage_StartGroupChat_Click", true);
                         mSelectGroupMessageHost.onSelectGroupMessage();
                     }
                 });

@@ -152,8 +152,9 @@ public class ContactPickerFragment extends Fragment implements ContactPickerData
 
     @Override // from SelectGroupMessageHost
     public void onSelectGroupMessage() {
+        // mContactPickingMode must be MODE_CHIPS_ONLY to pass the mode check in setContactPickingMode()
         mContactPickingMode = MODE_CHIPS_ONLY;
-        setContactPickingMode(MODE_PICK_MORE_CONTACTS, true);
+        setContactPickingMode(MODE_PICK_MORE_CONTACTS, false);
     }
 
     /**
