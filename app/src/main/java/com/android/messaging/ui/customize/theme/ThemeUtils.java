@@ -96,7 +96,50 @@ public class ThemeUtils {
     public static ThemeInfo getCurrentTheme() {
         // Default theme is not null
         if (sCurrentTheme == null) {
+
             String themeKey = Factory.get().getCustomizePrefs().getString(BuglePrefsKeys.PREFS_KEY_THEME_NAME, DEFAULT_THEME_KEY);
+
+            String currentKey = themeKey;
+            switch (themeKey) {
+                case "CuteGraffiti":
+                    themeKey = "cutegraffiti";
+                    break;
+                case "CoolGraffiti":
+                    themeKey = "coolgraffiti";
+                    break;
+                case "Starry":
+                    themeKey = "starry";
+                    break;
+                case "Unicorn":
+                    themeKey = "unicorn";
+                    break;
+                case "Technology":
+                    themeKey = "technology";
+                    break;
+                case "Diamond":
+                    themeKey = "diamond";
+                    break;
+                case "Neno":
+                    themeKey = "neon";
+                    break;
+                case "SimpleBusiness":
+                    themeKey = "simplebusiness";
+                    break;
+                case "WaterDrop":
+                    themeKey = "waterdrop";
+                    break;
+                case "GoldenDiamond":
+                    themeKey = "goldendiamond";
+                    break;
+                case "Default":
+                    themeKey = ThemeUtils.DEFAULT_THEME_KEY;
+                    break;
+            }
+
+            if (!themeKey.equals(currentKey)) {
+                Factory.get().getCustomizePrefs().putString(BuglePrefsKeys.PREFS_KEY_THEME_NAME, themeKey);
+            }
+
             Map<String, ?> map = HSConfig.getMap("Application", "Themes", "ThemeList", themeKey);
             if (map.isEmpty()) {
                 BugleAnalytics.logEvent("Error_Theme_Key", "key", themeKey);
