@@ -5,6 +5,7 @@ import com.ihs.commons.config.HSConfig;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -134,7 +135,13 @@ public class ThemeInfo {
     }
 
     public void removeDownloadListener(ThemeDownloadManager.IThemeDownloadListener listener) {
-        mDownloadListeners.remove(listener);
+        Iterator<ThemeDownloadManager.IThemeDownloadListener> listenerIterator = mDownloadListeners.iterator();
+        while (listenerIterator.hasNext()) {
+            ThemeDownloadManager.IThemeDownloadListener listener1 = listenerIterator.next();
+            if (listener1.equals(listener)) {
+                listenerIterator.remove();
+            }
+        }
     }
 
     public static ThemeInfo getDownloadingTheme(ThemeInfo info) {
