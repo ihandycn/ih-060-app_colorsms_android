@@ -90,6 +90,30 @@ public class ThemePreviewPagerView extends ConstraintLayout {
             }
         };
 
+        mThemeInfo.addDownloadListener(mDownloadListener);
+        if (mThemeInfo.isDownloading() || !mThemeInfo.isDownloaded()) {
+            mChoreographer = Choreographer.getInstance();
+            mFrameCallback = frameTimeNanos -> {
+                if (mIsThemeDownloading) {
+                    if (1 - mCurrentRate < 0.00001) {
+                        mButton.getBackground().setLevel(10000);
+                        mCurrentRate = 1;
+                        mIsThemeDownloading = false;
+                    }
+                    if (mCurrentRate < mTargetDownloadRate) {
+                        mCurrentRate += mSpeed[0];
+                        mButton.getBackground().setLevel((int) (mCurrentRate * 10000));
+                    }
+                    mChoreographer.postFrameCallback(mFrameCallback);
+                }
+            };
+            if (mThemeInfo.isDownloading()) {
+                mIsThemeDownloading = true;
+                mButton.getBackground().setLevel(10);
+                mChoreographer.postFrameCallback(mFrameCallback);
+            }
+        }
+
         //set view pager
         List<View> guideViewList = new ArrayList<>();
         Drawable selectedDrawable = BackgroundDrawables.createBackgroundDrawable(
@@ -184,34 +208,6 @@ public class ThemePreviewPagerView extends ConstraintLayout {
 
     public void setOnApplyClickListener(OnClickListener listener) {
         mApplyClickListener = listener;
-    }
-
-    @Override
-    protected void onAttachedToWindow() {
-        super.onAttachedToWindow();
-        mThemeInfo.addDownloadListener(mDownloadListener);
-        if (mThemeInfo.isDownloading() || !mThemeInfo.isDownloaded()) {
-            mChoreographer = Choreographer.getInstance();
-            mFrameCallback = frameTimeNanos -> {
-                if (mIsThemeDownloading) {
-                    if (1 - mCurrentRate < 0.00001) {
-                        mButton.getBackground().setLevel(10000);
-                        mCurrentRate = 1;
-                        mIsThemeDownloading = false;
-                    }
-                    if (mCurrentRate < mTargetDownloadRate) {
-                        mCurrentRate += mSpeed[0];
-                        mButton.getBackground().setLevel((int) (mCurrentRate * 10000));
-                    }
-                    mChoreographer.postFrameCallback(mFrameCallback);
-                }
-            };
-            if (mThemeInfo.isDownloading()) {
-                mIsThemeDownloading = true;
-                mButton.getBackground().setLevel(10);
-                mChoreographer.postFrameCallback(mFrameCallback);
-            }
-        }
     }
 
     @Override
