@@ -20,7 +20,7 @@
             android:layout_height="46dp"
             android:padding="10dp"
             android:scaleType="fitXY"
-            android:src="@drawable/ic_invalid_name" />
+            app:srcCompat="@drawable/ic_invalid_name" />
 
         <com.android.messaging.ui.view.MessagesTextView
             android:id="@+id/privacy_title"
