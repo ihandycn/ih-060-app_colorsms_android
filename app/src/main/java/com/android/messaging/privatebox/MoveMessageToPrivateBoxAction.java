@@ -26,7 +26,6 @@ import java.util.List;
 
 import static com.android.messaging.datamodel.data.MessageData.PROTOCOL_SMS;
 
-
 public class MoveMessageToPrivateBoxAction extends Action {
     private static final String MESSAGES_MOVE_START_NOTIFICATION = "messages_move_start_notification";
     private static final String MESSAGES_MOVE_END_NOTIFICATION = "messages_move_end_notification";

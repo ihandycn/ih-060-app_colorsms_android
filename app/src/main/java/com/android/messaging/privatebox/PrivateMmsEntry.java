@@ -6,6 +6,8 @@ import android.os.Build;
 import android.provider.BaseColumns;
 import android.provider.Telephony;
 
+import com.superapps.util.rom.RomUtils;
+
 import java.util.Arrays;
 import java.util.List;
 
@@ -133,7 +135,8 @@ public class PrivateMmsEntry {
 
     public static String[] getProjection() {
         int length = sProjection.length;
-        if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.LOLLIPOP_MR1) {
+
+        if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.LOLLIPOP_MR1 || RomUtils.checkIsMiuiRom()) {
             length--;
         }
         if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.LOLLIPOP) {
@@ -230,7 +233,7 @@ public class PrivateMmsEntry {
         public static final String CHARSET = Telephony.Mms.Addr.CHARSET;
 
         public static final String[] sAddressProjections = {
-                 MSG_ID, CONTACT_ID, ADDRESS, TYPE, CHARSET
+                MSG_ID, CONTACT_ID, ADDRESS, TYPE, CHARSET
         };
 
         public static final List<String> sSupportedFields = Arrays.asList(CONTACT_ID, ADDRESS, TYPE, CHARSET);
