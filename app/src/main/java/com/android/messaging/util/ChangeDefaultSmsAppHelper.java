@@ -65,7 +65,6 @@ public class ChangeDefaultSmsAppHelper {
             if (FabricUtils.isFabricInited()) {
                 CrashlyticsCore.getInstance().logException(new CrashlyticsLog("send message error: sms diabled!"));
             }
-            BugleAnalytics.logEvent("SMS_Send_Failed", false, true, "deny", "sms diabled!");
             // Has a preferred sim?
         } else if (!hasPreferredSmsSim) {
             UiUtils.showToast(R.string.no_preferred_sim_selected);

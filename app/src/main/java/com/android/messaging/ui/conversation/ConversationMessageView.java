@@ -43,6 +43,7 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.android.messaging.BugleApplication;
 import com.android.messaging.R;
 import com.android.messaging.datamodel.DataModel;
 import com.android.messaging.datamodel.data.ConversationMessageData;
@@ -408,7 +409,10 @@ public class ConversationMessageView extends RelativeLayout implements View.OnCl
                         statusResId = MmsUtils.mapRawStatusToErrorResourceId(
                                 mData.getStatus(), mData.getRawTelephonyStatus());
                     }
-                    BugleAnalytics.logEvent("SMS_Send_Failed", false, true, "status", getResources().getString(statusResId));
+                    if (BugleApplication.getFirstLaunchInfo().appVersionCode >= 47) {
+                        BugleAnalytics.logEvent("SMS_Send_Failed", false, true,
+                                "show_in_conversation", mData.getIsSms() ? "SMS" : "MMS");
+                    }
                     break;
                 }
                 // FALL THROUGH HERE
