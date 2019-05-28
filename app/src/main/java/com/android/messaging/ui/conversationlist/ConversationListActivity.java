@@ -64,6 +64,7 @@ import com.android.messaging.ui.customize.theme.ThemeSelectActivity;
 import com.android.messaging.ui.customize.theme.ThemeUtils;
 import com.android.messaging.ui.dialog.FiveStarRateDialog;
 import com.android.messaging.ui.emoji.EmojiStoreActivity;
+import com.android.messaging.ui.invitefriends.InviteFriendsConditions;
 import com.android.messaging.ui.messagebox.MessageBoxActivity;
 import com.android.messaging.ui.signature.SignatureSettingDialog;
 import com.android.messaging.ui.wallpaper.WallpaperChooserItem;
@@ -101,6 +102,8 @@ import java.util.Random;
 
 import static com.android.messaging.ui.dialog.FiveStarRateDialog.DESKTOP_PREFS;
 import static com.android.messaging.ui.dialog.FiveStarRateDialog.PREF_KEY_MAIN_ACTIVITY_SHOW_TIME;
+import static com.android.messaging.ui.invitefriends.InviteFriendsConditions.CHANGE_THEME;
+import static com.android.messaging.ui.invitefriends.InviteFriendsConditions.SHOW_INVITE_FRIENDS_DIALOG_AFTER_CHANGE_THEME_10_SECS;
 
 public class ConversationListActivity extends AbstractConversationListActivity
         implements View.OnClickListener, INotificationObserver {
@@ -159,6 +162,7 @@ public class ConversationListActivity extends AbstractConversationListActivity
     private boolean shouldShowCreateShortcutGuide;
     private String size;
     private View mPrivateBoxEntrance;
+    private boolean mIsActivityVisible;
 
     private boolean mIsMessageMoving;
 
@@ -212,6 +216,8 @@ public class ConversationListActivity extends AbstractConversationListActivity
         HSGlobalNotificationCenter.addObserver(SHOW_EMOJI, this);
         HSGlobalNotificationCenter.addObserver(FIRST_LOAD, this);
         HSGlobalNotificationCenter.addObserver(NOTIFICATION_NAME_MESSAGES_MOVE_END, this);
+        HSGlobalNotificationCenter.addObserver(SHOW_INVITE_FRIENDS_DIALOG_AFTER_CHANGE_THEME_10_SECS, this);
+
         BugleAnalytics.logEvent("SMS_ActiveUsers", true);
 
         if (!sIsRecreate) {
@@ -297,6 +303,7 @@ public class ConversationListActivity extends AbstractConversationListActivity
             }
         }
 
+        InviteFriendsConditions.setMainPageCreateTime(System.currentTimeMillis());
         Trace.endSection();
     }
 
@@ -323,6 +330,9 @@ public class ConversationListActivity extends AbstractConversationListActivity
         if (Preferences.getDefault().getInt(CustomizeGuideController.PREF_KEY_MAIN_PAGE_SHOW_TIME, 0) == 2) {
             Threads.postOnMainThreadDelayed(() -> showEmojiStoreGuide(), 500);
         }
+
+        mIsActivityVisible = true;
+        InviteFriendsConditions.showInviteFriendsDialogIfProper(this, InviteFriendsConditions.BACK_TO_MAIN_PAGE);
     }
 
     @Override
@@ -552,6 +562,12 @@ public class ConversationListActivity extends AbstractConversationListActivity
         getSupportActionBar().setHomeAsUpIndicator(drawable);
     }
 
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        mIsActivityVisible = false;
+    }
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
@@ -964,6 +980,11 @@ public class ConversationListActivity extends AbstractConversationListActivity
                 if (mIsMessageMoving) {
                     mIsMessageMoving = false;
                     Toasts.showToast(R.string.private_box_add_to_success);
+                }
+                break;
+            case SHOW_INVITE_FRIENDS_DIALOG_AFTER_CHANGE_THEME_10_SECS:
+                if (mIsActivityVisible) {
+                    InviteFriendsConditions.showInviteFriendsDialogIfProper(this, CHANGE_THEME);
                 }
                 break;
             default:

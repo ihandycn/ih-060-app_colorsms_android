@@ -70,6 +70,7 @@ import com.android.messaging.ui.conversation.ConversationInputManager.Conversati
 import com.android.messaging.ui.customize.PrimaryColors;
 import com.android.messaging.ui.dialog.FiveStarRateDialog;
 import com.android.messaging.ui.emoji.utils.EmojiManager;
+import com.android.messaging.ui.invitefriends.InviteFriendsConditions;
 import com.android.messaging.ui.signature.SignatureSettingDialog;
 import com.android.messaging.util.AccessibilityUtil;
 import com.android.messaging.util.Assert;
@@ -746,6 +747,12 @@ public class ComposeMessageView extends LinearLayout
                                     if (message != null && message.hasContent()) {
                                         boolean finalSendEmoji = sendEmoji;
                                         Threads.postOnMainThreadDelayed(() -> {
+                                            // show Invite Friends dialog
+                                            if (InviteFriendsConditions.showInviteFriendsDialogIfProper(
+                                                    BugleActivityUtil.contextToActivitySafely(getContext()), InviteFriendsConditions.SEND_SMS)) {
+                                                return;
+                                            }
+
                                             if (finalSendEmoji) {
                                                 FiveStarRateDialog.showFiveStarWhenSendEmojiIfNeed(BugleActivityUtil.contextToActivitySafely(getContext()));
                                             } else {

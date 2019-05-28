@@ -842,6 +842,7 @@
             android:excludeFromRecents="true"
             android:screenOrientation="portrait"
             android:theme="@style/SettingsActivity" />
+        <activity android:name=".ui.invitefriends.InviteFriendsActivity" />
     </application>
 
 </manifest>

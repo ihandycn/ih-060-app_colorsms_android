@@ -6,6 +6,7 @@ import android.content.Context;
 import android.support.annotation.Nullable;
 import android.support.constraint.ConstraintLayout;
 import android.support.v4.view.animation.PathInterpolatorCompat;
+import android.text.format.DateUtils;
 import android.util.AttributeSet;
 import android.view.View;
 import android.view.animation.Interpolator;
@@ -17,8 +18,11 @@ import com.android.messaging.R;
 import com.android.messaging.glide.GlideApp;
 import com.android.messaging.util.BugleAnalytics;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.ihs.commons.notificationcenter.HSGlobalNotificationCenter;
 import com.superapps.util.Threads;
 import com.superapps.util.Toasts;
+
+import static com.android.messaging.ui.invitefriends.InviteFriendsConditions.SHOW_INVITE_FRIENDS_DIALOG_AFTER_CHANGE_THEME_10_SECS;
 
 public class ThemeSelectItemView extends ConstraintLayout implements ThemeUtils.IThemeChangeListener {
     private ImageView mThemePreviewImg;
@@ -32,6 +36,10 @@ public class ThemeSelectItemView extends ConstraintLayout implements ThemeUtils.
     private View mButtonGroupContainer;
     private ThemeUtils.IThemeChangeListener mThemeChangeListener;
     private boolean mIsSelectAnimationPlaying;
+
+
+    private Runnable mShowInviteFriendsDialogRunnable =
+            () -> HSGlobalNotificationCenter.sendNotification(SHOW_INVITE_FRIENDS_DIALOG_AFTER_CHANGE_THEME_10_SECS);
 
     public ThemeSelectItemView(Context context) {
         super(context);
@@ -218,6 +226,9 @@ public class ThemeSelectItemView extends ConstraintLayout implements ThemeUtils.
         }).start();
         BugleAnalytics.logEvent("Customize_ThemeCenter_Theme_Apply", true,
                 "theme", mThemeInfo.mThemeKey, "from", "list");
+
+        Threads.removeOnMainThread(mShowInviteFriendsDialogRunnable);
+        Threads.postOnMainThreadDelayed(mShowInviteFriendsDialogRunnable, 10 * DateUtils.SECOND_IN_MILLIS);
     }
 
     @Override
