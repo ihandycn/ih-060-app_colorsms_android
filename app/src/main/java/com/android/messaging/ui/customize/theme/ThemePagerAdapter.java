@@ -15,8 +15,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import static com.android.messaging.ui.customize.theme.ThemeUtils.getDrawableFromUrl;
-
 public class ThemePagerAdapter extends PagerAdapter {
 
     private final int mCount;
@@ -26,7 +24,7 @@ public class ThemePagerAdapter extends PagerAdapter {
     private ThemeInfo mCurrentTheme;
 
     public ThemePagerAdapter(Context context) {
-        List<ThemeInfo> themeInfos = ThemeInfo.getAllThemes();
+        List<ThemeInfo> themeInfos = ThemeInfo.getLocalThemes();
         mCount = themeInfos.size();
 
         mItemList = new ArrayList<>(mCount);
@@ -37,7 +35,7 @@ public class ThemePagerAdapter extends PagerAdapter {
         String currentThemeName = ThemeUtils.getCurrentThemeName();
 
         for (ThemeInfo themeInfo : themeInfos) {
-            if (currentThemeName.equals(themeInfo.name)) {
+            if (currentThemeName.equals(themeInfo.mThemeKey)) {
                 mCurrentTheme = themeInfo;
             } else {
                 mShuffledThemeItemList.add(themeInfo);
@@ -54,12 +52,12 @@ public class ThemePagerAdapter extends PagerAdapter {
             ImageView imageView = item.findViewById(R.id.theme_preview_image);
             TextView currentThemeTag = item.findViewById(R.id.current_theme_tag);
             if (i == 0) {
-                imageView.setImageDrawable(getDrawableFromUrl(mCurrentTheme.previewUrl));
-                if (context instanceof ChooseThemeActivity) {
-                    currentThemeTag.setVisibility(View.VISIBLE);
-                }
+                imageView.setImageDrawable(ThemeUtils.getLocalThemeDrawableFromPath(
+                        mCurrentTheme.mThemeKey + "/" + mCurrentTheme.mPreviewList.get(0)));
             } else {
-                imageView.setImageDrawable(getDrawableFromUrl(mShuffledThemeItemList.get(i - 1).previewUrl));
+                imageView.setImageDrawable(ThemeUtils.getLocalThemeDrawableFromPath(
+                        mShuffledThemeItemList.get(i - 1).mThemeKey
+                                + "/" + mShuffledThemeItemList.get(i - 1).mPreviewList.get(0)));
             }
             mItemList.add(item);
         }

@@ -1,5 +1,6 @@
 package com.android.messaging.ui.appsettings;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.text.BidiFormatter;
@@ -18,10 +19,12 @@ import com.android.messaging.util.BugleAnalytics;
 import com.android.messaging.util.BuglePrefs;
 import com.android.messaging.util.PhoneUtils;
 import com.android.messaging.util.UiUtils;
-import com.ihs.app.framework.activity.HSAppCompatActivity;
 
 public class SettingAdvancedActivity extends BaseActivity {
 
+    private int mSubId;
+
+    private SettingItemView mGroupMMS;
     private SettingItemView mAutoRetrieve;
     private SettingItemView mRoamingAutoRetrieve;
     private SettingItemView mSMSDeliveryReports;
@@ -48,7 +51,7 @@ public class SettingAdvancedActivity extends BaseActivity {
         SettingItemView mPhoneNumberView = findViewById(R.id.setting_advanced_phone_number);
         Intent intent = getIntent();
         Assert.notNull(intent);
-        int mSubId = (intent != null) ? intent.getIntExtra(UIIntents.UI_INTENT_EXTRA_SUB_ID,
+        mSubId = (intent != null) ? intent.getIntExtra(UIIntents.UI_INTENT_EXTRA_SUB_ID,
                 ParticipantData.DEFAULT_SELF_SUB_ID) : ParticipantData.DEFAULT_SELF_SUB_ID;
 
         String value = PhoneUtils.get(mSubId).getCanonicalForSelf(false/*allowOverride*/);
@@ -59,6 +62,16 @@ public class SettingAdvancedActivity extends BaseActivity {
         final String phoneNumber = bidiFormatter.unicodeWrap
                 (displayValue, TextDirectionHeuristicsCompat.LTR);
         mPhoneNumberView.setSummary(phoneNumber);
+
+        //group mms
+        mGroupMMS = findViewById(R.id.setting_advanced_group_mms);
+        mGroupMMS.setOnItemClickListener(() ->
+                GroupMmsSettingDialog.showDialog(SettingAdvancedActivity.this, mSubId, new DialogInterface.OnDismissListener() {
+                    @Override public void onDismiss(DialogInterface dialog) {
+                        updateGroupMmsPrefSummary();
+                    }
+                }));
+        updateGroupMmsPrefSummary();
 
         //Auto Retrieve
         mAutoRetrieve = findViewById(R.id.setting_advanced_auto_retrieve);
@@ -93,6 +106,15 @@ public class SettingAdvancedActivity extends BaseActivity {
             mAutoRetrieve.setChecked(false);
             mSMSDeliveryReports.setChecked(false);
         }
+    }
+
+    private void updateGroupMmsPrefSummary() {
+        final BuglePrefs prefs = BuglePrefs.getSubscriptionPrefs(mSubId);
+        final String groupMmsKey = getResources().getString(R.string.group_mms_pref_key);
+        final boolean groupMmsEnabledDefault = getResources().getBoolean(R.bool.group_mms_pref_default);
+        final boolean groupMmsEnabled = prefs.getBoolean(groupMmsKey, groupMmsEnabledDefault);
+        mGroupMMS.setSummary(getString(groupMmsEnabled ?
+                R.string.enable_group_mms : R.string.disable_group_mms));
     }
 
     @Override

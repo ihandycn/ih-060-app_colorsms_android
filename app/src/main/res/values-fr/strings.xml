@@ -631,4 +631,27 @@
 	<string name="privacy_mode_show_messages">AFFICHER LES MESSAGES</string>
 	<string name="notification_sender_in_privacy_mode">Contact</string>
 
+
+	<string name="private_box_setting">Paramètres de la Boîte privée</string>
+	<string name="private_box_setting_security_summary">Modifier le mot de passe</string>
+	<string name="private_box_setting_entrance">Entrée</string>
+	<string name="private_box_setting_entrance_summary">Masquer l\'icône</string>
+	<string name="private_box_hide_icon">Masquer la Boîte privée</string>
+	<string name="private_box_hide_icon_summary">Appuyez longuement sur l\'icône Créer de la page d\'accueil pour entrer dans la Boîte privée.</string>
+	<string name="tips">Astuces</string>
+	<string name="private_box_add_to_success">Déplacés dans la Boîte privée</string>
+	<string name="private_box_move_from_success">Déplacés dans la Boîte publique</string>
+	<string name="private_box_setting_security">sécurité</string>
+	<string name="private_box_add_now">Ajouter maintenant</string>
+	<string name="add_to_private_list_dialog_title">Ajouter un contact privé</string>
+	<string name="add_to_private_list_dialog_from_conversation">De la liste des conversations</string>
+	<string name="add_to_private_list_dialog_from_contacts_list">De la liste des contacts</string>
+	<string name="conversation_list">Liste des conversations</string>
+	<string name="menu_privacy_box">Boîte privée</string>
+	<string name="private_start_box_tip">Les messages seront déplacés dans la Boîte privée. Veuillez d\'abord définir un mot de passe pour la Boîte privée.</string>
+	<string name="private_box_setting_notification">Activer les notifications</string>
+	<string name="private_box_setting_notification_summary">Lorsque vous désactivez cette option, les messages des contacts privés ne seront pas affichés dans les notifications.</string>
+	<string name="private_move_tip">Les messages seront déplacés dans la Boîte privée et aucune autre application de SMS n\'y aura accès.</string>
+	<string name="private_box_uninstall_notice">À moins de déplacer les messages dans la Boîte publique, vous perdrez vos données après nous avoir désinstallé.</string>
+
 </resources>

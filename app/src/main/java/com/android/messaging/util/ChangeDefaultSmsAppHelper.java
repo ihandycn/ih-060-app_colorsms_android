@@ -25,6 +25,8 @@ import android.view.View;
 import com.android.messaging.R;
 import com.android.messaging.ui.SnackBar;
 import com.android.messaging.ui.UIIntents;
+import com.crashlytics.android.core.CrashlyticsCore;
+import com.superapps.debug.CrashlyticsLog;
 
 public class ChangeDefaultSmsAppHelper {
     private Runnable mRunAfterMadeDefault;
@@ -36,21 +38,22 @@ public class ChangeDefaultSmsAppHelper {
      * When there's some condition that prevents an operation, such as sending a message,
      * call warnOfMissingActionConditions to put up a toast and allow the user to repair
      * that condition.
-     * @param sending - true if we're called during a sending operation
+     *
+     * @param sending             - true if we're called during a sending operation
      * @param runAfterMadeDefault - a runnable to run after the user responds
-     *                  positively to the condition prompt and resolves the condition. It is
-     *                  preferable to specify the value in {@link #handleChangeDefaultSmsResult}
-     *                  as that handles the case where the process gets restarted.
-     *                  If null, the user will be shown a generic toast message.
-     * @param composeView - compose view that may have the keyboard opened and focused
-     * @param rootView - if non-null, use this to attach a snackBar
-     * @param activity - calling activity
-     * @param fragment - calling fragment, may be null if called directly from an activity
+     *                            positively to the condition prompt and resolves the condition. It is
+     *                            preferable to specify the value in {@link #handleChangeDefaultSmsResult}
+     *                            as that handles the case where the process gets restarted.
+     *                            If null, the user will be shown a generic toast message.
+     * @param composeView         - compose view that may have the keyboard opened and focused
+     * @param rootView            - if non-null, use this to attach a snackBar
+     * @param activity            - calling activity
+     * @param fragment            - calling fragment, may be null if called directly from an activity
      */
     public void warnOfMissingActionConditions(final boolean sending,
-            final Runnable runAfterMadeDefault,
-            final View composeView, final View rootView,
-            final Activity activity, final Fragment fragment) {
+                                              final Runnable runAfterMadeDefault,
+                                              final View composeView, final View rootView,
+                                              final Activity activity, final Fragment fragment) {
         final PhoneUtils phoneUtils = PhoneUtils.getDefault();
         final boolean isSmsCapable = phoneUtils.isSmsCapable();
         final boolean hasPreferredSmsSim = phoneUtils.getHasPreferredSmsSim();
@@ -59,12 +62,17 @@ public class ChangeDefaultSmsAppHelper {
         // Supports SMS?
         if (!isSmsCapable) {
             UiUtils.showToast(R.string.sms_disabled);
-
-        // Has a preferred sim?
+            if (FabricUtils.isFabricInited()) {
+                CrashlyticsCore.getInstance().logException(new CrashlyticsLog("send message error: sms diabled!"));
+            }
+            // Has a preferred sim?
         } else if (!hasPreferredSmsSim) {
             UiUtils.showToast(R.string.no_preferred_sim_selected);
-
-        // Is the default sms app?
+            if (FabricUtils.isFabricInited()) {
+                CrashlyticsCore.getInstance().logException(new CrashlyticsLog("send message error: no_preferred_sim_selected!"));
+            }
+            BugleAnalytics.logEvent("SMS_Send_Failed", false, true, "deny", "no preferred sim selected!");
+            // Is the default sms app?
         } else if (!isDefaultSmsApp) {
             mChangeSmsAppSettingRunnable = new ChangeSmsAppSettingRunnable(activity, fragment);
             promptToChangeDefaultSmsApp(sending, runAfterMadeDefault,
@@ -78,9 +86,9 @@ public class ChangeDefaultSmsAppHelper {
     }
 
     private void promptToChangeDefaultSmsApp(final boolean sending,
-            final Runnable runAfterMadeDefault,
-            final View composeView, final View rootView,
-            final Activity activity) {
+                                             final Runnable runAfterMadeDefault,
+                                             final View composeView, final View rootView,
+                                             final Activity activity) {
         if (composeView != null) {
             // Avoid bug in system which puts soft keyboard over dialog after orientation change
             ImeUtil.hideSoftInput(activity, composeView);
@@ -94,11 +102,11 @@ public class ChangeDefaultSmsAppHelper {
             UiUtils.showSnackBarWithCustomAction(activity,
                     rootView,
                     activity.getString(sending ? R.string.requires_default_sms_app_to_send :
-                        R.string.requires_default_sms_app),
-                        SnackBar.Action.createCustomAction(mChangeSmsAppSettingRunnable,
-                                activity.getString(R.string.requires_default_sms_change_button)),
-                                null /* interactions */,
-                                SnackBar.Placement.above(composeView));
+                            R.string.requires_default_sms_app),
+                    SnackBar.Action.createCustomAction(mChangeSmsAppSettingRunnable,
+                            activity.getString(R.string.requires_default_sms_change_button)),
+                    null /* interactions */,
+                    SnackBar.Placement.above(composeView));
         }
     }
 
@@ -143,7 +151,7 @@ public class ChangeDefaultSmsAppHelper {
                 // promptToChangeDefaultSmsApp, and the process subsequently restarted when the
                 // user momentarily switched to another app. In that case, we'll simply show a
                 // generic toast since we do not know what the runnable was supposed to do.
-                if  (runAfterMadeDefault != null) {
+                if (runAfterMadeDefault != null) {
                     runAfterMadeDefault.run();
                 } else {
                     UiUtils.showToast(R.string.toast_after_setting_default_sms_app);

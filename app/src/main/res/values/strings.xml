@@ -1133,10 +1133,56 @@
     <string name="message_welcome_set_as_default_title">To make Color SMS work properly with cool features, it needs to be the default SMS app.</string>
 
     <string name="action_pin">Pin to Top</string>
+    <string name="reset_password">Reset Password</string>
+    <string name="set_gesture_sub_prompt">Connect at least 4 dots</string>
+    <string name="gesture_not_confirmed_sub_prompt">Wrong Pattern</string>
+    <string name="draw_unlock_pattern">Draw your unlock pattern</string>
+    <string name="lock_style_pattern">Pattern</string>
+    <string name="lock_style_pin">Passcode</string>
+    <string name="lock_activity_change_to_pin">Change to Passcode</string>
+    <string name="lock_activity_change_to_pattern">Change to Pattern</string>
+    <string name="password_not_confirmed_sub_prompt">Passcode Not Confirmed</string>
+    <string name="confirm_prompt_gesture">Confirm pattern</string>
+    <string name="please_set_password">Please set an unlock pattern</string>
+    <string name="set_password_prompt">Please set an unlock passcode</string>
+    <string name="set_password_sub_prompt">Enter 4 numbers</string>
+    <string name="confirm_prompt_password">Confirm passcode</string>
+    <string name="app_lock_verify_identity">Verify Identity</string>
+
+    <string name="private_box_add_private_contacts">Please add private contacts!</string>
+    <string name="private_box_add_now">Add Now</string>
+    <string name="private_box_setting_security">Security</string>
+    <string name="private_box_setting_security_summary">Modify Password</string>
+    <string name="private_box_setting_entrance">Entrance</string>
+    <string name="private_box_setting_entrance_summary">Hide the icon</string>
+    <string name="private_box_setting_notification">Enable Notifications</string>
+    <string name="private_box_setting_notification_summary">When disable this option, messages from private contacts will not pop up any notification.</string>
+    <string name="private_box_hide_icon">Hide Private Box</string>
+    <string name="private_box_hide_icon_summary">Long press the create icon on home page to enter private box.</string>
+    <string name="add_to_private_list_dialog_title">Add private contact</string>
+    <string name="add_to_private_list_dialog_from_conversation">From conversation list</string>
+    <string name="add_to_private_list_dialog_from_contacts_list">From contacts list</string>
+    <string name="private_box_move_to_box">Move to private box</string>
+    <string name="private_box_remove_from_box">Remove from private box</string>
+    <string name="private_box_uninstall_notice">Unless you move the messages to public box, you may lose your data after you uninstall us.</string>
+
+    <string name="conversation_list">Conversation List</string>
+    <string name="contacts">Contacts</string>
+    <string name="private_box_setting">Private Box Settings</string>
+    <string name="private_move_tip">Messages will be moved to Private Box and will not be accessed by other SMS apps.</string>
+    <string name="private_start_box_tip">Messages will be moved to Private Box. Please set a password for Private Box first.</string>
+    <string name="private_box_add_to_success">Moved to private box</string>
+    <string name="private_box_move_from_success">Moved to public box</string>
+    <string name="notification_title_in_private_box_single">New message</string>
+    <string name="notification_title_in_private_box_other">%1$d unread messages</string>
+    <string name="notification_sender_in_private_box">Private Contact</string>
+
+    <string name="tips">Tips</string>
 
     <string name="welcome_choose_theme_title">Choose a Theme You Like</string>
     <string name="welcome_choose_theme_current">Current</string>
-    <string name="apply_theme_success">Apply Success</string>
+    <string name="apply_theme_success">Applied Successfully</string>
+
     <string name="set_as_default_success">Changed Successfully</string>
 
     <string name="firebase_login_succeed">Login succeed</string>
@@ -1148,4 +1194,7 @@
     <string name="firebase_sync_desktop_settings_description_logged_out">After logging in, you can sync your sms settings across multiple devices</string>
     <string name="firebase_sync_desktop_settings_description_logged_in">Sync succeed</string>
 
+    <string name="get_now">Get Now</string>
+    <string name="downloading">Downloading …</string>
+    <string name="theme_coming">More themes coming soon...</string>
 </resources>

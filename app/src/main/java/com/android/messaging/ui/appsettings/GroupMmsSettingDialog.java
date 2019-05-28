@@ -17,6 +17,7 @@ package com.android.messaging.ui.appsettings;
 
 import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -37,8 +38,8 @@ public class GroupMmsSettingDialog {
     /**
      * Shows a new group MMS setting dialog.
      */
-    public static void showDialog(final Context context, final int subId) {
-        new GroupMmsSettingDialog(context, subId).show();
+    public static void showDialog(final Context context, final int subId, DialogInterface.OnDismissListener listener) {
+        new GroupMmsSettingDialog(context, subId).show(listener);
     }
 
     private GroupMmsSettingDialog(final Context context, final int subId) {
@@ -46,12 +47,13 @@ public class GroupMmsSettingDialog {
         mSubId = subId;
     }
 
-    private void show() {
+    private void show(DialogInterface.OnDismissListener listener) {
         Assert.isNull(mDialog);
         mDialog = new AlertDialog.Builder(mContext)
                 .setView(createView())
                 .setTitle(R.string.group_mms_pref_title)
                 .setNegativeButton(android.R.string.cancel, null)
+                .setOnDismissListener(listener)
                 .show();
     }
 

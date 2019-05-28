@@ -69,7 +69,7 @@ public class MessagePartData implements Parcelable {
     private static final int INDEX_ID = 0;
     private static final int INDEX_MESSAGE_ID = 1;
     private static final int INDEX_TEXT = 2;
-    private static final int INDEX_CONTENT_URI = 3;
+    public static final int INDEX_CONTENT_URI = 3;
     private static final int INDEX_CONTENT_TYPE = 4;
     private static final int INDEX_WIDTH = 5;
     private static final int INDEX_HEIGHT = 6;

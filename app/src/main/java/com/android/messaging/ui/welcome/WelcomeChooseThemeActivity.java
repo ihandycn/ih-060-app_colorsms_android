@@ -31,7 +31,7 @@ public class WelcomeChooseThemeActivity extends AppCompatActivity {
             finish();
         });
 
-        BugleAnalytics.logEvent("Start_ChooseTheme_Show", true);
+        BugleAnalytics.logEvent("Start_ChooseTheme_Show", true, true);
         Preferences.getDefault().putBoolean(PREF_KEY_WELCOME_CHOOSE_THEME_SHOWN, true);
     }
 
@@ -41,7 +41,7 @@ public class WelcomeChooseThemeActivity extends AppCompatActivity {
         BugleActivityUtil.cancelAdaptScreen(this);
 
         // apply default theme
-        ThemeUtils.applyTheme(ThemeInfo.getThemeInfo(ThemeUtils.getCurrentThemeName()));
+        ThemeUtils.applyTheme(ThemeInfo.getThemeInfo(ThemeUtils.getCurrentThemeName()), 0);
         UIIntents.get().launchConversationListActivity(WelcomeChooseThemeActivity.this);
         super.onBackPressed();
     }

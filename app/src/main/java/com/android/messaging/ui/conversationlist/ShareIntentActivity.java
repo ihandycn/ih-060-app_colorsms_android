@@ -32,9 +32,9 @@ import com.android.messaging.ui.BaseBugleActivity;
 import com.android.messaging.ui.UIIntents;
 import com.android.messaging.util.Assert;
 import com.android.messaging.util.ContentType;
+import com.android.messaging.util.FileUtil;
 import com.android.messaging.util.LogUtil;
 import com.android.messaging.util.MediaMetadataRetrieverWrapper;
-import com.android.messaging.util.FileUtil;
 import com.android.messaging.util.UriUtil;
 
 import java.io.IOException;
@@ -52,7 +52,7 @@ public class ShareIntentActivity extends BaseBugleActivity implements
         final Intent intent = getIntent();
         if (Intent.ACTION_SEND.equals(intent.getAction()) &&
                 (!TextUtils.isEmpty(intent.getStringExtra("address")) ||
-                !TextUtils.isEmpty(intent.getStringExtra(Intent.EXTRA_EMAIL)))) {
+                        !TextUtils.isEmpty(intent.getStringExtra(Intent.EXTRA_EMAIL)))) {
             // This is really more like a SENDTO intent because a destination is supplied.
             // It's coming through the SEND intent because that's the intent that is used
             // when invoking the chooser with Intent.createChooser().
@@ -78,8 +78,8 @@ public class ShareIntentActivity extends BaseBugleActivity implements
             final Uri contentUri = (Uri) intent.getParcelableExtra(Intent.EXTRA_STREAM);
             if (UriUtil.isFileUri(contentUri)) {
                 LogUtil.i(
-                    LogUtil.BUGLE_TAG,
-                    "Ignoring attachment from file URI which are no longer supported.");
+                        LogUtil.BUGLE_TAG,
+                        "Ignoring attachment from file URI which are no longer supported.");
                 return;
             }
             final String contentType = extractContentType(contentUri, intent.getType());
@@ -121,8 +121,8 @@ public class ShareIntentActivity extends BaseBugleActivity implements
                     for (final Uri imageUri : imageUris) {
                         if (UriUtil.isFileUri(imageUri)) {
                             LogUtil.i(
-                                LogUtil.BUGLE_TAG,
-                                "Ignoring attachment from file URI which are no longer supported.");
+                                    LogUtil.BUGLE_TAG,
+                                    "Ignoring attachment from file URI which are no longer supported.");
                             continue;
                         }
                         final String actualContentType = extractContentType(imageUri, contentType);
@@ -163,7 +163,7 @@ public class ShareIntentActivity extends BaseBugleActivity implements
             if (extractedType != null) {
                 return extractedType;
             }
-        } catch (final IOException e) {
+        } catch (IOException | IllegalStateException e) {
             LogUtil.i(LogUtil.BUGLE_TAG, "Could not determine type of " + uri, e);
         } finally {
             retriever.release();

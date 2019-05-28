@@ -39,7 +39,6 @@ import com.android.messaging.ui.customize.ToolbarDrawables;
 import com.android.messaging.ui.customize.WallpaperDrawables;
 import com.android.messaging.ui.customize.theme.ThemeUtils;
 import com.android.messaging.ui.emoji.EmojiInfo;
-import com.android.messaging.ui.wallpaper.WallpaperManager;
 import com.android.messaging.util.BugleAnalytics;
 import com.android.messaging.util.Dates;
 import com.android.messaging.util.ImeUtil;
@@ -74,7 +73,6 @@ public class MessageBoxConversationView extends FrameLayout {
     private String mSelfId;
     private String mParticipantId;
 
-    private boolean mMarkAsRead;
     private int mInputEmojiCount;
 
     public MessageBoxConversationView(Context context, AttributeSet attrs) {
@@ -121,7 +119,7 @@ public class MessageBoxConversationView extends FrameLayout {
         }
 
         ImageView background = findViewById(R.id.message_background);
-        Drawable wallpaperDrawable = WallpaperDrawables.getListWallpaperBg();
+        Drawable wallpaperDrawable = WallpaperDrawables.getConversationListWallpaperDrawable();
         if (wallpaperDrawable != null) {
             background.setImageDrawable(wallpaperDrawable);
         } else {

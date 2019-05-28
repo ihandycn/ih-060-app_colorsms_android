@@ -63,7 +63,7 @@ public class MessageBoxActivity extends AppCompatActivity implements INotificati
     public static final String NOTIFICATION_MESSAGE_BOX_SEND_SMS_SUCCEED = "message_box_send_sms_success";
     public static final String NOTIFICATION_MESSAGE_BOX_SEND_SMS_FAILED = "message_box_send_sms_failed";
 
-    private static final boolean DEBUGGING_MULTI_CONVERSATIONS = true && BuildConfig.DEBUG;
+    private static final boolean DEBUGGING_MULTI_CONVERSATIONS = false && BuildConfig.DEBUG;
 
     private ViewPager mPager;
     private DynamicalPagerAdapter mPagerAdapter;
@@ -151,7 +151,15 @@ public class MessageBoxActivity extends AppCompatActivity implements INotificati
     @Override
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
+        if (isFinishing()) {
+            return;
+        }
+
         final MessageBoxItemData data = intent.getParcelableExtra(UI_INTENT_EXTRA_MESSAGE_BOX_ITEM);
+        if (data == null) {
+            BugleAnalytics.logEvent("MessageBox_GetItemIsNull_FromOnNewIntent");
+            return;
+        }
 
         boolean isNewConversation = true;
 

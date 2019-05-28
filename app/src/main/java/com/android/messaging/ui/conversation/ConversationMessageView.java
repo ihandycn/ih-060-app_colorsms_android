@@ -43,6 +43,7 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.android.messaging.BugleApplication;
 import com.android.messaging.R;
 import com.android.messaging.datamodel.DataModel;
 import com.android.messaging.datamodel.data.ConversationMessageData;
@@ -70,6 +71,7 @@ import com.android.messaging.ui.wallpaper.WallpaperManager;
 import com.android.messaging.util.AccessibilityUtil;
 import com.android.messaging.util.Assert;
 import com.android.messaging.util.AvatarUriUtil;
+import com.android.messaging.util.BugleAnalytics;
 import com.android.messaging.util.ContentType;
 import com.android.messaging.util.ImageUtils;
 import com.android.messaging.util.OsUtil;
@@ -406,6 +408,10 @@ public class ConversationMessageView extends RelativeLayout implements View.OnCl
                     } else {
                         statusResId = MmsUtils.mapRawStatusToErrorResourceId(
                                 mData.getStatus(), mData.getRawTelephonyStatus());
+                    }
+                    if (BugleApplication.getFirstLaunchInfo().appVersionCode >= 47) {
+                        BugleAnalytics.logEvent("SMS_Send_Failed", false, true,
+                                "show_in_conversation", mData.getIsSms() ? "SMS" : "MMS");
                     }
                     break;
                 }

@@ -304,9 +304,6 @@ public final class SmsReceiver extends BroadcastReceiver {
         final Notification notification = bigTextStyle.build();
 
         int defaults = Notification.DEFAULT_LIGHTS;
-        if (BugleNotifications.shouldVibrate(new SecondaryUserNotificationState())) {
-            defaults |= Notification.DEFAULT_VIBRATE;
-        }
         notification.defaults = defaults;
         Notifications.notifySafely(getNotificationTag(),
                 PendingIntentConstants.SMS_SECONDARY_USER_NOTIFICATION_ID,

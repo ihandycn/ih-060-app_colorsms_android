@@ -27,8 +27,10 @@ import com.android.messaging.datamodel.data.ConversationListData;
 import com.android.messaging.datamodel.data.ConversationListItemData;
 import com.android.messaging.util.Assert;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.List;
 
 public class MultiSelectActionModeCallback implements Callback {
     private HashSet<String> mBlockedSet;
@@ -51,6 +53,8 @@ public class MultiSelectActionModeCallback implements Callback {
         void onActionMenu();
 
         void onPin(Collection<SelectedConversation> conversations, boolean pin);
+
+        void onAddToPrivateBox(List<String> conversations);
     }
 
     static class SelectedConversation {
@@ -103,6 +107,7 @@ public class MultiSelectActionModeCallback implements Callback {
         mNotificationOnMenuItem = menu.findItem(R.id.action_notification_on);
         mPinMenuItem = menu.findItem(R.id.action_pin);
         mCancelPinMenuItem = menu.findItem(R.id.action_cancel_pin);
+        menu.findItem(R.id.action_move_from_private_box).setVisible(false);
         mHasInflated = true;
         updateActionIconsVisiblity();
         return true;
@@ -143,6 +148,13 @@ public class MultiSelectActionModeCallback implements Callback {
                 return true;
             case R.id.action_menu:
                 mListener.onActionMenu();
+                return true;
+            case R.id.action_add_to_private_box:
+                List<String> conversationIdList = new ArrayList<>();
+                for (SelectedConversation conversation : mSelectedConversations.values()) {
+                    conversationIdList.add(conversation.conversationId);
+                }
+                mListener.onAddToPrivateBox(conversationIdList);
                 return true;
             default:
                 return false;

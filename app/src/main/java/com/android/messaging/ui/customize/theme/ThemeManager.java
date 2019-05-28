@@ -2,17 +2,17 @@ package com.android.messaging.ui.customize.theme;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.drawable.BitmapDrawable;
+import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
-import android.text.TextUtils;
+import android.graphics.drawable.NinePatchDrawable;
 
-import com.android.messaging.font.FontDownloadManager;
 import com.android.messaging.util.CommonUtils;
 import com.ihs.app.framework.HSApplication;
 
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 
 public class ThemeManager {
     public static final String THEME_BASE_PATH = "theme" + File.separator;
@@ -20,120 +20,90 @@ public class ThemeManager {
     public static final String WALLPAPER_BG_FILE_NAME = "wallpaper";
     public static final String LIST_VIEW_WALLPAPER_BG_FILE_NAME = "list_wallpaper";
     public static final String TOOLBAR_BG_FILE_NAME = "toolbar";
-    public static final String INCOMING_BUBBLE_FILE_NAME = "incoming_bubble";
-    public static final String OUTGOING_BUBBLE_FILE_NAME = "outgoing_bubble";
-    public static final String CREATE_ICON_FILE_NAME = "icon";
+    static final String INCOMING_BUBBLE_FILE_NAME = "incoming_bubble";
+    static final String OUTGOING_BUBBLE_FILE_NAME = "outgoing_bubble";
+    static final String CREATE_ICON_FILE_NAME = "icon";
     public static final String AVATAR_FILE_NAME = "avatar";
 
-    private Bitmap mWallpaperBitmap;
-    private Bitmap mToolbarBitmap;
     private Bitmap mIncomingBitmap;
     private Bitmap mOutgoingBitmap;
-    private Bitmap mCreateBitmap;
 
-    //
-    public boolean isThemeDownload(ThemeInfo info) {
-        File wallpaper = new File(CommonUtils.getDirectory(THEME_BASE_PATH + info.name),
-                WALLPAPER_BG_FILE_NAME);
-        if (!wallpaper.exists()) {
-            return false;
-        }
+    private static ThemeManager sInstance = new ThemeManager();
 
-        File toolbar = new File(CommonUtils.getDirectory(THEME_BASE_PATH + info.name),
-                TOOLBAR_BG_FILE_NAME);
-        if (!toolbar.exists()) {
-            return false;
-        }
-
-        if (!TextUtils.isEmpty(info.newConversationIconUrl)
-                && !new File(CommonUtils.getDirectory(THEME_BASE_PATH + info.name),
-                CREATE_ICON_FILE_NAME).exists()) {
-            return false;
-        }
-        if (!new File(CommonUtils.getDirectory(THEME_BASE_PATH + info.name),
-                INCOMING_BUBBLE_FILE_NAME).exists()) {
-            return false;
-        }
-
-        if (!new File(CommonUtils.getDirectory(THEME_BASE_PATH + info.name),
-                OUTGOING_BUBBLE_FILE_NAME).exists()) {
-            return false;
-        }
-
-        if (!FontDownloadManager.isFontDownloaded(null)) {
-            return false;
-        }
-        return true;
+    public static ThemeManager getInstance() {
+        return sInstance;
     }
 
-    public Drawable getThemeWallpaperDrawable(String name) {
-        if (mWallpaperBitmap != null) {
-            return new BitmapDrawable(HSApplication.getContext().getResources(), mWallpaperBitmap);
-        }
+    private ThemeManager() {
 
-        Bitmap bitmap = loadBitmap(new File(CommonUtils.getDirectory(THEME_BASE_PATH + name), WALLPAPER_BG_FILE_NAME));
-        if (bitmap != null) {
-            mWallpaperBitmap = bitmap;
-            return new BitmapDrawable(HSApplication.getContext().getResources(), bitmap);
-        }
-        return null;
     }
 
-    public Drawable getThemeToolbarDrawable(String name) {
-        if (mToolbarBitmap != null) {
-            return new BitmapDrawable(HSApplication.getContext().getResources(), mToolbarBitmap);
-        }
-
-        Bitmap bitmap = null;
-        try {
-            bitmap = loadBitmap(new File(CommonUtils.getDirectory(THEME_BASE_PATH + name), TOOLBAR_BG_FILE_NAME));
-        } catch (Exception e) {
-
-        }
-        if (bitmap != null) {
-            mToolbarBitmap = bitmap;
-            return new BitmapDrawable(HSApplication.getContext().getResources(), bitmap);
-        }
-        return null;
+    void clearCacheDrawable() {
+        mIncomingBitmap = null;
+        mOutgoingBitmap = null;
     }
 
-    public void saveWallpaperDrawable(Bitmap bitmap, String themeName) {
-        File file = new File(CommonUtils.getDirectory(THEME_BASE_PATH + themeName), WALLPAPER_BG_FILE_NAME);
-        saveBitmap(bitmap, file);
-    }
-
-    public Drawable getIncomingBubbleDrawable(String name) {
+    public Drawable getIncomingBubbleDrawable() {
+        ThemeInfo theme = ThemeUtils.getCurrentTheme();
         if (mIncomingBitmap != null) {
-            return new BitmapDrawable(HSApplication.getContext().getResources(), mIncomingBitmap);
+            byte[] chunk = mIncomingBitmap.getNinePatchChunk();
+            Rect rect = NinePatchChunk.deserialize(chunk).mPaddings;
+            return new NinePatchDrawable(HSApplication.getContext().getResources(),
+                    mIncomingBitmap, chunk, rect, null);
         }
 
         Bitmap bitmap = null;
         try {
-            bitmap = loadBitmap(new File(CommonUtils.getDirectory(THEME_BASE_PATH + name), INCOMING_BUBBLE_FILE_NAME));
-        } catch (Exception x) {
+            if (!theme.isInLocalFolder()) {
+                if (theme.mIsLocalTheme) {
+                    InputStream ims = HSApplication.getContext().getAssets().open(
+                            "themes/" + theme.mThemeKey + "/" + theme.bubbleIncomingUrl);
+                    bitmap = BitmapFactory.decodeStream(ims);
+                }
+            } else {
+                bitmap = loadBitmap(new File(CommonUtils.getDirectory(THEME_BASE_PATH
+                        + theme.mThemeKey), INCOMING_BUBBLE_FILE_NAME));
+            }
+        } catch (Exception ignored) {
 
         }
         if (bitmap != null) {
             mIncomingBitmap = bitmap;
-            return getIncomingBubbleDrawable(name);
+            return getIncomingBubbleDrawable();
         }
         return null;
     }
 
-    public Drawable getOutgoingBubbleDrawable(String name) {
+    public Drawable getOutgoingBubbleDrawable() {
+
         if (mOutgoingBitmap != null) {
-            return new BitmapDrawable(HSApplication.getContext().getResources(), mOutgoingBitmap);
+            byte[] chunk = mOutgoingBitmap.getNinePatchChunk();
+            Rect rect = NinePatchChunk.deserialize(chunk).mPaddings;
+
+            return new NinePatchDrawable(HSApplication.getContext().getResources(),
+                    mOutgoingBitmap, chunk, rect, null);
         }
+
+        ThemeInfo theme = ThemeUtils.getCurrentTheme();
 
         Bitmap bitmap = null;
         try {
-            bitmap = loadBitmap(new File(CommonUtils.getDirectory(THEME_BASE_PATH + name), OUTGOING_BUBBLE_FILE_NAME));
-        } catch (Exception x) {
+            if (!theme.isInLocalFolder()) {
+                if (theme.mIsLocalTheme) {
+                    InputStream ims = HSApplication.getContext().getAssets().open(
+                            "themes/" + theme.mThemeKey + "/" + theme.bubbleOutgoingUrl);
+                    bitmap = BitmapFactory.decodeStream(ims);
+                }
+            } else {
+                bitmap = loadBitmap(new File(CommonUtils.getDirectory(THEME_BASE_PATH
+                        + theme.mThemeKey), OUTGOING_BUBBLE_FILE_NAME));
+            }
+        } catch (Exception ignored) {
 
         }
         if (bitmap != null) {
             mOutgoingBitmap = bitmap;
-            return getOutgoingBubbleDrawable(name);
+            return getOutgoingBubbleDrawable();
         }
         return null;
     }
@@ -153,7 +123,7 @@ public class ThemeManager {
         Bitmap bitmap = null;
         try {
             bitmap = BitmapFactory.decodeFile(file.getAbsolutePath());
-        } catch (Exception e) {
+        } catch (Exception ignored) {
 
         }
         return bitmap;

@@ -72,6 +72,7 @@ public class ConversationListItemData {
     private boolean mIsEnterprise;
     private int mUnreadCount;
     private int mPinTime;
+    private boolean mIsPrivate;
 
     public ConversationListItemData() {
     }
@@ -126,6 +127,8 @@ public class ConversationListItemData {
         mIsEnterprise = cursor.getInt(INDEX_IS_ENTERPRISE) == 1;
         mUnreadCount = cursor.getInt(INDEX_UNREAD_MESSAGE_COUNT);
         mPinTime = cursor.getInt(INDEX_PIN_TIMESTAMP);
+        // private = 1, normal = 0
+        mIsPrivate = cursor.getInt(INDEX_IS_PRIVATE) == 1;
     }
 
     public String getConversationId() {
@@ -293,6 +296,10 @@ public class ConversationListItemData {
         return mPinTime != 0;
     }
 
+    public boolean isPrivate() {
+        return mIsPrivate;
+    }
+
     /**
      * Get the name of the view for this data item
      */
@@ -369,7 +376,9 @@ public class ConversationListItemData {
                     + "IFNULL(" + UNREAD_MESSAGES_NUMBER_TABLE + "." + ConversationListViewColumns.UNREAD_MESSAGE_COUNT
                     + ",0) as " + ConversationListViewColumns.UNREAD_MESSAGE_COUNT + ", "
                     + DatabaseHelper.CONVERSATIONS_TABLE + '.' + ConversationColumns.PIN_TIMESTAMP
-                    + " as " + ConversationListViewColumns.PIN_TIMESTAMP;
+                    + " as " + ConversationListViewColumns.PIN_TIMESTAMP + ","
+                    + DatabaseHelper.CONVERSATIONS_TABLE + "." + ConversationColumns.IS_PRIVATE
+                    + " as " + ConversationListViewColumns.IS_PRIVATE;
 
     private static final String JOIN_PARTICIPANTS =
             " LEFT JOIN " + DatabaseHelper.PARTICIPANTS_TABLE + " ON ("
@@ -442,6 +451,7 @@ public class ConversationListItemData {
         static final String IS_ENTERPRISE = ConversationColumns.IS_ENTERPRISE;
         static final String UNREAD_MESSAGE_COUNT = "unread_message_count";
         static final String PIN_TIMESTAMP = ConversationColumns.PIN_TIMESTAMP;
+        static final String IS_PRIVATE = ConversationColumns.IS_PRIVATE;
     }
 
     public static final String[] PROJECTION = {
@@ -476,7 +486,8 @@ public class ConversationListItemData {
             ConversationListViewColumns.SNIPPET_SENDER_DISPLAY_DESTINATION,
             ConversationListViewColumns.IS_ENTERPRISE,
             ConversationListViewColumns.UNREAD_MESSAGE_COUNT,
-            ConversationListViewColumns.PIN_TIMESTAMP
+            ConversationListViewColumns.PIN_TIMESTAMP,
+            ConversationListViewColumns.IS_PRIVATE
     };
 
     private static final int INDEX_ID = 0;
@@ -511,6 +522,7 @@ public class ConversationListItemData {
     private static final int INDEX_IS_ENTERPRISE = 29;
     private static final int INDEX_UNREAD_MESSAGE_COUNT = 30;
     private static final int INDEX_PIN_TIMESTAMP = 31;
+    private static final int INDEX_IS_PRIVATE = 32;
 
     private static final String DIVIDER_TEXT = ", ";
 

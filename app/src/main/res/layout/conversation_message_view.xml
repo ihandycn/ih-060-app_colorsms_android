@@ -192,9 +192,5 @@
                 android:src="@drawable/ic_sms_delivery_ok"
                 android:visibility="gone"/>
         </com.android.messaging.ui.LineWrapLayout>
-
     </com.android.messaging.ui.conversation.ConversationMessageBubbleView>
-
 </com.android.messaging.ui.conversation.ConversationMessageView>
-
-

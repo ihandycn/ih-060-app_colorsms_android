@@ -633,4 +633,27 @@
 	<string name="privacy_mode_show_messages">NACHRICHTEN ZEIGEN</string>
 	<string name="notification_sender_in_privacy_mode">Kontakt</string>
 
+
+	<string name="private_box_setting">Einstellungen für privaten Briefkasten</string>
+	<string name="private_box_setting_security_summary">Passwort verändern</string>
+	<string name="private_box_setting_entrance">Zugang</string>
+	<string name="private_box_setting_entrance_summary">Das Symbol ausblenden</string>
+	<string name="private_box_hide_icon">Privaten Briefkasten ausblenden</string>
+	<string name="private_box_hide_icon_summary">Lange auf „Symbol erstellen” auf der Startseite drücken, um den privaten Briefkasten zu betreten.</string>
+	<string name="tips">Hinweise</string>
+	<string name="private_box_add_to_success">In privaten Briefkasten verschoben</string>
+	<string name="private_box_move_from_success">In öffentlichen Briefkasten verschoben</string>
+	<string name="private_box_setting_security">Sicherheit</string>
+	<string name="private_box_add_now">Jetzt hinzufügen</string>
+	<string name="add_to_private_list_dialog_title">Privaten Kontakt hinzufügen</string>
+	<string name="add_to_private_list_dialog_from_conversation">Aus der Gesprächsliste</string>
+	<string name="add_to_private_list_dialog_from_contacts_list">Aus der Kontakteliste</string>
+	<string name="conversation_list">Gesprächsliste</string>
+	<string name="menu_privacy_box">Privater Briefkasten</string>
+	<string name="private_start_box_tip">Nachrichten werden in den privaten Briefkasten verschoben. Biite legen Sie zuerst ein Passwort für den privaten Briefkasten fest.</string>
+	<string name="private_box_setting_notification">Benachrichtigungen aktivieren</string>
+	<string name="private_box_setting_notification_summary">Wenn diese Option deaktiviert wird, wird bei Nachrichten von privaten Kontakten keine Mitteilung erscheinen.</string>
+	<string name="private_move_tip">Nachrichten werden in den privaten Briefkasten verschoben, und es werden keine anderen SMS-Apps Zugang haben</string>
+	<string name="private_box_uninstall_notice">Wenn Sie die Nachrichten nicht in den öffentlichen Briefkasten verschieben, können Sie Ihre Daten nach dem Deinstallieren verlieren.</string>
+
 </resources>

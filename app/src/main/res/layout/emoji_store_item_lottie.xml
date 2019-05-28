@@ -14,8 +14,8 @@
         android:layout_height="105dp"
         android:scaleType="centerCrop"
         app:lottie_autoPlay="true"
-        app:lottie_fileName="lottie/emoj_store_guide.json"
         app:lottie_imageAssetsFolder="lottie/emoj_store_guide/"
+        app:lottie_fileName="lottie/emoj_store_guide.json"
         app:lottie_loop="true" />
 
     <com.android.messaging.ui.emoji.EmojiStorePreviewLayout

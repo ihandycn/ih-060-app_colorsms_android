@@ -265,6 +265,15 @@ public class ConversationActivity extends BugleActionBarActivity
     }
 
     @Override
+    protected void onStart() {
+        super.onStart();
+        final ConversationFragment conversationFragment = getConversationFragment();
+        if (conversationFragment != null) {
+            conversationFragment.onActivityStart();
+        }
+    }
+
+    @Override
     protected void onResume() {
         super.onResume();
 

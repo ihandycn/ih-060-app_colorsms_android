@@ -60,11 +60,7 @@ public class ChooseThemePagerView extends ConstraintLayout {
                     mOnPageSelectedListener.onPageSelected(position, themeColor);
                 }
 
-                if (getContext() instanceof WelcomeChooseThemeActivity) {
-                    BugleAnalytics.logEvent("Start_ChooseTheme_Slide", true);
-                } else if (getContext() instanceof  ChooseThemeActivity) {
-                    BugleAnalytics.logEvent("Customize_Theme_Slide", true);
-                }
+                BugleAnalytics.logEvent("Start_ChooseTheme_Slide", true);
             }
 
             @Override
@@ -81,20 +77,10 @@ public class ChooseThemePagerView extends ConstraintLayout {
                 mApplyClickListener.onClick(applyTextView);
             }
 
-            String preTheme = ThemeUtils.getCurrentThemeName();
-            ThemeUtils.applyTheme(mAdapter.getThemeInfo(mPager.getCurrentItem()));
+            ThemeUtils.applyTheme(mAdapter.getThemeInfo(mPager.getCurrentItem()), 0);
             FontUtils.onFontTypefaceChanged();
 
-            if (getContext() instanceof WelcomeChooseThemeActivity) {
-                BugleAnalytics.logEvent("Start_ChooseTheme_Apply", true, "theme", ThemeUtils.getCurrentThemeName());
-            } else if (getContext() instanceof ChooseThemeActivity) {
-                BugleAnalytics.logEvent("Customize_Theme_Apply_Click", true, "theme", ThemeUtils.getCurrentThemeName());
-            }
-            if (!ThemeUtils.getCurrentThemeName().equals(preTheme)) {
-                if (getContext() instanceof ChooseThemeActivity) {
-                    BugleAnalytics.logEvent("Customize_Theme_Change", true, "theme", ThemeUtils.getCurrentThemeName());
-                }
-            }
+            BugleAnalytics.logEvent("Start_ChooseTheme_Apply", true, "theme", ThemeUtils.getCurrentThemeName());
         });
     }
 

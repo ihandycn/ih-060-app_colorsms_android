@@ -34,6 +34,8 @@ import com.android.messaging.datamodel.data.ConversationListItemData;
 import com.android.messaging.datamodel.data.MessageData;
 import com.android.messaging.datamodel.data.MessagePartData;
 import com.android.messaging.datamodel.data.ParticipantData;
+import com.android.messaging.privatebox.PrivateMessageManager;
+import com.android.messaging.privatebox.PrivateSmsEntry;
 import com.android.messaging.sms.MmsUtils;
 import com.android.messaging.util.Assert;
 import com.android.messaging.util.LogUtil;
@@ -75,7 +77,7 @@ public class InsertNewMessageAction extends Action implements Parcelable {
      * Insert message (no listener)
      */
     public static void insertNewMessage(final int subId, final String recipients,
-            final String messageText, final String subject) {
+                                        final String messageText, final String subject) {
         final InsertNewMessageAction action = new InsertNewMessageAction(
                 subId, recipients, messageText, subject);
         action.start();
@@ -103,7 +105,7 @@ public class InsertNewMessageAction extends Action implements Parcelable {
     }
 
     private InsertNewMessageAction(final int subId, final String recipients,
-            final String messageText, final String subject) {
+                                   final String messageText, final String subject) {
         super();
         if (TextUtils.isEmpty(recipients) || TextUtils.isEmpty(messageText)) {
             Assert.fail("InsertNewMessageAction: Can't have empty recipients or message");
@@ -238,7 +240,9 @@ public class InsertNewMessageAction extends Action implements Parcelable {
         return self;
     }
 
-    /** Create MessageData using KEY_RECIPIENTS, KEY_MESSAGE_TEXT and KEY_SUBJECT */
+    /**
+     * Create MessageData using KEY_RECIPIENTS, KEY_MESSAGE_TEXT and KEY_SUBJECT
+     */
     private MessageData createMessage() {
         // First find the thread id for this list of participants.
         final String recipientsList = actionParameters.getString(KEY_RECIPIENTS);
@@ -289,8 +293,8 @@ public class InsertNewMessageAction extends Action implements Parcelable {
     }
 
     private void insertBroadcastSmsMessage(final String conversationId,
-            final MessageData message, final int subId, final long laterTimestamp,
-            final ArrayList<String> recipients) {
+                                           final MessageData message, final int subId, final long laterTimestamp,
+                                           final ArrayList<String> recipients) {
         if (LogUtil.isLoggable(TAG, LogUtil.VERBOSE)) {
             LogUtil.v(TAG, "InsertNewMessageAction: Inserting broadcast SMS message "
                     + message.getMessageId());
@@ -307,8 +311,9 @@ public class InsertNewMessageAction extends Action implements Parcelable {
 
         final String messageText = message.getMessageText();
         // Insert message into telephony database sms message table
+        boolean isPrivateMessage = PrivateMessageManager.getInstance().isPrivateConversationId(conversationId);
         final Uri messageUri = MmsUtils.insertSmsMessage(context,
-                Telephony.Sms.CONTENT_URI,
+                isPrivateMessage ? PrivateSmsEntry.CONTENT_URI : Telephony.Sms.CONTENT_URI,
                 subId,
                 address,
                 messageText,
@@ -341,7 +346,7 @@ public class InsertNewMessageAction extends Action implements Parcelable {
             // Ignore error as we only really care about the individual messages?
             LogUtil.e(TAG,
                     "InsertNewMessageAction: No uri for broadcast SMS " + message.getMessageId()
-                    + " inserted into telephony DB");
+                            + " inserted into telephony DB");
         }
     }
 
@@ -349,7 +354,7 @@ public class InsertNewMessageAction extends Action implements Parcelable {
      * Insert SMS messaging into our database and telephony db.
      */
     private MessageData insertSendingSmsMessage(final MessageData content, final int subId,
-            final String recipient, final long timestamp, final String sendingConversationId) {
+                                                final String recipient, final long timestamp, final String sendingConversationId) {
         sLastSentMessageTimestamp = timestamp;
 
         final Context context = Factory.get().getApplicationContext();
@@ -378,8 +383,10 @@ public class InsertNewMessageAction extends Action implements Parcelable {
         final String messageText = content.getMessageText();
 
         // Insert message into telephony database sms message table
+        boolean isPrivateMessage = PrivateMessageManager.getInstance().isPrivateConversationId(conversationId);
+
         final Uri messageUri = MmsUtils.insertSmsMessage(context,
-                Telephony.Sms.CONTENT_URI,
+                isPrivateMessage ? PrivateSmsEntry.CONTENT_URI : Telephony.Sms.CONTENT_URI,
                 subId,
                 recipient,
                 messageText,
@@ -426,7 +433,7 @@ public class InsertNewMessageAction extends Action implements Parcelable {
      * Insert MMS messaging into our database.
      */
     private MessageData insertSendingMmsMessage(final String conversationId,
-            final MessageData message, final long timestamp) {
+                                                final MessageData message, final long timestamp) {
         final DatabaseWrapper db = DataModel.get().getDatabase();
         db.beginTransaction();
         final List<MessagePartData> attachmentsUpdated = new ArrayList<>();

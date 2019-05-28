@@ -6,100 +6,136 @@ import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.text.TextUtils;
 
-import com.android.messaging.Factory;
+import com.android.messaging.ui.customize.theme.ThemeInfo;
+import com.android.messaging.ui.customize.theme.ThemeManager;
+import com.android.messaging.ui.customize.theme.ThemeUtils;
 import com.android.messaging.ui.wallpaper.WallpaperManager;
+import com.android.messaging.util.CommonUtils;
 import com.ihs.app.framework.HSApplication;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 
 public class WallpaperDrawables {
-
-    public static final String PREF_KEY_CUSTOMIZE_WALLPAPER_BACKGROUND = "pref_key_customize_wallpaper_background";
-    private static final String PREF_KEY_CUSTOMIZE_LIST_WALLPAPER_BACKGROUND = "pref_key_customize_list_wallpaper_background";
-    public static Drawable sListWallpaperBg;
+    public static Bitmap sWallpaperBitmap;
+    public static Bitmap sListWallpaperBitmap;
 
     public static void applyWallpaperBg(String url) {
-        Factory.get().getCustomizePrefs().putString(PREF_KEY_CUSTOMIZE_WALLPAPER_BACKGROUND, url);
         if (!TextUtils.isEmpty(url)) {
             WallpaperManager.resetGlobalWallpaper();
         }
     }
 
-    public static void applyListWallpaperBg(String url) {
-        Factory.get().getCustomizePrefs().putString(PREF_KEY_CUSTOMIZE_LIST_WALLPAPER_BACKGROUND, url);
-    }
-
-    public static Drawable getWallpaperBg() {
-        String url = Factory.get().getCustomizePrefs().getString(PREF_KEY_CUSTOMIZE_WALLPAPER_BACKGROUND, "");
-        if (TextUtils.isEmpty(url)) {
-            return null;
+    public static Drawable getConversationWallpaperBg() {
+        if (sWallpaperBitmap != null) {
+            return new BitmapDrawable(HSApplication.getContext().getResources(), sWallpaperBitmap);
         }
 
-        if (sListWallpaperBg != null) {
-            return sListWallpaperBg;
-        }
+        ThemeInfo info = ThemeUtils.getCurrentTheme();
 
-        if (url.startsWith("assets://")) {
-            try {
-                InputStream ims = HSApplication.getContext().getAssets().open(url.replace("assets://", ""));
-                Bitmap bitmap = BitmapFactory.decodeStream(ims);
-                sListWallpaperBg = new BitmapDrawable(HSApplication.getContext().getResources(), bitmap);
-                return sListWallpaperBg;
-            } catch (IOException e) {
-                e.printStackTrace();
+        if (!info.isInLocalFolder()) {
+            if (info.mIsLocalTheme) {
+                try {
+                    InputStream ims = HSApplication.getContext().getAssets().open("themes/" + info.mThemeKey + "/"
+                            + info.wallpaperUrl);
+                    Bitmap bitmap = BitmapFactory.decodeStream(ims);
+                    sWallpaperBitmap = bitmap;
+                    return new BitmapDrawable(HSApplication.getContext().getResources(), bitmap);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        } else {
+            File file = new File(CommonUtils.getDirectory(
+                    ThemeManager.THEME_BASE_PATH + info.mThemeKey),
+                    ThemeManager.WALLPAPER_BG_FILE_NAME);
+            if (file.exists()) {
+                try {
+                    Bitmap bitmap = BitmapFactory.decodeFile(file.getAbsolutePath());
+                    sWallpaperBitmap = bitmap;
+                    return new BitmapDrawable(HSApplication.getContext().getResources(), bitmap);
+                } catch (Exception ignored) {
+
+                }
             }
         }
 
         return null;
     }
 
-    public static Bitmap getWallpaperBgBitmap() {
-        String url = Factory.get().getCustomizePrefs().getString(PREF_KEY_CUSTOMIZE_WALLPAPER_BACKGROUND, "");
-        if (TextUtils.isEmpty(url)) {
-            return null;
+    public static Bitmap getConversationListWallpaperBitmap() {
+        if (sWallpaperBitmap != null) {
+            return sWallpaperBitmap;
         }
 
-        if (url.startsWith("assets://")) {
-            try {
-                InputStream ims = HSApplication.getContext().getAssets().open(url.replace("assets://", ""));
-                Bitmap bitmap = BitmapFactory.decodeStream(ims);
-                sListWallpaperBg = new BitmapDrawable(HSApplication.getContext().getResources(), bitmap);
-                return bitmap;
-            } catch (IOException e) {
-                e.printStackTrace();
+        ThemeInfo info = ThemeUtils.getCurrentTheme();
+
+        if (!info.isInLocalFolder()) {
+            if (info.mIsLocalTheme) {
+                try {
+                    InputStream ims = HSApplication.getContext().getAssets().open("themes/" + info.mThemeKey + "/"
+                            + info.wallpaperUrl);
+                    sWallpaperBitmap = BitmapFactory.decodeStream(ims);
+                    return sWallpaperBitmap;
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        } else {
+            File file = new File(CommonUtils.getDirectory(
+                    ThemeManager.THEME_BASE_PATH + info.mThemeKey),
+                    ThemeManager.WALLPAPER_BG_FILE_NAME);
+            if (file.exists()) {
+                try {
+                    sWallpaperBitmap = BitmapFactory.decodeFile(file.getAbsolutePath());
+                    return sWallpaperBitmap;
+                } catch (Exception ignored) {
+
+                }
             }
         }
 
         return null;
     }
 
-
-    public static Drawable getListWallpaperBg() {
-        String url = Factory.get().getCustomizePrefs().getString(PREF_KEY_CUSTOMIZE_LIST_WALLPAPER_BACKGROUND, "");
-        if (TextUtils.isEmpty(url)) {
-            return null;
+    public static Drawable getConversationListWallpaperDrawable() {
+        if (sListWallpaperBitmap != null) {
+            return new BitmapDrawable(HSApplication.getContext().getResources(), sListWallpaperBitmap);
         }
 
-        if (sListWallpaperBg != null) {
-            return sListWallpaperBg;
-        }
+        ThemeInfo info = ThemeUtils.getCurrentTheme();
 
-        if (url.startsWith("assets://")) {
-            try {
-                InputStream ims = HSApplication.getContext().getAssets().open(url.replace("assets://", ""));
-                Bitmap bitmap = BitmapFactory.decodeStream(ims);
-                sListWallpaperBg = new BitmapDrawable(HSApplication.getContext().getResources(), bitmap);
-                return sListWallpaperBg;
-            } catch (IOException e) {
-                e.printStackTrace();
+        if (!info.isInLocalFolder()) {
+            if (info.mIsLocalTheme) {
+                try {
+                    InputStream ims = HSApplication.getContext().getAssets().open("themes/" + info.mThemeKey
+                            + "/" + info.listWallpaperUrl);
+                    Bitmap bitmap = BitmapFactory.decodeStream(ims);
+                    sListWallpaperBitmap = bitmap;
+                    return new BitmapDrawable(HSApplication.getContext().getResources(), bitmap);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        } else {
+            File file = new File(CommonUtils.getDirectory(
+                    ThemeManager.THEME_BASE_PATH + info.mThemeKey),
+                    ThemeManager.LIST_VIEW_WALLPAPER_BG_FILE_NAME);
+            if (file.exists()) {
+                try {
+                    Bitmap bitmap = BitmapFactory.decodeFile(file.getAbsolutePath());
+                    sListWallpaperBitmap = bitmap;
+                    return new BitmapDrawable(HSApplication.getContext().getResources(), bitmap);
+                } catch (Exception ignored) {
+
+                }
             }
         }
-
         return null;
     }
 
     public static boolean hasWallpaper() {
-        return !TextUtils.isEmpty(Factory.get().getCustomizePrefs().getString(PREF_KEY_CUSTOMIZE_WALLPAPER_BACKGROUND, ""));
+        return !TextUtils.isEmpty(ThemeUtils.getCurrentTheme().listWallpaperUrl);
     }
 }

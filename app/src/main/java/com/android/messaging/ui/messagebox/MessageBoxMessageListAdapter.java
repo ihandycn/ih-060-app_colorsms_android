@@ -52,7 +52,7 @@ public class MessageBoxMessageListAdapter extends RecyclerView.Adapter<RecyclerV
         mConversationId =  data.getConversationId();
         mIncomingTextColor = ConversationColors.get().getMessageTextColor(true, mConversationId);
 
-        mHasWallpaper = WallpaperDrawables.getListWallpaperBg() != null;
+        mHasWallpaper = WallpaperDrawables.getConversationListWallpaperDrawable() != null;
         if (mHasWallpaper) {
             mIncomingTimestampColor = R.color.white;
         } else {

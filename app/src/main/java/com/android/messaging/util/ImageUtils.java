@@ -684,6 +684,12 @@ public class ImageUtils {
                         mOptions.inSampleSize = mSampleSize;
                         final InputStream inputStream = cr.openInputStream(mUri);
                         mDecoded = BitmapFactory.decodeStream(inputStream, null, mOptions);
+                        try {
+                            if (inputStream != null)
+                                inputStream.close();
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
                         if (mDecoded == null) {
                             if (logv) {
                                 LogUtil.v(LogUtil.BUGLE_IMAGE_TAG,

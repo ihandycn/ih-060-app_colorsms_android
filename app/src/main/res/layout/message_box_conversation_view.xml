@@ -109,7 +109,7 @@
                     android:padding="6.7dp"
                     android:background="@drawable/material_close_btn_bg_round"
                     android:tint="@color/white"
-                    android:src="@drawable/ic_message_box_close" />
+                    app:srcCompat="@drawable/ic_message_box_close" />
             </LinearLayout>
 
             <com.superapps.view.RoundImageView

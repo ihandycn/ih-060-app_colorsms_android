@@ -53,7 +53,7 @@
                         android:layout_height="36dp"
                         android:background="@drawable/message_box_menu_round_background"
                         android:padding="9dp"
-                        android:src="@drawable/ic_message_box_close"/>
+                        app:srcCompat="@drawable/ic_message_box_close"/>
                 </LinearLayout>
 
             </FrameLayout>

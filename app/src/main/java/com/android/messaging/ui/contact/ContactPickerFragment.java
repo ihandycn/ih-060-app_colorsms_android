@@ -53,8 +53,8 @@ import com.android.messaging.datamodel.data.ContactListItemData;
 import com.android.messaging.datamodel.data.ContactPickerData;
 import com.android.messaging.datamodel.data.ContactPickerData.ContactPickerDataListener;
 import com.android.messaging.datamodel.data.ParticipantData;
-import com.android.messaging.ui.CustomPagerViewHolder;
 import com.android.messaging.ui.CustomHeaderViewPager;
+import com.android.messaging.ui.CustomPagerViewHolder;
 import com.android.messaging.ui.CustomViewPager;
 import com.android.messaging.ui.CustomViewPagerAdapter;
 import com.android.messaging.ui.animation.ViewGroupItemVerticalExplodeAnimation;
@@ -218,6 +218,7 @@ public class ContactPickerFragment extends Fragment implements ContactPickerData
 
         mComposeDivider = view.findViewById(R.id.compose_contact_divider);
         mRootView = view;
+        BugleAnalytics.logEvent("CreatMessage_Show");
         return view;
     }
 
@@ -326,6 +327,11 @@ public class ContactPickerFragment extends Fragment implements ContactPickerData
             mRecipientTextView.appendRecipientEntry(item.getRecipientEntry());
         } else if (mContactPickingMode != MODE_PICK_INITIAL_CONTACT) {
             mRecipientTextView.removeRecipientEntry(item.getRecipientEntry());
+        }
+        if (mCustomHeaderViewPager.getSelectedItemPosition() == 0) {
+            BugleAnalytics.logEvent("CreatMessage_Frequents_Click");
+        } else {
+            BugleAnalytics.logEvent("CreatMessage_AllContacts_Click");
         }
     }
 

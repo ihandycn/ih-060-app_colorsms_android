@@ -33,11 +33,21 @@ import com.android.messaging.datamodel.MessagingContentProvider;
 import com.android.messaging.datamodel.SyncManager;
 import com.android.messaging.datamodel.data.MessageData;
 import com.android.messaging.datamodel.data.ParticipantData;
+import com.android.messaging.privatebox.PrivateContactsManager;
+import com.android.messaging.privatebox.PrivateSettingManager;
+import com.android.messaging.privatebox.PrivateSmsEntry;
 import com.android.messaging.sms.MmsSmsUtils;
+import com.android.messaging.util.BugleAnalytics;
 import com.android.messaging.util.CheckPermissionUtil;
 import com.android.messaging.util.FabricUtils;
 import com.android.messaging.util.LogUtil;
 import com.android.messaging.util.OsUtil;
+import com.android.messaging.util.TextUtil;
+import com.crashlytics.android.core.CrashlyticsCore;
+import com.superapps.debug.CrashlyticsLog;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Action used to "receive" an incoming message
@@ -98,11 +108,23 @@ public class ReceiveSmsMessageAction extends Action implements Parcelable {
         final String conversationId = BugleDatabaseOperations.
                 getOrCreateConversationFromRecipient(db, threadId, blocked, rawSender);
 
+        if (TextUtils.isEmpty(conversationId)) {
+            if (FabricUtils.isFabricInited()) {
+                CrashlyticsCore.getInstance().logException(
+                        new CrashlyticsLog("conversation is null, thread = " + threadId
+                                + "  sender empty ? " + TextUtils.isEmpty(rawSender.getNormalizedDestination())));
+            }
+            return null;
+        }
+
         final boolean messageInFocusedConversation =
                 DataModel.get().isFocusedConversation(conversationId);
         final boolean messageInObservableConversation =
                 DataModel.get().isNewMessageObservable(conversationId);
 
+        List<String> recipients = new ArrayList<>();
+        recipients.add(address);
+        boolean isPrivateMessage = PrivateContactsManager.getInstance().isPrivateRecipient(recipients);
         MessageData message = null;
         // Only the primary user gets to insert the message into the telephony db and into bugle's
         // db. The secondary user goes through this path, but skips doing the actual insert. It
@@ -120,7 +142,8 @@ public class ReceiveSmsMessageAction extends Action implements Parcelable {
             messageValues.put(Sms.Inbox.SEEN, 1);
 
             // Insert into telephony
-            final Uri messageUri = context.getContentResolver().insert(Sms.Inbox.CONTENT_URI,
+            Uri messageUri = context.getContentResolver().insert(
+                    isPrivateMessage ? PrivateSmsEntry.Inbox.CONTENT_URI : Sms.Inbox.CONTENT_URI,
                     messageValues);
 
             if (messageUri != null) {
@@ -178,7 +201,9 @@ public class ReceiveSmsMessageAction extends Action implements Parcelable {
         }
         // Show a notification to let the user know a new message has arrived
         BugleNotifications.update(false/*silent*/, conversationId, BugleNotifications.UPDATE_ALL);
-
+        if (isPrivateMessage && PrivateSettingManager.isNotificationEnable()) {
+            BugleAnalytics.logEvent("Notifications_Received_PrivateBox");
+        }
         MessagingContentProvider.notifyMessagesChanged(conversationId);
         MessagingContentProvider.notifyPartsChanged();
 

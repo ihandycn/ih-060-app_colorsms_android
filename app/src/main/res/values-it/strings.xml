@@ -632,4 +632,27 @@
 	<string name="privacy_mode_show_messages">MOSTRA MESSAGGI</string>
 	<string name="notification_sender_in_privacy_mode">Contatto</string>
 
+
+	<string name="private_box_setting">Impostazioni casella privata</string>
+	<string name="private_box_setting_security_summary">Modifica la password</string>
+	<string name="private_box_setting_entrance">Ingresso</string>
+	<string name="private_box_setting_entrance_summary">Nascondi l\'icona</string>
+	<string name="private_box_hide_icon">Nascondi casella privata</string>
+	<string name="private_box_hide_icon_summary">Tieni premuto per creare sulla pagina iniziale un\'icona per l\'accesso alla casella privata.</string>
+	<string name="tips">Suggerimenti</string>
+	<string name="private_box_add_to_success">Spostato nella casella privata</string>
+	<string name="private_box_move_from_success">Spostato nella casella pubblica</string>
+	<string name="private_box_setting_security">sicurezza</string>
+	<string name="private_box_add_now">Aggiungi ora</string>
+	<string name="add_to_private_list_dialog_title">Aggiungi contatto privato</string>
+	<string name="add_to_private_list_dialog_from_conversation">Dall\'elenco delle conversazioni</string>
+	<string name="add_to_private_list_dialog_from_contacts_list">Dall\'elenco dei contatti</string>
+	<string name="conversation_list">Elenco conversazioni</string>
+	<string name="menu_privacy_box">Casella privata</string>
+	<string name="private_start_box_tip">I messaggi verranno trasferiti nella casella privata. Imposta una password per la casella privata.</string>
+	<string name="private_box_setting_notification">Attiva le notifiche</string>
+	<string name="private_box_setting_notification_summary">Se l\'opzione viene disattivata, per i messaggi provenienti dai contatti privati non verranno visualizzate notifiche.</string>
+	<string name="private_move_tip">I messaggi verranno trasferiti nella casella provata e non saranno accessibili da altre app.</string>
+	<string name="private_box_uninstall_notice">Se non trasferisci i messaggi nella casella pubblica, disinstallando l\'app potresti perdere i tuoi dati.</string>
+
 </resources>

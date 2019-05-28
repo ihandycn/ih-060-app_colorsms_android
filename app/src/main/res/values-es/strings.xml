@@ -637,4 +637,27 @@
 	<string name="privacy_mode_show_messages">MOSTRAR MENSAJES</string>
 	<string name="notification_sender_in_privacy_mode">Contacto</string>
 
+
+	<string name="private_box_setting">Ajustes de caja privada</string>
+	<string name="private_box_setting_security_summary">Modificar contraseña </string>
+	<string name="private_box_setting_entrance">Entrada</string>
+	<string name="private_box_setting_entrance_summary">Ocultar el icono</string>
+	<string name="private_box_hide_icon">Ocultar caja privada</string>
+	<string name="private_box_hide_icon_summary">Mantén pulsado para crear un icono en la página de inicio de entrada a la caja privada.</string>
+	<string name="tips">Consejos</string>
+	<string name="private_box_add_to_success">Movido a la caja privada</string>
+	<string name="private_box_move_from_success">Movido a la caja pública</string>
+	<string name="private_box_setting_security">seguridad</string>
+	<string name="private_box_add_now">Añadir ahora</string>
+	<string name="add_to_private_list_dialog_title">Añadir contacto privado</string>
+	<string name="add_to_private_list_dialog_from_conversation">De la lista de conversación</string>
+	<string name="add_to_private_list_dialog_from_contacts_list">De la lista de contactos</string>
+	<string name="conversation_list">Lista de conversación</string>
+	<string name="menu_privacy_box">Caja privada</string>
+	<string name="private_start_box_tip">Los mensajes se moverán a la caja privada. Primero establece una contraseña para la caja privada.</string>
+	<string name="private_box_setting_notification">Habilitar notificaciones</string>
+	<string name="private_box_setting_notification_summary">Si se deshabilita esta opción, los mensajes de contactos privados no aparecerán en ninguna notificación.</string>
+	<string name="private_move_tip">Los mensajes se moverán a la caja privada y ninguna otra aplicación de SMS podrá acceder a ellos.</string>
+	<string name="private_box_uninstall_notice">A menos que muevas los mensajes a la caja pública, puedes perder tus datos cuando desinstales la aplicación.</string>
+
 </resources>
