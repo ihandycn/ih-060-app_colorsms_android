@@ -87,6 +87,9 @@
         <meta-data
             android:name="io.fabric.ApiKey"
             android:value="0b4450f77c38aaab5bda6429b3e6ece0f4c33dfb"/>
+        <meta-data
+            android:name="firebase_analytics_collection_enabled"
+            android:value="false"/>
 
         <!-- Displays a list of conversations -->
         <activity
