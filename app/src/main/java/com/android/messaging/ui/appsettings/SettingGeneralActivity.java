@@ -403,7 +403,7 @@ public class SettingGeneralActivity extends BaseActivity {
                 Uri uri = data.getParcelableExtra(RingtoneManager.EXTRA_RINGTONE_PICKED_URI);
                 String prefKey = getString(R.string.notification_sound_pref_key);
                 String currentRingtone = prefs.getString(prefKey, Settings.System.DEFAULT_NOTIFICATION_URI.toString());
-                if (currentRingtone != null && !currentRingtone.equals(uri.toString())) {
+                if (currentRingtone != null && !currentRingtone.equals(uri == null ? "" : uri.toString())) {
                     BugleAnalytics.logEvent("Customize_Notification_Sound_Change", true, true, "from", "settings");
                 }
                 prefs.putString(prefKey, uri == null ? "" : uri.toString());
