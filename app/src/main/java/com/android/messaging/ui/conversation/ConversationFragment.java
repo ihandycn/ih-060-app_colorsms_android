@@ -100,6 +100,7 @@ import com.android.messaging.ui.dialog.FiveStarRateDialog;
 import com.android.messaging.ui.emoji.EmojiPickerFragment;
 import com.android.messaging.ui.mediapicker.CameraGalleryFragment;
 import com.android.messaging.ui.mediapicker.MediaPickerFragment;
+import com.android.messaging.ui.sendmessagesdelay.SendMessagesDelayManager;
 import com.android.messaging.ui.wallpaper.WallpaperManager;
 import com.android.messaging.util.AccessibilityUtil;
 import com.android.messaging.util.Assert;
@@ -117,7 +118,6 @@ import com.android.messaging.util.UiUtils;
 import com.android.messaging.util.UriUtil;
 import com.android.messaging.util.ViewUtils;
 import com.google.common.annotations.VisibleForTesting;
-import com.ihs.app.framework.HSApplication;
 import com.ihs.commons.config.HSConfig;
 import com.ihs.commons.notificationcenter.HSGlobalNotificationCenter;
 import com.ihs.commons.notificationcenter.INotificationObserver;
@@ -197,7 +197,7 @@ public class ConversationFragment extends Fragment implements ConversationDataLi
     private ConversationMessageAdapter mAdapter;
     private ConversationFastScroller mFastScroller;
     private ImageView mWallpaperView;
-
+    public static boolean isFragmentDestroyed;
 
     private View mConversationComposeDivider;
     private ChangeDefaultSmsAppHelper mChangeDefaultSmsAppHelper;
@@ -1138,20 +1138,37 @@ public class ConversationFragment extends Fragment implements ConversationDataLi
         super.onDestroy();
         HSLog.d("ComposeMessageView","onDestroy");
         // Unbind all the views that we bound to data
-
         if (mComposeMessageView != null) {
-//            if (! mComposeMessageView.getIsMessageSendFlag()) {
+            if (! mComposeMessageView.getIsMessageSendFlag()) {
                 HSLog.d("ComposeMessageView","if (mComposeMessageView != null) {");
-                mComposeMessageView.getSendDelayHandler().removeCallbacks(mComposeMessageView.getSendDelayRunnable());
-                mComposeMessageView.getViewTreeObserver().removeOnGlobalLayoutListener(globalLayoutListener);
+//                mComposeMessageView.getSendDelayHandler().removeCallbacks(mComposeMessageView.getSendDelayRunnable());
+//                Threads.removeOnMainThread(SendMessagesDelayManager.getSendMessagesDelayValue(mBinding.getData().getConversationId()).getRunnable());
                 mComposeMessageView.unbind();
-//            }
+                mComposeMessageView.getViewTreeObserver().removeOnGlobalLayoutListener(globalLayoutListener);
+                destroyContent();
+            } else {
+                SendMessagesDelayManager.getSendMessagesDelayValue(mBinding.getData().getConversationId()).setFragmentDestroyed(true);
+                mComposeMessageView.setOnActionEndListener(new SendDelayActionCompleted() {
+                    @Override
+                    public void onSendDelayActionEnd() {
+                        mComposeMessageView.unbind();
+                        mComposeMessageView.getViewTreeObserver().removeOnGlobalLayoutListener(globalLayoutListener);
+                        destroyContent();
+                    }
+                });
+            }
         }
+        else {
+            destroyContent();
+        }
+    }
+
+    private void destroyContent(){
         mRecyclerView.setAdapter(null);
-//        if (! mComposeMessageView.getIsMessageSendFlag()){
-            mBinding.unbind();
-            mConversationId = null;
-//        }
+
+        mBinding.unbind();
+        mConversationId = null;
+
         if (mNativeAd != null) {
             mNativeAd.release();
         }
@@ -1207,9 +1224,12 @@ public class ConversationFragment extends Fragment implements ConversationDataLi
     @Override
     public void sendMessage(final MessageData message) {
         if (isReadyForAction()) {
+            HSLog.d("ComposeMessageView", "isReadyForAction()");
             if (ensureKnownRecipients()) {
+                HSLog.d("ComposeMessageView", "ensureKnownRecipients()");
                 String name = mBinding.getData().getConversationName();
                 if (!TextUtils.isEmpty(name)) {
+                    HSLog.d("ComposeMessageView", "!TextUtils.isEmpty(name)");
                     String[] count = name.split(",");
                     BugleAnalytics.logEvent("SMS_SendPeopleAmount_Statistics", true, true, "type", String.valueOf(count.length));
                 }
@@ -1288,6 +1308,7 @@ public class ConversationFragment extends Fragment implements ConversationDataLi
         final ConversationData conversationData = mBinding.getData();
 
         if (!conversationData.getParticipantsLoaded()) {
+            HSLog.d("ComposeMessageView", "!conversationData.getParticipantsLoaded()");
             // We can't tell yet whether or not we have an unknown recipient
             return false;
         }
@@ -1295,6 +1316,7 @@ public class ConversationFragment extends Fragment implements ConversationDataLi
         final ConversationParticipantsData participants = conversationData.getParticipants();
         for (final ParticipantData participant : participants) {
             if (participant.isUnknownSender()) {
+                HSLog.d("ComposeMessageView", "if (participant.isUnknownSender())");
                 FabricUtils.logNonFatal("Send_Message_Unknown_Sender");
                 UiUtils.showToast(R.string.unknown_sender);
                 return false;

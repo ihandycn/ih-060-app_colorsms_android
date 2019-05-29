@@ -234,7 +234,6 @@ public class ConversationData extends BindableData {
         @Override
         public void onLoaderReset(final Loader<Cursor> generic) {
             final BoundCursorLoader loader = (BoundCursorLoader) generic;
-
             // Check if data still bound to the requesting ui element
             if (isBound(loader.getBindingId())) {
                 // Clear the conversation meta data
@@ -394,7 +393,7 @@ public class ConversationData extends BindableData {
         @Override
         public void onLoaderReset(final Loader<Cursor> generic) {
             final BoundCursorLoader loader = (BoundCursorLoader) generic;
-
+            HSLog.d("ComposeMessageView", "onLoaderReset");
             // Check if data still bound to the requesting ui element
             if (isBound(loader.getBindingId())) {
                 mParticipantData.bind(null);
@@ -555,6 +554,7 @@ public class ConversationData extends BindableData {
         // TODO: May false trigger if destroy happens after "new" conversation is focused.
         //        Assert.isTrue(!DataModel.get().isFocusedConversation(mConversationId));
 
+        HSLog.d("ComposeMessageView", "unregisterListeners");
         // This could be null if we bind but the caller doesn't init the BindableData
         if (mLoaderManager != null) {
             mLoaderManager.destroyLoader(CONVERSATION_META_DATA_LOADER);

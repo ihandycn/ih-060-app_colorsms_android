@@ -41,6 +41,7 @@ import com.android.messaging.ui.customize.ToolbarDrawables;
 import com.android.messaging.ui.customize.WallpaperDrawables;
 import com.android.messaging.ui.customize.theme.ThemeUtils;
 import com.android.messaging.ui.emoji.EmojiInfo;
+import com.android.messaging.ui.sendmessagesdelay.SendMessagesDelayManager;
 import com.android.messaging.ui.wallpaper.WallpaperManager;
 import com.android.messaging.util.BugleAnalytics;
 import com.android.messaging.util.Dates;
@@ -80,6 +81,7 @@ public class MessageBoxConversationView extends FrameLayout {
     private int mInputEmojiCount;
     private Handler mSendDelayHandler;
     private Runnable mSendDelayRunnable;
+//    private SendMessagesDelayManager.SendMessagesDelayData sendMessagesDelayData;
 
     public MessageBoxConversationView(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -90,7 +92,8 @@ public class MessageBoxConversationView extends FrameLayout {
     protected void onFinishInflate() {
         super.onFinishInflate();
         mPrimaryColor = PrimaryColors.getPrimaryColor();
-
+//        sendMessagesDelayData = new SendMessagesDelayManager.SendMessagesDelayData();
+//        SendMessagesDelayManager.putSendMessagesDelayValue(getConversationId(), sendMessagesDelayData);
         initActionBarSimulation();
         mContent = findViewById(R.id.content);
         mInputActionView = findViewById(R.id.message_compose_view_container);

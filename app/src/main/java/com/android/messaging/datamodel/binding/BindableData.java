@@ -16,6 +16,8 @@
 
 package com.android.messaging.datamodel.binding;
 
+import com.ihs.commons.utils.HSLog;
+
 /**
  * Base class for data objects that will be bound to a piece of the UI
  */
@@ -48,6 +50,7 @@ public abstract class BindableData {
         if (!isBound(bindingId)) {
             throw new IllegalStateException();
         }
+        HSLog.d("ComposeMessageView", "unbind to unregisterListeners();");
         unregisterListeners();
         mBindingId = null;
     }
