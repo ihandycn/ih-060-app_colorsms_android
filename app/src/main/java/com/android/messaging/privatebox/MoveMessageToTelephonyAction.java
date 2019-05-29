@@ -153,8 +153,10 @@ public class MoveMessageToTelephonyAction extends Action {
                         }
 
                         for (String partUri : partUris) {
-                            HSApplication.getContext().getContentResolver()
-                                    .update(Uri.parse(partUri), values, null, null);
+                            if (!TextUtils.isEmpty(partUri) && partUri.contains("content://mms/part")) {
+                                HSApplication.getContext().getContentResolver()
+                                        .update(Uri.parse(partUri), values, null, null);
+                            }
                         }
                         //copy address data
                         long telephonyMsgId = ContentUris.parseId(uri);
@@ -202,7 +204,7 @@ public class MoveMessageToTelephonyAction extends Action {
     }
 
     private void bindMmsAddrValues(ContentValues values, Cursor cursor) {
-        for(int i = 0; i < cursor.getColumnCount(); i++) {
+        for (int i = 0; i < cursor.getColumnCount(); i++) {
             if (!cursor.isNull(i) && PrivateMmsEntry.Addr.sSupportedFields.contains(cursor.getColumnName(i))) {
                 values.put(cursor.getColumnName(i), cursor.getString(i));
             }
