@@ -23,8 +23,6 @@ public class AddPrivateContactAction extends Action {
     private static final String KEY_RECIPIENT = "recipient";
 
     public static void addPrivateRecipientsAndMoveMessages(final List<String> recipients) {
-        //todo : check permission for no grant exception
-
         AddPrivateContactAction action = new AddPrivateContactAction();
         action.actionParameters.putStringArrayList(KEY_RECIPIENT, (ArrayList<String>) recipients);
         action.start();
@@ -47,17 +45,27 @@ public class AddPrivateContactAction extends Action {
 
     private void addThreadIdToPrivateTable(DatabaseWrapper db, String recipient) {
         //check if the thread_id is in the table
-        long threadId = MmsSmsUtils.Threads.getOrCreateThreadId(HSApplication.getContext(), recipient.trim());
+        Cursor cursor;
+        long threadId = -1;
         String formatRecipient = PhoneUtils.getDefault().getCanonicalBySimLocale(recipient.trim());
-        Cursor cursor = db.query(PRIVATE_CONTACTS_TABLE, sProjection,
-                RECIPIENTS + "=? AND " + THREAD_ID + "=?",
-                new String[]{formatRecipient, String.valueOf(threadId)}, null, null, null);
+        try {
+            threadId = MmsSmsUtils.Threads.getOrCreateThreadId(HSApplication.getContext(), recipient.trim());
+            cursor = db.query(PRIVATE_CONTACTS_TABLE, sProjection,
+                    RECIPIENTS + "=? AND " + THREAD_ID + "=?",
+                    new String[]{formatRecipient, String.valueOf(threadId)}, null, null, null);
+        } catch (Exception ignored) {
+            cursor = db.query(PRIVATE_CONTACTS_TABLE, sProjection,
+                    RECIPIENTS + "=?",
+                    new String[]{formatRecipient}, null, null, null);
+        }
         if (cursor == null) {
             return;
         }
         if (cursor.getCount() <= 0) {
             ContentValues values = new ContentValues();
-            values.put(THREAD_ID, threadId);
+            if (threadId >= 0) {
+                values.put(THREAD_ID, threadId);
+            }
             values.put(RECIPIENTS, formatRecipient);
             db.insert(PRIVATE_CONTACTS_TABLE, null, values);
         }
