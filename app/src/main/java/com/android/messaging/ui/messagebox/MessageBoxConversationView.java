@@ -41,8 +41,6 @@ import com.android.messaging.ui.customize.ToolbarDrawables;
 import com.android.messaging.ui.customize.WallpaperDrawables;
 import com.android.messaging.ui.customize.theme.ThemeUtils;
 import com.android.messaging.ui.emoji.EmojiInfo;
-import com.android.messaging.ui.sendmessagesdelay.SendMessagesDelayManager;
-import com.android.messaging.ui.wallpaper.WallpaperManager;
 import com.android.messaging.util.BugleAnalytics;
 import com.android.messaging.util.Dates;
 import com.android.messaging.util.ImeUtil;
@@ -77,11 +75,11 @@ public class MessageBoxConversationView extends FrameLayout {
     private String mSelfId;
     private String mParticipantId;
 
+    private boolean mHasSentMessages;
     private boolean mMarkAsRead;
     private int mInputEmojiCount;
     private Handler mSendDelayHandler;
     private Runnable mSendDelayRunnable;
-//    private SendMessagesDelayManager.SendMessagesDelayData sendMessagesDelayData;
 
     public MessageBoxConversationView(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -92,8 +90,6 @@ public class MessageBoxConversationView extends FrameLayout {
     protected void onFinishInflate() {
         super.onFinishInflate();
         mPrimaryColor = PrimaryColors.getPrimaryColor();
-//        sendMessagesDelayData = new SendMessagesDelayManager.SendMessagesDelayData();
-//        SendMessagesDelayManager.putSendMessagesDelayValue(getConversationId(), sendMessagesDelayData);
         initActionBarSimulation();
         mContent = findViewById(R.id.content);
         mInputActionView = findViewById(R.id.message_compose_view_container);
@@ -104,10 +100,6 @@ public class MessageBoxConversationView extends FrameLayout {
         initInputAction();
         mSendDelayHandler = new Handler();
         mSendDelayRunnable = () -> {
-            mInputActionView.mDelayCloseButton.setVisibility(View.GONE);
-            mInputActionView.mSendDelayCircleBarView.setVisibility(View.GONE);
-            mInputActionView.mSelfSendIcon.setVisibility(View.VISIBLE);
-            mSendDelayHandler.removeCallbacks(mSendDelayRunnable);
             mInputActionView.resetDelaySendAnimation();
             sendMessage();
         };
@@ -188,28 +180,30 @@ public class MessageBoxConversationView extends FrameLayout {
         return mParticipantId;
     }
 
+    boolean hasSentMessage() {
+        return mHasSentMessages;
+    }
+
     void replyMessage() {
+        if (TextUtils.isEmpty(mInputActionView.getMessage())) {
+            return;
+        }
+        mHasSentMessages = true;
+
         if (SendDelaySettings.getSendDelay() != SendDelaySettings.NO_DELAY) {
-            if (TextUtils.isEmpty(mInputActionView.getMessage())) {
-                return;
-            }
             mInputActionView.sendDelayAnimation();
             mSendDelayHandler.postDelayed(mSendDelayRunnable, 1000 * SendDelaySettings.getSendDelay());
-            mInputActionView.mSendDelayCircleBarView.setOnClickListener(clickedView -> {
-                mInputActionView.mDelayCloseButton.setVisibility(View.GONE);
-                mInputActionView.mSendDelayCircleBarView.setVisibility(View.GONE);
-                mInputActionView.mSelfSendIcon.setVisibility(View.VISIBLE);
+            mInputActionView.setOnCancelSmsSendingClickListener(clickedView -> {
                 mSendDelayHandler.removeCallbacks(mSendDelayRunnable);
                 mInputActionView.resetDelaySendAnimation();
             });
-        }
-        else {
+        } else {
             sendMessage();
             mInputActionView.performReply();
         }
     }
 
-    private void sendMessage(){
+    private void sendMessage() {
         String message = mInputActionView.getMessage();
         if (TextUtils.isEmpty(message)) {
             return;

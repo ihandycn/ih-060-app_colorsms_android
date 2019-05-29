@@ -35,13 +35,13 @@ import com.superapps.util.Preferences;
 
 class MessageBoxInputActionView extends LinearLayout {
 
-    protected ImageView mSelfSendIcon;
+    private ImageView mSelfSendIcon;
     private MessageBoxActivity mHost;
     private PlainTextEditText mComposeEditText;
     private ImageView mEmojiIcon;
     private ProgressBar mProgressBar;
-    protected ImageView mDelayCloseButton;
-    protected SendDelayCircleBarView mSendDelayCircleBarView;
+    private ImageView mDelayCloseButton;
+    private SendDelayCircleBarView mSendDelayCircleBarView;
 
     public MessageBoxInputActionView(Context context, @Nullable AttributeSet attrs) {
         super(context, attrs, 0);
@@ -121,6 +121,10 @@ class MessageBoxInputActionView extends LinearLayout {
         mSendDelayCircleBarView.startAnimation(SendDelaySettings.getSendDelay());
     }
 
+    void setOnCancelSmsSendingClickListener(View.OnClickListener listener) {
+        mSendDelayCircleBarView.setOnClickListener(listener);
+    }
+
     void resetDelaySendAnimation(){
         mDelayCloseButton.setAlpha(0.0f);
         mSendDelayCircleBarView.setAlpha(0.0f);
@@ -128,5 +132,9 @@ class MessageBoxInputActionView extends LinearLayout {
         mSendDelayCircleBarView.setScaleY(0.8f);
         mSendDelayCircleBarView.resetAnimation();
         mSendDelayCircleBarView.setProgress(100);
+
+        mDelayCloseButton.setVisibility(View.GONE);
+        mSendDelayCircleBarView.setVisibility(View.GONE);
+        mSelfSendIcon.setVisibility(View.VISIBLE);
     }
 }

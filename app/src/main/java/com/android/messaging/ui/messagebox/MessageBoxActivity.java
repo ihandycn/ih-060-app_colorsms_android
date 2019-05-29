@@ -30,6 +30,7 @@ import com.android.messaging.ui.emoji.EmojiPackagePagerAdapter;
 import com.android.messaging.ui.emoji.StickerInfo;
 import com.android.messaging.ui.emoji.ViewPagerDotIndicatorView;
 import com.android.messaging.util.BugleAnalytics;
+import com.android.messaging.util.TextUtil;
 import com.android.messaging.util.UiUtils;
 import com.ihs.app.framework.HSApplication;
 import com.ihs.commons.notificationcenter.HSGlobalNotificationCenter;
@@ -63,7 +64,7 @@ public class MessageBoxActivity extends AppCompatActivity implements INotificati
     public static final String NOTIFICATION_MESSAGE_BOX_SEND_SMS_SUCCEED = "message_box_send_sms_success";
     public static final String NOTIFICATION_MESSAGE_BOX_SEND_SMS_FAILED = "message_box_send_sms_failed";
 
-    private static final boolean DEBUGGING_MULTI_CONVERSATIONS = true && BuildConfig.DEBUG;
+    private static final boolean DEBUGGING_MULTI_CONVERSATIONS = false && BuildConfig.DEBUG;
 
     private ViewPager mPager;
     private DynamicalPagerAdapter mPagerAdapter;
@@ -330,7 +331,7 @@ public class MessageBoxActivity extends AppCompatActivity implements INotificati
         int position = mPager.getCurrentItem();
         if (position == mPagerAdapter.getCount() - 1 && mPagerAdapter.getCount() == 1) {
             finish(source);
-        } else {
+        } else if (mCurrentConversationView.hasSentMessage()) {
             mPagerAdapter.removeView(mPager, mCurrentConversationView);
             mPager.setCurrentItem(position);
             mCurrentConversationView = (MessageBoxConversationView) mPagerAdapter.getViews().get(position);
@@ -338,6 +339,7 @@ public class MessageBoxActivity extends AppCompatActivity implements INotificati
             mCurrentConversationView.requestEditTextFocus();
         }
     }
+
 
     @Override
     public void onReceive(String s, HSBundle hsBundle) {
