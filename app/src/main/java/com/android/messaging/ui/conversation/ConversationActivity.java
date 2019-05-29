@@ -27,7 +27,6 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.text.format.DateUtils;
-import android.util.Log;
 import android.view.ActionMode;
 import android.view.MenuItem;
 import android.view.View;
@@ -45,10 +44,6 @@ import com.android.messaging.datamodel.MessagingContentProvider;
 import com.android.messaging.datamodel.data.MessageData;
 import com.android.messaging.ui.BugleActionBarActivity;
 import com.android.messaging.ui.UIIntents;
-import com.android.messaging.ui.UIIntentsImpl;
-import com.android.messaging.ui.contact.ContactPickerActivity;
-import com.android.messaging.ui.contact.ContactPickerFragment;
-import com.android.messaging.ui.contact.ContactPickerFragment.ContactPickerFragmentHost;
 import com.android.messaging.ui.conversation.ConversationActivityUiState.ConversationActivityUiStateHost;
 import com.android.messaging.ui.conversation.ConversationFragment.ConversationFragmentHost;
 import com.android.messaging.ui.conversationlist.ConversationListActivity;
@@ -106,7 +101,7 @@ public class ConversationActivity extends BugleActionBarActivity
     private AcbInterstitialAd mInterstitialAd;
     private long mCreateTime;
     private Toolbar toolbar;
-    private final String TAG = "conversation_act";
+    private boolean fromCreateConversation;
 
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
@@ -114,9 +109,11 @@ public class ConversationActivity extends BugleActionBarActivity
 
         setContentView(R.layout.conversation_activity);
 
+        fromCreateConversation = getIntent() != null
+                && getIntent().getBooleanExtra(UIIntents.UI_INTENT_EXTRA_FROM_CREATE_CONVERSATION, false);
         final Intent intent = getIntent();
-        if(intent != null && intent.getBooleanExtra(UIIntents.SHOW_KEYBOARD, false)) {
-            this.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
+        if (fromCreateConversation) {
+            getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
         }
         if (getIntent() != null && getIntent().getBooleanExtra(BugleNotifications.EXTRA_FROM_NOTIFICATION, false)) {
             BugleAnalytics.logEvent("SMS_Notifications_Clicked", true, true);
@@ -442,6 +439,10 @@ public class ConversationActivity extends BugleActionBarActivity
     @Override // From ConversationFragmentHost
     public boolean isActiveAndFocused() {
         return !mIsPaused && hasWindowFocus();
+    }
+
+    @Override public boolean isFromCreateConversation() {
+        return fromCreateConversation;
     }
 
     @Override // From ConversationActivityUiStateListener

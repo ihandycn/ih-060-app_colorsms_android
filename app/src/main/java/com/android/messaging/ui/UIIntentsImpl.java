@@ -208,11 +208,11 @@ public class UIIntentsImpl extends UIIntents {
     public void launchConversationActivity(final Context context,
                                            final String conversationId, final MessageData draft, final Bundle activityOptions,
                                            final boolean withCustomTransition,
-                                           final String conversationName, final boolean showKeyboard) {
+                                           final String conversationName, final boolean fromCreate) {
         Assert.isTrue(!withCustomTransition || activityOptions != null);
         final Intent intent = getConversationActivityIntent(context, conversationId, draft,
                 withCustomTransition, conversationName);
-        intent.putExtra(SHOW_KEYBOARD, showKeyboard);
+        intent.putExtra(UI_INTENT_EXTRA_FROM_CREATE_CONVERSATION, fromCreate);
         context.startActivity(intent, activityOptions);
     }
 

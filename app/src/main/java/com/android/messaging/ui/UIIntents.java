@@ -120,9 +120,7 @@ public abstract class UIIntents {
 
     public static final String UI_INTENT_EXTRA_MESSAGE_BOX_ITEM = "message_box_item";
 
-    public static final String SHOW_KEYBOARD = "show_keyboard";
-
-
+    public static final String UI_INTENT_EXTRA_FROM_CREATE_CONVERSATION = "from_create_conversation";
 
     /**
      * Launch the welcome activity
