@@ -89,9 +89,9 @@ public class SelectSendDelayDialog extends BaseDialogFragment {
         RadioGroup radioGroup = mContentView.findViewById(R.id.radio_group);
         Typeface font = Fonts.getTypeface(Fonts.Font.CUSTOM_FONT_MEDIUM);
 
-        int mode = SendDelaySettings.getSendDelay();
+        int sendDelayInSecs = SendDelaySettings.getSendDelayInSecs();
 
-        switch (mode) {
+        switch (sendDelayInSecs) {
             case NO_DELAY:
                 radioGroup.check(R.id.no_delay);
                 break;
@@ -143,44 +143,36 @@ public class SelectSendDelayDialog extends BaseDialogFragment {
         radioGroup.setOnCheckedChangeListener((group, checkedId) -> {
             switch (checkedId) {
                 case R.id.no_delay:
-                    SendDelaySettings.setSendDelay(NO_DELAY);
+                    SendDelaySettings.setSendDelay(0);
                     break;
                 case R.id.one_second:
-                    SendDelaySettings.setSendDelay(ONE_SECOND);
+                    SendDelaySettings.setSendDelay(1);
                     break;
                 case R.id.two_seconds:
-                    SendDelaySettings.setSendDelay(TWO_SECONDS);
+                    SendDelaySettings.setSendDelay(2);
                     break;
                 case R.id.three_seconds:
-                    SendDelaySettings.setSendDelay(THREE_SECONDS);
+                    SendDelaySettings.setSendDelay(3);
                     break;
                 case R.id.four_seconds:
-                    SendDelaySettings.setSendDelay(FOUR_SECONDS);
+                    SendDelaySettings.setSendDelay(4);
                     break;
                 case R.id.five_seconds:
-                    SendDelaySettings.setSendDelay(FIVE_SECONDS);
+                    SendDelaySettings.setSendDelay(5);
                     break;
                 case R.id.six_seconds:
-                    SendDelaySettings.setSendDelay(SIX_SECONDS);
+                    SendDelaySettings.setSendDelay(6);
                     break;
                 case R.id.seven_seconds:
-                    SendDelaySettings.setSendDelay(SEVEN_SECONDS);
+                    SendDelaySettings.setSendDelay(7);
                     break;
                 case R.id.eight_seconds:
-                    SendDelaySettings.setSendDelay(EIGHT_SECONDS);
+                    SendDelaySettings.setSendDelay(8);
                     break;
                 case R.id.nine_seconds:
-                    SendDelaySettings.setSendDelay(NINE_SECONDS);
+                    SendDelaySettings.setSendDelay(9);
                     break;
             }
-
-//            if (TextUtils.isEmpty(mConversationId)) {
-//                BugleAnalytics.logEvent("SMS_Settings_Privacy_Click", false, true,
-//                        "type", PrivacyModeSettings.getPrivacyModeDescription(mConversationId));
-//            } else {
-//                BugleAnalytics.logEvent("SMS_DetailsPage_Privacy_Click", false, true,
-//                        "type", PrivacyModeSettings.getPrivacyModeDescription(mConversationId));
-//            }
         });
 
         return mContentView;

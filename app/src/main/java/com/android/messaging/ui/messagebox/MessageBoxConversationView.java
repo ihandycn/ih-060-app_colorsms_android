@@ -190,9 +190,9 @@ public class MessageBoxConversationView extends FrameLayout {
         }
         mHasSentMessages = true;
 
-        if (SendDelaySettings.getSendDelay() != SendDelaySettings.NO_DELAY) {
+        if (SendDelaySettings.getSendDelayInSecs() != SendDelaySettings.NO_DELAY) {
             mInputActionView.sendDelayAnimation();
-            mSendDelayHandler.postDelayed(mSendDelayRunnable, 1000 * SendDelaySettings.getSendDelay());
+            mSendDelayHandler.postDelayed(mSendDelayRunnable, 1000 * SendDelaySettings.getSendDelayInSecs());
             mInputActionView.setOnCancelSmsSendingClickListener(clickedView -> {
                 mSendDelayHandler.removeCallbacks(mSendDelayRunnable);
                 mInputActionView.resetDelaySendAnimation();

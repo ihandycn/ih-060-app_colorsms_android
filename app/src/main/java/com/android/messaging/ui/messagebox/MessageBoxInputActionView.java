@@ -3,7 +3,6 @@ package com.android.messaging.ui.messagebox;
 import android.content.Context;
 import android.graphics.PorterDuff;
 import android.os.Build;
-import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v4.view.animation.PathInterpolatorCompat;
 import android.text.Editable;
@@ -28,7 +27,6 @@ import com.android.messaging.ui.customize.PrimaryColors;
 import com.android.messaging.ui.customize.theme.ThemeUtils;
 import com.android.messaging.ui.signature.SignatureSettingDialog;
 import com.android.messaging.font.FontUtils;
-import com.ihs.commons.utils.HSLog;
 import com.superapps.util.BackgroundDrawables;
 import com.superapps.util.Dimensions;
 import com.superapps.util.Preferences;
@@ -118,7 +116,7 @@ class MessageBoxInputActionView extends LinearLayout {
         Interpolator scaleStartInterpolator =
                 PathInterpolatorCompat.create(0.0f, 0.0f, 0.58f, 1.0f);
         mSendDelayCircleBarView.animate().alpha(1.0f).scaleX(1.0f).scaleY(1.0f).setDuration(160).setStartDelay(80).setInterpolator(scaleStartInterpolator).start();
-        mSendDelayCircleBarView.startAnimation(SendDelaySettings.getSendDelay());
+        mSendDelayCircleBarView.startAnimation(SendDelaySettings.getSendDelayInSecs());
     }
 
     void setOnCancelSmsSendingClickListener(View.OnClickListener listener) {

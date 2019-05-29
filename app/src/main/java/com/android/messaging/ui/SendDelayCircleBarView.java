@@ -108,18 +108,18 @@ public class SendDelayCircleBarView extends View {
         }
     }
 
-    public void resetAnimation (){
+    public void resetAnimation () {
         mSendDelayCircleBarAnimator.end();
         mProgress = 0;
         mInitialProgress = 0;
-        postInvalidate();
+        invalidate();
     }
 
-    public boolean isRunning(){
+    public boolean isRunning() {
         return mSendDelayCircleBarAnimator.isRunning();
     }
 
-    public float getProgress(){
+    public float getProgress() {
         return mProgress;
     }
 
@@ -130,9 +130,9 @@ public class SendDelayCircleBarView extends View {
         mDirection = 270 + mInitialProgress * 3.6f;
         mSendDelayCircleBarAnimator.addUpdateListener(animation -> {
             mProgress = (float) mSendDelayCircleBarAnimator.getAnimatedValue();
-            postInvalidate();
+            invalidate();
         });
         mSendDelayCircleBarAnimator.setInterpolator(sendDelayCircleBarInterpolator);
-        postInvalidate();
+        invalidate();
     }
 }
