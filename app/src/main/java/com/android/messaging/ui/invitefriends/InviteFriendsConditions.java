@@ -5,6 +5,7 @@ import android.support.annotation.IntDef;
 import android.text.format.DateUtils;
 
 import com.android.messaging.util.BuglePrefs;
+import com.android.messaging.util.UiUtils;
 import com.superapps.util.Preferences;
 
 public class InviteFriendsConditions {
@@ -23,27 +24,20 @@ public class InviteFriendsConditions {
     }
 
     public static boolean showInviteFriendsDialogIfProper(Activity activity, @InviteFriendsTiming int timing) {
-        // version code
-
-
+        // version code control
         boolean isTimingValid = true;
 
         switch (timing) {
             case BACK_TO_MAIN_PAGE:
                 isTimingValid = System.currentTimeMillis() - sMainPageCreateTime > 3 * DateUtils.MINUTE_IN_MILLIS;
                 break;
-
             case CHANGE_THEME:
             case SEND_SMS:
                 break;
         }
 
-        return isTimingValid && Preferences.get(BuglePrefs.SHARED_PREFERENCES_NAME).doLimitedTimes(new Runnable() {
-            @Override
-            public void run() {
-
-//                    UiUtils.showDialogFragment(activity, dialog);
-            }
+        return isTimingValid && Preferences.get(BuglePrefs.SHARED_PREFERENCES_NAME).doLimitedTimes(() -> {
+//            UiUtils.showDialogFragment(activity, dialog);
         }, INVITE_FRIENDS_DIALOG_SHOW_COUNT, 2);
     }
 
