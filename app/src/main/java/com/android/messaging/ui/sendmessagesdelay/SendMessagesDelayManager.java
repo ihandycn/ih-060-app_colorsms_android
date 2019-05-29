@@ -15,6 +15,10 @@ public class SendMessagesDelayManager {
         return sendMessagesDelayHashmap.get(conversationId);
     }
 
+    public static void remove(String conversationId) {
+        sendMessagesDelayHashmap.remove(conversationId);
+    }
+
     public static class SendMessagesDelayData {
 
         private Runnable runnable;

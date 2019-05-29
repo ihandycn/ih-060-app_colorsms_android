@@ -438,12 +438,14 @@ public class ComposeMessageView extends LinearLayout
 
             updateVisualsOnDraftChanged();
             resetDelaySendAnimation();
-            if (SendMessagesDelayManager.getSendMessagesDelayValue(mBinding.getData().getConversationId()).isFragmentDestroyed()) {
-                SendMessagesDelayManager.getSendMessagesDelayValue(mBinding.getData().getConversationId()).setFragmentDestroyed(false);
+            String conversationId = mBinding.getData().getConversationId();
+            if(SendMessagesDelayManager.getSendMessagesDelayValue(conversationId).isFragmentDestroyed()) {
+                SendMessagesDelayManager.getSendMessagesDelayValue(conversationId).setFragmentDestroyed(false);
                 if (mSendDelayActionCompleted != null) {
                     mSendDelayActionCompleted.onSendDelayActionEnd();
                 }
             }
+            SendMessagesDelayManager.remove(conversationId);
         };
         mSubjectView = findViewById(R.id.subject_view);
         mSendButton = findViewById(R.id.send_message_button);

@@ -392,15 +392,6 @@ public class ConversationData extends BindableData {
 
         @Override
         public void onLoaderReset(final Loader<Cursor> generic) {
-            final BoundCursorLoader loader = (BoundCursorLoader) generic;
-            HSLog.d("ComposeMessageView", "onLoaderReset");
-            // Check if data still bound to the requesting ui element
-            if (isBound(loader.getBindingId())) {
-                mParticipantData.bind(null);
-            } else {
-                LogUtil.w(TAG, "Participant loader reset after unbinding mConversationId = " +
-                        mConversationId);
-            }
         }
     }
 
