@@ -328,11 +328,6 @@ public class ContactPickerFragment extends Fragment implements ContactPickerData
         } else if (mContactPickingMode != MODE_PICK_INITIAL_CONTACT) {
             mRecipientTextView.removeRecipientEntry(item.getRecipientEntry());
         }
-        if (mCustomHeaderViewPager.getSelectedItemPosition() == 0) {
-            BugleAnalytics.logEvent("CreatMessage_Frequents_Click");
-        } else {
-            BugleAnalytics.logEvent("CreatMessage_AllContacts_Click");
-        }
     }
 
     @Override // From ContactListItemView.HostInterface
