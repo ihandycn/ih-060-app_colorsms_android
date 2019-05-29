@@ -16,6 +16,7 @@
 
 package com.android.messaging.util;
 
+import android.annotation.TargetApi;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
@@ -26,6 +27,7 @@ import android.database.ContentObserver;
 import android.database.Cursor;
 import android.net.ConnectivityManager;
 import android.net.Uri;
+import android.os.Build;
 import android.provider.Settings;
 import android.provider.Telephony;
 import android.support.v4.util.ArrayMap;
@@ -567,9 +569,16 @@ public abstract class PhoneUtils {
             return getDefaultSmsSubscriptionId() != ParticipantData.DEFAULT_SELF_SUB_ID;
         }
 
+        @TargetApi(Build.VERSION_CODES.LOLLIPOP_MR1)
         @Override
         public int getActiveSubscriptionCount() {
-            return mSubscriptionManager.getActiveSubscriptionInfoCount();
+            try {
+                // @RequiresPermission(android.Manifest.permission.READ_PHONE_STATE)
+                return mSubscriptionManager.getActiveSubscriptionInfoCount();
+            } catch (SecurityException e) {
+                // No @RequiresPermission(android.Manifest.permission.READ_PHONE_STATE)
+                return 0;
+            }
         }
 
         @Override
@@ -580,7 +589,7 @@ public abstract class PhoneUtils {
 
         private int getEffectiveIncomingSubIdFromSystem(int subId) {
             if (subId < 0) {
-                if (mSubscriptionManager.getActiveSubscriptionInfoCount() > 1) {
+                if (getActiveSubscriptionCount() > 1) {
                     // For multi-SIM device, we can not decide which SIM to use if system
                     // does not know either. So just make it the invalid sub id.
                     return ParticipantData.DEFAULT_SELF_SUB_ID;
