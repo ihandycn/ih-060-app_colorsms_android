@@ -429,6 +429,10 @@ public class BugleApplication extends HSApplication implements UncaughtException
                 int delayTimes[] = {20, 40, 65, 95, 125, 365, 1850, 7300, 11000, 15000, 22000};
                 for (int delay : delayTimes) {
                     Threads.postOnMainThreadDelayed(() -> {
+                        AcbPublisherMgr.PublisherData publisherData = AcbPublisherMgr.getPublisherData(BugleApplication.this);
+                        BugleAnalytics.logUserProperty("MediaSource", publisherData.getMediaSource());
+                        BugleAnalytics.logUserProperty("Compaign", publisherData.getCampaign());
+                        BugleAnalytics.logUserProperty("Channel", publisherData.getAfChannel());
                         if (!mAppsFlyerResultReceived) {
                             mAppsFlyerResultReceived = true;
                             String userLevel = HSConfig.optString("not_configured", "UserLevel");
