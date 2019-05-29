@@ -4,36 +4,19 @@ import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.content.Intent;
 import android.graphics.Rect;
-import android.net.Uri;
-import android.support.v4.text.BidiFormatter;
-import android.support.v4.text.TextDirectionHeuristicsCompat;
-import android.support.v7.app.ActionBar;
 import android.os.Bundle;
-import android.support.v7.widget.Toolbar;
-import android.text.TextPaint;
-import android.text.TextUtils;
-import android.util.Log;
-import android.view.View;
+import android.support.v7.app.ActionBar;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
-import android.widget.ImageView;
 
 import com.android.messaging.R;
 import com.android.messaging.datamodel.BugleNotifications;
-import com.android.messaging.datamodel.MessagingContentProvider;
-import com.android.messaging.datamodel.data.MessageData;
 import com.android.messaging.ui.BugleActionBarActivity;
 import com.android.messaging.ui.UIIntents;
-import com.android.messaging.ui.conversation.ConversationActivity;
-import com.android.messaging.ui.conversation.ConversationActivityUiState;
 import com.android.messaging.ui.conversationlist.ConversationListActivity;
-import com.android.messaging.ui.customize.PrimaryColors;
-import com.android.messaging.ui.customize.ToolbarDrawables;
 import com.android.messaging.ui.messagebox.MessageBoxActivity;
 import com.android.messaging.util.Assert;
 import com.android.messaging.util.BugleAnalytics;
-import com.android.messaging.util.ContentType;
-import com.android.messaging.util.LogUtil;
 import com.android.messaging.util.UiUtils;
 import com.android.messaging.util.ViewUtils;
 import com.ihs.app.framework.HSApplication;
@@ -42,13 +25,8 @@ import com.superapps.util.Dimensions;
 import com.superapps.util.IntegerBuckets;
 import com.superapps.util.Preferences;
 
-import net.appcloudbox.ads.base.AcbInterstitialAd;
-
-import java.lang.ref.WeakReference;
-
 public class ContactPickerActivity extends BugleActionBarActivity implements
-        ContactPickerFragment.ContactPickerFragmentHost ,
-        ConversationActivityUiState.ConversationActivityUiStateHost ,
+        ContactPickerFragment.ContactPickerFragmentHost,
         ViewTreeObserver.OnGlobalLayoutListener {
 
 
@@ -61,8 +39,6 @@ public class ContactPickerActivity extends BugleActionBarActivity implements
     // Tracks whether onPause is called.
     private boolean mIsPaused;
 
-    private ConversationActivityUiState mUiState;
-
     private ViewGroup mContainer;
 
     private static final String SAVED_INSTANCE_STATE_UI_STATE_KEY = "uistate";
@@ -73,7 +49,7 @@ public class ContactPickerActivity extends BugleActionBarActivity implements
     private int mNavigationBarHeight;
 
     private final String TAG = "contact_picker_test";
-    
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -85,34 +61,22 @@ public class ContactPickerActivity extends BugleActionBarActivity implements
             BugleAnalytics.logEvent("SMS_Notifications_Clicked", true, true);
         }
 
-        // Do our best to restore UI state from saved instance state.
-        if (savedInstanceState != null) {
-            mUiState = savedInstanceState.getParcelable(SAVED_INSTANCE_STATE_UI_STATE_KEY);
-        } else {
-            if (intent.
-                    getBooleanExtra(UIIntents.UI_INTENT_EXTRA_GOTO_CONVERSATION_LIST, false)) {
-                // See the comment in BugleWidgetService.getViewMoreConversationsView() why this
-                // is unfortunately necessary. The Bugle desktop widget can display a list of
-                // conversations. When there are more conversations that can be displayed in
-                // the widget, the last item is a "More conversations" item. The way widgets
-                // are built, the list items can only go to a single fill-in intent which points
-                // to this ConversationActivity. When the user taps on "More conversations", we
-                // really want to go to the ConversationList. This code makes that possible.
-                finish();
-                final Intent convListIntent = new Intent(this, ConversationListActivity.class);
-                convListIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                startActivity(convListIntent);
-                return;
-            }
+        if (intent.
+                getBooleanExtra(UIIntents.UI_INTENT_EXTRA_GOTO_CONVERSATION_LIST, false)) {
+            // See the comment in BugleWidgetService.getViewMoreConversationsView() why this
+            // is unfortunately necessary. The Bugle desktop widget can display a list of
+            // conversations. When there are more conversations that can be displayed in
+            // the widget, the last item is a "More conversations" item. The way widgets
+            // are built, the list items can only go to a single fill-in intent which points
+            // to this ConversationActivity. When the user taps on "More conversations", we
+            // really want to go to the ConversationList. This code makes that possible.
+            finish();
+            final Intent convListIntent = new Intent(this, ConversationListActivity.class);
+            convListIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            startActivity(convListIntent);
+            return;
         }
 
-        // If saved instance state doesn't offer a clue, get the info from the intent.
-        if (mUiState == null) {
-            final String conversationId = intent.getStringExtra(
-                    UIIntents.UI_INTENT_EXTRA_CONVERSATION_ID);
-            mUiState = new ConversationActivityUiState(conversationId);
-        }
-        mUiState.setHost(this);
         mInstanceStateSaved = false;
 
 
@@ -146,8 +110,6 @@ public class ContactPickerActivity extends BugleActionBarActivity implements
         if (mInstanceStateSaved || mIsPaused) {
             return;
         }
-        Assert.notNull(mUiState);
-
         final FragmentManager fragmentManager = getFragmentManager();
         final FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
 
@@ -160,7 +122,7 @@ public class ContactPickerActivity extends BugleActionBarActivity implements
                     contactPickerFragment, ContactPickerFragment.FRAGMENT_TAG);
         }
         contactPickerFragment.setHost(this);
-        contactPickerFragment.setContactPickingMode(mUiState.getDesiredContactPickingMode(),
+        contactPickerFragment.setContactPickingMode(ContactPickerFragment.MODE_PICK_INITIAL_CONTACT,
                 animate);
 
         fragmentTransaction.commit();
@@ -172,16 +134,18 @@ public class ContactPickerActivity extends BugleActionBarActivity implements
     public void updateActionBar(final ActionBar actionBar) {
         super.updateActionBar(actionBar);
         final ContactPickerFragment contactPicker = getContactPicker();
-        if (contactPicker != null && mUiState.shouldShowContactPickerFragment()) {
+        if (contactPicker != null) {
             contactPicker.updateActionBar(actionBar);
         }
     }
 
-
     @Override // From ContactPickerFragmentHost
     public void onGetOrCreateNewConversation(final String conversationId) {
         Assert.isTrue(conversationId != null);
-        mUiState.onGetOrCreateConversation(conversationId);
+        UIIntents.get().launchConversationActivity(
+                this, conversationId, null,
+                null, false, "", true);
+        finish();
     }
 
     @Override // From ContactPickerFragmentHost
@@ -191,36 +155,17 @@ public class ContactPickerActivity extends BugleActionBarActivity implements
 
     @Override // From ContactPickerFragmentHost
     public void onInitiateAddMoreParticipants() {
-        mUiState.onAddMoreParticipants();
     }
 
 
     @Override // From ContactPickerFragmentHost
     public void onParticipantCountChanged(final boolean canAddMoreParticipants) {
-        mUiState.onParticipantCountUpdated(canAddMoreParticipants);
     }
-
-
-    @Override // From ConversationActivityUiStateListener
-    public void onConversationContactPickerUiStateChanged(final int oldState, final int newState,
-                                                          final boolean animate) {
-        Assert.isTrue(oldState != newState);
-//        updateUiState(animate);
-
-
-        final String conversationId = mUiState.getConversationId();
-        UIIntents.get().launchConversationActivity(
-                this, conversationId, null,
-                null, false, "", true);
-        finish();
-    }
-
 
     private ContactPickerFragment getContactPicker() {
         return (ContactPickerFragment) getFragmentManager().findFragmentByTag(
                 ContactPickerFragment.FRAGMENT_TAG);
     }
-
 
 
     @Override
@@ -234,7 +179,6 @@ public class ContactPickerActivity extends BugleActionBarActivity implements
         // focus change from the framework, making mUiState and actual UI inconsistent.
         // Therefore, save an exact "snapshot" (clone) of the UI state object to make sure the
         // restored UI state ALWAYS matches the actual restored UI components.
-        outState.putParcelable(SAVED_INSTANCE_STATE_UI_STATE_KEY, mUiState.clone());
         mInstanceStateSaved = true;
     }
 
@@ -265,13 +209,8 @@ public class ContactPickerActivity extends BugleActionBarActivity implements
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        if (mUiState != null) {
-            mUiState.setHost(null);
-            mUiState = null;
-        }
         mContainer.getViewTreeObserver().removeOnGlobalLayoutListener(this);
     }
-
 
     @Override
     public void onGlobalLayout() {
