@@ -252,12 +252,14 @@ public class ComposeMessageView extends LinearLayout
         String conversationId = mBinding.getData().getConversationId();
         SendMessagesDelayManager.SendMessagesDelayData globalSendMessagesDelayData = SendMessagesDelayManager.getSendMessagesDelayValue(conversationId);
         if (globalSendMessagesDelayData != null) {
+            long firstSendDelayActionStartSystemTime = globalSendMessagesDelayData.getLastSendDelayActionStartSystemTime();
             HSLog.d(TAG,"" + globalSendMessagesDelayData);
             lastSendDelayActionStartSystemTime = globalSendMessagesDelayData.getLastSendDelayActionStartSystemTime();
             mMillisecondsAnimated = System.currentTimeMillis() - lastSendDelayActionStartSystemTime;
+            HSLog.d(TAG, "" + mMillisecondsAnimated);
             Threads.removeOnMainThread(globalSendMessagesDelayData.getRunnable());
             SendMessagesDelayManager.remove(conversationId);
-            startMessageSendDelayAction();
+            startMessageSendDelayAction(firstSendDelayActionStartSystemTime);
         }
     }
 
@@ -425,7 +427,7 @@ public class ComposeMessageView extends LinearLayout
         mSendButton.setOnClickListener(clickView -> {
             HSLog.d(TAG, "mSendButton.setOnClickListener Run");
             BugleAnalytics.logEvent("Detailpage_BtnSend_Click", "SendDelay", "" + SendDelaySettings.getSendDelayInSecs());
-            startMessageSendDelayAction();
+            startMessageSendDelayAction(System.currentTimeMillis());
         });
 
         mSendButton.setOnLongClickListener(arg0 -> {
@@ -556,7 +558,7 @@ public class ComposeMessageView extends LinearLayout
         mSendDelayProgressBar.setProgress(100);
     }
 
-    private void startMessageSendDelayAction(){
+    private void startMessageSendDelayAction(long firstSendDelayActionStartSystemTime){
         mDelayCloseButton.setVisibility(View.VISIBLE);
         mSendDelayProgressBar.setVisibility(View.VISIBLE);
         mSelfSendIcon.setVisibility(View.GONE);
@@ -580,7 +582,7 @@ public class ComposeMessageView extends LinearLayout
             sendMessagesDelayData.setRunnable(mSendDelayRunnable);
             SendMessagesDelayManager.putSendMessagesDelayValue((conversationId), sendMessagesDelayData);
         }
-        SendMessagesDelayManager.getSendMessagesDelayValue(conversationId).setLastSendDelayActionStartSystemTime(System.currentTimeMillis());
+        SendMessagesDelayManager.getSendMessagesDelayValue(conversationId).setLastSendDelayActionStartSystemTime(firstSendDelayActionStartSystemTime);
 
         mSendDelayProgressBar.startAnimation(SendDelaySettings.getSendDelayInSecs() - (mMillisecondsAnimated / 1000));
         mMillisecondsAnimated = 0;
