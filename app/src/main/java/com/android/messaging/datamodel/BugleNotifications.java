@@ -475,6 +475,9 @@ public class BugleNotifications {
 
         updateBuilderAudioVibrate(state, notifBuilder, silent, ringtoneUri, conversationId);
 
+        notifBuilder.setPriority(state.getPriority());
+        final NotificationCompat.Style notifStyle = state.build(notifBuilder);
+
         // Set the content intent
         PendingIntent destinationIntent;
         if (state.mConversationIds.size() > 1) {
@@ -502,11 +505,8 @@ public class BugleNotifications {
         }
         notifBuilder.setContentIntent(destinationIntent);
 
-        notifBuilder.setPriority(state.getPriority());
-
         // Save the state of the notification in-progress so when the avatar is loaded,
         // we can continue building the notification.
-        final NotificationCompat.Style notifStyle = state.build(notifBuilder);
         state.mNotificationBuilder = notifBuilder;
         state.mNotificationStyle = notifStyle;
         state.mChannel = notificationChannel;
