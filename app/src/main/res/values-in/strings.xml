@@ -658,4 +658,19 @@
 	<string name="private_move_tip">Pesan akan dipindahkan ke Kotak Pribadi dan tidak akan diakses oleh aplikasi SMS lainnya.</string>
 	<string name="private_box_uninstall_notice">Kecuali jika Anda memindahkan pesan ke kotak publik, Anda mungkin kehilangan data Anda setelah menghapus aplikasi kami.</string>
 
+    <string name="set_password_prompt">Atur kode akses pembuka</string>
+    <string name="lock_activity_change_to_pattern">Ubah ke Pola</string>
+    <string name="set_password_sub_prompt">Masukkan 4 nomor</string>
+    <string name="lock_style_pattern">Pola</string>
+    <string name="lock_activity_change_to_pin">Ubah ke kode sandi</string>
+    <string name="set_gesture_sub_prompt">Sambung minimal 4 titik</string>
+    <string name="app_lock_verify_identity">Verifikasi Identitas</string>
+    <string name="please_set_password">Atur pola penguncian</string>
+    <string name="gesture_not_confirmed_sub_prompt">Pola Salah</string>
+    <string name="password_not_confirmed_sub_prompt">Kode tidak dikonfirmasi</string>
+    <string name="confirm_prompt_gesture">Konfirmasikan pola</string>
+    <string name="reset_password">Atur Ulang Kata Sandi</string>
+    <string name="lock_style_pin">Kode Akses</string>
+    <string name="confirm_prompt_password">Konfirmasikan kode akses</string>
+    <string name="draw_unlock_pattern">Gambar pola</string>
 </resources>

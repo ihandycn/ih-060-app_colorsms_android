@@ -656,4 +656,19 @@
 	<string name="private_move_tip">メッセージはプライベート受信箱に移動され、他のSMSアプリからはアクセスされません。</string>
 	<string name="private_box_uninstall_notice">メッセージを一般の受信箱に移動しない限り、アンインストール後にデータが失われる可能性があります。</string>
 
+    <string name="set_password_prompt">アンロックするパスコードを設定してください</string>
+    <string name="lock_activity_change_to_pattern">パターンに変更する</string>
+    <string name="set_password_sub_prompt">4桁の数字を入力</string>
+    <string name="lock_style_pattern">パターン</string>
+    <string name="lock_activity_change_to_pin">パスコードに変更する</string>
+    <string name="set_gesture_sub_prompt">少なくとも4つのドットを繋げます</string>
+    <string name="app_lock_verify_identity">身分証明を認証する</string>
+    <string name="please_set_password">アンロックのパターンを設定してください</string>
+    <string name="gesture_not_confirmed_sub_prompt">間違ったパターン</string>
+    <string name="password_not_confirmed_sub_prompt">パスコードが確定されていません</string>
+    <string name="confirm_prompt_gesture">パターンを確認</string>
+    <string name="reset_password">パスワードのリセット</string>
+    <string name="lock_style_pin">パスコード</string>
+    <string name="confirm_prompt_password">パスコードを確認</string>
+    <string name="draw_unlock_pattern">アンロックするパターンを描いてください</string>
 </resources>

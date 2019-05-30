@@ -615,4 +615,19 @@
     <string name="setting_reset_customization_summary">這將重置此會話的所有自定義內容。 </string>
     <string name="action_pin">置頂</string>
 
+    <string name="set_password_prompt">請設置數字解鎖密碼</string>
+    <string name="lock_activity_change_to_pattern">切換到圖案密碼</string>
+    <string name="set_password_sub_prompt">輸入4個數字</string>
+    <string name="lock_style_pattern">圖案</string>
+    <string name="lock_activity_change_to_pin">切換到數字密碼</string>
+    <string name="set_gesture_sub_prompt">至少連接4個點</string>
+    <string name="app_lock_verify_identity">驗證身份</string>
+    <string name="please_set_password">請設置解鎖圖案</string>
+    <string name="gesture_not_confirmed_sub_prompt">錯誤的解鎖圖案</string>
+    <string name="password_not_confirmed_sub_prompt">錯誤的數字密碼</string>
+    <string name="confirm_prompt_gesture">請確認解鎖圖案</string>
+    <string name="reset_password">重新設置密碼</string>
+    <string name="lock_style_pin">數字密碼</string>
+    <string name="confirm_prompt_password">請確認數字解鎖密碼</string>
+    <string name="draw_unlock_pattern">請輸入你的解鎖圖案</string>
 </resources>

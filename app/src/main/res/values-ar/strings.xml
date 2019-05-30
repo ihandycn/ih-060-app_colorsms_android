@@ -756,4 +756,19 @@
 	<string name="private_move_tip">سوف تُنقل الرسائل إلى الصندوق الخاص ولا يمكن الوصول إليها عبر تطبيقات الرسائل القصيرة الأُخرى.</string>
 	<string name="private_box_uninstall_notice">قد تفقد بياناتك عند إلغاء التثبيت ما لم تنقلها إلى الصندوق العام أولاً.</string>
 
+    <string name="set_password_prompt">يرجى تعيين رمز مرور فتح</string>
+    <string name="lock_activity_change_to_pattern">التغيير إلى الأنماط</string>
+    <string name="set_password_sub_prompt">أدخل 4 أرقام</string>
+    <string name="lock_style_pattern">النمط</string>
+    <string name="lock_activity_change_to_pin">التغيير إلى رمز المرور</string>
+    <string name="set_gesture_sub_prompt">وصل 4 نقاط على الأقل</string>
+    <string name="app_lock_verify_identity">مصادقة الهوية</string>
+    <string name="please_set_password">يرجى تعيين نمط فتح</string>
+    <string name="gesture_not_confirmed_sub_prompt">نمط خاطئ</string>
+    <string name="password_not_confirmed_sub_prompt">لم يتم تأكيد رمز المرور</string>
+    <string name="confirm_prompt_gesture">تأكيد النمط</string>
+    <string name="reset_password">إعادة تعيين كلمة المرور</string>
+    <string name="lock_style_pin">رمز المرور</string>
+    <string name="confirm_prompt_password">تأكيد رمز المرور</string>
+    <string name="draw_unlock_pattern">ارسم نمط فك القفل</string>
 </resources>

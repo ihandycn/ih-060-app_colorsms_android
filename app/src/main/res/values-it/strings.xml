@@ -655,4 +655,20 @@
 	<string name="private_move_tip">I messaggi verranno trasferiti nella casella provata e non saranno accessibili da altre app.</string>
 	<string name="private_box_uninstall_notice">Se non trasferisci i messaggi nella casella pubblica, disinstallando l\'app potresti perdere i tuoi dati.</string>
 
+    <string name="set_password_prompt">Imposta una password</string>
+    <string name="lock_activity_change_to_pattern">Passa a sequenza</string>
+    <string name="set_password_sub_prompt">Inserisci 4 numeri</string>
+    <string name="lock_style_pattern">Sequenza</string>
+    <string name="lock_activity_change_to_pin">Passa alla password</string>
+    <string name="set_gesture_sub_prompt">Unisci almeno 4 punti</string>
+    <string name="app_lock_verify_identity">Verifica l\'identità</string>
+    <string name="please_set_password">Imposta sequenza sblocco</string>
+    <string name="gesture_not_confirmed_sub_prompt">Sequenza errata</string>
+    <string name="password_not_confirmed_sub_prompt">Password non confermata</string>
+    <string name="confirm_prompt_gesture">Conferma sequenza</string>
+    <string name="reset_password">Ripristina password</string>
+    <string name="lock_style_pin">Password</string>
+    <string name="confirm_prompt_password">Conferma password</string>
+    <string name="draw_unlock_pattern">Traccia sequenza sblocco</string>
+
 </resources>
