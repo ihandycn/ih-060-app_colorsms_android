@@ -6,11 +6,6 @@ public class SendDelayMessagesManager {
 
     private static HashMap<String, SendDelayMessagesData> sSendDelayMessagesHashMap = new HashMap<>();
 
-    public static void putSendDelayMessagesValue(String conversationId, SendDelayMessagesData sendDelayMessagesData ) {
-        sSendDelayMessagesHashMap.put(conversationId, sendDelayMessagesData);
-    }
-
-
     public static SendDelayMessagesData getIncompleteSendingDelayMessagesAction(String conversationId) {
         return sSendDelayMessagesHashMap.get(conversationId);
     }
@@ -19,26 +14,27 @@ public class SendDelayMessagesManager {
         sSendDelayMessagesHashMap.remove(conversationId);
     }
 
+    public static void insertIncompleteSendingDelayMessagesAction(String conversationId, long sendDelayAnimationStartTime, Runnable sendDelayRunnable) {
+        SendDelayMessagesManager.SendDelayMessagesData sendDelayMessagesData = new SendDelayMessagesManager.SendDelayMessagesData(sendDelayRunnable, sendDelayAnimationStartTime);
+        sSendDelayMessagesHashMap.put(conversationId, sendDelayMessagesData);
+    }
+
     public static class SendDelayMessagesData {
 
         private Runnable mSendDelayMessagesRunnable;
         private long mSendDelayMessagesAnimationStartTime;
 
-        public Runnable getSendDelayMessagesRunnable() {
-            return mSendDelayMessagesRunnable;
+        private SendDelayMessagesData(Runnable mSendDelayMessagesRunnable, long mSendDelayMessagesAnimationStartTime) {
+            this.mSendDelayMessagesRunnable = mSendDelayMessagesRunnable;
+            this.mSendDelayMessagesAnimationStartTime = mSendDelayMessagesAnimationStartTime;
         }
 
-        public void setSendDelayMessagesRunnable(Runnable sendDelayMessagesRunnable) {
-            this.mSendDelayMessagesRunnable = sendDelayMessagesRunnable;
+        public Runnable getSendDelayMessagesRunnable() {
+            return mSendDelayMessagesRunnable;
         }
 
         public long getLastSendDelayActionStartSystemTime() {
             return mSendDelayMessagesAnimationStartTime;
         }
-
-        public void setLastSendDelayActionStartSystemTime(long sendDelayMessagesAnimationStartTime) {
-            this.mSendDelayMessagesAnimationStartTime = sendDelayMessagesAnimationStartTime;
-        }
-
     }
 }
