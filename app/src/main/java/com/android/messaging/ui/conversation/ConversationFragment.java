@@ -1007,69 +1007,74 @@ public class ConversationFragment extends Fragment implements ConversationDataLi
         invalidateOptionsMenu();
 
         mMessageDataList.clear();
-        if (cursor != null && cursor.moveToFirst()) {
-            do {
-                ConversationMessageData messageData = new ConversationMessageData();
-                messageData.bind(cursor);
-                mMessageDataList.add(messageData);
-            } while (cursor.moveToNext());
-        }
+        Threads.postOnThreadPoolExecutor(() -> {
 
-        mAdapter.setConversationId(mConversationId);
-        mAdapter.setDataList(mMessageDataList);
-
-        if (isSync) {
-            // This is a message sync. Syncing messages changes cursor item count, which would
-            // implicitly change RV's scroll position. We'd like the RV to keep scrolled to the same
-            // relative position from the bottom (because RV is stacked from bottom), so that it
-            // stays relatively put as we sync.
-            final int position = Math.max(mAdapter.getItemCount() - 1 - positionFromBottom, 0);
-            scrollToPosition(position, false /* smoothScroll */);
-        } else if (newestMessage != null) {
-            // Show a snack bar notification if we are not scrolled to the bottom and the new
-            // message is an incoming message.
-            if (!scrolledToBottom && newestMessage.getIsIncoming()) {
-                // If the conversation activity is started but not resumed (if another dialog
-                // activity was in the foregrond), we will show a system notification instead of
-                // the snack bar.
-                if (mBinding.getData().isFocused()) {
-                    UiUtils.showSnackBarWithCustomAction(getActivity(),
-                            getView().getRootView(),
-                            getString(R.string.in_conversation_notify_new_message_text),
-                            SnackBar.Action.createCustomAction(() -> {
-                                        scrollToBottom(true /* smoothScroll */);
-                                        mComposeMessageView.hideAllComposeInputs(false /* animate */);
-                                    },
-                                    getString(R.string.in_conversation_notify_new_message_action)),
-                            null /* interactions */,
-                            SnackBar.Placement.above(mComposeMessageView));
-                }
-            } else {
-                // We are either already scrolled to the bottom or this is an outgoing message,
-                // scroll to the bottom to reveal it.
-                // Don't smooth scroll if we were already at the bottom; instead, we scroll
-                // immediately so RecyclerView's view animation will take place.
-                scrollToBottom(!scrolledToBottom);
+            if (cursor != null && cursor.moveToFirst()) {
+                do {
+                    ConversationMessageData messageData = new ConversationMessageData();
+                    messageData.bind(cursor);
+                    mMessageDataList.add(messageData);
+                } while (cursor.moveToNext());
             }
-        }
 
-        if (cursor != null) {
-            mHost.onConversationMessagesUpdated(cursor.getCount());
+            Threads.postOnMainThread(() -> {
+                mAdapter.setConversationId(mConversationId);
+                mAdapter.setDataList(mMessageDataList);
 
-            // Are we coming from a widget click where we're told to scroll to a particular item?
-            final int scrollToPos = getScrollToMessagePosition();
-            if (scrollToPos >= 0) {
-                if (LogUtil.isLoggable(LogUtil.BUGLE_TAG, LogUtil.VERBOSE)) {
-                    LogUtil.v(LogUtil.BUGLE_TAG, "onConversationMessagesCursorUpdated " +
-                            " scrollToPos: " + scrollToPos +
-                            " cursorCount: " + cursor.getCount());
+                if (isSync) {
+                    // This is a message sync. Syncing messages changes cursor item count, which would
+                    // implicitly change RV's scroll position. We'd like the RV to keep scrolled to the same
+                    // relative position from the bottom (because RV is stacked from bottom), so that it
+                    // stays relatively put as we sync.
+                    final int position = Math.max(mAdapter.getItemCount() - 1 - positionFromBottom, 0);
+                    scrollToPosition(position, false /* smoothScroll */);
+                } else if (newestMessage != null) {
+                    // Show a snack bar notification if we are not scrolled to the bottom and the new
+                    // message is an incoming message.
+                    if (!scrolledToBottom && newestMessage.getIsIncoming()) {
+                        // If the conversation activity is started but not resumed (if another dialog
+                        // activity was in the foregrond), we will show a system notification instead of
+                        // the snack bar.
+                        if (mBinding.getData().isFocused()) {
+                            UiUtils.showSnackBarWithCustomAction(getActivity(),
+                                    getView().getRootView(),
+                                    getString(R.string.in_conversation_notify_new_message_text),
+                                    SnackBar.Action.createCustomAction(() -> {
+                                                scrollToBottom(true /* smoothScroll */);
+                                                mComposeMessageView.hideAllComposeInputs(false /* animate */);
+                                            },
+                                            getString(R.string.in_conversation_notify_new_message_action)),
+                                    null /* interactions */,
+                                    SnackBar.Placement.above(mComposeMessageView));
+                        }
+                    } else {
+                        // We are either already scrolled to the bottom or this is an outgoing message,
+                        // scroll to the bottom to reveal it.
+                        // Don't smooth scroll if we were already at the bottom; instead, we scroll
+                        // immediately so RecyclerView's view animation will take place.
+                        scrollToBottom(!scrolledToBottom);
+                    }
                 }
-                scrollToPosition(scrollToPos, true /*smoothScroll*/);
-                clearScrollToMessagePosition();
-            }
-        }
 
-        mHost.invalidateActionBar();
+                if (cursor != null) {
+                    mHost.onConversationMessagesUpdated(cursor.getCount());
+
+                    // Are we coming from a widget click where we're told to scroll to a particular item?
+                    final int scrollToPos = getScrollToMessagePosition();
+                    if (scrollToPos >= 0) {
+                        if (LogUtil.isLoggable(LogUtil.BUGLE_TAG, LogUtil.VERBOSE)) {
+                            LogUtil.v(LogUtil.BUGLE_TAG, "onConversationMessagesCursorUpdated " +
+                                    " scrollToPos: " + scrollToPos +
+                                    " cursorCount: " + cursor.getCount());
+                        }
+                        scrollToPosition(scrollToPos, true /*smoothScroll*/);
+                        clearScrollToMessagePosition();
+                    }
+                }
+
+                mHost.invalidateActionBar();
+            });
+        });
     }
 
     /**

@@ -33,7 +33,6 @@ import android.support.v4.view.ViewGroupCompat;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -70,7 +69,6 @@ import com.android.messaging.ui.customize.theme.ThemeInfo;
 import com.android.messaging.ui.customize.theme.ThemeUtils;
 import com.android.messaging.util.AccessibilityUtil;
 import com.android.messaging.util.Assert;
-import com.android.messaging.util.AvatarUriUtil;
 import com.android.messaging.util.BugleAnalytics;
 import com.android.messaging.util.ImeUtil;
 import com.android.messaging.util.LogUtil;
@@ -83,9 +81,8 @@ import com.ihs.commons.utils.HSBundle;
 import com.ihs.commons.utils.HSLog;
 import com.superapps.util.BackgroundDrawables;
 import com.superapps.util.Dimensions;
-import com.superapps.util.IntegerBuckets;
 import com.superapps.util.Navigations;
-import com.superapps.util.Preferences;
+import com.superapps.util.Threads;
 
 import net.appcloudbox.ads.base.AcbNativeAd;
 import net.appcloudbox.ads.base.ContainerView.AcbNativeAdContainerView;
@@ -96,8 +93,6 @@ import net.appcloudbox.ads.nativead.AcbNativeAdManager;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import static com.android.messaging.datamodel.data.ConversationListItemData.INDEX_CONVERSATION_ICON;
 
 /**
  * Shows a list of conversations.
@@ -531,66 +526,49 @@ public class ConversationListFragment extends Fragment implements ConversationLi
         mListBinding.ensureBound(data);
 
         ArrayList<Object> dataList = new ArrayList<>();
-
-        int localAvatarCount = 0;
-        if (cursor != null && cursor.moveToFirst()) {
-            do {
-                ConversationListItemData itemData = new ConversationListItemData();
-                itemData.bind(cursor);
-                if (!itemData.isPrivate()) {
-                    dataList.add(itemData);
-                    if (!TextUtils.isEmpty(cursor.getString(INDEX_CONVERSATION_ICON))
-                            && TextUtils.equals(AvatarUriUtil.TYPE_LOCAL_RESOURCE_URI,
-                            AvatarUriUtil.getAvatarType(Uri.parse(cursor.getString(INDEX_CONVERSATION_ICON))))) {
-                        localAvatarCount++;
+        Threads.postOnThreadPoolExecutor(() -> {
+            if (cursor != null && cursor.moveToFirst()) {
+                do {
+                    ConversationListItemData itemData = new ConversationListItemData();
+                    itemData.bind(cursor);
+                    if (!itemData.isPrivate()) {
+                        dataList.add(itemData);
                     }
-                }
-            } while (cursor.moveToNext());
-        }
+                } while (cursor.moveToNext());
+            }
 
-        IntegerBuckets buckets = new IntegerBuckets(0, 1, 2, 3, 4, 5, 10, 20, 30);
-        if (cursor != null) {
-            BugleAnalytics.logEvent("Sms_Local_Contact_Avatar_Count", "count", buckets.getBucket(localAvatarCount));
-        }
-
-        if (conversationFirstUpdated) {
-            conversationFirstUpdated = false;
-            boolean hasPinConversation = false;
-            if (!dataList.isEmpty()) {
-                for (Object object : dataList) {
-                    if (object instanceof ConversationListItemData) {
-                        ConversationListItemData itemData = (ConversationListItemData) object;
-                        if (itemData.isPinned()) {
-                            hasPinConversation = true;
-                            break;
+            Threads.postOnMainThread(() -> {
+                if (conversationFirstUpdated) {
+                    conversationFirstUpdated = false;
+                    boolean hasPinConversation = false;
+                    if (!dataList.isEmpty()) {
+                        for (Object object : dataList) {
+                            if (object instanceof ConversationListItemData) {
+                                ConversationListItemData itemData = (ConversationListItemData) object;
+                                if (itemData.isPinned()) {
+                                    hasPinConversation = true;
+                                    break;
+                                }
+                            }
                         }
                     }
+                    HSBundle hsBundle = new HSBundle();
+                    hsBundle.putBoolean(ConversationListActivity.HAS_PIN_CONVERSATION, hasPinConversation);
+                    HSGlobalNotificationCenter.sendNotification(ConversationListActivity.FIRST_LOAD, hsBundle);
                 }
-            }
-            HSBundle hsBundle = new HSBundle();
-            hsBundle.putBoolean(ConversationListActivity.HAS_PIN_CONVERSATION, hasPinConversation);
-            HSGlobalNotificationCenter.sendNotification(ConversationListActivity.FIRST_LOAD, hsBundle);
-        }
 
-        if (dataList.size() > 0 && mAdapter.hasHeader()) {
-            dataList.add(0, new AdItemData());
-        }
-        mAdapter.setDataList(dataList);
-        HSLog.d("conversation list has : " + dataList.size());
-        if (adFirstPrepared && !dataList.isEmpty()) {
-            tryShowTopNativeAd();
-            adFirstPrepared = false;
-        }
-        updateEmptyListUi(cursor == null || dataList.size() == 0);
-        if (cursor != null && cursor.getCount() > 0) {
-            Preferences.getDefault().doOnce(new Runnable() {
-                @Override
-                public void run() {
-                    IntegerBuckets buckets = new IntegerBuckets(10, 20, 30, 40, 50);
-                    BugleAnalytics.logEvent("SMS_FirstLoading_Success", true, "Number", buckets.getBucket(cursor.getCount()));
+                if (dataList.size() > 0 && mAdapter.hasHeader()) {
+                    dataList.add(0, new AdItemData());
                 }
-            }, "pref_key_first_loading_conversation_count");
-        }
+                mAdapter.setDataList(dataList);
+                HSLog.d("conversation list has : " + dataList.size());
+                if (adFirstPrepared && !dataList.isEmpty()) {
+                    tryShowTopNativeAd();
+                    adFirstPrepared = false;
+                }
+                updateEmptyListUi(cursor == null || dataList.size() == 0);
+            });
+        });
     }
 
     @Override
