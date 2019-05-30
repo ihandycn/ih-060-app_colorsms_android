@@ -347,7 +347,7 @@
 					<key>redrose</key>
 					<dict>
 						<key>IsLocalTheme</key>
-						<false/>
+						<true/>
 						<key>Name</key>
 						<string>Red Rose</string>
 						<key>PreviewList</key>
@@ -360,7 +360,7 @@
 						<key>ThemeColor</key>
 						<string>#ce1232</string>
 						<key>FontName</key>
-						<string>kalam</string>
+						<string>Merienda</string>
 						<key>AvatarForegroundColor</key>
 						<string>#ffffff</string>
 						<key>ListTitleColor</key>
@@ -405,7 +405,7 @@
 					<key>rainbow</key>
 					<dict>
 						<key>IsLocalTheme</key>
-						<false/>
+						<true/>
 						<key>Name</key>
 						<string>Rainbow</string>
 						<key>PreviewList</key>
@@ -579,7 +579,7 @@
 					<key>raindrop</key>
 					<dict>
 						<key>IsLocalTheme</key>
-						<false/>
+						<true/>
 						<key>Name</key>
 						<string>Rain Drop</string>
 						<key>PreviewList</key>
@@ -985,7 +985,7 @@
 					<key>simplebusiness</key>
 					<dict>
 						<key>IsLocalTheme</key>
-						<true/>
+						<false/>
 						<key>Name</key>
 						<string>Simple Business</string>
 						<key>PreviewList</key>
@@ -1275,7 +1275,7 @@
 					<key>technology</key>
 					<dict>
 						<key>IsLocalTheme</key>
-						<true/>
+						<false/>
 						<key>Name</key>
 						<string>Technology</string>
 						<key>PreviewList</key>
@@ -1391,7 +1391,7 @@
 					<key>waterdrop</key>
 					<dict>
 						<key>IsLocalTheme</key>
-						<true/>
+						<false/>
 						<key>Name</key>
 						<string>Water Drop</string>
 						<key>PreviewList</key>
@@ -1449,7 +1449,7 @@
 					<key>goldendiamond</key>
 					<dict>
 						<key>IsLocalTheme</key>
-						<true/>
+						<false/>
 						<key>Name</key>
 						<string>Golden Diamond</string>
 						<key>PreviewList</key>
