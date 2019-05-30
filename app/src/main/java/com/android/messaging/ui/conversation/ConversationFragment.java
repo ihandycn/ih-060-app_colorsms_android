@@ -100,7 +100,7 @@ import com.android.messaging.ui.dialog.FiveStarRateDialog;
 import com.android.messaging.ui.emoji.EmojiPickerFragment;
 import com.android.messaging.ui.mediapicker.CameraGalleryFragment;
 import com.android.messaging.ui.mediapicker.MediaPickerFragment;
-import com.android.messaging.ui.sendmessagesdelay.SendMessagesDelayManager;
+import com.android.messaging.ui.senddelaymessages.SendDelayMessagesManager;
 import com.android.messaging.ui.wallpaper.WallpaperManager;
 import com.android.messaging.util.AccessibilityUtil;
 import com.android.messaging.util.Assert;
@@ -1104,8 +1104,8 @@ public class ConversationFragment extends Fragment implements ConversationDataLi
         // Unbind all the views that we bound to data
         if (mComposeMessageView != null) {
             String conversationId = mBinding.getData().getConversationId();
-            if (!mComposeMessageView.getWaitingToSendMessageFlag()) {
-                SendMessagesDelayManager.remove(conversationId);
+            if (!mComposeMessageView.getIsWaitingToSendMessageFlag()) {
+                SendDelayMessagesManager.remove(conversationId);
                 mComposeMessageView.unbind();
                 mBinding.unbind();
                 mConversationId = null;

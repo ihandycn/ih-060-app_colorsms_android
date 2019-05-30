@@ -1,25 +1,25 @@
-package com.android.messaging.ui.sendmessagesdelay;
+package com.android.messaging.ui.senddelaymessages;
 
 import java.util.HashMap;
 
-public class SendMessagesDelayManager {
+public class SendDelayMessagesManager {
 
-    private static HashMap<String, SendMessagesDelayData> sSendMessagesDelayHashMap = new HashMap<>();
+    private static HashMap<String, SendDelayMessagesData> sSendDelayMessagesHashMap = new HashMap<>();
 
-    public static void putSendMessagesDelayValue(String conversationId, SendMessagesDelayData sendMessagesDelayData ) {
-        sSendMessagesDelayHashMap.put(conversationId, sendMessagesDelayData);
+    public static void putSendDelayMessagesValue(String conversationId, SendDelayMessagesData sendDelayMessagesData ) {
+        sSendDelayMessagesHashMap.put(conversationId, sendDelayMessagesData);
     }
 
 
-    public static SendMessagesDelayData getSendMessagesDelayValue(String conversationId) {
-        return sSendMessagesDelayHashMap.get(conversationId);
+    public static SendDelayMessagesData getIncompleteSendingDelayMessagesAction(String conversationId) {
+        return sSendDelayMessagesHashMap.get(conversationId);
     }
 
     public static void remove(String conversationId) {
-        sSendMessagesDelayHashMap.remove(conversationId);
+        sSendDelayMessagesHashMap.remove(conversationId);
     }
 
-    public static class SendMessagesDelayData {
+    public static class SendDelayMessagesData {
 
         private Runnable mSendDelayMessagesRunnable;
         private long mSendDelayMessagesAnimationStartTime;

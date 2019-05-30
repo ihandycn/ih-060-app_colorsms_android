@@ -74,7 +74,7 @@ import com.android.messaging.ui.conversation.ConversationInputManager.Conversati
 import com.android.messaging.ui.customize.PrimaryColors;
 import com.android.messaging.ui.dialog.FiveStarRateDialog;
 import com.android.messaging.ui.emoji.utils.EmojiManager;
-import com.android.messaging.ui.sendmessagesdelay.SendMessagesDelayManager;
+import com.android.messaging.ui.senddelaymessages.SendDelayMessagesManager;
 import com.android.messaging.ui.signature.SignatureSettingDialog;
 import com.android.messaging.util.AccessibilityUtil;
 import com.android.messaging.util.Assert;
@@ -90,7 +90,6 @@ import com.android.messaging.util.OsUtil;
 import com.android.messaging.util.TextViewUtil;
 import com.android.messaging.util.UiUtils;
 import com.android.messaging.font.FontUtils;
-import com.ihs.commons.utils.HSLog;
 import com.superapps.util.BackgroundDrawables;
 import com.superapps.util.Dimensions;
 import com.superapps.util.Preferences;
@@ -256,21 +255,7 @@ public class ComposeMessageView extends LinearLayout
         mInputManager.onDetach();
     }
 
-    private void resumeSendDelayMessageActionStartTime(){
-        long sendDelayActionStartTime;
-        String conversationId = mBinding.getData().getConversationId();
-        SendMessagesDelayManager.SendMessagesDelayData globalSendMessagesDelayData = SendMessagesDelayManager.getSendMessagesDelayValue(conversationId);
-        if (globalSendMessagesDelayData != null) {
-            long firstSendDelayActionStartSystemTime = globalSendMessagesDelayData.getLastSendDelayActionStartSystemTime();
-            sendDelayActionStartTime = globalSendMessagesDelayData.getLastSendDelayActionStartSystemTime();
-            mMillisecondsAnimated = System.currentTimeMillis() - sendDelayActionStartTime;
-            Threads.removeOnMainThread(globalSendMessagesDelayData.getSendDelayMessagesRunnable());
-            SendMessagesDelayManager.remove(conversationId);
-            startMessageSendDelayAction(firstSendDelayActionStartSystemTime);
-        }
-    }
-
-    protected boolean getWaitingToSendMessageFlag() {
+    protected boolean getIsWaitingToSendMessageFlag() {
         return mIsWaitingToSendMessage;
     }
 
@@ -392,8 +377,7 @@ public class ComposeMessageView extends LinearLayout
         });
         mSubjectView = findViewById(R.id.subject_view);
         mSendButton = findViewById(R.id.send_message_button);
-        mDelayCloseButton = findViewById(R.id.delay_close_button);
-        mSendDelayProgressBar = findViewById(R.id.send_delay_circle_bar);
+
         initSendDelayMessagesRunnable();
         mSendButton.setBackground(BackgroundDrawables.createBackgroundDrawable(PrimaryColors.getPrimaryColor(),
                 PrimaryColors.getPrimaryColorDark(),
@@ -519,6 +503,8 @@ public class ComposeMessageView extends LinearLayout
     }
 
     private void initSendDelayMessagesRunnable() {
+        mDelayCloseButton = findViewById(R.id.delay_close_button);
+        mSendDelayProgressBar = findViewById(R.id.send_delay_circle_bar);
         mSendDelayRunnable = () -> {
             logEmojiEvent();
             sendMessageInternal(true /* checkMessageSize */);
@@ -526,7 +512,7 @@ public class ComposeMessageView extends LinearLayout
             String conversationId = mBinding.getData().getConversationId();
             updateVisualsOnDraftChanged();
             resetDelaySendAnimation();
-            SendMessagesDelayManager.remove(conversationId);
+            SendDelayMessagesManager.remove(conversationId);
         };
     }
 
@@ -556,6 +542,7 @@ public class ComposeMessageView extends LinearLayout
         mSendDelayProgressBar.animate().alpha(1.0f).scaleX(1.0f).scaleY(1.0f).setDuration(160).setStartDelay(80).setInterpolator(scaleStartInterpolator).start();
         mIsWaitingToSendMessage = true;
         mSendButton.setVisibility(View.GONE);
+
         if (mMillisecondsAnimated > 1000 * SendDelaySettings.getSendDelayInSecs()) {
             mMillisecondsAnimated =  1000 * SendDelaySettings.getSendDelayInSecs() * 9 / 10 ;
         }
@@ -566,15 +553,14 @@ public class ComposeMessageView extends LinearLayout
         Threads.postOnMainThreadDelayed(mSendDelayRunnable,1000 * SendDelaySettings.getSendDelayInSecs() - mMillisecondsAnimated);
 
         String conversationId = mBinding.getData().getConversationId();
-        SendMessagesDelayManager.SendMessagesDelayData globalSendMessagesDelayData = SendMessagesDelayManager.getSendMessagesDelayValue(conversationId);
+        SendDelayMessagesManager.SendDelayMessagesData globalSendDelayMessagesData = SendDelayMessagesManager.getIncompleteSendingDelayMessagesAction(conversationId);
 
-        if (globalSendMessagesDelayData == null) {
-            SendMessagesDelayManager.SendMessagesDelayData sendMessagesDelayData = new SendMessagesDelayManager.SendMessagesDelayData();
-            sendMessagesDelayData.setSendDelayMessagesRunnable(mSendDelayRunnable);
-            SendMessagesDelayManager.putSendMessagesDelayValue((conversationId), sendMessagesDelayData);
+        if (globalSendDelayMessagesData == null) {
+            SendDelayMessagesManager.SendDelayMessagesData sendDelayMessagesData = new SendDelayMessagesManager.SendDelayMessagesData();
+            sendDelayMessagesData.setSendDelayMessagesRunnable(mSendDelayRunnable);
+            SendDelayMessagesManager.putSendDelayMessagesValue((conversationId), sendDelayMessagesData);
         }
-        SendMessagesDelayManager.getSendMessagesDelayValue(conversationId).setLastSendDelayActionStartSystemTime(firstSendDelayActionStartSystemTime);
-
+        SendDelayMessagesManager.getIncompleteSendingDelayMessagesAction(conversationId).setLastSendDelayActionStartSystemTime(firstSendDelayActionStartSystemTime);
 
         mSendDelayProgressBar.startAnimation(SendDelaySettings.getSendDelayInSecs() - (mMillisecondsAnimated / 1000));
         mMillisecondsAnimated = 0;
@@ -585,6 +571,20 @@ public class ComposeMessageView extends LinearLayout
             resetDelaySendAnimation();
             BugleAnalytics.logEvent("Detailpage_BtnCancel_Click");
         });
+    }
+
+    private void resumeSendDelayMessageActionStartTime(){
+        long sendDelayActionStartTime;
+        String conversationId = mBinding.getData().getConversationId();
+        SendDelayMessagesManager.SendDelayMessagesData globalSendDelayMessagesData = SendDelayMessagesManager.getIncompleteSendingDelayMessagesAction(conversationId);
+        if (globalSendDelayMessagesData != null) {
+            long firstSendDelayActionStartSystemTime = globalSendDelayMessagesData.getLastSendDelayActionStartSystemTime();
+            sendDelayActionStartTime = globalSendDelayMessagesData.getLastSendDelayActionStartSystemTime();
+            mMillisecondsAnimated = System.currentTimeMillis() - sendDelayActionStartTime;
+            Threads.removeOnMainThread(globalSendDelayMessagesData.getSendDelayMessagesRunnable());
+            SendDelayMessagesManager.remove(conversationId);
+            startMessageSendDelayAction(firstSendDelayActionStartSystemTime);
+        }
     }
 
     private boolean isMediaPickerShowing() {
