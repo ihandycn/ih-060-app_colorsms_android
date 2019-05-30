@@ -137,6 +137,7 @@ import net.appcloudbox.ads.nativead.AcbNativeAdManager;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -515,7 +516,6 @@ public class ConversationFragment extends Fragment implements ConversationDataLi
         return selectMessages.size() == 1;
     }
 
-    private List<Object> mMessageDataList = new ArrayList<>();
     private AcbNativeAdLoader mNativeAdLoader;
     private AcbNativeAd mNativeAd;
     private ViewGroup mAdContainer;
@@ -1008,14 +1008,13 @@ public class ConversationFragment extends Fragment implements ConversationDataLi
         // Ensure that the action bar is updated with the current data.
         invalidateOptionsMenu();
 
-        mMessageDataList.clear();
-        Threads.postOnThreadPoolExecutor(() -> {
-
+        Threads.postOnSingleThreadExecutor(() -> {
+            List<ConversationMessageData> conversationMessageDataList = new ArrayList<>();
             if (cursor != null && cursor.moveToFirst()) {
                 do {
                     ConversationMessageData messageData = new ConversationMessageData();
                     messageData.bind(cursor);
-                    mMessageDataList.add(messageData);
+                    conversationMessageDataList.add(messageData);
                 } while (cursor.moveToNext());
             }
 
@@ -1024,8 +1023,7 @@ public class ConversationFragment extends Fragment implements ConversationDataLi
                     return;
                 }
 
-                mAdapter.setConversationId(mConversationId);
-                mAdapter.setDataList(mMessageDataList);
+                mAdapter.setDataList(conversationMessageDataList);
 
                 if (isSync) {
                     // This is a message sync. Syncing messages changes cursor item count, which would
