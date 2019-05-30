@@ -311,7 +311,9 @@ public class MessageBoxActivity extends AppCompatActivity implements INotificati
     }
 
     void markAsRead(String mConversationId) {
-        mMarkAsReadMap.put(mConversationId, true);
+        if (TextUtils.equals(mCurrentConversationView.getConversationId(), mConversationId)) {
+            mMarkAsReadMap.put(mConversationId, true);
+        }
     }
 
     private void adjustKeyboardGuideline(boolean showEmoji) {

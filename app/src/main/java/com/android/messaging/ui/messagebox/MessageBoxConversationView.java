@@ -43,6 +43,7 @@ import com.android.messaging.util.BugleAnalytics;
 import com.android.messaging.util.Dates;
 import com.android.messaging.util.ImeUtil;
 import com.android.messaging.util.UiUtils;
+import com.ihs.commons.utils.HSLog;
 import com.superapps.util.BackgroundDrawables;
 import com.superapps.util.Dimensions;
 
@@ -113,10 +114,6 @@ public class MessageBoxConversationView extends FrameLayout {
 
         mParticipantId = data.getParticipantId();
         inflatePrivacyModePageIfNeeded();
-
-        if (PrivacyModeSettings.getPrivacyMode(mConversationId) == NONE) {
-            markAsRead();
-        }
 
         ImageView background = findViewById(R.id.message_background);
         Drawable wallpaperDrawable = WallpaperDrawables.getConversationListWallpaperDrawable();
@@ -334,15 +331,13 @@ public class MessageBoxConversationView extends FrameLayout {
     }
 
     @Override
-    protected void onVisibilityChanged(@NonNull View changedView, int visibility) {
-        super.onVisibilityChanged(changedView, visibility);
-
-        if (visibility == VISIBLE) {
+    public void onWindowFocusChanged(boolean hasWindowFocus) {
+        super.onWindowFocusChanged(hasWindowFocus);
+        if (hasWindowFocus) {
             if (PrivacyModeSettings.getPrivacyMode(mConversationId) == NONE) {
                 markAsRead();
             }
         }
-
     }
 
     void markAsRead() {
