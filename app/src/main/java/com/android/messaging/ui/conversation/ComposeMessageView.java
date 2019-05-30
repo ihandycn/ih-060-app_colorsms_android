@@ -248,32 +248,31 @@ public class ComposeMessageView extends LinearLayout
         data.addListener(this);
         data.setSubscriptionDataProvider(host);
 
-        SendMessagesDelayManager.SendMessagesDelayData sendMessagesDelayData = new SendMessagesDelayManager.SendMessagesDelayData();
         long lastSendDelayActionStartSystemTime = 0;
+        SendMessagesDelayManager.SendMessagesDelayData sendMessagesDelayData = new SendMessagesDelayManager.SendMessagesDelayData();
+        sendMessagesDelayData.setRunnable(mSendDelayRunnable);
         String conversationId = mBinding.getData().getConversationId();
-        if((SendMessagesDelayManager.getSendMessagesDelayValue(conversationId)) == null) {
+        SendMessagesDelayManager.SendMessagesDelayData globalSendMessagesDelayData = SendMessagesDelayManager.getSendMessagesDelayValue(conversationId);
+        if(globalSendMessagesDelayData == null) {
             SendMessagesDelayManager.putSendMessagesDelayValue((conversationId), sendMessagesDelayData);
-            SendMessagesDelayManager.getSendMessagesDelayValue(conversationId).setLastSendDelayActionStartSystemTime(0L);
         } else {
-            lastSendDelayActionStartSystemTime = SendMessagesDelayManager.getSendMessagesDelayValue(conversationId).getLastSendDelayActionStartSystemTime();
+            HSLog.d(TAG,"" + globalSendMessagesDelayData);
+            lastSendDelayActionStartSystemTime = globalSendMessagesDelayData.getLastSendDelayActionStartSystemTime();
+            globalSendMessagesDelayData.setFragmentDestroyed(false);
         }
-        SendMessagesDelayManager.getSendMessagesDelayValue(conversationId).setFragmentDestroyed(false);
 
         if (lastSendDelayActionStartSystemTime != 0) {
-            SendMessagesDelayManager.getSendMessagesDelayValue(conversationId).setLastSendDelayActionStartSystemTime(0L);
+            globalSendMessagesDelayData.setLastSendDelayActionStartSystemTime(0L);
             mMillisecondsAnimated = System.currentTimeMillis() - lastSendDelayActionStartSystemTime;
             if (mMillisecondsAnimated <= 1000 * SendDelaySettings.getSendDelayInSecs()) {
                 HSLog.d(TAG, "mMillisecondsAnimated <= 1000 * SendDelaySettings.getSendDelayInSecs()");
-                Threads.removeOnMainThread(SendMessagesDelayManager.getSendMessagesDelayValue(conversationId).getRunnable());
-                SendMessagesDelayManager.getSendMessagesDelayValue(conversationId).setRunnable(mSendDelayRunnable);
+                Threads.removeOnMainThread(globalSendMessagesDelayData.getRunnable());
+                globalSendMessagesDelayData.setRunnable(mSendDelayRunnable);
                 startMessageSendDelayAction();
             } else {
                 mMillisecondsAnimated = 0;
-                SendMessagesDelayManager.getSendMessagesDelayValue(conversationId).setRunnable(mSendDelayRunnable);
+                globalSendMessagesDelayData.setRunnable(mSendDelayRunnable);
             }
-        }
-        else {
-            SendMessagesDelayManager.getSendMessagesDelayValue(conversationId).setRunnable(mSendDelayRunnable);
         }
     }
 

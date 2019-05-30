@@ -22,7 +22,7 @@ public class SendMessagesDelayManager {
     public static class SendMessagesDelayData {
 
         private Runnable mRunnable;
-        private Long mLastSendDelayActionStartSystemTime;
+        private long mLastSendDelayActionStartSystemTime;
         private boolean isFragmentDestroyed;
 
         public boolean isFragmentDestroyed() {
@@ -41,7 +41,7 @@ public class SendMessagesDelayManager {
             this.mRunnable = runnable;
         }
 
-        public Long getLastSendDelayActionStartSystemTime() {
+        public long getLastSendDelayActionStartSystemTime() {
             return mLastSendDelayActionStartSystemTime;
         }
 
