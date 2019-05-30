@@ -653,4 +653,19 @@
 	<string name="private_move_tip">Các tin nhắn sẽ được chuyển đến Hộp tin riêng và các ứng dụng SMS khác sẽ không được truy cập.</string>
 	<string name="private_box_uninstall_notice">Trừ khi bạn chuyển các tin nhắn sang hộp tin công khai, bạn có thể bị mất dữ liệu sau khi gỡ cài đặt chúng tôi.</string>
 
+    <string name="set_password_prompt">Hãy đặt 1 mật mã mở khóa</string>
+    <string name="lock_activity_change_to_pattern">Đổi sang mẫu hình</string>
+    <string name="set_password_sub_prompt">Nhập 4 số</string>
+    <string name="lock_style_pattern">Mẫu hình</string>
+    <string name="lock_activity_change_to_pin">Đổi sang mật mã</string>
+    <string name="set_gesture_sub_prompt">Kết nối ít nhất 4 chấm</string>
+    <string name="app_lock_verify_identity">Xác minh danh tính</string>
+    <string name="please_set_password">Đặt một mẫu hình mở khóa</string>
+    <string name="gesture_not_confirmed_sub_prompt">Mẫu hình không đúng</string>
+    <string name="password_not_confirmed_sub_prompt">Chưa Xác Nhận Mật Mã</string>
+    <string name="confirm_prompt_gesture">Xác nhận mẫu hình</string>
+    <string name="reset_password">Đặt lại mật khẩu</string>
+    <string name="lock_style_pin">Mật mã</string>
+    <string name="confirm_prompt_password">Xác nhận mật mã</string>
+    <string name="draw_unlock_pattern">Hãy vẽ mẫu hình mở khóa</string>
 </resources>

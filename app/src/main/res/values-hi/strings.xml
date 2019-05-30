@@ -659,4 +659,19 @@
 	<string name="private_move_tip">संदेशों को निजी बॉक्स में ले जाया जाएगा और अन्य एसएमएस ऐप द्वारा एक्सेस नहीं किया जाएगा।</string>
 	<string name="private_box_uninstall_notice">जब तक आप संदेशों को सार्वजनिक बॉक्स में नहीं ले जाते, आप हमें अनइंस्टॉल करने के बाद अपना डाटा खो सकते हैं।</string>
 
+    <string name="set_password_prompt">कृपया अनलॉक पासकोड सेट</string>
+    <string name="lock_activity_change_to_pattern">पैटर्न बदलें</string>
+    <string name="set_password_sub_prompt">4 संख्‍या दर्ज करें</string>
+    <string name="lock_style_pattern">पैटर्न</string>
+    <string name="lock_activity_change_to_pin">पासकोड के लिए बदलें</string>
+    <string name="set_gesture_sub_prompt">कम से कम 4 डोट्स जोड़ें</string>
+    <string name="app_lock_verify_identity">पहचान की पुष्टि</string>
+    <string name="please_set_password">कृपया अनलॉक पैटर्न बनाएं</string>
+    <string name="gesture_not_confirmed_sub_prompt">गलत पैटर्न</string>
+    <string name="password_not_confirmed_sub_prompt">पासकोड पुष्‍ट नहीें है</string>
+    <string name="confirm_prompt_gesture">पैटर्न की पुष्टि करें</string>
+    <string name="reset_password">पासवर्ड दुबारा सेट करें</string>
+    <string name="lock_style_pin">पासकोड</string>
+    <string name="confirm_prompt_password">पासकोड की पुष्टि करें</string>
+    <string name="draw_unlock_pattern">अपना अनलॉक पैटर्न बनाएं</string>
 </resources>

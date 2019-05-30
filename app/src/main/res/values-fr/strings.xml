@@ -654,4 +654,19 @@
 	<string name="private_move_tip">Les messages seront déplacés dans la Boîte privée et aucune autre application de SMS n\'y aura accès.</string>
 	<string name="private_box_uninstall_notice">À moins de déplacer les messages dans la Boîte publique, vous perdrez vos données après nous avoir désinstallé.</string>
 
+    <string name="set_password_prompt">Créez un code</string>
+    <string name="lock_activity_change_to_pattern">Changer pour un motif</string>
+    <string name="set_password_sub_prompt">Saisissez 4 chiffres</string>
+    <string name="lock_style_pattern">Motif</string>
+    <string name="lock_activity_change_to_pin">Changer pour un code</string>
+    <string name="set_gesture_sub_prompt">Liez au moins 4 points</string>
+    <string name="app_lock_verify_identity">Vérifier l\'identité</string>
+    <string name="please_set_password">Créez un motif-verrou</string>
+    <string name="gesture_not_confirmed_sub_prompt">Mauvais motif</string>
+    <string name="password_not_confirmed_sub_prompt">Code non confirmé</string>
+    <string name="confirm_prompt_gesture">Confirmer le motif</string>
+    <string name="reset_password">Réinitialiser mdp</string>
+    <string name="lock_style_pin">Code</string>
+    <string name="confirm_prompt_password">Confirmer le code</string>
+    <string name="draw_unlock_pattern">Dessinez votre motif</string>
 </resources>

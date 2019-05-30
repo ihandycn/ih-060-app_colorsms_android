@@ -656,4 +656,19 @@
 	<string name="private_move_tip">ข้อความจะถูกย้ายไปยังกล่องส่วนตัว และแอป SMS อื่นจะไม่สามารถเข้าถึงได้</string>
 	<string name="private_box_uninstall_notice">หากคุณไม่ย้ายข้อความไปยังกล่องส่วนตัว คุณก็อาจสูญเสียข้อมูลหลังจากถอนการติดตั้งเราได้</string>
 
+    <string name="set_password_prompt">กรุณากำหนดรหัสปลดล็อก</string>
+    <string name="lock_activity_change_to_pattern">เปลี่ยนเป็นรูปแบบ</string>
+    <string name="set_password_sub_prompt">ใส่เลข 4 หลัก</string>
+    <string name="lock_style_pattern">รูปแบบ</string>
+    <string name="lock_activity_change_to_pin">เปลี่ยนเป็นรหัสผ่าน</string>
+    <string name="set_gesture_sub_prompt">เชื่อมต่ออย่างน้อย 4 จุด</string>
+    <string name="app_lock_verify_identity">ยืนยันตัวตน</string>
+    <string name="please_set_password">กรุณากำหนดรูปแบบปลดล็อก</string>
+    <string name="gesture_not_confirmed_sub_prompt">รูปแบบไม่ถูกต้อง</string>
+    <string name="password_not_confirmed_sub_prompt">ไม่ได้ยืนยันรหัสผ่าน</string>
+    <string name="confirm_prompt_gesture">ยืนยันรูปแบบ</string>
+    <string name="reset_password">รีเซ็ตรหัสผ่าน</string>
+    <string name="lock_style_pin">รหัสผ่าน</string>
+    <string name="confirm_prompt_password">ยืนยันรหัสผ่าน</string>
+    <string name="draw_unlock_pattern">วาดรูปแบบการปลดล็อก</string>
 </resources>

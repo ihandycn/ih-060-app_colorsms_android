@@ -661,4 +661,19 @@
 	<string name="private_move_tip">As mensagens serão movidas para a Caixa Privada e não serão acessadas por outros aplicativos de SMS.</string>
 	<string name="private_box_uninstall_notice">Se as mensagens não forem movidas para a caixa pública, você pode perder seus dados após a desinstalação.</string>
 
+    <string name="set_password_prompt">Defina um cód. de desbl.</string>
+    <string name="lock_activity_change_to_pattern">Alterar para padrão</string>
+    <string name="set_password_sub_prompt">Insira 4 números</string>
+    <string name="lock_style_pattern">Padrão</string>
+    <string name="lock_activity_change_to_pin">Alterar para código</string>
+    <string name="set_gesture_sub_prompt">Conecte mín. de 4 pts</string>
+    <string name="app_lock_verify_identity">Verifique sua identidade</string>
+    <string name="please_set_password">Defina padrão de desb.</string>
+    <string name="gesture_not_confirmed_sub_prompt">Padrão incorreto</string>
+    <string name="password_not_confirmed_sub_prompt">Código não confirmado</string>
+    <string name="confirm_prompt_gesture">Confirmar padrão</string>
+    <string name="reset_password">Redefinir senha</string>
+    <string name="lock_style_pin">Código</string>
+    <string name="confirm_prompt_password">Confirmar código</string>
+    <string name="draw_unlock_pattern">Desenhe padrão de desbl.</string>
 </resources>

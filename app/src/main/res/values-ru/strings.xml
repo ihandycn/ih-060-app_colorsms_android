@@ -702,4 +702,20 @@
 	<string name="private_move_tip">Сообщения будут перемещены в личные сообщения и не будут доступны в других приложениях для обмена СМС.</string>
 	<string name="private_box_uninstall_notice">Если сообщения не будут перенесены в публичные сообщения, в случае удаления нашего приложения данные могут быть потеряны.</string>
 
+    <string name="set_password_prompt">Установите блок. код</string>
+    <string name="lock_activity_change_to_pattern">Использовать граф. ключ</string>
+    <string name="set_password_sub_prompt">Введите 4 цифры</string>
+    <string name="lock_style_pattern">Граф. ключ</string>
+    <string name="lock_activity_change_to_pin">Использовать код</string>
+    <string name="set_gesture_sub_prompt">Соедините больше 4 точек</string>
+    <string name="app_lock_verify_identity">Подтвердить личность</string>
+    <string name="please_set_password">Устан. граф. ключ</string>
+    <string name="gesture_not_confirmed_sub_prompt">Неправильный граф. ключ</string>
+    <string name="password_not_confirmed_sub_prompt">Код не подтвержден</string>
+    <string name="confirm_prompt_gesture">Подтвердите граф. ключ</string>
+    <string name="reset_password">Сброс пароля</string>
+    <string name="lock_style_pin">Код блокировки</string>
+    <string name="confirm_prompt_password">Подтвердите код</string>
+    <string name="draw_unlock_pattern">Нарисуйте граф. ключ</string>
+
 </resources>

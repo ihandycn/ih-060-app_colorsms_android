@@ -650,4 +650,19 @@
 	<string name="private_move_tip">Mesajlar Özel Kutuya taşınacak ve diğer SMS uygulamaları tarafından erişilmeyecektir.</string>
 	<string name="private_box_uninstall_notice">Mesajları genel kutuya taşımazsanız, uygulamamızı kaldırdıktan sonra verilerinizi kaybedebilirsiniz.</string>
 
+    <string name="set_password_prompt">Açmak için şifre oluştur</string>
+    <string name="lock_activity_change_to_pattern">Desene Değiştir</string>
+    <string name="set_password_sub_prompt">4 sayı gir</string>
+    <string name="lock_style_pattern">Desen</string>
+    <string name="lock_activity_change_to_pin">Şifreye değiştir</string>
+    <string name="set_gesture_sub_prompt">En az 4 nokta birleştir</string>
+    <string name="app_lock_verify_identity">Kimliği Doğrula</string>
+    <string name="please_set_password">Açmak için desen oluştur</string>
+    <string name="gesture_not_confirmed_sub_prompt">Yanlış Desen</string>
+    <string name="password_not_confirmed_sub_prompt">Şifre Onaylanmadı</string>
+    <string name="confirm_prompt_gesture">Deseni onayla</string>
+    <string name="reset_password">Şifreyi sıfırla</string>
+    <string name="lock_style_pin">Şifre</string>
+    <string name="confirm_prompt_password">Şifreyi onayla</string>
+    <string name="draw_unlock_pattern">Açmak için deseni çiz</string>
 </resources>
