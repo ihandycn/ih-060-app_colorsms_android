@@ -238,6 +238,8 @@ public class ConversationFragment extends Fragment implements ConversationDataLi
 
     private boolean mIsPrivateConversation = false;
 
+    private boolean mIsDestroyed = false;
+
     // Normally, as soon as draft message is loaded, we trust the UI state held in
     // ComposeMessageView to be the only source of truth (incl. the conversation self id). However,
     // there can be external events that forces the UI state to change, such as SIM state changes
@@ -1021,6 +1023,10 @@ public class ConversationFragment extends Fragment implements ConversationDataLi
             }
 
             Threads.postOnMainThread(() -> {
+                if (mIsDestroyed) {
+                    return;
+                }
+
                 mAdapter.setConversationId(mConversationId);
                 mAdapter.setDataList(mMessageDataList);
 
@@ -1128,6 +1134,7 @@ public class ConversationFragment extends Fragment implements ConversationDataLi
     @Override
     public void onDestroy() {
         super.onDestroy();
+        mIsDestroyed = true;
         // Unbind all the views that we bound to data
         if (mComposeMessageView != null) {
             mComposeMessageView.getViewTreeObserver().removeOnGlobalLayoutListener(globalLayoutListener);
