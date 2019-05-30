@@ -112,6 +112,7 @@ public class ConversationListFragment extends Fragment implements ConversationLi
     private boolean adFirstPrepared = true;
     private boolean conversationFirstUpdated = true;
     private boolean isFirstOnResume = true;
+    private boolean mIsDestroyed = false;
 
     private AcbNativeAd mNativeAd;
     private AcbNativeAdLoader mNativeAdLoader;
@@ -214,6 +215,7 @@ public class ConversationListFragment extends Fragment implements ConversationLi
     @Override
     public void onDestroy() {
         super.onDestroy();
+        mIsDestroyed = true;
         mListBinding.unbind();
         mHost = null;
         if (mNativeAdLoader != null) {
@@ -538,6 +540,9 @@ public class ConversationListFragment extends Fragment implements ConversationLi
             }
 
             Threads.postOnMainThread(() -> {
+                if (mIsDestroyed) {
+                    return;
+                }
                 if (conversationFirstUpdated) {
                     conversationFirstUpdated = false;
                     boolean hasPinConversation = false;
