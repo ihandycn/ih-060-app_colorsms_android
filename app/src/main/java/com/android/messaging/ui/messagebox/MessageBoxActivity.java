@@ -105,7 +105,6 @@ public class MessageBoxActivity extends AppCompatActivity implements INotificati
 
 
         mCurrentConversationView = view;
-        mCurrentConversationView.markAsRead();
         MessageBoxAnalytics.setIsMultiConversation(false);
 
         recordMessageType(data);
@@ -220,7 +219,6 @@ public class MessageBoxActivity extends AppCompatActivity implements INotificati
         mCurrentConversationView = (MessageBoxConversationView) mPagerAdapter.getViews().get(position);
         reLayoutIndicatorView();
         mIndicator.updateIndicator(position, mPagerAdapter.getCount());
-        mCurrentConversationView.markAsRead();
     }
 
     @Override
@@ -338,7 +336,6 @@ public class MessageBoxActivity extends AppCompatActivity implements INotificati
             mCurrentConversationView = (MessageBoxConversationView) mPagerAdapter.getViews().get(position);
             mIndicator.updateIndicator(mPager.getCurrentItem(), mPagerAdapter.getCount());
             mCurrentConversationView.requestEditTextFocus();
-            mCurrentConversationView.markAsRead();
         }
     }
 
