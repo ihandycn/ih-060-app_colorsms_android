@@ -47,6 +47,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.airbnb.lottie.LottieAnimationView;
+import com.android.messaging.BuildConfig;
 import com.android.messaging.Factory;
 import com.android.messaging.R;
 import com.android.messaging.datamodel.binding.Binding;
@@ -90,7 +91,6 @@ import com.android.messaging.util.OsUtil;
 import com.android.messaging.util.TextViewUtil;
 import com.android.messaging.util.UiUtils;
 import com.android.messaging.font.FontUtils;
-import com.ihs.app.framework.HSApplication;
 import com.ihs.commons.utils.HSLog;
 import com.superapps.util.BackgroundDrawables;
 import com.superapps.util.Dimensions;
@@ -248,31 +248,16 @@ public class ComposeMessageView extends LinearLayout
         data.addListener(this);
         data.setSubscriptionDataProvider(host);
 
-        long lastSendDelayActionStartSystemTime = 0;
-        SendMessagesDelayManager.SendMessagesDelayData sendMessagesDelayData = new SendMessagesDelayManager.SendMessagesDelayData();
-        sendMessagesDelayData.setRunnable(mSendDelayRunnable);
+        long lastSendDelayActionStartSystemTime;
         String conversationId = mBinding.getData().getConversationId();
         SendMessagesDelayManager.SendMessagesDelayData globalSendMessagesDelayData = SendMessagesDelayManager.getSendMessagesDelayValue(conversationId);
-        if(globalSendMessagesDelayData == null) {
-            SendMessagesDelayManager.putSendMessagesDelayValue((conversationId), sendMessagesDelayData);
-        } else {
+        if (globalSendMessagesDelayData != null) {
             HSLog.d(TAG,"" + globalSendMessagesDelayData);
             lastSendDelayActionStartSystemTime = globalSendMessagesDelayData.getLastSendDelayActionStartSystemTime();
-            globalSendMessagesDelayData.setFragmentDestroyed(false);
-        }
-
-        if (lastSendDelayActionStartSystemTime != 0) {
-            globalSendMessagesDelayData.setLastSendDelayActionStartSystemTime(0L);
             mMillisecondsAnimated = System.currentTimeMillis() - lastSendDelayActionStartSystemTime;
-            if (mMillisecondsAnimated <= 1000 * SendDelaySettings.getSendDelayInSecs()) {
-                HSLog.d(TAG, "mMillisecondsAnimated <= 1000 * SendDelaySettings.getSendDelayInSecs()");
-                Threads.removeOnMainThread(globalSendMessagesDelayData.getRunnable());
-                globalSendMessagesDelayData.setRunnable(mSendDelayRunnable);
-                startMessageSendDelayAction();
-            } else {
-                mMillisecondsAnimated = 0;
-                globalSendMessagesDelayData.setRunnable(mSendDelayRunnable);
-            }
+            Threads.removeOnMainThread(globalSendMessagesDelayData.getRunnable());
+            SendMessagesDelayManager.remove(conversationId);
+            startMessageSendDelayAction();
         }
     }
 
@@ -422,17 +407,13 @@ public class ComposeMessageView extends LinearLayout
             mSendDelayProgressBar.setVisibility(View.GONE);
             mSelfSendIcon.setVisibility(View.VISIBLE);
             mIsWaitingToSendMessage = false;
-
+            String conversationId = mBinding.getData().getConversationId();
             updateVisualsOnDraftChanged();
             resetDelaySendAnimation();
-            String conversationId = mBinding.getData().getConversationId();
-            if(SendMessagesDelayManager.getSendMessagesDelayValue(conversationId).isFragmentDestroyed()) {
-                SendMessagesDelayManager.getSendMessagesDelayValue(conversationId).setFragmentDestroyed(false);
-                if (mSendDelayActionCompletedCallBack != null) {
-                    mSendDelayActionCompletedCallBack.onSendDelayActionEnd();
-                }
+            SendMessagesDelayManager.remove(conversationId);
+            if (mSendDelayActionCompletedCallBack != null) {
+                mSendDelayActionCompletedCallBack.onSendDelayActionEnd();
             }
-//            SendMessagesDelayManager.remove(conversationId);
         };
         mSubjectView = findViewById(R.id.subject_view);
         mSendButton = findViewById(R.id.send_message_button);
@@ -591,7 +572,15 @@ public class ComposeMessageView extends LinearLayout
         }
         Threads.postOnMainThreadDelayed(mSendDelayRunnable,1000 * SendDelaySettings.getSendDelayInSecs() - mMillisecondsAnimated);
 
-        SendMessagesDelayManager.getSendMessagesDelayValue(mBinding.getData().getConversationId()).setLastSendDelayActionStartSystemTime(System.currentTimeMillis());
+        String conversationId = mBinding.getData().getConversationId();
+        SendMessagesDelayManager.SendMessagesDelayData globalSendMessagesDelayData = SendMessagesDelayManager.getSendMessagesDelayValue(conversationId);
+
+        if(globalSendMessagesDelayData == null) {
+            SendMessagesDelayManager.SendMessagesDelayData sendMessagesDelayData = new SendMessagesDelayManager.SendMessagesDelayData();
+            sendMessagesDelayData.setRunnable(mSendDelayRunnable);
+            SendMessagesDelayManager.putSendMessagesDelayValue((conversationId), sendMessagesDelayData);
+        }
+        SendMessagesDelayManager.getSendMessagesDelayValue(conversationId).setLastSendDelayActionStartSystemTime(System.currentTimeMillis());
 
         mSendDelayProgressBar.startAnimation(SendDelaySettings.getSendDelayInSecs() - (mMillisecondsAnimated / 1000));
         mMillisecondsAnimated = 0;
@@ -601,7 +590,6 @@ public class ComposeMessageView extends LinearLayout
             mSendDelayProgressBar.setVisibility(View.GONE);
             mSelfSendIcon.setVisibility(View.VISIBLE);
             mIsWaitingToSendMessage = false;
-//            mSendDelayHandler.removeCallbacks(mSendDelayRunnable);
             Threads.removeOnMainThread(mSendDelayRunnable);
             updateVisualsOnDraftChanged();
             resetDelaySendAnimation();

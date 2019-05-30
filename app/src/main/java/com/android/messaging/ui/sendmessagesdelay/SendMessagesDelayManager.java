@@ -23,15 +23,6 @@ public class SendMessagesDelayManager {
 
         private Runnable mRunnable;
         private long mLastSendDelayActionStartSystemTime;
-        private boolean isFragmentDestroyed;
-
-        public boolean isFragmentDestroyed() {
-            return isFragmentDestroyed;
-        }
-
-        public void setFragmentDestroyed(boolean fragmentDestroyed) {
-            isFragmentDestroyed = fragmentDestroyed;
-        }
 
         public Runnable getRunnable() {
             return mRunnable;
