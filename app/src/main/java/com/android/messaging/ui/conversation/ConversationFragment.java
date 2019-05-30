@@ -1140,7 +1140,7 @@ public class ConversationFragment extends Fragment implements ConversationDataLi
         // Unbind all the views that we bound to data
         if (mComposeMessageView != null) {
             String conversationId = mBinding.getData().getConversationId();
-            if (!mComposeMessageView.getIsMessageSendFlag()) {
+            if (!mComposeMessageView.getWaitingToSendMessageFlag()) {
                 SendMessagesDelayManager.remove(conversationId);
                 HSLog.d("ComposeMessageView","if (mComposeMessageView != null) {");
                 mComposeMessageView.unbind();
