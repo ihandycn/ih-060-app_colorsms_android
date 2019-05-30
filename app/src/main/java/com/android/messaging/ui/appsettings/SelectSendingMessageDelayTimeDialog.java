@@ -17,18 +17,7 @@ import com.android.messaging.util.OsUtil;
 import com.superapps.util.Fonts;
 import com.superapps.util.Threads;
 
-import static com.android.messaging.ui.appsettings.SendDelaySettings.EIGHT_SECONDS;
-import static com.android.messaging.ui.appsettings.SendDelaySettings.FIVE_SECONDS;
-import static com.android.messaging.ui.appsettings.SendDelaySettings.FOUR_SECONDS;
-import static com.android.messaging.ui.appsettings.SendDelaySettings.NINE_SECONDS;
-import static com.android.messaging.ui.appsettings.SendDelaySettings.NO_DELAY;
-import static com.android.messaging.ui.appsettings.SendDelaySettings.ONE_SECOND;
-import static com.android.messaging.ui.appsettings.SendDelaySettings.SEVEN_SECONDS;
-import static com.android.messaging.ui.appsettings.SendDelaySettings.SIX_SECONDS;
-import static com.android.messaging.ui.appsettings.SendDelaySettings.THREE_SECONDS;
-import static com.android.messaging.ui.appsettings.SendDelaySettings.TWO_SECONDS;
-
-public class SelectSendDelayDialog extends BaseDialogFragment {
+public class SelectSendingMessageDelayTimeDialog extends BaseDialogFragment {
 
     private static final String BUNDLE_KEY_CONVERSATION_ID = "conversation_id";
     private View mContentView;
@@ -54,8 +43,8 @@ public class SelectSendDelayDialog extends BaseDialogFragment {
     }
 
 
-    public static SelectSendDelayDialog newInstance(String conversationId) {
-        SelectSendDelayDialog dialog = new SelectSendDelayDialog();
+    public static SelectSendingMessageDelayTimeDialog newInstance(String conversationId) {
+        SelectSendingMessageDelayTimeDialog dialog = new SelectSendingMessageDelayTimeDialog();
         Bundle bundle = new Bundle();
         bundle.putString(BUNDLE_KEY_CONVERSATION_ID, conversationId);
         dialog.setArguments(bundle);
@@ -92,34 +81,34 @@ public class SelectSendDelayDialog extends BaseDialogFragment {
         int sendDelayInSecs = SendDelaySettings.getSendDelayInSecs();
 
         switch (sendDelayInSecs) {
-            case NO_DELAY:
+            case 0:
                 radioGroup.check(R.id.no_delay);
                 break;
-            case ONE_SECOND:
+            case 1:
                 radioGroup.check(R.id.one_second);
                 break;
-            case TWO_SECONDS:
+            case 2:
                 radioGroup.check(R.id.two_seconds);
                 break;
-            case THREE_SECONDS:
+            case 3:
                 radioGroup.check(R.id.three_seconds);
                 break;
-            case FOUR_SECONDS:
+            case 4:
                 radioGroup.check(R.id.four_seconds);
                 break;
-            case FIVE_SECONDS:
+            case 5:
                 radioGroup.check(R.id.five_seconds);
                 break;
-            case SIX_SECONDS:
+            case 6:
                 radioGroup.check(R.id.six_seconds);
                 break;
-            case SEVEN_SECONDS:
+            case 7:
                 radioGroup.check(R.id.seven_seconds);
                 break;
-            case EIGHT_SECONDS:
+            case 8:
                 radioGroup.check(R.id.eight_seconds);
                 break;
-            case NINE_SECONDS:
+            case 9:
                 radioGroup.check(R.id.nine_seconds);
                 break;
         }

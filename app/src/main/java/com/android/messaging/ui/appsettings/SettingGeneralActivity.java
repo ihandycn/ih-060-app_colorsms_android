@@ -130,7 +130,7 @@ public class SettingGeneralActivity extends BaseActivity {
         mSendDelayView = findViewById(R.id.setting_item_send_delay);
         updateSendDelaySummary();
         mSendDelayView.setOnItemClickListener(() -> {
-            SelectSendDelayDialog dialog = new SelectSendDelayDialog();
+            SelectSendingMessageDelayTimeDialog dialog = new SelectSendingMessageDelayTimeDialog();
             dialog.setOnDismissOrCancelListener(new BaseDialogFragment.OnDismissOrCancelListener() {
 
                 @Override

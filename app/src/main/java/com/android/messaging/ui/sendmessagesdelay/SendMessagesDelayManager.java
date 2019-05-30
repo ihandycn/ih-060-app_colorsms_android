@@ -4,25 +4,25 @@ import java.util.HashMap;
 
 public class SendMessagesDelayManager {
 
-    private static HashMap<String, SendMessagesDelayData> sendMessagesDelayHashmap = new HashMap<>();
+    private static HashMap<String, SendMessagesDelayData> sSendMessagesDelayHashmap = new HashMap<>();
 
     public static void putSendMessagesDelayValue(String converstionId, SendMessagesDelayData sendMessagesDelayData ) {
-        sendMessagesDelayHashmap.put(converstionId, sendMessagesDelayData);
+        sSendMessagesDelayHashmap.put(converstionId, sendMessagesDelayData);
     }
 
 
     public static SendMessagesDelayData getSendMessagesDelayValue(String conversationId) {
-        return sendMessagesDelayHashmap.get(conversationId);
+        return sSendMessagesDelayHashmap.get(conversationId);
     }
 
     public static void remove(String conversationId) {
-        sendMessagesDelayHashmap.remove(conversationId);
+        sSendMessagesDelayHashmap.remove(conversationId);
     }
 
     public static class SendMessagesDelayData {
 
-        private Runnable runnable;
-        private Long systemTime;
+        private Runnable mRunnable;
+        private Long mLastSendDelayActionStartSystemTime;
         private boolean isFragmentDestroyed;
 
         public boolean isFragmentDestroyed() {
@@ -34,19 +34,19 @@ public class SendMessagesDelayManager {
         }
 
         public Runnable getRunnable() {
-            return runnable;
+            return mRunnable;
         }
 
         public void setRunnable(Runnable runnable) {
-            this.runnable = runnable;
+            this.mRunnable = runnable;
         }
 
-        public Long getSystemTime() {
-            return systemTime;
+        public Long getLastSendDelayActionStartSystemTime() {
+            return mLastSendDelayActionStartSystemTime;
         }
 
-        public void setSystemTime(Long systemTime) {
-            this.systemTime = systemTime;
+        public void setLastSendDelayActionStartSystemTime(Long lastSendDelayActionStartSystemTime) {
+            this.mLastSendDelayActionStartSystemTime = lastSendDelayActionStartSystemTime;
         }
 
     }

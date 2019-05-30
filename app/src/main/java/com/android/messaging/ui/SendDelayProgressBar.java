@@ -17,7 +17,8 @@ import com.superapps.util.Dimensions;
 
 import static android.graphics.Paint.Style.STROKE;
 
-public class SendDelayCircleBarView extends View {
+public class SendDelayProgressBar extends View {
+    private final static float SEND_DELAY_PROGRESS_BAR_INITIAL_DIRECTION = 270.0f;
     private int mOutsideColor;    //进度的颜色
     private float mOutsideRadius;    //外圆半径大小
     private int mInsideColor;    //背景颜色
@@ -32,15 +33,15 @@ public class SendDelayCircleBarView extends View {
     private Paint mPaint;
     private ValueAnimator mSendDelayCircleBarAnimator;
 
-    public SendDelayCircleBarView(Context context) {
+    public SendDelayProgressBar(Context context) {
         this(context, null);
     }
 
-    public SendDelayCircleBarView(Context context, AttributeSet attrs) {
+    public SendDelayProgressBar(Context context, AttributeSet attrs) {
         this(context, attrs, 0);
     }
 
-    public SendDelayCircleBarView(Context context, AttributeSet attrs, int defStyleAttr) {
+    public SendDelayProgressBar(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         TypedArray sendDelayCircleProgressBar = context.getTheme().obtainStyledAttributes(attrs, R.styleable.SendDelayCircleProgressBar, defStyleAttr, 0);
         mOutsideColor = sendDelayCircleProgressBar.getColor(R.styleable.SendDelayCircleProgressBar_outside_color, PrimaryColors.getPrimaryColor());
@@ -49,7 +50,7 @@ public class SendDelayCircleBarView extends View {
         mProgressWidth = sendDelayCircleProgressBar.getDimension(R.styleable.SendDelayCircleProgressBar_progress_width, Dimensions.pxFromDp(2.7f));
         mProgress = sendDelayCircleProgressBar.getFloat(R.styleable.SendDelayCircleProgressBar_progress, 0.0f);
         mMaxProgress = sendDelayCircleProgressBar.getInt(R.styleable.SendDelayCircleProgressBar_max_progress, 100);
-        mDirection = sendDelayCircleProgressBar.getFloat(R.styleable.SendDelayCircleProgressBar_direction, 270.0f);
+        mDirection = sendDelayCircleProgressBar.getFloat(R.styleable.SendDelayCircleProgressBar_direction, SEND_DELAY_PROGRESS_BAR_INITIAL_DIRECTION);
 
         mInitialProgress = 0;
         sendDelayCircleProgressBar.recycle();
@@ -96,7 +97,7 @@ public class SendDelayCircleBarView extends View {
         canvas.drawCircle(mCirclePoint, mCirclePoint, mOutsideRadius, mPaint);
 
         mPaint.setColor(mOutsideColor);
-        canvas.drawArc(mOval, 270.0f, 360 * (mInitialProgress / mMaxProgress),false, mPaint);
+        canvas.drawArc(mOval, SEND_DELAY_PROGRESS_BAR_INITIAL_DIRECTION, 360 * (mInitialProgress / mMaxProgress),false, mPaint);
         canvas.drawArc(mOval, mDirection, 360 * (mProgress / mMaxProgress), false, mPaint);
 
     }
@@ -127,7 +128,7 @@ public class SendDelayCircleBarView extends View {
         Interpolator sendDelayCircleBarInterpolator = PathInterpolatorCompat.create(0.33f,0.00f,0.67f,1.00f);
         mSendDelayCircleBarAnimator = ValueAnimator.ofFloat(0, progress);
         mInitialProgress = 100 - progress;
-        mDirection = 270 + mInitialProgress * 3.6f;
+        mDirection = SEND_DELAY_PROGRESS_BAR_INITIAL_DIRECTION + mInitialProgress * 3.6f;
         mSendDelayCircleBarAnimator.addUpdateListener(animation -> {
             mProgress = (float) mSendDelayCircleBarAnimator.getAnimatedValue();
             invalidate();

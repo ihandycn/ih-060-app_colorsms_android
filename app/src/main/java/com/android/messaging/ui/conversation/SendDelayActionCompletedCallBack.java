@@ -1,5 +1,5 @@
 package com.android.messaging.ui.conversation;
 
-public interface SendDelayActionCompleted {
+public interface SendDelayActionCompletedCallBack {
     void onSendDelayActionEnd();
 }
