@@ -182,6 +182,8 @@ public class ConversationFragment extends Fragment implements ConversationDataLi
         void onConversationParticipantDataLoaded(int numberOfParticipants);
 
         boolean isActiveAndFocused();
+
+        boolean isFromCreateConversation();
     }
 
     public static final String FRAGMENT_TAG = "conversation";
@@ -768,7 +770,8 @@ public class ConversationFragment extends Fragment implements ConversationDataLi
         mWallpaperView = view.findViewById(R.id.conversation_fragment_wallpaper);
         mThemeWallpaperView = view.findViewById(R.id.conversation_fragment_theme_wallpaper);
 
-        if (AdConfig.isDetailpageTopAdEnabled()) {
+        if (AdConfig.isDetailpageTopAdEnabled()
+                && !mHost.isFromCreateConversation()) {
             BugleAnalytics.logEvent("Detailspage_TopAd_Should_Show", true, true);
             List<AcbNativeAd> nativeAds = AcbNativeAdManager.fetch(AdPlacement.AD_DETAIL_NATIVE, 1);
             if (nativeAds.size() > 0) {

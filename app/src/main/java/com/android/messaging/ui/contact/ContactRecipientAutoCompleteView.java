@@ -284,9 +284,12 @@ public class ContactRecipientAutoCompleteView extends RecipientEditTextView {
 
     @Override
     public boolean onEditorAction(final TextView view, final int actionId, final KeyEvent event) {
-        if (actionId == EditorInfo.IME_ACTION_DONE && mChipsChangeListener != null) {
+        boolean result =  false;
+        if(shouldCreateChip()){
+            result = super.onEditorAction(view, actionId, event);
+        } else if (actionId == EditorInfo.IME_ACTION_DONE && mChipsChangeListener != null) {
             mChipsChangeListener.onEntryComplete();
         }
-        return super.onEditorAction(view, actionId, event);
+        return result;
     }
 }

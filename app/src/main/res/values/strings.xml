@@ -40,6 +40,8 @@
     <!-- The tab header for all contacts list -->
     <string name="contact_picker_all_contacts_tab_title">All contacts</string>
 
+    <string name="contact_picker_select_group">Start group chat</string>
+
     <!-- The text on the list item in the contact picker that allows a user to send an SMS directly
          to a number that he/she typed. eg. "Send to 650-555-1234" -->
     <string name="contact_list_send_to_text">Send to <xliff:g id="destination">%s</xliff:g></string>

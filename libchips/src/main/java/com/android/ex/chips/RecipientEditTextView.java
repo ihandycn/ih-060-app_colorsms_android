@@ -1457,7 +1457,7 @@ public class RecipientEditTextView extends MultiAutoCompleteTextView implements
     private boolean commitChip(int start, int end, Editable editable) {
         int position = positionOfFirstEntryWithTypePerson();
         if (position != -1 && enoughToFilter()
-                && end == getSelectionEnd() && !isPhoneQuery()
+                && end == getSelectionEnd()
                 && !isValidEmailAddress(editable.toString().substring(start, end).trim())) {
             // let's choose the selected or first entry if only the input text is NOT an email
             // address so we won't try to replace the user's potentially correct but
@@ -1508,7 +1508,9 @@ public class RecipientEditTextView extends MultiAutoCompleteTextView implements
         ListAdapter adapter = getAdapter();
         int itemCount = adapter != null ? adapter.getCount() : 0;
         for (int i = 0; i < itemCount; i++) {
-            if (isEntryAtPositionTypePerson(i)) {
+            // the contactId of the default item of PopupWindow is < 0, so pass it
+            // entries created at ContactRecipientAdapter.ContactFilter.performFilter(...)
+            if(getAdapter().getItem(i).getContactId() > 0){
                 return i;
             }
         }
@@ -1554,6 +1556,13 @@ public class RecipientEditTextView extends MultiAutoCompleteTextView implements
 
     private boolean shouldCreateChip(int start, int end) {
         return !mNoChipMode && hasFocus() && enoughToFilter() && !alreadyHasChip(start, end);
+    }
+
+    protected boolean shouldCreateChip(){
+        Editable editable = getText();
+        int end = getSelectionEnd();
+        int start = mTokenizer.findTokenStart(editable, end);
+        return shouldCreateChip(start, end);
     }
 
     private boolean alreadyHasChip(int start, int end) {

@@ -7,6 +7,7 @@ import android.support.annotation.ColorRes;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
+import android.text.util.Linkify;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -116,12 +117,30 @@ public class MessageBoxMessageListAdapter extends RecyclerView.Adapter<RecyclerV
             case ITEM_SMS:
                 SmsViewHolder smsViewHolder = (SmsViewHolder) holder;
                 smsViewHolder.mContentText.setText(mDataList.get(position).getContent());
+                updateMessageText(smsViewHolder.mContentText);
                 smsViewHolder.mDateText.setText(Dates.getConversationTimeString(mDataList.get(position).getReceivedTimestamp()));
                 break;
             case ITEM_MMS:
                 MmsViewHolder mmsViewHolder = (MmsViewHolder) holder;
                 mmsViewHolder.mDateText.setText(Dates.getConversationTimeString(mDataList.get(position).getReceivedTimestamp()));
                 break;
+        }
+    }
+
+
+    private void updateMessageText(TextView mMessageTextView) {
+        if (!TextUtils.isEmpty(mMessageTextView.getText())) {
+            // Linkify phone numbers, web urls, emails, and map addresses to allow users to
+            // click on them and take the default intent.
+            try {
+                Linkify.addLinks(mMessageTextView, Linkify.ALL);
+            } catch (Exception e) {
+                // catch crash: https://fabric.io/smsgroup/android/apps/com.color.sms.messages.emoji/issues/5c5616d4f8b88c296372d310?time=last-seven-days
+                // ignore framework error
+            }
+            mMessageTextView.setVisibility(View.VISIBLE);
+        } else {
+            mMessageTextView.setVisibility(View.GONE);
         }
     }
 

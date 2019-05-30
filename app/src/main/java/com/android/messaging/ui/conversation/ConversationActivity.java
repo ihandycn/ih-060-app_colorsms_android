@@ -32,6 +32,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
+import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -43,9 +44,6 @@ import com.android.messaging.datamodel.MessagingContentProvider;
 import com.android.messaging.datamodel.data.MessageData;
 import com.android.messaging.ui.BugleActionBarActivity;
 import com.android.messaging.ui.UIIntents;
-import com.android.messaging.ui.contact.ContactPickerFragment;
-import com.android.messaging.ui.contact.ContactPickerFragment.ContactPickerFragmentHost;
-import com.android.messaging.ui.conversation.ConversationActivityUiState.ConversationActivityUiStateHost;
 import com.android.messaging.ui.conversation.ConversationFragment.ConversationFragmentHost;
 import com.android.messaging.ui.conversationlist.ConversationListActivity;
 import com.android.messaging.ui.customize.PrimaryColors;
@@ -73,16 +71,13 @@ import net.appcloudbox.ads.interstitialad.AcbInterstitialAdManager;
 import java.util.List;
 
 public class ConversationActivity extends BugleActionBarActivity
-        implements ContactPickerFragmentHost, ConversationFragmentHost,
-        ConversationActivityUiStateHost, ViewTreeObserver.OnGlobalLayoutListener {
+        implements ConversationFragmentHost,ViewTreeObserver.OnGlobalLayoutListener {
     public static final int FINISH_RESULT_CODE = 1;
     public static final int DELETE_CONVERSATION_RESULT_CODE = 2;
     private static final String SAVED_INSTANCE_STATE_UI_STATE_KEY = "uistate";
 
     private static final String PREF_KEY_CONVERSATION_ACTIVITY_SHOW_TIME = "pref_key_conversation_activity_show_time";
     private static final String PREF_KEY_WIRE_AD_SHOW_TIME = "pref_key_wire_ad_show_time";
-
-    private ConversationActivityUiState mUiState;
 
     // Fragment transactions cannot be performed after onSaveInstanceState() has been called since
     // it will cause state loss. We don't want to call commitAllowingStateLoss() since it's
@@ -102,6 +97,8 @@ public class ConversationActivity extends BugleActionBarActivity
     private AcbInterstitialAd mInterstitialAd;
     private long mCreateTime;
     private Toolbar toolbar;
+    private boolean fromCreateConversation;
+    private String mConversationId;
 
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
@@ -109,40 +106,33 @@ public class ConversationActivity extends BugleActionBarActivity
 
         setContentView(R.layout.conversation_activity);
 
+        fromCreateConversation = getIntent() != null
+                && getIntent().getBooleanExtra(UIIntents.UI_INTENT_EXTRA_FROM_CREATE_CONVERSATION, false);
         final Intent intent = getIntent();
-
+        if (fromCreateConversation) {
+            getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
+        }
         if (getIntent() != null && getIntent().getBooleanExtra(BugleNotifications.EXTRA_FROM_NOTIFICATION, false)) {
             BugleAnalytics.logEvent("SMS_Notifications_Clicked", true, true);
         }
 
-        // Do our best to restore UI state from saved instance state.
-        if (savedInstanceState != null) {
-            mUiState = savedInstanceState.getParcelable(SAVED_INSTANCE_STATE_UI_STATE_KEY);
-        } else {
-            if (intent.
-                    getBooleanExtra(UIIntents.UI_INTENT_EXTRA_GOTO_CONVERSATION_LIST, false)) {
-                // See the comment in BugleWidgetService.getViewMoreConversationsView() why this
-                // is unfortunately necessary. The Bugle desktop widget can display a list of
-                // conversations. When there are more conversations that can be displayed in
-                // the widget, the last item is a "More conversations" item. The way widgets
-                // are built, the list items can only go to a single fill-in intent which points
-                // to this ConversationActivity. When the user taps on "More conversations", we
-                // really want to go to the ConversationList. This code makes that possible.
-                finish();
-                final Intent convListIntent = new Intent(this, ConversationListActivity.class);
-                convListIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                startActivity(convListIntent);
-                return;
-            }
+        if (intent.
+                getBooleanExtra(UIIntents.UI_INTENT_EXTRA_GOTO_CONVERSATION_LIST, false)) {
+            // See the comment in BugleWidgetService.getViewMoreConversationsView() why this
+            // is unfortunately necessary. The Bugle desktop widget can display a list of
+            // conversations. When there are more conversations that can be displayed in
+            // the widget, the last item is a "More conversations" item. The way widgets
+            // are built, the list items can only go to a single fill-in intent which points
+            // to this ConversationActivity. When the user taps on "More conversations", we
+            // really want to go to the ConversationList. This code makes that possible.
+            finish();
+            final Intent convListIntent = new Intent(this, ConversationListActivity.class);
+            convListIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            startActivity(convListIntent);
+            return;
         }
 
-        // If saved instance state doesn't offer a clue, get the info from the intent.
-        if (mUiState == null) {
-            final String conversationId = intent.getStringExtra(
-                    UIIntents.UI_INTENT_EXTRA_CONVERSATION_ID);
-            mUiState = new ConversationActivityUiState(conversationId);
-        }
-        mUiState.setHost(this);
+        mConversationId = intent.getStringExtra(UIIntents.UI_INTENT_EXTRA_CONVERSATION_ID);
         mInstanceStateSaved = false;
 
         initActionBar();
@@ -164,8 +154,7 @@ public class ConversationActivity extends BugleActionBarActivity
                     intent.getStringExtra(UIIntents.UI_INTENT_EXTRA_ATTACHMENT_TYPE);
             final Rect bounds = UiUtils.getMeasuredBoundsOnScreen(mContainer);
             if (ContentType.isImageType(contentType)) {
-                final Uri imagesUri = MessagingContentProvider.buildConversationImagesUri(
-                        mUiState.getConversationId());
+                final Uri imagesUri = MessagingContentProvider.buildConversationImagesUri(mConversationId);
                 UIIntents.get().launchFullScreenPhotoViewer(
                         this, Uri.parse(extraToDisplay), bounds, imagesUri);
             } else if (ContentType.isVideoType(contentType)) {
@@ -253,7 +242,6 @@ public class ConversationActivity extends BugleActionBarActivity
         // focus change from the framework, making mUiState and actual UI inconsistent.
         // Therefore, save an exact "snapshot" (clone) of the UI state object to make sure the
         // restored UI state ALWAYS matches the actual restored UI components.
-        outState.putParcelable(SAVED_INSTANCE_STATE_UI_STATE_KEY, mUiState.clone());
         mInstanceStateSaved = true;
     }
 
@@ -303,9 +291,6 @@ public class ConversationActivity extends BugleActionBarActivity
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        if (mUiState != null) {
-            mUiState.setHost(null);
-        }
         mContainer.getViewTreeObserver().removeOnGlobalLayoutListener(this);
     }
 
@@ -313,10 +298,7 @@ public class ConversationActivity extends BugleActionBarActivity
     public void updateActionBar(final ActionBar actionBar) {
         super.updateActionBar(actionBar);
         final ConversationFragment conversation = getConversationFragment();
-        final ContactPickerFragment contactPicker = getContactPicker();
-        if (contactPicker != null && mUiState.shouldShowContactPickerFragment()) {
-            contactPicker.updateActionBar(actionBar);
-        } else if (conversation != null && mUiState.shouldShowConversationFragment()) {
+        if (conversation != null) {
             conversation.updateActionBar(actionBar, mTitleTextView);
         }
 
@@ -384,19 +366,23 @@ public class ConversationActivity extends BugleActionBarActivity
             if (ads.size() > 0) {
                 mInterstitialAd = ads.get(0);
                 mInterstitialAd.setInterstitialAdListener(new AcbInterstitialAd.IAcbInterstitialAdListener() {
-                    @Override public void onAdDisplayed() {
+                    @Override
+                    public void onAdDisplayed() {
 
                     }
 
-                    @Override public void onAdClicked() {
+                    @Override
+                    public void onAdClicked() {
                         BugleAnalytics.logEvent("Detailspage_FullAd_Click", true, true);
                     }
 
-                    @Override public void onAdClosed() {
+                    @Override
+                    public void onAdClosed() {
                         mInterstitialAd.release();
                     }
 
-                    @Override public void onAdDisplayFailed(AcbError acbError) {
+                    @Override
+                    public void onAdDisplayFailed(AcbError acbError) {
 
                     }
                 });
@@ -408,41 +394,13 @@ public class ConversationActivity extends BugleActionBarActivity
         }
     }
 
-    private ContactPickerFragment getContactPicker() {
-        return (ContactPickerFragment) getFragmentManager().findFragmentByTag(
-                ContactPickerFragment.FRAGMENT_TAG);
-    }
-
     public ConversationFragment getConversationFragment() {
         return (ConversationFragment) getFragmentManager().findFragmentByTag(
                 ConversationFragment.FRAGMENT_TAG);
     }
 
-    @Override // From ContactPickerFragmentHost
-    public void onGetOrCreateNewConversation(final String conversationId) {
-        Assert.isTrue(conversationId != null);
-        mUiState.onGetOrCreateConversation(conversationId);
-    }
-
-    @Override // From ContactPickerFragmentHost
-    public void onBackButtonPressed() {
-        onBackPressed();
-    }
-
-    @Override // From ContactPickerFragmentHost
-    public void onInitiateAddMoreParticipants() {
-        mUiState.onAddMoreParticipants();
-    }
-
-
-    @Override
-    public void onParticipantCountChanged(final boolean canAddMoreParticipants) {
-        mUiState.onParticipantCountUpdated(canAddMoreParticipants);
-    }
-
     @Override // From ConversationFragmentHost
     public void onStartComposeMessage() {
-        mUiState.onStartMessageCompose();
     }
 
     @Override // From ConversationFragmentHost
@@ -463,11 +421,8 @@ public class ConversationActivity extends BugleActionBarActivity
         return !mIsPaused && hasWindowFocus();
     }
 
-    @Override // From ConversationActivityUiStateListener
-    public void onConversationContactPickerUiStateChanged(final int oldState, final int newState,
-                                                          final boolean animate) {
-        Assert.isTrue(oldState != newState);
-        updateUiState(animate);
+    @Override public boolean isFromCreateConversation() {
+        return fromCreateConversation;
     }
 
     public String getConversationName() {
@@ -478,70 +433,44 @@ public class ConversationActivity extends BugleActionBarActivity
         if (mInstanceStateSaved || mIsPaused) {
             return;
         }
-        Assert.notNull(mUiState);
         final Intent intent = getIntent();
-        final String conversationId = mUiState.getConversationId();
+        final String conversationId = mConversationId;
 
         final FragmentManager fragmentManager = getFragmentManager();
         final FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
 
-        final boolean needConversationFragment = mUiState.shouldShowConversationFragment();
-        final boolean needContactPickerFragment = mUiState.shouldShowContactPickerFragment();
         ConversationFragment conversationFragment = getConversationFragment();
 
-        // Set up the conversation fragment.
-        if (needConversationFragment) {
-            Assert.notNull(conversationId);
-            if (conversationFragment == null) {
-                conversationFragment = new ConversationFragment();
-                fragmentTransaction.add(R.id.conversation_fragment_container,
-                        conversationFragment, ConversationFragment.FRAGMENT_TAG);
-                if (HSConfig.optBoolean(false, "Application", "SMSAd", "SMSDetailspageFullAd", "Enabled")
-                        && System.currentTimeMillis() - Preferences.getDefault().getLong(PREF_KEY_WIRE_AD_SHOW_TIME, -1)
-                        > HSConfig.optInteger(5, "Application", "SMSAd", "SMSDetailspageFullAd", "MinInterval") * DateUtils.MINUTE_IN_MILLIS
-                        && System.currentTimeMillis() - CommonUtils.getAppInstallTimeMillis()
-                        > HSConfig.optInteger(2, "Application", "SMSAd", "SMSDetailspageFullAd", "ShowAfterInstall") * DateUtils.HOUR_IN_MILLIS) {
-                    AcbInterstitialAdManager.preload(1, AdPlacement.AD_WIRE);
-                }
+        Assert.notNull(conversationId);
+        if (conversationFragment == null) {
+            conversationFragment = new ConversationFragment();
+            fragmentTransaction.add(R.id.conversation_fragment_container,
+                    conversationFragment, ConversationFragment.FRAGMENT_TAG);
+            if (HSConfig.optBoolean(false, "Application", "SMSAd", "SMSDetailspageFullAd", "Enabled")
+                    && System.currentTimeMillis() - Preferences.getDefault().getLong(PREF_KEY_WIRE_AD_SHOW_TIME, -1)
+                    > HSConfig.optInteger(5, "Application", "SMSAd", "SMSDetailspageFullAd", "MinInterval") * DateUtils.MINUTE_IN_MILLIS
+                    && System.currentTimeMillis() - CommonUtils.getAppInstallTimeMillis()
+                    > HSConfig.optInteger(2, "Application", "SMSAd", "SMSDetailspageFullAd", "ShowAfterInstall") * DateUtils.HOUR_IN_MILLIS) {
+                AcbInterstitialAdManager.preload(1, AdPlacement.AD_WIRE);
+            }
 
-                // todo @zhe.li.1 重构新建短信的代码，这块暂时隐藏键盘
-                InputMethodManager imm = (InputMethodManager) getSystemService(Activity.INPUT_METHOD_SERVICE);
-                View view = getCurrentFocus();
-                if (view == null) {
-                    view = new View(this);
-                }
-                imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+            // todo @zhe.li.1 重构新建短信的代码，这块暂时隐藏键盘
+            InputMethodManager imm = (InputMethodManager) getSystemService(Activity.INPUT_METHOD_SERVICE);
+            View view = getCurrentFocus();
+            if (view == null) {
+                view = new View(this);
             }
-            final MessageData draftData = intent.getParcelableExtra(
-                    UIIntents.UI_INTENT_EXTRA_DRAFT_DATA);
-            if (!needContactPickerFragment) {
-                // Once the user has committed the audience,remove the draft data from the
-                // intent to prevent reuse
-                intent.removeExtra(UIIntents.UI_INTENT_EXTRA_DRAFT_DATA);
-            }
-            conversationFragment.setHost(this);
-            conversationFragment.setConversationInfo(this, conversationId, draftData);
-        } else if (conversationFragment != null) {
-            // Don't save draft to DB when removing conversation fragment and switching to
-            // contact picking mode.  The draft is intended for the new group.
-            conversationFragment.suppressWriteDraft();
-            fragmentTransaction.remove(conversationFragment);
+            imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
         }
-
-        // Set up the contact picker fragment.
-        ContactPickerFragment contactPickerFragment = getContactPicker();
-        if (needContactPickerFragment) {
-            if (contactPickerFragment == null) {
-                contactPickerFragment = new ContactPickerFragment();
-                fragmentTransaction.add(R.id.contact_picker_fragment_container,
-                        contactPickerFragment, ContactPickerFragment.FRAGMENT_TAG);
-            }
-            contactPickerFragment.setHost(this);
-            contactPickerFragment.setContactPickingMode(mUiState.getDesiredContactPickingMode(),
-                    animate);
-        } else if (contactPickerFragment != null) {
-            fragmentTransaction.remove(contactPickerFragment);
-        }
+        final MessageData draftData = intent.getParcelableExtra(
+                UIIntents.UI_INTENT_EXTRA_DRAFT_DATA);
+//      if (!needContactPickerFragment) {
+        // Once the user has committed the audience,remove the draft data from the
+        // intent to prevent reuse
+        intent.removeExtra(UIIntents.UI_INTENT_EXTRA_DRAFT_DATA);
+//      }
+        conversationFragment.setHost(this);
+        conversationFragment.setConversationInfo(this, conversationId, draftData);
 
         fragmentTransaction.commit();
         invalidateActionBar();
@@ -561,11 +490,11 @@ public class ConversationActivity extends BugleActionBarActivity
 
     @Override
     public boolean shouldResumeComposeMessage() {
-        return mUiState.shouldResumeComposeMessage();
+        return false;
     }
 
     public boolean shouldShowContactPickerFragment() {
-        return mUiState.shouldShowContactPickerFragment();
+        return false;
     }
 
     @Override
@@ -588,4 +517,6 @@ public class ConversationActivity extends BugleActionBarActivity
             finish();
         }
     }
+
+
 }

@@ -76,8 +76,4 @@
             android:layout_height="match_parent" />
     </LinearLayout>
 
-    <FrameLayout
-        android:id="@+id/contact_picker_fragment_container"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent" />
 </com.android.messaging.ui.ImeDetectFrameLayout>

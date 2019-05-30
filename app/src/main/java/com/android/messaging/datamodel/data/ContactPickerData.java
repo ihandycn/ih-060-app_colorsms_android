@@ -44,8 +44,6 @@ public class ContactPickerData extends BindableData implements
     public interface ContactPickerDataListener {
         void onAllContactsCursorUpdated(Cursor data);
 
-        void onFrequentContactsCursorUpdated(Cursor data);
-
         void onContactCustomColorLoaded(ContactPickerData data);
     }
 
@@ -53,16 +51,13 @@ public class ContactPickerData extends BindableData implements
     private final Context mContext;
     private LoaderManager mLoaderManager;
     private ContactPickerDataListener mListener;
-    private final FrequentContactsCursorBuilder mFrequentContactsCursorBuilder;
 
     public ContactPickerData(final Context context, final ContactPickerDataListener listener) {
         mListener = listener;
         mContext = context;
-        mFrequentContactsCursorBuilder = new FrequentContactsCursorBuilder();
     }
 
     private static final int ALL_CONTACTS_LOADER = 1;
-    private static final int FREQUENT_CONTACTS_LOADER = 2;
     private static final int PARTICIPANT_LOADER = 3;
 
     @Override
@@ -73,9 +68,6 @@ public class ContactPickerData extends BindableData implements
             switch (id) {
                 case ALL_CONTACTS_LOADER:
                     return ContactUtil.getPhones(mContext)
-                            .createBoundCursorLoader(bindingId);
-                case FREQUENT_CONTACTS_LOADER:
-                    return ContactUtil.getFrequentContacts(mContext)
                             .createBoundCursorLoader(bindingId);
                 case PARTICIPANT_LOADER:
                     return new BoundCursorLoader(bindingId, mContext,
@@ -104,10 +96,6 @@ public class ContactPickerData extends BindableData implements
                         Log.v("Cursor Object", DatabaseUtils.dumpCursorToString(data));
                     }
                     mListener.onAllContactsCursorUpdated(data);
-                    mFrequentContactsCursorBuilder.setAllContacts(data);
-                    break;
-                case FREQUENT_CONTACTS_LOADER:
-                    mFrequentContactsCursorBuilder.setFrequents(data);
                     break;
                 case PARTICIPANT_LOADER:
                     mListener.onContactCustomColorLoaded(this);
@@ -115,17 +103,6 @@ public class ContactPickerData extends BindableData implements
                 default:
                     Assert.fail("Unknown loader id for contact picker!");
                     break;
-            }
-
-            if (loader.getId() != PARTICIPANT_LOADER) {
-                // The frequent contacts cursor to be used in the UI depends on results from both
-                // all contacts and frequent contacts loader, and we don't know which will finish
-                // first. Therefore, try to build the cursor and notify the listener if it's
-                // successfully built.
-                final Cursor frequentContactsCursor = mFrequentContactsCursorBuilder.build();
-                if (frequentContactsCursor != null) {
-                    mListener.onFrequentContactsCursorUpdated(frequentContactsCursor);
-                }
             }
         } else {
             LogUtil.w(LogUtil.BUGLE_TAG, "Loader finished after unbinding the contacts list");
@@ -142,11 +119,6 @@ public class ContactPickerData extends BindableData implements
             switch (loader.getId()) {
                 case ALL_CONTACTS_LOADER:
                     mListener.onAllContactsCursorUpdated(null);
-                    mFrequentContactsCursorBuilder.setAllContacts(null);
-                    break;
-                case FREQUENT_CONTACTS_LOADER:
-                    mListener.onFrequentContactsCursorUpdated(null);
-                    mFrequentContactsCursorBuilder.setFrequents(null);
                     break;
                 case PARTICIPANT_LOADER:
                     mListener.onContactCustomColorLoaded(this);
@@ -166,7 +138,6 @@ public class ContactPickerData extends BindableData implements
         args.putString(BINDING_ID, binding.getBindingId());
         mLoaderManager = loaderManager;
         mLoaderManager.initLoader(ALL_CONTACTS_LOADER, args, this);
-        mLoaderManager.initLoader(FREQUENT_CONTACTS_LOADER, args, this);
         mLoaderManager.initLoader(PARTICIPANT_LOADER, args, this);
     }
 
@@ -178,11 +149,9 @@ public class ContactPickerData extends BindableData implements
         // This could be null if we bind but the caller doesn't init the BindableData
         if (mLoaderManager != null) {
             mLoaderManager.destroyLoader(ALL_CONTACTS_LOADER);
-            mLoaderManager.destroyLoader(FREQUENT_CONTACTS_LOADER);
             mLoaderManager.destroyLoader(PARTICIPANT_LOADER);
             mLoaderManager = null;
         }
-        mFrequentContactsCursorBuilder.resetBuilder();
     }
 
     public static boolean isTooManyParticipants(final int participantCount) {

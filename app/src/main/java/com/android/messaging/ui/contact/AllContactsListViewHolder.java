@@ -26,8 +26,8 @@ import com.android.messaging.util.BugleAnalytics;
  * Holds the all contacts view for the contact picker's view pager.
  */
 public class AllContactsListViewHolder extends CustomPagerListViewHolder {
-    public AllContactsListViewHolder(final Context context, final HostInterface clivHostInterface) {
-        super(context, new ContactListAdapter(clivHostInterface, true /* needAlphabetHeader */));
+    public AllContactsListViewHolder(final Context context,final ContactListAdapter adapter) {
+        super(context, adapter);
     }
 
     @Override

@@ -42,6 +42,7 @@ import com.android.messaging.ui.SnackBar;
 import com.android.messaging.ui.SnackBarInteraction;
 import com.android.messaging.ui.UIIntents;
 import com.android.messaging.ui.contact.AddContactsConfirmationDialog;
+import com.android.messaging.ui.contact.ContactPickerActivity;
 import com.android.messaging.ui.conversationlist.ConversationListFragment.ConversationListFragmentHost;
 import com.android.messaging.ui.conversationlist.MultiSelectActionModeCallback.SelectedConversation;
 import com.android.messaging.util.BugleAnalytics;
@@ -293,7 +294,7 @@ public abstract class AbstractConversationListActivity extends BugleActionBarAct
             UIIntents.get().launchConversationActivity(
                     this, conversationId, null,
                     sceneTransitionAnimationOptions,
-                    hasCustomTransitions, formattedName);
+                    hasCustomTransitions, formattedName, false);
             BugleAnalytics.logEvent("SMS_Messages_Message_Click", true, true,
                     "Type", conversationListItemData.isPinned() ? "pin" : "unpin");
         }
@@ -301,7 +302,9 @@ public abstract class AbstractConversationListActivity extends BugleActionBarAct
 
     @Override
     public void onCreateConversationClick() {
-        UIIntents.get().launchCreateNewConversationActivity(this, null);
+//        UIIntents.get().launchCreateNewConversationActivity(this, null);
+        Intent intent = new Intent(this, ContactPickerActivity.class);
+        startActivity(intent);
     }
 
 

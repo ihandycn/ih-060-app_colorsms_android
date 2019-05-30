@@ -11,7 +11,7 @@ import android.util.AttributeSet;
 import android.view.View;
 import android.widget.TextView;
 
-import com.superapps.R;
+import com.android.messaging.R;
 import com.android.messaging.font.FontStyleManager;
 import com.android.messaging.font.FontUtils;
 import com.superapps.util.Fonts;
