@@ -22,6 +22,7 @@ import com.android.messaging.datamodel.action.MarkAsReadAction;
 import com.android.messaging.datamodel.data.MessageBoxItemData;
 import com.android.messaging.ui.UIIntents;
 import com.android.messaging.ui.appsettings.PrivacyModeSettings;
+import com.android.messaging.ui.appsettings.SendDelaySettings;
 import com.android.messaging.ui.customize.theme.ThemeUtils;
 import com.android.messaging.ui.emoji.BaseEmojiInfo;
 import com.android.messaging.ui.emoji.EmojiInfo;
@@ -286,6 +287,7 @@ public class MessageBoxActivity extends AppCompatActivity implements INotificati
                         "privacyMode", String.valueOf(mHasPrivacyModeConversation));
                 break;
             case R.id.self_send_icon:
+                BugleAnalytics.logEvent("Popups_BtnSend_Click", "SendDelay", "" + SendDelaySettings.getSendDelayInSecs());
                 mCurrentConversationView.replyMessage();
                 break;
         }

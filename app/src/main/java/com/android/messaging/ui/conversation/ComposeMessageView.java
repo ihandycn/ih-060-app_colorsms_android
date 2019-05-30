@@ -90,6 +90,7 @@ import com.android.messaging.util.OsUtil;
 import com.android.messaging.util.TextViewUtil;
 import com.android.messaging.util.UiUtils;
 import com.android.messaging.font.FontUtils;
+import com.ihs.app.framework.HSApplication;
 import com.ihs.commons.utils.HSLog;
 import com.superapps.util.BackgroundDrawables;
 import com.superapps.util.Dimensions;
@@ -259,9 +260,6 @@ public class ComposeMessageView extends LinearLayout
         SendMessagesDelayManager.getSendMessagesDelayValue(conversationId).setFragmentDestroyed(false);
 
         if (lastSendDelayActionStartSystemTime != 0) {
-
-//            Preferences.getDefault().putLong(PREF_KEY_SEND_DELAY_SYSTEM_TIME, 0);
-//            sLastSendDelaySystemTime = 0;
             SendMessagesDelayManager.getSendMessagesDelayValue(conversationId).setLastSendDelayActionStartSystemTime(0L);
             mMillisecondsAnimated = System.currentTimeMillis() - lastSendDelayActionStartSystemTime;
             if (mMillisecondsAnimated <= 1000 * SendDelaySettings.getSendDelayInSecs()) {
@@ -292,15 +290,6 @@ public class ComposeMessageView extends LinearLayout
     protected boolean getIsMessageSendFlag(){
         return mIsWaitingToSendMessage;
     }
-//    protected Handler getSendDelayHandler(){
-//        return mSendDelayHandler;
-//    }
-
-//    protected Runnable getSendDelayRunnable(){
-//        return mSendDelayRunnable;
-//    }
-
-//    protected boolean getIsMessage
 
     public void setOnActionEndListener(SendDelayActionCompletedCallBack listener) {
         this.mSendDelayActionCompletedCallBack = listener;
@@ -377,6 +366,7 @@ public class ComposeMessageView extends LinearLayout
         mSelfSendIcon = findViewById(R.id.self_send_icon);
         mSelfSendIcon.setOnClickListener(v -> {
             HSLog.d(TAG,"mSelfSendIcon.setOnClickListener Run");
+            BugleAnalytics.logEvent("Detailpage_BtnSend_Click", "SendDelay", "" + SendDelaySettings.getSendDelayInSecs());
             SubscriptionListEntry entry = getSelfSubscriptionListEntry();
             boolean shown = false;
             if (entry != null) {
@@ -449,13 +439,12 @@ public class ComposeMessageView extends LinearLayout
         mSendButton = findViewById(R.id.send_message_button);
         mDelayCloseButton = findViewById(R.id.delay_close_button);
         mSendDelayProgressBar = findViewById(R.id.send_delay_circle_bar);
-
-//        mSendDelayHandler = new Handler();
         mSendButton.setBackground(BackgroundDrawables.createBackgroundDrawable(PrimaryColors.getPrimaryColor(),
                 PrimaryColors.getPrimaryColorDark(),
                 Dimensions.pxFromDp(29), false, true));
         mSendButton.setOnClickListener(clickView -> {
             HSLog.d(TAG, "mSendButton.setOnClickListener Run");
+            BugleAnalytics.logEvent("Detailpage_BtnSend_Click", "SendDelay", "" + SendDelaySettings.getSendDelayInSecs());
             startMessageSendDelayAction();
         });
 
@@ -601,11 +590,8 @@ public class ComposeMessageView extends LinearLayout
         if (mMillisecondsAnimated != 0) {
             mSendDelayProgressBar.setProgress(100 - (float) ((mMillisecondsAnimated * 100) / (1000 * SendDelaySettings.getSendDelayInSecs())));
         }
-//        mSendDelayHandler.postDelayed(mSendDelayRunnable, 1000 * SendDelaySettings.getSendDelayInSecs() - mMillisecondsAnimated);
         Threads.postOnMainThreadDelayed(mSendDelayRunnable,1000 * SendDelaySettings.getSendDelayInSecs() - mMillisecondsAnimated);
 
-//            Preferences.getDefault().putLong(PREF_KEY_SEND_DELAY_SYSTEM_TIME, System.currentTimeMillis());
-//        sLastSendDelaySystemTime = System.currentTimeMillis();
         SendMessagesDelayManager.getSendMessagesDelayValue(mBinding.getData().getConversationId()).setLastSendDelayActionStartSystemTime(System.currentTimeMillis());
 
         mSendDelayProgressBar.startAnimation(SendDelaySettings.getSendDelayInSecs() - (mMillisecondsAnimated / 1000));
@@ -620,6 +606,7 @@ public class ComposeMessageView extends LinearLayout
             Threads.removeOnMainThread(mSendDelayRunnable);
             updateVisualsOnDraftChanged();
             resetDelaySendAnimation();
+            BugleAnalytics.logEvent("Detailpage_BtnCancel_Click");
         });
     }
 

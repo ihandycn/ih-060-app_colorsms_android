@@ -144,6 +144,7 @@ public class SettingGeneralActivity extends BaseActivity {
                 }
             });
             UiUtils.showDialogFragment(SettingGeneralActivity.this, dialog);
+            BugleAnalytics.logEvent("Settings_SendDelay_Click");
         });
 
 

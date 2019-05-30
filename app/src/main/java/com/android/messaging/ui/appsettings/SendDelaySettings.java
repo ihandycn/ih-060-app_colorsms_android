@@ -4,6 +4,7 @@ import android.content.Context;
 
 import com.android.messaging.Factory;
 import com.android.messaging.R;
+import com.android.messaging.util.BugleAnalytics;
 import com.android.messaging.util.BuglePrefs;
 
 public class SendDelaySettings {
@@ -17,7 +18,8 @@ public class SendDelaySettings {
     }
 
     public static void setSendDelay(int timeInSecs) {
-            sPrefs.putInt(PREF_KEY_SEND_DELAY, timeInSecs);
+        sPrefs.putInt(PREF_KEY_SEND_DELAY, timeInSecs);
+        BugleAnalytics.logEvent("Settings_SendDelay_Choose", "SendDelay", "" + timeInSecs);
     }
 
     public static String getSendDelayDescription() {

@@ -1218,9 +1218,7 @@ public class ConversationFragment extends Fragment implements ConversationDataLi
     @Override
     public void sendMessage(final MessageData message) {
         if (isReadyForAction()) {
-            HSLog.d("ComposeMessageView", "isReadyForAction()");
             if (ensureKnownRecipients()) {
-                HSLog.d("ComposeMessageView", "ensureKnownRecipients()");
                 String name = mBinding.getData().getConversationName();
                 if (!TextUtils.isEmpty(name)) {
                     HSLog.d("ComposeMessageView", "!TextUtils.isEmpty(name)");
@@ -1302,7 +1300,6 @@ public class ConversationFragment extends Fragment implements ConversationDataLi
         final ConversationData conversationData = mBinding.getData();
 
         if (!conversationData.getParticipantsLoaded()) {
-            HSLog.d("ComposeMessageView", "!conversationData.getParticipantsLoaded()");
             // We can't tell yet whether or not we have an unknown recipient
             return false;
         }
@@ -1310,7 +1307,6 @@ public class ConversationFragment extends Fragment implements ConversationDataLi
         final ConversationParticipantsData participants = conversationData.getParticipants();
         for (final ParticipantData participant : participants) {
             if (participant.isUnknownSender()) {
-                HSLog.d("ComposeMessageView", "if (participant.isUnknownSender())");
                 FabricUtils.logNonFatal("Send_Message_Unknown_Sender");
                 UiUtils.showToast(R.string.unknown_sender);
                 return false;

@@ -194,6 +194,7 @@ public class MessageBoxConversationView extends FrameLayout {
             mInputActionView.sendDelayAnimation();
             mSendDelayHandler.postDelayed(mSendDelayRunnable, 1000 * SendDelaySettings.getSendDelayInSecs());
             mInputActionView.setOnCancelSmsSendingClickListener(clickedView -> {
+                BugleAnalytics.logEvent("Popups_BtnCancel_Click");
                 mSendDelayHandler.removeCallbacks(mSendDelayRunnable);
                 mInputActionView.resetDelaySendAnimation();
             });
