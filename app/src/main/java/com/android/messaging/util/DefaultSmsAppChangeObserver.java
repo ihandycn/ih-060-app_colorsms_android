@@ -6,6 +6,7 @@ import android.os.Handler;
 import com.android.messaging.BuildConfig;
 import com.android.messaging.Factory;
 import com.android.messaging.ui.SetAsDefaultGuideActivity;
+import com.ihs.app.framework.HSApplication;
 import com.ihs.commons.config.HSConfig;
 import com.superapps.util.Threads;
 import com.superapps.util.Toasts;
@@ -28,7 +29,7 @@ public class DefaultSmsAppChangeObserver extends ContentObserver {
             public void run() {
                 if (!PhoneUtils.getDefault().isDefaultSmsApp()) {
                     if (HSConfig.optBoolean(false, "Application", "SetDefaultAlert", "Switch")) {
-                        SetAsDefaultGuideActivity.startActivity(Factory.get().getApplicationContext(), SetAsDefaultGuideActivity.DEFAULT_CHANGED);
+                        SetAsDefaultGuideActivity.startActivity(HSApplication.getContext(), SetAsDefaultGuideActivity.DEFAULT_CHANGED);
                     }
                 }
 
