@@ -21,7 +21,7 @@ public class FontUtils {
 
     public static final String[] sSupportGoogleFonts = {
             FontUtils.MESSAGE_FONT_FAMILY_DEFAULT_VALUE,
-            "Krub", "Mali", "ExpletusSans", "SourceSerifPro",
+            "Krub", "Mali", "Averia_Libre",
             "Merienda", "Sarpanch", "K2D", "El_Messiri"
     };
 

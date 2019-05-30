@@ -108,15 +108,6 @@
 					</dict>
 					<dict>
 						<key>Name</key>
-						<string>averia_libre</string>
-						<key>Weight</key>
-						<array>
-							<string>SemiBold</string>
-							<string>Regular</string>
-						</array>
-					</dict>
-					<dict>
-						<key>Name</key>
 						<string>trochut</string>
 						<key>Weight</key>
 						<array>
@@ -592,7 +583,7 @@
 						<key>ThemeColor</key>
 						<string>#1c9cb7</string>
 						<key>FontName</key>
-						<string>averia_libre</string>
+						<string>Averia_Libre</string>
 						<key>AvatarForegroundColor</key>
 						<string>#ffffff</string>
 						<key>ListTitleColor</key>
@@ -650,7 +641,7 @@
 						<key>ThemeColor</key>
 						<string>#ff4a91</string>
 						<key>FontName</key>
-						<string>averia_libre</string>
+						<string>Averia_Libre</string>
 						<key>AvatarForegroundColor</key>
 						<string>#ffffff</string>
 						<key>ListTitleColor</key>
@@ -882,7 +873,7 @@
 						<key>ThemeColor</key>
 						<string>#f2645f</string>
 						<key>FontName</key>
-						<string>averia_libre</string>
+						<string>Averia_Libre</string>
 						<key>AvatarForegroundColor</key>
 						<string>#ffffff</string>
 						<key>ListTitleColor</key>
