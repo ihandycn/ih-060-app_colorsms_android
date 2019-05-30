@@ -82,7 +82,6 @@ import com.ihs.commons.utils.HSLog;
 import com.superapps.util.BackgroundDrawables;
 import com.superapps.util.Dimensions;
 import com.superapps.util.Navigations;
-import com.superapps.util.Threads;
 
 import net.appcloudbox.ads.base.AcbNativeAd;
 import net.appcloudbox.ads.base.ContainerView.AcbNativeAdContainerView;
@@ -528,52 +527,45 @@ public class ConversationListFragment extends Fragment implements ConversationLi
         mListBinding.ensureBound(data);
 
         ArrayList<Object> dataList = new ArrayList<>();
-        Threads.postOnThreadPoolExecutor(() -> {
-            if (cursor != null && cursor.moveToFirst()) {
-                do {
-                    ConversationListItemData itemData = new ConversationListItemData();
-                    itemData.bind(cursor);
-                    if (!itemData.isPrivate()) {
-                        dataList.add(itemData);
-                    }
-                } while (cursor.moveToNext());
-            }
-
-            Threads.postOnMainThread(() -> {
-                if (mIsDestroyed) {
-                    return;
+        if (cursor != null && cursor.moveToFirst()) {
+            do {
+                ConversationListItemData itemData = new ConversationListItemData();
+                itemData.bind(cursor);
+                if (!itemData.isPrivate()) {
+                    dataList.add(itemData);
                 }
-                if (conversationFirstUpdated) {
-                    conversationFirstUpdated = false;
-                    boolean hasPinConversation = false;
-                    if (!dataList.isEmpty()) {
-                        for (Object object : dataList) {
-                            if (object instanceof ConversationListItemData) {
-                                ConversationListItemData itemData = (ConversationListItemData) object;
-                                if (itemData.isPinned()) {
-                                    hasPinConversation = true;
-                                    break;
-                                }
-                            }
+            } while (cursor.moveToNext());
+        }
+
+        if (conversationFirstUpdated) {
+            conversationFirstUpdated = false;
+            boolean hasPinConversation = false;
+            if (!dataList.isEmpty()) {
+                for (Object object : dataList) {
+                    if (object instanceof ConversationListItemData) {
+                        ConversationListItemData itemData = (ConversationListItemData) object;
+                        if (itemData.isPinned()) {
+                            hasPinConversation = true;
+                            break;
                         }
                     }
-                    HSBundle hsBundle = new HSBundle();
-                    hsBundle.putBoolean(ConversationListActivity.HAS_PIN_CONVERSATION, hasPinConversation);
-                    HSGlobalNotificationCenter.sendNotification(ConversationListActivity.FIRST_LOAD, hsBundle);
                 }
+            }
+            HSBundle hsBundle = new HSBundle();
+            hsBundle.putBoolean(ConversationListActivity.HAS_PIN_CONVERSATION, hasPinConversation);
+            HSGlobalNotificationCenter.sendNotification(ConversationListActivity.FIRST_LOAD, hsBundle);
+        }
 
-                if (dataList.size() > 0 && mAdapter.hasHeader()) {
-                    dataList.add(0, new AdItemData());
-                }
-                mAdapter.setDataList(dataList);
-                HSLog.d("conversation list has : " + dataList.size());
-                if (adFirstPrepared && !dataList.isEmpty()) {
-                    tryShowTopNativeAd();
-                    adFirstPrepared = false;
-                }
-                updateEmptyListUi(cursor == null || dataList.size() == 0);
-            });
-        });
+        if (dataList.size() > 0 && mAdapter.hasHeader()) {
+            dataList.add(0, new AdItemData());
+        }
+        mAdapter.setDataList(dataList);
+        HSLog.d("conversation list has : " + dataList.size());
+        if (adFirstPrepared && !dataList.isEmpty()) {
+            tryShowTopNativeAd();
+            adFirstPrepared = false;
+        }
+        updateEmptyListUi(cursor == null || dataList.size() == 0);
     }
 
     @Override
