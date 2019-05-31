@@ -46,6 +46,9 @@ public class MarkAsReadAction extends Action implements Parcelable {
      * Mark all the messages as read for a particular conversation.
      */
     public static void markAsRead(final String conversationId) {
+        if (conversationId == null) {
+            return;
+        }
         final MarkAsReadAction action = new MarkAsReadAction(conversationId);
         action.start();
     }
@@ -53,6 +56,9 @@ public class MarkAsReadAction extends Action implements Parcelable {
     public static void markAsRead(final String conversationId,
                                   final String participantId,
                                   final long receivedTimestamp) {
+        if (conversationId == null) {
+            return;
+        }
         final MarkAsReadAction action = new MarkAsReadAction(conversationId, participantId, receivedTimestamp);
         action.start();
     }
