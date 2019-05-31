@@ -43,6 +43,7 @@ public class MarkAsSeenAction extends Action implements Parcelable {
     private static final String KEY_CONVERSATION_ID = "conversation_id";
     private static final String KEY_JUST_PRIVATE_CONVERSATIONS = "just_move_private_conversation";
     private static final String KEY_JUST_NORMAL_CONVERSATIONS = "just_move_normal_conversation";
+    private static final String KEY_CONVERSATION_ID_LIST = "conversation_list";
 
     /**
      * Mark all messages as seen.
@@ -69,6 +70,12 @@ public class MarkAsSeenAction extends Action implements Parcelable {
      */
     public static void markAsSeen(final String conversationId) {
         final MarkAsSeenAction action = new MarkAsSeenAction(conversationId);
+        action.start();
+    }
+
+    public static void markAsSeen(final ArrayList<String> conversationList) {
+        final MarkAsSeenAction action = new MarkAsSeenAction((String) null);
+        action.actionParameters.putStringArrayList(KEY_CONVERSATION_ID_LIST, conversationList);
         action.start();
     }
 
@@ -110,7 +117,24 @@ public class MarkAsSeenAction extends Action implements Parcelable {
                     MessagingContentProvider.notifyMessagesChanged(conversationId);
                 }
             } else {
-                if (actionParameters.containsKey(KEY_JUST_PRIVATE_CONVERSATIONS)) {
+                if (actionParameters.containsKey(KEY_CONVERSATION_ID_LIST)) {
+                    List<String> list = actionParameters.getStringArrayList(KEY_CONVERSATION_ID_LIST);
+                    if (list == null || list.size() == 0) {
+                        return null;
+                    }
+                    StringBuilder sb = new StringBuilder();
+                    sb.append(list.get(0));
+                    for (String s : list) {
+                        sb.append(",").append(s);
+                    }
+                    updateCount = db.update(DatabaseHelper.MESSAGES_TABLE, values,
+                            MessageColumns.SEEN + " != 1 AND " +
+                                    MessageColumns.CONVERSATION_ID + " IN ( " + sb.toString() + " )",
+                            null);
+                    if (updateCount > 0) {
+                        MessagingContentProvider.notifyMessagesChanged(conversationId);
+                    }
+                } else if (actionParameters.containsKey(KEY_JUST_PRIVATE_CONVERSATIONS)) {
                     Cursor cursor = db.query(DatabaseHelper.MESSAGES_TABLE,
                             new String[]{MessageColumns.CONVERSATION_ID},
                             MessageColumns.SEEN + " != 1 ", null,
@@ -197,7 +221,7 @@ public class MarkAsSeenAction extends Action implements Parcelable {
         // After marking messages as seen, update the notifications. This will
         // clear the now stale notifications.
         //if (updateCount > 0) {
-            BugleNotifications.update(false/*silent*/, BugleNotifications.UPDATE_ALL);
+        BugleNotifications.update(false/*silent*/, BugleNotifications.UPDATE_ALL);
         //}
         return null;
     }

@@ -917,7 +917,7 @@ public class ConversationFragment extends Fragment implements ConversationDataLi
         }
 
         setConversationFocus();
-        BugleNotifications.markMessagesAsRead(mConversationId);
+        Threads.postOnMainThreadDelayed(() -> BugleNotifications.markMessagesAsRead(mConversationId), 500);
 
         // On resume, invalidate all message views to show the updated timestamp.
         mAdapter.notifyDataSetChanged();

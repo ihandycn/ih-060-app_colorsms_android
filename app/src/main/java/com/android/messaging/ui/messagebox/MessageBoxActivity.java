@@ -111,7 +111,7 @@ public class MessageBoxActivity extends AppCompatActivity implements INotificati
 
             @Override
             public void onPageSelected(int position) {
-                String conversationId = (String)mPagerAdapter.getView(position).getTag();
+                String conversationId = (String) mPagerAdapter.getView(position).getTag();
                 mMarkAsSeenMap.put(conversationId, true);
             }
 
@@ -410,6 +410,23 @@ public class MessageBoxActivity extends AppCompatActivity implements INotificati
     }
 
     @Override
+    protected void onStop() {
+        super.onStop();
+        ArrayList<String> markAsSeenList = new ArrayList<>();
+        for (String conversationId : mConversationIdList) {
+            Boolean seen = mMarkAsSeenMap.get(conversationId);
+            if (seen != null) {
+                if (seen) {
+                    markAsSeenList.add(conversationId);
+                }
+            }
+        }
+        if (markAsSeenList.size() > 0) {
+            MarkAsSeenAction.markAsSeen(markAsSeenList);
+        }
+    }
+
+    @Override
     protected void onDestroy() {
         super.onDestroy();
         HSGlobalNotificationCenter.removeObserver(this);
@@ -420,13 +437,6 @@ public class MessageBoxActivity extends AppCompatActivity implements INotificati
                 if (markAsRead) {
                     MessageBoxItemData data = mDataMap.get(conversationId);
                     MarkAsReadAction.markAsRead(conversationId, data.getParticipantId(), data.getReceivedTimestamp());
-                }
-            }
-
-            Boolean seen = mMarkAsSeenMap.get(conversationId);
-            if (seen != null) {
-                if (seen) {
-                    MarkAsSeenAction.markAsSeen(conversationId);
                 }
             }
         }
