@@ -133,6 +133,26 @@
 							<string>Regular</string>
 						</array>
 					</dict>
+					<dict>
+						<key>Name</key>
+						<string>expletus_sans</string>
+						<key>Weight</key>
+						<array>
+							<string>SemiBold</string>
+							<string>Regular</string>
+							<string>Medium</string>
+						</array>
+					</dict>
+					<dict>
+						<key>Name</key>
+						<string>source_serif_pro</string>
+						<key>Weight</key>
+						<array>
+							<string>SemiBold</string>
+							<string>Regular</string>
+							<string>Medium</string>
+						</array>
+					</dict>
 				</array>
 			</dict>
 			<key>SMSAd</key>
