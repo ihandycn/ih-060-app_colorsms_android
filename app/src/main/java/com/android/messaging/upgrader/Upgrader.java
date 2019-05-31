@@ -92,8 +92,7 @@ public class Upgrader extends BaseUpgrader {
                         }
                     });
         } else {
-            Factory.get().getCustomizePrefs()
-                    .putString(BuglePrefsKeys.PREFS_KEY_THEME_NAME, ThemeUtils.DEFAULT_THEME_KEY);
+            ThemeUtils.applyTheme(ThemeInfo.getThemeInfo(ThemeUtils.DEFAULT_THEME_KEY), 0);
             Preferences.getDefault().putBoolean(BuglePrefsKeys.PREFS_KEY_THEME_CLEARED_TO_DEFAULT, true);
         }
     }

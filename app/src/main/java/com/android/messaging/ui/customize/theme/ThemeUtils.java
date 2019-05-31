@@ -40,53 +40,61 @@ public class ThemeUtils {
         sCurrentTheme = themeInfo;
         Factory.get().getCustomizePrefs().putString(BuglePrefsKeys.PREFS_KEY_THEME_NAME, themeInfo.mThemeKey);
 
-        Threads.postOnMainThreadDelayed(() -> {
-            PrimaryColors.changePrimaryColor(Color.parseColor(themeInfo.themeColor));
+        if (delay > 0) {
+            Threads.postOnMainThreadDelayed(() -> {
+                applyTheme(themeInfo);
+            }, delay);
+        } else {
+            applyTheme(themeInfo);
+        }
+    }
 
-            ConversationColors.get().setBubbleBackgroundColor(true, Color.parseColor(themeInfo.incomingBubbleBgColor));
-            ConversationColors.get().setBubbleBackgroundColor(false, Color.parseColor(themeInfo.outgoingBubbleBgColor));
-            ConversationColors.get().setMessageTextColor(true, Color.parseColor(themeInfo.incomingBubbleTextColor));
-            ConversationColors.get().setMessageTextColor(false, Color.parseColor(themeInfo.outgoingBubbleTextColor));
-            ConversationColors.get().setListTitleColor(Color.parseColor(themeInfo.listTitleColor));
-            ConversationColors.get().setListSubTitleColor(Color.parseColor(themeInfo.listSubtitleColor));
-            ConversationColors.get().setListTimeColor(Color.parseColor(themeInfo.listTimeColor));
-            ConversationColors.get().setAdActionColor(Color.parseColor(themeInfo.bubbleAdColor));
+    private static void applyTheme(ThemeInfo themeInfo) {
+        PrimaryColors.changePrimaryColor(Color.parseColor(themeInfo.themeColor));
 
-            ToolbarDrawables.sToolbarBitmap = null;
-            WallpaperDrawables.sListWallpaperBitmap = null;
-            WallpaperDrawables.sWallpaperBitmap = null;
-            WallpaperDrawables.applyWallpaperBg(themeInfo.wallpaperUrl);
-            AvatarBgDrawables.sAvatarBg = null;
-            CreateIconDrawable.sCreateIconBitmap = null;
+        ConversationColors.get().setBubbleBackgroundColor(true, Color.parseColor(themeInfo.incomingBubbleBgColor));
+        ConversationColors.get().setBubbleBackgroundColor(false, Color.parseColor(themeInfo.outgoingBubbleBgColor));
+        ConversationColors.get().setMessageTextColor(true, Color.parseColor(themeInfo.incomingBubbleTextColor));
+        ConversationColors.get().setMessageTextColor(false, Color.parseColor(themeInfo.outgoingBubbleTextColor));
+        ConversationColors.get().setListTitleColor(Color.parseColor(themeInfo.listTitleColor));
+        ConversationColors.get().setListSubTitleColor(Color.parseColor(themeInfo.listSubtitleColor));
+        ConversationColors.get().setListTimeColor(Color.parseColor(themeInfo.listTimeColor));
+        ConversationColors.get().setAdActionColor(Color.parseColor(themeInfo.bubbleAdColor));
 
-            ThemeManager.getInstance().clearCacheDrawable();
+        ToolbarDrawables.sToolbarBitmap = null;
+        WallpaperDrawables.sListWallpaperBitmap = null;
+        WallpaperDrawables.sWallpaperBitmap = null;
+        WallpaperDrawables.applyWallpaperBg(themeInfo.wallpaperUrl);
+        AvatarBgDrawables.sAvatarBg = null;
+        CreateIconDrawable.sCreateIconBitmap = null;
 
-            if (!themeInfo.mThemeKey.equals(ThemeUtils.DEFAULT_THEME_KEY)) {
-                BubbleDrawables.setSelectedIdentifier(-1);
-            }
+        ThemeManager.getInstance().clearCacheDrawable();
 
-            if (themeInfo.mIsLocalTheme && !themeInfo.isInLocalFolder()) {
-                ThemeDownloadManager.getInstance().copyFileFromAssetsAsync(themeInfo,
-                        new ThemeDownloadManager.IThemeMoveListener() {
-                            @Override
-                            public void onMoveSuccess() {
+        if (!themeInfo.mThemeKey.equals(ThemeUtils.DEFAULT_THEME_KEY)) {
+            BubbleDrawables.setSelectedIdentifier(-1);
+        }
 
-                            }
+        if (themeInfo.mIsLocalTheme && !themeInfo.isInLocalFolder()) {
+            ThemeDownloadManager.getInstance().copyFileFromAssetsAsync(themeInfo,
+                    new ThemeDownloadManager.IThemeMoveListener() {
+                        @Override
+                        public void onMoveSuccess() {
 
-                            @Override
-                            public void onMoveFailed() {
+                        }
 
-                            }
-                        });
-            }
+                        @Override
+                        public void onMoveFailed() {
 
-            FontStyleManager.getInstance().setFontFamily(themeInfo.fontName);
-            FontUtils.onFontTypefaceChanged();
+                        }
+                    });
+        }
 
-            HSGlobalNotificationCenter.sendNotification(ConversationListActivity.EVENT_MAINPAGE_RECREATE);
-            WallpaperSizeManager.getInstance().loadWallpaperParams();
-            Factory.get().reclaimMemory();
-        }, delay);
+        FontStyleManager.getInstance().setFontFamily(themeInfo.fontName);
+        FontUtils.onFontTypefaceChanged();
+
+        HSGlobalNotificationCenter.sendNotification(ConversationListActivity.EVENT_MAINPAGE_RECREATE);
+        WallpaperSizeManager.getInstance().loadWallpaperParams();
+        Factory.get().reclaimMemory();
     }
 
     public static String getCurrentThemeName() {
