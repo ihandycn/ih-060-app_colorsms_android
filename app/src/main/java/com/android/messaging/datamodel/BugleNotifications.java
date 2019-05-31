@@ -431,7 +431,7 @@ public class BugleNotifications {
     }
 
     private static void processAndSend(final NotificationState state, final boolean silent,
-                                       final boolean softSound) {
+                                       final boolean softSound, final boolean noHeadsUpAndVoice) {
         final Context context = Factory.get().getApplicationContext();
         final Uri ringtoneUri = RingtoneUtil.getNotificationRingtoneUri(state.getRingtoneUri());
 
@@ -439,9 +439,12 @@ public class BugleNotifications {
         String channelId = PendingIntentConstants.SMS_NOTIFICATION_CHANNEL_ID;
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
             int priority = state.getChannelPriority();
+            if (noHeadsUpAndVoice) {
+                priority = NotificationManager.IMPORTANCE_LOW;
+            }
             notificationChannel = BugleNotificationChannelUtil.getSmsNotificationChannel(ringtoneUri, shouldVibrate(state), priority);
             channelId = notificationChannel.getId();
-            notificationChannel.setImportance(state.getChannelPriority());
+            notificationChannel.setImportance(priority);
         }
 
         final NotificationCompat.Builder notifBuilder = new NotificationCompat.Builder(context, channelId);
@@ -477,7 +480,11 @@ public class BugleNotifications {
 
         updateBuilderAudioVibrate(state, notifBuilder, silent, ringtoneUri, conversationId);
 
-        notifBuilder.setPriority(state.getPriority());
+        if (noHeadsUpAndVoice) {
+            notifBuilder.setPriority(Notification.PRIORITY_LOW);
+        } else {
+            notifBuilder.setPriority(state.getPriority());
+        }
         final NotificationCompat.Style notifStyle = state.build(notifBuilder);
 
         // Set the content intent
@@ -678,7 +685,7 @@ public class BugleNotifications {
             HSLog.d(TAG, "should not pop up messagebox");
         }
         if (!isPrivateConversation || PrivateSettingManager.isNotificationEnable()) {
-            processAndSend(state, silent, softSound);
+            processAndSend(state, silent, softSound, conversationId == null);
             boolean isPrivacyMode = PrivacyModeSettings.getPrivacyMode(conversationId) != PrivacyModeSettings.NONE;
             BugleAnalytics.logEvent("SMS_Notifications_Pushed", true, true, "PrivacyMode", String.valueOf(isPrivacyMode));
             if (isPrivacyMode) {

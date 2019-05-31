@@ -52,10 +52,10 @@ public class BugleNotificationChannelUtil {
         channel = Notifications.getChannel(
                 PendingIntentConstants.SMS_NOTIFICATION_CHANNEL_ID + "_" + channelIndex,
                 HSApplication.getContext().getResources().getString(R.string.sms_notification_channel),
-                HSApplication.getContext().getResources().getString(R.string.sms_notification_channel_description));
+                HSApplication.getContext().getResources().getString(R.string.sms_notification_channel_description), importance);
         channel.setSound(soundPath, Notification.AUDIO_ATTRIBUTES_DEFAULT);
         channel.enableVibration(enableVibration);
-        channel.setImportance(importance);
+
         if (enableVibration) {
             channel.setVibrationPattern(new long[]{100, 200, 300});
         }
