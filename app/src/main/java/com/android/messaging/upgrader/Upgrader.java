@@ -9,6 +9,7 @@ import com.android.messaging.datamodel.DatabaseHelper;
 import com.android.messaging.datamodel.DatabaseWrapper;
 import com.android.messaging.datamodel.data.ConversationListItemData;
 import com.android.messaging.font.FontStyleManager;
+import com.android.messaging.font.FontUtils;
 import com.android.messaging.privatebox.PrivateContactsManager;
 import com.android.messaging.privatebox.PrivateMmsEntry;
 import com.android.messaging.privatebox.PrivateSmsEntry;
@@ -68,11 +69,17 @@ public class Upgrader extends BaseUpgrader {
         }
 
         if (oldVersion < 49 && newVersion >= 49) {
-            migrateLocalTheme();
+            migrateLocalThemeAndFont();
         }
     }
 
-    private void migrateLocalTheme() {
+    private void migrateLocalThemeAndFont() {
+        String currentFontName = Preferences.getDefault().
+                getString(FontStyleManager.PREF_KEY_MESSAGE_FONT_TYPE, FontUtils.MESSAGE_FONT_FAMILY_DEFAULT_VALUE);
+        if ("ExpletusSans".equals(currentFontName) || "SourceSerifPro".equals(currentFontName)) {
+            Preferences.getDefault().putString(FontStyleManager.PREF_KEY_MESSAGE_FONT_TYPE, FontUtils.MESSAGE_FONT_FAMILY_DEFAULT_VALUE);
+        }
+
         ThemeInfo currentTheme = ThemeUtils.getCurrentTheme();
         if (currentTheme.isInLocalFolder()) {
             return;

@@ -4,7 +4,7 @@ import com.superapps.util.Preferences;
 
 public class FontStyleManager {
     private static final String PREF_KEY_MESSAGE_FONT_SCALE_LEVEL = "message_font_scale";
-    private static final String PREF_KEY_MESSAGE_FONT_TYPE = "message_font_family";
+    public static final String PREF_KEY_MESSAGE_FONT_TYPE = "message_font_family";
     private static FontStyleManager mInstance;
     private String mFontName;
     private int mFontLevel;
