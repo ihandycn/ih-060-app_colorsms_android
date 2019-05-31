@@ -243,7 +243,7 @@ public class ComposeMessageView extends LinearLayout
         mBinding.bind(data);
         data.addListener(this);
         data.setSubscriptionDataProvider(host);
-        resumeSendDelayMessageActionStartTime();
+        resumeLastSendDelayMessageActionInThisConversation();
     }
 
     /**
@@ -567,7 +567,7 @@ public class ComposeMessageView extends LinearLayout
         });
     }
 
-    private void resumeSendDelayMessageActionStartTime(){
+    private void resumeLastSendDelayMessageActionInThisConversation(){
         long sendDelayActionStartTime;
         String conversationId = mBinding.getData().getConversationId();
         SendDelayMessagesManager.SendDelayMessagesData globalSendDelayMessagesData = SendDelayMessagesManager.getIncompleteSendingDelayMessagesAction(conversationId);
