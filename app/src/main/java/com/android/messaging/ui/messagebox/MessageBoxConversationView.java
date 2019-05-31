@@ -187,6 +187,7 @@ public class MessageBoxConversationView extends FrameLayout {
         if (TextUtils.isEmpty(mInputActionView.getMessage())) {
             return;
         }
+        BugleAnalytics.logEvent("Popups_BtnSend_Click", "SendDelay", "" + SendDelaySettings.getSendDelayInSecs());
         mHasSentMessages = true;
 
         if (SendDelaySettings.getSendDelayInSecs() != 0) {

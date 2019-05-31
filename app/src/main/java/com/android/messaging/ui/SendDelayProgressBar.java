@@ -4,6 +4,7 @@ import android.animation.ValueAnimator;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.RectF;
 import android.support.v4.view.animation.PathInterpolatorCompat;
@@ -15,16 +16,17 @@ import com.android.messaging.R;
 import com.android.messaging.ui.customize.PrimaryColors;
 import com.superapps.util.Dimensions;
 
+import static android.graphics.Paint.Style.FILL;
 import static android.graphics.Paint.Style.STROKE;
 
 public class SendDelayProgressBar extends View {
     private final static float SEND_DELAY_PROGRESS_BAR_INITIAL_DIRECTION = 270.0f;
-    private int mOutsideColor;    //进度的颜色
-    private float mOutsideRadius;    //外圆半径大小
-    private int mInsideColor;    //背景颜色
-    private float mProgressWidth;    //圆环的宽度
-    private int mMaxProgress;    //最大进度
-    private float mProgress;    //当前进度
+    private int mOutsideColor;
+    private float mOutsideRadius;
+    private int mInsideColor;
+    private float mProgressWidth;
+    private int mMaxProgress;
+    private float mProgress;
     private float mDirection;
     private int mCirclePoint;
     private RectF mOval;
@@ -90,10 +92,15 @@ public class SendDelayProgressBar extends View {
         mOval.right = mCirclePoint + mOutsideRadius;
         mOval.bottom = mCirclePoint + mOutsideRadius;
 
+
+        mPaint.setAntiAlias(true);
+        mPaint.setColor(Color.WHITE);
+        mPaint.setStyle(FILL);
+        canvas.drawCircle(mCirclePoint, mCirclePoint, mOutsideRadius, mPaint);
+
         mPaint.setColor(mInsideColor);
         mPaint.setStyle(STROKE);
         mPaint.setStrokeWidth(mProgressWidth);
-        mPaint.setAntiAlias(true);
         canvas.drawCircle(mCirclePoint, mCirclePoint, mOutsideRadius, mPaint);
 
         mPaint.setColor(mOutsideColor);

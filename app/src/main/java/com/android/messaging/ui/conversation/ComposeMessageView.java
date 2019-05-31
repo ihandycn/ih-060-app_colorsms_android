@@ -333,7 +333,6 @@ public class ComposeMessageView extends LinearLayout
 
         mSelfSendIcon = findViewById(R.id.self_send_icon);
         mSelfSendIcon.setOnClickListener(v -> {
-            BugleAnalytics.logEvent("Detailpage_BtnSend_Click", "SendDelay", "" + SendDelaySettings.getSendDelayInSecs());
             SubscriptionListEntry entry = getSelfSubscriptionListEntry();
             boolean shown = false;
             if (entry != null) {

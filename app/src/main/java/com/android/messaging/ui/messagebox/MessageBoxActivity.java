@@ -287,7 +287,6 @@ public class MessageBoxActivity extends AppCompatActivity implements INotificati
                         "privacyMode", String.valueOf(mHasPrivacyModeConversation));
                 break;
             case R.id.self_send_icon:
-                BugleAnalytics.logEvent("Popups_BtnSend_Click", "SendDelay", "" + SendDelaySettings.getSendDelayInSecs());
                 mCurrentConversationView.replyMessage();
                 break;
         }
