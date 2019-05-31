@@ -330,16 +330,6 @@ public class MessageBoxConversationView extends FrameLayout {
         markAsRead();
     }
 
-    @Override
-    public void onWindowFocusChanged(boolean hasWindowFocus) {
-        super.onWindowFocusChanged(hasWindowFocus);
-        if (hasWindowFocus) {
-            if (PrivacyModeSettings.getPrivacyMode(mConversationId) == NONE) {
-                markAsRead();
-            }
-        }
-    }
-
     void markAsRead() {
         if (!TextUtils.isEmpty(mConversationId)) {
             mActivity.markAsRead(mConversationId);

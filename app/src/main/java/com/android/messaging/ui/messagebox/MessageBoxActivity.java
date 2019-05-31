@@ -47,6 +47,7 @@ import java.util.HashMap;
 import java.util.List;
 
 import static com.android.messaging.ui.UIIntents.UI_INTENT_EXTRA_MESSAGE_BOX_ITEM;
+import static com.android.messaging.ui.appsettings.PrivacyModeSettings.NONE;
 import static com.android.messaging.ui.messagebox.MessageBoxAnalytics.getConversationType;
 
 public class MessageBoxActivity extends AppCompatActivity implements INotificationObserver,
@@ -223,6 +224,17 @@ public class MessageBoxActivity extends AppCompatActivity implements INotificati
         mCurrentConversationView.post(this::reLayoutIndicatorView);
     }
 
+    @Override
+    public void onWindowFocusChanged(boolean hasFocus) {
+        super.onWindowFocusChanged(hasFocus);
+        if (hasFocus) {
+            String conversationId = mCurrentConversationView.getConversationId();
+            if (PrivacyModeSettings.getPrivacyMode(conversationId) == NONE) {
+                markAsRead(conversationId);
+            }
+        }
+    }
+
     private boolean mLogScrollPaged;
 
     @Override
@@ -238,6 +250,10 @@ public class MessageBoxActivity extends AppCompatActivity implements INotificati
         mCurrentConversationView = (MessageBoxConversationView) mPagerAdapter.getViews().get(position);
         reLayoutIndicatorView();
         mIndicator.updateIndicator(position, mPagerAdapter.getCount());
+        String conversationId = mCurrentConversationView.getConversationId();
+        if (PrivacyModeSettings.getPrivacyMode(conversationId) == NONE) {
+            markAsRead(conversationId);
+        }
     }
 
     @Override
@@ -330,9 +346,7 @@ public class MessageBoxActivity extends AppCompatActivity implements INotificati
     }
 
     void markAsRead(String mConversationId) {
-        if (TextUtils.equals(mCurrentConversationView.getConversationId(), mConversationId)) {
-            mMarkAsReadMap.put(mConversationId, true);
-        }
+        mMarkAsReadMap.put(mConversationId, true);
     }
 
     private void adjustKeyboardGuideline(boolean showEmoji) {
