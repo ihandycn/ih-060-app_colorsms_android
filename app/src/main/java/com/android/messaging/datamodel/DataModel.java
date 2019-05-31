@@ -166,6 +166,9 @@ public abstract class DataModel {
      * @param conversationId conversation with the new incoming message
      */
     public boolean isNewMessageObservable(final String conversationId) {
+        if (TextUtils.isEmpty(conversationId)) {
+            return false;
+        }
         if (PrivateMessageManager.getInstance().isPrivateConversationId(conversationId)) {
             return isPrivateConversationListScrolledToNewestConversation()
                     || isFocusedConversation(conversationId);

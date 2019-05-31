@@ -19,6 +19,7 @@ import android.widget.Toast;
 import com.android.messaging.BuildConfig;
 import com.android.messaging.R;
 import com.android.messaging.datamodel.action.MarkAsReadAction;
+import com.android.messaging.datamodel.action.MarkAsSeenAction;
 import com.android.messaging.datamodel.data.MessageBoxItemData;
 import com.android.messaging.ui.UIIntents;
 import com.android.messaging.ui.appsettings.PrivacyModeSettings;
@@ -78,6 +79,7 @@ public class MessageBoxActivity extends AppCompatActivity implements INotificati
     private boolean mHasPrivacyModeConversation;
 
     private HashMap<String, Boolean> mMarkAsReadMap = new HashMap<>(4);
+    private HashMap<String, Boolean> mMarkAsSeenMap = new HashMap<>(4);
     private HashMap<String, MessageBoxItemData> mDataMap = new HashMap<>(4);
     private ArrayList<String> mConversationIdList = new ArrayList<>(4);
 
@@ -101,6 +103,23 @@ public class MessageBoxActivity extends AppCompatActivity implements INotificati
         mPagerAdapter.addView(view);
         mPager.addOnPageChangeListener(this);
         mPager.setAdapter(mPagerAdapter);
+        mPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+                String conversationId = (String)mPagerAdapter.getView(position).getTag();
+                mMarkAsSeenMap.put(conversationId, true);
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+
+            }
+        });
         initEmojiKeyboradSimulation();
 
 
@@ -401,6 +420,13 @@ public class MessageBoxActivity extends AppCompatActivity implements INotificati
                 if (markAsRead) {
                     MessageBoxItemData data = mDataMap.get(conversationId);
                     MarkAsReadAction.markAsRead(conversationId, data.getParticipantId(), data.getReceivedTimestamp());
+                }
+            }
+
+            Boolean seen = mMarkAsSeenMap.get(conversationId);
+            if (seen != null) {
+                if (seen) {
+                    MarkAsSeenAction.markAsSeen(conversationId);
                 }
             }
         }

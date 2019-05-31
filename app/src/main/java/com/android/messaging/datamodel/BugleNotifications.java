@@ -144,6 +144,7 @@ public class BugleNotifications {
     private static boolean sInitialized = false;
 
     private static final Object mLock = new Object();
+    private static ConversationIdSet sCurrentConversationIdSet = null;
 
     // sLastMessageDingTime is a map between a conversation id and a time. It's used to keep track
     // of the time we last dinged a message for this conversation. When messages are coming in
@@ -437,7 +438,8 @@ public class BugleNotifications {
         NotificationChannel notificationChannel = null;
         String channelId = PendingIntentConstants.SMS_NOTIFICATION_CHANNEL_ID;
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
-            notificationChannel = BugleNotificationChannelUtil.getSmsNotificationChannel(ringtoneUri, shouldVibrate(state));
+            int priority = state.getChannelPriority();
+            notificationChannel = BugleNotificationChannelUtil.getSmsNotificationChannel(ringtoneUri, shouldVibrate(state), priority);
             channelId = notificationChannel.getId();
             notificationChannel.setImportance(state.getChannelPriority());
         }
@@ -648,6 +650,17 @@ public class BugleNotifications {
     private static void createMessageNotification(final boolean silent,
                                                   final String conversationId) {
         final NotificationState state = MessageNotificationState.getNotificationState();
+        if (state != null) {
+            ConversationIdSet set = state.mConversationIds;
+            if (conversationId == null && sCurrentConversationIdSet != null && set != null && sCurrentConversationIdSet.equals(set)) {
+                sCurrentConversationIdSet = set;
+                return;
+            } else {
+                sCurrentConversationIdSet = set;
+            }
+        } else {
+            sCurrentConversationIdSet = null;
+        }
 
         final boolean softSound = DataModel.get().isNewMessageObservable(conversationId);
         if (state == null) {
@@ -1296,7 +1309,7 @@ public class BugleNotifications {
         String channelId = PendingIntentConstants.SMS_NOTIFICATION_CHANNEL_ID;
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
             channel = BugleNotificationChannelUtil.getSmsNotificationChannel(
-                    UriUtil.getUriForResourceId(context, R.raw.message_failure), true);
+                    UriUtil.getUriForResourceId(context, R.raw.message_failure), true, NotificationManager.IMPORTANCE_HIGH);
             channel.setImportance(NotificationManager.IMPORTANCE_HIGH);
             channelId = channel.getId();
         }

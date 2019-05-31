@@ -175,13 +175,17 @@ public class MarkAsSeenAction extends Action implements Parcelable {
                                             + MessageColumns.CONVERSATION_ID + " NOT IN (" +
                                             sb.toString() + ")",
                                     null);
-                            if (updateCount > 0) {
-                                MessagingContentProvider.notifyMessagesChanged(conversationId);
-                            }
+
+                        } else {
+                            updateCount = db.update(DatabaseHelper.MESSAGES_TABLE, values,
+                                    MessageColumns.SEEN + " != 1", null/*selectionArgs*/);
+                        }
+                        if (updateCount > 0) {
+                            MessagingContentProvider.notifyMessagesChanged(conversationId);
                         }
                     }
                 } else {
-                    db.update(DatabaseHelper.MESSAGES_TABLE, values,
+                    updateCount = db.update(DatabaseHelper.MESSAGES_TABLE, values,
                             MessageColumns.SEEN + " != 1", null/*selectionArgs*/);
                 }
             }
@@ -192,9 +196,9 @@ public class MarkAsSeenAction extends Action implements Parcelable {
         }
         // After marking messages as seen, update the notifications. This will
         // clear the now stale notifications.
-        if (updateCount > 0) {
+        //if (updateCount > 0) {
             BugleNotifications.update(false/*silent*/, BugleNotifications.UPDATE_ALL);
-        }
+        //}
         return null;
     }
 

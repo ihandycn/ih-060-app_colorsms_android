@@ -175,11 +175,11 @@ public class ConversationListData extends BindableData
         mLoaderManager.initLoader(BLOCKED_PARTICIPANTS_AVAILABLE_LOADER, mArgs, this);
     }
 
-    public void handleMessagesSeen() {
-        BugleNotifications.markAllMessagesAsSeen();
-
-        SmsReceiver.cancelSecondaryUserNotification();
-    }
+//    public void handleMessagesSeen() {
+//        BugleNotifications.markAllMessagesAsSeen();
+//
+//        SmsReceiver.cancelSecondaryUserNotification();
+//    }
 
     @Override
     protected void unregisterListeners() {
