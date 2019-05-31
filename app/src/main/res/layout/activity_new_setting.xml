@@ -83,7 +83,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 app:title="@string/send_delay_settings"
-                app:type="2"/>
+                app:type="withTriangle"/>
 
             <!--Signature-->
             <com.android.messaging.ui.appsettings.SettingItemView
