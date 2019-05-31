@@ -43,6 +43,7 @@ import com.android.messaging.util.BugleAnalytics;
 import com.android.messaging.util.ImeUtil;
 import com.android.messaging.util.ImeUtil.ImeStateHost;
 import com.google.common.annotations.VisibleForTesting;
+import com.ihs.commons.utils.HSLog;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -219,9 +220,12 @@ public class ConversationInputManager implements ConversationInput.ConversationI
     public boolean onNavigationUpPressed() {
         for (int i = 0; i < mInputs.length; i++) {
             if (mInputs[i].onNavigationUpPressed()) {
+                HSLog.d("Conversation_Activity", "ConversationInputManager, return true");
                 return true;
             }
         }
+
+        HSLog.d("Conversation_Activity", "ConversationInputManager, return false");
         return false;
     }
 

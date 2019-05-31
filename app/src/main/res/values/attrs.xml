@@ -120,4 +120,14 @@
         <attr name="circleHorizontalPadding" format="dimension" />
     </declare-styleable>
 
+    <declare-styleable name="SendDelayCircleProgressBar">
+        <attr name="outside_color" format="color" />
+        <attr name="outside_radius" format="dimension" />
+        <attr name="inside_color" format="color" />
+        <attr name="progress_width" format="dimension" />
+        <attr name="max_progress" format="integer" />
+        <attr name="progress" format="float" />
+        <attr name="direction" format="float" />
+    </declare-styleable>
+
 </resources>

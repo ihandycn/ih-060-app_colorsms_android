@@ -16,6 +16,8 @@
 
 package com.android.messaging.datamodel.binding;
 
+import com.ihs.commons.utils.HSLog;
+
 import java.util.concurrent.atomic.AtomicLong;
 
 public class Binding<T extends BindableData> extends BindingBase<T> {

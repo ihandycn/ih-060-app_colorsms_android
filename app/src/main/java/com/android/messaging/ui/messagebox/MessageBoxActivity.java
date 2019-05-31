@@ -22,6 +22,7 @@ import com.android.messaging.datamodel.action.MarkAsReadAction;
 import com.android.messaging.datamodel.data.MessageBoxItemData;
 import com.android.messaging.ui.UIIntents;
 import com.android.messaging.ui.appsettings.PrivacyModeSettings;
+import com.android.messaging.ui.appsettings.SendDelaySettings;
 import com.android.messaging.ui.customize.theme.ThemeUtils;
 import com.android.messaging.ui.emoji.BaseEmojiInfo;
 import com.android.messaging.ui.emoji.EmojiInfo;
@@ -30,6 +31,7 @@ import com.android.messaging.ui.emoji.EmojiPackagePagerAdapter;
 import com.android.messaging.ui.emoji.StickerInfo;
 import com.android.messaging.ui.emoji.ViewPagerDotIndicatorView;
 import com.android.messaging.util.BugleAnalytics;
+import com.android.messaging.util.TextUtil;
 import com.android.messaging.util.UiUtils;
 import com.ihs.app.framework.HSApplication;
 import com.ihs.commons.notificationcenter.HSGlobalNotificationCenter;
@@ -285,6 +287,7 @@ public class MessageBoxActivity extends AppCompatActivity implements INotificati
                         "privacyMode", String.valueOf(mHasPrivacyModeConversation));
                 break;
             case R.id.self_send_icon:
+                BugleAnalytics.logEvent("Popups_BtnSend_Click", "SendDelay", "" + SendDelaySettings.getSendDelayInSecs());
                 mCurrentConversationView.replyMessage();
                 break;
         }
@@ -328,9 +331,9 @@ public class MessageBoxActivity extends AppCompatActivity implements INotificati
 
     private void removeCurrentPage(String source) {
         int position = mPager.getCurrentItem();
-        if (position == mPagerAdapter.getCount() - 1) {
+        if (position == mPagerAdapter.getCount() - 1 && mPagerAdapter.getCount() == 1) {
             finish(source);
-        } else {
+        } else if (mCurrentConversationView.hasSentMessage()) {
             mPagerAdapter.removeView(mPager, mCurrentConversationView);
             mPager.setCurrentItem(position);
             mCurrentConversationView = (MessageBoxConversationView) mPagerAdapter.getViews().get(position);
@@ -338,6 +341,7 @@ public class MessageBoxActivity extends AppCompatActivity implements INotificati
             mCurrentConversationView.requestEditTextFocus();
         }
     }
+
 
     @Override
     public void onReceive(String s, HSBundle hsBundle) {

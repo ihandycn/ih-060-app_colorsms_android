@@ -10,6 +10,7 @@ import android.graphics.Color;
 import android.graphics.Rect;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
+import android.os.Handler;
 import android.support.annotation.ColorInt;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.LinearLayoutManager;
@@ -33,6 +34,7 @@ import com.android.messaging.datamodel.NoConfirmationSmsSendService;
 import com.android.messaging.datamodel.data.MessageBoxItemData;
 import com.android.messaging.ui.UIIntents;
 import com.android.messaging.ui.appsettings.PrivacyModeSettings;
+import com.android.messaging.ui.appsettings.SendDelaySettings;
 import com.android.messaging.ui.customize.ConversationColors;
 import com.android.messaging.ui.customize.PrimaryColors;
 import com.android.messaging.ui.customize.ToolbarDrawables;
@@ -73,7 +75,10 @@ public class MessageBoxConversationView extends FrameLayout {
     private String mSelfId;
     private String mParticipantId;
 
+    private boolean mHasSentMessages;
     private int mInputEmojiCount;
+    private Handler mSendDelayHandler;
+    private Runnable mSendDelayRunnable;
 
     public MessageBoxConversationView(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -84,7 +89,6 @@ public class MessageBoxConversationView extends FrameLayout {
     protected void onFinishInflate() {
         super.onFinishInflate();
         mPrimaryColor = PrimaryColors.getPrimaryColor();
-
         initActionBarSimulation();
         mContent = findViewById(R.id.content);
         mInputActionView = findViewById(R.id.message_compose_view_container);
@@ -93,6 +97,11 @@ public class MessageBoxConversationView extends FrameLayout {
 
         mInputEditText = mInputActionView.getComposeEditText();
         initInputAction();
+        mSendDelayHandler = new Handler();
+        mSendDelayRunnable = () -> {
+            mInputActionView.resetDelaySendAnimation();
+            sendMessage();
+        };
     }
 
     void bind(MessageBoxItemData data) {
@@ -170,12 +179,35 @@ public class MessageBoxConversationView extends FrameLayout {
         return mParticipantId;
     }
 
+    boolean hasSentMessage() {
+        return mHasSentMessages;
+    }
+
     void replyMessage() {
+        if (TextUtils.isEmpty(mInputActionView.getMessage())) {
+            return;
+        }
+        mHasSentMessages = true;
+
+        if (SendDelaySettings.getSendDelayInSecs() != 0) {
+            mInputActionView.sendDelayAnimation();
+            mSendDelayHandler.postDelayed(mSendDelayRunnable, 1000 * SendDelaySettings.getSendDelayInSecs());
+            mInputActionView.setOnCancelSmsSendingClickListener(clickedView -> {
+                BugleAnalytics.logEvent("Popups_BtnCancel_Click");
+                mSendDelayHandler.removeCallbacks(mSendDelayRunnable);
+                mInputActionView.resetDelaySendAnimation();
+            });
+        } else {
+            sendMessage();
+            mInputActionView.performReply();
+        }
+    }
+
+    private void sendMessage() {
         String message = mInputActionView.getMessage();
         if (TextUtils.isEmpty(message)) {
             return;
         }
-        mInputActionView.performReply();
         Context context = Factory.get().getApplicationContext();
         final Intent sendIntent = new Intent(context, NoConfirmationSmsSendService.class);
         sendIntent.setAction(TelephonyManager.ACTION_RESPOND_VIA_MESSAGE);
@@ -202,6 +234,7 @@ public class MessageBoxConversationView extends FrameLayout {
                 "type", type, "type2", MessageBoxAnalytics.getConversationType(),
                 "withTheme", String.valueOf(!ThemeUtils.isDefaultTheme()));
     }
+
 
     void emojiClick(EmojiInfo emojiInfo) {
         if (mInputEditText != null) {

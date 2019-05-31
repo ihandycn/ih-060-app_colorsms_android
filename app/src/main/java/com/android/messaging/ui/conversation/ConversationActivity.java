@@ -60,6 +60,7 @@ import com.android.messaging.util.ViewUtils;
 import com.ihs.app.framework.HSApplication;
 import com.ihs.commons.config.HSConfig;
 import com.ihs.commons.notificationcenter.HSGlobalNotificationCenter;
+import com.ihs.commons.utils.HSLog;
 import com.superapps.util.Dimensions;
 import com.superapps.util.IntegerBuckets;
 import com.superapps.util.Preferences;
@@ -71,7 +72,7 @@ import net.appcloudbox.ads.interstitialad.AcbInterstitialAdManager;
 import java.util.List;
 
 public class ConversationActivity extends BugleActionBarActivity
-        implements ConversationFragmentHost,ViewTreeObserver.OnGlobalLayoutListener {
+        implements ConversationFragmentHost, ViewTreeObserver.OnGlobalLayoutListener {
     public static final int FINISH_RESULT_CODE = 1;
     public static final int DELETE_CONVERSATION_RESULT_CODE = 2;
     private static final String SAVED_INSTANCE_STATE_UI_STATE_KEY = "uistate";

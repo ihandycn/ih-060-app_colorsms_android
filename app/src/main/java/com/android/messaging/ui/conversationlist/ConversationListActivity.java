@@ -55,6 +55,7 @@ import com.android.messaging.ui.ThemeUpgradeActivity;
 import com.android.messaging.ui.UIIntents;
 import com.android.messaging.ui.UIIntentsImpl;
 import com.android.messaging.ui.appsettings.ChooseThemeColorRecommendViewHolder;
+import com.android.messaging.ui.appsettings.SendDelaySettings;
 import com.android.messaging.ui.appsettings.ThemeColorSelectActivity;
 import com.android.messaging.ui.customize.BubbleDrawables;
 import com.android.messaging.ui.customize.ConversationColors;
@@ -200,6 +201,9 @@ public class ConversationListActivity extends AbstractConversationListActivity
             Preferences.get(DESKTOP_PREFS).incrementAndGetInt(PREF_KEY_MAIN_ACTIVITY_SHOW_TIME);
             if (CommonUtils.isNewUser() && DateUtils.isToday(CommonUtils.getAppInstallTimeMillis())) {
                 BugleAnalytics.logEvent("SMS_Messages_Show_NewUser", true);
+            }
+            if (HSApplication.getFirstLaunchInfo().appVersionCode >= 48){
+                BugleAnalytics.logEvent("SMS_Messages_Show_NewUser", true, "SendDelay", "" + SendDelaySettings.getSendDelayInSecs());
             }
         }
 

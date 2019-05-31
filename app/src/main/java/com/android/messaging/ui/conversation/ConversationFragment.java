@@ -102,6 +102,7 @@ import com.android.messaging.ui.dialog.FiveStarRateDialog;
 import com.android.messaging.ui.emoji.EmojiPickerFragment;
 import com.android.messaging.ui.mediapicker.CameraGalleryFragment;
 import com.android.messaging.ui.mediapicker.MediaPickerFragment;
+import com.android.messaging.ui.senddelaymessages.SendDelayMessagesManager;
 import com.android.messaging.ui.wallpaper.WallpaperManager;
 import com.android.messaging.util.AccessibilityUtil;
 import com.android.messaging.util.Assert;
@@ -200,7 +201,6 @@ public class ConversationFragment extends Fragment implements ConversationDataLi
     private ConversationFastScroller mFastScroller;
     private ImageView mWallpaperView;
     private ImageView mThemeWallpaperView;
-
 
     private View mConversationComposeDivider;
     private ChangeDefaultSmsAppHelper mChangeDefaultSmsAppHelper;
@@ -740,7 +740,6 @@ public class ConversationFragment extends Fragment implements ConversationDataLi
     public View onCreateView(final LayoutInflater inflater, final ViewGroup container,
                              final Bundle savedInstanceState) {
         HSLog.d("message list create : " + System.currentTimeMillis());
-
         final View view = inflater.inflate(R.layout.conversation_fragment, container, false);
         mRecyclerView = view.findViewById(android.R.id.list);
         mAdContainer = view.findViewById(R.id.top_banner_ad_container);
@@ -902,7 +901,6 @@ public class ConversationFragment extends Fragment implements ConversationDataLi
     @Override
     public void onResume() {
         super.onResume();
-
         WallpaperManager.setConversationWallPaper(mWallpaperView, mThemeWallpaperView, mConversationId);
 
         if (mIncomingDraft == null) {
@@ -1137,15 +1135,31 @@ public class ConversationFragment extends Fragment implements ConversationDataLi
         super.onDestroy();
         mIsDestroyed = true;
         // Unbind all the views that we bound to data
-        if (mComposeMessageView != null) {
-            mComposeMessageView.getViewTreeObserver().removeOnGlobalLayoutListener(globalLayoutListener);
-            mComposeMessageView.unbind();
-        }
-        mRecyclerView.setAdapter(null);
 
-        // And unbind this fragment from its data
-        mBinding.unbind();
-        mConversationId = null;
+
+
+        if (mComposeMessageView != null) {
+            // if we have message to send in a delay time, unbind data until message is sent
+            String conversationId = mBinding.getData().getConversationId();
+            if (!mComposeMessageView.getIsWaitingToSendMessageFlag()) {
+                SendDelayMessagesManager.remove(conversationId);
+                mComposeMessageView.unbind();
+                mBinding.unbind();
+                mConversationId = null;
+            } else {
+                mComposeMessageView.setOnActionEndListener(new SendDelayActionCompletedCallBack() {
+                    @Override
+                    public void onSendDelayActionEnd() {
+                        mComposeMessageView.unbind();
+                        mBinding.unbind();
+                        mConversationId = null;
+                    }
+                });
+            }
+            mComposeMessageView.getViewTreeObserver().removeOnGlobalLayoutListener(globalLayoutListener);
+        }
+
+        mRecyclerView.setAdapter(null);
 
         if (mNativeAd != null) {
             mNativeAd.release();

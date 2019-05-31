@@ -60,6 +60,24 @@
                     android:src="@drawable/input_send_message_icon"
                     android:importantForAccessibility="no" />
 
+                <ImageView
+                    android:id="@+id/delay_close_button"
+                    android:layout_width="12dp"
+                    android:layout_height="12dp"
+                    android:layout_gravity="center"
+                    android:background="@null"
+                    android:src="@drawable/input_send_message_delay_close_icon"
+                    android:alpha="0"
+                    android:visibility="gone"/>
+
+                <com.android.messaging.ui.SendDelayProgressBar
+                    android:id="@+id/send_delay_circle_bar"
+                    android:layout_width="36.7dp"
+                    android:layout_height="36.7dp"
+                    android:layout_gravity="center_vertical"
+                    android:alpha="0"
+                    android:visibility="gone"/>
+
             </FrameLayout>
 
             <LinearLayout
