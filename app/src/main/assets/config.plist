@@ -1034,11 +1034,11 @@
 						<key>WallpaperUrl</key>
 						<string>wallpaper.jpg</string>
 						<key>NewConversationIconUrl</key>
-						<string>create.png</string>
+						<string></string>
 						<key>BubbleIncomingUrl</key>
-						<string></string>
+						<string>incoming.9.png</string>
 						<key>BubbleOutgoingUrl</key>
-						<string></string>
+						<string>outgoing.9.png</string>
 					</dict>
 					<key>unicorn</key>
 					<dict>
