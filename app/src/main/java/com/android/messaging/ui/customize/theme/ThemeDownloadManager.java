@@ -201,6 +201,8 @@ public class ThemeDownloadManager {
                     ThemeManager.CREATE_ICON_FILE_NAME);
             downloadItemInfo.mStartProcessValue = CREATE_ICON_START_RATE;
             downloadItemInfo.mEndProcessValue = AVATAR_START_RATE;
+
+            downloadItemInfoList.add(downloadItemInfo);
         }
 
         if (!TextUtils.isEmpty(theme.avatarUrl)) {
