@@ -1130,7 +1130,6 @@ public class ConversationFragment extends Fragment implements ConversationDataLi
 
         // And unbind this fragment from its data
         mBinding.unbind();
-        mConversationId = null;
 
         if (mNativeAd != null) {
             mNativeAd.release();
