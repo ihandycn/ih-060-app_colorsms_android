@@ -767,6 +767,7 @@ public class ConversationFragment extends Fragment implements ConversationDataLi
         // Bind the compose message view to the DraftMessageData
         mComposeMessageView.bind(DataModel.get().createDraftMessageData(
                 mBinding.getData().getConversationId()), this);
+        mComposeMessageView.requestFocus();
 
         mMediaLayout = view.findViewById(R.id.camera_photo_layout);
         mWallpaperView = view.findViewById(R.id.conversation_fragment_wallpaper);
