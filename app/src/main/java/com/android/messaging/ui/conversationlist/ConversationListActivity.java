@@ -51,6 +51,7 @@ import com.android.messaging.privatebox.ui.SelfVerifyActivity;
 import com.android.messaging.ui.BaseAlertDialog;
 import com.android.messaging.ui.CreateShortcutActivity;
 import com.android.messaging.ui.DragHotSeatActivity;
+import com.android.messaging.ui.ThemeUpgradeActivity;
 import com.android.messaging.ui.UIIntents;
 import com.android.messaging.ui.UIIntentsImpl;
 import com.android.messaging.ui.appsettings.ChooseThemeColorRecommendViewHolder;
@@ -71,6 +72,7 @@ import com.android.messaging.ui.wallpaper.WallpaperDownloader;
 import com.android.messaging.ui.wallpaper.WallpaperManager;
 import com.android.messaging.ui.wallpaper.WallpaperPreviewActivity;
 import com.android.messaging.util.BugleAnalytics;
+import com.android.messaging.util.BuglePrefsKeys;
 import com.android.messaging.util.CommonUtils;
 import com.android.messaging.util.CreateShortcutUtils;
 import com.android.messaging.util.MediaUtil;
@@ -321,6 +323,15 @@ public class ConversationListActivity extends AbstractConversationListActivity
         Preferences.getDefault().incrementAndGetInt(CustomizeGuideController.PREF_KEY_MAIN_PAGE_SHOW_TIME);
         if (Preferences.getDefault().getInt(CustomizeGuideController.PREF_KEY_MAIN_PAGE_SHOW_TIME, 0) == 2) {
             Threads.postOnMainThreadDelayed(() -> showEmojiStoreGuide(), 500);
+        }
+        showThemeUpgradeDialog();
+    }
+
+    private void showThemeUpgradeDialog() {
+        if (Preferences.getDefault().getBoolean(BuglePrefsKeys.PREFS_KEY_THEME_CLEARED_TO_DEFAULT, false)) {
+            Navigations.startActivitySafely(ConversationListActivity.this,
+                    new Intent(ConversationListActivity.this, ThemeUpgradeActivity.class));
+            Preferences.getDefault().putBoolean(BuglePrefsKeys.PREFS_KEY_THEME_CLEARED_TO_DEFAULT, false);
         }
     }
 

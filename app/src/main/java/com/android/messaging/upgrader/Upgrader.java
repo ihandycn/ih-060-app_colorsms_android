@@ -13,6 +13,8 @@ import com.android.messaging.privatebox.PrivateContactsManager;
 import com.android.messaging.privatebox.PrivateMmsEntry;
 import com.android.messaging.privatebox.PrivateSmsEntry;
 import com.android.messaging.ui.conversationlist.ConversationListActivity;
+import com.android.messaging.ui.customize.theme.ThemeDownloadManager;
+import com.android.messaging.ui.customize.theme.ThemeInfo;
 import com.android.messaging.ui.customize.theme.ThemeUtils;
 import com.android.messaging.ui.welcome.WelcomeChooseThemeActivity;
 import com.android.messaging.ui.welcome.WelcomeStartActivity;
@@ -63,6 +65,36 @@ public class Upgrader extends BaseUpgrader {
 
         if (oldVersion < 46 && newVersion >= 46) {
             updateThemeKey();
+        }
+
+        if (oldVersion < 49 && newVersion >= 49) {
+            migrateLocalTheme();
+        }
+    }
+
+    private void migrateLocalTheme() {
+        ThemeInfo currentTheme = ThemeUtils.getCurrentTheme();
+        if (currentTheme.isInLocalFolder()) {
+            return;
+        }
+
+        if (currentTheme.mIsLocalTheme) {
+            ThemeDownloadManager.getInstance().copyFileFromAssetsSync(currentTheme,
+                    new ThemeDownloadManager.IThemeMoveListener() {
+                        @Override
+                        public void onMoveSuccess() {
+
+                        }
+
+                        @Override
+                        public void onMoveFailed() {
+
+                        }
+                    });
+        } else {
+            Factory.get().getCustomizePrefs()
+                    .putString(BuglePrefsKeys.PREFS_KEY_THEME_NAME, ThemeUtils.DEFAULT_THEME_KEY);
+            Preferences.getDefault().putBoolean(BuglePrefsKeys.PREFS_KEY_THEME_CLEARED_TO_DEFAULT, true);
         }
     }
 

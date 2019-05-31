@@ -123,6 +123,8 @@ public final class BuglePrefsKeys {
      */
     public static final String PREFS_KEY_THEME_NAME = "bugle_theme_name";
 
+    public static final String PREFS_KEY_THEME_CLEARED_TO_DEFAULT = "theme_cleared_to_default";
+
 
     public static final String PREFS_KEY_KEYBOARD_HEIGHT = "keyboard_height";
 

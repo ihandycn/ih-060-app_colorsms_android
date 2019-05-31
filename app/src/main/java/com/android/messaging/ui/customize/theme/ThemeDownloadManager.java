@@ -49,7 +49,7 @@ public class ThemeDownloadManager {
         void onDownloadUpdate(float rate);
     }
 
-    interface IThemeMoveListener {
+    public interface IThemeMoveListener {
         void onMoveSuccess();
 
         void onMoveFailed();
@@ -326,102 +326,104 @@ public class ThemeDownloadManager {
         });
     }
 
-    void copyFileFromAssetsAsync(ThemeInfo theme, IThemeMoveListener listener) {
-        Threads.postOnThreadPoolExecutor(() -> {
-            String folderName = theme.mThemeKey;
-            List<DownloadItemInfo> copyTask = new ArrayList<>();
+    public void copyFileFromAssetsAsync(ThemeInfo theme, IThemeMoveListener listener) {
+        Threads.postOnThreadPoolExecutor(() -> copyFileFromAssetsSync(theme, listener));
+    }
 
-            if (!TextUtils.isEmpty(theme.wallpaperUrl)) {
-                DownloadItemInfo downloadItemInfo = new DownloadItemInfo();
-                downloadItemInfo.mRemoteFileName = theme.wallpaperUrl;
-                downloadItemInfo.mLocalFile = new File(CommonUtils.getDirectory(
-                        ThemeManager.THEME_BASE_PATH + folderName),
-                        ThemeManager.WALLPAPER_BG_FILE_NAME);
-                copyTask.add(downloadItemInfo);
-            }
+    public void copyFileFromAssetsSync(ThemeInfo theme, IThemeMoveListener listener) {
+        String folderName = theme.mThemeKey;
+        List<DownloadItemInfo> copyTask = new ArrayList<>();
 
-            if (!TextUtils.isEmpty(theme.listWallpaperUrl)) {
-                DownloadItemInfo downloadItemInfo = new DownloadItemInfo();
-                downloadItemInfo.mRemoteFileName = theme.listWallpaperUrl;
-                downloadItemInfo.mLocalFile = new File(CommonUtils.getDirectory(
-                        ThemeManager.THEME_BASE_PATH + folderName),
-                        ThemeManager.LIST_VIEW_WALLPAPER_BG_FILE_NAME);
-                copyTask.add(downloadItemInfo);
-            }
+        if (!TextUtils.isEmpty(theme.wallpaperUrl)) {
+            DownloadItemInfo downloadItemInfo = new DownloadItemInfo();
+            downloadItemInfo.mRemoteFileName = theme.wallpaperUrl;
+            downloadItemInfo.mLocalFile = new File(CommonUtils.getDirectory(
+                    ThemeManager.THEME_BASE_PATH + folderName),
+                    ThemeManager.WALLPAPER_BG_FILE_NAME);
+            copyTask.add(downloadItemInfo);
+        }
 
-            if (!TextUtils.isEmpty(theme.toolbarBgUrl)) {
-                DownloadItemInfo downloadItemInfo = new DownloadItemInfo();
-                downloadItemInfo.mRemoteFileName = theme.toolbarBgUrl;
-                downloadItemInfo.mLocalFile = new File(CommonUtils.getDirectory(
-                        ThemeManager.THEME_BASE_PATH + folderName),
-                        ThemeManager.TOOLBAR_BG_FILE_NAME);
-                copyTask.add(downloadItemInfo);
-            }
+        if (!TextUtils.isEmpty(theme.listWallpaperUrl)) {
+            DownloadItemInfo downloadItemInfo = new DownloadItemInfo();
+            downloadItemInfo.mRemoteFileName = theme.listWallpaperUrl;
+            downloadItemInfo.mLocalFile = new File(CommonUtils.getDirectory(
+                    ThemeManager.THEME_BASE_PATH + folderName),
+                    ThemeManager.LIST_VIEW_WALLPAPER_BG_FILE_NAME);
+            copyTask.add(downloadItemInfo);
+        }
 
-            if (!TextUtils.isEmpty(theme.bubbleIncomingUrl)) {
-                DownloadItemInfo downloadItemInfo = new DownloadItemInfo();
-                downloadItemInfo.mRemoteFileName = theme.bubbleIncomingUrl;
-                downloadItemInfo.mLocalFile = new File(CommonUtils.getDirectory(
-                        ThemeManager.THEME_BASE_PATH + folderName),
-                        ThemeManager.INCOMING_BUBBLE_FILE_NAME);
-                copyTask.add(downloadItemInfo);
-            }
+        if (!TextUtils.isEmpty(theme.toolbarBgUrl)) {
+            DownloadItemInfo downloadItemInfo = new DownloadItemInfo();
+            downloadItemInfo.mRemoteFileName = theme.toolbarBgUrl;
+            downloadItemInfo.mLocalFile = new File(CommonUtils.getDirectory(
+                    ThemeManager.THEME_BASE_PATH + folderName),
+                    ThemeManager.TOOLBAR_BG_FILE_NAME);
+            copyTask.add(downloadItemInfo);
+        }
 
-            if (!TextUtils.isEmpty(theme.bubbleOutgoingUrl)) {
-                DownloadItemInfo downloadItemInfo = new DownloadItemInfo();
-                downloadItemInfo.mRemoteFileName = theme.bubbleOutgoingUrl;
-                downloadItemInfo.mLocalFile = new File(CommonUtils.getDirectory(
-                        ThemeManager.THEME_BASE_PATH + folderName),
-                        ThemeManager.OUTGOING_BUBBLE_FILE_NAME);
-                copyTask.add(downloadItemInfo);
-            }
+        if (!TextUtils.isEmpty(theme.bubbleIncomingUrl)) {
+            DownloadItemInfo downloadItemInfo = new DownloadItemInfo();
+            downloadItemInfo.mRemoteFileName = theme.bubbleIncomingUrl;
+            downloadItemInfo.mLocalFile = new File(CommonUtils.getDirectory(
+                    ThemeManager.THEME_BASE_PATH + folderName),
+                    ThemeManager.INCOMING_BUBBLE_FILE_NAME);
+            copyTask.add(downloadItemInfo);
+        }
 
-            if (!TextUtils.isEmpty(theme.newConversationIconUrl)) {
-                DownloadItemInfo downloadItemInfo = new DownloadItemInfo();
-                downloadItemInfo.mRemoteFileName = theme.newConversationIconUrl;
-                downloadItemInfo.mLocalFile = new File(CommonUtils.getDirectory(
-                        ThemeManager.THEME_BASE_PATH + folderName),
-                        ThemeManager.CREATE_ICON_FILE_NAME);
-                copyTask.add(downloadItemInfo);
-            }
+        if (!TextUtils.isEmpty(theme.bubbleOutgoingUrl)) {
+            DownloadItemInfo downloadItemInfo = new DownloadItemInfo();
+            downloadItemInfo.mRemoteFileName = theme.bubbleOutgoingUrl;
+            downloadItemInfo.mLocalFile = new File(CommonUtils.getDirectory(
+                    ThemeManager.THEME_BASE_PATH + folderName),
+                    ThemeManager.OUTGOING_BUBBLE_FILE_NAME);
+            copyTask.add(downloadItemInfo);
+        }
 
-            if (!TextUtils.isEmpty(theme.avatarUrl)) {
-                DownloadItemInfo downloadItemInfo = new DownloadItemInfo();
-                downloadItemInfo.mRemoteFileName = theme.avatarUrl;
-                downloadItemInfo.mLocalFile = new File(CommonUtils.getDirectory(
-                        ThemeManager.THEME_BASE_PATH + folderName),
-                        ThemeManager.AVATAR_FILE_NAME);
-                copyTask.add(downloadItemInfo);
-            }
+        if (!TextUtils.isEmpty(theme.newConversationIconUrl)) {
+            DownloadItemInfo downloadItemInfo = new DownloadItemInfo();
+            downloadItemInfo.mRemoteFileName = theme.newConversationIconUrl;
+            downloadItemInfo.mLocalFile = new File(CommonUtils.getDirectory(
+                    ThemeManager.THEME_BASE_PATH + folderName),
+                    ThemeManager.CREATE_ICON_FILE_NAME);
+            copyTask.add(downloadItemInfo);
+        }
 
-            AssetManager assetManager = HSApplication.getContext().getAssets();
+        if (!TextUtils.isEmpty(theme.avatarUrl)) {
+            DownloadItemInfo downloadItemInfo = new DownloadItemInfo();
+            downloadItemInfo.mRemoteFileName = theme.avatarUrl;
+            downloadItemInfo.mLocalFile = new File(CommonUtils.getDirectory(
+                    ThemeManager.THEME_BASE_PATH + folderName),
+                    ThemeManager.AVATAR_FILE_NAME);
+            copyTask.add(downloadItemInfo);
+        }
 
-            File folder = new File(CommonUtils.getDirectory("theme"), folderName);
-            if (!folder.exists()) {
-                folder.mkdirs();
-            }
+        AssetManager assetManager = HSApplication.getContext().getAssets();
+
+        File folder = new File(CommonUtils.getDirectory("theme"), folderName);
+        if (!folder.exists()) {
+            folder.mkdirs();
+        }
 
 
-            for (DownloadItemInfo info : copyTask) {
-                try {
-                    InputStream in = assetManager.open("themes/" + theme.mThemeKey + "/" + info.mRemoteFileName);
-                    FileOutputStream out = new FileOutputStream(info.mLocalFile);
+        for (DownloadItemInfo info : copyTask) {
+            try {
+                InputStream in = assetManager.open("themes/" + theme.mThemeKey + "/" + info.mRemoteFileName);
+                FileOutputStream out = new FileOutputStream(info.mLocalFile);
 
-                    byte[] buffer = new byte[1024];
-                    int read;
-                    while ((read = in.read(buffer)) != -1) {
-                        out.write(buffer, 0, read);
-                    }
-                    in.close();
-                    out.flush();
-                    out.close();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                    listener.onMoveFailed();
+                byte[] buffer = new byte[1024];
+                int read;
+                while ((read = in.read(buffer)) != -1) {
+                    out.write(buffer, 0, read);
                 }
+                in.close();
+                out.flush();
+                out.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+                listener.onMoveFailed();
             }
-            listener.onMoveSuccess();
-        });
+        }
+        listener.onMoveSuccess();
     }
 
     class DownloadItemInfo {

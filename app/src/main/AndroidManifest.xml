@@ -244,7 +244,12 @@
         <activity
             android:name=".ui.DragHotSeatActivity"
             android:screenOrientation="portrait"
-            android:theme="@style/Theme.AppCompat.Translucent" /> <!-- WebView -->
+            android:theme="@style/Theme.AppCompat.Translucent" />
+        <activity
+            android:name=".ui.ThemeUpgradeActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.AppCompat.Translucent" />
+        <!-- WebView -->
         <activity
             android:name=".ui.WebViewActivity"
             android:launchMode="singleTop"
