@@ -22,7 +22,7 @@ public class BugleNotificationChannelUtil {
     public static final String PREF_KEY_NOTIFICATION_CHANNEL_INDEX = "pref_key_notification_channel_index";
 
     @TargetApi(Build.VERSION_CODES.O)
-    public static NotificationChannel getSmsNotificationChannel(Uri soundPath, boolean enableVibration) {
+    public static NotificationChannel getSmsNotificationChannel(Uri soundPath, boolean enableVibration, int importance) {
         int channelIndex = Preferences.getDefault().getInt(PREF_KEY_NOTIFICATION_CHANNEL_INDEX, 0);
         NotificationManager notifyMgr = (NotificationManager)
                 HSApplication.getContext().getSystemService(Context.NOTIFICATION_SERVICE);
@@ -34,12 +34,14 @@ public class BugleNotificationChannelUtil {
         if (soundPath == null) {
             if (channel != null
                     && (channel.getSound() == null || TextUtils.isEmpty(channel.getSound().getPath()))
-                    && channel.shouldVibrate() == enableVibration) {
+                    && channel.shouldVibrate() == enableVibration
+                    && channel.getImportance() == importance) {
                 return channel;
             }
         } else if (channel != null && channel.getSound() != null
                 && channel.getSound().getPath().equals(soundPath.getPath())
-                && channel.shouldVibrate() == enableVibration) {
+                && channel.shouldVibrate() == enableVibration
+                && channel.getImportance() == importance) {
             return channel;
         }
 
@@ -50,9 +52,10 @@ public class BugleNotificationChannelUtil {
         channel = Notifications.getChannel(
                 PendingIntentConstants.SMS_NOTIFICATION_CHANNEL_ID + "_" + channelIndex,
                 HSApplication.getContext().getResources().getString(R.string.sms_notification_channel),
-                HSApplication.getContext().getResources().getString(R.string.sms_notification_channel_description));
+                HSApplication.getContext().getResources().getString(R.string.sms_notification_channel_description), importance);
         channel.setSound(soundPath, Notification.AUDIO_ATTRIBUTES_DEFAULT);
         channel.enableVibration(enableVibration);
+
         if (enableVibration) {
             channel.setVibrationPattern(new long[]{100, 200, 300});
         }

@@ -1422,7 +1422,7 @@ public abstract class MessageNotificationState extends NotificationState {
                     String channelId = PendingIntentConstants.SMS_NOTIFICATION_CHANNEL_ID;
                     if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
                         Uri failSound = UriUtil.getUriForResourceId(context, R.raw.message_failure);
-                        channel = BugleNotificationChannelUtil.getSmsNotificationChannel(failSound, true);
+                        channel = BugleNotificationChannelUtil.getSmsNotificationChannel(failSound, true, NotificationManager.IMPORTANCE_HIGH);
                         channelId = channel.getId();
                     }
 

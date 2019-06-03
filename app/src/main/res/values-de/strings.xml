@@ -671,6 +671,7 @@
     <string name="lock_style_pin">Passcode</string>
     <string name="confirm_prompt_password">Passcode bestätigen</string>
     <string name="draw_unlock_pattern">Ihr Entsperrm. zeichnen</string>
+
     <string name="send_delay_settings">Verspätung senden</string>
     <string name="send_delay_no_delay">Keine Verzögerung</string>
     <string name="contact_picker_select_group">Gruppenchat starten</string>

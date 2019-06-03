@@ -19,6 +19,7 @@ import android.widget.Toast;
 import com.android.messaging.BuildConfig;
 import com.android.messaging.R;
 import com.android.messaging.datamodel.action.MarkAsReadAction;
+import com.android.messaging.datamodel.action.MarkAsSeenAction;
 import com.android.messaging.datamodel.data.MessageBoxItemData;
 import com.android.messaging.ui.UIIntents;
 import com.android.messaging.ui.appsettings.PrivacyModeSettings;
@@ -48,6 +49,7 @@ import java.util.HashMap;
 import java.util.List;
 
 import static com.android.messaging.ui.UIIntents.UI_INTENT_EXTRA_MESSAGE_BOX_ITEM;
+import static com.android.messaging.ui.appsettings.PrivacyModeSettings.NONE;
 import static com.android.messaging.ui.messagebox.MessageBoxAnalytics.getConversationType;
 
 public class MessageBoxActivity extends AppCompatActivity implements INotificationObserver,
@@ -80,6 +82,7 @@ public class MessageBoxActivity extends AppCompatActivity implements INotificati
     private boolean mHasPrivacyModeConversation;
 
     private HashMap<String, Boolean> mMarkAsReadMap = new HashMap<>(4);
+    private HashMap<String, Boolean> mMarkAsSeenMap = new HashMap<>(4);
     private HashMap<String, MessageBoxItemData> mDataMap = new HashMap<>(4);
     private ArrayList<String> mConversationIdList = new ArrayList<>(4);
 
@@ -103,6 +106,23 @@ public class MessageBoxActivity extends AppCompatActivity implements INotificati
         mPagerAdapter.addView(view);
         mPager.addOnPageChangeListener(this);
         mPager.setAdapter(mPagerAdapter);
+        mPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+                String conversationId = (String) mPagerAdapter.getView(position).getTag();
+                mMarkAsSeenMap.put(conversationId, true);
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+
+            }
+        });
         initEmojiKeyboradSimulation();
 
 
@@ -206,6 +226,17 @@ public class MessageBoxActivity extends AppCompatActivity implements INotificati
         mCurrentConversationView.post(this::reLayoutIndicatorView);
     }
 
+    @Override
+    public void onWindowFocusChanged(boolean hasFocus) {
+        super.onWindowFocusChanged(hasFocus);
+        if (hasFocus) {
+            String conversationId = mCurrentConversationView.getConversationId();
+            if (PrivacyModeSettings.getPrivacyMode(conversationId) == NONE) {
+                markAsRead(conversationId);
+            }
+        }
+    }
+
     private boolean mLogScrollPaged;
 
     @Override
@@ -221,6 +252,10 @@ public class MessageBoxActivity extends AppCompatActivity implements INotificati
         mCurrentConversationView = (MessageBoxConversationView) mPagerAdapter.getViews().get(position);
         reLayoutIndicatorView();
         mIndicator.updateIndicator(position, mPagerAdapter.getCount());
+        String conversationId = mCurrentConversationView.getConversationId();
+        if (PrivacyModeSettings.getPrivacyMode(conversationId) == NONE) {
+            markAsRead(conversationId);
+        }
     }
 
     @Override
@@ -388,6 +423,23 @@ public class MessageBoxActivity extends AppCompatActivity implements INotificati
             mHasSms = true;
         } else {
             mHasMms = true;
+        }
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        ArrayList<String> markAsSeenList = new ArrayList<>();
+        for (String conversationId : mConversationIdList) {
+            Boolean seen = mMarkAsSeenMap.get(conversationId);
+            if (seen != null) {
+                if (seen) {
+                    markAsSeenList.add(conversationId);
+                }
+            }
+        }
+        if (markAsSeenList.size() > 0) {
+            MarkAsSeenAction.markAsSeen(markAsSeenList);
         }
     }
 
