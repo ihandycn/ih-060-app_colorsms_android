@@ -150,7 +150,7 @@ public class BugleDatabaseOperations {
         final ArrayList<String> recipients = new ArrayList<String>();
 
         for (final ParticipantData participant : participants) {
-            recipients.add(participant.getSendDestination());
+            recipients.add(participant.getSendDestination().replaceAll("\\s+",""));
         }
         return recipients;
     }
