@@ -138,7 +138,7 @@ public class Upgrader extends BaseUpgrader {
                         + " ADD COLUMN " + DatabaseHelper.ConversationColumns.IS_PRIVATE
                         + " INT DEFAULT(0)");
             }
-        } catch (Exception e) {
+        } catch (Exception ignored) {
 
         } finally {
             if (null != cursor && !cursor.isClosed()) {

@@ -44,6 +44,7 @@ import com.android.messaging.util.LogUtil;
 import com.android.messaging.util.OsUtil;
 import com.android.messaging.util.TextUtil;
 import com.crashlytics.android.core.CrashlyticsCore;
+import com.ihs.app.framework.HSApplication;
 import com.superapps.debug.CrashlyticsLog;
 
 import java.util.ArrayList;
@@ -74,7 +75,7 @@ public class ReceiveSmsMessageAction extends Action implements Parcelable {
             return null;
         }
 
-        final Context context = Factory.get().getApplicationContext();
+        final Context context = HSApplication.getContext();
         final ContentValues messageValues = actionParameters.getParcelable(KEY_MESSAGE_VALUES);
         final DatabaseWrapper db = DataModel.get().getDatabase();
 
