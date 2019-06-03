@@ -6,22 +6,23 @@
     android:orientation="vertical">
 
     <FrameLayout
-        android:layout_width="52dp"
-        android:layout_height="52dp">
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
 
         <android.support.v7.widget.AppCompatImageView
             android:id="@+id/contact_icon"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            app:srcCompat="@drawable/default_contact_avatar"
-            />
-
+            android:layout_width="@dimen/invite_friends_item_size"
+            android:layout_height="@dimen/invite_friends_item_size"
+            android:layout_marginEnd="4dp"
+            android:layout_marginTop="4dp"
+            app:srcCompat="@drawable/default_contact_avatar" />
 
         <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="top|right"
-            android:src="@drawable/set_as_default_close"/>
+            android:id="@+id/delete_friends"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:layout_gravity="top|end"
+            android:src="@drawable/selector_invite_friends_delete_friends"/>
     </FrameLayout>
 
 
@@ -29,6 +30,11 @@
         android:id="@+id/contact_name"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:textSize="11sp"
+        android:textColor="#19191c"
+        android:layout_gravity="center"
+        android:gravity="center"
+        app:typeface="@string/custom_font_regular"
         android:ellipsize="end"
         android:maxLines="1"/>
 

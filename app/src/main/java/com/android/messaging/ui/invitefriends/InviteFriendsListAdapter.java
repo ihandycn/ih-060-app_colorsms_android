@@ -8,6 +8,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.android.messaging.R;
@@ -55,7 +56,14 @@ public class InviteFriendsListAdapter extends RecyclerView.Adapter<RecyclerView.
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View v = LayoutInflater.from(mActivity).inflate(R.layout.invite_friends_list_item, parent, false);
         ViewHolder viewHolder = new ViewHolder(v);
-
+        viewHolder.mDeleteBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                int target = viewHolder.getAdapterPosition();
+                mContactInfos.remove(target - 1);
+                notifyItemRemoved(target);
+            }
+        });
         return viewHolder;
     }
 
@@ -63,11 +71,13 @@ public class InviteFriendsListAdapter extends RecyclerView.Adapter<RecyclerView.
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
         if (holder instanceof ViewHolder) {
             if (position == 0) {
-                ((ViewHolder) holder).mContactIcon.setImageResource(R.drawable.ic_add_white);
+                ((ViewHolder) holder).mContactIcon.setImageResource(R.drawable.ic_add_gray);
+                ((ViewHolder) holder).mContactIcon.setBackgroundResource(R.drawable.gray_circle_btn_bg_drawable);
                 ((ViewHolder) holder).mContactIcon.setOnClickListener(v -> {
                     Intent intent = new Intent(mActivity, SelectFriendsToInviteActivity.class);
                     mActivity.startActivityForResult(intent, REQUEST_CODE_ADD_FRIENDS);
                 });
+                ((ViewHolder) holder).mDeleteBtn.setVisibility(View.GONE);
             } else {
                 position -= 1;
                 GlideApp.with(mActivity).load(mContactInfos.get(position).avatarUriStr).placeholder(R.drawable.default_contact_avatar).circleCrop().into(((ViewHolder) holder).mContactIcon);
@@ -84,11 +94,13 @@ public class InviteFriendsListAdapter extends RecyclerView.Adapter<RecyclerView.
     private static class ViewHolder extends RecyclerView.ViewHolder {
         AppCompatImageView mContactIcon;
         TextView mContactName;
+        ImageView mDeleteBtn;
 
         ViewHolder(View itemView) {
             super(itemView);
             mContactIcon = itemView.findViewById(R.id.contact_icon);
             mContactName = itemView.findViewById(R.id.contact_name);
+            mDeleteBtn = itemView.findViewById(R.id.delete_friends);
         }
     }
 }

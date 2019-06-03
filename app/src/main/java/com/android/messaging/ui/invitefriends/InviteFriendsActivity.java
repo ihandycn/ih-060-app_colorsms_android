@@ -6,47 +6,52 @@ import android.content.Loader;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.annotation.VisibleForTesting;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.text.Spannable;
 import android.text.TextPaint;
 import android.text.TextUtils;
 import android.text.style.URLSpan;
+import android.view.MenuItem;
+import android.view.View;
+import android.widget.TextView;
+
 import com.android.messaging.R;
-import com.android.messaging.datamodel.binding.Binding;
-import com.android.messaging.datamodel.binding.BindingBase;
-import com.android.messaging.datamodel.data.ContactPickerData;
 import com.android.messaging.privatebox.ui.addtolist.CallAssistantUtils;
-import com.android.messaging.ui.customize.RecommendColorItemDecoration;
+import com.android.messaging.ui.PlainTextEditText;
 import com.android.messaging.ui.view.MessagesTextView;
 import com.android.messaging.util.ContactUtil;
+import com.android.messaging.util.UiUtils;
 import com.ihs.commons.utils.HSLog;
-import com.superapps.util.Dimensions;
 
 import java.util.ArrayList;
 
 public class InviteFriendsActivity extends AppCompatActivity {
 
+    private static final String BINDING_ID = "bindingId";
+    private static final int LOADER_ID = 1;
     static final int REQUEST_CODE_ADD_FRIENDS = 12;
 
     private InviteFriendsListAdapter mAdapter;
-
-    @VisibleForTesting
-    final Binding<ContactPickerData> mBinding = BindingBase.createBinding(this);
-
-    private static final String BINDING_ID = "bindingId";
-    private static final int LOADER_ID = 1;
-
+    private PlainTextEditText mEditText;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_invite_friends);
+        initToolBar();
+
         MessagesTextView autoLinkMessagesTextView = findViewById(R.id.invite_friends_message_auto_link);
         stripUnderlines(autoLinkMessagesTextView);
+        mEditText = findViewById(R.id.invite_friends_message_text);
+        mEditText.clearFocus();
 
+        initRecyclerView();
+    }
+
+    private void initRecyclerView() {
         RecyclerView recyclerView = findViewById(R.id.friends_list_recycler_view);
         float size = getResources().getDimensionPixelSize(R.dimen.invite_friends_item_size);
         recyclerView.setHasFixedSize(true);
@@ -54,7 +59,7 @@ public class InviteFriendsActivity extends AppCompatActivity {
         recyclerView.addItemDecoration(new InviteFriendsListItemDecoration(5, (int)size, (int)size));
         mAdapter = new InviteFriendsListAdapter(this);
         recyclerView.setAdapter(mAdapter);
-
+        recyclerView.setOverScrollMode(View.OVER_SCROLL_NEVER);
 
         final Bundle args = new Bundle();
         getLoaderManager().initLoader(LOADER_ID, args, new LoaderManager.LoaderCallbacks<Cursor>() {
@@ -135,6 +140,28 @@ public class InviteFriendsActivity extends AppCompatActivity {
             textView.setAutoLinkMask(0);
             textView.setText(s);
         }
+    }
+
+    private void initToolBar() {
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        toolbar.setTitle("");
+        UiUtils.setTitleBarBackground(toolbar, this);
+        TextView title = toolbar.findViewById(R.id.toolbar_title);
+        title.setText(getString(R.string.invite_friends_default_back_to_main_page_title));
+        setSupportActionBar(toolbar);
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        }
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == android.R.id.home) {
+            onBackPressed();
+        }
+
+        return super.onOptionsItemSelected(item);
     }
 
     @Override
