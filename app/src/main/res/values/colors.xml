@@ -233,4 +233,9 @@
     <color name="close_icon">#f0f2f8</color>
     <color name="like_icon">#e33232</color>
     <color name="dislike_icon">#31394d</color>
+
+    <!--invite friends-->
+    <color name="invite_friends_auto_link">#2492f9</color>
+    <color name="invite_friends_text_color">#222327</color>
+    <color name="invite_friends_button_text_color">#37a63b</color>
 </resources>

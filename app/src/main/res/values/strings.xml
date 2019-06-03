@@ -1209,6 +1209,9 @@
     <string name="invite_friends_bonus_free_sms_description">Invite friends install to Color SMS to send FREE SMS with them!</string>
     <string name="invite_friends_bonus_ad_free_description">Invite 3 friends to install Color SMS to get 3 day ads FREE!</string>
 
-    <string name="invite_friends_invite_content">Hey, I found a brand new SMS app. 4.8 star rating in play store and many people are using! Join us now!</string>
+    <string name="invite_friends_invite_content">Hey, I found a brand new SMS app. 4.8 star rating in play store and many people are using! Join us now!\n</string>
+    <string name="invite_friends_invite_auto_link_content">https://go.onelink.me/app/90cf450c</string>
+    <string name="invite_friends_invite_cancel_button">Cancel</string>
+    <string name="invite_friends_invite_save_button">Save</string>
 
 </resources>
