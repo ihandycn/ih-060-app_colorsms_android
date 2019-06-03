@@ -64,7 +64,9 @@ import com.android.messaging.ui.customize.theme.ThemeSelectActivity;
 import com.android.messaging.ui.customize.theme.ThemeUtils;
 import com.android.messaging.ui.dialog.FiveStarRateDialog;
 import com.android.messaging.ui.emoji.EmojiStoreActivity;
+import com.android.messaging.ui.invitefriends.InviteFriendsActivity;
 import com.android.messaging.ui.invitefriends.InviteFriendsConditions;
+import com.android.messaging.ui.invitefriends.SelectFriendsToInviteActivity;
 import com.android.messaging.ui.messagebox.MessageBoxActivity;
 import com.android.messaging.ui.signature.SignatureSettingDialog;
 import com.android.messaging.ui.wallpaper.WallpaperChooserItem;
@@ -463,7 +465,7 @@ public class ConversationListActivity extends AbstractConversationListActivity
 
                     case DRAWER_INDEX_INVITE_FRIENDS:
                         BugleAnalytics.logEvent("Menu_InviteFriends_Click");
-                        Intent inviteFriendsIntent = new Intent(ConversationListActivity.this, ChangeFontActivity.class);
+                        Intent inviteFriendsIntent = new Intent(ConversationListActivity.this, InviteFriendsActivity.class);
                         startActivity(inviteFriendsIntent);
                         break;
                     case DRAWER_INDEX_RATE:

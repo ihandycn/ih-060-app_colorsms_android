@@ -107,5 +107,29 @@
         app:layout_constraintTop_toBottomOf="@+id/invite_friends_invite_cancel_button"
         app:layout_constraintBottom_toBottomOf="@+id/invite_friends_message_text_container"/>
 
-    
+
+    <com.android.messaging.ui.view.MessagesTextView
+        android:id="@+id/send_sms_description"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/invite_friends_invite_save_button"
+        android:textSize="12.7sp"
+        android:textColor="#414449"
+        android:lineSpacingExtra="4sp"
+        android:gravity="center_horizontal"
+        android:text="Send SMS to the friend that you’d like to invite." />
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/friends_list_recycler_view"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/send_sms_description"
+        app:layout_constraintBottom_toBottomOf="parent">
+
+    </android.support.v7.widget.RecyclerView>
+
 </android.support.constraint.ConstraintLayout>

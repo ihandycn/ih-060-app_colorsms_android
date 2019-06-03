@@ -18,13 +18,25 @@ import java.util.List;
 public class CallAssistantUtils {
 
     public static class ContactInfo {
-        public String name = "";
-        public String number = "";
-        public String avatarUriStr = "";
+        public String name;
+        public String number;
+        public String avatarUriStr;
 
         //这里供UI显示使用，实际作用相当于Boolean值：isItemSelected
         public Object customInfo = Boolean.FALSE;
         private volatile int hashcode;
+
+        public ContactInfo(String name, String number, String avatarUriStr) {
+            this.name = name;
+            this.number = number;
+            this.avatarUriStr = avatarUriStr;
+        }
+
+        public ContactInfo() {
+            name = "";
+            number = "";
+            avatarUriStr = "";
+        }
 
         @Override
         public boolean equals(Object obj) {
