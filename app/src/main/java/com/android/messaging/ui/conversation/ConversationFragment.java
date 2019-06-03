@@ -1148,8 +1148,6 @@ public class ConversationFragment extends Fragment implements ConversationDataLi
         }
 
         mRecyclerView.setAdapter(null);
-        // And unbind this fragment from its data
-        mBinding.unbind();
 
         if (mNativeAd != null) {
             mNativeAd.release();
