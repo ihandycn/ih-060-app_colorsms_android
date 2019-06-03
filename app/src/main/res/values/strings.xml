@@ -1207,4 +1207,6 @@
         <item quantity="one">%s Second</item>
         <item quantity="other">%s Seconds</item>
     </plurals>
+
+    <string name="menu_backup_restore">Backup &amp; Restore</string>
 </resources>

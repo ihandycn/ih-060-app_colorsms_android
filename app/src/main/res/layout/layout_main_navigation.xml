@@ -153,6 +153,28 @@
                 android:layout_width="match_parent"
                 android:layout_height="35dp" />
 
+            <!-- Backup & Restore -->
+            <RelativeLayout
+                android:id="@+id/navigation_item_backup_restore"
+                style="@style/DrawerMenuItem">
+
+                <android.support.v7.widget.AppCompatImageView
+                    style="@style/DrawerMenuIcon"
+                    app:srcCompat="@drawable/ic_menu_backup"/>
+
+                <com.android.messaging.ui.view.MessagesTextView
+                    style="@style/DrawerMenuTitle"
+                    android:includeFontPadding="false"
+                    android:text="@string/menu_backup_restore"
+                    app:typeface="@string/custom_font_medium"/>
+
+                <com.android.messaging.ui.view.MessagesTextView
+                    android:id="@+id/navigation_item_backup_restore_new_text"
+                    style="@style/DrawerMenuNewMark"
+                    app:textAllCaps="true"
+                    app:typeface="@string/custom_font_bold"/>
+            </RelativeLayout>
+
             <!-- Privacy Box -->
             <RelativeLayout
                 android:id="@+id/navigation_item_privacy_box"

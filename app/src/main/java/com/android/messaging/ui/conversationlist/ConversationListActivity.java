@@ -123,6 +123,7 @@ public class ConversationListActivity extends AbstractConversationListActivity
     private static final String PREF_KEY_THEME_COLOR_CLICKED = "pref_key_navigation_theme_color_clicked";
     private static final String PREF_KEY_BUBBLE_CLICKED = "pref_key_navigation_bubble_clicked";
     private static final String PREF_KEY_PRIVATE_BOX_CLICKED = "pref_key_navigation_private_box_clicked";
+    private static final String PREF_KEY_BACKUP_RESTORE_CLICKED = "pref_key_navigation_backup_restore_clicked";
     private static final String PREF_KEY_BACKGROUND_CLICKED = "pref_key_navigation_background_clicked";
     private static final String PREF_KEY_FONT_CLICKED = "pref_key_navigation_font_clicked";
 
@@ -143,6 +144,7 @@ public class ConversationListActivity extends AbstractConversationListActivity
     private static final int DRAWER_INDEX_RATE = 5;
     private static final int DRAWER_INDEX_CHANGE_FONT = 6;
     private static final int DRAWER_INDEX_PRIVACY_BOX = 7;
+    private static final int DRAWER_INDEX_BACKUP_RESTORE = 8;
 
     private int drawerClickIndex = DRAWER_INDEX_NONE;
 
@@ -438,6 +440,12 @@ public class ConversationListActivity extends AbstractConversationListActivity
                         navigationContent.findViewById(R.id.navigation_item_font_new_text).setVisibility(View.GONE);
                         startActivity(intent);
                         break;
+                    case DRAWER_INDEX_BACKUP_RESTORE:
+                        BugleAnalytics.logEvent("Menu_BackupRestore_Click", true);
+//                        Navigations.startActivity(ConversationListActivity.this, BackUpActivity.class);
+                        Preferences.getDefault().putBoolean(PREF_KEY_BACKUP_RESTORE_CLICKED, true);
+                        navigationContent.findViewById(R.id.navigation_item_backup_restore_new_text).setVisibility(View.GONE);
+                        break;
                     case DRAWER_INDEX_PRIVACY_BOX:
                         BugleAnalytics.logEvent("Menu_PrivateBox_Click", true);
                         if (PrivateBoxSettings.isAnyPasswordSet()) {
@@ -495,6 +503,13 @@ public class ConversationListActivity extends AbstractConversationListActivity
                 bubbleNewMark.setBackground(BackgroundDrawables.createBackgroundDrawable(0xffea6126,
                         Dimensions.pxFromDp(8.7f), false));
             }
+
+            if (!Preferences.getDefault().getBoolean(PREF_KEY_BACKUP_RESTORE_CLICKED, false)) {
+                View bubbleNewMark = navigationContent.findViewById(R.id.navigation_item_backup_restore_new_text);
+                bubbleNewMark.setVisibility(View.VISIBLE);
+                bubbleNewMark.setBackground(BackgroundDrawables.createBackgroundDrawable(0xffea6126,
+                        Dimensions.pxFromDp(8.7f), false));
+            }
         }
 
         navigationContent.findViewById(R.id.navigation_item_theme).setOnClickListener(this);
@@ -504,6 +519,7 @@ public class ConversationListActivity extends AbstractConversationListActivity
         navigationContent.findViewById(R.id.navigation_item_change_font).setOnClickListener(this);
         navigationContent.findViewById(R.id.navigation_item_setting).setOnClickListener(this);
         navigationContent.findViewById(R.id.navigation_item_rate).setOnClickListener(this);
+        navigationContent.findViewById(R.id.navigation_item_backup_restore).setOnClickListener(this);
         //test code
         //this item is used to delete dirty mms parts in telephony
         navigationContent.findViewById(R.id.navigation_item_clear_private_parts).setVisibility(View.GONE);
@@ -918,6 +934,10 @@ public class ConversationListActivity extends AbstractConversationListActivity
                 break;
             case R.id.navigation_item_setting:
                 drawerClickIndex = DRAWER_INDEX_SETTING;
+                drawerLayout.closeDrawer(navigationView);
+                break;
+            case R.id.navigation_item_backup_restore:
+                drawerClickIndex = DRAWER_INDEX_BACKUP_RESTORE;
                 drawerLayout.closeDrawer(navigationView);
                 break;
             case R.id.navigation_item_rate:
