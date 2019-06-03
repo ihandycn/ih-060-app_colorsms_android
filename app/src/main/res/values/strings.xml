@@ -1207,5 +1207,4 @@
         <item quantity="one">%s Second</item>
         <item quantity="other">%s Seconds</item>
     </plurals>
-
 </resources>
