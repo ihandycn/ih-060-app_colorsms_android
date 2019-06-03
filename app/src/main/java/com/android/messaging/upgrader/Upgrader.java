@@ -68,7 +68,7 @@ public class Upgrader extends BaseUpgrader {
             updateThemeKey();
         }
 
-        if (oldVersion < 49 && newVersion >= 49) {
+        if (oldVersion < 50 && newVersion >= 50) {
             migrateLocalThemeAndFont();
         }
     }
