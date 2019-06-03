@@ -36,12 +36,21 @@
 
     <item
         android:id="@+id/action_menu"
-        android:icon="@drawable/ic_menu"
+        android:icon="@drawable/ic_menu_with_red_point"
         android:title="@string/settings"
         appcompat:showAsAction="always">
 
         <menu>
             <group>
+                <item
+                    android:id="@+id/lock_message_menu"
+                    android:title="@string/action_lock"
+                    appcompat:showAsAction="never" />
+                <item
+                    android:id="@+id/unlock_message_menu"
+                    android:title="@string/action_unlock"
+                    appcompat:showAsAction="never" />
+
                 <item
                     android:id="@+id/share_message_menu"
 

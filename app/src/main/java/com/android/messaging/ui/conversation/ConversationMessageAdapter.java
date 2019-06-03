@@ -50,8 +50,7 @@ public class ConversationMessageAdapter extends
 
     private final ConversationMessageViewHost mHost;
     private final AsyncImageViewDelayLoader mImageViewDelayLoader;
-    private final View.OnClickListener mViewClickListener;
-    private final View.OnLongClickListener mViewLongClickListener;
+    private final ConversationMessageClickListener mViewClickListener;
     private boolean mOneOnOne;
     private static boolean multiSelectMode;
     public static final int NORMAL = 1000;
@@ -66,11 +65,9 @@ public class ConversationMessageAdapter extends
 
     public ConversationMessageAdapter(final ConversationMessageViewHost host,
                                       final AsyncImageViewDelayLoader imageViewDelayLoader,
-                                      final View.OnClickListener viewClickListener,
-                                      final View.OnLongClickListener longClickListener) {
+                                      final ConversationMessageClickListener viewClickListener) {
         mHost = host;
         mViewClickListener = viewClickListener;
-        mViewLongClickListener = longClickListener;
         mImageViewDelayLoader = imageViewDelayLoader;
         setHasStableIds(true);
     }
@@ -112,7 +109,8 @@ public class ConversationMessageAdapter extends
         return multiSelectMode;
     }
 
-    @NonNull @Override
+    @NonNull
+    @Override
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         if (viewType == TYPE_MESSAGE) {
             final LayoutInflater layoutInflater = LayoutInflater.from(parent.getContext());
@@ -120,8 +118,7 @@ public class ConversationMessageAdapter extends
                     layoutInflater.inflate(R.layout.conversation_message_view, null);
             conversationMessageView.setHost(mHost);
             conversationMessageView.setImageViewDelayLoader(mImageViewDelayLoader);
-            return new ConversationMessageViewHolder(conversationMessageView,
-                    mViewClickListener, mViewLongClickListener);
+            return new ConversationMessageViewHolder(conversationMessageView);
         } else {
             final LinearLayout container = (LinearLayout) LayoutInflater.from(parent.getContext())
                     .inflate(R.layout.native_ad_container, parent, false);
@@ -139,6 +136,21 @@ public class ConversationMessageAdapter extends
             conversationMessageView.bind((ConversationMessageData) mDataList.get(position), mOneOnOne, multiSelectMode);
             ConversationMessageData data = conversationMessageView.getData();
 
+            conversationMessageView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    checkbox.setSelected(!checkbox.isSelected());
+                    mViewClickListener.onConversationMessageClick((ConversationMessageData) mDataList.get(position));
+                }
+            });
+            conversationMessageView.setOnLongClickListener(new View.OnLongClickListener() {
+                @Override
+                public boolean onLongClick(View v) {
+                    checkbox.setSelected(true);
+                    mViewClickListener.onConversationMessageLongClick((ConversationMessageData) mDataList.get(position));
+                    return true;
+                }
+            });
             if (multiSelectMode && !ConversationFragment.getSelectMessageIds().isEmpty()) {
                 checkbox.setVisibility(View.VISIBLE);
                 if (ConversationFragment.getSelectMessageIds().contains(data.getMessageId())) {
@@ -164,11 +176,13 @@ public class ConversationMessageAdapter extends
         }
     }
 
-    @Override public int getItemCount() {
+    @Override
+    public int getItemCount() {
         return mDataList.size();
     }
 
-    @Override public int getItemViewType(int position) {
+    @Override
+    public int getItemViewType(int position) {
         if (mDataList.get(position) instanceof ConversationMessageData) {
             return TYPE_MESSAGE;
         } else {
@@ -192,17 +206,9 @@ public class ConversationMessageAdapter extends
     public static class ConversationMessageViewHolder extends RecyclerView.ViewHolder {
         final View mView;
 
-        /**
-         * @param viewClickListener a View.OnClickListener that should define the interaction when
-         *                          an item in the RecyclerView is clicked.
-         */
-        public ConversationMessageViewHolder(final View itemView,
-                                             final View.OnClickListener viewClickListener,
-                                             final View.OnLongClickListener viewLongClickListener) {
+        public ConversationMessageViewHolder(final View itemView) {
             super(itemView);
             mView = itemView;
-            mView.setOnClickListener(viewClickListener);
-            mView.setOnLongClickListener(viewLongClickListener);
         }
 
         public void bind() {
@@ -248,5 +254,10 @@ public class ConversationMessageAdapter extends
             mAdContentView.setAdChoiceView(choice);
             container.addView(mAdContentView);
         }
+    }
+
+    public interface ConversationMessageClickListener{
+        void onConversationMessageClick(ConversationMessageData data);
+        void onConversationMessageLongClick(ConversationMessageData data);
     }
 }

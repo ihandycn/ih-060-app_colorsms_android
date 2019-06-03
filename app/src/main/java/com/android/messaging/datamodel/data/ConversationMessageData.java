@@ -75,6 +75,7 @@ public class ConversationMessageData {
     private long mSenderContactId;
     private String mSenderContactLookupKey;
     private String mSelfParticipantId;
+    private boolean mIsLocked;
 
     /** Are we similar enough to the previous/next messages that we can cluster them? */
     private boolean mCanClusterWithPreviousMessage;
@@ -119,6 +120,7 @@ public class ConversationMessageData {
         mSenderContactId = cursor.getLong(INDEX_SENDER_CONTACT_ID);
         mSenderContactLookupKey = cursor.getString(INDEX_SENDER_CONTACT_LOOKUP_KEY);
         mSelfParticipantId = cursor.getString(INDEX_SELF_PARTICIPIANT_ID);
+        mIsLocked = cursor.getInt(INDEX_IS_LOCKED) == 1;
 
         if (!cursor.isFirst() && cursor.moveToPrevious()) {
             mCanClusterWithPreviousMessage = canClusterWithMessage(cursor);
@@ -513,6 +515,10 @@ public class ConversationMessageData {
         return mSelfParticipantId;
     }
 
+    public final boolean getIsLocked(){
+        return mIsLocked;
+    }
+
     public boolean getIsIncoming() {
         return (mStatus >= MessageData.BUGLE_STATUS_FIRST_INCOMING);
     }
@@ -751,6 +757,8 @@ public class ConversationMessageData {
             + " as " + ConversationMessageViewColumns.RAW_TELEPHONY_STATUS + ", "
             + DatabaseHelper.MESSAGES_TABLE + '.' + MessageColumns.SELF_PARTICIPANT_ID
             + " as " + ConversationMessageViewColumns.SELF_PARTICIPANT_ID + ", "
+            + DatabaseHelper.MESSAGES_TABLE + "." + MessageColumns.IS_LOCKED
+            + " as " + ConversationMessageViewColumns.IS_LOCKED + ", "
             + DatabaseHelper.PARTICIPANTS_TABLE + '.' + ParticipantColumns.FULL_NAME
             + " as " + ConversationMessageViewColumns.SENDER_FULL_NAME + ", "
             + DatabaseHelper.PARTICIPANTS_TABLE + '.' + ParticipantColumns.FIRST_NAME
@@ -823,6 +831,7 @@ public class ConversationMessageData {
         static final String MMS_EXPIRY = MessageColumns.MMS_EXPIRY;
         static final String RAW_TELEPHONY_STATUS = MessageColumns.RAW_TELEPHONY_STATUS;
         static final String SELF_PARTICIPANT_ID = MessageColumns.SELF_PARTICIPANT_ID;
+        static final String IS_LOCKED = MessageColumns.IS_LOCKED;
         static final String SENDER_FULL_NAME = ParticipantColumns.FULL_NAME;
         static final String SENDER_FIRST_NAME = ParticipantColumns.FIRST_NAME;
         static final String SENDER_DISPLAY_DESTINATION = ParticipantColumns.DISPLAY_DESTINATION;
@@ -867,6 +876,8 @@ public class ConversationMessageData {
     private static final int INDEX_MMS_EXPIRY                    = sIndexIncrementer++;
     private static final int INDEX_RAW_TELEPHONY_STATUS          = sIndexIncrementer++;
     private static final int INDEX_SELF_PARTICIPIANT_ID          = sIndexIncrementer++;
+    private static final int INDEX_IS_LOCKED                     = sIndexIncrementer++;
+
     private static final int INDEX_SENDER_FULL_NAME              = sIndexIncrementer++;
     private static final int INDEX_SENDER_FIRST_NAME             = sIndexIncrementer++;
     private static final int INDEX_SENDER_DISPLAY_DESTINATION    = sIndexIncrementer++;
@@ -902,6 +913,7 @@ public class ConversationMessageData {
         ConversationMessageViewColumns.MMS_EXPIRY,
         ConversationMessageViewColumns.RAW_TELEPHONY_STATUS,
         ConversationMessageViewColumns.SELF_PARTICIPANT_ID,
+        ConversationMessageViewColumns.IS_LOCKED,
         ConversationMessageViewColumns.SENDER_FULL_NAME,
         ConversationMessageViewColumns.SENDER_FIRST_NAME,
         ConversationMessageViewColumns.SENDER_DISPLAY_DESTINATION,

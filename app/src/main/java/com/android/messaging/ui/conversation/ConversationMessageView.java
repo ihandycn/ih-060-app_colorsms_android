@@ -67,6 +67,7 @@ import com.android.messaging.ui.VideoThumbnailView;
 import com.android.messaging.ui.customize.AvatarBgDrawables;
 import com.android.messaging.ui.customize.ConversationColors;
 import com.android.messaging.ui.customize.PrimaryColors;
+import com.android.messaging.ui.customize.WallpaperDrawables;
 import com.android.messaging.ui.wallpaper.WallpaperManager;
 import com.android.messaging.util.AccessibilityUtil;
 import com.android.messaging.util.Assert;
@@ -93,7 +94,7 @@ public class ConversationMessageView extends RelativeLayout implements View.OnCl
         View.OnLongClickListener, OnAttachmentClickListener {
 
     public interface ConversationMessageViewHost {
-        boolean onAttachmentClick(ConversationMessageView view, MessagePartData attachment,
+        boolean onAttachmentClick(ConversationMessageData view, MessagePartData attachment,
                                   Rect imageBounds, boolean longPress);
 
         SubscriptionListEntry getSubscriptionEntryForSelfParticipant(String selfParticipantId,
@@ -107,6 +108,7 @@ public class ConversationMessageView extends RelativeLayout implements View.OnCl
     private TextView mMessageTextView;
     private boolean mMessageTextHasLinks;
     private boolean mMessageHasYouTubeLink;
+    private ImageView mMessageIsLockView;
     private TextView mStatusTextView;
     private TextView mTitleTextView;
     private TextView mMmsInfoTextView;
@@ -161,6 +163,8 @@ public class ConversationMessageView extends RelativeLayout implements View.OnCl
         mStatusTextView = findViewById(R.id.message_status);
         mStatusTextView.setBackground(BackgroundDrawables.createBackgroundDrawable(
                 Color.argb(51, Color.red(color), Color.green(color), Color.blue(color)), Dimensions.pxFromDp(16), false));
+
+        mMessageIsLockView = findViewById(R.id.message_lock);
 
         mTitleTextView = findViewById(R.id.message_title);
         mMmsInfoTextView = findViewById(R.id.mms_info);
@@ -420,10 +424,7 @@ public class ConversationMessageView extends RelativeLayout implements View.OnCl
             case MessageData.BUGLE_STATUS_OUTGOING_COMPLETE:
             case MessageData.BUGLE_STATUS_INCOMING_COMPLETE:
             default:
-                if (!mData.getCanClusterWithNextMessage()) {
-                    //
-                    statusText = mData.getFormattedReceivedTimeStamp();
-                }
+                statusText = mData.getFormattedReceivedTimeStamp();
                 break;
         }
 
@@ -467,11 +468,23 @@ public class ConversationMessageView extends RelativeLayout implements View.OnCl
 
         // We set the text even if the view will be GONE for accessibility
         mStatusTextView.setText(statusText);
-        final boolean statusVisible = !TextUtils.isEmpty(statusText);
+        final boolean statusVisible = !mData.getCanClusterWithNextMessage() || mData.getIsLocked();
         if (statusVisible) {
             mStatusTextView.setVisibility(View.VISIBLE);
         } else {
             mStatusTextView.setVisibility(View.GONE);
+        }
+
+        if(mData.getIsLocked()) {
+            mMessageIsLockView.setVisibility(VISIBLE);
+            if(WallpaperDrawables.getConversationListWallpaperBitmap() == null){
+                mMessageIsLockView.setImageResource(R.drawable.message_lock_default);
+            }else {
+                mMessageIsLockView.setImageResource(R.drawable.message_lock_theme);
+            }
+        }
+        else {
+            mMessageIsLockView.setVisibility(GONE);
         }
 
         final boolean deliveredBadgeVisible =
@@ -500,12 +513,12 @@ public class ConversationMessageView extends RelativeLayout implements View.OnCl
             mSimNameView.setVisibility(GONE);
         }
 
-        final boolean metadataVisible = senderNameVisible || statusVisible
-                || deliveredBadgeVisible || simNameVisible;
-        mMessageMetadataView.setVisibility(metadataVisible ? View.VISIBLE : View.GONE);
+//        final boolean metadataVisible = senderNameVisible || statusVisible
+//                || deliveredBadgeVisible || simNameVisible;
+        mMessageMetadataView.setVisibility(View.VISIBLE);
 
         final boolean messageTextAndOrInfoVisible = titleVisible || subjectVisible
-                || mData.hasText() || metadataVisible;
+                || mData.hasText();
         mMessageTextAndInfoView.setVisibility(
                 messageTextAndOrInfoVisible ? View.VISIBLE : View.GONE);
 
@@ -1078,7 +1091,7 @@ public class ConversationMessageView extends RelativeLayout implements View.OnCl
     @Override
     public boolean onAttachmentClick(final MessagePartData attachment,
                                      final Rect viewBoundsOnScreen, final boolean longPress) {
-        return mHost.onAttachmentClick(this, attachment, viewBoundsOnScreen, longPress);
+        return mHost.onAttachmentClick(this.getData(), attachment, viewBoundsOnScreen, longPress);
     }
 
     // Sort photos in MultiAttachLayout in the same order as the ConversationImagePartsView

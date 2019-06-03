@@ -90,6 +90,11 @@ public class DeleteMessageAction extends Action implements Parcelable {
         if (!TextUtils.isEmpty(messageId)) {
             // Check message still exists
             final MessageData message = BugleDatabaseOperations.readMessage(db, messageId);
+            if(message.getIsLocked()){
+                BugleActionToasts.onMessageLockedWhenDelete();
+                return null;
+            }
+
             if (message != null) {
                 // Delete from local DB
                 int count = BugleDatabaseOperations.deleteMessage(db, messageId);
@@ -161,6 +166,18 @@ public class DeleteMessageAction extends Action implements Parcelable {
                     "timestamp = " + timeStamp);
 
             if (!messages.isEmpty()) {
+                boolean hasLocked = false;
+                for (MessageData messageData : messages){
+                    if(messageData.getIsLocked()){
+                        hasLocked = true;
+                        break;
+                    }
+                }
+                if(hasLocked){
+                    BugleActionToasts.onMessageLockedWhenDelete();
+                    return super.processBackgroundResponse(response);
+                }
+
                 for (MessageData messageData : messages) {
                     int count = BugleDatabaseOperations.deleteMessage(db, messageData.getMessageId());
                     HSLog.d(TAG, "delete count" + count) ;

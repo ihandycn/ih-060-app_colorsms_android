@@ -534,19 +534,22 @@ public class BugleDatabaseOperations {
                 conversationMessagesDeleted = true;
             } else {
                 // Delete all messages prior to the cutoff
+                // Can't delete messages which is locked
                 dbWrapper.delete(DatabaseHelper.MESSAGES_TABLE,
                         MessageColumns.CONVERSATION_ID + "=? AND "
+                                + MessageColumns.IS_LOCKED + "=0 AND "
                                 + MessageColumns.RECEIVED_TIMESTAMP + "<=?",
                         new String[]{conversationId, Long.toString(cutoffTimestamp)});
-
                 // Delete any draft message. The delete above may not always include the draft,
                 // because under certain scenarios (e.g. sending messages in progress), the draft
                 // timestamp can be larger than the cutoff time, which is generally the conversation
                 // sort timestamp. Because of how the sms/mms provider works on some newer
                 // devices, it's important that we never delete all the messages in a conversation
                 // without also deleting the conversation itself (see b/20262204 for details).
+
+                // Can't delete messages which locked.
                 dbWrapper.delete(DatabaseHelper.MESSAGES_TABLE,
-                        MessageColumns.STATUS + "=? AND " + MessageColumns.CONVERSATION_ID + "=?",
+                        MessageColumns.STATUS + "=? AND " + MessageColumns.IS_LOCKED + "=0 AND " + MessageColumns.CONVERSATION_ID + "=?",
                         new String[]{
                                 Integer.toString(MessageData.BUGLE_STATUS_OUTGOING_DRAFT),
                                 conversationId
@@ -858,6 +861,14 @@ public class BugleDatabaseOperations {
         Assert.isNotMainThread();
         final boolean exists = updateConversationRowIfExists(dbWrapper, conversationId, values);
         Assert.isTrue(exists);
+    }
+
+    public static void updateMessageLockStatus(final DatabaseWrapper dbWrapper, final String messageId, final boolean isLock){
+        Assert.isNotMainThread();
+        Assert.isTrue(dbWrapper.getDatabase().inTransaction());
+        final ContentValues values = new ContentValues();
+        values.put(MessageColumns.IS_LOCKED, isLock ? 1 : 0);
+        updateMessageRowIfExists(dbWrapper, messageId, values);
     }
 
     @DoesNotRunOnMainThread
@@ -1310,14 +1321,14 @@ public class BugleDatabaseOperations {
         if (current != null) {
             // Delete existing message parts)
             deletePartsForMessage(dbWrapper, message.getMessageId());
-            //  Insert new parts
+            // Insert new parts
             for (final MessagePartData messagePart : message.getParts()) {
                 messagePart.updatePartId(null);
                 messagePart.updateMessageId(message.getMessageId());
                 insertNewMessagePartInTransaction(dbWrapper, messagePart,
                         message.getConversationId());
             }
-            //  Update message row
+            // Update message row
             final ContentValues values = new ContentValues();
             message.populate(values);
             updateMessageRowIfExists(dbWrapper, message.getMessageId(), values);
@@ -1369,7 +1380,7 @@ public class BugleDatabaseOperations {
                 final String conversationId = message.getConversationId();
                 // Delete message
                 count = dbWrapper.delete(DatabaseHelper.MESSAGES_TABLE,
-                        MessageColumns._ID + "=?", new String[]{messageId});
+                        MessageColumns._ID + "=? AND " + MessageColumns.IS_LOCKED + "=0", new String[]{messageId});
 
                 if (!deleteConversationIfEmptyInTransaction(dbWrapper, conversationId)) {
                     // TODO: Should we leave the conversation sort timestamp alone?

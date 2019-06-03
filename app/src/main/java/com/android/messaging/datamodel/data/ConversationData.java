@@ -38,6 +38,7 @@ import com.android.messaging.datamodel.MessagingContentProvider;
 import com.android.messaging.datamodel.action.DeleteConversationAction;
 import com.android.messaging.datamodel.action.DeleteMessageAction;
 import com.android.messaging.datamodel.action.InsertNewMessageAction;
+import com.android.messaging.datamodel.action.LockMessageAction;
 import com.android.messaging.datamodel.action.RedownloadMmsAction;
 import com.android.messaging.datamodel.action.ResendMessageAction;
 import com.android.messaging.datamodel.action.UpdateConversationArchiveStatusAction;
@@ -679,6 +680,20 @@ public class ConversationData extends BindableData {
         Assert.notNull(messageId);
         DeleteMessageAction.deleteMessage(messageId);
     }
+
+    public void lockMessage(final BindingBase<ConversationData> binding, final String messageId) {
+        Assert.isTrue(binding.getData() == this);
+        Assert.notNull(messageId);
+        LockMessageAction.lockMessage(this.getConversationId(), messageId);
+    }
+
+    public void unlockMessage(final BindingBase<ConversationData> binding, final String messageId) {
+        Assert.isTrue(binding.getData() == this);
+        Assert.notNull(messageId);
+        LockMessageAction.unlockMessage(this.getConversationId(), messageId);
+    }
+
+
 
     public void deleteConversation(final Binding<ConversationData> binding) {
         Assert.isTrue(binding.getData() == this);

@@ -74,10 +74,12 @@ public class DeleteConversationAction extends Action implements Parcelable {
         final long cutoffTimestamp = actionParameters.getLong(KEY_CUTOFF_TIMESTAMP);
 
         if (!TextUtils.isEmpty(conversationId)) {
+            // prepare uris, avoid conflict between local db and tel db.
+            List<Uri> messageUris = getUnlockMessageUrisFromTel();
             // First find the thread id for this conversation.
             final long threadId = BugleDatabaseOperations.getThreadId(db, conversationId);
-
-            if (BugleDatabaseOperations.deleteConversation(db, conversationId, cutoffTimestamp)) {
+            boolean deleteLocal = BugleDatabaseOperations.deleteConversation(db, conversationId, cutoffTimestamp);
+            if (deleteLocal) {
                 LogUtil.i(TAG, "DeleteConversationAction: Deleted local conversation "
                         + conversationId);
 
@@ -97,13 +99,12 @@ public class DeleteConversationAction extends Action implements Parcelable {
             } else {
                 LogUtil.w(TAG, "DeleteConversationAction: Could not delete local conversation "
                         + conversationId);
-                return null;
             }
 
             // Now delete from telephony DB. MmsSmsProvider throws an exception if the thread id is
             // less than 0. If it's greater than zero, it will delete all messages with that thread
             // id, even if there's no corresponding row in the threads table.
-            if (threadId >= 0) {
+            if (threadId >= 0 && deleteLocal) {
                 final int count = MmsUtils.deleteThread(threadId, cutoffTimestamp);
                 if (count > 0) {
                     LogUtil.i(TAG, "DeleteConversationAction: Deleted telephony thread "
@@ -116,7 +117,7 @@ public class DeleteConversationAction extends Action implements Parcelable {
             } else {
                 LogUtil.w(TAG, "DeleteConversationAction: Local conversation " + conversationId
                         + " has an invalid telephony thread id; will delete messages individually");
-                deleteConversationMessagesFromTelephony();
+                deleteConversationMessagesFromTelephony(messageUris);
             }
         } else {
             LogUtil.e(TAG, "DeleteConversationAction: conversationId is empty");
@@ -125,26 +126,16 @@ public class DeleteConversationAction extends Action implements Parcelable {
         return null;
     }
 
-    /**
-     * Deletes all the telephony messages for the local conversation being deleted.
-     * <p>
-     * This is a fallback used when the conversation is not associated with any telephony thread,
-     * or its thread id is invalid (e.g. negative). This is not common, but can happen sometimes
-     * (e.g. the Unknown Sender conversation). In the usual case of deleting a conversation, we
-     * don't need this because the telephony provider automatically deletes messages when a thread
-     * is deleted.
-     */
-    private void deleteConversationMessagesFromTelephony() {
+    private List<Uri> getUnlockMessageUrisFromTel(){
         final DatabaseWrapper db = DataModel.get().getDatabase();
         final String conversationId = actionParameters.getString(KEY_CONVERSATION_ID);
         Assert.notNull(conversationId);
-
         final List<Uri> messageUris = new ArrayList<>();
         Cursor cursor = null;
         try {
             cursor = db.query(DatabaseHelper.MESSAGES_TABLE,
                     new String[] { MessageColumns.SMS_MESSAGE_URI },
-                    MessageColumns.CONVERSATION_ID + "=?",
+                    MessageColumns.CONVERSATION_ID + "=? AND " + MessageColumns.IS_LOCKED + "=0",
                     new String[] { conversationId },
                     null, null, null);
             while (cursor.moveToNext()) {
@@ -161,6 +152,19 @@ public class DeleteConversationAction extends Action implements Parcelable {
                 cursor.close();
             }
         }
+        return messageUris;
+    }
+
+    /**
+     * Deletes all the telephony messages for the local conversation being deleted.
+     * <p>
+     * This is a fallback used when the conversation is not associated with any telephony thread,
+     * or its thread id is invalid (e.g. negative). This is not common, but can happen sometimes
+     * (e.g. the Unknown Sender conversation). In the usual case of deleting a conversation, we
+     * don't need this because the telephony provider automatically deletes messages when a thread
+     * is deleted.
+     */
+    private void deleteConversationMessagesFromTelephony(List<Uri> messageUris) {
         for (Uri messageUri : messageUris) {
             int count = MmsUtils.deleteMessage(messageUri);
             if (count > 0) {

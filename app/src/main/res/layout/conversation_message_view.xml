@@ -140,7 +140,7 @@
                 app:typeface="@string/custom_font_regular"/>
         </com.android.messaging.ui.conversation.MessageBubbleBackground>
 
-        <com.android.messaging.ui.LineWrapLayout
+        <LinearLayout
             android:id="@+id/message_metadata"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -159,6 +159,17 @@
                 android:layout_marginEnd="4dp"
                 android:visibility="gone"
                 app:typeface="@string/custom_font_regular"/>
+
+            <ImageView
+                android:id="@+id/message_lock"
+                android:layout_width="16dp"
+                android:layout_height="16dp"
+                android:gravity="center"
+                android:layout_marginEnd="2dp"
+                android:layout_marginStart="2dp"
+                android:src="@drawable/message_lock_default"
+                android:scaleType="centerCrop"
+                android:visibility="gone"/>
 
             <com.android.messaging.ui.view.MessagesTextView
                 android:id="@+id/message_status"
@@ -191,6 +202,6 @@
                 android:layout_gravity="center"
                 android:src="@drawable/ic_sms_delivery_ok"
                 android:visibility="gone"/>
-        </com.android.messaging.ui.LineWrapLayout>
+        </LinearLayout>
     </com.android.messaging.ui.conversation.ConversationMessageBubbleView>
 </com.android.messaging.ui.conversation.ConversationMessageView>
