@@ -7,22 +7,22 @@
 
 
     <FrameLayout
+        android:id="@+id/invite_friends_message_text_container"
         android:layout_width="0dp"
-        android:layout_height="115.3dp"
+        android:layout_height="0dp"
         android:layout_marginStart="16dp"
         android:layout_marginTop="18dp"
         android:layout_marginEnd="16dp"
         android:background="@drawable/input_edit_drawable"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
-
-    </FrameLayout>
+        app:layout_constraintBottom_toBottomOf="@+id/invite_friends_message_text_container_margin"
+        app:layout_constraintTop_toTopOf="parent"/>
 
     <com.android.messaging.ui.PlainTextEditText
         android:id="@+id/invite_friends_message_text"
-        android:layout_width="match_parent"
-        android:layout_height="48.7dp"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
         android:layout_marginStart="35.7dp"
         android:layout_marginTop="35.3dp"
         android:layout_marginEnd="35.7dp"
@@ -40,10 +40,9 @@
 
     <com.android.messaging.ui.view.MessagesTextView
         android:id="@+id/invite_friends_message_auto_link"
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="35.7dp"
-        android:layout_marginTop="85dp"
         android:layout_marginEnd="35.7dp"
         android:gravity="start"
         android:text="@string/invite_friends_invite_auto_link_content"
@@ -52,16 +51,17 @@
         app:typeface="@string/custom_font_regular"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintTop_toBottomOf = "@+id/invite_friends_message_text"
         android:autoLink="web">
     </com.android.messaging.ui.view.MessagesTextView>
 
     <com.android.messaging.ui.view.MessagesTextView
         android:id="@+id/invite_friends_invite_cancel_button"
-        android:layout_width="64.7dp"
+        android:layout_width="wrap_content"
+        android:paddingStart="11.3dp"
+        android:paddingEnd="11.7dp"
         android:layout_height="24.7dp"
-        android:layout_marginStart="185.3dp"
-        android:layout_marginTop="103.3dp"
+        android:layout_marginStart="250.3dp"
         android:layout_marginEnd="87dp"
         android:background="@drawable/invite_friends_button_text_background"
         android:gravity="center"
@@ -69,17 +69,19 @@
         android:textColor="@color/invite_friends_button_text_color"
         android:textSize="12sp"
         app:typeface="@string/custom_font_regular"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintTop_toBottomOf="@+id/invite_friends_message_auto_link">
 
     </com.android.messaging.ui.view.MessagesTextView>
 
     <com.android.messaging.ui.view.MessagesTextView
         android:id="@+id/invite_friends_invite_save_button"
-        android:layout_width="51.7dp"
+        android:layout_width="wrap_content"
+        android:paddingStart="11.3dp"
+        android:paddingEnd="11.7dp"
         android:layout_height="24.7dp"
         android:layout_marginStart="310dp"
-        android:layout_marginTop="103.3dp"
         android:layout_marginEnd="30dp"
         android:layout_toEndOf="@+id/invite_friends_invite_cancel_button"
         android:background="@drawable/invite_friends_button_text_background"
@@ -87,10 +89,23 @@
         android:text="@string/invite_friends_invite_save_button"
         android:textColor="@color/invite_friends_button_text_color"
         android:textSize="12sp"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/invite_friends_message_auto_link"
         app:typeface="@string/custom_font_regular">
 
     </com.android.messaging.ui.view.MessagesTextView>
+
+    <FrameLayout
+        android:id="@+id/invite_friends_message_text_container_margin"
+        android:layout_width="0dp"
+        android:layout_height="5.3dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/invite_friends_invite_cancel_button"
+        app:layout_constraintBottom_toBottomOf="@+id/invite_friends_message_text_container"/>
+
     
 </android.support.constraint.ConstraintLayout>
