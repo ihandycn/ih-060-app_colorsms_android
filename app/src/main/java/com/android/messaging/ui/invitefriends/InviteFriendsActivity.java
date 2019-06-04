@@ -79,7 +79,7 @@ public class InviteFriendsActivity extends AppCompatActivity implements ContactP
             BugleAnalytics.logEvent("Invite_SendPage_Invite_Click");
             BugleAnalytics.logEvent("Invite_SMS_Send");
             InviteFriendsTest.logInviteFriendsClick();
-//            InviteFriendsTest.logInviteSmsSent();
+            InviteFriendsTest.logInviteSmsSent();
             finish();
         });
 

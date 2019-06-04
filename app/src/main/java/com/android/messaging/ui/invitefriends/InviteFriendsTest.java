@@ -4,6 +4,7 @@ import android.content.res.Resources;
 
 import com.android.messaging.R;
 import com.ihs.app.framework.HSApplication;
+import com.superapps.util.Toasts;
 
 import net.appcloudbox.autopilot.AutopilotConfig;
 import net.appcloudbox.autopilot.AutopilotEvent;
@@ -17,6 +18,9 @@ public class InviteFriendsTest {
 
     public static String getSendDescription() {
         String type = AutopilotConfig.getStringToTestNow(SMS_TOPIC_ID, "send_description", "default");
+        if (BuildConfig.DEBUG) {
+            Toasts.showToast("in test : " + type);
+        }
 
         Resources resources = HSApplication.getContext().getResources();
         if ("default".equals(type)) {
@@ -39,7 +43,11 @@ public class InviteFriendsTest {
     }
 
     public static String getAlertType() {
-        return AutopilotConfig.getStringToTestNow(DIALOG_TOPIC_ID, "alert_description", "freesms");
+        String type =  AutopilotConfig.getStringToTestNow(DIALOG_TOPIC_ID, "alert_description", "freesms");
+        if (BuildConfig.DEBUG) {
+            Toasts.showToast("in test : " + type);
+        }
+        return type;
     }
 
     public static void logGuideAlertShow() {
