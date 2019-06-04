@@ -30,6 +30,18 @@ public class InviteFriendsListAdapter extends RecyclerView.Adapter<RecyclerView.
     }
 
 
+    public String getRecipients() {
+        StringBuilder recipients = new StringBuilder();
+        if (mContactInfos != null) {
+            for (CallAssistantUtils.ContactInfo contactInfo : mContactInfos) {
+                recipients.append(contactInfo.number);
+                recipients.append(",");
+            }
+            return recipients.toString();
+        }
+        return "";
+    }
+
     public void initData(List<CallAssistantUtils.ContactInfo> contactInfos) {
         mContactInfos = contactInfos;
         notifyDataSetChanged();

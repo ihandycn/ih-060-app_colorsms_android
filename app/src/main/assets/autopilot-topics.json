@@ -52,6 +52,37 @@
     }
   ],
   "topics": {
+    "topic-74oxuasmo": {
+      "topic_type": "one_time",
+      "topic_name": "Invite Guide Description Test",
+      "variations": {
+        "alert_description": {
+          "values": [
+            {
+              "value": "default"
+            }
+          ],
+          "type": "string",
+          "value": "default",
+          "strategy": "sole"
+        }
+      },
+      "events": [
+        {
+          "name": "test"
+        },
+        {
+          "name": "guide_alert_show"
+        },
+        {
+          "name": "guide_alert_click"
+        },
+        {
+          "name": "invite_send_click"
+        }
+      ],
+      "topic_id": "topic-74oxuasmo"
+    },
     "topic-rp-73fiu9zuo": {
       "topic_type": "one_time",
       "topic_name": "RTOT Popup",
@@ -159,12 +190,37 @@
         }
       ],
       "topic_id": "topic-74azpj82p"
+    },
+    "topic-74rv6bpwy": {
+      "topic_type": "one_time",
+      "topic_name": "Invite Send Test",
+      "variations": {
+        "send_description": {
+          "values": [
+            {
+              "value": "default"
+            }
+          ],
+          "type": "string",
+          "value": "default",
+          "strategy": "sole"
+        }
+      },
+      "events": [
+        {
+          "name": "test"
+        },
+        {
+          "name": "invite_sms_send"
+        }
+      ],
+      "topic_id": "topic-74rv6bpwy"
     }
   },
   "autopilot_id": 10104,
   "service_url": "https://ap.appcloudbox.net",
   "other_app_events": [],
-  "json_id": "d7b15643-1344-4375-827d-122621ff5dcd",
+  "json_id": "799b5635-ef87-48a5-8ed1-5754cdb1ae3c",
   "autopilot_name": "Bubble_A",
   "autopilot_type": "app"
 }

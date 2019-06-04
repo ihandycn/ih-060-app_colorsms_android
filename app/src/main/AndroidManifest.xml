@@ -843,12 +843,20 @@
             android:screenOrientation="portrait"
             android:theme="@style/SettingsActivity" />
 
-        <activity android:name=".ui.invitefriends.InviteFriendsActivity"
+        <activity
+            android:name=".ui.invitefriends.InviteFriendsActivity"
             android:windowSoftInputMode="stateAlwaysHidden|adjustPan"
             android:theme="@style/SettingsActivity"/>
 
-        <activity android:name=".ui.invitefriends.SelectFriendsToInviteActivity"
+        <activity
+            android:name=".ui.invitefriends.SelectFriendsToInviteActivity"
             android:theme="@style/SettingsActivity"/>
+
+        <activity
+            android:name=".ui.invitefriends.InviteFriendsRewardDialogActivity"
+            android:theme="@style/Theme.AppCompat.Translucent"/>
+
+
     </application>
 
 </manifest>

@@ -19,12 +19,18 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.android.messaging.R;
+import com.android.messaging.datamodel.action.InsertNewMessageAction;
+import com.android.messaging.datamodel.data.ParticipantData;
 import com.android.messaging.privatebox.ui.addtolist.CallAssistantUtils;
 import com.android.messaging.ui.PlainTextEditText;
+import com.android.messaging.ui.customize.PrimaryColors;
 import com.android.messaging.ui.view.MessagesTextView;
 import com.android.messaging.util.ContactUtil;
+import com.android.messaging.util.PhoneUtils;
 import com.android.messaging.util.UiUtils;
 import com.ihs.commons.utils.HSLog;
+import com.superapps.util.BackgroundDrawables;
+import com.superapps.util.Dimensions;
 
 import java.util.ArrayList;
 
@@ -36,6 +42,7 @@ public class InviteFriendsActivity extends AppCompatActivity {
 
     private InviteFriendsListAdapter mAdapter;
     private PlainTextEditText mEditText;
+    private TextView mInviteButton;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -49,6 +56,19 @@ public class InviteFriendsActivity extends AppCompatActivity {
         mEditText.clearFocus();
 
         initRecyclerView();
+        mInviteButton = findViewById(R.id.invite_button);
+        mInviteButton.setBackground(BackgroundDrawables.createBackgroundDrawable(PrimaryColors.getPrimaryColor(),
+                Dimensions.pxFromDp(6.7f), true));
+
+        mInviteButton.setOnClickListener(v -> {
+            HSLog.d("ContactPicker_InviteFriendsActivity_", mAdapter.getRecipients());
+//            InsertNewMessageAction.insertNewMessage(ParticipantData.DEFAULT_SELF_SUB_ID, mAdapter.getRecipients(),
+//                    mEditText.getText().append(getString(R.string.invite_friends_invite_auto_link_content)).toString(), "");
+//
+//            InviteFriendsTest.logInviteFriendsClick();
+//            InviteFriendsTest.logInviteSmsSent();
+//            finish();
+        });
     }
 
     private void initRecyclerView() {
@@ -81,14 +101,12 @@ public class InviteFriendsActivity extends AppCompatActivity {
                 if (data.moveToFirst()) {
                     while (data.moveToNext()) {
                         final String displayName = data.getString(ContactUtil.INDEX_DISPLAY_NAME);
-                        HSLog.d("ContactPicker_InviteFriendsActivity_", displayName);
 
                         final String photoThumbnailUri = data.getString(ContactUtil.INDEX_PHOTO_URI);
 
-                        if (!TextUtils.isEmpty(photoThumbnailUri)) {
-                            HSLog.d("ContactPicker_InviteFriendsActivity_", photoThumbnailUri);
-                        }
                         final String destination = data.getString(ContactUtil.INDEX_PHONE_EMAIL);
+
+                        HSLog.d("ContactPicker_InviteFriendsActivity_", PhoneUtils.getDefault().formatForDisplay(destination));
                         contactInfos.add(new CallAssistantUtils.ContactInfo(displayName, destination, photoThumbnailUri));
                     }
                 }
@@ -115,15 +133,10 @@ public class InviteFriendsActivity extends AppCompatActivity {
         }
     }
 
-    private class URLSpanNoUnderline extends URLSpan {
-        private URLSpanNoUnderline(String url) {
-            super(url);
-        }
-        @Override public void updateDrawState(TextPaint ds) {
-            super.updateDrawState(ds);
-            ds.setUnderlineText(false);
-        }
+    private void inviteFriends() {
+
     }
+
 
     private void stripUnderlines(MessagesTextView textView) {
         if(null!=textView&&textView.getText() instanceof Spannable){
@@ -169,4 +182,15 @@ public class InviteFriendsActivity extends AppCompatActivity {
         super.onDestroy();
         getLoaderManager().destroyLoader(LOADER_ID);
     }
+
+    private class URLSpanNoUnderline extends URLSpan {
+        private URLSpanNoUnderline(String url) {
+            super(url);
+        }
+        @Override public void updateDrawState(TextPaint ds) {
+            super.updateDrawState(ds);
+            ds.setUnderlineText(false);
+        }
+    }
+
 }
