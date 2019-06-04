@@ -379,9 +379,13 @@ public class MessageBoxActivity extends AppCompatActivity implements INotificati
 
     private void removeCurrentPage(String source) {
         int position = mPager.getCurrentItem();
-        if (position == mPagerAdapter.getCount() - 1) {
+        if (!mCurrentConversationView.hasSentMessage()) {
+            return;
+        }
+
+        if (position >= mPagerAdapter.getCount() - 1) {
             finish(source);
-        } else if (mCurrentConversationView.hasSentMessage()) {
+        } else {
             mPagerAdapter.removeView(mPager, mCurrentConversationView);
             mPager.setCurrentItem(position);
             mCurrentConversationView = (MessageBoxConversationView) mPagerAdapter.getViews().get(position);
