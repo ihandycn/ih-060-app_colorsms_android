@@ -62,6 +62,7 @@ public class InviteFriendsActivity extends AppCompatActivity implements ContactP
         MessagesTextView autoLinkMessagesTextView = findViewById(R.id.invite_friends_message_auto_link);
         stripUnderlines(autoLinkMessagesTextView);
         mEditText = findViewById(R.id.invite_friends_message_text);
+        mEditText.setText(InviteFriendsTest.getSendDescription());
         mEditText.clearFocus();
 
         initRecyclerView();

@@ -53,7 +53,6 @@ public class InviteFriendsConditions {
         Preferences preferences = Preferences.get(BuglePrefs.SHARED_PREFERENCES_NAME);
         if (System.currentTimeMillis() - preferences.getLong(PREF_KEY_LAST_INVITE_FRIENDS_DIALOG_SHOW_TIME, -1L)
                 <= 12 * DateUtils.HOUR_IN_MILLIS) {
-
             if (BuildConfig.DEBUG) {
                 Toasts.showToast("invite friends dialog invalid interval ");
             }

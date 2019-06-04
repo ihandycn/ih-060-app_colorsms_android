@@ -1,5 +1,10 @@
 package com.android.messaging.ui.invitefriends;
 
+import android.content.res.Resources;
+
+import com.android.messaging.R;
+import com.ihs.app.framework.HSApplication;
+
 import net.appcloudbox.autopilot.AutopilotConfig;
 import net.appcloudbox.autopilot.AutopilotEvent;
 import net.appcloudbox.autopilot.BuildConfig;
@@ -11,7 +16,19 @@ public class InviteFriendsTest {
     private static final String DIALOG_TOPIC_ID = "topic-74oxuasmo";
 
     public static String getSendDescription() {
-        return AutopilotConfig.getStringToTestNow(SMS_TOPIC_ID, "send_description", "");
+        String type = AutopilotConfig.getStringToTestNow(SMS_TOPIC_ID, "send_description", "default");
+
+        Resources resources = HSApplication.getContext().getResources();
+        if ("default".equals(type)) {
+            return resources.getString(R.string.invite_friends_invite_default_content);
+        } else if ("high_rating".equals(type)) {
+            return resources.getString(R.string.invite_friends_high_rating_content);
+        } else if ("better_than_system".equals(type)) {
+            return resources.getString(R.string.invite_friends_better_than_system_content);
+        } else if ("help_get_reward".equals(type)) {
+            return resources.getString(R.string.invite_friends_help_get_reward_content);
+        }
+        return resources.getString(R.string.invite_friends_invite_default_content);
     }
 
     public static void logInviteSmsSent() {

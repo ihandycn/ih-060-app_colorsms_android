@@ -39,7 +39,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/toolbar"
         app:typeface="@string/custom_font_regular"
-        android:text="@string/invite_friends_invite_content" />
+        android:text="@string/invite_friends_invite_default_content" />
 
     <com.android.messaging.ui.view.MessagesTextView
         android:id="@+id/invite_friends_message_auto_link"
