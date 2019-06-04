@@ -53,14 +53,16 @@ import com.android.messaging.util.Assert;
 import com.android.messaging.util.BugleAnalytics;
 import com.android.messaging.util.CommonUtils;
 import com.android.messaging.util.ContentType;
+import com.android.messaging.util.FabricUtils;
 import com.android.messaging.util.LogUtil;
 import com.android.messaging.util.OsUtil;
 import com.android.messaging.util.UiUtils;
 import com.android.messaging.util.ViewUtils;
+import com.crashlytics.android.core.CrashlyticsCore;
 import com.ihs.app.framework.HSApplication;
 import com.ihs.commons.config.HSConfig;
 import com.ihs.commons.notificationcenter.HSGlobalNotificationCenter;
-import com.ihs.commons.utils.HSLog;
+import com.superapps.debug.CrashlyticsLog;
 import com.superapps.util.Dimensions;
 import com.superapps.util.IntegerBuckets;
 import com.superapps.util.Preferences;
@@ -134,6 +136,14 @@ public class ConversationActivity extends BugleActionBarActivity
         }
 
         mConversationId = intent.getStringExtra(UIIntents.UI_INTENT_EXTRA_CONVERSATION_ID);
+        if (TextUtils.isEmpty(mConversationId)) {
+            if (FabricUtils.isFabricInited()) {
+                CrashlyticsCore.getInstance().logException(
+                        new CrashlyticsLog("start conversation activity error : conversation id is null"));
+            }
+            finish();
+            return;
+        }
         mInstanceStateSaved = false;
 
         initActionBar();
@@ -141,8 +151,7 @@ public class ConversationActivity extends BugleActionBarActivity
         ViewUtils.setMargins(findViewById(R.id.conversation_fragment_container),
                 0, -Dimensions.getStatusBarHeight(HSApplication.getContext()), 0, 0);
 
-        // Don't animate UI state change for initial setup.
-        updateUiState(false /* animate */);
+        initConversationFragment();
 
         mContainer = findViewById(R.id.conversation_and_compose_container);
         mContainer.getViewTreeObserver().addOnGlobalLayoutListener(this);
@@ -430,7 +439,7 @@ public class ConversationActivity extends BugleActionBarActivity
         return getIntent().getStringExtra(UIIntents.UI_INTENT_EXTRA_CONVERSATION_NAME);
     }
 
-    private void updateUiState(final boolean animate) {
+    private void initConversationFragment() {
         if (mInstanceStateSaved || mIsPaused) {
             return;
         }

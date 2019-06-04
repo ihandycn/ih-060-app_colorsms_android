@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.graphics.Rect;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
+import android.text.TextUtils;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 
@@ -17,10 +18,13 @@ import com.android.messaging.ui.conversationlist.ConversationListActivity;
 import com.android.messaging.ui.messagebox.MessageBoxActivity;
 import com.android.messaging.util.Assert;
 import com.android.messaging.util.BugleAnalytics;
+import com.android.messaging.util.FabricUtils;
 import com.android.messaging.util.UiUtils;
 import com.android.messaging.util.ViewUtils;
+import com.crashlytics.android.core.CrashlyticsCore;
 import com.ihs.app.framework.HSApplication;
 import com.ihs.commons.notificationcenter.HSGlobalNotificationCenter;
+import com.superapps.debug.CrashlyticsLog;
 import com.superapps.util.Dimensions;
 import com.superapps.util.IntegerBuckets;
 import com.superapps.util.Preferences;
@@ -142,10 +146,19 @@ public class ContactPickerActivity extends BugleActionBarActivity implements
     @Override // From ContactPickerFragmentHost
     public void onGetOrCreateNewConversation(final String conversationId) {
         Assert.isTrue(conversationId != null);
-        UIIntents.get().launchConversationActivity(
-                this, conversationId, null,
-                null, false, "", true);
-        finish();
+
+        if (TextUtils.isEmpty(conversationId)) {
+            if (FabricUtils.isFabricInited()) {
+                CrashlyticsCore.getInstance().logException(
+                        new CrashlyticsLog("start conversation activity error : create conversation id is null"));
+            }
+            finish();
+        } else {
+            UIIntents.get().launchConversationActivity(
+                    this, conversationId, null,
+                    null, false, "", true);
+            finish();
+        }
     }
 
     @Override // From ContactPickerFragmentHost

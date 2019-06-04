@@ -1133,14 +1133,12 @@ public class ConversationFragment extends Fragment implements ConversationDataLi
                 SendDelayMessagesManager.remove(conversationId);
                 mComposeMessageView.unbind();
                 mBinding.unbind();
-                mConversationId = null;
             } else {
                 mComposeMessageView.setOnActionEndListener(new SendDelayActionCompletedCallBack() {
                     @Override
                     public void onSendDelayActionEnd() {
                         mComposeMessageView.unbind();
                         mBinding.unbind();
-                        mConversationId = null;
                     }
                 });
             }
