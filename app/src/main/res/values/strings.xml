@@ -1219,6 +1219,7 @@
     <string name="invite_friends_invite_auto_link_content">https://go.onelink.me/app/90cf450c</string>
     <string name="invite_friends_invite_cancel_button">Cancel</string>
     <string name="invite_friends_invite_save_button">Save</string>
+    <string name="invite_friends_invite_edit_button">Edit</string>
     <string name="invite_friends_invite_send_sms_description">Send SMS to the friend that you’d like to invite.</string>
 
     <string name="invite_friends_success_toast">Invite Success</string>

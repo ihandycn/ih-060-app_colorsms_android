@@ -48,24 +48,21 @@ public class InviteFriendsActivity extends AppCompatActivity implements ContactP
     @VisibleForTesting
     final Binding<ContactPickerData> mBinding = BindingBase.createBinding(this);
 
-
     private InviteFriendsListAdapter mAdapter;
     private PlainTextEditText mEditText;
     private TextView mInviteButton;
+
+    private String mDescription;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_invite_friends);
+
         initToolBar();
-
-        MessagesTextView autoLinkMessagesTextView = findViewById(R.id.invite_friends_message_auto_link);
-        stripUnderlines(autoLinkMessagesTextView);
-        mEditText = findViewById(R.id.invite_friends_message_text);
-        mEditText.setText(InviteFriendsTest.getSendDescription());
-        mEditText.clearFocus();
-
+        initEditText();
         initRecyclerView();
+
         mInviteButton = findViewById(R.id.invite_button);
         mInviteButton.setBackground(BackgroundDrawables.createBackgroundDrawable(PrimaryColors.getPrimaryColor(),
                 Dimensions.pxFromDp(6.7f), true));
@@ -73,7 +70,7 @@ public class InviteFriendsActivity extends AppCompatActivity implements ContactP
         mInviteButton.setVisibility(View.GONE);
         mInviteButton.setOnClickListener(v -> {
             InsertNewMessageAction.insertNewMessage(ParticipantData.DEFAULT_SELF_SUB_ID, mAdapter.getRecipients(),
-                    mEditText.getText().append(getString(R.string.invite_friends_invite_auto_link_content)).toString(), "");
+                    mDescription + getString(R.string.invite_friends_invite_auto_link_content), "");
             Toasts.showToast(R.string.invite_friends_success_toast);
 
             BugleAnalytics.logEvent("Invite_SendPage_Invite_Click");
@@ -84,7 +81,55 @@ public class InviteFriendsActivity extends AppCompatActivity implements ContactP
         });
 
         BugleAnalytics.logEvent("Invite_SendPage_Show", true, "from", getIntent().getStringExtra(INTENT_KEY_FROM));
+    }
 
+    private void initEditText() {
+        mDescription = InviteFriendsTest.getSendDescription();
+        MessagesTextView autoLinkMessagesTextView = findViewById(R.id.invite_friends_message_auto_link);
+        stripUnderlines(autoLinkMessagesTextView);
+        mEditText = findViewById(R.id.invite_friends_message_text);
+        mEditText.setText(mDescription);
+        mEditText.setEnabled(false);
+
+        View editButton = findViewById(R.id.edit_button);
+        View cancelButton = findViewById(R.id.invite_friends_invite_cancel_button);
+        View saveButton = findViewById(R.id.invite_friends_invite_save_button);
+
+        editButton.setBackground(BackgroundDrawables.createBackgroundDrawable(0xfff2f4f6,
+                Dimensions.pxFromDp(26f), false));
+        editButton.setOnClickListener(v -> {
+            makeEditTextEditable(editButton, saveButton, cancelButton);
+        });
+
+        cancelButton.setBackground(BackgroundDrawables.createBackgroundDrawable(0xfff2f4f6,
+                Dimensions.pxFromDp(26f), false));
+        cancelButton.setOnClickListener(v -> {
+            mEditText.setText(mDescription);
+            mEditText.setSelection(mEditText.getText().length());
+        });
+
+        saveButton.setBackground(BackgroundDrawables.createBackgroundDrawable(0xfff2f4f6,
+                Dimensions.pxFromDp(26f), false));
+        saveButton.setOnClickListener(v -> {
+            makeEditTextIneditable(editButton, saveButton, cancelButton);
+        });
+    }
+
+    private void makeEditTextEditable(View editButton, View saveButton, View cancelButton) {
+        editButton.setVisibility(View.GONE);
+        saveButton.setVisibility(View.VISIBLE);
+        cancelButton.setVisibility(View.VISIBLE);
+        mEditText.setEnabled(true);
+        mEditText.requestFocus();
+        mEditText.setSelection(mEditText.getText().length());
+    }
+
+    private void makeEditTextIneditable(View editButton, View saveButton, View cancelButton) {
+        editButton.setVisibility(View.VISIBLE);
+        saveButton.setVisibility(View.GONE);
+        cancelButton.setVisibility(View.GONE);
+        mDescription = mEditText.getText().toString();
+        mEditText.setEnabled(false);
     }
 
     private void initRecyclerView() {
@@ -107,7 +152,6 @@ public class InviteFriendsActivity extends AppCompatActivity implements ContactP
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-
         switch (requestCode) {
             case REQUEST_CODE_ADD_FRIENDS:
                 if (resultCode == RESULT_OK) {

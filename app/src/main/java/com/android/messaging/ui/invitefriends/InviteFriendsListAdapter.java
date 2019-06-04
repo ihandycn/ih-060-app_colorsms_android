@@ -86,7 +86,7 @@ public class InviteFriendsListAdapter extends RecyclerView.Adapter<RecyclerView.
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
         if (holder instanceof ViewHolder) {
             if (position == 0) {
-                ((ViewHolder) holder).mContactIcon.setImageResource(R.drawable.ic_add_gray);
+                ((ViewHolder) holder).mContactIcon.setImageResource(R.drawable.ic_add_black);
                 ((ViewHolder) holder).mContactIcon.setBackgroundResource(R.drawable.gray_circle_btn_bg_drawable);
                 ((ViewHolder) holder).mContactIcon.setOnClickListener(v -> {
                     Intent intent = new Intent(mActivity, SelectFriendsToInviteActivity.class);
