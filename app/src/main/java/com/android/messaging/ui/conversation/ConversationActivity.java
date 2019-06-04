@@ -306,7 +306,9 @@ public class ConversationActivity extends BugleActionBarActivity
         if (mUiState != null) {
             mUiState.setHost(null);
         }
-        mContainer.getViewTreeObserver().removeOnGlobalLayoutListener(this);
+        if (mContainer != null) {
+            mContainer.getViewTreeObserver().removeOnGlobalLayoutListener(this);
+        }
     }
 
     @Override

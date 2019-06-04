@@ -12,6 +12,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.airbnb.lottie.LottieAnimationView;
 import com.android.messaging.R;
 import com.android.messaging.ui.customize.PrimaryColors;
 import com.android.messaging.util.BugleAnalytics;
@@ -70,6 +71,8 @@ public class InviteFriendsRewardDialogActivity extends AppCompatActivity {
 
         String title;
         String description;
+        String lottieJsonPath;
+        String lottieImagePath;
 
         if ("default".equals(type)) {
             title = getString(R.string.invite_friends_default_back_to_main_page_title);
@@ -79,15 +82,32 @@ public class InviteFriendsRewardDialogActivity extends AppCompatActivity {
 
         if ("freesms".equals(type)) {
             description = getString(R.string.invite_friends_bonus_free_sms_description);
+            lottieJsonPath = "lottie/invite_friends/freesms/data.json";
+            lottieImagePath = "lottie/invite_friends/freesms/images/";
         } else if ("adfree".equals(type)) {
             description = getString(R.string.invite_friends_bonus_ad_free_description);
+
+            lottieJsonPath = "lottie/invite_friends/freead/data.json";
+            lottieImagePath = "lottie/invite_friends/freead/images/";
         } else if ("unlocktheme".equals(type)) {
             description = getString(R.string.invite_friends_bonus_unlock_theme_description);
+
+            lottieJsonPath = "lottie/invite_friends/unlocktheme/data.json";
+            lottieImagePath = "lottie/invite_friends/unlocktheme/images/";
         } else {
             description = getString(R.string.invite_friends_default_back_to_main_page_description);
+            lottieJsonPath = "lottie/invite_friends/default/data.json";
+            lottieImagePath = "lottie/invite_friends/default/images/";
         }
 
         titleTv.setText(title);
         descriptionTv.setText(description);
+
+
+        LottieAnimationView lottieAnimationView = findViewById(R.id.lottie_animation_view);
+        lottieAnimationView.setImageAssetsFolder(lottieImagePath);
+        lottieAnimationView.setAnimation(lottieJsonPath);
+        lottieAnimationView.loop(true);
+        lottieAnimationView.playAnimation();
     }
 }

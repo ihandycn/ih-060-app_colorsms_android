@@ -7,7 +7,7 @@
     android:alpha="0.95"
     android:background="@color/black_40_transparent">
 
-    <LinearLayout
+    <FrameLayout
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -16,17 +16,13 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintWidth_percent="0.80"
         android:orientation="vertical">
-        
-        <com.airbnb.lottie.LottieAnimationView
-            android:layout_width="match_parent"
-            android:layout_height="225dp"
-            android:layout_marginBottom="-45dp"/>
 
 
         <LinearLayout
             android:id="@+id/main_content"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginTop="170dp"
             tools:background="@drawable/white_corner_background"
             android:orientation="vertical">
 
@@ -84,6 +80,12 @@
 
         </LinearLayout>
 
-    </LinearLayout>
+        <com.airbnb.lottie.LottieAnimationView
+            android:id="@+id/lottie_animation_view"
+            android:layout_width="match_parent"
+            android:layout_height="225dp" />
+
+
+    </FrameLayout>
 
 </android.support.constraint.ConstraintLayout>
