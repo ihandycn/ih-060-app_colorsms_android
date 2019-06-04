@@ -104,6 +104,7 @@ import java.util.Random;
 
 import static com.android.messaging.ui.dialog.FiveStarRateDialog.DESKTOP_PREFS;
 import static com.android.messaging.ui.dialog.FiveStarRateDialog.PREF_KEY_MAIN_ACTIVITY_SHOW_TIME;
+import static com.android.messaging.ui.invitefriends.InviteFriendsActivity.INTENT_KEY_FROM;
 import static com.android.messaging.ui.invitefriends.InviteFriendsConditions.CHANGE_THEME;
 import static com.android.messaging.ui.invitefriends.InviteFriendsConditions.SHOW_INVITE_FRIENDS_DIALOG_AFTER_CHANGE_THEME_10_SECS;
 
@@ -466,6 +467,7 @@ public class ConversationListActivity extends AbstractConversationListActivity
                     case DRAWER_INDEX_INVITE_FRIENDS:
                         BugleAnalytics.logEvent("Menu_InviteFriends_Click");
                         Intent inviteFriendsIntent = new Intent(ConversationListActivity.this, InviteFriendsActivity.class);
+                        inviteFriendsIntent.putExtra(INTENT_KEY_FROM, "menu");
                         startActivity(inviteFriendsIntent);
                         break;
                     case DRAWER_INDEX_RATE:

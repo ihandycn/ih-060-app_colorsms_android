@@ -14,10 +14,16 @@ import android.widget.TextView;
 
 import com.android.messaging.R;
 import com.android.messaging.ui.customize.PrimaryColors;
+import com.android.messaging.util.BugleAnalytics;
 import com.superapps.util.BackgroundDrawables;
 import com.superapps.util.Dimensions;
 
+import static com.android.messaging.ui.invitefriends.InviteFriendsActivity.INTENT_KEY_FROM;
+
 public class InviteFriendsRewardDialogActivity extends AppCompatActivity {
+
+    public static final String INTENT_KEY_TIME = "INTENT_KEY_TIME";
+    public static final String INTENT_KEY_OCCASION = "INTENT_KEY_OCCASION";
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -44,10 +50,14 @@ public class InviteFriendsRewardDialogActivity extends AppCompatActivity {
         inviteButton.setBackground(BackgroundDrawables.createBackgroundDrawable(PrimaryColors.getPrimaryColor(),
                 Dimensions.pxFromDp(20f), true));
         inviteButton.setOnClickListener(v -> {
-            Intent Intent = new Intent(InviteFriendsRewardDialogActivity.this, InviteFriendsActivity.class);
-            startActivity(Intent);
+            Intent intent = new Intent(InviteFriendsRewardDialogActivity.this, InviteFriendsActivity.class);
+            intent.putExtra(INTENT_KEY_FROM, "guide_alert");
+            startActivity(intent);
             finish();
             InviteFriendsTest.logGuideAlertClick();
+            BugleAnalytics.logEvent("Invite_GuideAlert_Click", true,
+                    "time", getIntent().getStringExtra(INTENT_KEY_TIME),
+                    "occasion", getIntent().getStringExtra(INTENT_KEY_OCCASION));
         });
 
         InviteFriendsTest.logGuideAlertShow();

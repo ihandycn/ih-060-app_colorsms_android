@@ -14,6 +14,7 @@ import android.widget.TextView;
 import com.android.messaging.R;
 import com.android.messaging.glide.GlideApp;
 import com.android.messaging.privatebox.ui.addtolist.CallAssistantUtils;
+import com.android.messaging.util.BugleAnalytics;
 
 import java.util.List;
 
@@ -74,6 +75,7 @@ public class InviteFriendsListAdapter extends RecyclerView.Adapter<RecyclerView.
                 int target = viewHolder.getAdapterPosition();
                 mContactInfos.remove(target - 1);
                 notifyItemRemoved(target);
+                BugleAnalytics.logEvent("Invite_SendPage_Delete_Click");
             }
         });
         return viewHolder;
@@ -88,6 +90,8 @@ public class InviteFriendsListAdapter extends RecyclerView.Adapter<RecyclerView.
                 ((ViewHolder) holder).mContactIcon.setOnClickListener(v -> {
                     Intent intent = new Intent(mActivity, SelectFriendsToInviteActivity.class);
                     mActivity.startActivityForResult(intent, REQUEST_CODE_ADD_FRIENDS);
+                    BugleAnalytics.logEvent("Invite_SendPage_Add_Click");
+
                 });
                 ((ViewHolder) holder).mDeleteBtn.setVisibility(View.GONE);
             } else {

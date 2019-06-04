@@ -1,10 +1,7 @@
 package com.android.messaging.ui.invitefriends;
 
-import android.app.LoaderManager;
 import android.content.Intent;
-import android.content.Loader;
 import android.database.Cursor;
-import android.database.DatabaseUtils;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
@@ -13,7 +10,6 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.text.Spannable;
 import android.text.TextPaint;
-import android.text.TextUtils;
 import android.text.style.URLSpan;
 import android.view.MenuItem;
 import android.view.View;
@@ -21,8 +17,6 @@ import android.widget.TextView;
 
 import com.android.messaging.R;
 import com.android.messaging.datamodel.DataModel;
-import com.android.messaging.datamodel.FrequentContactsCursorBuilder;
-import com.android.messaging.datamodel.action.GetOrCreateConversationAction;
 import com.android.messaging.datamodel.action.InsertNewMessageAction;
 import com.android.messaging.datamodel.binding.Binding;
 import com.android.messaging.datamodel.binding.BindingBase;
@@ -32,6 +26,7 @@ import com.android.messaging.privatebox.ui.addtolist.CallAssistantUtils;
 import com.android.messaging.ui.PlainTextEditText;
 import com.android.messaging.ui.customize.PrimaryColors;
 import com.android.messaging.ui.view.MessagesTextView;
+import com.android.messaging.util.BugleAnalytics;
 import com.android.messaging.util.ContactUtil;
 import com.android.messaging.util.PhoneUtils;
 import com.android.messaging.util.UiUtils;
@@ -39,15 +34,14 @@ import com.google.common.annotations.VisibleForTesting;
 import com.ihs.commons.utils.HSLog;
 import com.superapps.util.BackgroundDrawables;
 import com.superapps.util.Dimensions;
-import com.superapps.util.Threads;
 import com.superapps.util.Toasts;
 
 import java.util.ArrayList;
 
 public class InviteFriendsActivity extends AppCompatActivity implements ContactPickerData.ContactPickerDataListener {
 
-    private static final String BINDING_ID = "bindingId";
-    private static final int LOADER_ID = 1;
+    public static final String INTENT_KEY_FROM = "from";
+
     static final int REQUEST_CODE_ADD_FRIENDS = 12;
 
     @VisibleForTesting
@@ -75,15 +69,21 @@ public class InviteFriendsActivity extends AppCompatActivity implements ContactP
                 Dimensions.pxFromDp(6.7f), true));
 
         mInviteButton.setOnClickListener(v -> {
+            BugleAnalytics.logEvent("Invite_SendPage_Invite_Click");
+
             HSLog.d("ContactPicker_InviteFriendsActivity_", mAdapter.getRecipients());
             InsertNewMessageAction.insertNewMessage(ParticipantData.DEFAULT_SELF_SUB_ID, mAdapter.getRecipients(),
                     mEditText.getText().append(getString(R.string.invite_friends_invite_auto_link_content)).toString(), "");
 
             Toasts.showToast(R.string.invite_friends_success_toast);
+
+            BugleAnalytics.logEvent("Invite_SMS_Send");
 //            InviteFriendsTest.logInviteFriendsClick();
 //            InviteFriendsTest.logInviteSmsSent();
             finish();
         });
+
+        BugleAnalytics.logEvent("Invite_SendPage_Show", true, "from", getIntent().getStringExtra(INTENT_KEY_FROM));
 
     }
 
