@@ -147,6 +147,9 @@ public class ConversationListData extends BindableData
     @Override
     public void onLoaderReset(final Loader<Cursor> generic) {
         final BoundCursorLoader loader = (BoundCursorLoader) generic;
+        if (mListener == null) {
+            return;
+        }
         if (isBound(loader.getBindingId())) {
             switch (loader.getId()) {
                 case BLOCKED_PARTICIPANTS_AVAILABLE_LOADER:
