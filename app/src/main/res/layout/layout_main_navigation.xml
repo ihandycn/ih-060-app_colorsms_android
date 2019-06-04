@@ -199,7 +199,7 @@
 
                 <android.support.v7.widget.AppCompatImageView
                     style="@style/DrawerMenuIcon"
-                    app:srcCompat="@drawable/ic_menu_rate"/>
+                    app:srcCompat="@drawable/ic_menu_invite_friends"/>
 
                 <com.android.messaging.ui.view.MessagesTextView
                     style="@style/DrawerMenuTitle"
