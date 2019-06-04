@@ -301,7 +301,9 @@ public class ConversationActivity extends BugleActionBarActivity
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        mContainer.getViewTreeObserver().removeOnGlobalLayoutListener(this);
+        if (mContainer != null) {
+            mContainer.getViewTreeObserver().removeOnGlobalLayoutListener(this);
+        }
     }
 
     @Override
