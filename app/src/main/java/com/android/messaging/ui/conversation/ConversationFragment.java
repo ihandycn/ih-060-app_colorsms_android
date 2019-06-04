@@ -1125,7 +1125,6 @@ public class ConversationFragment extends Fragment implements ConversationDataLi
         mIsDestroyed = true;
         // Unbind all the views that we bound to data
 
-
         if (mComposeMessageView != null) {
             // if we have message to send in a delay time, unbind data until message is sent
             String conversationId = mBinding.getData().getConversationId();
