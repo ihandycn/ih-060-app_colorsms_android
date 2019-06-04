@@ -4,6 +4,7 @@ import android.app.LoaderManager;
 import android.content.Intent;
 import android.content.Loader;
 import android.database.Cursor;
+import android.database.DatabaseUtils;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
@@ -19,7 +20,13 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.android.messaging.R;
+import com.android.messaging.datamodel.DataModel;
+import com.android.messaging.datamodel.FrequentContactsCursorBuilder;
+import com.android.messaging.datamodel.action.GetOrCreateConversationAction;
 import com.android.messaging.datamodel.action.InsertNewMessageAction;
+import com.android.messaging.datamodel.binding.Binding;
+import com.android.messaging.datamodel.binding.BindingBase;
+import com.android.messaging.datamodel.data.ContactPickerData;
 import com.android.messaging.datamodel.data.ParticipantData;
 import com.android.messaging.privatebox.ui.addtolist.CallAssistantUtils;
 import com.android.messaging.ui.PlainTextEditText;
@@ -28,17 +35,24 @@ import com.android.messaging.ui.view.MessagesTextView;
 import com.android.messaging.util.ContactUtil;
 import com.android.messaging.util.PhoneUtils;
 import com.android.messaging.util.UiUtils;
+import com.google.common.annotations.VisibleForTesting;
 import com.ihs.commons.utils.HSLog;
 import com.superapps.util.BackgroundDrawables;
 import com.superapps.util.Dimensions;
+import com.superapps.util.Threads;
+import com.superapps.util.Toasts;
 
 import java.util.ArrayList;
 
-public class InviteFriendsActivity extends AppCompatActivity {
+public class InviteFriendsActivity extends AppCompatActivity implements ContactPickerData.ContactPickerDataListener {
 
     private static final String BINDING_ID = "bindingId";
     private static final int LOADER_ID = 1;
     static final int REQUEST_CODE_ADD_FRIENDS = 12;
+
+    @VisibleForTesting
+    final Binding<ContactPickerData> mBinding = BindingBase.createBinding(this);
+
 
     private InviteFriendsListAdapter mAdapter;
     private PlainTextEditText mEditText;
@@ -62,13 +76,15 @@ public class InviteFriendsActivity extends AppCompatActivity {
 
         mInviteButton.setOnClickListener(v -> {
             HSLog.d("ContactPicker_InviteFriendsActivity_", mAdapter.getRecipients());
-//            InsertNewMessageAction.insertNewMessage(ParticipantData.DEFAULT_SELF_SUB_ID, mAdapter.getRecipients(),
-//                    mEditText.getText().append(getString(R.string.invite_friends_invite_auto_link_content)).toString(), "");
-//
+            InsertNewMessageAction.insertNewMessage(ParticipantData.DEFAULT_SELF_SUB_ID, mAdapter.getRecipients(),
+                    mEditText.getText().append(getString(R.string.invite_friends_invite_auto_link_content)).toString(), "");
+
+            Toasts.showToast(R.string.invite_friends_success_toast);
 //            InviteFriendsTest.logInviteFriendsClick();
 //            InviteFriendsTest.logInviteSmsSent();
-//            finish();
+            finish();
         });
+
     }
 
     private void initRecyclerView() {
@@ -81,43 +97,11 @@ public class InviteFriendsActivity extends AppCompatActivity {
         recyclerView.setAdapter(mAdapter);
         recyclerView.setOverScrollMode(View.OVER_SCROLL_NEVER);
 
-        final Bundle args = new Bundle();
-        getLoaderManager().initLoader(LOADER_ID, args, new LoaderManager.LoaderCallbacks<Cursor>() {
-            @Override
-            public Loader<Cursor> onCreateLoader(int id, Bundle args) {
 
-                return ContactUtil.getFrequentContacts(InviteFriendsActivity.this)
-                        .createBoundCursorLoader(BINDING_ID);
-            }
-
-            @Override
-            public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
-                if (data == null) {
-                    return;
-                }
-                HSLog.d("ContactPicker_InviteFriendsActivity_", "" + data.getCount());
-
-                ArrayList<CallAssistantUtils.ContactInfo> contactInfos = new ArrayList<>(data.getCount());
-                if (data.moveToFirst()) {
-                    while (data.moveToNext()) {
-                        final String displayName = data.getString(ContactUtil.INDEX_DISPLAY_NAME);
-
-                        final String photoThumbnailUri = data.getString(ContactUtil.INDEX_PHOTO_URI);
-
-                        final String destination = data.getString(ContactUtil.INDEX_PHONE_EMAIL);
-
-                        HSLog.d("ContactPicker_InviteFriendsActivity_", PhoneUtils.getDefault().formatForDisplay(destination));
-                        contactInfos.add(new CallAssistantUtils.ContactInfo(displayName, destination, photoThumbnailUri));
-                    }
-                }
-                mAdapter.initData(contactInfos);
-            }
-
-            @Override
-            public void onLoaderReset(Loader<Cursor> loader) {
-
-            }
-        });
+        if (ContactUtil.hasReadContactsPermission()) {
+            mBinding.bind(DataModel.get().createContactPickerData(this, this));
+            mBinding.getData().init(getLoaderManager(), mBinding);
+        }
     }
 
     @Override
@@ -132,11 +116,6 @@ public class InviteFriendsActivity extends AppCompatActivity {
                 break;
         }
     }
-
-    private void inviteFriends() {
-
-    }
-
 
     private void stripUnderlines(MessagesTextView textView) {
         if(null!=textView&&textView.getText() instanceof Spannable){
@@ -169,6 +148,38 @@ public class InviteFriendsActivity extends AppCompatActivity {
     }
 
     @Override
+    public void onAllContactsCursorUpdated(Cursor data) {
+
+    }
+
+    @Override
+    public void onFrequentContactsCursorUpdated(Cursor data) {
+
+        if (data == null) {
+            return;
+        }
+
+        ArrayList<CallAssistantUtils.ContactInfo> contactInfos = new ArrayList<>(data.getCount());
+        if (data.moveToFirst()) {
+            while (data.moveToNext()) {
+
+                final String displayName = data.getString(ContactUtil.INDEX_DISPLAY_NAME);
+                final String photoThumbnailUri = data.getString(ContactUtil.INDEX_PHOTO_URI);
+                final String destination = data.getString(ContactUtil.INDEX_PHONE_EMAIL);
+
+                HSLog.d("ContactPicker_InviteFriendsActivity_", PhoneUtils.getDefault().formatForDisplay(destination));
+                contactInfos.add(new CallAssistantUtils.ContactInfo(displayName, destination, photoThumbnailUri));
+            }
+        }
+        mAdapter.initData(contactInfos);
+    }
+
+    @Override
+    public void onContactCustomColorLoaded(ContactPickerData data) {
+
+    }
+
+    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == android.R.id.home) {
             onBackPressed();
@@ -180,7 +191,9 @@ public class InviteFriendsActivity extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        getLoaderManager().destroyLoader(LOADER_ID);
+        if (mBinding.isBound()) {
+            mBinding.unbind();
+        }
     }
 
     private class URLSpanNoUnderline extends URLSpan {
@@ -192,5 +205,4 @@ public class InviteFriendsActivity extends AppCompatActivity {
             ds.setUnderlineText(false);
         }
     }
-
 }

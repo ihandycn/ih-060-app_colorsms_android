@@ -14,6 +14,9 @@ public class InviteFriendsTest {
     }
 
     public static void logInviteSmsSent() {
+        if (BuildConfig.DEBUG) {
+            getSendDescription();
+        }
         AutopilotEvent.logTopicEvent(SMS_TOPIC_ID, "invite_sms_send");
     }
 
@@ -26,17 +29,12 @@ public class InviteFriendsTest {
     }
 
     public static void logGuideAlertClick() {
-        if (BuildConfig.DEBUG) {
-            getSendDescription();
 
-        }
 //        AutopilotEvent.logTopicEvent(DIALOG_TOPIC_ID, "guide_alert_click");
     }
 
     public static void logInviteFriendsClick() {
-        if (BuildConfig.DEBUG) {
-            getAlertType();
-        }
+
 //        AutopilotEvent.logTopicEvent(DIALOG_TOPIC_ID, "invite_send_click");
     }
 
