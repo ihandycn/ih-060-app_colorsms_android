@@ -8,7 +8,9 @@ import android.text.format.DateUtils;
 import com.android.messaging.BuildConfig;
 import com.android.messaging.util.BugleAnalytics;
 import com.android.messaging.util.BuglePrefs;
+import com.google.common.hash.HashCode;
 import com.ihs.app.framework.HSApplication;
+import com.ihs.commons.config.HSConfig;
 import com.superapps.util.Preferences;
 import com.superapps.util.Toasts;
 
@@ -33,6 +35,14 @@ public class InviteFriendsConditions {
     }
 
     public static boolean showInviteFriendsDialogIfProper(Activity activity, @InviteFriendsTiming int timing) {
+        if (!HSConfig.optBoolean(false, "Application", "InviteFriendsGuide")) {
+            if (BuildConfig.DEBUG) {
+                Toasts.showToast("invite friends dialog config disabled");
+            }
+            return false;
+        }
+
+
         if (HSApplication.getFirstLaunchInfo().appVersionCode < 52) {
             if (BuildConfig.DEBUG) {
                 Toasts.showToast("first install version code is too old");

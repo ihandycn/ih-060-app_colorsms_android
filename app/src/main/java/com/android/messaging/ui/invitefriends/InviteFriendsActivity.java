@@ -31,6 +31,7 @@ import com.android.messaging.util.ContactUtil;
 import com.android.messaging.util.PhoneUtils;
 import com.android.messaging.util.UiUtils;
 import com.google.common.annotations.VisibleForTesting;
+import com.ihs.commons.config.HSConfig;
 import com.ihs.commons.utils.HSLog;
 import com.superapps.util.BackgroundDrawables;
 import com.superapps.util.Dimensions;
@@ -68,16 +69,15 @@ public class InviteFriendsActivity extends AppCompatActivity implements ContactP
         mInviteButton.setBackground(BackgroundDrawables.createBackgroundDrawable(PrimaryColors.getPrimaryColor(),
                 Dimensions.pxFromDp(6.7f), true));
 
+        mInviteButton.setVisibility(View.GONE);
         mInviteButton.setOnClickListener(v -> {
-            BugleAnalytics.logEvent("Invite_SendPage_Invite_Click");
-
             InsertNewMessageAction.insertNewMessage(ParticipantData.DEFAULT_SELF_SUB_ID, mAdapter.getRecipients(),
                     mEditText.getText().append(getString(R.string.invite_friends_invite_auto_link_content)).toString(), "");
-
             Toasts.showToast(R.string.invite_friends_success_toast);
 
+            BugleAnalytics.logEvent("Invite_SendPage_Invite_Click");
             BugleAnalytics.logEvent("Invite_SMS_Send");
-//            InviteFriendsTest.logInviteFriendsClick();
+            InviteFriendsTest.logInviteFriendsClick();
 //            InviteFriendsTest.logInviteSmsSent();
             finish();
         });
@@ -153,7 +153,6 @@ public class InviteFriendsActivity extends AppCompatActivity implements ContactP
 
     @Override
     public void onFrequentContactsCursorUpdated(Cursor data) {
-
         if (data == null) {
             return;
         }
@@ -161,16 +160,19 @@ public class InviteFriendsActivity extends AppCompatActivity implements ContactP
         ArrayList<CallAssistantUtils.ContactInfo> contactInfos = new ArrayList<>(data.getCount());
         if (data.moveToFirst()) {
             while (data.moveToNext()) {
-
                 final String displayName = data.getString(ContactUtil.INDEX_DISPLAY_NAME);
                 final String photoThumbnailUri = data.getString(ContactUtil.INDEX_PHOTO_URI);
                 final String destination = data.getString(ContactUtil.INDEX_PHONE_EMAIL);
-
-                HSLog.d("ContactPicker_InviteFriendsActivity_", PhoneUtils.getDefault().formatForDisplay(destination));
                 contactInfos.add(new CallAssistantUtils.ContactInfo(displayName, destination, photoThumbnailUri));
             }
         }
-        mAdapter.initData(contactInfos);
+
+        int count = Math.min(contactInfos.size(), HSConfig.optInteger(5, "Application", "CheckContactNum"));
+        if (count > 0) {
+            mInviteButton.setText(String.format(getString(R.string.invite_friends_invite), count));
+            mInviteButton.setVisibility(View.VISIBLE);
+            mAdapter.initData(contactInfos.subList(0, count));
+        }
     }
 
     @Override

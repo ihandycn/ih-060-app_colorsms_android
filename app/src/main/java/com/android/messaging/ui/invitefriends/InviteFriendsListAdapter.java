@@ -16,6 +16,7 @@ import com.android.messaging.glide.GlideApp;
 import com.android.messaging.privatebox.ui.addtolist.CallAssistantUtils;
 import com.android.messaging.util.BugleAnalytics;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import static com.android.messaging.ui.invitefriends.InviteFriendsActivity.REQUEST_CODE_ADD_FRIENDS;
@@ -24,7 +25,7 @@ public class InviteFriendsListAdapter extends RecyclerView.Adapter<RecyclerView.
 
     private Activity mActivity;
 
-    private List<CallAssistantUtils.ContactInfo> mContactInfos;
+    private List<CallAssistantUtils.ContactInfo> mContactInfos = new ArrayList<>();
 
     public InviteFriendsListAdapter(Activity activity) {
         mActivity = activity;
@@ -104,7 +105,7 @@ public class InviteFriendsListAdapter extends RecyclerView.Adapter<RecyclerView.
 
     @Override
     public int getItemCount() {
-        return (mContactInfos == null ? 0 : mContactInfos.size()) + 1;
+        return mContactInfos.size() + 1;
     }
 
     private static class ViewHolder extends RecyclerView.ViewHolder {

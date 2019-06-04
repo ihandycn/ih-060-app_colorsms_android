@@ -1199,6 +1199,9 @@
     <string name="menu_invite_friends">Invite Friends</string>
     <string name="invite_friends_now">INVITE NOW</string>
 
+    <string name="invite_friends_invite">INVITE (%d)</string>
+    <string name="invite_friends_add">ADD (%d)</string>
+
     <string name="invite_friends_default_back_to_main_page_title">Invite Friends</string>
     <string name="invite_friends_default_back_to_main_page_description">Is it amazing? You can customize everywhere you want! Tell your friends Now</string>
     <string name="invite_friends_default_apply_theme_description">Love these awesome themes? Tell your friends and let them join you!</string>

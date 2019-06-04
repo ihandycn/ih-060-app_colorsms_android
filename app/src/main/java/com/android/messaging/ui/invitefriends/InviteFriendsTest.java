@@ -7,6 +7,7 @@ import net.appcloudbox.autopilot.BuildConfig;
 public class InviteFriendsTest {
 
     private static final String SMS_TOPIC_ID = "topic-74rv6bpwy";
+
     private static final String DIALOG_TOPIC_ID = "topic-74oxuasmo";
 
     public static String getSendDescription() {
@@ -29,13 +30,14 @@ public class InviteFriendsTest {
     }
 
     public static void logGuideAlertClick() {
-
-//        AutopilotEvent.logTopicEvent(DIALOG_TOPIC_ID, "guide_alert_click");
+        AutopilotEvent.logTopicEvent(DIALOG_TOPIC_ID, "guide_alert_click");
     }
 
     public static void logInviteFriendsClick() {
-
-//        AutopilotEvent.logTopicEvent(DIALOG_TOPIC_ID, "invite_send_click");
+        if (BuildConfig.DEBUG) {
+            getAlertType();
+        }
+        AutopilotEvent.logTopicEvent(DIALOG_TOPIC_ID, "invite_send_click");
     }
 
 }

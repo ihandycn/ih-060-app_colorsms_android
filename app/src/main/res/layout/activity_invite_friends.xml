@@ -131,6 +131,7 @@
         android:layout_marginLeft="16dp"
         android:layout_marginRight="16dp"
         android:gravity="center"
+        android:layout_marginBottom="9dp"
         android:includeFontPadding="false"
         android:text="@string/dialog_add_contact_confirmation"
         android:textColor="@android:color/white"
