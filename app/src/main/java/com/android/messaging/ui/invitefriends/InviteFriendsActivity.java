@@ -2,6 +2,7 @@ package com.android.messaging.ui.invitefriends;
 
 import android.content.Intent;
 import android.database.Cursor;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
@@ -10,6 +11,7 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.text.Spannable;
 import android.text.TextPaint;
+import android.text.TextUtils;
 import android.text.style.URLSpan;
 import android.view.MenuItem;
 import android.view.View;
@@ -21,15 +23,21 @@ import com.android.messaging.datamodel.action.InsertNewMessageAction;
 import com.android.messaging.datamodel.binding.Binding;
 import com.android.messaging.datamodel.binding.BindingBase;
 import com.android.messaging.datamodel.data.ContactPickerData;
+import com.android.messaging.datamodel.data.ConversationListData;
+import com.android.messaging.datamodel.data.ConversationListItemData;
 import com.android.messaging.datamodel.data.ParticipantData;
 import com.android.messaging.privatebox.ui.addtolist.CallAssistantUtils;
 import com.android.messaging.ui.PlainTextEditText;
 import com.android.messaging.ui.customize.PrimaryColors;
 import com.android.messaging.ui.view.MessagesTextView;
+import com.android.messaging.util.Assert;
+import com.android.messaging.util.AvatarUriUtil;
 import com.android.messaging.util.BugleAnalytics;
 import com.android.messaging.util.ContactUtil;
 import com.android.messaging.util.PhoneUtils;
+import com.android.messaging.util.TextUtil;
 import com.android.messaging.util.UiUtils;
+import com.android.messaging.util.UriUtil;
 import com.google.common.annotations.VisibleForTesting;
 import com.ihs.commons.config.HSConfig;
 import com.ihs.commons.utils.HSLog;
@@ -39,14 +47,16 @@ import com.superapps.util.Toasts;
 
 import java.util.ArrayList;
 
-public class InviteFriendsActivity extends AppCompatActivity implements ContactPickerData.ContactPickerDataListener {
+import static com.android.messaging.datamodel.data.ConversationListItemData.INDEX_CONVERSATION_ICON;
+
+public class InviteFriendsActivity extends AppCompatActivity implements ConversationListData.ConversationListDataListener {
 
     public static final String INTENT_KEY_FROM = "from";
 
     static final int REQUEST_CODE_ADD_FRIENDS = 12;
 
     @VisibleForTesting
-    final Binding<ContactPickerData> mBinding = BindingBase.createBinding(this);
+    final Binding<ConversationListData> mBinding = BindingBase.createBinding(this);
 
     private InviteFriendsListAdapter mAdapter;
     private PlainTextEditText mEditText;
@@ -152,7 +162,7 @@ public class InviteFriendsActivity extends AppCompatActivity implements ContactP
         });
 
         if (ContactUtil.hasReadContactsPermission()) {
-            mBinding.bind(DataModel.get().createContactPickerData(this, this));
+            mBinding.bind(DataModel.get().createConversationListData(this, this, false));
             mBinding.getData().init(getLoaderManager(), mBinding);
         }
     }
@@ -200,39 +210,6 @@ public class InviteFriendsActivity extends AppCompatActivity implements ContactP
     }
 
     @Override
-    public void onAllContactsCursorUpdated(Cursor data) {
-
-    }
-
-    @Override
-    public void onFrequentContactsCursorUpdated(Cursor data) {
-        if (data == null) {
-            return;
-        }
-
-        ArrayList<CallAssistantUtils.ContactInfo> contactInfos = new ArrayList<>(data.getCount());
-        if (data.moveToFirst()) {
-            while (data.moveToNext()) {
-                final String displayName = data.getString(ContactUtil.INDEX_DISPLAY_NAME);
-                final String photoThumbnailUri = data.getString(ContactUtil.INDEX_PHOTO_URI);
-                final String destination = data.getString(ContactUtil.INDEX_PHONE_EMAIL);
-                contactInfos.add(new CallAssistantUtils.ContactInfo(displayName, destination, photoThumbnailUri));
-            }
-        }
-
-        int count = Math.min(contactInfos.size(), HSConfig.optInteger(5, "Application", "CheckContactNum"));
-        if (count > 0) {
-
-            mAdapter.initData(contactInfos.subList(0, count));
-        }
-    }
-
-    @Override
-    public void onContactCustomColorLoaded(ContactPickerData data) {
-
-    }
-
-    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == android.R.id.home) {
             onBackPressed();
@@ -247,6 +224,47 @@ public class InviteFriendsActivity extends AppCompatActivity implements ContactP
         if (mBinding.isBound()) {
             mBinding.unbind();
         }
+    }
+
+    @Override
+    public void onConversationListCursorUpdated(ConversationListData data, Cursor cursor) {
+        if (cursor != null && cursor.moveToFirst()) {
+            ArrayList<CallAssistantUtils.ContactInfo> contactInfos = new ArrayList<>();
+            int count = HSConfig.optInteger(5, "Application", "CheckContactNum");
+
+            int dataCount = 0;
+            do {
+                ConversationListItemData itemData = new ConversationListItemData();
+                itemData.bind(cursor);
+                if (itemData.getIsGroup() || TextUtils.isEmpty(itemData.getOtherParticipantNormalizedDestination())) {
+                    continue;
+                }
+
+                String uri = "";
+                if (!TextUtils.isEmpty(itemData.getIcon())) {
+                    Uri primaryUri = AvatarUriUtil.getPrimaryUri(Uri.parse(itemData.getIcon()));
+                    if (primaryUri != null) {
+                        uri = primaryUri.toString();
+                    }
+                }
+                contactInfos.add(new CallAssistantUtils.ContactInfo(itemData.getName(),
+                        itemData.getOtherParticipantNormalizedDestination(), uri));
+                if (dataCount == count) {
+                    break;
+                }
+                HSLog.d("InviteFriends, onConversationListCursorUpdated");
+            } while (cursor.moveToNext());
+
+
+            if (count > 0) {
+                mAdapter.initData(contactInfos.subList(0, count));
+            }
+        }
+    }
+
+    @Override
+    public void setBlockedParticipantsAvailable(boolean blockedAvailable) {
+
     }
 
     private class URLSpanNoUnderline extends URLSpan {
