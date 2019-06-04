@@ -70,7 +70,7 @@ public class InviteFriendsActivity extends AppCompatActivity implements ContactP
         mInviteButton.setVisibility(View.GONE);
         mInviteButton.setOnClickListener(v -> {
             InsertNewMessageAction.insertNewMessage(ParticipantData.DEFAULT_SELF_SUB_ID, mAdapter.getRecipients(),
-                    mDescription + getString(R.string.invite_friends_invite_auto_link_content), "");
+                    mDescription + InviteFriendsTest.getSendLink(), "");
             Toasts.showToast(R.string.invite_friends_success_toast);
 
             BugleAnalytics.logEvent("Invite_SendPage_Invite_Click");
@@ -86,6 +86,7 @@ public class InviteFriendsActivity extends AppCompatActivity implements ContactP
     private void initEditText() {
         mDescription = InviteFriendsTest.getSendDescription();
         MessagesTextView autoLinkMessagesTextView = findViewById(R.id.invite_friends_message_auto_link);
+        autoLinkMessagesTextView.setText(InviteFriendsTest.getSendLink());
         stripUnderlines(autoLinkMessagesTextView);
         mEditText = findViewById(R.id.invite_friends_message_text);
         mEditText.setText(mDescription);
@@ -111,7 +112,7 @@ public class InviteFriendsActivity extends AppCompatActivity implements ContactP
         saveButton.setBackground(BackgroundDrawables.createBackgroundDrawable(0xfff2f4f6,
                 Dimensions.pxFromDp(26f), false));
         saveButton.setOnClickListener(v -> {
-            makeEditTextIneditable(editButton, saveButton, cancelButton);
+            makeEditTextUneditable(editButton, saveButton, cancelButton);
         });
     }
 
@@ -124,7 +125,7 @@ public class InviteFriendsActivity extends AppCompatActivity implements ContactP
         mEditText.setSelection(mEditText.getText().length());
     }
 
-    private void makeEditTextIneditable(View editButton, View saveButton, View cancelButton) {
+    private void makeEditTextUneditable(View editButton, View saveButton, View cancelButton) {
         editButton.setVisibility(View.VISIBLE);
         saveButton.setVisibility(View.GONE);
         cancelButton.setVisibility(View.GONE);
@@ -162,10 +163,10 @@ public class InviteFriendsActivity extends AppCompatActivity implements ContactP
     }
 
     private void stripUnderlines(MessagesTextView textView) {
-        if(null!=textView&&textView.getText() instanceof Spannable){
-            Spannable s = (Spannable)textView.getText();
+        if (null != textView && textView.getText() instanceof Spannable) {
+            Spannable s = (Spannable) textView.getText();
             URLSpan[] spans = s.getSpans(0, s.length(), URLSpan.class);
-            for (URLSpan span: spans) {
+            for (URLSpan span : spans) {
                 int start = s.getSpanStart(span);
                 int end = s.getSpanEnd(span);
                 s.removeSpan(span);

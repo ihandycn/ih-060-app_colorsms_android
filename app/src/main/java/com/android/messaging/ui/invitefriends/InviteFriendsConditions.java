@@ -8,7 +8,6 @@ import android.text.format.DateUtils;
 import com.android.messaging.BuildConfig;
 import com.android.messaging.util.BugleAnalytics;
 import com.android.messaging.util.BuglePrefs;
-import com.google.common.hash.HashCode;
 import com.ihs.app.framework.HSApplication;
 import com.ihs.commons.config.HSConfig;
 import com.superapps.util.Preferences;
