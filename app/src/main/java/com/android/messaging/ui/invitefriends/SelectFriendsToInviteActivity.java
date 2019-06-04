@@ -17,6 +17,7 @@ import com.android.messaging.privatebox.PrivateContactsManager;
 import com.android.messaging.privatebox.ui.addtolist.CallAssistantUtils;
 import com.android.messaging.privatebox.ui.addtolist.ContactsSelectAdapter;
 import com.android.messaging.ui.customize.PrimaryColors;
+import com.android.messaging.util.BugleAnalytics;
 import com.android.messaging.util.PhoneUtils;
 import com.android.messaging.util.UiUtils;
 import com.ihs.commons.notificationcenter.INotificationObserver;
@@ -76,10 +77,11 @@ public class SelectFriendsToInviteActivity extends AppCompatActivity {
             if (addList.size() <= 0) {
                 return;
             }
-
             InviteFriendsList.setAddedInvitedFriendsList(addList);
             setResult(RESULT_OK);
             finish();
+            BugleAnalytics.logEvent("Invite_AddList_Add_Click");
+
         });
 
     }

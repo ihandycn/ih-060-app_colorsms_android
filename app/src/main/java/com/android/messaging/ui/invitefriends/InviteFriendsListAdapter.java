@@ -23,6 +23,12 @@ import static com.android.messaging.ui.invitefriends.InviteFriendsActivity.REQUE
 
 public class InviteFriendsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
+
+
+    interface OnItemCountChangeListener {
+        void onChange();
+    }
+    private OnItemCountChangeListener mOnItemCountChangeListener;
     private Activity mActivity;
 
     private List<CallAssistantUtils.ContactInfo> mContactInfos = new ArrayList<>();
@@ -31,6 +37,9 @@ public class InviteFriendsListAdapter extends RecyclerView.Adapter<RecyclerView.
         mActivity = activity;
     }
 
+    public void setOnItemCountChangeListener(OnItemCountChangeListener onItemCountChangeListener) {
+        mOnItemCountChangeListener = onItemCountChangeListener;
+    }
 
     public String getRecipients() {
         StringBuilder recipients = new StringBuilder();
@@ -47,6 +56,9 @@ public class InviteFriendsListAdapter extends RecyclerView.Adapter<RecyclerView.
     public void initData(List<CallAssistantUtils.ContactInfo> contactInfos) {
         mContactInfos = contactInfos;
         notifyDataSetChanged();
+        if (mOnItemCountChangeListener != null) {
+            mOnItemCountChangeListener.onChange();
+        }
     }
 
     public void addContact(List<CallAssistantUtils.ContactInfo> contactInfos) {
@@ -63,6 +75,9 @@ public class InviteFriendsListAdapter extends RecyclerView.Adapter<RecyclerView.
 
         int currentCount = getItemCount();
         notifyItemRangeInserted(preCount, currentCount - preCount);
+        if (mOnItemCountChangeListener != null) {
+            mOnItemCountChangeListener.onChange();
+        }
     }
 
     @NonNull
@@ -77,6 +92,9 @@ public class InviteFriendsListAdapter extends RecyclerView.Adapter<RecyclerView.
                 mContactInfos.remove(target - 1);
                 notifyItemRemoved(target);
                 BugleAnalytics.logEvent("Invite_SendPage_Delete_Click");
+                if (mOnItemCountChangeListener != null) {
+                    mOnItemCountChangeListener.onChange();
+                }
             }
         });
         return viewHolder;

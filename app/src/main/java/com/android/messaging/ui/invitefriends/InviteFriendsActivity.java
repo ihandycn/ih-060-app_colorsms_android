@@ -54,6 +54,7 @@ public class InviteFriendsActivity extends AppCompatActivity implements ContactP
 
     private String mDescription;
 
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -73,7 +74,7 @@ public class InviteFriendsActivity extends AppCompatActivity implements ContactP
                     mDescription + InviteFriendsTest.getSendLink(), "");
             Toasts.showToast(R.string.invite_friends_success_toast);
 
-            BugleAnalytics.logEvent("Invite_SendPage_Invite_Click");
+            BugleAnalytics.logEvent("Invite_SendPage_Invite_Click", "from", getIntent().getStringExtra(INTENT_KEY_FROM));
             BugleAnalytics.logEvent("Invite_SMS_Send");
             InviteFriendsTest.logInviteFriendsClick();
             InviteFriendsTest.logInviteSmsSent();
@@ -100,6 +101,7 @@ public class InviteFriendsActivity extends AppCompatActivity implements ContactP
                 Dimensions.pxFromDp(26f), false));
         editButton.setOnClickListener(v -> {
             makeEditTextEditable(editButton, saveButton, cancelButton);
+            BugleAnalytics.logEvent("Invite_SendPage_Edit_Click");
         });
 
         cancelButton.setBackground(BackgroundDrawables.createBackgroundDrawable(0xfff2f4f6,
@@ -113,6 +115,7 @@ public class InviteFriendsActivity extends AppCompatActivity implements ContactP
                 Dimensions.pxFromDp(26f), false));
         saveButton.setOnClickListener(v -> {
             makeEditTextUneditable(editButton, saveButton, cancelButton);
+            BugleAnalytics.logEvent("Invite_SendPage_Save_Click");
         });
     }
 
@@ -143,6 +146,10 @@ public class InviteFriendsActivity extends AppCompatActivity implements ContactP
         recyclerView.setAdapter(mAdapter);
         recyclerView.setOverScrollMode(View.OVER_SCROLL_NEVER);
 
+        mAdapter.setOnItemCountChangeListener(() -> {
+            mInviteButton.setText(String.format(getString(R.string.invite_friends_invite), mAdapter.getItemCount() - 1));
+            mInviteButton.setVisibility(View.VISIBLE);
+        });
 
         if (ContactUtil.hasReadContactsPermission()) {
             mBinding.bind(DataModel.get().createContactPickerData(this, this));
@@ -215,8 +222,7 @@ public class InviteFriendsActivity extends AppCompatActivity implements ContactP
 
         int count = Math.min(contactInfos.size(), HSConfig.optInteger(5, "Application", "CheckContactNum"));
         if (count > 0) {
-            mInviteButton.setText(String.format(getString(R.string.invite_friends_invite), count));
-            mInviteButton.setVisibility(View.VISIBLE);
+
             mAdapter.initData(contactInfos.subList(0, count));
         }
     }
