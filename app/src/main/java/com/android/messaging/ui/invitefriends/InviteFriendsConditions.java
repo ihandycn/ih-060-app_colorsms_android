@@ -2,14 +2,15 @@ package com.android.messaging.ui.invitefriends;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.provider.Settings;
 import android.support.annotation.IntDef;
 import android.text.format.DateUtils;
 
+import com.android.messaging.BuildConfig;
 import com.android.messaging.util.BugleAnalytics;
 import com.android.messaging.util.BuglePrefs;
-import com.android.messaging.util.UiUtils;
+import com.ihs.app.framework.HSApplication;
 import com.superapps.util.Preferences;
+import com.superapps.util.Toasts;
 
 import static com.android.messaging.ui.invitefriends.InviteFriendsRewardDialogActivity.INTENT_KEY_OCCASION;
 import static com.android.messaging.ui.invitefriends.InviteFriendsRewardDialogActivity.INTENT_KEY_TIME;
@@ -17,8 +18,8 @@ import static com.android.messaging.ui.invitefriends.InviteFriendsRewardDialogAc
 public class InviteFriendsConditions {
     public static final String SHOW_INVITE_FRIENDS_DIALOG_AFTER_CHANGE_THEME_10_SECS = "SHOW_INVITE_FRIENDS_DIALOG_AFTER_CHANGE_THEME_10_SECS";
 
-    private static final String INVITE_FRIENDS_DIALOG_SHOW_COUNT = "INVITE_FRIENDS_DIALOG_SHOW_COUNT";
-    private static final String PREF_KEY_LAST_INVITE_FRIENDS_DIALOG_SHOW_TIME = "PREF_KEY_LAST_INVITE_FRIENDS_DIALOG_SHOW_TIME";
+    private static final String INVITE_FRIENDS_DIALOG_SHOW_COUNT = "invite_friends_dialog_show_count_limit";
+    private static final String PREF_KEY_LAST_INVITE_FRIENDS_DIALOG_SHOW_TIME = "invite_friends_dialog_interval";
 
     private static long sMainPageCreateTime = 0L;
 
@@ -32,11 +33,20 @@ public class InviteFriendsConditions {
     }
 
     public static boolean showInviteFriendsDialogIfProper(Activity activity, @InviteFriendsTiming int timing) {
-        // version code control
+        if (HSApplication.getFirstLaunchInfo().appVersionCode < 52) {
+            if (BuildConfig.DEBUG) {
+                Toasts.showToast("first install version code is too old");
+            }
+            return false;
+        }
 
         Preferences preferences = Preferences.get(BuglePrefs.SHARED_PREFERENCES_NAME);
         if (System.currentTimeMillis() - preferences.getLong(PREF_KEY_LAST_INVITE_FRIENDS_DIALOG_SHOW_TIME, -1L)
                 <= 12 * DateUtils.HOUR_IN_MILLIS) {
+
+            if (BuildConfig.DEBUG) {
+                Toasts.showToast("invite friends dialog invalid interval ");
+            }
             return false;
         }
         String type = "";
@@ -65,15 +75,11 @@ public class InviteFriendsConditions {
                 BugleAnalytics.logEvent("Invite_GuideAlert_Show", true, "time", String.valueOf(showedCount),
                         "occasion", type);
                 preferences.putInt(INVITE_FRIENDS_DIALOG_SHOW_COUNT, showedCount);
+                preferences.putLong(PREF_KEY_LAST_INVITE_FRIENDS_DIALOG_SHOW_TIME, System.currentTimeMillis());
+                return true;
             }
         }
-
         return false;
-
-    }
-
-    public static long getMainPageCreateTime() {
-        return sMainPageCreateTime;
     }
 
     public static void setMainPageCreateTime(long mainPageCreateTime) {

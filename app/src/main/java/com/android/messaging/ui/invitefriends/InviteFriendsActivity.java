@@ -71,7 +71,6 @@ public class InviteFriendsActivity extends AppCompatActivity implements ContactP
         mInviteButton.setOnClickListener(v -> {
             BugleAnalytics.logEvent("Invite_SendPage_Invite_Click");
 
-            HSLog.d("ContactPicker_InviteFriendsActivity_", mAdapter.getRecipients());
             InsertNewMessageAction.insertNewMessage(ParticipantData.DEFAULT_SELF_SUB_ID, mAdapter.getRecipients(),
                     mEditText.getText().append(getString(R.string.invite_friends_invite_auto_link_content)).toString(), "");
 
