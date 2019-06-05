@@ -29,6 +29,7 @@ import com.android.messaging.ui.customize.PrimaryColors;
 import com.android.messaging.ui.view.MessagesTextView;
 import com.android.messaging.util.AvatarUriUtil;
 import com.android.messaging.util.BugleAnalytics;
+import com.android.messaging.util.BuglePrefs;
 import com.android.messaging.util.ContactUtil;
 import com.android.messaging.util.ImeUtil;
 import com.android.messaging.util.UiUtils;
@@ -37,9 +38,12 @@ import com.ihs.commons.config.HSConfig;
 import com.ihs.commons.utils.HSLog;
 import com.superapps.util.BackgroundDrawables;
 import com.superapps.util.Dimensions;
+import com.superapps.util.Preferences;
 import com.superapps.util.Toasts;
 
 import java.util.ArrayList;
+
+import static com.android.messaging.ui.invitefriends.InviteFriendsConditions.INVITE_FRIENDS_DIALOG_SHOW_COUNT;
 
 public class InviteFriendsActivity extends AppCompatActivity implements ConversationListData.ConversationListDataListener {
 
@@ -164,6 +168,13 @@ public class InviteFriendsActivity extends AppCompatActivity implements Conversa
             mBinding.bind(DataModel.get().createConversationListData(this, this, false));
             mBinding.getData().init(getLoaderManager(), mBinding);
         }
+    }
+
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        Preferences.get(BuglePrefs.SHARED_PREFERENCES_NAME).putInt(INVITE_FRIENDS_DIALOG_SHOW_COUNT, Integer.MAX_VALUE);
     }
 
     @Override

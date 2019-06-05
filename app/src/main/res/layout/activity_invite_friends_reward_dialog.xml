@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:tools="http://schemas.android.com/tools"
-    android:background="@color/black_40_transparent">
+    android:background="@color/black_70_transparent">
 
     <FrameLayout
         android:layout_width="0dp"
@@ -36,7 +36,7 @@
                 android:layout_marginTop="14dp"
                 android:src="@drawable/set_as_default_close"/>
 
-            <TextView
+            <com.android.messaging.ui.view.MessagesTextView
                 android:id="@+id/title"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -48,22 +48,26 @@
                 android:textColor="@color/text_primary_color"
                 android:textSize="19sp"
                 android:textStyle="bold"
-                android:fontFamily="sans-serif-medium" />
+                app:font_size_changeable="false"
+                app:font_family_changeable="false"
+                app:typeface="@string/custom_font_bold" />
 
-            <TextView
+            <com.android.messaging.ui.view.MessagesTextView
                 android:id="@+id/description"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="30dp"
                 android:layout_marginEnd="30dp"
-                android:layout_marginTop="11dp"
+                android:layout_marginTop="5dp"
                 android:gravity="center"
                 android:text="@string/invite_friends_default_back_to_main_page_description"
                 android:textColor="#6e717b"
-                android:textSize="15sp"
-                android:fontFamily="sans-serif-medium"/>
+                android:textSize="13sp"
+                app:font_size_changeable="false"
+                app:font_family_changeable="false"
+                app:typeface="@string/custom_font_medium"/>
 
-            <TextView
+            <com.android.messaging.ui.view.MessagesTextView
                 android:id="@+id/invite_button"
                 android:layout_width="match_parent"
                 android:layout_height="44dp"
@@ -74,10 +78,11 @@
                 android:textSize="14sp"
                 android:textColor="#ffffff"
                 android:gravity="center"
-                android:textStyle="bold"
                 android:includeFontPadding="false"
                 android:text="@string/invite_friends_now"
-                android:fontFamily="sans-serif-medium"/>
+                app:font_size_changeable="false"
+                app:font_family_changeable="false"
+                app:typeface="@string/custom_font_bold"/>
 
         </LinearLayout>
 
