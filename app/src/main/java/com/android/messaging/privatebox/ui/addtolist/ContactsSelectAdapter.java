@@ -10,6 +10,8 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.android.messaging.R;
+import com.android.messaging.ui.invitefriends.SelectFriendsToInviteActivity;
+import com.android.messaging.util.BugleAnalytics;
 import com.android.messaging.util.PhoneUtils;
 
 import java.util.ArrayList;
@@ -89,6 +91,10 @@ public class ContactsSelectAdapter extends RecyclerView.Adapter<ContactsSelectAd
             } else {
                 contactInfo.customInfo = Boolean.TRUE;
                 holder.checkBoxView.setImageResource(R.drawable.ic_all_checked);
+            }
+
+            if (holder.itemView.getContext() instanceof SelectFriendsToInviteActivity) {
+                BugleAnalytics.logEvent("Invite_AddList_Contact_Click");
             }
         });
     }

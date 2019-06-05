@@ -236,4 +236,9 @@
 
     <!--send delay-->
     <color name="inside_circle_color">#e1e3e7</color>
+
+    <!--invite friends-->
+    <color name="invite_friends_auto_link">#2492f9</color>
+    <color name="invite_friends_text_color">#222327</color>
+    <color name="invite_friends_button_text_color">#37a63b</color>
 </resources>
