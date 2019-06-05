@@ -85,16 +85,16 @@ public class InviteFriendsActivity extends AppCompatActivity implements Conversa
                     InsertNewMessageAction.insertNewMessage(ParticipantData.DEFAULT_SELF_SUB_ID, contactInfo.number,
                             message, "");
                 }
+                InviteFriendsTest.logInviteSmsSent();
+                BugleAnalytics.logEvent("Invite_SMS_Send", "link", InviteFriendsTest.getSendTestType(),
+                        "isModified", "" + !TextUtils.equals(mDescription, InviteFriendsTest.getSendDescription()));
             }
             Toasts.showToast(R.string.invite_friends_success_toast);
 
             BugleAnalytics.logEvent("Invite_SendPage_Invite_Click",
                     "from", getIntent().getStringExtra(INTENT_KEY_FROM),
                     "num", String.valueOf(mAdapter.getItemCount()));
-            BugleAnalytics.logEvent("Invite_SMS_Send", "link", InviteFriendsTest.getSendLink(),
-                    "isModified", "" + !TextUtils.equals(mDescription, InviteFriendsTest.getSendDescription()));
             InviteFriendsTest.logInviteFriendsClick();
-            InviteFriendsTest.logInviteSmsSent();
             finish();
         });
 

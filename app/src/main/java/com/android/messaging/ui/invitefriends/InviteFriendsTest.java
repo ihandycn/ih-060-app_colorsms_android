@@ -16,6 +16,10 @@ public class InviteFriendsTest {
 
     private static final String DIALOG_TOPIC_ID = "topic-74oxuasmo";
 
+    public static String getSendTestType() {
+        return AutopilotConfig.getStringToTestNow(SMS_TOPIC_ID, "send_description", "default");
+    }
+
     public static String getSendDescription() {
         String type = AutopilotConfig.getStringToTestNow(SMS_TOPIC_ID, "send_description", "default");
         if (BuildConfig.DEBUG) {
