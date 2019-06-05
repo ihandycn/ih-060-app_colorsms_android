@@ -51,7 +51,7 @@ public class SelectFriendsToInviteActivity extends AppCompatActivity {
         toolbar.setTitle("");
         UiUtils.setTitleBarBackground(toolbar, this);
         TextView title = toolbar.findViewById(R.id.toolbar_title);
-        title.setText(getString(R.string.contacts));
+        title.setText(getString(R.string.invite_friends_default_back_to_main_page_title));
         setSupportActionBar(toolbar);
         if (getSupportActionBar() != null) {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -89,7 +89,6 @@ public class SelectFriendsToInviteActivity extends AppCompatActivity {
 
     private void startQueryData() {
         Threads.postOnThreadPoolExecutor(() -> {
-            final List<CallAssistantUtils.ContactInfo> list = new ArrayList<>();
             List<CallAssistantUtils.ContactInfo> contactsList = CallAssistantUtils.getAllContactsFromPhoneBook();
             // filter contact which is already private
             List<String> privateRecipients = PrivateContactsManager.getInstance().getPrivateRecipientList();
@@ -101,7 +100,7 @@ public class SelectFriendsToInviteActivity extends AppCompatActivity {
                 }
             }
             Collections.sort(filterContactsList, (o1, o2) -> Collator.getInstance().compare(o1.toString(), o2.toString()));
-            list.addAll(filterContactsList);
+            final List<CallAssistantUtils.ContactInfo> list = new ArrayList<>(filterContactsList);
 
             Threads.postOnMainThread(() -> {
                 mAdapter.updateData(list);

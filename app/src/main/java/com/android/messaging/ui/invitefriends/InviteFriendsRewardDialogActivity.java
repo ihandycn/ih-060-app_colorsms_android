@@ -37,7 +37,7 @@ public class InviteFriendsRewardDialogActivity extends AppCompatActivity {
         }
 
         ImageView closeButton = findViewById(R.id.close_btn);
-        closeButton.setBackground(BackgroundDrawables.createBackgroundDrawable(0xffe9eff1,
+        closeButton.setBackground(BackgroundDrawables.createBackgroundDrawable(Color.WHITE,
                 Dimensions.pxFromDp(16f), true));
         closeButton.setOnClickListener(v -> finish());
 
@@ -107,7 +107,7 @@ public class InviteFriendsRewardDialogActivity extends AppCompatActivity {
         LottieAnimationView lottieAnimationView = findViewById(R.id.lottie_animation_view);
         lottieAnimationView.setImageAssetsFolder(lottieImagePath);
         lottieAnimationView.setAnimation(lottieJsonPath);
-        lottieAnimationView.loop(true);
+        lottieAnimationView.loop(false);
         lottieAnimationView.playAnimation();
     }
 }
