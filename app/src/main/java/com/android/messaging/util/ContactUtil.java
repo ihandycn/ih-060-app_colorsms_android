@@ -44,7 +44,6 @@ import com.google.common.annotations.VisibleForTesting;
 /**
  * Utility class including logic to list, filter, and lookup phone and emails in CP2.
  */
-@VisibleForTesting
 public class ContactUtil {
 
     /**

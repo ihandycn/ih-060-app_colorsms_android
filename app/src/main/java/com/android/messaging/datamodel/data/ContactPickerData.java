@@ -89,6 +89,10 @@ public class ContactPickerData extends BindableData implements
     @Override
     public void onLoadFinished(final Loader<Cursor> loader, final Cursor data) {
         final BoundCursorLoader cursorLoader = (BoundCursorLoader) loader;
+        if (mListener == null) {
+            return;
+        }
+
         if (isBound(cursorLoader.getBindingId())) {
             switch (loader.getId()) {
                 case ALL_CONTACTS_LOADER:
@@ -114,14 +118,19 @@ public class ContactPickerData extends BindableData implements
      */
     @Override
     public void onLoaderReset(final Loader<Cursor> loader) {
+
         final BoundCursorLoader cursorLoader = (BoundCursorLoader) loader;
         if (isBound(cursorLoader.getBindingId())) {
             switch (loader.getId()) {
                 case ALL_CONTACTS_LOADER:
-                    mListener.onAllContactsCursorUpdated(null);
+                    if (mListener != null) {
+                        mListener.onAllContactsCursorUpdated(null);
+                    }
                     break;
                 case PARTICIPANT_LOADER:
-                    mListener.onContactCustomColorLoaded(this);
+                    if (mListener != null) {
+                        mListener.onContactCustomColorLoaded(this);
+                    }
                     break;
                 default:
                     Assert.fail("Unknown loader id for contact picker!");

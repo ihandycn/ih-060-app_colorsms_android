@@ -10,6 +10,8 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.android.messaging.R;
+import com.android.messaging.ui.invitefriends.SelectFriendsToInviteActivity;
+import com.android.messaging.util.BugleAnalytics;
 import com.android.messaging.util.PhoneUtils;
 
 import java.util.ArrayList;
@@ -18,6 +20,10 @@ import java.util.List;
 import java.util.Map;
 
 public class ContactsSelectAdapter extends RecyclerView.Adapter<ContactsSelectAdapter.ViewHolder> {
+
+    public interface OnSelectCountChangeListener {
+        void onChange(int count);
+    }
 
     static class ViewHolder extends RecyclerView.ViewHolder {
         TextView mainTitle, subTitle;
@@ -36,6 +42,13 @@ public class ContactsSelectAdapter extends RecyclerView.Adapter<ContactsSelectAd
 
             subTitle.setLayoutParams(params);
         }
+    }
+
+    private int selectedCount;
+    private OnSelectCountChangeListener mOnSelectCountChangeListener;
+
+    public void setOnSelectCountChangeListener(OnSelectCountChangeListener onSelectCountChangeListener) {
+        mOnSelectCountChangeListener = onSelectCountChangeListener;
     }
 
     private List<CallAssistantUtils.ContactInfo> recyclerDataList = new ArrayList<>();
@@ -86,9 +99,19 @@ public class ContactsSelectAdapter extends RecyclerView.Adapter<ContactsSelectAd
             if (contactInfo.customInfo.equals(Boolean.TRUE)) {
                 contactInfo.customInfo = Boolean.FALSE;
                 holder.checkBoxView.setImageResource(R.drawable.ic_all_unchecked);
+                selectedCount--;
             } else {
                 contactInfo.customInfo = Boolean.TRUE;
                 holder.checkBoxView.setImageResource(R.drawable.ic_all_checked);
+                selectedCount++;
+            }
+
+            if (mOnSelectCountChangeListener != null) {
+                mOnSelectCountChangeListener.onChange(selectedCount);
+            }
+
+            if (holder.itemView.getContext() instanceof SelectFriendsToInviteActivity) {
+                BugleAnalytics.logEvent("Invite_AddList_Contact_Click");
             }
         });
     }

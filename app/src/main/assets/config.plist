@@ -6,6 +6,10 @@
 	<dict>
 		<key>Application</key>
 		<dict>
+			<key>CheckContactNum</key>
+			<integer>6</integer>
+			<key>InviteFriendsGuide</key>
+			<true/>
 			<key>FiveStarShowTime</key>
 			<integer>5</integer>
 			<key>PrivacyPolicyUrl</key>
