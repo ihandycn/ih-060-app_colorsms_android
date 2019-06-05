@@ -249,6 +249,7 @@ public class InviteFriendsActivity extends AppCompatActivity implements Conversa
                 }
                 contactInfos.add(new CallAssistantUtils.ContactInfo(itemData.getName(),
                         itemData.getOtherParticipantNormalizedDestination(), uri));
+                dataCount ++;
                 if (dataCount == count) {
                     break;
                 }
@@ -256,8 +257,8 @@ public class InviteFriendsActivity extends AppCompatActivity implements Conversa
             } while (cursor.moveToNext());
 
 
-            if (count > 0) {
-                mAdapter.initData(contactInfos.subList(0, count));
+            if (dataCount > 0) {
+                mAdapter.initData(contactInfos.subList(0, dataCount));
             }
         }
     }
