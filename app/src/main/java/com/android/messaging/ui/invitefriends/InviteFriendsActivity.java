@@ -35,6 +35,7 @@ import com.android.messaging.util.Assert;
 import com.android.messaging.util.AvatarUriUtil;
 import com.android.messaging.util.BugleAnalytics;
 import com.android.messaging.util.ContactUtil;
+import com.android.messaging.util.ImeUtil;
 import com.android.messaging.util.PhoneUtils;
 import com.android.messaging.util.TextUtil;
 import com.android.messaging.util.UiUtils;
@@ -119,6 +120,7 @@ public class InviteFriendsActivity extends AppCompatActivity implements Conversa
 
         editButton.setOnClickListener(v -> {
             makeEditTextEditable(editButton, saveButton, cancelButton);
+            ImeUtil.get().showImeKeyboard(InviteFriendsActivity.this, mEditText);
             BugleAnalytics.logEvent("Invite_SendPage_Edit_Click");
         });
 
