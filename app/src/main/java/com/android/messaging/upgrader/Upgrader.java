@@ -73,8 +73,7 @@ public class Upgrader extends BaseUpgrader {
             migrateLocalThemeAndFont();
         }
 
-        // TODO: 2019-05-29 add version check
-        {
+        if (oldVersion < 52 && newVersion >= 52) {
             addLockedColumnInDB();
         }
     }
