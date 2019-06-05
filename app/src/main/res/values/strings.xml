@@ -1229,4 +1229,5 @@
     <string name="backup_tips_before_uninstalling_button">OK</string>
     <string name="backup_tips_before_uninstalling_content">RESTORE your messages before uninstalling our app, so as not to lose your messages.</string>
     <string name="backup_folder_select_toast">Should select a folder to backup messages.</string>
+    <string name="message_free_up_process_dialog">Freeing up your message space…</string>
 </resources>

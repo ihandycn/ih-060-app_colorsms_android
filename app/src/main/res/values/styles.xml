@@ -788,9 +788,10 @@
         <item name="colorPrimary">@color/conversation_edge_effect</item>
     </style>
 
-    <style name="RestoreRadioGroup">
-        <item name="android:layout_width">wrap_content</item>
-        <item name="android:layout_height">wrap_content</item>
+    <style name="RestoreCheckBox">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">67.3dp</item>
+        <item name="android:paddingEnd">19dp</item>
         <item name="android:gravity">start|center_vertical</item>
         <item name="android:textColor">@color/text_primary_color</item>
         <item name="android:checked">false</item>
@@ -799,9 +800,10 @@
         <item name="android:button">@null</item>
     </style>
 
-    <style name="BackUpRadioGroup">
-        <item name="android:layout_width">wrap_content</item>
-        <item name="android:layout_height">wrap_content</item>
+    <style name="BackUpCheckBox">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">67.3dp</item>
+        <item name="android:paddingEnd">19dp</item>
         <item name="android:gravity">start|center_vertical</item>
         <item name="android:textColor">@color/text_primary_color</item>
         <item name="android:checked">false</item>
