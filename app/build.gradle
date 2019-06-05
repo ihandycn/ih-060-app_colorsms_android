@@ -16,8 +16,8 @@ android {
         applicationId "com.color.sms.messages.emoji"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 51
-        versionName "1.0.26"
+        versionCode 52
+        versionName "1.0.27"
         multiDexEnabled true
 
         vectorDrawables.useSupportLibrary = true
