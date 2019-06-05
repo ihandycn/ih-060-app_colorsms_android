@@ -144,12 +144,15 @@ public class CallAssistantUtils {
 
         Cursor cursor = null;
         try {
+
+            String selectionClause = ContactsContract.RawContacts.ACCOUNT_NAME + " != ?";
+            String[] selectionArgs = {"WhatsApp"};
             cursor = HSApplication.getContext().getContentResolver().query(ContactsContract.CommonDataKinds.Phone.CONTENT_URI,
                     new String[]{
                             ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME,
                             ContactsContract.CommonDataKinds.Phone.NUMBER,
                             ContactsContract.CommonDataKinds.Phone.PHOTO_THUMBNAIL_URI
-                    }, null, null, null);
+                    }, selectionClause, selectionArgs, null);
 
             if (cursor == null) {
                 return list;
