@@ -26,6 +26,7 @@ import com.android.messaging.datamodel.data.ContactPickerData;
 import com.android.messaging.datamodel.data.ConversationListData;
 import com.android.messaging.datamodel.data.ConversationListItemData;
 import com.android.messaging.datamodel.data.ParticipantData;
+import com.android.messaging.font.FontUtils;
 import com.android.messaging.privatebox.ui.addtolist.CallAssistantUtils;
 import com.android.messaging.ui.PlainTextEditText;
 import com.android.messaging.ui.customize.PrimaryColors;
@@ -98,8 +99,8 @@ public class InviteFriendsActivity extends AppCompatActivity implements Conversa
         mDescription = InviteFriendsTest.getSendDescription();
         MessagesTextView autoLinkMessagesTextView = findViewById(R.id.invite_friends_message_auto_link);
         autoLinkMessagesTextView.setText(InviteFriendsTest.getSendLink());
-        stripUnderlines(autoLinkMessagesTextView);
         mEditText = findViewById(R.id.invite_friends_message_text);
+        mEditText.setTypeface(FontUtils.getTypeface());
         mEditText.setText(mDescription);
         mEditText.setEnabled(false);
 
@@ -179,23 +180,6 @@ public class InviteFriendsActivity extends AppCompatActivity implements Conversa
         }
     }
 
-    private void stripUnderlines(MessagesTextView textView) {
-        if (null != textView && textView.getText() instanceof Spannable) {
-            Spannable s = (Spannable) textView.getText();
-            URLSpan[] spans = s.getSpans(0, s.length(), URLSpan.class);
-            for (URLSpan span : spans) {
-                int start = s.getSpanStart(span);
-                int end = s.getSpanEnd(span);
-                s.removeSpan(span);
-                span = new URLSpanNoUnderline(span.getURL());
-                s.setSpan(span, start, end, 0);
-            }
-
-            textView.setAutoLinkMask(0);
-            textView.setText(s);
-        }
-    }
-
     private void initToolBar() {
         Toolbar toolbar = findViewById(R.id.toolbar);
         toolbar.setTitle("");
@@ -249,7 +233,7 @@ public class InviteFriendsActivity extends AppCompatActivity implements Conversa
                 }
                 contactInfos.add(new CallAssistantUtils.ContactInfo(itemData.getName(),
                         itemData.getOtherParticipantNormalizedDestination(), uri));
-                dataCount ++;
+                dataCount++;
                 if (dataCount == count) {
                     break;
                 }

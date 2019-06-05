@@ -105,7 +105,8 @@ public class InviteFriendsListAdapter extends RecyclerView.Adapter<RecyclerView.
         if (holder instanceof ViewHolder) {
             if (position == 0) {
                 ((ViewHolder) holder).mContactIcon.setImageResource(R.drawable.ic_add_black);
-                ((ViewHolder) holder).mContactIcon.setBackgroundResource(R.drawable.gray_circle_btn_bg_drawable);
+                ((ViewHolder) holder).mContactName.setText(R.string.invite_friends_add_friends);
+                ((ViewHolder) holder).mContactIcon.setBackgroundResource(R.drawable.light_gray_circle_btn_bg_drwable);
                 ((ViewHolder) holder).mContactIcon.setOnClickListener(v -> {
                     Intent intent = new Intent(mActivity, SelectFriendsToInviteActivity.class);
                     mActivity.startActivityForResult(intent, REQUEST_CODE_ADD_FRIENDS);

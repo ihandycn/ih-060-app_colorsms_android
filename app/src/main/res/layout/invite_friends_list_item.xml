@@ -32,6 +32,7 @@
         android:layout_height="wrap_content"
         android:textSize="11sp"
         android:textColor="#19191c"
+        android:layout_marginTop="9dp"
         android:layout_gravity="center"
         android:gravity="center"
         app:typeface="@string/custom_font_regular"
