@@ -612,6 +612,9 @@ public class ConversationFragment extends Fragment implements ConversationDataLi
         BugleAnalytics.logEvent("Detailspage_TopAd_Should_Show", true, true);
         List<AcbNativeAd> nativeAds = AcbNativeAdManager.fetch(AdPlacement.AD_DETAIL_NATIVE, 1);
         if (nativeAds.size() > 0) {
+            if (mNativeAd != null) {
+                mNativeAd.release();
+            }
             mNativeAd = nativeAds.get(0);
             mNativeAd.setNativeClickListener(
                     acbAd -> BugleAnalytics.logEvent("Detailspage_TopAd_Click", true, false));
@@ -622,16 +625,21 @@ public class ConversationFragment extends Fragment implements ConversationDataLi
                 @Override
                 public void onAdReceived(AcbNativeAdLoader acbNativeAdLoader, List<AcbNativeAd> list) {
                     if (list.size() > 0) {
+                        if (mNativeAd != null) {
+                            mNativeAd.release();
+                        }
                         mNativeAd = list.get(0);
                         mNativeAd.setNativeClickListener(
                                 acbAd -> BugleAnalytics.logEvent("Detailspage_TopAd_Click", true, false));
                         showTopBannerAd();
+                    } else {
+                        enqueueNextAd();
                     }
                 }
 
                 @Override
                 public void onAdFinished(AcbNativeAdLoader acbNativeAdLoader, AcbError acbError) {
-
+                    enqueueNextAd();
                 }
             });
         }
@@ -697,8 +705,13 @@ public class ConversationFragment extends Fragment implements ConversationDataLi
         mRecyclerView.setClipToPadding(true);
 
         BugleAnalytics.logEvent("Detailspage_TopAd_Show", true, true);
+        enqueueNextAd();
+    }
+
+    private void enqueueNextAd() {
         if (!HSConfig.optBoolean(false, "Application", "SMSAd", "SMSDetailspageTopAd", "HideWhenKeyboardShow")) {
             AcbNativeAdManager.preload(1, AdPlacement.AD_DETAIL_NATIVE);
+            mAdRefreshHandler.removeCallbacksAndMessages(null);
             mAdRefreshHandler.sendEmptyMessageDelayed(0,
                     HSConfig.optInteger(60, "Application", "SMSAd", "SMSDetailspageTopAd", "RefreshInterval")
                             * DateUtils.SECOND_IN_MILLIS);
