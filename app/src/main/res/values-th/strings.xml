@@ -671,4 +671,24 @@
     <string name="lock_style_pin">รหัสผ่าน</string>
     <string name="confirm_prompt_password">ยืนยันรหัสผ่าน</string>
     <string name="draw_unlock_pattern">วาดรูปแบบการปลดล็อก</string>
+
+	<string name="contact_picker_select_group">เริ่มต้นสนทนากลุ่ม</string>
+	<string name="send_delay_settings">หน่วงเวลาส่ง</string>
+	<string name="send_delay_no_delay">ไม่หน่วงเวลา</string>
+	<string name="set_as_default_success">เปลี่ยนแปลงสำเร็จ</string>
+	<string name="invite_friends_invite_edit_button">แก้ไข</string>
+	<string name="delete_conversation_decline_button">ยกเลิก</string>
+	<string name="settings">ตั้งค่า</string>
+	<string name="invite_friends_invite">เชิญ (%d)</string>
+	<string name="invite_friends_add">เพิ่ม (%d)</string>
+	<string name="invite_friends_invite_send_sms_description">ส่ง SMS ถึงเพื่อนคนที่คุณต้องการเชิญ</string>
+	<string name="notification_sender_in_private_box">รายชื่อติดต่อส่วนตัว</string>
+	<string name="message_box_click_to_view">คลิกเพื่อดู</string>
+	<string name="get_now">รับทันที</string>
+	<string name="downloading">กำลังดาวน์โหลด …</string>
+	<string name="apply_theme_success">นำไปใช้สำเร็จแล้ว</string>
+	<string name="theme_coming">พบธีมเพิ่มเติมเร็วๆ นี้ …</string>
+	<string name="menu_invite_friends">เชิญเพื่อน</string>
+	<string name="invite_friends_now">เชิญทันที</string>
+
 </resources>

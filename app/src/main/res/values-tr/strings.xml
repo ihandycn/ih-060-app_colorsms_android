@@ -665,4 +665,24 @@
     <string name="lock_style_pin">Şifre</string>
     <string name="confirm_prompt_password">Şifreyi onayla</string>
     <string name="draw_unlock_pattern">Açmak için deseni çiz</string>
+
+	<string name="contact_picker_select_group">Grup sohbetini başlat</string>
+	<string name="send_delay_settings">Gecikmeli Gönder</string>
+	<string name="send_delay_no_delay">Gecikme Yok</string>
+	<string name="set_as_default_success">Başarıyla Değiştirildi</string>
+	<string name="invite_friends_invite_edit_button">Düzenle</string>
+	<string name="delete_conversation_decline_button">İptal Et</string>
+	<string name="settings">Ayarlar</string>
+	<string name="invite_friends_invite">GÖNDER (%d)</string>
+	<string name="invite_friends_add">EKLE (%d)</string>
+	<string name="invite_friends_invite_send_sms_description">Davet etmek istediğin arkadaşına SMS gönder.</string>
+	<string name="notification_sender_in_private_box">Özel Kişi</string>
+	<string name="message_box_click_to_view">Görüntülemek için Tıkla</string>
+	<string name="get_now">Hemen Al</string>
+	<string name="downloading">İndiriliyor...</string>
+	<string name="apply_theme_success">Başarıyla Uygulandı</string>
+	<string name="theme_coming">Yakında daha fazla tema gelecek...</string>
+	<string name="menu_invite_friends">Arkadaşlarını Davet Et</string>
+	<string name="invite_friends_now">HEMEN DAVET ET</string>
+
 </resources>

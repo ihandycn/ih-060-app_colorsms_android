@@ -631,4 +631,23 @@
     <string name="lock_style_pin">数字密码</string>
     <string name="confirm_prompt_password">请确认数字解锁密码</string>
     <string name="draw_unlock_pattern">请输入你的解锁图案</string>
+
+    <string name="contact_picker_select_group">开启群组聊天</string>
+    <string name="send_delay_settings">延时发送</string>
+    <string name="send_delay_no_delay">无延时</string>
+    <string name="set_as_default_success">修改成功</string>
+    <string name="invite_friends_invite_edit_button">编辑</string>
+    <string name="delete_conversation_decline_button">取消</string>
+    <string name="settings">设置</string>
+    <string name="invite_friends_invite">邀请 (%d)</string>
+    <string name="invite_friends_add">添加 (%d)</string>
+    <string name="invite_friends_invite_send_sms_description">给你想要邀请的朋友发送短信。</string>
+    <string name="notification_sender_in_private_box">联系人</string>
+    <string name="message_box_click_to_view">点击查看详情</string>
+    <string name="get_now">现在获取</string>
+    <string name="downloading">下载中...</string>
+    <string name="apply_theme_success">应用成功</string>
+    <string name="theme_coming">更多主题即将推出...</string>
+    <string name="menu_invite_friends">邀请好友</string>
+    <string name="invite_friends_now">邀请</string>
 </resources>

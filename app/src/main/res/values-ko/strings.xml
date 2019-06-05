@@ -670,4 +670,24 @@
     <string name="lock_style_pin">비밀번호</string>
     <string name="confirm_prompt_password">비밀번호 확인</string>
     <string name="draw_unlock_pattern">잠금 해제 패턴을 그리세요</string>
+
+	<string name="contact_picker_select_group">그룹 채팅 시작</string>
+	<string name="send_delay_settings">지연 전송</string>
+	<string name="send_delay_no_delay">지연 없음</string>
+	<string name="set_as_default_success">변경 성공</string>
+	<string name="invite_friends_invite_edit_button">편집</string>
+	<string name="delete_conversation_decline_button">취소</string>
+	<string name="settings">설정</string>
+	<string name="invite_friends_invite">초대 (%d)</string>
+	<string name="invite_friends_add">추가 (%d)</string>
+	<string name="invite_friends_invite_send_sms_description">초대하려는 친구에게 SMS를 보내세요.</string>
+	<string name="notification_sender_in_private_box">비공개 연락처</string>
+	<string name="message_box_click_to_view">클릭하여 보기</string>
+	<string name="get_now">지금 받기</string>
+	<string name="downloading">다운로드 중...</string>
+	<string name="apply_theme_success">적용 성공</string>
+	<string name="theme_coming">더 많은 테마가 찾아옵니다...</string>
+	<string name="menu_invite_friends">친구 초대</string>
+	<string name="invite_friends_now">지금 초대</string>
+
 </resources>

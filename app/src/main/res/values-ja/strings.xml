@@ -671,4 +671,24 @@
     <string name="lock_style_pin">パスコード</string>
     <string name="confirm_prompt_password">パスコードを確認</string>
     <string name="draw_unlock_pattern">アンロックするパターンを描いてください</string>
+
+	<string name="contact_picker_select_group">グループチャットを開始</string>
+	<string name="send_delay_settings">遅延送信</string>
+	<string name="send_delay_no_delay">遅延なし</string>
+	<string name="set_as_default_success">変更に成功しました</string>
+	<string name="invite_friends_invite_edit_button">編集</string>
+	<string name="delete_conversation_decline_button">キャンセル</string>
+	<string name="settings">設定</string>
+	<string name="invite_friends_invite">招待 (%d)</string>
+	<string name="invite_friends_add">追加 (%d)</string>
+	<string name="invite_friends_invite_send_sms_description">あなたが招待したい人にSMSを送信する</string>
+	<string name="notification_sender_in_private_box">プライベートな連絡先</string>
+	<string name="message_box_click_to_view">クリックして表示</string>
+	<string name="get_now">今すぐゲット</string>
+	<string name="downloading">ダウンロード中...</string>
+	<string name="apply_theme_success">適用に成功しました</string>
+	<string name="theme_coming">その他のテーマは近日公開...</string>
+	<string name="menu_invite_friends">友人を招待する</string>
+	<string name="invite_friends_now">今すぐ招待する</string>
+
 </resources>

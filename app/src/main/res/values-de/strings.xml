@@ -676,4 +676,24 @@
     <string name="send_delay_no_delay">Keine Verzögerung</string>
     <string name="contact_picker_select_group">Gruppenchat starten</string>
 
+
+	<string name="contact_picker_select_group">Gruppenchat starten</string>
+	<string name="send_delay_settings">Sendeverzögerung</string>
+	<string name="send_delay_no_delay">Keine Verzögerung</string>
+	<string name="set_as_default_success">Erfolgreich geändert</string>
+	<string name="invite_friends_invite_edit_button">Bearbeiten</string>
+	<string name="delete_conversation_decline_button">Abbrechen</string>
+	<string name="settings">Einstellungen</string>
+	<string name="invite_friends_invite">EINLADEN (%d)</string>
+	<string name="invite_friends_add">HINZUFÜGEN (%d)</string>
+	<string name="invite_friends_invite_send_sms_description">Ein SMS an den Freund senden, den Sie einladen möchten.</string>
+	<string name="notification_sender_in_private_box">Privater Kontakt</string>
+	<string name="message_box_click_to_view">Zur Ansicht anklicken</string>
+	<string name="get_now">Jetzt holen</string>
+	<string name="downloading">Wird heruntergeladen…</string>
+	<string name="apply_theme_success">Erfolgreich übernommen</string>
+	<string name="theme_coming">Demnächst mehr Motive...</string>
+	<string name="menu_invite_friends">Freunde einladen</string>
+	<string name="invite_friends_now">JETZT EINLADEN</string>
+
 </resources>

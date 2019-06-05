@@ -771,4 +771,24 @@
     <string name="lock_style_pin">رمز المرور</string>
     <string name="confirm_prompt_password">تأكيد رمز المرور</string>
     <string name="draw_unlock_pattern">ارسم نمط فك القفل</string>
+
+	<string name="contact_picker_select_group">ابدأ دردشة جماعية</string>
+	<string name="send_delay_settings">تأخير الإرسال</string>
+	<string name="send_delay_no_delay">دون تأخير</string>
+	<string name="set_as_default_success">تم التغيير بنجاح</string>
+	<string name="invite_friends_invite_edit_button">تحرير</string>
+	<string name="delete_conversation_decline_button">إلغاء</string>
+	<string name="settings">الإعدادات</string>
+	<string name="invite_friends_invite">دعوة (%d)</string>
+	<string name="invite_friends_add">إضافة (%d)</string>
+	<string name="invite_friends_invite_send_sms_description">أرسل رسالة قصيرة للصديق الذي ترغب في دعوته</string>
+	<string name="notification_sender_in_private_box">جهة اتصال خاصة</string>
+	<string name="message_box_click_to_view">اضغط للعرض</string>
+	<string name="get_now">احصل عليه الآن</string>
+	<string name="downloading">التنزيل جارٍ...</string>
+	<string name="apply_theme_success">تم الاستخدام بنجاح</string>
+	<string name="theme_coming">مزيد من الثيمات قريباً...</string>
+	<string name="menu_invite_friends">دعوة الأصدقاء</string>
+	<string name="invite_friends_now">ادع الآن</string>
+
 </resources>

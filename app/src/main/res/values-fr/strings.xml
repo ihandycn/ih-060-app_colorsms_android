@@ -674,4 +674,24 @@
     <string name="send_delay_no_delay">Sans délai</string>
     <string name="contact_picker_select_group">Démarrer le chat en groupe</string>
 
+
+	<string name="contact_picker_select_group">Démarrer le tchat de groupe</string>
+	<string name="send_delay_settings">Délai d'envoi</string>
+	<string name="send_delay_no_delay">Pas de délai</string>
+	<string name="set_as_default_success">Modifié avec succès</string>
+	<string name="invite_friends_invite_edit_button">Modifier</string>
+	<string name="delete_conversation_decline_button">Annuler</string>
+	<string name="settings">Paramètres</string>
+	<string name="invite_friends_invite">INVITER (%d)</string>
+	<string name="invite_friends_add">AJOUTER (%d)</string>
+	<string name="invite_friends_invite_send_sms_description">Envoyez un SMS à l'ami que vous voulez inviter.</string>
+	<string name="notification_sender_in_private_box">Contact privé</string>
+	<string name="message_box_click_to_view">Cliquez pour voir</string>
+	<string name="get_now">Obtenir maintenant</string>
+	<string name="downloading">Téléchargement...</string>
+	<string name="apply_theme_success">Appliqué avec succès</string>
+	<string name="theme_coming">Prochainement plus de thèmes...</string>
+	<string name="menu_invite_friends">Inviter des amis</string>
+	<string name="invite_friends_now">INVITER MAINTENANT</string>
+
 </resources>

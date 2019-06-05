@@ -630,4 +630,23 @@
     <string name="lock_style_pin">數字密碼</string>
     <string name="confirm_prompt_password">請確認數字解鎖密碼</string>
     <string name="draw_unlock_pattern">請輸入你的解鎖圖案</string>
+
+    <string name="contact_picker_select_group">開啟群組聊天</string>
+    <string name="send_delay_settings">延時發送</string>
+    <string name="send_delay_no_delay">無延時</string>
+    <string name="set_as_default_success">修改成功</string>
+    <string name="invite_friends_invite_edit_button">編輯</string>
+    <string name="delete_conversation_decline_button">取消</string>
+    <string name="settings">設置</string>
+    <string name="invite_friends_invite">邀請 (%d)</string>
+    <string name="invite_friends_add">添加 (%d)</string>
+    <string name="invite_friends_invite_send_sms_description">給你想要邀請的朋友發送短信。 </string>
+    <string name="notification_sender_in_private_box">聯繫人</string>
+    <string name="message_box_click_to_view">點擊查看詳情</string>
+    <string name="get_now">現在獲取</string>
+    <string name="downloading">下載中...</string>
+    <string name="apply_theme_success">應用成功</string>
+    <string name="theme_coming">更多主題即將推出...</string>
+    <string name="menu_invite_friends">邀請好友</string>
+    <string name="invite_friends_now">邀請</string>
 </resources>
