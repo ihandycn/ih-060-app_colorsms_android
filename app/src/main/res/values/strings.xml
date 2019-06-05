@@ -59,7 +59,6 @@
     <string name="mediapicker_audio_title">Record audio</string>
     <string name="network_error_and_try_again">Network errors. Please try again.</string>
 
-
     <string name="action_share">Share</string>
     <string name="action_lock">Lock</string>
     <string name="action_unlock">Unlock</string>
