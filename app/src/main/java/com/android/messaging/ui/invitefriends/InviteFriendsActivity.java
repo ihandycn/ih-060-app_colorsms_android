@@ -117,21 +117,15 @@ public class InviteFriendsActivity extends AppCompatActivity implements Conversa
         View cancelButton = findViewById(R.id.invite_friends_invite_cancel_button);
         View saveButton = findViewById(R.id.invite_friends_invite_save_button);
 
-        editButton.setBackground(BackgroundDrawables.createBackgroundDrawable(0xfff2f4f6,
-                Dimensions.pxFromDp(26f), false));
         editButton.setOnClickListener(v -> {
             makeEditTextEditable(editButton, saveButton, cancelButton);
             BugleAnalytics.logEvent("Invite_SendPage_Edit_Click");
         });
 
-        cancelButton.setBackground(BackgroundDrawables.createBackgroundDrawable(0xfff2f4f6,
-                Dimensions.pxFromDp(26f), false));
         cancelButton.setOnClickListener(v -> {
             makeEditTextUneditable(editButton, saveButton, cancelButton, false);
         });
 
-        saveButton.setBackground(BackgroundDrawables.createBackgroundDrawable(0xfff2f4f6,
-                Dimensions.pxFromDp(26f), false));
         saveButton.setOnClickListener(v -> {
             makeEditTextUneditable(editButton, saveButton, cancelButton, true);
             BugleAnalytics.logEvent("Invite_SendPage_Save_Click");
