@@ -36,7 +36,7 @@
 
     <item
         android:id="@+id/action_menu"
-        android:icon="@drawable/ic_menu_with_red_point"
+        android:icon="@drawable/ic_menu"
         android:title="@string/settings"
         appcompat:showAsAction="always">
 

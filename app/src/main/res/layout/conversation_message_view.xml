@@ -168,7 +168,7 @@
                 android:layout_marginEnd="2dp"
                 android:layout_marginStart="2dp"
                 android:src="@drawable/message_lock_default"
-                android:scaleType="centerCrop"
+                android:scaleType="fitCenter"
                 android:visibility="gone"/>
 
             <com.android.messaging.ui.view.MessagesTextView

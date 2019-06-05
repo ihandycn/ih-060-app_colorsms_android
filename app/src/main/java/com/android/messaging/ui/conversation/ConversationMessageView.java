@@ -513,9 +513,9 @@ public class ConversationMessageView extends RelativeLayout implements View.OnCl
             mSimNameView.setVisibility(GONE);
         }
 
-//        final boolean metadataVisible = senderNameVisible || statusVisible
-//                || deliveredBadgeVisible || simNameVisible;
-        mMessageMetadataView.setVisibility(View.VISIBLE);
+        final boolean metadataVisible = senderNameVisible || statusVisible
+                || deliveredBadgeVisible || simNameVisible;
+        mMessageMetadataView.setVisibility(metadataVisible ? VISIBLE : GONE);
 
         final boolean messageTextAndOrInfoVisible = titleVisible || subjectVisible
                 || mData.hasText();

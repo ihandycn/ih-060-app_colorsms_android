@@ -126,6 +126,7 @@ import com.ihs.commons.notificationcenter.INotificationObserver;
 import com.ihs.commons.utils.HSBundle;
 import com.ihs.commons.utils.HSLog;
 import com.superapps.util.Dimensions;
+import com.superapps.util.Preferences;
 import com.superapps.util.Threads;
 
 import net.appcloudbox.ads.base.AcbNativeAd;
@@ -152,6 +153,8 @@ public class ConversationFragment extends Fragment implements ConversationDataLi
     public static final String EVENT_HIDE_MEDIA_PICKER = "event_hide_media_picker";
     public static final String RESET_ITEM = "reset_item";
 
+    private final String IS_FIRST_CLICK_ACTION_MENU = "is_first_click_action_menu";
+    private boolean mIsFirstClickActionMenu = false;
     private ArrayList<ConversationMessageData> mSelectMessageDataList;
 
     public static ArrayList<String> getSelectMessageIds() {
@@ -296,9 +299,9 @@ public class ConversationFragment extends Fragment implements ConversationDataLi
     }
 
     private void resetActionModeAndAnimation() {
-        mAdapter.setMultiSelectMode(false);
         selectMessageIds.clear();
         mHost.dismissActionMode();
+        mAdapter.setMultiSelectMode(false);
         mAdapter.closeItemAnimation();
     }
 
@@ -406,6 +409,12 @@ public class ConversationFragment extends Fragment implements ConversationDataLi
                     }
                 }
             }
+
+            Preferences preferences = Preferences.getDefault();
+            mIsFirstClickActionMenu = preferences.getBoolean(IS_FIRST_CLICK_ACTION_MENU, true);
+            if(mIsFirstClickActionMenu){
+                menu.findItem(R.id.action_menu).setIcon(R.drawable.ic_menu_with_red_point);
+            }
             return true;
         }
 
@@ -472,12 +481,22 @@ public class ConversationFragment extends Fragment implements ConversationDataLi
                     BugleAnalytics.logEvent("SMS_DetailsPage_LongPress_Info", true);
                     break;
                 case R.id.lock_message_menu:
-                    lockSelectedMessage();
                     resetActionModeAndAnimation();
+                    Threads.postOnMainThreadDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            lockSelectedMessage();
+                        }
+                    }, 500);
                     break;
                 case R.id.unlock_message_menu:
-                    unlockSelectedMessage();
                     resetActionModeAndAnimation();
+                    Threads.postOnMainThreadDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            unlockSelectedMessage();
+                        }
+                    }, 500);
                     break;
                 case R.id.share_message_menu:
                     shareMessage(data);
@@ -493,7 +512,11 @@ public class ConversationFragment extends Fragment implements ConversationDataLi
                     break;
                 case R.id.action_menu:
                     BugleAnalytics.logEvent("SMS_DetailsPage_LongPress_More", true);
-                    menuItem.setIcon(R.drawable.ic_menu);
+                    if (mIsFirstClickActionMenu) {
+                        menuItem.setIcon(R.drawable.ic_menu);
+                        Preferences preferences = Preferences.getDefault();
+                        preferences.putBoolean(IS_FIRST_CLICK_ACTION_MENU, false);
+                    }
                     break;
                 default:
                     result = false;
@@ -1042,7 +1065,6 @@ public class ConversationFragment extends Fragment implements ConversationDataLi
         }
 
         mAdapter.setDataList(messageDataList);
-        mAdapter.notifyDataSetChanged();
 
         if (isSync) {
             // This is a message sync. Syncing messages changes cursor item count, which would
@@ -1345,7 +1367,7 @@ public class ConversationFragment extends Fragment implements ConversationDataLi
                     });
         }
     }
-
+    
     private void lockSelectedMessage() {
         BugleAnalytics.logEvent("Detailpage_Messages_Lock", true);
         for (ConversationMessageData data : mSelectMessageDataList) {

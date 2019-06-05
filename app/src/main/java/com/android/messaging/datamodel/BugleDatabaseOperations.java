@@ -546,8 +546,6 @@ public class BugleDatabaseOperations {
                 // sort timestamp. Because of how the sms/mms provider works on some newer
                 // devices, it's important that we never delete all the messages in a conversation
                 // without also deleting the conversation itself (see b/20262204 for details).
-
-                // Can't delete messages which locked.
                 dbWrapper.delete(DatabaseHelper.MESSAGES_TABLE,
                         MessageColumns.STATUS + "=? AND " + MessageColumns.IS_LOCKED + "=0 AND " + MessageColumns.CONVERSATION_ID + "=?",
                         new String[]{
@@ -559,7 +557,6 @@ public class BugleDatabaseOperations {
                 final long count = dbWrapper.queryNumEntries(DatabaseHelper.MESSAGES_TABLE,
                         MessageColumns.CONVERSATION_ID + "=?", new String[]{conversationId});
                 conversationMessagesDeleted = (count == 0);
-
                 // Log detail information if there are still messages left in the conversation
                 if (!conversationMessagesDeleted) {
                     final long maxTimestamp =
@@ -580,6 +577,9 @@ public class BugleDatabaseOperations {
                 final int count = dbWrapper.delete(DatabaseHelper.CONVERSATIONS_TABLE,
                         ConversationColumns._ID + "=?", new String[]{conversationId});
                 conversationDeleted = (count > 0);
+            } else {
+                refreshConversationMetadataInTransaction(dbWrapper, conversationId,
+                        false/* shouldAutoSwitchSelfId */, false/*archived*/);
             }
             dbWrapper.setTransactionSuccessful();
         } finally {
@@ -863,7 +863,7 @@ public class BugleDatabaseOperations {
         Assert.isTrue(exists);
     }
 
-    public static void updateMessageLockStatus(final DatabaseWrapper dbWrapper, final String messageId, final boolean isLock){
+    public static void updateMessageLockStatus(final DatabaseWrapper dbWrapper, final String messageId, final boolean isLock) {
         Assert.isNotMainThread();
         Assert.isTrue(dbWrapper.getDatabase().inTransaction());
         final ContentValues values = new ContentValues();

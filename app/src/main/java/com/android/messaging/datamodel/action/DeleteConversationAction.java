@@ -99,6 +99,9 @@ public class DeleteConversationAction extends Action implements Parcelable {
             } else {
                 LogUtil.w(TAG, "DeleteConversationAction: Could not delete local conversation "
                         + conversationId);
+                MessagingContentProvider.notifyMessagesChanged(conversationId);
+                // We may have changed the conversation list
+                MessagingContentProvider.notifyConversationListChanged();
             }
 
             // Now delete from telephony DB. MmsSmsProvider throws an exception if the thread id is
