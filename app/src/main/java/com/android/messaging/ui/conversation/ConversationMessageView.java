@@ -109,6 +109,7 @@ public class ConversationMessageView extends RelativeLayout implements View.OnCl
     private boolean mMessageTextHasLinks;
     private boolean mMessageHasYouTubeLink;
     private ImageView mMessageIsLockView;
+    private ViewGroup mStatusContainer;
     private TextView mStatusTextView;
     private TextView mTitleTextView;
     private TextView mMmsInfoTextView;
@@ -159,9 +160,10 @@ public class ConversationMessageView extends RelativeLayout implements View.OnCl
         mMessageTextView.setOnClickListener(this);
         IgnoreLinkLongClickHelper.ignoreLinkLongClick(mMessageTextView, this);
 
+        mStatusContainer = findViewById(R.id.message_status_container);
         int color = PrimaryColors.getPrimaryColor();
         mStatusTextView = findViewById(R.id.message_status);
-        mStatusTextView.setBackground(BackgroundDrawables.createBackgroundDrawable(
+        mStatusContainer.setBackground(BackgroundDrawables.createBackgroundDrawable(
                 Color.argb(51, Color.red(color), Color.green(color), Color.blue(color)), Dimensions.pxFromDp(16), false));
 
         mMessageIsLockView = findViewById(R.id.message_lock);
