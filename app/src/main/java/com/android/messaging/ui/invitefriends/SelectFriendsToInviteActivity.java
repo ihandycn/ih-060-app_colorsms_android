@@ -35,7 +35,7 @@ public class SelectFriendsToInviteActivity extends AppCompatActivity {
 
 
     private ContactsSelectAdapter mAdapter;
-    private View mActionButton;
+    private TextView mActionButton;
 
 
     @Override
@@ -62,6 +62,12 @@ public class SelectFriendsToInviteActivity extends AppCompatActivity {
         RecyclerView recyclerView = findViewById(R.id.fragment_missed_calls_recyclerview);
         recyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
         recyclerView.setAdapter(mAdapter);
+        mAdapter.setOnSelectCountChangeListener(new ContactsSelectAdapter.OnSelectCountChangeListener() {
+            @Override
+            public void onChange(int count) {
+                mActionButton.setText(String.format(getString(R.string.invite_friends_add), count));
+            }
+        });
 
         mActionButton = findViewById(R.id.private_box_add_btn);
         mActionButton.setBackground(BackgroundDrawables.createBackgroundDrawable(PrimaryColors.getPrimaryColor(),
