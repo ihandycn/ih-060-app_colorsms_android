@@ -31,7 +31,7 @@ import android.widget.EditText;
 public class PlainTextEditText extends EditText {
     private static final char OBJECT_UNICODE = '\uFFFC';
 
-    private boolean mTouchable;
+    private boolean mTouchable = true;
 
     public PlainTextEditText(final Context context, final AttributeSet attrs) {
         super(context, attrs);
