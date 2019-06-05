@@ -107,7 +107,7 @@ dependencies {
 
     implementation "com.ihandy.device:device-permanent.gm:4.5.4.gm"
 
-    implementation "net.appcloudbox.goldeneye:bubble_a:2019.05.16.001"
+    implementation "net.appcloudbox.goldeneye:bubble_a:2019.06.05.001"
     implementation "me.leolin:ShortcutBadger:1.1.22@aar"
     implementation 'net.appcloudbox.autopilot:libAutoPilot.gm:5.5.1.gm'
 

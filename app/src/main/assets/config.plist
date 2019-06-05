@@ -165,8 +165,12 @@
 				<dict>
 					<key>Enabled</key>
 					<true/>
+					<key>HideWhenKeyboardShow</key>
+					<false/>
 					<key>ShowAfterInstall</key>
 					<integer>10</integer>
+					<key>RefreshInterval</key>
+					<integer>12</integer>
 					<key>ShowAfterSlide</key>
 					<true/>
 					<key>FacebookEnabled</key>

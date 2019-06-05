@@ -44,6 +44,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
+import android.os.Message;
 import android.os.Parcelable;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.text.BidiFormatter;
@@ -52,6 +53,7 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
+import android.text.format.DateUtils;
 import android.view.ActionMode;
 import android.view.Display;
 import android.view.LayoutInflater;
@@ -518,6 +520,11 @@ public class ConversationFragment extends Fragment implements ConversationDataLi
     }
 
     private AcbNativeAdLoader mNativeAdLoader;
+    private Handler mAdRefreshHandler = new Handler() {
+        @Override public void handleMessage(Message msg) {
+            loadTopBannerAd();
+        }
+    };
     private AcbNativeAd mNativeAd;
     private ViewGroup mAdContainer;
     private AcbNativeAdContainerView mAdContentView;
@@ -594,6 +601,35 @@ public class ConversationFragment extends Fragment implements ConversationDataLi
         BugleAnalytics.logEvent("SMS_DetailsPage_Show", true, true);
     }
 
+    private void loadTopBannerAd() {
+        BugleAnalytics.logEvent("Detailspage_TopAd_Should_Show", true, true);
+        List<AcbNativeAd> nativeAds = AcbNativeAdManager.fetch(AdPlacement.AD_DETAIL_NATIVE, 1);
+        if (nativeAds.size() > 0) {
+            mNativeAd = nativeAds.get(0);
+            mNativeAd.setNativeClickListener(
+                    acbAd -> BugleAnalytics.logEvent("Detailspage_TopAd_Click", true, false));
+            showTopBannerAd();
+        } else {
+            mNativeAdLoader = AcbNativeAdManager.createLoaderWithPlacement(AdPlacement.AD_DETAIL_NATIVE);
+            mNativeAdLoader.load(1, new AcbNativeAdLoader.AcbNativeAdLoadListener() {
+                @Override
+                public void onAdReceived(AcbNativeAdLoader acbNativeAdLoader, List<AcbNativeAd> list) {
+                    if (list.size() > 0) {
+                        mNativeAd = list.get(0);
+                        mNativeAd.setNativeClickListener(
+                                acbAd -> BugleAnalytics.logEvent("Detailspage_TopAd_Click", true, false));
+                        showTopBannerAd();
+                    }
+                }
+
+                @Override
+                public void onAdFinished(AcbNativeAdLoader acbNativeAdLoader, AcbError acbError) {
+
+                }
+            });
+        }
+    }
+
     public void showTopBannerAd() {
         if (((ConversationActivity) getActivity()).shouldShowContactPickerFragment()) {
             BugleAnalytics.logEvent("Detailspage_TopAd_Not_Show", "reason", "isFromContactPicker");
@@ -641,6 +677,7 @@ public class ConversationFragment extends Fragment implements ConversationDataLi
 
         FrameLayout choice = ViewUtils.findViewById(adView, R.id.ad_choice);
         mAdContentView.setAdChoiceView(choice);
+        mAdContainer.removeAllViews();
         mAdContainer.addView(mAdContentView);
 
         ImageView ivAdPreview = adView.findViewById(R.id.icon_ad_preview);
@@ -653,11 +690,19 @@ public class ConversationFragment extends Fragment implements ConversationDataLi
         mRecyclerView.setClipToPadding(true);
 
         BugleAnalytics.logEvent("Detailspage_TopAd_Show", true, true);
+        if (!HSConfig.optBoolean(false, "Application", "SMSAd", "SMSDetailspageTopAd", "HideWhenKeyboardShow")) {
+            AcbNativeAdManager.preload(1, AdPlacement.AD_DETAIL_NATIVE);
+            mAdRefreshHandler.sendEmptyMessageDelayed(0,
+                    HSConfig.optInteger(60, "Application", "SMSAd", "SMSDetailspageTopAd", "RefreshInterval")
+                            * DateUtils.SECOND_IN_MILLIS);
+        }
     }
 
     private void hideTopBannerAd() {
-        mAdContainer.setVisibility(View.GONE);
-        mRecyclerView.setClipToPadding(false);
+        if (HSConfig.optBoolean(false, "Application", "SMSAd", "SMSDetailspageTopAd", "HideWhenKeyboardShow")) {
+            mAdContainer.setVisibility(View.GONE);
+            mRecyclerView.setClipToPadding(false);
+        }
     }
 
     /**
@@ -773,32 +818,7 @@ public class ConversationFragment extends Fragment implements ConversationDataLi
 
         if (AdConfig.isDetailpageTopAdEnabled()
                 && !mHost.isFromCreateConversation()) {
-            BugleAnalytics.logEvent("Detailspage_TopAd_Should_Show", true, true);
-            List<AcbNativeAd> nativeAds = AcbNativeAdManager.fetch(AdPlacement.AD_DETAIL_NATIVE, 1);
-            if (nativeAds.size() > 0) {
-                mNativeAd = nativeAds.get(0);
-                mNativeAd.setNativeClickListener(
-                        acbAd -> BugleAnalytics.logEvent("Detailspage_TopAd_Click", true, false));
-                showTopBannerAd();
-            } else {
-                mNativeAdLoader = AcbNativeAdManager.createLoaderWithPlacement(AdPlacement.AD_DETAIL_NATIVE);
-                mNativeAdLoader.load(1, new AcbNativeAdLoader.AcbNativeAdLoadListener() {
-                    @Override
-                    public void onAdReceived(AcbNativeAdLoader acbNativeAdLoader, List<AcbNativeAd> list) {
-                        if (list.size() > 0) {
-                            mNativeAd = list.get(0);
-                            mNativeAd.setNativeClickListener(
-                                    acbAd -> BugleAnalytics.logEvent("Detailspage_TopAd_Click", true, false));
-                            showTopBannerAd();
-                        }
-                    }
-
-                    @Override
-                    public void onAdFinished(AcbNativeAdLoader acbNativeAdLoader, AcbError acbError) {
-
-                    }
-                });
-            }
+            loadTopBannerAd();
         }
         if (AdConfig.isHomepageBannerAdEnabled()) {
             AcbNativeAdManager.preload(1, AdPlacement.AD_BANNER);
@@ -1155,6 +1175,8 @@ public class ConversationFragment extends Fragment implements ConversationDataLi
         if (AdConfig.isDetailpageTopAdEnabled()) {
             AcbNativeAdManager.preload(1, AdPlacement.AD_DETAIL_NATIVE);
         }
+
+        mAdRefreshHandler.removeCallbacksAndMessages(null);
 
         HSGlobalNotificationCenter.removeObserver(this);
         FiveStarRateDialog.dismissDialogs();
