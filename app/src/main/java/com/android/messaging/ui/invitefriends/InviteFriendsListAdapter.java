@@ -41,16 +41,8 @@ public class InviteFriendsListAdapter extends RecyclerView.Adapter<RecyclerView.
         mOnItemCountChangeListener = onItemCountChangeListener;
     }
 
-    public String getRecipients() {
-        StringBuilder recipients = new StringBuilder();
-        if (mContactInfos != null) {
-            for (CallAssistantUtils.ContactInfo contactInfo : mContactInfos) {
-                recipients.append(contactInfo.number);
-                recipients.append(",");
-            }
-            return recipients.toString();
-        }
-        return "";
+    public List<CallAssistantUtils.ContactInfo> getContactInfos() {
+        return mContactInfos;
     }
 
     public void initData(List<CallAssistantUtils.ContactInfo> contactInfos) {

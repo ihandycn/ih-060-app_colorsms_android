@@ -62,7 +62,6 @@ public class InviteFriendsActivity extends AppCompatActivity implements Conversa
     private InviteFriendsListAdapter mAdapter;
     private PlainTextEditText mEditText;
     private TextView mInviteButton;
-
     private String mDescription;
 
 
@@ -81,12 +80,22 @@ public class InviteFriendsActivity extends AppCompatActivity implements Conversa
 
         mInviteButton.setVisibility(View.GONE);
         mInviteButton.setOnClickListener(v -> {
-            InsertNewMessageAction.insertNewMessage(ParticipantData.DEFAULT_SELF_SUB_ID, mAdapter.getRecipients(),
-                    mDescription + InviteFriendsTest.getSendLink(), "");
+            if (TextUtils.isEmpty(mDescription)) {
+                return;
+            }
+
+            String message = mDescription + InviteFriendsTest.getSendLink();
+            for (CallAssistantUtils.ContactInfo contactInfo : mAdapter.getContactInfos()) {
+                if (!TextUtils.isEmpty(contactInfo.number)) {
+                    InsertNewMessageAction.insertNewMessage(ParticipantData.DEFAULT_SELF_SUB_ID, contactInfo.number,
+                            message, "");
+                }
+            }
             Toasts.showToast(R.string.invite_friends_success_toast);
 
             BugleAnalytics.logEvent("Invite_SendPage_Invite_Click", "from", getIntent().getStringExtra(INTENT_KEY_FROM));
-            BugleAnalytics.logEvent("Invite_SMS_Send");
+            BugleAnalytics.logEvent("Invite_SMS_Send", "link", InviteFriendsTest.getSendLink(),
+                    "isModified", "" + !TextUtils.equals(mDescription, InviteFriendsTest.getSendDescription()));
             InviteFriendsTest.logInviteFriendsClick();
             InviteFriendsTest.logInviteSmsSent();
             finish();
