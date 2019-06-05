@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <ImageView
+        android:id="@+id/message_free_up_close"
+        android:clickable="true"
+        android:focusable="true"
+        android:layout_height="28dp"
+        android:layout_width="28dp"
+        android:layout_marginEnd="5.3dp"
+        android:padding="8dp"
+        android:background="@drawable/message_free_up_close_btn_background"
+        app:srcCompat="@drawable/ic_free_up_popup"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"/>
+
+    <com.android.messaging.ui.view.MessagesTextView
+        android:id="@+id/message_free_up_title"
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:text="@string/message_free_up_title"
+        android:layout_marginEnd="46.7dp"
+        android:layout_marginStart="23.7dp"
+        android:textSize="18.7sp"
+        android:textColor="@color/text_primary_color"
+        android:includeFontPadding="false"
+        app:typeface="@string/custom_font_semibold"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/message_free_up_close"
+        >
+    </com.android.messaging.ui.view.MessagesTextView>
+
+    <com.android.messaging.ui.view.MessagesTextView
+        android:id="@+id/message_free_up_content"
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:text="@string/message_free_up_content"
+        android:layout_marginTop="12.7dp"
+        android:layout_marginEnd="29.7dp"
+        android:layout_marginStart="24.3dp"
+        android:textSize="13.3sp"
+        android:textColor="@color/dialog_content_color"
+        android:includeFontPadding="false"
+        android:lineSpacingMultiplier="1.1"
+        app:typeface="@string/custom_font_medium"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/message_free_up_title"
+        >
+    </com.android.messaging.ui.view.MessagesTextView>
+
+</android.support.constraint.ConstraintLayout>

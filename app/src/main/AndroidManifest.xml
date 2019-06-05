@@ -787,6 +787,12 @@
             android:excludeFromRecents="true"
             android:screenOrientation="portrait"
             android:theme="@style/SettingsActivity" />
+        <activity
+            android:name=".backup.BackUpRestoreActivity"
+            android:configChanges="orientation|screenSize|keyboardHidden"
+            android:screenOrientation="portrait"
+            android:theme="@style/SettingsActivity" />
+
     </application>
 
 </manifest>

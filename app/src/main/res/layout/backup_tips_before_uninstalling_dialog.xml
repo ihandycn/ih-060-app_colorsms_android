@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <com.android.messaging.ui.view.MessagesTextView
+        android:id="@+id/backup_tip_before_uninstalling_title"
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+        android:text="@string/backup_tip_dialog_title"
+        android:layout_marginStart="23dp"
+        android:textSize="18.7sp"
+        android:textColor="@color/text_primary_color"
+        android:includeFontPadding="false"
+        android:layout_marginTop="5dp"
+        app:typeface="@string/custom_font_semibold"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        >
+    </com.android.messaging.ui.view.MessagesTextView>
+
+    <com.android.messaging.ui.view.MessagesTextView
+        android:id="@+id/backup_tip_before_uninstalling_content"
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:text="@string/backup_tips_before_uninstalling_content"
+        android:layout_marginTop="12.7dp"
+        android:layout_marginEnd="47.7dp"
+        android:layout_marginStart="24.7dp"
+        android:textSize="13.3sp"
+        android:textColor="@color/dialog_content_color"
+        android:includeFontPadding="false"
+        android:lineSpacingMultiplier="1.1"
+        app:typeface="@string/custom_font_medium"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/backup_tip_before_uninstalling_title"
+        >
+    </com.android.messaging.ui.view.MessagesTextView>
+
+    <ImageView
+        android:id="@+id/backup_tip_before_uninstalling_flag"
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+        android:layout_marginStart="7dp"
+        app:srcCompat="@drawable/ic_tips"
+        app:layout_constraintStart_toEndOf="@+id/backup_tip_before_uninstalling_title"
+        app:layout_constraintTop_toTopOf="@+id/backup_tip_before_uninstalling_title"
+        app:layout_constraintBottom_toBottomOf="@+id/backup_tip_before_uninstalling_title"/>
+
+</android.support.constraint.ConstraintLayout>

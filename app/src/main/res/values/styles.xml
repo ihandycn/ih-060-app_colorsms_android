@@ -787,4 +787,26 @@
     <style name="AcbSmsRecyclerViewTheme" parent="Theme.AppCompat.Light">
         <item name="colorPrimary">@color/conversation_edge_effect</item>
     </style>
+
+    <style name="RestoreRadioGroup">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:gravity">start|center_vertical</item>
+        <item name="android:textColor">@color/text_primary_color</item>
+        <item name="android:checked">false</item>
+        <item name="android:drawableRight">?android:attr/listChoiceIndicatorSingle</item>
+        <item name="android:background">?selectableItemBackground</item>
+        <item name="android:button">@null</item>
+    </style>
+
+    <style name="BackUpRadioGroup">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:gravity">start|center_vertical</item>
+        <item name="android:textColor">@color/text_primary_color</item>
+        <item name="android:checked">false</item>
+        <item name="android:drawableRight">?android:attr/listChoiceIndicatorMultiple</item>
+        <item name="android:background">?selectableItemBackground</item>
+        <item name="android:button">@null</item>
+    </style>
 </resources>
