@@ -20,20 +20,12 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.FrameLayout;
 import android.widget.ImageView;
-import android.widget.TextView;
 
 import com.android.messaging.R;
 import com.android.messaging.datamodel.data.ConversationMessageData;
 import com.android.messaging.ui.AsyncImageView.AsyncImageViewDelayLoader;
 import com.android.messaging.ui.conversation.ConversationMessageView.ConversationMessageViewHost;
-import com.android.messaging.ui.customize.ConversationColors;
-import com.android.messaging.util.ViewUtils;
-import com.superapps.util.Dimensions;
-
-import net.appcloudbox.ads.base.ContainerView.AcbNativeAdContainerView;
-import net.appcloudbox.ads.base.ContainerView.AcbNativeAdIconView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -140,7 +132,7 @@ public class ConversationMessageAdapter extends
                     checkbox.setImageResource(R.drawable.ic_choose);
                 }
             } else {
-                checkbox.setImageResource(R.drawable.ic_choose);
+                checkbox.setVisibility(View.GONE);
             }
         ((ConversationMessageViewHolder) holder).bind();
     }
