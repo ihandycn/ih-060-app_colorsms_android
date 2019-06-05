@@ -12,6 +12,7 @@ import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.airbnb.lottie.LottieAnimationView;
 import com.android.messaging.R;
 import com.android.messaging.privatebox.PrivateContactsManager;
 import com.android.messaging.privatebox.ui.addtolist.CallAssistantUtils;
@@ -40,7 +41,7 @@ public class SelectFriendsToInviteActivity extends AppCompatActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_call_blocker);
+        setContentView(R.layout.activity_invite_friends_to_select);
 
         startQueryData();
 
@@ -86,7 +87,6 @@ public class SelectFriendsToInviteActivity extends AppCompatActivity {
 
     }
 
-
     private void startQueryData() {
         Threads.postOnThreadPoolExecutor(() -> {
             final List<CallAssistantUtils.ContactInfo> list = new ArrayList<>();
@@ -103,7 +103,13 @@ public class SelectFriendsToInviteActivity extends AppCompatActivity {
             Collections.sort(filterContactsList, (o1, o2) -> Collator.getInstance().compare(o1.toString(), o2.toString()));
             list.addAll(filterContactsList);
 
-            Threads.postOnMainThread(() -> mAdapter.updateData(list));
+            Threads.postOnMainThread(() -> {
+                mAdapter.updateData(list);
+
+                LottieAnimationView lottieAnimationView = findViewById(R.id.loading_image_hint);
+                lottieAnimationView.cancelAnimation();
+                lottieAnimationView.setVisibility(View.GONE);
+            });
         });
     }
 

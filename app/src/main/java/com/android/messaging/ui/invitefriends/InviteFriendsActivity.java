@@ -127,14 +127,13 @@ public class InviteFriendsActivity extends AppCompatActivity implements Conversa
         cancelButton.setBackground(BackgroundDrawables.createBackgroundDrawable(0xfff2f4f6,
                 Dimensions.pxFromDp(26f), false));
         cancelButton.setOnClickListener(v -> {
-            mEditText.setText(mDescription);
-            mEditText.setSelection(mEditText.getText().length());
+            makeEditTextUneditable(editButton, saveButton, cancelButton, false);
         });
 
         saveButton.setBackground(BackgroundDrawables.createBackgroundDrawable(0xfff2f4f6,
                 Dimensions.pxFromDp(26f), false));
         saveButton.setOnClickListener(v -> {
-            makeEditTextUneditable(editButton, saveButton, cancelButton);
+            makeEditTextUneditable(editButton, saveButton, cancelButton, true);
             BugleAnalytics.logEvent("Invite_SendPage_Save_Click");
         });
     }
@@ -148,11 +147,15 @@ public class InviteFriendsActivity extends AppCompatActivity implements Conversa
         mEditText.setSelection(mEditText.getText().length());
     }
 
-    private void makeEditTextUneditable(View editButton, View saveButton, View cancelButton) {
+    private void makeEditTextUneditable(View editButton, View saveButton, View cancelButton, boolean save) {
         editButton.setVisibility(View.VISIBLE);
         saveButton.setVisibility(View.GONE);
         cancelButton.setVisibility(View.GONE);
-        mDescription = mEditText.getText().toString();
+        if (save) {
+            mDescription = mEditText.getText().toString();
+        } else {
+            mEditText.setText(mDescription);
+        }
         mEditText.setEnabled(false);
     }
 
