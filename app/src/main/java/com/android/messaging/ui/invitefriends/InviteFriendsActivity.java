@@ -79,7 +79,7 @@ public class InviteFriendsActivity extends AppCompatActivity implements Conversa
                 return;
             }
 
-            String message = mDescription + InviteFriendsTest.getSendLink();
+            String message = mDescription + "\n" + InviteFriendsTest.getSendLink();
             for (CallAssistantUtils.ContactInfo contactInfo : mAdapter.getContactInfos()) {
                 if (!TextUtils.isEmpty(contactInfo.number)) {
                     InsertNewMessageAction.insertNewMessage(ParticipantData.DEFAULT_SELF_SUB_ID, contactInfo.number,
