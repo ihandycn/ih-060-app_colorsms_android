@@ -1210,8 +1210,7 @@
         <item quantity="one">%s Second</item>
         <item quantity="other">%s Seconds</item>
     </plurals>
-
-
+    
 
     <string name="menu_invite_friends">Invite Friends</string>
     <string name="invite_friends_now">INVITE NOW</string>
