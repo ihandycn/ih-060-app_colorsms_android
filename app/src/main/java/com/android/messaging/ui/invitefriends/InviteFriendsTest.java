@@ -2,13 +2,13 @@ package com.android.messaging.ui.invitefriends;
 
 import android.content.res.Resources;
 
+import com.android.messaging.BuildConfig;
 import com.android.messaging.R;
 import com.ihs.app.framework.HSApplication;
 import com.superapps.util.Toasts;
 
 import net.appcloudbox.autopilot.AutopilotConfig;
 import net.appcloudbox.autopilot.AutopilotEvent;
-import net.appcloudbox.autopilot.BuildConfig;
 
 public class InviteFriendsTest {
 
