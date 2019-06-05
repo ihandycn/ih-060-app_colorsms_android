@@ -15,7 +15,7 @@
     <LinearLayout
         android:id="@+id/bottom_container"
         android:layout_width="match_parent"
-        android:layout_height="54dp"
+        android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:gravity="center"
         android:orientation="vertical">
@@ -24,6 +24,7 @@
             android:id="@+id/private_box_add_btn"
             android:layout_width="match_parent"
             android:layout_height="50dp"
+            android:layout_marginBottom="9dp"
             android:layout_gravity="center"
             android:layout_marginLeft="16dp"
             android:layout_marginRight="16dp"
