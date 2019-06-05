@@ -11,6 +11,7 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.TextView;
 
@@ -58,7 +59,6 @@ public class InviteFriendsActivity extends AppCompatActivity implements Conversa
     private PlainTextEditText mEditText;
     private TextView mInviteButton;
     private String mDescription;
-
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -112,7 +112,7 @@ public class InviteFriendsActivity extends AppCompatActivity implements Conversa
         mEditText = findViewById(R.id.invite_friends_message_text);
         mEditText.setTypeface(FontUtils.getTypeface());
         mEditText.setText(mDescription);
-        mEditText.setEnabled(false);
+        disableEditText();
 
         View editButton = findViewById(R.id.edit_button);
         View cancelButton = findViewById(R.id.invite_friends_invite_cancel_button);
@@ -138,8 +138,7 @@ public class InviteFriendsActivity extends AppCompatActivity implements Conversa
         editButton.setVisibility(View.GONE);
         saveButton.setVisibility(View.VISIBLE);
         cancelButton.setVisibility(View.VISIBLE);
-        mEditText.setEnabled(true);
-        mEditText.requestFocus();
+        enableEditText();
         mEditText.setSelection(mEditText.getText().length());
     }
 
@@ -152,7 +151,18 @@ public class InviteFriendsActivity extends AppCompatActivity implements Conversa
         } else {
             mEditText.setText(mDescription);
         }
-        mEditText.setEnabled(false);
+        disableEditText();
+        ImeUtil.get().hideImeKeyboard(InviteFriendsActivity.this, mEditText);
+    }
+
+    private void enableEditText() {
+        mEditText.setCursorVisible(true);
+        mEditText.setTouchable(true);
+    }
+
+    private void disableEditText() {
+        mEditText.setTouchable(false);
+        mEditText.setCursorVisible(false);
     }
 
     private void initRecyclerView() {
