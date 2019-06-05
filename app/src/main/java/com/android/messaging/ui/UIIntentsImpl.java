@@ -59,6 +59,7 @@ import com.android.messaging.ui.appsettings.SettingAdvancedActivity;
 import com.android.messaging.ui.appsettings.SettingGeneralActivity;
 import com.android.messaging.ui.appsettings.SettingsActivity;
 import com.android.messaging.ui.attachmentchooser.AttachmentChooserActivity;
+import com.android.messaging.ui.contact.ContactPickerActivity;
 import com.android.messaging.ui.conversation.ConversationActivity;
 import com.android.messaging.ui.conversation.LaunchConversationActivity;
 import com.android.messaging.ui.conversationlist.ArchivedConversationListActivity;
@@ -241,9 +242,11 @@ public class UIIntentsImpl extends UIIntents {
     @Override
     public void launchCreateNewConversationActivity(final Context context,
                                                     final MessageData draft) {
-        final Intent intent = getConversationActivityIntent(context, null, draft,
-                false /* withCustomTransition */);
-        context.startActivity(intent);
+        final Intent intent = new Intent(context, ContactPickerActivity.class);
+        if (draft != null) {
+            intent.putExtra(UI_INTENT_EXTRA_DRAFT_DATA, draft);
+        }
+        Navigations.startActivitySafely(context, intent);
     }
 
     @Override

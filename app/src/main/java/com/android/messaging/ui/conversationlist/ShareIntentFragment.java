@@ -21,23 +21,24 @@ import android.app.AlertDialog.Builder;
 import android.app.Dialog;
 import android.app.DialogFragment;
 import android.content.DialogInterface;
-import android.content.DialogInterface.OnClickListener;
 import android.database.Cursor;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 
 import com.android.messaging.R;
+import com.android.messaging.datamodel.DataModel;
 import com.android.messaging.datamodel.binding.Binding;
 import com.android.messaging.datamodel.binding.BindingBase;
 import com.android.messaging.datamodel.data.ConversationListData;
-import com.android.messaging.datamodel.data.ConversationListItemData;
 import com.android.messaging.datamodel.data.ConversationListData.ConversationListDataListener;
+import com.android.messaging.datamodel.data.ConversationListItemData;
 import com.android.messaging.ui.ListEmptyView;
-import com.android.messaging.datamodel.DataModel;
 
 /**
  * Allow user to pick conversation to which an incoming attachment will be shared.
@@ -48,6 +49,7 @@ public class ShareIntentFragment extends DialogFragment implements ConversationL
 
     public interface HostInterface {
         public void onConversationClick(final ConversationListItemData conversationListItemData);
+
         public void onCreateConversationClick();
     }
 
@@ -66,7 +68,7 @@ public class ShareIntentFragment extends DialogFragment implements ConversationL
         final Activity activity = getActivity();
         final LayoutInflater inflater = activity.getLayoutInflater();
         View view = inflater.inflate(R.layout.share_intent_conversation_list_view, null);
-        mEmptyListMessageView = (ListEmptyView) view.findViewById(R.id.no_conversations_view);
+        mEmptyListMessageView = view.findViewById(R.id.no_conversations_view);
         mEmptyListMessageView.setImageHint(R.drawable.ic_oobe_conv_list);
         // The default behavior for default layout param generation by LinearLayoutManager is to
         // provide width and height of WRAP_CONTENT, but this is not desirable for
@@ -81,7 +83,7 @@ public class ShareIntentFragment extends DialogFragment implements ConversationL
         };
         mListBinding.getData().init(getLoaderManager(), mListBinding);
         mAdapter = new ShareIntentAdapter(activity, null, this);
-        mRecyclerView = (RecyclerView) view.findViewById(android.R.id.list);
+        mRecyclerView = view.findViewById(android.R.id.list);
         mRecyclerView.setLayoutManager(manager);
         mRecyclerView.setHasFixedSize(true);
         mRecyclerView.setAdapter(mAdapter);
@@ -89,18 +91,23 @@ public class ShareIntentFragment extends DialogFragment implements ConversationL
                 .setView(view)
                 .setTitle(R.string.share_intent_activity_label);
 
+
         final Bundle arguments = getArguments();
         if (arguments == null || !arguments.getBoolean(HIDE_NEW_CONVERSATION_BUTTON_KEY)) {
-            dialogBuilder.setPositiveButton(R.string.share_new_message, new OnClickListener() {
-                        @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                            mDismissed = true;
-                            mHost.onCreateConversationClick();
-                    }
-                });
+            dialogBuilder.setPositiveButton(R.string.share_new_message, (dialog, which) -> {
+                mDismissed = true;
+                mHost.onCreateConversationClick();
+            });
         }
-        return dialogBuilder.setNegativeButton(R.string.share_cancel, null)
-                .create();
+        AlertDialog dialog = dialogBuilder.setNegativeButton(R.string.share_cancel, null).create();
+        if (arguments == null || !arguments.getBoolean(HIDE_NEW_CONVERSATION_BUTTON_KEY)
+                && Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            dialog.setOnShowListener(dialogInterface -> {
+                Button button = dialog.getButton(AlertDialog.BUTTON_POSITIVE);
+                button.setOnClickListener(view1 -> mHost.onCreateConversationClick());
+            });
+        }
+        return dialog;
     }
 
     @Override
@@ -133,7 +140,7 @@ public class ShareIntentFragment extends DialogFragment implements ConversationL
 
     @Override
     public void onConversationListCursorUpdated(final ConversationListData data,
-            final Cursor cursor) {
+                                                final Cursor cursor) {
         mListBinding.ensureBound(data);
         mAdapter.swapCursor(cursor);
         updateEmptyListUi(cursor == null || cursor.getCount() == 0);

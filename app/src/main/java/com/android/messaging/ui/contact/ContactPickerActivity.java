@@ -12,6 +12,7 @@ import android.view.ViewTreeObserver;
 
 import com.android.messaging.R;
 import com.android.messaging.datamodel.BugleNotifications;
+import com.android.messaging.datamodel.data.MessageData;
 import com.android.messaging.ui.BugleActionBarActivity;
 import com.android.messaging.ui.UIIntents;
 import com.android.messaging.ui.conversationlist.ConversationListActivity;
@@ -33,7 +34,6 @@ public class ContactPickerActivity extends BugleActionBarActivity implements
         ContactPickerFragment.ContactPickerFragmentHost,
         ViewTreeObserver.OnGlobalLayoutListener {
 
-
     // Fragment transactions cannot be performed after onSaveInstanceState() has been called since
     // it will cause state loss. We don't want to call commitAllowingStateLoss() since it's
     // dangerous. Therefore, we note when instance state is saved and avoid performing UI state
@@ -45,14 +45,12 @@ public class ContactPickerActivity extends BugleActionBarActivity implements
 
     private ViewGroup mContainer;
 
-    private static final String SAVED_INSTANCE_STATE_UI_STATE_KEY = "uistate";
     private static final String PREF_KEY_CONVERSATION_ACTIVITY_SHOW_TIME = "pref_key_conversation_activity_show_time";
 
     private int mStatusBarHeight;
     private int mKeyboardHeight;
     private int mNavigationBarHeight;
-
-    private final String TAG = "contact_picker_test";
+    private MessageData mDraftData;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,6 +61,9 @@ public class ContactPickerActivity extends BugleActionBarActivity implements
 
         if (getIntent() != null && getIntent().getBooleanExtra(BugleNotifications.EXTRA_FROM_NOTIFICATION, false)) {
             BugleAnalytics.logEvent("SMS_Notifications_Clicked", true, true);
+        }
+        if (getIntent() != null) {
+            mDraftData = getIntent().getParcelableExtra(UIIntents.UI_INTENT_EXTRA_DRAFT_DATA);
         }
 
         if (intent.
@@ -155,7 +156,7 @@ public class ContactPickerActivity extends BugleActionBarActivity implements
             finish();
         } else {
             UIIntents.get().launchConversationActivity(
-                    this, conversationId, null,
+                    this, conversationId, mDraftData,
                     null, false, "", true);
             finish();
         }
@@ -238,5 +239,4 @@ public class ContactPickerActivity extends BugleActionBarActivity implements
             UiUtils.updateKeyboardHeight(mKeyboardHeight);
         }
     }
-
 }
