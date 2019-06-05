@@ -66,7 +66,10 @@ public class InviteFriendsListAdapter extends RecyclerView.Adapter<RecyclerView.
         }
 
         int currentCount = getItemCount();
-        notifyItemRangeInserted(preCount, currentCount - preCount);
+        if (currentCount - preCount > 0) {
+            notifyItemRangeInserted(preCount, currentCount - preCount);
+        }
+
         if (mOnItemCountChangeListener != null) {
             mOnItemCountChangeListener.onChange();
         }
