@@ -95,11 +95,18 @@ public class InviteFriendsRewardDialogActivity extends AppCompatActivity {
             lottieJsonPath = "lottie/invite_friends/unlocktheme/data.json";
             lottieImagePath = "lottie/invite_friends/unlocktheme/images/";
         } else {
-            description = getString(R.string.invite_friends_default_back_to_main_page_description);
             lottieJsonPath = "lottie/invite_friends/default/data.json";
             lottieImagePath = "lottie/invite_friends/default/images/";
-        }
 
+            String occasion = getIntent().getStringExtra(INTENT_KEY_OCCASION);
+            if ("SendSMS".equals(occasion)) {
+                description = getString(R.string.invite_friends_default_back_to_main_page_description);
+            } else if ("ChangeTheme".equals(occasion)) {
+                description = getString(R.string.invite_friends_default_apply_theme_description);
+            } else {
+                description = getString(R.string.invite_friends_default_back_to_main_page_description);
+            }
+        }
         titleTv.setText(title);
         descriptionTv.setText(description);
 
