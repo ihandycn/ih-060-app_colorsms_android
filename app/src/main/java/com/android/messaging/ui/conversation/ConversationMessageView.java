@@ -67,7 +67,6 @@ import com.android.messaging.ui.VideoThumbnailView;
 import com.android.messaging.ui.customize.AvatarBgDrawables;
 import com.android.messaging.ui.customize.ConversationColors;
 import com.android.messaging.ui.customize.PrimaryColors;
-import com.android.messaging.ui.customize.WallpaperDrawables;
 import com.android.messaging.ui.wallpaper.WallpaperManager;
 import com.android.messaging.util.AccessibilityUtil;
 import com.android.messaging.util.Assert;
@@ -479,11 +478,6 @@ public class ConversationMessageView extends RelativeLayout implements View.OnCl
 
         if(mData.getIsLocked()) {
             mMessageIsLockView.setVisibility(VISIBLE);
-            if(WallpaperDrawables.getConversationListWallpaperBitmap() == null){
-                mMessageIsLockView.setImageResource(R.drawable.message_lock_default);
-            }else {
-                mMessageIsLockView.setImageResource(R.drawable.message_lock_theme);
-            }
         }
         else {
             mMessageIsLockView.setVisibility(GONE);
@@ -1037,8 +1031,14 @@ public class ConversationMessageView extends RelativeLayout implements View.OnCl
         }
 
         if (!hasWallPaper) {
-            mStatusTextView.setBackground(null);
+            mStatusContainer.setBackground(null);
         }
+        if(!hasWallPaper && mData.getIsLocked()){
+            mMessageIsLockView.setImageResource(R.drawable.message_lock_default);
+        }else {
+            mMessageIsLockView.setImageResource(R.drawable.message_lock_theme);
+        }
+
         mStatusTextView.setTextColor(resources.getColor(timestampColorResId));
 
         mSenderNameTextView.setTextColor(resources.getColor(timestampColorResId));
