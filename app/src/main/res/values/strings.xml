@@ -59,8 +59,9 @@
     <string name="mediapicker_audio_title">Record audio</string>
     <string name="network_error_and_try_again">Network errors. Please try again.</string>
 
-
     <string name="action_share">Share</string>
+    <string name="action_lock">Lock</string>
+    <string name="action_unlock">Unlock</string>
 
     <string name="posted_just_now">"Just now"</string>
     <string name="posted_now">"Now"</string>
@@ -886,6 +887,8 @@
     <string name="view_more_messages">View more messages</string>
     <!-- Toast message telling the user a conversation has been deleted -->
     <string name="conversation_deleted">Conversation deleted</string>
+    <!-- Toast message telling the user a message is lock when user want to delete -->
+    <string name="message_locked_when_delete">To delete locked messages, unlock them first</string>
     <!-- Displayed when user adds a new conversation widget. Tapping on the widget in this
           mode will bring user to the conversation selection screen -->
     <string name="tap_to_configure">Conversation deleted. Tap to show a different Messaging conversation</string>
@@ -1207,8 +1210,7 @@
         <item quantity="one">%s Second</item>
         <item quantity="other">%s Seconds</item>
     </plurals>
-
-
+    
 
     <string name="menu_invite_friends">Invite Friends</string>
     <string name="invite_friends_now">INVITE NOW</string>

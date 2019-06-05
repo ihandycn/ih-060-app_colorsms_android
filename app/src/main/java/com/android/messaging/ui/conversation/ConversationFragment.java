@@ -126,6 +126,7 @@ import com.ihs.commons.notificationcenter.INotificationObserver;
 import com.ihs.commons.utils.HSBundle;
 import com.ihs.commons.utils.HSLog;
 import com.superapps.util.Dimensions;
+import com.superapps.util.Preferences;
 import com.superapps.util.Threads;
 
 import net.appcloudbox.ads.base.AcbNativeAd;
@@ -152,7 +153,9 @@ public class ConversationFragment extends Fragment implements ConversationDataLi
     public static final String EVENT_HIDE_MEDIA_PICKER = "event_hide_media_picker";
     public static final String RESET_ITEM = "reset_item";
 
-    private ArrayList<ConversationMessageView> selectMessages;
+    private final String IS_FIRST_CLICK_ACTION_MENU = "is_first_click_action_menu";
+    private boolean mIsFirstClickActionMenu = false;
+    private ArrayList<ConversationMessageData> mSelectMessageDataList;
 
     public static ArrayList<String> getSelectMessageIds() {
         return selectMessageIds;
@@ -231,7 +234,7 @@ public class ConversationFragment extends Fragment implements ConversationDataLi
     private int mFastFlingThreshold;
 
     // ConversationMessageView that is currently selected
-    private ConversationMessageView mSelectedMessage;
+    private ConversationMessageData mSelectedMessageData;
 
     // Attachment data for the attachment within the selected message that was long pressed
     private MessagePartData mSelectedAttachment;
@@ -296,9 +299,9 @@ public class ConversationFragment extends Fragment implements ConversationDataLi
     }
 
     private void resetActionModeAndAnimation() {
-        mAdapter.setMultiSelectMode(false);
         selectMessageIds.clear();
         mHost.dismissActionMode();
+        mAdapter.setMultiSelectMode(false);
         mAdapter.closeItemAnimation();
     }
 
@@ -350,18 +353,17 @@ public class ConversationFragment extends Fragment implements ConversationDataLi
     private final ActionMode.Callback mMessageActionModeCallback = new ActionMode.Callback() {
         @Override
         public boolean onCreateActionMode(final ActionMode actionMode, final Menu menu) {
-
             if (getActivity() == null) {
                 return false;
             }
             final MenuInflater menuInflater = getActivity().getMenuInflater();
             menuInflater.inflate(R.menu.conversation_fragment_select_menu, menu);
             if (singleMessageSelected()) {
-                //  mSelectedMessage = selectMessages.get(0);
-                if (mSelectedMessage == null) {
+                //  mSelectedMessageData = mSelectMessageDataList.get(0);
+                if (mSelectedMessageData == null) {
                     return false;
                 }
-                final ConversationMessageData data = mSelectedMessage.getData();
+                final ConversationMessageData data = mSelectMessageDataList.get(0);
                 menu.findItem(R.id.action_download).setVisible(data.getShowDownloadMessage());
                 menu.findItem(R.id.action_send).setVisible(data.getShowResendMessage());
 
@@ -370,6 +372,13 @@ public class ConversationFragment extends Fragment implements ConversationDataLi
                 menu.findItem(R.id.save_attachment).setVisible(mSelectedAttachment != null);
                 menu.findItem(R.id.forward_message_menu).setVisible(data.getCanForwardMessage());
 
+                if (data.getIsLocked()) {
+                    menu.findItem(R.id.unlock_message_menu).setVisible(true);
+                    menu.findItem(R.id.lock_message_menu).setVisible(false);
+                } else {
+                    menu.findItem(R.id.unlock_message_menu).setVisible(false);
+                    menu.findItem(R.id.lock_message_menu).setVisible(true);
+                }
                 // TODO: We may want to support copying attachments in the future, but it's
                 // unclear which attachment to pick when we make this context menu at the message level
                 // instead of the part level
@@ -387,7 +396,24 @@ public class ConversationFragment extends Fragment implements ConversationDataLi
                 // unclear which attachment to pick when we make this context menu at the message level
                 // instead of the part level
                 menu.findItem(R.id.copy_text).setVisible(false);
-                menu.findItem(R.id.action_menu).setVisible(false);
+
+                menu.findItem(R.id.action_menu).setVisible(true);
+
+                menu.findItem(R.id.lock_message_menu).setVisible(false);
+                menu.findItem(R.id.unlock_message_menu).setVisible(false);
+                for (ConversationMessageData item : mSelectMessageDataList) {
+                    if (item.getIsLocked()) {
+                        menu.findItem(R.id.unlock_message_menu).setVisible(true);
+                    } else {
+                        menu.findItem(R.id.lock_message_menu).setVisible(true);
+                    }
+                }
+            }
+
+            Preferences preferences = Preferences.getDefault();
+            mIsFirstClickActionMenu = preferences.getBoolean(IS_FIRST_CLICK_ACTION_MENU, true);
+            if(mIsFirstClickActionMenu){
+                menu.findItem(R.id.action_menu).setIcon(R.drawable.ic_menu_with_red_point);
             }
             return true;
         }
@@ -399,9 +425,9 @@ public class ConversationFragment extends Fragment implements ConversationDataLi
 
         @Override
         public boolean onActionItemClicked(final ActionMode actionMode, final MenuItem menuItem) {
-            mSelectedMessage = selectMessages.get(0);
-            final ConversationMessageData data = mSelectedMessage.getData();
-
+            mSelectedMessageData = mSelectMessageDataList.get(0);
+            final ConversationMessageData data = mSelectedMessageData;
+            boolean result = true;
             final String messageId = data.getMessageId();
             switch (menuItem.getItemId()) {
                 case R.id.save_attachment:
@@ -421,24 +447,23 @@ public class ConversationFragment extends Fragment implements ConversationDataLi
                                 new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 0);
                     }
                     BugleAnalytics.logEvent("SMS_DetailsPage_LongPress_Save", true);
-                    return true;
+                    break;
                 case R.id.action_delete_message:
                     deleteMessage();
-
-                    BugleAnalytics.logEvent("SMS_DetailsPage_LongPress_Delete", true, "numbers", String.valueOf(selectMessages.size()));
-                    return true;
+                    BugleAnalytics.logEvent("SMS_DetailsPage_LongPress_Delete", true, "numbers", String.valueOf(mSelectMessageDataList.size()));
+                    break;
                 case R.id.action_download:
-                    if (mSelectedMessage != null) {
+                    if (mSelectedMessageData != null) {
                         retryDownload(messageId);
                         resetActionModeAndAnimation();
                     }
-                    return true;
+                    break;
                 case R.id.action_send:
-                    if (mSelectedMessage != null) {
+                    if (mSelectedMessageData != null) {
                         retrySend(messageId);
                         resetActionModeAndAnimation();
                     }
-                    return true;
+                    break;
                 case R.id.copy_text:
                     Assert.isTrue(data.hasText());
                     final ClipboardManager clipboard = (ClipboardManager) getActivity()
@@ -447,17 +472,35 @@ public class ConversationFragment extends Fragment implements ConversationDataLi
                             ClipData.newPlainText(null /* label */, data.getText()));
                     resetActionModeAndAnimation();
                     BugleAnalytics.logEvent("SMS_DetailsPage_LongPress_Copy", true);
-                    return true;
+                    break;
                 case R.id.details_menu:
                     MessageDetailsDialog.show(
                             getActivity(), data, mBinding.getData().getParticipants(),
                             mBinding.getData().getSelfParticipantById(data.getSelfParticipantId()));
                     resetActionModeAndAnimation();
                     BugleAnalytics.logEvent("SMS_DetailsPage_LongPress_Info", true);
-                    return true;
+                    break;
+                case R.id.lock_message_menu:
+                    resetActionModeAndAnimation();
+                    Threads.postOnMainThreadDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            lockSelectedMessage();
+                        }
+                    }, 500);
+                    break;
+                case R.id.unlock_message_menu:
+                    resetActionModeAndAnimation();
+                    Threads.postOnMainThreadDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            unlockSelectedMessage();
+                        }
+                    }, 500);
+                    break;
                 case R.id.share_message_menu:
                     shareMessage(data);
-                    return true;
+                    break;
                 case R.id.forward_message_menu:
                     // TODO: Currently we are forwarding one part at a time, instead of
                     // the entire message. Change this to forwarding the entire message when we
@@ -466,15 +509,21 @@ public class ConversationFragment extends Fragment implements ConversationDataLi
                     UIIntents.get().launchForwardMessageActivity(getActivity(), message);
                     resetActionModeAndAnimation();
                     BugleAnalytics.logEvent("SMS_DetailsPage_LongPress_Forward", true);
-                    return true;
+                    break;
                 case R.id.action_menu:
                     BugleAnalytics.logEvent("SMS_DetailsPage_LongPress_More", true);
+                    if (mIsFirstClickActionMenu) {
+                        menuItem.setIcon(R.drawable.ic_menu);
+                        Preferences preferences = Preferences.getDefault();
+                        preferences.putBoolean(IS_FIRST_CLICK_ACTION_MENU, false);
+                    }
                     break;
                 default:
+                    result = false;
                     break;
             }
 
-            return false;
+            return result;
         }
 
         private void shareMessage(final ConversationMessageData data) {
@@ -514,7 +563,7 @@ public class ConversationFragment extends Fragment implements ConversationDataLi
     private boolean mHasSentMessages;
 
     private boolean singleMessageSelected() {
-        return selectMessages.size() == 1;
+        return mSelectMessageDataList.size() == 1;
     }
 
     private AcbNativeAdLoader mNativeAdLoader;
@@ -551,38 +600,37 @@ public class ConversationFragment extends Fragment implements ConversationDataLi
         super.onCreate(savedInstanceState);
         mFastFlingThreshold = getResources().getDimensionPixelOffset(
                 R.dimen.conversation_fast_fling_threshold);
-        selectMessages = new ArrayList<>();
+        mSelectMessageDataList = new ArrayList<>();
         if (selectMessageIds != null) {
             selectMessageIds.clear();
         }
         mAdapter = new ConversationMessageAdapter(this, null,
                 // Sets the item click listener on the Recycler item views.
-                v -> {
-                    final ConversationMessageView messageView = (ConversationMessageView) v;
-                    ConversationMessageData data = messageView.getData();
-
-                    if (data != null && mAdapter.isMultiSelectMode()) {
-                        ImageView checkBox = messageView.findViewById(R.id.check_box);
-                        checkBox.setSelected(!checkBox.isSelected());
-                        String messageId = data.getMessageId();
-                        if (selectMessageIds.contains(messageId)) {
-                            selectMessageIds.remove(messageId);
-                            selectMessages.remove(messageView);
-                        } else {
-                            selectMessageIds.add(messageId);
-                            selectMessages.add(messageView);
+                new ConversationMessageAdapter.ConversationMessageClickListener() {
+                    @Override
+                    public void onConversationMessageClick(ConversationMessageData data) {
+                        if (data != null && mAdapter.isMultiSelectMode()) {
+                            String messageId = data.getMessageId();
+                            if (selectMessageIds.contains(messageId)) {
+                                selectMessageIds.remove(messageId);
+                                mSelectMessageDataList.remove(data);
+                            } else {
+                                selectMessageIds.add(messageId);
+                                mSelectMessageDataList.add(data);
+                            }
+                            mHost.startActionMode(mMessageActionModeCallback);
+                            mAdapter.notifyDataSetChanged();
                         }
-                        mHost.startActionMode(mMessageActionModeCallback);
-                        mAdapter.notifyDataSetChanged();
+                        if (mSelectMessageDataList.isEmpty()) {
+                            resetActionModeAndAnimation();
+                        }
+                        handleMessageClick(data);
                     }
-                    if (selectMessages.isEmpty()) {
-                        resetActionModeAndAnimation();
+
+                    @Override
+                    public void onConversationMessageLongClick(ConversationMessageData data) {
+                        selectMessage(data);
                     }
-                    handleMessageClick(messageView);
-                },
-                view -> {
-                    selectMessage((ConversationMessageView) view);
-                    return true;
                 }
         );
 
@@ -745,7 +793,7 @@ public class ConversationFragment extends Fragment implements ConversationDataLi
         final LinearLayoutManager manager = new LinearLayoutManager(getActivity());
         manager.setStackFromEnd(true);
         manager.setReverseLayout(false);
-        mRecyclerView.setHasFixedSize(true);
+//        mRecyclerView.setHasFixedSize(true);
         mRecyclerView.setLayoutManager(manager);
         mRecyclerView.setItemAnimator(null);
         mRecyclerView.setAdapter(mAdapter);
@@ -859,34 +907,29 @@ public class ConversationFragment extends Fragment implements ConversationDataLi
                 activity, photoUri, imageBounds, imagesUri);
     }
 
-    private void selectMessage(final ConversationMessageView messageView) {
-        selectMessage(messageView, null /* attachment */);
+    private void selectMessage(final ConversationMessageData data) {
+        selectMessage(data, null /* attachment */);
     }
 
-    private void selectMessage(final ConversationMessageView messageView,
+    private void selectMessage(final ConversationMessageData data,
                                final MessagePartData attachment) {
         if (!mAdapter.isMultiSelectMode()) {
             mAdapter.setMultiSelectMode(true);
-            mSelectedMessage = messageView;
-            if (mSelectedMessage == null) {
+            mSelectedMessageData = data;
+            if (mSelectedMessageData == null) {
                 mAdapter.notifyDataSetChanged();
                 mSelectedAttachment = null;
                 return;
             }
             mSelectedAttachment = attachment;
-            ConversationMessageData data = messageView.getData();
             mAdapter.notifyDataSetChanged();
-            ImageView checkBox = messageView.findViewById(R.id.check_box);
-            checkBox.setSelected(true);
-            selectMessages.clear();
-            selectMessages.add(messageView);
+            mSelectMessageDataList.clear();
+            mSelectMessageDataList.add(data);
             selectMessageIds.add(data.getMessageId());
             mAdapter.openItemAnimation();
             mHost.startActionMode(mMessageActionModeCallback);
         }
-
     }
-
 
     @Override
     public void onSaveInstanceState(final Bundle outState) {
@@ -995,7 +1038,6 @@ public class ConversationFragment extends Fragment implements ConversationDataLi
     public void onConversationMessagesCursorUpdated(final ConversationData data,
                                                     final Cursor cursor, final ConversationMessageData newestMessage,
                                                     final boolean isSync) {
-        HSLog.d("message list show : " + System.currentTimeMillis());
         mBinding.ensureBound(data);
         // This needs to be determined before swapping cursor, which may change the scroll state.
         final boolean scrolledToBottom = isScrolledToBottom();
@@ -1005,20 +1047,24 @@ public class ConversationFragment extends Fragment implements ConversationDataLi
         final boolean oneOnOne =
                 !data.getParticipantsLoaded() || data.getOtherParticipant() != null;
         mAdapter.setOneOnOne(oneOnOne, false /* invalidate */);
-
         // Ensure that the action bar is updated with the current data.
         invalidateOptionsMenu();
 
-        List<ConversationMessageData> conversationMessageDataList = new ArrayList<>();
+        List<ConversationMessageData> messageDataList = new ArrayList<>();
+
         if (cursor != null && cursor.moveToFirst()) {
             do {
                 ConversationMessageData messageData = new ConversationMessageData();
                 messageData.bind(cursor);
-                conversationMessageDataList.add(messageData);
+                messageDataList.add(messageData);
             } while (cursor.moveToNext());
         }
 
-        mAdapter.setDataList(conversationMessageDataList);
+        if (mIsDestroyed) {
+            return;
+        }
+
+        mAdapter.setDataList(messageDataList);
 
         if (isSync) {
             // This is a message sync. Syncing messages changes cursor item count, which would
@@ -1087,17 +1133,16 @@ public class ConversationFragment extends Fragment implements ConversationDataLi
         }
         mBinding.ensureBound(conversationData);
 
-        if (mSelectedMessage != null && mSelectedAttachment != null) {
+        if (mSelectedMessageData != null && mSelectedAttachment != null) {
             // We may have just sent a message and the temp attachment we selected is now gone.
             // and it was replaced with some new attachment.  Since we don't know which one it
             // is we shouldn't reselect it (unless there is just one) In the multi-attachment
             // case we would just deselect the message and allow the user to reselect, otherwise we
             // may act on old temp data and may crash.
-            final List<MessagePartData> currentAttachments = mSelectedMessage.getData().getAttachments();
+            final List<MessagePartData> currentAttachments = mSelectedMessageData.getAttachments();
             if (currentAttachments.size() == 1) {
                 mSelectedAttachment = currentAttachments.get(0);
             } else if (!currentAttachments.contains(mSelectedAttachment)) {
-                selectMessage(null);
             }
         }
         // Ensure that the action bar is updated with the current data.
@@ -1322,6 +1367,20 @@ public class ConversationFragment extends Fragment implements ConversationDataLi
                     });
         }
     }
+    
+    private void lockSelectedMessage() {
+        BugleAnalytics.logEvent("Detailpage_Messages_Lock", true);
+        for (ConversationMessageData data : mSelectMessageDataList) {
+            mBinding.getData().lockMessage(mBinding, data.getMessageId());
+        }
+    }
+
+    private void unlockSelectedMessage() {
+        BugleAnalytics.logEvent("Detailpage_Messages_Unlock", false);
+        for (ConversationMessageData data : mSelectMessageDataList) {
+            mBinding.getData().unlockMessage(mBinding, data.getMessageId());
+        }
+    }
 
     void deleteMessage() {
         if (isReadyForAction()) {
@@ -1351,8 +1410,8 @@ public class ConversationFragment extends Fragment implements ConversationDataLi
     }
 
     private void deleteSelectMessage() {
-        for (ConversationMessageView messageView : selectMessages) {
-            mBinding.getData().deleteMessage(mBinding, messageView.getData().getMessageId());
+        for (ConversationMessageData data : mSelectMessageDataList) {
+            mBinding.getData().deleteMessage(mBinding, data.getMessageId());
         }
     }
 
@@ -1446,13 +1505,13 @@ public class ConversationFragment extends Fragment implements ConversationDataLi
     }
 
     @Override
-    public boolean onAttachmentClick(final ConversationMessageView messageView,
+    public boolean onAttachmentClick(final ConversationMessageData data,
                                      final MessagePartData attachment, final Rect imageBounds, final boolean longPress) {
         if (longPress) {
-            selectMessage(messageView, attachment);
+            selectMessage(data, attachment);
             return true;
-        } else if (messageView.getData().getOneClickResendMessage()) {
-            handleMessageClick(messageView);
+        } else if (data.getOneClickResendMessage()) {
+            handleMessageClick(data);
             return true;
         }
 
@@ -1467,16 +1526,15 @@ public class ConversationFragment extends Fragment implements ConversationDataLi
         return false;
     }
 
-    private void handleMessageClick(final ConversationMessageView messageView) {
-        if (messageView != mSelectedMessage) {
-            final ConversationMessageData data = messageView.getData();
+    private void handleMessageClick(final ConversationMessageData data) {
+        if (data != mSelectedMessageData) {
             final boolean isReadyToSend = isReadyForAction();
             if (data.getOneClickResendMessage()) {
                 // Directly resend the message on tap if it's failed
                 retrySend(data.getMessageId());
             } else if (data.getShowResendMessage() && isReadyToSend) {
                 // Select the message to show the resend/download/delete options
-                selectMessage(messageView);
+                selectMessage(data);
             } else if (data.getShowDownloadMessage() && isReadyToSend) {
                 // Directly download the message on tap
                 retryDownload(data.getMessageId());
