@@ -94,7 +94,9 @@ public class InviteFriendsActivity extends AppCompatActivity implements Conversa
             }
             Toasts.showToast(R.string.invite_friends_success_toast);
 
-            BugleAnalytics.logEvent("Invite_SendPage_Invite_Click", "from", getIntent().getStringExtra(INTENT_KEY_FROM));
+            BugleAnalytics.logEvent("Invite_SendPage_Invite_Click",
+                    "from", getIntent().getStringExtra(INTENT_KEY_FROM),
+                    "num", String.valueOf(mAdapter.getItemCount()));
             BugleAnalytics.logEvent("Invite_SMS_Send", "link", InviteFriendsTest.getSendLink(),
                     "isModified", "" + !TextUtils.equals(mDescription, InviteFriendsTest.getSendDescription()));
             InviteFriendsTest.logInviteFriendsClick();
