@@ -777,8 +777,6 @@
 	<string name="send_delay_no_delay">دون تأخير</string>
 	<string name="set_as_default_success">تم التغيير بنجاح</string>
 	<string name="invite_friends_invite_edit_button">تحرير</string>
-	<string name="delete_conversation_decline_button">إلغاء</string>
-	<string name="settings">الإعدادات</string>
 	<string name="invite_friends_invite">دعوة (%d)</string>
 	<string name="invite_friends_add">إضافة (%d)</string>
 	<string name="invite_friends_invite_send_sms_description">أرسل رسالة قصيرة للصديق الذي ترغب في دعوته</string>

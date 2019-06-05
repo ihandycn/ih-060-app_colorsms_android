@@ -671,8 +671,6 @@
 	<string name="send_delay_no_delay">Gecikme Yok</string>
 	<string name="set_as_default_success">Başarıyla Değiştirildi</string>
 	<string name="invite_friends_invite_edit_button">Düzenle</string>
-	<string name="delete_conversation_decline_button">İptal Et</string>
-	<string name="settings">Ayarlar</string>
 	<string name="invite_friends_invite">GÖNDER (%d)</string>
 	<string name="invite_friends_add">EKLE (%d)</string>
 	<string name="invite_friends_invite_send_sms_description">Davet etmek istediğin arkadaşına SMS gönder.</string>

@@ -672,18 +672,11 @@
     <string name="confirm_prompt_password">Passcode bestätigen</string>
     <string name="draw_unlock_pattern">Ihr Entsperrm. zeichnen</string>
 
-    <string name="send_delay_settings">Verspätung senden</string>
-    <string name="send_delay_no_delay">Keine Verzögerung</string>
-    <string name="contact_picker_select_group">Gruppenchat starten</string>
-
-
 	<string name="contact_picker_select_group">Gruppenchat starten</string>
 	<string name="send_delay_settings">Sendeverzögerung</string>
 	<string name="send_delay_no_delay">Keine Verzögerung</string>
 	<string name="set_as_default_success">Erfolgreich geändert</string>
 	<string name="invite_friends_invite_edit_button">Bearbeiten</string>
-	<string name="delete_conversation_decline_button">Abbrechen</string>
-	<string name="settings">Einstellungen</string>
 	<string name="invite_friends_invite">EINLADEN (%d)</string>
 	<string name="invite_friends_add">HINZUFÜGEN (%d)</string>
 	<string name="invite_friends_invite_send_sms_description">Ein SMS an den Freund senden, den Sie einladen möchten.</string>

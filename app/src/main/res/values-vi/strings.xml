@@ -674,8 +674,6 @@
 	<string name="send_delay_no_delay">Không Hoãn</string>
 	<string name="set_as_default_success">Đã thay đổi thành công</string>
 	<string name="invite_friends_invite_edit_button">Chỉnh sửa</string>
-	<string name="delete_conversation_decline_button">Hủy</string>
-	<string name="settings">Cài đặt</string>
 	<string name="invite_friends_invite">MỜI (%D)</string>
 	<string name="invite_friends_add">THÊM (%d)</string>
 	<string name="invite_friends_invite_send_sms_description">Gửi tin nhắn SMS đến người bạn mà bạn muốn mời.</string>

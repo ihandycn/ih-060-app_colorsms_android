@@ -677,11 +677,9 @@
 	<string name="send_delay_no_delay">Nessun ritardo</string>
 	<string name="set_as_default_success">Modifiche apportate</string>
 	<string name="invite_friends_invite_edit_button">Modifica</string>
-	<string name="delete_conversation_decline_button">Annulla</string>
-	<string name="settings">Impostazioni</string>
 	<string name="invite_friends_invite">INVITA (%d)</string>
 	<string name="invite_friends_add">AGGIUNGI (%d)</string>
-	<string name="invite_friends_invite_send_sms_description">Invia un SMS all'amico che vuoi invitare.</string>
+	<string name="invite_friends_invite_send_sms_description">Invia un SMS all\'amico che vuoi invitare.</string>
 	<string name="notification_sender_in_private_box">Contatto privato</string>
 	<string name="message_box_click_to_view">Fai clic per visualizzare</string>
 	<string name="get_now">Scarica ora</string>

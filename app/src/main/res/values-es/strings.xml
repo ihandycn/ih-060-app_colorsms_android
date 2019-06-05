@@ -676,28 +676,15 @@
     <string name="confirm_prompt_password">Confirmar contraseña</string>
     <string name="draw_unlock_pattern">Dibuja tu patrón</string>
 
-    <string name="get_now">Obtener ahora</string>
-    <string name="downloading">Descargando ...</string>
-    <string name="theme_upgrade_title">¡Más temas!</string>
-    <string name="theme_upgrade_subtitle">Puede seleccionar un tema que le guste o volver a aplicar su tema anterior en la nueva tienda de temas. ¡Disfrútala!</string>
-
-    <string name="send_delay_settings">Enviar retraso</string>
-    <string name="send_delay_no_delay">Sin demora</string>
-    <string name="contact_picker_select_group">Iniciar chat de grupo</string>
-
-
 	<string name="contact_picker_select_group">Iniciar chat de grupo</string>
 	<string name="send_delay_settings">Retardo de envío</string>
 	<string name="send_delay_no_delay">Sin retardo</string>
 	<string name="set_as_default_success">Cambiado correctamente</string>
 	<string name="invite_friends_invite_edit_button">Editar</string>
-	<string name="delete_conversation_decline_button">Cancelar</string>
-	<string name="settings">Ajustes</string>
 	<string name="invite_friends_invite">INVITAR (%d)</string>
 	<string name="invite_friends_add">AÑADIR (%d)</string>
 	<string name="invite_friends_invite_send_sms_description">Envía un SMS al amigo al que te gustaría invitar.</string>
 	<string name="notification_sender_in_private_box">Contacto privado</string>
-	<string name="message_box_click_to_view">Haz clic para ver</string>
 	<string name="get_now">Obtener ahora</string>
 	<string name="downloading">Descargando...</string>
 	<string name="apply_theme_success">Aplicado correctamente</string>

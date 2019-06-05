@@ -677,8 +677,6 @@
 	<string name="send_delay_no_delay">遅延なし</string>
 	<string name="set_as_default_success">変更に成功しました</string>
 	<string name="invite_friends_invite_edit_button">編集</string>
-	<string name="delete_conversation_decline_button">キャンセル</string>
-	<string name="settings">設定</string>
 	<string name="invite_friends_invite">招待 (%d)</string>
 	<string name="invite_friends_add">追加 (%d)</string>
 	<string name="invite_friends_invite_send_sms_description">あなたが招待したい人にSMSを送信する</string>

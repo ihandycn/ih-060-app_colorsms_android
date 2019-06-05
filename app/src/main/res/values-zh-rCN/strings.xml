@@ -637,8 +637,6 @@
     <string name="send_delay_no_delay">无延时</string>
     <string name="set_as_default_success">修改成功</string>
     <string name="invite_friends_invite_edit_button">编辑</string>
-    <string name="delete_conversation_decline_button">取消</string>
-    <string name="settings">设置</string>
     <string name="invite_friends_invite">邀请 (%d)</string>
     <string name="invite_friends_add">添加 (%d)</string>
     <string name="invite_friends_invite_send_sms_description">给你想要邀请的朋友发送短信。</string>

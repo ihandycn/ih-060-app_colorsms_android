@@ -680,8 +680,6 @@
 	<string name="send_delay_no_delay">कोई देरी नहीं</string>
 	<string name="set_as_default_success">सफलतापूर्वक बदल गया</string>
 	<string name="invite_friends_invite_edit_button">संपादन</string>
-	<string name="delete_conversation_decline_button">रद्द करें</string>
-	<string name="settings">सेटिंग्‍स</string>
 	<string name="invite_friends_invite">आमंत्रण (%d)</string>
 	<string name="invite_friends_add">जोड़ें (%d)</string>
 	<string name="invite_friends_invite_send_sms_description">उस मित्र को एसएमएस भेजें जिसे आप आमंत्रित करना चाहते हैं।</string>

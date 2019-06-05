@@ -676,8 +676,6 @@
 	<string name="send_delay_no_delay">지연 없음</string>
 	<string name="set_as_default_success">변경 성공</string>
 	<string name="invite_friends_invite_edit_button">편집</string>
-	<string name="delete_conversation_decline_button">취소</string>
-	<string name="settings">설정</string>
 	<string name="invite_friends_invite">초대 (%d)</string>
 	<string name="invite_friends_add">추가 (%d)</string>
 	<string name="invite_friends_invite_send_sms_description">초대하려는 친구에게 SMS를 보내세요.</string>

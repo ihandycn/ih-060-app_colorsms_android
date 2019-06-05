@@ -724,8 +724,6 @@
 	<string name="send_delay_no_delay">Без задержки</string>
 	<string name="set_as_default_success">Изменения внесены</string>
 	<string name="invite_friends_invite_edit_button">Изменить</string>
-	<string name="delete_conversation_decline_button">Отмена</string>
-	<string name="settings">Настройки</string>
 	<string name="invite_friends_invite">ПРИГЛАСИТЬ (%d)</string>
 	<string name="invite_friends_add">ДОБАВИТЬ (%d)</string>
 	<string name="invite_friends_invite_send_sms_description">Отправьте СМС другу, которого хотите пригласить.</string>

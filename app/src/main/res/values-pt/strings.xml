@@ -677,8 +677,6 @@
     <string name="confirm_prompt_password">Confirmar código</string>
     <string name="draw_unlock_pattern">Desenhe padrão de desbl.</string>
 
-    <string name="get_now">Obter agora</string>
-    <string name="downloading">Baixando…</string>
     <string name="theme_upgrade_title">Mais temas!</string>
     <string name="theme_upgrade_subtitle">Você pode selecionar um tema de que gosta ou reaplicar seu antigo tema na nova loja de temas. Aproveite!</string>
 
@@ -687,13 +685,10 @@
 	<string name="send_delay_no_delay">Sem atraso</string>
 	<string name="set_as_default_success">Alterado com sucesso</string>
 	<string name="invite_friends_invite_edit_button">Editar</string>
-	<string name="delete_conversation_decline_button">Cancelar</string>
-	<string name="settings">Configurações</string>
 	<string name="invite_friends_invite">CONVIDAR (%d)</string>
 	<string name="invite_friends_add">ADICIONAR (%d)</string>
 	<string name="invite_friends_invite_send_sms_description">Enviar SMS para o amigo que você gostaria de convidar.</string>
 	<string name="notification_sender_in_private_box">Contato privado</string>
-	<string name="message_box_click_to_view">Clique para ver</string>
 	<string name="get_now">Obtenha um agora</string>
 	<string name="downloading">Baixando...</string>
 	<string name="apply_theme_success">Aplicado com sucesso</string>

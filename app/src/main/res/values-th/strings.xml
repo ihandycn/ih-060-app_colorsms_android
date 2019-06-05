@@ -677,8 +677,6 @@
 	<string name="send_delay_no_delay">ไม่หน่วงเวลา</string>
 	<string name="set_as_default_success">เปลี่ยนแปลงสำเร็จ</string>
 	<string name="invite_friends_invite_edit_button">แก้ไข</string>
-	<string name="delete_conversation_decline_button">ยกเลิก</string>
-	<string name="settings">ตั้งค่า</string>
 	<string name="invite_friends_invite">เชิญ (%d)</string>
 	<string name="invite_friends_add">เพิ่ม (%d)</string>
 	<string name="invite_friends_invite_send_sms_description">ส่ง SMS ถึงเพื่อนคนที่คุณต้องการเชิญ</string>
