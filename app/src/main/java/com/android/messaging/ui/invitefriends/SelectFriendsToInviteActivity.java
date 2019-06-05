@@ -67,6 +67,7 @@ public class SelectFriendsToInviteActivity extends AppCompatActivity {
         mActionButton = findViewById(R.id.private_box_add_btn);
         mActionButton.setBackground(BackgroundDrawables.createBackgroundDrawable(PrimaryColors.getPrimaryColor(),
                 Dimensions.pxFromDp(3.3f), true));
+        mActionButton.setText(String.format(getString(R.string.invite_friends_add), 0));
 
         mActionButton.setOnClickListener(v -> {
             List<CallAssistantUtils.ContactInfo> addList = new ArrayList<>();

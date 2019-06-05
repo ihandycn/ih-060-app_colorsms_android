@@ -23,8 +23,6 @@ import static com.android.messaging.ui.invitefriends.InviteFriendsActivity.REQUE
 
 public class InviteFriendsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
-
-
     interface OnItemCountChangeListener {
         void onChange();
     }
@@ -80,16 +78,13 @@ public class InviteFriendsListAdapter extends RecyclerView.Adapter<RecyclerView.
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View v = LayoutInflater.from(mActivity).inflate(R.layout.invite_friends_list_item, parent, false);
         ViewHolder viewHolder = new ViewHolder(v);
-        viewHolder.mDeleteBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                int target = viewHolder.getAdapterPosition();
-                mContactInfos.remove(target - 1);
-                notifyItemRemoved(target);
-                BugleAnalytics.logEvent("Invite_SendPage_Delete_Click");
-                if (mOnItemCountChangeListener != null) {
-                    mOnItemCountChangeListener.onChange();
-                }
+        viewHolder.mDeleteBtn.setOnClickListener(v1 -> {
+            int target = viewHolder.getAdapterPosition();
+            mContactInfos.remove(target - 1);
+            notifyItemRemoved(target);
+            BugleAnalytics.logEvent("Invite_SendPage_Delete_Click");
+            if (mOnItemCountChangeListener != null) {
+                mOnItemCountChangeListener.onChange();
             }
         });
         return viewHolder;
