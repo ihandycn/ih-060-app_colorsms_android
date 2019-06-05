@@ -230,7 +230,9 @@ public class InviteFriendsActivity extends AppCompatActivity implements Conversa
             do {
                 ConversationListItemData itemData = new ConversationListItemData();
                 itemData.bind(cursor);
-                if (itemData.getIsGroup() || TextUtils.isEmpty(itemData.getOtherParticipantNormalizedDestination())) {
+                if (itemData.getIsGroup()
+                        || TextUtils.isEmpty(itemData.getOtherParticipantNormalizedDestination())
+                        || !ContactUtil.isValidContactId(itemData.getParticipantContactId())) {
                     continue;
                 }
 
