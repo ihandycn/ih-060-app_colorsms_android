@@ -676,4 +676,9 @@
     <string name="lock_style_pin">Código</string>
     <string name="confirm_prompt_password">Confirmar código</string>
     <string name="draw_unlock_pattern">Desenhe padrão de desbl.</string>
+
+    <string name="get_now">Obter agora</string>
+    <string name="downloading">Baixando…</string>
+    <string name="theme_upgrade_title">Mais temas!</string>
+    <string name="theme_upgrade_subtitle">Você pode selecionar um tema de que gosta ou reaplicar seu antigo tema na nova loja de temas. Aproveite!</string>
 </resources>

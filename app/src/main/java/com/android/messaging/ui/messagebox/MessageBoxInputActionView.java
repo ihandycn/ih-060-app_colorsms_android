@@ -4,6 +4,7 @@ import android.content.Context;
 import android.graphics.PorterDuff;
 import android.os.Build;
 import android.support.annotation.Nullable;
+import android.support.v4.view.animation.PathInterpolatorCompat;
 import android.text.Editable;
 import android.text.SpannableString;
 import android.text.TextUtils;
@@ -12,6 +13,7 @@ import android.text.style.ForegroundColorSpan;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.animation.Interpolator;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
@@ -19,6 +21,8 @@ import android.widget.TextView;
 
 import com.android.messaging.R;
 import com.android.messaging.ui.PlainTextEditText;
+import com.android.messaging.ui.SendDelayProgressBar;
+import com.android.messaging.ui.appsettings.SendDelaySettings;
 import com.android.messaging.ui.customize.PrimaryColors;
 import com.android.messaging.ui.customize.theme.ThemeUtils;
 import com.android.messaging.ui.signature.SignatureSettingDialog;
@@ -34,6 +38,8 @@ class MessageBoxInputActionView extends LinearLayout {
     private PlainTextEditText mComposeEditText;
     private ImageView mEmojiIcon;
     private ProgressBar mProgressBar;
+    private ImageView mDelayCloseButton;
+    private SendDelayProgressBar mSendDelayProgressBar;
 
     public MessageBoxInputActionView(Context context, @Nullable AttributeSet attrs) {
         super(context, attrs, 0);
@@ -55,6 +61,8 @@ class MessageBoxInputActionView extends LinearLayout {
         mProgressBar = findViewById(R.id.progress_bar);
         mProgressBar.getIndeterminateDrawable().setColorFilter(PrimaryColors.getPrimaryColor(), PorterDuff.Mode.SRC_IN);
         mEmojiIcon = findViewById(R.id.emoji_btn);
+        mDelayCloseButton = findViewById(R.id.delay_close_button);
+        mSendDelayProgressBar = findViewById(R.id.send_delay_circle_bar);
 
         ForegroundColorSpan signatureSpan = new ForegroundColorSpan(0xb3222327);
         String signature = Preferences.getDefault().getString(SignatureSettingDialog.PREF_KEY_SIGNATURE_CONTENT, null);
@@ -79,7 +87,6 @@ class MessageBoxInputActionView extends LinearLayout {
                             0f, 0f, radius, radius,
                             false, false));
         }
-
     }
 
     void performReply() {
@@ -98,5 +105,34 @@ class MessageBoxInputActionView extends LinearLayout {
 
     public ImageView getEmojiIcon() {
         return mEmojiIcon;
+    }
+
+    void sendDelayAnimation(){
+        mDelayCloseButton.setVisibility(View.VISIBLE);
+        mSendDelayProgressBar.setVisibility(View.VISIBLE);
+        mSelfSendIcon.setVisibility(View.GONE);
+
+        mDelayCloseButton.animate().alpha(1.0f).setDuration(160).setStartDelay(80).start();
+        Interpolator scaleStartInterpolator =
+                PathInterpolatorCompat.create(0.0f, 0.0f, 0.58f, 1.0f);
+        mSendDelayProgressBar.animate().alpha(1.0f).scaleX(1.0f).scaleY(1.0f).setDuration(160).setStartDelay(80).setInterpolator(scaleStartInterpolator).start();
+        mSendDelayProgressBar.startAnimation(SendDelaySettings.getSendDelayInSecs());
+    }
+
+    void setOnCancelSmsSendingClickListener(View.OnClickListener listener) {
+        mSendDelayProgressBar.setOnClickListener(listener);
+    }
+
+    void resetDelaySendAnimation(){
+        mDelayCloseButton.setAlpha(0.0f);
+        mSendDelayProgressBar.setAlpha(0.0f);
+        mSendDelayProgressBar.setScaleX(0.8f);
+        mSendDelayProgressBar.setScaleY(0.8f);
+        mSendDelayProgressBar.resetAnimation();
+        mSendDelayProgressBar.setProgress(100);
+
+        mDelayCloseButton.setVisibility(View.GONE);
+        mSendDelayProgressBar.setVisibility(View.GONE);
+        mSelfSendIcon.setVisibility(View.VISIBLE);
     }
 }

@@ -673,4 +673,9 @@
     <string name="lock_style_pin">Kode Akses</string>
     <string name="confirm_prompt_password">Konfirmasikan kode akses</string>
     <string name="draw_unlock_pattern">Gambar pola</string>
+
+    <string name="get_now">Dapatkan sekarang</string>
+    <string name="downloading">Mengunduh ...</string>
+    <string name="theme_upgrade_title">Lebih Banyak Tema!</string>
+    <string name="theme_upgrade_subtitle">Anda dapat memilih tema yang Anda sukai atau mendaftar kembali tema lama Anda di toko tema baru. Bersenang senang lah!</string>
 </resources>

@@ -133,6 +133,26 @@
 							<string>Regular</string>
 						</array>
 					</dict>
+					<dict>
+						<key>Name</key>
+						<string>expletus_sans</string>
+						<key>Weight</key>
+						<array>
+							<string>SemiBold</string>
+							<string>Regular</string>
+							<string>Medium</string>
+						</array>
+					</dict>
+					<dict>
+						<key>Name</key>
+						<string>source_serif_pro</string>
+						<key>Weight</key>
+						<array>
+							<string>SemiBold</string>
+							<string>Regular</string>
+							<string>Medium</string>
+						</array>
+					</dict>
 				</array>
 			</dict>
 			<key>SMSAd</key>
@@ -142,7 +162,7 @@
 					<key>Enabled</key>
 					<true/>
 					<key>ShowAfterInstall</key>
-					<integer>30</integer>
+					<integer>10</integer>
 					<key>ShowAfterSlide</key>
 					<true/>
 					<key>FacebookEnabled</key>
@@ -162,7 +182,7 @@
 					<key>Enabled</key>
 					<true/>
 					<key>ShowAfterInstall</key>
-					<integer>30</integer>
+					<integer>10</integer>
 					<key>SMSHomepageBannerAdFacebookEnabled</key>
 					<false/>
 				</dict>
@@ -1025,11 +1045,11 @@
 						<key>WallpaperUrl</key>
 						<string>wallpaper.jpg</string>
 						<key>NewConversationIconUrl</key>
-						<string>create.png</string>
+						<string></string>
 						<key>BubbleIncomingUrl</key>
-						<string></string>
+						<string>incoming.9.png</string>
 						<key>BubbleOutgoingUrl</key>
-						<string></string>
+						<string>outgoing.9.png</string>
 					</dict>
 					<key>unicorn</key>
 					<dict>

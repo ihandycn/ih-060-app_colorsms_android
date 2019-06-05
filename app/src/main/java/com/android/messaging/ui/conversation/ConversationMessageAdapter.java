@@ -22,19 +22,16 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.android.messaging.R;
 import com.android.messaging.datamodel.data.ConversationMessageData;
 import com.android.messaging.ui.AsyncImageView.AsyncImageViewDelayLoader;
-import com.android.messaging.ui.ConversationDrawables;
 import com.android.messaging.ui.conversation.ConversationMessageView.ConversationMessageViewHost;
 import com.android.messaging.ui.customize.ConversationColors;
 import com.android.messaging.util.ViewUtils;
 import com.superapps.util.Dimensions;
 
-import net.appcloudbox.ads.base.AcbNativeAd;
 import net.appcloudbox.ads.base.ContainerView.AcbNativeAdContainerView;
 import net.appcloudbox.ads.base.ContainerView.AcbNativeAdIconView;
 
@@ -57,11 +54,7 @@ public class ConversationMessageAdapter extends
     public static final int SLIDE = 2000;
     public static int mState;
 
-    private static final int TYPE_MESSAGE = 0;
-    private static final int TYPE_AD = 1;
-    private String mConversationId;
-
-    private List<Object> mDataList = new ArrayList<>();
+    private List<ConversationMessageData> mDataList = new ArrayList<>();
 
     public ConversationMessageAdapter(final ConversationMessageViewHost host,
                                       final AsyncImageViewDelayLoader imageViewDelayLoader,
@@ -72,13 +65,9 @@ public class ConversationMessageAdapter extends
         setHasStableIds(true);
     }
 
-    public void setDataList(List<Object> dataList) {
+    public void setDataList(List<ConversationMessageData> dataList) {
         mDataList = dataList;
         notifyDataSetChanged();
-    }
-
-    public void setConversationId(String conversationId) {
-        mConversationId = conversationId;
     }
 
     public void openItemAnimation() {
@@ -112,24 +101,16 @@ public class ConversationMessageAdapter extends
     @NonNull
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        if (viewType == TYPE_MESSAGE) {
             final LayoutInflater layoutInflater = LayoutInflater.from(parent.getContext());
             final ConversationMessageView conversationMessageView = (ConversationMessageView)
                     layoutInflater.inflate(R.layout.conversation_message_view, null);
             conversationMessageView.setHost(mHost);
             conversationMessageView.setImageViewDelayLoader(mImageViewDelayLoader);
             return new ConversationMessageViewHolder(conversationMessageView);
-        } else {
-            final LinearLayout container = (LinearLayout) LayoutInflater.from(parent.getContext())
-                    .inflate(R.layout.native_ad_container, parent, false);
-            final View adView = LayoutInflater.from(parent.getContext()).inflate(R.layout.conversation_ad_view, container, false);
-            return new ConversationAdViewHolder(container, adView);
-        }
     }
 
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
-        if (getItemViewType(position) == TYPE_MESSAGE) {
             final ConversationMessageView conversationMessageView =
                     (ConversationMessageView) ((ConversationMessageViewHolder) holder).mView;
             ImageView checkbox = conversationMessageView.findViewById(R.id.check_box);
@@ -159,35 +140,14 @@ public class ConversationMessageAdapter extends
                     checkbox.setImageResource(R.drawable.ic_choose);
                 }
             } else {
-                checkbox.setVisibility(View.GONE);
+                checkbox.setImageResource(R.drawable.ic_choose);
             }
-            ((ConversationMessageViewHolder) holder).bind();
-        } else {
-            AcbNativeAd ad = (AcbNativeAd) mDataList.get(position);
-            if (((ConversationAdViewHolder) holder).alreadyFilled) {
-                return;
-            }
-            ((ConversationAdViewHolder) holder).alreadyFilled = true;
-            AcbNativeAdContainerView adContainerView = ((ConversationAdViewHolder) holder).mAdContentView;
-            adContainerView.hideAdCorner();
-            ((ConversationAdViewHolder) holder).contentBg.setBackground(
-                    ConversationDrawables.get().getBubbleDrawable(false, true, true, false, mConversationId));
-            adContainerView.fillNativeAd(ad);
-        }
+        ((ConversationMessageViewHolder) holder).bind();
     }
 
     @Override
     public int getItemCount() {
         return mDataList.size();
-    }
-
-    @Override
-    public int getItemViewType(int position) {
-        if (mDataList.get(position) instanceof ConversationMessageData) {
-            return TYPE_MESSAGE;
-        } else {
-            return TYPE_AD;
-        }
     }
 
     @Override
@@ -221,38 +181,6 @@ public class ConversationMessageAdapter extends
                     messageView.open();
                     break;
             }
-        }
-    }
-
-    public static class ConversationAdViewHolder extends RecyclerView.ViewHolder {
-
-        private AcbNativeAdContainerView mAdContentView;
-        private View contentBg;
-        private boolean alreadyFilled = false;
-
-        public ConversationAdViewHolder(ViewGroup container, View adView) {
-            super(container);
-
-            mAdContentView = new AcbNativeAdContainerView(container.getContext());
-            mAdContentView.addContentView(adView);
-
-            AcbNativeAdIconView icon = ViewUtils.findViewById(adView, R.id.ad_icon);
-            icon.setShapeMode(1);
-            icon.setRadius(Dimensions.pxFromDp(20));
-            mAdContentView.setAdIconView(icon);
-            TextView title = ViewUtils.findViewById(adView, R.id.ad_title);
-            title.setTextColor(ConversationColors.get().getMessageTextColor(true));
-            mAdContentView.setAdTitleView(title);
-            TextView description = ViewUtils.findViewById(adView, R.id.ad_subtitle);
-            description.setTextColor(ConversationColors.get().getMessageTextColor(true));
-            mAdContentView.setAdBodyView(description);
-            TextView actionBtn = ViewUtils.findViewById(adView, R.id.ad_action);
-            actionBtn.setTextColor(ConversationColors.get().getAdActionColor());
-            actionBtn.setBackgroundResource(R.drawable.conversation_ad_action_pressed_bg);
-            mAdContentView.setAdActionView(actionBtn);
-            FrameLayout choice = ViewUtils.findViewById(adView, R.id.ad_choice);
-            mAdContentView.setAdChoiceView(choice);
-            container.addView(mAdContentView);
         }
     }
 

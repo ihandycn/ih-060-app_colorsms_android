@@ -669,4 +669,9 @@
     <string name="lock_style_pin">Code</string>
     <string name="confirm_prompt_password">Confirmer le code</string>
     <string name="draw_unlock_pattern">Dessinez votre motif</string>
+
+    <string name="send_delay_settings">Délai d\'envoi</string>
+    <string name="send_delay_no_delay">Sans délai</string>
+    <string name="contact_picker_select_group">Démarrer le chat en groupe</string>
+
 </resources>

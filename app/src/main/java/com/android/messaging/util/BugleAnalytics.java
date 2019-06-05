@@ -1,6 +1,7 @@
 package com.android.messaging.util;
 
 import android.os.Bundle;
+import android.text.TextUtils;
 
 import com.android.messaging.BuildConfig;
 import com.crashlytics.android.answers.Answers;
@@ -120,6 +121,9 @@ public class BugleAnalytics {
     }
 
     public static void logUserProperty(String key, String value) {
+        if (!TextUtils.isEmpty(value) && value.length() > 36) {
+            value = value.substring(0, 36);
+        }
         sFirebaseAnalytics.setUserProperty(key, value);
     }
 

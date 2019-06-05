@@ -259,22 +259,6 @@ public final class SmsReceiver extends BroadcastReceiver {
         }
     }
 
-    private static class SecondaryUserNotificationState extends MessageNotificationState {
-        SecondaryUserNotificationState() {
-            super(null);
-        }
-
-        @Override
-        protected Style build(Builder builder) {
-            return null;
-        }
-
-        @Override
-        public boolean getNotificationVibrate() {
-            return true;
-        }
-    }
-
     public static void postNewMessageSecondaryUserNotification() {
         final Context context = Factory.get().getApplicationContext();
         final Resources resources = context.getResources();
@@ -284,7 +268,7 @@ public final class SmsReceiver extends BroadcastReceiver {
         NotificationChannel channel = null;
         String channelId = PendingIntentConstants.SMS_NOTIFICATION_CHANNEL_ID;
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
-            channel = BugleNotificationChannelUtil.getSmsNotificationChannel(null, true);
+            channel = BugleNotificationChannelUtil.getSmsNotificationChannel(null, true, NotificationManager.IMPORTANCE_HIGH);
             channel.setImportance(NotificationManager.IMPORTANCE_HIGH);
             channelId = channel.getId();
         }

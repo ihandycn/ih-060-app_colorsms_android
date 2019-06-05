@@ -69,7 +69,7 @@ public class Upgrader extends BaseUpgrader {
             updateThemeKey();
         }
 
-        if (oldVersion < 49 && newVersion >= 49) {
+        if (oldVersion < 50 && newVersion >= 50) {
             migrateLocalThemeAndFont();
         }
 
@@ -165,7 +165,7 @@ public class Upgrader extends BaseUpgrader {
                         + " ADD COLUMN " + DatabaseHelper.ConversationColumns.IS_PRIVATE
                         + " INT DEFAULT(0)");
             }
-        } catch (Exception e) {
+        } catch (Exception ignored) {
 
         } finally {
             if (null != cursor && !cursor.isClosed()) {

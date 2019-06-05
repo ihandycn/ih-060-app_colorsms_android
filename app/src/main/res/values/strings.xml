@@ -1204,4 +1204,12 @@
 
     <string name="theme_upgrade_title">More Themes!</string>
     <string name="theme_upgrade_subtitle">You can select a theme you like or reapply your old theme in the brand new theme store. Enjoy it!</string>
+
+    <string name="send_delay_settings">Send Delay</string>
+    <string name="send_delay_no_delay">No Delay</string>
+    <plurals name="send_delay_seconds">
+        <item quantity="one">%s Second</item>
+        <item quantity="other">%s Seconds</item>
+    </plurals>
+
 </resources>

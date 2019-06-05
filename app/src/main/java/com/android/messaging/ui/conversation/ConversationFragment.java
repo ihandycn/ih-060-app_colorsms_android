@@ -102,6 +102,7 @@ import com.android.messaging.ui.dialog.FiveStarRateDialog;
 import com.android.messaging.ui.emoji.EmojiPickerFragment;
 import com.android.messaging.ui.mediapicker.CameraGalleryFragment;
 import com.android.messaging.ui.mediapicker.MediaPickerFragment;
+import com.android.messaging.ui.senddelaymessages.SendDelayMessagesManager;
 import com.android.messaging.ui.wallpaper.WallpaperManager;
 import com.android.messaging.util.AccessibilityUtil;
 import com.android.messaging.util.Assert;
@@ -200,7 +201,6 @@ public class ConversationFragment extends Fragment implements ConversationDataLi
     private ConversationFastScroller mFastScroller;
     private ImageView mWallpaperView;
     private ImageView mThemeWallpaperView;
-
 
     private View mConversationComposeDivider;
     private ChangeDefaultSmsAppHelper mChangeDefaultSmsAppHelper;
@@ -583,7 +583,7 @@ public class ConversationFragment extends Fragment implements ConversationDataLi
         }
         mAdapter = new ConversationMessageAdapter(this, null,
                 // Sets the item click listener on the Recycler item views.
-                new ConversationMessageAdapter.ConversationMessageClickListener(){
+                new ConversationMessageAdapter.ConversationMessageClickListener() {
                     @Override
                     public void onConversationMessageClick(ConversationMessageData data) {
                         if (data != null && mAdapter.isMultiSelectMode()) {
@@ -764,7 +764,6 @@ public class ConversationFragment extends Fragment implements ConversationDataLi
     public View onCreateView(final LayoutInflater inflater, final ViewGroup container,
                              final Bundle savedInstanceState) {
         HSLog.d("message list create : " + System.currentTimeMillis());
-
         final View view = inflater.inflate(R.layout.conversation_fragment, container, false);
         mRecyclerView = view.findViewById(android.R.id.list);
         mAdContainer = view.findViewById(R.id.top_banner_ad_container);
@@ -791,6 +790,7 @@ public class ConversationFragment extends Fragment implements ConversationDataLi
         // Bind the compose message view to the DraftMessageData
         mComposeMessageView.bind(DataModel.get().createDraftMessageData(
                 mBinding.getData().getConversationId()), this);
+        mComposeMessageView.requestFocus();
 
         mMediaLayout = view.findViewById(R.id.camera_photo_layout);
         mWallpaperView = view.findViewById(R.id.conversation_fragment_wallpaper);
@@ -920,7 +920,6 @@ public class ConversationFragment extends Fragment implements ConversationDataLi
     @Override
     public void onResume() {
         super.onResume();
-
         WallpaperManager.setConversationWallPaper(mWallpaperView, mThemeWallpaperView, mConversationId);
 
         if (mIncomingDraft == null) {
@@ -939,7 +938,7 @@ public class ConversationFragment extends Fragment implements ConversationDataLi
         }
 
         setConversationFocus();
-        BugleNotifications.markMessagesAsRead(mConversationId);
+        Threads.postOnMainThreadDelayed(() -> BugleNotifications.markMessagesAsRead(mConversationId), 500);
 
         // On resume, invalidate all message views to show the updated timestamp.
         mAdapter.notifyDataSetChanged();
@@ -1028,80 +1027,75 @@ public class ConversationFragment extends Fragment implements ConversationDataLi
         // Ensure that the action bar is updated with the current data.
         invalidateOptionsMenu();
 
-        List<Object> messageDataList = new ArrayList<>();
-        Threads.postOnThreadPoolExecutor(() -> {
+        List<ConversationMessageData> messageDataList = new ArrayList<>();
 
-            if (cursor != null && cursor.moveToFirst()) {
-                do {
-                    ConversationMessageData messageData = new ConversationMessageData();
-                    messageData.bind(cursor);
-                    messageDataList.add(messageData);
-                } while (cursor.moveToNext());
+        if (cursor != null && cursor.moveToFirst()) {
+            do {
+                ConversationMessageData messageData = new ConversationMessageData();
+                messageData.bind(cursor);
+                messageDataList.add(messageData);
+            } while (cursor.moveToNext());
+        }
+
+        if (mIsDestroyed) {
+            return;
+        }
+
+        mAdapter.setDataList(messageDataList);
+        mAdapter.notifyDataSetChanged();
+
+        if (isSync) {
+            // This is a message sync. Syncing messages changes cursor item count, which would
+            // implicitly change RV's scroll position. We'd like the RV to keep scrolled to the same
+            // relative position from the bottom (because RV is stacked from bottom), so that it
+            // stays relatively put as we sync.
+            final int position = Math.max(mAdapter.getItemCount() - 1 - positionFromBottom, 0);
+            scrollToPosition(position, false /* smoothScroll */);
+        } else if (newestMessage != null) {
+            // Show a snack bar notification if we are not scrolled to the bottom and the new
+            // message is an incoming message.
+            if (!scrolledToBottom && newestMessage.getIsIncoming()) {
+                // If the conversation activity is started but not resumed (if another dialog
+                // activity was in the foregrond), we will show a system notification instead of
+                // the snack bar.
+                if (mBinding.getData().isFocused()) {
+                    UiUtils.showSnackBarWithCustomAction(getActivity(),
+                            getView().getRootView(),
+                            getString(R.string.in_conversation_notify_new_message_text),
+                            SnackBar.Action.createCustomAction(() -> {
+                                        scrollToBottom(true /* smoothScroll */);
+                                        mComposeMessageView.hideAllComposeInputs(false /* animate */);
+                                    },
+                                    getString(R.string.in_conversation_notify_new_message_action)),
+                            null /* interactions */,
+                            SnackBar.Placement.above(mComposeMessageView));
+                }
+            } else {
+                // We are either already scrolled to the bottom or this is an outgoing message,
+                // scroll to the bottom to reveal it.
+                // Don't smooth scroll if we were already at the bottom; instead, we scroll
+                // immediately so RecyclerView's view animation will take place.
+                scrollToBottom(!scrolledToBottom);
             }
+        }
 
-            Threads.postOnMainThread(() -> {
-                if (mIsDestroyed) {
-                    return;
+        if (cursor != null) {
+            mHost.onConversationMessagesUpdated(cursor.getCount());
+
+            // Are we coming from a widget click where we're told to scroll to a particular item?
+            final int scrollToPos = getScrollToMessagePosition();
+            if (scrollToPos >= 0) {
+                if (LogUtil.isLoggable(LogUtil.BUGLE_TAG, LogUtil.VERBOSE)) {
+                    LogUtil.v(LogUtil.BUGLE_TAG, "onConversationMessagesCursorUpdated " +
+                            " scrollToPos: " + scrollToPos +
+                            " cursorCount: " + cursor.getCount());
                 }
+                scrollToPosition(scrollToPos, true /*smoothScroll*/);
+                clearScrollToMessagePosition();
+            }
+        }
 
-                mAdapter.setConversationId(mConversationId);
-                mAdapter.setDataList(messageDataList);
-                mAdapter.notifyDataSetChanged();
-
-                if (isSync) {
-                    // This is a message sync. Syncing messages changes cursor item count, which would
-                    // implicitly change RV's scroll position. We'd like the RV to keep scrolled to the same
-                    // relative position from the bottom (because RV is stacked from bottom), so that it
-                    // stays relatively put as we sync.
-                    final int position = Math.max(mAdapter.getItemCount() - 1 - positionFromBottom, 0);
-                    scrollToPosition(position, false /* smoothScroll */);
-                } else if (newestMessage != null) {
-                    // Show a snack bar notification if we are not scrolled to the bottom and the new
-                    // message is an incoming message.
-                    if (!scrolledToBottom && newestMessage.getIsIncoming()) {
-                        // If the conversation activity is started but not resumed (if another dialog
-                        // activity was in the foregrond), we will show a system notification instead of
-                        // the snack bar.
-                        if (mBinding.getData().isFocused()) {
-                            UiUtils.showSnackBarWithCustomAction(getActivity(),
-                                    getView().getRootView(),
-                                    getString(R.string.in_conversation_notify_new_message_text),
-                                    SnackBar.Action.createCustomAction(() -> {
-                                                scrollToBottom(true /* smoothScroll */);
-                                                mComposeMessageView.hideAllComposeInputs(false /* animate */);
-                                            },
-                                            getString(R.string.in_conversation_notify_new_message_action)),
-                                    null /* interactions */,
-                                    SnackBar.Placement.above(mComposeMessageView));
-                        }
-                    } else {
-                        // We are either already scrolled to the bottom or this is an outgoing message,
-                        // scroll to the bottom to reveal it.
-                        // Don't smooth scroll if we were already at the bottom; instead, we scroll
-                        // immediately so RecyclerView's view animation will take place.
-                        scrollToBottom(!scrolledToBottom);
-                    }
-                }
-
-                if (cursor != null) {
-                    mHost.onConversationMessagesUpdated(cursor.getCount());
-
-                    // Are we coming from a widget click where we're told to scroll to a particular item?
-                    final int scrollToPos = getScrollToMessagePosition();
-                    if (scrollToPos >= 0) {
-                        if (LogUtil.isLoggable(LogUtil.BUGLE_TAG, LogUtil.VERBOSE)) {
-                            LogUtil.v(LogUtil.BUGLE_TAG, "onConversationMessagesCursorUpdated " +
-                                    " scrollToPos: " + scrollToPos +
-                                    " cursorCount: " + cursor.getCount());
-                        }
-                        scrollToPosition(scrollToPos, true /*smoothScroll*/);
-                        clearScrollToMessagePosition();
-                    }
-                }
-
-                mHost.invalidateActionBar();
-            });
-        });
+        mHost.invalidateActionBar();
     }
 
     /**
@@ -1153,15 +1147,27 @@ public class ConversationFragment extends Fragment implements ConversationDataLi
         super.onDestroy();
         mIsDestroyed = true;
         // Unbind all the views that we bound to data
-        if (mComposeMessageView != null) {
-            mComposeMessageView.getViewTreeObserver().removeOnGlobalLayoutListener(globalLayoutListener);
-            mComposeMessageView.unbind();
-        }
-        mRecyclerView.setAdapter(null);
 
-        // And unbind this fragment from its data
-        mBinding.unbind();
-        mConversationId = null;
+        if (mComposeMessageView != null) {
+            // if we have message to send in a delay time, unbind data until message is sent
+            String conversationId = mBinding.getData().getConversationId();
+            if (!mComposeMessageView.getIsWaitingToSendMessageFlag()) {
+                SendDelayMessagesManager.remove(conversationId);
+                mComposeMessageView.unbind();
+                mBinding.unbind();
+            } else {
+                mComposeMessageView.setOnActionEndListener(new SendDelayActionCompletedCallBack() {
+                    @Override
+                    public void onSendDelayActionEnd() {
+                        mComposeMessageView.unbind();
+                        mBinding.unbind();
+                    }
+                });
+            }
+            mComposeMessageView.getViewTreeObserver().removeOnGlobalLayoutListener(globalLayoutListener);
+        }
+
+        mRecyclerView.setAdapter(null);
 
         if (mNativeAd != null) {
             mNativeAd.release();

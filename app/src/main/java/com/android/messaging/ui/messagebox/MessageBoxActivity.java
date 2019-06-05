@@ -19,9 +19,11 @@ import android.widget.Toast;
 import com.android.messaging.BuildConfig;
 import com.android.messaging.R;
 import com.android.messaging.datamodel.action.MarkAsReadAction;
+import com.android.messaging.datamodel.action.MarkAsSeenAction;
 import com.android.messaging.datamodel.data.MessageBoxItemData;
 import com.android.messaging.ui.UIIntents;
 import com.android.messaging.ui.appsettings.PrivacyModeSettings;
+import com.android.messaging.ui.appsettings.SendDelaySettings;
 import com.android.messaging.ui.customize.theme.ThemeUtils;
 import com.android.messaging.ui.emoji.BaseEmojiInfo;
 import com.android.messaging.ui.emoji.EmojiInfo;
@@ -30,11 +32,15 @@ import com.android.messaging.ui.emoji.EmojiPackagePagerAdapter;
 import com.android.messaging.ui.emoji.StickerInfo;
 import com.android.messaging.ui.emoji.ViewPagerDotIndicatorView;
 import com.android.messaging.util.BugleAnalytics;
+import com.android.messaging.util.FabricUtils;
+import com.android.messaging.util.TextUtil;
 import com.android.messaging.util.UiUtils;
+import com.crashlytics.android.core.CrashlyticsCore;
 import com.ihs.app.framework.HSApplication;
 import com.ihs.commons.notificationcenter.HSGlobalNotificationCenter;
 import com.ihs.commons.notificationcenter.INotificationObserver;
 import com.ihs.commons.utils.HSBundle;
+import com.superapps.debug.CrashlyticsLog;
 import com.superapps.util.Dimensions;
 import com.superapps.util.HomeKeyWatcher;
 import com.superapps.util.Threads;
@@ -46,6 +52,7 @@ import java.util.HashMap;
 import java.util.List;
 
 import static com.android.messaging.ui.UIIntents.UI_INTENT_EXTRA_MESSAGE_BOX_ITEM;
+import static com.android.messaging.ui.appsettings.PrivacyModeSettings.NONE;
 import static com.android.messaging.ui.messagebox.MessageBoxAnalytics.getConversationType;
 
 public class MessageBoxActivity extends AppCompatActivity implements INotificationObserver,
@@ -78,6 +85,7 @@ public class MessageBoxActivity extends AppCompatActivity implements INotificati
     private boolean mHasPrivacyModeConversation;
 
     private HashMap<String, Boolean> mMarkAsReadMap = new HashMap<>(4);
+    private HashMap<String, Boolean> mMarkAsSeenMap = new HashMap<>(4);
     private HashMap<String, MessageBoxItemData> mDataMap = new HashMap<>(4);
     private ArrayList<String> mConversationIdList = new ArrayList<>(4);
 
@@ -101,6 +109,23 @@ public class MessageBoxActivity extends AppCompatActivity implements INotificati
         mPagerAdapter.addView(view);
         mPager.addOnPageChangeListener(this);
         mPager.setAdapter(mPagerAdapter);
+        mPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+                String conversationId = (String) mPagerAdapter.getView(position).getTag();
+                mMarkAsSeenMap.put(conversationId, true);
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+
+            }
+        });
         initEmojiKeyboradSimulation();
 
 
@@ -161,6 +186,10 @@ public class MessageBoxActivity extends AppCompatActivity implements INotificati
             return;
         }
 
+        if (TextUtils.isEmpty(data.getConversationId())) {
+            return;
+        }
+
         boolean isNewConversation = true;
 
         if (!DEBUGGING_MULTI_CONVERSATIONS) {
@@ -204,6 +233,17 @@ public class MessageBoxActivity extends AppCompatActivity implements INotificati
         mCurrentConversationView.post(this::reLayoutIndicatorView);
     }
 
+    @Override
+    public void onWindowFocusChanged(boolean hasFocus) {
+        super.onWindowFocusChanged(hasFocus);
+        if (hasFocus) {
+            String conversationId = mCurrentConversationView.getConversationId();
+            if (PrivacyModeSettings.getPrivacyMode(conversationId) == NONE) {
+                markAsRead(conversationId);
+            }
+        }
+    }
+
     private boolean mLogScrollPaged;
 
     @Override
@@ -219,6 +259,10 @@ public class MessageBoxActivity extends AppCompatActivity implements INotificati
         mCurrentConversationView = (MessageBoxConversationView) mPagerAdapter.getViews().get(position);
         reLayoutIndicatorView();
         mIndicator.updateIndicator(position, mPagerAdapter.getCount());
+        String conversationId = mCurrentConversationView.getConversationId();
+        if (PrivacyModeSettings.getPrivacyMode(conversationId) == NONE) {
+            markAsRead(conversationId);
+        }
     }
 
     @Override
@@ -278,7 +322,14 @@ public class MessageBoxActivity extends AppCompatActivity implements INotificati
                 finish(CLOSE);
                 break;
             case R.id.action_open:
-                UIIntents.get().launchConversationActivityWithParentStack(this, mCurrentConversationView.getConversationId(), null);
+                if (!TextUtils.isEmpty(mCurrentConversationView.getConversationId())) {
+                    UIIntents.get().launchConversationActivityWithParentStack(this, mCurrentConversationView.getConversationId(), null);
+                } else {
+                    if (FabricUtils.isFabricInited()) {
+                        CrashlyticsCore.getInstance().logException(
+                                new CrashlyticsLog("start conversation activity error : message box conversation id is null"));
+                    }
+                }
                 finish(OPEN);
                 BugleAnalytics.logEvent("SMS_PopUp_Open_Click",
                         false, true, "type", getConversationType(),
@@ -328,7 +379,11 @@ public class MessageBoxActivity extends AppCompatActivity implements INotificati
 
     private void removeCurrentPage(String source) {
         int position = mPager.getCurrentItem();
-        if (position == mPagerAdapter.getCount() - 1) {
+        if (!mCurrentConversationView.hasSentMessage()) {
+            return;
+        }
+
+        if (position >= mPagerAdapter.getCount() - 1) {
             finish(source);
         } else {
             mPagerAdapter.removeView(mPager, mCurrentConversationView);
@@ -338,6 +393,7 @@ public class MessageBoxActivity extends AppCompatActivity implements INotificati
             mCurrentConversationView.requestEditTextFocus();
         }
     }
+
 
     @Override
     public void onReceive(String s, HSBundle hsBundle) {
@@ -385,6 +441,23 @@ public class MessageBoxActivity extends AppCompatActivity implements INotificati
             mHasSms = true;
         } else {
             mHasMms = true;
+        }
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        ArrayList<String> markAsSeenList = new ArrayList<>();
+        for (String conversationId : mConversationIdList) {
+            Boolean seen = mMarkAsSeenMap.get(conversationId);
+            if (seen != null) {
+                if (seen) {
+                    markAsSeenList.add(conversationId);
+                }
+            }
+        }
+        if (markAsSeenList.size() > 0) {
+            MarkAsSeenAction.markAsSeen(markAsSeenList);
         }
     }
 

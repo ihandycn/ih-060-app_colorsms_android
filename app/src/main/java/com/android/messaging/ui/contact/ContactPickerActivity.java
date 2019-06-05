@@ -6,21 +6,26 @@ import android.content.Intent;
 import android.graphics.Rect;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
+import android.text.TextUtils;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 
 import com.android.messaging.R;
 import com.android.messaging.datamodel.BugleNotifications;
+import com.android.messaging.datamodel.data.MessageData;
 import com.android.messaging.ui.BugleActionBarActivity;
 import com.android.messaging.ui.UIIntents;
 import com.android.messaging.ui.conversationlist.ConversationListActivity;
 import com.android.messaging.ui.messagebox.MessageBoxActivity;
 import com.android.messaging.util.Assert;
 import com.android.messaging.util.BugleAnalytics;
+import com.android.messaging.util.FabricUtils;
 import com.android.messaging.util.UiUtils;
 import com.android.messaging.util.ViewUtils;
+import com.crashlytics.android.core.CrashlyticsCore;
 import com.ihs.app.framework.HSApplication;
 import com.ihs.commons.notificationcenter.HSGlobalNotificationCenter;
+import com.superapps.debug.CrashlyticsLog;
 import com.superapps.util.Dimensions;
 import com.superapps.util.IntegerBuckets;
 import com.superapps.util.Preferences;
@@ -28,7 +33,6 @@ import com.superapps.util.Preferences;
 public class ContactPickerActivity extends BugleActionBarActivity implements
         ContactPickerFragment.ContactPickerFragmentHost,
         ViewTreeObserver.OnGlobalLayoutListener {
-
 
     // Fragment transactions cannot be performed after onSaveInstanceState() has been called since
     // it will cause state loss. We don't want to call commitAllowingStateLoss() since it's
@@ -41,14 +45,12 @@ public class ContactPickerActivity extends BugleActionBarActivity implements
 
     private ViewGroup mContainer;
 
-    private static final String SAVED_INSTANCE_STATE_UI_STATE_KEY = "uistate";
     private static final String PREF_KEY_CONVERSATION_ACTIVITY_SHOW_TIME = "pref_key_conversation_activity_show_time";
 
     private int mStatusBarHeight;
     private int mKeyboardHeight;
     private int mNavigationBarHeight;
-
-    private final String TAG = "contact_picker_test";
+    private MessageData mDraftData;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,6 +61,9 @@ public class ContactPickerActivity extends BugleActionBarActivity implements
 
         if (getIntent() != null && getIntent().getBooleanExtra(BugleNotifications.EXTRA_FROM_NOTIFICATION, false)) {
             BugleAnalytics.logEvent("SMS_Notifications_Clicked", true, true);
+        }
+        if (getIntent() != null) {
+            mDraftData = getIntent().getParcelableExtra(UIIntents.UI_INTENT_EXTRA_DRAFT_DATA);
         }
 
         if (intent.
@@ -142,10 +147,19 @@ public class ContactPickerActivity extends BugleActionBarActivity implements
     @Override // From ContactPickerFragmentHost
     public void onGetOrCreateNewConversation(final String conversationId) {
         Assert.isTrue(conversationId != null);
-        UIIntents.get().launchConversationActivity(
-                this, conversationId, null,
-                null, false, "", true);
-        finish();
+
+        if (TextUtils.isEmpty(conversationId)) {
+            if (FabricUtils.isFabricInited()) {
+                CrashlyticsCore.getInstance().logException(
+                        new CrashlyticsLog("start conversation activity error : create conversation id is null"));
+            }
+            finish();
+        } else {
+            UIIntents.get().launchConversationActivity(
+                    this, conversationId, mDraftData,
+                    null, false, "", true);
+            finish();
+        }
     }
 
     @Override // From ContactPickerFragmentHost
@@ -225,5 +239,4 @@ public class ContactPickerActivity extends BugleActionBarActivity implements
             UiUtils.updateKeyboardHeight(mKeyboardHeight);
         }
     }
-
 }

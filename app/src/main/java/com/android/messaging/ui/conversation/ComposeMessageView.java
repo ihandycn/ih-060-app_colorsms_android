@@ -22,6 +22,7 @@ import android.graphics.Rect;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.v4.view.animation.PathInterpolatorCompat;
 import android.support.v7.app.ActionBar;
 import android.text.Editable;
 import android.text.Html;
@@ -37,6 +38,7 @@ import android.view.ContextThemeWrapper;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.accessibility.AccessibilityEvent;
+import android.view.animation.Interpolator;
 import android.view.inputmethod.EditorInfo;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
@@ -66,10 +68,13 @@ import com.android.messaging.sms.MmsConfig;
 import com.android.messaging.ui.AttachmentPreview;
 import com.android.messaging.ui.BugleActionBarActivity;
 import com.android.messaging.ui.PlainTextEditText;
+import com.android.messaging.ui.SendDelayProgressBar;
+import com.android.messaging.ui.appsettings.SendDelaySettings;
 import com.android.messaging.ui.conversation.ConversationInputManager.ConversationInputSink;
 import com.android.messaging.ui.customize.PrimaryColors;
 import com.android.messaging.ui.dialog.FiveStarRateDialog;
 import com.android.messaging.ui.emoji.utils.EmojiManager;
+import com.android.messaging.ui.senddelaymessages.SendDelayMessagesManager;
 import com.android.messaging.ui.signature.SignatureSettingDialog;
 import com.android.messaging.util.AccessibilityUtil;
 import com.android.messaging.util.Assert;
@@ -99,7 +104,7 @@ import java.util.List;
  */
 public class ComposeMessageView extends LinearLayout
         implements TextView.OnEditorActionListener, DraftMessageDataListener, TextWatcher,
-        ConversationInputSink {
+        ConversationInputSink{
 
     public interface IComposeMessageViewHost extends
             DraftMessageData.DraftMessageSubscriptionDataProvider {
@@ -140,6 +145,8 @@ public class ComposeMessageView extends LinearLayout
         void onClickMediaOrEmoji();
     }
 
+    private static final String TAG = ComposeMessageView.class.getSimpleName();
+
     private static final int DISTANCE_SLOP = Dimensions.pxFromDp(90);
 
     // There is no draft and there is no need for the SIM selector
@@ -154,6 +161,8 @@ public class ComposeMessageView extends LinearLayout
     private TextView mMmsIndicator;
     private SimIconView mSelfSendIcon;
     private ImageView mSendButton;
+    private ImageView mDelayCloseButton;
+    private SendDelayProgressBar mSendDelayProgressBar;
     private View mSubjectView;
     private ImageButton mDeleteSubjectButton;
     private AttachmentPreview mAttachmentPreview;
@@ -177,7 +186,12 @@ public class ComposeMessageView extends LinearLayout
     private final Context mOriginalContext;
     private int mSendWidgetMode = SEND_WIDGET_MODE_SELF_AVATAR;
     private String mSignatureStr;
+    private boolean mIsWaitingToSendMessage;
+    private Runnable mSendDelayRunnable;
+    private long mMillisecondsAnimated;
     ForegroundColorSpan mSignatureSpan = new ForegroundColorSpan(0xb3222327);
+
+    private SendDelayActionCompletedCallBack mSendDelayActionCompletedCallBack;
 
     // Shared data model object binding from the conversation.
     private ImmutableBindingRef<ConversationData> mConversationDataModel;
@@ -229,6 +243,7 @@ public class ComposeMessageView extends LinearLayout
         mBinding.bind(data);
         data.addListener(this);
         data.setSubscriptionDataProvider(host);
+        resumeLastSendDelayMessageActionInThisConversation();
     }
 
     /**
@@ -238,6 +253,14 @@ public class ComposeMessageView extends LinearLayout
         mBinding.unbind();
         mHost = null;
         mInputManager.onDetach();
+    }
+
+    protected boolean getIsWaitingToSendMessageFlag() {
+        return mIsWaitingToSendMessage;
+    }
+
+    public void setOnActionEndListener(SendDelayActionCompletedCallBack listener) {
+        this.mSendDelayActionCompletedCallBack = listener;
     }
 
     @Override
@@ -351,17 +374,18 @@ public class ComposeMessageView extends LinearLayout
                 mBinding.getData().setMessageSubject(null);
             }
         });
-
         mSubjectView = findViewById(R.id.subject_view);
-
         mSendButton = findViewById(R.id.send_message_button);
+
+        initSendDelayMessagesRunnable();
         mSendButton.setBackground(BackgroundDrawables.createBackgroundDrawable(PrimaryColors.getPrimaryColor(),
                 PrimaryColors.getPrimaryColorDark(),
                 Dimensions.pxFromDp(29), false, true));
         mSendButton.setOnClickListener(clickView -> {
-            logEmojiEvent();
-            sendMessageInternal(true /* checkMessageSize */);
+            BugleAnalytics.logEvent("Detailpage_BtnSend_Click", "SendDelay", "" + SendDelaySettings.getSendDelayInSecs());
+            startMessageSendDelayAction(System.currentTimeMillis());
         });
+
         mSendButton.setOnLongClickListener(arg0 -> {
             SubscriptionListEntry entry = getSelfSubscriptionListEntry();
             boolean shown = false;
@@ -475,6 +499,85 @@ public class ComposeMessageView extends LinearLayout
                 showEmojiPicker();
             }
         });
+    }
+
+    private void initSendDelayMessagesRunnable() {
+        mDelayCloseButton = findViewById(R.id.delay_close_button);
+        mSendDelayProgressBar = findViewById(R.id.send_delay_circle_bar);
+        mSendDelayRunnable = () -> {
+            logEmojiEvent();
+            sendMessageInternal(true /* checkMessageSize */);
+            mIsWaitingToSendMessage = false;
+            String conversationId = mBinding.getData().getConversationId();
+            updateVisualsOnDraftChanged();
+            resetDelaySendAnimation();
+            SendDelayMessagesManager.remove(conversationId);
+        };
+    }
+
+    private void resetDelaySendAnimation(){
+        mDelayCloseButton.setVisibility(View.GONE);
+        mSendDelayProgressBar.setVisibility(View.GONE);
+        mSelfSendIcon.setVisibility(View.VISIBLE);
+        mDelayCloseButton.setAlpha(0.0f);
+        mSendDelayProgressBar.setAlpha(0.0f);
+        mSendDelayProgressBar.setScaleX(0.8f);
+        mSendDelayProgressBar.setScaleY(0.8f);
+        mSendDelayProgressBar.resetAnimation();
+        mSendButton.setScaleX(1.0f);
+        mSendButton.setScaleY(1.0f);
+        mSendButton.setAlpha(1.0f);
+        mSendDelayProgressBar.setProgress(100);
+    }
+
+    private void startMessageSendDelayAction(long sendDelayAnimationStartTime){
+        mIsWaitingToSendMessage = true;
+
+        if (mMillisecondsAnimated > 1000 * SendDelaySettings.getSendDelayInSecs()) {
+            mMillisecondsAnimated =  1000 * SendDelaySettings.getSendDelayInSecs() * 9 / 10 ;
+        }
+
+        if (mMillisecondsAnimated != 0) {
+            mSendDelayProgressBar.setProgress(100 - (float) ((mMillisecondsAnimated * 100) / (1000 * SendDelaySettings.getSendDelayInSecs())));
+        }
+        Threads.postOnMainThreadDelayed(mSendDelayRunnable,1000 * SendDelaySettings.getSendDelayInSecs() - mMillisecondsAnimated);
+
+        String conversationId = mBinding.getData().getConversationId();
+        SendDelayMessagesManager.insertIncompleteSendingDelayMessagesAction(conversationId, sendDelayAnimationStartTime, mSendDelayRunnable);
+        if(SendDelaySettings.getSendDelayInSecs() != 0) {
+            mDelayCloseButton.setVisibility(View.VISIBLE);
+            mSendDelayProgressBar.setVisibility(View.VISIBLE);
+            mSelfSendIcon.setVisibility(View.GONE);
+            mSendButton.setVisibility(View.GONE);
+            
+            mDelayCloseButton.animate().alpha(1.0f).setDuration(160).setStartDelay(80).start();
+            Interpolator scaleStartInterpolator =
+                    PathInterpolatorCompat.create(0.0f, 0.0f, 0.58f, 1.0f);
+            mSendDelayProgressBar.animate().alpha(1.0f).scaleX(1.0f).scaleY(1.0f).setDuration(160).setStartDelay(80).setInterpolator(scaleStartInterpolator).start();
+            mSendDelayProgressBar.startAnimation(SendDelaySettings.getSendDelayInSecs() - (mMillisecondsAnimated / 1000));
+        }
+        mMillisecondsAnimated = 0;
+        mSendDelayProgressBar.setOnClickListener(clickedView -> {
+            mIsWaitingToSendMessage = false;
+            Threads.removeOnMainThread(mSendDelayRunnable);
+            updateVisualsOnDraftChanged();
+            resetDelaySendAnimation();
+            BugleAnalytics.logEvent("Detailpage_BtnCancel_Click");
+        });
+    }
+
+    private void resumeLastSendDelayMessageActionInThisConversation(){
+        long sendDelayActionStartTime;
+        String conversationId = mBinding.getData().getConversationId();
+        SendDelayMessagesManager.SendDelayMessagesData globalSendDelayMessagesData = SendDelayMessagesManager.getIncompleteSendingDelayMessagesAction(conversationId);
+        if (globalSendDelayMessagesData != null) {
+            long firstSendDelayActionStartSystemTime = globalSendDelayMessagesData.getLastSendDelayActionStartSystemTime();
+            sendDelayActionStartTime = globalSendDelayMessagesData.getLastSendDelayActionStartSystemTime();
+            mMillisecondsAnimated = System.currentTimeMillis() - sendDelayActionStartTime;
+            Threads.removeOnMainThread(globalSendDelayMessagesData.getSendDelayMessagesRunnable());
+            SendDelayMessagesManager.remove(conversationId);
+            startMessageSendDelayAction(firstSendDelayActionStartSystemTime);
+        }
     }
 
     private boolean isMediaPickerShowing() {
@@ -721,6 +824,7 @@ public class ComposeMessageView extends LinearLayout
                 BugleAnalytics.logEvent("SMS_DetailsPage_IconSend_Click", true, true, "Type", "SMS",
                         "isContact", isContactValue);
             }
+
             // Asynchronously check the draft against various requirements before sending.
             boolean finalIncludeSignature = includeSignature;
             mBinding.getData().checkDraftForAction(checkMessageSize,
@@ -799,6 +903,9 @@ public class ComposeMessageView extends LinearLayout
 
                                 default:
                                     break;
+                            }
+                            if (mSendDelayActionCompletedCallBack != null) {
+                                mSendDelayActionCompletedCallBack.onSendDelayActionEnd();
                             }
                         }
                     }, mBinding);
@@ -1069,8 +1176,8 @@ public class ComposeMessageView extends LinearLayout
             if (hasWorkingDraft && isDataLoadedForMessageSend()) {
                 if (selfSendButtonUri != null) {
                     UiUtils.revealOrHideViewWithAnimation(mSendButton, VISIBLE, null);
-                } else {
-                    mSendButton.setVisibility(View.VISIBLE);
+                } else if(!mIsWaitingToSendMessage) {
+                        mSendButton.setVisibility(View.VISIBLE);
                 }
                 if (isOverriddenAvatarAGroup()) {
                     // If the host has overriden the avatar to show a group avatar where the

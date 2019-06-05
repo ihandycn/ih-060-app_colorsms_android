@@ -21,7 +21,10 @@ import com.android.messaging.ui.customize.ConversationColors;
 import com.android.messaging.ui.customize.PrimaryColors;
 import com.android.messaging.ui.customize.WallpaperDrawables;
 import com.android.messaging.util.Dates;
+import com.android.messaging.util.FabricUtils;
+import com.crashlytics.android.core.CrashlyticsCore;
 import com.ihs.commons.notificationcenter.HSGlobalNotificationCenter;
+import com.superapps.debug.CrashlyticsLog;
 import com.superapps.util.BackgroundDrawables;
 import com.superapps.util.Dimensions;
 
@@ -75,7 +78,14 @@ public class MessageBoxMessageListAdapter extends RecyclerView.Adapter<RecyclerV
                 View smsViewItem = LayoutInflater.from(parent.getContext()).inflate(R.layout.message_box_sms_item, parent, false);
                 SmsViewHolder holder = new SmsViewHolder(smsViewItem);
                 holder.mContentText.setOnClickListener(v1 -> {
-                    UIIntents.get().launchConversationActivityWithParentStack(v1.getContext(), mConversationId, null);
+                    if (!TextUtils.isEmpty(mConversationId)) {
+                        UIIntents.get().launchConversationActivityWithParentStack(v1.getContext(), mConversationId, null);
+                    } else {
+                        if (FabricUtils.isFabricInited()) {
+                            CrashlyticsCore.getInstance().logException(
+                                    new CrashlyticsLog("start conversation activity error : message box conversation id is null"));
+                        }
+                    }
                     HSGlobalNotificationCenter.sendNotification(NOTIFICATION_FINISH_MESSAGE_BOX);
                 });
                 holder.mContentText.setTextColor(mIncomingTextColor);
@@ -94,7 +104,14 @@ public class MessageBoxMessageListAdapter extends RecyclerView.Adapter<RecyclerV
 
                 MmsViewHolder mmsViewHolder = new MmsViewHolder(mmsViewItem);
                 mmsViewHolder.mContentView.setOnClickListener(v -> {
-                    UIIntents.get().launchConversationActivityWithParentStack(parent.getContext(), mConversationId, null);
+                    if (!TextUtils.isEmpty(mConversationId)) {
+                        UIIntents.get().launchConversationActivityWithParentStack(parent.getContext(), mConversationId, null);
+                    } else {
+                        if (FabricUtils.isFabricInited()) {
+                            CrashlyticsCore.getInstance().logException(
+                                    new CrashlyticsLog("start conversation activity error : message box conversation id is null"));
+                        }
+                    }
                     HSGlobalNotificationCenter.sendNotification(NOTIFICATION_FINISH_MESSAGE_BOX);
                     MessageBoxAnalytics.logEvent("SMS_PopUp_MMS_Click");
                 });

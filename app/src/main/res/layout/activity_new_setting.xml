@@ -77,6 +77,14 @@
                 app:title="@string/notification_vibrate_pref_title"
                 app:type="switchView" />
 
+            <!--Send Delay-->
+            <com.android.messaging.ui.appsettings.SettingItemView
+                android:id="@+id/setting_item_send_delay"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:title="@string/send_delay_settings"
+                app:type="withTriangle"/>
+
             <!--Signature-->
             <com.android.messaging.ui.appsettings.SettingItemView
                 android:id="@+id/setting_item_signature"

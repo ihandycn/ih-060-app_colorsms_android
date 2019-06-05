@@ -17,6 +17,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -201,6 +202,8 @@ public class ThemeDownloadManager {
                     ThemeManager.CREATE_ICON_FILE_NAME);
             downloadItemInfo.mStartProcessValue = CREATE_ICON_START_RATE;
             downloadItemInfo.mEndProcessValue = AVATAR_START_RATE;
+
+            downloadItemInfoList.add(downloadItemInfo);
         }
 
         if (!TextUtils.isEmpty(theme.avatarUrl)) {
@@ -230,31 +233,41 @@ public class ThemeDownloadManager {
         }
 
         if (!isFontDownload[0]) {
-            FontDownloadManager.downloadFont(fontInfo, new FontDownloadManager.FontDownloadListener() {
+            WeakReference<IThemeDownloadListener> listenerWeakReference = new WeakReference<>(listener);
+            FontDownloadManager.FontDownloadListener listener1 = new FontDownloadManager.FontDownloadListener() {
                 @Override
                 public void onDownloadSuccess() {
                     isFontDownloadSuccess[0] = true;
                     fontRate[0] = TOTAL_RATE - FONT_START_RATE;
                     if (isThemeDownloadSuccess[0]) {
-                        listener.onDownloadSuccess();
+                        if (listenerWeakReference.get() != null) {
+                            listenerWeakReference.get().onDownloadSuccess();
+                        }
                     } else {
-                        listener.onDownloadUpdate(themeRate[0] + fontRate[0]);
+                        if (listenerWeakReference.get() != null) {
+                            listenerWeakReference.get().onDownloadUpdate(themeRate[0] + fontRate[0]);
+                        }
                     }
                 }
 
                 @Override
                 public void onDownloadFailed() {
-                    //listener.onDownloadFailed();
+                    if (listenerWeakReference.get() != null) {
+                        listenerWeakReference.get().onDownloadFailed();
+                    }
                 }
 
                 @Override
                 public void onDownloadUpdate(float rate) {
                     if (fontRate[0] < rate * (TOTAL_RATE - FONT_START_RATE)) {
                         fontRate[0] = rate * (TOTAL_RATE - FONT_START_RATE);
-                        listener.onDownloadUpdate(themeRate[0] + fontRate[0]);
+                        if (listenerWeakReference.get() != null) {
+                            listenerWeakReference.get().onDownloadUpdate(themeRate[0] + fontRate[0]);
+                        }
                     }
                 }
-            });
+            };
+            FontDownloadManager.downloadFont(fontInfo, listener1);
         }
 
         IThemeDownloadListener downloadListener = new IThemeDownloadListener() {
