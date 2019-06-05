@@ -520,9 +520,16 @@ public class ConversationFragment extends Fragment implements ConversationDataLi
     }
 
     private AcbNativeAdLoader mNativeAdLoader;
+    private boolean isForeground;
     private Handler mAdRefreshHandler = new Handler() {
         @Override public void handleMessage(Message msg) {
-            loadTopBannerAd();
+            if (isForeground) {
+                loadTopBannerAd();
+            } else {
+                sendEmptyMessageDelayed(0,
+                        HSConfig.optInteger(60, "Application", "SMSAd", "SMSDetailspageTopAd", "RefreshInterval")
+                                * DateUtils.SECOND_IN_MILLIS);
+            }
         }
     };
     private AcbNativeAd mNativeAd;
@@ -929,6 +936,7 @@ public class ConversationFragment extends Fragment implements ConversationDataLi
             mIncomingDraft = null;
         }
         mClearLocalDraft = false;
+        isForeground = true;
 
         // On resume, check if there's a pending request for resuming message compose. This
         // may happen when the user commits the contact selection for a group conversation and
@@ -1193,6 +1201,7 @@ public class ConversationFragment extends Fragment implements ConversationDataLi
             mComposeMessageView.writeDraftMessage();
         }
         mSuppressWriteDraft = false;
+        isForeground = false;
         mBinding.getData().unsetFocus();
         mListState = mRecyclerView.getLayoutManager().onSaveInstanceState();
 
