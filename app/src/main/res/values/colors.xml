@@ -241,6 +241,9 @@
     <color name="restore_summary_default_color">#8c8d93</color>
     <color name="backup_cloud_default_summary_color">#0b8fff</color>
     <color name="dialog_content_color">#6e717b</color>
-    <color name="message_free_up_process_hint_color">#36373c</color>
+    <color name="message_back_up_process_hint_color">#36373c</color>
     <color name="backup_button_default_color">#c5c7ca</color>
+    <color name="backup_dialog_process_background_color">#e7e9ef</color>
+    <color name="already_backup_messages_color">#18191c</color>
+    <color name="total_backup_messages_color">#989ba6</color>
 </resources>

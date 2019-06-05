@@ -29,7 +29,7 @@
         android:text="@string/message_free_up_process_dialog"
         android:layout_marginTop="25.7dp"
         android:textSize="12.7sp"
-        android:textColor="@color/message_free_up_process_hint_color"
+        android:textColor="@color/message_back_up_process_hint_color"
         android:includeFontPadding="false"
         android:lineSpacingMultiplier="1.1"
         app:typeface="@string/custom_font_medium"

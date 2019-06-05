@@ -680,6 +680,12 @@
         <item name="android:maxHeight">5.3dip</item>
     </style>
 
+    <style name="SmsBackUpDialogProgressBar" parent="Base.Widget.AppCompat.ProgressBar.Horizontal">
+        <item name="android:progressDrawable">@drawable/sms_backup_dialog_progress_bar</item>
+        <item name="android:minHeight">5.3dp</item>
+        <item name="android:maxHeight">5.3dp</item>
+    </style>
+
     <style name="PopupMenu" parent="ThemeOverlay.AppCompat.Light">
         <item name="android:listSelector">?attr/listChoiceBackgroundIndicator</item>
     </style>
