@@ -9,10 +9,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.text.Spannable;
-import android.text.TextPaint;
 import android.text.TextUtils;
-import android.text.style.URLSpan;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
@@ -22,7 +19,6 @@ import com.android.messaging.datamodel.DataModel;
 import com.android.messaging.datamodel.action.InsertNewMessageAction;
 import com.android.messaging.datamodel.binding.Binding;
 import com.android.messaging.datamodel.binding.BindingBase;
-import com.android.messaging.datamodel.data.ContactPickerData;
 import com.android.messaging.datamodel.data.ConversationListData;
 import com.android.messaging.datamodel.data.ConversationListItemData;
 import com.android.messaging.datamodel.data.ParticipantData;
@@ -31,15 +27,11 @@ import com.android.messaging.privatebox.ui.addtolist.CallAssistantUtils;
 import com.android.messaging.ui.PlainTextEditText;
 import com.android.messaging.ui.customize.PrimaryColors;
 import com.android.messaging.ui.view.MessagesTextView;
-import com.android.messaging.util.Assert;
 import com.android.messaging.util.AvatarUriUtil;
 import com.android.messaging.util.BugleAnalytics;
 import com.android.messaging.util.ContactUtil;
 import com.android.messaging.util.ImeUtil;
-import com.android.messaging.util.PhoneUtils;
-import com.android.messaging.util.TextUtil;
 import com.android.messaging.util.UiUtils;
-import com.android.messaging.util.UriUtil;
 import com.google.common.annotations.VisibleForTesting;
 import com.ihs.commons.config.HSConfig;
 import com.ihs.commons.utils.HSLog;
@@ -48,8 +40,6 @@ import com.superapps.util.Dimensions;
 import com.superapps.util.Toasts;
 
 import java.util.ArrayList;
-
-import static com.android.messaging.datamodel.data.ConversationListItemData.INDEX_CONVERSATION_ICON;
 
 public class InviteFriendsActivity extends AppCompatActivity implements ConversationListData.ConversationListDataListener {
 
@@ -159,10 +149,8 @@ public class InviteFriendsActivity extends AppCompatActivity implements Conversa
 
     private void initRecyclerView() {
         RecyclerView recyclerView = findViewById(R.id.friends_list_recycler_view);
-        float size = getResources().getDimensionPixelSize(R.dimen.invite_friends_item_size);
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new GridLayoutManager(this, 5));
-        recyclerView.addItemDecoration(new InviteFriendsListItemDecoration(5, (int)size, (int)size));
         mAdapter = new InviteFriendsListAdapter(this);
         recyclerView.setAdapter(mAdapter);
         recyclerView.setOverScrollMode(View.OVER_SCROLL_NEVER);
@@ -264,13 +252,4 @@ public class InviteFriendsActivity extends AppCompatActivity implements Conversa
 
     }
 
-    private class URLSpanNoUnderline extends URLSpan {
-        private URLSpanNoUnderline(String url) {
-            super(url);
-        }
-        @Override public void updateDrawState(TextPaint ds) {
-            super.updateDrawState(ds);
-            ds.setUnderlineText(false);
-        }
-    }
 }
