@@ -18,9 +18,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:lottie_fileName="lottie/clean_process.json"
         app:lottie_loop="true"
-        app:lottie_autoPlay="true">
-
-    </com.airbnb.lottie.LottieAnimationView>
+        app:lottie_autoPlay="true" />
 
     <com.android.messaging.ui.view.MessagesTextView
         android:id="@+id/message_free_up_process_hint"
@@ -35,8 +33,6 @@
         app:typeface="@string/custom_font_medium"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/message_free_up_process"
-        >
-    </com.android.messaging.ui.view.MessagesTextView>
+        app:layout_constraintTop_toBottomOf="@+id/message_free_up_process" />
 
 </android.support.constraint.ConstraintLayout>

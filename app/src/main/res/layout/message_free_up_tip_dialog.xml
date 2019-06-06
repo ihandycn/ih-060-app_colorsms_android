@@ -30,9 +30,7 @@
         app:typeface="@string/custom_font_semibold"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/message_free_up_close"
-        >
-    </com.android.messaging.ui.view.MessagesTextView>
+        app:layout_constraintTop_toBottomOf="@+id/message_free_up_close" />
 
     <com.android.messaging.ui.view.MessagesTextView
         android:id="@+id/message_free_up_content"
@@ -49,8 +47,6 @@
         app:typeface="@string/custom_font_medium"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/message_free_up_title"
-        >
-    </com.android.messaging.ui.view.MessagesTextView>
+        app:layout_constraintTop_toBottomOf="@+id/message_free_up_title" />
 
 </android.support.constraint.ConstraintLayout>
