@@ -17,7 +17,7 @@ public class InviteFriendsTest {
 
     private static final String DIALOG_TOPIC_ID = "topic-74oxuasmo";
 
-    private static String sLink;
+    private static String sLink = "";
 
     public static String getSendTestType() {
         return AutopilotConfig.getStringToTestNow(SMS_TOPIC_ID, "send_description", "default");
@@ -46,16 +46,15 @@ public class InviteFriendsTest {
         if (TextUtils.isEmpty(sLink)) {
             String type = AutopilotConfig.getStringToTestNow(SMS_TOPIC_ID, "send_description", "default");
             Resources resources = HSApplication.getContext().getResources();
-            if ("default".equals(type)) {
-                sLink = resources.getString(R.string.invite_friends_default_auto_link_content);
-            } else if ("high_rating".equals(type)) {
+            if ("high_rating".equals(type)) {
                 sLink = resources.getString(R.string.invite_friends_high_rating_auto_link_content);
             } else if ("better_than_system".equals(type)) {
                 sLink = resources.getString(R.string.invite_friends_better_than_system_auto_link_content);
             } else if ("help_get_reward".equals(type)) {
                 sLink = resources.getString(R.string.invite_friends_help_get_reward_auto_link_content);
+            } else {
+                sLink = resources.getString(R.string.invite_friends_default_auto_link_content);
             }
-            sLink = resources.getString(R.string.invite_friends_invite_default_content);
         }
 
         return sLink;
