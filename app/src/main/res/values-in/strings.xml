@@ -674,8 +674,24 @@
     <string name="confirm_prompt_password">Konfirmasikan kode akses</string>
     <string name="draw_unlock_pattern">Gambar pola</string>
 
-    <string name="get_now">Dapatkan sekarang</string>
-    <string name="downloading">Mengunduh ...</string>
     <string name="theme_upgrade_title">Lebih Banyak Tema!</string>
     <string name="theme_upgrade_subtitle">Anda dapat memilih tema yang Anda sukai atau mendaftar kembali tema lama Anda di toko tema baru. Bersenang senang lah!</string>
+
+	<string name="contact_picker_select_group">Mulai obrolan grup</string>
+	<string name="send_delay_settings">Penundaan Kirim</string>
+	<string name="send_delay_no_delay">Tidak Ada Penundaan</string>
+	<string name="set_as_default_success">Berhasil Diubah</string>
+	<string name="invite_friends_invite_edit_button">Edit</string>
+	<string name="invite_friends_invite">UNDANG (%d)</string>
+	<string name="invite_friends_add">TAMBAHKAN (%d)</string>
+	<string name="invite_friends_invite_send_sms_description">Kirim SMS ke teman yang ingin Anda undang.</string>
+	<string name="notification_sender_in_private_box">Kontak Pribadi</string>
+	<string name="message_box_click_to_view">Klik untuk Melihat</string>
+	<string name="get_now">Dapatkan Sekarang</string>
+	<string name="downloading">Mengunduh ...</string>
+	<string name="apply_theme_success">Berhasil Diterapkan</string>
+	<string name="theme_coming">Teman lainnya akan segera datang...</string>
+	<string name="menu_invite_friends">Undang Teman</string>
+	<string name="invite_friends_now">UNDANG SEKARANG</string>
+
 </resources>

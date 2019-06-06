@@ -9,11 +9,9 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.text.Spannable;
-import android.text.TextPaint;
 import android.text.TextUtils;
-import android.text.style.URLSpan;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.TextView;
 
@@ -22,7 +20,6 @@ import com.android.messaging.datamodel.DataModel;
 import com.android.messaging.datamodel.action.InsertNewMessageAction;
 import com.android.messaging.datamodel.binding.Binding;
 import com.android.messaging.datamodel.binding.BindingBase;
-import com.android.messaging.datamodel.data.ContactPickerData;
 import com.android.messaging.datamodel.data.ConversationListData;
 import com.android.messaging.datamodel.data.ConversationListItemData;
 import com.android.messaging.datamodel.data.ParticipantData;
@@ -31,25 +28,24 @@ import com.android.messaging.privatebox.ui.addtolist.CallAssistantUtils;
 import com.android.messaging.ui.PlainTextEditText;
 import com.android.messaging.ui.customize.PrimaryColors;
 import com.android.messaging.ui.view.MessagesTextView;
-import com.android.messaging.util.Assert;
 import com.android.messaging.util.AvatarUriUtil;
 import com.android.messaging.util.BugleAnalytics;
+import com.android.messaging.util.BuglePrefs;
 import com.android.messaging.util.ContactUtil;
 import com.android.messaging.util.ImeUtil;
 import com.android.messaging.util.PhoneUtils;
-import com.android.messaging.util.TextUtil;
 import com.android.messaging.util.UiUtils;
-import com.android.messaging.util.UriUtil;
 import com.google.common.annotations.VisibleForTesting;
 import com.ihs.commons.config.HSConfig;
 import com.ihs.commons.utils.HSLog;
 import com.superapps.util.BackgroundDrawables;
 import com.superapps.util.Dimensions;
+import com.superapps.util.Preferences;
 import com.superapps.util.Toasts;
 
 import java.util.ArrayList;
 
-import static com.android.messaging.datamodel.data.ConversationListItemData.INDEX_CONVERSATION_ICON;
+import static com.android.messaging.ui.invitefriends.InviteFriendsConditions.INVITE_FRIENDS_DIALOG_SHOW_COUNT;
 
 public class InviteFriendsActivity extends AppCompatActivity implements ConversationListData.ConversationListDataListener {
 
@@ -65,7 +61,6 @@ public class InviteFriendsActivity extends AppCompatActivity implements Conversa
     private TextView mInviteButton;
     private String mDescription;
 
-
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -77,7 +72,7 @@ public class InviteFriendsActivity extends AppCompatActivity implements Conversa
 
         mInviteButton = findViewById(R.id.invite_button);
         mInviteButton.setBackground(BackgroundDrawables.createBackgroundDrawable(PrimaryColors.getPrimaryColor(),
-                Dimensions.pxFromDp(6.7f), true));
+                Dimensions.pxFromDp(3.3f), true));
 
         mInviteButton.setVisibility(View.GONE);
         mInviteButton.setOnClickListener(v -> {
@@ -85,22 +80,26 @@ public class InviteFriendsActivity extends AppCompatActivity implements Conversa
                 return;
             }
 
-            String message = mDescription + InviteFriendsTest.getSendLink();
+            if (mAdapter.getItemCount() <= 1) {
+                return;
+            }
+
+            String message = mDescription + "\n" + InviteFriendsTest.getSendLink();
             for (CallAssistantUtils.ContactInfo contactInfo : mAdapter.getContactInfos()) {
                 if (!TextUtils.isEmpty(contactInfo.number)) {
                     InsertNewMessageAction.insertNewMessage(ParticipantData.DEFAULT_SELF_SUB_ID, contactInfo.number,
                             message, "");
                 }
+                InviteFriendsTest.logInviteSmsSent();
+                BugleAnalytics.logEvent("Invite_SMS_Send", "link", InviteFriendsTest.getSendTestType(),
+                        "isModified", "" + !TextUtils.equals(mDescription, InviteFriendsTest.getSendDescription()));
             }
             Toasts.showToast(R.string.invite_friends_success_toast);
 
             BugleAnalytics.logEvent("Invite_SendPage_Invite_Click",
                     "from", getIntent().getStringExtra(INTENT_KEY_FROM),
-                    "num", String.valueOf(mAdapter.getItemCount()));
-            BugleAnalytics.logEvent("Invite_SMS_Send", "link", InviteFriendsTest.getSendLink(),
-                    "isModified", "" + !TextUtils.equals(mDescription, InviteFriendsTest.getSendDescription()));
+                    "num", String.valueOf(mAdapter.getItemCount() - 1));
             InviteFriendsTest.logInviteFriendsClick();
-            InviteFriendsTest.logInviteSmsSent();
             finish();
         });
 
@@ -114,7 +113,7 @@ public class InviteFriendsActivity extends AppCompatActivity implements Conversa
         mEditText = findViewById(R.id.invite_friends_message_text);
         mEditText.setTypeface(FontUtils.getTypeface());
         mEditText.setText(mDescription);
-        mEditText.setEnabled(false);
+        disableEditText();
 
         View editButton = findViewById(R.id.edit_button);
         View cancelButton = findViewById(R.id.invite_friends_invite_cancel_button);
@@ -140,8 +139,7 @@ public class InviteFriendsActivity extends AppCompatActivity implements Conversa
         editButton.setVisibility(View.GONE);
         saveButton.setVisibility(View.VISIBLE);
         cancelButton.setVisibility(View.VISIBLE);
-        mEditText.setEnabled(true);
-        mEditText.requestFocus();
+        enableEditText();
         mEditText.setSelection(mEditText.getText().length());
     }
 
@@ -154,15 +152,24 @@ public class InviteFriendsActivity extends AppCompatActivity implements Conversa
         } else {
             mEditText.setText(mDescription);
         }
-        mEditText.setEnabled(false);
+        disableEditText();
+        ImeUtil.get().hideImeKeyboard(InviteFriendsActivity.this, mEditText);
+    }
+
+    private void enableEditText() {
+        mEditText.setCursorVisible(true);
+        mEditText.setTouchable(true);
+    }
+
+    private void disableEditText() {
+        mEditText.setTouchable(false);
+        mEditText.setCursorVisible(false);
     }
 
     private void initRecyclerView() {
         RecyclerView recyclerView = findViewById(R.id.friends_list_recycler_view);
-        float size = getResources().getDimensionPixelSize(R.dimen.invite_friends_item_size);
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new GridLayoutManager(this, 5));
-        recyclerView.addItemDecoration(new InviteFriendsListItemDecoration(5, (int)size, (int)size));
         mAdapter = new InviteFriendsListAdapter(this);
         recyclerView.setAdapter(mAdapter);
         recyclerView.setOverScrollMode(View.OVER_SCROLL_NEVER);
@@ -176,6 +183,13 @@ public class InviteFriendsActivity extends AppCompatActivity implements Conversa
             mBinding.bind(DataModel.get().createConversationListData(this, this, false));
             mBinding.getData().init(getLoaderManager(), mBinding);
         }
+    }
+
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        Preferences.get(BuglePrefs.SHARED_PREFERENCES_NAME).putInt(INVITE_FRIENDS_DIALOG_SHOW_COUNT, Integer.MAX_VALUE);
     }
 
     @Override
@@ -244,12 +258,13 @@ public class InviteFriendsActivity extends AppCompatActivity implements Conversa
                     }
                 }
                 contactInfos.add(new CallAssistantUtils.ContactInfo(itemData.getName(),
-                        itemData.getOtherParticipantNormalizedDestination(), uri));
+                        PhoneUtils.getDefault().formatForDisplay(itemData.getOtherParticipantNormalizedDestination()), uri));
+
                 dataCount++;
                 if (dataCount == count) {
                     break;
                 }
-                HSLog.d("InviteFriends, onConversationListCursorUpdated");
+
             } while (cursor.moveToNext());
 
 
@@ -264,13 +279,4 @@ public class InviteFriendsActivity extends AppCompatActivity implements Conversa
 
     }
 
-    private class URLSpanNoUnderline extends URLSpan {
-        private URLSpanNoUnderline(String url) {
-            super(url);
-        }
-        @Override public void updateDrawState(TextPaint ds) {
-            super.updateDrawState(ds);
-            ds.setUnderlineText(false);
-        }
-    }
 }

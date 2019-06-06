@@ -23,7 +23,7 @@
         <com.android.messaging.ui.view.MessagesTextView
             android:id="@+id/private_box_add_btn"
             android:layout_width="match_parent"
-            android:layout_height="50dp"
+            android:layout_height="46dp"
             android:layout_marginBottom="9dp"
             android:layout_gravity="center"
             android:layout_marginLeft="16dp"

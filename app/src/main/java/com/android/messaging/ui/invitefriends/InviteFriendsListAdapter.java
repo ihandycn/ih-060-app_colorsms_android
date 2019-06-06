@@ -22,6 +22,8 @@ import java.util.List;
 import static com.android.messaging.ui.invitefriends.InviteFriendsActivity.REQUEST_CODE_ADD_FRIENDS;
 
 public class InviteFriendsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+    private static final int ITEM_TYPE_ADD = 0;
+    private static final int ITEM_TYPE_CONTACT = 1;
 
     interface OnItemCountChangeListener {
         void onChange();
@@ -31,19 +33,19 @@ public class InviteFriendsListAdapter extends RecyclerView.Adapter<RecyclerView.
 
     private List<CallAssistantUtils.ContactInfo> mContactInfos = new ArrayList<>();
 
-    public InviteFriendsListAdapter(Activity activity) {
+    InviteFriendsListAdapter(Activity activity) {
         mActivity = activity;
     }
 
-    public void setOnItemCountChangeListener(OnItemCountChangeListener onItemCountChangeListener) {
+    void setOnItemCountChangeListener(OnItemCountChangeListener onItemCountChangeListener) {
         mOnItemCountChangeListener = onItemCountChangeListener;
     }
 
-    public List<CallAssistantUtils.ContactInfo> getContactInfos() {
+    List<CallAssistantUtils.ContactInfo> getContactInfos() {
         return mContactInfos;
     }
 
-    public void initData(List<CallAssistantUtils.ContactInfo> contactInfos) {
+    void initData(List<CallAssistantUtils.ContactInfo> contactInfos) {
         mContactInfos = contactInfos;
         notifyDataSetChanged();
         if (mOnItemCountChangeListener != null) {
@@ -51,7 +53,7 @@ public class InviteFriendsListAdapter extends RecyclerView.Adapter<RecyclerView.
         }
     }
 
-    public void addContact(List<CallAssistantUtils.ContactInfo> contactInfos) {
+    void addContact(List<CallAssistantUtils.ContactInfo> contactInfos) {
         if (contactInfos == null) {
             return;
         }
@@ -78,37 +80,55 @@ public class InviteFriendsListAdapter extends RecyclerView.Adapter<RecyclerView.
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View v = LayoutInflater.from(mActivity).inflate(R.layout.invite_friends_list_item, parent, false);
         ViewHolder viewHolder = new ViewHolder(v);
-        viewHolder.mDeleteBtn.setOnClickListener(v1 -> {
-            int target = viewHolder.getAdapterPosition();
-            mContactInfos.remove(target - 1);
-            notifyItemRemoved(target);
-            BugleAnalytics.logEvent("Invite_SendPage_Delete_Click");
-            if (mOnItemCountChangeListener != null) {
-                mOnItemCountChangeListener.onChange();
-            }
-        });
+
+        switch (viewType) {
+            case  ITEM_TYPE_ADD :
+                viewHolder.mContactIcon.setImageResource(R.drawable.ic_add_black);
+                viewHolder.mContactName.setText(R.string.invite_friends_add_friends);
+                viewHolder.mContactIcon.setBackgroundResource(R.drawable.light_gray_circle_btn_bg_drwable);
+                viewHolder.mContactIcon.setOnClickListener(v2 -> {
+                    Intent intent = new Intent(mActivity, SelectFriendsToInviteActivity.class);
+                    mActivity.startActivityForResult(intent, REQUEST_CODE_ADD_FRIENDS);
+                    BugleAnalytics.logEvent("Invite_SendPage_Add_Click");
+                });
+                viewHolder.mDeleteBtn.setVisibility(View.GONE);
+                break;
+
+            case ITEM_TYPE_CONTACT:
+                viewHolder.mDeleteBtn.setOnClickListener(v1 -> {
+                    int target = viewHolder.getAdapterPosition();
+                    if (target > 0 && target <= mContactInfos.size()) {
+                        mContactInfos.remove(target - 1);
+                        notifyItemRemoved(target);
+                        BugleAnalytics.logEvent("Invite_SendPage_Delete_Click");
+                        if (mOnItemCountChangeListener != null) {
+                            mOnItemCountChangeListener.onChange();
+                        }
+                    }
+                });
+                break;
+        }
+
         return viewHolder;
     }
 
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
         if (holder instanceof ViewHolder) {
-            if (position == 0) {
-                ((ViewHolder) holder).mContactIcon.setImageResource(R.drawable.ic_add_black);
-                ((ViewHolder) holder).mContactName.setText(R.string.invite_friends_add_friends);
-                ((ViewHolder) holder).mContactIcon.setBackgroundResource(R.drawable.light_gray_circle_btn_bg_drwable);
-                ((ViewHolder) holder).mContactIcon.setOnClickListener(v -> {
-                    Intent intent = new Intent(mActivity, SelectFriendsToInviteActivity.class);
-                    mActivity.startActivityForResult(intent, REQUEST_CODE_ADD_FRIENDS);
-                    BugleAnalytics.logEvent("Invite_SendPage_Add_Click");
-
-                });
-                ((ViewHolder) holder).mDeleteBtn.setVisibility(View.GONE);
-            } else {
+            if (position > 0) {
                 position -= 1;
                 GlideApp.with(mActivity).load(mContactInfos.get(position).avatarUriStr).placeholder(R.drawable.default_contact_avatar).circleCrop().into(((ViewHolder) holder).mContactIcon);
                 ((ViewHolder) holder).mContactName.setText(mContactInfos.get(position).name);
             }
+        }
+    }
+
+    @Override
+    public int getItemViewType(int position) {
+        if (position == 0) {
+            return ITEM_TYPE_ADD;
+        } else {
+            return ITEM_TYPE_CONTACT;
         }
     }
 

@@ -671,4 +671,22 @@
     <string name="confirm_prompt_password">Conferma password</string>
     <string name="draw_unlock_pattern">Traccia sequenza sblocco</string>
 
+
+	<string name="contact_picker_select_group">Avvia chat di gruppo</string>
+	<string name="send_delay_settings">Invio ritardato</string>
+	<string name="send_delay_no_delay">Nessun ritardo</string>
+	<string name="set_as_default_success">Modifiche apportate</string>
+	<string name="invite_friends_invite_edit_button">Modifica</string>
+	<string name="invite_friends_invite">INVITA (%d)</string>
+	<string name="invite_friends_add">AGGIUNGI (%d)</string>
+	<string name="invite_friends_invite_send_sms_description">Invia un SMS all\'amico che vuoi invitare.</string>
+	<string name="notification_sender_in_private_box">Contatto privato</string>
+	<string name="message_box_click_to_view">Fai clic per visualizzare</string>
+	<string name="get_now">Scarica ora</string>
+	<string name="downloading">Download in corso...</string>
+	<string name="apply_theme_success">Applicato</string>
+	<string name="theme_coming">Altri temi verranno aggiunti a breve...</string>
+	<string name="menu_invite_friends">Invita amici</string>
+	<string name="invite_friends_now">INVITA ORA</string>
+
 </resources>

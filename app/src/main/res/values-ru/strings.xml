@@ -718,4 +718,22 @@
     <string name="confirm_prompt_password">Подтвердите код</string>
     <string name="draw_unlock_pattern">Нарисуйте граф. ключ</string>
 
+
+	<string name="contact_picker_select_group">Начать групповой чат</string>
+	<string name="send_delay_settings">Задержка отправки</string>
+	<string name="send_delay_no_delay">Без задержки</string>
+	<string name="set_as_default_success">Изменения внесены</string>
+	<string name="invite_friends_invite_edit_button">Изменить</string>
+	<string name="invite_friends_invite">ПРИГЛАСИТЬ (%d)</string>
+	<string name="invite_friends_add">ДОБАВИТЬ (%d)</string>
+	<string name="invite_friends_invite_send_sms_description">Отправьте СМС другу, которого хотите пригласить.</string>
+	<string name="notification_sender_in_private_box">Личный контакт</string>
+	<string name="message_box_click_to_view">Нажмите для просмотра</string>
+	<string name="get_now">Получить</string>
+	<string name="downloading">Загрузка...</string>
+	<string name="apply_theme_success">Тема применена</string>
+	<string name="theme_coming">Скоро появится больше тем...</string>
+	<string name="menu_invite_friends">Пригласить друзей</string>
+	<string name="invite_friends_now">ПРИГЛАСИТЬ</string>
+
 </resources>

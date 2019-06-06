@@ -19,6 +19,7 @@ import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
 import android.util.AttributeSet;
+import android.view.MotionEvent;
 import android.widget.EditText;
 
 /**
@@ -29,6 +30,8 @@ import android.widget.EditText;
  */
 public class PlainTextEditText extends EditText {
     private static final char OBJECT_UNICODE = '\uFFFC';
+
+    private boolean mTouchable = true;
 
     public PlainTextEditText(final Context context, final AttributeSet attrs) {
         super(context, attrs);
@@ -80,6 +83,19 @@ public class PlainTextEditText extends EditText {
             return result;
         } else {
             return super.onTextContextMenuItem(id);
+        }
+    }
+
+    public void setTouchable(boolean enable) {
+        mTouchable = enable;
+    }
+
+    @Override
+    public boolean onTouchEvent(MotionEvent event) {
+        if (mTouchable) {
+            return super.onTouchEvent(event);
+        } else {
+            return false;
         }
     }
 }

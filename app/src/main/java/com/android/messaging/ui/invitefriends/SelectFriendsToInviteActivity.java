@@ -83,7 +83,7 @@ public class SelectFriendsToInviteActivity extends AppCompatActivity {
             InviteFriendsList.setAddedInvitedFriendsList(addList);
             setResult(RESULT_OK);
             finish();
-            BugleAnalytics.logEvent("Invite_AddList_Add_Click");
+            BugleAnalytics.logEvent("Invite_AddList_Add_Click", "num", String.valueOf(addList.size()));
 
         });
 

@@ -41,25 +41,26 @@ import java.util.List;
 
 public class MessageData implements Parcelable {
     private static final String[] sProjection = {
-        MessageColumns._ID,
-        MessageColumns.CONVERSATION_ID,
-        MessageColumns.SENDER_PARTICIPANT_ID,
-        MessageColumns.SELF_PARTICIPANT_ID,
-        MessageColumns.SENT_TIMESTAMP,
-        MessageColumns.RECEIVED_TIMESTAMP,
-        MessageColumns.SEEN,
-        MessageColumns.READ,
-        MessageColumns.PROTOCOL,
-        MessageColumns.STATUS,
-        MessageColumns.SMS_MESSAGE_URI,
-        MessageColumns.SMS_PRIORITY,
-        MessageColumns.SMS_MESSAGE_SIZE,
-        MessageColumns.MMS_SUBJECT,
-        MessageColumns.MMS_TRANSACTION_ID,
-        MessageColumns.MMS_CONTENT_LOCATION,
-        MessageColumns.MMS_EXPIRY,
-        MessageColumns.RAW_TELEPHONY_STATUS,
-        MessageColumns.RETRY_START_TIMESTAMP,
+            MessageColumns._ID,
+            MessageColumns.CONVERSATION_ID,
+            MessageColumns.SENDER_PARTICIPANT_ID,
+            MessageColumns.SELF_PARTICIPANT_ID,
+            MessageColumns.SENT_TIMESTAMP,
+            MessageColumns.RECEIVED_TIMESTAMP,
+            MessageColumns.SEEN,
+            MessageColumns.READ,
+            MessageColumns.PROTOCOL,
+            MessageColumns.STATUS,
+            MessageColumns.SMS_MESSAGE_URI,
+            MessageColumns.SMS_PRIORITY,
+            MessageColumns.SMS_MESSAGE_SIZE,
+            MessageColumns.MMS_SUBJECT,
+            MessageColumns.MMS_TRANSACTION_ID,
+            MessageColumns.MMS_CONTENT_LOCATION,
+            MessageColumns.MMS_EXPIRY,
+            MessageColumns.RAW_TELEPHONY_STATUS,
+            MessageColumns.RETRY_START_TIMESTAMP,
+            MessageColumns.IS_LOCKED,
     };
 
     private static final int INDEX_ID = 0;
@@ -81,13 +82,14 @@ public class MessageData implements Parcelable {
     private static final int INDEX_MMS_EXPIRY = 16;
     private static final int INDEX_RAW_TELEPHONY_STATUS = 17;
     private static final int INDEX_RETRY_START_TIMESTAMP = 18;
+    private static final int INDEX_IS_LOCKED = 19;
 
     // SQL statement to insert a "complete" message row (columns based on the projection above).
     private static final String INSERT_MESSAGE_SQL =
             "INSERT INTO " + DatabaseHelper.MESSAGES_TABLE + " ( "
                     + TextUtils.join(", ", Arrays.copyOfRange(sProjection, 1,
-                            INDEX_RETRY_START_TIMESTAMP + 1))
-                    + ") VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+                    INDEX_RETRY_START_TIMESTAMP + 1))
+                    + ") VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";  // when insert a new message, don't need param IS_LOCKED, use it default value 0.
 
     private String mMessageId;
     private String mConversationId;
@@ -109,6 +111,7 @@ public class MessageData implements Parcelable {
     private int mStatus;
     private final ArrayList<MessagePartData> mParts;
     private long mRetryStartTimestamp;
+    private boolean mIsLocked = false;
 
     // PROTOCOL Values
     public static final int PROTOCOL_UNKNOWN = -1;              // Unknown type
@@ -120,26 +123,26 @@ public class MessageData implements Parcelable {
     public static final int BUGLE_STATUS_UNKNOWN = 0;
 
     // Outgoing
-    public static final int BUGLE_STATUS_OUTGOING_COMPLETE                = 1;
-    public static final int BUGLE_STATUS_OUTGOING_DELIVERED               = 2;
+    public static final int BUGLE_STATUS_OUTGOING_COMPLETE = 1;
+    public static final int BUGLE_STATUS_OUTGOING_DELIVERED = 2;
     // Transitions to either YET_TO_SEND or SEND_AFTER_PROCESSING depending attachments.
-    public static final int BUGLE_STATUS_OUTGOING_DRAFT                   = 3;
-    public static final int BUGLE_STATUS_OUTGOING_YET_TO_SEND             = 4;
-    public static final int BUGLE_STATUS_OUTGOING_SENDING                 = 5;
-    public static final int BUGLE_STATUS_OUTGOING_RESENDING               = 6;
-    public static final int BUGLE_STATUS_OUTGOING_AWAITING_RETRY          = 7;
-    public static final int BUGLE_STATUS_OUTGOING_FAILED                  = 8;
+    public static final int BUGLE_STATUS_OUTGOING_DRAFT = 3;
+    public static final int BUGLE_STATUS_OUTGOING_YET_TO_SEND = 4;
+    public static final int BUGLE_STATUS_OUTGOING_SENDING = 5;
+    public static final int BUGLE_STATUS_OUTGOING_RESENDING = 6;
+    public static final int BUGLE_STATUS_OUTGOING_AWAITING_RETRY = 7;
+    public static final int BUGLE_STATUS_OUTGOING_FAILED = 8;
     public static final int BUGLE_STATUS_OUTGOING_FAILED_EMERGENCY_NUMBER = 9;
 
     // Incoming
-    public static final int BUGLE_STATUS_INCOMING_COMPLETE                   = 100;
-    public static final int BUGLE_STATUS_INCOMING_YET_TO_MANUAL_DOWNLOAD     = 101;
-    public static final int BUGLE_STATUS_INCOMING_RETRYING_MANUAL_DOWNLOAD   = 102;
-    public static final int BUGLE_STATUS_INCOMING_MANUAL_DOWNLOADING         = 103;
-    public static final int BUGLE_STATUS_INCOMING_RETRYING_AUTO_DOWNLOAD     = 104;
-    public static final int BUGLE_STATUS_INCOMING_AUTO_DOWNLOADING           = 105;
-    public static final int BUGLE_STATUS_INCOMING_DOWNLOAD_FAILED            = 106;
-    public static final int BUGLE_STATUS_INCOMING_EXPIRED_OR_NOT_AVAILABLE   = 107;
+    public static final int BUGLE_STATUS_INCOMING_COMPLETE = 100;
+    public static final int BUGLE_STATUS_INCOMING_YET_TO_MANUAL_DOWNLOAD = 101;
+    public static final int BUGLE_STATUS_INCOMING_RETRYING_MANUAL_DOWNLOAD = 102;
+    public static final int BUGLE_STATUS_INCOMING_MANUAL_DOWNLOADING = 103;
+    public static final int BUGLE_STATUS_INCOMING_RETRYING_AUTO_DOWNLOAD = 104;
+    public static final int BUGLE_STATUS_INCOMING_AUTO_DOWNLOADING = 105;
+    public static final int BUGLE_STATUS_INCOMING_DOWNLOAD_FAILED = 106;
+    public static final int BUGLE_STATUS_INCOMING_EXPIRED_OR_NOT_AVAILABLE = 107;
 
     public static final String getStatusDescription(int status) {
         switch (status) {
@@ -212,7 +215,7 @@ public class MessageData implements Parcelable {
      * Create a draft message for a particular conversation based on supplied content
      */
     public static MessageData createDraftMessage(final String conversationId,
-            final String selfId, final MessageData content) {
+                                                 final String selfId, final MessageData content) {
         final MessageData message = new MessageData();
         message.mStatus = BUGLE_STATUS_OUTGOING_DRAFT;
         message.mProtocol = PROTOCOL_UNKNOWN;
@@ -240,7 +243,7 @@ public class MessageData implements Parcelable {
      * Create a draft sms message for a particular conversation
      */
     public static MessageData createDraftSmsMessage(final String conversationId,
-            final String selfId, final String messageText) {
+                                                    final String selfId, final String messageText) {
         final MessageData message = new MessageData();
         message.mStatus = BUGLE_STATUS_OUTGOING_DRAFT;
         message.mProtocol = PROTOCOL_SMS;
@@ -256,7 +259,7 @@ public class MessageData implements Parcelable {
      * Create a draft mms message for a particular conversation
      */
     public static MessageData createDraftMmsMessage(final String conversationId,
-            final String selfId, final String messageText, final String subjectText) {
+                                                    final String selfId, final String messageText, final String subjectText) {
         final MessageData message = new MessageData();
         message.mStatus = BUGLE_STATUS_OUTGOING_DRAFT;
         message.mProtocol = PROTOCOL_MMS;
@@ -275,9 +278,9 @@ public class MessageData implements Parcelable {
      * Create a message received from a particular number in a particular conversation
      */
     public static MessageData createReceivedSmsMessage(final Uri uri, final String conversationId,
-            final String participantId, final String selfId, final String messageText,
-            final String subject, final long sent, final long recieved,
-            final boolean seen, final boolean read) {
+                                                       final String participantId, final String selfId, final String messageText,
+                                                       final String subject, final long sent, final long recieved,
+                                                       final boolean seen, final boolean read) {
         final MessageData message = new MessageData();
         message.mSmsMessageUri = uri;
         message.mConversationId = conversationId;
@@ -310,9 +313,9 @@ public class MessageData implements Parcelable {
      * Create a message from Sms table fields
      */
     public static MessageData createSmsMessage(final String messageUri, final String participantId,
-            final String selfId, final String conversationId, final int bugleStatus,
-            final boolean seen, final boolean read, final long sent,
-            final long recieved, final String messageText) {
+                                               final String selfId, final String conversationId, final int bugleStatus,
+                                               final boolean seen, final boolean read, final long sent,
+                                               final long recieved, final String messageText) {
         final MessageData message = new MessageData();
         message.mParticipantId = participantId;
         message.mSelfId = selfId;
@@ -332,11 +335,11 @@ public class MessageData implements Parcelable {
      * Create a message from Mms table fields
      */
     public static MessageData createMmsMessage(final String messageUri, final String participantId,
-            final String selfId, final String conversationId, final boolean isNotification,
-            final int bugleStatus, final String contentLocation, final String transactionId,
-            final int smsPriority, final String subject, final boolean seen, final boolean read,
-            final long size, final int rawStatus, final long expiry, final long sent,
-            final long received) {
+                                               final String selfId, final String conversationId, final boolean isNotification,
+                                               final int bugleStatus, final String contentLocation, final String transactionId,
+                                               final int smsPriority, final String subject, final boolean seen, final boolean read,
+                                               final long size, final int rawStatus, final long expiry, final long sent,
+                                               final long received) {
         final MessageData message = new MessageData();
         message.mParticipantId = participantId;
         message.mSelfId = selfId;
@@ -398,6 +401,8 @@ public class MessageData implements Parcelable {
         mMmsTransactionId = cursor.getString(INDEX_MMS_TRANSACTION_ID);
         mMmsContentLocation = cursor.getString(INDEX_MMS_CONTENT_LOCATION);
         mRetryStartTimestamp = cursor.getLong(INDEX_RETRY_START_TIMESTAMP);
+
+        mIsLocked = cursor.getInt(INDEX_IS_LOCKED) == 1;
     }
 
     /**
@@ -433,6 +438,7 @@ public class MessageData implements Parcelable {
         values.put(MessageColumns.MMS_CONTENT_LOCATION, mMmsContentLocation);
         values.put(MessageColumns.RAW_TELEPHONY_STATUS, mRawStatus);
         values.put(MessageColumns.RETRY_START_TIMESTAMP, mRetryStartTimestamp);
+        values.put(MessageColumns.IS_LOCKED, mIsLocked);
     }
 
     /**
@@ -469,6 +475,7 @@ public class MessageData implements Parcelable {
         }
         insert.bindLong(INDEX_RAW_TELEPHONY_STATUS, mRawStatus);
         insert.bindLong(INDEX_RETRY_START_TIMESTAMP, mRetryStartTimestamp);
+        // when insert new message, IS_LOCKED use default value 0.
         return insert;
     }
 
@@ -682,6 +689,10 @@ public class MessageData implements Parcelable {
         return text.toString();
     }
 
+    public boolean getIsLocked() {
+        return mIsLocked;
+    }
+
     /**
      * Takes all captions from attachments and adds them as a prefix to the first text part or
      * appends a text part
@@ -735,7 +746,7 @@ public class MessageData implements Parcelable {
     /**
      * Updates the messageId for this message.
      * Can be used to reset the messageId prior to persisting (which will assign a new messageId)
-     *  or can be called on a message that does not yet have a valid messageId to set it.
+     * or can be called on a message that does not yet have a valid messageId to set it.
      */
     public void updateMessageId(final String messageId) {
         Assert.isTrue(TextUtils.isEmpty(messageId) || TextUtils.isEmpty(mMessageId));
@@ -746,7 +757,7 @@ public class MessageData implements Parcelable {
     }
 
     public final void updateSendingMessage(final String conversationId, final Uri messageUri,
-            final long timestamp) {
+                                           final long timestamp) {
         mConversationId = conversationId;
         mSmsMessageUri = messageUri;
         mRead = true;
@@ -804,6 +815,10 @@ public class MessageData implements Parcelable {
 
     public final void setRetryStartTimestamp(final long timestamp) {
         mRetryStartTimestamp = timestamp;
+    }
+
+    public final void setIsLocked(boolean isLocked) {
+        mIsLocked = isLocked;
     }
 
     public final void setRawTelephonyStatus(final int rawStatus) {

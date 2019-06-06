@@ -59,8 +59,9 @@
     <string name="mediapicker_audio_title">Record audio</string>
     <string name="network_error_and_try_again">Network errors. Please try again.</string>
 
-
     <string name="action_share">Share</string>
+    <string name="action_lock">Lock</string>
+    <string name="action_unlock">Unlock</string>
 
     <string name="posted_just_now">"Just now"</string>
     <string name="posted_now">"Now"</string>
@@ -886,6 +887,8 @@
     <string name="view_more_messages">View more messages</string>
     <!-- Toast message telling the user a conversation has been deleted -->
     <string name="conversation_deleted">Conversation deleted</string>
+    <!-- Toast message telling the user a message is lock when user want to delete -->
+    <string name="message_locked_when_delete">To delete locked messages, unlock them first</string>
     <!-- Displayed when user adds a new conversation widget. Tapping on the widget in this
           mode will bring user to the conversation selection screen -->
     <string name="tap_to_configure">Conversation deleted. Tap to show a different Messaging conversation</string>
@@ -1207,34 +1210,33 @@
         <item quantity="one">%s Second</item>
         <item quantity="other">%s Seconds</item>
     </plurals>
-
-
+    
 
     <string name="menu_invite_friends">Invite Friends</string>
     <string name="invite_friends_now">INVITE NOW</string>
 
-    <string name="invite_friends_invite">INVITE (%d)</string>
+    <string name="invite_friends_invite">INVITE BY SMS (%d)</string>
     <string name="invite_friends_add">ADD (%d)</string>
     <string name="invite_friends_add_friends">Add</string>
 
     <string name="invite_friends_default_back_to_main_page_title">Invite Friends</string>
-    <string name="invite_friends_default_back_to_main_page_description">Is it amazing? You can customize everywhere you want! Tell your friends Now</string>
+    <string name="invite_friends_default_back_to_main_page_description">Is it amazing? You can customize everywhere you want! Tell your friends now!</string>
     <string name="invite_friends_default_apply_theme_description">Love these awesome themes? Tell your friends and let them join you!</string>
     <string name="invite_friends_default_send_sms_description">Well done, your message was sent successfully! Want to share Color SMS with your friends?</string>
 
     <string name="invite_friends_bonus_title">Get Rewards</string>
     <string name="invite_friends_bonus_unlock_theme_description">Invite 3 friends to install Color SMS to unlock an awesome theme!</string>
-    <string name="invite_friends_bonus_free_sms_description">Invite friends install to Color SMS to send FREE SMS with them!</string>
+    <string name="invite_friends_bonus_free_sms_description">Invite friends to install Color SMS to send FREE SMS with them!</string>
     <string name="invite_friends_bonus_ad_free_description">Invite 3 friends to install Color SMS to get 3 day ads FREE!</string>
 
-    <string name="invite_friends_invite_default_content">I’m using Color SMS, an awesome SMS app with pretty themes, funny emojis and perfect functions! Come and join us 😁😏</string>
+    <string name="invite_friends_invite_default_content">I’m using Color SMS, an awesome SMS app with pretty themes, funny emojis and perfect functions! Come and join us! 😁😏</string>
     <string name="invite_friends_high_rating_content">Hey, I found a brand new SMS app. 4.8 star rating in play store and many people are using! Join us now!</string>
     <string name="invite_friends_better_than_system_content">I found an awesome SMS app! Simple, fast and beautiful! Much better than the old system messages. I promise you will love it!</string>
-    <string name="invite_friends_help_get_reward_content">Hey, bro, I will be rewarded once you installed this app. Do me a favor! And I’m sure you will love it!</string>
+    <string name="invite_friends_help_get_reward_content">Hey, I will be rewarded once you installed this app. Do me a favor! And I’m sure you will love it!</string>
     <string name="invite_friends_invite_cancel_button">Cancel</string>
     <string name="invite_friends_invite_save_button">Save</string>
     <string name="invite_friends_invite_edit_button">Edit</string>
-    <string name="invite_friends_invite_send_sms_description">Send SMS to the friend that you’d like to invite.</string>
+    <string name="invite_friends_invite_send_sms_description">Send SMS to the friend that you’d like to invite</string>
 
     <string name="invite_friends_default_auto_link_content">https://go.onelink.me/app/90cf450c</string>
     <string name="invite_friends_high_rating_auto_link_content">https://go.onelink.me/app/e783b50c</string>
@@ -1242,5 +1244,5 @@
     <string name="invite_friends_help_get_reward_auto_link_content">https://go.onelink.me/app/7afeac49</string>
 
     <string name="invite_friends_success_toast">Invite Success</string>
-
+    
 </resources>
