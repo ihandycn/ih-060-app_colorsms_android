@@ -114,6 +114,7 @@ public class InviteFriendsRewardDialogActivity extends AppCompatActivity {
         LottieAnimationView lottieAnimationView = findViewById(R.id.lottie_animation_view);
         lottieAnimationView.setImageAssetsFolder(lottieImagePath);
         lottieAnimationView.setAnimation(lottieJsonPath);
+        lottieAnimationView.useHardwareAcceleration();
         lottieAnimationView.loop(false);
         lottieAnimationView.playAnimation();
     }
