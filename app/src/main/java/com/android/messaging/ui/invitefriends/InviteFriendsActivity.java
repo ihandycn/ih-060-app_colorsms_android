@@ -245,7 +245,7 @@ public class InviteFriendsActivity extends AppCompatActivity implements Conversa
                 ConversationListItemData itemData = new ConversationListItemData();
                 itemData.bind(cursor);
                 if (itemData.getIsGroup()
-                        || TextUtils.isEmpty(PhoneUtils.getDefault().formatForDisplay(itemData.getOtherParticipantNormalizedDestination()))
+                        || TextUtils.isEmpty(itemData.getOtherParticipantNormalizedDestination())
                         || !ContactUtil.isValidContactId(itemData.getParticipantContactId())) {
                     continue;
                 }
@@ -258,12 +258,13 @@ public class InviteFriendsActivity extends AppCompatActivity implements Conversa
                     }
                 }
                 contactInfos.add(new CallAssistantUtils.ContactInfo(itemData.getName(),
-                        itemData.getOtherParticipantNormalizedDestination(), uri));
+                        PhoneUtils.getDefault().formatForDisplay(itemData.getOtherParticipantNormalizedDestination()), uri));
+
                 dataCount++;
                 if (dataCount == count) {
                     break;
                 }
-                HSLog.d("InviteFriends, onConversationListCursorUpdated");
+
             } while (cursor.moveToNext());
 
 
