@@ -16,6 +16,7 @@
 package com.android.messaging.datamodel;
 
 import android.content.Context;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
 import com.android.messaging.Factory;
@@ -43,10 +44,13 @@ public class DatabaseUpgradeHelper {
     }
 
     public void doUpgradeWithExceptions(final SQLiteDatabase db, final int oldVersion,
-            final int newVersion) throws Exception {
+                                        final int newVersion) throws Exception {
         int currentVersion = oldVersion;
         if (currentVersion < 2) {
             currentVersion = upgradeToVersion2(db);
+        }
+        if (currentVersion < 3) {
+            currentVersion = upgradeToVersion3(db);
         }
         // Rebuild all the views
         final Context context = Factory.get().getApplicationContext();
@@ -63,6 +67,26 @@ public class DatabaseUpgradeHelper {
         return 2;
     }
 
+    private int upgradeToVersion3(SQLiteDatabase db) {
+        LogUtil.d("lock_test", "add_db_column");
+        Cursor cursor = null;
+        try {
+            cursor = db.rawQuery("SELECT * FROM " + DatabaseHelper.MESSAGES_TABLE + " LIMIT 0"
+                    , null);
+            if (cursor != null && cursor.getColumnIndex(DatabaseHelper.MessageColumns.IS_LOCKED) == -1) {
+                db.execSQL("ALTER TABLE " + DatabaseHelper.MESSAGES_TABLE
+                        + " ADD COLUMN " + DatabaseHelper.MessageColumns.IS_LOCKED
+                        + " INT DEFAULT(0)");
+            }
+        } catch (Exception e) {
+        } finally {
+            if (null != cursor && !cursor.isClosed()) {
+                cursor.close();
+            }
+        }
+        return 3;
+    }
+
     /**
      * Checks db version correctness at the end of each milestone release. If target database
      * version lies beyond the version range that the current release may handle, we snap the
@@ -71,7 +95,7 @@ public class DatabaseUpgradeHelper {
      * at the target version, then throw an exception to force a table rebuild.
      */
     private int checkAndUpdateVersionAtReleaseEnd(final int currentVersion,
-            final int maxVersionForRelease, final int targetVersion) throws Exception {
+                                                  final int maxVersionForRelease, final int targetVersion) throws Exception {
         if (maxVersionForRelease < targetVersion) {
             // Target version is beyond the current release. Snap to max version for the
             // current release so we can go on to the upgrade path for the next release.

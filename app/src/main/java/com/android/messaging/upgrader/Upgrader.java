@@ -21,7 +21,6 @@ import com.android.messaging.ui.welcome.WelcomeChooseThemeActivity;
 import com.android.messaging.ui.welcome.WelcomeStartActivity;
 import com.android.messaging.util.BuglePrefs;
 import com.android.messaging.util.BuglePrefsKeys;
-import com.android.messaging.util.LogUtil;
 import com.superapps.util.Preferences;
 
 public class Upgrader extends BaseUpgrader {
@@ -71,10 +70,6 @@ public class Upgrader extends BaseUpgrader {
 
         if (oldVersion < 50 && newVersion >= 50) {
             migrateLocalThemeAndFont();
-        }
-
-        if (oldVersion < 52 && newVersion >= 52) {
-            addLockedColumnInDB();
         }
     }
 
@@ -130,27 +125,6 @@ public class Upgrader extends BaseUpgrader {
 
         DatabaseHelper.rebuildView(db, ConversationListItemData.getConversationListView(),
                 ConversationListItemData.getConversationListViewSql());
-    }
-
-    private void addLockedColumnInDB() {
-        LogUtil.d("lock_test", "add_db_column");
-        final DatabaseWrapper db = DataModel.get().getDatabaseWithoutMainCheck();
-        Cursor cursor = null;
-        try {
-            cursor = db.rawQuery("SELECT * FROM " + DatabaseHelper.MESSAGES_TABLE + " LIMIT 0"
-                    , null);
-            if (cursor != null && cursor.getColumnIndex(DatabaseHelper.MessageColumns.IS_LOCKED) == -1) {
-                db.execSQL("ALTER TABLE " + DatabaseHelper.MESSAGES_TABLE
-                        + " ADD COLUMN " + DatabaseHelper.MessageColumns.IS_LOCKED
-                        + " INT DEFAULT(0)");
-            }
-        } catch (Exception e) {
-
-        } finally {
-            if (null != cursor && !cursor.isClosed()) {
-                cursor.close();
-            }
-        }
     }
 
     public static void addIsPrivateColumnInConversationTable(boolean rebuildView) {
