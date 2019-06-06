@@ -1367,7 +1367,7 @@ public class ConversationFragment extends Fragment implements ConversationDataLi
                     });
         }
     }
-    
+
     private void lockSelectedMessage() {
         BugleAnalytics.logEvent("Detailpage_Messages_Lock", true);
         for (ConversationMessageData data : mSelectMessageDataList) {
