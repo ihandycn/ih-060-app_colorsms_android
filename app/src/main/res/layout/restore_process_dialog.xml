@@ -7,19 +7,19 @@
 
     <com.airbnb.lottie.LottieAnimationView
         android:id="@+id/restore_process"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_centerVertical="true"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="89.3dp"
+        android:scaleType="centerCrop"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
         app:lottie_fileName="lottie/restore_process.json"
         app:lottie_loop="true"
-        app:lottie_autoPlay="true"
-        android:layout_width="100dp"
-        android:layout_height="100dp"
-        android:layout_centerVertical="true"
-        android:layout_marginTop="10dp"
-        android:layout_marginBottom="89.3dp"
-        android:scaleType="centerCrop">
+        app:lottie_autoPlay="true">
 
     </com.airbnb.lottie.LottieAnimationView>
 

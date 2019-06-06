@@ -1225,7 +1225,7 @@
     <string name="message_free_up_content">Delete local messages 30 days ago to save space &amp; speed up your phone! You could access cleaned messages via RESTORE.</string>
     <string name="message_free_up_button">CLEAN</string>
     <string name="backup_tip_dialog_title">Tips</string>
-    <string name="backup_tip_dialog_content">Restore will cover all your current messages. Highly recommend backup messages before the Recover.</string>
+    <string name="backup_tip_dialog_content">Backup will overwrite the existing one, highly recommend restore from your last backup before Backup</string>
     <string name="backup_tips_before_uninstalling_button">OK</string>
     <string name="backup_tips_before_uninstalling_content">RESTORE your messages before uninstalling our app, so as not to lose your messages.</string>
     <string name="backup_folder_select_toast">Should select a folder to backup messages.</string>
