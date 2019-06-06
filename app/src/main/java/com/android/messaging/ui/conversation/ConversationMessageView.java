@@ -22,11 +22,15 @@ import android.graphics.Color;
 import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.text.Spannable;
+import android.text.SpannableStringBuilder;
 import android.text.Spanned;
 import android.text.TextUtils;
 import android.text.format.DateUtils;
 import android.text.format.Formatter;
+import android.text.style.ClickableSpan;
 import android.text.style.URLSpan;
 import android.text.util.Linkify;
 import android.util.AttributeSet;
@@ -67,6 +71,7 @@ import com.android.messaging.ui.VideoThumbnailView;
 import com.android.messaging.ui.customize.AvatarBgDrawables;
 import com.android.messaging.ui.customize.ConversationColors;
 import com.android.messaging.ui.customize.PrimaryColors;
+import com.android.messaging.ui.invitefriends.InviteFriendsTest;
 import com.android.messaging.ui.wallpaper.WallpaperManager;
 import com.android.messaging.util.AccessibilityUtil;
 import com.android.messaging.util.Assert;
@@ -129,10 +134,13 @@ public class ConversationMessageView extends RelativeLayout implements View.OnCl
     private ImageView checkBox;
     private int mOffset;
 
+    private String mSendLink;
+
     public ConversationMessageView(final Context context, final AttributeSet attrs) {
         super(context, attrs);
         // TODO: we should switch to using Binding and DataModel factory methods.
         mData = new ConversationMessageData();
+        mSendLink = InviteFriendsTest.getSendLink();
     }
 
     @Override
@@ -571,6 +579,8 @@ public class ConversationMessageView extends RelativeLayout implements View.OnCl
         // then we will show a preview.
         String youtubeThumbnailUrl = null;
         String originalYoutubeLink = null;
+
+        boolean hasAppsFlyerPromotionUrl = false;
         if (mMessageTextHasLinks && imageParts.size() == 0) {
             CharSequence messageTextWithSpans = mMessageTextView.getText();
             final URLSpan[] spans = ((Spanned) messageTextWithSpans).getSpans(0,
@@ -578,6 +588,10 @@ public class ConversationMessageView extends RelativeLayout implements View.OnCl
             for (URLSpan span : spans) {
                 String url = span.getURL();
                 String youtubeLinkForUrl = YouTubeUtil.getYoutubePreviewImageLink(url);
+
+                if (TextUtils.equals(url, mSendLink)) {
+                    hasAppsFlyerPromotionUrl = true;
+                }
                 if (!TextUtils.isEmpty(youtubeLinkForUrl)) {
                     if (TextUtils.isEmpty(youtubeThumbnailUrl)) {
                         // Save the youtube link if we don't already have one
@@ -590,6 +604,29 @@ public class ConversationMessageView extends RelativeLayout implements View.OnCl
                         originalYoutubeLink = null;
                         break;
                     }
+                }
+            }
+
+            if (hasAppsFlyerPromotionUrl) {
+                if (messageTextWithSpans instanceof Spannable) {
+                    Spannable sp = (Spannable) messageTextWithSpans;
+                    SpannableStringBuilder style = new SpannableStringBuilder(messageTextWithSpans);
+                    style.clearSpans();
+                    for (URLSpan urlSpan : spans) {
+                        if (TextUtils.equals(urlSpan.getURL(), mSendLink)) {
+                            ClickableSpan clickableSpan = new ClickableSpan() {
+                                @Override
+                                public void onClick(@NonNull View view) {
+                                    UIIntents.get().launchBrowserForUrl(getContext(), urlSpan.getURL());
+                                    BugleAnalytics.logEvent("Invite_Url_Click", "type", InviteFriendsTest.getSendTestType());
+                                }
+                            };
+                            style.setSpan(clickableSpan, sp.getSpanStart(urlSpan),
+                                    sp.getSpanEnd(urlSpan),
+                                    Spannable.SPAN_EXCLUSIVE_INCLUSIVE);
+                        }
+                    }
+                    mMessageTextView.setText(style);
                 }
             }
         }

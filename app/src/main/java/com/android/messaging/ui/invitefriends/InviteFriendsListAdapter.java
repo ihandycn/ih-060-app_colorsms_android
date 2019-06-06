@@ -15,6 +15,7 @@ import com.android.messaging.R;
 import com.android.messaging.glide.GlideApp;
 import com.android.messaging.privatebox.ui.addtolist.CallAssistantUtils;
 import com.android.messaging.util.BugleAnalytics;
+import com.ihs.commons.utils.HSLog;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -31,19 +32,19 @@ public class InviteFriendsListAdapter extends RecyclerView.Adapter<RecyclerView.
 
     private List<CallAssistantUtils.ContactInfo> mContactInfos = new ArrayList<>();
 
-    public InviteFriendsListAdapter(Activity activity) {
+    InviteFriendsListAdapter(Activity activity) {
         mActivity = activity;
     }
 
-    public void setOnItemCountChangeListener(OnItemCountChangeListener onItemCountChangeListener) {
+    void setOnItemCountChangeListener(OnItemCountChangeListener onItemCountChangeListener) {
         mOnItemCountChangeListener = onItemCountChangeListener;
     }
 
-    public List<CallAssistantUtils.ContactInfo> getContactInfos() {
+    List<CallAssistantUtils.ContactInfo> getContactInfos() {
         return mContactInfos;
     }
 
-    public void initData(List<CallAssistantUtils.ContactInfo> contactInfos) {
+    void initData(List<CallAssistantUtils.ContactInfo> contactInfos) {
         mContactInfos = contactInfos;
         notifyDataSetChanged();
         if (mOnItemCountChangeListener != null) {
@@ -51,7 +52,7 @@ public class InviteFriendsListAdapter extends RecyclerView.Adapter<RecyclerView.
         }
     }
 
-    public void addContact(List<CallAssistantUtils.ContactInfo> contactInfos) {
+    void addContact(List<CallAssistantUtils.ContactInfo> contactInfos) {
         if (contactInfos == null) {
             return;
         }

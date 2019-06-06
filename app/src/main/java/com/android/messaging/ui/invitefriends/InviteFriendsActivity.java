@@ -71,7 +71,7 @@ public class InviteFriendsActivity extends AppCompatActivity implements Conversa
 
         mInviteButton = findViewById(R.id.invite_button);
         mInviteButton.setBackground(BackgroundDrawables.createBackgroundDrawable(PrimaryColors.getPrimaryColor(),
-                Dimensions.pxFromDp(6.7f), true));
+                Dimensions.pxFromDp(3.3f), true));
 
         mInviteButton.setVisibility(View.GONE);
         mInviteButton.setOnClickListener(v -> {
