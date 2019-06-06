@@ -33,6 +33,7 @@ import com.android.messaging.util.BugleAnalytics;
 import com.android.messaging.util.BuglePrefs;
 import com.android.messaging.util.ContactUtil;
 import com.android.messaging.util.ImeUtil;
+import com.android.messaging.util.PhoneUtils;
 import com.android.messaging.util.UiUtils;
 import com.google.common.annotations.VisibleForTesting;
 import com.ihs.commons.config.HSConfig;
@@ -97,7 +98,7 @@ public class InviteFriendsActivity extends AppCompatActivity implements Conversa
 
             BugleAnalytics.logEvent("Invite_SendPage_Invite_Click",
                     "from", getIntent().getStringExtra(INTENT_KEY_FROM),
-                    "num", String.valueOf(mAdapter.getItemCount()));
+                    "num", String.valueOf(mAdapter.getItemCount() - 1));
             InviteFriendsTest.logInviteFriendsClick();
             finish();
         });
@@ -244,7 +245,7 @@ public class InviteFriendsActivity extends AppCompatActivity implements Conversa
                 ConversationListItemData itemData = new ConversationListItemData();
                 itemData.bind(cursor);
                 if (itemData.getIsGroup()
-                        || TextUtils.isEmpty(itemData.getOtherParticipantNormalizedDestination())
+                        || TextUtils.isEmpty(PhoneUtils.getDefault().formatForDisplay(itemData.getOtherParticipantNormalizedDestination()))
                         || !ContactUtil.isValidContactId(itemData.getParticipantContactId())) {
                     continue;
                 }

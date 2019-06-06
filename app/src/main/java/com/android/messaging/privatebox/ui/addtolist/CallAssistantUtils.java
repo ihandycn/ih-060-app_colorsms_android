@@ -9,6 +9,7 @@ import android.text.TextUtils;
 import android.widget.ImageView;
 
 import com.android.messaging.R;
+import com.android.messaging.util.PhoneUtils;
 import com.ihs.app.framework.HSApplication;
 import com.superapps.util.Navigations;
 
@@ -167,6 +168,8 @@ public class CallAssistantUtils {
                 if (contactInfo.number == null) {
                     contactInfo.number = "";
                 }
+
+                contactInfo.number = PhoneUtils.getDefault().formatForDisplay(contactInfo.number);
 
                 if (TextUtils.isEmpty(contactInfo.name)) {
                     contactInfo.name = contactInfo.number;
