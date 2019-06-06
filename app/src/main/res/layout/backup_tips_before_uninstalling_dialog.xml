@@ -8,7 +8,7 @@
         android:id="@+id/backup_tip_before_uninstalling_title"
         android:layout_height="wrap_content"
         android:layout_width="wrap_content"
-        android:text="@string/backup_tip_dialog_title"
+        android:text="@string/tips"
         android:layout_marginStart="23dp"
         android:textSize="18.7sp"
         android:textColor="@color/text_primary_color"
