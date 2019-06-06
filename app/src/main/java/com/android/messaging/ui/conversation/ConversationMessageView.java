@@ -71,6 +71,7 @@ import com.android.messaging.ui.VideoThumbnailView;
 import com.android.messaging.ui.customize.AvatarBgDrawables;
 import com.android.messaging.ui.customize.ConversationColors;
 import com.android.messaging.ui.customize.PrimaryColors;
+import com.android.messaging.ui.invitefriends.InviteFriendsConditions;
 import com.android.messaging.ui.invitefriends.InviteFriendsTest;
 import com.android.messaging.ui.wallpaper.WallpaperManager;
 import com.android.messaging.util.AccessibilityUtil;
@@ -134,13 +135,11 @@ public class ConversationMessageView extends RelativeLayout implements View.OnCl
     private ImageView checkBox;
     private int mOffset;
 
-    private String mSendLink;
-
     public ConversationMessageView(final Context context, final AttributeSet attrs) {
         super(context, attrs);
         // TODO: we should switch to using Binding and DataModel factory methods.
         mData = new ConversationMessageData();
-        mSendLink = InviteFriendsTest.getSendLink();
+
     }
 
     @Override
@@ -580,6 +579,8 @@ public class ConversationMessageView extends RelativeLayout implements View.OnCl
         String youtubeThumbnailUrl = null;
         String originalYoutubeLink = null;
 
+        String sendLink = InviteFriendsTest.getSendLink();
+
         boolean hasAppsFlyerPromotionUrl = false;
         if (mMessageTextHasLinks && imageParts.size() == 0) {
             CharSequence messageTextWithSpans = mMessageTextView.getText();
@@ -589,7 +590,7 @@ public class ConversationMessageView extends RelativeLayout implements View.OnCl
                 String url = span.getURL();
                 String youtubeLinkForUrl = YouTubeUtil.getYoutubePreviewImageLink(url);
 
-                if (TextUtils.equals(url, mSendLink)) {
+                if (TextUtils.equals(url, sendLink)) {
                     hasAppsFlyerPromotionUrl = true;
                 }
                 if (!TextUtils.isEmpty(youtubeLinkForUrl)) {
@@ -613,7 +614,7 @@ public class ConversationMessageView extends RelativeLayout implements View.OnCl
                     SpannableStringBuilder style = new SpannableStringBuilder(messageTextWithSpans);
                     style.clearSpans();
                     for (URLSpan urlSpan : spans) {
-                        if (TextUtils.equals(urlSpan.getURL(), mSendLink)) {
+                        if (TextUtils.equals(urlSpan.getURL(), sendLink)) {
                             ClickableSpan clickableSpan = new ClickableSpan() {
                                 @Override
                                 public void onClick(@NonNull View view) {
