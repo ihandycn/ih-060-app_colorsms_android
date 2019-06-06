@@ -108,8 +108,6 @@ import java.util.Random;
 import static com.android.messaging.ui.dialog.FiveStarRateDialog.DESKTOP_PREFS;
 import static com.android.messaging.ui.dialog.FiveStarRateDialog.PREF_KEY_MAIN_ACTIVITY_SHOW_TIME;
 import static com.android.messaging.ui.invitefriends.InviteFriendsActivity.INTENT_KEY_FROM;
-import static com.android.messaging.ui.invitefriends.InviteFriendsConditions.CHANGE_THEME;
-import static com.android.messaging.ui.invitefriends.InviteFriendsConditions.SHOW_INVITE_FRIENDS_DIALOG_AFTER_CHANGE_THEME_10_SECS;
 
 public class ConversationListActivity extends AbstractConversationListActivity
         implements View.OnClickListener, INotificationObserver {
@@ -225,7 +223,6 @@ public class ConversationListActivity extends AbstractConversationListActivity
         HSGlobalNotificationCenter.addObserver(SHOW_EMOJI, this);
         HSGlobalNotificationCenter.addObserver(FIRST_LOAD, this);
         HSGlobalNotificationCenter.addObserver(NOTIFICATION_NAME_MESSAGES_MOVE_END, this);
-        HSGlobalNotificationCenter.addObserver(SHOW_INVITE_FRIENDS_DIALOG_AFTER_CHANGE_THEME_10_SECS, this);
 
         BugleAnalytics.logEvent("SMS_ActiveUsers", true);
 
@@ -998,11 +995,6 @@ public class ConversationListActivity extends AbstractConversationListActivity
                 if (mIsMessageMoving) {
                     mIsMessageMoving = false;
                     Toasts.showToast(R.string.private_box_add_to_success);
-                }
-                break;
-            case SHOW_INVITE_FRIENDS_DIALOG_AFTER_CHANGE_THEME_10_SECS:
-                if (mIsActivityVisible) {
-                    InviteFriendsConditions.showInviteFriendsDialogIfProper(this, CHANGE_THEME);
                 }
                 break;
             default:

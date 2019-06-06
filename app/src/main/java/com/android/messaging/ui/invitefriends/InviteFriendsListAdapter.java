@@ -81,11 +81,13 @@ public class InviteFriendsListAdapter extends RecyclerView.Adapter<RecyclerView.
         ViewHolder viewHolder = new ViewHolder(v);
         viewHolder.mDeleteBtn.setOnClickListener(v1 -> {
             int target = viewHolder.getAdapterPosition();
-            mContactInfos.remove(target - 1);
-            notifyItemRemoved(target);
-            BugleAnalytics.logEvent("Invite_SendPage_Delete_Click");
-            if (mOnItemCountChangeListener != null) {
-                mOnItemCountChangeListener.onChange();
+            if (target > 0 && target <= mContactInfos.size()) {
+                mContactInfos.remove(target - 1);
+                notifyItemRemoved(target);
+                BugleAnalytics.logEvent("Invite_SendPage_Delete_Click");
+                if (mOnItemCountChangeListener != null) {
+                    mOnItemCountChangeListener.onChange();
+                }
             }
         });
         return viewHolder;

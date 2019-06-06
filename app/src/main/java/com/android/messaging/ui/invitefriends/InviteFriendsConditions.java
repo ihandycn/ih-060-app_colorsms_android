@@ -17,8 +17,6 @@ import static com.android.messaging.ui.invitefriends.InviteFriendsRewardDialogAc
 import static com.android.messaging.ui.invitefriends.InviteFriendsRewardDialogActivity.INTENT_KEY_TIME;
 
 public class InviteFriendsConditions {
-    public static final String SHOW_INVITE_FRIENDS_DIALOG_AFTER_CHANGE_THEME_10_SECS = "SHOW_INVITE_FRIENDS_DIALOG_AFTER_CHANGE_THEME_10_SECS";
-
     static final String INVITE_FRIENDS_DIALOG_SHOW_COUNT = "invite_friends_dialog_show_count_limit";
     private static final String PREF_KEY_LAST_INVITE_FRIENDS_DIALOG_SHOW_TIME = "invite_friends_dialog_interval";
 
