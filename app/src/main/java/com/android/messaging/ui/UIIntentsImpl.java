@@ -435,7 +435,7 @@ public class UIIntentsImpl extends UIIntents {
         intent.putExtra(UI_INTENT_EXTRA_MESSAGE_BOX_ITEM, itemData);
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         ActivityOptionsCompat options =
-                ActivityOptionsCompat.makeCustomAnimation(context, android.R.anim.fade_in, android.R.anim.fade_out);
+                ActivityOptionsCompat.makeCustomAnimation(context, R.anim.fade_in, R.anim.fade_out);
         context.startActivity(intent, options.toBundle());
     }
 

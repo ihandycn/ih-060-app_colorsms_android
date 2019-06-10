@@ -712,9 +712,7 @@ public class BugleNotifications {
                     boolean isMms = false;
 
                     if (TextUtils.isEmpty(messageLineInfo.mText)
-                            || ContentType.isImageType(attachmentType)
-                            || ContentType.isVideoType(attachmentType)
-                            || ContentType.isAudioType(attachmentType)) {
+                            || ContentType.isMediaType(attachmentType)) {
                         isMms = true;
                     }
 
