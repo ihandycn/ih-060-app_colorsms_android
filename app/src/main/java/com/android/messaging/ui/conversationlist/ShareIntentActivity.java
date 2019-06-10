@@ -44,6 +44,7 @@ public class ShareIntentActivity extends BaseBugleActivity implements
         ShareIntentFragment.HostInterface {
 
     private MessageData mDraftMessage;
+    public boolean hasUri = false;
 
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
@@ -177,6 +178,7 @@ public class ShareIntentActivity extends BaseBugleActivity implements
         } else {
             mDraftMessage.addPart(PendingAttachmentData.createPendingAttachmentData(contentType,
                     imageUri));
+            hasUri = true;
         }
     }
 
