@@ -109,25 +109,7 @@ public class MessageBoxActivity extends AppCompatActivity implements INotificati
         mPagerAdapter.addView(view);
         mPager.addOnPageChangeListener(this);
         mPager.setAdapter(mPagerAdapter);
-        mPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
-            @Override
-            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-
-            }
-
-            @Override
-            public void onPageSelected(int position) {
-                String conversationId = (String) mPagerAdapter.getView(position).getTag();
-                mMarkAsSeenMap.put(conversationId, true);
-            }
-
-            @Override
-            public void onPageScrollStateChanged(int state) {
-
-            }
-        });
         initEmojiKeyboradSimulation();
-
 
         mCurrentConversationView = view;
         MessageBoxAnalytics.setIsMultiConversation(false);
