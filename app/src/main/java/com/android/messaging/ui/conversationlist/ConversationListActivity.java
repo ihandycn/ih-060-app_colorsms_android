@@ -74,6 +74,7 @@ import com.android.messaging.ui.wallpaper.WallpaperDownloader;
 import com.android.messaging.ui.wallpaper.WallpaperManager;
 import com.android.messaging.ui.wallpaper.WallpaperPreviewActivity;
 import com.android.messaging.util.BugleAnalytics;
+import com.android.messaging.util.BuglePrefs;
 import com.android.messaging.util.BuglePrefsKeys;
 import com.android.messaging.util.CommonUtils;
 import com.android.messaging.util.CreateShortcutUtils;
@@ -103,6 +104,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Random;
 
+import static com.android.messaging.ui.conversationlist.ConversationListFragment.PREF_KEY_BACKUP_SHOW_BANNER_GUIDE;
 import static com.android.messaging.ui.dialog.FiveStarRateDialog.DESKTOP_PREFS;
 import static com.android.messaging.ui.dialog.FiveStarRateDialog.PREF_KEY_MAIN_ACTIVITY_SHOW_TIME;
 
@@ -157,6 +159,7 @@ public class ConversationListActivity extends AbstractConversationListActivity
     private View mEmojiStoreIconView;
     private LottieAnimationView mGuideContainer;
 
+    private BuglePrefs mBackupBannerGuideHidePrefs = Factory.get().getCustomizePrefs();
     private static boolean mIsNoActionBack = true;
     private boolean mIsRealCreate = false;
     private boolean mShowEndAnimation;
@@ -446,6 +449,11 @@ public class ConversationListActivity extends AbstractConversationListActivity
                         Navigations.startActivity(ConversationListActivity.this, BackupRestoreActivity.class);
                         Preferences.getDefault().putBoolean(PREF_KEY_BACKUP_RESTORE_CLICKED, true);
                         navigationContent.findViewById(R.id.navigation_item_backup_restore_new_text).setVisibility(View.GONE);
+                        final ConversationListFragment conversationListFragment =
+                                (ConversationListFragment) getFragmentManager().findFragmentById(
+                                        R.id.conversation_list_fragment);
+                        mBackupBannerGuideHidePrefs.putBoolean(PREF_KEY_BACKUP_SHOW_BANNER_GUIDE, false);
+                        conversationListFragment.hideBackupBannerGuide();
                         break;
                     case DRAWER_INDEX_PRIVACY_BOX:
                         BugleAnalytics.logEvent("Menu_PrivateBox_Click", true);

@@ -246,4 +246,7 @@
     <color name="backup_dialog_process_background_color">#e7e9ef</color>
     <color name="already_backup_messages_color">#18191c</color>
     <color name="total_backup_messages_color">#989ba6</color>
+    <color name="backup_guide_dialog_content_color">#83848a</color>
+    <color name="backup_banner_guide_button_text_color">#306fed</color>
+    <color name="backup_guide_dialog_close_button_color">#4386f4</color>
 </resources>

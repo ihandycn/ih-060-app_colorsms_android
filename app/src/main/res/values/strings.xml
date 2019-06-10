@@ -1237,4 +1237,10 @@
     <string name="restore_success">Restore Success</string>
     <string name="backup_failed_toast">Backup Failed</string>
     <string name="restore_downloading">Downloading…</string>
+    <string name="backup_guide_dialog_button">BACKUP NOW</string>
+    <string name="backup_guide_dialog_title">SMS Backup</string>
+    <string name="backup_guide_dialog_first_content">Prevent data loss before phone failure or loss.</string>
+    <string name="backup_guide_dialog_second_content">%1$d messages are not protected.</string>
+    <string name="backup_guide_dialog_third_content">Protect all your messages in one step.</string>
+    <string name="backup_banner_guide_title">%1$d messages are unprotected without backup.</string>
 </resources>

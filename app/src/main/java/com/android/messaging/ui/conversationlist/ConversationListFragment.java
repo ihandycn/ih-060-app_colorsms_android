@@ -28,6 +28,7 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Parcelable;
+import android.support.constraint.ConstraintLayout;
 import android.support.v4.view.ViewCompat;
 import android.support.v4.view.ViewGroupCompat;
 import android.support.v7.widget.DefaultItemAnimator;
@@ -43,10 +44,12 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.android.messaging.Factory;
 import com.android.messaging.R;
 import com.android.messaging.ad.AdConfig;
 import com.android.messaging.ad.AdPlacement;
 import com.android.messaging.annotation.VisibleForAnimation;
+import com.android.messaging.backup.ui.BackupRestoreActivity;
 import com.android.messaging.datamodel.DataModel;
 import com.android.messaging.datamodel.binding.Binding;
 import com.android.messaging.datamodel.binding.BindingBase;
@@ -67,14 +70,17 @@ import com.android.messaging.ui.customize.WallpaperDrawables;
 import com.android.messaging.ui.customize.theme.CreateIconDrawable;
 import com.android.messaging.ui.customize.theme.ThemeInfo;
 import com.android.messaging.ui.customize.theme.ThemeUtils;
+import com.android.messaging.ui.view.MessagesTextView;
 import com.android.messaging.util.AccessibilityUtil;
 import com.android.messaging.util.Assert;
 import com.android.messaging.util.BugleAnalytics;
+import com.android.messaging.util.BuglePrefs;
 import com.android.messaging.util.ImeUtil;
 import com.android.messaging.util.LogUtil;
 import com.android.messaging.util.UiUtils;
 import com.android.messaging.util.ViewUtils;
 import com.google.common.annotations.VisibleForTesting;
+import com.ihs.app.framework.HSApplication;
 import com.ihs.commons.config.HSConfig;
 import com.ihs.commons.notificationcenter.HSGlobalNotificationCenter;
 import com.ihs.commons.utils.HSBundle;
@@ -98,9 +104,12 @@ import java.util.List;
  */
 public class ConversationListFragment extends Fragment implements ConversationListDataListener,
         ConversationListItemView.HostInterface {
+    public static final String PREF_KEY_BACKUP_SHOW_BANNER_GUIDE = "pref_key_backup_banner_guide_hide";
+    private static final String PREF_KEY_BACKUP_BANNER_GUIDE_SHOW_COUNT = "pref_key_backup_banner_guide_show_count";
     private static final String BUNDLE_ARCHIVED_MODE = "archived_mode";
     private static final String BUNDLE_FORWARD_MESSAGE_MODE = "forward_message_mode";
     private static final boolean VERBOSE = false;
+    private BuglePrefs mBackupBannerGuideHidePrefs = Factory.get().getCustomizePrefs();
 
     private boolean mArchiveMode;
     private boolean mBlockedAvailable;
@@ -138,6 +147,7 @@ public class ConversationListFragment extends Fragment implements ConversationLi
     private ImageView mStartNewConversationButton;
     private ListEmptyView mEmptyListMessageView;
     private ConversationListAdapter mAdapter;
+    private ConstraintLayout mBackupBannerGuideContainer;
 
     // Saved Instance State Data - only for temporal data which is nice to maintain but not
     // critical for correctness.
@@ -183,7 +193,9 @@ public class ConversationListFragment extends Fragment implements ConversationLi
             } else {
                 switchAd = false;
                 if (!isFirstOnResume) {
-                    tryShowTopNativeAd();
+                    if (mBackupBannerGuideContainer.getVisibility() == View.GONE) {
+                        tryShowTopNativeAd();
+                    }
                 }
             }
         }
@@ -236,6 +248,7 @@ public class ConversationListFragment extends Fragment implements ConversationLi
         mRecyclerView = rootView.findViewById(android.R.id.list);
         mEmptyListMessageView = rootView.findViewById(R.id.no_conversations_view);
         mEmptyListMessageView.setImageHint(R.drawable.ic_oobe_conv_list);
+        tryShowTopBackupBannerGuide(rootView);
         ImageView conversationListBg = rootView.findViewById(R.id.conversation_list_bg);
         Drawable bgDrawable = WallpaperDrawables.getConversationListWallpaperDrawable();
         getActivity().getWindow().getDecorView().setBackground(null);
@@ -281,8 +294,10 @@ public class ConversationListFragment extends Fragment implements ConversationLi
                 if (!isFirstConversationVisible && isScrolledToFirstConversation()) {
                     BugleAnalytics.logEvent("SMS_Messages_SlideUpToTop");
                     if (switchAd) {
-                        tryShowTopNativeAd();
-                        switchAd = false;
+                        if (mBackupBannerGuideContainer.getVisibility() == View.GONE) {
+                            tryShowTopNativeAd();
+                            switchAd = false;
+                        }
                     }
                 }
 
@@ -368,6 +383,44 @@ public class ConversationListFragment extends Fragment implements ConversationLi
             AcbNativeAdManager.preload(1, AdPlacement.AD_BANNER);
         }
         return rootView;
+    }
+
+
+    private void tryShowTopBackupBannerGuide(ViewGroup rootView) {
+        if (mBackupBannerGuideHidePrefs.getBoolean(PREF_KEY_BACKUP_SHOW_BANNER_GUIDE, true)) {
+            int backupBannerGuideShowCount = mBackupBannerGuideHidePrefs.getInt(PREF_KEY_BACKUP_BANNER_GUIDE_SHOW_COUNT, 0);
+            if (backupBannerGuideShowCount < HSConfig.optInteger(6, "Application", "BackupRestore", "RecommendBannerTimes")) {
+                mBackupBannerGuideContainer = rootView.findViewById(R.id.backup_banner_guide_container);
+                mBackupBannerGuideContainer.setVisibility(View.VISIBLE);
+                mBackupBannerGuideHidePrefs.putInt(PREF_KEY_BACKUP_BANNER_GUIDE_SHOW_COUNT, backupBannerGuideShowCount + 1);
+                MessagesTextView backupBannerButton = mBackupBannerGuideContainer.findViewById(R.id.backup_banner_button);
+                backupBannerButton.setBackground(BackgroundDrawables.createBackgroundDrawable(Color.WHITE,
+                        Dimensions.pxFromDp(3.3f), true));
+                backupBannerButton.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        final Intent intent = new Intent(getActivity(), BackupRestoreActivity.class);
+                        getActivity().startActivity(intent);
+                        mBackupBannerGuideContainer.setVisibility(View.GONE);
+                        mBackupBannerGuideHidePrefs.putBoolean(PREF_KEY_BACKUP_SHOW_BANNER_GUIDE, false);
+                        tryShowTopNativeAd();
+                        switchAd = false;
+                    }
+                });
+                ImageView backupBannerGuideCloseButton = mBackupBannerGuideContainer.findViewById(R.id.backup_banner_close);
+                backupBannerGuideCloseButton.setBackground(BackgroundDrawables.createBackgroundDrawable(getResources().getColor(R.color.backup_guide_dialog_close_button_color),
+                        Dimensions.pxFromDp(40f), true));
+                backupBannerGuideCloseButton.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        mBackupBannerGuideContainer.setVisibility(View.GONE);
+                        mBackupBannerGuideHidePrefs.putBoolean(PREF_KEY_BACKUP_SHOW_BANNER_GUIDE, false);
+                        tryShowTopNativeAd();
+                        switchAd = false;
+                    }
+                });
+            }
+        }
     }
 
     private boolean isAdLoading = false;
@@ -562,8 +615,10 @@ public class ConversationListFragment extends Fragment implements ConversationLi
         mAdapter.setDataList(dataList);
         HSLog.d("conversation list has : " + dataList.size());
         if (adFirstPrepared && !dataList.isEmpty()) {
-            tryShowTopNativeAd();
-            adFirstPrepared = false;
+            if (mBackupBannerGuideContainer.getVisibility() == View.GONE) {
+                tryShowTopNativeAd();
+                adFirstPrepared = false;
+            }
         }
         updateEmptyListUi(cursor == null || dataList.size() == 0);
     }
@@ -578,6 +633,9 @@ public class ConversationListFragment extends Fragment implements ConversationLi
 
     }
 
+    public void hideBackupBannerGuide(){
+        mBackupBannerGuideContainer.setVisibility(View.GONE);
+    }
     /**
      * {@inheritDoc} from ConversationListItemView.HostInterface
      */

@@ -11,15 +11,13 @@
         android:layout_height="100dp"
         android:layout_centerVertical="true"
         android:layout_marginTop="10dp"
-        android:layout_marginBottom="89.3dp"
         android:scaleType="centerCrop"
         app:lottie_fileName="lottie/cloud_backup_process.json"
         app:lottie_loop="true"
         app:lottie_autoPlay="true"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent">
+        app:layout_constraintStart_toStartOf="parent">
 
     </com.airbnb.lottie.LottieAnimationView>
 
@@ -40,10 +38,12 @@
     <com.android.messaging.ui.view.MessagesTextView
         android:id="@+id/cloud_backup_process_hint"
         android:layout_height="wrap_content"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:text="@string/cloud_backup_process_hint"
         android:layout_marginTop="14dp"
         android:layout_marginStart="20dp"
+        android:layout_marginBottom="26.7dp"
+        android:layout_marginEnd="50dp"
         android:textSize="12.7sp"
         android:textColor="@color/message_back_up_process_hint_color"
         android:includeFontPadding="false"
@@ -51,6 +51,8 @@
         app:typeface="@string/custom_font_medium"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/cloud_backup_progress_bar"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/cloud_already_backup_messages"
         >
     </com.android.messaging.ui.view.MessagesTextView>
 
@@ -65,9 +67,11 @@
         android:lineSpacingMultiplier="1.1"
         android:layout_marginEnd="45dp"
         android:layout_marginTop="14dp"
+        android:layout_marginBottom="26.7dp"
         app:typeface="@string/custom_font_medium"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/cloud_backup_progress_bar"
+        app:layout_constraintBottom_toBottomOf="parent"
         tools:text="51"
         >
     </com.android.messaging.ui.view.MessagesTextView>
@@ -82,9 +86,11 @@
         android:includeFontPadding="false"
         android:lineSpacingMultiplier="1.1"
         android:layout_marginTop="14dp"
+        android:layout_marginBottom="26.7dp"
         app:typeface="@string/custom_font_medium"
         app:layout_constraintTop_toBottomOf="@+id/cloud_backup_progress_bar"
         app:layout_constraintStart_toEndOf="@+id/cloud_already_backup_messages"
+        app:layout_constraintBottom_toBottomOf="parent"
         >
     </com.android.messaging.ui.view.MessagesTextView>
 
@@ -98,9 +104,11 @@
         android:includeFontPadding="false"
         android:lineSpacingMultiplier="1.1"
         android:layout_marginTop="14dp"
+        android:layout_marginBottom="26.7dp"
         app:typeface="@string/custom_font_medium"
         app:layout_constraintTop_toBottomOf="@+id/cloud_backup_progress_bar"
         app:layout_constraintStart_toEndOf="@+id/cloud_backup_messages_divider"
+        app:layout_constraintBottom_toBottomOf="parent"
         tools:text="231"
         >
     </com.android.messaging.ui.view.MessagesTextView>

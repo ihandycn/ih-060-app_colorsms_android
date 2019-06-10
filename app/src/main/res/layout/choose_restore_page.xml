@@ -36,12 +36,16 @@
         app:layout_constraintTop_toBottomOf="@id/from_cloud" />
 
     <LinearLayout
-        android:layout_width="match_parent"
+        android:id="@+id/from_local_container"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="16.3dp"
+        android:layout_marginEnd="60dp"
         android:orientation="vertical"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintBottom_toBottomOf="@id/from_local"
-        app:layout_constraintTop_toTopOf="@id/from_local">
+        app:layout_constraintTop_toTopOf="@id/from_local"
+        app:layout_constraintEnd_toEndOf="parent">
 
         <com.android.messaging.ui.view.MessagesTextView
             android:id="@+id/from_local_title"
@@ -66,12 +70,15 @@
     </LinearLayout>
 
     <LinearLayout
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="16.3dp"
+        android:layout_marginEnd="60dp"
         android:orientation="vertical"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintBottom_toBottomOf="@id/from_cloud"
-        app:layout_constraintTop_toTopOf="@id/from_cloud">
+        app:layout_constraintTop_toTopOf="@id/from_cloud"
+        app:layout_constraintEnd_toEndOf="parent">
 
         <com.android.messaging.ui.view.MessagesTextView
             android:id="@+id/from_cloud_title"

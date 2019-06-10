@@ -9,10 +9,8 @@
         android:layout_width="100dp"
         android:layout_height="100dp"
         android:layout_centerVertical="true"
-        android:layout_marginBottom="89.3dp"
         android:layout_marginTop="10dp"
         android:scaleType="centerCrop"
-        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
@@ -35,10 +33,12 @@
 
     <com.android.messaging.ui.view.MessagesTextView
         android:id="@+id/local_backup_process_hint"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="20dp"
         android:layout_marginTop="14dp"
+        android:layout_marginBottom="26.7dp"
+        android:layout_marginEnd="50dp"
         android:includeFontPadding="false"
         android:lineSpacingMultiplier="1.1"
         android:text="@string/local_backup_process_hint"
@@ -46,6 +46,8 @@
         android:textSize="12.7sp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/local_backup_progress_bar"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/local_already_backup_messages"
         app:typeface="@string/custom_font_medium" />
 
     <com.android.messaging.ui.view.MessagesTextView
@@ -54,12 +56,14 @@
         android:layout_height="wrap_content"
         android:layout_marginEnd="45dp"
         android:layout_marginTop="14dp"
+        android:layout_marginBottom="26.7dp"
         android:includeFontPadding="false"
         android:lineSpacingMultiplier="1.1"
         android:textColor="@color/already_backup_messages_color"
         android:textSize="12.7sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/local_backup_progress_bar"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:typeface="@string/custom_font_medium" />
 
     <com.android.messaging.ui.view.MessagesTextView
@@ -67,6 +71,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="14dp"
+        android:layout_marginBottom="26.7dp"
         android:includeFontPadding="false"
         android:lineSpacingMultiplier="1.1"
         android:text="@string/backup_process_number_divider"
@@ -74,6 +79,7 @@
         android:textSize="12.7sp"
         app:layout_constraintStart_toEndOf="@+id/local_already_backup_messages"
         app:layout_constraintTop_toBottomOf="@+id/local_backup_progress_bar"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:typeface="@string/custom_font_medium" />
 
     <com.android.messaging.ui.view.MessagesTextView
@@ -81,12 +87,14 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="14dp"
+        android:layout_marginBottom="26.7dp"
         android:includeFontPadding="false"
         android:lineSpacingMultiplier="1.1"
         android:textColor="@color/total_backup_messages_color"
         android:textSize="12.7sp"
         app:layout_constraintStart_toEndOf="@+id/local_backup_messages_divider"
         app:layout_constraintTop_toBottomOf="@+id/local_backup_progress_bar"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:typeface="@string/custom_font_medium" />
 
 </android.support.constraint.ConstraintLayout>

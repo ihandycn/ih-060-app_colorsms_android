@@ -792,7 +792,10 @@
             android:configChanges="orientation|screenSize|keyboardHidden"
             android:screenOrientation="portrait"
             android:theme="@style/SettingsActivity" />
-
+        <activity
+            android:name=".backup.ui.BackupGuideDialogActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.AppCompat.Translucent" />
     </application>
 
 </manifest>
