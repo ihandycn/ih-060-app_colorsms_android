@@ -295,6 +295,7 @@ public abstract class AbstractConversationListActivity extends BugleActionBarAct
                     this, conversationId, null,
                     sceneTransitionAnimationOptions,
                     hasCustomTransitions, formattedName, false);
+            overridePendingTransition(R.anim.fade_in_long, R.anim.anim_null);
             BugleAnalytics.logEvent("SMS_Messages_Message_Click", true, true,
                     "Type", conversationListItemData.isPinned() ? "pin" : "unpin");
         }
