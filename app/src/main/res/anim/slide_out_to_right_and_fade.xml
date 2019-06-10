@@ -8,5 +8,5 @@
         android:toXDelta="39.999996%"/>
     <alpha
         android:fromAlpha="1.0"
-        android:toAlpha="0.15"/>
+        android:toAlpha="0"/>
 </set>
