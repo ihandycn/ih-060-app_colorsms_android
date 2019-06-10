@@ -89,6 +89,7 @@ dependencies {
     implementation "com.google.firebase:firebase-database:${rootProject.ext.googlePlayServiceVersion}"
     implementation "com.google.firebase:firebase-auth:${rootProject.ext.googlePlayServiceVersion}"
     implementation "com.firebaseui:firebase-ui-auth:4.1.0"
+    implementation "com.google.firebase:firebase-storage:${rootProject.ext.googlePlayServiceVersion}"
     implementation "com.ihandy.appframework:libAppframework.gm:4.9.1.gm"
 
     implementation 'com.airbnb.android:lottie:2.7.0'

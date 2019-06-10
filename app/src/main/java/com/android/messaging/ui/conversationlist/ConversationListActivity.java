@@ -36,7 +36,7 @@ import com.android.messaging.Factory;
 import com.android.messaging.R;
 import com.android.messaging.ad.AdConfig;
 import com.android.messaging.ad.AdPlacement;
-import com.android.messaging.backup.BackUpRestoreActivity;
+import com.android.messaging.backup.ui.BackupRestoreActivity;
 import com.android.messaging.datamodel.BugleNotifications;
 import com.android.messaging.datamodel.action.PinConversationAction;
 import com.android.messaging.datamodel.data.MessageBoxItemData;
@@ -205,7 +205,7 @@ public class ConversationListActivity extends AbstractConversationListActivity
             if (CommonUtils.isNewUser() && DateUtils.isToday(CommonUtils.getAppInstallTimeMillis())) {
                 BugleAnalytics.logEvent("SMS_Messages_Show_NewUser", true);
             }
-            if (HSApplication.getFirstLaunchInfo().appVersionCode >= 48){
+            if (HSApplication.getFirstLaunchInfo().appVersionCode >= 48) {
                 BugleAnalytics.logEvent("SMS_Messages_Show_NewUser", true, "SendDelay", "" + SendDelaySettings.getSendDelayInSecs());
             }
         }
@@ -443,7 +443,7 @@ public class ConversationListActivity extends AbstractConversationListActivity
                         break;
                     case DRAWER_INDEX_BACKUP_RESTORE:
                         BugleAnalytics.logEvent("Menu_BackupRestore_Click", true);
-                        Navigations.startActivity(ConversationListActivity.this, BackUpRestoreActivity.class);
+                        Navigations.startActivity(ConversationListActivity.this, BackupRestoreActivity.class);
                         Preferences.getDefault().putBoolean(PREF_KEY_BACKUP_RESTORE_CLICKED, true);
                         navigationContent.findViewById(R.id.navigation_item_backup_restore_new_text).setVisibility(View.GONE);
                         break;
