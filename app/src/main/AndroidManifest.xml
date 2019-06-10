@@ -593,11 +593,14 @@
             android:screenOrientation="portrait"
             android:theme="@style/BaseSettingsActivity" />
         <activity android:name=".debug.ChangeThemeColorDebugActivity" />
+
         <activity
             android:name=".ui.customize.CustomBubblesActivity"
             android:excludeFromRecents="true"
             android:screenOrientation="portrait"
-            android:theme="@style/BaseSettingsActivity" /> <!-- Lib permanent -->
+            android:theme="@style/NoBackgroundActivity" />
+
+        <!-- Lib permanent -->
         <service
             android:name="com.ihs.device.permanent.PermanentService"
             android:label="GuardServiceNew"
