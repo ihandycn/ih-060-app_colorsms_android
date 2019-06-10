@@ -47,7 +47,7 @@ import com.android.messaging.ui.conversationlist.ConversationListFragment.Conver
 import com.android.messaging.ui.conversationlist.MultiSelectActionModeCallback.SelectedConversation;
 import com.android.messaging.util.BugleAnalytics;
 import com.android.messaging.util.DebugUtils;
-import com.android.messaging.util.PhoneUtils;
+import com.android.messaging.util.DefaultSMSUtils;
 import com.android.messaging.util.Trace;
 import com.android.messaging.util.UiUtils;
 
@@ -116,7 +116,7 @@ public abstract class AbstractConversationListActivity extends BugleActionBarAct
     public void onActionBarDelete(final Collection<SelectedConversation> conversations) {
         BugleAnalytics.logEvent("SMS_EditMode_Delete_BtnClick", true);
 
-        if (!PhoneUtils.getDefault().isDefaultSmsApp()) {
+        if (!DefaultSMSUtils.isDefaultSmsApp()) {
             // TODO: figure out a good way to combine this with the implementation in
             // ConversationFragment doing similar things
             final Activity activity = this;

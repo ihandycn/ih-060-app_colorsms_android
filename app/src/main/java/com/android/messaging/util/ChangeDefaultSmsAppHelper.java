@@ -57,7 +57,7 @@ public class ChangeDefaultSmsAppHelper {
         final PhoneUtils phoneUtils = PhoneUtils.getDefault();
         final boolean isSmsCapable = phoneUtils.isSmsCapable();
         final boolean hasPreferredSmsSim = phoneUtils.getHasPreferredSmsSim();
-        final boolean isDefaultSmsApp = phoneUtils.isDefaultSmsApp();
+        final boolean isDefaultSmsApp = DefaultSMSUtils.isDefaultSmsApp();
 
         // Supports SMS?
         if (!isSmsCapable) {

@@ -4,7 +4,7 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 
 import com.android.messaging.ui.UIIntents;
-import com.android.messaging.util.PhoneUtils;
+import com.android.messaging.util.DefaultSMSUtils;
 import com.ihs.commons.utils.HSLog;
 
 public abstract class BaseActivity extends AppCompatActivity {
@@ -18,7 +18,7 @@ public abstract class BaseActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        if (!PhoneUtils.getDefault().isDefaultSmsApp()) {
+        if (!DefaultSMSUtils.isDefaultSmsApp()) {
             UIIntents.get().launchWelcomeSetAsDefaultActivity(this);
             finish();
             mShouldFinishThisTime = true;
@@ -30,7 +30,7 @@ public abstract class BaseActivity extends AppCompatActivity {
         super.onResume();
 
         if (!mJustCreated) {
-            if (!PhoneUtils.getDefault().isDefaultSmsApp()) {
+            if (!DefaultSMSUtils.isDefaultSmsApp()) {
                 UIIntents.get().launchWelcomeSetAsDefaultActivity(this);
                 finish();
                 HSLog.d(TAG, "Show welcome set as default");

@@ -71,7 +71,6 @@ import com.android.messaging.ui.VideoThumbnailView;
 import com.android.messaging.ui.customize.AvatarBgDrawables;
 import com.android.messaging.ui.customize.ConversationColors;
 import com.android.messaging.ui.customize.PrimaryColors;
-import com.android.messaging.ui.invitefriends.InviteFriendsConditions;
 import com.android.messaging.ui.invitefriends.InviteFriendsTest;
 import com.android.messaging.ui.wallpaper.WallpaperManager;
 import com.android.messaging.util.AccessibilityUtil;
@@ -79,9 +78,9 @@ import com.android.messaging.util.Assert;
 import com.android.messaging.util.AvatarUriUtil;
 import com.android.messaging.util.BugleAnalytics;
 import com.android.messaging.util.ContentType;
+import com.android.messaging.util.DefaultSMSUtils;
 import com.android.messaging.util.ImageUtils;
 import com.android.messaging.util.OsUtil;
-import com.android.messaging.util.PhoneUtils;
 import com.android.messaging.util.UiUtils;
 import com.android.messaging.util.YouTubeUtil;
 import com.google.common.base.Predicate;
@@ -414,7 +413,7 @@ public class ConversationMessageView extends RelativeLayout implements View.OnCl
 
             case MessageData.BUGLE_STATUS_OUTGOING_FAILED:
                 // don't show the error state unless we're the default sms app
-                if (PhoneUtils.getDefault().isDefaultSmsApp()) {
+                if (DefaultSMSUtils.isDefaultSmsApp()) {
                     if (isSelected()) {
                         statusResId = R.string.message_status_resend;
                     } else {

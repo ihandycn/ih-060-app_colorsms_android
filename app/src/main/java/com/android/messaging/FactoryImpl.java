@@ -44,11 +44,13 @@ import com.android.messaging.util.BugleGservicesImpl;
 import com.android.messaging.util.BuglePrefs;
 import com.android.messaging.util.BugleSubscriptionPrefs;
 import com.android.messaging.util.BugleWidgetPrefs;
+import com.android.messaging.util.DefaultSMSUtils;
 import com.android.messaging.util.LogUtil;
 import com.android.messaging.util.MediaUtil;
 import com.android.messaging.util.MediaUtilImpl;
 import com.android.messaging.util.OsUtil;
 import com.android.messaging.util.PhoneUtils;
+import com.ihs.commons.utils.HSLog;
 import com.superapps.util.Compats;
 import com.superapps.util.Threads;
 
@@ -120,18 +122,22 @@ class FactoryImpl extends Factory {
         factory.mCarrierConfigValuesLoader = new BugleCarrierConfigValuesLoader(applicationContext);
         application.registerActivityLifecycleCallbacks(new Application.ActivityLifecycleCallbacks() {
 
+            int foregroundActivityCounter = 0;
+
             @Override
             public void onActivityCreated(Activity activity, Bundle savedInstanceState) {
-
+                HSLog.d("lifecycle callback", "onActivityCreated");
             }
 
             @Override
             public void onActivityStarted(Activity activity) {
-
+                HSLog.d("lifecycle callback", "onActivityStarted");
+                foregroundActivityCounter++;
             }
 
             @Override
             public void onActivityResumed(Activity activity) {
+                HSLog.d("lifecycle callback", "onActivityResumed");
                 if (!(activity instanceof MessageBoxActivity)) {
                     factory.mIsForeground = true;
                 }
@@ -139,6 +145,7 @@ class FactoryImpl extends Factory {
 
             @Override
             public void onActivityPaused(Activity activity) {
+                HSLog.d("lifecycle callback", "onActivityPaused");
                 if (!(activity instanceof MessageBoxActivity)) {
                     factory.mIsForeground = false;
                 }
@@ -146,16 +153,16 @@ class FactoryImpl extends Factory {
 
             @Override
             public void onActivityStopped(Activity activity) {
-
-            }
-
-            @Override
-            public void onActivitySaveInstanceState(Activity activity, Bundle outState) {
-
+                HSLog.d("lifecycle callback", "onActivityStopped");
+                foregroundActivityCounter--;
+                if (foregroundActivityCounter == 0) {
+                    DefaultSMSUtils.invalidateCache();
+                }
             }
 
             @Override
             public void onActivityDestroyed(Activity activity) {
+                HSLog.d("lifecycle callback", "onActivityDestroyed");
                 try {
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && Compats.IS_SAMSUNG_DEVICE) {
                         Object systemService = applicationContext.getSystemService(Class.forName("com.samsung.android.content.clipboard.SemClipboardManager"));
@@ -163,16 +170,21 @@ class FactoryImpl extends Factory {
                         mContext.setAccessible(true);
                         mContext.set(systemService, null);
                     }
-                } catch (ClassNotFoundException | NoSuchFieldException | IllegalAccessException e) { //ignored
-
+                } catch (ClassNotFoundException | NoSuchFieldException | IllegalAccessException e) {
+                    //ignored
                 }
+            }
+
+            @Override
+            public void onActivitySaveInstanceState(Activity activity, Bundle outState) {
+
             }
         });
 
         Assert.initializeGservices(factory.mBugleGservices);
         LogUtil.initializeGservices(factory.mBugleGservices);
 
-        if (PhoneUtils.getDefault().isDefaultSmsApp() && OsUtil.hasRequiredPermissions()) {
+        if (DefaultSMSUtils.isDefaultSmsApp() && OsUtil.hasRequiredPermissions()) {
             factory.onDefaultSmsSetAndPermissionsGranted();
         }
         PhoneUtils.getDefault().registerDefaultSmsPackageChange(

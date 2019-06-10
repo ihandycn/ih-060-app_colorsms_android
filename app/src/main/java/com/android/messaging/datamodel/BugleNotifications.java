@@ -82,12 +82,12 @@ import com.android.messaging.util.BuglePrefs;
 import com.android.messaging.util.BuglePrefsKeys;
 import com.android.messaging.util.ContentType;
 import com.android.messaging.util.ConversationIdSet;
+import com.android.messaging.util.DefaultSMSUtils;
 import com.android.messaging.util.ImageUtils;
 import com.android.messaging.util.LogUtil;
 import com.android.messaging.util.NotificationPlayer;
 import com.android.messaging.util.OsUtil;
 import com.android.messaging.util.PendingIntentConstants;
-import com.android.messaging.util.PhoneUtils;
 import com.android.messaging.util.RingtoneUtil;
 import com.android.messaging.util.ThreadUtil;
 import com.android.messaging.util.UriUtil;
@@ -315,7 +315,7 @@ public class BugleNotifications {
      */
     public static boolean shouldNotify() {
         // If we're not the default sms app, don't put up any notifications.
-        if (!PhoneUtils.getDefault().isDefaultSmsApp()) {
+        if (!DefaultSMSUtils.isDefaultSmsApp()) {
             return false;
         }
         // Now check prefs (i.e. settings) to see if the user turned off notifications.

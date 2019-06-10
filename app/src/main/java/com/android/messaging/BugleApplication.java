@@ -57,6 +57,7 @@ import com.android.messaging.util.BuglePrefsKeys;
 import com.android.messaging.util.BugleTimeTicker;
 import com.android.messaging.util.CommonUtils;
 import com.android.messaging.util.DebugUtils;
+import com.android.messaging.util.DefaultSMSUtils;
 import com.android.messaging.util.DefaultSmsAppChangeObserver;
 import com.android.messaging.util.FabricUtils;
 import com.android.messaging.util.LogUtil;
@@ -363,7 +364,7 @@ public class BugleApplication extends HSApplication implements UncaughtException
             if (!HSConfig.optBoolean(false, "Application", "SetDefaultAlert", "Switch")) {
                 return;
             }
-            if (PhoneUtils.getDefault().isDefaultSmsApp()) {
+            if (DefaultSMSUtils.isDefaultSmsApp()) {
                 return;
             }
             long lastUserPresent = Preferences.getDefault().getLong(KEY_FOR_LAST_USER_PRESENT_TIME, 0);
@@ -408,7 +409,7 @@ public class BugleApplication extends HSApplication implements UncaughtException
         long lastLogProcessStart = Preferences.getDefault().getLong("pref_key_last_log_process_start", -1);
         if (!Calendars.isSameDay(System.currentTimeMillis(), lastLogProcessStart)) {
             BugleAnalytics.logEvent("process_start_daily", true, true,
-                    "isDefault", String.valueOf(PhoneUtils.getDefault().isDefaultSmsApp()));
+                    "isDefault", String.valueOf(DefaultSMSUtils.isDefaultSmsApp()));
             Preferences.getDefault().putLong("pref_key_last_log_process_start", System.currentTimeMillis());
         }
 

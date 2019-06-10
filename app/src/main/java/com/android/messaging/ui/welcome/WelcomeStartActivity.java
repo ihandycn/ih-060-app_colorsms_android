@@ -24,10 +24,11 @@ import com.android.messaging.Factory;
 import com.android.messaging.R;
 import com.android.messaging.ui.UIIntents;
 import com.android.messaging.ui.WebViewActivity;
+import com.android.messaging.ui.view.MessagesTextView;
 import com.android.messaging.util.BugleAnalytics;
 import com.android.messaging.util.BugleAnimUtils;
+import com.android.messaging.util.DefaultSMSUtils;
 import com.android.messaging.util.OsUtil;
-import com.android.messaging.util.PhoneUtils;
 import com.android.messaging.util.view.AdvancedPageIndicator;
 import com.android.messaging.util.view.IndicatorMark;
 import com.ihs.app.framework.HSGdprConsent;
@@ -39,7 +40,6 @@ import com.superapps.util.Navigations;
 import com.superapps.util.Preferences;
 import com.superapps.util.Threads;
 import com.superapps.util.Toasts;
-import com.android.messaging.ui.view.MessagesTextView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -463,6 +463,7 @@ public class WelcomeStartActivity extends AppCompatActivity implements View.OnCl
                 BugleAnalytics.logEvent("Start_DetailPage_Click", true, true, "Page", String.valueOf(mViewPagerCurrentPosition));
                 Preferences.getDefault().putBoolean(PREF_KEY_START_BUTTON_CLICKED, true);
                 final Intent intent = UIIntents.get().getChangeDefaultSmsAppIntent(WelcomeStartActivity.this);
+                DefaultSMSUtils.invalidateCache();
                 startActivityForResult(intent, REQUEST_SET_DEFAULT_SMS_APP);
                 break;
 
@@ -541,7 +542,7 @@ public class WelcomeStartActivity extends AppCompatActivity implements View.OnCl
     @Override
     public void onActivityResult(final int requestCode, final int resultCode, final Intent data) {
         if (requestCode == REQUEST_SET_DEFAULT_SMS_APP) {
-            if (PhoneUtils.getDefault().isDefaultSmsApp()) {
+            if (DefaultSMSUtils.isDefaultSmsApp()) {
                 mHandler.sendEmptyMessageDelayed(EVENT_RETRY_NAVIGATION, 100);
             } else {
                 Intent intent = new Intent(WelcomeStartActivity.this, WelcomeSetAsDefaultActivity.class);
