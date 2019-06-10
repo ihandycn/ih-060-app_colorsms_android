@@ -2,10 +2,11 @@ package com.android.messaging.backup;
 
 import android.database.Cursor;
 import android.text.TextUtils;
+import android.util.Log;
 
 import com.android.messaging.util.OsUtil;
 
-public class BackupSmsMessage extends BackupMessages.BackupMessage{
+public class BackupSmsMessage extends BackupMessages.BackupMessage {
 
     public long mId;
     public long mMessageId;
@@ -71,19 +72,16 @@ public class BackupSmsMessage extends BackupMessages.BackupMessage{
             return false;
         }
 
-        if (otherDbMsg.getTelephonyId() != getTelephonyId()) {
+        if ((TextUtils.isEmpty(mAddress) && !TextUtils.isEmpty(otherDbMsg.mAddress))
+                || (!TextUtils.isEmpty(mAddress) && !mAddress.equals(otherDbMsg.mAddress))) {
             return false;
         }
 
-        if (TextUtils.isEmpty(mBody) && TextUtils.isEmpty(otherDbMsg.mBody)
-                && otherDbMsg.mBody.equals(mBody)) {
+        if ((TextUtils.isEmpty(mBody) && !TextUtils.isEmpty(otherDbMsg.mBody))
+                || (!TextUtils.isEmpty(mBody) && !mBody.equals(otherDbMsg.mBody))) {
             return false;
         }
 
-        if (TextUtils.isEmpty(mAddress) && TextUtils.isEmpty(otherDbMsg.mAddress)
-                && otherDbMsg.mAddress.equals(mAddress)) {
-            return false;
-        }
         return true;
     }
 }

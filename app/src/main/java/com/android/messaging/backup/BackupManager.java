@@ -91,6 +91,16 @@ public class BackupManager {
         void onUploadFailed();
     }
 
+    interface MessageRestoreToDBListener {
+        void onRestoreStart();
+
+        void onRestoreUpdate(int restoredCount);
+
+        void onRestoreSuccess();
+
+        void onRestoreFailed();
+    }
+
     private static BackupManager sInstance = new BackupManager();
 
     public static BackupManager getInstance() {
@@ -103,14 +113,57 @@ public class BackupManager {
             CloudFileDownloadListener listener = new CloudFileDownloadListener() {
                 @Override
                 public void onDownloadSuccess(File file) {
-                    if (weakListener.get() != null) {
+                    if (weakListener.get() != null || backupInfo.getLocationType() == BackupInfo.CLOUD) {
                         weakListener.get().onDownloadSuccess();
                     }
                     //2.resolve file messages
                     List<BackupSmsMessage> backupMessages = BackupPersistManager.get().resolveMessages(file);
+                    if (backupMessages.size() <= 0) {
+                        weakListener.get().onRestoreFailed();
+                        return;
+                    }
 
                     //3.sync messages
-                    RestoreManager.get().restore(backupMessages);
+                    if (weakListener.get() != null) {
+                        weakListener.get().onRestoreStart(backupMessages.size());
+                    }
+
+                    Threads.postOnThreadPoolExecutor(() -> {
+                        MessageRestoreToDBListener listener1 = new MessageRestoreToDBListener() {
+                            @Override
+                            public void onRestoreStart() {
+                                Threads.postOnMainThread(() -> {
+                                    if (weakListener.get() != null) {
+                                        weakListener.get().onRestoreStart(backupMessages.size());
+                                    }
+                                });
+                            }
+
+                            @Override
+                            public void onRestoreUpdate(int restoredCount) {
+                                Threads.postOnMainThread(() -> {
+                                    if (weakListener.get() != null) {
+                                        weakListener.get().onRestoreUpdate(restoredCount);
+                                    }
+                                });
+                            }
+
+                            @Override
+                            public void onRestoreSuccess() {
+                                if (weakListener.get() != null) {
+                                    weakListener.get().onRestoreSuccess();
+                                }
+                            }
+
+                            @Override
+                            public void onRestoreFailed() {
+                                if (weakListener.get() != null) {
+                                    weakListener.get().onRestoreFailed();
+                                }
+                            }
+                        };
+                        RestoreManager.get().restore(backupMessages, listener1);
+                    });
                 }
 
                 @Override
@@ -120,7 +173,6 @@ public class BackupManager {
                     }
                 }
             };
-
             //1.load backup file, local or cloud
             File backupFile;
             if (backupInfo.getLocationType() == BackupInfo.LOCAL) {
@@ -133,6 +185,10 @@ public class BackupManager {
                     listener.onDownloadSuccess(backupFile);
                 }
             } else {
+                MessageRestoreListener listener1 = weakListener.get();
+                if (listener1 != null) {
+                    listener1.onDownloadStart();
+                }
                 downloadCloudBackup(backupInfo, listener);
             }
         });
@@ -358,6 +414,7 @@ public class BackupManager {
 
         reference.getFile(file)
                 .addOnSuccessListener(taskSnapshot -> {
+                    //run on main thread
                     if (listener != null && file != null) {
                         listener.onDownloadSuccess(file);
                     }

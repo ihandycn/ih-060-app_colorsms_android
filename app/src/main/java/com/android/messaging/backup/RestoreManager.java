@@ -2,20 +2,14 @@ package com.android.messaging.backup;
 
 import android.database.sqlite.SQLiteException;
 
-import com.android.messaging.datamodel.DataModel;
-import com.android.messaging.datamodel.DatabaseWrapper;
-import com.android.messaging.util.BugleGservices;
-import com.android.messaging.util.BugleGservicesKeys;
-import com.android.messaging.util.LogUtil;
+import com.android.messaging.util.CheckPermissionUtil;
 import com.android.messaging.util.OsUtil;
 import com.ihs.commons.utils.HSLog;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class RestoreManager {
     //when restore remote is backup file, local is telephony
-    static final long SYNC_FAILED = Long.MIN_VALUE;
     private static final String TAG = "-->>";
 
     private static RestoreManager sInstance;
@@ -31,76 +25,39 @@ public class RestoreManager {
 
     }
 
-    public void restore(List<BackupSmsMessage> restoredSms) {
-        if (!OsUtil.hasSmsPermission()) {
+    public void restore(List<BackupSmsMessage> restoredSms, BackupManager.MessageRestoreToDBListener listener) {
+        if (!OsUtil.hasSmsPermission() || !CheckPermissionUtil.isSmsPermissionGranted()) {
             // Sync requires READ_SMS permission
+            listener.onRestoreFailed();
             return;
         }
-
-        final BugleGservices bugleGservices = BugleGservices.get();
-
-        final int maxMessagesToScan = bugleGservices.getInt(
-                BugleGservicesKeys.SMS_SYNC_BATCH_MAX_MESSAGES_TO_SCAN,
-                BugleGservicesKeys.SMS_SYNC_BATCH_MAX_MESSAGES_TO_SCAN_DEFAULT);
-
-        final int initialMaxMessagesToUpdate = 1000000;
-        final int smsSyncSubsequentBatchSizeMin = bugleGservices.getInt(
-                BugleGservicesKeys.SMS_SYNC_BATCH_SIZE_MIN,
-                BugleGservicesKeys.SMS_SYNC_BATCH_SIZE_MIN_DEFAULT);
-        final int smsSyncSubsequentBatchSizeMax = bugleGservices.getInt(
-                BugleGservicesKeys.SMS_SYNC_BATCH_SIZE_MAX,
-                BugleGservicesKeys.SMS_SYNC_BATCH_SIZE_MAX_DEFAULT);
-
-        // Cap sync size to GServices limits
-        final int maxMessagesToUpdate = Math.max(smsSyncSubsequentBatchSizeMin,
-                Math.min(initialMaxMessagesToUpdate, smsSyncSubsequentBatchSizeMax));
-
-        // Sms messages to store
-        final ArrayList<BackupSmsMessage> smsToAdd = new ArrayList<>();
+        listener.onRestoreStart();
 
         // Cursors
         final RestoreSyncCursorPair cursors = new RestoreSyncCursorPair();
 
-        // Actually compare the messages using cursor pair
-        long lastTimestampMillis = syncCursorPair(cursors, restoredSms, smsToAdd, maxMessagesToUpdate);
-
-
-        // If comparison succeeds bundle up the changes for processing in ActionService
-        if (lastTimestampMillis == SYNC_FAILED) {
-            return;
-        }
-
-        final int messagesUpdated = smsToAdd.size();
-
-        // Perform local database changes in one transaction
-        if (messagesUpdated > 0) {
-            final RestoreMessageBatch batch = new RestoreMessageBatch(smsToAdd);
-            batch.updateTelephonyDatabase();
-        }
-    }
-
-    private long syncCursorPair(final RestoreSyncCursorPair cursors,
-                                final List<BackupSmsMessage> restoreList,
-                                final ArrayList<BackupSmsMessage> smsToAdd,
-                                final int maxMessagesToUpdate) {
+        // Actually compare the messages using cursor pair and restore to telephony
         long lastTimestampMillis;
-
         try {
             cursors.query();
-            lastTimestampMillis = cursors.scan(restoreList, maxMessagesToUpdate, smsToAdd);
+            lastTimestampMillis = cursors.scanAndRestore(restoredSms, listener);
         } catch (final SQLiteException e) {
             HSLog.e(TAG, "restore backup: Database exception " + e.getMessage());
             // Let's abort
-            lastTimestampMillis = SYNC_FAILED;
+            lastTimestampMillis = RestoreSyncCursorPair.SYNC_FAILED;
         } catch (final Exception e) {
-            HSLog.e(TAG, "restore backup: unexpected failure in scan " + e.getMessage());
-            lastTimestampMillis = SYNC_FAILED;
+            HSLog.e(TAG, "restore backup: unexpected failure in scanAndRestore " + e.getMessage());
+            lastTimestampMillis = RestoreSyncCursorPair.SYNC_FAILED;
         } finally {
             if (cursors != null) {
                 cursors.close();
             }
         }
 
-        return lastTimestampMillis;
+        if (lastTimestampMillis == RestoreSyncCursorPair.SYNC_COMPLETE) {
+            listener.onRestoreSuccess();
+        } else {
+            listener.onRestoreFailed();
+        }
     }
 }

@@ -19,6 +19,8 @@ import com.android.messaging.util.UiUtils;
 import com.google.firebase.auth.FirebaseAuth;
 import com.superapps.util.BackgroundDrawables;
 import com.superapps.util.Dimensions;
+import com.superapps.util.Threads;
+import com.superapps.util.Toasts;
 
 import java.util.List;
 
@@ -67,10 +69,15 @@ public class ChooseRestoreViewHolder extends BasePagerViewHolder implements Cust
             }
         });
 
+        RestoreProcessDialog restoreProcessDialog = new RestoreProcessDialog();
+        restoreProcessDialog.setCancelable(false);
         BackupManager.MessageRestoreListener listener = new BackupManager.MessageRestoreListener() {
             @Override
             public void onDownloadStart() {
-
+                Threads.postOnMainThread(() -> {
+                    restoreProcessDialog.setStateText(getContext().getString(R.string.restore_downloading));
+                    restoreProcessDialog.hideProgressBar(true);
+                });
             }
 
             @Override
@@ -80,37 +87,57 @@ public class ChooseRestoreViewHolder extends BasePagerViewHolder implements Cust
 
             @Override
             public void onDownloadFailed() {
-
+                Threads.postOnMainThread(() -> {
+                    restoreProcessDialog.dismissAllowingStateLoss();
+                    Toasts.showToast(R.string.restore_fail);
+                });
             }
 
             @Override
             public void onRestoreStart(int messageCount) {
-
+                Threads.postOnMainThread(() -> {
+                    restoreProcessDialog.hideProgressBar(false);
+                    restoreProcessDialog.setStateText(getContext().getString(R.string.restore_process_hint));
+                    restoreProcessDialog.setTotal(messageCount);
+                });
             }
 
             @Override
             public void onRestoreUpdate(int restoredCount) {
-
+                Threads.postOnMainThread(() -> {
+                    restoreProcessDialog.setStateText(getContext().getString(R.string.restore_process_hint));
+                    restoreProcessDialog.setProgress(restoredCount);
+                });
             }
 
             @Override
             public void onRestoreSuccess() {
-
+                Threads.postOnMainThread(() -> {
+                    restoreProcessDialog.dismissAllowingStateLoss();
+                    Toasts.showToast(R.string.restore_success);
+                });
             }
 
             @Override
             public void onRestoreFailed() {
-
+                Threads.postOnMainThread(() -> {
+                    restoreProcessDialog.dismissAllowingStateLoss();
+                    Toasts.showToast(R.string.restore_fail);
+                });
             }
         };
 
         restoreButton.setOnClickListener(v -> {
-            if (fromLocalCheckBox.isChecked() || fromCloudCheckBox.isChecked()) {
-                RestoreProcessDialog restoreProcessDialog = new RestoreProcessDialog();
-                UiUtils.showDialogFragment((Activity) mContext, restoreProcessDialog);
-            }
-            if (mCloudBackups != null) {
-                BackupManager.getInstance().restoreMessages(mCloudBackups.get(0), listener);
+            if (fromLocalCheckBox.isChecked()) {
+                if (mLocalBackups != null) {
+                    BackupManager.getInstance().restoreMessages(mLocalBackups.get(0), listener);
+                    UiUtils.showDialogFragment((Activity) mContext, restoreProcessDialog);
+                }
+            } else if (fromCloudCheckBox.isChecked()) {
+                if (mCloudBackups != null) {
+                    BackupManager.getInstance().restoreMessages(mCloudBackups.get(0), listener);
+                    UiUtils.showDialogFragment((Activity) mContext, restoreProcessDialog);
+                }
             }
         });
 
