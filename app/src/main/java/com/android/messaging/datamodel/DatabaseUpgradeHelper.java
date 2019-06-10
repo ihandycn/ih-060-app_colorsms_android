@@ -20,10 +20,14 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
 import com.android.messaging.Factory;
+import com.android.messaging.privatebox.PrivateContactsManager;
+import com.android.messaging.privatebox.PrivateMmsEntry;
+import com.android.messaging.privatebox.PrivateSmsEntry;
 import com.android.messaging.util.Assert;
 import com.android.messaging.util.LogUtil;
 
 public class DatabaseUpgradeHelper {
+
     private static final String TAG = LogUtil.BUGLE_DATABASE_TAG;
 
     public void doOnUpgrade(final SQLiteDatabase db, final int oldVersion, final int newVersion) {
@@ -51,6 +55,9 @@ public class DatabaseUpgradeHelper {
         }
         if (currentVersion < 3) {
             currentVersion = upgradeToVersion3(db);
+        }
+        if (currentVersion < 4) {
+            currentVersion = upgradeToVersion4(db);
         }
         // Rebuild all the views
         final Context context = Factory.get().getApplicationContext();
@@ -85,6 +92,35 @@ public class DatabaseUpgradeHelper {
             }
         }
         return 3;
+    }
+
+    private int upgradeToVersion4(SQLiteDatabase db) {
+        Cursor cursor = null;
+        try {
+            cursor = db.rawQuery("SELECT * FROM " + DatabaseHelper.CONVERSATIONS_TABLE + " LIMIT 0"
+                    , null);
+            if (cursor != null && cursor.getColumnIndex(DatabaseHelper.ConversationColumns.IS_PRIVATE) == -1) {
+                db.execSQL("ALTER TABLE " + DatabaseHelper.CONVERSATIONS_TABLE
+                        + " ADD COLUMN " + DatabaseHelper.ConversationColumns.IS_PRIVATE
+                        + " INT DEFAULT(0)");
+            }
+        } catch (Exception ignored) {
+
+        } finally {
+            if (null != cursor && !cursor.isClosed()) {
+                cursor.close();
+            }
+        }
+
+
+        try {
+            db.execSQL(PrivateMmsEntry.CREATE_MMS_TABLE_SQL);
+            db.execSQL(PrivateSmsEntry.CREATE_SMS_TABLE_SQL);
+            db.execSQL(PrivateContactsManager.CREATE_PRIVATE_CONTACTS_TABLE_SQL);
+            db.execSQL(PrivateMmsEntry.Addr.CREATE_MMS_ADDRESS_TABLE_SQL);
+        } catch (Exception e) {
+        }
+        return 4;
     }
 
     /**
