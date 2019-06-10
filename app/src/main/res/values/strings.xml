@@ -1243,6 +1243,6 @@
     <string name="invite_friends_better_than_system_auto_link_content">https://go.onelink.me/app/aa04cdd0</string>
     <string name="invite_friends_help_get_reward_auto_link_content">https://go.onelink.me/app/7afeac49</string>
 
-    <string name="invite_friends_success_toast">Invite Success</string>
+    <string name="invite_friends_success_toast">Invite success</string>
     
 </resources>
