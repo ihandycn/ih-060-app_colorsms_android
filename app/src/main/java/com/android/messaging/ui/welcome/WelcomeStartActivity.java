@@ -98,6 +98,7 @@ public class WelcomeStartActivity extends AppCompatActivity implements View.OnCl
                     Factory.get().onDefaultSmsSetAndPermissionsGranted();
                     Navigations.startActivitySafely(WelcomeStartActivity.this,
                             new Intent(WelcomeStartActivity.this, WelcomeChooseThemeActivity.class));
+                    overridePendingTransition(R.anim.slide_in_from_right_and_fade, R.anim.anim_null);
                     Toasts.showToast(R.string.set_as_default_success);
                     BugleAnalytics.logEvent("Start_SetAsDefault_Success", true, true, "step", "detail page");
                     finish();
@@ -548,6 +549,7 @@ public class WelcomeStartActivity extends AppCompatActivity implements View.OnCl
                 Intent intent = new Intent(WelcomeStartActivity.this, WelcomeSetAsDefaultActivity.class);
                 intent.putExtra(WelcomeSetAsDefaultActivity.EXTRA_FROM_WELCOME_START, true);
                 Navigations.startActivitySafely(WelcomeStartActivity.this, intent);
+                overridePendingTransition(R.anim.slide_in_from_right_and_fade, R.anim.anim_null);
                 finish();
             }
         }

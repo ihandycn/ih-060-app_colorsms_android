@@ -68,7 +68,6 @@ import com.android.messaging.ui.dialog.FiveStarRateDialog;
 import com.android.messaging.ui.emoji.EmojiStoreActivity;
 import com.android.messaging.ui.invitefriends.InviteFriendsActivity;
 import com.android.messaging.ui.invitefriends.InviteFriendsConditions;
-import com.android.messaging.ui.invitefriends.SelectFriendsToInviteActivity;
 import com.android.messaging.ui.messagebox.MessageBoxActivity;
 import com.android.messaging.ui.signature.SignatureSettingDialog;
 import com.android.messaging.ui.wallpaper.WallpaperChooserItem;
@@ -81,6 +80,7 @@ import com.android.messaging.util.CommonUtils;
 import com.android.messaging.util.CreateShortcutUtils;
 import com.android.messaging.util.MediaUtil;
 import com.android.messaging.util.Trace;
+import com.android.messaging.util.TransitionUtils;
 import com.ihs.app.framework.HSApplication;
 import com.ihs.commons.config.HSConfig;
 import com.ihs.commons.notificationcenter.HSGlobalNotificationCenter;
@@ -208,7 +208,7 @@ public class ConversationListActivity extends AbstractConversationListActivity
             if (CommonUtils.isNewUser() && DateUtils.isToday(CommonUtils.getAppInstallTimeMillis())) {
                 BugleAnalytics.logEvent("SMS_Messages_Show_NewUser", true);
             }
-            if (HSApplication.getFirstLaunchInfo().appVersionCode >= 48){
+            if (HSApplication.getFirstLaunchInfo().appVersionCode >= 48) {
                 BugleAnalytics.logEvent("SMS_Messages_Show_NewUser", true, "SendDelay", "" + SendDelaySettings.getSendDelayInSecs());
             }
         }
@@ -343,6 +343,7 @@ public class ConversationListActivity extends AbstractConversationListActivity
         if (Preferences.getDefault().getBoolean(BuglePrefsKeys.PREFS_KEY_THEME_CLEARED_TO_DEFAULT, false)) {
             Navigations.startActivitySafely(ConversationListActivity.this,
                     new Intent(ConversationListActivity.this, ThemeUpgradeActivity.class));
+            overridePendingTransition(R.anim.slide_in_from_right_and_fade, R.anim.anim_null);
             Preferences.getDefault().putBoolean(BuglePrefsKeys.PREFS_KEY_THEME_CLEARED_TO_DEFAULT, false);
         }
         mIsActivityVisible = true;
@@ -408,8 +409,8 @@ public class ConversationListActivity extends AbstractConversationListActivity
                 switch (drawerClickIndex) {
                     case DRAWER_INDEX_THEME:
                         BugleAnalytics.logEvent("Menu_Theme_Click");
-                        //Navigations.startActivity(ConversationListActivity.this, ChooseThemeActivity.class);
                         Navigations.startActivity(ConversationListActivity.this, ThemeSelectActivity.class);
+                        overridePendingTransition(R.anim.slide_in_from_right_and_fade, R.anim.anim_null);
                         navigationContent.findViewById(R.id.navigation_item_theme_new_text).setVisibility(View.GONE);
                         break;
 
@@ -419,6 +420,7 @@ public class ConversationListActivity extends AbstractConversationListActivity
                             BugleAnalytics.logEvent("Menu_ThemeColor_Click_NewUser", true);
                         }
                         Navigations.startActivity(ConversationListActivity.this, ThemeColorSelectActivity.class);
+                        overridePendingTransition(R.anim.slide_in_from_right_and_fade, R.anim.anim_null);
                         navigationContent.findViewById(R.id.navigation_item_theme_color_new_text).setVisibility(View.GONE);
                         break;
                     case DRAWER_INDEX_BUBBLE:
@@ -432,6 +434,7 @@ public class ConversationListActivity extends AbstractConversationListActivity
                                     "asd", "asd", "asd", "asd", "heihei", 123L));
                         } else {
                             Navigations.startActivity(ConversationListActivity.this, CustomBubblesActivity.class);
+                            overridePendingTransition(R.anim.slide_in_from_right_and_fade, R.anim.anim_null);
                         }
                         break;
                     case DRAWER_INDEX_CHAT_BACKGROUND:
@@ -440,16 +443,15 @@ public class ConversationListActivity extends AbstractConversationListActivity
                             BugleAnalytics.logEvent("Menu_ChatBackground_Click_NewUser", true);
                         }
                         WallpaperPreviewActivity.startWallpaperPreview(ConversationListActivity.this);
+                        overridePendingTransition(R.anim.slide_in_from_right_and_fade, R.anim.anim_null);
                         navigationContent.findViewById(R.id.navigation_item_background_new_text).setVisibility(View.GONE);
                         break;
                     case DRAWER_INDEX_CHANGE_FONT:
                         BugleAnalytics.logEvent("Menu_ChangeFont_Click");
-                        Intent intent = new Intent(ConversationListActivity.this, ChangeFontActivity.class);
+                        Navigations.startActivity(ConversationListActivity.this, ChangeFontActivity.class);
+                        overridePendingTransition(R.anim.slide_in_from_right_and_fade, R.anim.anim_null);
                         navigationContent.findViewById(R.id.navigation_item_font_new_text).setVisibility(View.GONE);
-                        startActivity(intent);
                         break;
-
-
                     case DRAWER_INDEX_PRIVACY_BOX:
                         BugleAnalytics.logEvent("Menu_PrivateBox_Click", true);
                         if (PrivateBoxSettings.isAnyPasswordSet()) {
@@ -457,9 +459,11 @@ public class ConversationListActivity extends AbstractConversationListActivity
                             intent1.putExtra(SelfVerifyActivity.INTENT_KEY_ACTIVITY_ENTRANCE,
                                     SelfVerifyActivity.ENTRANCE_MENU);
                             Navigations.startActivitySafely(ConversationListActivity.this, intent1);
+                            overridePendingTransition(R.anim.slide_in_from_right_and_fade, R.anim.anim_null);
                         } else {
                             Navigations.startActivitySafely(ConversationListActivity.this,
                                     new Intent(ConversationListActivity.this, PrivateBoxSetPasswordActivity.class));
+                            overridePendingTransition(R.anim.slide_in_from_right_and_fade, R.anim.anim_null);
                         }
                         Preferences.getDefault().putBoolean(PREF_KEY_PRIVATE_BOX_CLICKED, true);
                         navigationContent.findViewById(R.id.navigation_item_private_box_new_text).setVisibility(View.GONE);
@@ -480,7 +484,7 @@ public class ConversationListActivity extends AbstractConversationListActivity
                         BugleAnalytics.logEvent("Menu_InviteFriends_Click");
                         Intent inviteFriendsIntent = new Intent(ConversationListActivity.this, InviteFriendsActivity.class);
                         inviteFriendsIntent.putExtra(INTENT_KEY_FROM, "menu");
-                        startActivity(inviteFriendsIntent);
+                        startActivity(inviteFriendsIntent, TransitionUtils.getTransitionInBundle(ConversationListActivity.this));
                         break;
                     case DRAWER_INDEX_RATE:
                         FiveStarRateDialog.showFiveStarFromSetting(ConversationListActivity.this);
@@ -709,6 +713,7 @@ public class ConversationListActivity extends AbstractConversationListActivity
                         Intent intent = new Intent(ConversationListActivity.this, PrivateBoxSetPasswordActivity.class);
                         intent.putExtra(INTENT_KEY_PRIVATE_CONVERSATION_LIST, conversations.toArray(new String[conversations.size()]));
                         Navigations.startActivitySafely(ConversationListActivity.this, intent);
+                        overridePendingTransition(R.anim.slide_in_from_right_and_fade, R.anim.anim_null);
                     })
                     .setNegativeButton(R.string.delete_conversation_decline_button, null)
                     .show();

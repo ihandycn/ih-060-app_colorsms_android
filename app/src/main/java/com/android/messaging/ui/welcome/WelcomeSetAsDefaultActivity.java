@@ -37,6 +37,7 @@ public class WelcomeSetAsDefaultActivity extends AppCompatActivity {
                 if (!Preferences.getDefault().contains(WelcomeChooseThemeActivity.PREF_KEY_WELCOME_CHOOSE_THEME_SHOWN)) {
                     Navigations.startActivitySafely(WelcomeSetAsDefaultActivity.this,
                             new Intent(WelcomeSetAsDefaultActivity.this, WelcomeChooseThemeActivity.class));
+                    overridePendingTransition(R.anim.slide_in_from_right_and_fade, R.anim.anim_null);
                 } else {
                     UIIntents.get().launchConversationListActivity(WelcomeSetAsDefaultActivity.this);
                 }

@@ -120,7 +120,7 @@ public abstract class VerifyActivity extends BaseActivity implements INotificati
     protected void onUnlockSucceed() {
         setResult(RESULT_OK);
 
-        overridePendingTransition(0, R.anim.fade_out_long);
+        overridePendingTransition(0, R.anim.fade_out_short);
     }
 
     @Override
@@ -159,6 +159,7 @@ public abstract class VerifyActivity extends BaseActivity implements INotificati
             startMain.addCategory(Intent.CATEGORY_HOME);
             startMain.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             Navigations.startActivitySafely(this, startMain);
+            overridePendingTransition(R.anim.slide_in_from_right_and_fade, R.anim.anim_null);
         }
         return super.onKeyDown(keyCode, event);
     }

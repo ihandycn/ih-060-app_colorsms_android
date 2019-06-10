@@ -27,6 +27,7 @@ import com.android.messaging.R;
 import com.android.messaging.feedback.FeedbackActivity;
 import com.android.messaging.util.BugleAnalytics;
 import com.android.messaging.util.CommonUtils;
+import com.android.messaging.util.TransitionUtils;
 import com.android.messaging.util.ViewUtils;
 import com.ihs.app.framework.HSApplication;
 import com.ihs.app.utils.HSMarketUtils;
@@ -248,7 +249,7 @@ public class FiveStarRateDialog extends DefaultButtonDialog2 implements View.OnC
             } else {
                 Intent intent = new Intent(mActivity, FeedbackActivity.class);
                 intent.putExtra(FeedbackActivity.INTENT_KEY_LAUNCH_FROM, FeedbackActivity.LAUNCH_FROM_RATING);
-                mActivity.startActivity(intent);
+                mActivity.startActivity(intent, TransitionUtils.getTransitionInBundle(mActivity));
             }
             haveDone();
             super.onClickPositiveButton(v);

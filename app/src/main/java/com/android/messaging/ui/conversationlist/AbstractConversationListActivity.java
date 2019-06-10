@@ -21,7 +21,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.net.Uri;
-import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.text.BidiFormatter;
 import android.support.v4.text.TextDirectionHeuristicsCompat;
@@ -276,9 +275,6 @@ public abstract class AbstractConversationListActivity extends BugleActionBarAct
             mConversationListFragment.updateUi();
         } else {
             final String conversationId = conversationListItemData.getConversationId();
-            Bundle sceneTransitionAnimationOptions = null;
-            boolean hasCustomTransitions = false;
-
             final String conversationName = conversationListItemData.getName();
             // RTL : To format conversation title if it happens to be phone numbers.
             final BidiFormatter bidiFormatter = BidiFormatter.getInstance();
@@ -292,10 +288,7 @@ public abstract class AbstractConversationListActivity extends BugleActionBarAct
                     TextDirectionHeuristicsCompat.LTR);
 
             UIIntents.get().launchConversationActivity(
-                    this, conversationId, null,
-                    sceneTransitionAnimationOptions,
-                    hasCustomTransitions, formattedName, false);
-            overridePendingTransition(R.anim.fade_in_long, R.anim.anim_null);
+                    this, conversationId, null, formattedName, false);
             BugleAnalytics.logEvent("SMS_Messages_Message_Click", true, true,
                     "Type", conversationListItemData.isPinned() ? "pin" : "unpin");
         }
@@ -303,7 +296,6 @@ public abstract class AbstractConversationListActivity extends BugleActionBarAct
 
     @Override
     public void onCreateConversationClick() {
-//        UIIntents.get().launchCreateNewConversationActivity(this, null);
         Intent intent = new Intent(this, ContactPickerActivity.class);
         startActivity(intent);
     }

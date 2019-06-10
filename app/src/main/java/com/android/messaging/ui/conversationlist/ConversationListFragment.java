@@ -348,9 +348,11 @@ public class ConversationListFragment extends Fragment implements ConversationLi
                     intent.putExtra(SelfVerifyActivity.INTENT_KEY_ACTIVITY_ENTRANCE,
                             SelfVerifyActivity.ENTRANCE_CREATE_ICON);
                     Navigations.startActivitySafely(getActivity(), intent);
+                    getActivity().overridePendingTransition(R.anim.slide_in_from_right_and_fade, R.anim.anim_null);
                 } else {
                     Navigations.startActivitySafely(getActivity(),
                             new Intent(getActivity(), PrivateBoxSetPasswordActivity.class));
+                    getActivity().overridePendingTransition(R.anim.slide_in_from_right_and_fade, R.anim.anim_null);
                 }
                 return true;
             });

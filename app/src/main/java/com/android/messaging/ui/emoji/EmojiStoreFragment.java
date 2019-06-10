@@ -28,6 +28,7 @@ import com.android.messaging.ui.emoji.utils.EmojiConfig;
 import com.android.messaging.ui.emoji.utils.EmojiManager;
 import com.android.messaging.ui.view.RecyclerViewWidthSlideListener;
 import com.android.messaging.util.BugleAnalytics;
+import com.android.messaging.util.TransitionUtils;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.ihs.commons.notificationcenter.HSGlobalNotificationCenter;
 import com.ihs.commons.notificationcenter.INotificationObserver;
@@ -265,8 +266,7 @@ public class EmojiStoreFragment extends Fragment implements INotificationObserve
                 storeViewHolder.itemView.setOnClickListener(v -> {
                     BugleAnalytics.logEvent("SMSEmoji_ChatEmoji_StoreList_Click", true, "type", "Magic Emoji");
                     Intent intent = new Intent(getActivity(), EmojiLottieDetailActivity.class);
-                    getActivity().startActivity(intent);
-
+                    getActivity().startActivity(intent, TransitionUtils.getTransitionInBundle(getActivity()));
                 });
             }
 

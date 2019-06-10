@@ -298,11 +298,6 @@ public class ConversationActivity extends BugleActionBarActivity
         invalidateActionBar();
     }
 
-    @Override public void finish() {
-        super.finish();
-        overridePendingTransition(R.anim.anim_null, R.anim.fade_out_long);
-    }
-
     @Override
     protected void onDestroy() {
         super.onDestroy();

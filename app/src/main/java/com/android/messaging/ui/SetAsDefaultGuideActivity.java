@@ -38,7 +38,7 @@ public class SetAsDefaultGuideActivity extends AppCompatActivity {
         intent.putExtra("from", type);
         Navigations.startActivitySafely(context, intent);
         if (context instanceof Activity) {
-            ((Activity) context).overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
+            ((Activity) context).overridePendingTransition(R.anim.slide_in_from_right_and_fade, R.anim.anim_null);
         }
     }
 
@@ -128,6 +128,7 @@ public class SetAsDefaultGuideActivity extends AppCompatActivity {
                             .setComponent(new ComponentName(this, ConversationListActivity.class))
                             .setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_RESET_TASK_IF_NEEDED);
                     Navigations.startActivitySafely(this, intent);
+                    overridePendingTransition(R.anim.slide_in_from_right_and_fade, R.anim.anim_null);
                 }
             } else {
                 Toasts.showToast(R.string.welcome_set_default_failed_toast, Toast.LENGTH_LONG);
