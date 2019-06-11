@@ -33,10 +33,8 @@ import java.util.List;
 
 public class SelectFriendsToInviteActivity extends AppCompatActivity {
 
-
     private ContactsSelectAdapter mAdapter;
     private TextView mActionButton;
-
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
