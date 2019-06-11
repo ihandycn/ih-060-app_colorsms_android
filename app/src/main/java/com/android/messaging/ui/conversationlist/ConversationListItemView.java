@@ -45,7 +45,6 @@ import com.android.messaging.datamodel.media.UriImageRequestDescriptor;
 import com.android.messaging.font.FontUtils;
 import com.android.messaging.sms.MmsUtils;
 import com.android.messaging.ui.AsyncImageView;
-import com.android.messaging.ui.AudioAttachmentView;
 import com.android.messaging.ui.ContactIconView;
 import com.android.messaging.ui.SnackBar;
 import com.android.messaging.ui.SnackBarInteraction;
@@ -144,7 +143,6 @@ public class ConversationListItemView extends FrameLayout implements OnClickList
     private ImageView mCrossSwipeArchiveLeftImageView;
     private ImageView mCrossSwipeArchiveRightImageView;
     private AsyncImageView mImagePreviewView;
-    private AudioAttachmentView mAudioAttachmentView;
     private HostInterface mHostInterface;
     private TextView mUnreadMessagesCountView;
 
@@ -180,7 +178,6 @@ public class ConversationListItemView extends FrameLayout implements OnClickList
         mCrossSwipeArchiveRightImageView =
                 findViewById(R.id.crossSwipeArchiveIconRight);
         mImagePreviewView = findViewById(R.id.conversation_image_preview);
-        mAudioAttachmentView = findViewById(R.id.audio_attachment_view);
         mUnreadMessagesCountView = findViewById(R.id.conversation_unread_messages_count);
 
         mConversationNameView.addOnLayoutChangeListener(this);
@@ -376,13 +373,8 @@ public class ConversationListItemView extends FrameLayout implements OnClickList
         OnClickListener previewClickListener = null;
         Uri previewImageUri = null;
         int previewImageVisibility = GONE;
-        int audioPreviewVisibility = GONE;
         if (!shouldShowUnreadMsgCount && previewUri != null && !TextUtils.isEmpty(previewContentType)) {
-            if (ContentType.isAudioType(previewContentType)) {
-                boolean incoming = !(mData.getShowDraft() || mData.getIsMessageTypeOutgoing());
-                mAudioAttachmentView.bind(previewUri, incoming, false);
-                audioPreviewVisibility = VISIBLE;
-            } else if (ContentType.isVideoType(previewContentType)) {
+            if (ContentType.isVideoType(previewContentType)) {
                 previewImageUri = UriUtil.getUriForResourceId(
                         getContext(), R.drawable.ic_preview_play);
                 previewClickListener = fullScreenPreviewClickListener;
@@ -414,10 +406,8 @@ public class ConversationListItemView extends FrameLayout implements OnClickList
         mImagePreviewView.setOnLongClickListener(this);
         mImagePreviewView.setVisibility(previewImageVisibility);
         mImagePreviewView.setOnClickListener(previewClickListener);
-        mAudioAttachmentView.setOnLongClickListener(this);
-        mAudioAttachmentView.setVisibility(audioPreviewVisibility);
 
-        if (previewImageVisibility == View.VISIBLE || audioPreviewVisibility == VISIBLE) {
+        if (previewImageVisibility == View.VISIBLE) {
             mTimestampTextView.setVisibility(GONE);
         } else {
             mTimestampTextView.setVisibility(VISIBLE);

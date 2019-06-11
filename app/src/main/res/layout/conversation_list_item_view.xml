@@ -233,15 +233,6 @@
                     android:layout_gravity="center_vertical"
                     app:cornerRadius="@dimen/conversation_list_image_preview_corner_radius"/>
 
-                <com.android.messaging.ui.AudioAttachmentView
-                    android:id="@+id/audio_attachment_view"
-                    android:layout_width="@dimen/conversation_list_image_preview_size"
-                    android:layout_height="@dimen/conversation_list_image_preview_size"
-                    android:background="@android:color/transparent"
-                    android:visibility="gone"
-                    android:layout_gravity="center_vertical"
-                    app:layoutMode="subcompact"/>
-
                 <com.android.messaging.ui.view.MessagesTextView
                     android:id="@+id/conversation_timestamp"
                     style="@style/ConversationListItemViewTextTimeStampStyle"
