@@ -375,7 +375,7 @@ public class UIIntentsImpl extends UIIntents {
 
         builder.setDisplayThumbsFullScreen(false);
         builder.setMaxInitialScale(8);
-        activity.startActivity(builder.build(), TransitionUtils.getTransitionInBundle(activity));
+        activity.startActivity(builder.build());
     }
 
     @Override
