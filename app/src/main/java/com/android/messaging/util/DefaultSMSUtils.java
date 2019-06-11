@@ -26,7 +26,7 @@ public class DefaultSMSUtils {
     public static boolean isDefaultSmsApp() {
         if (!OsUtil.isAtLeastKLP()) {
             return true;
-        }
+        } 
 
         if ((cacheValidationLock != null)
                 || sHandler.hasMessages(EVENT_CACHE_VALIDATION_PERIOD)) {
