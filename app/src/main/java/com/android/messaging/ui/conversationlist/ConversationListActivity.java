@@ -333,6 +333,14 @@ public class ConversationListActivity extends AbstractConversationListActivity
             Threads.postOnMainThreadDelayed(() -> showEmojiStoreGuide(), 500);
         }
         showThemeUpgradeDialog();
+
+        if (drawerLayout != null) {
+            View v = drawerLayout.findViewById(R.id.navigation_item_backup_restore_new_text);
+            if (v.getVisibility() == View.VISIBLE
+                    && Preferences.getDefault().getBoolean(BackupRestoreActivity.PREF_KEY_BACKUP_ACTIVITY_SHOWN, false)) {
+                v.setVisibility(View.GONE);
+            }
+        }
     }
 
     private void showThemeUpgradeDialog() {
