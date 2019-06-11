@@ -43,7 +43,6 @@ import com.superapps.util.Toasts;
 
 import java.util.ArrayList;
 
-import static com.android.messaging.ui.invitefriends.InviteFriendsConditions.INVITE_FRIENDS_DIALOG_SHOW_COUNT;
 
 public class InviteFriendsActivity extends BaseActivity
         implements ConversationListData.ConversationListDataListener {
@@ -83,22 +82,20 @@ public class InviteFriendsActivity extends BaseActivity
                 return;
             }
 
-            String message = mDescription + "\n" + InviteFriendsTest.getSendLink();
+            String message = mDescription + "\n" + getString(R.string.invite_friends_default_auto_link_content);
             for (CallAssistantUtils.ContactInfo contactInfo : mAdapter.getContactInfos()) {
                 if (!TextUtils.isEmpty(contactInfo.number)) {
                     InsertNewMessageAction.insertNewMessage(ParticipantData.DEFAULT_SELF_SUB_ID, contactInfo.number,
                             message, "");
                 }
-                InviteFriendsTest.logInviteSmsSent();
-                BugleAnalytics.logEvent("Invite_SMS_Send", "link", InviteFriendsTest.getSendTestType(),
-                        "isModified", "" + !TextUtils.equals(mDescription, InviteFriendsTest.getSendDescription()));
+                BugleAnalytics.logEvent("Invite_SMS_Send",
+                        "isModified", "" + !TextUtils.equals(mDescription, getString(R.string.invite_friends_invite_default_content)));
             }
             Toasts.showToast(R.string.invite_friends_success_toast);
 
             BugleAnalytics.logEvent("Invite_SendPage_Invite_Click",
                     "from", getIntent().getStringExtra(INTENT_KEY_FROM),
                     "num", String.valueOf(mAdapter.getItemCount() - 1));
-            InviteFriendsTest.logInviteFriendsClick();
             finish();
         });
 
@@ -106,9 +103,7 @@ public class InviteFriendsActivity extends BaseActivity
     }
 
     private void initEditText() {
-        mDescription = InviteFriendsTest.getSendDescription();
-        MessagesTextView autoLinkMessagesTextView = findViewById(R.id.invite_friends_message_auto_link);
-        autoLinkMessagesTextView.setText(InviteFriendsTest.getSendLink());
+        mDescription = getString(R.string.invite_friends_invite_default_content);
         mEditText = findViewById(R.id.invite_friends_message_text);
         mEditText.setTypeface(FontUtils.getTypeface());
         mEditText.setText(mDescription);
@@ -188,7 +183,6 @@ public class InviteFriendsActivity extends BaseActivity
     @Override
     protected void onPause() {
         super.onPause();
-        Preferences.get(BuglePrefs.SHARED_PREFERENCES_NAME).putInt(INVITE_FRIENDS_DIALOG_SHOW_COUNT, Integer.MAX_VALUE);
     }
 
     @Override

@@ -13,7 +13,6 @@ import android.widget.TextView;
 import com.android.messaging.BaseActivity;
 import com.android.messaging.R;
 import com.android.messaging.ui.UIIntents;
-import com.android.messaging.ui.invitefriends.InviteFriendsConditions;
 import com.android.messaging.util.BugleActivityUtil;
 import com.android.messaging.util.UiUtils;
 import com.superapps.util.Navigations;
@@ -55,11 +54,6 @@ public class ThemePreviewActivity extends BaseActivity {
 
         pagerView.setOnApplyClickListener(v -> {
             Toasts.showToast(R.string.apply_theme_success);
-
-            Threads.postOnMainThreadDelayed(() -> {
-                InviteFriendsConditions.showInviteFriendsDialogIfProper(this, InviteFriendsConditions.CHANGE_THEME);
-            }, 4000);
-
             Threads.postOnMainThreadDelayed(() -> {
                 UIIntents.get().launchConversationListActivity(this);
                 finish();

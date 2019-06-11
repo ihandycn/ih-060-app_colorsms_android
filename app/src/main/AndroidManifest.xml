@@ -803,9 +803,5 @@
         <activity
             android:name=".ui.invitefriends.SelectFriendsToInviteActivity"
             android:theme="@style/SettingsActivity"/>
-
-        <activity
-            android:name=".ui.invitefriends.InviteFriendsRewardDialogActivity"
-            android:theme="@style/Theme.AppCompat.Translucent"/>
     </application>
 </manifest>

@@ -68,7 +68,6 @@ import com.android.messaging.ui.customize.theme.ThemeUtils;
 import com.android.messaging.ui.dialog.FiveStarRateDialog;
 import com.android.messaging.ui.emoji.EmojiStoreActivity;
 import com.android.messaging.ui.invitefriends.InviteFriendsActivity;
-import com.android.messaging.ui.invitefriends.InviteFriendsConditions;
 import com.android.messaging.ui.messagebox.MessageBoxActivity;
 import com.android.messaging.ui.signature.SignatureSettingDialog;
 import com.android.messaging.ui.wallpaper.WallpaperChooserItem;
@@ -382,7 +381,6 @@ public class ConversationListActivity extends AbstractConversationListActivity
             Preferences.getDefault().putBoolean(BuglePrefsKeys.PREFS_KEY_THEME_CLEARED_TO_DEFAULT, false);
         }
         mIsActivityVisible = true;
-        InviteFriendsConditions.showInviteFriendsDialogIfProper(this, InviteFriendsConditions.BACK_TO_MAIN_PAGE);
     }
 
     @Override

@@ -71,7 +71,6 @@ import com.android.messaging.ui.VideoThumbnailView;
 import com.android.messaging.ui.customize.AvatarBgDrawables;
 import com.android.messaging.ui.customize.ConversationColors;
 import com.android.messaging.ui.customize.PrimaryColors;
-import com.android.messaging.ui.invitefriends.InviteFriendsTest;
 import com.android.messaging.ui.wallpaper.WallpaperManager;
 import com.android.messaging.util.AccessibilityUtil;
 import com.android.messaging.util.Assert;
@@ -578,7 +577,7 @@ public class ConversationMessageView extends RelativeLayout implements View.OnCl
         String youtubeThumbnailUrl = null;
         String originalYoutubeLink = null;
 
-        String sendLink = InviteFriendsTest.getSendLink();
+        String sendLink = getResources().getString(R.string.invite_friends_default_auto_link_content);
 
         boolean hasAppsFlyerPromotionUrl = false;
         if (mMessageTextHasLinks && imageParts.size() == 0) {
@@ -618,7 +617,7 @@ public class ConversationMessageView extends RelativeLayout implements View.OnCl
                                 @Override
                                 public void onClick(@NonNull View view) {
                                     UIIntents.get().launchBrowserForUrl(getContext(), urlSpan.getURL());
-                                    BugleAnalytics.logEvent("Invite_Url_Click", "type", InviteFriendsTest.getSendTestType());
+                                    BugleAnalytics.logEvent("Invite_Url_Click");
                                 }
                             };
                             style.setSpan(clickableSpan, sp.getSpanStart(urlSpan),

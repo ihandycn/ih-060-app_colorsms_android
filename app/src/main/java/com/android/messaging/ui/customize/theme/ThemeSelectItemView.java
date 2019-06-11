@@ -2,12 +2,10 @@ package com.android.messaging.ui.customize.theme;
 
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
-import android.app.Activity;
 import android.content.Context;
 import android.support.annotation.Nullable;
 import android.support.constraint.ConstraintLayout;
 import android.support.v4.view.animation.PathInterpolatorCompat;
-import android.text.format.DateUtils;
 import android.util.AttributeSet;
 import android.view.View;
 import android.view.animation.Interpolator;
@@ -17,7 +15,6 @@ import android.widget.TextView;
 import com.airbnb.lottie.LottieAnimationView;
 import com.android.messaging.R;
 import com.android.messaging.glide.GlideApp;
-import com.android.messaging.ui.invitefriends.InviteFriendsConditions;
 import com.android.messaging.util.BugleAnalytics;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.superapps.util.Threads;
@@ -222,7 +219,6 @@ public class ThemeSelectItemView extends ConstraintLayout implements ThemeUtils.
         BugleAnalytics.logEvent("Customize_ThemeCenter_Theme_Apply", true,
                 "theme", mThemeInfo.mThemeKey, "from", "list");
 
-        Threads.postOnMainThreadDelayed(() -> InviteFriendsConditions.showInviteFriendsDialogIfProper((Activity) getContext(), InviteFriendsConditions.CHANGE_THEME), 4000);
     }
 
     @Override
