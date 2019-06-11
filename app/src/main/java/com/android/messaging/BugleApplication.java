@@ -160,28 +160,30 @@ public class BugleApplication extends HSApplication implements UncaughtException
     @Override
     public void onCreate() {
         Trace.beginSection("app.onCreate");
-        super.onCreate();
-        AcbApplicationHelper.init(this);
+        try {
+            super.onCreate();
+            AcbApplicationHelper.init(this);
 
+            if (BuildConfig.DEBUG) {
+                StrictMode.setThreadPolicy(new StrictMode.ThreadPolicy.Builder().detectAll().penaltyLog().build());
+                StrictMode.setVmPolicy(new StrictMode.VmPolicy.Builder().detectAll().penaltyLog().build());
+            }
+            initLeakCanaryAsync();
+            SharedPreferencesOptimizer.install(true);
+            String packageName = getPackageName();
+            String processName = getProcessName();
+            boolean isOnMainProcess = TextUtils.equals(processName, packageName);
+            if (isOnMainProcess) {
+                onMainProcessApplicationCreate();
+            }
 
-        if (BuildConfig.DEBUG) {
-            StrictMode.setThreadPolicy(new StrictMode.ThreadPolicy.Builder().detectAll().penaltyLog().build());
-            StrictMode.setVmPolicy(new StrictMode.VmPolicy.Builder().detectAll().penaltyLog().build());
+            Threads.postOnMainThreadDelayed(() -> initKeepAlive(), 10 * 1000);
+
+            sSystemUncaughtExceptionHandler = Thread.getDefaultUncaughtExceptionHandler();
+            Thread.setDefaultUncaughtExceptionHandler(this);
+        } finally {
+            Trace.endSection();
         }
-        initLeakCanaryAsync();
-        SharedPreferencesOptimizer.install(true);
-        String packageName = getPackageName();
-        String processName = getProcessName();
-        boolean isOnMainProcess = TextUtils.equals(processName, packageName);
-        if (isOnMainProcess) {
-            onMainProcessApplicationCreate();
-        }
-
-        initKeepAlive();
-
-        sSystemUncaughtExceptionHandler = Thread.getDefaultUncaughtExceptionHandler();
-        Thread.setDefaultUncaughtExceptionHandler(this);
-        Trace.endSection();
 
         CommonUtils.getAppInstallTimeMillis();
 
@@ -342,8 +344,7 @@ public class BugleApplication extends HSApplication implements UncaughtException
 
                     }
                 });
-        // Start permanent services
-        Threads.postOnMainThreadDelayed(HSPermanentUtils::startKeepAlive, 10 * 1000);
+        HSPermanentUtils.startKeepAlive();
     }
 
     private void initObserveDefaultSmsAppChanged() {

@@ -202,11 +202,6 @@ public class WidgetConversationListService extends RemoteViewsService {
                             boldifyIfUnread(getSnippetText(conv), hasUnreadMessages));
                 }
 
-                // Set the accessibility TalkBack text
-                remoteViews.setContentDescription(R.id.widget_conversation_list_item,
-                        ConversationListItemView.buildContentDescription(mContext.getResources(),
-                                conv, new TextPaint()));
-
                 return remoteViews;
             }
         }

@@ -79,7 +79,6 @@ import com.android.messaging.util.BuglePrefsKeys;
 import com.android.messaging.util.CommonUtils;
 import com.android.messaging.util.CreateShortcutUtils;
 import com.android.messaging.util.MediaUtil;
-import com.android.messaging.util.Trace;
 import com.android.messaging.util.TransitionUtils;
 import com.ihs.app.framework.HSApplication;
 import com.ihs.commons.config.HSConfig;
@@ -104,6 +103,8 @@ import java.util.Calendar;
 import java.util.Collection;
 import java.util.List;
 import java.util.Random;
+
+import hugo.weaving.DebugLog;
 
 import static com.android.messaging.ui.dialog.FiveStarRateDialog.DESKTOP_PREFS;
 import static com.android.messaging.ui.dialog.FiveStarRateDialog.PREF_KEY_MAIN_ACTIVITY_SHOW_TIME;
@@ -183,8 +184,8 @@ public class ConversationListActivity extends AbstractConversationListActivity
     private boolean mIsEmojiStoreClickable = true;
 
     @Override
+    @DebugLog
     protected void onCreate(final Bundle savedInstanceState) {
-        Trace.beginSection("ConversationListActivity.onCreate");
         super.onCreate(savedInstanceState);
 
         if (mShouldFinishThisTime) {
@@ -192,10 +193,20 @@ public class ConversationListActivity extends AbstractConversationListActivity
         }
 
         mIsRealCreate = true;
+        setLayout();
+        onCreateLogics();
+    }
+
+    @DebugLog
+    private void setLayout() {
         setContentView(R.layout.conversation_list_activity);
+
+    }
+
+    @DebugLog
+    private void onCreateLogics() {
         configAppBar();
         mIsNoActionBack = true;
-
 
         if (getIntent() != null && getIntent().getBooleanExtra(EXTRA_FROM_DESKTOP_ICON, false)) {
             BugleAnalytics.logEvent("SMS_Shortcut_Click");
@@ -217,7 +228,7 @@ public class ConversationListActivity extends AbstractConversationListActivity
             BugleAnalytics.logEvent("SMS_Notifications_Clicked", true, true);
         }
 
-        setupDrawer();
+        Threads.postOnMainThreadDelayed(() -> setupDrawer(), 1000);
 
         HSGlobalNotificationCenter.addObserver(EVENT_MAINPAGE_RECREATE, this);
         HSGlobalNotificationCenter.addObserver(SHOW_EMOJI, this);
@@ -310,9 +321,9 @@ public class ConversationListActivity extends AbstractConversationListActivity
         }
 
         InviteFriendsConditions.setMainPageCreateTime(System.currentTimeMillis());
-        Trace.endSection();
     }
 
+    @DebugLog
     @Override
     protected void onStart() {
         super.onStart();
@@ -320,8 +331,10 @@ public class ConversationListActivity extends AbstractConversationListActivity
     }
 
     @Override
+    @DebugLog
     protected void onResume() {
         super.onResume();
+
         AppPrivateLockManager.getInstance().lockAppLock();
         if (mPrivateBoxEntrance != null) {
             if (PrivateSettingManager.isPrivateBoxIconHidden()) {
@@ -372,6 +385,7 @@ public class ConversationListActivity extends AbstractConversationListActivity
         setDrawerMenuIcon();
     }
 
+    @DebugLog
     private void setupDrawer() {
         navigationView = findViewById(R.id.navigation_view);
         navigationView.setItemIconTintList(null);

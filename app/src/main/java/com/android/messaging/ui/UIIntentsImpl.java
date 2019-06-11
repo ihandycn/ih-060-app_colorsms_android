@@ -186,7 +186,7 @@ public class UIIntentsImpl extends UIIntents {
     @Override
     public void launchConversationListActivity(final Context context) {
         final Intent intent = getConversationListActivityIntent(context);
-        context.startActivity(intent, TransitionUtils.getTransitionInBundle(context));
+        context.startActivity(intent);
     }
 
     /**
