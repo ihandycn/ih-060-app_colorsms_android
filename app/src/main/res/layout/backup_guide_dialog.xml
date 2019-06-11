@@ -20,159 +20,195 @@
         android:orientation="vertical"
         app:layout_constraintGuide_percent="0.91" />
 
-    <LinearLayout
-        android:id="@+id/backup_guide_dialog_homepage_container"
+    <com.superapps.view.RoundImageView
+        android:id="@+id/backup_guide_dialog_homepage"
         android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:layout_marginBottom="8dp"
-        android:clipChildren="false"
-        android:orientation="vertical"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="@+id/set_as_default_guideline_end"
-        app:layout_constraintStart_toStartOf="@+id/set_as_default_guideline"
-        app:layout_constraintTop_toTopOf="parent">
-
-        <com.superapps.view.RoundImageView
-            android:id="@+id/backup_guide_dialog_homepage"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:scaleType="centerCrop"
-            app:radius_leftTop="8dp"
-            app:radius_rightTop="8dp"
-            app:srcCompat="@drawable/backup_guide_homepage" />
-
-        <LinearLayout
-            android:id="@+id/linearLayout"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@drawable/backup_guide_dialog_text_background"
-            android:clipChildren="false"
-            android:orientation="vertical">
-
-            <com.android.messaging.ui.view.MessagesTextView
-                android:id="@+id/backup_guide_dialog_title"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/dialog_content_margin_left"
-                android:layout_marginTop="24.7dp"
-                android:layout_marginEnd="@dimen/dialog_content_margin_right"
-                android:includeFontPadding="false"
-                android:text="@string/backup_guide_dialog_title"
-                android:textColor="@color/text_primary_color"
-                android:textSize="18.7sp"
-                app:typeface="@string/custom_font_semibold" />
-
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="24dp"
-                android:layout_marginTop="15.3dp"
-                android:layout_marginEnd="24dp"
-                android:orientation="horizontal">
-
-                <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="13dp"
-                    android:src="@drawable/backup_guide_content_mark" />
-
-                <com.android.messaging.ui.view.MessagesTextView
-                    android:id="@+id/backup_guide_dialog_first_content"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="11dp"
-                    android:includeFontPadding="false"
-                    android:lineSpacingMultiplier="1.1"
-                    android:text="@string/backup_guide_dialog_first_content"
-                    android:textColor="@color/backup_guide_dialog_content_color"
-                    android:textSize="12.7sp"
-                    app:typeface="@string/custom_font_medium" />
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="24dp"
-                android:layout_marginTop="14.7dp"
-                android:layout_marginEnd="24dp"
-                android:orientation="horizontal">
-
-                <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="13dp"
-                    android:src="@drawable/backup_guide_content_mark" />
-
-                <com.android.messaging.ui.view.MessagesTextView
-                    android:id="@+id/backup_guide_dialog_second_content"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="11dp"
-                    android:includeFontPadding="false"
-                    android:lineSpacingMultiplier="1.1"
-                    android:text="@string/backup_guide_dialog_second_content"
-                    android:textColor="@color/backup_guide_dialog_content_color"
-                    android:textSize="12.7sp"
-                    app:typeface="@string/custom_font_medium" />
-
-            </LinearLayout>
-
-
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="24dp"
-                android:layout_marginTop="14.7dp"
-                android:layout_marginEnd="24dp"
-                android:orientation="horizontal">
-
-                <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="13dp"
-                    android:src="@drawable/backup_guide_content_mark" />
-
-                <com.android.messaging.ui.view.MessagesTextView
-                    android:id="@+id/backup_guide_dialog_third_content"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="11dp"
-                    android:includeFontPadding="false"
-                    android:lineSpacingMultiplier="1.1"
-                    android:text="@string/backup_guide_dialog_third_content"
-                    android:textColor="@color/backup_guide_dialog_content_color"
-                    android:textSize="12.7sp"
-                    app:typeface="@string/custom_font_medium" />
-
-            </LinearLayout>
-
-            <com.android.messaging.ui.view.MessagesTextView
-                android:id="@+id/backup_guide_dialog_btn"
-                android:layout_width="match_parent"
-                android:layout_height="46.7dp"
-                android:layout_marginStart="24dp"
-                android:layout_marginTop="28dp"
-                android:layout_marginEnd="24dp"
-                android:layout_marginBottom="24dp"
-                android:gravity="center"
-                android:includeFontPadding="false"
-                android:text="@string/backup_guide_dialog_button"
-                android:textAllCaps="true"
-                android:textColor="@android:color/white"
-                android:textSize="14sp"
-                app:typeface="@string/custom_font_semibold" />
-
-        </LinearLayout>
-    </LinearLayout>
+        android:layout_height="0dp"
+        android:src="@drawable/backup_guide_homepage"
+        app:layout_constraintBottom_toTopOf="@+id/linearLayout"
+        app:layout_constraintDimensionRatio="H,880:558"
+        app:layout_constraintEnd_toEndOf="@id/set_as_default_guideline_end"
+        app:layout_constraintStart_toStartOf="@id/set_as_default_guideline"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_chainStyle="packed"
+        app:radius_leftTop="8dp"
+        app:radius_rightTop="8dp" />
 
     <ImageView
         android:id="@+id/backup_guide_dialog_close"
         android:layout_width="28dp"
         android:layout_height="28dp"
-        android:padding="8dp"
-        android:layout_marginTop="5dp"
         android:layout_marginEnd="5dp"
-        app:layout_constraintEnd_toEndOf="@+id/backup_guide_dialog_homepage_container"
-        app:layout_constraintTop_toTopOf="@+id/backup_guide_dialog_homepage_container"
-        app:srcCompat="@drawable/ic_close_popup_backup_homepage" />
+        android:layout_marginTop="5dp"
+        android:padding="8dp"
+        app:layout_constraintEnd_toEndOf="@+id/backup_guide_dialog_homepage"
+        app:layout_constraintTop_toTopOf="@+id/backup_guide_dialog_homepage"
+        app:srcCompat="@drawable/ic_close_popup_backup_homepage"
+        tools:ignore="ContentDescription" />
 
+    <android.support.constraint.ConstraintLayout
+        android:id="@+id/linearLayout"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:background="@drawable/backup_guide_dialog_text_background"
+        android:clipChildren="false"
+        android:orientation="vertical"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="@id/backup_guide_dialog_homepage"
+        app:layout_constraintStart_toStartOf="@id/backup_guide_dialog_homepage"
+        app:layout_constraintTop_toBottomOf="@id/backup_guide_dialog_homepage">
+
+        <com.superapps.view.TypefacedTextView
+            android:id="@+id/backup_guide_dialog_title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="@dimen/dialog_content_margin_right"
+            android:layout_marginStart="@dimen/dialog_content_margin_left"
+            android:layout_marginTop="24.7dp"
+            android:includeFontPadding="false"
+            android:maxLines="1"
+            android:text="@string/backup_guide_dialog_title"
+            android:textColor="@color/text_primary_color"
+            android:textSize="18.7sp"
+            app:font_family_changeable="false"
+            app:layout_constraintTop_toTopOf="parent"
+            app:typeface="@string/custom_font_semibold" />
+
+        <!--line 1-->
+        <View
+            android:id="@+id/point_1"
+            android:layout_width="4dp"
+            android:layout_height="4dp"
+            android:background="@drawable/backup_guide_content_mark"
+            app:layout_constraintBottom_toBottomOf="@+id/space_1"
+            app:layout_constraintStart_toStartOf="@id/backup_guide_dialog_title"
+            app:layout_constraintTop_toTopOf="@+id/space_1" />
+
+        <com.superapps.view.TypefacedTextView
+            android:id="@+id/space_1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:includeFontPadding="false"
+            android:lineSpacingMultiplier="1.1"
+            android:text=" "
+            android:textSize="12.7sp"
+            android:visibility="invisible"
+            app:layout_constraintStart_toEndOf="@id/point_1"
+            app:layout_constraintTop_toTopOf="@+id/backup_guide_dialog_first_content"
+            app:typeface="@string/custom_font_medium"
+            tools:ignore="HardcodedText" />
+
+        <com.superapps.view.TypefacedTextView
+            android:id="@+id/backup_guide_dialog_first_content"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="6dp"
+            android:layout_marginTop="15.3dp"
+            android:includeFontPadding="false"
+            android:lineSpacingMultiplier="1.1"
+            android:text="@string/backup_guide_dialog_first_content"
+            android:textColor="@color/backup_guide_dialog_content_color"
+            android:textSize="12.7sp"
+            app:layout_constraintEnd_toEndOf="@id/backup_guide_dialog_title"
+            app:layout_constraintStart_toEndOf="@id/space_1"
+            app:layout_constraintTop_toBottomOf="@id/backup_guide_dialog_title"
+            app:typeface="@string/custom_font_medium" />
+
+        <!--line 2-->
+        <View
+            android:id="@+id/point_2"
+            android:layout_width="4dp"
+            android:layout_height="4dp"
+            android:background="@drawable/backup_guide_content_mark"
+            app:layout_constraintBottom_toBottomOf="@+id/space_2"
+            app:layout_constraintStart_toStartOf="@id/backup_guide_dialog_title"
+            app:layout_constraintTop_toTopOf="@+id/space_2" />
+
+        <com.superapps.view.TypefacedTextView
+            android:id="@+id/space_2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:includeFontPadding="false"
+            android:lineSpacingMultiplier="1.1"
+            android:text=" "
+            android:textSize="12.7sp"
+            android:visibility="invisible"
+            app:layout_constraintStart_toEndOf="@id/point_2"
+            app:layout_constraintTop_toTopOf="@+id/backup_guide_dialog_second_content"
+            app:typeface="@string/custom_font_medium"
+            tools:ignore="HardcodedText" />
+
+        <com.superapps.view.TypefacedTextView
+            android:id="@+id/backup_guide_dialog_second_content"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="6dp"
+            android:layout_marginTop="14dp"
+            android:includeFontPadding="false"
+            android:lineSpacingMultiplier="1.1"
+            android:textColor="@color/backup_guide_dialog_content_color"
+            android:textSize="12.7sp"
+            app:layout_constraintEnd_toEndOf="@id/backup_guide_dialog_title"
+            app:layout_constraintStart_toEndOf="@id/space_2"
+            app:layout_constraintTop_toBottomOf="@id/backup_guide_dialog_first_content"
+            app:typeface="@string/custom_font_medium" />
+
+        <!--line 3-->
+        <View
+            android:id="@+id/point_3"
+            android:layout_width="4dp"
+            android:layout_height="4dp"
+            android:background="@drawable/backup_guide_content_mark"
+            app:layout_constraintBottom_toBottomOf="@+id/space_3"
+            app:layout_constraintStart_toStartOf="@id/backup_guide_dialog_title"
+            app:layout_constraintTop_toTopOf="@+id/space_3" />
+
+        <com.superapps.view.TypefacedTextView
+            android:id="@+id/space_3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:includeFontPadding="false"
+            android:lineSpacingMultiplier="1.1"
+            android:text=" "
+            android:textSize="12.7sp"
+            android:visibility="invisible"
+            app:layout_constraintStart_toEndOf="@id/point_3"
+            app:layout_constraintTop_toTopOf="@+id/backup_guide_dialog_third_content"
+            app:typeface="@string/custom_font_medium"
+            tools:ignore="HardcodedText" />
+
+        <com.superapps.view.TypefacedTextView
+            android:id="@+id/backup_guide_dialog_third_content"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="6dp"
+            android:layout_marginTop="14dp"
+            android:includeFontPadding="false"
+            android:lineSpacingMultiplier="1.1"
+            android:text="@string/backup_guide_dialog_third_content"
+            android:textColor="@color/backup_guide_dialog_content_color"
+            android:textSize="12.7sp"
+            app:layout_constraintEnd_toEndOf="@id/backup_guide_dialog_title"
+            app:layout_constraintStart_toEndOf="@id/space_3"
+            app:layout_constraintTop_toBottomOf="@id/backup_guide_dialog_second_content"
+            app:typeface="@string/custom_font_medium" />
+
+        <com.superapps.view.TypefacedTextView
+            android:id="@+id/backup_guide_dialog_btn"
+            android:layout_width="match_parent"
+            android:layout_height="46.7dp"
+            android:layout_marginBottom="24dp"
+            android:layout_marginEnd="24dp"
+            android:layout_marginStart="24dp"
+            android:layout_marginTop="28dp"
+            android:gravity="center"
+            android:includeFontPadding="false"
+            android:text="@string/backup_guide_dialog_button"
+            android:textAllCaps="true"
+            android:textColor="@android:color/white"
+            android:textSize="14sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/backup_guide_dialog_third_content"
+            app:typeface="@string/custom_font_semibold" />
+    </android.support.constraint.ConstraintLayout>
 </android.support.constraint.ConstraintLayout>

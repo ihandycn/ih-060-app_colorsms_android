@@ -66,11 +66,9 @@ public class BackupManager {
     public interface MessageDeleteListener {
         void onDeleteStart();
 
-        void onScanFinished(int deleteCount);
+        void onDeleteFailed();
 
-        void onDeleteUpdate(int deletedCount);
-
-        void onDeleteFinished();
+        void onDeleteSuccess();
     }
 
     public interface CloudFileListLoadListener {
@@ -124,10 +122,6 @@ public class BackupManager {
                     }
 
                     //3.sync messages
-                    if (weakListener.get() != null) {
-                        weakListener.get().onRestoreStart(backupMessages.size());
-                    }
-
                     Threads.postOnThreadPoolExecutor(() -> {
                         MessageRestoreToDBListener listener1 = new MessageRestoreToDBListener() {
                             @Override
@@ -204,7 +198,7 @@ public class BackupManager {
             DatabaseWrapper db = DataModel.get().getDatabase();
             try {
                 db.execSQL(BackupDatabaseHelper.MessageColumn.CREATE_BACKUP_TABLE_SQL);
-            } catch (Exception e) {
+            } catch (Exception ignored) {
 
             }
             //1.sync
@@ -432,15 +426,27 @@ public class BackupManager {
 
     public void deleteLocalMessages(int remainDays, MessageDeleteListener messageDeleteListener) {
         Threads.postOnThreadPoolExecutor(() -> {
+            if (messageDeleteListener != null) {
+                messageDeleteListener.onDeleteStart();
+            }
             long time = System.currentTimeMillis() - remainDays * DateUtils.DAY_IN_MILLIS;
-            DatabaseWrapper db = DataModel.get().getDatabase();
-            ContentValues values = new ContentValues();
-            values.put(BackupDatabaseHelper.MessageColumn.HIDDEN, 1);
-            db.update(BackupDatabaseHelper.BACKUP_MESSAGE_TABLE, values,
-                    BackupDatabaseHelper.MessageColumn.DATE + "<" + time, null);
+            try {
+                DatabaseWrapper db = DataModel.get().getDatabase();
+                ContentValues values = new ContentValues();
+                values.put(BackupDatabaseHelper.MessageColumn.HIDDEN, 1);
+                db.update(BackupDatabaseHelper.BACKUP_MESSAGE_TABLE, values,
+                        BackupDatabaseHelper.MessageColumn.DATE + "<" + time, null);
 
-            ContentResolver resolver = HSApplication.getContext().getContentResolver();
-            resolver.delete(Telephony.Sms.CONTENT_URI, Telephony.Sms.DATE + "<" + time, null);
+                ContentResolver resolver = HSApplication.getContext().getContentResolver();
+                resolver.delete(Telephony.Sms.CONTENT_URI, Telephony.Sms.DATE + "<" + time, null);
+                if (messageDeleteListener != null) {
+                    messageDeleteListener.onDeleteSuccess();
+                }
+            } catch (Exception e) {
+                if (messageDeleteListener != null) {
+                    messageDeleteListener.onDeleteFailed();
+                }
+            }
         });
     }
 }

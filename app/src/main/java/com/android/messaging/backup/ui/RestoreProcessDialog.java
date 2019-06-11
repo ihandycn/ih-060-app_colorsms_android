@@ -1,5 +1,6 @@
 package com.android.messaging.backup.ui;
 
+import android.view.Choreographer;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ProgressBar;
@@ -9,12 +10,18 @@ import com.android.messaging.R;
 import com.android.messaging.ui.BaseDialogFragment;
 
 public class RestoreProcessDialog extends BaseDialogFragment {
+    public static final int MIN_PROGRESS_TIME = 3000;
     private TextView mTotalView;
     private TextView mRestoredTextView;
-    private ProgressBar mProgressbar;
+    private ProgressBar mProgressBar;
     private TextView mStateView;
-    private int mTotalCount;
     private TextView mCountDivideView;
+
+    private int mTotalCount = 1;
+    private Choreographer.FrameCallback mCallback;
+    private Choreographer mChoreographer;
+    private int mTargetCount;
+    private long mStartTime;
 
     @Override
     protected CharSequence getTitle() {
@@ -42,42 +49,60 @@ public class RestoreProcessDialog extends BaseDialogFragment {
         mTotalView = view.findViewById(R.id.total_restore_messages);
         mRestoredTextView = view.findViewById(R.id.already_restore_messages);
         mStateView = view.findViewById(R.id.restore_process_hint);
-        mProgressbar = view.findViewById(R.id.restore_progress_bar);
+        mProgressBar = view.findViewById(R.id.restore_progress_bar);
         mCountDivideView = view.findViewById(R.id.restore_messages_divider);
+
+        mChoreographer = Choreographer.getInstance();
+        mCallback = frameTimeNanos -> {
+            long interval = System.currentTimeMillis() - mStartTime;
+            int progress;
+            if (mTotalCount * interval > mTargetCount * MIN_PROGRESS_TIME) {
+                //use actual progress
+                progress = Math.min((int) (100.0f * mTargetCount / mTotalCount), 100);
+            } else {
+                progress = Math.min((int) (100.0f * interval / MIN_PROGRESS_TIME), 100);
+            }
+
+            mProgressBar.setProgress(progress);
+            mRestoredTextView.setText(String.valueOf((int) (mTotalCount * 1.0f * interval / MIN_PROGRESS_TIME)));
+
+            if (progress >= 100) {
+
+            } else {
+                mChoreographer.postFrameCallback(mCallback);
+            }
+        };
+
         return view;
     }
 
     public void setTotal(int totalCount) {
+        mTotalCount = totalCount == 0 ? 1 : totalCount;
         if (mTotalView != null) {
-            mTotalView.setText(String.valueOf(totalCount));
+            mTotalView.setText(String.valueOf(mTotalCount));
         }
-        mTotalCount = totalCount;
+    }
+
+    public void startProgress() {
+        mStartTime = System.currentTimeMillis();
+        mChoreographer.postFrameCallback(mCallback);
     }
 
     public void setProgress(int restoredCount) {
-        if (mRestoredTextView != null) {
-            mRestoredTextView.setText(String.valueOf(restoredCount));
-        }
-        if (mProgressbar != null) {
-            int current = mProgressbar.getProgress();
-            int target = (int) (restoredCount * 1.0 / mTotalCount * 100);
-            if (target > current) {
-                mProgressbar.setProgress(target);
-            }
-        }
+        mTargetCount = restoredCount;
     }
 
     public void hideProgressBar(boolean hide) {
-        if (mProgressbar == null) {
+        if (mProgressBar == null) {
             return;
         }
         if (hide) {
-            mProgressbar.setVisibility(View.INVISIBLE);
+            mProgressBar.setVisibility(View.INVISIBLE);
             mCountDivideView.setVisibility(View.INVISIBLE);
             mTotalView.setVisibility(View.INVISIBLE);
             mRestoredTextView.setVisibility(View.INVISIBLE);
         } else {
-            mProgressbar.setVisibility(View.VISIBLE);
+            mProgressBar.setVisibility(View.VISIBLE);
             mCountDivideView.setVisibility(View.VISIBLE);
             mTotalView.setVisibility(View.VISIBLE);
             mRestoredTextView.setVisibility(View.VISIBLE);

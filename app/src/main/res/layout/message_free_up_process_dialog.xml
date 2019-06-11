@@ -1,38 +1,39 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    android:layout_height="wrap_content">
 
     <com.airbnb.lottie.LottieAnimationView
         android:id="@+id/message_free_up_process"
         android:layout_width="100dp"
         android:layout_height="100dp"
         android:layout_centerVertical="true"
-        android:layout_marginTop="10dp"
-        android:scaleType="centerCrop"
-        app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginTop="40dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:lottie_fileName="lottie/clean_process.json"
-        app:lottie_loop="true"
-        app:lottie_autoPlay="true" />
+        app:lottie_autoPlay="true"
+        app:lottie_loop="true" />
 
     <com.android.messaging.ui.view.MessagesTextView
         android:id="@+id/message_free_up_process_hint"
-        android:layout_height="wrap_content"
         android:layout_width="wrap_content"
-        android:text="@string/message_free_up_process_dialog"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="34dp"
         android:layout_marginTop="25.7dp"
-        android:layout_marginBottom="26.7dp"
-        android:textSize="12.7sp"
-        android:textColor="@color/message_back_up_process_hint_color"
+        android:layout_marginStart="40dp"
+        android:layout_marginEnd="40dp"
         android:includeFontPadding="false"
         android:lineSpacingMultiplier="1.1"
-        app:typeface="@string/custom_font_medium"
-        app:layout_constraintStart_toStartOf="parent"
+        android:text="@string/message_free_up_process_dialog"
+        android:textColor="@color/message_back_up_process_hint_color"
+        android:textSize="12.7sp"
+        app:font_family_changeable="false"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/message_free_up_process"
-        app:layout_constraintBottom_toBottomOf="parent"/>
+        app:typeface="@string/custom_font_semibold" />
 
 </android.support.constraint.ConstraintLayout>

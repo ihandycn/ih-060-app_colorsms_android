@@ -9,6 +9,7 @@ import android.widget.ImageView;
 
 import com.android.messaging.R;
 import com.android.messaging.ui.BaseDialogFragment;
+import com.android.messaging.util.BugleAnalytics;
 import com.android.messaging.util.UiUtils;
 
 public class MessageFreeUpDialog extends BaseDialogFragment {
@@ -42,23 +43,13 @@ public class MessageFreeUpDialog extends BaseDialogFragment {
         super.onCreate(savedInstanceState);
     }
 
-    @Nullable
-    @Override
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
-        setOnPositiveButtonClickListener(v -> {
-            dismissAllowingStateLoss();
-            BackupTipsDialog freeUpDialog = new BackupTipsDialog();
-            UiUtils.showDialogFragment(getActivity(), freeUpDialog);
-        });
-        return super.onCreateView(inflater, container, savedInstanceState);
-    }
-
     private View createBodyView() {
         View mContentView = LayoutInflater.from(getActivity()).inflate(
                 R.layout.message_free_up_tip_dialog, null);
         ImageView freeUpCloseButton = mContentView.findViewById(R.id.message_free_up_close);
         freeUpCloseButton.setOnClickListener(v -> {
             dismissAllowingStateLoss();
+            BugleAnalytics.logEvent("Backup_Freeupmsg_Alert_Close");
         });
         return mContentView;
     }

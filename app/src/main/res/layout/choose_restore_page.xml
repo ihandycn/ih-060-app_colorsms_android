@@ -31,21 +31,21 @@
         android:layout_height="1px"
         android:layout_marginStart="16dp"
         android:background="@color/divider_color"
-
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/from_cloud" />
 
     <LinearLayout
         android:id="@+id/from_local_container"
         android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16.3dp"
-        android:layout_marginEnd="60dp"
+        android:layout_height="0dp"
+        android:gravity="center_vertical"
         android:orientation="vertical"
-        app:layout_constraintStart_toStartOf="parent"
+        android:paddingEnd="60dp"
+        android:paddingStart="16.3dp"
         app:layout_constraintBottom_toBottomOf="@id/from_local"
-        app:layout_constraintTop_toTopOf="@id/from_local"
-        app:layout_constraintEnd_toEndOf="parent">
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@id/from_local">
 
         <com.android.messaging.ui.view.MessagesTextView
             android:id="@+id/from_local_title"
@@ -70,15 +70,17 @@
     </LinearLayout>
 
     <LinearLayout
+        android:id="@+id/from_cloud_container"
         android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16.3dp"
-        android:layout_marginEnd="60dp"
+        android:layout_height="0dp"
+        android:gravity="center_vertical"
         android:orientation="vertical"
-        app:layout_constraintStart_toStartOf="parent"
+        android:paddingEnd="60dp"
+        android:paddingStart="16.3dp"
         app:layout_constraintBottom_toBottomOf="@id/from_cloud"
-        app:layout_constraintTop_toTopOf="@id/from_cloud"
-        app:layout_constraintEnd_toEndOf="parent">
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@id/from_cloud">
 
         <com.android.messaging.ui.view.MessagesTextView
             android:id="@+id/from_cloud_title"

@@ -18,7 +18,7 @@ import java.util.List;
 
 public class BackupPersistManager {
 
-    static final String BASE_PATH = "backups";
+    public static final String BASE_PATH = "backups";
 
     private static final char VERSION_1_START_CODE = 17;
     private static final char VERSION_1_SPLIT_CODE = 18;

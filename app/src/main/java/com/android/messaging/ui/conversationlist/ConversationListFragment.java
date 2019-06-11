@@ -51,6 +51,8 @@ import com.android.messaging.ad.AdPlacement;
 import com.android.messaging.annotation.VisibleForAnimation;
 import com.android.messaging.backup.ui.BackupRestoreActivity;
 import com.android.messaging.datamodel.DataModel;
+import com.android.messaging.datamodel.DatabaseHelper;
+import com.android.messaging.datamodel.DatabaseWrapper;
 import com.android.messaging.datamodel.binding.Binding;
 import com.android.messaging.datamodel.binding.BindingBase;
 import com.android.messaging.datamodel.data.AdItemData;
@@ -75,12 +77,12 @@ import com.android.messaging.util.AccessibilityUtil;
 import com.android.messaging.util.Assert;
 import com.android.messaging.util.BugleAnalytics;
 import com.android.messaging.util.BuglePrefs;
+import com.android.messaging.util.CommonUtils;
 import com.android.messaging.util.ImeUtil;
 import com.android.messaging.util.LogUtil;
 import com.android.messaging.util.UiUtils;
 import com.android.messaging.util.ViewUtils;
 import com.google.common.annotations.VisibleForTesting;
-import com.ihs.app.framework.HSApplication;
 import com.ihs.commons.config.HSConfig;
 import com.ihs.commons.notificationcenter.HSGlobalNotificationCenter;
 import com.ihs.commons.utils.HSBundle;
@@ -88,6 +90,8 @@ import com.ihs.commons.utils.HSLog;
 import com.superapps.util.BackgroundDrawables;
 import com.superapps.util.Dimensions;
 import com.superapps.util.Navigations;
+import com.superapps.util.Preferences;
+import com.superapps.util.Threads;
 
 import net.appcloudbox.ads.base.AcbNativeAd;
 import net.appcloudbox.ads.base.ContainerView.AcbNativeAdContainerView;
@@ -96,6 +100,7 @@ import net.appcloudbox.ads.common.utils.AcbError;
 import net.appcloudbox.ads.nativead.AcbNativeAdLoader;
 import net.appcloudbox.ads.nativead.AcbNativeAdManager;
 
+import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -120,7 +125,6 @@ public class ConversationListFragment extends Fragment implements ConversationLi
     private boolean adFirstPrepared = true;
     private boolean conversationFirstUpdated = true;
     private boolean isFirstOnResume = true;
-    private boolean mIsDestroyed = false;
 
     private AcbNativeAd mNativeAd;
     private AcbNativeAdLoader mNativeAdLoader;
@@ -226,7 +230,6 @@ public class ConversationListFragment extends Fragment implements ConversationLi
     @Override
     public void onDestroy() {
         super.onDestroy();
-        mIsDestroyed = true;
         mListBinding.unbind();
         mHost = null;
         if (mNativeAdLoader != null) {
@@ -388,39 +391,74 @@ public class ConversationListFragment extends Fragment implements ConversationLi
 
 
     private void tryShowTopBackupBannerGuide() {
-        if (mBackupBannerGuideHidePrefs.getBoolean(PREF_KEY_BACKUP_SHOW_BANNER_GUIDE, true)) {
-            int backupBannerGuideShowCount = mBackupBannerGuideHidePrefs.getInt(PREF_KEY_BACKUP_BANNER_GUIDE_SHOW_COUNT, 0);
-            if (backupBannerGuideShowCount < HSConfig.optInteger(6, "Application", "BackupRestore", "RecommendBannerTimes")) {
-                mBackupBannerGuideContainer.setVisibility(View.VISIBLE);
-                mBackupBannerGuideHidePrefs.putInt(PREF_KEY_BACKUP_BANNER_GUIDE_SHOW_COUNT, backupBannerGuideShowCount + 1);
-                MessagesTextView backupBannerButton = mBackupBannerGuideContainer.findViewById(R.id.backup_banner_button);
-                backupBannerButton.setBackground(BackgroundDrawables.createBackgroundDrawable(Color.WHITE,
-                        Dimensions.pxFromDp(3.3f), true));
-                backupBannerButton.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        final Intent intent = new Intent(getActivity(), BackupRestoreActivity.class);
-                        getActivity().startActivity(intent);
-                        mBackupBannerGuideContainer.setVisibility(View.GONE);
-                        mBackupBannerGuideHidePrefs.putBoolean(PREF_KEY_BACKUP_SHOW_BANNER_GUIDE, false);
-                        tryShowTopNativeAd();
-                        switchAd = false;
-                    }
-                });
-                ImageView backupBannerGuideCloseButton = mBackupBannerGuideContainer.findViewById(R.id.backup_banner_close);
-                backupBannerGuideCloseButton.setBackground(BackgroundDrawables.createBackgroundDrawable(getResources().getColor(R.color.backup_guide_dialog_close_button_color),
-                        Dimensions.pxFromDp(40f), true));
-                backupBannerGuideCloseButton.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        mBackupBannerGuideContainer.setVisibility(View.GONE);
-                        mBackupBannerGuideHidePrefs.putBoolean(PREF_KEY_BACKUP_SHOW_BANNER_GUIDE, false);
-                        tryShowTopNativeAd();
-                        switchAd = false;
-                    }
-                });
-            }
+        // check new user
+        if (!CommonUtils.isNewUser()) {
+            return;
         }
+        // check top guide enable
+        boolean topGuideEnable = mBackupBannerGuideHidePrefs.getBoolean(PREF_KEY_BACKUP_SHOW_BANNER_GUIDE, true);
+        if (!topGuideEnable) {
+            return;
+        }
+
+        // check backup activity opened
+        boolean backupActivityShown = Preferences.getDefault().
+                getBoolean(BackupRestoreActivity.PREF_KEY_BACKUP_ACTIVITY_SHOWN, false);
+        if (backupActivityShown) {
+            return;
+        }
+
+        //check show times
+        int backupBannerGuideShowCount = mBackupBannerGuideHidePrefs.getInt(PREF_KEY_BACKUP_BANNER_GUIDE_SHOW_COUNT, 0);
+        if (backupBannerGuideShowCount >= HSConfig.optInteger(6, "Application", "BackupRestore", "RecommendBannerTimes")) {
+            return;
+        }
+
+        mBackupBannerGuideContainer.setVisibility(View.VISIBLE);
+        mBackupBannerGuideHidePrefs.putInt(PREF_KEY_BACKUP_BANNER_GUIDE_SHOW_COUNT, backupBannerGuideShowCount + 1);
+
+        TextView title = mBackupBannerGuideContainer.findViewById(R.id.backup_banner_title);
+        title.setText(getString(R.string.backup_banner_guide_title, 30));
+        Threads.postOnThreadPoolExecutor(() -> {
+            WeakReference<TextView> tv = new WeakReference<>(title);
+            DatabaseWrapper db = DataModel.get().getDatabaseWithoutMainCheck();
+            Cursor cursor = db.query(DatabaseHelper.MESSAGES_TABLE, new String[]{"COUNT(*)"},
+                    null, null, null, null, null);
+            if (cursor != null) {
+                if (cursor.moveToFirst()) {
+                    int count = cursor.getInt(0);
+                    Threads.postOnMainThread(() -> {
+                        if (tv.get() != null) {
+                            tv.get().setText(getString(R.string.backup_banner_guide_title, count));
+                        }
+                    });
+                }
+                cursor.close();
+            }
+        });
+
+        MessagesTextView backupBannerButton = mBackupBannerGuideContainer.findViewById(R.id.backup_banner_button);
+        backupBannerButton.setBackground(BackgroundDrawables.createBackgroundDrawable(Color.WHITE,
+                Dimensions.pxFromDp(3.3f), true));
+        backupBannerButton.setOnClickListener(v -> {
+            BackupRestoreActivity.startBackupRestoreActivity(getActivity(), BackupRestoreActivity.ENTRANCE_TOP_GUIDE);
+            mBackupBannerGuideContainer.setVisibility(View.GONE);
+            tryShowTopNativeAd();
+            switchAd = false;
+            BugleAnalytics.logEvent("BackupTopGuide_Click");
+        });
+
+        ImageView backupBannerGuideCloseButton = mBackupBannerGuideContainer.findViewById(R.id.backup_banner_close);
+        backupBannerGuideCloseButton.setBackground(BackgroundDrawables.createBackgroundDrawable
+                (getResources().getColor(R.color.backup_guide_dialog_close_button_color),
+                        Dimensions.pxFromDp(40f), true));
+        backupBannerGuideCloseButton.setOnClickListener(v -> {
+            mBackupBannerGuideContainer.setVisibility(View.GONE);
+            mBackupBannerGuideHidePrefs.putBoolean(PREF_KEY_BACKUP_SHOW_BANNER_GUIDE, false);
+            tryShowTopNativeAd();
+            switchAd = false;
+        });
+        BugleAnalytics.logEvent("BackupTopGuide_Show");
     }
 
     private boolean isAdLoading = false;
@@ -633,9 +671,10 @@ public class ConversationListFragment extends Fragment implements ConversationLi
 
     }
 
-    public void hideBackupBannerGuide(){
+    public void hideBackupBannerGuide() {
         mBackupBannerGuideContainer.setVisibility(View.GONE);
     }
+
     /**
      * {@inheritDoc} from ConversationListItemView.HostInterface
      */
@@ -690,7 +729,7 @@ public class ConversationListFragment extends Fragment implements ConversationLi
 
     @Override
     public List<SnackBarInteraction> getSnackBarInteractions() {
-        final List<SnackBarInteraction> interactions = new ArrayList<SnackBarInteraction>(1);
+        final List<SnackBarInteraction> interactions = new ArrayList<>(1);
         final SnackBarInteraction fabInteraction =
                 new SnackBarInteraction.BasicSnackBarInteraction(mStartNewConversationButton);
         interactions.add(fabInteraction);
@@ -716,12 +755,9 @@ public class ConversationListFragment extends Fragment implements ConversationLi
     }
 
     public ViewPropertyAnimator showFab() {
-        return getNormalizedFabAnimator().translationX(0).withEndAction(new Runnable() {
-            @Override
-            public void run() {
-                // Re-enable clicks after the animation.
-                mStartNewConversationButton.setEnabled(true);
-            }
+        return getNormalizedFabAnimator().translationX(0).withEndAction(() -> {
+            // Re-enable clicks after the animation.
+            mStartNewConversationButton.setEnabled(true);
         });
     }
 

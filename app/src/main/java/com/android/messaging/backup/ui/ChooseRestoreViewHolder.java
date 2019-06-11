@@ -1,7 +1,10 @@
 package com.android.messaging.backup.ui;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
+import android.content.res.ColorStateList;
+import android.os.Build;
 import android.support.v7.widget.AppCompatCheckBox;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,6 +18,7 @@ import com.android.messaging.ui.BasePagerViewHolder;
 import com.android.messaging.ui.CustomPagerViewHolder;
 import com.android.messaging.ui.customize.PrimaryColors;
 import com.android.messaging.ui.view.MessagesTextView;
+import com.android.messaging.util.BugleAnalytics;
 import com.android.messaging.util.UiUtils;
 import com.google.firebase.auth.FirebaseAuth;
 import com.superapps.util.BackgroundDrawables;
@@ -34,44 +38,83 @@ public class ChooseRestoreViewHolder extends BasePagerViewHolder implements Cust
     private TextView mLocalSummary;
     private TextView mCloudSummary;
 
-    public ChooseRestoreViewHolder(final Context context) {
+    ChooseRestoreViewHolder(final Context context) {
         mContext = context;
     }
 
+    @SuppressLint("RestrictedApi")
     @Override
     protected View createView(ViewGroup container) {
         final LayoutInflater inflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         final View view = inflater.inflate(R.layout.choose_restore_page, container, false);
         AppCompatCheckBox fromLocalCheckBox = view.findViewById(R.id.from_local);
+        fromLocalCheckBox.setEnabled(false);
         AppCompatCheckBox fromCloudCheckBox = view.findViewById(R.id.from_cloud);
+        fromCloudCheckBox.setEnabled(false);
+
+        View localContainer = view.findViewById(R.id.from_local_container);
+        View cloudContainer = view.findViewById(R.id.from_cloud_container);
+
         MessagesTextView restoreButton = view.findViewById(R.id.restore_confirm_button);
         mLocalSummary = view.findViewById(R.id.from_local_summary);
         mCloudSummary = view.findViewById(R.id.from_cloud_summary);
+
+        ColorStateList colorStateList = new ColorStateList(
+                new int[][]{
+                        new int[]{-android.R.attr.state_checked},
+                        new int[]{android.R.attr.state_checked}
+                },
+                new int[]{
+                        0xffa5abb1
+                        , PrimaryColors.getPrimaryColor(),
+                }
+        );
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            fromLocalCheckBox.getCompoundDrawables()[2].setTintList(colorStateList);
+            fromCloudCheckBox.getCompoundDrawables()[2].setTintList(colorStateList);
+        }
+
+        final boolean[] restoreBgChanged = {false};
         restoreButton.setBackground(BackgroundDrawables.createBackgroundDrawable(getContext().getResources().getColor(R.color.backup_button_default_color),
                 Dimensions.pxFromDp(3.3f), false));
-        fromLocalCheckBox.setOnCheckedChangeListener((buttonView, isChecked) -> {
-            restoreButton.setBackground(BackgroundDrawables.createBackgroundDrawable(PrimaryColors.getPrimaryColor(),
-                    Dimensions.pxFromDp(3.3f), true));
-            if (isChecked && fromCloudCheckBox.isChecked()) {
-                fromCloudCheckBox.setChecked(false);
-            } else if (!isChecked && !fromCloudCheckBox.isChecked()) {
+
+        localContainer.setOnClickListener(v -> {
+            if (!fromLocalCheckBox.isChecked()
+                    && mLocalBackups != null
+                    && mLocalBackups.size() > 0) {
                 fromLocalCheckBox.setChecked(true);
+                fromCloudCheckBox.setChecked(false);
+                if (!restoreBgChanged[0]) {
+                    restoreButton.setBackground(BackgroundDrawables.createBackgroundDrawable(PrimaryColors.getPrimaryColor(),
+                            Dimensions.pxFromDp(3.3f), true));
+                    restoreBgChanged[0] = true;
+                }
+                BugleAnalytics.logEvent("Backup_RestorePage_Local_Click");
             }
         });
 
-        fromCloudCheckBox.setOnCheckedChangeListener((buttonView, isChecked) -> {
-            restoreButton.setBackground(BackgroundDrawables.createBackgroundDrawable(PrimaryColors.getPrimaryColor(),
-                    Dimensions.pxFromDp(3.3f), true));
-            if (isChecked && fromLocalCheckBox.isChecked()) {
+        cloudContainer.setOnClickListener(v -> {
+            if (!fromCloudCheckBox.isChecked()
+                    && mCloudBackups != null
+                    && mCloudBackups.size() > 0) {
                 fromLocalCheckBox.setChecked(false);
-            } else if (!isChecked && !fromLocalCheckBox.isChecked()) {
                 fromCloudCheckBox.setChecked(true);
+                if (!restoreBgChanged[0]) {
+                    restoreButton.setBackground(BackgroundDrawables.createBackgroundDrawable(PrimaryColors.getPrimaryColor(),
+                            Dimensions.pxFromDp(3.3f), true));
+                    restoreBgChanged[0] = true;
+                }
+                BugleAnalytics.logEvent("Backup_RestorePage_Cloud_Click");
             }
         });
 
         RestoreProcessDialog restoreProcessDialog = new RestoreProcessDialog();
         restoreProcessDialog.setCancelable(false);
         BackupManager.MessageRestoreListener listener = new BackupManager.MessageRestoreListener() {
+            //[0] more than min time,[1] backup complete
+            boolean[] backupCondition = {false, false};
+
             @Override
             public void onDownloadStart() {
                 Threads.postOnMainThread(() -> {
@@ -99,7 +142,15 @@ public class ChooseRestoreViewHolder extends BasePagerViewHolder implements Cust
                     restoreProcessDialog.hideProgressBar(false);
                     restoreProcessDialog.setStateText(getContext().getString(R.string.restore_process_hint));
                     restoreProcessDialog.setTotal(messageCount);
+                    restoreProcessDialog.startProgress();
                 });
+
+                Threads.postOnMainThreadDelayed(() -> {
+                    backupCondition[0] = true;
+                    if (backupCondition[1]) {
+                        onRestoreSuccess();
+                    }
+                }, RestoreProcessDialog.MIN_PROGRESS_TIME);
             }
 
             @Override
@@ -112,10 +163,16 @@ public class ChooseRestoreViewHolder extends BasePagerViewHolder implements Cust
 
             @Override
             public void onRestoreSuccess() {
-                Threads.postOnMainThread(() -> {
-                    restoreProcessDialog.dismissAllowingStateLoss();
-                    Toasts.showToast(R.string.restore_success);
-                });
+                backupCondition[1] = true;
+                if (backupCondition[0]) {
+                    Threads.postOnMainThread(() -> {
+                        restoreProcessDialog.dismissAllowingStateLoss();
+                        Toasts.showToast(R.string.restore_success);
+                    });
+                }
+
+                BugleAnalytics.logEvent("Backup_RestorePage_Restore_Success", true,
+                        "restorefrom", fromLocalCheckBox.isChecked() ? "local" : "cloud");
             }
 
             @Override
@@ -132,11 +189,15 @@ public class ChooseRestoreViewHolder extends BasePagerViewHolder implements Cust
                 if (mLocalBackups != null) {
                     BackupManager.getInstance().restoreMessages(mLocalBackups.get(0), listener);
                     UiUtils.showDialogFragment((Activity) mContext, restoreProcessDialog);
+                    BugleAnalytics.logEvent("Backup_RestorePage_Restore_Click", true,
+                            "restorefrom", "local");
                 }
             } else if (fromCloudCheckBox.isChecked()) {
                 if (mCloudBackups != null) {
                     BackupManager.getInstance().restoreMessages(mCloudBackups.get(0), listener);
                     UiUtils.showDialogFragment((Activity) mContext, restoreProcessDialog);
+                    BugleAnalytics.logEvent("Backup_RestorePage_Restore_Click", true,
+                            "restorefrom", "cloud");
                 }
             }
         });
