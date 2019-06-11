@@ -314,16 +314,10 @@ public class ConversationListActivity extends AbstractConversationListActivity
         }
 
         navigationView = findViewById(R.id.navigation_view);
-        navigationView.getViewTreeObserver().addOnDrawListener(new ViewTreeObserver.OnDrawListener() {
-
-            boolean firstCall = true;
-
-            @Override
-            public void onDraw() {
-                if (firstCall) {
-                    Threads.postOnMainThread(() -> onPostPageVisible());
-                    firstCall = false;
-                }
+        navigationView.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+            @Override public void onGlobalLayout() {
+                Threads.postOnMainThread(() -> onPostPageVisible());
+                navigationView.getViewTreeObserver().removeOnGlobalLayoutListener(this);
             }
         });
     }
