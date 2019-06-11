@@ -52,6 +52,7 @@
         android:id="@+id/backup_banner_close"
         android:layout_width="24dp"
         android:layout_height="24dp"
+        android:background="@drawable/material_compat_button_bg"
         android:padding="7dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"

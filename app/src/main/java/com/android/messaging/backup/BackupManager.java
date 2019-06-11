@@ -27,10 +27,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class BackupManager {
-    public static final boolean RECOVERY_MODE = true;
+    static final boolean RECOVERY_MODE = true;
 
     public interface MessageBackupListener {
-        void onBackupStart();
+        void onBackupStart(boolean hasUpload);
 
         void onSyncAndLoadSuccess(int messageCount);
 
@@ -38,13 +38,15 @@ public class BackupManager {
 
         void onBackupFailed();
 
+        void onBackupSuccess();
+
         void onUploadStart();
 
         void onUploadSuccess();
 
         void onUploadFailed();
 
-        void onBackupSuccess();
+        void onAllBackupSuccess();
     }
 
     public interface MessageRestoreListener {
@@ -192,7 +194,7 @@ public class BackupManager {
         Threads.postOnThreadPoolExecutor(() -> {
             WeakReference<MessageBackupListener> listenerWeakReference = new WeakReference<>(listener);
             if (listenerWeakReference.get() != null) {
-                listenerWeakReference.get().onBackupStart();
+                listenerWeakReference.get().onBackupStart(backupType != BackupInfo.LOCAL);
             }
 
             DatabaseWrapper db = DataModel.get().getDatabase();
@@ -223,10 +225,12 @@ public class BackupManager {
             if (backupType == BackupInfo.LOCAL) {
                 if (listenerWeakReference.get() != null) {
                     listenerWeakReference.get().onBackupSuccess();
+                    listenerWeakReference.get().onAllBackupSuccess();
                 }
                 return;
             } else {
                 if (listenerWeakReference.get() != null) {
+                    listenerWeakReference.get().onBackupSuccess();
                     listenerWeakReference.get().onUploadStart();
                 }
             }
@@ -237,7 +241,7 @@ public class BackupManager {
                 public void onUploadSuccess() {
                     if (listenerWeakReference.get() != null) {
                         listenerWeakReference.get().onUploadSuccess();
-                        listenerWeakReference.get().onBackupSuccess();
+                        listenerWeakReference.get().onAllBackupSuccess();
                     }
                     if (backupType == BackupInfo.CLOUD) {
                         file.delete();
@@ -248,6 +252,9 @@ public class BackupManager {
                 public void onUploadFailed() {
                     if (listenerWeakReference.get() != null) {
                         listenerWeakReference.get().onUploadFailed();
+                    }
+                    if (backupType == BackupInfo.CLOUD) {
+                        file.delete();
                     }
                 }
             };
@@ -330,7 +337,7 @@ public class BackupManager {
                 });
     }
 
-    public void addCloudBackup(File file, CloudFileUploadListener listener) {
+    private void addCloudBackup(File file, CloudFileUploadListener listener) {
         //upload file
         FirebaseStorage storage = FirebaseStorage.getInstance();
         StorageReference storageReference = storage.getReference();
@@ -389,7 +396,7 @@ public class BackupManager {
                 });
     }
 
-    public void downloadCloudBackup(BackupInfo info, CloudFileDownloadListener listener) {
+    private void downloadCloudBackup(BackupInfo info, CloudFileDownloadListener listener) {
         FirebaseStorage storage = FirebaseStorage.getInstance();
         StorageReference storageReference = storage.getReference();
 

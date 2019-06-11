@@ -163,10 +163,17 @@ public class ChooseBackupViewHolder extends BasePagerViewHolder implements Custo
         backupDialog.setCancelable(false);
         //[0] more than min time,[1] backup complete
         boolean[] backupCondition = {false, false};
+        boolean[] backupFailed = {false};
+
+        boolean[] uploadSuccess = {false};
+        boolean[] useFakeUpload = {false};
 
         BackupManager.MessageBackupListener listener = new BackupManager.MessageBackupListener() {
+            boolean needUpload;
+
             @Override
-            public void onBackupStart() {
+            public void onBackupStart(boolean upload) {
+                needUpload = upload;
                 Threads.postOnMainThread(() -> {
                     UiUtils.showDialogFragment((Activity) mContext, backupDialog);
                     backupDialog.setStateString(getContext().getString(R.string.backup_state_scanning));
@@ -185,8 +192,15 @@ public class ChooseBackupViewHolder extends BasePagerViewHolder implements Custo
                 });
                 Threads.postOnMainThreadDelayed(() -> {
                     backupCondition[0] = true;
+                    if (backupFailed[0]) {
+                        return;
+                    }
                     if (backupCondition[1]) {
-                        onBackupSuccess();
+                        if (!needUpload) {
+                            dismiss();
+                        } else if (useFakeUpload[0]) {
+                            onUploadStart();
+                        }
                     }
                 }, BackupProcessDialog.MIN_PROGRESS_TIME);
             }
@@ -196,34 +210,11 @@ public class ChooseBackupViewHolder extends BasePagerViewHolder implements Custo
                 Threads.postOnMainThread(() -> backupDialog.setProgress(backedUpCount));
             }
 
-
             @Override
             public void onBackupFailed() {
                 Threads.postOnMainThread(() -> {
-                    backupDialog.dismiss();
-                    Toasts.showToast(R.string.backup_failed_toast);
-                });
-            }
-
-            @Override
-            public void onUploadStart() {
-                Threads.postOnMainThread(() -> {
-                    backupDialog.changeLottie(false);
-                    backupDialog.setStateString(getContext().getResources().getString(R.string.cloud_backup_process_hint));
-                    backupDialog.setProgress(0);
-                    backupDialog.hideProgressBar(true);
-                });
-            }
-
-            @Override
-            public void onUploadSuccess() {
-
-            }
-
-            @Override
-            public void onUploadFailed() {
-                Threads.postOnMainThread(() -> {
-                    backupDialog.dismiss();
+                    backupDialog.dismissAllowingStateLoss();
+                    backupFailed[0] = true;
                     Toasts.showToast(R.string.backup_failed_toast);
                 });
             }
@@ -231,25 +222,61 @@ public class ChooseBackupViewHolder extends BasePagerViewHolder implements Custo
             @Override
             public void onBackupSuccess() {
                 backupCondition[1] = true;
-                if (backupCondition[0]) {
-                    Threads.postOnMainThread(() -> {
-                        backupDialog.dismiss();
-                        if (mContext != null && mContext instanceof BackupRestoreActivity) {
-                            ((BackupRestoreActivity) mContext).onBackupDataChanged();
-                        }
-                        if (HSConfig.optBoolean(false, "Application", "BackupRestore", "FreeUpOldmsg")) {
-                            MessageFreeUpDialog freeUpDialog = new MessageFreeUpDialog();
-                            freeUpDialog.setOnPositiveButtonClickListener(v -> {
-                                //freeUpDialog.dismissAllowingStateLoss();
-                                freeUpAndShowDialog();
-                                BugleAnalytics.logEvent("Backup_Freeupmsg_Alert_Click");
-                            });
-                            UiUtils.showDialogFragment((Activity) mContext, freeUpDialog);
-                            BugleAnalytics.logEvent("Backup_Freeupmsg_Alert_Show");
-                        }
-                    });
+                if (backupCondition[0] && !backupFailed[0]) {
+                    if (!needUpload) {
+                        dismiss();
+                    }
                 }
+            }
 
+            //upload
+            @Override
+            public void onUploadStart() {
+                if (backupCondition[0] && backupCondition[1]) {
+                    //backup complete
+                    Threads.postOnMainThread(() -> {
+                        backupDialog.changeLottie(false);
+                        backupDialog.setStateString(getContext().getResources().getString(R.string.cloud_backup_process_hint));
+                        backupDialog.setProgress(0);
+                        backupDialog.hideProgressBar(true);
+                    });
+                    if (useFakeUpload[0]) {
+                        Threads.postOnMainThreadDelayed(() -> {
+                            if (backupFailed[0]) {
+                                return;
+                            }
+                            useFakeUpload[0] = false;
+                            if (uploadSuccess[0]) {
+                                dismiss();
+                            }
+                        }, BackupProcessDialog.MIN_UPLOAD_TIME);
+                    }
+                } else {
+                    useFakeUpload[0] = true;
+                }
+            }
+
+            @Override
+            public void onUploadSuccess() {
+                uploadSuccess[0] = true;
+                if (!useFakeUpload[0]) {
+                    dismiss();
+                }
+            }
+
+            @Override
+            public void onUploadFailed() {
+                Threads.postOnMainThread(() -> {
+                    backupDialog.dismissAllowingStateLoss();
+                    backupFailed[0] = true;
+                    Toasts.showToast(R.string.backup_failed_toast);
+                });
+            }
+
+            @Override
+            public void onAllBackupSuccess() {
+                backupCondition[1] = true;
+                uploadSuccess[0] = true;
                 Preferences.getDefault().putBoolean(PREF_KEY_BACKUP_SUCCESS_FOR_EVENT, true);
                 String backupType = "empty";
                 if (mLocalCheckBox.isChecked() && mCloudCheckBox.isChecked()) {
@@ -260,6 +287,26 @@ public class ChooseBackupViewHolder extends BasePagerViewHolder implements Custo
                     backupType = "cloud";
                 }
                 BugleAnalytics.logEvent("Backup_BackupPage_Backup_Success", true, "type", backupType);
+            }
+
+            void dismiss() {
+                Threads.postOnMainThread(() -> {
+                    backupDialog.dismissAllowingStateLoss();
+                    if (mContext != null && mContext instanceof BackupRestoreActivity) {
+                        ((BackupRestoreActivity) mContext).onBackupDataChanged();
+                    }
+                    if (HSConfig.optBoolean(false, "Application", "BackupRestore", "FreeUpOldmsg")) {
+                        MessageFreeUpDialog freeUpDialog = new MessageFreeUpDialog();
+                        freeUpDialog.setOnPositiveButtonClickListener(v -> {
+                            freeUpDialog.dismissAllowingStateLoss();
+                            freeUpAndShowDialog();
+                            BugleAnalytics.logEvent("Backup_Freeupmsg_Alert_Click");
+                        });
+                        UiUtils.showDialogFragment((Activity) mContext, freeUpDialog);
+                        BugleAnalytics.logEvent("Backup_Freeupmsg_Alert_Show");
+                    }
+                    Toasts.showToast(R.string.backup_success_toast);
+                });
             }
         };
         if (mLocalCheckBox.isChecked() && mCloudCheckBox.isChecked()) {
@@ -279,7 +326,9 @@ public class ChooseBackupViewHolder extends BasePagerViewHolder implements Custo
         Threads.postOnMainThreadDelayed(() -> {
             dismissCondition[0] = true;
             if (dismissCondition[1]) {
-                dialog.dismissAllowingStateLoss();
+                if (dialog != null) {
+                    dialog.dismissAllowingStateLoss();
+                }
             }
         }, 3000);
 
@@ -292,17 +341,15 @@ public class ChooseBackupViewHolder extends BasePagerViewHolder implements Custo
             @Override
             public void onDeleteFailed() {
                 if (dialog != null) {
-                    dismissCondition[1] = true;
-                    if (dismissCondition[0]) {
-                        dialog.dismissAllowingStateLoss();
-                    }
+                    dialog.dismissAllowingStateLoss();
+                    Toasts.showToast(R.string.backup_delete_failed);
                 }
             }
 
             @Override
             public void onDeleteSuccess() {
+                dismissCondition[1] = true;
                 if (dialog != null) {
-                    dismissCondition[1] = true;
                     if (dismissCondition[0]) {
                         dialog.dismissAllowingStateLoss();
                     }
@@ -321,7 +368,7 @@ public class ChooseBackupViewHolder extends BasePagerViewHolder implements Custo
 
     private void loadBackupInfo() {
         List<BackupInfo> localBackups = BackupManager.getInstance().getLocalBackupFilesInfo();
-        if (localBackups == null || localBackups.size() == 0) {
+        if (localBackups != null && localBackups.size() > 0) {
             mHasBackup = true;
             return;
         }

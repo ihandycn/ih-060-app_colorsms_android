@@ -40,6 +40,7 @@
         android:layout_height="28dp"
         android:layout_marginEnd="5dp"
         android:layout_marginTop="5dp"
+        android:background="@drawable/material_compat_button_bg"
         android:padding="8dp"
         app:layout_constraintEnd_toEndOf="@+id/backup_guide_dialog_homepage"
         app:layout_constraintTop_toTopOf="@+id/backup_guide_dialog_homepage"

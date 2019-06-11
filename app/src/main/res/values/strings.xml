@@ -1236,7 +1236,9 @@
     <string name="restore_fail">Restore Failed</string>
     <string name="restore_success">Restore Success</string>
     <string name="backup_failed_toast">Backup Failed</string>
+    <string name="backup_success_toast">Backup Success</string>
     <string name="restore_downloading">Downloading…</string>
+    <string name="backup_delete_failed">Delete Messages Failed</string>
     <string name="backup_guide_dialog_button">BACKUP NOW</string>
     <string name="backup_guide_dialog_title">SMS Backup</string>
     <string name="backup_guide_dialog_first_content">Prevent data loss before phone failure or loss.</string>

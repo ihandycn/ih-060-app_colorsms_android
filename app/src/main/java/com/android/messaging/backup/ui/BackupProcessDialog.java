@@ -1,6 +1,8 @@
 package com.android.messaging.backup.ui;
 
+import android.content.DialogInterface;
 import android.os.Bundle;
+import android.support.constraint.Group;
 import android.view.Choreographer;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -25,8 +27,7 @@ public class BackupProcessDialog extends BaseDialogFragment {
     private Choreographer mChoreographer;
     private int mTargetCount;
     private long mStartTime;
-
-    private boolean showUploadAnimation;
+    private Group mTextGroup;
 
     @Override
     protected CharSequence getTitle() {
@@ -57,28 +58,23 @@ public class BackupProcessDialog extends BaseDialogFragment {
         mTotalView = view.findViewById(R.id.local_total_backup_messages);
         mBackedUpView = view.findViewById(R.id.local_already_backup_messages);
         mLottie = view.findViewById(R.id.local_backup_process);
+        mTextGroup = view.findViewById(R.id.view_id_group);
 
         mChoreographer = Choreographer.getInstance();
-        mCallback = frameTimeNanos -> {
-            long interval = System.currentTimeMillis() - mStartTime;
-            int progress;
-            if (mTotalCount * interval > mTargetCount * MIN_PROGRESS_TIME) {
-                //use actual progress
-                progress = Math.min((int) (100.0f * mTargetCount / mTotalCount), 100);
-            } else {
-                progress = Math.min((int) (100.0f * interval / MIN_PROGRESS_TIME), 100);
-            }
-
-            mProgressBar.setProgress(progress);
-            mBackedUpView.setText(String.valueOf((int) (mTotalCount * 1.0f * interval / MIN_PROGRESS_TIME)));
-
-            if (progress >= 100) {
-
-            } else {
-                mChoreographer.postFrameCallback(mCallback);
-            }
-        };
         return view;
+    }
+
+    @Override
+    public void dismissAllowingStateLoss() {
+        if (mChoreographer != null) {
+            mChoreographer.removeFrameCallback(mCallback);
+        }
+        super.dismissAllowingStateLoss();
+    }
+
+    @Override
+    public void onDismiss(DialogInterface dialog) {
+        super.onDismiss(dialog);
     }
 
     @Override
@@ -101,6 +97,23 @@ public class BackupProcessDialog extends BaseDialogFragment {
 
     public void startProgress() {
         mStartTime = System.currentTimeMillis();
+        mCallback = frameTimeNanos -> {
+            long interval = System.currentTimeMillis() - mStartTime;
+            int progress;
+            if (mTotalCount * interval > mTargetCount * MIN_PROGRESS_TIME) {
+                //use actual progress
+                progress = Math.min((int) (100.0f * mTargetCount / mTotalCount), 100);
+            } else {
+                progress = Math.min((int) (100.0f * interval / MIN_PROGRESS_TIME), 100);
+            }
+
+            mProgressBar.setProgress(progress);
+            mBackedUpView.setText(String.valueOf((int) (mTotalCount * 1.0f * interval / MIN_PROGRESS_TIME)));
+
+            if (interval < MIN_PROGRESS_TIME && progress < 100 && isResumed()) {
+                mChoreographer.postFrameCallback(mCallback);
+            }
+        };
         mChoreographer.postFrameCallback(mCallback);
     }
 
@@ -115,8 +128,10 @@ public class BackupProcessDialog extends BaseDialogFragment {
 
         if (hide) {
             mProgressBar.setVisibility(View.INVISIBLE);
+            mTextGroup.setVisibility(View.INVISIBLE);
         } else {
             mProgressBar.setVisibility(View.VISIBLE);
+            mTextGroup.setVisibility(View.VISIBLE);
         }
     }
 
@@ -126,12 +141,12 @@ public class BackupProcessDialog extends BaseDialogFragment {
         }
     }
 
-    public void changeLottie(boolean backing) {
+    public void changeLottie(boolean backingUp) {
         if (mLottie == null) {
             return;
         }
         mLottie.cancelAnimation();
-        if (backing) {
+        if (backingUp) {
             mLottie.setAnimation("lottie/local_backup_process.json");
         } else {
             mLottie.setAnimation("lottie/cloud_backup_process.json");

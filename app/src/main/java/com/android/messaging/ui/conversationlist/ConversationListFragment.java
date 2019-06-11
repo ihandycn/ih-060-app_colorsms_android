@@ -247,8 +247,8 @@ public class ConversationListFragment extends Fragment implements ConversationLi
                 container, false);
         mRecyclerView = rootView.findViewById(android.R.id.list);
         mEmptyListMessageView = rootView.findViewById(R.id.no_conversations_view);
-        mBackupBannerGuideContainer = rootView.findViewById(R.id.backup_banner_guide_container);
         mEmptyListMessageView.setImageHint(R.drawable.ic_oobe_conv_list);
+        mBackupBannerGuideContainer = rootView.findViewById(R.id.backup_banner_guide_container);
         tryShowTopBackupBannerGuide();
         ImageView conversationListBg = rootView.findViewById(R.id.conversation_list_bg);
         Drawable bgDrawable = WallpaperDrawables.getConversationListWallpaperDrawable();
@@ -448,9 +448,9 @@ public class ConversationListFragment extends Fragment implements ConversationLi
         });
 
         ImageView backupBannerGuideCloseButton = mBackupBannerGuideContainer.findViewById(R.id.backup_banner_close);
-        backupBannerGuideCloseButton.setBackground(BackgroundDrawables.createBackgroundDrawable
-                (getResources().getColor(R.color.backup_guide_dialog_close_button_color),
-                        Dimensions.pxFromDp(40f), true));
+//        backupBannerGuideCloseButton.setBackground(BackgroundDrawables.createBackgroundDrawable
+//                (getResources().getColor(R.color.backup_guide_dialog_close_button_color),
+//                        Dimensions.pxFromDp(40f), true));
         backupBannerGuideCloseButton.setOnClickListener(v -> {
             mBackupBannerGuideContainer.setVisibility(View.GONE);
             Preferences.getDefault().putBoolean(PREF_KEY_BACKUP_SHOW_BANNER_GUIDE, false);
