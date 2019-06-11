@@ -44,7 +44,6 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.android.messaging.Factory;
 import com.android.messaging.R;
 import com.android.messaging.ad.AdConfig;
 import com.android.messaging.ad.AdPlacement;
@@ -76,7 +75,6 @@ import com.android.messaging.ui.view.MessagesTextView;
 import com.android.messaging.util.AccessibilityUtil;
 import com.android.messaging.util.Assert;
 import com.android.messaging.util.BugleAnalytics;
-import com.android.messaging.util.BuglePrefs;
 import com.android.messaging.util.CommonUtils;
 import com.android.messaging.util.ImeUtil;
 import com.android.messaging.util.LogUtil;
@@ -114,7 +112,6 @@ public class ConversationListFragment extends Fragment implements ConversationLi
     private static final String BUNDLE_ARCHIVED_MODE = "archived_mode";
     private static final String BUNDLE_FORWARD_MESSAGE_MODE = "forward_message_mode";
     private static final boolean VERBOSE = false;
-    private BuglePrefs mBackupBannerGuideHidePrefs = Factory.get().getCustomizePrefs();
 
     private boolean mArchiveMode;
     private boolean mBlockedAvailable;
@@ -395,27 +392,29 @@ public class ConversationListFragment extends Fragment implements ConversationLi
         if (!CommonUtils.isNewUser()) {
             return;
         }
+
+        Preferences prefFile = Preferences.getDefault();
         // check top guide enable
-        boolean topGuideEnable = mBackupBannerGuideHidePrefs.getBoolean(PREF_KEY_BACKUP_SHOW_BANNER_GUIDE, true);
+        boolean topGuideEnable = prefFile.getBoolean(PREF_KEY_BACKUP_SHOW_BANNER_GUIDE, true);
         if (!topGuideEnable) {
             return;
         }
 
         // check backup activity opened
-        boolean backupActivityShown = Preferences.getDefault().
+        boolean backupActivityShown = prefFile.
                 getBoolean(BackupRestoreActivity.PREF_KEY_BACKUP_ACTIVITY_SHOWN, false);
         if (backupActivityShown) {
             return;
         }
 
         //check show times
-        int backupBannerGuideShowCount = mBackupBannerGuideHidePrefs.getInt(PREF_KEY_BACKUP_BANNER_GUIDE_SHOW_COUNT, 0);
+        int backupBannerGuideShowCount = prefFile.getInt(PREF_KEY_BACKUP_BANNER_GUIDE_SHOW_COUNT, 0);
         if (backupBannerGuideShowCount >= HSConfig.optInteger(6, "Application", "BackupRestore", "RecommendBannerTimes")) {
             return;
         }
 
         mBackupBannerGuideContainer.setVisibility(View.VISIBLE);
-        mBackupBannerGuideHidePrefs.putInt(PREF_KEY_BACKUP_BANNER_GUIDE_SHOW_COUNT, backupBannerGuideShowCount + 1);
+        prefFile.putInt(PREF_KEY_BACKUP_BANNER_GUIDE_SHOW_COUNT, backupBannerGuideShowCount + 1);
 
         TextView title = mBackupBannerGuideContainer.findViewById(R.id.backup_banner_title);
         title.setText(getString(R.string.backup_banner_guide_title, 30));
@@ -454,7 +453,7 @@ public class ConversationListFragment extends Fragment implements ConversationLi
                         Dimensions.pxFromDp(40f), true));
         backupBannerGuideCloseButton.setOnClickListener(v -> {
             mBackupBannerGuideContainer.setVisibility(View.GONE);
-            mBackupBannerGuideHidePrefs.putBoolean(PREF_KEY_BACKUP_SHOW_BANNER_GUIDE, false);
+            Preferences.getDefault().putBoolean(PREF_KEY_BACKUP_SHOW_BANNER_GUIDE, false);
             tryShowTopNativeAd();
             switchAd = false;
         });

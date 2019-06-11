@@ -76,7 +76,6 @@ import com.android.messaging.ui.wallpaper.WallpaperDownloader;
 import com.android.messaging.ui.wallpaper.WallpaperManager;
 import com.android.messaging.ui.wallpaper.WallpaperPreviewActivity;
 import com.android.messaging.util.BugleAnalytics;
-import com.android.messaging.util.BuglePrefs;
 import com.android.messaging.util.BuglePrefsKeys;
 import com.android.messaging.util.CommonUtils;
 import com.android.messaging.util.CreateShortcutUtils;
@@ -159,7 +158,6 @@ public class ConversationListActivity extends AbstractConversationListActivity
     private View mEmojiStoreIconView;
     private LottieAnimationView mGuideContainer;
 
-    private BuglePrefs mBackupBannerGuideHidePrefs = Factory.get().getCustomizePrefs();
     private static boolean mIsNoActionBack = true;
     private boolean mIsRealCreate = false;
     private boolean mShowEndAnimation;
