@@ -366,9 +366,6 @@ public class ConversationListFragment extends Fragment implements ConversationLi
         ViewGroupCompat.setTransitionGroup(rootView, false);
 
         setHasOptionsMenu(true);
-        if (AdConfig.isHomepageBannerAdEnabled()) {
-            AcbNativeAdManager.preload(1, AdPlacement.AD_BANNER);
-        }
         return rootView;
     }
 

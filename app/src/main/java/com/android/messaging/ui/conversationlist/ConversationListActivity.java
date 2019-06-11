@@ -27,6 +27,7 @@ import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -200,7 +201,6 @@ public class ConversationListActivity extends AbstractConversationListActivity
     @DebugLog
     private void setLayout() {
         setContentView(R.layout.conversation_list_activity);
-
     }
 
     @DebugLog
@@ -227,8 +227,6 @@ public class ConversationListActivity extends AbstractConversationListActivity
         if (getIntent() != null && getIntent().getBooleanExtra(BugleNotifications.EXTRA_FROM_NOTIFICATION, false)) {
             BugleAnalytics.logEvent("SMS_Notifications_Clicked", true, true);
         }
-
-        Threads.postOnMainThreadDelayed(() -> setupDrawer(), 1000);
 
         HSGlobalNotificationCenter.addObserver(EVENT_MAINPAGE_RECREATE, this);
         HSGlobalNotificationCenter.addObserver(SHOW_EMOJI, this);
@@ -314,13 +312,37 @@ public class ConversationListActivity extends AbstractConversationListActivity
                     }, "pref_key_customize_config_has_send");
                 }
             });
-
-            if (AdConfig.isDetailpageTopAdEnabled()) {
-                AcbNativeAdManager.preload(1, AdPlacement.AD_DETAIL_NATIVE);
-            }
         }
 
         InviteFriendsConditions.setMainPageCreateTime(System.currentTimeMillis());
+
+        navigationView = findViewById(R.id.navigation_view);
+        navigationView.getViewTreeObserver().addOnDrawListener(new ViewTreeObserver.OnDrawListener() {
+
+            boolean firstCall = true;
+
+            @Override
+            public void onDraw() {
+                if (firstCall) {
+                    Threads.postOnMainThread(() -> onPostPageVisible());
+                    firstCall = false;
+                }
+            }
+        });
+    }
+
+    private void onPostPageVisible() {
+        setupDrawer();
+
+        if (AdConfig.isHomepageBannerAdEnabled()) {
+            AcbNativeAdManager.preload(1, AdPlacement.AD_BANNER);
+        }
+
+        Threads.postOnMainThreadDelayed(() -> {
+            if (AdConfig.isDetailpageTopAdEnabled()) {
+                AcbNativeAdManager.preload(1, AdPlacement.AD_DETAIL_NATIVE);
+            }
+        }, 1000);
     }
 
     @DebugLog
@@ -757,6 +779,7 @@ public class ConversationListActivity extends AbstractConversationListActivity
         }
     }
 
+    @DebugLog
     private void configAppBar() {
         View accessoryContainer = findViewById(R.id.accessory_container);
         ViewGroup.LayoutParams layoutParams = accessoryContainer.getLayoutParams();

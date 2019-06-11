@@ -29,8 +29,6 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 
-import hugo.weaving.DebugLog;
-
 /**
  * Collection of date utilities.
  */
@@ -129,7 +127,6 @@ public class Dates {
     }
 
     @VisibleForTesting
-    @DebugLog
     public static CharSequence getTimestamp(final long time, final long now,
                                             final boolean abbreviated, final Locale locale, final int flags,
                                             final boolean minPeriodToday) {
@@ -143,25 +140,10 @@ public class Dates {
         }
     }
 
-    private static CharSequence getLessThanAMinuteOldTimeString(
-            final boolean abbreviated) {
-        return getContext().getResources().getText(
-                abbreviated ? R.string.posted_just_now : R.string.posted_now);
-    }
-
-    private static CharSequence getLessThanAnHourOldTimeString(final long timeDiff,
-                                                               final int flags) {
-        final long count = (timeDiff / MINUTE_IN_MILLIS);
-        final String format = getContext().getResources().getQuantityString(
-                R.plurals.num_minutes_ago, (int) count);
-        return String.format(format, count);
-    }
-
     private static CharSequence getTodayTimeStamp(final long time, final int flags) {
         return getExplicitFormattedTime(time, flags, "HH:mm", "h:mmaa");
     }
 
-    @DebugLog
     private static CharSequence getExplicitFormattedTime(final long time, final int flags,
                                                          final String format24, final String format12) {
         SimpleDateFormat formatter;
@@ -171,24 +153,6 @@ public class Dates {
             formatter = new SimpleDateFormat(format12);
         }
         return formatter.format(new Date(time));
-    }
-
-    private static CharSequence getThisWeekTimestamp(final long time,
-                                                     final Locale locale, final boolean abbreviated, final int flags) {
-        final Context context = getContext();
-        if (abbreviated) {
-            return DateUtils.formatDateTime(context, time,
-                    DateUtils.FORMAT_SHOW_WEEKDAY | DateUtils.FORMAT_ABBREV_WEEKDAY | flags);
-        } else {
-            if (locale.equals(Locale.US)) {
-                return getExplicitFormattedTime(time, flags, "EEE HH:mm", "EEE h:mmaa");
-            } else {
-                return DateUtils.formatDateTime(context, time,
-                        DateUtils.FORMAT_SHOW_WEEKDAY | DateUtils.FORMAT_SHOW_TIME
-                                | DateUtils.FORMAT_ABBREV_WEEKDAY
-                                | flags);
-            }
-        }
     }
 
     private static CharSequence getThisYearTimestamp(final long time, final Locale locale,
