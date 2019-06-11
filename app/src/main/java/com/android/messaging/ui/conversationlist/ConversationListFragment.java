@@ -247,8 +247,9 @@ public class ConversationListFragment extends Fragment implements ConversationLi
                 container, false);
         mRecyclerView = rootView.findViewById(android.R.id.list);
         mEmptyListMessageView = rootView.findViewById(R.id.no_conversations_view);
+        mBackupBannerGuideContainer = rootView.findViewById(R.id.backup_banner_guide_container);
         mEmptyListMessageView.setImageHint(R.drawable.ic_oobe_conv_list);
-        tryShowTopBackupBannerGuide(rootView);
+        tryShowTopBackupBannerGuide();
         ImageView conversationListBg = rootView.findViewById(R.id.conversation_list_bg);
         Drawable bgDrawable = WallpaperDrawables.getConversationListWallpaperDrawable();
         getActivity().getWindow().getDecorView().setBackground(null);
@@ -386,11 +387,10 @@ public class ConversationListFragment extends Fragment implements ConversationLi
     }
 
 
-    private void tryShowTopBackupBannerGuide(ViewGroup rootView) {
+    private void tryShowTopBackupBannerGuide() {
         if (mBackupBannerGuideHidePrefs.getBoolean(PREF_KEY_BACKUP_SHOW_BANNER_GUIDE, true)) {
             int backupBannerGuideShowCount = mBackupBannerGuideHidePrefs.getInt(PREF_KEY_BACKUP_BANNER_GUIDE_SHOW_COUNT, 0);
             if (backupBannerGuideShowCount < HSConfig.optInteger(6, "Application", "BackupRestore", "RecommendBannerTimes")) {
-                mBackupBannerGuideContainer = rootView.findViewById(R.id.backup_banner_guide_container);
                 mBackupBannerGuideContainer.setVisibility(View.VISIBLE);
                 mBackupBannerGuideHidePrefs.putInt(PREF_KEY_BACKUP_BANNER_GUIDE_SHOW_COUNT, backupBannerGuideShowCount + 1);
                 MessagesTextView backupBannerButton = mBackupBannerGuideContainer.findViewById(R.id.backup_banner_button);
