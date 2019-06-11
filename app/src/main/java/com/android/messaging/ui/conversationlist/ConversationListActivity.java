@@ -313,8 +313,6 @@ public class ConversationListActivity extends AbstractConversationListActivity
             });
         }
 
-        InviteFriendsConditions.setMainPageCreateTime(System.currentTimeMillis());
-
         navigationView = findViewById(R.id.navigation_view);
         navigationView.getViewTreeObserver().addOnDrawListener(new ViewTreeObserver.OnDrawListener() {
 
