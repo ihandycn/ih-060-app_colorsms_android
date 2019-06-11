@@ -3,7 +3,6 @@ package com.android.messaging.util;
 import android.os.Handler;
 import android.provider.Telephony;
 
-import com.android.messaging.Factory;
 import com.ihs.app.framework.HSApplication;
 import com.ihs.commons.utils.HSLog;
 
@@ -25,22 +24,23 @@ public class DefaultSMSUtils {
      */
     @DebugLog
     public static boolean isDefaultSmsApp() {
-        if (OsUtil.isAtLeastKLP()) {
-            if ((cacheValidationLock != null && Factory.get().getIsForeground())
-                    || sHandler.hasMessages(EVENT_CACHE_VALIDATION_PERIOD)) {
-                HSLog.d("detect is default app : hit cache");
-                return sIsDefautSMS;
-            }
+        if (!OsUtil.isAtLeastKLP()) {
+            return true;
+        }
 
-            long time = System.currentTimeMillis();
-            final String configuredApplication = Telephony.Sms.getDefaultSmsPackage(HSApplication.getContext());
-            HSLog.d("detect is default app : cost time " + (System.currentTimeMillis() - time));
-            sIsDefautSMS = HSApplication.getContext().getPackageName().equals(configuredApplication);
-            cacheValidationLock = new Object();
-            sHandler.sendEmptyMessageDelayed(EVENT_CACHE_VALIDATION_PERIOD, CACHE_INVALIDATE_INTERVAL);
+        if ((cacheValidationLock != null)
+                || sHandler.hasMessages(EVENT_CACHE_VALIDATION_PERIOD)) {
+            HSLog.d("detect is default app : hit cache");
             return sIsDefautSMS;
         }
-        return true;
+
+        long time = System.currentTimeMillis();
+        final String configuredApplication = Telephony.Sms.getDefaultSmsPackage(HSApplication.getContext());
+        HSLog.d("detect is default app : cost time " + (System.currentTimeMillis() - time));
+        sIsDefautSMS = HSApplication.getContext().getPackageName().equals(configuredApplication);
+        cacheValidationLock = new Object();
+        sHandler.sendEmptyMessageDelayed(EVENT_CACHE_VALIDATION_PERIOD, CACHE_INVALIDATE_INTERVAL);
+        return sIsDefautSMS;
     }
 
     public static void invalidateCache() {

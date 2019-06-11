@@ -639,7 +639,7 @@ public class ConversationListActivity extends AbstractConversationListActivity
 
     @Override
     public void onBackPressed() {
-        if (drawerLayout.isDrawerOpen(navigationView)) {
+        if (drawerLayout != null && drawerLayout.isDrawerOpen(navigationView)) {
             drawerLayout.closeDrawer(navigationView);
             return;
         }
