@@ -1,5 +1,6 @@
 package com.android.messaging.backup.ui;
 
+import android.content.DialogInterface;
 import android.view.Choreographer;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -66,9 +67,7 @@ public class RestoreProcessDialog extends BaseDialogFragment {
             mProgressBar.setProgress(progress);
             mRestoredTextView.setText(String.valueOf((int) (mTotalCount * 1.0f * interval / MIN_PROGRESS_TIME)));
 
-            if (progress >= 100) {
-
-            } else {
+            if (interval < MIN_PROGRESS_TIME && progress < 100 && isResumed()) {
                 mChoreographer.postFrameCallback(mCallback);
             }
         };
@@ -119,5 +118,17 @@ public class RestoreProcessDialog extends BaseDialogFragment {
     protected void onContentViewAdded() {
         super.onContentViewAdded();
         removeDialogContentHorizontalMargin();
+    }
+
+    @Override
+    public void onDismiss(DialogInterface dialog) {
+        super.onDismiss(dialog);
+        mChoreographer.removeFrameCallback(mCallback);
+    }
+
+    @Override
+    public void dismissAllowingStateLoss() {
+        super.dismissAllowingStateLoss();
+        mChoreographer.removeFrameCallback(mCallback);
     }
 }

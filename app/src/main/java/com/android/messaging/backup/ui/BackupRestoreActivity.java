@@ -11,7 +11,6 @@ import android.widget.TextView;
 
 import com.android.messaging.BaseActivity;
 import com.android.messaging.R;
-import com.android.messaging.ui.CustomHeaderViewPager;
 import com.android.messaging.ui.CustomPagerViewHolder;
 import com.android.messaging.ui.CustomViewPager;
 import com.android.messaging.util.BugleAnalytics;
@@ -35,7 +34,7 @@ public class BackupRestoreActivity extends BaseActivity {
     private static final int RC_SIGN_IN = 12;
     private ChooseBackupViewHolder mBackUpViewHolder;
     private ChooseRestoreViewHolder mRestoreViewHolder;
-    private CustomHeaderViewPager mCustomHeaderViewPager;
+    private CustomViewPager mCustomHeaderViewPager;
 
     public static void startBackupRestoreActivity(Context context, @NonNull String entrance) {
         Intent intent = new Intent(context, BackupRestoreActivity.class);

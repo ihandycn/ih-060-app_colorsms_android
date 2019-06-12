@@ -53,8 +53,7 @@ public class ChooseBackupViewHolder extends BasePagerViewHolder implements Custo
         final LayoutInflater inflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         final View view = inflater.inflate(R.layout.choose_backup_page, container, false);
 
-        ((TextView) view.findViewById(R.id.backup_local_summary))
-                .setText(CommonUtils.getDirectory(BackupPersistManager.BASE_PATH).getAbsolutePath());
+        ((TextView) view.findViewById(R.id.backup_local_summary)).setText(R.string.backup_local_summary);
 
         mLocalCheckBox = view.findViewById(R.id.backup_local);
         mCloudCheckBox = view.findViewById(R.id.backup_cloud);
@@ -349,11 +348,13 @@ public class ChooseBackupViewHolder extends BasePagerViewHolder implements Custo
             @Override
             public void onDeleteSuccess() {
                 dismissCondition[1] = true;
-                if (dialog != null) {
-                    if (dismissCondition[0]) {
+                if (dismissCondition[0]) {
+                    if (dialog != null) {
                         dialog.dismissAllowingStateLoss();
                     }
+                    Toasts.showToast(R.string.backup_free_success);
                 }
+
                 Preferences.getDefault().doOnce(() -> {
                     UiUtils.showDialogFragment((Activity) mContext,
                             new BackupTipsBeforeUninstallingDialog());

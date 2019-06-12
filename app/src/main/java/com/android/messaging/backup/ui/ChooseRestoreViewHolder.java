@@ -35,6 +35,8 @@ public class ChooseRestoreViewHolder extends BasePagerViewHolder implements Cust
     private BackupManager.CloudFileListLoadListener mListLoadListener;
     private List<BackupInfo> mCloudBackups;
     private List<BackupInfo> mLocalBackups;
+    private TextView mFromLocalTitle;
+    private TextView mFromCloudTitle;
     private TextView mLocalSummary;
     private TextView mCloudSummary;
 
@@ -54,6 +56,9 @@ public class ChooseRestoreViewHolder extends BasePagerViewHolder implements Cust
 
         View localContainer = view.findViewById(R.id.from_local_container);
         View cloudContainer = view.findViewById(R.id.from_cloud_container);
+
+        mFromLocalTitle = view.findViewById(R.id.from_local_title);
+        mFromCloudTitle = view.findViewById(R.id.from_cloud_title);
 
         MessagesTextView restoreButton = view.findViewById(R.id.restore_confirm_button);
         mLocalSummary = view.findViewById(R.id.from_local_summary);
@@ -216,12 +221,19 @@ public class ChooseRestoreViewHolder extends BasePagerViewHolder implements Cust
                     if (cloudList != null && cloudList.size() > 0) {
                         mCloudBackups = cloudList;
                         mCloudSummary.setText(cloudList.get(0).getBackupTimeStr());
+                        mFromCloudTitle.setTextColor(getContext().getResources()
+                                .getColor(R.color.text_primary_color));
+                    } else {
+                        mFromCloudTitle.setTextColor(getContext().getResources()
+                                .getColor(R.color.restore_summary_default_color));
                     }
                 }
 
                 @Override
                 public void onLoadCancel() {
                     mCloudSummary.setText(R.string.restore_default_summary);
+                    mFromCloudTitle.setTextColor(getContext().getResources()
+                            .getColor(R.color.restore_summary_default_color));
                 }
             };
             BackupManager.getInstance().getCloudBackupFilesName(mListLoadListener);
@@ -239,9 +251,13 @@ public class ChooseRestoreViewHolder extends BasePagerViewHolder implements Cust
         List<BackupInfo> localBackups = BackupManager.getInstance().getLocalBackupFilesInfo();
         if (localBackups == null || localBackups.size() == 0) {
             mLocalSummary.setText(R.string.restore_default_summary);
+            mFromLocalTitle.setTextColor(getContext().getResources()
+                    .getColor(R.color.restore_summary_default_color));
         } else {
             mLocalSummary.setText(localBackups.get(0).getBackupTimeStr());
             mLocalBackups = localBackups;
+            mFromLocalTitle.setTextColor(getContext().getResources()
+                    .getColor(R.color.text_primary_color));
         }
     }
 

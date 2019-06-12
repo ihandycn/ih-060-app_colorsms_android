@@ -7,9 +7,8 @@
 
     <include layout="@layout/top_tool_bar_view" />
 
-    <com.android.messaging.ui.CustomHeaderViewPager
+    <com.android.messaging.backup.ui.BackupRestoreHeaderViewPager
         android:id="@+id/backup_header_pager"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
-
 </LinearLayout>

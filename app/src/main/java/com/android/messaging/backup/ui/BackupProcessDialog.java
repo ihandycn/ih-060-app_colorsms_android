@@ -108,7 +108,8 @@ public class BackupProcessDialog extends BaseDialogFragment {
             }
 
             mProgressBar.setProgress(progress);
-            mBackedUpView.setText(String.valueOf((int) (mTotalCount * 1.0f * interval / MIN_PROGRESS_TIME)));
+            mBackedUpView.setText(String.valueOf(
+                    Math.min(mTotalCount, (int) (mTotalCount * 1.0f * interval / MIN_PROGRESS_TIME))));
 
             if (interval < MIN_PROGRESS_TIME && progress < 100 && isResumed()) {
                 mChoreographer.postFrameCallback(mCallback);

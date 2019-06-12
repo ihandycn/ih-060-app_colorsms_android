@@ -1,16 +1,15 @@
 package com.android.messaging.backup.ui;
 
 import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.ImageView;
 
 import com.android.messaging.R;
 import com.android.messaging.ui.BaseDialogFragment;
 import com.android.messaging.util.BugleAnalytics;
-import com.android.messaging.util.UiUtils;
+import com.superapps.util.BackgroundDrawables;
+import com.superapps.util.Dimensions;
 
 public class MessageFreeUpDialog extends BaseDialogFragment {
     @Override
@@ -44,9 +43,10 @@ public class MessageFreeUpDialog extends BaseDialogFragment {
     }
 
     private View createBodyView() {
-        View mContentView = LayoutInflater.from(getActivity()).inflate(
-                R.layout.message_free_up_tip_dialog, null);
+        View mContentView = LayoutInflater.from(getActivity()).inflate(R.layout.message_free_up_tip_dialog, null);
         ImageView freeUpCloseButton = mContentView.findViewById(R.id.message_free_up_close);
+        freeUpCloseButton.setBackground(BackgroundDrawables.createTransparentBackgroundDrawable(
+                0x33000000, Dimensions.pxFromDp(14)));
         freeUpCloseButton.setOnClickListener(v -> {
             dismissAllowingStateLoss();
             BugleAnalytics.logEvent("Backup_Freeupmsg_Alert_Close");
@@ -58,5 +58,6 @@ public class MessageFreeUpDialog extends BaseDialogFragment {
     protected void onContentViewAdded() {
         super.onContentViewAdded();
         removeDialogContentHorizontalMargin();
+        removeDialogContentVerticalMargin();
     }
 }

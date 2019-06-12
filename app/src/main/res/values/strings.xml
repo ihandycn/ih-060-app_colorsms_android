@@ -1218,7 +1218,6 @@
     <string name="restore_default_summary">No backup file</string>
     <string name="backup_local">Local</string>
     <string name="backup_cloud">Cloud</string>
-    <string name="backup_local_default_summary">/storage/emuilated/0/backup</string>
     <string name="backup_no_account">No account</string>
     <string name="message_free_up_title">Free Up Message Space</string>
     <string name="message_free_up_content">Delete local messages 30 days ago to save space &amp; speed up your phone! You could access cleaned messages via RESTORE.</string>
@@ -1245,4 +1244,6 @@
     <string name="backup_guide_dialog_second_content">%1$d messages are not protected.</string>
     <string name="backup_guide_dialog_third_content">Protect all your messages in one step.</string>
     <string name="backup_banner_guide_title">%1$d messages are unprotected without backup.</string>
+    <string name="backup_local_summary">Back up to local storage</string>
+    <string name="backup_free_success">Free Up Space Success</string>
 </resources>

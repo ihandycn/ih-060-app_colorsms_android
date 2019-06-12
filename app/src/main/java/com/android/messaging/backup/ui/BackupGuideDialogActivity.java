@@ -38,6 +38,8 @@ public class BackupGuideDialogActivity extends HSAppCompatActivity {
         });
 
         ImageView backupDialogCloseButton = findViewById(R.id.backup_guide_dialog_close);
+        backupDialogCloseButton.setBackground(BackgroundDrawables.createTransparentBackgroundDrawable(
+                0x33000000, Dimensions.pxFromDp(14)));
         backupDialogCloseButton.setOnClickListener(v -> finish());
 
         Threads.postOnThreadPoolExecutor(() -> {

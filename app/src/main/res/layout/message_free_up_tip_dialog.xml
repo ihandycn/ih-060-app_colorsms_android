@@ -10,9 +10,8 @@
         android:layout_width="28dp"
         android:layout_height="28dp"
         android:layout_marginEnd="5.3dp"
-        android:background="@drawable/message_free_up_close_btn_background"
-        android:clickable="true"
-        android:focusable="true"
+        android:layout_marginTop="5.3dp"
+        android:background="@drawable/material_compat_button_bg"
         android:padding="8dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
@@ -52,5 +51,4 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/message_free_up_title"
         app:typeface="@string/custom_font_medium" />
-
 </android.support.constraint.ConstraintLayout>

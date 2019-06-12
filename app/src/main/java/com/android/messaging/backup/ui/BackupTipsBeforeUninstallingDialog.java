@@ -17,7 +17,7 @@ import com.ihs.app.framework.HSApplication;
 public class BackupTipsBeforeUninstallingDialog extends BaseDialogFragment {
     @Override
     protected CharSequence getTitle() {
-        SpannableString ss = new SpannableString(HSApplication.getContext().getString(R.string.tips) + " ");
+        SpannableString ss = new SpannableString(HSApplication.getContext().getString(R.string.tips) + "   ");
         Drawable drawable = getResources().getDrawable(R.drawable.ic_tips);
         drawable.setBounds(0, 0, drawable.getIntrinsicWidth(), drawable.getIntrinsicHeight());
         ss.setSpan(new ImageSpan(drawable,ImageSpan.ALIGN_BASELINE),
