@@ -4,7 +4,6 @@ import android.Manifest;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.content.Intent;
-import android.content.res.Resources;
 import android.database.Cursor;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
@@ -33,7 +32,6 @@ import android.widget.TextView;
 
 import com.airbnb.lottie.LottieAnimationView;
 import com.android.messaging.BuildConfig;
-import com.android.messaging.Factory;
 import com.android.messaging.R;
 import com.android.messaging.ad.AdConfig;
 import com.android.messaging.ad.AdPlacement;
@@ -101,8 +99,9 @@ import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
-import java.util.Random;
+import java.util.Map;
 
 import hugo.weaving.DebugLog;
 
@@ -283,33 +282,6 @@ public class ConversationListActivity extends AbstractConversationListActivity
                     default:
                         size = "Default";
                 }
-
-
-                if (Calendars.getDayDifference(System.currentTimeMillis(), CommonUtils.getAppInstallTimeMillis()) == 1) {
-                    final int wallpaper = wallpaperIndex;
-                    Preferences.getDefault().doOnce(() -> {
-                        Resources res = Factory.get().getApplicationContext().getResources();
-                        int bubbleSendFontColor = ConversationColors.get().getMessageTextColor(false);
-                        int bubbleSendBgColor = ConversationColors.get().getBubbleBackgroundColor(false);
-                        int bubbleRcvFontColor = ConversationColors.get().getMessageTextColor(true);
-                        int bubbleRcvBgColor = ConversationColors.get().getBubbleBackgroundColor(true);
-                        if (bubbleRcvBgColor != res.getColor(R.color.message_bubble_color_incoming)
-                                || bubbleSendBgColor != res.getColor(R.color.message_bubble_color_outgoing)
-                                || bubbleSendFontColor != res.getColor(R.color.message_text_color_outgoing)
-                                || bubbleRcvFontColor != res.getColor(R.color.message_text_color_incoming)) {
-                            //bubble font color or bg color has been changed
-                            String fontType = FontStyleManager.getInstance().getFontFamily();
-                            int fontSize = FontStyleManager.getInstance().getFontScaleLevel();
-                            int bubbleStyle = BubbleDrawables.getSelectedIdentifier();
-                            BugleAnalytics.logEvent("Customize_Analysis", true,
-                                    "group" + new Random().nextInt(7),
-                                    bubbleSendFontColor + "|" + bubbleSendBgColor + "|"
-                                            + bubbleRcvFontColor + "|" + bubbleRcvBgColor + "|"
-                                            + fontType + "|" + fontSize + "|" + bubbleStyle + "|"
-                                            + wallpaper + "|" + ChooseThemeColorRecommendViewHolder.getPrimaryColorType());
-                        }
-                    }, "pref_key_customize_config_has_send");
-                }
             });
         }
 
@@ -363,6 +335,23 @@ public class ConversationListActivity extends AbstractConversationListActivity
             Threads.postOnMainThreadDelayed(() -> showEmojiStoreGuide(), 500);
         }
         showThemeUpgradeDialog();
+
+        logMainPageShowEvent();
+    }
+
+    private void logMainPageShowEvent() {
+        Map<String, String> params = new HashMap<>();
+        params.put("WidthDp", String.valueOf(Dimensions.dpFromPx(Dimensions.getPhoneWidth(this))));
+        params.put("HeightDp", String.valueOf(Dimensions.dpFromPx(Dimensions.getPhoneHeight(this))));
+        params.put("DensityDpi", String.valueOf(getResources().getDisplayMetrics().densityDpi));
+        params.put("ScreenSize", getScreenSize());
+        BugleAnalytics.logEvent("Main_Page_Shown", params);
+    }
+
+    private static String getScreenSize() {
+        int screenWidth = Dimensions.getPhoneWidth(HSApplication.getContext());
+        int screenHeight = Dimensions.getPhoneHeight(HSApplication.getContext());
+        return screenWidth + "x" + screenHeight;
     }
 
     private void showThemeUpgradeDialog() {
