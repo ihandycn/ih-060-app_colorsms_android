@@ -399,6 +399,7 @@ public class ConversationActivity extends BugleActionBarActivity
 
                     }
                 });
+                mInterstitialAd.setSoundEnable(false);
                 mInterstitialAd.show();
                 BugleAnalytics.logEvent("Detailspage_FullAd_Show", true, true);
                 Preferences.getDefault().putLong(PREF_KEY_WIRE_AD_SHOW_TIME, System.currentTimeMillis());
