@@ -414,7 +414,7 @@ public class ConversationFragment extends Fragment implements ConversationDataLi
 
             Preferences preferences = Preferences.getDefault();
             mIsFirstClickActionMenu = preferences.getBoolean(IS_FIRST_CLICK_ACTION_MENU, true);
-            if(mIsFirstClickActionMenu){
+            if (mIsFirstClickActionMenu) {
                 menu.findItem(R.id.action_menu).setIcon(R.drawable.ic_menu_with_red_point);
             }
             return true;
@@ -884,18 +884,24 @@ public class ConversationFragment extends Fragment implements ConversationDataLi
         mWallpaperView = view.findViewById(R.id.conversation_fragment_wallpaper);
         mThemeWallpaperView = view.findViewById(R.id.conversation_fragment_theme_wallpaper);
 
-        Threads.postOnMainThreadDelayed(() -> {
-            if (mIsDestroyed || getActivity() == null) {
-                return;
+        mComposeMessageView.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+            @Override public void onGlobalLayout() {
+                mComposeMessageView.getViewTreeObserver().removeOnGlobalLayoutListener(this);
+
+                Threads.postOnMainThreadDelayed(() -> {
+                    if (mIsDestroyed || getActivity() == null) {
+                        return;
+                    }
+                    if (AdConfig.isDetailpageTopAdEnabled()
+                            && !mHost.isFromCreateConversation()) {
+                        loadTopBannerAd();
+                    }
+                    if (AdConfig.isHomepageBannerAdEnabled()) {
+                        AcbNativeAdManager.preload(1, AdPlacement.AD_BANNER);
+                    }
+                }, 500);
             }
-            if (AdConfig.isDetailpageTopAdEnabled()
-                    && !mHost.isFromCreateConversation()) {
-                loadTopBannerAd();
-            }
-            if (AdConfig.isHomepageBannerAdEnabled()) {
-                AcbNativeAdManager.preload(1, AdPlacement.AD_BANNER);
-            }
-        }, 3 * DateUtils.SECOND_IN_MILLIS);
+        });
 
         return view;
     }
