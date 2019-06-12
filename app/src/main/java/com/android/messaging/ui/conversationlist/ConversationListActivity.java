@@ -630,10 +630,12 @@ public class ConversationListActivity extends AbstractConversationListActivity
 
         int mainActivityCreateTime = Preferences.get(DESKTOP_PREFS).getInt(PREF_KEY_MAIN_ACTIVITY_SHOW_TIME, 0);
         // show backup full guide
-        if (mainActivityCreateTime >= 2 && CommonUtils.isNewUser()
+        if (!shouldShowCreateShortcutGuide
+                && mainActivityCreateTime >= 2 && CommonUtils.isNewUser()
                 && HSConfig.optBoolean(false, "Application", "BackupRestore", "RecommendFull")
                 && !Preferences.getDefault()
                 .getBoolean(BackupGuideDialogActivity.PREF_KEY_BACKUP_FULL_GUIDE_SHOWN, false)) {
+            shouldShowCreateShortcutGuide = true;
             Intent intent = new Intent(this, BackupGuideDialogActivity.class);
             Navigations.startActivitySafely(this, intent);
             return;
