@@ -64,6 +64,7 @@ import com.android.messaging.datamodel.data.MessagePartData;
 import com.android.messaging.datamodel.data.ParticipantData;
 import com.android.messaging.datamodel.data.PendingAttachmentData;
 import com.android.messaging.datamodel.data.SubscriptionListData.SubscriptionListEntry;
+import com.android.messaging.font.FontUtils;
 import com.android.messaging.sms.MmsConfig;
 import com.android.messaging.ui.AttachmentPreview;
 import com.android.messaging.ui.BugleActionBarActivity;
@@ -89,7 +90,6 @@ import com.android.messaging.util.MediaUtil;
 import com.android.messaging.util.OsUtil;
 import com.android.messaging.util.TextViewUtil;
 import com.android.messaging.util.UiUtils;
-import com.android.messaging.font.FontUtils;
 import com.superapps.util.BackgroundDrawables;
 import com.superapps.util.Dimensions;
 import com.superapps.util.Preferences;
@@ -104,7 +104,7 @@ import java.util.List;
  */
 public class ComposeMessageView extends LinearLayout
         implements TextView.OnEditorActionListener, DraftMessageDataListener, TextWatcher,
-        ConversationInputSink{
+        ConversationInputSink {
 
     public interface IComposeMessageViewHost extends
             DraftMessageData.DraftMessageSubscriptionDataProvider {
@@ -515,7 +515,7 @@ public class ComposeMessageView extends LinearLayout
         };
     }
 
-    private void resetDelaySendAnimation(){
+    private void resetDelaySendAnimation() {
         mDelayCloseButton.setVisibility(View.GONE);
         mSendDelayProgressBar.setVisibility(View.GONE);
         mSelfSendIcon.setVisibility(View.VISIBLE);
@@ -530,26 +530,26 @@ public class ComposeMessageView extends LinearLayout
         mSendDelayProgressBar.setProgress(100);
     }
 
-    private void startMessageSendDelayAction(long sendDelayAnimationStartTime){
+    private void startMessageSendDelayAction(long sendDelayAnimationStartTime) {
         mIsWaitingToSendMessage = true;
 
         if (mMillisecondsAnimated > 1000 * SendDelaySettings.getSendDelayInSecs()) {
-            mMillisecondsAnimated =  1000 * SendDelaySettings.getSendDelayInSecs() * 9 / 10 ;
+            mMillisecondsAnimated = 1000 * SendDelaySettings.getSendDelayInSecs() * 9 / 10;
         }
 
         if (mMillisecondsAnimated != 0) {
             mSendDelayProgressBar.setProgress(100 - (float) ((mMillisecondsAnimated * 100) / (1000 * SendDelaySettings.getSendDelayInSecs())));
         }
-        Threads.postOnMainThreadDelayed(mSendDelayRunnable,1000 * SendDelaySettings.getSendDelayInSecs() - mMillisecondsAnimated);
+        Threads.postOnMainThreadDelayed(mSendDelayRunnable, 1000 * SendDelaySettings.getSendDelayInSecs() - mMillisecondsAnimated);
 
         String conversationId = mBinding.getData().getConversationId();
         SendDelayMessagesManager.insertIncompleteSendingDelayMessagesAction(conversationId, sendDelayAnimationStartTime, mSendDelayRunnable);
-        if(SendDelaySettings.getSendDelayInSecs() != 0) {
+        if (SendDelaySettings.getSendDelayInSecs() != 0) {
             mDelayCloseButton.setVisibility(View.VISIBLE);
             mSendDelayProgressBar.setVisibility(View.VISIBLE);
             mSelfSendIcon.setVisibility(View.GONE);
             mSendButton.setVisibility(View.GONE);
-            
+
             mDelayCloseButton.animate().alpha(1.0f).setDuration(160).setStartDelay(80).start();
             Interpolator scaleStartInterpolator =
                     PathInterpolatorCompat.create(0.0f, 0.0f, 0.58f, 1.0f);
@@ -566,7 +566,7 @@ public class ComposeMessageView extends LinearLayout
         });
     }
 
-    private void resumeLastSendDelayMessageActionInThisConversation(){
+    private void resumeLastSendDelayMessageActionInThisConversation() {
         long sendDelayActionStartTime;
         String conversationId = mBinding.getData().getConversationId();
         SendDelayMessagesManager.SendDelayMessagesData globalSendDelayMessagesData = SendDelayMessagesManager.getIncompleteSendingDelayMessagesAction(conversationId);
@@ -758,7 +758,10 @@ public class ComposeMessageView extends LinearLayout
         // show the subject editor
         if (mSubjectView.getVisibility() == View.GONE) {
             mSubjectView.setVisibility(View.VISIBLE);
-            mSubjectView.requestFocus();
+            try {
+                mSubjectView.requestFocus();
+            } catch (Exception e) {
+            }
             return true;
         }
         return false;
@@ -766,7 +769,10 @@ public class ComposeMessageView extends LinearLayout
 
     private void hideSubjectEditor() {
         mSubjectView.setVisibility(View.GONE);
-        mComposeEditText.requestFocus();
+        try {
+            mComposeEditText.requestFocus();
+        } catch (Exception e) {
+        }
     }
 
     /**
@@ -1178,8 +1184,8 @@ public class ComposeMessageView extends LinearLayout
             if (hasWorkingDraft && isDataLoadedForMessageSend()) {
                 if (selfSendButtonUri != null) {
                     UiUtils.revealOrHideViewWithAnimation(mSendButton, VISIBLE, null);
-                } else if(!mIsWaitingToSendMessage) {
-                        mSendButton.setVisibility(View.VISIBLE);
+                } else if (!mIsWaitingToSendMessage) {
+                    mSendButton.setVisibility(View.VISIBLE);
                 }
                 if (isOverriddenAvatarAGroup()) {
                     // If the host has overriden the avatar to show a group avatar where the
