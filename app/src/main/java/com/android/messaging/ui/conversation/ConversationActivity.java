@@ -93,9 +93,7 @@ public class ConversationActivity extends BugleActionBarActivity
     private TextView mTitleTextView;
     private ViewGroup mContainer;
 
-    private int mStatusBarHeight;
     private int mKeyboardHeight;
-    private int mNavigationBarHeight;
 
     private AcbInterstitialAd mInterstitialAd;
     private long mCreateTime;
@@ -153,9 +151,6 @@ public class ConversationActivity extends BugleActionBarActivity
 
         initConversationFragment();
 
-        mContainer = findViewById(R.id.conversation_and_compose_container);
-        mContainer.getViewTreeObserver().addOnGlobalLayoutListener(this);
-
         // See if we're getting called from a widget to directly display an image or video
         final String extraToDisplay =
                 intent.getStringExtra(UIIntents.UI_INTENT_EXTRA_ATTACHMENT_URI);
@@ -174,9 +169,12 @@ public class ConversationActivity extends BugleActionBarActivity
 
         BugleAnalytics.logEvent("SMS_ActiveUsers", true);
 
-        mStatusBarHeight = Dimensions.getStatusBarHeight(this);
-        mNavigationBarHeight = Dimensions.getNavigationBarHeight(this);
+
         mKeyboardHeight = UiUtils.getKeyboardHeight();
+        if (mKeyboardHeight <= 0) {
+            mContainer = findViewById(R.id.conversation_and_compose_container);
+            mContainer.getViewTreeObserver().addOnGlobalLayoutListener(this);
+        }
 
         long lastShowTime = Preferences.getDefault().getLong(PREF_KEY_CONVERSATION_ACTIVITY_SHOW_TIME, -1);
         if (lastShowTime != -1) {
@@ -191,14 +189,17 @@ public class ConversationActivity extends BugleActionBarActivity
     @Override
     public void onGlobalLayout() {
         Rect r = new Rect();
-        mContainer.getWindowVisibleDisplayFrame(r);
+        if (mContainer != null && mKeyboardHeight == 0) {
+            int statusBarHeight = Dimensions.getStatusBarHeight(this);
+            int navigationBarHeight = Dimensions.getNavigationBarHeight(this);
+            mContainer.getWindowVisibleDisplayFrame(r);
+            int screenHeight = mContainer.getRootView().getHeight();
+            int heightDiff = screenHeight - (r.bottom - r.top);
 
-        int screenHeight = mContainer.getRootView().getHeight();
-        int heightDiff = screenHeight - (r.bottom - r.top);
-
-        if (mKeyboardHeight == 0 && heightDiff > mStatusBarHeight + mNavigationBarHeight + Dimensions.pxFromDp(20)) {
-            mKeyboardHeight = heightDiff - mStatusBarHeight - mNavigationBarHeight;
-            UiUtils.updateKeyboardHeight(mKeyboardHeight);
+            if (heightDiff > statusBarHeight + navigationBarHeight + Dimensions.pxFromDp(20)) {
+                mKeyboardHeight = heightDiff - statusBarHeight - navigationBarHeight;
+                UiUtils.updateKeyboardHeight(mKeyboardHeight);
+            }
         }
     }
 

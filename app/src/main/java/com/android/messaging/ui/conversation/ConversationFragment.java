@@ -884,13 +884,19 @@ public class ConversationFragment extends Fragment implements ConversationDataLi
         mWallpaperView = view.findViewById(R.id.conversation_fragment_wallpaper);
         mThemeWallpaperView = view.findViewById(R.id.conversation_fragment_theme_wallpaper);
 
-        if (AdConfig.isDetailpageTopAdEnabled()
-                && !mHost.isFromCreateConversation()) {
-            loadTopBannerAd();
-        }
-        if (AdConfig.isHomepageBannerAdEnabled()) {
-            AcbNativeAdManager.preload(1, AdPlacement.AD_BANNER);
-        }
+        Threads.postOnMainThreadDelayed(() -> {
+            if (mIsDestroyed || getActivity() == null) {
+                return;
+            }
+            if (AdConfig.isDetailpageTopAdEnabled()
+                    && !mHost.isFromCreateConversation()) {
+                loadTopBannerAd();
+            }
+            if (AdConfig.isHomepageBannerAdEnabled()) {
+                AcbNativeAdManager.preload(1, AdPlacement.AD_BANNER);
+            }
+        }, 3 * DateUtils.SECOND_IN_MILLIS);
+
         return view;
     }
 
