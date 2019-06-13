@@ -1,6 +1,9 @@
 package com.android.messaging.backup.ui;
 
 import android.content.DialogInterface;
+import android.content.res.ColorStateList;
+import android.graphics.PorterDuff;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.constraint.Group;
 import android.view.Choreographer;
@@ -12,6 +15,7 @@ import android.widget.TextView;
 import com.airbnb.lottie.LottieAnimationView;
 import com.android.messaging.R;
 import com.android.messaging.ui.BaseDialogFragment;
+import com.android.messaging.ui.customize.PrimaryColors;
 
 public class BackupProcessDialog extends BaseDialogFragment {
     public static final int MIN_PROGRESS_TIME = 3000;
@@ -52,7 +56,7 @@ public class BackupProcessDialog extends BaseDialogFragment {
     @Override
     protected View getContentView() {
         View view = LayoutInflater.from(getActivity()).inflate(
-                R.layout.local_backup_process_dialog, null);
+                R.layout.backup_process_dialog, null);
         mProgressBar = view.findViewById(R.id.local_backup_progress_bar);
         mStateView = view.findViewById(R.id.local_backup_process_hint);
         mTotalView = view.findViewById(R.id.local_total_backup_messages);
@@ -60,6 +64,19 @@ public class BackupProcessDialog extends BaseDialogFragment {
         mLottie = view.findViewById(R.id.local_backup_process);
         mTextGroup = view.findViewById(R.id.view_id_group);
 
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            ColorStateList colorStateList = new ColorStateList(
+                    new int[][]{
+                            new int[]{android.R.attr.background},
+                            new int[]{-android.R.attr.background}
+                    },
+                    new int[]{
+                            0xffa5abb1
+                            , PrimaryColors.getPrimaryColor(),
+                    }
+            );
+            mProgressBar.setProgressTintList(colorStateList);
+        }
         mChoreographer = Choreographer.getInstance();
         return view;
     }
@@ -86,6 +103,7 @@ public class BackupProcessDialog extends BaseDialogFragment {
     protected void onContentViewAdded() {
         super.onContentViewAdded();
         removeDialogContentHorizontalMargin();
+        removeDialogContentVerticalMargin();
     }
 
     public void setTotal(int totalCount) {

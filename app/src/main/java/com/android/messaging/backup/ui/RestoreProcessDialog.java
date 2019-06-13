@@ -1,6 +1,8 @@
 package com.android.messaging.backup.ui;
 
 import android.content.DialogInterface;
+import android.content.res.ColorStateList;
+import android.os.Build;
 import android.view.Choreographer;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -9,6 +11,7 @@ import android.widget.TextView;
 
 import com.android.messaging.R;
 import com.android.messaging.ui.BaseDialogFragment;
+import com.android.messaging.ui.customize.PrimaryColors;
 
 public class RestoreProcessDialog extends BaseDialogFragment {
     public static final int MIN_PROGRESS_TIME = 3000;
@@ -52,6 +55,20 @@ public class RestoreProcessDialog extends BaseDialogFragment {
         mStateView = view.findViewById(R.id.restore_process_hint);
         mProgressBar = view.findViewById(R.id.restore_progress_bar);
         mCountDivideView = view.findViewById(R.id.restore_messages_divider);
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            ColorStateList colorStateList = new ColorStateList(
+                    new int[][]{
+                            new int[]{android.R.attr.background},
+                            new int[]{-android.R.attr.background}
+                    },
+                    new int[]{
+                            0xffa5abb1
+                            , PrimaryColors.getPrimaryColor(),
+                    }
+            );
+            mProgressBar.setProgressTintList(colorStateList);
+        }
 
         mChoreographer = Choreographer.getInstance();
         mCallback = frameTimeNanos -> {
@@ -118,6 +135,7 @@ public class RestoreProcessDialog extends BaseDialogFragment {
     protected void onContentViewAdded() {
         super.onContentViewAdded();
         removeDialogContentHorizontalMargin();
+        removeDialogContentVerticalMargin();
     }
 
     @Override

@@ -38,5 +38,6 @@ public class MessageFreeUpProcessDialog extends BaseDialogFragment {
     protected void onContentViewAdded() {
         super.onContentViewAdded();
         removeDialogContentHorizontalMargin();
+        removeDialogContentVerticalMargin();
     }
 }

@@ -5,6 +5,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.res.ColorStateList;
 import android.os.Build;
+import android.support.annotation.NonNull;
 import android.support.v7.widget.AppCompatCheckBox;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -114,92 +115,23 @@ public class ChooseRestoreViewHolder extends BasePagerViewHolder implements Cust
             }
         });
 
-        RestoreProcessDialog restoreProcessDialog = new RestoreProcessDialog();
-        restoreProcessDialog.setCancelable(false);
-        BackupManager.MessageRestoreListener listener = new BackupManager.MessageRestoreListener() {
-            //[0] more than min time,[1] backup complete
-            boolean[] backupCondition = {false, false};
-
-            @Override
-            public void onDownloadStart() {
-                Threads.postOnMainThread(() -> {
-                    restoreProcessDialog.setStateText(getContext().getString(R.string.restore_downloading));
-                    restoreProcessDialog.hideProgressBar(true);
-                });
-            }
-
-            @Override
-            public void onDownloadSuccess() {
-
-            }
-
-            @Override
-            public void onDownloadFailed() {
-                Threads.postOnMainThread(() -> {
-                    restoreProcessDialog.dismissAllowingStateLoss();
-                    Toasts.showToast(R.string.restore_fail);
-                });
-            }
-
-            @Override
-            public void onRestoreStart(int messageCount) {
-                Threads.postOnMainThread(() -> {
-                    restoreProcessDialog.hideProgressBar(false);
-                    restoreProcessDialog.setStateText(getContext().getString(R.string.restore_process_hint));
-                    restoreProcessDialog.setTotal(messageCount);
-                    restoreProcessDialog.startProgress();
-                });
-
-                Threads.postOnMainThreadDelayed(() -> {
-                    backupCondition[0] = true;
-                    if (backupCondition[1]) {
-                        onRestoreSuccess();
-                    }
-                }, RestoreProcessDialog.MIN_PROGRESS_TIME);
-            }
-
-            @Override
-            public void onRestoreUpdate(int restoredCount) {
-                Threads.postOnMainThread(() -> {
-                    restoreProcessDialog.setStateText(getContext().getString(R.string.restore_process_hint));
-                    restoreProcessDialog.setProgress(restoredCount);
-                });
-            }
-
-            @Override
-            public void onRestoreSuccess() {
-                backupCondition[1] = true;
-                if (backupCondition[0]) {
-                    Threads.postOnMainThread(() -> {
-                        restoreProcessDialog.dismissAllowingStateLoss();
-                        Toasts.showToast(R.string.restore_success);
-                    });
-                }
-
-                BugleAnalytics.logEvent("Backup_RestorePage_Restore_Success", true,
-                        "restorefrom", fromLocalCheckBox.isChecked() ? "local" : "cloud");
-            }
-
-            @Override
-            public void onRestoreFailed() {
-                Threads.postOnMainThread(() -> {
-                    restoreProcessDialog.dismissAllowingStateLoss();
-                    Toasts.showToast(R.string.restore_fail);
-                });
-            }
-        };
-
         restoreButton.setOnClickListener(v -> {
             if (fromLocalCheckBox.isChecked()) {
                 if (mLocalBackups != null) {
-                    BackupManager.getInstance().restoreMessages(mLocalBackups.get(0), listener);
+                    RestoreProcessDialog restoreProcessDialog = new RestoreProcessDialog();
+                    restoreProcessDialog.setCancelable(false);
+                    BackupManager.getInstance().restoreMessages(mLocalBackups.get(0),
+                            new MessageRestoreListenerImpl(restoreProcessDialog, true));
                     UiUtils.showDialogFragment((Activity) mContext, restoreProcessDialog);
                     BugleAnalytics.logEvent("Backup_RestorePage_Restore_Click", true,
                             "restorefrom", "local");
                 }
             } else if (fromCloudCheckBox.isChecked()) {
                 if (mCloudBackups != null) {
-                    BackupManager.getInstance().restoreMessages(mCloudBackups.get(0), listener);
+                    RestoreProcessDialog restoreProcessDialog = new RestoreProcessDialog();
+                    restoreProcessDialog.setCancelable(false);
+                    BackupManager.getInstance().restoreMessages(mCloudBackups.get(0),
+                            new MessageRestoreListenerImpl(restoreProcessDialog, false));
                     UiUtils.showDialogFragment((Activity) mContext, restoreProcessDialog);
                     BugleAnalytics.logEvent("Backup_RestorePage_Restore_Click", true,
                             "restorefrom", "cloud");
@@ -211,6 +143,88 @@ public class ChooseRestoreViewHolder extends BasePagerViewHolder implements Cust
         reloadBackupData();
 
         return view;
+    }
+
+    private class MessageRestoreListenerImpl implements BackupManager.MessageRestoreListener {
+        //[0] more than min time,[1] backup complete
+        boolean[] backupCondition = {false, false};
+        RestoreProcessDialog mRestoreProcessDialog;
+        boolean mIsLocal;
+
+        private MessageRestoreListenerImpl(@NonNull RestoreProcessDialog restoreProcessDialog, boolean isLocal) {
+            this.mRestoreProcessDialog = restoreProcessDialog;
+            this.mIsLocal = isLocal;
+        }
+
+        @Override
+        public void onDownloadStart() {
+            Threads.postOnMainThread(() -> {
+                mRestoreProcessDialog.setStateText(getContext().getString(R.string.restore_downloading));
+                mRestoreProcessDialog.hideProgressBar(true);
+            });
+        }
+
+        @Override
+        public void onDownloadSuccess() {
+
+        }
+
+        @Override
+        public void onDownloadFailed() {
+            Threads.postOnMainThread(() -> {
+                mRestoreProcessDialog.dismissAllowingStateLoss();
+                Toasts.showToast(R.string.restore_fail);
+            });
+        }
+
+        @Override
+        public void onRestoreStart(int messageCount) {
+            Threads.postOnMainThread(() -> {
+                mRestoreProcessDialog.hideProgressBar(false);
+                mRestoreProcessDialog.setStateText(getContext().getString(R.string.restore_process_hint));
+                mRestoreProcessDialog.setTotal(messageCount);
+                mRestoreProcessDialog.startProgress();
+            });
+
+            Threads.postOnMainThreadDelayed(() -> {
+                backupCondition[0] = true;
+                if (backupCondition[1]) {
+                    onRestoreSuccess();
+                }
+            }, RestoreProcessDialog.MIN_PROGRESS_TIME);
+        }
+
+        @Override
+        public void onRestoreUpdate(int restoredCount) {
+            Threads.postOnMainThread(() -> {
+                mRestoreProcessDialog.setStateText(getContext().getString(R.string.restore_process_hint));
+                mRestoreProcessDialog.setProgress(restoredCount);
+            });
+        }
+
+        @Override
+        public void onRestoreSuccess() {
+            backupCondition[1] = true;
+            if (backupCondition[0]) {
+                Threads.postOnMainThread(() -> {
+                    mRestoreProcessDialog.dismissAllowingStateLoss();
+                    backupCondition[0] = false;
+                    backupCondition[1] = false;
+                    Toasts.showToast(R.string.restore_success);
+                });
+            }
+
+            BugleAnalytics.logEvent("Backup_RestorePage_Restore_Success", true,
+                    "restorefrom", mIsLocal ? "local" : "cloud");
+        }
+
+        @Override
+        public void onRestoreFailed() {
+            Threads.postOnMainThread(() -> {
+                mRestoreProcessDialog.dismissAllowingStateLoss();
+                Toasts.showToast(R.string.restore_fail);
+            });
+        }
     }
 
     void onLoginSuccess() {
