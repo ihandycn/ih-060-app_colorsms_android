@@ -3,6 +3,7 @@ package com.android.messaging.backup.ui;
 import android.app.Activity;
 import android.content.Context;
 import android.content.res.ColorStateList;
+import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -58,6 +59,8 @@ public class ChooseBackupViewHolder extends BasePagerViewHolder implements Custo
         mLocalCheckBox = view.findViewById(R.id.backup_local);
         mCloudCheckBox = view.findViewById(R.id.backup_cloud);
         mLocalCheckBox.setChecked(true);
+        mLocalCheckBox.setEnabled(false);
+        mCloudCheckBox.setEnabled(false);
 
         ColorStateList colorStateList = new ColorStateList(
                 new int[][]{
@@ -79,32 +82,36 @@ public class ChooseBackupViewHolder extends BasePagerViewHolder implements Custo
         backupButton.setBackground(BackgroundDrawables.createBackgroundDrawable(PrimaryColors.getPrimaryColor(),
                 Dimensions.pxFromDp(3.3f), true));
 
-        mLocalCheckBox.setOnCheckedChangeListener((buttonView, isChecked) -> {
-            if (!isChecked && !mCloudCheckBox.isChecked()) {
-                backupButton.setBackground(BackgroundDrawables.createBackgroundDrawable(
-                        getContext().getResources().getColor(R.color.backup_button_default_color),
-                        Dimensions.pxFromDp(3.3f), false));
+        View localView = view.findViewById(R.id.choose_backup_local_container);
+        View cloudView = view.findViewById(R.id.choose_backup_cloud_container);
+
+        Drawable noItemCheckedDrawable = BackgroundDrawables.createBackgroundDrawable(
+                getContext().getResources().getColor(R.color.backup_button_default_color),
+                Dimensions.pxFromDp(3.3f), false);
+        Drawable itemCheckedDrawable = BackgroundDrawables.createBackgroundDrawable(
+                PrimaryColors.getPrimaryColor(),
+                Dimensions.pxFromDp(3.3f), true);
+
+        localView.setOnClickListener(v -> {
+            mLocalCheckBox.setChecked(!mLocalCheckBox.isChecked());
+            if (mLocalCheckBox.isChecked() || mCloudCheckBox.isChecked()) {
+                backupButton.setBackground(itemCheckedDrawable);
             } else {
-                backupButton.setBackground(BackgroundDrawables.createBackgroundDrawable(
-                        PrimaryColors.getPrimaryColor(),
-                        Dimensions.pxFromDp(3.3f), true));
+                backupButton.setBackground(noItemCheckedDrawable);
             }
         });
 
-        mCloudCheckBox.setOnCheckedChangeListener((buttonView, isChecked) -> {
-            if (!isChecked && !mLocalCheckBox.isChecked()) {
-                backupButton.setBackground(BackgroundDrawables.createBackgroundDrawable(
-                        getContext().getResources().getColor(R.color.backup_button_default_color),
-                        Dimensions.pxFromDp(3.3f), false));
-            } else {
-                backupButton.setBackground(BackgroundDrawables.createBackgroundDrawable(
-                        PrimaryColors.getPrimaryColor(),
-                        Dimensions.pxFromDp(3.3f), true));
-            }
-
-            if (isChecked && FirebaseAuth.getInstance().getCurrentUser() == null) {
+        cloudView.setOnClickListener(v -> {
+            if (FirebaseAuth.getInstance().getCurrentUser() == null) {
                 if (mContext instanceof BackupRestoreActivity) {
                     ((BackupRestoreActivity) mContext).login();
+                }
+            } else {
+                mCloudCheckBox.setChecked(!mCloudCheckBox.isChecked());
+                if (mLocalCheckBox.isChecked() || mCloudCheckBox.isChecked()) {
+                    backupButton.setBackground(itemCheckedDrawable);
+                } else {
+                    backupButton.setBackground(noItemCheckedDrawable);
                 }
             }
         });
@@ -411,6 +418,7 @@ public class ChooseBackupViewHolder extends BasePagerViewHolder implements Custo
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         if (user != null) {
             mCloudSummary.setText(user.getEmail());
+            mCloudCheckBox.setChecked(true);
         } else {
             mCloudSummary.setText(R.string.backup_no_account);
         }

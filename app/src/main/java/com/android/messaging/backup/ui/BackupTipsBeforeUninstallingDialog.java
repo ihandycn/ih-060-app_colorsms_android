@@ -37,7 +37,7 @@ public class BackupTipsBeforeUninstallingDialog extends BaseDialogFragment {
 
     @Override
     protected CharSequence getPositiveButtonText() {
-        return getString(R.string.backup_tips_before_uninstalling_button);
+        return getString(R.string.requires_sms_permissions_close_button);
     }
     @Override
     protected View getContentView() {

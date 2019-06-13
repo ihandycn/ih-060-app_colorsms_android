@@ -339,6 +339,11 @@ public class BackupManager {
 
     private void addCloudBackup(File file, CloudFileUploadListener listener) {
         //upload file
+        if (FirebaseAuth.getInstance().getCurrentUser() == null) {
+            if (listener != null) {
+                listener.onUploadFailed();
+            }
+        }
         FirebaseStorage storage = FirebaseStorage.getInstance();
         StorageReference storageReference = storage.getReference();
 
