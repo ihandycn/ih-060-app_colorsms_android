@@ -37,6 +37,9 @@ import java.util.List;
 public class ConversationMessageAdapter extends
         RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
+    private static final int ITEM_WITH_ATTACHMENTS = 0;
+    private static final int ITEM_WITHOUT_ATTACHMENTS = 1;
+
     private final ConversationMessageViewHost mHost;
     private final AsyncImageViewDelayLoader mImageViewDelayLoader;
     private final ConversationMessageClickListener mViewClickListener;
@@ -94,8 +97,19 @@ public class ConversationMessageAdapter extends
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
             final LayoutInflater layoutInflater = LayoutInflater.from(parent.getContext());
-            final ConversationMessageView conversationMessageView = (ConversationMessageView)
-                    layoutInflater.inflate(R.layout.conversation_message_view, null);
+            ConversationMessageView conversationMessageView;
+            switch (viewType) {
+                case ITEM_WITH_ATTACHMENTS:
+                    conversationMessageView = (ConversationMessageView)
+                            layoutInflater.inflate(R.layout.conversation_message_view, null);
+                    break;
+
+                case ITEM_WITHOUT_ATTACHMENTS:
+                    default:
+                    conversationMessageView = (ConversationMessageView)
+                            layoutInflater.inflate(R.layout.conversation_message_view_withou_attachments, null);
+                    break;
+            }
             conversationMessageView.setHost(mHost);
             conversationMessageView.setImageViewDelayLoader(mImageViewDelayLoader);
             return new ConversationMessageViewHolder(conversationMessageView);
@@ -135,6 +149,11 @@ public class ConversationMessageAdapter extends
                 checkbox.setVisibility(View.GONE);
             }
         ((ConversationMessageViewHolder) holder).bind();
+    }
+
+    @Override
+    public int getItemViewType(int position) {
+        return mDataList.get(position).hasAttachments() ? ITEM_WITH_ATTACHMENTS : ITEM_WITHOUT_ATTACHMENTS;
     }
 
     @Override

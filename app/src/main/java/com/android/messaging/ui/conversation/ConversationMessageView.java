@@ -40,6 +40,7 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewStub;
 import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.ImageView.ScaleType;
@@ -110,7 +111,6 @@ public class ConversationMessageView extends RelativeLayout implements View.OnCl
     private AsyncImageView mMessageImageView;
     private TextView mMessageTextView;
     private boolean mMessageTextHasLinks;
-    private boolean mMessageHasYouTubeLink;
     private ImageView mMessageIsLockView;
     private ViewGroup mStatusContainer;
     private TextView mStatusTextView;
@@ -143,7 +143,6 @@ public class ConversationMessageView extends RelativeLayout implements View.OnCl
     @Override
     protected void onFinishInflate() {
         super.onFinishInflate();
-
         mContactIconView = findViewById(R.id.conversation_icon);
         mContactIconBg = findViewById(R.id.conversation_icon_bg);
         mContactIconBg.setImageDrawable(AvatarBgDrawables.getAvatarBg(false));
@@ -152,13 +151,17 @@ public class ConversationMessageView extends RelativeLayout implements View.OnCl
             ConversationMessageView.this.performLongClick();
             return true;
         });
-        mMessageAttachmentsView = findViewById(R.id.message_attachments);
-        mMultiAttachmentView = findViewById(R.id.multiple_attachments);
-        mMultiAttachmentView.setOnAttachmentClickListener(this);
 
-        mMessageImageView = findViewById(R.id.message_image);
-        mMessageImageView.setOnClickListener(this);
-        mMessageImageView.setOnLongClickListener(this);
+        mMessageAttachmentsView = findViewById(R.id.message_attachments);
+        if (mMessageAttachmentsView != null) {
+            mMultiAttachmentView = findViewById(R.id.multiple_attachments);
+            mMultiAttachmentView.setOnAttachmentClickListener(this);
+
+            mMessageImageView = findViewById(R.id.message_image);
+            mMessageImageView.setOnClickListener(this);
+            mMessageImageView.setOnLongClickListener(this);
+        }
+
 
         mMessageTextView = findViewById(R.id.message_text);
         mMessageTextView.setOnClickListener(this);
@@ -268,10 +271,9 @@ public class ConversationMessageView extends RelativeLayout implements View.OnCl
 
         mMessageBubble.layout(contentLeft, contentTop, contentLeft + contentWidth,
                 contentTop + contentHeight);
-        View messageTextAndInfo = mMessageBubble.findViewById(R.id.message_text_and_info);
-        View messageAttachment = mMessageBubble.findViewById(R.id.message_attachments);
-        int bubbleBgHeight = (messageTextAndInfo.getVisibility() == View.VISIBLE ? messageTextAndInfo.getMeasuredHeight() : 0)
-                + (messageAttachment.getVisibility() == View.VISIBLE ? messageAttachment.getMeasuredHeight() : 0);
+
+        int bubbleBgHeight = (mMessageTextAndInfoView.getVisibility() == View.VISIBLE ? mMessageTextAndInfoView.getMeasuredHeight() : 0)
+                + (mMessageAttachmentsView != null && mMessageAttachmentsView.getVisibility() == View.VISIBLE ? mMessageAttachmentsView.getMeasuredHeight() : 0);
         checkBox.layout(right - Dimensions.pxFromDp(37),
                 contentTop + bubbleBgHeight / 2 - Dimensions.pxFromDp(20) / 2,
                 right - Dimensions.pxFromDp(17),
@@ -306,9 +308,10 @@ public class ConversationMessageView extends RelativeLayout implements View.OnCl
      * Sets a delay loader instance to manage loading / resuming of image attachments.
      */
     public void setImageViewDelayLoader(final AsyncImageViewDelayLoader delayLoader) {
-        Assert.notNull(mMessageImageView);
-        mMessageImageView.setDelayLoader(delayLoader);
-        mMultiAttachmentView.setImageViewDelayLoader(delayLoader);
+        if (mMessageImageView != null) {
+            mMessageImageView.setDelayLoader(delayLoader);
+            mMultiAttachmentView.setImageViewDelayLoader(delayLoader);
+        }
     }
 
     public ConversationMessageData getData() {
@@ -329,7 +332,7 @@ public class ConversationMessageView extends RelativeLayout implements View.OnCl
      */
     private boolean shouldShowMessageBubbleArrow() {
         return !shouldShowSimplifiedVisualStyle()
-                && !(mData.hasAttachments() || mMessageHasYouTubeLink);
+                && !(mData.hasAttachments());
     }
 
     /**
@@ -554,6 +557,10 @@ public class ConversationMessageView extends RelativeLayout implements View.OnCl
     }
 
     private void updateMessageAttachments() {
+        if (mMessageAttachmentsView == null) {
+            return;
+        }
+
         // Bind video, audio, and VCard attachments. If there are multiple, they stack vertically.
         bindAttachmentsOfSameType(sVideoFilter,
                 R.layout.message_video_attachment, mVideoViewBinder, VideoThumbnailView.class);
@@ -574,67 +581,9 @@ public class ConversationMessageView extends RelativeLayout implements View.OnCl
 
         // In the case that we have no image attachments and exactly one youtube link in a message
         // then we will show a preview.
-        String youtubeThumbnailUrl = null;
-        String originalYoutubeLink = null;
-
-        String sendLink = getResources().getString(R.string.invite_friends_default_auto_link_content);
-
-        boolean hasAppsFlyerPromotionUrl = false;
-        if (mMessageTextHasLinks && imageParts.size() == 0) {
-            CharSequence messageTextWithSpans = mMessageTextView.getText();
-            final URLSpan[] spans = ((Spanned) messageTextWithSpans).getSpans(0,
-                    messageTextWithSpans.length(), URLSpan.class);
-            for (URLSpan span : spans) {
-                String url = span.getURL();
-                String youtubeLinkForUrl = YouTubeUtil.getYoutubePreviewImageLink(url);
-
-                if (TextUtils.equals(url, sendLink)) {
-                    hasAppsFlyerPromotionUrl = true;
-                }
-                if (!TextUtils.isEmpty(youtubeLinkForUrl)) {
-                    if (TextUtils.isEmpty(youtubeThumbnailUrl)) {
-                        // Save the youtube link if we don't already have one
-                        youtubeThumbnailUrl = youtubeLinkForUrl;
-                        originalYoutubeLink = url;
-                    } else {
-                        // We already have a youtube link. This means we have two youtube links so
-                        // we shall show none.
-                        youtubeThumbnailUrl = null;
-                        originalYoutubeLink = null;
-                        break;
-                    }
-                }
-            }
-
-            if (hasAppsFlyerPromotionUrl) {
-                if (messageTextWithSpans instanceof Spannable) {
-                    Spannable sp = (Spannable) messageTextWithSpans;
-                    SpannableStringBuilder style = new SpannableStringBuilder(messageTextWithSpans);
-                    style.clearSpans();
-                    for (URLSpan urlSpan : spans) {
-                        if (TextUtils.equals(urlSpan.getURL(), sendLink)) {
-                            ClickableSpan clickableSpan = new ClickableSpan() {
-                                @Override
-                                public void onClick(@NonNull View view) {
-                                    UIIntents.get().launchBrowserForUrl(getContext(), urlSpan.getURL());
-                                    BugleAnalytics.logEvent("Invite_Url_Click");
-                                }
-                            };
-                            style.setSpan(clickableSpan, sp.getSpanStart(urlSpan),
-                                    sp.getSpanEnd(urlSpan),
-                                    Spannable.SPAN_EXCLUSIVE_INCLUSIVE);
-                        }
-                    }
-                    mMessageTextView.setText(style);
-                }
-            }
-        }
-        // We need to keep track if we have a youtube link in the message so that we will not show
-        // the arrow
-        mMessageHasYouTubeLink = !TextUtils.isEmpty(youtubeThumbnailUrl);
 
         // We will show the message image view if there is one attachment or one youtube link
-        if (imageParts.size() == 1 || mMessageHasYouTubeLink) {
+        if (imageParts.size() == 1) {
             // Get the display metrics for a hint for how large to pull the image data into
             final WindowManager windowManager = (WindowManager) getContext().
                     getSystemService(Context.WINDOW_SERVICE);
@@ -657,16 +606,6 @@ public class ConversationMessageView extends RelativeLayout implements View.OnCl
                 adjustImageViewBounds(imagePart);
                 mMessageImageView.setImageResourceId(imageRequest);
                 mMessageImageView.setTag(imagePart);
-            } else {
-                // Youtube Thumbnail image
-                final ImageRequestDescriptor imageRequest =
-                        new UriImageRequestDescriptor(Uri.parse(youtubeThumbnailUrl), desiredWidth,
-                                MessagePartData.UNSPECIFIED_SIZE, true /* allowCompression */,
-                                true /* isStatic */, false /* cropToCircle */,
-                                ImageUtils.DEFAULT_CIRCLE_BACKGROUND_COLOR /* circleBackgroundColor */,
-                                ImageUtils.DEFAULT_CIRCLE_STROKE_COLOR /* circleStrokeColor */);
-                mMessageImageView.setImageResourceId(imageRequest);
-                mMessageImageView.setTag(originalYoutubeLink);
             }
             mMessageImageView.setVisibility(View.VISIBLE);
         } else {
@@ -930,6 +869,9 @@ public class ConversationMessageView extends RelativeLayout implements View.OnCl
     }
 
     private void updateMessageAttachmentsAppearance(final int gravity) {
+        if (mMessageAttachmentsView == null) {
+            return;
+        }
         mMessageAttachmentsView.setGravity(gravity);
 
         // Tint image/video attachments when selected

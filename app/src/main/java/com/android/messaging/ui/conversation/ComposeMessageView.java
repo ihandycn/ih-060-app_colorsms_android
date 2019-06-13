@@ -1228,16 +1228,7 @@ public class ComposeMessageView extends LinearLayout
         final List<MessagePartData> attachments = draftMessageData.getReadOnlyAttachments();
         final int attachmentCount = attachments.size();
         if (attachmentCount == 0) {
-            final SubscriptionListEntry subscriptionListEntry =
-                    mConversationDataModel == null ? null : mConversationDataModel.getData().getSubscriptionEntryForSelfParticipant(
-                            mBinding.getData().getSelfId(), false /* excludeDefault */);
-            if (subscriptionListEntry == null) {
-                mComposeEditText.setHint(R.string.compose_message_view_hint_text);
-            } else {
-                mComposeEditText.setHint(Html.fromHtml(getResources().getString(
-                        R.string.compose_message_view_hint_text_multi_sim,
-                        subscriptionListEntry.displayName)));
-            }
+            mComposeEditText.setHint(R.string.compose_message_view_hint_text);
         } else {
             int type = -1;
             for (final MessagePartData attachment : attachments) {
