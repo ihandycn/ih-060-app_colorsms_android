@@ -1,13 +1,13 @@
 package com.android.messaging;
 
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 
 import com.android.messaging.ui.UIIntents;
 import com.android.messaging.util.DefaultSMSUtils;
-import com.ihs.app.framework.activity.HSAppCompatActivity;
 import com.ihs.commons.utils.HSLog;
 
-public abstract class BaseActivity extends HSAppCompatActivity {
+public abstract class BaseActivity extends AppCompatActivity {
 
     private static final String TAG = BaseActivity.class.getSimpleName();
 
