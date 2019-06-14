@@ -114,7 +114,7 @@
         android:layout_marginEnd="19dp"
         android:layout_marginStart="19dp"
         android:gravity="center"
-        android:text="@string/restore_tab"
+        android:text="@string/restore_verb"
         android:textAllCaps="true"
         android:textColor="@color/white"
         android:textSize="14sp"

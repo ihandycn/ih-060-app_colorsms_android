@@ -24,6 +24,7 @@ import com.android.messaging.util.UiUtils;
 import com.google.firebase.auth.FirebaseAuth;
 import com.superapps.util.BackgroundDrawables;
 import com.superapps.util.Dimensions;
+import com.superapps.util.Networks;
 import com.superapps.util.Threads;
 import com.superapps.util.Toasts;
 
@@ -128,6 +129,10 @@ public class ChooseRestoreViewHolder extends BasePagerViewHolder implements Cust
                 }
             } else if (fromCloudCheckBox.isChecked()) {
                 if (mCloudBackups != null) {
+                    if (!Networks.isNetworkAvailable(-1)) {
+                        Toasts.showToast(R.string.sms_network_error);
+                        return;
+                    }
                     RestoreProcessDialog restoreProcessDialog = new RestoreProcessDialog();
                     restoreProcessDialog.setCancelable(false);
                     BackupManager.getInstance().restoreMessages(mCloudBackups.get(0),

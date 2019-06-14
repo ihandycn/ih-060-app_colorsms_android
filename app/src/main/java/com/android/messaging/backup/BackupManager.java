@@ -6,6 +6,7 @@ import android.net.Uri;
 import android.provider.Telephony;
 import android.text.format.DateUtils;
 
+import com.android.messaging.R;
 import com.android.messaging.datamodel.DataModel;
 import com.android.messaging.datamodel.DatabaseWrapper;
 import com.android.messaging.ui.appsettings.GeneralSettingSyncManager;
@@ -18,7 +19,9 @@ import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.ihs.app.framework.HSApplication;
+import com.superapps.util.Networks;
 import com.superapps.util.Threads;
+import com.superapps.util.Toasts;
 
 import java.io.File;
 import java.io.IOException;
@@ -235,6 +238,17 @@ public class BackupManager {
                 }
             }
 
+            if (!Networks.isNetworkAvailable(-1)) {
+                if (listenerWeakReference.get() != null) {
+                    listenerWeakReference.get().onUploadFailed();
+                }
+                Toasts.showToast(R.string.sms_network_error);
+                if (backupType == BackupInfo.CLOUD) {
+                    file.delete();
+                }
+                return;
+            }
+
             //3.upload
             CloudFileUploadListener uploadListener = new CloudFileUploadListener() {
                 @Override
@@ -258,6 +272,7 @@ public class BackupManager {
                     }
                 }
             };
+
             addCloudBackup(file, uploadListener);
         });
     }

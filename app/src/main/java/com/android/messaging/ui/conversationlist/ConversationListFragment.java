@@ -194,6 +194,9 @@ public class ConversationListFragment extends Fragment implements ConversationLi
             } else {
                 switchAd = false;
                 if (!isFirstOnResume) {
+                    if (mAdapter.getItemCount() > 0) {
+                        changeTopBackupGuideState();
+                    }
                     if (mBackupBannerGuideContainer.getVisibility() == View.GONE) {
                         tryShowTopNativeAd();
                     }
@@ -249,7 +252,6 @@ public class ConversationListFragment extends Fragment implements ConversationLi
         mEmptyListMessageView = rootView.findViewById(R.id.no_conversations_view);
         mEmptyListMessageView.setImageHint(R.drawable.ic_oobe_conv_list);
         mBackupBannerGuideContainer = rootView.findViewById(R.id.backup_banner_guide_container);
-        tryShowTopBackupBannerGuide();
         ImageView conversationListBg = rootView.findViewById(R.id.conversation_list_bg);
         Drawable bgDrawable = WallpaperDrawables.getConversationListWallpaperDrawable();
         getActivity().getWindow().getDecorView().setBackground(null);
@@ -386,17 +388,24 @@ public class ConversationListFragment extends Fragment implements ConversationLi
         return rootView;
     }
 
+    private void changeTopBackupGuideState() {
+        Preferences prefFile = Preferences.getDefault();
+        //check show times
+        int backupBannerGuideShowCount = prefFile.getInt(PREF_KEY_BACKUP_BANNER_GUIDE_SHOW_COUNT, 0);
+        if (backupBannerGuideShowCount >= HSConfig.optInteger(6, "Application", "BackupRestore", "RecommendBannerTimes")) {
+            mBackupBannerGuideContainer.setVisibility(View.GONE);
+            return;
+        }
 
-    private void tryShowTopBackupBannerGuide() {
         // check new user
         if (!CommonUtils.isNewUser()) {
             return;
         }
 
-        Preferences prefFile = Preferences.getDefault();
         // check top guide enable
         boolean topGuideEnable = prefFile.getBoolean(PREF_KEY_BACKUP_SHOW_BANNER_GUIDE, true);
         if (!topGuideEnable) {
+            mBackupBannerGuideContainer.setVisibility(View.GONE);
             return;
         }
 
@@ -404,17 +413,16 @@ public class ConversationListFragment extends Fragment implements ConversationLi
         boolean backupActivityShown = prefFile.
                 getBoolean(BackupRestoreActivity.PREF_KEY_BACKUP_ACTIVITY_SHOWN, false);
         if (backupActivityShown) {
+            mBackupBannerGuideContainer.setVisibility(View.GONE);
             return;
         }
 
-        //check show times
-        int backupBannerGuideShowCount = prefFile.getInt(PREF_KEY_BACKUP_BANNER_GUIDE_SHOW_COUNT, 0);
-        if (backupBannerGuideShowCount >= HSConfig.optInteger(6, "Application", "BackupRestore", "RecommendBannerTimes")) {
-            return;
-        }
-
-        mBackupBannerGuideContainer.setVisibility(View.VISIBLE);
         prefFile.putInt(PREF_KEY_BACKUP_BANNER_GUIDE_SHOW_COUNT, backupBannerGuideShowCount + 1);
+        if (mBackupBannerGuideContainer.getVisibility() == View.VISIBLE) {
+            BugleAnalytics.logEvent("BackupTopGuide_Show");
+            return;
+        }
+        mBackupBannerGuideContainer.setVisibility(View.VISIBLE);
 
         TextView title = mBackupBannerGuideContainer.findViewById(R.id.backup_banner_title);
         title.setText(getString(R.string.backup_banner_guide_title, 30));
@@ -448,16 +456,14 @@ public class ConversationListFragment extends Fragment implements ConversationLi
         });
 
         ImageView backupBannerGuideCloseButton = mBackupBannerGuideContainer.findViewById(R.id.backup_banner_close);
-//        backupBannerGuideCloseButton.setBackground(BackgroundDrawables.createBackgroundDrawable
-//                (getResources().getColor(R.color.backup_guide_dialog_close_button_color),
-//                        Dimensions.pxFromDp(40f), true));
+        backupBannerGuideCloseButton.setBackground(BackgroundDrawables.
+                createTransparentBackgroundDrawable(0x33000000, Dimensions.pxFromDp(12)));
         backupBannerGuideCloseButton.setOnClickListener(v -> {
             mBackupBannerGuideContainer.setVisibility(View.GONE);
             Preferences.getDefault().putBoolean(PREF_KEY_BACKUP_SHOW_BANNER_GUIDE, false);
             tryShowTopNativeAd();
             switchAd = false;
         });
-        BugleAnalytics.logEvent("BackupTopGuide_Show");
     }
 
     private boolean isAdLoading = false;
@@ -640,6 +646,7 @@ public class ConversationListFragment extends Fragment implements ConversationLi
                         }
                     }
                 }
+                changeTopBackupGuideState();
             }
             HSBundle hsBundle = new HSBundle();
             hsBundle.putBoolean(ConversationListActivity.HAS_PIN_CONVERSATION, hasPinConversation);

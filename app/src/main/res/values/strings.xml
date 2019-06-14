@@ -1214,6 +1214,7 @@
     <string name="backup_tab">Backup</string>
     <string name="restore_tab">Restore</string>
     <string name="backup_verb">Backup</string>
+    <string name="restore_verb">Restore</string>
     <string name="restore_from_local">From Local</string>
     <string name="restore_from_cloud">From Cloud</string>
     <string name="restore_default_summary">No backup file</string>

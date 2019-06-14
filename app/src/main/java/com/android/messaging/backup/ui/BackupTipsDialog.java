@@ -18,12 +18,12 @@ public class BackupTipsDialog extends BaseDialogFragment {
 
     @Override
     protected CharSequence getNegativeButtonText() {
-        return getString(R.string.restore_tab).toUpperCase();
+        return getString(R.string.restore_verb).toUpperCase();
     }
 
     @Override
     protected CharSequence getPositiveButtonText() {
-        return getString(R.string.backup_tab).toUpperCase();
+        return getString(R.string.backup_verb).toUpperCase();
     }
 
     @Override

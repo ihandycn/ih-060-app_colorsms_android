@@ -14,13 +14,11 @@ import android.widget.TextView;
 import com.android.messaging.R;
 import com.android.messaging.backup.BackupInfo;
 import com.android.messaging.backup.BackupManager;
-import com.android.messaging.backup.BackupPersistManager;
 import com.android.messaging.ui.BasePagerViewHolder;
 import com.android.messaging.ui.CustomPagerViewHolder;
 import com.android.messaging.ui.customize.PrimaryColors;
 import com.android.messaging.ui.view.MessagesTextView;
 import com.android.messaging.util.BugleAnalytics;
-import com.android.messaging.util.CommonUtils;
 import com.android.messaging.util.UiUtils;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -42,7 +40,8 @@ public class ChooseBackupViewHolder extends BasePagerViewHolder implements Custo
     private CheckBox mLocalCheckBox;
     private CheckBox mCloudCheckBox;
     private TextView mCloudSummary;
-    private boolean mHasBackup;
+    private boolean mHasLocalBackup;
+    private boolean mHasCloudBackup;
 
     ChooseBackupViewHolder(final Context context) {
         mContext = context;
@@ -117,7 +116,8 @@ public class ChooseBackupViewHolder extends BasePagerViewHolder implements Custo
         });
 
         backupButton.setOnClickListener(v -> {
-            if (mHasBackup) {
+            if ((mHasLocalBackup && mLocalCheckBox.isChecked())
+                    || mHasCloudBackup && mCloudCheckBox.isChecked()) {
                 showTipsDialog();
             } else {
                 backupAndShowDialog();
@@ -335,6 +335,7 @@ public class ChooseBackupViewHolder extends BasePagerViewHolder implements Custo
                 if (dialog != null) {
                     dialog.dismissAllowingStateLoss();
                 }
+                Toasts.showToast(R.string.backup_free_success);
             }
         }, 3000);
 
@@ -377,7 +378,7 @@ public class ChooseBackupViewHolder extends BasePagerViewHolder implements Custo
     private void loadBackupInfo() {
         List<BackupInfo> localBackups = BackupManager.getInstance().getLocalBackupFilesInfo();
         if (localBackups != null && localBackups.size() > 0) {
-            mHasBackup = true;
+            mHasLocalBackup = true;
             return;
         }
 
@@ -386,7 +387,7 @@ public class ChooseBackupViewHolder extends BasePagerViewHolder implements Custo
                 @Override
                 public void onLoadSuccess(List<BackupInfo> cloudList) {
                     if (cloudList != null && cloudList.size() > 0) {
-                        mHasBackup = true;
+                        mHasCloudBackup = true;
                     }
                 }
 
