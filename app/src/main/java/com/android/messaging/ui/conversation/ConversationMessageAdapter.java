@@ -107,7 +107,7 @@ public class ConversationMessageAdapter extends
                 case ITEM_WITHOUT_ATTACHMENTS:
                     default:
                     conversationMessageView = (ConversationMessageView)
-                            layoutInflater.inflate(R.layout.conversation_message_view_withou_attachments, null);
+                            layoutInflater.inflate(R.layout.conversation_message_view_without_attachments, null);
                     break;
             }
             conversationMessageView.setHost(mHost);
