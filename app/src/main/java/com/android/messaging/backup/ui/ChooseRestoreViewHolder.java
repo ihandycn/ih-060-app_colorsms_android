@@ -52,9 +52,9 @@ public class ChooseRestoreViewHolder extends BasePagerViewHolder implements Cust
         final LayoutInflater inflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         final View view = inflater.inflate(R.layout.choose_restore_page, container, false);
         AppCompatCheckBox fromLocalCheckBox = view.findViewById(R.id.from_local);
-        fromLocalCheckBox.setEnabled(false);
+        fromLocalCheckBox.setClickable(false);
         AppCompatCheckBox fromCloudCheckBox = view.findViewById(R.id.from_cloud);
-        fromCloudCheckBox.setEnabled(false);
+        fromCloudCheckBox.setClickable(false);
 
         View localContainer = view.findViewById(R.id.from_local_container);
         View cloudContainer = view.findViewById(R.id.from_cloud_container);

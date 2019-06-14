@@ -58,8 +58,8 @@ public class ChooseBackupViewHolder extends BasePagerViewHolder implements Custo
         mLocalCheckBox = view.findViewById(R.id.backup_local);
         mCloudCheckBox = view.findViewById(R.id.backup_cloud);
         mLocalCheckBox.setChecked(true);
-        mLocalCheckBox.setEnabled(false);
-        mCloudCheckBox.setEnabled(false);
+        mLocalCheckBox.setClickable(false);
+        mCloudCheckBox.setClickable(false);
 
         ColorStateList colorStateList = new ColorStateList(
                 new int[][]{
