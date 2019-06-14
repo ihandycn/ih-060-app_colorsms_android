@@ -3,7 +3,7 @@
      android:interpolator="@anim/slide_in_interpolator"
      android:zAdjustment="top">
     <translate
-        android:fromXDelta="100%"
+        android:fromXDelta="70%"
         android:duration="360"
         android:toXDelta="0.0%"/>
     <alpha

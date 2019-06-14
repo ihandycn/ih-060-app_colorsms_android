@@ -193,7 +193,10 @@ class FactoryImpl extends Factory {
                         factory.onDefaultSmsSetAndPermissionsGranted();
                     }
                 },
-                () -> BugleApplication.updateAppConfig(factory.getApplicationContext(), false));
+                () -> {
+                    BugleApplication.updateAppConfig(factory.getApplicationContext(), false);
+                    DefaultSMSUtils.invalidateCache();
+                });
 
         return factory;
     }
