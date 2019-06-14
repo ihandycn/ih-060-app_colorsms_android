@@ -334,6 +334,11 @@ public class ChooseBackupViewHolder extends BasePagerViewHolder implements Custo
             if (dismissCondition[1]) {
                 if (dialog != null) {
                     dialog.dismissAllowingStateLoss();
+                    Preferences.getDefault().doOnce(() -> {
+                        UiUtils.showDialogFragment((Activity) mContext,
+                                new BackupTipsBeforeUninstallingDialog());
+                        BugleAnalytics.logEvent("Backup_Freeupmsg_Tips_Show");
+                    }, PREF_KEY_BACKUP_TIP_SHOWN);
                 }
                 Toasts.showToast(R.string.backup_free_success);
             }
@@ -359,15 +364,15 @@ public class ChooseBackupViewHolder extends BasePagerViewHolder implements Custo
                 if (dismissCondition[0]) {
                     if (dialog != null) {
                         dialog.dismissAllowingStateLoss();
+                        Preferences.getDefault().doOnce(() -> {
+                            UiUtils.showDialogFragment((Activity) mContext,
+                                    new BackupTipsBeforeUninstallingDialog());
+                            BugleAnalytics.logEvent("Backup_Freeupmsg_Tips_Show");
+                        }, PREF_KEY_BACKUP_TIP_SHOWN);
                     }
                     Toasts.showToast(R.string.backup_free_success);
                 }
 
-                Preferences.getDefault().doOnce(() -> {
-                    UiUtils.showDialogFragment((Activity) mContext,
-                            new BackupTipsBeforeUninstallingDialog());
-                    BugleAnalytics.logEvent("Backup_Freeupmsg_Tips_Show");
-                }, PREF_KEY_BACKUP_TIP_SHOWN);
                 BugleAnalytics.logEvent("Backup_Freeupmsg_Success");
             }
         });
