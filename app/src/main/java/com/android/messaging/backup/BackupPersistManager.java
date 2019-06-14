@@ -155,7 +155,10 @@ public class BackupPersistManager {
         message.mStatus = Integer.parseInt(info[i++]);
         message.mType = Integer.parseInt(info[i++]);
         message.mReplyPathPresent = Integer.parseInt(info[i++]);
-        message.mSubject = info[i++];
+        String subject = info[i++];
+        if (!TextUtils.isEmpty(subject)) {
+            message.mSubject = subject;
+        }
         message.mBody = info[i++];
         message.mServiceCenter = info[i++];
         message.mLocked = Integer.parseInt(info[i++]);
@@ -178,8 +181,13 @@ public class BackupPersistManager {
                 .append(message.mSeen).append(VERSION_1_SPLIT_CODE)
                 .append(message.mStatus).append(VERSION_1_SPLIT_CODE)
                 .append(message.mType).append(VERSION_1_SPLIT_CODE)
-                .append(message.mReplyPathPresent).append(VERSION_1_SPLIT_CODE)
-                .append(message.mSubject).append(VERSION_1_SPLIT_CODE)
+                .append(message.mReplyPathPresent).append(VERSION_1_SPLIT_CODE);
+        if (TextUtils.isEmpty(message.mSubject)) {
+            sb.append("");
+        } else {
+            sb.append(message.mSubject);
+        }
+        sb.append(VERSION_1_SPLIT_CODE)
                 .append(message.mBody).append(VERSION_1_SPLIT_CODE)
                 .append(message.mServiceCenter).append(VERSION_1_SPLIT_CODE)
                 .append(message.mLocked).append(VERSION_1_SPLIT_CODE)

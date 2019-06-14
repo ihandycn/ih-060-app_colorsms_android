@@ -41,7 +41,10 @@ public class BackupSmsMessage extends BackupMessages.BackupMessage {
         mStatus = cursor.getInt(BackupDatabaseHelper.MessageColumn.INDEX_STATUS);
         mType = cursor.getInt(BackupDatabaseHelper.MessageColumn.INDEX_TYPE);
         mReplyPathPresent = cursor.getInt(BackupDatabaseHelper.MessageColumn.INDEX_REPLY_PATH_PRESENT);
-        mSubject = cursor.getString(BackupDatabaseHelper.MessageColumn.INDEX_SUBJECT);
+        String subject = cursor.getString(BackupDatabaseHelper.MessageColumn.INDEX_SUBJECT);
+        if (TextUtils.isEmpty(subject)) {
+            mSubject = "";
+        }
         mBody = cursor.getString(BackupDatabaseHelper.MessageColumn.INDEX_BODY);
         mServiceCenter = cursor.getString(BackupDatabaseHelper.MessageColumn.INDEX_SERVICE_CENTER);
         mLocked = cursor.getInt(BackupDatabaseHelper.MessageColumn.INDEX_LOCKED);

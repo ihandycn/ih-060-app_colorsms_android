@@ -7,6 +7,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteException;
 import android.provider.Telephony;
 import android.provider.Telephony.Sms;
+import android.text.TextUtils;
 
 import com.android.messaging.mmslib.SqliteWrapper;
 import com.android.messaging.sms.MmsUtils;
@@ -239,7 +240,9 @@ class RestoreSyncCursorPair {
         values.put(BackupDatabaseHelper.MessageColumn.STATUS, sms.mStatus);
         values.put(BackupDatabaseHelper.MessageColumn.TYPE, sms.mType);
         values.put(BackupDatabaseHelper.MessageColumn.REPLY_PATH_PRESENT, sms.mReplyPathPresent);
-        values.put(BackupDatabaseHelper.MessageColumn.SUBJECT, sms.mSubject);
+        if (!TextUtils.isEmpty(sms.mSubject)) {
+            values.put(BackupDatabaseHelper.MessageColumn.SUBJECT, sms.mSubject);
+        }
         values.put(BackupDatabaseHelper.MessageColumn.BODY, sms.mBody);
         values.put(BackupDatabaseHelper.MessageColumn.SERVICE_CENTER, sms.mServiceCenter);
         values.put(BackupDatabaseHelper.MessageColumn.LOCKED, sms.mLocked);
