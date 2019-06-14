@@ -503,16 +503,16 @@ public class BugleApnSettingsLoader implements ApnSettingsLoader {
         final SQLiteDatabase database = ApnDatabase.getApnDatabase().getWritableDatabase();
         final String mccMnc = PhoneUtils.getMccMncString(PhoneUtils.getDefault().getMccMnc());
 
-        if ("000000".equals(mccMnc)) {
-            BugleAnalytics.logEvent("Bugle_Apn_Load_From_Local_Database_MccInvalid");
-        }
-
         Cursor cursor = null;
         cursor = queryLocalDatabase(database, mccMnc, apnName);
         if (cursor == null) {
+            BugleAnalytics.logEvent("Bugle_Apn_Load_From_Local_Database_Failed_By_APN_Name", "apnName",
+                    apnName != null ? apnName : "ERROR");
             cursor = queryLocalDatabase(database, mccMnc, null/*apnName*/);
         }
         if (cursor == null) {
+            BugleAnalytics.logEvent("Bugle_Apn_Load_From_Local_Database_Failed_By_Mcc",
+                    "mccmnc", "mccMnc");
             LogUtil.w(LogUtil.BUGLE_TAG, "Could not find any APN in local table");
             return;
         }
