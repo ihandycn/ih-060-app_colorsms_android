@@ -216,11 +216,10 @@ public class ChooseRestoreViewHolder extends BasePagerViewHolder implements Cust
                     backupCondition[0] = false;
                     backupCondition[1] = false;
                     Toasts.showToast(R.string.restore_success);
+                    BugleAnalytics.logEvent("Backup_RestorePage_Restore_Success", true,
+                            "restorefrom", mIsLocal ? "local" : "cloud");
                 });
             }
-
-            BugleAnalytics.logEvent("Backup_RestorePage_Restore_Success", true,
-                    "restorefrom", mIsLocal ? "local" : "cloud");
         }
 
         @Override

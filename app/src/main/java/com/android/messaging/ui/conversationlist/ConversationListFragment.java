@@ -418,8 +418,8 @@ public class ConversationListFragment extends Fragment implements ConversationLi
         }
 
         prefFile.putInt(PREF_KEY_BACKUP_BANNER_GUIDE_SHOW_COUNT, backupBannerGuideShowCount + 1);
+        BugleAnalytics.logEvent("BackupTopGuide_Show");
         if (mBackupBannerGuideContainer.getVisibility() == View.VISIBLE) {
-            BugleAnalytics.logEvent("BackupTopGuide_Show");
             return;
         }
         mBackupBannerGuideContainer.setVisibility(View.VISIBLE);

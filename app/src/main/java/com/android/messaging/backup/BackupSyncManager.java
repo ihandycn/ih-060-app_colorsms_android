@@ -13,18 +13,9 @@ import java.util.ArrayList;
 
 public class BackupSyncManager {
     static final long SYNC_FAILED = Long.MIN_VALUE;
-    private static final String PREF_KEY_BACKUP_SYNC = "backup_synchronizing";
     private static final String TAG = "-->>";
 
     private static BackupSyncManager sInstance;
-
-    public interface BackupSyncListener {
-        void onSyncStart();
-
-        void onSyncFailed();
-
-        void onSyncSuccess();
-    }
 
     public static BackupSyncManager get() {
         if (sInstance == null) {
