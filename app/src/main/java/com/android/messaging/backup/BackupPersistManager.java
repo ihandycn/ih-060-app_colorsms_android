@@ -51,7 +51,8 @@ public class BackupPersistManager {
         return null;
     }
 
-    public File persistMessages(BackupManager.MessageBackupListener listener) {
+    File persistMessages(@BackupInfo.BackupLocationType int backupType
+            , BackupManager.MessageBackupListener listener) {
         WeakReference<BackupManager.MessageBackupListener> listenerWeakReference = new WeakReference<>(listener);
         //1.load from db
         DatabaseWrapper db = DataModel.get().getDatabase();
@@ -107,10 +108,12 @@ public class BackupPersistManager {
             writer.close();
 
             //remove useless files
-            if (BackupManager.RECOVERY_MODE) {
-                for (File f : CommonUtils.getDirectory(BASE_PATH).listFiles()) {
-                    if (!f.getName().equals(file.getName())) {
-                        f.delete();
+            if (backupType != BackupInfo.CLOUD) {
+                if (BackupManager.RECOVERY_MODE) {
+                    for (File f : CommonUtils.getDirectory(BASE_PATH).listFiles()) {
+                        if (!f.getName().equals(file.getName())) {
+                            f.delete();
+                        }
                     }
                 }
             }
@@ -120,7 +123,7 @@ public class BackupPersistManager {
         return file;
     }
 
-    public List<BackupSmsMessage> parseText(String text) {
+    private List<BackupSmsMessage> parseText(String text) {
         List<BackupSmsMessage> messageList = new ArrayList<>();
         String[] infoList = text.split(String.valueOf(VERSION_1_START_CODE));
         for (String k : infoList) {
@@ -162,7 +165,7 @@ public class BackupPersistManager {
         }
     }
 
-    public String getMessageString(BackupSmsMessage message) {
+    private String getMessageString(BackupSmsMessage message) {
         StringBuilder sb = new StringBuilder();
         sb.append(message.mMessageId).append(VERSION_1_SPLIT_CODE)
                 .append(message.mThreadId).append(VERSION_1_SPLIT_CODE)

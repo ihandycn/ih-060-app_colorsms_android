@@ -213,7 +213,7 @@ public class BackupManager {
             }
 
             //2.persist
-            File file = BackupPersistManager.get().persistMessages(listenerWeakReference.get());
+            File file = BackupPersistManager.get().persistMessages(backupType, listenerWeakReference.get());
 
             if (file == null) {
                 if (listenerWeakReference.get() != null) {
@@ -349,7 +349,9 @@ public class BackupManager {
 
         String uid = FirebaseAuth.getInstance().getCurrentUser().getUid();
         StorageReference reference = storageReference.child("backup").child(uid).child(file.getName());
-        Uri fileUri = Uri.fromFile(file);
+
+        File cryptoFile = AESHelper.encryptFile(uid, file);
+        Uri fileUri = Uri.fromFile(cryptoFile);
         reference.putFile(fileUri)
                 .addOnSuccessListener(taskSnapshot -> {
                     Uri remoteUri = taskSnapshot.getUploadSessionUri();
@@ -422,7 +424,8 @@ public class BackupManager {
                 .addOnSuccessListener(taskSnapshot -> {
                     //run on main thread
                     if (listener != null && file != null) {
-                        listener.onDownloadSuccess(file);
+                        File decryptFile = AESHelper.decryptFile(uid, file);
+                        listener.onDownloadSuccess(decryptFile);
                     }
                     file.deleteOnExit();
                 })
