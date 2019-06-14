@@ -91,11 +91,15 @@ public class WallpaperManager {
                 bgView.setVisibility(View.VISIBLE);
                 bgView.setImageDrawable(new BitmapDrawable(wallpaperPath));
                 return;
+            } else {
+                bgView.setImageDrawable(null);
             }
         } else if (!TextUtils.isEmpty(WallpaperManager.getWallpaperPathByThreadId(conversationId))) {
             bgView.setVisibility(View.VISIBLE);
             bgView.setImageDrawable(new BitmapDrawable(WallpaperManager.getWallpaperPathByThreadId(conversationId)));
             return;
+        } else {
+            bgView.setImageDrawable(null);
         }
 
         Drawable wallpaperDrawable = WallpaperDrawables.getConversationWallpaperBg();
