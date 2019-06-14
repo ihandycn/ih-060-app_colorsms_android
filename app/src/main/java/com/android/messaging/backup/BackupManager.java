@@ -218,6 +218,11 @@ public class BackupManager {
                 return;
             }
 
+            if (time == 0) {
+                // no message to backup
+                return;
+            }
+
             //2.persist
             File file = BackupPersistManager.get().persistMessages(backupType, listenerWeakReference.get());
 
@@ -294,7 +299,7 @@ public class BackupManager {
                 for (DataSnapshot s : dataSnapshot.getChildren()) {
                     String fileName = s.getKey();
                     String filePath = (String) s.getValue();
-                    BackupInfo info = new BackupInfo(BackupInfo.CLOUD, fileName, filePath);
+                    BackupInfo info = new BackupInfo(BackupInfo.CLOUD, fileName);
                     list.add(info);
                 }
                 if (listener != null) {
@@ -320,7 +325,7 @@ public class BackupManager {
         if (list.length > 0) {
             List<BackupInfo> backupInfoList = new ArrayList<>();
             for (File file1 : list) {
-                BackupInfo info = new BackupInfo(BackupInfo.LOCAL, file1.getName(), file1.getAbsolutePath());
+                BackupInfo info = new BackupInfo(BackupInfo.LOCAL, file1.getName());
                 backupInfoList.add(info);
             }
             return backupInfoList;

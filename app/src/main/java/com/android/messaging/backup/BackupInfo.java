@@ -11,17 +11,15 @@ public class BackupInfo {
     public static final int BOTH = 3;
 
     @IntDef({LOCAL, CLOUD, BOTH})
-    public @interface BackupLocationType {
+    @interface BackupLocationType {
     }
 
     private int mLocationType;
     private String mBackupKey;
-    private String mLocationString;
 
-    public BackupInfo(@BackupLocationType int locationType, String backupKey, String locationStr) {
+    public BackupInfo(@BackupLocationType int locationType, String backupKey) {
         mLocationType = locationType;
         mBackupKey = backupKey;
-        mLocationString = locationStr;
     }
 
     public int getLocationType() {
@@ -35,7 +33,7 @@ public class BackupInfo {
         try {
             long time = Long.parseLong(mBackupKey);
             Date date = new Date(time);
-            SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+            SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
             return format.format(date);
         } catch (Exception e) {
             return mBackupKey;
@@ -44,9 +42,5 @@ public class BackupInfo {
 
     public String getKey() {
         return mBackupKey;
-    }
-
-    public String getLocationString() {
-        return null;
     }
 }
