@@ -5,13 +5,13 @@ import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.widget.TextView;
 
+import com.android.messaging.BaseActivity;
 import com.android.messaging.R;
 import com.android.messaging.ui.BaseAlertDialog;
 import com.android.messaging.util.UiUtils;
 import com.ihs.app.framework.HSGdprConsent;
-import com.ihs.app.framework.activity.HSAppCompatActivity;
 
-public class GDPRSettingsActivity extends HSAppCompatActivity {
+public class GDPRSettingsActivity extends BaseActivity {
     private SettingItemView mSMSDeliveryReports;
 
     @Override protected void onCreate(Bundle savedInstanceState) {

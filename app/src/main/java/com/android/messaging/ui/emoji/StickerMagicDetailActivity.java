@@ -8,17 +8,18 @@ import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
 
+import com.android.messaging.BaseActivity;
 import com.android.messaging.R;
 import com.android.messaging.download.Downloader;
 import com.android.messaging.ui.emoji.utils.EmojiManager;
 import com.android.messaging.util.BugleAnalytics;
-import com.ihs.app.framework.activity.HSAppCompatActivity;
+import com.android.messaging.util.TransitionUtils;
 import com.ihs.commons.notificationcenter.HSGlobalNotificationCenter;
 import com.ihs.commons.utils.HSBundle;
 
 import java.io.File;
 
-public class StickerMagicDetailActivity extends HSAppCompatActivity implements View.OnClickListener {
+public class StickerMagicDetailActivity extends BaseActivity implements View.OnClickListener {
 
     private static final String TAG = StickerMagicDetailActivity.class.getSimpleName();
     static final String INTENT_KEY_EMOJI_INFO = "emoji_info";
@@ -33,7 +34,7 @@ public class StickerMagicDetailActivity extends HSAppCompatActivity implements V
         starter.putExtra(INTENT_KEY_EMOJI_INFO, stickerInfo);
         if (context instanceof Activity) {
             Activity activity = (Activity) context;
-            activity.startActivity(starter);
+            activity.startActivity(starter, TransitionUtils.getTransitionInBundle(context));
         }
     }
 
@@ -43,10 +44,8 @@ public class StickerMagicDetailActivity extends HSAppCompatActivity implements V
         starter.putExtra(FROM_WHERE, from);
         if (context instanceof Activity) {
             Activity activity = (Activity) context;
-            activity.startActivity(starter);
+            activity.startActivity(starter, TransitionUtils.getTransitionInBundle(context));
         }
-
-
     }
 
     private StickerInfo mStickerInfo;

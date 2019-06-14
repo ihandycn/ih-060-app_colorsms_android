@@ -170,7 +170,7 @@
 					<key>ShowAfterInstall</key>
 					<integer>10</integer>
 					<key>RefreshInterval</key>
-					<integer>12</integer>
+					<integer>30</integer>
 					<key>ShowAfterSlide</key>
 					<true/>
 					<key>FacebookEnabled</key>

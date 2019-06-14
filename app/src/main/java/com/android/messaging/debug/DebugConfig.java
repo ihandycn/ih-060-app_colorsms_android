@@ -23,7 +23,7 @@ public class DebugConfig {
     /**
      * Whether LeakCanary is enabled.
      */
-    public static final boolean ENABLE_LEAK_CANARY = !MONKEY && BuildConfig.DEBUG;
+    public static final boolean ENABLE_LEAK_CANARY = false && BuildConfig.DEBUG;
 
     /**
      * Whether BlockCanary is enabled.

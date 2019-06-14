@@ -220,6 +220,7 @@ public class SettingGeneralActivity extends BaseActivity {
         mGdpr.setOnItemClickListener(() -> {
             Navigations.startActivitySafely(SettingGeneralActivity.this,
                     new Intent(SettingGeneralActivity.this, GDPRSettingsActivity.class));
+            overridePendingTransition(R.anim.slide_in_from_right_and_fade, R.anim.anim_null);
         });
         if (HSGdprConsent.isGdprUser()) {
             mGdpr.setVisibility(View.VISIBLE);

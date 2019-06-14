@@ -30,6 +30,7 @@ import android.util.SparseArray;
 
 import com.android.messaging.datamodel.data.ParticipantData;
 import com.android.messaging.mmslib.SqliteWrapper;
+import com.android.messaging.util.BugleAnalytics;
 import com.android.messaging.util.BugleGservices;
 import com.android.messaging.util.BugleGservicesKeys;
 import com.android.messaging.util.LogUtil;
@@ -337,16 +338,22 @@ public class BugleApnSettingsLoader implements ApnSettingsLoader {
 
     private void loadLocked(final int subId, final String apnName, final List<Apn> apns) {
         // Try Gservices first
+
+        BugleAnalytics.logEvent("Bugle_Apn_Load_From_Gservices");
+
         loadFromGservices(apns);
         if (apns.size() > 0) {
             return;
         }
         // Try system APN table
+
+        BugleAnalytics.logEvent("Bugle_Apn_Load_From_System");
         loadFromSystem(subId, apnName, apns);
         if (apns.size() > 0) {
             return;
         }
         // Try local APN table
+        BugleAnalytics.logEvent("Bugle_Apn_Load_From_Local_Database");
         loadFromLocalDatabase(apnName, apns);
         if (apns.size() <= 0) {
             LogUtil.w(LogUtil.BUGLE_TAG, "Failed to load any APN");
@@ -495,12 +502,17 @@ public class BugleApnSettingsLoader implements ApnSettingsLoader {
         LogUtil.i(LogUtil.BUGLE_TAG, "Loading APNs from local APN table");
         final SQLiteDatabase database = ApnDatabase.getApnDatabase().getWritableDatabase();
         final String mccMnc = PhoneUtils.getMccMncString(PhoneUtils.getDefault().getMccMnc());
+
         Cursor cursor = null;
         cursor = queryLocalDatabase(database, mccMnc, apnName);
         if (cursor == null) {
+            BugleAnalytics.logEvent("Bugle_Apn_Load_From_Local_Database_Failed_By_APN_Name", "apnName",
+                    apnName != null ? apnName : "ERROR");
             cursor = queryLocalDatabase(database, mccMnc, null/*apnName*/);
         }
         if (cursor == null) {
+            BugleAnalytics.logEvent("Bugle_Apn_Load_From_Local_Database_Failed_By_Mcc",
+                    "mccmnc", "mccMnc");
             LogUtil.w(LogUtil.BUGLE_TAG, "Could not find any APN in local table");
             return;
         }

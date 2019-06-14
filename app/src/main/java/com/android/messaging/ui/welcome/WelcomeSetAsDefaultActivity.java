@@ -11,8 +11,8 @@ import com.android.messaging.Factory;
 import com.android.messaging.R;
 import com.android.messaging.ui.UIIntents;
 import com.android.messaging.util.BugleAnalytics;
+import com.android.messaging.util.DefaultSMSUtils;
 import com.android.messaging.util.OsUtil;
-import com.android.messaging.util.PhoneUtils;
 import com.ihs.commons.config.HSConfig;
 import com.superapps.util.BackgroundDrawables;
 import com.superapps.util.Dimensions;
@@ -37,6 +37,7 @@ public class WelcomeSetAsDefaultActivity extends AppCompatActivity {
                 if (!Preferences.getDefault().contains(WelcomeChooseThemeActivity.PREF_KEY_WELCOME_CHOOSE_THEME_SHOWN)) {
                     Navigations.startActivitySafely(WelcomeSetAsDefaultActivity.this,
                             new Intent(WelcomeSetAsDefaultActivity.this, WelcomeChooseThemeActivity.class));
+                    overridePendingTransition(R.anim.slide_in_from_right_and_fade, R.anim.anim_null);
                 } else {
                     UIIntents.get().launchConversationListActivity(WelcomeSetAsDefaultActivity.this);
                 }
@@ -65,6 +66,7 @@ public class WelcomeSetAsDefaultActivity extends AppCompatActivity {
                 BackgroundDrawables.createBackgroundDrawable(getResources().getColor(R.color.welcome_button_dark_green), Dimensions.pxFromDp(6.7f), true));
         findViewById(R.id.welcome_set_default_button).setOnClickListener(v -> {
             final Intent intent = UIIntents.get().getChangeDefaultSmsAppIntent(WelcomeSetAsDefaultActivity.this);
+            DefaultSMSUtils.invalidateCache();
             startActivityForResult(intent, REQUEST_SET_DEFAULT_SMS_APP);
             if (mIsFromWelcomeStart) {
                 BugleAnalytics.logEvent("Start_SetAsDefault_Click", true, true);
@@ -100,7 +102,7 @@ public class WelcomeSetAsDefaultActivity extends AppCompatActivity {
     @Override
     public void onActivityResult(final int requestCode, final int resultCode, final Intent data) {
         if (requestCode == REQUEST_SET_DEFAULT_SMS_APP) {
-            if (PhoneUtils.getDefault().isDefaultSmsApp()) {
+            if (DefaultSMSUtils.isDefaultSmsApp()) {
                 mHandler.sendEmptyMessageDelayed(EVENT_RETRY_NAVIGATION, 100);
             } else {
                 Toasts.showToast(R.string.welcome_set_default_failed_toast, Toast.LENGTH_LONG);

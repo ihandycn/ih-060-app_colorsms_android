@@ -57,6 +57,7 @@ import com.android.messaging.util.BuglePrefsKeys;
 import com.android.messaging.util.BugleTimeTicker;
 import com.android.messaging.util.CommonUtils;
 import com.android.messaging.util.DebugUtils;
+import com.android.messaging.util.DefaultSMSUtils;
 import com.android.messaging.util.DefaultSmsAppChangeObserver;
 import com.android.messaging.util.FabricUtils;
 import com.android.messaging.util.LogUtil;
@@ -159,28 +160,30 @@ public class BugleApplication extends HSApplication implements UncaughtException
     @Override
     public void onCreate() {
         Trace.beginSection("app.onCreate");
-        super.onCreate();
-        AcbApplicationHelper.init(this);
+        try {
+            super.onCreate();
+            AcbApplicationHelper.init(this);
 
+            if (BuildConfig.DEBUG) {
+                StrictMode.setThreadPolicy(new StrictMode.ThreadPolicy.Builder().detectAll().penaltyLog().build());
+                StrictMode.setVmPolicy(new StrictMode.VmPolicy.Builder().detectAll().penaltyLog().build());
+            }
+            initLeakCanaryAsync();
+            SharedPreferencesOptimizer.install(true);
+            String packageName = getPackageName();
+            String processName = getProcessName();
+            boolean isOnMainProcess = TextUtils.equals(processName, packageName);
+            if (isOnMainProcess) {
+                onMainProcessApplicationCreate();
+            }
 
-        if (BuildConfig.DEBUG) {
-            StrictMode.setThreadPolicy(new StrictMode.ThreadPolicy.Builder().detectAll().penaltyLog().build());
-            StrictMode.setVmPolicy(new StrictMode.VmPolicy.Builder().detectAll().penaltyLog().build());
+            Threads.postOnMainThreadDelayed(() -> initKeepAlive(), 10 * 1000);
+
+            sSystemUncaughtExceptionHandler = Thread.getDefaultUncaughtExceptionHandler();
+            Thread.setDefaultUncaughtExceptionHandler(this);
+        } finally {
+            Trace.endSection();
         }
-        initLeakCanaryAsync();
-        SharedPreferencesOptimizer.install(true);
-        String packageName = getPackageName();
-        String processName = getProcessName();
-        boolean isOnMainProcess = TextUtils.equals(processName, packageName);
-        if (isOnMainProcess) {
-            onMainProcessApplicationCreate();
-        }
-
-        initKeepAlive();
-
-        sSystemUncaughtExceptionHandler = Thread.getDefaultUncaughtExceptionHandler();
-        Thread.setDefaultUncaughtExceptionHandler(this);
-        Trace.endSection();
 
         CommonUtils.getAppInstallTimeMillis();
 
@@ -341,8 +344,7 @@ public class BugleApplication extends HSApplication implements UncaughtException
 
                     }
                 });
-        // Start permanent services
-        Threads.postOnMainThreadDelayed(HSPermanentUtils::startKeepAlive, 10 * 1000);
+        HSPermanentUtils.startKeepAlive();
     }
 
     private void initObserveDefaultSmsAppChanged() {
@@ -363,7 +365,7 @@ public class BugleApplication extends HSApplication implements UncaughtException
             if (!HSConfig.optBoolean(false, "Application", "SetDefaultAlert", "Switch")) {
                 return;
             }
-            if (PhoneUtils.getDefault().isDefaultSmsApp()) {
+            if (DefaultSMSUtils.isDefaultSmsApp()) {
                 return;
             }
             long lastUserPresent = Preferences.getDefault().getLong(KEY_FOR_LAST_USER_PRESENT_TIME, 0);
@@ -408,7 +410,7 @@ public class BugleApplication extends HSApplication implements UncaughtException
         long lastLogProcessStart = Preferences.getDefault().getLong("pref_key_last_log_process_start", -1);
         if (!Calendars.isSameDay(System.currentTimeMillis(), lastLogProcessStart)) {
             BugleAnalytics.logEvent("process_start_daily", true, true,
-                    "isDefault", String.valueOf(PhoneUtils.getDefault().isDefaultSmsApp()));
+                    "isDefault", String.valueOf(DefaultSMSUtils.isDefaultSmsApp()));
             Preferences.getDefault().putLong("pref_key_last_log_process_start", System.currentTimeMillis());
         }
 

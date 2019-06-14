@@ -80,4 +80,6 @@
 
     <!-- Generic reveal view animation duration -->
     <integer name="reveal_view_animation_duration">300</integer>
+
+    <integer name="screen_change_animation_duration">180</integer>
 </resources>

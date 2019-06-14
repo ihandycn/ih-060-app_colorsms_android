@@ -15,7 +15,7 @@ import com.android.messaging.R;
 import com.android.messaging.ui.conversationlist.ConversationListActivity;
 import com.android.messaging.util.BugleAnalytics;
 import com.android.messaging.util.CommonUtils;
-import com.android.messaging.util.PhoneUtils;
+import com.android.messaging.util.DefaultSMSUtils;
 import com.superapps.util.BackgroundDrawables;
 import com.superapps.util.Dimensions;
 import com.superapps.util.Navigations;
@@ -38,7 +38,7 @@ public class SetAsDefaultGuideActivity extends AppCompatActivity {
         intent.putExtra("from", type);
         Navigations.startActivitySafely(context, intent);
         if (context instanceof Activity) {
-            ((Activity) context).overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
+            ((Activity) context).overridePendingTransition(R.anim.slide_in_from_right_and_fade, R.anim.anim_null);
         }
     }
 
@@ -91,6 +91,7 @@ public class SetAsDefaultGuideActivity extends AppCompatActivity {
                 BugleAnalytics.logEvent("SMS_DefaultAlert_BtnClick", true, "type", "Cleared");
             }
             final Intent intent = UIIntents.get().getChangeDefaultSmsAppIntent(SetAsDefaultGuideActivity.this);
+            DefaultSMSUtils.invalidateCache();
             startActivityForResult(intent, REQUEST_SET_DEFAULT_SMS_APP);
         });
     }
@@ -114,7 +115,7 @@ public class SetAsDefaultGuideActivity extends AppCompatActivity {
     @Override
     public void onActivityResult(final int requestCode, final int resultCode, final Intent data) {
         if (requestCode == REQUEST_SET_DEFAULT_SMS_APP) {
-            if (PhoneUtils.getDefault().isDefaultSmsApp()) {
+            if (DefaultSMSUtils.isDefaultSmsApp()) {
                 if (mType == USER_PRESENT) {
                     BugleAnalytics.logEvent("SMS_DefaultAlert_SetDefault_Success", true, "type", "Unlock");
                 } else {
@@ -127,6 +128,7 @@ public class SetAsDefaultGuideActivity extends AppCompatActivity {
                             .setComponent(new ComponentName(this, ConversationListActivity.class))
                             .setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_RESET_TASK_IF_NEEDED);
                     Navigations.startActivitySafely(this, intent);
+                    overridePendingTransition(R.anim.slide_in_from_right_and_fade, R.anim.anim_null);
                 }
             } else {
                 Toasts.showToast(R.string.welcome_set_default_failed_toast, Toast.LENGTH_LONG);

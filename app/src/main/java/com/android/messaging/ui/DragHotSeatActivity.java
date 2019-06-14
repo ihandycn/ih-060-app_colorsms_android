@@ -39,6 +39,12 @@ public class DragHotSeatActivity extends HSAppCompatActivity {
         lottieAnimationView.playAnimation();
     }
 
+    @Override public void finish() {
+        super.finish();
+
+        overridePendingTransition(R.anim.anim_null, R.anim.fade_out);
+    }
+
     @Override
     protected void onDestroy() {
         super.onDestroy();

@@ -11,6 +11,7 @@ import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.android.messaging.BaseActivity;
 import com.android.messaging.R;
 import com.android.messaging.privatebox.AddPrivateContactAction;
 import com.android.messaging.privatebox.AppPrivateLockManager;
@@ -20,7 +21,6 @@ import com.android.messaging.ui.BaseAlertDialog;
 import com.android.messaging.ui.customize.PrimaryColors;
 import com.android.messaging.util.PhoneUtils;
 import com.android.messaging.util.UiUtils;
-import com.ihs.app.framework.activity.HSAppCompatActivity;
 import com.ihs.commons.notificationcenter.HSGlobalNotificationCenter;
 import com.ihs.commons.notificationcenter.INotificationObserver;
 import com.superapps.util.BackgroundDrawables;
@@ -34,7 +34,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public class ContactsSelectActivity extends HSAppCompatActivity {
+public class ContactsSelectActivity extends BaseActivity {
 
     public final static String EVENT_MESSAGES_MOVE_START = "event_contact_messages_move_start";
     public final static String EVENT_MESSAGES_MOVE_END = "event_contact_messages_move_end";

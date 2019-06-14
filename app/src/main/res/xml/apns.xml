@@ -14,6 +14,12 @@
     See the License for the specific language governing permissions and
     limitations under the License.
 -->
+
+<!--
+    mcc  mobile country code, 310,311 Guam (United States of America)
+    mnc  mobile network code,  与 mcc 一起决定一个设备的网络运营商, 而且 01 和 001 是不同的
+    apn 域名解析时候用到
+-->
   <apns version="9">
       <apn mcc="001" mnc="01" carrier="AT&amp;T PHONE TEST SIM" apn="phone" mmsc="http://mmsc.mobile.att.net" mmsproxy="proxy.mobile.att.net" mmsport="80" type="default,mms,supl,hipri,fota,dun"></apn>
       <apn mcc="001" mnc="01" carrier="EHRPD - Test CBS" apn="VZWAPP" mmsc="http://mms.vtext.com/servlets/mms" type="cbs,mms" protocol="IPV4V6" bearer="13" roaming_protocol="IPV4V6"></apn>

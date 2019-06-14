@@ -90,7 +90,6 @@ public class CustomBubblesActivity extends BaseActivity implements CustomMessage
         CustomHeaderViewPager customHeaderViewPager = findViewById(R.id.customize_pager);
         customHeaderViewPager.setViewHolders(viewHolders);
         customHeaderViewPager.setViewPagerTabHeight(CustomViewPager.DEFAULT_TAB_STRIP_SIZE);
-        customHeaderViewPager.setBackgroundColor(getResources().getColor(R.color.contact_picker_background));
         customHeaderViewPager.setCurrentItem(0);
 
         BugleAnalytics.logEvent("Customize_Bubble_Show", true, true, "from", getOpenSourceType());

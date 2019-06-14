@@ -6,13 +6,12 @@ import android.content.Intent;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.ImageView;
 
 import com.android.messaging.BaseActivity;
 import com.android.messaging.R;
 import com.android.messaging.ui.customize.PrimaryColors;
+import com.android.messaging.util.TransitionUtils;
 import com.android.messaging.util.UiUtils;
-import com.ihs.app.framework.activity.HSAppCompatActivity;
 import com.superapps.util.BackgroundDrawables;
 import com.superapps.util.Dimensions;
 
@@ -20,7 +19,7 @@ public class EmojiStoreActivity extends BaseActivity {
 
     public static void start(Context context) {
         Intent starter = new Intent(context, EmojiStoreActivity.class);
-        context.startActivity(starter);
+        context.startActivity(starter, TransitionUtils.getTransitionInBundle(context));
     }
 
     @Override

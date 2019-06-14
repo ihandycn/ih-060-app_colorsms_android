@@ -99,6 +99,7 @@ public class SelfVerifyActivity extends VerifyActivity {
             UIIntents.get().launchConversationListActivity(this);
             Navigations.startActivitySafely(this,
                     new Intent(this, PrivateConversationListActivity.class));
+            overridePendingTransition(R.anim.slide_in_from_right_and_fade, R.anim.anim_null);
             UIIntents.get().launchConversationActivity(
                     this, intent.getStringExtra(INTENT_KEY_ENTRANCE_CONVERSATION_ID), null,
                     null,
@@ -107,11 +108,13 @@ public class SelfVerifyActivity extends VerifyActivity {
             UIIntents.get().launchConversationListActivity(this);
             Navigations.startActivitySafely(this,
                     new Intent(this, PrivateConversationListActivity.class));
+            overridePendingTransition(R.anim.slide_in_from_right_and_fade, R.anim.anim_null);
         } else if (ENTRANCE_APPLICATION_STOP.equals(mEntrance)) {
             //do nothing
         } else {
             Navigations.startActivitySafely(SelfVerifyActivity.this,
                     new Intent(SelfVerifyActivity.this, PrivateConversationListActivity.class));
+            overridePendingTransition(R.anim.slide_in_from_right_and_fade, R.anim.anim_null);
         }
         finish();
     }

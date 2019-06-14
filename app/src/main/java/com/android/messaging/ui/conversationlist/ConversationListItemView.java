@@ -20,11 +20,9 @@ import android.content.res.Resources;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.graphics.Rect;
-import android.graphics.Typeface;
 import android.net.Uri;
 import android.support.v4.text.BidiFormatter;
 import android.support.v4.text.TextDirectionHeuristicsCompat;
-import android.text.TextPaint;
 import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.view.View;
@@ -44,9 +42,9 @@ import com.android.messaging.datamodel.action.UpdateConversationArchiveStatusAct
 import com.android.messaging.datamodel.data.ConversationListItemData;
 import com.android.messaging.datamodel.data.MessageData;
 import com.android.messaging.datamodel.media.UriImageRequestDescriptor;
+import com.android.messaging.font.FontUtils;
 import com.android.messaging.sms.MmsUtils;
 import com.android.messaging.ui.AsyncImageView;
-import com.android.messaging.ui.AudioAttachmentView;
 import com.android.messaging.ui.ContactIconView;
 import com.android.messaging.ui.SnackBar;
 import com.android.messaging.ui.SnackBarInteraction;
@@ -62,11 +60,12 @@ import com.android.messaging.util.ImageUtils;
 import com.android.messaging.util.OsUtil;
 import com.android.messaging.util.UiUtils;
 import com.android.messaging.util.UriUtil;
-import com.android.messaging.font.FontUtils;
 import com.superapps.util.BackgroundDrawables;
 import com.superapps.util.Dimensions;
 
 import java.util.List;
+
+import hugo.weaving.DebugLog;
 
 /**
  * The view for a single entry in a conversation list.
@@ -144,7 +143,6 @@ public class ConversationListItemView extends FrameLayout implements OnClickList
     private ImageView mCrossSwipeArchiveLeftImageView;
     private ImageView mCrossSwipeArchiveRightImageView;
     private AsyncImageView mImagePreviewView;
-    private AudioAttachmentView mAudioAttachmentView;
     private HostInterface mHostInterface;
     private TextView mUnreadMessagesCountView;
 
@@ -180,7 +178,6 @@ public class ConversationListItemView extends FrameLayout implements OnClickList
         mCrossSwipeArchiveRightImageView =
                 findViewById(R.id.crossSwipeArchiveIconRight);
         mImagePreviewView = findViewById(R.id.conversation_image_preview);
-        mAudioAttachmentView = findViewById(R.id.audio_attachment_view);
         mUnreadMessagesCountView = findViewById(R.id.conversation_unread_messages_count);
 
         mConversationNameView.addOnLayoutChangeListener(this);
@@ -286,114 +283,10 @@ public class ConversationListItemView extends FrameLayout implements OnClickList
         }
     }
 
-    // Resource Ids of content descriptions prefixes for different message status.
-    private static final int[][][] sPrimaryContentDescriptions = {
-            // 1:1 conversation
-            {
-                    // Incoming message
-                    {
-                            R.string.one_on_one_incoming_failed_message_prefix,
-                            R.string.one_on_one_incoming_successful_message_prefix
-                    },
-                    // Outgoing message
-                    {
-                            R.string.one_on_one_outgoing_failed_message_prefix,
-                            R.string.one_on_one_outgoing_successful_message_prefix,
-                            R.string.one_on_one_outgoing_draft_message_prefix,
-                            R.string.one_on_one_outgoing_sending_message_prefix,
-                    }
-            },
-
-            // Group conversation
-            {
-                    // Incoming message
-                    {
-                            R.string.group_incoming_failed_message_prefix,
-                            R.string.group_incoming_successful_message_prefix,
-                    },
-                    // Outgoing message
-                    {
-                            R.string.group_outgoing_failed_message_prefix,
-                            R.string.group_outgoing_successful_message_prefix,
-                            R.string.group_outgoing_draft_message_prefix,
-                            R.string.group_outgoing_sending_message_prefix,
-                    }
-            }
-    };
-
-    // Resource Id of the secondary part of the content description for an edge case of a message
-    // which is in both draft status and failed status.
-    private static final int sSecondaryContentDescription =
-            R.string.failed_message_content_description;
-
-    // 1:1 versus group
-    private static final int CONV_TYPE_ONE_ON_ONE_INDEX = 0;
-    private static final int CONV_TYPE_ONE_GROUP_INDEX = 1;
-    // Direction
-    private static final int DIRECTION_INCOMING_INDEX = 0;
-    private static final int DIRECTION_OUTGOING_INDEX = 1;
-    // Message status
-    private static final int MESSAGE_STATUS_FAILED_INDEX = 0;
-    private static final int MESSAGE_STATUS_SUCCESSFUL_INDEX = 1;
-    private static final int MESSAGE_STATUS_DRAFT_INDEX = 2;
-    private static final int MESSAGE_STATUS_SENDING_INDEX = 3;
-
-    private static final int WIDTH_FOR_ACCESSIBLE_CONVERSATION_NAME = 600;
-
-    public static String buildContentDescription(final Resources resources,
-                                                 final ConversationListItemData data, final TextPaint conversationNameViewPaint) {
-        int messageStatusIndex;
-        boolean outgoingSnippet = data.getIsMessageTypeOutgoing() || data.getShowDraft();
-        if (outgoingSnippet) {
-            if (data.getShowDraft()) {
-                messageStatusIndex = MESSAGE_STATUS_DRAFT_INDEX;
-            } else if (data.getIsSendRequested()) {
-                messageStatusIndex = MESSAGE_STATUS_SENDING_INDEX;
-            } else {
-                messageStatusIndex = data.getIsFailedStatus() ? MESSAGE_STATUS_FAILED_INDEX
-                        : MESSAGE_STATUS_SUCCESSFUL_INDEX;
-            }
-        } else {
-            messageStatusIndex = data.getIsFailedStatus() ? MESSAGE_STATUS_FAILED_INDEX
-                    : MESSAGE_STATUS_SUCCESSFUL_INDEX;
-        }
-
-        int resId = sPrimaryContentDescriptions
-                [data.getIsGroup() ? CONV_TYPE_ONE_GROUP_INDEX : CONV_TYPE_ONE_ON_ONE_INDEX]
-                [outgoingSnippet ? DIRECTION_OUTGOING_INDEX : DIRECTION_INCOMING_INDEX]
-                [messageStatusIndex];
-
-        final String snippetText = data.getShowDraft() ?
-                data.getDraftSnippetText() : data.getSnippetText();
-
-        final String conversationName = data.getName();
-        String senderOrConvName = outgoingSnippet ? conversationName : data.getSnippetSenderName();
-
-        String primaryContentDescription = resources.getString(resId, senderOrConvName,
-                snippetText == null ? "" : snippetText,
-                data.getFormattedTimestamp(),
-                // This is used only for incoming group messages
-                conversationName);
-        String contentDescription = primaryContentDescription;
-
-        // An edge case : for an outgoing message, it might be in both draft status and
-        // failed status.
-        if (outgoingSnippet && data.getShowDraft() && data.getIsFailedStatus()) {
-            StringBuilder contentDescriptionBuilder = new StringBuilder();
-            contentDescriptionBuilder.append(primaryContentDescription);
-
-            String secondaryContentDescription =
-                    resources.getString(sSecondaryContentDescription);
-            contentDescriptionBuilder.append(" ");
-            contentDescriptionBuilder.append(secondaryContentDescription);
-            contentDescription = contentDescriptionBuilder.toString();
-        }
-        return contentDescription;
-    }
-
     /**
      * Fills in the data associated with this view.
      */
+    @DebugLog
     public void bind(final ConversationListItemData data, final HostInterface hostInterface) {
         // Update our UI model
         mHostInterface = hostInterface;
@@ -408,7 +301,6 @@ public class ConversationListItemView extends FrameLayout implements OnClickList
 
         int color;
         final int maxLines;
-        final int typefaceStyle = mData.getShowDraft() ? Typeface.ITALIC : Typeface.NORMAL;
         final String snippetText = getSnippetText();
 
         if (mData.getIsFailedStatus()) {
@@ -427,7 +319,6 @@ public class ConversationListItemView extends FrameLayout implements OnClickList
         setSnippet();
         setConversationName();
         setWorkProfileIcon();
-        setContentDescription(buildContentDescription(resources, mData, mConversationNameView.getPaint()));
 
         if (mData.getShowDraft()
                 || mData.getMessageStatus() == MessageData.BUGLE_STATUS_OUTGOING_DRAFT
@@ -435,11 +326,9 @@ public class ConversationListItemView extends FrameLayout implements OnClickList
                 // row is left with a latest_message_id of a no longer existing message and
                 // therefore the join values come back as null (or in this case zero).
                 || mData.getMessageStatus() == MessageData.BUGLE_STATUS_UNKNOWN) {
-            //mTimestampTextView.setTypeface(Typefaces.getCustomRegular(), typefaceStyle);
             mTimestampTextView.setText(resources.getString(
                     R.string.conversation_list_item_view_draft_message));
         } else {
-            //mTimestampTextView.setTypeface(Typefaces.getCustomRegular(), typefaceStyle);
             final String formattedTimestamp = mData.getFormattedTimestamp();
             if (mData.getIsSendRequested()) {
                 mTimestampTextView.setText(R.string.message_status_sending);
@@ -469,10 +358,7 @@ public class ConversationListItemView extends FrameLayout implements OnClickList
 
         setContactImage();
         mContactIconView.setVisibility(contactIconVisibility);
-        //mContactIconView.setOnLongClickListener(this);
         mContactIconView.clearColorFilter();
-//        mContactIconView.setClickable(mHostInterface.isSelectionMode());
-//        mContactIconView.setLongClickable(mHostInterface.isSelectionMode());
 
         mContactCheckmarkView.setVisibility(checkMarkVisibility);
         mFailedStatusIconView.setVisibility(failStatusVisibility);
@@ -487,13 +373,8 @@ public class ConversationListItemView extends FrameLayout implements OnClickList
         OnClickListener previewClickListener = null;
         Uri previewImageUri = null;
         int previewImageVisibility = GONE;
-        int audioPreviewVisibility = GONE;
         if (!shouldShowUnreadMsgCount && previewUri != null && !TextUtils.isEmpty(previewContentType)) {
-            if (ContentType.isAudioType(previewContentType)) {
-                boolean incoming = !(mData.getShowDraft() || mData.getIsMessageTypeOutgoing());
-                mAudioAttachmentView.bind(previewUri, incoming, false);
-                audioPreviewVisibility = VISIBLE;
-            } else if (ContentType.isVideoType(previewContentType)) {
+            if (ContentType.isVideoType(previewContentType)) {
                 previewImageUri = UriUtil.getUriForResourceId(
                         getContext(), R.drawable.ic_preview_play);
                 previewClickListener = fullScreenPreviewClickListener;
@@ -525,10 +406,8 @@ public class ConversationListItemView extends FrameLayout implements OnClickList
         mImagePreviewView.setOnLongClickListener(this);
         mImagePreviewView.setVisibility(previewImageVisibility);
         mImagePreviewView.setOnClickListener(previewClickListener);
-        mAudioAttachmentView.setOnLongClickListener(this);
-        mAudioAttachmentView.setVisibility(audioPreviewVisibility);
 
-        if (previewImageVisibility == View.VISIBLE || audioPreviewVisibility == VISIBLE) {
+        if (previewImageVisibility == View.VISIBLE) {
             mTimestampTextView.setVisibility(GONE);
         } else {
             mTimestampTextView.setVisibility(VISIBLE);

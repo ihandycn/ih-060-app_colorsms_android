@@ -13,14 +13,15 @@
     See the License for the specific language governing permissions and
     limitations under the License.
 -->
-<com.android.messaging.ui.conversation.ComposeMessageView xmlns:android="http://schemas.android.com/apk/res/android"
-                                                          xmlns:app="http://schemas.android.com/apk/res-auto"
-                                                          xmlns:tools="http://schemas.android.com/tools"
-                                                          android:id="@+id/message_compose_view_container"
-                                                          android:layout_width="match_parent"
-                                                          android:layout_height="wrap_content"
-                                                          android:background="#f4f7f9"
-                                                          android:orientation="vertical">
+<com.android.messaging.ui.conversation.ComposeMessageView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/message_compose_view_container"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="#f4f7f9"
+    android:orientation="vertical">
 
     <!-- Note it may seem off to have the layout_weight="1" on the compose bar and attachment view
          when it's the media picker that expands, but this is correct because weight also works when
@@ -199,7 +200,7 @@
                     android:layout_weight="1"
                     android:hint="@string/compose_message_view_hint_text"
                     android:theme="@style/MessageViewEditTextTheme"
-                    android:imeOptions="actionSend|flagNoEnterAction|flagNoExtractUi" />
+                    android:imeOptions="actionSend|flagNoEnterAction|flagNoExtractUi"/>
 
                 <ImageView
                     android:id="@+id/emoji_btn"
@@ -246,5 +247,4 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:visibility="gone"/>
-
 </com.android.messaging.ui.conversation.ComposeMessageView>
