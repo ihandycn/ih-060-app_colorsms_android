@@ -15,6 +15,7 @@
  */
 package com.android.messaging.ui.conversation;
 
+import android.Manifest;
 import android.animation.Animator;
 import android.content.Context;
 import android.content.res.Resources;
@@ -25,7 +26,6 @@ import android.os.Handler;
 import android.support.v4.view.animation.PathInterpolatorCompat;
 import android.support.v7.app.ActionBar;
 import android.text.Editable;
-import android.text.Html;
 import android.text.InputFilter;
 import android.text.InputFilter.LengthFilter;
 import android.text.SpannableString;
@@ -72,6 +72,7 @@ import com.android.messaging.ui.PlainTextEditText;
 import com.android.messaging.ui.SendDelayProgressBar;
 import com.android.messaging.ui.appsettings.SendDelaySettings;
 import com.android.messaging.ui.conversation.ConversationInputManager.ConversationInputSink;
+import com.android.messaging.ui.conversationlist.ConversationListActivity;
 import com.android.messaging.ui.customize.PrimaryColors;
 import com.android.messaging.ui.dialog.FiveStarRateDialog;
 import com.android.messaging.ui.emoji.utils.EmojiManager;
@@ -84,6 +85,7 @@ import com.android.messaging.util.BugleActivityUtil;
 import com.android.messaging.util.BugleAnalytics;
 import com.android.messaging.util.BuglePrefs;
 import com.android.messaging.util.ContentType;
+import com.android.messaging.util.DefaultSMSUtils;
 import com.android.messaging.util.ImeUtil;
 import com.android.messaging.util.LogUtil;
 import com.android.messaging.util.MediaUtil;
@@ -93,6 +95,7 @@ import com.android.messaging.util.UiUtils;
 import com.superapps.util.BackgroundDrawables;
 import com.superapps.util.Dimensions;
 import com.superapps.util.Preferences;
+import com.superapps.util.RuntimePermissions;
 import com.superapps.util.Threads;
 
 import java.util.ArrayList;
@@ -382,7 +385,13 @@ public class ComposeMessageView extends LinearLayout
                 PrimaryColors.getPrimaryColorDark(),
                 Dimensions.pxFromDp(29), false, true));
         mSendButton.setOnClickListener(clickView -> {
-            BugleAnalytics.logEvent("Detailpage_BtnSend_Click", "SendDelay", "" + SendDelaySettings.getSendDelayInSecs());
+            BugleAnalytics.logEvent("Detailpage_BtnSend_Click", true, true,
+                    "SendDelay", "" + SendDelaySettings.getSendDelayInSecs(),
+                    "IsDefaultSMS", String.valueOf(DefaultSMSUtils.isDefaultSmsApp()),
+                    "SendSMSPermission",String.valueOf(RuntimePermissions.checkSelfPermission(getContext(),
+                            Manifest.permission.SEND_SMS) == RuntimePermissions.PERMISSION_GRANTED),
+                    "ReadSMSPermission",String.valueOf(RuntimePermissions.checkSelfPermission(getContext(),
+                            Manifest.permission.READ_SMS) == RuntimePermissions.PERMISSION_GRANTED));
             startMessageSendDelayAction(System.currentTimeMillis());
         });
 
@@ -475,7 +484,6 @@ public class ComposeMessageView extends LinearLayout
                         }
                     });
                     new Handler().postDelayed(() -> mEmojiLottieGuideView.playAnimation(), 180);
-
                 }
             }
         }, "pref_key_emoji_lottie_guide", 1);

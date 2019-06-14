@@ -77,6 +77,7 @@ import com.android.messaging.util.BuglePrefsKeys;
 import com.android.messaging.util.CommonUtils;
 import com.android.messaging.util.CreateShortcutUtils;
 import com.android.messaging.util.MediaUtil;
+import com.android.messaging.util.PhoneUtils;
 import com.android.messaging.util.TransitionUtils;
 import com.ihs.app.framework.HSApplication;
 import com.ihs.commons.config.HSConfig;
@@ -282,6 +283,16 @@ public class ConversationListActivity extends AbstractConversationListActivity
                     default:
                         size = "Default";
                 }
+
+                boolean granted = RuntimePermissions.checkSelfPermission(ConversationListActivity.this,
+                        Manifest.permission.READ_PHONE_STATE) == RuntimePermissions.PERMISSION_GRANTED;
+                String simStatus;
+                if (granted) {
+                    simStatus = String.valueOf(PhoneUtils.getDefault().getActiveSubscriptionCount());
+                } else {
+                    simStatus = "No Permission";
+                }
+                BugleAnalytics.logEvent("SMS_HomePage_Show", "SIM", simStatus);
             });
         }
 

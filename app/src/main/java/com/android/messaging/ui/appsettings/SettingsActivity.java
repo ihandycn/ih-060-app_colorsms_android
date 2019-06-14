@@ -4,7 +4,6 @@ import android.app.Fragment;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.v4.app.NavUtils;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -49,6 +48,7 @@ public class SettingsActivity extends BaseActivity {
         if (PhoneUtils.getDefault().getActiveSubscriptionCount() <= 1) {
             UIIntents.get().launchApplicationSettingsActivity(this, true /* topLevel */);
             finish();
+            BugleAnalytics.logEvent("Setting_Show_Single_SIM");
         } else {
             setContentView(R.layout.activity_setting);
 
@@ -66,6 +66,7 @@ public class SettingsActivity extends BaseActivity {
             getFragmentManager().beginTransaction()
                     .replace(R.id.setting_fragment_container, new SettingsFragment())
                     .commit();
+            BugleAnalytics.logEvent("Setting_Show_Dual_SIM");
         }
     }
 
@@ -73,7 +74,7 @@ public class SettingsActivity extends BaseActivity {
     public boolean onOptionsItemSelected(final MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
-                NavUtils.navigateUpFromSameTask(this);
+                finish();
                 return true;
         }
         return super.onOptionsItemSelected(item);
