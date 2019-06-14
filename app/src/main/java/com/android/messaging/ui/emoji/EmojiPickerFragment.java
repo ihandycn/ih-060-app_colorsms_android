@@ -30,7 +30,9 @@ import com.superapps.view.ViewPagerFixed;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class EmojiPickerFragment extends Fragment implements INotificationObserver {
 
@@ -128,14 +130,22 @@ public class EmojiPickerFragment extends Fragment implements INotificationObserv
             }
         });
 
+        Map<EmojiPackageType, List<EmojiPackageInfo>> data = new HashMap<>();
+        data.put(EmojiPackageType.EMOJI, getInitEmojiData());
+        data.put(EmojiPackageType.STICKER, getInitStickerData());
+        mEmojiPackagePagerAdapter.setData(data);
+
         mEmojiPager = view.findViewById(R.id.emoji_pager);
         mEmojiPager.setAdapter(mEmojiPackagePagerAdapter);
         tabLayout.setupWithViewPager(mEmojiPager);
-        mEmojiPackagePagerAdapter.update(initData());
+        mEmojiPackagePagerAdapter.updateTab(initMainTab());
         mEmojiPager.setCurrentItem(2);
-        view.findViewById(R.id.emoji_store_btn).setOnClickListener(v -> {
-            BugleAnalytics.logEvent("SMSEmoji_ChatEmoji_Store_Click", true, true, "type", "chat_tab");
-            EmojiStoreActivity.start(getActivity());
+
+        view.findViewById(R.id.emoji_delete_btn).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mOnEmojiPickerListener.deleteEmoji();
+            }
         });
     }
 
@@ -172,8 +182,8 @@ public class EmojiPickerFragment extends Fragment implements INotificationObserv
         }
     }
 
-
-    private List<EmojiPackageInfo> initData() {
+    // add emojiPackageInfo only with iconTabUrl, without image data. Only for TabLayout showing.
+    private List<EmojiPackageInfo> initMainTab() {
         Activity activity = getActivity();
         List<EmojiPackageInfo> result = new ArrayList<>();
         EmojiPackageInfo info = new EmojiPackageInfo();
@@ -182,17 +192,41 @@ public class EmojiPickerFragment extends Fragment implements INotificationObserv
         String packageName = activity.getPackageName();
         info.mTabIconUrl = Uri.parse("android.resource://" + packageName + "/" +
                 activity.getResources().getIdentifier("emoji_normal_tab_icon", "drawable", packageName)).toString();
-        info.mEmojiInfoList = getEmojiList();
         result.add(info);
 
+        EmojiPackageInfo stickerInfo = new EmojiPackageInfo();
+        stickerInfo.mName = "sticker";
+        stickerInfo.mEmojiPackageType = EmojiPackageType.STICKER;
+        stickerInfo.mTabIconUrl = Uri.parse("android.resource://" + activity.getPackageName() +
+                "/" + activity.getResources().getIdentifier("emoji_ic_hh", "drawable",
+                activity.getPackageName())).toString();
+        result.add(stickerInfo);
+
+        return result;
+    }
+
+    private List<EmojiPackageInfo> getInitStickerData(){
+        List<EmojiPackageInfo> result = new ArrayList<>();
+
+        Activity activity = getActivity();
+        String packageName = activity.getPackageName();
         EmojiPackageInfo recentInfo = new EmojiPackageInfo();
         recentInfo.mName = "recent";
         recentInfo.mEmojiPackageType = EmojiPackageType.RECENT;
         recentInfo.mTabIconUrl = Uri.parse("android.resource://" + packageName + "/" +
                 activity.getResources().getIdentifier("emoji_recent_tab_icon", "drawable", packageName)).toString();
+        recentInfo.mEmojiInfoList = EmojiManager.getRecentStickerInfo();
         result.add(recentInfo);
 
         result.addAll(EmojiConfig.getInstance().getAddedEmojiFromConfig());
+        return result;
+    }
+
+    private List<EmojiPackageInfo> getInitEmojiData(){
+        List<EmojiPackageInfo> result = new ArrayList<>();
+        EmojiPackageInfo info = new EmojiPackageInfo();
+        info.mEmojiInfoList = getEmojiList();
+        result.add(info);
         return result;
     }
 
@@ -231,8 +265,8 @@ public class EmojiPickerFragment extends Fragment implements INotificationObserv
                 }
                 EmojiPackageInfo packageInfo = (EmojiPackageInfo) object;
                 if (mEmojiPackagePagerAdapter != null) {
-                    mEmojiPackagePagerAdapter.insertItem(3, packageInfo);
-                    mEmojiPager.setCurrentItem(2);
+                    mEmojiPackagePagerAdapter.insertStickItem(1, packageInfo);
+                    mEmojiPager.setCurrentItem(1);
                 }
                 break;
             case StickerMagicDetailActivity.NOTIFICATION_SEND_MAGIC_STICKER:

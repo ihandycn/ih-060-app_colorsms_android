@@ -6,7 +6,6 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.constraint.ConstraintLayout;
 import android.support.constraint.Guideline;
-import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
@@ -23,17 +22,13 @@ import com.android.messaging.datamodel.action.MarkAsSeenAction;
 import com.android.messaging.datamodel.data.MessageBoxItemData;
 import com.android.messaging.ui.UIIntents;
 import com.android.messaging.ui.appsettings.PrivacyModeSettings;
-import com.android.messaging.ui.appsettings.SendDelaySettings;
 import com.android.messaging.ui.customize.theme.ThemeUtils;
 import com.android.messaging.ui.emoji.BaseEmojiInfo;
 import com.android.messaging.ui.emoji.EmojiInfo;
-import com.android.messaging.ui.emoji.EmojiItemPagerAdapter;
 import com.android.messaging.ui.emoji.EmojiPackagePagerAdapter;
 import com.android.messaging.ui.emoji.StickerInfo;
-import com.android.messaging.ui.emoji.ViewPagerDotIndicatorView;
 import com.android.messaging.util.BugleAnalytics;
 import com.android.messaging.util.FabricUtils;
-import com.android.messaging.util.TextUtil;
 import com.android.messaging.util.UiUtils;
 import com.crashlytics.android.core.CrashlyticsCore;
 import com.ihs.app.framework.HSApplication;
@@ -277,11 +272,11 @@ public class MessageBoxActivity extends AppCompatActivity implements INotificati
         };
 
         ViewPagerFixed itemPager = findViewById(R.id.emoji_item_pager);
-        ViewPagerDotIndicatorView dotIndicatorView = findViewById(R.id.dot_indicator_view);
-        itemPager.addOnPageChangeListener(dotIndicatorView);
-        PagerAdapter adapter = new EmojiItemPagerAdapter(getEmojiList(), listener);
-        itemPager.setAdapter(adapter);
-        dotIndicatorView.initDot(adapter.getCount(), 0);
+//        ViewPagerDotIndicatorView dotIndicatorView = findViewById(R.id.dot_indicator_view);
+//        itemPager.addOnPageChangeListener(dotIndicatorView);
+//        PagerAdapter adapter = new EmojiItemPagerAdapter(getEmojiList(), listener);
+//        itemPager.setAdapter(adapter);
+//        dotIndicatorView.initDot(adapter.getCount(), 0);
     }
 
     private List<BaseEmojiInfo> getEmojiList() {

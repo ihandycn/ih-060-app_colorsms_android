@@ -6,10 +6,10 @@
     android:background="#ffffff"
     android:orientation="vertical">
 
-    <com.superapps.view.ViewPagerFixed
+    <com.android.messaging.ui.emoji.ViewPagerWithoutAnim
         android:id="@+id/emoji_pager"
         android:layout_width="match_parent"
-        android:layout_height="197dp"
+        android:layout_height="247dp"
         android:layout_above="@+id/bottom_tab_layout"
         />
 
@@ -30,7 +30,7 @@
             android:layout_width="match_parent"
             android:layout_height="50dp"
             android:layout_below="@id/line_view"
-            android:layout_toStartOf="@+id/emoji_store_btn"
+            android:layout_toStartOf="@id/emoji_store_btn"
             app:tabIndicatorHeight="0dp"
             app:tabMaxWidth="0dp"
             app:tabMinWidth="0dp"
@@ -41,11 +41,10 @@
             app:tabPaddingTop="0dp" />
 
         <FrameLayout
-            android:id="@+id/emoji_store_btn"
+            android:id="@+id/emoji_delete_btn"
             android:layout_width="56dp"
             android:layout_height="50dp"
             android:layout_alignParentEnd="true"
-            android:layout_below="@id/line_view"
             android:background="@drawable/material_compat_button_bg">
 
             <ImageView
@@ -53,7 +52,7 @@
                 android:layout_height="34dp"
                 android:layout_gravity="center"
                 android:scaleType="centerInside"
-                android:src="@drawable/emoji_store_icon" />
+                android:src="@drawable/emoji_delete_icon" />
         </FrameLayout>
     </RelativeLayout>
 </RelativeLayout>

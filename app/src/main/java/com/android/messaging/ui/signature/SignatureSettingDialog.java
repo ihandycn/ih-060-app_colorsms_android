@@ -7,7 +7,6 @@ import android.graphics.PorterDuff;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v4.view.PagerAdapter;
 import android.text.TextUtils;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -21,10 +20,8 @@ import com.android.messaging.ui.appsettings.SettingGeneralActivity;
 import com.android.messaging.ui.customize.PrimaryColors;
 import com.android.messaging.ui.emoji.BaseEmojiInfo;
 import com.android.messaging.ui.emoji.EmojiInfo;
-import com.android.messaging.ui.emoji.EmojiItemPagerAdapter;
 import com.android.messaging.ui.emoji.EmojiPackagePagerAdapter;
 import com.android.messaging.ui.emoji.StickerInfo;
-import com.android.messaging.ui.emoji.ViewPagerDotIndicatorView;
 import com.android.messaging.util.BugleAnalytics;
 import com.android.messaging.util.ImeUtil;
 import com.ihs.app.framework.HSApplication;
@@ -237,10 +234,10 @@ public class SignatureSettingDialog extends DialogFragment {
         };
 
         ViewPagerFixed itemPager = root.findViewById(R.id.emoji_item_pager);
-        ViewPagerDotIndicatorView dotIndicatorView = root.findViewById(R.id.dot_indicator_view);
-        itemPager.addOnPageChangeListener(dotIndicatorView);
-        PagerAdapter adapter = new EmojiItemPagerAdapter(getEmojiList(), listener);
-        itemPager.setAdapter(adapter);
-        dotIndicatorView.initDot(adapter.getCount(), 0);
+//        ViewPagerDotIndicatorView dotIndicatorView = root.findViewById(R.id.dot_indicator_view);
+//        itemPager.addOnPageChangeListener(dotIndicatorView);
+//        PagerAdapter adapter = new EmojiItemPagerAdapter(getEmojiList(), listener);
+//        itemPager.setAdapter(adapter);
+//        dotIndicatorView.initDot(adapter.getCount(), 0);
     }
 }

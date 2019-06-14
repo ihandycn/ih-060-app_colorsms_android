@@ -1,47 +1,45 @@
 package com.android.messaging.ui.emoji;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.support.annotation.NonNull;
-import android.support.v4.view.PagerAdapter;
+import android.support.design.widget.TabLayout;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 
 import com.android.messaging.R;
+import com.android.messaging.glide.GlideApp;
 import com.android.messaging.ui.emoji.utils.EmojiManager;
 import com.superapps.util.Dimensions;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class StickerItemPagerAdapter extends PagerAdapter {
+public class StickerItemPagerAdapter extends AbstractEmojiItemPagerAdapter{
 
-    private final int STICKER_COLUMNS = 4;
-    private final int STICKER_ROWS = 2;
     @SuppressWarnings("FieldCanBeLocal")
-    private final int STICKER_COUNT_ONE_PAGE = STICKER_COLUMNS * STICKER_ROWS;
+    private final int STICKER_COLUMNS = 4;
+    @SuppressWarnings("FieldCanBeLocal")
+    private final int STICKER_ROWS = 2;
+    private TabLayout mTabLayout;
 
-    private List<List<BaseEmojiInfo>> mData;
+    private List<EmojiPackageInfo> mData;
     private EmojiPackagePagerAdapter.OnEmojiClickListener mOnEmojiClickListener;
-    private boolean mIsRecentPage;
+    private Context mContext;
+    private int mNeedUpdatePagePosition = -1;
 
-    StickerItemPagerAdapter(List<BaseEmojiInfo> data, EmojiPackagePagerAdapter.OnEmojiClickListener emojiClickListener) {
-        this(false, data, emojiClickListener);
-    }
-
-    StickerItemPagerAdapter(boolean isRecentPage, List<BaseEmojiInfo> data, EmojiPackagePagerAdapter.OnEmojiClickListener emojiClickListener) {
+    StickerItemPagerAdapter(List<EmojiPackageInfo> data, Context context, EmojiPackagePagerAdapter.OnEmojiClickListener emojiClickListener) {
         mOnEmojiClickListener = emojiClickListener;
-        mIsRecentPage = isRecentPage;
-        if (data == null || data.isEmpty()) {
-            mData = new ArrayList<>();
-            mData.add(data);
-        } else {
-            mData = EmojiManager.subList(data, STICKER_COUNT_ONE_PAGE);
+        mData = new ArrayList<>();
+        if(data!=null){
+            mData.addAll(data);
         }
+        mContext = context;
     }
-
 
     @Override
     public int getCount() {
@@ -53,35 +51,75 @@ public class StickerItemPagerAdapter extends PagerAdapter {
         return view == object;
     }
 
-    @Override
-    public int getItemPosition(@NonNull Object object) {
-        if (mIsRecentPage) {
-            return POSITION_NONE;
-        } else {
-            return super.getItemPosition(object);
-        }
-    }
-
     @NonNull
     @Override
     public Object instantiateItem(@NonNull ViewGroup container, int position) {
         Context context = container.getContext();
         View view;
-        List<BaseEmojiInfo> list = mData.get(position);
+        List<BaseEmojiInfo> list = mData.get(position).mEmojiInfoList;
         if (list.isEmpty()) {
             view = LayoutInflater.from(context).inflate(R.layout.sticker_item_no_recent_layout, container, false);
         } else {
-            RecyclerView recyclerView = new RecyclerView(context);
+            RecyclerView recyclerView = new RecyclerView(container.getContext());
             recyclerView.setOverScrollMode(View.OVER_SCROLL_NEVER);
-            recyclerView.setPadding(Dimensions.pxFromDp(24.3f), Dimensions.pxFromDp(17.7f), Dimensions.pxFromDp(23.7f), Dimensions.pxFromDp(13.3f));
-            StickerItemRecyclerAdapter adapter = new StickerItemRecyclerAdapter(position, mData.get(position), mOnEmojiClickListener);
+            recyclerView.setPadding(Dimensions.pxFromDp(24.3f), Dimensions.pxFromDp(3f), Dimensions.pxFromDp(23.7f), Dimensions.pxFromDp(3f));
+            StickerItemRecyclerAdapter adapter = new StickerItemRecyclerAdapter(position, list, mOnEmojiClickListener);
             recyclerView.setAdapter(adapter);
             recyclerView.setLayoutManager(new GridLayoutManager(context, STICKER_COLUMNS));
             recyclerView.addItemDecoration(new EmojiItemDecoration(STICKER_COLUMNS, STICKER_ROWS, Dimensions.pxFromDp(69), Dimensions.pxFromDp(69)));
             view = recyclerView;
         }
+        view.setTag(position+"");
         container.addView(view);
         return view;
+    }
+
+    @Override
+    public void updateTabView() {
+        int count = mTabLayout.getTabCount();
+        for (int i = 0; i < count; i++) {
+            EmojiPackageInfo info = mData.get(i);
+            @SuppressLint("InflateParams")
+            View view = LayoutInflater.from(mContext).inflate(R.layout.emoji_tab_item_layout, null);
+            TabLayout.Tab tab = mTabLayout.getTabAt(i);
+            ImageView tabIconView = view.findViewById(R.id.tab_icon_view);
+            ImageView newTabView = view.findViewById(R.id.tab_new_view);
+            if (EmojiManager.isNewTabSticker(info.mName)) {
+                newTabView.setVisibility(View.VISIBLE);
+            } else {
+                newTabView.setVisibility(View.GONE);
+            }
+            GlideApp.with(mContext).load(info.mTabIconUrl).placeholder(R.drawable.emoji_normal_tab_icon).into(tabIconView);
+            if (tab != null) {
+                tab.setCustomView(view);
+                tab.setTag(info);
+            }
+        }
+    }
+
+
+    void insertItem(int position, EmojiPackageInfo packageInfo) {
+        if (position < 0) {
+            position = 0;
+        }
+        if (mData.size() < position) {
+            mData.add(packageInfo);
+        }
+
+        mData.add(position, packageInfo);
+        notifyDataSetChanged();
+
+        updateTabView();
+    }
+
+    @Override
+    public int getItemPosition(@NonNull Object object) {
+        View view = (View)object;
+        if(view.getTag().equals(mNeedUpdatePagePosition+"")){
+            return POSITION_NONE;
+        }else{
+            return POSITION_UNCHANGED;
+        }
     }
 
     @Override
@@ -89,12 +127,24 @@ public class StickerItemPagerAdapter extends PagerAdapter {
         container.removeView((View) object);
     }
 
-    void updateRecentItem() {
-        if (mData != null) {
-            mData.clear();
-        }
-        List<BaseEmojiInfo> recent = EmojiManager.getRecentStickerInfo();
-        mData = EmojiManager.subList(recent, STICKER_COUNT_ONE_PAGE);
+    @Override
+    public void updateRecentItem() {
+        if(mData == null || mData.isEmpty())
+            return ;
+        EmojiPackageInfo recentInfo = mData.get(0);
+        if(recentInfo.mEmojiPackageType != EmojiPackageType.RECENT)
+            return ;
+        mData.get(0).mEmojiInfoList.clear();
+        recentInfo.mEmojiInfoList = EmojiManager.getRecentStickerInfo();
+        // update single page view
+        mNeedUpdatePagePosition = 0;
         notifyDataSetChanged();
+        updateTabView();
+        mNeedUpdatePagePosition = -1;
+    }
+
+    @Override
+    public void setTabLayout(TabLayout tabLayout) {
+        this.mTabLayout = tabLayout;
     }
 }

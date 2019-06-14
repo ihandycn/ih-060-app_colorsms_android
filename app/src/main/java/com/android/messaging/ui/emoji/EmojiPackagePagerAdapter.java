@@ -19,13 +19,15 @@ import com.superapps.view.ViewPagerFixed;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 public class EmojiPackagePagerAdapter extends PagerAdapter {
 
     private List<EmojiPackageInfo> mData;
     private TabLayout mTabLayout;
     private Context mContext;
-    private StickerItemPagerAdapter mRecentPagerAdapter;
+    private StickerItemPagerAdapter mStickerAdapter;
+    private EmojiItemPagerAdapter mEmojiAdapter;
     private OnEmojiClickListener mOnEmojiClickListener;
 
     EmojiPackagePagerAdapter(Context context, TabLayout tabLayout, OnEmojiClickListener emojiClickListener) {
@@ -36,8 +38,11 @@ public class EmojiPackagePagerAdapter extends PagerAdapter {
     }
 
     void updateRecentItem() {
-        if (mRecentPagerAdapter != null) {
-            mRecentPagerAdapter.updateRecentItem();
+        if (mStickerAdapter != null) {
+            mStickerAdapter.updateRecentItem();
+        }
+        if (mEmojiAdapter != null) {
+            mEmojiAdapter.updateRecentItem();
         }
     }
 
@@ -51,14 +56,15 @@ public class EmojiPackagePagerAdapter extends PagerAdapter {
         return view == object;
     }
 
-    @NonNull @Override
+    @NonNull
+    @Override
     public Object instantiateItem(@NonNull ViewGroup container, int position) {
         EmojiPackageInfo info = mData.get(position);
         View view = LayoutInflater.from(container.getContext()).inflate(R.layout.emoji_page_item_layout, container, false);
         ViewPagerFixed itemPager = view.findViewById(R.id.emoji_item_pager);
-        ViewPagerDotIndicatorView dotIndicatorView = view.findViewById(R.id.dot_indicator_view);
-        itemPager.addOnPageChangeListener(dotIndicatorView);
-        PagerAdapter adapter = getPagerAdapter(info);
+        TabLayout itemTabLayout = view.findViewById(R.id.emoji_item_tab_layout);
+        AbstractEmojiItemPagerAdapter adapter = getPagerAdapter(info);
+        adapter.setTabLayout(itemTabLayout);
         itemPager.setAdapter(adapter);
         itemPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             private int currentPosition = 0;
@@ -81,24 +87,41 @@ public class EmojiPackagePagerAdapter extends PagerAdapter {
 
             }
         });
-        dotIndicatorView.initDot(adapter.getCount(), 0);
+        itemTabLayout.setupWithViewPager(itemPager);
+        adapter.updateTabView();
         container.addView(view);
+
+        if(adapter instanceof StickerItemPagerAdapter) {
+            View storeBtn = view.findViewById(R.id.emoji_store_btn);
+            storeBtn.setVisibility(View.VISIBLE);
+            storeBtn.setOnClickListener(v -> {
+                BugleAnalytics.logEvent("SMSEmoji_ChatEmoji_Store_Click", true, true, "type", "chat_tab");
+                EmojiStoreActivity.start(container.getContext());
+            });
+        }
         return view;
     }
 
-    private PagerAdapter getPagerAdapter(EmojiPackageInfo info) {
+    private AbstractEmojiItemPagerAdapter getPagerAdapter(EmojiPackageInfo info) {
         switch (info.mEmojiPackageType) {
             case STICKER:
-                return new StickerItemPagerAdapter(info.mEmojiInfoList, mOnEmojiClickListener);
+                return mStickerAdapter;
             case EMOJI:
-                return new EmojiItemPagerAdapter(info.mEmojiInfoList, mOnEmojiClickListener);
-            case RECENT:
-                mRecentPagerAdapter = new StickerItemPagerAdapter(true, EmojiManager.getRecentStickerInfo(), mOnEmojiClickListener);
-                return mRecentPagerAdapter;
+                return mEmojiAdapter;
             default:
                 throw new IllegalStateException("There is no this type: " + info.mEmojiPackageType + "!!!");
         }
     }
+
+    public void setData(Map<EmojiPackageType, List<EmojiPackageInfo>> data){
+        if(data.containsKey(EmojiPackageType.STICKER)) {
+            mStickerAdapter = new StickerItemPagerAdapter(data.get(EmojiPackageType.STICKER), mContext, mOnEmojiClickListener);
+        }
+        if(data.containsKey(EmojiPackageType.EMOJI)){
+            mEmojiAdapter = new EmojiItemPagerAdapter(data.get(EmojiPackageType.EMOJI), mOnEmojiClickListener);
+        }
+    }
+
 
     @Override
     public void destroyItem(@NonNull ViewGroup container, int position, @NonNull Object object) {
@@ -110,7 +133,7 @@ public class EmojiPackagePagerAdapter extends PagerAdapter {
         return POSITION_NONE;
     }
 
-    public void update(List<EmojiPackageInfo> dataList) {
+    public void updateTab(List<EmojiPackageInfo> dataList) {
         mData.clear();
         mData.addAll(dataList);
         notifyDataSetChanged();
@@ -118,18 +141,8 @@ public class EmojiPackagePagerAdapter extends PagerAdapter {
         updateTabView();
     }
 
-    void insertItem(int position, EmojiPackageInfo packageInfo) {
-        if (position < 0){
-            position = 0;
-        }
-        if (mData.size() < position) {
-            mData.add(packageInfo);
-        }
-
-        mData.add(position, packageInfo);
-        notifyDataSetChanged();
-
-        updateTabView();
+    void insertStickItem(int position, EmojiPackageInfo packageInfo) {
+        mStickerAdapter.insertItem(position, packageInfo);
     }
 
     private void updateTabView() {
