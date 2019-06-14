@@ -2,10 +2,9 @@ package com.android.messaging.ui.messagebox;
 
 import com.android.messaging.Factory;
 import com.android.messaging.datamodel.BugleNotifications;
+import com.android.messaging.util.DefaultSMSUtils;
 import com.android.messaging.util.OsUtil;
-import com.android.messaging.util.PhoneUtils;
 import com.ihs.commons.config.HSConfig;
-import com.ihs.commons.notificationcenter.HSGlobalNotificationCenter;
 import com.ihs.commons.utils.HSPreferenceHelper;
 
 public class MessageBoxSettings {
@@ -17,7 +16,7 @@ public class MessageBoxSettings {
         return !Factory.get().getIsForeground()
                 && (BugleNotifications.isNotificationSettingsSwitchOpenned() || OsUtil.isAtLeastO())
                 && isSMSAssistantModuleEnabled()
-                && PhoneUtils.getDefault().isDefaultSmsApp();
+                && DefaultSMSUtils.isDefaultSmsApp();
     }
 
 

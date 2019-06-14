@@ -16,13 +16,18 @@
 package com.android.messaging.datamodel;
 
 import android.content.Context;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
 import com.android.messaging.Factory;
+import com.android.messaging.privatebox.PrivateContactsManager;
+import com.android.messaging.privatebox.PrivateMmsEntry;
+import com.android.messaging.privatebox.PrivateSmsEntry;
 import com.android.messaging.util.Assert;
 import com.android.messaging.util.LogUtil;
 
 public class DatabaseUpgradeHelper {
+
     private static final String TAG = LogUtil.BUGLE_DATABASE_TAG;
 
     public void doOnUpgrade(final SQLiteDatabase db, final int oldVersion, final int newVersion) {
@@ -43,10 +48,16 @@ public class DatabaseUpgradeHelper {
     }
 
     public void doUpgradeWithExceptions(final SQLiteDatabase db, final int oldVersion,
-            final int newVersion) throws Exception {
+                                        final int newVersion) throws Exception {
         int currentVersion = oldVersion;
         if (currentVersion < 2) {
             currentVersion = upgradeToVersion2(db);
+        }
+        if (currentVersion < 3) {
+            currentVersion = upgradeToVersion3(db);
+        }
+        if (currentVersion < 4) {
+            currentVersion = upgradeToVersion4(db);
         }
         // Rebuild all the views
         final Context context = Factory.get().getApplicationContext();
@@ -63,6 +74,55 @@ public class DatabaseUpgradeHelper {
         return 2;
     }
 
+    private int upgradeToVersion3(SQLiteDatabase db) {
+        LogUtil.d("lock_test", "add_db_column");
+        Cursor cursor = null;
+        try {
+            cursor = db.rawQuery("SELECT * FROM " + DatabaseHelper.MESSAGES_TABLE + " LIMIT 0"
+                    , null);
+            if (cursor != null && cursor.getColumnIndex(DatabaseHelper.MessageColumns.IS_LOCKED) == -1) {
+                db.execSQL("ALTER TABLE " + DatabaseHelper.MESSAGES_TABLE
+                        + " ADD COLUMN " + DatabaseHelper.MessageColumns.IS_LOCKED
+                        + " INT DEFAULT(0)");
+            }
+        } catch (Exception e) {
+        } finally {
+            if (null != cursor && !cursor.isClosed()) {
+                cursor.close();
+            }
+        }
+        return 3;
+    }
+
+    private int upgradeToVersion4(SQLiteDatabase db) {
+        Cursor cursor = null;
+        try {
+            cursor = db.rawQuery("SELECT * FROM " + DatabaseHelper.CONVERSATIONS_TABLE + " LIMIT 0"
+                    , null);
+            if (cursor != null && cursor.getColumnIndex(DatabaseHelper.ConversationColumns.IS_PRIVATE) == -1) {
+                db.execSQL("ALTER TABLE " + DatabaseHelper.CONVERSATIONS_TABLE
+                        + " ADD COLUMN " + DatabaseHelper.ConversationColumns.IS_PRIVATE
+                        + " INT DEFAULT(0)");
+            }
+        } catch (Exception ignored) {
+
+        } finally {
+            if (null != cursor && !cursor.isClosed()) {
+                cursor.close();
+            }
+        }
+
+
+        try {
+            db.execSQL(PrivateMmsEntry.CREATE_MMS_TABLE_SQL);
+            db.execSQL(PrivateSmsEntry.CREATE_SMS_TABLE_SQL);
+            db.execSQL(PrivateContactsManager.CREATE_PRIVATE_CONTACTS_TABLE_SQL);
+            db.execSQL(PrivateMmsEntry.Addr.CREATE_MMS_ADDRESS_TABLE_SQL);
+        } catch (Exception e) {
+        }
+        return 4;
+    }
+
     /**
      * Checks db version correctness at the end of each milestone release. If target database
      * version lies beyond the version range that the current release may handle, we snap the
@@ -71,7 +131,7 @@ public class DatabaseUpgradeHelper {
      * at the target version, then throw an exception to force a table rebuild.
      */
     private int checkAndUpdateVersionAtReleaseEnd(final int currentVersion,
-            final int maxVersionForRelease, final int targetVersion) throws Exception {
+                                                  final int maxVersionForRelease, final int targetVersion) throws Exception {
         if (maxVersionForRelease < targetVersion) {
             // Target version is beyond the current release. Snap to max version for the
             // current release so we can go on to the upgrade path for the next release.

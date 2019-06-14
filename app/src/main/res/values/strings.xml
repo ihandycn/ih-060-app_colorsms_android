@@ -59,8 +59,9 @@
     <string name="mediapicker_audio_title">Record audio</string>
     <string name="network_error_and_try_again">Network errors. Please try again.</string>
 
-
     <string name="action_share">Share</string>
+    <string name="action_lock">Lock</string>
+    <string name="action_unlock">Unlock</string>
 
     <string name="posted_just_now">"Just now"</string>
     <string name="posted_now">"Now"</string>
@@ -886,6 +887,8 @@
     <string name="view_more_messages">View more messages</string>
     <!-- Toast message telling the user a conversation has been deleted -->
     <string name="conversation_deleted">Conversation deleted</string>
+    <!-- Toast message telling the user a message is lock when user want to delete -->
+    <string name="message_locked_when_delete">To delete locked messages, unlock them first</string>
     <!-- Displayed when user adds a new conversation widget. Tapping on the widget in this
           mode will bring user to the conversation selection screen -->
     <string name="tap_to_configure">Conversation deleted. Tap to show a different Messaging conversation</string>
@@ -1197,8 +1200,8 @@
 
     <string name="get_now">Get Now</string>
     <string name="downloading">Downloading …</string>
-    <string name="theme_coming">More themes coming soon...</string>
 
+    <string name="theme_coming">More themes coming soon…</string>
     <string name="theme_upgrade_title">More Themes!</string>
     <string name="theme_upgrade_subtitle">You can select a theme you like or reapply your old theme in the brand new theme store. Enjoy it!</string>
 
@@ -1208,6 +1211,27 @@
         <item quantity="one">%s Second</item>
         <item quantity="other">%s Seconds</item>
     </plurals>
+    
+
+    <string name="menu_invite_friends">Invite Friends</string>
+    <string name="invite_friends_now">INVITE NOW</string>
+
+    <string name="invite_friends_invite">INVITE BY SMS (%d)</string>
+    <string name="invite_friends_add">ADD (%d)</string>
+    <string name="invite_friends_add_friends">Add</string>
+
+    <string name="invite_friends_default_back_to_main_page_title">Invite Friends</string>
+    <string name="invite_friends_default_back_to_main_page_description">Is it amazing? You can customize everywhere you want! Tell your friends now!</string>
+    <string name="invite_friends_default_apply_theme_description">Love these awesome themes? Tell your friends and let them join you!</string>
+    <string name="invite_friends_default_send_sms_description">Well done, your message was sent successfully! Want to share Color SMS with your friends?</string>
+
+    <string name="invite_friends_invite_default_content">I’m using Color SMS, an awesome SMS app with pretty themes, funny emojis and perfect functions! Come and join us! 😁😏</string>
+    <string name="invite_friends_invite_cancel_button">Cancel</string>
+    <string name="invite_friends_invite_save_button">Save</string>
+    <string name="invite_friends_invite_edit_button">Edit</string>
+    <string name="invite_friends_invite_send_sms_description">Send SMS to the friend that you’d like to invite</string>
+    <string name="invite_friends_success_toast">Invite success</string>
+    <string name="invite_friends_default_auto_link_content">https://go.onelink.me/app/90cf450c</string>
 
     <!--back up-->
     <string name="menu_backup_restore">Backup &amp; Restore</string>
@@ -1247,4 +1271,5 @@
     <string name="backup_banner_guide_title">%1$d messages are unprotected without backup.</string>
     <string name="backup_local_summary">Back up to local storage</string>
     <string name="backup_free_success">Free Up Space Success</string>
+
 </resources>

@@ -42,9 +42,9 @@ import com.android.messaging.ui.UIIntents;
 import com.android.messaging.ui.conversationlist.ConversationListItemView;
 import com.android.messaging.util.ContentType;
 import com.android.messaging.util.Dates;
+import com.android.messaging.util.DefaultSMSUtils;
 import com.android.messaging.util.LogUtil;
 import com.android.messaging.util.OsUtil;
-import com.android.messaging.util.PhoneUtils;
 
 public class WidgetConversationListService extends RemoteViewsService {
     private static final String TAG = LogUtil.BUGLE_WIDGET_TAG;
@@ -106,7 +106,7 @@ public class WidgetConversationListService extends RemoteViewsService {
 
                 final boolean hasUnreadMessages = !conv.getIsRead();
                 final Resources resources = mContext.getResources();
-                final boolean isDefaultSmsApp = PhoneUtils.getDefault().isDefaultSmsApp();
+                final boolean isDefaultSmsApp = DefaultSMSUtils.isDefaultSmsApp();
 
                 final String timeStamp = conv.getIsSendRequested() ?
                         resources.getString(R.string.message_status_sending) :
@@ -201,11 +201,6 @@ public class WidgetConversationListService extends RemoteViewsService {
                     remoteViews.setTextViewText(R.id.snippet,
                             boldifyIfUnread(getSnippetText(conv), hasUnreadMessages));
                 }
-
-                // Set the accessibility TalkBack text
-                remoteViews.setContentDescription(R.id.widget_conversation_list_item,
-                        ConversationListItemView.buildContentDescription(mContext.getResources(),
-                                conv, new TextPaint()));
 
                 return remoteViews;
             }

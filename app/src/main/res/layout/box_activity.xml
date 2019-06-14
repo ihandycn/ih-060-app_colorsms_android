@@ -5,7 +5,7 @@
     android:id="@+id/root_view"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#cc000000">
+    android:background="#99000000">
 
     <com.superapps.view.ViewPagerFixed
         android:id="@+id/message_box_conversation_pager"

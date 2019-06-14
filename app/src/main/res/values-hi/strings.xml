@@ -674,4 +674,22 @@
     <string name="lock_style_pin">पासकोड</string>
     <string name="confirm_prompt_password">पासकोड की पुष्टि करें</string>
     <string name="draw_unlock_pattern">अपना अनलॉक पैटर्न बनाएं</string>
+
+	<string name="contact_picker_select_group">ग्रूप चैट शुरु करें</string>
+	<string name="send_delay_settings">भेजने में देरी</string>
+	<string name="send_delay_no_delay">कोई देरी नहीं</string>
+	<string name="set_as_default_success">सफलतापूर्वक बदल गया</string>
+	<string name="invite_friends_invite_edit_button">संपादन</string>
+	<string name="invite_friends_invite">आमंत्रण (%d)</string>
+	<string name="invite_friends_add">जोड़ें (%d)</string>
+	<string name="invite_friends_invite_send_sms_description">उस मित्र को एसएमएस भेजें जिसे आप आमंत्रित करना चाहते हैं।</string>
+	<string name="notification_sender_in_private_box">निजी संपर्क</string>
+	<string name="message_box_click_to_view">देखने के लिए क्लिक करें</string>
+	<string name="get_now">अभी पाएं</string>
+	<string name="downloading">डाउनलोड हो रही है...</string>
+	<string name="apply_theme_success">सफलतापूर्वक लागू हो गई</string>
+	<string name="theme_coming">और थीम्‍स शीघ्र आ रही है...</string>
+	<string name="menu_invite_friends">दोस्‍तों को आमंत्रित करें</string>
+	<string name="invite_friends_now">अभी आमंत्रित करें</string>
+
 </resources>

@@ -668,4 +668,22 @@
     <string name="lock_style_pin">Mật mã</string>
     <string name="confirm_prompt_password">Xác nhận mật mã</string>
     <string name="draw_unlock_pattern">Hãy vẽ mẫu hình mở khóa</string>
+
+	<string name="contact_picker_select_group">Bắt đầu trò chuyện nhóm</string>
+	<string name="send_delay_settings">Hoãn Gửi</string>
+	<string name="send_delay_no_delay">Không Hoãn</string>
+	<string name="set_as_default_success">Đã thay đổi thành công</string>
+	<string name="invite_friends_invite_edit_button">Chỉnh sửa</string>
+	<string name="invite_friends_invite">MỜI (%D)</string>
+	<string name="invite_friends_add">THÊM (%d)</string>
+	<string name="invite_friends_invite_send_sms_description">Gửi tin nhắn SMS đến người bạn mà bạn muốn mời.</string>
+	<string name="notification_sender_in_private_box">Liên hệ riêng tư</string>
+	<string name="message_box_click_to_view">Nhấp để xem</string>
+	<string name="get_now">Tải Ngay</string>
+	<string name="downloading">Đang tải xuống...</string>
+	<string name="apply_theme_success">Đã áp dụng thành công</string>
+	<string name="theme_coming">Sắp có thêm chủ đề...</string>
+	<string name="menu_invite_friends">Mời Bạn bè</string>
+	<string name="invite_friends_now">MỜI NGAY</string>
+
 </resources>

@@ -5,16 +5,16 @@ import android.os.Bundle;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
+import com.android.messaging.BaseActivity;
 import com.android.messaging.R;
 import com.android.messaging.ui.customize.theme.ThemeSelectActivity;
 import com.android.messaging.ui.view.MessagesTextView;
 import com.android.messaging.util.BugleAnalytics;
-import com.ihs.app.framework.activity.HSAppCompatActivity;
 import com.superapps.util.BackgroundDrawables;
 import com.superapps.util.Dimensions;
 import com.superapps.util.Navigations;
 
-public class ThemeUpgradeActivity extends HSAppCompatActivity {
+public class ThemeUpgradeActivity extends BaseActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -25,6 +25,7 @@ public class ThemeUpgradeActivity extends HSAppCompatActivity {
         gotIt.setOnClickListener(v -> {
             Navigations.startActivitySafely(ThemeUpgradeActivity.this,
                     new Intent(ThemeUpgradeActivity.this, ThemeSelectActivity.class));
+            overridePendingTransition(R.anim.slide_in_from_right_and_fade, R.anim.anim_null);
             finish();
             BugleAnalytics.logEvent("Theme_Upgrade_Click");
         });

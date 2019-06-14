@@ -48,9 +48,9 @@ import com.android.messaging.sms.MmsUtils;
 import com.android.messaging.ui.UIIntents;
 import com.android.messaging.util.AvatarUriUtil;
 import com.android.messaging.util.Dates;
+import com.android.messaging.util.DefaultSMSUtils;
 import com.android.messaging.util.LogUtil;
 import com.android.messaging.util.OsUtil;
-import com.android.messaging.util.PhoneUtils;
 
 import java.util.List;
 
@@ -321,7 +321,7 @@ public class WidgetConversationService extends RemoteViewsService {
 
                 case MessageData.BUGLE_STATUS_OUTGOING_FAILED:
                     // don't show the error state unless we're the default sms app
-                    if (PhoneUtils.getDefault().isDefaultSmsApp()) {
+                    if (DefaultSMSUtils.isDefaultSmsApp()) {
                         statusResId = MmsUtils.mapRawStatusToErrorResourceId(
                                 message.getStatus(), message.getRawTelephonyStatus());
                         showInRed = true;

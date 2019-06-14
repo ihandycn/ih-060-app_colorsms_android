@@ -33,6 +33,9 @@ import android.telephony.SmsManager;
 import android.text.TextUtils;
 import android.util.Log;
 
+import com.android.messaging.util.BugleAnalytics;
+import com.android.messaging.util.PhoneUtils;
+
 import java.lang.reflect.Method;
 import java.net.Inet4Address;
 import java.net.InetAddress;
@@ -151,7 +154,11 @@ abstract class MmsRequest implements Parcelable {
                 // APNs to try. Whenever we found a successful APN, we signal it and return.
                 final String apnName = networkManager.getApnName();
                 final List<ApnSettingsLoader.Apn> apns = apnSettingsLoader.get(apnName);
+                BugleAnalytics.logEvent("Start_Loading_APN");
                 if (apns.size() < 1) {
+                    BugleAnalytics.logEvent("Failed_To_Load_Any_APN",
+                            "mccmnc", PhoneUtils.getMccMncString(PhoneUtils.getDefault().getMccMnc()),
+                            "apn", apnName != null ? apnName : "ERROR");
                     throw new ApnException("No valid APN");
                 } else {
                     Log.d(MmsService.TAG, "Trying " + apns.size() + " APNs");

@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Rect;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -15,9 +14,6 @@ import com.android.messaging.R;
 import com.android.messaging.ui.emoji.utils.EmojiConfig;
 import com.android.messaging.ui.view.RecyclerViewWidthSlideListener;
 import com.superapps.util.Dimensions;
-
-import java.util.ArrayList;
-import java.util.List;
 
 
 public class EmojiLottieDetailActivity extends BaseActivity {
@@ -35,6 +31,9 @@ public class EmojiLottieDetailActivity extends BaseActivity {
         starter.putExtra(INTENT_EMOJI_PACKAGE_INFO, packageInfo);
         starter.putExtra(INTENT_SOURCE, source);
         context.startActivity(starter);
+        if (context instanceof Activity) {
+            ((Activity) context).overridePendingTransition(R.anim.slide_in_from_right_and_fade, R.anim.anim_null);
+        }
     }
 
     @Override

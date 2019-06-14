@@ -32,12 +32,15 @@ import com.android.messaging.ui.emoji.EmojiPackagePagerAdapter;
 import com.android.messaging.ui.emoji.StickerInfo;
 import com.android.messaging.ui.emoji.ViewPagerDotIndicatorView;
 import com.android.messaging.util.BugleAnalytics;
+import com.android.messaging.util.FabricUtils;
 import com.android.messaging.util.TextUtil;
 import com.android.messaging.util.UiUtils;
+import com.crashlytics.android.core.CrashlyticsCore;
 import com.ihs.app.framework.HSApplication;
 import com.ihs.commons.notificationcenter.HSGlobalNotificationCenter;
 import com.ihs.commons.notificationcenter.INotificationObserver;
 import com.ihs.commons.utils.HSBundle;
+import com.superapps.debug.CrashlyticsLog;
 import com.superapps.util.Dimensions;
 import com.superapps.util.HomeKeyWatcher;
 import com.superapps.util.Threads;
@@ -106,25 +109,7 @@ public class MessageBoxActivity extends AppCompatActivity implements INotificati
         mPagerAdapter.addView(view);
         mPager.addOnPageChangeListener(this);
         mPager.setAdapter(mPagerAdapter);
-        mPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
-            @Override
-            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-
-            }
-
-            @Override
-            public void onPageSelected(int position) {
-                String conversationId = (String) mPagerAdapter.getView(position).getTag();
-                mMarkAsSeenMap.put(conversationId, true);
-            }
-
-            @Override
-            public void onPageScrollStateChanged(int state) {
-
-            }
-        });
         initEmojiKeyboradSimulation();
-
 
         mCurrentConversationView = view;
         MessageBoxAnalytics.setIsMultiConversation(false);
@@ -180,6 +165,10 @@ public class MessageBoxActivity extends AppCompatActivity implements INotificati
         final MessageBoxItemData data = intent.getParcelableExtra(UI_INTENT_EXTRA_MESSAGE_BOX_ITEM);
         if (data == null) {
             BugleAnalytics.logEvent("MessageBox_GetItemIsNull_FromOnNewIntent");
+            return;
+        }
+
+        if (TextUtils.isEmpty(data.getConversationId())) {
             return;
         }
 
@@ -315,7 +304,14 @@ public class MessageBoxActivity extends AppCompatActivity implements INotificati
                 finish(CLOSE);
                 break;
             case R.id.action_open:
-                UIIntents.get().launchConversationActivityWithParentStack(this, mCurrentConversationView.getConversationId(), null);
+                if (!TextUtils.isEmpty(mCurrentConversationView.getConversationId())) {
+                    UIIntents.get().launchConversationActivityWithParentStack(this, mCurrentConversationView.getConversationId(), null);
+                } else {
+                    if (FabricUtils.isFabricInited()) {
+                        CrashlyticsCore.getInstance().logException(
+                                new CrashlyticsLog("start conversation activity error : message box conversation id is null"));
+                    }
+                }
                 finish(OPEN);
                 BugleAnalytics.logEvent("SMS_PopUp_Open_Click",
                         false, true, "type", getConversationType(),
@@ -365,9 +361,13 @@ public class MessageBoxActivity extends AppCompatActivity implements INotificati
 
     private void removeCurrentPage(String source) {
         int position = mPager.getCurrentItem();
-        if (position == mPagerAdapter.getCount() - 1 && mPagerAdapter.getCount() == 1) {
+        if (!mCurrentConversationView.hasSentMessage()) {
+            return;
+        }
+
+        if (position >= mPagerAdapter.getCount() - 1) {
             finish(source);
-        } else if (mCurrentConversationView.hasSentMessage()) {
+        } else {
             mPagerAdapter.removeView(mPager, mCurrentConversationView);
             mPager.setCurrentItem(position);
             mCurrentConversationView = (MessageBoxConversationView) mPagerAdapter.getViews().get(position);

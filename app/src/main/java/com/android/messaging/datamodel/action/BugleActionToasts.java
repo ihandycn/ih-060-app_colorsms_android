@@ -118,6 +118,10 @@ public class BugleActionToasts {
         }
     }
 
+    public static void onMessageLockedWhenDelete(){
+        showToast(R.string.message_locked_when_delete);
+    }
+
     public static void onConversationDeleted() {
         showToast(R.string.conversation_deleted);
     }

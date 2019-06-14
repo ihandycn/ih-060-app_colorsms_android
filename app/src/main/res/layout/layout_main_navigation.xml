@@ -22,7 +22,6 @@
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@android:color/white"
         android:clipToPadding="false"
         android:paddingBottom="10dp">
 
@@ -212,6 +211,24 @@
                     android:text="@string/menu_setting"
                     app:typeface="@string/custom_font_medium"/>
             </RelativeLayout>
+
+
+            <!-- Item Invite Friends -->
+            <RelativeLayout
+                android:id="@+id/navigation_item_invite_friends"
+                style="@style/DrawerMenuItem">
+
+                <android.support.v7.widget.AppCompatImageView
+                    style="@style/DrawerMenuIcon"
+                    app:srcCompat="@drawable/ic_menu_invite_friends"/>
+
+                <com.android.messaging.ui.view.MessagesTextView
+                    style="@style/DrawerMenuTitle"
+                    android:includeFontPadding="false"
+                    android:text="@string/menu_invite_friends"
+                    app:typeface="@string/custom_font_medium"/>
+            </RelativeLayout>
+
 
             <!-- Item Rate -->
             <RelativeLayout

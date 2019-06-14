@@ -15,6 +15,7 @@
  */
 package com.android.messaging.ui.conversation;
 
+import android.Manifest;
 import android.animation.Animator;
 import android.content.Context;
 import android.content.res.Resources;
@@ -25,7 +26,6 @@ import android.os.Handler;
 import android.support.v4.view.animation.PathInterpolatorCompat;
 import android.support.v7.app.ActionBar;
 import android.text.Editable;
-import android.text.Html;
 import android.text.InputFilter;
 import android.text.InputFilter.LengthFilter;
 import android.text.SpannableString;
@@ -64,6 +64,7 @@ import com.android.messaging.datamodel.data.MessagePartData;
 import com.android.messaging.datamodel.data.ParticipantData;
 import com.android.messaging.datamodel.data.PendingAttachmentData;
 import com.android.messaging.datamodel.data.SubscriptionListData.SubscriptionListEntry;
+import com.android.messaging.font.FontUtils;
 import com.android.messaging.sms.MmsConfig;
 import com.android.messaging.ui.AttachmentPreview;
 import com.android.messaging.ui.BugleActionBarActivity;
@@ -71,6 +72,7 @@ import com.android.messaging.ui.PlainTextEditText;
 import com.android.messaging.ui.SendDelayProgressBar;
 import com.android.messaging.ui.appsettings.SendDelaySettings;
 import com.android.messaging.ui.conversation.ConversationInputManager.ConversationInputSink;
+import com.android.messaging.ui.conversationlist.ConversationListActivity;
 import com.android.messaging.ui.customize.PrimaryColors;
 import com.android.messaging.ui.dialog.FiveStarRateDialog;
 import com.android.messaging.ui.emoji.utils.EmojiManager;
@@ -83,16 +85,17 @@ import com.android.messaging.util.BugleActivityUtil;
 import com.android.messaging.util.BugleAnalytics;
 import com.android.messaging.util.BuglePrefs;
 import com.android.messaging.util.ContentType;
+import com.android.messaging.util.DefaultSMSUtils;
 import com.android.messaging.util.ImeUtil;
 import com.android.messaging.util.LogUtil;
 import com.android.messaging.util.MediaUtil;
 import com.android.messaging.util.OsUtil;
 import com.android.messaging.util.TextViewUtil;
 import com.android.messaging.util.UiUtils;
-import com.android.messaging.font.FontUtils;
 import com.superapps.util.BackgroundDrawables;
 import com.superapps.util.Dimensions;
 import com.superapps.util.Preferences;
+import com.superapps.util.RuntimePermissions;
 import com.superapps.util.Threads;
 
 import java.util.ArrayList;
@@ -104,7 +107,7 @@ import java.util.List;
  */
 public class ComposeMessageView extends LinearLayout
         implements TextView.OnEditorActionListener, DraftMessageDataListener, TextWatcher,
-        ConversationInputSink{
+        ConversationInputSink {
 
     public interface IComposeMessageViewHost extends
             DraftMessageData.DraftMessageSubscriptionDataProvider {
@@ -382,7 +385,13 @@ public class ComposeMessageView extends LinearLayout
                 PrimaryColors.getPrimaryColorDark(),
                 Dimensions.pxFromDp(29), false, true));
         mSendButton.setOnClickListener(clickView -> {
-            BugleAnalytics.logEvent("Detailpage_BtnSend_Click", "SendDelay", "" + SendDelaySettings.getSendDelayInSecs());
+            BugleAnalytics.logEvent("Detailpage_BtnSend_Click", true, true,
+                    "SendDelay", "" + SendDelaySettings.getSendDelayInSecs(),
+                    "IsDefaultSMS", String.valueOf(DefaultSMSUtils.isDefaultSmsApp()),
+                    "SendSMSPermission",String.valueOf(RuntimePermissions.checkSelfPermission(getContext(),
+                            Manifest.permission.SEND_SMS) == RuntimePermissions.PERMISSION_GRANTED),
+                    "ReadSMSPermission",String.valueOf(RuntimePermissions.checkSelfPermission(getContext(),
+                            Manifest.permission.READ_SMS) == RuntimePermissions.PERMISSION_GRANTED));
             startMessageSendDelayAction(System.currentTimeMillis());
         });
 
@@ -475,7 +484,6 @@ public class ComposeMessageView extends LinearLayout
                         }
                     });
                     new Handler().postDelayed(() -> mEmojiLottieGuideView.playAnimation(), 180);
-
                 }
             }
         }, "pref_key_emoji_lottie_guide", 1);
@@ -515,7 +523,7 @@ public class ComposeMessageView extends LinearLayout
         };
     }
 
-    private void resetDelaySendAnimation(){
+    private void resetDelaySendAnimation() {
         mDelayCloseButton.setVisibility(View.GONE);
         mSendDelayProgressBar.setVisibility(View.GONE);
         mSelfSendIcon.setVisibility(View.VISIBLE);
@@ -530,26 +538,26 @@ public class ComposeMessageView extends LinearLayout
         mSendDelayProgressBar.setProgress(100);
     }
 
-    private void startMessageSendDelayAction(long sendDelayAnimationStartTime){
+    private void startMessageSendDelayAction(long sendDelayAnimationStartTime) {
         mIsWaitingToSendMessage = true;
 
         if (mMillisecondsAnimated > 1000 * SendDelaySettings.getSendDelayInSecs()) {
-            mMillisecondsAnimated =  1000 * SendDelaySettings.getSendDelayInSecs() * 9 / 10 ;
+            mMillisecondsAnimated = 1000 * SendDelaySettings.getSendDelayInSecs() * 9 / 10;
         }
 
         if (mMillisecondsAnimated != 0) {
             mSendDelayProgressBar.setProgress(100 - (float) ((mMillisecondsAnimated * 100) / (1000 * SendDelaySettings.getSendDelayInSecs())));
         }
-        Threads.postOnMainThreadDelayed(mSendDelayRunnable,1000 * SendDelaySettings.getSendDelayInSecs() - mMillisecondsAnimated);
+        Threads.postOnMainThreadDelayed(mSendDelayRunnable, 1000 * SendDelaySettings.getSendDelayInSecs() - mMillisecondsAnimated);
 
         String conversationId = mBinding.getData().getConversationId();
         SendDelayMessagesManager.insertIncompleteSendingDelayMessagesAction(conversationId, sendDelayAnimationStartTime, mSendDelayRunnable);
-        if(SendDelaySettings.getSendDelayInSecs() != 0) {
+        if (SendDelaySettings.getSendDelayInSecs() != 0) {
             mDelayCloseButton.setVisibility(View.VISIBLE);
             mSendDelayProgressBar.setVisibility(View.VISIBLE);
             mSelfSendIcon.setVisibility(View.GONE);
             mSendButton.setVisibility(View.GONE);
-            
+
             mDelayCloseButton.animate().alpha(1.0f).setDuration(160).setStartDelay(80).start();
             Interpolator scaleStartInterpolator =
                     PathInterpolatorCompat.create(0.0f, 0.0f, 0.58f, 1.0f);
@@ -566,7 +574,7 @@ public class ComposeMessageView extends LinearLayout
         });
     }
 
-    private void resumeLastSendDelayMessageActionInThisConversation(){
+    private void resumeLastSendDelayMessageActionInThisConversation() {
         long sendDelayActionStartTime;
         String conversationId = mBinding.getData().getConversationId();
         SendDelayMessagesManager.SendDelayMessagesData globalSendDelayMessagesData = SendDelayMessagesManager.getIncompleteSendingDelayMessagesAction(conversationId);
@@ -758,7 +766,10 @@ public class ComposeMessageView extends LinearLayout
         // show the subject editor
         if (mSubjectView.getVisibility() == View.GONE) {
             mSubjectView.setVisibility(View.VISIBLE);
-            mSubjectView.requestFocus();
+            try {
+                mSubjectView.requestFocus();
+            } catch (Exception e) {
+            }
             return true;
         }
         return false;
@@ -766,7 +777,10 @@ public class ComposeMessageView extends LinearLayout
 
     private void hideSubjectEditor() {
         mSubjectView.setVisibility(View.GONE);
-        mComposeEditText.requestFocus();
+        try {
+            mComposeEditText.requestFocus();
+        } catch (Exception e) {
+        }
     }
 
     /**
@@ -850,6 +864,8 @@ public class ComposeMessageView extends LinearLayout
                                     if (message != null && message.hasContent()) {
                                         boolean finalSendEmoji = sendEmoji;
                                         Threads.postOnMainThreadDelayed(() -> {
+                                            // show Invite Friends dialog
+
                                             if (finalSendEmoji) {
                                                 FiveStarRateDialog.showFiveStarWhenSendEmojiIfNeed(BugleActivityUtil.contextToActivitySafely(getContext()));
                                             } else {
@@ -1176,8 +1192,8 @@ public class ComposeMessageView extends LinearLayout
             if (hasWorkingDraft && isDataLoadedForMessageSend()) {
                 if (selfSendButtonUri != null) {
                     UiUtils.revealOrHideViewWithAnimation(mSendButton, VISIBLE, null);
-                } else if(!mIsWaitingToSendMessage) {
-                        mSendButton.setVisibility(View.VISIBLE);
+                } else if (!mIsWaitingToSendMessage) {
+                    mSendButton.setVisibility(View.VISIBLE);
                 }
                 if (isOverriddenAvatarAGroup()) {
                     // If the host has overriden the avatar to show a group avatar where the
@@ -1220,16 +1236,7 @@ public class ComposeMessageView extends LinearLayout
         final List<MessagePartData> attachments = draftMessageData.getReadOnlyAttachments();
         final int attachmentCount = attachments.size();
         if (attachmentCount == 0) {
-            final SubscriptionListEntry subscriptionListEntry =
-                    mConversationDataModel == null ? null : mConversationDataModel.getData().getSubscriptionEntryForSelfParticipant(
-                            mBinding.getData().getSelfId(), false /* excludeDefault */);
-            if (subscriptionListEntry == null) {
-                mComposeEditText.setHint(R.string.compose_message_view_hint_text);
-            } else {
-                mComposeEditText.setHint(Html.fromHtml(getResources().getString(
-                        R.string.compose_message_view_hint_text_multi_sim,
-                        subscriptionListEntry.displayName)));
-            }
+            mComposeEditText.setHint(R.string.compose_message_view_hint_text);
         } else {
             int type = -1;
             for (final MessagePartData attachment : attachments) {

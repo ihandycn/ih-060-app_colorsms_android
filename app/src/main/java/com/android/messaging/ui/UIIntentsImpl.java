@@ -59,6 +59,7 @@ import com.android.messaging.ui.appsettings.SettingAdvancedActivity;
 import com.android.messaging.ui.appsettings.SettingGeneralActivity;
 import com.android.messaging.ui.appsettings.SettingsActivity;
 import com.android.messaging.ui.attachmentchooser.AttachmentChooserActivity;
+import com.android.messaging.ui.contact.ContactPickerActivity;
 import com.android.messaging.ui.conversation.ConversationActivity;
 import com.android.messaging.ui.conversation.LaunchConversationActivity;
 import com.android.messaging.ui.conversationlist.ArchivedConversationListActivity;
@@ -77,6 +78,7 @@ import com.android.messaging.ui.welcome.WelcomeStartActivity;
 import com.android.messaging.util.Assert;
 import com.android.messaging.util.ContentType;
 import com.android.messaging.util.ConversationIdSet;
+import com.android.messaging.util.TransitionUtils;
 import com.android.messaging.util.UriUtil;
 import com.superapps.util.Navigations;
 
@@ -157,19 +159,19 @@ public class UIIntentsImpl extends UIIntents {
     @Override
     public void launchWelcomeStartActivity(final Context context) {
         final Intent intent = new Intent(context, WelcomeStartActivity.class);
-        context.startActivity(intent);
+        context.startActivity(intent, TransitionUtils.getTransitionInBundle(context));
     }
 
     @Override
     public void launchWelcomePermissionActivity(final Context context) {
         final Intent intent = new Intent(context, WelcomePermissionActivity.class);
-        context.startActivity(intent);
+        context.startActivity(intent, TransitionUtils.getTransitionInBundle(context));
     }
 
     @Override
     public void launchWelcomeSetAsDefaultActivity(final Context context) {
         final Intent intent = new Intent(context, WelcomeSetAsDefaultActivity.class);
-        context.startActivity(intent);
+        context.startActivity(intent, TransitionUtils.getTransitionInBundle(context));
     }
 
     /**
@@ -196,24 +198,19 @@ public class UIIntentsImpl extends UIIntents {
 
     @Override
     public void launchConversationActivity(final Context context,
-                                           final String conversationId, final MessageData draft, final Bundle activityOptions,
-                                           final boolean withCustomTransition) {
-        Assert.isTrue(!withCustomTransition || activityOptions != null);
-        final Intent intent = getConversationActivityIntent(context, conversationId, draft,
-                withCustomTransition);
-        context.startActivity(intent, activityOptions);
+                                           final String conversationId, final MessageData draft) {
+        final Intent intent = getConversationActivityIntent(context, conversationId, draft, false);
+        context.startActivity(intent, TransitionUtils.getTransitionInBundle(context));
     }
 
     @Override
     public void launchConversationActivity(final Context context,
-                                           final String conversationId, final MessageData draft, final Bundle activityOptions,
-                                           final boolean withCustomTransition,
+                                           final String conversationId, final MessageData draft,
                                            final String conversationName, final boolean fromCreate) {
-        Assert.isTrue(!withCustomTransition || activityOptions != null);
         final Intent intent = getConversationActivityIntent(context, conversationId, draft,
-                withCustomTransition, conversationName);
+                false, conversationName);
         intent.putExtra(UI_INTENT_EXTRA_FROM_CREATE_CONVERSATION, fromCreate);
-        context.startActivity(intent, activityOptions);
+        context.startActivity(intent, TransitionUtils.getTransitionInBundle(context));
     }
 
     @Override
@@ -222,7 +219,7 @@ public class UIIntentsImpl extends UIIntents {
         final Intent intent = getConversationActivityIntent(context, conversationId, null,
                 false /* withCustomTransition */);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        context.startActivity(intent);
+        context.startActivity(intent, TransitionUtils.getTransitionInBundle(context));
     }
 
     @Override
@@ -241,14 +238,17 @@ public class UIIntentsImpl extends UIIntents {
     @Override
     public void launchCreateNewConversationActivity(final Context context,
                                                     final MessageData draft) {
-        final Intent intent = getConversationActivityIntent(context, null, draft,
-                false /* withCustomTransition */);
-        context.startActivity(intent);
+        final Intent intent = new Intent(context, ContactPickerActivity.class);
+        if (draft != null) {
+            intent.putExtra(UI_INTENT_EXTRA_DRAFT_DATA, draft);
+        }
+        context.startActivity(intent, TransitionUtils.getTransitionInBundle(context));
     }
 
     @Override
     public void launchDebugMmsConfigActivity(final Context context) {
-        context.startActivity(new Intent(context, DebugMmsConfigActivity.class));
+        context.startActivity(new Intent(context, DebugMmsConfigActivity.class),
+                TransitionUtils.getTransitionInBundle(context));
     }
 
     @Override
@@ -264,19 +264,19 @@ public class UIIntentsImpl extends UIIntents {
     @Override
     public void launchSettingsActivity(final Context context) {
         final Intent intent = new Intent(context, SettingsActivity.class);
-        context.startActivity(intent);
+        context.startActivity(intent, TransitionUtils.getTransitionInBundle(context));
     }
 
     @Override
     public void launchArchivedConversationsActivity(final Context context) {
         final Intent intent = new Intent(context, ArchivedConversationListActivity.class);
-        context.startActivity(intent);
+        context.startActivity(intent, TransitionUtils.getTransitionInBundle(context));
     }
 
     @Override
     public void launchBlockedParticipantsActivity(final Context context) {
         final Intent intent = new Intent(context, BlockedParticipantsActivity.class);
-        context.startActivity(intent);
+        context.startActivity(intent, TransitionUtils.getTransitionInBundle(context));
     }
 
     @Override
@@ -293,7 +293,7 @@ public class UIIntentsImpl extends UIIntents {
     public void launchPeopleAndOptionsActivity(Activity context, String conversationId) {
         final Intent intent = new Intent(context, PeopleAndOptionsActivity.class);
         intent.putExtra(UI_INTENT_EXTRA_CONVERSATION_ID, conversationId);
-        context.startActivityForResult(intent, 0);
+        context.startActivityForResult(intent, 0, TransitionUtils.getTransitionInBundle(context));
     }
 
     @Override
@@ -312,21 +312,21 @@ public class UIIntentsImpl extends UIIntents {
         final Intent classZeroIntent = new Intent(context, ClassZeroActivity.class)
                 .putExtra(UI_INTENT_EXTRA_MESSAGE_VALUES, messageValues)
                 .setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_MULTIPLE_TASK);
-        context.startActivity(classZeroIntent);
+        context.startActivity(classZeroIntent, TransitionUtils.getTransitionInBundle(context));
     }
 
     @Override
     public void launchForwardMessageActivity(final Context context, final MessageData message) {
         final Intent forwardMessageIntent = new Intent(context, ForwardMessageActivity.class)
                 .putExtra(UI_INTENT_EXTRA_DRAFT_DATA, message);
-        context.startActivity(forwardMessageIntent);
+        context.startActivity(forwardMessageIntent, TransitionUtils.getTransitionInBundle(context));
     }
 
     @Override
     public void launchVCardDetailActivity(final Context context, final Uri vcardUri) {
         final Intent vcardDetailIntent = new Intent(context, VCardDetailActivity.class)
                 .putExtra(UI_INTENT_EXTRA_VCARD_URI, vcardUri);
-        context.startActivity(vcardDetailIntent);
+        context.startActivity(vcardDetailIntent, TransitionUtils.getTransitionInBundle(context));
     }
 
     @Override
@@ -376,21 +376,20 @@ public class UIIntentsImpl extends UIIntents {
         builder.setDisplayThumbsFullScreen(false);
         builder.setMaxInitialScale(8);
         activity.startActivity(builder.build());
-        activity.overridePendingTransition(0, 0);
     }
 
     @Override
     public void launchApplicationSettingsActivity(final Context context, final boolean topLevel) {
         Intent intent = new Intent(context, SettingGeneralActivity.class);
         intent.putExtra(UI_INTENT_EXTRA_TOP_LEVEL_SETTINGS, topLevel);
-        context.startActivity(intent);
+        context.startActivity(intent, TransitionUtils.getTransitionInBundle(context));
     }
 
     @Override
     public void launchPerSubscriptionSettingsActivity(final Context context, final int subId,
                                                       final String settingTitle) {
         final Intent intent = getPerSubscriptionSettingsIntent(context, subId, settingTitle);
-        context.startActivity(intent);
+        context.startActivity(intent, TransitionUtils.getTransitionInBundle(context));
     }
 
     @Override
@@ -402,7 +401,7 @@ public class UIIntentsImpl extends UIIntents {
         if (context instanceof Activity) {
             ((Activity) context).overridePendingTransition(R.anim.smsshow_detail_in, R.anim.smsshow_detail_out);
         }
-        context.startActivity(intent);
+        context.startActivity(intent, TransitionUtils.getTransitionInBundle(context));
     }
 
     @Override
@@ -423,7 +422,7 @@ public class UIIntentsImpl extends UIIntents {
         if (!TextUtils.isEmpty(conversationId)) {
             intent.putExtra(UI_INTENT_EXTRA_CONVERSATION_ID, conversationId);
         }
-        context.startActivity(intent);
+        context.startActivity(intent, TransitionUtils.getTransitionInBundle(context));
     }
 
     @Override
@@ -432,7 +431,7 @@ public class UIIntentsImpl extends UIIntents {
         intent.putExtra(UI_INTENT_EXTRA_MESSAGE_BOX_ITEM, itemData);
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         ActivityOptionsCompat options =
-                ActivityOptionsCompat.makeCustomAnimation(context, android.R.anim.fade_in, android.R.anim.fade_out);
+                ActivityOptionsCompat.makeCustomAnimation(context, R.anim.fade_in, R.anim.fade_out);
         context.startActivity(intent, options.toBundle());
     }
 
@@ -636,6 +635,9 @@ public class UIIntentsImpl extends UIIntents {
      */
     private void startExternalActivity(final Context context, final Intent intent) {
         Navigations.startActivitySafely(context, intent);
+        if (context instanceof Activity) {
+            ((Activity) context).overridePendingTransition(R.anim.slide_in_from_right_and_fade, R.anim.anim_null);
+        }
     }
 
     private Intent getPerSubscriptionSettingsIntent(final Context context, final int subId, @Nullable final String settingTitle) {

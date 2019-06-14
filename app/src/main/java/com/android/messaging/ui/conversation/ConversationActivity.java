@@ -53,14 +53,16 @@ import com.android.messaging.util.Assert;
 import com.android.messaging.util.BugleAnalytics;
 import com.android.messaging.util.CommonUtils;
 import com.android.messaging.util.ContentType;
+import com.android.messaging.util.FabricUtils;
 import com.android.messaging.util.LogUtil;
 import com.android.messaging.util.OsUtil;
 import com.android.messaging.util.UiUtils;
 import com.android.messaging.util.ViewUtils;
+import com.crashlytics.android.core.CrashlyticsCore;
 import com.ihs.app.framework.HSApplication;
 import com.ihs.commons.config.HSConfig;
 import com.ihs.commons.notificationcenter.HSGlobalNotificationCenter;
-import com.ihs.commons.utils.HSLog;
+import com.superapps.debug.CrashlyticsLog;
 import com.superapps.util.Dimensions;
 import com.superapps.util.IntegerBuckets;
 import com.superapps.util.Preferences;
@@ -91,9 +93,7 @@ public class ConversationActivity extends BugleActionBarActivity
     private TextView mTitleTextView;
     private ViewGroup mContainer;
 
-    private int mStatusBarHeight;
     private int mKeyboardHeight;
-    private int mNavigationBarHeight;
 
     private AcbInterstitialAd mInterstitialAd;
     private long mCreateTime;
@@ -134,6 +134,14 @@ public class ConversationActivity extends BugleActionBarActivity
         }
 
         mConversationId = intent.getStringExtra(UIIntents.UI_INTENT_EXTRA_CONVERSATION_ID);
+        if (TextUtils.isEmpty(mConversationId)) {
+            if (FabricUtils.isFabricInited()) {
+                CrashlyticsCore.getInstance().logException(
+                        new CrashlyticsLog("start conversation activity error : conversation id is null"));
+            }
+            finish();
+            return;
+        }
         mInstanceStateSaved = false;
 
         initActionBar();
@@ -141,11 +149,7 @@ public class ConversationActivity extends BugleActionBarActivity
         ViewUtils.setMargins(findViewById(R.id.conversation_fragment_container),
                 0, -Dimensions.getStatusBarHeight(HSApplication.getContext()), 0, 0);
 
-        // Don't animate UI state change for initial setup.
-        updateUiState(false /* animate */);
-
-        mContainer = findViewById(R.id.conversation_and_compose_container);
-        mContainer.getViewTreeObserver().addOnGlobalLayoutListener(this);
+        initConversationFragment();
 
         // See if we're getting called from a widget to directly display an image or video
         final String extraToDisplay =
@@ -165,9 +169,12 @@ public class ConversationActivity extends BugleActionBarActivity
 
         BugleAnalytics.logEvent("SMS_ActiveUsers", true);
 
-        mStatusBarHeight = Dimensions.getStatusBarHeight(this);
-        mNavigationBarHeight = Dimensions.getNavigationBarHeight(this);
+
         mKeyboardHeight = UiUtils.getKeyboardHeight();
+        if (mKeyboardHeight <= 0) {
+            mContainer = findViewById(R.id.conversation_and_compose_container);
+            mContainer.getViewTreeObserver().addOnGlobalLayoutListener(this);
+        }
 
         long lastShowTime = Preferences.getDefault().getLong(PREF_KEY_CONVERSATION_ACTIVITY_SHOW_TIME, -1);
         if (lastShowTime != -1) {
@@ -182,14 +189,17 @@ public class ConversationActivity extends BugleActionBarActivity
     @Override
     public void onGlobalLayout() {
         Rect r = new Rect();
-        mContainer.getWindowVisibleDisplayFrame(r);
+        if (mContainer != null && mKeyboardHeight == 0) {
+            int statusBarHeight = Dimensions.getStatusBarHeight(this);
+            int navigationBarHeight = Dimensions.getNavigationBarHeight(this);
+            mContainer.getWindowVisibleDisplayFrame(r);
+            int screenHeight = mContainer.getRootView().getHeight();
+            int heightDiff = screenHeight - (r.bottom - r.top);
 
-        int screenHeight = mContainer.getRootView().getHeight();
-        int heightDiff = screenHeight - (r.bottom - r.top);
-
-        if (mKeyboardHeight == 0 && heightDiff > mStatusBarHeight + mNavigationBarHeight + Dimensions.pxFromDp(20)) {
-            mKeyboardHeight = heightDiff - mStatusBarHeight - mNavigationBarHeight;
-            UiUtils.updateKeyboardHeight(mKeyboardHeight);
+            if (heightDiff > statusBarHeight + navigationBarHeight + Dimensions.pxFromDp(20)) {
+                mKeyboardHeight = heightDiff - statusBarHeight - navigationBarHeight;
+                UiUtils.updateKeyboardHeight(mKeyboardHeight);
+            }
         }
     }
 
@@ -292,7 +302,9 @@ public class ConversationActivity extends BugleActionBarActivity
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        mContainer.getViewTreeObserver().removeOnGlobalLayoutListener(this);
+        if (mContainer != null) {
+            mContainer.getViewTreeObserver().removeOnGlobalLayoutListener(this);
+        }
     }
 
     @Override
@@ -387,6 +399,7 @@ public class ConversationActivity extends BugleActionBarActivity
 
                     }
                 });
+                mInterstitialAd.setSoundEnable(false);
                 mInterstitialAd.show();
                 BugleAnalytics.logEvent("Detailspage_FullAd_Show", true, true);
                 Preferences.getDefault().putLong(PREF_KEY_WIRE_AD_SHOW_TIME, System.currentTimeMillis());
@@ -430,7 +443,7 @@ public class ConversationActivity extends BugleActionBarActivity
         return getIntent().getStringExtra(UIIntents.UI_INTENT_EXTRA_CONVERSATION_NAME);
     }
 
-    private void updateUiState(final boolean animate) {
+    private void initConversationFragment() {
         if (mInstanceStateSaved || mIsPaused) {
             return;
         }

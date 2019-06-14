@@ -218,6 +218,7 @@ public class ThemeSelectItemView extends ConstraintLayout implements ThemeUtils.
         }).start();
         BugleAnalytics.logEvent("Customize_ThemeCenter_Theme_Apply", true,
                 "theme", mThemeInfo.mThemeKey, "from", "list");
+
     }
 
     @Override

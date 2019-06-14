@@ -15,6 +15,10 @@
 				<key>RecommendFull</key>
 				<true/>
 			</dict>
+			<key>CheckContactNum</key>
+			<integer>6</integer>
+			<key>InviteFriendsGuide</key>
+			<false/>
 			<key>FiveStarShowTime</key>
 			<integer>5</integer>
 			<key>PrivacyPolicyUrl</key>
@@ -170,8 +174,12 @@
 				<dict>
 					<key>Enabled</key>
 					<true/>
+					<key>HideWhenKeyboardShow</key>
+					<false/>
 					<key>ShowAfterInstall</key>
 					<integer>10</integer>
+					<key>RefreshInterval</key>
+					<integer>30</integer>
 					<key>ShowAfterSlide</key>
 					<true/>
 					<key>FacebookEnabled</key>
@@ -865,6 +873,122 @@
 						<string>#e3187b</string>
 						<key>BannerAdBgColor</key>
 						<string>#66000000</string>
+						<key>BannerAdActionColor</key>
+						<string>#80ffffff</string>
+						<key>BannerAdActionTextColor</key>
+						<string>#ffffff</string>
+						<key>PreviewUrl</key>
+						<string>preview.jpg</string>
+						<key>ToolbarBgUrl</key>
+						<string>toolbar.jpg</string>
+						<key>AvatarUrl</key>
+						<string>avatar.png</string>
+						<key>ListWallpaperUrl</key>
+						<string>wallpaper.jpg</string>
+						<key>WallpaperUrl</key>
+						<string>wallpaper.jpg</string>
+						<key>NewConversationIconUrl</key>
+						<string></string>
+						<key>BubbleIncomingUrl</key>
+						<string>incoming.9.png</string>
+						<key>BubbleOutgoingUrl</key>
+						<string>outgoing.9.png</string>
+					</dict>
+					<key>cat</key>
+					<dict>
+						<key>IsLocalTheme</key>
+						<false/>
+						<key>Name</key>
+						<string>Cat</string>
+						<key>PreviewList</key>
+						<array>
+							<string>preview_1.jpg</string>
+							<string>preview_2.jpg</string>
+						</array>
+						<key>Hot</key>
+						<real>7692</real>
+						<key>ThemeColor</key>
+						<string>#f26872</string>
+						<key>FontName</key>
+						<string>Averia_Libre</string>
+						<key>AvatarForegroundColor</key>
+						<string>#ffffff</string>
+						<key>ListTitleColor</key>
+						<string>#ffffff</string>
+						<key>ListSubtitleColor</key>
+						<string>#ffffff</string>
+						<key>ListTimeColor</key>
+						<string>#ffffff</string>
+						<key>IncomingBubbleBgColor</key>
+						<string>#00000000</string>
+						<key>IncomingBubbleTextColor</key>
+						<string>#ffffff</string>
+						<key>OutgoingBubbleBgColor</key>
+						<string>#00000000</string>
+						<key>OutgoingBubbleTextColor</key>
+						<string>#ffffff</string>
+						<key>BubbleAdColor</key>
+						<string>#e3187b</string>
+						<key>BannerAdBgColor</key>
+						<string>#40000000</string>
+						<key>BannerAdActionColor</key>
+						<string>#80ffffff</string>
+						<key>BannerAdActionTextColor</key>
+						<string>#ffffff</string>
+						<key>PreviewUrl</key>
+						<string>preview.jpg</string>
+						<key>ToolbarBgUrl</key>
+						<string>toolbar.jpg</string>
+						<key>AvatarUrl</key>
+						<string>avatar.png</string>
+						<key>ListWallpaperUrl</key>
+						<string>wallpaper.jpg</string>
+						<key>WallpaperUrl</key>
+						<string>wallpaper.jpg</string>
+						<key>NewConversationIconUrl</key>
+						<string></string>
+						<key>BubbleIncomingUrl</key>
+						<string>incoming.9.png</string>
+						<key>BubbleOutgoingUrl</key>
+						<string>outgoing.9.png</string>
+					</dict>
+					<key>dog</key>
+					<dict>
+						<key>IsLocalTheme</key>
+						<false/>
+						<key>Name</key>
+						<string>Dog</string>
+						<key>PreviewList</key>
+						<array>
+							<string>preview_1.jpg</string>
+							<string>preview_2.jpg</string>
+						</array>
+						<key>Hot</key>
+						<integer>7529</integer>
+						<key>ThemeColor</key>
+						<string>#bd9d81</string>
+						<key>FontName</key>
+						<string>Averia_Libre</string>
+						<key>AvatarForegroundColor</key>
+						<string>#ffffff</string>
+						<key>ListTitleColor</key>
+						<string>#ffffff</string>
+						<key>ListSubtitleColor</key>
+						<string>#ffffff</string>
+						<key>ListTimeColor</key>
+						<string>#ffffff</string>
+						<key>IncomingBubbleBgColor</key>
+						<string>#00000000</string>
+						<key>IncomingBubbleTextColor</key>
+						<string>#ffffff</string>
+						<key>OutgoingBubbleBgColor</key>
+						<string>#00000000</string>
+						<key>OutgoingBubbleTextColor</key>
+						<string>#ffffff</string>
+						<key>BubbleAdColor</key>
+						<string>#e3187b</string>
+						<key>BannerAdBgColor</key>
+						<string>#40000000</string>
 						<key>BannerAdActionColor</key>
 						<string>#80ffffff</string>
 						<key>BannerAdActionTextColor</key>

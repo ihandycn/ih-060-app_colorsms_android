@@ -21,6 +21,7 @@ import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.android.messaging.BaseActivity;
 import com.android.messaging.R;
 import com.android.messaging.glide.GlideApp;
 import com.android.messaging.ui.wallpaper.crop.CropImageOptions;
@@ -45,7 +46,7 @@ import java.io.InputStream;
 
 import static com.android.messaging.ui.wallpaper.WallpaperManager.LOCAL_DIRECTORY;
 
-public class WallpaperEditActivity extends HSAppCompatActivity implements View.OnClickListener {
+public class WallpaperEditActivity extends BaseActivity implements View.OnClickListener {
 
     private static final String TAG = WallpaperEditActivity.class.getSimpleName();
     public static final String INTENT_KEY_WALLPAPER_URI = "wallpaperData";

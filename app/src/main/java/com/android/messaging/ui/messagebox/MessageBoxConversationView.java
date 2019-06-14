@@ -128,6 +128,7 @@ public class MessageBoxConversationView extends FrameLayout {
         Drawable wallpaperDrawable = WallpaperDrawables.getConversationListWallpaperDrawable();
         if (wallpaperDrawable != null) {
             background.setImageDrawable(wallpaperDrawable);
+            mContent.setBackground(null);
         } else {
             background.setImageDrawable(null);
         }

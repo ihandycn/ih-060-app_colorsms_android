@@ -23,11 +23,9 @@ import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.support.annotation.Nullable;
-import android.text.Spanned;
 import android.text.TextUtils;
 import android.text.format.DateUtils;
 import android.text.format.Formatter;
-import android.text.style.URLSpan;
 import android.text.util.Linkify;
 import android.util.AttributeSet;
 import android.util.DisplayMetrics;
@@ -52,7 +50,6 @@ import com.android.messaging.datamodel.data.MessagePartData;
 import com.android.messaging.datamodel.data.SubscriptionListData.SubscriptionListEntry;
 import com.android.messaging.datamodel.media.ImageRequestDescriptor;
 import com.android.messaging.datamodel.media.MessagePartImageRequestDescriptor;
-import com.android.messaging.datamodel.media.UriImageRequestDescriptor;
 import com.android.messaging.sms.MmsUtils;
 import com.android.messaging.ui.AsyncImageView;
 import com.android.messaging.ui.AsyncImageView.AsyncImageViewDelayLoader;
@@ -73,11 +70,10 @@ import com.android.messaging.util.Assert;
 import com.android.messaging.util.AvatarUriUtil;
 import com.android.messaging.util.BugleAnalytics;
 import com.android.messaging.util.ContentType;
+import com.android.messaging.util.DefaultSMSUtils;
 import com.android.messaging.util.ImageUtils;
 import com.android.messaging.util.OsUtil;
-import com.android.messaging.util.PhoneUtils;
 import com.android.messaging.util.UiUtils;
-import com.android.messaging.util.YouTubeUtil;
 import com.google.common.base.Predicate;
 import com.superapps.util.BackgroundDrawables;
 import com.superapps.util.Dimensions;
@@ -93,7 +89,7 @@ public class ConversationMessageView extends RelativeLayout implements View.OnCl
         View.OnLongClickListener, OnAttachmentClickListener {
 
     public interface ConversationMessageViewHost {
-        boolean onAttachmentClick(ConversationMessageView view, MessagePartData attachment,
+        boolean onAttachmentClick(ConversationMessageData view, MessagePartData attachment,
                                   Rect imageBounds, boolean longPress);
 
         SubscriptionListEntry getSubscriptionEntryForSelfParticipant(String selfParticipantId,
@@ -106,7 +102,8 @@ public class ConversationMessageView extends RelativeLayout implements View.OnCl
     private AsyncImageView mMessageImageView;
     private TextView mMessageTextView;
     private boolean mMessageTextHasLinks;
-    private boolean mMessageHasYouTubeLink;
+    private ImageView mMessageIsLockView;
+    private ViewGroup mStatusContainer;
     private TextView mStatusTextView;
     private TextView mTitleTextView;
     private TextView mMmsInfoTextView;
@@ -131,12 +128,12 @@ public class ConversationMessageView extends RelativeLayout implements View.OnCl
         super(context, attrs);
         // TODO: we should switch to using Binding and DataModel factory methods.
         mData = new ConversationMessageData();
+
     }
 
     @Override
     protected void onFinishInflate() {
         super.onFinishInflate();
-
         mContactIconView = findViewById(R.id.conversation_icon);
         mContactIconBg = findViewById(R.id.conversation_icon_bg);
         mContactIconBg.setImageDrawable(AvatarBgDrawables.getAvatarBg(false));
@@ -145,22 +142,29 @@ public class ConversationMessageView extends RelativeLayout implements View.OnCl
             ConversationMessageView.this.performLongClick();
             return true;
         });
-        mMessageAttachmentsView = findViewById(R.id.message_attachments);
-        mMultiAttachmentView = findViewById(R.id.multiple_attachments);
-        mMultiAttachmentView.setOnAttachmentClickListener(this);
 
-        mMessageImageView = findViewById(R.id.message_image);
-        mMessageImageView.setOnClickListener(this);
-        mMessageImageView.setOnLongClickListener(this);
+        mMessageAttachmentsView = findViewById(R.id.message_attachments);
+        if (mMessageAttachmentsView != null) {
+            mMultiAttachmentView = findViewById(R.id.multiple_attachments);
+            mMultiAttachmentView.setOnAttachmentClickListener(this);
+
+            mMessageImageView = findViewById(R.id.message_image);
+            mMessageImageView.setOnClickListener(this);
+            mMessageImageView.setOnLongClickListener(this);
+        }
+
 
         mMessageTextView = findViewById(R.id.message_text);
         mMessageTextView.setOnClickListener(this);
         IgnoreLinkLongClickHelper.ignoreLinkLongClick(mMessageTextView, this);
 
+        mStatusContainer = findViewById(R.id.message_status_container);
         int color = PrimaryColors.getPrimaryColor();
         mStatusTextView = findViewById(R.id.message_status);
-        mStatusTextView.setBackground(BackgroundDrawables.createBackgroundDrawable(
+        mStatusContainer.setBackground(BackgroundDrawables.createBackgroundDrawable(
                 Color.argb(51, Color.red(color), Color.green(color), Color.blue(color)), Dimensions.pxFromDp(16), false));
+
+        mMessageIsLockView = findViewById(R.id.message_lock);
 
         mTitleTextView = findViewById(R.id.message_title);
         mMmsInfoTextView = findViewById(R.id.mms_info);
@@ -258,10 +262,9 @@ public class ConversationMessageView extends RelativeLayout implements View.OnCl
 
         mMessageBubble.layout(contentLeft, contentTop, contentLeft + contentWidth,
                 contentTop + contentHeight);
-        View messageTextAndInfo = mMessageBubble.findViewById(R.id.message_text_and_info);
-        View messageAttachment = mMessageBubble.findViewById(R.id.message_attachments);
-        int bubbleBgHeight = (messageTextAndInfo.getVisibility() == View.VISIBLE ? messageTextAndInfo.getMeasuredHeight() : 0)
-                + (messageAttachment.getVisibility() == View.VISIBLE ? messageAttachment.getMeasuredHeight() : 0);
+
+        int bubbleBgHeight = (mMessageTextAndInfoView.getVisibility() == View.VISIBLE ? mMessageTextAndInfoView.getMeasuredHeight() : 0)
+                + (mMessageAttachmentsView != null && mMessageAttachmentsView.getVisibility() == View.VISIBLE ? mMessageAttachmentsView.getMeasuredHeight() : 0);
         checkBox.layout(right - Dimensions.pxFromDp(37),
                 contentTop + bubbleBgHeight / 2 - Dimensions.pxFromDp(20) / 2,
                 right - Dimensions.pxFromDp(17),
@@ -296,9 +299,10 @@ public class ConversationMessageView extends RelativeLayout implements View.OnCl
      * Sets a delay loader instance to manage loading / resuming of image attachments.
      */
     public void setImageViewDelayLoader(final AsyncImageViewDelayLoader delayLoader) {
-        Assert.notNull(mMessageImageView);
-        mMessageImageView.setDelayLoader(delayLoader);
-        mMultiAttachmentView.setImageViewDelayLoader(delayLoader);
+        if (mMessageImageView != null) {
+            mMessageImageView.setDelayLoader(delayLoader);
+            mMultiAttachmentView.setImageViewDelayLoader(delayLoader);
+        }
     }
 
     public ConversationMessageData getData() {
@@ -319,7 +323,7 @@ public class ConversationMessageView extends RelativeLayout implements View.OnCl
      */
     private boolean shouldShowMessageBubbleArrow() {
         return !shouldShowSimplifiedVisualStyle()
-                && !(mData.hasAttachments() || mMessageHasYouTubeLink);
+                && !(mData.hasAttachments());
     }
 
     /**
@@ -402,7 +406,7 @@ public class ConversationMessageView extends RelativeLayout implements View.OnCl
 
             case MessageData.BUGLE_STATUS_OUTGOING_FAILED:
                 // don't show the error state unless we're the default sms app
-                if (PhoneUtils.getDefault().isDefaultSmsApp()) {
+                if (DefaultSMSUtils.isDefaultSmsApp()) {
                     if (isSelected()) {
                         statusResId = R.string.message_status_resend;
                     } else {
@@ -420,10 +424,7 @@ public class ConversationMessageView extends RelativeLayout implements View.OnCl
             case MessageData.BUGLE_STATUS_OUTGOING_COMPLETE:
             case MessageData.BUGLE_STATUS_INCOMING_COMPLETE:
             default:
-                if (!mData.getCanClusterWithNextMessage()) {
-                    //
-                    statusText = mData.getFormattedReceivedTimeStamp();
-                }
+                statusText = mData.getFormattedReceivedTimeStamp();
                 break;
         }
 
@@ -467,11 +468,18 @@ public class ConversationMessageView extends RelativeLayout implements View.OnCl
 
         // We set the text even if the view will be GONE for accessibility
         mStatusTextView.setText(statusText);
-        final boolean statusVisible = !TextUtils.isEmpty(statusText);
+        final boolean statusVisible = !mData.getCanClusterWithNextMessage() || mData.getIsLocked();
         if (statusVisible) {
             mStatusTextView.setVisibility(View.VISIBLE);
         } else {
             mStatusTextView.setVisibility(View.GONE);
+        }
+
+        if(mData.getIsLocked()) {
+            mMessageIsLockView.setVisibility(VISIBLE);
+        }
+        else {
+            mMessageIsLockView.setVisibility(GONE);
         }
 
         final boolean deliveredBadgeVisible =
@@ -502,10 +510,10 @@ public class ConversationMessageView extends RelativeLayout implements View.OnCl
 
         final boolean metadataVisible = senderNameVisible || statusVisible
                 || deliveredBadgeVisible || simNameVisible;
-        mMessageMetadataView.setVisibility(metadataVisible ? View.VISIBLE : View.GONE);
+        mMessageMetadataView.setVisibility(metadataVisible ? VISIBLE : GONE);
 
         final boolean messageTextAndOrInfoVisible = titleVisible || subjectVisible
-                || mData.hasText() || metadataVisible;
+                || mData.hasText();
         mMessageTextAndInfoView.setVisibility(
                 messageTextAndOrInfoVisible ? View.VISIBLE : View.GONE);
 
@@ -540,6 +548,10 @@ public class ConversationMessageView extends RelativeLayout implements View.OnCl
     }
 
     private void updateMessageAttachments() {
+        if (mMessageAttachmentsView == null) {
+            return;
+        }
+
         // Bind video, audio, and VCard attachments. If there are multiple, they stack vertically.
         bindAttachmentsOfSameType(sVideoFilter,
                 R.layout.message_video_attachment, mVideoViewBinder, VideoThumbnailView.class);
@@ -560,36 +572,9 @@ public class ConversationMessageView extends RelativeLayout implements View.OnCl
 
         // In the case that we have no image attachments and exactly one youtube link in a message
         // then we will show a preview.
-        String youtubeThumbnailUrl = null;
-        String originalYoutubeLink = null;
-        if (mMessageTextHasLinks && imageParts.size() == 0) {
-            CharSequence messageTextWithSpans = mMessageTextView.getText();
-            final URLSpan[] spans = ((Spanned) messageTextWithSpans).getSpans(0,
-                    messageTextWithSpans.length(), URLSpan.class);
-            for (URLSpan span : spans) {
-                String url = span.getURL();
-                String youtubeLinkForUrl = YouTubeUtil.getYoutubePreviewImageLink(url);
-                if (!TextUtils.isEmpty(youtubeLinkForUrl)) {
-                    if (TextUtils.isEmpty(youtubeThumbnailUrl)) {
-                        // Save the youtube link if we don't already have one
-                        youtubeThumbnailUrl = youtubeLinkForUrl;
-                        originalYoutubeLink = url;
-                    } else {
-                        // We already have a youtube link. This means we have two youtube links so
-                        // we shall show none.
-                        youtubeThumbnailUrl = null;
-                        originalYoutubeLink = null;
-                        break;
-                    }
-                }
-            }
-        }
-        // We need to keep track if we have a youtube link in the message so that we will not show
-        // the arrow
-        mMessageHasYouTubeLink = !TextUtils.isEmpty(youtubeThumbnailUrl);
 
         // We will show the message image view if there is one attachment or one youtube link
-        if (imageParts.size() == 1 || mMessageHasYouTubeLink) {
+        if (imageParts.size() == 1) {
             // Get the display metrics for a hint for how large to pull the image data into
             final WindowManager windowManager = (WindowManager) getContext().
                     getSystemService(Context.WINDOW_SERVICE);
@@ -612,16 +597,6 @@ public class ConversationMessageView extends RelativeLayout implements View.OnCl
                 adjustImageViewBounds(imagePart);
                 mMessageImageView.setImageResourceId(imageRequest);
                 mMessageImageView.setTag(imagePart);
-            } else {
-                // Youtube Thumbnail image
-                final ImageRequestDescriptor imageRequest =
-                        new UriImageRequestDescriptor(Uri.parse(youtubeThumbnailUrl), desiredWidth,
-                                MessagePartData.UNSPECIFIED_SIZE, true /* allowCompression */,
-                                true /* isStatic */, false /* cropToCircle */,
-                                ImageUtils.DEFAULT_CIRCLE_BACKGROUND_COLOR /* circleBackgroundColor */,
-                                ImageUtils.DEFAULT_CIRCLE_STROKE_COLOR /* circleStrokeColor */);
-                mMessageImageView.setImageResourceId(imageRequest);
-                mMessageImageView.setTag(originalYoutubeLink);
             }
             mMessageImageView.setVisibility(View.VISIBLE);
         } else {
@@ -885,6 +860,9 @@ public class ConversationMessageView extends RelativeLayout implements View.OnCl
     }
 
     private void updateMessageAttachmentsAppearance(final int gravity) {
+        if (mMessageAttachmentsView == null) {
+            return;
+        }
         mMessageAttachmentsView.setGravity(gravity);
 
         // Tint image/video attachments when selected
@@ -1022,8 +1000,14 @@ public class ConversationMessageView extends RelativeLayout implements View.OnCl
         }
 
         if (!hasWallPaper) {
-            mStatusTextView.setBackground(null);
+            mStatusContainer.setBackground(null);
         }
+        if(!hasWallPaper && mData.getIsLocked()){
+            mMessageIsLockView.setImageResource(R.drawable.message_lock_default);
+        }else {
+            mMessageIsLockView.setImageResource(R.drawable.message_lock_theme);
+        }
+
         mStatusTextView.setTextColor(resources.getColor(timestampColorResId));
 
         mSenderNameTextView.setTextColor(resources.getColor(timestampColorResId));
@@ -1078,7 +1062,7 @@ public class ConversationMessageView extends RelativeLayout implements View.OnCl
     @Override
     public boolean onAttachmentClick(final MessagePartData attachment,
                                      final Rect viewBoundsOnScreen, final boolean longPress) {
-        return mHost.onAttachmentClick(this, attachment, viewBoundsOnScreen, longPress);
+        return mHost.onAttachmentClick(this.getData(), attachment, viewBoundsOnScreen, longPress);
     }
 
     // Sort photos in MultiAttachLayout in the same order as the ConversationImagePartsView

@@ -90,7 +90,9 @@ public class PrivateMmsEntry {
     static String SUBSCRIPTION_ID = "sub_id";
     static String SEEN = Telephony.Mms.SEEN;
     //Telephony.Mms.CREATOR
-    static String CREATOR = "creator";
+    //This column is read-only. It is set by the provider and can not be changed by apps.
+    //so the information in this column is useless
+    //static String CREATOR = "creator";
     static String TEXT_ONLY = Telephony.Mms.TEXT_ONLY;
 
     static String[] sProjection = {
@@ -127,8 +129,6 @@ public class PrivateMmsEntry {
             LOCKED,
             SEEN,
             TEXT_ONLY,
-            //target Build.VERSION_CODES.LOLLIPOP
-            CREATOR,
             //target Build.VERSION_CODES.LOLLIPOP_MR1
             SUBSCRIPTION_ID
     };
@@ -136,54 +136,13 @@ public class PrivateMmsEntry {
     public static String[] getProjection() {
         int length = sProjection.length;
 
-        if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.LOLLIPOP_MR1 || RomUtils.checkIsMiuiRom()) {
-            length--;
-        }
         if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.LOLLIPOP) {
             length--;
         }
         return Arrays.copyOfRange(sProjection, 0, length);
     }
 
-    private static int s = 0;
-    public static int _ID_INDEX = s++;
-    public static int THREAD_ID_INDEX = s++;
-    public static int DATE_INDEX = s++;
-    public static int DATE_SENT_INDEX = s++;
-    public static int MESSAGE_BOX_INDEX = s++;
-    public static int READ_INDEX = s++;
-    public static int MESSAGE_ID_INDEX = s++;
-    public static int SUBJECT_INDEX = s++;
-    public static int SUBJECT_CHARSET_INDEX = s++;
-    public static int CONTENT_TYPE_INDEX = s++;
-    public static int CONTENT_LOCATION_INDEX = s++;
-    public static int EXPIRY_INDEX = s++;
-    public static int MESSAGE_CLASS_INDEX = s++;
-    public static int MESSAGE_TYPE_INDEX = s++;
-    public static int MMS_VERSION_INDEX = s++;
-    public static int MESSAGE_SIZE_INDEX = s++;
-    public static int PRIORITY_INDEX = s++;
-    public static int READ_REPORT_INDEX = s++;
-    public static int REPORT_ALLOWED_INDEX = s++;
-    public static int RESPONSE_STATUS_INDEX = s++;
-    public static int STATUS_INDEX = s++;
-    public static int TRANSACTION_ID_INDEX = s++;
-    public static int RETRIEVE_STATUS_INDEX = s++;
-    public static int RETRIEVE_TEXT_INDEX = s++;
-    public static int RETRIEVE_TEXT_CHARSET_INDEX = s++;
-    public static int READ_STATUS_INDEX = s++;
-    public static int CONTENT_CLASS_INDEX = s++;
-    public static int RESPONSE_TEXT_INDEX = s++;
-    public static int DELIVERY_TIME_INDEX = s++;
-    public static int DELIVERY_REPORT_INDEX = s++;
-    public static int LOCKED_INDEX = s++;
-    public static int SEEN_INDEX = s++;
-    public static int TEXT_ONLY_INDEX = s++;
-
-    //@target Build.VERSION_CODES.LOLLIPOP
-    public static int CREATOR_INDEX = s++;
-    //@target Build.VERSION_CODES.LOLLIPOP_MR1
-    public static int SUBSCRIPTION_ID_INDEX = s++;
+    public static int THREAD_ID_INDEX = 1;
 
     public static final String CREATE_MMS_TABLE_SQL =
             "CREATE TABLE " + MMS_MESSAGE_TABLE + "("
@@ -220,7 +179,6 @@ public class PrivateMmsEntry {
                     + LOCKED + " TEXT, "
                     + SUBSCRIPTION_ID + " TEXT, "
                     + SEEN + " TEXT, "
-                    + CREATOR + " TEXT, "
                     + TEXT_ONLY + " TEXT )";
 
     public static final class Addr implements BaseColumns {

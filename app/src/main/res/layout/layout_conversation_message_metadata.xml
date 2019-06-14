@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/message_metadata"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_marginStart="10dp"
+    android:layout_marginEnd="10dp"
+    android:layout_marginBottom="5dp"
+    android:gravity="center_vertical"
+    android:importantForAccessibility="noHideDescendants"
+    android:orientation="horizontal">
+
+    <com.android.messaging.ui.view.MessagesTextView
+        android:id="@+id/message_sender_name"
+        style="@style/ConversationMessageStatus"
+        app:typeface="@string/custom_font_regular"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="4dp"
+        android:visibility="gone" />
+
+    <LinearLayout
+        android:id="@+id/message_status_container"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical"
+        android:paddingStart="5dp"
+        android:paddingLeft="7dp"
+        android:paddingEnd="7dp"
+        android:paddingRight="7dp">
+
+        <ImageView
+            android:id="@+id/message_lock"
+            android:layout_width="13dp"
+            android:layout_height="13dp"
+            android:layout_marginEnd="1dp"
+            android:gravity="center"
+            android:scaleType="fitCenter"
+            android:src="@drawable/message_lock_default"
+            android:visibility="gone" />
+
+        <com.android.messaging.ui.view.MessagesTextView
+            android:id="@+id/message_status"
+            style="@style/ConversationMessageStatus"
+            app:typeface="@string/custom_font_regular"
+            android:layout_width="wrap_content"
+            android:layout_height="16dp"
+            android:layout_marginStart="2dp"
+            android:gravity="center"
+            android:includeFontPadding="false"
+            android:visibility="gone" />
+    </LinearLayout>
+
+    <com.android.messaging.ui.view.MessagesTextView
+        android:id="@+id/sim_name"
+        style="@style/MessageSimIndicator"
+        app:typeface="@string/custom_font_regular"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:visibility="gone" />
+
+    <ImageView
+        android:id="@+id/smsDeliveredBadge"
+        style="@style/SmsDeliverdBadge"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:src="@drawable/ic_sms_delivery_ok"
+        android:visibility="gone" />
+</LinearLayout>

@@ -30,9 +30,9 @@ import com.android.messaging.util.BugleGservices;
 import com.android.messaging.util.BugleGservicesKeys;
 import com.android.messaging.util.BuglePrefs;
 import com.android.messaging.util.BuglePrefsKeys;
+import com.android.messaging.util.DefaultSMSUtils;
 import com.android.messaging.util.LogUtil;
 import com.android.messaging.util.OsUtil;
-import com.android.messaging.util.PhoneUtils;
 import com.google.common.collect.Lists;
 
 import java.util.ArrayList;
@@ -302,7 +302,7 @@ public class SyncManager {
     }
 
     private void registerObserver(final Context context) {
-        if (!PhoneUtils.getDefault().isDefaultSmsApp()) {
+        if (!DefaultSMSUtils.isDefaultSmsApp()) {
             // Not default SMS app - need to actively monitor telephony but not notify
             mNotifyOnChanges = false;
             mSyncOnChanges = true;

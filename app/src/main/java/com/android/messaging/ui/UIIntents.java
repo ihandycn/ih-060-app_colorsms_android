@@ -24,7 +24,6 @@ import android.content.Intent;
 import android.graphics.Point;
 import android.graphics.Rect;
 import android.net.Uri;
-import android.os.Bundle;
 
 import com.android.messaging.Factory;
 import com.android.messaging.datamodel.data.MessageBoxItemData;
@@ -139,23 +138,14 @@ public abstract class UIIntents {
      */
     public void launchConversationActivity(final Context context,
                                            final String conversationId, final MessageData draft) {
-        launchConversationActivity(context, conversationId, draft, null,
-                false /* withCustomTransition */);
+        launchConversationActivity(context, conversationId, draft, "", false);
     }
 
     /**
      * Launch an activity to show a conversation.
      */
     public abstract void launchConversationActivity(final Context context,
-                                                    final String conversationId, final MessageData draft, final Bundle activityOptions,
-                                                    final boolean withCustomTransition);
-
-    /**
-     * Launch an activity to show a conversation.
-     */
-    public abstract void launchConversationActivity(final Context context,
-                                                    final String conversationId, final MessageData draft, final Bundle activityOptions,
-                                                    final boolean withCustomTransition,
+                                                    final String conversationId, final MessageData draft,
                                                     final String conversationName, final boolean showKeyboard);
 
     /**
@@ -385,7 +375,7 @@ public abstract class UIIntents {
 
     /**
      * Get a PendingIntent for sending a message to a conversation, without opening the Bugle UI.
-     *
+     * <p>
      * <p>This is intended to be used by the Android Wear companion app when sending transcribed
      * voice replies.
      */
@@ -395,7 +385,7 @@ public abstract class UIIntents {
 
     /**
      * Get a PendingIntent for clearing notifications.
-     *
+     * <p>
      * <p>This is intended to be used by notifications.
      */
     public abstract PendingIntent getPendingIntentForClearingNotifications(final Context context,

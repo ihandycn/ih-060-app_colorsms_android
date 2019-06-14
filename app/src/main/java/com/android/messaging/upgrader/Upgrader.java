@@ -10,9 +10,6 @@ import com.android.messaging.datamodel.DatabaseWrapper;
 import com.android.messaging.datamodel.data.ConversationListItemData;
 import com.android.messaging.font.FontStyleManager;
 import com.android.messaging.font.FontUtils;
-import com.android.messaging.privatebox.PrivateContactsManager;
-import com.android.messaging.privatebox.PrivateMmsEntry;
-import com.android.messaging.privatebox.PrivateSmsEntry;
 import com.android.messaging.ui.conversationlist.ConversationListActivity;
 import com.android.messaging.ui.customize.theme.ThemeDownloadManager;
 import com.android.messaging.ui.customize.theme.ThemeInfo;
@@ -49,11 +46,6 @@ public class Upgrader extends BaseUpgrader {
             FontStyleManager.getInstance().setFontScaleLevel(fontLevel);
         }
 
-        if (oldVersion < 45 && newVersion >= 45) {
-            addIsPrivateColumnInConversationTable(oldVersion >= 25);
-            createPrivateBoxTables();
-        }
-
         if (oldVersion < 25 && newVersion >= 25) {
             addPinColumnInDB();
             Preferences.getDefault().putBoolean(WelcomeStartActivity.PREF_KEY_START_BUTTON_CLICKED,
@@ -68,7 +60,7 @@ public class Upgrader extends BaseUpgrader {
             updateThemeKey();
         }
 
-        if (oldVersion < 49 && newVersion >= 49) {
+        if (oldVersion < 50 && newVersion >= 50) {
             migrateLocalThemeAndFont();
         }
     }
@@ -138,7 +130,7 @@ public class Upgrader extends BaseUpgrader {
                         + " ADD COLUMN " + DatabaseHelper.ConversationColumns.IS_PRIVATE
                         + " INT DEFAULT(0)");
             }
-        } catch (Exception e) {
+        } catch (Exception ignored) {
 
         } finally {
             if (null != cursor && !cursor.isClosed()) {
@@ -149,17 +141,6 @@ public class Upgrader extends BaseUpgrader {
         if (rebuildView) {
             DatabaseHelper.rebuildView(db, ConversationListItemData.getConversationListView(),
                     ConversationListItemData.getConversationListViewSql());
-        }
-    }
-
-    public static void createPrivateBoxTables() {
-        final DatabaseWrapper db = DataModel.get().getDatabaseWithoutMainCheck();
-        try {
-            db.execSQL(PrivateMmsEntry.CREATE_MMS_TABLE_SQL);
-            db.execSQL(PrivateSmsEntry.CREATE_SMS_TABLE_SQL);
-            db.execSQL(PrivateContactsManager.CREATE_PRIVATE_CONTACTS_TABLE_SQL);
-            db.execSQL(PrivateMmsEntry.Addr.CREATE_MMS_ADDRESS_TABLE_SQL);
-        } catch (Exception e) {
         }
     }
 

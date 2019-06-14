@@ -248,4 +248,9 @@
     <color name="total_backup_messages_color">#989ba6</color>
     <color name="backup_guide_dialog_content_color">#83848a</color>
     <color name="backup_banner_guide_button_text_color">#306fed</color>
+
+    <!--invite friends-->
+    <color name="invite_friends_auto_link">#2492f9</color>
+    <color name="invite_friends_text_color">#222327</color>
+    <color name="invite_friends_button_text_color">#37a63b</color>
 </resources>

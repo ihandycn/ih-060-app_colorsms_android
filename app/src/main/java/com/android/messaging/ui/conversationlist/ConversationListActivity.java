@@ -4,7 +4,6 @@ import android.Manifest;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.content.Intent;
-import android.content.res.Resources;
 import android.database.Cursor;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
@@ -27,12 +26,12 @@ import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.airbnb.lottie.LottieAnimationView;
 import com.android.messaging.BuildConfig;
-import com.android.messaging.Factory;
 import com.android.messaging.R;
 import com.android.messaging.ad.AdConfig;
 import com.android.messaging.ad.AdPlacement;
@@ -69,6 +68,7 @@ import com.android.messaging.ui.customize.theme.ThemeSelectActivity;
 import com.android.messaging.ui.customize.theme.ThemeUtils;
 import com.android.messaging.ui.dialog.FiveStarRateDialog;
 import com.android.messaging.ui.emoji.EmojiStoreActivity;
+import com.android.messaging.ui.invitefriends.InviteFriendsActivity;
 import com.android.messaging.ui.messagebox.MessageBoxActivity;
 import com.android.messaging.ui.signature.SignatureSettingDialog;
 import com.android.messaging.ui.wallpaper.WallpaperChooserItem;
@@ -80,7 +80,8 @@ import com.android.messaging.util.BuglePrefsKeys;
 import com.android.messaging.util.CommonUtils;
 import com.android.messaging.util.CreateShortcutUtils;
 import com.android.messaging.util.MediaUtil;
-import com.android.messaging.util.Trace;
+import com.android.messaging.util.PhoneUtils;
+import com.android.messaging.util.TransitionUtils;
 import com.ihs.app.framework.HSApplication;
 import com.ihs.commons.config.HSConfig;
 import com.ihs.commons.notificationcenter.HSGlobalNotificationCenter;
@@ -102,11 +103,15 @@ import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
-import java.util.Random;
+import java.util.Map;
+
+import hugo.weaving.DebugLog;
 
 import static com.android.messaging.ui.dialog.FiveStarRateDialog.DESKTOP_PREFS;
 import static com.android.messaging.ui.dialog.FiveStarRateDialog.PREF_KEY_MAIN_ACTIVITY_SHOW_TIME;
+import static com.android.messaging.ui.invitefriends.InviteFriendsActivity.INTENT_KEY_FROM;
 
 public class ConversationListActivity extends AbstractConversationListActivity
         implements View.OnClickListener, INotificationObserver {
@@ -146,7 +151,8 @@ public class ConversationListActivity extends AbstractConversationListActivity
     private static final int DRAWER_INDEX_RATE = 5;
     private static final int DRAWER_INDEX_CHANGE_FONT = 6;
     private static final int DRAWER_INDEX_PRIVACY_BOX = 7;
-    private static final int DRAWER_INDEX_BACKUP_RESTORE = 8;
+    private static final int DRAWER_INDEX_INVITE_FRIENDS = 8;
+    private static final int DRAWER_INDEX_BACKUP_RESTORE = 9;
 
     private int drawerClickIndex = DRAWER_INDEX_NONE;
 
@@ -165,6 +171,7 @@ public class ConversationListActivity extends AbstractConversationListActivity
     private boolean shouldShowCreateShortcutGuide;
     private String size;
     private View mPrivateBoxEntrance;
+    private boolean mIsActivityVisible;
 
     private boolean mIsMessageMoving;
 
@@ -181,8 +188,8 @@ public class ConversationListActivity extends AbstractConversationListActivity
     private boolean mIsEmojiStoreClickable = true;
 
     @Override
+    @DebugLog
     protected void onCreate(final Bundle savedInstanceState) {
-        Trace.beginSection("ConversationListActivity.onCreate");
         super.onCreate(savedInstanceState);
 
         if (mShouldFinishThisTime) {
@@ -190,10 +197,19 @@ public class ConversationListActivity extends AbstractConversationListActivity
         }
 
         mIsRealCreate = true;
+        setLayout();
+        onCreateLogics();
+    }
+
+    @DebugLog
+    private void setLayout() {
         setContentView(R.layout.conversation_list_activity);
+    }
+
+    @DebugLog
+    private void onCreateLogics() {
         configAppBar();
         mIsNoActionBack = true;
-
 
         if (getIntent() != null && getIntent().getBooleanExtra(EXTRA_FROM_DESKTOP_ICON, false)) {
             BugleAnalytics.logEvent("SMS_Shortcut_Click");
@@ -215,12 +231,11 @@ public class ConversationListActivity extends AbstractConversationListActivity
             BugleAnalytics.logEvent("SMS_Notifications_Clicked", true, true);
         }
 
-        setupDrawer();
-
         HSGlobalNotificationCenter.addObserver(EVENT_MAINPAGE_RECREATE, this);
         HSGlobalNotificationCenter.addObserver(SHOW_EMOJI, this);
         HSGlobalNotificationCenter.addObserver(FIRST_LOAD, this);
         HSGlobalNotificationCenter.addObserver(NOTIFICATION_NAME_MESSAGES_MOVE_END, this);
+
         BugleAnalytics.logEvent("SMS_ActiveUsers", true);
 
         if (!sIsRecreate) {
@@ -273,42 +288,42 @@ public class ConversationListActivity extends AbstractConversationListActivity
                         size = "Default";
                 }
 
-
-                if (Calendars.getDayDifference(System.currentTimeMillis(), CommonUtils.getAppInstallTimeMillis()) == 1) {
-                    final int wallpaper = wallpaperIndex;
-                    Preferences.getDefault().doOnce(() -> {
-                        Resources res = Factory.get().getApplicationContext().getResources();
-                        int bubbleSendFontColor = ConversationColors.get().getMessageTextColor(false);
-                        int bubbleSendBgColor = ConversationColors.get().getBubbleBackgroundColor(false);
-                        int bubbleRcvFontColor = ConversationColors.get().getMessageTextColor(true);
-                        int bubbleRcvBgColor = ConversationColors.get().getBubbleBackgroundColor(true);
-                        if (bubbleRcvBgColor != res.getColor(R.color.message_bubble_color_incoming)
-                                || bubbleSendBgColor != res.getColor(R.color.message_bubble_color_outgoing)
-                                || bubbleSendFontColor != res.getColor(R.color.message_text_color_outgoing)
-                                || bubbleRcvFontColor != res.getColor(R.color.message_text_color_incoming)) {
-                            //bubble font color or bg color has been changed
-                            String fontType = FontStyleManager.getInstance().getFontFamily();
-                            int fontSize = FontStyleManager.getInstance().getFontScaleLevel();
-                            int bubbleStyle = BubbleDrawables.getSelectedIdentifier();
-                            BugleAnalytics.logEvent("Customize_Analysis", true,
-                                    "group" + new Random().nextInt(7),
-                                    bubbleSendFontColor + "|" + bubbleSendBgColor + "|"
-                                            + bubbleRcvFontColor + "|" + bubbleRcvBgColor + "|"
-                                            + fontType + "|" + fontSize + "|" + bubbleStyle + "|"
-                                            + wallpaper + "|" + ChooseThemeColorRecommendViewHolder.getPrimaryColorType());
-                        }
-                    }, "pref_key_customize_config_has_send");
+                boolean granted = RuntimePermissions.checkSelfPermission(ConversationListActivity.this,
+                        Manifest.permission.READ_PHONE_STATE) == RuntimePermissions.PERMISSION_GRANTED;
+                String simStatus;
+                if (granted) {
+                    simStatus = String.valueOf(PhoneUtils.getDefault().getActiveSubscriptionCount());
+                } else {
+                    simStatus = "No Permission";
                 }
+                BugleAnalytics.logEvent("SMS_HomePage_Show", "SIM", simStatus);
             });
+        }
 
+        navigationView = findViewById(R.id.navigation_view);
+        navigationView.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+            @Override public void onGlobalLayout() {
+                Threads.postOnMainThread(() -> onPostPageVisible());
+                navigationView.getViewTreeObserver().removeOnGlobalLayoutListener(this);
+            }
+        });
+    }
+
+    private void onPostPageVisible() {
+        setupDrawer();
+
+        if (AdConfig.isHomepageBannerAdEnabled()) {
+            AcbNativeAdManager.preload(1, AdPlacement.AD_BANNER);
+        }
+
+        Threads.postOnMainThreadDelayed(() -> {
             if (AdConfig.isDetailpageTopAdEnabled()) {
                 AcbNativeAdManager.preload(1, AdPlacement.AD_DETAIL_NATIVE);
             }
-        }
-
-        Trace.endSection();
+        }, 1000);
     }
 
+    @DebugLog
     @Override
     protected void onStart() {
         super.onStart();
@@ -316,8 +331,10 @@ public class ConversationListActivity extends AbstractConversationListActivity
     }
 
     @Override
+    @DebugLog
     protected void onResume() {
         super.onResume();
+
         AppPrivateLockManager.getInstance().lockAppLock();
         if (mPrivateBoxEntrance != null) {
             if (PrivateSettingManager.isPrivateBoxIconHidden()) {
@@ -341,14 +358,32 @@ public class ConversationListActivity extends AbstractConversationListActivity
                 v.setVisibility(View.GONE);
             }
         }
+        logMainPageShowEvent();
+    }
+
+    private void logMainPageShowEvent() {
+        Map<String, String> params = new HashMap<>();
+        params.put("WidthDp", String.valueOf(Dimensions.dpFromPx(Dimensions.getPhoneWidth(this))));
+        params.put("HeightDp", String.valueOf(Dimensions.dpFromPx(Dimensions.getPhoneHeight(this))));
+        params.put("DensityDpi", String.valueOf(getResources().getDisplayMetrics().densityDpi));
+        params.put("ScreenSize", getScreenSize());
+        BugleAnalytics.logEvent("Main_Page_Shown", params);
+    }
+
+    private static String getScreenSize() {
+        int screenWidth = Dimensions.getPhoneWidth(HSApplication.getContext());
+        int screenHeight = Dimensions.getPhoneHeight(HSApplication.getContext());
+        return screenWidth + "x" + screenHeight;
     }
 
     private void showThemeUpgradeDialog() {
         if (Preferences.getDefault().getBoolean(BuglePrefsKeys.PREFS_KEY_THEME_CLEARED_TO_DEFAULT, false)) {
             Navigations.startActivitySafely(ConversationListActivity.this,
                     new Intent(ConversationListActivity.this, ThemeUpgradeActivity.class));
+            overridePendingTransition(R.anim.slide_in_from_right_and_fade, R.anim.anim_null);
             Preferences.getDefault().putBoolean(BuglePrefsKeys.PREFS_KEY_THEME_CLEARED_TO_DEFAULT, false);
         }
+        mIsActivityVisible = true;
     }
 
     @Override
@@ -373,6 +408,7 @@ public class ConversationListActivity extends AbstractConversationListActivity
         setDrawerMenuIcon();
     }
 
+    @DebugLog
     private void setupDrawer() {
         navigationView = findViewById(R.id.navigation_view);
         navigationView.setItemIconTintList(null);
@@ -411,8 +447,8 @@ public class ConversationListActivity extends AbstractConversationListActivity
                 switch (drawerClickIndex) {
                     case DRAWER_INDEX_THEME:
                         BugleAnalytics.logEvent("Menu_Theme_Click");
-                        //Navigations.startActivity(ConversationListActivity.this, ChooseThemeActivity.class);
                         Navigations.startActivity(ConversationListActivity.this, ThemeSelectActivity.class);
+                        overridePendingTransition(R.anim.slide_in_from_right_and_fade, R.anim.anim_null);
                         navigationContent.findViewById(R.id.navigation_item_theme_new_text).setVisibility(View.GONE);
                         break;
 
@@ -422,6 +458,7 @@ public class ConversationListActivity extends AbstractConversationListActivity
                             BugleAnalytics.logEvent("Menu_ThemeColor_Click_NewUser", true);
                         }
                         Navigations.startActivity(ConversationListActivity.this, ThemeColorSelectActivity.class);
+                        overridePendingTransition(R.anim.slide_in_from_right_and_fade, R.anim.anim_null);
                         navigationContent.findViewById(R.id.navigation_item_theme_color_new_text).setVisibility(View.GONE);
                         break;
                     case DRAWER_INDEX_BUBBLE:
@@ -435,6 +472,7 @@ public class ConversationListActivity extends AbstractConversationListActivity
                                     "asd", "asd", "asd", "asd", "heihei", 123L));
                         } else {
                             Navigations.startActivity(ConversationListActivity.this, CustomBubblesActivity.class);
+                            overridePendingTransition(R.anim.slide_in_from_right_and_fade, R.anim.anim_null);
                         }
                         break;
                     case DRAWER_INDEX_CHAT_BACKGROUND:
@@ -443,13 +481,14 @@ public class ConversationListActivity extends AbstractConversationListActivity
                             BugleAnalytics.logEvent("Menu_ChatBackground_Click_NewUser", true);
                         }
                         WallpaperPreviewActivity.startWallpaperPreview(ConversationListActivity.this);
+                        overridePendingTransition(R.anim.slide_in_from_right_and_fade, R.anim.anim_null);
                         navigationContent.findViewById(R.id.navigation_item_background_new_text).setVisibility(View.GONE);
                         break;
                     case DRAWER_INDEX_CHANGE_FONT:
                         BugleAnalytics.logEvent("Menu_ChangeFont_Click");
-                        Intent intent = new Intent(ConversationListActivity.this, ChangeFontActivity.class);
+                        Navigations.startActivity(ConversationListActivity.this, ChangeFontActivity.class);
+                        overridePendingTransition(R.anim.slide_in_from_right_and_fade, R.anim.anim_null);
                         navigationContent.findViewById(R.id.navigation_item_font_new_text).setVisibility(View.GONE);
-                        startActivity(intent);
                         break;
                     case DRAWER_INDEX_BACKUP_RESTORE:
                         BugleAnalytics.logEvent("Menu_BackupRestore_Click", true);
@@ -467,9 +506,11 @@ public class ConversationListActivity extends AbstractConversationListActivity
                             intent1.putExtra(SelfVerifyActivity.INTENT_KEY_ACTIVITY_ENTRANCE,
                                     SelfVerifyActivity.ENTRANCE_MENU);
                             Navigations.startActivitySafely(ConversationListActivity.this, intent1);
+                            overridePendingTransition(R.anim.slide_in_from_right_and_fade, R.anim.anim_null);
                         } else {
                             Navigations.startActivitySafely(ConversationListActivity.this,
                                     new Intent(ConversationListActivity.this, PrivateBoxSetPasswordActivity.class));
+                            overridePendingTransition(R.anim.slide_in_from_right_and_fade, R.anim.anim_null);
                         }
                         Preferences.getDefault().putBoolean(PREF_KEY_PRIVATE_BOX_CLICKED, true);
                         navigationContent.findViewById(R.id.navigation_item_private_box_new_text).setVisibility(View.GONE);
@@ -484,6 +525,13 @@ public class ConversationListActivity extends AbstractConversationListActivity
                             RuntimePermissions.requestPermissions(ConversationListActivity.this,
                                     new String[]{Manifest.permission.READ_PHONE_STATE}, REQUEST_PERMISSION_CODE);
                         }
+                        break;
+
+                    case DRAWER_INDEX_INVITE_FRIENDS:
+                        BugleAnalytics.logEvent("Menu_InviteFriends_Click");
+                        Intent inviteFriendsIntent = new Intent(ConversationListActivity.this, InviteFriendsActivity.class);
+                        inviteFriendsIntent.putExtra(INTENT_KEY_FROM, "menu");
+                        startActivity(inviteFriendsIntent, TransitionUtils.getTransitionInBundle(ConversationListActivity.this));
                         break;
                     case DRAWER_INDEX_RATE:
                         FiveStarRateDialog.showFiveStarFromSetting(ConversationListActivity.this);
@@ -533,7 +581,9 @@ public class ConversationListActivity extends AbstractConversationListActivity
         navigationContent.findViewById(R.id.navigation_item_change_font).setOnClickListener(this);
         navigationContent.findViewById(R.id.navigation_item_setting).setOnClickListener(this);
         navigationContent.findViewById(R.id.navigation_item_rate).setOnClickListener(this);
+        navigationContent.findViewById(R.id.navigation_item_invite_friends).setOnClickListener(this);
         navigationContent.findViewById(R.id.navigation_item_backup_restore).setOnClickListener(this);
+
         //test code
         //this item is used to delete dirty mms parts in telephony
         navigationContent.findViewById(R.id.navigation_item_clear_private_parts).setVisibility(View.GONE);
@@ -589,6 +639,12 @@ public class ConversationListActivity extends AbstractConversationListActivity
 
 
     @Override
+    protected void onPause() {
+        super.onPause();
+        mIsActivityVisible = false;
+    }
+
+    @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
 
@@ -606,7 +662,7 @@ public class ConversationListActivity extends AbstractConversationListActivity
 
     @Override
     public void onBackPressed() {
-        if (drawerLayout.isDrawerOpen(navigationView)) {
+        if (drawerLayout != null && drawerLayout.isDrawerOpen(navigationView)) {
             drawerLayout.closeDrawer(navigationView);
             return;
         }
@@ -633,6 +689,7 @@ public class ConversationListActivity extends AbstractConversationListActivity
         if (!shouldShowCreateShortcutGuide
                 && mainActivityCreateTime >= 2 && CommonUtils.isNewUser()
                 && HSConfig.optBoolean(false, "Application", "BackupRestore", "RecommendFull")
+                && !Preferences.getDefault().getBoolean(BackupRestoreActivity.PREF_KEY_BACKUP_ACTIVITY_SHOWN,false)
                 && !Preferences.getDefault()
                 .getBoolean(BackupGuideDialogActivity.PREF_KEY_BACKUP_FULL_GUIDE_SHOWN, false)) {
             shouldShowCreateShortcutGuide = true;
@@ -724,6 +781,7 @@ public class ConversationListActivity extends AbstractConversationListActivity
                         Intent intent = new Intent(ConversationListActivity.this, PrivateBoxSetPasswordActivity.class);
                         intent.putExtra(INTENT_KEY_PRIVATE_CONVERSATION_LIST, conversations.toArray(new String[conversations.size()]));
                         Navigations.startActivitySafely(ConversationListActivity.this, intent);
+                        overridePendingTransition(R.anim.slide_in_from_right_and_fade, R.anim.anim_null);
                     })
                     .setNegativeButton(R.string.delete_conversation_decline_button, null)
                     .show();
@@ -753,6 +811,7 @@ public class ConversationListActivity extends AbstractConversationListActivity
         }
     }
 
+    @DebugLog
     private void configAppBar() {
         View accessoryContainer = findViewById(R.id.accessory_container);
         ViewGroup.LayoutParams layoutParams = accessoryContainer.getLayoutParams();
@@ -964,6 +1023,10 @@ public class ConversationListActivity extends AbstractConversationListActivity
                 break;
             case R.id.navigation_item_backup_restore:
                 drawerClickIndex = DRAWER_INDEX_BACKUP_RESTORE;
+                drawerLayout.closeDrawer(navigationView);
+                break;
+            case R.id.navigation_item_invite_friends:
+                drawerClickIndex = DRAWER_INDEX_INVITE_FRIENDS;
                 drawerLayout.closeDrawer(navigationView);
                 break;
             case R.id.navigation_item_rate:

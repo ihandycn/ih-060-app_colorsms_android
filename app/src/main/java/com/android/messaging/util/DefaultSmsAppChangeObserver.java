@@ -27,14 +27,14 @@ public class DefaultSmsAppChangeObserver extends ContentObserver {
         Threads.postOnMainThreadDelayed(new Runnable() {
             @Override
             public void run() {
-                if (!PhoneUtils.getDefault().isDefaultSmsApp()) {
+                if (!DefaultSMSUtils.isDefaultSmsApp()) {
                     if (HSConfig.optBoolean(false, "Application", "SetDefaultAlert", "Switch")) {
                         SetAsDefaultGuideActivity.startActivity(HSApplication.getContext(), SetAsDefaultGuideActivity.DEFAULT_CHANGED);
                     }
                 }
 
                 if (BuildConfig.DEBUG) {
-                    if (PhoneUtils.getDefault().isDefaultSmsApp()) {
+                    if (DefaultSMSUtils.isDefaultSmsApp()) {
                         Toasts.showToast("debug toast : sms_default_application_set");
                     } else {
                         Toasts.showToast("debug toast : sms_default_application_cleared");

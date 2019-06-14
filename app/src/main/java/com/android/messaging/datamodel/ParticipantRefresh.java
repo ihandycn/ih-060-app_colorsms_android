@@ -393,7 +393,9 @@ public class ParticipantRefresh {
             for (final Integer subId : activeSubscriptionIdToRecordMap.keySet()) {
                 final SubscriptionInfo record = activeSubscriptionIdToRecordMap.get(subId);
                 final String displayName =
-                        DatabaseUtils.sqlEscapeString(record.getDisplayName().toString());
+                        DatabaseUtils.sqlEscapeString(
+                                TextUtils.isEmpty(record.getDisplayName()) ?
+                                        "" : record.getDisplayName().toString());
                 db.execSQL(getUpdateSelfParticipantSubscriptionInfoSql(record.getSimSlotIndex(),
                         record.getIconTint(), displayName,
                         ParticipantColumns.SUB_ID + " = " + subId));

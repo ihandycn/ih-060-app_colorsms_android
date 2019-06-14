@@ -43,6 +43,15 @@
         <menu>
             <group>
                 <item
+                    android:id="@+id/lock_message_menu"
+                    android:title="@string/action_lock"
+                    appcompat:showAsAction="never" />
+                <item
+                    android:id="@+id/unlock_message_menu"
+                    android:title="@string/action_unlock"
+                    appcompat:showAsAction="never" />
+
+                <item
                     android:id="@+id/share_message_menu"
 
                     android:title="@string/action_share"
