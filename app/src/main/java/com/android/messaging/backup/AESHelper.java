@@ -91,14 +91,8 @@ public class AESHelper {
         FileOutputStream out = null;
         File destFile = null;
         try {
-            destFile = new File(CommonUtils.getDirectory(BackupPersistManager.BASE_PATH ), sourceFile.getName());
-            if (destFile.exists()) {
-                destFile.delete();
-            }
-            if (!destFile.getParentFile().exists()) {
-                destFile.getParentFile().mkdirs();
-            }
-            destFile.createNewFile();
+            destFile = File.createTempFile(sourceFile.getName(), "decrypt");
+                    //new File(CommonUtils.getDirectory(BackupPersistManager.BASE_PATH), sourceFile.getName());
             destFile.deleteOnExit();
 
             if (sourceFile.exists() && sourceFile.isFile()) {

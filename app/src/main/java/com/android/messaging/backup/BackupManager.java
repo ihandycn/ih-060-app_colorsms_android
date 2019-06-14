@@ -116,13 +116,16 @@ public class BackupManager {
             CloudFileDownloadListener listener = new CloudFileDownloadListener() {
                 @Override
                 public void onDownloadSuccess(File file) {
-                    if (weakListener.get() != null || backupInfo.getLocationType() == BackupInfo.CLOUD) {
+                    if (weakListener.get() != null
+                            && backupInfo.getLocationType() == BackupInfo.CLOUD) {
                         weakListener.get().onDownloadSuccess();
                     }
                     //2.resolve file messages
                     List<BackupSmsMessage> backupMessages = BackupPersistManager.get().resolveMessages(file);
                     if (backupMessages.size() <= 0) {
-                        weakListener.get().onRestoreFailed();
+                        if (weakListener.get() != null) {
+                            weakListener.get().onRestoreFailed();
+                        }
                         return;
                     }
 
