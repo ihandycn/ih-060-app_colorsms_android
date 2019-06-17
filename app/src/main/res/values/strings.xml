@@ -1237,8 +1237,8 @@
     <string name="menu_backup_restore">Backup &amp; Restore</string>
     <string name="backup_tab">Backup</string>
     <string name="restore_tab">Restore</string>
-    <string name="backup_verb">Backup</string>
-    <string name="restore_verb">Restore</string>
+    <string name="backup_verb">BACKUP</string>
+    <string name="restore_verb">RESTORE</string>
     <string name="restore_from_local">From Local</string>
     <string name="restore_from_cloud">From Cloud</string>
     <string name="restore_default_summary">No backup file</string>
@@ -1254,8 +1254,8 @@
     <string name="message_free_up_process_dialog">Freeing up your message space…</string>
     <string name="backup_process_number_divider">/</string>
     <string name="backup_state_scanning">Scanning…</string>
-    <string name="local_backup_process_hint">Backing Up…</string>
-    <string name="cloud_backup_process_hint">Uploading Backup…</string>
+    <string name="local_backup_process_hint">Backing up…</string>
+    <string name="cloud_backup_process_hint">Uploading backup…</string>
     <string name="restore_process_hint">Restoring…</string>
     <string name="restore_fail">Restore Failed</string>
     <string name="restore_success">Restore Successful</string>

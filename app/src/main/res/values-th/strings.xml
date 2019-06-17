@@ -688,5 +688,35 @@
 	<string name="theme_coming">พบธีมเพิ่มเติมเร็วๆ นี้ …</string>
 	<string name="menu_invite_friends">เชิญเพื่อน</string>
 	<string name="invite_friends_now">เชิญทันที</string>
+	<string name="backup_banner_guide_title">%1$d ข้อความไม่ได้รับการปกป้องหากไม่มีการสำรองข้อมูล</string>
+	<string name="backup_guide_dialog_first_content">สำรองข้อมูลข้อความก่อนโทรศัพท์เสียหรือสูญหาย</string>
+	<string name="backup_guide_dialog_second_content">%1$d ข้อความไม่ได้รับการปกป้อง</string>
+	<string name="backup_guide_dialog_third_content">คืนค่าข้อความของคุณไปยังอุปกรณ์เครื่องใดก็ได้</string>
+	<string name="backup_guide_dialog_button">สำรองข้อมูลทันที</string>
+	<string name="menu_backup_restore_toolbar_title">สำรองข้อมูลและคืนค่า SMS</string>
+	<string name="menu_backup_restore">สำรองข้อมูลและคืนค่า</string>
+	<string name="backup_verb">สำรองข้อมูล</string>
+	<string name="backup_local">ในเครื่อง</string>
+	<string name="backup_cloud">คลาวด์</string>
+	<string name="local_backup_process_hint">กำลังสำรองข้อมูล…</string>
+	<string name="cloud_backup_process_hint">กำลังอัปโหลดข้อมูลสำรอง…</string>
+	<string name="backup_success_toast">สำรองข้อมูลสำเร็จ</string>
+	<string name="backup_failed_toast">สำรองข้อมูลไม่สำเร็จ</string>
+	<string name="backup_tip_dialog_content">การสำรองข้อมูลจะเขียนทับข้อมูลสำรองที่มีอยู่ ขอแนะนำเป็นอย่างมากให้คืนค่าก่อนสำรองข้อมูล</string>
+	<string name="restore_verb">คืนค่า</string>
+	<string name="message_free_up_title">คืนพื้นที่จัดเก็บข้อความ</string>
+	<string name="message_free_up_content">ล้างข้อความในเครื่อง 30 วันก่อนเพื่อประหยัดพื้นที่และเพิ่มความเร็วโทรศัพท์คุณ! คุณสามารถเข้าถึงข้อความที่ล้างแล้วได้ทาง คืนค่า</string>
+	<string name="message_free_up_button">ล้าง</string>
+	<string name="message_free_up_process_dialog">กำลังคืนพื้นที่จัดเก็บข้อความ… </string>
+	<string name="backup_tips_before_uninstalling_content">คืนค่าข้อความของคุณก่อนถอนการติดตั้งแอป เพื่อให้ข้อความไม่หายไป</string>
+	<string name="restore_from_local">จากในเครื่อง</string>
+	<string name="restore_from_cloud">จากคลาวด์</string>
+	<string name="restore_process_hint">กำลังคืนค่า…</string>
+	<string name="restore_success">คืนค่าสำเร็จ</string>
+	<string name="restore_fail">คืนค่าไม่สำเร็จ</string>
+	<string name="restore_default_summary">ไม่มีไฟล์ข้อมูลสำรอง</string>
+	<string name="backup_no_account">ไม่มีบัญชีผู้ใช้</string>
+	<string name="restore_tab">คืนค่า</string>
+	<string name="backup_tab">สำรองข้อมูล</string>
 
 </resources>

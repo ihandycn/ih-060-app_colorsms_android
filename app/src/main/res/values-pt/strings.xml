@@ -695,5 +695,35 @@
 	<string name="theme_coming">Mais temas em breve...</string>
 	<string name="menu_invite_friends">Convidar amigos</string>
 	<string name="invite_friends_now">CONVIDAR AGORA</string>
+	<string name="backup_banner_guide_title">%1$d mensagens estão desprotegidas sem backup.</string>
+	<string name="backup_guide_dialog_first_content">Faça backup de suas mensagens antes que o telefone falhe ou perca.</string>
+	<string name="backup_guide_dialog_second_content">%1$d mensagens estão desprotegidas.</string>
+	<string name="backup_guide_dialog_third_content">Restaure suas mensagens para qualquer dispositivo.</string>
+	<string name="backup_guide_dialog_button">FAZER BACKUP AGORA</string>
+	<string name="menu_backup_restore_toolbar_title">Backup e restauração de SMS</string>
+	<string name="menu_backup_restore">Backup e restauração</string>
+	<string name="backup_verb">BACKUP</string>
+	<string name="backup_local">Local</string>
+	<string name="backup_cloud">Nuvem</string>
+	<string name="local_backup_process_hint">Fazendo backup...</string>
+	<string name="cloud_backup_process_hint">Enviando backup...</string>
+	<string name="backup_success_toast">Backup bem-sucedido</string>
+	<string name="backup_failed_toast">Falha no backup</string>
+	<string name="backup_tip_dialog_content">O backup substituirá o existente. Altamente recomendado restaurar antes do Backup.</string>
+	<string name="restore_verb">RESTAURAR</string>
+	<string name="message_free_up_title">Libere o espaço de mensagens</string>
+	<string name="message_free_up_content">Limpe as mensagens locais de 30 dias atrás para economizar espaço e acelerar o seu telefone! Você pode acessar mensagens limpas via RESTAURAR.</string>
+	<string name="message_free_up_button">LIMPAR</string>
+	<string name="message_free_up_process_dialog">Liberando seu espaço de mensagens... </string>
+	<string name="backup_tips_before_uninstalling_content">RESTAURE suas mensagens antes de desinstalar nosso aplicativo, para não perder suas mensagens.</string>
+	<string name="restore_from_local">De Local</string>
+	<string name="restore_from_cloud">Da Nuvem</string>
+	<string name="restore_process_hint">Restaurando...</string>
+	<string name="restore_success">Restauração bem-sucedida</string>
+	<string name="restore_fail">Falha na restauração</string>
+	<string name="restore_default_summary">Nenhum arquivo de backup</string>
+	<string name="backup_no_account">Sem conta</string>
+	<string name="restore_tab">Restauração</string>
+	<string name="backup_tab">Backup</string>
 
 </resources>

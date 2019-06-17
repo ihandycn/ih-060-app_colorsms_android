@@ -688,5 +688,35 @@
 	<string name="theme_coming">その他のテーマは近日公開...</string>
 	<string name="menu_invite_friends">友人を招待する</string>
 	<string name="invite_friends_now">今すぐ招待する</string>
+	<string name="backup_banner_guide_title">%1$d件のメッセージがバックアップしておらず保護されていません。</string>
+	<string name="backup_guide_dialog_first_content">携帯電話が故障したり失くなる前にメッセージをバックアップしましょう。</string>
+	<string name="backup_guide_dialog_second_content">%1$d件のメッセージが保護されていません。</string>
+	<string name="backup_guide_dialog_third_content">メッセージを任意のデバイスに復元します。</string>
+	<string name="backup_guide_dialog_button">今すぐバックアップする</string>
+	<string name="menu_backup_restore_toolbar_title">SMSのバックアップと復元</string>
+	<string name="menu_backup_restore">バックアップ＆復元</string>
+	<string name="backup_verb">バックアップ</string>
+	<string name="backup_local">ローカル</string>
+	<string name="backup_cloud">クラウド</string>
+	<string name="local_backup_process_hint">バックアップ中...</string>
+	<string name="cloud_backup_process_hint">バックアップをアップロード中...</string>
+	<string name="backup_success_toast">バックアップに成功しました</string>
+	<string name="backup_failed_toast">バックアップに失敗しました</string>
+	<string name="backup_tip_dialog_content">バックアップは既存のものを上書きします。バックアップする前に復元することを強くお勧めします。</string>
+	<string name="restore_verb">復元する</string>
+	<string name="message_free_up_title">メッセージの容量をさらに解放しましょう</string>
+	<string name="message_free_up_content">30日前のローカルメッセージを消去してスペースを解放し、携帯電話をスピードアップしましょう！復元をすることで消去したメッセージにアクセスすることができます。</string>
+	<string name="message_free_up_button">削除</string>
+	<string name="message_free_up_process_dialog">メッセージの容量を解放しています…</string>
+	<string name="backup_tips_before_uninstalling_content">メッセージを紛失しないように、アプリをアンインストールする前にあなたのメッセージを復元してください。</string>
+	<string name="restore_from_local">ローカルから</string>
+	<string name="restore_from_cloud">クラウドから</string>
+	<string name="restore_process_hint">復元中...</string>
+	<string name="restore_success">復元に成功しました</string>
+	<string name="restore_fail">復元に失敗しました</string>
+	<string name="restore_default_summary">バックアップファイルなし</string>
+	<string name="backup_no_account">アカウントなし</string>
+	<string name="restore_tab">復元する</string>
+	<string name="backup_tab">バックアップ</string>
 
 </resources>

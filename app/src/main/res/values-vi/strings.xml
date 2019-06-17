@@ -685,5 +685,35 @@
 	<string name="theme_coming">Sắp có thêm chủ đề...</string>
 	<string name="menu_invite_friends">Mời Bạn bè</string>
 	<string name="invite_friends_now">MỜI NGAY</string>
+	<string name="backup_banner_guide_title">%1$d tin nhắn không được bảo vệ khi không sao lưu.</string>
+	<string name="backup_guide_dialog_first_content">Sao lưu các tin nhắn của bạn phòng khi bị hỏng hoặc mất điện thoại.</string>
+	<string name="backup_guide_dialog_second_content">%1$d tin nhắn không được bảo vệ.</string>
+	<string name="backup_guide_dialog_third_content">Khôi phục tin nhắn của bạn tới thiết bị bất kỳ.</string>
+	<string name="backup_guide_dialog_button">SAO LƯU NGAY</string>
+	<string name="menu_backup_restore_toolbar_title">Sao lưu &amp;  Khôi phục SMS</string>
+	<string name="menu_backup_restore">Sao lưu &amp;  Khôi phục</string>
+	<string name="backup_verb">SAO LƯU</string>
+	<string name="backup_local">Cục bộ</string>
+	<string name="backup_cloud">Đám mây</string>
+	<string name="local_backup_process_hint">Đang sao lưu...</string>
+	<string name="cloud_backup_process_hint">Đang tải lên bản sao lưu...</string>
+	<string name="backup_success_toast">Sao lưu thành công</string>
+	<string name="backup_failed_toast">Sao lưu không thành công</string>
+	<string name="backup_tip_dialog_content">Sao lưu sẽ ghi đè lên bản hiện có. Rất khuyến khích khôi phục trước khi Sao lưu.</string>
+	<string name="restore_verb">KHÔI PHỤC</string>
+	<string name="message_free_up_title">Giải phóng bộ nhớ tin nhắn</string>
+	<string name="message_free_up_content">Xóa các tin nhắn cục bộ từ 30 ngày trước để tiết kiệm dung lượng và tăng tốc điện thoại! Bạn có thể truy cập tin nhắn đã xóa thông qua KHÔI PHỤC.</string>
+	<string name="message_free_up_button">DỌN DẸP</string>
+	<string name="message_free_up_process_dialog">Đang giải phóng không gian tin nhắn của bạn... </string>
+	<string name="backup_tips_before_uninstalling_content">KHÔI PHỤC các tin nhắn của bạn trước khi gỡ cài đặt ứng dụng của chúng tôi để không làm mất tin nhắn.</string>
+	<string name="restore_from_local">Từ Cục bộ</string>
+	<string name="restore_from_cloud">Từ Đám mây</string>
+	<string name="restore_process_hint">Đang khôi phục...</string>
+	<string name="restore_success">Khôi phục thành công</string>
+	<string name="restore_fail">Khôi phục không thành công</string>
+	<string name="restore_default_summary">Không có tệp sao lưu</string>
+	<string name="backup_no_account">Không có tài khoản</string>
+	<string name="restore_tab">Khôi phục</string>
+	<string name="backup_tab">Sao lưu</string>
 
 </resources>

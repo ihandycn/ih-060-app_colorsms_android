@@ -735,5 +735,35 @@
 	<string name="theme_coming">Скоро появится больше тем...</string>
 	<string name="menu_invite_friends">Пригласить друзей</string>
 	<string name="invite_friends_now">ПРИГЛАСИТЬ</string>
+	<string name="backup_banner_guide_title">%1$d SMS не защищ. без резервных копий.</string>
+	<string name="backup_guide_dialog_first_content">Сохраните резервную копию своих сообщений на случай поломки или потери телефона.</string>
+	<string name="backup_guide_dialog_second_content">%1$d SMS не защищ.</string>
+	<string name="backup_guide_dialog_third_content">Восстановить сообщения можно на любом устройстве.</string>
+	<string name="backup_guide_dialog_button">СОХРАНИТЬ РЕЗЕРВНУЮ КОПИЮ</string>
+	<string name="menu_backup_restore_toolbar_title">Резервное копирование и восстановление SMS</string>
+	<string name="menu_backup_restore">Резервное копирование и восстановление</string>
+	<string name="backup_verb">РЕЗЕРВНОЕ КОПИРОВАНИЕ</string>
+	<string name="backup_local">Локальное</string>
+	<string name="backup_cloud">Облачное</string>
+	<string name="local_backup_process_hint">Идет резервное копирование…</string>
+	<string name="cloud_backup_process_hint">Идет резервное копирование</string>
+	<string name="backup_success_toast">Резервное копирование выполнено</string>
+	<string name="backup_failed_toast">Не удалось выполнить резервное копирование</string>
+	<string name="backup_tip_dialog_content">Резервная копия заменит имеющуюся. Перед резервным копированием настоятельно рекомендуется выполнить восстановление.</string>
+	<string name="restore_verb">ВОССТАНОВИТЬ</string>
+	<string name="message_free_up_title">Освободить место для сообщений</string>
+	<string name="message_free_up_content">Можно удалить локальные сообщения за последние 30 дней, чтобы освободить место на смартфоне! Удаленные сообщения можно ВОССТАНОВИТЬ.</string>
+	<string name="message_free_up_button">УДАЛИТЬ</string>
+	<string name="message_free_up_process_dialog">Освобождение места для сообщений… </string>
+	<string name="backup_tips_before_uninstalling_content">ВОССТАНОВИТЕ сообщения перед удалением нашего приложения, чтобы не утратить их.</string>
+	<string name="restore_from_local">Из локальной резервной копии</string>
+	<string name="restore_from_cloud">Из облачной резервной копии</string>
+	<string name="restore_process_hint">Восстановление…</string>
+	<string name="restore_success">Восстановление выполнено</string>
+	<string name="restore_fail">Не удалось восстановить</string>
+	<string name="restore_default_summary">Отсутствует файл резервной копии</string>
+	<string name="backup_no_account">Отсутствует учетная запись</string>
+	<string name="restore_tab">Восстановление</string>
+	<string name="backup_tab">Резервное копирование</string>
 
 </resources>
