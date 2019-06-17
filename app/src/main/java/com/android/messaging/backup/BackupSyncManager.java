@@ -46,9 +46,10 @@ public class BackupSyncManager {
                 null);
 
         List<BackupSmsMessage> addList = new ArrayList<>();
+        Cursor cursor = null;
         try {
             final Context context = HSApplication.getContext();
-            Cursor mSmsCursor = SqliteWrapper.query(
+            cursor = SqliteWrapper.query(
                     context,
                     context.getContentResolver(),
                     Telephony.Sms.CONTENT_URI,
@@ -56,16 +57,20 @@ public class BackupSyncManager {
                     MmsUtils.getSmsTypeSelectionSql(),
                     null /* selectionArgs */,
                     ORDER_BY_DATE_DESC);
-            if (mSmsCursor.getCount() == 0) {
+            if (cursor.getCount() == 0) {
                 return 0;
             }
-            while (mSmsCursor.moveToNext()) {
+            while (cursor.moveToNext()) {
                 BackupSmsMessage smsMessage = new BackupSmsMessage();
-                smsMessage.load(mSmsCursor);
+                smsMessage.load(cursor);
                 addList.add(smsMessage);
             }
         } catch (final SQLiteException e) {
             HSLog.e(TAG, e.getMessage());
+        } finally {
+            if (cursor != null) {
+                cursor.close();
+            }
         }
 
         try {

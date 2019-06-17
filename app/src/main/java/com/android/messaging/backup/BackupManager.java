@@ -326,27 +326,17 @@ public class BackupManager {
         return null;
     }
 
-    private void removeCloudBackup(BackupInfo info) {
+    private void removeCloudBackup(String backupFileName) {
         FirebaseStorage storage = FirebaseStorage.getInstance();
         StorageReference storageReference = storage.getReference();
 
         String uid = FirebaseAuth.getInstance().getCurrentUser().getUid();
-        StorageReference reference = storageReference.child("backup").child(uid).child(info.getKey());
+        StorageReference reference = storageReference.child("backup").child(uid).child(backupFileName);
 
         reference.delete()
                 .addOnSuccessListener(a -> {
                     DatabaseReference mDatabase = GeneralSettingSyncManager.getAuthUserRef();
-                    mDatabase.child("backup").child(info.getKey()).setValue(null)
-                            .addOnSuccessListener(aVoid -> {
-//                                if (listener != null) {
-//                                    listener.onUploadSuccess();
-//                                }
-                            })
-                            .addOnFailureListener(e -> {
-//                                if (listener != null) {
-//                                    listener.onUploadFailed();
-//                                }
-                            });
+                    mDatabase.child("backup").child(backupFileName).setValue(null);
                 })
                 .addOnFailureListener(e -> {
 
@@ -375,25 +365,42 @@ public class BackupManager {
                         //record file name in db
                         DatabaseReference mDatabase = GeneralSettingSyncManager.getAuthUserRef();
                         if (BackupManager.RECOVERY_MODE) {
-                            //clear all records
-                            mDatabase.child("backup").setValue(null)
-                                    .addOnSuccessListener(a -> {
-                                        //add new record
-                                        mDatabase.child("backup").child(file.getName()).setValue(remoteUri.toString())
-                                                .addOnSuccessListener(aVoid -> {
-                                                    if (listener != null) {
-                                                        listener.onUploadSuccess();
-                                                    }
-                                                })
-                                                .addOnFailureListener(e -> {
-                                                    if (listener != null) {
-                                                        listener.onUploadFailed();
-                                                    }
-                                                });
-                                    })
-                                    .addOnFailureListener(e -> {
-                                        if (listener != null) {
-                                            listener.onUploadFailed();
+                            //remove old file
+                            GeneralSettingSyncManager.getAuthUserRef().child("backup").
+                                    addListenerForSingleValueEvent(new ValueEventListener() {
+                                        @Override
+                                        public void onDataChange(DataSnapshot dataSnapshot) {
+                                            for (DataSnapshot s : dataSnapshot.getChildren()) {
+                                                String fileName = s.getKey();
+                                                if (!fileName.equals(file.getName())) {
+                                                    storageReference.child("backup").child(uid).child(fileName).delete();
+                                                }
+                                            }
+                                            //clear all records
+                                            mDatabase.child("backup").setValue(null)
+                                                    .addOnSuccessListener(a -> {
+                                                        //add new record
+                                                        mDatabase.child("backup").child(file.getName()).setValue(remoteUri.toString())
+                                                                .addOnSuccessListener(aVoid -> {
+                                                                    if (listener != null) {
+                                                                        listener.onUploadSuccess();
+                                                                    }
+                                                                })
+                                                                .addOnFailureListener(e -> {
+                                                                    if (listener != null) {
+                                                                        listener.onUploadFailed();
+                                                                    }
+                                                                });
+                                                    })
+                                                    .addOnFailureListener(e -> {
+                                                        if (listener != null) {
+                                                            listener.onUploadFailed();
+                                                        }
+                                                    });
+                                        }
+
+                                        @Override
+                                        public void onCancelled(DatabaseError databaseError) {
                                         }
                                     });
                         } else {
