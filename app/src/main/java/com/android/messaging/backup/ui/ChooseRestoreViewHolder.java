@@ -15,15 +15,14 @@ import android.widget.TextView;
 import com.android.messaging.R;
 import com.android.messaging.backup.BackupInfo;
 import com.android.messaging.backup.BackupManager;
+import com.android.messaging.datamodel.MessagingContentProvider;
 import com.android.messaging.ui.BasePagerViewHolder;
 import com.android.messaging.ui.CustomPagerViewHolder;
-import com.android.messaging.ui.conversationlist.ConversationListActivity;
 import com.android.messaging.ui.customize.PrimaryColors;
 import com.android.messaging.ui.view.MessagesTextView;
 import com.android.messaging.util.BugleAnalytics;
 import com.android.messaging.util.UiUtils;
 import com.google.firebase.auth.FirebaseAuth;
-import com.ihs.commons.notificationcenter.HSGlobalNotificationCenter;
 import com.superapps.util.BackgroundDrawables;
 import com.superapps.util.Dimensions;
 import com.superapps.util.Networks;
@@ -196,7 +195,12 @@ public class ChooseRestoreViewHolder extends BasePagerViewHolder implements Cust
             Threads.postOnMainThreadDelayed(() -> {
                 backupCondition[0] = true;
                 if (backupCondition[1]) {
-                    onRestoreSuccess();
+                    Threads.postOnMainThread(() -> {
+                        mRestoreProcessDialog.dismissAllowingStateLoss();
+                        backupCondition[0] = false;
+                        backupCondition[1] = false;
+                        Toasts.showToast(R.string.restore_success);
+                    });
                 }
             }, RestoreProcessDialog.MIN_PROGRESS_TIME);
         }
@@ -211,18 +215,18 @@ public class ChooseRestoreViewHolder extends BasePagerViewHolder implements Cust
 
         @Override
         public void onRestoreSuccess() {
-            HSGlobalNotificationCenter.sendNotification(ConversationListActivity.EVENT_MAINPAGE_RECREATE);
             backupCondition[1] = true;
+            MessagingContentProvider.notifyEverythingChanged();
             if (backupCondition[0]) {
                 Threads.postOnMainThread(() -> {
                     mRestoreProcessDialog.dismissAllowingStateLoss();
                     backupCondition[0] = false;
                     backupCondition[1] = false;
                     Toasts.showToast(R.string.restore_success);
-                    BugleAnalytics.logEvent("Backup_RestorePage_Restore_Success", true,
-                            "restorefrom", mIsLocal ? "local" : "cloud");
                 });
             }
+            BugleAnalytics.logEvent("Backup_RestorePage_Restore_Success", true,
+                    "restorefrom", mIsLocal ? "local" : "cloud");
         }
 
         @Override
