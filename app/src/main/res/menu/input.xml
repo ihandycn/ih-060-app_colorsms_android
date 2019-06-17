@@ -1,0 +1,13 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <!-- Menu for activities that let the user input something -->
+    <item
+        android:id="@+id/action_done"
+        android:enabled="false"
+        android:icon="@drawable/done_btn_disable"
+        android:orderInCategory="100"
+        android:title="@string/ok"
+        app:showAsAction="always" />
+
+</menu>

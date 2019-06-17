@@ -5,10 +5,12 @@ import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.KeyEvent;
+import android.view.View;
 import android.widget.TextView;
 
 import com.android.messaging.R;
 import com.android.messaging.privatebox.AppPrivateLockManager;
+import com.android.messaging.privatebox.PrivateBoxSettings;
 import com.android.messaging.ui.UIIntents;
 import com.android.messaging.ui.UIIntentsImpl;
 import com.android.messaging.util.BugleAnalytics;
@@ -17,6 +19,7 @@ import com.ihs.app.framework.HSApplication;
 import com.superapps.util.Navigations;
 
 public class SelfVerifyActivity extends VerifyActivity {
+    private static final String TAG = "SelfVerifyActivity";
     public static final String INTENT_KEY_ACTIVITY_ENTRANCE = "entrance";
     public static final String INTENT_KEY_ENTRANCE_CONVERSATION_ID = "conversation_id";
 
@@ -59,6 +62,11 @@ public class SelfVerifyActivity extends VerifyActivity {
                 && ENTRANCE_NOTIFICATION.equals(mEntrance))
                 || ENTRANCE_NOTIFICATION_TO_CONVERSATION_LIST.equals(mEntrance)) {
             BugleAnalytics.logEvent("Notifications_Clicked_PrivateBox");
+        }
+        if (!PrivateBoxSettings.isSecurityQuestionSet()) {
+            findViewById(R.id.menu_icon).setVisibility(View.GONE);
+        } else {
+            findViewById(R.id.menu_icon).setVisibility(View.VISIBLE);
         }
     }
 

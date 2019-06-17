@@ -14,6 +14,7 @@
     limitations under the License.
 -->
 <resources>
+    <attr name="textSize" format="dimension|reference" />
     <declare-styleable name="ContactIconView">
         <attr name="iconSize">
             <enum name="normal" value="0" />
@@ -46,7 +47,7 @@
         <attr name="android:maxHeight" />
     </declare-styleable>
     <declare-styleable name="ConversationNameView">
-        <attr name="textSize" format="dimension|reference" />
+        <attr name="textSize"/>
         <attr name="textColor" format="color" />
     </declare-styleable>
     <declare-styleable name="AudioAttachmentView">
@@ -128,6 +129,18 @@
         <attr name="max_progress" format="integer" />
         <attr name="progress" format="float" />
         <attr name="direction" format="float" />
+    </declare-styleable>
+
+    <declare-styleable name="wheelview">
+        <attr name="gravity">
+            <enum name="center" value="17" />
+            <enum name="left" value="3" />
+            <enum name="right" value="5" />
+        </attr>
+        <attr name="textSize"/>
+        <attr name="textColorOut" format="color" />
+        <attr name="textColorCenter" format="color" />
+        <attr name="dividerColor" format="color" />
     </declare-styleable>
 
 </resources>

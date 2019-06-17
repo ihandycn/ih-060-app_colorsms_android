@@ -16,6 +16,7 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <color name="primary_color">#37a63b</color>
     <color name="primary_color_dark">#0D6624</color>
+    <color name="blue_primary">#2471E2</color>
     <color name="text_primary_color">#222327</color>
     <color name="setting_gray">#25000000</color>
 
@@ -241,4 +242,18 @@
     <color name="invite_friends_auto_link">#2492f9</color>
     <color name="invite_friends_text_color">#222327</color>
     <color name="invite_friends_button_text_color">#37a63b</color>
+
+    <color name="lock_intruder_title">#B2000000</color>
+    <color name="edit_text_shape">#E1E1E1</color>
+    <color name="edit_text_shape_focused">#0086F8</color>
+    <color name="almost_white">#FBFBFB</color>
+    <color name="bgColor_overlay">#60000000</color>
+    <color name="pickerview_bg_topbar">#f5f5f5</color>
+    <color name="pickerview_topbar_title">#000000</color>
+    <color name="pickerview_timebtn_nor">#057dff</color>
+    <color name="pickerview_timebtn_pre">#c2daf5</color>
+    <color name="pickerview_wheelview_textcolor_out">#000000</color>
+    <color name="pickerview_wheelview_textcolor_center">#000000</color>
+    <color name="pickerview_wheelview_textcolor_divider">#a8a8a8</color>
+    <color name="button_pressed_bg">#0d000000</color>
 </resources>

@@ -669,11 +669,16 @@
             android:screenOrientation="portrait"
             android:theme="@style/SettingsActivity" />
         <activity
+            android:name=".privatebox.ui.PrivateBoxLockQuestionActivity"
+            android:excludeFromRecents="true"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"
+            android:theme="@style/SettingsActivity" />
+        <activity
             android:name=".privatebox.ui.PrivateConversationListActivity"
             android:configChanges="orientation|screenSize|keyboardHidden"
             android:screenOrientation="portrait"
             android:theme="@style/BugleTheme.ConversationListActivity" />
-
         <provider
             android:name=".privatebox.PrivateMessageContentProvider"
             android:authorities="com.color.sms.messages"
@@ -698,6 +703,12 @@
             android:excludeFromRecents="true"
             android:screenOrientation="portrait"
             android:theme="@style/BaseSettingsActivity" />
+
+        <activity
+            android:name=".privatebox.ui.PrivateContactsActivity"
+            android:excludeFromRecents="true"
+            android:screenOrientation="portrait"
+            android:theme="@style/SettingsActivity" />
 
         <activity
             android:name=".privatebox.ui.addtolist.ContactsSelectActivity"

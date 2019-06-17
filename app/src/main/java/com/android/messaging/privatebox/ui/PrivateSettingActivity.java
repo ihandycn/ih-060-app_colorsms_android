@@ -52,6 +52,19 @@ public class PrivateSettingActivity extends BaseActivity {
             BugleAnalytics.logEvent("PrivateBox_Settings_ModifyPassword_Click");
         });
 
+        SettingItemView securityQuestionView = findViewById(R.id.private_setting_security_question);
+        securityQuestionView.setOnItemClickListener(() -> {
+            Intent intent = new Intent(PrivateSettingActivity.this, PrivateBoxLockQuestionActivity.class);
+            intent.putExtra(PrivateBoxLockQuestionActivity.INTENT_KEY_IS_SETTING_QUESTION, true);
+            Navigations.startActivitySafely(PrivateSettingActivity.this, intent);
+        });
+
+        SettingItemView privateContactsView = findViewById(R.id.private_setting_private_contacts);
+        privateContactsView.setOnItemClickListener(() -> {
+            Intent intent = new Intent(PrivateSettingActivity.this, PrivateContactsActivity.class);
+            Navigations.startActivitySafely(PrivateSettingActivity.this, intent);
+        });
+
         SettingItemView entranceView = findViewById(R.id.private_setting_entrance);
         entranceView.setOnItemClickListener(
                 () -> {

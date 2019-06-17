@@ -141,7 +141,7 @@ public class PrivateBoxSetPasswordActivity extends BaseActivity implements View.
         toolbar.setTitle("");
         UiUtils.setTitleBarBackground(toolbar, this);
         TextView title = toolbar.findViewById(R.id.toolbar_title);
-        title.setText(isResetPassword ?
+        title.setText((isResetPassword || isForgetPassword) ?
                 getString(R.string.reset_password) : getString(R.string.menu_privacy_box));
         setSupportActionBar(toolbar);
         if (getSupportActionBar() != null) {
@@ -250,7 +250,9 @@ public class PrivateBoxSetPasswordActivity extends BaseActivity implements View.
     @Override
     protected void onStop() {
         super.onStop();
-        finish();
+        if (isForgetPassword) {
+            finish();
+        }
     }
 
     @Override
@@ -419,9 +421,15 @@ public class PrivateBoxSetPasswordActivity extends BaseActivity implements View.
     }
 
     private void onPasswordSetSucceed() {
-        BugleAnalytics.logEvent("PrivateBox_Password_SetSuccess");
+//        BugleAnalytics.logEvent("PrivateBox_Password_SetSuccess");
         if (!isResetPassword && !isForgetPassword) {
-            Intent intent = new Intent(PrivateBoxSetPasswordActivity.this, PrivateConversationListActivity.class);
+//            BugleAnalytics.logEvent("First Set");
+//            Intent intent = new Intent(PrivateBoxSetPasswordActivity.this, PrivateConversationListActivity.class);
+//            Navigations.startActivitySafely(PrivateBoxSetPasswordActivity.this, intent);
+            HSLog.d(TAG, " if (!isResetPassword && !isForgetPassword)");
+            Intent intent = new Intent(PrivateBoxSetPasswordActivity.this, PrivateBoxLockQuestionActivity.class);
+            intent.putExtra(PrivateBoxLockQuestionActivity.INTENT_KEY_IS_SETTING_QUESTION, true);
+            intent.putExtra(PrivateBoxLockQuestionActivity.INTENT_KEY_IS_FIRST_SETTING_QUESTION, true);
             if (getIntent().hasExtra(ConversationListActivity.INTENT_KEY_PRIVATE_CONVERSATION_LIST)) {
                 intent.putExtra(ConversationListActivity.INTENT_KEY_PRIVATE_CONVERSATION_LIST,
                         getIntent().getStringArrayExtra(ConversationListActivity.INTENT_KEY_PRIVATE_CONVERSATION_LIST)
@@ -429,5 +437,9 @@ public class PrivateBoxSetPasswordActivity extends BaseActivity implements View.
             }
             Navigations.startActivitySafely(PrivateBoxSetPasswordActivity.this, intent);
         }
+//        } else if (isForgetPassword) {
+//            Intent intent = new Intent(PrivateBoxSetPasswordActivity.this, PrivateConversationListActivity.class);
+//            Navigations.startActivitySafely(PrivateBoxSetPasswordActivity.this, intent);
+//        }
     }
 }

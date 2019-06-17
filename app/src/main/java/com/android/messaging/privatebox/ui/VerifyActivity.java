@@ -3,14 +3,21 @@ package com.android.messaging.privatebox.ui;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.animation.ObjectAnimator;
+import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.graphics.drawable.Drawable;
+import android.os.Build;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.KeyEvent;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.android.messaging.BaseActivity;
 import com.android.messaging.R;
@@ -18,14 +25,18 @@ import com.android.messaging.privatebox.PrivateBoxSettings;
 import com.android.messaging.privatebox.ui.view.GestureLockView;
 import com.android.messaging.privatebox.ui.view.PINIndicatorView;
 import com.android.messaging.privatebox.ui.view.PINKeyboardView;
+import com.android.messaging.privatebox.ui.view.RipplePopupView;
 import com.android.messaging.ui.customize.PrimaryColors;
 import com.android.messaging.util.ViewUtils;
+import com.ihs.app.framework.HSSessionMgr;
+import com.ihs.commons.config.HSConfig;
 import com.ihs.commons.notificationcenter.HSGlobalNotificationCenter;
 import com.ihs.commons.notificationcenter.INotificationObserver;
 import com.ihs.commons.utils.HSBundle;
 import com.ihs.commons.utils.HSLog;
 import com.superapps.util.Dimensions;
 import com.superapps.util.Navigations;
+import com.superapps.util.Toasts;
 
 public abstract class VerifyActivity extends BaseActivity implements INotificationObserver {
 
@@ -33,17 +44,27 @@ public abstract class VerifyActivity extends BaseActivity implements INotificati
 
     public static final String EVENT_UNLOCK_APP_SUCCESS = "EVENT_UNLOCK_APP_SUCCESS";
 
+    private static final int REQUEST_SECURITY_QUESTION = 0;
+
     private GestureLockView gestureLockView;
     private PINKeyboardView pinUnlockView;
     private PINIndicatorView pinIndicatorView;
+    private RipplePopupView menuPopupWindow;
+    private ViewGroup mainContainer;
+    private TextView tvForgetPassword;
+    private TextView verifyHint;
+    private Animation shakeAnimation;
+    private int menuWidth;
     protected ImageView panelAppIcon;
+    protected ImageView menuIcon;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         setContentView(getLayoutResId());
-
+        mainContainer = findViewById(R.id.lock_container);
+        verifyHint = findViewById(R.id.panel_desc_tv);
         findViewById(R.id.background).setBackgroundColor(PrimaryColors.getPrimaryColor());
 
         gestureLockView = findViewById(R.id.gesture_unlock_view);
@@ -85,10 +106,12 @@ public abstract class VerifyActivity extends BaseActivity implements INotificati
             @Override
             public void onSetPasswordFinished(String password) {
                 if (TextUtils.isEmpty(password)) {
-                    return;
+                    performShakeAnimation(getString(R.string.gesture_not_confirmed_sub_prompt));
                 } else {
                     if (password.equals(PrivateBoxSettings.getUnlockGesture())) {
                         onUnlockSucceed();
+                    } else {
+                        performShakeAnimation(getString(R.string.gesture_not_confirmed_sub_prompt));
                     }
                 }
             }
@@ -103,8 +126,72 @@ public abstract class VerifyActivity extends BaseActivity implements INotificati
 
         resetUnlockUI();
 
+        menuIcon = findViewById(R.id.menu_icon);
+        menuIcon.setOnClickListener(v -> {
+            showMenuPopupWindow(VerifyActivity.this, menuIcon);
+            menuIcon.setImageResource(R.drawable.app_lock_menu);
+        });
 
         HSGlobalNotificationCenter.addObserver(EVENT_UNLOCK_APP_SUCCESS, this);
+    }
+
+    private void performShakeAnimation(final String msg) {
+        if (shakeAnimation == null) {
+            shakeAnimation = AnimationUtils.loadAnimation(VerifyActivity.this, R.anim.left_right_shake);
+            shakeAnimation.setAnimationListener(new Animation.AnimationListener() {
+                @Override
+                public void onAnimationStart(Animation animation) {
+
+                }
+
+                @Override
+                public void onAnimationEnd(Animation animation) {
+                    if (pinIndicatorView != null) {
+                        pinIndicatorView.clear();
+                    }
+                }
+
+                @Override
+                public void onAnimationRepeat(Animation animation) {
+
+                }
+            });
+        }
+            if (verifyHint.getText().equals(msg)) {
+                verifyHint.startAnimation(shakeAnimation);
+            } else {
+                verifyHint.setText(msg);
+                verifyHint.startAnimation(shakeAnimation);
+            }
+    }
+
+    private void showMenuPopupWindow(Context context, View parentView) {
+        if (menuPopupWindow == null) {
+            menuPopupWindow = new RipplePopupView(context, mainContainer);
+            View view = getLayoutInflater().inflate(R.layout.private_box_lock_menu_popup_window, mainContainer, false);
+            view.measure(View.MeasureSpec.UNSPECIFIED, View.MeasureSpec.UNSPECIFIED);
+            menuWidth = view.getMeasuredWidth();
+            tvForgetPassword = view.findViewById(R.id.tv_forget_password);
+
+            tvForgetPassword.setOnClickListener(v -> {
+                menuPopupWindow.dismiss();
+                startActivityForResult(new Intent(this, PrivateBoxLockQuestionActivity.class), REQUEST_SECURITY_QUESTION);
+            });
+
+            menuPopupWindow.setOutSideBackgroundColor(Color.TRANSPARENT);
+            menuPopupWindow.setContentView(view);
+            menuPopupWindow.setOutSideClickListener(v -> menuPopupWindow.dismiss());
+        }
+
+        if (PrivateBoxSettings.isSecurityQuestionSet()) {
+            tvForgetPassword.setVisibility(View.VISIBLE);
+        } else {
+            tvForgetPassword.setVisibility(View.GONE);
+        }
+
+        menuPopupWindow.showAsDropDown(parentView,
+                Dimensions.isRtl() ? 0 : (parentView.getWidth() - menuWidth),
+                -Dimensions.getStatusBarHeight(this) - parentView.getMeasuredHeight());
     }
 
     protected abstract int getLayoutResId();
@@ -161,6 +248,22 @@ public abstract class VerifyActivity extends BaseActivity implements INotificati
             Navigations.startActivitySafely(this, startMain);
         }
         return super.onKeyDown(keyCode, event);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        switch (requestCode) {
+            case REQUEST_SECURITY_QUESTION:
+                if (resultCode == RESULT_OK) {
+                    finish();
+                    overridePendingTransition(0, R.anim.fade_out_long);
+                    Navigations.startActivitySafely(this,
+                            new Intent(this, PrivateConversationListActivity.class));
+                }
+                break;
+        }
     }
 
     private void performFingerprintShakeAnimation(View fingerprintView, Runnable endRunnable) {
