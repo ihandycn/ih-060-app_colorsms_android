@@ -116,6 +116,7 @@ public class WelcomeStartActivity extends AppCompatActivity implements View.OnCl
         if (Preferences.getDefault().getBoolean(PREF_KEY_START_BUTTON_CLICKED, false)) {
             UIIntents.get().launchConversationListActivity(this);
             finish();
+            return;
         }
 
         setContentView(R.layout.activity_welcome_start);
