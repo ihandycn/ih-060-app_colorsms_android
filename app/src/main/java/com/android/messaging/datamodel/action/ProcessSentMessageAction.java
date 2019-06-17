@@ -184,7 +184,7 @@ public class ProcessSentMessageAction extends Action {
 
                 if (!isSms) {
                     BugleAnalytics.logEvent("Send_Mms_Failed",
-                            "result&http&raw", resultCode + "," + httpStatusCode + "," + rawStatus);
+                            "resultCode", String.valueOf(resultCode));
                 }
                 // Check for MMS messages that failed because they exceeded the maximum size,
                 // indicated by an I/O error from the platform.
