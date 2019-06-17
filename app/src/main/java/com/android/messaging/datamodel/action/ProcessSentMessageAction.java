@@ -41,6 +41,7 @@ import com.android.messaging.sms.MmsSender;
 import com.android.messaging.sms.MmsUtils;
 import com.android.messaging.ui.emoji.utils.EmojiManager;
 import com.android.messaging.util.Assert;
+import com.android.messaging.util.BugleAnalytics;
 import com.android.messaging.util.LogUtil;
 import com.ihs.commons.notificationcenter.HSGlobalNotificationCenter;
 
@@ -181,6 +182,10 @@ public class ProcessSentMessageAction extends Action {
                 LogUtil.w(TAG, errorMsg);
                 status = MmsSender.getErrorResultStatus(resultCode, httpStatusCode);
 
+                if (!isSms) {
+                    BugleAnalytics.logEvent("Send_Mms_Failed",
+                            "result&http&raw", resultCode + "," + httpStatusCode + "," + rawStatus);
+                }
                 // Check for MMS messages that failed because they exceeded the maximum size,
                 // indicated by an I/O error from the platform.
                 if (resultCode == SmsManager.MMS_ERROR_IO_ERROR) {
