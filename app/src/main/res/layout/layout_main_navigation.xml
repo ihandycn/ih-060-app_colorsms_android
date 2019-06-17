@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              xmlns:app="http://schemas.android.com/apk/res-auto"
-              android:layout_width="match_parent"
-              android:layout_height="match_parent"
-              android:orientation="vertical">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
 
     <!-- Header -->
     <FrameLayout
@@ -16,7 +16,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:src="@drawable/navigation_header_icon"/>
+            android:src="@drawable/navigation_header_icon" />
     </FrameLayout>
 
     <ScrollView
@@ -42,7 +42,7 @@
                 android:text="@string/menu_group_customization"
                 android:textColor="#66222327"
                 android:textSize="14sp"
-                app:typeface="@string/custom_font_medium"/>
+                app:typeface="@string/custom_font_medium" />
 
             <RelativeLayout
                 android:id="@+id/navigation_item_theme"
@@ -50,19 +50,19 @@
 
                 <android.support.v7.widget.AppCompatImageView
                     style="@style/DrawerMenuIcon"
-                    app:srcCompat="@drawable/ic_menu_theme"/>
+                    app:srcCompat="@drawable/ic_menu_theme" />
 
                 <com.android.messaging.ui.view.MessagesTextView
                     style="@style/DrawerMenuTitle"
                     android:includeFontPadding="false"
                     android:text="@string/menu_theme"
-                    app:typeface="@string/custom_font_medium"/>
+                    app:typeface="@string/custom_font_medium" />
 
                 <com.android.messaging.ui.view.MessagesTextView
                     android:id="@+id/navigation_item_theme_new_text"
                     style="@style/DrawerMenuNewMark"
                     app:textAllCaps="true"
-                    app:typeface="@string/custom_font_bold"/>
+                    app:typeface="@string/custom_font_bold" />
             </RelativeLayout>
 
 
@@ -73,19 +73,19 @@
 
                 <android.support.v7.widget.AppCompatImageView
                     style="@style/DrawerMenuIcon"
-                    app:srcCompat="@drawable/ic_menu_theme_color"/>
+                    app:srcCompat="@drawable/ic_menu_theme_color" />
 
                 <com.android.messaging.ui.view.MessagesTextView
                     style="@style/DrawerMenuTitle"
                     android:includeFontPadding="false"
                     android:text="@string/menu_theme_color"
-                    app:typeface="@string/custom_font_medium"/>
+                    app:typeface="@string/custom_font_medium" />
 
                 <com.android.messaging.ui.view.MessagesTextView
                     android:id="@+id/navigation_item_theme_color_new_text"
                     style="@style/DrawerMenuNewMark"
                     app:textAllCaps="true"
-                    app:typeface="@string/custom_font_bold"/>
+                    app:typeface="@string/custom_font_bold" />
             </RelativeLayout>
 
             <!-- Item Bubble -->
@@ -95,13 +95,13 @@
 
                 <android.support.v7.widget.AppCompatImageView
                     style="@style/DrawerMenuIcon"
-                    app:srcCompat="@drawable/ic_menu_bubble"/>
+                    app:srcCompat="@drawable/ic_menu_bubble" />
 
                 <com.android.messaging.ui.view.MessagesTextView
                     style="@style/DrawerMenuTitle"
                     android:includeFontPadding="false"
                     android:text="@string/menu_bubble"
-                    app:typeface="@string/custom_font_medium"/>
+                    app:typeface="@string/custom_font_medium" />
             </RelativeLayout>
 
             <!-- Item Chat Background -->
@@ -111,19 +111,19 @@
 
                 <android.support.v7.widget.AppCompatImageView
                     style="@style/DrawerMenuIcon"
-                    app:srcCompat="@drawable/ic_menu_chat"/>
+                    app:srcCompat="@drawable/ic_menu_chat" />
 
                 <com.android.messaging.ui.view.MessagesTextView
                     style="@style/DrawerMenuTitle"
                     android:includeFontPadding="false"
                     android:text="@string/menu_chat_background"
-                    app:typeface="@string/custom_font_medium"/>
+                    app:typeface="@string/custom_font_medium" />
 
                 <com.android.messaging.ui.view.MessagesTextView
                     android:id="@+id/navigation_item_background_new_text"
                     style="@style/DrawerMenuNewMark"
                     app:textAllCaps="true"
-                    app:typeface="@string/custom_font_bold"/>
+                    app:typeface="@string/custom_font_bold" />
             </RelativeLayout>
 
             <!-- Item Change Font -->
@@ -133,19 +133,19 @@
 
                 <android.support.v7.widget.AppCompatImageView
                     style="@style/DrawerMenuIcon"
-                    app:srcCompat="@drawable/ic_menu_font"/>
+                    app:srcCompat="@drawable/ic_menu_font" />
 
                 <com.android.messaging.ui.view.MessagesTextView
                     style="@style/DrawerMenuTitle"
                     android:includeFontPadding="false"
                     android:text="@string/menu_change_font"
-                    app:typeface="@string/custom_font_medium"/>
+                    app:typeface="@string/custom_font_medium" />
 
                 <com.android.messaging.ui.view.MessagesTextView
                     android:id="@+id/navigation_item_font_new_text"
                     style="@style/DrawerMenuNewMark"
                     app:textAllCaps="true"
-                    app:typeface="@string/custom_font_bold"/>
+                    app:typeface="@string/custom_font_bold" />
             </RelativeLayout>
 
             <View
@@ -155,23 +155,51 @@
             <!-- Backup & Restore -->
             <RelativeLayout
                 android:id="@+id/navigation_item_backup_restore"
-                style="@style/DrawerMenuItem">
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/sidebar_button_background"
+                android:minHeight="44dp">
 
                 <android.support.v7.widget.AppCompatImageView
                     style="@style/DrawerMenuIcon"
-                    app:srcCompat="@drawable/ic_menu_backup"/>
+                    app:srcCompat="@drawable/ic_menu_backup" />
 
-                <com.android.messaging.ui.view.MessagesTextView
-                    style="@style/DrawerMenuTitle"
-                    android:includeFontPadding="false"
-                    android:text="@string/menu_backup_restore"
-                    app:typeface="@string/custom_font_medium"/>
+                <!--for some long strings-->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_marginStart="65dp"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal">
 
-                <com.android.messaging.ui.view.MessagesTextView
-                    android:id="@+id/navigation_item_backup_restore_new_text"
-                    style="@style/DrawerMenuNewMark"
-                    app:textAllCaps="true"
-                    app:typeface="@string/custom_font_bold"/>
+                    <com.android.messaging.ui.view.MessagesTextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:gravity="center_vertical"
+                        android:includeFontPadding="false"
+                        android:text="@string/menu_backup_restore"
+                        android:textColor="#222327"
+                        android:textSize="14sp"
+                        app:typeface="@string/custom_font_medium" />
+
+                    <com.android.messaging.ui.view.MessagesTextView
+                        android:id="@+id/navigation_item_backup_restore_new_text"
+                        android:layout_width="wrap_content"
+                        android:layout_height="17.8dp"
+                        android:layout_marginEnd="19.3dp"
+                        android:gravity="center"
+                        android:includeFontPadding="false"
+                        android:paddingEnd="8.5dp"
+                        android:paddingStart="8.5dp"
+                        android:text="@string/menu_new"
+                        android:textColor="@color/white"
+                        android:textSize="9.3sp"
+                        android:visibility="gone"
+                        app:textAllCaps="true"
+                        app:typeface="@string/custom_font_bold" />
+                </LinearLayout>
             </RelativeLayout>
 
             <!-- Privacy Box -->
@@ -181,19 +209,19 @@
 
                 <android.support.v7.widget.AppCompatImageView
                     style="@style/DrawerMenuIcon"
-                    app:srcCompat="@drawable/menu_icon_private_box"/>
+                    app:srcCompat="@drawable/menu_icon_private_box" />
 
                 <com.android.messaging.ui.view.MessagesTextView
                     style="@style/DrawerMenuTitle"
                     android:includeFontPadding="false"
                     android:text="@string/menu_privacy_box"
-                    app:typeface="@string/custom_font_medium"/>
+                    app:typeface="@string/custom_font_medium" />
 
                 <com.android.messaging.ui.view.MessagesTextView
                     android:id="@+id/navigation_item_private_box_new_text"
                     style="@style/DrawerMenuNewMark"
                     app:textAllCaps="true"
-                    app:typeface="@string/custom_font_bold"/>
+                    app:typeface="@string/custom_font_bold" />
             </RelativeLayout>
 
             <!-- Item Setting -->
@@ -203,13 +231,13 @@
 
                 <android.support.v7.widget.AppCompatImageView
                     style="@style/DrawerMenuIcon"
-                    app:srcCompat="@drawable/ic_menu_setting"/>
+                    app:srcCompat="@drawable/ic_menu_setting" />
 
                 <com.android.messaging.ui.view.MessagesTextView
                     style="@style/DrawerMenuTitle"
                     android:includeFontPadding="false"
                     android:text="@string/menu_setting"
-                    app:typeface="@string/custom_font_medium"/>
+                    app:typeface="@string/custom_font_medium" />
             </RelativeLayout>
 
 
@@ -220,13 +248,13 @@
 
                 <android.support.v7.widget.AppCompatImageView
                     style="@style/DrawerMenuIcon"
-                    app:srcCompat="@drawable/ic_menu_invite_friends"/>
+                    app:srcCompat="@drawable/ic_menu_invite_friends" />
 
                 <com.android.messaging.ui.view.MessagesTextView
                     style="@style/DrawerMenuTitle"
                     android:includeFontPadding="false"
                     android:text="@string/menu_invite_friends"
-                    app:typeface="@string/custom_font_medium"/>
+                    app:typeface="@string/custom_font_medium" />
             </RelativeLayout>
 
 
@@ -237,13 +265,13 @@
 
                 <android.support.v7.widget.AppCompatImageView
                     style="@style/DrawerMenuIcon"
-                    app:srcCompat="@drawable/ic_menu_rate"/>
+                    app:srcCompat="@drawable/ic_menu_rate" />
 
                 <com.android.messaging.ui.view.MessagesTextView
                     style="@style/DrawerMenuTitle"
                     android:includeFontPadding="false"
                     android:text="@string/menu_rate"
-                    app:typeface="@string/custom_font_medium"/>
+                    app:typeface="@string/custom_font_medium" />
             </RelativeLayout>
 
             <!-- debug -->
