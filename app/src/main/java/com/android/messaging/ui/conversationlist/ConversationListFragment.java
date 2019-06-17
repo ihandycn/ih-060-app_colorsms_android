@@ -317,6 +317,8 @@ public class ConversationListFragment extends Fragment implements ConversationLi
             }
         });
 
+        mRecyclerView.addOnItemTouchListener(new ConversationListSwipeHelper(mRecyclerView));
+
         if (savedInstanceState != null) {
             mListState = savedInstanceState.getParcelable(SAVED_INSTANCE_STATE_LIST_VIEW_STATE_KEY);
         }
