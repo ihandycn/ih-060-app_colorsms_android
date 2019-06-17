@@ -17,11 +17,13 @@ import com.android.messaging.backup.BackupInfo;
 import com.android.messaging.backup.BackupManager;
 import com.android.messaging.ui.BasePagerViewHolder;
 import com.android.messaging.ui.CustomPagerViewHolder;
+import com.android.messaging.ui.conversationlist.ConversationListActivity;
 import com.android.messaging.ui.customize.PrimaryColors;
 import com.android.messaging.ui.view.MessagesTextView;
 import com.android.messaging.util.BugleAnalytics;
 import com.android.messaging.util.UiUtils;
 import com.google.firebase.auth.FirebaseAuth;
+import com.ihs.commons.notificationcenter.HSGlobalNotificationCenter;
 import com.superapps.util.BackgroundDrawables;
 import com.superapps.util.Dimensions;
 import com.superapps.util.Networks;
@@ -209,6 +211,7 @@ public class ChooseRestoreViewHolder extends BasePagerViewHolder implements Cust
 
         @Override
         public void onRestoreSuccess() {
+            HSGlobalNotificationCenter.sendNotification(ConversationListActivity.EVENT_MAINPAGE_RECREATE);
             backupCondition[1] = true;
             if (backupCondition[0]) {
                 Threads.postOnMainThread(() -> {

@@ -9,6 +9,8 @@ import android.provider.Telephony;
 import android.provider.Telephony.Sms;
 import android.text.TextUtils;
 
+import com.android.messaging.datamodel.DataModel;
+import com.android.messaging.datamodel.DatabaseWrapper;
 import com.android.messaging.mmslib.SqliteWrapper;
 import com.android.messaging.sms.MmsUtils;
 import com.android.messaging.util.OsUtil;
@@ -29,7 +31,7 @@ class RestoreSyncCursorPair {
 
     static final long SYNC_COMPLETE = -1L;
     static final long SYNC_FAILED = Long.MIN_VALUE;
-    static final long SYNC_STARTING = Long.MAX_VALUE;
+    private static final long SYNC_STARTING = Long.MAX_VALUE;
 
     private LocalCursorIterator mLocalCursorIterator;
 
@@ -252,5 +254,12 @@ class RestoreSyncCursorPair {
             values.put(BackupDatabaseHelper.MessageColumn.SUBSCRIPTION_ID, sms.mSubId);
         }
         resolver.insert(Telephony.Sms.CONTENT_URI, values);
+
+        DatabaseWrapper db = DataModel.get().getDatabase();
+        db.delete(BackupDatabaseHelper.BACKUP_MESSAGE_TABLE,
+                BackupDatabaseHelper.MessageColumn.ADDRESS + "=? AND "
+                        + BackupDatabaseHelper.MessageColumn.DATE + "=? AND "
+                        + BackupDatabaseHelper.MessageColumn.BODY + "=? ",
+                new String[]{sms.mAddress, String.valueOf(sms.getTimestampInMillis()), sms.mBody});
     }
 }

@@ -6,7 +6,6 @@ import android.net.Uri;
 import android.provider.Telephony;
 import android.text.format.DateUtils;
 
-import com.android.messaging.R;
 import com.android.messaging.datamodel.DataModel;
 import com.android.messaging.datamodel.DatabaseWrapper;
 import com.android.messaging.ui.appsettings.GeneralSettingSyncManager;
@@ -19,15 +18,14 @@ import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.ihs.app.framework.HSApplication;
-import com.superapps.util.Navigations;
 import com.superapps.util.Networks;
 import com.superapps.util.Threads;
-import com.superapps.util.Toasts;
 
 import java.io.File;
 import java.io.IOException;
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class BackupManager {
@@ -165,6 +163,11 @@ public class BackupManager {
                                 }
                             }
                         };
+                        Collections.sort(backupMessages,
+                                (o1, o2) -> {
+                                    long t = o2.getTimestampInMillis() - o1.getTimestampInMillis();
+                                    return t > 0 ? 1 : t == 0 ? 0 : -1;
+                                });
                         RestoreManager.get().restore(backupMessages, listener1);
                     });
                 }

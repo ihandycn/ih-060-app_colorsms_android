@@ -16,6 +16,7 @@ import com.android.messaging.backup.BackupInfo;
 import com.android.messaging.backup.BackupManager;
 import com.android.messaging.ui.BasePagerViewHolder;
 import com.android.messaging.ui.CustomPagerViewHolder;
+import com.android.messaging.ui.conversationlist.ConversationListActivity;
 import com.android.messaging.ui.customize.PrimaryColors;
 import com.android.messaging.ui.view.MessagesTextView;
 import com.android.messaging.util.BugleAnalytics;
@@ -23,6 +24,7 @@ import com.android.messaging.util.UiUtils;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.ihs.commons.config.HSConfig;
+import com.ihs.commons.notificationcenter.HSGlobalNotificationCenter;
 import com.superapps.util.BackgroundDrawables;
 import com.superapps.util.Dimensions;
 import com.superapps.util.Networks;
@@ -374,6 +376,7 @@ public class ChooseBackupViewHolder extends BasePagerViewHolder implements Custo
 
             @Override
             public void onDeleteSuccess() {
+                HSGlobalNotificationCenter.sendNotification(ConversationListActivity.EVENT_MAINPAGE_RECREATE);
                 dismissCondition[1] = true;
                 if (dismissCondition[0]) {
                     if (dialog != null) {
