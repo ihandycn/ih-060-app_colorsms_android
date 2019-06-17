@@ -356,7 +356,7 @@ public class ConversationListActivity extends AbstractConversationListActivity
         params.put("HeightDp", String.valueOf(Dimensions.dpFromPx(Dimensions.getPhoneHeight(this))));
         params.put("DensityDpi", String.valueOf(getResources().getDisplayMetrics().densityDpi));
         params.put("ScreenSize", getScreenSize());
-        BugleAnalytics.logEvent("Main_Page_Shown", params);
+        BugleAnalytics.logEvent("Main_Page_Shown", true, params);
     }
 
     private static String getScreenSize() {
