@@ -19,6 +19,7 @@ import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.ihs.app.framework.HSApplication;
+import com.superapps.util.Navigations;
 import com.superapps.util.Networks;
 import com.superapps.util.Threads;
 import com.superapps.util.Toasts;
@@ -232,21 +233,15 @@ public class BackupManager {
                     listenerWeakReference.get().onAllBackupSuccess();
                 }
                 return;
-            } else {
-                if (listenerWeakReference.get() != null) {
-                    listenerWeakReference.get().onBackupSuccess();
-                    listenerWeakReference.get().onUploadStart();
-                }
+            }
+
+            if (listenerWeakReference.get() != null) {
+                listenerWeakReference.get().onBackupSuccess();
+                listenerWeakReference.get().onUploadStart();
             }
 
             if (!Networks.isNetworkAvailable(-1)) {
-                if (listenerWeakReference.get() != null) {
-                    listenerWeakReference.get().onUploadFailed();
-                }
-                Toasts.showToast(R.string.sms_network_error);
-                if (backupType == BackupInfo.CLOUD) {
-                    file.delete();
-                }
+                file.delete();
                 return;
             }
 

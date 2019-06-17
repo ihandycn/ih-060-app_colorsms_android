@@ -418,12 +418,31 @@ public class ConversationListFragment extends Fragment implements ConversationLi
 
         prefFile.putInt(PREF_KEY_BACKUP_BANNER_GUIDE_SHOW_COUNT, backupBannerGuideShowCount + 1);
         BugleAnalytics.logEvent("BackupTopGuide_Show");
+
+        TextView title = mBackupBannerGuideContainer.findViewById(R.id.backup_banner_title);
         if (mBackupBannerGuideContainer.getVisibility() == View.VISIBLE) {
+
+            Threads.postOnThreadPoolExecutor(() -> {
+                WeakReference<TextView> tv = new WeakReference<>(title);
+                DatabaseWrapper db = DataModel.get().getDatabaseWithoutMainCheck();
+                Cursor cursor = db.query(DatabaseHelper.MESSAGES_TABLE, new String[]{"COUNT(*)"},
+                        null, null, null, null, null);
+                if (cursor != null) {
+                    if (cursor.moveToFirst()) {
+                        int count = cursor.getInt(0);
+                        Threads.postOnMainThread(() -> {
+                            if (tv.get() != null) {
+                                tv.get().setText(getString(R.string.backup_banner_guide_title, count));
+                            }
+                        });
+                    }
+                    cursor.close();
+                }
+            });
             return;
         }
         mBackupBannerGuideContainer.setVisibility(View.VISIBLE);
 
-        TextView title = mBackupBannerGuideContainer.findViewById(R.id.backup_banner_title);
         title.setText(getString(R.string.backup_banner_guide_title, 30));
         Threads.postOnThreadPoolExecutor(() -> {
             WeakReference<TextView> tv = new WeakReference<>(title);

@@ -25,6 +25,7 @@ import com.google.firebase.auth.FirebaseUser;
 import com.ihs.commons.config.HSConfig;
 import com.superapps.util.BackgroundDrawables;
 import com.superapps.util.Dimensions;
+import com.superapps.util.Networks;
 import com.superapps.util.Preferences;
 import com.superapps.util.Threads;
 import com.superapps.util.Toasts;
@@ -239,6 +240,11 @@ public class ChooseBackupViewHolder extends BasePagerViewHolder implements Custo
             @Override
             public void onUploadStart() {
                 if (backupCondition[0] && backupCondition[1]) {
+                    if (!Networks.isNetworkAvailable(-1)) {
+                        Toasts.showToast(R.string.sms_network_error);
+                        backupDialog.dismissAllowingStateLoss();
+                        return;
+                    }
                     //backup complete
                     Threads.postOnMainThread(() -> {
                         backupDialog.changeLottie(false);
@@ -316,10 +322,18 @@ public class ChooseBackupViewHolder extends BasePagerViewHolder implements Custo
             }
         };
         if (mLocalCheckBox.isChecked() && mCloudCheckBox.isChecked()) {
+            if (!Networks.isNetworkAvailable(-1)) {
+                Toasts.showToast(R.string.sms_network_error);
+                return;
+            }
             BackupManager.getInstance().backupMessages(BackupInfo.BOTH, listener);
         } else if (mLocalCheckBox.isChecked()) {
             BackupManager.getInstance().backupMessages(BackupInfo.LOCAL, listener);
         } else if (mCloudCheckBox.isChecked()) {
+            if (!Networks.isNetworkAvailable(-1)) {
+                Toasts.showToast(R.string.sms_network_error);
+                return;
+            }
             BackupManager.getInstance().backupMessages(BackupInfo.CLOUD, listener);
         }
     }
@@ -384,7 +398,6 @@ public class ChooseBackupViewHolder extends BasePagerViewHolder implements Custo
         List<BackupInfo> localBackups = BackupManager.getInstance().getLocalBackupFilesInfo();
         if (localBackups != null && localBackups.size() > 0) {
             mHasLocalBackup = true;
-            return;
         }
 
         if (FirebaseAuth.getInstance().getCurrentUser() != null) {
