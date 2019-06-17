@@ -202,13 +202,6 @@ public class BackupManager {
             if (listenerWeakReference.get() != null) {
                 listenerWeakReference.get().onBackupStart(backupType != BackupInfo.LOCAL);
             }
-
-            DatabaseWrapper db = DataModel.get().getDatabase();
-            try {
-                db.execSQL(BackupDatabaseHelper.MessageColumn.CREATE_BACKUP_TABLE_SQL);
-            } catch (Exception ignored) {
-
-            }
             //1.sync
             long time = BackupSyncManager.get().sync();
             if (time == BackupSyncManager.SYNC_FAILED) {
