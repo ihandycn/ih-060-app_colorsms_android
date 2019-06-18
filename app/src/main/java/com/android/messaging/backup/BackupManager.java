@@ -5,7 +5,6 @@ import android.content.ContentValues;
 import android.net.Uri;
 import android.provider.Telephony;
 import android.text.format.DateUtils;
-import android.util.Log;
 
 import com.android.messaging.datamodel.DataModel;
 import com.android.messaging.datamodel.DatabaseWrapper;
@@ -19,10 +18,8 @@ import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.ihs.app.framework.HSApplication;
-import com.ihs.commons.utils.HSLog;
 import com.superapps.util.Networks;
 import com.superapps.util.Threads;
-import com.superapps.util.Toasts;
 
 import java.io.File;
 import java.io.IOException;
@@ -480,15 +477,14 @@ public class BackupManager {
                 ContentResolver resolver = HSApplication.getContext().getContentResolver();
                 resolver.delete(Telephony.Sms.CONTENT_URI, Telephony.Sms.DATE + "< ?",
                         new String[]{String.valueOf(time)});
-                if (messageDeleteListener != null) {
-                    messageDeleteListener.onDeleteSuccess();
-                }
             } catch (Exception e) {
                 if (messageDeleteListener != null) {
                     messageDeleteListener.onDeleteFailed();
                 }
-                Toasts.showToast("3333" + e.getMessage());
-                Log.e("---->>>>", e.getMessage());
+                return;
+            }
+            if (messageDeleteListener != null) {
+                messageDeleteListener.onDeleteSuccess();
             }
         });
     }

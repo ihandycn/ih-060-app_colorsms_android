@@ -22,8 +22,6 @@
 -keep class com.flurry.** { *; }
 -dontwarn com.flurry.**
 
--keep class com.android.messaging.backup.ui.** { *; }
-
 # Tapjoy
 -keep class com.tapjoy.** { *; }
 -dontwarn com.tapjoy.**
@@ -141,3 +139,6 @@
 
 -keep class android.support.graphics.drawable.** { *; }
 -keep class com.android.messaging.ui.wallpaper.WallpaperEditActivity { *; }
+
+-keep class com.android.messaging.backup.ui.ChooseBackupViewHolder { *; }
+-keep class com.android.messaging.backup.ui.ChooseRestoreViewHolder { *; }

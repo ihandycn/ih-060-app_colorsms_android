@@ -5,7 +5,6 @@ import android.content.Context;
 import android.content.res.ColorStateList;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -345,25 +344,18 @@ public class ChooseBackupViewHolder extends BasePagerViewHolder implements Custo
         dialog.setCancelable(false);
         // dismiss[0] more than 3s, dismiss[1] delete complete
         boolean[] dismissCondition = {false, false};
-        Runnable runnable = new Runnable() {
-            @Override
-            public void run() {
-                Toasts.showToast("111111:");
-                Log.e("---->>>>", "111111: " );
-                dismissCondition[0] = true;
-                Toasts.showToast("222222:");
-                Log.e("---->>>>", "222222: " );
-                if (dismissCondition[1]) {
-                    if (dialog != null) {
-                        dialog.dismissAllowingStateLoss();
-                        Preferences.getDefault().doOnce(() -> {
-                            UiUtils.showDialogFragment((Activity) mContext,
-                                    new BackupTipsBeforeUninstallingDialog());
-                            BugleAnalytics.logEvent("Backup_Freeupmsg_Tips_Show");
-                        }, PREF_KEY_BACKUP_TIP_SHOWN);
-                    }
-                    Toasts.showToast(R.string.backup_free_success);
+        Runnable runnable = () -> {
+            dismissCondition[0] = true;
+            if (dismissCondition[1]) {
+                if (dialog != null) {
+                    dialog.dismissAllowingStateLoss();
+                    Preferences.getDefault().doOnce(() -> {
+                        UiUtils.showDialogFragment((Activity) mContext,
+                                new BackupTipsBeforeUninstallingDialog());
+                        BugleAnalytics.logEvent("Backup_Freeupmsg_Tips_Show");
+                    }, PREF_KEY_BACKUP_TIP_SHOWN);
                 }
+                Toasts.showToast(R.string.backup_free_success);
             }
         };
         Threads.postOnMainThreadDelayed(runnable, 3000);
