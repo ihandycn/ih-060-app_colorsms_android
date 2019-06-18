@@ -427,9 +427,6 @@ public class WidgetConversationService extends RemoteViewsService {
                     }
                 }
             }
-            remoteViews.setContentDescription(message.getIsIncoming() ?
-                    R.id.widget_message_item_incoming :
-                        R.id.widget_message_item_outgoing, description);
         }
 
         private Bitmap getAttachmentBitmap(final MessagePartData part) {

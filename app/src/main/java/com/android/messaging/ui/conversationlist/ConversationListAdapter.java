@@ -31,8 +31,6 @@ import com.android.messaging.datamodel.data.ConversationListItemData;
 import java.util.ArrayList;
 import java.util.List;
 
-import hugo.weaving.DebugLog;
-
 /**
  * Provides an interface to expose Conversation List Cursor data to a UI widget like a ListView.
  */

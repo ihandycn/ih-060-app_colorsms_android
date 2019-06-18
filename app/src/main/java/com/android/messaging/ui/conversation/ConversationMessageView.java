@@ -287,8 +287,6 @@ public class ConversationMessageView extends RelativeLayout implements View.OnCl
 
         // Update colors and layout parameters for the view.
         updateViewAppearance();
-
-        updateContentDescription();
     }
 
     public void setHost(final ConversationMessageViewHost host) {
@@ -792,71 +790,6 @@ public class ConversationMessageView extends RelativeLayout implements View.OnCl
         updateTextAppearance();
 
         requestLayout();
-    }
-
-    private void updateContentDescription() {
-        StringBuilder description = new StringBuilder();
-
-        Resources res = getResources();
-        String separator = res.getString(R.string.enumeration_comma);
-
-        // Sender information
-        boolean hasPlainTextMessage = !(TextUtils.isEmpty(mData.getText()) ||
-                mMessageTextHasLinks);
-        if (mData.getIsIncoming()) {
-            int senderResId = hasPlainTextMessage
-                    ? R.string.incoming_text_sender_content_description
-                    : R.string.incoming_sender_content_description;
-            description.append(res.getString(senderResId, mData.getSenderDisplayName()));
-        } else {
-            int senderResId = hasPlainTextMessage
-                    ? R.string.outgoing_text_sender_content_description
-                    : R.string.outgoing_sender_content_description;
-            description.append(res.getString(senderResId));
-        }
-
-        if (mSubjectView.getVisibility() == View.VISIBLE) {
-            description.append(separator);
-            description.append(mSubjectText.getText());
-        }
-
-        if (mMessageTextView.getVisibility() == View.VISIBLE) {
-            // If the message has hyperlinks, we will let the user navigate to the text message so
-            // that the hyperlink can be clicked. Otherwise, the text message does not need to
-            // be reachable.
-            if (mMessageTextHasLinks) {
-                mMessageTextView.setImportantForAccessibility(View.IMPORTANT_FOR_ACCESSIBILITY_YES);
-            } else {
-                mMessageTextView.setImportantForAccessibility(View.IMPORTANT_FOR_ACCESSIBILITY_NO);
-                description.append(separator);
-                description.append(mMessageTextView.getText());
-            }
-        }
-
-        if (mMessageTitleLayout.getVisibility() == View.VISIBLE) {
-            description.append(separator);
-            description.append(mTitleTextView.getText());
-
-            description.append(separator);
-            description.append(mMmsInfoTextView.getText());
-        }
-
-        if (mStatusTextView.getVisibility() == View.VISIBLE) {
-            description.append(separator);
-            description.append(mStatusTextView.getText());
-        }
-
-        if (mSimNameView.getVisibility() == View.VISIBLE) {
-            description.append(separator);
-            description.append(mSimNameView.getText());
-        }
-
-        if (mDeliveredBadge.getVisibility() == View.VISIBLE) {
-            description.append(separator);
-            description.append(res.getString(R.string.delivered_status_content_description));
-        }
-
-        setContentDescription(description);
     }
 
     private void updateMessageAttachmentsAppearance(final int gravity) {

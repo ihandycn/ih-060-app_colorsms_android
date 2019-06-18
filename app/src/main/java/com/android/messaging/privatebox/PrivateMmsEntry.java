@@ -6,8 +6,6 @@ import android.os.Build;
 import android.provider.BaseColumns;
 import android.provider.Telephony;
 
-import com.superapps.util.rom.RomUtils;
-
 import java.util.Arrays;
 import java.util.List;
 

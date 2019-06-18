@@ -35,7 +35,6 @@ import android.widget.ImageButton;
 
 import com.android.messaging.R;
 import com.android.messaging.datamodel.data.MediaPickerMessagePartData;
-import com.android.messaging.ui.conversation.ConversationFastScroller;
 import com.android.messaging.ui.conversation.ConversationFragment;
 import com.android.messaging.ui.mediapicker.CameraManager.MediaCallback;
 import com.android.messaging.ui.mediapicker.camerafocus.RenderOverlay;
@@ -450,23 +449,15 @@ class CameraMediaChooser extends MediaChooser implements
         mSwapModeButton.setImageResource(videoMode ?
                 R.drawable.ic_mp_camera_small_light :
                 R.drawable.ic_mp_video_small_light);
-        mSwapModeButton.setContentDescription(context.getString(videoMode ?
-                R.string.camera_switch_to_still_mode : R.string.camera_switch_to_video_mode));
         mSwapModeButton.setVisibility(isRecording ? View.GONE : View.VISIBLE);
         mSwapModeButton.setEnabled(isCameraAvailable);
 
         if (isRecording) {
             mCaptureButton.setImageResource(R.drawable.ic_mp_capture_stop_large_light);
-            mCaptureButton.setContentDescription(context.getString(
-                    R.string.camera_stop_recording));
         } else if (videoMode) {
             mCaptureButton.setImageResource(R.drawable.ic_mp_video_large_light);
-            mCaptureButton.setContentDescription(context.getString(
-                    R.string.camera_start_recording));
         } else {
             mCaptureButton.setImageResource(R.drawable.ic_checkmark_large_light);
-            mCaptureButton.setContentDescription(context.getString(
-                    R.string.camera_take_picture));
         }
         mCaptureButton.setEnabled(isCameraAvailable);
     }

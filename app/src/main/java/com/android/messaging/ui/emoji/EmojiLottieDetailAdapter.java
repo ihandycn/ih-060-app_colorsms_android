@@ -14,11 +14,11 @@ import com.android.messaging.R;
 import com.android.messaging.glide.GlideApp;
 import com.android.messaging.ui.emoji.utils.EmojiConfig;
 import com.android.messaging.ui.emoji.utils.EmojiManager;
+import com.android.messaging.ui.view.MessagesTextView;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.superapps.util.BackgroundDrawables;
 import com.superapps.util.Dimensions;
 import com.superapps.util.Threads;
-import com.android.messaging.ui.view.MessagesTextView;
 
 import java.util.List;
 

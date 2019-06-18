@@ -32,7 +32,6 @@ import com.android.messaging.datamodel.binding.BindingBase;
 import com.android.messaging.datamodel.binding.DetachableBinding;
 import com.android.messaging.datamodel.data.PersonItemData;
 import com.android.messaging.datamodel.data.PersonItemData.PersonItemDataListener;
-import com.android.messaging.util.AccessibilityUtil;
 import com.android.messaging.util.UiUtils;
 import com.superapps.util.BackgroundDrawables;
 import com.superapps.util.Dimensions;
@@ -110,12 +109,6 @@ public class PersonItemView extends LinearLayout implements PersonItemDataListen
         if (personData != null) {
             mBinding.bind(personData);
             mBinding.getData().setListener(this);
-
-            // Accessibility reason : in case phone numbers are mixed in the display name,
-            // we need to vocalize it for talkback.
-            final String vocalizedDisplayName = AccessibilityUtil.getVocalizedPhoneNumber(
-                    getResources(), getDisplayName());
-            mNameTextView.setContentDescription(vocalizedDisplayName);
         }
         updateViewAppearance();
     }

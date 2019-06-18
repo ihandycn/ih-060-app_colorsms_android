@@ -106,7 +106,6 @@ import com.android.messaging.ui.mediapicker.CameraGalleryFragment;
 import com.android.messaging.ui.mediapicker.MediaPickerFragment;
 import com.android.messaging.ui.senddelaymessages.SendDelayMessagesManager;
 import com.android.messaging.ui.wallpaper.WallpaperManager;
-import com.android.messaging.util.AccessibilityUtil;
 import com.android.messaging.util.Assert;
 import com.android.messaging.util.BugleAnalytics;
 import com.android.messaging.util.ChangeDefaultSmsAppHelper;
@@ -1876,10 +1875,6 @@ public class ConversationFragment extends Fragment implements ConversationDataLi
                                 getString(R.string.plus_n)).toString(),
                         TextDirectionHeuristicsCompat.LTR);
                 tvTitle.setText(formattedName);
-                // In case phone numbers are mixed in the conversation name, we need to vocalize it.
-                final String vocalizedConversationName =
-                        AccessibilityUtil.getVocalizedPhoneNumber(getResources(), conversationName);
-                tvTitle.setContentDescription(vocalizedConversationName);
             } else {
                 final String appName = getString(R.string.app_name);
                 tvTitle.setText(appName);
@@ -2018,7 +2013,6 @@ public class ConversationFragment extends Fragment implements ConversationDataLi
             public void onDismissed() {
                 // Re-enable accessibility on all controls now that the media picker is
                 // going away.
-                mComposeMessageView.setAccessibility(true /*enabled*/);
                 handleStateChange();
             }
 

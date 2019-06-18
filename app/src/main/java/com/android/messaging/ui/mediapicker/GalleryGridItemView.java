@@ -33,8 +33,6 @@ import com.android.messaging.ui.AsyncImageView;
 import com.android.messaging.ui.ConversationDrawables;
 import com.google.common.annotations.VisibleForTesting;
 
-import java.util.concurrent.TimeUnit;
-
 /**
  * Shows an item in the gallery picker grid view. Hosts an FileImageView with a checkbox.
  */
@@ -140,20 +138,10 @@ public class GalleryGridItemView extends FrameLayout {
             setBackgroundColor(ConversationDrawables.get().getConversationThemeColor());
             mImageView.setImageResourceId(null);
             mImageView.setImageResource(R.drawable.ic_photo_library_light);
-            mImageView.setContentDescription(getResources().getString(
-                    R.string.pick_image_from_document_library_content_description));
         } else {
             mImageView.setScaleType(ScaleType.CENTER_CROP);
             setBackgroundColor(getResources().getColor(R.color.gallery_image_default_background));
             mImageView.setImageResourceId(mData.getImageRequestDescriptor());
-            final long dateSeconds = mData.getDateSeconds();
-            final boolean isValidDate = (dateSeconds > 0);
-            final int templateId = isValidDate ?
-                    R.string.mediapicker_gallery_image_item_description :
-                    R.string.mediapicker_gallery_image_item_description_no_date;
-            String contentDescription = String.format(getResources().getString(templateId),
-                    dateSeconds * TimeUnit.SECONDS.toMillis(1));
-            mImageView.setContentDescription(contentDescription);
         }
     }
 }

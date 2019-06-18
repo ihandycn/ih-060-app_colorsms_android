@@ -21,12 +21,9 @@ import android.content.Intent;
 import com.android.messaging.datamodel.data.ConversationListData;
 import com.android.messaging.datamodel.data.ConversationListItemData;
 import com.android.messaging.ui.BugleActionBarActivity;
-import com.android.messaging.ui.SnackBarInteraction;
 import com.android.messaging.ui.UIIntents;
 import com.android.messaging.ui.conversationlist.ConversationListItemView;
 import com.android.messaging.util.BugleAnalytics;
-
-import java.util.List;
 
 /**
  * Base class for many Conversation List activities. This will handle the common actions of multi

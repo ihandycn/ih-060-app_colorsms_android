@@ -22,10 +22,8 @@ import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.UserHandle;
 import android.os.UserManager;
-import android.support.v4.os.BuildCompat;
 
 import com.android.messaging.Factory;
-import com.superapps.util.RuntimePermissions;
 
 import java.util.ArrayList;
 import java.util.Hashtable;

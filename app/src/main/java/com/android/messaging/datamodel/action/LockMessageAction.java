@@ -9,7 +9,6 @@ import com.android.messaging.datamodel.DataModel;
 import com.android.messaging.datamodel.DatabaseWrapper;
 import com.android.messaging.datamodel.MessagingContentProvider;
 import com.android.messaging.util.Assert;
-import com.android.messaging.util.LogUtil;
 
 public class LockMessageAction extends Action{
 

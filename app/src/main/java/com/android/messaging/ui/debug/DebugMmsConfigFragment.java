@@ -33,7 +33,6 @@ import android.widget.TextView;
 import com.android.messaging.R;
 import com.android.messaging.datamodel.data.ParticipantData;
 import com.android.messaging.sms.MmsConfig;
-import com.android.messaging.ui.debug.DebugMmsConfigItemView.MmsConfigItemListener;
 import com.android.messaging.util.OsUtil;
 import com.android.messaging.util.PhoneUtils;
 

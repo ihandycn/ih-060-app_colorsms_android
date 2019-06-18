@@ -280,7 +280,6 @@ public class PhotoViewFragment extends Fragment implements
         mPhotoView.setOnClickListener(this);
         mPhotoView.setFullScreen(mFullScreen, false);
         mPhotoView.enableImageTransforms(false);
-        mPhotoView.setContentDescription(mContentDescription);
 
         mPhotoPreviewAndProgress = view.findViewById(R.id.photo_preview);
         mPhotoPreviewImage = (ImageView) view.findViewById(R.id.photo_preview_image);

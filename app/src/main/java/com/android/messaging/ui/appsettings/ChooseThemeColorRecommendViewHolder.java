@@ -7,19 +7,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
-import com.android.messaging.Factory;
 import com.android.messaging.R;
 import com.android.messaging.ui.BasePagerViewHolder;
-import com.android.messaging.ui.ConversationDrawables;
 import com.android.messaging.ui.CustomPagerViewHolder;
-import com.android.messaging.ui.conversationlist.ConversationListActivity;
-import com.android.messaging.ui.customize.ChooseMessageColorRecommendAdapter;
 import com.android.messaging.ui.customize.OnColorChangedListener;
 import com.android.messaging.ui.customize.PrimaryColors;
 import com.android.messaging.ui.customize.theme.ThemeInfo;
-import com.android.messaging.util.BugleAnalytics;
-import com.android.messaging.util.UiUtils;
-import com.ihs.commons.notificationcenter.HSGlobalNotificationCenter;
 import com.superapps.util.BackgroundDrawables;
 import com.superapps.util.Dimensions;
 

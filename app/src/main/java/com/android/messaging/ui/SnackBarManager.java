@@ -19,7 +19,6 @@ import android.content.Context;
 import android.graphics.Point;
 import android.graphics.Rect;
 import android.os.Handler;
-import android.text.TextUtils;
 import android.util.DisplayMetrics;
 import android.view.Gravity;
 import android.view.MotionEvent;
@@ -38,15 +37,10 @@ import com.android.messaging.Factory;
 import com.android.messaging.R;
 import com.android.messaging.ui.SnackBar.Placement;
 import com.android.messaging.ui.SnackBar.SnackBarListener;
-import com.android.messaging.util.AccessibilityUtil;
 import com.android.messaging.util.Assert;
 import com.android.messaging.util.LogUtil;
 import com.android.messaging.util.OsUtil;
-import com.android.messaging.util.TextUtil;
 import com.android.messaging.util.UiUtils;
-import com.crashlytics.android.core.CrashlyticsCore;
-import com.google.common.base.Joiner;
-import com.superapps.debug.CrashlyticsLog;
 
 import java.util.List;
 
@@ -186,18 +180,6 @@ public class SnackBarManager {
             public void run() {
                 mCurrentSnackBar.setEnabled(true);
                 makeCurrentSnackBarDismissibleOnTouch();
-                // Fire an accessibility event as needed
-                String snackBarText = snackBar.getMessageText();
-                if (!TextUtils.isEmpty(snackBarText) &&
-                        TextUtils.getTrimmedLength(snackBarText) > 0) {
-                    snackBarText = snackBarText.trim();
-                    final String snackBarActionText = snackBar.getActionLabel();
-                    if (!TextUtil.isAllWhitespace(snackBarActionText)) {
-                        snackBarText = Joiner.on(", ").join(snackBarText, snackBarActionText);
-                    }
-                    AccessibilityUtil.announceForAccessibilityCompat(snackBar.getSnackBarView(),
-                            null /*accessibilityManager*/, snackBarText);
-                }
             }
         });
 

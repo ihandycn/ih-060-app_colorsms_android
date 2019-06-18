@@ -20,13 +20,13 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.android.messaging.R;
+import com.android.messaging.font.FontUtils;
 import com.android.messaging.ui.PlainTextEditText;
 import com.android.messaging.ui.SendDelayProgressBar;
 import com.android.messaging.ui.appsettings.SendDelaySettings;
 import com.android.messaging.ui.customize.PrimaryColors;
 import com.android.messaging.ui.customize.theme.ThemeUtils;
 import com.android.messaging.ui.signature.SignatureSettingDialog;
-import com.android.messaging.font.FontUtils;
 import com.superapps.util.BackgroundDrawables;
 import com.superapps.util.Dimensions;
 import com.superapps.util.Preferences;

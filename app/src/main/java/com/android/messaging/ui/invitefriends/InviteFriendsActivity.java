@@ -26,10 +26,8 @@ import com.android.messaging.font.FontUtils;
 import com.android.messaging.privatebox.ui.addtolist.CallAssistantUtils;
 import com.android.messaging.ui.PlainTextEditText;
 import com.android.messaging.ui.customize.PrimaryColors;
-import com.android.messaging.ui.view.MessagesTextView;
 import com.android.messaging.util.AvatarUriUtil;
 import com.android.messaging.util.BugleAnalytics;
-import com.android.messaging.util.BuglePrefs;
 import com.android.messaging.util.ContactUtil;
 import com.android.messaging.util.ImeUtil;
 import com.android.messaging.util.PhoneUtils;
@@ -38,7 +36,6 @@ import com.google.common.annotations.VisibleForTesting;
 import com.ihs.commons.config.HSConfig;
 import com.superapps.util.BackgroundDrawables;
 import com.superapps.util.Dimensions;
-import com.superapps.util.Preferences;
 import com.superapps.util.Toasts;
 
 import java.util.ArrayList;

@@ -19,7 +19,6 @@ import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.PorterDuff;
 import android.graphics.Rect;
-import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
@@ -187,8 +186,6 @@ public class AttachmentPreviewFactory {
             imageView.setImageResourceId(getImageRequestDescriptorForAttachment(attachmentData,
                     maxWidth, maxHeight));
         }
-        imageView.setContentDescription(
-                parent.getResources().getString(R.string.message_image_content_description));
         return view;
     }
 

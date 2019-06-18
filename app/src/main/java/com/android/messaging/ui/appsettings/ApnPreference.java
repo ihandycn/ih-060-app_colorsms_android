@@ -26,7 +26,6 @@ import android.view.ViewGroup;
 import android.widget.CompoundButton;
 import android.widget.RadioButton;
 import android.widget.RelativeLayout;
-import android.widget.TextView;
 
 import com.android.messaging.R;
 import com.android.messaging.datamodel.data.ParticipantData;
@@ -81,7 +80,6 @@ public class ApnPreference extends Preference implements
             } else {
                 rb.setVisibility(View.GONE);
             }
-            setApnRadioButtonContentDescription(rb);
         }
 
         View textLayout = view.findViewById(R.id.text_layout);
@@ -90,13 +88,6 @@ public class ApnPreference extends Preference implements
         }
 
         return view;
-    }
-
-    public void setApnRadioButtonContentDescription(final CompoundButton buttonView) {
-        final View widget = (View) buttonView.getParent();
-        final TextView tv = (TextView) widget.findViewById(android.R.id.title);
-        final String apnTitle = tv.getText().toString();
-        buttonView.setContentDescription(apnTitle);
     }
 
     public boolean isChecked() {
@@ -128,7 +119,6 @@ public class ApnPreference extends Preference implements
             mCurrentChecked = null;
             mSelectedKey = null;
         }
-        setApnRadioButtonContentDescription(buttonView);
     }
 
     public void onClick(android.view.View v) {

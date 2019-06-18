@@ -16,16 +16,13 @@
 package com.android.messaging.datamodel.action;
 
 import android.content.Context;
-import android.content.res.Resources;
 import android.widget.Toast;
 
 import com.android.messaging.Factory;
 import com.android.messaging.R;
-import com.android.messaging.datamodel.DataModel;
 import com.android.messaging.datamodel.data.MessageData;
 import com.android.messaging.datamodel.data.ParticipantData;
 import com.android.messaging.sms.MmsUtils;
-import com.android.messaging.util.AccessibilityUtil;
 import com.android.messaging.util.BugleAnalytics;
 import com.android.messaging.util.PhoneUtils;
 import com.android.messaging.util.ThreadUtil;
@@ -74,48 +71,13 @@ public class BugleActionToasts {
                 return;
             }
         }
-
-        if (AccessibilityUtil.isTouchExplorationEnabled(Factory.get().getApplicationContext())) {
-            final boolean isFocusedConversation = DataModel.get().isFocusedConversation(conversationId);
-            if (isFocusedConversation && success) {
-                // Using View.announceForAccessibility may be preferable, but we do not have a
-                // View, and so we use a toast instead.
-                showToast(isSend ? R.string.send_message_success
-                        : R.string.download_message_success);
-                return;
-            }
-
-            // {@link MessageNotificationState#checkFailedMessages} does not post a notification for
-            // failures in observable conversations. For accessibility, we provide an indication
-            // here.
-            final boolean isObservableConversation = DataModel.get().isNewMessageObservable(
-                    conversationId);
-            if (isObservableConversation && !success) {
-                showToast(isSend ? R.string.send_message_failure
-                        : R.string.download_message_failure);
-            }
-        }
     }
 
     public static void onMessageReceived(final String conversationId,
                                          @Nullable final ParticipantData sender, @Nullable final MessageData message) {
-        final Context context = Factory.get().getApplicationContext();
         BugleAnalytics.logEvent("SMS_Received", true, true,
                 "type", message != null && message.getIsMms() ? "mms" : "sms",
                 "isContact", sender != null && sender.getContactId() > 0 ? "true" : "false");
-        if (AccessibilityUtil.isTouchExplorationEnabled(context)) {
-            final boolean isFocusedConversation = DataModel.get().isFocusedConversation(
-                    conversationId);
-            if (isFocusedConversation) {
-                final Resources res = context.getResources();
-                final String senderDisplayName = (sender == null)
-                        ? res.getString(R.string.unknown_sender) : sender.getDisplayName(false);
-                final String announcement = res.getString(
-                        R.string.incoming_message_announcement, senderDisplayName,
-                        (message == null) ? "" : message.getMessageText());
-                showToast(announcement);
-            }
-        }
     }
 
     public static void onMessageLockedWhenDelete(){

@@ -24,7 +24,6 @@ import android.os.Parcelable;
 import android.provider.Telephony.Sms;
 import android.text.TextUtils;
 
-import com.android.messaging.Factory;
 import com.android.messaging.datamodel.BugleDatabaseOperations;
 import com.android.messaging.datamodel.BugleNotifications;
 import com.android.messaging.datamodel.DataModel;
@@ -42,7 +41,6 @@ import com.android.messaging.util.CheckPermissionUtil;
 import com.android.messaging.util.FabricUtils;
 import com.android.messaging.util.LogUtil;
 import com.android.messaging.util.OsUtil;
-import com.android.messaging.util.TextUtil;
 import com.crashlytics.android.core.CrashlyticsCore;
 import com.ihs.app.framework.HSApplication;
 import com.superapps.debug.CrashlyticsLog;

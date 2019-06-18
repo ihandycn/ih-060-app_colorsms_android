@@ -25,7 +25,6 @@ import android.os.Bundle;
 import android.util.Log;
 
 import com.android.messaging.datamodel.BoundCursorLoader;
-import com.android.messaging.datamodel.FrequentContactsCursorBuilder;
 import com.android.messaging.datamodel.MessagingContentProvider;
 import com.android.messaging.datamodel.binding.BindableData;
 import com.android.messaging.datamodel.binding.BindingBase;

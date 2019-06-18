@@ -5,12 +5,12 @@ import android.os.Bundle;
 import android.widget.ImageView;
 
 import com.android.messaging.R;
+import com.android.messaging.ui.view.MessagesTextView;
 import com.android.messaging.util.BugleAnalytics;
 import com.android.messaging.util.CreateShortcutUtils;
 import com.ihs.app.framework.HSApplication;
 import com.ihs.app.framework.activity.HSAppCompatActivity;
 import com.superapps.util.BackgroundDrawables;
-import com.android.messaging.ui.view.MessagesTextView;
 
 public class CreateShortcutActivity extends HSAppCompatActivity {
 

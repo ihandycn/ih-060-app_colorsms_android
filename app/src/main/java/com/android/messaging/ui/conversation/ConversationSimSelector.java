@@ -15,16 +15,11 @@
  */
 package com.android.messaging.ui.conversation;
 
-import android.content.Context;
 import android.support.v4.util.Pair;
-import android.text.TextUtils;
 
-import com.android.messaging.Factory;
-import com.android.messaging.R;
 import com.android.messaging.datamodel.data.SubscriptionListData;
 import com.android.messaging.datamodel.data.SubscriptionListData.SubscriptionListEntry;
 import com.android.messaging.ui.conversation.SimSelectorView.SimSelectorViewListener;
-import com.android.messaging.util.AccessibilityUtil;
 import com.android.messaging.util.Assert;
 import com.android.messaging.util.BugleAnalytics;
 import com.android.messaging.util.OsUtil;
@@ -63,23 +58,12 @@ abstract class ConversationSimSelector extends ConversationInput {
         }
     }
 
-    private void announcedSelectedSim() {
-        final Context context = Factory.get().getApplicationContext();
-        if (AccessibilityUtil.isTouchExplorationEnabled(context) &&
-                !TextUtils.isEmpty(mSelectedSimText)) {
-            AccessibilityUtil.announceForAccessibilityCompat(
-                    mSimSelectorView, null,
-                    context.getString(R.string.selected_sim_content_message, mSelectedSimText));
-        }
-    }
-
     public void setSelected(final SubscriptionListEntry subEntry) {
         mSelectedSimText = subEntry == null ? null : subEntry.displayName;
     }
 
     @Override
     public boolean show(boolean animate) {
-        announcedSelectedSim();
         return showHide(true, animate);
     }
 

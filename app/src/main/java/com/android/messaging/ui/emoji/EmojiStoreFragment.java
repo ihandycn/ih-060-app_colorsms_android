@@ -26,6 +26,7 @@ import com.android.messaging.glide.GlideApp;
 import com.android.messaging.glide.GlideRequests;
 import com.android.messaging.ui.emoji.utils.EmojiConfig;
 import com.android.messaging.ui.emoji.utils.EmojiManager;
+import com.android.messaging.ui.view.MessagesTextView;
 import com.android.messaging.ui.view.RecyclerViewWidthSlideListener;
 import com.android.messaging.util.BugleAnalytics;
 import com.android.messaging.util.TransitionUtils;
@@ -35,7 +36,6 @@ import com.ihs.commons.notificationcenter.INotificationObserver;
 import com.ihs.commons.utils.HSBundle;
 import com.superapps.util.BackgroundDrawables;
 import com.superapps.util.Dimensions;
-import com.android.messaging.ui.view.MessagesTextView;
 import com.superapps.view.RoundImageView;
 
 import java.util.List;

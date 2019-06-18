@@ -8,7 +8,6 @@ import com.android.messaging.datamodel.BugleDatabaseOperations;
 import com.android.messaging.datamodel.DataModel;
 import com.android.messaging.datamodel.DatabaseWrapper;
 import com.android.messaging.sms.MmsSmsUtils;
-import com.android.messaging.util.CheckPermissionUtil;
 import com.android.messaging.util.PhoneUtils;
 import com.google.common.base.Joiner;
 import com.ihs.app.framework.HSApplication;

@@ -19,7 +19,6 @@ import android.content.Context;
 
 import com.android.messaging.R;
 import com.android.messaging.ui.CustomPagerListViewHolder;
-import com.android.messaging.ui.contact.ContactListItemView.HostInterface;
 import com.android.messaging.util.BugleAnalytics;
 
 /**

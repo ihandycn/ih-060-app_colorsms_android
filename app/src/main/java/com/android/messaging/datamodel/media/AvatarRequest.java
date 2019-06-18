@@ -31,7 +31,6 @@ import android.media.ExifInterface;
 import android.net.Uri;
 
 import com.android.messaging.R;
-import com.android.messaging.ui.customize.theme.ThemeInfo;
 import com.android.messaging.ui.customize.theme.ThemeUtils;
 import com.android.messaging.util.Assert;
 import com.android.messaging.util.AvatarUriUtil;

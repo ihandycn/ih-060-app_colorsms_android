@@ -5,11 +5,11 @@ import android.view.ViewGroup;
 
 import com.airbnb.lottie.LottieAnimationView;
 import com.android.messaging.R;
+import com.android.messaging.ui.view.MessagesTextView;
 import com.android.messaging.util.BugleAnalytics;
 import com.ihs.app.framework.activity.HSAppCompatActivity;
 import com.superapps.util.BackgroundDrawables;
 import com.superapps.util.Dimensions;
-import com.android.messaging.ui.view.MessagesTextView;
 
 public class DragHotSeatActivity extends HSAppCompatActivity {
 

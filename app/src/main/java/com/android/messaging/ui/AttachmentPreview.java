@@ -156,9 +156,6 @@ public class AttachmentPreview extends ScrollView implements OnAttachmentClickLi
         mPendingFirstUpdate = false;
 
         final int combinedAttachmentCount = attachments.size() + pendingAttachments.size();
-        mCloseButton.setContentDescription(getResources()
-                .getQuantityString(R.plurals.attachment_preview_close_content_description,
-                        combinedAttachmentCount));
         if (combinedAttachmentCount == 0) {
             mHideRunnable = new Runnable() {
                 @Override

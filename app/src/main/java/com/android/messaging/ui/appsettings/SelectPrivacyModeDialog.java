@@ -1,7 +1,6 @@
 package com.android.messaging.ui.appsettings;
 
 import android.content.res.ColorStateList;
-import android.graphics.ColorFilter;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v7.widget.AppCompatRadioButton;

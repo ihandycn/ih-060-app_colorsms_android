@@ -37,14 +37,10 @@ import com.android.ex.photo.loaders.PhotoBitmapLoaderInterface.BitmapResult;
 import com.android.messaging.R;
 import com.android.messaging.datamodel.ConversationImagePartsView.PhotoViewQuery;
 import com.android.messaging.datamodel.MediaScratchFileProvider;
-import com.android.messaging.download.Downloader;
 import com.android.messaging.ui.conversation.ConversationFragment;
-import com.android.messaging.ui.emoji.utils.EmojiManager;
 import com.android.messaging.util.Dates;
 import com.android.messaging.util.LogUtil;
 import com.android.messaging.util.OsUtil;
-
-import java.io.File;
 
 /**
  * Customizations for the photoviewer to display conversation images in full screen.

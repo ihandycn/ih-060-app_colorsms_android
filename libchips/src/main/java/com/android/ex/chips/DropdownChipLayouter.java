@@ -1,7 +1,6 @@
 package com.android.ex.chips;
 
 import android.content.Context;
-import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
@@ -285,10 +284,7 @@ public class DropdownChipLayouter {
         if (drawable == null) {
             view.setVisibility(View.GONE);
         } else {
-            final Resources res = mContext.getResources();
             view.setImageDrawable(drawable);
-            view.setContentDescription(
-                    res.getString(R.string.dropdown_delete_button_desc, recipient));
             if (mDeleteListener != null) {
                 view.setOnClickListener(new View.OnClickListener() {
                     @Override

@@ -17,7 +17,6 @@
 
 package com.android.ex.chips;
 
-import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.DialogFragment;
@@ -29,7 +28,6 @@ import android.content.DialogInterface;
 import android.content.res.Resources;
 import android.content.res.TypedArray;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.BitmapShader;
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -79,7 +77,6 @@ import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewParent;
-import android.view.accessibility.AccessibilityEvent;
 import android.view.accessibility.AccessibilityManager;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputConnection;
@@ -107,7 +104,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -609,25 +605,6 @@ public class RecipientEditTextView extends MultiAutoCompleteTextView implements
                 // that the user can see as many results as possible.
                 if (entries != null && entries.size() > 0) {
                     scrollBottomIntoView();
-                    // Here the current suggestion count is still the old one since we update
-                    // the count at the bottom of this function.
-                    if (mCurrentSuggestionCount == 0) {
-                        // Announce the new number of possible choices for accessibility.
-                        announceForAccessibilityCompat(
-                                getSuggestionDropdownOpenedVerbalization(suggestionCount));
-                    }
-                }
-
-                // Is the dropdown closing?
-                if ((entries == null || entries.size() == 0)
-                        // Here the current suggestion count is still the old one since we update
-                        // the count at the bottom of this function.
-                        && mCurrentSuggestionCount != 0
-                        // If there is no text, there's no need to know if no suggestions are
-                        // available.
-                        && getText().length() > 0) {
-                    announceForAccessibilityCompat(getResources().getString(
-                            R.string.accessbility_suggestion_dropdown_closed));
                 }
 
                 if ((entries != null)
@@ -648,32 +625,6 @@ public class RecipientEditTextView extends MultiAutoCompleteTextView implements
             }
         });
         baseAdapter.setDropdownChipLayouter(mDropdownChipLayouter);
-    }
-
-    /**
-     * Return the accessibility verbalization when the suggestion dropdown is opened.
-     */
-    public String getSuggestionDropdownOpenedVerbalization(int suggestionCount) {
-        return getResources().getString(R.string.accessbility_suggestion_dropdown_opened);
-    }
-
-    @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
-    private void announceForAccessibilityCompat(String text) {
-        final AccessibilityManager accessibilityManager =
-                (AccessibilityManager) getContext().getSystemService(Context.ACCESSIBILITY_SERVICE);
-        final boolean isAccessibilityOn = accessibilityManager.isEnabled();
-
-        if (isAccessibilityOn && Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
-            final ViewParent parent = getParent();
-            if (parent != null) {
-                AccessibilityEvent event = AccessibilityEvent.obtain(
-                        AccessibilityEvent.TYPE_ANNOUNCEMENT);
-                onInitializeAccessibilityEvent(event);
-                event.getText().add(text);
-                event.setContentDescription(null);
-                parent.requestSendAccessibilityEvent(this, event);
-            }
-        }
     }
 
     protected void scrollBottomIntoView() {

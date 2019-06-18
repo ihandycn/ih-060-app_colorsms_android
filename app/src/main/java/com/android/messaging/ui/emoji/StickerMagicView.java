@@ -12,9 +12,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.airbnb.lottie.LottieAnimationView;
-import com.airbnb.lottie.LottieComposition;
 import com.airbnb.lottie.LottieCompositionFactory;
-import com.airbnb.lottie.LottieListener;
 import com.android.messaging.R;
 import com.android.messaging.download.Downloader;
 import com.android.messaging.glide.GlideApp;

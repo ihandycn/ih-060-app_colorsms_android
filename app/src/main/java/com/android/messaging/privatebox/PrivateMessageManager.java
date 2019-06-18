@@ -9,7 +9,6 @@ import com.android.messaging.sms.MmsSmsUtils;
 import com.android.messaging.sms.MmsUtils;
 import com.ihs.app.framework.HSApplication;
 
-import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 

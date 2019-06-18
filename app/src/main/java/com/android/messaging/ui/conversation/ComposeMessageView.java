@@ -18,7 +18,6 @@ package com.android.messaging.ui.conversation;
 import android.Manifest;
 import android.animation.Animator;
 import android.content.Context;
-import android.content.res.Resources;
 import android.graphics.Rect;
 import android.net.Uri;
 import android.os.Bundle;
@@ -37,7 +36,6 @@ import android.util.AttributeSet;
 import android.view.ContextThemeWrapper;
 import android.view.KeyEvent;
 import android.view.View;
-import android.view.accessibility.AccessibilityEvent;
 import android.view.animation.Interpolator;
 import android.view.inputmethod.EditorInfo;
 import android.widget.FrameLayout;
@@ -72,13 +70,11 @@ import com.android.messaging.ui.PlainTextEditText;
 import com.android.messaging.ui.SendDelayProgressBar;
 import com.android.messaging.ui.appsettings.SendDelaySettings;
 import com.android.messaging.ui.conversation.ConversationInputManager.ConversationInputSink;
-import com.android.messaging.ui.conversationlist.ConversationListActivity;
 import com.android.messaging.ui.customize.PrimaryColors;
 import com.android.messaging.ui.dialog.FiveStarRateDialog;
 import com.android.messaging.ui.emoji.utils.EmojiManager;
 import com.android.messaging.ui.senddelaymessages.SendDelayMessagesManager;
 import com.android.messaging.ui.signature.SignatureSettingDialog;
-import com.android.messaging.util.AccessibilityUtil;
 import com.android.messaging.util.Assert;
 import com.android.messaging.util.AvatarUriUtil;
 import com.android.messaging.util.BugleActivityUtil;
@@ -406,23 +402,6 @@ public class ComposeMessageView extends LinearLayout
                 showSubjectEditor();
             }
             return true;
-        });
-        mSendButton.setAccessibilityDelegate(new AccessibilityDelegate() {
-            @Override
-            public void onPopulateAccessibilityEvent(View host, AccessibilityEvent event) {
-                super.onPopulateAccessibilityEvent(host, event);
-                // When the send button is long clicked, we want TalkBack to announce the real
-                // action (select SIM or edit subject), as opposed to "long press send button."
-                if (event.getEventType() == AccessibilityEvent.TYPE_VIEW_LONG_CLICKED) {
-                    event.getText().clear();
-                    event.getText().add(getResources()
-                            .getText(mConversationDataModel != null && shouldShowSimSelector(mConversationDataModel.getData()) ?
-                                    R.string.send_button_long_click_description_with_sim_selector :
-                                    R.string.send_button_long_click_description_no_sim_selector));
-                    // Make this an announcement so TalkBack will read our custom message.
-                    event.setEventType(AccessibilityEvent.TYPE_ANNOUNCEMENT);
-                }
-            }
         });
 
         mMediaPickerLayout = findViewById(R.id.media_picker_container);
@@ -881,11 +860,6 @@ public class ComposeMessageView extends LinearLayout
                                         }
 
                                         hideSubjectEditor();
-                                        if (AccessibilityUtil.isTouchExplorationEnabled(getContext())) {
-                                            AccessibilityUtil.announceForAccessibilityCompat(
-                                                    ComposeMessageView.this, null,
-                                                    R.string.sending_message);
-                                        }
                                     }
                                     break;
 
@@ -1020,7 +994,6 @@ public class ComposeMessageView extends LinearLayout
     @Override
     public void onMediaItemsSelected(final Collection<MessagePartData> items) {
         mBinding.getData().addAttachments(items);
-        announceMediaItemState(true /*isSelected*/);
     }
 
     @Override
@@ -1031,34 +1004,12 @@ public class ComposeMessageView extends LinearLayout
     @Override
     public void onMediaItemsUnselected(final MessagePartData item) {
         mBinding.getData().removeAttachment(item);
-        announceMediaItemState(false /*isSelected*/);
     }
 
     @Override
     public void onPendingAttachmentAdded(final PendingAttachmentData pendingItem) {
         mBinding.getData().addPendingAttachment(pendingItem, mBinding);
         resumeComposeMessage(true);
-    }
-
-    private void announceMediaItemState(final boolean isSelected) {
-        final Resources res = getContext().getResources();
-        final String announcement = isSelected ? res.getString(
-                R.string.mediapicker_gallery_item_selected_content_description) :
-                res.getString(R.string.mediapicker_gallery_item_unselected_content_description);
-        AccessibilityUtil.announceForAccessibilityCompat(
-                this, null, announcement);
-    }
-
-    private void announceAttachmentState() {
-        if (AccessibilityUtil.isTouchExplorationEnabled(getContext())) {
-            int attachmentCount = mBinding.getData().getReadOnlyAttachments().size()
-                    + mBinding.getData().getReadOnlyPendingAttachments().size();
-            final String announcement = getContext().getResources().getQuantityString(
-                    R.plurals.attachment_changed_accessibility_announcement,
-                    attachmentCount, attachmentCount);
-            AccessibilityUtil.announceForAccessibilityCompat(
-                    this, null, announcement);
-        }
     }
 
     @Override
@@ -1069,7 +1020,6 @@ public class ComposeMessageView extends LinearLayout
         } else {
             hideKeyboard();
         }
-        announceAttachmentState();
     }
 
     public void clearAttachments() {
@@ -1228,7 +1178,6 @@ public class ComposeMessageView extends LinearLayout
         }
 
         if (mSendWidgetMode != sendWidgetMode || sendWidgetMode == SEND_WIDGET_MODE_SIM_SELECTOR) {
-            setSendButtonAccessibility(sendWidgetMode);
             mSendWidgetMode = sendWidgetMode;
         }
 
@@ -1289,59 +1238,6 @@ public class ComposeMessageView extends LinearLayout
 
                 default:
                     Assert.fail("Unsupported attachment type!");
-                    break;
-            }
-        }
-    }
-
-    private void setSendButtonAccessibility(final int sendWidgetMode) {
-        switch (sendWidgetMode) {
-            case SEND_WIDGET_MODE_SELF_AVATAR:
-                // No send button and no SIM selector; the self send button is no longer
-                // important for accessibility.
-                mSelfSendIcon.setImportantForAccessibility(IMPORTANT_FOR_ACCESSIBILITY_NO);
-                mSelfSendIcon.setContentDescription(null);
-                mSendButton.setVisibility(View.GONE);
-                setSendWidgetAccessibilityTraversalOrder(SEND_WIDGET_MODE_SELF_AVATAR);
-                break;
-
-            case SEND_WIDGET_MODE_SIM_SELECTOR:
-                mSelfSendIcon.setImportantForAccessibility(IMPORTANT_FOR_ACCESSIBILITY_YES);
-                mSelfSendIcon.setContentDescription(getSimContentDescription());
-                setSendWidgetAccessibilityTraversalOrder(SEND_WIDGET_MODE_SIM_SELECTOR);
-                break;
-
-            case SEND_WIDGET_MODE_SEND_BUTTON:
-                mMmsIndicator.setImportantForAccessibility(IMPORTANT_FOR_ACCESSIBILITY_NO);
-                mMmsIndicator.setContentDescription(null);
-                setSendWidgetAccessibilityTraversalOrder(SEND_WIDGET_MODE_SEND_BUTTON);
-                break;
-        }
-    }
-
-    private String getSimContentDescription() {
-        final SubscriptionListEntry sub = getSelfSubscriptionListEntry();
-        if (sub != null) {
-            return getResources().getString(
-                    R.string.sim_selector_button_content_description_with_selection,
-                    sub.displayName);
-        } else {
-            return getResources().getString(
-                    R.string.sim_selector_button_content_description);
-        }
-    }
-
-    // Set accessibility traversal order of the components in the send widget.
-    private void setSendWidgetAccessibilityTraversalOrder(final int mode) {
-        if (OsUtil.isAtLeastL_MR1()) {
-            mAttachMediaButton.setAccessibilityTraversalBefore(R.id.compose_message_text);
-            switch (mode) {
-                case SEND_WIDGET_MODE_SIM_SELECTOR:
-                    break;
-                case SEND_WIDGET_MODE_SEND_BUTTON:
-                    mComposeEditText.setAccessibilityTraversalBefore(R.id.send_message_button);
-                    break;
-                default:
                     break;
             }
         }
@@ -1467,20 +1363,5 @@ public class ComposeMessageView extends LinearLayout
 
     public boolean isCameraOrGalleryShowing() {
         return mHost.isCameraOrGalleryShowing();
-    }
-
-    @Override
-    public void setAccessibility(boolean enabled) {
-        if (enabled) {
-            mAttachMediaButton.setImportantForAccessibility(IMPORTANT_FOR_ACCESSIBILITY_YES);
-            mComposeEditText.setImportantForAccessibility(IMPORTANT_FOR_ACCESSIBILITY_YES);
-            mSendButton.setImportantForAccessibility(IMPORTANT_FOR_ACCESSIBILITY_YES);
-            setSendButtonAccessibility(mSendWidgetMode);
-        } else {
-            mSelfSendIcon.setImportantForAccessibility(IMPORTANT_FOR_ACCESSIBILITY_NO);
-            mComposeEditText.setImportantForAccessibility(IMPORTANT_FOR_ACCESSIBILITY_NO);
-            mSendButton.setImportantForAccessibility(IMPORTANT_FOR_ACCESSIBILITY_NO);
-            mAttachMediaButton.setImportantForAccessibility(IMPORTANT_FOR_ACCESSIBILITY_NO);
-        }
     }
 }

@@ -113,7 +113,6 @@ public class AudioAttachmentView extends LinearLayout {
         mRoundedCornerClipPath = new Path();
         mCornerRadius = context.getResources().getDimensionPixelSize(
                 R.dimen.conversation_list_image_preview_corner_radius);
-        setContentDescription(context.getString(R.string.audio_attachment_content_description));
     }
 
     @Override

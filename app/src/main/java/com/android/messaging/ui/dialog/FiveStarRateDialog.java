@@ -25,6 +25,7 @@ import com.airbnb.lottie.LottieAnimationView;
 import com.airbnb.lottie.LottieComposition;
 import com.android.messaging.R;
 import com.android.messaging.feedback.FeedbackActivity;
+import com.android.messaging.ui.view.MessagesTextView;
 import com.android.messaging.util.BugleAnalytics;
 import com.android.messaging.util.CommonUtils;
 import com.android.messaging.util.TransitionUtils;
@@ -35,7 +36,6 @@ import com.ihs.commons.config.HSConfig;
 import com.superapps.util.Dimensions;
 import com.superapps.util.Preferences;
 import com.superapps.util.Threads;
-import com.android.messaging.ui.view.MessagesTextView;
 
 import java.util.concurrent.RejectedExecutionException;
 

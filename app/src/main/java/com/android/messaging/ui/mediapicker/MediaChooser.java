@@ -23,14 +23,12 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.view.View;
-import android.view.ViewGroup;
 import android.widget.ImageButton;
 
 import com.android.messaging.R;
 import com.android.messaging.datamodel.binding.ImmutableBindingRef;
-import com.android.messaging.datamodel.data.MediaPickerData;
 import com.android.messaging.datamodel.data.DraftMessageData.DraftMessageSubscriptionDataProvider;
+import com.android.messaging.datamodel.data.MediaPickerData;
 import com.android.messaging.ui.BasePagerViewHolder;
 import com.android.messaging.util.Assert;
 import com.android.messaging.util.OsUtil;
@@ -82,23 +80,6 @@ abstract class MediaChooser extends BasePagerViewHolder
 
     ImageButton getTabButton() {
         return mTabButton;
-    }
-
-    void onCreateTabButton(final LayoutInflater inflater, final ViewGroup parent) {
-        mTabButton = (ImageButton) inflater.inflate(
-                R.layout.mediapicker_tab_button,
-                parent,
-                false /* addToParent */);
-        mTabButton.setImageResource(getIconResource());
-        mTabButton.setContentDescription(
-                inflater.getContext().getResources().getString(getIconDescriptionResource()));
-        setSelected(mSelected);
-        mTabButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(final View view) {
-                mCameraGalleryFragment.selectChooser(MediaChooser.this);
-            }
-        });
     }
 
     protected Context getContext() {

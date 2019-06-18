@@ -38,8 +38,6 @@ import com.android.messaging.util.CommonUtils;
 import com.android.messaging.util.FabricUtils;
 import com.android.messaging.util.PhoneUtils;
 import com.android.messaging.util.TextUtil;
-import com.crashlytics.android.core.CrashlyticsCore;
-import com.superapps.debug.CrashlyticsLog;
 
 /**
  * A class that encapsulates all of the data for a specific participant in a conversation.

@@ -32,7 +32,6 @@ import com.android.messaging.datamodel.data.DraftMessageData.DraftMessageSubscri
 import com.android.messaging.datamodel.data.MediaPickerMessagePartData;
 import com.android.messaging.datamodel.data.MessagePartData;
 import com.android.messaging.sms.MmsConfig;
-import com.android.messaging.ui.customize.PrimaryColors;
 import com.android.messaging.util.Assert;
 import com.android.messaging.util.ContentType;
 import com.android.messaging.util.LogUtil;
