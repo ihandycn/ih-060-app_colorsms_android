@@ -44,11 +44,13 @@ import com.android.messaging.util.Assert;
 import com.android.messaging.util.BugleAnalytics;
 import com.android.messaging.util.LogUtil;
 import com.ihs.commons.notificationcenter.HSGlobalNotificationCenter;
+import com.superapps.util.Networks;
 
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
+import static android.net.ConnectivityManager.TYPE_MOBILE_MMS;
 import static com.android.messaging.ui.messagebox.MessageBoxActivity.NOTIFICATION_MESSAGE_BOX_SEND_SMS_FAILED;
 import static com.android.messaging.ui.messagebox.MessageBoxActivity.NOTIFICATION_MESSAGE_BOX_SEND_SMS_SUCCEED;
 
@@ -172,6 +174,10 @@ public class ProcessSentMessageAction extends Action {
                         rawStatus = result.rawStatus;
                     }
                 }
+
+                if (!isSms) {
+                    BugleAnalytics.logEvent("Send_Mms_Succeed");
+                }
             } else {
                 String errorMsg = "ProcessSentMessageAction: Platform returned error resultCode: "
                         + resultCode;
@@ -183,8 +189,8 @@ public class ProcessSentMessageAction extends Action {
                 status = MmsSender.getErrorResultStatus(resultCode, httpStatusCode);
 
                 if (!isSms) {
-                    BugleAnalytics.logEvent("Send_Mms_Failed",
-                            "resultCode", String.valueOf(resultCode));
+                    BugleAnalytics.logEvent("Send_Mms_Failed", true,
+                            "resultCode", String.valueOf(resultCode), "mobileAvailable", String.valueOf(Networks.isNetworkAvailable(TYPE_MOBILE_MMS)));
                 }
                 // Check for MMS messages that failed because they exceeded the maximum size,
                 // indicated by an I/O error from the platform.
