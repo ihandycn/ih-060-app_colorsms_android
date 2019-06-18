@@ -343,7 +343,7 @@ public class ChooseBackupViewHolder extends BasePagerViewHolder implements Custo
         MessageFreeUpProcessDialog dialog = new MessageFreeUpProcessDialog();
         dialog.setCancelable(false);
         // dismiss[0] more than 3s, dismiss[1] delete complete
-        final boolean[] dismissCondition = new boolean[2];
+        boolean[] dismissCondition = new boolean[2];
         Threads.postOnMainThreadDelayed(() -> {
             dismissCondition[0] = true;
             if (dismissCondition[1]) {
