@@ -50,10 +50,15 @@ public class ThemeUtils {
     }
 
     private static void applyTheme(ThemeInfo themeInfo) {
+        if (!themeInfo.mThemeKey.equals(ThemeUtils.DEFAULT_THEME_KEY)) {
+            ConversationColors.get().setBubbleBackgroundColor(false, Color.parseColor(themeInfo.outgoingBubbleBgColor));
+        } else {
+            ConversationColors.get().setBubbleBackgroundColor(false, Color.parseColor(themeInfo.themeColor));
+        }
+        // change theme color should be after bubble color set
         PrimaryColors.changePrimaryColor(Color.parseColor(themeInfo.themeColor));
 
         ConversationColors.get().setBubbleBackgroundColor(true, Color.parseColor(themeInfo.incomingBubbleBgColor));
-        ConversationColors.get().setBubbleBackgroundColor(false, Color.parseColor(themeInfo.outgoingBubbleBgColor));
         ConversationColors.get().setMessageTextColor(true, Color.parseColor(themeInfo.incomingBubbleTextColor));
         ConversationColors.get().setMessageTextColor(false, Color.parseColor(themeInfo.outgoingBubbleTextColor));
         ConversationColors.get().setListTitleColor(Color.parseColor(themeInfo.listTitleColor));
