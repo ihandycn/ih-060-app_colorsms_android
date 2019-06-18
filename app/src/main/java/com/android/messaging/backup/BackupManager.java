@@ -18,6 +18,7 @@ import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.ihs.app.framework.HSApplication;
+import com.ihs.commons.utils.HSLog;
 import com.superapps.util.Networks;
 import com.superapps.util.Threads;
 
@@ -471,10 +472,12 @@ public class BackupManager {
                 ContentValues values = new ContentValues();
                 values.put(BackupDatabaseHelper.MessageColumn.HIDDEN, 1);
                 db.update(BackupDatabaseHelper.BACKUP_MESSAGE_TABLE, values,
-                        BackupDatabaseHelper.MessageColumn.DATE + "<" + time, null);
+                        BackupDatabaseHelper.MessageColumn.DATE + "< ?",
+                        new String[]{String.valueOf(time)});
 
                 ContentResolver resolver = HSApplication.getContext().getContentResolver();
-                resolver.delete(Telephony.Sms.CONTENT_URI, Telephony.Sms.DATE + "<" + time, null);
+                resolver.delete(Telephony.Sms.CONTENT_URI, Telephony.Sms.DATE + "< ?",
+                        new String[]{String.valueOf(time)});
                 if (messageDeleteListener != null) {
                     messageDeleteListener.onDeleteSuccess();
                 }
@@ -482,6 +485,7 @@ public class BackupManager {
                 if (messageDeleteListener != null) {
                     messageDeleteListener.onDeleteFailed();
                 }
+                HSLog.e(e.getMessage());
             }
         });
     }

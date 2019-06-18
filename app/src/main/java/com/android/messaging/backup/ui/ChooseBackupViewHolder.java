@@ -47,7 +47,7 @@ public class ChooseBackupViewHolder extends BasePagerViewHolder implements Custo
 
     ChooseBackupViewHolder(final Context context) {
         mContext = context;
-        loadBackupInfo();
+        //loadBackupInfo();
     }
 
     @Override
@@ -343,7 +343,7 @@ public class ChooseBackupViewHolder extends BasePagerViewHolder implements Custo
         MessageFreeUpProcessDialog dialog = new MessageFreeUpProcessDialog();
         dialog.setCancelable(false);
         // dismiss[0] more than 3s, dismiss[1] delete complete
-        final boolean[] dismissCondition = {false, false};
+        final boolean[] dismissCondition = new boolean[2];
         Threads.postOnMainThreadDelayed(() -> {
             dismissCondition[0] = true;
             if (dismissCondition[1]) {
@@ -443,7 +443,7 @@ public class ChooseBackupViewHolder extends BasePagerViewHolder implements Custo
         } else {
             mCloudSummary.setText(R.string.backup_no_account);
         }
-        loadBackupInfo();
+        //loadBackupInfo();
     }
 
     void onLoginFailed() {
