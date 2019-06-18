@@ -222,17 +222,6 @@
                 android:layout_gravity="top|end"
                 android:background="@android:color/transparent">
 
-                <com.android.messaging.ui.AsyncImageView
-                    android:id="@+id/conversation_image_preview"
-                    android:layout_width="@dimen/conversation_list_image_preview_size"
-                    android:layout_height="@dimen/conversation_list_image_preview_size"
-                    android:background="@android:color/transparent"
-                    android:contentDescription="@string/message_image_content_description"
-                    android:scaleType="centerCrop"
-                    android:visibility="gone"
-                    android:layout_gravity="center_vertical"
-                    app:cornerRadius="@dimen/conversation_list_image_preview_corner_radius"/>
-
                 <com.android.messaging.ui.view.MessagesTextView
                     android:id="@+id/conversation_timestamp"
                     style="@style/ConversationListItemViewTextTimeStampStyle"

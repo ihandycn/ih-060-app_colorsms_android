@@ -142,7 +142,6 @@ public class ConversationListItemView extends FrameLayout implements OnClickList
     private ImageView mFailedStatusIconView;
     private ImageView mCrossSwipeArchiveLeftImageView;
     private ImageView mCrossSwipeArchiveRightImageView;
-    private AsyncImageView mImagePreviewView;
     private HostInterface mHostInterface;
     private TextView mUnreadMessagesCountView;
 
@@ -177,7 +176,6 @@ public class ConversationListItemView extends FrameLayout implements OnClickList
         mCrossSwipeArchiveLeftImageView = findViewById(R.id.crossSwipeArchiveIconLeft);
         mCrossSwipeArchiveRightImageView =
                 findViewById(R.id.crossSwipeArchiveIconRight);
-        mImagePreviewView = findViewById(R.id.conversation_image_preview);
         mUnreadMessagesCountView = findViewById(R.id.conversation_unread_messages_count);
 
         mConversationNameView.addOnLayoutChangeListener(this);
@@ -366,28 +364,6 @@ public class ConversationListItemView extends FrameLayout implements OnClickList
         boolean shouldShowUnreadMsgCount = mData.getUnreadMessagesNumber() > 0;
         int unreadMsgCountViewVisibility = shouldShowUnreadMsgCount ? VISIBLE : GONE;
 
-        final Uri previewUri = mData.getShowDraft() ?
-                mData.getDraftPreviewUri() : mData.getPreviewUri();
-        final String previewContentType = mData.getShowDraft() ?
-                mData.getDraftPreviewContentType() : mData.getPreviewContentType();
-        OnClickListener previewClickListener = null;
-        Uri previewImageUri = null;
-        int previewImageVisibility = GONE;
-        if (!shouldShowUnreadMsgCount && previewUri != null && !TextUtils.isEmpty(previewContentType)) {
-            if (ContentType.isVideoType(previewContentType)) {
-                previewImageUri = UriUtil.getUriForResourceId(
-                        getContext(), R.drawable.ic_preview_play);
-                previewClickListener = fullScreenPreviewClickListener;
-                previewImageVisibility = VISIBLE;
-                mImagePreviewView.setBackgroundDrawable(BackgroundDrawables.
-                        createBackgroundDrawable(PrimaryColors.getPrimaryColor(), Dimensions.pxFromDp(28), false));
-            } else if (ContentType.isImageType(previewContentType)) {
-                previewImageUri = previewUri;
-                previewClickListener = fullScreenPreviewClickListener;
-                previewImageVisibility = VISIBLE;
-            }
-        }
-
         mUnreadMessagesCountView.setVisibility(unreadMsgCountViewVisibility);
         if (unreadMsgCountViewVisibility == VISIBLE) {
             mUnreadMessagesCountView.setBackground(
@@ -395,23 +371,7 @@ public class ConversationListItemView extends FrameLayout implements OnClickList
                             Dimensions.pxFromDp(8.5f), false));
             mUnreadMessagesCountView.setText(String.valueOf(mData.getUnreadMessagesNumber()));
         }
-
-        final int imageSize = resources.getDimensionPixelSize(
-                R.dimen.conversation_list_image_preview_size);
-        mImagePreviewView.setImageResourceId(
-                new UriImageRequestDescriptor(previewImageUri, imageSize, imageSize,
-                        true /* allowCompression */, false /* isStatic */, false /*cropToCircle*/,
-                        ImageUtils.DEFAULT_CIRCLE_BACKGROUND_COLOR /* circleBackgroundColor */,
-                        ImageUtils.DEFAULT_CIRCLE_STROKE_COLOR /* circleStrokeColor */));
-        mImagePreviewView.setOnLongClickListener(this);
-        mImagePreviewView.setVisibility(previewImageVisibility);
-        mImagePreviewView.setOnClickListener(previewClickListener);
-
-        if (previewImageVisibility == View.VISIBLE) {
-            mTimestampTextView.setVisibility(GONE);
-        } else {
-            mTimestampTextView.setVisibility(VISIBLE);
-        }
+        mTimestampTextView.setVisibility(VISIBLE);
 
         final int notificationBellVisibility = mData.getNotificationEnabled() ? GONE : VISIBLE;
         mNotificationBellView.setVisibility(notificationBellVisibility);
@@ -521,7 +481,7 @@ public class ConversationListItemView extends FrameLayout implements OnClickList
     }
 
     private boolean processClick(final View v, final boolean isLongClick) {
-        Assert.isTrue(v == mSwipeableContainer || v == mContactIconView || v == mImagePreviewView);
+        Assert.isTrue(v == mSwipeableContainer || v == mContactIconView);
         Assert.notNull(mData.getName());
 
         if (mHostInterface != null) {
