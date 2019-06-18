@@ -345,22 +345,28 @@ public class ChooseBackupViewHolder extends BasePagerViewHolder implements Custo
         dialog.setCancelable(false);
         // dismiss[0] more than 3s, dismiss[1] delete complete
         boolean[] dismissCondition = {false, false};
-        Threads.postOnMainThreadDelayed(() -> {
-            Log.e("---->>>>", "111111: " );
-            dismissCondition[0] = true;
-            Log.e("---->>>>", "222222: " );
-            if (dismissCondition[1]) {
-                if (dialog != null) {
-                    dialog.dismissAllowingStateLoss();
-                    Preferences.getDefault().doOnce(() -> {
-                        UiUtils.showDialogFragment((Activity) mContext,
-                                new BackupTipsBeforeUninstallingDialog());
-                        BugleAnalytics.logEvent("Backup_Freeupmsg_Tips_Show");
-                    }, PREF_KEY_BACKUP_TIP_SHOWN);
+        Runnable runnable = new Runnable() {
+            @Override
+            public void run() {
+                Toasts.showToast("111111:");
+                Log.e("---->>>>", "111111: " );
+                dismissCondition[0] = true;
+                Toasts.showToast("222222:");
+                Log.e("---->>>>", "222222: " );
+                if (dismissCondition[1]) {
+                    if (dialog != null) {
+                        dialog.dismissAllowingStateLoss();
+                        Preferences.getDefault().doOnce(() -> {
+                            UiUtils.showDialogFragment((Activity) mContext,
+                                    new BackupTipsBeforeUninstallingDialog());
+                            BugleAnalytics.logEvent("Backup_Freeupmsg_Tips_Show");
+                        }, PREF_KEY_BACKUP_TIP_SHOWN);
+                    }
+                    Toasts.showToast(R.string.backup_free_success);
                 }
-                Toasts.showToast(R.string.backup_free_success);
             }
-        }, 3000);
+        };
+        Threads.postOnMainThreadDelayed(runnable, 3000);
 
         BackupManager.getInstance().deleteLocalMessages(30, new BackupManager.MessageDeleteListener() {
             @Override

@@ -22,6 +22,7 @@ import com.ihs.app.framework.HSApplication;
 import com.ihs.commons.utils.HSLog;
 import com.superapps.util.Networks;
 import com.superapps.util.Threads;
+import com.superapps.util.Toasts;
 
 import java.io.File;
 import java.io.IOException;
@@ -486,6 +487,7 @@ public class BackupManager {
                 if (messageDeleteListener != null) {
                     messageDeleteListener.onDeleteFailed();
                 }
+                Toasts.showToast("3333" + e.getMessage());
                 Log.e("---->>>>", e.getMessage());
             }
         });
