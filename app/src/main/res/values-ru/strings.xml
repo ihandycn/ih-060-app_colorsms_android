@@ -736,5 +736,13 @@
 	<string name="theme_coming">Скоро появится больше тем...</string>
 	<string name="menu_invite_friends">Пригласить друзей</string>
 	<string name="invite_friends_now">ПРИГЛАСИТЬ</string>
+    <string name="invite_friends_add_friends">ДОБАВИТЬ</string>
+    <string name="invite_friends_default_back_to_main_page_title">Пригласить друзей</string>
+    <string name="invite_friends_invite_cancel_button">Отмена</string>
+    <string name="invite_friends_invite_save_button">СПАСТИ</string>
+    <string name="contacts">контакты</string>
+    <string name="privacy_mode_conversation_name">контакт</string>
+    <string name="notification_title_in_private_box_single">Новое сообщение</string>
+    <string name="privacy_mode_open_button_text">ОТКРЫТЬ</string>
 
 </resources>

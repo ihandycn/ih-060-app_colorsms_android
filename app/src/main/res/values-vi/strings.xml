@@ -689,4 +689,13 @@
     <string name="message_box_next">KẾ TIẾP</string>
     <string name="message_box_time_ago">%1$d phút trước</string>
 
+
+    <string name="invite_friends_add_friends">Thêm</string>
+    <string name="invite_friends_default_back_to_main_page_title">Mời Bạn bè</string>
+    <string name="privacy_mode_open_button_text">MỞ</string>
+    <string name="invite_friends_invite_save_button">Lưu</string>
+    <string name="notification_title_in_private_box_single">Tin nhắn mới</string>
+    <string name="invite_friends_invite_cancel_button">Hủy</string>
+    <string name="privacy_mode_conversation_name">Liên hệ</string>
+    <string name="contacts">Liên hệ</string>
 </resources>

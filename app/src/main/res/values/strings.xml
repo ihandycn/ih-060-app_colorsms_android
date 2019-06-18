@@ -1200,8 +1200,8 @@
     <string name="downloading">Downloading …</string>
 
     <string name="theme_coming">More themes coming soon…</string>
-    <string name="theme_upgrade_title" translatable="false">More Themes!</string>
-    <string name="theme_upgrade_subtitle" translatable="false">You can select a theme you like or reapply your old theme in the brand new theme store. Enjoy it!</string>
+    <string name="theme_upgrade_title">More Themes!</string>
+    <string name="theme_upgrade_subtitle">You can select a theme you like or reapply your old theme in the brand new theme store. Enjoy it!</string>
 
     <string name="send_delay_settings">Send Delay</string>
     <string name="send_delay_no_delay">No Delay</string>

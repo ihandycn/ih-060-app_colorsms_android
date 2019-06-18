@@ -687,4 +687,13 @@
 	<string name="menu_invite_friends">Inviter des amis</string>
 	<string name="invite_friends_now">INVITER MAINTENANT</string>
 
+
+    <string name="invite_friends_add_friends">Ajouter</string>
+    <string name="invite_friends_default_back_to_main_page_title">Inviter des amis</string>
+    <string name="privacy_mode_open_button_text">OUVRIR</string>
+    <string name="invite_friends_invite_save_button">Enregistrer</string>
+    <string name="notification_title_in_private_box_single">Nouveau message</string>
+    <string name="invite_friends_invite_cancel_button">Annuler</string>
+    <string name="privacy_mode_conversation_name">Contact</string>
+    <string name="contacts">Contacts</string>
 </resources>

@@ -689,4 +689,13 @@
 	<string name="menu_invite_friends">友人を招待する</string>
 	<string name="invite_friends_now">今すぐ招待する</string>
 
+
+    <string name="invite_friends_add_friends">追加</string>
+    <string name="invite_friends_default_back_to_main_page_title">友人を招待する</string>
+    <string name="privacy_mode_open_button_text">開いた</string>
+    <string name="invite_friends_invite_save_button">保存</string>
+    <string name="notification_title_in_private_box_single">新しいメッセージ</string>
+    <string name="invite_friends_invite_cancel_button">キャンセル</string>
+    <string name="privacy_mode_conversation_name">連絡先</string>
+    <string name="contacts">連絡先</string>
 </resources>

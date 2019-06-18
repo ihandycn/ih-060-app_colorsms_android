@@ -649,4 +649,13 @@
     <string name="theme_coming">更多主题即将推出...</string>
     <string name="menu_invite_friends">邀请好友</string>
     <string name="invite_friends_now">邀请</string>
+
+    <string name="invite_friends_add_friends">添加</string>
+    <string name="invite_friends_default_back_to_main_page_title">邀请好友</string>
+    <string name="privacy_mode_open_button_text">打开</string>
+    <string name="invite_friends_invite_save_button">保存</string>
+    <string name="notification_title_in_private_box_single">新信息</string>
+    <string name="invite_friends_invite_cancel_button">取消</string>
+    <string name="contacts">联系人</string>
+    <string name="privacy_mode_conversation_name">联系人</string>
 </resources>

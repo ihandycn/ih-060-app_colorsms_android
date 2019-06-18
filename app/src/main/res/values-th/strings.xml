@@ -689,4 +689,13 @@
 	<string name="menu_invite_friends">เชิญเพื่อน</string>
 	<string name="invite_friends_now">เชิญทันที</string>
 
+
+    <string name="invite_friends_add_friends">เพิ่ม</string>
+    <string name="invite_friends_default_back_to_main_page_title">เชิญเพื่อน</string>
+    <string name="privacy_mode_open_button_text">เปิด</string>
+    <string name="invite_friends_invite_save_button">บันทึก</string>
+    <string name="notification_title_in_private_box_single">ข้อความใหม่</string>
+    <string name="invite_friends_invite_cancel_button">ยกเลิก</string>
+    <string name="privacy_mode_conversation_name">รายชื่อติดต่อ</string>
+    <string name="contacts">รายชื่อติดต่อ</string>
 </resources>

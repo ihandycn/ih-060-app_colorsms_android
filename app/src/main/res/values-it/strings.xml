@@ -689,4 +689,12 @@
 	<string name="menu_invite_friends">Invita amici</string>
 	<string name="invite_friends_now">INVITA ORA</string>
 
+    <string name="invite_friends_add_friends">Aggiungi</string>
+    <string name="invite_friends_default_back_to_main_page_title">Invita amici</string>
+    <string name="privacy_mode_open_button_text">APRIRE</string>
+    <string name="invite_friends_invite_save_button">Salva</string>
+    <string name="notification_title_in_private_box_single">Nuovo messaggio</string>
+    <string name="invite_friends_invite_cancel_button">Annulla</string>
+    <string name="privacy_mode_conversation_name">Contatto</string>
+    <string name="contacts">Contatti</string>
 </resources>
