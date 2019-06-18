@@ -141,6 +141,7 @@ public class BackupRestoreActivity extends BaseActivity {
                 mRestoreViewHolder.onLoginSuccess();
             } else {
                 Toasts.showToast(R.string.firebase_login_failed);
+                BugleAnalytics.logEvent("Backup_Login_Failed");
                 mBackUpViewHolder.onLoginFailed();
                 mRestoreViewHolder.onLoginFailed();
             }
