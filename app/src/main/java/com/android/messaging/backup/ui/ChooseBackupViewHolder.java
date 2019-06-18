@@ -166,26 +166,16 @@ public class ChooseBackupViewHolder extends BasePagerViewHolder implements Custo
         UiUtils.showDialogFragment((Activity) mContext, tipsDialog);
         BugleAnalytics.logEvent("Backup_BackupPage_BackupAlert_Show");
     }
-    
-    class A {
-        boolean one;
-        boolean two;
-
-        public A(boolean one, boolean two) {
-            this.one = one;
-            this.two = two;
-        }
-    }
 
     private void backupAndShowDialog() {
         BackupProcessDialog backupDialog = new BackupProcessDialog();
         backupDialog.setCancelable(false);
         //[0] more than min time,[1] backup complete
-        Boolean[] backupCondition = {false, false};
-        Boolean[] backupFailed = {false};
+        boolean[] backupCondition = {false, false};
+        boolean[] backupFailed = {false};
 
-        Boolean[] uploadSuccess = {false};
-        Boolean[] useFakeUpload = {false};
+        boolean[] uploadSuccess = {false};
+        boolean[] useFakeUpload = {false};
 
         BackupManager.MessageBackupListener listener = new BackupManager.MessageBackupListener() {
             boolean needUpload;
@@ -354,7 +344,7 @@ public class ChooseBackupViewHolder extends BasePagerViewHolder implements Custo
         MessageFreeUpProcessDialog dialog = new MessageFreeUpProcessDialog();
         dialog.setCancelable(false);
         // dismiss[0] more than 3s, dismiss[1] delete complete
-        Boolean[] dismissCondition = {false, false};
+        boolean[] dismissCondition = {false, false};
         Runnable runnable = new Runnable() {
             @Override
             public void run() {
