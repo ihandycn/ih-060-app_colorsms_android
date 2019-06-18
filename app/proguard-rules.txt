@@ -22,6 +22,8 @@
 -keep class com.flurry.** { *; }
 -dontwarn com.flurry.**
 
+-keep class com.android.messaging.backup.ui.** { *; }
+
 # Tapjoy
 -keep class com.tapjoy.** { *; }
 -dontwarn com.tapjoy.**
