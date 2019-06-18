@@ -718,5 +718,10 @@
 	<string name="backup_no_account">ไม่มีบัญชีผู้ใช้</string>
 	<string name="restore_tab">คืนค่า</string>
 	<string name="backup_tab">สำรองข้อมูล</string>
+    <string name="backup_state_scanning">สแกน ...</string>
+    <string name="backup_delete_failed">ลบข้อความล้มเหลว</string>
+    <string name="backup_local_summary">กลับขึ้นไปจัดเก็บในท้องถิ่น</string>
+    <string name="backup_free_success">เพิ่มพื้นที่ว่างเรียบร้อยแล้ว</string>
+    <string name="restore_downloading">กำลังดาวน์โหลด …</string>
 
 </resources>

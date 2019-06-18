@@ -717,5 +717,10 @@
 	<string name="backup_no_account">계정 없음</string>
 	<string name="restore_tab">복원</string>
 	<string name="backup_tab">백업</string>
+    <string name="backup_state_scanning">스캐닝...</string>
+    <string name="backup_delete_failed">삭제 된 메시지 삭제</string>
+    <string name="backup_local_summary">로컬 저장소에 백업</string>
+    <string name="backup_free_success">공간을 성공적으로 비우십시오.</string>
+    <string name="restore_downloading">다운로드 중...</string>
 
 </resources>

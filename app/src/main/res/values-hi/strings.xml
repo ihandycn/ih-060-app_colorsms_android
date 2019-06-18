@@ -721,5 +721,9 @@
 	<string name="backup_no_account">कोई एकाउंट नहीं</string>
 	<string name="restore_tab">रीस्‍टोर करें</string>
 	<string name="backup_tab">बैकअप</string>
-
+    <string name="backup_state_scanning">स्कैनिंग ...</string>
+    <string name="backup_delete_failed">हटाएँ संदेश विफल</string>
+    <string name="backup_local_summary">स्थानीय संग्रहण में बैक अप लें</string>
+    <string name="backup_free_success">जगह खाली सफलतापूर्वक</string>
+    <string name="restore_downloading">डाउनलोड हो रही है...</string>
 </resources>

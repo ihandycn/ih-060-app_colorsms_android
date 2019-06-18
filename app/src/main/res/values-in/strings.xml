@@ -723,5 +723,10 @@
 	<string name="backup_no_account">Tidak ada akun</string>
 	<string name="restore_tab">Pemulihan</string>
 	<string name="backup_tab">Backup</string>
+    <string name="backup_state_scanning">Memindai ...</string>
+    <string name="backup_delete_failed">Hapus Pesan Gagal</string>
+    <string name="backup_local_summary">Cadangkan ke penyimpanan lokal</string>
+    <string name="backup_free_success">Kosongkan Ruang Dengan Sukses</string>
+    <string name="restore_downloading">Mengunduh ...</string>
 
 </resources>

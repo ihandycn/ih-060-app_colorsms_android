@@ -715,5 +715,10 @@
 	<string name="backup_no_account">Không có tài khoản</string>
 	<string name="restore_tab">Khôi phục</string>
 	<string name="backup_tab">Sao lưu</string>
+    <string name="backup_state_scanning">Đang quét ...</string>
+    <string name="backup_delete_failed">Xóa tin nhắn thất bại</string>
+    <string name="backup_local_summary">Sao lưu vào bộ nhớ cục bộ</string>
+    <string name="backup_free_success">Giải phóng không gian thành công</string>
+    <string name="restore_downloading">Đang tải xuống...</string>
 
 </resources>

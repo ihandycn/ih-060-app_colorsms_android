@@ -718,5 +718,9 @@
 	<string name="backup_no_account">Nessun account trovato</string>
 	<string name="restore_tab">Ripristino</string>
 	<string name="backup_tab">Backup</string>
-
+    <string name="backup_state_scanning">Scansione ...</string>
+    <string name="backup_delete_failed">Eliminare i messaggi non riuscita</string>
+    <string name="backup_local_summary">Eseguire il backup di archiviazione locale</string>
+    <string name="backup_free_success">Fino Spazio libero con successo</string>
+    <string name="restore_downloading">Download in corso...</string>
 </resources>

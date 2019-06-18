@@ -818,5 +818,10 @@
 	<string name="backup_no_account">لا حساب</string>
 	<string name="restore_tab">استعادة</string>
 	<string name="backup_tab">نسخ احتياطي</string>
+    <string name="backup_state_scanning">مسح...</string>
+    <string name="backup_delete_failed">حذف الرسائل فشل</string>
+    <string name="backup_local_summary">النسخ الاحتياطي إلى التخزين المحلي</string>
+    <string name="backup_free_success">تحرير مساحة بنجاح</string>
+    <string name="restore_downloading">डाउनलोड हो रही है...</string>
 
 </resources>

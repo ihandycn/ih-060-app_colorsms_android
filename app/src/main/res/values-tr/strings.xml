@@ -712,5 +712,9 @@
 	<string name="backup_no_account">Hesap yok</string>
 	<string name="restore_tab">Geri Yükle</string>
 	<string name="backup_tab">Yedekle</string>
-
+    <string name="backup_state_scanning">Tarama...</string>
+    <string name="backup_delete_failed">Sil Mesajlar Başarısız</string>
+    <string name="backup_local_summary">yerel depolama yedekle</string>
+    <string name="backup_free_success">Bedava Uzay Başarıyla</string>
+    <string name="restore_downloading">İndiriliyor...</string>
 </resources>

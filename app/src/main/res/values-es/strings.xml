@@ -699,7 +699,7 @@
 	<string name="backup_guide_dialog_third_content">Restablece tus mensajes en cualquier dispositivo.</string>
 	<string name="backup_guide_dialog_button">HACER COPIA DE SEGURIDAD AHORA</string>
 	<string name="menu_backup_restore_toolbar_title">Copia de seguridad y restablecimiento de SMS</string>
-	<string name="menu_backup_restore">Copia de seguridad y restablecimiento</string>
+	<string name="menu_backup_restore">Copiar y restaurar</string>
 	<string name="backup_verb">COPIA DE SEGURIDAD</string>
 	<string name="backup_local">Local</string>
 	<string name="backup_cloud">Nube</string>
@@ -723,5 +723,10 @@
 	<string name="backup_no_account">No hay cuenta</string>
 	<string name="restore_tab">Restablecimiento</string>
 	<string name="backup_tab">Copia de seguridad</string>
+    <string name="backup_state_scanning">Exploración...</string>
+    <string name="backup_delete_failed">Borrar mensajes fallidos</string>
+    <string name="backup_local_summary">Copia de seguridad en el almacenamiento local</string>
+    <string name="backup_free_success">Liberar espacio con éxito</string>
+    <string name="restore_downloading">Descargando...</string>
 
 </resources>
