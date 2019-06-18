@@ -118,12 +118,12 @@ public class ChooseBackupViewHolder extends BasePagerViewHolder implements Custo
         });
 
         backupButton.setOnClickListener(v -> {
-            if ((mHasLocalBackup && mLocalCheckBox.isChecked())
-                    || mHasCloudBackup && mCloudCheckBox.isChecked()) {
-                showTipsDialog();
-            } else {
-                backupAndShowDialog();
-            }
+//            if ((mHasLocalBackup && mLocalCheckBox.isChecked())
+//                    || mHasCloudBackup && mCloudCheckBox.isChecked()) {
+//                showTipsDialog();
+//            } else {
+            backupAndShowDialog();
+//            }
             String backupType = "empty";
             if (mLocalCheckBox.isChecked() && mCloudCheckBox.isChecked()) {
                 backupType = "both";

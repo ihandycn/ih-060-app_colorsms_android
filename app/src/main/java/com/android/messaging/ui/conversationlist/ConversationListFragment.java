@@ -486,6 +486,7 @@ public class ConversationListFragment extends Fragment implements ConversationLi
                 Dimensions.pxFromDp(3.3f), true));
         backupBannerButton.setOnClickListener(v -> {
             BackupRestoreActivity.startBackupRestoreActivity(getActivity(), BackupRestoreActivity.ENTRANCE_TOP_GUIDE);
+            getActivity().overridePendingTransition(R.anim.slide_in_from_right_and_fade, R.anim.anim_null);
             mBackupBannerGuideContainer.setVisibility(View.GONE);
             tryShowTopNativeAd();
             switchAd = false;

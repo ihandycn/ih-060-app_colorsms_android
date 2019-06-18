@@ -35,6 +35,7 @@ public class BackupGuideDialogActivity extends HSAppCompatActivity {
         backupDialogButton.setBackground(BackgroundDrawables.createBackgroundDrawable(PrimaryColors.getPrimaryColor(), Dimensions.pxFromDp(3.3f), true));
         backupDialogButton.setOnClickListener(v -> {
             BackupRestoreActivity.startBackupRestoreActivity(this, BackupRestoreActivity.ENTRANCE_FULL_GUIDE);
+            overridePendingTransition(R.anim.slide_in_from_right_and_fade, R.anim.anim_null);
             finish();
             BugleAnalytics.logEvent("BackupFullGuide_Click");
         });
@@ -71,7 +72,7 @@ public class BackupGuideDialogActivity extends HSAppCompatActivity {
     @Override
     public void onBackPressed() {
         super.onBackPressed();
-        //startActivity(new Intent(this, ConversationListActivity.class));
         finish();
+        overridePendingTransition(0, R.anim.app_lock_fade_out_long);
     }
 }

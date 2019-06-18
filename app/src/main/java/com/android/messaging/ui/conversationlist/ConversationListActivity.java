@@ -493,6 +493,7 @@ public class ConversationListActivity extends AbstractConversationListActivity
                     case DRAWER_INDEX_BACKUP_RESTORE:
                         BugleAnalytics.logEvent("Menu_BackupRestore_Click", true);
                         BackupRestoreActivity.startBackupRestoreActivity(ConversationListActivity.this, BackupRestoreActivity.ENTRANCE_MENU);
+                        overridePendingTransition(R.anim.slide_in_from_right_and_fade, R.anim.anim_null);
                         navigationContent.findViewById(R.id.navigation_item_backup_restore_new_text).setVisibility(View.GONE);
                         final ConversationListFragment conversationListFragment =
                                 (ConversationListFragment) getFragmentManager().findFragmentById(
