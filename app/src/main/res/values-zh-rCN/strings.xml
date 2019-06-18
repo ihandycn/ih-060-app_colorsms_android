@@ -615,6 +615,7 @@
     <string name="setting_reset_customization_title">重置自定义内容？</string>
     <string name="setting_reset_customization_summary">这将重置此会话的所有自定义内容。</string>
     <string name="action_pin">置顶</string>
+    <string name="tips">提示</string>
 
     <string name="set_password_prompt">请设置数字解锁密码</string>
     <string name="lock_activity_change_to_pattern">切换到图案密码</string>

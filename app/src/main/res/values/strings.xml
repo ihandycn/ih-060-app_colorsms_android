@@ -1010,7 +1010,7 @@
     <string name="setting_feedback">Feedback</string>
     <string name="setting_privacy_policy">Privacy Policy</string>
     <string name="setting_terms_of_service">Terms of Service</string>
-    <string name="setting_gdpr">Analytics &amp; Advertising</string>
+    <string name="setting_gdpr" translatable="false">Analytics &amp; Advertising</string>
     <string name="setting_text_font">Font</string>
     <string name="setting_text_size">Font Size</string>
     <string name="setting_text_size_hint_larger">Largest</string>
@@ -1029,10 +1029,10 @@
     <string name="setting_sms_show_close_dialog_content">You will lose the beautiful SMS reminder themes, really want to close it?</string>
     <string name="setting_sms_show_close_dialog_ok">OK</string>
 
-    <string name="gdpr_share_data">Share data with developers</string>
-    <string name="gdpr_dialog_title">Confirm to turn off?</string>
-    <string name="gdpr_dialog_content">These data are collected and used to help the developer improve the apps for better using experience.</string>
-    <string name="restarting">Restarting</string>
+    <string name="gdpr_share_data" translatable="false">Share data with developers</string>
+    <string name="gdpr_dialog_title" translatable="false">Confirm to turn off?</string>
+    <string name="gdpr_dialog_content" translatable="false">These data are collected and used to help the developer improve the apps for better using experience.</string>
+    <string name="restarting" translatable="false">Restarting</string>
 
     <!--notification channel-->
     <string name="sms_notification_channel">SMS Notification</string>
@@ -1107,7 +1107,7 @@
     <string name="message_box_mark_as_unread">Marked as unread</string>
     <string name="message_box_send_successfully_toast">Sent successfully</string>
     <string name="message_box_send_failed_toast">Failed to send</string>
-    <string name="message_box_indicator">%1$d \/ %2$d</string>
+    <string name="message_box_indicator" translatable="false">%1$d \/ %2$d</string>
 
     <string name="privacy_mode_settings">Privacy Mode</string>
     <string name="privacy_mode_disable">None</string>
@@ -1118,7 +1118,6 @@
     <string name="privacy_mode_open_button_text">OPEN</string>
 
     <string name="menu_privacy_box">Private Box</string>
-    <string name="menu_privacy_box_coming">Coming soon in a few days</string>
 
     <string name="customize_guide_title">Customization is here!</string>
     <string name="signature">Signature</string>
@@ -1188,21 +1187,21 @@
 
     <string name="set_as_default_success">Changed Successfully</string>
 
-    <string name="firebase_login_succeed">Login succeed</string>
-    <string name="firebase_login_failed">Login failed</string>
-    <string name="firebase_login_out_succeed">Logged out</string>
-    <string name="firebase_login_out_title">Are you sure to log out?</string>
-    <string name="firebase_login_out">Log out</string>
-    <string name="firebase_sync_desktop_settings_title">Sync settings</string>
-    <string name="firebase_sync_desktop_settings_description_logged_out">After logging in, you can sync your sms settings across multiple devices</string>
-    <string name="firebase_sync_desktop_settings_description_logged_in">Sync succeed</string>
+    <string name="firebase_login_succeed" translatable="false">Login succeed</string>
+    <string name="firebase_login_failed" translatable="false">Login failed</string>
+    <string name="firebase_login_out_succeed" translatable="false">Logged out</string>
+    <string name="firebase_login_out_title" translatable="false">Are you sure to log out?</string>
+    <string name="firebase_login_out" translatable="false">Log out</string>
+    <string name="firebase_sync_desktop_settings_title" translatable="false">Sync settings</string>
+    <string name="firebase_sync_desktop_settings_description_logged_out" translatable="false">After logging in, you can sync your sms settings across multiple devices</string>
+    <string name="firebase_sync_desktop_settings_description_logged_in" translatable="false">Sync succeed</string>
 
     <string name="get_now">Get Now</string>
     <string name="downloading">Downloading …</string>
 
     <string name="theme_coming">More themes coming soon…</string>
-    <string name="theme_upgrade_title">More Themes!</string>
-    <string name="theme_upgrade_subtitle">You can select a theme you like or reapply your old theme in the brand new theme store. Enjoy it!</string>
+    <string name="theme_upgrade_title" translatable="false">More Themes!</string>
+    <string name="theme_upgrade_subtitle" translatable="false">You can select a theme you like or reapply your old theme in the brand new theme store. Enjoy it!</string>
 
     <string name="send_delay_settings">Send Delay</string>
     <string name="send_delay_no_delay">No Delay</string>
@@ -1220,17 +1219,17 @@
     <string name="invite_friends_add_friends">Add</string>
 
     <string name="invite_friends_default_back_to_main_page_title">Invite Friends</string>
-    <string name="invite_friends_default_back_to_main_page_description">Is it amazing? You can customize everywhere you want! Tell your friends now!</string>
-    <string name="invite_friends_default_apply_theme_description">Love these awesome themes? Tell your friends and let them join you!</string>
-    <string name="invite_friends_default_send_sms_description">Well done, your message was sent successfully! Want to share Color SMS with your friends?</string>
+    <string name="invite_friends_default_back_to_main_page_description" translatable="false">Is it amazing? You can customize everywhere you want! Tell your friends now!</string>
+    <string name="invite_friends_default_apply_theme_description" translatable="false">Love these awesome themes? Tell your friends and let them join you!</string>
+    <string name="invite_friends_default_send_sms_description" translatable="false">Well done, your message was sent successfully! Want to share Color SMS with your friends?</string>
 
-    <string name="invite_friends_invite_default_content">I’m using Color SMS, an awesome SMS app with pretty themes, funny emojis and perfect functions! Come and join us! 😁😏</string>
+    <string name="invite_friends_invite_default_content" translatable="false">I’m using Color SMS, an awesome SMS app with pretty themes, funny emojis and perfect functions! Come and join us! 😁😏</string>
     <string name="invite_friends_invite_cancel_button">Cancel</string>
     <string name="invite_friends_invite_save_button">Save</string>
     <string name="invite_friends_invite_edit_button">Edit</string>
     <string name="invite_friends_invite_send_sms_description">Send SMS to the friend that you’d like to invite</string>
 
-    <string name="invite_friends_default_auto_link_content">https://go.onelink.me/app/90cf450c</string>
+    <string name="invite_friends_default_auto_link_content" translatable="false">https://go.onelink.me/app/90cf450c</string>
 
     <string name="invite_friends_success_toast">Invite success</string>
     

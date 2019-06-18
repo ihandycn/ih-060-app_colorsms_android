@@ -685,5 +685,8 @@
 	<string name="theme_coming">Sắp có thêm chủ đề...</string>
 	<string name="menu_invite_friends">Mời Bạn bè</string>
 	<string name="invite_friends_now">MỜI NGAY</string>
+    <string name="message_box_reply">Trả lời</string>
+    <string name="message_box_next">KẾ TIẾP</string>
+    <string name="message_box_time_ago">%1$d phút trước</string>
 
 </resources>

@@ -614,6 +614,7 @@
     <string name="set_as_default_dialog_description_user_present">Отправляйте друзьям эмотиконы, стикеры и гифки через Color SMS.</string>
     <string name="set_as_default_dialog_title_default_change">По умолчанию для СМС используется другое приложение</string>
     <string name="set_as_default_dialog_description_default_change">Color SMS не сможет работать правильно, если не будет установлено как приложение по умолчанию.</string>
+    <string name="set_as_default_dialog_button_ok_user_present">OK</string>
     <string name="drag_hotseat_title">Сделайте Color SMS главным приложением</string>
     <string name="drag_hotseat_content">Через Color SMS удобнее отправлять забавные эмотиконы и стикеры.</string>
     <string name="set_as_default_dialog_button_ok_default_change">Установить</string>
@@ -717,7 +718,7 @@
     <string name="lock_style_pin">Код блокировки</string>
     <string name="confirm_prompt_password">Подтвердите код</string>
     <string name="draw_unlock_pattern">Нарисуйте граф. ключ</string>
-
+    <string name="menu_setting">Настройки</string>
 
 	<string name="contact_picker_select_group">Начать групповой чат</string>
 	<string name="send_delay_settings">Задержка отправки</string>
