@@ -1069,6 +1069,7 @@
     <string name="menu_rate">5 Star Rating</string>
     <string name="menu_new">new</string>
     <string name="menu_group_customization">Customize</string>
+    <string name="menu_backup_restore_toolbar_title">SMS Backup &amp; Restore</string>
 
     <string name="set_as_default_dialog_title_default_change">Default SMS Cleared</string>
     <string name="set_as_default_dialog_description_default_change">Color SMS can\'t work properly without being set as default.</string>
@@ -1230,7 +1231,46 @@
     <string name="invite_friends_invite_send_sms_description">Send SMS to the friend that you’d like to invite</string>
 
     <string name="invite_friends_default_auto_link_content" translatable="false">https://go.onelink.me/app/90cf450c</string>
-
     <string name="invite_friends_success_toast">Invite success</string>
+
+    <!--back up-->
+    <string name="menu_backup_restore">Backup &amp; Restore</string>
+    <string name="backup_tab">Backup</string>
+    <string name="restore_tab">Restore</string>
+    <string name="backup_verb">BACKUP</string>
+    <string name="restore_verb">RESTORE</string>
+    <string name="restore_from_local">From Local</string>
+    <string name="restore_from_cloud">From Cloud</string>
+    <string name="restore_default_summary">No backup file</string>
+    <string name="backup_local">Local</string>
+    <string name="backup_cloud">Cloud</string>
+    <string name="backup_no_account">No account</string>
+    <string name="message_free_up_title">Free Up Message Space</string>
+    <string name="message_free_up_content">Clean local messages 30 days ago to save space &amp; speed up your phone! You could access cleaned messages via RESTORE.</string>
+    <string name="message_free_up_button">CLEAN</string>
+    <string name="backup_tip_dialog_content">Backup will overwrite the existing one. Highly recommend restore before the Backup.</string>
+    <string name="backup_tips_before_uninstalling_content">RESTORE your messages before uninstalling our app, so as not to lose your messages.</string>
+    <string name="backup_folder_select_toast">Should select a folder to backup messages.</string>
+    <string name="message_free_up_process_dialog">Freeing up your message space…</string>
+    <string name="backup_process_number_divider">/</string>
+    <string name="backup_state_scanning">Scanning…</string>
+    <string name="local_backup_process_hint">Backing up…</string>
+    <string name="cloud_backup_process_hint">Uploading backup…</string>
+    <string name="restore_process_hint">Restoring…</string>
+    <string name="restore_fail">Restore Failed</string>
+    <string name="restore_success">Restore Successful</string>
+    <string name="backup_failed_toast">Backup Failed</string>
+    <string name="backup_success_toast">Backup Successful</string>
+    <string name="restore_downloading">Downloading…</string>
+    <string name="backup_delete_failed">Delete Messages Failed</string>
+    <string name="backup_guide_dialog_button">BACKUP NOW</string>
+    <string name="backup_guide_dialog_title">SMS Backup</string>
+    <string name="backup_guide_dialog_first_content">Backup your messages before phone failure or lose.</string>
+    <string name="backup_guide_dialog_second_content">%1$d messages are unprotected.</string>
+    <string name="backup_guide_dialog_third_content">Restore your messages to any device.</string>
+    <string name="backup_banner_guide_title">%1$d messages are unprotected without backup.</string>
+    <string name="backup_local_summary">Back up to local storage</string>
+    <string name="backup_free_success">Free Up Space Successfully</string>
     
 </resources>
+

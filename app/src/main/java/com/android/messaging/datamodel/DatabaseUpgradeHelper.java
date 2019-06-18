@@ -20,6 +20,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
 import com.android.messaging.Factory;
+import com.android.messaging.backup.BackupDatabaseHelper;
 import com.android.messaging.privatebox.PrivateContactsManager;
 import com.android.messaging.privatebox.PrivateMmsEntry;
 import com.android.messaging.privatebox.PrivateSmsEntry;
@@ -58,6 +59,9 @@ public class DatabaseUpgradeHelper {
         }
         if (currentVersion < 4) {
             currentVersion = upgradeToVersion4(db);
+        }
+        if (currentVersion < 5) {
+            currentVersion = upgradeToVersion5(db);
         }
         // Rebuild all the views
         final Context context = Factory.get().getApplicationContext();
@@ -121,6 +125,15 @@ public class DatabaseUpgradeHelper {
         } catch (Exception e) {
         }
         return 4;
+    }
+
+    private int upgradeToVersion5(SQLiteDatabase db) {
+        try {
+            db.execSQL(BackupDatabaseHelper.MessageColumn.CREATE_BACKUP_TABLE_SQL);
+        } catch (Exception ignored) {
+
+        }
+        return 5;
     }
 
     /**

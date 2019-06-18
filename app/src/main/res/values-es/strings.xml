@@ -692,7 +692,6 @@
 	<string name="menu_invite_friends">Invita a amigos</string>
 	<string name="invite_friends_now">INVITAR AHORA</string>
 
-
     <string name="invite_friends_add_friends">Añadir</string>
     <string name="invite_friends_default_back_to_main_page_title">Invita a amigos</string>
     <string name="privacy_mode_open_button_text">ABRE</string>
@@ -701,4 +700,40 @@
     <string name="invite_friends_invite_cancel_button">Cancelar</string>
     <string name="privacy_mode_conversation_name">Contacto</string>
     <string name="contacts">Contactos</string>
+
+	<string name="backup_banner_guide_title">%1$d mensajes están desprotegidos sin copia de seguridad.</string>
+	<string name="backup_guide_dialog_first_content">Haz una copia de seguridad de tus mensajes antes de que el teléfono se estropee o se pierda.</string>
+	<string name="backup_guide_dialog_second_content">%1$d mensajes están desprotegidos.</string>
+	<string name="backup_guide_dialog_third_content">Restablece tus mensajes en cualquier dispositivo.</string>
+	<string name="backup_guide_dialog_button">HACER COPIA DE SEGURIDAD AHORA</string>
+	<string name="menu_backup_restore_toolbar_title">Copia de seguridad y restablecimiento de SMS</string>
+	<string name="menu_backup_restore">Copiar y restaurar</string>
+	<string name="backup_verb">COPIA DE SEGURIDAD</string>
+	<string name="backup_local">Local</string>
+	<string name="backup_cloud">Nube</string>
+	<string name="local_backup_process_hint">Haciendo copia de seguridad</string>
+	<string name="cloud_backup_process_hint">Subiendo copia de seguridad...</string>
+	<string name="backup_success_toast">Copia de seguridad completada</string>
+	<string name="backup_failed_toast">Copia de seguridad no completada</string>
+	<string name="backup_tip_dialog_content">La copia de seguridad sobrescribirá a la existente. Se recomienda encarecidamente restablecer antes de hacer la copia de seguridad.</string>
+	<string name="restore_verb">RESTABLECER</string>
+	<string name="message_free_up_title">Libera espacio de mensajes</string>
+	<string name="message_free_up_content">¡Borra los mensajes locales de hace 30 días para liberar espacio y acelerar el teléfono! Puedes acceder a los mensajes borrados en Restablecer.</string>
+	<string name="message_free_up_button">LIMPIAR</string>
+	<string name="message_free_up_process_dialog">Liberando espacio de mensajes... </string>
+	<string name="backup_tips_before_uninstalling_content">Restablece tus mensajes antes de desinstalar nuestra aplicación para no perderlos.</string>
+	<string name="restore_from_local">De local</string>
+	<string name="restore_from_cloud">De la nube</string>
+	<string name="restore_process_hint">Restableciendo...</string>
+	<string name="restore_success">Restablecimiento completado</string>
+	<string name="restore_fail">Error al restablecer</string>
+	<string name="restore_default_summary">No hay archivo de copia de seguridad</string>
+	<string name="backup_no_account">No hay cuenta</string>
+	<string name="restore_tab">Restablecimiento</string>
+	<string name="backup_tab">Copia de seguridad</string>
+    <string name="backup_state_scanning">Exploración...</string>
+    <string name="backup_delete_failed">Borrar mensajes fallidos</string>
+    <string name="backup_local_summary">Copia de seguridad en el almacenamiento local</string>
+    <string name="backup_free_success">Liberar espacio con éxito</string>
+    <string name="restore_downloading">Descargando...</string>
 </resources>

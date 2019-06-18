@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/backup_banner_background">
+
+    <com.android.messaging.ui.view.MessagesTextView
+        android:id="@+id/backup_banner_title"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="10dp"
+        android:layout_marginEnd="20dp"
+        android:layout_marginStart="14dp"
+        android:layout_marginTop="10dp"
+        android:ellipsize="end"
+        android:includeFontPadding="false"
+        android:textColor="@color/white"
+        android:textSize="14sp"
+        app:font_family_changeable="false"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/backup_banner_button"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:typeface="@string/custom_font_semibold" />
+
+    <com.android.messaging.ui.view.MessagesTextView
+        android:id="@+id/backup_banner_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="12dp"
+        android:layout_marginEnd="25.3dp"
+        android:layout_marginTop="12dp"
+        android:gravity="center"
+        android:includeFontPadding="false"
+        android:paddingBottom="8dp"
+        android:paddingEnd="11.3dp"
+        android:paddingStart="11.3dp"
+        android:paddingTop="8dp"
+        android:text="@string/backup_tab"
+        android:textAllCaps="true"
+        android:textColor="@color/backup_banner_guide_button_text_color"
+        android:textSize="14sp"
+        app:font_family_changeable="false"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:typeface="@string/custom_font_semibold" />
+
+    <ImageView
+        android:id="@+id/backup_banner_close"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        android:background="@drawable/material_compat_button_bg"
+        android:padding="7dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/ic_close_banner"
+        tools:ignore="ContentDescription" />
+</android.support.constraint.ConstraintLayout>

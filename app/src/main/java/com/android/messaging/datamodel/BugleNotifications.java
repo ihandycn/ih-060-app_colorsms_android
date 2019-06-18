@@ -92,6 +92,7 @@ import com.android.messaging.util.OsUtil;
 import com.android.messaging.util.PendingIntentConstants;
 import com.android.messaging.util.RingtoneUtil;
 import com.android.messaging.util.ThreadUtil;
+import com.android.messaging.util.UiUtils;
 import com.android.messaging.util.UriUtil;
 import com.ihs.app.framework.HSApplication;
 import com.ihs.commons.utils.HSLog;
@@ -698,6 +699,8 @@ public class BugleNotifications {
     }
 
     private static void popUpMessageBox(final NotificationState state, final String conversationId) {
+        BugleAnalytics.logEvent("Message_Box_Will_Show", "isLandscapeMode", String.valueOf(UiUtils.isLandscapeMode()));
+
         if (state instanceof MessageNotificationState) {
             for (ConversationLineInfo convInfo : ((MessageNotificationState) state).mConvList.mConvInfos) {
 

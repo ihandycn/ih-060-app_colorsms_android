@@ -40,6 +40,5 @@
             android:layout_height="1px"
             android:layout_gravity="top"
             android:background="#cdcdcd"/>
-
     </FrameLayout>
 </merge>

@@ -687,6 +687,12 @@
         <item name="android:maxHeight">5.3dip</item>
     </style>
 
+    <style name="SmsBackUpDialogProgressBar" parent="Base.Widget.AppCompat.ProgressBar.Horizontal">
+        <item name="android:progressDrawable">@drawable/sms_backup_dialog_progress_bar</item>
+        <item name="android:minHeight">5.3dp</item>
+        <item name="android:maxHeight">5.3dp</item>
+    </style>
+
     <style name="PopupMenu" parent="ThemeOverlay.AppCompat.Light">
         <item name="android:listSelector">?attr/listChoiceBackgroundIndicator</item>
     </style>
@@ -793,5 +799,29 @@
 
     <style name="AcbSmsRecyclerViewTheme" parent="Theme.AppCompat.Light">
         <item name="colorPrimary">@color/conversation_edge_effect</item>
+    </style>
+
+    <style name="RestoreCheckBox">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">67.3dp</item>
+        <item name="android:paddingEnd">19dp</item>
+        <item name="android:gravity">start|center_vertical</item>
+        <item name="android:textColor">@color/text_primary_color</item>
+        <item name="android:checked">false</item>
+        <item name="android:drawableRight">?android:attr/listChoiceIndicatorSingle</item>
+        <item name="android:background">?selectableItemBackground</item>
+        <item name="android:button">@null</item>
+    </style>
+
+    <style name="BackUpCheckBox">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">67.3dp</item>
+        <item name="android:paddingEnd">19dp</item>
+        <item name="android:gravity">start|center_vertical</item>
+        <item name="android:textColor">@color/text_primary_color</item>
+        <item name="android:checked">false</item>
+        <item name="android:drawableRight">?android:attr/listChoiceIndicatorMultiple</item>
+        <item name="android:background">?selectableItemBackground</item>
+        <item name="android:button">@null</item>
     </style>
 </resources>
