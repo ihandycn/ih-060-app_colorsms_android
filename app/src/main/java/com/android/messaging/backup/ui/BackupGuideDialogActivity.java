@@ -1,17 +1,19 @@
 package com.android.messaging.backup.ui;
 
+import android.content.Context;
 import android.database.Cursor;
 import android.os.Bundle;
+import android.provider.Telephony;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.android.messaging.R;
-import com.android.messaging.datamodel.DataModel;
-import com.android.messaging.datamodel.DatabaseHelper;
-import com.android.messaging.datamodel.DatabaseWrapper;
+import com.android.messaging.mmslib.SqliteWrapper;
+import com.android.messaging.sms.MmsUtils;
 import com.android.messaging.ui.customize.PrimaryColors;
 import com.android.messaging.util.BugleAnalytics;
+import com.ihs.app.framework.HSApplication;
 import com.ihs.app.framework.activity.HSAppCompatActivity;
 import com.superapps.util.BackgroundDrawables;
 import com.superapps.util.Dimensions;
@@ -43,9 +45,16 @@ public class BackupGuideDialogActivity extends HSAppCompatActivity {
         backupDialogCloseButton.setOnClickListener(v -> finish());
 
         Threads.postOnThreadPoolExecutor(() -> {
-            DatabaseWrapper db = DataModel.get().getDatabaseWithoutMainCheck();
-            Cursor cursor = db.query(DatabaseHelper.MESSAGES_TABLE, new String[]{"COUNT(*)"},
-                    null, null, null, null, null);
+            final Context context = HSApplication.getContext();
+            Cursor cursor = SqliteWrapper.query(
+                    context,
+                    context.getContentResolver(),
+                    Telephony.Sms.CONTENT_URI,
+                    new String[]{"COUNT(*)"},
+                    MmsUtils.getSmsTypeSelectionSql(),
+                    null,
+                    Telephony.Sms.DATE + " DESC");
+
             if (cursor != null) {
                 if (cursor.moveToFirst()) {
                     int count = cursor.getInt(0);

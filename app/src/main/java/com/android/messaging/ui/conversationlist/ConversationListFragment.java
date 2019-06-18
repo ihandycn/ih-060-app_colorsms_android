@@ -17,6 +17,7 @@ package com.android.messaging.ui.conversationlist;
 
 import android.app.Activity;
 import android.app.Fragment;
+import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Color;
@@ -28,6 +29,7 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Parcelable;
+import android.provider.Telephony;
 import android.support.constraint.ConstraintLayout;
 import android.support.v4.view.ViewCompat;
 import android.support.v4.view.ViewGroupCompat;
@@ -50,17 +52,17 @@ import com.android.messaging.ad.AdPlacement;
 import com.android.messaging.annotation.VisibleForAnimation;
 import com.android.messaging.backup.ui.BackupRestoreActivity;
 import com.android.messaging.datamodel.DataModel;
-import com.android.messaging.datamodel.DatabaseHelper;
-import com.android.messaging.datamodel.DatabaseWrapper;
 import com.android.messaging.datamodel.binding.Binding;
 import com.android.messaging.datamodel.binding.BindingBase;
 import com.android.messaging.datamodel.data.AdItemData;
 import com.android.messaging.datamodel.data.ConversationListData;
 import com.android.messaging.datamodel.data.ConversationListData.ConversationListDataListener;
 import com.android.messaging.datamodel.data.ConversationListItemData;
+import com.android.messaging.mmslib.SqliteWrapper;
 import com.android.messaging.privatebox.PrivateBoxSettings;
 import com.android.messaging.privatebox.ui.PrivateBoxSetPasswordActivity;
 import com.android.messaging.privatebox.ui.SelfVerifyActivity;
+import com.android.messaging.sms.MmsUtils;
 import com.android.messaging.ui.BugleAnimationTags;
 import com.android.messaging.ui.ListEmptyView;
 import com.android.messaging.ui.SnackBarInteraction;
@@ -81,6 +83,7 @@ import com.android.messaging.util.LogUtil;
 import com.android.messaging.util.UiUtils;
 import com.android.messaging.util.ViewUtils;
 import com.google.common.annotations.VisibleForTesting;
+import com.ihs.app.framework.HSApplication;
 import com.ihs.commons.config.HSConfig;
 import com.ihs.commons.notificationcenter.HSGlobalNotificationCenter;
 import com.ihs.commons.utils.HSBundle;
@@ -424,9 +427,17 @@ public class ConversationListFragment extends Fragment implements ConversationLi
 
             Threads.postOnThreadPoolExecutor(() -> {
                 WeakReference<TextView> tv = new WeakReference<>(title);
-                DatabaseWrapper db = DataModel.get().getDatabaseWithoutMainCheck();
-                Cursor cursor = db.query(DatabaseHelper.MESSAGES_TABLE, new String[]{"COUNT(*)"},
-                        null, null, null, null, null);
+
+                final Context context = HSApplication.getContext();
+                Cursor cursor = SqliteWrapper.query(
+                        context,
+                        context.getContentResolver(),
+                        Telephony.Sms.CONTENT_URI,
+                        new String[]{"COUNT(*)"},
+                        MmsUtils.getSmsTypeSelectionSql(),
+                        null,
+                        Telephony.Sms.DATE + " DESC");
+
                 if (cursor != null) {
                     if (cursor.moveToFirst()) {
                         int count = cursor.getInt(0);
@@ -446,9 +457,16 @@ public class ConversationListFragment extends Fragment implements ConversationLi
         title.setText(getString(R.string.backup_banner_guide_title, 30));
         Threads.postOnThreadPoolExecutor(() -> {
             WeakReference<TextView> tv = new WeakReference<>(title);
-            DatabaseWrapper db = DataModel.get().getDatabaseWithoutMainCheck();
-            Cursor cursor = db.query(DatabaseHelper.MESSAGES_TABLE, new String[]{"COUNT(*)"},
-                    null, null, null, null, null);
+
+            final Context context = HSApplication.getContext();
+            Cursor cursor = SqliteWrapper.query(
+                    context,
+                    context.getContentResolver(),
+                    Telephony.Sms.CONTENT_URI,
+                    new String[]{"COUNT(*)"},
+                    MmsUtils.getSmsTypeSelectionSql(),
+                    null,
+                    Telephony.Sms.DATE + " DESC");
             if (cursor != null) {
                 if (cursor.moveToFirst()) {
                     int count = cursor.getInt(0);
@@ -462,6 +480,7 @@ public class ConversationListFragment extends Fragment implements ConversationLi
             }
         });
 
+
         MessagesTextView backupBannerButton = mBackupBannerGuideContainer.findViewById(R.id.backup_banner_button);
         backupBannerButton.setBackground(BackgroundDrawables.createBackgroundDrawable(Color.WHITE,
                 Dimensions.pxFromDp(3.3f), true));
@@ -472,6 +491,8 @@ public class ConversationListFragment extends Fragment implements ConversationLi
             switchAd = false;
             BugleAnalytics.logEvent("BackupTopGuide_Click");
         });
+
+        mBackupBannerGuideContainer.setOnClickListener( v-> backupBannerButton.performClick());
 
         ImageView backupBannerGuideCloseButton = mBackupBannerGuideContainer.findViewById(R.id.backup_banner_close);
         backupBannerGuideCloseButton.setBackground(BackgroundDrawables.
