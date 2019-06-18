@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.res.ColorStateList;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -343,9 +344,11 @@ public class ChooseBackupViewHolder extends BasePagerViewHolder implements Custo
         MessageFreeUpProcessDialog dialog = new MessageFreeUpProcessDialog();
         dialog.setCancelable(false);
         // dismiss[0] more than 3s, dismiss[1] delete complete
-        boolean[] dismissCondition = new boolean[2];
+        boolean[] dismissCondition = {false, false};
         Threads.postOnMainThreadDelayed(() -> {
+            Log.e("---->>>>", "111111: " );
             dismissCondition[0] = true;
+            Log.e("---->>>>", "222222: " );
             if (dismissCondition[1]) {
                 if (dialog != null) {
                     dialog.dismissAllowingStateLoss();

@@ -5,6 +5,7 @@ import android.content.ContentValues;
 import android.net.Uri;
 import android.provider.Telephony;
 import android.text.format.DateUtils;
+import android.util.Log;
 
 import com.android.messaging.datamodel.DataModel;
 import com.android.messaging.datamodel.DatabaseWrapper;
@@ -485,7 +486,7 @@ public class BackupManager {
                 if (messageDeleteListener != null) {
                     messageDeleteListener.onDeleteFailed();
                 }
-                HSLog.e(e.getMessage());
+                Log.e("---->>>>", e.getMessage());
             }
         });
     }
