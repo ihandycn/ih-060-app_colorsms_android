@@ -135,16 +135,15 @@ public class CustomBubblesActivity extends BaseActivity implements CustomMessage
     public void previewCustomBubbleDrawable(int index) {
         if (!mHasCustomBubbleClicked) {
             ThemeInfo themeInfo = ThemeInfo.getThemeInfo(ThemeUtils.getCurrentThemeName());
-            ThemeInfo defaultTheme = ThemeInfo.getThemeInfo(ThemeUtils.DEFAULT_THEME_KEY);
             if (BubbleDrawables.getSelectedIdentifier(mConversationId) <= 0) {
-                mCustomMessagePreview.previewCustomBubbleBackgroundColor(true, Color.parseColor(defaultTheme.incomingBubbleBgColor));
-                mCustomMessagePreview.previewCustomBubbleBackgroundColor(false, Color.parseColor(defaultTheme.outgoingBubbleBgColor));
-                mCustomMessagePreview.previewCustomTextColor(true, Color.parseColor(defaultTheme.incomingBubbleTextColor));
-                mCustomMessagePreview.previewCustomTextColor(false, Color.parseColor(defaultTheme.outgoingBubbleTextColor));
-                mChooseMessageColorEntryViewHolder.previewCustomColor(BUBBLE_COLOR_INCOMING, Color.parseColor(defaultTheme.incomingBubbleBgColor));
-                mChooseMessageColorEntryViewHolder.previewCustomColor(BUBBLE_COLOR_OUTGOING, Color.parseColor(defaultTheme.outgoingBubbleBgColor));
-                mChooseMessageColorEntryViewHolder.previewCustomColor(TEXT_COLOR_INCOMING, Color.parseColor(defaultTheme.incomingBubbleTextColor));
-                mChooseMessageColorEntryViewHolder.previewCustomColor(TEXT_COLOR_OUTGOING, Color.parseColor(defaultTheme.outgoingBubbleTextColor));
+                mCustomMessagePreview.previewCustomBubbleBackgroundColor(true, Color.parseColor(themeInfo.incomingBubbleBgColor));
+                mCustomMessagePreview.previewCustomBubbleBackgroundColor(false, PrimaryColors.getPrimaryColor());
+                mCustomMessagePreview.previewCustomTextColor(true, Color.parseColor(themeInfo.incomingBubbleTextColor));
+                mCustomMessagePreview.previewCustomTextColor(false, Color.parseColor(themeInfo.outgoingBubbleTextColor));
+                mChooseMessageColorEntryViewHolder.previewCustomColor(BUBBLE_COLOR_INCOMING, Color.parseColor(themeInfo.incomingBubbleBgColor));
+                mChooseMessageColorEntryViewHolder.previewCustomColor(BUBBLE_COLOR_OUTGOING, Color.parseColor(themeInfo.outgoingBubbleBgColor));
+                mChooseMessageColorEntryViewHolder.previewCustomColor(TEXT_COLOR_INCOMING, Color.parseColor(themeInfo.incomingBubbleTextColor));
+                mChooseMessageColorEntryViewHolder.previewCustomColor(TEXT_COLOR_OUTGOING, Color.parseColor(themeInfo.outgoingBubbleTextColor));
             }
         }
         mHasCustomBubbleClicked = true;
