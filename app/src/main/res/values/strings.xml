@@ -1271,6 +1271,5 @@
     <string name="backup_banner_guide_title">%1$d messages are unprotected without backup.</string>
     <string name="backup_local_summary">Back up to local storage</string>
     <string name="backup_free_success">Free Up Space Successfully</string>
-    
 </resources>
 
