@@ -46,7 +46,6 @@ import com.android.messaging.Factory;
 import com.android.messaging.R;
 import com.android.messaging.datamodel.MediaScratchFileProvider;
 import com.android.messaging.datamodel.action.DownloadMmsAction;
-import com.android.messaging.datamodel.action.ProcessDownloadedMmsAction;
 import com.android.messaging.datamodel.action.SendMessageAction;
 import com.android.messaging.datamodel.data.MessageData;
 import com.android.messaging.datamodel.data.MessagePartData;
@@ -85,6 +84,7 @@ import com.android.messaging.util.MediaMetadataRetrieverWrapper;
 import com.android.messaging.util.OsUtil;
 import com.android.messaging.util.PhoneUtils;
 import com.google.common.base.Joiner;
+import com.superapps.util.Preferences;
 
 import java.io.BufferedOutputStream;
 import java.io.File;
@@ -101,6 +101,8 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Set;
 import java.util.UUID;
+
+import hugo.weaving.DebugLog;
 
 /**
  * Utils for sending sms/mms messages.
@@ -1520,7 +1522,7 @@ public class MmsUtils {
     }
 
     private static final String[] TEST_DATE_SENT_PROJECTION = new String[]{Sms.DATE_SENT};
-    private static Boolean sHasSmsDateSentColumn = null;
+    private static final String PREF_KEY_HAS_DATE_SEND_COLUMN = "pref_key_has_date_send_column";
 
     /**
      * Check if date_sent column exists on ICS and above devices. We need to do a test
@@ -1529,31 +1531,35 @@ public class MmsUtils {
      *
      * @return Whether "date_sent" column exists in sms table
      */
+    @DebugLog
     public static boolean hasSmsDateSentColumn() {
-        if (sHasSmsDateSentColumn == null) {
-            Cursor cursor = null;
-            try {
-                final Context context = Factory.get().getApplicationContext();
-                final ContentResolver resolver = context.getContentResolver();
-                cursor = SqliteWrapper.query(
-                        context,
-                        resolver,
-                        Sms.CONTENT_URI,
-                        TEST_DATE_SENT_PROJECTION,
-                        null/*selection*/,
-                        null/*selectionArgs*/,
-                        Sms.DATE_SENT + " ASC LIMIT 1");
-                sHasSmsDateSentColumn = true;
-            } catch (final SQLiteException e) {
-                LogUtil.w(TAG, "date_sent in sms table does not exist", e);
-                sHasSmsDateSentColumn = false;
-            } finally {
-                if (cursor != null) {
-                    cursor.close();
-                }
+        if (Preferences.getDefault().contains(PREF_KEY_HAS_DATE_SEND_COLUMN)) {
+            return Preferences.getDefault().getBoolean(PREF_KEY_HAS_DATE_SEND_COLUMN, false);
+        }
+        Cursor cursor = null;
+        boolean hasSmsDateSentColumn;
+        try {
+            final Context context = Factory.get().getApplicationContext();
+            final ContentResolver resolver = context.getContentResolver();
+            cursor = SqliteWrapper.query(
+                    context,
+                    resolver,
+                    Sms.CONTENT_URI,
+                    TEST_DATE_SENT_PROJECTION,
+                    null/*selection*/,
+                    null/*selectionArgs*/,
+                    Sms.DATE_SENT + " ASC LIMIT 1");
+            hasSmsDateSentColumn = true;
+        } catch (final SQLiteException e) {
+            LogUtil.w(TAG, "date_sent in sms table does not exist", e);
+            hasSmsDateSentColumn = false;
+        } finally {
+            if (cursor != null) {
+                cursor.close();
             }
         }
-        return sHasSmsDateSentColumn;
+        Preferences.getDefault().putBoolean(PREF_KEY_HAS_DATE_SEND_COLUMN, hasSmsDateSentColumn);
+        return hasSmsDateSentColumn;
     }
 
     private static final String[] TEST_CARRIERS_PROJECTION =
