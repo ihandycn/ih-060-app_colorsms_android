@@ -20,6 +20,17 @@ public class EmojiInfo extends BaseEmojiInfo {
         dest.writeString(this.mEmoji);
     }
 
+    public static EmojiInfo unflatten(String flatten){
+        EmojiInfo info = new EmojiInfo();
+        info.mEmoji = flatten;
+        return info;
+    }
+
+    @Override
+    public String toString() {
+        return mEmoji;
+    }
+
     private EmojiInfo(Parcel in) {
         super(in);
         this.mEmoji = in.readString();

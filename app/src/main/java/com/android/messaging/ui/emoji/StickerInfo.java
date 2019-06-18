@@ -48,7 +48,7 @@ public class StickerInfo extends BaseEmojiInfo {
         StickerInfo result = new StickerInfo();
         String[] split = flatten.split("\\|");
         if (split.length != 5) {
-            throw new IllegalStateException("split.lenght must be 5!!!");
+            throw new IllegalStateException("split.length must be 5!!!");
         }
         result.mEmojiType = EmojiType.valueOfInt(Integer.valueOf(split[0]));
         result.mStickerUrl = split[1];

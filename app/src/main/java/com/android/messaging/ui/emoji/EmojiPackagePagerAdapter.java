@@ -15,6 +15,7 @@ import com.android.messaging.R;
 import com.android.messaging.glide.GlideApp;
 import com.android.messaging.ui.emoji.utils.EmojiManager;
 import com.android.messaging.util.BugleAnalytics;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.superapps.view.ViewPagerFixed;
 
 import java.util.ArrayList;
@@ -37,10 +38,13 @@ public class EmojiPackagePagerAdapter extends PagerAdapter {
         mData = new ArrayList<>();
     }
 
-    void updateRecentItem() {
+    void updateRecentSticker() {
         if (mStickerAdapter != null) {
             mStickerAdapter.updateRecentItem();
         }
+    }
+
+    void updateRecentEmoji(){
         if (mEmojiAdapter != null) {
             mEmojiAdapter.updateRecentItem();
         }
@@ -118,7 +122,7 @@ public class EmojiPackagePagerAdapter extends PagerAdapter {
             mStickerAdapter = new StickerItemPagerAdapter(data.get(EmojiPackageType.STICKER), mContext, mOnEmojiClickListener);
         }
         if(data.containsKey(EmojiPackageType.EMOJI)){
-            mEmojiAdapter = new EmojiItemPagerAdapter(data.get(EmojiPackageType.EMOJI), mOnEmojiClickListener);
+            mEmojiAdapter = new EmojiItemPagerAdapter(mContext, data.get(EmojiPackageType.EMOJI), mOnEmojiClickListener);
         }
     }
 
@@ -159,7 +163,7 @@ public class EmojiPackagePagerAdapter extends PagerAdapter {
             } else {
                 newTabView.setVisibility(View.GONE);
             }
-            GlideApp.with(mContext).load(info.mTabIconUrl).placeholder(R.drawable.emoji_normal_tab_icon).into(tabIconView);
+            GlideApp.with(mContext).load(info.mTabIconUrl).diskCacheStrategy(DiskCacheStrategy.NONE).placeholder(R.drawable.emoji_normal_tab_icon).into(tabIconView);
             if (tab != null) {
                 tab.setCustomView(view);
                 tab.setTag(info);

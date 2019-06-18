@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TabLayout;
+import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,7 +16,7 @@ import com.android.messaging.R;
 import com.android.messaging.datamodel.data.MediaPickerMessagePartData;
 import com.android.messaging.datamodel.data.MessagePartData;
 import com.android.messaging.download.Downloader;
-import com.android.messaging.ui.emoji.utils.EmojiConfig;
+import com.android.messaging.ui.emoji.utils.EmojiDataProducer;
 import com.android.messaging.ui.emoji.utils.EmojiManager;
 import com.android.messaging.util.BugleAnalytics;
 import com.android.messaging.util.ContentType;
@@ -78,6 +79,7 @@ public class EmojiPickerFragment extends Fragment implements INotificationObserv
             public void emojiClick(EmojiInfo emojiInfo) {
                 if (mOnEmojiPickerListener != null) {
                     mOnEmojiPickerListener.addEmoji(emojiInfo.mEmoji);
+                    updateRecentEmoji(emojiInfo);
                 }
             }
 
@@ -107,13 +109,6 @@ public class EmojiPickerFragment extends Fragment implements INotificationObserv
 
             @Override
             public void onTabUnselected(TabLayout.Tab tab) {
-                EmojiPackageInfo packageInfo = getPackageInfo(tab);
-                if (packageInfo != null && EmojiManager.isNewTabSticker(packageInfo.mName)) {
-                    EmojiManager.removeNewTabSticker(packageInfo.mName);
-                    assert tab.getCustomView() != null;
-                    tab.getCustomView().findViewById(R.id.tab_new_view).setVisibility(View.GONE);
-                }
-
             }
 
             @Override
@@ -129,29 +124,56 @@ public class EmojiPickerFragment extends Fragment implements INotificationObserv
                 return null;
             }
         });
-
+        Activity activity = getActivity();
         Map<EmojiPackageType, List<EmojiPackageInfo>> data = new HashMap<>();
-        data.put(EmojiPackageType.EMOJI, getInitEmojiData());
-        data.put(EmojiPackageType.STICKER, getInitStickerData());
+        data.put(EmojiPackageType.EMOJI, EmojiDataProducer.getInitEmojiData(activity));
+        data.put(EmojiPackageType.STICKER, EmojiDataProducer.getInitStickerData(activity));
         mEmojiPackagePagerAdapter.setData(data);
 
         mEmojiPager = view.findViewById(R.id.emoji_pager);
         mEmojiPager.setAdapter(mEmojiPackagePagerAdapter);
         tabLayout.setupWithViewPager(mEmojiPager);
         mEmojiPackagePagerAdapter.updateTab(initMainTab());
-        mEmojiPager.setCurrentItem(2);
+        mEmojiPager.setCurrentItem(1);
 
-        view.findViewById(R.id.emoji_delete_btn).setOnClickListener(new View.OnClickListener() {
+
+        View deleteView = view.findViewById(R.id.emoji_delete_btn);
+        deleteView.setVisibility(View.GONE);
+        deleteView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 mOnEmojiPickerListener.deleteEmoji();
             }
         });
+        mEmojiPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+                if(position != 0){
+                    deleteView.setVisibility(View.GONE);
+                }else{
+                    deleteView.setVisibility(View.VISIBLE);
+                }
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+
+            }
+        });
     }
 
     private void updateRecentSticker(StickerInfo info) {
-        EmojiManager.saveRecentSticker(info.toString());
-        mEmojiPackagePagerAdapter.updateRecentItem();
+        EmojiManager.saveRecentInfo(info.toString(), EmojiPackageType.STICKER);
+        mEmojiPackagePagerAdapter.updateRecentSticker();
+    }
+
+    private void updateRecentEmoji(EmojiInfo info){
+        EmojiManager.saveRecentInfo(info.toString(), EmojiPackageType.EMOJI);
+        mEmojiPackagePagerAdapter.updateRecentEmoji();
     }
 
     private void sendSticker(StickerInfo info, File file) {
@@ -205,49 +227,15 @@ public class EmojiPickerFragment extends Fragment implements INotificationObserv
         return result;
     }
 
-    private List<EmojiPackageInfo> getInitStickerData(){
-        List<EmojiPackageInfo> result = new ArrayList<>();
-
-        Activity activity = getActivity();
-        String packageName = activity.getPackageName();
-        EmojiPackageInfo recentInfo = new EmojiPackageInfo();
-        recentInfo.mName = "recent";
-        recentInfo.mEmojiPackageType = EmojiPackageType.RECENT;
-        recentInfo.mTabIconUrl = Uri.parse("android.resource://" + packageName + "/" +
-                activity.getResources().getIdentifier("emoji_recent_tab_icon", "drawable", packageName)).toString();
-        recentInfo.mEmojiInfoList = EmojiManager.getRecentStickerInfo();
-        result.add(recentInfo);
-
-        result.addAll(EmojiConfig.getInstance().getAddedEmojiFromConfig());
-        return result;
-    }
-
-    private List<EmojiPackageInfo> getInitEmojiData(){
-        List<EmojiPackageInfo> result = new ArrayList<>();
-        EmojiPackageInfo info = new EmojiPackageInfo();
-        info.mEmojiInfoList = getEmojiList();
-        result.add(info);
-        return result;
-    }
-
-    private List<BaseEmojiInfo> getEmojiList() {
-        List<BaseEmojiInfo> result = new ArrayList<>();
-        String[] arrays = getResources().getStringArray(R.array.emoji_faces);
-        for (String array : arrays) {
-            EmojiInfo info = new EmojiInfo();
-            info.mEmoji = new String((Character.toChars(Integer.parseInt(array, 16))));
-            result.add(info);
-        }
-        return result;
-    }
-
-    @Override public void onDestroyView() {
+    @Override
+    public void onDestroyView() {
         super.onDestroyView();
         HSLog.e(TAG, "onDestroyView()");
         BaseStickerItemRecyclerAdapter.releaseListener();
     }
 
-    @Override public void onDestroy() {
+    @Override
+    public void onDestroy() {
         super.onDestroy();
         HSGlobalNotificationCenter.removeObserver(this);
     }
