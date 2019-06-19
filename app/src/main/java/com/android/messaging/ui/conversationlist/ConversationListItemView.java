@@ -96,6 +96,8 @@ public class ConversationListItemView extends FrameLayout implements OnClickList
         void startFullScreenVideoViewer(final Uri videoUri);
 
         boolean isSelectionMode();
+
+        boolean isArchived();
     }
 
     private final OnClickListener fullScreenPreviewClickListener = new OnClickListener() {
@@ -128,7 +130,6 @@ public class ConversationListItemView extends FrameLayout implements OnClickList
 
     private int mAnimatingCount;
     private ViewGroup mSwipeableContainer;
-    private ViewGroup mCrossSwipeBackground;
     private ViewGroup mSwipeableContent;
     private TextView mConversationNameView;
     private ImageView mWorkProfileIconView;
@@ -140,8 +141,9 @@ public class ConversationListItemView extends FrameLayout implements OnClickList
     private ImageView mNotificationBellView;
     private ImageView mPinView;
     private ImageView mFailedStatusIconView;
-    private ImageView mCrossSwipeArchiveLeftImageView;
-    private ImageView mCrossSwipeArchiveRightImageView;
+    private View mCrossSwipeArchiveLeftContainer;
+    private View mCrossSwipeArchiveRightContainer;
+    private View mCrossSwipeBg;
     private AsyncImageView mImagePreviewView;
     private HostInterface mHostInterface;
     private TextView mUnreadMessagesCountView;
@@ -156,7 +158,6 @@ public class ConversationListItemView extends FrameLayout implements OnClickList
     protected void onFinishInflate() {
         super.onFinishInflate();
         mSwipeableContainer = findViewById(R.id.swipeableContainer);
-        mCrossSwipeBackground = findViewById(R.id.crossSwipeBackground);
         mSwipeableContent = findViewById(R.id.swipeableContent);
         mConversationNameView = findViewById(R.id.conversation_name);
         mSnippetTextView = findViewById(R.id.conversation_snippet);
@@ -174,9 +175,13 @@ public class ConversationListItemView extends FrameLayout implements OnClickList
         mPinView.getDrawable().setColorFilter(
                 ConversationColors.get().getListTimeColor(), PorterDuff.Mode.SRC_ATOP);
         mFailedStatusIconView = findViewById(R.id.conversation_failed_status_icon);
-        mCrossSwipeArchiveLeftImageView = findViewById(R.id.crossSwipeArchiveIconLeft);
-        mCrossSwipeArchiveRightImageView =
-                findViewById(R.id.crossSwipeArchiveIconRight);
+
+        mCrossSwipeArchiveLeftContainer = findViewById(R.id.cross_swipe_archive_left_container);
+        mCrossSwipeArchiveRightContainer = findViewById(R.id.cross_swipe_archive_right_container);
+
+        mCrossSwipeBg = findViewById(R.id.cross_swipe_archive_background);
+        mCrossSwipeBg.setBackgroundColor(PrimaryColors.getPrimaryColor());
+
         mImagePreviewView = findViewById(R.id.conversation_image_preview);
         mUnreadMessagesCountView = findViewById(R.id.conversation_unread_messages_count);
 
@@ -296,6 +301,18 @@ public class ConversationListItemView extends FrameLayout implements OnClickList
 
         mSwipeableContainer.setOnClickListener(this);
         mSwipeableContainer.setOnLongClickListener(this);
+
+        if (!mHostInterface.isArchived()) {
+            ((ImageView) findViewById(R.id.cross_swipe_archive_icon_left)).setImageResource(R.drawable.archive_swipe);
+            ((ImageView) findViewById(R.id.cross_swipe_archive_icon_right)).setImageResource(R.drawable.archive_swipe);
+            ((TextView) findViewById(R.id.cross_swipe_archive_text_left)).setText(R.string.action_archive);
+            ((TextView) findViewById(R.id.cross_swipe_archive_text_right)).setText(R.string.action_archive);
+        } else {
+            ((ImageView) findViewById(R.id.cross_swipe_archive_icon_left)).setImageResource(R.drawable.unarchive_swipe);
+            ((ImageView) findViewById(R.id.cross_swipe_archive_icon_right)).setImageResource(R.drawable.unarchive_swipe);
+            ((TextView) findViewById(R.id.cross_swipe_archive_text_left)).setText(R.string.action_unarchive);
+            ((TextView) findViewById(R.id.cross_swipe_archive_text_right)).setText(R.string.action_unarchive);
+        }
 
         final Resources resources = getContext().getResources();
 
@@ -431,33 +448,66 @@ public class ConversationListItemView extends FrameLayout implements OnClickList
     public void setSwipeTranslationX(final float translationX) {
         mSwipeableContainer.setTranslationX(translationX);
         if (translationX == 0) {
-            mCrossSwipeBackground.setVisibility(View.GONE);
-            mCrossSwipeArchiveLeftImageView.setVisibility(GONE);
-            mCrossSwipeArchiveRightImageView.setVisibility(GONE);
+            mCrossSwipeArchiveLeftContainer.setVisibility(GONE);
+            mCrossSwipeArchiveRightContainer.setVisibility(GONE);
+            mCrossSwipeBg.setVisibility(INVISIBLE);
+            mCrossSwipeBg.setTranslationX(-getWidth());
+//            mCrossSwipeRightBg.setVisibility(INVISIBLE);
+//            mCrossSwipeRightBg.setTranslationX(getWidth());
 
             mSwipeableContainer.setBackgroundResource(R.drawable.conversation_list_item_bg);
         } else {
-            mCrossSwipeBackground.setVisibility(View.VISIBLE);
+            int padding = getResources().getDimensionPixelSize(R.dimen.conversation_item_view_swipe_padding);
             if (translationX > 0) {
-                mCrossSwipeArchiveLeftImageView.setVisibility(VISIBLE);
-                mCrossSwipeArchiveRightImageView.setVisibility(GONE);
+                mCrossSwipeBg.setVisibility(VISIBLE);
+                mCrossSwipeBg.setTranslationX(translationX - getWidth());
+                if (translationX > padding) {
+                    mCrossSwipeArchiveLeftContainer.setVisibility(VISIBLE);
+                    Rect rect = new Rect(0, 0, (int) translationX - padding,
+                            mCrossSwipeArchiveLeftContainer.getHeight());
+                    mCrossSwipeArchiveLeftContainer.setClipBounds(rect);
+                } else {
+                    mCrossSwipeArchiveLeftContainer.setVisibility(GONE);
+                }
+
+                mCrossSwipeArchiveRightContainer.setVisibility(GONE);
+                // mCrossSwipeRightBg.setVisibility(INVISIBLE);
             } else {
-                mCrossSwipeArchiveLeftImageView.setVisibility(GONE);
-                mCrossSwipeArchiveRightImageView.setVisibility(VISIBLE);
+                mCrossSwipeBg.setVisibility(VISIBLE);
+                mCrossSwipeBg.setTranslationX(getWidth() + translationX);
+
+                if (-translationX > padding) {
+                    mCrossSwipeArchiveRightContainer.setVisibility(VISIBLE);
+
+                    Rect rect = new Rect(
+                            (int) (mCrossSwipeArchiveRightContainer.getWidth() + padding + translationX),
+                            0,
+                            mCrossSwipeArchiveRightContainer.getWidth(),
+                            mCrossSwipeArchiveRightContainer.getHeight());
+
+                    mCrossSwipeArchiveRightContainer.setClipBounds(rect);
+                } else {
+                    mCrossSwipeArchiveRightContainer.setVisibility(GONE);
+                }
+
+                mCrossSwipeArchiveLeftContainer.setVisibility(GONE);
             }
-            mSwipeableContainer.setBackgroundResource(R.drawable.swipe_shadow_drag);
+            // mSwipeableContainer.setBackgroundResource(R.drawable.swipe_shadow_drag);
         }
     }
 
     public void onSwipeComplete() {
         final String conversationId = mData.getConversationId();
-        UpdateConversationArchiveStatusAction.archiveConversation(conversationId);
-
-        final Runnable undoRunnable = () -> UpdateConversationArchiveStatusAction.unarchiveConversation(conversationId);
-        final String message = getResources().getString(R.string.archived_toast_message, 1);
-        UiUtils.showSnackBar(getContext(), getRootView(), message, undoRunnable,
-                SnackBar.Action.SNACK_BAR_UNDO,
-                mHostInterface.getSnackBarInteractions());
+        if (mHostInterface.isArchived()) {
+            UpdateConversationArchiveStatusAction.unarchiveConversation(conversationId);
+        } else {
+            UpdateConversationArchiveStatusAction.archiveConversation(conversationId);
+            final Runnable undoRunnable = () -> UpdateConversationArchiveStatusAction.unarchiveConversation(conversationId);
+            final String message = getResources().getString(R.string.archived_toast_message, 1);
+            UiUtils.showSnackBar(getContext(), getRootView(), message, undoRunnable,
+                    SnackBar.Action.SNACK_BAR_UNDO,
+                    mHostInterface.getSnackBarInteractions());
+        }
     }
 
     private void setShortAndLongClickable(final boolean clickable) {

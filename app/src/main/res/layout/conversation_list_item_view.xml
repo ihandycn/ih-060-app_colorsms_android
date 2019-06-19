@@ -14,50 +14,79 @@
     limitations under the License.
 -->
 <com.android.messaging.ui.conversationlist.ConversationListItemView xmlns:android="http://schemas.android.com/apk/res/android"
-                                                                    xmlns:app="http://schemas.android.com/apk/res-auto"
-                                                                    android:layout_width="match_parent"
-                                                                    android:layout_height="wrap_content">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
 
     <!-- The background displayed when the conversation is swiped sideways -->
-    <LinearLayout
-        android:id="@+id/crossSwipeBackground"
+    <!--
+     android:background="@drawable/swipe_shadow"
+     -->
+    <View
+        android:id="@+id/cross_swipe_archive_background"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@drawable/swipe_shadow"
-        android:baselineAligned="false"
-        android:clipChildren="false"
-        android:gravity="center_vertical|start"
-        android:orientation="horizontal"
-        android:paddingStart="@dimen/conversation_list_item_view_padding"
-        android:paddingTop="@dimen/conversation_list_item_view_padding_top"
-        android:paddingEnd="@dimen/conversation_list_item_view_padding"
-        android:paddingBottom="@dimen/conversation_list_item_view_padding_top"
-        android:visibility="visible">
+        android:background="@color/primary_color" />
+
+    <LinearLayout
+        android:id="@+id/cross_swipe_archive_left_container"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_gravity="start"
+        android:layout_marginLeft="@dimen/conversation_item_view_swipe_padding"
+        android:layout_marginStart="@dimen/conversation_item_view_swipe_padding"
+        android:gravity="center"
+        android:orientation="vertical">
 
         <ImageView
-            android:id="@+id/crossSwipeArchiveIconLeft"
+            android:id="@+id/cross_swipe_archive_icon_left"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:contentDescription="@null"
-            android:gravity="center_vertical|start"
             android:importantForAccessibility="no"
-            android:src="@drawable/ic_archive_small_dark"
-            android:visibility="gone"/>
+            android:src="@drawable/archive_swipe" />
 
-        <FrameLayout
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"/>
-
-        <ImageView
-            android:id="@+id/crossSwipeArchiveIconRight"
+        <com.android.messaging.ui.view.MessagesTextView
+            android:id="@+id/cross_swipe_archive_text_left"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical|end"
+            android:includeFontPadding="false"
+            android:text="Archive"
+            android:textColor="@color/white"
+            android:textSize="10sp"
+            app:typeface="@string/custom_font_semibold"
+            tools:ignore="SmallSp" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/cross_swipe_archive_right_container"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_gravity="end"
+        android:layout_marginEnd="@dimen/conversation_item_view_swipe_padding"
+        android:layout_marginRight="@dimen/conversation_item_view_swipe_padding"
+        android:gravity="center"
+        android:orientation="vertical">
+
+        <ImageView
+            android:id="@+id/cross_swipe_archive_icon_right"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:contentDescription="@null"
             android:importantForAccessibility="no"
-            android:src="@drawable/ic_archive_small_dark"
-            android:visibility="gone"/>
+            android:src="@drawable/archive_swipe" />
+
+        <com.android.messaging.ui.view.MessagesTextView
+            android:id="@+id/cross_swipe_archive_text_right"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:includeFontPadding="false"
+            android:text="Archive"
+            android:textColor="@color/white"
+            android:textSize="10sp"
+            app:typeface="@string/custom_font_semibold"
+            tools:ignore="SmallSp" />
     </LinearLayout>
 
     <FrameLayout
@@ -74,9 +103,9 @@
             android:clipChildren="false"
             android:clipToPadding="false"
             android:duplicateParentState="true"
-            android:paddingStart="2dp"
             android:orientation="horizontal"
-            android:paddingEnd="@dimen/conversation_list_item_view_padding">
+            android:paddingEnd="@dimen/conversation_list_item_view_padding"
+            android:paddingStart="2dp">
 
             <!-- Contact avatar on the left side of the view -->
             <FrameLayout
@@ -88,19 +117,19 @@
                     android:id="@+id/conversation_icon_bg"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:scaleType="centerCrop"/>
+                    android:scaleType="centerCrop" />
 
                 <com.android.messaging.ui.ContactIconView
                     android:id="@+id/conversation_icon"
-                    android:layout_gravity="center"
                     android:layout_width="@dimen/conversation_list_contact_icon_size"
                     android:layout_height="@dimen/conversation_list_contact_icon_size"
+                    android:layout_gravity="center"
                     android:background="@android:color/transparent"
                     android:contentDescription="@null"
                     android:importantForAccessibility="no"
                     app:fadeIn="false"
                     app:iconSize="large"
-                    app:reveal="false"/>
+                    app:reveal="false" />
 
                 <ImageView
                     android:id="@+id/conversation_checkmark"
@@ -109,20 +138,20 @@
                     android:layout_gravity="center"
                     android:importantForAccessibility="no"
                     android:src="@drawable/ic_checkmark_circle_blue"
-                    android:visibility="gone"/>
+                    android:visibility="gone" />
 
                 <ImageView
                     android:id="@+id/conversation_failed_status_icon"
                     android:layout_width="@dimen/conversation_list_error_icon_size"
                     android:layout_height="@dimen/conversation_list_error_icon_size"
                     android:layout_gravity="bottom|end"
-                    android:layout_marginEnd="10dp"
                     android:layout_marginBottom="10dp"
+                    android:layout_marginEnd="10dp"
                     android:background="@android:color/transparent"
                     android:contentDescription="@null"
                     android:importantForAccessibility="no"
                     android:src="@drawable/ic_failed_status_red"
-                    android:visibility="gone"/>
+                    android:visibility="gone" />
             </FrameLayout>
 
             <!-- The conversation name, message preview, etc -->
@@ -131,8 +160,8 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_gravity="top"
-                android:layout_weight="1"
                 android:layout_marginTop="@dimen/conversation_list_item_view_padding_top"
+                android:layout_weight="1"
                 android:background="@android:color/transparent"
                 android:clipChildren="false"
                 android:orientation="vertical">
@@ -159,7 +188,7 @@
                             android:contentDescription="@null"
                             android:importantForAccessibility="no"
                             android:src="@drawable/ic_small_mute"
-                            android:visibility="gone"/>
+                            android:visibility="gone" />
 
                         <ImageView
                             android:id="@+id/conversation_pin"
@@ -171,7 +200,7 @@
                             android:contentDescription="@null"
                             android:importantForAccessibility="no"
                             android:src="@drawable/ic_small_pin"
-                            android:visibility="gone"/>
+                            android:visibility="gone" />
 
                         <com.android.messaging.ui.view.MessagesTextView
                             android:id="@+id/conversation_name"
@@ -181,7 +210,7 @@
                             android:layout_gravity="center_vertical"
                             android:includeFontPadding="false"
                             android:singleLine="true"
-                            app:typeface="@string/custom_font_semibold"/>
+                            app:typeface="@string/custom_font_semibold" />
                     </LinearLayout>
 
                     <ImageView
@@ -192,7 +221,7 @@
                         android:background="@android:color/transparent"
                         android:scaleType="center"
                         android:src="@drawable/ic_work_profile"
-                        android:visibility="gone"/>
+                        android:visibility="gone" />
                 </LinearLayout>
 
                 <LinearLayout
@@ -209,7 +238,7 @@
                         android:includeFontPadding="false"
                         android:textColor="#878a95"
                         android:textSize="13sp"
-                        app:typeface="@string/custom_font_regular"/>
+                        app:typeface="@string/custom_font_regular" />
                 </LinearLayout>
 
 
@@ -226,32 +255,32 @@
                     android:id="@+id/conversation_image_preview"
                     android:layout_width="@dimen/conversation_list_image_preview_size"
                     android:layout_height="@dimen/conversation_list_image_preview_size"
+                    android:layout_gravity="center_vertical"
                     android:background="@android:color/transparent"
                     android:contentDescription="@string/message_image_content_description"
                     android:scaleType="centerCrop"
                     android:visibility="gone"
-                    android:layout_gravity="center_vertical"
-                    app:cornerRadius="@dimen/conversation_list_image_preview_corner_radius"/>
+                    app:cornerRadius="@dimen/conversation_list_image_preview_corner_radius" />
 
                 <com.android.messaging.ui.view.MessagesTextView
                     android:id="@+id/conversation_timestamp"
                     style="@style/ConversationListItemViewTextTimeStampStyle"
                     android:layout_width="wrap_content"
-                    android:layout_marginTop="14dp"
-                    android:layout_height="wrap_content"/>
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="14dp" />
 
                 <com.android.messaging.ui.view.MessagesTextView
                     android:id="@+id/conversation_unread_messages_count"
                     android:layout_width="17dp"
                     android:layout_height="17dp"
                     android:layout_gravity="bottom|end"
+                    android:layout_marginBottom="14dp"
                     android:gravity="center"
                     android:includeFontPadding="false"
-                    android:layout_marginBottom="14dp"
                     android:textColor="@android:color/white"
                     android:textSize="12sp"
                     android:visibility="gone"
-                    app:typeface="@string/custom_font_semibold"/>
+                    app:typeface="@string/custom_font_semibold" />
             </FrameLayout>
         </LinearLayout>
     </FrameLayout>

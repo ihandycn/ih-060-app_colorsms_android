@@ -357,4 +357,9 @@ public class PrivateConversationListFragment extends Fragment
     public boolean isSelectionMode() {
         return mHost != null && mHost.isSelectionMode();
     }
+
+    @Override
+    public boolean isArchived() {
+        return false;
+    }
 }

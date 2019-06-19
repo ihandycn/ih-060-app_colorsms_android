@@ -21,6 +21,7 @@ import com.android.messaging.ui.BaseAlertDialog;
 import com.android.messaging.ui.BaseDialogFragment;
 import com.android.messaging.ui.UIIntents;
 import com.android.messaging.ui.WebViewActivity;
+import com.android.messaging.ui.customize.PrimaryColors;
 import com.android.messaging.ui.messagebox.MessageBoxSettings;
 import com.android.messaging.ui.signature.SignatureSettingDialog;
 import com.android.messaging.util.BugleAnalytics;
@@ -35,6 +36,7 @@ import com.superapps.util.Navigations;
 import com.superapps.util.Preferences;
 import com.superapps.util.Toasts;
 
+import java.security.acl.Group;
 import java.util.Collections;
 
 import static android.view.View.GONE;
@@ -43,16 +45,15 @@ public class SettingGeneralActivity extends BaseActivity {
     private static final int REQUEST_CODE_START_RINGTONE_PICKER = 1;
     private static final int RC_SIGN_IN = 12;
 
-    private SettingItemView mSmsShowView;
-    private SettingItemView mOutgoingSoundView;
-    private SettingItemView mNotificationView;
-    private SettingItemView mPopUpsView;
-    private SettingItemView mSignature;
-    private SettingItemView mSoundView;
-    private SettingItemView mVibrateView;
-    private SettingItemView mPrivacyModeView;
-    private SettingItemView mSyncSettingsView;
-    private SettingItemView mSendDelayView;
+    private GeneralSettingItemView mSmsShowView;
+    private GeneralSettingItemView mNotificationView;
+    private GeneralSettingItemView mPopUpsView;
+    private GeneralSettingItemView mSignature;
+    private GeneralSettingItemView mSoundView;
+    private GeneralSettingItemView mVibrateView;
+    private GeneralSettingItemView mPrivacyModeView;
+    private GeneralSettingItemView mSyncSettingsView;
+    private GeneralSettingItemView mSendDelayView;
     private BackPressedListener mBackListener;
     final BuglePrefs prefs = BuglePrefs.getApplicationPrefs();
 
@@ -63,7 +64,7 @@ public class SettingGeneralActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_new_setting);
+        setContentView(R.layout.activity_general_setting);
         final boolean topLevel = getIntent().getBooleanExtra(
                 UIIntents.UI_INTENT_EXTRA_TOP_LEVEL_SETTINGS, false);
 
@@ -79,8 +80,12 @@ public class SettingGeneralActivity extends BaseActivity {
         }
         getSupportActionBar().setDisplayShowHomeEnabled(true);
 
-        //outgoing message sounds
-        setUpOutgoingSoundView();
+        //set title
+        int color = PrimaryColors.getPrimaryColor();
+        ((TextView) findViewById(R.id.setting_title_notifications)).setTextColor(color);
+        ((TextView) findViewById(R.id.setting_title_general)).setTextColor(color);
+        ((TextView) findViewById(R.id.setting_title_emoji)).setTextColor(color);
+        ((TextView) findViewById(R.id.setting_title_others)).setTextColor(color);
 
         //sms show
         mSmsShowView = findViewById(R.id.setting_item_sms_show);
@@ -169,15 +174,26 @@ public class SettingGeneralActivity extends BaseActivity {
         //notification
         setUpNotificationView();
 
+        //emoji
+        ((BaseItemView)findViewById(R.id.setting_item_emoji)).setOnItemClickListener(() -> {
+
+        });
+
         //blocked contacts
-        SettingItemView mBlockedContactsView = findViewById(R.id.setting_item_blocked_contacts);
+        GeneralSettingItemView mBlockedContactsView = findViewById(R.id.setting_item_blocked_contacts);
         mBlockedContactsView.setOnItemClickListener(() -> {
             UIIntents.get().launchBlockedParticipantsActivity(this);
             BugleAnalytics.logEvent("SMS_Settings_BlockedContacts_Click", true);
         });
 
+        //archived conversations
+        GeneralSettingItemView archivedConversations = findViewById(R.id.setting_item_archive);
+        archivedConversations.setOnItemClickListener(() -> {
+            UIIntents.get().launchArchivedConversationsActivity(this);
+        });
+
         //advances
-        SettingItemView mAdvancedView = findViewById(R.id.setting_item_advanced);
+        GeneralSettingItemView mAdvancedView = findViewById(R.id.setting_item_advanced);
         if (topLevel) {
             mAdvancedView.setOnItemClickListener(() -> {
                 BugleAnalytics.logEvent("SMS_Settings_Advanced_Click", true);
@@ -189,7 +205,7 @@ public class SettingGeneralActivity extends BaseActivity {
         }
 
         //feedback
-        ((SettingItemView) findViewById(R.id.setting_item_feedback)).setOnItemClickListener(
+        ((GeneralSettingItemView) findViewById(R.id.setting_item_feedback)).setOnItemClickListener(
                 () -> {
                     Intent intent = new Intent(this, FeedbackActivity.class);
                     intent.putExtra(FeedbackActivity.INTENT_KEY_LAUNCH_FROM, FeedbackActivity.LAUNCH_FROM_SETTING);
@@ -197,36 +213,9 @@ public class SettingGeneralActivity extends BaseActivity {
                 }
         );
 
-        //privacy policy
-        SettingItemView mPrivacyPolicy = findViewById(R.id.setting_item_privacy_policy);
-        mPrivacyPolicy.setOnItemClickListener(() -> {
-            Intent privacyIntent = WebViewActivity.newIntent(
-                    HSConfig.optString("", "Application", "PrivacyPolicyUrl"),
-                    false, false);
-            startActivity(privacyIntent);
-        });
-
-        //terms of service
-        SettingItemView mTermsOfService = findViewById(R.id.setting_item_terms_of_service);
-        mTermsOfService.setOnItemClickListener(() -> {
-            Intent termsOfServiceIntent = WebViewActivity.newIntent(
-                    HSConfig.optString("", "Application", "TermsOfServiceUrl"),
-                    false, false);
-            startActivity(termsOfServiceIntent);
-        });
-
-        // gdpr
-        SettingItemView mGdpr = findViewById(R.id.setting_item_analytics_advertising);
-        mGdpr.setOnItemClickListener(() -> {
-            Navigations.startActivitySafely(SettingGeneralActivity.this,
-                    new Intent(SettingGeneralActivity.this, GDPRSettingsActivity.class));
-            overridePendingTransition(R.anim.slide_in_from_right_and_fade, R.anim.anim_null);
-        });
-        if (HSGdprConsent.isGdprUser()) {
-            mGdpr.setVisibility(View.VISIBLE);
-        } else {
-            mGdpr.setVisibility(View.GONE);
-        }
+        //about
+        GeneralSettingItemView mPrivacyPolicy = findViewById(R.id.setting_item_about);
+        mPrivacyPolicy.setOnItemClickListener(() -> Navigations.startActivitySafely(this, SettingAboutActivity.class));
 
         setUpSyncSettingsView();
     }
@@ -256,24 +245,38 @@ public class SettingGeneralActivity extends BaseActivity {
     private void setUpNotificationView() {
         mNotificationView = findViewById(R.id.setting_item_notifications);
         String notificationKey = getString(R.string.notifications_enabled_pref_key);
-        boolean notificationDefaultValue = prefs.getBoolean(
+        boolean notificationEnable = prefs.getBoolean(
                 notificationKey,
                 getResources().getBoolean(R.bool.notifications_enabled_pref_default));
-        if (!notificationDefaultValue && !OsUtil.isAtLeastO()) {
-            mSmsShowView.setEnable(false);
-            mPopUpsView.setEnable(false);
-            mSoundView.setEnable(false);
-            mVibrateView.setEnable(false);
+        if (!notificationEnable) {
+            mSmsShowView.setVisibility(GONE);
+            mPopUpsView.setVisibility(GONE);
+            mSoundView.setVisibility(GONE);
+            mVibrateView.setVisibility(GONE);
+            mPrivacyModeView.setVisibility(GONE);
+//            mSmsShowView.setEnable(false);
+//            mPopUpsView.setEnable(false);
+//            mSoundView.setEnable(false);
+//            mVibrateView.setEnable(false);
         }
-        mNotificationView.setChecked(notificationDefaultValue);
+        mNotificationView.setChecked(notificationEnable);
         mNotificationView.setOnItemClickListener(() -> {
                     boolean b = mNotificationView.isChecked();
                     prefs.putBoolean(notificationKey, b);
-                    mPopUpsView.setEnable(b);
-                    mSmsShowView.setEnable(b && mPopUpsView.isChecked());
-                    mSoundView.setEnable(b);
-                    mVibrateView.setEnable(b);
-                    mPrivacyModeView.setEnable(b);
+
+                    mNotificationView.hideDivideLine(!b);
+
+                    mPopUpsView.setVisibility(b ? View.VISIBLE : GONE);
+                    mSmsShowView.setVisibility(b ? View.VISIBLE : GONE);
+                    mSoundView.setVisibility(b ? View.VISIBLE : GONE);
+                    mVibrateView.setVisibility(b ? View.VISIBLE : GONE);
+                    mPrivacyModeView.setVisibility(b ? View.VISIBLE : GONE);
+
+//                    mPopUpsView.setEnable(b);
+//                    mSmsShowView.setEnable(b && mPopUpsView.isChecked());
+//                    mSoundView.setEnable(b);
+//                    mVibrateView.setEnable(b);
+//                    mPrivacyModeView.setEnable(b);
                     GeneralSettingSyncManager.uploadNotificationSwitchToServer(b);
                     BugleAnalytics.logEvent("SMS_Settings_Notifications_Click", true);
                 }
@@ -306,19 +309,6 @@ public class SettingGeneralActivity extends BaseActivity {
             prefs.putBoolean(vibratePrefKey, mVibrateView.isChecked());
             GeneralSettingSyncManager.uploadVibrateSwitchToServer(mVibrateView.isChecked());
             BugleAnalytics.logEvent("SMS_Settings_Vibrate_Click", true);
-        });
-    }
-
-    private void setUpOutgoingSoundView() {
-        mOutgoingSoundView = findViewById(R.id.setting_item_outgoing_message_sounds);
-        final String prefKey = getString(R.string.send_sound_pref_key);
-        final boolean defaultValue = getResources().getBoolean(
-                R.bool.send_sound_pref_default);
-        mOutgoingSoundView.setChecked(prefs.getBoolean(prefKey, defaultValue));
-        mOutgoingSoundView.setOnItemClickListener(() -> {
-            prefs.putBoolean(prefKey, mOutgoingSoundView.isChecked());
-            GeneralSettingSyncManager.uploadOutgoingMessageSoundsSwitchToServer(mOutgoingSoundView.isChecked());
-            BugleAnalytics.logEvent("SMS_Settings_MessageSounds_Click", true);
         });
     }
 
@@ -441,7 +431,6 @@ public class SettingGeneralActivity extends BaseActivity {
             if (resultCode == RESULT_OK) {
                 GeneralSettingSyncManager.overrideLocalData(() -> {
                     setUpNotificationView();
-                    setUpOutgoingSoundView();
                     setUpPopUpsView();
                     setUpVibrateView();
                 });

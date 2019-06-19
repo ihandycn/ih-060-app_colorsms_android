@@ -1,0 +1,186 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <include layout="@layout/top_tool_bar_view" />
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <com.android.messaging.ui.view.MessagesTextView
+                android:id="@+id/setting_title_notifications"
+                style="@style/SettingTitleStyle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/notifications_enabled_pref_title"
+                app:typeface="@string/custom_font_regular" />
+
+            <!--Notifications-->
+            <com.android.messaging.ui.appsettings.GeneralSettingItemView
+                android:id="@+id/setting_item_notifications"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:title="@string/notifications_enabled_pref_title"
+                app:summary="@string/notification_summary"
+                app:type="switchView" />
+
+            <!--Sound-->
+            <com.android.messaging.ui.appsettings.GeneralSettingItemView
+                android:id="@+id/setting_item_sound"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:title="@string/notification_sound_pref_title"
+                app:type="withTriangle" />
+
+            <!--Vibrate-->
+            <com.android.messaging.ui.appsettings.GeneralSettingItemView
+                android:id="@+id/setting_item_vibrate"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:key="@string/notification_vibration_pref_key"
+                app:title="@string/notification_vibrate_pref_title"
+                app:type="switchView" />
+
+            <!--SMS Show-->
+            <com.android.messaging.ui.appsettings.GeneralSettingItemView
+                android:id="@+id/setting_item_sms_show"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:visibility="gone"
+                app:summary="@string/setting_sms_show_summary"
+                app:title="@string/setting_sms_show"
+                app:type="switchView" />
+
+            <!--SMS Pop-ups-->
+            <com.android.messaging.ui.appsettings.GeneralSettingItemView
+                android:id="@+id/setting_item_sms_pop_ups"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:summary="@string/setting_sms_pop_ups_summary"
+                app:title="@string/setting_sms_pop_ups"
+                app:type="switchView" />
+
+            <!--Privacy Mode-->
+            <com.android.messaging.ui.appsettings.GeneralSettingItemView
+                android:id="@+id/setting_item_privacy_mode"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:hideDivideLine="true"
+                app:title="@string/privacy_mode_settings"
+                app:type="withTriangle" />
+
+            <View style="@style/SettingDividerStyle" />
+
+            <com.android.messaging.ui.view.MessagesTextView
+                android:id="@+id/setting_title_emoji"
+                style="@style/SettingTitleStyle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/emoji"
+                app:typeface="@string/custom_font_regular" />
+
+            <com.android.messaging.ui.appsettings.SettingEmojiItemView
+                android:id="@+id/setting_item_emoji"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:hideDivideLine="true"
+                app:title="@string/privacy_mode_settings"
+                app:typeface="@string/custom_font_regular" />
+
+            <View style="@style/SettingDividerStyle" />
+
+            <com.android.messaging.ui.view.MessagesTextView
+                android:id="@+id/setting_title_general"
+                style="@style/SettingTitleStyle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/general_settings"
+                app:typeface="@string/custom_font_regular" />
+
+            <!--Signature-->
+            <com.android.messaging.ui.appsettings.GeneralSettingItemView
+                android:id="@+id/setting_item_signature"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:title="@string/signature"
+                app:type="normal" />
+
+            <!--Send Delay-->
+            <com.android.messaging.ui.appsettings.GeneralSettingItemView
+                android:id="@+id/setting_item_send_delay"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:title="@string/send_delay_settings"
+                app:type="withTriangle" />
+
+            <!--Archived Conversations-->
+            <com.android.messaging.ui.appsettings.GeneralSettingItemView
+                android:id="@+id/setting_item_archive"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:title="@string/archived_conversations"
+                app:type="withTriangle" />
+
+            <!--Blocked contacts-->
+            <com.android.messaging.ui.appsettings.GeneralSettingItemView
+                android:id="@+id/setting_item_blocked_contacts"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:hideDivideLine="true"
+                app:title="@string/blocked_contacts_title"
+                app:type="withTriangle" />
+
+            <View style="@style/SettingDividerStyle" />
+
+            <com.android.messaging.ui.view.MessagesTextView
+                android:id="@+id/setting_title_others"
+                style="@style/SettingTitleStyle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/others"
+                app:typeface="@string/custom_font_regular" />
+
+            <!--Advanced-->
+            <com.android.messaging.ui.appsettings.GeneralSettingItemView
+                android:id="@+id/setting_item_advanced"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:title="@string/advanced_settings"
+                app:type="withTriangle" />
+
+            <!--Sync-->
+            <com.android.messaging.ui.appsettings.GeneralSettingItemView
+                android:id="@+id/sync_settings_item"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:summary="@string/firebase_sync_desktop_settings_description_logged_out"
+                app:title="@string/firebase_sync_desktop_settings_title"
+                app:type="normal" />
+
+            <!--feedback-->
+            <com.android.messaging.ui.appsettings.GeneralSettingItemView
+                android:id="@+id/setting_item_feedback"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:title="@string/setting_feedback"
+                app:type="normal" />
+
+            <!--about-->
+            <com.android.messaging.ui.appsettings.GeneralSettingItemView
+                android:id="@+id/setting_item_about"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:title="@string/about"
+                app:type="withTriangle" />
+        </LinearLayout>
+    </ScrollView>
+</LinearLayout>

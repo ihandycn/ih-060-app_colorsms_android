@@ -693,4 +693,9 @@ public class ConversationListFragment extends Fragment implements ConversationLi
     public boolean isSelectionMode() {
         return mHost != null && mHost.isSelectionMode();
     }
+
+    @Override
+    public boolean isArchived() {
+        return mArchiveMode;
+    }
 }
