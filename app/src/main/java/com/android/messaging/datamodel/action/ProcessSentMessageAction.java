@@ -43,14 +43,14 @@ import com.android.messaging.ui.emoji.utils.EmojiManager;
 import com.android.messaging.util.Assert;
 import com.android.messaging.util.BugleAnalytics;
 import com.android.messaging.util.LogUtil;
+import com.android.messaging.util.PhoneUtils;
 import com.ihs.commons.notificationcenter.HSGlobalNotificationCenter;
-import com.superapps.util.Networks;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
-import static android.net.ConnectivityManager.TYPE_MOBILE_MMS;
 import static com.android.messaging.ui.messagebox.MessageBoxActivity.NOTIFICATION_MESSAGE_BOX_SEND_SMS_FAILED;
 import static com.android.messaging.ui.messagebox.MessageBoxActivity.NOTIFICATION_MESSAGE_BOX_SEND_SMS_SUCCEED;
 
@@ -145,6 +145,7 @@ public class ProcessSentMessageAction extends Action {
                 MmsUtils.PDU_HEADER_VALUE_UNDEFINED);
         final int subId = actionParameters.getInt(KEY_SUB_ID, ParticipantData.DEFAULT_SELF_SUB_ID);
 
+
         if (sentByPlatform) {
             // Delete temporary file backing the contentUri passed to MMS service
             final Uri contentUri = actionParameters.getParcelable(KEY_CONTENT_URI);
@@ -174,9 +175,8 @@ public class ProcessSentMessageAction extends Action {
                         rawStatus = result.rawStatus;
                     }
                 }
-
                 if (!isSms) {
-                    BugleAnalytics.logEvent("Send_Mms_Succeed");
+                    logMmsSentAnalytics(subId, true);
                 }
             } else {
                 String errorMsg = "ProcessSentMessageAction: Platform returned error resultCode: "
@@ -189,9 +189,9 @@ public class ProcessSentMessageAction extends Action {
                 status = MmsSender.getErrorResultStatus(resultCode, httpStatusCode);
 
                 if (!isSms) {
-                    BugleAnalytics.logEvent("Send_Mms_Failed", true,
-                            "resultCode", String.valueOf(resultCode), "mobileAvailable", String.valueOf(Networks.isNetworkAvailable(TYPE_MOBILE_MMS)));
+                    logMmsSentAnalytics(subId, false);
                 }
+
                 // Check for MMS messages that failed because they exceeded the maximum size,
                 // indicated by an I/O error from the platform.
                 if (resultCode == SmsManager.MMS_ERROR_IO_ERROR) {
@@ -214,6 +214,18 @@ public class ProcessSentMessageAction extends Action {
             }
         }
         return null;
+    }
+
+    private void logMmsSentAnalytics(int subId, boolean successful) {
+        PhoneUtils phoneUtils = PhoneUtils.get(subId);
+        boolean isMobileDataAvailable = phoneUtils.isMobileDataEnabled();
+        HashMap<String, String> params = new HashMap<>();
+        params.put("mobileAvailable", String.valueOf(phoneUtils.isMobileDataEnabled()));
+        params.put("success", String.valueOf(successful));
+        if (!isMobileDataAvailable) {
+            params.put("mcc&mnc", PhoneUtils.getMccMncString(PhoneUtils.get(subId).getMccMnc()));
+        }
+        BugleAnalytics.logEvent("Send_Mms_Analytics", true, true, params);
     }
 
     static void processResult(final String messageId, Uri updatedMessageUri, int status,
