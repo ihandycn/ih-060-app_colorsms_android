@@ -32,6 +32,7 @@ import com.ihs.commons.notificationcenter.HSGlobalNotificationCenter;
 import com.ihs.commons.notificationcenter.INotificationObserver;
 import com.ihs.commons.utils.HSBundle;
 import com.ihs.commons.utils.HSLog;
+import com.superapps.util.BackgroundDrawables;
 import com.superapps.util.Dimensions;
 import com.superapps.util.Navigations;
 
@@ -124,6 +125,8 @@ public abstract class VerifyActivity extends BaseActivity implements INotificati
         resetUnlockUI();
 
         menuIcon = findViewById(R.id.menu_icon);
+        menuIcon.setBackground(BackgroundDrawables.createBackgroundDrawable(PrimaryColors.getPrimaryColor(),
+                Dimensions.pxFromDp(50f), true));
         menuIcon.setOnClickListener(v -> {
             showMenuPopupWindow(VerifyActivity.this, menuIcon);
             menuIcon.setImageResource(R.drawable.app_lock_menu);

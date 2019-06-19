@@ -20,7 +20,6 @@
         android:layout_alignParentEnd="true"
         android:layout_marginEnd="8dp"
         android:layout_marginTop="10dp"
-        android:background="?selectableItemBackgroundBorderless"
         android:scaleType="center"
         android:src="@drawable/app_lock_menu"/>
 
