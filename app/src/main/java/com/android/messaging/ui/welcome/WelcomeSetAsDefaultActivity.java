@@ -66,7 +66,6 @@ public class WelcomeSetAsDefaultActivity extends AppCompatActivity {
                 BackgroundDrawables.createBackgroundDrawable(getResources().getColor(R.color.welcome_button_dark_green), Dimensions.pxFromDp(6.7f), true));
         findViewById(R.id.welcome_set_default_button).setOnClickListener(v -> {
             final Intent intent = UIIntents.get().getChangeDefaultSmsAppIntent(WelcomeSetAsDefaultActivity.this);
-            DefaultSMSUtils.invalidateCache();
             startActivityForResult(intent, REQUEST_SET_DEFAULT_SMS_APP);
             if (mIsFromWelcomeStart) {
                 BugleAnalytics.logEvent("Start_SetAsDefault_Click", true, true);

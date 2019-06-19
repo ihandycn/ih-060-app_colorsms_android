@@ -465,7 +465,6 @@ public class WelcomeStartActivity extends AppCompatActivity implements View.OnCl
                 BugleAnalytics.logEvent("Start_DetailPage_Click", true, true, "Page", String.valueOf(mViewPagerCurrentPosition));
                 Preferences.getDefault().putBoolean(PREF_KEY_START_BUTTON_CLICKED, true);
                 final Intent intent = UIIntents.get().getChangeDefaultSmsAppIntent(WelcomeStartActivity.this);
-                DefaultSMSUtils.invalidateCache();
                 startActivityForResult(intent, REQUEST_SET_DEFAULT_SMS_APP);
                 break;
 

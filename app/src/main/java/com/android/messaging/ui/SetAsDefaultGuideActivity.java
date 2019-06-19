@@ -91,7 +91,6 @@ public class SetAsDefaultGuideActivity extends AppCompatActivity {
                 BugleAnalytics.logEvent("SMS_DefaultAlert_BtnClick", true, "type", "Cleared");
             }
             final Intent intent = UIIntents.get().getChangeDefaultSmsAppIntent(SetAsDefaultGuideActivity.this);
-            DefaultSMSUtils.invalidateCache();
             startActivityForResult(intent, REQUEST_SET_DEFAULT_SMS_APP);
         });
     }
