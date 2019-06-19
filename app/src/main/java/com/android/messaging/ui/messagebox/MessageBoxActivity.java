@@ -407,6 +407,7 @@ public class MessageBoxActivity extends AppCompatActivity implements INotificati
             return;
         }
         finish();
+        overridePendingTransition(R.anim.anim_null, R.anim.anim_null);
         if (MessageBoxAnalytics.getIsMultiConversation()) {
             BugleAnalytics.logEvent("SMS_PopUp_Close_Multifunction_MultiUser", false, true, "closeType", source);
         } else {
