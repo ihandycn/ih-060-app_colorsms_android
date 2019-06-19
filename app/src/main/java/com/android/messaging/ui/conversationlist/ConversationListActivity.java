@@ -120,6 +120,7 @@ public class ConversationListActivity extends AbstractConversationListActivity
 
     private static final String PREF_SHOW_EMOJI_GUIDE = "pref_show_emoji_guide";
     public static final String PREF_KEY_MAIN_DRAWER_OPENED = "pref_key_main_drawer_opened";
+    public static final String PREF_KEY_IS_PRIVATE_BOX_ENTRANCE_SWITCH_ON = "pref_key_is_private_box_entrance_switch_on";
 
     private static final String PREF_KEY_THEME_CLICKED = "pref_key_navigation_theme_clicked";
     private static final String PREF_KEY_THEME_COLOR_CLICKED = "pref_key_navigation_theme_color_clicked";
@@ -325,6 +326,15 @@ public class ConversationListActivity extends AbstractConversationListActivity
                 mPrivateBoxEntrance.setVisibility(View.GONE);
             } else {
                 mPrivateBoxEntrance.setVisibility(View.VISIBLE);
+            }
+            if (HSApplication.getFirstLaunchInfo().appVersionCode >= 60) {
+                if (!Preferences.getDefault().getBoolean(PREF_KEY_IS_PRIVATE_BOX_ENTRANCE_SWITCH_ON, false)) {
+                    if (!HSConfig.optBoolean(true, "Application", "PrivateBox")) {
+                        mPrivateBoxEntrance.setVisibility(View.GONE);
+                    } else {
+                        Preferences.getDefault().putBoolean(PREF_KEY_IS_PRIVATE_BOX_ENTRANCE_SWITCH_ON, true);
+                    }
+                }
             }
         }
 
@@ -551,14 +561,19 @@ public class ConversationListActivity extends AbstractConversationListActivity
 
         });
         mPrivateBoxEntrance = navigationContent.findViewById(R.id.navigation_item_privacy_box);
-        if (CommonUtils.isNewUser()){
-            if (!HSConfig.optBoolean(true, "Application", "PrivateBox")){
-                mPrivateBoxEntrance.setVisibility(View.GONE);
-            }
-        }
         mPrivateBoxEntrance.setOnClickListener(this);
         if (PrivateSettingManager.isPrivateBoxIconHidden()) {
             mPrivateBoxEntrance.setVisibility(View.GONE);
+        }
+
+        if (HSApplication.getFirstLaunchInfo().appVersionCode >= 60) {
+            if (!Preferences.getDefault().getBoolean(PREF_KEY_IS_PRIVATE_BOX_ENTRANCE_SWITCH_ON, false)) {
+                if (!HSConfig.optBoolean(true, "Application", "PrivateBox")) {
+                    mPrivateBoxEntrance.setVisibility(View.GONE);
+                } else {
+                    Preferences.getDefault().putBoolean(PREF_KEY_IS_PRIVATE_BOX_ENTRANCE_SWITCH_ON, true);
+                }
+            }
         }
 
         setDrawerMenuIcon();

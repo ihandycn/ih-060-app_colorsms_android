@@ -76,6 +76,7 @@ import com.android.messaging.util.LogUtil;
 import com.android.messaging.util.UiUtils;
 import com.android.messaging.util.ViewUtils;
 import com.google.common.annotations.VisibleForTesting;
+import com.ihs.app.framework.HSApplication;
 import com.ihs.commons.config.HSConfig;
 import com.ihs.commons.notificationcenter.HSGlobalNotificationCenter;
 import com.ihs.commons.utils.HSBundle;
@@ -83,6 +84,7 @@ import com.ihs.commons.utils.HSLog;
 import com.superapps.util.BackgroundDrawables;
 import com.superapps.util.Dimensions;
 import com.superapps.util.Navigations;
+import com.superapps.util.Preferences;
 
 import net.appcloudbox.ads.base.AcbNativeAd;
 import net.appcloudbox.ads.base.ContainerView.AcbNativeAdContainerView;
@@ -93,6 +95,8 @@ import net.appcloudbox.ads.nativead.AcbNativeAdManager;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import static com.android.messaging.ui.conversationlist.ConversationListActivity.PREF_KEY_IS_PRIVATE_BOX_ENTRANCE_SWITCH_ON;
 
 /**
  * Shows a list of conversations.
@@ -344,9 +348,13 @@ public class ConversationListFragment extends Fragment implements ConversationLi
                 mHost.onCreateConversationClick();
             });
             mStartNewConversationButton.setOnLongClickListener(v -> {
-                if (CommonUtils.isNewUser()){
-                    if (!HSConfig.optBoolean(true, "Application", "PrivateBox")){
-                        return true;
+                if (HSApplication.getFirstLaunchInfo().appVersionCode >= 60){
+                    if (!Preferences.getDefault().getBoolean(PREF_KEY_IS_PRIVATE_BOX_ENTRANCE_SWITCH_ON, false)) {
+                        if (!HSConfig.optBoolean(true, "Application", "PrivateBox")) {
+                            return true;
+                        } else {
+                            Preferences.getDefault().putBoolean(PREF_KEY_IS_PRIVATE_BOX_ENTRANCE_SWITCH_ON, true);
+                        }
                     }
                 }
                 if (PrivateBoxSettings.isAnyPasswordSet()) {
