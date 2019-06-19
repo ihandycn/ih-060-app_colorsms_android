@@ -378,7 +378,6 @@ public class UiUtils {
         // Has a preferred sim?
         // Is the default sms app?
         return phoneUtils.isSmsCapable() &&
-                phoneUtils.getHasPreferredSmsSim() &&
                 DefaultSMSUtils.isDefaultSmsApp();
     }
 

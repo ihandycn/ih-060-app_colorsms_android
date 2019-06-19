@@ -47,7 +47,6 @@ import com.google.i18n.phonenumbers.NumberParseException;
 import com.google.i18n.phonenumbers.PhoneNumberUtil;
 import com.google.i18n.phonenumbers.PhoneNumberUtil.PhoneNumberFormat;
 import com.google.i18n.phonenumbers.Phonenumber.PhoneNumber;
-import com.ihs.commons.utils.HSLog;
 import com.superapps.util.Toasts;
 
 import java.lang.reflect.Method;
@@ -551,7 +550,11 @@ public abstract class PhoneUtils {
 
         @Override
         public SmsManager getSmsManager() {
-            return SmsManager.getSmsManagerForSubscriptionId(mSubId);
+            if (mSubId == -1) {
+                return SmsManager.getDefault();
+            } else {
+                return SmsManager.getSmsManagerForSubscriptionId(mSubId);
+            }
         }
 
         @Override
