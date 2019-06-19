@@ -905,7 +905,7 @@ public abstract class PhoneUtils {
             @Override
             public void onChange(boolean selfChange) {
                 super.onChange(selfChange);
-                if (!DefaultSMSUtils.isDefaultSmsApp()) {
+                if (!context.getPackageName().equals(getDefaultSmsApp())) {
                     if (clearedRunnable != null) {
                         clearedRunnable.run();
                     }

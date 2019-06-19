@@ -186,14 +186,14 @@ class FactoryImpl extends Factory {
         }
         PhoneUtils.getDefault().registerDefaultSmsPackageChange(
                 () -> {
+                    DefaultSMSUtils.setIsDefaultSms(true);
                     if (OsUtil.hasRequiredPermissions()) {
                         factory.onDefaultSmsSetAndPermissionsGranted();
                     }
-                    DefaultSMSUtils.setIsDefaultSms(true);
                 },
                 () -> {
-                    BugleApplication.updateAppConfig(factory.getApplicationContext(), false);
                     DefaultSMSUtils.setIsDefaultSms(false);
+                    BugleApplication.updateAppConfig(factory.getApplicationContext(), false);
                 });
 
         return factory;
