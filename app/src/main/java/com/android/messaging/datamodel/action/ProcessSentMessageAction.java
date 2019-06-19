@@ -175,9 +175,7 @@ public class ProcessSentMessageAction extends Action {
                         rawStatus = result.rawStatus;
                     }
                 }
-                if (!isSms) {
-                    logMmsSentAnalytics(subId, true);
-                }
+                logMmsSentAnalytics(isSms, subId, true);
             } else {
                 String errorMsg = "ProcessSentMessageAction: Platform returned error resultCode: "
                         + resultCode;
@@ -188,9 +186,7 @@ public class ProcessSentMessageAction extends Action {
                 LogUtil.w(TAG, errorMsg);
                 status = MmsSender.getErrorResultStatus(resultCode, httpStatusCode);
 
-                if (!isSms) {
-                    logMmsSentAnalytics(subId, false);
-                }
+                logMmsSentAnalytics(isSms, subId, false);
 
                 // Check for MMS messages that failed because they exceeded the maximum size,
                 // indicated by an I/O error from the platform.
@@ -216,7 +212,7 @@ public class ProcessSentMessageAction extends Action {
         return null;
     }
 
-    private void logMmsSentAnalytics(int subId, boolean successful) {
+    private void logMmsSentAnalytics(boolean isSms, int subId, boolean successful) {
         PhoneUtils phoneUtils = PhoneUtils.get(subId);
         boolean isMobileDataAvailable = phoneUtils.isMobileDataEnabled();
         HashMap<String, String> params = new HashMap<>();
@@ -225,6 +221,7 @@ public class ProcessSentMessageAction extends Action {
         if (!isMobileDataAvailable) {
             params.put("mcc&mnc", PhoneUtils.getMccMncString(PhoneUtils.get(subId).getMccMnc()));
         }
+        params.put("isSms", String.valueOf(isSms));
         BugleAnalytics.logEvent("Send_Mms_Analytics", true, true, params);
     }
 
