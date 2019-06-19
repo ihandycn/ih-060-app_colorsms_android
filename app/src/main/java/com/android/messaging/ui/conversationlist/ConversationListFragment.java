@@ -82,6 +82,7 @@ import com.ihs.commons.utils.HSLog;
 import com.superapps.util.BackgroundDrawables;
 import com.superapps.util.Dimensions;
 import com.superapps.util.Navigations;
+import com.superapps.util.Preferences;
 
 import net.appcloudbox.ads.base.AcbNativeAd;
 import net.appcloudbox.ads.base.ContainerView.AcbNativeAdContainerView;
@@ -364,6 +365,15 @@ public class ConversationListFragment extends Fragment implements ConversationLi
         // activity transition. However, we want each individual items in the recycler view to
         // show explode animation themselves, so we explicitly tag the root view to be a non-group.
         ViewGroupCompat.setTransitionGroup(rootView, false);
+
+        if (!Preferences.getDefault().getBoolean("pref_key_first_loading_show", false)) {
+            mEmptyListMessageView.setTextHint(R.string.conversation_list_first_sync_text);
+            mEmptyListMessageView.setVisibility(View.VISIBLE);
+            mEmptyListMessageView.setIsImageVisible(false);
+            mEmptyListMessageView.setIsLoadingAnimationVisible(true);
+            mEmptyListMessageView.setIsVerticallyCentered(true);
+            Preferences.getDefault().putBoolean("pref_key_first_loading_show", true);
+        }
 
         setHasOptionsMenu(true);
         return rootView;
