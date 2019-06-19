@@ -17,7 +17,6 @@ package com.android.messaging.datamodel.action;
 
 import android.content.Context;
 import android.content.res.Resources;
-import android.os.Handler;
 import android.widget.Toast;
 
 import com.android.messaging.Factory;
@@ -119,18 +118,12 @@ public class BugleActionToasts {
         }
     }
 
-    public static void onMessageLockedWhenDelete() {
+    public static void onMessageLockedWhenDelete(){
         showToast(R.string.message_locked_when_delete);
     }
 
-    private static Handler sHandler = new Handler();
-    private static final int EVENT_TOAST_INTERVAL = 100;
-
     public static void onConversationDeleted() {
-        if (!sHandler.hasMessages(EVENT_TOAST_INTERVAL)) {
-            showToast(R.string.conversation_deleted);
-            sHandler.sendEmptyMessageDelayed(EVENT_TOAST_INTERVAL, 3000);
-        }
+        showToast(R.string.conversation_deleted);
     }
 
     private static void showToast(final int messageResId) {
