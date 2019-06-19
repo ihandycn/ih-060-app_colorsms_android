@@ -23,7 +23,6 @@ import com.android.messaging.datamodel.data.MessageBoxItemData;
 import com.android.messaging.ui.UIIntents;
 import com.android.messaging.ui.appsettings.PrivacyModeSettings;
 import com.android.messaging.ui.customize.theme.ThemeUtils;
-import com.android.messaging.ui.emoji.BaseEmojiInfo;
 import com.android.messaging.ui.emoji.EmojiInfo;
 import com.android.messaging.ui.emoji.EmojiPackagePagerAdapter;
 import com.android.messaging.ui.emoji.StickerInfo;
@@ -44,7 +43,6 @@ import com.superapps.view.ViewPagerFixed;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 
 import static com.android.messaging.ui.UIIntents.UI_INTENT_EXTRA_MESSAGE_BOX_ITEM;
 import static com.android.messaging.ui.appsettings.PrivacyModeSettings.NONE;
@@ -261,6 +259,11 @@ public class MessageBoxActivity extends AppCompatActivity implements INotificati
             }
 
             @Override
+            public void emojiLongClick(View view, EmojiInfo emojiInfo) {
+
+            }
+
+            @Override
             public void stickerClickExcludeMagic(@NonNull StickerInfo info) {
 
             }
@@ -279,16 +282,16 @@ public class MessageBoxActivity extends AppCompatActivity implements INotificati
 //        dotIndicatorView.initDot(adapter.getCount(), 0);
     }
 
-    private List<BaseEmojiInfo> getEmojiList() {
-        List<BaseEmojiInfo> result = new ArrayList<>();
-        String[] arrays = getResources().getStringArray(R.array.emoji_faces);
-        for (String array : arrays) {
-            EmojiInfo info = new EmojiInfo();
-            info.mEmoji = new String((Character.toChars(Integer.parseInt(array, 16))));
-            result.add(info);
-        }
-        return result;
-    }
+//    private List<BaseEmojiInfo> getEmojiList() {
+//        List<BaseEmojiInfo> result = new ArrayList<>();
+//        String[] arrays = getResources().getStringArray(R.array.emoji_faces);
+//        for (String array : arrays) {
+//            EmojiInfo info = new EmojiInfo();
+//            info.mEmoji = new String((Character.toChars(Integer.parseInt(array, 16))));
+//            result.add(info);
+//        }
+//        return result;
+//    }
 
 
     @Override

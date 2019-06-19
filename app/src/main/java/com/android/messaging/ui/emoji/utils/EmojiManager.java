@@ -37,6 +37,9 @@ public class EmojiManager {
     private static final String PREF_STICKER_MAGIC_SOUND_URL_PREFIX = "pref_sticker_magic_sound_url_";
     private static final String PREF_STICKER_MAGIC_FILE_URI = "pref_sticker_magic_file_uri";
 
+    private static final String PREF_SKIN_FILE_NAME = "pref_skin_record";
+    private static final String PREF_SKIN_SET_DEFAULT = "pref_skin_set_default";
+
     static List<String> getTabSticker() {
         return Preferences.get(PREF_FILE_NAME).getStringList(PREF_TAB_STICKER);
     }
@@ -127,10 +130,10 @@ public class EmojiManager {
         return result;
     }
 
-    public static void saveRecentInfo(String stickerMsg, EmojiPackageType emojiType) {
+    public static void saveRecentInfo(String msg, EmojiPackageType emojiType) {
         List<String> list = getRecentStr(emojiType);
-        list.remove(stickerMsg);
-        list.add(0, stickerMsg);
+        list.remove(msg);
+        list.add(0, msg);
         switch (emojiType) {
             case STICKER:
                 Preferences.get(PREF_FILE_NAME).putStringList(PREF_RECENT_STICKER, list);
@@ -248,5 +251,21 @@ public class EmojiManager {
 
     public interface OnGetStickerFileListener {
         void onSuccess(@NonNull File file);
+    }
+
+    public static String getSkinSingleRecord(String unicode){
+        return Preferences.get(PREF_SKIN_FILE_NAME).getString(unicode, null);
+    }
+
+    public static void addSkinSingleRecord(String unicode, String msg){
+        Preferences.get(PREF_SKIN_FILE_NAME).putString(unicode, msg);
+    }
+
+    public static int getSkinDefault(){
+        return Preferences.get(PREF_SKIN_FILE_NAME).getInt(PREF_SKIN_SET_DEFAULT, 0);
+    }
+
+    public static void setSkinDefault(int index){
+        Preferences.get(PREF_SKIN_FILE_NAME).putInt(PREF_SKIN_SET_DEFAULT, index);
     }
 }

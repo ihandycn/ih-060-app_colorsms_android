@@ -18,7 +18,6 @@ import android.widget.ImageView;
 import com.android.messaging.R;
 import com.android.messaging.ui.appsettings.SettingGeneralActivity;
 import com.android.messaging.ui.customize.PrimaryColors;
-import com.android.messaging.ui.emoji.BaseEmojiInfo;
 import com.android.messaging.ui.emoji.EmojiInfo;
 import com.android.messaging.ui.emoji.EmojiPackagePagerAdapter;
 import com.android.messaging.ui.emoji.StickerInfo;
@@ -32,9 +31,7 @@ import com.superapps.util.Threads;
 import com.superapps.view.ViewPagerFixed;
 
 import java.lang.ref.WeakReference;
-import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 
@@ -179,16 +176,16 @@ public class SignatureSettingDialog extends DialogFragment {
         dismiss();
     }
 
-    private List<BaseEmojiInfo> getEmojiList() {
-        List<BaseEmojiInfo> result = new ArrayList<>();
-        String[] arrays = getResources().getStringArray(R.array.emoji_faces);
-        for (String array : arrays) {
-            EmojiInfo info = new EmojiInfo();
-            info.mEmoji = new String((Character.toChars(Integer.parseInt(array, 16))));
-            result.add(info);
-        }
-        return result;
-    }
+//    private List<BaseEmojiInfo> getEmojiList() {
+//        List<BaseEmojiInfo> result = new ArrayList<>();
+//        String[] arrays = getResources().getStringArray(R.array.emoji_faces);
+//        for (String array : arrays) {
+//            EmojiInfo info = new EmojiInfo();
+//            info.mEmoji = new String((Character.toChars(Integer.parseInt(array, 16))));
+//            result.add(info);
+//        }
+//        return result;
+//    }
 
     private void showEmoji() {
         mEmojiContainer.setVisibility(View.VISIBLE);
@@ -220,6 +217,11 @@ public class SignatureSettingDialog extends DialogFragment {
                     mInputEditText.getText().replace(start, end, emojiInfo.mEmoji);
                     mInputEmojiSet.add(emojiInfo.mEmoji);
                 }
+            }
+
+            @Override
+            public void emojiLongClick(View view, EmojiInfo emojiInfo) {
+
             }
 
             @Override

@@ -175,6 +175,8 @@ public class EmojiPackagePagerAdapter extends PagerAdapter {
 
         void emojiClick(EmojiInfo emojiInfo);
 
+        void emojiLongClick(View view, EmojiInfo emojiInfo);
+
         void stickerClickExcludeMagic(StickerInfo stickerInfo);
 
         void deleteEmoji();

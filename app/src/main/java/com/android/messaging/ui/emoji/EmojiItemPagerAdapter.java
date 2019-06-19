@@ -58,7 +58,7 @@ public class EmojiItemPagerAdapter extends AbstractEmojiItemPagerAdapter{
         }else {
             RecyclerView recyclerView = new RecyclerView(context);
             recyclerView.setPadding(Dimensions.pxFromDp(20), Dimensions.pxFromDp(17.7f), Dimensions.pxFromDp(20), Dimensions.pxFromDp(11.7f));
-            EmojiItemRecyclerAdapter adapter = new EmojiItemRecyclerAdapter(mData.get(position).mEmojiInfoList, mOnEmojiClickListener);
+            EmojiItemRecyclerAdapter adapter = new EmojiItemRecyclerAdapter(list, mOnEmojiClickListener);
             recyclerView.setAdapter(adapter);
             recyclerView.setLayoutManager(new GridLayoutManager(context, EMOJI_COLUMNS));
             recyclerView.addItemDecoration(new EmojiItemDecoration(EMOJI_COLUMNS, EMOJI_ROWS, Dimensions.pxFromDp(29), Dimensions.pxFromDp(29)));

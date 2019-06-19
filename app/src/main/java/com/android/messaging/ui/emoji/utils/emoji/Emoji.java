@@ -61,7 +61,7 @@ public final class Emoji implements Serializable {
     }
 
     public boolean hasVariants() {
-        return this.variants.isEmpty();
+        return !this.variants.isEmpty();
     }
 
     public boolean equals(Object obj) {

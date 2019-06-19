@@ -7,7 +7,6 @@ import com.android.messaging.ui.emoji.BaseEmojiInfo;
 import com.android.messaging.ui.emoji.EmojiInfo;
 import com.android.messaging.ui.emoji.EmojiPackageInfo;
 import com.android.messaging.ui.emoji.EmojiPackageType;
-import com.android.messaging.ui.emoji.EmojiType;
 import com.android.messaging.ui.emoji.utils.emoji.Emoji;
 import com.android.messaging.ui.emoji.utils.emoji.EmojiCategory;
 import com.android.messaging.ui.emoji.utils.emoji.EmojiProvider;
@@ -54,11 +53,19 @@ public class EmojiDataProducer {
                     context.getResources().getIdentifier(category.getIcon() + "", "drawable", packageName)).toString();
             List<BaseEmojiInfo> emojiList = new ArrayList<>();
             for (Emoji emoji : category.getEmojis()) {
-                EmojiInfo emojiInfo = new EmojiInfo();
-                emojiInfo.mEmojiType = EmojiType.EMOJI;
-                emojiInfo.mEmoji = emoji.getUnicode();
-                emojiList.add(emojiInfo);
-
+                EmojiInfo itemInfo = EmojiInfo.convert(emoji);
+                if(itemInfo.hasVariant()) {
+                    String record = EmojiManager.getSkinSingleRecord(itemInfo.getUnicode());
+                    if (record != null) {
+                        itemInfo.mEmoji = record;
+                    }else{
+                        int index = EmojiManager.getSkinDefault();
+                        if(index >= 0 && index < itemInfo.mVariants.length){
+                            itemInfo.mEmoji = itemInfo.mVariants[index].mEmoji;
+                        }
+                    }
+                }
+                emojiList.add(itemInfo);
             }
             info.mEmojiInfoList = emojiList;
             result.add(info);

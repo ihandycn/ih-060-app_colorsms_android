@@ -36,7 +36,7 @@ public class EmojiItemRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.
     }
 
     @Override
-    public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull final RecyclerView.ViewHolder holder, int position) {
         if (holder instanceof EmojiImageViewHolder) {
             ((EmojiImageViewHolder) holder).imageView.setOnClickListener(v -> {
                 if (mOnEmojiClickListener != null) {
@@ -44,21 +44,36 @@ public class EmojiItemRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.
                 }
             });
         } else if (holder instanceof EmojiViewHolder) {
-            EmojiViewHolder emojiHolder = (EmojiViewHolder) holder;
-            BaseEmojiInfo info = mData.get(position);
+            final EmojiViewHolder emojiHolder = (EmojiViewHolder) holder;
+            final BaseEmojiInfo info = mData.get(position);
             if (info.mEmojiType == EmojiType.EMOJI_EMPTY) {
                 emojiHolder.textView.setVisibility(View.INVISIBLE);
             } else {
-                EmojiInfo emojiInfo = (EmojiInfo) info;
+                final EmojiInfo emojiInfo = (EmojiInfo) info;
+                emojiHolder.itemView.setTag(emojiInfo);
                 emojiHolder.textView.setText(emojiInfo.mEmoji);
                 emojiHolder.textView.setOnClickListener(v -> {
                     if (mOnEmojiClickListener != null) {
                         mOnEmojiClickListener.emojiClick(emojiInfo);
                     }
                 });
+                if(emojiInfo.hasVariant()) {
+                    emojiHolder.textView.setOnLongClickListener(new View.OnLongClickListener() {
+                        @Override
+                        public boolean onLongClick(View v) {
+                            if (mOnEmojiClickListener != null) {
+                                mOnEmojiClickListener.emojiLongClick(emojiHolder.itemView, (EmojiInfo) emojiHolder.itemView.getTag());
+                            }
+                            return true;
+                        }
+                    });
+                    // TODO: 2019-06-18 add a background change to show users that it has chooses
+                }
             }
         }
     }
+
+
 
     @Override
     public int getItemViewType(int position) {

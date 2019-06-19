@@ -16,6 +16,7 @@ import com.android.messaging.R;
 import com.android.messaging.datamodel.data.MediaPickerMessagePartData;
 import com.android.messaging.datamodel.data.MessagePartData;
 import com.android.messaging.download.Downloader;
+import com.android.messaging.ui.EmojiVariantPopup;
 import com.android.messaging.ui.emoji.utils.EmojiDataProducer;
 import com.android.messaging.ui.emoji.utils.EmojiManager;
 import com.android.messaging.util.BugleAnalytics;
@@ -48,6 +49,7 @@ public class EmojiPickerFragment extends Fragment implements INotificationObserv
     private ViewPagerFixed mEmojiPager;
     private OnEmojiPickerListener mOnEmojiPickerListener;
     private boolean mIsEnableSend = true;
+    private EmojiVariantPopup mEmojiVariantPopup;
 
     public static EmojiPickerFragment newInstance() {
         return new EmojiPickerFragment();
@@ -81,6 +83,12 @@ public class EmojiPickerFragment extends Fragment implements INotificationObserv
                     mOnEmojiPickerListener.addEmoji(emojiInfo.mEmoji);
                     updateRecentEmoji(emojiInfo);
                 }
+            }
+
+            @Override
+            public void emojiLongClick(View view, EmojiInfo emojiInfo) {
+                mEmojiVariantPopup = new EmojiVariantPopup(EmojiPickerFragment.this.getView(), this);
+                mEmojiVariantPopup.show(view, emojiInfo);
             }
 
             @Override
@@ -229,6 +237,9 @@ public class EmojiPickerFragment extends Fragment implements INotificationObserv
 
     @Override
     public void onDestroyView() {
+        if(mEmojiVariantPopup != null){
+            this.mEmojiVariantPopup.dismiss();
+        }
         super.onDestroyView();
         HSLog.e(TAG, "onDestroyView()");
         BaseStickerItemRecyclerAdapter.releaseListener();
