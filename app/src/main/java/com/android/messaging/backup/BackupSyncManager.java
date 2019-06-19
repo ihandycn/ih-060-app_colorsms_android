@@ -57,6 +57,10 @@ public class BackupSyncManager {
                     MmsUtils.getSmsTypeSelectionSql(),
                     null /* selectionArgs */,
                     ORDER_BY_DATE_DESC);
+            if (cursor == null) {
+                return SYNC_FAILED;
+            }
+
             if (cursor.getCount() == 0) {
                 return 0;
             }

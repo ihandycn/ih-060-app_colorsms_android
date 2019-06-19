@@ -28,7 +28,7 @@ public class BackupProcessDialog extends BaseDialogFragment {
     private LottieAnimationView mLottie;
     private int mTotalCount = 1;
     private Choreographer.FrameCallback mCallback;
-    private Choreographer mChoreographer;
+    private Choreographer mChoreographer = Choreographer.getInstance();
     private int mTargetCount;
     private long mStartTime;
     private Group mTextGroup;
@@ -77,13 +77,12 @@ public class BackupProcessDialog extends BaseDialogFragment {
             );
             mProgressBar.setProgressTintList(colorStateList);
         }
-        mChoreographer = Choreographer.getInstance();
         return view;
     }
 
     @Override
     public void dismissAllowingStateLoss() {
-        if (mChoreographer != null) {
+        if (mChoreographer != null && mCallback != null) {
             mChoreographer.removeFrameCallback(mCallback);
         }
         super.dismissAllowingStateLoss();
