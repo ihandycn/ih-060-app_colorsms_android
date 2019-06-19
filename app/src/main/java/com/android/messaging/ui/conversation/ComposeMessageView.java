@@ -374,9 +374,19 @@ public class ComposeMessageView extends LinearLayout
             }
         });
         mSubjectView = findViewById(R.id.subject_view);
-        mSendButton = findViewById(R.id.send_message_button);
+        mDelayCloseButton = findViewById(R.id.delay_close_button);
 
-        initSendDelayMessagesRunnable();
+        mSendDelayRunnable = () -> {
+            logEmojiEvent();
+            sendMessageInternal(true /* checkMessageSize */);
+            mIsWaitingToSendMessage = false;
+            String conversationId = mBinding.getData().getConversationId();
+            updateVisualsOnDraftChanged();
+            resetDelaySendAnimation();
+            SendDelayMessagesManager.remove(conversationId);
+        };
+
+        mSendButton = findViewById(R.id.send_message_button);
         mSendButton.setBackground(BackgroundDrawables.createBackgroundDrawable(PrimaryColors.getPrimaryColor(),
                 PrimaryColors.getPrimaryColorDark(),
                 Dimensions.pxFromDp(29), false, true));
@@ -402,6 +412,15 @@ public class ComposeMessageView extends LinearLayout
                 showSubjectEditor();
             }
             return true;
+        });
+
+        mSendDelayProgressBar = findViewById(R.id.send_delay_circle_bar);
+        mSendDelayProgressBar.setOnClickListener(clickedView -> {
+            mIsWaitingToSendMessage = false;
+            Threads.removeOnMainThread(mSendDelayRunnable);
+            updateVisualsOnDraftChanged();
+            resetDelaySendAnimation();
+            BugleAnalytics.logEvent("Detailpage_BtnCancel_Click");
         });
 
         mMediaPickerLayout = findViewById(R.id.media_picker_container);
@@ -488,20 +507,6 @@ public class ComposeMessageView extends LinearLayout
         });
     }
 
-    private void initSendDelayMessagesRunnable() {
-        mDelayCloseButton = findViewById(R.id.delay_close_button);
-        mSendDelayProgressBar = findViewById(R.id.send_delay_circle_bar);
-        mSendDelayRunnable = () -> {
-            logEmojiEvent();
-            sendMessageInternal(true /* checkMessageSize */);
-            mIsWaitingToSendMessage = false;
-            String conversationId = mBinding.getData().getConversationId();
-            updateVisualsOnDraftChanged();
-            resetDelaySendAnimation();
-            SendDelayMessagesManager.remove(conversationId);
-        };
-    }
-
     private void resetDelaySendAnimation() {
         mDelayCloseButton.setVisibility(View.GONE);
         mSendDelayProgressBar.setVisibility(View.GONE);
@@ -544,13 +549,6 @@ public class ComposeMessageView extends LinearLayout
             mSendDelayProgressBar.startAnimation(SendDelaySettings.getSendDelayInSecs() - (mMillisecondsAnimated / 1000));
         }
         mMillisecondsAnimated = 0;
-        mSendDelayProgressBar.setOnClickListener(clickedView -> {
-            mIsWaitingToSendMessage = false;
-            Threads.removeOnMainThread(mSendDelayRunnable);
-            updateVisualsOnDraftChanged();
-            resetDelaySendAnimation();
-            BugleAnalytics.logEvent("Detailpage_BtnCancel_Click");
-        });
     }
 
     private void resumeLastSendDelayMessageActionInThisConversation() {
@@ -1157,17 +1155,18 @@ public class ComposeMessageView extends LinearLayout
             } else {
                 if (selfSendButtonUri != null) {
                     mSelfSendIcon.setImageResourceUri(selfSendButtonUri);
+                    UiUtils.revealOrHideViewWithAnimation(mSendButton, GONE, null);
                 } else {
                     mSelfSendIcon.setImageResource(R.drawable.input_send_message_icon);
                     mSelfSendIcon.setBackground(BackgroundDrawables.createBackgroundDrawable(PrimaryColors.getPrimaryColor(),
                             PrimaryColors.getPrimaryColorDark(),
                             Dimensions.pxFromDp(20), false, true));
+                    mSendButton.setVisibility(GONE);
 
                 }
                 if (isOverriddenAvatarAGroup()) {
                     UiUtils.revealOrHideViewWithAnimation(mSelfSendIcon, VISIBLE, null);
                 }
-                UiUtils.revealOrHideViewWithAnimation(mSendButton, GONE, null);
                 mMmsIndicator.setVisibility(INVISIBLE);
                 if (mConversationDataModel != null && shouldShowSimSelector(mConversationDataModel.getData())) {
                     sendWidgetMode = SEND_WIDGET_MODE_SIM_SELECTOR;
