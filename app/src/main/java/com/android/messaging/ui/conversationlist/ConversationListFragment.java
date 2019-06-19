@@ -442,8 +442,8 @@ public class ConversationListFragment extends Fragment implements ConversationLi
                     if (cursor.moveToFirst()) {
                         int count = cursor.getInt(0);
                         Threads.postOnMainThread(() -> {
-                            if (tv.get() != null) {
-                                tv.get().setText(getString(R.string.backup_banner_guide_title, count));
+                            if (tv.get() != null && isAdded()) {
+                                tv.get().setText(HSApplication.getContext().getString(R.string.backup_banner_guide_title, count));
                             }
                         });
                     }
@@ -454,7 +454,7 @@ public class ConversationListFragment extends Fragment implements ConversationLi
         }
         mBackupBannerGuideContainer.setVisibility(View.VISIBLE);
 
-        title.setText(getString(R.string.backup_banner_guide_title, 30));
+        title.setText(HSApplication.getContext().getString(R.string.backup_banner_guide_title, 30));
         Threads.postOnThreadPoolExecutor(() -> {
             WeakReference<TextView> tv = new WeakReference<>(title);
 
@@ -471,8 +471,8 @@ public class ConversationListFragment extends Fragment implements ConversationLi
                 if (cursor.moveToFirst()) {
                     int count = cursor.getInt(0);
                     Threads.postOnMainThread(() -> {
-                        if (tv.get() != null) {
-                            tv.get().setText(getString(R.string.backup_banner_guide_title, count));
+                        if (tv.get() != null && isAdded()) {
+                            tv.get().setText(HSApplication.getContext().getString(R.string.backup_banner_guide_title, count));
                         }
                     });
                 }
@@ -493,7 +493,7 @@ public class ConversationListFragment extends Fragment implements ConversationLi
             BugleAnalytics.logEvent("BackupTopGuide_Click");
         });
 
-        mBackupBannerGuideContainer.setOnClickListener( v-> backupBannerButton.performClick());
+        mBackupBannerGuideContainer.setOnClickListener(v -> backupBannerButton.performClick());
 
         ImageView backupBannerGuideCloseButton = mBackupBannerGuideContainer.findViewById(R.id.backup_banner_close);
         backupBannerGuideCloseButton.setBackground(BackgroundDrawables.
