@@ -27,6 +27,7 @@ import com.android.messaging.privatebox.ui.view.timepickerview.TimePickerView;
 import com.android.messaging.privatebox.ui.view.timepickerview.WheelTime;
 import com.android.messaging.ui.conversationlist.ConversationListActivity;
 import com.android.messaging.ui.customize.PrimaryColors;
+import com.android.messaging.util.BugleAnalytics;
 import com.android.messaging.util.UiUtils;
 import com.ihs.app.framework.activity.HSAppCompatActivity;
 import com.superapps.util.BackgroundDrawables;
@@ -104,6 +105,11 @@ public class PrivateBoxLockQuestionActivity extends HSAppCompatActivity implemen
         isBirthdayQuestion = (POSITION_BIRTHDAY < questions.length && savedQuestion.equals(questions[POSITION_BIRTHDAY]));
 
         if (isSettingQuestion) {
+            if(getIntent().getBooleanExtra(INTENT_KEY_IS_FIRST_SETTING_QUESTION, false)){
+                BugleAnalytics.logEvent("PrivateBox_SecurityQuestion_Show", true,"from", "firstsetcode");
+            } else {
+                BugleAnalytics.logEvent("PrivateBox_SecurityQuestion_Show", true,"from", "settings");
+            }
             ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
                     R.array.question_spinner_content,
                     R.layout.item_security_question_spinner);
@@ -136,6 +142,7 @@ public class PrivateBoxLockQuestionActivity extends HSAppCompatActivity implemen
             getSupportActionBar().setTitle(getResources().getString(R.string.security_question));
             setOnlyBtn.setText(getString(R.string.set));
         } else {
+            BugleAnalytics.logEvent("PrivateBox_ForgetPage_Show");
             questionEditText.setText(savedQuestion);
             questionEditText.setFocusable(false);
             questionSpinner.setVisibility(View.GONE);
@@ -360,7 +367,8 @@ public class PrivateBoxLockQuestionActivity extends HSAppCompatActivity implemen
             prefs.putString(PREF_KEY_SECURITY_ANSWER, answer);
             PrivateBoxSettings.setSecurityQuestionSet(true);
             finishAndNotifyLockFinished();
-            if(getIntent().getBooleanExtra(INTENT_KEY_IS_FIRST_SETTING_QUESTION, false)) {
+            if (getIntent().getBooleanExtra(INTENT_KEY_IS_FIRST_SETTING_QUESTION, false)) {
+                BugleAnalytics.logEvent("PrivateBox_SecurityQuestion_Set_Click", true,"from", "firstsetcode");
                 Intent intent = new Intent(PrivateBoxLockQuestionActivity.this, PrivateConversationListActivity.class);
                 if (getIntent().hasExtra(ConversationListActivity.INTENT_KEY_PRIVATE_CONVERSATION_LIST)) {
                     intent.putExtra(ConversationListActivity.INTENT_KEY_PRIVATE_CONVERSATION_LIST,
@@ -368,6 +376,8 @@ public class PrivateBoxLockQuestionActivity extends HSAppCompatActivity implemen
                     );
                 }
                 Navigations.startActivitySafely(PrivateBoxLockQuestionActivity.this, intent);
+            } else {
+                BugleAnalytics.logEvent("PrivateBox_SecurityQuestion_Set_Click", true,"from", "settings");
             }
         } else { // Is answering question
             String answer = answerEditText.getText().toString().trim();
@@ -382,6 +392,7 @@ public class PrivateBoxLockQuestionActivity extends HSAppCompatActivity implemen
             } else {
                 Toast.makeText(PrivateBoxLockQuestionActivity.this, "Answer is incorrect", Toast.LENGTH_SHORT).show();
             }
+            BugleAnalytics.logEvent("PrivateBox_ForgetPage_Submit");
         }
     }
 }

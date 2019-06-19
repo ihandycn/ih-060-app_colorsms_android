@@ -26,6 +26,8 @@ import com.android.messaging.R;
 import com.android.messaging.datamodel.data.ConversationListData;
 import com.android.messaging.datamodel.data.ConversationListItemData;
 import com.android.messaging.util.Assert;
+import com.android.messaging.util.CommonUtils;
+import com.ihs.commons.config.HSConfig;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -108,6 +110,11 @@ public class MultiSelectActionModeCallback implements Callback {
         mPinMenuItem = menu.findItem(R.id.action_pin);
         mCancelPinMenuItem = menu.findItem(R.id.action_cancel_pin);
         menu.findItem(R.id.action_move_from_private_box).setVisible(false);
+        if (CommonUtils.isNewUser()){
+            if (!HSConfig.optBoolean(true, "Application", "PrivateBox")){
+                menu.findItem(R.id.action_add_to_private_box).setVisible(false);
+            }
+        }
         mHasInflated = true;
         updateActionIconsVisiblity();
         return true;

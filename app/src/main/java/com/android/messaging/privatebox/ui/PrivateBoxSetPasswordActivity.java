@@ -421,11 +421,8 @@ public class PrivateBoxSetPasswordActivity extends BaseActivity implements View.
     }
 
     private void onPasswordSetSucceed() {
-//        BugleAnalytics.logEvent("PrivateBox_Password_SetSuccess");
+        BugleAnalytics.logEvent("PrivateBox_Password_SetSuccess");
         if (!isResetPassword && !isForgetPassword) {
-//            BugleAnalytics.logEvent("First Set");
-//            Intent intent = new Intent(PrivateBoxSetPasswordActivity.this, PrivateConversationListActivity.class);
-//            Navigations.startActivitySafely(PrivateBoxSetPasswordActivity.this, intent);
             HSLog.d(TAG, " if (!isResetPassword && !isForgetPassword)");
             Intent intent = new Intent(PrivateBoxSetPasswordActivity.this, PrivateBoxLockQuestionActivity.class);
             intent.putExtra(PrivateBoxLockQuestionActivity.INTENT_KEY_IS_SETTING_QUESTION, true);
@@ -437,9 +434,5 @@ public class PrivateBoxSetPasswordActivity extends BaseActivity implements View.
             }
             Navigations.startActivitySafely(PrivateBoxSetPasswordActivity.this, intent);
         }
-//        } else if (isForgetPassword) {
-//            Intent intent = new Intent(PrivateBoxSetPasswordActivity.this, PrivateConversationListActivity.class);
-//            Navigations.startActivitySafely(PrivateBoxSetPasswordActivity.this, intent);
-//        }
     }
 }

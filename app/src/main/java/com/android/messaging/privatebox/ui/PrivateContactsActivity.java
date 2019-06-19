@@ -5,6 +5,7 @@ import android.content.CursorLoader;
 import android.content.Loader;
 import android.database.Cursor;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -17,24 +18,25 @@ import com.android.messaging.datamodel.data.ConversationListItemData;
 import com.android.messaging.privatebox.AppPrivateLockManager;
 import com.android.messaging.privatebox.MoveConversationToTelephonyAction;
 import com.android.messaging.privatebox.ui.view.PrivateContactsAdapter;
+import com.android.messaging.util.BugleAnalytics;
 import com.android.messaging.util.UiUtils;
-import com.ihs.app.framework.activity.HSAppCompatActivity;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import static com.android.messaging.datamodel.data.ConversationListData.SORT_ORDER;
 
-public class PrivateContactsActivity extends HSAppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor>, PrivateContactsAdapter.PrivateContactsHost {
+public class PrivateContactsActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor>, PrivateContactsAdapter.PrivateContactsHost {
     private static final int CONVERSATION_LIST_LOADER = 1;
     private PrivateContactsAdapter mAdapter;
     private LoaderManager mLoaderManager;
+    private List<String> mRemoveConversationList = new ArrayList<>();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_private_contact);
         mAdapter = new PrivateContactsAdapter();
-
+        BugleAnalytics.logEvent("PrivateBox_PrivateContacts_Show");
         Toolbar toolbar = findViewById(R.id.toolbar);
         toolbar.setTitle("");
         UiUtils.setTitleBarBackground(toolbar, this);
@@ -45,7 +47,8 @@ public class PrivateContactsActivity extends HSAppCompatActivity implements Load
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         }
         getSupportActionBar().setDisplayShowHomeEnabled(true);
-        RecyclerView recyclerView = findViewById(R.id.private_contact_recyclerview);
+        RecyclerView recyclerView = findViewById(R.id.private_contact_recycler_view);
+        recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
         recyclerView.setAdapter(mAdapter);
         mAdapter.setHost(this);
@@ -54,9 +57,21 @@ public class PrivateContactsActivity extends HSAppCompatActivity implements Load
     }
 
     @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        mLoaderManager.destroyLoader(CONVERSATION_LIST_LOADER);
+    }
+
+    @Override
     protected void onStart() {
         AppPrivateLockManager.getInstance().checkLockStateAndSelfVerify();
         super.onStart();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        removeConversationsFromPrivateBox(mRemoveConversationList);
     }
 
     @Override
@@ -91,8 +106,8 @@ public class PrivateContactsActivity extends HSAppCompatActivity implements Load
 
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor cursor) {
-        List<ConversationListItemData> dataList = new ArrayList<>();
         if (cursor != null && cursor.moveToFirst()) {
+            List<ConversationListItemData> dataList = new ArrayList<>(cursor.getCount());
             do {
                 ConversationListItemData itemData = new ConversationListItemData();
                 itemData.bind(cursor);
@@ -100,9 +115,8 @@ public class PrivateContactsActivity extends HSAppCompatActivity implements Load
                     dataList.add(itemData);
                 }
             } while (cursor.moveToNext());
+            mAdapter.updateData(dataList);
         }
-
-        mAdapter.updateData(dataList);
     }
 
     @Override
@@ -112,12 +126,6 @@ public class PrivateContactsActivity extends HSAppCompatActivity implements Load
 
     @Override
     public void onPrivateContactsRemoveButtonClick(ConversationListItemData conversationListItemData) {
-        List<String> addList = new ArrayList<>();
-        addList.add(conversationListItemData.getConversationId());
-
-        if (addList.size() <= 0) {
-            return;
-        }
-        removeConversationsFromPrivateBox(addList);
+        mRemoveConversationList.add(conversationListItemData.getConversationId());
     }
 }

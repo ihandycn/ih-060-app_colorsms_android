@@ -70,6 +70,7 @@ import com.android.messaging.ui.customize.theme.ThemeUtils;
 import com.android.messaging.util.AccessibilityUtil;
 import com.android.messaging.util.Assert;
 import com.android.messaging.util.BugleAnalytics;
+import com.android.messaging.util.CommonUtils;
 import com.android.messaging.util.ImeUtil;
 import com.android.messaging.util.LogUtil;
 import com.android.messaging.util.UiUtils;
@@ -343,6 +344,11 @@ public class ConversationListFragment extends Fragment implements ConversationLi
                 mHost.onCreateConversationClick();
             });
             mStartNewConversationButton.setOnLongClickListener(v -> {
+                if (CommonUtils.isNewUser()){
+                    if (!HSConfig.optBoolean(true, "Application", "PrivateBox")){
+                        return true;
+                    }
+                }
                 if (PrivateBoxSettings.isAnyPasswordSet()) {
                     Intent intent = new Intent(getActivity(), SelfVerifyActivity.class);
                     intent.putExtra(SelfVerifyActivity.INTENT_KEY_ACTIVITY_ENTRANCE,

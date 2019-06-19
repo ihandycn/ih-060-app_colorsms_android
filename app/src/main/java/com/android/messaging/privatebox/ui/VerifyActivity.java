@@ -7,7 +7,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
-import android.os.Build;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.KeyEvent;
@@ -27,16 +26,14 @@ import com.android.messaging.privatebox.ui.view.PINIndicatorView;
 import com.android.messaging.privatebox.ui.view.PINKeyboardView;
 import com.android.messaging.privatebox.ui.view.RipplePopupView;
 import com.android.messaging.ui.customize.PrimaryColors;
+import com.android.messaging.util.BugleAnalytics;
 import com.android.messaging.util.ViewUtils;
-import com.ihs.app.framework.HSSessionMgr;
-import com.ihs.commons.config.HSConfig;
 import com.ihs.commons.notificationcenter.HSGlobalNotificationCenter;
 import com.ihs.commons.notificationcenter.INotificationObserver;
 import com.ihs.commons.utils.HSBundle;
 import com.ihs.commons.utils.HSLog;
 import com.superapps.util.Dimensions;
 import com.superapps.util.Navigations;
-import com.superapps.util.Toasts;
 
 public abstract class VerifyActivity extends BaseActivity implements INotificationObserver {
 
@@ -176,6 +173,7 @@ public abstract class VerifyActivity extends BaseActivity implements INotificati
             tvForgetPassword.setOnClickListener(v -> {
                 menuPopupWindow.dismiss();
                 startActivityForResult(new Intent(this, PrivateBoxLockQuestionActivity.class), REQUEST_SECURITY_QUESTION);
+                BugleAnalytics.logEvent("PrivateBox_UnlockPage_Forget_Click");
             });
 
             menuPopupWindow.setOutSideBackgroundColor(Color.TRANSPARENT);

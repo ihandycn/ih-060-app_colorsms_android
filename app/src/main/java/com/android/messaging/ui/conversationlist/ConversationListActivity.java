@@ -471,7 +471,6 @@ public class ConversationListActivity extends AbstractConversationListActivity
                                     new String[]{Manifest.permission.READ_PHONE_STATE}, REQUEST_PERMISSION_CODE);
                         }
                         break;
-
                     case DRAWER_INDEX_INVITE_FRIENDS:
                         BugleAnalytics.logEvent("Menu_InviteFriends_Click");
                         Intent inviteFriendsIntent = new Intent(ConversationListActivity.this, InviteFriendsActivity.class);
@@ -552,6 +551,11 @@ public class ConversationListActivity extends AbstractConversationListActivity
 
         });
         mPrivateBoxEntrance = navigationContent.findViewById(R.id.navigation_item_privacy_box);
+        if (CommonUtils.isNewUser()){
+            if (!HSConfig.optBoolean(true, "Application", "PrivateBox")){
+                mPrivateBoxEntrance.setVisibility(View.GONE);
+            }
+        }
         mPrivateBoxEntrance.setOnClickListener(this);
         if (PrivateSettingManager.isPrivateBoxIconHidden()) {
             mPrivateBoxEntrance.setVisibility(View.GONE);

@@ -19,7 +19,6 @@ import com.ihs.app.framework.HSApplication;
 import com.superapps.util.Navigations;
 
 public class SelfVerifyActivity extends VerifyActivity {
-    private static final String TAG = "SelfVerifyActivity";
     public static final String INTENT_KEY_ACTIVITY_ENTRANCE = "entrance";
     public static final String INTENT_KEY_ENTRANCE_CONVERSATION_ID = "conversation_id";
 
@@ -64,8 +63,10 @@ public class SelfVerifyActivity extends VerifyActivity {
             BugleAnalytics.logEvent("Notifications_Clicked_PrivateBox");
         }
         if (!PrivateBoxSettings.isSecurityQuestionSet()) {
+            BugleAnalytics.logEvent("PrivateBox_UnlockPage_Show", true, "isForgetEnabled", "false");
             findViewById(R.id.menu_icon).setVisibility(View.GONE);
         } else {
+            BugleAnalytics.logEvent("PrivateBox_UnlockPage_Show", true, "isForgetEnabled", "true");
             findViewById(R.id.menu_icon).setVisibility(View.VISIBLE);
         }
     }
