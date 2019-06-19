@@ -74,6 +74,7 @@ import com.android.messaging.ad.AdPlacement;
 import com.android.messaging.datamodel.BugleNotifications;
 import com.android.messaging.datamodel.DataModel;
 import com.android.messaging.datamodel.MessagingContentProvider;
+import com.android.messaging.datamodel.action.BugleActionToasts;
 import com.android.messaging.datamodel.binding.Binding;
 import com.android.messaging.datamodel.binding.BindingBase;
 import com.android.messaging.datamodel.binding.ImmutableBindingRef;
@@ -129,6 +130,7 @@ import com.ihs.commons.utils.HSLog;
 import com.superapps.util.Dimensions;
 import com.superapps.util.Preferences;
 import com.superapps.util.Threads;
+import com.superapps.util.Toasts;
 
 import net.appcloudbox.ads.base.AcbNativeAd;
 import net.appcloudbox.ads.base.ContainerView.AcbNativeAdContainerView;
@@ -472,6 +474,7 @@ public class ConversationFragment extends Fragment implements ConversationDataLi
                     clipboard.setPrimaryClip(
                             ClipData.newPlainText(null /* label */, data.getText()));
                     resetActionModeAndAnimation();
+                    Toasts.showToast(R.string.message_copied);
                     BugleAnalytics.logEvent("SMS_DetailsPage_LongPress_Copy", true);
                     break;
                 case R.id.details_menu:

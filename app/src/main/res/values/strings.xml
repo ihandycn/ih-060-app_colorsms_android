@@ -1210,7 +1210,6 @@
         <item quantity="one">%s Second</item>
         <item quantity="other">%s Seconds</item>
     </plurals>
-    
 
     <string name="menu_invite_friends">Invite Friends</string>
     <string name="invite_friends_now">INVITE NOW</string>
@@ -1229,9 +1228,11 @@
     <string name="invite_friends_invite_save_button">Save</string>
     <string name="invite_friends_invite_edit_button">Edit</string>
     <string name="invite_friends_invite_send_sms_description">Send SMS to the friend that you’d like to invite</string>
-
     <string name="invite_friends_default_auto_link_content">https://go.onelink.me/app/90cf450c</string>
-
     <string name="invite_friends_success_toast">Invite success</string>
-    
+
+    <string name="message_copied">Copied to clipboard</string>
+    <string name="conversation_pinned">Pinned to top</string>
+    <string name="conversation_unpinned">Unpinned</string>
+    <string name="conversation_moved_to_private_box">Moved to private box</string>
 </resources>
