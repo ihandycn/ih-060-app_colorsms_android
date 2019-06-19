@@ -17,6 +17,7 @@ package com.android.messaging.datamodel.action;
 
 import android.content.Context;
 import android.os.Handler;
+import android.os.Looper;
 import android.widget.Toast;
 
 import com.android.messaging.Factory;
@@ -85,7 +86,7 @@ public class BugleActionToasts {
         showToast(R.string.message_locked_when_delete);
     }
 
-    private static Handler sHandler = new Handler();
+    private static Handler sHandler = new Handler(Looper.getMainLooper());
     private static final int EVENT_TOAST_INTERVAL = 100;
 
     public static void onConversationDeleted() {
