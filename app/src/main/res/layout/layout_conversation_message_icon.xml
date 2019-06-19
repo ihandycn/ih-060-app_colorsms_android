@@ -19,5 +19,7 @@
         android:layout_height="@dimen/conversation_message_contact_icon_size"
         android:layout_gravity="center"
         android:clickable="true"
+        app:reveal="false"
+        app:fadeIn="false"
         android:importantForAccessibility="no" />
 </FrameLayout>
