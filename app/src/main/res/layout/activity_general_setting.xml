@@ -59,17 +59,6 @@
                     app:title="@string/notification_vibrate_pref_title"
                     app:type="switchView" />
 
-                <!--SMS Show-->
-                <com.android.messaging.ui.appsettings.GeneralSettingItemView
-                    android:id="@+id/setting_item_sms_show"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:visibility="gone"
-                    app:hideDivideLine="true"
-                    app:summary="@string/setting_sms_show_summary"
-                    app:title="@string/setting_sms_show"
-                    app:type="switchView" />
-
                 <!--SMS Pop-ups-->
                 <com.android.messaging.ui.appsettings.GeneralSettingItemView
                     android:id="@+id/setting_item_sms_pop_ups"
@@ -117,6 +106,17 @@
                 android:layout_height="wrap_content"
                 android:text="@string/general_settings"
                 app:typeface="@string/custom_font_regular" />
+
+            <!--SMS Show-->
+            <com.android.messaging.ui.appsettings.GeneralSettingItemView
+                android:id="@+id/setting_item_sms_show"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:visibility="gone"
+                app:hideDivideLine="true"
+                app:summary="@string/setting_sms_show_summary"
+                app:title="@string/setting_sms_show"
+                app:type="switchView" />
 
             <!--Signature-->
             <com.android.messaging.ui.appsettings.GeneralSettingItemView

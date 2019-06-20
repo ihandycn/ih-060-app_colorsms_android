@@ -796,12 +796,13 @@
     </style>
 
     <style name="SettingTitleStyle">
-        <item name="android:textSize">12sp</item>
+        <item name="android:textSize">14sp</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_marginTop">15.3dp</item>
-        <item name="android:layout_marginBottom">12.3dp</item>
+        <item name="android:layout_marginBottom">2dp</item>
         <item name="android:layout_marginStart">15dp</item>
+        <item name="android:includeFontPadding">false</item>
     </style>
 
     <style name="SettingDividerStyle">

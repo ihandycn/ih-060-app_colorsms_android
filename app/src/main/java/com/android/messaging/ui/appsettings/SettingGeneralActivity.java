@@ -1,6 +1,7 @@
 package com.android.messaging.ui.appsettings;
 
 import android.animation.LayoutTransition;
+import android.animation.ObjectAnimator;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.media.Ringtone;
@@ -185,6 +186,7 @@ public class SettingGeneralActivity extends BaseActivity {
         GeneralSettingItemView mBlockedContactsView = findViewById(R.id.setting_item_blocked_contacts);
         mBlockedContactsView.setOnItemClickListener(() -> {
             UIIntents.get().launchBlockedParticipantsActivity(this);
+            overridePendingTransition(R.anim.slide_in_from_right_and_fade, R.anim.anim_null);
             BugleAnalytics.logEvent("SMS_Settings_BlockedContacts_Click", true);
         });
 
@@ -192,6 +194,7 @@ public class SettingGeneralActivity extends BaseActivity {
         GeneralSettingItemView archivedConversations = findViewById(R.id.setting_item_archive);
         archivedConversations.setOnItemClickListener(() -> {
             UIIntents.get().launchArchivedConversationsActivity(this);
+            overridePendingTransition(R.anim.slide_in_from_right_and_fade, R.anim.anim_null);
         });
 
         //advances
@@ -201,6 +204,7 @@ public class SettingGeneralActivity extends BaseActivity {
                 BugleAnalytics.logEvent("SMS_Settings_Advanced_Click", true);
                 Intent intent = UIIntents.get().getAdvancedSettingsIntent(this);
                 startActivity(intent);
+                overridePendingTransition(R.anim.slide_in_from_right_and_fade, R.anim.anim_null);
             });
         } else {
             mAdvancedView.setVisibility(View.GONE);
@@ -212,12 +216,16 @@ public class SettingGeneralActivity extends BaseActivity {
                     Intent intent = new Intent(this, FeedbackActivity.class);
                     intent.putExtra(FeedbackActivity.INTENT_KEY_LAUNCH_FROM, FeedbackActivity.LAUNCH_FROM_SETTING);
                     startActivity(intent);
+                    overridePendingTransition(R.anim.slide_in_from_right_and_fade, R.anim.anim_null);
                 }
         );
 
         //about
         GeneralSettingItemView mPrivacyPolicy = findViewById(R.id.setting_item_about);
-        mPrivacyPolicy.setOnItemClickListener(() -> Navigations.startActivitySafely(this, SettingAboutActivity.class));
+        mPrivacyPolicy.setOnItemClickListener(() -> {
+            Navigations.startActivitySafely(this, SettingAboutActivity.class);
+            overridePendingTransition(R.anim.slide_in_from_right_and_fade, R.anim.anim_null);
+        });
 
         setUpSyncSettingsView();
     }
@@ -257,6 +265,9 @@ public class SettingGeneralActivity extends BaseActivity {
         }
 
         LayoutTransition transition = new LayoutTransition();
+        ObjectAnimator animator = ObjectAnimator.ofFloat(null, "alpha", 0, 0);
+        transition.setAnimator(LayoutTransition.DISAPPEARING, animator);
+        transition.setDuration(LayoutTransition.DISAPPEARING, 200);
         ((LinearLayout) findViewById(R.id.setting_root_container)).setLayoutTransition(transition);
 
         mNotificationView.setChecked(notificationEnable);
@@ -269,6 +280,7 @@ public class SettingGeneralActivity extends BaseActivity {
                     if (b) {
                         mNotificationChildrenGroup.setVisibility(View.VISIBLE);
                     } else {
+                        //mNotificationChildrenGroup.setAlpha(0);
                         mNotificationChildrenGroup.setVisibility(View.GONE);
                     }
 
@@ -397,6 +409,7 @@ public class SettingGeneralActivity extends BaseActivity {
         ringtonePickerIntent.putExtra(RingtoneManager.EXTRA_RINGTONE_TITLE, getTitle()); //title
         Navigations.startActivityForResultSafely(SettingGeneralActivity.this,
                 ringtonePickerIntent, REQUEST_CODE_START_RINGTONE_PICKER);
+        overridePendingTransition(R.anim.slide_in_from_right_and_fade, R.anim.anim_null);
     }
 
     @Override

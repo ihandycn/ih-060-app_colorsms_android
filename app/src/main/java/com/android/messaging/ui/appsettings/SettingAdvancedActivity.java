@@ -25,11 +25,11 @@ public class SettingAdvancedActivity extends BaseActivity {
 
     private int mSubId;
 
-    private SettingItemView mGroupMMS;
-    private SettingItemView mAutoRetrieve;
-    private SettingItemView mRoamingAutoRetrieve;
-    private SettingItemView mSMSDeliveryReports;
-    private SettingItemView mOutgoingSoundView;
+    private GeneralSettingItemView mGroupMMS;
+    private GeneralSettingItemView mAutoRetrieve;
+    private GeneralSettingItemView mRoamingAutoRetrieve;
+    private GeneralSettingItemView mSMSDeliveryReports;
+    private GeneralSettingItemView mOutgoingSoundView;
 
     final BuglePrefs mPrefs = BuglePrefs.getApplicationPrefs();
 
@@ -50,7 +50,7 @@ public class SettingAdvancedActivity extends BaseActivity {
         getSupportActionBar().setDisplayShowHomeEnabled(true);
 
         //phone number
-        SettingItemView mPhoneNumberView = findViewById(R.id.setting_advanced_phone_number);
+        GeneralSettingItemView mPhoneNumberView = findViewById(R.id.setting_advanced_phone_number);
         Intent intent = getIntent();
         Assert.notNull(intent);
         mSubId = (intent != null) ? intent.getIntExtra(UIIntents.UI_INTENT_EXTRA_SUB_ID,

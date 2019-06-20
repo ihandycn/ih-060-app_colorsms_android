@@ -22,6 +22,7 @@ import android.widget.TextView;
 
 import com.android.messaging.R;
 import com.android.messaging.ui.customize.PrimaryColors;
+import com.superapps.util.Dimensions;
 
 public class GeneralSettingItemView extends BaseItemView {
     public static final int SWITCH = 1;
@@ -76,6 +77,7 @@ public class GeneralSettingItemView extends BaseItemView {
                 mTriangleView.setImageResource(R.drawable.setting_more_icon_new);
                 LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,
                         ViewGroup.LayoutParams.WRAP_CONTENT);
+                params.setMarginEnd(Dimensions.pxFromDp(7));
                 widgetFrame.addView(mTriangleView, params);
             }
         }

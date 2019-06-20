@@ -32,6 +32,7 @@ public class SettingEmojiItemView extends BaseItemView {
             TextView emojiView = new TextView(getContext());
             LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,
                     ViewGroup.LayoutParams.WRAP_CONTENT);
+            params.setMarginEnd(Dimensions.pxFromDp(7));
             widgetFrame.addView(emojiView, params);
             emojiView.setTextSize(22f);
             emojiView.setText(String.valueOf(Character.toChars(Integer.parseInt("1f590", 16))));

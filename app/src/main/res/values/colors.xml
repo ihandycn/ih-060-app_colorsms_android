@@ -21,6 +21,7 @@
 
     <!-- base color -->
     <color name="divider_color">#e4e7eb</color>
+    <color name="setting_divider_color">#d7dde3</color>
 
     <color name="black_10_transparent">#1A000000</color>
     <color name="black_20_transparent">#32000000</color>
