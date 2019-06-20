@@ -27,23 +27,6 @@ public class BugleNotificationChannelUtil {
         NotificationManager notifyMgr = (NotificationManager)
                 HSApplication.getContext().getSystemService(Context.NOTIFICATION_SERVICE);
         NotificationChannel channel = null;
-        if (notifyMgr != null) {
-            channel = notifyMgr.getNotificationChannel(PendingIntentConstants.SMS_NOTIFICATION_CHANNEL_ID + "_" + channelIndex);
-        }
-
-        if (soundPath == null) {
-            if (channel != null
-                    && (channel.getSound() == null || TextUtils.isEmpty(channel.getSound().getPath()))
-                    && channel.shouldVibrate() == enableVibration
-                    && channel.getImportance() == importance) {
-                return channel;
-            }
-        } else if (channel != null && channel.getSound() != null
-                && channel.getSound().getPath().equals(soundPath.getPath())
-                && channel.shouldVibrate() == enableVibration
-                && channel.getImportance() == importance) {
-            return channel;
-        }
 
         deleteNotificationChannels();
         channelIndex++;

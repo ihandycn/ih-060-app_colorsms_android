@@ -153,7 +153,7 @@ public abstract class MessageNotificationState extends NotificationState {
     }
 
     private boolean disableHeadUpNotification() {
-        return MessageBoxSettings.isSMSAssistantModuleEnabled() && !Factory.get().getIsForeground() && CommonUtils.isScreenOn(Factory.get().getApplicationContext());
+        return MessageBoxSettings.shouldPopUp() && CommonUtils.isScreenOn(Factory.get().getApplicationContext());
     }
 
     /**

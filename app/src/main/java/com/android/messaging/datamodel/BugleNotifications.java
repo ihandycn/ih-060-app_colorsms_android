@@ -699,9 +699,6 @@ public class BugleNotifications {
     }
 
     private static void popUpMessageBox(final NotificationState state, final String conversationId) {
-        if (UiUtils.isLandscapeMode()) {
-            return;
-        }
 
         if (state instanceof MessageNotificationState) {
             for (ConversationLineInfo convInfo : ((MessageNotificationState) state).mConvList.mConvInfos) {
