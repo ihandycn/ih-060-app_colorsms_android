@@ -72,6 +72,12 @@ public class PrivateContactsActivity extends AppCompatActivity implements Loader
     }
 
     @Override
+    protected void onPause() {
+        super.onPause();
+        removeConversationsFromPrivateBox(mRemoveConversationList);
+    }
+
+    @Override
     public void onBackPressed() {
         finish();
     }
@@ -124,9 +130,7 @@ public class PrivateContactsActivity extends AppCompatActivity implements Loader
 
     @Override
     public void onPrivateContactsRemoveButtonClick(ConversationListItemData conversationListItemData, boolean isPrivateContactListEmpty) {
-        mRemoveConversationList.clear();
         mRemoveConversationList.add(conversationListItemData.getConversationId());
-        removeConversationsFromPrivateBox(mRemoveConversationList);
         if (isPrivateContactListEmpty) {
             mEmptyListMessageView.setVisibility(View.VISIBLE);
         }
