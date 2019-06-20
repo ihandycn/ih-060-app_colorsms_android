@@ -6,30 +6,43 @@
     android:background="?selectableItemBackground">
 
     <android.support.v7.widget.AppCompatImageView
-        android:id="@+id/call_assistant_sub_category_checked"
-        android:layout_width="30dp"
-        android:layout_height="30dp"
-        android:layout_centerVertical="true"
-        android:layout_marginEnd="16dp"
+        android:id="@+id/contact_remove_button"
+        android:layout_width="36.7dp"
+        android:layout_height="36.7dp"
         android:layout_alignParentEnd="true"
-        app:srcCompat="@drawable/ic_media_gallery" />
+        android:layout_centerVertical="true"
+        android:layout_marginEnd="6.7dp"
+        android:padding="9.3dp"
+        app:srcCompat="@drawable/icon_remove" />
 
-    <android.support.v7.widget.AppCompatImageView
-        android:id="@+id/missied_calls_sub_category_icon"
+    <FrameLayout
+        android:id="@+id/contact_avatar"
         android:layout_width="40dp"
         android:layout_height="40dp"
+        android:layout_alignParentStart="true"
         android:layout_centerVertical="true"
-        android:layout_marginStart="16dp"
-        app:srcCompat="@drawable/default_contact_avatar" />
+        android:layout_marginStart="17.3dp"
+        android:background="@drawable/bubble_customize_preview_contact_icon_background">
+
+        <com.android.messaging.ui.ContactIconView
+            android:id="@+id/private_contact_icon"
+            android:layout_width="@dimen/conversation_list_contact_icon_size"
+            android:layout_height="@dimen/conversation_list_contact_icon_size"
+            android:layout_gravity="center"
+            android:background="@android:color/transparent"
+            android:contentDescription="@null"
+            android:importantForAccessibility="no"
+            app:fadeIn="false"
+            app:iconSize="large"
+            app:reveal="false" />
+    </FrameLayout>
 
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerVertical="true"
-        android:layout_marginLeft="16dp"
-        android:layout_marginRight="16dp"
-        android:layout_toEndOf="@+id/missied_calls_sub_category_icon"
-        android:layout_toRightOf="@+id/missied_calls_sub_category_icon"
+        android:layout_marginStart="15.3dp"
+        android:layout_toEndOf="@+id/contact_avatar"
         android:orientation="vertical">
 
         <com.android.messaging.ui.view.MessagesTextView
@@ -37,9 +50,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:ellipsize="end"
-            android:text="Unknown"
             android:textColor="#19191c"
-            android:textSize="16sp"
+            android:textSize="15.3sp"
             app:typeface="@string/custom_font_medium" />
 
         <com.android.messaging.ui.view.MessagesTextView
@@ -48,15 +60,9 @@
             android:layout_height="wrap_content"
             android:ellipsize="end"
             android:singleLine="true"
-            android:text="Unknown"
-            android:textColor="#222327"
-            android:textSize="13sp"
+            android:textColor="#5a5c63"
+            android:textSize="12.7sp"
             app:typeface="@string/custom_font_regular" />
     </LinearLayout>
 
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="1px"
-        android:layout_alignParentBottom="true"
-        android:background="@color/divider_color" />
 </RelativeLayout>

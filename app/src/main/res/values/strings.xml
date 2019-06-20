@@ -1170,6 +1170,7 @@
     <string name="private_box_move_to_box">Move to private box</string>
     <string name="private_box_remove_from_box">Remove from private box</string>
     <string name="private_box_uninstall_notice">Unless you move the messages to public box, you may lose your data after you uninstall us.</string>
+    <string name="private_box_empty_contact_hint">No privacy contact</string>
 
     <string name="conversation_list">Conversation List</string>
     <string name="contacts">Contacts</string>

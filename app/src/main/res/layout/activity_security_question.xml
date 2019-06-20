@@ -93,7 +93,7 @@
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_above="@+id/button_ll"
+                android:layout_above="@+id/set_only_button"
                 android:layout_marginLeft="20dp"
                 android:layout_marginRight="20dp">
 
@@ -138,24 +138,19 @@
                 </LinearLayout>
             </RelativeLayout>
 
-            <LinearLayout
-                android:id="@+id/button_ll"
+            <TextView
+                android:id="@+id/set_only_button"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="50dp"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="20dp"
+                android:layout_marginBottom="18.3dp"
                 android:layout_alignParentBottom="true"
-                android:layout_marginBottom="15dp">
+                android:gravity="center"
+                android:text="@string/set"
+                android:textColor="@android:color/white"
+                android:textSize="20sp" />
 
-                <TextView
-                    android:id="@+id/set_only_button"
-                    android:layout_width="match_parent"
-                    android:layout_height="50dp"
-                    android:layout_marginLeft="15dp"
-                    android:layout_marginRight="15dp"
-                    android:gravity="center"
-                    android:text="@string/set"
-                    android:textColor="@android:color/white"
-                    android:textSize="20sp" />
-            </LinearLayout>
         </RelativeLayout>
     </LinearLayout>
 </FrameLayout>

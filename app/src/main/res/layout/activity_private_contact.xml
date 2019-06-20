@@ -3,14 +3,49 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical">
 
     <include layout="@layout/top_tool_bar_view" />
 
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/private_contact_recycler_view"
+    <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:scrollbars="none" />
+        android:layout_height="match_parent">
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/private_contact_recycler_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scrollbars="none" />
+
+        <LinearLayout
+            android:id="@+id/private_contact_empty_container"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:visibility="gone">
+
+            <ImageView
+                android:id="@+id/private_contact_empty_bg"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/private_contact_empty" />
+
+            <com.android.messaging.ui.view.MessagesTextView
+                android:id="@+id/private_contact_empty_view_description"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16.3dp"
+                android:layout_marginBottom="30dp"
+                android:text="@string/private_box_empty_contact_hint"
+                android:textColor="#9d9fa8"
+                android:textSize="15.3sp"
+                app:typeface="@string/custom_font_regular" />
+
+        </LinearLayout>
+
+    </FrameLayout>
 
 </LinearLayout>

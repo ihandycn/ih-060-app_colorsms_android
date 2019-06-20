@@ -10,6 +10,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.TextView;
 
 import com.android.messaging.R;
@@ -31,10 +32,12 @@ public class PrivateContactsActivity extends AppCompatActivity implements Loader
     private PrivateContactsAdapter mAdapter;
     private LoaderManager mLoaderManager;
     private List<String> mRemoveConversationList = new ArrayList<>();
+    private View mEmptyListMessageView;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_private_contact);
+        mEmptyListMessageView = findViewById(R.id.private_contact_empty_container);
         mAdapter = new PrivateContactsAdapter();
         BugleAnalytics.logEvent("PrivateBox_PrivateContacts_Show");
         Toolbar toolbar = findViewById(R.id.toolbar);
@@ -116,6 +119,7 @@ public class PrivateContactsActivity extends AppCompatActivity implements Loader
                 }
             } while (cursor.moveToNext());
             mAdapter.updateData(dataList);
+            mEmptyListMessageView.setVisibility(dataList.isEmpty() ? View.VISIBLE : View.GONE);
         }
     }
 
@@ -125,7 +129,10 @@ public class PrivateContactsActivity extends AppCompatActivity implements Loader
     }
 
     @Override
-    public void onPrivateContactsRemoveButtonClick(ConversationListItemData conversationListItemData) {
+    public void onPrivateContactsRemoveButtonClick(ConversationListItemData conversationListItemData, boolean isPrivateContactListEmpty) {
         mRemoveConversationList.add(conversationListItemData.getConversationId());
+        if (isPrivateContactListEmpty) {
+            mEmptyListMessageView.setVisibility(View.VISIBLE);
+        }
     }
 }
