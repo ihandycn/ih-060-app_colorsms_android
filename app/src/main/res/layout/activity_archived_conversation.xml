@@ -44,10 +44,9 @@
             <com.android.messaging.ui.view.MessagesTextView
                 android:id="@+id/toolbar_title"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_gravity="center"
-                android:gravity="center_vertical"
+                android:layout_height="wrap_content"
                 android:includeFontPadding="false"
+                android:textAlignment="viewStart"
                 android:textColor="@color/action_bar_title_text_color"
                 android:textSize="16.7dp"
                 app:typeface="@string/custom_font_semibold" />

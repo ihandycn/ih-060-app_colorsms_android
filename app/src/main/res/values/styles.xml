@@ -802,6 +802,7 @@
         <item name="android:layout_marginTop">15.3dp</item>
         <item name="android:layout_marginBottom">2dp</item>
         <item name="android:layout_marginStart">15dp</item>
+        <item name="android:textAlignment">viewStart</item>
         <item name="android:includeFontPadding">false</item>
     </style>
 
