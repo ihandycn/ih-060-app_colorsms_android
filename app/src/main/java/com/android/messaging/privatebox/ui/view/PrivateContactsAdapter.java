@@ -62,10 +62,12 @@ public class PrivateContactsAdapter extends RecyclerView.Adapter<PrivateContacts
             @Override
             public void onClick(View view) {
                 int position = holder.getAdapterPosition();
-                ConversationListItemData conversationListItemData = mRecyclerDataList.get(position);
-                removeData(position);
-                mHost.onPrivateContactsRemoveButtonClick(conversationListItemData, getItemCount() == 0);
-                BugleAnalytics.logEvent("PrivateBox_PrivateContacts_Move_Click");
+                if(position != -1) {
+                    ConversationListItemData conversationListItemData = mRecyclerDataList.get(position);
+                    removeData(position);
+                    mHost.onPrivateContactsRemoveButtonClick(conversationListItemData, getItemCount() == 0);
+                    BugleAnalytics.logEvent("PrivateBox_PrivateContacts_Move_Click");
+                }
             }
         });
         return holder;
