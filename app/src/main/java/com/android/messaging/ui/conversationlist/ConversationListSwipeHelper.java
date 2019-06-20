@@ -270,7 +270,7 @@ public class ConversationListSwipeHelper implements OnItemTouchListener {
     private void onSwipeGestureEnd(final ConversationListItemView itemView,
                                    final int swipeDirection) {
         if (swipeDirection == SWIPE_DIRECTION_RIGHT || swipeDirection == SWIPE_DIRECTION_LEFT) {
-            itemView.onSwipeComplete();
+            itemView.onSwipeComplete(swipeDirection == SWIPE_DIRECTION_LEFT);
         }
 
         // Balances out onSwipeGestureStart.

@@ -15,14 +15,22 @@
  */
 package com.android.messaging.ui.conversationlist;
 
-import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
-import android.view.Menu;
+import android.support.v7.widget.Toolbar;
+import android.view.ActionMode;
 import android.view.MenuItem;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.android.messaging.R;
-import com.android.messaging.util.DebugUtils;
+import com.android.messaging.datamodel.action.PinConversationAction;
+import com.android.messaging.ui.customize.PrimaryColors;
+import com.android.messaging.ui.customize.ToolbarDrawables;
+import com.android.messaging.util.BugleAnalytics;
+import com.superapps.util.Dimensions;
 
 import java.util.Collection;
 import java.util.List;
@@ -33,25 +41,78 @@ public class ArchivedConversationListActivity extends AbstractConversationListAc
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        setContentView(R.layout.activity_archived_conversation);
+
+        configAppBar();
+
         final ConversationListFragment fragment =
                 ConversationListFragment.createArchivedConversationListFragment();
-        getFragmentManager().beginTransaction().add(android.R.id.content, fragment).commit();
+        getFragmentManager().beginTransaction().add(R.id.root_view, fragment).commit();
+    }
+
+    private void configAppBar() {
+        View accessoryContainer = findViewById(R.id.accessory_container);
+        ViewGroup.LayoutParams layoutParams = accessoryContainer.getLayoutParams();
+        layoutParams.height = Dimensions.getStatusBarHeight(this) + Dimensions.pxFromDp(56);
+        accessoryContainer.setLayoutParams(layoutParams);
+        if (ToolbarDrawables.getToolbarBg() != null) {
+            ImageView ivAccessoryBg = accessoryContainer.findViewById(R.id.accessory_bg);
+            ivAccessoryBg.setVisibility(View.VISIBLE);
+            ivAccessoryBg.setImageDrawable(ToolbarDrawables.getToolbarBg());
+        } else {
+            accessoryContainer.setBackgroundColor(PrimaryColors.getPrimaryColor());
+            accessoryContainer.findViewById(R.id.accessory_bg).setVisibility(View.GONE);
+        }
+
+        View statusBarInset = findViewById(R.id.status_bar_inset);
+        layoutParams = statusBarInset.getLayoutParams();
+        layoutParams.height = Dimensions.getStatusBarHeight(this);
+        statusBarInset.setLayoutParams(layoutParams);
+
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        toolbar.setTitle("");
+        TextView title = toolbar.findViewById(R.id.toolbar_title);
+        title.setText(getString(R.string.archived_conversations));
+        setSupportActionBar(toolbar);
+
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        }
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
+
         invalidateActionBar();
+        //setupToolbarUI();
     }
 
     protected void updateActionBar(ActionBar actionBar) {
-        if(actionBar == null){
+        if (actionBar == null) {
             return;
         }
 
-        actionBar.setTitle(getString(R.string.archived_activity_title));
-        actionBar.setDisplayShowTitleEnabled(true);
-        actionBar.setDisplayHomeAsUpEnabled(true);
-        actionBar.setBackgroundDrawable(new ColorDrawable(
-                getResources().getColor(
-                        R.color.archived_conversation_action_bar_background_color_dark)));
+        if (getActionMode() == null) {
+            findViewById(R.id.toolbar_title).setVisibility(View.VISIBLE);
+            findViewById(R.id.selection_mode_bg).setVisibility(View.INVISIBLE);
+            actionBar.setDisplayHomeAsUpEnabled(true);
+        } else {
+            findViewById(R.id.toolbar_title).setVisibility(View.GONE);
+            findViewById(R.id.selection_mode_bg).setVisibility(View.VISIBLE);
+            actionBar.setDisplayHomeAsUpEnabled(false);
+        }
+        actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
         actionBar.show();
+
+        if (getActionMode() == null) {
+            findViewById(R.id.selection_mode_bg).setVisibility(View.INVISIBLE);
+        }
+
         super.updateActionBar(actionBar);
+    }
+
+    @Override
+    public ActionMode startActionMode(ActionMode.Callback callback) {
+        findViewById(R.id.toolbar_title).setVisibility(View.GONE);
+        findViewById(R.id.selection_mode_bg).setVisibility(View.VISIBLE);
+        return super.startActionMode(callback);
     }
 
     @Override
@@ -64,25 +125,8 @@ public class ArchivedConversationListActivity extends AbstractConversationListAc
     }
 
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        if (super.onCreateOptionsMenu(menu)) {
-            return true;
-        }
-        getMenuInflater().inflate(R.menu.archived_conversation_list_menu, menu);
-        final MenuItem item = menu.findItem(R.id.action_debug_options);
-        if (item != null) {
-            final boolean enableDebugItems = DebugUtils.isDebugEnabled();
-            item.setVisible(enableDebugItems).setEnabled(enableDebugItems);
-        }
-        return true;
-    }
-
-    @Override
     public boolean onOptionsItemSelected(MenuItem menuItem) {
-        switch(menuItem.getItemId()) {
-            case R.id.action_debug_options:
-                onActionBarDebug();
-                return true;
+        switch (menuItem.getItemId()) {
             case android.R.id.home:
                 onActionBarHome();
                 return true;
@@ -103,7 +147,14 @@ public class ArchivedConversationListActivity extends AbstractConversationListAc
 
     @Override
     public void onPin(Collection<MultiSelectActionModeCallback.SelectedConversation> conversations, boolean pin) {
-
+        for (MultiSelectActionModeCallback.SelectedConversation conversation : conversations) {
+            if (pin) {
+                PinConversationAction.pinConversation(conversation.conversationId);
+            } else {
+                PinConversationAction.unpinConversation(conversation.conversationId);
+            }
+        }
+        exitMultiSelectState();
     }
 
     @Override
@@ -113,6 +164,6 @@ public class ArchivedConversationListActivity extends AbstractConversationListAc
 
     @Override
     public boolean isSwipeAnimatable() {
-        return false;
+        return true;
     }
 }

@@ -20,9 +20,6 @@
     android:layout_height="wrap_content">
 
     <!-- The background displayed when the conversation is swiped sideways -->
-    <!--
-     android:background="@drawable/swipe_shadow"
-     -->
     <View
         android:id="@+id/cross_swipe_archive_background"
         android:layout_width="match_parent"

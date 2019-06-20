@@ -541,20 +541,29 @@ public class ConversationListFragment extends Fragment implements ConversationLi
         if (conversationFirstUpdated) {
             conversationFirstUpdated = false;
             boolean hasPinConversation = false;
+            int archivedCount = 0;
             if (!dataList.isEmpty()) {
                 for (Object object : dataList) {
                     if (object instanceof ConversationListItemData) {
                         ConversationListItemData itemData = (ConversationListItemData) object;
+                        if (itemData.getIsArchived()) {
+                            archivedCount++;
+                        }
                         if (itemData.isPinned()) {
                             hasPinConversation = true;
-                            break;
                         }
                     }
                 }
             }
-            HSBundle hsBundle = new HSBundle();
-            hsBundle.putBoolean(ConversationListActivity.HAS_PIN_CONVERSATION, hasPinConversation);
-            HSGlobalNotificationCenter.sendNotification(ConversationListActivity.FIRST_LOAD, hsBundle);
+
+            if (mArchiveMode) {
+                BugleAnalytics.logEvent("Archive_Homepage_Show", true,
+                        "num", String.valueOf(archivedCount));
+            } else {
+                HSBundle hsBundle = new HSBundle();
+                hsBundle.putBoolean(ConversationListActivity.HAS_PIN_CONVERSATION, hasPinConversation);
+                HSGlobalNotificationCenter.sendNotification(ConversationListActivity.FIRST_LOAD, hsBundle);
+            }
         }
 
         if (dataList.size() > 0 && mAdapter.hasHeader()) {

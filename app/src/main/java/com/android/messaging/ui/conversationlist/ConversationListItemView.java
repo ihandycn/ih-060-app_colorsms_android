@@ -452,8 +452,6 @@ public class ConversationListItemView extends FrameLayout implements OnClickList
             mCrossSwipeArchiveRightContainer.setVisibility(GONE);
             mCrossSwipeBg.setVisibility(INVISIBLE);
             mCrossSwipeBg.setTranslationX(-getWidth());
-//            mCrossSwipeRightBg.setVisibility(INVISIBLE);
-//            mCrossSwipeRightBg.setTranslationX(getWidth());
 
             mSwipeableContainer.setBackgroundResource(R.drawable.conversation_list_item_bg);
         } else {
@@ -471,7 +469,6 @@ public class ConversationListItemView extends FrameLayout implements OnClickList
                 }
 
                 mCrossSwipeArchiveRightContainer.setVisibility(GONE);
-                // mCrossSwipeRightBg.setVisibility(INVISIBLE);
             } else {
                 mCrossSwipeBg.setVisibility(VISIBLE);
                 mCrossSwipeBg.setTranslationX(getWidth() + translationX);
@@ -492,22 +489,35 @@ public class ConversationListItemView extends FrameLayout implements OnClickList
 
                 mCrossSwipeArchiveLeftContainer.setVisibility(GONE);
             }
-            // mSwipeableContainer.setBackgroundResource(R.drawable.swipe_shadow_drag);
         }
     }
 
-    public void onSwipeComplete() {
+    public void onSwipeComplete(boolean isLeft) {
         final String conversationId = mData.getConversationId();
         if (mHostInterface.isArchived()) {
             UpdateConversationArchiveStatusAction.unarchiveConversation(conversationId);
+            BugleAnalytics.logEvent("SMS_Messages_Unarchive", true, "from",
+                    isLeft ? "slide_left" : "slide_right");
         } else {
             UpdateConversationArchiveStatusAction.archiveConversation(conversationId);
-            final Runnable undoRunnable = () -> UpdateConversationArchiveStatusAction.unarchiveConversation(conversationId);
-            final String message = getResources().getString(R.string.archived_toast_message, 1);
-            UiUtils.showSnackBar(getContext(), getRootView(), message, undoRunnable,
-                    SnackBar.Action.SNACK_BAR_UNDO,
-                    mHostInterface.getSnackBarInteractions());
+            BugleAnalytics.logEvent("SMS_Messages_Archive", true, "from",
+                    isLeft ? "slide_left" : "slide_right");
         }
+
+        final int textId = mHostInterface.isArchived() ? R.string.archived_toast_message : R.string.unarchived_toast_message;
+        final Runnable undoRunnable = () -> {
+            if (mHostInterface.isArchived()) {
+                UpdateConversationArchiveStatusAction.archiveConversation(conversationId);
+                BugleAnalytics.logEvent("SMS_Messages_Unarchive_Undo", true);
+            } else {
+                UpdateConversationArchiveStatusAction.unarchiveConversation(conversationId);
+                BugleAnalytics.logEvent("SMS_Messages_Archive_Undo", true);
+            }
+        };
+        final String message = getResources().getString(textId, 1);
+        UiUtils.showSnackBar(getContext(), getRootView(), message, undoRunnable,
+                SnackBar.Action.SNACK_BAR_UNDO,
+                mHostInterface.getSnackBarInteractions());
     }
 
     private void setShortAndLongClickable(final boolean clickable) {
