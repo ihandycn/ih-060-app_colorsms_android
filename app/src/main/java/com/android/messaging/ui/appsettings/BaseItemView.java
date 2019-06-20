@@ -3,16 +3,16 @@ package com.android.messaging.ui.appsettings;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.support.annotation.Nullable;
-import android.support.constraint.ConstraintLayout;
 import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.TextView;
 
 import com.android.messaging.R;
+import com.ihs.app.framework.HSApplication;
+import com.superapps.util.BackgroundDrawables;
 
 public class BaseItemView extends FrameLayout {
     public interface OnSettingItemClickListener {
@@ -63,6 +63,10 @@ public class BaseItemView extends FrameLayout {
         }
 
         a.recycle();
+
+        setBackground(BackgroundDrawables.createBackgroundDrawable(0xffffffff,
+                HSApplication.getContext().getResources().getColor(com.superapps.R.color.ripples_ripple_color),
+                0, true, true));
     }
 
     public void setTitle(String title) {

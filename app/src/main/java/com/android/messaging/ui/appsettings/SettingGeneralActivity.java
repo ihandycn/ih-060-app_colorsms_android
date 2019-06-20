@@ -1,5 +1,6 @@
 package com.android.messaging.ui.appsettings;
 
+import android.animation.LayoutTransition;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.media.Ringtone;
@@ -11,6 +12,7 @@ import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.android.messaging.BaseActivity;
@@ -20,23 +22,18 @@ import com.android.messaging.smsshow.SmsShowUtils;
 import com.android.messaging.ui.BaseAlertDialog;
 import com.android.messaging.ui.BaseDialogFragment;
 import com.android.messaging.ui.UIIntents;
-import com.android.messaging.ui.WebViewActivity;
 import com.android.messaging.ui.customize.PrimaryColors;
 import com.android.messaging.ui.messagebox.MessageBoxSettings;
 import com.android.messaging.ui.signature.SignatureSettingDialog;
 import com.android.messaging.util.BugleAnalytics;
 import com.android.messaging.util.BuglePrefs;
-import com.android.messaging.util.OsUtil;
 import com.android.messaging.util.UiUtils;
 import com.firebase.ui.auth.AuthUI;
 import com.google.firebase.auth.FirebaseAuth;
-import com.ihs.app.framework.HSGdprConsent;
-import com.ihs.commons.config.HSConfig;
 import com.superapps.util.Navigations;
 import com.superapps.util.Preferences;
 import com.superapps.util.Toasts;
 
-import java.security.acl.Group;
 import java.util.Collections;
 
 import static android.view.View.GONE;
@@ -54,6 +51,9 @@ public class SettingGeneralActivity extends BaseActivity {
     private GeneralSettingItemView mPrivacyModeView;
     private GeneralSettingItemView mSyncSettingsView;
     private GeneralSettingItemView mSendDelayView;
+
+    private View mNotificationChildrenGroup;
+
     private BackPressedListener mBackListener;
     final BuglePrefs prefs = BuglePrefs.getApplicationPrefs();
 
@@ -86,6 +86,8 @@ public class SettingGeneralActivity extends BaseActivity {
         ((TextView) findViewById(R.id.setting_title_general)).setTextColor(color);
         ((TextView) findViewById(R.id.setting_title_emoji)).setTextColor(color);
         ((TextView) findViewById(R.id.setting_title_others)).setTextColor(color);
+
+        mNotificationChildrenGroup = findViewById(R.id.notification_children_group);
 
         //sms show
         mSmsShowView = findViewById(R.id.setting_item_sms_show);
@@ -175,7 +177,7 @@ public class SettingGeneralActivity extends BaseActivity {
         setUpNotificationView();
 
         //emoji
-        ((BaseItemView)findViewById(R.id.setting_item_emoji)).setOnItemClickListener(() -> {
+        ((BaseItemView) findViewById(R.id.setting_item_emoji)).setOnItemClickListener(() -> {
 
         });
 
@@ -249,16 +251,14 @@ public class SettingGeneralActivity extends BaseActivity {
                 notificationKey,
                 getResources().getBoolean(R.bool.notifications_enabled_pref_default));
         if (!notificationEnable) {
-            mSmsShowView.setVisibility(GONE);
-            mPopUpsView.setVisibility(GONE);
-            mSoundView.setVisibility(GONE);
-            mVibrateView.setVisibility(GONE);
-            mPrivacyModeView.setVisibility(GONE);
-//            mSmsShowView.setEnable(false);
-//            mPopUpsView.setEnable(false);
-//            mSoundView.setEnable(false);
-//            mVibrateView.setEnable(false);
+            mNotificationChildrenGroup.setVisibility(View.GONE);
+        } else {
+            mNotificationChildrenGroup.setVisibility(View.VISIBLE);
         }
+
+        LayoutTransition transition = new LayoutTransition();
+        ((LinearLayout) findViewById(R.id.setting_root_container)).setLayoutTransition(transition);
+
         mNotificationView.setChecked(notificationEnable);
         mNotificationView.setOnItemClickListener(() -> {
                     boolean b = mNotificationView.isChecked();
@@ -266,17 +266,12 @@ public class SettingGeneralActivity extends BaseActivity {
 
                     mNotificationView.hideDivideLine(!b);
 
-                    mPopUpsView.setVisibility(b ? View.VISIBLE : GONE);
-                    mSmsShowView.setVisibility(b ? View.VISIBLE : GONE);
-                    mSoundView.setVisibility(b ? View.VISIBLE : GONE);
-                    mVibrateView.setVisibility(b ? View.VISIBLE : GONE);
-                    mPrivacyModeView.setVisibility(b ? View.VISIBLE : GONE);
+                    if (b) {
+                        mNotificationChildrenGroup.setVisibility(View.VISIBLE);
+                    } else {
+                        mNotificationChildrenGroup.setVisibility(View.GONE);
+                    }
 
-//                    mPopUpsView.setEnable(b);
-//                    mSmsShowView.setEnable(b && mPopUpsView.isChecked());
-//                    mSoundView.setEnable(b);
-//                    mVibrateView.setEnable(b);
-//                    mPrivacyModeView.setEnable(b);
                     GeneralSettingSyncManager.uploadNotificationSwitchToServer(b);
                     BugleAnalytics.logEvent("SMS_Settings_Notifications_Click", true);
                 }

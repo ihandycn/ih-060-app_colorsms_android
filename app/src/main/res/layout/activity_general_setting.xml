@@ -12,6 +12,7 @@
         android:layout_height="match_parent">
 
         <LinearLayout
+            android:id="@+id/setting_root_container"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical">
@@ -29,54 +30,65 @@
                 android:id="@+id/setting_item_notifications"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:title="@string/notifications_enabled_pref_title"
                 app:summary="@string/notification_summary"
+                app:title="@string/notifications_enabled_pref_title"
                 app:type="switchView" />
 
-            <!--Sound-->
-            <com.android.messaging.ui.appsettings.GeneralSettingItemView
-                android:id="@+id/setting_item_sound"
+            <LinearLayout
+                android:id="@+id/notification_children_group"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:title="@string/notification_sound_pref_title"
-                app:type="withTriangle" />
+                android:orientation="vertical">
 
-            <!--Vibrate-->
-            <com.android.messaging.ui.appsettings.GeneralSettingItemView
-                android:id="@+id/setting_item_vibrate"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:key="@string/notification_vibration_pref_key"
-                app:title="@string/notification_vibrate_pref_title"
-                app:type="switchView" />
+                <!--Sound-->
+                <com.android.messaging.ui.appsettings.GeneralSettingItemView
+                    android:id="@+id/setting_item_sound"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:hideDivideLine="true"
+                    app:title="@string/notification_sound_pref_title"
+                    app:type="withTriangle" />
 
-            <!--SMS Show-->
-            <com.android.messaging.ui.appsettings.GeneralSettingItemView
-                android:id="@+id/setting_item_sms_show"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:visibility="gone"
-                app:summary="@string/setting_sms_show_summary"
-                app:title="@string/setting_sms_show"
-                app:type="switchView" />
+                <!--Vibrate-->
+                <com.android.messaging.ui.appsettings.GeneralSettingItemView
+                    android:id="@+id/setting_item_vibrate"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:key="@string/notification_vibration_pref_key"
+                    app:hideDivideLine="true"
+                    app:title="@string/notification_vibrate_pref_title"
+                    app:type="switchView" />
 
-            <!--SMS Pop-ups-->
-            <com.android.messaging.ui.appsettings.GeneralSettingItemView
-                android:id="@+id/setting_item_sms_pop_ups"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                app:summary="@string/setting_sms_pop_ups_summary"
-                app:title="@string/setting_sms_pop_ups"
-                app:type="switchView" />
+                <!--SMS Show-->
+                <com.android.messaging.ui.appsettings.GeneralSettingItemView
+                    android:id="@+id/setting_item_sms_show"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:visibility="gone"
+                    app:hideDivideLine="true"
+                    app:summary="@string/setting_sms_show_summary"
+                    app:title="@string/setting_sms_show"
+                    app:type="switchView" />
 
-            <!--Privacy Mode-->
-            <com.android.messaging.ui.appsettings.GeneralSettingItemView
-                android:id="@+id/setting_item_privacy_mode"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                app:hideDivideLine="true"
-                app:title="@string/privacy_mode_settings"
-                app:type="withTriangle" />
+                <!--SMS Pop-ups-->
+                <com.android.messaging.ui.appsettings.GeneralSettingItemView
+                    android:id="@+id/setting_item_sms_pop_ups"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:hideDivideLine="true"
+                    app:summary="@string/setting_sms_pop_ups_summary"
+                    app:title="@string/setting_sms_pop_ups"
+                    app:type="switchView" />
+
+                <!--Privacy Mode-->
+                <com.android.messaging.ui.appsettings.GeneralSettingItemView
+                    android:id="@+id/setting_item_privacy_mode"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:hideDivideLine="true"
+                    app:title="@string/privacy_mode_settings"
+                    app:type="withTriangle" />
+            </LinearLayout>
 
             <View style="@style/SettingDividerStyle" />
 
