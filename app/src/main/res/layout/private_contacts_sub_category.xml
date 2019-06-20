@@ -3,6 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="65dp"
+    xmlns:tools="http://schemas.android.com/tools"
     android:background="?selectableItemBackground">
 
     <android.support.v7.widget.AppCompatImageView
@@ -41,7 +42,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerVertical="true"
-        android:layout_marginStart="15.3dp"
+        android:layout_marginStart="16.3dp"
         android:layout_toEndOf="@+id/contact_avatar"
         android:orientation="vertical">
 
@@ -49,20 +50,24 @@
             android:id="@+id/main_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:includeFontPadding="false"
             android:ellipsize="end"
-            android:textColor="#19191c"
+            android:textColor="@color/conversation_list_item_conversation"
             android:textSize="15.3sp"
-            app:typeface="@string/custom_font_medium" />
+            app:typeface="@string/custom_font_medium"
+            tools:text = "Ability"/>
 
         <com.android.messaging.ui.view.MessagesTextView
             android:id="@+id/sub_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:includeFontPadding="false"
             android:ellipsize="end"
             android:singleLine="true"
-            android:textColor="#5a5c63"
+            android:textColor="@color/conversation_list_item_conversation_sub_title"
             android:textSize="12.7sp"
-            app:typeface="@string/custom_font_regular" />
+            app:typeface="@string/custom_font_regular"
+            tools:text = "1901231444343"/>
     </LinearLayout>
 
 </RelativeLayout>
