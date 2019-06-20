@@ -26,6 +26,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.android.messaging.R;
+import com.android.messaging.datamodel.DatabaseHelper;
+import com.android.messaging.datamodel.DatabaseWrapper;
 import com.android.messaging.datamodel.action.PinConversationAction;
 import com.android.messaging.ui.customize.PrimaryColors;
 import com.android.messaging.ui.customize.ToolbarDrawables;
@@ -165,5 +167,15 @@ public class ArchivedConversationListActivity extends AbstractConversationListAc
     @Override
     public boolean isSwipeAnimatable() {
         return true;
+    }
+
+    public static void logUnarchiveEvent(DatabaseWrapper db, String conversationId, String from) {
+        //for archive log
+        long count = db.queryNumEntries(DatabaseHelper.CONVERSATIONS_TABLE,
+                DatabaseHelper.ConversationColumns.ARCHIVE_STATUS + "=1 AND "
+                        + DatabaseHelper.ConversationColumns._ID + "=" + conversationId, null);
+        if (count == 1) {
+            BugleAnalytics.logEvent("SMS_Messages_Unarchive", true, "from", from);
+        }
     }
 }

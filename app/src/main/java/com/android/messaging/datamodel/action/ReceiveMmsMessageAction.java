@@ -37,6 +37,7 @@ import com.android.messaging.privatebox.PrivateSettingManager;
 import com.android.messaging.sms.DatabaseMessages;
 import com.android.messaging.sms.MmsSmsUtils;
 import com.android.messaging.sms.MmsUtils;
+import com.android.messaging.ui.conversationlist.ArchivedConversationListActivity;
 import com.android.messaging.util.BugleAnalytics;
 import com.android.messaging.util.CheckPermissionUtil;
 import com.android.messaging.util.FabricUtils;
@@ -148,6 +149,8 @@ public class ReceiveMmsMessageAction extends Action implements Parcelable {
                 BugleDatabaseOperations.insertNewMessageInTransaction(db, message);
 
                 if (!autoDownload) {
+                    ArchivedConversationListActivity.logUnarchiveEvent(db,conversationId, "receive_message");
+                    
                     BugleDatabaseOperations.updateConversationMetadataInTransaction(db,
                             conversationId, message.getMessageId(), message.getReceivedTimeStamp(),
                             blocked, true /* shouldAutoSwitchSelfId */);

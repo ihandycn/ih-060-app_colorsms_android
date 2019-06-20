@@ -46,6 +46,7 @@ import com.android.messaging.sms.DatabaseMessages;
 import com.android.messaging.sms.MmsSender;
 import com.android.messaging.sms.MmsSmsUtils;
 import com.android.messaging.sms.MmsUtils;
+import com.android.messaging.ui.conversationlist.ArchivedConversationListActivity;
 import com.android.messaging.util.Assert;
 import com.android.messaging.util.BugleAnalytics;
 import com.android.messaging.util.FabricUtils;
@@ -554,6 +555,8 @@ public class ProcessDownloadedMmsAction extends Action {
                     }
                 }
 
+                ArchivedConversationListActivity.logUnarchiveEvent(db, message.getConversationId(), "receive_message");
+
                 BugleDatabaseOperations.refreshConversationMetadataInTransaction(db, conversationId,
                         true /*shouldAutoSwitchSelfId*/, blockedSender /*keepArchived*/);
             } else {
@@ -573,6 +576,8 @@ public class ProcessDownloadedMmsAction extends Action {
                 // Log MMS download failed
                 final int resultCode = actionParameters.getInt(KEY_RESULT_CODE);
                 final int httpStatusCode = actionParameters.getInt(KEY_HTTP_STATUS_CODE);
+
+                ArchivedConversationListActivity.logUnarchiveEvent(db, message.getConversationId(), "receive_message");
 
                 // Just in case this was the latest message update the summary data
                 BugleDatabaseOperations.refreshConversationMetadataInTransaction(db,

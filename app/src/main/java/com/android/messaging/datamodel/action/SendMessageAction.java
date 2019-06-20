@@ -35,6 +35,7 @@ import com.android.messaging.datamodel.SyncManager;
 import com.android.messaging.datamodel.data.MessageData;
 import com.android.messaging.datamodel.data.ParticipantData;
 import com.android.messaging.sms.MmsUtils;
+import com.android.messaging.ui.conversationlist.ArchivedConversationListActivity;
 import com.android.messaging.util.Assert;
 import com.android.messaging.util.LogUtil;
 
@@ -388,6 +389,8 @@ public class SendMessageAction extends Action implements Parcelable {
             if (updatedMessageUri != null) {
                 // Update all message and part fields
                 BugleDatabaseOperations.updateMessageInTransaction(db, message);
+                ArchivedConversationListActivity.logUnarchiveEvent(db, message.getConversationId(), "receive_message");
+
                 BugleDatabaseOperations.refreshConversationMetadataInTransaction(
                         db, message.getConversationId(), false/* shouldAutoSwitchSelfId */,
                         false/*archived*/);
