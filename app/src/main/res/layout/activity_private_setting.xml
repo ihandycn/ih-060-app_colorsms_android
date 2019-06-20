@@ -21,7 +21,8 @@
         android:id="@+id/private_setting_security_question"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:title="@string/private_box_setting_security_question"
+        app:summary="@string/private_setting_security_question_summary"
+        app:title="@string/security_question"
         app:type="withTriangle" />
 
     <!--Private Contacts-->

@@ -390,7 +390,7 @@ public class PrivateBoxLockQuestionActivity extends HSAppCompatActivity implemen
                 intent.putExtra(PrivateBoxSetPasswordActivity.INTENT_EXTRA_FORGET_PASSWORD, true);
                 startActivityForResult(intent, REQUEST_FOR_SETTING_PASSWORD);
             } else {
-                Toast.makeText(PrivateBoxLockQuestionActivity.this, "Answer is incorrect", Toast.LENGTH_SHORT).show();
+                Toast.makeText(PrivateBoxLockQuestionActivity.this, getString(R.string.incorrect_question_answer_hint), Toast.LENGTH_SHORT).show();
             }
             BugleAnalytics.logEvent("PrivateBox_ForgetPage_Submit");
         }

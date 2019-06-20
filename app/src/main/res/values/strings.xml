@@ -1156,7 +1156,7 @@
     <string name="private_box_add_now">Add Now</string>
     <string name="private_box_setting_security">Security</string>
     <string name="private_box_setting_security_summary">Modify Password</string>
-    <string name="private_box_setting_security_question">Security Question</string>
+    <string name="private_setting_security_question_summary">In case you forget your password</string>
     <string name="private_box_setting_private_contacts">Private Contacts</string>
     <string name="private_box_setting_entrance">Entrance</string>
     <string name="private_box_setting_entrance_summary">Hide the icon</string>
@@ -1259,5 +1259,6 @@
     <string name="submit">SUBMIT</string>
     <string name="security_question_answer">Your answer is empty</string>
     <string name="lock_activity_forget_password">Forgot Password?</string>
+    <string name="incorrect_question_answer_hint">Answer is incorrect</string>
     
 </resources>
