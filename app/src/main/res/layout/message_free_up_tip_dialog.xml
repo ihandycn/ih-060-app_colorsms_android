@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <ImageView
+        android:id="@+id/message_free_up_close"
+        android:layout_width="28dp"
+        android:layout_height="28dp"
+        android:layout_marginEnd="5.3dp"
+        android:layout_marginTop="5.3dp"
+        android:padding="8dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/ic_free_up_popup"
+        tools:ignore="ContentDescription" />
+
+    <com.android.messaging.ui.view.MessagesTextView
+        android:id="@+id/message_free_up_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="46.7dp"
+        android:layout_marginStart="23.7dp"
+        android:includeFontPadding="false"
+        android:text="@string/message_free_up_title"
+        android:textColor="@color/text_primary_color"
+        android:textSize="18.7sp"
+        app:font_family_changeable="false"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/message_free_up_close"
+        app:typeface="@string/custom_font_semibold" />
+
+    <com.android.messaging.ui.view.MessagesTextView
+        android:id="@+id/message_free_up_content"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="29.7dp"
+        android:layout_marginStart="24.3dp"
+        android:layout_marginTop="12.7dp"
+        android:includeFontPadding="false"
+        android:lineSpacingMultiplier="1.1"
+        android:text="@string/message_free_up_content"
+        android:textColor="@color/dialog_content_color"
+        android:textSize="13.3sp"
+        app:font_family_changeable="false"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/message_free_up_title"
+        app:typeface="@string/custom_font_medium" />
+</android.support.constraint.ConstraintLayout>

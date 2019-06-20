@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <android.support.constraint.Guideline
+        android:id="@+id/start_guideline"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.3" />
+
+    <android.support.constraint.Guideline
+        android:id="@+id/end_guideline"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.7" />
+
+    <com.airbnb.lottie.LottieAnimationView
+        android:id="@+id/local_backup_process"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginTop="10dp"
+        app:layout_constraintDimensionRatio="H,117:103"
+        app:layout_constraintEnd_toEndOf="@id/end_guideline"
+        app:layout_constraintStart_toStartOf="@id/start_guideline"
+        app:layout_constraintTop_toTopOf="parent"
+        app:lottie_autoPlay="true"
+        app:lottie_fileName="lottie/local_backup_process.json"
+        app:lottie_loop="true" />
+
+    <ProgressBar
+        android:id="@+id/local_backup_progress_bar"
+        style="@style/SmsBackUpDialogProgressBar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="17.7dp"
+        android:layout_marginStart="17.7dp"
+        android:layout_marginTop="9.7dp"
+        android:max="100"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/local_backup_process" />
+
+    <com.android.messaging.ui.view.MessagesTextView
+        android:id="@+id/local_backup_process_hint"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="26.7dp"
+        android:layout_marginEnd="30dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="14dp"
+        android:includeFontPadding="false"
+        android:lineSpacingMultiplier="1.1"
+        android:text="@string/local_backup_process_hint"
+        android:textColor="@color/message_back_up_process_hint_color"
+        android:textSize="12.7sp"
+        app:font_family_changeable="false"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/local_already_backup_messages"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/local_backup_progress_bar"
+        app:typeface="@string/custom_font_medium" />
+
+    <com.android.messaging.ui.view.MessagesTextView
+        android:id="@+id/local_total_backup_messages"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="22.3dp"
+        android:includeFontPadding="false"
+        android:lineSpacingMultiplier="1.1"
+        android:textColor="@color/total_backup_messages_color"
+        android:textSize="12.7sp"
+        app:font_family_changeable="false"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@id/local_backup_process_hint"
+        app:typeface="@string/custom_font_medium" />
+
+    <com.android.messaging.ui.view.MessagesTextView
+        android:id="@+id/local_backup_messages_divider"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:includeFontPadding="false"
+        android:lineSpacingMultiplier="1.1"
+        android:text="@string/backup_process_number_divider"
+        android:textColor="@color/total_backup_messages_color"
+        android:textSize="12.7sp"
+        app:font_family_changeable="false"
+        app:layout_constraintEnd_toStartOf="@id/local_total_backup_messages"
+        app:layout_constraintTop_toTopOf="@id/local_backup_process_hint"
+        app:typeface="@string/custom_font_medium" />
+
+    <com.android.messaging.ui.view.MessagesTextView
+        android:id="@+id/local_already_backup_messages"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:includeFontPadding="false"
+        android:lineSpacingMultiplier="1.1"
+        android:textColor="@color/already_backup_messages_color"
+        android:textSize="12.7sp"
+        app:font_family_changeable="false"
+        app:layout_constraintEnd_toStartOf="@id/local_backup_messages_divider"
+        app:layout_constraintTop_toTopOf="@id/local_backup_process_hint"
+        app:typeface="@string/custom_font_medium" />
+
+    <android.support.constraint.Group
+        android:id="@+id/view_id_group"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:constraint_referenced_ids="local_total_backup_messages,local_backup_messages_divider,local_already_backup_messages" />
+</android.support.constraint.ConstraintLayout>

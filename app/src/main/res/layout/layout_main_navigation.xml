@@ -146,6 +146,56 @@
             android:layout_width="match_parent"
             android:layout_height="35dp"/>
 
+        <!-- Backup & Restore -->
+        <RelativeLayout
+            android:id="@+id/navigation_item_backup_restore"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/sidebar_button_background"
+            android:minHeight="44dp">
+
+            <android.support.v7.widget.AppCompatImageView
+                style="@style/DrawerMenuIcon"
+                app:srcCompat="@drawable/ic_menu_backup" />
+
+            <!--for some long strings-->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginStart="65dp"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <com.android.messaging.ui.view.MessagesTextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="center_vertical"
+                    android:includeFontPadding="false"
+                    android:text="@string/menu_backup_restore"
+                    android:textColor="#222327"
+                    android:textSize="14sp"
+                    app:typeface="@string/custom_font_medium" />
+
+                <com.android.messaging.ui.view.MessagesTextView
+                    android:id="@+id/navigation_item_backup_restore_new_text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="17.8dp"
+                    android:layout_marginEnd="19.3dp"
+                    android:gravity="center"
+                    android:includeFontPadding="false"
+                    android:paddingEnd="8.5dp"
+                    android:paddingStart="8.5dp"
+                    android:text="@string/menu_new"
+                    android:textColor="@color/white"
+                    android:textSize="9.3sp"
+                    android:visibility="gone"
+                    app:textAllCaps="true"
+                    app:typeface="@string/custom_font_bold" />
+            </LinearLayout>
+        </RelativeLayout>
+
         <!-- Privacy Box -->
         <RelativeLayout
             android:id="@+id/navigation_item_privacy_box"
@@ -235,3 +285,4 @@
         </RelativeLayout>
     </LinearLayout>
 </ScrollView>
+

@@ -793,8 +793,16 @@
             android:name=".ui.customize.theme.ThemePreviewActivity"
             android:excludeFromRecents="true"
             android:screenOrientation="portrait"
-            android:theme="@style/SettingsActivity"/>
-
+            android:theme="@style/SettingsActivity" />
+        <activity
+            android:name=".backup.ui.BackupRestoreActivity"
+            android:configChanges="orientation|screenSize|keyboardHidden"
+            android:screenOrientation="portrait"
+            android:theme="@style/SettingsActivity" />
+        <activity
+            android:name=".backup.ui.BackupGuideDialogActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.AppCompat.Translucent" />
         <activity
             android:name=".ui.invitefriends.InviteFriendsActivity"
             android:windowSoftInputMode="stateAlwaysHidden|adjustPan"

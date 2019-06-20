@@ -159,6 +159,15 @@ public abstract class BaseDialogFragment extends DialogFragment {
         }
     }
 
+    protected void removeDialogContentVerticalMargin() {
+        if (mContentContainer != null) {
+            ViewGroup.MarginLayoutParams params = (ViewGroup.MarginLayoutParams) mContentContainer.getLayoutParams();
+            params.topMargin = 0;
+            params.bottomMargin = 0;
+            mContentContainer.setLayoutParams(params);
+        }
+    }
+
     protected void onContentViewAdded() {
 
     }

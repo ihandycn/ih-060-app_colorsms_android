@@ -35,6 +35,9 @@ import com.android.messaging.BuildConfig;
 import com.android.messaging.R;
 import com.android.messaging.ad.AdConfig;
 import com.android.messaging.ad.AdPlacement;
+import com.android.messaging.backup.ui.BackupGuideDialogActivity;
+import com.android.messaging.backup.ui.BackupRestoreActivity;
+import com.android.messaging.backup.ui.ChooseBackupViewHolder;
 import com.android.messaging.datamodel.BugleNotifications;
 import com.android.messaging.datamodel.action.PinConversationAction;
 import com.android.messaging.datamodel.data.MessageBoxItemData;
@@ -149,6 +152,7 @@ public class ConversationListActivity extends AbstractConversationListActivity
     private static final int DRAWER_INDEX_CHANGE_FONT = 6;
     private static final int DRAWER_INDEX_PRIVACY_BOX = 7;
     private static final int DRAWER_INDEX_INVITE_FRIENDS = 8;
+    private static final int DRAWER_INDEX_BACKUP_RESTORE = 9;
 
     private int drawerClickIndex = DRAWER_INDEX_NONE;
 
@@ -347,6 +351,13 @@ public class ConversationListActivity extends AbstractConversationListActivity
         }
         showThemeUpgradeDialog();
 
+        if (drawerLayout != null) {
+            View v = drawerLayout.findViewById(R.id.navigation_item_backup_restore_new_text);
+            if (v.getVisibility() == View.VISIBLE
+                    && Preferences.getDefault().getBoolean(BackupRestoreActivity.PREF_KEY_BACKUP_ACTIVITY_SHOWN, false)) {
+                v.setVisibility(View.GONE);
+            }
+        }
         logMainPageShowEvent();
     }
 
@@ -424,6 +435,7 @@ public class ConversationListActivity extends AbstractConversationListActivity
                 if (CommonUtils.isNewUser()
                         && Calendars.isSameDay(CommonUtils.getAppInstallTimeMillis(), System.currentTimeMillis())) {
                     BugleAnalytics.logEvent("Menu_Show_NewUser", true);
+                    BugleAnalytics.logEvent("Menu_Show_NewUser_Backup", true);
                 }
                 super.onDrawerOpened(drawerView);
             }
@@ -477,6 +489,16 @@ public class ConversationListActivity extends AbstractConversationListActivity
                         Navigations.startActivity(ConversationListActivity.this, ChangeFontActivity.class);
                         overridePendingTransition(R.anim.slide_in_from_right_and_fade, R.anim.anim_null);
                         navigationContent.findViewById(R.id.navigation_item_font_new_text).setVisibility(View.GONE);
+                        break;
+                    case DRAWER_INDEX_BACKUP_RESTORE:
+                        BugleAnalytics.logEvent("Menu_BackupRestore_Click", true);
+                        BackupRestoreActivity.startBackupRestoreActivity(ConversationListActivity.this, BackupRestoreActivity.ENTRANCE_MENU);
+                        overridePendingTransition(R.anim.slide_in_from_right_and_fade, R.anim.anim_null);
+                        navigationContent.findViewById(R.id.navigation_item_backup_restore_new_text).setVisibility(View.GONE);
+                        final ConversationListFragment conversationListFragment =
+                                (ConversationListFragment) getFragmentManager().findFragmentById(
+                                        R.id.conversation_list_fragment);
+                        conversationListFragment.hideBackupBannerGuide();
                         break;
                     case DRAWER_INDEX_PRIVACY_BOX:
                         BugleAnalytics.logEvent("Menu_PrivateBox_Click", true);
@@ -544,6 +566,13 @@ public class ConversationListActivity extends AbstractConversationListActivity
                 bubbleNewMark.setBackground(BackgroundDrawables.createBackgroundDrawable(0xffea6126,
                         Dimensions.pxFromDp(8.7f), false));
             }
+
+            if (!Preferences.getDefault().getBoolean(BackupRestoreActivity.PREF_KEY_BACKUP_ACTIVITY_SHOWN, false)) {
+                View bubbleNewMark = navigationContent.findViewById(R.id.navigation_item_backup_restore_new_text);
+                bubbleNewMark.setVisibility(View.VISIBLE);
+                bubbleNewMark.setBackground(BackgroundDrawables.createBackgroundDrawable(0xffea6126,
+                        Dimensions.pxFromDp(8.7f), false));
+            }
         }
 
         navigationContent.findViewById(R.id.navigation_item_theme).setOnClickListener(this);
@@ -554,6 +583,7 @@ public class ConversationListActivity extends AbstractConversationListActivity
         navigationContent.findViewById(R.id.navigation_item_setting).setOnClickListener(this);
         navigationContent.findViewById(R.id.navigation_item_rate).setOnClickListener(this);
         navigationContent.findViewById(R.id.navigation_item_invite_friends).setOnClickListener(this);
+        navigationContent.findViewById(R.id.navigation_item_backup_restore).setOnClickListener(this);
 
         //test code
         //this item is used to delete dirty mms parts in telephony
@@ -655,6 +685,20 @@ public class ConversationListActivity extends AbstractConversationListActivity
             }
         }
 
+        int mainActivityCreateTime = Preferences.get(DESKTOP_PREFS).getInt(PREF_KEY_MAIN_ACTIVITY_SHOW_TIME, 0);
+        // show backup full guide
+        if (!shouldShowCreateShortcutGuide
+                && mainActivityCreateTime >= 2 && CommonUtils.isNewUser()
+                && HSConfig.optBoolean(false, "Application", "BackupRestore", "RecommendFull")
+                && !Preferences.getDefault().getBoolean(BackupRestoreActivity.PREF_KEY_BACKUP_ACTIVITY_SHOWN,false)
+                && !Preferences.getDefault()
+                .getBoolean(BackupGuideDialogActivity.PREF_KEY_BACKUP_FULL_GUIDE_SHOWN, false)) {
+            shouldShowCreateShortcutGuide = true;
+            Intent intent = new Intent(this, BackupGuideDialogActivity.class);
+            Navigations.startActivitySafely(this, intent);
+            return;
+        }
+
         if (!shouldShowCreateShortcutGuide
                 && FiveStarRateDialog.showShowFiveStarRateDialogOnBackToDesktopIfNeed(this)) {
             return;
@@ -663,7 +707,6 @@ public class ConversationListActivity extends AbstractConversationListActivity
         BugleAnalytics.logEvent("SMS_Messages_Back", true);
         super.onBackPressed();
         overridePendingTransition(0, 0);
-        int mainActivityCreateTime = Preferences.get(DESKTOP_PREFS).getInt(PREF_KEY_MAIN_ACTIVITY_SHOW_TIME, 0);
         if (!shouldShowCreateShortcutGuide && mainActivityCreateTime >= 2) {
             Preferences.getDefault().doOnce(
                     () -> UIIntentsImpl.get().launchDragHotSeatActivity(this),
@@ -982,7 +1025,10 @@ public class ConversationListActivity extends AbstractConversationListActivity
                 drawerClickIndex = DRAWER_INDEX_SETTING;
                 drawerLayout.closeDrawer(navigationView);
                 break;
-
+            case R.id.navigation_item_backup_restore:
+                drawerClickIndex = DRAWER_INDEX_BACKUP_RESTORE;
+                drawerLayout.closeDrawer(navigationView);
+                break;
             case R.id.navigation_item_invite_friends:
                 drawerClickIndex = DRAWER_INDEX_INVITE_FRIENDS;
                 drawerLayout.closeDrawer(navigationView);
@@ -1023,7 +1069,9 @@ public class ConversationListActivity extends AbstractConversationListActivity
                             "open time", String.valueOf(hour),
                             "signature", String.valueOf(!TextUtils.isEmpty(Preferences.getDefault().getString(
                                     SignatureSettingDialog.PREF_KEY_SIGNATURE_CONTENT, null))),
-                            "pin", String.valueOf(hasPinConversation));
+                            "pin", String.valueOf(hasPinConversation),
+                            "backup", String.valueOf(Preferences.getDefault().getBoolean(
+                                    ChooseBackupViewHolder.PREF_KEY_BACKUP_SUCCESS_FOR_EVENT, false)));
                 }
                 break;
             case NOTIFICATION_NAME_MESSAGES_MOVE_END:

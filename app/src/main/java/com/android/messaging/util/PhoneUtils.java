@@ -550,7 +550,11 @@ public abstract class PhoneUtils {
 
         @Override
         public SmsManager getSmsManager() {
-            return SmsManager.getSmsManagerForSubscriptionId(mSubId);
+            if (mSubId == -1) {
+                return SmsManager.getDefault();
+            } else {
+                return SmsManager.getSmsManagerForSubscriptionId(mSubId);
+            }
         }
 
         @Override
