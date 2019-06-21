@@ -223,6 +223,7 @@ public class BackupManager {
                 if (listenerWeakReference.get() != null) {
                     listenerWeakReference.get().onBackupFailed();
                 }
+                BugleAnalytics.logEvent("Backup_BackupPage_Backup_Failed", "reason", "sync_failed");
                 return;
             }
 
@@ -231,6 +232,7 @@ public class BackupManager {
                 if (listenerWeakReference.get() != null) {
                     listenerWeakReference.get().onBackupFailed();
                 }
+                BugleAnalytics.logEvent("Backup_BackupPage_Backup_Failed", "reason", "no_message");
                 return;
             }
 
@@ -262,6 +264,7 @@ public class BackupManager {
                 if (listenerWeakReference.get() != null) {
                     listenerWeakReference.get().onBackupFailed();
                 }
+                BugleAnalytics.logEvent("Backup_BackupPage_Backup_Failed", "reason", "network_error");
                 return;
             }
 
@@ -364,6 +367,7 @@ public class BackupManager {
             if (listener != null) {
                 listener.onUploadFailed();
             }
+            BugleAnalytics.logEvent("Backup_BackupPage_Backup_Failed", "reason", "user_check_error");
         }
         FirebaseStorage storage = FirebaseStorage.getInstance();
         StorageReference storageReference = storage.getReference();
@@ -372,6 +376,12 @@ public class BackupManager {
         StorageReference reference = storageReference.child("backup").child(uid).child(file.getName());
 
         File cryptoFile = AESHelper.encryptFile(uid, file);
+        if (cryptoFile == null) {
+            if (listener != null) {
+                listener.onUploadFailed();
+            }
+            BugleAnalytics.logEvent("Backup_BackupPage_Backup_Failed", "reason", "crypto_error");
+        }
         Uri fileUri = Uri.fromFile(cryptoFile);
         reference.putFile(fileUri)
                 .addOnSuccessListener(taskSnapshot -> {
@@ -404,12 +414,14 @@ public class BackupManager {
                                                                 .addOnFailureListener(e -> {
                                                                     if (listener != null) {
                                                                         listener.onUploadFailed();
+                                                                        BugleAnalytics.logEvent("Backup_BackupPage_Backup_Failed", "reason", "update_remote_failed");
                                                                     }
                                                                 });
                                                     })
                                                     .addOnFailureListener(e -> {
                                                         if (listener != null) {
                                                             listener.onUploadFailed();
+                                                            BugleAnalytics.logEvent("Backup_BackupPage_Backup_Failed", "reason", "update_remote_failed");
                                                         }
                                                     });
                                         }
@@ -430,6 +442,7 @@ public class BackupManager {
                                         if (listener != null) {
                                             listener.onUploadFailed();
                                         }
+                                        BugleAnalytics.logEvent("Backup_BackupPage_Backup_Failed", "reason", "update_remote_failed");
                                     });
                         }
                     }
@@ -438,6 +451,7 @@ public class BackupManager {
                     if (listener != null) {
                         listener.onUploadFailed();
                     }
+                    BugleAnalytics.logEvent("Backup_BackupPage_Backup_Failed", "reason", "upload_failed");
                 });
     }
 

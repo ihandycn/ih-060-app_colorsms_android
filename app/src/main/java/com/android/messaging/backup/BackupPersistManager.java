@@ -5,6 +5,7 @@ import android.text.TextUtils;
 
 import com.android.messaging.datamodel.DataModel;
 import com.android.messaging.datamodel.DatabaseWrapper;
+import com.android.messaging.util.BugleAnalytics;
 import com.android.messaging.util.CommonUtils;
 import com.android.messaging.util.OsUtil;
 
@@ -60,17 +61,20 @@ public class BackupPersistManager {
                 BackupDatabaseHelper.MessageColumn.getProjection(),
                 null, null, null, null, null);
 
-        if (listenerWeakReference.get() != null) {
-            listenerWeakReference.get().onSyncAndLoadSuccess(cursor.getCount());
-        }
 
         if (cursor == null) {
+            BugleAnalytics.logEvent("Backup_BackupPage_Backup_Failed", "reason", "no_message");
             return null;
         }
 
         if (cursor.getCount() == 0) {
+            BugleAnalytics.logEvent("Backup_BackupPage_Backup_Failed", "reason", "no_message");
             cursor.close();
             return null;
+        }
+
+        if (listenerWeakReference.get() != null) {
+            listenerWeakReference.get().onSyncAndLoadSuccess(cursor.getCount());
         }
 
         //2.cursor -> SmsMessage
@@ -107,6 +111,7 @@ public class BackupPersistManager {
             writer.flush();
             writer.close();
         } catch (IOException e) {
+            BugleAnalytics.logEvent("Backup_BackupPage_Backup_Failed", "reason", "file_write_error");
             file.delete();
             return null;
         }
