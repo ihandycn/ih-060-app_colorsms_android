@@ -37,7 +37,7 @@ public class BackupGuideDialogActivity extends HSAppCompatActivity {
             BackupRestoreActivity.startBackupRestoreActivity(this, BackupRestoreActivity.ENTRANCE_FULL_GUIDE);
             overridePendingTransition(R.anim.slide_in_from_right_and_fade, R.anim.anim_null);
             finish();
-            BugleAnalytics.logEvent("BackupFullGuide_Click");
+            BugleAnalytics.logEvent("BackupFullGuide_Click", true);
         });
 
         ImageView backupDialogCloseButton = findViewById(R.id.backup_guide_dialog_close);
@@ -66,7 +66,7 @@ public class BackupGuideDialogActivity extends HSAppCompatActivity {
         });
 
         Preferences.getDefault().putBoolean(PREF_KEY_BACKUP_FULL_GUIDE_SHOWN, true);
-        BugleAnalytics.logEvent("BackupFullGuide_Show");
+        BugleAnalytics.logEvent("BackupFullGuide_Show", true);
     }
 
     @Override

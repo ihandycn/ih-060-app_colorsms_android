@@ -31,7 +31,9 @@ import com.superapps.util.Preferences;
 import com.superapps.util.Threads;
 import com.superapps.util.Toasts;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import static com.ihs.app.framework.HSApplication.getContext;
 
@@ -176,6 +178,8 @@ public class ChooseBackupViewHolder extends BasePagerViewHolder implements Custo
         boolean[] uploadSuccess = {false};
         boolean[] useFakeUpload = {false};
 
+        UiUtils.showDialogFragment((Activity) mContext, backupDialog);
+        
         BackupManager.MessageBackupListener listener = new BackupManager.MessageBackupListener() {
             boolean needUpload;
 
@@ -183,7 +187,6 @@ public class ChooseBackupViewHolder extends BasePagerViewHolder implements Custo
             public void onBackupStart(boolean upload) {
                 needUpload = upload;
                 Threads.postOnMainThread(() -> {
-                    UiUtils.showDialogFragment((Activity) mContext, backupDialog);
                     backupDialog.setStateString(getContext().getString(R.string.backup_state_scanning));
                     backupDialog.hideProgressBar(true);
                 });
@@ -300,6 +303,10 @@ public class ChooseBackupViewHolder extends BasePagerViewHolder implements Custo
                     backupType = "cloud";
                 }
                 BugleAnalytics.logEvent("Backup_BackupPage_Backup_Success", true, "type", backupType);
+
+                Map<String, String> params = new HashMap<>();
+                params.put("Backup", "Backup_BackupSuccess");
+                BugleAnalytics.logEventToFirebase("Feature_BackupRestore", params);
             }
 
             void dismiss() {
@@ -313,10 +320,10 @@ public class ChooseBackupViewHolder extends BasePagerViewHolder implements Custo
                         freeUpDialog.setOnPositiveButtonClickListener(v -> {
                             freeUpDialog.dismissAllowingStateLoss();
                             freeUpAndShowDialog();
-                            BugleAnalytics.logEvent("Backup_Freeupmsg_Alert_Click");
+                            BugleAnalytics.logEvent("Backup_Freeupmsg_Alert_Click", true);
                         });
                         UiUtils.showDialogFragment((Activity) mContext, freeUpDialog);
-                        BugleAnalytics.logEvent("Backup_Freeupmsg_Alert_Show");
+                        BugleAnalytics.logEvent("Backup_Freeupmsg_Alert_Show", true);
                     }
                     Toasts.showToast(R.string.backup_success_toast);
                 });
@@ -390,7 +397,11 @@ public class ChooseBackupViewHolder extends BasePagerViewHolder implements Custo
                     Toasts.showToast(R.string.backup_free_success);
                 }
 
-                BugleAnalytics.logEvent("Backup_Freeupmsg_Success");
+                BugleAnalytics.logEvent("Backup_Freeupmsg_Success", true);
+                
+                Map<String, String> params = new HashMap<>();
+                params.put("Backup", "Backup_CleanSuccess");
+                BugleAnalytics.logEventToFirebase("Feature_BackupRestore", params);
             }
         });
 

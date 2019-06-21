@@ -16,6 +16,23 @@
         app:title="@string/private_box_setting_security"
         app:type="withTriangle" />
 
+    <!--Security Question-->
+    <com.android.messaging.ui.appsettings.SettingItemView
+        android:id="@+id/private_setting_security_question"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:summary="@string/private_setting_security_question_summary"
+        app:title="@string/security_question"
+        app:type="withTriangle" />
+
+    <!--Private Contacts-->
+    <com.android.messaging.ui.appsettings.SettingItemView
+        android:id="@+id/private_setting_private_contacts"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:title="@string/private_box_setting_private_contacts"
+        app:type="withTriangle" />
+
     <!--Entrance-->
     <com.android.messaging.ui.appsettings.SettingItemView
         android:id="@+id/private_setting_entrance"

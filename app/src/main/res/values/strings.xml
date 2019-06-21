@@ -1156,6 +1156,8 @@
     <string name="private_box_add_now">Add Now</string>
     <string name="private_box_setting_security">Security</string>
     <string name="private_box_setting_security_summary">Modify Password</string>
+    <string name="private_setting_security_question_summary">In case you forget your password</string>
+    <string name="private_box_setting_private_contacts">Private Contacts</string>
     <string name="private_box_setting_entrance">Entrance</string>
     <string name="private_box_setting_entrance_summary">Hide the icon</string>
     <string name="private_box_setting_notification">Enable Notifications</string>
@@ -1168,9 +1170,11 @@
     <string name="private_box_move_to_box">Move to private box</string>
     <string name="private_box_remove_from_box">Remove from private box</string>
     <string name="private_box_uninstall_notice">Unless you move the messages to public box, you may lose your data after you uninstall us.</string>
+    <string name="private_box_empty_contact_hint">No privacy contact</string>
 
     <string name="conversation_list">Conversation List</string>
     <string name="contacts">Contacts</string>
+    <string name="private_contacts">Private Contacts</string>
     <string name="private_box_setting">Private Box Settings</string>
     <string name="private_move_tip">Messages will be moved to Private Box and will not be accessed by other SMS apps.</string>
     <string name="private_start_box_tip">Messages will be moved to Private Box. Please set a password for Private Box first.</string>
@@ -1235,6 +1239,29 @@
     <string name="conversation_moved_to_private_box">Moved to private box</string>
     <string name="invite_friends_default_auto_link_content" translatable="false">https://go.onelink.me/app/90cf450c</string>
     <string name="invite_friends_success_toast">Invite success</string>
+
+    <!-- Private Box Lock Question-->
+    <string name="choose_question_prompt">Please set a security question in case you forget your password.</string>
+    <string name="enter_answer_prompt">Answer:</string>
+    <string name="set">SET</string>
+    <string name="cancel">Cancel</string>
+    <string name="ok">OK</string>
+    <string name="pickerview_year">year</string>
+    <string name="pickerview_hours">hour</string>
+    <string name="time_minute_single">minute</string>
+    <string-array name="question_spinner_content">
+        <item>When is your birthday?</item>
+        <item>What is the last name of your first teacher?</item>
+        <item>What is the name of your elementary school?</item>
+        <item>Who is your childhood hero?</item>
+    </string-array>
+    <string name="security_question">Security Question</string>
+    <string name="answer_question_prompt">Please answer the question to reset password.</string>
+    <string name="forget_password">Forget Password</string>
+    <string name="submit">SUBMIT</string>
+    <string name="security_question_answer">Your answer is empty</string>
+    <string name="lock_activity_forget_password">Forgot Password?</string>
+    <string name="incorrect_question_answer_hint">Answer is incorrect</string>
 
     <!--back up-->
     <string name="menu_backup_restore">Backup &amp; Restore</string>

@@ -105,6 +105,8 @@ import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.android.messaging.ui.conversationlist.ConversationListActivity.PREF_KEY_IS_PRIVATE_BOX_ENTRANCE_SWITCH_ON;
+
 /**
  * Shows a list of conversations.
  */
@@ -364,6 +366,15 @@ public class ConversationListFragment extends Fragment implements ConversationLi
                 mHost.onCreateConversationClick();
             });
             mStartNewConversationButton.setOnLongClickListener(v -> {
+                if (HSApplication.getFirstLaunchInfo().appVersionCode >= 60){
+                    if (!Preferences.getDefault().getBoolean(PREF_KEY_IS_PRIVATE_BOX_ENTRANCE_SWITCH_ON, false)) {
+                        if (!HSConfig.optBoolean(true, "Application", "PrivateBox")) {
+                            return true;
+                        } else {
+                            Preferences.getDefault().putBoolean(PREF_KEY_IS_PRIVATE_BOX_ENTRANCE_SWITCH_ON, true);
+                        }
+                    }
+                }
                 if (PrivateBoxSettings.isAnyPasswordSet()) {
                     Intent intent = new Intent(getActivity(), SelfVerifyActivity.class);
                     intent.putExtra(SelfVerifyActivity.INTENT_KEY_ACTIVITY_ENTRANCE,
@@ -429,7 +440,7 @@ public class ConversationListFragment extends Fragment implements ConversationLi
         }
 
         prefFile.putInt(PREF_KEY_BACKUP_BANNER_GUIDE_SHOW_COUNT, backupBannerGuideShowCount + 1);
-        BugleAnalytics.logEvent("BackupTopGuide_Show");
+        BugleAnalytics.logEvent("BackupTopGuide_Show", true);
 
         TextView title = mBackupBannerGuideContainer.findViewById(R.id.backup_banner_title);
         if (mBackupBannerGuideContainer.getVisibility() == View.VISIBLE) {
@@ -499,7 +510,7 @@ public class ConversationListFragment extends Fragment implements ConversationLi
             mBackupBannerGuideContainer.setVisibility(View.GONE);
             tryShowTopNativeAd();
             switchAd = false;
-            BugleAnalytics.logEvent("BackupTopGuide_Click");
+            BugleAnalytics.logEvent("BackupTopGuide_Click", true);
         });
 
         mBackupBannerGuideContainer.setOnClickListener(v -> backupBannerButton.performClick());

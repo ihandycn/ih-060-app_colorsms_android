@@ -132,6 +132,8 @@ public class ChooseRestoreViewHolder extends BasePagerViewHolder implements Cust
                 if (mCloudBackups != null) {
                     if (!Networks.isNetworkAvailable(-1)) {
                         Toasts.showToast(R.string.sms_network_error);
+                        BugleAnalytics.logEvent("Backup_RestorePage_Restore_Failed",
+                                "reason", "network_error");
                         return;
                     }
                     RestoreProcessDialog restoreProcessDialog = new RestoreProcessDialog();
@@ -225,8 +227,6 @@ public class ChooseRestoreViewHolder extends BasePagerViewHolder implements Cust
                     Toasts.showToast(R.string.restore_success);
                 });
             }
-            BugleAnalytics.logEvent("Backup_RestorePage_Restore_Success", true,
-                    "restorefrom", mIsLocal ? "local" : "cloud");
         }
 
         @Override

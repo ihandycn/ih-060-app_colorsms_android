@@ -5,10 +5,12 @@ import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.KeyEvent;
+import android.view.View;
 import android.widget.TextView;
 
 import com.android.messaging.R;
 import com.android.messaging.privatebox.AppPrivateLockManager;
+import com.android.messaging.privatebox.PrivateBoxSettings;
 import com.android.messaging.ui.UIIntents;
 import com.android.messaging.ui.UIIntentsImpl;
 import com.android.messaging.util.BugleAnalytics;
@@ -59,6 +61,13 @@ public class SelfVerifyActivity extends VerifyActivity {
                 && ENTRANCE_NOTIFICATION.equals(mEntrance))
                 || ENTRANCE_NOTIFICATION_TO_CONVERSATION_LIST.equals(mEntrance)) {
             BugleAnalytics.logEvent("Notifications_Clicked_PrivateBox");
+        }
+        if (!PrivateBoxSettings.isSecurityQuestionSet()) {
+            BugleAnalytics.logEvent("PrivateBox_UnlockPage_Show", true, "isForgetEnabled", "false");
+            findViewById(R.id.menu_icon).setVisibility(View.GONE);
+        } else {
+            BugleAnalytics.logEvent("PrivateBox_UnlockPage_Show", true, "isForgetEnabled", "true");
+            findViewById(R.id.menu_icon).setVisibility(View.VISIBLE);
         }
     }
 

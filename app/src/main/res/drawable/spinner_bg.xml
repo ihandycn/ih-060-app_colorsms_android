@@ -1,0 +1,51 @@
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:state_enabled="true"
+        android:state_window_focused="true">
+        <layer-list>
+            <item>
+                <shape>
+                    <solid android:color="@android:color/transparent" />
+                    <stroke
+                        android:width="1dip"
+                        android:color="@color/edit_text_shape" />
+                </shape>
+            </item>
+
+            <!-- Downward arrow displayed when spinner is not expanded -->
+            <item
+                android:bottom="3dp"
+                android:left="3dp"
+                android:right="15dp"
+                android:top="3dp">
+                <bitmap android:gravity="center_vertical|right" android:src="@drawable/spinner_triangle_downward" />
+            </item>
+
+        </layer-list>
+    </item>
+
+    <item>
+        <layer-list>
+
+            <item>
+                <shape>
+                    <solid android:color="@android:color/transparent" />
+                    <stroke
+                        android:width="1dip"
+                        android:color="@color/edit_text_shape_focused" />
+                </shape>
+            </item>
+
+            <!-- Upward arrow displayed when spinner is expanded -->
+            <item
+                android:bottom="3dp"
+                android:left="3dp"
+                android:right="15dp"
+                android:top="3dp">
+                <bitmap android:gravity="center_vertical|right" android:src="@drawable/spinner_triangle_upward" />
+            </item>
+
+        </layer-list>
+    </item>
+
+</selector>

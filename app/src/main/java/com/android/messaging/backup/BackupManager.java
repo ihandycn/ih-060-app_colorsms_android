@@ -9,6 +9,7 @@ import android.text.format.DateUtils;
 import com.android.messaging.datamodel.DataModel;
 import com.android.messaging.datamodel.DatabaseWrapper;
 import com.android.messaging.ui.appsettings.GeneralSettingSyncManager;
+import com.android.messaging.util.BugleAnalytics;
 import com.android.messaging.util.CommonUtils;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
@@ -122,6 +123,8 @@ public class BackupManager {
                     //2.resolve file messages
                     List<BackupSmsMessage> backupMessages = BackupPersistManager.get().resolveMessages(file);
                     if (backupMessages.size() <= 0) {
+                        BugleAnalytics.logEvent("Backup_RestorePage_Restore_Failed",
+                                "reason", "no_message_in_file");
                         if (weakListener.get() != null) {
                             weakListener.get().onRestoreFailed();
                         }
@@ -151,6 +154,10 @@ public class BackupManager {
 
                             @Override
                             public void onRestoreSuccess() {
+                                BugleAnalytics.logEvent("Backup_RestorePage_Restore_Success",
+                                        true,
+                                        "restorefrom",
+                                        backupInfo.getLocationType() == BackupInfo.LOCAL ? "local" : "cloud");
                                 if (weakListener.get() != null) {
                                     weakListener.get().onRestoreSuccess();
                                 }
@@ -174,6 +181,8 @@ public class BackupManager {
 
                 @Override
                 public void onDownloadFailed() {
+                    BugleAnalytics.logEvent("Backup_RestorePage_Restore_Failed",
+                            "reason", "download_failed");
                     if (weakListener.get() != null) {
                         weakListener.get().onDownloadFailed();
                     }
@@ -186,6 +195,8 @@ public class BackupManager {
                         backupInfo.getKey());
                 if (!backupFile.exists()) {
                     listener.onDownloadFailed();
+                    BugleAnalytics.logEvent("Backup_RestorePage_Restore_Failed",
+                            "reason", "file_not_exist");
                 } else {
                     //go to next step
                     listener.onDownloadSuccess(backupFile);
@@ -438,15 +449,31 @@ public class BackupManager {
             if (listener != null) {
                 listener.onDownloadFailed();
             }
+            BugleAnalytics.logEvent("Backup_RestorePage_Restore_Failed",
+                    "reason", "create_temp_file_failed");
             return;
         }
 
         reference.getFile(file)
                 .addOnSuccessListener(taskSnapshot -> {
                     //run on main thread
-                    if (listener != null && file != null) {
+                    if (file != null) {
                         File decryptFile = AESHelper.decryptFile(uid, file);
-                        listener.onDownloadSuccess(decryptFile);
+                        if (decryptFile != null) {
+                            if (listener != null) {
+                                listener.onDownloadSuccess(decryptFile);
+                            }
+                        } else {
+                            if (listener != null) {
+                                listener.onDownloadFailed();
+                            }
+                            BugleAnalytics.logEvent("Backup_RestorePage_Restore_Failed",
+                                    "reason", "decrypt_failed");
+                        }
+                    } else {
+                        if (listener != null) {
+                            listener.onDownloadFailed();
+                        }
                     }
                     file.deleteOnExit();
                 })
