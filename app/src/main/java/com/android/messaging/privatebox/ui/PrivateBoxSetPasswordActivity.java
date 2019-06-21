@@ -25,8 +25,11 @@ import com.android.messaging.ui.conversationlist.ConversationListActivity;
 import com.android.messaging.ui.customize.PrimaryColors;
 import com.android.messaging.util.BugleAnalytics;
 import com.android.messaging.util.UiUtils;
+import com.ihs.commons.notificationcenter.HSGlobalNotificationCenter;
 import com.ihs.commons.utils.HSLog;
 import com.superapps.util.Navigations;
+
+import static com.android.messaging.privatebox.ui.VerifyActivity.EVENT_UNLOCK_APP_RESET_PASSWORD_SUCCESS;
 
 public class PrivateBoxSetPasswordActivity extends BaseActivity implements View.OnClickListener {
 
@@ -101,8 +104,6 @@ public class PrivateBoxSetPasswordActivity extends BaseActivity implements View.
 
                 AppPrivateLockManager.getInstance().unlockAppLock();
                 onPasswordSetSucceed();
-                setResult(RESULT_OK, intent);
-                finish();
             } else {
                 performShakeAnimation(getString(R.string.gesture_not_confirmed_sub_prompt), false);
                 promptSubLine.setText("");
@@ -203,8 +204,6 @@ public class PrivateBoxSetPasswordActivity extends BaseActivity implements View.
 
                         onPasswordSetSucceed();
                         AppPrivateLockManager.getInstance().unlockAppLock();
-                        setResult(RESULT_OK, intent);
-                        finish();
                     } else {
                         performShakeAnimation(getString(R.string.password_not_confirmed_sub_prompt), false);
                     }
@@ -413,6 +412,15 @@ public class PrivateBoxSetPasswordActivity extends BaseActivity implements View.
             }
             Navigations.startActivitySafely(PrivateBoxSetPasswordActivity.this, intent);
             overridePendingTransition(R.anim.slide_in_from_right_and_fade, R.anim.anim_null);
+            finish();
+        } else if (isForgetPassword) {
+            finish();
+            Navigations.startActivitySafely(this,
+                    new Intent(this, PrivateConversationListActivity.class));
+            overridePendingTransition(R.anim.slide_in_from_right_and_fade, R.anim.anim_null);
+            HSGlobalNotificationCenter.sendNotification(EVENT_UNLOCK_APP_RESET_PASSWORD_SUCCESS);
+        } else {
+            finish();
         }
     }
 }

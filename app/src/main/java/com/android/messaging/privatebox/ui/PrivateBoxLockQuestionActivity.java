@@ -36,7 +36,6 @@ import com.superapps.util.Navigations;
 import com.superapps.util.Preferences;
 
 public class PrivateBoxLockQuestionActivity extends HSAppCompatActivity implements View.OnClickListener{
-    public static final int REQUEST_FOR_SETTING_PASSWORD = 1;
 
     public static final String INTENT_KEY_IS_SETTING_QUESTION = "INTENT_KEY_IS_SETTING_QUESTION";
     public static final String INTENT_KEY_IS_FIRST_SETTING_QUESTION = "INTENT_KEY_IS_FIRST_SETTING_QUESTION";
@@ -223,15 +222,6 @@ public class PrivateBoxLockQuestionActivity extends HSAppCompatActivity implemen
     }
 
     @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-
-        if (requestCode == REQUEST_FOR_SETTING_PASSWORD) {
-            finishAndNotifyLockFinished();
-        }
-    }
-
-    @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.input, menu);
         menuItem = menu.findItem(R.id.action_done);
@@ -270,11 +260,10 @@ public class PrivateBoxLockQuestionActivity extends HSAppCompatActivity implemen
         return super.onKeyDown(keyCode, event);
     }
 
-    private void finishAndNotifyLockFinished() {
-        setResult(RESULT_OK);
-        finish();
-        // TODO confirm below code
-        //HSGlobalNotificationCenter.sendNotification(AppLockActivity.NOTIFICATION_PASSWORD_ACTIVITIES_FINISHED);
+    @Override
+    public void finish() {
+        super.finish();
+        overridePendingTransition(R.anim.anim_null, R.anim.slide_out_to_right_and_fade);
     }
 
     private void setSelectTimePickerViewStatus(boolean isBirthdayQuestion) {
@@ -367,6 +356,7 @@ public class PrivateBoxLockQuestionActivity extends HSAppCompatActivity implemen
                     );
                 }
                 Navigations.startActivitySafely(PrivateBoxLockQuestionActivity.this, intent);
+                overridePendingTransition(R.anim.slide_in_from_right_and_fade, R.anim.anim_null);
             } else {
                 BugleAnalytics.logEvent("PrivateBox_SecurityQuestion_Set_Click", true,"from", "settings");
             }
@@ -379,7 +369,9 @@ public class PrivateBoxLockQuestionActivity extends HSAppCompatActivity implemen
             if (!TextUtils.isEmpty(answer) && TextUtils.equals(answer, savedAnswer)) {
                 Intent intent = new Intent(PrivateBoxLockQuestionActivity.this, PrivateBoxSetPasswordActivity.class);
                 intent.putExtra(PrivateBoxSetPasswordActivity.INTENT_EXTRA_FORGET_PASSWORD, true);
-                startActivityForResult(intent, REQUEST_FOR_SETTING_PASSWORD);
+                finish();
+                Navigations.startActivitySafely(PrivateBoxLockQuestionActivity.this, intent);
+                overridePendingTransition(R.anim.slide_in_from_right_and_fade, R.anim.anim_null);
             } else {
                 Toast.makeText(PrivateBoxLockQuestionActivity.this, getString(R.string.incorrect_question_answer_hint), Toast.LENGTH_SHORT).show();
             }

@@ -40,9 +40,7 @@ public abstract class VerifyActivity extends BaseActivity implements INotificati
 
     private static final String TAG = "VerifyActivity";
 
-    public static final String EVENT_UNLOCK_APP_SUCCESS = "EVENT_UNLOCK_APP_SUCCESS";
-
-    private static final int REQUEST_SECURITY_QUESTION = 0;
+    public static final String EVENT_UNLOCK_APP_RESET_PASSWORD_SUCCESS = "EVENT_UNLOCK_APP_RESET_PASSWORD_SUCCESS";
 
     private GestureLockView gestureLockView;
     private PINKeyboardView pinUnlockView;
@@ -132,7 +130,7 @@ public abstract class VerifyActivity extends BaseActivity implements INotificati
             menuIcon.setImageResource(R.drawable.app_lock_menu);
         });
 
-        HSGlobalNotificationCenter.addObserver(EVENT_UNLOCK_APP_SUCCESS, this);
+        HSGlobalNotificationCenter.addObserver(EVENT_UNLOCK_APP_RESET_PASSWORD_SUCCESS, this);
     }
 
     private void performShakeAnimation(final String msg) {
@@ -175,7 +173,9 @@ public abstract class VerifyActivity extends BaseActivity implements INotificati
 
             tvForgetPassword.setOnClickListener(v -> {
                 menuPopupWindow.dismiss();
-                startActivityForResult(new Intent(this, PrivateBoxLockQuestionActivity.class), REQUEST_SECURITY_QUESTION);
+                Navigations.startActivitySafely(VerifyActivity.this,
+                        new Intent(this, PrivateBoxLockQuestionActivity.class));
+                overridePendingTransition(R.anim.slide_in_from_right_and_fade, R.anim.anim_null);
                 BugleAnalytics.logEvent("PrivateBox_UnlockPage_Forget_Click");
             });
 
@@ -251,19 +251,6 @@ public abstract class VerifyActivity extends BaseActivity implements INotificati
         return super.onKeyDown(keyCode, event);
     }
 
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == REQUEST_SECURITY_QUESTION) {
-            if (resultCode == RESULT_OK) {
-                finish();
-                overridePendingTransition(0, R.anim.fade_out_long);
-                Navigations.startActivitySafely(this,
-                        new Intent(this, PrivateConversationListActivity.class));
-            }
-        }
-    }
-
     private void performFingerprintShakeAnimation(View fingerprintView, Runnable endRunnable) {
         ObjectAnimator animator = ObjectAnimator.ofFloat(fingerprintView, View.TRANSLATION_X, 0, 25, 5, -15, -5, 5, 0, -5, 0, 5, 0);
         animator.setDuration(400);
@@ -302,7 +289,7 @@ public abstract class VerifyActivity extends BaseActivity implements INotificati
 
     @Override public void onReceive(String s, HSBundle hsBundle) {
         switch (s) {
-            case EVENT_UNLOCK_APP_SUCCESS:
+            case EVENT_UNLOCK_APP_RESET_PASSWORD_SUCCESS:
                 finish();
                 break;
             default:

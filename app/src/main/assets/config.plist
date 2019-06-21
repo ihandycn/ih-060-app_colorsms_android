@@ -6,6 +6,8 @@
 	<dict>
 		<key>Application</key>
 		<dict>
+		    <key>PrivateBox</key>
+        	<true/>
 			<key>BackupRestore</key>
 			<dict>
 				<key>RecommendBannerTimes</key>
