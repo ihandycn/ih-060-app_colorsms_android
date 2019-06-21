@@ -76,22 +76,13 @@ public class PrivateBoxSetPasswordActivity extends BaseActivity implements View.
 
             if (TextUtils.isEmpty(password)) {
                 performShakeAnimation(getString(R.string.set_gesture_sub_prompt), true);
-                if (isResetPassword) {
-                } else {
-//                    BugleAnalytics.logEvent("AppLock_Setpassword_First_Input", "State", "fail");
-                }
             } else {
                 passwordSetMode = PasswordSetMode.NORMAL_SECOND_SET;
                 PrivateBoxSetPasswordActivity.this.password = password;
 
                 currentPasswordStyle = PrivateBoxSettings.PasswordStyle.PATTERN;
                 updateCurrentProtectionUI(currentPasswordStyle, false);
-                if (isResetPassword) {
-                } else {
-//                    BugleAnalytics.logEvent("AppLock_Setpassword_First_Input", "State", "success");
-//                    BugleAnalytics.logEvent("AppLock_Setpassword_Second_Shown", "Type", "Pattern");
-                    BugleAnalytics.logEvent("PrivateBox_ConfirmPassword_Show");
-                }
+                BugleAnalytics.logEvent("PrivateBox_ConfirmPassword_Show");
             }
         }
 
@@ -105,8 +96,6 @@ public class PrivateBoxSetPasswordActivity extends BaseActivity implements View.
                 if (isResetPassword) {
                     intent.putExtra(INTENT_KER_PASSWORD_STATUS, RESET_PASSWORD);
                 } else {
-                    //BugleAnalytics.logEvent("AppLock_Setpassword_Second_Input", "State", "success");
-                    // BugleAnalytics.logEvent("AppLock_Setpassword_Success", "Type", "pattern");
                     intent.putExtra(INTENT_KER_PASSWORD_STATUS, SET_PASSWORD);
                 }
 
@@ -114,14 +103,9 @@ public class PrivateBoxSetPasswordActivity extends BaseActivity implements View.
                 onPasswordSetSucceed();
                 setResult(RESULT_OK, intent);
                 finish();
-                //HSLog.i("onGestureFinish(), NORMAL_SECOND_SET, finish");
             } else {
                 performShakeAnimation(getString(R.string.gesture_not_confirmed_sub_prompt), false);
                 promptSubLine.setText("");
-//                if (isResetPassword) {
-//                } else {
-//                    //BugleAnalytics.logEvent("AppLock_Setpassword_Second_Input", "State", "fail");
-//                }
             }
         }
     }
@@ -213,7 +197,7 @@ public class PrivateBoxSetPasswordActivity extends BaseActivity implements View.
                         if (isResetPassword) {
                             intent.putExtra(INTENT_KER_PASSWORD_STATUS, RESET_PASSWORD);
                         } else {
-                            //BugleAnalytics.logEvent("PrivateBox_Password_SetSuccess");
+                            BugleAnalytics.logEvent("PrivateBox_Password_SetSuccess");
                             intent.putExtra(INTENT_KER_PASSWORD_STATUS, SET_PASSWORD);
                         }
 
@@ -223,10 +207,6 @@ public class PrivateBoxSetPasswordActivity extends BaseActivity implements View.
                         finish();
                     } else {
                         performShakeAnimation(getString(R.string.password_not_confirmed_sub_prompt), false);
-//                        if (isResetPassword) {
-//                        } else {
-//                            //BugleAnalytics.logEvent("AppLock_Setpassword_Second_Input", "State", "fail");
-//                        }
                     }
                     break;
             }
@@ -258,7 +238,6 @@ public class PrivateBoxSetPasswordActivity extends BaseActivity implements View.
     @Override
     protected void onDestroy() {
         super.onDestroy();
-
         handler.removeCallbacksAndMessages(null);
     }
 
@@ -278,6 +257,8 @@ public class PrivateBoxSetPasswordActivity extends BaseActivity implements View.
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if (keyCode == KeyEvent.KEYCODE_BACK) {
             setResult(RESULT_CANCELED, getIntent());
+            finish();
+            return true;
         }
 
         return super.onKeyDown(keyCode, event);
@@ -399,7 +380,6 @@ public class PrivateBoxSetPasswordActivity extends BaseActivity implements View.
                     }
                 }
 
-                //  BugleAnalytics.logEvent("AppLock_Setpassword_ChangeType_Clicked", "Type", currentPasswordStyle.toString());
                 switch (currentPasswordStyle) {
                     case PATTERN:
                         currentPasswordStyle = PrivateBoxSettings.PasswordStyle.PIN;
@@ -423,7 +403,6 @@ public class PrivateBoxSetPasswordActivity extends BaseActivity implements View.
     private void onPasswordSetSucceed() {
         BugleAnalytics.logEvent("PrivateBox_Password_SetSuccess");
         if (!isResetPassword && !isForgetPassword) {
-            HSLog.d(TAG, " if (!isResetPassword && !isForgetPassword)");
             Intent intent = new Intent(PrivateBoxSetPasswordActivity.this, PrivateBoxLockQuestionActivity.class);
             intent.putExtra(PrivateBoxLockQuestionActivity.INTENT_KEY_IS_SETTING_QUESTION, true);
             intent.putExtra(PrivateBoxLockQuestionActivity.INTENT_KEY_IS_FIRST_SETTING_QUESTION, true);

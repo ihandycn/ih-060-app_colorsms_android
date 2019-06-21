@@ -36,7 +36,7 @@ import com.superapps.util.Navigations;
 import com.superapps.util.Preferences;
 
 public class PrivateBoxLockQuestionActivity extends HSAppCompatActivity implements View.OnClickListener{
-    public static final int REQUEST_FOR_SETTING_PASSWORD = 0x8765;
+    public static final int REQUEST_FOR_SETTING_PASSWORD = 1;
 
     public static final String INTENT_KEY_IS_SETTING_QUESTION = "INTENT_KEY_IS_SETTING_QUESTION";
     public static final String INTENT_KEY_IS_FIRST_SETTING_QUESTION = "INTENT_KEY_IS_FIRST_SETTING_QUESTION";
@@ -204,12 +204,6 @@ public class PrivateBoxLockQuestionActivity extends HSAppCompatActivity implemen
         });
     }
 
-    @Override
-    protected void onStop() {
-        finish();
-        super.onStop();
-    }
-
     private void showSoftKeyboard() {
         if (answerEditText.requestFocus()) {
             InputMethodManager imm = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
@@ -233,9 +227,6 @@ public class PrivateBoxLockQuestionActivity extends HSAppCompatActivity implemen
         super.onActivityResult(requestCode, resultCode, data);
 
         if (requestCode == REQUEST_FOR_SETTING_PASSWORD) {
-            if (resultCode == RESULT_OK) {
-                setResult(RESULT_OK);
-            }
             finishAndNotifyLockFinished();
         }
     }
@@ -366,7 +357,7 @@ public class PrivateBoxLockQuestionActivity extends HSAppCompatActivity implemen
             prefs.putString(PREF_KEY_SECURITY_QUESTION, questionSpinner.getSelectedItem().toString());
             prefs.putString(PREF_KEY_SECURITY_ANSWER, answer);
             PrivateBoxSettings.setSecurityQuestionSet(true);
-            finishAndNotifyLockFinished();
+            finish();
             if (getIntent().getBooleanExtra(INTENT_KEY_IS_FIRST_SETTING_QUESTION, false)) {
                 BugleAnalytics.logEvent("PrivateBox_SecurityQuestion_Set_Click", true,"from", "firstsetcode");
                 Intent intent = new Intent(PrivateBoxLockQuestionActivity.this, PrivateConversationListActivity.class);

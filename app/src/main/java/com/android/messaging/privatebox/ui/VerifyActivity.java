@@ -236,7 +236,6 @@ public abstract class VerifyActivity extends BaseActivity implements INotificati
     @Override
     protected void onDestroy() {
         super.onDestroy();
-
         HSGlobalNotificationCenter.removeObserver(this);
     }
 
@@ -254,16 +253,13 @@ public abstract class VerifyActivity extends BaseActivity implements INotificati
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-
-        switch (requestCode) {
-            case REQUEST_SECURITY_QUESTION:
-                if (resultCode == RESULT_OK) {
-                    finish();
-                    overridePendingTransition(0, R.anim.fade_out_long);
-                    Navigations.startActivitySafely(this,
-                            new Intent(this, PrivateConversationListActivity.class));
-                }
-                break;
+        if (requestCode == REQUEST_SECURITY_QUESTION) {
+            if (resultCode == RESULT_OK) {
+                finish();
+                overridePendingTransition(0, R.anim.fade_out_long);
+                Navigations.startActivitySafely(this,
+                        new Intent(this, PrivateConversationListActivity.class));
+            }
         }
     }
 
