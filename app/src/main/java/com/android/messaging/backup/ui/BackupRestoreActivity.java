@@ -18,6 +18,7 @@ import com.android.messaging.util.UiUtils;
 import com.firebase.ui.auth.AuthUI;
 import com.google.firebase.auth.FirebaseAuth;
 import com.superapps.util.Navigations;
+import com.superapps.util.Networks;
 import com.superapps.util.Preferences;
 import com.superapps.util.Toasts;
 
@@ -141,7 +142,11 @@ public class BackupRestoreActivity extends BaseActivity {
                 mRestoreViewHolder.onLoginSuccess();
             } else {
                 Toasts.showToast(R.string.firebase_login_failed);
-                BugleAnalytics.logEvent("Backup_Login_Failed");
+                if (!Networks.isNetworkAvailable(-1)) {
+                    BugleAnalytics.logEvent("Backup_Login_Failed", "reason", "network_error");
+                } else {
+                    BugleAnalytics.logEvent("Backup_Login_Failed", "reason", "firebase");
+                }
                 mBackUpViewHolder.onLoginFailed();
                 mRestoreViewHolder.onLoginFailed();
             }

@@ -319,10 +319,10 @@ public class ChooseBackupViewHolder extends BasePagerViewHolder implements Custo
                         freeUpDialog.setOnPositiveButtonClickListener(v -> {
                             freeUpDialog.dismissAllowingStateLoss();
                             freeUpAndShowDialog();
-                            BugleAnalytics.logEvent("Backup_Freeupmsg_Alert_Click");
+                            BugleAnalytics.logEvent("Backup_Freeupmsg_Alert_Click", true);
                         });
                         UiUtils.showDialogFragment((Activity) mContext, freeUpDialog);
-                        BugleAnalytics.logEvent("Backup_Freeupmsg_Alert_Show");
+                        BugleAnalytics.logEvent("Backup_Freeupmsg_Alert_Show", true);
                     }
                     Toasts.showToast(R.string.backup_success_toast);
                 });
@@ -396,8 +396,8 @@ public class ChooseBackupViewHolder extends BasePagerViewHolder implements Custo
                     Toasts.showToast(R.string.backup_free_success);
                 }
 
-                BugleAnalytics.logEvent("Backup_Freeupmsg_Success");
-
+                BugleAnalytics.logEvent("Backup_Freeupmsg_Success", true);
+                
                 Map<String, String> params = new HashMap<>();
                 params.put("Backup", "Backup_CleanSuccess");
                 BugleAnalytics.logEventToFirebase("Feature_BackupRestore", params);

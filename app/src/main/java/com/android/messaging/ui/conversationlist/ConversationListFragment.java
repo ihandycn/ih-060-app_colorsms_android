@@ -420,7 +420,7 @@ public class ConversationListFragment extends Fragment implements ConversationLi
         }
 
         prefFile.putInt(PREF_KEY_BACKUP_BANNER_GUIDE_SHOW_COUNT, backupBannerGuideShowCount + 1);
-        BugleAnalytics.logEvent("BackupTopGuide_Show");
+        BugleAnalytics.logEvent("BackupTopGuide_Show", true);
 
         TextView title = mBackupBannerGuideContainer.findViewById(R.id.backup_banner_title);
         if (mBackupBannerGuideContainer.getVisibility() == View.VISIBLE) {
@@ -490,7 +490,7 @@ public class ConversationListFragment extends Fragment implements ConversationLi
             mBackupBannerGuideContainer.setVisibility(View.GONE);
             tryShowTopNativeAd();
             switchAd = false;
-            BugleAnalytics.logEvent("BackupTopGuide_Click");
+            BugleAnalytics.logEvent("BackupTopGuide_Click", true);
         });
 
         mBackupBannerGuideContainer.setOnClickListener(v -> backupBannerButton.performClick());
