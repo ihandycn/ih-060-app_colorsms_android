@@ -1157,7 +1157,6 @@
     <string name="private_box_setting_security">Security</string>
     <string name="private_box_setting_security_summary">Modify Password</string>
     <string name="private_setting_security_question_summary">In case you forget your password</string>
-    <string name="private_box_setting_private_contacts">Private Contacts</string>
     <string name="private_box_setting_entrance">Entrance</string>
     <string name="private_box_setting_entrance_summary">Hide the icon</string>
     <string name="private_box_setting_notification">Enable Notifications</string>

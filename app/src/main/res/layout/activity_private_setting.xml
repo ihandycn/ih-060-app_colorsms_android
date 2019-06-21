@@ -30,7 +30,7 @@
         android:id="@+id/private_setting_private_contacts"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:title="@string/private_box_setting_private_contacts"
+        app:title="@string/private_contacts"
         app:type="withTriangle" />
 
     <!--Entrance-->
