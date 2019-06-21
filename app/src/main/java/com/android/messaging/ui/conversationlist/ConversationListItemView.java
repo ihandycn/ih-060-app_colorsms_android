@@ -521,7 +521,7 @@ public class ConversationListItemView extends FrameLayout implements OnClickList
                     isLeft ? "slide_left" : "slide_right");
         }
 
-        final int textId = mHostInterface.isArchived() ? R.string.archived_toast_message : R.string.unarchived_toast_message;
+        final int textId = !mHostInterface.isArchived() ? R.string.archived_toast_message : R.string.unarchived_toast_message;
         final Runnable undoRunnable = () -> {
             if (mHostInterface.isArchived()) {
                 UpdateConversationArchiveStatusAction.archiveConversation(conversationId);
