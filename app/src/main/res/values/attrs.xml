@@ -120,6 +120,14 @@
         <attr name="circleHorizontalPadding" format="dimension" />
     </declare-styleable>
 
+    <declare-styleable name="CenterTopImageView">
+        <attr name="radius_leftTop" format="dimension" />
+        <attr name="radius_leftBottom" format="dimension" />
+        <attr name="radius_rightTop" format="dimension" />
+        <attr name="radius_rightBottom" format="dimension" />
+    </declare-styleable>
+
+
     <declare-styleable name="SendDelayCircleProgressBar">
         <attr name="outside_color" format="color" />
         <attr name="outside_radius" format="dimension" />
