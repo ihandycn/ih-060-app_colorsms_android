@@ -40,12 +40,10 @@ import com.android.messaging.util.BugleGservicesKeys;
 import com.android.messaging.util.BuglePrefs;
 import com.android.messaging.util.BuglePrefsKeys;
 import com.android.messaging.util.ConnectivityUtil.ConnectivityListener;
+import com.android.messaging.util.DefaultSMSUtils;
 import com.android.messaging.util.LogUtil;
 import com.android.messaging.util.OsUtil;
 import com.android.messaging.util.PhoneUtils;
-
-import java.util.HashSet;
-import java.util.Set;
 
 /**
  * Action used to lookup any messages in the pending send/download state and either fail them or
@@ -75,7 +73,7 @@ public class ProcessPendingMessagesAction extends Action implements Parcelable {
         // is currently running or we will run now or register if pending actions possible.
         unregister();
 
-        final boolean isDefaultSmsApp = PhoneUtils.getDefault().isDefaultSmsApp();
+        final boolean isDefaultSmsApp = DefaultSMSUtils.isDefaultSmsApp();
         boolean scheduleAlarm = false;
         // If message succeeded and if Bugle is default SMS app just carry on with next message
         if (!failed && isDefaultSmsApp) {
@@ -281,7 +279,7 @@ public class ProcessPendingMessagesAction extends Action implements Parcelable {
         // If triggered by alarm will not have unregistered yet
         unregister();
 
-        if (PhoneUtils.getDefault().isDefaultSmsApp()) {
+        if (DefaultSMSUtils.isDefaultSmsApp()) {
             queueActions(this);
         } else {
             if (LogUtil.isLoggable(TAG, LogUtil.VERBOSE)) {

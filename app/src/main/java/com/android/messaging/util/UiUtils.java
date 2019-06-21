@@ -59,7 +59,6 @@ import com.android.messaging.ui.SnackBar.Placement;
 import com.android.messaging.ui.SnackBarInteraction;
 import com.android.messaging.ui.SnackBarManager;
 import com.android.messaging.ui.customize.PrimaryColors;
-import com.superapps.util.Preferences;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
@@ -379,8 +378,7 @@ public class UiUtils {
         // Has a preferred sim?
         // Is the default sms app?
         return phoneUtils.isSmsCapable() &&
-                phoneUtils.getHasPreferredSmsSim() &&
-                phoneUtils.isDefaultSmsApp();
+                DefaultSMSUtils.isDefaultSmsApp();
     }
 
     /*

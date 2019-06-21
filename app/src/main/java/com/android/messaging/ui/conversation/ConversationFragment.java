@@ -414,7 +414,7 @@ public class ConversationFragment extends Fragment implements ConversationDataLi
 
             Preferences preferences = Preferences.getDefault();
             mIsFirstClickActionMenu = preferences.getBoolean(IS_FIRST_CLICK_ACTION_MENU, true);
-            if(mIsFirstClickActionMenu){
+            if (mIsFirstClickActionMenu) {
                 menu.findItem(R.id.action_menu).setIcon(R.drawable.ic_menu_with_red_point);
             }
             return true;
@@ -878,19 +878,34 @@ public class ConversationFragment extends Fragment implements ConversationDataLi
         // Bind the compose message view to the DraftMessageData
         mComposeMessageView.bind(DataModel.get().createDraftMessageData(
                 mBinding.getData().getConversationId()), this);
-        mComposeMessageView.requestFocus();
+        try {
+            mComposeMessageView.requestFocus();
+        } catch (Exception e) {
+        }
 
         mMediaLayout = view.findViewById(R.id.camera_photo_layout);
         mWallpaperView = view.findViewById(R.id.conversation_fragment_wallpaper);
         mThemeWallpaperView = view.findViewById(R.id.conversation_fragment_theme_wallpaper);
 
-        if (AdConfig.isDetailpageTopAdEnabled()
-                && !mHost.isFromCreateConversation()) {
-            loadTopBannerAd();
-        }
-        if (AdConfig.isHomepageBannerAdEnabled()) {
-            AcbNativeAdManager.preload(1, AdPlacement.AD_BANNER);
-        }
+        mComposeMessageView.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+            @Override public void onGlobalLayout() {
+                mComposeMessageView.getViewTreeObserver().removeOnGlobalLayoutListener(this);
+
+                Threads.postOnMainThreadDelayed(() -> {
+                    if (mIsDestroyed || getActivity() == null) {
+                        return;
+                    }
+                    if (AdConfig.isDetailpageTopAdEnabled()
+                            && !mHost.isFromCreateConversation()) {
+                        loadTopBannerAd();
+                    }
+                    if (AdConfig.isHomepageBannerAdEnabled()) {
+                        AcbNativeAdManager.preload(1, AdPlacement.AD_BANNER);
+                    }
+                }, 500);
+            }
+        });
+
         return view;
     }
 

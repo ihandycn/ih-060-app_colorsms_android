@@ -20,13 +20,10 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 
-import com.android.ex.chips.PhoneUtil;
 import com.android.messaging.BugleApplication;
-import com.android.messaging.Factory;
 import com.android.messaging.datamodel.action.UpdateMessageNotificationAction;
-import com.android.messaging.util.BuglePrefsKeys;
+import com.android.messaging.util.DefaultSMSUtils;
 import com.android.messaging.util.LogUtil;
-import com.android.messaging.util.PhoneUtils;
 
 /**
  * Receives notification of boot completion and package replacement
@@ -37,7 +34,7 @@ public class BootAndPackageReplacedReceiver extends BroadcastReceiver {
         if (Intent.ACTION_BOOT_COMPLETED.equals(intent.getAction())
                 || Intent.ACTION_MY_PACKAGE_REPLACED.equals(intent.getAction())) {
             UpdateMessageNotificationAction.updateMessageNotification();
-            BugleApplication.updateAppConfig(context, PhoneUtils.getDefault().isDefaultSmsApp());
+            BugleApplication.updateAppConfig(context, DefaultSMSUtils.isDefaultSmsApp());
         } else {
             LogUtil.i(LogUtil.BUGLE_TAG, "BootAndPackageReplacedReceiver got unexpected action: "
                     + intent.getAction());

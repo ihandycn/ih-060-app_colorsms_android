@@ -43,7 +43,6 @@ import com.android.messaging.Factory;
 import com.android.messaging.R;
 import com.android.messaging.datamodel.data.ParticipantData;
 import com.android.messaging.sms.MmsSmsUtils;
-import com.android.messaging.ui.UIIntents;
 import com.google.i18n.phonenumbers.NumberParseException;
 import com.google.i18n.phonenumbers.PhoneNumberUtil;
 import com.google.i18n.phonenumbers.PhoneNumberUtil.PhoneNumberFormat;
@@ -60,11 +59,11 @@ import java.util.Locale;
  * This class abstracts away platform dependency of calling telephony related
  * platform APIs, mostly involving TelephonyManager, SubscriptionManager and
  * a bit of SmsManager.
- *
+ * <p>
  * The class instance can only be obtained via the get(int subId) method parameterized
  * by a SIM subscription ID. On pre-L_MR1, the subId is not used and it has to be
  * the default subId (-1).
- *
+ * <p>
  * A convenient getDefault() method is provided for default subId (-1) on any platform
  */
 public abstract class PhoneUtils {
@@ -152,10 +151,10 @@ public abstract class PhoneUtils {
     /**
      * Returns the "effective" subId, or the subId used in the context of actual messages,
      * conversations and subscription-specific settings, for the given "nominal" sub id.
-     *
+     * <p>
      * For pre-L-MR1 platform, this should always be
      * {@value com.android.messaging.datamodel.data.ParticipantData#DEFAULT_SELF_SUB_ID};
-     *
+     * <p>
      * On the other hand, for L-MR1 and above, DEFAULT_SELF_SUB_ID will be mapped to the system
      * default subscription id for SMS.
      *
@@ -191,10 +190,10 @@ public abstract class PhoneUtils {
     /**
      * For L_MR1, system may return a negative subId. Convert this into our own
      * subId, so that we consistently use -1 for invalid or default.
-     *
+     * <p>
      * see b/18629526 and b/18670346
      *
-     * @param intent The push intent from system
+     * @param intent    The push intent from system
      * @param extraName The name of the sub id extra
      * @return the subId that is valid and meaningful for the app
      */
@@ -203,7 +202,7 @@ public abstract class PhoneUtils {
     /**
      * Get the subscription_id column value from a telephony provider cursor
      *
-     * @param cursor The database query cursor
+     * @param cursor     The database query cursor
      * @param subIdIndex The index of the subId column in the cursor
      * @return the subscription_id column value from the cursor
      */
@@ -551,7 +550,11 @@ public abstract class PhoneUtils {
 
         @Override
         public SmsManager getSmsManager() {
-            return SmsManager.getSmsManagerForSubscriptionId(mSubId);
+            if (mSubId == -1) {
+                return SmsManager.getDefault();
+            } else {
+                return SmsManager.getSmsManagerForSubscriptionId(mSubId);
+            }
         }
 
         @Override
@@ -742,7 +745,7 @@ public abstract class PhoneUtils {
 
     // Put canonicalized phone number into cache
     private static void putCanonicalToCache(final String phoneText, String country,
-            final String canonical) {
+                                            final String canonical) {
         synchronized (sCanonicalPhoneNumberCache) {
             final ArrayMap<String, String> countryMap = getOrAddCountryMapInCacheLocked(country);
             countryMap.put(phoneText, canonical);
@@ -753,7 +756,7 @@ public abstract class PhoneUtils {
      * Utility method to parse user input number into standard E164 number.
      *
      * @param phoneText Phone number text as input by user.
-     * @param country ISO country code based on which to parse the number.
+     * @param country   ISO country code based on which to parse the number.
      * @return E164 phone number. Returns null in case parsing failed.
      */
     private static String getValidE164Number(final String phoneText, final String country) {
@@ -765,7 +768,7 @@ public abstract class PhoneUtils {
             }
         } catch (final NumberParseException e) {
             LogUtil.e(TAG, "PhoneUtils.getValidE164Number(): Not able to parse phone number "
-                        + LogUtil.sanitizePII(phoneText) + " for country " + country);
+                    + LogUtil.sanitizePII(phoneText) + " for country " + country);
         }
         return null;
     }
@@ -796,7 +799,7 @@ public abstract class PhoneUtils {
      * This uses an internal cache per country to speed up.
      *
      * @param phoneText The phone number to canonicalize
-     * @param country The ISO country code to use
+     * @param country   The ISO country code to use
      * @return the canonicalized number, or the original number if can't be parsed
      */
     private String getCanonicalByCountry(final String phoneText, final String country) {
@@ -898,19 +901,6 @@ public abstract class PhoneUtils {
         }
     }
 
-    /**
-     * Is Messaging the default SMS app?
-     * - On KLP+ this checks the system setting.
-     * - On JB (and below) this always returns true, since the setting was added in KLP.
-     */
-    public boolean isDefaultSmsApp() {
-        if (OsUtil.isAtLeastKLP()) {
-            final String configuredApplication = Telephony.Sms.getDefaultSmsPackage(mContext);
-            return  mContext.getPackageName().equals(configuredApplication);
-        }
-        return true;
-    }
-
     public void registerDefaultSmsPackageChange(Runnable setRunnable, Runnable clearedRunnable) {
         Uri uri = Settings.Secure.getUriFor("sms_default_application");
 
@@ -919,7 +909,7 @@ public abstract class PhoneUtils {
             @Override
             public void onChange(boolean selfChange) {
                 super.onChange(selfChange);
-                if (!isDefaultSmsApp()) {
+                if (!DefaultSMSUtils.isDefaultSmsApp()) {
                     if (clearedRunnable != null) {
                         clearedRunnable.run();
                     }
@@ -930,7 +920,7 @@ public abstract class PhoneUtils {
                 }
 
                 if (BuildConfig.DEBUG) {
-                    if (isDefaultSmsApp()) {
+                    if (DefaultSMSUtils.isDefaultSmsApp()) {
                         Toasts.showToast("debug toast : sms_default_application_set");
                     } else {
                         Toasts.showToast("debug toast : sms_default_application_cleared");
@@ -958,7 +948,7 @@ public abstract class PhoneUtils {
      * - On KLP+ we must be set as the default SMS app
      */
     public boolean isSmsEnabled() {
-        return isSmsCapable() && isDefaultSmsApp();
+        return isSmsCapable() && DefaultSMSUtils.isDefaultSmsApp();
     }
 
     /**

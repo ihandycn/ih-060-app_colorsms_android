@@ -1,10 +1,13 @@
 package com.android.messaging.ui.customize.theme;
 
+import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.NinePatchDrawable;
+import android.util.DisplayMetrics;
+import android.view.WindowManager;
 
 import com.android.messaging.util.CommonUtils;
 import com.ihs.app.framework.HSApplication;
@@ -25,8 +28,8 @@ public class ThemeManager {
     static final String CREATE_ICON_FILE_NAME = "icon";
     public static final String AVATAR_FILE_NAME = "avatar";
 
-    private Bitmap mIncomingBitmap;
-    private Bitmap mOutgoingBitmap;
+    private NinePatchDrawable mIncomingDrawable;
+    private NinePatchDrawable mOutgoingDrawable;
 
     private static ThemeManager sInstance = new ThemeManager();
 
@@ -39,19 +42,16 @@ public class ThemeManager {
     }
 
     void clearCacheDrawable() {
-        mIncomingBitmap = null;
-        mOutgoingBitmap = null;
+        mIncomingDrawable = null;
+        mOutgoingDrawable = null;
     }
 
     public Drawable getIncomingBubbleDrawable() {
-        ThemeInfo theme = ThemeUtils.getCurrentTheme();
-        if (mIncomingBitmap != null) {
-            byte[] chunk = mIncomingBitmap.getNinePatchChunk();
-            Rect rect = NinePatchChunk.deserialize(chunk).mPaddings;
-            return new NinePatchDrawable(HSApplication.getContext().getResources(),
-                    mIncomingBitmap, chunk, rect, null);
+        if (mIncomingDrawable != null) {
+            return mIncomingDrawable;
         }
 
+        ThemeInfo theme = ThemeUtils.getCurrentTheme();
         Bitmap bitmap = null;
         try {
             if (!theme.isInLocalFolder()) {
@@ -65,23 +65,26 @@ public class ThemeManager {
                         + theme.mThemeKey), INCOMING_BUBBLE_FILE_NAME));
             }
         } catch (Exception ignored) {
-
         }
+
         if (bitmap != null) {
-            mIncomingBitmap = bitmap;
-            return getIncomingBubbleDrawable();
+            byte[] chunk = bitmap.getNinePatchChunk();
+            Rect rect = NinePatchChunk.deserialize(chunk).mPaddings;
+            bitmap.setDensity(DisplayMetrics.DENSITY_XXHIGH);
+            mIncomingDrawable = new NinePatchDrawable(HSApplication.getContext().getResources(),
+                    bitmap, chunk, rect, null);
+            DisplayMetrics metrics = new DisplayMetrics();
+            WindowManager windowManager = (WindowManager) HSApplication.getContext().getSystemService(Context.WINDOW_SERVICE);
+            windowManager.getDefaultDisplay().getMetrics(metrics);
+            mIncomingDrawable.setTargetDensity(metrics);
+            return mIncomingDrawable;
         }
         return null;
     }
 
     public Drawable getOutgoingBubbleDrawable() {
-
-        if (mOutgoingBitmap != null) {
-            byte[] chunk = mOutgoingBitmap.getNinePatchChunk();
-            Rect rect = NinePatchChunk.deserialize(chunk).mPaddings;
-
-            return new NinePatchDrawable(HSApplication.getContext().getResources(),
-                    mOutgoingBitmap, chunk, rect, null);
+        if (mOutgoingDrawable != null) {
+            return mOutgoingDrawable;
         }
 
         ThemeInfo theme = ThemeUtils.getCurrentTheme();
@@ -102,8 +105,16 @@ public class ThemeManager {
 
         }
         if (bitmap != null) {
-            mOutgoingBitmap = bitmap;
-            return getOutgoingBubbleDrawable();
+            byte[] chunk = bitmap.getNinePatchChunk();
+            Rect rect = NinePatchChunk.deserialize(chunk).mPaddings;
+            bitmap.setDensity(DisplayMetrics.DENSITY_XXHIGH);
+            mOutgoingDrawable = new NinePatchDrawable(HSApplication.getContext().getResources(),
+                    bitmap, chunk, rect, null);
+            DisplayMetrics metrics = new DisplayMetrics();
+            WindowManager windowManager = (WindowManager) HSApplication.getContext().getSystemService(Context.WINDOW_SERVICE);
+            windowManager.getDefaultDisplay().getMetrics(metrics);
+            mOutgoingDrawable.setTargetDensity(metrics);
+            return mOutgoingDrawable;
         }
         return null;
     }

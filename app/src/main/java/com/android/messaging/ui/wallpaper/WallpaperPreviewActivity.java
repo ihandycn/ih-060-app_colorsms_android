@@ -46,11 +46,17 @@ public class WallpaperPreviewActivity extends BaseActivity implements WallpaperM
         Intent intent = new Intent(context, WallpaperPreviewActivity.class);
         intent.putExtra("thread_id", threadId);
         Navigations.startActivitySafely(context, intent);
+        if (context instanceof Activity) {
+            ((Activity) context).overridePendingTransition(R.anim.slide_in_from_right_and_fade, R.anim.anim_null);
+        }
     }
 
     public static void startWallpaperPreview(Context context) {
         Intent intent = new Intent(context, WallpaperPreviewActivity.class);
         Navigations.startActivitySafely(context, intent);
+        if (context instanceof Activity) {
+            ((Activity) context).overridePendingTransition(R.anim.slide_in_from_right_and_fade, R.anim.anim_null);
+        }
     }
 
     private List<WallpaperChooserItemView> mListeners = new ArrayList<>();

@@ -23,6 +23,7 @@ import android.text.format.Time;
 import com.android.messaging.Factory;
 import com.android.messaging.R;
 import com.google.common.annotations.VisibleForTesting;
+import com.superapps.util.Calendars;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -42,9 +43,11 @@ public class Dates {
     // Callers of methods in this class should never have to specify these; this is really
     // intended only for unit tests.
     @SuppressWarnings("deprecation")
-    @VisibleForTesting public static final int FORCE_12_HOUR = DateUtils.FORMAT_12HOUR;
+    @VisibleForTesting
+    public static final int FORCE_12_HOUR = DateUtils.FORMAT_12HOUR;
     @SuppressWarnings("deprecation")
-    @VisibleForTesting public static final int FORCE_24_HOUR = DateUtils.FORMAT_24HOUR;
+    @VisibleForTesting
+    public static final int FORCE_24_HOUR = DateUtils.FORMAT_24HOUR;
 
     /**
      * Private default constructor
@@ -55,11 +58,11 @@ public class Dates {
     private static Context getContext() {
         return Factory.get().getApplicationContext();
     }
+
     /**
      * Get the relative time as a string
      *
      * @param time The time
-     *
      * @return The relative time
      */
     public static CharSequence getRelativeTimeSpanString(final long time) {
@@ -111,7 +114,7 @@ public class Dates {
     }
 
     private static CharSequence getTimeString(final long time, final boolean abbreviated,
-            final boolean minPeriodToday) {
+                                              final boolean minPeriodToday) {
         final Context context = getContext();
         int flags;
         if (android.text.format.DateFormat.is24HourFormat(context)) {
@@ -125,18 +128,11 @@ public class Dates {
 
     @VisibleForTesting
     public static CharSequence getTimestamp(final long time, final long now,
-            final boolean abbreviated, final Locale locale, final int flags,
-            final boolean minPeriodToday) {
+                                            final boolean abbreviated, final Locale locale, final int flags,
+                                            final boolean minPeriodToday) {
         final long timeDiff = now - time;
-
-        if (!minPeriodToday && timeDiff < DateUtils.MINUTE_IN_MILLIS) {
-            return getLessThanAMinuteOldTimeString(abbreviated);
-        } else if (!minPeriodToday && timeDiff < DateUtils.HOUR_IN_MILLIS) {
-            return getLessThanAnHourOldTimeString(timeDiff, flags);
-        } else if (getNumberOfDaysPassed(time, now) == 0) {
+        if (Calendars.isSameDay(time, now)) {
             return getTodayTimeStamp(time, flags);
-        } else if (timeDiff < DateUtils.WEEK_IN_MILLIS) {
-            return getThisWeekTimestamp(time, locale, abbreviated, flags);
         } else if (timeDiff < DateUtils.YEAR_IN_MILLIS) {
             return getThisYearTimestamp(time, locale, abbreviated, flags);
         } else {
@@ -144,27 +140,12 @@ public class Dates {
         }
     }
 
-    private static CharSequence getLessThanAMinuteOldTimeString(
-            final boolean abbreviated) {
-        return getContext().getResources().getText(
-                abbreviated ? R.string.posted_just_now : R.string.posted_now);
-    }
-
-    private static CharSequence getLessThanAnHourOldTimeString(final long timeDiff,
-            final int flags) {
-        final long count = (timeDiff / MINUTE_IN_MILLIS);
-        final String format = getContext().getResources().getQuantityString(
-                R.plurals.num_minutes_ago, (int) count);
-        return String.format(format, count);
-    }
-
     private static CharSequence getTodayTimeStamp(final long time, final int flags) {
-        return DateUtils.formatDateTime(getContext(), time,
-                DateUtils.FORMAT_SHOW_TIME | flags);
+        return getExplicitFormattedTime(time, flags, "HH:mm", "h:mmaa");
     }
 
     private static CharSequence getExplicitFormattedTime(final long time, final int flags,
-            final String format24, final String format12) {
+                                                         final String format24, final String format12) {
         SimpleDateFormat formatter;
         if ((flags & FORCE_24_HOUR) == FORCE_24_HOUR) {
             formatter = new SimpleDateFormat(format24);
@@ -174,64 +155,21 @@ public class Dates {
         return formatter.format(new Date(time));
     }
 
-    private static CharSequence getThisWeekTimestamp(final long time,
-            final Locale locale, final boolean abbreviated, final int flags) {
-        final Context context = getContext();
-        if (abbreviated) {
-            return DateUtils.formatDateTime(context, time,
-                    DateUtils.FORMAT_SHOW_WEEKDAY | DateUtils.FORMAT_ABBREV_WEEKDAY | flags);
-        } else {
-            if (locale.equals(Locale.US)) {
-                return getExplicitFormattedTime(time, flags, "EEE HH:mm", "EEE h:mmaa");
-            } else {
-                return DateUtils.formatDateTime(context, time,
-                        DateUtils.FORMAT_SHOW_WEEKDAY | DateUtils.FORMAT_SHOW_TIME
-                        | DateUtils.FORMAT_ABBREV_WEEKDAY
-                        | flags);
-            }
-        }
-    }
-
     private static CharSequence getThisYearTimestamp(final long time, final Locale locale,
-            final boolean abbreviated, final int flags) {
-        final Context context = getContext();
+                                                     final boolean abbreviated, final int flags) {
         if (abbreviated) {
-            return DateUtils.formatDateTime(context, time,
-                    DateUtils.FORMAT_SHOW_DATE | DateUtils.FORMAT_ABBREV_MONTH
-                    | DateUtils.FORMAT_NO_YEAR | flags);
+            return getExplicitFormattedTime(time, flags, "MMM d", "MMM d");
         } else {
-            if (locale.equals(Locale.US)) {
-                return getExplicitFormattedTime(time, flags, "MMM d, HH:mm", "MMM d, h:mmaa");
-            } else {
-                return DateUtils.formatDateTime(context, time,
-                        DateUtils.FORMAT_SHOW_DATE | DateUtils.FORMAT_SHOW_TIME
-                        | DateUtils.FORMAT_ABBREV_MONTH
-                        | DateUtils.FORMAT_NO_YEAR
-                        | flags);
-            }
+            return getExplicitFormattedTime(time, flags, "MMM d, HH:mm", "MMM d, h:mmaa");
         }
     }
 
     private static CharSequence getOlderThanAYearTimestamp(final long time,
-            final Locale locale, final boolean abbreviated, final int flags) {
-        final Context context = getContext();
+                                                           final Locale locale, final boolean abbreviated, final int flags) {
         if (abbreviated) {
-            if (locale.equals(Locale.US)) {
-                return getExplicitFormattedTime(time, flags, "M/d/yy", "M/d/yy");
-            } else {
-                return DateUtils.formatDateTime(context, time,
-                        DateUtils.FORMAT_SHOW_DATE | DateUtils.FORMAT_SHOW_YEAR
-                        | DateUtils.FORMAT_NUMERIC_DATE);
-            }
+            return getExplicitFormattedTime(time, flags, "M/d/yy", "M/d/yy");
         } else {
-            if (locale.equals(Locale.US)) {
-                return getExplicitFormattedTime(time, flags, "M/d/yy, HH:mm", "M/d/yy, h:mmaa");
-            } else {
-                return DateUtils.formatDateTime(context, time,
-                        DateUtils.FORMAT_SHOW_DATE | DateUtils.FORMAT_SHOW_TIME
-                        | DateUtils.FORMAT_NUMERIC_DATE | DateUtils.FORMAT_SHOW_YEAR
-                        | flags);
-            }
+            return getExplicitFormattedTime(time, flags, "M/d/yy, HH:mm", "M/d/yy, h:mmaa");
         }
     }
 

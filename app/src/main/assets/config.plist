@@ -6,8 +6,15 @@
 	<dict>
 		<key>Application</key>
 		<dict>
-		    <key>PrivateBox</key>
-		    <true/>
+			<key>BackupRestore</key>
+			<dict>
+				<key>RecommendBannerTimes</key>
+				<integer>6</integer>
+				<key>FreeUpOldmsg</key>
+				<true/>
+				<key>RecommendFull</key>
+				<true/>
+			</dict>
 			<key>CheckContactNum</key>
 			<integer>6</integer>
 			<key>InviteFriendsGuide</key>
@@ -172,7 +179,7 @@
 					<key>ShowAfterInstall</key>
 					<integer>10</integer>
 					<key>RefreshInterval</key>
-					<integer>12</integer>
+					<integer>30</integer>
 					<key>ShowAfterSlide</key>
 					<true/>
 					<key>FacebookEnabled</key>
@@ -851,7 +858,7 @@
 						<key>ListTitleColor</key>
 						<string>#ffffff</string>
 						<key>ListSubtitleColor</key>
-						<string>#80ffffff</string>
+						<string>#c0ffffff</string>
 						<key>ListTimeColor</key>
 						<string>#ffffff</string>
 						<key>IncomingBubbleBgColor</key>
@@ -1425,7 +1432,7 @@
 						<key>ThemeColor</key>
 						<string>#263f8c</string>
 						<key>FontName</key>
-						<string>Sarpanch</string>
+						<string>Default</string>
 						<key>AvatarForegroundColor</key>
 						<string>#ffffff</string>
 						<key>ListTitleColor</key>

@@ -412,6 +412,7 @@ public class PrivateBoxSetPasswordActivity extends BaseActivity implements View.
                 );
             }
             Navigations.startActivitySafely(PrivateBoxSetPasswordActivity.this, intent);
+            overridePendingTransition(R.anim.slide_in_from_right_and_fade, R.anim.anim_null);
         }
     }
 }

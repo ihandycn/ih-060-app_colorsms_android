@@ -1,5 +1,6 @@
 package com.android.messaging.ui.emoji;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Rect;
@@ -11,7 +12,6 @@ import android.view.View;
 import com.android.messaging.BaseActivity;
 import com.android.messaging.R;
 import com.android.messaging.ui.view.RecyclerViewWidthSlideListener;
-import com.ihs.app.framework.activity.HSAppCompatActivity;
 import com.superapps.util.Dimensions;
 
 
@@ -32,6 +32,9 @@ public class EmojiDetailActivity extends BaseActivity {
         starter.putExtra(INTENT_EMOJI_PACKAGE_INFO, packageInfo);
         starter.putExtra(INTENT_SOURCE, source);
         context.startActivity(starter);
+        if (context instanceof Activity) {
+            ((Activity) context).overridePendingTransition(R.anim.slide_in_from_right_and_fade, R.anim.anim_null);
+        }
     }
 
     @Override

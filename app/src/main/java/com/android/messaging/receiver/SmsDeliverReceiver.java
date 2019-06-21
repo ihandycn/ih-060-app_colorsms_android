@@ -21,7 +21,7 @@ import android.content.Context;
 import android.content.Intent;
 
 import com.android.messaging.util.BugleAnalytics;
-import com.android.messaging.util.PhoneUtils;
+import com.android.messaging.util.DefaultSMSUtils;
 
 /**
  * Class that receives incoming SMS messages on KLP+ Devices.
@@ -29,7 +29,7 @@ import com.android.messaging.util.PhoneUtils;
 public final class SmsDeliverReceiver extends BroadcastReceiver {
     @Override
     public void onReceive(final Context context, final Intent intent) {
-        if (PhoneUtils.getDefault().isDefaultSmsApp()) {
+        if (DefaultSMSUtils.isDefaultSmsApp()) {
             SmsReceiver.deliverSmsIntent(context, intent);
             BugleAnalytics.logEvent("SMS_Received_Default", false, true);
         }

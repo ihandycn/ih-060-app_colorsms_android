@@ -35,6 +35,7 @@ import com.android.messaging.util.Assert.DoesNotRunOnMainThread;
 import com.android.messaging.util.Assert.RunsOnMainThread;
 import com.android.messaging.util.BugleGservices;
 import com.android.messaging.util.BugleGservicesKeys;
+import com.android.messaging.util.DefaultSMSUtils;
 import com.android.messaging.util.LogUtil;
 import com.android.messaging.util.PhoneUtils;
 import com.android.messaging.util.SafeAsyncTask;
@@ -686,7 +687,7 @@ public class DraftMessageData extends BindableData implements ReadDraftDataActio
      * @return
      */
     public boolean getIsDefaultSmsApp() {
-        return PhoneUtils.getDefault().isDefaultSmsApp();
+        return DefaultSMSUtils.isDefaultSmsApp();
     }
 
     @Override //BindableData.unregisterListeners

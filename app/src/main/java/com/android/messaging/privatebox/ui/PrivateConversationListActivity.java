@@ -285,6 +285,7 @@ public class PrivateConversationListActivity extends MultiSelectConversationList
                         BugleAnalytics.logEvent("PrivateBox_AddContactAlert_BtnClick", "type", "conversation");
                         Navigations.startActivitySafely(PrivateConversationListActivity.this,
                                 new Intent(PrivateConversationListActivity.this, ConversationSelectActivity.class));
+                        overridePendingTransition(R.anim.slide_in_from_right_and_fade, R.anim.anim_null);
                         addToBlackListDialog.dismiss();
                     }
 
@@ -293,6 +294,7 @@ public class PrivateConversationListActivity extends MultiSelectConversationList
                         BugleAnalytics.logEvent("PrivateBox_AddContactAlert_BtnClick", "type", "contact");
                         Navigations.startActivitySafely(PrivateConversationListActivity.this,
                                 new Intent(PrivateConversationListActivity.this, ContactsSelectActivity.class));
+                        overridePendingTransition(R.anim.slide_in_from_right_and_fade, R.anim.anim_null);
                         addToBlackListDialog.dismiss();
                     }
                 });
@@ -303,6 +305,7 @@ public class PrivateConversationListActivity extends MultiSelectConversationList
                 break;
             case R.id.private_action_setting:
                 Navigations.startActivitySafely(this, new Intent(this, PrivateSettingActivity.class));
+                overridePendingTransition(R.anim.slide_in_from_right_and_fade, R.anim.anim_null);
                 break;
         }
         return (super.onOptionsItemSelected(menuItem));

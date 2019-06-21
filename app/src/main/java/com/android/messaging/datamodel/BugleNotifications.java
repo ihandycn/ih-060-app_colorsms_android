@@ -30,7 +30,9 @@ import android.graphics.BitmapFactory;
 import android.graphics.Typeface;
 import android.media.AudioManager;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
+import android.os.PowerManager;
 import android.os.SystemClock;
 import android.provider.ContactsContract;
 import android.provider.ContactsContract.Contacts;
@@ -82,15 +84,17 @@ import com.android.messaging.util.BuglePrefs;
 import com.android.messaging.util.BuglePrefsKeys;
 import com.android.messaging.util.ContentType;
 import com.android.messaging.util.ConversationIdSet;
+import com.android.messaging.util.DefaultSMSUtils;
 import com.android.messaging.util.ImageUtils;
 import com.android.messaging.util.LogUtil;
 import com.android.messaging.util.NotificationPlayer;
 import com.android.messaging.util.OsUtil;
 import com.android.messaging.util.PendingIntentConstants;
-import com.android.messaging.util.PhoneUtils;
 import com.android.messaging.util.RingtoneUtil;
 import com.android.messaging.util.ThreadUtil;
+import com.android.messaging.util.UiUtils;
 import com.android.messaging.util.UriUtil;
+import com.ihs.app.framework.HSApplication;
 import com.ihs.commons.utils.HSLog;
 import com.superapps.util.Notifications;
 
@@ -315,7 +319,7 @@ public class BugleNotifications {
      */
     public static boolean shouldNotify() {
         // If we're not the default sms app, don't put up any notifications.
-        if (!PhoneUtils.getDefault().isDefaultSmsApp()) {
+        if (!DefaultSMSUtils.isDefaultSmsApp()) {
             return false;
         }
         // Now check prefs (i.e. settings) to see if the user turned off notifications.
@@ -695,6 +699,8 @@ public class BugleNotifications {
     }
 
     private static void popUpMessageBox(final NotificationState state, final String conversationId) {
+        BugleAnalytics.logEvent("Message_Box_Will_Show", "isLandscapeMode", String.valueOf(UiUtils.isLandscapeMode()));
+
         if (state instanceof MessageNotificationState) {
             for (ConversationLineInfo convInfo : ((MessageNotificationState) state).mConvList.mConvInfos) {
 
@@ -1074,6 +1080,12 @@ public class BugleNotifications {
         Notifications.notifySafely(notificationTag, type, notification, notificationState.mChannel);
         LogUtil.i(TAG, "Notifying for conversation " + conversationId + "; "
                 + "tag = " + notificationTag + ", type = " + type);
+
+        PowerManager pm = (PowerManager) HSApplication.getContext().getSystemService(Context.POWER_SERVICE);
+        if (!(Build.VERSION.SDK_INT >= 20 ? pm.isInteractive() : pm.isScreenOn())) {
+            PowerManager.WakeLock wl = pm.newWakeLock(PowerManager.FULL_WAKE_LOCK | PowerManager.ACQUIRE_CAUSES_WAKEUP, "ColorSMS:NotificationLock");
+            wl.acquire(10000);
+        }
     }
 
     // This is the message string used in each line of an inboxStyle notification.

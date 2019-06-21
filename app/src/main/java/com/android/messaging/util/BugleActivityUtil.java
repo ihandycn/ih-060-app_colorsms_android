@@ -30,6 +30,8 @@ import com.android.messaging.Factory;
 import com.android.messaging.R;
 import com.android.messaging.datamodel.DataModel;
 
+import hugo.weaving.DebugLog;
+
 /**
  * Utility class including logic to verify requirements to run Bugle and other activity startup
  * logic. Called from base Bugle activity classes.
@@ -47,6 +49,7 @@ public class BugleActivityUtil {
      * @return true if resume should continue normally. Returns false if some requirements to run
      * are not met.
      */
+    @DebugLog
     public static boolean onActivityResume(Context context, Activity activity) {
         if (OsUtil.hasRequiredPermissions()) {
             DataModel.get().onActivityResume();

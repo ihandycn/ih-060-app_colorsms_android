@@ -59,6 +59,7 @@ public class ViewPagerTabs extends HorizontalScrollView implements ViewPager.OnP
     final ColorStateList mTextColor;
     final int mTextSize;
     final boolean mTextAllCaps;
+    int mBackgroundColor;
     int mPrevSelected = -1;
     int mSidePadding;
 
@@ -68,7 +69,8 @@ public class ViewPagerTabs extends HorizontalScrollView implements ViewPager.OnP
     private static final int[] ATTRS = new int[]{
             android.R.attr.textSize,
             android.R.attr.textStyle,
-            android.R.attr.textAllCaps
+            android.R.attr.textAllCaps,
+            R.attr.text_background_color
     };
 
     /**
@@ -120,11 +122,15 @@ public class ViewPagerTabs extends HorizontalScrollView implements ViewPager.OnP
         mTextSize = a.getDimensionPixelSize(0, 0);
         mTextStyle = a.getInt(1, 0);
         mTextAllCaps = a.getBoolean(2, false);
+        mBackgroundColor = a.getColor(3, -1);
 
         mTabStrip = new ViewPagerTabStrip(context);
+        if (mBackgroundColor != -1) {
+            mTabStrip.setBackgroundColor(mBackgroundColor);
+        }
+
         mTextColor = getTextColor();
-        addView(mTabStrip,
-                new FrameLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.MATCH_PARENT));
+        addView(mTabStrip, new FrameLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.MATCH_PARENT));
         a.recycle();
     }
 
@@ -164,7 +170,10 @@ public class ViewPagerTabs extends HorizontalScrollView implements ViewPager.OnP
 
         textView.setTypeface(FontUtils.getTypeface());
         textView.setText(tabTitle);
-        textView.setBackgroundResource(R.drawable.contact_picker_tab_background_selector);
+        if (mBackgroundColor == -1) {
+            textView.setBackgroundResource(R.drawable.contact_picker_tab_background_selector);
+        }
+
         textView.setGravity(Gravity.CENTER);
         textView.setOnClickListener(v -> mPager.setCurrentItem(getRtlPosition(position)));
 
@@ -192,12 +201,12 @@ public class ViewPagerTabs extends HorizontalScrollView implements ViewPager.OnP
     }
 
     private ColorStateList getTextColor() {
-        int[][] states = new int[][] {
-                new int[] { android.R.attr.state_selected},
-                new int[] { -android.R.attr.state_selected}
+        int[][] states = new int[][]{
+                new int[]{android.R.attr.state_selected},
+                new int[]{-android.R.attr.state_selected}
         };
 
-        int[] colors = new int[] {
+        int[] colors = new int[]{
                 PrimaryColors.getPrimaryColor(),
                 getResources().getColor(R.color.pager_tab_state_normal)
         };

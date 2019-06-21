@@ -27,7 +27,7 @@
         appcompat:showAsAction="ifRoom"/>
 
     <item
-        android:icon="@drawable/ic_menu"
+        android:icon="@drawable/ic_setting"
         android:title="@string/settings"
         android:id="@+id/action_menu"
         android:orderInCategory="90"

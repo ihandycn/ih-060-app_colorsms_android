@@ -13,67 +13,62 @@
     See the License for the specific language governing permissions and
     limitations under the License.
 -->
-<com.android.messaging.ui.ImeDetectFrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<com.android.messaging.ui.ImeDetectLinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/conversation_and_compose_container"
     android:layout_width="match_parent"
+    android:orientation="vertical"
     android:layout_height="match_parent"
     android:fitsSystemWindows="false">
 
-    <LinearLayout
+    <RelativeLayout
+        android:id="@+id/accessory_container"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical">
+        android:layout_height="56dp">
 
-        <RelativeLayout
-            android:id="@+id/accessory_container"
+        <com.android.messaging.ui.customize.theme.ToolbarBackgroundImageView
+            android:id="@+id/accessory_bg"
             android:layout_width="match_parent"
-            android:layout_height="56dp">
+            android:layout_height="match_parent"
+            android:scaleType="fitXY"/>
 
-            <com.android.messaging.ui.customize.theme.ToolbarBackgroundImageView
-                android:id="@+id/accessory_bg"
+        <View
+            android:id="@+id/selection_mode_bg"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentTop="true"
+            android:background="@color/black_40_transparent"
+            android:visibility="gone"/>
+
+        <View
+            android:id="@+id/status_bar_inset"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"/>
+
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/action_bar_height"
+            android:layout_below="@id/status_bar_inset"
+            app:popupTheme="@style/PopupMenu">
+
+            <com.android.messaging.ui.view.MessagesTextView
+                android:id="@+id/toolbar_title"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:scaleType="fitXY" />
+                android:layout_gravity="center"
+                android:gravity="center_vertical"
+                android:includeFontPadding="false"
+                android:textColor="@color/action_bar_title_text_color"
+                android:textSize="16.7dp"
+                app:typeface="@string/custom_font_semibold"/>
+        </android.support.v7.widget.Toolbar>
+    </RelativeLayout>
 
-            <View
-                android:id="@+id/selection_mode_bg"
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_alignParentBottom="true"
-                android:layout_alignParentTop="true"
-                android:background="@color/black_40_transparent"
-                android:visibility="gone" />
-
-            <View
-                android:id="@+id/status_bar_inset"
-                android:layout_width="match_parent"
-                android:layout_height="0dp" />
-
-            <android.support.v7.widget.Toolbar
-                android:id="@+id/toolbar"
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/action_bar_height"
-                android:layout_below="@id/status_bar_inset"
-                app:popupTheme="@style/PopupMenu">
-
-                <com.android.messaging.ui.view.MessagesTextView
-                    android:id="@+id/toolbar_title"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_gravity="center"
-                    android:gravity="center_vertical"
-                    android:includeFontPadding="false"
-                    android:textColor="@color/action_bar_title_text_color"
-                    android:textSize="16.7dp"
-                    app:typeface="@string/custom_font_semibold" />
-            </android.support.v7.widget.Toolbar>
-        </RelativeLayout>
-
-        <FrameLayout
-            android:id="@+id/conversation_fragment_container"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent" />
-    </LinearLayout>
-
-</com.android.messaging.ui.ImeDetectFrameLayout>
+    <FrameLayout
+        android:id="@+id/conversation_fragment_container"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
+</com.android.messaging.ui.ImeDetectLinearLayout>

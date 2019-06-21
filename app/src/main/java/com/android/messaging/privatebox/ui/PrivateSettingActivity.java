@@ -49,6 +49,7 @@ public class PrivateSettingActivity extends BaseActivity {
             Intent intent = new Intent(PrivateSettingActivity.this, PrivateBoxSetPasswordActivity.class);
             intent.putExtra(PrivateBoxSetPasswordActivity.INTENT_EXTRA_RESET_PASSWORD, true);
             Navigations.startActivitySafely(PrivateSettingActivity.this, intent);
+            overridePendingTransition(R.anim.slide_in_from_right_and_fade, R.anim.anim_null);
             BugleAnalytics.logEvent("PrivateBox_Settings_ModifyPassword_Click");
         });
 
@@ -72,6 +73,7 @@ public class PrivateSettingActivity extends BaseActivity {
                 () -> {
                     Navigations.startActivitySafely(this,
                             new Intent(this, HideTheIconActivity.class));
+                    overridePendingTransition(R.anim.slide_in_from_right_and_fade, R.anim.anim_null);
                     BugleAnalytics.logEvent("PrivateBox_Settings_HideTheIcon_Click");
                 });
 

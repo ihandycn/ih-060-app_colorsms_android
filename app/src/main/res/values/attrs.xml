@@ -143,4 +143,7 @@
         <attr name="dividerColor" format="color" />
     </declare-styleable>
 
+    <declare-styleable name="ViewPagerTabs">
+        <attr name="text_background_color" format="color"/>
+    </declare-styleable>
 </resources>

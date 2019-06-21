@@ -17,6 +17,7 @@ import com.android.messaging.ui.UIIntents;
 import com.android.messaging.util.Assert;
 import com.android.messaging.util.BugleAnalytics;
 import com.android.messaging.util.BuglePrefs;
+import com.android.messaging.util.DefaultSMSUtils;
 import com.android.messaging.util.PhoneUtils;
 import com.android.messaging.util.UiUtils;
 
@@ -102,7 +103,7 @@ public class SettingAdvancedActivity extends BaseActivity {
             BugleAnalytics.logEvent("SMS_Settings_Advanced_DeliveryReports_Click", true);
         });
 
-        if (!PhoneUtils.getDefault().isDefaultSmsApp()) {
+        if (!DefaultSMSUtils.isDefaultSmsApp()) {
             mAutoRetrieve.setChecked(false);
             mSMSDeliveryReports.setChecked(false);
         }
