@@ -228,6 +228,9 @@ public class BackupManager {
 
             if (time == 0) {
                 // no message to backup
+                if (listenerWeakReference.get() != null) {
+                    listenerWeakReference.get().onBackupFailed();
+                }
                 return;
             }
 
@@ -256,6 +259,9 @@ public class BackupManager {
 
             if (!Networks.isNetworkAvailable(-1)) {
                 file.delete();
+                if (listenerWeakReference.get() != null) {
+                    listenerWeakReference.get().onBackupFailed();
+                }
                 return;
             }
 

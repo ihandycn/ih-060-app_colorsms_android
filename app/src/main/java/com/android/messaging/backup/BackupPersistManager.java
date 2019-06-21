@@ -106,19 +106,20 @@ public class BackupPersistManager {
             }
             writer.flush();
             writer.close();
+        } catch (IOException e) {
+            file.delete();
+            return null;
+        }
 
-            //remove useless files
-            if (backupType != BackupInfo.CLOUD) {
-                if (BackupManager.RECOVERY_MODE) {
-                    for (File f : CommonUtils.getDirectory(BASE_PATH).listFiles()) {
-                        if (!f.getName().equals(file.getName())) {
-                            f.delete();
-                        }
+        //remove useless files
+        if (backupType != BackupInfo.CLOUD) {
+            if (BackupManager.RECOVERY_MODE) {
+                for (File f : CommonUtils.getDirectory(BASE_PATH).listFiles()) {
+                    if (!f.getName().equals(file.getName())) {
+                        f.delete();
                     }
                 }
             }
-        } catch (IOException e) {
-            e.printStackTrace();
         }
         return file;
     }
