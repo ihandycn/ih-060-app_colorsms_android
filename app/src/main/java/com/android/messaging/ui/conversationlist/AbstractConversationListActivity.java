@@ -90,9 +90,11 @@ public abstract class AbstractConversationListActivity extends BugleActionBarAct
 
     protected void startMultiSelectActionMode() {
         startActionMode(new MultiSelectActionModeCallback(this));
+        mConversationListFragment.startMultiSelectMode();
     }
 
     protected void exitMultiSelectState() {
+        mConversationListFragment.exitMultiSelectMode();
         mConversationListFragment.showFab();
         dismissActionMode();
         mConversationListFragment.updateUi();

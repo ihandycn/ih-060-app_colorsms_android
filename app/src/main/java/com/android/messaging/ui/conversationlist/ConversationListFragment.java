@@ -585,7 +585,20 @@ public class ConversationListFragment extends Fragment implements ConversationLi
 
     public void updateUi() {
         mAdapter.notifyDataSetChanged();
+    }
 
+    public void startMultiSelectMode() {
+        if (mArchiveMode || mForwardMessageMode) {
+            return;
+        }
+        mStartNewConversationButton.animate().scaleX(0.5f).scaleY(0.5f).alpha(0).setDuration(200).start();
+    }
+
+    public void exitMultiSelectMode() {
+        if (mArchiveMode || mForwardMessageMode) {
+            return;
+        }
+        mStartNewConversationButton.animate().scaleX(1f).scaleY(1f).alpha(1).setDuration(200).start();
     }
 
     /**

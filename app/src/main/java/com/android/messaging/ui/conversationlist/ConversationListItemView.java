@@ -15,6 +15,7 @@
  */
 package com.android.messaging.ui.conversationlist;
 
+import android.animation.LayoutTransition;
 import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Color;
@@ -137,7 +138,6 @@ public class ConversationListItemView extends FrameLayout implements OnClickList
     private TextView mTimestampTextView;
     private ContactIconView mContactIconView;
     private ImageView mContactBackground;
-    private ImageView mContactCheckmarkView;
     private ImageView mNotificationBellView;
     private ImageView mPinView;
     private ImageView mFailedStatusIconView;
@@ -164,10 +164,6 @@ public class ConversationListItemView extends FrameLayout implements OnClickList
         mWorkProfileIconView = findViewById(R.id.work_profile_icon);
         mTimestampTextView = findViewById(R.id.conversation_timestamp);
         mContactIconView = findViewById(R.id.conversation_icon);
-        mContactCheckmarkView = findViewById(R.id.conversation_checkmark);
-        mContactCheckmarkView.getDrawable().setColorFilter(
-                Color.parseColor(ThemeInfo.getThemeInfo(ThemeUtils.getCurrentThemeName()).avatarForegroundColor),
-                PorterDuff.Mode.SRC_ATOP);
         mNotificationBellView = findViewById(R.id.conversation_notification_bell);
         mNotificationBellView.getDrawable().setColorFilter(
                 ConversationColors.get().getListTimeColor(), PorterDuff.Mode.SRC_ATOP);
@@ -194,6 +190,12 @@ public class ConversationListItemView extends FrameLayout implements OnClickList
 
         mContactBackground = findViewById(R.id.conversation_icon_bg);
         mContactBackground.setImageDrawable(AvatarBgDrawables.getAvatarBg(false));
+
+        LayoutTransition layoutTransition = new LayoutTransition();
+        layoutTransition.setDuration(200);
+        layoutTransition.disableTransitionType(LayoutTransition.DISAPPEARING);
+
+        mSwipeableContent.setLayoutTransition(layoutTransition);
 
         if (OsUtil.isAtLeastL()) {
             setTransitionGroup(true);
@@ -359,25 +361,40 @@ public class ConversationListItemView extends FrameLayout implements OnClickList
         final boolean isSelected = mHostInterface.isConversationSelected(mData.getConversationId());
         setSelected(isSelected);
 
-        int contactIconVisibility = GONE;
-        int checkMarkVisibility = GONE;
-        int failStatusVisibility = GONE;
-        if (isSelected) {
-            checkMarkVisibility = VISIBLE;
-        } else {
-            contactIconVisibility = VISIBLE;
-            // Only show the fail icon if it is not a group conversation.
-            // And also require that we be the default sms app.
-            if (mData.getIsFailedStatus() && !mData.getIsGroup()) {
-                failStatusVisibility = VISIBLE;
+        ImageView checkbox = findViewById(R.id.check_box);
+        View rightContainer = findViewById(R.id.conversation_item_right_container);
+
+        if (mHostInterface.isSelectionMode()) {
+            checkbox.setVisibility(View.VISIBLE);
+            if (isSelected) {
+                checkbox.setImageResource(R.drawable.ic_choosen);
+            } else {
+                checkbox.setImageResource(R.drawable.ic_choose);
             }
+            rightContainer.setVisibility(GONE);
+        } else {
+            checkbox.setVisibility(View.GONE);
+            //rightContainer.scrollTo(0, 0);
+            rightContainer.setVisibility(VISIBLE);
         }
 
+//        int contactIconVisibility = GONE;
+        int failStatusVisibility = GONE;
+//        if (isSelected) {
+//            checkMarkVisibility = VISIBLE;
+//        } else {
+//            contactIconVisibility = VISIBLE;
+        // Only show the fail icon if it is not a group conversation.
+        // And also require that we be the default sms app.
+        if (mData.getIsFailedStatus() && !mData.getIsGroup()) {
+            failStatusVisibility = VISIBLE;
+        }
+//        }
+
         setContactImage();
-        mContactIconView.setVisibility(contactIconVisibility);
+//        mContactIconView.setVisibility(contactIconVisibility);
         mContactIconView.clearColorFilter();
 
-        mContactCheckmarkView.setVisibility(checkMarkVisibility);
         mFailedStatusIconView.setVisibility(failStatusVisibility);
 
         boolean shouldShowUnreadMsgCount = mData.getUnreadMessagesNumber() > 0;
