@@ -31,7 +31,9 @@ import com.superapps.util.Preferences;
 import com.superapps.util.Threads;
 import com.superapps.util.Toasts;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import static com.ihs.app.framework.HSApplication.getContext;
 
@@ -300,6 +302,10 @@ public class ChooseBackupViewHolder extends BasePagerViewHolder implements Custo
                     backupType = "cloud";
                 }
                 BugleAnalytics.logEvent("Backup_BackupPage_Backup_Success", true, "type", backupType);
+
+                Map<String, String> params = new HashMap<>();
+                params.put("Backup", "Backup_BackupSuccess");
+                BugleAnalytics.logEventToFirebase("Feature_BackupRestore", params);
             }
 
             void dismiss() {
@@ -391,6 +397,10 @@ public class ChooseBackupViewHolder extends BasePagerViewHolder implements Custo
                 }
 
                 BugleAnalytics.logEvent("Backup_Freeupmsg_Success");
+
+                Map<String, String> params = new HashMap<>();
+                params.put("Backup", "Backup_CleanSuccess");
+                BugleAnalytics.logEventToFirebase("Feature_BackupRestore", params);
             }
         });
 

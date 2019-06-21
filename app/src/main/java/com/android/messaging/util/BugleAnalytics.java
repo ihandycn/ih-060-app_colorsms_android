@@ -113,6 +113,15 @@ public class BugleAnalytics {
         }
     }
 
+    public static void logEventToFirebase(final String eventID, final Map<String, String> eventValues){
+        Bundle params = new Bundle();
+        for (Map.Entry<String, String> entry : eventValues.entrySet()) {
+            params.putString(entry.getKey(), entry.getValue());
+        }
+        sFirebaseAnalytics.logEvent(eventID, params);
+        onLogEvent(eventID, false, eventValues);
+    }
+
     private static void onLogEvent(String eventID, boolean alsoLogToFlurry, Map<String, String> eventValues) {
         if (BuildConfig.DEBUG) {
             String eventDescription = getEventInfoDescription(eventID, alsoLogToFlurry, eventValues);
