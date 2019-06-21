@@ -70,6 +70,7 @@ import com.android.messaging.ui.dialog.FiveStarRateDialog;
 import com.android.messaging.ui.emoji.EmojiStoreActivity;
 import com.android.messaging.ui.invitefriends.InviteFriendsActivity;
 import com.android.messaging.ui.messagebox.MessageBoxActivity;
+import com.android.messaging.ui.messagebox.MessageBoxSettings;
 import com.android.messaging.ui.signature.SignatureSettingDialog;
 import com.android.messaging.ui.wallpaper.WallpaperChooserItem;
 import com.android.messaging.ui.wallpaper.WallpaperDownloader;
@@ -296,7 +297,9 @@ public class ConversationListActivity extends AbstractConversationListActivity
                 } else {
                     simStatus = "No Permission";
                 }
-                BugleAnalytics.logEvent("SMS_HomePage_Show", "SIM", simStatus);
+                BugleAnalytics.logEvent("SMS_HomePage_Show", true,
+                        "SIM", simStatus,
+                        "Popups", String.valueOf(MessageBoxSettings.isSMSAssistantModuleEnabled()));
             });
         }
 
