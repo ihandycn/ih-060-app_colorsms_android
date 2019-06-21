@@ -687,4 +687,6 @@
 	<string name="menu_invite_friends">Inviter des amis</string>
 	<string name="invite_friends_now">INVITER MAINTENANT</string>
 
+    <string name="action_unarchive">"Annuler l\'archivage"</string>
+    <string name="action_archive">"Archiver"</string>
 </resources>

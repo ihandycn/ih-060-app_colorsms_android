@@ -648,4 +648,7 @@
     <string name="theme_coming">更多主题即将推出...</string>
     <string name="menu_invite_friends">邀请好友</string>
     <string name="invite_friends_now">邀请</string>
+
+    <string name="action_unarchive">"取消归档"</string>
+    <string name="action_archive">"归档"</string>
 </resources>

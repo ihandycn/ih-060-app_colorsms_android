@@ -694,4 +694,6 @@
 	<string name="menu_invite_friends">Undang Teman</string>
 	<string name="invite_friends_now">UNDANG SEKARANG</string>
 
+    <string name="action_unarchive">"Batalkan pengarsipan"</string>
+    <string name="action_archive">"Arsipkan"</string>
 </resources>

@@ -789,4 +789,6 @@
 	<string name="menu_invite_friends">دعوة الأصدقاء</string>
 	<string name="invite_friends_now">ادع الآن</string>
 
+    <string name="action_unarchive">"إزالة من الأرشيف"</string>
+    <string name="action_archive">"أرشيف"</string>
 </resources>
