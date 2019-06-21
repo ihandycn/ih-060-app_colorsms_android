@@ -82,6 +82,12 @@ public class PrivateContactsActivity extends AppCompatActivity implements Loader
         finish();
     }
 
+    @Override
+    public void finish() {
+        super.finish();
+        overridePendingTransition(R.anim.anim_null, R.anim.slide_out_to_right_and_fade);
+    }
+
     private void removeConversationsFromPrivateBox(List<String> addList) {
         MoveConversationToTelephonyAction.moveToTelephony((ArrayList<String>) addList,
                 null, null);

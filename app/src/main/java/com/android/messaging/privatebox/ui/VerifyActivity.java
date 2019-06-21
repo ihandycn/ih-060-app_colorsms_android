@@ -290,7 +290,7 @@ public abstract class VerifyActivity extends BaseActivity implements INotificati
     @Override public void onReceive(String s, HSBundle hsBundle) {
         switch (s) {
             case EVENT_UNLOCK_APP_RESET_PASSWORD_SUCCESS:
-                finish();
+                finishWithoutOverridePendingTransition();
                 break;
             default:
                 break;

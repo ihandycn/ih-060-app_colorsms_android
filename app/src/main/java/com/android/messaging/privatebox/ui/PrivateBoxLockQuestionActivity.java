@@ -266,6 +266,11 @@ public class PrivateBoxLockQuestionActivity extends HSAppCompatActivity implemen
         overridePendingTransition(R.anim.anim_null, R.anim.slide_out_to_right_and_fade);
     }
 
+    public void finishWithoutOverridePendingTransition() {
+        super.finish();
+    }
+
+
     private void setSelectTimePickerViewStatus(boolean isBirthdayQuestion) {
         if (isBirthdayQuestion) {
             hideKeyBoard(answerEditText, this);
@@ -346,7 +351,6 @@ public class PrivateBoxLockQuestionActivity extends HSAppCompatActivity implemen
             prefs.putString(PREF_KEY_SECURITY_QUESTION, questionSpinner.getSelectedItem().toString());
             prefs.putString(PREF_KEY_SECURITY_ANSWER, answer);
             PrivateBoxSettings.setSecurityQuestionSet(true);
-            finish();
             if (getIntent().getBooleanExtra(INTENT_KEY_IS_FIRST_SETTING_QUESTION, false)) {
                 BugleAnalytics.logEvent("PrivateBox_SecurityQuestion_Set_Click", true,"from", "firstsetcode");
                 Intent intent = new Intent(PrivateBoxLockQuestionActivity.this, PrivateConversationListActivity.class);
@@ -357,7 +361,9 @@ public class PrivateBoxLockQuestionActivity extends HSAppCompatActivity implemen
                 }
                 Navigations.startActivitySafely(PrivateBoxLockQuestionActivity.this, intent);
                 overridePendingTransition(R.anim.slide_in_from_right_and_fade, R.anim.anim_null);
+                finishWithoutOverridePendingTransition();
             } else {
+                finish();
                 BugleAnalytics.logEvent("PrivateBox_SecurityQuestion_Set_Click", true,"from", "settings");
             }
         } else { // Is answering question
@@ -369,9 +375,9 @@ public class PrivateBoxLockQuestionActivity extends HSAppCompatActivity implemen
             if (!TextUtils.isEmpty(answer) && TextUtils.equals(answer, savedAnswer)) {
                 Intent intent = new Intent(PrivateBoxLockQuestionActivity.this, PrivateBoxSetPasswordActivity.class);
                 intent.putExtra(PrivateBoxSetPasswordActivity.INTENT_EXTRA_FORGET_PASSWORD, true);
-                finish();
                 Navigations.startActivitySafely(PrivateBoxLockQuestionActivity.this, intent);
                 overridePendingTransition(R.anim.slide_in_from_right_and_fade, R.anim.anim_null);
+                finishWithoutOverridePendingTransition();
             } else {
                 Toast.makeText(PrivateBoxLockQuestionActivity.this, getString(R.string.incorrect_question_answer_hint), Toast.LENGTH_SHORT).show();
             }

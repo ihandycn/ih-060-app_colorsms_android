@@ -44,4 +44,8 @@ public abstract class BaseActivity extends AppCompatActivity {
         super.finish();
         overridePendingTransition(R.anim.anim_null, R.anim.slide_out_to_right_and_fade);
     }
+
+    public void finishWithoutOverridePendingTransition() {
+        super.finish();
+    }
 }

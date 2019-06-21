@@ -412,12 +412,12 @@ public class PrivateBoxSetPasswordActivity extends BaseActivity implements View.
             }
             Navigations.startActivitySafely(PrivateBoxSetPasswordActivity.this, intent);
             overridePendingTransition(R.anim.slide_in_from_right_and_fade, R.anim.anim_null);
-            finish();
+            finishWithoutOverridePendingTransition();
         } else if (isForgetPassword) {
-            finish();
             Navigations.startActivitySafely(this,
                     new Intent(this, PrivateConversationListActivity.class));
             overridePendingTransition(R.anim.slide_in_from_right_and_fade, R.anim.anim_null);
+            finishWithoutOverridePendingTransition();
             HSGlobalNotificationCenter.sendNotification(EVENT_UNLOCK_APP_RESET_PASSWORD_SUCCESS);
         } else {
             finish();
