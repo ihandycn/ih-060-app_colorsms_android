@@ -25,7 +25,7 @@ public class EmojiDataProducer {
         recentInfo.mName = "recent";
         recentInfo.mEmojiPackageType = EmojiPackageType.RECENT;
         recentInfo.mTabIconUrl = Uri.parse("android.resource://" + packageName + "/" +
-                context.getResources().getIdentifier("emoji_recent_tab_icon", "drawable", packageName)).toString();
+                context.getResources().getIdentifier("emoji_category_recent_selected", "drawable", packageName)).toString();
         recentInfo.mEmojiInfoList = EmojiManager.getRecentInfo(EmojiPackageType.STICKER);
         result.add(recentInfo);
 
@@ -42,7 +42,10 @@ public class EmojiDataProducer {
         recentInfo.mName = "recent";
         recentInfo.mEmojiPackageType = EmojiPackageType.RECENT;
         recentInfo.mTabIconUrl = Uri.parse("android.resource://" + packageName + "/" +
-                context.getResources().getIdentifier("emoji_recent_tab_icon", "drawable", packageName)).toString();
+                context.getResources().getIdentifier("emoji_category_recent", "drawable", packageName)).toString();
+        recentInfo.mTabIconSelectedUrl = Uri.parse("android.resource://" + packageName + "/" +
+                context.getResources().getIdentifier("emoji_category_recent_selected", "drawable", packageName)).toString();
+
         recentInfo.mEmojiInfoList = EmojiManager.getRecentInfo(EmojiPackageType.EMOJI);
         result.add(recentInfo);
 
@@ -51,10 +54,13 @@ public class EmojiDataProducer {
             info.mEmojiPackageType = EmojiPackageType.EMOJI;
             info.mTabIconUrl = Uri.parse("android.resource://" + packageName + "/" +
                     context.getResources().getIdentifier(category.getIcon() + "", "drawable", packageName)).toString();
+            info.mTabIconSelectedUrl = Uri.parse("android.resource://" + packageName + "/" +
+                    context.getResources().getIdentifier(category.getIconSelected() + "", "drawable", packageName)).toString();
             List<BaseEmojiInfo> emojiList = new ArrayList<>();
             for (Emoji emoji : category.getEmojis()) {
                 EmojiInfo itemInfo = EmojiInfo.convert(emoji);
                 if(itemInfo.hasVariant()) {
+                    // get skin record
                     String record = EmojiManager.getSkinSingleRecord(itemInfo.getUnicode());
                     if (record != null) {
                         itemInfo.mEmoji = record;

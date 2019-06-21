@@ -2,6 +2,8 @@ package com.android.messaging.ui.emoji;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.graphics.PorterDuff;
+import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.PagerAdapter;
@@ -12,10 +14,10 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 
 import com.android.messaging.R;
-import com.android.messaging.glide.GlideApp;
-import com.android.messaging.ui.emoji.utils.EmojiManager;
+import com.android.messaging.ui.customize.PrimaryColors;
 import com.android.messaging.util.BugleAnalytics;
-import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.superapps.util.BackgroundDrawables;
+import com.superapps.util.Dimensions;
 import com.superapps.view.ViewPagerFixed;
 
 import java.util.ArrayList;
@@ -31,6 +33,8 @@ public class EmojiPackagePagerAdapter extends PagerAdapter {
     private EmojiItemPagerAdapter mEmojiAdapter;
     private OnEmojiClickListener mOnEmojiClickListener;
 
+    private final int DEFAULT_PAGE = 1;
+
     EmojiPackagePagerAdapter(Context context, TabLayout tabLayout, OnEmojiClickListener emojiClickListener) {
         mContext = context;
         mTabLayout = tabLayout;
@@ -44,7 +48,7 @@ public class EmojiPackagePagerAdapter extends PagerAdapter {
         }
     }
 
-    void updateRecentEmoji(){
+    void updateRecentEmoji() {
         if (mEmojiAdapter != null) {
             mEmojiAdapter.updateRecentItem();
         }
@@ -93,11 +97,14 @@ public class EmojiPackagePagerAdapter extends PagerAdapter {
         });
         itemTabLayout.setupWithViewPager(itemPager);
         adapter.updateTabView();
+        itemTabLayout.getTabAt(0).select();
         container.addView(view);
 
-        if(adapter instanceof StickerItemPagerAdapter) {
+        if (adapter instanceof StickerItemPagerAdapter) {
             View storeBtn = view.findViewById(R.id.emoji_store_btn);
             storeBtn.setVisibility(View.VISIBLE);
+            storeBtn.setBackground(BackgroundDrawables.createBackgroundDrawable(
+                    mContext.getResources().getColor(R.color.white), Dimensions.pxFromDp(17), true));
             storeBtn.setOnClickListener(v -> {
                 BugleAnalytics.logEvent("SMSEmoji_ChatEmoji_Store_Click", true, true, "type", "chat_tab");
                 EmojiStoreActivity.start(container.getContext());
@@ -117,11 +124,11 @@ public class EmojiPackagePagerAdapter extends PagerAdapter {
         }
     }
 
-    public void setData(Map<EmojiPackageType, List<EmojiPackageInfo>> data){
-        if(data.containsKey(EmojiPackageType.STICKER)) {
+    public void setData(Map<EmojiPackageType, List<EmojiPackageInfo>> data) {
+        if (data.containsKey(EmojiPackageType.STICKER)) {
             mStickerAdapter = new StickerItemPagerAdapter(data.get(EmojiPackageType.STICKER), mContext, mOnEmojiClickListener);
         }
-        if(data.containsKey(EmojiPackageType.EMOJI)){
+        if (data.containsKey(EmojiPackageType.EMOJI)) {
             mEmojiAdapter = new EmojiItemPagerAdapter(mContext, data.get(EmojiPackageType.EMOJI), mOnEmojiClickListener);
         }
     }
@@ -151,24 +158,71 @@ public class EmojiPackagePagerAdapter extends PagerAdapter {
 
     private void updateTabView() {
         int count = mTabLayout.getTabCount();
+        int primaryColors = PrimaryColors.getPrimaryColor();
         for (int i = 0; i < count; i++) {
             EmojiPackageInfo info = mData.get(i);
             @SuppressLint("InflateParams")
             View view = LayoutInflater.from(mContext).inflate(R.layout.emoji_tab_item_layout, null);
             TabLayout.Tab tab = mTabLayout.getTabAt(i);
             ImageView tabIconView = view.findViewById(R.id.tab_icon_view);
-            ImageView newTabView = view.findViewById(R.id.tab_new_view);
-            if (EmojiManager.isNewTabSticker(info.mName)) {
-                newTabView.setVisibility(View.VISIBLE);
-            } else {
-                newTabView.setVisibility(View.GONE);
-            }
-            GlideApp.with(mContext).load(info.mTabIconUrl).diskCacheStrategy(DiskCacheStrategy.NONE).placeholder(R.drawable.emoji_normal_tab_icon).into(tabIconView);
+            tabIconView.setBackground(BackgroundDrawables.createBackgroundDrawable(
+                    mContext.getResources().getColor(R.color.white), Dimensions.pxFromDp(20), true));
+            tabIconView.setImageURI(Uri.parse(info.mTabIconUrl));
             if (tab != null) {
                 tab.setCustomView(view);
                 tab.setTag(info);
             }
         }
+
+        mTabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+            @Override
+            public void onTabSelected(TabLayout.Tab tab) {
+                EmojiPackageInfo info = getPackageInfo(tab);
+                if (info == null)
+                    return;
+
+                BugleAnalytics.logEvent("SMSEmoji_ChatEmoji_Tab_Click", true, true, "type", info.mName);
+
+                ImageView view = getImageView(tab);
+                if (view == null)
+                    return;
+                view.setImageURI(Uri.parse(info.mTabIconSelectedUrl));
+                view.getDrawable().setColorFilter(primaryColors, PorterDuff.Mode.SRC_ATOP);
+            }
+
+            @Override
+            public void onTabUnselected(TabLayout.Tab tab) {
+                EmojiPackageInfo info = getPackageInfo(tab);
+                if (info == null)
+                    return;
+                ImageView view = getImageView(tab);
+                if (view == null)
+                    return;
+                view.setImageURI(Uri.parse(info.mTabIconUrl));
+            }
+
+            @Override
+            public void onTabReselected(TabLayout.Tab tab) {
+                onTabSelected(tab);
+            }
+
+            private EmojiPackageInfo getPackageInfo(TabLayout.Tab tab) {
+                Object object = tab.getTag();
+                if (object instanceof EmojiPackageInfo) {
+                    return (EmojiPackageInfo) object;
+                }
+                return null;
+            }
+
+            private ImageView getImageView(TabLayout.Tab tab) {
+                View view = tab.getCustomView();
+                if (view == null)
+                    return null;
+                return view.findViewById(R.id.tab_icon_view);
+            }
+        });
+
+
     }
 
     public interface OnEmojiClickListener {

@@ -13,6 +13,7 @@ import android.widget.ImageView;
 
 import com.android.messaging.R;
 import com.android.messaging.glide.GlideApp;
+import com.android.messaging.ui.customize.PrimaryColors;
 import com.android.messaging.ui.emoji.utils.EmojiManager;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.superapps.util.Dimensions;
@@ -26,6 +27,7 @@ public class StickerItemPagerAdapter extends AbstractEmojiItemPagerAdapter{
     private final int STICKER_COLUMNS = 4;
     @SuppressWarnings("FieldCanBeLocal")
     private final int STICKER_ROWS = 2;
+    private int mCurrentPage = 0;
     private TabLayout mTabLayout;
 
     private List<EmojiPackageInfo> mData;
@@ -76,20 +78,23 @@ public class StickerItemPagerAdapter extends AbstractEmojiItemPagerAdapter{
     @Override
     public void updateTabView() {
         int count = mTabLayout.getTabCount();
+        int primaryColor = PrimaryColors.getPrimaryColor();
         for (int i = 0; i < count; i++) {
             EmojiPackageInfo info = mData.get(i);
             @SuppressLint("InflateParams")
-            View view = LayoutInflater.from(mContext).inflate(R.layout.emoji_tab_item_layout, null);
+            View view = LayoutInflater.from(mContext).inflate(R.layout.emoji_tab_lower_item_layout, null);
             TabLayout.Tab tab = mTabLayout.getTabAt(i);
             ImageView tabIconView = view.findViewById(R.id.tab_icon_view);
             ImageView newTabView = view.findViewById(R.id.tab_new_view);
+            View tabIndicator = view.findViewById(R.id.tab_indicator);
+            tabIndicator.setBackgroundColor(primaryColor);
             if (EmojiManager.isNewTabSticker(info.mName)) {
                 newTabView.setVisibility(View.VISIBLE);
             } else {
                 newTabView.setVisibility(View.GONE);
             }
             // cancel cache to avoid showing wrong image
-            GlideApp.with(mContext).load(info.mTabIconUrl).diskCacheStrategy(DiskCacheStrategy.NONE).placeholder(R.drawable.emoji_normal_tab_icon).into(tabIconView);
+            GlideApp.with(mContext).load(info.mTabIconUrl).diskCacheStrategy(DiskCacheStrategy.NONE).placeholder(R.drawable.emoji_tab_normal_icon).into(tabIconView);
             if (tab != null) {
                 tab.setCustomView(view);
                 tab.setTag(info);
@@ -98,20 +103,27 @@ public class StickerItemPagerAdapter extends AbstractEmojiItemPagerAdapter{
         mTabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
+                if(tab.getCustomView() == null)
+                    return ;
+                tab.getCustomView().findViewById(R.id.tab_indicator).setVisibility(View.VISIBLE);
+                mCurrentPage = tab.getPosition();
             }
 
             @Override
             public void onTabUnselected(TabLayout.Tab tab) {
                 EmojiPackageInfo packageInfo = getPackageInfo(tab);
+                if(tab.getCustomView() == null)
+                    return ;
                 if (packageInfo != null && EmojiManager.isNewTabSticker(packageInfo.mName)) {
                     EmojiManager.removeNewTabSticker(packageInfo.mName);
-                    assert tab.getCustomView() != null;
                     tab.getCustomView().findViewById(R.id.tab_new_view).setVisibility(View.GONE);
                 }
+                tab.getCustomView().findViewById(R.id.tab_indicator).setVisibility(View.GONE);
             }
 
             @Override
             public void onTabReselected(TabLayout.Tab tab) {
+                onTabSelected(tab);
             }
 
             private EmojiPackageInfo getPackageInfo(TabLayout.Tab tab) {
@@ -122,6 +134,8 @@ public class StickerItemPagerAdapter extends AbstractEmojiItemPagerAdapter{
                 return null;
             }
         });
+
+        mTabLayout.getTabAt(mCurrentPage).select();
     }
 
 

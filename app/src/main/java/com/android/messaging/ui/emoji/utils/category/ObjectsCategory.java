@@ -8,7 +8,12 @@ public final class ObjectsCategory implements EmojiCategory {
     private static final Emoji[] DATA;
 
     public int getIcon() {
-        return R.drawable.emoji_google_category_objects;
+        return R.drawable.emoji_category_object;
+    }
+
+    @Override
+    public int getIconSelected() {
+        return R.drawable.emoji_category_object_selected;
     }
 
     static {

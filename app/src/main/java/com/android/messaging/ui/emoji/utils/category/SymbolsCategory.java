@@ -280,8 +280,14 @@ public final class SymbolsCategory implements EmojiCategory {
             new Emoji(128358, "emoji_google_1f566"),
             new Emoji(128359, "emoji_google_1f567")};
 
+    @Override
     public int getIcon() {
-        return R.drawable.emoji_google_category_symbols;
+        return R.drawable.emoji_category_symbol;
+    }
+
+    @Override
+    public int getIconSelected(){
+        return R.drawable.emoji_category_symbol_selected;
     }
 
     public Emoji[] getEmojis() {

@@ -93,8 +93,14 @@ public final class FoodCategory implements EmojiCategory {
             new Emoji(127860, "emoji_google_1f374"),
             new Emoji(127869, "emoji_google_1f37d")};
 
+    @Override
     public int getIcon() {
-        return R.drawable.emoji_google_category_food;
+        return R.drawable.emoji_category_food;
+    }
+
+    @Override
+    public int getIconSelected() {
+        return R.drawable.emoji_category_food_selected;
     }
 
     public Emoji[] getEmojis() {

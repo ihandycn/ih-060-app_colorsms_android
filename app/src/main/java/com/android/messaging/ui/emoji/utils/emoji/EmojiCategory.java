@@ -4,4 +4,6 @@ public interface EmojiCategory {
     Emoji[] getEmojis();
 
     int getIcon();
+
+    int getIconSelected();
 }

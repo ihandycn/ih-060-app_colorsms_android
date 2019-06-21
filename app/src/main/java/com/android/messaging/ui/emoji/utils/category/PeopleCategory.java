@@ -8,8 +8,14 @@ import com.android.messaging.ui.emoji.utils.emoji.EmojiCategory;
 public final class PeopleCategory implements EmojiCategory {
     private static final Emoji[] DATA;
 
+    @Override
     public int getIcon() {
-        return R.drawable.emoji_google_category_people;
+        return R.drawable.emoji_category_people;
+    }
+
+    @Override
+    public int getIconSelected() {
+        return R.drawable.emoji_category_people_selected;
     }
 
     static {

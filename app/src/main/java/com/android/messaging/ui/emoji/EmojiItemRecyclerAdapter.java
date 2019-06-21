@@ -1,5 +1,6 @@
 package com.android.messaging.ui.emoji;
 
+import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -9,6 +10,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.android.messaging.R;
+import com.superapps.util.BackgroundDrawables;
+import com.superapps.util.Dimensions;
 
 import java.util.List;
 
@@ -16,6 +19,7 @@ public class EmojiItemRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.
 
     private static final int TYPE_IMAGE = 1;
     private static final int TYPE_TEXT = 2;
+    private Context mContext;
 
     private List<BaseEmojiInfo> mData;
     private EmojiPackagePagerAdapter.OnEmojiClickListener mOnEmojiClickListener;
@@ -28,6 +32,7 @@ public class EmojiItemRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.
     @NonNull
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        mContext = parent.getContext();
         if (viewType == TYPE_IMAGE) {
             return new EmojiImageViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.emoji_item_delete_layout, parent, false));
         } else {
@@ -35,6 +40,7 @@ public class EmojiItemRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.
         }
     }
 
+    @SuppressWarnings("ClickableViewAccessibility")
     @Override
     public void onBindViewHolder(@NonNull final RecyclerView.ViewHolder holder, int position) {
         if (holder instanceof EmojiImageViewHolder) {
@@ -52,27 +58,35 @@ public class EmojiItemRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.
                 final EmojiInfo emojiInfo = (EmojiInfo) info;
                 emojiHolder.itemView.setTag(emojiInfo);
                 emojiHolder.textView.setText(emojiInfo.mEmoji);
+
+                emojiHolder.textView.setBackground(BackgroundDrawables.createBackgroundDrawable(
+                        mContext.getResources().getColor(android.R.color.white), Dimensions.pxFromDp(16), true));
+
                 emojiHolder.textView.setOnClickListener(v -> {
                     if (mOnEmojiClickListener != null) {
                         mOnEmojiClickListener.emojiClick(emojiInfo);
                     }
                 });
-                if(emojiInfo.hasVariant()) {
+
+                if (emojiInfo.hasVariant()) {
                     emojiHolder.textView.setOnLongClickListener(new View.OnLongClickListener() {
                         @Override
                         public boolean onLongClick(View v) {
                             if (mOnEmojiClickListener != null) {
-                                mOnEmojiClickListener.emojiLongClick(emojiHolder.itemView, (EmojiInfo) emojiHolder.itemView.getTag());
+                                EmojiInfo info = (EmojiInfo) emojiHolder.itemView.getTag();
+                                mOnEmojiClickListener.emojiLongClick(emojiHolder.itemView, info);
                             }
                             return true;
                         }
                     });
-                    // TODO: 2019-06-18 add a background change to show users that it has chooses
+                    emojiHolder.imageView.setVisibility(View.VISIBLE);
+                }else{
+                    emojiHolder.textView.setOnLongClickListener(null);
+                    emojiHolder.imageView.setVisibility(View.GONE);
                 }
             }
         }
     }
-
 
 
     @Override
@@ -92,10 +106,12 @@ public class EmojiItemRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.
 
     static class EmojiViewHolder extends RecyclerView.ViewHolder {
         private TextView textView;
+        private ImageView imageView;
 
         EmojiViewHolder(View itemView) {
             super(itemView);
             textView = itemView.findViewById(R.id.emoji_text);
+            imageView = itemView.findViewById(R.id.emoji_more);
         }
     }
 

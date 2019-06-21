@@ -166,9 +166,16 @@ public final class NatureCategory implements EmojiCategory {
             new Emoji(128166, "emoji_google_1f4a6"),
             new Emoji(9748, "emoji_google_2614")};
 
+    @Override
     public int getIcon() {
-        return R.drawable.emoji_google_category_nature;
+        return R.drawable.emoji_category_nature;
     }
+
+    @Override
+    public int getIconSelected() {
+        return R.drawable.emoji_category_nature_selected;
+    }
+
 
     public Emoji[] getEmojis() {
         return DATA;

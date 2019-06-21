@@ -16,6 +16,7 @@
 package com.android.messaging.ui.conversation;
 
 import android.animation.Animator;
+import android.animation.ValueAnimator;
 import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Rect;
@@ -37,6 +38,7 @@ import android.util.AttributeSet;
 import android.view.ContextThemeWrapper;
 import android.view.KeyEvent;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.accessibility.AccessibilityEvent;
 import android.view.animation.Interpolator;
 import android.view.inputmethod.EditorInfo;
@@ -90,6 +92,7 @@ import com.android.messaging.util.OsUtil;
 import com.android.messaging.util.TextViewUtil;
 import com.android.messaging.util.UiUtils;
 import com.android.messaging.font.FontUtils;
+import com.ihs.commons.utils.HSLog;
 import com.superapps.util.BackgroundDrawables;
 import com.superapps.util.Dimensions;
 import com.superapps.util.Preferences;
@@ -104,7 +107,7 @@ import java.util.List;
  */
 public class ComposeMessageView extends LinearLayout
         implements TextView.OnEditorActionListener, DraftMessageDataListener, TextWatcher,
-        ConversationInputSink{
+        ConversationInputSink {
 
     public interface IComposeMessageViewHost extends
             DraftMessageData.DraftMessageSubscriptionDataProvider {
@@ -156,6 +159,8 @@ public class ComposeMessageView extends LinearLayout
     // There is a draft
     private static final int SEND_WIDGET_MODE_SEND_BUTTON = 3;
 
+    private static final int DEFAULT_EMOJI_PICKER_HEIGHT = Dimensions.pxFromDp(243);
+
     private PlainTextEditText mComposeEditText;
     private PlainTextEditText mComposeSubjectText;
     private TextView mMmsIndicator;
@@ -180,6 +185,7 @@ public class ComposeMessageView extends LinearLayout
 
     private boolean mIsMediaPendingShow = false;
     private boolean mIsEmojiPendingShow = false;
+    private boolean isKeyboardShowed = false;
 
     private final Binding<DraftMessageData> mBinding;
     private IComposeMessageViewHost mHost;
@@ -515,7 +521,7 @@ public class ComposeMessageView extends LinearLayout
         };
     }
 
-    private void resetDelaySendAnimation(){
+    private void resetDelaySendAnimation() {
         mDelayCloseButton.setVisibility(View.GONE);
         mSendDelayProgressBar.setVisibility(View.GONE);
         mSelfSendIcon.setVisibility(View.VISIBLE);
@@ -530,26 +536,26 @@ public class ComposeMessageView extends LinearLayout
         mSendDelayProgressBar.setProgress(100);
     }
 
-    private void startMessageSendDelayAction(long sendDelayAnimationStartTime){
+    private void startMessageSendDelayAction(long sendDelayAnimationStartTime) {
         mIsWaitingToSendMessage = true;
 
         if (mMillisecondsAnimated > 1000 * SendDelaySettings.getSendDelayInSecs()) {
-            mMillisecondsAnimated =  1000 * SendDelaySettings.getSendDelayInSecs() * 9 / 10 ;
+            mMillisecondsAnimated = 1000 * SendDelaySettings.getSendDelayInSecs() * 9 / 10;
         }
 
         if (mMillisecondsAnimated != 0) {
             mSendDelayProgressBar.setProgress(100 - (float) ((mMillisecondsAnimated * 100) / (1000 * SendDelaySettings.getSendDelayInSecs())));
         }
-        Threads.postOnMainThreadDelayed(mSendDelayRunnable,1000 * SendDelaySettings.getSendDelayInSecs() - mMillisecondsAnimated);
+        Threads.postOnMainThreadDelayed(mSendDelayRunnable, 1000 * SendDelaySettings.getSendDelayInSecs() - mMillisecondsAnimated);
 
         String conversationId = mBinding.getData().getConversationId();
         SendDelayMessagesManager.insertIncompleteSendingDelayMessagesAction(conversationId, sendDelayAnimationStartTime, mSendDelayRunnable);
-        if(SendDelaySettings.getSendDelayInSecs() != 0) {
+        if (SendDelaySettings.getSendDelayInSecs() != 0) {
             mDelayCloseButton.setVisibility(View.VISIBLE);
             mSendDelayProgressBar.setVisibility(View.VISIBLE);
             mSelfSendIcon.setVisibility(View.GONE);
             mSendButton.setVisibility(View.GONE);
-            
+
             mDelayCloseButton.animate().alpha(1.0f).setDuration(160).setStartDelay(80).start();
             Interpolator scaleStartInterpolator =
                     PathInterpolatorCompat.create(0.0f, 0.0f, 0.58f, 1.0f);
@@ -566,7 +572,7 @@ public class ComposeMessageView extends LinearLayout
         });
     }
 
-    private void resumeLastSendDelayMessageActionInThisConversation(){
+    private void resumeLastSendDelayMessageActionInThisConversation() {
         long sendDelayActionStartTime;
         String conversationId = mBinding.getData().getConversationId();
         SendDelayMessagesManager.SendDelayMessagesData globalSendDelayMessagesData = SendDelayMessagesManager.getIncompleteSendingDelayMessagesAction(conversationId);
@@ -623,12 +629,15 @@ public class ComposeMessageView extends LinearLayout
 
     private void showKeyboard() {
         ImeUtil.get().showImeKeyboard(getContext(), mComposeEditText);
+        isKeyboardShowed = true;
+        HSLog.d(TAG, "showKeyboard: ");
         if (mHost.shouldHideAttachmentsWhenSimSelectorShown()) {
             hideSimSelector();
         }
     }
 
     private void hideKeyboard() {
+        HSLog.d(TAG, "hideKeyboard: ");
         ImeUtil.get().hideImeKeyboard(getContext(), mComposeEditText);
     }
 
@@ -638,9 +647,39 @@ public class ComposeMessageView extends LinearLayout
             EmojiManager.recordAlreadyShowEmojiGuide();
             mEmojiGuideView.setVisibility(GONE);
         }
+        LinearLayout.LayoutParams lp = (LayoutParams) mEmojiPickerLayout.getLayoutParams();
+        lp.height = 0;
+        mEmojiPickerLayout.setLayoutParams(lp);
+
         mEmojiPickerLayout.setVisibility(VISIBLE);
         mEmojiKeyboardBtn.setImageResource(R.drawable.input_keyboard_icon);
         mInputManager.showEmojiPicker();
+
+        if (!isKeyboardShowed) {
+            emojiPickerAnimation(mEmojiPickerLayout);
+        } else {
+            mEmojiPickerLayout.getLayoutParams().height = UiUtils.getKeyboardHeight();
+            isKeyboardShowed = false;
+            invalidate();
+        }
+    }
+
+    private void emojiPickerAnimation(ViewGroup container) {
+        int keyboardHeight = UiUtils.getKeyboardHeight();
+        int height = keyboardHeight == 0 ? DEFAULT_EMOJI_PICKER_HEIGHT : keyboardHeight;
+        ValueAnimator va = ValueAnimator.ofInt(0, height);
+        va.setDuration(520);
+        va.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+            @Override
+            public void onAnimationUpdate(ValueAnimator animation) {
+                ViewGroup.LayoutParams lp = container.getLayoutParams();
+                lp.height = (Integer) animation.getAnimatedValue();
+                container.setLayoutParams(lp);
+                container.invalidate();
+            }
+        });
+        va.setInterpolator(PathInterpolatorCompat.create(0.26f, 1, 0.48f, 1));
+        va.start();
     }
 
     @Override
@@ -1178,8 +1217,8 @@ public class ComposeMessageView extends LinearLayout
             if (hasWorkingDraft && isDataLoadedForMessageSend()) {
                 if (selfSendButtonUri != null) {
                     UiUtils.revealOrHideViewWithAnimation(mSendButton, VISIBLE, null);
-                } else if(!mIsWaitingToSendMessage) {
-                        mSendButton.setVisibility(View.VISIBLE);
+                } else if (!mIsWaitingToSendMessage) {
+                    mSendButton.setVisibility(View.VISIBLE);
                 }
                 if (isOverriddenAvatarAGroup()) {
                     // If the host has overriden the avatar to show a group avatar where the

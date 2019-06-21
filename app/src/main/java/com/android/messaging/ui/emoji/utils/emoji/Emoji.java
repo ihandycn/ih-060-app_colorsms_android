@@ -30,7 +30,9 @@ public final class Emoji implements Serializable {
             builder.append(new String(Character.toChars(item)));
         }
         // add 0xFE0F, avoid emoji show as text-style(black-white)
-        builder.append(new String(Character.toChars(0xFE0F)));
+        if (codes.length == 1) {
+            builder.append(new String(Character.toChars(0xFE0F)));
+        }
         this.unicode = builder.toString();
         this.resource = str;
         this.variants = Arrays.asList(emojiArr);

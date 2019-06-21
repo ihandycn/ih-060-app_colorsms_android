@@ -126,8 +126,14 @@ public final class TravelCategory implements EmojiCategory {
             new Emoji(127753, "emoji_google_1f309"),
             new Emoji(127745, "emoji_google_1f301")};
 
+    @Override
     public int getIcon() {
-        return R.drawable.emoji_google_category_travel;
+        return R.drawable.emoji_category_travel;
+    }
+
+    @Override
+    public int getIconSelected() {
+        return R.drawable.emoji_category_travel_selected;
     }
 
     public Emoji[] getEmojis() {

@@ -16,16 +16,16 @@ import com.android.messaging.R;
 import com.android.messaging.datamodel.data.MediaPickerMessagePartData;
 import com.android.messaging.datamodel.data.MessagePartData;
 import com.android.messaging.download.Downloader;
-import com.android.messaging.ui.EmojiVariantPopup;
 import com.android.messaging.ui.emoji.utils.EmojiDataProducer;
 import com.android.messaging.ui.emoji.utils.EmojiManager;
-import com.android.messaging.util.BugleAnalytics;
 import com.android.messaging.util.ContentType;
 import com.android.messaging.util.UiUtils;
 import com.ihs.commons.notificationcenter.HSGlobalNotificationCenter;
 import com.ihs.commons.notificationcenter.INotificationObserver;
 import com.ihs.commons.utils.HSBundle;
 import com.ihs.commons.utils.HSLog;
+import com.superapps.util.BackgroundDrawables;
+import com.superapps.util.Dimensions;
 import com.superapps.util.Threads;
 import com.superapps.view.ViewPagerFixed;
 
@@ -105,33 +105,6 @@ public class EmojiPickerFragment extends Fragment implements INotificationObserv
                 }
             }
         });
-
-        tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
-            @Override
-            public void onTabSelected(TabLayout.Tab tab) {
-                EmojiPackageInfo packageInfo = getPackageInfo(tab);
-                if (packageInfo != null) {
-                    BugleAnalytics.logEvent("SMSEmoji_ChatEmoji_Tab_Click", true, true, "type", packageInfo.mName);
-                }
-            }
-
-            @Override
-            public void onTabUnselected(TabLayout.Tab tab) {
-            }
-
-            @Override
-            public void onTabReselected(TabLayout.Tab tab) {
-
-            }
-
-            private EmojiPackageInfo getPackageInfo(TabLayout.Tab tab) {
-                Object object = tab.getTag();
-                if (object instanceof EmojiPackageInfo) {
-                    return (EmojiPackageInfo) object;
-                }
-                return null;
-            }
-        });
         Activity activity = getActivity();
         Map<EmojiPackageType, List<EmojiPackageInfo>> data = new HashMap<>();
         data.put(EmojiPackageType.EMOJI, EmojiDataProducer.getInitEmojiData(activity));
@@ -144,8 +117,9 @@ public class EmojiPickerFragment extends Fragment implements INotificationObserv
         mEmojiPackagePagerAdapter.updateTab(initMainTab());
         mEmojiPager.setCurrentItem(1);
 
-
         View deleteView = view.findViewById(R.id.emoji_delete_btn);
+        deleteView.setBackground(BackgroundDrawables.createBackgroundDrawable(
+                activity.getResources().getColor(android.R.color.white), Dimensions.pxFromDp(20), true));
         deleteView.setVisibility(View.GONE);
         deleteView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -160,9 +134,9 @@ public class EmojiPickerFragment extends Fragment implements INotificationObserv
 
             @Override
             public void onPageSelected(int position) {
-                if(position != 0){
+                if (position != 0) {
                     deleteView.setVisibility(View.GONE);
-                }else{
+                } else {
                     deleteView.setVisibility(View.VISIBLE);
                 }
             }
@@ -179,7 +153,7 @@ public class EmojiPickerFragment extends Fragment implements INotificationObserv
         mEmojiPackagePagerAdapter.updateRecentSticker();
     }
 
-    private void updateRecentEmoji(EmojiInfo info){
+    private void updateRecentEmoji(EmojiInfo info) {
         EmojiManager.saveRecentInfo(info.toString(), EmojiPackageType.EMOJI);
         mEmojiPackagePagerAdapter.updateRecentEmoji();
     }
@@ -221,14 +195,20 @@ public class EmojiPickerFragment extends Fragment implements INotificationObserv
         info.mName = "emoji";
         String packageName = activity.getPackageName();
         info.mTabIconUrl = Uri.parse("android.resource://" + packageName + "/" +
-                activity.getResources().getIdentifier("emoji_normal_tab_icon", "drawable", packageName)).toString();
+                activity.getResources().getIdentifier("emoji_tab_normal_icon", "drawable", packageName)).toString();
+        info.mTabIconSelectedUrl = Uri.parse("android.resource://" + packageName + "/" +
+                activity.getResources().getIdentifier("emoji_tab_normal_selected_icon", "drawable", packageName)).toString();
+
         result.add(info);
 
         EmojiPackageInfo stickerInfo = new EmojiPackageInfo();
         stickerInfo.mName = "sticker";
         stickerInfo.mEmojiPackageType = EmojiPackageType.STICKER;
         stickerInfo.mTabIconUrl = Uri.parse("android.resource://" + activity.getPackageName() +
-                "/" + activity.getResources().getIdentifier("emoji_ic_hh", "drawable",
+                "/" + activity.getResources().getIdentifier("emoji_tab_sticker_icon", "drawable",
+                activity.getPackageName())).toString();
+        stickerInfo.mTabIconSelectedUrl = Uri.parse("android.resource://" + activity.getPackageName() +
+                "/" + activity.getResources().getIdentifier("emoji_tab_sticker_selected_icon", "drawable",
                 activity.getPackageName())).toString();
         result.add(stickerInfo);
 
@@ -237,7 +217,7 @@ public class EmojiPickerFragment extends Fragment implements INotificationObserv
 
     @Override
     public void onDestroyView() {
-        if(mEmojiVariantPopup != null){
+        if (mEmojiVariantPopup != null) {
             this.mEmojiVariantPopup.dismiss();
         }
         super.onDestroyView();

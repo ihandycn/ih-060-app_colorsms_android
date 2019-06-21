@@ -7,6 +7,16 @@ import com.android.messaging.ui.emoji.utils.emoji.EmojiCategory;
 
 public final class FlagsCategory implements EmojiCategory {
 
+    @Override
+    public int getIcon() {
+        return R.drawable.emoji_category_flag;
+    }
+
+    @Override
+    public int getIconSelected() {
+        return R.drawable.emoji_category_flag_selected;
+    }
+
     private static final Emoji[] DATA = new Emoji[]{
             new Emoji(127987, "emoji_google_1f3f3"),
             new Emoji(127988, "emoji_google_1f3f4"),
@@ -243,10 +253,6 @@ public final class FlagsCategory implements EmojiCategory {
             new Emoji(new int[]{127487, 127484}, "emoji_google_1f1ff_1f1fc"),
             new Emoji(new int[]{127462, 127464}, "emoji_google_1f1e6_1f1e8"),
             new Emoji(new int[]{127482, 127475}, "emoji_google_1f1fa_1f1f3")};
-
-    public int getIcon() {
-        return R.drawable.emoji_google_category_flags;
-    }
 
     public Emoji[] getEmojis() {
         return DATA;
