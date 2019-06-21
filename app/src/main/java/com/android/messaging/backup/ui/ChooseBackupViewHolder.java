@@ -178,6 +178,8 @@ public class ChooseBackupViewHolder extends BasePagerViewHolder implements Custo
         boolean[] uploadSuccess = {false};
         boolean[] useFakeUpload = {false};
 
+        UiUtils.showDialogFragment((Activity) mContext, backupDialog);
+        
         BackupManager.MessageBackupListener listener = new BackupManager.MessageBackupListener() {
             boolean needUpload;
 
@@ -185,7 +187,6 @@ public class ChooseBackupViewHolder extends BasePagerViewHolder implements Custo
             public void onBackupStart(boolean upload) {
                 needUpload = upload;
                 Threads.postOnMainThread(() -> {
-                    UiUtils.showDialogFragment((Activity) mContext, backupDialog);
                     backupDialog.setStateString(getContext().getString(R.string.backup_state_scanning));
                     backupDialog.hideProgressBar(true);
                 });
