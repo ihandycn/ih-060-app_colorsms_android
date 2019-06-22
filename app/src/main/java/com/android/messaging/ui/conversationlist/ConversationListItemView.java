@@ -532,7 +532,7 @@ public class ConversationListItemView extends FrameLayout implements OnClickList
             }
         };
         final String message = getResources().getString(textId, 1);
-        UiUtils.showSnackBar(getContext(), getRootView(), message, undoRunnable,
+        UiUtils.showSnackBar(UiUtils.getActivity(this), getRootView(), message, undoRunnable,
                 SnackBar.Action.SNACK_BAR_UNDO,
                 mHostInterface.getSnackBarInteractions());
     }

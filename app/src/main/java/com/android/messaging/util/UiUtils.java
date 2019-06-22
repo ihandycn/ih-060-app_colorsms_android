@@ -169,7 +169,7 @@ public class UiUtils {
         Assert.notNull(context);
         Assert.isTrue(!TextUtils.isEmpty(message));
         Assert.notNull(action);
-        SnackBarManager.get()
+        SnackBarManager.get(context)
                 .newBuilder(parentView)
                 .setText(message)
                 .setAction(action)
