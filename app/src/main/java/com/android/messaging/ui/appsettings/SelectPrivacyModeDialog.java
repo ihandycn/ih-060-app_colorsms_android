@@ -3,10 +3,12 @@ package com.android.messaging.ui.appsettings;
 import android.content.res.ColorStateList;
 import android.graphics.Typeface;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v7.widget.AppCompatRadioButton;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.RadioGroup;
 
 import com.android.messaging.R;
@@ -65,6 +67,13 @@ public class SelectPrivacyModeDialog extends BaseDialogFragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mConversationId = getArguments() != null ? getArguments().getString(BUNDLE_KEY_CONVERSATION_ID) : null;
+    }
+
+    @Nullable
+    @Override
+    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
+        setCanceledOnTouchOutside(true);
+        return super.onCreateView(inflater, container, savedInstanceState);
     }
 
     private View createBodyView() {
