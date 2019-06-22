@@ -1184,10 +1184,10 @@ public class ConversationFragment extends Fragment implements ConversationDataLi
     @Override
     public void onConversationMetadataUpdated(final ConversationData conversationData) {
         if (conversationData != null && conversationData.isPrivate()) {
-            mIsPrivateConversation = true;
-            if (!getActivity().isFinishing()) {
+            if (!getActivity().isFinishing() && !mIsPrivateConversation) {
                 AppPrivateLockManager.getInstance().checkLockStateAndSelfVerify();
             }
+            mIsPrivateConversation = true;
         }
         mBinding.ensureBound(conversationData);
 
