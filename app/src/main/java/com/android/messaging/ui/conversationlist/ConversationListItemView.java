@@ -51,6 +51,7 @@ import com.android.messaging.ui.customize.AvatarBgDrawables;
 import com.android.messaging.ui.customize.ConversationColors;
 import com.android.messaging.ui.customize.PrimaryColors;
 import com.android.messaging.util.Assert;
+import com.android.messaging.util.AvatarUriUtil;
 import com.android.messaging.util.BugleAnalytics;
 import com.android.messaging.util.ContentType;
 import com.android.messaging.util.OsUtil;
@@ -248,6 +249,10 @@ public class ConversationListItemView extends FrameLayout implements OnClickList
         }
         if (!TextUtils.isEmpty(imgUri)) {
             iconUri = Uri.parse(imgUri);
+            String iconType = AvatarUriUtil.getAvatarType(iconUri);
+            if (AvatarUriUtil.TYPE_LOCAL_RESOURCE_URI.equals(iconType)) {
+                mContactBackground.setImageDrawable(null);
+            }
         }
         mContactIconView.setImageResourceUri(iconUri, mData.getParticipantContactId(),
                 mData.getParticipantLookupKey(), mData.getOtherParticipantNormalizedDestination(), Color.TRANSPARENT);
