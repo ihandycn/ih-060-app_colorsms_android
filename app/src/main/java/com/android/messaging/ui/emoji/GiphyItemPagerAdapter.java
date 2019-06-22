@@ -113,7 +113,7 @@ public class GiphyItemPagerAdapter extends AbstractEmojiItemPagerAdapter {
             }
 
             if (i == 0) {
-                tab.setIcon(R.drawable.emoji_recent_tab_icon);
+                tab.setIcon(R.drawable.emoji_ic_recent);
                 tab.setText(null);
             } else {
                 tab.setText("cats");
