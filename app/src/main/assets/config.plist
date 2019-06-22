@@ -330,7 +330,7 @@
 						<key>Hot</key>
 						<integer>99999</integer>
 						<key>ThemeColor</key>
-						<string>#37a63b</string>
+						<string>#2d7ab5</string>
 						<key>FontName</key>
 						<string>Default</string>
 						<key>AvatarForegroundColor</key>
@@ -346,7 +346,7 @@
 						<key>IncomingBubbleTextColor</key>
 						<string>#222327</string>
 						<key>OutgoingBubbleBgColor</key>
-						<string>#37a63b</string>
+						<string>#2d7ab5</string>
 						<key>OutgoingBubbleTextColor</key>
 						<string>#ffffff</string>
 						<key>BubbleAdColor</key>

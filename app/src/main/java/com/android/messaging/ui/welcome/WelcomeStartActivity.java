@@ -123,7 +123,8 @@ public class WelcomeStartActivity extends AppCompatActivity implements View.OnCl
 
         findViewById(R.id.welcome_start_button).setOnClickListener(this);
         findViewById(R.id.welcome_start_button).setBackgroundDrawable(
-                BackgroundDrawables.createBackgroundDrawable(getResources().getColor(R.color.welcome_button_dark_green), Dimensions.pxFromDp(6.7f), true));
+                BackgroundDrawables.createBackgroundDrawable(
+                        getResources().getColor(R.color.primary_color), Dimensions.pxFromDp(6.7f), true));
 
         MessagesTextView serviceText = findViewById(R.id.welcome_start_service);
         serviceText.getPaint().setFlags(Paint.UNDERLINE_TEXT_FLAG);

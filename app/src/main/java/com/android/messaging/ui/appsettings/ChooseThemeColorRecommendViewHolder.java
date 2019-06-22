@@ -35,7 +35,7 @@ public class ChooseThemeColorRecommendViewHolder extends BasePagerViewHolder imp
     };
 
     public static int[] COLORS = new int[]{
-            0xff37a63b,
+            0xff2d7ab5,
             0xff338ee4,
             0xff0098a6,
             0xffd74315,

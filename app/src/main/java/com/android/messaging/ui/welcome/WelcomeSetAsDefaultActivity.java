@@ -11,7 +11,6 @@ import com.android.messaging.Factory;
 import com.android.messaging.R;
 import com.android.messaging.ui.UIIntents;
 import com.android.messaging.util.BugleAnalytics;
-import com.android.messaging.util.DefaultSMSUtils;
 import com.android.messaging.util.OsUtil;
 import com.android.messaging.util.PhoneUtils;
 import com.ihs.commons.config.HSConfig;
@@ -64,7 +63,7 @@ public class WelcomeSetAsDefaultActivity extends AppCompatActivity {
         }
 
         findViewById(R.id.welcome_set_default_button).setBackgroundDrawable(
-                BackgroundDrawables.createBackgroundDrawable(getResources().getColor(R.color.welcome_button_dark_green), Dimensions.pxFromDp(6.7f), true));
+                BackgroundDrawables.createBackgroundDrawable(getResources().getColor(R.color.primary_color), Dimensions.pxFromDp(6.7f), true));
         findViewById(R.id.welcome_set_default_button).setOnClickListener(v -> {
             final Intent intent = UIIntents.get().getChangeDefaultSmsAppIntent(WelcomeSetAsDefaultActivity.this);
             startActivityForResult(intent, REQUEST_SET_DEFAULT_SMS_APP);

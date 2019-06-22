@@ -14,7 +14,7 @@
     limitations under the License.
 -->
 <resources xmlns:tools="http://schemas.android.com/tools">
-    <color name="primary_color">#37a63b</color>
+    <color name="primary_color">#2d7ab5</color>
     <color name="primary_color_dark">#0D6624</color>
     <color name="blue_primary">#2471E2</color>
     <color name="text_primary_color">#222327</color>
@@ -255,7 +255,7 @@
     <!--invite friends-->
     <color name="invite_friends_auto_link">#2492f9</color>
     <color name="invite_friends_text_color">#222327</color>
-    <color name="invite_friends_button_text_color">#37a63b</color>
+    <color name="invite_friends_button_text_color">#2d7ab5</color>
 
     <color name="lock_intruder_title">#B2000000</color>
     <color name="edit_text_shape">#E1E1E1</color>
