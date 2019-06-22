@@ -1,15 +1,22 @@
 package com.android.messaging.ui.emoji.utils.emoji;
 
+import android.graphics.Paint;
+import android.support.v4.graphics.PaintCompat;
+
 import java.io.Serializable;
 import java.util.Arrays;
 import java.util.List;
 
+/**
+ * Emoji is only used in emoji produce.
+ */
 public final class Emoji implements Serializable {
     private static final long serialVersionUID = 3;
     private Emoji base;
     private final String resource;
     private final String unicode;
     private final List<Emoji> variants;
+    private boolean needFix = false;
 
     public Emoji(int[] codes, String str) {
         this(codes, str, new Emoji[0]);
@@ -29,9 +36,8 @@ public final class Emoji implements Serializable {
         for (int item : codes) {
             builder.append(new String(Character.toChars(item)));
         }
-        // add 0xFE0F, avoid emoji show as text-style(black-white)
         if (codes.length == 1) {
-            builder.append(new String(Character.toChars(0xFE0F)));
+            this.needFix = true;
         }
         this.unicode = builder.toString();
         this.resource = str;
@@ -60,6 +66,14 @@ public final class Emoji implements Serializable {
 
     public int getLength() {
         return this.unicode.length();
+    }
+
+    public boolean isSupport(){
+        return PaintCompat.hasGlyph(new Paint(), unicode);
+    }
+
+    public boolean needToFix(){
+        return needFix;
     }
 
     public boolean hasVariants() {

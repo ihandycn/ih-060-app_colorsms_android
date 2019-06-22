@@ -4,6 +4,9 @@ import android.os.Parcel;
 
 import com.android.messaging.ui.emoji.utils.emoji.Emoji;
 
+/**
+ * EmojiInfo is used in UI
+ */
 public class EmojiInfo extends BaseEmojiInfo {
 
     public String mEmoji;
@@ -11,6 +14,8 @@ public class EmojiInfo extends BaseEmojiInfo {
     public EmojiInfo[] mVariants;
 
     public final String mUnicode;
+
+    public static boolean isSupportVariant = true;
 
     public EmojiInfo(String unicode) {
         this.mUnicode = unicode;
@@ -28,20 +33,42 @@ public class EmojiInfo extends BaseEmojiInfo {
     }
 
     public static EmojiInfo convert(Emoji emoji) {
+        if(!emoji.isSupport()){
+            throw new IllegalArgumentException("the emoji unicode is not support in current system");
+        }
+        String unicode = emoji.getUnicode();
+        // append 0xFEOF.  Force to show emoji colorful, not white-black
+        if(emoji.needToFix()){
+            unicode += new String(Character.toChars(0xFE0f));
+        }
         EmojiInfo info = new EmojiInfo(emoji.getUnicode());
-        info.mEmoji = emoji.getUnicode();
-        if(emoji.hasVariants()) {
+        info.mEmoji = unicode;
+
+        if (emoji.hasVariants() && isSupportVariant) {
+            for(Emoji item : emoji.getVariants()) {
+                if (!item.isSupport()) {
+                    isSupportVariant = false;
+                    break;
+                }
+            }
+            // the system don't support multiple skin emoji, so drop the variants.
+            if(!isSupportVariant){
+                info.mVariants = new EmojiInfo[0];
+                return info;
+            }
             info.mVariants = new EmojiInfo[emoji.getVariants().size() + 1];
             int i = 0;
             info.mVariants[i++] = info;
             for (Emoji item : emoji.getVariants()) {
                 EmojiInfo variant = new EmojiInfo(emoji.getUnicode());
+                // the variant's unicode don't need to add 0xFE0f. Add the 0xFE0F will cause bad.
                 variant.mEmoji = item.getUnicode();
                 info.mVariants[i++] = variant;
             }
             for (int j = 1; j < info.mVariants.length; j++) {
                 info.mVariants[j].mVariants = info.mVariants;
             }
+
         }
         return info;
     }

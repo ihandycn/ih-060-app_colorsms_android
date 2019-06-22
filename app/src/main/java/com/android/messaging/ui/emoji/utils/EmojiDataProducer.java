@@ -58,15 +58,19 @@ public class EmojiDataProducer {
                     context.getResources().getIdentifier(category.getIconSelected() + "", "drawable", packageName)).toString();
             List<BaseEmojiInfo> emojiList = new ArrayList<>();
             for (Emoji emoji : category.getEmojis()) {
+                // skip the emoji unicode which system not support
+                if (!emoji.isSupport()) {
+                    continue;
+                }
                 EmojiInfo itemInfo = EmojiInfo.convert(emoji);
-                if(itemInfo.hasVariant()) {
+                if (itemInfo.hasVariant()) {
                     // get skin record
                     String record = EmojiManager.getSkinSingleRecord(itemInfo.getUnicode());
                     if (record != null) {
                         itemInfo.mEmoji = record;
-                    }else{
+                    } else {
                         int index = EmojiManager.getSkinDefault();
-                        if(index >= 0 && index < itemInfo.mVariants.length){
+                        if (index >= 0 && index < itemInfo.mVariants.length) {
                             itemInfo.mEmoji = itemInfo.mVariants[index].mEmoji;
                         }
                     }
