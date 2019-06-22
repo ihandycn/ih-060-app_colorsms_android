@@ -692,4 +692,6 @@
 	<string name="menu_invite_friends">दोस्‍तों को आमंत्रित करें</string>
 	<string name="invite_friends_now">अभी आमंत्रित करें</string>
 
+    <string name="action_unarchive">"संग्रह से निकालें"</string>
+    <string name="action_archive">"संग्रहीत करें"</string>
 </resources>

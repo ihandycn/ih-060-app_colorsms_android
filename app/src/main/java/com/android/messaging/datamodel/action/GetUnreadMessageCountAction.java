@@ -26,18 +26,20 @@ public class GetUnreadMessageCountAction extends Action implements Parcelable {
     protected Object executeAction() {
         final DatabaseWrapper db = DataModel.get().getDatabase();
 
-        // Update local db
-        db.beginTransaction();
-        try {
-            final Cursor cursor = db.query(DatabaseHelper.MESSAGES_TABLE, new String[]{MessageColumns.READ},
-                    MessageColumns.STATUS + "=\"" + BUGLE_STATUS_INCOMING_COMPLETE + "\" AND "
-                            + MessageColumns.READ + "!=?", new String[]{"1"},
-                    null, null, null, null);
-            UnreadMessageManager.getInstance().setUnreadMessageCount(cursor.getCount());
+        final Cursor cursor = db.rawQuery("SELECT COUNT(*) FROM "
+                        + DatabaseHelper.MESSAGES_TABLE + ","
+                        + DatabaseHelper.PARTICIPANTS_TABLE
+                        + " WHERE " + DatabaseHelper.MESSAGES_TABLE + "." + MessageColumns.SENDER_PARTICIPANT_ID
+                        + "=" + DatabaseHelper.PARTICIPANTS_TABLE + "." + DatabaseHelper.ParticipantColumns._ID
+                        + " AND " + MessageColumns.STATUS + "=\"" + BUGLE_STATUS_INCOMING_COMPLETE + "\" "
+                        + " AND " + MessageColumns.READ + "!=1 "
+                        + " AND " + DatabaseHelper.ParticipantColumns.BLOCKED + " = 0"
+                , null);
+        if (cursor != null && cursor.moveToFirst()) {
+            UnreadMessageManager.getInstance().setUnreadMessageCount(cursor.getInt(0));
             cursor.close();
-            db.setTransactionSuccessful();
-        } finally {
-            db.endTransaction();
+        } else {
+            UnreadMessageManager.getInstance().setUnreadMessageCount(0);
         }
         return null;
     }

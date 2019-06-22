@@ -13,6 +13,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.airbnb.lottie.LottieAnimationView;
+import com.android.messaging.BaseActivity;
 import com.android.messaging.R;
 import com.android.messaging.privatebox.PrivateContactsManager;
 import com.android.messaging.privatebox.ui.addtolist.CallAssistantUtils;
@@ -31,7 +32,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public class SelectFriendsToInviteActivity extends AppCompatActivity {
+public class SelectFriendsToInviteActivity extends BaseActivity {
 
     private ContactsSelectAdapter mAdapter;
     private TextView mActionButton;

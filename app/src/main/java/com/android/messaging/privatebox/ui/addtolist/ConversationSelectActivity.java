@@ -14,6 +14,7 @@ import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.android.messaging.BaseActivity;
 import com.android.messaging.R;
 import com.android.messaging.datamodel.MessagingContentProvider;
 import com.android.messaging.datamodel.data.ConversationListItemData;
@@ -23,7 +24,6 @@ import com.android.messaging.ui.BaseAlertDialog;
 import com.android.messaging.ui.customize.PrimaryColors;
 import com.android.messaging.util.BugleAnalytics;
 import com.android.messaging.util.UiUtils;
-import com.ihs.app.framework.activity.HSAppCompatActivity;
 import com.ihs.commons.notificationcenter.HSGlobalNotificationCenter;
 import com.ihs.commons.notificationcenter.INotificationObserver;
 import com.superapps.util.BackgroundDrawables;
@@ -38,7 +38,7 @@ import java.util.List;
 import static com.android.messaging.datamodel.data.ConversationListData.SORT_ORDER;
 
 
-public class ConversationSelectActivity extends HSAppCompatActivity
+public class ConversationSelectActivity extends BaseActivity
         implements LoaderManager.LoaderCallbacks<Cursor> {
 
     private static final String NOTIFICATION_KEY_MESSAGE_MOVE_START = "conversation_select_activity_move_start";

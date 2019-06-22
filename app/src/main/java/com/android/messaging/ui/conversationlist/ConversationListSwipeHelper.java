@@ -100,13 +100,14 @@ public class ConversationListSwipeHelper implements OnItemTouchListener {
                     mInitialY = event.getY();
 
                     final View viewAtPoint = mRecyclerView.findChildViewUnder(mInitialX, mInitialY);
-                    final ConversationListItemView child = (ConversationListItemView) viewAtPoint;
-                    if (viewAtPoint instanceof ConversationListItemView &&
-                            child != null && child.isSwipeAnimatable()) {
-                        // Begin detecting swipe on the target for the rest of the gesture.
-                        mListItemView = child;
-                        if (mListItemView.isAnimating()) {
-                            mListItemView = null;
+                    if (viewAtPoint instanceof ConversationListItemView) {
+                        final ConversationListItemView child = (ConversationListItemView) viewAtPoint;
+                        if (child != null && child.isSwipeAnimatable()) {
+                            // Begin detecting swipe on the target for the rest of the gesture.
+                            mListItemView = child;
+                            if (mListItemView.isAnimating()) {
+                                mListItemView = null;
+                            }
                         }
                     } else {
                         mListItemView = null;
@@ -204,7 +205,7 @@ public class ConversationListSwipeHelper implements OnItemTouchListener {
                     final boolean fastEnough = isTargetSwipedFastEnough();
                     final boolean farEnough = isTargetSwipedFarEnough();
 
-                    final boolean shouldDismiss =  (fastEnough || farEnough);
+                    final boolean shouldDismiss = (fastEnough || farEnough);
 
                     if (shouldDismiss) {
                         if (fastEnough) {
@@ -253,7 +254,7 @@ public class ConversationListSwipeHelper implements OnItemTouchListener {
 
     /**
      * The series of touch events has been detected as a swipe.
-     *
+     * <p>
      * Now that the gesture is a swipe, we will begin translating the view of the
      * given viewHolder.
      */
@@ -267,9 +268,9 @@ public class ConversationListSwipeHelper implements OnItemTouchListener {
      * The current swipe gesture is complete.
      */
     private void onSwipeGestureEnd(final ConversationListItemView itemView,
-            final int swipeDirection) {
+                                   final int swipeDirection) {
         if (swipeDirection == SWIPE_DIRECTION_RIGHT || swipeDirection == SWIPE_DIRECTION_LEFT) {
-            itemView.onSwipeComplete();
+            itemView.onSwipeComplete(swipeDirection == SWIPE_DIRECTION_LEFT);
         }
 
         // Balances out onSwipeGestureStart.
@@ -331,7 +332,7 @@ public class ConversationListSwipeHelper implements OnItemTouchListener {
      * Animate the dismissal of the given item.
      */
     private void animateDismiss(final ConversationListItemView itemView,
-            final int swipeDirection, final float velocityX) {
+                                final int swipeDirection, final float velocityX) {
         Assert.isTrue(swipeDirection != SWIPE_DIRECTION_NONE);
 
         onSwipeAnimationStart(itemView);
@@ -361,7 +362,7 @@ public class ConversationListSwipeHelper implements OnItemTouchListener {
      * Animate the bounce back of the given item.
      */
     private void animateRestore(final ConversationListItemView itemView,
-            final float velocityX) {
+                                final float velocityX) {
         onSwipeAnimationStart(itemView);
 
         final float translationX = itemView.getSwipeTranslationX();
@@ -377,7 +378,7 @@ public class ConversationListSwipeHelper implements OnItemTouchListener {
         animator.addListener(new AnimatorListenerAdapter() {
             @Override
             public void onAnimationEnd(final Animator animation) {
-                       onSwipeAnimationEnd(itemView);
+                onSwipeAnimationEnd(itemView);
             }
         });
         animator.start();
@@ -388,7 +389,7 @@ public class ConversationListSwipeHelper implements OnItemTouchListener {
      * from its current value to the value given by animateTo.
      */
     private ObjectAnimator getSwipeTranslationXAnimator(final ConversationListItemView itemView,
-            final float animateTo, final long duration, final TimeInterpolator interpolator) {
+                                                        final float animateTo, final long duration, final TimeInterpolator interpolator) {
         final ObjectAnimator animator =
                 ObjectAnimator.ofFloat(itemView, "swipeTranslationX", animateTo);
         animator.setDuration(duration);
@@ -409,8 +410,8 @@ public class ConversationListSwipeHelper implements OnItemTouchListener {
                 && (Math.abs(velocityX) > Math.abs(velocityY)) // Not unintentional.
                 && (velocityX > 0) == (translationX > 0) // Right direction.
                 && Math.abs(translationX) >
-                    FLING_PERCENTAGE_OF_WIDTH_TO_DISMISS * width; // Enough movement.
-  }
+                FLING_PERCENTAGE_OF_WIDTH_TO_DISMISS * width; // Enough movement.
+    }
 
     /**
      * Only used during a swipe gesture. Determine if the swipe has enough distance to be
@@ -424,8 +425,8 @@ public class ConversationListSwipeHelper implements OnItemTouchListener {
 
         return (velocityX >= 0) == (translationX > 0) // Right direction.
                 && Math.abs(translationX) >
-                    PERCENTAGE_OF_WIDTH_TO_DISMISS * width; // Enough movement.
-  }
+                PERCENTAGE_OF_WIDTH_TO_DISMISS * width; // Enough movement.
+    }
 
     private long calculateTranslationDuration(final float deltaPosition, final float velocity) {
         Assert.isTrue(velocity != 0);
@@ -445,7 +446,7 @@ public class ConversationListSwipeHelper implements OnItemTouchListener {
      * Enable a hardware layer for the it view and build that layer.
      */
     private void setHardwareAnimatingLayerType(final ConversationListItemView itemView,
-            final boolean animating) {
+                                               final boolean animating) {
         if (animating) {
             itemView.setLayerType(View.LAYER_TYPE_HARDWARE, null);
             if (itemView.getWindowToken() != null) {

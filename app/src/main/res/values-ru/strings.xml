@@ -736,4 +736,6 @@
 	<string name="menu_invite_friends">Пригласить друзей</string>
 	<string name="invite_friends_now">ПРИГЛАСИТЬ</string>
 
+    <string name="action_unarchive">"Вернуть из архива"</string>
+    <string name="action_archive">"Архив"</string>
 </resources>

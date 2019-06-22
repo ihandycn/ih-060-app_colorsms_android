@@ -21,7 +21,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.net.Uri;
-import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.text.BidiFormatter;
 import android.support.v4.text.TextDirectionHeuristicsCompat;
@@ -47,7 +46,7 @@ import com.android.messaging.ui.conversationlist.ConversationListFragment.Conver
 import com.android.messaging.ui.conversationlist.MultiSelectActionModeCallback.SelectedConversation;
 import com.android.messaging.util.BugleAnalytics;
 import com.android.messaging.util.DebugUtils;
-import com.android.messaging.util.PhoneUtils;
+import com.android.messaging.util.DefaultSMSUtils;
 import com.android.messaging.util.Trace;
 import com.android.messaging.util.UiUtils;
 
@@ -91,9 +90,11 @@ public abstract class AbstractConversationListActivity extends BugleActionBarAct
 
     protected void startMultiSelectActionMode() {
         startActionMode(new MultiSelectActionModeCallback(this));
+        mConversationListFragment.startMultiSelectMode();
     }
 
     protected void exitMultiSelectState() {
+        mConversationListFragment.exitMultiSelectMode();
         mConversationListFragment.showFab();
         dismissActionMode();
         mConversationListFragment.updateUi();
@@ -116,7 +117,7 @@ public abstract class AbstractConversationListActivity extends BugleActionBarAct
     public void onActionBarDelete(final Collection<SelectedConversation> conversations) {
         BugleAnalytics.logEvent("SMS_EditMode_Delete_BtnClick", true);
 
-        if (!PhoneUtils.getDefault().isDefaultSmsApp()) {
+        if (!DefaultSMSUtils.isDefaultSmsApp()) {
             // TODO: figure out a good way to combine this with the implementation in
             // ConversationFragment doing similar things
             final Activity activity = this;
@@ -168,16 +169,24 @@ public abstract class AbstractConversationListActivity extends BugleActionBarAct
             }
         }
 
-        final Runnable undoRunnable = new Runnable() {
-            @Override
-            public void run() {
-                for (final String conversationId : conversationIds) {
-                    if (isToArchive) {
-                        UpdateConversationArchiveStatusAction.unarchiveConversation(conversationId);
-                    } else {
-                        UpdateConversationArchiveStatusAction.archiveConversation(conversationId);
-                    }
+        if (isToArchive) {
+            BugleAnalytics.logEvent("SMS_Messages_Archive", true,"from", "edit_mode");
+        } else {
+            BugleAnalytics.logEvent("SMS_Messages_Unarchive", true,"from", "edit_mode");
+        }
+
+        final Runnable undoRunnable = () -> {
+            for (final String conversationId : conversationIds) {
+                if (isToArchive) {
+                    UpdateConversationArchiveStatusAction.unarchiveConversation(conversationId);
+                } else {
+                    UpdateConversationArchiveStatusAction.archiveConversation(conversationId);
                 }
+            }
+            if (isToArchive) {
+                BugleAnalytics.logEvent("SMS_Messages_Archive_Undo", true);
+            } else {
+                BugleAnalytics.logEvent("SMS_Messages_Unarchive_Undo", true);
             }
         };
 
@@ -276,9 +285,6 @@ public abstract class AbstractConversationListActivity extends BugleActionBarAct
             mConversationListFragment.updateUi();
         } else {
             final String conversationId = conversationListItemData.getConversationId();
-            Bundle sceneTransitionAnimationOptions = null;
-            boolean hasCustomTransitions = false;
-
             final String conversationName = conversationListItemData.getName();
             // RTL : To format conversation title if it happens to be phone numbers.
             final BidiFormatter bidiFormatter = BidiFormatter.getInstance();
@@ -292,9 +298,7 @@ public abstract class AbstractConversationListActivity extends BugleActionBarAct
                     TextDirectionHeuristicsCompat.LTR);
 
             UIIntents.get().launchConversationActivity(
-                    this, conversationId, null,
-                    sceneTransitionAnimationOptions,
-                    hasCustomTransitions, formattedName, false);
+                    this, conversationId, null, formattedName, false);
             BugleAnalytics.logEvent("SMS_Messages_Message_Click", true, true,
                     "Type", conversationListItemData.isPinned() ? "pin" : "unpin");
         }
@@ -302,7 +306,6 @@ public abstract class AbstractConversationListActivity extends BugleActionBarAct
 
     @Override
     public void onCreateConversationClick() {
-//        UIIntents.get().launchCreateNewConversationActivity(this, null);
         Intent intent = new Intent(this, ContactPickerActivity.class);
         startActivity(intent);
     }

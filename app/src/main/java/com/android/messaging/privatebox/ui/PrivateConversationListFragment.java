@@ -313,6 +313,7 @@ public class PrivateConversationListFragment extends Fragment
                         BugleAnalytics.logEvent("PrivateBox_AddContactAlert_BtnClick", "type", "conversation");
                         Navigations.startActivitySafely(getActivity(),
                                 new Intent(getActivity(), ConversationSelectActivity.class));
+                        getActivity().overridePendingTransition(R.anim.slide_in_from_right_and_fade, R.anim.anim_null);
                         addToBlackListDialog.dismiss();
                     }
 
@@ -321,6 +322,7 @@ public class PrivateConversationListFragment extends Fragment
                         BugleAnalytics.logEvent("PrivateBox_AddContactAlert_BtnClick", "type", "contact");
                         Navigations.startActivitySafely(getActivity(),
                                 new Intent(getActivity(), ContactsSelectActivity.class));
+                        getActivity().overridePendingTransition(R.anim.slide_in_from_right_and_fade, R.anim.anim_null);
                         addToBlackListDialog.dismiss();
                     }
                 });
@@ -354,5 +356,10 @@ public class PrivateConversationListFragment extends Fragment
     @Override
     public boolean isSelectionMode() {
         return mHost != null && mHost.isSelectionMode();
+    }
+
+    @Override
+    public boolean isArchived() {
+        return false;
     }
 }

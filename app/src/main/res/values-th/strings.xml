@@ -689,4 +689,6 @@
 	<string name="menu_invite_friends">เชิญเพื่อน</string>
 	<string name="invite_friends_now">เชิญทันที</string>
 
+    <string name="action_unarchive">"ยกเลิกการเก็บถาวร"</string>
+    <string name="action_archive">"เก็บถาวร"</string>
 </resources>

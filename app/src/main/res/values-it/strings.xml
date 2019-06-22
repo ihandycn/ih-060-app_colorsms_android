@@ -689,4 +689,6 @@
 	<string name="menu_invite_friends">Invita amici</string>
 	<string name="invite_friends_now">INVITA ORA</string>
 
+    <string name="action_unarchive">"Annulla archiviazione"</string>
+    <string name="action_archive">"Archivio"</string>
 </resources>

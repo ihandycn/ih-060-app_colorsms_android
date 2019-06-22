@@ -688,4 +688,6 @@
 	<string name="menu_invite_friends">친구 초대</string>
 	<string name="invite_friends_now">지금 초대</string>
 
+    <string name="action_unarchive">"보관 취소"</string>
+    <string name="action_archive">"보관처리"</string>
 </resources>

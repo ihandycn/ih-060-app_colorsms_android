@@ -683,4 +683,6 @@
 	<string name="menu_invite_friends">Arkadaşlarını Davet Et</string>
 	<string name="invite_friends_now">HEMEN DAVET ET</string>
 
+    <string name="action_unarchive">"Arşivden kaldır"</string>
+    <string name="action_archive">"Arşivle"</string>
 </resources>

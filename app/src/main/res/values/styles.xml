@@ -61,7 +61,7 @@
         </item>
     </style>
 
-    <style name="BugleTheme.DialogActivity" parent="@style/Theme.AppCompat.Light.Dialog"/>
+    <style name="BugleTheme.DialogActivity" parent="@style/Theme.AppCompat.Light.Dialog" />
 
     <style name="BugleTheme.ConversationListActivity" parent="BugleTheme">
         <item name="windowActionBar">false</item>
@@ -82,6 +82,13 @@
         <item name="windowNoTitle">true</item>
         <item name="android:windowBackground">@android:color/background_light</item>
     </style>
+
+    <style name="NoBackgroundActivity" parent="BugleTheme">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+        <item name="android:windowBackground">@null</item>
+    </style>
+
 
     <style name="SettingGeneralActivityTheme" parent="BaseSettingsActivity">
         <item name="android:windowBackground">@drawable/conversation_start_bg</item>
@@ -734,7 +741,7 @@
     <style name="MessageViewEditTextTheme" parent="Base.Theme.AppCompat.Light.DarkActionBar">
         <item name="colorPrimary">@color/primary_color</item>
         <item name="colorPrimaryDark">@color/primary_color_dark</item>
-        <item name="colorAccent" >#11bd3d</item>
+        <item name="colorAccent">#11bd3d</item>
     </style>
 
     <style name="SelectPrivacyModeRadioGroup">
@@ -786,5 +793,22 @@
 
     <style name="AcbSmsRecyclerViewTheme" parent="Theme.AppCompat.Light">
         <item name="colorPrimary">@color/conversation_edge_effect</item>
+    </style>
+
+    <style name="SettingTitleStyle">
+        <item name="android:textSize">14sp</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_marginTop">15.3dp</item>
+        <item name="android:layout_marginBottom">2dp</item>
+        <item name="android:layout_marginStart">15dp</item>
+        <item name="android:textAlignment">viewStart</item>
+        <item name="android:includeFontPadding">false</item>
+    </style>
+
+    <style name="SettingDividerStyle">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">14dp</item>
+        <item name="android:background">#f1f2f4</item>
     </style>
 </resources>

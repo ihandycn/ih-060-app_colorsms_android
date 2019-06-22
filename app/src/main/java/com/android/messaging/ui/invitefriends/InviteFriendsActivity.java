@@ -5,16 +5,15 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.view.MenuItem;
-import android.view.MotionEvent;
 import android.view.View;
 import android.widget.TextView;
 
+import com.android.messaging.BaseActivity;
 import com.android.messaging.R;
 import com.android.messaging.datamodel.DataModel;
 import com.android.messaging.datamodel.action.InsertNewMessageAction;
@@ -37,7 +36,6 @@ import com.android.messaging.util.PhoneUtils;
 import com.android.messaging.util.UiUtils;
 import com.google.common.annotations.VisibleForTesting;
 import com.ihs.commons.config.HSConfig;
-import com.ihs.commons.utils.HSLog;
 import com.superapps.util.BackgroundDrawables;
 import com.superapps.util.Dimensions;
 import com.superapps.util.Preferences;
@@ -46,7 +44,8 @@ import com.superapps.util.Toasts;
 import java.util.ArrayList;
 
 
-public class InviteFriendsActivity extends AppCompatActivity implements ConversationListData.ConversationListDataListener {
+public class InviteFriendsActivity extends BaseActivity
+        implements ConversationListData.ConversationListDataListener {
 
     public static final String INTENT_KEY_FROM = "from";
 

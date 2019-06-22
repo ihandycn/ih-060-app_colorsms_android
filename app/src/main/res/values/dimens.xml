@@ -195,4 +195,6 @@
     <dimen name="feedback_content_lr_margin">5dp</dimen>
 
     <dimen name="invite_friends_item_size">55dp</dimen>
+
+    <dimen name="conversation_item_view_swipe_padding">15dp</dimen>
 </resources>

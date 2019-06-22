@@ -113,7 +113,7 @@ public class SnackBarManager {
     public void show(final SnackBar snackBar) {
         Assert.notNull(snackBar);
 
-        if (mCurrentSnackBar != null) {
+        if (mCurrentSnackBar != null && mCurrentSnackBar.getContext() == snackBar.getContext()) {
             LogUtil.d(LogUtil.BUGLE_TAG, "Showing snack bar, but currentSnackBar was not null.");
 
             // Dismiss the current snack bar. That will cause the next snack bar to be shown on

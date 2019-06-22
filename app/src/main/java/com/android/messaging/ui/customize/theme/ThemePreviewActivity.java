@@ -1,5 +1,6 @@
 package com.android.messaging.ui.customize.theme;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
@@ -9,21 +10,22 @@ import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.widget.TextView;
 
+import com.android.messaging.BaseActivity;
 import com.android.messaging.R;
 import com.android.messaging.ui.UIIntents;
 import com.android.messaging.util.BugleActivityUtil;
 import com.android.messaging.util.UiUtils;
-import com.ihs.app.framework.activity.HSAppCompatActivity;
 import com.superapps.util.Navigations;
 import com.superapps.util.Threads;
 import com.superapps.util.Toasts;
 
-public class ThemePreviewActivity extends HSAppCompatActivity {
+public class ThemePreviewActivity extends BaseActivity {
 
     public static void startThemePreviewActivity(Context context, ThemeInfo themeInfo) {
         Intent intent = new Intent(context, ThemePreviewActivity.class);
         intent.putExtra("theme_info", themeInfo.mThemeKey);
         Navigations.startActivitySafely(context, intent);
+        ((Activity) context).overridePendingTransition(R.anim.slide_in_from_right_and_fade, R.anim.anim_null);
     }
 
     @Override
@@ -52,9 +54,9 @@ public class ThemePreviewActivity extends HSAppCompatActivity {
 
         pagerView.setOnApplyClickListener(v -> {
             Toasts.showToast(R.string.apply_theme_success);
-            Threads.postOnMainThreadDelayed(()-> {
+            Threads.postOnMainThreadDelayed(() -> {
                 UIIntents.get().launchConversationListActivity(this);
-            finish();
+                finish();
             }, 500);
         });
 

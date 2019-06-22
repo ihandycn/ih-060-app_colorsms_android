@@ -3,21 +3,16 @@ package com.android.messaging.ui.appsettings;
 import android.content.Context;
 import android.content.res.ColorStateList;
 import android.content.res.TypedArray;
-import android.graphics.Color;
 import android.graphics.PorterDuff;
-import android.graphics.drawable.ColorDrawable;
-import android.graphics.drawable.StateListDrawable;
+import android.os.Build;
 import android.support.annotation.DrawableRes;
 import android.support.annotation.IntDef;
 import android.support.annotation.Nullable;
-import android.support.v4.graphics.drawable.DrawableCompat;
-import android.support.v7.widget.SwitchCompat;
 import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.CompoundButton;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -117,6 +112,21 @@ public class SettingItemView extends FrameLayout {
             }
         }
 
+        if (mSwitchView != null) {
+            ColorStateList colorStateList = new ColorStateList(new int[][]{
+                    new int[]{android.R.attr.state_checked, android.R.attr.state_enabled},
+                    new int[]{}
+            }, new int[]{
+                    PrimaryColors.getPrimaryColor(),
+                    0xffc0c2cb
+            });
+
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                mSwitchView.getTrackDrawable().setTintList(colorStateList);
+                mSwitchView.getThumbDrawable().setTintList(colorStateList);
+            }
+        }
+
         setOnClickListener(v -> {
             if (mSwitchView != null) {
                 boolean isChecked = !mSwitchView.isChecked();
@@ -142,6 +152,21 @@ public class SettingItemView extends FrameLayout {
                     final LayoutInflater layoutInflater = LayoutInflater.from(getContext());
                     layoutInflater.inflate(R.layout.preference_switch_layout, widgetFrame);
                     mSwitchView = mRootView.findViewById(R.id.switch_widget);
+                }
+
+                if (mSwitchView != null) {
+                    ColorStateList colorStateList = new ColorStateList(new int[][]{
+                            new int[]{android.R.attr.state_checked, android.R.attr.state_enabled},
+                            new int[]{}
+                    }, new int[]{
+                            PrimaryColors.getPrimaryColor(),
+                            0xffc0c2cb
+                    });
+
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                        mSwitchView.getTrackDrawable().setTintList(colorStateList);
+                        mSwitchView.getThumbDrawable().setTintList(colorStateList);
+                    }
                 }
             } else if (type == 2) {
                 if (mTriangleView != null) {
@@ -219,6 +244,9 @@ public class SettingItemView extends FrameLayout {
     }
 
     private void toggleSwitchViewColorFilter(boolean isChecked) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            return;
+        }
         if (isChecked) {
             mSwitchView.getThumbDrawable().setColorFilter(PrimaryColors.getPrimaryColor(), PorterDuff.Mode.SRC_ATOP);
             mSwitchView.getTrackDrawable().setColorFilter(PrimaryColors.getPrimaryColor(), PorterDuff.Mode.SRC_ATOP);

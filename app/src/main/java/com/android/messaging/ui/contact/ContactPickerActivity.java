@@ -156,8 +156,7 @@ public class ContactPickerActivity extends BugleActionBarActivity implements
             finish();
         } else {
             UIIntents.get().launchConversationActivity(
-                    this, conversationId, mDraftData,
-                    null, false, "", true);
+                    this, conversationId, mDraftData, "", true);
             finish();
         }
     }

@@ -21,7 +21,7 @@ import com.android.messaging.ui.UIIntents;
 import com.android.messaging.ui.contact.AddContactsConfirmationDialog;
 import com.android.messaging.util.Assert;
 import com.android.messaging.util.BugleAnalytics;
-import com.android.messaging.util.PhoneUtils;
+import com.android.messaging.util.DefaultSMSUtils;
 import com.android.messaging.util.UiUtils;
 import com.ihs.app.framework.HSApplication;
 
@@ -82,6 +82,8 @@ public class PrivateMultiSelectActionModeCallback implements Callback {
         menu.findItem(R.id.action_notification_on).setVisible(false);
         menu.findItem(R.id.action_add_to_private_box).setVisible(false);
         menu.findItem(R.id.action_menu).setVisible(false);
+        menu.findItem(R.id.action_archive).setVisible(false);
+        menu.findItem(R.id.action_unarchive).setVisible(false);
         mHasInflated = true;
         updateActionIconsVisibility();
         return true;
@@ -195,7 +197,7 @@ public class PrivateMultiSelectActionModeCallback implements Callback {
         if (activity == null) {
             return;
         }
-        if (!PhoneUtils.getDefault().isDefaultSmsApp()) {
+        if (!DefaultSMSUtils.isDefaultSmsApp()) {
             // TODO: figure out a good way to combine this with the implementation in
             // ConversationFragment doing similar things
 

@@ -686,4 +686,6 @@
 	<string name="menu_invite_friends">Mời Bạn bè</string>
 	<string name="invite_friends_now">MỜI NGAY</string>
 
+    <string name="action_unarchive">"Hủy lưu trữ"</string>
+    <string name="action_archive">"Lưu trữ"</string>
 </resources>

@@ -15,16 +15,15 @@
  */
 package com.android.messaging.ui.conversationlist;
 
+import android.animation.LayoutTransition;
 import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.graphics.Rect;
-import android.graphics.Typeface;
 import android.net.Uri;
 import android.support.v4.text.BidiFormatter;
 import android.support.v4.text.TextDirectionHeuristicsCompat;
-import android.text.TextPaint;
 import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.view.View;
@@ -44,9 +43,9 @@ import com.android.messaging.datamodel.action.UpdateConversationArchiveStatusAct
 import com.android.messaging.datamodel.data.ConversationListItemData;
 import com.android.messaging.datamodel.data.MessageData;
 import com.android.messaging.datamodel.media.UriImageRequestDescriptor;
+import com.android.messaging.font.FontUtils;
 import com.android.messaging.sms.MmsUtils;
 import com.android.messaging.ui.AsyncImageView;
-import com.android.messaging.ui.AudioAttachmentView;
 import com.android.messaging.ui.ContactIconView;
 import com.android.messaging.ui.SnackBar;
 import com.android.messaging.ui.SnackBarInteraction;
@@ -62,11 +61,12 @@ import com.android.messaging.util.ImageUtils;
 import com.android.messaging.util.OsUtil;
 import com.android.messaging.util.UiUtils;
 import com.android.messaging.util.UriUtil;
-import com.android.messaging.font.FontUtils;
 import com.superapps.util.BackgroundDrawables;
 import com.superapps.util.Dimensions;
 
 import java.util.List;
+
+import hugo.weaving.DebugLog;
 
 /**
  * The view for a single entry in a conversation list.
@@ -97,6 +97,8 @@ public class ConversationListItemView extends FrameLayout implements OnClickList
         void startFullScreenVideoViewer(final Uri videoUri);
 
         boolean isSelectionMode();
+
+        boolean isArchived();
     }
 
     private final OnClickListener fullScreenPreviewClickListener = new OnClickListener() {
@@ -129,7 +131,6 @@ public class ConversationListItemView extends FrameLayout implements OnClickList
 
     private int mAnimatingCount;
     private ViewGroup mSwipeableContainer;
-    private ViewGroup mCrossSwipeBackground;
     private ViewGroup mSwipeableContent;
     private TextView mConversationNameView;
     private ImageView mWorkProfileIconView;
@@ -137,14 +138,13 @@ public class ConversationListItemView extends FrameLayout implements OnClickList
     private TextView mTimestampTextView;
     private ContactIconView mContactIconView;
     private ImageView mContactBackground;
-    private ImageView mContactCheckmarkView;
     private ImageView mNotificationBellView;
     private ImageView mPinView;
     private ImageView mFailedStatusIconView;
-    private ImageView mCrossSwipeArchiveLeftImageView;
-    private ImageView mCrossSwipeArchiveRightImageView;
+    private View mCrossSwipeArchiveLeftContainer;
+    private View mCrossSwipeArchiveRightContainer;
+    private View mCrossSwipeBg;
     private AsyncImageView mImagePreviewView;
-    private AudioAttachmentView mAudioAttachmentView;
     private HostInterface mHostInterface;
     private TextView mUnreadMessagesCountView;
 
@@ -158,17 +158,12 @@ public class ConversationListItemView extends FrameLayout implements OnClickList
     protected void onFinishInflate() {
         super.onFinishInflate();
         mSwipeableContainer = findViewById(R.id.swipeableContainer);
-        mCrossSwipeBackground = findViewById(R.id.crossSwipeBackground);
         mSwipeableContent = findViewById(R.id.swipeableContent);
         mConversationNameView = findViewById(R.id.conversation_name);
         mSnippetTextView = findViewById(R.id.conversation_snippet);
         mWorkProfileIconView = findViewById(R.id.work_profile_icon);
         mTimestampTextView = findViewById(R.id.conversation_timestamp);
         mContactIconView = findViewById(R.id.conversation_icon);
-        mContactCheckmarkView = findViewById(R.id.conversation_checkmark);
-        mContactCheckmarkView.getDrawable().setColorFilter(
-                Color.parseColor(ThemeInfo.getThemeInfo(ThemeUtils.getCurrentThemeName()).avatarForegroundColor),
-                PorterDuff.Mode.SRC_ATOP);
         mNotificationBellView = findViewById(R.id.conversation_notification_bell);
         mNotificationBellView.getDrawable().setColorFilter(
                 ConversationColors.get().getListTimeColor(), PorterDuff.Mode.SRC_ATOP);
@@ -176,11 +171,14 @@ public class ConversationListItemView extends FrameLayout implements OnClickList
         mPinView.getDrawable().setColorFilter(
                 ConversationColors.get().getListTimeColor(), PorterDuff.Mode.SRC_ATOP);
         mFailedStatusIconView = findViewById(R.id.conversation_failed_status_icon);
-        mCrossSwipeArchiveLeftImageView = findViewById(R.id.crossSwipeArchiveIconLeft);
-        mCrossSwipeArchiveRightImageView =
-                findViewById(R.id.crossSwipeArchiveIconRight);
+
+        mCrossSwipeArchiveLeftContainer = findViewById(R.id.cross_swipe_archive_left_container);
+        mCrossSwipeArchiveRightContainer = findViewById(R.id.cross_swipe_archive_right_container);
+
+        mCrossSwipeBg = findViewById(R.id.cross_swipe_archive_background);
+        mCrossSwipeBg.setBackgroundColor(PrimaryColors.getPrimaryColor());
+
         mImagePreviewView = findViewById(R.id.conversation_image_preview);
-        mAudioAttachmentView = findViewById(R.id.audio_attachment_view);
         mUnreadMessagesCountView = findViewById(R.id.conversation_unread_messages_count);
 
         mConversationNameView.addOnLayoutChangeListener(this);
@@ -192,6 +190,12 @@ public class ConversationListItemView extends FrameLayout implements OnClickList
 
         mContactBackground = findViewById(R.id.conversation_icon_bg);
         mContactBackground.setImageDrawable(AvatarBgDrawables.getAvatarBg(false));
+
+        LayoutTransition layoutTransition = new LayoutTransition();
+        layoutTransition.setDuration(200);
+        layoutTransition.disableTransitionType(LayoutTransition.DISAPPEARING);
+
+        mSwipeableContent.setLayoutTransition(layoutTransition);
 
         if (OsUtil.isAtLeastL()) {
             setTransitionGroup(true);
@@ -286,114 +290,10 @@ public class ConversationListItemView extends FrameLayout implements OnClickList
         }
     }
 
-    // Resource Ids of content descriptions prefixes for different message status.
-    private static final int[][][] sPrimaryContentDescriptions = {
-            // 1:1 conversation
-            {
-                    // Incoming message
-                    {
-                            R.string.one_on_one_incoming_failed_message_prefix,
-                            R.string.one_on_one_incoming_successful_message_prefix
-                    },
-                    // Outgoing message
-                    {
-                            R.string.one_on_one_outgoing_failed_message_prefix,
-                            R.string.one_on_one_outgoing_successful_message_prefix,
-                            R.string.one_on_one_outgoing_draft_message_prefix,
-                            R.string.one_on_one_outgoing_sending_message_prefix,
-                    }
-            },
-
-            // Group conversation
-            {
-                    // Incoming message
-                    {
-                            R.string.group_incoming_failed_message_prefix,
-                            R.string.group_incoming_successful_message_prefix,
-                    },
-                    // Outgoing message
-                    {
-                            R.string.group_outgoing_failed_message_prefix,
-                            R.string.group_outgoing_successful_message_prefix,
-                            R.string.group_outgoing_draft_message_prefix,
-                            R.string.group_outgoing_sending_message_prefix,
-                    }
-            }
-    };
-
-    // Resource Id of the secondary part of the content description for an edge case of a message
-    // which is in both draft status and failed status.
-    private static final int sSecondaryContentDescription =
-            R.string.failed_message_content_description;
-
-    // 1:1 versus group
-    private static final int CONV_TYPE_ONE_ON_ONE_INDEX = 0;
-    private static final int CONV_TYPE_ONE_GROUP_INDEX = 1;
-    // Direction
-    private static final int DIRECTION_INCOMING_INDEX = 0;
-    private static final int DIRECTION_OUTGOING_INDEX = 1;
-    // Message status
-    private static final int MESSAGE_STATUS_FAILED_INDEX = 0;
-    private static final int MESSAGE_STATUS_SUCCESSFUL_INDEX = 1;
-    private static final int MESSAGE_STATUS_DRAFT_INDEX = 2;
-    private static final int MESSAGE_STATUS_SENDING_INDEX = 3;
-
-    private static final int WIDTH_FOR_ACCESSIBLE_CONVERSATION_NAME = 600;
-
-    public static String buildContentDescription(final Resources resources,
-                                                 final ConversationListItemData data, final TextPaint conversationNameViewPaint) {
-        int messageStatusIndex;
-        boolean outgoingSnippet = data.getIsMessageTypeOutgoing() || data.getShowDraft();
-        if (outgoingSnippet) {
-            if (data.getShowDraft()) {
-                messageStatusIndex = MESSAGE_STATUS_DRAFT_INDEX;
-            } else if (data.getIsSendRequested()) {
-                messageStatusIndex = MESSAGE_STATUS_SENDING_INDEX;
-            } else {
-                messageStatusIndex = data.getIsFailedStatus() ? MESSAGE_STATUS_FAILED_INDEX
-                        : MESSAGE_STATUS_SUCCESSFUL_INDEX;
-            }
-        } else {
-            messageStatusIndex = data.getIsFailedStatus() ? MESSAGE_STATUS_FAILED_INDEX
-                    : MESSAGE_STATUS_SUCCESSFUL_INDEX;
-        }
-
-        int resId = sPrimaryContentDescriptions
-                [data.getIsGroup() ? CONV_TYPE_ONE_GROUP_INDEX : CONV_TYPE_ONE_ON_ONE_INDEX]
-                [outgoingSnippet ? DIRECTION_OUTGOING_INDEX : DIRECTION_INCOMING_INDEX]
-                [messageStatusIndex];
-
-        final String snippetText = data.getShowDraft() ?
-                data.getDraftSnippetText() : data.getSnippetText();
-
-        final String conversationName = data.getName();
-        String senderOrConvName = outgoingSnippet ? conversationName : data.getSnippetSenderName();
-
-        String primaryContentDescription = resources.getString(resId, senderOrConvName,
-                snippetText == null ? "" : snippetText,
-                data.getFormattedTimestamp(),
-                // This is used only for incoming group messages
-                conversationName);
-        String contentDescription = primaryContentDescription;
-
-        // An edge case : for an outgoing message, it might be in both draft status and
-        // failed status.
-        if (outgoingSnippet && data.getShowDraft() && data.getIsFailedStatus()) {
-            StringBuilder contentDescriptionBuilder = new StringBuilder();
-            contentDescriptionBuilder.append(primaryContentDescription);
-
-            String secondaryContentDescription =
-                    resources.getString(sSecondaryContentDescription);
-            contentDescriptionBuilder.append(" ");
-            contentDescriptionBuilder.append(secondaryContentDescription);
-            contentDescription = contentDescriptionBuilder.toString();
-        }
-        return contentDescription;
-    }
-
     /**
      * Fills in the data associated with this view.
      */
+    @DebugLog
     public void bind(final ConversationListItemData data, final HostInterface hostInterface) {
         // Update our UI model
         mHostInterface = hostInterface;
@@ -404,11 +304,22 @@ public class ConversationListItemView extends FrameLayout implements OnClickList
         mSwipeableContainer.setOnClickListener(this);
         mSwipeableContainer.setOnLongClickListener(this);
 
+        if (!mHostInterface.isArchived()) {
+            ((ImageView) findViewById(R.id.cross_swipe_archive_icon_left)).setImageResource(R.drawable.archive_swipe);
+            ((ImageView) findViewById(R.id.cross_swipe_archive_icon_right)).setImageResource(R.drawable.archive_swipe);
+            ((TextView) findViewById(R.id.cross_swipe_archive_text_left)).setText(R.string.action_archive);
+            ((TextView) findViewById(R.id.cross_swipe_archive_text_right)).setText(R.string.action_archive);
+        } else {
+            ((ImageView) findViewById(R.id.cross_swipe_archive_icon_left)).setImageResource(R.drawable.unarchive_swipe);
+            ((ImageView) findViewById(R.id.cross_swipe_archive_icon_right)).setImageResource(R.drawable.unarchive_swipe);
+            ((TextView) findViewById(R.id.cross_swipe_archive_text_left)).setText(R.string.action_unarchive);
+            ((TextView) findViewById(R.id.cross_swipe_archive_text_right)).setText(R.string.action_unarchive);
+        }
+
         final Resources resources = getContext().getResources();
 
         int color;
         final int maxLines;
-        final int typefaceStyle = mData.getShowDraft() ? Typeface.ITALIC : Typeface.NORMAL;
         final String snippetText = getSnippetText();
 
         if (mData.getIsFailedStatus()) {
@@ -427,7 +338,6 @@ public class ConversationListItemView extends FrameLayout implements OnClickList
         setSnippet();
         setConversationName();
         setWorkProfileIcon();
-        setContentDescription(buildContentDescription(resources, mData, mConversationNameView.getPaint()));
 
         if (mData.getShowDraft()
                 || mData.getMessageStatus() == MessageData.BUGLE_STATUS_OUTGOING_DRAFT
@@ -435,11 +345,9 @@ public class ConversationListItemView extends FrameLayout implements OnClickList
                 // row is left with a latest_message_id of a no longer existing message and
                 // therefore the join values come back as null (or in this case zero).
                 || mData.getMessageStatus() == MessageData.BUGLE_STATUS_UNKNOWN) {
-            //mTimestampTextView.setTypeface(Typefaces.getCustomRegular(), typefaceStyle);
             mTimestampTextView.setText(resources.getString(
                     R.string.conversation_list_item_view_draft_message));
         } else {
-            //mTimestampTextView.setTypeface(Typefaces.getCustomRegular(), typefaceStyle);
             final String formattedTimestamp = mData.getFormattedTimestamp();
             if (mData.getIsSendRequested()) {
                 mTimestampTextView.setText(R.string.message_status_sending);
@@ -453,28 +361,40 @@ public class ConversationListItemView extends FrameLayout implements OnClickList
         final boolean isSelected = mHostInterface.isConversationSelected(mData.getConversationId());
         setSelected(isSelected);
 
-        int contactIconVisibility = GONE;
-        int checkMarkVisibility = GONE;
-        int failStatusVisibility = GONE;
-        if (isSelected) {
-            checkMarkVisibility = VISIBLE;
-        } else {
-            contactIconVisibility = VISIBLE;
-            // Only show the fail icon if it is not a group conversation.
-            // And also require that we be the default sms app.
-            if (mData.getIsFailedStatus() && !mData.getIsGroup()) {
-                failStatusVisibility = VISIBLE;
+        ImageView checkbox = findViewById(R.id.check_box);
+        View rightContainer = findViewById(R.id.conversation_item_right_container);
+
+        if (mHostInterface.isSelectionMode()) {
+            checkbox.setVisibility(View.VISIBLE);
+            if (isSelected) {
+                checkbox.setImageResource(R.drawable.ic_choosen);
+            } else {
+                checkbox.setImageResource(R.drawable.ic_choose);
             }
+            rightContainer.setVisibility(GONE);
+        } else {
+            checkbox.setVisibility(View.GONE);
+            //rightContainer.scrollTo(0, 0);
+            rightContainer.setVisibility(VISIBLE);
         }
 
-        setContactImage();
-        mContactIconView.setVisibility(contactIconVisibility);
-        //mContactIconView.setOnLongClickListener(this);
-        mContactIconView.clearColorFilter();
-//        mContactIconView.setClickable(mHostInterface.isSelectionMode());
-//        mContactIconView.setLongClickable(mHostInterface.isSelectionMode());
+//        int contactIconVisibility = GONE;
+        int failStatusVisibility = GONE;
+//        if (isSelected) {
+//            checkMarkVisibility = VISIBLE;
+//        } else {
+//            contactIconVisibility = VISIBLE;
+        // Only show the fail icon if it is not a group conversation.
+        // And also require that we be the default sms app.
+        if (mData.getIsFailedStatus() && !mData.getIsGroup()) {
+            failStatusVisibility = VISIBLE;
+        }
+//        }
 
-        mContactCheckmarkView.setVisibility(checkMarkVisibility);
+        setContactImage();
+//        mContactIconView.setVisibility(contactIconVisibility);
+        mContactIconView.clearColorFilter();
+
         mFailedStatusIconView.setVisibility(failStatusVisibility);
 
         boolean shouldShowUnreadMsgCount = mData.getUnreadMessagesNumber() > 0;
@@ -487,13 +407,8 @@ public class ConversationListItemView extends FrameLayout implements OnClickList
         OnClickListener previewClickListener = null;
         Uri previewImageUri = null;
         int previewImageVisibility = GONE;
-        int audioPreviewVisibility = GONE;
         if (!shouldShowUnreadMsgCount && previewUri != null && !TextUtils.isEmpty(previewContentType)) {
-            if (ContentType.isAudioType(previewContentType)) {
-                boolean incoming = !(mData.getShowDraft() || mData.getIsMessageTypeOutgoing());
-                mAudioAttachmentView.bind(previewUri, incoming, false);
-                audioPreviewVisibility = VISIBLE;
-            } else if (ContentType.isVideoType(previewContentType)) {
+            if (ContentType.isVideoType(previewContentType)) {
                 previewImageUri = UriUtil.getUriForResourceId(
                         getContext(), R.drawable.ic_preview_play);
                 previewClickListener = fullScreenPreviewClickListener;
@@ -525,10 +440,8 @@ public class ConversationListItemView extends FrameLayout implements OnClickList
         mImagePreviewView.setOnLongClickListener(this);
         mImagePreviewView.setVisibility(previewImageVisibility);
         mImagePreviewView.setOnClickListener(previewClickListener);
-        mAudioAttachmentView.setOnLongClickListener(this);
-        mAudioAttachmentView.setVisibility(audioPreviewVisibility);
 
-        if (previewImageVisibility == View.VISIBLE || audioPreviewVisibility == VISIBLE) {
+        if (previewImageVisibility == View.VISIBLE) {
             mTimestampTextView.setVisibility(GONE);
         } else {
             mTimestampTextView.setVisibility(VISIBLE);
@@ -552,30 +465,73 @@ public class ConversationListItemView extends FrameLayout implements OnClickList
     public void setSwipeTranslationX(final float translationX) {
         mSwipeableContainer.setTranslationX(translationX);
         if (translationX == 0) {
-            mCrossSwipeBackground.setVisibility(View.GONE);
-            mCrossSwipeArchiveLeftImageView.setVisibility(GONE);
-            mCrossSwipeArchiveRightImageView.setVisibility(GONE);
+            mCrossSwipeArchiveLeftContainer.setVisibility(GONE);
+            mCrossSwipeArchiveRightContainer.setVisibility(GONE);
+            mCrossSwipeBg.setVisibility(INVISIBLE);
+            mCrossSwipeBg.setTranslationX(-getWidth());
 
             mSwipeableContainer.setBackgroundResource(R.drawable.conversation_list_item_bg);
         } else {
-            mCrossSwipeBackground.setVisibility(View.VISIBLE);
+            int padding = getResources().getDimensionPixelSize(R.dimen.conversation_item_view_swipe_padding);
             if (translationX > 0) {
-                mCrossSwipeArchiveLeftImageView.setVisibility(VISIBLE);
-                mCrossSwipeArchiveRightImageView.setVisibility(GONE);
+                mCrossSwipeBg.setVisibility(VISIBLE);
+                mCrossSwipeBg.setTranslationX(translationX - getWidth());
+                if (translationX > padding) {
+                    mCrossSwipeArchiveLeftContainer.setVisibility(VISIBLE);
+                    Rect rect = new Rect(0, 0, (int) translationX - padding,
+                            mCrossSwipeArchiveLeftContainer.getHeight());
+                    mCrossSwipeArchiveLeftContainer.setClipBounds(rect);
+                } else {
+                    mCrossSwipeArchiveLeftContainer.setVisibility(GONE);
+                }
+
+                mCrossSwipeArchiveRightContainer.setVisibility(GONE);
             } else {
-                mCrossSwipeArchiveLeftImageView.setVisibility(GONE);
-                mCrossSwipeArchiveRightImageView.setVisibility(VISIBLE);
+                mCrossSwipeBg.setVisibility(VISIBLE);
+                mCrossSwipeBg.setTranslationX(getWidth() + translationX);
+
+                if (-translationX > padding) {
+                    mCrossSwipeArchiveRightContainer.setVisibility(VISIBLE);
+
+                    Rect rect = new Rect(
+                            (int) (mCrossSwipeArchiveRightContainer.getWidth() + padding + translationX),
+                            0,
+                            mCrossSwipeArchiveRightContainer.getWidth(),
+                            mCrossSwipeArchiveRightContainer.getHeight());
+
+                    mCrossSwipeArchiveRightContainer.setClipBounds(rect);
+                } else {
+                    mCrossSwipeArchiveRightContainer.setVisibility(GONE);
+                }
+
+                mCrossSwipeArchiveLeftContainer.setVisibility(GONE);
             }
-            mSwipeableContainer.setBackgroundResource(R.drawable.swipe_shadow_drag);
         }
     }
 
-    public void onSwipeComplete() {
+    public void onSwipeComplete(boolean isLeft) {
         final String conversationId = mData.getConversationId();
-        UpdateConversationArchiveStatusAction.archiveConversation(conversationId);
+        if (mHostInterface.isArchived()) {
+            UpdateConversationArchiveStatusAction.unarchiveConversation(conversationId);
+            BugleAnalytics.logEvent("SMS_Messages_Unarchive", true, "from",
+                    isLeft ? "slide_left" : "slide_right");
+        } else {
+            UpdateConversationArchiveStatusAction.archiveConversation(conversationId);
+            BugleAnalytics.logEvent("SMS_Messages_Archive", true, "from",
+                    isLeft ? "slide_left" : "slide_right");
+        }
 
-        final Runnable undoRunnable = () -> UpdateConversationArchiveStatusAction.unarchiveConversation(conversationId);
-        final String message = getResources().getString(R.string.archived_toast_message, 1);
+        final int textId = !mHostInterface.isArchived() ? R.string.archived_toast_message : R.string.unarchived_toast_message;
+        final Runnable undoRunnable = () -> {
+            if (mHostInterface.isArchived()) {
+                UpdateConversationArchiveStatusAction.archiveConversation(conversationId);
+                BugleAnalytics.logEvent("SMS_Messages_Unarchive_Undo", true);
+            } else {
+                UpdateConversationArchiveStatusAction.unarchiveConversation(conversationId);
+                BugleAnalytics.logEvent("SMS_Messages_Archive_Undo", true);
+            }
+        };
+        final String message = getResources().getString(textId, 1);
         UiUtils.showSnackBar(getContext(), getRootView(), message, undoRunnable,
                 SnackBar.Action.SNACK_BAR_UNDO,
                 mHostInterface.getSnackBarInteractions());
