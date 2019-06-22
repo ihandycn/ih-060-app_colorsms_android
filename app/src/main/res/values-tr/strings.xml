@@ -685,4 +685,49 @@
 
     <string name="action_unarchive">"Arşivden kaldır"</string>
     <string name="action_archive">"Arşivle"</string>
+
+    <string name="invite_friends_add_friends">Ekle</string>
+    <string name="invite_friends_default_back_to_main_page_title">Arkadaşlarını Davet Et</string>
+    <string name="privacy_mode_open_button_text">AÇIK</string>
+    <string name="invite_friends_invite_save_button">Kaydet</string>
+    <string name="notification_title_in_private_box_single">Yeni ileti</string>
+    <string name="invite_friends_invite_cancel_button">İptal</string>
+    <string name="privacy_mode_conversation_name">Kişi</string>
+    <string name="contacts">Kişiler</string>
+
+	<string name="backup_banner_guide_title">%1$d mesaj yedeklemesi olmadan korunmuyor.</string>
+	<string name="backup_guide_dialog_first_content">Telefon arızası olmadan veya telefonu kaybetmeden önce mesajlarınızı yedekleyin.</string>
+	<string name="backup_guide_dialog_second_content">%1$d mesaj korunmuyor.</string>
+	<string name="backup_guide_dialog_third_content">Mesajlarınızı herhangi bir cihaza geri yükleyin.</string>
+	<string name="backup_guide_dialog_button">HEMEN YEDEKLE</string>
+	<string name="menu_backup_restore_toolbar_title">SMS Yedekleme ve Geri Yükleme</string>
+	<string name="menu_backup_restore">Yedekle ve Geri Yükle</string>
+	<string name="backup_verb">YEDEKLEME</string>
+	<string name="backup_local">Yerel</string>
+	<string name="backup_cloud">Bulut</string>
+	<string name="local_backup_process_hint">Yedekleniyor...</string>
+	<string name="cloud_backup_process_hint">Yedek yükleniyor...</string>
+	<string name="backup_success_toast">Yedekleme başarılı</string>
+	<string name="backup_failed_toast">Yedekleme başarısız</string>
+	<string name="backup_tip_dialog_content">Yedek mevcut olanın üzerine yazacaktır. Yedeklemeden önce geri yükleniz şiddetle önerilir.</string>
+	<string name="restore_verb">GERİ YÜKLE</string>
+	<string name="message_free_up_title">Mesaj Alanını Boşalt</string>
+	<string name="message_free_up_content">Alan kazanmak ve telefonunuzu hızlandırmak için 30 günden eski yerel mesajları temizleyin! GERİ YÜKLE ile silinmiş mesajlara erişebilirsiniz.</string>
+	<string name="message_free_up_button">TEMİZLE</string>
+	<string name="message_free_up_process_dialog">Mesaj alanı boşaltılıyor... </string>
+	<string name="backup_tips_before_uninstalling_content">Uygulamamızı kaldırmadan önce mesajlarınızı GERİ YÜKLEYİN, böylece mesajlarınızı kaybetmezsiniz.</string>
+	<string name="restore_from_local">Yerelden</string>
+	<string name="restore_from_cloud">Buluttan</string>
+	<string name="restore_process_hint">Geri yükleniyor...</string>
+	<string name="restore_success">Başarıyla geri yüklendi</string>
+	<string name="restore_fail">Geri yüklenemedi</string>
+	<string name="restore_default_summary">Yedek dosya yok</string>
+	<string name="backup_no_account">Hesap yok</string>
+	<string name="restore_tab">Geri Yükle</string>
+	<string name="backup_tab">Yedekle</string>
+    <string name="backup_state_scanning">Tarama...</string>
+    <string name="backup_delete_failed">Sil Mesajlar Başarısız</string>
+    <string name="backup_local_summary">yerel depolama yedekle</string>
+    <string name="backup_free_success">Bedava Uzay Başarıyla</string>
+    <string name="restore_downloading">İndiriliyor...</string>
 </resources>

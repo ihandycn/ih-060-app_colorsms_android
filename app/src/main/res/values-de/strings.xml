@@ -691,4 +691,49 @@
 
     <string name="action_unarchive">"Aus Archiv entfernen"</string>
     <string name="action_archive">"Archivieren"</string>
+
+    <string name="invite_friends_add_friends">Hinzufügen</string>
+    <string name="invite_friends_default_back_to_main_page_title">Freunde einladen</string>
+    <string name="privacy_mode_open_button_text">ÖFFNEN</string>
+    <string name="invite_friends_invite_save_button">Speichern</string>
+    <string name="notification_title_in_private_box_single">Neue Nachricht</string>
+    <string name="invite_friends_invite_cancel_button">Abbrechen</string>
+    <string name="privacy_mode_conversation_name">Kontakt</string>
+    <string name="contacts">Kontakte</string>
+
+    <string name="backup_banner_guide_title">%1$d Nachrichten sind ohne Sicherungskopie nicht geschützt.</string>
+	<string name="backup_guide_dialog_first_content">Sichern Sie Ihre Nachrichten, bevor eine Störung des Telefons passiert oder es verloren geht.</string>
+	<string name="backup_guide_dialog_second_content">%1$d Nachrichten sind nicht geschützt.</string>
+	<string name="backup_guide_dialog_third_content">Stellen Sie Ihre Nachrichten auf jedem beliebigen Gerät wieder her.</string>
+	<string name="backup_guide_dialog_button">JETZT SICHERN</string>
+	<string name="menu_backup_restore_toolbar_title">SMS Sicherung &amp;  Wiederherstellung</string>
+	<string name="menu_backup_restore">Sichern &amp;  Wiederherstellen</string>
+	<string name="backup_verb">SICHERUNG</string>
+	<string name="backup_local">Lokal</string>
+	<string name="backup_cloud">Cloud</string>
+	<string name="local_backup_process_hint">Wird gesichert...</string>
+	<string name="cloud_backup_process_hint">Sicherung wird hochgeladen...</string>
+	<string name="backup_success_toast">Sicherung erfolgreich</string>
+	<string name="backup_failed_toast">Sicherung fehlgeschlagen</string>
+	<string name="backup_tip_dialog_content">Die Sicherungskopie wird die bereits bestehende überschreiben. Eine Wiederherstellung vor der Sicherung wird dringend empfohlen.</string>
+	<string name="restore_verb">WIEDERHERSTELLEN</string>
+	<string name="message_free_up_title">Speicherplatz für Nachrichten freigeben</string>
+	<string name="message_free_up_content">30 Tage alte Nachrichten im lokalen Speicher löschen, um Speicherplatz zu gewinnen &amp;  Ihr Telefon zu beschleunigen! Sie können auf die gelöschten Nachrichten über WIEDERHERSTELLEN zugreifen.</string>
+	<string name="message_free_up_button">BEREINIGEN</string>
+	<string name="message_free_up_process_dialog">Speicherplatz für Nachrichten wird freigegeben... </string>
+	<string name="backup_tips_before_uninstalling_content">STELLEN Sie Ihre Nachrichten WIEDER HER, bevor Sie unsere App deinstallieren, damit Sie Ihre Nachrichten nicht verlieren.</string>
+	<string name="restore_from_local">Aus lokaler Sicherung</string>
+	<string name="restore_from_cloud">Aus der Cloud</string>
+	<string name="restore_process_hint">Werden wiederhergestellt...</string>
+	<string name="restore_success">Wiederherstellung erfolgreich</string>
+	<string name="restore_fail">Wiederherstellung fehlgeschlagen</string>
+	<string name="restore_default_summary">Keine Sicherungsdatei</string>
+	<string name="backup_no_account">Kein Konto</string>
+	<string name="restore_tab">Wiederherstellen</string>
+	<string name="backup_tab">Sichern</string>
+    <string name="backup_state_scanning">Scannen ...</string>
+    <string name="backup_delete_failed">Löschen der Nachrichten fehlgeschlagen</string>
+    <string name="backup_local_summary">Sichern Sie im lokalen Speicher</string>
+    <string name="backup_free_success">Erfolgreich Speicherplatz freigeben</string>
+    <string name="restore_downloading">Wird heruntergeladen…</string>
 </resources>

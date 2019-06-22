@@ -23,6 +23,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 
+import com.android.messaging.util.BugleAnalytics;
 import com.android.messaging.util.LogUtil;
 
 public abstract class BaseWidgetProvider extends AppWidgetProvider {
@@ -37,6 +38,12 @@ public abstract class BaseWidgetProvider extends AppWidgetProvider {
     public static final int SIZE_MEDIUM = 2;
     public static final int SIZE_PRE_JB = 3;
 
+    @Override public void onEnabled(Context context) {
+        super.onEnabled(context);
+
+        BugleAnalytics.logEvent("Widget_Enable", true);
+    }
+
     /**
      * Update all widgets in the list
      */
@@ -47,6 +54,8 @@ public abstract class BaseWidgetProvider extends AppWidgetProvider {
         for (int i = 0; i < appWidgetIds.length; ++i) {
             updateWidget(context, appWidgetIds[i]);
         }
+
+        BugleAnalytics.logEvent("Widget_Update", true);
     }
 
     @Override

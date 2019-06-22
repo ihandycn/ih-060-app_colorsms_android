@@ -25,6 +25,7 @@ import android.provider.BaseColumns;
 
 import com.android.messaging.BugleApplication;
 import com.android.messaging.R;
+import com.android.messaging.backup.BackupDatabaseHelper;
 import com.android.messaging.datamodel.data.ConversationListItemData;
 import com.android.messaging.datamodel.data.MessageData;
 import com.android.messaging.datamodel.data.ParticipantData;
@@ -555,7 +556,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             PrivateMmsEntry.CREATE_MMS_TABLE_SQL,
             PrivateSmsEntry.CREATE_SMS_TABLE_SQL,
             PrivateContactsManager.CREATE_PRIVATE_CONTACTS_TABLE_SQL,
-            PrivateMmsEntry.Addr.CREATE_MMS_ADDRESS_TABLE_SQL
+            PrivateMmsEntry.Addr.CREATE_MMS_ADDRESS_TABLE_SQL,
+            BackupDatabaseHelper.MessageColumn.CREATE_BACKUP_TABLE_SQL
     };
 
     // List of all our indices

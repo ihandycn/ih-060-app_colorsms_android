@@ -265,7 +265,11 @@ class SyncMessageBatch {
         if (recipients.size() == 2 && !TextUtils.isEmpty(senderId)) {
             recipients.clear();
             recipients.add(senderId);
-            mms.mThreadId = MmsSmsUtils.Threads.getOrCreateThreadId(HSApplication.getContext(), mms.mSender);
+            try {
+                mms.mThreadId = MmsSmsUtils.Threads.getOrCreateThreadId(HSApplication.getContext(), mms.mSender);
+            } catch (Exception e) {
+                return;
+            }
         }
 
         if (recipients.get(0).equals(ParticipantData.getUnknownSenderDestination())) {
@@ -274,7 +278,11 @@ class SyncMessageBatch {
             } else {
                 recipients.clear();
                 recipients.add(senderId);
-                mms.mThreadId = MmsSmsUtils.Threads.getOrCreateThreadId(HSApplication.getContext(), mms.mSender);
+                try {
+                    mms.mThreadId = MmsSmsUtils.Threads.getOrCreateThreadId(HSApplication.getContext(), mms.mSender);
+                } catch (Exception e) {
+                    return;
+                }
             }
         }
 

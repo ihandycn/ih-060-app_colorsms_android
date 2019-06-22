@@ -531,6 +531,4 @@ public class ConversationActivity extends BugleActionBarActivity
             finish();
         }
     }
-
-
 }

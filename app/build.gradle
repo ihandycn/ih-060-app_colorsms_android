@@ -19,8 +19,8 @@ android {
         applicationId "com.color.sms.messages.emoji"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 55
-        versionName "1.0.29"
+        versionCode 58
+        versionName "1.1.1"
         multiDexEnabled true
 
         vectorDrawables.useSupportLibrary = true
@@ -94,6 +94,7 @@ dependencies {
     implementation "com.google.firebase:firebase-database:${rootProject.ext.googlePlayServiceVersion}"
     implementation "com.google.firebase:firebase-auth:${rootProject.ext.googlePlayServiceVersion}"
     implementation "com.firebaseui:firebase-ui-auth:4.1.0"
+    implementation "com.google.firebase:firebase-storage:${rootProject.ext.googlePlayServiceVersion}"
     implementation "com.ihandy.appframework:libAppframework.gm:4.9.1.gm"
 
     implementation 'com.airbnb.android:lottie:2.7.0'

@@ -82,7 +82,7 @@ public class BugleDatabaseOperations {
      * @param recipients The recipient list
      * @param refSubId   The subId used to normalize phone numbers in the recipients
      */
-    static ArrayList<ParticipantData> getConversationParticipantsFromRecipients(
+    public static ArrayList<ParticipantData> getConversationParticipantsFromRecipients(
             final List<String> recipients, final int refSubId) {
         // Generate a list of partially formed participants
         final ArrayList<ParticipantData> participants = new

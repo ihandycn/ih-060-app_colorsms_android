@@ -689,4 +689,49 @@
 
     <string name="action_unarchive">"Annuler l\'archivage"</string>
     <string name="action_archive">"Archiver"</string>
+
+    <string name="invite_friends_add_friends">Ajouter</string>
+    <string name="invite_friends_default_back_to_main_page_title">Inviter des amis</string>
+    <string name="privacy_mode_open_button_text">OUVRIR</string>
+    <string name="invite_friends_invite_save_button">Enregistrer</string>
+    <string name="notification_title_in_private_box_single">Nouveau message</string>
+    <string name="invite_friends_invite_cancel_button">Annuler</string>
+    <string name="privacy_mode_conversation_name">Contact</string>
+    <string name="contacts">Contacts</string>
+
+	<string name="backup_banner_guide_title">%1$d messages sont non protégés sans sauvegarde.</string>
+	<string name="backup_guide_dialog_first_content">Sauvegardez vos messages avant une panne ou une perte de votre téléphone.</string>
+	<string name="backup_guide_dialog_second_content">%1$d messages sont non protégés.</string>
+	<string name="backup_guide_dialog_third_content">Restaurez vos messages sur n\'importe quel appareil.</string>
+	<string name="backup_guide_dialog_button">SAUVEGARDER MAINTENANT</string>
+	<string name="menu_backup_restore_toolbar_title">Sauvegarder et restaurer les SMS</string>
+	<string name="menu_backup_restore">Sauvegarder et restaurer</string>
+	<string name="backup_verb">SAUVEGARDER</string>
+	<string name="backup_local">Local</string>
+	<string name="backup_cloud">Cloud</string>
+	<string name="local_backup_process_hint">Sauvegarde...</string>
+	<string name="cloud_backup_process_hint">Téléchargement de la sauvegarde...</string>
+	<string name="backup_success_toast">Sauvegarde réussie</string>
+	<string name="backup_failed_toast">Échec de la sauvegarde</string>
+	<string name="backup_tip_dialog_content">Sauvegarder écrasera l\'existante. Il est fortement conseillé de restaurer avant la sauvegarde.</string>
+	<string name="restore_verb">RESTAURER</string>
+	<string name="message_free_up_title">Libérer de l\'espace message</string>
+	<string name="message_free_up_content">Nettoyez les messages locaux d\'il y a 30 jours pour gagner de l\'espace et accélérer votre téléphone ! Vous pouvez accéder aux messages nettoyés via RESTAURER.</string>
+	<string name="message_free_up_button">NETTOYER</string>
+	<string name="message_free_up_process_dialog">Nettoyage de votre espace de messages... </string>
+	<string name="backup_tips_before_uninstalling_content">RESTAUREZ vos messages avant de désinstaller notre appli afin de ne pas perdre vos messages.</string>
+	<string name="restore_from_local">De local</string>
+	<string name="restore_from_cloud">Du Cloud</string>
+	<string name="restore_process_hint">Restauration...</string>
+	<string name="restore_success">Restauration réussie</string>
+	<string name="restore_fail">Échec de la restauration</string>
+	<string name="restore_default_summary">Aucun fichier de sauvegarde</string>
+	<string name="backup_no_account">Pas de compte</string>
+	<string name="restore_tab">restaurer</string>
+	<string name="backup_tab">Sauvegarder</string>
+    <string name="backup_state_scanning">Balayage...</string>
+    <string name="backup_delete_failed">Supprimer les messages a échoué</string>
+    <string name="backup_local_summary">Sauvegarde sur stockage local</string>
+    <string name="backup_free_success">Libérer de l\'espace avec succès</string>
+    <string name="restore_downloading">Téléchargement...</string>
 </resources>

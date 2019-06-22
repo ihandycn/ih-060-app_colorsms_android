@@ -615,6 +615,7 @@
     <string name="setting_reset_customization_title">重置自定义内容？</string>
     <string name="setting_reset_customization_summary">这将重置此会话的所有自定义内容。</string>
     <string name="action_pin">置顶</string>
+    <string name="tips">提示</string>
 
     <string name="set_password_prompt">请设置数字解锁密码</string>
     <string name="lock_activity_change_to_pattern">切换到图案密码</string>
@@ -651,4 +652,13 @@
 
     <string name="action_unarchive">"取消归档"</string>
     <string name="action_archive">"归档"</string>
+
+    <string name="invite_friends_add_friends">添加</string>
+    <string name="invite_friends_default_back_to_main_page_title">邀请好友</string>
+    <string name="privacy_mode_open_button_text">打开</string>
+    <string name="invite_friends_invite_save_button">保存</string>
+    <string name="notification_title_in_private_box_single">新信息</string>
+    <string name="invite_friends_invite_cancel_button">取消</string>
+    <string name="contacts">联系人</string>
+    <string name="privacy_mode_conversation_name">联系人</string>
 </resources>

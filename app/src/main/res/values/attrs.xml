@@ -131,4 +131,7 @@
         <attr name="direction" format="float" />
     </declare-styleable>
 
+    <declare-styleable name="ViewPagerTabs">
+        <attr name="text_background_color" format="color"/>
+    </declare-styleable>
 </resources>
