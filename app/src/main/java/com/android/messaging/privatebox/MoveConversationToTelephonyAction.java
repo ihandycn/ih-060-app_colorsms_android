@@ -61,7 +61,7 @@ public class MoveConversationToTelephonyAction extends Action {
             if (!TextUtils.isEmpty(end)) {
                 HSGlobalNotificationCenter.sendNotification(end);
             }
-            Toasts.showToast(R.string.private_box_move_to_box);
+            Toasts.showToast(R.string.private_box_move_from_success);
         }
         return null;
     }

@@ -1,42 +1,43 @@
 package com.android.messaging.privatebox.ui;
 
-import android.app.LoaderManager;
-import android.content.CursorLoader;
-import android.content.Loader;
-import android.database.Cursor;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 
+import com.android.messaging.BaseActivity;
 import com.android.messaging.R;
-import com.android.messaging.datamodel.MessagingContentProvider;
+import com.android.messaging.datamodel.BugleDatabaseOperations;
+import com.android.messaging.datamodel.DataModel;
+import com.android.messaging.datamodel.DatabaseWrapper;
 import com.android.messaging.datamodel.data.ConversationListItemData;
 import com.android.messaging.privatebox.AppPrivateLockManager;
 import com.android.messaging.privatebox.MoveConversationToTelephonyAction;
+import com.android.messaging.privatebox.PrivateContactsManager;
 import com.android.messaging.privatebox.ui.view.PrivateContactsAdapter;
 import com.android.messaging.util.BugleAnalytics;
+import com.android.messaging.util.PhoneUtils;
 import com.android.messaging.util.UiUtils;
+import com.superapps.util.Threads;
 
+import java.text.Collator;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
-import static com.android.messaging.datamodel.data.ConversationListData.SORT_ORDER;
-
-public class PrivateContactsActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor>, PrivateContactsAdapter.PrivateContactsHost {
-    private static final int CONVERSATION_LIST_LOADER = 1;
+public class PrivateContactsActivity extends BaseActivity implements PrivateContactsAdapter.PrivateContactsHost {
     private PrivateContactsAdapter mAdapter;
-    private LoaderManager mLoaderManager;
-    private List<String> mRemoveConversationList = new ArrayList<>();
+    private List<String> mRemoveConversationIdList = new ArrayList<>();
     private View mEmptyListMessageView;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_private_contact);
+        startQueryData();
         mEmptyListMessageView = findViewById(R.id.private_contact_empty_container);
         mAdapter = new PrivateContactsAdapter();
         BugleAnalytics.logEvent("PrivateBox_PrivateContacts_Show");
@@ -55,14 +56,11 @@ public class PrivateContactsActivity extends AppCompatActivity implements Loader
         recyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
         recyclerView.setAdapter(mAdapter);
         mAdapter.setHost(this);
-        mLoaderManager = getLoaderManager();
-        mLoaderManager.initLoader(CONVERSATION_LIST_LOADER, null, this);
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        mLoaderManager.destroyLoader(CONVERSATION_LIST_LOADER);
     }
 
     @Override
@@ -74,7 +72,7 @@ public class PrivateContactsActivity extends AppCompatActivity implements Loader
     @Override
     protected void onPause() {
         super.onPause();
-        removeConversationsFromPrivateBox(mRemoveConversationList);
+        removeContactsFromPrivateBox(mRemoveConversationIdList);
     }
 
     @Override
@@ -88,9 +86,45 @@ public class PrivateContactsActivity extends AppCompatActivity implements Loader
         overridePendingTransition(R.anim.anim_null, R.anim.slide_out_to_right_and_fade);
     }
 
-    private void removeConversationsFromPrivateBox(List<String> addList) {
-        MoveConversationToTelephonyAction.moveToTelephony((ArrayList<String>) addList,
-                null, null);
+    private void removeContactsFromPrivateBox(List<String> addList) {
+        if (addList.size() != 0) {
+            MoveConversationToTelephonyAction.moveToTelephony((ArrayList<String>) addList,
+                    null, null);
+        }
+    }
+
+    private void startQueryData() {
+        Threads.postOnThreadPoolExecutor(() -> {
+            final List<String> list = new ArrayList<>();
+            List<String> conversationIdList = new ArrayList<>();
+            List<String> privateRecipients = PrivateContactsManager.getInstance().getPrivateRecipientList();
+            for (String recipient : privateRecipients) {
+                String phoneNumBySim = PhoneUtils.getDefault().getCanonicalBySimLocale(recipient);
+                String phoneNumBySystem = PhoneUtils.getDefault().getCanonicalBySystemLocale(recipient);
+
+                String participantId = BugleDatabaseOperations.getParticipantIdByName(phoneNumBySim);
+                String conversationId =
+                        BugleDatabaseOperations.getConversationIdForParticipantsGroup(Collections.singletonList(participantId));
+                if (!TextUtils.isEmpty(conversationId)) {
+                    conversationIdList.add(conversationId);
+                }
+
+                if (!phoneNumBySim.equals(phoneNumBySystem)) {
+                    String conversationId1 =
+                            BugleDatabaseOperations.getConversationIdForParticipantsGroup(
+                                    Collections.singletonList(
+                                            BugleDatabaseOperations.getParticipantIdByName(phoneNumBySim)));
+                    if (!TextUtils.isEmpty(conversationId1)) {
+                        conversationIdList.add(conversationId1);
+                    }
+                }
+            }
+            Collections.sort(conversationIdList, (o1, o2) -> Collator.getInstance().compare(o1, o2));
+            list.addAll(conversationIdList);
+            mEmptyListMessageView.setVisibility(list.isEmpty() ? View.VISIBLE : View.GONE);
+            final DatabaseWrapper db = DataModel.get().getDatabase();
+            Threads.postOnMainThread(() -> mAdapter.updateData(list, db));
+        });
     }
 
     @Override
@@ -103,40 +137,8 @@ public class PrivateContactsActivity extends AppCompatActivity implements Loader
     }
 
     @Override
-    public Loader<Cursor> onCreateLoader(int id, Bundle args) {
-        Loader<Cursor> loader = new CursorLoader(PrivateContactsActivity.this,
-                MessagingContentProvider.CONVERSATIONS_URI,
-                ConversationListItemData.PROJECTION,
-                "",
-                null,
-                SORT_ORDER);
-        return loader;
-    }
-
-    @Override
-    public void onLoadFinished(Loader<Cursor> loader, Cursor cursor) {
-        if (cursor != null && cursor.moveToFirst()) {
-            List<ConversationListItemData> dataList = new ArrayList<>(cursor.getCount());
-            do {
-                ConversationListItemData itemData = new ConversationListItemData();
-                itemData.bind(cursor);
-                if (itemData.isPrivate()) {
-                    dataList.add(itemData);
-                }
-            } while (cursor.moveToNext());
-            mAdapter.updateData(dataList);
-            mEmptyListMessageView.setVisibility(dataList.isEmpty() ? View.VISIBLE : View.GONE);
-        }
-    }
-
-    @Override
-    public void onLoaderReset(Loader<Cursor> loader) {
-
-    }
-
-    @Override
     public void onPrivateContactsRemoveButtonClick(ConversationListItemData conversationListItemData, boolean isPrivateContactListEmpty) {
-        mRemoveConversationList.add(conversationListItemData.getConversationId());
+        mRemoveConversationIdList.add(conversationListItemData.getConversationId());
         if (isPrivateContactListEmpty) {
             mEmptyListMessageView.setVisibility(View.VISIBLE);
         }

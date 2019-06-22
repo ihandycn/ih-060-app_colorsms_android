@@ -11,6 +11,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.android.messaging.R;
+import com.android.messaging.datamodel.DataModel;
+import com.android.messaging.datamodel.DatabaseWrapper;
 import com.android.messaging.datamodel.data.ConversationListItemData;
 import com.android.messaging.ui.ContactIconView;
 import com.android.messaging.util.Assert;
@@ -45,9 +47,11 @@ public class PrivateContactsAdapter extends RecyclerView.Adapter<PrivateContacts
 
     private List<ConversationListItemData> mRecyclerDataList = new ArrayList<>();
 
-    public void updateData(List<ConversationListItemData> data) {
+    public void updateData(List<String> conversationIdList, DatabaseWrapper db) {
         mRecyclerDataList.clear();
-        mRecyclerDataList.addAll(data);
+        for (String conversationId : conversationIdList) {
+            mRecyclerDataList.add(ConversationListItemData.getExistingConversation(db, conversationId));
+        }
         notifyDataSetChanged();
     }
 
