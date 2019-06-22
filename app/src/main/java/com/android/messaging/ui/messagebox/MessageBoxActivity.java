@@ -245,6 +245,7 @@ public class MessageBoxActivity extends AppCompatActivity implements INotificati
         if (PrivacyModeSettings.getPrivacyMode(conversationId) == NONE) {
             markAsRead(conversationId);
         }
+        mMarkAsSeenMap.put(conversationId, true);
     }
 
     @Override
