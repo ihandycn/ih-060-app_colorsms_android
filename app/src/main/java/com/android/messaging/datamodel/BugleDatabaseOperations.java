@@ -42,6 +42,7 @@ import com.android.messaging.privatebox.PrivateContactsManager;
 import com.android.messaging.privatebox.PrivateMessageManager;
 import com.android.messaging.sms.MmsUtils;
 import com.android.messaging.ui.UIIntents;
+import com.android.messaging.ui.conversationlist.ArchivedConversationListActivity;
 import com.android.messaging.util.Assert;
 import com.android.messaging.util.Assert.DoesNotRunOnMainThread;
 import com.android.messaging.util.AvatarUriUtil;
@@ -578,6 +579,7 @@ public class BugleDatabaseOperations {
                         ConversationColumns._ID + "=?", new String[]{conversationId});
                 conversationDeleted = (count > 0);
             } else {
+                ArchivedConversationListActivity.logUnarchiveEvent(dbWrapper, conversationId, "delete_message");
                 refreshConversationMetadataInTransaction(dbWrapper, conversationId,
                         false/* shouldAutoSwitchSelfId */, false/*archived*/);
             }
@@ -1384,6 +1386,7 @@ public class BugleDatabaseOperations {
 
                 if (!deleteConversationIfEmptyInTransaction(dbWrapper, conversationId)) {
                     // TODO: Should we leave the conversation sort timestamp alone?
+                    ArchivedConversationListActivity.logUnarchiveEvent(dbWrapper, conversationId, "delete_message");
                     refreshConversationMetadataInTransaction(dbWrapper, conversationId,
                             false/* shouldAutoSwitchSelfId */, false/*archived*/);
                 }
@@ -1519,6 +1522,7 @@ public class BugleDatabaseOperations {
         }
         if (refresh) {
             // TODO: I think it is okay to delete the conversation if it is empty...
+            ArchivedConversationListActivity.logUnarchiveEvent(dbWrapper, conversationId, "receive_message");
             refreshConversationMetadataInTransaction(dbWrapper, conversationId,
                     shouldAutoSwitchSelfId, keepArchived);
         }
@@ -1598,6 +1602,7 @@ public class BugleDatabaseOperations {
 
         if (TextUtils.isEmpty(currentLatestMessageId) ||
                 !TextUtils.equals(currentLatestMessageId, latestMessageId)) {
+            ArchivedConversationListActivity.logUnarchiveEvent(dbWrapper, conversationId, "receive_message");
             refreshConversationMetadataInTransaction(dbWrapper, conversationId,
                     shouldAutoSwitchSelfId, keepArchived);
         }

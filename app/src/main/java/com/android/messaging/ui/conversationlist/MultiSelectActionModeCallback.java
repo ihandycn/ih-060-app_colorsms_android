@@ -96,6 +96,8 @@ public class MultiSelectActionModeCallback implements Callback {
     private MenuItem mNotificationOffMenuItem;
     private MenuItem mPinMenuItem;
     private MenuItem mCancelPinMenuItem;
+    private MenuItem mArchiveMenuItem;
+    private MenuItem mUnarchiveMenuItem;
     private boolean mHasInflated;
 
     public MultiSelectActionModeCallback(final Listener listener) {
@@ -113,6 +115,8 @@ public class MultiSelectActionModeCallback implements Callback {
         mNotificationOnMenuItem = menu.findItem(R.id.action_notification_on);
         mPinMenuItem = menu.findItem(R.id.action_pin);
         mCancelPinMenuItem = menu.findItem(R.id.action_cancel_pin);
+        mArchiveMenuItem = menu.findItem(R.id.action_archive);
+        mUnarchiveMenuItem = menu.findItem(R.id.action_unarchive);
         menu.findItem(R.id.action_move_from_private_box).setVisible(false);
         if (HSApplication.getFirstLaunchInfo().appVersionCode >= 60){
             if (!Preferences.getDefault().getBoolean(PREF_KEY_IS_PRIVATE_BOX_ENTRANCE_SWITCH_ON, false)) {
@@ -124,7 +128,7 @@ public class MultiSelectActionModeCallback implements Callback {
             }
         }
         mHasInflated = true;
-        updateActionIconsVisiblity();
+        updateActionIconsVisibility();
         return true;
     }
 
@@ -171,6 +175,12 @@ public class MultiSelectActionModeCallback implements Callback {
                 }
                 mListener.onAddToPrivateBox(conversationIdList);
                 return true;
+            case R.id.action_archive:
+                mListener.onActionBarArchive(mSelectedConversations.values(), true);
+                return true;
+            case R.id.action_unarchive:
+                mListener.onActionBarArchive(mSelectedConversations.values(), false);
+                return true;
             default:
                 return false;
         }
@@ -197,7 +207,7 @@ public class MultiSelectActionModeCallback implements Callback {
         if (mSelectedConversations.isEmpty()) {
             mListener.onActionBarHome();
         } else {
-            updateActionIconsVisiblity();
+            updateActionIconsVisibility();
         }
     }
 
@@ -205,7 +215,7 @@ public class MultiSelectActionModeCallback implements Callback {
         return mSelectedConversations.containsKey(selectedId);
     }
 
-    private void updateActionIconsVisiblity() {
+    private void updateActionIconsVisibility() {
         if (!mHasInflated) {
             return;
         }
@@ -261,6 +271,13 @@ public class MultiSelectActionModeCallback implements Callback {
                     hasCurrentlyArchived && hasCurrentlyUnarchived) {
                 break;
             }
+        }
+        if (hasCurrentlyArchived) {
+            mArchiveMenuItem.setVisible(false);
+        }
+
+        if (hasCurrentlyUnarchived) {
+            mUnarchiveMenuItem.setVisible(false);
         }
         // If we have notification off conversations we show on button, if we have notification on
         // conversation we show off button. We can show both if we have a mixture.

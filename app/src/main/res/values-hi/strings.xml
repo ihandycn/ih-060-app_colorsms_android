@@ -736,4 +736,7 @@
     <string name="backup_local_summary">स्थानीय संग्रहण में बैक अप लें</string>
     <string name="backup_free_success">जगह खाली सफलतापूर्वक</string>
     <string name="restore_downloading">डाउनलोड हो रही है...</string>
+
+    <string name="action_unarchive">"संग्रह से निकालें"</string>
+    <string name="action_archive">"संग्रहीत करें"</string>
 </resources>

@@ -693,6 +693,7 @@
 	<string name="theme_coming">Teman lainnya akan segera datang...</string>
 	<string name="menu_invite_friends">Undang Teman</string>
 	<string name="invite_friends_now">UNDANG SEKARANG</string>
+
 	<string name="backup_banner_guide_title">%1$d tidak terlindungi tanpa backup.</string>
 	<string name="backup_guide_dialog_first_content">Backup pesan Anda sebelum ponsel Anda mengalami kerusakan atau kehilangan data.</string>
 	<string name="backup_guide_dialog_second_content">%1$d pesan tidak terlindungi.</string>
@@ -737,4 +738,7 @@
     <string name="invite_friends_invite_cancel_button">Batal</string>
     <string name="privacy_mode_conversation_name">Kontak</string>
     <string name="contacts">Kontak</string>
+
+    <string name="action_unarchive">"Batalkan pengarsipan"</string>
+    <string name="action_archive">"Arsipkan"</string>
 </resources>

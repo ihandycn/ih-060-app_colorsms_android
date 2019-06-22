@@ -36,6 +36,7 @@ import com.android.messaging.privatebox.PrivateContactsManager;
 import com.android.messaging.privatebox.PrivateSettingManager;
 import com.android.messaging.privatebox.PrivateSmsEntry;
 import com.android.messaging.sms.MmsSmsUtils;
+import com.android.messaging.ui.conversationlist.ArchivedConversationListActivity;
 import com.android.messaging.util.BugleAnalytics;
 import com.android.messaging.util.CheckPermissionUtil;
 import com.android.messaging.util.FabricUtils;
@@ -177,6 +178,8 @@ public class ReceiveSmsMessageAction extends Action implements Parcelable {
                         participantId, selfId, text, subject, sent, received, seen, read);
 
                 BugleDatabaseOperations.insertNewMessageInTransaction(db, message);
+
+                ArchivedConversationListActivity.logUnarchiveEvent(db,conversationId, "receive_message");
 
                 BugleDatabaseOperations.updateConversationMetadataInTransaction(db, conversationId,
                         message.getMessageId(), message.getReceivedTimeStamp(), blocked,

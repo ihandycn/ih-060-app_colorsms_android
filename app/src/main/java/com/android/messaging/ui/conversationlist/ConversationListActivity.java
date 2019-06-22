@@ -39,6 +39,9 @@ import com.android.messaging.backup.ui.BackupGuideDialogActivity;
 import com.android.messaging.backup.ui.BackupRestoreActivity;
 import com.android.messaging.backup.ui.ChooseBackupViewHolder;
 import com.android.messaging.datamodel.BugleNotifications;
+import com.android.messaging.datamodel.DataModel;
+import com.android.messaging.datamodel.DatabaseHelper;
+import com.android.messaging.datamodel.DatabaseWrapper;
 import com.android.messaging.datamodel.action.PinConversationAction;
 import com.android.messaging.datamodel.data.MessageBoxItemData;
 import com.android.messaging.font.ChangeFontActivity;
@@ -306,7 +309,8 @@ public class ConversationListActivity extends AbstractConversationListActivity
 
         navigationView = findViewById(R.id.navigation_view);
         navigationView.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
-            @Override public void onGlobalLayout() {
+            @Override
+            public void onGlobalLayout() {
                 Threads.postOnMainThread(() -> onPostPageVisible());
                 navigationView.getViewTreeObserver().removeOnGlobalLayoutListener(this);
             }
@@ -1085,15 +1089,30 @@ public class ConversationListActivity extends AbstractConversationListActivity
                 if (!sIsRecreate && hsBundle != null) {
                     boolean hasPinConversation = hsBundle.getBoolean(HAS_PIN_CONVERSATION);
                     int hour = Calendar.getInstance().get(Calendar.HOUR_OF_DAY);
-                    BugleAnalytics.logEvent("SMS_Messages_Show_1", true,
-                            "font", FontStyleManager.getInstance().getFontFamily(),
-                            "size", size,
-                            "open time", String.valueOf(hour),
-                            "signature", String.valueOf(!TextUtils.isEmpty(Preferences.getDefault().getString(
-                                    SignatureSettingDialog.PREF_KEY_SIGNATURE_CONTENT, null))),
-                            "pin", String.valueOf(hasPinConversation),
-                            "backup", String.valueOf(Preferences.getDefault().getBoolean(
-                                    ChooseBackupViewHolder.PREF_KEY_BACKUP_SUCCESS_FOR_EVENT, false)));
+                    Threads.postOnThreadPoolExecutor(() -> {
+                        DatabaseWrapper db = DataModel.get().getDatabase();
+                        Cursor cursor = db.query(DatabaseHelper.CONVERSATIONS_TABLE, new String[]{"COUNT(*)"},
+                                DatabaseHelper.ConversationColumns.ARCHIVE_STATUS + " =1 ", null,
+                                null, null, null);
+                        int archivedCount = 0;
+                        if (cursor != null) {
+                            if (cursor.moveToFirst()) {
+                                archivedCount = cursor.getInt(0);
+                            }
+                            cursor.close();
+                        }
+
+                        BugleAnalytics.logEvent("SMS_Messages_Show_1", true,
+                                "font", FontStyleManager.getInstance().getFontFamily(),
+                                "size", size,
+                                "open time", String.valueOf(hour),
+                                "signature", String.valueOf(!TextUtils.isEmpty(Preferences.getDefault().getString(
+                                        SignatureSettingDialog.PREF_KEY_SIGNATURE_CONTENT, null))),
+                                "pin", String.valueOf(hasPinConversation),
+                                "backup", String.valueOf(Preferences.getDefault().getBoolean(
+                                        ChooseBackupViewHolder.PREF_KEY_BACKUP_SUCCESS_FOR_EVENT, false)),
+                                "archive", String.valueOf(archivedCount > 0));
+                    });
                 }
                 break;
             case NOTIFICATION_NAME_MESSAGES_MOVE_END:

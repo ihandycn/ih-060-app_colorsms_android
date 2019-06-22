@@ -90,9 +90,11 @@ public abstract class AbstractConversationListActivity extends BugleActionBarAct
 
     protected void startMultiSelectActionMode() {
         startActionMode(new MultiSelectActionModeCallback(this));
+        mConversationListFragment.startMultiSelectMode();
     }
 
     protected void exitMultiSelectState() {
+        mConversationListFragment.exitMultiSelectMode();
         mConversationListFragment.showFab();
         dismissActionMode();
         mConversationListFragment.updateUi();
@@ -167,16 +169,24 @@ public abstract class AbstractConversationListActivity extends BugleActionBarAct
             }
         }
 
-        final Runnable undoRunnable = new Runnable() {
-            @Override
-            public void run() {
-                for (final String conversationId : conversationIds) {
-                    if (isToArchive) {
-                        UpdateConversationArchiveStatusAction.unarchiveConversation(conversationId);
-                    } else {
-                        UpdateConversationArchiveStatusAction.archiveConversation(conversationId);
-                    }
+        if (isToArchive) {
+            BugleAnalytics.logEvent("SMS_Messages_Archive", true,"from", "edit_mode");
+        } else {
+            BugleAnalytics.logEvent("SMS_Messages_Unarchive", true,"from", "edit_mode");
+        }
+
+        final Runnable undoRunnable = () -> {
+            for (final String conversationId : conversationIds) {
+                if (isToArchive) {
+                    UpdateConversationArchiveStatusAction.unarchiveConversation(conversationId);
+                } else {
+                    UpdateConversationArchiveStatusAction.archiveConversation(conversationId);
                 }
+            }
+            if (isToArchive) {
+                BugleAnalytics.logEvent("SMS_Messages_Archive_Undo", true);
+            } else {
+                BugleAnalytics.logEvent("SMS_Messages_Unarchive_Undo", true);
             }
         };
 

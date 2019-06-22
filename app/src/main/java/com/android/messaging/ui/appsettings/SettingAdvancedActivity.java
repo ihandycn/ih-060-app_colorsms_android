@@ -25,10 +25,11 @@ public class SettingAdvancedActivity extends BaseActivity {
 
     private int mSubId;
 
-    private SettingItemView mGroupMMS;
-    private SettingItemView mAutoRetrieve;
-    private SettingItemView mRoamingAutoRetrieve;
-    private SettingItemView mSMSDeliveryReports;
+    private GeneralSettingItemView mGroupMMS;
+    private GeneralSettingItemView mAutoRetrieve;
+    private GeneralSettingItemView mRoamingAutoRetrieve;
+    private GeneralSettingItemView mSMSDeliveryReports;
+    private GeneralSettingItemView mOutgoingSoundView;
 
     final BuglePrefs mPrefs = BuglePrefs.getApplicationPrefs();
 
@@ -49,7 +50,7 @@ public class SettingAdvancedActivity extends BaseActivity {
         getSupportActionBar().setDisplayShowHomeEnabled(true);
 
         //phone number
-        SettingItemView mPhoneNumberView = findViewById(R.id.setting_advanced_phone_number);
+        GeneralSettingItemView mPhoneNumberView = findViewById(R.id.setting_advanced_phone_number);
         Intent intent = getIntent();
         Assert.notNull(intent);
         mSubId = (intent != null) ? intent.getIntExtra(UIIntents.UI_INTENT_EXTRA_SUB_ID,
@@ -63,6 +64,9 @@ public class SettingAdvancedActivity extends BaseActivity {
         final String phoneNumber = bidiFormatter.unicodeWrap
                 (displayValue, TextDirectionHeuristicsCompat.LTR);
         mPhoneNumberView.setSummary(phoneNumber);
+
+        //outgoing message sounds
+        setUpOutgoingSoundView();
 
         //group mms
         mGroupMMS = findViewById(R.id.setting_advanced_group_mms);
@@ -108,6 +112,20 @@ public class SettingAdvancedActivity extends BaseActivity {
             mSMSDeliveryReports.setChecked(false);
         }
     }
+
+    private void setUpOutgoingSoundView() {
+        mOutgoingSoundView = findViewById(R.id.setting_advanced_outgoing_sounds);
+        final String prefKey = getString(R.string.send_sound_pref_key);
+        final boolean defaultValue = getResources().getBoolean(
+                R.bool.send_sound_pref_default);
+        mOutgoingSoundView.setChecked(mPrefs.getBoolean(prefKey, defaultValue));
+        mOutgoingSoundView.setOnItemClickListener(() -> {
+            mPrefs.putBoolean(prefKey, mOutgoingSoundView.isChecked());
+            GeneralSettingSyncManager.uploadOutgoingMessageSoundsSwitchToServer(mOutgoingSoundView.isChecked());
+            BugleAnalytics.logEvent("SMS_Settings_MessageSounds_Click", true);
+        });
+    }
+
 
     private void updateGroupMmsPrefSummary() {
         final BuglePrefs prefs = BuglePrefs.getSubscriptionPrefs(mSubId);

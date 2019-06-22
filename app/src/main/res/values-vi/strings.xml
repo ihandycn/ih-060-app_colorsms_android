@@ -735,4 +735,7 @@
     <string name="backup_local_summary">Sao lưu vào bộ nhớ cục bộ</string>
     <string name="backup_free_success">Giải phóng không gian thành công</string>
     <string name="restore_downloading">Đang tải xuống...</string>
+
+    <string name="action_unarchive">"Hủy lưu trữ"</string>
+    <string name="action_archive">"Lưu trữ"</string>
 </resources>

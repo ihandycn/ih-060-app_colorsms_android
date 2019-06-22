@@ -581,6 +581,13 @@
             android:excludeFromRecents="true"
             android:screenOrientation="portrait"
             android:theme="@style/BaseSettingsActivity" />
+
+        <activity
+            android:name=".ui.appsettings.SettingAboutActivity"
+            android:excludeFromRecents="true"
+            android:screenOrientation="portrait"
+            android:theme="@style/BaseSettingsActivity"/>
+
         <activity
             android:name=".ui.appsettings.GDPRSettingsActivity"
             android:excludeFromRecents="true"

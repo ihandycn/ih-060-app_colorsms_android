@@ -824,7 +824,6 @@
     <string name="backup_free_success">تحرير مساحة بنجاح</string>
     <string name="restore_downloading">डाउनलोड हो रही है...</string>
 
-
     <string name="invite_friends_add_friends">Add</string>
     <string name="invite_friends_default_back_to_main_page_title">دعوة الأصدقاء</string>
     <string name="privacy_mode_open_button_text">افتح</string>
@@ -833,4 +832,7 @@
     <string name="invite_friends_invite_cancel_button">إلغاء</string>
     <string name="privacy_mode_conversation_name">جهة الاتصال</string>
     <string name="contacts">جهات الاتصال</string>
+
+    <string name="action_unarchive">"إزالة من الأرشيف"</string>
+    <string name="action_archive">"أرشيف"</string>
 </resources>

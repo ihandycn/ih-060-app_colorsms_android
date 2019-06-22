@@ -687,6 +687,7 @@
 	<string name="theme_coming">더 많은 테마가 찾아옵니다...</string>
 	<string name="menu_invite_friends">친구 초대</string>
 	<string name="invite_friends_now">지금 초대</string>
+
 	<string name="backup_banner_guide_title">메시지 %1$d개가 백업 없이 보호되지 않습니다.</string>
 	<string name="backup_guide_dialog_first_content">휴대폰이 고장나거나 분실되기 전에 메시지를 백업하세요.</string>
 	<string name="backup_guide_dialog_second_content">메시지 %1$d개가 보호되지 않습니다.</string>
@@ -731,4 +732,7 @@
     <string name="invite_friends_invite_cancel_button">취소</string>
     <string name="privacy_mode_conversation_name">연락처</string>
     <string name="contacts">연락처</string>
+
+    <string name="action_unarchive">"보관 취소"</string>
+    <string name="action_archive">"보관처리"</string>
 </resources>

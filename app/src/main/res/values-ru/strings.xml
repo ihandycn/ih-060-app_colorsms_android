@@ -781,4 +781,7 @@
     <string name="backup_local_summary">Резервное копирование в локальное хранилище</string>
     <string name="backup_free_success">Освободите пространство успешно</string>
     <string name="restore_downloading">Загрузка...</string>
+
+    <string name="action_unarchive">"Вернуть из архива"</string>
+    <string name="action_archive">"Архив"</string>
 </resources>

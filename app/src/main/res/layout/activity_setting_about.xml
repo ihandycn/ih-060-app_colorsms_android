@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <include layout="@layout/top_tool_bar_view" />
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+            <!--privacy policy-->
+            <com.android.messaging.ui.appsettings.GeneralSettingItemView
+                android:id="@+id/setting_item_privacy_policy"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:title="@string/setting_privacy_policy"
+                app:type="normal" />
+
+            <!--terms of services-->
+            <com.android.messaging.ui.appsettings.GeneralSettingItemView
+                android:id="@+id/setting_item_terms_of_service"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:title="@string/setting_terms_of_service"
+                app:type="normal" />
+
+            <!--analytics and advertising-->
+            <com.android.messaging.ui.appsettings.GeneralSettingItemView
+                android:id="@+id/setting_item_analytics_advertising"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:title="@string/setting_gdpr"
+                app:type="normal" />
+        </LinearLayout>
+    </ScrollView>
+</LinearLayout>

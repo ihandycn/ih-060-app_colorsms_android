@@ -15,6 +15,7 @@
  */
 package com.android.messaging.ui.conversationlist;
 
+import android.animation.LayoutTransition;
 import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Color;
@@ -48,8 +49,7 @@ import com.android.messaging.ui.SnackBar;
 import com.android.messaging.ui.SnackBarInteraction;
 import com.android.messaging.ui.customize.AvatarBgDrawables;
 import com.android.messaging.ui.customize.ConversationColors;
-import com.android.messaging.ui.customize.theme.ThemeInfo;
-import com.android.messaging.ui.customize.theme.ThemeUtils;
+import com.android.messaging.ui.customize.PrimaryColors;
 import com.android.messaging.util.Assert;
 import com.android.messaging.util.BugleAnalytics;
 import com.android.messaging.util.ContentType;
@@ -91,6 +91,8 @@ public class ConversationListItemView extends FrameLayout implements OnClickList
         void startFullScreenVideoViewer(final Uri videoUri);
 
         boolean isSelectionMode();
+
+        boolean isArchived();
     }
 
     private final OnClickListener fullScreenPreviewClickListener = new OnClickListener() {
@@ -123,7 +125,6 @@ public class ConversationListItemView extends FrameLayout implements OnClickList
 
     private int mAnimatingCount;
     private ViewGroup mSwipeableContainer;
-    private ViewGroup mCrossSwipeBackground;
     private ViewGroup mSwipeableContent;
     private TextView mConversationNameView;
     private ImageView mWorkProfileIconView;
@@ -131,12 +132,13 @@ public class ConversationListItemView extends FrameLayout implements OnClickList
     private TextView mTimestampTextView;
     private ContactIconView mContactIconView;
     private ImageView mContactBackground;
-    private ImageView mContactCheckmarkView;
     private ImageView mNotificationBellView;
     private ImageView mPinView;
     private ImageView mFailedStatusIconView;
-    private ImageView mCrossSwipeArchiveLeftImageView;
-    private ImageView mCrossSwipeArchiveRightImageView;
+
+    private View mCrossSwipeArchiveLeftContainer;
+    private View mCrossSwipeArchiveRightContainer;
+    private View mCrossSwipeBg;
     private HostInterface mHostInterface;
     private TextView mUnreadMessagesCountView;
 
@@ -150,17 +152,12 @@ public class ConversationListItemView extends FrameLayout implements OnClickList
     protected void onFinishInflate() {
         super.onFinishInflate();
         mSwipeableContainer = findViewById(R.id.swipeableContainer);
-        mCrossSwipeBackground = findViewById(R.id.crossSwipeBackground);
         mSwipeableContent = findViewById(R.id.swipeableContent);
         mConversationNameView = findViewById(R.id.conversation_name);
         mSnippetTextView = findViewById(R.id.conversation_snippet);
         mWorkProfileIconView = findViewById(R.id.work_profile_icon);
         mTimestampTextView = findViewById(R.id.conversation_timestamp);
         mContactIconView = findViewById(R.id.conversation_icon);
-        mContactCheckmarkView = findViewById(R.id.conversation_checkmark);
-        mContactCheckmarkView.getDrawable().setColorFilter(
-                Color.parseColor(ThemeInfo.getThemeInfo(ThemeUtils.getCurrentThemeName()).avatarForegroundColor),
-                PorterDuff.Mode.SRC_ATOP);
         mNotificationBellView = findViewById(R.id.conversation_notification_bell);
         mNotificationBellView.getDrawable().setColorFilter(
                 ConversationColors.get().getListTimeColor(), PorterDuff.Mode.SRC_ATOP);
@@ -168,9 +165,13 @@ public class ConversationListItemView extends FrameLayout implements OnClickList
         mPinView.getDrawable().setColorFilter(
                 ConversationColors.get().getListTimeColor(), PorterDuff.Mode.SRC_ATOP);
         mFailedStatusIconView = findViewById(R.id.conversation_failed_status_icon);
-        mCrossSwipeArchiveLeftImageView = findViewById(R.id.crossSwipeArchiveIconLeft);
-        mCrossSwipeArchiveRightImageView =
-                findViewById(R.id.crossSwipeArchiveIconRight);
+
+        mCrossSwipeArchiveLeftContainer = findViewById(R.id.cross_swipe_archive_left_container);
+        mCrossSwipeArchiveRightContainer = findViewById(R.id.cross_swipe_archive_right_container);
+
+        mCrossSwipeBg = findViewById(R.id.cross_swipe_archive_background);
+        mCrossSwipeBg.setBackgroundColor(PrimaryColors.getPrimaryColor());
+
         mUnreadMessagesCountView = findViewById(R.id.conversation_unread_messages_count);
 
         mConversationNameView.addOnLayoutChangeListener(this);
@@ -182,6 +183,12 @@ public class ConversationListItemView extends FrameLayout implements OnClickList
 
         mContactBackground = findViewById(R.id.conversation_icon_bg);
         mContactBackground.setImageDrawable(AvatarBgDrawables.getAvatarBg(false));
+
+        LayoutTransition layoutTransition = new LayoutTransition();
+        layoutTransition.setDuration(200);
+        layoutTransition.disableTransitionType(LayoutTransition.DISAPPEARING);
+
+        mSwipeableContent.setLayoutTransition(layoutTransition);
 
         if (OsUtil.isAtLeastL()) {
             setTransitionGroup(true);
@@ -290,6 +297,18 @@ public class ConversationListItemView extends FrameLayout implements OnClickList
         mSwipeableContainer.setOnClickListener(this);
         mSwipeableContainer.setOnLongClickListener(this);
 
+        if (!mHostInterface.isArchived()) {
+            ((ImageView) findViewById(R.id.cross_swipe_archive_icon_left)).setImageResource(R.drawable.archive_swipe);
+            ((ImageView) findViewById(R.id.cross_swipe_archive_icon_right)).setImageResource(R.drawable.archive_swipe);
+            ((TextView) findViewById(R.id.cross_swipe_archive_text_left)).setText(R.string.action_archive);
+            ((TextView) findViewById(R.id.cross_swipe_archive_text_right)).setText(R.string.action_archive);
+        } else {
+            ((ImageView) findViewById(R.id.cross_swipe_archive_icon_left)).setImageResource(R.drawable.unarchive_swipe);
+            ((ImageView) findViewById(R.id.cross_swipe_archive_icon_right)).setImageResource(R.drawable.unarchive_swipe);
+            ((TextView) findViewById(R.id.cross_swipe_archive_text_left)).setText(R.string.action_unarchive);
+            ((TextView) findViewById(R.id.cross_swipe_archive_text_right)).setText(R.string.action_unarchive);
+        }
+
         final Resources resources = getContext().getResources();
 
         int color;
@@ -335,25 +354,40 @@ public class ConversationListItemView extends FrameLayout implements OnClickList
         final boolean isSelected = mHostInterface.isConversationSelected(mData.getConversationId());
         setSelected(isSelected);
 
-        int contactIconVisibility = GONE;
-        int checkMarkVisibility = GONE;
-        int failStatusVisibility = GONE;
-        if (isSelected) {
-            checkMarkVisibility = VISIBLE;
-        } else {
-            contactIconVisibility = VISIBLE;
-            // Only show the fail icon if it is not a group conversation.
-            // And also require that we be the default sms app.
-            if (mData.getIsFailedStatus() && !mData.getIsGroup()) {
-                failStatusVisibility = VISIBLE;
+        ImageView checkbox = findViewById(R.id.check_box);
+        View rightContainer = findViewById(R.id.conversation_item_right_container);
+
+        if (mHostInterface.isSelectionMode()) {
+            checkbox.setVisibility(View.VISIBLE);
+            if (isSelected) {
+                checkbox.setImageResource(R.drawable.ic_choosen);
+            } else {
+                checkbox.setImageResource(R.drawable.ic_choose);
             }
+            rightContainer.setVisibility(GONE);
+        } else {
+            checkbox.setVisibility(View.GONE);
+            //rightContainer.scrollTo(0, 0);
+            rightContainer.setVisibility(VISIBLE);
         }
 
+//        int contactIconVisibility = GONE;
+        int failStatusVisibility = GONE;
+//        if (isSelected) {
+//            checkMarkVisibility = VISIBLE;
+//        } else {
+//            contactIconVisibility = VISIBLE;
+        // Only show the fail icon if it is not a group conversation.
+        // And also require that we be the default sms app.
+        if (mData.getIsFailedStatus() && !mData.getIsGroup()) {
+            failStatusVisibility = VISIBLE;
+        }
+//        }
+
         setContactImage();
-        mContactIconView.setVisibility(contactIconVisibility);
+//        mContactIconView.setVisibility(contactIconVisibility);
         mContactIconView.clearColorFilter();
 
-        mContactCheckmarkView.setVisibility(checkMarkVisibility);
         mFailedStatusIconView.setVisibility(failStatusVisibility);
 
         boolean shouldShowUnreadMsgCount = mData.getUnreadMessagesNumber() > 0;
@@ -386,31 +420,74 @@ public class ConversationListItemView extends FrameLayout implements OnClickList
     public void setSwipeTranslationX(final float translationX) {
         mSwipeableContainer.setTranslationX(translationX);
         if (translationX == 0) {
-            mCrossSwipeBackground.setVisibility(View.GONE);
-            mCrossSwipeArchiveLeftImageView.setVisibility(GONE);
-            mCrossSwipeArchiveRightImageView.setVisibility(GONE);
+            mCrossSwipeArchiveLeftContainer.setVisibility(GONE);
+            mCrossSwipeArchiveRightContainer.setVisibility(GONE);
+            mCrossSwipeBg.setVisibility(INVISIBLE);
+            mCrossSwipeBg.setTranslationX(-getWidth());
 
             mSwipeableContainer.setBackgroundResource(R.drawable.conversation_list_item_bg);
         } else {
-            mCrossSwipeBackground.setVisibility(View.VISIBLE);
+            int padding = getResources().getDimensionPixelSize(R.dimen.conversation_item_view_swipe_padding);
             if (translationX > 0) {
-                mCrossSwipeArchiveLeftImageView.setVisibility(VISIBLE);
-                mCrossSwipeArchiveRightImageView.setVisibility(GONE);
+                mCrossSwipeBg.setVisibility(VISIBLE);
+                mCrossSwipeBg.setTranslationX(translationX - getWidth());
+                if (translationX > padding) {
+                    mCrossSwipeArchiveLeftContainer.setVisibility(VISIBLE);
+                    Rect rect = new Rect(0, 0, (int) translationX - padding,
+                            mCrossSwipeArchiveLeftContainer.getHeight());
+                    mCrossSwipeArchiveLeftContainer.setClipBounds(rect);
+                } else {
+                    mCrossSwipeArchiveLeftContainer.setVisibility(GONE);
+                }
+
+                mCrossSwipeArchiveRightContainer.setVisibility(GONE);
             } else {
-                mCrossSwipeArchiveLeftImageView.setVisibility(GONE);
-                mCrossSwipeArchiveRightImageView.setVisibility(VISIBLE);
+                mCrossSwipeBg.setVisibility(VISIBLE);
+                mCrossSwipeBg.setTranslationX(getWidth() + translationX);
+
+                if (-translationX > padding) {
+                    mCrossSwipeArchiveRightContainer.setVisibility(VISIBLE);
+
+                    Rect rect = new Rect(
+                            (int) (mCrossSwipeArchiveRightContainer.getWidth() + padding + translationX),
+                            0,
+                            mCrossSwipeArchiveRightContainer.getWidth(),
+                            mCrossSwipeArchiveRightContainer.getHeight());
+
+                    mCrossSwipeArchiveRightContainer.setClipBounds(rect);
+                } else {
+                    mCrossSwipeArchiveRightContainer.setVisibility(GONE);
+                }
+
+                mCrossSwipeArchiveLeftContainer.setVisibility(GONE);
             }
-            mSwipeableContainer.setBackgroundResource(R.drawable.swipe_shadow_drag);
         }
     }
 
-    public void onSwipeComplete() {
+    public void onSwipeComplete(boolean isLeft) {
         final String conversationId = mData.getConversationId();
-        UpdateConversationArchiveStatusAction.archiveConversation(conversationId);
+        if (mHostInterface.isArchived()) {
+            UpdateConversationArchiveStatusAction.unarchiveConversation(conversationId);
+            BugleAnalytics.logEvent("SMS_Messages_Unarchive", true, "from",
+                    isLeft ? "slide_left" : "slide_right");
+        } else {
+            UpdateConversationArchiveStatusAction.archiveConversation(conversationId);
+            BugleAnalytics.logEvent("SMS_Messages_Archive", true, "from",
+                    isLeft ? "slide_left" : "slide_right");
+        }
 
-        final Runnable undoRunnable = () -> UpdateConversationArchiveStatusAction.unarchiveConversation(conversationId);
-        final String message = getResources().getString(R.string.archived_toast_message, 1);
-        UiUtils.showSnackBar(getContext(), getRootView(), message, undoRunnable,
+        final int textId = !mHostInterface.isArchived() ? R.string.archived_toast_message : R.string.unarchived_toast_message;
+        final Runnable undoRunnable = () -> {
+            if (mHostInterface.isArchived()) {
+                UpdateConversationArchiveStatusAction.archiveConversation(conversationId);
+                BugleAnalytics.logEvent("SMS_Messages_Unarchive_Undo", true);
+            } else {
+                UpdateConversationArchiveStatusAction.unarchiveConversation(conversationId);
+                BugleAnalytics.logEvent("SMS_Messages_Archive_Undo", true);
+            }
+        };
+        final String message = getResources().getString(textId, 1);
+        UiUtils.showSnackBar(UiUtils.getActivity(this), getRootView(), message, undoRunnable,
                 SnackBar.Action.SNACK_BAR_UNDO,
                 mHostInterface.getSnackBarInteractions());
     }

@@ -727,4 +727,7 @@
     <string name="backup_local_summary">yerel depolama yedekle</string>
     <string name="backup_free_success">Bedava Uzay Başarıyla</string>
     <string name="restore_downloading">İndiriliyor...</string>
+
+    <string name="action_unarchive">"Arşivden kaldır"</string>
+    <string name="action_archive">"Arşivle"</string>
 </resources>

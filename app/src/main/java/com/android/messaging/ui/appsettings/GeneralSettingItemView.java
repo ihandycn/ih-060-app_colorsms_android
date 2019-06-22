@@ -10,9 +10,10 @@ import android.support.annotation.IntDef;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
 import android.util.AttributeSet;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
-import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewStub;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -21,8 +22,9 @@ import android.widget.TextView;
 
 import com.android.messaging.R;
 import com.android.messaging.ui.customize.PrimaryColors;
+import com.superapps.util.Dimensions;
 
-public class SettingItemView extends FrameLayout {
+public class GeneralSettingItemView extends BaseItemView {
     public static final int SWITCH = 1;
     public static final int NORMAL = 3;
     public static final int WITH_TRIANGLE = 2;
@@ -31,65 +33,32 @@ public class SettingItemView extends FrameLayout {
     @interface SettingViewType {
     }
 
-    public interface OnSettingItemClickListener {
-        void onClick();
-    }
-
     private int mViewType;
 
-    private TextView mTitleView, mSummaryView;
-    private ImageView mIconView;
     private Switch mSwitchView;
     private ImageView mTriangleView;
-    private OnSettingItemClickListener mListener;
 
-    private View mRootView;
-
-    public SettingItemView(Context context) {
+    public GeneralSettingItemView(Context context) {
         this(context, null);
     }
 
-    public SettingItemView(Context context, @Nullable AttributeSet attrs) {
+    public GeneralSettingItemView(Context context, @Nullable AttributeSet attrs) {
         this(context, attrs, 0);
     }
 
-    public SettingItemView(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
+    public GeneralSettingItemView(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
-        initView(context, attrs);
     }
 
-    private void initView(Context context, AttributeSet attrs) {
-
+    @Override
+    protected void initView(Context context, AttributeSet attrs) {
+        super.initView(context, attrs);
         final LayoutInflater layoutInflater = LayoutInflater.from(context);
 
-        mRootView = layoutInflater.inflate(R.layout.setting_item_layout, this);
-        mTitleView = findViewById(R.id.title);
-        mSummaryView = findViewById(R.id.summary);
-        mIconView = findViewById(R.id.icon);
-
         TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.SettingItemView);
-
-        int titleRes = a.getResourceId(R.styleable.SettingItemView_title, 0);
-        if (titleRes != 0) {
-            mTitleView.setText(getResources().getString(titleRes));
-        }
-
-        int summaryRes = a.getResourceId(R.styleable.SettingItemView_summary, 0);
-        if (summaryRes != 0) {
-            mSummaryView.setText(getResources().getString(summaryRes));
-        } else {
-            mSummaryView.setVisibility(GONE);
-        }
-
-        int iconRes = a.getResourceId(R.styleable.SettingItemView_icon, 0);
-        if (iconRes != 0) {
-            mIconView.setImageResource(iconRes);
-        } else {
-            mIconView.setVisibility(GONE);
-        }
-
         int type = a.getInt(R.styleable.SettingItemView_type, 0);
         a.recycle();
+
         if (mViewType > 0) {
             type = mViewType;
         }
@@ -105,9 +74,10 @@ public class SettingItemView extends FrameLayout {
             final ViewGroup widgetFrame = mRootView.findViewById(R.id.widget_frame);
             if (widgetFrame != null) {
                 mTriangleView = new ImageView(getContext());
-                mTriangleView.setImageResource(R.drawable.more_icon_settings);
+                mTriangleView.setImageResource(R.drawable.setting_more_icon_new);
                 LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,
                         ViewGroup.LayoutParams.WRAP_CONTENT);
+                params.setMarginEnd(Dimensions.pxFromDp(7));
                 widgetFrame.addView(mTriangleView, params);
             }
         }
@@ -131,7 +101,9 @@ public class SettingItemView extends FrameLayout {
             if (mSwitchView != null) {
                 boolean isChecked = !mSwitchView.isChecked();
                 mSwitchView.setChecked(isChecked);
-                toggleSwitchViewColorFilter(isChecked);
+                if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
+                    toggleSwitchViewColorFilter(isChecked);
+                }
             }
 
             if (mListener != null) {
@@ -199,54 +171,27 @@ public class SettingItemView extends FrameLayout {
     public void setChecked(boolean isChecked) {
         if (mViewType == SWITCH && mSwitchView != null) {
             mSwitchView.setChecked(isChecked);
-            toggleSwitchViewColorFilter(isChecked);
-        }
-    }
-
-    public void setTitle(String title) {
-        mTitleView.setText(title);
-    }
-
-    public void setSummary(String summary) {
-        if (TextUtils.isEmpty(summary)) {
-            mSummaryView.setVisibility(GONE);
-        } else {
-            if (mSummaryView.getVisibility() != VISIBLE) {
-                mSummaryView.setVisibility(VISIBLE);
+            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
+                toggleSwitchViewColorFilter(isChecked);
             }
-            mSummaryView.setText(summary);
         }
     }
 
-    public void setIcon(@DrawableRes int drawableRes) {
-        mIconView.setImageResource(drawableRes);
-    }
-
+    @Override
     public void setEnable(boolean clickable) {
         super.setEnabled(clickable);
         if (!clickable) {
             if (mSwitchView != null) {
                 mSwitchView.setEnabled(false);
             }
-            mTitleView.setTextColor(0xffacaeb5);
-            mSummaryView.setTextColor(0xffacaeb5);
         } else {
             if (mSwitchView != null) {
                 mSwitchView.setEnabled(true);
             }
-            mTitleView.setTextColor(0xff222327);
-            mSummaryView.setTextColor(0xff56575c);
         }
-    }
-
-    public void setOnItemClickListener(OnSettingItemClickListener listener) {
-        mListener = listener;
     }
 
     private void toggleSwitchViewColorFilter(boolean isChecked) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            return;
-        }
         if (isChecked) {
             mSwitchView.getThumbDrawable().setColorFilter(PrimaryColors.getPrimaryColor(), PorterDuff.Mode.SRC_ATOP);
             mSwitchView.getTrackDrawable().setColorFilter(PrimaryColors.getPrimaryColor(), PorterDuff.Mode.SRC_ATOP);

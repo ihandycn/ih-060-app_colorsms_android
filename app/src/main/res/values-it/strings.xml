@@ -733,4 +733,7 @@
     <string name="backup_local_summary">Eseguire il backup di archiviazione locale</string>
     <string name="backup_free_success">Fino Spazio libero con successo</string>
     <string name="restore_downloading">Download in corso...</string>
+
+    <string name="action_unarchive">"Annulla archiviazione"</string>
+    <string name="action_archive">"Archivio"</string>
 </resources>

@@ -210,4 +210,6 @@
     <dimen name="pickerview_topbar_title_textsize">21sp</dimen>
     <!-- 选项文字大小 需要配合 bools.xml 的 pickerview_customTextSize 为 true 才有效果-->
     <dimen name="pickerview_textsize">24sp</dimen>
+
+    <dimen name="conversation_item_view_swipe_padding">15dp</dimen>
 </resources>

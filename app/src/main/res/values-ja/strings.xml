@@ -688,6 +688,7 @@
 	<string name="theme_coming">その他のテーマは近日公開...</string>
 	<string name="menu_invite_friends">友人を招待する</string>
 	<string name="invite_friends_now">今すぐ招待する</string>
+
 	<string name="backup_banner_guide_title">%1$d件のメッセージがバックアップしておらず保護されていません。</string>
 	<string name="backup_guide_dialog_first_content">携帯電話が故障したり失くなる前にメッセージをバックアップしましょう。</string>
 	<string name="backup_guide_dialog_second_content">%1$d件のメッセージが保護されていません。</string>
@@ -733,4 +734,7 @@
     <string name="invite_friends_invite_cancel_button">キャンセル</string>
     <string name="privacy_mode_conversation_name">連絡先</string>
     <string name="contacts">連絡先</string>
+
+    <string name="action_unarchive">"アーカイブ解除"</string>
+    <string name="action_archive">"アーカイブ"</string>
 </resources>

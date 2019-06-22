@@ -340,6 +340,8 @@ public class ConversationListFragment extends Fragment implements ConversationLi
             }
         });
 
+        mRecyclerView.addOnItemTouchListener(new ConversationListSwipeHelper(mRecyclerView));
+
         if (savedInstanceState != null) {
             mListState = savedInstanceState.getParcelable(SAVED_INSTANCE_STATE_LIST_VIEW_STATE_KEY);
         }
@@ -696,21 +698,30 @@ public class ConversationListFragment extends Fragment implements ConversationLi
         if (conversationFirstUpdated) {
             conversationFirstUpdated = false;
             boolean hasPinConversation = false;
+            int archivedCount = 0;
             if (!dataList.isEmpty()) {
                 for (Object object : dataList) {
                     if (object instanceof ConversationListItemData) {
                         ConversationListItemData itemData = (ConversationListItemData) object;
+                        if (itemData.getIsArchived()) {
+                            archivedCount++;
+                        }
                         if (itemData.isPinned()) {
                             hasPinConversation = true;
-                            break;
                         }
                     }
                 }
                 changeTopBackupGuideState();
             }
-            HSBundle hsBundle = new HSBundle();
-            hsBundle.putBoolean(ConversationListActivity.HAS_PIN_CONVERSATION, hasPinConversation);
-            HSGlobalNotificationCenter.sendNotification(ConversationListActivity.FIRST_LOAD, hsBundle);
+
+            if (mArchiveMode) {
+                BugleAnalytics.logEvent("Archive_Homepage_Show", true,
+                        "num", String.valueOf(archivedCount));
+            } else {
+                HSBundle hsBundle = new HSBundle();
+                hsBundle.putBoolean(ConversationListActivity.HAS_PIN_CONVERSATION, hasPinConversation);
+                HSGlobalNotificationCenter.sendNotification(ConversationListActivity.FIRST_LOAD, hsBundle);
+            }
         }
 
         if (dataList.size() > 0 && mAdapter.hasHeader()) {
@@ -734,7 +745,20 @@ public class ConversationListFragment extends Fragment implements ConversationLi
 
     public void updateUi() {
         mAdapter.notifyDataSetChanged();
+    }
 
+    public void startMultiSelectMode() {
+        if (mArchiveMode || mForwardMessageMode) {
+            return;
+        }
+        mStartNewConversationButton.animate().scaleX(0.5f).scaleY(0.5f).alpha(0).setDuration(200).start();
+    }
+
+    public void exitMultiSelectMode() {
+        if (mArchiveMode || mForwardMessageMode) {
+            return;
+        }
+        mStartNewConversationButton.animate().scaleX(1f).scaleY(1f).alpha(1).setDuration(200).start();
     }
 
     public void hideBackupBannerGuide() {
@@ -851,5 +875,10 @@ public class ConversationListFragment extends Fragment implements ConversationLi
     @Override
     public boolean isSelectionMode() {
         return mHost != null && mHost.isSelectionMode();
+    }
+
+    @Override
+    public boolean isArchived() {
+        return mArchiveMode;
     }
 }

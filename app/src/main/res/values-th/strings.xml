@@ -688,6 +688,7 @@
 	<string name="theme_coming">พบธีมเพิ่มเติมเร็วๆ นี้ …</string>
 	<string name="menu_invite_friends">เชิญเพื่อน</string>
 	<string name="invite_friends_now">เชิญทันที</string>
+
 	<string name="backup_banner_guide_title">%1$d ข้อความไม่ได้รับการปกป้องหากไม่มีการสำรองข้อมูล</string>
 	<string name="backup_guide_dialog_first_content">สำรองข้อมูลข้อความก่อนโทรศัพท์เสียหรือสูญหาย</string>
 	<string name="backup_guide_dialog_second_content">%1$d ข้อความไม่ได้รับการปกป้อง</string>
@@ -733,4 +734,7 @@
     <string name="invite_friends_invite_cancel_button">ยกเลิก</string>
     <string name="privacy_mode_conversation_name">รายชื่อติดต่อ</string>
     <string name="contacts">รายชื่อติดต่อ</string>
+
+    <string name="action_unarchive">"ยกเลิกการเก็บถาวร"</string>
+    <string name="action_archive">"เก็บถาวร"</string>
 </resources>

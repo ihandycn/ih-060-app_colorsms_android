@@ -740,4 +740,7 @@
     <string name="backup_local_summary">Fazer backup no armazenamento local</string>
     <string name="backup_free_success">Liberte espaço com sucesso</string>
     <string name="restore_downloading">Baixando...</string>
+
+    <string name="action_unarchive">"Desarquivar"</string>
+    <string name="action_archive">"Arquivar"</string>
 </resources>

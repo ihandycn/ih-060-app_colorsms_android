@@ -243,7 +243,9 @@
     <!-- Action menu title for deleting selected conversations in conversation list -->
     <string name="action_delete">Delete</string>
     <!-- Action menu title for archiving selected conversations in conversation list -->
+    <string name="action_archive">Archive</string>
     <!-- Action menu title for unarchiving selected conversations in conversation list -->
+    <string name="action_unarchive">Unarchive</string>
     <!-- Action menu title for turning off notification for the selected conversations in conversation list -->
     <string name="action_notification_off">Turn off notifications</string>
     <!-- Action menu title for turning on notification for the selected conversations in conversation list -->
@@ -1214,19 +1216,20 @@
         <item quantity="other">%s Seconds</item>
     </plurals>
 
+    <!--invite friends-->
     <string name="menu_invite_friends">Invite Friends</string>
     <string name="invite_friends_now">INVITE NOW</string>
-
     <string name="invite_friends_invite">INVITE BY SMS (%d)</string>
     <string name="invite_friends_add">ADD (%d)</string>
     <string name="invite_friends_add_friends">Add</string>
-
     <string name="invite_friends_default_back_to_main_page_title">Invite Friends</string>
+
     <string name="invite_friends_default_back_to_main_page_description" translatable="false">Is it amazing? You can customize everywhere you want! Tell your friends now!</string>
     <string name="invite_friends_default_apply_theme_description" translatable="false">Love these awesome themes? Tell your friends and let them join you!</string>
     <string name="invite_friends_default_send_sms_description" translatable="false">Well done, your message was sent successfully! Want to share Color SMS with your friends?</string>
 
     <string name="invite_friends_invite_default_content" translatable="false">I’m using Color SMS, an awesome SMS app with pretty themes, funny emojis and perfect functions! Come and join us! 😁😏</string>
+
     <string name="invite_friends_invite_cancel_button">Cancel</string>
     <string name="invite_friends_invite_save_button">Save</string>
     <string name="invite_friends_invite_edit_button">Edit</string>
@@ -1300,7 +1303,14 @@
     <string name="backup_banner_guide_title">%1$d messages are unprotected without backup.</string>
     <string name="backup_local_summary">Back up to local storage</string>
     <string name="backup_free_success">Free Up Space Successfully</string>
-    
->>>>>>> develop
+
+    <!--New setting-->
+    <string name="emoji">Emoji</string>
+    <string name="others">Others</string>
+    <string name="about">About</string>
+    <string name="notification_summary">Get notify when receiving messages</string>
+
+    <!--archive-->
+    <string name="archived_conversations">Archived Conversations</string>
 </resources>
 

@@ -736,4 +736,7 @@
     <string name="backup_local_summary">Copia de seguridad en el almacenamiento local</string>
     <string name="backup_free_success">Liberar espacio con éxito</string>
     <string name="restore_downloading">Descargando...</string>
+
+    <string name="action_unarchive">"No archivar"</string>
+    <string name="action_archive">"Archivar"</string>
 </resources>

@@ -20,6 +20,7 @@ import android.graphics.Point;
 import android.graphics.Rect;
 import android.os.Handler;
 import android.util.DisplayMetrics;
+import android.util.SparseArray;
 import android.view.Gravity;
 import android.view.MotionEvent;
 import android.view.View;
@@ -46,17 +47,18 @@ import java.util.List;
 
 public class SnackBarManager {
 
-    private static SnackBarManager sInstance;
+    private static SparseArray<SnackBarManager> sManagerList = new SparseArray<>();
 
-    public static SnackBarManager get() {
-        if (sInstance == null) {
+    public static SnackBarManager get(Context context) {
+        if (sManagerList.get(System.identityHashCode(context)) == null) {
             synchronized (SnackBarManager.class) {
-                if (sInstance == null) {
-                    sInstance = new SnackBarManager();
+                if (sManagerList.get(System.identityHashCode(context)) == null) {
+                    SnackBarManager manager = new SnackBarManager();
+                    sManagerList.put(System.identityHashCode(context), manager);
                 }
             }
         }
-        return sInstance;
+        return sManagerList.get(System.identityHashCode(context));
     }
 
     private final Runnable mDismissRunnable = new Runnable() {
@@ -216,6 +218,9 @@ public class SnackBarManager {
                 } catch (Throwable e) {
                     // PopupWindow.dismiss() will fire an IllegalArgumentException if the activity
                     // has already ended while we were animating
+                    synchronized (SnackBarManager.class) {
+                        sManagerList.removeAt(sManagerList.indexOfValue(SnackBarManager.this));
+                    }
                 }
 
                 mPopupWindow = null;
@@ -227,6 +232,10 @@ public class SnackBarManager {
                     final SnackBar localNextSnackBar = mNextSnackBar;
                     mNextSnackBar = null;
                     show(localNextSnackBar);
+                } else {
+                    synchronized (SnackBarManager.class) {
+                        sManagerList.removeAt(sManagerList.indexOfValue(SnackBarManager.this));
+                    }
                 }
             }
         });

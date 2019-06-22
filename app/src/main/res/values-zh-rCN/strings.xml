@@ -658,4 +658,7 @@
     <string name="invite_friends_invite_cancel_button">取消</string>
     <string name="contacts">联系人</string>
     <string name="privacy_mode_conversation_name">联系人</string>
+
+    <string name="action_unarchive">"取消归档"</string>
+    <string name="action_archive">"归档"</string>
 </resources>

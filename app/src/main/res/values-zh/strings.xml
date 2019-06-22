@@ -648,6 +648,7 @@
     <string name="theme_coming">更多主題即將推出...</string>
     <string name="menu_invite_friends">邀請好友</string>
     <string name="invite_friends_now">邀請</string>
+
     <string name="sms_emoji_add_more">更多表情</string>
     <string name="sms_emoji_recent_empty_description">暫無收藏</string>
 
@@ -659,4 +660,7 @@
     <string name="invite_friends_invite_cancel_button">取消</string>
     <string name="contacts">聯繫人</string>
     <string name="privacy_mode_conversation_name">聯繫人</string>
+
+    <string name ="action_unarchive">"取消歸檔"</string>
+    <string name ="action_archive">"歸檔"</string>
 </resources>

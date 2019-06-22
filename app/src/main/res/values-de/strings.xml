@@ -733,4 +733,7 @@
     <string name="backup_local_summary">Sichern Sie im lokalen Speicher</string>
     <string name="backup_free_success">Erfolgreich Speicherplatz freigeben</string>
     <string name="restore_downloading">Wird heruntergeladen…</string>
+
+    <string name="action_unarchive">"Aus Archiv entfernen"</string>
+    <string name="action_archive">"Archivieren"</string>
 </resources>
