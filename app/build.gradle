@@ -1,4 +1,6 @@
 apply plugin: 'com.android.application'
+apply plugin: 'kotlin-android-extensions'
+apply plugin: 'kotlin-android'
 apply plugin: 'com.jakewharton.hugo'
 
 repositories {
@@ -71,6 +73,8 @@ dependencies {
     implementation project(':libframesequence')
     implementation project(':libSuperApps')
     implementation project(':libBlockCanary')
+    implementation project(':libgiphy')
+
 
     implementation 'com.android.support:multidex:1.0.3'
     implementation "com.android.support:design:${rootProject.ext.supportLibVersion}"
@@ -111,6 +115,8 @@ dependencies {
     implementation "net.appcloudbox.goldeneye:bubble_a:2019.06.05.001"
     implementation "me.leolin:ShortcutBadger:1.1.22@aar"
     implementation 'net.appcloudbox.autopilot:libAutoPilot.gm:5.5.1.gm'
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+
 
 //     "D/DebugDB: Open http://xxxxxxxx:8080 in your browser" will appear in your logcat,
 //     open it in your browser to see out project tables. Please only  use it to see the table,

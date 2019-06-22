@@ -109,6 +109,7 @@ public class EmojiPickerFragment extends Fragment implements INotificationObserv
         Map<EmojiPackageType, List<EmojiPackageInfo>> data = new HashMap<>();
         data.put(EmojiPackageType.EMOJI, EmojiDataProducer.getInitEmojiData(activity));
         data.put(EmojiPackageType.STICKER, EmojiDataProducer.getInitStickerData(activity));
+        data.put(EmojiPackageType.GIF, EmojiDataProducer.getInitEmojiData(activity));
         mEmojiPackagePagerAdapter.setData(data);
 
         mEmojiPager = view.findViewById(R.id.emoji_pager);
@@ -190,6 +191,7 @@ public class EmojiPickerFragment extends Fragment implements INotificationObserv
     private List<EmojiPackageInfo> initMainTab() {
         Activity activity = getActivity();
         List<EmojiPackageInfo> result = new ArrayList<>();
+
         EmojiPackageInfo info = new EmojiPackageInfo();
         info.mEmojiPackageType = EmojiPackageType.EMOJI;
         info.mName = "emoji";
@@ -211,6 +213,14 @@ public class EmojiPickerFragment extends Fragment implements INotificationObserv
                 "/" + activity.getResources().getIdentifier("emoji_tab_sticker_selected_icon", "drawable",
                 activity.getPackageName())).toString();
         result.add(stickerInfo);
+
+        EmojiPackageInfo gifInfo = new EmojiPackageInfo();
+        gifInfo.mName = "gif";
+        gifInfo.mEmojiPackageType = EmojiPackageType.GIF;
+        gifInfo.mTabIconUrl = Uri.parse("android.resource://" + activity.getPackageName() +
+                "/" + activity.getResources().getIdentifier("emoji_ic_hh", "drawable",
+                activity.getPackageName())).toString();
+        result.add(gifInfo);
 
         return result;
     }

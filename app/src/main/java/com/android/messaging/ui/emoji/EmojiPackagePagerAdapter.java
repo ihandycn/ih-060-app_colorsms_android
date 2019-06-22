@@ -31,6 +31,7 @@ public class EmojiPackagePagerAdapter extends PagerAdapter {
     private Context mContext;
     private StickerItemPagerAdapter mStickerAdapter;
     private EmojiItemPagerAdapter mEmojiAdapter;
+    private GiphyItemPagerAdapter mGiphyAdapter;
     private OnEmojiClickListener mOnEmojiClickListener;
 
     private final int DEFAULT_PAGE = 1;
@@ -71,6 +72,7 @@ public class EmojiPackagePagerAdapter extends PagerAdapter {
         View view = LayoutInflater.from(container.getContext()).inflate(R.layout.emoji_page_item_layout, container, false);
         ViewPagerFixed itemPager = view.findViewById(R.id.emoji_item_pager);
         TabLayout itemTabLayout = view.findViewById(R.id.emoji_item_tab_layout);
+
         AbstractEmojiItemPagerAdapter adapter = getPagerAdapter(info);
         adapter.setTabLayout(itemTabLayout);
         itemPager.setAdapter(adapter);
@@ -110,6 +112,7 @@ public class EmojiPackagePagerAdapter extends PagerAdapter {
                 EmojiStoreActivity.start(container.getContext());
             });
         }
+
         return view;
     }
 
@@ -119,6 +122,8 @@ public class EmojiPackagePagerAdapter extends PagerAdapter {
                 return mStickerAdapter;
             case EMOJI:
                 return mEmojiAdapter;
+            case GIF:
+                return mGiphyAdapter;
             default:
                 throw new IllegalStateException("There is no this type: " + info.mEmojiPackageType + "!!!");
         }
@@ -131,8 +136,10 @@ public class EmojiPackagePagerAdapter extends PagerAdapter {
         if (data.containsKey(EmojiPackageType.EMOJI)) {
             mEmojiAdapter = new EmojiItemPagerAdapter(mContext, data.get(EmojiPackageType.EMOJI), mOnEmojiClickListener);
         }
+        if(data.containsKey(EmojiPackageType.GIF)) {
+            mGiphyAdapter = new GiphyItemPagerAdapter(mContext, data.get(EmojiPackageType.GIF), mOnEmojiClickListener);
+        }
     }
-
 
     @Override
     public void destroyItem(@NonNull ViewGroup container, int position, @NonNull Object object) {
