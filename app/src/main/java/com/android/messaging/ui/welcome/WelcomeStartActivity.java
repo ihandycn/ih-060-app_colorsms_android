@@ -544,7 +544,7 @@ public class WelcomeStartActivity extends AppCompatActivity implements View.OnCl
     @Override
     public void onActivityResult(final int requestCode, final int resultCode, final Intent data) {
         if (requestCode == REQUEST_SET_DEFAULT_SMS_APP) {
-            if (DefaultSMSUtils.isDefaultSmsApp()) {
+            if (DefaultSMSUtils.isDefaultSmsApp(true)) {
                 mHandler.sendEmptyMessageDelayed(EVENT_RETRY_NAVIGATION, 100);
             } else {
                 Intent intent = new Intent(WelcomeStartActivity.this, WelcomeSetAsDefaultActivity.class);

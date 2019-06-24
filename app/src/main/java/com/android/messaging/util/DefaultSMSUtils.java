@@ -3,7 +3,6 @@ package com.android.messaging.util;
 import android.provider.Telephony;
 
 import com.ihs.app.framework.HSApplication;
-import com.ihs.commons.utils.HSLog;
 
 import hugo.weaving.DebugLog;
 
@@ -25,6 +24,17 @@ public class DefaultSMSUtils {
     public static boolean isDefaultSmsApp() {
         if (!OsUtil.isAtLeastKLP()) {
             return true;
+        }
+        return sIsDefaultSms;
+    }
+
+    public static boolean isDefaultSmsApp(boolean forceRefresh) {
+        if (!OsUtil.isAtLeastKLP()) {
+            return true;
+        }
+        if (forceRefresh) {
+            final String configuredApplication = Telephony.Sms.getDefaultSmsPackage(HSApplication.getContext());
+            sIsDefaultSms = HSApplication.getContext().getPackageName().equals(configuredApplication);
         }
         return sIsDefaultSms;
     }
