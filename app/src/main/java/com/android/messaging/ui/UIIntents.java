@@ -92,9 +92,6 @@ public abstract class UIIntents {
     public static final String UI_INTENT_EXTRA_PER_SUBSCRIPTION_SETTING_TITLE =
             "per_sub_setting_title";
 
-    // Is application settings launched as the top level settings activity?
-    public static final String UI_INTENT_EXTRA_TOP_LEVEL_SETTINGS = "top_level_settings";
-
     // Sending attachment uri from widget
     public static final String UI_INTENT_EXTRA_ATTACHMENT_URI = "attachment_uri";
 
@@ -174,7 +171,7 @@ public abstract class UIIntents {
     /**
      * Launch an activity to change settings.
      */
-    public abstract void launchSettingsActivity(final Context context);
+    public abstract void launchSettingsSimSelectActivity(final Context context);
 
     /**
      * Launch an activity to add a contact with a given destination.
@@ -252,13 +249,8 @@ public abstract class UIIntents {
 
     /**
      * Launch an activity to show general app settings
-     *
-     * @param topLevel indicates whether the app settings is launched as the top-level settings
-     *                 activity (instead of SettingsActivity which shows a collapsed view of the app
-     *                 settings + one settings item per subscription). This is true when there's only one
-     *                 active SIM in the system so we can show this activity directly.
      */
-    public abstract void launchApplicationSettingsActivity(Context context, boolean topLevel);
+    public abstract void launchSettingsActivity(Context context);
 
     /**
      * Launch an activity to show per-subscription settings

@@ -17,7 +17,7 @@ import android.view.WindowManager;
 import android.widget.ImageView;
 
 import com.android.messaging.R;
-import com.android.messaging.ui.appsettings.SettingGeneralActivity;
+import com.android.messaging.ui.appsettings.SettingActivity;
 import com.android.messaging.ui.customize.PrimaryColors;
 import com.android.messaging.ui.emoji.BaseEmojiInfo;
 import com.android.messaging.ui.emoji.EmojiInfo;
@@ -75,16 +75,16 @@ public class SignatureSettingDialog extends DialogFragment {
     @Override
     public void onDestroy() {
         super.onDestroy();
-        if (mActivityReference.get() != null && mActivityReference.get() instanceof SettingGeneralActivity) {
-            ((SettingGeneralActivity) mActivityReference.get()).clearBackPressedListener();
+        if (mActivityReference.get() != null && mActivityReference.get() instanceof SettingActivity) {
+            ((SettingActivity) mActivityReference.get()).clearBackPressedListener();
         }
     }
 
     @Override
     public void dismiss() {
         super.dismiss();
-        if (mActivityReference.get() != null && mActivityReference.get() instanceof SettingGeneralActivity) {
-            ((SettingGeneralActivity) mActivityReference.get()).clearBackPressedListener();
+        if (mActivityReference.get() != null && mActivityReference.get() instanceof SettingActivity) {
+            ((SettingActivity) mActivityReference.get()).clearBackPressedListener();
         }
     }
 
@@ -98,8 +98,8 @@ public class SignatureSettingDialog extends DialogFragment {
         }
         root = inflater.inflate(R.layout.activity_signature_setting, container, false);
 
-        if (getActivity() instanceof SettingGeneralActivity) {
-            ((SettingGeneralActivity) getActivity()).addBackPressListener(this::onBackPressed);
+        if (getActivity() instanceof SettingActivity) {
+            ((SettingActivity) getActivity()).addBackPressListener(this::onBackPressed);
         }
 
         mEmojiContainer = root.findViewById(R.id.signature_emoji_container);
@@ -126,8 +126,8 @@ public class SignatureSettingDialog extends DialogFragment {
             }
             BugleAnalytics.logEvent("SMS_Signature_Change", true, "with_emoji", String.valueOf(hasEmoji));
 
-            if (mActivityReference.get() != null && mActivityReference.get() instanceof SettingGeneralActivity) {
-                ((SettingGeneralActivity) mActivityReference.get()).refreshSignature();
+            if (mActivityReference.get() != null && mActivityReference.get() instanceof SettingActivity) {
+                ((SettingActivity) mActivityReference.get()).refreshSignature();
             }
             dismiss();
         });

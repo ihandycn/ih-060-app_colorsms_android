@@ -25,7 +25,6 @@ import com.android.messaging.datamodel.data.SettingsData.SettingsItem;
 import com.android.messaging.ui.UIIntents;
 import com.android.messaging.util.Assert;
 import com.android.messaging.util.BugleAnalytics;
-import com.android.messaging.util.PhoneUtils;
 import com.android.messaging.util.UiUtils;
 
 import java.util.ArrayList;
@@ -38,36 +37,27 @@ import java.util.List;
  * (e.g. "General settings") will open the detail settings activity (ApplicationSettingsActivity
  * in this case).
  */
-public class SettingsActivity extends BaseActivity {
+public class SettingsSimSelectActivity extends BaseActivity {
 
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        // Directly open the detailed settings page as the top-level settings activity if this is
-        // not a multi-SIM device.
-        if (PhoneUtils.getDefault().getActiveSubscriptionCount() <= 1) {
-            UIIntents.get().launchApplicationSettingsActivity(this, true /* topLevel */);
-            finish();
-            BugleAnalytics.logEvent("Setting_Show_Single_SIM");
-        } else {
-            setContentView(R.layout.activity_setting);
+        setContentView(R.layout.activity_setting);
 
-            Toolbar toolbar = findViewById(R.id.toolbar);
-            toolbar.setTitle("");
-            TextView title = toolbar.findViewById(R.id.toolbar_title);
-            UiUtils.setTitleBarBackground(toolbar, this);
-            title.setText(getString(R.string.settings_activity_title));
-            setSupportActionBar(toolbar);
-            if (getSupportActionBar() != null) {
-                getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-            }
-            getSupportActionBar().setDisplayShowHomeEnabled(true);
-
-            getFragmentManager().beginTransaction()
-                    .replace(R.id.setting_fragment_container, new SettingsFragment())
-                    .commit();
-            BugleAnalytics.logEvent("Setting_Show_Dual_SIM");
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        toolbar.setTitle("");
+        TextView title = toolbar.findViewById(R.id.toolbar_title);
+        UiUtils.setTitleBarBackground(toolbar, this);
+        title.setText(getString(R.string.advanced_settings_activity_title));
+        setSupportActionBar(toolbar);
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         }
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
+
+        getFragmentManager().beginTransaction()
+                .replace(R.id.setting_fragment_container, new SettingsFragment())
+                .commit();
     }
 
     @Override
@@ -132,12 +122,12 @@ public class SettingsActivity extends BaseActivity {
             @Override
             public @NonNull
             View getView(final int position, final View convertView, final ViewGroup parent) {
-                SettingItemView itemView;
+                GeneralSettingItemView itemView;
                 if (convertView != null) {
-                    itemView = (SettingItemView) convertView;
+                    itemView = (GeneralSettingItemView) convertView;
                 } else {
                     final LayoutInflater inflater = LayoutInflater.from(getContext());
-                    itemView = (SettingItemView) inflater.inflate(
+                    itemView = (GeneralSettingItemView) inflater.inflate(
                             R.layout.settings_item_view, parent, false);
                 }
                 final SettingsItem item = getItem(position);
@@ -146,17 +136,12 @@ public class SettingsActivity extends BaseActivity {
                 if (!TextUtils.isEmpty(summaryText)) {
                     itemView.setSummary(summaryText);
                 }
-                itemView.setViewType(SettingItemView.WITH_TRIANGLE);
+                itemView.setViewType(GeneralSettingItemView.WITH_TRIANGLE);
                 itemView.setOnItemClickListener(() -> {
                     if (item == null) {
                         return;
                     }
                     switch (item.getType()) {
-                        case SettingsItem.TYPE_GENERAL_SETTINGS:
-                            UIIntents.get().launchApplicationSettingsActivity(getActivity(),
-                                    false /* topLevel */);
-                            break;
-
                         case SettingsItem.TYPE_PER_SUBSCRIPTION_SETTINGS:
                             UIIntents.get().launchPerSubscriptionSettingsActivity(getActivity(),
                                     item.getSubId(), item.getActivityTitle());

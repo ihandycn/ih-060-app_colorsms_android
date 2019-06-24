@@ -47,7 +47,6 @@ public class SettingsData extends BindableData implements
     }
 
     public static class SettingsItem {
-        public static final int TYPE_GENERAL_SETTINGS = 1;
         public static final int TYPE_PER_SUBSCRIPTION_SETTINGS = 2;
 
         private final String mDisplayName;
@@ -96,12 +95,6 @@ public class SettingsData extends BindableData implements
                     self.getSubscriptionName());
             return new SettingsItem(displayName, displayDetail, displayName,
                     TYPE_PER_SUBSCRIPTION_SETTINGS, self.getSubId());
-        }
-
-        public static SettingsItem createGeneralSettingsItem(final Context context) {
-            return new SettingsItem(context.getString(R.string.general_settings),
-                    null, context.getString(R.string.general_settings_activity_title),
-                    TYPE_GENERAL_SETTINGS, -1);
         }
 
         public static SettingsItem createDefaultMmsSettingsItem(final Context context,
@@ -194,8 +187,6 @@ public class SettingsData extends BindableData implements
     public List<SettingsItem> getSettingsItems() {
         final List<ParticipantData> selfs = mSelfParticipantsData.getSelfParticipants(true);
         final List<SettingsItem> settingsItems = new ArrayList<SettingsItem>();
-        // First goes the general settings, followed by per-subscription settings.
-        settingsItems.add(SettingsItem.createGeneralSettingsItem(mContext));
         // For per-subscription settings, show the actual SIM name with phone number if the
         // platorm is at least L-MR1 and there are multiple active SIMs.
         final int activeSubCountExcludingDefault =

@@ -151,9 +151,17 @@
                 android:id="@+id/setting_item_blocked_contacts"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:hideDivideLine="true"
                 app:title="@string/blocked_contacts_title"
                 app:type="withTriangle" />
+
+            <!--Outgoing sounds-->
+            <com.android.messaging.ui.appsettings.GeneralSettingItemView
+                android:id="@+id/setting_advanced_outgoing_sounds"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:hideDivideLine="true"
+                app:title="@string/send_sound_pref_title"
+                app:type="switchView" />
 
             <View style="@style/SettingDividerStyle" />
 

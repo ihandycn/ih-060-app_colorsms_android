@@ -161,7 +161,7 @@
             android:screenOrientation="portrait"
             android:theme="@style/BuglePhotoViewTheme" /> <!-- Settings -->
         <activity
-            android:name=".ui.appsettings.SettingsActivity"
+            android:name=".ui.appsettings.SettingsSimSelectActivity"
             android:configChanges="orientation|screenSize|keyboardHidden"
             android:label="@string/settings_activity_title"
             android:parentActivityName=".ui.conversationlist.ConversationListActivity"
@@ -444,7 +444,7 @@
         <activity
             android:name=".ui.appsettings.ApnSettingsActivity"
             android:configChanges="orientation|screenSize|keyboardHidden"
-            android:parentActivityName=".ui.appsettings.SettingsActivity"
+            android:parentActivityName=".ui.appsettings.SettingsSimSelectActivity"
             android:screenOrientation="portrait"
             android:theme="@style/BugleTheme" />
         <activity
@@ -577,7 +577,7 @@
         <service android:name="android.support.v7.mms.MmsService" />
 
         <activity
-            android:name=".ui.appsettings.SettingGeneralActivity"
+            android:name=".ui.appsettings.SettingActivity"
             android:excludeFromRecents="true"
             android:screenOrientation="portrait"
             android:theme="@style/BaseSettingsActivity" />

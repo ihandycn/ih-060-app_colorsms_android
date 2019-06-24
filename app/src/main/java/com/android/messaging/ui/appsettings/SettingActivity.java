@@ -28,6 +28,7 @@ import com.android.messaging.ui.messagebox.MessageBoxSettings;
 import com.android.messaging.ui.signature.SignatureSettingDialog;
 import com.android.messaging.util.BugleAnalytics;
 import com.android.messaging.util.BuglePrefs;
+import com.android.messaging.util.PhoneUtils;
 import com.android.messaging.util.UiUtils;
 import com.firebase.ui.auth.AuthUI;
 import com.google.firebase.auth.FirebaseAuth;
@@ -39,7 +40,7 @@ import java.util.Collections;
 
 import static android.view.View.GONE;
 
-public class SettingGeneralActivity extends BaseActivity {
+public class SettingActivity extends BaseActivity {
     private static final int REQUEST_CODE_START_RINGTONE_PICKER = 1;
     private static final int RC_SIGN_IN = 12;
 
@@ -52,6 +53,7 @@ public class SettingGeneralActivity extends BaseActivity {
     private GeneralSettingItemView mPrivacyModeView;
     private GeneralSettingItemView mSyncSettingsView;
     private GeneralSettingItemView mSendDelayView;
+    private GeneralSettingItemView mOutgoingSoundView;
 
     private View mNotificationChildrenGroup;
 
@@ -66,15 +68,12 @@ public class SettingGeneralActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_general_setting);
-        final boolean topLevel = getIntent().getBooleanExtra(
-                UIIntents.UI_INTENT_EXTRA_TOP_LEVEL_SETTINGS, false);
 
         Toolbar toolbar = findViewById(R.id.toolbar);
         toolbar.setTitle("");
         UiUtils.setTitleBarBackground(toolbar, this);
         TextView title = toolbar.findViewById(R.id.toolbar_title);
-        title.setText(topLevel ? getString(R.string.settings_activity_title) :
-                getString(R.string.general_settings_activity_title));
+        title.setText(getString(R.string.settings_activity_title));
         setSupportActionBar(toolbar);
         if (getSupportActionBar() != null) {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -131,7 +130,7 @@ public class SettingGeneralActivity extends BaseActivity {
 
                 }
             });
-            UiUtils.showDialogFragment(SettingGeneralActivity.this, dialog);
+            UiUtils.showDialogFragment(SettingActivity.this, dialog);
         });
 
         //send delay
@@ -151,7 +150,7 @@ public class SettingGeneralActivity extends BaseActivity {
 
                 }
             });
-            UiUtils.showDialogFragment(SettingGeneralActivity.this, dialog);
+            UiUtils.showDialogFragment(SettingActivity.this, dialog);
             BugleAnalytics.logEvent("Settings_SendDelay_Click");
         });
 
@@ -159,9 +158,7 @@ public class SettingGeneralActivity extends BaseActivity {
         //signature
         mSignature = findViewById(R.id.setting_item_signature);
         refreshSignature();
-        mSignature.setOnItemClickListener(() -> {
-            UiUtils.showDialogFragment(this, new SignatureSettingDialog());
-        });
+        mSignature.setOnItemClickListener(() -> UiUtils.showDialogFragment(this, new SignatureSettingDialog()));
 
         //sounds
         mSoundView = findViewById(R.id.setting_item_sound);
@@ -199,16 +196,20 @@ public class SettingGeneralActivity extends BaseActivity {
 
         //advances
         GeneralSettingItemView mAdvancedView = findViewById(R.id.setting_item_advanced);
-        if (topLevel) {
-            mAdvancedView.setOnItemClickListener(() -> {
-                BugleAnalytics.logEvent("SMS_Settings_Advanced_Click", true);
+        mAdvancedView.setOnItemClickListener(() -> {
+            BugleAnalytics.logEvent("SMS_Settings_Advanced_Click", true);
+
+            if (PhoneUtils.getDefault().getActiveSubscriptionCount() <= 1) {
                 Intent intent = UIIntents.get().getAdvancedSettingsIntent(this);
                 startActivity(intent);
                 overridePendingTransition(R.anim.slide_in_from_right_and_fade, R.anim.anim_null);
-            });
-        } else {
-            mAdvancedView.setVisibility(View.GONE);
-        }
+            } else {
+                UIIntents.get().launchSettingsSimSelectActivity(this);
+            }
+        });
+
+        //outgoing message sounds
+        setUpOutgoingSoundView();
 
         //feedback
         ((GeneralSettingItemView) findViewById(R.id.setting_item_feedback)).setOnItemClickListener(
@@ -336,7 +337,7 @@ public class SettingGeneralActivity extends BaseActivity {
                         RC_SIGN_IN);
                 BugleAnalytics.logEvent("SyncSettings_Icon_Click", "type", "loggedOut");
             } else {
-                new BaseAlertDialog.Builder(SettingGeneralActivity.this)
+                new BaseAlertDialog.Builder(SettingActivity.this)
                         .setTitle(R.string.firebase_login_out_title)
                         .setPositiveButton(R.string.firebase_login_out, (dialog, which) -> {
                             FirebaseAuth.getInstance().signOut();
@@ -350,6 +351,19 @@ public class SettingGeneralActivity extends BaseActivity {
                 BugleAnalytics.logEvent("SyncSettings_LogOut_PopUp_Show");
                 BugleAnalytics.logEvent("SyncSettings_Icon_Click", "type", "loggedIn");
             }
+        });
+    }
+
+    private void setUpOutgoingSoundView() {
+        mOutgoingSoundView = findViewById(R.id.setting_advanced_outgoing_sounds);
+        final String prefKey = getString(R.string.send_sound_pref_key);
+        final boolean defaultValue = getResources().getBoolean(
+                R.bool.send_sound_pref_default);
+        mOutgoingSoundView.setChecked(prefs.getBoolean(prefKey, defaultValue));
+        mOutgoingSoundView.setOnItemClickListener(() -> {
+            prefs.putBoolean(prefKey, mOutgoingSoundView.isChecked());
+            GeneralSettingSyncManager.uploadOutgoingMessageSoundsSwitchToServer(mOutgoingSoundView.isChecked());
+            BugleAnalytics.logEvent("SMS_Settings_MessageSounds_Click", true);
         });
     }
 
@@ -407,7 +421,7 @@ public class SettingGeneralActivity extends BaseActivity {
         ringtonePickerIntent.putExtra(RingtoneManager.EXTRA_RINGTONE_SHOW_SILENT, true);
         ringtonePickerIntent.putExtra(RingtoneManager.EXTRA_RINGTONE_TYPE, RingtoneManager.TYPE_NOTIFICATION);
         ringtonePickerIntent.putExtra(RingtoneManager.EXTRA_RINGTONE_TITLE, getTitle()); //title
-        Navigations.startActivityForResultSafely(SettingGeneralActivity.this,
+        Navigations.startActivityForResultSafely(SettingActivity.this,
                 ringtonePickerIntent, REQUEST_CODE_START_RINGTONE_PICKER);
         overridePendingTransition(R.anim.slide_in_from_right_and_fade, R.anim.anim_null);
     }
