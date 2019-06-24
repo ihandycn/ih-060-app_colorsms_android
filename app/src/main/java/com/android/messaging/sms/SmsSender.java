@@ -109,9 +109,7 @@ public class SmsSender {
                 case Activity.RESULT_OK:
                     return FAILURE_LEVEL_NONE;
                 case SmsManager.RESULT_ERROR_NO_SERVICE:
-                    return FAILURE_LEVEL_TEMPORARY;
                 case SmsManager.RESULT_ERROR_RADIO_OFF:
-                    return FAILURE_LEVEL_PERMANENT;
                 case SmsManager.RESULT_ERROR_GENERIC_FAILURE:
                     return FAILURE_LEVEL_PERMANENT;
                 default: {

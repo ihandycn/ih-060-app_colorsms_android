@@ -390,12 +390,14 @@ public class ConversationMessageView extends RelativeLayout implements View.OnCl
 
             case MessageData.BUGLE_STATUS_OUTGOING_YET_TO_SEND:
             case MessageData.BUGLE_STATUS_OUTGOING_SENDING:
-                statusResId = R.string.message_status_sending;
+//                statusResId = R.string.message_status_sending;
+                statusText = mData.getFormattedReceivedTimeStamp();
                 break;
 
             case MessageData.BUGLE_STATUS_OUTGOING_RESENDING:
             case MessageData.BUGLE_STATUS_OUTGOING_AWAITING_RETRY:
-                statusResId = R.string.message_status_send_retrying;
+//                statusResId = R.string.message_status_send_retrying;
+                statusText = mData.getFormattedReceivedTimeStamp();
                 break;
 
             case MessageData.BUGLE_STATUS_OUTGOING_FAILED_EMERGENCY_NUMBER:

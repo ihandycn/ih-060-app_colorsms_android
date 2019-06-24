@@ -231,10 +231,11 @@ public class ConversationListItemData {
     }
 
     public final boolean getIsSendRequested() {
-        return (mMessageStatus == MessageData.BUGLE_STATUS_OUTGOING_YET_TO_SEND ||
-                mMessageStatus == MessageData.BUGLE_STATUS_OUTGOING_AWAITING_RETRY ||
-                mMessageStatus == MessageData.BUGLE_STATUS_OUTGOING_SENDING ||
-                mMessageStatus == MessageData.BUGLE_STATUS_OUTGOING_RESENDING);
+//        return (mMessageStatus == MessageData.BUGLE_STATUS_OUTGOING_YET_TO_SEND ||
+//                mMessageStatus == MessageData.BUGLE_STATUS_OUTGOING_AWAITING_RETRY ||
+//                mMessageStatus == MessageData.BUGLE_STATUS_OUTGOING_SENDING ||
+//                mMessageStatus == MessageData.BUGLE_STATUS_OUTGOING_RESENDING);
+        return false;
     }
 
     public boolean getIsMessageTypeOutgoing() {
