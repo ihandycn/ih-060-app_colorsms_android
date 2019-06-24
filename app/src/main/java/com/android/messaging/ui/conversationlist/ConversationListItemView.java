@@ -252,7 +252,11 @@ public class ConversationListItemView extends FrameLayout implements OnClickList
             String iconType = AvatarUriUtil.getAvatarType(iconUri);
             if (AvatarUriUtil.TYPE_LOCAL_RESOURCE_URI.equals(iconType)) {
                 mContactBackground.setImageDrawable(null);
+            } else {
+                mContactBackground.setImageDrawable(AvatarBgDrawables.getAvatarBg(false));
             }
+        } else {
+            mContactBackground.setImageDrawable(AvatarBgDrawables.getAvatarBg(false));
         }
         mContactIconView.setImageResourceUri(iconUri, mData.getParticipantContactId(),
                 mData.getParticipantLookupKey(), mData.getOtherParticipantNormalizedDestination(), Color.TRANSPARENT);
