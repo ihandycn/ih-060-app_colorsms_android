@@ -254,7 +254,7 @@ public class EmojiPickerFragment extends Fragment implements INotificationObserv
         gifInfo.mTabIconUrl = Uri.parse("android.resource://" + activity.getPackageName() +
                 "/" + activity.getResources().getIdentifier("emoji_ic_hh", "drawable",
                 activity.getPackageName())).toString();
-        stickerInfo.mTabIconSelectedUrl = Uri.parse("android.resource://" + activity.getPackageName() +
+        gifInfo.mTabIconSelectedUrl = Uri.parse("android.resource://" + activity.getPackageName() +
                 "/" + activity.getResources().getIdentifier("emoji_tab_sticker_selected_icon", "drawable",
                 activity.getPackageName())).toString();
 
