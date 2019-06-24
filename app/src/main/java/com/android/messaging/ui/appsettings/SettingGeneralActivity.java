@@ -24,6 +24,7 @@ import com.android.messaging.ui.BaseAlertDialog;
 import com.android.messaging.ui.BaseDialogFragment;
 import com.android.messaging.ui.UIIntents;
 import com.android.messaging.ui.customize.PrimaryColors;
+import com.android.messaging.ui.emoji.utils.EmojiManager;
 import com.android.messaging.ui.messagebox.MessageBoxSettings;
 import com.android.messaging.ui.signature.SignatureSettingDialog;
 import com.android.messaging.util.BugleAnalytics;
@@ -178,8 +179,18 @@ public class SettingGeneralActivity extends BaseActivity {
         setUpNotificationView();
 
         //emoji
-        ((BaseItemView) findViewById(R.id.setting_item_emoji)).setOnItemClickListener(() -> {
-
+        SettingEmojiItemView settingEmojiItemView =  findViewById(R.id.setting_item_emoji);
+        settingEmojiItemView.setDefault(EmojiManager.EMOJI_SKINS[EmojiManager.getSkinDefault()]);
+        settingEmojiItemView.setOnItemClickListener(() -> {
+            int choose = EmojiManager.getSkinDefault();
+            ChooseEmojiSkinDialog dialog = new ChooseEmojiSkinDialog(choose, new ChooseEmojiSkinAdapter.SkinChooseListener() {
+                @Override
+                public void onSkinChooseListener(int index) {
+                    EmojiManager.setSkinDefault(index);
+                    settingEmojiItemView.updateSkin(EmojiManager.EMOJI_SKINS[index]);
+                }
+            });
+            UiUtils.showDialogFragment(this, dialog);
         });
 
         //blocked contacts

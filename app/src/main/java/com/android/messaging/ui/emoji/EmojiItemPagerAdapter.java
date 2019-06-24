@@ -102,7 +102,7 @@ public class EmojiItemPagerAdapter extends AbstractEmojiItemPagerAdapter {
         for (int i = 0; i < count; i++) {
             EmojiPackageInfo info = mData.get(i);
             @SuppressLint("InflateParams")
-            View view = LayoutInflater.from(mContext).inflate(R.layout.emoji_tab_lower_item_layout, mTabLayout, false);
+            View view = LayoutInflater.from(mContext).inflate(R.layout.emoji_tab_emoji_cateogry, mTabLayout, false);
             ViewGroup.LayoutParams lp = view.getLayoutParams();
             lp.width = width;
             view.setLayoutParams(lp);

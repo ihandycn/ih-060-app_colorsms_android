@@ -94,7 +94,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 app:hideDivideLine="true"
-                app:title="@string/privacy_mode_settings"
+                app:title="@string/emoji_skin_tone_setting"
                 app:typeface="@string/custom_font_regular" />
 
             <View style="@style/SettingDividerStyle" />

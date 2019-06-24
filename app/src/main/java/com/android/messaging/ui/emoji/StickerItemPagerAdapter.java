@@ -82,7 +82,7 @@ public class StickerItemPagerAdapter extends AbstractEmojiItemPagerAdapter{
         for (int i = 0; i < count; i++) {
             EmojiPackageInfo info = mData.get(i);
             @SuppressLint("InflateParams")
-            View view = LayoutInflater.from(mContext).inflate(R.layout.emoji_tab_lower_item_layout, null);
+            View view = LayoutInflater.from(mContext).inflate(R.layout.emoji_tab_emoji_cateogry, null);
             TabLayout.Tab tab = mTabLayout.getTabAt(i);
             ImageView tabIconView = view.findViewById(R.id.tab_icon_view);
             ImageView newTabView = view.findViewById(R.id.tab_new_view);

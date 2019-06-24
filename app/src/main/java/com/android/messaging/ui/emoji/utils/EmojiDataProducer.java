@@ -10,6 +10,7 @@ import com.android.messaging.ui.emoji.EmojiPackageType;
 import com.android.messaging.ui.emoji.utils.emoji.Emoji;
 import com.android.messaging.ui.emoji.utils.emoji.EmojiCategory;
 import com.android.messaging.ui.emoji.utils.emoji.EmojiProvider;
+import com.ihs.commons.utils.HSLog;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -69,6 +70,10 @@ public class EmojiDataProducer {
                 context.getResources().getIdentifier("emoji_category_recent_selected", "drawable", packageName)).toString();
 
         recentInfo.mEmojiInfoList = EmojiManager.getRecentInfo(EmojiPackageType.EMOJI);
+        for(BaseEmojiInfo item : recentInfo.mEmojiInfoList){
+            EmojiInfo info = (EmojiInfo)item;
+            changeSkin(info);
+        }
         result.add(recentInfo);
 
         for (EmojiCategory category : categoryList) {
@@ -85,23 +90,28 @@ public class EmojiDataProducer {
                     continue;
                 }
                 EmojiInfo itemInfo = EmojiInfo.convert(emoji);
-                if (itemInfo.hasVariant()) {
-                    // get skin record
-                    String record = EmojiManager.getSkinSingleRecord(itemInfo.getUnicode());
-                    if (record != null) {
-                        itemInfo.mEmoji = record;
-                    } else {
-                        int index = EmojiManager.getSkinDefault();
-                        if (index >= 0 && index < itemInfo.mVariants.length) {
-                            itemInfo.mEmoji = itemInfo.mVariants[index].mEmoji;
-                        }
-                    }
-                }
+                changeSkin(itemInfo);
                 emojiList.add(itemInfo);
             }
             info.mEmojiInfoList = emojiList;
             result.add(info);
         }
         return result;
+    }
+
+    private static void changeSkin(EmojiInfo info){
+        if (info.hasVariant()) {
+            // get skin record
+            String record = EmojiManager.getSkinSingleRecord(info.getUnicode());
+            if (record != null) {
+                info.mEmoji = record;
+            } else {
+                int index = EmojiManager.getSkinDefault();
+                HSLog.d("ui_test", "changeSkin: " + index);
+                if (index >= 0 && index < info.mVariants.length) {
+                    info.mEmoji = info.mVariants[index].mEmoji;
+                }
+            }
+        }
     }
 }

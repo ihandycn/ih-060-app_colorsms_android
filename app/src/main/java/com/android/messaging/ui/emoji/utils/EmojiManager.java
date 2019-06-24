@@ -41,6 +41,14 @@ public class EmojiManager {
 
     private static final String PREF_SKIN_FILE_NAME = "pref_skin_record";
     private static final String PREF_SKIN_SET_DEFAULT = "pref_skin_set_default";
+    public static final String[] EMOJI_SKINS = new String[]{
+            "",
+            new String(Character.toChars(0x1F3FB)),
+            new String(Character.toChars(0x1F3FC)),
+            new String(Character.toChars(0x1F3FD)),
+            new String(Character.toChars(0x1F3FE)),
+            new String(Character.toChars(0x1F3FF)),
+    };
 
     static List<String> getTabSticker() {
         return Preferences.get(PREF_FILE_NAME).getStringList(PREF_TAB_STICKER);
@@ -91,7 +99,7 @@ public class EmojiManager {
     private static List<String> getRecentStr(EmojiPackageType emojiType) {
         int maxRecentCount = EmojiConfig.getInstance().optInteger(0, "RecentEmojiCount");
         List<String> result;
-        switch(emojiType) {
+        switch (emojiType) {
             case STICKER:
                 result = Preferences.get(PREF_FILE_NAME).getStringList(PREF_RECENT_STICKER);
                 break;
@@ -281,19 +289,19 @@ public class EmojiManager {
         void onSuccess(@NonNull File file);
     }
 
-    public static String getSkinSingleRecord(String unicode){
+    public static String getSkinSingleRecord(String unicode) {
         return Preferences.get(PREF_SKIN_FILE_NAME).getString(unicode, null);
     }
 
-    public static void addSkinSingleRecord(String unicode, String msg){
+    public static void addSkinSingleRecord(String unicode, String msg) {
         Preferences.get(PREF_SKIN_FILE_NAME).putString(unicode, msg);
     }
 
-    public static int getSkinDefault(){
+    public static int getSkinDefault() {
         return Preferences.get(PREF_SKIN_FILE_NAME).getInt(PREF_SKIN_SET_DEFAULT, 0);
     }
 
-    public static void setSkinDefault(int index){
+    public static void setSkinDefault(int index) {
         Preferences.get(PREF_SKIN_FILE_NAME).putInt(PREF_SKIN_SET_DEFAULT, index);
     }
 }

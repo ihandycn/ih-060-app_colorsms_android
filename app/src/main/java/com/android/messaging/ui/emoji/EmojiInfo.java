@@ -44,28 +44,26 @@ public class EmojiInfo extends BaseEmojiInfo {
         EmojiInfo info = new EmojiInfo(emoji.getUnicode());
         info.mEmoji = unicode;
 
-        if (emoji.hasVariants() && isSupportVariant) {
+        if (emoji.hasVariants()) {
             for(Emoji item : emoji.getVariants()) {
                 if (!item.isSupport()) {
-                    isSupportVariant = false;
-                    break;
+                    return info;
                 }
-            }
-            // the system don't support multiple skin emoji, so drop the variants.
-            if(!isSupportVariant){
-                info.mVariants = new EmojiInfo[0];
-                return info;
             }
             info.mVariants = new EmojiInfo[emoji.getVariants().size() + 1];
             int i = 0;
-            info.mVariants[i++] = info;
+//            info.mVariants[i++] = info;
+            // copy item 'info' as the first of variants, avoid skin change to affect variant array;
+            EmojiInfo firstVariant = new EmojiInfo(emoji.getUnicode());
+            firstVariant.mEmoji = info.mEmoji;
+            info.mVariants[i++] = firstVariant;
             for (Emoji item : emoji.getVariants()) {
                 EmojiInfo variant = new EmojiInfo(emoji.getUnicode());
                 // the variant's unicode don't need to add 0xFE0f. Add the 0xFE0F will cause bad.
                 variant.mEmoji = item.getUnicode();
                 info.mVariants[i++] = variant;
             }
-            for (int j = 1; j < info.mVariants.length; j++) {
+            for (int j = 0; j < info.mVariants.length; j++) {
                 info.mVariants[j].mVariants = info.mVariants;
             }
 

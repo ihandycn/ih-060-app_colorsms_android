@@ -1112,6 +1112,8 @@
     <string name="message_box_send_failed_toast">Failed to send</string>
     <string name="message_box_indicator" translatable="false">%1$d \/ %2$d</string>
 
+    <string name="emoji_skin_tone_setting">Emoji Skin Tone</string>
+
     <string name="privacy_mode_settings">Privacy Mode</string>
     <string name="privacy_mode_disable">None</string>
     <string name="privacy_mode_hide_message_only">Hide message only</string>
