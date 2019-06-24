@@ -741,4 +741,5 @@
 
     <string name="action_unarchive">"Batalkan pengarsipan"</string>
     <string name="action_archive">"Arsipkan"</string>
+    <string name="archived_conversations">Percakapan yang Diarsipkan</string>
 </resources>

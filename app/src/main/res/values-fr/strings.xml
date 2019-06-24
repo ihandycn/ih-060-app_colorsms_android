@@ -734,4 +734,5 @@
 
     <string name="action_unarchive">"Annuler l\'archivage"</string>
     <string name="action_archive">"Archiver"</string>
+    <string name="archived_conversations">Conversations archivées</string>
 </resources>

@@ -739,4 +739,5 @@
 
     <string name="action_unarchive">"No archivar"</string>
     <string name="action_archive">"Archivar"</string>
+    <string name="archived_conversations">Conversaciones archivadas</string>
 </resources>

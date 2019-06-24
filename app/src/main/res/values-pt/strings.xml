@@ -743,4 +743,5 @@
 
     <string name="action_unarchive">"Desarquivar"</string>
     <string name="action_archive">"Arquivar"</string>
+    <string name="archived_conversations">Conversas Arquivadas</string>
 </resources>
