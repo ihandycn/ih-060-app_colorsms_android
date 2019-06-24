@@ -1228,7 +1228,7 @@
     <string name="invite_friends_default_apply_theme_description" translatable="false">Love these awesome themes? Tell your friends and let them join you!</string>
     <string name="invite_friends_default_send_sms_description" translatable="false">Well done, your message was sent successfully! Want to share Color SMS with your friends?</string>
 
-    <string name="invite_friends_invite_default_content" translatable="false">I’m using Color SMS, an awesome SMS app with pretty themes, funny emojis and perfect functions! Come and join us! 😁😏</string>
+    <string name="invite_friends_invite_default_content" translatable="false">I’m using Color SMS, an awesome SMS app with pretty themes, funny emojis and perfect functions! Come and join us!</string>
 
     <string name="invite_friends_invite_cancel_button">Cancel</string>
     <string name="invite_friends_invite_save_button">Save</string>

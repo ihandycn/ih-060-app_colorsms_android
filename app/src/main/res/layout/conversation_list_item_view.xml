@@ -17,7 +17,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="@dimen/conversation_list_item_height">
 
     <!-- The background displayed when the conversation is swiped sideways -->
     <View
@@ -114,8 +114,8 @@
 
             <!-- Contact avatar on the left side of the view -->
             <FrameLayout
-                android:layout_width="66dp"
-                android:layout_height="66dp"
+                android:layout_width="@dimen/conversation_list_contact_bg_size"
+                android:layout_height="@dimen/conversation_list_contact_bg_size"
                 android:background="@android:color/transparent">
 
                 <ImageView
@@ -233,7 +233,7 @@
                         android:ellipsize="end"
                         android:includeFontPadding="false"
                         android:textColor="#878a95"
-                        android:textSize="13sp"
+                        android:textSize="@dimen/conversation_list_item_snippet_text_size"
                         app:typeface="@string/custom_font_regular" />
                 </LinearLayout>
             </LinearLayout>
