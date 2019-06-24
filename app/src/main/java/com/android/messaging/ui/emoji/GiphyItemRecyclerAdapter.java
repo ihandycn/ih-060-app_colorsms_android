@@ -2,7 +2,9 @@ package com.android.messaging.ui.emoji;
 
 import android.content.Context;
 import android.graphics.Rect;
+import android.graphics.drawable.Drawable;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,7 +16,10 @@ import com.android.messaging.glide.GlideApp;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.load.resource.bitmap.FitCenter;
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
+import com.bumptech.glide.load.resource.gif.GifDrawable;
 import com.bumptech.glide.request.RequestOptions;
+import com.bumptech.glide.request.target.CustomViewTarget;
+import com.bumptech.glide.request.transition.Transition;
 import com.giphy.sdk.core.models.Image;
 import com.giphy.sdk.core.models.Media;
 import com.giphy.sdk.core.models.enums.MediaType;
@@ -79,6 +84,7 @@ public class GiphyItemRecyclerAdapter extends RecyclerView.Adapter<GiphyItemRecy
     }
 
     void updateData(List<Media> list) {
+        int preCount = mDataList.size();
         for (Media giphy : list) {
             GiphyInfo giphyInfo = new GiphyInfo();
             Image image = giphy.getImages().getFixedWidth();
@@ -87,8 +93,10 @@ public class GiphyItemRecyclerAdapter extends RecyclerView.Adapter<GiphyItemRecy
             giphyInfo.mGifOriginalHeight = image.getHeight();
             mDataList.add(giphyInfo);
         }
-        notifyDataSetChanged();
+        int currentCount = mDataList.size();
+        notifyItemRangeInserted(preCount, currentCount - preCount);
     }
+
 
     @NonNull
     @Override
@@ -119,14 +127,15 @@ public class GiphyItemRecyclerAdapter extends RecyclerView.Adapter<GiphyItemRecy
 
         int width = mDataList.get(position).mGifOriginalWidth;
         int height = mDataList.get(position).mGifOriginalHeight;
-        holder.mGif.getLayoutParams().height = Dimensions.getPhoneWidth(context) * height / width / 2;
-
+        holder.mGif.getLayoutParams().height = (Dimensions.getPhoneWidth(context) - Dimensions.pxFromDp(23))
+                * height / width / 2 + Dimensions.pxFromDp(5);
         RequestOptions requestOptions = new RequestOptions();
         requestOptions = requestOptions.transforms(new FitCenter(), new RoundedCorners(Dimensions.pxFromDp(4)));
 
+        GiphyInfo giphyInfo = mDataList.get(position);
         GlideApp.with(context)
                 .asGif()
-                .load(mDataList.get(position).mFixedWidthGifUrl)
+                .load(giphyInfo.mFixedWidthGifUrl)
                 .apply(requestOptions)
                 .diskCacheStrategy(DiskCacheStrategy.DATA)
                 .into(holder.mGif);
@@ -140,7 +149,7 @@ public class GiphyItemRecyclerAdapter extends RecyclerView.Adapter<GiphyItemRecy
     static class ViewHolder extends RecyclerView.ViewHolder {
         ImageView mGif;
 
-        public ViewHolder(View itemView) {
+        ViewHolder(View itemView) {
             super(itemView);
             mGif = itemView.findViewById(R.id.gif_image_view);
         }

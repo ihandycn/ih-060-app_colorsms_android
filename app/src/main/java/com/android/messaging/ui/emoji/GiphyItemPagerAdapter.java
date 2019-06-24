@@ -1,6 +1,7 @@
 package com.android.messaging.ui.emoji;
 
 import android.content.Context;
+import android.graphics.Rect;
 import android.support.annotation.NonNull;
 import android.support.design.widget.TabLayout;
 import android.support.v7.widget.OrientationHelper;
@@ -12,6 +13,7 @@ import android.view.ViewGroup;
 
 import com.android.messaging.R;
 import com.android.messaging.ui.emoji.utils.EmojiManager;
+import com.superapps.util.Dimensions;
 
 import java.util.List;
 
@@ -53,9 +55,16 @@ public class GiphyItemPagerAdapter extends AbstractEmojiItemPagerAdapter {
             view = LayoutInflater.from(context).inflate(R.layout.sticker_item_no_recent_layout, container, false);
         } else {
             RecyclerView recyclerView = new RecyclerView(context);
-//            recyclerView.setPadding(Dimensions.pxFromDp(7), Dimensions.pxFromDp(7), Dimensions.pxFromDp(7), 0);
+            recyclerView.setPadding(Dimensions.pxFromDp(6), Dimensions.pxFromDp(7), Dimensions.pxFromDp(6), 0);
             GiphyItemRecyclerAdapter adapter = new GiphyItemRecyclerAdapter(mOnEmojiClickListener, mData.get(position).mName);
-
+            recyclerView.addItemDecoration(new RecyclerView.ItemDecoration() {
+                @Override
+                public void getItemOffsets(Rect outRect, View view, RecyclerView parent, RecyclerView.State state) {
+                    super.getItemOffsets(outRect, view, parent, state);
+                    outRect.left = Dimensions.pxFromDp(2.5f);
+                    outRect.right = Dimensions.pxFromDp(2.5f);
+                }
+            });
 
             recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
 
