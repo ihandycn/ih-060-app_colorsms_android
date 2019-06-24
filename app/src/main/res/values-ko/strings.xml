@@ -733,6 +733,31 @@
     <string name="privacy_mode_conversation_name">연락처</string>
     <string name="contacts">연락처</string>
 
+
     <string name="action_unarchive">"보관 취소"</string>
     <string name="action_archive">"보관처리"</string>
+
+    <!-- Private Box Lock Question-->
+    <string name="ok">확인</string>
+    <string name="cancel">취소</string>
+    <string name="set">설정</string>
+    <string name="submit">제출</string>
+    <string name="time_minute_single">분</string>
+    <string name="lock_activity_forget_password">비밀번호를 잊어버리셨나요?</string>
+    <string name="security_question">보안 질문</string>
+    <string name="forget_password">비밀번호 분실</string>
+    <string name="answer_question_prompt">비밀번호를 재설정하려면 질문에 답하세요.</string>
+    <string name="choose_question_prompt">비밀번호를 잊어버렸을 경우에 대비해 보안 질문을 설정하세요.</string>
+    <string name="enter_answer_prompt">답변:</string>
+    <string name="security_question_answer">답변을 입력하지 않았습니다</string>
+    <string name="pickerview_year">년</string>
+    <string name="pickerview_hours">시간</string>
+    <string-array name="question_spinner_content">
+        <item>생일이 언제입니까?</item>
+        <item>첫 교사의 성이 무엇입니까?</item>
+        <item>초등학교 이름이 무엇입니까?</item>
+        <item>어린시절 영웅은 누구입니까?</item>
+    </string-array>
+    <string name="private_setting_security_question_summary">비밀번호를 잊어버렸을 경우를 대비하기 위함입니다.</string>
+
 </resources>

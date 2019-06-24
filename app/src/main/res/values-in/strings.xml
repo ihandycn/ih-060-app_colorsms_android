@@ -739,7 +739,34 @@
     <string name="privacy_mode_conversation_name">Kontak</string>
     <string name="contacts">Kontak</string>
 
+
     <string name="action_unarchive">"Batalkan pengarsipan"</string>
     <string name="action_archive">"Arsipkan"</string>
     <string name="archived_conversations">Percakapan yang Diarsipkan</string>
+
+    <!-- Private Box Lock Question-->
+    <string name="ok">OK</string>
+    <string name="cancel">Batalkan</string>
+    <string name="set">ATUR</string>
+    <string name="submit">KIRIM</string>
+    <string name="time_minute_single">menit</string>
+    <string name="lock_activity_forget_password">Lupa Kata Sandi?</string>
+    <string name="security_question">Pertanyaan Keamanan</string>
+    <string name="forget_password">Lupa Sandi</string>
+    <string name="answer_question_prompt">Jawab pertanyaan untuk mengatur ulang kata sandi.</string>
+    <string name="choose_question_prompt">Tetapkan pertanyaan keamanan jika Anda lupa kata sandi.</string>
+    <string name="enter_answer_prompt">Jawaban:</string>
+    <string name="security_question_answer">Jawaban kosong</string>
+    <string name="pickerview_hours">jam</string>
+    <string-array name="question_spinner_content">
+        <item>Kapan ulang tahun Anda?</item>
+          
+        <item>Siapa nama terakhir guru Anda?</item>
+          
+        <item>Apa nama sekolah dasar anda?</item>
+          
+        <item>Siapa pahlawan masa kecil Anda?</item>
+    </string-array>
+    <string name="private_setting_security_question_summary">Jika Anda lupa kata sandi.</string>
+
 </resources>

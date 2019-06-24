@@ -686,6 +686,7 @@
 	<string name="menu_invite_friends">Mời Bạn bè</string>
 	<string name="invite_friends_now">MỜI NGAY</string>
 
+
     <string name="message_box_reply">Trả lời</string>
     <string name="message_box_next">KẾ TIẾP</string>
     <string name="message_box_time_ago">%1$d phút trước</string>
@@ -736,6 +737,30 @@
     <string name="backup_free_success">Giải phóng không gian thành công</string>
     <string name="restore_downloading">Đang tải xuống...</string>
 
+
     <string name="action_unarchive">"Hủy lưu trữ"</string>
     <string name="action_archive">"Lưu trữ"</string>
+
+    <string name="ok">OK</string>
+    <string name="cancel">Hủy</string>
+    <string name="set">XÁC NHẬN</string>
+    <string name="submit">GỬI</string>
+    <string name="time_minute_single">phút</string>
+    <string name="lock_activity_forget_password">Quên mật khẩu?</string>
+    <string name="security_question">Câu hỏi bảo mật</string>
+    <string name="forget_password">Quên mật khẩu</string>
+    <string name="answer_question_prompt">Vui lòng trả lời câu hỏi để đặt lại mật khẩu.</string>
+    <string name="choose_question_prompt">Vui lòng đặt một câu hỏi bảo mật trong trường hợp bạn quên mật khẩu.</string>
+    <string name="enter_answer_prompt">Trả lời:</string>
+    <string name="security_question_answer">Câu trả lời của bạn trống</string>
+    <string name="pickerview_year">năm</string>
+    <string name="pickerview_hours">giờ</string>
+    <string-array name="question_spinner_content">
+        <item>Bạn sinh ngày nào?</item>
+        <item>Họ của giáo viên đầu tiên của bạn là gì?</item>
+        <item>Tên trường tiểu học của bạn là gì?</item>
+        <item>Ai là anh hùng thời thơ ấu của bạn?</item>
+    </string-array>
+    <string name="private_setting_security_question_summary">Trong trường hợp bạn quên mật khẩu.</string>
+
 </resources>

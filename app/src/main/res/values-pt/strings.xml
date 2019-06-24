@@ -744,4 +744,27 @@
     <string name="action_unarchive">"Desarquivar"</string>
     <string name="action_archive">"Arquivar"</string>
     <string name="archived_conversations">Conversas Arquivadas</string>
+
+    <string name="ok">OK</string>
+    <string name="cancel">Cancelar</string>
+    <string name="submit">ENVIAR</string>
+    <string name="set">DEFINIR</string>
+    <string name="time_minute_single">minuto</string>
+    <string name="lock_activity_forget_password">Esqueceu a senha?</string>
+    <string name="security_question">Pergunta de segurança</string>
+    <string name="forget_password">Esqueci a senha</string>
+    <string name="answer_question_prompt">Responda à pergunta para redefinir a senha.</string>
+    <string name="choose_question_prompt">Defina uma pergunta de segurança caso esqueça a senha.</string>
+    <string name="enter_answer_prompt">Resposta:</string>
+    <string name="security_question_answer">Sua resposta está em branco</string>
+    <string name="pickerview_year">ano</string>
+    <string name="pickerview_hours">hora</string>
+    <string-array name="question_spinner_content">
+        <item>Qual é a data do seu aniversário?</item>
+        <item>Qual é o sobrenome do seu primeiro professor?</item>
+        <item>Qual o nome da escola onde você cursou o ensino fundamental?</item>
+        <item>Quem era o seu herói na infância?</item>
+    </string-array>
+    <string name="private_setting_security_question_summary">Caso você esqueça sua senha.</string>
+
 </resources>

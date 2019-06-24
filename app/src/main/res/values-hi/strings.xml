@@ -692,6 +692,7 @@
 	<string name="menu_invite_friends">दोस्‍तों को आमंत्रित करें</string>
 	<string name="invite_friends_now">अभी आमंत्रित करें</string>
 
+
     <string name="invite_friends_add_friends">जोड़ें</string>
     <string name="invite_friends_default_back_to_main_page_title">दोस्‍तों को आमंत्रित करें</string>
     <string name="privacy_mode_open_button_text">खुला</string>
@@ -739,4 +740,27 @@
 
     <string name="action_unarchive">"संग्रह से निकालें"</string>
     <string name="action_archive">"संग्रहीत करें"</string>
+    <!-- Private Box Lock Question-->
+    <string name="ok">ठीक है</string>
+    <string name="cancel">रद्द करें</string>
+    <string name="set">सेट करें</string>
+    <string name="submit">जमा करें</string>
+    <string name="time_minute_single">मिनिट</string>
+    <string name="lock_activity_forget_password">पासवर्ड भूल गए?</string>
+    <string name="security_question">सुरक्षा प्रश्‍न</string>
+    <string name="forget_password">पासवर्ड भूल गए</string>
+    <string name="answer_question_prompt">पासवर्ड दुबारा सेट करने के लिए कृपया प्रश्‍न का जवाब दें।</string>
+    <string name="choose_question_prompt">आप पासवर्ड भूल जाओ उस स्थिति‍ में कृपया एक सुरक्षा प्रश्न निर्धारित करें।</string>
+    <string name="enter_answer_prompt">जवाब:</string>
+    <string name="security_question_answer">आपका जवाब खाली है</string>
+    <string name="pickerview_year">साल</string>
+    <string name="pickerview_hours">घंटा</string>
+    <string-array name="question_spinner_content">
+        <item>आपका जन्म दिन कब है?</item>
+        <item>आपके पहले शिक्षक का आखिरी नाम क्या है?</item>
+        <item>आपके प्राथमिक विद्यालय का नाम क्या‍ है?</item>
+        <item>आपके बचपन का हीरो कौन है?</item>
+    </string-array>
+    <string name="private_setting_security_question_summary">आपका पासवर्ड भूलने की स्थिति में।</string>
+
 </resources>

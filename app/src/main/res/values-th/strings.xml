@@ -735,6 +735,29 @@
     <string name="privacy_mode_conversation_name">รายชื่อติดต่อ</string>
     <string name="contacts">รายชื่อติดต่อ</string>
 
+
     <string name="action_unarchive">"ยกเลิกการเก็บถาวร"</string>
     <string name="action_archive">"เก็บถาวร"</string>
+
+    <string name="cancel">ยกเลิก</string>
+    <string name="ok">ตกลง</string>
+    <string name="submit">ส่ง</string>
+    <string name="set">กำหนด</string>
+    <string name="time_minute_single">นาที</string>
+    <string name="lock_activity_forget_password">ลืมรหัสผ่าน?</string>
+    <string name="security_question">คำถามความปลอดภัย</string>
+    <string name="forget_password">ลืมรหัสผ่าน</string>
+    <string name="answer_question_prompt">กรุณาตอบคำถามเพื่อรีเซ็ตรหัสผ่าน</string>
+    <string name="choose_question_prompt">กรุณากำหนดคำถามเพื่อความปลอดภัยในกรณีที่คุณลืมรหัสผ่าน</string>
+    <string name="enter_answer_prompt">คำตอบ:</string>
+    <string name="security_question_answer">คำตอบของคุณว่างเปล่า</string>
+    <string name="pickerview_hours">ชั่วโมง</string>
+    <string name="pickerview_year">ปี</string>
+    <string-array name="question_spinner_content">
+        <item>วันเกิดของคุณคือ?</item>
+        <item>นามสกุลของครูคนแรกคือ?</item>
+        <item>ชื่อโรงเรียนประถมของคุณคือ?</item>
+        <item>ใครคือฮีโรวัยเด็กของคุณ?</item>
+    </string-array>
+    <string name="private_setting_security_question_summary">ในกรณีที่คุณลืมรหัสผ่าน</string>
 </resources>

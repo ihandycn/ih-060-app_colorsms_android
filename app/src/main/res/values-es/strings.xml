@@ -740,4 +740,28 @@
     <string name="action_unarchive">"No archivar"</string>
     <string name="action_archive">"Archivar"</string>
     <string name="archived_conversations">Conversaciones archivadas</string>
+
+    <!-- Private Box Lock Question-->
+    <string name="ok">ACEPTAR</string>
+    <string name="cancel">Cancelar</string>
+    <string name="set">ESTABLECER</string>
+    <string name="submit">ENVIAR</string>
+    <string name="time_minute_single">minuto</string>
+    <string name="pickerview_year">año</string>
+    <string name="pickerview_hours">hora</string>
+    <string name="lock_activity_forget_password">¿Has olvidado tu contraseña?</string>
+    <string name="security_question">Pregunta de seguridad</string>
+    <string name="forget_password">¿Olvidaste la contraseña?</string>
+    <string name="answer_question_prompt">Responde la pregunta para restablecer la contraseña.</string>
+    <string name="choose_question_prompt">Establece una pregunta de seguridad, por si olvidas la contraseña.</string>
+    <string name="enter_answer_prompt">Respuesta:</string>
+    <string name="security_question_answer">Tu respuesta está vacía</string>
+    <string-array name="question_spinner_content">
+        <item>¿Qué día es tu cumpleaños?</item>
+        <item>¿Cómo se apellidaba tu primer profesor?</item>
+        <item>¿Cómo se llamaba tu colegio de primaria?</item>
+        <item>¿Quién es tu héroe de la infancia?</item>
+    </string-array>
+    <string name="private_setting_security_question_summary">En caso de que olvides la contraseña.</string>
+
 </resources>

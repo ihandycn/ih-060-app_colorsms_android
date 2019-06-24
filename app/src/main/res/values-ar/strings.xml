@@ -835,4 +835,28 @@
 
     <string name="action_unarchive">"إزالة من الأرشيف"</string>
     <string name="action_archive">"أرشيف"</string>
+
+    <!-- Private Box Lock Question-->
+    <string name="forget_password">نسيت كلمة المرور</string>
+    <string name="answer_question_prompt">يرجى الإجابة عن السؤال لإعادة تعيين كلمة المرور.</string>
+    <string name="choose_question_prompt">يرجى تعيين سؤال أمان لاستخدامه في حالة نسيان كلمة المرور.</string>
+    <string name="enter_answer_prompt">الإجابة:</string>
+    <string name="security_question_answer">إجابتك فارغة</string>
+    <string name="set">تعيين</string>
+    <string name="ok">موافق</string>
+    <string name="cancel">إلغاء</string>"
+    <string name="pickerview_year">سنة</string>
+    <string name="pickerview_hours">ساعة</string>"
+    <string-array name="question_spinner_content">
+        <item>  متى عيد ميلادك؟</item>
+        <item> ما هو اسم العائلة لمعلمك الأول؟</item>
+        <item> ما هو اسم مدرستك الابتدائية؟</item>
+        <item>    من هو بطل طفولتك؟</item>
+    </string-array>
+    <string name="security_question">سؤال الأمان</string>
+    <string name="lock_activity_forget_password">نسيت كلمة المرور؟</string>
+    <string name="time_minute_single">دقيقة</string>
+    <string name="submit">إدخال</string>
+    <string name="private_setting_security_question_summary">في حال نسيت كلمة مرورك.</string>
+
 </resources>

@@ -689,6 +689,7 @@
 	<string name="menu_invite_friends">Freunde einladen</string>
 	<string name="invite_friends_now">JETZT EINLADEN</string>
 
+
     <string name="invite_friends_add_friends">Hinzufügen</string>
     <string name="invite_friends_default_back_to_main_page_title">Freunde einladen</string>
     <string name="privacy_mode_open_button_text">ÖFFNEN</string>
@@ -736,4 +737,27 @@
 
     <string name="action_unarchive">"Aus Archiv entfernen"</string>
     <string name="action_archive">"Archivieren"</string>
+    <!-- Private Box Lock Question-->
+    <string name="ok">OK</string>
+    <string name="cancel">Abbrechen</string>
+    <string name="set">FESTLEGEN</string>
+    <string name="forget_password">Passwort vergessen</string>
+    <string name="answer_question_prompt">Bitte Frage beantworten, um Passwort zurückzusetzen.</string>
+    <string name="choose_question_prompt">Bitte eine Sicherheitsfrage festlegen, falls Sie Ihr Passwort vergessen.</string>
+    <string name="enter_answer_prompt">Antwort:</string>
+    <string name="security_question_answer">Ihre Antwort ist leer.</string>
+    <string name="pickerview_year">Jahr</string>
+    <string name="pickerview_hours">Stunde</string>
+    <string name="time_minute_single">Minute</string>
+    <string-array name="question_spinner_content">
+        <item>Wann ist Ihr Geburtstag?</item>
+        <item>Was ist der Name Ihres ersten Lehrers?</item>
+        <item>Wie lautet der Name Ihrer Grundschule?</item>
+        <item>Wer war in Ihrer Kindheit Ihr großes Vorbild?</item>
+    </string-array>
+    <string name="security_question">Sicherheitsfrage</string>
+    <string name="lock_activity_forget_password">Passwort vergessen?</string>
+    <string name="submit">SENDEN</string>
+    <string name="private_setting_security_question_summary">Falls Sie Ihr Passwort vergessen sollten.</string>
+
 </resources>

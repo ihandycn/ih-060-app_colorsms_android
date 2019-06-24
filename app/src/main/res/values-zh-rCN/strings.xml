@@ -650,6 +650,7 @@
     <string name="menu_invite_friends">邀请好友</string>
     <string name="invite_friends_now">邀请</string>
 
+
     <string name="invite_friends_add_friends">添加</string>
     <string name="invite_friends_default_back_to_main_page_title">邀请好友</string>
     <string name="privacy_mode_open_button_text">打开</string>
@@ -661,4 +662,28 @@
 
     <string name="action_unarchive">"取消归档"</string>
     <string name="action_archive">"归档"</string>
+
+    <!-- Private Box Lock Question-->
+    <string name="ok">确认</string>
+    <string name="cancel">取消</string>
+    <string name="set">设置</string>
+    <string name="submit">提交</string>
+    <string name="time_minute_single">分钟</string>
+    <string name="lock_activity_forget_password">忘记密码？</string>
+    <string name="security_question">安全问题</string>
+    <string name="forget_password">忘记密码</string>
+    <string name="answer_question_prompt">请输入正确答案来重置密码</string>
+    <string name="choose_question_prompt">回答：</string>
+    <string name="enter_answer_prompt">请设置安全问题来防止你忘记密码。</string>
+    <string name="security_question_answer">答案为空</string>
+    <string name="pickerview_year">年</string>
+    <string name="pickerview_hours">小时</string>
+    <string-array name="question_spinner_content">
+        <item>你的生日是几号？</item>
+        <item>你第一个老师的姓名是什么？</item>
+        <item>你的初中学校叫什么？</item>
+        <item>谁是你儿时的偶像？</item>
+    </string-array>
+    <string name="private_setting_security_question_summary">防止自己忘记密码</string>
+
 </resources>
