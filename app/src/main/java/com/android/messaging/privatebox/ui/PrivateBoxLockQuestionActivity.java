@@ -22,6 +22,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.messaging.R;
+import com.android.messaging.privatebox.AppPrivateLockManager;
 import com.android.messaging.privatebox.PrivateBoxSettings;
 import com.android.messaging.privatebox.ui.view.timepickerview.TimePickerView;
 import com.android.messaging.privatebox.ui.view.timepickerview.WheelTime;
@@ -258,6 +259,12 @@ public class PrivateBoxLockQuestionActivity extends HSAppCompatActivity implemen
             return true;
         }
         return super.onKeyDown(keyCode, event);
+    }
+
+    @Override
+    protected void onStart() {
+        AppPrivateLockManager.getInstance().checkLockStateAndSelfVerify();
+        super.onStart();
     }
 
     @Override
