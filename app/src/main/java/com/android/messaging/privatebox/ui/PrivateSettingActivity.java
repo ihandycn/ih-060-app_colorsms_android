@@ -57,6 +57,7 @@ public class PrivateSettingActivity extends BaseActivity {
         securityQuestionView.setOnItemClickListener(() -> {
             Intent intent = new Intent(PrivateSettingActivity.this, PrivateBoxLockQuestionActivity.class);
             intent.putExtra(PrivateBoxLockQuestionActivity.INTENT_KEY_IS_SETTING_QUESTION, true);
+            intent.putExtra(PrivateBoxLockQuestionActivity.INTENT_KEY_NEEDS_LOCK, true);
             Navigations.startActivitySafely(PrivateSettingActivity.this, intent);
             BugleAnalytics.logEvent("PrivateBox_Settings_SecurityQuestion_Click");
         });

@@ -40,6 +40,8 @@ public class PrivateBoxLockQuestionActivity extends HSAppCompatActivity implemen
 
     public static final String INTENT_KEY_IS_SETTING_QUESTION = "INTENT_KEY_IS_SETTING_QUESTION";
     public static final String INTENT_KEY_IS_FIRST_SETTING_QUESTION = "INTENT_KEY_IS_FIRST_SETTING_QUESTION";
+    public static final String INTENT_KEY_NEEDS_LOCK = "INTENT_KEY_NEEDS_LOCK";
+
     public static final String PREF_KEY_SECURITY_QUESTION = "PREF_KEY_SECURITY_QUESTION";
     public static final String PREF_KEY_SECURITY_ANSWER = "PREF_KEY_SECURITY_ANSWER";
     private static final int POSITION_BIRTHDAY = 0;
@@ -57,6 +59,7 @@ public class PrivateBoxLockQuestionActivity extends HSAppCompatActivity implemen
 
     private Preferences prefs;
     private boolean isSettingQuestion;
+    private boolean needLock;
 
     private View timePickerView;
     private LinearLayout answerLl;
@@ -99,6 +102,7 @@ public class PrivateBoxLockQuestionActivity extends HSAppCompatActivity implemen
         isSettingQuestion = !PrivateBoxSettings.isSecurityQuestionSet()
                 || getIntent().getBooleanExtra(INTENT_KEY_IS_SETTING_QUESTION, false);
 
+        needLock = getIntent().getBooleanExtra(INTENT_KEY_NEEDS_LOCK, false);
         questions = getResources().getTextArray(R.array.question_spinner_content);
         savedQuestion = prefs.getString(PREF_KEY_SECURITY_QUESTION, questions[POSITION_BIRTHDAY].toString());
         savedAnswer = prefs.getString(PREF_KEY_SECURITY_ANSWER, "");
@@ -263,8 +267,10 @@ public class PrivateBoxLockQuestionActivity extends HSAppCompatActivity implemen
 
     @Override
     protected void onStart() {
-        AppPrivateLockManager.getInstance().checkLockStateAndSelfVerify();
         super.onStart();
+        if (needLock) {
+            AppPrivateLockManager.getInstance().checkLockStateAndSelfVerify();
+        }
     }
 
     @Override
