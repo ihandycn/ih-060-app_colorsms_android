@@ -138,6 +138,11 @@ public class ArchivedConversationListActivity extends AbstractConversationListAc
     }
 
     @Override
+    public boolean isArchiveMode() {
+        return true;
+    }
+
+    @Override
     public void onActionBarHome() {
         onBackPressed();
     }

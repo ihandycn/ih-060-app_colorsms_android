@@ -42,6 +42,8 @@ public class MultiSelectActionModeCallback implements Callback {
     private HashSet<String> mBlockedSet;
 
     public interface Listener {
+        boolean isArchiveMode();
+
         void onActionBarDelete(Collection<SelectedConversation> conversations);
 
         void onActionBarArchive(Iterable<SelectedConversation> conversations,
@@ -98,6 +100,7 @@ public class MultiSelectActionModeCallback implements Callback {
     private MenuItem mCancelPinMenuItem;
     private MenuItem mArchiveMenuItem;
     private MenuItem mUnarchiveMenuItem;
+    private MenuItem mMoreMenuItem;
     private boolean mHasInflated;
 
     public MultiSelectActionModeCallback(final Listener listener) {
@@ -127,6 +130,10 @@ public class MultiSelectActionModeCallback implements Callback {
                 }
             }
         }
+        if (mListener.isArchiveMode()) {
+            menu.findItem(R.id.action_add_to_private_box).setVisible(false);
+        }
+        mMoreMenuItem = menu.findItem(R.id.action_menu);
         mHasInflated = true;
         updateActionIconsVisibility();
         return true;
@@ -217,6 +224,14 @@ public class MultiSelectActionModeCallback implements Callback {
 
     private void updateActionIconsVisibility() {
         if (!mHasInflated) {
+            return;
+        }
+
+        if (mListener.isArchiveMode()) {
+            mPinMenuItem.setVisible(false);
+            mCancelPinMenuItem.setVisible(false);
+            mMoreMenuItem.setVisible(false);
+            mArchiveMenuItem.setVisible(false);
             return;
         }
 

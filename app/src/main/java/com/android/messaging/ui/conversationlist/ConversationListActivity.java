@@ -771,6 +771,11 @@ public class ConversationListActivity extends AbstractConversationListActivity
     }
 
     @Override
+    public boolean isArchiveMode() {
+        return false;
+    }
+
+    @Override
     public void onActionBarHome() {
         exitMultiSelectState();
     }
