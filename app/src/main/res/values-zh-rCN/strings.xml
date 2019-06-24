@@ -665,7 +665,81 @@
     <string name="action_unarchive">"取消归档"</string>
     <string name="action_archive">"归档"</string>
 
+    <!-- Backup-->
+    <string name="backup_tips_before_uninstalling_content">为了防止您的消息遗失，请在卸载前恢复您的消息。</string>
+    <string name="restore_from_cloud">云端</string>
+    <string name="backup_guide_dialog_title">短信备份</string>
+    <string name="restore_fail">恢复失败</string>
+    <string name="backup_free_success">清理成功</string>
+    <string name="backup_tip_dialog_content">再次备份会覆盖已有备份，建议备份前恢复。</string>
+    <string name="backup_no_account">未登录</string>
+    <string name="restore_process_hint">恢复中……</string>
+    <string name="message_free_up_title">清理短信空间</string>
+    <string name="restore_from_local">本地</string>
+    <string name="backup_guide_dialog_button">现在备份</string>
+    <string name="message_free_up_content">删除本地30天前信息节约空间并加速手机，你可以通过恢复获取删除的信息。</string>
+    <string name="backup_local_summary">备份到本地存储</string>
+    <string name="backup_banner_guide_title">%1$d 条信息没有受到保护。</string>
+    <string name="backup_cloud">云端</string>
+    <string name="restore_tab">恢复</string>
+    <string name="message_free_up_button">清理</string>
+    <string name="backup_guide_dialog_third_content">从任一设备恢复你的信息</string>
+    <string name="restore_default_summary">没有备份文件</string>
+    <string name="message_free_up_process_dialog">正在清理你的短信空间……</string>
+    <string name="cloud_backup_process_hint">上传备份中</string>
+    <string name="backup_success_toast">备份成功</string>
+    <string name="backup_local">本地</string>
+    <string name="add_to_private_list_dialog_from_conversation">从对话列表</string>
+    <string name="privacy_mode_hide_contact_and_message">隐藏联系人和信息内容</string>
+    <string name="incorrect_question_answer_hint">答案不正确</string>
+    <string name="menu_backup_restore">备份及恢复</string>
+    <string name="restore_verb">恢复</string>
+    <string name="local_backup_process_hint">备份中……</string>
+    <string name="restore_success">恢复失败</string>
+    <string name="backup_delete_failed">删除消息失败</string>
+    <string name="backup_failed_toast">备份失败</string>
+    <string name="backup_guide_dialog_first_content">在手机损坏或遗失前备份所有短信</string>
+    <string name="menu_backup_restore_toolbar_title">短信备份及恢复</string>
+    <string name="private_box_setting_security">Security</string>
+    <string name="backup_guide_dialog_second_content">%1$d 没有受到保护</string>
+    <string name="backup_state_scanning">扫描中……</string>
+    <string name="backup_tab">备份</string>
+    <string name="backup_verb">备份</string>
+
+
+
     <!-- Private Box Lock Question-->
+    <string name="private_box_uninstall_notice">除非将信息移至公共信箱，否则你将会在卸载短信后丢失这些信息。</string>
+    <string name="private_box_setting_entrance_summary">隐藏图标</string>
+    <string name="private_box_add_now">现在添加</string>
+    <string name="private_box_setting_notification_summary">禁用此选项，隐私联系人的消息不会展示任何通知。</string>
+    <string name="private_start_box_tip">信息将被移到隐私信箱中，请首先为隐私信箱设置密码。</string>
+    <string name="private_box_setting_notification">开启通知</string>
+    <string name="private_box_move_from_success">已移至公共信箱</string>
+    <string name="private_box_hide_icon_summary">长按新建短信按钮进入隐私信箱。</string>
+    <string name="private_box_setting_security_summary">修改密码</string>
+    <string name="private_box_setting">隐私信箱设置</string>
+    <string name="conversation_moved_to_private_box">已移至隐私信箱</string>
+    <string name="private_contacts">隐私联系人</string>
+    <string name="private_box_hide_icon">隐藏信息信箱</string>
+    <string name="add_to_private_list_dialog_from_contacts_list">从联系人列表</string>
+    <string name="private_box_move_to_box">移至公共信箱</string>
+    <string name="private_box_add_private_contacts">请添加隐私联系人</string>
+    <string name="add_to_private_list_dialog_title">添加隐私联系人</string>
+    <string name="private_box_remove_from_box">从隐私信箱中移除</string>
+    <string name="private_move_tip">信息将被移至隐私信箱并不能被其他短信应用访问。</string>
+    <string name="menu_privacy_box">隐私信箱</string>
+    <string name="private_box_empty_contact_hint">没有隐私联系人</string>
+    <string name="conversation_list">对话列表</string>
+
+
+    <!-- Privacy Mode-->
+    <string name="privacy_mode_hide_message_only">只隐藏消息</string>
+    <string name="privacy_mode_disable">无</string>
+    <string name="privacy_mode_settings">隐私模式</string>
+    <string name="privacy_mode_show_messages">展示信息</string>
+
+
     <string name="ok">确认</string>
     <string name="cancel">取消</string>
     <string name="set">设置</string>
