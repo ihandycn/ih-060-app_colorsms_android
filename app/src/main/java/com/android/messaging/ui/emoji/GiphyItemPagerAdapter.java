@@ -1,33 +1,23 @@
 package com.android.messaging.ui.emoji;
 
-import android.annotation.SuppressLint;
 import android.content.Context;
-import android.graphics.Rect;
 import android.support.annotation.NonNull;
 import android.support.design.widget.TabLayout;
-import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.OrientationHelper;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
-import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 
 import com.android.messaging.R;
-import com.android.messaging.glide.GlideApp;
-import com.android.messaging.ui.emoji.utils.EmojiConfig;
 import com.android.messaging.ui.emoji.utils.EmojiManager;
-import com.superapps.util.Dimensions;
-import com.superapps.util.Threads;
 
 import java.util.List;
 
 public class GiphyItemPagerAdapter extends AbstractEmojiItemPagerAdapter {
 
-    private final int EMOJI_COLUMNS = 2;
-    private final int EMOJI_ROWS = 4;
+    private static final int GIF_COLUMNS = 2;
     private TabLayout mTabLayout;
     private Context mContext;
 
@@ -59,17 +49,51 @@ public class GiphyItemPagerAdapter extends AbstractEmojiItemPagerAdapter {
         Context context = container.getContext();
         View view;
         List<BaseEmojiInfo> list = mData.get(position).mEmojiInfoList;
-        if (list.isEmpty()) {
+        if (list != null) {
             view = LayoutInflater.from(context).inflate(R.layout.sticker_item_no_recent_layout, container, false);
         } else {
             RecyclerView recyclerView = new RecyclerView(context);
 //            recyclerView.setPadding(Dimensions.pxFromDp(7), Dimensions.pxFromDp(7), Dimensions.pxFromDp(7), 0);
-            GiphyItemRecyclerAdapter adapter = new GiphyItemRecyclerAdapter(mOnEmojiClickListener);
+            GiphyItemRecyclerAdapter adapter = new GiphyItemRecyclerAdapter(mOnEmojiClickListener, mData.get(position).mName);
+
+
+            recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+
+                private boolean mIsSlideUpward;
+                @Override
+                public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+                    super.onScrollStateChanged(recyclerView, newState);
+
+                    StaggeredGridLayoutManager manager = (StaggeredGridLayoutManager) recyclerView.getLayoutManager();
+                    int[] lastCompletelyVisibleItemPositions = new int[GIF_COLUMNS];
+
+                    if (newState == RecyclerView.SCROLL_STATE_IDLE) {
+                        manager.findLastCompletelyVisibleItemPositions(lastCompletelyVisibleItemPositions);
+                        int itemCount = manager.getItemCount();
+                        boolean scrolledToBottom = false;
+                        for (int i = 0; i < GIF_COLUMNS; i++) {
+                            if (lastCompletelyVisibleItemPositions[i] == itemCount - 1) {
+                                scrolledToBottom = true;
+                            }
+                        }
+                        if (scrolledToBottom &&  mIsSlideUpward) {
+                            adapter.loadMore();
+                        }
+                    }
+
+                }
+
+                @Override
+                public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                    super.onScrolled(recyclerView, dx, dy);
+                    mIsSlideUpward = dy > 0;
+                }
+            });
             recyclerView.setAdapter(adapter);
             recyclerView.setHasFixedSize(true);
             recyclerView.setOverScrollMode(View.OVER_SCROLL_NEVER);
             StaggeredGridLayoutManager staggeredGridLayoutManager =
-                    new StaggeredGridLayoutManager(2, OrientationHelper.VERTICAL);
+                    new StaggeredGridLayoutManager(GIF_COLUMNS, OrientationHelper.VERTICAL);
             recyclerView.setLayoutManager(staggeredGridLayoutManager);
             view = recyclerView;
         }
@@ -101,12 +125,10 @@ public class GiphyItemPagerAdapter extends AbstractEmojiItemPagerAdapter {
         updateTabView();
     }
 
-
     @Override
     public void updateTabView() {
         int count = mTabLayout.getTabCount();
         for (int i = 0; i < count; i++) {
-            EmojiPackageInfo info = mData.get(i);
             TabLayout.Tab tab = mTabLayout.getTabAt(i);
             if (tab == null) {
                 return;
@@ -116,10 +138,9 @@ public class GiphyItemPagerAdapter extends AbstractEmojiItemPagerAdapter {
                 tab.setIcon(R.drawable.emoji_ic_recent);
                 tab.setText(null);
             } else {
-                tab.setText("cats");
+                EmojiPackageInfo info = mData.get(i);
+                tab.setText(info.mName);
             }
-
-
         }
     }
 }

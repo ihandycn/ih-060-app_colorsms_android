@@ -99,6 +99,13 @@ public class EmojiPickerFragment extends Fragment implements INotificationObserv
             }
 
             @Override
+            public void gifClick(GiphyInfo gifInfo) {
+                EmojiManager.getStickerFile(getActivity(), gifInfo.mFixedWidthGifUrl, file -> {
+                    sendGif(gifInfo, file);
+                });
+            }
+
+            @Override
             public void deleteEmoji() {
                 if (mOnEmojiPickerListener != null) {
                     mOnEmojiPickerListener.deleteEmoji();
@@ -109,7 +116,7 @@ public class EmojiPickerFragment extends Fragment implements INotificationObserv
         Map<EmojiPackageType, List<EmojiPackageInfo>> data = new HashMap<>();
         data.put(EmojiPackageType.EMOJI, EmojiDataProducer.getInitEmojiData(activity));
         data.put(EmojiPackageType.STICKER, EmojiDataProducer.getInitStickerData(activity));
-        data.put(EmojiPackageType.GIF, EmojiDataProducer.getInitEmojiData(activity));
+        data.put(EmojiPackageType.GIF, EmojiDataProducer.getInitGifData(activity));
         mEmojiPackagePagerAdapter.setData(data);
 
         mEmojiPager = view.findViewById(R.id.emoji_pager);
@@ -187,6 +194,33 @@ public class EmojiPickerFragment extends Fragment implements INotificationObserv
         }
     }
 
+    private void sendGif(GiphyInfo info, File file) {
+        if (mOnEmojiPickerListener != null) {
+            Uri uri = Uri.fromFile(file);
+            if (mOnEmojiPickerListener.isContainMessagePartData(uri)) {
+                return;
+            }
+
+            if (!mIsEnableSend) {
+                return;
+            }
+            mIsEnableSend = false;
+            Threads.postOnMainThreadDelayed(() -> mIsEnableSend = true, UiUtils.MEDIAPICKER_TRANSITION_DURATION);
+
+            String contentType = ContentType.IMAGE_PNG;
+            if (info.mEmojiType == EmojiType.STICKER_GIF || info.mEmojiType == EmojiType.STICKER_MAGIC) {
+                contentType = ContentType.IMAGE_GIF;
+            }
+            final List<MessagePartData> items = new ArrayList<>(1);
+            MediaPickerMessagePartData data = new MediaPickerMessagePartData(info.mStartRect, contentType, uri, info.mGifWidth, info.mGifHeight);
+            data.setName(info.mFixedWidthGifUrl);
+            items.add(data);
+            mOnEmojiPickerListener.prepareSendSticker(items);
+
+//            updateRecentSticker(info);
+        }
+    }
+
     // add emojiPackageInfo only with iconTabUrl, without image data. Only for TabLayout showing.
     private List<EmojiPackageInfo> initMainTab() {
         Activity activity = getActivity();
@@ -220,6 +254,10 @@ public class EmojiPickerFragment extends Fragment implements INotificationObserv
         gifInfo.mTabIconUrl = Uri.parse("android.resource://" + activity.getPackageName() +
                 "/" + activity.getResources().getIdentifier("emoji_ic_hh", "drawable",
                 activity.getPackageName())).toString();
+        stickerInfo.mTabIconSelectedUrl = Uri.parse("android.resource://" + activity.getPackageName() +
+                "/" + activity.getResources().getIdentifier("emoji_tab_sticker_selected_icon", "drawable",
+                activity.getPackageName())).toString();
+
         result.add(gifInfo);
 
         return result;

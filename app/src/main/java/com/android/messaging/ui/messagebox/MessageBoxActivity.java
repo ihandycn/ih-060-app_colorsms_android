@@ -25,6 +25,7 @@ import com.android.messaging.ui.appsettings.PrivacyModeSettings;
 import com.android.messaging.ui.customize.theme.ThemeUtils;
 import com.android.messaging.ui.emoji.EmojiInfo;
 import com.android.messaging.ui.emoji.EmojiPackagePagerAdapter;
+import com.android.messaging.ui.emoji.GiphyInfo;
 import com.android.messaging.ui.emoji.StickerInfo;
 import com.android.messaging.util.BugleAnalytics;
 import com.android.messaging.util.FabricUtils;
@@ -266,6 +267,11 @@ public class MessageBoxActivity extends AppCompatActivity implements INotificati
 
             @Override
             public void stickerClickExcludeMagic(@NonNull StickerInfo info) {
+
+            }
+
+            @Override
+            public void gifClick(GiphyInfo gifInfo) {
 
             }
 

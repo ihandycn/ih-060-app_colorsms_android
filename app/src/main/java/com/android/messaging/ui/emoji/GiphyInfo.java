@@ -1,25 +1,38 @@
 package com.android.messaging.ui.emoji;
 
+import android.graphics.Rect;
 import android.os.Parcel;
-import android.os.Parcelable;
 
 public class GiphyInfo extends BaseEmojiInfo {
 
-    private int mGifOriginalWidth;
-    private int mGifOriginalHeight;
-    private int mFixedWidthGifUrl;
+    public int mGifOriginalWidth;
+    public int mGifOriginalHeight;
+    public String mFixedWidthGifUrl;
+
+    public int mGifWidth;
+    public int mGifHeight;
+    public Rect mStartRect;
+
+    public GiphyInfo() {
+    }
 
     protected GiphyInfo(Parcel in) {
         mGifOriginalWidth = in.readInt();
         mGifOriginalHeight = in.readInt();
-        mFixedWidthGifUrl = in.readInt();
+        mFixedWidthGifUrl = in.readString();
+        mGifWidth = in.readInt();
+        mGifHeight = in.readInt();
+        mStartRect = in.readParcelable(Rect.class.getClassLoader());
     }
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeInt(mGifOriginalWidth);
         dest.writeInt(mGifOriginalHeight);
-        dest.writeInt(mFixedWidthGifUrl);
+        dest.writeString(mFixedWidthGifUrl);
+        dest.writeInt(mGifWidth);
+        dest.writeInt(mGifHeight);
+        dest.writeParcelable(mStartRect, flags);
     }
 
     @Override
@@ -38,4 +51,10 @@ public class GiphyInfo extends BaseEmojiInfo {
             return new GiphyInfo[size];
         }
     };
+
+    public static GiphyInfo unflatten(String flatten) {
+        GiphyInfo result = new GiphyInfo();
+        return result;
+    }
+
 }

@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.PorterDuff;
 import android.net.Uri;
+import android.support.annotation.LayoutRes;
 import android.support.annotation.NonNull;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.PagerAdapter;
@@ -69,7 +70,7 @@ public class EmojiPackagePagerAdapter extends PagerAdapter {
     @Override
     public Object instantiateItem(@NonNull ViewGroup container, int position) {
         EmojiPackageInfo info = mData.get(position);
-        View view = LayoutInflater.from(container.getContext()).inflate(R.layout.emoji_page_item_layout, container, false);
+        View view = LayoutInflater.from(container.getContext()).inflate(getLayoutRes(info), container, false);
         ViewPagerFixed itemPager = view.findViewById(R.id.emoji_item_pager);
         TabLayout itemTabLayout = view.findViewById(R.id.emoji_item_tab_layout);
 
@@ -97,6 +98,7 @@ public class EmojiPackagePagerAdapter extends PagerAdapter {
 
             }
         });
+        itemTabLayout.setSelectedTabIndicatorColor(PrimaryColors.getPrimaryColor());
         itemTabLayout.setupWithViewPager(itemPager);
         adapter.updateTabView();
         itemTabLayout.getTabAt(0).select();
@@ -114,6 +116,17 @@ public class EmojiPackagePagerAdapter extends PagerAdapter {
         }
 
         return view;
+    }
+
+    @LayoutRes
+    private int getLayoutRes(EmojiPackageInfo info) {
+        switch (info.mEmojiPackageType) {
+            case GIF:
+                return R.layout.emoji_gif_page_item_layout;
+            default:
+                return R.layout.emoji_page_item_layout ;
+        }
+
     }
 
     private AbstractEmojiItemPagerAdapter getPagerAdapter(EmojiPackageInfo info) {
@@ -136,7 +149,7 @@ public class EmojiPackagePagerAdapter extends PagerAdapter {
         if (data.containsKey(EmojiPackageType.EMOJI)) {
             mEmojiAdapter = new EmojiItemPagerAdapter(mContext, data.get(EmojiPackageType.EMOJI), mOnEmojiClickListener);
         }
-        if(data.containsKey(EmojiPackageType.GIF)) {
+        if (data.containsKey(EmojiPackageType.GIF)) {
             mGiphyAdapter = new GiphyItemPagerAdapter(mContext, data.get(EmojiPackageType.GIF), mOnEmojiClickListener);
         }
     }
@@ -239,6 +252,8 @@ public class EmojiPackagePagerAdapter extends PagerAdapter {
         void emojiLongClick(View view, EmojiInfo emojiInfo);
 
         void stickerClickExcludeMagic(StickerInfo stickerInfo);
+
+        void gifClick(GiphyInfo gifInfo);
 
         void deleteEmoji();
     }

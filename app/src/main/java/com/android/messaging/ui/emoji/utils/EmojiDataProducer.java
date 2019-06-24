@@ -33,6 +33,28 @@ public class EmojiDataProducer {
         return result;
     }
 
+    public static List<EmojiPackageInfo> getInitGifData(Context context) {
+        List<EmojiPackageInfo> result = new ArrayList<>();
+
+        String packageName = context.getPackageName();
+        EmojiPackageInfo recentInfo = new EmojiPackageInfo();
+        recentInfo.mName = "recent";
+        recentInfo.mEmojiPackageType = EmojiPackageType.RECENT;
+        recentInfo.mTabIconUrl = Uri.parse("android.resource://" + packageName + "/" +
+                context.getResources().getIdentifier("emoji_category_recent_selected", "drawable", packageName)).toString();
+        recentInfo.mEmojiInfoList = EmojiManager.getRecentInfo(EmojiPackageType.GIF);
+        result.add(recentInfo);
+
+        String[] categories = {"Happy", "Laugh", "Dogs", "Sad", "OMG",
+        "Good", "Well Done", "Heihei", "Cry", "Upset"};
+        for (int i = 0; i < 10; i++) {
+            EmojiPackageInfo category = new EmojiPackageInfo();
+            category.mName = categories[i];
+            result.add(category);
+        }
+        return result;
+    }
+
     public static List<EmojiPackageInfo> getInitEmojiData(Context context) {
         List<EmojiPackageInfo> result = new ArrayList<>();
         EmojiCategory[] categoryList = EmojiProvider.getCategories();

@@ -13,6 +13,7 @@ import com.android.messaging.glide.GlideApp;
 import com.android.messaging.ui.emoji.BaseEmojiInfo;
 import com.android.messaging.ui.emoji.EmojiInfo;
 import com.android.messaging.ui.emoji.EmojiPackageType;
+import com.android.messaging.ui.emoji.GiphyInfo;
 import com.android.messaging.ui.emoji.StickerInfo;
 import com.bumptech.glide.request.target.SimpleTarget;
 import com.bumptech.glide.request.transition.Transition;
@@ -31,6 +32,7 @@ public class EmojiManager {
     private static final String PREF_FILE_NAME = "emoji";
     private static final String PREF_RECENT_STICKER = "pref_recent_sticker";
     private static final String PREF_RECENT_EMOJI = "pref_recent_emoji";
+    private static final String PREF_RECENT_GIF = "pref_recent_gif";
     private static final String PREF_NEW_TAB_STICKER = "pref_new_tab_sticker";
     private static final String PREF_IS_SHOW_EMOJI_GUIDE = "pref_is_show_emoji_guide";
     private static final String PREF_STICKER_MAGIC_LOTTIE_URL_PREFIX = "pref_sticker_magic_lottie_url_";
@@ -96,6 +98,9 @@ public class EmojiManager {
             case EMOJI:
                 result = Preferences.get(PREF_FILE_NAME).getStringList(PREF_RECENT_EMOJI);
                 break;
+            case GIF:
+                result = Preferences.get(PREF_FILE_NAME).getStringList(PREF_RECENT_GIF);
+                break;
             default:
                 throw new IllegalStateException("emojiType illegal");
         }
@@ -121,6 +126,9 @@ public class EmojiManager {
                     break;
                 case EMOJI:
                     info = EmojiInfo.unflatten(msg);
+                    break;
+                case GIF:
+                    info = GiphyInfo.unflatten(msg);
                     break;
                 default:
                     throw new IllegalStateException("emojiType illegal");
@@ -174,6 +182,26 @@ public class EmojiManager {
     @SuppressLint("CheckResult")
     public static void getStickerFile(Context context,
                                       final String picUrl, OnGetStickerFileListener stickerFileListener) {
+        if (!TextUtils.isEmpty(picUrl)) {
+            if (!TextUtils.isEmpty(picUrl)) {
+                GlideApp.with(context)
+                        .asFile()
+                        .load(picUrl)
+                        .downloadOnly(new SimpleTarget<File>() {
+                            @Override
+                            public void onResourceReady(@NonNull File file, @Nullable Transition<? super File> transition) {
+                                if (stickerFileListener != null) {
+                                    stickerFileListener.onSuccess(file);
+                                }
+                            }
+                        });
+            }
+        }
+    }
+
+    @SuppressLint("CheckResult")
+    public static void getGifFile(Context context,
+                                  final String picUrl, OnGetStickerFileListener stickerFileListener) {
         if (!TextUtils.isEmpty(picUrl)) {
             if (!TextUtils.isEmpty(picUrl)) {
                 GlideApp.with(context)

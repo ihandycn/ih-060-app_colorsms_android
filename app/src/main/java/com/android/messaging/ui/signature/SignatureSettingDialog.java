@@ -20,6 +20,7 @@ import com.android.messaging.ui.appsettings.SettingGeneralActivity;
 import com.android.messaging.ui.customize.PrimaryColors;
 import com.android.messaging.ui.emoji.EmojiInfo;
 import com.android.messaging.ui.emoji.EmojiPackagePagerAdapter;
+import com.android.messaging.ui.emoji.GiphyInfo;
 import com.android.messaging.ui.emoji.StickerInfo;
 import com.android.messaging.util.BugleAnalytics;
 import com.android.messaging.util.ImeUtil;
@@ -226,6 +227,11 @@ public class SignatureSettingDialog extends DialogFragment {
 
             @Override
             public void stickerClickExcludeMagic(@NonNull StickerInfo info) {
+
+            }
+
+            @Override
+            public void gifClick(GiphyInfo gifInfo) {
 
             }
 
