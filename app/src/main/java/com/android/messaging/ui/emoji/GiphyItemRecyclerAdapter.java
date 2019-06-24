@@ -2,9 +2,7 @@ package com.android.messaging.ui.emoji;
 
 import android.content.Context;
 import android.graphics.Rect;
-import android.graphics.drawable.Drawable;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,10 +14,7 @@ import com.android.messaging.glide.GlideApp;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.load.resource.bitmap.FitCenter;
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
-import com.bumptech.glide.load.resource.gif.GifDrawable;
 import com.bumptech.glide.request.RequestOptions;
-import com.bumptech.glide.request.target.CustomViewTarget;
-import com.bumptech.glide.request.transition.Transition;
 import com.giphy.sdk.core.models.Image;
 import com.giphy.sdk.core.models.Media;
 import com.giphy.sdk.core.models.enums.MediaType;
@@ -128,7 +123,7 @@ public class GiphyItemRecyclerAdapter extends RecyclerView.Adapter<GiphyItemRecy
         int width = mDataList.get(position).mGifOriginalWidth;
         int height = mDataList.get(position).mGifOriginalHeight;
         holder.mGif.getLayoutParams().height = (Dimensions.getPhoneWidth(context) - Dimensions.pxFromDp(23))
-                * height / width / 2 + Dimensions.pxFromDp(5);
+                * height / width / 2;
         RequestOptions requestOptions = new RequestOptions();
         requestOptions = requestOptions.transforms(new FitCenter(), new RoundedCorners(Dimensions.pxFromDp(4)));
 

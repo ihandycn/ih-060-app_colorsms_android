@@ -383,7 +383,7 @@ public class MessageBoxConversationView extends FrameLayout {
 
         @Override
         public void getItemOffsets(Rect outRect, View view, RecyclerView parent, RecyclerView.State state) {
-
+            super.getItemOffsets(outRect, view, parent, state);
             int position = parent.getChildAdapterPosition(view);
             int count = parent.getAdapter().getItemCount();
 

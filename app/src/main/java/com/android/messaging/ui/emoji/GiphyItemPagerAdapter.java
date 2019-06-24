@@ -63,6 +63,8 @@ public class GiphyItemPagerAdapter extends AbstractEmojiItemPagerAdapter {
                     super.getItemOffsets(outRect, view, parent, state);
                     outRect.left = Dimensions.pxFromDp(2.5f);
                     outRect.right = Dimensions.pxFromDp(2.5f);
+                    outRect.top = Dimensions.pxFromDp(2.5f);
+                    outRect.bottom = Dimensions.pxFromDp(2.5f);
                 }
             });
 
