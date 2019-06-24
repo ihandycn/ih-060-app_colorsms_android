@@ -573,6 +573,7 @@
     <string name="welcome_set_default_failed_toast">Color SMS no se estableció correctamente.</string>
     <string name="dialog_add_contact_confirmation">Añadir</string>
     <string name="sms_network_error">Error de red.</string>
+    <string name="network_error_and_try_again">Error de red.</string>
     <string name="reload">Recargar</string>
     <string name="sms_notification_channel">Notificación SMS</string>
     <string name="sms_notification_channel_description">Muestra una notificación cuando se recibe un SMS.</string>
@@ -626,6 +627,7 @@
 	<string name="welcome_choose_theme_title">Elige un tema que te guste</string>
 	<string name="welcome_choose_theme_current">ACTUAL</string>
 	<string name="setting_reset_customization_title">Restablecer personalización</string>
+    <string name="menu_reset_customization">Restablecer personalización</string>
 	<string name="setting_reset_customization_summary">Borrar la personalización de este chat.</string>
 	<string name="action_pin">Fijar en la parte superior</string>
 

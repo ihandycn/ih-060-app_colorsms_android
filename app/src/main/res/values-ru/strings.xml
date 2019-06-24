@@ -622,6 +622,7 @@
     <string name="welcome_set_default_failed_toast">Приложение Color SMS установлено неправильно</string>
     <string name="dialog_add_contact_confirmation">Добавить</string>
     <string name="sms_network_error">Ошибка сети.</string>
+    <string name="network_error_and_try_again">Ошибка сети.</string>
     <string name="reload">Перезагрузить</string>
     <string name="sms_notification_channel">Уведомление об СМС</string>
     <string name="sms_notification_channel_description">Показывать уведомления о входящих СМС</string>
@@ -669,6 +670,7 @@
 	<string name="welcome_choose_theme_title">Выберите понравившуюся тему</string>
 	<string name="welcome_choose_theme_current">ТЕКУЩАЯ</string>
 	<string name="setting_reset_customization_title">Сброс индивидуальных настроек</string>
+    <string name="menu_reset_customization">Сброс индивидуальных настроек</string>
 	<string name="setting_reset_customization_summary">Стереть индивидуальные настройки данного чата.</string>
 	<string name="action_pin">Закрепить сверху</string>
 

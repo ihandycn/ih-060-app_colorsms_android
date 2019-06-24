@@ -567,6 +567,7 @@
     <string name="welcome_set_default_failed_toast">未能成功將Color SMS設為默認</string>
     <string name="dialog_add_contact_confirmation">添加</string>
     <string name="sms_network_error">網絡錯誤</string>
+    <string name="network_error_and_try_again">網絡錯誤</string>
     <string name="reload">重新加載</string>
     <string name="sms_notification_channel">短信通知</string>
     <string name="sms_notification_channel_description">當收到短信時，顯示通知消息</string>
@@ -611,8 +612,9 @@
     <string name="menu_theme">主題</string>
     <string name="welcome_choose_theme_title">選擇一個你喜歡的主題</string>
     <string name="welcome_choose_theme_current">當前</string>
-    <string name="setting_reset_customization_title">重置自定義內容？ </string>
-    <string name="setting_reset_customization_summary">這將重置此會話的所有自定義內容。 </string>
+    <string name="setting_reset_customization_title">重置自定義內容？</string>
+    <string name="menu_reset_customization">重置自定義內容</string>
+    <string name="setting_reset_customization_summary">這將重置此會話的所有自定義內容。</string>
     <string name="action_pin">置頂</string>
     <string name="tips">提示</string>
 

@@ -570,6 +570,7 @@
     <string name="welcome_set_default_failed_toast">Color SMS düzgün ayarlanmadı</string>
     <string name="dialog_add_contact_confirmation">Ekle</string>
     <string name="sms_network_error">Ağ hatası.</string>
+    <string name="network_error_and_try_again">Ağ hatası.</string>
     <string name="reload">Tekrar Yükle</string>
     <string name="sms_notification_channel">SMS Bildirimi</string>
     <string name="sms_notification_channel_description">SMS alındığında bildirim göster</string>
@@ -616,6 +617,7 @@
 	<string name="welcome_choose_theme_title">Beğendiğin Temayı Seç</string>
 	<string name="welcome_choose_theme_current">MEVCUT</string>
 	<string name="setting_reset_customization_title">Özelleştirmeyi Sıfırla</string>
+    <string name="menu_reset_customization">Özelleştirmeyi Sıfırla</string>
 	<string name="setting_reset_customization_summary">Bu sohbetteki özelleştirmeyi silin.</string>
 	<string name="action_pin">En Üste Sabitle</string>
 

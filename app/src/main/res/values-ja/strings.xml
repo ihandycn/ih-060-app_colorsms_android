@@ -573,6 +573,7 @@
     <string name="welcome_set_default_failed_toast">Color SMSは正しくセットアップされませんでした</string>
     <string name="dialog_add_contact_confirmation">追加</string>
     <string name="sms_network_error">ネットワークエラー。</string>
+    <string name="network_error_and_try_again">ネットワークエラー。</string>
     <string name="reload">リロード</string>
     <string name="sms_notification_channel">SMS通知</string>
     <string name="sms_notification_channel_description">SMSを受信した時に通知を表示する</string>
@@ -622,6 +623,7 @@
 	<string name="welcome_choose_theme_title">お好きなテーマを選択</string>
 	<string name="welcome_choose_theme_current">現在</string>
 	<string name="setting_reset_customization_title">カスタマイズをリセット</string>
+    <string name="menu_reset_customization">カスタマイズをリセット</string>
 	<string name="setting_reset_customization_summary">このチャットのカスタマイズを消去する。</string>
 	<string name="action_pin">ピン付けしてトップに移動する</string>
 

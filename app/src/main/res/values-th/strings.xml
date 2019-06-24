@@ -569,6 +569,7 @@
     <string name="welcome_set_default_failed_toast">Color SMS ไม่ได้ตั้งค่าอย่างถูกต้อง</string>
     <string name="dialog_add_contact_confirmation">เพิ่ม</string>
     <string name="sms_network_error">ข้อผิดพลาดเครือข่าย</string>
+    <string name="network_error_and_try_again">ข้อผิดพลาดเครือข่าย</string>
     <string name="reload">โหลดใหม่</string>
     <string name="sms_notification_channel">การแจ้งเตือน SMS</string>
     <string name="sms_notification_channel_description">แสดงการแจ้งเตือนเมื่อได้รับ SMS</string>
@@ -622,6 +623,7 @@
 	<string name="welcome_choose_theme_title">เลือกธีมที่คุณต้องการ</string>
 	<string name="welcome_choose_theme_current">ปัจจุบัน</string>
 	<string name="setting_reset_customization_title">รีเซ็ตรายการกำหนดเอง</string>
+    <string name="menu_reset_customization">รีเซ็ตรายการกำหนดเอง</string>
 	<string name="setting_reset_customization_summary">ลบรายการกำหนดเองในการสนทนานี้</string>
 	<string name="action_pin">ปักหมุดบนสุด</string>
 

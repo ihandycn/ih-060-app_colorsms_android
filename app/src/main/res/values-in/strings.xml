@@ -573,6 +573,7 @@
     <string name="welcome_set_default_failed_toast">Color SMS belum disiapkan secara benar</string>
     <string name="dialog_add_contact_confirmation">Tambahkan</string>
     <string name="sms_network_error">Jaringan bermasalah.</string>
+    <string name="network_error_and_try_again">Jaringan bermasalah.</string>
     <string name="reload">Muat Ulang</string>
     <string name="sms_notification_channel">Notifikasi SMS</string>
     <string name="sms_notification_channel_description">Tampilkan notifikasi saat menerima SMS</string>
@@ -624,6 +625,7 @@
 	<string name="welcome_choose_theme_title">Pilih Tema yang Anda Sukai</string>
 	<string name="welcome_choose_theme_current">SEKARANG</string>
 	<string name="setting_reset_customization_title">Atur Ulang Kustomisasi</string>
+    <string name="menu_reset_customization">Atur Ulang Kustomisasi</string>
 	<string name="setting_reset_customization_summary">Hapus kustomisasi di percakapan ini.</string>
 	<string name="action_pin">Sematkan ke Atas</string>
 

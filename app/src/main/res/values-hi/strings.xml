@@ -573,6 +573,7 @@
     <string name="welcome_set_default_failed_toast">रंगीन एसएमएस ठीक से सेट नहीं किया गया था</string>
     <string name="dialog_add_contact_confirmation">जोड़ें</string>
     <string name="sms_network_error">नेटवर्क त्रुटि।</string>
+    <string name="network_error_and_try_again">नेटवर्क त्रुटि।</string>
     <string name="reload">रिलॉड</string>
     <string name="sms_notification_channel">एसएमएस सूचना</string>
     <string name="sms_notification_channel_description">एसएमएस प्राप्‍त करने पर एक सूचना दर्शाएं</string>
@@ -625,6 +626,7 @@
 	<string name="welcome_choose_theme_title">अपनी पसंद की एक थीम चुनें</string>
 	<string name="welcome_choose_theme_current">मौजूदा</string>
 	<string name="setting_reset_customization_title">अनुकूलन दुबारा सेट करें</string>
+    <string name="menu_reset_customization">अनुकूलन दुबारा सेट करें</string>
 	<string name="setting_reset_customization_summary">इस चैट में अनुकूलन मिटाएं</string>
 	<string name="action_pin">शीर्ष पर पिन करें</string>
 

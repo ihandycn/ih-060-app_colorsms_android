@@ -573,6 +573,7 @@
     <string name="welcome_set_default_failed_toast">Color SMS đã không được thiết lập đúng cách</string>
     <string name="dialog_add_contact_confirmation">Thêm</string>
     <string name="sms_network_error">Lỗi mạng.</string>
+    <string name="network_error_and_try_again">Lỗi mạng.</string>
     <string name="reload">Tải lại</string>
     <string name="sms_notification_channel">Thông báo SMS</string>
     <string name="sms_notification_channel_description">Hiển thị thông báo khi nhận được SMS</string>
@@ -619,6 +620,7 @@
 	<string name="welcome_choose_theme_title">Chọn một chủ đề bạn thích</string>
 	<string name="welcome_choose_theme_current">HIỆN TẠI</string>
 	<string name="setting_reset_customization_title">Đặt lại Tùy chỉnh</string>
+    <string name="menu_reset_customization">Đặt lại Tùy chỉnh</string>
 	<string name="setting_reset_customization_summary">Xóa các tùy chỉnh trong cuộc trò chuyện này.</string>
 	<string name="action_pin">Ghim vào Trên cùng</string>
 
