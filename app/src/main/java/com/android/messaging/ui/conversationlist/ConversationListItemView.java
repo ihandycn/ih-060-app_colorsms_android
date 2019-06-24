@@ -365,9 +365,13 @@ public class ConversationListItemView extends FrameLayout implements OnClickList
         if (mHostInterface.isSelectionMode()) {
             checkbox.setVisibility(View.VISIBLE);
             if (isSelected) {
-                checkbox.setImageResource(R.drawable.ic_choosen);
+                checkbox.setImageResource(R.drawable.conversation_check);
+                checkbox.setBackground(BackgroundDrawables.createBackgroundDrawable(
+                        PrimaryColors.getPrimaryColor(), Dimensions.pxFromDp(20), false));
             } else {
-                checkbox.setImageResource(R.drawable.ic_choose);
+                checkbox.setImageDrawable(null);
+                checkbox.setBackground(BackgroundDrawables.createBackgroundDrawable(0, 0, 4,
+                        0xffbdc2c9, Dimensions.pxFromDp(20), false, false));
             }
             rightContainer.setVisibility(GONE);
         } else {
@@ -376,21 +380,14 @@ public class ConversationListItemView extends FrameLayout implements OnClickList
             rightContainer.setVisibility(VISIBLE);
         }
 
-//        int contactIconVisibility = GONE;
         int failStatusVisibility = GONE;
-//        if (isSelected) {
-//            checkMarkVisibility = VISIBLE;
-//        } else {
-//            contactIconVisibility = VISIBLE;
         // Only show the fail icon if it is not a group conversation.
         // And also require that we be the default sms app.
         if (mData.getIsFailedStatus() && !mData.getIsGroup()) {
             failStatusVisibility = VISIBLE;
         }
-//        }
 
         setContactImage();
-//        mContactIconView.setVisibility(contactIconVisibility);
         mContactIconView.clearColorFilter();
 
         mFailedStatusIconView.setVisibility(failStatusVisibility);

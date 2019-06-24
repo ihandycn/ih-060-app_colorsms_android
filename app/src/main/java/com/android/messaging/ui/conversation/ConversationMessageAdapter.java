@@ -26,6 +26,9 @@ import com.android.messaging.R;
 import com.android.messaging.datamodel.data.ConversationMessageData;
 import com.android.messaging.ui.AsyncImageView.AsyncImageViewDelayLoader;
 import com.android.messaging.ui.conversation.ConversationMessageView.ConversationMessageViewHost;
+import com.android.messaging.ui.customize.PrimaryColors;
+import com.superapps.util.BackgroundDrawables;
+import com.superapps.util.Dimensions;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -141,9 +144,13 @@ public class ConversationMessageAdapter extends
             if (multiSelectMode && !ConversationFragment.getSelectMessageIds().isEmpty()) {
                 checkbox.setVisibility(View.VISIBLE);
                 if (ConversationFragment.getSelectMessageIds().contains(data.getMessageId())) {
-                    checkbox.setImageResource(R.drawable.ic_choosen);
+                    checkbox.setImageResource(R.drawable.conversation_check);
+                    checkbox.setBackground(BackgroundDrawables.createBackgroundDrawable(
+                            PrimaryColors.getPrimaryColor(), Dimensions.pxFromDp(20), false));
                 } else {
-                    checkbox.setImageResource(R.drawable.ic_choose);
+                    checkbox.setImageDrawable(null);
+                    checkbox.setBackground(BackgroundDrawables.createBackgroundDrawable(0, 0, 4,
+                            0xffbdc2c9, Dimensions.pxFromDp(20), false, false));
                 }
             } else {
                 checkbox.setVisibility(View.GONE);
