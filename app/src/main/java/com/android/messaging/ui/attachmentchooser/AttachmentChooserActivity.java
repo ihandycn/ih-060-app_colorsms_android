@@ -27,6 +27,7 @@ import com.android.messaging.R;
 import com.android.messaging.ui.BugleActionBarActivity;
 import com.android.messaging.ui.UIIntents;
 import com.android.messaging.ui.attachmentchooser.AttachmentChooserFragment.AttachmentChooserFragmentHost;
+import com.android.messaging.ui.customize.PrimaryColors;
 import com.android.messaging.util.Assert;
 import com.android.messaging.util.Typefaces;
 import com.android.messaging.util.UiUtils;
@@ -64,11 +65,12 @@ public class AttachmentChooserActivity extends BugleActionBarActivity implements
 
     private void initActionBar() {
         Toolbar toolbar = findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-        invalidateActionBar();
         mTitleTextView = findViewById(R.id.toolbar_title);
         mTitleTextView.setTypeface(Typefaces.getCustomSemiBold());
         mTitleTextView.setText(R.string.attachment_chooser_activity_title);
+        setSupportActionBar(toolbar);
+        UiUtils.setTitleBarBackground(toolbar, this);
+        invalidateActionBar();
     }
 
     @Override
@@ -77,13 +79,11 @@ public class AttachmentChooserActivity extends BugleActionBarActivity implements
         // Reset the back arrow to its default
         actionBar.setHomeAsUpIndicator(R.drawable.ic_back);
         actionBar.setDisplayShowTitleEnabled(false);
-        actionBar.setBackgroundDrawable(getResources().getDrawable(R.drawable.actionbar_underline_bg));
-        UiUtils.setStatusBarColor(this, getResources().getColor(R.color.action_bar_background_color));
-
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem menuItem) {
+
         boolean superConsumed = super.onOptionsItemSelected(menuItem);
         switch (menuItem.getItemId()) {
             case android.R.id.home:

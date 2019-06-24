@@ -61,7 +61,7 @@
     </style>
 
     <style name="GalleryGridItemViewCheckBoxStyle">
-        <item name="android:paddingEnd">4dp</item>
+        <item name="android:layout_marginEnd">4dp</item>
     </style>
 
     <style name="BugleActionBarTitleTextStyle" parent="@style/TextAppearance.AppCompat.Widget.ActionBar.Title">
@@ -141,7 +141,7 @@
     </style>
 
     <style name="AttachmentGridItemViewCheckBoxStyle">
-        <item name="android:paddingEnd">7dp</item>
+        <item name="android:layout_marginEnd">7dp</item>
     </style>
 
     <style name="WidgetConversationItemFailed">

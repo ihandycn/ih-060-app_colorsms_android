@@ -326,7 +326,7 @@
     </style>
 
     <style name="GalleryGridItemViewCheckBoxStyle">
-        <item name="android:paddingEnd">22dp</item>
+        <item name="android:layout_marginEnd">22dp</item>
     </style>
 
     <style name="AttachmentPreviewAttachmentStyle">
@@ -555,7 +555,7 @@
     </style>
 
     <style name="AttachmentGridItemViewCheckBoxStyle">
-        <item name="android:paddingEnd">7dp</item>
+        <item name="android:layout_marginEnd">7dp</item>
     </style>
 
     <style name="DirectoryHeaderStyle">

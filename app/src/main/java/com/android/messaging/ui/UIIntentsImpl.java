@@ -344,7 +344,7 @@ public class UIIntentsImpl extends UIIntents {
                                                 final String conversationId, final int requestCode) {
         final Intent intent = new Intent(activity, AttachmentChooserActivity.class);
         intent.putExtra(UI_INTENT_EXTRA_CONVERSATION_ID, conversationId);
-        activity.startActivityForResult(intent, requestCode);
+        activity.startActivityForResult(intent, requestCode, TransitionUtils.getTransitionInBundle(activity));
     }
 
     @Override

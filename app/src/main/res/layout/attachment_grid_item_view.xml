@@ -29,14 +29,13 @@
         android:layout_height="match_parent"
         android:background="?android:attr/selectableItemBackground" />
 
-    <CheckBox
+    <ImageView
         android:id="@+id/checkbox"
         style="@style/AttachmentGridItemViewCheckBoxStyle"
-        android:button="@drawable/gallery_checkbox_selector"
         android:background="@null"
-        android:layout_width="26.3dp"
-        android:layout_height="26.3dp"
+        android:layout_width="20dp"
+        android:layout_height="20dp"
         android:layout_gravity="top|end"
-        android:paddingTop="7dp"
+        android:layout_marginTop="7dp"
         android:contentDescription="@string/gallery_checkbox_content_description" />
 </com.android.messaging.ui.attachmentchooser.AttachmentGridItemView>
