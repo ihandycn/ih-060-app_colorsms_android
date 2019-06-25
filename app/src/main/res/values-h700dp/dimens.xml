@@ -14,7 +14,7 @@
     limitations under the License.
 -->
 <resources>
-    <dimen name="conversation_list_contact_icon_size">48sp</dimen>
+    <dimen name="conversation_list_contact_icon_size">47sp</dimen>
     <dimen name="conversation_list_contact_bg_size">74dp</dimen>
     <dimen name="conversation_list_item_view_padding_top">16dp</dimen>
     <dimen name="conversation_list_item_height">69dp</dimen>
