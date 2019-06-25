@@ -593,7 +593,7 @@ public class UiUtils {
         int phoneHeight = Dimensions.getPhoneHeight(context);
         float heightThresholdInDp = 700f;
 
-        return heightThresholdInDp > Dimensions.dpFromPx(phoneHeight);
+        return  Dimensions.dpFromPx(phoneHeight) > heightThresholdInDp;
     }
 
 

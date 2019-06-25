@@ -38,7 +38,7 @@
     <dimen name="conversation_list_error_icon_size">18.7dp</dimen>
     <dimen name="conversation_list_item_conversation_name_text_size">16sp</dimen>
     <dimen name="conversation_list_item_snippet_text_size">13sp</dimen>
-    <dimen name="conversation_list_item_height">@dimen/wrap_content</dimen>
+    <dimen name="conversation_list_item_height">@dimen/conversation_list_contact_bg_size</dimen>
     <dimen name="conversation_message_bubble_incoming_simple_style_top_padding">10dp</dimen>
     <dimen name="conversation_message_bubble_incoming_top_padding">20dp</dimen>
     <dimen name="conversation_message_contact_icon_container_size">66dp</dimen>

@@ -121,8 +121,9 @@ public class PrivateContactsActivity extends BaseActivity implements PrivateCont
             }
             Collections.sort(conversationIdList, (o1, o2) -> Collator.getInstance().compare(o1, o2));
             list.addAll(conversationIdList);
-            final DatabaseWrapper db = DataModel.get().getDatabase();
+
             Threads.postOnMainThread(() -> {
+                final DatabaseWrapper db = DataModel.get().getDatabase();
                 mEmptyListMessageView.setVisibility(list.isEmpty() ? View.VISIBLE : View.GONE);
                 mAdapter.updateData(list, db);
             });
