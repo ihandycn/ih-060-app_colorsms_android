@@ -120,7 +120,7 @@
                     app:srcCompat="@drawable/ic_message_box_close" />
             </LinearLayout>
 
-            <com.superapps.view.RoundImageView
+            <com.android.messaging.ui.view.CenterTopImageView
                 android:id="@+id/message_background"
                 android:layout_width="0dp"
                 android:layout_height="0dp"
