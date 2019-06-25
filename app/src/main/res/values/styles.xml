@@ -165,7 +165,7 @@
         <item name="android:textSize">14sp</item>
         <item name="android:gravity">center_vertical</item>
         <item name="android:fontFamily">sans-serif</item>
-        <item name="android:paddingStart">13.7dp</item>
+        <item name="android:paddingStart">6.7dp</item>
         <item name="android:paddingEnd">13.7dp</item>
         <item name="android:paddingBottom">9dp</item>
         <item name="android:paddingTop">9dp</item>
@@ -777,6 +777,14 @@
         <item name="android:textSize">15.3sp</item>
         <item name="android:includeFontPadding">false</item>
         <item name="android:background">?selectableItemBackground</item>
+        <item name="android:button">@null</item>
+    </style>
+
+    <style name="SelectSimRadioButton">
+        <item name="android:layout_width">18dp</item>
+        <item name="android:layout_height">18dp</item>
+        <item name="android:gravity">center</item>
+        <item name="android:checked">false</item>
         <item name="android:button">@null</item>
     </style>
 

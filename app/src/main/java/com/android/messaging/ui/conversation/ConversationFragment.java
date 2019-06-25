@@ -1888,11 +1888,6 @@ public class ConversationFragment extends Fragment implements ConversationDataLi
     }
 
     @Override
-    public boolean shouldShowSubjectEditor() {
-        return false;
-    }
-
-    @Override
     public boolean shouldHideAttachmentsWhenSimSelectorShown() {
         return false;
     }
@@ -1908,17 +1903,17 @@ public class ConversationFragment extends Fragment implements ConversationDataLi
     }
 
     @Override
-    public Uri getSelfSendButtonIconUri() {
-        return null;    // use default button icon uri
-    }
-
-    @Override
     public void onAttachmentsChanged(final boolean haveAttachments) {
         // no-op for now
     }
 
     @Override
     public void onClickMediaOrEmoji() {
+    }
+
+    @Override
+    public Activity getHostActivity(){
+        return getActivity();
     }
 
     @Override

@@ -1312,5 +1312,7 @@
 
     <!--archive-->
     <string name="archived_conversations">Archived Conversations</string>
+
+    <string name="switch_sim">Switch SIM</string>
 </resources>
 
