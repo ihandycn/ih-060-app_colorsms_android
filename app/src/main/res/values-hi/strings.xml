@@ -699,7 +699,6 @@
     <string name="invite_friends_default_back_to_main_page_title">दोस्‍तों को आमंत्रित करें</string>
     <string name="privacy_mode_open_button_text">खुला</string>
     <string name="invite_friends_invite_save_button">सहेजें</string>
-    <string name="notification_title_in_private_box_single">नया संदेश</string>
     <string name="invite_friends_invite_cancel_button">अभी नहीं</string>
     <string name="privacy_mode_conversation_name">संपर्क</string>
     <string name="contacts">संपर्कों</string>

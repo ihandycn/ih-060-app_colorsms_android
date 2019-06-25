@@ -730,7 +730,6 @@
     <string name="invite_friends_default_back_to_main_page_title">친구 초대</string>
     <string name="privacy_mode_open_button_text">열다</string>
     <string name="invite_friends_invite_save_button">저장</string>
-    <string name="notification_title_in_private_box_single">새 메시지</string>
     <string name="invite_friends_invite_cancel_button">취소</string>
     <string name="privacy_mode_conversation_name">연락처</string>
     <string name="contacts">연락처</string>

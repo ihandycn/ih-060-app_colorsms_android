@@ -698,7 +698,6 @@
     <string name="invite_friends_default_back_to_main_page_title">Invita a amigos</string>
     <string name="privacy_mode_open_button_text">ABRE</string>
     <string name="invite_friends_invite_save_button">Guardar</string>
-    <string name="notification_title_in_private_box_single">Mensaje nuevo</string>
     <string name="invite_friends_invite_cancel_button">Cancelar</string>
     <string name="privacy_mode_conversation_name">Contacto</string>
     <string name="contacts">Contactos</string>

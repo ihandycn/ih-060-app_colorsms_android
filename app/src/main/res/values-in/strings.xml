@@ -736,7 +736,6 @@
     <string name="invite_friends_default_back_to_main_page_title">Undang Teman</string>
     <string name="privacy_mode_open_button_text">BUKA</string>
     <string name="invite_friends_invite_save_button">Simpan</string>
-    <string name="notification_title_in_private_box_single">Pesan baru</string>
     <string name="invite_friends_invite_cancel_button">Batal</string>
     <string name="privacy_mode_conversation_name">Kontak</string>
     <string name="contacts">Kontak</string>

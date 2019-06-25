@@ -690,7 +690,6 @@
     <string name="invite_friends_default_back_to_main_page_title">Arkadaşlarını Davet Et</string>
     <string name="privacy_mode_open_button_text">AÇIK</string>
     <string name="invite_friends_invite_save_button">Kaydet</string>
-    <string name="notification_title_in_private_box_single">Yeni ileti</string>
     <string name="invite_friends_invite_cancel_button">İptal</string>
     <string name="privacy_mode_conversation_name">Kişi</string>
     <string name="contacts">Kişiler</string>

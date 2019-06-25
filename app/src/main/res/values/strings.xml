@@ -222,10 +222,6 @@
         <item quantity="other"><xliff:g id="messages">%d</xliff:g> new messages</item>
     </plurals>
 
-    <plurals name="notification_title_in_privacy_mode">
-        <item quantity="one">New message</item>
-        <item quantity="other">%1$d unread messages</item>
-    </plurals>
     <string name="notification_sender_in_privacy_mode">Contact</string>
 
     <!-- Text for starting a new conversation button in the compose UI -->
@@ -1181,8 +1177,6 @@
     <string name="private_start_box_tip">Messages will be moved to Private Box. Please set a password for Private Box first.</string>
     <string name="private_box_add_to_success">Moved to private box</string>
     <string name="private_box_move_from_success">Moved to public box</string>
-    <string name="notification_title_in_private_box_single">New message</string>
-    <string name="notification_title_in_private_box_other">%1$d unread messages</string>
     <string name="notification_sender_in_private_box">Private Contact</string>
 
     <string name="tips">Tips</string>

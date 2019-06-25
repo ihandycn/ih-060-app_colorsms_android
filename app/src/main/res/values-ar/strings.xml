@@ -830,7 +830,6 @@
     <string name="invite_friends_default_back_to_main_page_title">دعوة الأصدقاء</string>
     <string name="privacy_mode_open_button_text">افتح</string>
     <string name="invite_friends_invite_save_button">حفظ</string>
-    <string name="notification_title_in_private_box_single">رسالة جديدة</string>
     <string name="invite_friends_invite_cancel_button">إلغاء</string>
     <string name="privacy_mode_conversation_name">جهة الاتصال</string>
     <string name="contacts">جهات الاتصال</string>
