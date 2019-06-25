@@ -145,7 +145,7 @@ public class ConversationListSwipeHelper implements OnItemTouchListener {
                             return false;
                         }
 
-                        if (absDeltaX > mTouchSlop
+                        if (absDeltaX > mTouchSlop && mListItemView.isSwipeAnimatable()
                                 && (!mIsRtl ? mInitialX > MIN_TOUCH_POINT_TO_LEFT_SIDE
                                 : mInitialX < mListItemView.getWidth() - MIN_TOUCH_POINT_TO_LEFT_SIDE)) {
                             // Swipe detected. Return true so we can handle the gesture in
