@@ -218,9 +218,6 @@ public class SnackBarManager {
                 } catch (Throwable e) {
                     // PopupWindow.dismiss() will fire an IllegalArgumentException if the activity
                     // has already ended while we were animating
-                    synchronized (SnackBarManager.class) {
-                        sManagerList.removeAt(sManagerList.indexOfValue(SnackBarManager.this));
-                    }
                 }
 
                 mPopupWindow = null;
@@ -232,10 +229,6 @@ public class SnackBarManager {
                     final SnackBar localNextSnackBar = mNextSnackBar;
                     mNextSnackBar = null;
                     show(localNextSnackBar);
-                } else {
-                    synchronized (SnackBarManager.class) {
-                        sManagerList.removeAt(sManagerList.indexOfValue(SnackBarManager.this));
-                    }
                 }
             }
         });
