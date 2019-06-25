@@ -925,14 +925,19 @@ public class ComposeMessageView extends LinearLayout
     }
 
     private void checkEmojiEvent(String input){
-        final String EMOJI_REGEX = "([\\ud83c\\udc00-\\ud83c\\udfff]|[\\ud83d\\udc00-\\ud83d\\udfff]|[\\u2600-\\u27ff]|[\\ue000-\\uf8ff])[\\uD83C\\uDFFB-\\uD83C\\uDFFF]" +
-                "|([\\ud83c\\udc00-\\ud83c\\udfff]|[\\ud83d\\udc00-\\ud83d\\udfff]|[\\u2600-\\u27ff]|[\\ue000-\\uf8ff])";
-        Pattern emojiPattern = Pattern.compile(EMOJI_REGEX,
-                Pattern.UNICODE_CASE | Pattern.CASE_INSENSITIVE);
-        Matcher matcher = emojiPattern.matcher(input);
-        if(matcher.matches()){
-            BugleAnalytics.logEvent("Message_Emoji_Send");
-        }
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                final String EMOJI_REGEX = "([\\ud83c\\udc00-\\ud83c\\udfff]|[\\ud83d\\udc00-\\ud83d\\udfff]|[\\u2600-\\u27ff]|[\\ue000-\\uf8ff])[\\uD83C\\uDFFB-\\uD83C\\uDFFF]" +
+                        "|([\\ud83c\\udc00-\\ud83c\\udfff]|[\\ud83d\\udc00-\\ud83d\\udfff]|[\\u2600-\\u27ff]|[\\ue000-\\uf8ff])";
+                Pattern emojiPattern = Pattern.compile(EMOJI_REGEX,
+                        Pattern.UNICODE_CASE | Pattern.CASE_INSENSITIVE);
+                Matcher matcher = emojiPattern.matcher(input);
+                if(matcher.matches()){
+                    BugleAnalytics.logEvent("Message_Emoji_Send");
+                }
+            }
+        }).start();
     }
 
     public static void playSentSound() {
