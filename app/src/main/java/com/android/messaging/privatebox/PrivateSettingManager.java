@@ -1,5 +1,7 @@
 package com.android.messaging.privatebox;
 
+import com.ihs.app.framework.HSApplication;
+import com.ihs.commons.config.HSConfig;
 import com.superapps.util.Preferences;
 
 public class PrivateSettingManager {
@@ -20,6 +22,7 @@ public class PrivateSettingManager {
     }
 
     public static boolean isPrivateBoxIconHidden() {
-        return Preferences.getDefault().getBoolean(PREF_KEY_PRIVATE_SETTING_HIDE_ICON, false);
+        return !PrivateBoxSettings.getIsPrivateBoxEnabled() ||
+                Preferences.getDefault().getBoolean(PREF_KEY_PRIVATE_SETTING_HIDE_ICON, false);
     }
 }

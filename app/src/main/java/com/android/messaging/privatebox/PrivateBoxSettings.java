@@ -1,7 +1,11 @@
 package com.android.messaging.privatebox;
 
 import com.android.messaging.BugleFiles;
+import com.android.messaging.R;
+import com.ihs.app.framework.HSApplication;
+import com.ihs.commons.config.HSConfig;
 import com.superapps.util.Preferences;
+
 
 /**
  * Created by lizhe on 2019/3/28.
@@ -100,5 +104,12 @@ public class PrivateBoxSettings {
 
     public static void setSecurityQuestionSet(boolean isSet) {
         Preferences.get(BugleFiles.COMMON_PREFS).putBoolean(PrivateBoxSettings.PREF_KEY_IS_SECURITY_QUESTION_SET, isSet);
+    }
+
+    public static boolean getIsPrivateBoxEnabled() {
+        if (HSApplication.getFirstLaunchInfo().appVersionCode >= 59) {
+            return isAnyPasswordSet() || HSConfig.optBoolean(false, "Application", "PrivateBox");
+        }
+        return true;
     }
 }

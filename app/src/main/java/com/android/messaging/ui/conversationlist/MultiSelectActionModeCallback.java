@@ -25,18 +25,13 @@ import android.view.MenuItem;
 import com.android.messaging.R;
 import com.android.messaging.datamodel.data.ConversationListData;
 import com.android.messaging.datamodel.data.ConversationListItemData;
+import com.android.messaging.privatebox.PrivateBoxSettings;
 import com.android.messaging.util.Assert;
-import com.android.messaging.util.CommonUtils;
-import com.ihs.app.framework.HSApplication;
-import com.ihs.commons.config.HSConfig;
-import com.superapps.util.Preferences;
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
-
-import static com.android.messaging.ui.conversationlist.ConversationListActivity.PREF_KEY_IS_PRIVATE_BOX_ENTRANCE_SWITCH_ON;
 
 public class MultiSelectActionModeCallback implements Callback {
     private HashSet<String> mBlockedSet;
@@ -121,14 +116,9 @@ public class MultiSelectActionModeCallback implements Callback {
         mArchiveMenuItem = menu.findItem(R.id.action_archive);
         mUnarchiveMenuItem = menu.findItem(R.id.action_unarchive);
         menu.findItem(R.id.action_move_from_private_box).setVisible(false);
-        if (HSApplication.getFirstLaunchInfo().appVersionCode >= 60){
-            if (!Preferences.getDefault().getBoolean(PREF_KEY_IS_PRIVATE_BOX_ENTRANCE_SWITCH_ON, false)) {
-                if (!HSConfig.optBoolean(true, "Application", "PrivateBox")) {
-                    menu.findItem(R.id.action_add_to_private_box).setVisible(false);
-                } else {
-                    Preferences.getDefault().putBoolean(PREF_KEY_IS_PRIVATE_BOX_ENTRANCE_SWITCH_ON, true);
-                }
-            }
+
+        if (!PrivateBoxSettings.getIsPrivateBoxEnabled()) {
+            menu.findItem(R.id.action_add_to_private_box).setVisible(false);
         }
         if (mListener.isArchiveMode()) {
             menu.findItem(R.id.action_add_to_private_box).setVisible(false);

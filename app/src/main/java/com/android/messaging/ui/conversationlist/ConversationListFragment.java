@@ -105,7 +105,6 @@ import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.android.messaging.ui.conversationlist.ConversationListActivity.PREF_KEY_IS_PRIVATE_BOX_ENTRANCE_SWITCH_ON;
 
 /**
  * Shows a list of conversations.
@@ -368,15 +367,10 @@ public class ConversationListFragment extends Fragment implements ConversationLi
                 mHost.onCreateConversationClick();
             });
             mStartNewConversationButton.setOnLongClickListener(v -> {
-                if (HSApplication.getFirstLaunchInfo().appVersionCode >= 60){
-                    if (!Preferences.getDefault().getBoolean(PREF_KEY_IS_PRIVATE_BOX_ENTRANCE_SWITCH_ON, false)) {
-                        if (!HSConfig.optBoolean(true, "Application", "PrivateBox")) {
-                            return true;
-                        } else {
-                            Preferences.getDefault().putBoolean(PREF_KEY_IS_PRIVATE_BOX_ENTRANCE_SWITCH_ON, true);
-                        }
-                    }
+                if (!PrivateBoxSettings.getIsPrivateBoxEnabled()) {
+                    return true;
                 }
+
                 if (PrivateBoxSettings.isAnyPasswordSet()) {
                     Intent intent = new Intent(getActivity(), SelfVerifyActivity.class);
                     intent.putExtra(SelfVerifyActivity.INTENT_KEY_ACTIVITY_ENTRANCE,
