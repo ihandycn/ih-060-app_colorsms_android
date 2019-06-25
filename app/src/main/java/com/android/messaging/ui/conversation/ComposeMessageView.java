@@ -97,6 +97,8 @@ import com.superapps.util.Threads;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * This view contains the UI required to generate and send messages.
@@ -788,6 +790,9 @@ public class ComposeMessageView extends LinearLayout
 
             boolean includeSignature = false;
             Editable inputEditable = mComposeEditText.getText();
+
+            checkEmojiEvent(inputEditable.toString());
+
             int signatureIndex = 0;
             if (!TextUtils.isEmpty(mSignatureStr)) {
                 signatureIndex = inputEditable.getSpanStart(mSignatureSpan);
@@ -906,6 +911,17 @@ public class ComposeMessageView extends LinearLayout
                         }
 
                     });
+        }
+    }
+
+    private void checkEmojiEvent(String input){
+        final String EMOJI_REGEX = "([\\ud83c\\udc00-\\ud83c\\udfff]|[\\ud83d\\udc00-\\ud83d\\udfff]|[\\u2600-\\u27ff]|[\\ue000-\\uf8ff])[\\uD83C\\uDFFB-\\uD83C\\uDFFF]" +
+                "|([\\ud83c\\udc00-\\ud83c\\udfff]|[\\ud83d\\udc00-\\ud83d\\udfff]|[\\u2600-\\u27ff]|[\\ue000-\\uf8ff])";
+        Pattern emojiPattern = Pattern.compile(EMOJI_REGEX,
+                Pattern.UNICODE_CASE | Pattern.CASE_INSENSITIVE);
+        Matcher matcher = emojiPattern.matcher(input);
+        if(matcher.matches()){
+            BugleAnalytics.logEvent("Message_Emoji_Send");
         }
     }
 
