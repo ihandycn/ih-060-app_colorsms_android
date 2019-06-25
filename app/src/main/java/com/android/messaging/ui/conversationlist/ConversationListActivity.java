@@ -716,7 +716,7 @@ public class ConversationListActivity extends AbstractConversationListActivity
         if (!shouldShowCreateShortcutGuide
                 && mainActivityCreateTime >= 2 && CommonUtils.isNewUser()
                 && HSConfig.optBoolean(false, "Application", "BackupRestore", "RecommendFull")
-                && !Preferences.getDefault().getBoolean(BackupRestoreActivity.PREF_KEY_BACKUP_ACTIVITY_SHOWN,false)
+                && !Preferences.getDefault().getBoolean(BackupRestoreActivity.PREF_KEY_BACKUP_ACTIVITY_SHOWN, false)
                 && !Preferences.getDefault()
                 .getBoolean(BackupGuideDialogActivity.PREF_KEY_BACKUP_FULL_GUIDE_SHOWN, false)) {
             shouldShowCreateShortcutGuide = true;
@@ -783,26 +783,6 @@ public class ConversationListActivity extends AbstractConversationListActivity
     @Override
     public void onActionMenu() {
         BugleAnalytics.logEvent("SMS_EditMode_More_Click");
-    }
-
-    @Override
-    public void onPin(Collection<MultiSelectActionModeCallback.SelectedConversation> conversations, boolean pin) {
-        if (pin) {
-            BugleAnalytics.logEvent("SMS_EditMode_Pin_Click", true);
-            Toasts.showToast(R.string.conversation_pinned);
-        } else {
-            BugleAnalytics.logEvent("SMS_EditMode_Unpin_Click", true);
-            Toasts.showToast(R.string.conversation_unpinned);
-        }
-
-        for (MultiSelectActionModeCallback.SelectedConversation conversation : conversations) {
-            if (pin) {
-                PinConversationAction.pinConversation(conversation.conversationId);
-            } else {
-                PinConversationAction.unpinConversation(conversation.conversationId);
-            }
-        }
-        exitMultiSelectState();
     }
 
     @Override

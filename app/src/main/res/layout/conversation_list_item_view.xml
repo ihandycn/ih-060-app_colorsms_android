@@ -28,6 +28,7 @@
 
     <LinearLayout
         android:id="@+id/cross_swipe_archive_left_container"
+
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:layout_gravity="left"
@@ -86,186 +87,195 @@
             tools:ignore="SmallSp" />
     </LinearLayout>
 
-    <FrameLayout
-        android:id="@+id/swipeableContainer"
+    <android.support.constraint.ConstraintLayout
+        android:id="@+id/conversation_item_swipeable_container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:clipChildren="false"
-        android:importantForAccessibility="no">
+        android:clipToPadding="false"
+        android:duplicateParentState="true"
+        android:orientation="horizontal"
+        android:paddingEnd="@dimen/conversation_list_item_view_padding"
+        android:paddingStart="2dp">
 
-        <LinearLayout
-            android:id="@+id/swipeableContent"
-            android:layout_width="match_parent"
+        <ImageView
+            android:id="@+id/check_box"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:layout_marginStart="13.3dp"
+            android:contentDescription="@null"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <!-- Contact avatar on the left side of the view -->
+        <ImageView
+            android:id="@+id/conversation_icon_bg"
+            android:layout_width="@dimen/conversation_list_contact_bg_size"
+            android:layout_height="@dimen/conversation_list_contact_bg_size"
+            android:scaleType="centerCrop"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="@+id/conversation_notification_bell"
+            app:layout_constraintStart_toEndOf="@id/check_box"
+            app:layout_constraintTop_toTopOf="parent"
+            android:contentDescription="@null" />
+
+        <com.android.messaging.ui.ContactIconView
+            android:id="@+id/conversation_icon"
+            android:layout_width="@dimen/conversation_list_contact_icon_size"
+            android:layout_height="@dimen/conversation_list_contact_icon_size"
+            android:background="@null"
+            android:contentDescription="@null"
+            android:importantForAccessibility="no"
+            app:fadeIn="false"
+            app:iconSize="large"
+            app:layout_constraintBottom_toBottomOf="@id/conversation_icon_bg"
+            app:layout_constraintEnd_toEndOf="@id/conversation_icon_bg"
+            app:layout_constraintStart_toStartOf="@id/conversation_icon_bg"
+            app:layout_constraintTop_toTopOf="@id/conversation_icon_bg"
+            app:reveal="false" />
+
+        <ImageView
+            android:id="@+id/conversation_failed_status_icon"
+            android:layout_width="@dimen/conversation_list_error_icon_size"
+            android:layout_height="@dimen/conversation_list_error_icon_size"
+            android:layout_gravity="bottom|end"
+            android:layout_marginBottom="10dp"
+            android:layout_marginEnd="10dp"
+            android:background="@null"
+            android:contentDescription="@null"
+            android:importantForAccessibility="no"
+            android:src="@drawable/ic_failed_status_red"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="@id/conversation_icon_bg"
+            app:layout_constraintEnd_toEndOf="@id/conversation_icon_bg" />
+
+        <android.support.constraint.Guideline
+            android:id="@+id/title_top_guide_line"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:clipChildren="false"
-            android:clipToPadding="false"
-            android:duplicateParentState="true"
             android:orientation="horizontal"
-            android:paddingEnd="@dimen/conversation_list_item_view_padding"
-            android:paddingStart="2dp">
+            app:layout_constraintGuide_begin="@dimen/conversation_list_item_view_padding_top" />
 
-            <ImageView
-                android:id="@+id/check_box"
-                android:layout_width="20dp"
-                android:layout_height="20dp"
-                android:layout_gravity="center_vertical"
-                android:layout_marginStart="13.3dp"
-                android:contentDescription="@null" />
+        <ImageView
+            android:id="@+id/conversation_notification_bell"
+            style="@style/ConversationListNotificationBellPaddingStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="2dp"
+            android:background="@null"
+            android:contentDescription="@null"
+            android:importantForAccessibility="no"
+            android:src="@drawable/ic_small_mute"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="@+id/barrier_bottom"
+            app:layout_constraintEnd_toStartOf="@+id/conversation_pin"
+            app:layout_constraintStart_toEndOf="@id/conversation_icon_bg"
+            app:layout_constraintTop_toTopOf="@+id/title_top_guide_line" />
 
-            <!-- Contact avatar on the left side of the view -->
-            <FrameLayout
-                android:layout_width="@dimen/conversation_list_contact_bg_size"
-                android:layout_height="@dimen/conversation_list_contact_bg_size"
-                android:background="@android:color/transparent">
+        <ImageView
+            android:id="@+id/conversation_pin"
+            style="@style/ConversationListNotificationBellPaddingStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@null"
+            android:contentDescription="@null"
+            android:importantForAccessibility="no"
+            android:src="@drawable/ic_small_pin"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="@+id/barrier_bottom"
+            app:layout_constraintEnd_toStartOf="@+id/conversation_name"
+            app:layout_constraintStart_toEndOf="@id/conversation_notification_bell"
+            app:layout_constraintTop_toTopOf="@+id/title_top_guide_line" />
 
-                <ImageView
-                    android:id="@+id/conversation_icon_bg"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:scaleType="centerCrop" />
+        <!--name -->
+        <com.android.messaging.ui.view.MessagesTextView
+            android:id="@+id/conversation_name"
+            style="@style/ConversationListItemViewConversationNameStyle"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:includeFontPadding="false"
+            android:lines="1"
+            android:ellipsize="end"
+            app:layout_constraintBottom_toBottomOf="@+id/barrier_bottom"
+            app:layout_constraintEnd_toStartOf="@+id/work_profile_icon"
+            app:layout_constraintStart_toEndOf="@id/conversation_pin"
+            app:layout_constraintTop_toTopOf="@+id/title_top_guide_line"
+            app:typeface="@string/custom_font_semibold" />
 
-                <com.android.messaging.ui.ContactIconView
-                    android:id="@+id/conversation_icon"
-                    android:layout_width="@dimen/conversation_list_contact_icon_size"
-                    android:layout_height="@dimen/conversation_list_contact_icon_size"
-                    android:layout_gravity="center"
-                    android:background="@android:color/transparent"
-                    android:contentDescription="@null"
-                    android:importantForAccessibility="no"
-                    app:fadeIn="false"
-                    app:iconSize="large"
-                    app:reveal="false" />
+        <ImageView
+            android:id="@+id/work_profile_icon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="end"
+            android:background="@null"
+            android:scaleType="center"
+            android:src="@drawable/ic_work_profile"
+            android:visibility="gone"
+            app:layout_constraintEnd_toStartOf="@+id/conversation_right_part_start_barrier"
+            app:layout_constraintStart_toEndOf="@+id/conversation_name"
+            app:layout_constraintTop_toTopOf="@+id/title_top_guide_line"
+            android:contentDescription="@null" />
 
-                <ImageView
-                    android:id="@+id/conversation_failed_status_icon"
-                    android:layout_width="@dimen/conversation_list_error_icon_size"
-                    android:layout_height="@dimen/conversation_list_error_icon_size"
-                    android:layout_gravity="bottom|end"
-                    android:layout_marginBottom="10dp"
-                    android:layout_marginEnd="10dp"
-                    android:background="@android:color/transparent"
-                    android:contentDescription="@null"
-                    android:importantForAccessibility="no"
-                    android:src="@drawable/ic_failed_status_red"
-                    android:visibility="gone" />
-            </FrameLayout>
+        <android.support.constraint.Barrier
+            android:id="@+id/barrier_bottom"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:barrierDirection="bottom"
+            app:constraint_referenced_ids="conversation_notification_bell,conversation_pin,conversation_name" />
 
-            <!-- The conversation name, message preview, etc -->
-            <LinearLayout
-                style="@style/ConversationListItemViewPaddingStyle"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_gravity="top"
-                android:layout_marginTop="@dimen/conversation_list_item_view_padding_top"
-                android:layout_weight="1"
-                android:background="@android:color/transparent"
-                android:clipChildren="false"
-                android:orientation="vertical">
+        <!--message content-->
+        <com.android.messaging.ui.view.MessagesTextView
+            android:id="@+id/conversation_snippet"
+            style="@style/ConversationListItemViewTextStyle"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/conversation_list_item_view_padding_top"
+            android:ellipsize="end"
+            android:includeFontPadding="false"
+            android:textColor="#878a95"
+            android:textSize="@dimen/conversation_list_item_snippet_text_size"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/conversation_right_part_start_barrier"
+            app:layout_constraintStart_toEndOf="@id/conversation_icon_bg"
+            app:layout_constraintTop_toBottomOf="@id/barrier_bottom"
+            app:typeface="@string/custom_font_regular" />
 
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:background="@android:color/transparent"
-                    android:orientation="horizontal">
+        <com.android.messaging.ui.view.MessagesTextView
+            android:id="@+id/conversation_timestamp"
+            style="@style/ConversationListItemViewTextTimeStampStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="14dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
-                    <LinearLayout
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:background="@android:color/transparent">
+        <com.android.messaging.ui.view.MessagesTextView
+            android:id="@+id/conversation_unread_messages_count"
+            android:layout_width="17dp"
+            android:layout_height="17dp"
+            android:layout_gravity="bottom|end"
+            android:layout_marginBottom="14dp"
+            android:gravity="center"
+            android:includeFontPadding="false"
+            android:textColor="@android:color/white"
+            android:textSize="12sp"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:typeface="@string/custom_font_semibold" />
 
-                        <ImageView
-                            android:id="@+id/conversation_notification_bell"
-                            style="@style/ConversationListNotificationBellPaddingStyle"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_gravity="center_vertical"
-                            android:background="@android:color/transparent"
-                            android:contentDescription="@null"
-                            android:importantForAccessibility="no"
-                            android:src="@drawable/ic_small_mute"
-                            android:visibility="gone" />
+        <android.support.constraint.Barrier
+            android:id="@+id/conversation_right_part_start_barrier"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:barrierDirection="start"
+            app:constraint_referenced_ids="conversation_timestamp,conversation_unread_messages_count" />
 
-                        <ImageView
-                            android:id="@+id/conversation_pin"
-                            style="@style/ConversationListNotificationBellPaddingStyle"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_gravity="center_vertical"
-                            android:background="@android:color/transparent"
-                            android:contentDescription="@null"
-                            android:importantForAccessibility="no"
-                            android:src="@drawable/ic_small_pin"
-                            android:visibility="gone" />
-
-                        <com.android.messaging.ui.view.MessagesTextView
-                            android:id="@+id/conversation_name"
-                            style="@style/ConversationListItemViewConversationNameStyle"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_gravity="center_vertical"
-                            android:includeFontPadding="false"
-                            android:singleLine="true"
-                            app:typeface="@string/custom_font_semibold" />
-                    </LinearLayout>
-
-                    <ImageView
-                        android:id="@+id/work_profile_icon"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="end"
-                        android:background="@android:color/transparent"
-                        android:scaleType="center"
-                        android:src="@drawable/ic_work_profile"
-                        android:visibility="gone" />
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:gravity="bottom">
-
-                    <com.android.messaging.ui.view.MessagesTextView
-                        android:id="@+id/conversation_snippet"
-                        style="@style/ConversationListItemViewTextStyle"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:ellipsize="end"
-                        android:includeFontPadding="false"
-                        android:textColor="#878a95"
-                        android:textSize="@dimen/conversation_list_item_snippet_text_size"
-                        app:typeface="@string/custom_font_regular" />
-                </LinearLayout>
-            </LinearLayout>
-
-            <!-- The attachment preview on the right side of the view -->
-            <FrameLayout
-                android:id="@+id/conversation_item_right_container"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_gravity="top|end"
-                android:background="@android:color/transparent">
-
-                <com.android.messaging.ui.view.MessagesTextView
-                    android:id="@+id/conversation_timestamp"
-                    style="@style/ConversationListItemViewTextTimeStampStyle"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="14dp" />
-
-                <com.android.messaging.ui.view.MessagesTextView
-                    android:id="@+id/conversation_unread_messages_count"
-                    android:layout_width="17dp"
-                    android:layout_height="17dp"
-                    android:layout_gravity="bottom|end"
-                    android:layout_marginBottom="14dp"
-                    android:gravity="center"
-                    android:includeFontPadding="false"
-                    android:textColor="@android:color/white"
-                    android:textSize="12sp"
-                    android:visibility="gone"
-                    app:typeface="@string/custom_font_semibold" />
-            </FrameLayout>
-        </LinearLayout>
-    </FrameLayout>
+        <android.support.constraint.Group
+            android:id="@+id/conversation_item_right_container"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:constraint_referenced_ids="conversation_timestamp,conversation_unread_messages_count" />
+    </android.support.constraint.ConstraintLayout>
 </com.android.messaging.ui.conversationlist.ConversationListItemView>

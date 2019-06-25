@@ -30,6 +30,7 @@ import android.widget.Toast;
 
 import com.android.messaging.R;
 import com.android.messaging.datamodel.action.DeleteConversationAction;
+import com.android.messaging.datamodel.action.PinConversationAction;
 import com.android.messaging.datamodel.action.UpdateConversationArchiveStatusAction;
 import com.android.messaging.datamodel.action.UpdateConversationOptionsAction;
 import com.android.messaging.datamodel.action.UpdateDestinationBlockedAction;
@@ -49,6 +50,7 @@ import com.android.messaging.util.DebugUtils;
 import com.android.messaging.util.DefaultSMSUtils;
 import com.android.messaging.util.Trace;
 import com.android.messaging.util.UiUtils;
+import com.superapps.util.Toasts;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -302,6 +304,30 @@ public abstract class AbstractConversationListActivity extends BugleActionBarAct
             BugleAnalytics.logEvent("SMS_Messages_Message_Click", true, true,
                     "Type", conversationListItemData.isPinned() ? "pin" : "unpin");
         }
+    }
+
+    @Override
+    public void onPin(Collection<MultiSelectActionModeCallback.SelectedConversation> conversations, boolean pin) {
+        if (pin) {
+            BugleAnalytics.logEvent("SMS_EditMode_Pin_Click", true);
+            Toasts.showToast(R.string.conversation_pinned);
+        } else {
+            BugleAnalytics.logEvent("SMS_EditMode_Unpin_Click", true);
+            Toasts.showToast(R.string.conversation_unpinned);
+        }
+
+        ArrayList<String> conversationList = new ArrayList<>();
+        for (MultiSelectActionModeCallback.SelectedConversation conversation : conversations) {
+            conversationList.add(conversation.conversationId);
+        }
+
+        if (pin) {
+            PinConversationAction.pinConversation(conversationList);
+        } else {
+            PinConversationAction.unpinConversation(conversationList);
+        }
+
+        exitMultiSelectState();
     }
 
     @Override

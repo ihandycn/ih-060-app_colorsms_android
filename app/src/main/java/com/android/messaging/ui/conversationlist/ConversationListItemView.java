@@ -126,7 +126,6 @@ public class ConversationListItemView extends FrameLayout implements OnClickList
 
     private int mAnimatingCount;
     private ViewGroup mSwipeableContainer;
-    private ViewGroup mSwipeableContent;
     private TextView mConversationNameView;
     private ImageView mWorkProfileIconView;
     private TextView mSnippetTextView;
@@ -143,6 +142,8 @@ public class ConversationListItemView extends FrameLayout implements OnClickList
     private HostInterface mHostInterface;
     private TextView mUnreadMessagesCountView;
 
+    private boolean mIsFirstBind = true;
+
     public ConversationListItemView(final Context context, final AttributeSet attrs) {
         super(context, attrs);
         mData = new ConversationListItemData();
@@ -152,8 +153,7 @@ public class ConversationListItemView extends FrameLayout implements OnClickList
     @Override
     protected void onFinishInflate() {
         super.onFinishInflate();
-        mSwipeableContainer = findViewById(R.id.swipeableContainer);
-        mSwipeableContent = findViewById(R.id.swipeableContent);
+        mSwipeableContainer = findViewById(R.id.conversation_item_swipeable_container);
         mConversationNameView = findViewById(R.id.conversation_name);
         mSnippetTextView = findViewById(R.id.conversation_snippet);
         mWorkProfileIconView = findViewById(R.id.work_profile_icon);
@@ -187,9 +187,9 @@ public class ConversationListItemView extends FrameLayout implements OnClickList
 
         LayoutTransition layoutTransition = new LayoutTransition();
         layoutTransition.setDuration(200);
-        layoutTransition.disableTransitionType(LayoutTransition.DISAPPEARING);
-
-        mSwipeableContent.setLayoutTransition(layoutTransition);
+        //layoutTransition.disableTransitionType(LayoutTransition.DISAPPEARING);
+        layoutTransition.setAnimateParentHierarchy(false);
+        mSwipeableContainer.setLayoutTransition(layoutTransition);
 
         if (OsUtil.isAtLeastL()) {
             setTransitionGroup(true);
@@ -305,17 +305,21 @@ public class ConversationListItemView extends FrameLayout implements OnClickList
 
         mSwipeableContainer.setOnClickListener(this);
         mSwipeableContainer.setOnLongClickListener(this);
+        mPinView.setVisibility(mData.isPinned() ? VISIBLE : GONE);
 
-        if (!mHostInterface.isArchived()) {
-            ((ImageView) findViewById(R.id.cross_swipe_archive_icon_left)).setImageResource(R.drawable.archive_swipe);
-            ((ImageView) findViewById(R.id.cross_swipe_archive_icon_right)).setImageResource(R.drawable.archive_swipe);
-            ((TextView) findViewById(R.id.cross_swipe_archive_text_left)).setText(R.string.action_archive);
-            ((TextView) findViewById(R.id.cross_swipe_archive_text_right)).setText(R.string.action_archive);
-        } else {
-            ((ImageView) findViewById(R.id.cross_swipe_archive_icon_left)).setImageResource(R.drawable.unarchive_swipe);
-            ((ImageView) findViewById(R.id.cross_swipe_archive_icon_right)).setImageResource(R.drawable.unarchive_swipe);
-            ((TextView) findViewById(R.id.cross_swipe_archive_text_left)).setText(R.string.action_unarchive);
-            ((TextView) findViewById(R.id.cross_swipe_archive_text_right)).setText(R.string.action_unarchive);
+        if (mIsFirstBind) {
+            if (!mHostInterface.isArchived()) {
+                ((ImageView) findViewById(R.id.cross_swipe_archive_icon_left)).setImageResource(R.drawable.archive_swipe);
+                ((ImageView) findViewById(R.id.cross_swipe_archive_icon_right)).setImageResource(R.drawable.archive_swipe);
+                ((TextView) findViewById(R.id.cross_swipe_archive_text_left)).setText(R.string.action_archive);
+                ((TextView) findViewById(R.id.cross_swipe_archive_text_right)).setText(R.string.action_archive);
+            } else {
+                ((ImageView) findViewById(R.id.cross_swipe_archive_icon_left)).setImageResource(R.drawable.unarchive_swipe);
+                ((ImageView) findViewById(R.id.cross_swipe_archive_icon_right)).setImageResource(R.drawable.unarchive_swipe);
+                ((TextView) findViewById(R.id.cross_swipe_archive_text_left)).setText(R.string.action_unarchive);
+                ((TextView) findViewById(R.id.cross_swipe_archive_text_right)).setText(R.string.action_unarchive);
+            }
+            mIsFirstBind = false;
         }
 
         final Resources resources = getContext().getResources();
@@ -380,7 +384,6 @@ public class ConversationListItemView extends FrameLayout implements OnClickList
             rightContainer.setVisibility(GONE);
         } else {
             checkbox.setVisibility(View.GONE);
-            //rightContainer.scrollTo(0, 0);
             rightContainer.setVisibility(VISIBLE);
         }
 
@@ -410,7 +413,6 @@ public class ConversationListItemView extends FrameLayout implements OnClickList
 
         final int notificationBellVisibility = mData.getNotificationEnabled() ? GONE : VISIBLE;
         mNotificationBellView.setVisibility(notificationBellVisibility);
-        mPinView.setVisibility(mData.isPinned() ? VISIBLE : GONE);
     }
 
     public boolean isSwipeAnimatable() {
@@ -567,10 +569,6 @@ public class ConversationListItemView extends FrameLayout implements OnClickList
             return true;
         }
         return false;
-    }
-
-    public View getSwipeableContent() {
-        return mSwipeableContent;
     }
 
     public View getContactIconView() {

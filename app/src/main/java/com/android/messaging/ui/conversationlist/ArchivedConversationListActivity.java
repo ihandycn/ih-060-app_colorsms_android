@@ -153,18 +153,6 @@ public class ArchivedConversationListActivity extends AbstractConversationListAc
     }
 
     @Override
-    public void onPin(Collection<MultiSelectActionModeCallback.SelectedConversation> conversations, boolean pin) {
-        for (MultiSelectActionModeCallback.SelectedConversation conversation : conversations) {
-            if (pin) {
-                PinConversationAction.pinConversation(conversation.conversationId);
-            } else {
-                PinConversationAction.unpinConversation(conversation.conversationId);
-            }
-        }
-        exitMultiSelectState();
-    }
-
-    @Override
     public void onAddToPrivateBox(List<String> conversations) {
 
     }

@@ -151,7 +151,7 @@ public class BugleDatabaseOperations {
         final ArrayList<String> recipients = new ArrayList<String>();
 
         for (final ParticipantData participant : participants) {
-            recipients.add(participant.getSendDestination().replaceAll("\\s+",""));
+            recipients.add(participant.getSendDestination().replaceAll("\\s+", ""));
         }
         return recipients;
     }
@@ -678,11 +678,11 @@ public class BugleDatabaseOperations {
     }
 
     public static void updateConversationPinStatues(final DatabaseWrapper dbWrapper,
-                                                    final String conversationId, final boolean isPin) {
+                                                    final String conversationId, long time, final boolean isPin) {
         Assert.isNotMainThread();
         Assert.isTrue(dbWrapper.getDatabase().inTransaction());
         final ContentValues values = new ContentValues();
-        values.put(ConversationColumns.PIN_TIMESTAMP, isPin ? System.currentTimeMillis() : 0);
+        values.put(ConversationColumns.PIN_TIMESTAMP, isPin ? time : 0);
         updateConversationRowIfExists(dbWrapper, conversationId, values);
     }
 
