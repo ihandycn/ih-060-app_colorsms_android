@@ -591,9 +591,9 @@ public class UiUtils {
 
     public static boolean isLongScreenDevice(Context context) {
         int phoneHeight = Dimensions.getPhoneHeight(context);
-        int phoneWidth = Dimensions.getPhoneWidth(context);
-        float threshold = 1.90f;
-        return phoneHeight > phoneWidth * threshold;
+        float heightThresholdInDp = 700f;
+
+        return heightThresholdInDp > Dimensions.dpFromPx(phoneHeight);
     }
 
 
