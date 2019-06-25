@@ -13,6 +13,11 @@ import com.android.messaging.R;
 import com.superapps.util.Dimensions;
 
 public class ThemeDownloadingView extends View {
+
+    interface DownloadingAnimationEndListener {
+        void onAnimationEnd();
+    }
+
     private Paint mPaint;
     private int mThemeColor;
     private float mEndPercent = 0;
@@ -22,6 +27,7 @@ public class ThemeDownloadingView extends View {
     private RectF mRectF;
     private Choreographer mChoreographer;
     private Choreographer.FrameCallback mCallback;
+    private DownloadingAnimationEndListener mEndListener;
 
     public ThemeDownloadingView(Context context) {
         super(context);
@@ -48,10 +54,20 @@ public class ThemeDownloadingView extends View {
     }
 
     public void updatePercent(float percent) {
-        if (Math.abs(percent - 0) < 0.0000001 || mEndPercent < percent) {
+        if (Math.abs(percent - 0) < 0.00001) {
+            mEndPercent = 0;
+            mSpeed = 0;
+            return;
+        }
+
+        if (mEndPercent < percent) {
             mEndPercent = percent;
             mSpeed = (mEndPercent - mCurrentPercent) / 15;
         }
+    }
+
+    public void setEndListener(DownloadingAnimationEndListener listener) {
+        mEndListener = listener;
     }
 
     @Override
@@ -76,6 +92,10 @@ public class ThemeDownloadingView extends View {
                     mRectF = new RectF(offset, offset, width - offset, height - offset);
                 }
                 canvas.drawArc(mRectF, -90, mCurrentPercent * 360, false, mPaint);
+                if (1 - mCurrentPercent < 0.00001) {
+                    mCurrentPercent = 1;
+                    mEndListener.onAnimationEnd();
+                }
             } else {
                 mCurrentPercent = 0;
             }
@@ -88,7 +108,7 @@ public class ThemeDownloadingView extends View {
         mChoreographer = Choreographer.getInstance();
         mCallback = frameTimeNanos -> {
             mChoreographer.postFrameCallback(mCallback);
-            if ((Math.abs(mEndPercent - 0) < 0.0000001 && Math.abs(mCurrentPercent - 0) > 0.0000001)
+            if ((Math.abs(mEndPercent - 0) < 0.00001 && Math.abs(mCurrentPercent - 0) > 0.00001)
                     || mEndPercent - mCurrentPercent > 0.00001) {
                 invalidate();
             }

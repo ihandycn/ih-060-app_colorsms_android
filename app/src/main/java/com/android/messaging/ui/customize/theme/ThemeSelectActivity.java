@@ -94,6 +94,7 @@ public class ThemeSelectActivity extends BaseActivity {
             }
         });
         mRecyclerView.setAdapter(mAdapter);
+        mRecyclerView.getRecycledViewPool().setMaxRecycledViews(ThemeAdapter.THEME, 0);
 
         mRecyclerView.setOnScrollListener(new RecyclerView.OnScrollListener() {
 

@@ -117,7 +117,7 @@ public class ThemeSelectItemView extends ConstraintLayout implements ThemeUtils.
             mThemeDownloadListener = new ThemeDownloadManager.IThemeDownloadListener() {
                 @Override
                 public void onDownloadSuccess() {
-                    Threads.postOnMainThread(() -> setDownloadSuccessState());
+                    Threads.postOnMainThread(() -> mDownloadingView.updatePercent(1f));
                 }
 
                 @Override
@@ -131,6 +131,9 @@ public class ThemeSelectItemView extends ConstraintLayout implements ThemeUtils.
                 }
             };
             mThemeInfo.addDownloadListener(mThemeDownloadListener);
+            mDownloadingView.setEndListener(() -> {
+                Threads.postOnMainThread(this::setDownloadSuccessState);
+            });
             setNormalState();
         }
 
@@ -160,6 +163,7 @@ public class ThemeSelectItemView extends ConstraintLayout implements ThemeUtils.
         mButtonGroupContainer.setEnabled(true);
         mButtonGroupContainer.setOnClickListener(v -> {
             mButtonGroupContainer.setEnabled(false);
+            mDownloadingView.updatePercent(0);
             mThemeInfo.downloadTheme();
             BugleAnalytics.logEvent("Customize_ThemeCenter_Theme_Download", true,
                     "theme", mThemeInfo.mThemeKey, "from", "list");
@@ -200,7 +204,6 @@ public class ThemeSelectItemView extends ConstraintLayout implements ThemeUtils.
         setSelectedState();
         Toasts.showToast(R.string.apply_theme_success);
         ThemeUtils.applyTheme(mThemeInfo, 160);
-
         if (mThemeChangeListener != null) {
             mThemeChangeListener.onThemeChanged();
         }
@@ -218,7 +221,6 @@ public class ThemeSelectItemView extends ConstraintLayout implements ThemeUtils.
         }).start();
         BugleAnalytics.logEvent("Customize_ThemeCenter_Theme_Apply", true,
                 "theme", mThemeInfo.mThemeKey, "from", "list");
-
     }
 
     @Override
