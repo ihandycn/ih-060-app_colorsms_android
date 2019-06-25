@@ -91,12 +91,23 @@
         android:id="@+id/conversation_item_swipeable_container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:background="@null"
         android:clipChildren="false"
         android:clipToPadding="false"
         android:duplicateParentState="true"
         android:orientation="horizontal"
         android:paddingEnd="@dimen/conversation_list_item_view_padding"
         android:paddingStart="2dp">
+
+        <View
+            android:id="@+id/conversation_item_ripple_view"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:background="?android:attr/selectableItemBackground"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
         <ImageView
             android:id="@+id/check_box"
@@ -113,12 +124,12 @@
             android:id="@+id/conversation_icon_bg"
             android:layout_width="@dimen/conversation_list_contact_bg_size"
             android:layout_height="@dimen/conversation_list_contact_bg_size"
+            android:contentDescription="@null"
             android:scaleType="centerCrop"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="@+id/conversation_notification_bell"
             app:layout_constraintStart_toEndOf="@id/check_box"
-            app:layout_constraintTop_toTopOf="parent"
-            android:contentDescription="@null" />
+            app:layout_constraintTop_toTopOf="parent" />
 
         <com.android.messaging.ui.ContactIconView
             android:id="@+id/conversation_icon"
@@ -194,9 +205,9 @@
             style="@style/ConversationListItemViewConversationNameStyle"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:ellipsize="end"
             android:includeFontPadding="false"
             android:lines="1"
-            android:ellipsize="end"
             app:layout_constraintBottom_toBottomOf="@+id/barrier_bottom"
             app:layout_constraintEnd_toStartOf="@+id/work_profile_icon"
             app:layout_constraintStart_toEndOf="@id/conversation_pin"
@@ -209,13 +220,13 @@
             android:layout_height="wrap_content"
             android:layout_gravity="end"
             android:background="@null"
+            android:contentDescription="@null"
             android:scaleType="center"
             android:src="@drawable/ic_work_profile"
             android:visibility="gone"
             app:layout_constraintEnd_toStartOf="@+id/conversation_right_part_start_barrier"
             app:layout_constraintStart_toEndOf="@+id/conversation_name"
-            app:layout_constraintTop_toTopOf="@+id/title_top_guide_line"
-            android:contentDescription="@null" />
+            app:layout_constraintTop_toTopOf="@+id/title_top_guide_line" />
 
         <android.support.constraint.Barrier
             android:id="@+id/barrier_bottom"

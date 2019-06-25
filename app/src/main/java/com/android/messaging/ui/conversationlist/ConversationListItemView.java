@@ -141,6 +141,7 @@ public class ConversationListItemView extends FrameLayout implements OnClickList
     private View mCrossSwipeBg;
     private HostInterface mHostInterface;
     private TextView mUnreadMessagesCountView;
+    private View mRippleBackgroundView;
 
     private boolean mIsFirstBind = true;
 
@@ -154,6 +155,7 @@ public class ConversationListItemView extends FrameLayout implements OnClickList
     protected void onFinishInflate() {
         super.onFinishInflate();
         mSwipeableContainer = findViewById(R.id.conversation_item_swipeable_container);
+        mRippleBackgroundView = findViewById(R.id.conversation_item_ripple_view);
         mConversationNameView = findViewById(R.id.conversation_name);
         mSnippetTextView = findViewById(R.id.conversation_snippet);
         mWorkProfileIconView = findViewById(R.id.work_profile_icon);
@@ -303,8 +305,8 @@ public class ConversationListItemView extends FrameLayout implements OnClickList
 
         resetAnimatingState();
 
-        mSwipeableContainer.setOnClickListener(this);
-        mSwipeableContainer.setOnLongClickListener(this);
+        mRippleBackgroundView.setOnClickListener(this);
+        mRippleBackgroundView.setOnLongClickListener(this);
         mPinView.setVisibility(mData.isPinned() ? VISIBLE : GONE);
 
         if (mIsFirstBind) {
@@ -433,7 +435,7 @@ public class ConversationListItemView extends FrameLayout implements OnClickList
             mCrossSwipeBg.setVisibility(INVISIBLE);
             mCrossSwipeBg.setTranslationX(-getWidth());
 
-            mSwipeableContainer.setBackgroundResource(R.drawable.conversation_list_item_bg);
+            //mSwipeableContainer.setBackgroundResource(R.drawable.conversation_list_item_bg);
         } else {
             int padding = getResources().getDimensionPixelSize(R.dimen.conversation_item_view_swipe_padding);
             if (translationX > 0) {
@@ -561,7 +563,7 @@ public class ConversationListItemView extends FrameLayout implements OnClickList
     }
 
     private boolean processClick(final View v, final boolean isLongClick) {
-        Assert.isTrue(v == mSwipeableContainer || v == mContactIconView);
+        Assert.isTrue(v == mRippleBackgroundView);
         Assert.notNull(mData.getName());
 
         if (mHostInterface != null) {
