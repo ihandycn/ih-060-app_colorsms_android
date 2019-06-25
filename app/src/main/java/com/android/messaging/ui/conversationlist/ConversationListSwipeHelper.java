@@ -32,6 +32,7 @@ import android.view.ViewConfiguration;
 import com.android.messaging.R;
 import com.android.messaging.util.Assert;
 import com.android.messaging.util.UiUtils;
+import com.superapps.util.Dimensions;
 
 /**
  * Animation and touch helper class for Conversation List swipe.
@@ -43,6 +44,7 @@ public class ConversationListSwipeHelper implements OnItemTouchListener {
     private static final float ERROR_FACTOR_MULTIPLIER = 1.2f;
     private static final float PERCENTAGE_OF_WIDTH_TO_DISMISS = 0.4f;
     private static final float FLING_PERCENTAGE_OF_WIDTH_TO_DISMISS = 0.05f;
+    private static final int MIN_TOUCH_POINT_TO_LEFT_SIDE = Dimensions.pxFromDp(35);
 
     private static final int SWIPE_DIRECTION_NONE = 0;
     private static final int SWIPE_DIRECTION_LEFT = 1;
@@ -55,6 +57,7 @@ public class ConversationListSwipeHelper implements OnItemTouchListener {
     private final int mTouchSlop;
     private final int mMinimumFlingVelocity;
     private final int mMaximumFlingVelocity;
+    private final boolean mIsRtl = Dimensions.isRtl();
 
     /* Valid throughout a single gesture. */
     private VelocityTracker mVelocityTracker;
@@ -142,7 +145,9 @@ public class ConversationListSwipeHelper implements OnItemTouchListener {
                             return false;
                         }
 
-                        if (absDeltaX > mTouchSlop) {
+                        if (absDeltaX > mTouchSlop
+                                && !mIsRtl ? mInitialX > MIN_TOUCH_POINT_TO_LEFT_SIDE
+                                : mInitialX < mListItemView.getWidth() - MIN_TOUCH_POINT_TO_LEFT_SIDE) {
                             // Swipe detected. Return true so we can handle the gesture in
                             // onTouchEvent.
                             mIsSwiping = true;
