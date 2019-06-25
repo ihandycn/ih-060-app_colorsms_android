@@ -186,7 +186,6 @@ class FactoryImpl extends Factory {
         }
         PhoneUtils.getDefault().registerDefaultSmsPackageChange(
                 () -> {
-                    DefaultSMSUtils.setIsDefaultSms(true);
                     if (OsUtil.hasRequiredPermissions()) {
                         factory.onDefaultSmsSetAndPermissionsGranted();
                     }
@@ -205,6 +204,8 @@ class FactoryImpl extends Factory {
             return;
         }
         sInitialized = true;
+
+        DefaultSMSUtils.setIsDefaultSms(true);
 
         Threads.postOnMainThread(() -> mApplication.initializeSync(this));
 
