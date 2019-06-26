@@ -211,7 +211,6 @@
             app:layout_constraintEnd_toStartOf="@+id/work_profile_icon"
             app:layout_constraintStart_toEndOf="@id/conversation_pin"
             app:layout_constraintTop_toTopOf="@+id/title_top_guide_line"
-            app:layout_goneMarginEnd="@dimen/conversation_list_item_view_padding"
             app:typeface="@string/custom_font_semibold" />
 
         <ImageView
@@ -224,10 +223,9 @@
             android:scaleType="center"
             android:src="@drawable/ic_work_profile"
             android:visibility="gone"
-            app:layout_constraintEnd_toStartOf="@+id/conversation_right_part_start_barrier"
+            app:layout_constraintEnd_toEndOf="@+id/conversation_snippet"
             app:layout_constraintStart_toEndOf="@+id/conversation_name"
-            app:layout_constraintTop_toTopOf="@+id/title_top_guide_line"
-            app:layout_goneMarginEnd="@dimen/conversation_list_item_view_padding" />
+            app:layout_constraintTop_toTopOf="@+id/title_top_guide_line" />
 
         <android.support.constraint.Barrier
             android:id="@+id/barrier_bottom"
@@ -248,9 +246,10 @@
             android:textColor="#878a95"
             android:textSize="@dimen/conversation_list_item_snippet_text_size"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@+id/conversation_right_part_start_barrier"
+            app:layout_constraintEnd_toStartOf="@+id/conversation_timestamp"
             app:layout_constraintStart_toEndOf="@id/conversation_icon_bg"
             app:layout_constraintTop_toBottomOf="@id/barrier_bottom"
+            app:layout_goneMarginEnd="30dp"
             app:typeface="@string/custom_font_regular" />
 
         <com.android.messaging.ui.view.MessagesTextView
@@ -278,13 +277,6 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:typeface="@string/custom_font_semibold" />
-
-        <android.support.constraint.Barrier
-            android:id="@+id/conversation_right_part_start_barrier"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:barrierDirection="start"
-            app:constraint_referenced_ids="conversation_timestamp,conversation_unread_messages_count" />
 
         <android.support.constraint.Group
             android:id="@+id/conversation_item_right_container"
