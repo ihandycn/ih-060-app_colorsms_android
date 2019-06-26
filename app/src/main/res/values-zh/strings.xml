@@ -719,7 +719,6 @@
         <string name="private_box_hide_icon_summary">長按新建短信按鈕進入隱私信箱。 </string>
         <string name="private_box_setting_security_summary">修改密碼</string>
         <string name="private_box_setting">隱私信箱設置</string>
-        <string name="conversation_moved_to_private_box">已移至隱私信箱</string>
         <string name="private_contacts">隱私聯繫人</string>
         <string name="private_box_hide_icon">隱藏信息信箱</string>
         <string name="add_to_private_list_dialog_from_contacts_list">從聯繫人列表</string>

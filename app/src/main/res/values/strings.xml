@@ -1232,7 +1232,6 @@
     <string name="message_copied">Copied to clipboard</string>
     <string name="conversation_pinned">Pinned to top</string>
     <string name="conversation_unpinned">Unpinned</string>
-    <string name="conversation_moved_to_private_box">Moved to private box</string>
     <string name="invite_friends_default_auto_link_content" translatable="false">https://go.onelink.me/app/90cf450c</string>
     <string name="invite_friends_success_toast">Invite success</string>
 

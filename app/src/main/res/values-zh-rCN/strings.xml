@@ -718,7 +718,6 @@
     <string name="private_box_hide_icon_summary">长按新建短信按钮进入隐私信箱。</string>
     <string name="private_box_setting_security_summary">修改密码</string>
     <string name="private_box_setting">隐私信箱设置</string>
-    <string name="conversation_moved_to_private_box">已移至隐私信箱</string>
     <string name="private_contacts">隐私联系人</string>
     <string name="private_box_hide_icon">隐藏信息信箱</string>
     <string name="add_to_private_list_dialog_from_contacts_list">从联系人列表</string>

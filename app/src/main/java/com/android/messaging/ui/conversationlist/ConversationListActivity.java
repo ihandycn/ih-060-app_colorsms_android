@@ -776,7 +776,6 @@ public class ConversationListActivity extends AbstractConversationListActivity
             mIsMessageMoving = true;
             MoveConversationToPrivateBoxAction.moveAndUpdatePrivateContact(conversations,
                     null, NOTIFICATION_NAME_MESSAGES_MOVE_END);
-            Toasts.showToast(R.string.conversation_moved_to_private_box);
         }
         exitMultiSelectState();
     }
