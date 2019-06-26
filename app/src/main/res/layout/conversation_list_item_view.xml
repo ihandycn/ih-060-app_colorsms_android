@@ -95,9 +95,7 @@
         android:clipChildren="false"
         android:clipToPadding="false"
         android:duplicateParentState="true"
-        android:orientation="horizontal"
-        android:paddingEnd="@dimen/conversation_list_item_view_padding"
-        android:paddingStart="2dp">
+        android:orientation="horizontal">
 
         <View
             android:id="@+id/conversation_item_ripple_view"
@@ -113,7 +111,7 @@
             android:id="@+id/check_box"
             android:layout_width="20dp"
             android:layout_height="20dp"
-            android:layout_marginStart="13.3dp"
+            android:layout_marginStart="15.3dp"
             android:contentDescription="@null"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -127,9 +125,10 @@
             android:contentDescription="@null"
             android:scaleType="centerCrop"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="@+id/conversation_notification_bell"
+            app:layout_constraintEnd_toStartOf="@+id/conversation_notification_bell"
             app:layout_constraintStart_toEndOf="@id/check_box"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_goneMarginStart="2dp" />
 
         <com.android.messaging.ui.ContactIconView
             android:id="@+id/conversation_icon"
@@ -212,6 +211,7 @@
             app:layout_constraintEnd_toStartOf="@+id/work_profile_icon"
             app:layout_constraintStart_toEndOf="@id/conversation_pin"
             app:layout_constraintTop_toTopOf="@+id/title_top_guide_line"
+            app:layout_goneMarginEnd="@dimen/conversation_list_item_view_padding"
             app:typeface="@string/custom_font_semibold" />
 
         <ImageView
@@ -226,7 +226,8 @@
             android:visibility="gone"
             app:layout_constraintEnd_toStartOf="@+id/conversation_right_part_start_barrier"
             app:layout_constraintStart_toEndOf="@+id/conversation_name"
-            app:layout_constraintTop_toTopOf="@+id/title_top_guide_line" />
+            app:layout_constraintTop_toTopOf="@+id/title_top_guide_line"
+            app:layout_goneMarginEnd="@dimen/conversation_list_item_view_padding" />
 
         <android.support.constraint.Barrier
             android:id="@+id/barrier_bottom"
@@ -257,6 +258,7 @@
             style="@style/ConversationListItemViewTextTimeStampStyle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginEnd="@dimen/conversation_list_item_view_padding"
             android:layout_marginTop="14dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
@@ -267,6 +269,7 @@
             android:layout_height="17dp"
             android:layout_gravity="bottom|end"
             android:layout_marginBottom="14dp"
+            android:layout_marginEnd="@dimen/conversation_list_item_view_padding"
             android:gravity="center"
             android:includeFontPadding="false"
             android:textColor="@android:color/white"

@@ -370,7 +370,7 @@ public class ConversationListItemView extends FrameLayout implements OnClickList
         setSelected(isSelected);
 
         ImageView checkbox = findViewById(R.id.check_box);
-        View rightContainer = findViewById(R.id.conversation_item_right_container);
+        View rightGroup = findViewById(R.id.conversation_item_right_container);
 
         if (mHostInterface.isSelectionMode()) {
             checkbox.setVisibility(View.VISIBLE);
@@ -383,10 +383,21 @@ public class ConversationListItemView extends FrameLayout implements OnClickList
                 checkbox.setBackground(BackgroundDrawables.createBackgroundDrawable(0, 0, 4,
                         0xffbdc2c9, Dimensions.pxFromDp(20), false, false));
             }
-            rightContainer.setVisibility(GONE);
+            rightGroup.setVisibility(GONE);
         } else {
             checkbox.setVisibility(View.GONE);
-            rightContainer.setVisibility(VISIBLE);
+            rightGroup.setVisibility(VISIBLE);
+
+            boolean shouldShowUnreadMsgCount = mData.getUnreadMessagesNumber() > 0;
+            int unreadMsgCountViewVisibility = shouldShowUnreadMsgCount ? VISIBLE : GONE;
+
+            mUnreadMessagesCountView.setVisibility(unreadMsgCountViewVisibility);
+            if (unreadMsgCountViewVisibility == VISIBLE) {
+                mUnreadMessagesCountView.setBackground(
+                        BackgroundDrawables.createBackgroundDrawable(0xffe35353,
+                                Dimensions.pxFromDp(8.5f), false));
+                mUnreadMessagesCountView.setText(String.valueOf(mData.getUnreadMessagesNumber()));
+            }
         }
 
         int failStatusVisibility = GONE;
@@ -400,18 +411,6 @@ public class ConversationListItemView extends FrameLayout implements OnClickList
         mContactIconView.clearColorFilter();
 
         mFailedStatusIconView.setVisibility(failStatusVisibility);
-
-        boolean shouldShowUnreadMsgCount = mData.getUnreadMessagesNumber() > 0;
-        int unreadMsgCountViewVisibility = shouldShowUnreadMsgCount ? VISIBLE : GONE;
-
-        mUnreadMessagesCountView.setVisibility(unreadMsgCountViewVisibility);
-        if (unreadMsgCountViewVisibility == VISIBLE) {
-            mUnreadMessagesCountView.setBackground(
-                    BackgroundDrawables.createBackgroundDrawable(0xffe35353,
-                            Dimensions.pxFromDp(8.5f), false));
-            mUnreadMessagesCountView.setText(String.valueOf(mData.getUnreadMessagesNumber()));
-        }
-        mTimestampTextView.setVisibility(VISIBLE);
 
         final int notificationBellVisibility = mData.getNotificationEnabled() ? GONE : VISIBLE;
         mNotificationBellView.setVisibility(notificationBellVisibility);
