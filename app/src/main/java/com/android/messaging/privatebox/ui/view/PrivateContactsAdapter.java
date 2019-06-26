@@ -11,11 +11,11 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.android.messaging.R;
-import com.android.messaging.datamodel.DataModel;
-import com.android.messaging.datamodel.DatabaseWrapper;
-import com.android.messaging.datamodel.data.ConversationListItemData;
+import com.android.messaging.datamodel.data.ParticipantData;
+import com.android.messaging.datamodel.data.PrivateContactItemData;
 import com.android.messaging.ui.ContactIconView;
 import com.android.messaging.util.Assert;
+import com.android.messaging.util.AvatarUriUtil;
 import com.android.messaging.util.BugleAnalytics;
 import com.android.messaging.util.ContactUtil;
 import com.android.messaging.util.UiUtils;
@@ -28,9 +28,11 @@ import java.util.List;
 public class PrivateContactsAdapter extends RecyclerView.Adapter<PrivateContactsAdapter.ViewHolder>{
 
     public interface PrivateContactsHost {
-        void onPrivateContactsRemoveButtonClick(ConversationListItemData conversationListItemData, boolean isPrivateContactListEmpty);
+        void onPrivateContactsRemoveButtonClick(PrivateContactItemData conversationListItemData, boolean isPrivateContactListEmpty);
     }
+
     private PrivateContactsHost mHost;
+
     static class ViewHolder extends RecyclerView.ViewHolder {
 
         TextView mMainTitle, mSubTitle;
@@ -45,13 +47,10 @@ public class PrivateContactsAdapter extends RecyclerView.Adapter<PrivateContacts
         }
     }
 
-    private List<ConversationListItemData> mRecyclerDataList = new ArrayList<>();
+    private List<PrivateContactItemData> mRecyclerDataList = new ArrayList<>();
 
-    public void updateData(List<String> conversationIdList, DatabaseWrapper db) {
-        mRecyclerDataList.clear();
-        for (String conversationId : conversationIdList) {
-            mRecyclerDataList.add(ConversationListItemData.getExistingConversation(db, conversationId));
-        }
+    public void updateData(List<PrivateContactItemData> contactListItemData) {
+        mRecyclerDataList = contactListItemData;
         notifyDataSetChanged();
     }
 
@@ -62,16 +61,13 @@ public class PrivateContactsAdapter extends RecyclerView.Adapter<PrivateContacts
         holder.mRemoveButton.setBackground(
                 BackgroundDrawables.createBackgroundDrawable(Color.WHITE,
                         UiUtils.getColorDark(Color.WHITE), Dimensions.pxFromDp(25), false, true));
-        holder.mRemoveButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                int position = holder.getAdapterPosition();
-                if(position != -1) {
-                    ConversationListItemData conversationListItemData = mRecyclerDataList.get(position);
-                    removeData(position);
-                    mHost.onPrivateContactsRemoveButtonClick(conversationListItemData, getItemCount() == 0);
-                    BugleAnalytics.logEvent("PrivateBox_PrivateContacts_Move_Click");
-                }
+        holder.mRemoveButton.setOnClickListener(view1 -> {
+            int position = holder.getAdapterPosition();
+            if (position != -1) {
+                PrivateContactItemData privateContactItemData = mRecyclerDataList.get(position);
+                removeData(position);
+                mHost.onPrivateContactsRemoveButtonClick(privateContactItemData, getItemCount() == 0);
+                BugleAnalytics.logEvent("PrivateBox_PrivateContacts_Move_Click");
             }
         });
         return holder;
@@ -79,13 +75,13 @@ public class PrivateContactsAdapter extends RecyclerView.Adapter<PrivateContacts
 
     @Override
     public void onBindViewHolder(final PrivateContactsAdapter.ViewHolder holder, int position) {
-        final ConversationListItemData contactInfo = mRecyclerDataList.get(position);
+        final PrivateContactItemData contactInfo = mRecyclerDataList.get(position);
         setContactImage(contactInfo, holder);
-        if (ContactUtil.isValidContactId(contactInfo.getParticipantContactId())) {
-            holder.mMainTitle.setText(contactInfo.getName());
-            holder.mSubTitle.setText(contactInfo.getOtherParticipantNormalizedDestination());
+        if (contactInfo.getRecipientEntry() != null && ContactUtil.isValidContactId(contactInfo.getContactId()) ) {
+            holder.mMainTitle.setText(contactInfo.getDisplayName());
+            holder.mSubTitle.setText(contactInfo.getDestination());
         } else {
-            holder.mMainTitle.setText(contactInfo.getName());
+            holder.mMainTitle.setText(contactInfo.getDisplayName());
             holder.mSubTitle.setVisibility(View.GONE);
         }
     }
@@ -105,19 +101,16 @@ public class PrivateContactsAdapter extends RecyclerView.Adapter<PrivateContacts
         mHost = host;
     }
 
-    private void setContactImage(ConversationListItemData data, final PrivateContactsAdapter.ViewHolder holder) {
-        Uri iconUri = null;
-        String imgUri = data.getIcon();
-        if (!data.getIsRead()) {
-            //unread
-            if (!TextUtils.isEmpty(imgUri)) {
-                imgUri = imgUri.concat("unread");
-            }
+    private void setContactImage(PrivateContactItemData data, final PrivateContactsAdapter.ViewHolder holder) {
+        if (data.getRecipientEntry() == null) {
+            final Uri avatarUri = AvatarUriUtil.createAvatarUri(
+                    null, data.getDisplayName(), data.getDisplayName().toString(), null);
+            holder.mContactIconView.setImageResourceUri(avatarUri);
+        } else {
+            final Uri avatarUri = AvatarUriUtil.createAvatarUri(
+                    ParticipantData.getFromRecipientEntry(data.getRecipientEntry()));
+            holder.mContactIconView.setImageResourceUri(avatarUri, data.getContactId(),
+                    data.getLookupKey(), data.getDestination().toString());
         }
-        if (!TextUtils.isEmpty(imgUri)) {
-            iconUri = Uri.parse(imgUri);
-        }
-        holder.mContactIconView.setImageResourceUri(iconUri, data.getParticipantContactId(),
-                data.getParticipantLookupKey(), data.getOtherParticipantNormalizedDestination(), Color.TRANSPARENT);
     }
 }

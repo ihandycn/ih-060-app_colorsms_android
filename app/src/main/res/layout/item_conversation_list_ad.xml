@@ -13,8 +13,8 @@
         android:layout_height="wrap_content"
         android:layout_centerVertical="true"
         android:layout_marginStart="16dp"
-        app:radiusX="20dp"
-        app:radiusY="20dp">
+        app:radiusX="25dp"
+        app:radiusY="25dp">
 
         <ImageView
             android:layout_width="@dimen/conversation_list_contact_icon_size"
