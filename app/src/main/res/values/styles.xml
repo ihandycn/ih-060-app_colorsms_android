@@ -175,7 +175,7 @@
         <item name="android:scrollHorizontally">false</item>
         <item name="android:textCursorDrawable">@drawable/conversation_edittext_cursor</item>
         <item name="android:inputType">
-            textShortMessage|textAutoCorrect|textCapSentences|textMultiLine
+            textAutoCorrect|textCapSentences|textMultiLine
         </item>
     </style>
 
