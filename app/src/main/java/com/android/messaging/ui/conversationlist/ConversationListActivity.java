@@ -484,7 +484,7 @@ public class ConversationListActivity extends AbstractConversationListActivity
                         navigationContent.findViewById(R.id.navigation_item_font_new_text).setVisibility(View.GONE);
                         break;
                     case DRAWER_INDEX_EMOJI_STORE:
-                        BugleAnalytics.logEvent("Menu_EmojiStore_Click");
+                        BugleAnalytics.logEvent("Menu_EmojiStore_Click", true);
                         Navigations.startActivity(ConversationListActivity.this, EmojiStoreActivity.class);
                         overridePendingTransition(R.anim.slide_in_from_right_and_fade, R.anim.anim_null);
                         navigationContent.findViewById(R.id.navigation_item_emoji_store_new_text).setVisibility(View.GONE);
