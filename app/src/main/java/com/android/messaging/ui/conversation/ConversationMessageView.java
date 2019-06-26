@@ -390,14 +390,20 @@ public class ConversationMessageView extends RelativeLayout implements View.OnCl
 
             case MessageData.BUGLE_STATUS_OUTGOING_YET_TO_SEND:
             case MessageData.BUGLE_STATUS_OUTGOING_SENDING:
-//                statusResId = R.string.message_status_sending;
-                statusText = mData.getFormattedReceivedTimeStamp();
+                if (getData().getIsSms()) {
+                    statusText = mData.getFormattedReceivedTimeStamp();
+                } else {
+                    statusResId = R.string.message_status_sending;
+                }
                 break;
 
             case MessageData.BUGLE_STATUS_OUTGOING_RESENDING:
             case MessageData.BUGLE_STATUS_OUTGOING_AWAITING_RETRY:
-//                statusResId = R.string.message_status_send_retrying;
-                statusText = mData.getFormattedReceivedTimeStamp();
+                if (getData().getIsSms()) {
+                    statusText = mData.getFormattedReceivedTimeStamp();
+                } else {
+                    statusResId = R.string.message_status_send_retrying;
+                }
                 break;
 
             case MessageData.BUGLE_STATUS_OUTGOING_FAILED_EMERGENCY_NUMBER:
@@ -475,10 +481,9 @@ public class ConversationMessageView extends RelativeLayout implements View.OnCl
             mStatusTextView.setVisibility(View.GONE);
         }
 
-        if(mData.getIsLocked()) {
+        if (mData.getIsLocked()) {
             mMessageIsLockView.setVisibility(VISIBLE);
-        }
-        else {
+        } else {
             mMessageIsLockView.setVisibility(GONE);
         }
 
@@ -937,9 +942,9 @@ public class ConversationMessageView extends RelativeLayout implements View.OnCl
         if (!hasWallPaper) {
             mStatusContainer.setBackground(null);
         }
-        if(!hasWallPaper && mData.getIsLocked()){
+        if (!hasWallPaper && mData.getIsLocked()) {
             mMessageIsLockView.setImageResource(R.drawable.message_lock_default);
-        }else {
+        } else {
             mMessageIsLockView.setImageResource(R.drawable.message_lock_theme);
         }
 
