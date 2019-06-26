@@ -11,8 +11,8 @@ import com.android.messaging.Factory;
 import com.android.messaging.R;
 import com.android.messaging.ui.UIIntents;
 import com.android.messaging.util.BugleAnalytics;
+import com.android.messaging.util.DefaultSMSUtils;
 import com.android.messaging.util.OsUtil;
-import com.android.messaging.util.PhoneUtils;
 import com.ihs.commons.config.HSConfig;
 import com.superapps.util.BackgroundDrawables;
 import com.superapps.util.Dimensions;
@@ -101,7 +101,7 @@ public class WelcomeSetAsDefaultActivity extends AppCompatActivity {
     @Override
     public void onActivityResult(final int requestCode, final int resultCode, final Intent data) {
         if (requestCode == REQUEST_SET_DEFAULT_SMS_APP) {
-            if (getPackageName().equals(PhoneUtils.getDefault().getDefaultSmsApp())) {
+            if (DefaultSMSUtils.isDefaultSmsApp(true)) {
                 mHandler.sendEmptyMessageDelayed(EVENT_RETRY_NAVIGATION, 100);
             } else {
                 Toasts.showToast(R.string.welcome_set_default_failed_toast, Toast.LENGTH_LONG);
