@@ -17,7 +17,7 @@ package com.android.messaging.ui.conversation;
 
 import android.Manifest;
 import android.animation.Animator;
-import android.animation.ValueAnimator;
+import android.animation.ObjectAnimator;
 import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Rect;
@@ -74,7 +74,6 @@ import com.android.messaging.ui.PlainTextEditText;
 import com.android.messaging.ui.SendDelayProgressBar;
 import com.android.messaging.ui.appsettings.SendDelaySettings;
 import com.android.messaging.ui.conversation.ConversationInputManager.ConversationInputSink;
-import com.android.messaging.ui.conversationlist.ConversationListActivity;
 import com.android.messaging.ui.customize.PrimaryColors;
 import com.android.messaging.ui.dialog.FiveStarRateDialog;
 import com.android.messaging.ui.emoji.utils.EmojiManager;
@@ -187,7 +186,7 @@ public class ComposeMessageView extends LinearLayout
 
     private boolean mIsMediaPendingShow = false;
     private boolean mIsEmojiPendingShow = false;
-    private boolean isKeyboardShowed = false;
+    private boolean isFirstEmojiStart = true;
 
     private final Binding<DraftMessageData> mBinding;
     private IComposeMessageViewHost mHost;
@@ -393,9 +392,9 @@ public class ComposeMessageView extends LinearLayout
             BugleAnalytics.logEvent("Detailpage_BtnSend_Click", true, true,
                     "SendDelay", "" + SendDelaySettings.getSendDelayInSecs(),
                     "IsDefaultSMS", String.valueOf(DefaultSMSUtils.isDefaultSmsApp()),
-                    "SendSMSPermission",String.valueOf(RuntimePermissions.checkSelfPermission(getContext(),
+                    "SendSMSPermission", String.valueOf(RuntimePermissions.checkSelfPermission(getContext(),
                             Manifest.permission.SEND_SMS) == RuntimePermissions.PERMISSION_GRANTED),
-                    "ReadSMSPermission",String.valueOf(RuntimePermissions.checkSelfPermission(getContext(),
+                    "ReadSMSPermission", String.valueOf(RuntimePermissions.checkSelfPermission(getContext(),
                             Manifest.permission.READ_SMS) == RuntimePermissions.PERMISSION_GRANTED));
             startMessageSendDelayAction(System.currentTimeMillis());
         });
@@ -636,7 +635,6 @@ public class ComposeMessageView extends LinearLayout
 
     private void showKeyboard() {
         ImeUtil.get().showImeKeyboard(getContext(), mComposeEditText);
-        isKeyboardShowed = true;
         if (mHost.shouldHideAttachmentsWhenSimSelectorShown()) {
             hideSimSelector();
         }
@@ -652,38 +650,51 @@ public class ComposeMessageView extends LinearLayout
             EmojiManager.recordAlreadyShowEmojiGuide();
             mEmojiGuideView.setVisibility(GONE);
         }
-        LinearLayout.LayoutParams lp = (LayoutParams) mEmojiPickerLayout.getLayoutParams();
-        lp.height = 0;
-        mEmojiPickerLayout.setLayoutParams(lp);
 
+        mInputManager.showEmojiPicker();
         mEmojiPickerLayout.setVisibility(VISIBLE);
         mEmojiKeyboardBtn.setImageResource(R.drawable.input_keyboard_icon);
-        mInputManager.showEmojiPicker();
 
-        if (!isKeyboardShowed) {
-            emojiPickerAnimation(mEmojiPickerLayout);
+        int keyboardHeight = UiUtils.getKeyboardHeight();
+        int height = keyboardHeight == 0 ? DEFAULT_EMOJI_PICKER_HEIGHT : keyboardHeight;
+        mEmojiPickerLayout.getLayoutParams().height = height;
+        mEmojiPickerLayout.requestLayout();
+
+        if (!mIsEmojiPendingShow) {
+            startEmojiPickerAnimation(mEmojiPickerLayout, height);
         } else {
-            mEmojiPickerLayout.getLayoutParams().height = UiUtils.getKeyboardHeight();
-            isKeyboardShowed = false;
-            invalidate();
+            isFirstEmojiStart = false;
+            Threads.postOnMainThreadDelayed(() -> mInputManager.onEmojiAnimationFinished(), 10);
         }
     }
 
-    private void emojiPickerAnimation(ViewGroup container) {
-        int keyboardHeight = UiUtils.getKeyboardHeight();
-        int height = keyboardHeight == 0 ? DEFAULT_EMOJI_PICKER_HEIGHT : keyboardHeight;
-        ValueAnimator va = ValueAnimator.ofInt(0, height);
+    private void startEmojiPickerAnimation(ViewGroup container, int startHeight) {
+        ObjectAnimator va = ObjectAnimator.ofFloat(container, "translationY",
+                startHeight, 0f);
         va.setDuration(520);
-        va.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+        va.setInterpolator(PathInterpolatorCompat.create(0.26f, 1, 0.48f, 1));
+        va.addListener(new Animator.AnimatorListener() {
             @Override
-            public void onAnimationUpdate(ValueAnimator animation) {
-                ViewGroup.LayoutParams lp = container.getLayoutParams();
-                lp.height = (Integer) animation.getAnimatedValue();
-                container.setLayoutParams(lp);
-                container.invalidate();
+            public void onAnimationStart(Animator animation) {
+
+            }
+
+            @Override
+            public void onAnimationEnd(Animator animation) {
+                isFirstEmojiStart = false;
+                mInputManager.onEmojiAnimationFinished();
+            }
+
+            @Override
+            public void onAnimationCancel(Animator animation) {
+
+            }
+
+            @Override
+            public void onAnimationRepeat(Animator animation) {
+
             }
         });
-        va.setInterpolator(PathInterpolatorCompat.create(0.26f, 1, 0.48f, 1));
         va.start();
     }
 
@@ -784,6 +795,7 @@ public class ComposeMessageView extends LinearLayout
 
     public void setInputManager(final ConversationInputManager inputManager) {
         mInputManager = inputManager;
+        mInputManager.showEmojiPicker();
     }
 
     public void setConversationDataModel(final ImmutableBindingRef<ConversationData> refDataModel) {

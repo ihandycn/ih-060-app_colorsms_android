@@ -77,6 +77,9 @@ public class EmojiPackagePagerAdapter extends PagerAdapter {
         AbstractEmojiItemPagerAdapter adapter = getPagerAdapter(info);
         adapter.setTabLayout(itemTabLayout);
         itemPager.setAdapter(adapter);
+        if(adapter instanceof EmojiItemPagerAdapter) {
+            itemPager.setOffscreenPageLimit(10);
+        }
         itemPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             private int currentPosition = 0;
 
@@ -152,6 +155,14 @@ public class EmojiPackagePagerAdapter extends PagerAdapter {
         if (data.containsKey(EmojiPackageType.GIF)) {
             mGiphyAdapter = new GiphyItemPagerAdapter(mContext, data.get(EmojiPackageType.GIF), mOnEmojiClickListener);
         }
+    }
+
+    public EmojiItemPagerAdapter getEmojiAdapter() {
+        return mEmojiAdapter;
+    }
+
+    public StickerItemPagerAdapter getStickerAdapter() {
+        return mStickerAdapter;
     }
 
     @Override

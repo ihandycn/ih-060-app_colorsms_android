@@ -10,7 +10,6 @@ import com.android.messaging.ui.emoji.EmojiPackageType;
 import com.android.messaging.ui.emoji.utils.emoji.Emoji;
 import com.android.messaging.ui.emoji.utils.emoji.EmojiCategory;
 import com.android.messaging.ui.emoji.utils.emoji.EmojiProvider;
-import com.ihs.commons.utils.HSLog;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,10 +26,14 @@ public class EmojiDataProducer {
         recentInfo.mEmojiPackageType = EmojiPackageType.RECENT;
         recentInfo.mTabIconUrl = Uri.parse("android.resource://" + packageName + "/" +
                 context.getResources().getIdentifier("emoji_category_recent_selected", "drawable", packageName)).toString();
-        recentInfo.mEmojiInfoList = EmojiManager.getRecentInfo(EmojiPackageType.STICKER);
+        recentInfo.mEmojiInfoList = new ArrayList<>();
         result.add(recentInfo);
 
-        result.addAll(EmojiConfig.getInstance().getAddedEmojiFromConfig());
+        List<EmojiPackageInfo> addInfo = EmojiConfig.getInstance().getAddedEmojiFromConfig();
+        for (EmojiPackageInfo info : addInfo){      // clear data, on retain tab info. Keep fluency during view initialisation
+            info.mEmojiInfoList = new ArrayList<>();
+        }
+        result.addAll(addInfo);
         return result;
     }
 
@@ -68,12 +71,7 @@ public class EmojiDataProducer {
                 context.getResources().getIdentifier("emoji_category_recent", "drawable", packageName)).toString();
         recentInfo.mTabIconSelectedUrl = Uri.parse("android.resource://" + packageName + "/" +
                 context.getResources().getIdentifier("emoji_category_recent_selected", "drawable", packageName)).toString();
-
-        recentInfo.mEmojiInfoList = EmojiManager.getRecentInfo(EmojiPackageType.EMOJI);
-        for(BaseEmojiInfo item : recentInfo.mEmojiInfoList){
-            EmojiInfo info = (EmojiInfo)item;
-            changeSkin(info);
-        }
+        recentInfo.mEmojiInfoList = new ArrayList<>();
         result.add(recentInfo);
 
         for (EmojiCategory category : categoryList) {
@@ -83,6 +81,25 @@ public class EmojiDataProducer {
                     context.getResources().getIdentifier(category.getIcon() + "", "drawable", packageName)).toString();
             info.mTabIconSelectedUrl = Uri.parse("android.resource://" + packageName + "/" +
                     context.getResources().getIdentifier(category.getIconSelected() + "", "drawable", packageName)).toString();
+            info.mEmojiInfoList = new ArrayList<>();
+            result.add(info);
+        }
+        return result;
+    }
+
+    // load data except 'recent'
+    public static List<EmojiPackageInfo> loadEmojiData(){
+        List<EmojiPackageInfo> result = new ArrayList<>();
+        EmojiPackageInfo recentInfo = new EmojiPackageInfo();
+        recentInfo.mEmojiInfoList = EmojiManager.getRecentInfo(EmojiPackageType.EMOJI);
+        for(BaseEmojiInfo item : recentInfo.mEmojiInfoList){
+            EmojiInfo info = (EmojiInfo)item;
+            changeSkin(info);
+        }
+        result.add(recentInfo);
+
+        EmojiCategory[] categoryList = EmojiProvider.getCategories();
+        for (EmojiCategory category : categoryList) {
             List<BaseEmojiInfo> emojiList = new ArrayList<>();
             for (Emoji emoji : category.getEmojis()) {
                 // skip the emoji unicode which system not support
@@ -93,11 +110,22 @@ public class EmojiDataProducer {
                 changeSkin(itemInfo);
                 emojiList.add(itemInfo);
             }
+            EmojiPackageInfo info = new EmojiPackageInfo();
             info.mEmojiInfoList = emojiList;
             result.add(info);
         }
         return result;
     }
+
+    public static List<EmojiPackageInfo> loadStickerData(){
+        List<EmojiPackageInfo> result = new ArrayList<>();
+        EmojiPackageInfo recentInfo = new EmojiPackageInfo();
+        recentInfo.mEmojiInfoList = EmojiManager.getRecentInfo(EmojiPackageType.STICKER);
+        result.add(recentInfo);
+        result.addAll(EmojiConfig.getInstance().getAddedEmojiFromConfig());
+        return result;
+    }
+
 
     private static void changeSkin(EmojiInfo info){
         if (info.hasVariant()) {
@@ -107,7 +135,6 @@ public class EmojiDataProducer {
                 info.mEmoji = record;
             } else {
                 int index = EmojiManager.getSkinDefault();
-                HSLog.d("ui_test", "changeSkin: " + index);
                 if (index >= 0 && index < info.mVariants.length) {
                     info.mEmoji = info.mVariants[index].mEmoji;
                 }

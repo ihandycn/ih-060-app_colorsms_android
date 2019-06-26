@@ -71,6 +71,16 @@ public class EmojiItemPagerAdapter extends AbstractEmojiItemPagerAdapter {
         return view;
     }
 
+    public void initData(List<EmojiPackageInfo> infoList) {
+        for (int i = 0; i < infoList.size(); i++) {
+            mData.get(i).mEmojiInfoList = infoList.get(i).mEmojiInfoList;
+        }
+        notifyDataSetChanged();
+        if (mTabLayout != null) {
+            updateTabView();
+        }
+    }
+
     @Override
     public void destroyItem(@NonNull ViewGroup container, int position, @NonNull Object object) {
         container.removeView((View) object);
@@ -132,7 +142,7 @@ public class EmojiItemPagerAdapter extends AbstractEmojiItemPagerAdapter {
                 }
                 imageView.setImageURI(Uri.parse(info.mTabIconSelectedUrl));
                 View indicatorView = getIndicatorView(tab);
-                if(indicatorView != null) {
+                if (indicatorView != null) {
                     indicatorView.setVisibility(View.VISIBLE);
                 }
             }
@@ -147,7 +157,7 @@ public class EmojiItemPagerAdapter extends AbstractEmojiItemPagerAdapter {
                     return;
                 imageView.setImageURI(Uri.parse(info.mTabIconUrl));
                 View indicatorView = getIndicatorView(tab);
-                if(indicatorView != null) {
+                if (indicatorView != null) {
                     indicatorView.setVisibility(View.GONE);
                 }
             }

@@ -4,8 +4,8 @@
     android:layout_height="wrap_content"
     android:layout_marginTop="6.3dp"
     android:layout_marginBottom="6.3dp">
-    <TextView
-        android:id="@+id/emoji_text"
+    <ImageView
+        android:id="@+id/emoji_view"
         android:layout_width="32dp"
         android:layout_height="32dp"
         android:includeFontPadding="false"
@@ -18,8 +18,8 @@
         android:id="@+id/emoji_more"
         android:layout_width="5.7dp"
         android:layout_height="5.3dp"
-        android:layout_alignEnd="@id/emoji_text"
-        android:layout_alignBottom="@id/emoji_text"
+        android:layout_alignEnd="@id/emoji_view"
+        android:layout_alignBottom="@id/emoji_view"
         android:src="@drawable/emoji_item_more"
         android:visibility="gone" />
 </RelativeLayout>

@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.media.Ringtone;
 import android.media.RingtoneManager;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.support.v7.widget.Toolbar;
@@ -179,19 +180,24 @@ public class SettingGeneralActivity extends BaseActivity {
         setUpNotificationView();
 
         //emoji
-        SettingEmojiItemView settingEmojiItemView =  findViewById(R.id.setting_item_emoji);
-        settingEmojiItemView.setDefault(EmojiManager.EMOJI_SKINS[EmojiManager.getSkinDefault()]);
-        settingEmojiItemView.setOnItemClickListener(() -> {
-            int choose = EmojiManager.getSkinDefault();
-            ChooseEmojiSkinDialog dialog = new ChooseEmojiSkinDialog(choose, new ChooseEmojiSkinAdapter.SkinChooseListener() {
-                @Override
-                public void onSkinChooseListener(int index) {
-                    EmojiManager.setSkinDefault(index);
-                    settingEmojiItemView.updateSkin(EmojiManager.EMOJI_SKINS[index]);
-                }
+        SettingEmojiItemView settingEmojiItemView = findViewById(R.id.setting_item_emoji);
+        if(Build.VERSION.SDK_INT > 24) {
+            settingEmojiItemView.setDefault(EmojiManager.EMOJI_SKINS[EmojiManager.getSkinDefault()]);
+            settingEmojiItemView.setOnItemClickListener(() -> {
+                int choose = EmojiManager.getSkinDefault();
+                ChooseEmojiSkinDialog dialog = new ChooseEmojiSkinDialog(choose, new ChooseEmojiSkinAdapter.SkinChooseListener() {
+                    @Override
+                    public void onSkinChooseListener(int index) {
+                        EmojiManager.setSkinDefault(index);
+                        settingEmojiItemView.updateSkin(EmojiManager.EMOJI_SKINS[index]);
+                    }
+                });
+                UiUtils.showDialogFragment(this, dialog);
             });
-            UiUtils.showDialogFragment(this, dialog);
-        });
+        }else{
+            settingEmojiItemView.setVisibility(GONE);
+            findViewById(R.id.setting_title_emoji).setVisibility(GONE);
+        }
 
         //blocked contacts
         GeneralSettingItemView mBlockedContactsView = findViewById(R.id.setting_item_blocked_contacts);

@@ -75,6 +75,16 @@ public class StickerItemPagerAdapter extends AbstractEmojiItemPagerAdapter{
         return view;
     }
 
+    public void initData(List<EmojiPackageInfo> infoList){
+        for (int i = 0; i < infoList.size(); i++) {
+            mData.get(i).mEmojiInfoList = infoList.get(i).mEmojiInfoList;
+        }
+        notifyDataSetChanged();
+        if(mTabLayout != null) {
+            updateTabView();
+        }
+    }
+
     @Override
     public void updateTabView() {
         int count = mTabLayout.getTabCount();

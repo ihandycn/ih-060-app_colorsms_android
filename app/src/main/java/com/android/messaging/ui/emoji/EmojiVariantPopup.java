@@ -10,9 +10,9 @@ import android.view.View.MeasureSpec;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.view.ViewGroup.MarginLayoutParams;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
-import android.widget.TextView;
 
 import com.android.messaging.R;
 import com.android.messaging.ui.emoji.utils.EmojiManager;
@@ -92,12 +92,12 @@ public class EmojiVariantPopup {
         LayoutInflater from = LayoutInflater.from(context);
         for (final EmojiInfo item : variants) {
             View container = from.inflate(R.layout.emoji_item_layout, linearLayout, false);
-            TextView view = container.findViewById(R.id.emoji_text);
+            ImageView view = container.findViewById(R.id.emoji_view);
             MarginLayoutParams marginLayoutParams = (MarginLayoutParams) view.getLayoutParams();
             int dpToPx = (int) DisplayUtils.dpToPx(context, 2.0f);
             marginLayoutParams.width = i;
             marginLayoutParams.setMargins(dpToPx, dpToPx, dpToPx, dpToPx);
-            view.setText(item.mEmoji);
+            new EmojiItemRecyclerAdapter.EmojiDrawable(item.mEmoji).initView(context, view);
             view.setOnClickListener(new OnClickListener() {
                 public void onClick(View view) {
                     if (mListener != null) {
@@ -105,7 +105,7 @@ public class EmojiVariantPopup {
                     }
                     EmojiManager.addSkinSingleRecord(item.getUnicode(), item.mEmoji);
                     emojiInfo.mEmoji = item.mEmoji;
-                    ((TextView)mAnchorView.findViewById(R.id.emoji_text)).setText(emojiInfo.mEmoji);
+                    new EmojiItemRecyclerAdapter.EmojiDrawable(emojiInfo.mEmoji).initView(context, mAnchorView.findViewById(R.id.emoji_view));
                     mPopupWindow.dismiss();
                 }
             });

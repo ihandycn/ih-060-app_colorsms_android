@@ -337,6 +337,10 @@ public class ConversationInputManager implements ConversationInput.ConversationI
         return true;
     }
 
+    public void onEmojiAnimationFinished(){
+        mEmojiInput.onAnimationFinished();
+    }
+
     @Override
     public void handleOnShow(final ConversationInput target) {
         if (!mConversationDataModel.isBound()) {
@@ -477,7 +481,8 @@ public class ConversationInputManager implements ConversationInput.ConversationI
 
         @Override
         public boolean show(boolean animate) {
-            if (!isAddedToFragmentManager()) {
+            if (!isAddedToFragmentManager() && mEmojiPickerFragment == null) {
+                // Only create one instance of EmojiPickerFragment. Call the show every time just for backPressed() work normally
 
                 initEmojiPicker();
 
@@ -487,6 +492,12 @@ public class ConversationInputManager implements ConversationInput.ConversationI
                         EmojiPickerFragment.FRAGMENT_TAG).commitAllowingStateLoss();
             }
             return true;
+        }
+
+        public void onAnimationFinished(){
+            if(isAddedToFragmentManager()){
+                mEmojiPickerFragment.onAnimationFinished();
+            }
         }
 
         @Override

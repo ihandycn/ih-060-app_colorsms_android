@@ -13,7 +13,7 @@ public abstract class AbstractEmojiItemPagerAdapter extends PagerAdapter {
     public int getItemPosition(@NonNull Object object) {
         View view = (View)object;
         // if want to update a single page, you must set position in view's tag
-        if(view.getTag() != null && view.getTag().equals(mNeedUpdatePagePosition+"")){
+        if((view.getTag() != null && view.getTag().equals(mNeedUpdatePagePosition+"")) || mNeedUpdatePagePosition < 0){
             return POSITION_NONE;
         }else{
             return POSITION_UNCHANGED;

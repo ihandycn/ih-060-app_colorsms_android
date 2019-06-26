@@ -9,6 +9,7 @@ import android.support.annotation.Nullable;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -18,6 +19,7 @@ import com.android.messaging.datamodel.data.MessagePartData;
 import com.android.messaging.download.Downloader;
 import com.android.messaging.ui.emoji.utils.EmojiDataProducer;
 import com.android.messaging.ui.emoji.utils.EmojiManager;
+import com.android.messaging.ui.emoji.utils.LoadEmojiManager;
 import com.android.messaging.util.ContentType;
 import com.android.messaging.util.UiUtils;
 import com.ihs.commons.notificationcenter.HSGlobalNotificationCenter;
@@ -36,7 +38,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class EmojiPickerFragment extends Fragment implements INotificationObserver {
+public class EmojiPickerFragment extends Fragment implements INotificationObserver, LoadEmojiManager.EmojiDataCallback {
 
     private static final String TAG = EmojiPickerFragment.class.getSimpleName();
 
@@ -51,8 +53,19 @@ public class EmojiPickerFragment extends Fragment implements INotificationObserv
     private boolean mIsEnableSend = true;
     private EmojiVariantPopup mEmojiVariantPopup;
 
+    private boolean mIsDataLoaded = false;
+    private boolean mIsAnimationFinished = false;
+    private boolean mIsViewCreated = false;
+    private boolean mCanDelete  = false;
+
+    private List<EmojiPackageInfo> mEmojiData;
+    private List<EmojiPackageInfo> mStickerData;
+
     public static EmojiPickerFragment newInstance() {
         return new EmojiPickerFragment();
+    }
+
+    public EmojiPickerFragment(){
     }
 
     public void setOnEmojiPickerListener(OnEmojiPickerListener onEmojiPickerListener) {
@@ -64,6 +77,8 @@ public class EmojiPickerFragment extends Fragment implements INotificationObserv
         super.onCreate(savedInstanceState);
         HSGlobalNotificationCenter.addObserver(NOTIFICATION_ADD_EMOJI_FROM_STORE, this);
         HSGlobalNotificationCenter.addObserver(StickerMagicDetailActivity.NOTIFICATION_SEND_MAGIC_STICKER, this);
+        HSGlobalNotificationCenter.addObserver(LoadEmojiManager.LOAD_EMOJI_DATA, this);
+        LoadEmojiManager.getInstance().getEmojiData(this);
     }
 
     @Nullable
@@ -135,6 +150,8 @@ public class EmojiPickerFragment extends Fragment implements INotificationObserv
                 mOnEmojiPickerListener.deleteEmoji();
             }
         });
+        makeDeleteContinuous(deleteView);
+
         mEmojiPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
@@ -154,6 +171,30 @@ public class EmojiPickerFragment extends Fragment implements INotificationObserv
 
             }
         });
+    }
+
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        mIsViewCreated = true;
+    }
+
+    public void onAnimationFinished(){
+        mIsAnimationFinished = true;
+        if(mIsDataLoaded){
+            initData();
+        }
+    }
+
+    private void initData() {
+        mEmojiPackagePagerAdapter.getStickerAdapter().initData(mStickerData);
+        Threads.postOnMainThreadDelayed(new Runnable() {
+            @Override
+            public void run() {
+                mEmojiPackagePagerAdapter.getEmojiAdapter().initData(mEmojiData);
+            }
+        }, 200);
+
     }
 
     private void updateRecentSticker(StickerInfo info) {
@@ -261,6 +302,49 @@ public class EmojiPickerFragment extends Fragment implements INotificationObserv
         result.add(gifInfo);
 
         return result;
+    }
+
+    @Override
+    public void onDataPrepared(List<EmojiPackageInfo> emojiList, List<EmojiPackageInfo> stickerList) {
+        mIsDataLoaded = true;
+        mEmojiData = emojiList;
+        mStickerData = stickerList;
+        if (mIsAnimationFinished) {
+            initData();
+        }
+    }
+
+    private class DeleteRunnable implements Runnable{
+        @Override
+        public void run() {
+            if(mCanDelete) {
+                mOnEmojiPickerListener.deleteEmoji();
+                Threads.postOnMainThreadDelayed(new DeleteRunnable(), 70);
+            }
+        }
+    }
+    private void makeDeleteContinuous(View deleteView){
+        deleteView.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                mCanDelete = true;
+                Threads.postOnMainThread(new DeleteRunnable());
+                return false;
+            }
+        });
+
+        deleteView.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                switch(event.getAction()){
+                    case MotionEvent.ACTION_UP:
+                    case MotionEvent.ACTION_CANCEL:
+                        mCanDelete = false;
+                        break;
+                }
+                return false;
+            }
+        });
     }
 
     @Override
