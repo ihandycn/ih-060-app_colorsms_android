@@ -761,4 +761,9 @@
     <string name="submit">SENDEN</string>
     <string name="private_setting_security_question_summary">Falls Sie Ihr Passwort vergessen sollten.</string>
 
+
+	<string name="incorrect_question_answer_hint">Falsche Antwort</string>
+	<string name="private_box_empty_contact_hint">Kein privater Kontakt</string>
+	<string name="private_contacts">Private Kontakte</string>
+
 </resources>

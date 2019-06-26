@@ -768,4 +768,9 @@
     </string-array>
     <string name="private_setting_security_question_summary">Caso você esqueça sua senha.</string>
 
+
+	<string name="incorrect_question_answer_hint">Resposta incorreta</string>
+	<string name="private_box_empty_contact_hint">Sem contato privado</string>
+	<string name="private_contacts">Contatos Privados</string>
+
 </resources>

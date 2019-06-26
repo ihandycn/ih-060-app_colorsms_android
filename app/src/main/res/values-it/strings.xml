@@ -764,4 +764,9 @@
     <string name="private_setting_security_question_summary">Se dimentichi la password.</string>
 
 
+
+	<string name="incorrect_question_answer_hint">Risposta errata</string>
+	<string name="private_box_empty_contact_hint">Nessun contatto privato</string>
+	<string name="private_contacts">Contatti privati</string>
+
 </resources>
