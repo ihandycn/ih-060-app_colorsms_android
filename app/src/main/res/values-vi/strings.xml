@@ -769,4 +769,7 @@
 	<string name="private_box_empty_contact_hint">Không có liên hệ riêng tư</string>
 	<string name="private_contacts">Liên hệ riêng tư</string>
 
+
+	<string name="backup_guide_dialog_title">Sao lưu SMS</string>
+
 </resources>

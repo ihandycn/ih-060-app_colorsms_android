@@ -769,4 +769,7 @@
 	<string name="private_box_empty_contact_hint">Nessun contatto privato</string>
 	<string name="private_contacts">Contatti privati</string>
 
+
+	<string name="backup_guide_dialog_title">Backup di SMS</string>
+
 </resources>

@@ -770,4 +770,7 @@
 	<string name="private_box_empty_contact_hint">No hay contactos privados</string>
 	<string name="private_contacts">Contactos privados</string>
 
+
+	<string name="backup_guide_dialog_title">Copia de seguridad de SMS</string>
+
 </resources>

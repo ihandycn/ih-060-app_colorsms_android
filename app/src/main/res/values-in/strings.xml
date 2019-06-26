@@ -775,4 +775,7 @@
 	<string name="private_box_empty_contact_hint">Tidak ada kontak pribadi</string>
 	<string name="private_contacts">Kontak pribadi</string>
 
+
+	<string name="backup_guide_dialog_title">Backup SMS</string>
+
 </resources>

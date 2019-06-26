@@ -766,4 +766,7 @@
 	<string name="private_box_empty_contact_hint">ไม่มีรายชื่อติดต่อส่วนตัว</string>
 	<string name="private_contacts">รายชื่อติดต่อส่วนตัว</string>
 
+
+	<string name="backup_guide_dialog_title">สำรองข้อมูล SMS</string>
+
 </resources>

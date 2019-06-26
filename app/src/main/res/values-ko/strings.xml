@@ -766,4 +766,7 @@
 	<string name="private_box_empty_contact_hint">비공개 연락처 없음</string>
 	<string name="private_contacts">비공개 연락처</string>
 
+
+	<string name="backup_guide_dialog_title">SMS 백업</string>
+
 </resources>

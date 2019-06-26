@@ -865,4 +865,7 @@
 	<string name="private_box_empty_contact_hint">ليست هناك جهة اتصال خاصة</string>
 	<string name="private_contacts">جهات اتصل خاصة</string>
 
+
+	<string name="backup_guide_dialog_title">نسخ الرسائل</string>
+
 </resources>

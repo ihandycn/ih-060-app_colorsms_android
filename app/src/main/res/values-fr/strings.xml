@@ -766,4 +766,7 @@
 	<string name="private_box_empty_contact_hint">Aucun contact privé</string>
 	<string name="private_contacts">Contacts privés</string>
 
+
+	<string name="backup_guide_dialog_title">Sauvegarder les SMS</string>
+
 </resources>

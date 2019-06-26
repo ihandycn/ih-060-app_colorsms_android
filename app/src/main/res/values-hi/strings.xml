@@ -769,4 +769,7 @@
 	<string name="private_box_empty_contact_hint">कोई निजी संपर्क नहीं</string>
 	<string name="private_contacts">निजी संपर्कों</string>
 
+
+	<string name="backup_guide_dialog_title">एसएमएस बैकअप</string>
+
 </resources>

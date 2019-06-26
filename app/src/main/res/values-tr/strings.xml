@@ -761,4 +761,7 @@
 	<string name="private_box_empty_contact_hint">Özel kişi yok</string>
 	<string name="private_contacts">Özel Kişiler</string>
 
+
+	<string name="backup_guide_dialog_title">SMS Yedekleme</string>
+
 </resources>

@@ -767,4 +767,7 @@
 	<string name="private_box_empty_contact_hint">プライベートな連絡先はありません</string>
 	<string name="private_contacts">プライベートな連絡先</string>
 
+
+	<string name="backup_guide_dialog_title">SMSバックアップ</string>
+
 </resources>
