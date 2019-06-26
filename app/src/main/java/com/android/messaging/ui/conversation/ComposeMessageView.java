@@ -385,7 +385,12 @@ public class ComposeMessageView extends LinearLayout
                     }
                 }
             }
-            if (!hasMessageText) {
+
+            final String subject = mComposeSubjectText.getText().toString();
+            final boolean hasSubject = (TextUtils.getTrimmedLength(subject) > 0);
+            final boolean hasWorkingDraft = hasMessageText || hasSubject ||
+                    (mBinding.getData() != null && mBinding.getData().hasAttachments());
+            if (!hasWorkingDraft || !isDataLoadedForMessageSend()) {
                 return;
             }
 
@@ -924,7 +929,7 @@ public class ComposeMessageView extends LinearLayout
         }
     }
 
-    private void checkEmojiEvent(String input){
+    private void checkEmojiEvent(String input) {
         new Thread(new Runnable() {
             @Override
             public void run() {
@@ -933,7 +938,7 @@ public class ComposeMessageView extends LinearLayout
                 Pattern emojiPattern = Pattern.compile(EMOJI_REGEX,
                         Pattern.UNICODE_CASE | Pattern.CASE_INSENSITIVE);
                 Matcher matcher = emojiPattern.matcher(input);
-                if(matcher.matches()){
+                if (matcher.matches()) {
                     BugleAnalytics.logEvent("Message_Emoji_Send");
                 }
             }
