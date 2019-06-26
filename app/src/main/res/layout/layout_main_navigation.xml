@@ -142,6 +142,56 @@
                 app:typeface="@string/custom_font_bold"/>
         </RelativeLayout>
 
+        <!-- Backup & Restore -->
+        <RelativeLayout
+            android:id="@+id/navigation_item_emoji_store"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/sidebar_button_background"
+            android:minHeight="44dp">
+
+            <android.support.v7.widget.AppCompatImageView
+                style="@style/DrawerMenuIcon"
+                app:srcCompat="@drawable/ic_menu_emoji_store" />
+
+            <!--for some long strings-->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginStart="65dp"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <com.android.messaging.ui.view.MessagesTextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="center_vertical"
+                    android:includeFontPadding="false"
+                    android:text="@string/sms_emoji_store_title"
+                    android:textColor="#222327"
+                    android:textSize="14sp"
+                    app:typeface="@string/custom_font_medium" />
+
+                <com.android.messaging.ui.view.MessagesTextView
+                    android:id="@+id/navigation_item_emoji_store_new_text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="17.8dp"
+                    android:layout_marginEnd="19.3dp"
+                    android:gravity="center"
+                    android:includeFontPadding="false"
+                    android:paddingEnd="8.5dp"
+                    android:paddingStart="8.5dp"
+                    android:text="@string/menu_new"
+                    android:textColor="@color/white"
+                    android:textSize="9.3sp"
+                    android:visibility="gone"
+                    app:textAllCaps="true"
+                    app:typeface="@string/custom_font_bold" />
+            </LinearLayout>
+        </RelativeLayout>
+
         <View
             android:layout_width="match_parent"
             android:layout_height="35dp"/>

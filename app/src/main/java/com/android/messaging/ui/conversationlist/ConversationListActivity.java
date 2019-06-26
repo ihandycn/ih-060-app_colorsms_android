@@ -1,8 +1,6 @@
 package com.android.messaging.ui.conversationlist;
 
 import android.Manifest;
-import android.animation.Animator;
-import android.animation.AnimatorListenerAdapter;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.drawable.Drawable;
@@ -30,7 +28,6 @@ import android.view.ViewTreeObserver;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.airbnb.lottie.LottieAnimationView;
 import com.android.messaging.BuildConfig;
 import com.android.messaging.R;
 import com.android.messaging.ad.AdConfig;
@@ -42,7 +39,6 @@ import com.android.messaging.datamodel.BugleNotifications;
 import com.android.messaging.datamodel.DataModel;
 import com.android.messaging.datamodel.DatabaseHelper;
 import com.android.messaging.datamodel.DatabaseWrapper;
-import com.android.messaging.datamodel.action.PinConversationAction;
 import com.android.messaging.datamodel.data.MessageBoxItemData;
 import com.android.messaging.font.ChangeFontActivity;
 import com.android.messaging.font.FontStyleManager;
@@ -83,7 +79,6 @@ import com.android.messaging.util.BugleAnalytics;
 import com.android.messaging.util.BuglePrefsKeys;
 import com.android.messaging.util.CommonUtils;
 import com.android.messaging.util.CreateShortcutUtils;
-import com.android.messaging.util.MediaUtil;
 import com.android.messaging.util.PhoneUtils;
 import com.android.messaging.util.TransitionUtils;
 import com.ihs.app.framework.HSApplication;
@@ -106,7 +101,6 @@ import net.appcloudbox.ads.nativead.AcbNativeAdManager;
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -128,9 +122,9 @@ public class ConversationListActivity extends AbstractConversationListActivity
     public static final String FIRST_LOAD = "first_load";
     public static final String HAS_PIN_CONVERSATION = "has_pin_conversation";
 
-    private static final String PREF_SHOW_EMOJI_GUIDE = "pref_show_emoji_guide";
     public static final String PREF_KEY_MAIN_DRAWER_OPENED = "pref_key_main_drawer_opened";
     private static final String PREF_KEY_THEME_CLICKED = "pref_key_navigation_theme_clicked";
+    private static final String PREF_KEY_EMOJI_STORE_CLICKED = "pref_key_emoji_store_clicked";
     private static final String PREF_KEY_THEME_COLOR_CLICKED = "pref_key_navigation_theme_color_clicked";
     private static final String PREF_KEY_BUBBLE_CLICKED = "pref_key_navigation_bubble_clicked";
     private static final String PREF_KEY_PRIVATE_BOX_CLICKED = "pref_key_navigation_private_box_clicked";
@@ -156,6 +150,7 @@ public class ConversationListActivity extends AbstractConversationListActivity
     private static final int DRAWER_INDEX_PRIVACY_BOX = 7;
     private static final int DRAWER_INDEX_INVITE_FRIENDS = 8;
     private static final int DRAWER_INDEX_BACKUP_RESTORE = 9;
+    private static final int DRAWER_INDEX_EMOJI_STORE = 10;
 
     private int drawerClickIndex = DRAWER_INDEX_NONE;
 
@@ -165,16 +160,12 @@ public class ConversationListActivity extends AbstractConversationListActivity
 
     private TextView mTitleTextView;
     private View mEmojiStoreIconView;
-    private LottieAnimationView mGuideContainer;
 
     private static boolean mIsNoActionBack = true;
     private boolean mIsRealCreate = false;
-    private boolean mShowEndAnimation;
-    private boolean hideAnimation;
     private boolean shouldShowCreateShortcutGuide;
     private String size;
     private View mPrivateBoxEntrance;
-    private boolean mIsActivityVisible;
 
     private boolean mIsMessageMoving;
 
@@ -352,9 +343,6 @@ public class ConversationListActivity extends AbstractConversationListActivity
 
         BugleAnalytics.logEvent("SMS_Messages_Show_Corrected", true, true);
         Preferences.getDefault().incrementAndGetInt(CustomizeGuideController.PREF_KEY_MAIN_PAGE_SHOW_TIME);
-        if (Preferences.getDefault().getInt(CustomizeGuideController.PREF_KEY_MAIN_PAGE_SHOW_TIME, 0) == 2) {
-            Threads.postOnMainThreadDelayed(() -> showEmojiStoreGuide(), 500);
-        }
         showThemeUpgradeDialog();
 
         if (drawerLayout != null) {
@@ -389,7 +377,6 @@ public class ConversationListActivity extends AbstractConversationListActivity
             overridePendingTransition(R.anim.slide_in_from_right_and_fade, R.anim.anim_null);
             Preferences.getDefault().putBoolean(BuglePrefsKeys.PREFS_KEY_THEME_CLEARED_TO_DEFAULT, false);
         }
-        mIsActivityVisible = true;
     }
 
     @Override
@@ -496,6 +483,12 @@ public class ConversationListActivity extends AbstractConversationListActivity
                         overridePendingTransition(R.anim.slide_in_from_right_and_fade, R.anim.anim_null);
                         navigationContent.findViewById(R.id.navigation_item_font_new_text).setVisibility(View.GONE);
                         break;
+                    case DRAWER_INDEX_EMOJI_STORE:
+                        BugleAnalytics.logEvent("Menu_EmojiStore_Click");
+                        Navigations.startActivity(ConversationListActivity.this, EmojiStoreActivity.class);
+                        overridePendingTransition(R.anim.slide_in_from_right_and_fade, R.anim.anim_null);
+                        navigationContent.findViewById(R.id.navigation_item_emoji_store_new_text).setVisibility(View.GONE);
+                        break;
                     case DRAWER_INDEX_BACKUP_RESTORE:
                         BugleAnalytics.logEvent("Menu_BackupRestore_Click", true);
                         BackupRestoreActivity.startBackupRestoreActivity(ConversationListActivity.this, BackupRestoreActivity.ENTRANCE_MENU);
@@ -565,6 +558,14 @@ public class ConversationListActivity extends AbstractConversationListActivity
                         Dimensions.pxFromDp(8.7f), false));
             }
 
+            if (!Preferences.getDefault().getBoolean(PREF_KEY_EMOJI_STORE_CLICKED, false)
+                    && HSApplication.getFirstLaunchInfo().appVersionCode > 58) {
+                View newMark = navigationContent.findViewById(R.id.navigation_item_emoji_store_new_text);
+                newMark.setVisibility(View.VISIBLE);
+                newMark.setBackground(BackgroundDrawables.createBackgroundDrawable(0xffea6126,
+                        Dimensions.pxFromDp(8.7f), false));
+            }
+
             if (!Preferences.getDefault().getBoolean(PREF_KEY_PRIVATE_BOX_CLICKED, false)) {
                 View bubbleNewMark = navigationContent.findViewById(R.id.navigation_item_private_box_new_text);
                 bubbleNewMark.setVisibility(View.VISIBLE);
@@ -589,6 +590,7 @@ public class ConversationListActivity extends AbstractConversationListActivity
         navigationContent.findViewById(R.id.navigation_item_rate).setOnClickListener(this);
         navigationContent.findViewById(R.id.navigation_item_invite_friends).setOnClickListener(this);
         navigationContent.findViewById(R.id.navigation_item_backup_restore).setOnClickListener(this);
+        navigationContent.findViewById(R.id.navigation_item_emoji_store).setOnClickListener(this);
 
         //test code
         //this item is used to delete dirty mms parts in telephony
@@ -641,13 +643,6 @@ public class ConversationListActivity extends AbstractConversationListActivity
             drawable = AppCompatDrawableManager.get().getDrawable(this, R.drawable.ic_navigation_drawer);
         }
         getSupportActionBar().setHomeAsUpIndicator(drawable);
-    }
-
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-        mIsActivityVisible = false;
     }
 
     @Override
@@ -742,7 +737,6 @@ public class ConversationListActivity extends AbstractConversationListActivity
     @Override
     public ActionMode startActionMode(ActionMode.Callback callback) {
         mTitleTextView.setVisibility(View.GONE);
-        stopEmojiStoreGuide();
         mEmojiStoreIconView.setVisibility(View.GONE);
         findViewById(R.id.selection_mode_bg).setVisibility(View.VISIBLE);
         BugleAnalytics.logEvent("SMS_EditMode_Show", true, true);
@@ -836,7 +830,6 @@ public class ConversationListActivity extends AbstractConversationListActivity
 
     private void setupToolbarUI() {
         mTitleTextView = findViewById(R.id.toolbar_title);
-        mGuideContainer = findViewById(R.id.emoji_store_guide_content);
         mEmojiStoreIconView = findViewById(R.id.emoji_store_icon);
         mEmojiStoreIconView.setScaleX(1f);
         mEmojiStoreIconView.setScaleY(1f);
@@ -891,65 +884,6 @@ public class ConversationListActivity extends AbstractConversationListActivity
 
     }
 
-    private void showEmojiStoreGuide() {
-        boolean isShowEmojiGuide = Preferences.getDefault().getBoolean(PREF_SHOW_EMOJI_GUIDE, true);
-        if (!isShowEmojiGuide) {
-            return;
-        }
-        mAnimState = AnimState.APPEAR;
-        mGuideContainer.setVisibility(View.VISIBLE);
-        Preferences.getDefault().putBoolean(PREF_SHOW_EMOJI_GUIDE, false);
-        mGuideContainer.setImageAssetsFolder("lottie/show_emoj_bubble/");
-        mGuideContainer.setAnimation("lottie/show_emoj_bubble.json");
-        mGuideContainer.addAnimatorListener(new AnimatorListenerAdapter() {
-            @Override
-            public void onAnimationEnd(Animator animation) {
-                super.onAnimationEnd(animation);
-                mAnimState = AnimState.NONE;
-                if (mGuideContainer.getProgress() >= 0.85f) {
-                    mGuideContainer.setVisibility(View.GONE);
-                }
-                if (mShowEndAnimation) {
-                    hideStoreGuide();
-                }
-            }
-
-            @Override
-            public void onAnimationStart(Animator animation) {
-                super.onAnimationStart(animation);
-                mAnimState = AnimState.SHOWING;
-                if (mGuideContainer.getProgress() <= 0.5f) {
-                    MediaUtil.get().playSound(ConversationListActivity.this, R.raw.emoj_show, null /* completionListener */);
-                }
-            }
-        });
-        mGuideContainer.setMaxProgress(0.85f);
-        mGuideContainer.playAnimation();
-
-    }
-
-    private void hideStoreGuide() {
-        hideAnimation = true;
-        mAnimState = AnimState.DISAPPEAR;
-        mGuideContainer.setMaxProgress(1f);
-        mGuideContainer.resumeAnimation();
-    }
-
-    @Override
-    public boolean dispatchTouchEvent(MotionEvent event) {
-        if (mGuideContainer.getVisibility() == View.VISIBLE) {
-            if (mAnimState == AnimState.SHOWING) {
-                mShowEndAnimation = true;
-            } else {
-                if (!hideAnimation) {
-                    hideStoreGuide();
-                }
-            }
-
-        }
-        return super.dispatchTouchEvent(event);
-    }
-
     public static void logFirstComeInClickEvent(String type) {
         if (!type.equals("no_action")) {
             mIsNoActionBack = false;
@@ -970,15 +904,6 @@ public class ConversationListActivity extends AbstractConversationListActivity
         }
         if (mIsNoActionBack) {
             logFirstComeInClickEvent("no_action");
-        }
-    }
-
-    private void stopEmojiStoreGuide() {
-        if (mAnimState != AnimState.NONE) {
-            if (mGuideContainer != null) {
-                mGuideContainer.setVisibility(View.GONE);
-            }
-            mAnimState = AnimState.NONE;
         }
     }
 
@@ -1014,6 +939,11 @@ public class ConversationListActivity extends AbstractConversationListActivity
             case R.id.navigation_item_setting:
                 drawerClickIndex = DRAWER_INDEX_SETTING;
                 drawerLayout.closeDrawer(navigationView);
+                break;
+            case R.id.navigation_item_emoji_store:
+                drawerClickIndex = DRAWER_INDEX_EMOJI_STORE;
+                drawerLayout.closeDrawer(navigationView);
+                Preferences.getDefault().putBoolean(PREF_KEY_EMOJI_STORE_CLICKED, true);
                 break;
             case R.id.navigation_item_backup_restore:
                 drawerClickIndex = DRAWER_INDEX_BACKUP_RESTORE;
