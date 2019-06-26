@@ -159,7 +159,6 @@ public class ConversationListActivity extends AbstractConversationListActivity
     private NavigationView navigationView;
 
     private TextView mTitleTextView;
-    private View mEmojiStoreIconView;
 
     private static boolean mIsNoActionBack = true;
     private boolean mIsRealCreate = false;
@@ -389,7 +388,6 @@ public class ConversationListActivity extends AbstractConversationListActivity
 
         if (mTitleTextView != null && mTitleTextView.getVisibility() == View.GONE) {
             mTitleTextView.setVisibility(View.VISIBLE);
-            mEmojiStoreIconView.setVisibility(View.VISIBLE);
         }
 
         if (getActionMode() == null) {
@@ -737,7 +735,6 @@ public class ConversationListActivity extends AbstractConversationListActivity
     @Override
     public ActionMode startActionMode(ActionMode.Callback callback) {
         mTitleTextView.setVisibility(View.GONE);
-        mEmojiStoreIconView.setVisibility(View.GONE);
         findViewById(R.id.selection_mode_bg).setVisibility(View.VISIBLE);
         BugleAnalytics.logEvent("SMS_EditMode_Show", true, true);
         return super.startActionMode(callback);
@@ -829,58 +826,6 @@ public class ConversationListActivity extends AbstractConversationListActivity
 
     private void setupToolbarUI() {
         mTitleTextView = findViewById(R.id.toolbar_title);
-        mEmojiStoreIconView = findViewById(R.id.emoji_store_icon);
-        mEmojiStoreIconView.setScaleX(1f);
-        mEmojiStoreIconView.setScaleY(1f);
-        mEmojiStoreIconView.setOnClickListener(v -> {
-            if (!mIsEmojiStoreClickable) {
-                return;
-            }
-            logFirstComeInClickEvent("emojistore");
-            BugleAnalytics.logEvent("SMS_Messages_Emojistore_Click", true, true);
-            if (mAnimState == AnimState.DISAPPEAR) {
-                mIsEmojiStoreClickable = false;
-                Threads.postOnMainThreadDelayed(() -> {
-                    mIsEmojiStoreClickable = true;
-                    EmojiStoreActivity.start(ConversationListActivity.this);
-                }, 250);
-            } else {
-                EmojiStoreActivity.start(ConversationListActivity.this);
-            }
-        });
-        mEmojiStoreIconView.setOnTouchListener(new View.OnTouchListener() {
-            boolean touch = false;
-
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                switch (event.getAction()) {
-                    case MotionEvent.ACTION_DOWN:
-                        if (!touch) {
-                            touch = true;
-                            mEmojiStoreIconView.animate().cancel();
-                            mEmojiStoreIconView.animate()
-                                    .scaleX(0.7f)
-                                    .scaleY(0.7f)
-                                    .setDuration(200L)
-                                    .start();
-                        }
-                        break;
-                    case MotionEvent.ACTION_UP:
-                        if (touch) {
-                            touch = false;
-                            mEmojiStoreIconView.animate().cancel();
-                            mEmojiStoreIconView.animate()
-                                    .scaleX(1f)
-                                    .scaleY(1f)
-                                    .setDuration(200)
-                                    .start();
-                        }
-                        break;
-                }
-                return false;
-            }
-        });
-
     }
 
     public static void logFirstComeInClickEvent(String type) {
