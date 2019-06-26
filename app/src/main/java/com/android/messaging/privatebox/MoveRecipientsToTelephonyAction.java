@@ -45,17 +45,17 @@ public class MoveRecipientsToTelephonyAction extends Action {
             String conversationId =
                     BugleDatabaseOperations.getConversationIdForParticipantsGroup(Collections.singletonList(participantId));
 
-            if (BugleDatabaseOperations.updateConversationPrivateStatue(conversationId, false)) {
+            if (!TextUtils.isEmpty(conversationId) && BugleDatabaseOperations.updateConversationPrivateStatue(conversationId, false)) {
                 PrivateContactsManager.getInstance().updatePrivateContactsByConversationId(conversationId, false);
                 MessagingContentProvider.notifyConversationListChanged();
                 addMessagesByConversation(conversationId, messageIdList);
+            } else {
+                PrivateContactsManager.getInstance().removeRecipient(recipient);
             }
         }
 
         if (messageIdList.size() > 0) {
             MoveMessageToTelephonyAction.move(messageIdList, "", "");
-        } else {
-            Toasts.showToast(R.string.private_box_move_from_success);
         }
         return null;
     }

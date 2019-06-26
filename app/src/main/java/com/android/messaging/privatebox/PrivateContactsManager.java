@@ -11,6 +11,7 @@ import com.android.messaging.sms.MmsSmsUtils;
 import com.android.messaging.util.PhoneUtils;
 import com.google.common.base.Joiner;
 import com.ihs.app.framework.HSApplication;
+import com.ihs.commons.utils.HSLog;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -110,6 +111,17 @@ public class PrivateContactsManager {
         } else {
             db.delete(PRIVATE_CONTACTS_TABLE,
                     THREAD_ID + "=?", new String[]{String.valueOf(threadId)});
+        }
+    }
+
+    public void removeRecipient(String recipient) {
+        DatabaseWrapper db = DataModel.get().getDatabase();
+        String phoneNumBySystem = PhoneUtils.getDefault().getCanonicalBySystemLocale(recipient);
+        HSLog.d("removeRecipient : " + phoneNumBySystem);
+        if (!TextUtils.isEmpty(recipient)) {
+            db.delete(PRIVATE_CONTACTS_TABLE,
+                    " RECIPIENTS" + " =? ",
+                    new String[]{phoneNumBySystem});
         }
     }
 
