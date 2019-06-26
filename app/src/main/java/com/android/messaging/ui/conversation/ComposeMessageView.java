@@ -68,7 +68,7 @@ import com.android.messaging.datamodel.data.SubscriptionListData.SubscriptionLis
 import com.android.messaging.font.FontUtils;
 import com.android.messaging.sms.MmsConfig;
 import com.android.messaging.ui.AttachmentPreview;
-import com.android.messaging.ui.BaseDialogFragment;
+import com.android.messaging.ui.AvoidKeyboardHiddenDialogFragment;
 import com.android.messaging.ui.BugleActionBarActivity;
 import com.android.messaging.ui.PlainTextEditText;
 import com.android.messaging.ui.SendDelayProgressBar;
@@ -417,7 +417,7 @@ public class ComposeMessageView extends LinearLayout
             dialog.bindData(mConversationDataModel.getData().getSubscriptionListData().getActiveSubscriptionEntriesExcludingDefault(),
                     getSelfSubscriptionListEntry().slotId,
                     entry -> selectSim(entry));
-            dialog.setOnDismissOrCancelListener(new BaseDialogFragment.OnDismissOrCancelListener() {
+            dialog.setOnDismissOrCancelListener(new AvoidKeyboardHiddenDialogFragment.OnDismissOrCancelListener() {
 
                 @Override
                 public void onDismiss(DialogInterface dialog) {

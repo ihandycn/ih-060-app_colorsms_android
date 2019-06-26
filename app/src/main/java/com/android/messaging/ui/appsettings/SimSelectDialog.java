@@ -15,13 +15,13 @@ import android.widget.TextView;
 
 import com.android.messaging.R;
 import com.android.messaging.datamodel.data.SubscriptionListData;
-import com.android.messaging.ui.BaseDialogFragment;
+import com.android.messaging.ui.AvoidKeyboardHiddenDialogFragment;
 import com.android.messaging.ui.customize.PrimaryColors;
 import com.superapps.util.BackgroundDrawables;
 
 import java.util.List;
 
-public class SimSelectDialog extends BaseDialogFragment {
+public class SimSelectDialog extends AvoidKeyboardHiddenDialogFragment {
 
     public interface OnSimSelectListener {
         void onSimSelect(SubscriptionListData.SubscriptionListEntry entry);
