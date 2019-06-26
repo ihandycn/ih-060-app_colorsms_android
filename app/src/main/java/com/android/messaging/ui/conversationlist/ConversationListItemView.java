@@ -370,7 +370,6 @@ public class ConversationListItemView extends FrameLayout implements OnClickList
         setSelected(isSelected);
 
         ImageView checkbox = findViewById(R.id.check_box);
-        View rightGroup = findViewById(R.id.conversation_item_right_container);
 
         if (mHostInterface.isSelectionMode()) {
             checkbox.setVisibility(View.VISIBLE);
@@ -383,10 +382,11 @@ public class ConversationListItemView extends FrameLayout implements OnClickList
                 checkbox.setBackground(BackgroundDrawables.createBackgroundDrawable(0, 0, 4,
                         0xffbdc2c9, Dimensions.pxFromDp(20), false, false));
             }
-            rightGroup.setVisibility(GONE);
+            mTimestampTextView.setVisibility(GONE);
+            mUnreadMessagesCountView.setVisibility(GONE);
         } else {
             checkbox.setVisibility(View.GONE);
-            rightGroup.setVisibility(VISIBLE);
+            mTimestampTextView.setVisibility(VISIBLE);
 
             boolean shouldShowUnreadMsgCount = mData.getUnreadMessagesNumber() > 0;
             int unreadMsgCountViewVisibility = shouldShowUnreadMsgCount ? VISIBLE : GONE;
