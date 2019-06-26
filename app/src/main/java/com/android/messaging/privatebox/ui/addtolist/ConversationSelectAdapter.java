@@ -11,6 +11,9 @@ import android.widget.TextView;
 
 import com.android.messaging.R;
 import com.android.messaging.datamodel.data.ConversationListItemData;
+import com.android.messaging.ui.customize.PrimaryColors;
+import com.superapps.util.BackgroundDrawables;
+import com.superapps.util.Dimensions;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -48,7 +51,7 @@ public class ConversationSelectAdapter extends RecyclerView.Adapter<Conversation
         notifyDataSetChanged();
     }
 
-    public HashMap<ConversationListItemData, Boolean> getSelectedMap(){
+    public HashMap<ConversationListItemData, Boolean> getSelectedMap() {
         return selectedMap;
     }
 
@@ -71,11 +74,16 @@ public class ConversationSelectAdapter extends RecyclerView.Adapter<Conversation
             holder.subTitle.setVisibility(View.VISIBLE);
         }
 
+        ImageView checkbox = holder.checkBoxView;
         if (null != selectedMap.get(contactInfo) &&
                 selectedMap.get(contactInfo).equals(Boolean.TRUE)) {
-            holder.checkBoxView.setImageResource(R.drawable.ic_all_checked);
+            checkbox.setImageResource(R.drawable.conversation_check);
+            checkbox.setBackground(BackgroundDrawables.createBackgroundDrawable(
+                    PrimaryColors.getPrimaryColor(), Dimensions.pxFromDp(20), false));
         } else {
-            holder.checkBoxView.setImageResource(R.drawable.ic_all_unchecked);
+            checkbox.setImageDrawable(null);
+            checkbox.setBackground(BackgroundDrawables.createBackgroundDrawable(0, 0, 4,
+                    0xffbdc2c9, Dimensions.pxFromDp(20), false, false));
         }
 
         holder.itemView.setOnClickListener(new View.OnClickListener() {
@@ -84,10 +92,14 @@ public class ConversationSelectAdapter extends RecyclerView.Adapter<Conversation
                 if (null != selectedMap.get(contactInfo)
                         && selectedMap.get(contactInfo).equals(Boolean.TRUE)) {
                     selectedMap.put(contactInfo, Boolean.FALSE);
-                    holder.checkBoxView.setImageResource(R.drawable.ic_all_unchecked);
+                    checkbox.setImageDrawable(null);
+                    checkbox.setBackground(BackgroundDrawables.createBackgroundDrawable(0, 0, 4,
+                            0xffbdc2c9, Dimensions.pxFromDp(20), false, false));
                 } else {
                     selectedMap.put(contactInfo, Boolean.TRUE);
-                    holder.checkBoxView.setImageResource(R.drawable.ic_all_checked);
+                    checkbox.setImageResource(R.drawable.conversation_check);
+                    checkbox.setBackground(BackgroundDrawables.createBackgroundDrawable(
+                            PrimaryColors.getPrimaryColor(), Dimensions.pxFromDp(20), false));
                 }
             }
         });
