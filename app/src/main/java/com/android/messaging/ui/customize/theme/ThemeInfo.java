@@ -4,14 +4,14 @@ import com.ihs.commons.config.HSConfig;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class ThemeInfo {
-    private static final Map<String, ThemeInfo> sDownloadingThemeList = new HashMap<>();
+    private static final Map<String, ThemeInfo> sDownloadingThemeList = new ConcurrentHashMap<>();
 
     public String mThemeKey;
     public boolean mIsLocalTheme;
