@@ -13,9 +13,11 @@
     See the License for the specific language governing permissions and
     limitations under the License.
 -->
-<com.android.messaging.ui.conversation.ConversationMessageView xmlns:android="http://schemas.android.com/apk/res/android"
+<com.android.messaging.ui.conversation.ConversationMessageView
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     style="@style/ConversationMessageViewStyle"
+    android:clipChildren="false"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
@@ -26,7 +28,7 @@
         android:layout_width="20dp"
         android:layout_height="20dp"
         android:scaleType="fitXY"
-        android:visibility="gone" />
+        android:visibility="gone"/>
 
     <com.android.messaging.ui.conversation.ConversationMessageBubbleView
         android:id="@+id/message_content"
@@ -47,7 +49,7 @@
                 android:id="@+id/multiple_attachments"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:visibility="gone" />
+                android:visibility="gone"/>
 
             <com.android.messaging.ui.AsyncImageView
                 android:id="@+id/message_image"
@@ -61,7 +63,7 @@
                 android:scaleType="fitCenter"
                 android:visibility="gone"
                 app:cornerRadius="@dimen/attachment_rounded_corner_radius"
-                app:placeholderDrawable="@drawable/attachment_image_placeholder_background" />
+                app:placeholderDrawable="@drawable/attachment_image_placeholder_background"/>
         </LinearLayout>
 
 

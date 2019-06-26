@@ -13,10 +13,11 @@
     See the License for the specific language governing permissions and
     limitations under the License.
 -->
-<com.android.messaging.ui.conversation.ConversationMessageView xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<com.android.messaging.ui.conversation.ConversationMessageView
+    xmlns:android="http://schemas.android.com/apk/res/android"
     style="@style/ConversationMessageViewStyle"
     android:layout_width="match_parent"
+    android:clipChildren="false"
     android:layout_height="wrap_content">
 
     <include layout="@layout/layout_conversation_message_icon"/>
@@ -26,7 +27,7 @@
         android:layout_width="20dp"
         android:layout_height="20dp"
         android:scaleType="fitXY"
-        android:visibility="gone" />
+        android:visibility="gone"/>
 
     <com.android.messaging.ui.conversation.ConversationMessageBubbleView
         android:id="@+id/message_content"
