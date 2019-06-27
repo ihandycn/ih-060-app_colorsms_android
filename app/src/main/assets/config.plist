@@ -438,11 +438,11 @@
 						<key>BubbleIncomingUrl</key>
 						<string>incoming.9.png</string>
 						<key>BubbleIncomingSolidUrl</key>
-						<string>incoming_solid.9.png</string>
+						<string></string>
 						<key>BubbleOutgoingUrl</key>
 						<string>outgoing.9.png</string>
 						<key>BubbleOutgoingSolidUrl</key>
-						<string>outgoing_solid.9.png</string>
+						<string></string>
 					</dict>
 					<key>flower</key>
 					<dict>
@@ -634,8 +634,6 @@
 						<key>BubbleOutgoingUrl</key>
 						<string>outgoing.9.png</string>
 						<key>BubbleOutgoingSolidUrl</key>
-						<string></string>
-						<key>BubbleOutgoingSolidUrl - 2</key>
 						<string></string>
 					</dict>
 					<key>fireskull</key>
