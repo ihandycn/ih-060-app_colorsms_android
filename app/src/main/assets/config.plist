@@ -11,11 +11,11 @@
 			<key>BackupRestore</key>
 			<dict>
 				<key>RecommendBannerTimes</key>
-				<integer>6</integer>
+				<integer>0</integer>
 				<key>FreeUpOldmsg</key>
-				<true/>
+				<false/>
 				<key>RecommendFull</key>
-				<true/>
+				<false/>
 			</dict>
 			<key>CheckContactNum</key>
 			<integer>6</integer>
