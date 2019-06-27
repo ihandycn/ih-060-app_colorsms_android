@@ -58,6 +58,7 @@ import com.android.messaging.ui.appsettings.PrivacyModeSettings;
 import com.android.messaging.ui.messagebox.MessageBoxSettings;
 import com.android.messaging.util.Assert;
 import com.android.messaging.util.AvatarUriUtil;
+import com.android.messaging.util.BugleAnalytics;
 import com.android.messaging.util.BugleGservices;
 import com.android.messaging.util.BugleGservicesKeys;
 import com.android.messaging.util.CommonUtils;
@@ -1452,6 +1453,7 @@ public abstract class MessageNotificationState extends NotificationState {
                                 PendingIntentConstants.MSG_SEND_ERROR, null),
                                 PendingIntentConstants.MSG_SEND_ERROR, builder.build(), channel);
                     }
+                    BugleAnalytics.logEvent("FailedNotifications_Received", true);
                 } else {
                     Notifications.cancelSafely(BugleNotifications.buildNotificationTag(PendingIntentConstants.MSG_SEND_ERROR, null),
                             PendingIntentConstants.MSG_SEND_ERROR);
