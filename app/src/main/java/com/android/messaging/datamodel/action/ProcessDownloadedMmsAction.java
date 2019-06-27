@@ -577,7 +577,7 @@ public class ProcessDownloadedMmsAction extends Action {
                 final int resultCode = actionParameters.getInt(KEY_RESULT_CODE);
                 final int httpStatusCode = actionParameters.getInt(KEY_HTTP_STATUS_CODE);
 
-                ArchivedConversationListActivity.logUnarchiveEvent(db, message.getConversationId(), "receive_message");
+                ArchivedConversationListActivity.logUnarchiveEvent(db, notificationConversationId, "receive_message");
 
                 // Just in case this was the latest message update the summary data
                 BugleDatabaseOperations.refreshConversationMetadataInTransaction(db,
