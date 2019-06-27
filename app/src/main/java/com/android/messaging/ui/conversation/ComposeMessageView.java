@@ -18,15 +18,18 @@ package com.android.messaging.ui.conversation;
 import android.Manifest;
 import android.animation.Animator;
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.graphics.PorterDuff;
 import android.graphics.Rect;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.v4.graphics.drawable.DrawableCompat;
 import android.support.v4.view.animation.PathInterpolatorCompat;
 import android.support.v7.app.ActionBar;
+import android.support.v7.content.res.AppCompatResources;
 import android.text.Editable;
 import android.text.InputFilter;
 import android.text.InputFilter.LengthFilter;
@@ -37,8 +40,12 @@ import android.text.style.AbsoluteSizeSpan;
 import android.text.style.ForegroundColorSpan;
 import android.util.AttributeSet;
 import android.view.ContextThemeWrapper;
+import android.view.Gravity;
 import android.view.KeyEvent;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
+import android.view.Window;
 import android.view.animation.Interpolator;
 import android.view.inputmethod.EditorInfo;
 import android.widget.FrameLayout;
@@ -64,16 +71,15 @@ import com.android.messaging.datamodel.data.MessageData;
 import com.android.messaging.datamodel.data.MessagePartData;
 import com.android.messaging.datamodel.data.ParticipantData;
 import com.android.messaging.datamodel.data.PendingAttachmentData;
+import com.android.messaging.datamodel.data.SubscriptionListData;
 import com.android.messaging.datamodel.data.SubscriptionListData.SubscriptionListEntry;
 import com.android.messaging.font.FontUtils;
 import com.android.messaging.sms.MmsConfig;
 import com.android.messaging.ui.AttachmentPreview;
-import com.android.messaging.ui.AvoidKeyboardHiddenDialogFragment;
 import com.android.messaging.ui.BugleActionBarActivity;
 import com.android.messaging.ui.PlainTextEditText;
 import com.android.messaging.ui.SendDelayProgressBar;
 import com.android.messaging.ui.appsettings.SendDelaySettings;
-import com.android.messaging.ui.appsettings.SimSelectDialog;
 import com.android.messaging.ui.conversation.ConversationInputManager.ConversationInputSink;
 import com.android.messaging.ui.customize.PrimaryColors;
 import com.android.messaging.ui.dialog.FiveStarRateDialog;
@@ -413,24 +419,69 @@ public class ComposeMessageView extends LinearLayout
                     || mConversationDataModel.getData().getSubscriptionListData().getActiveSubscriptionEntriesExcludingDefault() == null) {
                 return;
             }
-            SimSelectDialog dialog = new SimSelectDialog();
-            dialog.bindData(mConversationDataModel.getData().getSubscriptionListData().getActiveSubscriptionEntriesExcludingDefault(),
-                    getSelfSubscriptionListEntry().slotId,
-                    entry -> selectSim(entry));
-            dialog.setOnDismissOrCancelListener(new AvoidKeyboardHiddenDialogFragment.OnDismissOrCancelListener() {
 
-                @Override
-                public void onDismiss(DialogInterface dialog) {
-                    updateOnSelfSubscriptionChange();
-                }
+            View mContentView = LayoutInflater.from(getContext()).inflate(
+                    R.layout.dialog_select_sim, null);
+            AlertDialog.Builder simBuilder = new AlertDialog.Builder(getContext(), R.style.TransparentDialog);
+            simBuilder.setView(mContentView);
+            AlertDialog dialog = simBuilder.create();
+            Window window = dialog.getWindow();
+            window.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+            window.setGravity(Gravity.CENTER);
+            dialog.setOnDismissListener(dialog1 -> updateOnSelfSubscriptionChange());
 
-                @Override
-                public void onCancel(DialogInterface dialog) {
-                    updateOnSelfSubscriptionChange();
+            List<SubscriptionListData.SubscriptionListEntry> data =
+                    mConversationDataModel.getData().getSubscriptionListData().getActiveSubscriptionEntriesExcludingDefault();
+            int currentSlotId = getSelfSubscriptionListEntry().slotId;
+            ImageView ivTip1 = mContentView.findViewById(R.id.iv_tip_1);
+            ivTip1.getDrawable().setColorFilter(PrimaryColors.getPrimaryColor(), PorterDuff.Mode.SRC_ATOP);
+            ImageView ivTip2 = mContentView.findViewById(R.id.iv_tip_2);
+            ivTip2.getDrawable().setColorFilter(PrimaryColors.getPrimaryColor(), PorterDuff.Mode.SRC_ATOP);
+
+            for (int i = 0; i < 2 && i < data.size(); i++) {
+                final SubscriptionListData.SubscriptionListEntry entry = data.get(i);
+                if (entry.slotId == 1) {
+                    ((TextView) mContentView.findViewById(R.id.carrier_1)).setText(entry.displayName);
+
+                    final String displayDestination = TextUtils.isEmpty(entry.displayDestination) ?
+                            getContext().getResources().getString(R.string.sim_settings_unknown_number) :
+                            entry.displayDestination;
+                    ((TextView) mContentView.findViewById(R.id.phone_number_1)).setText(displayDestination);
+                    mContentView.findViewById(R.id.container_sim_1).setOnClickListener(v1 -> {
+                        selectSim(entry);
+                        dialog.dismiss();
+                    });
+                    mContentView.findViewById(R.id.container_sim_1).setBackground(BackgroundDrawables.createBackgroundDrawable(0xffffffff, 0, true));
+                } else {
+                    ((TextView) mContentView.findViewById(R.id.carrier_2)).setText(entry.displayName);
+                    final String displayDestination = TextUtils.isEmpty(entry.displayDestination) ?
+                            getContext().getResources().getString(R.string.sim_settings_unknown_number) :
+                            entry.displayDestination;
+                    ((TextView) mContentView.findViewById(R.id.phone_number_2)).setText(displayDestination);
+                    mContentView.findViewById(R.id.container_sim_2).setOnClickListener(v2 -> {
+                        selectSim(entry);
+                        dialog.dismiss();
+                    });
+                    mContentView.findViewById(R.id.container_sim_2).setBackground(BackgroundDrawables.createBackgroundDrawable(0xffffffff, 0, true));
                 }
-            });
-            UiUtils.showDialogFragment(mHost.getHostActivity(), dialog);
-            BugleAnalytics.logEvent("Settings_SendDelay_Click");
+            }
+
+            Drawable unwrappedDrawable = AppCompatResources.getDrawable(getContext(), R.drawable.iv_sim_selected);
+            Drawable selectedDrawable = DrawableCompat.wrap(unwrappedDrawable);
+            DrawableCompat.setTint(selectedDrawable, PrimaryColors.getPrimaryColor());
+            if (currentSlotId == 1) {
+                ImageView ivCheckSim1 = mContentView.findViewById(R.id.iv_check_sim_1);
+                ivCheckSim1.setImageDrawable(selectedDrawable);
+                ImageView ivCheckSim2 = mContentView.findViewById(R.id.iv_check_sim_2);
+                ivCheckSim2.setImageResource(R.drawable.iv_sim_unselected);
+            } else {
+                ImageView ivCheckSim1 = mContentView.findViewById(R.id.iv_check_sim_1);
+                ivCheckSim1.setImageResource(R.drawable.iv_sim_unselected);
+                ImageView ivCheckSim2 = mContentView.findViewById(R.id.iv_check_sim_2);
+                ivCheckSim2.setImageDrawable(selectedDrawable);
+            }
+
+            dialog.show();
         });
 
         mSendDelayProgressBar = findViewById(R.id.send_delay_circle_bar);
