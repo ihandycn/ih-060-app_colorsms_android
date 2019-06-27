@@ -699,8 +699,8 @@
     <string name="backup_failed_toast">备份失败</string>
     <string name="backup_guide_dialog_first_content">在手机损坏或遗失前备份所有短信</string>
     <string name="menu_backup_restore_toolbar_title">短信备份及恢复</string>
-    <string name="private_box_setting_security">Security</string>
-    <string name="backup_guide_dialog_second_content">%1$d 没有受到保护</string>
+    <string name="private_box_setting_security">安全</string>
+    <string name="backup_guide_dialog_second_content">%1$d 条消息没有受到保护</string>
     <string name="backup_state_scanning">扫描中……</string>
     <string name="backup_tab">备份</string>
     <string name="backup_verb">备份</string>
@@ -710,6 +710,7 @@
     <!-- Private Box Lock Question-->
     <string name="private_box_uninstall_notice">除非将信息移至公共信箱，否则你将会在卸载短信后丢失这些信息。</string>
     <string name="private_box_setting_entrance_summary">隐藏图标</string>
+    <string name="private_box_setting_entrance">入口</string>
     <string name="private_box_add_now">现在添加</string>
     <string name="private_box_setting_notification_summary">禁用此选项，隐私联系人的消息不会展示任何通知。</string>
     <string name="private_start_box_tip">信息将被移到隐私信箱中，请首先为隐私信箱设置密码。</string>
