@@ -744,7 +744,6 @@
 
     <string name="action_unarchive">"Desarquivar"</string>
     <string name="action_archive">"Arquivar"</string>
-    <string name="archived_conversations">Conversas Arquivadas</string>
 
     <string name="ok">OK</string>
     <string name="cancel">Cancelar</string>
@@ -775,5 +774,21 @@
 
 
 	<string name="backup_guide_dialog_title">Backup de SMS</string>
+
+
+	<string name="invite_friends_success_toast">Sucesso no convite</string>
+	<string name="notification_summary">Seja notificado ao receber mensagens</string>
+	<string name="archived_conversations">Conversas arquivadas</string>
+	<string name="others">Outros</string>
+	<string name="about">Sobre</string>
+	<string name="conversation_pinned">Fixado no topo</string>
+	<string name="conversation_unpinned">Desafixado</string>
+	<string name="action_lock">Bloquear</string>
+	<string name="action_unlock">Desbloquear</string>
+	<string name="message_locked_when_delete">Para excluir mensagens bloqueadas, desbloqueie-as primeiro</string>
+	<string name="message_copied">Copiar para a área de transferência</string>
+	<string name="private_box_remove_from_box">Remover da caixa privada</string>
+	<string name="private_box_move_to_box">Mover para caixa privada</string>
+	<string name="private_box_add_private_contacts">Adicione contatos privados!</string>
 
 </resources>

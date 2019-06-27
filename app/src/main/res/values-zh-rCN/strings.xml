@@ -761,4 +761,17 @@
     </string-array>
     <string name="private_setting_security_question_summary">防止自己忘记密码</string>
 
+    <string name="invite_friends_success_toast">邀请成功</string>
+    <string name="notification_summary">收到消息时获取通知</string>
+    <string name="archived_conversations">过去的对话</string>
+    <string name="others">其他</string>
+    <string name="about">关于</string>
+    <string name="conversation_pinned">置顶</string>
+    <string name="conversation_unpinned">取消置顶</string>
+    <string name="action_lock">锁定</string>
+    <string name="action_unlock">解锁</string>
+    <string name="message_locked_when_delete">解锁以删除锁定的消息</string>
+    <string name="message_copied">复制到剪贴板</string>
+    <string name="private_box_add_to_success">移至隐私信箱</string>
+    <string name="restore_downloading">正在下载 ...</string>
 </resources>

@@ -743,7 +743,6 @@
 
     <string name="action_unarchive">"Batalkan pengarsipan"</string>
     <string name="action_archive">"Arsipkan"</string>
-    <string name="archived_conversations">Percakapan yang Diarsipkan</string>
 
     <!-- Private Box Lock Question-->
     <string name="ok">OK</string>
@@ -777,5 +776,22 @@
 
 
 	<string name="backup_guide_dialog_title">Backup SMS</string>
+
+
+	<string name="invite_friends_success_toast">Undangan berhasil</string>
+	<string name="notification_summary">Dapatkan notifikasi saat menerima pesan</string>
+	<string name="archived_conversations">Percakapan Diarsipkan</string>
+	<string name="others">Lainnya</string>
+	<string name="about">Tentang</string>
+	<string name="conversation_pinned">Disematkan di bagian teratas</string>
+	<string name="conversation_unpinned">Dibatal sematkan</string>
+	<string name="action_lock">Kunci</string>
+	<string name="action_unlock">Buka Kunci</string>
+	<string name="message_locked_when_delete">Untuk menghapus pesan yang terkunci, buka kunci terlebih dahulu</string>
+	<string name="message_copied">Disalin ke clipboard</string>
+	<string name="private_box_remove_from_box">Buang dari kotak pribadi</string>
+	<string name="private_box_move_to_box">Pindahkan ke kotak pribadi</string>
+	<string name="private_box_add_private_contacts">Tambahkan kotak pribadi!</string>
+    <string name="pickerview_year">Tahun</string>
 
 </resources>

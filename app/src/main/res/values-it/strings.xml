@@ -772,4 +772,20 @@
 
 	<string name="backup_guide_dialog_title">Backup di SMS</string>
 
+
+	<string name="invite_friends_success_toast">Invito mandato</string>
+	<string name="notification_summary">Ricevi una notifica quando ricevi i messaggi</string>
+	<string name="archived_conversations">Conversazioni archiviate</string>
+	<string name="others">Altri</string>
+	<string name="about">Informazioni</string>
+	<string name="conversation_pinned">Tenuto in alto</string>
+	<string name="conversation_unpinned">Rimosso</string>
+	<string name="action_lock">Blocca</string>
+	<string name="action_unlock">Sblocca</string>
+	<string name="message_locked_when_delete">Per eliminare i messaggi bloccati, devi prima sbloccarli</string>
+	<string name="message_copied">Copia sugli appunti</string>
+	<string name="private_box_remove_from_box">Rimuovi dalla casella privata</string>
+	<string name="private_box_move_to_box">Sposta nella casella privata</string>
+	<string name="private_box_add_private_contacts">Aggiungi contatti privati!</string>
+
 </resources>

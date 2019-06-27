@@ -772,4 +772,20 @@
 
 	<string name="backup_guide_dialog_title">Sao lưu SMS</string>
 
+
+	<string name="invite_friends_success_toast">Mời thành công</string>
+	<string name="notification_summary">Nhận thông báo khi nhận được tin nhắn</string>
+	<string name="archived_conversations">Cuộc trò chuyện đã lưu trữ</string>
+	<string name="others">Khác</string>
+	<string name="about">Giới thiệu</string>
+	<string name="conversation_pinned">Đã ghim lên đầu</string>
+	<string name="conversation_unpinned">Đã bỏ ghim</string>
+	<string name="action_lock">Khóa</string>
+	<string name="action_unlock">Mở khóa</string>
+	<string name="message_locked_when_delete">Để xóa những tin nhắn đã khóa, trước tiên hãy mở khóa chúng</string>
+	<string name="message_copied">Đã sao chép vào bảng tạm</string>
+	<string name="private_box_remove_from_box">Xóa khỏi hộp tin riêng</string>
+	<string name="private_box_move_to_box">Chuyển sang hộp tin riêng</string>
+	<string name="private_box_add_private_contacts">Vui lòng thêm liên hệ riêng tư!</string>
+
 </resources>

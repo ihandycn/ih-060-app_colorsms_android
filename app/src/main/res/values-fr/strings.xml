@@ -737,7 +737,6 @@
 
     <string name="action_unarchive">"Annuler l\'archivage"</string>
     <string name="action_archive">"Archiver"</string>
-    <string name="archived_conversations">Conversations archivées</string>
     <!-- Private Box Lock Question-->
     <string name="ok">OK</string>
     <string name="cancel">Annuler</string>
@@ -768,5 +767,21 @@
 
 
 	<string name="backup_guide_dialog_title">Sauvegarder les SMS</string>
+
+
+	<string name="invite_friends_success_toast">Invitation réussie</string>
+	<string name="notification_summary">Soyez informé dès la réception de messages</string>
+	<string name="archived_conversations">Conversations archivées</string>
+	<string name="others">Autres</string>
+	<string name="about">À propos</string>
+	<string name="conversation_pinned">Garder en haut de liste</string>
+	<string name="conversation_unpinned">Redescendre en bas de liste</string>
+	<string name="action_lock">Verrouiller</string>
+	<string name="action_unlock">Déverrouiller</string>
+	<string name="message_locked_when_delete">Pour supprimer des messages bloqués, vous devez d\'abord les débloquer.</string>
+	<string name="message_copied">Copié dans le presse-papier</string>
+	<string name="private_box_remove_from_box">Supprimer de la Boîte privée</string>
+	<string name="private_box_move_to_box">Déplacer dans la Boîte privée</string>
+	<string name="private_box_add_private_contacts">Ajoutez des contacts privés !</string>
 
 </resources>

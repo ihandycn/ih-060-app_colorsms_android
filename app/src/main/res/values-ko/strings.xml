@@ -769,4 +769,20 @@
 
 	<string name="backup_guide_dialog_title">SMS 백업</string>
 
+
+	<string name="invite_friends_success_toast">초대 성공</string>
+	<string name="notification_summary">메시지가 오면 알림을 받습니다</string>
+	<string name="archived_conversations">대화 내용 아카이브</string>
+	<string name="others">기타</string>
+	<string name="about">정보</string>
+	<string name="conversation_pinned">맨 위로 끌어올리기</string>
+	<string name="conversation_unpinned">끌어올리기 취소</string>
+	<string name="action_lock">잠금</string>
+	<string name="action_unlock">잠금 해제</string>
+	<string name="message_locked_when_delete">잠긴 메시지를 삭제하려면 먼저 해제하세요</string>
+	<string name="message_copied">클립보드에 복사</string>
+	<string name="private_box_remove_from_box">비공개 상자에서 제거</string>
+	<string name="private_box_move_to_box">비공개 상자로 이동</string>
+	<string name="private_box_add_private_contacts">비공개 연락처를 추가하세요!</string>
+
 </resources>

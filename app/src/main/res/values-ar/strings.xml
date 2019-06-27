@@ -868,4 +868,20 @@
 
 	<string name="backup_guide_dialog_title">نسخ الرسائل</string>
 
+
+	<string name="invite_friends_success_toast">نجحت الدعوة</string>
+	<string name="notification_summary">احصل على إخطار عند استلام الرسائل</string>
+	<string name="archived_conversations">المحادثات المؤرشفة</string>
+	<string name="others">أُخرى</string>
+	<string name="about">حول التطبيق</string>
+	<string name="conversation_pinned">مثبّت في الأعلى</string>
+	<string name="conversation_unpinned">غير مثبّت</string>
+	<string name="action_lock">قفل</string>
+	<string name="action_unlock">إلغاء قفل</string>
+	<string name="message_locked_when_delete">يجب إلغاء قفل الرسائل المقفلة لحذفها</string>
+	<string name="message_copied">تم النسخ إلى الحافظة</string>
+	<string name="private_box_remove_from_box">إزالة من الصندوق الخاص</string>
+	<string name="private_box_move_to_box">نقل إلى الصندوق الخاص</string>
+	<string name="private_box_add_private_contacts">يرجى إضافة جهات اتصال خاصة!</string>
+
 </resources>

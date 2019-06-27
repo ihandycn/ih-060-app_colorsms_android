@@ -1278,7 +1278,7 @@
     <string name="backup_tips_before_uninstalling_content">RESTORE your messages before uninstalling our app, so as not to lose your messages.</string>
     <string name="backup_folder_select_toast">Should select a folder to backup messages.</string>
     <string name="message_free_up_process_dialog">Freeing up your message space…</string>
-    <string name="backup_process_number_divider">/</string>
+    <string name="backup_process_number_divider" translatable="false">/</string>
     <string name="backup_state_scanning">Scanning…</string>
     <string name="local_backup_process_hint">Backing up…</string>
     <string name="cloud_backup_process_hint">Uploading backup…</string>
@@ -1299,7 +1299,7 @@
     <string name="backup_free_success">Free Up Space Successfully</string>
 
     <!--New setting-->
-    <string name="emoji">Emoji</string>
+    <string name="emoji" translatable="false">Emoji</string>
     <string name="others">Others</string>
     <string name="about">About</string>
     <string name="notification_summary">Get notify when receiving messages</string>

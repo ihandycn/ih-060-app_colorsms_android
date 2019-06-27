@@ -769,4 +769,20 @@
 
 	<string name="backup_guide_dialog_title">สำรองข้อมูล SMS</string>
 
+
+	<string name="invite_friends_success_toast">เชิญสำเร็จ</string>
+	<string name="notification_summary">รับแจ้งเตือนเมื่อได้รับข้อความ</string>
+	<string name="archived_conversations">การสนทนาที่จัดเก็บ</string>
+	<string name="others">อื่น ๆ</string>
+	<string name="about">เกี่ยวกับ</string>
+	<string name="conversation_pinned">ปักหมุดบนสุด</string>
+	<string name="conversation_unpinned">เลิกปักหมุด</string>
+	<string name="action_lock">ล็อก</string>
+	<string name="action_unlock">ปลดล็อก</string>
+	<string name="message_locked_when_delete">ในการลบข้อความ ให้ปลดล็อกก่อน</string>
+	<string name="message_copied">คัดลอกไปยังคลิปบอร์ดแล้ว</string>
+	<string name="private_box_remove_from_box">นำออกจากกล่องส่วนตัว</string>
+	<string name="private_box_move_to_box">ย้ายไปยังกล่องส่วนตัว</string>
+	<string name="private_box_add_private_contacts">กรุณาเพิ่มรายชื่อติดต่อส่วนตัว!</string>
+
 </resources>

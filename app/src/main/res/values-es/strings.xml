@@ -740,7 +740,6 @@
 
     <string name="action_unarchive">"No archivar"</string>
     <string name="action_archive">"Archivar"</string>
-    <string name="archived_conversations">Conversaciones archivadas</string>
 
     <!-- Private Box Lock Question-->
     <string name="ok">ACEPTAR</string>
@@ -772,5 +771,21 @@
 
 
 	<string name="backup_guide_dialog_title">Copia de seguridad de SMS</string>
+
+
+	<string name="invite_friends_success_toast">Invitación realizada</string>
+	<string name="notification_summary">Recibe un aviso cuando te lleguen mensajes</string>
+	<string name="archived_conversations">Conversaciones archivadas</string>
+	<string name="others">Otros</string>
+	<string name="about">Acerca de</string>
+	<string name="conversation_pinned">Anclada arriba</string>
+	<string name="conversation_unpinned">Desanclada</string>
+	<string name="action_lock">Bloquear</string>
+	<string name="action_unlock">Desbloquear</string>
+	<string name="message_locked_when_delete">Para eliminar mensajes bloqueados, primero desbloquéalos.</string>
+	<string name="message_copied">Copiado al portapapeles</string>
+	<string name="private_box_remove_from_box">Eliminar de la caja privada</string>
+	<string name="private_box_move_to_box">Mover a la caja privada</string>
+	<string name="private_box_add_private_contacts">¡Añade contactos privados!</string>
 
 </resources>

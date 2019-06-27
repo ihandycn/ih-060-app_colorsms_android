@@ -770,4 +770,20 @@
 
 	<string name="backup_guide_dialog_title">SMSバックアップ</string>
 
+
+	<string name="invite_friends_success_toast">招待に成功</string>
+	<string name="notification_summary">メッセージを受信した際に通知する</string>
+	<string name="archived_conversations">過去の会話</string>
+	<string name="others">その他</string>
+	<string name="about">アプリについて</string>
+	<string name="conversation_pinned">一番上に移動する</string>
+	<string name="conversation_unpinned">元に戻す</string>
+	<string name="action_lock">ロック</string>
+	<string name="action_unlock">アンロック</string>
+	<string name="message_locked_when_delete">ロックしたメッセージを削除するには、最初にアンロックします</string>
+	<string name="message_copied">クリップボードにコピーする</string>
+	<string name="private_box_remove_from_box">プライベート受信箱から削除する</string>
+	<string name="private_box_move_to_box">プライベート受信箱に移動する</string>
+	<string name="private_box_add_private_contacts">プライベートな連絡先を追加してください！</string>
+
 </resources>

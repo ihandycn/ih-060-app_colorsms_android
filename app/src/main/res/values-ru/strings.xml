@@ -818,4 +818,20 @@
 
 	<string name="backup_guide_dialog_title">Резервное копирование SMS</string>
 
+
+	<string name="invite_friends_success_toast">Приглашение отправлено</string>
+	<string name="notification_summary">Получайте уведомления о входящих сообщениях</string>
+	<string name="archived_conversations">Архивные диалоги</string>
+	<string name="others">Другое</string>
+	<string name="about">О приложении</string>
+	<string name="conversation_pinned">Закреплено</string>
+	<string name="conversation_unpinned">Откреплено</string>
+	<string name="action_lock">Заблокировать</string>
+	<string name="action_unlock">Разблокировать</string>
+	<string name="message_locked_when_delete">Для удаления заблокированных сообщений нужно сначала их разблокировать</string>
+	<string name="message_copied">Скопировано в буфер обмена</string>
+	<string name="private_box_remove_from_box">Удалить из личных сообщений</string>
+	<string name="private_box_move_to_box">Переместить в личные сообщения</string>
+	<string name="private_box_add_private_contacts">Добавьте личные контакты!</string>
+
 </resources>

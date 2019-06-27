@@ -772,4 +772,20 @@
 
 	<string name="backup_guide_dialog_title">एसएमएस बैकअप</string>
 
+
+	<string name="invite_friends_success_toast">आमंत्रण सफल</string>
+	<string name="notification_summary">संदेश प्राप्त करते समय सूचित करें</string>
+	<string name="archived_conversations">संग्रहीत बातचीत</string>
+	<string name="others">अन्</string>
+	<string name="about">के बारे में</string>
+	<string name="conversation_pinned">शीर्ष से पिन किया हुआ</string>
+	<string name="conversation_unpinned">पिन निकालना</string>
+	<string name="action_lock">लॉक</string>
+	<string name="action_unlock">अनलॉक</string>
+	<string name="message_locked_when_delete">लॉक संदेशों को हटाने के लिए, पहले उन्</string>
+	<string name="message_copied">क्लिपबोर्ड पर कॉपी करें</string>
+	<string name="private_box_remove_from_box">सभी निजी बॉक्</string>
+	<string name="private_box_move_to_box">निजी बॉक्</string>
+	<string name="private_box_add_private_contacts">कृपया निजी संपर्क जोड़ें!</string>
+
 </resources>
