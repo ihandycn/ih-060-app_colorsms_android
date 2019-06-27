@@ -313,7 +313,7 @@
 			<key>Themes</key>
 			<dict>
 				<key>BasePath</key>
-				<string>http://cdn.appcloudbox.net/smoothappsstudio/apps/bubble/theme/</string>
+				<string>http://s3.amazonaws.com/superapps-dev/ColorSMS/theme/</string>
 				<key>ThemeList</key>
 				<dict>
 					<key>default</key>
@@ -363,6 +363,8 @@
 						<string></string>
 						<key>AvatarUrl</key>
 						<string>avatar.png</string>
+						<key>AvatarSolidUrl</key>
+						<string></string>
 						<key>ListWallpaperUrl</key>
 						<string></string>
 						<key>WallpaperUrl</key>
@@ -371,7 +373,11 @@
 						<string></string>
 						<key>BubbleIncomingUrl</key>
 						<string></string>
+						<key>BubbleIncomingSolidUrl</key>
+						<string></string>
 						<key>BubbleOutgoingUrl</key>
+						<string></string>
+						<key>BubbleOutgoingSolidUrl</key>
 						<string></string>
 					</dict>
 					<key>tiger</key>
@@ -421,6 +427,8 @@
 						<string>toolbar.jpg</string>
 						<key>AvatarUrl</key>
 						<string>avatar.png</string>
+						<key>AvatarSolidUrl</key>
+						<string></string>
 						<key>ListWallpaperUrl</key>
 						<string>wallpaper.jpg</string>
 						<key>WallpaperUrl</key>
@@ -429,8 +437,12 @@
 						<string></string>
 						<key>BubbleIncomingUrl</key>
 						<string>incoming.9.png</string>
+						<key>BubbleIncomingSolidUrl</key>
+						<string>incoming_solid.9.png</string>
 						<key>BubbleOutgoingUrl</key>
 						<string>outgoing.9.png</string>
+						<key>BubbleOutgoingSolidUrl</key>
+						<string>outgoing_solid.9.png</string>
 					</dict>
 					<key>flower</key>
 					<dict>
@@ -479,6 +491,8 @@
 						<string>toolbar.jpg</string>
 						<key>AvatarUrl</key>
 						<string>avatar.png</string>
+						<key>AvatarSolidUrl</key>
+						<string></string>
 						<key>ListWallpaperUrl</key>
 						<string>wallpaper.jpg</string>
 						<key>WallpaperUrl</key>
@@ -487,8 +501,12 @@
 						<string></string>
 						<key>BubbleIncomingUrl</key>
 						<string>incoming.9.png</string>
+						<key>BubbleIncomingSolidUrl</key>
+						<string></string>
 						<key>BubbleOutgoingUrl</key>
 						<string>outgoing.9.png</string>
+						<key>BubbleOutgoingSolidUrl</key>
+						<string></string>
 					</dict>
 					<key>americanflag</key>
 					<dict>
@@ -537,6 +555,8 @@
 						<string>toolbar.jpg</string>
 						<key>AvatarUrl</key>
 						<string>avatar.png</string>
+						<key>AvatarSolidUrl</key>
+						<string></string>
 						<key>ListWallpaperUrl</key>
 						<string>wallpaper.jpg</string>
 						<key>WallpaperUrl</key>
@@ -545,8 +565,12 @@
 						<string></string>
 						<key>BubbleIncomingUrl</key>
 						<string>incoming.9.png</string>
+						<key>BubbleIncomingSolidUrl</key>
+						<string></string>
 						<key>BubbleOutgoingUrl</key>
 						<string>outgoing.9.png</string>
+						<key>BubbleOutgoingSolidUrl</key>
+						<string></string>
 					</dict>
 					<key>goldenbutterfly</key>
 					<dict>
@@ -595,6 +619,8 @@
 						<string>toolbar.jpg</string>
 						<key>AvatarUrl</key>
 						<string>avatar.png</string>
+						<key>AvatarSolidUrl</key>
+						<string>avatar_solid.png</string>
 						<key>ListWallpaperUrl</key>
 						<string>wallpaper.jpg</string>
 						<key>WallpaperUrl</key>
@@ -603,8 +629,14 @@
 						<string></string>
 						<key>BubbleIncomingUrl</key>
 						<string>incoming.9.png</string>
+						<key>BubbleIncomingSolidUrl</key>
+						<string></string>
 						<key>BubbleOutgoingUrl</key>
 						<string>outgoing.9.png</string>
+						<key>BubbleOutgoingSolidUrl</key>
+						<string></string>
+						<key>BubbleOutgoingSolidUrl - 2</key>
+						<string></string>
 					</dict>
 					<key>fireskull</key>
 					<dict>
@@ -653,6 +685,8 @@
 						<string>toolbar.jpg</string>
 						<key>AvatarUrl</key>
 						<string>avatar.png</string>
+						<key>AvatarSolidUrl</key>
+						<string></string>
 						<key>ListWallpaperUrl</key>
 						<string>wallpaper.jpg</string>
 						<key>WallpaperUrl</key>
@@ -661,8 +695,12 @@
 						<string></string>
 						<key>BubbleIncomingUrl</key>
 						<string>incoming.9.png</string>
+						<key>BubbleIncomingSolidUrl</key>
+						<string></string>
 						<key>BubbleOutgoingUrl</key>
 						<string>outgoing.9.png</string>
+						<key>BubbleOutgoingSolidUrl</key>
+						<string></string>
 					</dict>
 					<key>eiffeltower</key>
 					<dict>
@@ -711,6 +749,8 @@
 						<string>toolbar.jpg</string>
 						<key>AvatarUrl</key>
 						<string>avatar.png</string>
+						<key>AvatarSolidUrl</key>
+						<string></string>
 						<key>ListWallpaperUrl</key>
 						<string>wallpaper.jpg</string>
 						<key>WallpaperUrl</key>
@@ -719,8 +759,12 @@
 						<string></string>
 						<key>BubbleIncomingUrl</key>
 						<string>incoming.9.png</string>
+						<key>BubbleIncomingSolidUrl</key>
+						<string></string>
 						<key>BubbleOutgoingUrl</key>
 						<string>outgoing.9.png</string>
+						<key>BubbleOutgoingSolidUrl</key>
+						<string></string>
 					</dict>
 					<key>sunrise</key>
 					<dict>
@@ -769,6 +813,8 @@
 						<string>toolbar.jpg</string>
 						<key>AvatarUrl</key>
 						<string>avatar.png</string>
+						<key>AvatarSolidUrl</key>
+						<string></string>
 						<key>ListWallpaperUrl</key>
 						<string>wallpaper.jpg</string>
 						<key>WallpaperUrl</key>
@@ -777,8 +823,12 @@
 						<string></string>
 						<key>BubbleIncomingUrl</key>
 						<string>incoming.9.png</string>
+						<key>BubbleIncomingSolidUrl</key>
+						<string></string>
 						<key>BubbleOutgoingUrl</key>
 						<string>outgoing.9.png</string>
+						<key>BubbleOutgoingSolidUrl</key>
+						<string></string>
 					</dict>
 					<key>redrose</key>
 					<dict>
@@ -827,6 +877,8 @@
 						<string>toolbar.jpg</string>
 						<key>AvatarUrl</key>
 						<string>avatar.png</string>
+						<key>AvatarSolidUrl</key>
+						<string></string>
 						<key>ListWallpaperUrl</key>
 						<string>wallpaper.jpg</string>
 						<key>WallpaperUrl</key>
@@ -835,8 +887,12 @@
 						<string></string>
 						<key>BubbleIncomingUrl</key>
 						<string>incoming.9.png</string>
+						<key>BubbleIncomingSolidUrl</key>
+						<string></string>
 						<key>BubbleOutgoingUrl</key>
 						<string>outgoing.9.png</string>
+						<key>BubbleOutgoingSolidUrl</key>
+						<string></string>
 					</dict>
 					<key>raindrop</key>
 					<dict>
@@ -885,6 +941,8 @@
 						<string>toolbar.jpg</string>
 						<key>AvatarUrl</key>
 						<string>avatar.png</string>
+						<key>AvatarSolidUrl</key>
+						<string>avatar_solid.png</string>
 						<key>ListWallpaperUrl</key>
 						<string>wallpaper.jpg</string>
 						<key>WallpaperUrl</key>
@@ -893,8 +951,12 @@
 						<string></string>
 						<key>BubbleIncomingUrl</key>
 						<string>incoming.9.png</string>
+						<key>BubbleIncomingSolidUrl</key>
+						<string>incoming_solid.9.png</string>
 						<key>BubbleOutgoingUrl</key>
 						<string>outgoing.9.png</string>
+						<key>BubbleOutgoingSolidUrl</key>
+						<string>outgoing_solid.9.png</string>
 					</dict>
 					<key>rainbow</key>
 					<dict>
@@ -943,6 +1005,8 @@
 						<string>toolbar.jpg</string>
 						<key>AvatarUrl</key>
 						<string>avatar.png</string>
+						<key>AvatarSolidUrl</key>
+						<string></string>
 						<key>ListWallpaperUrl</key>
 						<string>wallpaper.jpg</string>
 						<key>WallpaperUrl</key>
@@ -951,8 +1015,12 @@
 						<string></string>
 						<key>BubbleIncomingUrl</key>
 						<string>incoming.9.png</string>
+						<key>BubbleIncomingSolidUrl</key>
+						<string>incoming_solid.9.png</string>
 						<key>BubbleOutgoingUrl</key>
 						<string>outgoing.9.png</string>
+						<key>BubbleOutgoingSolidUrl</key>
+						<string>outgoing_solid.9.png</string>
 					</dict>
 					<key>flashneon</key>
 					<dict>
@@ -1001,6 +1069,8 @@
 						<string>toolbar.jpg</string>
 						<key>AvatarUrl</key>
 						<string>avatar.png</string>
+						<key>AvatarSolidUrl</key>
+						<string>avatar_solid.png</string>
 						<key>ListWallpaperUrl</key>
 						<string>wallpaper.jpg</string>
 						<key>WallpaperUrl</key>
@@ -1009,8 +1079,12 @@
 						<string></string>
 						<key>BubbleIncomingUrl</key>
 						<string>incoming.9.png</string>
+						<key>BubbleIncomingSolidUrl</key>
+						<string>incoming_solid.9.png</string>
 						<key>BubbleOutgoingUrl</key>
 						<string>outgoing.9.png</string>
+						<key>BubbleOutgoingSolidUrl</key>
+						<string>outgoing_solid.9.png</string>
 					</dict>
 					<key>lovetree</key>
 					<dict>
@@ -1059,6 +1133,8 @@
 						<string>toolbar.jpg</string>
 						<key>AvatarUrl</key>
 						<string>avatar.png</string>
+						<key>AvatarSolidUrl</key>
+						<string></string>
 						<key>ListWallpaperUrl</key>
 						<string>wallpaper.jpg</string>
 						<key>WallpaperUrl</key>
@@ -1067,8 +1143,12 @@
 						<string></string>
 						<key>BubbleIncomingUrl</key>
 						<string>incoming.9.png</string>
+						<key>BubbleIncomingSolidUrl</key>
+						<string></string>
 						<key>BubbleOutgoingUrl</key>
 						<string>outgoing.9.png</string>
+						<key>BubbleOutgoingSolidUrl</key>
+						<string></string>
 					</dict>
 					<key>bowknot</key>
 					<dict>
@@ -1117,6 +1197,8 @@
 						<string>toolbar.jpg</string>
 						<key>AvatarUrl</key>
 						<string>avatar.png</string>
+						<key>AvatarSolidUrl</key>
+						<string></string>
 						<key>ListWallpaperUrl</key>
 						<string>wallpaper.jpg</string>
 						<key>WallpaperUrl</key>
@@ -1125,8 +1207,12 @@
 						<string></string>
 						<key>BubbleIncomingUrl</key>
 						<string>incoming.9.png</string>
+						<key>BubbleIncomingSolidUrl</key>
+						<string></string>
 						<key>BubbleOutgoingUrl</key>
 						<string>outgoing.9.png</string>
+						<key>BubbleOutgoingSolidUrl</key>
+						<string></string>
 					</dict>
 					<key>neon</key>
 					<dict>
@@ -1175,6 +1261,8 @@
 						<string>toolbar.jpg</string>
 						<key>AvatarUrl</key>
 						<string>avatar.png</string>
+						<key>AvatarSolidUrl</key>
+						<string>avatar_solid.png</string>
 						<key>ListWallpaperUrl</key>
 						<string>wallpaper.jpg</string>
 						<key>WallpaperUrl</key>
@@ -1183,8 +1271,12 @@
 						<string>create.png</string>
 						<key>BubbleIncomingUrl</key>
 						<string>incoming.9.png</string>
+						<key>BubbleIncomingSolidUrl</key>
+						<string>incoming_solid.9.png</string>
 						<key>BubbleOutgoingUrl</key>
 						<string>outgoing.9.png</string>
+						<key>BubbleOutgoingSolidUrl</key>
+						<string>outgoing_solid.9.png</string>
 					</dict>
 					<key>cutegraffiti</key>
 					<dict>
@@ -1199,16 +1291,10 @@
 						<integer>15230</integer>
 						<key>Name</key>
 						<string>Cute Graffiti</string>
-						<key>AvatarUrl</key>
-						<string>avatar.png</string>
 						<key>AvatarForegroundColor</key>
 						<string>#000000</string>
 						<key>BubbleAdColor</key>
 						<string>#e3187b</string>
-						<key>BubbleIncomingUrl</key>
-						<string>incoming.9.png</string>
-						<key>BubbleOutgoingUrl</key>
-						<string>outgoing.9.png</string>
 						<key>FontName</key>
 						<string>K2D</string>
 						<key>IncomingBubbleBgColor</key>
@@ -1221,8 +1307,6 @@
 						<string>#000000</string>
 						<key>ListTitleColor</key>
 						<string>#000000</string>
-						<key>ListWallpaperUrl</key>
-						<string>wallpaper.jpg</string>
 						<key>NewConversationIconUrl</key>
 						<string></string>
 						<key>OutgoingBubbleBgColor</key>
@@ -1235,14 +1319,28 @@
 						<string>#80000000</string>
 						<key>BannerAdActionTextColor</key>
 						<string>#000000</string>
-						<key>PreviewUrl</key>
-						<string>preview.jpg</string>
 						<key>ThemeColor</key>
 						<string>#18b9b7</string>
+						<key>PreviewUrl</key>
+						<string>preview.jpg</string>
+						<key>AvatarUrl</key>
+						<string>avatar.png</string>
+						<key>AvatarSolidUrl</key>
+						<string></string>
 						<key>ToolbarBgUrl</key>
 						<string>toolbar.jpg</string>
+						<key>ListWallpaperUrl</key>
+						<string>wallpaper.jpg</string>
 						<key>WallpaperUrl</key>
 						<string>wallpaper.jpg</string>
+						<key>BubbleIncomingUrl</key>
+						<string>incoming.9.png</string>
+						<key>BubbleIncomingSolidUrl</key>
+						<string></string>
+						<key>BubbleOutgoingUrl</key>
+						<string>outgoing.9.png</string>
+						<key>BubbleOutgoingSolidUrl</key>
+						<string></string>
 					</dict>
 					<key>butterfly</key>
 					<dict>
@@ -1291,6 +1389,8 @@
 						<string>toolbar.jpg</string>
 						<key>AvatarUrl</key>
 						<string>avatar.png</string>
+						<key>AvatarSolidUrl</key>
+						<string>avatar_solid.png</string>
 						<key>ListWallpaperUrl</key>
 						<string>wallpaper.jpg</string>
 						<key>WallpaperUrl</key>
@@ -1299,8 +1399,12 @@
 						<string></string>
 						<key>BubbleIncomingUrl</key>
 						<string>incoming.9.png</string>
+						<key>BubbleIncomingSolidUrl</key>
+						<string>incoming_solid.9.png</string>
 						<key>BubbleOutgoingUrl</key>
 						<string>outgoing.9.png</string>
+						<key>BubbleOutgoingSolidUrl</key>
+						<string>outgoing_solid.9.png</string>
 					</dict>
 					<key>dessert</key>
 					<dict>
@@ -1349,6 +1453,8 @@
 						<string>toolbar.jpg</string>
 						<key>AvatarUrl</key>
 						<string>avatar.png</string>
+						<key>AvatarSolidUrl</key>
+						<string></string>
 						<key>ListWallpaperUrl</key>
 						<string>wallpaper.jpg</string>
 						<key>WallpaperUrl</key>
@@ -1357,8 +1463,12 @@
 						<string></string>
 						<key>BubbleIncomingUrl</key>
 						<string>incoming.9.png</string>
+						<key>BubbleIncomingSolidUrl</key>
+						<string></string>
 						<key>BubbleOutgoingUrl</key>
 						<string>outgoing.9.png</string>
+						<key>BubbleOutgoingSolidUrl</key>
+						<string></string>
 					</dict>
 					<key>fire</key>
 					<dict>
@@ -1407,6 +1517,8 @@
 						<string>toolbar.jpg</string>
 						<key>AvatarUrl</key>
 						<string>avatar.png</string>
+						<key>AvatarSolidUrl</key>
+						<string>avatar_solid.png</string>
 						<key>ListWallpaperUrl</key>
 						<string>wallpaper.jpg</string>
 						<key>WallpaperUrl</key>
@@ -1415,8 +1527,12 @@
 						<string></string>
 						<key>BubbleIncomingUrl</key>
 						<string>incoming.9.png</string>
+						<key>BubbleIncomingSolidUrl</key>
+						<string></string>
 						<key>BubbleOutgoingUrl</key>
 						<string>outgoing.9.png</string>
+						<key>BubbleOutgoingSolidUrl</key>
+						<string></string>
 					</dict>
 					<key>simplebusiness</key>
 					<dict>
@@ -1465,6 +1581,8 @@
 						<string>toolbar.jpg</string>
 						<key>AvatarUrl</key>
 						<string>avatar.png</string>
+						<key>AvatarSolidUrl</key>
+						<string></string>
 						<key>ListWallpaperUrl</key>
 						<string>wallpaper.jpg</string>
 						<key>WallpaperUrl</key>
@@ -1473,8 +1591,12 @@
 						<string></string>
 						<key>BubbleIncomingUrl</key>
 						<string>incoming.9.png</string>
+						<key>BubbleIncomingSolidUrl</key>
+						<string></string>
 						<key>BubbleOutgoingUrl</key>
 						<string>outgoing.9.png</string>
+						<key>BubbleOutgoingSolidUrl</key>
+						<string></string>
 					</dict>
 					<key>cat</key>
 					<dict>
@@ -1523,6 +1645,8 @@
 						<string>toolbar.jpg</string>
 						<key>AvatarUrl</key>
 						<string>avatar.png</string>
+						<key>AvatarSolidUrl</key>
+						<string></string>
 						<key>ListWallpaperUrl</key>
 						<string>wallpaper.jpg</string>
 						<key>WallpaperUrl</key>
@@ -1531,8 +1655,12 @@
 						<string></string>
 						<key>BubbleIncomingUrl</key>
 						<string>incoming.9.png</string>
+						<key>BubbleIncomingSolidUrl</key>
+						<string></string>
 						<key>BubbleOutgoingUrl</key>
 						<string>outgoing.9.png</string>
+						<key>BubbleOutgoingSolidUrl</key>
+						<string></string>
 					</dict>
 					<key>dog</key>
 					<dict>
@@ -1581,6 +1709,8 @@
 						<string>toolbar.jpg</string>
 						<key>AvatarUrl</key>
 						<string>avatar.png</string>
+						<key>AvatarSolidUrl</key>
+						<string></string>
 						<key>ListWallpaperUrl</key>
 						<string>wallpaper.jpg</string>
 						<key>WallpaperUrl</key>
@@ -1589,8 +1719,12 @@
 						<string></string>
 						<key>BubbleIncomingUrl</key>
 						<string>incoming.9.png</string>
+						<key>BubbleIncomingSolidUrl</key>
+						<string></string>
 						<key>BubbleOutgoingUrl</key>
 						<string>outgoing.9.png</string>
+						<key>BubbleOutgoingSolidUrl</key>
+						<string></string>
 					</dict>
 					<key>unicorn</key>
 					<dict>
@@ -1639,6 +1773,8 @@
 						<string>toolbar.jpg</string>
 						<key>AvatarUrl</key>
 						<string>avatar.png</string>
+						<key>AvatarSolidUrl</key>
+						<string></string>
 						<key>ListWallpaperUrl</key>
 						<string>wallpaper.jpg</string>
 						<key>WallpaperUrl</key>
@@ -1647,8 +1783,12 @@
 						<string></string>
 						<key>BubbleIncomingUrl</key>
 						<string>incoming.9.png</string>
+						<key>BubbleIncomingSolidUrl</key>
+						<string></string>
 						<key>BubbleOutgoingUrl</key>
 						<string>outgoing.9.png</string>
+						<key>BubbleOutgoingSolidUrl</key>
+						<string></string>
 					</dict>
 					<key>coolgraffiti</key>
 					<dict>
@@ -1697,6 +1837,8 @@
 						<string>toolbar.jpg</string>
 						<key>AvatarUrl</key>
 						<string>avatar.png</string>
+						<key>AvatarSolidUrl</key>
+						<string></string>
 						<key>ListWallpaperUrl</key>
 						<string>wallpaper.jpg</string>
 						<key>WallpaperUrl</key>
@@ -1705,8 +1847,12 @@
 						<string></string>
 						<key>BubbleIncomingUrl</key>
 						<string>incoming.9.png</string>
+						<key>BubbleIncomingSolidUrl</key>
+						<string></string>
 						<key>BubbleOutgoingUrl</key>
 						<string>outgoing.9.png</string>
+						<key>BubbleOutgoingSolidUrl</key>
+						<string></string>
 					</dict>
 					<key>starry</key>
 					<dict>
@@ -1755,6 +1901,8 @@
 						<string>toolbar.jpg</string>
 						<key>AvatarUrl</key>
 						<string>avatar.png</string>
+						<key>AvatarSolidUrl</key>
+						<string>avatar_solid.png</string>
 						<key>ListWallpaperUrl</key>
 						<string>wallpaper.jpg</string>
 						<key>WallpaperUrl</key>
@@ -1763,8 +1911,12 @@
 						<string></string>
 						<key>BubbleIncomingUrl</key>
 						<string>incoming.9.png</string>
+						<key>BubbleIncomingSolidUrl</key>
+						<string>incoming_solid.9.png</string>
 						<key>BubbleOutgoingUrl</key>
 						<string>outgoing.9.png</string>
+						<key>BubbleOutgoingSolidUrl</key>
+						<string>outgoing_solid.9.png</string>
 					</dict>
 					<key>diamond</key>
 					<dict>
@@ -1813,6 +1965,8 @@
 						<string>toolbar.jpg</string>
 						<key>AvatarUrl</key>
 						<string>avatar.png</string>
+						<key>AvatarSolidUrl</key>
+						<string></string>
 						<key>ListWallpaperUrl</key>
 						<string>wallpaper.jpg</string>
 						<key>WallpaperUrl</key>
@@ -1821,8 +1975,12 @@
 						<string>create.png</string>
 						<key>BubbleIncomingUrl</key>
 						<string>incoming.9.png</string>
+						<key>BubbleIncomingSolidUrl</key>
+						<string></string>
 						<key>BubbleOutgoingUrl</key>
 						<string>outgoing.9.png</string>
+						<key>BubbleOutgoingSolidUrl</key>
+						<string></string>
 					</dict>
 					<key>technology</key>
 					<dict>
@@ -1871,6 +2029,8 @@
 						<string>toolbar.jpg</string>
 						<key>AvatarUrl</key>
 						<string>avatar.png</string>
+						<key>AvatarSolidUrl</key>
+						<string>avatar_solid.png</string>
 						<key>ListWallpaperUrl</key>
 						<string>wallpaper.jpg</string>
 						<key>WallpaperUrl</key>
@@ -1879,8 +2039,12 @@
 						<string></string>
 						<key>BubbleIncomingUrl</key>
 						<string>incoming.9.png</string>
+						<key>BubbleIncomingSolidUrl</key>
+						<string>incoming_solid.9.png</string>
 						<key>BubbleOutgoingUrl</key>
 						<string>outgoing.9.png</string>
+						<key>BubbleOutgoingSolidUrl</key>
+						<string>outgoing_solid.9.png</string>
 					</dict>
 					<key>glitter2</key>
 					<dict>
@@ -1929,6 +2093,8 @@
 						<string>toolbar.jpg</string>
 						<key>AvatarUrl</key>
 						<string>avatar.png</string>
+						<key>AvatarSolidUrl</key>
+						<string></string>
 						<key>ListWallpaperUrl</key>
 						<string>wallpaper.jpg</string>
 						<key>WallpaperUrl</key>
@@ -1937,8 +2103,12 @@
 						<string></string>
 						<key>BubbleIncomingUrl</key>
 						<string>incoming.9.png</string>
+						<key>BubbleIncomingSolidUrl</key>
+						<string></string>
 						<key>BubbleOutgoingUrl</key>
 						<string>outgoing.9.png</string>
+						<key>BubbleOutgoingSolidUrl</key>
+						<string></string>
 					</dict>
 					<key>waterdrop</key>
 					<dict>
@@ -1987,6 +2157,8 @@
 						<string>toolbar.jpg</string>
 						<key>AvatarUrl</key>
 						<string>avatar.png</string>
+						<key>AvatarSolidUrl</key>
+						<string></string>
 						<key>ListWallpaperUrl</key>
 						<string>wallpaper.jpg</string>
 						<key>WallpaperUrl</key>
@@ -1995,8 +2167,12 @@
 						<string>create.png</string>
 						<key>BubbleIncomingUrl</key>
 						<string>incoming.9.png</string>
+						<key>BubbleIncomingSolidUrl</key>
+						<string>incoming_solid.9.png</string>
 						<key>BubbleOutgoingUrl</key>
 						<string>outgoing.9.png</string>
+						<key>BubbleOutgoingSolidUrl</key>
+						<string>outgoing_solid.9.png</string>
 					</dict>
 					<key>goldendiamond</key>
 					<dict>
@@ -2045,6 +2221,8 @@
 						<string>toolbar.jpg</string>
 						<key>AvatarUrl</key>
 						<string>avatar.png</string>
+						<key>AvatarSolidUrl</key>
+						<string></string>
 						<key>ListWallpaperUrl</key>
 						<string>wallpaper.jpg</string>
 						<key>WallpaperUrl</key>
@@ -2053,8 +2231,12 @@
 						<string></string>
 						<key>BubbleIncomingUrl</key>
 						<string>incoming.9.png</string>
+						<key>BubbleIncomingSolidUrl</key>
+						<string></string>
 						<key>BubbleOutgoingUrl</key>
 						<string>outgoing.9.png</string>
+						<key>BubbleOutgoingSolidUrl</key>
+						<string></string>
 					</dict>
 					<key>glitter</key>
 					<dict>
@@ -2103,6 +2285,8 @@
 						<string>toolbar.jpg</string>
 						<key>AvatarUrl</key>
 						<string>avatar.png</string>
+						<key>AvatarSolidUrl</key>
+						<string></string>
 						<key>ListWallpaperUrl</key>
 						<string>wallpaper.jpg</string>
 						<key>WallpaperUrl</key>
@@ -2111,8 +2295,12 @@
 						<string></string>
 						<key>BubbleIncomingUrl</key>
 						<string>incoming.9.png</string>
+						<key>BubbleIncomingSolidUrl</key>
+						<string>incoming_solid.9.png</string>
 						<key>BubbleOutgoingUrl</key>
 						<string>outgoing.9.png</string>
+						<key>BubbleOutgoingSolidUrl</key>
+						<string>outgoing_solid.9.png</string>
 					</dict>
 				</dict>
 			</dict>
