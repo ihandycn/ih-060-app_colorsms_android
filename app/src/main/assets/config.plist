@@ -6,8 +6,8 @@
 	<dict>
 		<key>Application</key>
 		<dict>
-		    <key>PrivateBox</key>
-        	<true/>
+			<key>PrivateBox</key>
+			<true/>
 			<key>BackupRestore</key>
 			<dict>
 				<key>RecommendBannerTimes</key>
@@ -324,11 +324,11 @@
 						<string>Default</string>
 						<key>PreviewList</key>
 						<array>
-							<string>preview_1.jpg</string>
-							<string>preview_2.jpg</string>
+							<string>preview_blue_1.jpg</string>
+							<string>preview_blue_2.jpg</string>
 						</array>
 						<key>Hot</key>
-						<integer>99999</integer>
+						<real>99999</real>
 						<key>ThemeColor</key>
 						<string>#2d7ab5</string>
 						<key>FontName</key>
@@ -358,7 +358,7 @@
 						<key>BannerAdActionTextColor</key>
 						<string>#2caef8</string>
 						<key>PreviewUrl</key>
-						<string>preview.jpg</string>
+						<string>preview_blue.jpg</string>
 						<key>ToolbarBgUrl</key>
 						<string></string>
 						<key>AvatarUrl</key>
