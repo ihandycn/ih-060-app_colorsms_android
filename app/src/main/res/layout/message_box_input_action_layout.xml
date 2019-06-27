@@ -96,6 +96,7 @@
                     android:id="@+id/compose_message_text"
                     style="@style/ConversationComposeSendText"
                     android:layout_width="0dp"
+                    android:paddingStart="14dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:hint="@string/compose_message_view_hint_text"
