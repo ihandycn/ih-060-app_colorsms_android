@@ -5,6 +5,7 @@ import android.animation.AnimatorListenerAdapter;
 import android.animation.ValueAnimator;
 import android.content.Intent;
 import android.graphics.Paint;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -35,6 +36,7 @@ import com.ihs.app.framework.HSGdprConsent;
 import com.ihs.commons.config.HSConfig;
 import com.ihs.commons.utils.HSLog;
 import com.superapps.util.BackgroundDrawables;
+import com.superapps.util.Compats;
 import com.superapps.util.Dimensions;
 import com.superapps.util.Navigations;
 import com.superapps.util.Preferences;
@@ -42,6 +44,7 @@ import com.superapps.util.Threads;
 import com.superapps.util.Toasts;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.RejectedExecutionException;
 
@@ -153,6 +156,35 @@ public class WelcomeStartActivity extends AppCompatActivity implements View.OnCl
                         }
                     });
         }
+
+        Preferences.getDefault().doOnce(() -> {
+            String locale = getResources().getConfiguration().locale.getCountry();
+            if (locale.equalsIgnoreCase("US")) {
+                if (Compats.IS_MOTOROLA_DEVICE
+                        || Compats.IS_LGE_DEVICE
+                        || Compats.IS_ZTE_DEVICE) {
+                    BugleAnalytics.logEventToFirebase("Device_High_Retention", new HashMap<>());
+                }
+                if (Compats.IS_MOTOROLA_DEVICE
+                        || (Compats.IS_LGE_DEVICE && Build.VERSION.SDK_INT == Build.VERSION_CODES.O_MR1)) {
+                    BugleAnalytics.logEventToFirebase("Device_ExtraHigh_Retention", new HashMap<>());
+                }
+            } else if (locale.equalsIgnoreCase("PH")) {
+                if (Compats.IS_SAMSUNG_DEVICE
+                        || Compats.IS_VIVO_DEVICE
+                        || Compats.IS_HUAWEI_DEVICE
+                        || Compats.IS_CHERRY_MOBILE) {
+                    BugleAnalytics.logEventToFirebase("Device_High_Retention", new HashMap<>());
+                }
+                if (Compats.IS_SAMSUNG_DEVICE
+                        || Compats.IS_VIVO_DEVICE
+                        || Compats.IS_HUAWEI_DEVICE
+                        || Compats.IS_CHERRY_MOBILE
+                        || (Compats.IS_OPPO_DEVICE && Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)) {
+                    BugleAnalytics.logEventToFirebase("Device_ExtraHigh_Retention", new HashMap<>());
+                }
+            }
+        }, "pref_key_log_retention_events");
     }
 
     @Override
