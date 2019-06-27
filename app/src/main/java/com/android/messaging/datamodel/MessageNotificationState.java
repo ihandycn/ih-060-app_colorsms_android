@@ -444,8 +444,11 @@ public abstract class MessageNotificationState extends NotificationState {
             final String separator = context.getString(R.string.enumeration_comma);
             final StringBuilder senders = new StringBuilder();
             long when = 0;
+
+            int badgerNumber = 0;
             for (int i = 0; i < mConvList.mConvInfos.size(); i++) {
                 final ConversationLineInfo convInfo = mConvList.mConvInfos.get(i);
+                badgerNumber += convInfo.mTotalMessageCount;
                 if (convInfo.mReceivedTimestamp > when) {
                     when = convInfo.mReceivedTimestamp;
                 }
@@ -499,6 +502,7 @@ public abstract class MessageNotificationState extends NotificationState {
             mContent = senders;
             builder.setContentText(senders)
                     .setTicker(getTicker())
+                    .setNumber(badgerNumber)
                     .setWhen(when);
 
             return inboxStyle;
@@ -696,7 +700,7 @@ public abstract class MessageNotificationState extends NotificationState {
                 // Show a single notification -- big style with the text of all the messages
                 notifStyle = new NotificationCompat.BigTextStyle(builder).bigText(buf);
             }
-            builder.setWhen(convInfo.mReceivedTimestamp);
+            builder.setWhen(convInfo.mReceivedTimestamp).setNumber(messageCount);
             return notifStyle;
         }
 
