@@ -77,7 +77,8 @@ public class StickerItemPagerAdapter extends AbstractEmojiItemPagerAdapter{
 
     public void initData(List<EmojiPackageInfo> infoList){
         for (int i = 0; i < infoList.size(); i++) {
-            mData.get(i).mEmojiInfoList = infoList.get(i).mEmojiInfoList;
+            mData.get(i).mEmojiInfoList.clear();
+            mData.get(i).mEmojiInfoList.addAll(infoList.get(i).mEmojiInfoList);
         }
         notifyDataSetChanged();
         if(mTabLayout != null) {
@@ -175,8 +176,8 @@ public class StickerItemPagerAdapter extends AbstractEmojiItemPagerAdapter{
         EmojiPackageInfo recentInfo = mData.get(0);
         if(recentInfo.mEmojiPackageType != EmojiPackageType.RECENT)
             return ;
-        mData.get(0).mEmojiInfoList.clear();
-        recentInfo.mEmojiInfoList = EmojiManager.getRecentInfo(EmojiPackageType.STICKER);
+        recentInfo.mEmojiInfoList.clear();
+        recentInfo.mEmojiInfoList.addAll(EmojiManager.getRecentInfo(EmojiPackageType.STICKER));
         updateSinglePage(0);
         updateTabView();
 

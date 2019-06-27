@@ -2,8 +2,8 @@ package com.android.messaging.ui.messagebox;
 
 import android.content.Intent;
 import android.graphics.Color;
+import android.net.Uri;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.constraint.ConstraintLayout;
 import android.support.constraint.Guideline;
 import android.support.v4.view.ViewPager;
@@ -20,13 +20,11 @@ import com.android.messaging.R;
 import com.android.messaging.datamodel.action.MarkAsReadAction;
 import com.android.messaging.datamodel.action.MarkAsSeenAction;
 import com.android.messaging.datamodel.data.MessageBoxItemData;
+import com.android.messaging.datamodel.data.MessagePartData;
 import com.android.messaging.ui.UIIntents;
 import com.android.messaging.ui.appsettings.PrivacyModeSettings;
 import com.android.messaging.ui.customize.theme.ThemeUtils;
-import com.android.messaging.ui.emoji.EmojiInfo;
-import com.android.messaging.ui.emoji.EmojiPackagePagerAdapter;
-import com.android.messaging.ui.emoji.GiphyInfo;
-import com.android.messaging.ui.emoji.StickerInfo;
+import com.android.messaging.ui.emoji.EmojiPickerFragment;
 import com.android.messaging.util.BugleAnalytics;
 import com.android.messaging.util.FabricUtils;
 import com.android.messaging.util.UiUtils;
@@ -40,9 +38,9 @@ import com.superapps.util.Dimensions;
 import com.superapps.util.HomeKeyWatcher;
 import com.superapps.util.Threads;
 import com.superapps.util.Toasts;
-import com.superapps.view.ViewPagerFixed;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 
 import static com.android.messaging.ui.UIIntents.UI_INTENT_EXTRA_MESSAGE_BOX_ITEM;
@@ -84,6 +82,8 @@ public class MessageBoxActivity extends AppCompatActivity implements INotificati
     private ArrayList<String> mConversationIdList = new ArrayList<>(4);
 
     private HomeKeyWatcher mHomeKeyWatcher;
+
+    private EmojiPickerFragment mEmojiPickerFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -254,51 +254,42 @@ public class MessageBoxActivity extends AppCompatActivity implements INotificati
     }
 
     private void initEmojiKeyboradSimulation() {
-        EmojiPackagePagerAdapter.OnEmojiClickListener listener = new EmojiPackagePagerAdapter.OnEmojiClickListener() {
+        EmojiPickerFragment.OnEmojiPickerListener listener = new EmojiPickerFragment.OnEmojiPickerListener() {
             @Override
-            public void emojiClick(EmojiInfo emojiInfo) {
-                mCurrentConversationView.emojiClick(emojiInfo);
-            }
-
-            @Override
-            public void emojiLongClick(View view, EmojiInfo emojiInfo) {
-
-            }
-
-            @Override
-            public void stickerClickExcludeMagic(@NonNull StickerInfo info) {
-
-            }
-
-            @Override
-            public void gifClick(GiphyInfo gifInfo) {
-
+            public void addEmoji(String emojiStr) {
+                mCurrentConversationView.emojiClick(emojiStr);
             }
 
             @Override
             public void deleteEmoji() {
                 mCurrentConversationView.deleteEmoji();
             }
+
+            @Override
+            public void prepareSendSticker(Collection<MessagePartData> items) {
+
+            }
+
+            @Override
+            public boolean isContainMessagePartData(Uri uri) {
+                return false;
+            }
         };
 
-        ViewPagerFixed itemPager = findViewById(R.id.emoji_item_pager);
-//        ViewPagerDotIndicatorView dotIndicatorView = findViewById(R.id.dot_indicator_view);
-//        itemPager.addOnPageChangeListener(dotIndicatorView);
-//        PagerAdapter adapter = new EmojiItemPagerAdapter(getEmojiList(), listener);
-//        itemPager.setAdapter(adapter);
-//        dotIndicatorView.initDot(adapter.getCount(), 0);
-    }
+        int keyboardHeight = UiUtils.getKeyboardHeight();
+        if(keyboardHeight != 0){
+            mEmojiContainer.getLayoutParams().height = keyboardHeight;
+        }
+        mEmojiPickerFragment = new EmojiPickerFragment();
+        mEmojiPickerFragment.setOnlyEmojiPage(true);
+        mEmojiPickerFragment.setOnEmojiPickerListener(listener);
+        getFragmentManager().beginTransaction().replace(
+                R.id.emoji_picker_container,
+                mEmojiPickerFragment,
+                EmojiPickerFragment.FRAGMENT_TAG).commitAllowingStateLoss();
+        mEmojiPickerFragment.onAnimationFinished();
 
-//    private List<BaseEmojiInfo> getEmojiList() {
-//        List<BaseEmojiInfo> result = new ArrayList<>();
-//        String[] arrays = getResources().getStringArray(R.array.emoji_faces);
-//        for (String array : arrays) {
-//            EmojiInfo info = new EmojiInfo();
-//            info.mEmoji = new String((Character.toChars(Integer.parseInt(array, 16))));
-//            result.add(info);
-//        }
-//        return result;
-//    }
+    }
 
 
     @Override

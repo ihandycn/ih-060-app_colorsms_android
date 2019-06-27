@@ -17,6 +17,7 @@ import com.android.messaging.ui.customize.PrimaryColors;
 import com.android.messaging.ui.emoji.utils.EmojiManager;
 import com.superapps.util.Dimensions;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class EmojiItemPagerAdapter extends AbstractEmojiItemPagerAdapter {
@@ -27,7 +28,7 @@ public class EmojiItemPagerAdapter extends AbstractEmojiItemPagerAdapter {
     private Context mContext;
     private int mCurrentPage = 0;
 
-    private List<EmojiPackageInfo> mData;
+    private List<EmojiPackageInfo> mData = new ArrayList<>();
     private EmojiPackagePagerAdapter.OnEmojiClickListener mOnEmojiClickListener;
 
     public EmojiItemPagerAdapter(Context context, List<EmojiPackageInfo> data, EmojiPackagePagerAdapter.OnEmojiClickListener emojiClickListener) {
@@ -35,7 +36,7 @@ public class EmojiItemPagerAdapter extends AbstractEmojiItemPagerAdapter {
             return;
         }
         mOnEmojiClickListener = emojiClickListener;
-        mData = data;
+        mData.addAll(data);
         this.mContext = context;
     }
 
@@ -73,7 +74,8 @@ public class EmojiItemPagerAdapter extends AbstractEmojiItemPagerAdapter {
 
     public void initData(List<EmojiPackageInfo> infoList) {
         for (int i = 0; i < infoList.size(); i++) {
-            mData.get(i).mEmojiInfoList = infoList.get(i).mEmojiInfoList;
+            mData.get(i).mEmojiInfoList.clear();
+            mData.get(i).mEmojiInfoList.addAll(infoList.get(i).mEmojiInfoList);
         }
         notifyDataSetChanged();
         if (mTabLayout != null) {
@@ -98,8 +100,8 @@ public class EmojiItemPagerAdapter extends AbstractEmojiItemPagerAdapter {
         EmojiPackageInfo recentInfo = mData.get(0);
         if (recentInfo.mEmojiPackageType != EmojiPackageType.RECENT)
             return;
-        mData.get(0).mEmojiInfoList.clear();
-        recentInfo.mEmojiInfoList = EmojiManager.getRecentInfo(EmojiPackageType.EMOJI);
+        recentInfo.mEmojiInfoList.clear();
+        recentInfo.mEmojiInfoList.addAll(EmojiManager.getRecentInfo(EmojiPackageType.EMOJI));
         updateSinglePage(0);
         updateTabView();
     }

@@ -63,8 +63,8 @@ public class EmojiItemRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.
                 final EmojiInfo emojiInfo = (EmojiInfo) info;
                 emojiHolder.itemView.setTag(emojiInfo);
 
-                Drawable emojiDrawable = new EmojiDrawable(((EmojiInfo) info).mEmoji);
-                ((EmojiDrawable) emojiDrawable).initView(mContext, emojiHolder.emojiView);
+                EmojiDrawable emojiDrawable = new EmojiDrawable(((EmojiInfo) info).mEmoji);
+                emojiDrawable.initView(mContext, emojiHolder.emojiView);
 
                 emojiHolder.emojiView.setBackground(BackgroundDrawables.createBackgroundDrawable(
                         mContext.getResources().getColor(android.R.color.white), Dimensions.pxFromDp(16), true));
@@ -81,15 +81,15 @@ public class EmojiItemRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.
                         public boolean onLongClick(View v) {
                             if (mOnEmojiClickListener != null) {
                                 EmojiInfo info = (EmojiInfo) emojiHolder.itemView.getTag();
-                                mOnEmojiClickListener.emojiLongClick(emojiHolder.itemView, info);
+                                mOnEmojiClickListener.emojiLongClick(emojiHolder.emojiView, info);
                             }
                             return true;
                         }
                     });
-                    emojiHolder.imageView.setVisibility(View.VISIBLE);
+                    emojiHolder.moreView.setVisibility(View.VISIBLE);
                 }else{
                     emojiHolder.emojiView.setOnLongClickListener(null);
-                    emojiHolder.imageView.setVisibility(View.GONE);
+                    emojiHolder.moreView.setVisibility(View.GONE);
                 }
             }
         }
@@ -113,12 +113,12 @@ public class EmojiItemRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.
 
     static class EmojiViewHolder extends RecyclerView.ViewHolder {
         private ImageView emojiView;
-        private ImageView imageView;
+        private ImageView moreView;
 
         EmojiViewHolder(View itemView) {
             super(itemView);
             emojiView = itemView.findViewById(R.id.emoji_view);
-            imageView = itemView.findViewById(R.id.emoji_more);
+            moreView = itemView.findViewById(R.id.emoji_more);
         }
     }
 
@@ -147,7 +147,7 @@ public class EmojiItemRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.
             mPaint.setTextSize(Dimensions.pxFromDp(23));
 //            Rect bounds = new Rect();
 //            mPaint.getTextBounds(mUnicode, 0, mUnicode.length(), bounds);
-            canvas.drawText(mUnicode,Dimensions.pxFromDp(1), Dimensions.pxFromDp(23), mPaint);
+            canvas.drawText(mUnicode,Dimensions.pxFromDp(1.5f), Dimensions.pxFromDp(23), mPaint);
         }
 
         @Override

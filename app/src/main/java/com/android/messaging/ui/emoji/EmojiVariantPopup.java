@@ -17,6 +17,9 @@ import android.widget.PopupWindow;
 import com.android.messaging.R;
 import com.android.messaging.ui.emoji.utils.EmojiManager;
 import com.android.messaging.util.DisplayUtils;
+import com.ihs.commons.utils.HSLog;
+import com.superapps.util.BackgroundDrawables;
+import com.superapps.util.Dimensions;
 
 public class EmojiVariantPopup {
     private final EmojiPackagePagerAdapter.OnEmojiClickListener mListener;
@@ -85,7 +88,7 @@ public class EmojiVariantPopup {
         }
     }
 
-    private View initView(Context context, EmojiInfo emojiInfo, int i) {
+    private View initView(Context context, EmojiInfo emojiInfo, int width) {
         View inflate = View.inflate(context, R.layout.emoji_skin_popup, null);
         LinearLayout linearLayout = (LinearLayout) inflate.findViewById(R.id.container);
         EmojiInfo[] variants = emojiInfo.mVariants;
@@ -95,8 +98,10 @@ public class EmojiVariantPopup {
             ImageView view = container.findViewById(R.id.emoji_view);
             MarginLayoutParams marginLayoutParams = (MarginLayoutParams) view.getLayoutParams();
             int dpToPx = (int) DisplayUtils.dpToPx(context, 2.0f);
-            marginLayoutParams.width = i;
+            marginLayoutParams.width = width;
+            HSLog.d("emoji_test", width + "");
             marginLayoutParams.setMargins(dpToPx, dpToPx, dpToPx, dpToPx);
+
             new EmojiItemRecyclerAdapter.EmojiDrawable(item.mEmoji).initView(context, view);
             view.setOnClickListener(new OnClickListener() {
                 public void onClick(View view) {
@@ -105,13 +110,16 @@ public class EmojiVariantPopup {
                     }
                     EmojiManager.addSkinSingleRecord(item.getUnicode(), item.mEmoji);
                     emojiInfo.mEmoji = item.mEmoji;
-                    new EmojiItemRecyclerAdapter.EmojiDrawable(emojiInfo.mEmoji).initView(context, mAnchorView.findViewById(R.id.emoji_view));
+                    new EmojiItemRecyclerAdapter.EmojiDrawable(emojiInfo.mEmoji).initView(context, (ImageView) mAnchorView);
                     mPopupWindow.dismiss();
                 }
             });
+            view.setBackground(BackgroundDrawables.createBackgroundDrawable(
+                    context.getResources().getColor(android.R.color.white), Dimensions.pxFromDp(16), true));
+
             // cancel the layout_margin_top of the item xml
             LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(container.getLayoutParams());
-            lp.topMargin = 0 ;
+            lp.topMargin = 0;
             lp.bottomMargin = 0;
             container.setLayoutParams(lp);
             linearLayout.addView(container);

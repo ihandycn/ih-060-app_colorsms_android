@@ -53,23 +53,31 @@ public class EmojiPickerFragment extends Fragment implements INotificationObserv
     private boolean mIsEnableSend = true;
     private EmojiVariantPopup mEmojiVariantPopup;
 
-    private boolean mIsDataLoaded = false;
+    private boolean mIsDataPrepared = false;
     private boolean mIsAnimationFinished = false;
     private boolean mIsViewCreated = false;
-    private boolean mCanDelete  = false;
+    private boolean mIsDataLoaded = false;
 
-    private List<EmojiPackageInfo> mEmojiData;
-    private List<EmojiPackageInfo> mStickerData;
+    private boolean mCanDelete = false;
+
+    private boolean mIsOnlyEmoji = false;
+
+    private List<EmojiPackageInfo> mEmojiData = new ArrayList<>();
+    private List<EmojiPackageInfo> mStickerData = new ArrayList<>();
 
     public static EmojiPickerFragment newInstance() {
         return new EmojiPickerFragment();
     }
 
-    public EmojiPickerFragment(){
+    public EmojiPickerFragment() {
     }
 
     public void setOnEmojiPickerListener(OnEmojiPickerListener onEmojiPickerListener) {
         mOnEmojiPickerListener = onEmojiPickerListener;
+    }
+
+    public void setOnlyEmojiPage(boolean onlyEmoji) {
+        mIsOnlyEmoji = onlyEmoji;
     }
 
     @Override
@@ -77,9 +85,9 @@ public class EmojiPickerFragment extends Fragment implements INotificationObserv
         super.onCreate(savedInstanceState);
         HSGlobalNotificationCenter.addObserver(NOTIFICATION_ADD_EMOJI_FROM_STORE, this);
         HSGlobalNotificationCenter.addObserver(StickerMagicDetailActivity.NOTIFICATION_SEND_MAGIC_STICKER, this);
-        HSGlobalNotificationCenter.addObserver(LoadEmojiManager.LOAD_EMOJI_DATA, this);
         LoadEmojiManager.getInstance().getEmojiData(this);
     }
+
 
     @Nullable
     @Override
@@ -130,15 +138,16 @@ public class EmojiPickerFragment extends Fragment implements INotificationObserv
         Activity activity = getActivity();
         Map<EmojiPackageType, List<EmojiPackageInfo>> data = new HashMap<>();
         data.put(EmojiPackageType.EMOJI, EmojiDataProducer.getInitEmojiData(activity));
-        data.put(EmojiPackageType.STICKER, EmojiDataProducer.getInitStickerData(activity));
-        data.put(EmojiPackageType.GIF, EmojiDataProducer.getInitGifData(activity));
+        if (!mIsOnlyEmoji) {
+            data.put(EmojiPackageType.STICKER, EmojiDataProducer.getInitStickerData(activity));
+            data.put(EmojiPackageType.GIF, EmojiDataProducer.getInitGifData(activity));
+        }
         mEmojiPackagePagerAdapter.setData(data);
 
         mEmojiPager = view.findViewById(R.id.emoji_pager);
         mEmojiPager.setAdapter(mEmojiPackagePagerAdapter);
         tabLayout.setupWithViewPager(mEmojiPager);
         mEmojiPackagePagerAdapter.updateTab(initMainTab());
-        mEmojiPager.setCurrentItem(1);
 
         View deleteView = view.findViewById(R.id.emoji_delete_btn);
         deleteView.setBackground(BackgroundDrawables.createBackgroundDrawable(
@@ -171,30 +180,48 @@ public class EmojiPickerFragment extends Fragment implements INotificationObserv
 
             }
         });
+        if(mIsOnlyEmoji) {
+            mEmojiPager.setCurrentItem(0);
+            tabLayout.getTabAt(0).select();
+            deleteView.setVisibility(View.VISIBLE);
+        }else{
+            mEmojiPager.setCurrentItem(1);
+            tabLayout.getTabAt(1).select();
+        }
     }
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         mIsViewCreated = true;
+        if (mIsDataPrepared && mIsAnimationFinished) {
+            initData();
+        }
     }
 
-    public void onAnimationFinished(){
+    public void onAnimationFinished() {
         mIsAnimationFinished = true;
-        if(mIsDataLoaded){
+        if (mIsDataPrepared && mIsViewCreated) {
             initData();
         }
     }
 
     private void initData() {
-        mEmojiPackagePagerAdapter.getStickerAdapter().initData(mStickerData);
-        Threads.postOnMainThreadDelayed(new Runnable() {
-            @Override
-            public void run() {
-                mEmojiPackagePagerAdapter.getEmojiAdapter().initData(mEmojiData);
-            }
-        }, 200);
-
+        if(mIsDataLoaded){
+            return ;
+        }
+        if (mEmojiPackagePagerAdapter.getStickerAdapter() != null) {
+            mEmojiPackagePagerAdapter.getStickerAdapter().initData(mStickerData);
+        }
+        if (mEmojiPackagePagerAdapter.getEmojiAdapter() != null) {
+            Threads.postOnMainThreadDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    mEmojiPackagePagerAdapter.getEmojiAdapter().initData(mEmojiData);
+                }
+            }, 200);
+        }
+        mIsDataLoaded = true;
     }
 
     private void updateRecentSticker(StickerInfo info) {
@@ -278,52 +305,55 @@ public class EmojiPickerFragment extends Fragment implements INotificationObserv
 
         result.add(info);
 
-        EmojiPackageInfo stickerInfo = new EmojiPackageInfo();
-        stickerInfo.mName = "sticker";
-        stickerInfo.mEmojiPackageType = EmojiPackageType.STICKER;
-        stickerInfo.mTabIconUrl = Uri.parse("android.resource://" + activity.getPackageName() +
-                "/" + activity.getResources().getIdentifier("emoji_tab_sticker_icon", "drawable",
-                activity.getPackageName())).toString();
-        stickerInfo.mTabIconSelectedUrl = Uri.parse("android.resource://" + activity.getPackageName() +
-                "/" + activity.getResources().getIdentifier("emoji_tab_sticker_selected_icon", "drawable",
-                activity.getPackageName())).toString();
-        result.add(stickerInfo);
+        if(!mIsOnlyEmoji) {
+            EmojiPackageInfo stickerInfo = new EmojiPackageInfo();
+            stickerInfo.mName = "sticker";
+            stickerInfo.mEmojiPackageType = EmojiPackageType.STICKER;
+            stickerInfo.mTabIconUrl = Uri.parse("android.resource://" + activity.getPackageName() +
+                    "/" + activity.getResources().getIdentifier("emoji_tab_sticker_icon", "drawable",
+                    activity.getPackageName())).toString();
+            stickerInfo.mTabIconSelectedUrl = Uri.parse("android.resource://" + activity.getPackageName() +
+                    "/" + activity.getResources().getIdentifier("emoji_tab_sticker_selected_icon", "drawable",
+                    activity.getPackageName())).toString();
+            result.add(stickerInfo);
 
-        EmojiPackageInfo gifInfo = new EmojiPackageInfo();
-        gifInfo.mName = "gif";
-        gifInfo.mEmojiPackageType = EmojiPackageType.GIF;
-        gifInfo.mTabIconUrl = Uri.parse("android.resource://" + activity.getPackageName() +
-                "/" + activity.getResources().getIdentifier("ic_tab_gif", "drawable",
-                activity.getPackageName())).toString();
-        gifInfo.mTabIconSelectedUrl = Uri.parse("android.resource://" + activity.getPackageName() +
-                "/" + activity.getResources().getIdentifier("ic_tab_gif_selected", "drawable",
-                activity.getPackageName())).toString();
+            EmojiPackageInfo gifInfo = new EmojiPackageInfo();
+            gifInfo.mName = "gif";
+            gifInfo.mEmojiPackageType = EmojiPackageType.GIF;
+            gifInfo.mTabIconUrl = Uri.parse("android.resource://" + activity.getPackageName() +
+                    "/" + activity.getResources().getIdentifier("ic_tab_gif", "drawable",
+                    activity.getPackageName())).toString();
+            gifInfo.mTabIconSelectedUrl = Uri.parse("android.resource://" + activity.getPackageName() +
+                    "/" + activity.getResources().getIdentifier("ic_tab_gif_selected", "drawable",
+                    activity.getPackageName())).toString();
 
-        result.add(gifInfo);
+            result.add(gifInfo);
+        }
 
         return result;
     }
 
     @Override
     public void onDataPrepared(List<EmojiPackageInfo> emojiList, List<EmojiPackageInfo> stickerList) {
-        mIsDataLoaded = true;
-        mEmojiData = emojiList;
-        mStickerData = stickerList;
-        if (mIsAnimationFinished) {
+        mIsDataPrepared = true;
+        mEmojiData.addAll(emojiList);
+        mStickerData.addAll(stickerList);
+        if (mIsAnimationFinished && mIsViewCreated) {
             initData();
         }
     }
 
-    private class DeleteRunnable implements Runnable{
+    private class DeleteRunnable implements Runnable {
         @Override
         public void run() {
-            if(mCanDelete) {
+            if (mCanDelete) {
                 mOnEmojiPickerListener.deleteEmoji();
                 Threads.postOnMainThreadDelayed(new DeleteRunnable(), 70);
             }
         }
     }
-    private void makeDeleteContinuous(View deleteView){
+
+    private void makeDeleteContinuous(View deleteView) {
         deleteView.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View v) {
@@ -336,7 +366,7 @@ public class EmojiPickerFragment extends Fragment implements INotificationObserv
         deleteView.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
-                switch(event.getAction()){
+                switch (event.getAction()) {
                     case MotionEvent.ACTION_UP:
                     case MotionEvent.ACTION_CANCEL:
                         mCanDelete = false;

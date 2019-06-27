@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.DialogFragment;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -16,22 +17,21 @@ import android.view.WindowManager;
 import android.widget.ImageView;
 
 import com.android.messaging.R;
+import com.android.messaging.datamodel.data.MessagePartData;
 import com.android.messaging.ui.appsettings.SettingGeneralActivity;
 import com.android.messaging.ui.customize.PrimaryColors;
-import com.android.messaging.ui.emoji.EmojiInfo;
-import com.android.messaging.ui.emoji.EmojiPackagePagerAdapter;
-import com.android.messaging.ui.emoji.GiphyInfo;
-import com.android.messaging.ui.emoji.StickerInfo;
+import com.android.messaging.ui.emoji.EmojiPickerFragment;
 import com.android.messaging.util.BugleAnalytics;
 import com.android.messaging.util.ImeUtil;
+import com.android.messaging.util.UiUtils;
 import com.ihs.app.framework.HSApplication;
 import com.superapps.util.BackgroundDrawables;
 import com.superapps.util.Dimensions;
 import com.superapps.util.Preferences;
 import com.superapps.util.Threads;
-import com.superapps.view.ViewPagerFixed;
 
 import java.lang.ref.WeakReference;
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -45,6 +45,8 @@ public class SignatureSettingDialog extends DialogFragment {
     private Set<String> mInputEmojiSet = new HashSet<>();
     private View root;
     private WeakReference<Activity> mActivityReference;
+
+    private EmojiPickerFragment mEmojiPickerFragment;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -177,17 +179,6 @@ public class SignatureSettingDialog extends DialogFragment {
         dismiss();
     }
 
-//    private List<BaseEmojiInfo> getEmojiList() {
-//        List<BaseEmojiInfo> result = new ArrayList<>();
-//        String[] arrays = getResources().getStringArray(R.array.emoji_faces);
-//        for (String array : arrays) {
-//            EmojiInfo info = new EmojiInfo();
-//            info.mEmoji = new String((Character.toChars(Integer.parseInt(array, 16))));
-//            result.add(info);
-//        }
-//        return result;
-//    }
-
     private void showEmoji() {
         mEmojiContainer.setVisibility(View.VISIBLE);
         mIsEmojiShow = true;
@@ -209,43 +200,46 @@ public class SignatureSettingDialog extends DialogFragment {
     }
 
     private void initEmoji() {
-        EmojiPackagePagerAdapter.OnEmojiClickListener listener = new EmojiPackagePagerAdapter.OnEmojiClickListener() {
+        EmojiPickerFragment.OnEmojiPickerListener listener = new EmojiPickerFragment.OnEmojiPickerListener() {
             @Override
-            public void emojiClick(EmojiInfo emojiInfo) {
+            public void addEmoji(String emojiStr) {
                 if (mInputEditText != null) {
                     int start = mInputEditText.getSelectionStart();
                     int end = mInputEditText.getSelectionEnd();
-                    mInputEditText.getText().replace(start, end, emojiInfo.mEmoji);
-                    mInputEmojiSet.add(emojiInfo.mEmoji);
+                    mInputEditText.getText().replace(start, end, emojiStr);
+                    mInputEmojiSet.add(emojiStr);
                 }
-            }
-
-            @Override
-            public void emojiLongClick(View view, EmojiInfo emojiInfo) {
-
-            }
-
-            @Override
-            public void stickerClickExcludeMagic(@NonNull StickerInfo info) {
-
-            }
-
-            @Override
-            public void gifClick(GiphyInfo gifInfo) {
-
             }
 
             @Override
             public void deleteEmoji() {
                 mInputEditText.dispatchKeyEvent(new KeyEvent(KeyEvent.ACTION_DOWN, KeyEvent.KEYCODE_DEL));
             }
+
+            @Override
+            public void prepareSendSticker(Collection<MessagePartData> items) {
+
+            }
+
+            @Override
+            public boolean isContainMessagePartData(Uri uri) {
+                return false;
+            }
         };
 
-        ViewPagerFixed itemPager = root.findViewById(R.id.emoji_item_pager);
-//        ViewPagerDotIndicatorView dotIndicatorView = root.findViewById(R.id.dot_indicator_view);
-//        itemPager.addOnPageChangeListener(dotIndicatorView);
-//        PagerAdapter adapter = new EmojiItemPagerAdapter(getEmojiList(), listener);
-//        itemPager.setAdapter(adapter);
-//        dotIndicatorView.initDot(adapter.getCount(), 0);
+        int keyboardHeight = UiUtils.getKeyboardHeight();
+        if(keyboardHeight != 0){
+            mEmojiContainer.getLayoutParams().height = keyboardHeight;
+        }
+
+        mEmojiPickerFragment = new EmojiPickerFragment();
+        mEmojiPickerFragment.setOnlyEmojiPage(true);
+        mEmojiPickerFragment.setOnEmojiPickerListener(listener);
+        getChildFragmentManager().beginTransaction().replace(
+                R.id.signature_emoji_container,
+                mEmojiPickerFragment,
+                EmojiPickerFragment.FRAGMENT_TAG).commitAllowingStateLoss();
+        mEmojiPickerFragment.onAnimationFinished();
+
     }
 }

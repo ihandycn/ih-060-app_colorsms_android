@@ -12,7 +12,6 @@ import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Handler;
 import android.support.annotation.ColorInt;
-import android.support.annotation.NonNull;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.telephony.TelephonyManager;
@@ -40,12 +39,10 @@ import com.android.messaging.ui.customize.PrimaryColors;
 import com.android.messaging.ui.customize.ToolbarDrawables;
 import com.android.messaging.ui.customize.WallpaperDrawables;
 import com.android.messaging.ui.customize.theme.ThemeUtils;
-import com.android.messaging.ui.emoji.EmojiInfo;
 import com.android.messaging.util.BugleAnalytics;
 import com.android.messaging.util.Dates;
 import com.android.messaging.util.ImeUtil;
 import com.android.messaging.util.UiUtils;
-import com.ihs.commons.utils.HSLog;
 import com.superapps.util.BackgroundDrawables;
 import com.superapps.util.Dimensions;
 
@@ -235,11 +232,11 @@ public class MessageBoxConversationView extends FrameLayout {
     }
 
 
-    void emojiClick(EmojiInfo emojiInfo) {
+    void emojiClick(String emojiInfo) {
         if (mInputEditText != null) {
             int start = mInputEditText.getSelectionStart();
             int end = mInputEditText.getSelectionEnd();
-            mInputEditText.getText().replace(start, end, emojiInfo.mEmoji);
+            mInputEditText.getText().replace(start, end, emojiInfo);
             mInputEmojiCount++;
         }
     }

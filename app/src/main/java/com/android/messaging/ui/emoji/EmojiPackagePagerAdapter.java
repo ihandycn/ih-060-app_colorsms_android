@@ -35,8 +35,6 @@ public class EmojiPackagePagerAdapter extends PagerAdapter {
     private GiphyItemPagerAdapter mGiphyAdapter;
     private OnEmojiClickListener mOnEmojiClickListener;
 
-    private final int DEFAULT_PAGE = 1;
-
     EmojiPackagePagerAdapter(Context context, TabLayout tabLayout, OnEmojiClickListener emojiClickListener) {
         mContext = context;
         mTabLayout = tabLayout;
@@ -184,7 +182,9 @@ public class EmojiPackagePagerAdapter extends PagerAdapter {
     }
 
     void insertStickItem(int position, EmojiPackageInfo packageInfo) {
-        mStickerAdapter.insertItem(position, packageInfo);
+        if(mStickerAdapter != null) {
+            mStickerAdapter.insertItem(position, packageInfo);
+        }
     }
 
     private void updateTabView() {

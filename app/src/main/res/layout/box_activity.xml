@@ -31,7 +31,7 @@
         android:id="@+id/emoji_picker_container"
         layout="@layout/emoji_page_item_layout"
         android:layout_width="match_parent"
-        android:layout_height="197dp"
+        android:layout_height="243dp"
         android:layout_gravity="bottom"
         android:background="@color/white"
         app:layout_constraintStart_toStartOf="parent"
