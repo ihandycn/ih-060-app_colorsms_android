@@ -197,7 +197,8 @@ public class PersonItemView extends LinearLayout implements PersonItemDataListen
 
             mContactIconView.setImageResourceUri(mBinding.getData().getAvatarUri(),
                     mBinding.getData().getContactId(), mBinding.getData().getLookupKey(),
-                    mBinding.getData().getNormalizedDestination());
+                    mBinding.getData().getNormalizedDestination(),
+                    false);
         } else {
             mNameTextView.setText("");
             mContactIconView.setImageResourceUri(null);

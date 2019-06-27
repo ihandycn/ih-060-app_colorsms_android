@@ -114,6 +114,12 @@ public class ContactIconView extends AsyncImageView {
 
     public void setImageResourceUri(final Uri uri, final long contactId,
                                     final String contactLookupKey, final String normalizedDestination) {
+        setImageResourceUri(uri, contactId, contactLookupKey, normalizedDestination, true);
+    }
+
+    public void setImageResourceUri(final Uri uri, final long contactId,
+                                    final String contactLookupKey, final String normalizedDestination,
+                                    boolean useForegroundColor) {
         if (uri == null) {
             setImageResourceId(null);
         } else {
@@ -121,7 +127,7 @@ public class ContactIconView extends AsyncImageView {
             if (AvatarUriUtil.TYPE_GROUP_URI.equals(avatarType)) {
                 setImageResourceId(new AvatarGroupRequestDescriptor(uri, mIconSize, mIconSize));
             } else {
-                setImageResourceId(new AvatarRequestDescriptor(uri, mIconSize, mIconSize));
+                setImageResourceId(new AvatarRequestDescriptor(uri, mIconSize, mIconSize, true, false, useForegroundColor));
             }
         }
 
