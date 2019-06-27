@@ -505,8 +505,6 @@ public class ConversationMessageView extends RelativeLayout implements View.OnCl
                     R.string.incoming_sim_name_text, subscriptionEntry.displayName) :
                     subscriptionEntry.displayName;
             mSimNameView.setText(simNameText);
-            mSimNameView.setTextColor(showSimIconAsIncoming ? getResources().getColor(
-                    R.color.timestamp_text_incoming) : subscriptionEntry.displayColor);
             mSimNameView.setVisibility(VISIBLE);
         } else {
             mSimNameView.setText(null);
@@ -949,6 +947,7 @@ public class ConversationMessageView extends RelativeLayout implements View.OnCl
         }
 
         mStatusTextView.setTextColor(resources.getColor(timestampColorResId));
+        mSimNameView.setTextColor(resources.getColor(timestampColorResId));
 
         mSenderNameTextView.setTextColor(resources.getColor(timestampColorResId));
     }

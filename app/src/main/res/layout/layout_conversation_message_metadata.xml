@@ -51,16 +51,17 @@
             android:gravity="center"
             android:includeFontPadding="false"
             android:visibility="gone" />
-    </LinearLayout>
 
-    <com.android.messaging.ui.view.MessagesTextView
-        android:id="@+id/sim_name"
-        style="@style/MessageSimIndicator"
-        app:typeface="@string/custom_font_regular"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:visibility="gone" />
+        <com.android.messaging.ui.view.MessagesTextView
+            android:id="@+id/sim_name"
+            style="@style/MessageSimIndicator"
+            app:typeface="@string/custom_font_regular"
+            android:layout_width="wrap_content"
+            android:layout_height="16dp"
+            android:gravity="center"
+            android:layout_weight="1"
+            android:visibility="gone" />
+    </LinearLayout>
 
     <ImageView
         android:id="@+id/smsDeliveredBadge"
