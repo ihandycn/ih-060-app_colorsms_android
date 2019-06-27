@@ -74,7 +74,6 @@ import com.android.messaging.ad.AdPlacement;
 import com.android.messaging.datamodel.BugleNotifications;
 import com.android.messaging.datamodel.DataModel;
 import com.android.messaging.datamodel.MessagingContentProvider;
-import com.android.messaging.datamodel.action.BugleActionToasts;
 import com.android.messaging.datamodel.binding.Binding;
 import com.android.messaging.datamodel.binding.BindingBase;
 import com.android.messaging.datamodel.binding.ImmutableBindingRef;
@@ -99,6 +98,7 @@ import com.android.messaging.ui.conversation.ComposeMessageView.IComposeMessageV
 import com.android.messaging.ui.conversation.ConversationInputManager.ConversationInputHost;
 import com.android.messaging.ui.conversation.ConversationMessageView.ConversationMessageViewHost;
 import com.android.messaging.ui.customize.ConversationColors;
+import com.android.messaging.ui.customize.PrimaryColors;
 import com.android.messaging.ui.customize.theme.ThemeInfo;
 import com.android.messaging.ui.customize.theme.ThemeUtils;
 import com.android.messaging.ui.dialog.FiveStarRateDialog;
@@ -127,6 +127,7 @@ import com.ihs.commons.notificationcenter.HSGlobalNotificationCenter;
 import com.ihs.commons.notificationcenter.INotificationObserver;
 import com.ihs.commons.utils.HSBundle;
 import com.ihs.commons.utils.HSLog;
+import com.superapps.util.BackgroundDrawables;
 import com.superapps.util.Dimensions;
 import com.superapps.util.Preferences;
 import com.superapps.util.Threads;
@@ -753,6 +754,20 @@ public class ConversationFragment extends Fragment implements ConversationDataLi
 
         mRecyclerView.setPadding(0, Dimensions.pxFromDp(53), 0, 0);
         mRecyclerView.setClipToPadding(true);
+
+        if (WallpaperManager.getWallpaperPathByThreadId(mConversationId) != null) {
+            int color = PrimaryColors.getPrimaryColor();
+            mAdContainer.setBackground(BackgroundDrawables.createBackgroundDrawable(
+                    Color.argb(40, Color.red(color), Color.green(color), Color.blue(color)), 0, false));
+            title.setTextColor(0xffffffff);
+            description.setTextColor(0xffffffff);
+            ivAdPreview.getDrawable().setColorFilter(0xffffffff, PorterDuff.Mode.SRC_ATOP);
+            actionBtn.setTextColor(0xffffffff);
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                ((LayerDrawable) actionBg).getDrawable(1)
+                        .setColorFilter(0xffffffff, PorterDuff.Mode.SRC_IN);
+            }
+        }
 
         BugleAnalytics.logEvent("Detailspage_TopAd_Show", true, true);
         enqueueNextAd();
