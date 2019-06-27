@@ -331,10 +331,10 @@
     <string name="unblocked_toast_message">Contact unblocked &amp; unarchived</string>
     <!-- The text of the toast/snack message shown when the selected conversation(s) are archived.
          Displays the number of converstions archived -->
-    <string name="archived_toast_message"><xliff:g id="count">%d</xliff:g> archived</string>
+    <string name="archived_toast_message"><xliff:g id="count">%d</xliff:g> conversation archived</string>
     <!-- The text of the toast/snack message shown when the selected conversation(s) are unarchived.
          Displays the number of conversations unarchived -->
-    <string name="unarchived_toast_message"><xliff:g id="count">%d</xliff:g> unarchived</string>
+    <string name="unarchived_toast_message"><xliff:g id="count">%d</xliff:g> conversation unarchived</string>
     <!-- The text of the toast/snack message shown when a notifications turned off for selected conversations -->
     <string name="notification_off_toast_message">Notifications turned off</string>
     <!-- The text of the toast/snack message shown when a notifications turned on for selected conversations -->
