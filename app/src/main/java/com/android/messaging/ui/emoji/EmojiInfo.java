@@ -36,9 +36,9 @@ public class EmojiInfo extends BaseEmojiInfo {
         }
         String unicode = emoji.getUnicode();
         // append 0xFEOF.  Force to show emoji colorful, not white-black
-        if(emoji.needToFix()){
-            unicode += new String(Character.toChars(0xFE0f));
-        }
+//        if(emoji.needToFix()){
+//            unicode += new String(Character.toChars(0xFE0f));
+//        }
         EmojiInfo info = new EmojiInfo(emoji.getUnicode());
         info.mEmoji = unicode;
 

@@ -22,7 +22,7 @@ import java.util.List;
 
 public class EmojiItemPagerAdapter extends AbstractEmojiItemPagerAdapter {
 
-    private final int EMOJI_COLUMNS = 8;
+    private final int EMOJI_COLUMNS = 9;
     private final int EMOJI_ROWS = 4;
     private TabLayout mTabLayout;
     private Context mContext;

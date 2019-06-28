@@ -89,14 +89,6 @@ public class EmojiDataProducer {
 
     public static List<EmojiPackageInfo> loadEmojiData(){
         List<EmojiPackageInfo> result = new ArrayList<>();
-        EmojiPackageInfo recentInfo = new EmojiPackageInfo();
-        recentInfo.mEmojiInfoList = EmojiManager.getRecentInfo(EmojiPackageType.EMOJI);
-        for(BaseEmojiInfo item : recentInfo.mEmojiInfoList){
-            EmojiInfo info = (EmojiInfo)item;
-            changeSkin(info);
-        }
-        result.add(recentInfo);
-
         EmojiCategory[] categoryList = EmojiProvider.getCategories();
         for (EmojiCategory category : categoryList) {
             List<BaseEmojiInfo> emojiList = new ArrayList<>();
@@ -116,14 +108,27 @@ public class EmojiDataProducer {
         return result;
     }
 
+    public static EmojiPackageInfo loadEmojiRecentData(){
+        EmojiPackageInfo recentInfo = new EmojiPackageInfo();
+        recentInfo.mEmojiInfoList = EmojiManager.getRecentInfo(EmojiPackageType.EMOJI);
+        for(BaseEmojiInfo item : recentInfo.mEmojiInfoList){
+            EmojiInfo info = (EmojiInfo)item;
+            changeSkin(info);
+        }
+        return recentInfo;
+    }
+
     public static List<EmojiPackageInfo> loadStickerData(){
-        List<EmojiPackageInfo> result = new ArrayList<>();
+        return EmojiConfig.getInstance().getAddedEmojiFromConfig();
+    }
+
+    public static EmojiPackageInfo loadStickerRecentData(){
         EmojiPackageInfo recentInfo = new EmojiPackageInfo();
         recentInfo.mEmojiInfoList = EmojiManager.getRecentInfo(EmojiPackageType.STICKER);
-        result.add(recentInfo);
-        result.addAll(EmojiConfig.getInstance().getAddedEmojiFromConfig());
-        return result;
+        return recentInfo;
     }
+
+
 
 
     private static void changeSkin(EmojiInfo info){

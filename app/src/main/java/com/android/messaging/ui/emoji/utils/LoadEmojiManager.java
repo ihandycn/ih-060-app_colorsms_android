@@ -6,23 +6,28 @@ import com.superapps.util.Threads;
 import java.util.List;
 
 public class LoadEmojiManager{
-    public static final String LOAD_EMOJI_DATA = "load_emoji_data";
-    public static final String DATA_EMOJI = "data_emoji";
-    public static final String DATA_STICKER = "data_sticker";
-
     private static LoadEmojiManager loadEmojiManager = new LoadEmojiManager();
     private boolean mIsDataPrepared = false;
     private List<EmojiPackageInfo> mEmojiData;
     private List<EmojiPackageInfo> mStickerData;
+    private boolean mNeedFlush = false;
 
     private LoadEmojiManager(){}
+
+    public void flush(){
+        mNeedFlush = true;
+    }
 
     public static LoadEmojiManager getInstance(){
         return loadEmojiManager;
     }
 
     public void getEmojiData(EmojiDataCallback callback){
-        if(mIsDataPrepared){
+        if(mIsDataPrepared && !mNeedFlush){
+            mEmojiData.remove(0);
+            mEmojiData.add(0, EmojiDataProducer.loadEmojiRecentData());
+            mStickerData.remove(0);
+            mStickerData.add(0, EmojiDataProducer.loadStickerRecentData());
             callback.onDataPrepared(mEmojiData, mStickerData);
             return ;
         }
@@ -31,6 +36,8 @@ public class LoadEmojiManager{
             public void run() {
                 mEmojiData = EmojiDataProducer.loadEmojiData();
                 mStickerData = EmojiDataProducer.loadStickerData();
+                mEmojiData.add(0, EmojiDataProducer.loadEmojiRecentData());
+                mStickerData.add(0, EmojiDataProducer.loadStickerRecentData());
                 Threads.postOnMainThread(new Runnable() {
                     @Override
                     public void run() {
@@ -40,6 +47,7 @@ public class LoadEmojiManager{
                 });
             }
         });
+        mNeedFlush = false;
     }
 
 

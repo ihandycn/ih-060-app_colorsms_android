@@ -17,8 +17,11 @@ import com.android.messaging.R;
 import com.android.messaging.glide.GlideApp;
 import com.superapps.util.BackgroundDrawables;
 import com.superapps.util.Dimensions;
+import com.superapps.util.Threads;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import hugo.weaving.DebugLog;
 
@@ -27,6 +30,7 @@ public class EmojiItemRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.
     private static final int TYPE_IMAGE = 1;
     private static final int TYPE_TEXT = 2;
     private Context mContext;
+    private Map<String, EmojiDrawable> cache = new HashMap<>();
 
     private List<BaseEmojiInfo> mData;
     private EmojiPackagePagerAdapter.OnEmojiClickListener mOnEmojiClickListener;
@@ -65,9 +69,22 @@ public class EmojiItemRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.
                 final EmojiInfo emojiInfo = (EmojiInfo) info;
                 emojiHolder.itemView.setTag(emojiInfo);
 
-                EmojiDrawable emojiDrawable = new EmojiDrawable(((EmojiInfo)info).mEmoji);
-                emojiHolder.emojiView.setImageDrawable(emojiDrawable);
-
+                if (cache.containsKey(emojiInfo.mEmoji)) {
+                    emojiHolder.emojiView.setImageDrawable(cache.get(emojiInfo.mEmoji));
+                } else {
+                    Threads.postOnThreadPoolExecutor(new Runnable() {
+                        @Override
+                        public void run() {
+                            EmojiDrawable emojiDrawable = new EmojiDrawable(((EmojiInfo) info).mEmoji);
+                            Threads.postOnMainThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    emojiHolder.emojiView.setImageDrawable(emojiDrawable);
+                                }
+                            });
+                        }
+                    });
+                }
                 emojiHolder.emojiView.setBackground(BackgroundDrawables.createBackgroundDrawable(
                         mContext.getResources().getColor(android.R.color.white), Dimensions.pxFromDp(16), true));
 
@@ -89,7 +106,7 @@ public class EmojiItemRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.
                         }
                     });
                     emojiHolder.moreView.setVisibility(View.VISIBLE);
-                }else{
+                } else {
                     emojiHolder.emojiView.setOnLongClickListener(null);
                     emojiHolder.moreView.setVisibility(View.GONE);
                 }
@@ -138,7 +155,7 @@ public class EmojiItemRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.
         private Paint mPaint;
         private String mUnicode;
 
-        public EmojiDrawable(String unicode){
+        public EmojiDrawable(String unicode) {
             mPaint = new Paint();
             mUnicode = unicode;
         }
@@ -147,10 +164,10 @@ public class EmojiItemRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.
         @Override
         public void draw(Canvas canvas) {
             mPaint.setTextAlign(Paint.Align.LEFT);
-            mPaint.setTextSize(Dimensions.pxFromDp(23));
+            mPaint.setTextSize(Dimensions.pxFromDp(26));
 //            Rect bounds = new Rect();
 //            mPaint.getTextBounds(mUnicode, 0, mUnicode.length(), bounds);
-            canvas.drawText(mUnicode,Dimensions.pxFromDp(1.5f), Dimensions.pxFromDp(23), mPaint);
+            canvas.drawText(mUnicode, Dimensions.pxFromDp(1.5f), Dimensions.pxFromDp(23), mPaint);
         }
 
         @Override
@@ -168,7 +185,7 @@ public class EmojiItemRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.
             return PixelFormat.TRANSLUCENT;
         }
 
-        public void initView(Context context, ImageView view){
+        public void initView(Context context, ImageView view) {
             GlideApp.with(context)
                     .load(this)
                     .override(Dimensions.pxFromDp(5), Dimensions.pxFromDp(5))
