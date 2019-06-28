@@ -73,13 +73,15 @@ public class CustomMessagePreviewView extends ConstraintLayout
         refreshTimestamp();
     }
 
-    @Override protected void onAttachedToWindow() {
+    @Override
+    protected void onAttachedToWindow() {
         super.onAttachedToWindow();
 
         WallpaperManager.addWallpaperChangeListener(this);
     }
 
-    @Override protected void onDetachedFromWindow() {
+    @Override
+    protected void onDetachedFromWindow() {
         super.onDetachedFromWindow();
 
         WallpaperManager.removeWallpaperChangeListener(this);
@@ -111,9 +113,9 @@ public class CustomMessagePreviewView extends ConstraintLayout
     public void updateBubbleDrawables(final String conversationId) {
         mConversationId = conversationId;
         mIncomingMessage.setBackground(
-                ConversationDrawables.get().getBubbleDrawable(false, true, true, false, mConversationId));
+                ConversationDrawables.get().getBubbleDrawable(false, true, true, false, mConversationId, false));
         mOutgoingMessage.setBackground(
-                ConversationDrawables.get().getBubbleDrawable(false, false, true, false, mConversationId));
+                ConversationDrawables.get().getBubbleDrawable(false, false, true, false, mConversationId, false));
 
         sIncomingBackgroundPreviewColor = ConversationColors.get().getBubbleBackgroundColor(true, conversationId);
         sOutgoingBackgroundPreviewColor = ConversationColors.get().getBubbleBackgroundColor(false, conversationId);
@@ -222,11 +224,13 @@ public class CustomMessagePreviewView extends ConstraintLayout
         return "noChange";
     }
 
-    @Override public void onWallpaperChanged() {
+    @Override
+    public void onWallpaperChanged() {
         refreshTimestamp();
     }
 
-    @Override public void onOnlineWallpaperChanged() {
+    @Override
+    public void onOnlineWallpaperChanged() {
         refreshTimestamp();
     }
 }

@@ -52,7 +52,7 @@ public class MessageBoxMessageListAdapter extends RecyclerView.Adapter<RecyclerV
 
     MessageBoxMessageListAdapter(MessageBoxItemData data) {
         mDataList.add(data);
-        mConversationId =  data.getConversationId();
+        mConversationId = data.getConversationId();
         mIncomingTextColor = ConversationColors.get().getMessageTextColor(true, mConversationId);
 
         mHasWallpaper = WallpaperDrawables.getConversationListWallpaperDrawable() != null;
@@ -90,7 +90,7 @@ public class MessageBoxMessageListAdapter extends RecyclerView.Adapter<RecyclerV
                 });
                 holder.mContentText.setTextColor(mIncomingTextColor);
                 holder.mContentText.setBackground(ConversationDrawables.get().getBubbleDrawable(false, true,
-                        true, false, mConversationId));
+                        true, false, mConversationId, false));
                 holder.mDateText.setTextColor(parent.getContext().getResources().getColor(mIncomingTimestampColor));
                 if (!mHasWallpaper) {
                     holder.mDateText.setBackground(null);

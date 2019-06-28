@@ -6,8 +6,9 @@ import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.text.TextUtils;
 
+import com.android.messaging.ui.customize.theme.ThemeDownloadManager;
 import com.android.messaging.ui.customize.theme.ThemeInfo;
-import com.android.messaging.ui.customize.theme.ThemeManager;
+import com.android.messaging.ui.customize.theme.ThemeBubbleDrawables;
 import com.android.messaging.ui.customize.theme.ThemeUtils;
 import com.android.messaging.ui.wallpaper.WallpaperManager;
 import com.android.messaging.util.CommonUtils;
@@ -30,69 +31,50 @@ public class WallpaperDrawables {
     public static Drawable getConversationWallpaperBg() {
         if (sWallpaperBitmap != null) {
             return new BitmapDrawable(HSApplication.getContext().getResources(), sWallpaperBitmap);
-        }
-
-        ThemeInfo info = ThemeUtils.getCurrentTheme();
-
-        if (!info.isInLocalFolder()) {
-            if (info.mIsLocalTheme) {
-                try {
-                    InputStream ims = HSApplication.getContext().getAssets().open("themes/" + info.mThemeKey + "/"
-                            + info.wallpaperUrl);
-                    Bitmap bitmap = BitmapFactory.decodeStream(ims);
-                    sWallpaperBitmap = bitmap;
-                    return new BitmapDrawable(HSApplication.getContext().getResources(), bitmap);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
         } else {
-            File file = new File(CommonUtils.getDirectory(
-                    ThemeManager.THEME_BASE_PATH + info.mThemeKey),
-                    ThemeManager.WALLPAPER_BG_FILE_NAME);
-            if (file.exists()) {
-                try {
-                    Bitmap bitmap = BitmapFactory.decodeFile(file.getAbsolutePath());
-                    sWallpaperBitmap = bitmap;
-                    return new BitmapDrawable(HSApplication.getContext().getResources(), bitmap);
-                } catch (Exception ignored) {
-
-                }
+            Bitmap bitmap = getConversationWallpaperBitmap();
+            if (bitmap != null) {
+                return new BitmapDrawable(HSApplication.getContext().getResources(), bitmap);
             }
         }
-
         return null;
     }
 
-    public static Bitmap getConversationListWallpaperBitmap() {
+    public static Bitmap getConversationWallpaperBitmap() {
         if (sWallpaperBitmap != null) {
             return sWallpaperBitmap;
         }
 
         ThemeInfo info = ThemeUtils.getCurrentTheme();
 
-        if (!info.isInLocalFolder()) {
-            if (info.mIsLocalTheme) {
-                try {
-                    InputStream ims = HSApplication.getContext().getAssets().open("themes/" + info.mThemeKey + "/"
-                            + info.wallpaperUrl);
-                    sWallpaperBitmap = BitmapFactory.decodeStream(ims);
-                    return sWallpaperBitmap;
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-        } else {
-            File file = new File(CommonUtils.getDirectory(
-                    ThemeManager.THEME_BASE_PATH + info.mThemeKey),
-                    ThemeManager.WALLPAPER_BG_FILE_NAME);
-            if (file.exists()) {
-                try {
-                    sWallpaperBitmap = BitmapFactory.decodeFile(file.getAbsolutePath());
-                    return sWallpaperBitmap;
-                } catch (Exception ignored) {
+        if (TextUtils.isEmpty(info.wallpaperUrl)) {
+            return null;
+        }
 
+        File file = new File(CommonUtils.getDirectory(
+                ThemeBubbleDrawables.THEME_BASE_PATH + info.mThemeKey),
+                ThemeBubbleDrawables.WALLPAPER_BG_FILE_NAME);
+        if (file.exists()) {
+            try {
+                sWallpaperBitmap = BitmapFactory.decodeFile(file.getAbsolutePath());
+                return sWallpaperBitmap;
+            } catch (Exception ignored) {
+
+            }
+        }
+
+        if (info.mIsLocalTheme) {
+            try {
+                String assetFileName = "themes/" + info.mThemeKey + "/" + info.wallpaperUrl;
+                InputStream ims = HSApplication.getContext().getAssets().open(assetFileName);
+                sWallpaperBitmap = BitmapFactory.decodeStream(ims);
+                if (ims != null) {
+                    ims.close();
                 }
+                ThemeDownloadManager.getInstance().copyAssetFileAsync(file, assetFileName);
+                return sWallpaperBitmap;
+            } catch (IOException e) {
+                e.printStackTrace();
             }
         }
 
@@ -105,31 +87,36 @@ public class WallpaperDrawables {
         }
 
         ThemeInfo info = ThemeUtils.getCurrentTheme();
+        if (TextUtils.isEmpty(info.listWallpaperUrl)) {
+            return null;
+        }
 
-        if (!info.isInLocalFolder()) {
-            if (info.mIsLocalTheme) {
-                try {
-                    InputStream ims = HSApplication.getContext().getAssets().open("themes/" + info.mThemeKey
-                            + "/" + info.listWallpaperUrl);
-                    Bitmap bitmap = BitmapFactory.decodeStream(ims);
-                    sListWallpaperBitmap = bitmap;
-                    return new BitmapDrawable(HSApplication.getContext().getResources(), bitmap);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
+        File file = new File(CommonUtils.getDirectory(
+                ThemeBubbleDrawables.THEME_BASE_PATH + info.mThemeKey),
+                ThemeBubbleDrawables.LIST_VIEW_WALLPAPER_BG_FILE_NAME);
+        if (file.exists()) {
+            try {
+                Bitmap bitmap = BitmapFactory.decodeFile(file.getAbsolutePath());
+                sListWallpaperBitmap = bitmap;
+                return new BitmapDrawable(HSApplication.getContext().getResources(), bitmap);
+            } catch (Exception ignored) {
+
             }
-        } else {
-            File file = new File(CommonUtils.getDirectory(
-                    ThemeManager.THEME_BASE_PATH + info.mThemeKey),
-                    ThemeManager.LIST_VIEW_WALLPAPER_BG_FILE_NAME);
-            if (file.exists()) {
-                try {
-                    Bitmap bitmap = BitmapFactory.decodeFile(file.getAbsolutePath());
-                    sListWallpaperBitmap = bitmap;
-                    return new BitmapDrawable(HSApplication.getContext().getResources(), bitmap);
-                } catch (Exception ignored) {
+        }
 
+        if (info.mIsLocalTheme) {
+            try {
+                String assetFileName = "themes/" + info.mThemeKey + "/" + info.listWallpaperUrl;
+                InputStream ims = HSApplication.getContext().getAssets().open(assetFileName);
+                Bitmap bitmap = BitmapFactory.decodeStream(ims);
+                sListWallpaperBitmap = bitmap;
+                if (ims != null) {
+                    ims.close();
                 }
+                ThemeDownloadManager.getInstance().copyAssetFileAsync(file, assetFileName);
+                return new BitmapDrawable(HSApplication.getContext().getResources(), bitmap);
+            } catch (IOException e) {
+                e.printStackTrace();
             }
         }
         return null;

@@ -73,7 +73,7 @@ public class Upgrader extends BaseUpgrader {
         }
 
         ThemeInfo currentTheme = ThemeUtils.getCurrentTheme();
-        if (currentTheme.isInLocalFolder()) {
+        if (currentTheme.isNecessaryFilesInLocalFolder()) {
             return;
         }
 

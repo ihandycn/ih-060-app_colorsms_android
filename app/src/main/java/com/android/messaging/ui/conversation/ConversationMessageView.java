@@ -121,6 +121,7 @@ public class ConversationMessageView extends RelativeLayout implements View.OnCl
     private ConversationMessageViewHost mHost;
     private ImageView checkBox;
     private int mOffset;
+    private boolean mHasCustomBackground;
 
     public ConversationMessageView(final Context context, final AttributeSet attrs) {
         super(context, attrs);
@@ -134,7 +135,6 @@ public class ConversationMessageView extends RelativeLayout implements View.OnCl
         super.onFinishInflate();
         mContactIconView = findViewById(R.id.conversation_icon);
         mContactIconBg = findViewById(R.id.conversation_icon_bg);
-        mContactIconBg.setImageDrawable(AvatarBgDrawables.getAvatarBg(false));
         mContactIconContainer = findViewById(R.id.conversation_icon_container);
         mContactIconView.setOnLongClickListener(view -> {
             ConversationMessageView.this.performLongClick();
@@ -280,6 +280,9 @@ public class ConversationMessageView extends RelativeLayout implements View.OnCl
 
         // Update our UI model
         mData = data;
+        mHasCustomBackground = !TextUtils.isEmpty(WallpaperManager.getWallpaperPathByThreadId(mData.getConversationId()));
+
+        mContactIconBg.setImageDrawable(AvatarBgDrawables.getAvatarBg(false, mHasCustomBackground));
         // Update text and image content for the view.
         updateViewContent();
 
@@ -723,7 +726,7 @@ public class ConversationMessageView extends RelativeLayout implements View.OnCl
                         incoming,
                         true /* needArrow */,
                         mData.hasIncomingErrorStatus(),
-                        mData.getConversationId());
+                        mData.getConversationId(), mHasCustomBackground);
                 textMinHeight = messageTextMinHeightDefault;
                 textTopMargin = messageTopPaddingClustered;
                 textTopPadding = textTopPaddingDefault;
@@ -747,7 +750,7 @@ public class ConversationMessageView extends RelativeLayout implements View.OnCl
                     incoming,
                     true,
                     mData.hasIncomingErrorStatus(),
-                    mData.getConversationId());
+                    mData.getConversationId(), mHasCustomBackground);
             textMinHeight = messageTextMinHeightDefault;
             textTopMargin = 0;
             textTopPadding = textTopPaddingDefault;
@@ -1075,7 +1078,7 @@ public class ConversationMessageView extends RelativeLayout implements View.OnCl
                     attachment));
             personView.setBackground(ConversationDrawables.get().getBubbleDrawable(
                     isSelected(), mData.getIsIncoming(), false /* needArrow */,
-                    mData.hasIncomingErrorStatus(), mData.getConversationId()));
+                    mData.hasIncomingErrorStatus(), mData.getConversationId(), mHasCustomBackground));
             final int nameTextColorRes;
             final int detailsTextColorRes;
             if (isSelected()) {
