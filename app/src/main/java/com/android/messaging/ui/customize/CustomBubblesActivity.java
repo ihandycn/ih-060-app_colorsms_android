@@ -73,7 +73,7 @@ public class CustomBubblesActivity extends BaseActivity implements CustomMessage
         mCustomMessagePreview = findViewById(R.id.custom_message_preview);
         FrameLayout customContainer = findViewById(R.id.customize_container);
 
-        mCustomMessagePreview.updateBubbleDrawables(mConversationId);
+        mCustomMessagePreview.updateBubbleDrawables(mConversationId, WallpaperManager.hasCustomWallpaper(mConversationId));
         mChooseMessageColorPagerView.setHost(this);
         customContainer.post(() -> mChooseMessageColorPagerView.setTranslationY(customContainer.getHeight()));
 

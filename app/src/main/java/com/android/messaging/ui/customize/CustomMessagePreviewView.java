@@ -111,11 +111,15 @@ public class CustomMessagePreviewView extends ConstraintLayout
     }
 
     public void updateBubbleDrawables(final String conversationId) {
+        updateBubbleDrawables(conversationId, false);
+    }
+
+    public void updateBubbleDrawables(final String conversationId,final boolean hasCustomBackground) {
         mConversationId = conversationId;
         mIncomingMessage.setBackground(
-                ConversationDrawables.get().getBubbleDrawable(false, true, true, false, mConversationId, false));
+                ConversationDrawables.get().getBubbleDrawable(false, true, true, false, mConversationId, hasCustomBackground));
         mOutgoingMessage.setBackground(
-                ConversationDrawables.get().getBubbleDrawable(false, false, true, false, mConversationId, false));
+                ConversationDrawables.get().getBubbleDrawable(false, false, true, false, mConversationId, hasCustomBackground));
 
         sIncomingBackgroundPreviewColor = ConversationColors.get().getBubbleBackgroundColor(true, conversationId);
         sOutgoingBackgroundPreviewColor = ConversationColors.get().getBubbleBackgroundColor(false, conversationId);

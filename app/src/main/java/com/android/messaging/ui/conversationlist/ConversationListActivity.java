@@ -21,7 +21,6 @@ import android.text.format.DateUtils;
 import android.view.ActionMode;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
@@ -233,7 +232,7 @@ public class ConversationListActivity extends AbstractConversationListActivity
 
         if (!sIsRecreate) {
             Threads.postOnThreadPoolExecutor(() -> {
-                String bgPath = WallpaperManager.getWallpaperPathByThreadId(null);
+                String bgPath = WallpaperManager.getWallpaperPathByConversationId(null);
                 String backgroundStr;
                 int wallpaperIndex = 99;
                 if (TextUtils.isEmpty(bgPath)) {

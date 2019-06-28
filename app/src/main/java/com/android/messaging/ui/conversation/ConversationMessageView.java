@@ -280,7 +280,7 @@ public class ConversationMessageView extends RelativeLayout implements View.OnCl
 
         // Update our UI model
         mData = data;
-        mHasCustomBackground = !TextUtils.isEmpty(WallpaperManager.getWallpaperPathByThreadId(mData.getConversationId()));
+        mHasCustomBackground = WallpaperManager.hasCustomWallpaper(mData.getConversationId());
 
         mContactIconBg.setImageDrawable(AvatarBgDrawables.getAvatarBg(false, mHasCustomBackground));
         // Update text and image content for the view.

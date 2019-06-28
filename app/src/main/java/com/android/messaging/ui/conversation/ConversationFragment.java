@@ -755,7 +755,7 @@ public class ConversationFragment extends Fragment implements ConversationDataLi
         mRecyclerView.setPadding(0, Dimensions.pxFromDp(53), 0, 0);
         mRecyclerView.setClipToPadding(true);
 
-        if (WallpaperManager.getWallpaperPathByThreadId(mConversationId) != null) {
+        if (WallpaperManager.getWallpaperPathByConversationId(mConversationId) != null) {
             int color = PrimaryColors.getPrimaryColor();
             mAdContainer.setBackground(BackgroundDrawables.createBackgroundDrawable(
                     Color.argb(40, Color.red(color), Color.green(color), Color.blue(color)), 0, false));
