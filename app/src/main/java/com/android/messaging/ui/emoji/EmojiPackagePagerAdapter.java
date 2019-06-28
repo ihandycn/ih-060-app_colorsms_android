@@ -261,7 +261,7 @@ public class EmojiPackagePagerAdapter extends PagerAdapter {
 
     public interface OnEmojiClickListener {
 
-        void emojiClick(EmojiInfo emojiInfo);
+        void emojiClick(EmojiInfo emojiInfo, boolean saveRecent);
 
         void emojiLongClick(View view, EmojiInfo emojiInfo);
 

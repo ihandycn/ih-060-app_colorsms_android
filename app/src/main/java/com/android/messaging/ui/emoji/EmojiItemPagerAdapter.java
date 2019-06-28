@@ -59,11 +59,9 @@ public class EmojiItemPagerAdapter extends AbstractEmojiItemPagerAdapter {
             view = LayoutInflater.from(context).inflate(R.layout.sticker_item_no_recent_layout, container, false);
         } else {
             RecyclerView recyclerView = new RecyclerView(context);
-            recyclerView.setPadding(Dimensions.pxFromDp(6.7f), 0, Dimensions.pxFromDp(6.7f), 0);
             EmojiItemRecyclerAdapter adapter = new EmojiItemRecyclerAdapter(list, mOnEmojiClickListener);
             recyclerView.setAdapter(adapter);
             recyclerView.setLayoutManager(new GridLayoutManager(context, EMOJI_COLUMNS));
-//            recyclerView.addItemDecoration(new EmojiItemDecoration(EMOJI_COLUMNS, EMOJI_ROWS, Dimensions.pxFromDp(29), Dimensions.pxFromDp(29)));
             view = recyclerView;
         }
         view.setTag(position + "");
@@ -79,6 +77,11 @@ public class EmojiItemPagerAdapter extends AbstractEmojiItemPagerAdapter {
         notifyDataSetChanged();
         if (mTabLayout != null) {
             updateTabView();
+            if(infoList.get(0).mEmojiInfoList.size() != 0){
+                mTabLayout.getTabAt(0).select();
+            }else{
+                mTabLayout.getTabAt(1).select();
+            }
         }
     }
 

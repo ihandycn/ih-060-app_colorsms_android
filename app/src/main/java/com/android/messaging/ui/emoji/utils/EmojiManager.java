@@ -38,6 +38,7 @@ public class EmojiManager {
     private static final String PREF_STICKER_MAGIC_LOTTIE_URL_PREFIX = "pref_sticker_magic_lottie_url_";
     private static final String PREF_STICKER_MAGIC_SOUND_URL_PREFIX = "pref_sticker_magic_sound_url_";
     private static final String PREF_STICKER_MAGIC_FILE_URI = "pref_sticker_magic_file_uri";
+    private static final String PREF_DEFAULT_MAIN_POSITION = "pref_default_main_position";
 
     private static final String PREF_SKIN_FILE_NAME = "pref_skin_record";
     private static final String PREF_SKIN_SET_DEFAULT = "pref_skin_set_default";
@@ -97,21 +98,25 @@ public class EmojiManager {
     }
 
     private static List<String> getRecentStr(EmojiPackageType emojiType) {
-        int maxRecentCount = EmojiConfig.getInstance().optInteger(0, "RecentEmojiCount");
+        String key;
         List<String> result;
         switch (emojiType) {
             case STICKER:
                 result = Preferences.get(PREF_FILE_NAME).getStringList(PREF_RECENT_STICKER);
+                key = "RecentStickerCount";
                 break;
             case EMOJI:
                 result = Preferences.get(PREF_FILE_NAME).getStringList(PREF_RECENT_EMOJI);
+                key = "RecentEmojiCount";
                 break;
             case GIF:
                 result = Preferences.get(PREF_FILE_NAME).getStringList(PREF_RECENT_GIF);
+                key = "RecentStickerCount";
                 break;
             default:
                 throw new IllegalStateException("emojiType illegal");
         }
+        int maxRecentCount = EmojiConfig.getInstance().optInteger(0, key);
         if (maxRecentCount > 0 && result.size() > maxRecentCount) {
             List<String> removeList = new ArrayList<>(result.size() - maxRecentCount);
             for (int i = result.size() - 1; i >= maxRecentCount; i--) {
@@ -149,6 +154,22 @@ public class EmojiManager {
 
     public static void saveRecentInfo(String msg, EmojiPackageType emojiType) {
         List<String> list = getRecentStr(emojiType);
+        if(emojiType == EmojiPackageType.EMOJI){
+            String removeItem = null;
+            for(String item : list){
+                String a = item.substring(item.indexOf('|'));
+                String b = item.substring(item.indexOf('|'));
+                if(a.equals(b)){
+                    removeItem = item;
+                    break;
+                }
+            }
+            if(removeItem != null){
+                list.remove(removeItem);
+            }
+        }else{
+            list.remove(msg);
+        }
         list.remove(msg);
         list.add(0, msg);
         switch (emojiType) {
@@ -304,5 +325,13 @@ public class EmojiManager {
 
     public static void setSkinDefault(int index) {
         Preferences.get(PREF_SKIN_FILE_NAME).putInt(PREF_SKIN_SET_DEFAULT, index);
+    }
+
+    public static int getDefaultMainPosition(){
+        return Preferences.get(PREF_FILE_NAME).getInt(PREF_DEFAULT_MAIN_POSITION, 1);
+    }
+
+    public static void setDefaultMainPosition(int position){
+        Preferences.get(PREF_FILE_NAME).putInt(PREF_DEFAULT_MAIN_POSITION, position);
     }
 }

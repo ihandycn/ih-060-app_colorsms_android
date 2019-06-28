@@ -48,7 +48,7 @@ android {
         debug {
             minifyEnabled false
             ext.enableCrashlytics = true
-            buildConfigField 'String', 'EMOJI_CONFIG', '"http://superapps-dev.s3.amazonaws.com/airlauncher/emoji/config-bubble-emoji-1.0.1-15.sa"'
+            buildConfigField 'String', 'EMOJI_CONFIG', '""'//, '"http://superapps-dev.s3.amazonaws.com/airlauncher/emoji/config-bubble-emoji-1.0.1-15.sa"'
         }
 
         release {

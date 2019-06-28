@@ -101,10 +101,10 @@ public class EmojiPickerFragment extends Fragment implements INotificationObserv
         TabLayout tabLayout = view.findViewById(R.id.emoji_tab_layout);
         mEmojiPackagePagerAdapter = new EmojiPackagePagerAdapter(getActivity(), tabLayout, new EmojiPackagePagerAdapter.OnEmojiClickListener() {
             @Override
-            public void emojiClick(EmojiInfo emojiInfo) {
+            public void emojiClick(EmojiInfo emojiInfo, boolean saveRecent) {
                 if (mOnEmojiPickerListener != null) {
                     mOnEmojiPickerListener.addEmoji(emojiInfo.mEmoji);
-                    updateRecentEmoji(emojiInfo);
+                    updateRecentEmoji(emojiInfo, saveRecent);
                 }
             }
 
@@ -151,7 +151,7 @@ public class EmojiPickerFragment extends Fragment implements INotificationObserv
 
         View deleteView = view.findViewById(R.id.emoji_delete_btn);
         deleteView.setBackground(BackgroundDrawables.createBackgroundDrawable(
-                activity.getResources().getColor(android.R.color.white), Dimensions.pxFromDp(20), true));
+                activity.getResources().getColor(android.R.color.white), Dimensions.pxFromDp(19), true));
         deleteView.setVisibility(View.GONE);
         deleteView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -185,8 +185,9 @@ public class EmojiPickerFragment extends Fragment implements INotificationObserv
             tabLayout.getTabAt(0).select();
             deleteView.setVisibility(View.VISIBLE);
         } else {
-            mEmojiPager.setCurrentItem(1);
-            tabLayout.getTabAt(1).select();
+            int position = EmojiManager.getDefaultMainPosition();
+            mEmojiPager.setCurrentItem(position);
+            tabLayout.getTabAt(position).select();
         }
     }
 
@@ -229,9 +230,10 @@ public class EmojiPickerFragment extends Fragment implements INotificationObserv
         mEmojiPackagePagerAdapter.updateRecentSticker();
     }
 
-    private void updateRecentEmoji(EmojiInfo info) {
-        EmojiManager.saveRecentInfo(info.toString(), EmojiPackageType.EMOJI);
-        if (!info.isRecent) {
+    private void updateRecentEmoji(EmojiInfo info, boolean saveRecent) {
+        HSLog.d("ui_test", "" + saveRecent);
+        if(saveRecent) {
+            EmojiManager.saveRecentInfo(info.toString(), EmojiPackageType.EMOJI);
             mEmojiPackagePagerAdapter.updateRecentEmoji();
         }
     }
@@ -387,6 +389,9 @@ public class EmojiPickerFragment extends Fragment implements INotificationObserv
         super.onDestroyView();
         HSLog.e(TAG, "onDestroyView()");
         BaseStickerItemRecyclerAdapter.releaseListener();
+        if(mEmojiPager != null) {
+            EmojiManager.setDefaultMainPosition(mEmojiPager.getCurrentItem());
+        }
     }
 
     @Override
@@ -408,8 +413,8 @@ public class EmojiPickerFragment extends Fragment implements INotificationObserv
                 }
                 EmojiPackageInfo packageInfo = (EmojiPackageInfo) object;
                 if (mEmojiPackagePagerAdapter != null) {
-                    mEmojiPackagePagerAdapter.insertStickItem(1, packageInfo);
-                    mEmojiPager.setCurrentItem(1);
+                    mEmojiPackagePagerAdapter.insertStickItem(2, packageInfo);
+                    mEmojiPager.setCurrentItem(2);
                 }
                 break;
             case StickerMagicDetailActivity.NOTIFICATION_SEND_MAGIC_STICKER:

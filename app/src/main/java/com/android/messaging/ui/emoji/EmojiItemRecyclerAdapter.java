@@ -14,7 +14,6 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 
 import com.android.messaging.R;
-import com.android.messaging.glide.GlideApp;
 import com.superapps.util.BackgroundDrawables;
 import com.superapps.util.Dimensions;
 import com.superapps.util.Threads;
@@ -85,17 +84,17 @@ public class EmojiItemRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.
                         }
                     });
                 }
-                emojiHolder.emojiView.setBackground(BackgroundDrawables.createBackgroundDrawable(
-                        mContext.getResources().getColor(android.R.color.white), Dimensions.pxFromDp(16), true));
+                emojiHolder.itemContainer.setBackground(BackgroundDrawables.createBackgroundDrawable(
+                        mContext.getResources().getColor(android.R.color.white), Dimensions.pxFromDp(21), true));
 
-                emojiHolder.emojiView.setOnClickListener(v -> {
+                emojiHolder.itemContainer.setOnClickListener(v -> {
                     if (mOnEmojiClickListener != null) {
-                        mOnEmojiClickListener.emojiClick(emojiInfo);
+                        mOnEmojiClickListener.emojiClick(emojiInfo, !emojiInfo.isRecent);
                     }
                 });
 
                 if (emojiInfo.hasVariant()) {
-                    emojiHolder.emojiView.setOnLongClickListener(new View.OnLongClickListener() {
+                    emojiHolder.itemContainer.setOnLongClickListener(new View.OnLongClickListener() {
                         @Override
                         public boolean onLongClick(View v) {
                             if (mOnEmojiClickListener != null) {
@@ -107,7 +106,7 @@ public class EmojiItemRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.
                     });
                     emojiHolder.moreView.setVisibility(View.VISIBLE);
                 } else {
-                    emojiHolder.emojiView.setOnLongClickListener(null);
+                    emojiHolder.itemContainer.setOnLongClickListener(null);
                     emojiHolder.moreView.setVisibility(View.GONE);
                 }
             }
@@ -133,11 +132,13 @@ public class EmojiItemRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.
     static class EmojiViewHolder extends RecyclerView.ViewHolder {
         private ImageView emojiView;
         private ImageView moreView;
+        private ViewGroup itemContainer;
 
         EmojiViewHolder(View itemView) {
             super(itemView);
             emojiView = itemView.findViewById(R.id.emoji_view);
             moreView = itemView.findViewById(R.id.emoji_more);
+            itemContainer = itemView.findViewById(R.id.emoji_item_container);
         }
     }
 
@@ -164,10 +165,10 @@ public class EmojiItemRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.
         @Override
         public void draw(Canvas canvas) {
             mPaint.setTextAlign(Paint.Align.LEFT);
-            mPaint.setTextSize(Dimensions.pxFromDp(26));
+            mPaint.setTextSize(Dimensions.pxFromDp(25));
 //            Rect bounds = new Rect();
 //            mPaint.getTextBounds(mUnicode, 0, mUnicode.length(), bounds);
-            canvas.drawText(mUnicode, Dimensions.pxFromDp(1.5f), Dimensions.pxFromDp(23), mPaint);
+            canvas.drawText(mUnicode, Dimensions.pxFromDp(1f), Dimensions.pxFromDp(25), mPaint);
         }
 
         @Override
@@ -183,14 +184,6 @@ public class EmojiItemRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.
         @Override
         public int getOpacity() {
             return PixelFormat.TRANSLUCENT;
-        }
-
-        public void initView(Context context, ImageView view) {
-            GlideApp.with(context)
-                    .load(this)
-                    .override(Dimensions.pxFromDp(5), Dimensions.pxFromDp(5))
-                    .placeholder(R.drawable.emoji_category_people)
-                    .into(view);
         }
     }
 

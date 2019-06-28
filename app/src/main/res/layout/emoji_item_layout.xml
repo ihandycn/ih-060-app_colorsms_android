@@ -2,9 +2,9 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/emoji_item_container"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:layout_marginTop="6.3dp"
-    android:layout_marginBottom="6.3dp">
+    android:layout_height="42.7dp"
+    android:layout_marginTop="1dp"
+    android:layout_marginBottom="1dp">
     <ImageView
         android:id="@+id/emoji_view"
         android:layout_width="32dp"

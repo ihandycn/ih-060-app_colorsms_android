@@ -17,7 +17,6 @@ import android.widget.PopupWindow;
 import com.android.messaging.R;
 import com.android.messaging.ui.emoji.utils.EmojiManager;
 import com.android.messaging.util.DisplayUtils;
-import com.ihs.commons.utils.HSLog;
 import com.superapps.util.BackgroundDrawables;
 import com.superapps.util.Dimensions;
 
@@ -99,18 +98,21 @@ public class EmojiVariantPopup {
             MarginLayoutParams marginLayoutParams = (MarginLayoutParams) view.getLayoutParams();
             int dpToPx = (int) DisplayUtils.dpToPx(context, 2.0f);
             marginLayoutParams.width = width;
-            HSLog.d("emoji_test", width + "");
             marginLayoutParams.setMargins(dpToPx, dpToPx, dpToPx, dpToPx);
-
-            new EmojiItemRecyclerAdapter.EmojiDrawable(item.mEmoji).initView(context, view);
+            view.setImageDrawable(new EmojiItemRecyclerAdapter.EmojiDrawable(item.mEmoji));
             view.setOnClickListener(new OnClickListener() {
                 public void onClick(View view) {
                     if (mListener != null) {
-                        mListener.emojiClick(item);
+                        item.isRecent = emojiInfo.isRecent;
+                        if(emojiInfo.isRecent) {
+                            mListener.emojiClick(item, false);
+                        }else{
+                            mListener.emojiClick(item, true);
+                        }
                     }
                     EmojiManager.addSkinSingleRecord(item.getUnicode(), item.mEmoji);
                     emojiInfo.mEmoji = item.mEmoji;
-                    new EmojiItemRecyclerAdapter.EmojiDrawable(emojiInfo.mEmoji).initView(context, (ImageView) mAnchorView);
+                    ((ImageView)mAnchorView).setImageDrawable(new EmojiItemRecyclerAdapter.EmojiDrawable(emojiInfo.mEmoji));
                     mPopupWindow.dismiss();
                 }
             });
