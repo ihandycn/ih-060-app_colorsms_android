@@ -39,6 +39,8 @@
 						</array>
 						<key>Name</key>
 						<string>lobster_two</string>
+						<key>IsLocalFont</key>
+						<false/>
 					</dict>
 					<dict>
 						<key>Name</key>
@@ -48,6 +50,8 @@
 							<string>SemiBold</string>
 							<string>Regular</string>
 						</array>
+						<key>IsLocalFont</key>
+                        <false/>
 					</dict>
 					<dict>
 						<key>Name</key>
@@ -57,6 +61,8 @@
 							<string>SemiBold</string>
 							<string>Regular</string>
 						</array>
+						<key>IsLocalFont</key>
+                        <false/>
 					</dict>
 					<dict>
 						<key>Name</key>
@@ -66,6 +72,8 @@
 							<string>SemiBold</string>
 							<string>Regular</string>
 						</array>
+						<key>IsLocalFont</key>
+                        <false/>
 					</dict>
 					<dict>
 						<key>Name</key>
@@ -75,6 +83,8 @@
 							<string>SemiBold</string>
 							<string>Regular</string>
 						</array>
+						<key>IsLocalFont</key>
+                        <false/>
 					</dict>
 					<dict>
 						<key>Name</key>
@@ -84,6 +94,8 @@
 							<string>SemiBold</string>
 							<string>Regular</string>
 						</array>
+						<key>IsLocalFont</key>
+                        <false/>
 					</dict>
 					<dict>
 						<key>Name</key>
@@ -93,6 +105,8 @@
 							<string>SemiBold</string>
 							<string>Regular</string>
 						</array>
+						<key>IsLocalFont</key>
+                        <false/>
 					</dict>
 					<dict>
 						<key>Name</key>
@@ -102,6 +116,8 @@
 							<string>SemiBold</string>
 							<string>Regular</string>
 						</array>
+						<key>IsLocalFont</key>
+                        <false/>
 					</dict>
 					<dict>
 						<key>Name</key>
@@ -111,6 +127,8 @@
 							<string>SemiBold</string>
 							<string>Regular</string>
 						</array>
+						<key>IsLocalFont</key>
+                        <false/>
 					</dict>
 					<dict>
 						<key>Name</key>
@@ -120,6 +138,8 @@
 							<string>SemiBold</string>
 							<string>Regular</string>
 						</array>
+						<key>IsLocalFont</key>
+                        <false/>
 					</dict>
 					<dict>
 						<key>Name</key>
@@ -129,6 +149,8 @@
 							<string>SemiBold</string>
 							<string>Regular</string>
 						</array>
+						<key>IsLocalFont</key>
+                        <false/>
 					</dict>
 					<dict>
 						<key>Name</key>
@@ -138,6 +160,8 @@
 							<string>SemiBold</string>
 							<string>Regular</string>
 						</array>
+						<key>IsLocalFont</key>
+                        <false/>
 					</dict>
 					<dict>
 						<key>Name</key>
@@ -147,6 +171,8 @@
 							<string>SemiBold</string>
 							<string>Regular</string>
 						</array>
+						<key>IsLocalFont</key>
+                        <false/>
 					</dict>
 					<dict>
 						<key>Name</key>
@@ -157,6 +183,8 @@
 							<string>Regular</string>
 							<string>Medium</string>
 						</array>
+						<key>IsLocalFont</key>
+                        <false/>
 					</dict>
 					<dict>
 						<key>Name</key>
@@ -167,7 +195,101 @@
 							<string>Regular</string>
 							<string>Medium</string>
 						</array>
+						<key>IsLocalFont</key>
+                        <false/>
 					</dict>
+					<dict>
+                    	<key>Name</key>
+                    	<string>averia_libre</string>
+                    	<key>Weight</key>
+                    	<array>
+                    		<string>SemiBold</string>
+                    		<string>Regular</string>
+                    	</array>
+                    	<key>IsLocalFont</key>
+                        <true/>
+                    </dict>
+                    <dict>
+                    	<key>Name</key>
+                    	<string>default</string>
+                    	<key>Weight</key>
+                    	<array>
+                    		<string>SemiBold</string>
+                    		<string>Regular</string>
+                    		<string>Medium</string>
+                    		<string>Bold</string>
+                    	</array>
+                    	<key>IsLocalFont</key>
+                        <true/>
+                    </dict>
+                    <dict>
+                    	<key>Name</key>
+                    	<string>el_messiri</string>
+                    	<key>Weight</key>
+                    	<array>
+                    		<string>SemiBold</string>
+                    		<string>Regular</string>
+                    	</array>
+                    	<key>IsLocalFont</key>
+                        <true/>
+                    </dict>
+                    <dict>
+                    	<key>Name</key>
+                    	<string>k2d</string>
+                    	<key>Weight</key>
+                    	<array>
+                    		<string>SemiBold</string>
+                    		<string>Regular</string>
+                    	</array>
+                    	<key>IsLocalFont</key>
+                        <true/>
+                    </dict>
+                    <dict>
+                    	<key>Name</key>
+                    	<string>krub</string>
+                    	<key>Weight</key>
+                    	<array>
+                    		<string>SemiBold</string>
+                    		<string>Regular</string>
+                    		<string>Medium</string>
+                    	</array>
+                    	<key>IsLocalFont</key>
+                        <true/>
+                    </dict>
+                    <dict>
+                    	<key>Name</key>
+                    	<string>mali</string>
+                    	<key>Weight</key>
+                    	<array>
+                    		<string>SemiBold</string>
+                    		<string>Regular</string>
+                    		<string>Medium</string>
+                    	</array>
+                    	<key>IsLocalFont</key>
+                        <true/>
+                    </dict>
+                    <dict>
+                    	<key>Name</key>
+                    	<string>merienda</string>
+                    	<key>Weight</key>
+                    	<array>
+                    		<string>SemiBold</string>
+                    		<string>Regular</string>
+                    	</array>
+                    	<key>IsLocalFont</key>
+                        <true/>
+                    </dict>
+                    <dict>
+                    	<key>Name</key>
+                    	<string>sarpanch</string>
+                    	<key>Weight</key>
+                    	<array>
+                    		<string>SemiBold</string>
+                    		<string>Regular</string>
+                    	</array>
+                    	<key>IsLocalFont</key>
+                        <true/>
+                    </dict>
 				</array>
 			</dict>
 			<key>SMSAd</key>
@@ -332,7 +454,7 @@
 						<key>ThemeColor</key>
 						<string>#2d7ab5</string>
 						<key>FontName</key>
-						<string>Default</string>
+						<string>default</string>
 						<key>AvatarForegroundColor</key>
 						<string>#ffffff</string>
 						<key>ListTitleColor</key>
@@ -844,7 +966,7 @@
 						<key>ThemeColor</key>
 						<string>#ce1232</string>
 						<key>FontName</key>
-						<string>Merienda</string>
+						<string>merienda</string>
 						<key>AvatarForegroundColor</key>
 						<string>#ffffff</string>
 						<key>ListTitleColor</key>
@@ -908,7 +1030,7 @@
 						<key>ThemeColor</key>
 						<string>#1c9cb7</string>
 						<key>FontName</key>
-						<string>Averia_Libre</string>
+						<string>averia_libre</string>
 						<key>AvatarForegroundColor</key>
 						<string>#ffffff</string>
 						<key>ListTitleColor</key>
@@ -972,7 +1094,7 @@
 						<key>ThemeColor</key>
 						<string>#e435bd</string>
 						<key>FontName</key>
-						<string>Default</string>
+						<string>default</string>
 						<key>AvatarForegroundColor</key>
 						<string>#ffffff</string>
 						<key>ListTitleColor</key>
@@ -1164,7 +1286,7 @@
 						<key>ThemeColor</key>
 						<string>#ff4a91</string>
 						<key>FontName</key>
-						<string>Averia_Libre</string>
+						<string>averia_libre</string>
 						<key>AvatarForegroundColor</key>
 						<string>#ffffff</string>
 						<key>ListTitleColor</key>
@@ -1228,7 +1350,7 @@
 						<key>ThemeColor</key>
 						<string>#5f1ef3</string>
 						<key>FontName</key>
-						<string>Mali</string>
+						<string>mali</string>
 						<key>AvatarForegroundColor</key>
 						<string>#ffffff</string>
 						<key>ListTitleColor</key>
@@ -1294,7 +1416,7 @@
 						<key>BubbleAdColor</key>
 						<string>#e3187b</string>
 						<key>FontName</key>
-						<string>K2D</string>
+						<string>k2d</string>
 						<key>IncomingBubbleBgColor</key>
 						<string>#00000000</string>
 						<key>IncomingBubbleTextColor</key>
@@ -1420,7 +1542,7 @@
 						<key>ThemeColor</key>
 						<string>#f2645f</string>
 						<key>FontName</key>
-						<string>Averia_Libre</string>
+						<string>averia_libre</string>
 						<key>AvatarForegroundColor</key>
 						<string>#ffffff</string>
 						<key>ListTitleColor</key>
@@ -1484,7 +1606,7 @@
 						<key>ThemeColor</key>
 						<string>#e94d00</string>
 						<key>FontName</key>
-						<string>El_Messiri</string>
+						<string>el_messiri</string>
 						<key>AvatarForegroundColor</key>
 						<string>#ffffff</string>
 						<key>ListTitleColor</key>
@@ -1548,7 +1670,7 @@
 						<key>ThemeColor</key>
 						<string>#5191d4</string>
 						<key>FontName</key>
-						<string>Default</string>
+						<string>default</string>
 						<key>AvatarForegroundColor</key>
 						<string>#ffffff</string>
 						<key>ListTitleColor</key>
@@ -1740,7 +1862,7 @@
 						<key>ThemeColor</key>
 						<string>#fc85d1</string>
 						<key>FontName</key>
-						<string>Mali</string>
+						<string>mali</string>
 						<key>AvatarForegroundColor</key>
 						<string>#fc85d1</string>
 						<key>ListTitleColor</key>
@@ -1804,7 +1926,7 @@
 						<key>ThemeColor</key>
 						<string>#654a41</string>
 						<key>FontName</key>
-						<string>K2D</string>
+						<string>k2d</string>
 						<key>AvatarForegroundColor</key>
 						<string>#ffffff</string>
 						<key>ListTitleColor</key>
@@ -1868,7 +1990,7 @@
 						<key>ThemeColor</key>
 						<string>#4a34e0</string>
 						<key>FontName</key>
-						<string>El_Messiri</string>
+						<string>el_messiri</string>
 						<key>AvatarForegroundColor</key>
 						<string>#ffffff</string>
 						<key>ListTitleColor</key>
@@ -1932,7 +2054,7 @@
 						<key>ThemeColor</key>
 						<string>#e45eb4</string>
 						<key>FontName</key>
-						<string>Mali</string>
+						<string>mali</string>
 						<key>AvatarForegroundColor</key>
 						<string>#ffffff</string>
 						<key>ListTitleColor</key>
@@ -1996,7 +2118,7 @@
 						<key>ThemeColor</key>
 						<string>#263f8c</string>
 						<key>FontName</key>
-						<string>Default</string>
+						<string>default</string>
 						<key>AvatarForegroundColor</key>
 						<string>#ffffff</string>
 						<key>ListTitleColor</key>
@@ -2124,7 +2246,7 @@
 						<key>ThemeColor</key>
 						<string>#7bbe25</string>
 						<key>FontName</key>
-						<string>Krub</string>
+						<string>krub</string>
 						<key>AvatarForegroundColor</key>
 						<string>#ffffff</string>
 						<key>ListTitleColor</key>
@@ -2188,7 +2310,7 @@
 						<key>ThemeColor</key>
 						<string>#81471a</string>
 						<key>FontName</key>
-						<string>Merienda</string>
+						<string>merienda</string>
 						<key>AvatarForegroundColor</key>
 						<string>#ffffff</string>
 						<key>ListTitleColor</key>
@@ -2252,7 +2374,7 @@
 						<key>ThemeColor</key>
 						<string>#ff4ff5</string>
 						<key>FontName</key>
-						<string>K2D</string>
+						<string>k2d</string>
 						<key>AvatarForegroundColor</key>
 						<string>#10002b</string>
 						<key>ListTitleColor</key>

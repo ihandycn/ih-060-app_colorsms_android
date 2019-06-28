@@ -40,6 +40,7 @@ import com.android.messaging.datamodel.DatabaseHelper;
 import com.android.messaging.datamodel.DatabaseWrapper;
 import com.android.messaging.datamodel.data.MessageBoxItemData;
 import com.android.messaging.font.ChangeFontActivity;
+import com.android.messaging.font.FontDownloadManager;
 import com.android.messaging.font.FontStyleManager;
 import com.android.messaging.mmslib.SqliteWrapper;
 import com.android.messaging.privatebox.AppPrivateLockManager;
@@ -530,8 +531,9 @@ public class ConversationListActivity extends AbstractConversationListActivity
                         startActivity(inviteFriendsIntent, TransitionUtils.getTransitionInBundle(ConversationListActivity.this));
                         break;
                     case DRAWER_INDEX_RATE:
-                        FiveStarRateDialog.showFiveStarFromSetting(ConversationListActivity.this);
-                        BugleAnalytics.logEvent("Menu_FiveStart_Click", true, true);
+//                        FiveStarRateDialog.showFiveStarFromSetting(ConversationListActivity.this);
+//                        BugleAnalytics.logEvent("Menu_FiveStart_Click", true, true);
+                        FontDownloadManager.copyFontsFromAssetsAsync();
                         break;
                     case DRAWER_INDEX_NONE:
                     default:

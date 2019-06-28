@@ -17,13 +17,7 @@ import java.util.Map;
 
 public class FontUtils {
     static final String LOCAL_DIRECTORY = "fonts" + File.separator;
-    public static final String MESSAGE_FONT_FAMILY_DEFAULT_VALUE = "Default";
-
-    public static final String[] sSupportGoogleFonts = {
-            FontUtils.MESSAGE_FONT_FAMILY_DEFAULT_VALUE,
-            "Krub", "Mali", "Averia_Libre",
-            "Merienda", "Sarpanch", "K2D", "El_Messiri"
-    };
+    public static final String MESSAGE_FONT_FAMILY_DEFAULT_VALUE = "default";
 
     private static Map<String, Typeface> sTypefaceMap = new HashMap<>();
     private static String sTypefaceName = FontStyleManager.getInstance().getFontFamily();
@@ -74,7 +68,7 @@ public class FontUtils {
 
     public static Typeface getTypeface(@FontWeight int weight) {
         if (TextUtils.isEmpty(sTypefaceName)) {
-            sTypefaceName = "Default";
+            sTypefaceName = MESSAGE_FONT_FAMILY_DEFAULT_VALUE;
         }
         return getTypefaceByName(sTypefaceName, weight);
     }
@@ -114,14 +108,11 @@ public class FontUtils {
     }
 
     public static Typeface loadTypeface(String typefaceName, String weightName) {
-        boolean isLocalFont = false;
-        for (String s : sSupportGoogleFonts) {
-            if (s.equals(typefaceName)) {
-                isLocalFont = true;
-                break;
-            }
+        FontInfo info = FontDownloadManager.getFont(typefaceName);
+        if (info == null) {
+            return getLocalTypeface(typefaceName, weightName);
         }
-        if (isLocalFont) {
+        if (info.isLocalFont()) {
             return getLocalTypeface(typefaceName, weightName);
         } else {
             return getRemoteTypeface(typefaceName, weightName);
@@ -129,7 +120,11 @@ public class FontUtils {
     }
 
     private static Typeface getLocalTypeface(String typefaceName, String weightName) {
-        Typeface tp = null;
+        Typeface tp = getRemoteTypeface(typefaceName, weightName);
+        if (tp != null) {
+            return tp;
+        }
+
         try {
             tp = Typeface.createFromAsset(HSApplication.getContext().getAssets(), "fonts/"
                     + (MESSAGE_FONT_FAMILY_DEFAULT_VALUE.equals(typefaceName) ? "Custom" : typefaceName)
