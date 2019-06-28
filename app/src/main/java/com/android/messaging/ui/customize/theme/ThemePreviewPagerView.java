@@ -141,6 +141,7 @@ public class ThemePreviewPagerView extends ConstraintLayout {
         mPager.setPageTransformer(false, new ThemePagerTransformer(getContext()));
         mPager.setPageMargin(Dimensions.pxFromDp(16));
 
+        mAdapter.setOnPageClickListener(mPager::setCurrentItem);
         mPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {

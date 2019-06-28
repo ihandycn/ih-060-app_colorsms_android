@@ -6,6 +6,7 @@ import android.support.constraint.ConstraintLayout;
 import android.support.v4.view.ViewPager;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
+import android.view.View;
 import android.widget.TextView;
 
 import com.android.messaging.R;
@@ -42,6 +43,7 @@ public class ChooseThemePagerView extends ConstraintLayout {
         mPager.setAdapter(mAdapter);
         mPager.setPageTransformer(false, new ThemePagerTransformer(getContext()));
         mPager.setPageMargin(Dimensions.pxFromDp(16));
+        mAdapter.setOnPageClickListener(position -> mPager.setCurrentItem(position));
         mPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
@@ -61,7 +63,6 @@ public class ChooseThemePagerView extends ConstraintLayout {
 
                 BugleAnalytics.logEvent("Start_ChooseTheme_Slide", true);
             }
-
             @Override
             public void onPageScrollStateChanged(int state) {
 
@@ -91,5 +92,4 @@ public class ChooseThemePagerView extends ConstraintLayout {
         mOnPageSelectedListener = listener;
         mOnPageSelectedListener.onPageSelected(0, Color.parseColor(mAdapter.getThemeInfo(0).themeColor));
     }
-
 }
