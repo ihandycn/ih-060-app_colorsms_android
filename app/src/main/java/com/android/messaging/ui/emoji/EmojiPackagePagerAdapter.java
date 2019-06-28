@@ -17,6 +17,7 @@ import android.widget.ImageView;
 import com.android.messaging.R;
 import com.android.messaging.ui.customize.PrimaryColors;
 import com.android.messaging.util.BugleAnalytics;
+import com.ihs.commons.utils.HSLog;
 import com.superapps.util.BackgroundDrawables;
 import com.superapps.util.Dimensions;
 import com.superapps.view.ViewPagerFixed;
@@ -209,8 +210,10 @@ public class EmojiPackagePagerAdapter extends PagerAdapter {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
                 EmojiPackageInfo info = getPackageInfo(tab);
-                if (info == null)
+                if (info == null) {
+                    HSLog.e("ui_test", "onTabSelected: info is null");
                     return;
+                }
 
                 BugleAnalytics.logEvent("SMSEmoji_ChatEmoji_Tab_Click", true, true, "type", info.mName);
 

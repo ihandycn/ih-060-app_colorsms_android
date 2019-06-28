@@ -20,6 +20,8 @@ import com.superapps.util.Dimensions;
 
 import java.util.List;
 
+import hugo.weaving.DebugLog;
+
 public class EmojiItemRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     private static final int TYPE_IMAGE = 1;
@@ -63,8 +65,8 @@ public class EmojiItemRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.
                 final EmojiInfo emojiInfo = (EmojiInfo) info;
                 emojiHolder.itemView.setTag(emojiInfo);
 
-                EmojiDrawable emojiDrawable = new EmojiDrawable(((EmojiInfo) info).mEmoji);
-                emojiDrawable.initView(mContext, emojiHolder.emojiView);
+                EmojiDrawable emojiDrawable = new EmojiDrawable(((EmojiInfo)info).mEmoji);
+                emojiHolder.emojiView.setImageDrawable(emojiDrawable);
 
                 emojiHolder.emojiView.setBackground(BackgroundDrawables.createBackgroundDrawable(
                         mContext.getResources().getColor(android.R.color.white), Dimensions.pxFromDp(16), true));
@@ -141,6 +143,7 @@ public class EmojiItemRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.
             mUnicode = unicode;
         }
 
+        @DebugLog
         @Override
         public void draw(Canvas canvas) {
             mPaint.setTextAlign(Paint.Align.LEFT);

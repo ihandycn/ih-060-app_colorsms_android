@@ -141,6 +141,7 @@ public class EmojiManager {
                 default:
                     throw new IllegalStateException("emojiType illegal");
             }
+            info.isRecent = true;
             result.add(info);
         }
         return result;

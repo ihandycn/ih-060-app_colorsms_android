@@ -27,7 +27,6 @@ public class StickerItemPagerAdapter extends AbstractEmojiItemPagerAdapter{
     private final int STICKER_COLUMNS = 4;
     @SuppressWarnings("FieldCanBeLocal")
     private final int STICKER_ROWS = 2;
-    private int mCurrentPage = 0;
     private TabLayout mTabLayout;
 
     private List<EmojiPackageInfo> mData;
@@ -67,7 +66,7 @@ public class StickerItemPagerAdapter extends AbstractEmojiItemPagerAdapter{
             StickerItemRecyclerAdapter adapter = new StickerItemRecyclerAdapter(position, list, mOnEmojiClickListener);
             recyclerView.setAdapter(adapter);
             recyclerView.setLayoutManager(new GridLayoutManager(context, STICKER_COLUMNS));
-            recyclerView.addItemDecoration(new EmojiItemDecoration(STICKER_COLUMNS, STICKER_ROWS, Dimensions.pxFromDp(69), Dimensions.pxFromDp(69)));
+            recyclerView.addItemDecoration(new EmojiItemDecoration(STICKER_COLUMNS, Dimensions.pxFromDp(69), Dimensions.pxFromDp(20)));
             view = recyclerView;
         }
         view.setTag(position+"");
@@ -117,7 +116,6 @@ public class StickerItemPagerAdapter extends AbstractEmojiItemPagerAdapter{
                 if(tab.getCustomView() == null)
                     return ;
                 tab.getCustomView().findViewById(R.id.tab_indicator).setVisibility(View.VISIBLE);
-                mCurrentPage = tab.getPosition();
             }
 
             @Override
@@ -146,7 +144,7 @@ public class StickerItemPagerAdapter extends AbstractEmojiItemPagerAdapter{
             }
         });
 
-        mTabLayout.getTabAt(mCurrentPage).select();
+        mTabLayout.getTabAt(mTabLayout.getSelectedTabPosition()).select();
     }
 
 

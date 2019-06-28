@@ -26,7 +26,6 @@ public class EmojiItemPagerAdapter extends AbstractEmojiItemPagerAdapter {
     private final int EMOJI_ROWS = 4;
     private TabLayout mTabLayout;
     private Context mContext;
-    private int mCurrentPage = 0;
 
     private List<EmojiPackageInfo> mData = new ArrayList<>();
     private EmojiPackagePagerAdapter.OnEmojiClickListener mOnEmojiClickListener;
@@ -134,10 +133,10 @@ public class EmojiItemPagerAdapter extends AbstractEmojiItemPagerAdapter {
         mTabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
-                mCurrentPage = tab.getPosition();
                 EmojiPackageInfo info = getPackageInfo(tab);
-                if (info == null)
+                if (info == null){
                     return;
+                }
                 ImageView imageView = getImageView(tab);
                 if (imageView == null) {
                     return;
@@ -191,9 +190,7 @@ public class EmojiItemPagerAdapter extends AbstractEmojiItemPagerAdapter {
                 return view.findViewById(R.id.tab_indicator);
             }
 
-
         });
-
-        mTabLayout.getTabAt(mCurrentPage).select();
+        mTabLayout.getTabAt(mTabLayout.getSelectedTabPosition()).select();
     }
 }

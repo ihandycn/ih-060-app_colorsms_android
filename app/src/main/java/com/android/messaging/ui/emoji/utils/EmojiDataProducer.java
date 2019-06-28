@@ -87,7 +87,6 @@ public class EmojiDataProducer {
         return result;
     }
 
-    // load data except 'recent'
     public static List<EmojiPackageInfo> loadEmojiData(){
         List<EmojiPackageInfo> result = new ArrayList<>();
         EmojiPackageInfo recentInfo = new EmojiPackageInfo();

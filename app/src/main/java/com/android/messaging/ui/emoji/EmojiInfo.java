@@ -15,8 +15,6 @@ public class EmojiInfo extends BaseEmojiInfo {
 
     public final String mUnicode;
 
-    public static boolean isSupportVariant = true;
-
     public EmojiInfo(String unicode) {
         this.mUnicode = unicode;
         mEmojiType = EmojiType.EMOJI;

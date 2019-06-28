@@ -180,11 +180,11 @@ public class EmojiPickerFragment extends Fragment implements INotificationObserv
 
             }
         });
-        if(mIsOnlyEmoji) {
+        if (mIsOnlyEmoji) {
             mEmojiPager.setCurrentItem(0);
             tabLayout.getTabAt(0).select();
             deleteView.setVisibility(View.VISIBLE);
-        }else{
+        } else {
             mEmojiPager.setCurrentItem(1);
             tabLayout.getTabAt(1).select();
         }
@@ -207,8 +207,8 @@ public class EmojiPickerFragment extends Fragment implements INotificationObserv
     }
 
     private void initData() {
-        if(mIsDataLoaded){
-            return ;
+        if (mIsDataLoaded) {
+            return;
         }
         if (mEmojiPackagePagerAdapter.getStickerAdapter() != null) {
             mEmojiPackagePagerAdapter.getStickerAdapter().initData(mStickerData);
@@ -231,7 +231,9 @@ public class EmojiPickerFragment extends Fragment implements INotificationObserv
 
     private void updateRecentEmoji(EmojiInfo info) {
         EmojiManager.saveRecentInfo(info.toString(), EmojiPackageType.EMOJI);
-        mEmojiPackagePagerAdapter.updateRecentEmoji();
+        if (!info.isRecent) {
+            mEmojiPackagePagerAdapter.updateRecentEmoji();
+        }
     }
 
     private void sendSticker(StickerInfo info, File file) {
@@ -305,7 +307,7 @@ public class EmojiPickerFragment extends Fragment implements INotificationObserv
 
         result.add(info);
 
-        if(!mIsOnlyEmoji) {
+        if (!mIsOnlyEmoji) {
             EmojiPackageInfo stickerInfo = new EmojiPackageInfo();
             stickerInfo.mName = "sticker";
             stickerInfo.mEmojiPackageType = EmojiPackageType.STICKER;

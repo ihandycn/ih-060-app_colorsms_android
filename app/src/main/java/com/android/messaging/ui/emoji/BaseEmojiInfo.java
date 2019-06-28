@@ -5,6 +5,7 @@ import android.os.Parcelable;
 
 public abstract class BaseEmojiInfo implements Parcelable {
     public EmojiType mEmojiType;
+    public boolean isRecent;
 
 
     @Override
