@@ -760,16 +760,11 @@
     <string name="lock_activity_forget_password">Passwort vergessen?</string>
     <string name="submit">SENDEN</string>
     <string name="private_setting_security_question_summary">Falls Sie Ihr Passwort vergessen sollten.</string>
-
-
 	<string name="incorrect_question_answer_hint">Falsche Antwort</string>
 	<string name="private_box_empty_contact_hint">Kein privater Kontakt</string>
 	<string name="private_contacts">Private Kontakte</string>
 
-
 	<string name="backup_guide_dialog_title">SMS Sicherung</string>
-
-
 	<string name="invite_friends_success_toast">Erfolgreich eingeladen</string>
 	<string name="notification_summary">Benachrichtigung beim Eingang von Nachrichten erhalten</string>
 	<string name="archived_conversations">Archivierte Konversationen</string>
