@@ -57,14 +57,15 @@ public class GiphyItemPagerAdapter extends AbstractEmojiItemPagerAdapter {
             RecyclerView recyclerView = new RecyclerView(context);
             recyclerView.setPadding(Dimensions.pxFromDp(6), Dimensions.pxFromDp(7), Dimensions.pxFromDp(6), 0);
             GiphyItemRecyclerAdapter adapter = new GiphyItemRecyclerAdapter(mOnEmojiClickListener, mData.get(position).mName);
+            final int itemOffsetInPixel = Dimensions.pxFromDp(2.5f);
             recyclerView.addItemDecoration(new RecyclerView.ItemDecoration() {
                 @Override
                 public void getItemOffsets(Rect outRect, View view, RecyclerView parent, RecyclerView.State state) {
                     super.getItemOffsets(outRect, view, parent, state);
-                    outRect.left = Dimensions.pxFromDp(2.5f);
-                    outRect.right = Dimensions.pxFromDp(2.5f);
-                    outRect.top = Dimensions.pxFromDp(2.5f);
-                    outRect.bottom = Dimensions.pxFromDp(2.5f);
+                    outRect.left = itemOffsetInPixel;
+                    outRect.right = itemOffsetInPixel;
+                    outRect.top = itemOffsetInPixel;
+                    outRect.bottom = itemOffsetInPixel;
                 }
             });
 

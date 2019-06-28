@@ -218,4 +218,6 @@
     <dimen name="pickerview_textsize">24sp</dimen>
 
     <dimen name="conversation_item_view_swipe_padding">15dp</dimen>
+
+    <dimen name="giphy_list_item_radius">4dp</dimen>
 </resources>

@@ -125,11 +125,13 @@ public class GiphyItemRecyclerAdapter extends RecyclerView.Adapter<GiphyItemRecy
         holder.mGif.getLayoutParams().height = (Dimensions.getPhoneWidth(context) - Dimensions.pxFromDp(23))
                 * height / width / 2;
         RequestOptions requestOptions = new RequestOptions();
-        requestOptions = requestOptions.transforms(new FitCenter(), new RoundedCorners(Dimensions.pxFromDp(4)));
+        requestOptions = requestOptions.transforms(new FitCenter(),
+                new RoundedCorners((int) context.getResources().getDimension(R.dimen.giphy_list_item_radius)));
 
         GiphyInfo giphyInfo = mDataList.get(position);
         GlideApp.with(context)
                 .asGif()
+                .placeholder(R.drawable.gif_item_placehoder)
                 .load(giphyInfo.mFixedWidthGifUrl)
                 .apply(requestOptions)
                 .diskCacheStrategy(DiskCacheStrategy.DATA)
