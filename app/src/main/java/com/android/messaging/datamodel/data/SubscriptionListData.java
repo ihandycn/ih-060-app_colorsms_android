@@ -48,18 +48,20 @@ public class SubscriptionListData {
         public final Uri iconUri;
         public final Uri selectedIconUri;
         public final String displayName;
+        public final int slotId;
         public final int displayColor;
         public final String displayDestination;
 
         private SubscriptionListEntry(final String selfParticipantId, final Uri iconUri,
                 final Uri selectedIconUri, final String displayName, final int displayColor,
-                final String displayDestination) {
+                final String displayDestination, final int slotId) {
             this.selfParticipantId = selfParticipantId;
             this.iconUri = iconUri;
             this.selectedIconUri = selectedIconUri;
             this.displayName = displayName;
             this.displayColor = displayColor;
             this.displayDestination = displayDestination;
+            this.slotId = slotId;
         }
 
         static SubscriptionListEntry fromSelfParticipantData(
@@ -77,7 +79,7 @@ public class SubscriptionListData {
                     AvatarUriUtil.createAvatarUri(selfParticipantData, iconIdentifier,
                             true /* selected */, false /* incoming */),
                     displayName, selfParticipantData.getSubscriptionColor(),
-                    selfParticipantData.getDisplayDestination());
+                    selfParticipantData.getDisplayDestination(), slotId);
         }
     }
 

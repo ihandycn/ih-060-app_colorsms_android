@@ -74,6 +74,7 @@ import com.android.messaging.ad.AdPlacement;
 import com.android.messaging.datamodel.BugleNotifications;
 import com.android.messaging.datamodel.DataModel;
 import com.android.messaging.datamodel.MessagingContentProvider;
+import com.android.messaging.datamodel.action.BugleActionToasts;
 import com.android.messaging.datamodel.binding.Binding;
 import com.android.messaging.datamodel.binding.BindingBase;
 import com.android.messaging.datamodel.binding.ImmutableBindingRef;
@@ -106,7 +107,6 @@ import com.android.messaging.ui.mediapicker.CameraGalleryFragment;
 import com.android.messaging.ui.mediapicker.MediaPickerFragment;
 import com.android.messaging.ui.senddelaymessages.SendDelayMessagesManager;
 import com.android.messaging.ui.wallpaper.WallpaperManager;
-import com.android.messaging.util.AccessibilityUtil;
 import com.android.messaging.util.Assert;
 import com.android.messaging.util.BugleAnalytics;
 import com.android.messaging.util.ChangeDefaultSmsAppHelper;
@@ -130,6 +130,7 @@ import com.ihs.commons.utils.HSLog;
 import com.superapps.util.Dimensions;
 import com.superapps.util.Preferences;
 import com.superapps.util.Threads;
+import com.superapps.util.Toasts;
 
 import net.appcloudbox.ads.base.AcbNativeAd;
 import net.appcloudbox.ads.base.ContainerView.AcbNativeAdContainerView;
@@ -473,6 +474,7 @@ public class ConversationFragment extends Fragment implements ConversationDataLi
                     clipboard.setPrimaryClip(
                             ClipData.newPlainText(null /* label */, data.getText()));
                     resetActionModeAndAnimation();
+                    Toasts.showToast(R.string.message_copied);
                     BugleAnalytics.logEvent("SMS_DetailsPage_LongPress_Copy", true);
                     break;
                 case R.id.details_menu:
@@ -1182,10 +1184,10 @@ public class ConversationFragment extends Fragment implements ConversationDataLi
     @Override
     public void onConversationMetadataUpdated(final ConversationData conversationData) {
         if (conversationData != null && conversationData.isPrivate()) {
-            mIsPrivateConversation = true;
-            if (!getActivity().isFinishing()) {
+            if (!getActivity().isFinishing() && !mIsPrivateConversation) {
                 AppPrivateLockManager.getInstance().checkLockStateAndSelfVerify();
             }
+            mIsPrivateConversation = true;
         }
         mBinding.ensureBound(conversationData);
 
@@ -1876,10 +1878,6 @@ public class ConversationFragment extends Fragment implements ConversationDataLi
                                 getString(R.string.plus_n)).toString(),
                         TextDirectionHeuristicsCompat.LTR);
                 tvTitle.setText(formattedName);
-                // In case phone numbers are mixed in the conversation name, we need to vocalize it.
-                final String vocalizedConversationName =
-                        AccessibilityUtil.getVocalizedPhoneNumber(getResources(), conversationName);
-                tvTitle.setContentDescription(vocalizedConversationName);
             } else {
                 final String appName = getString(R.string.app_name);
                 tvTitle.setText(appName);
@@ -1887,11 +1885,6 @@ public class ConversationFragment extends Fragment implements ConversationDataLi
         }
         actionBar.show();
         actionBar.setDisplayShowTitleEnabled(false);
-    }
-
-    @Override
-    public boolean shouldShowSubjectEditor() {
-        return false;
     }
 
     @Override
@@ -1910,17 +1903,17 @@ public class ConversationFragment extends Fragment implements ConversationDataLi
     }
 
     @Override
-    public Uri getSelfSendButtonIconUri() {
-        return null;    // use default button icon uri
-    }
-
-    @Override
     public void onAttachmentsChanged(final boolean haveAttachments) {
         // no-op for now
     }
 
     @Override
     public void onClickMediaOrEmoji() {
+    }
+
+    @Override
+    public Activity getHostActivity(){
+        return getActivity();
     }
 
     @Override
@@ -2018,7 +2011,6 @@ public class ConversationFragment extends Fragment implements ConversationDataLi
             public void onDismissed() {
                 // Re-enable accessibility on all controls now that the media picker is
                 // going away.
-                mComposeMessageView.setAccessibility(true /*enabled*/);
                 handleStateChange();
             }
 

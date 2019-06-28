@@ -6,14 +6,16 @@
 	<dict>
 		<key>Application</key>
 		<dict>
+			<key>PrivateBox</key>
+			<true/>
 			<key>BackupRestore</key>
 			<dict>
 				<key>RecommendBannerTimes</key>
-				<integer>6</integer>
+				<integer>0</integer>
 				<key>FreeUpOldmsg</key>
-				<true/>
+				<false/>
 				<key>RecommendFull</key>
-				<true/>
+				<false/>
 			</dict>
 			<key>CheckContactNum</key>
 			<integer>6</integer>
@@ -322,13 +324,13 @@
 						<string>Default</string>
 						<key>PreviewList</key>
 						<array>
-							<string>preview_1.jpg</string>
-							<string>preview_2.jpg</string>
+							<string>preview_blue_1.jpg</string>
+							<string>preview_blue_2.jpg</string>
 						</array>
 						<key>Hot</key>
-						<integer>99999</integer>
+						<real>99999</real>
 						<key>ThemeColor</key>
-						<string>#37a63b</string>
+						<string>#2d7ab5</string>
 						<key>FontName</key>
 						<string>Default</string>
 						<key>AvatarForegroundColor</key>
@@ -344,7 +346,7 @@
 						<key>IncomingBubbleTextColor</key>
 						<string>#222327</string>
 						<key>OutgoingBubbleBgColor</key>
-						<string>#37a63b</string>
+						<string>#2d7ab5</string>
 						<key>OutgoingBubbleTextColor</key>
 						<string>#ffffff</string>
 						<key>BubbleAdColor</key>
@@ -356,7 +358,7 @@
 						<key>BannerAdActionTextColor</key>
 						<string>#2caef8</string>
 						<key>PreviewUrl</key>
-						<string>preview.jpg</string>
+						<string>preview_blue.jpg</string>
 						<key>ToolbarBgUrl</key>
 						<string></string>
 						<key>AvatarUrl</key>

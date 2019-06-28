@@ -1,7 +1,5 @@
 package com.android.messaging.ui.appsettings;
 
-import android.support.annotation.ColorInt;
-
 import com.android.messaging.R;
 import com.android.messaging.ui.messagebox.MessageBoxSettings;
 import com.android.messaging.util.BuglePrefs;
@@ -13,8 +11,6 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.ihs.app.framework.HSApplication;
-import com.ihs.commons.utils.HSLog;
-import com.superapps.util.Preferences;
 
 import java.util.HashMap;
 

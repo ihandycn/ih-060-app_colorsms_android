@@ -41,7 +41,6 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.android.messaging.BugleApplication;
 import com.android.messaging.R;
 import com.android.messaging.datamodel.DataModel;
 import com.android.messaging.datamodel.data.ConversationMessageData;
@@ -68,7 +67,6 @@ import com.android.messaging.ui.wallpaper.WallpaperManager;
 import com.android.messaging.util.AccessibilityUtil;
 import com.android.messaging.util.Assert;
 import com.android.messaging.util.AvatarUriUtil;
-import com.android.messaging.util.BugleAnalytics;
 import com.android.messaging.util.ContentType;
 import com.android.messaging.util.DefaultSMSUtils;
 import com.android.messaging.util.ImageUtils;
@@ -287,8 +285,6 @@ public class ConversationMessageView extends RelativeLayout implements View.OnCl
 
         // Update colors and layout parameters for the view.
         updateViewAppearance();
-
-        updateContentDescription();
     }
 
     public void setHost(final ConversationMessageViewHost host) {
@@ -392,12 +388,20 @@ public class ConversationMessageView extends RelativeLayout implements View.OnCl
 
             case MessageData.BUGLE_STATUS_OUTGOING_YET_TO_SEND:
             case MessageData.BUGLE_STATUS_OUTGOING_SENDING:
-                statusResId = R.string.message_status_sending;
+                if (getData().getIsSms()) {
+                    statusText = mData.getFormattedReceivedTimeStamp();
+                } else {
+                    statusResId = R.string.message_status_sending;
+                }
                 break;
 
             case MessageData.BUGLE_STATUS_OUTGOING_RESENDING:
             case MessageData.BUGLE_STATUS_OUTGOING_AWAITING_RETRY:
-                statusResId = R.string.message_status_send_retrying;
+                if (getData().getIsSms()) {
+                    statusText = mData.getFormattedReceivedTimeStamp();
+                } else {
+                    statusResId = R.string.message_status_send_retrying;
+                }
                 break;
 
             case MessageData.BUGLE_STATUS_OUTGOING_FAILED_EMERGENCY_NUMBER:
@@ -412,10 +416,6 @@ public class ConversationMessageView extends RelativeLayout implements View.OnCl
                     } else {
                         statusResId = MmsUtils.mapRawStatusToErrorResourceId(
                                 mData.getStatus(), mData.getRawTelephonyStatus());
-                    }
-                    if (BugleApplication.getFirstLaunchInfo().appVersionCode >= 47) {
-                        BugleAnalytics.logEvent("SMS_Send_Failed", false, true,
-                                "show_in_conversation", mData.getIsSms() ? "SMS" : "MMS");
                     }
                     break;
                 }
@@ -475,10 +475,9 @@ public class ConversationMessageView extends RelativeLayout implements View.OnCl
             mStatusTextView.setVisibility(View.GONE);
         }
 
-        if(mData.getIsLocked()) {
+        if (mData.getIsLocked()) {
             mMessageIsLockView.setVisibility(VISIBLE);
-        }
-        else {
+        } else {
             mMessageIsLockView.setVisibility(GONE);
         }
 
@@ -500,8 +499,6 @@ public class ConversationMessageView extends RelativeLayout implements View.OnCl
                     R.string.incoming_sim_name_text, subscriptionEntry.displayName) :
                     subscriptionEntry.displayName;
             mSimNameView.setText(simNameText);
-            mSimNameView.setTextColor(showSimIconAsIncoming ? getResources().getColor(
-                    R.color.timestamp_text_incoming) : subscriptionEntry.displayColor);
             mSimNameView.setVisibility(VISIBLE);
         } else {
             mSimNameView.setText(null);
@@ -794,71 +791,6 @@ public class ConversationMessageView extends RelativeLayout implements View.OnCl
         requestLayout();
     }
 
-    private void updateContentDescription() {
-        StringBuilder description = new StringBuilder();
-
-        Resources res = getResources();
-        String separator = res.getString(R.string.enumeration_comma);
-
-        // Sender information
-        boolean hasPlainTextMessage = !(TextUtils.isEmpty(mData.getText()) ||
-                mMessageTextHasLinks);
-        if (mData.getIsIncoming()) {
-            int senderResId = hasPlainTextMessage
-                    ? R.string.incoming_text_sender_content_description
-                    : R.string.incoming_sender_content_description;
-            description.append(res.getString(senderResId, mData.getSenderDisplayName()));
-        } else {
-            int senderResId = hasPlainTextMessage
-                    ? R.string.outgoing_text_sender_content_description
-                    : R.string.outgoing_sender_content_description;
-            description.append(res.getString(senderResId));
-        }
-
-        if (mSubjectView.getVisibility() == View.VISIBLE) {
-            description.append(separator);
-            description.append(mSubjectText.getText());
-        }
-
-        if (mMessageTextView.getVisibility() == View.VISIBLE) {
-            // If the message has hyperlinks, we will let the user navigate to the text message so
-            // that the hyperlink can be clicked. Otherwise, the text message does not need to
-            // be reachable.
-            if (mMessageTextHasLinks) {
-                mMessageTextView.setImportantForAccessibility(View.IMPORTANT_FOR_ACCESSIBILITY_YES);
-            } else {
-                mMessageTextView.setImportantForAccessibility(View.IMPORTANT_FOR_ACCESSIBILITY_NO);
-                description.append(separator);
-                description.append(mMessageTextView.getText());
-            }
-        }
-
-        if (mMessageTitleLayout.getVisibility() == View.VISIBLE) {
-            description.append(separator);
-            description.append(mTitleTextView.getText());
-
-            description.append(separator);
-            description.append(mMmsInfoTextView.getText());
-        }
-
-        if (mStatusTextView.getVisibility() == View.VISIBLE) {
-            description.append(separator);
-            description.append(mStatusTextView.getText());
-        }
-
-        if (mSimNameView.getVisibility() == View.VISIBLE) {
-            description.append(separator);
-            description.append(mSimNameView.getText());
-        }
-
-        if (mDeliveredBadge.getVisibility() == View.VISIBLE) {
-            description.append(separator);
-            description.append(res.getString(R.string.delivered_status_content_description));
-        }
-
-        setContentDescription(description);
-    }
-
     private void updateMessageAttachmentsAppearance(final int gravity) {
         if (mMessageAttachmentsView == null) {
             return;
@@ -1002,13 +934,14 @@ public class ConversationMessageView extends RelativeLayout implements View.OnCl
         if (!hasWallPaper) {
             mStatusContainer.setBackground(null);
         }
-        if(!hasWallPaper && mData.getIsLocked()){
+        if (!hasWallPaper && mData.getIsLocked()) {
             mMessageIsLockView.setImageResource(R.drawable.message_lock_default);
-        }else {
+        } else {
             mMessageIsLockView.setImageResource(R.drawable.message_lock_theme);
         }
 
         mStatusTextView.setTextColor(resources.getColor(timestampColorResId));
+        mSimNameView.setTextColor(resources.getColor(timestampColorResId));
 
         mSenderNameTextView.setTextColor(resources.getColor(timestampColorResId));
     }

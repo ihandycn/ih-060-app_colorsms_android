@@ -55,8 +55,6 @@ import com.android.messaging.privatebox.PrivateMessageManager;
 import com.android.messaging.util.Assert.DoesNotRunOnMainThread;
 import com.android.messaging.util.ConnectivityUtil;
 
-import java.util.HashSet;
-
 public abstract class DataModel {
     private String mFocusedConversation;
     private boolean mConversationListScrolledToNewestConversation;

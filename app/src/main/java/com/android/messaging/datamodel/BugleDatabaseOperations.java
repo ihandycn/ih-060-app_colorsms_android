@@ -35,6 +35,7 @@ import com.android.messaging.datamodel.DatabaseHelper.PartColumns;
 import com.android.messaging.datamodel.DatabaseHelper.ParticipantColumns;
 import com.android.messaging.datamodel.ParticipantRefresh.ConversationParticipantsQuery;
 import com.android.messaging.datamodel.data.ConversationListItemData;
+import com.android.messaging.datamodel.data.ConversationMessageData;
 import com.android.messaging.datamodel.data.MessageData;
 import com.android.messaging.datamodel.data.MessagePartData;
 import com.android.messaging.datamodel.data.ParticipantData;
@@ -151,7 +152,7 @@ public class BugleDatabaseOperations {
         final ArrayList<String> recipients = new ArrayList<String>();
 
         for (final ParticipantData participant : participants) {
-            recipients.add(participant.getSendDestination().replaceAll("\\s+",""));
+            recipients.add(participant.getSendDestination().replaceAll("\\s+", ""));
         }
         return recipients;
     }
@@ -678,11 +679,11 @@ public class BugleDatabaseOperations {
     }
 
     public static void updateConversationPinStatues(final DatabaseWrapper dbWrapper,
-                                                    final String conversationId, final boolean isPin) {
+                                                    final String conversationId, long time, final boolean isPin) {
         Assert.isNotMainThread();
         Assert.isTrue(dbWrapper.getDatabase().inTransaction());
         final ContentValues values = new ContentValues();
-        values.put(ConversationColumns.PIN_TIMESTAMP, isPin ? System.currentTimeMillis() : 0);
+        values.put(ConversationColumns.PIN_TIMESTAMP, isPin ? time : 0);
         updateConversationRowIfExists(dbWrapper, conversationId, values);
     }
 
@@ -1380,8 +1381,12 @@ public class BugleDatabaseOperations {
             int count = 0;
             if (message != null) {
                 final String conversationId = message.getConversationId();
+
+                final ContentValues values = new ContentValues();
+                values.put(MessageColumns.IS_DELETED, 1);
+
                 // Delete message
-                count = dbWrapper.delete(DatabaseHelper.MESSAGES_TABLE,
+                count = dbWrapper.update(DatabaseHelper.MESSAGES_TABLE, values,
                         MessageColumns._ID + "=? AND " + MessageColumns.IS_LOCKED + "=0", new String[]{messageId});
 
                 if (!deleteConversationIfEmptyInTransaction(dbWrapper, conversationId)) {
@@ -1423,9 +1428,18 @@ public class BugleDatabaseOperations {
                     REFRESH_CONVERSATION_MESSAGE_PROJECTION,
                     MessageColumns.CONVERSATION_ID + "=? AND " +
                             MessageColumns.STATUS + "!=" + MessageData.BUGLE_STATUS_OUTGOING_DRAFT,
-                    new String[]{conversationId}, null, null,
-                    MessageColumns.RECEIVED_TIMESTAMP + " DESC", "1" /* limit */);
-            if (cursor.getCount() == 0) {
+                    new String[]{conversationId}, null, null, null);
+
+            int remainedMessagesCount = 0;
+
+            if (cursor != null && cursor.moveToFirst()) {
+                do {
+                    int index = cursor.getColumnIndex(MessageColumns.IS_DELETED);
+                    remainedMessagesCount += 1 - cursor.getInt(index);
+                } while (cursor.moveToNext());
+            }
+
+            if (remainedMessagesCount == 0) {
                 dbWrapper.delete(DatabaseHelper.CONVERSATIONS_TABLE,
                         ConversationColumns._ID + "=?", new String[]{conversationId});
                 LogUtil.i(TAG,
@@ -1444,7 +1458,8 @@ public class BugleDatabaseOperations {
     private static final String[] REFRESH_CONVERSATION_MESSAGE_PROJECTION = new String[]{
             MessageColumns._ID,
             MessageColumns.RECEIVED_TIMESTAMP,
-            MessageColumns.SENDER_PARTICIPANT_ID
+            MessageColumns.SENDER_PARTICIPANT_ID,
+            MessageColumns.IS_DELETED,
     };
 
     /**

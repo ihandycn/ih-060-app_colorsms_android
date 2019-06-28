@@ -80,6 +80,7 @@ import com.ihs.commons.utils.HSBundle;
 import com.ihs.commons.utils.HSLog;
 import com.ihs.device.permanent.HSPermanentUtils;
 import com.ihs.device.permanent.PermanentService;
+import com.ihs.device.permanent.syncaccount.HSAccountsKeepAliveUtils;
 import com.squareup.leakcanary.AndroidExcludedRefs;
 import com.squareup.leakcanary.ExcludedRefs;
 import com.squareup.leakcanary.LeakCanary;
@@ -177,7 +178,7 @@ public class BugleApplication extends HSApplication implements UncaughtException
                 onMainProcessApplicationCreate();
             }
 
-            Threads.postOnMainThreadDelayed(() -> initKeepAlive(), 10 * 1000);
+            initKeepAlive();
 
             sSystemUncaughtExceptionHandler = Thread.getDefaultUncaughtExceptionHandler();
             Thread.setDefaultUncaughtExceptionHandler(this);
@@ -313,38 +314,33 @@ public class BugleApplication extends HSApplication implements UncaughtException
     }
 
     private void initKeepAlive() {
-        // Init keep alive arguments
-        HSPermanentUtils.initKeepAlive(true,
-                false,
-                true,
-                false,
-                true,
-                false,
-                false,
-                false,
-                null,
-                new PermanentService.PermanentServiceListener() {
-                    @Override
-                    public Notification getForegroundNotification() {
-                        return null;
-                    }
+        HSPermanentUtils.KeepAliveConfig keepAliveConfig = new HSPermanentUtils.KeepAliveConfig.Builder()
+                .setOreoOptimizationEnabled(true)
+                // .setOreoForceForegroundEnabled(true) // 该方案可能有负向作用，谨慎开启
+                // .setAssistantProcessEnabled(true)
+                .setJobScheduleEnabled(true, 15 * 60 * 1000L)
+                // .setForegroundActivityEnabled(true)
+                .build();
 
-                    @Override
-                    public int getNotificationID() {
-                        return KEEP_ALIVE_NOTIFICATION_ID;
-                    }
+        HSPermanentUtils.initKeepAlive(keepAliveConfig, new PermanentService.PermanentServiceListener() {
+            @Override
+            public Notification getForegroundNotification() {
+                return null; // 一个前台通知，在target26下需自行注册Channel；可为null，为null时，在7.0及以下，保活库会自动添加一个隐藏的前台通知；在8.0及以上，如果setOreoForceForegroundEnabled为true，也会添加隐藏的前台通知，只不过这种情况下，部分8.0及以上的手机上会显示“XXX正在耗电”）
+            }
 
-                    @Override
-                    public int getNotificationIDForOreo() {
-                        return KEEP_ALIVE_NOTIFICATION_ID_OREO;
-                    }
+            @Override
+            public int getNotificationID() {
+                return KEEP_ALIVE_NOTIFICATION_ID; // 非0，不能和App在其他地方使用的NotificationID重复
+            }
 
-                    @Override
-                    public void onServiceCreate() {
-
-                    }
-                });
-        HSPermanentUtils.startKeepAlive();
+            @Override
+            public void onServiceCreate() { // 注意：主线程，不要做太多耗时操作
+                HSAccountsKeepAliveUtils.start(); // 启动账号保活，通过一定周期同步账号来唤醒App，需要才加
+                HSAccountsKeepAliveUtils.setSyncAccountPeriodic(30 * 60 * 1000L); // 设置同步周期，单位秒，默认15分钟
+                // HSNativeGuardUtils.start(PermanentService.class或null, 卸载问卷的url或null, BuildConfig.DEBUG); // 启动native保活，需要才加，第一个参数表示被保活的Service，第二个参数为卸载问卷的url
+            }
+        });
+        Threads.postOnMainThreadDelayed(() -> HSPermanentUtils.startKeepAlive(), 10 * 1000);
     }
 
     private void initObserveDefaultSmsAppChanged() {
@@ -445,8 +441,7 @@ public class BugleApplication extends HSApplication implements UncaughtException
                         BugleAnalytics.logEvent("New_User_Agency_Info_" + delay,
                                 "install_type", installType,
                                 "user_level", "" + HSConfig.optString("not_configured", "UserLevel"),
-                                "version_code", "" + HSApplication.getCurrentLaunchInfo().appVersionCode,
-                                "double_check", "" + HSConfig.getUserLevel() + "-" + HSConfig.optString("not_configured", "UserLevel"));
+                                "version_code", "" + HSApplication.getCurrentLaunchInfo().appVersionCode);
                     }, delay * 1000);
                 }
             }, "log_user_agency");

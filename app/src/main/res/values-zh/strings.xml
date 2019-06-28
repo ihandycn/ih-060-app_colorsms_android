@@ -567,6 +567,7 @@
     <string name="welcome_set_default_failed_toast">未能成功將Color SMS設為默認</string>
     <string name="dialog_add_contact_confirmation">添加</string>
     <string name="sms_network_error">網絡錯誤</string>
+    <string name="network_error_and_try_again">網絡錯誤</string>
     <string name="reload">重新加載</string>
     <string name="sms_notification_channel">短信通知</string>
     <string name="sms_notification_channel_description">當收到短信時，顯示通知消息</string>
@@ -611,8 +612,9 @@
     <string name="menu_theme">主題</string>
     <string name="welcome_choose_theme_title">選擇一個你喜歡的主題</string>
     <string name="welcome_choose_theme_current">當前</string>
-    <string name="setting_reset_customization_title">重置自定義內容？ </string>
-    <string name="setting_reset_customization_summary">這將重置此會話的所有自定義內容。 </string>
+    <string name="setting_reset_customization_title">重置自定義內容？</string>
+    <string name="menu_reset_customization">重置自定義內容</string>
+    <string name="setting_reset_customization_summary">這將重置此會話的所有自定義內容。</string>
     <string name="action_pin">置頂</string>
     <string name="tips">提示</string>
 
@@ -649,9 +651,6 @@
     <string name="menu_invite_friends">邀請好友</string>
     <string name="invite_friends_now">邀請</string>
 
-    <string name ="action_unarchive">"取消歸檔"</string>
-    <string name ="action_archive">"歸檔"</string>
-
     <string name="sms_emoji_add_more">更多表情</string>
     <string name="sms_emoji_recent_empty_description">暫無收藏</string>
 
@@ -659,8 +658,122 @@
     <string name="invite_friends_default_back_to_main_page_title">邀請好友</string>
     <string name="privacy_mode_open_button_text">打開</string>
     <string name="invite_friends_invite_save_button">儲存</string>
-    <string name="notification_title_in_private_box_single">新訊息</string>
     <string name="invite_friends_invite_cancel_button">取消</string>
     <string name="contacts">聯繫人</string>
     <string name="privacy_mode_conversation_name">聯繫人</string>
+
+    <string name ="action_unarchive">"取消歸檔"</string>
+    <string name ="action_archive">"歸檔"</string>
+
+    <!-- Backup-->
+        <string name="backup_tips_before_uninstalling_content">為了防止您的消息遺失，請在卸載前恢復您的消息。 </string>
+        <string name="restore_from_cloud">雲端</string>
+        <string name="backup_guide_dialog_title">短信備份</string>
+        <string name="restore_fail">恢復失敗</string>
+        <string name="backup_free_success">清理成功</string>
+        <string name="backup_tip_dialog_content">再次備份會覆蓋已有備份，建議備份前恢復。 </string>
+        <string name="backup_no_account">未登錄</string>
+        <string name="restore_process_hint">恢復中……</string>
+        <string name="message_free_up_title">清理短信空間</string>
+        <string name="restore_from_local">本地</string>
+        <string name="backup_guide_dialog_button">現在備份</string>
+        <string name="message_free_up_content">刪除本地30天前信息節約空間並加速手機，你可以通過恢復獲取刪除的信息。 </string>
+        <string name="backup_local_summary">備份到本地存儲</string>
+        <string name="backup_banner_guide_title">%1$d 條信息沒有受到保護。 </string>
+        <string name="backup_cloud">雲端</string>
+        <string name="restore_tab">恢復</string>
+        <string name="message_free_up_button">清理</string>
+        <string name="backup_guide_dialog_third_content">從任一設備恢復你的信息</string>
+        <string name="restore_default_summary">沒有備份文件</string>
+        <string name="message_free_up_process_dialog">正在清理你的短信空間……</string>
+        <string name="cloud_backup_process_hint">上傳備份中</string>
+        <string name="backup_success_toast">備份成功</string>
+        <string name="backup_local">本地</string>
+        <string name="add_to_private_list_dialog_from_conversation">從對話列表</string>
+        <string name="privacy_mode_hide_contact_and_message">隱藏聯繫人和信息內容</string>
+        <string name="incorrect_question_answer_hint">答案不正確</string>
+        <string name="menu_backup_restore">備份及恢復</string>
+        <string name="restore_verb">恢復</string>
+        <string name="local_backup_process_hint">備份中……</string>
+        <string name="restore_success">恢復失敗</string>
+        <string name="backup_delete_failed">刪除消息失敗</string>
+        <string name="backup_failed_toast">備份失敗</string>
+        <string name="backup_guide_dialog_first_content">在手機損壞或遺失前備份所有短信</string>
+        <string name="menu_backup_restore_toolbar_title">短信備份及恢復</string>
+        <string name="private_box_setting_security">安全</string>
+        <string name="backup_guide_dialog_second_content">%1$d 沒有受到保護</string>
+        <string name="backup_state_scanning">掃描中……</string>
+        <string name="backup_tab">備份</string>
+        <string name="backup_verb">備份</string>
+
+
+
+        <!-- Private Box Lock Question-->
+        <string name="private_box_uninstall_notice">除非將信息移至公共信箱，否則你將會在卸載短信後丟失這些信息。 </string>
+        <string name="private_box_setting_entrance_summary">隱藏圖標</string>
+        <string name="private_box_setting_entrance">入口</string>
+        <string name="private_box_add_now">現在添加</string>
+        <string name="private_box_setting_notification_summary">禁用此選項，隱私聯繫人的消息不會展示任何通知。 </string>
+        <string name="private_start_box_tip">信息將被移到隱私信箱中，請首先為隱私信箱設置密碼。 </string>
+        <string name="private_box_setting_notification">開啟通知</string>
+        <string name="private_box_move_from_success">已移至公共信箱</string>
+        <string name="private_box_hide_icon_summary">長按新建短信按鈕進入隱私信箱。 </string>
+        <string name="private_box_setting_security_summary">修改密碼</string>
+        <string name="private_box_setting">隱私信箱設置</string>
+        <string name="private_contacts">隱私聯繫人</string>
+        <string name="private_box_hide_icon">隱藏信息信箱</string>
+        <string name="add_to_private_list_dialog_from_contacts_list">從聯繫人列表</string>
+        <string name="private_box_move_to_box">移至公共信箱</string>
+        <string name="private_box_add_private_contacts">請添加隱私聯繫人</string>
+        <string name="add_to_private_list_dialog_title">添加隱私聯繫人</string>
+        <string name="private_box_remove_from_box">從隱私信箱中移除</string>
+        <string name="private_move_tip">信息將被移至隱私信箱並不能被其他短信應用訪問。 </string>
+        <string name="menu_privacy_box">隱私信箱</string>
+        <string name="private_box_empty_contact_hint">沒有隱私聯繫人</string>
+        <string name="conversation_list">對話列表</string>
+
+
+        <!-- Privacy Mode-->
+        <string name="privacy_mode_hide_message_only">只隱藏消息</string>
+        <string name="privacy_mode_disable">無</string>
+        <string name="privacy_mode_settings">隱私模式</string>
+        <string name="privacy_mode_show_messages">展示信息</string>
+
+
+    <string name="ok">確認</string>
+    <string name="cancel">取消</string>
+    <string name="set">設置</string>
+    <string name="submit">提交</string>
+    <string name="time_minute_single">分鐘</string>
+    <string name="lock_activity_forget_password">忘記密碼？</string>
+    <string name="forget_password">忘記密碼</string>
+    <string name="answer_question_prompt">請輸入正確答案來重置密碼</string>
+    <string name="choose_question_prompt">回答：</string>
+    <string name="enter_answer_prompt">請設置安全問題來防止你忘記密碼。</string>
+    <string name="security_question_answer">答案為空</string>
+    <string name="pickerview_year">年</string>
+    <string name="pickerview_hours">小時</string>
+    <string-array name="question_spinner_content">
+        <item>你的生日是幾號？</item>        
+        <item>你第一個老師的姓名是什麼？</item>        
+        <item>你的初中學校叫什麼？</item>
+        <item>誰是你兒時的偶像？</item>
+    </string-array>
+    <string name="private_setting_security_question_summary">防止自己忘記密碼</string>
+
+    <string name="invite_friends_success_toast">邀請成功</string>
+    <string name="notification_summary">收到消息時獲取通知</string>
+    <string name="archived_conversations">過去的對話</string>
+    <string name="others">其他</string>
+    <string name="about">關於</string>
+    <string name="conversation_pinned">置頂</string>
+    <string name="conversation_unpinned">取消置頂</string>
+    <string name="action_lock">鎖定</string>
+    <string name="action_unlock">解鎖</string>
+    <string name="message_locked_when_delete">解鎖以刪除鎖定的消息</string>
+    <string name="message_copied">複製到剪貼板</string>
+    <string name="notification_sender_in_privacy_mode">聯繫人</string>
+    <string name="private_box_add_to_success">移至隱私信箱</string>
+    <string name="security_question">安全問題</string>
+    <string name="restore_downloading">正在下載 ...</string>
 </resources>

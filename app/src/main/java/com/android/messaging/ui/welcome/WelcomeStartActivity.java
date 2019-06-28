@@ -5,6 +5,7 @@ import android.animation.AnimatorListenerAdapter;
 import android.animation.ValueAnimator;
 import android.content.Intent;
 import android.graphics.Paint;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -35,6 +36,7 @@ import com.ihs.app.framework.HSGdprConsent;
 import com.ihs.commons.config.HSConfig;
 import com.ihs.commons.utils.HSLog;
 import com.superapps.util.BackgroundDrawables;
+import com.superapps.util.Compats;
 import com.superapps.util.Dimensions;
 import com.superapps.util.Navigations;
 import com.superapps.util.Preferences;
@@ -42,6 +44,7 @@ import com.superapps.util.Threads;
 import com.superapps.util.Toasts;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.RejectedExecutionException;
 
@@ -123,7 +126,8 @@ public class WelcomeStartActivity extends AppCompatActivity implements View.OnCl
 
         findViewById(R.id.welcome_start_button).setOnClickListener(this);
         findViewById(R.id.welcome_start_button).setBackgroundDrawable(
-                BackgroundDrawables.createBackgroundDrawable(getResources().getColor(R.color.welcome_button_dark_green), Dimensions.pxFromDp(6.7f), true));
+                BackgroundDrawables.createBackgroundDrawable(
+                        getResources().getColor(R.color.primary_color), Dimensions.pxFromDp(6.7f), true));
 
         MessagesTextView serviceText = findViewById(R.id.welcome_start_service);
         serviceText.getPaint().setFlags(Paint.UNDERLINE_TEXT_FLAG);
@@ -152,6 +156,35 @@ public class WelcomeStartActivity extends AppCompatActivity implements View.OnCl
                         }
                     });
         }
+
+        Preferences.getDefault().doOnce(() -> {
+            String locale = getResources().getConfiguration().locale.getCountry();
+            if (locale.equalsIgnoreCase("US")) {
+                if (Compats.IS_MOTOROLA_DEVICE
+                        || Compats.IS_LGE_DEVICE
+                        || Compats.IS_ZTE_DEVICE) {
+                    BugleAnalytics.logEventToFirebase("Device_High_Retention", new HashMap<>());
+                }
+                if (Compats.IS_MOTOROLA_DEVICE
+                        || (Compats.IS_LGE_DEVICE && Build.VERSION.SDK_INT == Build.VERSION_CODES.O_MR1)) {
+                    BugleAnalytics.logEventToFirebase("Device_ExtraHigh_Retention", new HashMap<>());
+                }
+            } else if (locale.equalsIgnoreCase("PH")) {
+                if (Compats.IS_SAMSUNG_DEVICE
+                        || Compats.IS_VIVO_DEVICE
+                        || Compats.IS_HUAWEI_DEVICE
+                        || Compats.IS_CHERRY_MOBILE) {
+                    BugleAnalytics.logEventToFirebase("Device_High_Retention", new HashMap<>());
+                }
+                if (Compats.IS_SAMSUNG_DEVICE
+                        || Compats.IS_VIVO_DEVICE
+                        || Compats.IS_HUAWEI_DEVICE
+                        || Compats.IS_CHERRY_MOBILE
+                        || (Compats.IS_OPPO_DEVICE && Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)) {
+                    BugleAnalytics.logEventToFirebase("Device_ExtraHigh_Retention", new HashMap<>());
+                }
+            }
+        }, "pref_key_log_retention_events");
     }
 
     @Override
@@ -465,7 +498,6 @@ public class WelcomeStartActivity extends AppCompatActivity implements View.OnCl
                 BugleAnalytics.logEvent("Start_DetailPage_Click", true, true, "Page", String.valueOf(mViewPagerCurrentPosition));
                 Preferences.getDefault().putBoolean(PREF_KEY_START_BUTTON_CLICKED, true);
                 final Intent intent = UIIntents.get().getChangeDefaultSmsAppIntent(WelcomeStartActivity.this);
-                DefaultSMSUtils.invalidateCache();
                 startActivityForResult(intent, REQUEST_SET_DEFAULT_SMS_APP);
                 break;
 
@@ -544,7 +576,7 @@ public class WelcomeStartActivity extends AppCompatActivity implements View.OnCl
     @Override
     public void onActivityResult(final int requestCode, final int resultCode, final Intent data) {
         if (requestCode == REQUEST_SET_DEFAULT_SMS_APP) {
-            if (DefaultSMSUtils.isDefaultSmsApp()) {
+            if (DefaultSMSUtils.isDefaultSmsApp(true)) {
                 mHandler.sendEmptyMessageDelayed(EVENT_RETRY_NAVIGATION, 100);
             } else {
                 Intent intent = new Intent(WelcomeStartActivity.this, WelcomeSetAsDefaultActivity.class);

@@ -27,6 +27,8 @@ public abstract class BaseDialogFragment extends DialogFragment {
 
     private FrameLayout mContentContainer;
 
+    private boolean mCanceledOnTouchOutside = false;
+
     public void setOnDismissOrCancelListener(OnDismissOrCancelListener onDismissOrCancelListener) {
         this.mOnDismissOrCancelListener = onDismissOrCancelListener;
     }
@@ -55,6 +57,9 @@ public abstract class BaseDialogFragment extends DialogFragment {
         mPositiveClickListener = listener;
     }
 
+    public void setCanceledOnTouchOutside(boolean canceledOnTouchOutside) {
+        mCanceledOnTouchOutside = canceledOnTouchOutside;
+    }
 
     @Override
     public int show(FragmentTransaction transaction, String tag) {
@@ -66,6 +71,11 @@ public abstract class BaseDialogFragment extends DialogFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
         final View root = inflater.inflate(R.layout.layout_base_dialog, container, false);
+        root.setOnClickListener(v -> {
+            if (mCanceledOnTouchOutside) {
+                dismissAllowingStateLoss();
+            }
+        });
         TextView titleTextView = root.findViewById(R.id.dialog_title);
         if (TextUtils.isEmpty(getTitle())) {
             titleTextView.setVisibility(View.GONE);
@@ -165,6 +175,7 @@ public abstract class BaseDialogFragment extends DialogFragment {
     protected void onContentViewAdded() {
 
     }
+
 
     @Override
     public void dismissAllowingStateLoss() {

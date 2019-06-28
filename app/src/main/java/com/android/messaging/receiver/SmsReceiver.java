@@ -30,14 +30,10 @@ import android.content.res.Resources;
 import android.provider.Telephony;
 import android.provider.Telephony.Sms;
 import android.support.v4.app.NotificationCompat;
-import android.support.v4.app.NotificationCompat.Builder;
-import android.support.v4.app.NotificationCompat.Style;
 import android.support.v4.app.NotificationManagerCompat;
 
 import com.android.messaging.Factory;
 import com.android.messaging.R;
-import com.android.messaging.datamodel.BugleNotifications;
-import com.android.messaging.datamodel.MessageNotificationState;
 import com.android.messaging.datamodel.NoConfirmationSmsSendService;
 import com.android.messaging.datamodel.action.ReceiveSmsMessageAction;
 import com.android.messaging.datamodel.media.BugleNotificationChannelUtil;
@@ -200,6 +196,7 @@ public final class SmsReceiver extends BroadcastReceiver {
         // Always convert negative subIds into -1
         int subId = PhoneUtils.getDefault().getEffectiveIncomingSubIdFromSystem(
                 intent, EXTRA_SUB_ID);
+        BugleAnalytics.logEvent("SMS_Send_Failed", false, true, "SmsReceiveSubId", String.valueOf(subId));
         deliverSmsMessages(context, subId, errorCode, messages);
         if (MmsUtils.isDumpSmsEnabled()) {
             final String format = null;

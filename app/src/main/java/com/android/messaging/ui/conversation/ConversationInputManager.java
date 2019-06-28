@@ -103,8 +103,6 @@ public class ConversationInputManager implements ConversationInput.ConversationI
 
         EditText getComposeEditText();
 
-        void setAccessibility(boolean enabled);
-
         void logMagicSticker(String name);
 
         void logEmoji(String code);

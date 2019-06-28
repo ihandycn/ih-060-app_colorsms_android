@@ -91,7 +91,6 @@ public class SetAsDefaultGuideActivity extends AppCompatActivity {
                 BugleAnalytics.logEvent("SMS_DefaultAlert_BtnClick", true, "type", "Cleared");
             }
             final Intent intent = UIIntents.get().getChangeDefaultSmsAppIntent(SetAsDefaultGuideActivity.this);
-            DefaultSMSUtils.invalidateCache();
             startActivityForResult(intent, REQUEST_SET_DEFAULT_SMS_APP);
         });
     }
@@ -115,7 +114,7 @@ public class SetAsDefaultGuideActivity extends AppCompatActivity {
     @Override
     public void onActivityResult(final int requestCode, final int resultCode, final Intent data) {
         if (requestCode == REQUEST_SET_DEFAULT_SMS_APP) {
-            if (DefaultSMSUtils.isDefaultSmsApp()) {
+            if (DefaultSMSUtils.isDefaultSmsApp(true)) {
                 if (mType == USER_PRESENT) {
                     BugleAnalytics.logEvent("SMS_DefaultAlert_SetDefault_Success", true, "type", "Unlock");
                 } else {

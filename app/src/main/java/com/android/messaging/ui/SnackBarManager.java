@@ -19,8 +19,8 @@ import android.content.Context;
 import android.graphics.Point;
 import android.graphics.Rect;
 import android.os.Handler;
-import android.text.TextUtils;
 import android.util.DisplayMetrics;
+import android.util.SparseArray;
 import android.view.Gravity;
 import android.view.MotionEvent;
 import android.view.View;
@@ -38,31 +38,27 @@ import com.android.messaging.Factory;
 import com.android.messaging.R;
 import com.android.messaging.ui.SnackBar.Placement;
 import com.android.messaging.ui.SnackBar.SnackBarListener;
-import com.android.messaging.util.AccessibilityUtil;
 import com.android.messaging.util.Assert;
 import com.android.messaging.util.LogUtil;
 import com.android.messaging.util.OsUtil;
-import com.android.messaging.util.TextUtil;
 import com.android.messaging.util.UiUtils;
-import com.crashlytics.android.core.CrashlyticsCore;
-import com.google.common.base.Joiner;
-import com.superapps.debug.CrashlyticsLog;
 
 import java.util.List;
 
 public class SnackBarManager {
 
-    private static SnackBarManager sInstance;
+    private static SparseArray<SnackBarManager> sManagerList = new SparseArray<>();
 
-    public static SnackBarManager get() {
-        if (sInstance == null) {
+    public static SnackBarManager get(Context context) {
+        if (sManagerList.get(System.identityHashCode(context)) == null) {
             synchronized (SnackBarManager.class) {
-                if (sInstance == null) {
-                    sInstance = new SnackBarManager();
+                if (sManagerList.get(System.identityHashCode(context)) == null) {
+                    SnackBarManager manager = new SnackBarManager();
+                    sManagerList.put(System.identityHashCode(context), manager);
                 }
             }
         }
-        return sInstance;
+        return sManagerList.get(System.identityHashCode(context));
     }
 
     private final Runnable mDismissRunnable = new Runnable() {
@@ -113,7 +109,7 @@ public class SnackBarManager {
     public void show(final SnackBar snackBar) {
         Assert.notNull(snackBar);
 
-        if (mCurrentSnackBar != null && mCurrentSnackBar.getContext() == snackBar.getContext()) {
+        if (mCurrentSnackBar != null) {
             LogUtil.d(LogUtil.BUGLE_TAG, "Showing snack bar, but currentSnackBar was not null.");
 
             // Dismiss the current snack bar. That will cause the next snack bar to be shown on
@@ -186,18 +182,6 @@ public class SnackBarManager {
             public void run() {
                 mCurrentSnackBar.setEnabled(true);
                 makeCurrentSnackBarDismissibleOnTouch();
-                // Fire an accessibility event as needed
-                String snackBarText = snackBar.getMessageText();
-                if (!TextUtils.isEmpty(snackBarText) &&
-                        TextUtils.getTrimmedLength(snackBarText) > 0) {
-                    snackBarText = snackBarText.trim();
-                    final String snackBarActionText = snackBar.getActionLabel();
-                    if (!TextUtil.isAllWhitespace(snackBarActionText)) {
-                        snackBarText = Joiner.on(", ").join(snackBarText, snackBarActionText);
-                    }
-                    AccessibilityUtil.announceForAccessibilityCompat(snackBar.getSnackBarView(),
-                            null /*accessibilityManager*/, snackBarText);
-                }
             }
         });
 

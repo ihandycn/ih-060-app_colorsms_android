@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
@@ -26,8 +27,9 @@
                 android:includeFontPadding="false"
                 android:text="@string/customize_guide_title"
                 android:textColor="#3f4141"
+                android:maxWidth="180dp"
                 android:textSize="15.3sp"
-                app:typeface="@string/custom_font_bold" />
+                app:typeface="@string/custom_font_bold"/>
 
             <com.airbnb.lottie.LottieAnimationView
                 android:id="@+id/customize_guide_lottie"
@@ -35,8 +37,8 @@
                 android:layout_height="32dp"
                 android:layout_gravity="center_horizontal"
                 android:layout_marginTop="12dp"
-                app:lottie_imageAssetsFolder="lottie/customize_guide/"
-                app:lottie_fileName="lottie/customize_guide.json" />
+                app:lottie_fileName="lottie/customize_guide.json"
+                app:lottie_imageAssetsFolder="lottie/customize_guide/"/>
         </LinearLayout>
     </FrameLayout>
 </FrameLayout>

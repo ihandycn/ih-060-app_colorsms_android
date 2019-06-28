@@ -17,8 +17,6 @@ import com.bumptech.glide.request.transition.Transition;
 import com.ihs.app.framework.HSApplication;
 import com.superapps.util.Dimensions;
 
-import java.io.File;
-
 import pl.droidsonroids.gif.GifDrawable;
 import pl.droidsonroids.gif.GifImageView;
 

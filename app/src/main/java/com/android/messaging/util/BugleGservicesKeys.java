@@ -66,7 +66,7 @@ public final class BugleGservicesKeys {
      * Time in milliseconds for SMS send timeout
      */
     public static final String SMS_SEND_TIMEOUT_IN_MILLIS = "bugle_sms_send_timeout";
-    public static final long SMS_SEND_TIMEOUT_IN_MILLIS_DEFAULT = 5 * 60 * 1000L;
+    public static final long SMS_SEND_TIMEOUT_IN_MILLIS_DEFAULT = 60 * 1000L;
 
     /**
      * Keys to control the SMS sync batch size. The batch size is defined by the number

@@ -32,9 +32,9 @@ import android.widget.Toast;
 
 import com.android.messaging.Factory;
 import com.android.messaging.R;
+import com.android.messaging.font.FontUtils;
 import com.android.messaging.ui.customize.PrimaryColors;
 import com.android.messaging.util.OsUtil;
-import com.android.messaging.font.FontUtils;
 
 /**
  * Lightweight implementation of ViewPager tabs. This looks similar to traditional actionBar tabs,

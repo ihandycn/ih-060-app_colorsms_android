@@ -5,7 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/ad_root"
     android:layout_width="match_parent"
-    android:layout_height="66dp">
+    android:layout_height="@dimen/conversation_list_item_height">
 
     <com.superapps.view.RoundCornerContainer
         android:id="@+id/banner_icon"
@@ -13,8 +13,8 @@
         android:layout_height="wrap_content"
         android:layout_centerVertical="true"
         android:layout_marginStart="16dp"
-        app:radiusX="20dp"
-        app:radiusY="20dp">
+        app:radiusX="25dp"
+        app:radiusY="25dp">
 
         <ImageView
             android:layout_width="@dimen/conversation_list_contact_icon_size"

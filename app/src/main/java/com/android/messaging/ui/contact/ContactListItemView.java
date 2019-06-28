@@ -128,7 +128,7 @@ public class ContactListItemView extends LinearLayout implements OnClickListener
             final Uri avatarUri = AvatarUriUtil.createAvatarUri(
                     ParticipantData.getFromRecipientEntry(recipientEntry));
             mContactIconView.setImageResourceUri(avatarUri, mData.getContactId(),
-                    mData.getLookupKey(), destinationString);
+                    mData.getLookupKey(), destinationString, false);
             mContactIconView.setVisibility(VISIBLE);
             mContactCheckmarkView.setVisibility(GONE);
             mContactDetailTypeTextView.setVisibility(GONE);
@@ -138,7 +138,7 @@ public class ContactListItemView extends LinearLayout implements OnClickListener
             final Uri avatarUri = AvatarUriUtil.createAvatarUri(
                     ParticipantData.getFromRecipientEntry(recipientEntry));
             mContactIconView.setImageResourceUri(avatarUri, mData.getContactId(),
-                    mData.getLookupKey(), destinationString);
+                    mData.getLookupKey(), destinationString, false);
             mContactIconView.setVisibility(VISIBLE);
             mContactNameTextView.setVisibility(VISIBLE);
             final boolean isSelected = mHostInterface.isContactSelected(mData);

@@ -447,6 +447,7 @@ public class BugleNotifications {
                 priority = NotificationManager.IMPORTANCE_LOW;
             }
             notificationChannel = BugleNotificationChannelUtil.getSmsNotificationChannel(ringtoneUri, shouldVibrate(state), priority);
+            notificationChannel.setShowBadge(true);
             channelId = notificationChannel.getId();
             notificationChannel.setImportance(priority);
         }

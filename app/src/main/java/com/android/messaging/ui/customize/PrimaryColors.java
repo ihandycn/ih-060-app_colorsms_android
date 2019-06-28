@@ -5,6 +5,7 @@ import android.support.annotation.ColorInt;
 
 import com.android.messaging.Factory;
 import com.android.messaging.R;
+import com.android.messaging.ui.customize.theme.ThemeUtils;
 import com.android.messaging.util.BuglePrefs;
 import com.android.messaging.util.BuglePrefsKeys;
 
@@ -14,6 +15,9 @@ public class PrimaryColors {
 
     public static void changePrimaryColor(@ColorInt int color) {
         prefs.putInt(BuglePrefsKeys.PREFS_KEY_PRIMARY_COLOR, color);
+        if (ThemeUtils.isDefaultTheme() && ConversationColors.get().getBubbleBackgroundColor(false, "") == DEFAULT_PRIMARY_COLOR) {
+            ConversationColors.get().setBubbleBackgroundColor(false, color);
+        }
         ConversationColors.get().updateColors();
     }
 

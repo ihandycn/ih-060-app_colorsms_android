@@ -14,6 +14,8 @@
     limitations under the License.
 -->
 <resources>
+    <item name="match_parent" format="integer" type="dimen">-1</item>
+    <item name="wrap_content" format="integer" type="dimen">-2</item>
 
     <dimen name="action_bar_height">56dp</dimen>
     <dimen name="action_bar_elevation">8dp</dimen>
@@ -32,7 +34,11 @@
     <dimen name="conversation_list_image_preview_corner_radius">3dp</dimen>
     <dimen name="conversation_list_image_preview_size">41dp</dimen>
     <dimen name="conversation_list_contact_icon_size">40dp</dimen>
+    <dimen name="conversation_list_contact_bg_size">66dp</dimen>
     <dimen name="conversation_list_error_icon_size">18.7dp</dimen>
+    <dimen name="conversation_list_item_conversation_name_text_size">16sp</dimen>
+    <dimen name="conversation_list_item_snippet_text_size">13sp</dimen>
+    <dimen name="conversation_list_item_height">@dimen/conversation_list_contact_bg_size</dimen>
     <dimen name="conversation_message_bubble_incoming_simple_style_top_padding">10dp</dimen>
     <dimen name="conversation_message_bubble_incoming_top_padding">20dp</dimen>
     <dimen name="conversation_message_contact_icon_container_size">66dp</dimen>
@@ -195,6 +201,21 @@
     <dimen name="feedback_content_lr_margin">5dp</dimen>
 
     <dimen name="invite_friends_item_size">55dp</dimen>
+
+    <dimen name="text_edit_padding">9dp</dimen>
+    <dimen name="text_edit_size">15sp</dimen>
+    <!-- picker view -->
+    <!-- 顶部按钮栏高度 -->
+    <dimen name="pickerview_topbar_height">44dp</dimen>
+    <!-- 顶部按钮paddingLeft -->
+    <dimen name="pickerview_topbar_paddingleft">10dp</dimen>
+    <!-- 顶部按钮paddingRight -->
+    <dimen name="pickerview_topbar_paddingright">30dp</dimen>
+    <!-- 顶部按钮文字大小 -->
+    <dimen name="pickerview_topbar_btn_textsize">20sp</dimen>
+    <dimen name="pickerview_topbar_title_textsize">21sp</dimen>
+    <!-- 选项文字大小 需要配合 bools.xml 的 pickerview_customTextSize 为 true 才有效果-->
+    <dimen name="pickerview_textsize">24sp</dimen>
 
     <dimen name="conversation_item_view_swipe_padding">15dp</dimen>
 </resources>

@@ -19,8 +19,8 @@ android {
         applicationId "com.color.sms.messages.emoji"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 58
-        versionName "1.1.1"
+        versionCode 60
+        versionName "1.1.2"
         multiDexEnabled true
 
         vectorDrawables.useSupportLibrary = true
@@ -95,7 +95,7 @@ dependencies {
     implementation "com.google.firebase:firebase-auth:${rootProject.ext.googlePlayServiceVersion}"
     implementation "com.firebaseui:firebase-ui-auth:4.1.0"
     implementation "com.google.firebase:firebase-storage:${rootProject.ext.googlePlayServiceVersion}"
-    implementation "com.ihandy.appframework:libAppframework.gm:4.9.1.gm"
+    implementation "com.ihandy.appframework:libAppframework.gm:4.13.0.gm"
 
     implementation 'com.airbnb.android:lottie:2.7.0'
     implementation "com.zlc.glide:webpdecoder:1.3.${rootProject.ext.glideVersion}"
@@ -111,7 +111,8 @@ dependencies {
     implementation 'com.crashlytics.sdk.android:crashlytics:2.9.8'
     implementation 'com.facebook.android:facebook-android-sdk:4.23.0'
 
-    implementation "com.ihandy.device:device-permanent.gm:4.5.4.gm"
+    implementation "com.ihandy.permanent:permanent.gm:4.0.0.gm"
+    implementation "com.ihandy.permanent:accounts-keep-alive.gm:4.0.0.gm"
 
     implementation "net.appcloudbox.goldeneye:bubble_a:2019.06.05.001"
     implementation "me.leolin:ShortcutBadger:1.1.22@aar"

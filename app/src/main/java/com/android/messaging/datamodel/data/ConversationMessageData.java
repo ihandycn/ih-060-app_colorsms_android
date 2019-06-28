@@ -76,6 +76,7 @@ public class ConversationMessageData {
     private String mSenderContactLookupKey;
     private String mSelfParticipantId;
     private boolean mIsLocked;
+    private boolean mIsDeleted;
 
     /** Are we similar enough to the previous/next messages that we can cluster them? */
     private boolean mCanClusterWithPreviousMessage;
@@ -121,6 +122,7 @@ public class ConversationMessageData {
         mSenderContactLookupKey = cursor.getString(INDEX_SENDER_CONTACT_LOOKUP_KEY);
         mSelfParticipantId = cursor.getString(INDEX_SELF_PARTICIPIANT_ID);
         mIsLocked = cursor.getInt(INDEX_IS_LOCKED) == 1;
+        mIsDeleted = cursor.getInt(INDEX_IS_DELETED) == 1;
 
         if (!cursor.isFirst() && cursor.moveToPrevious()) {
             mCanClusterWithPreviousMessage = canClusterWithMessage(cursor);
@@ -519,6 +521,10 @@ public class ConversationMessageData {
         return mIsLocked;
     }
 
+    public final boolean getIsDeleted(){
+        return mIsDeleted;
+    }
+
     public boolean getIsIncoming() {
         return (mStatus >= MessageData.BUGLE_STATUS_FIRST_INCOMING);
     }
@@ -628,7 +634,8 @@ public class ConversationMessageData {
         return CONVERSATION_MESSAGES_QUERY_SQL
                 + " AND "
                 // Inject the conversation id
-                + DatabaseHelper.MESSAGES_TABLE + "." + MessageColumns.CONVERSATION_ID + "=?)"
+                + DatabaseHelper.MESSAGES_TABLE + "." + MessageColumns.CONVERSATION_ID + "=? AND "
+                + DatabaseHelper.MESSAGES_TABLE + "." + MessageColumns.IS_DELETED + " =0 )"
                 + CONVERSATION_MESSAGES_QUERY_SQL_GROUP_BY;
     }
 
@@ -709,70 +716,72 @@ public class ConversationMessageData {
 
     private static final String CONVERSATION_MESSAGES_QUERY_PROJECTION_SQL =
             DatabaseHelper.MESSAGES_TABLE + '.' + MessageColumns._ID
-            + " as " + ConversationMessageViewColumns._ID + ", "
-            + DatabaseHelper.MESSAGES_TABLE + '.' + MessageColumns.CONVERSATION_ID
-            + " as " + ConversationMessageViewColumns.CONVERSATION_ID + ", "
-            + DatabaseHelper.MESSAGES_TABLE + '.' + MessageColumns.SENDER_PARTICIPANT_ID
-            + " as " + ConversationMessageViewColumns.PARTICIPANT_ID + ", "
+                    + " as " + ConversationMessageViewColumns._ID + ", "
+                    + DatabaseHelper.MESSAGES_TABLE + '.' + MessageColumns.CONVERSATION_ID
+                    + " as " + ConversationMessageViewColumns.CONVERSATION_ID + ", "
+                    + DatabaseHelper.MESSAGES_TABLE + '.' + MessageColumns.SENDER_PARTICIPANT_ID
+                    + " as " + ConversationMessageViewColumns.PARTICIPANT_ID + ", "
 
-            + makeCaseWhenString(PartColumns._ID, false,
+                    + makeCaseWhenString(PartColumns._ID, false,
                     ConversationMessageViewColumns.PARTS_IDS) + ", "
-            + makeCaseWhenString(PartColumns.CONTENT_TYPE, true,
+                    + makeCaseWhenString(PartColumns.CONTENT_TYPE, true,
                     ConversationMessageViewColumns.PARTS_CONTENT_TYPES) + ", "
-            + makeCaseWhenString(PartColumns.CONTENT_URI, true,
+                    + makeCaseWhenString(PartColumns.CONTENT_URI, true,
                     ConversationMessageViewColumns.PARTS_CONTENT_URIS) + ", "
-            + makeCaseWhenString(PartColumns.WIDTH, false,
+                    + makeCaseWhenString(PartColumns.WIDTH, false,
                     ConversationMessageViewColumns.PARTS_WIDTHS) + ", "
-            + makeCaseWhenString(PartColumns.HEIGHT, false,
+                    + makeCaseWhenString(PartColumns.HEIGHT, false,
                     ConversationMessageViewColumns.PARTS_HEIGHTS) + ", "
-            + makeCaseWhenString(PartColumns.TEXT, true,
+                    + makeCaseWhenString(PartColumns.TEXT, true,
                     ConversationMessageViewColumns.PARTS_TEXTS) + ", "
 
-            + CONVERSATION_MESSAGE_VIEW_PARTS_COUNT
-            + " as " + ConversationMessageViewColumns.PARTS_COUNT + ", "
+                    + CONVERSATION_MESSAGE_VIEW_PARTS_COUNT
+                    + " as " + ConversationMessageViewColumns.PARTS_COUNT + ", "
 
-            + DatabaseHelper.MESSAGES_TABLE + '.' + MessageColumns.SENT_TIMESTAMP
-            + " as " + ConversationMessageViewColumns.SENT_TIMESTAMP + ", "
-            + DatabaseHelper.MESSAGES_TABLE + '.' + MessageColumns.RECEIVED_TIMESTAMP
-            + " as " + ConversationMessageViewColumns.RECEIVED_TIMESTAMP + ", "
-            + DatabaseHelper.MESSAGES_TABLE + '.' + MessageColumns.SEEN
-            + " as " + ConversationMessageViewColumns.SEEN + ", "
-            + DatabaseHelper.MESSAGES_TABLE + '.' + MessageColumns.READ
-            + " as " + ConversationMessageViewColumns.READ + ", "
-            + DatabaseHelper.MESSAGES_TABLE + '.' + MessageColumns.PROTOCOL
-            + " as " + ConversationMessageViewColumns.PROTOCOL + ", "
-            + DatabaseHelper.MESSAGES_TABLE + '.' + MessageColumns.STATUS
-            + " as " + ConversationMessageViewColumns.STATUS + ", "
-            + DatabaseHelper.MESSAGES_TABLE + '.' + MessageColumns.SMS_MESSAGE_URI
-            + " as " + ConversationMessageViewColumns.SMS_MESSAGE_URI + ", "
-            + DatabaseHelper.MESSAGES_TABLE + '.' + MessageColumns.SMS_PRIORITY
-            + " as " + ConversationMessageViewColumns.SMS_PRIORITY + ", "
-            + DatabaseHelper.MESSAGES_TABLE + '.' + MessageColumns.SMS_MESSAGE_SIZE
-            + " as " + ConversationMessageViewColumns.SMS_MESSAGE_SIZE + ", "
-            + DatabaseHelper.MESSAGES_TABLE + '.' + MessageColumns.MMS_SUBJECT
-            + " as " + ConversationMessageViewColumns.MMS_SUBJECT + ", "
-            + DatabaseHelper.MESSAGES_TABLE + '.' + MessageColumns.MMS_EXPIRY
-            + " as " + ConversationMessageViewColumns.MMS_EXPIRY + ", "
-            + DatabaseHelper.MESSAGES_TABLE + '.' + MessageColumns.RAW_TELEPHONY_STATUS
-            + " as " + ConversationMessageViewColumns.RAW_TELEPHONY_STATUS + ", "
-            + DatabaseHelper.MESSAGES_TABLE + '.' + MessageColumns.SELF_PARTICIPANT_ID
-            + " as " + ConversationMessageViewColumns.SELF_PARTICIPANT_ID + ", "
-            + DatabaseHelper.MESSAGES_TABLE + "." + MessageColumns.IS_LOCKED
-            + " as " + ConversationMessageViewColumns.IS_LOCKED + ", "
-            + DatabaseHelper.PARTICIPANTS_TABLE + '.' + ParticipantColumns.FULL_NAME
-            + " as " + ConversationMessageViewColumns.SENDER_FULL_NAME + ", "
-            + DatabaseHelper.PARTICIPANTS_TABLE + '.' + ParticipantColumns.FIRST_NAME
-            + " as " + ConversationMessageViewColumns.SENDER_FIRST_NAME + ", "
-            + DatabaseHelper.PARTICIPANTS_TABLE + '.' + ParticipantColumns.DISPLAY_DESTINATION
-            + " as " + ConversationMessageViewColumns.SENDER_DISPLAY_DESTINATION + ", "
-            + DatabaseHelper.PARTICIPANTS_TABLE + '.' + ParticipantColumns.NORMALIZED_DESTINATION
-            + " as " + ConversationMessageViewColumns.SENDER_NORMALIZED_DESTINATION + ", "
-            + DatabaseHelper.PARTICIPANTS_TABLE + '.' + ParticipantColumns.PROFILE_PHOTO_URI
-            + " as " + ConversationMessageViewColumns.SENDER_PROFILE_PHOTO_URI + ", "
-            + DatabaseHelper.PARTICIPANTS_TABLE + '.' + ParticipantColumns.CONTACT_ID
-            + " as " + ConversationMessageViewColumns.SENDER_CONTACT_ID + ", "
-            + DatabaseHelper.PARTICIPANTS_TABLE + '.' + ParticipantColumns.LOOKUP_KEY
-            + " as " + ConversationMessageViewColumns.SENDER_CONTACT_LOOKUP_KEY + " ";
+                    + DatabaseHelper.MESSAGES_TABLE + '.' + MessageColumns.SENT_TIMESTAMP
+                    + " as " + ConversationMessageViewColumns.SENT_TIMESTAMP + ", "
+                    + DatabaseHelper.MESSAGES_TABLE + '.' + MessageColumns.RECEIVED_TIMESTAMP
+                    + " as " + ConversationMessageViewColumns.RECEIVED_TIMESTAMP + ", "
+                    + DatabaseHelper.MESSAGES_TABLE + '.' + MessageColumns.SEEN
+                    + " as " + ConversationMessageViewColumns.SEEN + ", "
+                    + DatabaseHelper.MESSAGES_TABLE + '.' + MessageColumns.READ
+                    + " as " + ConversationMessageViewColumns.READ + ", "
+                    + DatabaseHelper.MESSAGES_TABLE + '.' + MessageColumns.PROTOCOL
+                    + " as " + ConversationMessageViewColumns.PROTOCOL + ", "
+                    + DatabaseHelper.MESSAGES_TABLE + '.' + MessageColumns.STATUS
+                    + " as " + ConversationMessageViewColumns.STATUS + ", "
+                    + DatabaseHelper.MESSAGES_TABLE + '.' + MessageColumns.SMS_MESSAGE_URI
+                    + " as " + ConversationMessageViewColumns.SMS_MESSAGE_URI + ", "
+                    + DatabaseHelper.MESSAGES_TABLE + '.' + MessageColumns.SMS_PRIORITY
+                    + " as " + ConversationMessageViewColumns.SMS_PRIORITY + ", "
+                    + DatabaseHelper.MESSAGES_TABLE + '.' + MessageColumns.SMS_MESSAGE_SIZE
+                    + " as " + ConversationMessageViewColumns.SMS_MESSAGE_SIZE + ", "
+                    + DatabaseHelper.MESSAGES_TABLE + '.' + MessageColumns.MMS_SUBJECT
+                    + " as " + ConversationMessageViewColumns.MMS_SUBJECT + ", "
+                    + DatabaseHelper.MESSAGES_TABLE + '.' + MessageColumns.MMS_EXPIRY
+                    + " as " + ConversationMessageViewColumns.MMS_EXPIRY + ", "
+                    + DatabaseHelper.MESSAGES_TABLE + '.' + MessageColumns.RAW_TELEPHONY_STATUS
+                    + " as " + ConversationMessageViewColumns.RAW_TELEPHONY_STATUS + ", "
+                    + DatabaseHelper.MESSAGES_TABLE + '.' + MessageColumns.SELF_PARTICIPANT_ID
+                    + " as " + ConversationMessageViewColumns.SELF_PARTICIPANT_ID + ", "
+                    + DatabaseHelper.MESSAGES_TABLE + "." + MessageColumns.IS_LOCKED
+                    + " as " + ConversationMessageViewColumns.IS_LOCKED + ", "
+                    + DatabaseHelper.MESSAGES_TABLE + "." + MessageColumns.IS_DELETED
+                    + " as " + ConversationMessageViewColumns.IS_DELETED + ", "
+                    + DatabaseHelper.PARTICIPANTS_TABLE + '.' + ParticipantColumns.FULL_NAME
+                    + " as " + ConversationMessageViewColumns.SENDER_FULL_NAME + ", "
+                    + DatabaseHelper.PARTICIPANTS_TABLE + '.' + ParticipantColumns.FIRST_NAME
+                    + " as " + ConversationMessageViewColumns.SENDER_FIRST_NAME + ", "
+                    + DatabaseHelper.PARTICIPANTS_TABLE + '.' + ParticipantColumns.DISPLAY_DESTINATION
+                    + " as " + ConversationMessageViewColumns.SENDER_DISPLAY_DESTINATION + ", "
+                    + DatabaseHelper.PARTICIPANTS_TABLE + '.' + ParticipantColumns.NORMALIZED_DESTINATION
+                    + " as " + ConversationMessageViewColumns.SENDER_NORMALIZED_DESTINATION + ", "
+                    + DatabaseHelper.PARTICIPANTS_TABLE + '.' + ParticipantColumns.PROFILE_PHOTO_URI
+                    + " as " + ConversationMessageViewColumns.SENDER_PROFILE_PHOTO_URI + ", "
+                    + DatabaseHelper.PARTICIPANTS_TABLE + '.' + ParticipantColumns.CONTACT_ID
+                    + " as " + ConversationMessageViewColumns.SENDER_CONTACT_ID + ", "
+                    + DatabaseHelper.PARTICIPANTS_TABLE + '.' + ParticipantColumns.LOOKUP_KEY
+                    + " as " + ConversationMessageViewColumns.SENDER_CONTACT_LOOKUP_KEY + " ";
 
     private static final String CONVERSATION_MESSAGES_QUERY_FROM_WHERE_SQL =
             " FROM " + DatabaseHelper.MESSAGES_TABLE
@@ -813,7 +822,7 @@ public class ConversationMessageData {
           + " ORDER BY "
           + DatabaseHelper.MESSAGES_TABLE + '.' + MessageColumns.RECEIVED_TIMESTAMP + " DESC";
 
-    interface ConversationMessageViewColumns extends BaseColumns {
+    public interface ConversationMessageViewColumns extends BaseColumns {
         static final String _ID = MessageColumns._ID;
         static final String CONVERSATION_ID = MessageColumns.CONVERSATION_ID;
         static final String PARTICIPANT_ID = MessageColumns.SENDER_PARTICIPANT_ID;
@@ -832,6 +841,7 @@ public class ConversationMessageData {
         static final String RAW_TELEPHONY_STATUS = MessageColumns.RAW_TELEPHONY_STATUS;
         static final String SELF_PARTICIPANT_ID = MessageColumns.SELF_PARTICIPANT_ID;
         static final String IS_LOCKED = MessageColumns.IS_LOCKED;
+        static final String IS_DELETED = MessageColumns.IS_DELETED;
         static final String SENDER_FULL_NAME = ParticipantColumns.FULL_NAME;
         static final String SENDER_FIRST_NAME = ParticipantColumns.FIRST_NAME;
         static final String SENDER_DISPLAY_DESTINATION = ParticipantColumns.DISPLAY_DESTINATION;
@@ -877,6 +887,7 @@ public class ConversationMessageData {
     private static final int INDEX_RAW_TELEPHONY_STATUS          = sIndexIncrementer++;
     private static final int INDEX_SELF_PARTICIPIANT_ID          = sIndexIncrementer++;
     private static final int INDEX_IS_LOCKED                     = sIndexIncrementer++;
+    private static final int INDEX_IS_DELETED                    = sIndexIncrementer++;
 
     private static final int INDEX_SENDER_FULL_NAME              = sIndexIncrementer++;
     private static final int INDEX_SENDER_FIRST_NAME             = sIndexIncrementer++;
@@ -888,39 +899,40 @@ public class ConversationMessageData {
 
 
     private static String[] sProjection = {
-        ConversationMessageViewColumns._ID,
-        ConversationMessageViewColumns.CONVERSATION_ID,
-        ConversationMessageViewColumns.PARTICIPANT_ID,
+            ConversationMessageViewColumns._ID,
+            ConversationMessageViewColumns.CONVERSATION_ID,
+            ConversationMessageViewColumns.PARTICIPANT_ID,
 
-        ConversationMessageViewColumns.PARTS_IDS,
-        ConversationMessageViewColumns.PARTS_CONTENT_TYPES,
-        ConversationMessageViewColumns.PARTS_CONTENT_URIS,
-        ConversationMessageViewColumns.PARTS_WIDTHS,
-        ConversationMessageViewColumns.PARTS_HEIGHTS,
-        ConversationMessageViewColumns.PARTS_TEXTS,
+            ConversationMessageViewColumns.PARTS_IDS,
+            ConversationMessageViewColumns.PARTS_CONTENT_TYPES,
+            ConversationMessageViewColumns.PARTS_CONTENT_URIS,
+            ConversationMessageViewColumns.PARTS_WIDTHS,
+            ConversationMessageViewColumns.PARTS_HEIGHTS,
+            ConversationMessageViewColumns.PARTS_TEXTS,
 
-        ConversationMessageViewColumns.PARTS_COUNT,
-        ConversationMessageViewColumns.SENT_TIMESTAMP,
-        ConversationMessageViewColumns.RECEIVED_TIMESTAMP,
-        ConversationMessageViewColumns.SEEN,
-        ConversationMessageViewColumns.READ,
-        ConversationMessageViewColumns.PROTOCOL,
-        ConversationMessageViewColumns.STATUS,
-        ConversationMessageViewColumns.SMS_MESSAGE_URI,
-        ConversationMessageViewColumns.SMS_PRIORITY,
-        ConversationMessageViewColumns.SMS_MESSAGE_SIZE,
-        ConversationMessageViewColumns.MMS_SUBJECT,
-        ConversationMessageViewColumns.MMS_EXPIRY,
-        ConversationMessageViewColumns.RAW_TELEPHONY_STATUS,
-        ConversationMessageViewColumns.SELF_PARTICIPANT_ID,
-        ConversationMessageViewColumns.IS_LOCKED,
-        ConversationMessageViewColumns.SENDER_FULL_NAME,
-        ConversationMessageViewColumns.SENDER_FIRST_NAME,
-        ConversationMessageViewColumns.SENDER_DISPLAY_DESTINATION,
-        ConversationMessageViewColumns.SENDER_NORMALIZED_DESTINATION,
-        ConversationMessageViewColumns.SENDER_PROFILE_PHOTO_URI,
-        ConversationMessageViewColumns.SENDER_CONTACT_ID,
-        ConversationMessageViewColumns.SENDER_CONTACT_LOOKUP_KEY,
+            ConversationMessageViewColumns.PARTS_COUNT,
+            ConversationMessageViewColumns.SENT_TIMESTAMP,
+            ConversationMessageViewColumns.RECEIVED_TIMESTAMP,
+            ConversationMessageViewColumns.SEEN,
+            ConversationMessageViewColumns.READ,
+            ConversationMessageViewColumns.PROTOCOL,
+            ConversationMessageViewColumns.STATUS,
+            ConversationMessageViewColumns.SMS_MESSAGE_URI,
+            ConversationMessageViewColumns.SMS_PRIORITY,
+            ConversationMessageViewColumns.SMS_MESSAGE_SIZE,
+            ConversationMessageViewColumns.MMS_SUBJECT,
+            ConversationMessageViewColumns.MMS_EXPIRY,
+            ConversationMessageViewColumns.RAW_TELEPHONY_STATUS,
+            ConversationMessageViewColumns.SELF_PARTICIPANT_ID,
+            ConversationMessageViewColumns.IS_LOCKED,
+            ConversationMessageViewColumns.IS_DELETED,
+            ConversationMessageViewColumns.SENDER_FULL_NAME,
+            ConversationMessageViewColumns.SENDER_FIRST_NAME,
+            ConversationMessageViewColumns.SENDER_DISPLAY_DESTINATION,
+            ConversationMessageViewColumns.SENDER_NORMALIZED_DESTINATION,
+            ConversationMessageViewColumns.SENDER_PROFILE_PHOTO_URI,
+            ConversationMessageViewColumns.SENDER_CONTACT_ID,
+            ConversationMessageViewColumns.SENDER_CONTACT_LOOKUP_KEY,
     };
 
     public static String[] getProjection() {

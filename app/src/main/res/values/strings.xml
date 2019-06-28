@@ -222,10 +222,6 @@
         <item quantity="other"><xliff:g id="messages">%d</xliff:g> new messages</item>
     </plurals>
 
-    <plurals name="notification_title_in_privacy_mode">
-        <item quantity="one">New message</item>
-        <item quantity="other">%1$d unread messages</item>
-    </plurals>
     <string name="notification_sender_in_privacy_mode">Contact</string>
 
     <!-- Text for starting a new conversation button in the compose UI -->
@@ -335,10 +331,10 @@
     <string name="unblocked_toast_message">Contact unblocked &amp; unarchived</string>
     <!-- The text of the toast/snack message shown when the selected conversation(s) are archived.
          Displays the number of converstions archived -->
-    <string name="archived_toast_message"><xliff:g id="count">%d</xliff:g> archived</string>
+    <string name="archived_toast_message"><xliff:g id="count">%d</xliff:g> conversation archived</string>
     <!-- The text of the toast/snack message shown when the selected conversation(s) are unarchived.
          Displays the number of conversations unarchived -->
-    <string name="unarchived_toast_message"><xliff:g id="count">%d</xliff:g> unarchived</string>
+    <string name="unarchived_toast_message"><xliff:g id="count">%d</xliff:g> conversation unarchived</string>
     <!-- The text of the toast/snack message shown when a notifications turned off for selected conversations -->
     <string name="notification_off_toast_message">Notifications turned off</string>
     <!-- The text of the toast/snack message shown when a notifications turned on for selected conversations -->
@@ -953,6 +949,7 @@
     <string name="sms_show_apply">APPLY</string>
     <string name="sms_show_current_theme">CURRENT THEME</string>
 
+    
     <!-- Welcome-->
     <string name="sms_welcome_start_button">START</string>
     <string name="welcome_start_service">Terms of Service</string>
@@ -1160,6 +1157,7 @@
     <string name="private_box_add_now">Add Now</string>
     <string name="private_box_setting_security">Security</string>
     <string name="private_box_setting_security_summary">Modify Password</string>
+    <string name="private_setting_security_question_summary">In case you forget your password</string>
     <string name="private_box_setting_entrance">Entrance</string>
     <string name="private_box_setting_entrance_summary">Hide the icon</string>
     <string name="private_box_setting_notification">Enable Notifications</string>
@@ -1172,16 +1170,16 @@
     <string name="private_box_move_to_box">Move to private box</string>
     <string name="private_box_remove_from_box">Remove from private box</string>
     <string name="private_box_uninstall_notice">Unless you move the messages to public box, you may lose your data after you uninstall us.</string>
+    <string name="private_box_empty_contact_hint">No private contact</string>
 
     <string name="conversation_list">Conversation List</string>
     <string name="contacts">Contacts</string>
+    <string name="private_contacts">Private Contacts</string>
     <string name="private_box_setting">Private Box Settings</string>
     <string name="private_move_tip">Messages will be moved to Private Box and will not be accessed by other SMS apps.</string>
     <string name="private_start_box_tip">Messages will be moved to Private Box. Please set a password for Private Box first.</string>
     <string name="private_box_add_to_success">Moved to private box</string>
     <string name="private_box_move_from_success">Moved to public box</string>
-    <string name="notification_title_in_private_box_single">New message</string>
-    <string name="notification_title_in_private_box_other">%1$d unread messages</string>
     <string name="notification_sender_in_private_box">Private Contact</string>
 
     <string name="tips">Tips</string>
@@ -1222,12 +1220,12 @@
     <string name="invite_friends_add">ADD (%d)</string>
     <string name="invite_friends_add_friends">Add</string>
     <string name="invite_friends_default_back_to_main_page_title">Invite Friends</string>
+
     <string name="invite_friends_default_back_to_main_page_description" translatable="false">Is it amazing? You can customize everywhere you want! Tell your friends now!</string>
     <string name="invite_friends_default_apply_theme_description" translatable="false">Love these awesome themes? Tell your friends and let them join you!</string>
     <string name="invite_friends_default_send_sms_description" translatable="false">Well done, your message was sent successfully! Want to share Color SMS with your friends?</string>
 
-    <string name="invite_friends_invite_default_content" translatable="false">I’m using Color SMS, an awesome SMS app with pretty themes, funny emojis and perfect functions! Come and join us! 😁😏</string>
-
+    <string name="invite_friends_invite_default_content" translatable="false">I’m using Color SMS, an awesome SMS app with pretty themes, funny emojis and perfect functions! Come and join us!</string>
 
     <string name="invite_friends_invite_cancel_button">Cancel</string>
     <string name="invite_friends_invite_save_button">Save</string>
@@ -1235,7 +1233,6 @@
     <string name="invite_friends_invite_send_sms_description">Send SMS to the friend that you’d like to invite</string>
 
     <!--New setting-->
-
     <string name="emoji">Emoji</string>
     <string name="others">Others</string>
     <string name="about">About</string>
@@ -1244,8 +1241,34 @@
     <!--archive-->
     <string name="archived_conversations">Archived Conversations</string>
 
+    <string name="message_copied">Copied to clipboard</string>
+    <string name="conversation_pinned">Pinned to top</string>
+    <string name="conversation_unpinned">Unpinned</string>
     <string name="invite_friends_default_auto_link_content" translatable="false">https://go.onelink.me/app/90cf450c</string>
     <string name="invite_friends_success_toast">Invite success</string>
+
+    <!-- Private Box Lock Question-->
+    <string name="choose_question_prompt">Please set a security question in case you forget your password.</string>
+    <string name="enter_answer_prompt">Answer:</string>
+    <string name="set">SET</string>
+    <string name="cancel">Cancel</string>
+    <string name="ok">OK</string>
+    <string name="pickerview_year">year</string>
+    <string name="pickerview_hours">hour</string>
+    <string name="time_minute_single">minute</string>
+    <string-array name="question_spinner_content">
+        <item>When is your birthday?</item>
+        <item>What is the last name of your first teacher?</item>
+        <item>What is the name of your elementary school?</item>
+        <item>Who is your childhood hero?</item>
+    </string-array>
+    <string name="security_question">Security Question</string>
+    <string name="answer_question_prompt">Please answer the question to reset password.</string>
+    <string name="forget_password">Forget Password</string>
+    <string name="submit">SUBMIT</string>
+    <string name="security_question_answer">Your answer is empty</string>
+    <string name="lock_activity_forget_password">Forgot Password?</string>
+    <string name="incorrect_question_answer_hint">Incorrect answer</string>
 
     <!--back up-->
     <string name="menu_backup_restore">Backup &amp; Restore</string>
@@ -1266,7 +1289,7 @@
     <string name="backup_tips_before_uninstalling_content">RESTORE your messages before uninstalling our app, so as not to lose your messages.</string>
     <string name="backup_folder_select_toast">Should select a folder to backup messages.</string>
     <string name="message_free_up_process_dialog">Freeing up your message space…</string>
-    <string name="backup_process_number_divider">/</string>
+    <string name="backup_process_number_divider" translatable="false">/</string>
     <string name="backup_state_scanning">Scanning…</string>
     <string name="local_backup_process_hint">Backing up…</string>
     <string name="cloud_backup_process_hint">Uploading backup…</string>
@@ -1285,6 +1308,7 @@
     <string name="backup_banner_guide_title">%1$d messages are unprotected without backup.</string>
     <string name="backup_local_summary">Back up to local storage</string>
     <string name="backup_free_success">Free Up Space Successfully</string>
-    
+
+    <string name="switch_sim">Switch SIM</string>
 </resources>
 

@@ -1,0 +1,231 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/dialog_root_view"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/dialog_background"
+    android:clipChildren="false">
+
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:background="@drawable/dialog_bg"
+        android:clickable="true"
+        android:clipChildren="false"
+        android:clipToPadding="false"
+        android:orientation="vertical"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintWidth_percent="0.82">
+
+        <com.android.messaging.ui.view.MessagesTextView
+            android:id="@+id/dialog_title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="@dimen/dialog_content_margin_right"
+            android:layout_marginStart="@dimen/dialog_content_margin_left"
+            android:layout_marginTop="24dp"
+            android:alpha="@dimen/dialog_content_title"
+            android:visibility="gone"
+            android:includeFontPadding="false"
+            android:textColor="@color/color_dialog_title_text"
+            android:textSize="@dimen/dialog_content_title_size"
+            app:autoSizeMaxTextSize="@dimen/dialog_content_title_size"
+            app:autoSizeMinTextSize="16sp"
+            app:font_family_changeable="false"
+            app:typeface="@string/custom_font_semibold"
+            tools:ignore="RelativeOverlap"
+            tools:text="Add to Contacts?"/>
+
+        <android.support.constraint.ConstraintLayout
+            android:id="@+id/content_view"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="13dp"
+            android:clipChildren="false"
+            android:clipToPadding="false"
+            tools:ignore="RelativeOverlap">
+
+            <com.android.messaging.ui.view.MessagesTextView
+                android:id="@id/title"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="@string/switch_sim"
+                android:textSize="13.3sp"
+                android:textColor="#6e717b"
+                android:lineSpacingExtra="3.3sp"
+                android:layout_marginStart="@dimen/dialog_btn_margin_left"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:typeface="@string/custom_font_medium"/>
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="15dp"
+                android:layout_marginBottom="25dp"
+                android:clipChildren="false"
+                android:clipToPadding="false"
+                android:orientation="vertical"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/title">
+
+                <LinearLayout
+                    android:id="@+id/container_sim_1"
+                    android:layout_width="match_parent"
+                    android:layout_height="54dp">
+
+                    <ImageView
+                        android:id="@+id/iv_check_sim_1"
+                        android:layout_width="18dp"
+                        android:layout_marginStart="25dp"
+                        android:layout_gravity="center_vertical"
+                        android:layout_height="18dp"/>
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_marginLeft="13dp"
+                        android:paddingTop="2dp"
+                        android:layout_weight="1"
+                        android:orientation="vertical"
+                        android:layout_gravity="center_vertical"
+                        android:layout_height="wrap_content">
+
+                        <com.android.messaging.ui.view.MessagesTextView
+                            android:id="@+id/carrier_1"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/switch_sim"
+                            android:textSize="15.3sp"
+                            android:textColor="#222327"
+                            app:typeface="@string/custom_font_medium"/>
+
+                        <com.android.messaging.ui.view.MessagesTextView
+                            android:id="@+id/phone_number_1"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="-5dp"
+                            android:text="@string/switch_sim"
+                            android:textSize="13.3sp"
+                            android:textColor="#74767d"
+                            app:typeface="@string/custom_font_medium"/>
+                    </LinearLayout>
+
+                    <ImageView
+                        android:id="@+id/iv_tip_1"
+                        android:layout_width="wrap_content"
+                        android:layout_marginEnd="27dp"
+                        android:layout_gravity="center_vertical"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/ic_dual_sim_1"/>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/container_sim_2"
+                    android:layout_width="match_parent"
+                    android:layout_height="54dp">
+
+                    <ImageView
+                        android:id="@+id/iv_check_sim_2"
+                        android:layout_width="18dp"
+                        android:layout_marginStart="25dp"
+                        android:layout_gravity="center_vertical"
+                        android:layout_height="18dp"/>
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_marginLeft="13dp"
+                        android:layout_weight="1"
+                        android:orientation="vertical"
+                        android:layout_gravity="center_vertical"
+                        android:paddingTop="2dp"
+                        android:layout_height="wrap_content">
+
+                        <com.android.messaging.ui.view.MessagesTextView
+                            android:id="@+id/carrier_2"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/switch_sim"
+                            android:textSize="15.3sp"
+                            android:textColor="#222327"
+                            app:typeface="@string/custom_font_medium"/>
+
+                        <com.android.messaging.ui.view.MessagesTextView
+                            android:id="@+id/phone_number_2"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="-5dp"
+                            android:text="@string/switch_sim"
+                            android:textSize="13.3sp"
+                            android:textColor="#74767d"
+                            app:typeface="@string/custom_font_medium"/>
+                    </LinearLayout>
+
+                    <ImageView
+                        android:id="@+id/iv_tip_2"
+                        android:layout_width="wrap_content"
+                        android:layout_marginEnd="27dp"
+                        android:layout_gravity="center_vertical"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/ic_dual_sim_2"/>
+                </LinearLayout>
+            </LinearLayout>
+        </android.support.constraint.ConstraintLayout>
+
+        <LinearLayout
+            android:id="@+id/btn_group_horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            android:layout_marginBottom="@dimen/dialog_group_btn_margin_bottom"
+            android:layout_marginEnd="@dimen/dialog_group_btn_margin_right"
+            android:layout_marginStart="@dimen/dialog_group_btn_margin_left"
+            android:layout_marginTop="@dimen/dialog_group_btn_margin_top"
+            android:gravity="center_horizontal"
+            android:orientation="horizontal">
+
+            <com.android.messaging.ui.view.MessagesTextView
+                android:id="@+id/negative_btn"
+                android:layout_width="0dp"
+                android:layout_height="@dimen/dialog_btn_height"
+                android:layout_marginEnd="16dp"
+                android:layout_weight="1"
+                android:background="@drawable/dialog_negative_button_bg"
+                android:gravity="center"
+                android:includeFontPadding="false"
+                android:paddingEnd="@dimen/dialog_two_btn_padding_right"
+                android:paddingStart="@dimen/dialog_two_btn_padding_left"
+                android:text="@android:string/cancel"
+                android:textAllCaps="true"
+                android:textColor="#515151"
+                android:textSize="@dimen/dialog_ok_btn_text_size"
+                app:font_family_changeable="false"
+                app:typeface="@string/custom_font_semibold"/>
+
+            <com.android.messaging.ui.view.MessagesTextView
+                android:id="@+id/ok_btn"
+                android:layout_width="0dp"
+                android:layout_height="@dimen/dialog_btn_height"
+                android:layout_weight="1"
+                android:background="@drawable/dialog_positive_button_bg"
+                android:gravity="center"
+                android:includeFontPadding="false"
+                android:paddingEnd="@dimen/dialog_two_btn_padding_right"
+                android:paddingStart="@dimen/dialog_two_btn_padding_left"
+                android:text="@android:string/ok"
+                android:textAllCaps="true"
+                android:textColor="@android:color/white"
+                android:textSize="@dimen/dialog_ok_btn_text_size"
+                app:font_family_changeable="false"
+                app:typeface="@string/custom_font_semibold"/>
+        </LinearLayout>
+    </LinearLayout>
+</android.support.constraint.ConstraintLayout>

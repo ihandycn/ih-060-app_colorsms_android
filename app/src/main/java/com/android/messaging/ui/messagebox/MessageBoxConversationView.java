@@ -46,6 +46,9 @@ import com.android.messaging.util.UiUtils;
 import com.superapps.util.BackgroundDrawables;
 import com.superapps.util.Dimensions;
 
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 import static com.android.messaging.datamodel.NoConfirmationSmsSendService.EXTRA_SELF_ID;
 import static com.android.messaging.ui.appsettings.PrivacyModeSettings.NONE;
 
@@ -204,6 +207,8 @@ public class MessageBoxConversationView extends FrameLayout {
         if (TextUtils.isEmpty(message)) {
             return;
         }
+        checkEmojiEvent(message);
+
         Context context = Factory.get().getApplicationContext();
         final Intent sendIntent = new Intent(context, NoConfirmationSmsSendService.class);
         sendIntent.setAction(TelephonyManager.ACTION_RESPOND_VIA_MESSAGE);
@@ -229,6 +234,22 @@ public class MessageBoxConversationView extends FrameLayout {
         BugleAnalytics.logEvent("SMS_PopUp_Reply_BtnClick_Multifunction", false, true,
                 "type", type, "type2", MessageBoxAnalytics.getConversationType(),
                 "withTheme", String.valueOf(!ThemeUtils.isDefaultTheme()));
+    }
+
+    private void checkEmojiEvent(String input) {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                final String EMOJI_REGEX = ".*(([\\ud83c\\udc00-\\ud83c\\udfff]|[\\ud83d\\udc00-\\ud83d\\udfff]|[\\u2600-\\u27ff]|[\\ue000-\\uf8ff])[\\uD83C\\uDFFB-\\uD83C\\uDFFF]" +
+                        "|([\\ud83c\\udc00-\\ud83c\\udfff]|[\\ud83d\\udc00-\\ud83d\\udfff]|[\\u2600-\\u27ff]|[\\ue000-\\uf8ff])).*";
+                Pattern emojiPattern = Pattern.compile(EMOJI_REGEX,
+                        Pattern.UNICODE_CASE | Pattern.CASE_INSENSITIVE);
+                Matcher matcher = emojiPattern.matcher(input);
+                if (matcher.matches()) {
+                    BugleAnalytics.logEvent("Message_Emoji_Send");
+                }
+            }
+        }).start();
     }
 
 

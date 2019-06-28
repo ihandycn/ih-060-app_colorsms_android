@@ -622,6 +622,7 @@
     <string name="welcome_set_default_failed_toast">Приложение Color SMS установлено неправильно</string>
     <string name="dialog_add_contact_confirmation">Добавить</string>
     <string name="sms_network_error">Ошибка сети.</string>
+    <string name="network_error_and_try_again">Ошибка сети.</string>
     <string name="reload">Перезагрузить</string>
     <string name="sms_notification_channel">Уведомление об СМС</string>
     <string name="sms_notification_channel_description">Показывать уведомления о входящих СМС</string>
@@ -669,6 +670,7 @@
 	<string name="welcome_choose_theme_title">Выберите понравившуюся тему</string>
 	<string name="welcome_choose_theme_current">ТЕКУЩАЯ</string>
 	<string name="setting_reset_customization_title">Сброс индивидуальных настроек</string>
+    <string name="menu_reset_customization">Сброс индивидуальных настроек</string>
 	<string name="setting_reset_customization_summary">Стереть индивидуальные настройки данного чата.</string>
 	<string name="action_pin">Закрепить сверху</string>
 
@@ -737,16 +739,12 @@
 	<string name="menu_invite_friends">Пригласить друзей</string>
 	<string name="invite_friends_now">ПРИГЛАСИТЬ</string>
 
-    <string name="action_unarchive">"Вернуть из архива"</string>
-    <string name="action_archive">"Архив"</string>
-
     <string name="invite_friends_add_friends">ДОБАВИТЬ</string>
     <string name="invite_friends_default_back_to_main_page_title">Пригласить друзей</string>
     <string name="invite_friends_invite_cancel_button">Отмена</string>
     <string name="invite_friends_invite_save_button">СПАСТИ</string>
     <string name="contacts">контакты</string>
     <string name="privacy_mode_conversation_name">контакт</string>
-    <string name="notification_title_in_private_box_single">Новое сообщение</string>
     <string name="privacy_mode_open_button_text">ОТКРЫТЬ</string>
 
 	<string name="backup_banner_guide_title">%1$d SMS не защищ. без резервных копий.</string>
@@ -784,4 +782,54 @@
     <string name="backup_local_summary">Резервное копирование в локальное хранилище</string>
     <string name="backup_free_success">Освободите пространство успешно</string>
     <string name="restore_downloading">Загрузка...</string>
+
+    <string name="action_unarchive">"Вернуть из архива"</string>
+    <string name="action_archive">"Архив"</string>
+
+    <!-- Private Box Lock Question-->
+    <string name="ok">OK</string>
+    <string name="cancel">Отмена</string>
+    <string name="set">ЗАДАТЬ</string>
+    <string name="submit">ОТПРАВИТЬ</string>
+    <string name="time_minute_single">минута</string>
+    <string name="lock_activity_forget_password">Забыли пароль?</string>
+    <string name="security_question">Контрольный вопрос</string>
+    <string name="forget_password">Не помню пароль</string>
+    <string name="answer_question_prompt">Ответьте на вопрос, чтобы сбросить пароль.</string>
+    <string name="choose_question_prompt">Выберите контрольный вопрос на случай, если вы забудете пароль.</string>
+    <string name="enter_answer_prompt">Ответ:</string>
+    <string name="security_question_answer">Ответ не указан.</string>
+    <string name="pickerview_year">год</string>
+    <string name="pickerview_hours">час</string>
+    <string-array name="question_spinner_content">
+        <item>Когда вы родились?</item>
+        <item>Фамилия вашего первого учителя?</item>
+        <item>Номер школы, в которой вы учились?</item>
+        <item>Кто был вашим героем в детстве?</item>
+    </string-array>
+    <string name="private_setting_security_question_summary">На случай, если вы забудете пароль.</string>
+
+
+	<string name="incorrect_question_answer_hint">Неверный ответ</string>
+	<string name="private_box_empty_contact_hint">Нет личных контактов</string>
+	<string name="private_contacts">Личные контакты</string>
+
+
+	<string name="backup_guide_dialog_title">Резервное копирование SMS</string>
+
+
+	<string name="invite_friends_success_toast">Приглашение отправлено</string>
+	<string name="notification_summary">Получайте уведомления о входящих сообщениях</string>
+	<string name="archived_conversations">Архивные диалоги</string>
+	<string name="others">Другое</string>
+	<string name="about">О приложении</string>
+	<string name="conversation_pinned">Закреплено</string>
+	<string name="conversation_unpinned">Откреплено</string>
+	<string name="action_lock">Заблокировать</string>
+	<string name="action_unlock">Разблокировать</string>
+	<string name="message_locked_when_delete">Для удаления заблокированных сообщений нужно сначала их разблокировать</string>
+	<string name="message_copied">Скопировано в буфер обмена</string>
+	<string name="private_box_remove_from_box">Удалить из личных сообщений</string>
+	<string name="private_box_move_to_box">Переместить в личные сообщения</string>
+	<string name="private_box_add_private_contacts">Добавьте личные контакты!</string>
 </resources>

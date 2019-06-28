@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/security_question_container"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#f1f1f1"
+        android:orientation="vertical">
+
+        <include
+            android:id="@+id/toolbar"
+            layout="@layout/tool_bar" />
+
+        <TextView
+            android:id="@+id/question_prompt"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
+            android:layout_marginLeft="15dp"
+            android:layout_marginRight="15dp"
+            android:layout_marginTop="20dp"
+            android:text="@string/choose_question_prompt"
+            android:textColor="@color/lock_intruder_title" />
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="20dp"
+            android:layout_marginLeft="15dp"
+            android:layout_marginRight="15dp">
+
+            <!-- Only one of the following two is visible at a time -->
+
+            <!-- Choose question to set -->
+            <Spinner
+                android:id="@+id/question_spinner"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/spinner_bg"
+                android:focusable="true"
+                android:focusableInTouchMode="true"
+                android:spinnerMode="dropdown" />
+
+            <!-- Present question to answer -->
+            <EditText
+                android:id="@+id/question_edit_text"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/edit_text"
+                android:inputType="none"
+                android:padding="@dimen/text_edit_padding"
+                android:singleLine="true"
+                android:textColor="@android:color/black"
+                android:textSize="@dimen/text_edit_size" />
+
+        </FrameLayout>
+
+        <LinearLayout
+            android:id="@+id/answer_ll"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:visibility="gone">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="15dp"
+                android:text="@string/enter_answer_prompt"
+                android:textColor="@android:color/black" />
+
+            <EditText
+                android:id="@+id/answer_edit_text"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="15dp"
+                android:layout_marginRight="15dp"
+                android:background="@drawable/edit_text"
+                android:padding="@dimen/text_edit_padding"
+                android:singleLine="true"
+                android:textColor="@android:color/black"
+                android:textCursorDrawable="@drawable/edit_text_cursor_white"
+                android:textSize="@dimen/text_edit_size" />
+        </LinearLayout>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_above="@+id/set_only_button"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="20dp">
+
+                <LinearLayout
+                    android:id="@+id/time_picker_ll"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:paddingBottom="10dp"
+                    android:orientation="horizontal"
+                    android:visibility="invisible">
+
+                    <com.android.messaging.privatebox.ui.view.timepickerview.WheelView
+                        android:id="@+id/year"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1" />
+
+                    <com.android.messaging.privatebox.ui.view.timepickerview.WheelView
+                        android:id="@+id/month"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1.1" />
+
+                    <com.android.messaging.privatebox.ui.view.timepickerview.WheelView
+                        android:id="@+id/day"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1.1" />
+
+                    <com.android.messaging.privatebox.ui.view.timepickerview.WheelView
+                        android:id="@+id/hour"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1.1" />
+
+                    <com.android.messaging.privatebox.ui.view.timepickerview.WheelView
+                        android:id="@+id/min"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1.1" />
+                </LinearLayout>
+            </RelativeLayout>
+
+            <TextView
+                android:id="@+id/set_only_button"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="20dp"
+                android:layout_marginBottom="18.3dp"
+                android:layout_alignParentBottom="true"
+                android:gravity="center"
+                android:text="@string/set"
+                android:textColor="@android:color/white"
+                android:textSize="20sp" />
+
+        </RelativeLayout>
+    </LinearLayout>
+</FrameLayout>

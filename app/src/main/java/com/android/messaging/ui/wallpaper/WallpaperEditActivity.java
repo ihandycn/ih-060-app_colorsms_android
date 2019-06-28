@@ -32,7 +32,6 @@ import com.android.messaging.util.CommonUtils;
 import com.android.messaging.util.ViewUtils;
 import com.bumptech.glide.request.target.ImageViewTarget;
 import com.bumptech.glide.request.transition.Transition;
-import com.ihs.app.framework.activity.HSAppCompatActivity;
 import com.ihs.commons.utils.HSLog;
 import com.superapps.util.Dimensions;
 import com.superapps.util.Threads;

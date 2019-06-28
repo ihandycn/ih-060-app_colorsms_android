@@ -63,10 +63,9 @@ public class WelcomeSetAsDefaultActivity extends AppCompatActivity {
         }
 
         findViewById(R.id.welcome_set_default_button).setBackgroundDrawable(
-                BackgroundDrawables.createBackgroundDrawable(getResources().getColor(R.color.welcome_button_dark_green), Dimensions.pxFromDp(6.7f), true));
+                BackgroundDrawables.createBackgroundDrawable(getResources().getColor(R.color.primary_color), Dimensions.pxFromDp(6.7f), true));
         findViewById(R.id.welcome_set_default_button).setOnClickListener(v -> {
             final Intent intent = UIIntents.get().getChangeDefaultSmsAppIntent(WelcomeSetAsDefaultActivity.this);
-            DefaultSMSUtils.invalidateCache();
             startActivityForResult(intent, REQUEST_SET_DEFAULT_SMS_APP);
             if (mIsFromWelcomeStart) {
                 BugleAnalytics.logEvent("Start_SetAsDefault_Click", true, true);
@@ -102,7 +101,7 @@ public class WelcomeSetAsDefaultActivity extends AppCompatActivity {
     @Override
     public void onActivityResult(final int requestCode, final int resultCode, final Intent data) {
         if (requestCode == REQUEST_SET_DEFAULT_SMS_APP) {
-            if (DefaultSMSUtils.isDefaultSmsApp()) {
+            if (DefaultSMSUtils.isDefaultSmsApp(true)) {
                 mHandler.sendEmptyMessageDelayed(EVENT_RETRY_NAVIGATION, 100);
             } else {
                 Toasts.showToast(R.string.welcome_set_default_failed_toast, Toast.LENGTH_LONG);

@@ -59,6 +59,7 @@ import com.android.messaging.ui.SnackBar.Placement;
 import com.android.messaging.ui.SnackBarInteraction;
 import com.android.messaging.ui.SnackBarManager;
 import com.android.messaging.ui.customize.PrimaryColors;
+import com.superapps.util.Dimensions;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
@@ -169,7 +170,7 @@ public class UiUtils {
         Assert.notNull(context);
         Assert.isTrue(!TextUtils.isEmpty(message));
         Assert.notNull(action);
-        SnackBarManager.get()
+        SnackBarManager.get(context)
                 .newBuilder(parentView)
                 .setText(message)
                 .setAction(action)
@@ -586,6 +587,13 @@ public class UiUtils {
             toolbar.setBackground(new ColorDrawable(activity.getResources().getColor(R.color.action_bar_background_color)));
             setStatusBarColor(activity, activity.getResources().getColor(R.color.action_bar_background_color));
         }
+    }
+
+    public static boolean isLongScreenDevice(Context context) {
+        int phoneHeight = Dimensions.getPhoneHeight(context);
+        float heightThresholdInDp = 700f;
+
+        return  Dimensions.dpFromPx(phoneHeight) > heightThresholdInDp;
     }
 
 

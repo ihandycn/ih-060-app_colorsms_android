@@ -573,6 +573,7 @@
     <string name="welcome_set_default_failed_toast">Color SMSは正しくセットアップされませんでした</string>
     <string name="dialog_add_contact_confirmation">追加</string>
     <string name="sms_network_error">ネットワークエラー。</string>
+    <string name="network_error_and_try_again">ネットワークエラー。</string>
     <string name="reload">リロード</string>
     <string name="sms_notification_channel">SMS通知</string>
     <string name="sms_notification_channel_description">SMSを受信した時に通知を表示する</string>
@@ -622,6 +623,7 @@
 	<string name="welcome_choose_theme_title">お好きなテーマを選択</string>
 	<string name="welcome_choose_theme_current">現在</string>
 	<string name="setting_reset_customization_title">カスタマイズをリセット</string>
+    <string name="menu_reset_customization">カスタマイズをリセット</string>
 	<string name="setting_reset_customization_summary">このチャットのカスタマイズを消去する。</string>
 	<string name="action_pin">ピン付けしてトップに移動する</string>
 
@@ -689,9 +691,6 @@
 	<string name="menu_invite_friends">友人を招待する</string>
 	<string name="invite_friends_now">今すぐ招待する</string>
 
-    <string name="action_unarchive">"アーカイブ解除"</string>
-    <string name="action_archive">"アーカイブ"</string>
-
 	<string name="backup_banner_guide_title">%1$d件のメッセージがバックアップしておらず保護されていません。</string>
 	<string name="backup_guide_dialog_first_content">携帯電話が故障したり失くなる前にメッセージをバックアップしましょう。</string>
 	<string name="backup_guide_dialog_second_content">%1$d件のメッセージが保護されていません。</string>
@@ -733,8 +732,57 @@
     <string name="invite_friends_default_back_to_main_page_title">友人を招待する</string>
     <string name="privacy_mode_open_button_text">開いた</string>
     <string name="invite_friends_invite_save_button">保存</string>
-    <string name="notification_title_in_private_box_single">新しいメッセージ</string>
     <string name="invite_friends_invite_cancel_button">キャンセル</string>
     <string name="privacy_mode_conversation_name">連絡先</string>
     <string name="contacts">連絡先</string>
+
+    <string name="action_unarchive">"アーカイブ解除"</string>
+    <string name="action_archive">"アーカイブ"</string>
+
+
+    <string name="ok">OK</string>
+    <string name="cancel">キャンセル</string>
+    <string name="submit">送信</string>
+    <string name="set">設定</string>
+    <string name="time_minute_single">分</string>
+    <string name="lock_activity_forget_password">パスワードをお忘れですか？</string>
+    <string name="security_question">セキュリティに関する質問</string>
+    <string name="forget_password">パスワードを忘れました</string>
+    <string name="answer_question_prompt">質問に答えてパスワードをリセットしてください。</string>
+    <string name="choose_question_prompt">パスワードを忘れた場合に備えて、セキュリティに関する質問を設定してください。</string>
+    <string name="enter_answer_prompt">回答：</string>
+    <string name="security_question_answer">答えは空です</string>
+    <string name="pickerview_year">年</string>
+    <string name="pickerview_hours">時間</string>
+    <string-array name="question_spinner_content">
+        <item>あなたの誕生日はいつですか？</item>
+        <item>あなたの最初の先生の姓は何ですか？</item>
+        <item>あなたの小学校の名前は何ですか？</item>
+        <item>あなたの子供時代のヒーローは誰ですか？</item>
+    </string-array>
+    <string name="private_setting_security_question_summary">パスワードを忘れた場合</string>
+
+
+	<string name="incorrect_question_answer_hint">回答が間違っています</string>
+	<string name="private_box_empty_contact_hint">プライベートな連絡先はありません</string>
+	<string name="private_contacts">プライベートな連絡先</string>
+
+
+	<string name="backup_guide_dialog_title">SMSバックアップ</string>
+
+
+	<string name="invite_friends_success_toast">招待に成功</string>
+	<string name="notification_summary">メッセージを受信した際に通知する</string>
+	<string name="archived_conversations">過去の会話</string>
+	<string name="others">その他</string>
+	<string name="about">アプリについて</string>
+	<string name="conversation_pinned">一番上に移動する</string>
+	<string name="conversation_unpinned">元に戻す</string>
+	<string name="action_lock">ロック</string>
+	<string name="action_unlock">アンロック</string>
+	<string name="message_locked_when_delete">ロックしたメッセージを削除するには、最初にアンロックします</string>
+	<string name="message_copied">クリップボードにコピーする</string>
+	<string name="private_box_remove_from_box">プライベート受信箱から削除する</string>
+	<string name="private_box_move_to_box">プライベート受信箱に移動する</string>
+	<string name="private_box_add_private_contacts">プライベートな連絡先を追加してください！</string>
 </resources>

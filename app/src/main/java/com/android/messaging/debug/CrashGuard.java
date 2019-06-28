@@ -1,21 +1,5 @@
 package com.android.messaging.debug;
 
-import android.os.Handler;
-import android.os.Looper;
-import android.os.SystemClock;
-
-import com.crashlytics.android.core.CrashlyticsCore;
-import com.ihs.commons.config.HSConfig;
-import com.ihs.commons.utils.HSLog;
-import com.ihs.commons.utils.HSMapUtils;
-import com.superapps.util.Commons;
-
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-
 @SuppressWarnings({"WeakerAccess", "unused"})
 public final class CrashGuard {
 

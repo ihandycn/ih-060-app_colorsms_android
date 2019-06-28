@@ -4,9 +4,11 @@ import android.content.Context;
 import android.content.res.ColorStateList;
 import android.graphics.Typeface;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v7.widget.AppCompatRadioButton;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.RadioGroup;
 
 import com.android.messaging.Factory;
@@ -59,6 +61,13 @@ public class SelectSendingMessageDelayTimeDialog extends BaseDialogFragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+    }
+
+    @Nullable
+    @Override
+    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
+        setCanceledOnTouchOutside(true);
+        return super.onCreateView(inflater, container, savedInstanceState);
     }
 
     private View createBodyView() {

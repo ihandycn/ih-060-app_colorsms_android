@@ -49,6 +49,7 @@ public class ChooseMessageColorRecommendAdapter extends RecyclerView.Adapter<Cho
         mColorDrawables[1] = getDrawableByColor(secondPositionColor);
 
         int lastSelectedPosition = mSelectedPosition;
+        mSelectedPosition = -1;
         for (int i = 0; i < mItemCount; i++) {
             if (mData[i] == selectedColor) {
                 mSelectedPosition = i;
@@ -57,7 +58,9 @@ public class ChooseMessageColorRecommendAdapter extends RecyclerView.Adapter<Cho
 
         notifyItemRangeChanged(0, 2);
         notifyItemChanged(lastSelectedPosition);
-        notifyItemChanged(mSelectedPosition);
+        if (mSelectedPosition >= 0) {
+            notifyItemChanged(mSelectedPosition);
+        }
     }
 
     void setOnColorChangedListener(OnColorChangedListener listener) {

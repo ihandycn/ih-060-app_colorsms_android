@@ -18,6 +18,7 @@ package com.android.messaging.ui.conversationlist;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
 import android.view.ActionMode;
 import android.view.MenuItem;
 import android.view.View;
@@ -138,6 +139,11 @@ public class ArchivedConversationListActivity extends AbstractConversationListAc
     }
 
     @Override
+    public boolean isArchiveMode() {
+        return true;
+    }
+
+    @Override
     public void onActionBarHome() {
         onBackPressed();
     }
@@ -145,18 +151,6 @@ public class ArchivedConversationListActivity extends AbstractConversationListAc
     @Override
     public void onActionMenu() {
 
-    }
-
-    @Override
-    public void onPin(Collection<MultiSelectActionModeCallback.SelectedConversation> conversations, boolean pin) {
-        for (MultiSelectActionModeCallback.SelectedConversation conversation : conversations) {
-            if (pin) {
-                PinConversationAction.pinConversation(conversation.conversationId);
-            } else {
-                PinConversationAction.unpinConversation(conversation.conversationId);
-            }
-        }
-        exitMultiSelectState();
     }
 
     @Override
@@ -170,6 +164,9 @@ public class ArchivedConversationListActivity extends AbstractConversationListAc
     }
 
     public static void logUnarchiveEvent(DatabaseWrapper db, String conversationId, String from) {
+        if (TextUtils.isEmpty(conversationId)) {
+            return;
+        }
         //for archive log
         long count = db.queryNumEntries(DatabaseHelper.CONVERSATIONS_TABLE,
                 DatabaseHelper.ConversationColumns.ARCHIVE_STATUS + "=1 AND "

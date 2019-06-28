@@ -30,6 +30,7 @@ import com.android.messaging.Factory;
 import com.android.messaging.R;
 import com.android.messaging.receiver.SendStatusReceiver;
 import com.android.messaging.util.Assert;
+import com.android.messaging.util.BugleAnalytics;
 import com.android.messaging.util.BugleGservices;
 import com.android.messaging.util.BugleGservicesKeys;
 import com.android.messaging.util.FabricUtils;
@@ -109,9 +110,7 @@ public class SmsSender {
                 case Activity.RESULT_OK:
                     return FAILURE_LEVEL_NONE;
                 case SmsManager.RESULT_ERROR_NO_SERVICE:
-                    return FAILURE_LEVEL_TEMPORARY;
                 case SmsManager.RESULT_ERROR_RADIO_OFF:
-                    return FAILURE_LEVEL_PERMANENT;
                 case SmsManager.RESULT_ERROR_GENERIC_FAILURE:
                     return FAILURE_LEVEL_PERMANENT;
                 default: {
@@ -144,6 +143,8 @@ public class SmsSender {
             LogUtil.e(TAG, "SmsSender: failure in sending message part. "
                     + " requestId=" + requestId + " partId=" + partId
                     + " resultCode=" + resultCode + " errorCode=" + errorCode);
+            BugleAnalytics.logEvent("SMS_Send_Failed", false, true,
+                    "SmsSendResult", "False");
             if (errorCode != SendStatusReceiver.NO_ERROR_CODE) {
                 final Context context = Factory.get().getApplicationContext();
                 UiUtils.showToastAtBottom(getSendErrorToastMessage(context, subId, errorCode));
@@ -153,6 +154,8 @@ public class SmsSender {
                 LogUtil.v(TAG, "SmsSender: received sent result. " + " requestId=" + requestId
                         + " partId=" + partId + " resultCode=" + resultCode);
             }
+            BugleAnalytics.logEvent("SMS_Send_Failed", false, true,
+                    "SmsSendResult", "True");
         }
         if (requestId != null) {
             final SendResult result = sPendingMessageMap.get(requestId);

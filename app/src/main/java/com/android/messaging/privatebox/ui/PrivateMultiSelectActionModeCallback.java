@@ -245,13 +245,17 @@ public class PrivateMultiSelectActionModeCallback implements Callback {
     }
 
     private void onPin(boolean pin) {
+        ArrayList<String> conversationList = new ArrayList<>();
         for (PrivateMultiSelectActionModeCallback.SelectedConversation conversation : mSelectedConversations.values()) {
-            if (pin) {
-                PinConversationAction.pinConversation(conversation.conversationId);
-            } else {
-                PinConversationAction.unpinConversation(conversation.conversationId);
-            }
+            conversationList.add(conversation.conversationId);
         }
+
+        if (pin) {
+            PinConversationAction.pinConversation(conversationList);
+        } else {
+            PinConversationAction.unpinConversation(conversationList);
+        }
+
         final MultiSelectConversationListActivity activity = mWeakActivity.get();
         if (activity != null) {
             activity.exitMultiSelectState();

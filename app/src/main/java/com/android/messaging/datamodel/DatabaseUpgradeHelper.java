@@ -63,6 +63,10 @@ public class DatabaseUpgradeHelper {
         if (currentVersion < 5) {
             currentVersion = upgradeToVersion5(db);
         }
+        if (currentVersion < 6) {
+            currentVersion = upgradeToVersion6(db);
+        }
+
         // Rebuild all the views
         final Context context = Factory.get().getApplicationContext();
         DatabaseHelper.dropAllViews(db);
@@ -134,6 +138,26 @@ public class DatabaseUpgradeHelper {
 
         }
         return 5;
+    }
+
+    private int upgradeToVersion6(SQLiteDatabase db) {
+        LogUtil.d("delete", "delete_messages");
+        Cursor cursor = null;
+        try {
+            cursor = db.rawQuery("SELECT * FROM " + DatabaseHelper.MESSAGES_TABLE + " LIMIT 0"
+                    , null);
+            if (cursor != null && cursor.getColumnIndex(DatabaseHelper.MessageColumns.IS_DELETED) == -1) {
+                db.execSQL("ALTER TABLE " + DatabaseHelper.MESSAGES_TABLE
+                        + " ADD COLUMN " + DatabaseHelper.MessageColumns.IS_DELETED
+                        + " INT DEFAULT(0)");
+            }
+        } catch (Exception e) {
+        } finally {
+            if (null != cursor && !cursor.isClosed()) {
+                cursor.close();
+            }
+        }
+        return 6;
     }
 
     /**

@@ -18,14 +18,19 @@ package com.android.messaging.ui.conversation;
 import android.Manifest;
 import android.animation.Animator;
 import android.animation.ObjectAnimator;
+import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Context;
-import android.content.res.Resources;
+import android.graphics.PorterDuff;
 import android.graphics.Rect;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.v4.graphics.drawable.DrawableCompat;
 import android.support.v4.view.animation.PathInterpolatorCompat;
 import android.support.v7.app.ActionBar;
+import android.support.v7.content.res.AppCompatResources;
 import android.text.Editable;
 import android.text.InputFilter;
 import android.text.InputFilter.LengthFilter;
@@ -36,10 +41,12 @@ import android.text.style.AbsoluteSizeSpan;
 import android.text.style.ForegroundColorSpan;
 import android.util.AttributeSet;
 import android.view.ContextThemeWrapper;
+import android.view.Gravity;
 import android.view.KeyEvent;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.accessibility.AccessibilityEvent;
+import android.view.Window;
 import android.view.animation.Interpolator;
 import android.view.inputmethod.EditorInfo;
 import android.widget.FrameLayout;
@@ -65,6 +72,7 @@ import com.android.messaging.datamodel.data.MessageData;
 import com.android.messaging.datamodel.data.MessagePartData;
 import com.android.messaging.datamodel.data.ParticipantData;
 import com.android.messaging.datamodel.data.PendingAttachmentData;
+import com.android.messaging.datamodel.data.SubscriptionListData;
 import com.android.messaging.datamodel.data.SubscriptionListData.SubscriptionListEntry;
 import com.android.messaging.font.FontUtils;
 import com.android.messaging.sms.MmsConfig;
@@ -79,9 +87,7 @@ import com.android.messaging.ui.dialog.FiveStarRateDialog;
 import com.android.messaging.ui.emoji.utils.EmojiManager;
 import com.android.messaging.ui.senddelaymessages.SendDelayMessagesManager;
 import com.android.messaging.ui.signature.SignatureSettingDialog;
-import com.android.messaging.util.AccessibilityUtil;
 import com.android.messaging.util.Assert;
-import com.android.messaging.util.AvatarUriUtil;
 import com.android.messaging.util.BugleActivityUtil;
 import com.android.messaging.util.BugleAnalytics;
 import com.android.messaging.util.BuglePrefs;
@@ -102,6 +108,8 @@ import com.superapps.util.Threads;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * This view contains the UI required to generate and send messages.
@@ -136,17 +144,15 @@ public class ComposeMessageView extends LinearLayout
 
         void showAttachmentChooser();
 
-        boolean shouldShowSubjectEditor();
-
         boolean shouldHideAttachmentsWhenSimSelectorShown();
-
-        Uri getSelfSendButtonIconUri();
 
         int getAttachmentsClearedFlags();
 
         boolean isCameraOrGalleryShowing();
 
         void onClickMediaOrEmoji();
+
+        Activity getHostActivity();
     }
 
     private static final String TAG = ComposeMessageView.class.getSimpleName();
@@ -165,8 +171,8 @@ public class ComposeMessageView extends LinearLayout
     private PlainTextEditText mComposeEditText;
     private PlainTextEditText mComposeSubjectText;
     private TextView mMmsIndicator;
-    private SimIconView mSelfSendIcon;
     private ImageView mSendButton;
+    private ImageView mSimButton;
     private ImageView mDelayCloseButton;
     private SendDelayProgressBar mSendDelayProgressBar;
     private View mSubjectView;
@@ -338,29 +344,6 @@ public class ComposeMessageView extends LinearLayout
             return true;
         });
 
-        mSelfSendIcon = findViewById(R.id.self_send_icon);
-        mSelfSendIcon.setOnClickListener(v -> {
-            SubscriptionListEntry entry = getSelfSubscriptionListEntry();
-            boolean shown = false;
-            if (entry != null) {
-                shown = mInputManager.toggleSimSelector(true /* animate */, entry);
-            }
-            hideAttachmentsWhenShowingSims(shown);
-        });
-        mSelfSendIcon.setOnLongClickListener(v -> {
-            if (mHost.shouldShowSubjectEditor()) {
-                showSubjectEditor();
-            } else {
-                SubscriptionListEntry entry = getSelfSubscriptionListEntry();
-                boolean shown = false;
-                if (entry != null) {
-                    shown = mInputManager.toggleSimSelector(true /* animate */, entry);
-                }
-                hideAttachmentsWhenShowingSims(shown);
-            }
-            return true;
-        });
-
         mComposeSubjectText = (PlainTextEditText) findViewById(
                 R.id.compose_subject_text);
         // We need the listener to change the avatar to the send button when the user starts
@@ -382,13 +365,46 @@ public class ComposeMessageView extends LinearLayout
             }
         });
         mSubjectView = findViewById(R.id.subject_view);
-        mSendButton = findViewById(R.id.send_message_button);
+        mDelayCloseButton = findViewById(R.id.delay_close_button);
 
-        initSendDelayMessagesRunnable();
+        mSendDelayRunnable = () -> {
+            logEmojiEvent();
+            sendMessageInternal(true /* checkMessageSize */);
+            mIsWaitingToSendMessage = false;
+            String conversationId = mBinding.getData().getConversationId();
+            updateVisualsOnDraftChanged();
+            resetDelaySendAnimation();
+            SendDelayMessagesManager.remove(conversationId);
+        };
+
+        mSendButton = findViewById(R.id.send_message_button);
         mSendButton.setBackground(BackgroundDrawables.createBackgroundDrawable(PrimaryColors.getPrimaryColor(),
                 PrimaryColors.getPrimaryColorDark(),
                 Dimensions.pxFromDp(29), false, true));
         mSendButton.setOnClickListener(clickView -> {
+            final String messageText = mComposeEditText.getText().toString();
+            boolean hasMessageText = (TextUtils.getTrimmedLength(messageText) > 0);
+
+            if (!TextUtils.isEmpty(mSignatureStr)) {
+                Editable inputEditable = mComposeEditText.getText();
+                int index = inputEditable.getSpanStart(mSignatureSpan);
+                if (index >= 0) {
+                    boolean signatureChanged = !mSignatureStr.equals(inputEditable.toString().substring(index, inputEditable.length()));
+                    if (index <= 1 && !signatureChanged) {
+                        hasMessageText = false;
+                    }
+                }
+            }
+
+            final String subject = mComposeSubjectText.getText().toString();
+            final boolean hasSubject = (TextUtils.getTrimmedLength(subject) > 0);
+            final boolean hasWorkingDraft = hasMessageText || hasSubject ||
+                    (mBinding.getData() != null && mBinding.getData().hasAttachments());
+            if (!hasWorkingDraft || !isDataLoadedForMessageSend()) {
+                return;
+            }
+
+            startMessageSendDelayAction(System.currentTimeMillis());
             BugleAnalytics.logEvent("Detailpage_BtnSend_Click", true, true,
                     "SendDelay", "" + SendDelaySettings.getSendDelayInSecs(),
                     "IsDefaultSMS", String.valueOf(DefaultSMSUtils.isDefaultSmsApp()),
@@ -396,37 +412,89 @@ public class ComposeMessageView extends LinearLayout
                             Manifest.permission.SEND_SMS) == RuntimePermissions.PERMISSION_GRANTED),
                     "ReadSMSPermission", String.valueOf(RuntimePermissions.checkSelfPermission(getContext(),
                             Manifest.permission.READ_SMS) == RuntimePermissions.PERMISSION_GRANTED));
-            startMessageSendDelayAction(System.currentTimeMillis());
         });
 
-        mSendButton.setOnLongClickListener(arg0 -> {
-            SubscriptionListEntry entry = getSelfSubscriptionListEntry();
-            boolean shown = false;
-            if (entry != null) {
-                shown = mInputManager.toggleSimSelector(true /* animate */, entry);
+        mSimButton = findViewById(R.id.sim_btn);
+        mSimButton.setBackground(
+                BackgroundDrawables.createBackgroundDrawable(0xffffffff, Dimensions.pxFromDp(15), true));
+        mSimButton.setOnClickListener(v -> {
+            if (mConversationDataModel.getData() == null
+                    || mConversationDataModel.getData().getSubscriptionListData() == null
+                    || mConversationDataModel.getData().getSubscriptionListData().getActiveSubscriptionEntriesExcludingDefault() == null) {
+                return;
             }
-            hideAttachmentsWhenShowingSims(shown);
-            if (mHost.shouldShowSubjectEditor()) {
-                showSubjectEditor();
-            }
-            return true;
-        });
-        mSendButton.setAccessibilityDelegate(new AccessibilityDelegate() {
-            @Override
-            public void onPopulateAccessibilityEvent(View host, AccessibilityEvent event) {
-                super.onPopulateAccessibilityEvent(host, event);
-                // When the send button is long clicked, we want TalkBack to announce the real
-                // action (select SIM or edit subject), as opposed to "long press send button."
-                if (event.getEventType() == AccessibilityEvent.TYPE_VIEW_LONG_CLICKED) {
-                    event.getText().clear();
-                    event.getText().add(getResources()
-                            .getText(mConversationDataModel != null && shouldShowSimSelector(mConversationDataModel.getData()) ?
-                                    R.string.send_button_long_click_description_with_sim_selector :
-                                    R.string.send_button_long_click_description_no_sim_selector));
-                    // Make this an announcement so TalkBack will read our custom message.
-                    event.setEventType(AccessibilityEvent.TYPE_ANNOUNCEMENT);
+
+            View mContentView = LayoutInflater.from(getContext()).inflate(
+                    R.layout.dialog_select_sim, null);
+            AlertDialog.Builder simBuilder = new AlertDialog.Builder(getContext(), R.style.TransparentDialog);
+            simBuilder.setView(mContentView);
+            AlertDialog dialog = simBuilder.create();
+            Window window = dialog.getWindow();
+            window.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+            window.setGravity(Gravity.CENTER);
+            dialog.setOnDismissListener(dialog1 -> updateOnSelfSubscriptionChange());
+
+            List<SubscriptionListData.SubscriptionListEntry> data =
+                    mConversationDataModel.getData().getSubscriptionListData().getActiveSubscriptionEntriesExcludingDefault();
+            int currentSlotId = getSelfSubscriptionListEntry().slotId;
+            ImageView ivTip1 = mContentView.findViewById(R.id.iv_tip_1);
+            ivTip1.getDrawable().setColorFilter(PrimaryColors.getPrimaryColor(), PorterDuff.Mode.SRC_ATOP);
+            ImageView ivTip2 = mContentView.findViewById(R.id.iv_tip_2);
+            ivTip2.getDrawable().setColorFilter(PrimaryColors.getPrimaryColor(), PorterDuff.Mode.SRC_ATOP);
+
+            for (int i = 0; i < 2 && i < data.size(); i++) {
+                final SubscriptionListData.SubscriptionListEntry entry = data.get(i);
+                if (entry.slotId == 1) {
+                    ((TextView) mContentView.findViewById(R.id.carrier_1)).setText(entry.displayName);
+
+                    final String displayDestination = TextUtils.isEmpty(entry.displayDestination) ?
+                            getContext().getResources().getString(R.string.sim_settings_unknown_number) :
+                            entry.displayDestination;
+                    ((TextView) mContentView.findViewById(R.id.phone_number_1)).setText(displayDestination);
+                    mContentView.findViewById(R.id.container_sim_1).setOnClickListener(v1 -> {
+                        selectSim(entry);
+                        dialog.dismiss();
+                    });
+                    mContentView.findViewById(R.id.container_sim_1).setBackground(BackgroundDrawables.createBackgroundDrawable(0xffffffff, 0, true));
+                } else {
+                    ((TextView) mContentView.findViewById(R.id.carrier_2)).setText(entry.displayName);
+                    final String displayDestination = TextUtils.isEmpty(entry.displayDestination) ?
+                            getContext().getResources().getString(R.string.sim_settings_unknown_number) :
+                            entry.displayDestination;
+                    ((TextView) mContentView.findViewById(R.id.phone_number_2)).setText(displayDestination);
+                    mContentView.findViewById(R.id.container_sim_2).setOnClickListener(v2 -> {
+                        selectSim(entry);
+                        dialog.dismiss();
+                    });
+                    mContentView.findViewById(R.id.container_sim_2).setBackground(BackgroundDrawables.createBackgroundDrawable(0xffffffff, 0, true));
                 }
             }
+
+            Drawable unwrappedDrawable = AppCompatResources.getDrawable(getContext(), R.drawable.iv_sim_selected);
+            Drawable selectedDrawable = DrawableCompat.wrap(unwrappedDrawable);
+            DrawableCompat.setTint(selectedDrawable, PrimaryColors.getPrimaryColor());
+            if (currentSlotId == 1) {
+                ImageView ivCheckSim1 = mContentView.findViewById(R.id.iv_check_sim_1);
+                ivCheckSim1.setImageDrawable(selectedDrawable);
+                ImageView ivCheckSim2 = mContentView.findViewById(R.id.iv_check_sim_2);
+                ivCheckSim2.setImageResource(R.drawable.iv_sim_unselected);
+            } else {
+                ImageView ivCheckSim1 = mContentView.findViewById(R.id.iv_check_sim_1);
+                ivCheckSim1.setImageResource(R.drawable.iv_sim_unselected);
+                ImageView ivCheckSim2 = mContentView.findViewById(R.id.iv_check_sim_2);
+                ivCheckSim2.setImageDrawable(selectedDrawable);
+            }
+
+            dialog.show();
+        });
+
+        mSendDelayProgressBar = findViewById(R.id.send_delay_circle_bar);
+        mSendDelayProgressBar.setOnClickListener(clickedView -> {
+            mIsWaitingToSendMessage = false;
+            Threads.removeOnMainThread(mSendDelayRunnable);
+            updateVisualsOnDraftChanged();
+            resetDelaySendAnimation();
+            BugleAnalytics.logEvent("Detailpage_BtnCancel_Click");
         });
 
         mMediaPickerLayout = findViewById(R.id.media_picker_container);
@@ -513,24 +581,9 @@ public class ComposeMessageView extends LinearLayout
         });
     }
 
-    private void initSendDelayMessagesRunnable() {
-        mDelayCloseButton = findViewById(R.id.delay_close_button);
-        mSendDelayProgressBar = findViewById(R.id.send_delay_circle_bar);
-        mSendDelayRunnable = () -> {
-            logEmojiEvent();
-            sendMessageInternal(true /* checkMessageSize */);
-            mIsWaitingToSendMessage = false;
-            String conversationId = mBinding.getData().getConversationId();
-            updateVisualsOnDraftChanged();
-            resetDelaySendAnimation();
-            SendDelayMessagesManager.remove(conversationId);
-        };
-    }
-
     private void resetDelaySendAnimation() {
         mDelayCloseButton.setVisibility(View.GONE);
         mSendDelayProgressBar.setVisibility(View.GONE);
-        mSelfSendIcon.setVisibility(View.VISIBLE);
         mDelayCloseButton.setAlpha(0.0f);
         mSendDelayProgressBar.setAlpha(0.0f);
         mSendDelayProgressBar.setScaleX(0.8f);
@@ -559,7 +612,6 @@ public class ComposeMessageView extends LinearLayout
         if (SendDelaySettings.getSendDelayInSecs() != 0) {
             mDelayCloseButton.setVisibility(View.VISIBLE);
             mSendDelayProgressBar.setVisibility(View.VISIBLE);
-            mSelfSendIcon.setVisibility(View.GONE);
             mSendButton.setVisibility(View.GONE);
 
             mDelayCloseButton.animate().alpha(1.0f).setDuration(160).setStartDelay(80).start();
@@ -569,13 +621,6 @@ public class ComposeMessageView extends LinearLayout
             mSendDelayProgressBar.startAnimation(SendDelaySettings.getSendDelayInSecs() - (mMillisecondsAnimated / 1000));
         }
         mMillisecondsAnimated = 0;
-        mSendDelayProgressBar.setOnClickListener(clickedView -> {
-            mIsWaitingToSendMessage = false;
-            Threads.removeOnMainThread(mSendDelayRunnable);
-            updateVisualsOnDraftChanged();
-            resetDelaySendAnimation();
-            BugleAnalytics.logEvent("Detailpage_BtnCancel_Click");
-        });
     }
 
     private void resumeLastSendDelayMessageActionInThisConversation() {
@@ -859,6 +904,9 @@ public class ComposeMessageView extends LinearLayout
 
             boolean includeSignature = false;
             Editable inputEditable = mComposeEditText.getText();
+
+            checkEmojiEvent(inputEditable.toString());
+
             int signatureIndex = 0;
             if (!TextUtils.isEmpty(mSignatureStr)) {
                 signatureIndex = inputEditable.getSpanStart(mSignatureSpan);
@@ -929,11 +977,6 @@ public class ComposeMessageView extends LinearLayout
                                         }
 
                                         hideSubjectEditor();
-                                        if (AccessibilityUtil.isTouchExplorationEnabled(getContext())) {
-                                            AccessibilityUtil.announceForAccessibilityCompat(
-                                                    ComposeMessageView.this, null,
-                                                    R.string.sending_message);
-                                        }
                                     }
                                     break;
 
@@ -983,6 +1026,22 @@ public class ComposeMessageView extends LinearLayout
 
                     });
         }
+    }
+
+    private void checkEmojiEvent(String input) {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                final String EMOJI_REGEX = ".*(([\\ud83c\\udc00-\\ud83c\\udfff]|[\\ud83d\\udc00-\\ud83d\\udfff]|[\\u2600-\\u27ff]|[\\ue000-\\uf8ff])[\\uD83C\\uDFFB-\\uD83C\\uDFFF]" +
+                        "|([\\ud83c\\udc00-\\ud83c\\udfff]|[\\ud83d\\udc00-\\ud83d\\udfff]|[\\u2600-\\u27ff]|[\\ue000-\\uf8ff])).*";
+                Pattern emojiPattern = Pattern.compile(EMOJI_REGEX,
+                        Pattern.UNICODE_CASE | Pattern.CASE_INSENSITIVE);
+                Matcher matcher = emojiPattern.matcher(input);
+                if (matcher.matches()) {
+                    BugleAnalytics.logEvent("Message_Emoji_Send");
+                }
+            }
+        }).start();
     }
 
     public static void playSentSound() {
@@ -1063,12 +1122,21 @@ public class ComposeMessageView extends LinearLayout
         mComposeSubjectText.setFilters(new InputFilter[]{
                 new LengthFilter(MmsConfig.get(mBinding.getData().getSelfSubId())
                         .getMaxSubjectLength())});
+        mSimButton.setVisibility(shouldShowSimSelector(mConversationDataModel.getData()) ? View.VISIBLE : View.GONE);
+        final SubscriptionListEntry subscriptionListEntry = getSelfSubscriptionListEntry();
+        if (subscriptionListEntry != null) {
+            mSimButton.setImageResource(
+                    subscriptionListEntry.slotId == 1 ?
+                            R.drawable.ic_dual_sim_small_1 : R.drawable.ic_dual_sim_small_2);
+            mSimButton.getDrawable().setColorFilter(PrimaryColors.getPrimaryColor(), PorterDuff.Mode.SRC_ATOP);
+        }
+        findViewById(R.id.sim_message_space)
+                .setVisibility(shouldShowSimSelector(mConversationDataModel.getData()) ? View.GONE : View.VISIBLE);
     }
 
     @Override
     public void onMediaItemsSelected(final Collection<MessagePartData> items) {
         mBinding.getData().addAttachments(items);
-        announceMediaItemState(true /*isSelected*/);
     }
 
     @Override
@@ -1079,34 +1147,12 @@ public class ComposeMessageView extends LinearLayout
     @Override
     public void onMediaItemsUnselected(final MessagePartData item) {
         mBinding.getData().removeAttachment(item);
-        announceMediaItemState(false /*isSelected*/);
     }
 
     @Override
     public void onPendingAttachmentAdded(final PendingAttachmentData pendingItem) {
         mBinding.getData().addPendingAttachment(pendingItem, mBinding);
         resumeComposeMessage(true);
-    }
-
-    private void announceMediaItemState(final boolean isSelected) {
-        final Resources res = getContext().getResources();
-        final String announcement = isSelected ? res.getString(
-                R.string.mediapicker_gallery_item_selected_content_description) :
-                res.getString(R.string.mediapicker_gallery_item_unselected_content_description);
-        AccessibilityUtil.announceForAccessibilityCompat(
-                this, null, announcement);
-    }
-
-    private void announceAttachmentState() {
-        if (AccessibilityUtil.isTouchExplorationEnabled(getContext())) {
-            int attachmentCount = mBinding.getData().getReadOnlyAttachments().size()
-                    + mBinding.getData().getReadOnlyPendingAttachments().size();
-            final String announcement = getContext().getResources().getQuantityString(
-                    R.plurals.attachment_changed_accessibility_announcement,
-                    attachmentCount, attachmentCount);
-            AccessibilityUtil.announceForAccessibilityCompat(
-                    this, null, announcement);
-        }
     }
 
     @Override
@@ -1117,7 +1163,6 @@ public class ComposeMessageView extends LinearLayout
         } else {
             hideKeyboard();
         }
-        announceAttachmentState();
     }
 
     public void clearAttachments() {
@@ -1169,27 +1214,6 @@ public class ComposeMessageView extends LinearLayout
         mBinding.getData().setSelfId(selfId, notify);
     }
 
-    private boolean logIconSIMShow = false;
-
-    private Uri getSelfSendButtonIconUri() {
-        final Uri overridenSelfUri = mHost.getSelfSendButtonIconUri();
-        if (overridenSelfUri != null) {
-            return overridenSelfUri;
-        }
-        final SubscriptionListEntry subscriptionListEntry = getSelfSubscriptionListEntry();
-
-        if (subscriptionListEntry != null) {
-            if (!logIconSIMShow) {
-                logIconSIMShow = true;
-                BugleAnalytics.logEvent("SMS_DetailsPage_IconSIM_Show", true);
-            }
-            return subscriptionListEntry.selectedIconUri;
-        }
-
-        // Fall back to default self-avatar in the base case.
-        return null;
-    }
-
     private SubscriptionListEntry getSelfSubscriptionListEntry() {
         if (mConversationDataModel == null || mBinding == null) {
             return null;
@@ -1206,18 +1230,6 @@ public class ComposeMessageView extends LinearLayout
 
     private void updateVisualsOnDraftChanged() {
         final String messageText = mComposeEditText.getText().toString();
-        boolean hasMessageText = (TextUtils.getTrimmedLength(messageText) > 0);
-
-        if (!TextUtils.isEmpty(mSignatureStr)) {
-            Editable inputEditable = mComposeEditText.getText();
-            int index = inputEditable.getSpanStart(mSignatureSpan);
-            if (index >= 0) {
-                boolean signatureChanged = !mSignatureStr.equals(inputEditable.toString().substring(index, inputEditable.length()));
-                if (index <= 1 && !signatureChanged) {
-                    hasMessageText = false;
-                }
-            }
-        }
         final DraftMessageData draftMessageData = mBinding.getData();
         draftMessageData.setMessageText(messageText);
 
@@ -1227,58 +1239,8 @@ public class ComposeMessageView extends LinearLayout
             mSubjectView.setVisibility(View.VISIBLE);
         }
 
-
-        final boolean hasSubject = (TextUtils.getTrimmedLength(subject) > 0);
-        final boolean hasWorkingDraft = hasMessageText || hasSubject ||
-                mBinding.getData().hasAttachments();
-
-        // Update the send message button. Self icon uri might be null if self participant data
-        // and/or conversation metadata hasn't been loaded by the host.
-        final Uri selfSendButtonUri = getSelfSendButtonIconUri();
-        int sendWidgetMode = SEND_WIDGET_MODE_SELF_AVATAR;
-        if (selfSendButtonUri != null || getSelfSubscriptionListEntry() == null) {
-            if (hasWorkingDraft && isDataLoadedForMessageSend()) {
-                if (selfSendButtonUri != null) {
-                    UiUtils.revealOrHideViewWithAnimation(mSendButton, VISIBLE, null);
-                } else if (!mIsWaitingToSendMessage) {
-                    mSendButton.setVisibility(View.VISIBLE);
-                }
-                if (isOverriddenAvatarAGroup()) {
-                    // If the host has overriden the avatar to show a group avatar where the
-                    // send button sits, we have to hide the group avatar because it can be larger
-                    // than the send button and pieces of the avatar will stick out from behind
-                    // the send button.
-                    UiUtils.revealOrHideViewWithAnimation(mSelfSendIcon, GONE, null);
-                }
-                mMmsIndicator.setVisibility(draftMessageData.getIsMms() ? VISIBLE : INVISIBLE);
-                sendWidgetMode = SEND_WIDGET_MODE_SEND_BUTTON;
-            } else {
-                if (selfSendButtonUri != null) {
-                    mSelfSendIcon.setImageResourceUri(selfSendButtonUri);
-                } else {
-                    mSelfSendIcon.setImageResource(R.drawable.input_send_message_icon);
-                    mSelfSendIcon.setBackground(BackgroundDrawables.createBackgroundDrawable(PrimaryColors.getPrimaryColor(),
-                            PrimaryColors.getPrimaryColorDark(),
-                            Dimensions.pxFromDp(20), false, true));
-
-                }
-                if (isOverriddenAvatarAGroup()) {
-                    UiUtils.revealOrHideViewWithAnimation(mSelfSendIcon, VISIBLE, null);
-                }
-                UiUtils.revealOrHideViewWithAnimation(mSendButton, GONE, null);
-                mMmsIndicator.setVisibility(INVISIBLE);
-                if (mConversationDataModel != null && shouldShowSimSelector(mConversationDataModel.getData())) {
-                    sendWidgetMode = SEND_WIDGET_MODE_SIM_SELECTOR;
-                }
-            }
-        } else {
-            mSelfSendIcon.setImageResourceUri(null);
-        }
-
-        if (mSendWidgetMode != sendWidgetMode || sendWidgetMode == SEND_WIDGET_MODE_SIM_SELECTOR) {
-            setSendButtonAccessibility(sendWidgetMode);
-            mSendWidgetMode = sendWidgetMode;
-        }
+        mSendButton.setVisibility(View.VISIBLE);
+        mMmsIndicator.setVisibility(draftMessageData.getIsMms() ? VISIBLE : INVISIBLE);
 
         // Update the text hint on the message box depending on the attachment type.
         final List<MessagePartData> attachments = draftMessageData.getReadOnlyAttachments();
@@ -1337,59 +1299,6 @@ public class ComposeMessageView extends LinearLayout
 
                 default:
                     Assert.fail("Unsupported attachment type!");
-                    break;
-            }
-        }
-    }
-
-    private void setSendButtonAccessibility(final int sendWidgetMode) {
-        switch (sendWidgetMode) {
-            case SEND_WIDGET_MODE_SELF_AVATAR:
-                // No send button and no SIM selector; the self send button is no longer
-                // important for accessibility.
-                mSelfSendIcon.setImportantForAccessibility(IMPORTANT_FOR_ACCESSIBILITY_NO);
-                mSelfSendIcon.setContentDescription(null);
-                mSendButton.setVisibility(View.GONE);
-                setSendWidgetAccessibilityTraversalOrder(SEND_WIDGET_MODE_SELF_AVATAR);
-                break;
-
-            case SEND_WIDGET_MODE_SIM_SELECTOR:
-                mSelfSendIcon.setImportantForAccessibility(IMPORTANT_FOR_ACCESSIBILITY_YES);
-                mSelfSendIcon.setContentDescription(getSimContentDescription());
-                setSendWidgetAccessibilityTraversalOrder(SEND_WIDGET_MODE_SIM_SELECTOR);
-                break;
-
-            case SEND_WIDGET_MODE_SEND_BUTTON:
-                mMmsIndicator.setImportantForAccessibility(IMPORTANT_FOR_ACCESSIBILITY_NO);
-                mMmsIndicator.setContentDescription(null);
-                setSendWidgetAccessibilityTraversalOrder(SEND_WIDGET_MODE_SEND_BUTTON);
-                break;
-        }
-    }
-
-    private String getSimContentDescription() {
-        final SubscriptionListEntry sub = getSelfSubscriptionListEntry();
-        if (sub != null) {
-            return getResources().getString(
-                    R.string.sim_selector_button_content_description_with_selection,
-                    sub.displayName);
-        } else {
-            return getResources().getString(
-                    R.string.sim_selector_button_content_description);
-        }
-    }
-
-    // Set accessibility traversal order of the components in the send widget.
-    private void setSendWidgetAccessibilityTraversalOrder(final int mode) {
-        if (OsUtil.isAtLeastL_MR1()) {
-            mAttachMediaButton.setAccessibilityTraversalBefore(R.id.compose_message_text);
-            switch (mode) {
-                case SEND_WIDGET_MODE_SIM_SELECTOR:
-                    break;
-                case SEND_WIDGET_MODE_SEND_BUTTON:
-                    mComposeEditText.setAccessibilityTraversalBefore(R.id.send_message_button);
-                    break;
-                default:
                     break;
             }
         }
@@ -1505,30 +1414,7 @@ public class ComposeMessageView extends LinearLayout
         mHost.notifyOfAttachmentLoadFailed();
     }
 
-    private boolean isOverriddenAvatarAGroup() {
-        final Uri overridenSelfUri = mHost.getSelfSendButtonIconUri();
-        if (overridenSelfUri == null) {
-            return false;
-        }
-        return AvatarUriUtil.TYPE_GROUP_URI.equals(AvatarUriUtil.getAvatarType(overridenSelfUri));
-    }
-
     public boolean isCameraOrGalleryShowing() {
         return mHost.isCameraOrGalleryShowing();
-    }
-
-    @Override
-    public void setAccessibility(boolean enabled) {
-        if (enabled) {
-            mAttachMediaButton.setImportantForAccessibility(IMPORTANT_FOR_ACCESSIBILITY_YES);
-            mComposeEditText.setImportantForAccessibility(IMPORTANT_FOR_ACCESSIBILITY_YES);
-            mSendButton.setImportantForAccessibility(IMPORTANT_FOR_ACCESSIBILITY_YES);
-            setSendButtonAccessibility(mSendWidgetMode);
-        } else {
-            mSelfSendIcon.setImportantForAccessibility(IMPORTANT_FOR_ACCESSIBILITY_NO);
-            mComposeEditText.setImportantForAccessibility(IMPORTANT_FOR_ACCESSIBILITY_NO);
-            mSendButton.setImportantForAccessibility(IMPORTANT_FOR_ACCESSIBILITY_NO);
-            mAttachMediaButton.setImportantForAccessibility(IMPORTANT_FOR_ACCESSIBILITY_NO);
-        }
     }
 }

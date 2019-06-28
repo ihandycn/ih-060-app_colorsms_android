@@ -16,6 +16,7 @@
 package com.android.messaging.ui.attachmentchooser;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.graphics.Outline;
 import android.graphics.Rect;
 import android.util.AttributeSet;
@@ -25,13 +26,17 @@ import android.view.View;
 import android.view.ViewOutlineProvider;
 import android.widget.CheckBox;
 import android.widget.FrameLayout;
+import android.widget.ImageView;
 
 import com.android.messaging.R;
 import com.android.messaging.datamodel.data.MessagePartData;
 import com.android.messaging.ui.AttachmentPreviewFactory;
+import com.android.messaging.ui.customize.PrimaryColors;
 import com.android.messaging.util.Assert;
 import com.android.messaging.util.OsUtil;
 import com.google.common.annotations.VisibleForTesting;
+import com.ihs.app.framework.HSApplication;
+import com.superapps.util.BackgroundDrawables;
 import com.superapps.util.Dimensions;
 
 /**
@@ -48,7 +53,7 @@ public class AttachmentGridItemView extends FrameLayout {
     @VisibleForTesting
     MessagePartData mAttachmentData;
     private FrameLayout mAttachmentViewContainer;
-    private CheckBox mCheckBox;
+    private ImageView mCheckBox;
     private HostInterface mHostInterface;
 
     public AttachmentGridItemView(final Context context, final AttributeSet attrs) {
@@ -116,7 +121,19 @@ public class AttachmentGridItemView extends FrameLayout {
     }
 
     public void updateSelectedState() {
-        mCheckBox.setChecked(mHostInterface.isItemSelected(mAttachmentData));
+       // mCheckBox.setChecked(mHostInterface.isItemSelected(mAttachmentData));
+        if (mHostInterface.isItemSelected(mAttachmentData)) {
+            mCheckBox.setImageResource(R.drawable.gallery_select_icon);
+            mCheckBox.setBackground(BackgroundDrawables.createBackgroundDrawable(
+                    PrimaryColors.getPrimaryColor(), 0, 5,
+                    Color.WHITE, Dimensions.pxFromDp(10), false, false));
+        } else {
+            mCheckBox.setImageDrawable(null);
+            mCheckBox.setBackground(BackgroundDrawables.createBackgroundDrawable(
+                    HSApplication.getContext().getResources().getColor(R.color.black_20_transparent),
+                    0, 5, Color.WHITE,
+                    Dimensions.pxFromDp(10), false, false));
+        }
     }
 
     private void updateAttachmentView() {

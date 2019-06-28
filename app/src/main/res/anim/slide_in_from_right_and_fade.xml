@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <set xmlns:android="http://schemas.android.com/apk/res/android"
-     android:interpolator="@anim/slide_in_interpolator"
+     android:interpolator="@android:anim/decelerate_interpolator"
      android:zAdjustment="top">
     <translate
-        android:fromXDelta="70%"
-        android:duration="360"
+        android:fromXDelta="50%"
+        android:duration="140"
         android:toXDelta="0.0%"/>
     <alpha
         android:fromAlpha="0"
-        android:duration="360"
+        android:duration="140"
         android:toAlpha="1.0"/>
 </set>

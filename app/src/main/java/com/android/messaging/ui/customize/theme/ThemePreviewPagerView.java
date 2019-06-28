@@ -35,6 +35,7 @@ public class ThemePreviewPagerView extends ConstraintLayout {
     private Choreographer.FrameCallback mFrameCallback;
     private Choreographer mChoreographer;
     private final float[] mSpeed = {0};
+    private boolean mDownloadCompleted = false;
 
     public ThemePreviewPagerView(Context context) {
         super(context);
@@ -65,16 +66,18 @@ public class ThemePreviewPagerView extends ConstraintLayout {
         mDownloadListener = new ThemeDownloadManager.IThemeDownloadListener() {
             @Override
             public void onDownloadSuccess() {
-                mIsThemeDownloading = false;
-                Threads.postOnMainThread(() -> {
-                    clipBg.setLevel(10000);
-                    changeThemeState();
-                });
+                //mIsThemeDownloading = false;
+                mDownloadCompleted = true;
+                mTargetDownloadRate = 1;
+                if (mTargetDownloadRate > mCurrentRate) {
+                    mSpeed[0] = (mTargetDownloadRate - mCurrentRate) / 30;
+                }
             }
 
             @Override
             public void onDownloadFailed() {
                 mIsThemeDownloading = false;
+                mDownloadCompleted = true;
                 Threads.postOnMainThread(() -> {
                     clipBg.setLevel(10000);
                     changeThemeState();
@@ -83,9 +86,15 @@ public class ThemePreviewPagerView extends ConstraintLayout {
 
             @Override
             public void onDownloadUpdate(float rate) {
+                if (rate < mTargetDownloadRate) {
+                    return;
+                }
+                if (mDownloadCompleted) {
+                    return;
+                }
                 mTargetDownloadRate = rate;
-                if (rate > mCurrentRate) {
-                    mSpeed[0] = (rate - mCurrentRate) / 30;
+                if (mTargetDownloadRate > mCurrentRate) {
+                    mSpeed[0] = (mTargetDownloadRate - mCurrentRate) / 30;
                 }
             }
         };
@@ -98,7 +107,10 @@ public class ThemePreviewPagerView extends ConstraintLayout {
                     if (1 - mCurrentRate < 0.00001) {
                         mButton.getBackground().setLevel(10000);
                         mCurrentRate = 1;
-                        mIsThemeDownloading = false;
+                        if (mDownloadCompleted) {
+                            mIsThemeDownloading = false;
+                            changeThemeState();
+                        }
                     }
                     if (mCurrentRate < mTargetDownloadRate) {
                         mCurrentRate += mSpeed[0];

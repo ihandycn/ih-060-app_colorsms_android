@@ -61,8 +61,8 @@
         android:hardwareAccelerated="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
-        android:screenOrientation="portrait"
         android:largeHeap="true"
+        android:screenOrientation="portrait"
         android:supportsRtl="true"
         android:theme="@style/BugleTheme"
         tools:replace="android:allowBackup">
@@ -161,7 +161,7 @@
             android:screenOrientation="portrait"
             android:theme="@style/BuglePhotoViewTheme"/> <!-- Settings -->
         <activity
-            android:name=".ui.appsettings.SettingsActivity"
+            android:name=".ui.appsettings.SettingsSimSelectActivity"
             android:configChanges="orientation|screenSize|keyboardHidden"
             android:label="@string/settings_activity_title"
             android:parentActivityName=".ui.conversationlist.ConversationListActivity"
@@ -444,7 +444,7 @@
         <activity
             android:name=".ui.appsettings.ApnSettingsActivity"
             android:configChanges="orientation|screenSize|keyboardHidden"
-            android:parentActivityName=".ui.appsettings.SettingsActivity"
+            android:parentActivityName=".ui.appsettings.SettingsSimSelectActivity"
             android:screenOrientation="portrait"
             android:theme="@style/BugleTheme"/>
         <activity
@@ -577,7 +577,7 @@
         <service android:name="android.support.v7.mms.MmsService"/>
 
         <activity
-            android:name=".ui.appsettings.SettingGeneralActivity"
+            android:name=".ui.appsettings.SettingActivity"
             android:excludeFromRecents="true"
             android:screenOrientation="portrait"
             android:theme="@style/BaseSettingsActivity"/>
@@ -614,37 +614,111 @@
         <!-- Lib permanent -->
         <service
             android:name="com.ihs.device.permanent.PermanentService"
-            android:label="GuardServiceNew"
-            tools:remove="android:process"
-            tools:replace="android:label"/>
+            android:exported="true"
+            android:label="GuardService"
+            android:stopWithTask="false"
+            tools:remove="android:process">
+            <intent-filter>
+                <action android:name="com.ihs.device.permanent.StartPermanentService"/>
+            </intent-filter>
+        </service>
+        <service
+            android:name="com.ihs.device.permanent.PermanentDaemonService"
+            android:exported="true"
+            android:label="DaemonService"
+            android:stopWithTask="false"
+            tools:remove="android:process"/>
         <service
             android:name="com.ihs.device.permanent.PermanentService$PermanentServiceInner"
             tools:remove="android:process"/>
 
         <receiver
             android:name="com.ihs.device.permanent.PermanentService$PermanentReceiver"
+            android:enabled="true"
+            android:exported="true"
+            tools:remove="android:process"/>
+        <receiver
+            android:name="com.ihs.device.permanent.PermanentReceiver"
+            android:enabled="true"
+            android:exported="true"
+            tools:remove="android:process">
+            <intent-filter>
+                <action android:name="android.intent.action.PACKAGE_RESTARTED"/>
+                <action android:name="android.intent.action.PACKAGE_REPLACED"/>
+                <action android:name="android.intent.action.PACKAGE_REMOVED"/>
+
+                <data android:scheme="package"/>
+            </intent-filter>
+            <intent-filter>
+                <action android:name="android.intent.action.QUICKBOOT_POWERON"/>
+                <action android:name="android.bluetooth.adapter.action.STATE_CHANGED"/>
+                <action android:name="android.net.wifi.WIFI_STATE_CHANGED"/>
+            </intent-filter>
+            <intent-filter android:priority="999">
+                <action android:name="android.net.conn.CONNECTIVITY_CHANGE"/>
+                <action android:name="android.intent.action.BOOT_COMPLETED"/>
+                <action android:name="android.intent.action.USER_PRESENT"/>
+            </intent-filter>
+            <intent-filter>
+                <action android:name="android.intent.action.MEDIA_MOUNTED"/>
+                <action android:name="android.intent.action.MEDIA_UNMOUNTED"/>
+
+                <data android:scheme="file"/>
+            </intent-filter>
+            <intent-filter>
+                <action android:name="ihs.device.permanent.GUARD_PERMANENT"/>
+            </intent-filter>
+        </receiver>
+
+        <!-- Job Schedule -->
+        <service
+            android:name="com.ihs.device.permanent.GuardJobService"
+            android:permission="android.permission.BIND_JOB_SERVICE"
+            tools:remove="android:process">
+        </service>
+
+        <activity
+            android:name="com.ihs.device.permanent.PermanentActivity"
+            tools:remove="android:process"/>
+        <activity
+            android:name="com.ihs.device.permanent.foreground.ForegroundActivity"
             tools:remove="android:process"/>
 
         <service
             android:name="com.ihs.device.permanent.syncaccount.AuthenticationService"
-            tools:remove="android:process"/>
+            android:exported="true"
+            tools:remove="android:process">
+            <intent-filter>
+                <action android:name="android.accounts.AccountAuthenticator"/>
+            </intent-filter>
+
+            <meta-data
+                android:name="android.accounts.AccountAuthenticator"
+                android:resource="@xml/authenticator"/>
+        </service>
         <service
             android:name="com.ihs.device.permanent.syncaccount.SyncService"
-            tools:remove="android:process"/>
-        <service
-            android:name="com.ihs.device.permanent.GuardJobService"
-            tools:remove="android:process"/>
+            android:exported="true"
+            tools:remove="android:process">
+            <intent-filter>
+                <action android:name="android.content.SyncAdapter"/>
+            </intent-filter>
+
+            <meta-data
+                android:name="android.content.SyncAdapter"
+                android:resource="@xml/sync_adapter"
+                android:value="true"/>
+        </service>
 
         <provider
             android:name="com.ihs.device.permanent.syncaccount.SyncContentProvider"
-            tools:remove="android:process"/>
-        <provider
-            android:name="com.ihs.device.common.AppInfoProvider"
+            android:authorities="@string/sync_account_type"
+            android:enabled="true"
+            android:exported="true"
+            android:label="@string/sync_account_title"
+            android:syncable="true"
             tools:remove="android:process"/>
 
-        <activity
-            android:name="com.ihs.device.permanent.foreground.ForegroundActivity"
-            tools:remove="android:process"/>
         <activity
             android:name=".ui.wallpaper.WallpaperPreviewActivity"
             android:excludeFromRecents="true"
@@ -680,6 +754,13 @@
         <activity
             android:name=".privatebox.ui.PrivateBoxSetPasswordActivity"
             android:excludeFromRecents="true"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"
+            android:theme="@style/SettingsActivity"/>
+        <activity
+            android:name=".privatebox.ui.PrivateBoxLockQuestionActivity"
+            android:excludeFromRecents="true"
+            android:launchMode="singleTop"
             android:screenOrientation="portrait"
             android:theme="@style/SettingsActivity"/>
         <activity
@@ -696,7 +777,6 @@
 
         <activity
             android:name=".privatebox.ui.SelfVerifyActivity"
-            android:launchMode="singleInstance"
             android:excludeFromRecents="true"
             android:screenOrientation="portrait"
             android:theme="@style/SettingsActivity"/>
@@ -712,6 +792,12 @@
             android:excludeFromRecents="true"
             android:screenOrientation="portrait"
             android:theme="@style/BaseSettingsActivity"/>
+
+        <activity
+            android:name=".privatebox.ui.PrivateContactsActivity"
+            android:excludeFromRecents="true"
+            android:screenOrientation="portrait"
+            android:theme="@style/SettingsActivity"/>
 
         <activity
             android:name=".privatebox.ui.addtolist.ContactsSelectActivity"
@@ -747,49 +833,6 @@
                 <action android:name="android.intent.action.PHONE_STATE"/>
             </intent-filter>
         </receiver>
-        <receiver
-            android:name="com.ihs.device.permanent.PermanentReceiver"
-            android:enabled="true"
-            android:exported="true"
-            tools:node="replace">
-            <intent-filter>
-                <data android:scheme="package"/>
-
-                <action android:name="android.intent.action.PACKAGE_ADDED"/>
-                <action android:name="android.intent.action.PACKAGE_REMOVED"/>
-            </intent-filter>
-            <intent-filter>
-                <action android:name="android.intent.action.QUICKBOOT_POWERON"/>
-                <action android:name="android.bluetooth.adapter.action.STATE_CHANGED"/>
-                <action android:name="android.net.wifi.WIFI_STATE_CHANGED"/>
-            </intent-filter>
-            <intent-filter android:priority="999">
-                <action android:name="android.net.conn.CONNECTIVITY_CHANGE"/>
-                <action android:name="android.intent.action.BOOT_COMPLETED"/>
-                <action android:name="android.intent.action.USER_PRESENT"/>
-                <action android:name="android.intent.action.WALLPAPER_CHANGED"/>
-            </intent-filter>
-            <intent-filter>
-                <action android:name="android.intent.action.PACKAGE_RESTARTED"/>
-                <action android:name="android.intent.action.PACKAGE_REPLACED"/>
-
-                <data android:scheme="package"/>
-            </intent-filter>
-            <intent-filter android:priority="99999">
-                <action android:name="android.provider.Telephony.SECRET_CODE"/>
-
-                <data android:scheme="android_secret_code"/>
-            </intent-filter>
-            <intent-filter>
-                <action android:name="android.intent.action.MEDIA_MOUNTED"/>
-                <action android:name="android.intent.action.MEDIA_UNMOUNTED"/>
-
-                <data android:scheme="file"/>
-            </intent-filter>
-            <intent-filter>
-                <action android:name="ihs.device.permanent.GUARD_PERMANENT"/>
-            </intent-filter>
-        </receiver>
 
         <activity
             android:name=".ui.customize.theme.ThemeSelectActivity"
@@ -800,20 +843,20 @@
             android:name=".ui.customize.theme.ThemePreviewActivity"
             android:excludeFromRecents="true"
             android:screenOrientation="portrait"
-            android:theme="@style/SettingsActivity" />
+            android:theme="@style/SettingsActivity"/>
         <activity
             android:name=".backup.ui.BackupRestoreActivity"
             android:configChanges="orientation|screenSize|keyboardHidden"
             android:screenOrientation="portrait"
-            android:theme="@style/SettingsActivity" />
+            android:theme="@style/SettingsActivity"/>
         <activity
             android:name=".backup.ui.BackupGuideDialogActivity"
             android:screenOrientation="portrait"
-            android:theme="@style/Theme.AppCompat.Translucent" />
+            android:theme="@style/Theme.AppCompat.Translucent"/>
         <activity
             android:name=".ui.invitefriends.InviteFriendsActivity"
-            android:windowSoftInputMode="stateAlwaysHidden|adjustPan"
-            android:theme="@style/SettingsActivity"/>
+            android:theme="@style/SettingsActivity"
+            android:windowSoftInputMode="stateAlwaysHidden|adjustPan"/>
 
         <activity
             android:name=".ui.invitefriends.SelectFriendsToInviteActivity"

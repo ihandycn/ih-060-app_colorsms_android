@@ -573,6 +573,7 @@
     <string name="welcome_set_default_failed_toast">Color SMS belum disiapkan secara benar</string>
     <string name="dialog_add_contact_confirmation">Tambahkan</string>
     <string name="sms_network_error">Jaringan bermasalah.</string>
+    <string name="network_error_and_try_again">Jaringan bermasalah.</string>
     <string name="reload">Muat Ulang</string>
     <string name="sms_notification_channel">Notifikasi SMS</string>
     <string name="sms_notification_channel_description">Tampilkan notifikasi saat menerima SMS</string>
@@ -624,6 +625,7 @@
 	<string name="welcome_choose_theme_title">Pilih Tema yang Anda Sukai</string>
 	<string name="welcome_choose_theme_current">SEKARANG</string>
 	<string name="setting_reset_customization_title">Atur Ulang Kustomisasi</string>
+    <string name="menu_reset_customization">Atur Ulang Kustomisasi</string>
 	<string name="setting_reset_customization_summary">Hapus kustomisasi di percakapan ini.</string>
 	<string name="action_pin">Sematkan ke Atas</string>
 
@@ -694,9 +696,6 @@
 	<string name="menu_invite_friends">Undang Teman</string>
 	<string name="invite_friends_now">UNDANG SEKARANG</string>
 
-    <string name="action_unarchive">"Batalkan pengarsipan"</string>
-    <string name="action_archive">"Arsipkan"</string>
-
 	<string name="backup_banner_guide_title">%1$d tidak terlindungi tanpa backup.</string>
 	<string name="backup_guide_dialog_first_content">Backup pesan Anda sebelum ponsel Anda mengalami kerusakan atau kehilangan data.</string>
 	<string name="backup_guide_dialog_second_content">%1$d pesan tidak terlindungi.</string>
@@ -737,8 +736,60 @@
     <string name="invite_friends_default_back_to_main_page_title">Undang Teman</string>
     <string name="privacy_mode_open_button_text">BUKA</string>
     <string name="invite_friends_invite_save_button">Simpan</string>
-    <string name="notification_title_in_private_box_single">Pesan baru</string>
     <string name="invite_friends_invite_cancel_button">Batal</string>
     <string name="privacy_mode_conversation_name">Kontak</string>
     <string name="contacts">Kontak</string>
+
+    <string name="action_unarchive">"Batalkan pengarsipan"</string>
+    <string name="action_archive">"Arsipkan"</string>
+
+    <!-- Private Box Lock Question-->
+    <string name="ok">OK</string>
+    <string name="cancel">Batalkan</string>
+    <string name="set">ATUR</string>
+    <string name="submit">KIRIM</string>
+    <string name="time_minute_single">menit</string>
+    <string name="lock_activity_forget_password">Lupa Kata Sandi?</string>
+    <string name="security_question">Pertanyaan Keamanan</string>
+    <string name="forget_password">Lupa Sandi</string>
+    <string name="answer_question_prompt">Jawab pertanyaan untuk mengatur ulang kata sandi.</string>
+    <string name="choose_question_prompt">Tetapkan pertanyaan keamanan jika Anda lupa kata sandi.</string>
+    <string name="enter_answer_prompt">Jawaban:</string>
+    <string name="security_question_answer">Jawaban kosong</string>
+    <string name="pickerview_hours">jam</string>
+    <string-array name="question_spinner_content">
+        <item>Kapan ulang tahun Anda?</item>
+          
+        <item>Siapa nama terakhir guru Anda?</item>
+          
+        <item>Apa nama sekolah dasar anda?</item>
+          
+        <item>Siapa pahlawan masa kecil Anda?</item>
+    </string-array>
+    <string name="private_setting_security_question_summary">Jika Anda lupa kata sandi.</string>
+
+
+	<string name="incorrect_question_answer_hint">Jawaban salah</string>
+	<string name="private_box_empty_contact_hint">Tidak ada kontak pribadi</string>
+	<string name="private_contacts">Kontak pribadi</string>
+
+
+	<string name="backup_guide_dialog_title">Backup SMS</string>
+
+
+	<string name="invite_friends_success_toast">Undangan berhasil</string>
+	<string name="notification_summary">Dapatkan notifikasi saat menerima pesan</string>
+	<string name="archived_conversations">Percakapan Diarsipkan</string>
+	<string name="others">Lainnya</string>
+	<string name="about">Tentang</string>
+	<string name="conversation_pinned">Disematkan di bagian teratas</string>
+	<string name="conversation_unpinned">Dibatal sematkan</string>
+	<string name="action_lock">Kunci</string>
+	<string name="action_unlock">Buka Kunci</string>
+	<string name="message_locked_when_delete">Untuk menghapus pesan yang terkunci, buka kunci terlebih dahulu</string>
+	<string name="message_copied">Disalin ke clipboard</string>
+	<string name="private_box_remove_from_box">Buang dari kotak pribadi</string>
+	<string name="private_box_move_to_box">Pindahkan ke kotak pribadi</string>
+	<string name="private_box_add_private_contacts">Tambahkan kotak pribadi!</string>
+    <string name="pickerview_year">Tahun</string>
 </resources>

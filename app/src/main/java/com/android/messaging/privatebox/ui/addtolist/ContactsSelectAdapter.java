@@ -10,9 +10,12 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.android.messaging.R;
+import com.android.messaging.ui.customize.PrimaryColors;
 import com.android.messaging.ui.invitefriends.SelectFriendsToInviteActivity;
 import com.android.messaging.util.BugleAnalytics;
 import com.android.messaging.util.PhoneUtils;
+import com.superapps.util.BackgroundDrawables;
+import com.superapps.util.Dimensions;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -89,20 +92,30 @@ public class ContactsSelectAdapter extends RecyclerView.Adapter<ContactsSelectAd
             holder.subTitle.setVisibility(View.VISIBLE);
         }
 
+        ImageView checkbox = holder.checkBoxView;
+
         if (contactInfo.customInfo.equals(Boolean.TRUE)) {
-            holder.checkBoxView.setImageResource(R.drawable.ic_all_checked);
+            checkbox.setImageResource(R.drawable.conversation_check);
+            checkbox.setBackground(BackgroundDrawables.createBackgroundDrawable(
+                    PrimaryColors.getPrimaryColor(), Dimensions.pxFromDp(20), false));
         } else {
-            holder.checkBoxView.setImageResource(R.drawable.ic_all_unchecked);
+            checkbox.setImageDrawable(null);
+            checkbox.setBackground(BackgroundDrawables.createBackgroundDrawable(0, 0, 4,
+                    0xffbdc2c9, Dimensions.pxFromDp(20), false, false));
         }
 
         holder.itemView.setOnClickListener(view -> {
             if (contactInfo.customInfo.equals(Boolean.TRUE)) {
                 contactInfo.customInfo = Boolean.FALSE;
-                holder.checkBoxView.setImageResource(R.drawable.ic_all_unchecked);
+                checkbox.setImageDrawable(null);
+                checkbox.setBackground(BackgroundDrawables.createBackgroundDrawable(0, 0, 4,
+                        0xffbdc2c9, Dimensions.pxFromDp(20), false, false));
                 selectedCount--;
             } else {
                 contactInfo.customInfo = Boolean.TRUE;
-                holder.checkBoxView.setImageResource(R.drawable.ic_all_checked);
+                checkbox.setImageResource(R.drawable.conversation_check);
+                checkbox.setBackground(BackgroundDrawables.createBackgroundDrawable(
+                        PrimaryColors.getPrimaryColor(), Dimensions.pxFromDp(20), false));
                 selectedCount++;
             }
 

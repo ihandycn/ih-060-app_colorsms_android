@@ -155,9 +155,6 @@ class FactoryImpl extends Factory {
             public void onActivityStopped(Activity activity) {
                 HSLog.d("lifecycle callback", "onActivityStopped");
                 foregroundActivityCounter--;
-                if (foregroundActivityCounter == 0) {
-                    DefaultSMSUtils.invalidateCache();
-                }
             }
 
             @Override
@@ -194,8 +191,8 @@ class FactoryImpl extends Factory {
                     }
                 },
                 () -> {
+                    DefaultSMSUtils.setIsDefaultSms(false);
                     BugleApplication.updateAppConfig(factory.getApplicationContext(), false);
-                    DefaultSMSUtils.invalidateCache();
                 });
 
         return factory;
@@ -207,6 +204,8 @@ class FactoryImpl extends Factory {
             return;
         }
         sInitialized = true;
+
+        DefaultSMSUtils.setIsDefaultSms(true);
 
         Threads.postOnMainThread(() -> mApplication.initializeSync(this));
 

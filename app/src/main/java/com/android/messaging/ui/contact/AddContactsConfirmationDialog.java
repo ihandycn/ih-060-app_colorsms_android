@@ -28,7 +28,6 @@ import com.android.messaging.R;
 import com.android.messaging.ui.BaseDialogFragment;
 import com.android.messaging.ui.ContactIconView;
 import com.android.messaging.ui.UIIntents;
-import com.android.messaging.util.AccessibilityUtil;
 import com.superapps.util.BackgroundDrawables;
 import com.superapps.util.Dimensions;
 
@@ -108,11 +107,6 @@ public class AddContactsConfirmationDialog extends BaseDialogFragment {
 
         final TextView textView = view.findViewById(R.id.participant_name);
         textView.setText(mNormalizedDestination);
-        // Accessibility reason : in case phone numbers are mixed in the display name,
-        // we need to vocalize it for talkback.
-        final String vocalizedDisplayName = AccessibilityUtil.getVocalizedPhoneNumber(
-                getResources(), mNormalizedDestination);
-        textView.setContentDescription(vocalizedDisplayName);
         return view;
     }
 }

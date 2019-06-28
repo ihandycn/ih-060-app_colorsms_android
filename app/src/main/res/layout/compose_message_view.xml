@@ -15,7 +15,6 @@
 -->
 <com.android.messaging.ui.conversation.ComposeMessageView
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/message_compose_view_container"
     android:layout_width="match_parent"
@@ -125,15 +124,6 @@
                         android:layout_gravity="top"
                         android:layout_marginTop="8.3dp">
 
-                        <com.android.messaging.ui.conversation.SimIconView
-                            android:id="@+id/self_send_icon"
-                            android:layout_width="36.7dp"
-                            android:layout_height="36.7dp"
-                            android:clickable="true"
-                            android:importantForAccessibility="no"
-                            app:iconSize="normal"
-                            app:reveal="true"/>
-
                         <ImageView
                             android:id="@+id/send_message_button"
                             android:layout_width="36.7dp"
@@ -191,6 +181,20 @@
                 android:background="@drawable/input_edit_drawable"
                 android:orientation="horizontal">
 
+                <ImageView
+                    android:id="@+id/sim_btn"
+                    android:layout_width="30.7dp"
+                    android:layout_height="30.7dp"
+                    android:layout_gravity="bottom"
+                    android:layout_marginBottom="3.5dp"
+                    android:scaleType="center"
+                    android:layout_marginStart="3.5dp"/>
+
+                <View
+                    android:id="@+id/sim_message_space"
+                    android:layout_width="7dp"
+                    android:layout_height="1dp"/>
+
                 <com.android.messaging.ui.PlainTextEditText
                     android:id="@+id/compose_message_text"
                     style="@style/ConversationComposeSendText"
@@ -210,7 +214,6 @@
                     android:layout_marginBottom="3.5dp"
                     android:layout_marginEnd="3.5dp"
                     android:src="@drawable/input_emoji_icon"/>
-
             </LinearLayout>
 
             <ImageView

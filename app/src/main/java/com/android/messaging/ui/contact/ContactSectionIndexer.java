@@ -19,7 +19,6 @@ import android.database.Cursor;
 import android.os.Bundle;
 import android.provider.ContactsContract.Contacts;
 import android.text.TextUtils;
-import android.util.Log;
 import android.util.SparseArray;
 import android.widget.SectionIndexer;
 

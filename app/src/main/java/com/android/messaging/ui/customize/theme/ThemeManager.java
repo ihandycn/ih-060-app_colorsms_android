@@ -1,13 +1,12 @@
 package com.android.messaging.ui.customize.theme;
 
-import android.content.Context;
+import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.NinePatchDrawable;
 import android.util.DisplayMetrics;
-import android.view.WindowManager;
 
 import com.android.messaging.util.CommonUtils;
 import com.ihs.app.framework.HSApplication;
@@ -58,7 +57,11 @@ public class ThemeManager {
                 if (theme.mIsLocalTheme) {
                     InputStream ims = HSApplication.getContext().getAssets().open(
                             "themes/" + theme.mThemeKey + "/" + theme.bubbleIncomingUrl);
-                    bitmap = BitmapFactory.decodeStream(ims);
+                    BitmapFactory.Options opt = new BitmapFactory.Options();
+                    opt.inScaled = true;
+                    opt.inDensity = DisplayMetrics.DENSITY_XXHIGH;
+                    opt.inTargetDensity = Resources.getSystem().getDisplayMetrics().densityDpi;
+                    bitmap = BitmapFactory.decodeStream(ims, null, opt);
                 }
             } else {
                 bitmap = loadBitmap(new File(CommonUtils.getDirectory(THEME_BASE_PATH
@@ -70,13 +73,8 @@ public class ThemeManager {
         if (bitmap != null) {
             byte[] chunk = bitmap.getNinePatchChunk();
             Rect rect = NinePatchChunk.deserialize(chunk).mPaddings;
-            bitmap.setDensity(DisplayMetrics.DENSITY_XXHIGH);
             mIncomingDrawable = new NinePatchDrawable(HSApplication.getContext().getResources(),
                     bitmap, chunk, rect, null);
-            DisplayMetrics metrics = new DisplayMetrics();
-            WindowManager windowManager = (WindowManager) HSApplication.getContext().getSystemService(Context.WINDOW_SERVICE);
-            windowManager.getDefaultDisplay().getMetrics(metrics);
-            mIncomingDrawable.setTargetDensity(metrics);
             return mIncomingDrawable;
         }
         return null;
@@ -95,7 +93,11 @@ public class ThemeManager {
                 if (theme.mIsLocalTheme) {
                     InputStream ims = HSApplication.getContext().getAssets().open(
                             "themes/" + theme.mThemeKey + "/" + theme.bubbleOutgoingUrl);
-                    bitmap = BitmapFactory.decodeStream(ims);
+                    BitmapFactory.Options opt = new BitmapFactory.Options();
+                    opt.inScaled = true;
+                    opt.inDensity = DisplayMetrics.DENSITY_XXHIGH;
+                    opt.inTargetDensity = Resources.getSystem().getDisplayMetrics().densityDpi;
+                    bitmap = BitmapFactory.decodeStream(ims, null, opt);
                 }
             } else {
                 bitmap = loadBitmap(new File(CommonUtils.getDirectory(THEME_BASE_PATH
@@ -107,13 +109,8 @@ public class ThemeManager {
         if (bitmap != null) {
             byte[] chunk = bitmap.getNinePatchChunk();
             Rect rect = NinePatchChunk.deserialize(chunk).mPaddings;
-            bitmap.setDensity(DisplayMetrics.DENSITY_XXHIGH);
             mOutgoingDrawable = new NinePatchDrawable(HSApplication.getContext().getResources(),
                     bitmap, chunk, rect, null);
-            DisplayMetrics metrics = new DisplayMetrics();
-            WindowManager windowManager = (WindowManager) HSApplication.getContext().getSystemService(Context.WINDOW_SERVICE);
-            windowManager.getDefaultDisplay().getMetrics(metrics);
-            mOutgoingDrawable.setTargetDensity(metrics);
             return mOutgoingDrawable;
         }
         return null;
@@ -133,7 +130,11 @@ public class ThemeManager {
     private Bitmap loadBitmap(File file) {
         Bitmap bitmap = null;
         try {
-            bitmap = BitmapFactory.decodeFile(file.getAbsolutePath());
+            BitmapFactory.Options opt = new BitmapFactory.Options();
+            opt.inScaled = true;
+            opt.inDensity = DisplayMetrics.DENSITY_XXHIGH;
+            opt.inTargetDensity = Resources.getSystem().getDisplayMetrics().densityDpi;
+            bitmap = BitmapFactory.decodeFile(file.getAbsolutePath(), opt);
         } catch (Exception ignored) {
 
         }

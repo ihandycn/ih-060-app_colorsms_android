@@ -2,48 +2,57 @@ package com.android.messaging.datamodel.action;
 
 import android.os.Parcel;
 import android.os.Parcelable;
-import android.text.TextUtils;
 
 import com.android.messaging.datamodel.BugleDatabaseOperations;
 import com.android.messaging.datamodel.DataModel;
 import com.android.messaging.datamodel.DatabaseWrapper;
 import com.android.messaging.datamodel.MessagingContentProvider;
-import com.android.messaging.util.Assert;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class PinConversationAction extends Action {
 
     public static void unpinConversation(final String conversationId) {
-        final PinConversationAction action =
-                new PinConversationAction(conversationId, false);
-        action.start();
+        ArrayList<String> list = new ArrayList<>();
+        list.add(conversationId);
+        unpinConversation(list);
+    }
+
+    public static void unpinConversation(final ArrayList<String> conversationId) {
+        new PinConversationAction(conversationId, false).start();
     }
 
     public static void pinConversation(final String conversationId) {
-        final PinConversationAction action =
-                new PinConversationAction(conversationId, true);
-        action.start();
+        ArrayList<String> list = new ArrayList<>();
+        list.add(conversationId);
+        pinConversation(list);
+    }
+
+    public static void pinConversation(final ArrayList<String> conversationId) {
+        new PinConversationAction(conversationId, true).start();
     }
 
     private static final String KEY_CONVERSATION_ID = "conversation_id";
     private static final String KEY_IS_PIN = "is_pin";
 
     protected PinConversationAction(
-            final String conversationId, final boolean isPin) {
-        Assert.isTrue(!TextUtils.isEmpty(conversationId));
-        actionParameters.putString(KEY_CONVERSATION_ID, conversationId);
+            final ArrayList<String> conversationId, final boolean isPin) {
+        actionParameters.putStringArrayList(KEY_CONVERSATION_ID, conversationId);
         actionParameters.putBoolean(KEY_IS_PIN, isPin);
     }
 
     @Override
     protected Object executeAction() {
-        final String conversationId = actionParameters.getString(KEY_CONVERSATION_ID);
+        final List<String> conversationIdList = actionParameters.getStringArrayList(KEY_CONVERSATION_ID);
         final boolean isPin = actionParameters.getBoolean(KEY_IS_PIN);
-
+        long time = System.currentTimeMillis();
         final DatabaseWrapper db = DataModel.get().getDatabase();
         db.beginTransaction();
         try {
-            BugleDatabaseOperations.updateConversationPinStatues(
-                    db, conversationId, isPin);
+            for (String conversationId : conversationIdList) {
+                BugleDatabaseOperations.updateConversationPinStatues(db, conversationId, time, isPin);
+            }
             db.setTransactionSuccessful();
         } finally {
             db.endTransaction();

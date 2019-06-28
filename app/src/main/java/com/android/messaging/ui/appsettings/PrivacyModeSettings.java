@@ -6,9 +6,7 @@ import android.text.TextUtils;
 
 import com.android.messaging.Factory;
 import com.android.messaging.R;
-import com.android.messaging.util.BugleCustomizePrefs;
 import com.android.messaging.util.BuglePrefs;
-import com.superapps.util.Preferences;
 
 public class PrivacyModeSettings {
     private static final String PREF_KEY_PRIVACY_MODE = "pref_key_privacy_mode";

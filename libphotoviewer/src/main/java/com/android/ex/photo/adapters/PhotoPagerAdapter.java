@@ -63,7 +63,6 @@ public class PhotoPagerAdapter extends BaseCursorPagerAdapter {
         builder
             .setResolvedPhotoUri(photoUri)
             .setThumbnailUri(thumbnailUri)
-            .setContentDescription(contentDescription)
             .setDisplayThumbsFullScreen(mDisplayThumbsFullScreen)
             .setMaxInitialScale(mMaxScale);
 

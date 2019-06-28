@@ -4,7 +4,6 @@ import android.database.ContentObserver;
 import android.os.Handler;
 
 import com.android.messaging.BuildConfig;
-import com.android.messaging.Factory;
 import com.android.messaging.ui.SetAsDefaultGuideActivity;
 import com.ihs.app.framework.HSApplication;
 import com.ihs.commons.config.HSConfig;

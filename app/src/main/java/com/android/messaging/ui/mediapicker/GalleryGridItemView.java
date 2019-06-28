@@ -17,6 +17,7 @@ package com.android.messaging.ui.mediapicker;
 
 import android.content.Context;
 import android.database.Cursor;
+import android.graphics.Color;
 import android.graphics.Rect;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
@@ -24,6 +25,7 @@ import android.view.TouchDelegate;
 import android.view.View;
 import android.widget.CheckBox;
 import android.widget.FrameLayout;
+import android.widget.ImageView;
 import android.widget.ImageView.ScaleType;
 
 import com.android.messaging.R;
@@ -31,9 +33,11 @@ import com.android.messaging.datamodel.DataModel;
 import com.android.messaging.datamodel.data.GalleryGridItemData;
 import com.android.messaging.ui.AsyncImageView;
 import com.android.messaging.ui.ConversationDrawables;
+import com.android.messaging.ui.customize.PrimaryColors;
 import com.google.common.annotations.VisibleForTesting;
-
-import java.util.concurrent.TimeUnit;
+import com.ihs.app.framework.HSApplication;
+import com.superapps.util.BackgroundDrawables;
+import com.superapps.util.Dimensions;
 
 /**
  * Shows an item in the gallery picker grid view. Hosts an FileImageView with a checkbox.
@@ -45,14 +49,16 @@ public class GalleryGridItemView extends FrameLayout {
      */
     public interface HostInterface {
         void onItemClicked(View view, GalleryGridItemData data, boolean longClick);
+
         boolean isItemSelected(GalleryGridItemData data);
+
         boolean isMultiSelectEnabled();
     }
 
     @VisibleForTesting
     GalleryGridItemData mData;
     private AsyncImageView mImageView;
-    private CheckBox mCheckBox;
+    private ImageView mCheckBox;
     private HostInterface mHostInterface;
     private final OnClickListener mOnClickListener = new OnClickListener() {
         @Override
@@ -70,7 +76,7 @@ public class GalleryGridItemView extends FrameLayout {
     protected void onFinishInflate() {
         super.onFinishInflate();
         mImageView = (AsyncImageView) findViewById(R.id.image);
-        mCheckBox = (CheckBox) findViewById(R.id.checkbox);
+        mCheckBox = findViewById(R.id.checkbox);
         mCheckBox.setOnClickListener(mOnClickListener);
         setOnClickListener(mOnClickListener);
         final OnLongClickListener longClickListener = new OnLongClickListener() {
@@ -85,7 +91,7 @@ public class GalleryGridItemView extends FrameLayout {
         addOnLayoutChangeListener(new OnLayoutChangeListener() {
             @Override
             public void onLayoutChange(View v, int left, int top, int right, int bottom,
-                    int oldLeft, int oldTop, int oldRight, int oldBottom) {
+                                       int oldLeft, int oldTop, int oldRight, int oldBottom) {
                 // Enlarge the clickable region for the checkbox to fill the entire view.
                 final Rect region = new Rect(0, 0, getWidth(), getHeight());
                 setTouchDelegate(new TouchDelegate(region, mCheckBox) {
@@ -127,7 +133,18 @@ public class GalleryGridItemView extends FrameLayout {
         if (mHostInterface.isMultiSelectEnabled() && !mData.isDocumentPickerItem()) {
             mCheckBox.setVisibility(VISIBLE);
             mCheckBox.setClickable(true);
-            mCheckBox.setChecked(mHostInterface.isItemSelected(mData));
+            if (mHostInterface.isItemSelected(mData)) {
+                mCheckBox.setImageResource(R.drawable.gallery_select_icon);
+                mCheckBox.setBackground(BackgroundDrawables.createBackgroundDrawable(
+                        PrimaryColors.getPrimaryColor(), 0, 3,
+                        Color.WHITE, Dimensions.pxFromDp(10), false, false));
+            } else {
+                mCheckBox.setImageDrawable(null);
+                mCheckBox.setBackground(BackgroundDrawables.createBackgroundDrawable(
+                        HSApplication.getContext().getResources().getColor(R.color.black_20_transparent),
+                        0, 3, Color.WHITE,
+                        Dimensions.pxFromDp(10), false, false));
+            }
         } else {
             mCheckBox.setVisibility(GONE);
             mCheckBox.setClickable(false);
@@ -140,20 +157,10 @@ public class GalleryGridItemView extends FrameLayout {
             setBackgroundColor(ConversationDrawables.get().getConversationThemeColor());
             mImageView.setImageResourceId(null);
             mImageView.setImageResource(R.drawable.ic_photo_library_light);
-            mImageView.setContentDescription(getResources().getString(
-                    R.string.pick_image_from_document_library_content_description));
         } else {
             mImageView.setScaleType(ScaleType.CENTER_CROP);
             setBackgroundColor(getResources().getColor(R.color.gallery_image_default_background));
             mImageView.setImageResourceId(mData.getImageRequestDescriptor());
-            final long dateSeconds = mData.getDateSeconds();
-            final boolean isValidDate = (dateSeconds > 0);
-            final int templateId = isValidDate ?
-                    R.string.mediapicker_gallery_image_item_description :
-                    R.string.mediapicker_gallery_image_item_description_no_date;
-            String contentDescription = String.format(getResources().getString(templateId),
-                    dateSeconds * TimeUnit.SECONDS.toMillis(1));
-            mImageView.setContentDescription(contentDescription);
         }
     }
 }

@@ -2,8 +2,11 @@ package com.android.messaging.ui.messagebox;
 
 import com.android.messaging.Factory;
 import com.android.messaging.datamodel.BugleNotifications;
+import com.android.messaging.util.CommonUtils;
 import com.android.messaging.util.DefaultSMSUtils;
 import com.android.messaging.util.OsUtil;
+import com.android.messaging.util.UiUtils;
+import com.ihs.app.framework.HSApplication;
 import com.ihs.commons.config.HSConfig;
 import com.ihs.commons.utils.HSPreferenceHelper;
 
@@ -11,14 +14,14 @@ public class MessageBoxSettings {
 
     private static final String PREFS_SMS_MESSAGE_ASSISTANT = "prefs_sms_message_assistant";
 
-
     public static boolean shouldPopUp() {
         return !Factory.get().getIsForeground()
                 && (BugleNotifications.isNotificationSettingsSwitchOpenned() || OsUtil.isAtLeastO())
                 && isSMSAssistantModuleEnabled()
-                && DefaultSMSUtils.isDefaultSmsApp();
+                && DefaultSMSUtils.isDefaultSmsApp()
+                && !UiUtils.isLandscapeMode()
+                && !CommonUtils.isCallActive(HSApplication.getContext());
     }
-
 
     /**
      * @param isOpened set SMS assistant module to the {@param isOpened} state

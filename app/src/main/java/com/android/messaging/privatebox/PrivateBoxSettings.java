@@ -1,7 +1,11 @@
 package com.android.messaging.privatebox;
 
 import com.android.messaging.BugleFiles;
+import com.android.messaging.R;
+import com.ihs.app.framework.HSApplication;
+import com.ihs.commons.config.HSConfig;
 import com.superapps.util.Preferences;
+
 
 /**
  * Created by lizhe on 2019/3/28.
@@ -59,6 +63,7 @@ public class PrivateBoxSettings {
     public static final String PREF_KEY_GESTURE_PASSWORD = "PREF_KEY_GESTURE_PASSWORD";
     public static final String INTRUDER_VIEW_BACK = "intruder_view_back";
     public static final String ENABLE_INTRUDER_SHOT = "enable_intruder_shot";
+    public static final String PREF_KEY_IS_SECURITY_QUESTION_SET = "PREF_KEY_IS_SECURITY_QUESTION_SET";
 
 
     public static PasswordStyle getLockStyle() {
@@ -91,5 +96,20 @@ public class PrivateBoxSettings {
 
     public static void setUnlockPIN(String pin) {
         Preferences.get(BugleFiles.PRIVATE_BOX_PREFS).putString(PREF_KEY_PIN_PASSWORD, pin);
+    }
+
+    public static boolean isSecurityQuestionSet() {
+        return Preferences.get(BugleFiles.COMMON_PREFS).getBoolean(PrivateBoxSettings.PREF_KEY_IS_SECURITY_QUESTION_SET, false);
+    }
+
+    public static void setSecurityQuestionSet(boolean isSet) {
+        Preferences.get(BugleFiles.COMMON_PREFS).putBoolean(PrivateBoxSettings.PREF_KEY_IS_SECURITY_QUESTION_SET, isSet);
+    }
+
+    public static boolean getIsPrivateBoxEnabled() {
+        if (HSApplication.getFirstLaunchInfo().appVersionCode >= 59) {
+            return isAnyPasswordSet() || HSConfig.optBoolean(false, "Application", "PrivateBox");
+        }
+        return true;
     }
 }

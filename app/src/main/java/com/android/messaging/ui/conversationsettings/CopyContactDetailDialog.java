@@ -25,7 +25,6 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.android.messaging.R;
-import com.android.messaging.util.AccessibilityUtil;
 
 public class CopyContactDetailDialog implements DialogInterface.OnClickListener {
 
@@ -58,9 +57,6 @@ public class CopyContactDetailDialog implements DialogInterface.OnClickListener 
         TextView textView = (TextView) inflater.inflate(R.layout.copy_contact_dialog_view, null,
                 false);
         textView.setText(mContactDetail);
-        final String vocalizedDisplayName = AccessibilityUtil.getVocalizedPhoneNumber(
-                mContext.getResources(), mContactDetail);
-        textView.setContentDescription(vocalizedDisplayName);
         return textView;
     }
 }

@@ -570,6 +570,7 @@
     <string name="welcome_set_default_failed_toast">Color SMS düzgün ayarlanmadı</string>
     <string name="dialog_add_contact_confirmation">Ekle</string>
     <string name="sms_network_error">Ağ hatası.</string>
+    <string name="network_error_and_try_again">Ağ hatası.</string>
     <string name="reload">Tekrar Yükle</string>
     <string name="sms_notification_channel">SMS Bildirimi</string>
     <string name="sms_notification_channel_description">SMS alındığında bildirim göster</string>
@@ -616,6 +617,7 @@
 	<string name="welcome_choose_theme_title">Beğendiğin Temayı Seç</string>
 	<string name="welcome_choose_theme_current">MEVCUT</string>
 	<string name="setting_reset_customization_title">Özelleştirmeyi Sıfırla</string>
+    <string name="menu_reset_customization">Özelleştirmeyi Sıfırla</string>
 	<string name="setting_reset_customization_summary">Bu sohbetteki özelleştirmeyi silin.</string>
 	<string name="action_pin">En Üste Sabitle</string>
 
@@ -683,14 +685,10 @@
 	<string name="menu_invite_friends">Arkadaşlarını Davet Et</string>
 	<string name="invite_friends_now">HEMEN DAVET ET</string>
 
-    <string name="action_unarchive">"Arşivden kaldır"</string>
-    <string name="action_archive">"Arşivle"</string>
-
     <string name="invite_friends_add_friends">Ekle</string>
     <string name="invite_friends_default_back_to_main_page_title">Arkadaşlarını Davet Et</string>
     <string name="privacy_mode_open_button_text">AÇIK</string>
     <string name="invite_friends_invite_save_button">Kaydet</string>
-    <string name="notification_title_in_private_box_single">Yeni ileti</string>
     <string name="invite_friends_invite_cancel_button">İptal</string>
     <string name="privacy_mode_conversation_name">Kişi</string>
     <string name="contacts">Kişiler</string>
@@ -730,4 +728,53 @@
     <string name="backup_local_summary">yerel depolama yedekle</string>
     <string name="backup_free_success">Bedava Uzay Başarıyla</string>
     <string name="restore_downloading">İndiriliyor...</string>
+
+    <string name="action_unarchive">"Arşivden kaldır"</string>
+    <string name="action_archive">"Arşivle"</string>
+
+    <string name="ok">TAMAM</string>
+    <string name="cancel">İptal et</string>
+    <string name="set">AYARLA</string>
+    <string name="submit">GÖNDER</string>
+    <string name="time_minute_single">dakika</string>
+    <string name="lock_activity_forget_password">Şifremi Unuttum</string>
+    <string name="security_question">Güvenlik Sorusu</string>
+    <string name="forget_password">Şifremi Unuttum</string>
+    <string name="answer_question_prompt">Şifreyi sıfırlamak için lütfen soruyu yanıtlayın.</string>
+    <string name="choose_question_prompt">Şifreni unutman halinde kullanmak üzere lütfen bir güvenlik sorusu belirle.</string>
+    <string name="enter_answer_prompt">Yanıt:</string>
+    <string name="security_question_answer">Yanıtın boş</string>
+    <string name="pickerview_year">yıl</string>
+    <string name="pickerview_hours">saat</string>
+    <string-array name="question_spinner_content">
+        <item>Doğum günün ne zaman?</item>
+        <item>İlk öğretmeninin soyadı nedir?</item>
+        <item>İlk okulunun adı nedir?</item>
+        <item>Çocukluk kahramanın kimdir?</item>
+    </string-array>
+    <string name="private_setting_security_question_summary">Şifreni unutman durumunda</string>
+
+
+	<string name="incorrect_question_answer_hint">Yanlış yanıt</string>
+	<string name="private_box_empty_contact_hint">Özel kişi yok</string>
+	<string name="private_contacts">Özel Kişiler</string>
+
+
+	<string name="backup_guide_dialog_title">SMS Yedekleme</string>
+
+
+	<string name="invite_friends_success_toast">Davet başarılı</string>
+	<string name="notification_summary">Mesaj alındığında bildirim al</string>
+	<string name="archived_conversations">Arşivlenmiş Konuşmalar</string>
+	<string name="others">Diğerleri</string>
+	<string name="about">Hakkında</string>
+	<string name="conversation_pinned">Üste Sabitlendi</string>
+	<string name="conversation_unpinned">Sabitlenmedi</string>
+	<string name="action_lock">Kilitle</string>
+	<string name="action_unlock">Kilidi Aç</string>
+	<string name="message_locked_when_delete">Kilitlenmiş mesajları silmek için önce kilidi açın</string>
+	<string name="message_copied">Panoya kopyalandı</string>
+	<string name="private_box_remove_from_box">Özel kutudan kaldır</string>
+	<string name="private_box_move_to_box">Özel kutuya taşı</string>
+	<string name="private_box_add_private_contacts">Lütfen özel kişileri ekleyin!</string>
 </resources>

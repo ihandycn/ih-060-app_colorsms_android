@@ -573,6 +573,7 @@
     <string name="welcome_set_default_failed_toast">Color SMS wurde nicht richtig eingerichtet</string>
     <string name="dialog_add_contact_confirmation">Hinzufügen</string>
     <string name="sms_network_error">Netzwerkfehler.</string>
+    <string name="network_error_and_try_again">Netzwerkfehler.</string>
     <string name="reload">Neu laden</string>
     <string name="sms_notification_channel">SMS-Benachrichtigung</string>
     <string name="sms_notification_channel_description">Eine Benachrichtigung anzeigen, wenn eine SMS eingegangen ist</string>
@@ -622,6 +623,7 @@
 	<string name="welcome_choose_theme_title">Design auswählen, das dir gefällt</string>
 	<string name="welcome_choose_theme_current">AKTUELL</string>
 	<string name="setting_reset_customization_title">Anpassung zurücksetzen</string>
+    <string name="menu_reset_customization">Anpassung zurücksetzen</string>
 	<string name="setting_reset_customization_summary">Anpassung in diesem Chat entfernen.</string>
 	<string name="action_pin">Nach oben schieben</string>
 
@@ -689,14 +691,10 @@
 	<string name="menu_invite_friends">Freunde einladen</string>
 	<string name="invite_friends_now">JETZT EINLADEN</string>
 
-    <string name="action_unarchive">"Aus Archiv entfernen"</string>
-    <string name="action_archive">"Archivieren"</string>
-
     <string name="invite_friends_add_friends">Hinzufügen</string>
     <string name="invite_friends_default_back_to_main_page_title">Freunde einladen</string>
     <string name="privacy_mode_open_button_text">ÖFFNEN</string>
     <string name="invite_friends_invite_save_button">Speichern</string>
-    <string name="notification_title_in_private_box_single">Neue Nachricht</string>
     <string name="invite_friends_invite_cancel_button">Abbrechen</string>
     <string name="privacy_mode_conversation_name">Kontakt</string>
     <string name="contacts">Kontakte</string>
@@ -736,4 +734,48 @@
     <string name="backup_local_summary">Sichern Sie im lokalen Speicher</string>
     <string name="backup_free_success">Erfolgreich Speicherplatz freigeben</string>
     <string name="restore_downloading">Wird heruntergeladen…</string>
+
+    <string name="action_unarchive">"Aus Archiv entfernen"</string>
+    <string name="action_archive">"Archivieren"</string>
+    <!-- Private Box Lock Question-->
+    <string name="ok">OK</string>
+    <string name="cancel">Abbrechen</string>
+    <string name="set">FESTLEGEN</string>
+    <string name="forget_password">Passwort vergessen</string>
+    <string name="answer_question_prompt">Bitte Frage beantworten, um Passwort zurückzusetzen.</string>
+    <string name="choose_question_prompt">Bitte eine Sicherheitsfrage festlegen, falls Sie Ihr Passwort vergessen.</string>
+    <string name="enter_answer_prompt">Antwort:</string>
+    <string name="security_question_answer">Ihre Antwort ist leer.</string>
+    <string name="pickerview_year">Jahr</string>
+    <string name="pickerview_hours">Stunde</string>
+    <string name="time_minute_single">Minute</string>
+    <string-array name="question_spinner_content">
+        <item>Wann ist Ihr Geburtstag?</item>
+        <item>Was ist der Name Ihres ersten Lehrers?</item>
+        <item>Wie lautet der Name Ihrer Grundschule?</item>
+        <item>Wer war in Ihrer Kindheit Ihr großes Vorbild?</item>
+    </string-array>
+    <string name="security_question">Sicherheitsfrage</string>
+    <string name="lock_activity_forget_password">Passwort vergessen?</string>
+    <string name="submit">SENDEN</string>
+    <string name="private_setting_security_question_summary">Falls Sie Ihr Passwort vergessen sollten.</string>
+	<string name="incorrect_question_answer_hint">Falsche Antwort</string>
+	<string name="private_box_empty_contact_hint">Kein privater Kontakt</string>
+	<string name="private_contacts">Private Kontakte</string>
+
+	<string name="backup_guide_dialog_title">SMS Sicherung</string>
+	<string name="invite_friends_success_toast">Erfolgreich eingeladen</string>
+	<string name="notification_summary">Benachrichtigung beim Eingang von Nachrichten erhalten</string>
+	<string name="archived_conversations">Archivierte Konversationen</string>
+	<string name="others">Andere</string>
+	<string name="about">Über</string>
+	<string name="conversation_pinned">Oben angeheftet</string>
+	<string name="conversation_unpinned">Nicht fixiert</string>
+	<string name="action_lock">Sperren</string>
+	<string name="action_unlock">Freischalten</string>
+	<string name="message_locked_when_delete">Um gesperrte Nachrichten zu löschen, diese zuerst freischalten.</string>
+	<string name="message_copied">In Zwischenablage kopiert</string>
+	<string name="private_box_remove_from_box">Aus Privatem Briefkasten entfernen</string>
+	<string name="private_box_move_to_box">In Privaten Briefkasten verschieben</string>
+	<string name="private_box_add_private_contacts">Bitte private Kontakte hinzufügen!</string>
 </resources>

@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<set xmlns:android="http://schemas.android.com/apk/res/android"
+     android:interpolator="@anim/slide_in_interpolator"
+     android:zAdjustment="top">
+    <translate
+        android:fromXDelta="70%"
+        android:duration="360"
+        android:toXDelta="0.0%"/>
+    <alpha
+        android:fromAlpha="0"
+        android:duration="360"
+        android:toAlpha="1.0"/>
+</set>

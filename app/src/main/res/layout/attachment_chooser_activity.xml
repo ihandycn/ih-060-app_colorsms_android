@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--
+<?xml version="1.0" encoding="utf-8"?><!--
     Copyright (C) 2015 The Android Open Source Project
 
     Licensed under the Apache License, Version 2.0 (the "License");
@@ -18,11 +17,11 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
-
     <android.support.v7.widget.Toolbar
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
         android:layout_height="@dimen/action_bar_height">
+
         <com.android.messaging.ui.view.MessagesTextView
             android:id="@+id/toolbar_title"
             android:layout_width="match_parent"
@@ -30,8 +29,8 @@
             android:layout_gravity="center"
             android:layout_marginTop="5dp"
             android:gravity="center"
-            android:textColor="#222327"
-            android:textSize="16.7sp"/>
+            android:textColor="@color/action_bar_title_text_color"
+            android:textSize="16.7sp" />
     </android.support.v7.widget.Toolbar>
 
     <fragment xmlns:android="http://schemas.android.com/apk/res/android"

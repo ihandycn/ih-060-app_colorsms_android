@@ -56,8 +56,8 @@ import com.android.messaging.sms.MmsSmsUtils;
 import com.android.messaging.ui.appsettings.ApnEditorActivity;
 import com.android.messaging.ui.appsettings.ApnSettingsActivity;
 import com.android.messaging.ui.appsettings.SettingAdvancedActivity;
-import com.android.messaging.ui.appsettings.SettingGeneralActivity;
-import com.android.messaging.ui.appsettings.SettingsActivity;
+import com.android.messaging.ui.appsettings.SettingActivity;
+import com.android.messaging.ui.appsettings.SettingsSimSelectActivity;
 import com.android.messaging.ui.attachmentchooser.AttachmentChooserActivity;
 import com.android.messaging.ui.contact.ContactPickerActivity;
 import com.android.messaging.ui.conversation.ConversationActivity;
@@ -262,8 +262,8 @@ public class UIIntentsImpl extends UIIntents {
     }
 
     @Override
-    public void launchSettingsActivity(final Context context) {
-        final Intent intent = new Intent(context, SettingsActivity.class);
+    public void launchSettingsSimSelectActivity(final Context context) {
+        final Intent intent = new Intent(context, SettingsSimSelectActivity.class);
         context.startActivity(intent, TransitionUtils.getTransitionInBundle(context));
     }
 
@@ -344,7 +344,7 @@ public class UIIntentsImpl extends UIIntents {
                                                 final String conversationId, final int requestCode) {
         final Intent intent = new Intent(activity, AttachmentChooserActivity.class);
         intent.putExtra(UI_INTENT_EXTRA_CONVERSATION_ID, conversationId);
-        activity.startActivityForResult(intent, requestCode);
+        activity.startActivityForResult(intent, requestCode, TransitionUtils.getTransitionInBundle(activity));
     }
 
     @Override
@@ -379,9 +379,8 @@ public class UIIntentsImpl extends UIIntents {
     }
 
     @Override
-    public void launchApplicationSettingsActivity(final Context context, final boolean topLevel) {
-        Intent intent = new Intent(context, SettingGeneralActivity.class);
-        intent.putExtra(UI_INTENT_EXTRA_TOP_LEVEL_SETTINGS, topLevel);
+    public void launchSettingsActivity(final Context context) {
+        Intent intent = new Intent(context, SettingActivity.class);
         context.startActivity(intent, TransitionUtils.getTransitionInBundle(context));
     }
 

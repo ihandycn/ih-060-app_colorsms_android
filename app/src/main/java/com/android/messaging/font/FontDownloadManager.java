@@ -14,7 +14,6 @@ import com.ihs.commons.config.HSConfig;
 import com.ihs.commons.connection.HSHttpConnection;
 import com.ihs.commons.connection.httplib.HttpRequest;
 import com.ihs.commons.utils.HSError;
-import com.superapps.util.Fonts;
 import com.superapps.util.Networks;
 import com.superapps.util.Threads;
 import com.superapps.util.Toasts;

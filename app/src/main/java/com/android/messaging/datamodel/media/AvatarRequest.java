@@ -31,7 +31,6 @@ import android.media.ExifInterface;
 import android.net.Uri;
 
 import com.android.messaging.R;
-import com.android.messaging.ui.customize.theme.ThemeInfo;
 import com.android.messaging.ui.customize.theme.ThemeUtils;
 import com.android.messaging.util.Assert;
 import com.android.messaging.util.AvatarUriUtil;
@@ -160,14 +159,15 @@ public class AvatarRequest extends UriImageRequest<AvatarRequestDescriptor> {
         matrix.setRectToRect(source, dest, Matrix.ScaleToFit.FILL);
 
         paint.setColorFilter(new PorterDuffColorFilter(
-                Color.parseColor(ThemeUtils.getCurrentTheme().avatarForegroundColor),
+                getDescriptor().useForegroundColor ?
+                        Color.parseColor(ThemeUtils.getCurrentTheme().avatarForegroundColor) : 0xffffffff,
                 PorterDuff.Mode.SRC_IN));
         canvas.drawBitmap(defaultPerson, matrix, paint);
 
         return bitmap;
     }
 
-    private Bitmap renderLetterTile(final String name, final int width, final int height,int backgroundColor) {
+    private Bitmap renderLetterTile(final String name, final int width, final int height, int backgroundColor) {
         final float halfWidth = width / 2;
         final float halfHeight = height / 2;
         final int minOfWidthAndHeight = Math.min(width, height);
@@ -177,7 +177,8 @@ public class AvatarRequest extends UriImageRequest<AvatarRequestDescriptor> {
         final Resources resources = mContext.getResources();
         final Paint paint = new Paint(Paint.ANTI_ALIAS_FLAG);
         paint.setTypeface(Typefaces.getCustomSemiBold());
-        paint.setColor(Color.parseColor(ThemeUtils.getCurrentTheme().avatarForegroundColor));
+        paint.setColor(getDescriptor().useForegroundColor ?
+                Color.parseColor(ThemeUtils.getCurrentTheme().avatarForegroundColor) : 0xffffffff);
         final float letterToTileRatio = resources.getFraction(R.dimen.letter_to_tile_ratio, 1, 1);
         paint.setTextSize(letterToTileRatio * minOfWidthAndHeight);
 

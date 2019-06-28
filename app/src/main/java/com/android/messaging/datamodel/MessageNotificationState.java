@@ -58,6 +58,7 @@ import com.android.messaging.ui.appsettings.PrivacyModeSettings;
 import com.android.messaging.ui.messagebox.MessageBoxSettings;
 import com.android.messaging.util.Assert;
 import com.android.messaging.util.AvatarUriUtil;
+import com.android.messaging.util.BugleAnalytics;
 import com.android.messaging.util.BugleGservices;
 import com.android.messaging.util.BugleGservicesKeys;
 import com.android.messaging.util.CommonUtils;
@@ -153,7 +154,7 @@ public abstract class MessageNotificationState extends NotificationState {
     }
 
     private boolean disableHeadUpNotification() {
-        return MessageBoxSettings.isSMSAssistantModuleEnabled() && !Factory.get().getIsForeground() && CommonUtils.isScreenOn(Factory.get().getApplicationContext());
+        return MessageBoxSettings.shouldPopUp() && CommonUtils.isScreenOn(Factory.get().getApplicationContext());
     }
 
     /**
@@ -443,8 +444,11 @@ public abstract class MessageNotificationState extends NotificationState {
             final String separator = context.getString(R.string.enumeration_comma);
             final StringBuilder senders = new StringBuilder();
             long when = 0;
+
+            int badgerNumber = 0;
             for (int i = 0; i < mConvList.mConvInfos.size(); i++) {
                 final ConversationLineInfo convInfo = mConvList.mConvInfos.get(i);
+                badgerNumber += convInfo.mTotalMessageCount;
                 if (convInfo.mReceivedTimestamp > when) {
                     when = convInfo.mReceivedTimestamp;
                 }
@@ -469,9 +473,9 @@ public abstract class MessageNotificationState extends NotificationState {
                     int privacyMode = PrivacyModeSettings.getPrivacyMode(convInfo.mConversationId);
                     if (privacyMode == PrivacyModeSettings.HIDE_CONTACT_AND_MESSAGE) {
                         sender = context.getString(R.string.notification_sender_in_privacy_mode);
-                        text = context.getResources().getQuantityString(R.plurals.notification_title_in_privacy_mode, 1, 1);
+                        text = context.getResources().getQuantityString(R.plurals.notification_new_messages, 1, 1);
                     } else if (privacyMode == PrivacyModeSettings.HIDE_MESSAGE_ONLY) {
-                        text = context.getResources().getQuantityString(R.plurals.notification_title_in_privacy_mode, 1, 1);
+                        text = context.getResources().getQuantityString(R.plurals.notification_new_messages, 1, 1);
                     }
 
                     inboxStyle.addLine(BugleNotifications.formatInboxMessage(
@@ -485,7 +489,7 @@ public abstract class MessageNotificationState extends NotificationState {
                 } else {
                     inboxStyle.addLine(BugleNotifications.formatInboxMessage(
                             context.getString(R.string.notification_sender_in_private_box),
-                            context.getResources().getString(R.string.notification_title_in_private_box_single),
+                            context.getResources().getQuantityString(R.plurals.notification_new_messages, 1, 1),
                             null, null
                     ));
                     if (senders.length() > 0) {
@@ -498,6 +502,7 @@ public abstract class MessageNotificationState extends NotificationState {
             mContent = senders;
             builder.setContentText(senders)
                     .setTicker(getTicker())
+                    .setNumber(badgerNumber)
                     .setWhen(when);
 
             return inboxStyle;
@@ -593,12 +598,12 @@ public abstract class MessageNotificationState extends NotificationState {
                 builder.setContentTitle(HSApplication.getContext().getString(R.string.notification_sender_in_private_box));
                 if (messageCount == 1) {
                     String content = HSApplication.getContext().getResources()
-                            .getString(R.string.notification_title_in_private_box_single);
+                            .getQuantityString(R.plurals.notification_new_messages, 1, 1);
                     builder.setContentText(content);
                     notifStyle = new NotificationCompat.BigTextStyle(builder);
                 } else {
                     String content = HSApplication.getContext().getResources()
-                            .getString(R.string.notification_title_in_private_box_other, messageCount);
+                            .getQuantityString(R.plurals.notification_new_messages, messageCount, messageCount);
                     builder.setContentText(content);
                     notifStyle = new NotificationCompat.BigTextStyle(builder);
                 }
@@ -610,9 +615,9 @@ public abstract class MessageNotificationState extends NotificationState {
             int privacyMode = PrivacyModeSettings.getPrivacyMode(convInfo.mConversationId);
             if (privacyMode == PrivacyModeSettings.HIDE_CONTACT_AND_MESSAGE) {
                 mTitle = context.getString(R.string.notification_sender_in_privacy_mode);
-                mContent = context.getResources().getQuantityString(R.plurals.notification_title_in_privacy_mode, messageCount, messageCount);
+                mContent = context.getResources().getQuantityString(R.plurals.notification_new_messages, messageCount, messageCount);
             } else if (privacyMode == PrivacyModeSettings.HIDE_MESSAGE_ONLY) {
-                mContent = context.getResources().getQuantityString(R.plurals.notification_title_in_privacy_mode, messageCount, messageCount);
+                mContent = context.getResources().getQuantityString(R.plurals.notification_new_messages, messageCount, messageCount);
             }
 
             builder.setContentTitle(mTitle)
@@ -695,7 +700,7 @@ public abstract class MessageNotificationState extends NotificationState {
                 // Show a single notification -- big style with the text of all the messages
                 notifStyle = new NotificationCompat.BigTextStyle(builder).bigText(buf);
             }
-            builder.setWhen(convInfo.mReceivedTimestamp);
+            builder.setWhen(convInfo.mReceivedTimestamp).setNumber(messageCount);
             return notifStyle;
         }
 
@@ -1452,6 +1457,7 @@ public abstract class MessageNotificationState extends NotificationState {
                                 PendingIntentConstants.MSG_SEND_ERROR, null),
                                 PendingIntentConstants.MSG_SEND_ERROR, builder.build(), channel);
                     }
+                    BugleAnalytics.logEvent("FailedNotifications_Received", true);
                 } else {
                     Notifications.cancelSafely(BugleNotifications.buildNotificationTag(PendingIntentConstants.MSG_SEND_ERROR, null),
                             PendingIntentConstants.MSG_SEND_ERROR);

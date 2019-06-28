@@ -26,6 +26,7 @@ import java.util.List;
 
 public class ThemeSelectActivity extends BaseActivity {
     private ThemeAdapter mAdapter;
+    private RecyclerView mRecyclerView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,7 +45,7 @@ public class ThemeSelectActivity extends BaseActivity {
         }
         getSupportActionBar().setDisplayShowHomeEnabled(true);
 
-        RecyclerView mRecyclerView = findViewById(R.id.theme_select_recycler_view);
+        mRecyclerView = findViewById(R.id.theme_select_recycler_view);
         mAdapter = new ThemeAdapter(ThemeInfo.getAllThemes());
         GridLayoutManager layoutManager =
                 new GridLayoutManager(this, 2,
@@ -94,6 +95,7 @@ public class ThemeSelectActivity extends BaseActivity {
             }
         });
         mRecyclerView.setAdapter(mAdapter);
+        mRecyclerView.getRecycledViewPool().setMaxRecycledViews(ThemeAdapter.THEME, 0);
 
         mRecyclerView.setOnScrollListener(new RecyclerView.OnScrollListener() {
 
@@ -125,7 +127,7 @@ public class ThemeSelectActivity extends BaseActivity {
     @Override
     protected void onRestart() {
         super.onRestart();
-        mAdapter.refreshThemeState();
+        mRecyclerView.getAdapter().notifyDataSetChanged();
     }
 
     @Override
@@ -158,10 +160,6 @@ public class ThemeSelectActivity extends BaseActivity {
         ThemeAdapter(List<ThemeInfo> dataList) {
             mDataList = dataList;
             mDataList.add(new BottomThemeInfo());
-        }
-
-        void refreshThemeState() {
-            mListener.onThemeChanged();
         }
 
         @NonNull
