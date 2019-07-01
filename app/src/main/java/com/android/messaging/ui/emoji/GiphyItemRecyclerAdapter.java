@@ -2,6 +2,7 @@ package com.android.messaging.ui.emoji;
 
 import android.content.Context;
 import android.graphics.Rect;
+import android.os.Parcelable;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -18,13 +19,9 @@ import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
 import com.bumptech.glide.request.RequestOptions;
 import com.giphy.sdk.core.models.Image;
 import com.giphy.sdk.core.models.Media;
-import com.giphy.sdk.core.models.enums.MediaType;
-import com.giphy.sdk.core.network.api.CompletionHandler;
 import com.giphy.sdk.core.network.api.GPHApi;
 import com.giphy.sdk.core.network.api.GPHApiClient;
-import com.giphy.sdk.core.network.response.ListMediaResponse;
 import com.superapps.util.Dimensions;
-import com.superapps.util.Toasts;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -33,14 +30,13 @@ import static com.android.messaging.ui.emoji.utils.GiphyListManager.BUCKET_COUNT
 
 public class GiphyItemRecyclerAdapter extends RecyclerView.Adapter<GiphyItemRecyclerAdapter.ViewHolder> {
 
-    private List<GiphyInfo> mDataList = new ArrayList<>(20);
+    private List<BaseEmojiInfo> mDataList = new ArrayList<>(20);
     private EmojiPackagePagerAdapter.OnEmojiClickListener mOnEmojiClickListener;
-
 
     private int mOffset;
     private String mCategory;
 
-    private GPHApi mClient = new GPHApiClient("6eDzBQcmlIqYEtuulH1o3TvQja0oLnBs");
+    private boolean mIsRecentPage;
 
     GiphyItemRecyclerAdapter(EmojiPackagePagerAdapter.OnEmojiClickListener emojiClickListener, String category) {
         mOnEmojiClickListener = emojiClickListener;
@@ -48,9 +44,18 @@ public class GiphyItemRecyclerAdapter extends RecyclerView.Adapter<GiphyItemRecy
         GiphyListManager.getInstance().getGiphyList(mCategory, 0, giphyList -> updateData(giphyList));
     }
 
+    GiphyItemRecyclerAdapter(EmojiPackagePagerAdapter.OnEmojiClickListener emojiClickListener, List<BaseEmojiInfo> data) {
+        mOnEmojiClickListener = emojiClickListener;
+        mIsRecentPage = true;
+        mDataList = data;
+        notifyDataSetChanged();
+    }
+
     void loadMore() {
-        mOffset += BUCKET_COUNT;
-        GiphyListManager.getInstance().getGiphyList(mCategory, mOffset, giphyList -> updateData(giphyList));
+        if (!mIsRecentPage) {
+            mOffset += BUCKET_COUNT;
+            GiphyListManager.getInstance().getGiphyList(mCategory, mOffset, giphyList -> updateData(giphyList));
+        }
     }
 
     void updateData(List<Media> list) {
@@ -82,7 +87,7 @@ public class GiphyItemRecyclerAdapter extends RecyclerView.Adapter<GiphyItemRecy
                 Rect rect = new Rect();
                 v1.getGlobalVisibleRect(rect);
 
-                GiphyInfo info = mDataList.get(holder.getAdapterPosition());
+                GiphyInfo info = (GiphyInfo) mDataList.get(holder.getAdapterPosition());
                 info.mStartRect = rect;
                 info.mGifWidth = v1.getWidth();
                 info.mGifHeight = v1.getHeight();
@@ -97,16 +102,17 @@ public class GiphyItemRecyclerAdapter extends RecyclerView.Adapter<GiphyItemRecy
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
 
         Context context = holder.itemView.getContext();
+        GiphyInfo giphyInfo = (GiphyInfo) mDataList.get(position);
 
-        int width = mDataList.get(position).mGifOriginalWidth;
-        int height = mDataList.get(position).mGifOriginalHeight;
+        int width = giphyInfo.mGifOriginalWidth;
+        int height = giphyInfo.mGifOriginalHeight;
         holder.mGif.getLayoutParams().height = (Dimensions.getPhoneWidth(context) - Dimensions.pxFromDp(23))
                 * height / width / 2;
         RequestOptions requestOptions = new RequestOptions();
         requestOptions = requestOptions.transforms(new FitCenter(),
                 new RoundedCorners((int) context.getResources().getDimension(R.dimen.giphy_list_item_radius)));
 
-        GiphyInfo giphyInfo = mDataList.get(position);
+
         GlideApp.with(context)
                 .asGif()
                 .placeholder(R.drawable.gif_item_placehoder)

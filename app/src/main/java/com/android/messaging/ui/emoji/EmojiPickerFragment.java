@@ -238,6 +238,11 @@ public class EmojiPickerFragment extends Fragment implements INotificationObserv
         }
     }
 
+    private void updateRecentGif(GiphyInfo info) {
+        EmojiManager.saveRecentInfo(info.toString(), EmojiPackageType.GIF);
+        mEmojiPackagePagerAdapter.updateRecentGif();
+    }
+
     private void sendSticker(StickerInfo info, File file) {
         if (mOnEmojiPickerListener != null) {
             Uri uri = Uri.fromFile(file);
@@ -289,7 +294,7 @@ public class EmojiPickerFragment extends Fragment implements INotificationObserv
             items.add(data);
             mOnEmojiPickerListener.prepareSendSticker(items);
 
-//            updateRecentSticker(info);
+            updateRecentGif(info);
         }
     }
 

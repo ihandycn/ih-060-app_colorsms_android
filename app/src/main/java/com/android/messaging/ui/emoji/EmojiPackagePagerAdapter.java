@@ -55,6 +55,12 @@ public class EmojiPackagePagerAdapter extends PagerAdapter {
         }
     }
 
+    void updateRecentGif() {
+        if (mGiphyAdapter != null) {
+            mGiphyAdapter.updateRecentItem();
+        }
+    }
+
     @Override
     public int getCount() {
         return mData.size();

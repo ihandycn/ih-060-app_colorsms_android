@@ -2,6 +2,9 @@ package com.android.messaging.ui.emoji;
 
 import android.graphics.Rect;
 import android.os.Parcel;
+import android.text.TextUtils;
+
+import com.android.messaging.download.Downloader;
 
 public class GiphyInfo extends BaseEmojiInfo {
 
@@ -23,6 +26,11 @@ public class GiphyInfo extends BaseEmojiInfo {
         mGifWidth = in.readInt();
         mGifHeight = in.readInt();
         mStartRect = in.readParcelable(Rect.class.getClassLoader());
+    }
+
+    @Override
+    public String toString() {
+        return mGifOriginalWidth + "|" + mGifOriginalHeight + "|" + mFixedWidthGifUrl ;
     }
 
     @Override
@@ -54,6 +62,14 @@ public class GiphyInfo extends BaseEmojiInfo {
 
     public static GiphyInfo unflatten(String flatten) {
         GiphyInfo result = new GiphyInfo();
+        String[] split = flatten.split("\\|");
+        if (split.length != 3) {
+            throw new IllegalStateException("split.length must be 3!!!");
+        }
+        result.mGifOriginalWidth = Integer.parseInt(split[0]);
+        result.mGifOriginalHeight = Integer.parseInt(split[1]);
+        result.mFixedWidthGifUrl = split[2];
+
         return result;
     }
 

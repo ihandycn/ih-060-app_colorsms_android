@@ -111,7 +111,7 @@ public class EmojiManager {
                 break;
             case GIF:
                 result = Preferences.get(PREF_FILE_NAME).getStringList(PREF_RECENT_GIF);
-                key = "RecentStickerCount";
+                key = "RecentGifCount";
                 break;
             default:
                 throw new IllegalStateException("emojiType illegal");
@@ -178,6 +178,9 @@ public class EmojiManager {
                 break;
             case EMOJI:
                 Preferences.get(PREF_FILE_NAME).putStringList(PREF_RECENT_EMOJI, list);
+                break;
+            case GIF:
+                Preferences.get(PREF_FILE_NAME).putStringList(PREF_RECENT_GIF, list);
                 break;
             default:
                 throw new IllegalStateException("emojiType illegal");

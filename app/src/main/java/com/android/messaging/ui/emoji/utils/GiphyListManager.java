@@ -59,7 +59,6 @@ public class GiphyListManager {
                         if (callBack != null) {
                             callBack.onGiphyListFetched(list);
                         }
-                        HSLog.d("giphy result", result.getData().toString());
                     } else {
                         HSLog.e("giphy error", "No results found");
                     }

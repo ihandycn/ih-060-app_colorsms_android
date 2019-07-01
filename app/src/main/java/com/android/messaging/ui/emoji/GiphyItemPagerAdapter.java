@@ -51,12 +51,19 @@ public class GiphyItemPagerAdapter extends AbstractEmojiItemPagerAdapter {
         Context context = container.getContext();
         View view;
         List<BaseEmojiInfo> list = mData.get(position).mEmojiInfoList;
-        if (list != null) {
+        if (list != null && list.isEmpty()) {
             view = LayoutInflater.from(context).inflate(R.layout.sticker_item_no_recent_layout, container, false);
         } else {
             RecyclerView recyclerView = new RecyclerView(context);
             recyclerView.setPadding(Dimensions.pxFromDp(6), Dimensions.pxFromDp(7), Dimensions.pxFromDp(6), 0);
-            GiphyItemRecyclerAdapter adapter = new GiphyItemRecyclerAdapter(mOnEmojiClickListener, mData.get(position).mName);
+            GiphyItemRecyclerAdapter adapter;
+
+            if (list == null) {
+                adapter = new GiphyItemRecyclerAdapter(mOnEmojiClickListener, mData.get(position).mName);
+            } else {
+                adapter = new GiphyItemRecyclerAdapter(mOnEmojiClickListener, list);
+            }
+
             final int itemOffsetInPixel = Dimensions.pxFromDp(2.5f);
             recyclerView.addItemDecoration(new RecyclerView.ItemDecoration() {
                 @Override
@@ -126,13 +133,15 @@ public class GiphyItemPagerAdapter extends AbstractEmojiItemPagerAdapter {
 
     @Override
     public void updateRecentItem() {
-        if (mData == null || mData.isEmpty())
+        if (mData == null || mData.isEmpty()) {
             return;
+        }
         EmojiPackageInfo recentInfo = mData.get(0);
-        if (recentInfo.mEmojiPackageType != EmojiPackageType.RECENT)
+        if (recentInfo.mEmojiPackageType != EmojiPackageType.RECENT) {
             return;
+        }
         mData.get(0).mEmojiInfoList.clear();
-        recentInfo.mEmojiInfoList = EmojiManager.getRecentInfo(EmojiPackageType.EMOJI);
+        recentInfo.mEmojiInfoList = EmojiManager.getRecentInfo(EmojiPackageType.GIF);
         updateSinglePage(0);
         updateTabView();
     }
