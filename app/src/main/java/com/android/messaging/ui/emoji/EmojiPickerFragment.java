@@ -152,13 +152,13 @@ public class EmojiPickerFragment extends Fragment implements INotificationObserv
         View deleteView = view.findViewById(R.id.emoji_delete_btn);
         deleteView.setBackground(BackgroundDrawables.createBackgroundDrawable(
                 activity.getResources().getColor(android.R.color.white), Dimensions.pxFromDp(19), true));
-        deleteView.setVisibility(View.GONE);
         deleteView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 mOnEmojiPickerListener.deleteEmoji();
             }
         });
+        deleteView.setVisibility(View.GONE);
         makeDeleteContinuous(deleteView);
 
         mEmojiPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
@@ -168,11 +168,7 @@ public class EmojiPickerFragment extends Fragment implements INotificationObserv
 
             @Override
             public void onPageSelected(int position) {
-                if (position != 0) {
-                    deleteView.setVisibility(View.GONE);
-                } else {
-                    deleteView.setVisibility(View.VISIBLE);
-                }
+                showOrHideDeleteView(deleteView, position);
             }
 
             @Override
@@ -187,6 +183,7 @@ public class EmojiPickerFragment extends Fragment implements INotificationObserv
         } else {
             int position = EmojiManager.getDefaultMainPosition();
             mEmojiPager.setCurrentItem(position);
+            showOrHideDeleteView(deleteView, position);
             tabLayout.getTabAt(position).select();
         }
     }
@@ -204,6 +201,14 @@ public class EmojiPickerFragment extends Fragment implements INotificationObserv
         mIsAnimationFinished = true;
         if (mIsDataPrepared && mIsViewCreated) {
             initData();
+        }
+    }
+
+    private void showOrHideDeleteView(View deleteView, int position) {
+        if (position != 0) {
+            deleteView.setVisibility(View.GONE);
+        } else {
+            deleteView.setVisibility(View.VISIBLE);
         }
     }
 
