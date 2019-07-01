@@ -271,6 +271,7 @@ public class MessageBoxConversationView extends FrameLayout {
     private void initInputAction() {
         mInputActionView.getEmojiIcon().setOnClickListener(v -> {
             if (mActivity.getIsEmojiVisible()) {
+                ImeUtil.get().showImeKeyboard(getContext(), mInputEditText);
                 mActivity.hideEmoji();
             } else {
                 ImeUtil.get().hideImeKeyboard(getContext(), mInputEditText);
