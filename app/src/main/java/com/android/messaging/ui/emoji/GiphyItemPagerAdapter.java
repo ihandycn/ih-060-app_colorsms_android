@@ -156,7 +156,7 @@ public class GiphyItemPagerAdapter extends AbstractEmojiItemPagerAdapter {
             }
 
             if (i == 0) {
-                tab.setIcon(R.drawable.emoji_ic_recent);
+                tab.setIcon(R.drawable.ic_gif_recent);
                 tab.setText(null);
             } else {
                 EmojiPackageInfo info = mData.get(i);
