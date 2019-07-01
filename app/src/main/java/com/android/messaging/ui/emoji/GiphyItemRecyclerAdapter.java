@@ -19,8 +19,6 @@ import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
 import com.bumptech.glide.request.RequestOptions;
 import com.giphy.sdk.core.models.Image;
 import com.giphy.sdk.core.models.Media;
-import com.giphy.sdk.core.network.api.GPHApi;
-import com.giphy.sdk.core.network.api.GPHApiClient;
 import com.superapps.util.Dimensions;
 
 import java.util.ArrayList;
@@ -111,7 +109,6 @@ public class GiphyItemRecyclerAdapter extends RecyclerView.Adapter<GiphyItemRecy
         RequestOptions requestOptions = new RequestOptions();
         requestOptions = requestOptions.transforms(new FitCenter(),
                 new RoundedCorners((int) context.getResources().getDimension(R.dimen.giphy_list_item_radius)));
-
 
         GlideApp.with(context)
                 .asGif()

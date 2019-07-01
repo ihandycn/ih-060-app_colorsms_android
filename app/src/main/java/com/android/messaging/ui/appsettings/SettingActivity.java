@@ -179,7 +179,7 @@ public class SettingActivity extends BaseActivity {
 
         //emoji
         SettingEmojiItemView settingEmojiItemView = findViewById(R.id.setting_item_emoji);
-        if(Build.VERSION.SDK_INT >= 24) {
+        if (Build.VERSION.SDK_INT >= 24) {
             settingEmojiItemView.setDefault(EmojiManager.EMOJI_SKINS[EmojiManager.getSkinDefault()]);
             settingEmojiItemView.setOnItemClickListener(() -> {
                 int choose = EmojiManager.getSkinDefault();
@@ -193,7 +193,7 @@ public class SettingActivity extends BaseActivity {
                 });
                 UiUtils.showDialogFragment(this, dialog);
             });
-        }else{
+        } else {
             settingEmojiItemView.setVisibility(GONE);
             findViewById(R.id.setting_title_emoji).setVisibility(GONE);
         }
