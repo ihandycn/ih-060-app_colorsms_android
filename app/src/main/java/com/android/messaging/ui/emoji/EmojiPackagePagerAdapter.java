@@ -95,10 +95,19 @@ public class EmojiPackagePagerAdapter extends PagerAdapter {
 
             @Override
             public void onPageSelected(int position) {
-                if (position > currentPosition) {
-                    BugleAnalytics.logEvent("SMSEmoji_ChatEmoji_Page_Slideleft", true);
-                }
                 currentPosition = position;
+
+                switch (info.mEmojiPackageType) {
+                    case STICKER:
+                        BugleAnalytics.logEvent("SMSEmoji_StickerType_Switch");
+                        break;
+                    case EMOJI:
+                        BugleAnalytics.logEvent("SMSEmoji_EmojiType_Slide");
+                        break;
+                    case GIF:
+                        BugleAnalytics.logEvent("SMSEmoji_GifType_Switch");
+                        break;
+                }
             }
 
             @Override
@@ -218,9 +227,6 @@ public class EmojiPackagePagerAdapter extends PagerAdapter {
                     HSLog.e("ui_test", "onTabSelected: info is null");
                     return;
                 }
-
-                BugleAnalytics.logEvent("SMSEmoji_ChatEmoji_Tab_Click", true, true, "type", info.mName);
-
                 ImageView view = getImageView(tab);
                 if (view == null)
                     return;

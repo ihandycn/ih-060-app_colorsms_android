@@ -11,6 +11,8 @@ import android.view.ViewGroup;
 import com.android.messaging.R;
 import com.android.messaging.ui.BaseDialogFragment;
 import com.android.messaging.ui.emoji.utils.EmojiManager;
+import com.android.messaging.ui.emoji.utils.LoadEmojiManager;
+import com.android.messaging.util.BugleAnalytics;
 import com.superapps.util.Threads;
 
 public class ChooseEmojiSkinDialog extends BaseDialogFragment {
@@ -18,7 +20,6 @@ public class ChooseEmojiSkinDialog extends BaseDialogFragment {
     private RecyclerView mRecyclerView;
     private ChooseEmojiSkinAdapter mAdapter;
 
-    private int mChoose = 0;
     private final String BASE_EMOJI = new String(Character.toChars(0x270B));
 
     private String[] mEmojiSkins = new String[]{
@@ -30,11 +31,13 @@ public class ChooseEmojiSkinDialog extends BaseDialogFragment {
             BASE_EMOJI + EmojiManager.EMOJI_SKINS[5]
     };
 
-    private ChooseEmojiSkinAdapter.SkinChooseListener mListener;
 
-    public ChooseEmojiSkinDialog(int choose, ChooseEmojiSkinAdapter.SkinChooseListener listener) {
-        this.mChoose = choose;
-        this.mListener = listener;
+    public ChooseEmojiSkinDialog() {
+    }
+
+    public static ChooseEmojiSkinDialog newInstance() {
+        ChooseEmojiSkinDialog dialog = new ChooseEmojiSkinDialog();
+        return dialog;
     }
 
 
@@ -55,12 +58,12 @@ public class ChooseEmojiSkinDialog extends BaseDialogFragment {
         View view = LayoutInflater.from(getActivity()).inflate(R.layout.dialog_choose_emoji_skin, null);
         mRecyclerView = view.findViewById(R.id.recycler_view);
 
-        mAdapter = new ChooseEmojiSkinAdapter(mEmojiSkins, mChoose, new ChooseEmojiSkinAdapter.SkinChooseListener() {
-            @Override
-            public void onSkinChooseListener(int index) {
-                mListener.onSkinChooseListener(index);
-                ChooseEmojiSkinDialog.this.dismissAllowingStateLoss();
-            }
+
+        mAdapter = new ChooseEmojiSkinAdapter(mEmojiSkins, EmojiManager.getSkinDefault(), index -> {
+            EmojiManager.setSkinDefault(index);
+            LoadEmojiManager.getInstance().flush();
+            dismissAllowingStateLoss();
+            BugleAnalytics.logEvent("Settings_EmojiSkintone_Set", "type", String.valueOf(index + 1));
         });
         mRecyclerView.setAdapter(mAdapter);
         RecyclerView.LayoutManager layoutManager = new GridLayoutManager(getActivity(), 3);

@@ -20,6 +20,7 @@ import com.android.messaging.download.Downloader;
 import com.android.messaging.ui.emoji.utils.EmojiDataProducer;
 import com.android.messaging.ui.emoji.utils.EmojiManager;
 import com.android.messaging.ui.emoji.utils.LoadEmojiManager;
+import com.android.messaging.util.BugleAnalytics;
 import com.android.messaging.util.ContentType;
 import com.android.messaging.util.UiUtils;
 import com.ihs.commons.notificationcenter.HSGlobalNotificationCenter;
@@ -112,6 +113,7 @@ public class EmojiPickerFragment extends Fragment implements INotificationObserv
             public void emojiLongClick(View view, EmojiInfo emojiInfo) {
                 mEmojiVariantPopup = new EmojiVariantPopup(EmojiPickerFragment.this.getView(), this);
                 mEmojiVariantPopup.show(view, emojiInfo);
+                BugleAnalytics.logEvent("SMSEmoji_Emoji_SkintoneLongPress");
             }
 
             @Override
@@ -169,6 +171,14 @@ public class EmojiPickerFragment extends Fragment implements INotificationObserv
             @Override
             public void onPageSelected(int position) {
                 showOrHideDeleteView(deleteView, position);
+
+                if (position == 0) {
+                    BugleAnalytics.logEvent("SMSEmoji_Emojitab_Click");
+                } else if (position == 1) {
+                    BugleAnalytics.logEvent("SMSEmoji_Stickertab_Click");
+                } else if (position == 2) {
+                    BugleAnalytics.logEvent("SMSEmoji_Giftab_Click");
+                }
             }
 
             @Override

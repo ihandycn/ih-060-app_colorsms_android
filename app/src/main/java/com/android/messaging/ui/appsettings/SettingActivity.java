@@ -182,16 +182,22 @@ public class SettingActivity extends BaseActivity {
         if (Build.VERSION.SDK_INT >= 24) {
             settingEmojiItemView.setDefault(EmojiManager.EMOJI_SKINS[EmojiManager.getSkinDefault()]);
             settingEmojiItemView.setOnItemClickListener(() -> {
-                int choose = EmojiManager.getSkinDefault();
-                ChooseEmojiSkinDialog dialog = new ChooseEmojiSkinDialog(choose, new ChooseEmojiSkinAdapter.SkinChooseListener() {
+                ChooseEmojiSkinDialog dialog = new ChooseEmojiSkinDialog();
+                dialog.setOnDismissOrCancelListener(new BaseDialogFragment.OnDismissOrCancelListener() {
                     @Override
-                    public void onSkinChooseListener(int index) {
-                        EmojiManager.setSkinDefault(index);
-                        settingEmojiItemView.updateSkin(EmojiManager.EMOJI_SKINS[index]);
-                        LoadEmojiManager.getInstance().flush();
+                    public void onDismiss(DialogInterface dialog) {
+                        settingEmojiItemView.updateSkin(EmojiManager.EMOJI_SKINS[EmojiManager.getSkinDefault()]);
+                    }
+
+                    @Override
+                    public void onCancel(DialogInterface dialog) {
+
                     }
                 });
+
+
                 UiUtils.showDialogFragment(this, dialog);
+                BugleAnalytics.logEvent("Settings_EmojiSkintone_Click");
             });
         } else {
             settingEmojiItemView.setVisibility(GONE);

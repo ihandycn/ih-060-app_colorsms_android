@@ -67,6 +67,7 @@ import com.android.messaging.ui.customize.theme.ThemeSelectActivity;
 import com.android.messaging.ui.customize.theme.ThemeUtils;
 import com.android.messaging.ui.dialog.FiveStarRateDialog;
 import com.android.messaging.ui.emoji.EmojiStoreActivity;
+import com.android.messaging.ui.emoji.utils.EmojiManager;
 import com.android.messaging.ui.invitefriends.InviteFriendsActivity;
 import com.android.messaging.ui.messagebox.MessageBoxActivity;
 import com.android.messaging.ui.messagebox.MessageBoxSettings;
@@ -949,7 +950,8 @@ public class ConversationListActivity extends AbstractConversationListActivity
                                 "pin", String.valueOf(hasPinConversation),
                                 "backup", String.valueOf(Preferences.getDefault().getBoolean(
                                         ChooseBackupViewHolder.PREF_KEY_BACKUP_SUCCESS_FOR_EVENT, false)),
-                                "archive", String.valueOf(archivedCount > 0));
+                                "archive", String.valueOf(archivedCount > 0),
+                                "emojiskintone", String.valueOf(EmojiManager.getSkinDefault() + 1));
                     });
                 }
                 break;
