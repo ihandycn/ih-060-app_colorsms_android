@@ -54,7 +54,7 @@ public class GiphyItemPagerAdapter extends AbstractEmojiItemPagerAdapter {
         if (list != null && list.isEmpty()) {
             view = LayoutInflater.from(context).inflate(R.layout.sticker_item_no_recent_layout, container, false);
         } else {
-            RecyclerView recyclerView = new RecyclerView(context);
+            RecyclerView recyclerView = (RecyclerView) LayoutInflater.from(context).inflate(R.layout.vertical_recycler_view, null);
             recyclerView.setPadding(Dimensions.pxFromDp(6), Dimensions.pxFromDp(7), Dimensions.pxFromDp(6), 0);
             GiphyItemRecyclerAdapter adapter;
 
