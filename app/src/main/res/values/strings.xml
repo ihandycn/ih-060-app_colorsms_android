@@ -943,7 +943,7 @@
     <string name="sms_emoji_get">GET</string>
     <string name="sms_emoji_added">ADDED</string>
     <string name="sms_emoji_add_more">More emojis</string>
-    <string name="sms_emoji_recent_empty_description">Click an emoji to share with friends.</string>
+    <string name="sms_emoji_recent_empty_description">No Recent</string>
 
     <!--sms show-->
     <string name="sms_show_apply">APPLY</string>

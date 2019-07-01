@@ -116,7 +116,7 @@ public class EmojiPackagePagerAdapter extends PagerAdapter {
             View storeBtn = view.findViewById(R.id.emoji_store_btn);
             storeBtn.setVisibility(View.VISIBLE);
             storeBtn.setBackground(BackgroundDrawables.createBackgroundDrawable(
-                    mContext.getResources().getColor(R.color.white), Dimensions.pxFromDp(17), true));
+                    mContext.getResources().getColor(R.color.white), Dimensions.pxFromDp(50), true));
             storeBtn.setOnClickListener(v -> {
                 BugleAnalytics.logEvent("SMSEmoji_ChatEmoji_Store_Click", true, true, "type", "chat_tab");
                 EmojiStoreActivity.start(container.getContext());
@@ -203,8 +203,6 @@ public class EmojiPackagePagerAdapter extends PagerAdapter {
             View view = LayoutInflater.from(mContext).inflate(R.layout.emoji_tab_item_layout, null);
             TabLayout.Tab tab = mTabLayout.getTabAt(i);
             ImageView tabIconView = view.findViewById(R.id.tab_icon_view);
-            tabIconView.setBackground(BackgroundDrawables.createBackgroundDrawable(
-                    mContext.getResources().getColor(R.color.white), Dimensions.pxFromDp(20), true));
             tabIconView.setImageURI(Uri.parse(info.mTabIconUrl));
             if (tab != null) {
                 tab.setCustomView(view);
