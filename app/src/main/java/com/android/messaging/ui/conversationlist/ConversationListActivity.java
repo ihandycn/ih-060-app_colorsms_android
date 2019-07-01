@@ -531,9 +531,8 @@ public class ConversationListActivity extends AbstractConversationListActivity
                         startActivity(inviteFriendsIntent, TransitionUtils.getTransitionInBundle(ConversationListActivity.this));
                         break;
                     case DRAWER_INDEX_RATE:
-//                        FiveStarRateDialog.showFiveStarFromSetting(ConversationListActivity.this);
-//                        BugleAnalytics.logEvent("Menu_FiveStart_Click", true, true);
-                        FontDownloadManager.copyFontsFromAssetsAsync();
+                        FiveStarRateDialog.showFiveStarFromSetting(ConversationListActivity.this);
+                        BugleAnalytics.logEvent("Menu_FiveStart_Click", true, true);
                         break;
                     case DRAWER_INDEX_NONE:
                     default:
