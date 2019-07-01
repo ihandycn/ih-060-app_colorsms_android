@@ -34,7 +34,8 @@
                 android:layout_centerVertical="true"
                 android:layout_gravity="center"
                 android:scaleType="centerInside"
-                android:src="@drawable/emoji_add" />
+                android:src="@drawable/emoji_add"
+                android:visibility="gone"/>
 
     </RelativeLayout>
 

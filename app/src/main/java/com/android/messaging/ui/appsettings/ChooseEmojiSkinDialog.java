@@ -1,10 +1,12 @@
 package com.android.messaging.ui.appsettings;
 
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 
 import com.android.messaging.R;
 import com.android.messaging.ui.BaseDialogFragment;
@@ -41,6 +43,13 @@ public class ChooseEmojiSkinDialog extends BaseDialogFragment {
         super.onCreate(savedInstanceState);
     }
 
+    @Nullable
+    @Override
+    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
+        setCanceledOnTouchOutside(true);
+        return super.onCreateView(inflater, container, savedInstanceState);
+    }
+
     @Override
     protected View getContentView() {
         View view = LayoutInflater.from(getActivity()).inflate(R.layout.dialog_choose_emoji_skin, null);
@@ -50,12 +59,7 @@ public class ChooseEmojiSkinDialog extends BaseDialogFragment {
             @Override
             public void onSkinChooseListener(int index) {
                 mListener.onSkinChooseListener(index);
-                Threads.postOnMainThreadDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        ChooseEmojiSkinDialog.this.dismissAllowingStateLoss();
-                    }
-                }, 340);
+                ChooseEmojiSkinDialog.this.dismissAllowingStateLoss();
             }
         });
         mRecyclerView.setAdapter(mAdapter);
