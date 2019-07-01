@@ -22,8 +22,7 @@
             app:tabPaddingBottom="0dp"
             app:tabPaddingEnd="0dp"
             app:tabPaddingStart="0dp"
-            app:tabPaddingTop="0dp"
-            app:tabBackground="@android:color/transparent"/>
+            app:tabPaddingTop="0dp" />
 
             <ImageView
                 android:id="@+id/emoji_store_btn"
