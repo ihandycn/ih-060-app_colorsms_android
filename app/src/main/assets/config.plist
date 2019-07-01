@@ -2224,11 +2224,11 @@
 						<key>BubbleIncomingUrl</key>
 						<string>incoming.9.png</string>
 						<key>BubbleIncomingSolidUrl</key>
-						<string></string>
+						<string>incoming_solid.9.png</string>
 						<key>BubbleOutgoingUrl</key>
 						<string>outgoing.9.png</string>
 						<key>BubbleOutgoingSolidUrl</key>
-						<string></string>
+						<string>outgoing_solid.9.png</string>
 					</dict>
 					<key>waterdrop</key>
 					<dict>
@@ -2416,11 +2416,11 @@
 						<key>BubbleIncomingUrl</key>
 						<string>incoming.9.png</string>
 						<key>BubbleIncomingSolidUrl</key>
-						<string>incoming_solid.9.png</string>
+						<string></string>
 						<key>BubbleOutgoingUrl</key>
 						<string>outgoing.9.png</string>
 						<key>BubbleOutgoingSolidUrl</key>
-						<string>outgoing_solid.9.png</string>
+						<string></string>
 					</dict>
 				</dict>
 			</dict>
