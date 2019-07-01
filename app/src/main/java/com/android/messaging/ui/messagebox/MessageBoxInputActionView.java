@@ -11,6 +11,7 @@ import android.text.TextUtils;
 import android.text.style.AbsoluteSizeSpan;
 import android.text.style.ForegroundColorSpan;
 import android.util.AttributeSet;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.animation.Interpolator;
@@ -21,6 +22,7 @@ import android.widget.TextView;
 
 import com.android.messaging.R;
 import com.android.messaging.font.FontUtils;
+import com.android.messaging.font.TypefaceInfo;
 import com.android.messaging.ui.PlainTextEditText;
 import com.android.messaging.ui.SendDelayProgressBar;
 import com.android.messaging.ui.appsettings.SendDelaySettings;
@@ -56,7 +58,11 @@ class MessageBoxInputActionView extends LinearLayout {
         mSelfSendIcon.setOnClickListener(mHost);
 
         mComposeEditText = findViewById(R.id.compose_message_text);
-        mComposeEditText.setTypeface(FontUtils.getTypeface());
+        TypefaceInfo info = FontUtils.getTypefaceAndScale();
+        if (info != null) {
+            mComposeEditText.setTypeface(info.getTypeface());
+            mComposeEditText.setTextSize(TypedValue.COMPLEX_UNIT_PX, mComposeEditText.getTextSize() * info.getDefaultSizeScale());
+        }
 
         mProgressBar = findViewById(R.id.progress_bar);
         mProgressBar.getIndeterminateDrawable().setColorFilter(PrimaryColors.getPrimaryColor(), PorterDuff.Mode.SRC_IN);
@@ -77,7 +83,7 @@ class MessageBoxInputActionView extends LinearLayout {
             mComposeEditText.setShowSoftInputOnFocus(false);
         }
 
-        View container  = findViewById(R.id.edit_text_container);
+        View container = findViewById(R.id.edit_text_container);
         if (!ThemeUtils.isDefaultTheme()) {
             container.setBackground(null);
         } else {
@@ -107,7 +113,7 @@ class MessageBoxInputActionView extends LinearLayout {
         return mEmojiIcon;
     }
 
-    void sendDelayAnimation(){
+    void sendDelayAnimation() {
         mDelayCloseButton.setVisibility(View.VISIBLE);
         mSendDelayProgressBar.setVisibility(View.VISIBLE);
         mSelfSendIcon.setVisibility(View.GONE);
@@ -123,7 +129,7 @@ class MessageBoxInputActionView extends LinearLayout {
         mSendDelayProgressBar.setOnClickListener(listener);
     }
 
-    void resetDelaySendAnimation(){
+    void resetDelaySendAnimation() {
         mDelayCloseButton.setAlpha(0.0f);
         mSendDelayProgressBar.setAlpha(0.0f);
         mSendDelayProgressBar.setScaleX(0.8f);

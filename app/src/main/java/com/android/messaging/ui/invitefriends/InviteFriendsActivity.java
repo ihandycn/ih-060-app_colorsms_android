@@ -9,6 +9,7 @@ import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
+import android.util.TypedValue;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
@@ -23,6 +24,7 @@ import com.android.messaging.datamodel.data.ConversationListData;
 import com.android.messaging.datamodel.data.ConversationListItemData;
 import com.android.messaging.datamodel.data.ParticipantData;
 import com.android.messaging.font.FontUtils;
+import com.android.messaging.font.TypefaceInfo;
 import com.android.messaging.privatebox.ui.addtolist.CallAssistantUtils;
 import com.android.messaging.ui.PlainTextEditText;
 import com.android.messaging.ui.customize.PrimaryColors;
@@ -102,7 +104,11 @@ public class InviteFriendsActivity extends BaseActivity
     private void initEditText() {
         mDescription = getString(R.string.invite_friends_invite_default_content);
         mEditText = findViewById(R.id.invite_friends_message_text);
-        mEditText.setTypeface(FontUtils.getTypeface());
+        TypefaceInfo info = FontUtils.getTypefaceAndScale();
+        if (info != null) {
+            mEditText.setTypeface(info.getTypeface());
+            mEditText.setTextSize(TypedValue.COMPLEX_UNIT_PX, mEditText.getTextSize() * info.getDefaultSizeScale());
+        }
         mEditText.setText(mDescription);
         disableEditText();
 

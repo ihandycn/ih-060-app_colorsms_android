@@ -8,12 +8,13 @@ import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.text.TextUtils;
 import android.util.AttributeSet;
+import android.util.TypedValue;
 import android.view.View;
-import android.widget.TextView;
 
 import com.android.messaging.R;
 import com.android.messaging.font.FontStyleManager;
 import com.android.messaging.font.FontUtils;
+import com.android.messaging.font.TypefaceInfo;
 import com.superapps.util.Fonts;
 import com.superapps.view.DebuggableTextView;
 
@@ -32,6 +33,8 @@ public class MessagesTextView extends DebuggableTextView {
     private boolean fontFamilyChangeable;
     private boolean fontSizeChangeable;
     private float mDefaultTextSize;
+    private float mDefaultTypefaceSizeScale = 1f;
+    private float mCurrentScale = 1;
     private int mFontType;
 
     public MessagesTextView(Context context) {
@@ -72,7 +75,11 @@ public class MessagesTextView extends DebuggableTextView {
             }
 
             if (fontFamilyChangeable && mFontType != R.string.roboto_regular) {
-                setTypeface(FontUtils.getTypeface(mFontType, fontStyle));
+                TypefaceInfo info = FontUtils.getTypefaceInfo(mFontType, fontStyle);
+                if (info != null) {
+                    mDefaultTypefaceSizeScale = info.getDefaultSizeScale();
+                    setTypeface(info.getTypeface());
+                }
             } else {
                 typeface = Fonts.getTypeface(Fonts.Font.ofFontResId(mFontType), fontStyle);
                 if (typeface != null) {
@@ -86,6 +93,8 @@ public class MessagesTextView extends DebuggableTextView {
         if (fontSizeChangeable) {
             float scale = FontStyleManager.getInstance().getFontScale();
             setTextScale(scale);
+        } else {
+            setTextScale(1);
         }
 
         if (drawableWidth > 0 && drawableHeight > 0) {
@@ -130,8 +139,26 @@ public class MessagesTextView extends DebuggableTextView {
         mDefaultTextSize = size;
     }
 
+    @Override
+    public void setTextSize(int unit, float size) {
+        super.setTextSize(unit, size);
+        mDefaultTextSize = getTextSize();
+    }
+
     public void setTextScale(float scale) {
-        super.setTextSize(TextView.AUTO_SIZE_TEXT_TYPE_NONE, scale * mDefaultTextSize);
+        mCurrentScale = scale;
+        super.setTextSize(TypedValue.COMPLEX_UNIT_PX, scale * mDefaultTextSize * mDefaultTypefaceSizeScale);
+    }
+
+    public void setTypeface(TypefaceInfo typefaceInfo) {
+        if (typefaceInfo != null) {
+            setTypeface(typefaceInfo.getTypeface());
+            mDefaultTypefaceSizeScale = typefaceInfo.getDefaultSizeScale();
+        } else {
+            super.setTypeface(null);
+            mDefaultTypefaceSizeScale = 1;
+        }
+        setTextScale(mCurrentScale);
     }
 
     public int getFontStyle() {

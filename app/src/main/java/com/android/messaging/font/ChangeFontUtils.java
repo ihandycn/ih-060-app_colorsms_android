@@ -1,6 +1,5 @@
 package com.android.messaging.font;
 
-import android.graphics.Typeface;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,7 +13,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class ChangeFontUtils {
-    public static Map<String, Typeface> sTypefaceMap = new HashMap<>();
+    public static Map<String, TypefaceInfo> sTypefaceMap = new HashMap<>();
 
     public static void changeFontSize(View view, float scale) {
         if (view instanceof MessagesTextView) {
@@ -92,11 +91,9 @@ public class ChangeFontUtils {
                 return;
             }
 
-            Typeface tp = FontUtils.loadTypeface(typeName, weightStr);
-            if (tp != null) {
-                sTypefaceMap.put(weightStr, tp);
-            }
-            textView.setTypeface(tp);
+            TypefaceInfo tpInfo = FontUtils.loadTypeface(typeName, weightStr);
+            sTypefaceMap.put(weightStr, tpInfo);
+            textView.setTypeface(tpInfo);
         }
     }
 

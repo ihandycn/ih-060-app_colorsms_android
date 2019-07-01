@@ -59,7 +59,11 @@ public class FontDownloadManager {
             String fontName = (String) item.get("Name");
             List<String> styleList = (List<String>) item.get("Weight");
             boolean isLocal = (Boolean) item.get("IsLocalFont");
-            FontInfo info = new FontInfo(fontName, styleList, isLocal);
+            double defaultSizeRatio = 1;
+            if (item.containsKey("DefaultSizeRatio")) {
+                defaultSizeRatio = (Double) item.get("DefaultSizeScale");
+            }
+            FontInfo info = new FontInfo(fontName, styleList, isLocal, (float) defaultSizeRatio);
             list.add(info);
         }
         return list;
@@ -183,7 +187,7 @@ public class FontDownloadManager {
     }
 
     public static void copyFontsFromAssetsAsync() {
-        Threads.postOnThreadPoolExecutor( () ->{
+        Threads.postOnThreadPoolExecutor(() -> {
             List<FontInfo> list = getFontList();
             for (FontInfo font : list) {
                 if (font.isLocalFont() && !font.getFontName().equals(FontUtils.MESSAGE_FONT_FAMILY_DEFAULT_VALUE)) {
@@ -226,7 +230,6 @@ public class FontDownloadManager {
                 e.printStackTrace();
             }
         }
-
     }
 
     private static String getBaseRemoteUrl() {
