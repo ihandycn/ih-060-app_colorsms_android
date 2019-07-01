@@ -134,7 +134,7 @@ public class ThemeDownloadManager {
         String baseUrl = getBaseRemoteUrl() + folderName + "/";
         List<DownloadItemInfo> downloadItemInfoList = new ArrayList<>();
         FontInfo fontInfo = FontDownloadManager.getFont(theme.fontName);
-        final boolean[] isFontDownload = {fontInfo == null || FontDownloadManager.isFontDownloaded(fontInfo)};
+        final boolean isFontDownload = (fontInfo == null || FontDownloadManager.isFontDownloaded(fontInfo));
 
         if (!TextUtils.isEmpty(theme.wallpaperUrl)) {
             DownloadItemInfo downloadItemInfo = new DownloadItemInfo();
@@ -216,8 +216,8 @@ public class ThemeDownloadManager {
             downloadItemInfo.mLocalFile = new File(CommonUtils.getDirectory(
                     ThemeBubbleDrawables.THEME_BASE_PATH + folderName),
                     ThemeBubbleDrawables.OUTGOING_SOLID_BUBBLE_FILE_NAME);
-            downloadItemInfo.mStartProcessValue = CREATE_ICON_START_RATE;
-            downloadItemInfo.mEndProcessValue = FONT_START_RATE;
+            downloadItemInfo.mStartProcessValue = OUTGOING_SOLID_BUBBLE_START_RATE;
+            downloadItemInfo.mEndProcessValue = CREATE_ICON_START_RATE;
 
             downloadItemInfoList.add(downloadItemInfo);
         }
@@ -253,26 +253,26 @@ public class ThemeDownloadManager {
                     ThemeBubbleDrawables.THEME_BASE_PATH + folderName),
                     ThemeBubbleDrawables.AVATAR_FILE_NAME);
             downloadItemInfo.mStartProcessValue = AVATAR_START_RATE;
-            if (isFontDownload[0]) {
+            if (isFontDownload) {
                 downloadItemInfo.mEndProcessValue = FONT_START_RATE;
             } else {
-                downloadItemInfo.mEndProcessValue = TOOLBAR_START_RATE;
+                downloadItemInfo.mEndProcessValue = TOTAL_RATE;
             }
 
             downloadItemInfoList.add(downloadItemInfo);
         }
 
-        final boolean[] isFontDownloadSuccess = {isFontDownload[0]};
+        final boolean[] isFontDownloadSuccess = {isFontDownload};
         final boolean[] isThemeDownloadSuccess = {false};
         // 0-1
         final float[] themeRate = {0};
         final float[] fontRate = {0};
 
-        if (isFontDownload[0]) {
+        if (isFontDownload) {
             fontRate[0] = TOTAL_RATE - FONT_START_RATE;
         }
 
-        if (!isFontDownload[0]) {
+        if (!isFontDownload) {
             WeakReference<IThemeDownloadListener> listenerWeakReference = new WeakReference<>(listener);
             FontDownloadManager.FontDownloadListener listener1 = new FontDownloadManager.FontDownloadListener() {
                 @Override
@@ -331,7 +331,7 @@ public class ThemeDownloadManager {
             public void onDownloadUpdate(float rate) {
                 if (themeRate[0] < rate) {
                     themeRate[0] = rate;
-                    if (isFontDownload[0]) {
+                    if (isFontDownload) {
                         listener.onDownloadUpdate(rate * TOTAL_RATE / FONT_START_RATE);
                     } else {
                         listener.onDownloadUpdate(rate + fontRate[0]);

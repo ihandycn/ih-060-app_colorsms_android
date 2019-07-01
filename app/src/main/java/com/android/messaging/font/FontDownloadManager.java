@@ -80,6 +80,10 @@ public class FontDownloadManager {
     }
 
     public static boolean isFontDownloaded(FontInfo font) {
+        if (FontUtils.MESSAGE_FONT_FAMILY_DEFAULT_VALUE.equalsIgnoreCase(font.getFontName()) || font.isLocalFont()) {
+            return true;
+        }
+
         for (String style : font.getFontWeights()) {
             File file = new File(CommonUtils.getDirectory(LOCAL_DIRECTORY + font.getFontName()), style + ".ttf");
             if (!file.exists()) {

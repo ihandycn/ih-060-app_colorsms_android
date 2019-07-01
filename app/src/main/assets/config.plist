@@ -518,7 +518,7 @@
 						<key>ThemeColor</key>
 						<string>#2177e0</string>
 						<key>FontName</key>
-						<string>El_Messiri</string>
+						<string>el_messiri</string>
 						<key>AvatarForegroundColor</key>
 						<string>#ffffff</string>
 						<key>ListTitleColor</key>
@@ -582,7 +582,7 @@
 						<key>ThemeColor</key>
 						<string>#e0365e</string>
 						<key>FontName</key>
-						<string>K2D</string>
+						<string>k2d</string>
 						<key>AvatarForegroundColor</key>
 						<string>#ffffff</string>
 						<key>ListTitleColor</key>
@@ -710,7 +710,7 @@
 						<key>ThemeColor</key>
 						<string>#d09608</string>
 						<key>FontName</key>
-						<string>Lato</string>
+						<string>lato</string>
 						<key>AvatarForegroundColor</key>
 						<string>#ffffff</string>
 						<key>ListTitleColor</key>
@@ -774,7 +774,7 @@
 						<key>ThemeColor</key>
 						<string>#ec6e10</string>
 						<key>FontName</key>
-						<string>Merienda</string>
+						<string>merienda</string>
 						<key>AvatarForegroundColor</key>
 						<string>#ffffff</string>
 						<key>ListTitleColor</key>
@@ -838,7 +838,7 @@
 						<key>ThemeColor</key>
 						<string>#c830ee</string>
 						<key>FontName</key>
-						<string>Default</string>
+						<string>default</string>
 						<key>AvatarForegroundColor</key>
 						<string>#ffffff</string>
 						<key>ListTitleColor</key>
@@ -902,7 +902,7 @@
 						<key>ThemeColor</key>
 						<string>#f17049</string>
 						<key>FontName</key>
-						<string>Lato</string>
+						<string>lato</string>
 						<key>AvatarForegroundColor</key>
 						<string>#ffffff</string>
 						<key>ListTitleColor</key>
@@ -1158,7 +1158,7 @@
 						<key>ThemeColor</key>
 						<string>#d7295a</string>
 						<key>FontName</key>
-						<string>Default</string>
+						<string>default</string>
 						<key>AvatarForegroundColor</key>
 						<string>#ffffff</string>
 						<key>ListTitleColor</key>
@@ -1734,7 +1734,7 @@
 						<key>ThemeColor</key>
 						<string>#f26872</string>
 						<key>FontName</key>
-						<string>Averia_Libre</string>
+						<string>averia_libre</string>
 						<key>AvatarForegroundColor</key>
 						<string>#ffffff</string>
 						<key>ListTitleColor</key>
@@ -1798,7 +1798,7 @@
 						<key>ThemeColor</key>
 						<string>#bd9d81</string>
 						<key>FontName</key>
-						<string>Averia_Libre</string>
+						<string>averia_libre</string>
 						<key>AvatarForegroundColor</key>
 						<string>#ffffff</string>
 						<key>ListTitleColor</key>
