@@ -129,12 +129,12 @@ public class WallpaperPreviewActivity extends BaseActivity implements WallpaperM
                         super.onLoadCleared(placeholder);
                     }
                 });
-        mBubbleView.updateBubbleDrawables(mConversationId, true);
+        mBubbleView.updateBackgroundState(mConversationId, true);
     }
 
     public void setPreviewDrawable(Drawable drawable) {
         mWallpaperPreviewImg.setImageDrawable(drawable);
-        mBubbleView.updateBubbleDrawables(mConversationId, false);
+        mBubbleView.updateBackgroundState(mConversationId, false);
         startPreviewTransitionAnimation();
     }
 
@@ -218,7 +218,7 @@ public class WallpaperPreviewActivity extends BaseActivity implements WallpaperM
             if (!TextUtils.isEmpty(wallpaperPath)) {
                 mWallpaperPreviewImg.setImageURI(Uri.fromFile(new File(wallpaperPath)));
             }
-            mBubbleView.updateBubbleDrawables(mConversationId, true);
+            mBubbleView.updateBackgroundState(mConversationId, true);
             onItemSelected(null);
         } else {
             finish();

@@ -24,6 +24,7 @@ import com.superapps.util.Dimensions;
 public class CustomMessagePreviewView extends ConstraintLayout
         implements WallpaperManager.WallpaperChangeListener {
     private String mConversationId;
+    private boolean mHasCustomBackground;
 
     private static int sIncomingBackgroundPreviewColor;
     private static int sOutgoingBackgroundPreviewColor;
@@ -57,18 +58,6 @@ public class CustomMessagePreviewView extends ConstraintLayout
         inflater.inflate(R.layout.customize_preview_view, this, true);
         mIncomingMessage = findViewById(R.id.incoming_message_preview_item);
         mOutgoingMessage = findViewById(R.id.outgoing_message_preview_item);
-
-        TextView contactIcon = findViewById(R.id.contact_text);
-        contactIcon.setTextColor(
-                Color.parseColor(
-                        ThemeInfo.getThemeInfo(ThemeUtils.getCurrentThemeName()).avatarForegroundColor));
-        ImageView contactBackground = findViewById(R.id.contact_background);
-        Drawable avatar = AvatarBgDrawables.getAvatarBg(true);
-        if (avatar != null) {
-            contactBackground.setBackground(avatar);
-        } else {
-            contactIcon.setBackgroundResource(R.drawable.bubble_customize_preview_contact_icon_background);
-        }
 
         refreshTimestamp();
     }
@@ -110,11 +99,41 @@ public class CustomMessagePreviewView extends ConstraintLayout
         mOutgoingMessage.setText(getResources().getString(R.string.bubble_customize_preview_outgoing_message_font));
     }
 
+    public void updateAvatarDrawable(boolean hasCustomBackground) {
+        TextView contactIcon = findViewById(R.id.contact_text);
+        contactIcon.setTextColor(Color.parseColor(
+                ThemeInfo.getThemeInfo(ThemeUtils.getCurrentThemeName()).avatarForegroundColor));
+        ImageView contactBackground = findViewById(R.id.contact_background);
+        Drawable avatar = AvatarBgDrawables.getAvatarBg(true, hasCustomBackground);
+        if (avatar != null) {
+            contactBackground.setBackground(avatar);
+        } else {
+            contactIcon.setBackgroundResource(R.drawable.bubble_customize_preview_contact_icon_background);
+        }
+    }
+
+    public void updateBackgroundState(String conversationId, boolean hasCustomBackground) {
+        if (mHasCustomBackground != hasCustomBackground) {
+            updateAvatarDrawable(hasCustomBackground);
+            mConversationId = conversationId;
+            mIncomingMessage.setBackground(
+                    ConversationDrawables.get().getBubbleDrawable(false, true,
+                            true, false, mConversationId, hasCustomBackground));
+            mOutgoingMessage.setBackground(
+                    ConversationDrawables.get().getBubbleDrawable(false, false,
+                            true, false, mConversationId, hasCustomBackground));
+        }
+        mHasCustomBackground = hasCustomBackground;
+    }
+
     public void updateBubbleDrawables(final String conversationId) {
         updateBubbleDrawables(conversationId, false);
     }
 
-    public void updateBubbleDrawables(final String conversationId,final boolean hasCustomBackground) {
+    public void updateBubbleDrawables(final String conversationId, final boolean hasCustomBackground) {
+        //update avatar drawable
+        updateAvatarDrawable(hasCustomBackground);
+        //update bubble drawables
         mConversationId = conversationId;
         mIncomingMessage.setBackground(
                 ConversationDrawables.get().getBubbleDrawable(false, true, true, false, mConversationId, hasCustomBackground));
