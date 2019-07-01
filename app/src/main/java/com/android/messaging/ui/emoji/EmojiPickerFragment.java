@@ -48,6 +48,10 @@ public class EmojiPickerFragment extends Fragment implements INotificationObserv
 
     public static final String FRAGMENT_TAG = "emoji_picker";
 
+    private static final int EMOJI_PAGE_INDEX = 0;
+    private static final int STICKER_PAGE_INDEX = 1;
+    private static final int GIF_PAGE_INDEX = 2;
+
     private EmojiPackagePagerAdapter mEmojiPackagePagerAdapter;
     private ViewPagerFixed mEmojiPager;
     private OnEmojiPickerListener mOnEmojiPickerListener;
@@ -172,11 +176,11 @@ public class EmojiPickerFragment extends Fragment implements INotificationObserv
             public void onPageSelected(int position) {
                 showOrHideDeleteView(deleteView, position);
 
-                if (position == 0) {
+                if (position == EMOJI_PAGE_INDEX) {
                     BugleAnalytics.logEvent("SMSEmoji_Emojitab_Click");
-                } else if (position == 1) {
+                } else if (position == STICKER_PAGE_INDEX) {
                     BugleAnalytics.logEvent("SMSEmoji_Stickertab_Click");
-                } else if (position == 2) {
+                } else if (position == GIF_PAGE_INDEX) {
                     BugleAnalytics.logEvent("SMSEmoji_Giftab_Click");
                 }
             }
@@ -187,7 +191,7 @@ public class EmojiPickerFragment extends Fragment implements INotificationObserv
             }
         });
         if (mIsOnlyEmoji) {
-            mEmojiPager.setCurrentItem(0);
+            mEmojiPager.setCurrentItem(EMOJI_PAGE_INDEX);
             tabLayout.getTabAt(0).select();
             deleteView.setVisibility(View.VISIBLE);
         } else {
@@ -434,7 +438,7 @@ public class EmojiPickerFragment extends Fragment implements INotificationObserv
                 EmojiPackageInfo packageInfo = (EmojiPackageInfo) object;
                 if (mEmojiPackagePagerAdapter != null) {
                     mEmojiPackagePagerAdapter.insertStickItem(2, packageInfo);
-                    mEmojiPager.setCurrentItem(2);
+                    mEmojiPager.setCurrentItem(STICKER_PAGE_INDEX);
                 }
                 break;
             case StickerMagicDetailActivity.NOTIFICATION_SEND_MAGIC_STICKER:
