@@ -44,8 +44,8 @@
 
         <FrameLayout
             android:id="@+id/emoji_delete_btn"
-            android:layout_width="40dp"
-            android:layout_height="38dp"
+            android:layout_width="35dp"
+            android:layout_height="35dp"
             android:layout_alignParentEnd="true"
             android:layout_centerInParent="true"
             android:background="@drawable/material_compat_button_bg">
