@@ -51,7 +51,7 @@
 							<string>Regular</string>
 						</array>
 						<key>IsLocalFont</key>
-                        <false/>
+						<false/>
 					</dict>
 					<dict>
 						<key>Name</key>
@@ -62,7 +62,7 @@
 							<string>Regular</string>
 						</array>
 						<key>IsLocalFont</key>
-                        <false/>
+						<false/>
 					</dict>
 					<dict>
 						<key>Name</key>
@@ -73,7 +73,7 @@
 							<string>Regular</string>
 						</array>
 						<key>IsLocalFont</key>
-                        <false/>
+						<false/>
 					</dict>
 					<dict>
 						<key>Name</key>
@@ -84,7 +84,7 @@
 							<string>Regular</string>
 						</array>
 						<key>IsLocalFont</key>
-                        <false/>
+						<false/>
 					</dict>
 					<dict>
 						<key>Name</key>
@@ -95,7 +95,7 @@
 							<string>Regular</string>
 						</array>
 						<key>IsLocalFont</key>
-                        <false/>
+						<false/>
 					</dict>
 					<dict>
 						<key>Name</key>
@@ -106,7 +106,7 @@
 							<string>Regular</string>
 						</array>
 						<key>IsLocalFont</key>
-                        <false/>
+						<false/>
 					</dict>
 					<dict>
 						<key>Name</key>
@@ -117,7 +117,7 @@
 							<string>Regular</string>
 						</array>
 						<key>IsLocalFont</key>
-                        <false/>
+						<false/>
 					</dict>
 					<dict>
 						<key>Name</key>
@@ -128,7 +128,7 @@
 							<string>Regular</string>
 						</array>
 						<key>IsLocalFont</key>
-                        <false/>
+						<false/>
 					</dict>
 					<dict>
 						<key>Name</key>
@@ -139,7 +139,7 @@
 							<string>Regular</string>
 						</array>
 						<key>IsLocalFont</key>
-                        <false/>
+						<false/>
 					</dict>
 					<dict>
 						<key>Name</key>
@@ -150,7 +150,7 @@
 							<string>Regular</string>
 						</array>
 						<key>IsLocalFont</key>
-                        <false/>
+						<false/>
 					</dict>
 					<dict>
 						<key>Name</key>
@@ -161,7 +161,7 @@
 							<string>Regular</string>
 						</array>
 						<key>IsLocalFont</key>
-                        <false/>
+						<false/>
 					</dict>
 					<dict>
 						<key>Name</key>
@@ -172,7 +172,7 @@
 							<string>Regular</string>
 						</array>
 						<key>IsLocalFont</key>
-                        <false/>
+						<false/>
 					</dict>
 					<dict>
 						<key>Name</key>
@@ -184,7 +184,7 @@
 							<string>Medium</string>
 						</array>
 						<key>IsLocalFont</key>
-                        <false/>
+						<false/>
 					</dict>
 					<dict>
 						<key>Name</key>
@@ -196,100 +196,100 @@
 							<string>Medium</string>
 						</array>
 						<key>IsLocalFont</key>
-                        <false/>
+						<false/>
 					</dict>
 					<dict>
-                    	<key>Name</key>
-                    	<string>averia_libre</string>
-                    	<key>Weight</key>
-                    	<array>
-                    		<string>SemiBold</string>
-                    		<string>Regular</string>
-                    	</array>
-                    	<key>IsLocalFont</key>
-                        <true/>
-                    </dict>
-                    <dict>
-                    	<key>Name</key>
-                    	<string>default</string>
-                    	<key>Weight</key>
-                    	<array>
-                    		<string>SemiBold</string>
-                    		<string>Regular</string>
-                    		<string>Medium</string>
-                    		<string>Bold</string>
-                    	</array>
-                    	<key>IsLocalFont</key>
-                        <true/>
-                    </dict>
-                    <dict>
-                    	<key>Name</key>
-                    	<string>el_messiri</string>
-                    	<key>Weight</key>
-                    	<array>
-                    		<string>SemiBold</string>
-                    		<string>Regular</string>
-                    	</array>
-                    	<key>IsLocalFont</key>
-                        <true/>
-                    </dict>
-                    <dict>
-                    	<key>Name</key>
-                    	<string>k2d</string>
-                    	<key>Weight</key>
-                    	<array>
-                    		<string>SemiBold</string>
-                    		<string>Regular</string>
-                    	</array>
-                    	<key>IsLocalFont</key>
-                        <true/>
-                    </dict>
-                    <dict>
-                    	<key>Name</key>
-                    	<string>krub</string>
-                    	<key>Weight</key>
-                    	<array>
-                    		<string>SemiBold</string>
-                    		<string>Regular</string>
-                    		<string>Medium</string>
-                    	</array>
-                    	<key>IsLocalFont</key>
-                        <true/>
-                    </dict>
-                    <dict>
-                    	<key>Name</key>
-                    	<string>mali</string>
-                    	<key>Weight</key>
-                    	<array>
-                    		<string>SemiBold</string>
-                    		<string>Regular</string>
-                    		<string>Medium</string>
-                    	</array>
-                    	<key>IsLocalFont</key>
-                        <true/>
-                    </dict>
-                    <dict>
-                    	<key>Name</key>
-                    	<string>merienda</string>
-                    	<key>Weight</key>
-                    	<array>
-                    		<string>SemiBold</string>
-                    		<string>Regular</string>
-                    	</array>
-                    	<key>IsLocalFont</key>
-                        <true/>
-                    </dict>
-                    <dict>
-                    	<key>Name</key>
-                    	<string>sarpanch</string>
-                    	<key>Weight</key>
-                    	<array>
-                    		<string>SemiBold</string>
-                    		<string>Regular</string>
-                    	</array>
-                    	<key>IsLocalFont</key>
-                        <true/>
-                    </dict>
+						<key>Name</key>
+						<string>averia_libre</string>
+						<key>Weight</key>
+						<array>
+							<string>SemiBold</string>
+							<string>Regular</string>
+						</array>
+						<key>IsLocalFont</key>
+						<true/>
+					</dict>
+					<dict>
+						<key>Name</key>
+						<string>default</string>
+						<key>Weight</key>
+						<array>
+							<string>SemiBold</string>
+							<string>Regular</string>
+							<string>Medium</string>
+							<string>Bold</string>
+						</array>
+						<key>IsLocalFont</key>
+						<true/>
+					</dict>
+					<dict>
+						<key>Name</key>
+						<string>el_messiri</string>
+						<key>Weight</key>
+						<array>
+							<string>SemiBold</string>
+							<string>Regular</string>
+						</array>
+						<key>IsLocalFont</key>
+						<true/>
+					</dict>
+					<dict>
+						<key>Name</key>
+						<string>k2d</string>
+						<key>Weight</key>
+						<array>
+							<string>SemiBold</string>
+							<string>Regular</string>
+						</array>
+						<key>IsLocalFont</key>
+						<true/>
+					</dict>
+					<dict>
+						<key>Name</key>
+						<string>krub</string>
+						<key>Weight</key>
+						<array>
+							<string>SemiBold</string>
+							<string>Regular</string>
+							<string>Medium</string>
+						</array>
+						<key>IsLocalFont</key>
+						<true/>
+					</dict>
+					<dict>
+						<key>Name</key>
+						<string>mali</string>
+						<key>Weight</key>
+						<array>
+							<string>SemiBold</string>
+							<string>Regular</string>
+							<string>Medium</string>
+						</array>
+						<key>IsLocalFont</key>
+						<true/>
+					</dict>
+					<dict>
+						<key>Name</key>
+						<string>merienda</string>
+						<key>Weight</key>
+						<array>
+							<string>SemiBold</string>
+							<string>Regular</string>
+						</array>
+						<key>IsLocalFont</key>
+						<true/>
+					</dict>
+					<dict>
+						<key>Name</key>
+						<string>sarpanch</string>
+						<key>Weight</key>
+						<array>
+							<string>SemiBold</string>
+							<string>Regular</string>
+						</array>
+						<key>IsLocalFont</key>
+						<true/>
+					</dict>
 				</array>
 			</dict>
 			<key>SMSAd</key>
@@ -1072,11 +1072,11 @@
 						<key>BubbleIncomingUrl</key>
 						<string>incoming.9.png</string>
 						<key>BubbleIncomingSolidUrl</key>
-						<string>incoming_solid.9.png</string>
+						<string></string>
 						<key>BubbleOutgoingUrl</key>
 						<string>outgoing.9.png</string>
 						<key>BubbleOutgoingSolidUrl</key>
-						<string>outgoing_solid.9.png</string>
+						<string></string>
 					</dict>
 					<key>rainbow</key>
 					<dict>
@@ -1510,7 +1510,7 @@
 						<key>AvatarUrl</key>
 						<string>avatar.png</string>
 						<key>AvatarSolidUrl</key>
-						<string>avatar_solid.png</string>
+						<string></string>
 						<key>ListWallpaperUrl</key>
 						<string>wallpaper.jpg</string>
 						<key>WallpaperUrl</key>
@@ -2032,11 +2032,11 @@
 						<key>BubbleIncomingUrl</key>
 						<string>incoming.9.png</string>
 						<key>BubbleIncomingSolidUrl</key>
-						<string>incoming_solid.9.png</string>
+						<string></string>
 						<key>BubbleOutgoingUrl</key>
 						<string>outgoing.9.png</string>
 						<key>BubbleOutgoingSolidUrl</key>
-						<string>outgoing_solid.9.png</string>
+						<string></string>
 					</dict>
 					<key>diamond</key>
 					<dict>
