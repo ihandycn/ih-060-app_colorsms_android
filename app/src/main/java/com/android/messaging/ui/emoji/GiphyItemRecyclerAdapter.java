@@ -11,6 +11,7 @@ import android.widget.ImageView;
 
 import com.android.messaging.R;
 import com.android.messaging.glide.GlideApp;
+import com.android.messaging.ui.emoji.utils.GiphyListManager;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.load.resource.bitmap.FitCenter;
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
@@ -22,19 +23,20 @@ import com.giphy.sdk.core.network.api.CompletionHandler;
 import com.giphy.sdk.core.network.api.GPHApi;
 import com.giphy.sdk.core.network.api.GPHApiClient;
 import com.giphy.sdk.core.network.response.ListMediaResponse;
-import com.ihs.commons.utils.HSLog;
 import com.superapps.util.Dimensions;
 import com.superapps.util.Toasts;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.android.messaging.ui.emoji.utils.GiphyListManager.BUCKET_COUNT;
+
 public class GiphyItemRecyclerAdapter extends RecyclerView.Adapter<GiphyItemRecyclerAdapter.ViewHolder> {
 
     private List<GiphyInfo> mDataList = new ArrayList<>(20);
     private EmojiPackagePagerAdapter.OnEmojiClickListener mOnEmojiClickListener;
 
-    private static final int BUCKET_COUNT = 5;
+
     private int mOffset;
     private String mCategory;
 
@@ -43,53 +45,29 @@ public class GiphyItemRecyclerAdapter extends RecyclerView.Adapter<GiphyItemRecy
     GiphyItemRecyclerAdapter(EmojiPackagePagerAdapter.OnEmojiClickListener emojiClickListener, String category) {
         mOnEmojiClickListener = emojiClickListener;
         mCategory = category;
-        mClient.search(mCategory, MediaType.gif, BUCKET_COUNT, 0, null, null, null, new CompletionHandler<ListMediaResponse>() {
-            @Override
-            public void onComplete(ListMediaResponse result, Throwable e) {
-                if (result == null) {
-                    // Do what you want to do with the error
-                } else {
-                    if (result.getData() != null) {
-                        updateData(result.getData());
-                        HSLog.d("giphy result", result.getData().toString());
-                    } else {
-                        HSLog.e("giphy error", "No results found");
-                    }
-                }
-            }
-        });
+        GiphyListManager.getInstance().getGiphyList(mCategory, 0, giphyList -> updateData(giphyList));
     }
 
     void loadMore() {
         mOffset += BUCKET_COUNT;
-        mClient.search(mCategory, MediaType.gif, BUCKET_COUNT, mOffset, null, null, null, new CompletionHandler<ListMediaResponse>() {
-            @Override
-            public void onComplete(ListMediaResponse result, Throwable e) {
-                if (result == null) {
-                    // Do what you want to do with the error
-                } else {
-                    if (result.getData() != null) {
-                        updateData(result.getData());
-                    } else {
-                        Toasts.showToast("no more data");
-                    }
-                }
-            }
-        });
+        GiphyListManager.getInstance().getGiphyList(mCategory, mOffset, giphyList -> updateData(giphyList));
     }
 
     void updateData(List<Media> list) {
+        if (list.isEmpty()) {
+            return;
+        }
         int preCount = mDataList.size();
-        for (Media giphy : list) {
+        int totalCount = list.size();
+        for (int i = preCount; i < totalCount; i++) {
             GiphyInfo giphyInfo = new GiphyInfo();
-            Image image = giphy.getImages().getFixedWidth();
+            Image image = list.get(i).getImages().getFixedWidth();
             giphyInfo.mFixedWidthGifUrl = image.getGifUrl();
             giphyInfo.mGifOriginalWidth = image.getWidth();
             giphyInfo.mGifOriginalHeight = image.getHeight();
             mDataList.add(giphyInfo);
         }
-        int currentCount = mDataList.size();
-        notifyItemRangeInserted(preCount, currentCount - preCount);
+        notifyItemRangeInserted(preCount, totalCount - preCount);
     }
 
 
