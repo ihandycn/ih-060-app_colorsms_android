@@ -58,7 +58,6 @@ public class ChooseEmojiSkinDialog extends BaseDialogFragment {
         View view = LayoutInflater.from(getActivity()).inflate(R.layout.dialog_choose_emoji_skin, null);
         mRecyclerView = view.findViewById(R.id.recycler_view);
 
-
         mAdapter = new ChooseEmojiSkinAdapter(mEmojiSkins, EmojiManager.getSkinDefault(), index -> {
             EmojiManager.setSkinDefault(index);
             LoadEmojiManager.getInstance().flush();
@@ -91,5 +90,11 @@ public class ChooseEmojiSkinDialog extends BaseDialogFragment {
     @Override
     protected CharSequence getPositiveButtonText() {
         return null;
+    }
+
+    @Override
+    protected void onContentViewAdded() {
+        super.onContentViewAdded();
+        removeDialogContentHorizontalMargin();
     }
 }

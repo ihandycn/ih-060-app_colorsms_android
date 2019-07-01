@@ -1,27 +1,35 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="wrap_content">
 
     <com.android.messaging.ui.view.MessagesTextView
         android:id="@+id/text"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="25dp"
-        android:layout_marginTop="22.7dp"
-        android:gravity="start"
         android:text="@string/emoji_skin_tone_setting"
-        android:textColor="#6e717b"
         android:textSize="13.3sp"
-        app:typeface="@string/custom_font_semibold" />
+        android:textColor="#6e717b"
+        android:lineSpacingExtra="3.3sp"
+        android:layout_marginTop="13dp"
+        android:layout_marginStart="@dimen/dialog_btn_margin_left"
+        app:typeface="@string/custom_font_medium"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"/>
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/recycler_view"
         android:layout_width="219.9dp"
         android:layout_height="146.6dp"
-        android:layout_below="@id/text"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="11.3dp"
-        android:layout_marginBottom="15dp" />
-</RelativeLayout>
+        android:layout_marginTop="20.3dp"
+        android:layout_marginBottom="24dp"
+        app:layout_constraintTop_toBottomOf="@id/text"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"/>
+
+</android.support.constraint.ConstraintLayout>
