@@ -154,22 +154,6 @@ public class EmojiManager {
 
     public static void saveRecentInfo(String msg, EmojiPackageType emojiType) {
         List<String> list = getRecentStr(emojiType);
-        if(emojiType == EmojiPackageType.EMOJI){
-            String removeItem = null;
-            for(String item : list){
-                String a = item.substring(item.indexOf('|'));
-                String b = item.substring(item.indexOf('|'));
-                if(a.equals(b)){
-                    removeItem = item;
-                    break;
-                }
-            }
-            if(removeItem != null){
-                list.remove(removeItem);
-            }
-        }else{
-            list.remove(msg);
-        }
         list.remove(msg);
         list.add(0, msg);
         switch (emojiType) {
