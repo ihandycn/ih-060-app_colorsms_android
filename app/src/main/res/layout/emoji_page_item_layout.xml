@@ -14,7 +14,7 @@
             android:id="@+id/emoji_item_tab_layout"
             android:layout_width="match_parent"
             android:layout_height="34.7dp"
-            android:layout_toStartOf="@+id/emoji_store_btn"
+            android:layout_toStartOf="@+id/emoji_add_btn"
             app:tabIndicatorHeight="0dp"
             app:tabMaxWidth="0dp"
             app:tabMinWidth="0dp"
@@ -25,8 +25,8 @@
             app:tabPaddingTop="0dp" />
 
             <ImageView
-                android:id="@+id/emoji_store_btn"
-                android:layout_width="34.7dp"
+                android:id="@+id/emoji_add_btn"
+                android:layout_width="40dp"
                 android:layout_height="34.7dp"
                 android:padding="6dp"
                 android:layout_alignParentEnd="true"

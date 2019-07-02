@@ -122,14 +122,19 @@ public class EmojiPackagePagerAdapter extends PagerAdapter {
         container.addView(view);
 
         if (adapter instanceof StickerItemPagerAdapter) {
-            View storeBtn = view.findViewById(R.id.emoji_store_btn);
-            storeBtn.setVisibility(View.VISIBLE);
-            storeBtn.setBackground(BackgroundDrawables.createBackgroundDrawable(
-                    mContext.getResources().getColor(R.color.white), Dimensions.pxFromDp(50), true));
-            storeBtn.setOnClickListener(v -> {
+            View addBtn = view.findViewById(R.id.emoji_add_btn);
+            addBtn.setVisibility(View.VISIBLE);
+            addBtn.setBackground(BackgroundDrawables.createBackgroundDrawable(
+                    mContext.getResources().getColor(R.color.white),  0, true));
+            addBtn.setOnClickListener(v -> {
                 BugleAnalytics.logEvent("SMSEmoji_ChatEmoji_Store_Click", true, true, "type", "chat_tab");
                 EmojiStoreActivity.start(container.getContext());
             });
+
+            int width = (int) (Dimensions.getPhoneWidth(mContext) / (9.5f));
+            ViewGroup.LayoutParams params = addBtn.getLayoutParams();
+            params.width = width;
+            addBtn.setLayoutParams(params);
         }
 
         return view;

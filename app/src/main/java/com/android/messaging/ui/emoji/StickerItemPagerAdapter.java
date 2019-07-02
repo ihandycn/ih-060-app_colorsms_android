@@ -62,7 +62,7 @@ public class StickerItemPagerAdapter extends AbstractEmojiItemPagerAdapter{
             view = LayoutInflater.from(context).inflate(R.layout.sticker_item_no_recent_layout, container, false);
         } else {
             RecyclerView recyclerView = (RecyclerView) LayoutInflater.from(context).inflate(R.layout.vertical_recycler_view, null);
-            recyclerView.setPadding(Dimensions.pxFromDp(24.3f), Dimensions.pxFromDp(3f), Dimensions.pxFromDp(23.7f), Dimensions.pxFromDp(3f));
+            recyclerView.setPadding(Dimensions.pxFromDp(24.3f), Dimensions.pxFromDp(13f), Dimensions.pxFromDp(23.7f), Dimensions.pxFromDp(3f));
             StickerItemRecyclerAdapter adapter = new StickerItemRecyclerAdapter(position, list, mOnEmojiClickListener);
             recyclerView.setAdapter(adapter);
             recyclerView.setOverScrollMode(View.OVER_SCROLL_NEVER);
@@ -94,7 +94,7 @@ public class StickerItemPagerAdapter extends AbstractEmojiItemPagerAdapter{
     @Override
     public void updateTabView() {
         int count = mTabLayout.getTabCount();
-        int width = (int) (Dimensions.getPhoneWidth(mContext) / (8.25f));
+        int width = (int) (Dimensions.getPhoneWidth(mContext) / (9.5f));
         int primaryColor = PrimaryColors.getPrimaryColor();
         for (int i = 0; i < count; i++) {
             EmojiPackageInfo info = mData.get(i);
