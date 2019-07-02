@@ -32,6 +32,8 @@
 				<key>FontList</key>
 				<array>
 					<dict>
+						<key>DefaultSizeScale</key>
+						<real>1.1</real>
 						<key>Weight</key>
 						<array>
 							<string>SemiBold</string>
@@ -43,6 +45,8 @@
 						<false/>
 					</dict>
 					<dict>
+						<key>DefaultSizeScale</key>
+						<real>1.02</real>
 						<key>Name</key>
 						<string>oswald</string>
 						<key>Weight</key>
@@ -54,6 +58,8 @@
 						<false/>
 					</dict>
 					<dict>
+						<key>DefaultSizeScale</key>
+						<real>1.04</real>
 						<key>Name</key>
 						<string>quicksand</string>
 						<key>Weight</key>
@@ -65,6 +71,8 @@
 						<false/>
 					</dict>
 					<dict>
+						<key>DefaultSizeScale</key>
+						<real>1.12</real>
 						<key>Name</key>
 						<string>caveat</string>
 						<key>Weight</key>
@@ -76,6 +84,8 @@
 						<false/>
 					</dict>
 					<dict>
+						<key>DefaultSizeScale</key>
+						<real>0.96</real>
 						<key>Name</key>
 						<string>lemonada</string>
 						<key>Weight</key>
@@ -87,6 +97,8 @@
 						<false/>
 					</dict>
 					<dict>
+						<key>DefaultSizeScale</key>
+						<real>1.02</real>
 						<key>Name</key>
 						<string>mina</string>
 						<key>Weight</key>
@@ -98,6 +110,8 @@
 						<false/>
 					</dict>
 					<dict>
+						<key>DefaultSizeScale</key>
+						<real>1.08</real>
 						<key>Name</key>
 						<string>kalam</string>
 						<key>Weight</key>
@@ -109,6 +123,8 @@
 						<false/>
 					</dict>
 					<dict>
+						<key>DefaultSizeScale</key>
+						<real>1.08</real>
 						<key>Name</key>
 						<string>allan</string>
 						<key>Weight</key>
@@ -142,6 +158,8 @@
 						<false/>
 					</dict>
 					<dict>
+						<key>DefaultSizeScale</key>
+						<real>1.02</real>
 						<key>Name</key>
 						<string>trochut</string>
 						<key>Weight</key>
@@ -164,6 +182,8 @@
 						<false/>
 					</dict>
 					<dict>
+						<key>DefaultSizeScale</key>
+						<real>1.02</real>
 						<key>Name</key>
 						<string>charm</string>
 						<key>Weight</key>
@@ -175,6 +195,8 @@
 						<false/>
 					</dict>
 					<dict>
+						<key>DefaultSizeScale</key>
+						<real>1.02</real>
 						<key>Name</key>
 						<string>expletus_sans</string>
 						<key>Weight</key>
@@ -187,6 +209,8 @@
 						<false/>
 					</dict>
 					<dict>
+						<key>DefaultSizeScale</key>
+						<real>1.02</real>
 						<key>Name</key>
 						<string>source_serif_pro</string>
 						<key>Weight</key>
@@ -199,6 +223,8 @@
 						<false/>
 					</dict>
 					<dict>
+						<key>DefaultSizeScale</key>
+						<real>1.04</real>
 						<key>Name</key>
 						<string>averia_libre</string>
 						<key>Weight</key>
@@ -223,6 +249,8 @@
 						<true/>
 					</dict>
 					<dict>
+						<key>DefaultSizeScale</key>
+						<real>1.08</real>
 						<key>Name</key>
 						<string>el_messiri</string>
 						<key>Weight</key>
@@ -234,6 +262,8 @@
 						<true/>
 					</dict>
 					<dict>
+						<key>DefaultSizeScale</key>
+						<real>1.04</real>
 						<key>Name</key>
 						<string>k2d</string>
 						<key>Weight</key>
@@ -257,6 +287,8 @@
 						<true/>
 					</dict>
 					<dict>
+						<key>DefaultSizeScale</key>
+						<real>1.08</real>
 						<key>Name</key>
 						<string>mali</string>
 						<key>Weight</key>
@@ -280,6 +312,8 @@
 						<true/>
 					</dict>
 					<dict>
+						<key>DefaultSizeScale</key>
+						<real>1.06</real>
 						<key>Name</key>
 						<string>sarpanch</string>
 						<key>Weight</key>
