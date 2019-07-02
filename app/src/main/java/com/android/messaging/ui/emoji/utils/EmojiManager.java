@@ -15,6 +15,7 @@ import com.android.messaging.ui.emoji.EmojiInfo;
 import com.android.messaging.ui.emoji.EmojiPackageType;
 import com.android.messaging.ui.emoji.GiphyInfo;
 import com.android.messaging.ui.emoji.StickerInfo;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.target.SimpleTarget;
 import com.bumptech.glide.request.transition.Transition;
 import com.ihs.commons.utils.HSLog;
@@ -200,19 +201,17 @@ public class EmojiManager {
     public static void getStickerFile(Context context,
                                       final String picUrl, OnGetStickerFileListener stickerFileListener) {
         if (!TextUtils.isEmpty(picUrl)) {
-            if (!TextUtils.isEmpty(picUrl)) {
-                GlideApp.with(context)
-                        .asFile()
-                        .load(picUrl)
-                        .downloadOnly(new SimpleTarget<File>() {
-                            @Override
-                            public void onResourceReady(@NonNull File file, @Nullable Transition<? super File> transition) {
-                                if (stickerFileListener != null) {
-                                    stickerFileListener.onSuccess(file);
-                                }
+            GlideApp.with(context)
+                    .asFile()
+                    .load(picUrl)
+                    .downloadOnly(new SimpleTarget<File>() {
+                        @Override
+                        public void onResourceReady(@NonNull File file, @Nullable Transition<? super File> transition) {
+                            if (stickerFileListener != null) {
+                                stickerFileListener.onSuccess(file);
                             }
-                        });
-            }
+                        }
+                    });
         }
     }
 
@@ -220,19 +219,18 @@ public class EmojiManager {
     public static void getGifFile(Context context,
                                   final String picUrl, OnGetStickerFileListener stickerFileListener) {
         if (!TextUtils.isEmpty(picUrl)) {
-            if (!TextUtils.isEmpty(picUrl)) {
-                GlideApp.with(context)
-                        .asFile()
-                        .load(picUrl)
-                        .downloadOnly(new SimpleTarget<File>() {
-                            @Override
-                            public void onResourceReady(@NonNull File file, @Nullable Transition<? super File> transition) {
-                                if (stickerFileListener != null) {
-                                    stickerFileListener.onSuccess(file);
-                                }
+            GlideApp.with(context)
+                    .asFile()
+                    .load(picUrl)
+                    .diskCacheStrategy(DiskCacheStrategy.RESOURCE)
+                    .downloadOnly(new SimpleTarget<File>() {
+                        @Override
+                        public void onResourceReady(@NonNull File file, @Nullable Transition<? super File> transition) {
+                            if (stickerFileListener != null) {
+                                stickerFileListener.onSuccess(file);
                             }
-                        });
-            }
+                        }
+                    });
         }
     }
 

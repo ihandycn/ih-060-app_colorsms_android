@@ -60,14 +60,17 @@ public class GiphyItemRecyclerAdapter extends RecyclerView.Adapter<GiphyItemRecy
         if (list.isEmpty()) {
             return;
         }
+
         int preCount = mDataList.size();
         int totalCount = list.size();
         for (int i = preCount; i < totalCount; i++) {
             GiphyInfo giphyInfo = new GiphyInfo();
-            Image image = list.get(i).getImages().getFixedWidth();
+
+            Image image = list.get(i).getImages().getFixedWidthDownsampled();
             giphyInfo.mFixedWidthGifUrl = image.getGifUrl();
             giphyInfo.mGifOriginalWidth = image.getWidth();
             giphyInfo.mGifOriginalHeight = image.getHeight();
+
             mDataList.add(giphyInfo);
         }
         notifyItemRangeInserted(preCount, totalCount - preCount);
@@ -115,7 +118,7 @@ public class GiphyItemRecyclerAdapter extends RecyclerView.Adapter<GiphyItemRecy
                 .placeholder(R.drawable.gif_item_placehoder)
                 .load(giphyInfo.mFixedWidthGifUrl)
                 .apply(requestOptions)
-                .diskCacheStrategy(DiskCacheStrategy.DATA)
+                .diskCacheStrategy(DiskCacheStrategy.RESOURCE)
                 .into(holder.mGif);
     }
 

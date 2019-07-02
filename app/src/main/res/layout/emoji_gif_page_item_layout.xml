@@ -19,5 +19,5 @@
     <com.superapps.view.ViewPagerFixed
         android:id="@+id/emoji_item_pager"
         android:layout_width="match_parent"
-        android:layout_height="197dp" />
+        android:layout_height="match_parent" />
 </LinearLayout>

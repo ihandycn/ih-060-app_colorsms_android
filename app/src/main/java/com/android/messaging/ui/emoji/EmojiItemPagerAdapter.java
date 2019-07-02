@@ -58,7 +58,7 @@ public class EmojiItemPagerAdapter extends AbstractEmojiItemPagerAdapter {
         if (list.isEmpty()) {
             view = LayoutInflater.from(context).inflate(R.layout.sticker_item_no_recent_layout, container, false);
         } else {
-            RecyclerView recyclerView = (RecyclerView) LayoutInflater.from(context).inflate(R.layout.vertical_recycler_view, null);
+            RecyclerView recyclerView = (RecyclerView) LayoutInflater.from(context).inflate(R.layout.vertical_recycler_view, container, false);
             EmojiItemRecyclerAdapter adapter = new EmojiItemRecyclerAdapter(list, mOnEmojiClickListener);
             recyclerView.setAdapter(adapter);
             recyclerView.setOverScrollMode(View.OVER_SCROLL_NEVER);

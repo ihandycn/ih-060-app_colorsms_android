@@ -86,7 +86,6 @@ public class EmojiPackagePagerAdapter extends PagerAdapter {
             itemPager.setOffscreenPageLimit(10);
         }
         itemPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
-            private int currentPosition = 0;
 
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
@@ -95,7 +94,6 @@ public class EmojiPackagePagerAdapter extends PagerAdapter {
 
             @Override
             public void onPageSelected(int position) {
-                currentPosition = position;
 
                 switch (info.mEmojiPackageType) {
                     case STICKER:

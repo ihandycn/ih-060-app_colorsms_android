@@ -22,6 +22,7 @@ import com.android.messaging.ui.emoji.utils.EmojiManager;
 import com.android.messaging.ui.emoji.utils.LoadEmojiManager;
 import com.android.messaging.util.BugleAnalytics;
 import com.android.messaging.util.ContentType;
+import com.android.messaging.util.ImageUtils;
 import com.android.messaging.util.UiUtils;
 import com.ihs.commons.notificationcenter.HSGlobalNotificationCenter;
 import com.ihs.commons.notificationcenter.INotificationObserver;
@@ -129,7 +130,7 @@ public class EmojiPickerFragment extends Fragment implements INotificationObserv
 
             @Override
             public void gifClick(GiphyInfo gifInfo) {
-                EmojiManager.getStickerFile(getActivity(), gifInfo.mFixedWidthGifUrl, file -> {
+                EmojiManager.getGifFile(getActivity(), gifInfo.mFixedWidthGifUrl, file -> {
                     sendGif(gifInfo, file);
                 });
             }
@@ -304,12 +305,10 @@ public class EmojiPickerFragment extends Fragment implements INotificationObserv
             mIsEnableSend = false;
             Threads.postOnMainThreadDelayed(() -> mIsEnableSend = true, UiUtils.MEDIAPICKER_TRANSITION_DURATION);
 
-            String contentType = ContentType.IMAGE_PNG;
-            if (info.mEmojiType == EmojiType.STICKER_GIF || info.mEmojiType == EmojiType.STICKER_MAGIC) {
-                contentType = ContentType.IMAGE_GIF;
-            }
+            String contentType = ContentType.IMAGE_GIF;
             final List<MessagePartData> items = new ArrayList<>(1);
             MediaPickerMessagePartData data = new MediaPickerMessagePartData(info.mStartRect, contentType, uri, info.mGifWidth, info.mGifHeight);
+
             data.setName(info.mFixedWidthGifUrl);
             items.add(data);
             mOnEmojiPickerListener.prepareSendSticker(items);

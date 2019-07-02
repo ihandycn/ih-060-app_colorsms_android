@@ -85,7 +85,7 @@
     <!-- Flings slower than this length / sec will be ignored -->
     <!-- Flings faster than this length / sec will go from fullscreen straight to closed -->
     <dimen name="gallery_image_cell_size">110dp</dimen>
-    <dimen name="single_attachment_min_dimen">50dp</dimen>
+    <dimen name="single_attachment_min_dimen">96dp</dimen>
     <dimen name="single_attachment_max_height">150dp</dimen>
     <dimen name="multiple_attachment_preview_height">130dp</dimen>
     <dimen name="multiple_attachment_preview_width">260dp</dimen>

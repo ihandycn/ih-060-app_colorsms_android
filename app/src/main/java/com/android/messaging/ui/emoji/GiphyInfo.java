@@ -34,6 +34,19 @@ public class GiphyInfo extends BaseEmojiInfo {
     }
 
     @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+
+        if (obj instanceof GiphyInfo) {
+            return TextUtils.equals(((GiphyInfo) obj).mFixedWidthGifUrl, mFixedWidthGifUrl);
+        }
+
+        return false;
+    }
+
+    @Override
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeInt(mGifOriginalWidth);
         dest.writeInt(mGifOriginalHeight);
