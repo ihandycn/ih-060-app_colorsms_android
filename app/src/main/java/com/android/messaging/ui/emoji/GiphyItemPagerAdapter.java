@@ -10,9 +10,12 @@ import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.FrameLayout;
+import android.widget.ProgressBar;
 
 import com.android.messaging.R;
 import com.android.messaging.ui.emoji.utils.EmojiManager;
+import com.ihs.commons.utils.HSLog;
 import com.superapps.util.Dimensions;
 
 import java.util.List;
@@ -54,14 +57,24 @@ public class GiphyItemPagerAdapter extends AbstractEmojiItemPagerAdapter {
         if (list != null && list.isEmpty()) {
             view = LayoutInflater.from(context).inflate(R.layout.sticker_item_no_recent_layout, container, false);
         } else {
-            RecyclerView recyclerView = (RecyclerView) LayoutInflater.from(context).inflate(R.layout.vertical_recycler_view, container, false);
+            FrameLayout recyclerViewContainer = (FrameLayout) LayoutInflater.from(context).inflate(R.layout.layout_giphy_page_item, container, false);
+            RecyclerView recyclerView = recyclerViewContainer.findViewById(R.id.recycler_view);
+            ProgressBar progressBar = recyclerViewContainer.findViewById(R.id.progress_bar);
             recyclerView.setPadding(Dimensions.pxFromDp(6), Dimensions.pxFromDp(7), Dimensions.pxFromDp(6), 0);
             GiphyItemRecyclerAdapter adapter;
 
+            GiphyItemRecyclerAdapter.OnDataFetchedListener onDataFetchedListener = new GiphyItemRecyclerAdapter.OnDataFetchedListener() {
+                @Override
+                public void onFetched() {
+                    recyclerViewContainer.removeView(progressBar);
+                    recyclerView.setVisibility(View.VISIBLE);
+                }
+            };
+
             if (list == null) {
-                adapter = new GiphyItemRecyclerAdapter(mOnEmojiClickListener, mData.get(position).mName);
+                adapter = new GiphyItemRecyclerAdapter(mOnEmojiClickListener, onDataFetchedListener, mData.get(position).mName);
             } else {
-                adapter = new GiphyItemRecyclerAdapter(mOnEmojiClickListener, list);
+                adapter = new GiphyItemRecyclerAdapter(mOnEmojiClickListener, onDataFetchedListener, list);
             }
 
             final int itemOffsetInPixel = Dimensions.pxFromDp(2.5f);
@@ -114,7 +127,7 @@ public class GiphyItemPagerAdapter extends AbstractEmojiItemPagerAdapter {
             StaggeredGridLayoutManager staggeredGridLayoutManager =
                     new StaggeredGridLayoutManager(GIF_COLUMNS, OrientationHelper.VERTICAL);
             recyclerView.setLayoutManager(staggeredGridLayoutManager);
-            view = recyclerView;
+            view = recyclerViewContainer;
         }
         view.setTag(position + "");
         container.addView(view);

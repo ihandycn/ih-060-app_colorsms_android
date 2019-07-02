@@ -19,6 +19,7 @@ import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
 import com.bumptech.glide.request.RequestOptions;
 import com.giphy.sdk.core.models.Image;
 import com.giphy.sdk.core.models.Media;
+import com.ihs.commons.utils.HSLog;
 import com.superapps.util.Dimensions;
 
 import java.util.ArrayList;
@@ -28,25 +29,35 @@ import static com.android.messaging.ui.emoji.utils.GiphyListManager.BUCKET_COUNT
 
 public class GiphyItemRecyclerAdapter extends RecyclerView.Adapter<GiphyItemRecyclerAdapter.ViewHolder> {
 
+    interface OnDataFetchedListener {
+        void onFetched();
+    }
+
     private List<BaseEmojiInfo> mDataList = new ArrayList<>(20);
     private EmojiPackagePagerAdapter.OnEmojiClickListener mOnEmojiClickListener;
+    private OnDataFetchedListener mOnDataFetchedListener;
 
     private int mOffset;
     private String mCategory;
 
     private boolean mIsRecentPage;
 
-    GiphyItemRecyclerAdapter(EmojiPackagePagerAdapter.OnEmojiClickListener emojiClickListener, String category) {
+    GiphyItemRecyclerAdapter(EmojiPackagePagerAdapter.OnEmojiClickListener emojiClickListener, OnDataFetchedListener onDataFetchedListener, String category) {
         mOnEmojiClickListener = emojiClickListener;
+        mOnDataFetchedListener = onDataFetchedListener;
         mCategory = category;
         GiphyListManager.getInstance().getGiphyList(mCategory, 0, giphyList -> updateData(giphyList));
     }
 
-    GiphyItemRecyclerAdapter(EmojiPackagePagerAdapter.OnEmojiClickListener emojiClickListener, List<BaseEmojiInfo> data) {
+    GiphyItemRecyclerAdapter(EmojiPackagePagerAdapter.OnEmojiClickListener emojiClickListener, OnDataFetchedListener onDataFetchedListener, List<BaseEmojiInfo> data) {
         mOnEmojiClickListener = emojiClickListener;
+        mOnDataFetchedListener = onDataFetchedListener;
         mIsRecentPage = true;
         mDataList = data;
         notifyDataSetChanged();
+        if (mOnDataFetchedListener != null) {
+            mOnDataFetchedListener.onFetched();
+        }
     }
 
     void loadMore() {
@@ -74,6 +85,10 @@ public class GiphyItemRecyclerAdapter extends RecyclerView.Adapter<GiphyItemRecy
             mDataList.add(giphyInfo);
         }
         notifyItemRangeInserted(preCount, totalCount - preCount);
+        if (mOnDataFetchedListener != null) {
+            mOnDataFetchedListener.onFetched();
+            HSLog.d("GiphyItemPagerAdapter", "mOnDataFetchedListener onFetched: " + mCategory);
+        }
     }
 
 
