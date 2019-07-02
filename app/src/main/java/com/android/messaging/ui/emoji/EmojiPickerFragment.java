@@ -152,6 +152,7 @@ public class EmojiPickerFragment extends Fragment implements INotificationObserv
 
         mEmojiPager = view.findViewById(R.id.emoji_pager);
         mEmojiPager.setAdapter(mEmojiPackagePagerAdapter);
+        mEmojiPager.setOffscreenPageLimit(2);
         tabLayout.setupWithViewPager(mEmojiPager);
         mEmojiPackagePagerAdapter.updateTab(initMainTab());
 

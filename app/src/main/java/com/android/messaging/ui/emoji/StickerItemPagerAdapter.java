@@ -65,6 +65,7 @@ public class StickerItemPagerAdapter extends AbstractEmojiItemPagerAdapter{
             recyclerView.setPadding(Dimensions.pxFromDp(24.3f), Dimensions.pxFromDp(3f), Dimensions.pxFromDp(23.7f), Dimensions.pxFromDp(3f));
             StickerItemRecyclerAdapter adapter = new StickerItemRecyclerAdapter(position, list, mOnEmojiClickListener);
             recyclerView.setAdapter(adapter);
+            recyclerView.setOverScrollMode(View.OVER_SCROLL_NEVER);
             recyclerView.setLayoutManager(new GridLayoutManager(context, STICKER_COLUMNS));
             recyclerView.addItemDecoration(new EmojiItemDecoration(STICKER_COLUMNS, Dimensions.pxFromDp(69), Dimensions.pxFromDp(20)));
             view = recyclerView;
