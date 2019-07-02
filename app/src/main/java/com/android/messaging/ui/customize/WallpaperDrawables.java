@@ -54,14 +54,6 @@ public class WallpaperDrawables {
         File file = new File(CommonUtils.getDirectory(
                 ThemeBubbleDrawables.THEME_BASE_PATH + info.mThemeKey),
                 ThemeBubbleDrawables.WALLPAPER_BG_FILE_NAME);
-        if (file.exists()) {
-            try {
-                sWallpaperBitmap = BitmapFactory.decodeFile(file.getAbsolutePath());
-                return sWallpaperBitmap;
-            } catch (Exception ignored) {
-
-            }
-        }
 
         if (info.mIsLocalTheme) {
             try {
@@ -71,10 +63,21 @@ public class WallpaperDrawables {
                 if (ims != null) {
                     ims.close();
                 }
-                ThemeDownloadManager.getInstance().copyAssetFileAsync(file, assetFileName);
+                if (!file.exists()) {
+                    ThemeDownloadManager.getInstance().copyAssetFileAsync(file, assetFileName);
+                }
                 return sWallpaperBitmap;
             } catch (IOException e) {
                 e.printStackTrace();
+            }
+        }
+
+        if (file.exists()) {
+            try {
+                sWallpaperBitmap = BitmapFactory.decodeFile(file.getAbsolutePath());
+                return sWallpaperBitmap;
+            } catch (Exception ignored) {
+
             }
         }
 

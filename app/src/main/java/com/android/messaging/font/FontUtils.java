@@ -111,7 +111,7 @@ public class FontUtils {
     public static TypefaceInfo loadTypeface(String typefaceName, String weightName) {
         FontInfo info = FontDownloadManager.getFont(typefaceName);
         if (info == null) {
-            return getLocalTypeface(typefaceName, weightName, info.getDefaultSizeRatio());
+            return getLocalTypeface(typefaceName, weightName, 1);
         }
         if (info.isLocalFont()) {
             return getLocalTypeface(typefaceName, weightName, info.getDefaultSizeRatio());
