@@ -28,7 +28,7 @@
                 android:id="@+id/emoji_add_btn"
                 android:layout_width="40dp"
                 android:layout_height="34.7dp"
-                android:padding="6dp"
+                android:padding="4dp"
                 android:layout_alignParentEnd="true"
                 android:layout_centerVertical="true"
                 android:layout_gravity="center"
