@@ -22,11 +22,11 @@
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/recycler_view"
-        android:layout_width="219.9dp"
-        android:layout_height="146.6dp"
-        android:layout_centerHorizontal="true"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
         android:layout_marginTop="20.3dp"
         android:layout_marginBottom="24dp"
+        app:layout_constraintWidth_percent="0.76"
         app:layout_constraintTop_toBottomOf="@id/text"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
