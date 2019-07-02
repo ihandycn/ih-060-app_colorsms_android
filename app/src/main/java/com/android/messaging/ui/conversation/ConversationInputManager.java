@@ -107,6 +107,8 @@ public class ConversationInputManager implements ConversationInput.ConversationI
 
         void logEmoji(String code);
 
+        void logGif();
+
         void logSticker(String name);
 
         void hideMediaPickerView();
@@ -528,14 +530,16 @@ public class ConversationInputManager implements ConversationInput.ConversationI
                 }
 
                 @Override
-                public void prepareSendSticker(Collection<MessagePartData> items) {
+                public void prepareSendMedia(Collection<MessagePartData> items) {
                     mSink.onMediaItemsSelected(items);
                     mHost.invalidateActionBar();
                     for (MessagePartData data : items) {
                         if (data instanceof MediaPickerMessagePartData) {
                             MediaPickerMessagePartData mediaData = (MediaPickerMessagePartData) data;
                             if (mediaData.getEmojiType() != null) {
-                                if (mediaData.getEmojiType() == EmojiType.STICKER_MAGIC) {
+                                if (mediaData.getEmojiType() == EmojiType.GIPHY_GIF) {
+                                    mSink.logGif();
+                                } else if (mediaData.getEmojiType() == EmojiType.STICKER_MAGIC) {
                                     mSink.logMagicSticker(mediaData.getName());
                                 } else {
                                     mSink.logSticker(mediaData.getName());

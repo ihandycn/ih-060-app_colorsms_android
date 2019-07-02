@@ -266,7 +266,7 @@ public class MessageBoxActivity extends AppCompatActivity implements INotificati
             }
 
             @Override
-            public void prepareSendSticker(Collection<MessagePartData> items) {
+            public void prepareSendMedia(Collection<MessagePartData> items) {
 
             }
 

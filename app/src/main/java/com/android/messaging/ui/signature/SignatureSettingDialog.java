@@ -217,7 +217,7 @@ public class SignatureSettingDialog extends DialogFragment {
             }
 
             @Override
-            public void prepareSendSticker(Collection<MessagePartData> items) {
+            public void prepareSendMedia(Collection<MessagePartData> items) {
 
             }
 

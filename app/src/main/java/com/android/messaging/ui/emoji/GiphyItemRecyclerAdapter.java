@@ -13,6 +13,7 @@ import android.widget.ImageView;
 import com.android.messaging.R;
 import com.android.messaging.glide.GlideApp;
 import com.android.messaging.ui.emoji.utils.GiphyListManager;
+import com.android.messaging.util.BugleAnalytics;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.load.resource.bitmap.FitCenter;
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
@@ -107,8 +108,8 @@ public class GiphyItemRecyclerAdapter extends RecyclerView.Adapter<GiphyItemRecy
                 info.mStartRect = rect;
                 info.mGifWidth = v1.getWidth();
                 info.mGifHeight = v1.getHeight();
-
                 mOnEmojiClickListener.gifClick(info);
+                BugleAnalytics.logEvent("SMSEmoji_GIF_Click", "type", mCategory);
             }
         });
         return holder;

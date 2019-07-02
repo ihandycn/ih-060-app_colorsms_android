@@ -192,6 +192,7 @@ public class ComposeMessageView extends LinearLayout
 
     private boolean mIsMediaPendingShow = false;
     private boolean mIsEmojiPendingShow = false;
+    private boolean mHasGif;
     private boolean isFirstEmojiStart = true;
 
     private final Binding<DraftMessageData> mBinding;
@@ -768,15 +769,22 @@ public class ComposeMessageView extends LinearLayout
         }
         boolean hasSticker = mStickerLogNameList != null && !mStickerLogNameList.isEmpty();
         boolean hasMagicSticker = mMagicStickerLogNameList != null && !mMagicStickerLogNameList.isEmpty();
-        if (hasLittleEmoji && !hasSticker && !hasMagicSticker) {
+        if (hasLittleEmoji && !hasSticker && !hasMagicSticker && !mHasGif) {
             BugleAnalytics.logEvent("SMSEmoji_ChatEmoji_Emoji_Send", true, true, "type", "emoji");
-        } else if (!hasLittleEmoji && hasSticker && !hasMagicSticker) {
+        } else if (!hasLittleEmoji && hasSticker && !hasMagicSticker && !mHasGif) {
             BugleAnalytics.logEvent("SMSEmoji_ChatEmoji_Emoji_Send", true, true, "type", "sticker");
-        } else if (!hasLittleEmoji && !hasSticker && hasMagicSticker) {
+        } else if (!hasLittleEmoji && !hasSticker && hasMagicSticker && !mHasGif) {
             BugleAnalytics.logEvent("SMSEmoji_ChatEmoji_Emoji_Send", true, true, "type", "magic");
-        } else if (hasLittleEmoji || hasSticker || hasMagicSticker) {
+        } else if (!hasLittleEmoji && !hasSticker && !hasMagicSticker && mHasGif) {
+            BugleAnalytics.logEvent("SMSEmoji_ChatEmoji_Emoji_Send", true, true, "type", "gif");
+        } else if (hasLittleEmoji || hasSticker || hasMagicSticker || mHasGif) {
             BugleAnalytics.logEvent("SMSEmoji_ChatEmoji_Emoji_Send", true, true, "type", "other");
         }
+
+        if (mHasGif) {
+            BugleAnalytics.logEvent("SMSEmoji_GIF_Send");
+        }
+        mHasGif = false;
         logEvent("SMSEmoji_ChatEmoji_Tab_Send", mStickerLogNameList);
         logEvent("SMSEmoji_ChatEmoji_Magic_Send", mMagicStickerLogNameList);
     }
@@ -822,6 +830,11 @@ public class ComposeMessageView extends LinearLayout
             mStickerLogNameList = new ArrayList<>();
         }
         mStickerLogNameList.add(name);
+    }
+
+    @Override
+    public void logGif() {
+        mHasGif = true;
     }
 
     private void hideAttachmentsWhenShowingSims(final boolean simPickerVisible) {

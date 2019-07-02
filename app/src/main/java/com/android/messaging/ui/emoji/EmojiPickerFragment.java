@@ -22,7 +22,6 @@ import com.android.messaging.ui.emoji.utils.EmojiManager;
 import com.android.messaging.ui.emoji.utils.LoadEmojiManager;
 import com.android.messaging.util.BugleAnalytics;
 import com.android.messaging.util.ContentType;
-import com.android.messaging.util.ImageUtils;
 import com.android.messaging.util.UiUtils;
 import com.ihs.commons.notificationcenter.HSGlobalNotificationCenter;
 import com.ihs.commons.notificationcenter.INotificationObserver;
@@ -286,7 +285,7 @@ public class EmojiPickerFragment extends Fragment implements INotificationObserv
             data.setName(info.mPackageName + "-" + StickerInfo.getNumFromUrl(info.mStickerUrl));
             data.setEmojiType(info.mEmojiType);
             items.add(data);
-            mOnEmojiPickerListener.prepareSendSticker(items);
+            mOnEmojiPickerListener.prepareSendMedia(items);
 
             updateRecentSticker(info);
         }
@@ -308,10 +307,10 @@ public class EmojiPickerFragment extends Fragment implements INotificationObserv
             String contentType = ContentType.IMAGE_GIF;
             final List<MessagePartData> items = new ArrayList<>(1);
             MediaPickerMessagePartData data = new MediaPickerMessagePartData(info.mStartRect, contentType, uri, info.mGifWidth, info.mGifHeight);
-
+            data.setEmojiType(EmojiType.GIPHY_GIF);
             data.setName(info.mFixedWidthGifUrl);
             items.add(data);
-            mOnEmojiPickerListener.prepareSendSticker(items);
+            mOnEmojiPickerListener.prepareSendMedia(items);
 
             updateRecentGif(info);
         }
@@ -465,7 +464,7 @@ public class EmojiPickerFragment extends Fragment implements INotificationObserv
 
         void deleteEmoji();
 
-        void prepareSendSticker(Collection<MessagePartData> items);
+        void prepareSendMedia(Collection<MessagePartData> items);
 
         boolean isContainMessagePartData(Uri uri);
     }
