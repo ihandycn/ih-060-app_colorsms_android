@@ -574,7 +574,8 @@ public class ConversationFragment extends Fragment implements ConversationDataLi
     private AcbNativeAdLoader mNativeAdLoader;
     private boolean isForeground;
     private Handler mAdRefreshHandler = new Handler() {
-        @Override public void handleMessage(Message msg) {
+        @Override
+        public void handleMessage(Message msg) {
             if (isForeground) {
                 loadTopBannerAd();
             } else {
@@ -905,7 +906,8 @@ public class ConversationFragment extends Fragment implements ConversationDataLi
         mThemeWallpaperView = view.findViewById(R.id.conversation_fragment_theme_wallpaper);
 
         mComposeMessageView.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
-            @Override public void onGlobalLayout() {
+            @Override
+            public void onGlobalLayout() {
                 mComposeMessageView.getViewTreeObserver().removeOnGlobalLayoutListener(this);
 
                 Threads.postOnMainThreadDelayed(() -> {
@@ -1104,6 +1106,36 @@ public class ConversationFragment extends Fragment implements ConversationDataLi
         return super.onOptionsItemSelected(item);
     }
 
+    private void clusterConversationMessageData(final ConversationMessageData formerData, final ConversationMessageData latterData) {
+        final String formerParticipantId = formerData.getParticipantId();
+        final String latterParticipantId = latterData.getParticipantId();
+        if (!TextUtils.equals(formerParticipantId, latterParticipantId)) {
+            return;
+        }
+
+        final boolean formerStatus = formerData.getIsIncoming();
+        final boolean latterStatus = latterData.getIsIncoming();
+        if (latterStatus != formerStatus) {
+            return;
+        }
+
+        final long formerReceivedTimestamp = formerData.getReceivedTimeStamp();
+        final long latterReceivedTimestamp = latterData.getReceivedTimeStamp();
+        final long timestampDeltaMillis = Math.abs(formerReceivedTimestamp - latterReceivedTimestamp);
+        if (timestampDeltaMillis > DateUtils.MINUTE_IN_MILLIS) {
+            return;
+        }
+
+        final String formerSelfId = formerData.getSelfParticipantId();
+        final String latterSelfId = latterData.getSelfParticipantId();
+        if (!TextUtils.equals(formerSelfId, latterSelfId)) {
+            return;
+        }
+
+        formerData.setCanClusterWithNextMessage(true);
+        latterData.setCanClusterWithPreviousMessage(true);
+    }
+
     /**
      * {@inheritDoc} from ConversationDataListener
      */
@@ -1131,6 +1163,12 @@ public class ConversationFragment extends Fragment implements ConversationDataLi
                 messageData.bind(cursor);
                 messageDataList.add(messageData);
             } while (cursor.moveToNext());
+        }
+
+        if (messageDataList.size() > 1) {
+            for (int i = 0; i < messageDataList.size() - 1; i++) {
+                clusterConversationMessageData(messageDataList.get(i), messageDataList.get(i + 1));
+            }
         }
 
         if (mIsDestroyed) {
@@ -1927,7 +1965,7 @@ public class ConversationFragment extends Fragment implements ConversationDataLi
     }
 
     @Override
-    public Activity getHostActivity(){
+    public Activity getHostActivity() {
         return getActivity();
     }
 
