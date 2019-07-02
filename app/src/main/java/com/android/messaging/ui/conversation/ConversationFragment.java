@@ -74,7 +74,6 @@ import com.android.messaging.ad.AdPlacement;
 import com.android.messaging.datamodel.BugleNotifications;
 import com.android.messaging.datamodel.DataModel;
 import com.android.messaging.datamodel.MessagingContentProvider;
-import com.android.messaging.datamodel.action.BugleActionToasts;
 import com.android.messaging.datamodel.binding.Binding;
 import com.android.messaging.datamodel.binding.BindingBase;
 import com.android.messaging.datamodel.binding.ImmutableBindingRef;
@@ -636,11 +635,12 @@ public class ConversationFragment extends Fragment implements ConversationDataLi
                             }
                             mHost.startActionMode(mMessageActionModeCallback);
                             mAdapter.notifyDataSetChanged();
+                        } else {
+                            handleMessageClick(data);
                         }
                         if (mSelectMessageDataList.isEmpty()) {
                             resetActionModeAndAnimation();
                         }
-                        handleMessageClick(data);
                     }
 
                     @Override
@@ -1912,7 +1912,7 @@ public class ConversationFragment extends Fragment implements ConversationDataLi
     }
 
     @Override
-    public Activity getHostActivity(){
+    public Activity getHostActivity() {
         return getActivity();
     }
 
