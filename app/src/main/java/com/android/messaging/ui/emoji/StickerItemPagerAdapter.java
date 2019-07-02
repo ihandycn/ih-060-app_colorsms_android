@@ -62,12 +62,12 @@ public class StickerItemPagerAdapter extends AbstractEmojiItemPagerAdapter{
             view = LayoutInflater.from(context).inflate(R.layout.sticker_item_no_recent_layout, container, false);
         } else {
             RecyclerView recyclerView = (RecyclerView) LayoutInflater.from(context).inflate(R.layout.vertical_recycler_view, container, false);
-            recyclerView.setPadding(Dimensions.pxFromDp(24.3f), Dimensions.pxFromDp(13f), Dimensions.pxFromDp(23.7f), Dimensions.pxFromDp(3f));
+            recyclerView.setPadding(Dimensions.pxFromDp(3f), Dimensions.pxFromDp(13f), Dimensions.pxFromDp(3f), Dimensions.pxFromDp(3f));
             StickerItemRecyclerAdapter adapter = new StickerItemRecyclerAdapter(position, list, mOnEmojiClickListener);
             recyclerView.setAdapter(adapter);
             recyclerView.setOverScrollMode(View.OVER_SCROLL_NEVER);
             recyclerView.setLayoutManager(new GridLayoutManager(context, STICKER_COLUMNS));
-            recyclerView.addItemDecoration(new EmojiItemDecoration(STICKER_COLUMNS, Dimensions.pxFromDp(69), Dimensions.pxFromDp(20)));
+            recyclerView.addItemDecoration(new EmojiItemDecoration(STICKER_COLUMNS, Dimensions.pxFromDp(69), Dimensions.pxFromDp(20), Dimensions.pxFromDp(20)));
             view = recyclerView;
         }
         view.setTag(position+"");

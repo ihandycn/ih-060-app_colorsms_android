@@ -73,6 +73,10 @@ public class GiphyItemRecyclerAdapter extends RecyclerView.Adapter<GiphyItemRecy
             return;
         }
 
+        if (mCategory == null) {
+            mCategory = "Recent";
+        }
+
         int preCount = mDataList.size();
         int totalCount = list.size();
         for (int i = preCount; i < totalCount; i++) {
