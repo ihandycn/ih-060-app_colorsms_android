@@ -100,7 +100,7 @@ public class EmojiPackagePagerAdapter extends PagerAdapter {
                         BugleAnalytics.logEvent("SMSEmoji_StickerType_Switch");
                         break;
                     case EMOJI:
-                        BugleAnalytics.logEvent("SMSEmoji_EmojiType_Slide");
+                        BugleAnalytics.logEvent("SMSEmoji_EmojiType_Switch");
                         break;
                     case GIF:
                         BugleAnalytics.logEvent("SMSEmoji_GifType_Switch");
