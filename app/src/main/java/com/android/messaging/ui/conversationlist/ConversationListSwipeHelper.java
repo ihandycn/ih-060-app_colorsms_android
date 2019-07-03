@@ -43,7 +43,7 @@ public class ConversationListSwipeHelper implements OnItemTouchListener {
 
     private static final float ERROR_FACTOR_MULTIPLIER = 1.2f;
     private static final float PERCENTAGE_OF_WIDTH_TO_DISMISS = 0.4f;
-    private static final float FLING_PERCENTAGE_OF_WIDTH_TO_DISMISS = 0.05f;
+    private static final float FLING_PERCENTAGE_OF_WIDTH_TO_DISMISS = 0.1f;
     private static final int MIN_TOUCH_POINT_TO_LEFT_SIDE = Dimensions.pxFromDp(35);
 
     private static final int SWIPE_DIRECTION_NONE = 0;
