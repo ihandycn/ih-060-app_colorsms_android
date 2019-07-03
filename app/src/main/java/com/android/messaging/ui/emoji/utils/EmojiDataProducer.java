@@ -10,12 +10,14 @@ import com.android.messaging.ui.emoji.EmojiPackageType;
 import com.android.messaging.ui.emoji.utils.emoji.Emoji;
 import com.android.messaging.ui.emoji.utils.emoji.EmojiCategory;
 import com.android.messaging.ui.emoji.utils.emoji.EmojiProvider;
+import com.ihs.commons.config.HSConfig;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class EmojiDataProducer {
     private static final String TAG = "emoji_data_producer";
+    public static final String GIPHY_CATEGORY_TREND = "Trend";
 
     public static List<EmojiPackageInfo> getInitStickerData(Context context) {
         List<EmojiPackageInfo> result = new ArrayList<>();
@@ -49,11 +51,15 @@ public class EmojiDataProducer {
         recentInfo.mEmojiInfoList = EmojiManager.getRecentInfo(EmojiPackageType.GIF);
         result.add(recentInfo);
 
-        String[] categories = {"Happy", "Laugh", "Dogs", "Sad", "OMG",
-        "Good", "Well Done", "Heihei", "Cry", "Upset"};
-        for (int i = 0; i < 10; i++) {
+        List<String> categories = (List<String>) HSConfig.getList("Application", "Giphy", "Category");
+        if (!categories.contains(GIPHY_CATEGORY_TREND)) {
+            categories.add(0, GIPHY_CATEGORY_TREND);
+        }
+        int size = categories.size();
+
+        for (int i = 0; i < size; i++) {
             EmojiPackageInfo category = new EmojiPackageInfo();
-            category.mName = categories[i];
+            category.mName = categories.get(i);
             result.add(category);
         }
         return result;

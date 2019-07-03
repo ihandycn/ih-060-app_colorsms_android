@@ -72,9 +72,9 @@ public class GiphyItemPagerAdapter extends AbstractEmojiItemPagerAdapter {
             };
 
             if (list == null) {
-                adapter = new GiphyItemRecyclerAdapter(mOnEmojiClickListener, onDataFetchedListener, mData.get(position).mName);
+                adapter = new GiphyItemRecyclerAdapter(mOnEmojiClickListener, onDataFetchedListener, mContext, mData.get(position).mName);
             } else {
-                adapter = new GiphyItemRecyclerAdapter(mOnEmojiClickListener, onDataFetchedListener, list);
+                adapter = new GiphyItemRecyclerAdapter(mOnEmojiClickListener, onDataFetchedListener, mContext, list);
             }
 
             final int itemOffsetInPixel = Dimensions.pxFromDp(2.5f);

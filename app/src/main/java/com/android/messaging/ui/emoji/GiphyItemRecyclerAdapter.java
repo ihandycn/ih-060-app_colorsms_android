@@ -5,6 +5,7 @@ import android.graphics.Rect;
 import android.os.Parcelable;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,6 +15,7 @@ import com.android.messaging.R;
 import com.android.messaging.glide.GlideApp;
 import com.android.messaging.ui.emoji.utils.GiphyListManager;
 import com.android.messaging.util.BugleAnalytics;
+import com.android.messaging.util.UiUtils;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.load.resource.bitmap.FitCenter;
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
@@ -26,6 +28,7 @@ import com.superapps.util.Dimensions;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.android.messaging.ui.emoji.utils.EmojiDataProducer.GIPHY_CATEGORY_TREND;
 import static com.android.messaging.ui.emoji.utils.GiphyListManager.BUCKET_COUNT;
 
 public class GiphyItemRecyclerAdapter extends RecyclerView.Adapter<GiphyItemRecyclerAdapter.ViewHolder> {
@@ -34,6 +37,7 @@ public class GiphyItemRecyclerAdapter extends RecyclerView.Adapter<GiphyItemRecy
         void onFetched();
     }
 
+    private Context mContext;
     private List<BaseEmojiInfo> mDataList = new ArrayList<>(20);
     private EmojiPackagePagerAdapter.OnEmojiClickListener mOnEmojiClickListener;
     private OnDataFetchedListener mOnDataFetchedListener;
@@ -43,16 +47,32 @@ public class GiphyItemRecyclerAdapter extends RecyclerView.Adapter<GiphyItemRecy
 
     private boolean mIsRecentPage;
 
-    GiphyItemRecyclerAdapter(EmojiPackagePagerAdapter.OnEmojiClickListener emojiClickListener, OnDataFetchedListener onDataFetchedListener, String category) {
+    private GiphyItemRecyclerAdapter(EmojiPackagePagerAdapter.OnEmojiClickListener emojiClickListener, OnDataFetchedListener onDataFetchedListener, Context context) {
         mOnEmojiClickListener = emojiClickListener;
         mOnDataFetchedListener = onDataFetchedListener;
-        mCategory = category;
-        GiphyListManager.getInstance().getGiphyList(mCategory, 0, giphyList -> updateData(giphyList));
+        mContext = context;
     }
 
-    GiphyItemRecyclerAdapter(EmojiPackagePagerAdapter.OnEmojiClickListener emojiClickListener, OnDataFetchedListener onDataFetchedListener, List<BaseEmojiInfo> data) {
-        mOnEmojiClickListener = emojiClickListener;
-        mOnDataFetchedListener = onDataFetchedListener;
+    GiphyItemRecyclerAdapter(EmojiPackagePagerAdapter.OnEmojiClickListener emojiClickListener,
+                             OnDataFetchedListener onDataFetchedListener,
+                             Context context,
+                             String category) {
+        this(emojiClickListener, onDataFetchedListener, context);
+        mCategory = category;
+
+        if (TextUtils.equals(GIPHY_CATEGORY_TREND, mCategory)) {
+            GiphyListManager.getInstance().getTrendingGiphyList(0, this::updateData);
+        } else {
+            GiphyListManager.getInstance().getGiphyList(mCategory, 0, this::updateData);
+        }
+
+    }
+
+    GiphyItemRecyclerAdapter(EmojiPackagePagerAdapter.OnEmojiClickListener emojiClickListener,
+                             OnDataFetchedListener onDataFetchedListener,
+                             Context context,
+                             List<BaseEmojiInfo> data) {
+        this(emojiClickListener, onDataFetchedListener, context);
         mIsRecentPage = true;
         mDataList = data;
         notifyDataSetChanged();
@@ -64,12 +84,20 @@ public class GiphyItemRecyclerAdapter extends RecyclerView.Adapter<GiphyItemRecy
     void loadMore() {
         if (!mIsRecentPage) {
             mOffset += BUCKET_COUNT;
-            GiphyListManager.getInstance().getGiphyList(mCategory, mOffset, giphyList -> updateData(giphyList));
+            if (TextUtils.equals(GIPHY_CATEGORY_TREND, mCategory)) {
+                GiphyListManager.getInstance().getTrendingGiphyList(mOffset, this::updateData);
+            } else {
+                GiphyListManager.getInstance().getGiphyList(mCategory, mOffset, this::updateData);
+            }
         }
     }
 
-    void updateData(List<Media> list) {
+    private void updateData(List<Media> list) {
         if (list.isEmpty()) {
+            return;
+        }
+
+        if (UiUtils.isDestroyed(UiUtils.getActivity(mContext))) {
             return;
         }
 

@@ -12,6 +12,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import static com.android.messaging.ui.emoji.utils.EmojiDataProducer.GIPHY_CATEGORY_TREND;
+
 public class GiphyListManager {
     public static final int BUCKET_COUNT = 10;
 
@@ -45,6 +47,41 @@ public class GiphyListManager {
                 callBack.onGiphyListFetched(list);
             }
         }
+    }
+
+    public void getTrendingGiphyList(int offset, GiphyListFetchCallBack callBack) {
+        List<Media> list = mGiphyListCache.get(GIPHY_CATEGORY_TREND);
+        if (list == null) {
+            list = new ArrayList<>();
+            mGiphyListCache.put(GIPHY_CATEGORY_TREND, list);
+            trend(offset, list, callBack);
+        } else {
+            if (offset >= list.size()) {
+                trend(offset, list, callBack);
+            } else {
+                callBack.onGiphyListFetched(list);
+            }
+        }
+    }
+
+    private void trend(int offset, List<Media> list, GiphyListFetchCallBack callBack) {
+        mClient.trending(MediaType.gif, BUCKET_COUNT, offset, null, new CompletionHandler<ListMediaResponse>() {
+            @Override
+            public void onComplete(ListMediaResponse result, Throwable e) {
+                if (result == null) {
+                    // Do what you want to do with the error
+                } else {
+                    if (result.getData() != null) {
+                        list.addAll(result.getData());
+                        if (callBack != null) {
+                            callBack.onGiphyListFetched(list);
+                        }
+                    } else {
+                        HSLog.e("giphy error", "No results found");
+                    }
+                }
+            }
+        });
     }
 
     private void search(String category, int offset, List<Media> list, GiphyListFetchCallBack callBack) {
