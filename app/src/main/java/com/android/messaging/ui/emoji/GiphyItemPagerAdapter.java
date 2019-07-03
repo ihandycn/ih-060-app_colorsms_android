@@ -60,7 +60,7 @@ public class GiphyItemPagerAdapter extends AbstractEmojiItemPagerAdapter {
             FrameLayout recyclerViewContainer = (FrameLayout) LayoutInflater.from(context).inflate(R.layout.layout_giphy_page_item, container, false);
             RecyclerView recyclerView = recyclerViewContainer.findViewById(R.id.recycler_view);
             ProgressBar progressBar = recyclerViewContainer.findViewById(R.id.progress_bar);
-            recyclerView.setPadding(Dimensions.pxFromDp(6), Dimensions.pxFromDp(7), Dimensions.pxFromDp(6), 0);
+            recyclerView.setPadding(0, Dimensions.pxFromDp(7), 0, 0);
             GiphyItemRecyclerAdapter adapter;
 
             GiphyItemRecyclerAdapter.OnDataFetchedListener onDataFetchedListener = new GiphyItemRecyclerAdapter.OnDataFetchedListener() {
@@ -78,12 +78,21 @@ public class GiphyItemPagerAdapter extends AbstractEmojiItemPagerAdapter {
             }
 
             final int itemOffsetInPixel = Dimensions.pxFromDp(2.5f);
+            final int itemSideOffsetInPixel = Dimensions.pxFromDp(8.5f);
             recyclerView.addItemDecoration(new RecyclerView.ItemDecoration() {
                 @Override
                 public void getItemOffsets(Rect outRect, View view, RecyclerView parent, RecyclerView.State state) {
                     super.getItemOffsets(outRect, view, parent, state);
-                    outRect.left = itemOffsetInPixel;
-                    outRect.right = itemOffsetInPixel;
+
+                    int spanIndex = ((StaggeredGridLayoutManager.LayoutParams) view.getLayoutParams()).getSpanIndex();
+                    if (spanIndex == 0) {
+                        outRect.left = itemSideOffsetInPixel;
+                        outRect.right = itemOffsetInPixel;
+                    } else {
+                        outRect.left = itemOffsetInPixel;
+                        outRect.right = itemSideOffsetInPixel;
+                    }
+
                     outRect.top = itemOffsetInPixel;
                     outRect.bottom = itemOffsetInPixel;
                 }
