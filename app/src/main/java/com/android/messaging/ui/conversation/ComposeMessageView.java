@@ -853,7 +853,6 @@ public class ComposeMessageView extends LinearLayout
 
     public void setInputManager(final ConversationInputManager inputManager) {
         mInputManager = inputManager;
-        mInputManager.showEmojiPicker();
     }
 
     public void setConversationDataModel(final ImmutableBindingRef<ConversationData> refDataModel) {

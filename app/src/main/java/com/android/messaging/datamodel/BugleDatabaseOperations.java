@@ -526,22 +526,26 @@ public class BugleDatabaseOperations {
         Assert.isNotMainThread();
         dbWrapper.beginTransaction();
         boolean conversationDeleted = false;
-        boolean conversationMessagesDeleted = false;
         try {
             // Delete existing messages
             if (cutoffTimestamp == Long.MAX_VALUE) {
                 // Delete parts and messages
-                dbWrapper.delete(DatabaseHelper.MESSAGES_TABLE,
+                final ContentValues values = new ContentValues();
+                values.put(MessageColumns.IS_DELETED, 1);
+                dbWrapper.update(DatabaseHelper.MESSAGES_TABLE, values,
                         MessageColumns.CONVERSATION_ID + "=?", new String[]{conversationId});
-                conversationMessagesDeleted = true;
             } else {
                 // Delete all messages prior to the cutoff
                 // Can't delete messages which is locked
-                dbWrapper.delete(DatabaseHelper.MESSAGES_TABLE,
+
+                final ContentValues values = new ContentValues();
+                values.put(MessageColumns.IS_DELETED, 1);
+                dbWrapper.update(DatabaseHelper.MESSAGES_TABLE, values,
                         MessageColumns.CONVERSATION_ID + "=? AND "
                                 + MessageColumns.IS_LOCKED + "=0 AND "
                                 + MessageColumns.RECEIVED_TIMESTAMP + "<=?",
                         new String[]{conversationId, Long.toString(cutoffTimestamp)});
+
                 // Delete any draft message. The delete above may not always include the draft,
                 // because under certain scenarios (e.g. sending messages in progress), the draft
                 // timestamp can be larger than the cutoff time, which is generally the conversation
@@ -554,35 +558,14 @@ public class BugleDatabaseOperations {
                                 Integer.toString(MessageData.BUGLE_STATUS_OUTGOING_DRAFT),
                                 conversationId
                         });
-
-                // Check to see if there are any messages left in the conversation
-                final long count = dbWrapper.queryNumEntries(DatabaseHelper.MESSAGES_TABLE,
-                        MessageColumns.CONVERSATION_ID + "=?", new String[]{conversationId});
-                conversationMessagesDeleted = (count == 0);
-                // Log detail information if there are still messages left in the conversation
-                if (!conversationMessagesDeleted) {
-                    final long maxTimestamp =
-                            getConversationMaxTimestamp(dbWrapper, conversationId);
-                    LogUtil.w(TAG, "BugleDatabaseOperations:"
-                            + " cannot delete all messages in a conversation"
-                            + ", after deletion: count=" + count
-                            + ", max timestamp=" + maxTimestamp
-                            + ", cutoff timestamp=" + cutoffTimestamp);
-                }
             }
 
-            if (conversationMessagesDeleted) {
-                dbWrapper.delete(DatabaseHelper.CONVERSATION_PARTICIPANTS_TABLE,
-                        ConversationParticipantsColumns.CONVERSATION_ID + "=?",
-                        new String[]{conversationId});
-                // Delete conversation row
-                final int count = dbWrapper.delete(DatabaseHelper.CONVERSATIONS_TABLE,
-                        ConversationColumns._ID + "=?", new String[]{conversationId});
-                conversationDeleted = (count > 0);
-            } else {
+            if (!deleteConversationIfEmptyInTransaction(dbWrapper, conversationId)) {
                 ArchivedConversationListActivity.logUnarchiveEvent(dbWrapper, conversationId, "delete_message");
                 refreshConversationMetadataInTransaction(dbWrapper, conversationId,
                         false/* shouldAutoSwitchSelfId */, false/*archived*/);
+            } else {
+                conversationDeleted = true;
             }
             dbWrapper.setTransactionSuccessful();
         } finally {
@@ -1440,6 +1423,10 @@ public class BugleDatabaseOperations {
             }
 
             if (remainedMessagesCount == 0) {
+                dbWrapper.delete(DatabaseHelper.CONVERSATION_PARTICIPANTS_TABLE,
+                        ConversationParticipantsColumns.CONVERSATION_ID + "=?",
+                        new String[]{conversationId});
+
                 dbWrapper.delete(DatabaseHelper.CONVERSATIONS_TABLE,
                         ConversationColumns._ID + "=?", new String[]{conversationId});
                 LogUtil.i(TAG,
