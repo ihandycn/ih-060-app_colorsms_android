@@ -106,10 +106,13 @@ public class SmsSender {
         }
 
         private int getFailureLevel(final int resultCode) {
+            BugleAnalytics.logEvent("SMS_Send_Failed", false, true,
+                    "SmsSendResultCode", String.valueOf(resultCode));
             switch (resultCode) {
                 case Activity.RESULT_OK:
                     return FAILURE_LEVEL_NONE;
                 case SmsManager.RESULT_ERROR_NO_SERVICE:
+                    return FAILURE_LEVEL_TEMPORARY;
                 case SmsManager.RESULT_ERROR_RADIO_OFF:
                 case SmsManager.RESULT_ERROR_GENERIC_FAILURE:
                     return FAILURE_LEVEL_PERMANENT;
