@@ -71,7 +71,7 @@ public class StickerItemRecyclerAdapter extends BaseStickerItemRecyclerAdapter {
 
     @Override
     public void onMagicItemLoadingFinish(StickerInfo stickerInfo, StickerViewHolder holder) {
-        if (mPositionInViewPager == 0 && !stickerInfo.mIsDownloaded && holder.getAdapterPosition() < mMagicPreloadCount) {
+        if (!stickerInfo.mIsDownloaded && holder.getAdapterPosition() < mMagicPreloadCount) {
             downloadMagicEmoji(true, stickerInfo, holder);
         }
     }

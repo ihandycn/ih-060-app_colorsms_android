@@ -236,7 +236,6 @@ public class EmojiStoreFragment extends Fragment implements INotificationObserve
                         storeViewHolder.getBtn.setTextColor(0xFFFFFFFF);
                         storeViewHolder.getBtn.setBackground(BackgroundDrawables.createBackgroundDrawable(0xFFD6D6D6, Dimensions.pxFromDp(15), true));
                         EmojiManager.addTabSticker(packageInfo.mName);
-                        LoadEmojiManager.getInstance().flush();
 
                         HSBundle bundle = new HSBundle();
                         bundle.putObject(EmojiPickerFragment.NOTIFICATION_BUNDLE_PACKAGE_INFO, packageInfo);

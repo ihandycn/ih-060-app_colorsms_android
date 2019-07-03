@@ -68,6 +68,7 @@ public class EmojiManager {
         }
         data.add(0, name);
         Preferences.get(PREF_FILE_NAME).putStringList(PREF_TAB_STICKER, data);
+        LoadEmojiManager.getInstance().flush();
     }
 
     @SuppressWarnings("unused")
