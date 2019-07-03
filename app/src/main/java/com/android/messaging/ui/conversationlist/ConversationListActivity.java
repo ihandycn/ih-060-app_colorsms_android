@@ -21,7 +21,6 @@ import android.text.format.DateUtils;
 import android.view.ActionMode;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
@@ -37,6 +36,7 @@ import com.android.messaging.backup.ui.BackupRestoreActivity;
 import com.android.messaging.backup.ui.ChooseBackupViewHolder;
 import com.android.messaging.datamodel.BugleNotifications;
 import com.android.messaging.datamodel.DataModel;
+import com.android.messaging.datamodel.DataModelImpl;
 import com.android.messaging.datamodel.DatabaseHelper;
 import com.android.messaging.datamodel.DatabaseWrapper;
 import com.android.messaging.datamodel.data.MessageBoxItemData;
@@ -291,6 +291,7 @@ public class ConversationListActivity extends AbstractConversationListActivity
                 }
                 BugleAnalytics.logEvent("SMS_HomePage_Show", true,
                         "SIM", simStatus,
+                        "Signal", String.valueOf(DataModelImpl.get().getConnectivityUtil().getSignalLevel(0)),
                         "Popups", String.valueOf(MessageBoxSettings.isSMSAssistantModuleEnabled()));
             });
         }

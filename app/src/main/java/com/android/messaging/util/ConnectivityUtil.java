@@ -26,6 +26,8 @@ import android.telephony.ServiceState;
 import android.telephony.SignalStrength;
 import android.telephony.TelephonyManager;
 
+import com.ihs.commons.utils.HSLog;
+
 public class ConnectivityUtil {
     // Assume not connected until informed differently
     private volatile int mCurrentServiceState = ServiceState.STATE_POWER_OFF;
@@ -144,6 +146,7 @@ public class ConnectivityUtil {
         @Override
         public void onSignalStrengthsChanged(final SignalStrength signalStrength) {
             mSignalLevel = getLevel(signalStrength);
+            HSLog.d("on signal strengths changed : " + mSignalLevel);
         }
     };
 

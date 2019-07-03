@@ -231,7 +231,6 @@ public class ActionServiceImpl extends IntentService {
             startForeground(PendingIntentConstants.SMS_BACKGROUND_SERVICE_ID, new Notification());
         }
         mBackgroundWorker = DataModel.get().getBackgroundWorkerForActionService();
-        DataModel.get().getConnectivityUtil().registerForSignalStrength();
     }
 
     @Override
@@ -245,7 +244,6 @@ public class ActionServiceImpl extends IntentService {
     @Override
     public void onDestroy() {
         super.onDestroy();
-        DataModel.get().getConnectivityUtil().unregisterForSignalStrength();
     }
 
     private static final String WAKELOCK_ID = "bugle_datamodel_service_wakelock";

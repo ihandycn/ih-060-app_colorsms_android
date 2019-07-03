@@ -262,6 +262,8 @@ public class BugleApplication extends HSApplication implements UncaughtException
             }));
             initWorks.add(new ParallelBackgroundTask("AppLockObserver", () ->
                     AppPrivateLockManager.getInstance().startAppLockWatch()));
+            initWorks.add(new ParallelBackgroundTask("RegisterSignalStrength", () ->
+                    DataModel.get().getConnectivityUtil().registerForSignalStrength()));
             TaskRunner.run(initWorks);
         } finally {
             TraceCompat.endSection();
