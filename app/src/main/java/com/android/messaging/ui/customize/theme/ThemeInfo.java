@@ -15,6 +15,7 @@ public class ThemeInfo {
 
     public String mThemeKey;
     public boolean mIsLocalTheme;
+    public int mLocalIndex;
     public String name;
     public String previewUrl;
     public String themeColor;
@@ -51,6 +52,8 @@ public class ThemeInfo {
         themeInfo.mThemeKey = name;
         themeInfo.name = (String) themeConfig.get("Name");
         themeInfo.mIsLocalTheme = (Boolean) themeConfig.get("IsLocalTheme");
+        if (themeConfig.get("LocalIndex") != null)
+            themeInfo.mLocalIndex = (Integer) themeConfig.get("LocalIndex");
         themeInfo.previewUrl = (String) themeConfig.get("PreviewUrl");
         themeInfo.themeColor = (String) themeConfig.get("ThemeColor");
         themeInfo.avatarForegroundColor = (String) themeConfig.get("AvatarForegroundColor");

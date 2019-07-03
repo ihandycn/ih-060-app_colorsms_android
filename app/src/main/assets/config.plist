@@ -320,6 +320,8 @@
 					<dict>
 						<key>IsLocalTheme</key>
 						<true/>
+						<key>LocalIndex</key>
+						<integer>1</integer>
 						<key>Name</key>
 						<string>Default</string>
 						<key>PreviewList</key>
@@ -784,6 +786,8 @@
 					<dict>
 						<key>IsLocalTheme</key>
 						<true/>
+						<key>LocalIndex</key>
+						<integer>2</integer>
 						<key>Name</key>
 						<string>Red Rose</string>
 						<key>PreviewList</key>
@@ -844,6 +848,8 @@
 						<true/>
 						<key>Name</key>
 						<string>Rain Drop</string>
+						<key>LocalIndex</key>
+						<integer>5</integer>
 						<key>PreviewList</key>
 						<array>
 							<string>preview_1.jpg</string>
@@ -902,6 +908,8 @@
 						<true/>
 						<key>Name</key>
 						<string>Rainbow</string>
+						<key>LocalIndex</key>
+						<integer>10</integer>
 						<key>PreviewList</key>
 						<array>
 							<string>preview_1.jpg</string>
@@ -1132,6 +1140,8 @@
 					<dict>
 						<key>IsLocalTheme</key>
 						<true/>
+						<key>LocalIndex</key>
+						<integer>8</integer>
 						<key>Name</key>
 						<string>Neon</string>
 						<key>PreviewList</key>
@@ -1190,6 +1200,8 @@
 					<dict>
 						<key>IsLocalTheme</key>
 						<true/>
+						<key>LocalIndex</key>
+						<integer>3</integer>
 						<key>PreviewList</key>
 						<array>
 							<string>preview_1.jpg</string>
@@ -1596,6 +1608,8 @@
 					<dict>
 						<key>IsLocalTheme</key>
 						<true/>
+						<key>LocalIndex</key>
+						<integer>9</integer>
 						<key>Name</key>
 						<string>Unicorn</string>
 						<key>PreviewList</key>
@@ -1656,6 +1670,8 @@
 						<true/>
 						<key>Name</key>
 						<string>Cool Graffiti</string>
+						<key>LocalIndex</key>
+						<integer>4</integer>
 						<key>PreviewList</key>
 						<array>
 							<string>preview_1.jpg</string>
@@ -1714,6 +1730,8 @@
 						<true/>
 						<key>Name</key>
 						<string>Starry</string>
+						<key>LocalIndex</key>
+						<integer>6</integer>
 						<key>PreviewList</key>
 						<array>
 							<string>preview_1.jpg</string>
@@ -1770,6 +1788,8 @@
 					<dict>
 						<key>IsLocalTheme</key>
 						<true/>
+						<key>LocalIndex</key>
+						<integer>7</integer>
 						<key>Name</key>
 						<string>Pink Diamond</string>
 						<key>PreviewList</key>

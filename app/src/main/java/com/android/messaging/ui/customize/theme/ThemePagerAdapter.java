@@ -19,6 +19,7 @@ public class ThemePagerAdapter extends PagerAdapter {
     public interface OnPageClickedListener {
         void onPageClicked(int position);
     }
+
     private final int mCount;
 
     private final List<View> mItemList;
@@ -46,7 +47,7 @@ public class ThemePagerAdapter extends PagerAdapter {
         }
 
         if (context instanceof WelcomeChooseThemeActivity) {
-            Collections.shuffle(mShuffledThemeItemList);
+            Collections.sort(mShuffledThemeItemList, (t1, t2) -> t1.mLocalIndex - t2.mLocalIndex);
         }
 
         for (int i = 0; i < mCount; i++) {
