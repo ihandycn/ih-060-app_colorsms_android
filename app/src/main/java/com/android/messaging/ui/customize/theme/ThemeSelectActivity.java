@@ -121,7 +121,7 @@ public class ThemeSelectActivity extends BaseActivity {
             }
         });
 
-        BugleAnalytics.logEvent("Customize_ThemeCenter_Show", true);
+        BugleAnalytics.logEvent("Customize_ThemeCenter_Show", true, true);
     }
 
     @Override

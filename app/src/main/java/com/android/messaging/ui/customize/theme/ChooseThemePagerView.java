@@ -6,7 +6,6 @@ import android.support.constraint.ConstraintLayout;
 import android.support.v4.view.ViewPager;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
-import android.view.View;
 import android.widget.TextView;
 
 import com.android.messaging.R;
@@ -63,6 +62,7 @@ public class ChooseThemePagerView extends ConstraintLayout {
 
                 BugleAnalytics.logEvent("Start_ChooseTheme_Slide", true);
             }
+
             @Override
             public void onPageScrollStateChanged(int state) {
 
@@ -80,7 +80,7 @@ public class ChooseThemePagerView extends ConstraintLayout {
             ThemeUtils.applyTheme(mAdapter.getThemeInfo(mPager.getCurrentItem()), 0);
             FontUtils.onFontTypefaceChanged();
 
-            BugleAnalytics.logEvent("Start_ChooseTheme_Apply", true, "theme", ThemeUtils.getCurrentThemeName());
+            BugleAnalytics.logEvent("Start_ChooseTheme_Apply", true, true, "theme", ThemeUtils.getCurrentThemeName());
         });
     }
 

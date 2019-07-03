@@ -219,7 +219,7 @@ public class ThemeSelectItemView extends ConstraintLayout implements ThemeUtils.
                 mIsSelectAnimationPlaying = false;
             }
         }).start();
-        BugleAnalytics.logEvent("Customize_ThemeCenter_Theme_Apply", true,
+        BugleAnalytics.logEvent("Customize_ThemeCenter_Theme_Apply", true, true,
                 "theme", mThemeInfo.mThemeKey, "from", "list");
     }
 

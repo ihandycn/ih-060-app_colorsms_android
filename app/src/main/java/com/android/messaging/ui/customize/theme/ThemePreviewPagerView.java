@@ -201,7 +201,7 @@ public class ThemePreviewPagerView extends ConstraintLayout {
                     mApplyClickListener.onClick(mButton);
                 }
                 ThemeUtils.applyTheme(mThemeInfo, 0);
-                BugleAnalytics.logEvent("Customize_ThemeCenter_Theme_Apply", true,
+                BugleAnalytics.logEvent("Customize_ThemeCenter_Theme_Apply", true, true,
                         "theme", mThemeInfo.mThemeKey, "from", "detail");
             });
         } else {

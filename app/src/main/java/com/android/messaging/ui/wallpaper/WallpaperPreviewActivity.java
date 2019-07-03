@@ -275,6 +275,8 @@ public class WallpaperPreviewActivity extends BaseActivity implements WallpaperM
                             "from", TextUtils.isEmpty(mThreadId) ? "Menu" : "Options");
                     BugleAnalytics.logEvent("SMS_ChatBackground_Backgrounds_Applied", true, true,
                             "from", TextUtils.isEmpty(mThreadId) ? "Menu" : "Options");
+                    BugleAnalytics.logEvent("SMS_ChatBackground_Change", true, true,
+                            "from", TextUtils.isEmpty(mThreadId) ? "Menu" : "Options");
                 });
                 if (TextUtils.isEmpty(wallpaperPath)) {
                     onItemSelected(view);
@@ -297,6 +299,8 @@ public class WallpaperPreviewActivity extends BaseActivity implements WallpaperM
                             WallpaperManager.onOnlineWallpaperChanged();
                             BugleAnalytics.logEvent("SMS_ChatBackground_Backgrounds_Applied", true, true,
                                     "from", TextUtils.isEmpty(mThreadId) ? "Menu" : "Options");
+                            BugleAnalytics.logEvent("SMS_ChatBackground_Change", true, true,
+                                    "from", TextUtils.isEmpty(mThreadId) ? "Menu" : "Options");
                         }
                     } else {
                         view.onLoadingStart();
@@ -317,6 +321,8 @@ public class WallpaperPreviewActivity extends BaseActivity implements WallpaperM
                                         WallpaperManager.setWallpaperPath(mThreadId, item.getAbsolutePath());
                                         WallpaperManager.onOnlineWallpaperChanged();
                                         BugleAnalytics.logEvent("SMS_ChatBackground_Backgrounds_Applied", true, true,
+                                                "from", TextUtils.isEmpty(mThreadId) ? "Menu" : "Options");
+                                        BugleAnalytics.logEvent("SMS_ChatBackground_Change", true, true,
                                                 "from", TextUtils.isEmpty(mThreadId) ? "Menu" : "Options");
                                     }
                                 });

@@ -399,6 +399,8 @@ public class WallpaperEditActivity extends BaseActivity implements View.OnClickL
                 finish();
                 BugleAnalytics.logEvent("SMS_ChatBackground_CutPage_Applied", true, true,
                         "from", TextUtils.isEmpty(mThreadId) ? "Menu" : "Options");
+                BugleAnalytics.logEvent("SMS_ChatBackground_Change", true, true,
+                        "from", TextUtils.isEmpty(mThreadId) ? "Menu" : "Options");
                 break;
             case R.id.wallpaper_view_return:
                 cancel();
