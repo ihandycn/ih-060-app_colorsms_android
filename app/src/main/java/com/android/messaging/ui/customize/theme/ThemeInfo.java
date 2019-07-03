@@ -106,8 +106,8 @@ public class ThemeInfo {
             public void onDownloadSuccess() {
                 mIsDownloading = false;
                 sDownloadingThemeList.remove(mThemeKey);
-                for (ThemeDownloadManager.IThemeDownloadListener listener : mDownloadListeners) {
-                    listener.onDownloadSuccess();
+                for (int i = 0; i < mDownloadListeners.size(); i++) {
+                    mDownloadListeners.get(i).onDownloadSuccess();
                 }
             }
 
@@ -115,15 +115,15 @@ public class ThemeInfo {
             public void onDownloadFailed() {
                 mIsDownloading = false;
                 sDownloadingThemeList.remove(mThemeKey);
-                for (ThemeDownloadManager.IThemeDownloadListener listener : mDownloadListeners) {
-                    listener.onDownloadFailed();
+                for (int i = 0; i < mDownloadListeners.size(); i++) {
+                    mDownloadListeners.get(i).onDownloadFailed();
                 }
             }
 
             @Override
             public void onDownloadUpdate(float process) {
-                for (ThemeDownloadManager.IThemeDownloadListener listener : mDownloadListeners) {
-                    listener.onDownloadUpdate(process);
+                for (int i = 0; i < mDownloadListeners.size(); i++) {
+                    mDownloadListeners.get(i).onDownloadUpdate(process);
                 }
             }
         };
