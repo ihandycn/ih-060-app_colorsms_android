@@ -10,6 +10,7 @@ import android.graphics.Color;
 import android.graphics.Rect;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
+import android.os.Build;
 import android.os.Handler;
 import android.support.annotation.ColorInt;
 import android.support.v7.widget.LinearLayoutManager;
@@ -45,6 +46,7 @@ import com.android.messaging.util.Dates;
 import com.android.messaging.util.ImeUtil;
 import com.android.messaging.util.UiUtils;
 import com.superapps.util.BackgroundDrawables;
+import com.superapps.util.Compats;
 import com.superapps.util.Dimensions;
 
 import java.util.regex.Matcher;
@@ -136,7 +138,9 @@ public class MessageBoxConversationView extends FrameLayout {
     }
 
     void requestEditTextFocus() {
-        mInputEditText.requestFocus();
+        if (!(Compats.IS_SAMSUNG_DEVICE && Build.VERSION.SDK_INT >= Build.VERSION_CODES.P)) {
+            mInputEditText.requestFocus();
+        }
     }
 
     void updateTimestamp() {
@@ -368,7 +372,9 @@ public class MessageBoxConversationView extends FrameLayout {
             public void onAnimationEnd(Animator animation) {
                 super.onAnimationEnd(animation);
                 mPrivacyContainer.setVisibility(GONE);
-                mInputEditText.requestFocus();
+                if (!(Compats.IS_SAMSUNG_DEVICE && Build.VERSION.SDK_INT >= Build.VERSION_CODES.P)) {
+                    mInputEditText.requestFocus();
+                }
             }
         });
         revealAnimator.setStartDelay(120L);
