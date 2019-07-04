@@ -764,11 +764,11 @@
 						<key>IncomingBubbleTextColor</key>
 						<string>#000000</string>
 						<key>ListSubtitleColor</key>
-						<string>#ffffff</string>
+						<string>#000000</string>
 						<key>ListTimeColor</key>
-						<string>#ffffff</string>
+						<string>#000000</string>
 						<key>ListTitleColor</key>
-						<string>#ffffff</string>
+						<string>#000000</string>
 						<key>ListWallpaperUrl</key>
 						<string>wallpaper.jpg</string>
 						<key>NewConversationIconUrl</key>
