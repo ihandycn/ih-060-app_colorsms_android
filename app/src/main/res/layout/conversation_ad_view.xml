@@ -16,14 +16,14 @@
         app:radiusY="20dp">
 
         <ImageView
-            android:layout_width="@dimen/conversation_list_contact_icon_size"
-            android:layout_height="@dimen/conversation_list_contact_icon_size"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
             android:src="@drawable/icon_ad"/>
 
         <net.appcloudbox.ads.base.ContainerView.AcbNativeAdIconView
             android:id="@+id/banner_icon_image"
-            android:layout_width="@dimen/conversation_list_contact_icon_size"
-            android:layout_height="@dimen/conversation_list_contact_icon_size"/>
+            android:layout_width="40dp"
+            android:layout_height="40dp"/>
     </com.superapps.view.RoundCornerContainer>
 
     <LinearLayout
