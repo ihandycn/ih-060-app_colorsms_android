@@ -53,7 +53,7 @@ public class FontUtils {
         } else if (weight == MEDIUM) {
             weightName = "Medium";
         } else {
-            weightName = "Semibold";
+            weightName = "SemiBold";
         }
         String fullName = name + "_" + weightName;
         if (sTypefaceMap.containsKey(fullName)) {
@@ -91,7 +91,7 @@ public class FontUtils {
         } else if (fontType == R.string.custom_font_semibold
                 || fontType == R.string.custom_font_bold
                 || fontType == R.string.custom_font_black) {
-            weight = "Semibold";
+            weight = "SemiBold";
         } else {
             //not custom type
             return new TypefaceInfo(Fonts.getTypeface(Fonts.Font.ofFontResId(fontType), fontStyle), 1);
@@ -129,7 +129,7 @@ public class FontUtils {
         TypefaceInfo info = null;
         try {
             Typeface tp = Typeface.createFromAsset(HSApplication.getContext().getAssets(),
-                    "fonts/Custom" + "-" + weightName + ".ttf");
+                    "fonts/Custom" + "-" + (weightName.equals("SemiBold") ? "Semibold" : weightName) + ".ttf");
             info = new TypefaceInfo(tp, fontInfo.getDefaultSizeRatio());
             sDefaultTypefaceMap.put(weightName, info);
         } catch (Exception ignored) {
@@ -149,13 +149,13 @@ public class FontUtils {
 
         try {
             Typeface tp = Typeface.createFromAsset(HSApplication.getContext().getAssets(), "fonts/"
-                    + typefaceName + "-" + weightName + ".ttf");
+                    + typefaceName + "/" + weightName + ".ttf");
             return new TypefaceInfo(tp, typefaceDefaultSize);
         } catch (Exception e) {
             if ("Medium".equals(weightName)) {
                 try {
                     Typeface tp = Typeface.createFromAsset(HSApplication.getContext().getAssets(), "fonts/"
-                            + typefaceName + "-Semibold.ttf");
+                            + typefaceName + "/" + "SemiBold.ttf");
                     return new TypefaceInfo(tp, typefaceDefaultSize);
                 } catch (Exception e1) {
                     HSLog.e("load Semibold font", "create font from asset failed");
@@ -176,7 +176,7 @@ public class FontUtils {
                 if (file.exists()) {
                     break;
                 }
-            case "Semibold":
+            case "SemiBold":
                 file = new File(getDirectory(LOCAL_DIRECTORY + typefaceName) + File.separator + "SemiBold.ttf");
                 if (file.exists()) {
                     break;

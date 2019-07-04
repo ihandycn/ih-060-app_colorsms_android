@@ -214,7 +214,7 @@ public class FontDownloadManager {
         AssetManager assetManager = HSApplication.getContext().getAssets();
 
         for (String weight : fontInfo.getFontWeights()) {
-            String assetName = folderName + "-" + (weight.equals("SemiBold") ? "Semibold" : weight) + ".ttf";
+            String assetName = folderName + "/" + weight + ".ttf";
             File folderFile = new File(CommonUtils.getDirectory(
                     FontDownloadManager.LOCAL_DIRECTORY + folderName),
                     weight + ".ttf");
