@@ -432,6 +432,9 @@ public class ComposeMessageView extends LinearLayout
 
             List<SubscriptionListData.SubscriptionListEntry> data =
                     mConversationDataModel.getData().getSubscriptionListData().getActiveSubscriptionEntriesExcludingDefault();
+            if (getSelfSubscriptionListEntry() == null) {
+                return;
+            }
             int currentSlotId = getSelfSubscriptionListEntry().slotId;
             ImageView ivTip1 = mContentView.findViewById(R.id.iv_tip_1);
             ivTip1.getDrawable().setColorFilter(PrimaryColors.getPrimaryColor(), PorterDuff.Mode.SRC_ATOP);
