@@ -14,6 +14,7 @@ import android.widget.TextView;
 import com.android.messaging.R;
 import com.android.messaging.font.FontStyleManager;
 import com.android.messaging.font.FontUtils;
+import com.superapps.util.Dimensions;
 import com.superapps.util.Fonts;
 import com.superapps.view.DebuggableTextView;
 
@@ -112,6 +113,11 @@ public class MessagesTextView extends DebuggableTextView {
             heightMeasureSpec = View.MeasureSpec.makeMeasureSpec(height, View.MeasureSpec.EXACTLY);
         }
         super.onMeasure(widthMeasureSpec, heightMeasureSpec);
+
+        if (fontFamilyChangeable && "Caveat".equalsIgnoreCase(FontUtils.sTypefaceName)) {
+            final int measuredWidth = getMeasuredWidth();
+            setMeasuredDimension(measuredWidth + Dimensions.pxFromDp(1.5f), getMeasuredHeight());
+        }
     }
 
     public void setTypefaceFileName(String fileName) {

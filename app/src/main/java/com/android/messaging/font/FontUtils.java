@@ -26,7 +26,7 @@ public class FontUtils {
     };
 
     private static Map<String, Typeface> sTypefaceMap = new HashMap<>();
-    private static String sTypefaceName = FontStyleManager.getInstance().getFontFamily();
+    public static String sTypefaceName = FontStyleManager.getInstance().getFontFamily();
 
     public static final int THIN = 100;
     public static final int EXTRA_LIGHT = 200;
