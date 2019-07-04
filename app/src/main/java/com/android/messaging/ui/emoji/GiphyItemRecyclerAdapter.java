@@ -120,7 +120,6 @@ public class GiphyItemRecyclerAdapter extends RecyclerView.Adapter<GiphyItemRecy
         notifyItemRangeInserted(preCount, totalCount - preCount);
         if (mOnDataFetchedListener != null) {
             mOnDataFetchedListener.onFetched();
-            HSLog.d("GiphyItemPagerAdapter", "mOnDataFetchedListener onFetched: " + mCategory);
         }
     }
 
@@ -166,7 +165,7 @@ public class GiphyItemRecyclerAdapter extends RecyclerView.Adapter<GiphyItemRecy
                 .placeholder(R.drawable.gif_item_placehoder)
                 .load(giphyInfo.mFixedWidthGifUrl)
                 .apply(requestOptions)
-                .diskCacheStrategy(DiskCacheStrategy.RESOURCE)
+                .diskCacheStrategy(DiskCacheStrategy.DATA)
                 .into(holder.mGif);
     }
 

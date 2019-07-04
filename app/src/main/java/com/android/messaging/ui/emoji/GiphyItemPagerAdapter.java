@@ -109,8 +109,9 @@ public class GiphyItemPagerAdapter extends AbstractEmojiItemPagerAdapter {
                     int[] lastCompletelyVisibleItemPositions = new int[GIF_COLUMNS];
 
                     if (newState == RecyclerView.SCROLL_STATE_IDLE) {
-                        manager.findLastCompletelyVisibleItemPositions(lastCompletelyVisibleItemPositions);
-                        int itemCount = manager.getItemCount();
+                        manager.findLastVisibleItemPositions(lastCompletelyVisibleItemPositions);
+                        int itemCount = adapter.getItemCount();
+
                         boolean scrolledToBottom = false;
                         for (int i = 0; i < GIF_COLUMNS; i++) {
                             if (lastCompletelyVisibleItemPositions[i] == itemCount - 1) {
@@ -121,7 +122,6 @@ public class GiphyItemPagerAdapter extends AbstractEmojiItemPagerAdapter {
                             adapter.loadMore();
                         }
                     }
-
                 }
 
                 @Override

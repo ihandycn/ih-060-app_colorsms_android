@@ -223,7 +223,6 @@ public class EmojiManager {
             GlideApp.with(context)
                     .asFile()
                     .load(picUrl)
-                    .diskCacheStrategy(DiskCacheStrategy.RESOURCE)
                     .downloadOnly(new SimpleTarget<File>() {
                         @Override
                         public void onResourceReady(@NonNull File file, @Nullable Transition<? super File> transition) {
