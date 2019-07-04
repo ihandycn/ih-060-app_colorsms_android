@@ -22,6 +22,7 @@
             app:tabPaddingBottom="0dp"
             app:tabPaddingEnd="0dp"
             app:tabPaddingStart="0dp"
+            app:tabGravity="center"
             app:tabPaddingTop="0dp" />
 
             <ImageView

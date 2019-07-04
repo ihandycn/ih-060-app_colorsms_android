@@ -1,7 +1,9 @@
 package com.android.messaging.ui.emoji;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Rect;
+import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.design.widget.TabLayout;
 import android.support.v7.widget.OrientationHelper;
@@ -11,9 +13,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 
 import com.android.messaging.R;
+import com.android.messaging.ui.customize.PrimaryColors;
 import com.android.messaging.ui.emoji.utils.EmojiManager;
 import com.ihs.commons.utils.HSLog;
 import com.superapps.util.Dimensions;
@@ -171,19 +176,96 @@ public class GiphyItemPagerAdapter extends AbstractEmojiItemPagerAdapter {
     @Override
     public void updateTabView() {
         int count = mTabLayout.getTabCount();
+        int primaryColor = PrimaryColors.getPrimaryColor();
         for (int i = 0; i < count; i++) {
+            EmojiPackageInfo info = mData.get(i);
+            @SuppressLint("InflateParams")
+            View view = LayoutInflater.from(mContext).inflate(R.layout.layout_giphy_tab_item_layout, mTabLayout, false);
             TabLayout.Tab tab = mTabLayout.getTabAt(i);
-            if (tab == null) {
-                return;
+            ImageView tabIconView = view.findViewById(R.id.tab_icon_view);
+            TextView tabTextView = view.findViewById(R.id.tab_text_view);
+            if (i == 0) {
+                tabIconView.setVisibility(View.VISIBLE);
+                tabIconView.setImageResource(R.drawable.emoji_ic_recent);
+                tabTextView.setText("Rec");
+                tabTextView.setVisibility(View.INVISIBLE);
+            } else {
+                tabIconView.setVisibility(View.GONE);
+                tabTextView.setText(info.mName);
             }
 
-            if (i == 0) {
-                tab.setIcon(R.drawable.ic_gif_recent);
-                tab.setText(null);
-            } else {
-                EmojiPackageInfo info = mData.get(i);
-                tab.setText(info.mName);
+            View tabIndicator = view.findViewById(R.id.tab_indicator);
+            tabIndicator.setBackgroundColor(primaryColor);
+
+            if (tab != null) {
+                tab.setCustomView(view);
+                tab.setTag(info);
             }
         }
+
+        mTabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+            @Override
+            public void onTabSelected(TabLayout.Tab tab) {
+                EmojiPackageInfo info = getPackageInfo(tab);
+                if (info == null){
+                    return;
+                }
+                TextView textView = getText(tab);
+                if (textView != null) {
+                    textView.setTextColor(0xff515458);
+                }
+
+                View indicatorView = getIndicatorView(tab);
+                if (indicatorView != null) {
+                    indicatorView.setVisibility(View.VISIBLE);
+                }
+            }
+
+            @Override
+            public void onTabUnselected(TabLayout.Tab tab) {
+                EmojiPackageInfo info = getPackageInfo(tab);
+                if (info == null) {
+                    return;
+                }
+                TextView textView = getText(tab);
+                if (textView != null) {
+                    textView.setTextColor(0xffa2a5a7);
+                }
+
+                View indicatorView = getIndicatorView(tab);
+                if (indicatorView != null) {
+                    indicatorView.setVisibility(View.GONE);
+                }
+            }
+
+            @Override
+            public void onTabReselected(TabLayout.Tab tab) {
+                onTabSelected(tab);
+            }
+
+            private EmojiPackageInfo getPackageInfo(TabLayout.Tab tab) {
+                Object object = tab.getTag();
+                if (object instanceof EmojiPackageInfo) {
+                    return (EmojiPackageInfo) object;
+                }
+                return null;
+            }
+
+            private TextView getText(TabLayout.Tab tab) {
+                View view = tab.getCustomView();
+                if (view == null)
+                    return null;
+                return view.findViewById(R.id.tab_text_view);
+            }
+
+            private View getIndicatorView(TabLayout.Tab tab) {
+                View view = tab.getCustomView();
+                if (view == null)
+                    return null;
+                return view.findViewById(R.id.tab_indicator);
+            }
+
+        });
+        mTabLayout.getTabAt(mTabLayout.getSelectedTabPosition()).select();
     }
 }

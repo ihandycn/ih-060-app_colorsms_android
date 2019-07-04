@@ -141,8 +141,6 @@ public class EmojiPackagePagerAdapter extends PagerAdapter {
     @LayoutRes
     private int getLayoutRes(EmojiPackageInfo info) {
         switch (info.mEmojiPackageType) {
-            case GIF:
-                return R.layout.emoji_gif_page_item_layout;
             default:
                 return R.layout.emoji_page_item_layout ;
         }
