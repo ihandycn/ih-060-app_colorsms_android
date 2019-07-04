@@ -10,6 +10,8 @@ import com.ihs.app.framework.HSApplication;
 import com.ihs.commons.config.HSConfig;
 import com.ihs.commons.utils.HSPreferenceHelper;
 
+import net.appcloudbox.autopilot.AutopilotConfig;
+
 public class MessageBoxSettings {
 
     private static final String PREFS_SMS_MESSAGE_ASSISTANT = "prefs_sms_message_assistant";
@@ -41,6 +43,7 @@ public class MessageBoxSettings {
     }
 
     public static boolean isOpenDefault() {
-        return HSConfig.optBoolean(false, "Application", "SMSPopUps", "DefaultSwitch");
+        return HSConfig.optBoolean(false, "Application", "SMSPopUps", "DefaultSwitch")
+                && AutopilotConfig.getBooleanToTestNow("topic-768lyi3sp", "defaultswitch", true);
     }
 }

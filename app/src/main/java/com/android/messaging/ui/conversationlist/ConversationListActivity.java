@@ -97,6 +97,7 @@ import com.superapps.util.Threads;
 import com.superapps.util.Toasts;
 
 import net.appcloudbox.ads.nativead.AcbNativeAdManager;
+import net.appcloudbox.autopilot.AutopilotEvent;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
@@ -222,6 +223,7 @@ public class ConversationListActivity extends AbstractConversationListActivity
 
         if (getIntent() != null && getIntent().getBooleanExtra(BugleNotifications.EXTRA_FROM_NOTIFICATION, false)) {
             BugleAnalytics.logEvent("SMS_Notifications_Clicked", true, true);
+            AutopilotEvent.logTopicEvent("topic-768lyi3sp", "notification_clicked");
         }
 
         HSGlobalNotificationCenter.addObserver(EVENT_MAINPAGE_RECREATE, this);
@@ -342,6 +344,7 @@ public class ConversationListActivity extends AbstractConversationListActivity
         }
 
         BugleAnalytics.logEvent("SMS_Messages_Show_Corrected", true, true);
+        AutopilotEvent.logTopicEvent("topic-768lyi3sp", "homepage_show");
         Preferences.getDefault().incrementAndGetInt(CustomizeGuideController.PREF_KEY_MAIN_PAGE_SHOW_TIME);
         showThemeUpgradeDialog();
 

@@ -100,6 +100,7 @@ import net.appcloudbox.ads.base.ContainerView.AcbNativeAdIconView;
 import net.appcloudbox.ads.common.utils.AcbError;
 import net.appcloudbox.ads.nativead.AcbNativeAdLoader;
 import net.appcloudbox.ads.nativead.AcbNativeAdManager;
+import net.appcloudbox.autopilot.AutopilotEvent;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
@@ -540,6 +541,8 @@ public class ConversationListFragment extends Fragment implements ConversationLi
         }
 
         BugleAnalytics.logEvent("SMS_Messages_BannerAd_Should_Show", true, true);
+        AutopilotEvent.logTopicEvent("topic-768lyi3sp", "bannerad_chance");
+
         List<AcbNativeAd> nativeAds = AcbNativeAdManager.fetch(AdPlacement.AD_BANNER, 1);
         if (nativeAds.size() > 0) {
             mNativeAd = nativeAds.get(0);
@@ -627,6 +630,7 @@ public class ConversationListFragment extends Fragment implements ConversationLi
             }
         }
         BugleAnalytics.logEvent("SMS_Messages_BannerAd_Show", true, true);
+        AutopilotEvent.logTopicEvent("topic-768lyi3sp", "bannerad_show");
     }
 
     @Override

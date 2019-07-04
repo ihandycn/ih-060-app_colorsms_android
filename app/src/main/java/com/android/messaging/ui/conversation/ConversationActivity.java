@@ -70,6 +70,7 @@ import com.superapps.util.Preferences;
 import net.appcloudbox.ads.base.AcbInterstitialAd;
 import net.appcloudbox.ads.common.utils.AcbError;
 import net.appcloudbox.ads.interstitialad.AcbInterstitialAdManager;
+import net.appcloudbox.autopilot.AutopilotEvent;
 
 import java.util.List;
 
@@ -115,6 +116,7 @@ public class ConversationActivity extends BugleActionBarActivity
         }
         if (getIntent() != null && getIntent().getBooleanExtra(BugleNotifications.EXTRA_FROM_NOTIFICATION, false)) {
             BugleAnalytics.logEvent("SMS_Notifications_Clicked", true, true);
+            AutopilotEvent.logTopicEvent("topic-768lyi3sp", "notification_clicked");
         }
 
         if (intent.
@@ -168,7 +170,6 @@ public class ConversationActivity extends BugleActionBarActivity
         }
 
         BugleAnalytics.logEvent("SMS_ActiveUsers", true);
-
 
         mKeyboardHeight = UiUtils.getKeyboardHeight();
         if (mKeyboardHeight <= 0) {
@@ -402,9 +403,11 @@ public class ConversationActivity extends BugleActionBarActivity
                 mInterstitialAd.setSoundEnable(false);
                 mInterstitialAd.show();
                 BugleAnalytics.logEvent("Detailspage_FullAd_Show", true, true);
+                AutopilotEvent.logTopicEvent("topic-768lyi3sp", "fullad_show");
                 Preferences.getDefault().putLong(PREF_KEY_WIRE_AD_SHOW_TIME, System.currentTimeMillis());
             }
             BugleAnalytics.logEvent("Detailspage_FullAd_Should_Show", true, true);
+            AutopilotEvent.logTopicEvent("topic-768lyi3sp", "fullad_chance");
         }
     }
 

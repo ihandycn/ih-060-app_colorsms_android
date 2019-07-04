@@ -258,7 +258,8 @@
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar"
-            android:windowSoftInputMode="adjustPan"/> <!-- Message Forwarding -->
+            android:windowSoftInputMode="adjustPan"/>
+        <!-- Message Forwarding -->
         <activity
             android:name=".ui.conversationlist.ForwardMessageActivity"
             android:configChanges="orientation|screenSize|keyboardHidden"
@@ -277,7 +278,8 @@
             android:configChanges="orientation|screenSize|keyboardHidden"
             android:exported="false"
             android:screenOrientation="portrait"
-            android:theme="@style/Invisible"/> <!-- VCard details -->
+            android:theme="@style/Invisible"/>
+        <!-- VCard details -->
         <activity
             android:name=".ui.VCardDetailActivity"
             android:configChanges="orientation|screenSize|keyboardHidden"

@@ -137,6 +137,7 @@ import net.appcloudbox.ads.base.ContainerView.AcbNativeAdIconView;
 import net.appcloudbox.ads.common.utils.AcbError;
 import net.appcloudbox.ads.nativead.AcbNativeAdLoader;
 import net.appcloudbox.ads.nativead.AcbNativeAdManager;
+import net.appcloudbox.autopilot.AutopilotEvent;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -656,10 +657,13 @@ public class ConversationFragment extends Fragment implements ConversationDataLi
         HSGlobalNotificationCenter.addObserver(RESET_ITEM, this);
         HSGlobalNotificationCenter.addObserver(EVENT_UPDATE_BUBBLE_DRAWABLE, this);
         BugleAnalytics.logEvent("SMS_DetailsPage_Show", true, true);
+        AutopilotEvent.logTopicEvent("topic-768lyi3sp", "detailspage_show");
     }
 
     private void loadTopBannerAd() {
         BugleAnalytics.logEvent("Detailspage_TopAd_Should_Show", true, true);
+        AutopilotEvent.logTopicEvent("topic-768lyi3sp", "topad_chance");
+
         List<AcbNativeAd> nativeAds = AcbNativeAdManager.fetch(AdPlacement.AD_DETAIL_NATIVE, 1);
         if (nativeAds.size() > 0) {
             if (mNativeAd != null) {
@@ -755,6 +759,8 @@ public class ConversationFragment extends Fragment implements ConversationDataLi
         mRecyclerView.setClipToPadding(true);
 
         BugleAnalytics.logEvent("Detailspage_TopAd_Show", true, true);
+        AutopilotEvent.logTopicEvent("topic-768lyi3sp", "topad_show");
+
         enqueueNextAd();
     }
 
