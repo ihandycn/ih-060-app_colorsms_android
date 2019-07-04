@@ -472,8 +472,6 @@ public class BugleApplication extends HSApplication implements UncaughtException
         final CarrierConfigValuesLoader carrierConfigValuesLoader =
                 factory.getCarrierConfigValuesLoader();
 
-        maybeStartProfiling();
-
         // execute init works only after sms default set
         BugleApplication.updateAppConfig(context, true);
 
