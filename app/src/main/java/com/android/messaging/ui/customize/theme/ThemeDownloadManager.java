@@ -241,11 +241,15 @@ public class ThemeDownloadManager {
                     fontRate[0] = TOTAL_RATE - FONT_START_RATE;
                     if (isThemeDownloadSuccess[0]) {
                         if (listenerWeakReference.get() != null) {
-                            listenerWeakReference.get().onDownloadSuccess();
+                            Threads.postOnMainThread(() -> {
+                                listenerWeakReference.get().onDownloadSuccess();
+                            });
                         }
                     } else {
                         if (listenerWeakReference.get() != null) {
-                            listenerWeakReference.get().onDownloadUpdate(themeRate[0] + fontRate[0]);
+                            Threads.postOnMainThread(() -> {
+                                listenerWeakReference.get().onDownloadUpdate(themeRate[0] + fontRate[0]);
+                            });
                         }
                     }
                 }
@@ -253,7 +257,9 @@ public class ThemeDownloadManager {
                 @Override
                 public void onDownloadFailed() {
                     if (listenerWeakReference.get() != null) {
-                        listenerWeakReference.get().onDownloadFailed();
+                        Threads.postOnMainThread(() -> {
+                            listenerWeakReference.get().onDownloadFailed();
+                        });
                     }
                 }
 
@@ -262,7 +268,7 @@ public class ThemeDownloadManager {
                     if (fontRate[0] < rate * (TOTAL_RATE - FONT_START_RATE)) {
                         fontRate[0] = rate * (TOTAL_RATE - FONT_START_RATE);
                         if (listenerWeakReference.get() != null) {
-                            listenerWeakReference.get().onDownloadUpdate(themeRate[0] + fontRate[0]);
+                            Threads.postOnMainThread(() -> listenerWeakReference.get().onDownloadUpdate(themeRate[0] + fontRate[0]));
                         }
                     }
                 }
@@ -275,27 +281,31 @@ public class ThemeDownloadManager {
             public void onDownloadSuccess() {
                 isThemeDownloadSuccess[0] = true;
                 themeRate[0] = FONT_START_RATE;
-                if (isFontDownloadSuccess[0]) {
-                    listener.onDownloadSuccess();
-                } else {
-                    listener.onDownloadUpdate(FONT_START_RATE + fontRate[0]);
-                }
+                Threads.postOnMainThread(() -> {
+                    if (isFontDownloadSuccess[0]) {
+                        listener.onDownloadSuccess();
+                    } else {
+                        listener.onDownloadUpdate(FONT_START_RATE + fontRate[0]);
+                    }
+                });
             }
 
             @Override
             public void onDownloadFailed() {
-                listener.onDownloadFailed();
+                Threads.postOnMainThread(listener::onDownloadFailed);
             }
 
             @Override
             public void onDownloadUpdate(float rate) {
                 if (themeRate[0] < rate) {
                     themeRate[0] = rate;
-                    if (isFontDownload[0]) {
-                        listener.onDownloadUpdate(rate * TOTAL_RATE / FONT_START_RATE);
-                    } else {
-                        listener.onDownloadUpdate(rate + fontRate[0]);
-                    }
+                    Threads.postOnMainThread(() -> {
+                        if (isFontDownload[0]) {
+                            listener.onDownloadUpdate(rate * TOTAL_RATE / FONT_START_RATE);
+                        } else {
+                            listener.onDownloadUpdate(rate + fontRate[0]);
+                        }
+                    });
                 }
             }
         };
