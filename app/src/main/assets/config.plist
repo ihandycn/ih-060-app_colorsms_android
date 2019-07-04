@@ -469,7 +469,7 @@
 			<key>Themes</key>
 			<dict>
 				<key>BasePath</key>
-				<string>http://s3.amazonaws.com/superapps-dev/ColorSMS/theme/</string>
+				<string>http://cdn.appcloudbox.net/smoothappsstudio/apps/bubble/theme/</string>
 				<key>ThemeList</key>
 				<dict>
 					<key>default</key>
