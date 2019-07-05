@@ -141,7 +141,7 @@
                 android:layout_marginRight="18dp"
                 android:orientation="horizontal" >
 
-                <EditText
+                <com.superapps.view.EditTextFixed
                     android:id="@+id/edit_text"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"

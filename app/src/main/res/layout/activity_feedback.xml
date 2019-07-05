@@ -38,7 +38,7 @@
             app:font_style="bold"/>
 
         <!-- Main input box -->
-        <EditText
+        <com.superapps.view.EditTextFixed
             android:id="@+id/feedback_content"
             android:layout_width="match_parent"
             android:layout_height="140.7dp"
@@ -57,7 +57,7 @@
             android:layout_height="11.3dp" />
 
         <!-- Email input box -->
-        <EditText
+        <com.superapps.view.EditTextFixed
             android:id="@+id/feedback_email"
             android:layout_width="match_parent"
             android:layout_height="49dp"
