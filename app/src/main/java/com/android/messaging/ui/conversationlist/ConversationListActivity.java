@@ -169,18 +169,6 @@ public class ConversationListActivity extends AbstractConversationListActivity
 
     private boolean mIsMessageMoving;
 
-    private enum AnimState {
-        NONE,
-        APPEAR,
-        SHOWING,
-        DISAPPEAR,
-    }
-
-    private AnimState mAnimState = AnimState.NONE;
-
-
-    private boolean mIsEmojiStoreClickable = true;
-
     @Override
     @DebugLog
     protected void onCreate(final Bundle savedInstanceState) {
