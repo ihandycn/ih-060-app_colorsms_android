@@ -5,7 +5,7 @@ import net.appcloudbox.autopilot.AutopilotEvent;
 
 public class BackupAutopilotUtils {
 
-    public static final String BACK_UP_TOPIC_ID = "topic-768lyi3sp";
+    private static final String BACK_UP_TOPIC_ID = "topic-76bwea9b3";
 
 
     public static boolean getIsBackupSwitchOn() {
@@ -75,5 +75,4 @@ public class BackupAutopilotUtils {
     public static void logFreeUpMsgSuccess() {
         AutopilotEvent.logTopicEvent(BACK_UP_TOPIC_ID, "freeupmsg_success");
     }
-
 }

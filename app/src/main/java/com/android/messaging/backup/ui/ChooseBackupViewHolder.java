@@ -307,7 +307,7 @@ public class ChooseBackupViewHolder extends BasePagerViewHolder implements Custo
                 }
                 BugleAnalytics.logEvent("Backup_BackupPage_Backup_Success", true, "type", backupType);
                 BackupAutopilotUtils.logBackupPageSuccess();
-                if(Preferences.getDefault().getBoolean(PREF_KEY_BACKUP_SUCCESS_ONCE, true)) {
+                if (Preferences.getDefault().getBoolean(PREF_KEY_BACKUP_SUCCESS_ONCE, true)) {
                     BackupAutopilotUtils.logBackupOnce();
                     Preferences.getDefault().putBoolean(PREF_KEY_BACKUP_SUCCESS_ONCE, false);
                 }

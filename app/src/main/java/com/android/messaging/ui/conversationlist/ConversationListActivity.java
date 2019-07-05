@@ -582,8 +582,15 @@ public class ConversationListActivity extends AbstractConversationListActivity
         navigationContent.findViewById(R.id.navigation_item_setting).setOnClickListener(this);
         navigationContent.findViewById(R.id.navigation_item_rate).setOnClickListener(this);
         navigationContent.findViewById(R.id.navigation_item_invite_friends).setOnClickListener(this);
-        navigationContent.findViewById(R.id.navigation_item_backup_restore).setOnClickListener(this);
         navigationContent.findViewById(R.id.navigation_item_emoji_store).setOnClickListener(this);
+
+        View backupEntrance = navigationContent.findViewById(R.id.navigation_item_backup_restore);
+        backupEntrance.setOnClickListener(this);
+        if (!BackupAutopilotUtils.getIsBackupSwitchOn()) {
+            backupEntrance.setVisibility(View.GONE);
+        } else {
+            backupEntrance.setVisibility(View.VISIBLE);
+        }
 
         //test code
         //this item is used to delete dirty mms parts in telephony
@@ -685,7 +692,8 @@ public class ConversationListActivity extends AbstractConversationListActivity
                 && BackupAutopilotUtils.getIsBackupFullGuideSwitchOn()
                 && !Preferences.getDefault().getBoolean(BackupRestoreActivity.PREF_KEY_BACKUP_ACTIVITY_SHOWN, false)
                 && !Preferences.getDefault()
-                .getBoolean(BackupGuideDialogActivity.PREF_KEY_BACKUP_FULL_GUIDE_SHOWN, false)) {
+                .getBoolean(BackupGuideDialogActivity.PREF_KEY_BACKUP_FULL_GUIDE_SHOWN, false)
+                && BackupAutopilotUtils.getIsBackupSwitchOn()) {
             shouldShowCreateShortcutGuide = true;
             Intent intent = new Intent(this, BackupGuideDialogActivity.class);
             Navigations.startActivitySafely(this, intent);
