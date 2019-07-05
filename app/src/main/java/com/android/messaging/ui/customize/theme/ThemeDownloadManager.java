@@ -240,36 +240,42 @@ public class ThemeDownloadManager {
                     isFontDownloadSuccess[0] = true;
                     fontRate[0] = TOTAL_RATE - FONT_START_RATE;
                     if (isThemeDownloadSuccess[0]) {
-                        if (listenerWeakReference.get() != null) {
-                            Threads.postOnMainThread(() -> {
-                                listenerWeakReference.get().onDownloadSuccess();
-                            });
-                        }
+                        Threads.postOnMainThread(() -> {
+                            IThemeDownloadListener weakListener = listenerWeakReference.get();
+                            if (weakListener != null) {
+                                weakListener.onDownloadSuccess();
+                            }
+                        });
                     } else {
-                        if (listenerWeakReference.get() != null) {
-                            Threads.postOnMainThread(() -> {
-                                listenerWeakReference.get().onDownloadUpdate(themeRate[0] + fontRate[0]);
-                            });
-                        }
+                        Threads.postOnMainThread(() -> {
+                            IThemeDownloadListener weakListener = listenerWeakReference.get();
+                            if (weakListener != null) {
+                                weakListener.onDownloadUpdate(themeRate[0] + fontRate[0]);
+                            }
+                        });
                     }
                 }
 
                 @Override
                 public void onDownloadFailed() {
-                    if (listenerWeakReference.get() != null) {
-                        Threads.postOnMainThread(() -> {
-                            listenerWeakReference.get().onDownloadFailed();
-                        });
-                    }
+                    Threads.postOnMainThread(() -> {
+                        IThemeDownloadListener weakListener = listenerWeakReference.get();
+                        if (weakListener != null) {
+                            weakListener.onDownloadFailed();
+                        }
+                    });
                 }
 
                 @Override
                 public void onDownloadUpdate(float rate) {
                     if (fontRate[0] < rate * (TOTAL_RATE - FONT_START_RATE)) {
                         fontRate[0] = rate * (TOTAL_RATE - FONT_START_RATE);
-                        if (listenerWeakReference.get() != null) {
-                            Threads.postOnMainThread(() -> listenerWeakReference.get().onDownloadUpdate(themeRate[0] + fontRate[0]));
-                        }
+                        Threads.postOnMainThread(() -> {
+                            IThemeDownloadListener weakListener = listenerWeakReference.get();
+                            if (weakListener != null) {
+                                weakListener.onDownloadUpdate(themeRate[0] + fontRate[0]);
+                            }
+                        });
                     }
                 }
             };
