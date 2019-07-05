@@ -11,6 +11,7 @@ import android.widget.TextView;
 
 import com.android.messaging.BaseActivity;
 import com.android.messaging.R;
+import com.android.messaging.backup.BackupAutopilotUtils;
 import com.android.messaging.ui.CustomPagerViewHolder;
 import com.android.messaging.ui.CustomViewPager;
 import com.android.messaging.util.BugleAnalytics;
@@ -68,6 +69,7 @@ public class BackupRestoreActivity extends BaseActivity {
 
         BugleAnalytics.logEvent("Backup_BackupPage_Show", true,
                 "from", getIntent().getStringExtra("from"));
+        BackupAutopilotUtils.logBackupPageShow();
     }
 
     private void initPager(Context context) {
@@ -90,6 +92,7 @@ public class BackupRestoreActivity extends BaseActivity {
             public void onPageSelected(int position) {
                 if (position == 1 && !eventLogged[0]) {
                     BugleAnalytics.logEvent("Backup_RestorePage_Show", true);
+                    BackupAutopilotUtils.logRestorePageShow();
                     eventLogged[0] = true;
                 }
             }

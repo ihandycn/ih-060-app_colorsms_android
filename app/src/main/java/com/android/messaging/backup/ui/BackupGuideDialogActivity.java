@@ -9,6 +9,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.android.messaging.R;
+import com.android.messaging.backup.BackupAutopilotUtils;
 import com.android.messaging.mmslib.SqliteWrapper;
 import com.android.messaging.sms.MmsUtils;
 import com.android.messaging.ui.customize.PrimaryColors;
@@ -38,6 +39,7 @@ public class BackupGuideDialogActivity extends HSAppCompatActivity {
             overridePendingTransition(R.anim.slide_in_from_right_and_fade, R.anim.anim_null);
             finish();
             BugleAnalytics.logEvent("BackupFullGuide_Click", true);
+            BackupAutopilotUtils.logFullGuideClick();
         });
 
         ImageView backupDialogCloseButton = findViewById(R.id.backup_guide_dialog_close);
@@ -67,6 +69,7 @@ public class BackupGuideDialogActivity extends HSAppCompatActivity {
 
         Preferences.getDefault().putBoolean(PREF_KEY_BACKUP_FULL_GUIDE_SHOWN, true);
         BugleAnalytics.logEvent("BackupFullGuide_Show", true);
+        BackupAutopilotUtils.logFullGuideShow();
     }
 
     @Override

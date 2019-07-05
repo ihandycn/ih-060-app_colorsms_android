@@ -180,6 +180,90 @@
       ],
       "topic_id": "topic-rp-73fiu9zuo"
     },
+    "topic-76bwea9b3": {
+      "topic_type": "life_time",
+      "topic_name": "Test Backup 1.0",
+      "variations": {
+        "fullguide": {
+          "values": [
+            {
+              "value": false
+            }
+          ],
+          "type": "boolean",
+          "value": false,
+          "strategy": "sole"
+        },
+        "switch": {
+          "values": [
+            {
+              "value": true
+            }
+          ],
+          "type": "boolean",
+          "value": true,
+          "strategy": "sole"
+        },
+        "cleanswitch": {
+          "values": [
+            {
+              "value": false
+            }
+          ],
+          "type": "boolean",
+          "value": false,
+          "strategy": "sole"
+        }
+      },
+      "events": [
+        {
+          "name": "test"
+        },
+        {
+          "name": "backup_once"
+        },
+        {
+          "name": "menu_show"
+        },
+        {
+          "name": "menu_backup_click"
+        },
+        {
+          "name": "fullguide_show"
+        },
+        {
+          "name": "fullguide_click"
+        },
+        {
+          "name": "backuppage_show"
+        },
+        {
+          "name": "backuppage_click"
+        },
+        {
+          "name": "backuppage_success"
+        },
+        {
+          "name": "restorepage_show"
+        },
+        {
+          "name": "restorepage_click"
+        },
+        {
+          "name": "restorepage_success"
+        },
+        {
+          "name": "freeupmsg_alert_show"
+        },
+        {
+          "name": "freeupmsg_alert_click"
+        },
+        {
+          "name": "freeupmsg_success"
+        }
+      ],
+      "topic_id": "topic-76bwea9b3"
+    },
     "topic-768lyi3sp": {
       "topic_type": "life_time",
       "topic_name": "Test Popup Windows",
@@ -235,17 +319,6 @@
       ],
       "topic_id": "topic-768lyi3sp"
     },
-    "topic-74azpj82p": {
-      "topic_type": "one_day",
-      "topic_name": "To Export Config",
-      "variations": {},
-      "events": [
-        {
-          "name": "test"
-        }
-      ],
-      "topic_id": "topic-74azpj82p"
-    },
     "topic-74rv6bpwy": {
       "topic_type": "one_time",
       "topic_name": "Invite Send Test",
@@ -270,6 +343,17 @@
         }
       ],
       "topic_id": "topic-74rv6bpwy"
+    },
+    "topic-74azpj82p": {
+      "topic_type": "one_day",
+      "topic_name": "To Export Config",
+      "variations": {},
+      "events": [
+        {
+          "name": "test"
+        }
+      ],
+      "topic_id": "topic-74azpj82p"
     }
   },
   "occasion_mgt": {
@@ -311,7 +395,7 @@
   "autopilot_id": 10104,
   "service_url": "https://ap.appcloudbox.net",
   "other_app_events": [],
-  "json_id": "975173ff-8eb0-4630-b6d5-1876f0f3a39a",
+  "json_id": "2a542319-bb89-44ef-a393-9c7be8d8d282",
   "autopilot_name": "Bubble_A",
   "autopilot_type": "app"
 }

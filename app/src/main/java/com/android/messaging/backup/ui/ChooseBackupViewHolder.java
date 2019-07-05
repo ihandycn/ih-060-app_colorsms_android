@@ -12,6 +12,7 @@ import android.widget.CheckBox;
 import android.widget.TextView;
 
 import com.android.messaging.R;
+import com.android.messaging.backup.BackupAutopilotUtils;
 import com.android.messaging.backup.BackupInfo;
 import com.android.messaging.backup.BackupManager;
 import com.android.messaging.datamodel.MessagingContentProvider;
@@ -39,6 +40,7 @@ import static com.ihs.app.framework.HSApplication.getContext;
 
 public class ChooseBackupViewHolder extends BasePagerViewHolder implements CustomPagerViewHolder {
     public static final String PREF_KEY_BACKUP_SUCCESS_FOR_EVENT = "pref_key_backup_success_for_event";
+    private static final String PREF_KEY_BACKUP_SUCCESS_ONCE = "pref_key_backup_success_once";
     private static final String PREF_KEY_BACKUP_TIP_SHOWN = "pref_key_backup_tip_show";
     private Context mContext;
     private CheckBox mLocalCheckBox;
@@ -135,6 +137,7 @@ public class ChooseBackupViewHolder extends BasePagerViewHolder implements Custo
                 backupType = "cloud";
             }
             BugleAnalytics.logEvent("Backup_BackupPage_Backup_Click", true, "type", backupType);
+            BackupAutopilotUtils.logBackupPageClick();
         });
 
         mCloudSummary = view.findViewById(R.id.backup_cloud_summary);
@@ -303,7 +306,11 @@ public class ChooseBackupViewHolder extends BasePagerViewHolder implements Custo
                     backupType = "cloud";
                 }
                 BugleAnalytics.logEvent("Backup_BackupPage_Backup_Success", true, "type", backupType);
-
+                BackupAutopilotUtils.logBackupPageSuccess();
+                if(Preferences.getDefault().getBoolean(PREF_KEY_BACKUP_SUCCESS_ONCE, true)) {
+                    BackupAutopilotUtils.logBackupOnce();
+                    Preferences.getDefault().putBoolean(PREF_KEY_BACKUP_SUCCESS_ONCE, false);
+                }
                 Map<String, String> params = new HashMap<>();
                 params.put("Backup", "Backup_BackupSuccess");
                 BugleAnalytics.logEventToFirebase("Feature_BackupRestore", params);
@@ -315,15 +322,17 @@ public class ChooseBackupViewHolder extends BasePagerViewHolder implements Custo
                     if (mContext != null && mContext instanceof BackupRestoreActivity) {
                         ((BackupRestoreActivity) mContext).onBackupDataChanged();
                     }
-                    if (HSConfig.optBoolean(false, "Application", "BackupRestore", "FreeUpOldmsg")) {
+                    if (BackupAutopilotUtils.getIsBackupCleanSwitchOn()) {
                         MessageFreeUpDialog freeUpDialog = new MessageFreeUpDialog();
                         freeUpDialog.setOnPositiveButtonClickListener(v -> {
                             freeUpDialog.dismissAllowingStateLoss();
                             freeUpAndShowDialog();
                             BugleAnalytics.logEvent("Backup_Freeupmsg_Alert_Click", true);
+                            BackupAutopilotUtils.logFreeUpMsgAlertClick();
                         });
                         UiUtils.showDialogFragment((Activity) mContext, freeUpDialog);
                         BugleAnalytics.logEvent("Backup_Freeupmsg_Alert_Show", true);
+                        BackupAutopilotUtils.logFreeUpMsgAlertShow();
                     }
                     Toasts.showToast(R.string.backup_success_toast);
                 });
@@ -398,6 +407,7 @@ public class ChooseBackupViewHolder extends BasePagerViewHolder implements Custo
                 }
 
                 BugleAnalytics.logEvent("Backup_Freeupmsg_Success", true);
+                BackupAutopilotUtils.logFreeUpMsgSuccess();
                 
                 Map<String, String> params = new HashMap<>();
                 params.put("Backup", "Backup_CleanSuccess");

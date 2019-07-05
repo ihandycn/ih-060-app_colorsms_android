@@ -31,6 +31,7 @@ import com.android.messaging.BuildConfig;
 import com.android.messaging.R;
 import com.android.messaging.ad.AdConfig;
 import com.android.messaging.ad.AdPlacement;
+import com.android.messaging.backup.BackupAutopilotUtils;
 import com.android.messaging.backup.ui.BackupGuideDialogActivity;
 import com.android.messaging.backup.ui.BackupRestoreActivity;
 import com.android.messaging.backup.ui.ChooseBackupViewHolder;
@@ -415,6 +416,7 @@ public class ConversationListActivity extends AbstractConversationListActivity
                 setDrawerMenuIcon();
                 BugleAnalytics.logEvent("Menu_Show_NewVersion", true);
                 BugleAnalytics.logEvent("Menu_Show", true, true);
+                BackupAutopilotUtils.logMenuShow();
                 if (CommonUtils.isNewUser()
                         && Calendars.isSameDay(CommonUtils.getAppInstallTimeMillis(), System.currentTimeMillis())) {
                     BugleAnalytics.logEvent("Menu_Show_NewUser", true);
@@ -481,6 +483,7 @@ public class ConversationListActivity extends AbstractConversationListActivity
                         break;
                     case DRAWER_INDEX_BACKUP_RESTORE:
                         BugleAnalytics.logEvent("Menu_BackupRestore_Click", true);
+                        BackupAutopilotUtils.logMenuBackupClick();
                         BackupRestoreActivity.startBackupRestoreActivity(ConversationListActivity.this, BackupRestoreActivity.ENTRANCE_MENU);
                         overridePendingTransition(R.anim.slide_in_from_right_and_fade, R.anim.anim_null);
                         navigationContent.findViewById(R.id.navigation_item_backup_restore_new_text).setVisibility(View.GONE);
@@ -679,7 +682,7 @@ public class ConversationListActivity extends AbstractConversationListActivity
         // show backup full guide
         if (!shouldShowCreateShortcutGuide
                 && mainActivityCreateTime >= 2 && CommonUtils.isNewUser()
-                && HSConfig.optBoolean(false, "Application", "BackupRestore", "RecommendFull")
+                && BackupAutopilotUtils.getIsBackupFullGuideSwitchOn()
                 && !Preferences.getDefault().getBoolean(BackupRestoreActivity.PREF_KEY_BACKUP_ACTIVITY_SHOWN, false)
                 && !Preferences.getDefault()
                 .getBoolean(BackupGuideDialogActivity.PREF_KEY_BACKUP_FULL_GUIDE_SHOWN, false)) {
