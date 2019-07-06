@@ -49,6 +49,7 @@ import android.widget.TextView;
 import com.android.messaging.R;
 import com.android.messaging.ad.AdConfig;
 import com.android.messaging.ad.AdPlacement;
+import com.android.messaging.ad.BillingManager;
 import com.android.messaging.annotation.VisibleForAnimation;
 import com.android.messaging.backup.ui.BackupRestoreActivity;
 import com.android.messaging.datamodel.DataModel;
@@ -86,6 +87,7 @@ import com.google.common.annotations.VisibleForTesting;
 import com.ihs.app.framework.HSApplication;
 import com.ihs.commons.config.HSConfig;
 import com.ihs.commons.notificationcenter.HSGlobalNotificationCenter;
+import com.ihs.commons.notificationcenter.INotificationObserver;
 import com.ihs.commons.utils.HSBundle;
 import com.ihs.commons.utils.HSLog;
 import com.superapps.util.BackgroundDrawables;
@@ -111,7 +113,7 @@ import java.util.List;
  * Shows a list of conversations.
  */
 public class ConversationListFragment extends Fragment implements ConversationListDataListener,
-        ConversationListItemView.HostInterface {
+        ConversationListItemView.HostInterface, INotificationObserver {
     public static final String PREF_KEY_BACKUP_SHOW_BANNER_GUIDE = "pref_key_backup_banner_guide_hide";
     private static final String PREF_KEY_BACKUP_BANNER_GUIDE_SHOW_COUNT = "pref_key_backup_banner_guide_show_count";
     private static final String BUNDLE_ARCHIVED_MODE = "archived_mode";
@@ -402,6 +404,7 @@ public class ConversationListFragment extends Fragment implements ConversationLi
             mEmptyListMessageView.setIsVerticallyCentered(true);
             Preferences.getDefault().putBoolean("pref_key_first_loading_show", true);
         }
+        HSGlobalNotificationCenter.addObserver(BillingManager.BILLING_VERIFY_SUCCESS, this);
 
         setHasOptionsMenu(true);
         return rootView;
@@ -631,6 +634,20 @@ public class ConversationListFragment extends Fragment implements ConversationLi
         }
         BugleAnalytics.logEvent("SMS_Messages_BannerAd_Show", true, true);
         AutopilotEvent.logTopicEvent("topic-768lyi3sp", "bannerad_show");
+    }
+
+    private void disableTopNativeAd() {
+        if (mNativeAd != null) {
+            mNativeAd.release();
+            mNativeAd = null;
+        }
+        if (mNativeAdLoader != null) {
+            mNativeAdLoader.cancel();
+            mNativeAdLoader = null;
+        }
+        if (mAdapter.hasHeader()) {
+            mAdapter.setHeader(null);
+        }
     }
 
     @Override
@@ -878,5 +895,12 @@ public class ConversationListFragment extends Fragment implements ConversationLi
     @Override
     public boolean isArchived() {
         return mArchiveMode;
+    }
+
+    @Override
+    public void onReceive(String s, HSBundle hsBundle) {
+        if (BillingManager.BILLING_VERIFY_SUCCESS.equals(s)) {
+            disableTopNativeAd();
+        }
     }
 }
