@@ -245,6 +245,7 @@ public class ConversationListFragment extends Fragment implements ConversationLi
         if (mNativeAd != null) {
             mNativeAd.release();
         }
+        HSGlobalNotificationCenter.removeObserver(this);
     }
 
     /**
