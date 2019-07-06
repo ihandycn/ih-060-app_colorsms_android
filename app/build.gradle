@@ -89,6 +89,7 @@ dependencies {
     implementation "com.google.firebase:firebase-core:${rootProject.ext.googlePlayServiceVersion}"
     implementation "com.google.firebase:firebase-database:${rootProject.ext.googlePlayServiceVersion}"
     implementation "com.google.firebase:firebase-auth:${rootProject.ext.googlePlayServiceVersion}"
+    implementation "com.google.firebase:firebase-messaging:15.0.2"
     implementation "com.firebaseui:firebase-ui-auth:4.1.0"
     implementation "com.google.firebase:firebase-storage:${rootProject.ext.googlePlayServiceVersion}"
     implementation "com.ihandy.appframework:libAppframework.gm:4.13.0.gm"
