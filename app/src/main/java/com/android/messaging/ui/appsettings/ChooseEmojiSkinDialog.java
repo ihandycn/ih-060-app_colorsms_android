@@ -20,7 +20,7 @@ public class ChooseEmojiSkinDialog extends BaseDialogFragment {
     private RecyclerView mRecyclerView;
     private ChooseEmojiSkinAdapter mAdapter;
 
-    private final String BASE_EMOJI = new String(Character.toChars(0x270B));
+    private final String BASE_EMOJI = new String(Character.toChars(0x1f590));
 
     private String[] mEmojiSkins = new String[]{
             BASE_EMOJI,

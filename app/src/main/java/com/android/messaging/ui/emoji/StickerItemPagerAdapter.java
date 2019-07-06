@@ -62,7 +62,7 @@ public class StickerItemPagerAdapter extends AbstractEmojiItemPagerAdapter{
             view = LayoutInflater.from(context).inflate(R.layout.sticker_item_no_recent_layout, container, false);
         } else {
             RecyclerView recyclerView = (RecyclerView) LayoutInflater.from(context).inflate(R.layout.vertical_recycler_view, container, false);
-            recyclerView.setPadding(0, Dimensions.pxFromDp(13f), 0, Dimensions.pxFromDp(3f));
+            recyclerView.setPadding(0, 0, 0, Dimensions.pxFromDp(3f));
             StickerItemRecyclerAdapter adapter = new StickerItemRecyclerAdapter(position, list, mOnEmojiClickListener);
             recyclerView.setAdapter(adapter);
             recyclerView.setOverScrollMode(View.OVER_SCROLL_NEVER);

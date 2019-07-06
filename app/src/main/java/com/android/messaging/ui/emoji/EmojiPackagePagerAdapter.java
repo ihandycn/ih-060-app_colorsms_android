@@ -85,6 +85,7 @@ public class EmojiPackagePagerAdapter extends PagerAdapter {
         if(adapter instanceof EmojiItemPagerAdapter) {
             itemPager.setOffscreenPageLimit(10);
         }
+
         itemPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
 
             @Override
@@ -116,7 +117,6 @@ public class EmojiPackagePagerAdapter extends PagerAdapter {
         itemTabLayout.setSelectedTabIndicatorColor(PrimaryColors.getPrimaryColor());
         itemTabLayout.setupWithViewPager(itemPager);
         adapter.updateTabView();
-        itemTabLayout.getTabAt(0).select();
         container.addView(view);
 
         if (adapter instanceof StickerItemPagerAdapter) {

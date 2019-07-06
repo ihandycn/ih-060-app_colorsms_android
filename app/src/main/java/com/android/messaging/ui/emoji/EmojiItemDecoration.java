@@ -4,6 +4,8 @@ import android.graphics.Rect;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 
+import com.superapps.util.Dimensions;
+
 public class EmojiItemDecoration extends RecyclerView.ItemDecoration {
 
     private int mNumColumn;
@@ -34,6 +36,7 @@ public class EmojiItemDecoration extends RecyclerView.ItemDecoration {
         int position = parent.getChildAdapterPosition(view);
         int column = position % mNumColumn;
 
+
         if (column == 0) {
             outRect.left = mHorizontalSideSpace;
             outRect.right = mItemHorizontalSpacing / 2;
@@ -43,6 +46,10 @@ public class EmojiItemDecoration extends RecyclerView.ItemDecoration {
         } else {
             outRect.left = mItemHorizontalSpacing / 2;
             outRect.right = mItemHorizontalSpacing / 2;
+        }
+
+        if (position < mNumColumn) {
+            outRect.top = Dimensions.pxFromDp(12);
         }
 
         if (position >= mNumColumn) {

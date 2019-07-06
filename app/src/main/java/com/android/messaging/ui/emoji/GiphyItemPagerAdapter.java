@@ -65,7 +65,6 @@ public class GiphyItemPagerAdapter extends AbstractEmojiItemPagerAdapter {
             FrameLayout recyclerViewContainer = (FrameLayout) LayoutInflater.from(context).inflate(R.layout.layout_giphy_page_item, container, false);
             RecyclerView recyclerView = recyclerViewContainer.findViewById(R.id.recycler_view);
             ProgressBar progressBar = recyclerViewContainer.findViewById(R.id.progress_bar);
-            recyclerView.setPadding(0, Dimensions.pxFromDp(7), 0, 0);
             GiphyItemRecyclerAdapter adapter;
 
             GiphyItemRecyclerAdapter.OnDataFetchedListener onDataFetchedListener = new GiphyItemRecyclerAdapter.OnDataFetchedListener() {
@@ -89,7 +88,9 @@ public class GiphyItemPagerAdapter extends AbstractEmojiItemPagerAdapter {
                 public void getItemOffsets(Rect outRect, View view, RecyclerView parent, RecyclerView.State state) {
                     super.getItemOffsets(outRect, view, parent, state);
 
-                    int spanIndex = ((StaggeredGridLayoutManager.LayoutParams) view.getLayoutParams()).getSpanIndex();
+                    StaggeredGridLayoutManager.LayoutParams params = (StaggeredGridLayoutManager.LayoutParams) view.getLayoutParams();
+
+                    int spanIndex = params.getSpanIndex();
                     if (spanIndex == 0) {
                         outRect.left = itemSideOffsetInPixel;
                         outRect.right = itemOffsetInPixel;
@@ -100,6 +101,9 @@ public class GiphyItemPagerAdapter extends AbstractEmojiItemPagerAdapter {
 
                     outRect.top = itemOffsetInPixel;
                     outRect.bottom = itemOffsetInPixel;
+                    if (position <= 1) {
+                        outRect.top = Dimensions.pxFromDp(9);
+                    }
                 }
             });
 
@@ -266,6 +270,11 @@ public class GiphyItemPagerAdapter extends AbstractEmojiItemPagerAdapter {
             }
 
         });
+        List<BaseEmojiInfo> emojiInfos = mData.get(0).mEmojiInfoList;
+
+        if (emojiInfos == null || emojiInfos.isEmpty()) {
+            mTabLayout.getTabAt(1).select();
+        }
         mTabLayout.getTabAt(mTabLayout.getSelectedTabPosition()).select();
     }
 }
