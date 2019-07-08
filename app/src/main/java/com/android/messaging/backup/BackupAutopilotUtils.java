@@ -12,7 +12,7 @@ public class BackupAutopilotUtils {
         return AutopilotConfig.getBooleanToTestNow(BACK_UP_TOPIC_ID, "switch", true);
     }
 
-    public static boolean getIsBackupFullGuideSwitchOn() {
+    public static boolean getIsBackupFullScreenGuideSwitchOn() {
         return AutopilotConfig.getBooleanToTestNow(BACK_UP_TOPIC_ID, "fullguide", false);
     }
 

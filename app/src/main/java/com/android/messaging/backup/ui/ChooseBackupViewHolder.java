@@ -322,7 +322,8 @@ public class ChooseBackupViewHolder extends BasePagerViewHolder implements Custo
                     if (mContext != null && mContext instanceof BackupRestoreActivity) {
                         ((BackupRestoreActivity) mContext).onBackupDataChanged();
                     }
-                    if (BackupAutopilotUtils.getIsBackupCleanSwitchOn()) {
+                    if (HSConfig.optBoolean(false, "Application", "BackupRestore", "FreeUpOldmsg")||
+                            BackupAutopilotUtils.getIsBackupCleanSwitchOn()) {
                         MessageFreeUpDialog freeUpDialog = new MessageFreeUpDialog();
                         freeUpDialog.setOnPositiveButtonClickListener(v -> {
                             freeUpDialog.dismissAllowingStateLoss();

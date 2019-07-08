@@ -689,11 +689,12 @@ public class ConversationListActivity extends AbstractConversationListActivity
         // show backup full guide
         if (!shouldShowCreateShortcutGuide
                 && mainActivityCreateTime >= 2 && CommonUtils.isNewUser()
-                && BackupAutopilotUtils.getIsBackupFullGuideSwitchOn()
                 && !Preferences.getDefault().getBoolean(BackupRestoreActivity.PREF_KEY_BACKUP_ACTIVITY_SHOWN, false)
                 && !Preferences.getDefault()
                 .getBoolean(BackupGuideDialogActivity.PREF_KEY_BACKUP_FULL_GUIDE_SHOWN, false)
-                && BackupAutopilotUtils.getIsBackupSwitchOn()) {
+                && BackupAutopilotUtils.getIsBackupSwitchOn()
+                && (HSConfig.optBoolean(false, "Application", "BackupRestore", "RecommendFull")
+                || BackupAutopilotUtils.getIsBackupFullScreenGuideSwitchOn())) {
             shouldShowCreateShortcutGuide = true;
             Intent intent = new Intent(this, BackupGuideDialogActivity.class);
             Navigations.startActivitySafely(this, intent);
