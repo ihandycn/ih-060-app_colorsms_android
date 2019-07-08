@@ -276,6 +276,10 @@ public class ConversationMessageView extends RelativeLayout implements View.OnCl
      */
     public void bind(final ConversationMessageData data,
                      final boolean oneOnOne, boolean isMultiSelected) {
+        if(mData == data){
+            return;
+        }
+
         mOneOnOne = oneOnOne;
 
         // Update our UI model

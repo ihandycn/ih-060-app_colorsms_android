@@ -50,8 +50,10 @@ import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.text.BidiFormatter;
 import android.support.v4.text.TextDirectionHeuristicsCompat;
 import android.support.v7.app.ActionBar;
+import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.RecyclerView.ViewHolder;
 import android.text.TextUtils;
 import android.text.format.DateUtils;
 import android.view.ActionMode;
@@ -74,6 +76,7 @@ import com.android.messaging.ad.AdPlacement;
 import com.android.messaging.datamodel.BugleNotifications;
 import com.android.messaging.datamodel.DataModel;
 import com.android.messaging.datamodel.MessagingContentProvider;
+import com.android.messaging.datamodel.action.InsertNewMessageAction;
 import com.android.messaging.datamodel.binding.Binding;
 import com.android.messaging.datamodel.binding.BindingBase;
 import com.android.messaging.datamodel.binding.ImmutableBindingRef;
@@ -94,6 +97,7 @@ import com.android.messaging.ui.BugleActionBarActivity;
 import com.android.messaging.ui.ConversationDrawables;
 import com.android.messaging.ui.SnackBar;
 import com.android.messaging.ui.UIIntents;
+import com.android.messaging.ui.animation.BubbleTransitionAnimation;
 import com.android.messaging.ui.conversation.ComposeMessageView.IComposeMessageViewHost;
 import com.android.messaging.ui.conversation.ConversationInputManager.ConversationInputHost;
 import com.android.messaging.ui.conversation.ConversationMessageView.ConversationMessageViewHost;
@@ -869,7 +873,39 @@ public class ConversationFragment extends Fragment implements ConversationDataLi
         manager.setReverseLayout(false);
 //        mRecyclerView.setHasFixedSize(true);
         mRecyclerView.setLayoutManager(manager);
-        mRecyclerView.setItemAnimator(null);
+
+        DefaultItemAnimator itemAnimator = new DefaultItemAnimator() {
+            private final List<ViewHolder> mAddAnimations = new ArrayList<>();
+            private BubbleTransitionAnimation mPopupTransitionAnimation;
+
+            @Override
+            public boolean animateAdd(final ViewHolder holder) {
+                final ConversationMessageView view =
+                        (ConversationMessageView) holder.itemView;
+                final ConversationMessageData data = view.getData();
+                endAnimation(holder);
+                final long timeSinceSend = System.currentTimeMillis() - data.getReceivedTimeStamp();
+                if (data.getReceivedTimeStamp() ==
+                        InsertNewMessageAction.getLastSentMessageTimestamp() &&
+                        !data.getIsIncoming() &&
+                        timeSinceSend < MESSAGE_ANIMATION_MAX_WAIT) {
+                    view.setAlpha(0);
+                    mPopupTransitionAnimation = new BubbleTransitionAnimation(view);
+                    mPopupTransitionAnimation.startAfterLayoutComplete();
+                    mAddAnimations.add(holder);
+                    return true;
+                } else {
+                    return super.animateAdd(holder);
+                }
+            }
+
+            @Override
+            public boolean animateMove(ViewHolder holder, int fromX, int fromY, int toX, int toY) {
+                return false;
+            }
+        };
+        mRecyclerView.setItemAnimator(itemAnimator);
+
         mRecyclerView.setAdapter(mAdapter);
         if (savedInstanceState != null) {
             mListState = savedInstanceState.getParcelable(SAVED_INSTANCE_STATE_LIST_VIEW_STATE_KEY);
