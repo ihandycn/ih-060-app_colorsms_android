@@ -1,5 +1,6 @@
 package com.android.messaging.ad;
 
+import com.android.messaging.util.BugleAnalytics;
 import com.ihs.commons.notificationcenter.HSGlobalNotificationCenter;
 import com.ihs.commons.utils.HSLog;
 
@@ -51,6 +52,11 @@ public class BillingManager {
                 // 可在此处增加用户资产或资格
                 AdConfig.disableAllAds();
                 HSGlobalNotificationCenter.sendNotification(BILLING_VERIFY_SUCCESS);
+
+                BugleAnalytics.logEvent("SMS_Subscription_Purchase_Success", true);
+                BugleAnalytics.logEvent("Subscription_Analysis",
+                        false, true, "Subscription_Purchase_Success", "true");
+
             }
 
             @Override

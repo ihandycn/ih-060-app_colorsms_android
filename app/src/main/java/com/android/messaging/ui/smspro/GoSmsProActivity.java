@@ -53,11 +53,6 @@ public class GoSmsProActivity extends AppCompatActivity {
                 }
                 currencyCodeTv.setText(price.substring(0, amountStartIndex));
                 priceTv.setText(price.substring(amountStartIndex));
-
-                BugleAnalytics.logEvent("SMS_Subscription_Purchase_Success", true);
-                BugleAnalytics.logEvent("Subscription_Analysis",
-                        false, true, "Subscription_Purchase_Success", "true");
-
             }
 
             @Override
@@ -69,20 +64,20 @@ public class GoSmsProActivity extends AppCompatActivity {
         purchaseButton.setBackground(BackgroundDrawables.
                 createBackgroundDrawable(0xff1db255, Dimensions.pxFromDp(27), true));
         purchaseButton.setOnClickListener(v -> {
+            BillingManager.requestPurchase();
+
             BugleAnalytics.logEvent("SMS_Subscription_Click");
             BugleAnalytics.logEvent("Subscription_Analysis",
                     false, true, "Subscription_Click", "true");
-
-            BillingManager.requestPurchase();
         });
 
         ImageView closeActionImage = findViewById(R.id.action_close);
         closeActionImage.setOnClickListener(v -> finish());
+
         BugleAnalytics.logEvent("SMS_Subscription_Show", true,
                 "subscription", String.valueOf(BillingManager.isPremiumUser()));
         BugleAnalytics.logEvent("Subscription_Analysis",
                 false, true, "Subscription_Show", "true");
-
     }
 
     @Override
