@@ -822,6 +822,15 @@
             android:screenOrientation="portrait"
             android:theme="@style/WelcomeChooseThemeActivity"/>
 
+        <activity
+            android:name=".ui.smspro.GoSmsProActivity"
+            android:configChanges="orientation|screenSize"
+            android:excludeFromRecents="true"
+            android:label="@string/app_name"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.AppCompat.Translucent" />
+
+
         <receiver
             android:name="com.superapps.phonestate.PhoneStateReceiver2"
             android:enabled="false"

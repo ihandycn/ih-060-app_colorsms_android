@@ -31,6 +31,7 @@ import com.android.messaging.BuildConfig;
 import com.android.messaging.R;
 import com.android.messaging.ad.AdConfig;
 import com.android.messaging.ad.AdPlacement;
+import com.android.messaging.ad.BillingManager;
 import com.android.messaging.backup.ui.BackupGuideDialogActivity;
 import com.android.messaging.backup.ui.BackupRestoreActivity;
 import com.android.messaging.backup.ui.ChooseBackupViewHolder;
@@ -71,6 +72,7 @@ import com.android.messaging.ui.invitefriends.InviteFriendsActivity;
 import com.android.messaging.ui.messagebox.MessageBoxActivity;
 import com.android.messaging.ui.messagebox.MessageBoxSettings;
 import com.android.messaging.ui.signature.SignatureSettingDialog;
+import com.android.messaging.ui.smspro.GoSmsProActivity;
 import com.android.messaging.ui.wallpaper.WallpaperChooserItem;
 import com.android.messaging.ui.wallpaper.WallpaperDownloader;
 import com.android.messaging.ui.wallpaper.WallpaperManager;
@@ -152,6 +154,7 @@ public class ConversationListActivity extends AbstractConversationListActivity
     private static final int DRAWER_INDEX_INVITE_FRIENDS = 8;
     private static final int DRAWER_INDEX_BACKUP_RESTORE = 9;
     private static final int DRAWER_INDEX_EMOJI_STORE = 10;
+    private static final int DRAWER_INDEX_REMOVE_ADS = 11;
 
     private int drawerClickIndex = DRAWER_INDEX_NONE;
 
@@ -538,6 +541,16 @@ public class ConversationListActivity extends AbstractConversationListActivity
                         FiveStarRateDialog.showFiveStarFromSetting(ConversationListActivity.this);
                         BugleAnalytics.logEvent("Menu_FiveStart_Click", true, true);
                         break;
+                    case DRAWER_INDEX_REMOVE_ADS:
+                        Intent goSmsProIntent = new Intent(ConversationListActivity.this, GoSmsProActivity.class);
+                        startActivity(goSmsProIntent, TransitionUtils.getTransitionInBundle(ConversationListActivity.this));
+                        BugleAnalytics.logEvent("SMS_Menu_Subscription_Click",
+                                true, false,
+                                "subscription", String.valueOf(BillingManager.isPremiumUser()));
+
+                        BugleAnalytics.logEvent("Subscription_Analysis",
+                                false, true, "Menu_Subscription_Click", "true");
+                        break;
                     case DRAWER_INDEX_NONE:
                     default:
                         break;
@@ -593,6 +606,7 @@ public class ConversationListActivity extends AbstractConversationListActivity
         navigationContent.findViewById(R.id.navigation_item_invite_friends).setOnClickListener(this);
         navigationContent.findViewById(R.id.navigation_item_backup_restore).setOnClickListener(this);
         navigationContent.findViewById(R.id.navigation_item_emoji_store).setOnClickListener(this);
+        navigationContent.findViewById(R.id.navigation_item_remove_ads).setOnClickListener(this);
 
         //test code
         //this item is used to delete dirty mms parts in telephony
@@ -909,6 +923,10 @@ public class ConversationListActivity extends AbstractConversationListActivity
                 drawerClickIndex = DRAWER_INDEX_PRIVACY_BOX;
                 drawerLayout.closeDrawer(navigationView);
                 break;
+            case R.id.navigation_item_remove_ads:
+                drawerClickIndex = DRAWER_INDEX_REMOVE_ADS;
+                drawerLayout.closeDrawer(navigationView);
+                break;
         }
     }
 
@@ -953,7 +971,8 @@ public class ConversationListActivity extends AbstractConversationListActivity
                                 "pin", String.valueOf(hasPinConversation),
                                 "backup", String.valueOf(Preferences.getDefault().getBoolean(
                                         ChooseBackupViewHolder.PREF_KEY_BACKUP_SUCCESS_FOR_EVENT, false)),
-                                "archive", String.valueOf(archivedCount > 0));
+                                "archive", String.valueOf(archivedCount > 0),
+                                "subscription", String.valueOf(BillingManager.isPremiumUser()));
                     });
                 }
                 break;

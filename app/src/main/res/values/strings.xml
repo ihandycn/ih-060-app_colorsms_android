@@ -1307,6 +1307,11 @@
     <!--archive-->
     <string name="archived_conversations">Archived Conversations</string>
 
+    <string name="life_time">LIFETIME</string>
+    <string name="purchase">PURCHASE</string>
+    <string name="remove_ad">Remove Ads</string>
+    <string name="purchase_description">Purchase the AD-FREE version. No ads ever again.</string>
+
     <string name="switch_sim">Switch SIM</string>
 </resources>
 
