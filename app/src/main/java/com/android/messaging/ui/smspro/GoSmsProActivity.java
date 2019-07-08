@@ -74,8 +74,7 @@ public class GoSmsProActivity extends AppCompatActivity {
         ImageView closeActionImage = findViewById(R.id.action_close);
         closeActionImage.setOnClickListener(v -> finish());
 
-        BugleAnalytics.logEvent("SMS_Subscription_Show", true,
-                "subscription", String.valueOf(BillingManager.isPremiumUser()));
+        BugleAnalytics.logEvent("SMS_Subscription_Show", true);
         BugleAnalytics.logEvent("Subscription_Analysis",
                 false, true, "Subscription_Show", "true");
     }

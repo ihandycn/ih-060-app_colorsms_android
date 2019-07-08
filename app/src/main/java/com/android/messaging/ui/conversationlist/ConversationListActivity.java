@@ -110,6 +110,7 @@ import java.util.Map;
 
 import hugo.weaving.DebugLog;
 
+import static com.android.messaging.ad.BillingManager.BILLING_VERIFY_SUCCESS;
 import static com.android.messaging.ui.dialog.FiveStarRateDialog.DESKTOP_PREFS;
 import static com.android.messaging.ui.dialog.FiveStarRateDialog.PREF_KEY_MAIN_ACTIVITY_SHOW_TIME;
 import static com.android.messaging.ui.invitefriends.InviteFriendsActivity.INTENT_KEY_FROM;
@@ -233,6 +234,7 @@ public class ConversationListActivity extends AbstractConversationListActivity
         HSGlobalNotificationCenter.addObserver(SHOW_EMOJI, this);
         HSGlobalNotificationCenter.addObserver(FIRST_LOAD, this);
         HSGlobalNotificationCenter.addObserver(NOTIFICATION_NAME_MESSAGES_MOVE_END, this);
+        HSGlobalNotificationCenter.addObserver(BILLING_VERIFY_SUCCESS, this);
 
         BugleAnalytics.logEvent("SMS_ActiveUsers", true);
 
@@ -544,9 +546,7 @@ public class ConversationListActivity extends AbstractConversationListActivity
                     case DRAWER_INDEX_REMOVE_ADS:
                         Intent goSmsProIntent = new Intent(ConversationListActivity.this, GoSmsProActivity.class);
                         startActivity(goSmsProIntent, TransitionUtils.getTransitionInBundle(ConversationListActivity.this));
-                        BugleAnalytics.logEvent("SMS_Menu_Subscription_Click",
-                                true, false,
-                                "subscription", String.valueOf(BillingManager.isPremiumUser()));
+                        BugleAnalytics.logEvent("SMS_Menu_Subscription_Click", true, false);
 
                         BugleAnalytics.logEvent("Subscription_Analysis",
                                 false, true, "Menu_Subscription_Click", "true");
@@ -606,7 +606,12 @@ public class ConversationListActivity extends AbstractConversationListActivity
         navigationContent.findViewById(R.id.navigation_item_invite_friends).setOnClickListener(this);
         navigationContent.findViewById(R.id.navigation_item_backup_restore).setOnClickListener(this);
         navigationContent.findViewById(R.id.navigation_item_emoji_store).setOnClickListener(this);
-        navigationContent.findViewById(R.id.navigation_item_remove_ads).setOnClickListener(this);
+
+        if (!BillingManager.isPremiumUser()) {
+            navigationContent.findViewById(R.id.navigation_item_remove_ads).setOnClickListener(this);
+        } else {
+            navigationContent.findViewById(R.id.navigation_item_remove_ads).setVisibility(View.GONE);
+        }
 
         //test code
         //this item is used to delete dirty mms parts in telephony
@@ -981,6 +986,13 @@ public class ConversationListActivity extends AbstractConversationListActivity
                     mIsMessageMoving = false;
                     Toasts.showToast(R.string.private_box_add_to_success);
                 }
+                break;
+            case BILLING_VERIFY_SUCCESS:
+                final ConversationListFragment conversationListFragment =
+                        (ConversationListFragment) getFragmentManager().findFragmentById(
+                                R.id.conversation_list_fragment);
+                conversationListFragment.disableTopNativeAd();
+                findViewById(R.id.navigation_item_remove_ads).setVisibility(View.GONE);
                 break;
             default:
                 break;

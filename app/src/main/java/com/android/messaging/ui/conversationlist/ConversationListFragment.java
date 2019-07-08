@@ -113,7 +113,7 @@ import java.util.List;
  * Shows a list of conversations.
  */
 public class ConversationListFragment extends Fragment implements ConversationListDataListener,
-        ConversationListItemView.HostInterface, INotificationObserver {
+        ConversationListItemView.HostInterface {
     public static final String PREF_KEY_BACKUP_SHOW_BANNER_GUIDE = "pref_key_backup_banner_guide_hide";
     private static final String PREF_KEY_BACKUP_BANNER_GUIDE_SHOW_COUNT = "pref_key_backup_banner_guide_show_count";
     private static final String BUNDLE_ARCHIVED_MODE = "archived_mode";
@@ -245,7 +245,6 @@ public class ConversationListFragment extends Fragment implements ConversationLi
         if (mNativeAd != null) {
             mNativeAd.release();
         }
-        HSGlobalNotificationCenter.removeObserver(this);
     }
 
     /**
@@ -405,7 +404,6 @@ public class ConversationListFragment extends Fragment implements ConversationLi
             mEmptyListMessageView.setIsVerticallyCentered(true);
             Preferences.getDefault().putBoolean("pref_key_first_loading_show", true);
         }
-        HSGlobalNotificationCenter.addObserver(BillingManager.BILLING_VERIFY_SUCCESS, this);
 
         setHasOptionsMenu(true);
         return rootView;
@@ -637,7 +635,7 @@ public class ConversationListFragment extends Fragment implements ConversationLi
         AutopilotEvent.logTopicEvent("topic-768lyi3sp", "bannerad_show");
     }
 
-    private void disableTopNativeAd() {
+    public void disableTopNativeAd() {
         if (mNativeAd != null) {
             mNativeAd.release();
             mNativeAd = null;
@@ -898,10 +896,4 @@ public class ConversationListFragment extends Fragment implements ConversationLi
         return mArchiveMode;
     }
 
-    @Override
-    public void onReceive(String s, HSBundle hsBundle) {
-        if (BillingManager.BILLING_VERIFY_SUCCESS.equals(s)) {
-            disableTopNativeAd();
-        }
-    }
 }

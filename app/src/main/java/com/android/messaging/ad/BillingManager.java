@@ -1,8 +1,10 @@
 package com.android.messaging.ad;
 
+import com.android.messaging.R;
 import com.android.messaging.util.BugleAnalytics;
 import com.ihs.commons.notificationcenter.HSGlobalNotificationCenter;
 import com.ihs.commons.utils.HSLog;
+import com.superapps.util.Toasts;
 
 import net.appcloudbox.internal.service.iap.ProductRequest;
 import net.appcloudbox.service.iap.AcbIAPProductRequest;
@@ -64,6 +66,7 @@ public class BillingManager {
                 // 验证未通过（error.getKey() == AcbIAPErrorKey.InvalidReceipt，刚完成的购买会被消耗掉并从库中删除）
                 // 或在验证时出现其它错误（购买变为待验证状态）
                 // 交易结束
+                Toasts.showToast(R.string.purchase_failed);
             }
         }).start();
     }

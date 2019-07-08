@@ -1311,7 +1311,7 @@
     <string name="purchase">PURCHASE</string>
     <string name="remove_ad">Remove Ads</string>
     <string name="purchase_description">Purchase the AD-FREE version. No ads ever again.</string>
-
+    <string name="purchase_failed">failed</string>
     <string name="switch_sim">Switch SIM</string>
 </resources>
 
