@@ -46,7 +46,6 @@ public class EmojiConfig implements HSLibraryConfig.ILibraryListener {
      * Performs a local load and starts an async remote fetch.
      */
     public void doInit() {
-        TraceCompat.beginSection("EmojiConfig Init");
         try {
             Map<String, ?> localCommonData = parseLocalConfig();
             ConfigRegionsSupport.mergeRegions(localCommonData);
@@ -61,7 +60,6 @@ public class EmojiConfig implements HSLibraryConfig.ILibraryListener {
 
             setConfigData();
         } finally {
-            TraceCompat.endSection();
         }
     }
 
