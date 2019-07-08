@@ -3,25 +3,21 @@ package com.android.messaging.ad;
 import com.android.messaging.R;
 import com.android.messaging.util.BugleAnalytics;
 import com.ihs.commons.notificationcenter.HSGlobalNotificationCenter;
-import com.ihs.commons.utils.HSLog;
 import com.superapps.util.Toasts;
 
-import net.appcloudbox.internal.service.iap.ProductRequest;
-import net.appcloudbox.service.iap.AcbIAPProductRequest;
 import net.appcloudbox.service.iap.AcbIAPTransaction;
 import net.appcloudbox.service.utils.AcbError;
-import net.appcloudbox.service.utils.AcbResponseListener;
 
 import org.json.JSONObject;
 
-import java.util.ArrayList;
-import java.util.Arrays;
+import hugo.weaving.DebugLog;
 
 public class BillingManager {
 
     public static final String BILLING_VERIFY_SUCCESS = "billing.verify.success";
     public static final String PRODUCT_ID = "com.color.sms.messages.emoji.pid.adfree.tier1";
 
+    @DebugLog
     public static boolean isPremiumUser() {
         AcbIAPTransaction.State state = AcbIAPTransaction.getState(PRODUCT_ID);
         return AcbIAPTransaction.State.VERIFIED.equals(state);
