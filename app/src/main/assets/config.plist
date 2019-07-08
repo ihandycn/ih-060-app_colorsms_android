@@ -1530,9 +1530,9 @@
 						<key>BannerAdBgColor</key>
 						<string>#40000000</string>
 						<key>BannerAdActionColor</key>
-						<string>#80ffffff</string>
+						<string>#2caef8</string>
 						<key>BannerAdActionTextColor</key>
-						<string>#ffffff</string>
+						<string>#2caef8</string>
 						<key>PreviewUrl</key>
 						<string>preview.jpg</string>
 						<key>ToolbarBgUrl</key>
