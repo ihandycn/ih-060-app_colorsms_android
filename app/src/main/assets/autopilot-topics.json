@@ -260,6 +260,9 @@
         },
         {
           "name": "freeupmsg_success"
+        },
+        {
+          "name": "backuppage_show_once"
         }
       ],
       "topic_id": "topic-76bwea9b3"
@@ -395,7 +398,7 @@
   "autopilot_id": 10104,
   "service_url": "https://ap.appcloudbox.net",
   "other_app_events": [],
-  "json_id": "2a542319-bb89-44ef-a393-9c7be8d8d282",
+  "json_id": "38822f70-e08c-43ea-9064-d2c9676d0440",
   "autopilot_name": "Bubble_A",
   "autopilot_type": "app"
 }

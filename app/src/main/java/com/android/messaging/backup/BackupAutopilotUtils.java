@@ -20,6 +20,10 @@ public class BackupAutopilotUtils {
         return AutopilotConfig.getBooleanToTestNow(BACK_UP_TOPIC_ID, "cleanswitch", false);
     }
 
+    public static void logBackupPageShowOnce() {
+        AutopilotEvent.logTopicEvent(BACK_UP_TOPIC_ID, "backuppage_show_once");
+    }
+
     public static void logBackupOnce() {
         AutopilotEvent.logTopicEvent(BACK_UP_TOPIC_ID, "backup_once");
     }

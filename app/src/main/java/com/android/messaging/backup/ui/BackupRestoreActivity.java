@@ -32,7 +32,7 @@ public class BackupRestoreActivity extends BaseActivity {
     public static final String ENTRANCE_TOP_GUIDE = "top_guide";
     public static final String ENTRANCE_FULL_GUIDE = "full_guide";
     public static final String ENTRANCE_MENU = "menu";
-
+    private static final String PREF_KEY_BACKUP_PAGE_SHOW_ONCE = "pref_key_backup_page_show_once";
     private static final int RC_SIGN_IN = 12;
     private ChooseBackupViewHolder mBackUpViewHolder;
     private ChooseRestoreViewHolder mRestoreViewHolder;
@@ -62,7 +62,10 @@ public class BackupRestoreActivity extends BaseActivity {
         getSupportActionBar().setDisplayShowHomeEnabled(true);
 
         initPager(this);
-
+        if (Preferences.getDefault().getBoolean(PREF_KEY_BACKUP_PAGE_SHOW_ONCE, true)) {
+            BackupAutopilotUtils.logBackupPageShowOnce();
+            Preferences.getDefault().putBoolean(PREF_KEY_BACKUP_PAGE_SHOW_ONCE, false);
+        }
         UiUtils.setTitleBarBackground(mToolbar, this);
 
         Preferences.getDefault().putBoolean(PREF_KEY_BACKUP_ACTIVITY_SHOWN, true);
