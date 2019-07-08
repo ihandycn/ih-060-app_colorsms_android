@@ -40,7 +40,7 @@ import static com.ihs.app.framework.HSApplication.getContext;
 
 public class ChooseBackupViewHolder extends BasePagerViewHolder implements CustomPagerViewHolder {
     public static final String PREF_KEY_BACKUP_SUCCESS_FOR_EVENT = "pref_key_backup_success_for_event";
-    private static final String PREF_KEY_BACKUP_SUCCESS_ONCE = "pref_key_backup_success_once";
+    private static final String PREF_KEY_LOG_BACKUP_SUCCESS_ONLY_ONCE = "pref_key_log_backup_success_only_once";
     private static final String PREF_KEY_BACKUP_TIP_SHOWN = "pref_key_backup_tip_show";
     private Context mContext;
     private CheckBox mLocalCheckBox;
@@ -307,10 +307,7 @@ public class ChooseBackupViewHolder extends BasePagerViewHolder implements Custo
                 }
                 BugleAnalytics.logEvent("Backup_BackupPage_Backup_Success", true, "type", backupType);
                 BackupAutopilotUtils.logBackupPageSuccess();
-                if (Preferences.getDefault().getBoolean(PREF_KEY_BACKUP_SUCCESS_ONCE, true)) {
-                    BackupAutopilotUtils.logBackupOnce();
-                    Preferences.getDefault().putBoolean(PREF_KEY_BACKUP_SUCCESS_ONCE, false);
-                }
+                Preferences.getDefault().doOnce(BackupAutopilotUtils::logBackupOnce, PREF_KEY_LOG_BACKUP_SUCCESS_ONLY_ONCE);
                 Map<String, String> params = new HashMap<>();
                 params.put("Backup", "Backup_BackupSuccess");
                 BugleAnalytics.logEventToFirebase("Feature_BackupRestore", params);
