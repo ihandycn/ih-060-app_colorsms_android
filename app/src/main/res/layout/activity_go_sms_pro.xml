@@ -67,7 +67,6 @@
             android:layout_marginTop="4dp"
             android:includeFontPadding="false"
             app:typeface="@string/custom_font_semibold"
-            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/price_text_view"
             app:layout_constraintTop_toTopOf="@+id/price_text_view"
             app:layout_constraintHorizontal_chainStyle="packed"
@@ -83,8 +82,8 @@
             android:textSize="42sp"
             app:font_family_changeable="false"
             app:font_size_changeable="false"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/currency_code_text_view"
             app:layout_constraintTop_toTopOf="@+id/life_time"
             app:typeface="@string/custom_font_semibold"
             tools:text="2.99" />
