@@ -48,6 +48,7 @@ import com.android.messaging.ui.conversation.ConversationFragment.ConversationFr
 import com.android.messaging.ui.conversationlist.ConversationListActivity;
 import com.android.messaging.ui.customize.PrimaryColors;
 import com.android.messaging.ui.customize.ToolbarDrawables;
+import com.android.messaging.ui.emoji.utils.EmojiManager;
 import com.android.messaging.ui.messagebox.MessageBoxActivity;
 import com.android.messaging.util.Assert;
 import com.android.messaging.util.BugleAnalytics;
@@ -105,6 +106,9 @@ public class ConversationActivity extends BugleActionBarActivity
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        // preload emoji pref file
+        Preferences.get(EmojiManager.PREF_FILE_NAME);
 
         setContentView(R.layout.conversation_activity);
 

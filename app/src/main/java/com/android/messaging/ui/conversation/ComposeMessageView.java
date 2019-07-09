@@ -180,7 +180,6 @@ public class ComposeMessageView extends LinearLayout
     private ImageView mAttachMediaButton;
     private ImageView mEmojiKeyboardBtn;
     private ImageView mEmojiGuideView;
-    private LottieAnimationView mEmojiLottieGuideView;
     private LinearLayout mInputLayout;
     private FrameLayout mMediaPickerLayout;
     private FrameLayout mEmojiPickerLayout;
@@ -302,9 +301,6 @@ public class ComposeMessageView extends LinearLayout
             public void onClick(View arg0) {
                 mHost.onClickMediaOrEmoji();
 
-                if (mHost.shouldHideAttachmentsWhenSimSelectorShown()) {
-                    hideSimSelector();
-                }
                 BugleAnalytics.logEvent("SMS_DetailsPage_DialogBox_Click", true, true);
             }
         });
@@ -523,48 +519,14 @@ public class ComposeMessageView extends LinearLayout
 
         mMmsIndicator = (TextView) findViewById(R.id.mms_indicator);
         mEmojiGuideView = findViewById(R.id.emoji_guide_view);
-        mEmojiLottieGuideView = findViewById(R.id.emoji_lottie_guide_view);
         if (EmojiManager.isShowEmojiGuide()) {
             mEmojiGuideView.setVisibility(VISIBLE);
         }
-        Preferences.getDefault().doLimitedTimes(new Runnable() {
-            @Override
-            public void run() {
-                if (EmojiManager.isShowEmojiGuide()) {
-                    mEmojiLottieGuideView.setVisibility(View.VISIBLE);
-                    mEmojiLottieGuideView.setImageAssetsFolder("lottie/emoji_input_guide/");
-                    mEmojiLottieGuideView.setAnimation("lottie/emoji_input_guide.json");
-                    mEmojiLottieGuideView.addAnimatorListener(new Animator.AnimatorListener() {
-                        @Override
-                        public void onAnimationStart(Animator animation) {
-                            mEmojiKeyboardBtn.setImageResource(android.R.color.transparent);
-                        }
 
-                        @Override
-                        public void onAnimationEnd(Animator animation) {
-                            mEmojiKeyboardBtn.setImageResource(R.drawable.input_emoji_icon);
-                        }
-
-                        @Override
-                        public void onAnimationCancel(Animator animation) {
-
-                        }
-
-                        @Override
-                        public void onAnimationRepeat(Animator animation) {
-
-                        }
-                    });
-                    new Handler().postDelayed(() -> mEmojiLottieGuideView.playAnimation(), 180);
-                }
-            }
-        }, "pref_key_emoji_lottie_guide", 1);
         mEmojiPickerLayout = findViewById(R.id.emoji_picker_container);
         mEmojiKeyboardBtn = findViewById(R.id.emoji_btn);
         mEmojiKeyboardBtn.setOnClickListener(v -> {
             mHost.onClickMediaOrEmoji();
-
-            mEmojiLottieGuideView.setVisibility(View.GONE);
             mEmojiGuideView.setVisibility(View.GONE);
             if (isEmojiPickerShowing()) {
                 BugleAnalytics.logEvent("SMSEmoji_Chat_Keyboard_Click");
@@ -680,9 +642,6 @@ public class ComposeMessageView extends LinearLayout
 
     private void showKeyboard() {
         ImeUtil.get().showImeKeyboard(getContext(), mComposeEditText);
-        if (mHost.shouldHideAttachmentsWhenSimSelectorShown()) {
-            hideSimSelector();
-        }
     }
 
     private void hideKeyboard() {
@@ -832,7 +791,6 @@ public class ComposeMessageView extends LinearLayout
         }
         // Check the host for pre-conditions about any action.
         if (mHost.isReadyForAction()) {
-            mInputManager.showHideSimSelector(false /* show */, true /* animate */);
             final String subject = mComposeSubjectText.getText().toString();
             mBinding.getData().setMessageSubject(subject);
 
@@ -1245,18 +1203,8 @@ public class ComposeMessageView extends LinearLayout
     @Override
     public void beforeTextChanged(final CharSequence s, final int start, final int count,
                                   final int after) {
-        if (mHost.shouldHideAttachmentsWhenSimSelectorShown()) {
-            hideSimSelector();
-        }
     }
 
-    private void hideSimSelector() {
-        if (mInputManager.showHideSimSelector(false /* show */, true /* animate */)) {
-            // Now that the sim selector has been hidden, reshow the attachments if they
-            // have been hidden.
-            hideAttachmentsWhenShowingSims(false /*simPickerVisible*/);
-        }
-    }
 
     @Override
     public void onTextChanged(final CharSequence s, final int start, final int before,

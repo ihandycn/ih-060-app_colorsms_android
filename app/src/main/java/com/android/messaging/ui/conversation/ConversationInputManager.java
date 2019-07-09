@@ -67,17 +67,9 @@ public class ConversationInputManager implements ConversationInput.ConversationI
 
         void dismissActionMode();
 
-        void selectSim(SubscriptionListEntry subscriptionData);
-
         void onStartComposeMessage();
 
-        SimSelectorView getSimSelectorView();
-
         MediaPickerFragment createMediaPicker();
-
-        void showHideSimSelector(boolean show);
-
-        int getSimSelectorItemLayoutId();
 
         EmojiPickerFragment createEmojiPicker();
 
@@ -129,7 +121,6 @@ public class ConversationInputManager implements ConversationInput.ConversationI
     private final ConversationInput[] mInputs;
     private final ConversationMediaPicker mMediaInput;
     private final ConversationEmojiPicker mEmojiInput;
-    private final ConversationSimSelector mSimInput;
     private final ConversationImeKeyboard mImeInput;
     private int mUpdateCount;
 
@@ -149,7 +140,6 @@ public class ConversationInputManager implements ConversationInput.ConversationI
         @Override
         public void onSubscriptionListDataLoaded(ConversationData data) {
             mConversationDataModel.ensureBound(data);
-            mSimInput.onSubscriptionListDataLoaded(data.getSubscriptionListData());
         }
     };
 
@@ -177,9 +167,8 @@ public class ConversationInputManager implements ConversationInput.ConversationI
         // Initialize the inputs
         mMediaInput = new ConversationMediaPicker(this);
         mEmojiInput = new ConversationEmojiPicker(this);
-        mSimInput = new SimSelector(this);
         mImeInput = new ConversationImeKeyboard(this, mImeStateHost.isImeOpen());
-        mInputs = new ConversationInput[]{mMediaInput, mSimInput, mImeInput, mEmojiInput};
+        mInputs = new ConversationInput[]{mMediaInput, mImeInput, mEmojiInput};
 
         if (savedState != null) {
             for (int i = 0; i < mInputs.length; i++) {
@@ -243,17 +232,6 @@ public class ConversationInputManager implements ConversationInput.ConversationI
         showHideInternal(mEmojiInput, false, false);
     }
 
-    /**
-     * Show or hide the sim selector
-     *
-     * @param show    visibility
-     * @param animate whether to animate the change in visibility
-     * @return true if the state of the visibility was changed
-     */
-    public boolean showHideSimSelector(final boolean show, final boolean animate) {
-        return showHideInternal(mSimInput, show, animate);
-    }
-
     public void showHideImeKeyboard(final boolean show, final boolean animate) {
         showHideInternal(mImeInput, show, animate);
     }
@@ -264,18 +242,6 @@ public class ConversationInputManager implements ConversationInput.ConversationI
             showHideInternal(mInputs[i], false, animate);
         }
         endUpdate();
-    }
-
-    /**
-     * Toggle the visibility of the sim selector.
-     *
-     * @param animate
-     * @param subEntry
-     * @return true if the view is now shown, false if it now hidden
-     */
-    public boolean toggleSimSelector(final boolean animate, final SubscriptionListEntry subEntry) {
-        mSimInput.setSelected(subEntry);
-        return mSimInput.toggle(animate);
     }
 
     public boolean updateActionBar(final ActionBar actionBar) {
@@ -290,11 +256,6 @@ public class ConversationInputManager implements ConversationInput.ConversationI
     @VisibleForTesting
     boolean isMediaPickerVisible() {
         return mMediaInput.mShowing;
-    }
-
-    @VisibleForTesting
-    boolean isSimSelectorVisible() {
-        return mSimInput.mShowing;
     }
 
     @VisibleForTesting
@@ -548,44 +509,6 @@ public class ConversationInputManager implements ConversationInput.ConversationI
 
         boolean isAddedToFragmentManager() {
             return mEmojiPickerFragment != null && mFragmentManager.findFragmentByTag(EmojiPickerFragment.FRAGMENT_TAG) != null;
-        }
-    }
-
-    /**
-     * Manages showing/hiding the SIM selector in conversation.
-     */
-    private class SimSelector extends ConversationSimSelector {
-        public SimSelector(ConversationInputBase baseHost) {
-            super(baseHost);
-        }
-
-        @Override
-        protected SimSelectorView getSimSelectorView() {
-            return mHost.getSimSelectorView();
-        }
-
-        @Override
-        public int getSimSelectorItemLayoutId() {
-            return mHost.getSimSelectorItemLayoutId();
-        }
-
-        @Override
-        protected void selectSim(SubscriptionListEntry item) {
-            mHost.selectSim(item);
-        }
-
-        @Override
-        public boolean show(boolean animate) {
-            final boolean result = super.show(animate);
-            mHost.showHideSimSelector(true /*show*/);
-            return result;
-        }
-
-        @Override
-        public boolean hide(boolean animate) {
-            final boolean result = super.hide(animate);
-            mHost.showHideSimSelector(false /*show*/);
-            return result;
         }
     }
 

@@ -227,15 +227,6 @@
                 android:visibility="gone"
                 tools:ignore="RtlHardcoded"/>
 
-            <com.airbnb.lottie.LottieAnimationView
-                android:id="@+id/emoji_lottie_guide_view"
-                android:layout_width="56.7dp"
-                android:layout_height="50dp"
-                android:layout_gravity="end|bottom"
-                android:layout_marginBottom="15.3dp"
-                android:layout_marginEnd="53.7dp"
-                android:scaleType="centerCrop"
-                android:visibility="gone"/>
         </FrameLayout>
     </LinearLayout>
 
