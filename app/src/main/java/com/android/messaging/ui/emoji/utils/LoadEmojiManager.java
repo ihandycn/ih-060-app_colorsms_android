@@ -24,10 +24,6 @@ public class LoadEmojiManager{
 
     public void getEmojiData(EmojiDataCallback callback){
         if(mIsDataPrepared && !mNeedFlush){
-            mEmojiData.remove(0);
-            mEmojiData.add(0, EmojiDataProducer.loadEmojiRecentData());
-            mStickerData.remove(0);
-            mStickerData.add(0, EmojiDataProducer.loadStickerRecentData());
             callback.onDataPrepared(mEmojiData, mStickerData);
             return ;
         }
@@ -36,8 +32,6 @@ public class LoadEmojiManager{
             public void run() {
                 mEmojiData = EmojiDataProducer.loadEmojiData();
                 mStickerData = EmojiDataProducer.loadStickerData();
-                mEmojiData.add(0, EmojiDataProducer.loadEmojiRecentData());
-                mStickerData.add(0, EmojiDataProducer.loadStickerRecentData());
                 Threads.postOnMainThread(new Runnable() {
                     @Override
                     public void run() {

@@ -219,6 +219,16 @@ public class EmojiPickerFragment extends Fragment implements INotificationObserv
         }
     }
 
+    @Override
+    public void onDataPrepared(List<EmojiPackageInfo> emojiList, List<EmojiPackageInfo> stickerList) {
+        mIsDataPrepared = true;
+        mEmojiData.addAll(emojiList);
+        mStickerData.addAll(stickerList);
+        if (mIsAnimationFinished && mIsViewCreated) {
+            initData();
+        }
+    }
+
     private void showOrHideDeleteView(View deleteView, int position) {
         if (position != 0) {
             deleteView.setVisibility(View.GONE);
@@ -353,16 +363,6 @@ public class EmojiPickerFragment extends Fragment implements INotificationObserv
         }
 
         return result;
-    }
-
-    @Override
-    public void onDataPrepared(List<EmojiPackageInfo> emojiList, List<EmojiPackageInfo> stickerList) {
-        mIsDataPrepared = true;
-        mEmojiData.addAll(emojiList);
-        mStickerData.addAll(stickerList);
-        if (mIsAnimationFinished && mIsViewCreated) {
-            initData();
-        }
     }
 
     private class DeleteRunnable implements Runnable {

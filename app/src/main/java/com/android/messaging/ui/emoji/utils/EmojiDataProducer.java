@@ -30,8 +30,7 @@ public class EmojiDataProducer {
                 context.getResources().getIdentifier("emoji_category_recent", "drawable", packageName)).toString();
         recentInfo.mTabIconSelectedUrl = Uri.parse("android.resource://" + packageName + "/" +
                 context.getResources().getIdentifier("emoji_category_recent_selected", "drawable", packageName)).toString();
-
-        recentInfo.mEmojiInfoList = new ArrayList<>();
+        recentInfo.mEmojiInfoList = EmojiManager.getRecentInfo(EmojiPackageType.STICKER);
         result.add(recentInfo);
 
         List<EmojiPackageInfo> addInfo = EmojiConfig.getInstance().getAddedEmojiFromConfig();
@@ -82,7 +81,7 @@ public class EmojiDataProducer {
                 context.getResources().getIdentifier("emoji_category_recent", "drawable", packageName)).toString();
         recentInfo.mTabIconSelectedUrl = Uri.parse("android.resource://" + packageName + "/" +
                 context.getResources().getIdentifier("emoji_category_recent_selected", "drawable", packageName)).toString();
-        recentInfo.mEmojiInfoList = new ArrayList<>();
+        recentInfo.mEmojiInfoList = EmojiManager.getRecentInfo(EmojiPackageType.EMOJI);
         result.add(recentInfo);
 
         for (EmojiCategory category : categoryList) {

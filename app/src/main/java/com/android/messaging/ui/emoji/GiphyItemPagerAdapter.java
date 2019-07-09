@@ -289,9 +289,13 @@ public class GiphyItemPagerAdapter extends AbstractEmojiItemPagerAdapter {
 
         });
         List<BaseEmojiInfo> emojiInfos = mData.get(0).mEmojiInfoList;
-        if ((emojiInfos == null || emojiInfos.isEmpty()) && mIsFirst) {
-            mTabLayout.getTabAt(1).select();
+        if(mIsFirst) {
             mIsFirst = false;
+            if ((emojiInfos == null || emojiInfos.isEmpty())) {
+                mTabLayout.getTabAt(1).select();
+            }else{
+                mTabLayout.getTabAt(0).select();
+            }
         }
         mTabLayout.getTabAt(mTabLayout.getSelectedTabPosition()).select();
     }

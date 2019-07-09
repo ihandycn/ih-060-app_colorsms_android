@@ -22,7 +22,7 @@ import com.superapps.util.Dimensions;
 import java.util.ArrayList;
 import java.util.List;
 
-public class StickerItemPagerAdapter extends AbstractEmojiItemPagerAdapter{
+public class StickerItemPagerAdapter extends AbstractEmojiItemPagerAdapter {
 
     @SuppressWarnings("FieldCanBeLocal")
     private final int STICKER_COLUMNS = 4;
@@ -38,7 +38,7 @@ public class StickerItemPagerAdapter extends AbstractEmojiItemPagerAdapter{
     StickerItemPagerAdapter(List<EmojiPackageInfo> data, Context context, EmojiPackagePagerAdapter.OnEmojiClickListener emojiClickListener) {
         mOnEmojiClickListener = emojiClickListener;
         mData = new ArrayList<>();
-        if(data!=null){
+        if (data != null) {
             mData.addAll(data);
         }
         mContext = context;
@@ -60,7 +60,7 @@ public class StickerItemPagerAdapter extends AbstractEmojiItemPagerAdapter{
         Context context = container.getContext();
         View view;
         List<BaseEmojiInfo> list = mData.get(position).mEmojiInfoList;
-        if (list.isEmpty()) {
+        if (list.isEmpty() && position == 0) {
             view = LayoutInflater.from(context).inflate(R.layout.sticker_item_no_recent_layout, container, false);
         } else {
             RecyclerView recyclerView = (RecyclerView) LayoutInflater.from(context).inflate(R.layout.vertical_recycler_view, container, false);
@@ -72,17 +72,19 @@ public class StickerItemPagerAdapter extends AbstractEmojiItemPagerAdapter{
             recyclerView.setLayoutManager(new GridLayoutManager(context, STICKER_COLUMNS));
             view = recyclerView;
         }
-        view.setTag(position+"");
+        view.setTag(position + "");
         container.addView(view);
         return view;
     }
 
-    public void initData(List<EmojiPackageInfo> infoList){
-        for (int i = 0; i < infoList.size(); i++) {
+    public void initData(List<EmojiPackageInfo> infoList) {
+        for (int i = 1; i < mData.size(); i++) {
             mData.get(i).mEmojiInfoList.clear();
-            mData.get(i).mEmojiInfoList.addAll(infoList.get(i).mEmojiInfoList);
+            mData.get(i).mEmojiInfoList.addAll(infoList.get(i - 1).mEmojiInfoList);
         }
-        notifyDataSetChanged();
+        for (int i = 1; i < mData.size(); i++) {
+            updateSinglePage(i);
+        }
         if (mTabLayout != null) {
             updateTabView();
         }
@@ -120,13 +122,13 @@ public class StickerItemPagerAdapter extends AbstractEmojiItemPagerAdapter{
         mTabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
-                if(tab.getCustomView() == null)
-                    return ;
+                if (tab.getCustomView() == null)
+                    return;
                 tab.getCustomView().findViewById(R.id.tab_indicator).setVisibility(View.VISIBLE);
                 EmojiPackageInfo info = getPackageInfo(tab);
-                if(info == null)
-                    return ;
-                if(info.mTabIconSelectedUrl != null) {
+                if (info == null)
+                    return;
+                if (info.mTabIconSelectedUrl != null) {
                     getImageView(tab).setImageURI(Uri.parse(info.mTabIconSelectedUrl));
                 }
             }
@@ -134,17 +136,17 @@ public class StickerItemPagerAdapter extends AbstractEmojiItemPagerAdapter{
             @Override
             public void onTabUnselected(TabLayout.Tab tab) {
                 EmojiPackageInfo packageInfo = getPackageInfo(tab);
-                if(tab.getCustomView() == null)
-                    return ;
+                if (tab.getCustomView() == null)
+                    return;
                 if (packageInfo != null && EmojiManager.isNewTabSticker(packageInfo.mName)) {
                     EmojiManager.removeNewTabSticker(packageInfo.mName);
                     tab.getCustomView().findViewById(R.id.tab_new_view).setVisibility(View.GONE);
                 }
                 tab.getCustomView().findViewById(R.id.tab_indicator).setVisibility(View.GONE);
                 EmojiPackageInfo info = getPackageInfo(tab);
-                if(info == null)
-                    return ;
-                if(info.mTabIconSelectedUrl != null) {
+                if (info == null)
+                    return;
+                if (info.mTabIconSelectedUrl != null) {
                     getImageView(tab).setImageURI(Uri.parse(info.mTabIconUrl));
                 }
 
@@ -172,9 +174,13 @@ public class StickerItemPagerAdapter extends AbstractEmojiItemPagerAdapter{
         });
 
         List<BaseEmojiInfo> emojiInfos = mData.get(0).mEmojiInfoList;
-        if ((emojiInfos == null || emojiInfos.isEmpty()) && mIsFirst) {
-            mTabLayout.getTabAt(1).select();
+        if (mIsFirst) {
             mIsFirst = false;
+            if ((emojiInfos == null || emojiInfos.isEmpty())) {
+                mTabLayout.getTabAt(1).select();
+            } else {
+                mTabLayout.getTabAt(0).select();
+            }
         }
         mTabLayout.getTabAt(mTabLayout.getSelectedTabPosition()).select();
     }
@@ -201,11 +207,11 @@ public class StickerItemPagerAdapter extends AbstractEmojiItemPagerAdapter{
 
     @Override
     public void updateRecentItem() {
-        if(mData == null || mData.isEmpty())
-            return ;
+        if (mData == null || mData.isEmpty())
+            return;
         EmojiPackageInfo recentInfo = mData.get(0);
-        if(recentInfo.mEmojiPackageType != EmojiPackageType.RECENT)
-            return ;
+        if (recentInfo.mEmojiPackageType != EmojiPackageType.RECENT)
+            return;
         recentInfo.mEmojiInfoList.clear();
         recentInfo.mEmojiInfoList.addAll(EmojiManager.getRecentInfo(EmojiPackageType.STICKER));
         updateSinglePage(0);

@@ -22,8 +22,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import hugo.weaving.DebugLog;
-
 public class EmojiItemRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     private static final int TYPE_IMAGE = 1;
@@ -162,7 +160,6 @@ public class EmojiItemRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.
             mUnicode = unicode;
         }
 
-        @DebugLog
         @Override
         public void draw(Canvas canvas) {
             mPaint.setTextAlign(Paint.Align.LEFT);

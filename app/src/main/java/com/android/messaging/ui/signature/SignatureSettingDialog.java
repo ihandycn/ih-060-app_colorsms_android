@@ -239,6 +239,6 @@ public class SignatureSettingDialog extends DialogFragment {
                 R.id.signature_emoji_container,
                 mEmojiPickerFragment,
                 EmojiPickerFragment.FRAGMENT_TAG).commitAllowingStateLoss();
-
+        mEmojiPickerFragment.onAnimationFinished();
     }
 }

@@ -56,7 +56,7 @@ public class EmojiItemPagerAdapter extends AbstractEmojiItemPagerAdapter {
         Context context = container.getContext();
         View view;
         List<BaseEmojiInfo> list = mData.get(position).mEmojiInfoList;
-        if (list.isEmpty()) {
+        if (list.isEmpty() && position == 0) {
             view = LayoutInflater.from(context).inflate(R.layout.sticker_item_no_recent_layout, container, false);
         } else {
             RecyclerView recyclerView = (RecyclerView) LayoutInflater.from(context).inflate(R.layout.vertical_recycler_view, container, false);
@@ -72,12 +72,14 @@ public class EmojiItemPagerAdapter extends AbstractEmojiItemPagerAdapter {
     }
 
     public void initData(List<EmojiPackageInfo> infoList) {
-        for (int i = 0; i < infoList.size(); i++) {
+        for (int i = 1; i < mData.size(); i++) {
             mData.get(i).mEmojiInfoList.clear();
-            mData.get(i).mEmojiInfoList.addAll(infoList.get(i).mEmojiInfoList);
+            mData.get(i).mEmojiInfoList.addAll(infoList.get(i - 1).mEmojiInfoList);
         }
-        notifyDataSetChanged();
-        if(mTabLayout != null){
+        for (int i = 1; i < mData.size(); i++) {
+            updateSinglePage(i);
+        }
+        if (mTabLayout != null) {
             updateTabView();
         }
     }

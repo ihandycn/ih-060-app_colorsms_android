@@ -287,7 +287,7 @@ public class MessageBoxActivity extends AppCompatActivity implements INotificati
                 R.id.emoji_picker_container,
                 mEmojiPickerFragment,
                 EmojiPickerFragment.FRAGMENT_TAG).commitAllowingStateLoss();
-
+        mEmojiPickerFragment.onAnimationFinished();
     }
 
 
