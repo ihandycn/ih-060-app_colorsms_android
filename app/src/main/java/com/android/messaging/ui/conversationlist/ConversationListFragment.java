@@ -50,6 +50,7 @@ import com.android.messaging.R;
 import com.android.messaging.ad.AdConfig;
 import com.android.messaging.ad.AdPlacement;
 import com.android.messaging.annotation.VisibleForAnimation;
+import com.android.messaging.backup.BackupAutopilotUtils;
 import com.android.messaging.backup.ui.BackupRestoreActivity;
 import com.android.messaging.datamodel.DataModel;
 import com.android.messaging.datamodel.binding.Binding;
@@ -469,7 +470,12 @@ public class ConversationListFragment extends Fragment implements ConversationLi
             });
             return;
         }
-        mBackupBannerGuideContainer.setVisibility(View.VISIBLE);
+
+        if (BackupAutopilotUtils.getIsBackupSwitchOn()) {
+            mBackupBannerGuideContainer.setVisibility(View.VISIBLE);
+        } else {
+            mBackupBannerGuideContainer.setVisibility(View.GONE);
+        }
 
         title.setText(HSApplication.getContext().getString(R.string.backup_banner_guide_title, 30));
         Threads.postOnThreadPoolExecutor(() -> {
