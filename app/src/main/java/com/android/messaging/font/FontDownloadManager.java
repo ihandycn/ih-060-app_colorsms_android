@@ -60,7 +60,7 @@ public class FontDownloadManager {
             List<String> styleList = (List<String>) item.get("Weight");
             boolean isLocal = (Boolean) item.get("IsLocalFont");
             double defaultSizeRatio = 1;
-            if (item.containsKey("DefaultSizeScale")) {
+            if (item.containsKey("DefaultSizeRatio")) {
                 defaultSizeRatio = (Double) item.get("DefaultSizeScale");
             }
             FontInfo info = new FontInfo(fontName, styleList, isLocal, (float) defaultSizeRatio);
