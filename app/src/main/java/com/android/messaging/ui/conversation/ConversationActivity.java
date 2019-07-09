@@ -63,6 +63,7 @@ import com.crashlytics.android.core.CrashlyticsCore;
 import com.ihs.app.framework.HSApplication;
 import com.ihs.commons.config.HSConfig;
 import com.ihs.commons.notificationcenter.HSGlobalNotificationCenter;
+import com.ihs.commons.utils.HSLog;
 import com.superapps.debug.CrashlyticsLog;
 import com.superapps.util.Dimensions;
 import com.superapps.util.IntegerBuckets;
@@ -189,16 +190,14 @@ public class ConversationActivity extends BugleActionBarActivity
 
     @Override
     public void onGlobalLayout() {
-        Rect r = new Rect();
         if (mContainer != null && mKeyboardHeight == 0) {
-            int statusBarHeight = Dimensions.getStatusBarHeight(this);
-            int navigationBarHeight = Dimensions.getNavigationBarHeight(this);
-            mContainer.getWindowVisibleDisplayFrame(r);
-            int screenHeight = mContainer.getRootView().getHeight();
-            int heightDiff = screenHeight - (r.bottom - r.top);
-
-            if (heightDiff > statusBarHeight + navigationBarHeight + Dimensions.pxFromDp(20)) {
-                mKeyboardHeight = heightDiff - statusBarHeight - navigationBarHeight;
+            Rect r = new Rect();
+            View view = getWindow().getDecorView();
+            view.getWindowVisibleDisplayFrame(r);
+            int heightDiff = mContainer.getHeight()- r.height() -
+                    Dimensions.getStatusBarHeight(this);
+            if (heightDiff > Dimensions.pxFromDp(120)) {
+                mKeyboardHeight = heightDiff;
                 UiUtils.updateKeyboardHeight(mKeyboardHeight);
             }
         }

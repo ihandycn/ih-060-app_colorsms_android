@@ -31,8 +31,7 @@ import com.superapps.util.IntegerBuckets;
 import com.superapps.util.Preferences;
 
 public class ContactPickerActivity extends BugleActionBarActivity implements
-        ContactPickerFragment.ContactPickerFragmentHost,
-        ViewTreeObserver.OnGlobalLayoutListener {
+        ContactPickerFragment.ContactPickerFragmentHost {
 
     // Fragment transactions cannot be performed after onSaveInstanceState() has been called since
     // it will cause state loss. We don't want to call commitAllowingStateLoss() since it's
@@ -43,13 +42,8 @@ public class ContactPickerActivity extends BugleActionBarActivity implements
     // Tracks whether onPause is called.
     private boolean mIsPaused;
 
-    private ViewGroup mContainer;
-
     private static final String PREF_KEY_CONVERSATION_ACTIVITY_SHOW_TIME = "pref_key_conversation_activity_show_time";
 
-    private int mStatusBarHeight;
-    private int mKeyboardHeight;
-    private int mNavigationBarHeight;
     private MessageData mDraftData;
 
     @Override
@@ -88,15 +82,7 @@ public class ContactPickerActivity extends BugleActionBarActivity implements
         // Don't animate UI state change for initial setup.
         updateUiState(false /* animate */);
 
-        mContainer = findViewById(R.id.conversation_and_compose_container);
-        mContainer.getViewTreeObserver().addOnGlobalLayoutListener(this);
-
-
         BugleAnalytics.logEvent("SMS_ActiveUsers", true);
-
-        mStatusBarHeight = Dimensions.getStatusBarHeight(this);
-        mNavigationBarHeight = Dimensions.getNavigationBarHeight(this);
-        mKeyboardHeight = UiUtils.getKeyboardHeight();
 
         long lastShowTime = Preferences.getDefault().getLong(PREF_KEY_CONVERSATION_ACTIVITY_SHOW_TIME, -1);
         if (lastShowTime != -1) {
@@ -214,25 +200,5 @@ public class ContactPickerActivity extends BugleActionBarActivity implements
     public void onDisplayHeightChanged(final int heightSpecification) {
         super.onDisplayHeightChanged(heightSpecification);
         invalidateActionBar();
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        mContainer.getViewTreeObserver().removeOnGlobalLayoutListener(this);
-    }
-
-    @Override
-    public void onGlobalLayout() {
-        Rect r = new Rect();
-        mContainer.getWindowVisibleDisplayFrame(r);
-
-        int screenHeight = mContainer.getRootView().getHeight();
-        int heightDiff = screenHeight - (r.bottom - r.top);
-
-        if (mKeyboardHeight == 0 && heightDiff > mStatusBarHeight + mNavigationBarHeight + Dimensions.pxFromDp(20)) {
-            mKeyboardHeight = heightDiff - mStatusBarHeight - mNavigationBarHeight;
-            UiUtils.updateKeyboardHeight(mKeyboardHeight);
-        }
     }
 }
