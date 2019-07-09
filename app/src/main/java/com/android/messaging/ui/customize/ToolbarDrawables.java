@@ -42,6 +42,7 @@ public class ToolbarDrawables {
         File file = new File(CommonUtils.getDirectory(ThemeBubbleDrawables.THEME_BASE_PATH + info.mThemeKey),
                 ThemeBubbleDrawables.TOOLBAR_BG_FILE_NAME);
 
+        //load toolbar image resource from asset first,
         if (info.mIsLocalTheme) {
             try {
                 String assetFileName = "themes/" + info.mThemeKey + "/" + info.toolbarBgUrl;
@@ -50,9 +51,7 @@ public class ToolbarDrawables {
                 if (ims != null) {
                     ims.close();
                 }
-                if (!file.exists()) {
-                    ThemeDownloadManager.getInstance().copyAssetFileAsync(file, assetFileName);
-                }
+                ThemeDownloadManager.getInstance().copyAssetFileAsync(file, assetFileName);
                 return sToolbarBitmap;
             } catch (IOException ignored) {
 

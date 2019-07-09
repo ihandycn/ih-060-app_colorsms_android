@@ -67,38 +67,43 @@ public class ThemeBubbleDrawables {
 
         ThemeInfo theme = ThemeUtils.getCurrentTheme();
         Bitmap bitmap = null;
-        try {
-            File localFile = new File(CommonUtils.getDirectory(
-                    ThemeBubbleDrawables.THEME_BASE_PATH + theme.mThemeKey),
-                    ThemeBubbleDrawables.INCOMING_BUBBLE_FILE_NAME);
-            //from local file
-            if (localFile.exists()) {
-                bitmap = loadBitmap(localFile);
-            }
 
-            if (bitmap != null) {
-                byte[] chunk = bitmap.getNinePatchChunk();
-                Rect rect = NinePatchChunk.deserialize(chunk).mPaddings;
-                mIncomingDrawable = new NinePatchDrawable(HSApplication.getContext().getResources(),
-                        bitmap, chunk, rect, null);
-                return mIncomingDrawable;
-            }
+        File localFile = new File(CommonUtils.getDirectory(
+                ThemeBubbleDrawables.THEME_BASE_PATH + theme.mThemeKey),
+                ThemeBubbleDrawables.INCOMING_BUBBLE_FILE_NAME);
 
-            //from asset
+        //from asset
+        if (theme.mIsLocalTheme) {
             String assetFileName = "themes/" + theme.mThemeKey + "/" + theme.bubbleIncomingUrl;
-            if (theme.mIsLocalTheme) {
+            try {
                 InputStream ims = HSApplication.getContext().getAssets().open(assetFileName);
                 bitmap = loadBitmap(ims);
 
                 if (ims != null) {
                     ims.close();
                 }
+
+                if (bitmap != null) {
+                    //copy file
+                    ThemeDownloadManager.getInstance().copyAssetFileAsync(localFile, assetFileName);
+                    //load .9
+                    byte[] chunk = bitmap.getNinePatchChunk();
+                    Rect rect = NinePatchChunk.deserialize(chunk).mPaddings;
+                    mIncomingDrawable = new NinePatchDrawable(HSApplication.getContext().getResources(),
+                            bitmap, chunk, rect, null);
+                    return mIncomingDrawable;
+                }
+            } catch (Exception ignored) {
+            }
+        }
+
+        //from local file
+        try {
+            if (localFile.exists()) {
+                bitmap = loadBitmap(localFile);
             }
 
             if (bitmap != null) {
-                //copy file
-                ThemeDownloadManager.getInstance().copyAssetFileAsync(localFile, assetFileName);
-                //load .9
                 byte[] chunk = bitmap.getNinePatchChunk();
                 Rect rect = NinePatchChunk.deserialize(chunk).mPaddings;
                 mIncomingDrawable = new NinePatchDrawable(HSApplication.getContext().getResources(),
@@ -128,6 +133,30 @@ public class ThemeBubbleDrawables {
         File localFile = new File(CommonUtils.getDirectory(
                 ThemeBubbleDrawables.THEME_BASE_PATH + theme.mThemeKey),
                 ThemeBubbleDrawables.OUTGOING_BUBBLE_FILE_NAME);
+
+        if (theme.mIsLocalTheme) {
+            try {
+                String assetFileName = "themes/" + theme.mThemeKey + "/" + theme.bubbleOutgoingUrl;
+                InputStream ims = HSApplication.getContext().getAssets().open(assetFileName);
+                bitmap = loadBitmap(ims);
+                if (ims != null) {
+                    ims.close();
+                }
+
+                if (bitmap != null) {
+                    ThemeDownloadManager.getInstance().copyAssetFileAsync(localFile, assetFileName);
+
+                    byte[] chunk = bitmap.getNinePatchChunk();
+                    Rect rect = NinePatchChunk.deserialize(chunk).mPaddings;
+                    mOutgoingDrawable = new NinePatchDrawable(HSApplication.getContext().getResources(),
+                            bitmap, chunk, rect, null);
+                    return mOutgoingDrawable;
+                }
+            } catch (Exception ignored) {
+                bitmap = null;
+            }
+        }
+
         try {
             if (localFile.exists()) {
                 bitmap = loadBitmap(localFile);
@@ -141,32 +170,7 @@ public class ThemeBubbleDrawables {
                 return mOutgoingDrawable;
             }
         } catch (Exception ignored) {
-            bitmap = null;
         }
-
-        try {
-            String assetFileName = "themes/" + theme.mThemeKey + "/" + theme.bubbleOutgoingUrl;
-            if (theme.mIsLocalTheme) {
-                InputStream ims = HSApplication.getContext().getAssets().open(assetFileName);
-                bitmap = loadBitmap(ims);
-                if (ims != null) {
-                    ims.close();
-                }
-            }
-
-            if (bitmap != null) {
-                ThemeDownloadManager.getInstance().copyAssetFileAsync(localFile, assetFileName);
-
-                byte[] chunk = bitmap.getNinePatchChunk();
-                Rect rect = NinePatchChunk.deserialize(chunk).mPaddings;
-                mOutgoingDrawable = new NinePatchDrawable(HSApplication.getContext().getResources(),
-                        bitmap, chunk, rect, null);
-                return mOutgoingDrawable;
-            }
-        } catch (Exception ignored) {
-
-        }
-
         return null;
     }
 
@@ -183,6 +187,31 @@ public class ThemeBubbleDrawables {
         File file = new File(CommonUtils.getDirectory(THEME_BASE_PATH
                 + theme.mThemeKey), INCOMING_SOLID_BUBBLE_FILE_NAME);
         Bitmap bitmap = null;
+
+        //use asset file and copy
+        if (theme.mIsLocalTheme) {
+            try {
+                String assetFileName = "themes/" + theme.mThemeKey + "/" + theme.mSolidBubbleIncomingUrl;
+                InputStream ims = HSApplication.getContext().getAssets().open(assetFileName);
+                bitmap = loadBitmap(ims);
+
+                if (ims != null) {
+                    ims.close();
+                }
+
+                if (bitmap != null) {
+                    ThemeDownloadManager.getInstance().copyAssetFileAsync(file, assetFileName);
+
+                    byte[] chunk = bitmap.getNinePatchChunk();
+                    Rect rect = NinePatchChunk.deserialize(chunk).mPaddings;
+                    mIncomingSolidDrawable = new NinePatchDrawable(HSApplication.getContext().getResources(),
+                            bitmap, chunk, rect, null);
+                    return mIncomingSolidDrawable;
+                }
+            } catch (Exception ignored) {
+            }
+        }
+
         //use local file
         try {
             if (file.exists()) {
@@ -200,31 +229,7 @@ public class ThemeBubbleDrawables {
             bitmap = null;
         }
 
-        //use asset file and copy
-        try {
-            String assetFileName = "themes/" + theme.mThemeKey + "/" + theme.mSolidBubbleIncomingUrl;
-            if (theme.mIsLocalTheme) {
-                InputStream ims;
-                ims = HSApplication.getContext().getAssets().open(assetFileName);
-                bitmap = loadBitmap(ims);
 
-                if (ims != null) {
-                    ims.close();
-                }
-            }
-
-            if (bitmap != null) {
-                ThemeDownloadManager.getInstance().copyAssetFileAsync(file, assetFileName);
-
-                byte[] chunk = bitmap.getNinePatchChunk();
-                Rect rect = NinePatchChunk.deserialize(chunk).mPaddings;
-                mIncomingSolidDrawable = new NinePatchDrawable(HSApplication.getContext().getResources(),
-                        bitmap, chunk, rect, null);
-                return mIncomingSolidDrawable;
-            }
-        } catch (Exception ignored) {
-
-        }
         return null;
     }
 
@@ -242,6 +247,33 @@ public class ThemeBubbleDrawables {
         File file = new File(CommonUtils.getDirectory(THEME_BASE_PATH
                 + theme.mThemeKey), OUTGOING_SOLID_BUBBLE_FILE_NAME);
         Bitmap bitmap = null;
+
+        //use asset file and copy
+        if (theme.mIsLocalTheme) {
+            try {
+                String assetFileName = "themes/" + theme.mThemeKey + "/" + theme.mSolidBubbleOutgoingUrl;
+                InputStream ims;
+                ims = HSApplication.getContext().getAssets().open(assetFileName);
+                bitmap = loadBitmap(ims);
+                if (ims != null) {
+                    ims.close();
+                }
+
+                if (bitmap != null) {
+                    //the file is in asset but not in local folder
+                    ThemeDownloadManager.getInstance().copyAssetFileAsync(file, assetFileName);
+
+                    byte[] chunk = bitmap.getNinePatchChunk();
+                    Rect rect = NinePatchChunk.deserialize(chunk).mPaddings;
+                    mOutgoingSolidDrawable = new NinePatchDrawable(HSApplication.getContext().getResources(),
+                            bitmap, chunk, rect, null);
+                    return mOutgoingSolidDrawable;
+                }
+            } catch (Exception ignored) {
+                bitmap = null;
+            }
+        }
+
         // use local file
         try {
             if (file.exists()) {
@@ -256,33 +288,8 @@ public class ThemeBubbleDrawables {
                 return mOutgoingSolidDrawable;
             }
         } catch (Exception ignored) {
-            bitmap = null;
         }
-        //use asset file and copy
-        try {
-            String assetFileName = "themes/" + theme.mThemeKey + "/" + theme.mSolidBubbleOutgoingUrl;
-            if (theme.mIsLocalTheme) {
-                InputStream ims;
-                ims = HSApplication.getContext().getAssets().open(assetFileName);
-                bitmap = loadBitmap(ims);
-                if (ims != null) {
-                    ims.close();
-                }
-            }
 
-            if (bitmap != null) {
-                //the file is in asset but not in local folder
-                ThemeDownloadManager.getInstance().copyAssetFileAsync(file, assetFileName);
-
-                byte[] chunk = bitmap.getNinePatchChunk();
-                Rect rect = NinePatchChunk.deserialize(chunk).mPaddings;
-                mOutgoingSolidDrawable = new NinePatchDrawable(HSApplication.getContext().getResources(),
-                        bitmap, chunk, rect, null);
-                return mOutgoingSolidDrawable;
-            }
-        } catch (Exception ignored) {
-
-        }
         return null;
     }
 
