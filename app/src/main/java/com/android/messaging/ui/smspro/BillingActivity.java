@@ -9,6 +9,9 @@ import android.widget.TextView;
 import com.android.messaging.R;
 import com.android.messaging.ad.BillingManager;
 import com.android.messaging.util.BugleAnalytics;
+import com.ihs.commons.notificationcenter.HSGlobalNotificationCenter;
+import com.ihs.commons.notificationcenter.INotificationObserver;
+import com.ihs.commons.utils.HSBundle;
 import com.superapps.util.BackgroundDrawables;
 import com.superapps.util.Dimensions;
 
@@ -20,9 +23,10 @@ import net.appcloudbox.service.utils.AcbResponseListener;
 
 import java.util.ArrayList;
 
+import static com.android.messaging.ad.BillingManager.BILLING_VERIFY_SUCCESS;
 import static com.android.messaging.ad.BillingManager.PRODUCT_ID;
 
-public class BillingActivity extends AppCompatActivity {
+public class BillingActivity extends AppCompatActivity implements INotificationObserver{
 
     private AcbIAPProductRequest acbIAPProductRequest;
 
@@ -77,11 +81,22 @@ public class BillingActivity extends AppCompatActivity {
         BugleAnalytics.logEvent("SMS_Subscription_Show", true);
         BugleAnalytics.logEvent("Subscription_Analysis",
                 false, true, "Subscription_Show", "true");
+
+        HSGlobalNotificationCenter.addObserver(BILLING_VERIFY_SUCCESS, this);
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
         acbIAPProductRequest.cancel();
+        HSGlobalNotificationCenter.removeObserver(this);
     }
+
+    @Override
+    public void onReceive(String s, HSBundle hsBundle) {
+        if (BILLING_VERIFY_SUCCESS.equals(s)) {
+            finish();
+        }
+    }
+
 }
