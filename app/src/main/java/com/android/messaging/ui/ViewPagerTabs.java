@@ -33,7 +33,6 @@ import android.widget.Toast;
 import com.android.messaging.Factory;
 import com.android.messaging.R;
 import com.android.messaging.font.FontUtils;
-import com.android.messaging.font.TypefaceInfo;
 import com.android.messaging.ui.customize.PrimaryColors;
 import com.android.messaging.util.OsUtil;
 
@@ -169,8 +168,7 @@ public class ViewPagerTabs extends HorizontalScrollView implements ViewPager.OnP
     private void addTab(CharSequence tabTitle, final int position) {
         final TextView textView = new TextView(getContext());
 
-        TypefaceInfo info = FontUtils.getTypefaceAndScale();
-        textView.setTypeface(info.getTypeface());
+        textView.setTypeface(FontUtils.getTypeface());
         textView.setText(tabTitle);
         if (mBackgroundColor == -1) {
             textView.setBackgroundResource(R.drawable.contact_picker_tab_background_selector);
@@ -188,8 +186,6 @@ public class ViewPagerTabs extends HorizontalScrollView implements ViewPager.OnP
         if (mTextSize > 0) {
             textView.setTextSize(TypedValue.COMPLEX_UNIT_PX, mTextSize);
         }
-
-        textView.setTextSize(TypedValue.COMPLEX_UNIT_PX, textView.getTextSize() * info.getDefaultSizeScale());
         if (mTextColor != null) {
             textView.setTextColor(mTextColor);
         }

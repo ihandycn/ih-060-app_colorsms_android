@@ -39,7 +39,6 @@ import android.text.TextWatcher;
 import android.text.style.AbsoluteSizeSpan;
 import android.text.style.ForegroundColorSpan;
 import android.util.AttributeSet;
-import android.util.TypedValue;
 import android.view.ContextThemeWrapper;
 import android.view.Gravity;
 import android.view.KeyEvent;
@@ -75,7 +74,6 @@ import com.android.messaging.datamodel.data.PendingAttachmentData;
 import com.android.messaging.datamodel.data.SubscriptionListData;
 import com.android.messaging.datamodel.data.SubscriptionListData.SubscriptionListEntry;
 import com.android.messaging.font.FontUtils;
-import com.android.messaging.font.TypefaceInfo;
 import com.android.messaging.sms.MmsConfig;
 import com.android.messaging.ui.AttachmentPreview;
 import com.android.messaging.ui.BugleActionBarActivity;
@@ -286,12 +284,7 @@ public class ComposeMessageView extends LinearLayout
         mInputLayout = findViewById(R.id.input_layout);
         mComposeEditText = findViewById(R.id.compose_message_text);
         TextViewUtil.setCursorPointColor(mComposeEditText, PrimaryColors.DEFAULT_PRIMARY_COLOR);
-        TypefaceInfo info = FontUtils.getTypefaceAndScale();
-        if (info != null) {
-            mComposeEditText.setTypeface(info.getTypeface());
-            mComposeEditText.setTextSize(TypedValue.COMPLEX_UNIT_PX,
-                    mComposeEditText.getTextSize() * info.getDefaultSizeScale());
-        }
+        mComposeEditText.setTypeface(FontUtils.getTypeface());
         mComposeEditText.setOnEditorActionListener(this);
         mComposeEditText.addTextChangedListener(this);
         mComposeEditText.setOnFocusChangeListener(new OnFocusChangeListener() {

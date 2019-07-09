@@ -43,7 +43,6 @@ import com.android.messaging.datamodel.action.UpdateConversationArchiveStatusAct
 import com.android.messaging.datamodel.data.ConversationListItemData;
 import com.android.messaging.datamodel.data.MessageData;
 import com.android.messaging.font.FontUtils;
-import com.android.messaging.font.TypefaceInfo;
 import com.android.messaging.sms.MmsUtils;
 import com.android.messaging.ui.ContactIconView;
 import com.android.messaging.ui.SnackBar;
@@ -51,7 +50,6 @@ import com.android.messaging.ui.SnackBarInteraction;
 import com.android.messaging.ui.customize.AvatarBgDrawables;
 import com.android.messaging.ui.customize.ConversationColors;
 import com.android.messaging.ui.customize.PrimaryColors;
-import com.android.messaging.ui.view.MessagesTextView;
 import com.android.messaging.util.Assert;
 import com.android.messaging.util.AvatarUriUtil;
 import com.android.messaging.util.BugleAnalytics;
@@ -128,7 +126,7 @@ public class ConversationListItemView extends FrameLayout implements OnClickList
 
     private int mAnimatingCount;
     private ViewGroup mSwipeableContainer;
-    private MessagesTextView mConversationNameView;
+    private TextView mConversationNameView;
     private ImageView mWorkProfileIconView;
     private TextView mSnippetTextView;
     private TextView mTimestampTextView;
@@ -219,15 +217,9 @@ public class ConversationListItemView extends FrameLayout implements OnClickList
     private void setConversationName() {
         mConversationNameView.setTextColor(mConversationNameColor);
         if (mData.getIsRead() || mData.getShowDraft()) {
-            TypefaceInfo info = FontUtils.getTypeface(FontUtils.MEDIUM);
-            if (info != null) {
-                mConversationNameView.setTypeface(info.getTypeface());
-            }
+            mConversationNameView.setTypeface(FontUtils.getTypeface(FontUtils.MEDIUM));
         } else {
-            TypefaceInfo info = FontUtils.getTypeface(FontUtils.SEMI_BOLD);
-            if (info != null) {
-                mConversationNameView.setTypeface(info.getTypeface());
-            }
+            mConversationNameView.setTypeface(FontUtils.getTypeface(FontUtils.SEMI_BOLD));
         }
 
         final String conversationName = mData.getName();
@@ -371,6 +363,8 @@ public class ConversationListItemView extends FrameLayout implements OnClickList
                 mTimestampTextView.setText(formattedTimestamp);
             }
         }
+
+        mTimestampTextView.setTypeface(FontUtils.getTypeface());
 
         final boolean isSelected = mHostInterface.isConversationSelected(mData.getConversationId());
         setSelected(isSelected);
