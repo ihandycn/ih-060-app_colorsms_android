@@ -54,8 +54,6 @@
                 app:unselectedChipBackgroundColor="@color/chips_background_color"
                 app:unselectedChipTextColor="@color/chips_text_color">
 
-                <!-- Put focus on the chips view by default so soft keyboard can be shown -->
-                <requestFocus />
             </com.android.messaging.ui.contact.ContactRecipientAutoCompleteView>
 
         </com.android.messaging.ui.MaxHeightScrollView>

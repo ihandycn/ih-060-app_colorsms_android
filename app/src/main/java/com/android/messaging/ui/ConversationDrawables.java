@@ -103,15 +103,15 @@ public class ConversationDrawables {
 
     public Drawable getBubbleDrawable(final boolean selected, final boolean incoming,
                                       final boolean needArrow, final boolean isError,
-                                      final String conversationId) {
+                                      final String conversationId, final boolean hasCustomBackground) {
         final Drawable protoDrawable;
         final Resources resources = mContext.getResources();
         if (needArrow) {
             if (incoming) {
                 protoDrawable = isError && !selected ? mIncomingErrorBubbleDrawable :
-                        BubbleDrawables.getSelectedDrawable(true, conversationId);
+                        BubbleDrawables.getSelectedDrawable(true, conversationId, hasCustomBackground);
             } else {
-                protoDrawable = BubbleDrawables.getSelectedDrawable(false, conversationId);
+                protoDrawable = BubbleDrawables.getSelectedDrawable(false, conversationId, hasCustomBackground);
             }
         } else if (incoming) {
             protoDrawable = mIncomingBubbleNoArrowDrawable;

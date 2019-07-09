@@ -50,8 +50,10 @@ import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.text.BidiFormatter;
 import android.support.v4.text.TextDirectionHeuristicsCompat;
 import android.support.v7.app.ActionBar;
+import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.RecyclerView.ViewHolder;
 import android.text.TextUtils;
 import android.text.format.DateUtils;
 import android.view.ActionMode;
@@ -74,6 +76,7 @@ import com.android.messaging.ad.AdPlacement;
 import com.android.messaging.datamodel.BugleNotifications;
 import com.android.messaging.datamodel.DataModel;
 import com.android.messaging.datamodel.MessagingContentProvider;
+import com.android.messaging.datamodel.action.InsertNewMessageAction;
 import com.android.messaging.datamodel.binding.Binding;
 import com.android.messaging.datamodel.binding.BindingBase;
 import com.android.messaging.datamodel.binding.ImmutableBindingRef;
@@ -94,10 +97,12 @@ import com.android.messaging.ui.BugleActionBarActivity;
 import com.android.messaging.ui.ConversationDrawables;
 import com.android.messaging.ui.SnackBar;
 import com.android.messaging.ui.UIIntents;
+import com.android.messaging.ui.animation.BubbleTransitionAnimation;
 import com.android.messaging.ui.conversation.ComposeMessageView.IComposeMessageViewHost;
 import com.android.messaging.ui.conversation.ConversationInputManager.ConversationInputHost;
 import com.android.messaging.ui.conversation.ConversationMessageView.ConversationMessageViewHost;
 import com.android.messaging.ui.customize.ConversationColors;
+import com.android.messaging.ui.customize.PrimaryColors;
 import com.android.messaging.ui.customize.theme.ThemeInfo;
 import com.android.messaging.ui.customize.theme.ThemeUtils;
 import com.android.messaging.ui.dialog.FiveStarRateDialog;
@@ -126,6 +131,8 @@ import com.ihs.commons.notificationcenter.HSGlobalNotificationCenter;
 import com.ihs.commons.notificationcenter.INotificationObserver;
 import com.ihs.commons.utils.HSBundle;
 import com.ihs.commons.utils.HSLog;
+import com.superapps.util.Compats;
+import com.superapps.util.BackgroundDrawables;
 import com.superapps.util.Dimensions;
 import com.superapps.util.Preferences;
 import com.superapps.util.Threads;
@@ -137,6 +144,7 @@ import net.appcloudbox.ads.base.ContainerView.AcbNativeAdIconView;
 import net.appcloudbox.ads.common.utils.AcbError;
 import net.appcloudbox.ads.nativead.AcbNativeAdLoader;
 import net.appcloudbox.ads.nativead.AcbNativeAdManager;
+import net.appcloudbox.autopilot.AutopilotEvent;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -572,7 +580,8 @@ public class ConversationFragment extends Fragment implements ConversationDataLi
     private AcbNativeAdLoader mNativeAdLoader;
     private boolean isForeground;
     private Handler mAdRefreshHandler = new Handler() {
-        @Override public void handleMessage(Message msg) {
+        @Override
+        public void handleMessage(Message msg) {
             if (isForeground) {
                 loadTopBannerAd();
             } else {
@@ -656,10 +665,13 @@ public class ConversationFragment extends Fragment implements ConversationDataLi
         HSGlobalNotificationCenter.addObserver(RESET_ITEM, this);
         HSGlobalNotificationCenter.addObserver(EVENT_UPDATE_BUBBLE_DRAWABLE, this);
         BugleAnalytics.logEvent("SMS_DetailsPage_Show", true, true);
+        AutopilotEvent.logTopicEvent("topic-768lyi3sp", "detailspage_show");
     }
 
     private void loadTopBannerAd() {
         BugleAnalytics.logEvent("Detailspage_TopAd_Should_Show", true, true);
+        AutopilotEvent.logTopicEvent("topic-768lyi3sp", "topad_chance");
+
         List<AcbNativeAd> nativeAds = AcbNativeAdManager.fetch(AdPlacement.AD_DETAIL_NATIVE, 1);
         if (nativeAds.size() > 0) {
             if (mNativeAd != null) {
@@ -754,7 +766,23 @@ public class ConversationFragment extends Fragment implements ConversationDataLi
         mRecyclerView.setPadding(0, Dimensions.pxFromDp(53), 0, 0);
         mRecyclerView.setClipToPadding(true);
 
+        if (WallpaperManager.getWallpaperPathByConversationId(mConversationId) != null) {
+            int color = PrimaryColors.getPrimaryColor();
+            mAdContainer.setBackground(BackgroundDrawables.createBackgroundDrawable(
+                    Color.argb(40, Color.red(color), Color.green(color), Color.blue(color)), 0, false));
+            title.setTextColor(0xffffffff);
+            description.setTextColor(0xffffffff);
+            ivAdPreview.getDrawable().setColorFilter(0xffffffff, PorterDuff.Mode.SRC_ATOP);
+            actionBtn.setTextColor(0xffffffff);
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                ((LayerDrawable) actionBg).getDrawable(1)
+                        .setColorFilter(0xffffffff, PorterDuff.Mode.SRC_IN);
+            }
+        }
+
         BugleAnalytics.logEvent("Detailspage_TopAd_Show", true, true);
+        AutopilotEvent.logTopicEvent("topic-768lyi3sp", "topad_show");
+
         enqueueNextAd();
     }
 
@@ -862,7 +890,39 @@ public class ConversationFragment extends Fragment implements ConversationDataLi
         manager.setReverseLayout(false);
 //        mRecyclerView.setHasFixedSize(true);
         mRecyclerView.setLayoutManager(manager);
-        mRecyclerView.setItemAnimator(null);
+
+        DefaultItemAnimator itemAnimator = new DefaultItemAnimator() {
+            private final List<ViewHolder> mAddAnimations = new ArrayList<>();
+            private BubbleTransitionAnimation mPopupTransitionAnimation;
+
+            @Override
+            public boolean animateAdd(final ViewHolder holder) {
+                final ConversationMessageView view =
+                        (ConversationMessageView) holder.itemView;
+                final ConversationMessageData data = view.getData();
+                endAnimation(holder);
+                final long timeSinceSend = System.currentTimeMillis() - data.getReceivedTimeStamp();
+                if (data.getReceivedTimeStamp() ==
+                        InsertNewMessageAction.getLastSentMessageTimestamp() &&
+                        !data.getIsIncoming() &&
+                        timeSinceSend < MESSAGE_ANIMATION_MAX_WAIT) {
+                    view.setAlpha(0);
+                    mPopupTransitionAnimation = new BubbleTransitionAnimation(view);
+                    mPopupTransitionAnimation.startAfterLayoutComplete();
+                    mAddAnimations.add(holder);
+                    return true;
+                } else {
+                    return super.animateAdd(holder);
+                }
+            }
+
+            @Override
+            public boolean animateMove(ViewHolder holder, int fromX, int fromY, int toX, int toY) {
+                return false;
+            }
+        };
+        mRecyclerView.setItemAnimator(itemAnimator);
+
         mRecyclerView.setAdapter(mAdapter);
         if (savedInstanceState != null) {
             mListState = savedInstanceState.getParcelable(SAVED_INSTANCE_STATE_LIST_VIEW_STATE_KEY);
@@ -880,9 +940,8 @@ public class ConversationFragment extends Fragment implements ConversationDataLi
         // Bind the compose message view to the DraftMessageData
         mComposeMessageView.bind(DataModel.get().createDraftMessageData(
                 mBinding.getData().getConversationId()), this);
-        try {
+        if (!(Compats.IS_SAMSUNG_DEVICE && Build.VERSION.SDK_INT >= Build.VERSION_CODES.P)) {
             mComposeMessageView.requestFocus();
-        } catch (Exception e) {
         }
 
         mMediaLayout = view.findViewById(R.id.camera_photo_layout);
@@ -890,7 +949,8 @@ public class ConversationFragment extends Fragment implements ConversationDataLi
         mThemeWallpaperView = view.findViewById(R.id.conversation_fragment_theme_wallpaper);
 
         mComposeMessageView.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
-            @Override public void onGlobalLayout() {
+            @Override
+            public void onGlobalLayout() {
                 mComposeMessageView.getViewTreeObserver().removeOnGlobalLayoutListener(this);
 
                 Threads.postOnMainThreadDelayed(() -> {
@@ -1089,6 +1149,36 @@ public class ConversationFragment extends Fragment implements ConversationDataLi
         return super.onOptionsItemSelected(item);
     }
 
+    private void clusterConversationMessageData(final ConversationMessageData formerData, final ConversationMessageData latterData) {
+        final String formerParticipantId = formerData.getParticipantId();
+        final String latterParticipantId = latterData.getParticipantId();
+        if (!TextUtils.equals(formerParticipantId, latterParticipantId)) {
+            return;
+        }
+
+        final boolean formerStatus = formerData.getIsIncoming();
+        final boolean latterStatus = latterData.getIsIncoming();
+        if (latterStatus != formerStatus) {
+            return;
+        }
+
+        final long formerReceivedTimestamp = formerData.getReceivedTimeStamp();
+        final long latterReceivedTimestamp = latterData.getReceivedTimeStamp();
+        final long timestampDeltaMillis = Math.abs(formerReceivedTimestamp - latterReceivedTimestamp);
+        if (timestampDeltaMillis > DateUtils.MINUTE_IN_MILLIS) {
+            return;
+        }
+
+        final String formerSelfId = formerData.getSelfParticipantId();
+        final String latterSelfId = latterData.getSelfParticipantId();
+        if (!TextUtils.equals(formerSelfId, latterSelfId)) {
+            return;
+        }
+
+        formerData.setCanClusterWithNextMessage(true);
+        latterData.setCanClusterWithPreviousMessage(true);
+    }
+
     /**
      * {@inheritDoc} from ConversationDataListener
      */
@@ -1116,6 +1206,12 @@ public class ConversationFragment extends Fragment implements ConversationDataLi
                 messageData.bind(cursor);
                 messageDataList.add(messageData);
             } while (cursor.moveToNext());
+        }
+
+        if (messageDataList.size() > 1) {
+            for (int i = 0; i < messageDataList.size() - 1; i++) {
+                clusterConversationMessageData(messageDataList.get(i), messageDataList.get(i + 1));
+            }
         }
 
         if (mIsDestroyed) {

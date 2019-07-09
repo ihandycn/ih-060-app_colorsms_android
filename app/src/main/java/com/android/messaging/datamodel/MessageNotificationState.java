@@ -1457,7 +1457,8 @@ public abstract class MessageNotificationState extends NotificationState {
                                 PendingIntentConstants.MSG_SEND_ERROR, null),
                                 PendingIntentConstants.MSG_SEND_ERROR, builder.build(), channel);
                     }
-                    BugleAnalytics.logEvent("FailedNotifications_Received", true);
+                    BugleAnalytics.logEvent("FailedNotifications_Received", true,
+                            "Signal", String.valueOf(DataModelImpl.get().getConnectivityUtil().getSignalLevel(0)));
                 } else {
                     Notifications.cancelSafely(BugleNotifications.buildNotificationTag(PendingIntentConstants.MSG_SEND_ERROR, null),
                             PendingIntentConstants.MSG_SEND_ERROR);

@@ -24,8 +24,6 @@ import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
-import android.text.format.DateUtils;
-import android.text.format.Formatter;
 import android.text.util.Linkify;
 import android.util.AttributeSet;
 import android.util.DisplayMetrics;
@@ -103,24 +101,19 @@ public class ConversationMessageView extends RelativeLayout implements View.OnCl
     private ImageView mMessageIsLockView;
     private ViewGroup mStatusContainer;
     private TextView mStatusTextView;
-    private TextView mTitleTextView;
-    private TextView mMmsInfoTextView;
-    private LinearLayout mMessageTitleLayout;
     private TextView mSenderNameTextView;
     private ContactIconView mContactIconView;
     private ViewGroup mContactIconContainer;
     private ImageView mContactIconBg;
     private ConversationMessageBubbleView mMessageBubble;
-    private View mSubjectView;
-    private TextView mSubjectText;
-    private View mDeliveredBadge;
+    private ImageView mDeliveredBadge;
     private ViewGroup mMessageMetadataView;
     private ViewGroup mMessageTextAndInfoView;
-    private TextView mSimNameView;
     private boolean mOneOnOne;
     private ConversationMessageViewHost mHost;
     private ImageView checkBox;
     private int mOffset;
+    private boolean mHasCustomBackground;
 
     public ConversationMessageView(final Context context, final AttributeSet attrs) {
         super(context, attrs);
@@ -134,7 +127,6 @@ public class ConversationMessageView extends RelativeLayout implements View.OnCl
         super.onFinishInflate();
         mContactIconView = findViewById(R.id.conversation_icon);
         mContactIconBg = findViewById(R.id.conversation_icon_bg);
-        mContactIconBg.setImageDrawable(AvatarBgDrawables.getAvatarBg(false));
         mContactIconContainer = findViewById(R.id.conversation_icon_container);
         mContactIconView.setOnLongClickListener(view -> {
             ConversationMessageView.this.performLongClick();
@@ -164,17 +156,11 @@ public class ConversationMessageView extends RelativeLayout implements View.OnCl
 
         mMessageIsLockView = findViewById(R.id.message_lock);
 
-        mTitleTextView = findViewById(R.id.message_title);
-        mMmsInfoTextView = findViewById(R.id.mms_info);
-        mMessageTitleLayout = findViewById(R.id.message_title_layout);
         mSenderNameTextView = findViewById(R.id.message_sender_name);
         mMessageBubble = findViewById(R.id.message_content);
-        mSubjectView = findViewById(R.id.subject_container);
-        mSubjectText = mSubjectView.findViewById(R.id.subject_text);
         mDeliveredBadge = findViewById(R.id.smsDeliveredBadge);
         mMessageMetadataView = findViewById(R.id.message_metadata);
         mMessageTextAndInfoView = findViewById(R.id.message_text_and_info);
-        mSimNameView = findViewById(R.id.sim_name);
         checkBox = findViewById(R.id.check_box);
         LayoutTransition layoutTransition = new LayoutTransition();
         layoutTransition.disableTransitionType(LayoutTransition.DISAPPEARING);
@@ -276,10 +262,17 @@ public class ConversationMessageView extends RelativeLayout implements View.OnCl
      */
     public void bind(final ConversationMessageData data,
                      final boolean oneOnOne, boolean isMultiSelected) {
+        if (mData == data) {
+            return;
+        }
+
         mOneOnOne = oneOnOne;
 
         // Update our UI model
         mData = data;
+        mHasCustomBackground = WallpaperManager.hasCustomWallpaper(mData.getConversationId());
+
+        mContactIconBg.setImageDrawable(AvatarBgDrawables.getAvatarBg(false, mHasCustomBackground));
         // Update text and image content for the view.
         updateViewContent();
 
@@ -345,113 +338,6 @@ public class ConversationMessageView extends RelativeLayout implements View.OnCl
 
     private void updateViewContent() {
         updateMessageContent();
-        int titleResId = -1;
-        int statusResId = -1;
-        String statusText = null;
-        switch (mData.getStatus()) {
-            case MessageData.BUGLE_STATUS_INCOMING_AUTO_DOWNLOADING:
-            case MessageData.BUGLE_STATUS_INCOMING_MANUAL_DOWNLOADING:
-            case MessageData.BUGLE_STATUS_INCOMING_RETRYING_AUTO_DOWNLOAD:
-            case MessageData.BUGLE_STATUS_INCOMING_RETRYING_MANUAL_DOWNLOAD:
-                titleResId = R.string.message_title_downloading;
-                statusResId = R.string.message_status_downloading;
-                break;
-
-            case MessageData.BUGLE_STATUS_INCOMING_YET_TO_MANUAL_DOWNLOAD:
-                if (!OsUtil.isSecondaryUser()) {
-                    titleResId = R.string.message_title_manual_download;
-                    if (isSelected()) {
-                        statusResId = R.string.message_status_download_action;
-                    } else {
-                        statusResId = R.string.message_status_download;
-                    }
-                }
-                break;
-
-            case MessageData.BUGLE_STATUS_INCOMING_EXPIRED_OR_NOT_AVAILABLE:
-                if (!OsUtil.isSecondaryUser()) {
-                    titleResId = R.string.message_title_download_failed;
-                    statusResId = R.string.message_status_download_error;
-                }
-                break;
-
-            case MessageData.BUGLE_STATUS_INCOMING_DOWNLOAD_FAILED:
-                if (!OsUtil.isSecondaryUser()) {
-                    titleResId = R.string.message_title_download_failed;
-                    if (isSelected()) {
-                        statusResId = R.string.message_status_download_action;
-                    } else {
-                        statusResId = R.string.message_status_download;
-                    }
-                }
-                break;
-
-            case MessageData.BUGLE_STATUS_OUTGOING_YET_TO_SEND:
-            case MessageData.BUGLE_STATUS_OUTGOING_SENDING:
-                if (getData().getIsSms()) {
-                    statusText = mData.getFormattedReceivedTimeStamp();
-                } else {
-                    statusResId = R.string.message_status_sending;
-                }
-                break;
-
-            case MessageData.BUGLE_STATUS_OUTGOING_RESENDING:
-            case MessageData.BUGLE_STATUS_OUTGOING_AWAITING_RETRY:
-                if (getData().getIsSms()) {
-                    statusText = mData.getFormattedReceivedTimeStamp();
-                } else {
-                    statusResId = R.string.message_status_send_retrying;
-                }
-                break;
-
-            case MessageData.BUGLE_STATUS_OUTGOING_FAILED_EMERGENCY_NUMBER:
-                statusResId = R.string.message_status_send_failed_emergency_number;
-                break;
-
-            case MessageData.BUGLE_STATUS_OUTGOING_FAILED:
-                // don't show the error state unless we're the default sms app
-                if (DefaultSMSUtils.isDefaultSmsApp()) {
-                    if (isSelected()) {
-                        statusResId = R.string.message_status_resend;
-                    } else {
-                        statusResId = MmsUtils.mapRawStatusToErrorResourceId(
-                                mData.getStatus(), mData.getRawTelephonyStatus());
-                    }
-                    break;
-                }
-                // FALL THROUGH HERE
-
-            case MessageData.BUGLE_STATUS_OUTGOING_COMPLETE:
-            case MessageData.BUGLE_STATUS_INCOMING_COMPLETE:
-            default:
-                statusText = mData.getFormattedReceivedTimeStamp();
-                break;
-        }
-
-        final boolean titleVisible = (titleResId >= 0);
-        if (titleVisible) {
-            final String titleText = getResources().getString(titleResId);
-            mTitleTextView.setText(titleText);
-
-            final String mmsInfoText = getResources().getString(
-                    R.string.mms_info,
-                    Formatter.formatFileSize(getContext(), mData.getSmsMessageSize()),
-                    DateUtils.formatDateTime(
-                            getContext(),
-                            mData.getMmsExpiry(),
-                            DateUtils.FORMAT_SHOW_DATE |
-                                    DateUtils.FORMAT_SHOW_TIME |
-                                    DateUtils.FORMAT_NUMERIC_DATE |
-                                    DateUtils.FORMAT_NO_YEAR));
-            mMmsInfoTextView.setText(mmsInfoText);
-            mMessageTitleLayout.setVisibility(View.VISIBLE);
-        } else {
-            mMessageTitleLayout.setVisibility(View.GONE);
-        }
-
-        final String subjectText = MmsUtils.cleanseMmsSubject(getResources(),
-                mData.getMmsSubject());
-        final boolean subjectVisible = !TextUtils.isEmpty(subjectText);
 
         final boolean senderNameVisible = !mOneOnOne && !mData.getCanClusterWithNextMessage()
                 && mData.getIsIncoming();
@@ -462,14 +348,107 @@ public class ConversationMessageView extends RelativeLayout implements View.OnCl
             mSenderNameTextView.setVisibility(View.GONE);
         }
 
-        if (statusResId >= 0) {
-            statusText = getResources().getString(statusResId);
-        }
+        // Update the sim indicator.
+        final SubscriptionListEntry subscriptionEntry =
+                mHost.getSubscriptionEntryForSelfParticipant(mData.getSelfParticipantId(),
+                        true /* excludeDefault */);
+        final boolean simNameVisible = subscriptionEntry != null &&
+                !TextUtils.isEmpty(subscriptionEntry.displayName) &&
+                !mData.getCanClusterWithNextMessage();
 
-        // We set the text even if the view will be GONE for accessibility
-        mStatusTextView.setText(statusText);
         final boolean statusVisible = !mData.getCanClusterWithNextMessage() || mData.getIsLocked();
         if (statusVisible) {
+
+            int statusResId = -1;
+            String statusText = null;
+            switch (mData.getStatus()) {
+                case MessageData.BUGLE_STATUS_INCOMING_AUTO_DOWNLOADING:
+                case MessageData.BUGLE_STATUS_INCOMING_MANUAL_DOWNLOADING:
+                case MessageData.BUGLE_STATUS_INCOMING_RETRYING_AUTO_DOWNLOAD:
+                case MessageData.BUGLE_STATUS_INCOMING_RETRYING_MANUAL_DOWNLOAD:
+                    statusResId = R.string.message_status_downloading;
+                    break;
+
+                case MessageData.BUGLE_STATUS_INCOMING_YET_TO_MANUAL_DOWNLOAD:
+                    if (!OsUtil.isSecondaryUser()) {
+                        if (isSelected()) {
+                            statusResId = R.string.message_status_download_action;
+                        } else {
+                            statusResId = R.string.message_status_download;
+                        }
+                    }
+                    break;
+
+                case MessageData.BUGLE_STATUS_INCOMING_EXPIRED_OR_NOT_AVAILABLE:
+                    if (!OsUtil.isSecondaryUser()) {
+                        statusResId = R.string.message_status_download_error;
+                    }
+                    break;
+
+                case MessageData.BUGLE_STATUS_INCOMING_DOWNLOAD_FAILED:
+                    if (!OsUtil.isSecondaryUser()) {
+                        if (isSelected()) {
+                            statusResId = R.string.message_status_download_action;
+                        } else {
+                            statusResId = R.string.message_status_download;
+                        }
+                    }
+                    break;
+
+                case MessageData.BUGLE_STATUS_OUTGOING_YET_TO_SEND:
+                case MessageData.BUGLE_STATUS_OUTGOING_SENDING:
+                    if (getData().getIsSms()) {
+                        statusText = mData.getFormattedReceivedTimeStamp();
+                    } else {
+                        statusResId = R.string.message_status_sending;
+                    }
+                    break;
+
+                case MessageData.BUGLE_STATUS_OUTGOING_RESENDING:
+                case MessageData.BUGLE_STATUS_OUTGOING_AWAITING_RETRY:
+                    if (getData().getIsSms()) {
+                        statusText = mData.getFormattedReceivedTimeStamp();
+                    } else {
+                        statusResId = R.string.message_status_send_retrying;
+                    }
+                    break;
+
+                case MessageData.BUGLE_STATUS_OUTGOING_FAILED_EMERGENCY_NUMBER:
+                    statusResId = R.string.message_status_send_failed_emergency_number;
+                    break;
+
+                case MessageData.BUGLE_STATUS_OUTGOING_FAILED:
+                    // don't show the error state unless we're the default sms app
+                    if (DefaultSMSUtils.isDefaultSmsApp()) {
+                        if (isSelected()) {
+                            statusResId = R.string.message_status_resend;
+                        } else {
+                            statusResId = MmsUtils.mapRawStatusToErrorResourceId(
+                                    mData.getStatus(), mData.getRawTelephonyStatus());
+                        }
+                        break;
+                    }
+                    // FALL THROUGH HERE
+
+                case MessageData.BUGLE_STATUS_OUTGOING_COMPLETE:
+                case MessageData.BUGLE_STATUS_INCOMING_COMPLETE:
+                default:
+                    statusText = mData.getFormattedReceivedTimeStamp();
+                    break;
+            }
+
+            if (statusResId >= 0) {
+                statusText = getResources().getString(statusResId);
+            }
+
+            if (simNameVisible) {
+                final String simNameText = mData.getIsIncoming() ? getResources().getString(
+                        R.string.incoming_sim_name_text, subscriptionEntry.displayName) :
+                        subscriptionEntry.displayName;
+                mStatusTextView.setText(statusText + "   " + simNameText);
+            } else {
+                mStatusTextView.setText(statusText);
+            }
             mStatusTextView.setVisibility(View.VISIBLE);
         } else {
             mStatusTextView.setVisibility(View.GONE);
@@ -483,34 +462,18 @@ public class ConversationMessageView extends RelativeLayout implements View.OnCl
 
         final boolean deliveredBadgeVisible =
                 mData.getStatus() == MessageData.BUGLE_STATUS_OUTGOING_DELIVERED;
-        mDeliveredBadge.setVisibility(deliveredBadgeVisible ? View.VISIBLE : View.GONE);
-
-        // Update the sim indicator.
-        final boolean showSimIconAsIncoming = mData.getIsIncoming() &&
-                (!mData.hasAttachments() || shouldShowMessageTextBubble());
-        final SubscriptionListEntry subscriptionEntry =
-                mHost.getSubscriptionEntryForSelfParticipant(mData.getSelfParticipantId(),
-                        true /* excludeDefault */);
-        final boolean simNameVisible = subscriptionEntry != null &&
-                !TextUtils.isEmpty(subscriptionEntry.displayName) &&
-                !mData.getCanClusterWithNextMessage();
-        if (simNameVisible) {
-            final String simNameText = mData.getIsIncoming() ? getResources().getString(
-                    R.string.incoming_sim_name_text, subscriptionEntry.displayName) :
-                    subscriptionEntry.displayName;
-            mSimNameView.setText(simNameText);
-            mSimNameView.setVisibility(VISIBLE);
+        if (deliveredBadgeVisible) {
+            mDeliveredBadge.setVisibility(View.VISIBLE);
+            mDeliveredBadge.setImageResource(R.drawable.ic_sms_delivery_ok);
         } else {
-            mSimNameView.setText(null);
-            mSimNameView.setVisibility(GONE);
+            mDeliveredBadge.setVisibility(View.GONE);
         }
 
         final boolean metadataVisible = senderNameVisible || statusVisible
                 || deliveredBadgeVisible || simNameVisible;
         mMessageMetadataView.setVisibility(metadataVisible ? VISIBLE : GONE);
 
-        final boolean messageTextAndOrInfoVisible = titleVisible || subjectVisible
-                || mData.hasText();
+        final boolean messageTextAndOrInfoVisible = mData.hasText();
         mMessageTextAndInfoView.setVisibility(
                 messageTextAndOrInfoVisible ? View.VISIBLE : View.GONE);
 
@@ -540,7 +503,6 @@ public class ConversationMessageView extends RelativeLayout implements View.OnCl
         // should make a preview youtube image in the attachments
         updateMessageText();
         updateMessageAttachments();
-        updateMessageSubject();
         mMessageBubble.bind(mData);
     }
 
@@ -653,23 +615,10 @@ public class ConversationMessageView extends RelativeLayout implements View.OnCl
         }
     }
 
-    private void updateMessageSubject() {
-        final String subjectText = MmsUtils.cleanseMmsSubject(getResources(),
-                mData.getMmsSubject());
-        final boolean subjectVisible = !TextUtils.isEmpty(subjectText);
-
-        if (subjectVisible) {
-            mSubjectText.setText(subjectText);
-            mSubjectView.setVisibility(View.VISIBLE);
-        } else {
-            mSubjectView.setVisibility(View.GONE);
-        }
-    }
-
     private void updateMessageText() {
         final String text = mData.getText();
         if (!TextUtils.isEmpty(text)) {
-            mMessageTextView.setText(text);
+            mMessageTextView.setText(text.trim());
             // Linkify phone numbers, web urls, emails, and map addresses to allow users to
             // click on them and take the default intent.
             try {
@@ -723,7 +672,7 @@ public class ConversationMessageView extends RelativeLayout implements View.OnCl
                         incoming,
                         true /* needArrow */,
                         mData.hasIncomingErrorStatus(),
-                        mData.getConversationId());
+                        mData.getConversationId(), mHasCustomBackground);
                 textMinHeight = messageTextMinHeightDefault;
                 textTopMargin = messageTopPaddingClustered;
                 textTopPadding = textTopPaddingDefault;
@@ -747,7 +696,7 @@ public class ConversationMessageView extends RelativeLayout implements View.OnCl
                     incoming,
                     true,
                     mData.hasIncomingErrorStatus(),
-                    mData.getConversationId());
+                    mData.getConversationId(), mHasCustomBackground);
             textMinHeight = messageTextMinHeightDefault;
             textTopMargin = 0;
             textTopPadding = textTopPaddingDefault;
@@ -844,16 +793,12 @@ public class ConversationMessageView extends RelativeLayout implements View.OnCl
 
     private void updateTextAppearance() {
         int messageColor;
-        int statusColor = -1;
-        int infoColorResId = -1;
         int timestampColorResId;
         boolean hasWallPaper = WallpaperManager.hasWallpaper(mData.getConversationId());
 
         Resources resources = getResources();
         messageColor = ConversationColors.get().getMessageTextColor(mData.getIsIncoming(), mData.getConversationId());
         if (isSelected()) {
-            statusColor = resources.getColor(R.color.message_action_status_text);
-            infoColorResId = R.color.message_action_info_text;
             if (shouldShowMessageTextBubble()) {
                 timestampColorResId = R.color.message_action_timestamp_text;
             } else {
@@ -862,9 +807,6 @@ public class ConversationMessageView extends RelativeLayout implements View.OnCl
                 timestampColorResId = R.color.timestamp_text_outgoing;
             }
         } else {
-            statusColor = messageColor;
-            infoColorResId = R.color.timestamp_text_incoming;
-
             switch (mData.getStatus()) {
 
                 case MessageData.BUGLE_STATUS_OUTGOING_FAILED:
@@ -889,8 +831,6 @@ public class ConversationMessageView extends RelativeLayout implements View.OnCl
                 case MessageData.BUGLE_STATUS_INCOMING_DOWNLOAD_FAILED:
                     messageColor = getResources().getColor(R.color.message_text_color_incoming_download_failed);
                     timestampColorResId = R.color.message_download_failed_timestamp_text;
-                    statusColor = resources.getColor(R.color.message_download_failed_status_text);
-                    infoColorResId = R.color.message_info_text_incoming_download_failed;
                     break;
 
                 case MessageData.BUGLE_STATUS_INCOMING_AUTO_DOWNLOADING:
@@ -903,7 +843,6 @@ public class ConversationMessageView extends RelativeLayout implements View.OnCl
                     } else {
                         timestampColorResId = R.color.timestamp_text_incoming;
                     }
-                    infoColorResId = R.color.timestamp_text_incoming;
                     break;
 
                 case MessageData.BUGLE_STATUS_INCOMING_COMPLETE:
@@ -913,19 +852,11 @@ public class ConversationMessageView extends RelativeLayout implements View.OnCl
                     } else {
                         timestampColorResId = R.color.timestamp_text_incoming;
                     }
-                    infoColorResId = -1; // Not used
                     break;
             }
         }
         mMessageTextView.setTextColor(messageColor);
         mMessageTextView.setLinkTextColor(messageColor);
-        mSubjectText.setTextColor(messageColor);
-        if (statusColor >= 0) {
-            mTitleTextView.setTextColor(statusColor);
-        }
-        if (infoColorResId >= 0) {
-            mMmsInfoTextView.setTextColor(resources.getColor(infoColorResId));
-        }
         if (timestampColorResId == R.color.timestamp_text_incoming &&
                 mData.hasAttachments() && !shouldShowMessageTextBubble()) {
             timestampColorResId = R.color.timestamp_text_outgoing;
@@ -934,14 +865,15 @@ public class ConversationMessageView extends RelativeLayout implements View.OnCl
         if (!hasWallPaper) {
             mStatusContainer.setBackground(null);
         }
-        if (!hasWallPaper && mData.getIsLocked()) {
-            mMessageIsLockView.setImageResource(R.drawable.message_lock_default);
-        } else {
-            mMessageIsLockView.setImageResource(R.drawable.message_lock_theme);
+        if (mData.getIsLocked()) {
+            if (!hasWallPaper) {
+                mMessageIsLockView.setImageResource(R.drawable.message_lock_default);
+            } else {
+                mMessageIsLockView.setImageResource(R.drawable.message_lock_theme);
+            }
         }
 
         mStatusTextView.setTextColor(resources.getColor(timestampColorResId));
-        mSimNameView.setTextColor(resources.getColor(timestampColorResId));
 
         mSenderNameTextView.setTextColor(resources.getColor(timestampColorResId));
     }
@@ -1075,7 +1007,7 @@ public class ConversationMessageView extends RelativeLayout implements View.OnCl
                     attachment));
             personView.setBackground(ConversationDrawables.get().getBubbleDrawable(
                     isSelected(), mData.getIsIncoming(), false /* needArrow */,
-                    mData.hasIncomingErrorStatus(), mData.getConversationId()));
+                    mData.hasIncomingErrorStatus(), mData.getConversationId(), mHasCustomBackground));
             final int nameTextColorRes;
             final int detailsTextColorRes;
             if (isSelected()) {

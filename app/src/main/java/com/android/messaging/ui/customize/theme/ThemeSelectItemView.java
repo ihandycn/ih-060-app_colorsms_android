@@ -53,6 +53,23 @@ public class ThemeSelectItemView extends ConstraintLayout implements ThemeUtils.
         mDownloadSuccessLottie = findViewById(R.id.theme_download_success);
         mDownloadingView = findViewById(R.id.theme_downloading_view);
         mButtonGroupContainer = findViewById(R.id.theme_button_group_container);
+
+        mThemeDownloadListener = new ThemeDownloadManager.IThemeDownloadListener() {
+            @Override
+            public void onDownloadSuccess() {
+                mDownloadingView.updatePercent(1f);
+            }
+
+            @Override
+            public void onDownloadFailed() {
+                setNormalState();
+            }
+
+            @Override
+            public void onDownloadUpdate(float process) {
+                mDownloadingView.updatePercent(process);
+            }
+        };
     }
 
     public void resetStateByTheme() {
@@ -71,22 +88,6 @@ public class ThemeSelectItemView extends ConstraintLayout implements ThemeUtils.
                 setDownloadedState();
             }
         } else {
-            mThemeDownloadListener = new ThemeDownloadManager.IThemeDownloadListener() {
-                @Override
-                public void onDownloadSuccess() {
-                    Threads.postOnMainThread(() -> setDownloadSuccessState());
-                }
-
-                @Override
-                public void onDownloadFailed() {
-                    Threads.postOnMainThread(() -> setNormalState());
-                }
-
-                @Override
-                public void onDownloadUpdate(float process) {
-                    Threads.postOnMainThread(() -> mDownloadingView.updatePercent(process));
-                }
-            };
             mThemeInfo.addDownloadListener(mThemeDownloadListener);
             setNormalState();
         }
@@ -114,22 +115,6 @@ public class ThemeSelectItemView extends ConstraintLayout implements ThemeUtils.
                 setDownloadedState();
             }
         } else {
-            mThemeDownloadListener = new ThemeDownloadManager.IThemeDownloadListener() {
-                @Override
-                public void onDownloadSuccess() {
-                    Threads.postOnMainThread(() -> mDownloadingView.updatePercent(1f));
-                }
-
-                @Override
-                public void onDownloadFailed() {
-                    Threads.postOnMainThread(() -> setNormalState());
-                }
-
-                @Override
-                public void onDownloadUpdate(float process) {
-                    Threads.postOnMainThread(() -> mDownloadingView.updatePercent(process));
-                }
-            };
             mThemeInfo.addDownloadListener(mThemeDownloadListener);
             mDownloadingView.setEndListener(() -> {
                 Threads.postOnMainThread(this::setDownloadSuccessState);
@@ -219,7 +204,7 @@ public class ThemeSelectItemView extends ConstraintLayout implements ThemeUtils.
                 mIsSelectAnimationPlaying = false;
             }
         }).start();
-        BugleAnalytics.logEvent("Customize_ThemeCenter_Theme_Apply", true,
+        BugleAnalytics.logEvent("Customize_ThemeCenter_Theme_Apply", true, true,
                 "theme", mThemeInfo.mThemeKey, "from", "list");
     }
 
@@ -227,6 +212,12 @@ public class ThemeSelectItemView extends ConstraintLayout implements ThemeUtils.
     protected void onFinishInflate() {
         super.onFinishInflate();
         initView();
+    }
+
+    @Override
+    protected void onAttachedToWindow() {
+        super.onAttachedToWindow();
+        resetStateByTheme();
     }
 
     @Override
@@ -241,4 +232,5 @@ public class ThemeSelectItemView extends ConstraintLayout implements ThemeUtils.
     public void onThemeChanged() {
         resetStateByTheme();
     }
+
 }

@@ -11,6 +11,7 @@ import android.widget.TextView;
 
 import com.android.messaging.BaseActivity;
 import com.android.messaging.R;
+import com.android.messaging.backup.BackupAutopilotUtils;
 import com.android.messaging.ui.CustomPagerViewHolder;
 import com.android.messaging.ui.CustomViewPager;
 import com.android.messaging.util.BugleAnalytics;
@@ -31,7 +32,7 @@ public class BackupRestoreActivity extends BaseActivity {
     public static final String ENTRANCE_TOP_GUIDE = "top_guide";
     public static final String ENTRANCE_FULL_GUIDE = "full_guide";
     public static final String ENTRANCE_MENU = "menu";
-
+    private static final String PREF_KEY_LOG_BACKUP_PAGE_SHOW_ONLY_ONCE = "pref_key_log_backup_page_show_only_once";
     private static final int RC_SIGN_IN = 12;
     private ChooseBackupViewHolder mBackUpViewHolder;
     private ChooseRestoreViewHolder mRestoreViewHolder;
@@ -62,12 +63,15 @@ public class BackupRestoreActivity extends BaseActivity {
 
         initPager(this);
 
+        Preferences.getDefault().doOnce(BackupAutopilotUtils::logBackupPageShowOnce, PREF_KEY_LOG_BACKUP_PAGE_SHOW_ONLY_ONCE);
+
         UiUtils.setTitleBarBackground(mToolbar, this);
 
         Preferences.getDefault().putBoolean(PREF_KEY_BACKUP_ACTIVITY_SHOWN, true);
 
         BugleAnalytics.logEvent("Backup_BackupPage_Show", true,
                 "from", getIntent().getStringExtra("from"));
+        BackupAutopilotUtils.logBackupPageShow();
     }
 
     private void initPager(Context context) {
@@ -90,6 +94,7 @@ public class BackupRestoreActivity extends BaseActivity {
             public void onPageSelected(int position) {
                 if (position == 1 && !eventLogged[0]) {
                     BugleAnalytics.logEvent("Backup_RestorePage_Show", true);
+                    BackupAutopilotUtils.logRestorePageShow();
                     eventLogged[0] = true;
                 }
             }

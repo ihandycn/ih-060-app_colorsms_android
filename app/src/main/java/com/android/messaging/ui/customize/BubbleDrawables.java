@@ -7,7 +7,7 @@ import android.text.TextUtils;
 
 import com.android.messaging.Factory;
 import com.android.messaging.R;
-import com.android.messaging.ui.customize.theme.ThemeManager;
+import com.android.messaging.ui.customize.theme.ThemeBubbleDrawables;
 import com.android.messaging.ui.customize.theme.ThemeUtils;
 import com.android.messaging.util.BuglePrefs;
 import com.ihs.app.framework.HSApplication;
@@ -99,7 +99,7 @@ public class BubbleDrawables {
         }
     }
 
-    public static Drawable getSelectedDrawable(boolean incoming, String conversationId) {
+    public static Drawable getSelectedDrawable(boolean incoming, String conversationId, boolean hasCustomBackground) {
         int selectedIdentifier =
                 prefs.getInt(PREFS_KEY_BUBBLE_DRAWABLE_IDENTIFIER + "_" + conversationId, getSelectedIdentifier());
         int selectedIndex = -1;
@@ -114,8 +114,8 @@ public class BubbleDrawables {
                     .getDrawable(getSelectedDrawable(selectedIndex, incoming));
         } else if (!ThemeUtils.isDefaultTheme()) {
             //set theme and clear customize bubble, show theme bubble
-            Drawable drawable = incoming ? ThemeManager.getInstance().getIncomingBubbleDrawable()
-                    : ThemeManager.getInstance().getOutgoingBubbleDrawable();
+            Drawable drawable = incoming ? ThemeBubbleDrawables.getInstance().getIncomingBubbleDrawable(hasCustomBackground)
+                    : ThemeBubbleDrawables.getInstance().getOutgoingBubbleDrawable(hasCustomBackground);
             if (drawable != null) {
                 return drawable;
             }

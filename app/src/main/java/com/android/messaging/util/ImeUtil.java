@@ -16,11 +16,13 @@
 package com.android.messaging.util;
 
 import android.content.Context;
+import android.os.Build;
 import android.support.annotation.NonNull;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 
 import com.google.common.annotations.VisibleForTesting;
+import com.superapps.util.Compats;
 
 public class ImeUtil {
     public interface ImeStateObserver {
@@ -29,8 +31,11 @@ public class ImeUtil {
 
     public interface ImeStateHost {
         void onDisplayHeightChanged(int heightMeasureSpec);
+
         void registerImeStateObserver(ImeUtil.ImeStateObserver observer);
+
         void unregisterImeStateObserver(ImeUtil.ImeStateObserver observer);
+
         boolean isImeOpen();
     }
 
@@ -41,6 +46,7 @@ public class ImeUtil {
     public static void clearInstance() {
         sInstance = null;
     }
+
     public static ImeUtil get() {
         if (sInstance == null) {
             synchronized (ImeUtil.class) {
@@ -75,7 +81,9 @@ public class ImeUtil {
         final InputMethodManager inputMethodManager =
                 (InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE);
         if (inputMethodManager != null) {
-            v.requestFocus();
+            if (!(Compats.IS_SAMSUNG_DEVICE && Build.VERSION.SDK_INT >= Build.VERSION_CODES.P)) {
+                v.requestFocus();
+            }
             inputMethodManager.showSoftInput(v, 0 /* flags */);
         }
     }

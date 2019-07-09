@@ -596,7 +596,7 @@ public class ConversationListItemView extends FrameLayout implements OnClickList
                 snippetText = resources.getString(R.string.mms_text);
             }
         } else {
-            snippetText = snippetText.replace("\n", " ").replace("\r", " ");
+            snippetText = snippetText.trim().replace("\n", " ").replace("\r", " ");
         }
         return snippetText;
     }

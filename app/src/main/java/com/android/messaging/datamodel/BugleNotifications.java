@@ -98,6 +98,8 @@ import com.ihs.app.framework.HSApplication;
 import com.ihs.commons.utils.HSLog;
 import com.superapps.util.Notifications;
 
+import net.appcloudbox.autopilot.AutopilotEvent;
+
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -692,7 +694,9 @@ public class BugleNotifications {
         if (!isPrivateConversation || PrivateSettingManager.isNotificationEnable()) {
             processAndSend(state, silent, softSound, conversationId == null);
             boolean isPrivacyMode = PrivacyModeSettings.getPrivacyMode(conversationId) != PrivacyModeSettings.NONE;
-            BugleAnalytics.logEvent("SMS_Notifications_Pushed", true, true, "PrivacyMode", String.valueOf(isPrivacyMode));
+            BugleAnalytics.logEvent("SMS_Notifications_Pushed", true, true,
+                    "PrivacyMode", String.valueOf(isPrivacyMode));
+            AutopilotEvent.logTopicEvent("topic-768lyi3sp", "notification_pushed");
             if (isPrivacyMode) {
                 BugleAnalytics.logEvent("SMS_PrivacyNotifications_Pushed", false, true);
             }

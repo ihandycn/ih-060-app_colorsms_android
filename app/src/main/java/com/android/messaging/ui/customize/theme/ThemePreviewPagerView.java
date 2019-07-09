@@ -141,6 +141,7 @@ public class ThemePreviewPagerView extends ConstraintLayout {
         mPager.setPageTransformer(false, new ThemePagerTransformer(getContext()));
         mPager.setPageMargin(Dimensions.pxFromDp(16));
 
+        mAdapter.setOnPageClickListener(mPager::setCurrentItem);
         mPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
@@ -200,7 +201,7 @@ public class ThemePreviewPagerView extends ConstraintLayout {
                     mApplyClickListener.onClick(mButton);
                 }
                 ThemeUtils.applyTheme(mThemeInfo, 0);
-                BugleAnalytics.logEvent("Customize_ThemeCenter_Theme_Apply", true,
+                BugleAnalytics.logEvent("Customize_ThemeCenter_Theme_Apply", true, true,
                         "theme", mThemeInfo.mThemeKey, "from", "detail");
             });
         } else {

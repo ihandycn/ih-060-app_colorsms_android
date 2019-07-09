@@ -32,7 +32,6 @@ import com.superapps.util.Dimensions;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 public class ChooseFontDialog {
@@ -137,15 +136,30 @@ public class ChooseFontDialog {
         lp.bottomMargin = Dimensions.pxFromDp(32);
         v.setLayoutParams(lp);
 
-        List<String> choicesList = Arrays.asList(FontUtils.sSupportGoogleFonts);
+        //  List<String> choicesList = Arrays.asList(FontUtils.sSupportGoogleFonts);
 
         List<FontInfo> fontList = new ArrayList<>();
-        for (String fontName : choicesList) {
-            FontInfo local = new FontInfo(FontInfo.LOCAL_FONT, fontName);
-            fontList.add(local);
+        List<FontInfo> configList = FontDownloadManager.getFontList();
+//        for (String fontName : choicesList) {
+//            FontInfo local = new FontInfo(FontInfo.LOCAL_FONT, fontName);
+//            fontList.add(local);
+//        }
+
+        for (FontInfo info : configList) {
+            if (info.isLocalFont()) {
+                if (info.getFontName().equals(FontUtils.MESSAGE_FONT_FAMILY_DEFAULT_VALUE)) {
+                    fontList.add(0, info);
+                } else {
+                    fontList.add(info);
+                }
+            }
         }
 
-        fontList.addAll(FontDownloadManager.getRemoteFonts());
+        for (FontInfo info : configList) {
+            if (!info.isLocalFont()) {
+                fontList.add(info);
+            }
+        }
 
         ColorStateList colorStateList = new ColorStateList(
                 new int[][]{

@@ -13,7 +13,7 @@
     See the License for the specific language governing permissions and
     limitations under the License.
 -->
-<com.android.messaging.ui.ImeDetectLinearLayout
+<LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/conversation_and_compose_container"
@@ -73,4 +73,4 @@
         android:id="@+id/conversation_fragment_container"
         android:layout_width="match_parent"
         android:layout_height="match_parent"/>
-</com.android.messaging.ui.ImeDetectLinearLayout>
+</LinearLayout>

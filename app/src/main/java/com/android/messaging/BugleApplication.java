@@ -262,6 +262,8 @@ public class BugleApplication extends HSApplication implements UncaughtException
             }));
             initWorks.add(new ParallelBackgroundTask("AppLockObserver", () ->
                     AppPrivateLockManager.getInstance().startAppLockWatch()));
+            initWorks.add(new ParallelBackgroundTask("RegisterSignalStrength", () ->
+                    DataModel.get().getConnectivityUtil().registerForSignalStrength()));
             TaskRunner.run(initWorks);
         } finally {
             TraceCompat.endSection();
@@ -469,8 +471,6 @@ public class BugleApplication extends HSApplication implements UncaughtException
         final DataModel dataModel = factory.getDataModel();
         final CarrierConfigValuesLoader carrierConfigValuesLoader =
                 factory.getCarrierConfigValuesLoader();
-
-        maybeStartProfiling();
 
         // execute init works only after sms default set
         BugleApplication.updateAppConfig(context, true);

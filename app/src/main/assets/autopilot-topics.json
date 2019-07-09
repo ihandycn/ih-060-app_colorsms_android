@@ -180,16 +180,147 @@
       ],
       "topic_id": "topic-rp-73fiu9zuo"
     },
-    "topic-74azpj82p": {
-      "topic_type": "one_day",
-      "topic_name": "To Export Config",
-      "variations": {},
+    "topic-76bwea9b3": {
+      "topic_type": "life_time",
+      "topic_name": "Test Backup 1.0",
+      "variations": {
+        "fullguide": {
+          "values": [
+            {
+              "value": false
+            }
+          ],
+          "type": "boolean",
+          "value": false,
+          "strategy": "sole"
+        },
+        "switch": {
+          "values": [
+            {
+              "value": true
+            }
+          ],
+          "type": "boolean",
+          "value": true,
+          "strategy": "sole"
+        },
+        "cleanswitch": {
+          "values": [
+            {
+              "value": false
+            }
+          ],
+          "type": "boolean",
+          "value": false,
+          "strategy": "sole"
+        }
+      },
       "events": [
         {
           "name": "test"
+        },
+        {
+          "name": "backup_once"
+        },
+        {
+          "name": "menu_show"
+        },
+        {
+          "name": "menu_backup_click"
+        },
+        {
+          "name": "fullguide_show"
+        },
+        {
+          "name": "fullguide_click"
+        },
+        {
+          "name": "backuppage_show"
+        },
+        {
+          "name": "backuppage_click"
+        },
+        {
+          "name": "backuppage_success"
+        },
+        {
+          "name": "restorepage_show"
+        },
+        {
+          "name": "restorepage_click"
+        },
+        {
+          "name": "restorepage_success"
+        },
+        {
+          "name": "freeupmsg_alert_show"
+        },
+        {
+          "name": "freeupmsg_alert_click"
+        },
+        {
+          "name": "freeupmsg_success"
+        },
+        {
+          "name": "backuppage_show_once"
         }
       ],
-      "topic_id": "topic-74azpj82p"
+      "topic_id": "topic-76bwea9b3"
+    },
+    "topic-768lyi3sp": {
+      "topic_type": "life_time",
+      "topic_name": "Test Popup Windows",
+      "variations": {
+        "defaultswitch": {
+          "values": [
+            {
+              "value": true
+            }
+          ],
+          "type": "boolean",
+          "value": true,
+          "strategy": "sole"
+        }
+      },
+      "events": [
+        {
+          "name": "test"
+        },
+        {
+          "name": "homepage_show"
+        },
+        {
+          "name": "detailspage_show"
+        },
+        {
+          "name": "topad_chance"
+        },
+        {
+          "name": "topad_show"
+        },
+        {
+          "name": "bannerad_chance"
+        },
+        {
+          "name": "bannerad_show"
+        },
+        {
+          "name": "fullad_chance"
+        },
+        {
+          "name": "fullad_show"
+        },
+        {
+          "name": "notification_pushed"
+        },
+        {
+          "name": "notification_clicked"
+        },
+        {
+          "name": "notification_replied"
+        }
+      ],
+      "topic_id": "topic-768lyi3sp"
     },
     "topic-74rv6bpwy": {
       "topic_type": "one_time",
@@ -215,12 +346,59 @@
         }
       ],
       "topic_id": "topic-74rv6bpwy"
+    },
+    "topic-74azpj82p": {
+      "topic_type": "one_day",
+      "topic_name": "To Export Config",
+      "variations": {},
+      "events": [
+        {
+          "name": "test"
+        }
+      ],
+      "topic_id": "topic-74azpj82p"
+    }
+  },
+  "occasion_mgt": {
+    "custom_state_properties": [],
+    "actions": {},
+    "triggers": {
+      "unlock_screen": {
+        "trigger_id": "813"
+      },
+      "session_start": {
+        "trigger_id": "810"
+      },
+      "stop_charging_inapp": {
+        "trigger_id": "815"
+      },
+      "homepage_open": {
+        "trigger_id": "818"
+      },
+      "start_charging_inapp": {
+        "trigger_id": "814"
+      },
+      "session_end": {
+        "trigger_id": "811"
+      },
+      "start_charging_bg": {
+        "trigger_id": "816"
+      },
+      "stop_charging_bg": {
+        "trigger_id": "817"
+      },
+      "app_exit": {
+        "trigger_id": "819"
+      },
+      "screen_on": {
+        "trigger_id": "812"
+      }
     }
   },
   "autopilot_id": 10104,
   "service_url": "https://ap.appcloudbox.net",
   "other_app_events": [],
-  "json_id": "799b5635-ef87-48a5-8ed1-5754cdb1ae3c",
+  "json_id": "38822f70-e08c-43ea-9064-d2c9676d0440",
   "autopilot_name": "Bubble_A",
   "autopilot_type": "app"
 }

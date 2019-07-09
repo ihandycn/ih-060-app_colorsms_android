@@ -1,31 +1,17 @@
 package com.android.messaging.font;
 
-import android.support.annotation.IntDef;
-
 import java.util.ArrayList;
 import java.util.List;
 
 public class FontInfo {
-
-    public static final int LOCAL_FONT = 1;
-    public static final int REMOTE_FONT = 2;
-    @IntDef ({LOCAL_FONT, REMOTE_FONT})
-    public @interface FontType {
-    }
-
-    private int mType;
     private String mFontName;
     private List<String> mWeightList = new ArrayList<>();
+    private boolean mIsLocalFont;
 
-    public FontInfo(@FontType int type, String fontName) {
-        mType = type;
-        this.mFontName = fontName;
-    }
-
-    public FontInfo(@FontType int type, String fontName, List<String> styleList) {
-        mType = type;
+    public FontInfo(String fontName, List<String> styleList, boolean isLocal) {
         this.mFontName = fontName;
         this.mWeightList = new ArrayList<>(styleList);
+        this.mIsLocalFont = isLocal;
     }
 
     public String getFontName() {
@@ -36,16 +22,15 @@ public class FontInfo {
         return mWeightList;
     }
 
-    public int getType() {
-        return mType;
-    }
-
     public boolean isFontDownloaded() {
-        if (mType == LOCAL_FONT) {
+        if (!mIsLocalFont) {
+            return FontDownloadManager.isFontDownloaded(this);
+        } else {
             return true;
         }
-        else {
-            return FontDownloadManager.isFontDownloaded(this);
-        }
+    }
+
+    public boolean isLocalFont() {
+        return mIsLocalFont;
     }
 }

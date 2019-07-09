@@ -21,7 +21,6 @@ import android.text.format.DateUtils;
 import android.view.ActionMode;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
@@ -32,15 +31,18 @@ import com.android.messaging.BuildConfig;
 import com.android.messaging.R;
 import com.android.messaging.ad.AdConfig;
 import com.android.messaging.ad.AdPlacement;
+import com.android.messaging.backup.BackupAutopilotUtils;
 import com.android.messaging.backup.ui.BackupGuideDialogActivity;
 import com.android.messaging.backup.ui.BackupRestoreActivity;
 import com.android.messaging.backup.ui.ChooseBackupViewHolder;
 import com.android.messaging.datamodel.BugleNotifications;
 import com.android.messaging.datamodel.DataModel;
+import com.android.messaging.datamodel.DataModelImpl;
 import com.android.messaging.datamodel.DatabaseHelper;
 import com.android.messaging.datamodel.DatabaseWrapper;
 import com.android.messaging.datamodel.data.MessageBoxItemData;
 import com.android.messaging.font.ChangeFontActivity;
+import com.android.messaging.font.FontDownloadManager;
 import com.android.messaging.font.FontStyleManager;
 import com.android.messaging.mmslib.SqliteWrapper;
 import com.android.messaging.privatebox.AppPrivateLockManager;
@@ -98,6 +100,7 @@ import com.superapps.util.Threads;
 import com.superapps.util.Toasts;
 
 import net.appcloudbox.ads.nativead.AcbNativeAdManager;
+import net.appcloudbox.autopilot.AutopilotEvent;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
@@ -169,18 +172,6 @@ public class ConversationListActivity extends AbstractConversationListActivity
 
     private boolean mIsMessageMoving;
 
-    private enum AnimState {
-        NONE,
-        APPEAR,
-        SHOWING,
-        DISAPPEAR,
-    }
-
-    private AnimState mAnimState = AnimState.NONE;
-
-
-    private boolean mIsEmojiStoreClickable = true;
-
     @Override
     @DebugLog
     protected void onCreate(final Bundle savedInstanceState) {
@@ -223,6 +214,7 @@ public class ConversationListActivity extends AbstractConversationListActivity
 
         if (getIntent() != null && getIntent().getBooleanExtra(BugleNotifications.EXTRA_FROM_NOTIFICATION, false)) {
             BugleAnalytics.logEvent("SMS_Notifications_Clicked", true, true);
+            AutopilotEvent.logTopicEvent("topic-768lyi3sp", "notification_clicked");
         }
 
         HSGlobalNotificationCenter.addObserver(EVENT_MAINPAGE_RECREATE, this);
@@ -234,7 +226,7 @@ public class ConversationListActivity extends AbstractConversationListActivity
 
         if (!sIsRecreate) {
             Threads.postOnThreadPoolExecutor(() -> {
-                String bgPath = WallpaperManager.getWallpaperPathByThreadId(null);
+                String bgPath = WallpaperManager.getWallpaperPathByConversationId(null);
                 String backgroundStr;
                 int wallpaperIndex = 99;
                 if (TextUtils.isEmpty(bgPath)) {
@@ -292,6 +284,7 @@ public class ConversationListActivity extends AbstractConversationListActivity
                 }
                 BugleAnalytics.logEvent("SMS_HomePage_Show", true,
                         "SIM", simStatus,
+                        "Signal", String.valueOf(DataModelImpl.get().getConnectivityUtil().getSignalLevel(0)),
                         "Popups", String.valueOf(MessageBoxSettings.isSMSAssistantModuleEnabled()));
             });
         }
@@ -342,6 +335,7 @@ public class ConversationListActivity extends AbstractConversationListActivity
         }
 
         BugleAnalytics.logEvent("SMS_Messages_Show_Corrected", true, true);
+        AutopilotEvent.logTopicEvent("topic-768lyi3sp", "homepage_show");
         Preferences.getDefault().incrementAndGetInt(CustomizeGuideController.PREF_KEY_MAIN_PAGE_SHOW_TIME);
         showThemeUpgradeDialog();
 
@@ -424,6 +418,7 @@ public class ConversationListActivity extends AbstractConversationListActivity
                 setDrawerMenuIcon();
                 BugleAnalytics.logEvent("Menu_Show_NewVersion", true);
                 BugleAnalytics.logEvent("Menu_Show", true, true);
+                BackupAutopilotUtils.logMenuShow();
                 if (CommonUtils.isNewUser()
                         && Calendars.isSameDay(CommonUtils.getAppInstallTimeMillis(), System.currentTimeMillis())) {
                     BugleAnalytics.logEvent("Menu_Show_NewUser", true);
@@ -490,6 +485,7 @@ public class ConversationListActivity extends AbstractConversationListActivity
                         break;
                     case DRAWER_INDEX_BACKUP_RESTORE:
                         BugleAnalytics.logEvent("Menu_BackupRestore_Click", true);
+                        BackupAutopilotUtils.logMenuBackupClick();
                         BackupRestoreActivity.startBackupRestoreActivity(ConversationListActivity.this, BackupRestoreActivity.ENTRANCE_MENU);
                         overridePendingTransition(R.anim.slide_in_from_right_and_fade, R.anim.anim_null);
                         navigationContent.findViewById(R.id.navigation_item_backup_restore_new_text).setVisibility(View.GONE);
@@ -588,8 +584,15 @@ public class ConversationListActivity extends AbstractConversationListActivity
         navigationContent.findViewById(R.id.navigation_item_setting).setOnClickListener(this);
         navigationContent.findViewById(R.id.navigation_item_rate).setOnClickListener(this);
         navigationContent.findViewById(R.id.navigation_item_invite_friends).setOnClickListener(this);
-        navigationContent.findViewById(R.id.navigation_item_backup_restore).setOnClickListener(this);
         navigationContent.findViewById(R.id.navigation_item_emoji_store).setOnClickListener(this);
+
+        View backupEntrance = navigationContent.findViewById(R.id.navigation_item_backup_restore);
+        backupEntrance.setOnClickListener(this);
+        if (!BackupAutopilotUtils.getIsBackupSwitchOn()) {
+            backupEntrance.setVisibility(View.GONE);
+        } else {
+            backupEntrance.setVisibility(View.VISIBLE);
+        }
 
         //test code
         //this item is used to delete dirty mms parts in telephony
@@ -688,10 +691,12 @@ public class ConversationListActivity extends AbstractConversationListActivity
         // show backup full guide
         if (!shouldShowCreateShortcutGuide
                 && mainActivityCreateTime >= 2 && CommonUtils.isNewUser()
-                && HSConfig.optBoolean(false, "Application", "BackupRestore", "RecommendFull")
                 && !Preferences.getDefault().getBoolean(BackupRestoreActivity.PREF_KEY_BACKUP_ACTIVITY_SHOWN, false)
                 && !Preferences.getDefault()
-                .getBoolean(BackupGuideDialogActivity.PREF_KEY_BACKUP_FULL_GUIDE_SHOWN, false)) {
+                .getBoolean(BackupGuideDialogActivity.PREF_KEY_BACKUP_FULL_GUIDE_SHOWN, false)
+                && BackupAutopilotUtils.getIsBackupSwitchOn()
+                && (HSConfig.optBoolean(false, "Application", "BackupRestore", "RecommendFull")
+                || BackupAutopilotUtils.getIsBackupFullScreenGuideSwitchOn())) {
             shouldShowCreateShortcutGuide = true;
             Intent intent = new Intent(this, BackupGuideDialogActivity.class);
             Navigations.startActivitySafely(this, intent);

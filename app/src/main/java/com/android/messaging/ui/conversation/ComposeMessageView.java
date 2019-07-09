@@ -25,6 +25,7 @@ import android.graphics.PorterDuff;
 import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.graphics.drawable.DrawableCompat;
@@ -100,6 +101,7 @@ import com.android.messaging.util.OsUtil;
 import com.android.messaging.util.TextViewUtil;
 import com.android.messaging.util.UiUtils;
 import com.superapps.util.BackgroundDrawables;
+import com.superapps.util.Compats;
 import com.superapps.util.Dimensions;
 import com.superapps.util.Preferences;
 import com.superapps.util.RuntimePermissions;
@@ -360,7 +362,6 @@ public class ComposeMessageView extends LinearLayout
         mDeleteSubjectButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(final View clickView) {
-                hideSubjectEditor();
                 mComposeSubjectText.setText(null);
                 mBinding.getData().setMessageSubject(null);
             }
@@ -437,6 +438,9 @@ public class ComposeMessageView extends LinearLayout
 
             List<SubscriptionListData.SubscriptionListEntry> data =
                     mConversationDataModel.getData().getSubscriptionListData().getActiveSubscriptionEntriesExcludingDefault();
+            if (getSelfSubscriptionListEntry() == null) {
+                return;
+            }
             int currentSlotId = getSelfSubscriptionListEntry().slotId;
             ImageView ivTip1 = mContentView.findViewById(R.id.iv_tip_1);
             ivTip1.getDrawable().setColorFilter(PrimaryColors.getPrimaryColor(), PorterDuff.Mode.SRC_ATOP);
@@ -866,28 +870,6 @@ public class ComposeMessageView extends LinearLayout
         return BindingBase.createBindingReference(mBinding);
     }
 
-    // returns true if it actually shows the subject editor and false if already showing
-    private boolean showSubjectEditor() {
-        // show the subject editor
-        if (mSubjectView.getVisibility() == View.GONE) {
-            mSubjectView.setVisibility(View.VISIBLE);
-            try {
-                mSubjectView.requestFocus();
-            } catch (Exception e) {
-            }
-            return true;
-        }
-        return false;
-    }
-
-    private void hideSubjectEditor() {
-        mSubjectView.setVisibility(View.GONE);
-        try {
-            mComposeEditText.requestFocus();
-        } catch (Exception e) {
-        }
-    }
-
     /**
      * {@inheritDoc} from TextView.OnEditorActionListener
      */
@@ -981,14 +963,12 @@ public class ComposeMessageView extends LinearLayout
                                             }
                                         }, 1600);
 
-                                        playSentSound();
+//                                        playSentSound();
                                         mHost.sendMessage(message);
                                         if (!TextUtils.isEmpty(mSignatureStr)) {
                                             BugleAnalytics.logEvent("SMS_WithSignature_Send", true,
                                                     "deleteSignature", String.valueOf(!finalIncludeSignature));
                                         }
-
-                                        hideSubjectEditor();
                                     }
                                     break;
 
@@ -1169,7 +1149,9 @@ public class ComposeMessageView extends LinearLayout
 
     @Override
     public void resumeComposeMessage(boolean showKeyboard) {
-        mComposeEditText.requestFocus();
+        if (!(Compats.IS_SAMSUNG_DEVICE && Build.VERSION.SDK_INT >= Build.VERSION_CODES.P)) {
+            mComposeEditText.requestFocus();
+        }
         if (showKeyboard) {
             mInputManager.showHideImeKeyboard(true, true);
         } else {

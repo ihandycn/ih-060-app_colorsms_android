@@ -50,6 +50,7 @@ import com.android.messaging.R;
 import com.android.messaging.ad.AdConfig;
 import com.android.messaging.ad.AdPlacement;
 import com.android.messaging.annotation.VisibleForAnimation;
+import com.android.messaging.backup.BackupAutopilotUtils;
 import com.android.messaging.backup.ui.BackupRestoreActivity;
 import com.android.messaging.datamodel.DataModel;
 import com.android.messaging.datamodel.binding.Binding;
@@ -100,6 +101,7 @@ import net.appcloudbox.ads.base.ContainerView.AcbNativeAdIconView;
 import net.appcloudbox.ads.common.utils.AcbError;
 import net.appcloudbox.ads.nativead.AcbNativeAdLoader;
 import net.appcloudbox.ads.nativead.AcbNativeAdManager;
+import net.appcloudbox.autopilot.AutopilotEvent;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
@@ -468,7 +470,12 @@ public class ConversationListFragment extends Fragment implements ConversationLi
             });
             return;
         }
-        mBackupBannerGuideContainer.setVisibility(View.VISIBLE);
+
+        if (BackupAutopilotUtils.getIsBackupSwitchOn()) {
+            mBackupBannerGuideContainer.setVisibility(View.VISIBLE);
+        } else {
+            mBackupBannerGuideContainer.setVisibility(View.GONE);
+        }
 
         title.setText(HSApplication.getContext().getString(R.string.backup_banner_guide_title, 30));
         Threads.postOnThreadPoolExecutor(() -> {
@@ -540,6 +547,8 @@ public class ConversationListFragment extends Fragment implements ConversationLi
         }
 
         BugleAnalytics.logEvent("SMS_Messages_BannerAd_Should_Show", true, true);
+        AutopilotEvent.logTopicEvent("topic-768lyi3sp", "bannerad_chance");
+
         List<AcbNativeAd> nativeAds = AcbNativeAdManager.fetch(AdPlacement.AD_BANNER, 1);
         if (nativeAds.size() > 0) {
             mNativeAd = nativeAds.get(0);
@@ -627,6 +636,7 @@ public class ConversationListFragment extends Fragment implements ConversationLi
             }
         }
         BugleAnalytics.logEvent("SMS_Messages_BannerAd_Show", true, true);
+        AutopilotEvent.logTopicEvent("topic-768lyi3sp", "bannerad_show");
     }
 
     @Override

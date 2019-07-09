@@ -20,6 +20,7 @@ import android.app.Activity;
 import android.app.Fragment;
 import android.database.Cursor;
 import android.graphics.Rect;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBar;
@@ -68,6 +69,7 @@ import com.android.messaging.util.PhoneUtils;
 import com.android.messaging.util.TextViewUtil;
 import com.android.messaging.util.UiUtils;
 import com.google.common.annotations.VisibleForTesting;
+import com.superapps.util.Compats;
 
 import java.util.ArrayList;
 import java.util.Set;
@@ -362,8 +364,9 @@ public class ContactPickerFragment extends Fragment implements ContactPickerData
 
     private void showImeKeyboard() {
         Assert.notNull(mRecipientTextView);
-        mRecipientTextView.requestFocus();
-
+        if (!(Compats.IS_SAMSUNG_DEVICE && Build.VERSION.SDK_INT >= Build.VERSION_CODES.P)) {
+            mRecipientTextView.requestFocus();
+        }
         // showImeKeyboard() won't work until the layout is ready, so wait until layout is complete
         // before showing the soft keyboard.
         UiUtils.doOnceAfterLayoutChange(mRootView, new Runnable() {

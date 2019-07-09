@@ -49,6 +49,7 @@ import com.android.messaging.ui.conversationlist.ConversationListActivity;
 import com.android.messaging.ui.customize.PrimaryColors;
 import com.android.messaging.ui.customize.ToolbarDrawables;
 import com.android.messaging.ui.messagebox.MessageBoxActivity;
+import com.android.messaging.ui.wallpaper.WallpaperManager;
 import com.android.messaging.util.Assert;
 import com.android.messaging.util.BugleAnalytics;
 import com.android.messaging.util.CommonUtils;
@@ -70,6 +71,7 @@ import com.superapps.util.Preferences;
 import net.appcloudbox.ads.base.AcbInterstitialAd;
 import net.appcloudbox.ads.common.utils.AcbError;
 import net.appcloudbox.ads.interstitialad.AcbInterstitialAdManager;
+import net.appcloudbox.autopilot.AutopilotEvent;
 
 import java.util.List;
 
@@ -97,7 +99,6 @@ public class ConversationActivity extends BugleActionBarActivity
 
     private AcbInterstitialAd mInterstitialAd;
     private long mCreateTime;
-    private Toolbar toolbar;
     private boolean fromCreateConversation;
     private String mConversationId;
 
@@ -115,6 +116,7 @@ public class ConversationActivity extends BugleActionBarActivity
         }
         if (getIntent() != null && getIntent().getBooleanExtra(BugleNotifications.EXTRA_FROM_NOTIFICATION, false)) {
             BugleAnalytics.logEvent("SMS_Notifications_Clicked", true, true);
+            AutopilotEvent.logTopicEvent("topic-768lyi3sp", "notification_clicked");
         }
 
         if (intent.
@@ -169,7 +171,6 @@ public class ConversationActivity extends BugleActionBarActivity
 
         BugleAnalytics.logEvent("SMS_ActiveUsers", true);
 
-
         mKeyboardHeight = UiUtils.getKeyboardHeight();
         if (mKeyboardHeight <= 0) {
             mContainer = findViewById(R.id.conversation_and_compose_container);
@@ -217,12 +218,10 @@ public class ConversationActivity extends BugleActionBarActivity
         mTitleTextView.setVisibility(View.VISIBLE);
     }
 
-    private void initActionBar() {
+    private void refreshActionBarBg() {
         View accessoryContainer = findViewById(R.id.accessory_container);
-        ViewGroup.LayoutParams layoutParams = accessoryContainer.getLayoutParams();
-        layoutParams.height = Dimensions.getStatusBarHeight(ConversationActivity.this) + Dimensions.pxFromDp(56);
-        accessoryContainer.setLayoutParams(layoutParams);
-        if (ToolbarDrawables.getToolbarBg() != null) {
+        if (ToolbarDrawables.getToolbarBg() != null
+                && WallpaperManager.getWallpaperPathByConversationId(mConversationId) == null) {
             ImageView ivAccessoryBg = accessoryContainer.findViewById(R.id.accessory_bg);
             ivAccessoryBg.setVisibility(View.VISIBLE);
             ivAccessoryBg.setImageDrawable(ToolbarDrawables.getToolbarBg());
@@ -230,13 +229,20 @@ public class ConversationActivity extends BugleActionBarActivity
             accessoryContainer.setBackgroundColor(PrimaryColors.getPrimaryColor());
             accessoryContainer.findViewById(R.id.accessory_bg).setVisibility(View.GONE);
         }
+    }
+
+    private void initActionBar() {
+        View accessoryContainer = findViewById(R.id.accessory_container);
+        ViewGroup.LayoutParams layoutParams = accessoryContainer.getLayoutParams();
+        layoutParams.height = Dimensions.getStatusBarHeight(ConversationActivity.this) + Dimensions.pxFromDp(56);
+        accessoryContainer.setLayoutParams(layoutParams);
 
         View statusbarInset = findViewById(R.id.status_bar_inset);
         layoutParams = statusbarInset.getLayoutParams();
         layoutParams.height = Dimensions.getStatusBarHeight(ConversationActivity.this);
         statusbarInset.setLayoutParams(layoutParams);
 
-        toolbar = findViewById(R.id.toolbar);
+        Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         mTitleTextView = findViewById(R.id.toolbar_title);
         invalidateActionBar();
@@ -268,7 +274,7 @@ public class ConversationActivity extends BugleActionBarActivity
     @Override
     protected void onResume() {
         super.onResume();
-
+        refreshActionBarBg();
         // we need to reset the mInstanceStateSaved flag since we may have just been restored from
         // a previous onStop() instead of an onDestroy().
         mInstanceStateSaved = false;
@@ -402,9 +408,11 @@ public class ConversationActivity extends BugleActionBarActivity
                 mInterstitialAd.setSoundEnable(false);
                 mInterstitialAd.show();
                 BugleAnalytics.logEvent("Detailspage_FullAd_Show", true, true);
+                AutopilotEvent.logTopicEvent("topic-768lyi3sp", "fullad_show");
                 Preferences.getDefault().putLong(PREF_KEY_WIRE_AD_SHOW_TIME, System.currentTimeMillis());
             }
             BugleAnalytics.logEvent("Detailspage_FullAd_Should_Show", true, true);
+            AutopilotEvent.logTopicEvent("topic-768lyi3sp", "fullad_chance");
         }
     }
 

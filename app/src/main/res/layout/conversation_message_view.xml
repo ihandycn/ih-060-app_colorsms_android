@@ -66,7 +66,6 @@
                 app:placeholderDrawable="@drawable/attachment_image_placeholder_background"/>
         </LinearLayout>
 
-
         <com.android.messaging.ui.conversation.MessageBubbleBackground
             android:id="@+id/message_text_and_info"
             android:layout_width="wrap_content"

@@ -123,41 +123,6 @@ public class ConversationMessageData {
         mSelfParticipantId = cursor.getString(INDEX_SELF_PARTICIPIANT_ID);
         mIsLocked = cursor.getInt(INDEX_IS_LOCKED) == 1;
         mIsDeleted = cursor.getInt(INDEX_IS_DELETED) == 1;
-
-        if (!cursor.isFirst() && cursor.moveToPrevious()) {
-            mCanClusterWithPreviousMessage = canClusterWithMessage(cursor);
-            cursor.moveToNext();
-        } else {
-            mCanClusterWithPreviousMessage = false;
-        }
-        if (!cursor.isLast() && cursor.moveToNext()) {
-            mCanClusterWithNextMessage = canClusterWithMessage(cursor);
-            cursor.moveToPrevious();
-        } else {
-            mCanClusterWithNextMessage = false;
-        }
-    }
-
-    private boolean canClusterWithMessage(final Cursor cursor) {
-        final String otherParticipantId = cursor.getString(INDEX_PARTICIPANT_ID);
-        if (!TextUtils.equals(getParticipantId(), otherParticipantId)) {
-            return false;
-        }
-        final int otherStatus = cursor.getInt(INDEX_STATUS);
-        final boolean otherIsIncoming = (otherStatus >= MessageData.BUGLE_STATUS_FIRST_INCOMING);
-        if (getIsIncoming() != otherIsIncoming) {
-            return false;
-        }
-        final long otherReceivedTimestamp = cursor.getLong(INDEX_RECEIVED_TIMESTAMP);
-        final long timestampDeltaMillis = Math.abs(mReceivedTimestamp - otherReceivedTimestamp);
-        if (timestampDeltaMillis > DateUtils.MINUTE_IN_MILLIS) {
-            return false;
-        }
-        final String otherSelfId = cursor.getString(INDEX_SELF_PARTICIPIANT_ID);
-        if (!TextUtils.equals(getSelfParticipantId(), otherSelfId)) {
-            return false;
-        }
-        return true;
     }
 
     private static final Character QUOTE_CHAR = '\'';
@@ -619,8 +584,16 @@ public class ConversationMessageData {
         return mCanClusterWithPreviousMessage;
     }
 
+    public void setCanClusterWithPreviousMessage(boolean canClusterWithPreviousMessage) {
+        mCanClusterWithPreviousMessage = canClusterWithPreviousMessage;
+    }
+
     public boolean getCanClusterWithNextMessage() {
         return mCanClusterWithNextMessage;
+    }
+
+    public void setCanClusterWithNextMessage(boolean canClusterWithNextMessage) {
+        mCanClusterWithNextMessage = canClusterWithNextMessage;
     }
 
     @Override

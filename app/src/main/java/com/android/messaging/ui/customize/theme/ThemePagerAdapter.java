@@ -16,12 +16,16 @@ import java.util.Collections;
 import java.util.List;
 
 public class ThemePagerAdapter extends PagerAdapter {
+    public interface OnPageClickedListener {
+        void onPageClicked(int position);
+    }
 
     private final int mCount;
 
     private final List<View> mItemList;
     private final List<ThemeInfo> mShuffledThemeItemList;
     private ThemeInfo mCurrentTheme;
+    private OnPageClickedListener mPageClickListener;
 
     public ThemePagerAdapter(Context context) {
         List<ThemeInfo> themeInfos = ThemeInfo.getLocalThemes();
@@ -43,7 +47,7 @@ public class ThemePagerAdapter extends PagerAdapter {
         }
 
         if (context instanceof WelcomeChooseThemeActivity) {
-            Collections.shuffle(mShuffledThemeItemList);
+            Collections.sort(mShuffledThemeItemList, (t1, t2) -> t1.mLocalIndex - t2.mLocalIndex);
         }
 
         for (int i = 0; i < mCount; i++) {
@@ -60,6 +64,12 @@ public class ThemePagerAdapter extends PagerAdapter {
                                 + "/" + mShuffledThemeItemList.get(i - 1).mPreviewList.get(0)));
             }
             mItemList.add(item);
+            final int position = i;
+            item.setOnClickListener(v -> {
+                if (mPageClickListener != null) {
+                    mPageClickListener.onPageClicked(position);
+                }
+            });
         }
     }
 
@@ -92,4 +102,7 @@ public class ThemePagerAdapter extends PagerAdapter {
         container.removeView(mItemList.get(position));
     }
 
+    void setOnPageClickListener(OnPageClickedListener listener) {
+        mPageClickListener = listener;
+    }
 }

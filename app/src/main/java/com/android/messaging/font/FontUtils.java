@@ -16,17 +16,12 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class FontUtils {
-    static final String LOCAL_DIRECTORY = "fonts" + File.separator;
-    public static final String MESSAGE_FONT_FAMILY_DEFAULT_VALUE = "Default";
-
-    public static final String[] sSupportGoogleFonts = {
-            FontUtils.MESSAGE_FONT_FAMILY_DEFAULT_VALUE,
-            "Krub", "Mali", "Averia_Libre",
-            "Merienda", "Sarpanch", "K2D", "El_Messiri"
-    };
+    private static final String LOCAL_DIRECTORY = "fonts" + File.separator;
+    public static final String MESSAGE_FONT_FAMILY_DEFAULT_VALUE = "default";
 
     private static Map<String, Typeface> sTypefaceMap = new HashMap<>();
-    private static String sTypefaceName = FontStyleManager.getInstance().getFontFamily();
+    private static Map<String, Typeface> sDefaultTypefaceMap = new HashMap<>();
+    public static String sTypefaceName = FontStyleManager.getInstance().getFontFamily();
 
     public static final int THIN = 100;
     public static final int EXTRA_LIGHT = 200;
@@ -58,7 +53,7 @@ public class FontUtils {
         } else if (weight == MEDIUM) {
             weightName = "Medium";
         } else {
-            weightName = "Semibold";
+            weightName = "SemiBold";
         }
         String fullName = name + "_" + weightName;
         if (sTypefaceMap.containsKey(fullName)) {
@@ -74,7 +69,7 @@ public class FontUtils {
 
     public static Typeface getTypeface(@FontWeight int weight) {
         if (TextUtils.isEmpty(sTypefaceName)) {
-            sTypefaceName = "Default";
+            sTypefaceName = MESSAGE_FONT_FAMILY_DEFAULT_VALUE;
         }
         return getTypefaceByName(sTypefaceName, weight);
     }
@@ -96,7 +91,7 @@ public class FontUtils {
         } else if (fontType == R.string.custom_font_semibold
                 || fontType == R.string.custom_font_bold
                 || fontType == R.string.custom_font_black) {
-            weight = "Semibold";
+            weight = "SemiBold";
         } else {
             //not custom type
             return Fonts.getTypeface(Fonts.Font.ofFontResId(fontType), fontStyle);
@@ -114,43 +109,63 @@ public class FontUtils {
     }
 
     public static Typeface loadTypeface(String typefaceName, String weightName) {
-        boolean isLocalFont = false;
-        for (String s : sSupportGoogleFonts) {
-            if (s.equals(typefaceName)) {
-                isLocalFont = true;
-                break;
-            }
+        FontInfo info = FontDownloadManager.getFont(typefaceName);
+        if (info == null) {
+            return getAssetTypeface(typefaceName, weightName);
         }
-        if (isLocalFont) {
-            return getLocalTypeface(typefaceName, weightName);
+        if (info.isLocalFont()) {
+            return getAssetTypeface(typefaceName, weightName);
         } else {
             return getRemoteTypeface(typefaceName, weightName);
         }
     }
 
-    private static Typeface getLocalTypeface(String typefaceName, String weightName) {
+    private static Typeface getDefaultTypeface(String weightName) {
+        if (sDefaultTypefaceMap.get(weightName) != null) {
+            return sDefaultTypefaceMap.get(weightName);
+        }
+
         Typeface tp = null;
         try {
+            tp = Typeface.createFromAsset(HSApplication.getContext().getAssets(),
+                    "fonts/Custom" + "-" + (weightName.equals("SemiBold") ? "Semibold" : weightName) + ".ttf");
+            sDefaultTypefaceMap.put(weightName, tp);
+        } catch (Exception ignored) {
+        }
+        return tp;
+    }
+
+    private static Typeface getAssetTypeface(String typefaceName, String weightName) {
+        if (MESSAGE_FONT_FAMILY_DEFAULT_VALUE.equals(typefaceName)) {
+            return getDefaultTypeface(weightName);
+        }
+
+        Typeface tp;
+        try {
             tp = Typeface.createFromAsset(HSApplication.getContext().getAssets(), "fonts/"
-                    + (MESSAGE_FONT_FAMILY_DEFAULT_VALUE.equals(typefaceName) ? "Custom" : typefaceName)
-                    + "-" + weightName + ".ttf");
+                    + typefaceName + "/" + weightName + ".ttf");
+            return tp;
         } catch (Exception e) {
             if ("Medium".equals(weightName)) {
                 try {
                     tp = Typeface.createFromAsset(HSApplication.getContext().getAssets(), "fonts/"
-                            + (MESSAGE_FONT_FAMILY_DEFAULT_VALUE.equals(typefaceName)
-                            ? "Custom" : typefaceName)
-                            + "-Semibold.ttf");
+                            + typefaceName + "/" + "SemiBold.ttf");
+                    return tp;
                 } catch (Exception e1) {
                     HSLog.e("load Semibold font", "create font from asset failed");
-                    return null;
                 }
             } else {
                 HSLog.e("load font", "create font from asset failed");
-                return null;
             }
         }
-        return tp;
+
+        tp = getRemoteTypeface(typefaceName, weightName);
+        if (tp != null) {
+            return tp;
+        }
+
+        // if cannot load font from local and asset folder, use default font
+        return getDefaultTypeface(weightName);
     }
 
     private static Typeface getRemoteTypeface(String typefaceName, String weightName) {
@@ -161,7 +176,7 @@ public class FontUtils {
                 if (file.exists()) {
                     break;
                 }
-            case "Semibold":
+            case "SemiBold":
                 file = new File(getDirectory(LOCAL_DIRECTORY + typefaceName) + File.separator + "SemiBold.ttf");
                 if (file.exists()) {
                     break;
@@ -170,15 +185,14 @@ public class FontUtils {
                 file = new File(getDirectory(LOCAL_DIRECTORY + typefaceName) + File.separator + "Regular.ttf");
         }
 
-        Typeface tp = null;
         if (file.exists()) {
             try {
-                tp = Typeface.createFromFile(file);
+                return Typeface.createFromFile(file);
             } catch (Exception e) {
                 HSLog.e("load font", "create font from file failed");
             }
         }
-        return tp;
+        return null;
     }
 
     public static @Nullable

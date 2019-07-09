@@ -59,9 +59,6 @@ public class ContactPickerActivity extends BugleActionBarActivity implements
 
         final Intent intent = getIntent();
 
-        if (getIntent() != null && getIntent().getBooleanExtra(BugleNotifications.EXTRA_FROM_NOTIFICATION, false)) {
-            BugleAnalytics.logEvent("SMS_Notifications_Clicked", true, true);
-        }
         if (getIntent() != null) {
             mDraftData = getIntent().getParcelableExtra(UIIntents.UI_INTENT_EXTRA_DRAFT_DATA);
         }

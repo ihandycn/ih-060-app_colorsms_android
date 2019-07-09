@@ -42,6 +42,7 @@ public class ChooseThemePagerView extends ConstraintLayout {
         mPager.setAdapter(mAdapter);
         mPager.setPageTransformer(false, new ThemePagerTransformer(getContext()));
         mPager.setPageMargin(Dimensions.pxFromDp(16));
+        mAdapter.setOnPageClickListener(position -> mPager.setCurrentItem(position));
         mPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
@@ -79,7 +80,7 @@ public class ChooseThemePagerView extends ConstraintLayout {
             ThemeUtils.applyTheme(mAdapter.getThemeInfo(mPager.getCurrentItem()), 0);
             FontUtils.onFontTypefaceChanged();
 
-            BugleAnalytics.logEvent("Start_ChooseTheme_Apply", true, "theme", ThemeUtils.getCurrentThemeName());
+            BugleAnalytics.logEvent("Start_ChooseTheme_Apply", true, true, "theme", ThemeUtils.getCurrentThemeName());
         });
     }
 
@@ -91,5 +92,4 @@ public class ChooseThemePagerView extends ConstraintLayout {
         mOnPageSelectedListener = listener;
         mOnPageSelectedListener.onPageSelected(0, Color.parseColor(mAdapter.getThemeInfo(0).themeColor));
     }
-
 }

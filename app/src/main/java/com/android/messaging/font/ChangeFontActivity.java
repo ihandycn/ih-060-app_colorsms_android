@@ -54,7 +54,7 @@ public class ChangeFontActivity extends BaseActivity implements LevelSeekBar.OnL
 
         CustomMessagePreviewView customMessagePreviewView = findViewById(R.id.message_preview_view);
         customMessagePreviewView.setIsFontPreview();
-        customMessagePreviewView.updateBubbleDrawables(null);
+        customMessagePreviewView.updateBubbleDrawables(null, WallpaperManager.hasCustomWallpaper(null));
 
         LevelSeekBar mSeekBar = findViewById(R.id.seek_bar);
         mTextFontFamily = findViewById(R.id.setting_text_font_name);

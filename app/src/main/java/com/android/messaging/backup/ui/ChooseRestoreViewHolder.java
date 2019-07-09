@@ -13,6 +13,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.android.messaging.R;
+import com.android.messaging.backup.BackupAutopilotUtils;
 import com.android.messaging.backup.BackupInfo;
 import com.android.messaging.backup.BackupManager;
 import com.android.messaging.datamodel.MessagingContentProvider;
@@ -127,6 +128,7 @@ public class ChooseRestoreViewHolder extends BasePagerViewHolder implements Cust
                     UiUtils.showDialogFragment((Activity) mContext, restoreProcessDialog);
                     BugleAnalytics.logEvent("Backup_RestorePage_Restore_Click", true,
                             "restorefrom", "local");
+                    BackupAutopilotUtils.logRestorePageClick();
                 }
             } else if (fromCloudCheckBox.isChecked()) {
                 if (mCloudBackups != null) {
@@ -202,6 +204,7 @@ public class ChooseRestoreViewHolder extends BasePagerViewHolder implements Cust
                         backupCondition[0] = false;
                         backupCondition[1] = false;
                         Toasts.showToast(R.string.restore_success);
+                        BackupAutopilotUtils.logRestorePageSuccess();
                     });
                 }
             }, RestoreProcessDialog.MIN_PROGRESS_TIME);
@@ -225,6 +228,7 @@ public class ChooseRestoreViewHolder extends BasePagerViewHolder implements Cust
                     backupCondition[0] = false;
                     backupCondition[1] = false;
                     Toasts.showToast(R.string.restore_success);
+                    BackupAutopilotUtils.logRestorePageSuccess();
                 });
             }
         }

@@ -762,7 +762,7 @@
 
     <string name="invite_friends_success_toast">邀请成功</string>
     <string name="notification_summary">收到消息时获取通知</string>
-    <string name="archived_conversations">过去的对话</string>
+    <string name="archived_conversations">归档的会话</string>
     <string name="others">其他</string>
     <string name="about">关于</string>
     <string name="conversation_pinned">置顶</string>

@@ -19,11 +19,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ThemePreviewPagerAdapter extends PagerAdapter {
-
+    public interface OnPageClickedListener {
+        void onPageClicked(int position);
+    }
     private final int mCount;
 
     private final List<View> mItemList = new ArrayList<>();
-
+    private OnPageClickedListener mPageClickListener;
     ThemePreviewPagerAdapter(Context context, ThemeInfo theme) {
         mCount = theme.mPreviewList.size();
 
@@ -49,6 +51,12 @@ public class ThemePreviewPagerAdapter extends PagerAdapter {
                         .into(imageView);
             }
             mItemList.add(item);
+            final int position = i;
+            item.setOnClickListener(v -> {
+                if (mPageClickListener != null) {
+                    mPageClickListener.onPageClicked(position);
+                }
+            });
         }
     }
 
@@ -72,5 +80,9 @@ public class ThemePreviewPagerAdapter extends PagerAdapter {
     @Override
     public void destroyItem(@NonNull ViewGroup container, int position, @NonNull Object object) {
         container.removeView(mItemList.get(position));
+    }
+
+    void setOnPageClickListener(OnPageClickedListener listener) {
+        mPageClickListener = listener;
     }
 }
