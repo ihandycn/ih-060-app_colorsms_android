@@ -890,38 +890,7 @@ public class ConversationFragment extends Fragment implements ConversationDataLi
         manager.setReverseLayout(false);
 //        mRecyclerView.setHasFixedSize(true);
         mRecyclerView.setLayoutManager(manager);
-
-        DefaultItemAnimator itemAnimator = new DefaultItemAnimator() {
-            private final List<ViewHolder> mAddAnimations = new ArrayList<>();
-            private BubbleTransitionAnimation mPopupTransitionAnimation;
-
-            @Override
-            public boolean animateAdd(final ViewHolder holder) {
-                final ConversationMessageView view =
-                        (ConversationMessageView) holder.itemView;
-                final ConversationMessageData data = view.getData();
-                endAnimation(holder);
-                final long timeSinceSend = System.currentTimeMillis() - data.getReceivedTimeStamp();
-                if (data.getReceivedTimeStamp() ==
-                        InsertNewMessageAction.getLastSentMessageTimestamp() &&
-                        !data.getIsIncoming() &&
-                        timeSinceSend < MESSAGE_ANIMATION_MAX_WAIT) {
-                    view.setAlpha(0);
-                    mPopupTransitionAnimation = new BubbleTransitionAnimation(view);
-                    mPopupTransitionAnimation.startAfterLayoutComplete();
-                    mAddAnimations.add(holder);
-                    return true;
-                } else {
-                    return super.animateAdd(holder);
-                }
-            }
-
-            @Override
-            public boolean animateMove(ViewHolder holder, int fromX, int fromY, int toX, int toY) {
-                return false;
-            }
-        };
-        mRecyclerView.setItemAnimator(itemAnimator);
+        mRecyclerView.setItemAnimator(null);
 
         mRecyclerView.setAdapter(mAdapter);
         if (savedInstanceState != null) {
