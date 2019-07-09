@@ -292,6 +292,19 @@
 					</dict>
 				</array>
 			</dict>
+			<key>Giphy</key>
+			<dict>
+				<key>Category</key>
+				<array>
+					<string>Emotion</string>
+					<string>Reaction</string>
+					<string>Animal</string>
+					<string>Sports</string>
+					<string>Game</string>
+					<string>Cartoon</string>
+					<string>Artists</string>
+				</array>
+			</dict>
 			<key>SMSAd</key>
 			<dict>
 				<key>SMSDetailspageTopAd</key>
