@@ -22,14 +22,14 @@ import java.util.ArrayList;
 
 import static com.android.messaging.ad.BillingManager.PRODUCT_ID;
 
-public class GoSmsProActivity extends AppCompatActivity {
+public class BillingActivity extends AppCompatActivity {
 
     private AcbIAPProductRequest acbIAPProductRequest;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_go_sms_pro);
+        setContentView(R.layout.activity_billing);
 
         ArrayList<String> list = new ArrayList<>(2);
         list.add(PRODUCT_ID);

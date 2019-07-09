@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.provider.Telephony;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
+import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.content.pm.ShortcutManagerCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
@@ -72,7 +73,7 @@ import com.android.messaging.ui.invitefriends.InviteFriendsActivity;
 import com.android.messaging.ui.messagebox.MessageBoxActivity;
 import com.android.messaging.ui.messagebox.MessageBoxSettings;
 import com.android.messaging.ui.signature.SignatureSettingDialog;
-import com.android.messaging.ui.smspro.GoSmsProActivity;
+import com.android.messaging.ui.smspro.BillingActivity;
 import com.android.messaging.ui.wallpaper.WallpaperChooserItem;
 import com.android.messaging.ui.wallpaper.WallpaperDownloader;
 import com.android.messaging.ui.wallpaper.WallpaperManager;
@@ -544,8 +545,10 @@ public class ConversationListActivity extends AbstractConversationListActivity
                         BugleAnalytics.logEvent("Menu_FiveStart_Click", true, true);
                         break;
                     case DRAWER_INDEX_REMOVE_ADS:
-                        Intent goSmsProIntent = new Intent(ConversationListActivity.this, GoSmsProActivity.class);
-                        startActivity(goSmsProIntent, TransitionUtils.getTransitionInBundle(ConversationListActivity.this));
+                        Intent goSmsProIntent = new Intent(ConversationListActivity.this, BillingActivity.class);
+                        ActivityOptionsCompat options =
+                                ActivityOptionsCompat.makeCustomAnimation(ConversationListActivity.this, R.anim.fade_in, R.anim.anim_null);
+                        startActivity(goSmsProIntent, options.toBundle());
                         BugleAnalytics.logEvent("SMS_Menu_Subscription_Click", true, false);
 
                         BugleAnalytics.logEvent("Subscription_Analysis",
