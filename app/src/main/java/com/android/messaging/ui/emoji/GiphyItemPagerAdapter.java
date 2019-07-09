@@ -29,7 +29,7 @@ public class GiphyItemPagerAdapter extends AbstractEmojiItemPagerAdapter {
     private static final int GIF_COLUMNS = 2;
     private TabLayout mTabLayout;
     private Context mContext;
-    private boolean mIsFirst;
+    private boolean mIsFirst = true;
 
     private List<EmojiPackageInfo> mData;
     private EmojiPackagePagerAdapter.OnEmojiClickListener mOnEmojiClickListener;
@@ -193,6 +193,7 @@ public class GiphyItemPagerAdapter extends AbstractEmojiItemPagerAdapter {
                 tabIconView.setImageURI(Uri.parse(info.mTabIconUrl));
                 tabTextView.setText("Rec");
                 tabTextView.setVisibility(View.INVISIBLE);
+                view.getLayoutParams().width = (int) (Dimensions.getPhoneWidth(mContext) / 9 + 0.5f);
             } else {
                 tabIconView.setVisibility(View.GONE);
                 tabTextView.setText(info.mName);

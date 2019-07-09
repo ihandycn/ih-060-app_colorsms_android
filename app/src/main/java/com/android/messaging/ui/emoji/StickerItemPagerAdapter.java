@@ -91,7 +91,7 @@ public class StickerItemPagerAdapter extends AbstractEmojiItemPagerAdapter{
     @Override
     public void updateTabView() {
         int count = mTabLayout.getTabCount();
-        int width = (int) (Dimensions.getPhoneWidth(mContext) / (9.5f));
+        int width = (int) (Dimensions.getPhoneWidth(mContext) / 9 + 0.5f);
         int primaryColor = PrimaryColors.getPrimaryColor();
         for (int i = 0; i < count; i++) {
             EmojiPackageInfo info = mData.get(i);
