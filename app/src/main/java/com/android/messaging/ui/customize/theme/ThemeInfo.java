@@ -1,7 +1,11 @@
 package com.android.messaging.ui.customize.theme;
 
+import android.text.TextUtils;
+
+import com.android.messaging.util.CommonUtils;
 import com.ihs.commons.config.HSConfig;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
@@ -21,6 +25,7 @@ public class ThemeInfo {
     public String themeColor;
     public String toolbarBgUrl;
     public String avatarUrl;
+    public String mSolidAvatarUrl;
     public String avatarForegroundColor;
     public String listTitleColor;
     public String listSubtitleColor;
@@ -30,6 +35,8 @@ public class ThemeInfo {
     public String listWallpaperUrl;
     public String bubbleIncomingUrl;
     public String bubbleOutgoingUrl;
+    public String mSolidBubbleIncomingUrl;
+    public String mSolidBubbleOutgoingUrl;
     public String incomingBubbleBgColor;
     public String outgoingBubbleBgColor;
     public String incomingBubbleTextColor;
@@ -77,6 +84,15 @@ public class ThemeInfo {
         themeInfo.bannerAdActionColor = (String) themeConfig.get("BannerAdActionColor");
         themeInfo.bannerAdActionTextColor = (String) themeConfig.get("BannerAdActionTextColor");
         themeInfo.mThemeDownloadTimes = (Integer) themeConfig.get("Hot");
+        if (themeConfig.containsKey("BubbleIncomingSolidUrl")) {
+            themeInfo.mSolidBubbleIncomingUrl = (String) themeConfig.get("BubbleIncomingSolidUrl");
+        }
+        if (themeConfig.containsKey("BubbleOutgoingSolidUrl")) {
+            themeInfo.mSolidBubbleOutgoingUrl = (String) themeConfig.get("BubbleOutgoingSolidUrl");
+        }
+        if (themeConfig.containsKey("AvatarSolidUrl")) {
+            themeInfo.mSolidAvatarUrl = (String) themeConfig.get("AvatarSolidUrl");
+        }
         themeInfo.mPreviewList = (List<String>) HSConfig.getList("Application", "Themes", "ThemeList", name, "PreviewList");
 
         return themeInfo;
@@ -86,11 +102,45 @@ public class ThemeInfo {
         if (mIsLocalTheme) {
             return true;
         }
+        return isAllFileInLocalFolder();
+    }
+
+    public boolean isNecessaryFilesInLocalFolder() {
         return ThemeDownloadManager.getInstance().isThemeDownloaded(this);
     }
 
-    public boolean isInLocalFolder() {
-        return ThemeDownloadManager.getInstance().isThemeDownloaded(this);
+    public boolean isAllFileInLocalFolder() {
+        if (!isNecessaryFilesInLocalFolder()) {
+            return false;
+        }
+
+        if (!TextUtils.isEmpty(mSolidBubbleIncomingUrl)) {
+            File file = new File(CommonUtils.getDirectory(
+                    ThemeBubbleDrawables.THEME_BASE_PATH + mThemeKey),
+                    ThemeBubbleDrawables.INCOMING_SOLID_BUBBLE_FILE_NAME);
+            if (!file.exists()) {
+                return false;
+            }
+        }
+
+        if (!TextUtils.isEmpty(mSolidBubbleOutgoingUrl)) {
+            File file = new File(CommonUtils.getDirectory(
+                    ThemeBubbleDrawables.THEME_BASE_PATH + mThemeKey),
+                    ThemeBubbleDrawables.OUTGOING_SOLID_BUBBLE_FILE_NAME);
+            if (!file.exists()) {
+                return false;
+            }
+        }
+
+        if (!TextUtils.isEmpty(mSolidAvatarUrl)) {
+            File file = new File(CommonUtils.getDirectory(
+                    ThemeBubbleDrawables.THEME_BASE_PATH + mThemeKey),
+                    ThemeBubbleDrawables.SOLID_AVATAR_FILE_NAME);
+            if (!file.exists()) {
+                return false;
+            }
+        }
+        return true;
     }
 
     public boolean isDownloading() {

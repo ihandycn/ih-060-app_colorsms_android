@@ -71,15 +71,16 @@ public class ThemeUtils {
         WallpaperDrawables.sWallpaperBitmap = null;
         WallpaperDrawables.applyWallpaperBg(themeInfo.wallpaperUrl);
         AvatarBgDrawables.sAvatarBg = null;
+        AvatarBgDrawables.sSolidAvatarBg = null;
         CreateIconDrawable.sCreateIconBitmap = null;
 
-        ThemeManager.getInstance().clearCacheDrawable();
+        ThemeBubbleDrawables.getInstance().clearCacheDrawable();
 
         if (!themeInfo.mThemeKey.equals(ThemeUtils.DEFAULT_THEME_KEY)) {
             BubbleDrawables.setSelectedIdentifier(-1);
         }
 
-        if (themeInfo.mIsLocalTheme && !themeInfo.isInLocalFolder()) {
+        if (themeInfo.mIsLocalTheme && !themeInfo.isAllFileInLocalFolder()) {
             ThemeDownloadManager.getInstance().copyFileFromAssetsAsync(themeInfo,
                     new ThemeDownloadManager.IThemeMoveListener() {
                         @Override

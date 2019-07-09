@@ -763,7 +763,7 @@
 
     <string name="invite_friends_success_toast">邀請成功</string>
     <string name="notification_summary">收到消息時獲取通知</string>
-    <string name="archived_conversations">過去的對話</string>
+    <string name="archived_conversations">歸檔的會話</string>
     <string name="others">其他</string>
     <string name="about">關於</string>
     <string name="conversation_pinned">置頂</string>

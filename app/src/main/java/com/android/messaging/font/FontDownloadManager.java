@@ -1,5 +1,6 @@
 package com.android.messaging.font;
 
+import android.content.res.AssetManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
@@ -19,6 +20,7 @@ import com.superapps.util.Threads;
 import com.superapps.util.Toasts;
 
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -27,7 +29,7 @@ import java.util.List;
 import java.util.Map;
 
 public class FontDownloadManager {
-    static final String LOCAL_DIRECTORY = "fonts" + File.separator;
+    public static final String LOCAL_DIRECTORY = "fonts" + File.separator;
 
     public interface FontDownloadListener {
         void onDownloadSuccess();
@@ -50,26 +52,21 @@ public class FontDownloadManager {
         }
     }
 
-    static List<FontInfo> getRemoteFonts() {
+    static List<FontInfo> getFontList() {
         List<FontInfo> list = new ArrayList<>();
         List<Map<String, ?>> fontList = (List<Map<String, ?>>) HSConfig.getList("Application", "Fonts", "FontList");
         for (Map item : fontList) {
             String fontName = (String) item.get("Name");
             List<String> styleList = (List<String>) item.get("Weight");
-            FontInfo info = new FontInfo(FontInfo.REMOTE_FONT, fontName, styleList);
+            boolean isLocal = (Boolean) item.get("IsLocalFont");
+            FontInfo info = new FontInfo(fontName, styleList, isLocal);
             list.add(info);
         }
         return list;
     }
 
     public static FontInfo getFont(String fontName) {
-        for (String s : FontUtils.sSupportGoogleFonts) {
-            if (s.equals(fontName)) {
-                return new FontInfo(FontInfo.LOCAL_FONT, fontName);
-            }
-        }
-
-        for (FontInfo info : getRemoteFonts()) {
+        for (FontInfo info : getFontList()) {
             if (info.getFontName().equals(fontName)) {
                 return info;
             }
@@ -79,6 +76,10 @@ public class FontDownloadManager {
     }
 
     public static boolean isFontDownloaded(FontInfo font) {
+        if (FontUtils.MESSAGE_FONT_FAMILY_DEFAULT_VALUE.equalsIgnoreCase(font.getFontName()) || font.isLocalFont()) {
+            return true;
+        }
+
         for (String style : font.getFontWeights()) {
             File file = new File(CommonUtils.getDirectory(LOCAL_DIRECTORY + font.getFontName()), style + ".ttf");
             if (!file.exists()) {
@@ -183,6 +184,53 @@ public class FontDownloadManager {
             });
             connection.startSync();
         });
+    }
+
+    public static void copyFontsFromAssetsAsync() {
+        Threads.postOnThreadPoolExecutor( () ->{
+            List<FontInfo> list = getFontList();
+            for (FontInfo font : list) {
+                if (font.isLocalFont() && !font.getFontName().equals(FontUtils.MESSAGE_FONT_FAMILY_DEFAULT_VALUE)) {
+                    copyFont(font);
+                }
+            }
+        });
+    }
+
+    public static void copyFont(FontInfo fontInfo) {
+        boolean isInLocal = FontDownloadManager.isFontDownloaded(fontInfo);
+        if (isInLocal) {
+            return;
+        }
+        String folderName = fontInfo.getFontName();
+        File fontFolder = new File(CommonUtils.getDirectory("fonts"), folderName);
+        if (!fontFolder.exists()) {
+            fontFolder.mkdirs();
+        }
+        AssetManager assetManager = HSApplication.getContext().getAssets();
+
+        for (String weight : fontInfo.getFontWeights()) {
+            String assetName = folderName + "/" + weight + ".ttf";
+            File folderFile = new File(CommonUtils.getDirectory(
+                    FontDownloadManager.LOCAL_DIRECTORY + folderName),
+                    weight + ".ttf");
+            try {
+                InputStream in = assetManager.open("fonts/" + assetName);
+                FileOutputStream out = new FileOutputStream(folderFile);
+
+                byte[] buffer = new byte[1024];
+                int read;
+                while ((read = in.read(buffer)) != -1) {
+                    out.write(buffer, 0, read);
+                }
+                in.close();
+                out.flush();
+                out.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+
     }
 
     private static String getBaseRemoteUrl() {

@@ -27,6 +27,7 @@
             android:layout_height="match_parent"
             android:layout_gravity="center_vertical|start"
             android:layout_marginStart="5dp"
+            android:contentDescription="@null"
             android:padding="0dp" />
 
         <View

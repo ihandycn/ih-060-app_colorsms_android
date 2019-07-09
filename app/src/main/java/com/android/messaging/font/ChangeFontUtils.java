@@ -79,7 +79,7 @@ public class ChangeFontUtils {
                 case FontUtils.SEMI_BOLD:
                 case FontUtils.BOLD:
                 case FontUtils.BLACK:
-                    weightStr = "Semibold";
+                    weightStr = "SemiBold";
                     break;
                 default:
                     weightStr = "Regular";

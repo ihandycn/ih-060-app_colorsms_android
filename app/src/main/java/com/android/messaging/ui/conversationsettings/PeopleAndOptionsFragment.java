@@ -305,7 +305,7 @@ public class PeopleAndOptionsFragment extends Fragment
             View itemView = inflater.inflate(R.layout.conversation_option_customize, parent, false);
 
             itemView.findViewById(R.id.chat_background).setOnClickListener(v -> {
-                WallpaperPreviewActivity.startWallpaperPreviewByThreadId(mContext, mConversationId);
+                WallpaperPreviewActivity.startWallpaperPreviewByConversationId(mContext, mConversationId);
             });
 
             itemView.findViewById(R.id.reset_customization).setOnClickListener(v -> {

@@ -45,7 +45,7 @@ public class WallpaperSizeManager {
             mToolbarDrawableWidth = toolbarBg.getWidth();
             mToolbarDrawableHeight = toolbarBg.getHeight();
 
-            Bitmap bg = WallpaperDrawables.getConversationListWallpaperBitmap();
+            Bitmap bg = WallpaperDrawables.getConversationWallpaperBitmap();
             if (bg != null) {
                 mWallpaperDrawableWidth = bg.getWidth();
                 mWallpaperDrawableHeight = bg.getHeight();
