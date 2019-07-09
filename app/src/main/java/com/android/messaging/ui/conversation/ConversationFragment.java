@@ -71,6 +71,7 @@ import android.widget.TextView;
 import com.android.messaging.R;
 import com.android.messaging.ad.AdConfig;
 import com.android.messaging.ad.AdPlacement;
+import com.android.messaging.ad.BillingManager;
 import com.android.messaging.datamodel.BugleNotifications;
 import com.android.messaging.datamodel.DataModel;
 import com.android.messaging.datamodel.MessagingContentProvider;
@@ -662,6 +663,10 @@ public class ConversationFragment extends Fragment implements ConversationDataLi
     }
 
     private void loadTopBannerAd() {
+        if (BillingManager.isPremiumUser()) {
+            return;
+        }
+
         BugleAnalytics.logEvent("Detailspage_TopAd_Should_Show", true, true);
         AutopilotEvent.logTopicEvent("topic-768lyi3sp", "topad_chance");
 

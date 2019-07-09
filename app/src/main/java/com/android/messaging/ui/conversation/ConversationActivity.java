@@ -39,6 +39,7 @@ import android.widget.TextView;
 
 import com.android.messaging.R;
 import com.android.messaging.ad.AdPlacement;
+import com.android.messaging.ad.BillingManager;
 import com.android.messaging.datamodel.BugleNotifications;
 import com.android.messaging.datamodel.MessagingContentProvider;
 import com.android.messaging.datamodel.data.MessageData;
@@ -363,6 +364,10 @@ public class ConversationActivity extends BugleActionBarActivity
     }
 
     private void showInterstitialAd() {
+        if (BillingManager.isPremiumUser()) {
+            return;
+        }
+
         final ConversationFragment conversationFragment = getConversationFragment();
         if (conversationFragment != null) {
             IntegerBuckets integerBuckets = new IntegerBuckets(5, 10, 15, 20, 30, 60, 120, 180, 300);

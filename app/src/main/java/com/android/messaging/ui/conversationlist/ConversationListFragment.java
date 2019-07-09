@@ -529,6 +529,10 @@ public class ConversationListFragment extends Fragment implements ConversationLi
 
     private void tryShowTopNativeAd() {
         HSLog.d("try show top native ad");
+        if (BillingManager.isPremiumUser()) {
+            return;
+        }
+
         if (!AdConfig.isHomepageBannerAdEnabled()) {
             return;
         }
