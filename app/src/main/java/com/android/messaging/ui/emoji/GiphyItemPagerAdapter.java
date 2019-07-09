@@ -29,6 +29,7 @@ public class GiphyItemPagerAdapter extends AbstractEmojiItemPagerAdapter {
     private static final int GIF_COLUMNS = 2;
     private TabLayout mTabLayout;
     private Context mContext;
+    private boolean mIsFirst;
 
     private List<EmojiPackageInfo> mData;
     private EmojiPackagePagerAdapter.OnEmojiClickListener mOnEmojiClickListener;
@@ -189,7 +190,7 @@ public class GiphyItemPagerAdapter extends AbstractEmojiItemPagerAdapter {
             TextView tabTextView = view.findViewById(R.id.tab_text_view);
             if (i == 0) {
                 tabIconView.setVisibility(View.VISIBLE);
-                tabIconView.setImageResource(R.drawable.emoji_ic_recent);
+                tabIconView.setImageURI(Uri.parse(info.mTabIconUrl));
                 tabTextView.setText("Rec");
                 tabTextView.setVisibility(View.INVISIBLE);
             } else {
@@ -287,9 +288,9 @@ public class GiphyItemPagerAdapter extends AbstractEmojiItemPagerAdapter {
 
         });
         List<BaseEmojiInfo> emojiInfos = mData.get(0).mEmojiInfoList;
-
-        if (emojiInfos == null || emojiInfos.isEmpty()) {
+        if ((emojiInfos == null || emojiInfos.isEmpty()) && mIsFirst) {
             mTabLayout.getTabAt(1).select();
+            mIsFirst = false;
         }
         mTabLayout.getTabAt(mTabLayout.getSelectedTabPosition()).select();
     }

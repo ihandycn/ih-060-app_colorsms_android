@@ -9,13 +9,10 @@ import com.superapps.util.Dimensions;
 public class EmojiItemDecoration extends RecyclerView.ItemDecoration {
 
     private int mNumColumn;
-    private int mHorizontalSpacing;
     private int mVerticalSpacing;
     private int mItemWidth;
-    private int mHorizontalOffsetSpacing;
     private int mItemHorizontalSpacing;
     private boolean mInitSpacing = false;
-    int x;
 
     public EmojiItemDecoration(int column, int itemWidth, int verticalSpacing) {
         mNumColumn = column;
@@ -29,12 +26,13 @@ public class EmojiItemDecoration extends RecyclerView.ItemDecoration {
             mInitSpacing = true;
             int parentWidth = parent.getWidth();
 
-            mItemHorizontalSpacing = (parentWidth - parent.getPaddingLeft() - parent.getPaddingRight()) / mNumColumn - mItemWidth;
+            mItemHorizontalSpacing = (parentWidth - parent.getPaddingLeft() - parent.getPaddingRight() - mItemWidth * mNumColumn) / (mNumColumn + 1);
         }
         int position = parent.getChildAdapterPosition(view);
+        int column = position % mNumColumn;
 
-        outRect.left = mItemHorizontalSpacing / 2;
-        outRect.right = mItemHorizontalSpacing / 2;
+        outRect.left = (mNumColumn - column) * mItemHorizontalSpacing / mNumColumn;
+        outRect.right = (column + 1) * mItemHorizontalSpacing / mNumColumn;
 
         if (position < mNumColumn) {
             outRect.top = Dimensions.pxFromDp(12);

@@ -33,6 +33,7 @@ public class StickerItemPagerAdapter extends AbstractEmojiItemPagerAdapter{
     private List<EmojiPackageInfo> mData;
     private EmojiPackagePagerAdapter.OnEmojiClickListener mOnEmojiClickListener;
     private Context mContext;
+    private boolean mIsFirst = true;
 
     StickerItemPagerAdapter(List<EmojiPackageInfo> data, Context context, EmojiPackagePagerAdapter.OnEmojiClickListener emojiClickListener) {
         mOnEmojiClickListener = emojiClickListener;
@@ -84,11 +85,6 @@ public class StickerItemPagerAdapter extends AbstractEmojiItemPagerAdapter{
         notifyDataSetChanged();
         if (mTabLayout != null) {
             updateTabView();
-            if(infoList.get(0).mEmojiInfoList.size() != 0){
-                mTabLayout.getTabAt(0).select();
-            }else{
-                mTabLayout.getTabAt(1).select();
-            }
         }
     }
 
@@ -175,6 +171,11 @@ public class StickerItemPagerAdapter extends AbstractEmojiItemPagerAdapter{
             }
         });
 
+        List<BaseEmojiInfo> emojiInfos = mData.get(0).mEmojiInfoList;
+        if ((emojiInfos == null || emojiInfos.isEmpty()) && mIsFirst) {
+            mTabLayout.getTabAt(1).select();
+            mIsFirst = false;
+        }
         mTabLayout.getTabAt(mTabLayout.getSelectedTabPosition()).select();
     }
 

@@ -26,6 +26,7 @@ public class EmojiItemPagerAdapter extends AbstractEmojiItemPagerAdapter {
     private final int EMOJI_ROWS = 4;
     private TabLayout mTabLayout;
     private Context mContext;
+    private boolean mIsFirst = true;
 
     private List<EmojiPackageInfo> mData = new ArrayList<>();
     private EmojiPackagePagerAdapter.OnEmojiClickListener mOnEmojiClickListener;
@@ -76,13 +77,8 @@ public class EmojiItemPagerAdapter extends AbstractEmojiItemPagerAdapter {
             mData.get(i).mEmojiInfoList.addAll(infoList.get(i).mEmojiInfoList);
         }
         notifyDataSetChanged();
-        if (mTabLayout != null) {
+        if(mTabLayout != null){
             updateTabView();
-            if(infoList.get(0).mEmojiInfoList.size() != 0){
-                mTabLayout.getTabAt(0).select();
-            }else{
-                mTabLayout.getTabAt(1).select();
-            }
         }
     }
 
@@ -138,7 +134,7 @@ public class EmojiItemPagerAdapter extends AbstractEmojiItemPagerAdapter {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
                 EmojiPackageInfo info = getPackageInfo(tab);
-                if (info == null){
+                if (info == null) {
                     return;
                 }
                 ImageView imageView = getImageView(tab);
@@ -195,6 +191,11 @@ public class EmojiItemPagerAdapter extends AbstractEmojiItemPagerAdapter {
             }
 
         });
+        List<BaseEmojiInfo> emojiInfos = mData.get(0).mEmojiInfoList;
+        if ((emojiInfos == null || emojiInfos.isEmpty()) && mIsFirst) {
+            mTabLayout.getTabAt(1).select();
+            mIsFirst = false;
+        }
         mTabLayout.getTabAt(mTabLayout.getSelectedTabPosition()).select();
     }
 }
