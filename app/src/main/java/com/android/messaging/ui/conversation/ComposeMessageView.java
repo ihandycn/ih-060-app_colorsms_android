@@ -710,15 +710,15 @@ public class ComposeMessageView extends LinearLayout
             startEmojiPickerAnimation(mEmojiPickerLayout, height);
         } else {
             isFirstEmojiStart = false;
-            Threads.postOnMainThreadDelayed(() -> mInputManager.onEmojiAnimationFinished(), 10);
         }
     }
 
-    private void startEmojiPickerAnimation(ViewGroup container, int startHeight) {
+    private void startEmojiPickerAnimation(ViewGroup container, int startPos) {
         ObjectAnimator va = ObjectAnimator.ofFloat(container, "translationY",
-                startHeight, 0f);
+                startPos, 0f);
         va.setDuration(520);
         va.setInterpolator(PathInterpolatorCompat.create(0.26f, 1, 0.48f, 1));
+
         va.addListener(new Animator.AnimatorListener() {
             @Override
             public void onAnimationStart(Animator animation) {
@@ -728,7 +728,6 @@ public class ComposeMessageView extends LinearLayout
             @Override
             public void onAnimationEnd(Animator animation) {
                 isFirstEmojiStart = false;
-                mInputManager.onEmojiAnimationFinished();
             }
 
             @Override
@@ -853,6 +852,7 @@ public class ComposeMessageView extends LinearLayout
 
     public void setInputManager(final ConversationInputManager inputManager) {
         mInputManager = inputManager;
+        mInputManager.showEmojiPicker();
     }
 
     public void setConversationDataModel(final ImmutableBindingRef<ConversationData> refDataModel) {

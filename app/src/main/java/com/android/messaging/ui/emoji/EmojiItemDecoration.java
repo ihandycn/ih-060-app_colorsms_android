@@ -15,13 +15,12 @@ public class EmojiItemDecoration extends RecyclerView.ItemDecoration {
     private int mHorizontalOffsetSpacing;
     private int mItemHorizontalSpacing;
     private boolean mInitSpacing = false;
-    private int mHorizontalSideSpace;
+    int x;
 
-    public EmojiItemDecoration(int column, int itemWidth, int horizontalSideSpace, int verticalSpacing) {
+    public EmojiItemDecoration(int column, int itemWidth, int verticalSpacing) {
         mNumColumn = column;
         mItemWidth = itemWidth;
         mVerticalSpacing = verticalSpacing;
-        mHorizontalSideSpace = horizontalSideSpace;
     }
 
     @Override public void getItemOffsets(Rect outRect, View view, RecyclerView parent, RecyclerView.State state) {
@@ -30,23 +29,12 @@ public class EmojiItemDecoration extends RecyclerView.ItemDecoration {
             mInitSpacing = true;
             int parentWidth = parent.getWidth();
 
-            mItemHorizontalSpacing = (parentWidth - mHorizontalSideSpace * 2
-                    - parent.getPaddingLeft() - parent.getPaddingRight() - mItemWidth * mNumColumn) / (mNumColumn - 1);
+            mItemHorizontalSpacing = (parentWidth - parent.getPaddingLeft() - parent.getPaddingRight()) / mNumColumn - mItemWidth;
         }
         int position = parent.getChildAdapterPosition(view);
-        int column = position % mNumColumn;
 
-
-        if (column == 0) {
-            outRect.left = mHorizontalSideSpace;
-            outRect.right = mItemHorizontalSpacing / 2;
-        } else if (column == (mNumColumn - 1)) {
-            outRect.left = mItemHorizontalSpacing / 2;
-            outRect.right = mHorizontalSideSpace;
-        } else {
-            outRect.left = mItemHorizontalSpacing / 2;
-            outRect.right = mItemHorizontalSpacing / 2;
-        }
+        outRect.left = mItemHorizontalSpacing / 2;
+        outRect.right = mItemHorizontalSpacing / 2;
 
         if (position < mNumColumn) {
             outRect.top = Dimensions.pxFromDp(12);

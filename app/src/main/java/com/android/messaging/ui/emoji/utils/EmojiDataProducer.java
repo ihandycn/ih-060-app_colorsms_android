@@ -27,7 +27,10 @@ public class EmojiDataProducer {
         recentInfo.mName = "recent";
         recentInfo.mEmojiPackageType = EmojiPackageType.RECENT;
         recentInfo.mTabIconUrl = Uri.parse("android.resource://" + packageName + "/" +
+                context.getResources().getIdentifier("emoji_category_recent", "drawable", packageName)).toString();
+        recentInfo.mTabIconSelectedUrl = Uri.parse("android.resource://" + packageName + "/" +
                 context.getResources().getIdentifier("emoji_category_recent_selected", "drawable", packageName)).toString();
+
         recentInfo.mEmojiInfoList = new ArrayList<>();
         result.add(recentInfo);
 
@@ -47,6 +50,8 @@ public class EmojiDataProducer {
         recentInfo.mName = "recent";
         recentInfo.mEmojiPackageType = EmojiPackageType.RECENT;
         recentInfo.mTabIconUrl = Uri.parse("android.resource://" + packageName + "/" +
+                context.getResources().getIdentifier("emoji_category_recent", "drawable", packageName)).toString();
+        recentInfo.mTabIconSelectedUrl = Uri.parse("android.resource://" + packageName + "/" +
                 context.getResources().getIdentifier("emoji_category_recent_selected", "drawable", packageName)).toString();
         recentInfo.mEmojiInfoList = EmojiManager.getRecentInfo(EmojiPackageType.GIF);
         result.add(recentInfo);

@@ -20,7 +20,6 @@ import android.widget.TextView;
 import com.android.messaging.R;
 import com.android.messaging.ui.customize.PrimaryColors;
 import com.android.messaging.ui.emoji.utils.EmojiManager;
-import com.ihs.commons.utils.HSLog;
 import com.superapps.util.Dimensions;
 
 import java.util.List;
@@ -223,6 +222,11 @@ public class GiphyItemPagerAdapter extends AbstractEmojiItemPagerAdapter {
                 if (indicatorView != null) {
                     indicatorView.setVisibility(View.VISIBLE);
                 }
+
+                if(tab.getPosition() == 0){
+                    ImageView iconView = getImageView(tab);
+                    iconView.setImageURI(Uri.parse(info.mTabIconSelectedUrl));
+                }
             }
 
             @Override
@@ -239,6 +243,11 @@ public class GiphyItemPagerAdapter extends AbstractEmojiItemPagerAdapter {
                 View indicatorView = getIndicatorView(tab);
                 if (indicatorView != null) {
                     indicatorView.setVisibility(View.GONE);
+                }
+
+                if(tab.getPosition() == 0){
+                    ImageView iconView = getImageView(tab);
+                    iconView.setImageURI(Uri.parse(info.mTabIconUrl));
                 }
             }
 
@@ -267,6 +276,13 @@ public class GiphyItemPagerAdapter extends AbstractEmojiItemPagerAdapter {
                 if (view == null)
                     return null;
                 return view.findViewById(R.id.tab_indicator);
+            }
+
+            private ImageView getImageView(TabLayout.Tab tab) {
+                View view = tab.getCustomView();
+                if (view == null)
+                    return null;
+                return view.findViewById(R.id.tab_icon_view);
             }
 
         });

@@ -53,6 +53,9 @@ public class StickerItemRecyclerAdapter extends BaseStickerItemRecyclerAdapter {
             if (!mCouldClickSticker) {
                 return;
             }
+            if(!stickerInfo.mClickable){
+                return ;
+            }
             mCouldClickSticker = false;
             Threads.postOnMainThreadDelayed(() -> mCouldClickSticker = true, 200);
             switch (stickerInfo.mEmojiType) {

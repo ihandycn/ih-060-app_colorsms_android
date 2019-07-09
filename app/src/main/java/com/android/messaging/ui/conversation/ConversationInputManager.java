@@ -337,10 +337,6 @@ public class ConversationInputManager implements ConversationInput.ConversationI
         return true;
     }
 
-    public void onEmojiAnimationFinished(){
-        mEmojiInput.onAnimationFinished();
-    }
-
     @Override
     public void handleOnShow(final ConversationInput target) {
         if (!mConversationDataModel.isBound()) {
@@ -492,12 +488,6 @@ public class ConversationInputManager implements ConversationInput.ConversationI
                         EmojiPickerFragment.FRAGMENT_TAG).commitAllowingStateLoss();
             }
             return true;
-        }
-
-        public void onAnimationFinished(){
-            if(isAddedToFragmentManager()){
-                mEmojiPickerFragment.onAnimationFinished();
-            }
         }
 
         @Override

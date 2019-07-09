@@ -1,6 +1,5 @@
 package com.android.messaging.ui.appsettings;
 
-import android.annotation.SuppressLint;
 import android.content.Context;
 import android.support.annotation.Nullable;
 import android.util.AttributeSet;
@@ -41,6 +40,7 @@ public class SettingEmojiItemView extends BaseItemView {
             widgetFrame.addView(mEmojiView, params);
             mEmojiView.setTextSize(22f);
             mEmojiView.setText(mBaseEmoji);
+            mEmojiView.setTextColor(getResources().getColor(android.R.color.black));
         }
 
         setOnClickListener(v -> {
@@ -50,13 +50,11 @@ public class SettingEmojiItemView extends BaseItemView {
         });
     }
 
-    @SuppressLint("SetTxtI18n")
     public void updateSkin(String skin) {
         if (mEmojiView != null)
             mEmojiView.setText(mBaseEmoji + skin);
     }
 
-    @SuppressLint("SetTextI18n")
     public void setDefault(String skin) {
         if (mEmojiView != null) {
             mEmojiView.setText(mBaseEmoji + skin);

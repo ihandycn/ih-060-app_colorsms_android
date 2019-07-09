@@ -5,7 +5,7 @@
 
     <RelativeLayout
         android:id="@+id/tab_custom_view"
-        android:layout_width="40dp"
+        android:layout_width="match_parent"
         android:layout_height="34.7dp"
         android:layout_gravity="center">
 
@@ -30,7 +30,7 @@
 
         <FrameLayout
             android:id="@+id/tab_indicator"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="1.7dp"
             android:layout_alignParentEnd="true"
             android:layout_alignParentStart="true"

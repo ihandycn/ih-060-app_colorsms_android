@@ -78,6 +78,7 @@ public class EmojiItemRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.
                             Threads.postOnMainThread(new Runnable() {
                                 @Override
                                 public void run() {
+                                    cache.put(emojiInfo.mEmoji, emojiDrawable);
                                     emojiHolder.emojiView.setImageDrawable(emojiDrawable);
                                 }
                             });

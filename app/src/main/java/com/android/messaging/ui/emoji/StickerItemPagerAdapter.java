@@ -2,6 +2,7 @@ package com.android.messaging.ui.emoji;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.design.widget.TabLayout;
 import android.support.v7.widget.GridLayoutManager;
@@ -63,11 +64,11 @@ public class StickerItemPagerAdapter extends AbstractEmojiItemPagerAdapter{
         } else {
             RecyclerView recyclerView = (RecyclerView) LayoutInflater.from(context).inflate(R.layout.vertical_recycler_view, container, false);
             recyclerView.setPadding(0, 0, 0, Dimensions.pxFromDp(3f));
+            recyclerView.addItemDecoration(new EmojiItemDecoration(STICKER_COLUMNS, Dimensions.pxFromDp(69), Dimensions.pxFromDp(20)));
             StickerItemRecyclerAdapter adapter = new StickerItemRecyclerAdapter(position, list, mOnEmojiClickListener);
             recyclerView.setAdapter(adapter);
             recyclerView.setOverScrollMode(View.OVER_SCROLL_NEVER);
             recyclerView.setLayoutManager(new GridLayoutManager(context, STICKER_COLUMNS));
-            recyclerView.addItemDecoration(new EmojiItemDecoration(STICKER_COLUMNS, Dimensions.pxFromDp(69), Dimensions.pxFromDp(20), Dimensions.pxFromDp(20)));
             view = recyclerView;
         }
         view.setTag(position+"");
@@ -126,6 +127,12 @@ public class StickerItemPagerAdapter extends AbstractEmojiItemPagerAdapter{
                 if(tab.getCustomView() == null)
                     return ;
                 tab.getCustomView().findViewById(R.id.tab_indicator).setVisibility(View.VISIBLE);
+                EmojiPackageInfo info = getPackageInfo(tab);
+                if(info == null)
+                    return ;
+                if(info.mTabIconSelectedUrl != null) {
+                    getImageView(tab).setImageURI(Uri.parse(info.mTabIconSelectedUrl));
+                }
             }
 
             @Override
@@ -138,6 +145,13 @@ public class StickerItemPagerAdapter extends AbstractEmojiItemPagerAdapter{
                     tab.getCustomView().findViewById(R.id.tab_new_view).setVisibility(View.GONE);
                 }
                 tab.getCustomView().findViewById(R.id.tab_indicator).setVisibility(View.GONE);
+                EmojiPackageInfo info = getPackageInfo(tab);
+                if(info == null)
+                    return ;
+                if(info.mTabIconSelectedUrl != null) {
+                    getImageView(tab).setImageURI(Uri.parse(info.mTabIconUrl));
+                }
+
             }
 
             @Override
@@ -151,6 +165,13 @@ public class StickerItemPagerAdapter extends AbstractEmojiItemPagerAdapter{
                     return (EmojiPackageInfo) object;
                 }
                 return null;
+            }
+
+            private ImageView getImageView(TabLayout.Tab tab) {
+                View view = tab.getCustomView();
+                if (view == null)
+                    return null;
+                return view.findViewById(R.id.tab_icon_view);
             }
         });
 

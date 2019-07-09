@@ -59,7 +59,6 @@ public class EmojiPickerFragment extends Fragment implements INotificationObserv
     private EmojiVariantPopup mEmojiVariantPopup;
 
     private boolean mIsDataPrepared = false;
-    private boolean mIsAnimationFinished = false;
     private boolean mIsViewCreated = false;
     private boolean mIsDataLoaded = false;
 
@@ -207,14 +206,7 @@ public class EmojiPickerFragment extends Fragment implements INotificationObserv
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         mIsViewCreated = true;
-        if (mIsDataPrepared && mIsAnimationFinished) {
-            initData();
-        }
-    }
-
-    public void onAnimationFinished() {
-        mIsAnimationFinished = true;
-        if (mIsDataPrepared && mIsViewCreated) {
+        if (mIsDataPrepared) {
             initData();
         }
     }
@@ -231,16 +223,11 @@ public class EmojiPickerFragment extends Fragment implements INotificationObserv
         if (mIsDataLoaded) {
             return;
         }
+        if (mEmojiPackagePagerAdapter.getEmojiAdapter() != null) {
+            mEmojiPackagePagerAdapter.getEmojiAdapter().initData(mEmojiData);
+        }
         if (mEmojiPackagePagerAdapter.getStickerAdapter() != null) {
             mEmojiPackagePagerAdapter.getStickerAdapter().initData(mStickerData);
-        }
-        if (mEmojiPackagePagerAdapter.getEmojiAdapter() != null) {
-            Threads.postOnMainThreadDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    mEmojiPackagePagerAdapter.getEmojiAdapter().initData(mEmojiData);
-                }
-            }, 200);
         }
         mIsDataLoaded = true;
     }
@@ -365,7 +352,7 @@ public class EmojiPickerFragment extends Fragment implements INotificationObserv
         mIsDataPrepared = true;
         mEmojiData.addAll(emojiList);
         mStickerData.addAll(stickerList);
-        if (mIsAnimationFinished && mIsViewCreated) {
+        if (mIsViewCreated) {
             initData();
         }
     }
