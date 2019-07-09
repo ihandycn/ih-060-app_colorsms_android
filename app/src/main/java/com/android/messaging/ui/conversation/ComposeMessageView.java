@@ -714,6 +714,7 @@ public class ComposeMessageView extends LinearLayout
             startEmojiPickerAnimation(mEmojiPickerLayout, height);
         } else {
             isFirstEmojiStart = false;
+            mInputManager.onEmojiAnimationFinished();
         }
     }
 
@@ -732,6 +733,7 @@ public class ComposeMessageView extends LinearLayout
             @Override
             public void onAnimationEnd(Animator animation) {
                 isFirstEmojiStart = false;
+                mInputManager.onEmojiAnimationFinished();
             }
 
             @Override
@@ -856,7 +858,6 @@ public class ComposeMessageView extends LinearLayout
 
     public void setInputManager(final ConversationInputManager inputManager) {
         mInputManager = inputManager;
-        mInputManager.showEmojiPicker();
     }
 
     public void setConversationDataModel(final ImmutableBindingRef<ConversationData> refDataModel) {

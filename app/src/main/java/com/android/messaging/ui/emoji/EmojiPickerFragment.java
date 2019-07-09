@@ -59,6 +59,7 @@ public class EmojiPickerFragment extends Fragment implements INotificationObserv
     private EmojiVariantPopup mEmojiVariantPopup;
 
     private boolean mIsDataPrepared = false;
+    private boolean mIsAnimationFinished = false;
     private boolean mIsViewCreated = false;
     private boolean mIsDataLoaded = false;
 
@@ -206,7 +207,14 @@ public class EmojiPickerFragment extends Fragment implements INotificationObserv
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         mIsViewCreated = true;
-        if (mIsDataPrepared) {
+        if (mIsDataPrepared && mIsAnimationFinished) {
+            initData();
+        }
+    }
+
+    public void onAnimationFinished() {
+        mIsAnimationFinished = true;
+        if (mIsDataPrepared && mIsViewCreated) {
             initData();
         }
     }
@@ -352,7 +360,7 @@ public class EmojiPickerFragment extends Fragment implements INotificationObserv
         mIsDataPrepared = true;
         mEmojiData.addAll(emojiList);
         mStickerData.addAll(stickerList);
-        if (mIsViewCreated) {
+        if (mIsAnimationFinished && mIsViewCreated) {
             initData();
         }
     }
