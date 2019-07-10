@@ -610,7 +610,8 @@ public class ConversationListActivity extends AbstractConversationListActivity
         navigationContent.findViewById(R.id.navigation_item_backup_restore).setOnClickListener(this);
         navigationContent.findViewById(R.id.navigation_item_emoji_store).setOnClickListener(this);
 
-        if (!BillingManager.isPremiumUser()) {
+        if (HSConfig.optBoolean(false, "Application", "Subscription", "Enabled")
+                && !BillingManager.isPremiumUser()) {
             navigationContent.findViewById(R.id.navigation_item_remove_ads).setOnClickListener(this);
         } else {
             navigationContent.findViewById(R.id.navigation_item_remove_ads).setVisibility(View.GONE);
