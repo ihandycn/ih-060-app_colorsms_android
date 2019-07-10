@@ -32,6 +32,7 @@ public class AdConfig {
         AcbNativeAdManager.getInstance().deactivePlacementInProcess(AdPlacement.AD_BANNER);
         AcbInterstitialAdManager.getInstance().deactivePlacementInProcess(AdPlacement.AD_WIRE);
         AcbNativeAdManager.getInstance().deactivePlacementInProcess(AdPlacement.AD_DETAIL_NATIVE);
+        isAllAdActivated = false;
     }
 
     public static void activeAllAdsReentrantly() {
