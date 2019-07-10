@@ -35,6 +35,7 @@ import android.telephony.CarrierConfigManager;
 import android.text.TextUtils;
 
 import com.android.ex.photo.util.PhotoViewAnalytics;
+import com.android.messaging.ad.AdConfig;
 import com.android.messaging.ad.AdPlacement;
 import com.android.messaging.ad.BillingManager;
 import com.android.messaging.datamodel.DataModel;
@@ -216,12 +217,12 @@ public class BugleApplication extends HSApplication implements UncaughtException
             }
         }
 
-        if (!BillingManager.isPremiumUser()) {
-            AcbAds.getInstance().initializeFromGoldenEye(this);
-            AcbNativeAdManager.getInstance().activePlacementInProcess(AdPlacement.AD_BANNER);
-            AcbInterstitialAdManager.getInstance().activePlacementInProcess(AdPlacement.AD_WIRE);
-            AcbNativeAdManager.getInstance().activePlacementInProcess(AdPlacement.AD_DETAIL_NATIVE);
-        }
+        BillingManager.init(this, isPremiumUser -> {
+            if (!isPremiumUser) {
+                AcbAds.getInstance().initializeFromGoldenEye(BugleApplication.this);
+                AdConfig.activeAllAdsReentrantly();
+            }
+        });
     }
 
 

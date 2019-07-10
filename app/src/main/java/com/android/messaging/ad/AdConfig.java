@@ -14,6 +14,8 @@ import net.appcloudbox.ads.nativead.AcbNativeAdManager;
 
 public class AdConfig {
 
+    private static boolean isAllAdActivated;
+
     public static boolean isHomepageBannerAdEnabled() {
         return HSConfig.optBoolean(true, "Application", "SMSAd", "SMSHomepageBannerAd", "Enabled")
                 && System.currentTimeMillis() - CommonUtils.getAppInstallTimeMillis()
@@ -30,5 +32,14 @@ public class AdConfig {
         AcbNativeAdManager.getInstance().deactivePlacementInProcess(AdPlacement.AD_BANNER);
         AcbInterstitialAdManager.getInstance().deactivePlacementInProcess(AdPlacement.AD_WIRE);
         AcbNativeAdManager.getInstance().deactivePlacementInProcess(AdPlacement.AD_DETAIL_NATIVE);
+    }
+
+    public static void activeAllAdsReentrantly() {
+        if (!isAllAdActivated) {
+            isAllAdActivated = true;
+            AcbNativeAdManager.getInstance().activePlacementInProcess(AdPlacement.AD_BANNER);
+            AcbInterstitialAdManager.getInstance().activePlacementInProcess(AdPlacement.AD_WIRE);
+            AcbNativeAdManager.getInstance().activePlacementInProcess(AdPlacement.AD_DETAIL_NATIVE);
+        }
     }
 }

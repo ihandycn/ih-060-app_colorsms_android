@@ -1,5 +1,14 @@
 package com.android.messaging.ad;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
+import android.support.v4.content.LocalBroadcastManager;
+import android.text.TextUtils;
+import android.util.Log;
+
+import com.android.messaging.BugleApplication;
 import com.android.messaging.R;
 import com.android.messaging.util.BugleAnalytics;
 import com.ihs.commons.notificationcenter.HSGlobalNotificationCenter;
@@ -17,10 +26,27 @@ public class BillingManager {
     public static final String BILLING_VERIFY_SUCCESS = "billing.verify.success";
     public static final String PRODUCT_ID = "com.color.sms.messages.emoji.pid.adfree.tier1";
 
+    public interface CheckIapStateCallBack {
+        void onGetResult(boolean isPremiumUser);
+    }
+
     @DebugLog
     public static boolean isPremiumUser() {
         AcbIAPTransaction.State state = AcbIAPTransaction.getState(PRODUCT_ID);
         return AcbIAPTransaction.State.VERIFIED.equals(state);
+    }
+
+    public static void init(BugleApplication application, CheckIapStateCallBack checkIapStateCallBack) {
+        LocalBroadcastManager.getInstance(application).registerReceiver(new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                    AcbIAPTransaction.State state = AcbIAPTransaction.getState(PRODUCT_ID);
+                    if (checkIapStateCallBack != null) {
+                        checkIapStateCallBack.onGetResult(AcbIAPTransaction.State.VERIFIED.equals(state));
+                    }
+                }
+
+        }, new IntentFilter(AcbIAPTransaction.INVENTORY_DID_UPDATE_NOTIFICATION));
     }
 
     public static void requestPurchase() {
