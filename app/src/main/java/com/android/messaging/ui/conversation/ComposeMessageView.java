@@ -168,14 +168,10 @@ public class ComposeMessageView extends LinearLayout
     private static final int SEND_WIDGET_MODE_SEND_BUTTON = 3;
 
     private PlainTextEditText mComposeEditText;
-    private PlainTextEditText mComposeSubjectText;
-    private TextView mMmsIndicator;
     private ImageView mSendButton;
     private ImageView mSimButton;
     private ImageView mDelayCloseButton;
     private SendDelayProgressBar mSendDelayProgressBar;
-    private View mSubjectView;
-    private ImageButton mDeleteSubjectButton;
     private AttachmentPreview mAttachmentPreview;
     private ImageView mAttachMediaButton;
     private ImageView mEmojiKeyboardBtn;
@@ -338,26 +334,6 @@ public class ComposeMessageView extends LinearLayout
             return true;
         });
 
-        mComposeSubjectText = (PlainTextEditText) findViewById(
-                R.id.compose_subject_text);
-        // We need the listener to change the avatar to the send button when the user starts
-        // typing a subject without a message.
-        mComposeSubjectText.addTextChangedListener(this);
-        // onFinishInflate() is called before self is loaded from db. We set the default text
-        // limit here, and apply the real limit later in updateOnSelfSubscriptionChange().
-        mComposeSubjectText.setFilters(new InputFilter[]{
-                new LengthFilter(MmsConfig.get(ParticipantData.DEFAULT_SELF_SUB_ID)
-                        .getMaxSubjectLength())});
-
-        mDeleteSubjectButton = (ImageButton) findViewById(R.id.delete_subject_button);
-        mDeleteSubjectButton.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(final View clickView) {
-                mComposeSubjectText.setText(null);
-                mBinding.getData().setMessageSubject(null);
-            }
-        });
-        mSubjectView = findViewById(R.id.subject_view);
         mDelayCloseButton = findViewById(R.id.delay_close_button);
 
         mSendDelayRunnable = () -> {
@@ -389,9 +365,7 @@ public class ComposeMessageView extends LinearLayout
                 }
             }
 
-            final String subject = mComposeSubjectText.getText().toString();
-            final boolean hasSubject = (TextUtils.getTrimmedLength(subject) > 0);
-            final boolean hasWorkingDraft = hasMessageText || hasSubject ||
+            final boolean hasWorkingDraft = hasMessageText ||
                     (mBinding.getData() != null && mBinding.getData().hasAttachments());
             if (!hasWorkingDraft || !isDataLoadedForMessageSend()) {
                 return;
@@ -517,7 +491,6 @@ public class ComposeMessageView extends LinearLayout
         mAttachmentPreview = (AttachmentPreview) findViewById(R.id.attachment_draft_view);
         mAttachmentPreview.setComposeMessageView(this);
 
-        mMmsIndicator = (TextView) findViewById(R.id.mms_indicator);
         mEmojiGuideView = findViewById(R.id.emoji_guide_view);
         if (EmojiManager.isShowEmojiGuide()) {
             mEmojiGuideView.setVisibility(VISIBLE);
@@ -791,9 +764,6 @@ public class ComposeMessageView extends LinearLayout
         }
         // Check the host for pre-conditions about any action.
         if (mHost.isReadyForAction()) {
-            final String subject = mComposeSubjectText.getText().toString();
-            mBinding.getData().setMessageSubject(subject);
-
             boolean includeSignature = false;
             Editable inputEditable = mComposeEditText.getText();
 
@@ -960,15 +930,7 @@ public class ComposeMessageView extends LinearLayout
         // which immediately reloads the text from the subject and message fields and replaces
         // what's in the DraftMessageData.
 
-        final String subject = data.getMessageSubject();
         final String message = data.getMessageText();
-        if ((changeFlags & DraftMessageData.MESSAGE_SUBJECT_CHANGED) ==
-                DraftMessageData.MESSAGE_SUBJECT_CHANGED) {
-            mComposeSubjectText.setText(subject);
-
-            // Set the cursor selection to the end since setText resets it to the start
-            mComposeSubjectText.setSelection(mComposeSubjectText.getText().length());
-        }
 
         if ((changeFlags & DraftMessageData.MESSAGE_TEXT_CHANGED) ==
                 DraftMessageData.MESSAGE_TEXT_CHANGED) {
@@ -1009,9 +971,6 @@ public class ComposeMessageView extends LinearLayout
         mComposeEditText.setFilters(new InputFilter[]{
                 new LengthFilter(MmsConfig.get(mBinding.getData().getSelfSubId())
                         .getMaxTextLimit())});
-        mComposeSubjectText.setFilters(new InputFilter[]{
-                new LengthFilter(MmsConfig.get(mBinding.getData().getSelfSubId())
-                        .getMaxSubjectLength())});
         mSimButton.setVisibility(shouldShowSimSelector(mConversationDataModel.getData()) ? View.VISIBLE : View.GONE);
         final SubscriptionListEntry subscriptionListEntry = getSelfSubscriptionListEntry();
         if (subscriptionListEntry != null) {
@@ -1096,9 +1055,6 @@ public class ComposeMessageView extends LinearLayout
         }
         mBinding.getData().setMessageText(messageText);
 
-        final String subject = mComposeSubjectText.getText().toString();
-        mBinding.getData().setMessageSubject(subject);
-
         mBinding.getData().saveToStorage(mBinding);
     }
 
@@ -1125,14 +1081,7 @@ public class ComposeMessageView extends LinearLayout
         final DraftMessageData draftMessageData = mBinding.getData();
         draftMessageData.setMessageText(messageText);
 
-        final String subject = mComposeSubjectText.getText().toString();
-        draftMessageData.setMessageSubject(subject);
-        if (!TextUtils.isEmpty(subject)) {
-            mSubjectView.setVisibility(View.VISIBLE);
-        }
-
         mSendButton.setVisibility(View.VISIBLE);
-        mMmsIndicator.setVisibility(draftMessageData.getIsMms() ? VISIBLE : INVISIBLE);
 
         // Update the text hint on the message box depending on the attachment type.
         final List<MessagePartData> attachments = draftMessageData.getReadOnlyAttachments();

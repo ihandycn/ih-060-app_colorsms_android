@@ -13,8 +13,8 @@
     See the License for the specific language governing permissions and
     limitations under the License.
 -->
-<com.android.messaging.ui.conversation.ComposeMessageView
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<com.android.messaging.ui.conversation.ComposeMessageView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/message_compose_view_container"
     android:layout_width="match_parent"
@@ -36,15 +36,9 @@
         android:orientation="vertical">
 
         <View
-            android:id="@+id/top_margin"
-            android:layout_width="match_parent"
-            android:layout_height="16dp"
-            android:visibility="gone"/>
-
-        <View
             android:layout_width="match_parent"
             android:layout_height="1px"
-            android:background="#e9ebf2"/>
+            android:background="#e9ebf2" />
 
         <include
             android:id="@+id/attachment_draft_view"
@@ -54,191 +48,141 @@
             android:layout_height="0dp"
             android:layout_marginBottom="4dp"
             android:layout_weight="1"
-            android:visibility="gone"/>
-
-        <RelativeLayout
-            android:id="@+id/subject_view"
-            style="@style/SubjectViewStyle"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:clipChildren="false"
-            android:clipToPadding="false"
-            android:orientation="horizontal"
-            android:paddingBottom="@dimen/compose_message_subject_bottom_padding"
-            android:paddingTop="@dimen/compose_message_subject_top_padding"
-            android:visibility="gone">
-
-            <com.android.messaging.ui.PlainTextEditText
-                android:id="@+id/compose_subject_text"
-                style="@style/ConversationComposeSubjectText"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@drawable/subject_editor_bubble"
-                android:hint="@string/compose_message_view_subject_hint_text"
-                android:imeOptions="flagNoExtractUi"/>
-
-            <ImageButton
-                android:id="@+id/delete_subject_button"
-                style="@style/AttachmentPreviewCloseButtonStyle"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:background="@null"
-                android:contentDescription="@string/delete_subject_content_description"
-                android:src="@drawable/ic_remove_light"
-                android:translationY="@dimen/compose_message_subject_cancel_top_offset"/>
-
-        </RelativeLayout>
+            android:visibility="gone" />
 
         <!-- Holds all views that create the actual compose box -->
 
-        <FrameLayout
+        <android.support.constraint.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
-            <!-- Contains compose message bubble and character counter for SMS which should be left
-            aligned -->
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="57dp"
-                android:layout_gravity="bottom">
-
-                <ImageView
-                    android:id="@+id/media_btn"
-                    android:layout_width="39.3dp"
-                    android:layout_height="39.3dp"
-                    android:layout_marginStart="9.7dp"
-                    android:layout_marginTop="7dp"
-                    android:scaleType="centerInside"
-                    android:src="@drawable/input_media_icon"/>
-
-                <LinearLayout
-                    android:layout_width="36.7dp"
-                    android:layout_height="match_parent"
-                    android:layout_alignParentEnd="true"
-                    android:layout_marginEnd="16dp"
-                    android:orientation="vertical">
-
-                    <FrameLayout
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="top"
-                        android:layout_marginTop="8.3dp">
-
-                        <ImageView
-                            android:id="@+id/send_message_button"
-                            android:layout_width="36.7dp"
-                            android:layout_height="36.7dp"
-                            android:background="@null"
-                            android:contentDescription="@string/sendButtonContentDescription"
-                            android:src="@drawable/input_send_message_icon"
-                            android:visibility="gone"/>
-
-                        <com.android.messaging.ui.SendDelayProgressBar
-                            android:id="@+id/send_delay_circle_bar"
-                            android:layout_width="36.7dp"
-                            android:layout_height="36.7dp"
-                            android:layout_gravity="center"
-                            android:alpha="0"
-                            android:visibility="gone"/>
-
-                        <ImageView
-                            android:id="@+id/delay_close_button"
-                            android:layout_width="12dp"
-                            android:layout_height="12dp"
-                            android:layout_gravity="center"
-                            android:background="@null"
-                            android:src="@drawable/input_send_message_delay_close_icon"
-                            android:alpha="0"
-                            android:visibility="gone"/>
-
-                    </FrameLayout>
-
-                    <TextView
-                        android:id="@+id/mms_indicator"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center_horizontal"
-                        android:maxLines="1"
-                        android:singleLine="true"
-                        android:text="@string/mms_text"
-                        android:textAllCaps="true"
-                        android:textColor="#222327"
-                        android:textSize="10sp"
-                        android:visibility="invisible"
-                        tools:ignore="SmallSp"/>
-                </LinearLayout>
-            </RelativeLayout>
+            <ImageView
+                android:id="@+id/media_btn"
+                android:layout_width="39.3dp"
+                android:layout_height="39.3dp"
+                android:layout_marginStart="9.7dp"
+                android:layout_marginTop="7dp"
+                android:scaleType="centerInside"
+                android:src="@drawable/input_media_icon"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
 
             <LinearLayout
                 android:id="@+id/input_layout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_gravity="bottom"
-                android:layout_marginBottom="12dp"
-                android:layout_marginEnd="63.3dp"
-                android:layout_marginTop="7.3dp"
                 android:layout_marginStart="57.3dp"
+                android:layout_marginTop="7.3dp"
+                android:layout_marginEnd="63.3dp"
+                android:layout_marginBottom="12dp"
                 android:background="@drawable/input_edit_drawable"
-                android:orientation="horizontal">
+                android:orientation="horizontal"
+                app:layout_constraintStart_toEndOf="@id/media_btn"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent">
 
                 <ImageView
                     android:id="@+id/sim_btn"
                     android:layout_width="30.7dp"
                     android:layout_height="30.7dp"
                     android:layout_gravity="bottom"
+                    android:layout_marginStart="3.5dp"
                     android:layout_marginBottom="3.5dp"
-                    android:scaleType="center"
-                    android:layout_marginStart="3.5dp"/>
+                    android:scaleType="center" />
 
                 <View
                     android:id="@+id/sim_message_space"
                     android:layout_width="7dp"
-                    android:layout_height="1dp"/>
+                    android:layout_height="1dp" />
 
                 <com.android.messaging.ui.PlainTextEditText
                     android:id="@+id/compose_message_text"
                     style="@style/ConversationComposeSendText"
-                    android:includeFontPadding="false"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:hint="@string/compose_message_view_hint_text"
-                    android:theme="@style/MessageViewEditTextTheme"
-                    android:imeOptions="actionSend|flagNoEnterAction|flagNoExtractUi"/>
+                    android:imeOptions="actionSend|flagNoEnterAction|flagNoExtractUi"
+                    android:includeFontPadding="false"
+                    android:theme="@style/MessageViewEditTextTheme" />
 
                 <ImageView
                     android:id="@+id/emoji_btn"
                     android:layout_width="30.7dp"
                     android:layout_height="30.7dp"
                     android:layout_gravity="bottom"
-                    android:layout_marginBottom="3.5dp"
                     android:layout_marginEnd="3.5dp"
-                    android:src="@drawable/input_emoji_icon"/>
+                    android:layout_marginBottom="3.5dp"
+                    android:src="@drawable/input_emoji_icon" />
+
             </LinearLayout>
 
             <ImageView
                 android:id="@+id/emoji_guide_view"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="end|bottom"
                 android:layout_marginBottom="36.7dp"
-                android:layout_marginEnd="62dp"
                 android:src="@drawable/emoji_guide_icon"
-                android:visibility="gone"
-                tools:ignore="RtlHardcoded"/>
+                android:visibility="visible"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="@id/input_layout"
+                tools:ignore="RtlHardcoded" />
 
-        </FrameLayout>
+            <ImageView
+                android:id="@+id/send_message_button"
+                android:layout_width="36.7dp"
+                android:layout_height="36.7dp"
+                android:background="@null"
+                android:contentDescription="@string/sendButtonContentDescription"
+                android:src="@drawable/input_send_message_icon"
+                android:layout_marginEnd="16dp"
+                android:layout_marginTop="7dp"
+                android:layout_marginBottom="12dp"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent" />
+
+            <com.android.messaging.ui.SendDelayProgressBar
+                android:id="@+id/send_delay_circle_bar"
+                android:layout_width="36.7dp"
+                android:layout_height="36.7dp"
+                android:layout_gravity="center"
+                android:alpha="0"
+                android:layout_marginEnd="16dp"
+                android:layout_marginTop="7dp"
+                android:layout_marginBottom="12dp"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent" />
+
+            <ImageView
+                android:id="@+id/delay_close_button"
+                android:layout_width="12dp"
+                android:layout_height="12dp"
+                android:layout_gravity="center"
+                android:alpha="0"
+                android:background="@null"
+                android:src="@drawable/input_send_message_delay_close_icon"
+                android:layout_marginEnd="16dp"
+                android:layout_marginTop="7dp"
+                android:layout_marginBottom="12dp"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"/>
+
+        </android.support.constraint.ConstraintLayout>
     </LinearLayout>
 
     <FrameLayout
         android:id="@+id/media_picker_container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:visibility="gone"/>
+        android:visibility="gone" />
 
     <FrameLayout
         android:id="@+id/emoji_picker_container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:visibility="gone"/>
+        android:visibility="gone" />
+
 </com.android.messaging.ui.conversation.ComposeMessageView>
