@@ -337,7 +337,7 @@ public class ConversationInputManager implements ConversationInput.ConversationI
         return true;
     }
 
-    public void onEmojiAnimationFinished(){
+    public void onEmojiAnimationFinished() {
         mEmojiInput.onAnimationFinished();
     }
 
@@ -494,9 +494,11 @@ public class ConversationInputManager implements ConversationInput.ConversationI
             return true;
         }
 
-        public void onAnimationFinished(){
-            if(isAddedToFragmentManager()){
+        public void onAnimationFinished() {
+            if (mEmojiPickerFragment != null) {
                 mEmojiPickerFragment.onAnimationFinished();
+            } else {
+                HSLog.e("emoji_picker", "onAnimationFinished: ");
             }
         }
 
@@ -556,7 +558,8 @@ public class ConversationInputManager implements ConversationInput.ConversationI
             });
         }
 
-        @Override public boolean onBackPressed() {
+        @Override
+        public boolean onBackPressed() {
             mSink.hideEmojiPickerView();
             return super.onBackPressed();
         }
