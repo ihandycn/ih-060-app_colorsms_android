@@ -40,15 +40,15 @@
             android:layout_height="1px"
             android:background="#e9ebf2" />
 
-        <include
-            android:id="@+id/attachment_draft_view"
+        <ViewStub
+            android:id="@+id/attachment_container_stub"
             style="@style/ComposeMessageViewDraftViewStyle"
-            layout="@layout/attachment_preview"
+            android:inflatedId="@+id/attachment_draft_view"
+            android:layout="@layout/attachment_preview"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_marginBottom="4dp"
-            android:layout_weight="1"
-            android:visibility="gone" />
+            android:layout_weight="1" />
 
         <!-- Holds all views that create the actual compose box -->
 

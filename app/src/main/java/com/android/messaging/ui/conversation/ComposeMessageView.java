@@ -16,7 +16,6 @@
 package com.android.messaging.ui.conversation;
 
 import android.Manifest;
-import android.animation.Animator;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
@@ -26,7 +25,6 @@ import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.v4.graphics.drawable.DrawableCompat;
 import android.support.v4.view.animation.PathInterpolatorCompat;
 import android.support.v7.app.ActionBar;
@@ -46,16 +44,15 @@ import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewStub;
 import android.view.Window;
 import android.view.animation.Interpolator;
 import android.view.inputmethod.EditorInfo;
 import android.widget.FrameLayout;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.airbnb.lottie.LottieAnimationView;
 import com.android.messaging.Factory;
 import com.android.messaging.R;
 import com.android.messaging.datamodel.binding.Binding;
@@ -171,8 +168,8 @@ public class ComposeMessageView extends LinearLayout
     private ImageView mSendButton;
     private ImageView mSimButton;
     private ImageView mDelayCloseButton;
-    private SendDelayProgressBar mSendDelayProgressBar;
     private AttachmentPreview mAttachmentPreview;
+    private SendDelayProgressBar mSendDelayProgressBar;
     private ImageView mAttachMediaButton;
     private ImageView mEmojiKeyboardBtn;
     private ImageView mEmojiGuideView;
@@ -488,9 +485,6 @@ public class ComposeMessageView extends LinearLayout
             BugleAnalytics.logEvent("SMS_DetailsPage_IconPlus_Click", true, true);
         });
 
-        mAttachmentPreview = (AttachmentPreview) findViewById(R.id.attachment_draft_view);
-        mAttachmentPreview.setComposeMessageView(this);
-
         mEmojiGuideView = findViewById(R.id.emoji_guide_view);
         if (EmojiManager.isShowEmojiGuide()) {
             mEmojiGuideView.setVisibility(VISIBLE);
@@ -713,19 +707,6 @@ public class ComposeMessageView extends LinearLayout
         mStickerLogNameList.add(name);
     }
 
-    private void hideAttachmentsWhenShowingSims(final boolean simPickerVisible) {
-        if (!mHost.shouldHideAttachmentsWhenSimSelectorShown()) {
-            return;
-        }
-        final boolean haveAttachments = mBinding.getData().hasAttachments();
-        if (simPickerVisible && haveAttachments) {
-            mHost.onAttachmentsChanged(false);
-            mAttachmentPreview.hideAttachmentPreview();
-        } else {
-            mHost.onAttachmentsChanged(haveAttachments);
-            mAttachmentPreview.onAttachmentsChanged(mBinding.getData());
-        }
-    }
 
     public void setInputManager(final ConversationInputManager inputManager) {
         mInputManager = inputManager;
@@ -950,6 +931,21 @@ public class ComposeMessageView extends LinearLayout
 
         if ((changeFlags & DraftMessageData.ATTACHMENTS_CHANGED) ==
                 DraftMessageData.ATTACHMENTS_CHANGED) {
+
+            if (mAttachmentPreview == null) {
+                // first load
+                final List<MessagePartData> attachments = data.getReadOnlyAttachments();
+                final List<PendingAttachmentData> pendingAttachments =
+                        data.getReadOnlyPendingAttachments();
+                if (attachments.isEmpty() && pendingAttachments.isEmpty()) {
+                    return;
+                }
+
+                ViewStub stub = findViewById(R.id.attachment_container_stub);
+                mAttachmentPreview = stub.inflate().findViewById(R.id.attachment_draft_view);
+            }
+
+            mAttachmentPreview.setComposeMessageView(this);
             final boolean haveAttachments = mAttachmentPreview.onAttachmentsChanged(data);
             mHost.onAttachmentsChanged(haveAttachments);
         }
