@@ -75,7 +75,6 @@ dependencies {
     implementation project(':libBlockCanary')
     implementation project(':libgiphy')
 
-
     implementation 'com.android.support:multidex:1.0.3'
     implementation "com.android.support:design:${rootProject.ext.supportLibVersion}"
     implementation "com.android.support:appcompat-v7:${rootProject.ext.supportLibVersion}"
