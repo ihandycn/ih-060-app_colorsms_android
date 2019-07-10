@@ -151,13 +151,12 @@
                 app:title="@string/blocked_contacts_title"
                 app:type="withTriangle" />
 
-            <!--Outgoing sounds-->
             <com.android.messaging.ui.appsettings.GeneralSettingItemView
-                android:id="@+id/setting_advanced_outgoing_sounds"
+                android:id="@+id/setting_advanced_delivery_reports"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:hideDivideLine="true"
-                app:title="@string/send_sound_pref_title"
+                app:summary="@string/delivery_reports_pref_summary"
+                app:title="@string/delivery_reports_pref_title"
                 app:type="switchView" />
 
             <View style="@style/SettingDividerStyle" />

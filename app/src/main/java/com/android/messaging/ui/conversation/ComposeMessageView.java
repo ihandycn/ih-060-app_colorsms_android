@@ -100,6 +100,7 @@ import com.android.messaging.util.MediaUtil;
 import com.android.messaging.util.OsUtil;
 import com.android.messaging.util.TextViewUtil;
 import com.android.messaging.util.UiUtils;
+import com.ihs.commons.utils.HSLog;
 import com.superapps.util.BackgroundDrawables;
 import com.superapps.util.Compats;
 import com.superapps.util.Dimensions;
@@ -738,7 +739,7 @@ public class ComposeMessageView extends LinearLayout
 
             @Override
             public void onAnimationCancel(Animator animation) {
-
+                HSLog.e("emoji_picker", "onAnimationCancel: onAnimationCancelFinished not do");
             }
 
             @Override

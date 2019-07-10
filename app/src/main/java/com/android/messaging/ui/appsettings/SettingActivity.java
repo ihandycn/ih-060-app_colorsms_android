@@ -26,11 +26,11 @@ import com.android.messaging.ui.BaseDialogFragment;
 import com.android.messaging.ui.UIIntents;
 import com.android.messaging.ui.customize.PrimaryColors;
 import com.android.messaging.ui.emoji.utils.EmojiManager;
-import com.android.messaging.ui.emoji.utils.LoadEmojiManager;
 import com.android.messaging.ui.messagebox.MessageBoxSettings;
 import com.android.messaging.ui.signature.SignatureSettingDialog;
 import com.android.messaging.util.BugleAnalytics;
 import com.android.messaging.util.BuglePrefs;
+import com.android.messaging.util.DefaultSMSUtils;
 import com.android.messaging.util.PhoneUtils;
 import com.android.messaging.util.UiUtils;
 import com.firebase.ui.auth.AuthUI;
@@ -56,7 +56,8 @@ public class SettingActivity extends BaseActivity {
     private GeneralSettingItemView mPrivacyModeView;
     private GeneralSettingItemView mSyncSettingsView;
     private GeneralSettingItemView mSendDelayView;
-    private GeneralSettingItemView mOutgoingSoundView;
+    private GeneralSettingItemView mSMSDeliveryReports;
+
 
     private View mNotificationChildrenGroup;
 
@@ -233,8 +234,16 @@ public class SettingActivity extends BaseActivity {
             }
         });
 
-        //outgoing message sounds
-        setUpOutgoingSoundView();
+        //sms delivery reports
+        mSMSDeliveryReports = findViewById(R.id.setting_advanced_delivery_reports);
+        final String deliveryReportsKey = getString(R.string.delivery_reports_pref_key);
+        final Preferences prefs = Preferences.getDefault();
+        mSMSDeliveryReports.setChecked(prefs.getBoolean(deliveryReportsKey,
+                getResources().getBoolean(R.bool.delivery_reports_pref_default)));
+        mSMSDeliveryReports.setOnItemClickListener(() -> {
+            prefs.putBoolean(deliveryReportsKey, mSMSDeliveryReports.isChecked());
+            BugleAnalytics.logEvent("SMS_Settings_Advanced_DeliveryReports_Click", true);
+        });
 
         //feedback
         ((GeneralSettingItemView) findViewById(R.id.setting_item_feedback)).setOnItemClickListener(
@@ -254,6 +263,11 @@ public class SettingActivity extends BaseActivity {
         });
 
         setUpSyncSettingsView();
+
+
+        if (!DefaultSMSUtils.isDefaultSmsApp()) {
+            mSMSDeliveryReports.setChecked(false);
+        }
     }
 
     public void addBackPressListener(BackPressedListener listener) {
@@ -376,19 +390,6 @@ public class SettingActivity extends BaseActivity {
                 BugleAnalytics.logEvent("SyncSettings_LogOut_PopUp_Show");
                 BugleAnalytics.logEvent("SyncSettings_Icon_Click", "type", "loggedIn");
             }
-        });
-    }
-
-    private void setUpOutgoingSoundView() {
-        mOutgoingSoundView = findViewById(R.id.setting_advanced_outgoing_sounds);
-        final String prefKey = getString(R.string.send_sound_pref_key);
-        final boolean defaultValue = getResources().getBoolean(
-                R.bool.send_sound_pref_default);
-        mOutgoingSoundView.setChecked(prefs.getBoolean(prefKey, defaultValue));
-        mOutgoingSoundView.setOnItemClickListener(() -> {
-            prefs.putBoolean(prefKey, mOutgoingSoundView.isChecked());
-            GeneralSettingSyncManager.uploadOutgoingMessageSoundsSwitchToServer(mOutgoingSoundView.isChecked());
-            BugleAnalytics.logEvent("SMS_Settings_MessageSounds_Click", true);
         });
     }
 

@@ -4,6 +4,7 @@ import android.content.Context;
 import android.database.Cursor;
 
 import com.android.messaging.Factory;
+import com.android.messaging.R;
 import com.android.messaging.datamodel.DataModel;
 import com.android.messaging.datamodel.DatabaseHelper;
 import com.android.messaging.datamodel.DatabaseWrapper;
@@ -19,6 +20,7 @@ import com.android.messaging.ui.welcome.WelcomeChooseThemeActivity;
 import com.android.messaging.ui.welcome.WelcomeStartActivity;
 import com.android.messaging.util.BuglePrefs;
 import com.android.messaging.util.BuglePrefsKeys;
+import com.android.messaging.util.PhoneUtils;
 import com.superapps.util.Preferences;
 
 public class Upgrader extends BaseUpgrader {
@@ -65,7 +67,24 @@ public class Upgrader extends BaseUpgrader {
             migrateLocalThemeAndFont();
         }
 
+        if (oldVersion < 62 && newVersion >= 62) {
+            addDeliveryReportPref();
+        }
+
         FontDownloadManager.copyFontsFromAssetsAsync();
+    }
+
+    private void addDeliveryReportPref() {
+        Context context = Factory.get().getApplicationContext();
+        int subId = PhoneUtils.getDefault().getDefaultSmsSubscriptionId();
+        final BuglePrefs prefs = BuglePrefs.getSubscriptionPrefs(subId);
+        final String deliveryReportKey = context.getResources().getString(R.string.delivery_reports_pref_key);
+        final boolean defaultValue = context.getResources().getBoolean(R.bool.delivery_reports_pref_default);
+        boolean originalValue = prefs.getBoolean(deliveryReportKey, defaultValue);
+        if (originalValue != defaultValue) {
+            Preferences preferences = Preferences.getDefault();
+            preferences.putBoolean(deliveryReportKey, originalValue);
+        }
     }
 
     private void migrateLocalThemeAndFont() {

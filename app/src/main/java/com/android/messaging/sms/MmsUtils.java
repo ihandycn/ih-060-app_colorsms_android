@@ -2587,7 +2587,7 @@ public class MmsUtils {
         }
         final Context context = Factory.get().getApplicationContext();
         final Resources res = context.getResources();
-        final BuglePrefs prefs = BuglePrefs.getSubscriptionPrefs(subId);
+        final Preferences prefs = Preferences.getDefault();
         final String deliveryReportKey = res.getString(R.string.delivery_reports_pref_key);
         final boolean defaultValue = res.getBoolean(R.bool.delivery_reports_pref_default);
         return prefs.getBoolean(deliveryReportKey, defaultValue);

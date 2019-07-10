@@ -216,6 +216,8 @@ public class EmojiPickerFragment extends Fragment implements INotificationObserv
         mIsAnimationFinished = true;
         if (mIsDataPrepared && mIsViewCreated) {
             initData();
+        }else{
+            HSLog.e("emoji_picker", "onAnimationFinished: mIsDataPrepared: " + mIsDataPrepared + " mIsViewCreated: " + mIsViewCreated);
         }
     }
 
