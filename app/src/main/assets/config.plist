@@ -310,6 +310,11 @@
 			<false/>
 			<key>TermsOfServiceUrl</key>
 			<string>http://cdn.appcloudbox.net/smoothappsstudio/apps/bubble/terms-of-use.html</string>
+			<key>Subscription</key>
+			<dict>
+				<key>Enabled</key>
+				<true/>
+			</dict>
 			<key>Themes</key>
 			<dict>
 				<key>BasePath</key>
