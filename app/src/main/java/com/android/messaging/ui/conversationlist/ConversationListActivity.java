@@ -983,8 +983,11 @@ public class ConversationListActivity extends AbstractConversationListActivity
                                 "backup", String.valueOf(Preferences.getDefault().getBoolean(
                                         ChooseBackupViewHolder.PREF_KEY_BACKUP_SUCCESS_FOR_EVENT, false)),
                                 "archive", String.valueOf(archivedCount > 0),
-                                "emojiskintone", String.valueOf(EmojiManager.getSkinDefault() + 1),
+                                "emojiskintone", String.valueOf(EmojiManager.getSkinDefault() + 1));
+
+                        BugleAnalytics.logEvent("SMS_Messages_Show_2", true,
                                 "subscription", String.valueOf(BillingManager.isPremiumUser()));
+
                     });
                 }
                 break;
