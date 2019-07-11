@@ -116,6 +116,7 @@ public class ConversationMessageAdapter extends
             conversationMessageView.setHost(mHost);
             conversationMessageView.setImageViewDelayLoader(mImageViewDelayLoader);
             return new ConversationMessageViewHolder(conversationMessageView);
+            
     }
 
     @Override
