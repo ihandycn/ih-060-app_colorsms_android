@@ -949,7 +949,6 @@
     <string name="sms_show_apply">APPLY</string>
     <string name="sms_show_current_theme">CURRENT THEME</string>
 
-    
     <!-- Welcome-->
     <string name="sms_welcome_start_button">START</string>
     <string name="welcome_start_service">Terms of Service</string>
