@@ -88,7 +88,6 @@ import com.google.common.annotations.VisibleForTesting;
 import com.ihs.app.framework.HSApplication;
 import com.ihs.commons.config.HSConfig;
 import com.ihs.commons.notificationcenter.HSGlobalNotificationCenter;
-import com.ihs.commons.notificationcenter.INotificationObserver;
 import com.ihs.commons.utils.HSBundle;
 import com.ihs.commons.utils.HSLog;
 import com.superapps.util.BackgroundDrawables;
@@ -559,7 +558,8 @@ public class ConversationListFragment extends Fragment implements ConversationLi
         if (nativeAds.size() > 0) {
             mNativeAd = nativeAds.get(0);
             mNativeAd.setNativeClickListener(
-                    acbAd -> BugleAnalytics.logEvent("SMS_Messages_BannerAd_Click", true, true));
+                    acbAd -> BugleAnalytics.logEvent("SMS_Messages_BannerAd_Click", true, true,
+                            "theme", String.valueOf(ThemeUtils.isDefaultTheme())));
             showTopNativeAd();
         } else {
             mNativeAdLoader = AcbNativeAdManager.createLoaderWithPlacement(AdPlacement.AD_BANNER);
@@ -569,7 +569,8 @@ public class ConversationListFragment extends Fragment implements ConversationLi
                     if (list.size() > 0) {
                         mNativeAd = list.get(0);
                         mNativeAd.setNativeClickListener(
-                                acbAd -> BugleAnalytics.logEvent("SMS_Messages_BannerAd_Click", true, true));
+                                acbAd -> BugleAnalytics.logEvent("SMS_Messages_BannerAd_Click", true, true,
+                                        "theme", String.valueOf(ThemeUtils.isDefaultTheme())));
                         showTopNativeAd();
                     }
                     isAdLoading = false;
@@ -641,7 +642,8 @@ public class ConversationListFragment extends Fragment implements ConversationLi
                 mRecyclerView.scrollToPosition(0);
             }
         }
-        BugleAnalytics.logEvent("SMS_Messages_BannerAd_Show", true, true);
+        BugleAnalytics.logEvent("SMS_Messages_BannerAd_Show", true, true,
+                "theme", String.valueOf(ThemeUtils.isDefaultTheme()));
         AutopilotEvent.logTopicEvent("topic-768lyi3sp", "bannerad_show");
     }
 
