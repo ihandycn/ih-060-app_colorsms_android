@@ -99,6 +99,12 @@ public class ThemeUtils {
 
                         }
                     });
+        } else {
+            FontUtils.onFontTypefaceChanged();
+
+            Threads.postOnMainThread(() ->
+                    HSGlobalNotificationCenter.sendNotification(ConversationListActivity.EVENT_MAINPAGE_RECREATE));
+            WallpaperSizeManager.getInstance().loadWallpaperParams();
         }
 
         Factory.get().reclaimMemory();
