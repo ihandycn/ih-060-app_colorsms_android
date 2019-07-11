@@ -128,7 +128,8 @@ public class FontUtils {
         Typeface tp = null;
         try {
             tp = Typeface.createFromAsset(HSApplication.getContext().getAssets(),
-                    "fonts/Custom" + "-" + (weightName.equals("SemiBold") ? "Semibold" : weightName) + ".ttf");
+                    "fonts" + File.separator
+                            + "Custom" + "-" + (weightName.equals("SemiBold") ? "Semibold" : weightName) + ".ttf");
             sDefaultTypefaceMap.put(weightName, tp);
         } catch (Exception ignored) {
         }
@@ -142,14 +143,14 @@ public class FontUtils {
 
         Typeface tp;
         try {
-            tp = Typeface.createFromAsset(HSApplication.getContext().getAssets(), "fonts/"
-                    + typefaceName + "/" + weightName + ".ttf");
+            tp = Typeface.createFromAsset(HSApplication.getContext().getAssets(), "fonts" + File.separator
+                    + typefaceName + File.separator + weightName + ".ttf");
             return tp;
         } catch (Exception e) {
             if ("Medium".equals(weightName)) {
                 try {
-                    tp = Typeface.createFromAsset(HSApplication.getContext().getAssets(), "fonts/"
-                            + typefaceName + "/" + "SemiBold.ttf");
+                    tp = Typeface.createFromAsset(HSApplication.getContext().getAssets(), "fonts" + File.separator
+                            + typefaceName + File.separator + "SemiBold.ttf");
                     return tp;
                 } catch (Exception e1) {
                     HSLog.e("load Semibold font", "create font from asset failed");

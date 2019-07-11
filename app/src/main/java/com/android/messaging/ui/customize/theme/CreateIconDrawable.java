@@ -42,7 +42,7 @@ public class CreateIconDrawable {
 
         if (info.mIsLocalTheme) {
             try {
-                String assetFileName = "themes/" + info.mThemeKey + "/" + info.newConversationIconUrl;
+                String assetFileName = "themes" + File.separator + info.mThemeKey + File.separator + info.newConversationIconUrl;
                 InputStream ims = HSApplication.getContext().getAssets().open(assetFileName);
                 sCreateIconBitmap = BitmapFactory.decodeStream(ims);
                 if (ims != null) {
