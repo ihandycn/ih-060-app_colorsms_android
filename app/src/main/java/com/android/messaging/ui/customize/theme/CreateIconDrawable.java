@@ -31,6 +31,15 @@ public class CreateIconDrawable {
                 ThemeBubbleDrawables.THEME_BASE_PATH + info.mThemeKey),
                 ThemeBubbleDrawables.CREATE_ICON_FILE_NAME);
 
+        if (file.exists()) {
+            try {
+                sCreateIconBitmap = BitmapFactory.decodeFile(file.getAbsolutePath());
+                return new BitmapDrawable(HSApplication.getContext().getResources(), sCreateIconBitmap);
+            } catch (Exception ignored) {
+
+            }
+        }
+
         if (info.mIsLocalTheme) {
             try {
                 String assetFileName = "themes/" + info.mThemeKey + "/" + info.newConversationIconUrl;
@@ -39,19 +48,10 @@ public class CreateIconDrawable {
                 if (ims != null) {
                     ims.close();
                 }
-                ThemeDownloadManager.getInstance().copyAssetFileAsync(file, assetFileName);
+                //ThemeDownloadManager.getInstance().copyAssetFileAsync(file, assetFileName);
                 return new BitmapDrawable(HSApplication.getContext().getResources(), sCreateIconBitmap);
             } catch (IOException e) {
                 e.printStackTrace();
-            }
-        }
-
-        if (file.exists()) {
-            try {
-                sCreateIconBitmap = BitmapFactory.decodeFile(file.getAbsolutePath());
-                return new BitmapDrawable(HSApplication.getContext().getResources(), sCreateIconBitmap);
-            } catch (Exception ignored) {
-
             }
         }
 

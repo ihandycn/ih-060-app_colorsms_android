@@ -55,6 +55,15 @@ public class WallpaperDrawables {
                 ThemeBubbleDrawables.THEME_BASE_PATH + info.mThemeKey),
                 ThemeBubbleDrawables.WALLPAPER_BG_FILE_NAME);
 
+        if (file.exists()) {
+            try {
+                sWallpaperBitmap = BitmapFactory.decodeFile(file.getAbsolutePath());
+                return sWallpaperBitmap;
+            } catch (Exception ignored) {
+
+            }
+        }
+
         if (info.mIsLocalTheme) {
             try {
                 String assetFileName = "themes/" + info.mThemeKey + "/" + info.wallpaperUrl;
@@ -63,19 +72,10 @@ public class WallpaperDrawables {
                 if (ims != null) {
                     ims.close();
                 }
-                ThemeDownloadManager.getInstance().copyAssetFileAsync(file, assetFileName);
+                //ThemeDownloadManager.getInstance().copyAssetFileAsync(file, assetFileName);
                 return sWallpaperBitmap;
             } catch (IOException e) {
                 e.printStackTrace();
-            }
-        }
-
-        if (file.exists()) {
-            try {
-                sWallpaperBitmap = BitmapFactory.decodeFile(file.getAbsolutePath());
-                return sWallpaperBitmap;
-            } catch (Exception ignored) {
-
             }
         }
 
@@ -96,22 +96,6 @@ public class WallpaperDrawables {
                 ThemeBubbleDrawables.THEME_BASE_PATH + info.mThemeKey),
                 ThemeBubbleDrawables.LIST_VIEW_WALLPAPER_BG_FILE_NAME);
 
-        if (info.mIsLocalTheme) {
-            try {
-                String assetFileName = "themes/" + info.mThemeKey + "/" + info.listWallpaperUrl;
-                InputStream ims = HSApplication.getContext().getAssets().open(assetFileName);
-                Bitmap bitmap = BitmapFactory.decodeStream(ims);
-                sListWallpaperBitmap = bitmap;
-                if (ims != null) {
-                    ims.close();
-                }
-                ThemeDownloadManager.getInstance().copyAssetFileAsync(file, assetFileName);
-                return new BitmapDrawable(HSApplication.getContext().getResources(), bitmap);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-
         if (file.exists()) {
             try {
                 Bitmap bitmap = BitmapFactory.decodeFile(file.getAbsolutePath());
@@ -121,6 +105,23 @@ public class WallpaperDrawables {
 
             }
         }
+
+        if (info.mIsLocalTheme) {
+            try {
+                String assetFileName = "themes/" + info.mThemeKey + "/" + info.listWallpaperUrl;
+                InputStream ims = HSApplication.getContext().getAssets().open(assetFileName);
+                Bitmap bitmap = BitmapFactory.decodeStream(ims);
+                sListWallpaperBitmap = bitmap;
+                if (ims != null) {
+                    ims.close();
+                }
+                //ThemeDownloadManager.getInstance().copyAssetFileAsync(file, assetFileName);
+                return new BitmapDrawable(HSApplication.getContext().getResources(), bitmap);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+
         return null;
     }
 

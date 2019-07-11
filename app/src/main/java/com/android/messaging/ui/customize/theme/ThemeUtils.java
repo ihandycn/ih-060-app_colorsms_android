@@ -80,12 +80,18 @@ public class ThemeUtils {
             BubbleDrawables.setSelectedIdentifier(-1);
         }
 
-        if (themeInfo.mIsLocalTheme && !themeInfo.isAllFileInLocalFolder()) {
+        FontStyleManager.getInstance().setFontFamily(themeInfo.fontName);
+
+        if (themeInfo.mIsLocalTheme) {
             ThemeDownloadManager.getInstance().copyFileFromAssetsAsync(themeInfo,
                     new ThemeDownloadManager.IThemeMoveListener() {
                         @Override
                         public void onMoveSuccess() {
+                            FontUtils.onFontTypefaceChanged();
 
+                            Threads.postOnMainThread(() ->
+                                    HSGlobalNotificationCenter.sendNotification(ConversationListActivity.EVENT_MAINPAGE_RECREATE));
+                            WallpaperSizeManager.getInstance().loadWallpaperParams();
                         }
 
                         @Override
@@ -95,11 +101,6 @@ public class ThemeUtils {
                     });
         }
 
-        FontStyleManager.getInstance().setFontFamily(themeInfo.fontName);
-        FontUtils.onFontTypefaceChanged();
-
-        HSGlobalNotificationCenter.sendNotification(ConversationListActivity.EVENT_MAINPAGE_RECREATE);
-        WallpaperSizeManager.getInstance().loadWallpaperParams();
         Factory.get().reclaimMemory();
     }
 
