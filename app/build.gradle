@@ -114,6 +114,9 @@ dependencies {
     implementation "com.ihandy.permanent:permanent.gm:4.0.0.gm"
     implementation "com.ihandy.permanent:accounts-keep-alive.gm:4.0.0.gm"
 
+    // billing
+    implementation 'net.appcloudbox.service:libAcbService.beta:1.4.0.beta01'
+
     implementation "net.appcloudbox.goldeneye:bubble_a:2019.06.05.001"
     implementation "me.leolin:ShortcutBadger:1.1.22@aar"
     implementation 'net.appcloudbox.autopilot:libAutoPilot.gm:5.5.1.gm'

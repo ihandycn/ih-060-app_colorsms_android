@@ -49,6 +49,7 @@ import android.widget.TextView;
 import com.android.messaging.R;
 import com.android.messaging.ad.AdConfig;
 import com.android.messaging.ad.AdPlacement;
+import com.android.messaging.ad.BillingManager;
 import com.android.messaging.annotation.VisibleForAnimation;
 import com.android.messaging.backup.BackupAutopilotUtils;
 import com.android.messaging.backup.ui.BackupRestoreActivity;
@@ -87,6 +88,7 @@ import com.google.common.annotations.VisibleForTesting;
 import com.ihs.app.framework.HSApplication;
 import com.ihs.commons.config.HSConfig;
 import com.ihs.commons.notificationcenter.HSGlobalNotificationCenter;
+import com.ihs.commons.notificationcenter.INotificationObserver;
 import com.ihs.commons.utils.HSBundle;
 import com.ihs.commons.utils.HSLog;
 import com.superapps.util.BackgroundDrawables;
@@ -533,6 +535,10 @@ public class ConversationListFragment extends Fragment implements ConversationLi
 
     private void tryShowTopNativeAd() {
         HSLog.d("try show top native ad");
+        if (BillingManager.isPremiumUser()) {
+            return;
+        }
+
         if (!AdConfig.isHomepageBannerAdEnabled()) {
             return;
         }
@@ -637,6 +643,20 @@ public class ConversationListFragment extends Fragment implements ConversationLi
         }
         BugleAnalytics.logEvent("SMS_Messages_BannerAd_Show", true, true);
         AutopilotEvent.logTopicEvent("topic-768lyi3sp", "bannerad_show");
+    }
+
+    public void disableTopNativeAd() {
+        if (mNativeAd != null) {
+            mNativeAd.release();
+            mNativeAd = null;
+        }
+        if (mNativeAdLoader != null) {
+            mNativeAdLoader.cancel();
+            mNativeAdLoader = null;
+        }
+        if (mAdapter.hasHeader()) {
+            mAdapter.setHeader(null);
+        }
     }
 
     @Override
@@ -885,4 +905,5 @@ public class ConversationListFragment extends Fragment implements ConversationLi
     public boolean isArchived() {
         return mArchiveMode;
     }
+
 }

@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.provider.Telephony;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
+import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.content.pm.ShortcutManagerCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
@@ -32,6 +33,7 @@ import com.android.messaging.R;
 import com.android.messaging.ad.AdConfig;
 import com.android.messaging.ad.AdPlacement;
 import com.android.messaging.backup.BackupAutopilotUtils;
+import com.android.messaging.ad.BillingManager;
 import com.android.messaging.backup.ui.BackupGuideDialogActivity;
 import com.android.messaging.backup.ui.BackupRestoreActivity;
 import com.android.messaging.backup.ui.ChooseBackupViewHolder;
@@ -74,6 +76,7 @@ import com.android.messaging.ui.invitefriends.InviteFriendsActivity;
 import com.android.messaging.ui.messagebox.MessageBoxActivity;
 import com.android.messaging.ui.messagebox.MessageBoxSettings;
 import com.android.messaging.ui.signature.SignatureSettingDialog;
+import com.android.messaging.ui.smspro.BillingActivity;
 import com.android.messaging.ui.wallpaper.WallpaperChooserItem;
 import com.android.messaging.ui.wallpaper.WallpaperDownloader;
 import com.android.messaging.ui.wallpaper.WallpaperManager;
@@ -111,6 +114,7 @@ import java.util.Map;
 
 import hugo.weaving.DebugLog;
 
+import static com.android.messaging.ad.BillingManager.BILLING_VERIFY_SUCCESS;
 import static com.android.messaging.ui.dialog.FiveStarRateDialog.DESKTOP_PREFS;
 import static com.android.messaging.ui.dialog.FiveStarRateDialog.PREF_KEY_MAIN_ACTIVITY_SHOW_TIME;
 import static com.android.messaging.ui.invitefriends.InviteFriendsActivity.INTENT_KEY_FROM;
@@ -155,6 +159,7 @@ public class ConversationListActivity extends AbstractConversationListActivity
     private static final int DRAWER_INDEX_INVITE_FRIENDS = 8;
     private static final int DRAWER_INDEX_BACKUP_RESTORE = 9;
     private static final int DRAWER_INDEX_EMOJI_STORE = 10;
+    private static final int DRAWER_INDEX_REMOVE_ADS = 11;
 
     private int drawerClickIndex = DRAWER_INDEX_NONE;
 
@@ -221,6 +226,7 @@ public class ConversationListActivity extends AbstractConversationListActivity
         HSGlobalNotificationCenter.addObserver(SHOW_EMOJI, this);
         HSGlobalNotificationCenter.addObserver(FIRST_LOAD, this);
         HSGlobalNotificationCenter.addObserver(NOTIFICATION_NAME_MESSAGES_MOVE_END, this);
+        HSGlobalNotificationCenter.addObserver(BILLING_VERIFY_SUCCESS, this);
 
         BugleAnalytics.logEvent("SMS_ActiveUsers", true);
 
@@ -531,6 +537,16 @@ public class ConversationListActivity extends AbstractConversationListActivity
                         FiveStarRateDialog.showFiveStarFromSetting(ConversationListActivity.this);
                         BugleAnalytics.logEvent("Menu_FiveStart_Click", true, true);
                         break;
+                    case DRAWER_INDEX_REMOVE_ADS:
+                        Intent goSmsProIntent = new Intent(ConversationListActivity.this, BillingActivity.class);
+                        ActivityOptionsCompat options =
+                                ActivityOptionsCompat.makeCustomAnimation(ConversationListActivity.this, R.anim.fade_in, R.anim.anim_null);
+                        startActivity(goSmsProIntent, options.toBundle());
+                        BugleAnalytics.logEvent("SMS_Menu_Subscription_Click", true, false);
+
+                        BugleAnalytics.logEvent("Subscription_Analysis",
+                                false, true, "Menu_Subscription_Click", "true");
+                        break;
                     case DRAWER_INDEX_NONE:
                     default:
                         break;
@@ -592,6 +608,13 @@ public class ConversationListActivity extends AbstractConversationListActivity
             backupEntrance.setVisibility(View.GONE);
         } else {
             backupEntrance.setVisibility(View.VISIBLE);
+        }
+
+        if (HSConfig.optBoolean(false, "Application", "Subscription", "Enabled")
+                && !BillingManager.isPremiumUser()) {
+            navigationContent.findViewById(R.id.navigation_item_remove_ads).setOnClickListener(this);
+        } else {
+            navigationContent.findViewById(R.id.navigation_item_remove_ads).setVisibility(View.GONE);
         }
 
         //test code
@@ -911,6 +934,10 @@ public class ConversationListActivity extends AbstractConversationListActivity
                 drawerClickIndex = DRAWER_INDEX_PRIVACY_BOX;
                 drawerLayout.closeDrawer(navigationView);
                 break;
+            case R.id.navigation_item_remove_ads:
+                drawerClickIndex = DRAWER_INDEX_REMOVE_ADS;
+                drawerLayout.closeDrawer(navigationView);
+                break;
         }
     }
 
@@ -956,7 +983,8 @@ public class ConversationListActivity extends AbstractConversationListActivity
                                 "backup", String.valueOf(Preferences.getDefault().getBoolean(
                                         ChooseBackupViewHolder.PREF_KEY_BACKUP_SUCCESS_FOR_EVENT, false)),
                                 "archive", String.valueOf(archivedCount > 0),
-                                "emojiskintone", String.valueOf(EmojiManager.getSkinDefault() + 1));
+                                "emojiskintone", String.valueOf(EmojiManager.getSkinDefault() + 1),
+                                "subscription", String.valueOf(BillingManager.isPremiumUser()));
                     });
                 }
                 break;
@@ -965,6 +993,13 @@ public class ConversationListActivity extends AbstractConversationListActivity
                     mIsMessageMoving = false;
                     Toasts.showToast(R.string.private_box_add_to_success);
                 }
+                break;
+            case BILLING_VERIFY_SUCCESS:
+                final ConversationListFragment conversationListFragment =
+                        (ConversationListFragment) getFragmentManager().findFragmentById(
+                                R.id.conversation_list_fragment);
+                conversationListFragment.disableTopNativeAd();
+                findViewById(R.id.navigation_item_remove_ads).setVisibility(View.GONE);
                 break;
             default:
                 break;

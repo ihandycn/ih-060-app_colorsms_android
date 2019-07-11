@@ -35,7 +35,9 @@ import android.telephony.CarrierConfigManager;
 import android.text.TextUtils;
 
 import com.android.ex.photo.util.PhotoViewAnalytics;
+import com.android.messaging.ad.AdConfig;
 import com.android.messaging.ad.AdPlacement;
+import com.android.messaging.ad.BillingManager;
 import com.android.messaging.datamodel.DataModel;
 import com.android.messaging.debug.BlockCanaryConfig;
 import com.android.messaging.debug.UploadLeakService;
@@ -98,8 +100,13 @@ import net.appcloudbox.AcbAds;
 import net.appcloudbox.ads.interstitialad.AcbInterstitialAdManager;
 import net.appcloudbox.ads.nativead.AcbNativeAdManager;
 import net.appcloudbox.autopilot.AutopilotConfig;
+import net.appcloudbox.autopilot.core.PrefsUtils;
 import net.appcloudbox.common.analytics.publisher.AcbPublisherMgr;
 import net.appcloudbox.common.utils.AcbApplicationHelper;
+import net.appcloudbox.service.AcbService;
+import net.appcloudbox.service.iap.AcbIAPKit;
+
+import org.json.JSONObject;
 
 import java.io.File;
 import java.lang.Thread.UncaughtExceptionHandler;
@@ -179,7 +186,6 @@ public class BugleApplication extends HSApplication implements UncaughtException
             }
 
             initKeepAlive();
-
             sSystemUncaughtExceptionHandler = Thread.getDefaultUncaughtExceptionHandler();
             Thread.setDefaultUncaughtExceptionHandler(this);
         } finally {
@@ -193,11 +199,13 @@ public class BugleApplication extends HSApplication implements UncaughtException
             HSLog.d("gdpr", "listener changed : " + oldState + " -> " + newState);
             if (newState == HSGdprConsent.ConsentState.ACCEPTED) {
                 initFabric();
+                AcbService.setGDPRConsentGranted(true);
                 BugleAnalytics.sFirebaseAnalytics.setAnalyticsCollectionEnabled(true);
             }
 
             if (oldState == HSGdprConsent.ConsentState.ACCEPTED && newState == HSGdprConsent.ConsentState.DECLINED) {
                 Threads.postOnMainThreadDelayed(() -> System.exit(0), 800);
+                AcbService.setGDPRConsentGranted(false);
             }
         });
     }
@@ -208,11 +216,15 @@ public class BugleApplication extends HSApplication implements UncaughtException
                 AcbAds.getInstance().setGdprInfo(GDPR_USER, GDPR_NOT_GRANTED);
             }
         }
-        AcbAds.getInstance().initializeFromGoldenEye(this);
-        AcbNativeAdManager.getInstance().activePlacementInProcess(AdPlacement.AD_BANNER);
-        AcbInterstitialAdManager.getInstance().activePlacementInProcess(AdPlacement.AD_WIRE);
-        AcbNativeAdManager.getInstance().activePlacementInProcess(AdPlacement.AD_DETAIL_NATIVE);
+
+        BillingManager.init(this, isPremiumUser -> {
+            if (!isPremiumUser) {
+                AcbAds.getInstance().initializeFromGoldenEye(BugleApplication.this);
+                AdConfig.activeAllAdsReentrantly();
+            }
+        });
     }
+
 
     private void onMainProcessApplicationCreate() {
         TraceCompat.beginSection("Application#onMainProcessApplicationCreate");
@@ -223,6 +235,7 @@ public class BugleApplication extends HSApplication implements UncaughtException
                 if (HSGdprConsent.getConsentState() == HSGdprConsent.ConsentState.ACCEPTED) {
                     HSLog.d("gdpr", "app start with permission");
                     initFabric();
+                    AcbService.setGDPRConsentGranted(true);
                     BugleAnalytics.sFirebaseAnalytics.setAnalyticsCollectionEnabled(true);
                 } else {
                     HSLog.d("gdpr", "app start with no permission");
@@ -239,6 +252,13 @@ public class BugleApplication extends HSApplication implements UncaughtException
             initWorks.add(new SyncMainThreadTask("Upgrade", () -> Upgrader.getUpgrader(this).upgrade()));
 
             initWorks.add(new SyncMainThreadTask("InitFactoryImpl", this::initFactoryImpl));
+
+            initWorks.add(new SyncMainThreadTask("initAcbService",
+                    () -> {
+                        AcbService.initialize(BugleApplication.this, new AcbIAPKit());
+                        AcbService.setCustomerUserId(PrefsUtils.getCustomerUserId(this));
+                        AcbService.setCustomerUserInfo(new JSONObject());
+                    }));
 
             initWorks.add(new SyncMainThreadTask("InitAd", this::initAd));
 
@@ -260,6 +280,7 @@ public class BugleApplication extends HSApplication implements UncaughtException
                 HSGlobalNotificationCenter.addObserver(HSNotificationConstant.HS_CONFIG_LOAD_FINISHED, this);
                 HSGlobalNotificationCenter.addObserver(HSNotificationConstant.HS_CONFIG_CHANGED, this);
             }));
+
             initWorks.add(new ParallelBackgroundTask("AppLockObserver", () ->
                     AppPrivateLockManager.getInstance().startAppLockWatch()));
             initWorks.add(new ParallelBackgroundTask("RegisterSignalStrength", () ->
