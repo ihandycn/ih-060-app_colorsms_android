@@ -16,6 +16,7 @@ import com.android.messaging.R;
 import com.android.messaging.glide.GlideApp;
 import com.android.messaging.ui.customize.PrimaryColors;
 import com.android.messaging.ui.emoji.utils.EmojiManager;
+import com.android.messaging.util.UiUtils;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.superapps.util.Dimensions;
 
@@ -92,8 +93,13 @@ public class StickerItemPagerAdapter extends AbstractEmojiItemPagerAdapter {
 
     @Override
     public void updateTabView() {
+        if (UiUtils.isDestroyed(UiUtils.getActivity(mContext))) {
+            return;
+        }
+
         int count = mTabLayout.getTabCount();
         int width = (int) (Dimensions.getPhoneWidth(mContext) / 9 + 0.5f);
+
         int primaryColor = PrimaryColors.getPrimaryColor();
         for (int i = 0; i < count; i++) {
             EmojiPackageInfo info = mData.get(i);
