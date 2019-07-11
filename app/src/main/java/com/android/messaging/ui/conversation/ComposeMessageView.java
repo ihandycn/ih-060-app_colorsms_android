@@ -943,9 +943,9 @@ public class ComposeMessageView extends LinearLayout
 
                 ViewStub stub = findViewById(R.id.attachment_container_stub);
                 mAttachmentPreview = stub.inflate().findViewById(R.id.attachment_draft_view);
+                mAttachmentPreview.setComposeMessageView(this);
             }
 
-            mAttachmentPreview.setComposeMessageView(this);
             final boolean haveAttachments = mAttachmentPreview.onAttachmentsChanged(data);
             mHost.onAttachmentsChanged(haveAttachments);
         }
