@@ -42,6 +42,15 @@ public class ToolbarDrawables {
         File file = new File(CommonUtils.getDirectory(ThemeBubbleDrawables.THEME_BASE_PATH + info.mThemeKey),
                 ThemeBubbleDrawables.TOOLBAR_BG_FILE_NAME);
 
+        if (file.exists()) {
+            try {
+                sToolbarBitmap = BitmapFactory.decodeFile(file.getAbsolutePath());
+                return sToolbarBitmap;
+            } catch (Exception ignored) {
+
+            }
+        }
+
         //load toolbar image resource from asset first,
         if (info.mIsLocalTheme) {
             try {
@@ -51,18 +60,9 @@ public class ToolbarDrawables {
                 if (ims != null) {
                     ims.close();
                 }
-                ThemeDownloadManager.getInstance().copyAssetFileAsync(file, assetFileName);
+                //ThemeDownloadManager.getInstance().copyAssetFileAsync(file, assetFileName);
                 return sToolbarBitmap;
             } catch (IOException ignored) {
-
-            }
-        }
-
-        if (file.exists()) {
-            try {
-                sToolbarBitmap = BitmapFactory.decodeFile(file.getAbsolutePath());
-                return sToolbarBitmap;
-            } catch (Exception ignored) {
 
             }
         }
