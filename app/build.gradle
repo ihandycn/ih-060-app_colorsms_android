@@ -129,11 +129,3 @@ dependencies {
     debugImplementation 'com.amitshekhar.android:debug-db:1.0.3'
 }
 apply plugin: 'com.google.gms.google-services'
-
-apply plugin: 'com.geektime.systrace-plugin'
-systrace {
-    enable = true
-    baseMethodMapFile = "${project.buildDir}/systrace_output/Debug.methodmap"
-    blackListFile = "${project.projectDir}/blacklist/blackMethodList.txt"
-
-}

@@ -71,11 +71,13 @@ public abstract class AbstractConversationListActivity extends BugleActionBarAct
 
     @Override
     public void onAttachFragment(final Fragment fragment) {
+        Trace.beginSection("AbstractConversationListActivity.onAttachFragment");
         // Fragment could be debug dialog
         if (fragment instanceof ConversationListFragment) {
             mConversationListFragment = (ConversationListFragment) fragment;
             mConversationListFragment.setHost(this);
         }
+        Trace.endSection();
     }
 
     @Override

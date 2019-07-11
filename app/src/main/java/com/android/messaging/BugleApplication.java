@@ -28,6 +28,7 @@ import android.os.Looper;
 import android.os.StrictMode;
 import android.provider.Settings;
 import android.support.multidex.MultiDex;
+import android.support.v4.os.TraceCompat;
 import android.support.v7.mms.CarrierConfigValuesLoader;
 import android.support.v7.mms.MmsManager;
 import android.telephony.CarrierConfigManager;
@@ -64,6 +65,7 @@ import com.android.messaging.util.FabricUtils;
 import com.android.messaging.util.LogUtil;
 import com.android.messaging.util.OsUtil;
 import com.android.messaging.util.PhoneUtils;
+import com.android.messaging.util.Trace;
 import com.crashlytics.android.Crashlytics;
 import com.crashlytics.android.core.CrashlyticsCore;
 import com.github.moduth.blockcanary.BlockCanary;
@@ -165,6 +167,7 @@ public class BugleApplication extends HSApplication implements UncaughtException
 
     @Override
     public void onCreate() {
+        Trace.beginSection("app.onCreate");
         try {
             super.onCreate();
             AcbApplicationHelper.init(this);
@@ -186,6 +189,7 @@ public class BugleApplication extends HSApplication implements UncaughtException
             sSystemUncaughtExceptionHandler = Thread.getDefaultUncaughtExceptionHandler();
             Thread.setDefaultUncaughtExceptionHandler(this);
         } finally {
+            Trace.endSection();
         }
 
         CommonUtils.getAppInstallTimeMillis();
@@ -223,6 +227,7 @@ public class BugleApplication extends HSApplication implements UncaughtException
 
 
     private void onMainProcessApplicationCreate() {
+        TraceCompat.beginSection("Application#onMainProcessApplicationCreate");
         try {
             List<Task> initWorks = new ArrayList<>();
 
@@ -282,6 +287,7 @@ public class BugleApplication extends HSApplication implements UncaughtException
                     DataModel.get().getConnectivityUtil().registerForSignalStrength()));
             TaskRunner.run(initWorks);
         } finally {
+            TraceCompat.endSection();
         }
     }
 
@@ -479,6 +485,7 @@ public class BugleApplication extends HSApplication implements UncaughtException
 
     // Called by the "real" factory from FactoryImpl.register() (i.e. not run in tests)
     public void initializeSync(final Factory factory) {
+        Trace.beginSection("app.initializeSync");
         final Context context = factory.getApplicationContext();
         final BugleGservices bugleGservices = factory.getBugleGservices();
         final BuglePrefs buglePrefs = factory.getApplicationPrefs();
@@ -499,6 +506,8 @@ public class BugleApplication extends HSApplication implements UncaughtException
         if (OsUtil.isAtLeastM()) {
             registerCarrierConfigChangeReceiver(context);
         }
+
+        Trace.endSection();
     }
 
     private static void registerCarrierConfigChangeReceiver(final Context context) {
@@ -541,8 +550,10 @@ public class BugleApplication extends HSApplication implements UncaughtException
     public void initializeAsync(final Factory factory) {
         // Handle shared prefs upgrade & Load MMS Configuration
 
+        Trace.beginSection("app.initializeAsync");
         maybeHandleSharedPrefsUpgrade(factory);
         MmsConfig.load();
+        Trace.endSection();
     }
 
     @Override

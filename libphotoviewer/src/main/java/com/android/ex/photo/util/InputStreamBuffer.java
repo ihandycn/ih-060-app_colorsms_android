@@ -127,10 +127,13 @@ public class InputStreamBuffer {
      * @return The byte at that index.
      */
     public byte get(final int index) throws IllegalStateException, IndexOutOfBoundsException {
+        Trace.beginSection("get");
         if (has(index)) {
             final int i = index - mOffset;
+            Trace.endSection();
             return mBuffer[i];
         } else {
+            Trace.endSection();
             throw new IndexOutOfBoundsException(
                     String.format("Index %d beyond length.", index));
         }
@@ -154,7 +157,9 @@ public class InputStreamBuffer {
      * the index is beyond the size.
      */
     public boolean has(final int index) throws IllegalStateException, IndexOutOfBoundsException {
+        Trace.beginSection("has");
         if (index < mOffset) {
+            Trace.endSection();
             throw new IllegalStateException(
                     String.format("Index %d is before buffer %d", index, mOffset));
         }
@@ -163,9 +168,11 @@ public class InputStreamBuffer {
 
         // Requested index not in internal buffer.
         if (i >= mFilled || i >= mBuffer.length) {
+            Trace.endSection();
             return fill(index);
         }
 
+        Trace.endSection();
         return true;
     }
 
@@ -178,9 +185,11 @@ public class InputStreamBuffer {
      * {@link #has(int)} call will fill the buffer.
      */
     public void advanceTo(final int index) throws IllegalStateException, IndexOutOfBoundsException {
+        Trace.beginSection("advance to");
         final int i = index - mOffset;
         if (i <= 0) {
             // noop
+            Trace.endSection();
             return;
         } else if (i < mFilled) {
             // Shift elements starting at i to position 0.
@@ -226,6 +235,7 @@ public class InputStreamBuffer {
         if (Log.isLoggable(TAG, Log.DEBUG)) {
             Log.d(TAG, String.format("advanceTo %d buffer: %s", i, this));
         }
+        Trace.endSection();
     }
 
     /**
@@ -249,7 +259,9 @@ public class InputStreamBuffer {
      * input stream ends before we reach the index.
      */
     private boolean fill(final int index) {
+        Trace.beginSection("fill");
         if (index < mOffset) {
+            Trace.endSection();
             throw new IllegalStateException(
                     String.format("Index %d is before buffer %d", index, mOffset));
         }
@@ -257,6 +269,7 @@ public class InputStreamBuffer {
         int i = index - mOffset;
         // Can't fill buffer anymore if input stream is consumed.
         if (mInputStream == null) {
+            Trace.endSection();
             return false;
         }
 
@@ -294,6 +307,7 @@ public class InputStreamBuffer {
             Log.d(TAG, String.format("fill %d      buffer: %s", i, this));
         }
 
+        Trace.endSection();
         return i < mFilled;
     }
 
@@ -322,6 +336,7 @@ public class InputStreamBuffer {
     }
 
     public String toDebugString() {
+        Trace.beginSection("to debug string");
         final StringBuilder sb = new StringBuilder();
         sb.append("+").append(mOffset);
         sb.append("+").append(mBuffer.length);
@@ -341,6 +356,7 @@ public class InputStreamBuffer {
         }
         sb.append("]");
 
+        Trace.endSection();
         return sb.toString();
     }
 

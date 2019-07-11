@@ -5,7 +5,6 @@ buildscript {
         maven {
             url 'https://maven.google.com'
         }
-        mavenLocal()
         jcenter()
         google()
         maven { url 'https://maven.fabric.io/public' }
@@ -15,7 +14,6 @@ buildscript {
         classpath 'io.fabric.tools:gradle:1.25.1'
         classpath 'com.google.gms:google-services:4.0.1'
         classpath 'com.jakewharton.hugo:hugo-plugin:1.2.1'
-        classpath ("com.geektime.systrace:systrace-gradle-plugin:1.0") { changing = true }
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
     }
 }
@@ -25,7 +23,6 @@ allprojects {
         maven {
             url 'https://maven.google.com'
         }
-        mavenLocal()
         jcenter()
         google()
         maven {
@@ -46,11 +43,6 @@ allprojects {
                 }
             }
         }
-    }
-
-    tasks.withType(Javadoc).all {
-        enabled = false // TODO:
-        options.setEncoding('UTF-8')
     }
 }
 ext {
