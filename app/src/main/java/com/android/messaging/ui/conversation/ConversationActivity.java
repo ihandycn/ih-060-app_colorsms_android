@@ -21,6 +21,7 @@ import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.content.Intent;
 import android.graphics.Rect;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
@@ -52,6 +53,8 @@ import com.android.messaging.ui.emoji.utils.EmojiManager;
 import com.android.messaging.ui.messagebox.MessageBoxActivity;
 import com.android.messaging.util.Assert;
 import com.android.messaging.util.BugleAnalytics;
+import com.android.messaging.util.BugleApplicationPrefs;
+import com.android.messaging.util.BuglePrefs;
 import com.android.messaging.util.CommonUtils;
 import com.android.messaging.util.ContentType;
 import com.android.messaging.util.FabricUtils;
@@ -103,6 +106,8 @@ public class ConversationActivity extends BugleActionBarActivity
     private boolean fromCreateConversation;
     private String mConversationId;
 
+    private BuglePrefs bugleApplicationPrefs = BugleApplicationPrefs.getApplicationPrefs();
+
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -112,19 +117,18 @@ public class ConversationActivity extends BugleActionBarActivity
 
         setContentView(R.layout.conversation_activity);
 
-        fromCreateConversation = getIntent() != null
-                && getIntent().getBooleanExtra(UIIntents.UI_INTENT_EXTRA_FROM_CREATE_CONVERSATION, false);
         final Intent intent = getIntent();
+        fromCreateConversation = intent.getBooleanExtra(UIIntents.UI_INTENT_EXTRA_FROM_CREATE_CONVERSATION, false);
+
         if (fromCreateConversation) {
             getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
         }
-        if (getIntent() != null && getIntent().getBooleanExtra(BugleNotifications.EXTRA_FROM_NOTIFICATION, false)) {
+        if (intent.getBooleanExtra(BugleNotifications.EXTRA_FROM_NOTIFICATION, false)) {
             BugleAnalytics.logEvent("SMS_Notifications_Clicked", true, true);
             AutopilotEvent.logTopicEvent("topic-768lyi3sp", "notification_clicked");
         }
 
-        if (intent.
-                getBooleanExtra(UIIntents.UI_INTENT_EXTRA_GOTO_CONVERSATION_LIST, false)) {
+        if (intent.getBooleanExtra(UIIntents.UI_INTENT_EXTRA_GOTO_CONVERSATION_LIST, false)) {
             // See the comment in BugleWidgetService.getViewMoreConversationsView() why this
             // is unfortunately necessary. The Bugle desktop widget can display a list of
             // conversations. When there are more conversations that can be displayed in
@@ -181,13 +185,13 @@ public class ConversationActivity extends BugleActionBarActivity
             mContainer.getViewTreeObserver().addOnGlobalLayoutListener(this);
         }
 
-        long lastShowTime = Preferences.getDefault().getLong(PREF_KEY_CONVERSATION_ACTIVITY_SHOW_TIME, -1);
+        long lastShowTime = bugleApplicationPrefs.getLong(PREF_KEY_CONVERSATION_ACTIVITY_SHOW_TIME, -1);
         if (lastShowTime != -1) {
             IntegerBuckets buckets = new IntegerBuckets(5, 10, 30, 60, 300, 600, 1800, 3600, 7200);
             BugleAnalytics.logEvent("Detailspage_Show_Interval", false, true, "interval",
                     buckets.getBucket((int) ((System.currentTimeMillis() - lastShowTime) / 1000)));
         }
-        Preferences.getDefault().putLong(PREF_KEY_CONVERSATION_ACTIVITY_SHOW_TIME, System.currentTimeMillis());
+        bugleApplicationPrefs.putLong(PREF_KEY_CONVERSATION_ACTIVITY_SHOW_TIME, System.currentTimeMillis());
         mCreateTime = System.currentTimeMillis();
     }
 
@@ -227,10 +231,13 @@ public class ConversationActivity extends BugleActionBarActivity
         ViewGroup.LayoutParams layoutParams = accessoryContainer.getLayoutParams();
         layoutParams.height = Dimensions.getStatusBarHeight(ConversationActivity.this) + Dimensions.pxFromDp(56);
         accessoryContainer.setLayoutParams(layoutParams);
-        if (ToolbarDrawables.getToolbarBg() != null) {
+
+        Drawable toolbarBg = ToolbarDrawables.getToolbarBg();
+
+        if (toolbarBg != null) {
             ImageView ivAccessoryBg = accessoryContainer.findViewById(R.id.accessory_bg);
             ivAccessoryBg.setVisibility(View.VISIBLE);
-            ivAccessoryBg.setImageDrawable(ToolbarDrawables.getToolbarBg());
+            ivAccessoryBg.setImageDrawable(toolbarBg);
         } else {
             accessoryContainer.setBackgroundColor(PrimaryColors.getPrimaryColor());
             accessoryContainer.findViewById(R.id.accessory_bg).setVisibility(View.GONE);
@@ -244,7 +251,6 @@ public class ConversationActivity extends BugleActionBarActivity
         toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         mTitleTextView = findViewById(R.id.toolbar_title);
-        invalidateActionBar();
     }
 
     @Override
@@ -296,12 +302,6 @@ public class ConversationActivity extends BugleActionBarActivity
         if (hasFocus && conversationFragment != null) {
             conversationFragment.setConversationFocus();
         }
-    }
-
-    @Override
-    public void onDisplayHeightChanged(final int heightSpecification) {
-        super.onDisplayHeightChanged(heightSpecification);
-        invalidateActionBar();
     }
 
     @Override
@@ -376,7 +376,7 @@ public class ConversationActivity extends BugleActionBarActivity
         }
         if (conversationFragment != null
                 && HSConfig.optBoolean(false, "Application", "SMSAd", "SMSDetailspageFullAd", "Enabled")
-                && System.currentTimeMillis() - Preferences.getDefault().getLong(PREF_KEY_WIRE_AD_SHOW_TIME, -1)
+                && System.currentTimeMillis() - bugleApplicationPrefs.getLong(PREF_KEY_WIRE_AD_SHOW_TIME, -1)
                 > HSConfig.optInteger(5, "Application", "SMSAd", "SMSDetailspageFullAd", "MinInterval") * DateUtils.MINUTE_IN_MILLIS
                 && System.currentTimeMillis() - CommonUtils.getAppInstallTimeMillis()
                 > HSConfig.optInteger(2, "Application", "SMSAd", "SMSDetailspageFullAd", "ShowAfterInstall") * DateUtils.HOUR_IN_MILLIS) {
@@ -408,7 +408,7 @@ public class ConversationActivity extends BugleActionBarActivity
                 mInterstitialAd.show();
                 BugleAnalytics.logEvent("Detailspage_FullAd_Show", true, true);
                 AutopilotEvent.logTopicEvent("topic-768lyi3sp", "fullad_show");
-                Preferences.getDefault().putLong(PREF_KEY_WIRE_AD_SHOW_TIME, System.currentTimeMillis());
+                bugleApplicationPrefs.putLong(PREF_KEY_WIRE_AD_SHOW_TIME, System.currentTimeMillis());
             }
             BugleAnalytics.logEvent("Detailspage_FullAd_Should_Show", true, true);
             AutopilotEvent.logTopicEvent("topic-768lyi3sp", "fullad_chance");
@@ -468,7 +468,7 @@ public class ConversationActivity extends BugleActionBarActivity
             fragmentTransaction.add(R.id.conversation_fragment_container,
                     conversationFragment, ConversationFragment.FRAGMENT_TAG);
             if (HSConfig.optBoolean(false, "Application", "SMSAd", "SMSDetailspageFullAd", "Enabled")
-                    && System.currentTimeMillis() - Preferences.getDefault().getLong(PREF_KEY_WIRE_AD_SHOW_TIME, -1)
+                    && System.currentTimeMillis() - bugleApplicationPrefs.getLong(PREF_KEY_WIRE_AD_SHOW_TIME, -1)
                     > HSConfig.optInteger(5, "Application", "SMSAd", "SMSDetailspageFullAd", "MinInterval") * DateUtils.MINUTE_IN_MILLIS
                     && System.currentTimeMillis() - CommonUtils.getAppInstallTimeMillis()
                     > HSConfig.optInteger(2, "Application", "SMSAd", "SMSDetailspageFullAd", "ShowAfterInstall") * DateUtils.HOUR_IN_MILLIS) {
@@ -494,7 +494,6 @@ public class ConversationActivity extends BugleActionBarActivity
         conversationFragment.setConversationInfo(this, conversationId, draftData);
 
         fragmentTransaction.commit();
-        invalidateActionBar();
     }
 
     @Override

@@ -34,11 +34,11 @@ public class BugleAnalytics {
     }
 
     public static void logEvent(String eventID, boolean alsoLogToFlurry) {
-        logEvent(eventID, alsoLogToFlurry, new HashMap<>());
+        logEvent(eventID, alsoLogToFlurry, (HashMap<String, String>) null);
     }
 
     public static void logEvent(String eventID, boolean alsoLogToFlurry, boolean alsoLogToFirebase) {
-        logEvent(eventID, alsoLogToFlurry, alsoLogToFirebase, new HashMap<>());
+        logEvent(eventID, alsoLogToFlurry, alsoLogToFirebase, (HashMap<String, String>) null);
     }
 
     public static void logEvent(String eventID, String... vars) {
@@ -79,16 +79,20 @@ public class BugleAnalytics {
         logEvent(eventID, alsoLogToFlurry, false, eventValues);
     }
 
-    public static void logEvent(final String eventID, boolean alsoLogToFlurry, boolean alsoLogToFirebase, final Map<String, String> eventValues) {
+    public static void logEvent(final String eventID, boolean alsoLogToFlurry, boolean alsoLogToFirebase, Map<String, String> eventValues) {
         if (HSGdprConsent.getConsentState() != HSGdprConsent.ConsentState.ACCEPTED) {
             return;
         }
 
         try {
             CustomEvent event = new CustomEvent(eventID);
-            for (Map.Entry<String, String> entry : eventValues.entrySet()) {
-                event.putCustomAttribute(entry.getKey(), entry.getValue());
+
+            if (eventValues != null) {
+                for (Map.Entry<String, String> entry : eventValues.entrySet()) {
+                    event.putCustomAttribute(entry.getKey(), entry.getValue());
+                }
             }
+
             if (FabricUtils.isFabricInited()) {
                 Answers.getInstance().logCustom(event);
             } else {
@@ -96,13 +100,18 @@ public class BugleAnalytics {
             }
 
             if (alsoLogToFlurry) {
+                if (eventValues == null) {
+                    eventValues = new HashMap<>(1);
+                }
                 HSAnalytics.logEvent(eventID, eventValues);
             }
 
             if (alsoLogToFirebase) {
                 Bundle params = new Bundle();
-                for (Map.Entry<String, String> entry : eventValues.entrySet()) {
-                    params.putString(entry.getKey(), entry.getValue());
+                if (eventValues != null) {
+                    for (Map.Entry<String, String> entry : eventValues.entrySet()) {
+                        params.putString(entry.getKey(), entry.getValue());
+                    }
                 }
                 sFirebaseAnalytics.logEvent(eventID, params);
             }
@@ -139,9 +148,12 @@ public class BugleAnalytics {
     private static String getEventInfoDescription(String eventID, boolean alsoLogToFlurry, Map<String, String> eventValues) {
         String scope = (alsoLogToFlurry ? "F" : " ") + "|A";
         StringBuilder values = new StringBuilder();
-        for (Map.Entry<String, String> valueEntry : eventValues.entrySet()) {
-            values.append(valueEntry).append(", ");
+        if (eventValues != null) {
+            for (Map.Entry<String, String> valueEntry : eventValues.entrySet()) {
+                values.append(valueEntry).append(", ");
+            }
         }
+
         if (values.length() > 0) {
             values = new StringBuilder(": " + values.substring(0, values.length() - 2)); // At ": " at front and remove ", " in the end
         }
