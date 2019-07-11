@@ -37,6 +37,7 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.android.messaging.Factory;
 import com.android.messaging.R;
 import com.android.messaging.ad.AdPlacement;
 import com.android.messaging.ad.BillingManager;
@@ -53,6 +54,7 @@ import com.android.messaging.ui.messagebox.MessageBoxActivity;
 import com.android.messaging.ui.wallpaper.WallpaperManager;
 import com.android.messaging.util.Assert;
 import com.android.messaging.util.BugleAnalytics;
+import com.android.messaging.util.BuglePrefs;
 import com.android.messaging.util.CommonUtils;
 import com.android.messaging.util.ContentType;
 import com.android.messaging.util.FabricUtils;
@@ -85,6 +87,7 @@ public class ConversationActivity extends BugleActionBarActivity
 
     private static final String PREF_KEY_CONVERSATION_ACTIVITY_SHOW_TIME = "pref_key_conversation_activity_show_time";
     private static final String PREF_KEY_WIRE_AD_SHOW_TIME = "pref_key_wire_ad_show_time";
+    public static final String PREF_KEY_WIRE_AD_SHOW_TIME_FOR_EXIT_WIRE_AD = "pref_key_wire_ad_show_time_for_exit_wire_ad";
 
     // Fragment transactions cannot be performed after onSaveInstanceState() has been called since
     // it will cause state loss. We don't want to call commitAllowingStateLoss() since it's
@@ -103,7 +106,7 @@ public class ConversationActivity extends BugleActionBarActivity
     private long mCreateTime;
     private boolean fromCreateConversation;
     private String mConversationId;
-
+    private final BuglePrefs mPrefs = Factory.get().getApplicationPrefs();
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -414,6 +417,7 @@ public class ConversationActivity extends BugleActionBarActivity
                 BugleAnalytics.logEvent("Detailspage_FullAd_Show", true, true);
                 AutopilotEvent.logTopicEvent("topic-768lyi3sp", "fullad_show");
                 Preferences.getDefault().putLong(PREF_KEY_WIRE_AD_SHOW_TIME, System.currentTimeMillis());
+                mPrefs.putLong(PREF_KEY_WIRE_AD_SHOW_TIME_FOR_EXIT_WIRE_AD, System.currentTimeMillis());
             }
             BugleAnalytics.logEvent("Detailspage_FullAd_Should_Show", true, true);
             AutopilotEvent.logTopicEvent("topic-768lyi3sp", "fullad_chance");

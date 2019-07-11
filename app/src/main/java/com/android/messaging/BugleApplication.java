@@ -105,6 +105,7 @@ import net.appcloudbox.common.analytics.publisher.AcbPublisherMgr;
 import net.appcloudbox.common.utils.AcbApplicationHelper;
 import net.appcloudbox.service.AcbService;
 import net.appcloudbox.service.iap.AcbIAPKit;
+import net.appcloudbox.service.iap.AcbIAPTransaction;
 
 import org.json.JSONObject;
 
@@ -217,12 +218,16 @@ public class BugleApplication extends HSApplication implements UncaughtException
             }
         }
 
-        BillingManager.init(this, isPremiumUser -> {
-            if (!isPremiumUser) {
-                AcbAds.getInstance().initializeFromGoldenEye(BugleApplication.this);
-                AdConfig.activeAllAdsReentrantly();
-            }
-        });
+        if (AcbIAPTransaction.isServiceAvailable()) {
+            BillingManager.init(this, isPremiumUser -> {
+                if (!isPremiumUser) {
+                    AcbAds.getInstance().initializeFromGoldenEye(BugleApplication.this);
+                    AdConfig.activeAllAdsReentrantly();
+                }
+            });
+        } else {
+            AdConfig.activeAllAdsReentrantly();
+        }
     }
 
 

@@ -11,4 +11,7 @@ public class AdPlacement {
     public static final String AD_WIRE = "SMSDetailWire";
 
     public static final String AD_DETAIL_NATIVE = "SMSDetailNativeNewPlus";
+
+    public static final String AD_EXIT_WIRE = "SMSExitWire";
+
 }

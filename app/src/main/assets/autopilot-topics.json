@@ -347,6 +347,50 @@
       ],
       "topic_id": "topic-74rv6bpwy"
     },
+    "topic-76k40hett": {
+      "topic_type": "life_time",
+      "topic_name": "Test Exitad",
+      "variations": {
+        "switch": {
+          "values": [
+            {
+              "value": false
+            }
+          ],
+          "type": "boolean",
+          "value": false,
+          "strategy": "sole"
+        },
+        "maxtimes": {
+          "values": [
+            {
+              "value": 2
+            }
+          ],
+          "type": "double",
+          "value": 2,
+          "strategy": "sole"
+        }
+      },
+      "events": [
+        {
+          "name": "test"
+        },
+        {
+          "name": "sms_exitapp"
+        },
+        {
+          "name": "exitad_chance"
+        },
+        {
+          "name": "exitad_show"
+        },
+        {
+          "name": "exitad_click"
+        }
+      ],
+      "topic_id": "topic-76k40hett"
+    },
     "topic-74azpj82p": {
       "topic_type": "one_day",
       "topic_name": "To Export Config",
@@ -398,7 +442,7 @@
   "autopilot_id": 10104,
   "service_url": "https://ap.appcloudbox.net",
   "other_app_events": [],
-  "json_id": "38822f70-e08c-43ea-9064-d2c9676d0440",
+  "json_id": "2a833db5-7fa7-4876-bbe0-6f590bf4d864",
   "autopilot_name": "Bubble_A",
   "autopilot_type": "app"
 }
