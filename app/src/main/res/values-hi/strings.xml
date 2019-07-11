@@ -786,4 +786,10 @@
 	<string name="private_box_remove_from_box">सभी निजी बॉक्</string>
 	<string name="private_box_move_to_box">निजी बॉक्</string>
 	<string name="private_box_add_private_contacts">कृपया निजी संपर्क जोड़ें!</string>
+
+	<string name="remove_ad">विज्ञापनों को हटाएं</string>
+	<string name="purchase">खरीदें</string>
+	<string name="life_time">आजीवन</string>
+	<string name="purchase_description">एड-फ्री संस्  फिर कभी कोई विज्ञापन नहीं।</string>
+
 </resources>

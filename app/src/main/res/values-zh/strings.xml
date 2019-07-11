@@ -776,4 +776,8 @@
     <string name="private_box_add_to_success">移至隱私信箱</string>
     <string name="security_question">安全問題</string>
     <string name="restore_downloading">正在下載 ...</string>
+    <string name="remove_ad">移除廣告</string>
+    <string name="purchase">購買</string>
+    <string name="life_time">永久</string>
+    <string name="purchase_description">購買免廣告版本，永久移除廣告。 </string>
 </resources>
