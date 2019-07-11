@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/tab_custom_view"
+    android:layout_width="wrap_content"
+    android:layout_height="34.7dp">
+
+    <ImageView
+        android:id="@+id/tab_icon_view"
+        android:layout_width="wrap_content"
+        android:layout_height="30dp"
+        android:layout_centerInParent="true"
+        android:paddingStart="6dp"
+        android:paddingEnd="6dp"
+        android:src="@drawable/emoji_tab_normal_icon"
+        android:translationY="-0.65dp" />
+
+    <com.android.messaging.ui.view.MessagesTextView
+        android:id="@+id/tab_text_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:textSize="13.3sp"
+        android:paddingStart="10dp"
+        android:paddingEnd="10dp"
+        android:includeFontPadding="false"
+        app:font_family_changeable="false"
+        app:font_size_changeable="false"
+        app:typeface="@string/custom_font_regular"/>
+
+    <View
+        android:id="@+id/tab_indicator"
+        android:layout_width="0dp"
+        android:layout_height="1.7dp"
+        android:layout_alignStart="@+id/tab_text_view"
+        android:layout_alignEnd="@+id/tab_text_view"
+        android:layout_alignParentBottom="true"
+        android:visibility="gone" />
+</RelativeLayout>

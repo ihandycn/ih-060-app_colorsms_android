@@ -239,6 +239,9 @@
     <!--send delay-->
     <color name="inside_circle_color">#e1e3e7</color>
 
+    <!--giphy-->
+    <color name="giphy_loading_placeholder_background">#eff1f3</color>
+
     <!--backup restore-->
     <color name="restore_summary_default_color">#8c8d93</color>
     <color name="backup_cloud_default_summary_color">#0b8fff</color>

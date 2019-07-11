@@ -80,8 +80,7 @@
             </LinearLayout>
 
             <View
-                style="@style/SettingDividerStyle"
-                android:visibility="gone" />
+                style="@style/SettingDividerStyle" />
 
             <com.android.messaging.ui.view.MessagesTextView
                 android:id="@+id/setting_title_emoji"
@@ -89,16 +88,14 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/emoji"
-                android:visibility="gone"
                 app:typeface="@string/custom_font_regular" />
 
             <com.android.messaging.ui.appsettings.SettingEmojiItemView
                 android:id="@+id/setting_item_emoji"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:visibility="gone"
                 app:hideDivideLine="true"
-                app:title="@string/privacy_mode_settings"
+                app:title="@string/emoji_skin_tone_setting"
                 app:typeface="@string/custom_font_regular" />
 
             <View style="@style/SettingDividerStyle" />
@@ -154,13 +151,12 @@
                 app:title="@string/blocked_contacts_title"
                 app:type="withTriangle" />
 
-            <!--Outgoing sounds-->
             <com.android.messaging.ui.appsettings.GeneralSettingItemView
-                android:id="@+id/setting_advanced_outgoing_sounds"
+                android:id="@+id/setting_advanced_delivery_reports"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:hideDivideLine="true"
-                app:title="@string/send_sound_pref_title"
+                app:summary="@string/delivery_reports_pref_summary"
+                app:title="@string/delivery_reports_pref_title"
                 app:type="switchView" />
 
             <View style="@style/SettingDividerStyle" />

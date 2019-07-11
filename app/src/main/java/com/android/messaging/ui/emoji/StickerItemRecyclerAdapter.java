@@ -53,6 +53,9 @@ public class StickerItemRecyclerAdapter extends BaseStickerItemRecyclerAdapter {
             if (!mCouldClickSticker) {
                 return;
             }
+            if(!stickerInfo.mClickable){
+                return ;
+            }
             mCouldClickSticker = false;
             Threads.postOnMainThreadDelayed(() -> mCouldClickSticker = true, 200);
             switch (stickerInfo.mEmojiType) {
@@ -71,7 +74,7 @@ public class StickerItemRecyclerAdapter extends BaseStickerItemRecyclerAdapter {
 
     @Override
     public void onMagicItemLoadingFinish(StickerInfo stickerInfo, StickerViewHolder holder) {
-        if (mPositionInViewPager == 0 && !stickerInfo.mIsDownloaded && holder.getAdapterPosition() < mMagicPreloadCount) {
+        if (!stickerInfo.mIsDownloaded && holder.getAdapterPosition() < mMagicPreloadCount) {
             downloadMagicEmoji(true, stickerInfo, holder);
         }
     }

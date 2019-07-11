@@ -27,7 +27,6 @@ import java.util.List;
 
 public class PrivateContactsActivity extends BaseActivity implements PrivateContactsAdapter.PrivateContactsHost {
     private PrivateContactsAdapter mAdapter;
-    private List<String> mRemoveConversationIdList = new ArrayList<>();
     private View mEmptyListMessageView;
 
     @Override
@@ -67,12 +66,6 @@ public class PrivateContactsActivity extends BaseActivity implements PrivateCont
     }
 
     @Override
-    protected void onPause() {
-        super.onPause();
-        removeContactsFromPrivateBox(mRemoveConversationIdList);
-    }
-
-    @Override
     public void onBackPressed() {
         finish();
     }
@@ -81,13 +74,6 @@ public class PrivateContactsActivity extends BaseActivity implements PrivateCont
     public void finish() {
         super.finish();
         overridePendingTransition(R.anim.anim_null, R.anim.slide_out_to_right_and_fade);
-    }
-
-    private void removeContactsFromPrivateBox(List<String> addList) {
-        if (addList.size() != 0) {
-            MoveConversationToTelephonyAction.moveToTelephony((ArrayList<String>) addList,
-                    null, null);
-        }
     }
 
     private void startQueryData() {

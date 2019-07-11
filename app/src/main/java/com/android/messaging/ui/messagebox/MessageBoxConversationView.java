@@ -40,7 +40,6 @@ import com.android.messaging.ui.customize.PrimaryColors;
 import com.android.messaging.ui.customize.ToolbarDrawables;
 import com.android.messaging.ui.customize.WallpaperDrawables;
 import com.android.messaging.ui.customize.theme.ThemeUtils;
-import com.android.messaging.ui.emoji.EmojiInfo;
 import com.android.messaging.util.BugleAnalytics;
 import com.android.messaging.util.Dates;
 import com.android.messaging.util.ImeUtil;
@@ -258,11 +257,11 @@ public class MessageBoxConversationView extends FrameLayout {
     }
 
 
-    void emojiClick(EmojiInfo emojiInfo) {
+    void emojiClick(String emojiInfo) {
         if (mInputEditText != null) {
             int start = mInputEditText.getSelectionStart();
             int end = mInputEditText.getSelectionEnd();
-            mInputEditText.getText().replace(start, end, emojiInfo.mEmoji);
+            mInputEditText.getText().replace(start, end, emojiInfo);
             mInputEmojiCount++;
         }
     }
@@ -276,6 +275,7 @@ public class MessageBoxConversationView extends FrameLayout {
     private void initInputAction() {
         mInputActionView.getEmojiIcon().setOnClickListener(v -> {
             if (mActivity.getIsEmojiVisible()) {
+                ImeUtil.get().showImeKeyboard(getContext(), mInputEditText);
                 mActivity.hideEmoji();
             } else {
                 ImeUtil.get().hideImeKeyboard(getContext(), mInputEditText);
@@ -408,7 +408,7 @@ public class MessageBoxConversationView extends FrameLayout {
 
         @Override
         public void getItemOffsets(Rect outRect, View view, RecyclerView parent, RecyclerView.State state) {
-
+            super.getItemOffsets(outRect, view, parent, state);
             int position = parent.getChildAdapterPosition(view);
             int count = parent.getAdapter().getItemCount();
 

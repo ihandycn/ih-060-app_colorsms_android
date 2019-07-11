@@ -16,6 +16,8 @@
 package com.android.messaging.ui.conversation;
 
 import android.Manifest;
+import android.animation.Animator;
+import android.animation.ObjectAnimator;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
@@ -96,6 +98,7 @@ import com.android.messaging.util.MediaUtil;
 import com.android.messaging.util.OsUtil;
 import com.android.messaging.util.TextViewUtil;
 import com.android.messaging.util.UiUtils;
+import com.ihs.commons.utils.HSLog;
 import com.superapps.util.BackgroundDrawables;
 import com.superapps.util.Compats;
 import com.superapps.util.Dimensions;
@@ -164,6 +167,8 @@ public class ComposeMessageView extends LinearLayout
     // There is a draft
     private static final int SEND_WIDGET_MODE_SEND_BUTTON = 3;
 
+    private static final int DEFAULT_EMOJI_PICKER_HEIGHT = Dimensions.pxFromDp(243);
+
     private PlainTextEditText mComposeEditText;
     private ImageView mSendButton;
     private ImageView mSimButton;
@@ -183,6 +188,8 @@ public class ComposeMessageView extends LinearLayout
 
     private boolean mIsMediaPendingShow = false;
     private boolean mIsEmojiPendingShow = false;
+    private boolean mHasGif;
+    private boolean isFirstEmojiStart = true;
 
     private final Binding<DraftMessageData> mBinding;
     private IComposeMessageViewHost mHost;
@@ -621,9 +628,53 @@ public class ComposeMessageView extends LinearLayout
             EmojiManager.recordAlreadyShowEmojiGuide();
             mEmojiGuideView.setVisibility(GONE);
         }
+
+        mInputManager.showEmojiPicker();
         mEmojiPickerLayout.setVisibility(VISIBLE);
         mEmojiKeyboardBtn.setImageResource(R.drawable.input_keyboard_icon);
-        mInputManager.showEmojiPicker();
+
+        int keyboardHeight = UiUtils.getKeyboardHeight();
+        int height = keyboardHeight == 0 ? DEFAULT_EMOJI_PICKER_HEIGHT : keyboardHeight;
+        mEmojiPickerLayout.getLayoutParams().height = height;
+        mEmojiPickerLayout.requestLayout();
+
+        if (!mIsEmojiPendingShow) {
+            startEmojiPickerAnimation(mEmojiPickerLayout, height);
+        } else {
+            isFirstEmojiStart = false;
+            mInputManager.onEmojiAnimationFinished();
+        }
+    }
+
+    private void startEmojiPickerAnimation(ViewGroup container, int startPos) {
+        ObjectAnimator va = ObjectAnimator.ofFloat(container, "translationY",
+                startPos, 0f);
+        va.setDuration(520);
+        va.setInterpolator(PathInterpolatorCompat.create(0.26f, 1, 0.48f, 1));
+
+        va.addListener(new Animator.AnimatorListener() {
+            @Override
+            public void onAnimationStart(Animator animation) {
+
+            }
+
+            @Override
+            public void onAnimationEnd(Animator animation) {
+                isFirstEmojiStart = false;
+                mInputManager.onEmojiAnimationFinished();
+            }
+
+            @Override
+            public void onAnimationCancel(Animator animation) {
+                HSLog.e("emoji_picker", "onAnimationCancel: onAnimationCancelFinished not do");
+            }
+
+            @Override
+            public void onAnimationRepeat(Animator animation) {
+
+            }
+        });
+        va.start();
     }
 
     @Override
@@ -651,15 +702,22 @@ public class ComposeMessageView extends LinearLayout
         }
         boolean hasSticker = mStickerLogNameList != null && !mStickerLogNameList.isEmpty();
         boolean hasMagicSticker = mMagicStickerLogNameList != null && !mMagicStickerLogNameList.isEmpty();
-        if (hasLittleEmoji && !hasSticker && !hasMagicSticker) {
+        if (hasLittleEmoji && !hasSticker && !hasMagicSticker && !mHasGif) {
             BugleAnalytics.logEvent("SMSEmoji_ChatEmoji_Emoji_Send", true, true, "type", "emoji");
-        } else if (!hasLittleEmoji && hasSticker && !hasMagicSticker) {
+        } else if (!hasLittleEmoji && hasSticker && !hasMagicSticker && !mHasGif) {
             BugleAnalytics.logEvent("SMSEmoji_ChatEmoji_Emoji_Send", true, true, "type", "sticker");
-        } else if (!hasLittleEmoji && !hasSticker && hasMagicSticker) {
+        } else if (!hasLittleEmoji && !hasSticker && hasMagicSticker && !mHasGif) {
             BugleAnalytics.logEvent("SMSEmoji_ChatEmoji_Emoji_Send", true, true, "type", "magic");
-        } else if (hasLittleEmoji || hasSticker || hasMagicSticker) {
+        } else if (!hasLittleEmoji && !hasSticker && !hasMagicSticker && mHasGif) {
+            BugleAnalytics.logEvent("SMSEmoji_ChatEmoji_Emoji_Send", true, true, "type", "gif");
+        } else if (hasLittleEmoji || hasSticker || hasMagicSticker || mHasGif) {
             BugleAnalytics.logEvent("SMSEmoji_ChatEmoji_Emoji_Send", true, true, "type", "other");
         }
+
+        if (mHasGif) {
+            BugleAnalytics.logEvent("SMSEmoji_GIF_Send");
+        }
+        mHasGif = false;
         logEvent("SMSEmoji_ChatEmoji_Tab_Send", mStickerLogNameList);
         logEvent("SMSEmoji_ChatEmoji_Magic_Send", mMagicStickerLogNameList);
     }
@@ -707,6 +765,24 @@ public class ComposeMessageView extends LinearLayout
         mStickerLogNameList.add(name);
     }
 
+    @Override
+    public void logGif() {
+        mHasGif = true;
+    }
+
+    private void hideAttachmentsWhenShowingSims(final boolean simPickerVisible) {
+        if (!mHost.shouldHideAttachmentsWhenSimSelectorShown()) {
+            return;
+        }
+        final boolean haveAttachments = mBinding.getData().hasAttachments();
+        if (simPickerVisible && haveAttachments) {
+            mHost.onAttachmentsChanged(false);
+            mAttachmentPreview.hideAttachmentPreview();
+        } else {
+            mHost.onAttachmentsChanged(haveAttachments);
+            mAttachmentPreview.onAttachmentsChanged(mBinding.getData());
+        }
+    }
 
     public void setInputManager(final ConversationInputManager inputManager) {
         mInputManager = inputManager;

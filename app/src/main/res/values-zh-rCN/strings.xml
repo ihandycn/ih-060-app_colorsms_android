@@ -652,7 +652,6 @@
     <string name="menu_invite_friends">邀请好友</string>
     <string name="invite_friends_now">邀请</string>
 
-
     <string name="invite_friends_add_friends">添加</string>
     <string name="invite_friends_default_back_to_main_page_title">邀请好友</string>
     <string name="privacy_mode_open_button_text">打开</string>
@@ -763,7 +762,7 @@
 
     <string name="invite_friends_success_toast">邀请成功</string>
     <string name="notification_summary">收到消息时获取通知</string>
-    <string name="archived_conversations">过去的对话</string>
+    <string name="archived_conversations">归档的会话</string>
     <string name="others">其他</string>
     <string name="about">关于</string>
     <string name="conversation_pinned">置顶</string>
@@ -774,4 +773,8 @@
     <string name="message_copied">复制到剪贴板</string>
     <string name="private_box_add_to_success">移至隐私信箱</string>
     <string name="restore_downloading">正在下载 ...</string>
+    <string name="remove_ad">移除广告</string>
+    <string name="purchase">购买</string>
+    <string name="life_time">永久</string>
+    <string name="purchase_description">购买免广告版本，永久移除广告。</string>
 </resources>

@@ -53,7 +53,7 @@
     we should do a pass to remove any unused values here.
     -->
 
-    <integer name="mediapicker_transition_duration">600</integer><!-- ms -->
+    <integer name="mediapicker_transition_duration">300</integer><!-- ms -->
     <integer name="asyncimage_transition_duration">300</integer><!-- ms -->
     <integer name="compose_transition_duration">300</integer><!-- ms -->
     <integer name="camera_shutter_duration">200</integer><!-- ms -->

@@ -691,7 +691,6 @@
 	<string name="menu_invite_friends">Freunde einladen</string>
 	<string name="invite_friends_now">JETZT EINLADEN</string>
 
-
     <string name="invite_friends_add_friends">Hinzufügen</string>
     <string name="invite_friends_default_back_to_main_page_title">Freunde einladen</string>
     <string name="privacy_mode_open_button_text">ÖFFNEN</string>
@@ -779,5 +778,10 @@
 	<string name="private_box_remove_from_box">Aus Privatem Briefkasten entfernen</string>
 	<string name="private_box_move_to_box">In Privaten Briefkasten verschieben</string>
 	<string name="private_box_add_private_contacts">Bitte private Kontakte hinzufügen!</string>
+
+	<string name="remove_ad">Werbung entfernen</string>
+	<string name="purchase">KAUFEN</string>
+	<string name="life_time">LEBENSLANG</string>
+	<string name="purchase_description">Kaufen Sie die Version OHNE WERBUNG.Nie wieder Werbung.</string>
 
 </resources>

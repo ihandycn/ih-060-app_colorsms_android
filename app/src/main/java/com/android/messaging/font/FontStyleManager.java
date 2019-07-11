@@ -20,7 +20,7 @@ public class FontStyleManager {
         return mInstance;
     }
 
-    private FontStyleManager(){
+    private FontStyleManager() {
         mFontName = Preferences.getDefault().getString(PREF_KEY_MESSAGE_FONT_TYPE, FontUtils.MESSAGE_FONT_FAMILY_DEFAULT_VALUE);
         mFontLevel = Preferences.getDefault().getInt(PREF_KEY_MESSAGE_FONT_SCALE_LEVEL, 2);
     }
@@ -39,12 +39,24 @@ public class FontStyleManager {
     }
 
     public void setFontFamily(String typeName) {
-        Preferences.getDefault().putString(PREF_KEY_MESSAGE_FONT_TYPE, typeName);
-        mFontName = typeName;
+        char[] chs = typeName.toCharArray();
+        for (int i = 0; i < chs.length; i++) {
+            if (chs[i] <= 'Z' && chs[i] >= 'A') {
+                chs[i] = (char) (chs[i] + 'a' - 'A');
+            }
+        }
+        Preferences.getDefault().putString(PREF_KEY_MESSAGE_FONT_TYPE, String.valueOf(chs));
+        mFontName = String.valueOf(chs);
     }
 
     public String getFontFamily() {
-        return mFontName;
+        char[] chs = mFontName.toCharArray();
+        for (int i = 0; i < chs.length; i++) {
+            if (chs[i] <= 'Z' && chs[i] >= 'A') {
+                chs[i] = (char) (chs[i] + 'a' - 'A');
+            }
+        }
+        return String.valueOf(chs);
     }
 
     public static float getScaleByLevel(int level) {

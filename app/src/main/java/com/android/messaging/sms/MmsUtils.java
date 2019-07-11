@@ -85,7 +85,6 @@ import com.android.messaging.util.OsUtil;
 import com.android.messaging.util.PhoneUtils;
 import com.google.common.base.Joiner;
 import com.superapps.util.Preferences;
-import com.superapps.util.Networks;
 
 import java.io.BufferedOutputStream;
 import java.io.File;
@@ -104,7 +103,6 @@ import java.util.Set;
 import java.util.UUID;
 
 import hugo.weaving.DebugLog;
-import static android.net.ConnectivityManager.TYPE_WIFI;
 
 /**
  * Utils for sending sms/mms messages.
@@ -2113,7 +2111,7 @@ public class MmsUtils {
     }
 
     private static boolean isMmsDataAvailable(final int subId) {
-        if (OsUtil.isAtLeastL_MR1() && Networks.isNetworkAvailable(TYPE_WIFI)) {
+        if (OsUtil.isAtLeastL_MR1()) {
             // L_MR1 above may support sending mms via wifi
             return true;
         }
@@ -2587,7 +2585,7 @@ public class MmsUtils {
         }
         final Context context = Factory.get().getApplicationContext();
         final Resources res = context.getResources();
-        final BuglePrefs prefs = BuglePrefs.getSubscriptionPrefs(subId);
+        final Preferences prefs = Preferences.getDefault();
         final String deliveryReportKey = res.getString(R.string.delivery_reports_pref_key);
         final boolean defaultValue = res.getBoolean(R.bool.delivery_reports_pref_default);
         return prefs.getBoolean(deliveryReportKey, defaultValue);

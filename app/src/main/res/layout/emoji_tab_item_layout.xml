@@ -1,29 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:background="@drawable/emoji_tab_item_bg_drawable">
+    android:layout_height="wrap_content">
 
     <RelativeLayout
         android:id="@+id/tab_custom_view"
-        android:layout_width="55dp"
-        android:layout_height="52dp">
+        android:layout_width="42.7dp"
+        android:layout_height="40dp">
 
         <ImageView
             android:id="@+id/tab_icon_view"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="25.3dp"
+            android:layout_height="25.3dp"
             android:layout_centerInParent="true"
-            android:src="@drawable/emoji_normal_tab_icon"
+            android:src="@drawable/emoji_tab_normal_icon"
             android:translationY="-0.65dp" />
-
-        <ImageView
-            android:id="@+id/tab_new_view"
-            android:layout_width="4.7dp"
-            android:layout_height="4.7dp"
-            android:layout_below="@id/tab_icon_view"
-            android:layout_centerHorizontal="true"
-            android:background="@drawable/emoji_new_tab_guide_drawable"
-            android:visibility="gone" />
     </RelativeLayout>
 </FrameLayout>

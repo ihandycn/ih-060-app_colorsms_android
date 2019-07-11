@@ -1,20 +1,47 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <com.android.messaging.ui.emoji.ViewPagerDotIndicatorView
-        android:id="@+id/dot_indicator_view"
+    <RelativeLayout
+        android:id="@+id/item_tab_container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_marginBottom="10.3dp"
-        android:gravity="center"
-        android:orientation="horizontal" />
+        android:layout_alignParentTop="true">
+
+        <android.support.design.widget.TabLayout
+            android:id="@+id/emoji_item_tab_layout"
+            android:layout_width="match_parent"
+            android:layout_height="34.7dp"
+            android:layout_toStartOf="@+id/emoji_add_btn"
+            app:tabIndicatorHeight="0dp"
+            app:tabMaxWidth="0dp"
+            app:tabMinWidth="0dp"
+            app:tabMode="scrollable"
+            app:tabPaddingBottom="0dp"
+            app:tabPaddingEnd="0dp"
+            app:tabPaddingStart="0dp"
+            app:tabGravity="center"
+            app:tabPaddingTop="0dp" />
+
+            <ImageView
+                android:id="@+id/emoji_add_btn"
+                android:layout_width="40dp"
+                android:layout_height="34.7dp"
+                android:padding="4dp"
+                android:layout_alignParentEnd="true"
+                android:layout_centerVertical="true"
+                android:layout_gravity="center"
+                android:scaleType="centerInside"
+                android:src="@drawable/emoji_add"
+                android:visibility="gone"/>
+
+    </RelativeLayout>
 
     <com.superapps.view.ViewPagerFixed
         android:id="@+id/emoji_item_pager"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_above="@id/dot_indicator_view" />
+        android:layout_below="@id/item_tab_container" />
 </RelativeLayout>

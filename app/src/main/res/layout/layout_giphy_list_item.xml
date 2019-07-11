@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <ImageView
+        android:id="@+id/gif_image_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/giphy_loading_background"/>
+
+    <ImageView
+        android:id="@+id/giphy"
+        android:layout_width="match_parent"
+        android:layout_height="16dp"
+        android:layout_gravity="bottom"
+        android:paddingTop="2dp"
+        android:paddingBottom="2dp"
+        android:layout_marginStart="1dp"
+        android:layout_marginEnd="1dp"
+        android:scaleType="fitEnd"
+        android:src="@drawable/logo_powered_by_giphy"
+        android:background="@drawable/giphy_item_logo_background"/>
+
+</FrameLayout>

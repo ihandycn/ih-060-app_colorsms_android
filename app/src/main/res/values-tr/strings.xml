@@ -685,7 +685,6 @@
 	<string name="menu_invite_friends">Arkadaşlarını Davet Et</string>
 	<string name="invite_friends_now">HEMEN DAVET ET</string>
 
-
     <string name="invite_friends_add_friends">Ekle</string>
     <string name="invite_friends_default_back_to_main_page_title">Arkadaşlarını Davet Et</string>
     <string name="privacy_mode_open_button_text">AÇIK</string>
@@ -729,7 +728,6 @@
     <string name="backup_local_summary">yerel depolama yedekle</string>
     <string name="backup_free_success">Bedava Uzay Başarıyla</string>
     <string name="restore_downloading">İndiriliyor...</string>
-
 
     <string name="action_unarchive">"Arşivden kaldır"</string>
     <string name="action_archive">"Arşivle"</string>
@@ -779,5 +777,10 @@
 	<string name="private_box_remove_from_box">Özel kutudan kaldır</string>
 	<string name="private_box_move_to_box">Özel kutuya taşı</string>
 	<string name="private_box_add_private_contacts">Lütfen özel kişileri ekleyin!</string>
+
+	<string name="remove_ad">Reklamları Kaldır</string>
+	<string name="purchase">SATIN AL</string>
+	<string name="life_time">ÖMÜR BOYU</string>
+	<string name="purchase_description">REKLAMSIZ sürümü satın alın. Bir daha reklam görmeyin.</string>
 
 </resources>

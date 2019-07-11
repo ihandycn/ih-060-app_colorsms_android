@@ -691,7 +691,6 @@
 	<string name="menu_invite_friends">Invita amici</string>
 	<string name="invite_friends_now">INVITA ORA</string>
 
-
     <string name="invite_friends_add_friends">Aggiungi</string>
     <string name="invite_friends_default_back_to_main_page_title">Invita amici</string>
     <string name="privacy_mode_open_button_text">APRIRE</string>
@@ -735,7 +734,6 @@
     <string name="backup_local_summary">Eseguire il backup di archiviazione locale</string>
     <string name="backup_free_success">Fino Spazio libero con successo</string>
     <string name="restore_downloading">Download in corso...</string>
-
 
     <string name="action_unarchive">"Annulla archiviazione"</string>
     <string name="action_archive">"Archivio"</string>
@@ -787,5 +785,10 @@
 	<string name="private_box_remove_from_box">Rimuovi dalla casella privata</string>
 	<string name="private_box_move_to_box">Sposta nella casella privata</string>
 	<string name="private_box_add_private_contacts">Aggiungi contatti privati!</string>
+
+	<string name="remove_ad">Elimina gli annunci</string>
+	<string name="purchase">ACQUISTA</string>
+	<string name="life_time">PER SEMPRE</string>
+	<string name="purchase_description">Acquista la versione SENZA PUBBLICITÀ. Mai più pubblicità.</string>
 
 </resources>

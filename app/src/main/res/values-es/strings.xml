@@ -788,4 +788,9 @@
 	<string name="private_box_move_to_box">Mover a la caja privada</string>
 	<string name="private_box_add_private_contacts">¡Añade contactos privados!</string>
 
+	<string name="remove_ad">Eliminar publicidad</string>
+	<string name="purchase">COMPRAR</string>
+	<string name="life_time">NUNCA</string>
+	<string name="purchase_description">Compra la versión sin publicidad. Ningún anuncio nunca más.</string>
+
 </resources>

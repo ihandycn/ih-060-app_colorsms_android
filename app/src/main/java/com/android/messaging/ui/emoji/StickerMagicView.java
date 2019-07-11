@@ -65,7 +65,7 @@ public class StickerMagicView {
     private void startPlay() {
         File soundFile = Downloader.getInstance().getDownloadFile(mSoundUrl);
         if (soundFile.exists()) {
-            prepareGifSound(soundFile.getPath());
+            playWithSound(soundFile.getPath());
         } else {
             if (isLottieMagic()) {
                 playLottie();
@@ -175,11 +175,10 @@ public class StickerMagicView {
         }
     }
 
-    private void prepareGifSound(String filePath) {
+    private void playWithSound(String filePath) {
         mSoundPlayer = new MediaPlayer();
         try {
             mSoundPlayer.setDataSource(filePath);
-            mSoundPlayer.prepareAsync();
             mSoundPlayer.setLooping(true);
             mSoundPlayer.setOnPreparedListener(mp -> {
                 if (isLottieMagic()) {
@@ -188,6 +187,7 @@ public class StickerMagicView {
                     playGif(true);
                 }
             });
+            mSoundPlayer.prepareAsync();
         } catch (IOException e) {
             e.printStackTrace();
         }

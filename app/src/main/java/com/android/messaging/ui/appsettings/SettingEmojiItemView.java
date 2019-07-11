@@ -21,7 +21,11 @@ public class SettingEmojiItemView extends BaseItemView {
 
     public SettingEmojiItemView(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
+
     }
+
+    private TextView mEmojiView;
+    private String mBaseEmoji = String.valueOf(Character.toChars(Integer.parseInt("1f590", 16)));
 
     @Override
     protected void initView(Context context, AttributeSet attrs) {
@@ -29,13 +33,14 @@ public class SettingEmojiItemView extends BaseItemView {
 
         final ViewGroup widgetFrame = mRootView.findViewById(R.id.widget_frame);
         if (widgetFrame != null) {
-            TextView emojiView = new TextView(getContext());
+            mEmojiView = new TextView(getContext());
             LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,
                     ViewGroup.LayoutParams.WRAP_CONTENT);
             params.setMarginEnd(Dimensions.pxFromDp(7));
-            widgetFrame.addView(emojiView, params);
-            emojiView.setTextSize(22f);
-            emojiView.setText(String.valueOf(Character.toChars(Integer.parseInt("1f590", 16))));
+            widgetFrame.addView(mEmojiView, params);
+            mEmojiView.setTextSize(22f);
+            mEmojiView.setText(mBaseEmoji);
+            mEmojiView.setTextColor(getResources().getColor(android.R.color.black));
         }
 
         setOnClickListener(v -> {
@@ -44,4 +49,16 @@ public class SettingEmojiItemView extends BaseItemView {
             }
         });
     }
+
+    public void updateSkin(String skin) {
+        if (mEmojiView != null)
+            mEmojiView.setText(mBaseEmoji + skin);
+    }
+
+    public void setDefault(String skin) {
+        if (mEmojiView != null) {
+            mEmojiView.setText(mBaseEmoji + skin);
+        }
+    }
+
 }

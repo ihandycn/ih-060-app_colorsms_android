@@ -3,8 +3,9 @@ package com.android.messaging.ui.emoji;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-public class BaseEmojiInfo implements Parcelable {
+public abstract class BaseEmojiInfo implements Parcelable {
     public EmojiType mEmojiType;
+    public boolean isRecent;
 
 
     @Override

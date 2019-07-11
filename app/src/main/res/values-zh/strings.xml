@@ -763,7 +763,7 @@
 
     <string name="invite_friends_success_toast">邀請成功</string>
     <string name="notification_summary">收到消息時獲取通知</string>
-    <string name="archived_conversations">過去的對話</string>
+    <string name="archived_conversations">歸檔的會話</string>
     <string name="others">其他</string>
     <string name="about">關於</string>
     <string name="conversation_pinned">置頂</string>
@@ -776,4 +776,8 @@
     <string name="private_box_add_to_success">移至隱私信箱</string>
     <string name="security_question">安全問題</string>
     <string name="restore_downloading">正在下載 ...</string>
+    <string name="remove_ad">移除廣告</string>
+    <string name="purchase">購買</string>
+    <string name="life_time">永久</string>
+    <string name="purchase_description">購買免廣告版本，永久移除廣告。 </string>
 </resources>

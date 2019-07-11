@@ -26,6 +26,7 @@ import com.android.messaging.glide.GlideApp;
 import com.android.messaging.glide.GlideRequests;
 import com.android.messaging.ui.emoji.utils.EmojiConfig;
 import com.android.messaging.ui.emoji.utils.EmojiManager;
+import com.android.messaging.ui.emoji.utils.LoadEmojiManager;
 import com.android.messaging.ui.view.MessagesTextView;
 import com.android.messaging.ui.view.RecyclerViewWidthSlideListener;
 import com.android.messaging.util.BugleAnalytics;
@@ -235,6 +236,7 @@ public class EmojiStoreFragment extends Fragment implements INotificationObserve
                         storeViewHolder.getBtn.setTextColor(0xFFFFFFFF);
                         storeViewHolder.getBtn.setBackground(BackgroundDrawables.createBackgroundDrawable(0xFFD6D6D6, Dimensions.pxFromDp(15), true));
                         EmojiManager.addTabSticker(packageInfo.mName);
+
                         HSBundle bundle = new HSBundle();
                         bundle.putObject(EmojiPickerFragment.NOTIFICATION_BUNDLE_PACKAGE_INFO, packageInfo);
                         HSGlobalNotificationCenter.sendNotification(EmojiPickerFragment.NOTIFICATION_ADD_EMOJI_FROM_STORE, bundle);

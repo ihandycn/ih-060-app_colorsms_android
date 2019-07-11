@@ -689,7 +689,6 @@
 	<string name="menu_invite_friends">Inviter des amis</string>
 	<string name="invite_friends_now">INVITER MAINTENANT</string>
 
-
     <string name="invite_friends_add_friends">Ajouter</string>
     <string name="invite_friends_default_back_to_main_page_title">Inviter des amis</string>
     <string name="privacy_mode_open_button_text">OUVRIR</string>
@@ -733,7 +732,6 @@
     <string name="backup_local_summary">Sauvegarde sur stockage local</string>
     <string name="backup_free_success">Libérer de l\'espace avec succès</string>
     <string name="restore_downloading">Téléchargement...</string>
-
 
     <string name="action_unarchive">"Annuler l\'archivage"</string>
     <string name="action_archive">"Archiver"</string>
@@ -783,5 +781,10 @@
 	<string name="private_box_remove_from_box">Supprimer de la Boîte privée</string>
 	<string name="private_box_move_to_box">Déplacer dans la Boîte privée</string>
 	<string name="private_box_add_private_contacts">Ajoutez des contacts privés !</string>
+
+	<string name="remove_ad">Supprimer les pubs</string>
+	<string name="purchase">ACHETER</string>
+	<string name="life_time">À VIE</string>
+	<string name="purchase_description">Achetez la version SANS PUBS. Plus jamais de pubs.</string>
 
 </resources>

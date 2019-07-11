@@ -71,20 +71,27 @@ public class ThemeUtils {
         WallpaperDrawables.sWallpaperBitmap = null;
         WallpaperDrawables.applyWallpaperBg(themeInfo.wallpaperUrl);
         AvatarBgDrawables.sAvatarBg = null;
+        AvatarBgDrawables.sSolidAvatarBg = null;
         CreateIconDrawable.sCreateIconBitmap = null;
 
-        ThemeManager.getInstance().clearCacheDrawable();
+        ThemeBubbleDrawables.getInstance().clearCacheDrawable();
 
         if (!themeInfo.mThemeKey.equals(ThemeUtils.DEFAULT_THEME_KEY)) {
             BubbleDrawables.setSelectedIdentifier(-1);
         }
 
-        if (themeInfo.mIsLocalTheme && !themeInfo.isInLocalFolder()) {
+        FontStyleManager.getInstance().setFontFamily(themeInfo.fontName);
+
+        if (themeInfo.mIsLocalTheme) {
             ThemeDownloadManager.getInstance().copyFileFromAssetsAsync(themeInfo,
                     new ThemeDownloadManager.IThemeMoveListener() {
                         @Override
                         public void onMoveSuccess() {
+                            FontUtils.onFontTypefaceChanged();
 
+                            Threads.postOnMainThread(() ->
+                                    HSGlobalNotificationCenter.sendNotification(ConversationListActivity.EVENT_MAINPAGE_RECREATE));
+                            WallpaperSizeManager.getInstance().loadWallpaperParams();
                         }
 
                         @Override
@@ -92,13 +99,14 @@ public class ThemeUtils {
 
                         }
                     });
+        } else {
+            FontUtils.onFontTypefaceChanged();
+
+            Threads.postOnMainThread(() ->
+                    HSGlobalNotificationCenter.sendNotification(ConversationListActivity.EVENT_MAINPAGE_RECREATE));
+            WallpaperSizeManager.getInstance().loadWallpaperParams();
         }
 
-        FontStyleManager.getInstance().setFontFamily(themeInfo.fontName);
-        FontUtils.onFontTypefaceChanged();
-
-        HSGlobalNotificationCenter.sendNotification(ConversationListActivity.EVENT_MAINPAGE_RECREATE);
-        WallpaperSizeManager.getInstance().loadWallpaperParams();
         Factory.get().reclaimMemory();
     }
 

@@ -11,7 +11,11 @@ import android.text.TextUtils;
 import com.android.messaging.download.Downloader;
 import com.android.messaging.glide.GlideApp;
 import com.android.messaging.ui.emoji.BaseEmojiInfo;
+import com.android.messaging.ui.emoji.EmojiInfo;
+import com.android.messaging.ui.emoji.EmojiPackageType;
+import com.android.messaging.ui.emoji.GiphyInfo;
 import com.android.messaging.ui.emoji.StickerInfo;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.target.SimpleTarget;
 import com.bumptech.glide.request.transition.Transition;
 import com.ihs.commons.utils.HSLog;
@@ -29,11 +33,25 @@ public class EmojiManager {
 
     private static final String PREF_TAB_STICKER = "pref_tab_sticker";
     private static final String PREF_RECENT_STICKER = "pref_recent_sticker";
+    private static final String PREF_RECENT_EMOJI = "pref_recent_emoji";
+    private static final String PREF_RECENT_GIF = "pref_recent_gif";
     private static final String PREF_NEW_TAB_STICKER = "pref_new_tab_sticker";
     private static final String PREF_IS_SHOW_EMOJI_GUIDE = "pref_is_show_emoji_guide";
     private static final String PREF_STICKER_MAGIC_LOTTIE_URL_PREFIX = "pref_sticker_magic_lottie_url_";
     private static final String PREF_STICKER_MAGIC_SOUND_URL_PREFIX = "pref_sticker_magic_sound_url_";
     private static final String PREF_STICKER_MAGIC_FILE_URI = "pref_sticker_magic_file_uri";
+    private static final String PREF_DEFAULT_MAIN_POSITION = "pref_default_main_position";
+
+    private static final String PREF_SKIN_FILE_NAME = "pref_skin_record";
+    private static final String PREF_SKIN_SET_DEFAULT = "pref_skin_set_default";
+    public static final String[] EMOJI_SKINS = new String[]{
+            "",
+            new String(Character.toChars(0x1F3FB)),
+            new String(Character.toChars(0x1F3FC)),
+            new String(Character.toChars(0x1F3FD)),
+            new String(Character.toChars(0x1F3FE)),
+            new String(Character.toChars(0x1F3FF)),
+    };
 
     static List<String> getTabSticker() {
         return Preferences.get(PREF_FILE_NAME).getStringList(PREF_TAB_STICKER);
@@ -51,6 +69,7 @@ public class EmojiManager {
         }
         data.add(0, name);
         Preferences.get(PREF_FILE_NAME).putStringList(PREF_TAB_STICKER, data);
+        LoadEmojiManager.getInstance().flush();
     }
 
     @SuppressWarnings("unused")
@@ -81,10 +100,26 @@ public class EmojiManager {
         Preferences.get(PREF_FILE_NAME).putBoolean(PREF_IS_SHOW_EMOJI_GUIDE, false);
     }
 
-    @SuppressWarnings("SuspiciousMethodCalls")
-    private static List<String> getRecentStickerStr() {
-        int maxRecentCount = EmojiConfig.getInstance().optInteger(0, "RecentEmojiCount");
-        List<String> result = Preferences.get(PREF_FILE_NAME).getStringList(PREF_RECENT_STICKER);
+    private static List<String> getRecentStr(EmojiPackageType emojiType) {
+        String key;
+        List<String> result;
+        switch (emojiType) {
+            case STICKER:
+                result = Preferences.get(PREF_FILE_NAME).getStringList(PREF_RECENT_STICKER);
+                key = "RecentStickerCount";
+                break;
+            case EMOJI:
+                result = Preferences.get(PREF_FILE_NAME).getStringList(PREF_RECENT_EMOJI);
+                key = "RecentEmojiCount";
+                break;
+            case GIF:
+                result = Preferences.get(PREF_FILE_NAME).getStringList(PREF_RECENT_GIF);
+                key = "RecentGifCount";
+                break;
+            default:
+                throw new IllegalStateException("emojiType illegal");
+        }
+        int maxRecentCount = EmojiConfig.getInstance().optInteger(0, key);
         if (maxRecentCount > 0 && result.size() > maxRecentCount) {
             List<String> removeList = new ArrayList<>(result.size() - maxRecentCount);
             for (int i = result.size() - 1; i >= maxRecentCount; i--) {
@@ -95,22 +130,48 @@ public class EmojiManager {
         return result;
     }
 
-    public static List<BaseEmojiInfo> getRecentStickerInfo() {
-        List<String> recentList = getRecentStickerStr();
+    public static List<BaseEmojiInfo> getRecentInfo(EmojiPackageType emojiType) {
+        List<String> recentList = getRecentStr(emojiType);
         List<BaseEmojiInfo> result = new ArrayList<>(recentList.size());
         for (int i = 0; i < recentList.size(); i++) {
-            String stickerMsg = recentList.get(i);
-            StickerInfo info = StickerInfo.unflatten(stickerMsg);
+            String msg = recentList.get(i);
+            BaseEmojiInfo info;
+            switch (emojiType) {
+                case STICKER:
+                    info = StickerInfo.unflatten(msg);
+                    break;
+                case EMOJI:
+                    info = EmojiInfo.unflatten(msg);
+                    break;
+                case GIF:
+                    info = GiphyInfo.unflatten(msg);
+                    break;
+                default:
+                    throw new IllegalStateException("emojiType illegal");
+            }
+            info.isRecent = true;
             result.add(info);
         }
         return result;
     }
 
-    public static void saveRecentSticker(String stickerMsg) {
-        List<String> list = getRecentStickerStr();
-        list.remove(stickerMsg);
-        list.add(0, stickerMsg);
-        Preferences.get(PREF_FILE_NAME).putStringList(PREF_RECENT_STICKER, list);
+    public static void saveRecentInfo(String msg, EmojiPackageType emojiType) {
+        List<String> list = getRecentStr(emojiType);
+        list.remove(msg);
+        list.add(0, msg);
+        switch (emojiType) {
+            case STICKER:
+                Preferences.get(PREF_FILE_NAME).putStringList(PREF_RECENT_STICKER, list);
+                break;
+            case EMOJI:
+                Preferences.get(PREF_FILE_NAME).putStringList(PREF_RECENT_EMOJI, list);
+                break;
+            case GIF:
+                Preferences.get(PREF_FILE_NAME).putStringList(PREF_RECENT_GIF, list);
+                break;
+            default:
+                throw new IllegalStateException("emojiType illegal");
+        }
     }
 
     public static boolean isTabSticker(String name) {
@@ -139,21 +200,38 @@ public class EmojiManager {
     }
 
     @SuppressLint("CheckResult")
-    public static void getStickerFile(Context context, final String picUrl, OnGetStickerFileListener stickerFileListener) {
+    public static void getStickerFile(Context context,
+                                      final String picUrl, OnGetStickerFileListener stickerFileListener) {
         if (!TextUtils.isEmpty(picUrl)) {
-            if (!TextUtils.isEmpty(picUrl)) {
-                GlideApp.with(context)
-                        .asFile()
-                        .load(picUrl)
-                        .downloadOnly(new SimpleTarget<File>() {
-                            @Override
-                            public void onResourceReady(@NonNull File file, @Nullable Transition<? super File> transition) {
-                                if (stickerFileListener != null) {
-                                    stickerFileListener.onSuccess(file);
-                                }
+            GlideApp.with(context)
+                    .asFile()
+                    .load(picUrl)
+                    .downloadOnly(new SimpleTarget<File>() {
+                        @Override
+                        public void onResourceReady(@NonNull File file, @Nullable Transition<? super File> transition) {
+                            if (stickerFileListener != null) {
+                                stickerFileListener.onSuccess(file);
                             }
-                        });
-            }
+                        }
+                    });
+        }
+    }
+
+    @SuppressLint("CheckResult")
+    public static void getGifFile(Context context,
+                                  final String picUrl, OnGetStickerFileListener stickerFileListener) {
+        if (!TextUtils.isEmpty(picUrl)) {
+            GlideApp.with(context)
+                    .asFile()
+                    .load(picUrl)
+                    .downloadOnly(new SimpleTarget<File>() {
+                        @Override
+                        public void onResourceReady(@NonNull File file, @Nullable Transition<? super File> transition) {
+                            if (stickerFileListener != null) {
+                                stickerFileListener.onSuccess(file);
+                            }
+                        }
+                    });
         }
     }
 
@@ -199,7 +277,8 @@ public class EmojiManager {
         return Preferences.get(PREF_FILE_NAME).getStringList(PREF_STICKER_MAGIC_FILE_URI).contains(uriStr);
     }
 
-    public static void makePartUriRelateToStickerMagicUri(String partUriStr, String stickerMagicUriStr) {
+    public static void makePartUriRelateToStickerMagicUri(String partUriStr, String
+            stickerMagicUriStr) {
         Preferences.get(PREF_FILE_NAME).putString(partUriStr, stickerMagicUriStr);
     }
 
@@ -216,5 +295,29 @@ public class EmojiManager {
 
     public interface OnGetStickerFileListener {
         void onSuccess(@NonNull File file);
+    }
+
+    public static String getSkinSingleRecord(String unicode) {
+        return Preferences.get(PREF_SKIN_FILE_NAME).getString(unicode, null);
+    }
+
+    public static void addSkinSingleRecord(String unicode, String msg) {
+        Preferences.get(PREF_SKIN_FILE_NAME).putString(unicode, msg);
+    }
+
+    public static int getSkinDefault() {
+        return Preferences.get(PREF_SKIN_FILE_NAME).getInt(PREF_SKIN_SET_DEFAULT, 0);
+    }
+
+    public static void setSkinDefault(int index) {
+        Preferences.get(PREF_SKIN_FILE_NAME).putInt(PREF_SKIN_SET_DEFAULT, index);
+    }
+
+    public static int getDefaultMainPosition(){
+        return Preferences.get(PREF_FILE_NAME).getInt(PREF_DEFAULT_MAIN_POSITION, 1);
+    }
+
+    public static void setDefaultMainPosition(int position){
+        Preferences.get(PREF_FILE_NAME).putInt(PREF_DEFAULT_MAIN_POSITION, position);
     }
 }

@@ -688,7 +688,6 @@
 	<string name="menu_invite_friends">Mời Bạn bè</string>
 	<string name="invite_friends_now">MỜI NGAY</string>
 
-
     <string name="message_box_reply">Trả lời</string>
     <string name="message_box_next">KẾ TIẾP</string>
     <string name="message_box_time_ago">%1$d phút trước</string>
@@ -738,7 +737,6 @@
     <string name="backup_free_success">Giải phóng không gian thành công</string>
     <string name="restore_downloading">Đang tải xuống...</string>
 
-
     <string name="action_unarchive">"Hủy lưu trữ"</string>
     <string name="action_archive">"Lưu trữ"</string>
 
@@ -787,5 +785,10 @@
 	<string name="private_box_remove_from_box">Xóa khỏi hộp tin riêng</string>
 	<string name="private_box_move_to_box">Chuyển sang hộp tin riêng</string>
 	<string name="private_box_add_private_contacts">Vui lòng thêm liên hệ riêng tư!</string>
+
+	<string name="remove_ad">Xóa quảng cáo</string>
+	<string name="purchase">MUA</string>
+	<string name="life_time">TRỌN ĐỜI</string>
+	<string name="purchase_description">Mua phiên bản KHÔNG QUẢNG CÁO. Không còn quảng cáo.</string>
 
 </resources>

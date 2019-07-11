@@ -25,6 +25,7 @@ public class WallpaperManager {
 
     public interface WallpaperChangeListener {
         void onWallpaperChanged();
+
         void onOnlineWallpaperChanged();
     }
 
@@ -74,8 +75,8 @@ public class WallpaperManager {
                 view.setImageDrawable(new BitmapDrawable(wallpaperPath));
                 return;
             }
-        } else if (!TextUtils.isEmpty(WallpaperManager.getWallpaperPathByThreadId(conversationId))) {
-            view.setImageDrawable(new BitmapDrawable(WallpaperManager.getWallpaperPathByThreadId(conversationId)));
+        } else if (!TextUtils.isEmpty(WallpaperManager.getWallpaperPathByConversationId(conversationId))) {
+            view.setImageDrawable(new BitmapDrawable(WallpaperManager.getWallpaperPathByConversationId(conversationId)));
             return;
         }
 
@@ -83,7 +84,7 @@ public class WallpaperManager {
         view.setImageDrawable(wallpaperDrawable);
     }
 
-    public static void setConversationWallPaper(final ImageView bgView,ImageView themeBgView, String conversationId) {
+    public static void setConversationWallPaper(final ImageView bgView, ImageView themeBgView, String conversationId) {
         if (TextUtils.isEmpty(conversationId)) {
             String wallpaperPath = sPrefs.getString(PREF_KEY_WALLPAPER_PATH, "");
 
@@ -94,9 +95,9 @@ public class WallpaperManager {
             } else {
                 bgView.setImageDrawable(null);
             }
-        } else if (!TextUtils.isEmpty(WallpaperManager.getWallpaperPathByThreadId(conversationId))) {
+        } else if (!TextUtils.isEmpty(WallpaperManager.getWallpaperPathByConversationId(conversationId))) {
             bgView.setVisibility(View.VISIBLE);
-            bgView.setImageDrawable(new BitmapDrawable(WallpaperManager.getWallpaperPathByThreadId(conversationId)));
+            bgView.setImageDrawable(new BitmapDrawable(WallpaperManager.getWallpaperPathByConversationId(conversationId)));
             return;
         } else {
             bgView.setImageDrawable(null);
@@ -107,24 +108,30 @@ public class WallpaperManager {
         themeBgView.setImageDrawable(wallpaperDrawable);
     }
 
+    //if has theme wallpaper or custom wallpaper
     public static boolean hasWallpaper(String conversationId) {
-        if (TextUtils.isEmpty(WallpaperManager.getWallpaperPathByThreadId(conversationId))) {
+        if (TextUtils.isEmpty(WallpaperManager.getWallpaperPathByConversationId(conversationId))) {
             return WallpaperDrawables.hasWallpaper();
         }
         return true;
     }
 
-    public static String getWallpaperPathByThreadId(String threadId) {
+    //if has custom wallpaper
+    public static boolean hasCustomWallpaper(String conversationId) {
+        return !TextUtils.isEmpty(WallpaperManager.getWallpaperPathByConversationId(conversationId));
+    }
+
+    public static String getWallpaperPathByConversationId(String conversationId) {
         String threadWallpaperPath = sPrefs.
-                getString(PREF_KEY_WALLPAPER_PATH + "_" + threadId, "");
+                getString(PREF_KEY_WALLPAPER_PATH + "_" + conversationId, "");
         if (!TextUtils.isEmpty(threadWallpaperPath)) {
             if (threadWallpaperPath.equals("empty")) {
                 return null;
             }
             return threadWallpaperPath;
-        } else {
-            return getWallpaperPath();
         }
+        //conversationId is null or the path get by conversationId is null
+        return getWallpaperPath();
     }
 
     private static boolean isWallpaperPathEmpty(String path) {
@@ -161,9 +168,9 @@ public class WallpaperManager {
         }
     }
 
-    static void setWallpaperPath(String threadId, String path) {
-        if (!TextUtils.isEmpty(threadId)) {
-            sPrefs.putString(PREF_KEY_WALLPAPER_PATH + "_" + threadId, path);
+    static void setWallpaperPath(String conversationId, String path) {
+        if (!TextUtils.isEmpty(conversationId)) {
+            sPrefs.putString(PREF_KEY_WALLPAPER_PATH + "_" + conversationId, path);
         } else {
             sPrefs.putString(PREF_KEY_WALLPAPER_PATH, path);
         }

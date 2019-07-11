@@ -28,7 +28,6 @@ public class SettingAdvancedActivity extends BaseActivity {
     private GeneralSettingItemView mGroupMMS;
     private GeneralSettingItemView mAutoRetrieve;
     private GeneralSettingItemView mRoamingAutoRetrieve;
-    private GeneralSettingItemView mSMSDeliveryReports;
 
     final BuglePrefs mPrefs = BuglePrefs.getApplicationPrefs();
 
@@ -92,20 +91,8 @@ public class SettingAdvancedActivity extends BaseActivity {
         mRoamingAutoRetrieve.setOnItemClickListener(() -> mPrefs.putBoolean(roamingAutoRetrieveKey,
                 mRoamingAutoRetrieve.isChecked()));
 
-        //sms delivery reports
-        mSMSDeliveryReports = findViewById(R.id.setting_advanced_delivery_reports);
-        final String deliveryReportsKey = getString(R.string.delivery_reports_pref_key);
-        final BuglePrefs prefs = BuglePrefs.getSubscriptionPrefs(mSubId);
-        mSMSDeliveryReports.setChecked(prefs.getBoolean(deliveryReportsKey,
-                getResources().getBoolean(R.bool.delivery_reports_pref_default)));
-        mSMSDeliveryReports.setOnItemClickListener(() -> {
-            prefs.putBoolean(deliveryReportsKey, mSMSDeliveryReports.isChecked());
-            BugleAnalytics.logEvent("SMS_Settings_Advanced_DeliveryReports_Click", true);
-        });
-
         if (!DefaultSMSUtils.isDefaultSmsApp()) {
             mAutoRetrieve.setChecked(false);
-            mSMSDeliveryReports.setChecked(false);
         }
     }
 

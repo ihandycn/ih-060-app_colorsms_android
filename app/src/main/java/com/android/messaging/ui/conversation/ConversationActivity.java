@@ -40,6 +40,7 @@ import android.widget.TextView;
 
 import com.android.messaging.R;
 import com.android.messaging.ad.AdPlacement;
+import com.android.messaging.ad.BillingManager;
 import com.android.messaging.datamodel.BugleNotifications;
 import com.android.messaging.datamodel.MessagingContentProvider;
 import com.android.messaging.datamodel.data.MessageData;
@@ -51,6 +52,7 @@ import com.android.messaging.ui.customize.PrimaryColors;
 import com.android.messaging.ui.customize.ToolbarDrawables;
 import com.android.messaging.ui.emoji.utils.EmojiManager;
 import com.android.messaging.ui.messagebox.MessageBoxActivity;
+import com.android.messaging.ui.wallpaper.WallpaperManager;
 import com.android.messaging.util.Assert;
 import com.android.messaging.util.BugleAnalytics;
 import com.android.messaging.util.BugleApplicationPrefs;
@@ -66,6 +68,7 @@ import com.crashlytics.android.core.CrashlyticsCore;
 import com.ihs.app.framework.HSApplication;
 import com.ihs.commons.config.HSConfig;
 import com.ihs.commons.notificationcenter.HSGlobalNotificationCenter;
+import com.ihs.commons.utils.HSLog;
 import com.superapps.debug.CrashlyticsLog;
 import com.superapps.util.Dimensions;
 import com.superapps.util.IntegerBuckets;
@@ -102,7 +105,6 @@ public class ConversationActivity extends BugleActionBarActivity
 
     private AcbInterstitialAd mInterstitialAd;
     private long mCreateTime;
-    private Toolbar toolbar;
     private boolean fromCreateConversation;
     private String mConversationId;
 
@@ -197,16 +199,14 @@ public class ConversationActivity extends BugleActionBarActivity
 
     @Override
     public void onGlobalLayout() {
-        Rect r = new Rect();
         if (mContainer != null && mKeyboardHeight == 0) {
-            int statusBarHeight = Dimensions.getStatusBarHeight(this);
-            int navigationBarHeight = Dimensions.getNavigationBarHeight(this);
-            mContainer.getWindowVisibleDisplayFrame(r);
-            int screenHeight = mContainer.getRootView().getHeight();
-            int heightDiff = screenHeight - (r.bottom - r.top);
-
-            if (heightDiff > statusBarHeight + navigationBarHeight + Dimensions.pxFromDp(20)) {
-                mKeyboardHeight = heightDiff - statusBarHeight - navigationBarHeight;
+            Rect r = new Rect();
+            View view = getWindow().getDecorView();
+            view.getWindowVisibleDisplayFrame(r);
+            int heightDiff = mContainer.getHeight()- r.height() -
+                    Dimensions.getStatusBarHeight(this);
+            if (heightDiff > Dimensions.pxFromDp(120)) {
+                mKeyboardHeight = heightDiff;
                 UiUtils.updateKeyboardHeight(mKeyboardHeight);
             }
         }
@@ -226,15 +226,11 @@ public class ConversationActivity extends BugleActionBarActivity
         mTitleTextView.setVisibility(View.VISIBLE);
     }
 
-    private void initActionBar() {
+    private void refreshActionBarBg() {
         View accessoryContainer = findViewById(R.id.accessory_container);
-        ViewGroup.LayoutParams layoutParams = accessoryContainer.getLayoutParams();
-        layoutParams.height = Dimensions.getStatusBarHeight(ConversationActivity.this) + Dimensions.pxFromDp(56);
-        accessoryContainer.setLayoutParams(layoutParams);
-
         Drawable toolbarBg = ToolbarDrawables.getToolbarBg();
-
-        if (toolbarBg != null) {
+        if (toolbarBg != null
+                && WallpaperManager.getWallpaperPathByConversationId(mConversationId) == null) {
             ImageView ivAccessoryBg = accessoryContainer.findViewById(R.id.accessory_bg);
             ivAccessoryBg.setVisibility(View.VISIBLE);
             ivAccessoryBg.setImageDrawable(toolbarBg);
@@ -242,13 +238,20 @@ public class ConversationActivity extends BugleActionBarActivity
             accessoryContainer.setBackgroundColor(PrimaryColors.getPrimaryColor());
             accessoryContainer.findViewById(R.id.accessory_bg).setVisibility(View.GONE);
         }
+    }
+
+    private void initActionBar() {
+        View accessoryContainer = findViewById(R.id.accessory_container);
+        ViewGroup.LayoutParams layoutParams = accessoryContainer.getLayoutParams();
+        layoutParams.height = Dimensions.getStatusBarHeight(ConversationActivity.this) + Dimensions.pxFromDp(56);
+        accessoryContainer.setLayoutParams(layoutParams);
 
         View statusbarInset = findViewById(R.id.status_bar_inset);
         layoutParams = statusbarInset.getLayoutParams();
         layoutParams.height = Dimensions.getStatusBarHeight(ConversationActivity.this);
         statusbarInset.setLayoutParams(layoutParams);
 
-        toolbar = findViewById(R.id.toolbar);
+        Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         mTitleTextView = findViewById(R.id.toolbar_title);
     }
@@ -279,7 +282,7 @@ public class ConversationActivity extends BugleActionBarActivity
     @Override
     protected void onResume() {
         super.onResume();
-
+        refreshActionBarBg();
         // we need to reset the mInstanceStateSaved flag since we may have just been restored from
         // a previous onStop() instead of an onDestroy().
         mInstanceStateSaved = false;
@@ -367,6 +370,10 @@ public class ConversationActivity extends BugleActionBarActivity
     }
 
     private void showInterstitialAd() {
+        if (BillingManager.isPremiumUser()) {
+            return;
+        }
+
         final ConversationFragment conversationFragment = getConversationFragment();
         if (conversationFragment != null) {
             IntegerBuckets integerBuckets = new IntegerBuckets(5, 10, 15, 20, 30, 60, 120, 180, 300);

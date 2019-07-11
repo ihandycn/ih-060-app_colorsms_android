@@ -1,9 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
-<TextView android:id="@+id/emoji_text"
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="29dp"
-    android:layout_height="29dp"
-    android:background="@drawable/material_compat_button_bg"
-    android:gravity="center"
-    android:textColor="#000000"
-    android:textSize="22dp" />
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/emoji_item_container"
+    android:layout_width="match_parent"
+    android:layout_height="42.7dp"
+    android:layout_marginTop="1dp"
+    android:layout_marginBottom="1dp">
+    <ImageView
+        android:id="@+id/emoji_view"
+        android:layout_width="32dp"
+        android:layout_height="32dp"
+        android:includeFontPadding="false"
+        android:gravity="center"
+        android:layout_centerInParent="true"
+        android:textColor="#000000" />
+
+    <ImageView
+        android:id="@+id/emoji_more"
+        android:layout_width="5.7dp"
+        android:layout_height="5.3dp"
+        android:layout_alignEnd="@id/emoji_view"
+        android:layout_alignBottom="@id/emoji_view"
+        android:src="@drawable/emoji_item_more"
+        android:visibility="gone" />
+</RelativeLayout>

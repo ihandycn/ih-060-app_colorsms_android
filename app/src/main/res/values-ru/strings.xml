@@ -739,7 +739,6 @@
 	<string name="menu_invite_friends">Пригласить друзей</string>
 	<string name="invite_friends_now">ПРИГЛАСИТЬ</string>
 
-
     <string name="invite_friends_add_friends">ДОБАВИТЬ</string>
     <string name="invite_friends_default_back_to_main_page_title">Пригласить друзей</string>
     <string name="invite_friends_invite_cancel_button">Отмена</string>
@@ -833,5 +832,10 @@
 	<string name="private_box_remove_from_box">Удалить из личных сообщений</string>
 	<string name="private_box_move_to_box">Переместить в личные сообщения</string>
 	<string name="private_box_add_private_contacts">Добавьте личные контакты!</string>
+
+	<string name="remove_ad">Убрать рекламу</string>
+	<string name="purchase">КУПИТЬ</string>
+	<string name="life_time">НАВСЕГДА</string>
+	<string name="purchase_description">Купите версию БЕЗ РЕКЛАМЫ. Больше никакой рекламы.</string>
 
 </resources>

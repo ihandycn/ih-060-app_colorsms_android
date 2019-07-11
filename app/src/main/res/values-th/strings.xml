@@ -736,7 +736,6 @@
     <string name="privacy_mode_conversation_name">รายชื่อติดต่อ</string>
     <string name="contacts">รายชื่อติดต่อ</string>
 
-
     <string name="action_unarchive">"ยกเลิกการเก็บถาวร"</string>
     <string name="action_archive">"เก็บถาวร"</string>
 
@@ -784,5 +783,10 @@
 	<string name="private_box_remove_from_box">นำออกจากกล่องส่วนตัว</string>
 	<string name="private_box_move_to_box">ย้ายไปยังกล่องส่วนตัว</string>
 	<string name="private_box_add_private_contacts">กรุณาเพิ่มรายชื่อติดต่อส่วนตัว!</string>
+
+	<string name="remove_ad">ลบโฆษณา</string>
+	<string name="purchase">ซื้อ</string>
+	<string name="life_time">ตลอดชีพ</string>
+	<string name="purchase_description">ซื้อเวอร์ชันปลอดโฆษณา ไม่มีโฆษณาอีกต่อไป</string>
 
 </resources>

@@ -786,4 +786,9 @@
 	<string name="private_box_move_to_box">プライベート受信箱に移動する</string>
 	<string name="private_box_add_private_contacts">プライベートな連絡先を追加してください！</string>
 
+	<string name="remove_ad">広告削除</string>
+	<string name="purchase">購入</string>
+	<string name="life_time">永久的</string>
+	<string name="purchase_description">広告なしバージョンを購入してください。もう広告を見ることはありません。</string>
+
 </resources>

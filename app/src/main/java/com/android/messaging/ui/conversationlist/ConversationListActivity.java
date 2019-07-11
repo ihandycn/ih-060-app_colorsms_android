@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.provider.Telephony;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
+import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.content.pm.ShortcutManagerCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
@@ -31,6 +32,8 @@ import com.android.messaging.BuildConfig;
 import com.android.messaging.R;
 import com.android.messaging.ad.AdConfig;
 import com.android.messaging.ad.AdPlacement;
+import com.android.messaging.backup.BackupAutopilotUtils;
+import com.android.messaging.ad.BillingManager;
 import com.android.messaging.backup.ui.BackupGuideDialogActivity;
 import com.android.messaging.backup.ui.BackupRestoreActivity;
 import com.android.messaging.backup.ui.ChooseBackupViewHolder;
@@ -41,6 +44,7 @@ import com.android.messaging.datamodel.DatabaseHelper;
 import com.android.messaging.datamodel.DatabaseWrapper;
 import com.android.messaging.datamodel.data.MessageBoxItemData;
 import com.android.messaging.font.ChangeFontActivity;
+import com.android.messaging.font.FontDownloadManager;
 import com.android.messaging.font.FontStyleManager;
 import com.android.messaging.mmslib.SqliteWrapper;
 import com.android.messaging.privatebox.AppPrivateLockManager;
@@ -67,10 +71,12 @@ import com.android.messaging.ui.customize.theme.ThemeSelectActivity;
 import com.android.messaging.ui.customize.theme.ThemeUtils;
 import com.android.messaging.ui.dialog.FiveStarRateDialog;
 import com.android.messaging.ui.emoji.EmojiStoreActivity;
+import com.android.messaging.ui.emoji.utils.EmojiManager;
 import com.android.messaging.ui.invitefriends.InviteFriendsActivity;
 import com.android.messaging.ui.messagebox.MessageBoxActivity;
 import com.android.messaging.ui.messagebox.MessageBoxSettings;
 import com.android.messaging.ui.signature.SignatureSettingDialog;
+import com.android.messaging.ui.smspro.BillingActivity;
 import com.android.messaging.ui.wallpaper.WallpaperChooserItem;
 import com.android.messaging.ui.wallpaper.WallpaperDownloader;
 import com.android.messaging.ui.wallpaper.WallpaperManager;
@@ -108,6 +114,7 @@ import java.util.Map;
 
 import hugo.weaving.DebugLog;
 
+import static com.android.messaging.ad.BillingManager.BILLING_VERIFY_SUCCESS;
 import static com.android.messaging.ui.dialog.FiveStarRateDialog.DESKTOP_PREFS;
 import static com.android.messaging.ui.dialog.FiveStarRateDialog.PREF_KEY_MAIN_ACTIVITY_SHOW_TIME;
 import static com.android.messaging.ui.invitefriends.InviteFriendsActivity.INTENT_KEY_FROM;
@@ -152,6 +159,7 @@ public class ConversationListActivity extends AbstractConversationListActivity
     private static final int DRAWER_INDEX_INVITE_FRIENDS = 8;
     private static final int DRAWER_INDEX_BACKUP_RESTORE = 9;
     private static final int DRAWER_INDEX_EMOJI_STORE = 10;
+    private static final int DRAWER_INDEX_REMOVE_ADS = 11;
 
     private int drawerClickIndex = DRAWER_INDEX_NONE;
 
@@ -218,12 +226,13 @@ public class ConversationListActivity extends AbstractConversationListActivity
         HSGlobalNotificationCenter.addObserver(SHOW_EMOJI, this);
         HSGlobalNotificationCenter.addObserver(FIRST_LOAD, this);
         HSGlobalNotificationCenter.addObserver(NOTIFICATION_NAME_MESSAGES_MOVE_END, this);
+        HSGlobalNotificationCenter.addObserver(BILLING_VERIFY_SUCCESS, this);
 
         BugleAnalytics.logEvent("SMS_ActiveUsers", true);
 
         if (!sIsRecreate) {
             Threads.postOnThreadPoolExecutor(() -> {
-                String bgPath = WallpaperManager.getWallpaperPathByThreadId(null);
+                String bgPath = WallpaperManager.getWallpaperPathByConversationId(null);
                 String backgroundStr;
                 int wallpaperIndex = 99;
                 if (TextUtils.isEmpty(bgPath)) {
@@ -415,6 +424,7 @@ public class ConversationListActivity extends AbstractConversationListActivity
                 setDrawerMenuIcon();
                 BugleAnalytics.logEvent("Menu_Show_NewVersion", true);
                 BugleAnalytics.logEvent("Menu_Show", true, true);
+                BackupAutopilotUtils.logMenuShow();
                 if (CommonUtils.isNewUser()
                         && Calendars.isSameDay(CommonUtils.getAppInstallTimeMillis(), System.currentTimeMillis())) {
                     BugleAnalytics.logEvent("Menu_Show_NewUser", true);
@@ -481,6 +491,7 @@ public class ConversationListActivity extends AbstractConversationListActivity
                         break;
                     case DRAWER_INDEX_BACKUP_RESTORE:
                         BugleAnalytics.logEvent("Menu_BackupRestore_Click", true);
+                        BackupAutopilotUtils.logMenuBackupClick();
                         BackupRestoreActivity.startBackupRestoreActivity(ConversationListActivity.this, BackupRestoreActivity.ENTRANCE_MENU);
                         overridePendingTransition(R.anim.slide_in_from_right_and_fade, R.anim.anim_null);
                         navigationContent.findViewById(R.id.navigation_item_backup_restore_new_text).setVisibility(View.GONE);
@@ -525,6 +536,16 @@ public class ConversationListActivity extends AbstractConversationListActivity
                     case DRAWER_INDEX_RATE:
                         FiveStarRateDialog.showFiveStarFromSetting(ConversationListActivity.this);
                         BugleAnalytics.logEvent("Menu_FiveStart_Click", true, true);
+                        break;
+                    case DRAWER_INDEX_REMOVE_ADS:
+                        Intent goSmsProIntent = new Intent(ConversationListActivity.this, BillingActivity.class);
+                        ActivityOptionsCompat options =
+                                ActivityOptionsCompat.makeCustomAnimation(ConversationListActivity.this, R.anim.fade_in, R.anim.anim_null);
+                        startActivity(goSmsProIntent, options.toBundle());
+                        BugleAnalytics.logEvent("SMS_Menu_Subscription_Click", true, false);
+
+                        BugleAnalytics.logEvent("Subscription_Analysis",
+                                false, true, "Menu_Subscription_Click", "true");
                         break;
                     case DRAWER_INDEX_NONE:
                     default:
@@ -579,8 +600,22 @@ public class ConversationListActivity extends AbstractConversationListActivity
         navigationContent.findViewById(R.id.navigation_item_setting).setOnClickListener(this);
         navigationContent.findViewById(R.id.navigation_item_rate).setOnClickListener(this);
         navigationContent.findViewById(R.id.navigation_item_invite_friends).setOnClickListener(this);
-        navigationContent.findViewById(R.id.navigation_item_backup_restore).setOnClickListener(this);
         navigationContent.findViewById(R.id.navigation_item_emoji_store).setOnClickListener(this);
+
+        View backupEntrance = navigationContent.findViewById(R.id.navigation_item_backup_restore);
+        backupEntrance.setOnClickListener(this);
+        if (!BackupAutopilotUtils.getIsBackupSwitchOn()) {
+            backupEntrance.setVisibility(View.GONE);
+        } else {
+            backupEntrance.setVisibility(View.VISIBLE);
+        }
+
+        if (HSConfig.optBoolean(false, "Application", "Subscription", "Enabled")
+                && !BillingManager.isPremiumUser()) {
+            navigationContent.findViewById(R.id.navigation_item_remove_ads).setOnClickListener(this);
+        } else {
+            navigationContent.findViewById(R.id.navigation_item_remove_ads).setVisibility(View.GONE);
+        }
 
         //test code
         //this item is used to delete dirty mms parts in telephony
@@ -679,10 +714,12 @@ public class ConversationListActivity extends AbstractConversationListActivity
         // show backup full guide
         if (!shouldShowCreateShortcutGuide
                 && mainActivityCreateTime >= 2 && CommonUtils.isNewUser()
-                && HSConfig.optBoolean(false, "Application", "BackupRestore", "RecommendFull")
                 && !Preferences.getDefault().getBoolean(BackupRestoreActivity.PREF_KEY_BACKUP_ACTIVITY_SHOWN, false)
                 && !Preferences.getDefault()
-                .getBoolean(BackupGuideDialogActivity.PREF_KEY_BACKUP_FULL_GUIDE_SHOWN, false)) {
+                .getBoolean(BackupGuideDialogActivity.PREF_KEY_BACKUP_FULL_GUIDE_SHOWN, false)
+                && BackupAutopilotUtils.getIsBackupSwitchOn()
+                && (HSConfig.optBoolean(false, "Application", "BackupRestore", "RecommendFull")
+                || BackupAutopilotUtils.getIsBackupFullScreenGuideSwitchOn())) {
             shouldShowCreateShortcutGuide = true;
             Intent intent = new Intent(this, BackupGuideDialogActivity.class);
             Navigations.startActivitySafely(this, intent);
@@ -897,6 +934,10 @@ public class ConversationListActivity extends AbstractConversationListActivity
                 drawerClickIndex = DRAWER_INDEX_PRIVACY_BOX;
                 drawerLayout.closeDrawer(navigationView);
                 break;
+            case R.id.navigation_item_remove_ads:
+                drawerClickIndex = DRAWER_INDEX_REMOVE_ADS;
+                drawerLayout.closeDrawer(navigationView);
+                break;
         }
     }
 
@@ -941,7 +982,12 @@ public class ConversationListActivity extends AbstractConversationListActivity
                                 "pin", String.valueOf(hasPinConversation),
                                 "backup", String.valueOf(Preferences.getDefault().getBoolean(
                                         ChooseBackupViewHolder.PREF_KEY_BACKUP_SUCCESS_FOR_EVENT, false)),
-                                "archive", String.valueOf(archivedCount > 0));
+                                "archive", String.valueOf(archivedCount > 0),
+                                "emojiskintone", String.valueOf(EmojiManager.getSkinDefault() + 1));
+
+                        BugleAnalytics.logEvent("SMS_Messages_Show_2", true,
+                                "subscription", String.valueOf(BillingManager.isPremiumUser()));
+
                     });
                 }
                 break;
@@ -950,6 +996,13 @@ public class ConversationListActivity extends AbstractConversationListActivity
                     mIsMessageMoving = false;
                     Toasts.showToast(R.string.private_box_add_to_success);
                 }
+                break;
+            case BILLING_VERIFY_SUCCESS:
+                final ConversationListFragment conversationListFragment =
+                        (ConversationListFragment) getFragmentManager().findFragmentById(
+                                R.id.conversation_list_fragment);
+                conversationListFragment.disableTopNativeAd();
+                findViewById(R.id.navigation_item_remove_ads).setVisibility(View.GONE);
                 break;
             default:
                 break;

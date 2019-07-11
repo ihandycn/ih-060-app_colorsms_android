@@ -49,7 +49,9 @@ import android.widget.TextView;
 import com.android.messaging.R;
 import com.android.messaging.ad.AdConfig;
 import com.android.messaging.ad.AdPlacement;
+import com.android.messaging.ad.BillingManager;
 import com.android.messaging.annotation.VisibleForAnimation;
+import com.android.messaging.backup.BackupAutopilotUtils;
 import com.android.messaging.backup.ui.BackupRestoreActivity;
 import com.android.messaging.datamodel.DataModel;
 import com.android.messaging.datamodel.binding.Binding;
@@ -469,7 +471,12 @@ public class ConversationListFragment extends Fragment implements ConversationLi
             });
             return;
         }
-        mBackupBannerGuideContainer.setVisibility(View.VISIBLE);
+
+        if (BackupAutopilotUtils.getIsBackupSwitchOn()) {
+            mBackupBannerGuideContainer.setVisibility(View.VISIBLE);
+        } else {
+            mBackupBannerGuideContainer.setVisibility(View.GONE);
+        }
 
         title.setText(HSApplication.getContext().getString(R.string.backup_banner_guide_title, 30));
         Threads.postOnThreadPoolExecutor(() -> {
@@ -527,6 +534,10 @@ public class ConversationListFragment extends Fragment implements ConversationLi
 
     private void tryShowTopNativeAd() {
         HSLog.d("try show top native ad");
+        if (BillingManager.isPremiumUser()) {
+            return;
+        }
+
         if (!AdConfig.isHomepageBannerAdEnabled()) {
             return;
         }
@@ -547,7 +558,8 @@ public class ConversationListFragment extends Fragment implements ConversationLi
         if (nativeAds.size() > 0) {
             mNativeAd = nativeAds.get(0);
             mNativeAd.setNativeClickListener(
-                    acbAd -> BugleAnalytics.logEvent("SMS_Messages_BannerAd_Click", true, true));
+                    acbAd -> BugleAnalytics.logEvent("SMS_Messages_BannerAd_Click", true, true,
+                            "theme", String.valueOf(ThemeUtils.isDefaultTheme())));
             showTopNativeAd();
         } else {
             mNativeAdLoader = AcbNativeAdManager.createLoaderWithPlacement(AdPlacement.AD_BANNER);
@@ -557,7 +569,8 @@ public class ConversationListFragment extends Fragment implements ConversationLi
                     if (list.size() > 0) {
                         mNativeAd = list.get(0);
                         mNativeAd.setNativeClickListener(
-                                acbAd -> BugleAnalytics.logEvent("SMS_Messages_BannerAd_Click", true, true));
+                                acbAd -> BugleAnalytics.logEvent("SMS_Messages_BannerAd_Click", true, true,
+                                        "theme", String.valueOf(ThemeUtils.isDefaultTheme())));
                         showTopNativeAd();
                     }
                     isAdLoading = false;
@@ -629,8 +642,23 @@ public class ConversationListFragment extends Fragment implements ConversationLi
                 mRecyclerView.scrollToPosition(0);
             }
         }
-        BugleAnalytics.logEvent("SMS_Messages_BannerAd_Show", true, true);
+        BugleAnalytics.logEvent("SMS_Messages_BannerAd_Show", true, true,
+                "theme", String.valueOf(ThemeUtils.isDefaultTheme()));
         AutopilotEvent.logTopicEvent("topic-768lyi3sp", "bannerad_show");
+    }
+
+    public void disableTopNativeAd() {
+        if (mNativeAd != null) {
+            mNativeAd.release();
+            mNativeAd = null;
+        }
+        if (mNativeAdLoader != null) {
+            mNativeAdLoader.cancel();
+            mNativeAdLoader = null;
+        }
+        if (mAdapter.hasHeader()) {
+            mAdapter.setHeader(null);
+        }
     }
 
     @Override
@@ -879,4 +907,5 @@ public class ConversationListFragment extends Fragment implements ConversationLi
     public boolean isArchived() {
         return mArchiveMode;
     }
+
 }

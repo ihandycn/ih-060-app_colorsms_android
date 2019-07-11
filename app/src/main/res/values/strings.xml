@@ -943,7 +943,7 @@
     <string name="sms_emoji_get">GET</string>
     <string name="sms_emoji_added">ADDED</string>
     <string name="sms_emoji_add_more">More emojis</string>
-    <string name="sms_emoji_recent_empty_description">Click an emoji to share with friends.</string>
+    <string name="sms_emoji_recent_empty_description">No Recent</string>
 
     <!--sms show-->
     <string name="sms_show_apply">APPLY</string>
@@ -1109,6 +1109,8 @@
     <string name="message_box_send_failed_toast">Failed to send</string>
     <string name="message_box_indicator" translatable="false">%1$d \/ %2$d</string>
 
+    <string name="emoji_skin_tone_setting">Emoji Skin Tone</string>
+
     <string name="privacy_mode_settings">Privacy Mode</string>
     <string name="privacy_mode_disable">None</string>
     <string name="privacy_mode_hide_message_only">Hide message only</string>
@@ -1230,6 +1232,15 @@
     <string name="invite_friends_invite_edit_button">Edit</string>
     <string name="invite_friends_invite_send_sms_description">Send SMS to the friend that you’d like to invite</string>
 
+    <!--New setting-->
+    <string name="emoji">Emoji</string>
+    <string name="others">Others</string>
+    <string name="about">About</string>
+    <string name="notification_summary">Get notify when receiving messages</string>
+
+    <!--archive-->
+    <string name="archived_conversations">Archived Conversations</string>
+
     <string name="message_copied">Copied to clipboard</string>
     <string name="conversation_pinned">Pinned to top</string>
     <string name="conversation_unpinned">Unpinned</string>
@@ -1298,15 +1309,12 @@
     <string name="backup_local_summary">Back up to local storage</string>
     <string name="backup_free_success">Free Up Space Successfully</string>
 
-    <!--New setting-->
-    <string name="emoji" translatable="false">Emoji</string>
-    <string name="others">Others</string>
-    <string name="about">About</string>
-    <string name="notification_summary">Get notify when receiving messages</string>
-
-    <!--archive-->
-    <string name="archived_conversations">Archived Conversations</string>
-
+    <string name="life_time">LIFETIME</string>
+    <string name="purchase">PURCHASE</string>
+    <string name="remove_ad">Remove Ads</string>
+    <string name="purchase_description">Purchase the AD-FREE version. No ads ever again.</string>
+    <string name="purchase_failed">failed</string>
     <string name="switch_sim">Switch SIM</string>
+    
 </resources>
 

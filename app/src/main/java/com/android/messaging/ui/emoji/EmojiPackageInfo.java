@@ -11,6 +11,8 @@ public class EmojiPackageInfo implements Parcelable {
     public EmojiPackageType mEmojiPackageType;
 
     public String mTabIconUrl;
+    public String mTabIconSelectedUrl;
+
     public String mName;
     public String mBannerUrl;
     public List<BaseEmojiInfo> mEmojiInfoList;
@@ -22,6 +24,7 @@ public class EmojiPackageInfo implements Parcelable {
     @Override public void writeToParcel(Parcel dest, int flags) {
         dest.writeInt(this.mEmojiPackageType == null ? -1 : this.mEmojiPackageType.ordinal());
         dest.writeString(this.mTabIconUrl);
+        dest.writeString(this.mTabIconSelectedUrl);
         dest.writeString(this.mName);
         dest.writeString(this.mBannerUrl);
         dest.writeList(this.mEmojiInfoList);
@@ -34,6 +37,7 @@ public class EmojiPackageInfo implements Parcelable {
         int tmpMEmojiPackageType = in.readInt();
         this.mEmojiPackageType = tmpMEmojiPackageType == -1 ? null : EmojiPackageType.values()[tmpMEmojiPackageType];
         this.mTabIconUrl = in.readString();
+        this.mTabIconSelectedUrl = in.readString();
         this.mName = in.readString();
         this.mBannerUrl = in.readString();
         this.mEmojiInfoList = new ArrayList<>();

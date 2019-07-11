@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <android.support.design.widget.TabLayout
+        android:id="@+id/emoji_item_tab_layout"
+        android:layout_width="match_parent"
+        android:layout_height="34.7dp"
+        app:tabMaxWidth="0dp"
+        app:tabMinWidth="0dp"
+        app:tabTextColor="#a2a5a7"
+        app:tabSelectedTextColor="#515458"
+        app:tabTextAppearance="@style/TabLayoutTextAppearance"
+        app:tabMode="scrollable" />
+
+    <com.superapps.view.ViewPagerFixed
+        android:id="@+id/emoji_item_pager"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+</LinearLayout>
