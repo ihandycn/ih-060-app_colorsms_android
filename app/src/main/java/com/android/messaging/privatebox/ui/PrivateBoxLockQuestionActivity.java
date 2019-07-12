@@ -36,7 +36,7 @@ import com.superapps.util.Dimensions;
 import com.superapps.util.Navigations;
 import com.superapps.util.Preferences;
 
-public class PrivateBoxLockQuestionActivity extends HSAppCompatActivity implements View.OnClickListener{
+public class PrivateBoxLockQuestionActivity extends HSAppCompatActivity implements View.OnClickListener {
 
     public static final String INTENT_KEY_IS_SETTING_QUESTION = "INTENT_KEY_IS_SETTING_QUESTION";
     public static final String INTENT_KEY_IS_FIRST_SETTING_QUESTION = "INTENT_KEY_IS_FIRST_SETTING_QUESTION";
@@ -109,10 +109,10 @@ public class PrivateBoxLockQuestionActivity extends HSAppCompatActivity implemen
         isBirthdayQuestion = (POSITION_BIRTHDAY < questions.length && savedQuestion.equals(questions[POSITION_BIRTHDAY]));
 
         if (isSettingQuestion) {
-            if(getIntent().getBooleanExtra(INTENT_KEY_IS_FIRST_SETTING_QUESTION, false)){
-                BugleAnalytics.logEvent("PrivateBox_SecurityQuestion_Show", true,"from", "firstsetcode");
+            if (getIntent().getBooleanExtra(INTENT_KEY_IS_FIRST_SETTING_QUESTION, false)) {
+                BugleAnalytics.logEvent("PrivateBox_SecurityQuestion_Show", true, "from", "firstsetcode");
             } else {
-                BugleAnalytics.logEvent("PrivateBox_SecurityQuestion_Show", true,"from", "settings");
+                BugleAnalytics.logEvent("PrivateBox_SecurityQuestion_Show", true, "from", "settings");
             }
             ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
                     R.array.question_spinner_content,
@@ -209,9 +209,13 @@ public class PrivateBoxLockQuestionActivity extends HSAppCompatActivity implemen
     }
 
     private void showSoftKeyboard() {
-        if (answerEditText.requestFocus()) {
-            InputMethodManager imm = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
-            imm.showSoftInput(answerEditText, InputMethodManager.SHOW_IMPLICIT);
+        try {
+            if (answerEditText.requestFocus()) {
+                InputMethodManager imm = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
+                imm.showSoftInput(answerEditText, InputMethodManager.SHOW_IMPLICIT);
+            }
+        } catch (Exception e) {
+            // ignore samsung crash
         }
     }
 
@@ -307,6 +311,7 @@ public class PrivateBoxLockQuestionActivity extends HSAppCompatActivity implemen
         inputManager.hideSoftInputFromWindow(et.getWindowToken(),
                 InputMethodManager.RESULT_UNCHANGED_SHOWN);
     }
+
     private void setAnswerStatus(String selectQuestion) {
         if (!isBirthdayQuestion && !TextUtils.isEmpty(selectQuestion) && selectQuestion.equals(savedQuestion)) {
             answerEditText.setText(savedAnswer);
@@ -365,7 +370,7 @@ public class PrivateBoxLockQuestionActivity extends HSAppCompatActivity implemen
             prefs.putString(PREF_KEY_SECURITY_ANSWER, answer);
             PrivateBoxSettings.setSecurityQuestionSet(true);
             if (getIntent().getBooleanExtra(INTENT_KEY_IS_FIRST_SETTING_QUESTION, false)) {
-                BugleAnalytics.logEvent("PrivateBox_SecurityQuestion_Set_Click", true,"from", "firstsetcode");
+                BugleAnalytics.logEvent("PrivateBox_SecurityQuestion_Set_Click", true, "from", "firstsetcode");
                 Intent intent = new Intent(PrivateBoxLockQuestionActivity.this, PrivateConversationListActivity.class);
                 if (getIntent().hasExtra(ConversationListActivity.INTENT_KEY_PRIVATE_CONVERSATION_LIST)) {
                     intent.putExtra(ConversationListActivity.INTENT_KEY_PRIVATE_CONVERSATION_LIST,
@@ -377,7 +382,7 @@ public class PrivateBoxLockQuestionActivity extends HSAppCompatActivity implemen
                 finishWithoutOverridePendingTransition();
             } else {
                 finish();
-                BugleAnalytics.logEvent("PrivateBox_SecurityQuestion_Set_Click", true,"from", "settings");
+                BugleAnalytics.logEvent("PrivateBox_SecurityQuestion_Set_Click", true, "from", "settings");
             }
         } else { // Is answering question
             String answer = answerEditText.getText().toString().trim();
