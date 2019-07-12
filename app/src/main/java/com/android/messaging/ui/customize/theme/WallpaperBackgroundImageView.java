@@ -4,6 +4,8 @@ import android.content.Context;
 import android.support.v7.widget.AppCompatImageView;
 import android.util.AttributeSet;
 
+import com.superapps.util.Dimensions;
+
 public class WallpaperBackgroundImageView extends AppCompatImageView {
 
     public WallpaperBackgroundImageView(Context context) {
@@ -20,15 +22,7 @@ public class WallpaperBackgroundImageView extends AppCompatImageView {
 
     @Override
     public void layout(int l, int t, int r, int b) {
-        int[] params = WallpaperSizeManager.getInstance().getWallpaperFrameSize();
-        if (params != null) {
-            int width = params[0];
-            int height = params[1];
-            int l1 = 1;
-            l = l - (width - r + l1) / 2;
-            r = r + (width - r + l1) / 2;
-            b = t + height;
-        }
+        b = Dimensions.getPhoneHeight(getContext()) - Dimensions.pxFromDp(56) - Dimensions.getStatusBarHeight(getContext());
         super.layout(l, t, r, b);
     }
 }

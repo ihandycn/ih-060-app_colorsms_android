@@ -87,11 +87,11 @@ public class ThemeUtils {
                     new ThemeDownloadManager.IThemeMoveListener() {
                         @Override
                         public void onMoveSuccess() {
+                            WallpaperSizeManager.resizeThemeBitmap(themeInfo);
                             FontUtils.onFontTypefaceChanged();
 
                             Threads.postOnMainThread(() ->
                                     HSGlobalNotificationCenter.sendNotification(ConversationListActivity.EVENT_MAINPAGE_RECREATE));
-                            WallpaperSizeManager.getInstance().loadWallpaperParams();
                         }
 
                         @Override
@@ -104,7 +104,6 @@ public class ThemeUtils {
 
             Threads.postOnMainThread(() ->
                     HSGlobalNotificationCenter.sendNotification(ConversationListActivity.EVENT_MAINPAGE_RECREATE));
-            WallpaperSizeManager.getInstance().loadWallpaperParams();
         }
 
         Factory.get().reclaimMemory();

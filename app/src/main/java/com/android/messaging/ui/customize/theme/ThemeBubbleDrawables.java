@@ -21,7 +21,7 @@ public class ThemeBubbleDrawables {
     public static final String THEME_BASE_PATH = "theme" + File.separator;
 
     public static final String WALLPAPER_BG_FILE_NAME = "wallpaper";
-    public static final String LIST_VIEW_WALLPAPER_BG_FILE_NAME = "list_wallpaper";
+    public static final String LIST_WALLPAPER_BG_FILE_NAME = "list_wallpaper";
     public static final String TOOLBAR_BG_FILE_NAME = "toolbar";
     static final String INCOMING_BUBBLE_FILE_NAME = "incoming_bubble";
     static final String OUTGOING_BUBBLE_FILE_NAME = "outgoing_bubble";

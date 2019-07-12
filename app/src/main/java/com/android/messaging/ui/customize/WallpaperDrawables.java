@@ -6,7 +6,6 @@ import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.text.TextUtils;
 
-import com.android.messaging.ui.customize.theme.ThemeDownloadManager;
 import com.android.messaging.ui.customize.theme.ThemeInfo;
 import com.android.messaging.ui.customize.theme.ThemeBubbleDrawables;
 import com.android.messaging.ui.customize.theme.ThemeUtils;
@@ -94,7 +93,7 @@ public class WallpaperDrawables {
 
         File file = new File(CommonUtils.getDirectory(
                 ThemeBubbleDrawables.THEME_BASE_PATH + info.mThemeKey),
-                ThemeBubbleDrawables.LIST_VIEW_WALLPAPER_BG_FILE_NAME);
+                ThemeBubbleDrawables.LIST_WALLPAPER_BG_FILE_NAME);
 
         if (file.exists()) {
             try {
