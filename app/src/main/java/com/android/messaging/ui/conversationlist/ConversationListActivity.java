@@ -44,7 +44,6 @@ import com.android.messaging.datamodel.DatabaseHelper;
 import com.android.messaging.datamodel.DatabaseWrapper;
 import com.android.messaging.datamodel.data.MessageBoxItemData;
 import com.android.messaging.font.ChangeFontActivity;
-import com.android.messaging.font.FontDownloadManager;
 import com.android.messaging.font.FontStyleManager;
 import com.android.messaging.mmslib.SqliteWrapper;
 import com.android.messaging.privatebox.AppPrivateLockManager;
@@ -160,6 +159,7 @@ public class ConversationListActivity extends AbstractConversationListActivity
     private static final int DRAWER_INDEX_BACKUP_RESTORE = 9;
     private static final int DRAWER_INDEX_EMOJI_STORE = 10;
     private static final int DRAWER_INDEX_REMOVE_ADS = 11;
+    private static final int DRAWER_INDEX_CHAT_LIST = 12;
 
     private int drawerClickIndex = DRAWER_INDEX_NONE;
 
@@ -477,6 +477,8 @@ public class ConversationListActivity extends AbstractConversationListActivity
                         overridePendingTransition(R.anim.slide_in_from_right_and_fade, R.anim.anim_null);
                         navigationContent.findViewById(R.id.navigation_item_background_new_text).setVisibility(View.GONE);
                         break;
+                    case DRAWER_INDEX_CHAT_LIST:
+                        break;
                     case DRAWER_INDEX_CHANGE_FONT:
                         BugleAnalytics.logEvent("Menu_ChangeFont_Click");
                         Navigations.startActivity(ConversationListActivity.this, ChangeFontActivity.class);
@@ -601,6 +603,7 @@ public class ConversationListActivity extends AbstractConversationListActivity
         navigationContent.findViewById(R.id.navigation_item_rate).setOnClickListener(this);
         navigationContent.findViewById(R.id.navigation_item_invite_friends).setOnClickListener(this);
         navigationContent.findViewById(R.id.navigation_item_emoji_store).setOnClickListener(this);
+        navigationContent.findViewById(R.id.navigation_item_chat_list).setOnClickListener(this);
 
         View backupEntrance = navigationContent.findViewById(R.id.navigation_item_backup_restore);
         backupEntrance.setOnClickListener(this);
@@ -936,6 +939,10 @@ public class ConversationListActivity extends AbstractConversationListActivity
                 break;
             case R.id.navigation_item_remove_ads:
                 drawerClickIndex = DRAWER_INDEX_REMOVE_ADS;
+                drawerLayout.closeDrawer(navigationView);
+                break;
+            case R.id.navigation_item_chat_list:
+                drawerClickIndex = DRAWER_INDEX_CHAT_LIST;
                 drawerLayout.closeDrawer(navigationView);
                 break;
         }
