@@ -773,4 +773,8 @@
     <string name="message_copied">复制到剪贴板</string>
     <string name="private_box_add_to_success">移至隐私信箱</string>
     <string name="restore_downloading">正在下载 ...</string>
+    <string name="remove_ad">移除广告</string>
+    <string name="purchase">购买</string>
+    <string name="life_time">永久</string>
+    <string name="purchase_description">购买免广告版本，永久移除广告。</string>
 </resources>

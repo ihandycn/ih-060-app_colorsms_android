@@ -187,7 +187,7 @@ public class FontDownloadManager {
     }
 
     public static void copyFontsFromAssetsAsync() {
-        Threads.postOnThreadPoolExecutor( () ->{
+        Threads.postOnThreadPoolExecutor(() -> {
             List<FontInfo> list = getFontList();
             for (FontInfo font : list) {
                 if (font.isLocalFont() && !font.getFontName().equals(FontUtils.MESSAGE_FONT_FAMILY_DEFAULT_VALUE)) {
@@ -210,12 +210,12 @@ public class FontDownloadManager {
         AssetManager assetManager = HSApplication.getContext().getAssets();
 
         for (String weight : fontInfo.getFontWeights()) {
-            String assetName = folderName + "/" + weight + ".ttf";
+            String assetName = folderName + File.separator + weight + ".ttf";
             File folderFile = new File(CommonUtils.getDirectory(
                     FontDownloadManager.LOCAL_DIRECTORY + folderName),
                     weight + ".ttf");
             try {
-                InputStream in = assetManager.open("fonts/" + assetName);
+                InputStream in = assetManager.open("fonts" + File.separator + assetName);
                 FileOutputStream out = new FileOutputStream(folderFile);
 
                 byte[] buffer = new byte[1024];
@@ -239,7 +239,8 @@ public class FontDownloadManager {
 
     static Drawable getDrawableByName(String fontName) {
         try {
-            InputStream ims = HSApplication.getContext().getAssets().open("font_preview/font_preview_" + fontName + ".jpg");
+            InputStream ims = HSApplication.getContext().getAssets().open("font_preview"
+                    + File.separator + "font_preview_" + fontName + ".jpg");
             Bitmap bitmap = BitmapFactory.decodeStream(ims);
             return new BitmapDrawable(HSApplication.getContext().getResources(), bitmap);
         } catch (IOException e) {

@@ -949,7 +949,6 @@
     <string name="sms_show_apply">APPLY</string>
     <string name="sms_show_current_theme">CURRENT THEME</string>
 
-    
     <!-- Welcome-->
     <string name="sms_welcome_start_button">START</string>
     <string name="welcome_start_service">Terms of Service</string>
@@ -1309,6 +1308,12 @@
     <string name="backup_local_summary">Back up to local storage</string>
     <string name="backup_free_success">Free Up Space Successfully</string>
 
+    <string name="life_time">LIFETIME</string>
+    <string name="purchase">PURCHASE</string>
+    <string name="remove_ad">Remove Ads</string>
+    <string name="purchase_description">Purchase the AD-FREE version. No ads ever again.</string>
+    <string name="purchase_failed">failed</string>
     <string name="switch_sim">Switch SIM</string>
+    
 </resources>
 

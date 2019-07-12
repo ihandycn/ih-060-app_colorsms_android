@@ -86,7 +86,6 @@ import android.widget.Filterable;
 import android.widget.ListAdapter;
 import android.widget.ListPopupWindow;
 import android.widget.ListView;
-import android.widget.MultiAutoCompleteTextView;
 import android.widget.PopupWindow;
 import android.widget.ScrollView;
 import android.widget.TextView;
@@ -99,6 +98,7 @@ import com.android.ex.chips.recipientchip.ReplacementDrawableSpan;
 import com.android.ex.chips.recipientchip.VisibleRecipientChip;
 import com.superapps.util.Dimensions;
 import com.superapps.util.Fonts;
+import com.superapps.view.MultiAutoCompleteTextViewFixed;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -112,7 +112,7 @@ import java.util.Set;
  * RecipientEditTextView is an auto complete text view for use with applications
  * that use the new Chips UI for addressing a message to recipients.
  */
-public class RecipientEditTextView extends MultiAutoCompleteTextView implements
+public class RecipientEditTextView extends MultiAutoCompleteTextViewFixed implements
         OnItemClickListener, Callback, RecipientAlternatesAdapter.OnCheckedItemChangedListener,
         GestureDetector.OnGestureListener, TextView.OnEditorActionListener,
         DropdownChipLayouter.ChipDeleteListener, PermissionRequestDismissedListener {

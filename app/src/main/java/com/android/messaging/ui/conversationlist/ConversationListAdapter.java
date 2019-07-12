@@ -121,13 +121,19 @@ public class ConversationListAdapter
         return dataList.get(position) instanceof AdItemData;
     }
 
-    public void setHeader(View inflate) {
+    public void setHeader(View adView) {
         if (headerView == null) {
-            headerView = inflate;
+            headerView = adView;
         }
-        hasHeader = true;
-        dataList.add(0, new AdItemData());
-        notifyItemInserted(0);
+        if (adView == null && hasHeader) {
+            hasHeader = false;
+            dataList.remove(0);
+            notifyItemRemoved(0);
+        } else {
+            hasHeader = true;
+            dataList.add(0, new AdItemData());
+            notifyItemInserted(0);
+        }
     }
 
     /**

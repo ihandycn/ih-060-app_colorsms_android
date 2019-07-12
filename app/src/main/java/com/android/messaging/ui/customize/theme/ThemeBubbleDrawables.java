@@ -90,7 +90,7 @@ public class ThemeBubbleDrawables {
 
         //from asset
         if (theme.mIsLocalTheme) {
-            String assetFileName = "themes/" + theme.mThemeKey + "/" + theme.bubbleIncomingUrl;
+            String assetFileName = "themes" + File.separator+ theme.mThemeKey + File.separator + theme.bubbleIncomingUrl;
             try {
                 InputStream ims = HSApplication.getContext().getAssets().open(assetFileName);
                 bitmap = loadBitmap(ims);
@@ -152,7 +152,7 @@ public class ThemeBubbleDrawables {
 
         if (theme.mIsLocalTheme) {
             try {
-                String assetFileName = "themes/" + theme.mThemeKey + "/" + theme.bubbleOutgoingUrl;
+                String assetFileName = "themes" + File.separator + theme.mThemeKey + File.separator + theme.bubbleOutgoingUrl;
                 InputStream ims = HSApplication.getContext().getAssets().open(assetFileName);
                 bitmap = loadBitmap(ims);
                 if (ims != null) {
@@ -207,7 +207,7 @@ public class ThemeBubbleDrawables {
         //use asset file and copy
         if (theme.mIsLocalTheme) {
             try {
-                String assetFileName = "themes/" + theme.mThemeKey + "/" + theme.mSolidBubbleIncomingUrl;
+                String assetFileName = "themes" + File.separator + theme.mThemeKey + File.separator + theme.mSolidBubbleIncomingUrl;
                 InputStream ims = HSApplication.getContext().getAssets().open(assetFileName);
                 bitmap = loadBitmap(ims);
 
@@ -265,7 +265,7 @@ public class ThemeBubbleDrawables {
         //use asset file and copy
         if (theme.mIsLocalTheme) {
             try {
-                String assetFileName = "themes/" + theme.mThemeKey + "/" + theme.mSolidBubbleOutgoingUrl;
+                String assetFileName = "themes" + File.separator + theme.mThemeKey + File.separator + theme.mSolidBubbleOutgoingUrl;
                 InputStream ims;
                 ims = HSApplication.getContext().getAssets().open(assetFileName);
                 bitmap = loadBitmap(ims);

@@ -6,9 +6,8 @@ import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.text.TextUtils;
 
-import com.android.messaging.ui.customize.theme.ThemeDownloadManager;
-import com.android.messaging.ui.customize.theme.ThemeInfo;
 import com.android.messaging.ui.customize.theme.ThemeBubbleDrawables;
+import com.android.messaging.ui.customize.theme.ThemeInfo;
 import com.android.messaging.ui.customize.theme.ThemeUtils;
 import com.android.messaging.util.CommonUtils;
 import com.ihs.app.framework.HSApplication;
@@ -54,7 +53,7 @@ public class ToolbarDrawables {
         //load toolbar image resource from asset first,
         if (info.mIsLocalTheme) {
             try {
-                String assetFileName = "themes/" + info.mThemeKey + "/" + info.toolbarBgUrl;
+                String assetFileName = "themes"+ File.separator + info.mThemeKey + File.separator + info.toolbarBgUrl;
                 InputStream ims = HSApplication.getContext().getAssets().open(assetFileName);
                 sToolbarBitmap = BitmapFactory.decodeStream(ims);
                 if (ims != null) {

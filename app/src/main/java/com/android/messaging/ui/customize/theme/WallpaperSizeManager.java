@@ -4,8 +4,6 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.text.TextUtils;
 
-import com.android.messaging.ui.customize.ToolbarDrawables;
-import com.android.messaging.ui.customize.WallpaperDrawables;
 import com.android.messaging.util.CommonUtils;
 import com.ihs.app.framework.HSApplication;
 import com.superapps.util.Dimensions;

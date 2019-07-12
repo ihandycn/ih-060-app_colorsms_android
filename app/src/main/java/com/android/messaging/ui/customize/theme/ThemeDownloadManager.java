@@ -496,8 +496,8 @@ public class ThemeDownloadManager {
         }
 
         for (DownloadItemInfo info : copyTask) {
-            String assetFileName = "themes/" + theme.mThemeKey + "/" + info.mRemoteFileName;
-            if (!copyAssetFile(info.mLocalFile, assetFileName)) {
+            String assetFileName = "themes" + File.separator + theme.mThemeKey + File.separator + info.mRemoteFileName;
+            if (!copyAssetFile(theme.mThemeKey, info.mLocalFile, assetFileName)) {
                 if (listener != null) {
                     listener.onMoveFailed();
                 }
@@ -510,14 +510,14 @@ public class ThemeDownloadManager {
         }
     }
 
-    public void copyAssetFileAsync(File fileName, String assetFileName) {
-        Threads.postOnThreadPoolExecutor(() -> copyAssetFile(fileName, assetFileName));
+    public void copyAssetFileAsync(String themeKey, File fileName, String assetFileName) {
+        Threads.postOnThreadPoolExecutor(() -> copyAssetFile(themeKey, fileName, assetFileName));
     }
 
-    public boolean copyAssetFile(File fileName, String assetFileName) {
+    public boolean copyAssetFile(String themeKey, File fileName, String assetFileName) {
         AssetManager assetManager = HSApplication.getContext().getAssets();
 
-        File folder = new File(fileName.getParent());
+        File folder = new File(CommonUtils.getDirectory("theme"), themeKey);
         if (!folder.exists()) {
             folder.mkdirs();
         }

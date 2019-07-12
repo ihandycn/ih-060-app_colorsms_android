@@ -792,4 +792,10 @@
 	<string name="private_box_move_to_box">Pindahkan ke kotak pribadi</string>
 	<string name="private_box_add_private_contacts">Tambahkan kotak pribadi!</string>
     <string name="pickerview_year">Tahun</string>
+
+	<string name="remove_ad">Hapus Iklan</string>
+	<string name="purchase">BELI</string>
+	<string name="life_time">SELAMANYA</string>
+	<string name="purchase_description">Beli versi BEBAS-IKLAN. Tak ada iklan lagi.</string>
+
 </resources>

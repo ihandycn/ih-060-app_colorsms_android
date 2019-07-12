@@ -6,8 +6,8 @@ import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.text.TextUtils;
 
-import com.android.messaging.ui.customize.theme.ThemeInfo;
 import com.android.messaging.ui.customize.theme.ThemeBubbleDrawables;
+import com.android.messaging.ui.customize.theme.ThemeInfo;
 import com.android.messaging.ui.customize.theme.ThemeUtils;
 import com.android.messaging.ui.wallpaper.WallpaperManager;
 import com.android.messaging.util.CommonUtils;
@@ -65,7 +65,7 @@ public class WallpaperDrawables {
 
         if (info.mIsLocalTheme) {
             try {
-                String assetFileName = "themes/" + info.mThemeKey + "/" + info.wallpaperUrl;
+                String assetFileName = "themes" + File.separator + info.mThemeKey + File.separator + info.wallpaperUrl;
                 InputStream ims = HSApplication.getContext().getAssets().open(assetFileName);
                 sWallpaperBitmap = BitmapFactory.decodeStream(ims);
                 if (ims != null) {
@@ -107,7 +107,7 @@ public class WallpaperDrawables {
 
         if (info.mIsLocalTheme) {
             try {
-                String assetFileName = "themes/" + info.mThemeKey + "/" + info.listWallpaperUrl;
+                String assetFileName = "themes" + File.separator + info.mThemeKey + File.separator + info.listWallpaperUrl;
                 InputStream ims = HSApplication.getContext().getAssets().open(assetFileName);
                 Bitmap bitmap = BitmapFactory.decodeStream(ims);
                 sListWallpaperBitmap = bitmap;

@@ -6,6 +6,138 @@
 	<dict>
 		<key>Application</key>
 		<dict>
+			<key>IgnoredCrashes</key>
+			<array>
+				<dict>
+					<key>MessagePattern</key>
+					<string>Unable to create service androidx.work.impl.background.systemalarm.SystemAlarmService: </string>
+					<key>Type</key>
+					<string>RuntimeException</string>
+				</dict>
+				<dict>
+					<key>MessagePattern</key>
+					<string>androidx.work.impl.background.systemalarm.SystemAlarmService</string>
+					<key>Type</key>
+					<string>SecurityException</string>
+				</dict>
+				<dict>
+					<key>MessagePattern</key>
+					<string>timed out after 10 seconds</string>
+				</dict>
+				<dict>
+					<key>MessagePattern</key>
+					<string>is your activity running</string>
+				</dict>
+				<dict>
+					<key>MessagePattern</key>
+					<string>timed out after 20 seconds</string>
+				</dict>
+				<dict>
+					<key>MessagePattern</key>
+					<string>Apps may not schedule more than 100 distinct jobs</string>
+					<key>Type</key>
+					<string>IllegalStateException</string>
+				</dict>
+				<dict>
+					<key>MessagePattern</key>
+					<string>com.android.server.job.controllers.JobStatus.getUid()</string>
+				</dict>
+				<dict>
+					<key>MessagePattern</key>
+					<string>Results have already been set</string>
+				</dict>
+				<dict>
+					<key>StackTrace</key>
+					<dict>
+						<key>ElementIndex</key>
+						<integer>0</integer>
+						<key>FileName</key>
+						<string>PopupTouchHandleDrawable.java</string>
+					</dict>
+					<key>Type</key>
+					<string>NullPointerException</string>
+				</dict>
+				<dict>
+					<key>MessagePattern</key>
+					<string>regist too many Broadcast Receivers</string>
+					<key>Type</key>
+					<string>IllegalArgumentException</string>
+				</dict>
+				<dict>
+					<key>MessagePattern</key>
+					<string>Unknown id: com.smartkeyboard.emoji/.app.MyInputMethodService</string>
+				</dict>
+				<dict>
+					<key>MessagePattern</key>
+					<string>android.webkit.WebView</string>
+					<key>Type</key>
+					<string>NullPointerException</string>
+				</dict>
+				<dict>
+					<key>MessagePattern</key>
+					<string>can't deliver broadcast</string>
+					<key>Type</key>
+					<string>RemoteServiceException</string>
+				</dict>
+				<dict>
+					<key>MessagePattern</key>
+					<string>Broadcast already finished</string>
+					<key>Type</key>
+					<string>IllegalStateException</string>
+				</dict>
+				<dict>
+					<key>MessagePattern</key>
+					<string>Bad notification posted from package</string>
+					<key>Type</key>
+					<string>RemoteServiceException</string>
+				</dict>
+				<dict>
+					<key>StackTrace</key>
+					<dict>
+						<key>ElementIndex</key>
+						<integer>0</integer>
+						<key>FileName</key>
+						<string>AccessibilityInjector.java</string>
+					</dict>
+					<key>Type</key>
+					<string>NullPointerException</string>
+				</dict>
+				<dict>
+					<key>MessagePattern</key>
+					<string>bad parameter</string>
+					<key>Type</key>
+					<string>IllegalArgumentException</string>
+				</dict>
+				<dict>
+					<key>MessagePattern</key>
+					<string>Attempt to invoke virtual method 'void android.view.Display.getSize(android.graphics.Point)' on a null object reference</string>
+				</dict>
+				<dict>
+					<key>MessagePattern</key>
+					<string>Unknown id: com.touchtalent.bobbleapp/.services.BobbleKeyboar</string>
+				</dict>
+				<dict>
+					<key>MessagePattern</key>
+					<string>Invalid index</string>
+					<key>StackTrace</key>
+					<dict>
+						<key>ElementIndex</key>
+						<integer>2</integer>
+						<key>MethodName</key>
+						<string>doAnimationFrame</string>
+					</dict>
+					<key>Type</key>
+					<string>IndexOutOfBoundsException</string>
+				</dict>
+				<dict>
+					<key>MessagePattern</key>
+					<string>Attempt to read from field 'int android.view.View.mViewFlags' on a null object reference</string>
+				</dict>
+				<dict>
+					<key>MessagePattern</key>
+					<string>Attempt to invoke virtual method ‘java.lang.String android.content.Context.getOpPackageName()’ on a null object reference</string>
+				</dict>
+			</array>
 			<key>PrivateBox</key>
 			<true/>
 			<key>BackupRestore</key>
@@ -445,6 +577,11 @@
 			<false/>
 			<key>TermsOfServiceUrl</key>
 			<string>http://cdn.appcloudbox.net/smoothappsstudio/apps/bubble/terms-of-use.html</string>
+			<key>Subscription</key>
+			<dict>
+				<key>Enabled</key>
+				<true/>
+			</dict>
 			<key>Themes</key>
 			<dict>
 				<key>BasePath</key>
@@ -652,7 +789,7 @@
 						<key>IsLocalTheme</key>
 						<true/>
 						<key>LocalIndex</key>
-						<integer>5</integer>
+						<integer>7</integer>
 						<key>Name</key>
 						<string>Rain Drop</string>
 						<key>PreviewList</key>
@@ -718,7 +855,7 @@
 						<key>IsLocalTheme</key>
 						<true/>
 						<key>LocalIndex</key>
-						<integer>7</integer>
+						<integer>5</integer>
 						<key>Name</key>
 						<string>Pink Diamond</string>
 						<key>PreviewList</key>
@@ -848,7 +985,7 @@
 						<key>IsLocalTheme</key>
 						<true/>
 						<key>LocalIndex</key>
-						<integer>9</integer>
+						<integer>3</integer>
 						<key>Name</key>
 						<string>Unicorn</string>
 						<key>PreviewList</key>
@@ -914,7 +1051,7 @@
 						<key>IsLocalTheme</key>
 						<true/>
 						<key>LocalIndex</key>
-						<integer>3</integer>
+						<integer>4</integer>
 						<key>PreviewList</key>
 						<array>
 							<string>preview_1.jpg</string>
@@ -1039,33 +1176,31 @@
 						<key>BubbleOutgoingSolidUrl</key>
 						<string></string>
 					</dict>
-					<key>starry</key>
+					<key>goldenbutterfly</key>
 					<dict>
 						<key>IsLocalTheme</key>
-						<true/>
-						<key>LocalIndex</key>
-						<integer>6</integer>
+						<false/>
 						<key>Name</key>
-						<string>Starry</string>
+						<string>Golden Butterfly</string>
 						<key>PreviewList</key>
 						<array>
 							<string>preview_1.jpg</string>
 							<string>preview_2.jpg</string>
 						</array>
 						<key>Hot</key>
-						<integer>23128</integer>
+						<real>23128</real>
 						<key>ThemeColor</key>
-						<string>#4a34e0</string>
+						<string>#d09608</string>
 						<key>FontName</key>
-						<string>el_messiri</string>
+						<string>merienda</string>
 						<key>AvatarForegroundColor</key>
 						<string>#ffffff</string>
 						<key>ListTitleColor</key>
 						<string>#ffffff</string>
 						<key>ListSubtitleColor</key>
-						<string>#e4e4e4</string>
+						<string>#ffffff</string>
 						<key>ListTimeColor</key>
-						<string>#c7d6e2</string>
+						<string>#e9e6e0</string>
 						<key>IncomingBubbleBgColor</key>
 						<string>#00000000</string>
 						<key>IncomingBubbleTextColor</key>
@@ -1110,7 +1245,7 @@
 						<key>IsLocalTheme</key>
 						<true/>
 						<key>LocalIndex</key>
-						<integer>4</integer>
+						<integer>8</integer>
 						<key>Name</key>
 						<string>Cool Graffiti</string>
 						<key>PreviewList</key>
@@ -1235,31 +1370,31 @@
 						<key>BubbleOutgoingSolidUrl</key>
 						<string>outgoing_solid.9.png</string>
 					</dict>
-					<key>goldenbutterfly</key>
+					<key>dark</key>
 					<dict>
 						<key>IsLocalTheme</key>
 						<false/>
 						<key>Name</key>
-						<string>Golden Butterfly</string>
+						<string>Dark</string>
 						<key>PreviewList</key>
 						<array>
 							<string>preview_1.jpg</string>
 							<string>preview_2.jpg</string>
 						</array>
 						<key>Hot</key>
-						<real>21442</real>
+						<integer>21442</integer>
 						<key>ThemeColor</key>
-						<string>#d09608</string>
+						<string>#262f42</string>
 						<key>FontName</key>
-						<string>merienda</string>
+						<string>lato</string>
 						<key>AvatarForegroundColor</key>
 						<string>#ffffff</string>
 						<key>ListTitleColor</key>
-						<string>#ffffff</string>
+						<string>#d6ddee</string>
 						<key>ListSubtitleColor</key>
-						<string>#ffffff</string>
+						<string>#8992a9</string>
 						<key>ListTimeColor</key>
-						<string>#e9e6e0</string>
+						<string>#8992a9</string>
 						<key>IncomingBubbleBgColor</key>
 						<string>#00000000</string>
 						<key>IncomingBubbleTextColor</key>
@@ -1267,7 +1402,7 @@
 						<key>OutgoingBubbleBgColor</key>
 						<string>#00000000</string>
 						<key>OutgoingBubbleTextColor</key>
-						<string>#ffffff</string>
+						<string>#000000</string>
 						<key>BubbleAdColor</key>
 						<string>#e3187b</string>
 						<key>BannerAdBgColor</key>
@@ -1283,7 +1418,7 @@
 						<key>AvatarUrl</key>
 						<string>avatar.png</string>
 						<key>AvatarSolidUrl</key>
-						<string>avatar_solid.png</string>
+						<string></string>
 						<key>ListWallpaperUrl</key>
 						<string>wallpaper.jpg</string>
 						<key>WallpaperUrl</key>
@@ -1491,70 +1626,6 @@
 						<key>BubbleOutgoingSolidUrl</key>
 						<string></string>
 					</dict>
-					<key>dark</key>
-					<dict>
-						<key>IsLocalTheme</key>
-						<false/>
-						<key>Name</key>
-						<string>Dark</string>
-						<key>PreviewList</key>
-						<array>
-							<string>preview_1.jpg</string>
-							<string>preview_2.jpg</string>
-						</array>
-						<key>Hot</key>
-						<real>19058</real>
-						<key>ThemeColor</key>
-						<string>#262f42</string>
-						<key>FontName</key>
-						<string>lato</string>
-						<key>AvatarForegroundColor</key>
-						<string>#ffffff</string>
-						<key>ListTitleColor</key>
-						<string>#d6ddee</string>
-						<key>ListSubtitleColor</key>
-						<string>#8992a9</string>
-						<key>ListTimeColor</key>
-						<string>#8992a9</string>
-						<key>IncomingBubbleBgColor</key>
-						<string>#00000000</string>
-						<key>IncomingBubbleTextColor</key>
-						<string>#ffffff</string>
-						<key>OutgoingBubbleBgColor</key>
-						<string>#00000000</string>
-						<key>OutgoingBubbleTextColor</key>
-						<string>#000000</string>
-						<key>BubbleAdColor</key>
-						<string>#e3187b</string>
-						<key>BannerAdBgColor</key>
-						<string>#40000000</string>
-						<key>BannerAdActionColor</key>
-						<string>#80ffffff</string>
-						<key>BannerAdActionTextColor</key>
-						<string>#ffffff</string>
-						<key>PreviewUrl</key>
-						<string>preview.jpg</string>
-						<key>ToolbarBgUrl</key>
-						<string>toolbar.jpg</string>
-						<key>AvatarUrl</key>
-						<string>avatar.png</string>
-						<key>AvatarSolidUrl</key>
-						<string></string>
-						<key>ListWallpaperUrl</key>
-						<string>wallpaper.jpg</string>
-						<key>WallpaperUrl</key>
-						<string>wallpaper.jpg</string>
-						<key>NewConversationIconUrl</key>
-						<string></string>
-						<key>BubbleIncomingUrl</key>
-						<string>incoming.9.png</string>
-						<key>BubbleIncomingSolidUrl</key>
-						<string></string>
-						<key>BubbleOutgoingUrl</key>
-						<string>outgoing.9.png</string>
-						<key>BubbleOutgoingSolidUrl</key>
-						<string></string>
-					</dict>
 					<key>luckypurple</key>
 					<dict>
 						<key>IsLocalTheme</key>
@@ -1588,6 +1659,70 @@
 						<string>#00000000</string>
 						<key>OutgoingBubbleTextColor</key>
 						<string>#000000</string>
+						<key>BubbleAdColor</key>
+						<string>#e3187b</string>
+						<key>BannerAdBgColor</key>
+						<string>#40000000</string>
+						<key>BannerAdActionColor</key>
+						<string>#80ffffff</string>
+						<key>BannerAdActionTextColor</key>
+						<string>#ffffff</string>
+						<key>PreviewUrl</key>
+						<string>preview.jpg</string>
+						<key>ToolbarBgUrl</key>
+						<string>toolbar.jpg</string>
+						<key>AvatarUrl</key>
+						<string>avatar.png</string>
+						<key>AvatarSolidUrl</key>
+						<string>avatar_solid.png</string>
+						<key>ListWallpaperUrl</key>
+						<string>wallpaper.jpg</string>
+						<key>WallpaperUrl</key>
+						<string>wallpaper.jpg</string>
+						<key>NewConversationIconUrl</key>
+						<string></string>
+						<key>BubbleIncomingUrl</key>
+						<string>incoming.9.png</string>
+						<key>BubbleIncomingSolidUrl</key>
+						<string></string>
+						<key>BubbleOutgoingUrl</key>
+						<string>outgoing.9.png</string>
+						<key>BubbleOutgoingSolidUrl</key>
+						<string></string>
+					</dict>
+					<key>starry</key>
+					<dict>
+						<key>IsLocalTheme</key>
+						<false/>
+						<key>Name</key>
+						<string>Starry</string>
+						<key>PreviewList</key>
+						<array>
+							<string>preview_1.jpg</string>
+							<string>preview_2.jpg</string>
+						</array>
+						<key>Hot</key>
+						<integer>19058</integer>
+						<key>ThemeColor</key>
+						<string>#4a34e0</string>
+						<key>FontName</key>
+						<string>el_messiri</string>
+						<key>AvatarForegroundColor</key>
+						<string>#ffffff</string>
+						<key>ListTitleColor</key>
+						<string>#ffffff</string>
+						<key>ListSubtitleColor</key>
+						<string>#e4e4e4</string>
+						<key>ListTimeColor</key>
+						<string>#c7d6e2</string>
+						<key>IncomingBubbleBgColor</key>
+						<string>#00000000</string>
+						<key>IncomingBubbleTextColor</key>
+						<string>#ffffff</string>
+						<key>OutgoingBubbleBgColor</key>
+						<string>#00000000</string>
+						<key>OutgoingBubbleTextColor</key>
+						<string>#ffffff</string>
 						<key>BubbleAdColor</key>
 						<string>#e3187b</string>
 						<key>BannerAdBgColor</key>
@@ -1942,9 +2077,7 @@
 					<key>rainbow</key>
 					<dict>
 						<key>IsLocalTheme</key>
-						<true/>
-						<key>LocalIndex</key>
-						<integer>10</integer>
+						<false/>
 						<key>Name</key>
 						<string>Rainbow</string>
 						<key>PreviewList</key>
@@ -2138,7 +2271,7 @@
 						<key>IsLocalTheme</key>
 						<true/>
 						<key>LocalIndex</key>
-						<integer>8</integer>
+						<integer>6</integer>
 						<key>Name</key>
 						<string>Neon</string>
 						<key>PreviewList</key>
@@ -2858,6 +2991,119 @@
 			<dict>
 				<key>UpdateInterval</key>
 				<integer>43200</integer>
+			</dict>
+		</dict>
+	</dict>
+	<key>Regions</key>
+	<dict>
+		<key>US</key>
+		<dict>
+			<key>Data</key>
+			<dict>
+				<key>Application</key>
+				<dict>
+					<key>Themes</key>
+					<dict>
+						<key>ThemeList</key>
+						<dict>
+							<key>default</key>
+							<dict>
+								<key>LocalIndex</key>
+								<integer>1</integer>
+							</dict>
+							<key>redrose</key>
+							<dict>
+								<key>LocalIndex</key>
+								<integer>2</integer>
+							</dict>
+							<key>unicorn</key>
+							<dict>
+								<key>LocalIndex</key>
+								<integer>3</integer>
+							</dict>
+							<key>cutegraffiti</key>
+							<dict>
+								<key>LocalIndex</key>
+								<integer>4</integer>
+							</dict>
+							<key>diamond</key>
+							<dict>
+								<key>LocalIndex</key>
+								<integer>5</integer>
+							</dict>
+							<key>neon</key>
+							<dict>
+								<key>LocalIndex</key>
+								<integer>6</integer>
+							</dict>
+							<key>raindrop</key>
+							<dict>
+								<key>LocalIndex</key>
+								<integer>7</integer>
+							</dict>
+							<key>coolgraffiti</key>
+							<dict>
+								<key>LocalIndex</key>
+								<integer>8</integer>
+							</dict>
+						</dict>
+					</dict>
+				</dict>
+			</dict>
+		</dict>
+		<key>PH</key>
+		<dict>
+			<key>Data</key>
+			<dict>
+				<key>Application</key>
+				<dict>
+					<key>Themes</key>
+					<dict>
+						<key>ThemeList</key>
+						<dict>
+							<key>default</key>
+							<dict>
+								<key>LocalIndex</key>
+								<integer>1</integer>
+							</dict>
+							<key>redrose</key>
+							<dict>
+								<key>LocalIndex</key>
+								<integer>2</integer>
+							</dict>
+							<key>unicorn</key>
+							<dict>
+								<key>LocalIndex</key>
+								<integer>3</integer>
+							</dict>
+							<key>cutegraffiti</key>
+							<dict>
+								<key>LocalIndex</key>
+								<integer>4</integer>
+							</dict>
+							<key>diamond</key>
+							<dict>
+								<key>LocalIndex</key>
+								<integer>5</integer>
+							</dict>
+							<key>coolgraffiti</key>
+							<dict>
+								<key>LocalIndex</key>
+								<integer>6</integer>
+							</dict>
+							<key>raindrop</key>
+							<dict>
+								<key>LocalIndex</key>
+								<integer>7</integer>
+							</dict>
+							<key>neon</key>
+							<dict>
+								<key>LocalIndex</key>
+								<integer>8</integer>
+							</dict>
+						</dict>
+					</dict>
+				</dict>
 			</dict>
 		</dict>
 	</dict>

@@ -67,7 +67,7 @@ public class AvatarBgDrawables {
         // try to use asset file
         if (info.mIsLocalTheme) {
             try {
-                InputStream ims = HSApplication.getContext().getAssets().open("themes/" + info.mThemeKey + "/"
+                InputStream ims = HSApplication.getContext().getAssets().open("themes" + File.separator + info.mThemeKey + File.separator
                         + info.avatarUrl);
                 Bitmap bitmap = BitmapFactory.decodeStream(ims);
                 sAvatarBg = new BitmapDrawable(HSApplication.getContext().getResources(), bitmap);
@@ -116,7 +116,7 @@ public class AvatarBgDrawables {
 
         if (info.mIsLocalTheme) {
             try {
-                String assetFileName = "themes/" + info.mThemeKey + "/" + info.mSolidAvatarUrl;
+                String assetFileName = "themes" + File.separator + info.mThemeKey + File.separator + info.mSolidAvatarUrl;
                 InputStream ims = HSApplication.getContext().getAssets().open(assetFileName);
                 Bitmap bitmap = BitmapFactory.decodeStream(ims);
 
