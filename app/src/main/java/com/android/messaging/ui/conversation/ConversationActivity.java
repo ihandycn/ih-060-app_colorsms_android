@@ -389,6 +389,7 @@ public class ConversationActivity extends BugleActionBarActivity
                 && System.currentTimeMillis() - CommonUtils.getAppInstallTimeMillis()
                 > HSConfig.optInteger(2, "Application", "SMSAd", "SMSDetailspageFullAd", "ShowAfterInstall") * DateUtils.HOUR_IN_MILLIS) {
             List<AcbInterstitialAd> ads = AcbInterstitialAdManager.fetch(AdPlacement.AD_WIRE, 1);
+            HSLog.d("AdTest", "List<AcbInterstitialAd> ads = AcbInterstitialAdManager.fetch(AdPlacement.AD_WIRE, 1);");
             if (ads.size() > 0) {
                 mInterstitialAd = ads.get(0);
                 mInterstitialAd.setInterstitialAdListener(new AcbInterstitialAd.IAcbInterstitialAdListener() {
@@ -418,6 +419,7 @@ public class ConversationActivity extends BugleActionBarActivity
                 AutopilotEvent.logTopicEvent("topic-768lyi3sp", "fullad_show");
                 Preferences.getDefault().putLong(PREF_KEY_WIRE_AD_SHOW_TIME, System.currentTimeMillis());
                 mPrefs.putLong(PREF_KEY_WIRE_AD_SHOW_TIME_FOR_EXIT_WIRE_AD, System.currentTimeMillis());
+                HSLog.d("AdTest", "SMS_FullAd_Show");
             }
             BugleAnalytics.logEvent("Detailspage_FullAd_Should_Show", true, true);
             AutopilotEvent.logTopicEvent("topic-768lyi3sp", "fullad_chance");
@@ -476,11 +478,18 @@ public class ConversationActivity extends BugleActionBarActivity
             conversationFragment = new ConversationFragment();
             fragmentTransaction.add(R.id.conversation_fragment_container,
                     conversationFragment, ConversationFragment.FRAGMENT_TAG);
+            HSLog.d("AdTest", "Before AD_WIRE Preload");
+            HSLog.d("AdTest", "AD_WIRE JUDGE 1 = " + HSConfig.optBoolean(false, "Application", "SMSAd", "SMSDetailspageFullAd", "Enabled"));
+            HSLog.d("AdTest", "AD_WIRE JUDGE 2 = " + (System.currentTimeMillis() - Preferences.getDefault().getLong(PREF_KEY_WIRE_AD_SHOW_TIME, -1)
+                    > HSConfig.optInteger(5, "Application", "SMSAd", "SMSDetailspageFullAd", "MinInterval") * DateUtils.MINUTE_IN_MILLIS));
+            HSLog.d("AdTest", "AD_WIRE JUDGE 3 = " + (System.currentTimeMillis() - CommonUtils.getAppInstallTimeMillis()
+                    > HSConfig.optInteger(2, "Application", "SMSAd", "SMSDetailspageFullAd", "ShowAfterInstall") * DateUtils.HOUR_IN_MILLIS));
             if (HSConfig.optBoolean(false, "Application", "SMSAd", "SMSDetailspageFullAd", "Enabled")
                     && System.currentTimeMillis() - Preferences.getDefault().getLong(PREF_KEY_WIRE_AD_SHOW_TIME, -1)
                     > HSConfig.optInteger(5, "Application", "SMSAd", "SMSDetailspageFullAd", "MinInterval") * DateUtils.MINUTE_IN_MILLIS
                     && System.currentTimeMillis() - CommonUtils.getAppInstallTimeMillis()
                     > HSConfig.optInteger(2, "Application", "SMSAd", "SMSDetailspageFullAd", "ShowAfterInstall") * DateUtils.HOUR_IN_MILLIS) {
+                HSLog.d("AdTest", "AcbInterstitialAdManager.preload(1, AdPlacement.AD_WIRE);");
                 AcbInterstitialAdManager.preload(1, AdPlacement.AD_WIRE);
             }
 
