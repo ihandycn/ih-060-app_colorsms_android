@@ -6,6 +6,138 @@
 	<dict>
 		<key>Application</key>
 		<dict>
+			<key>IgnoredCrashes</key>
+			<array>
+				<dict>
+					<key>MessagePattern</key>
+					<string>Unable to create service androidx.work.impl.background.systemalarm.SystemAlarmService: </string>
+					<key>Type</key>
+					<string>RuntimeException</string>
+				</dict>
+				<dict>
+					<key>MessagePattern</key>
+					<string>androidx.work.impl.background.systemalarm.SystemAlarmService</string>
+					<key>Type</key>
+					<string>SecurityException</string>
+				</dict>
+				<dict>
+					<key>MessagePattern</key>
+					<string>timed out after 10 seconds</string>
+				</dict>
+				<dict>
+					<key>MessagePattern</key>
+					<string>is your activity running</string>
+				</dict>
+				<dict>
+					<key>MessagePattern</key>
+					<string>timed out after 20 seconds</string>
+				</dict>
+				<dict>
+					<key>MessagePattern</key>
+					<string>Apps may not schedule more than 100 distinct jobs</string>
+					<key>Type</key>
+					<string>IllegalStateException</string>
+				</dict>
+				<dict>
+					<key>MessagePattern</key>
+					<string>com.android.server.job.controllers.JobStatus.getUid()</string>
+				</dict>
+				<dict>
+					<key>MessagePattern</key>
+					<string>Results have already been set</string>
+				</dict>
+				<dict>
+					<key>StackTrace</key>
+					<dict>
+						<key>ElementIndex</key>
+						<integer>0</integer>
+						<key>FileName</key>
+						<string>PopupTouchHandleDrawable.java</string>
+					</dict>
+					<key>Type</key>
+					<string>NullPointerException</string>
+				</dict>
+				<dict>
+					<key>MessagePattern</key>
+					<string>regist too many Broadcast Receivers</string>
+					<key>Type</key>
+					<string>IllegalArgumentException</string>
+				</dict>
+				<dict>
+					<key>MessagePattern</key>
+					<string>Unknown id: com.smartkeyboard.emoji/.app.MyInputMethodService</string>
+				</dict>
+				<dict>
+					<key>MessagePattern</key>
+					<string>android.webkit.WebView</string>
+					<key>Type</key>
+					<string>NullPointerException</string>
+				</dict>
+				<dict>
+					<key>MessagePattern</key>
+					<string>can't deliver broadcast</string>
+					<key>Type</key>
+					<string>RemoteServiceException</string>
+				</dict>
+				<dict>
+					<key>MessagePattern</key>
+					<string>Broadcast already finished</string>
+					<key>Type</key>
+					<string>IllegalStateException</string>
+				</dict>
+				<dict>
+					<key>MessagePattern</key>
+					<string>Bad notification posted from package</string>
+					<key>Type</key>
+					<string>RemoteServiceException</string>
+				</dict>
+				<dict>
+					<key>StackTrace</key>
+					<dict>
+						<key>ElementIndex</key>
+						<integer>0</integer>
+						<key>FileName</key>
+						<string>AccessibilityInjector.java</string>
+					</dict>
+					<key>Type</key>
+					<string>NullPointerException</string>
+				</dict>
+				<dict>
+					<key>MessagePattern</key>
+					<string>bad parameter</string>
+					<key>Type</key>
+					<string>IllegalArgumentException</string>
+				</dict>
+				<dict>
+					<key>MessagePattern</key>
+					<string>Attempt to invoke virtual method 'void android.view.Display.getSize(android.graphics.Point)' on a null object reference</string>
+				</dict>
+				<dict>
+					<key>MessagePattern</key>
+					<string>Unknown id: com.touchtalent.bobbleapp/.services.BobbleKeyboar</string>
+				</dict>
+				<dict>
+					<key>MessagePattern</key>
+					<string>Invalid index</string>
+					<key>StackTrace</key>
+					<dict>
+						<key>ElementIndex</key>
+						<integer>2</integer>
+						<key>MethodName</key>
+						<string>doAnimationFrame</string>
+					</dict>
+					<key>Type</key>
+					<string>IndexOutOfBoundsException</string>
+				</dict>
+				<dict>
+					<key>MessagePattern</key>
+					<string>Attempt to read from field 'int android.view.View.mViewFlags' on a null object reference</string>
+				</dict>
+				<dict>
+					<key>MessagePattern</key>
+					<string>Attempt to invoke virtual method ‘java.lang.String android.content.Context.getOpPackageName()’ on a null object reference</string>
+				</dict>
+			</array>
 			<key>PrivateBox</key>
 			<true/>
 			<key>BackupRestore</key>

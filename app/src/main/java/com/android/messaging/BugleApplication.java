@@ -26,6 +26,7 @@ import android.net.Uri;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.StrictMode;
+import android.os.SystemClock;
 import android.provider.Settings;
 import android.support.multidex.MultiDex;
 import android.support.v4.os.TraceCompat;
@@ -40,6 +41,7 @@ import com.android.messaging.ad.AdPlacement;
 import com.android.messaging.ad.BillingManager;
 import com.android.messaging.datamodel.DataModel;
 import com.android.messaging.debug.BlockCanaryConfig;
+import com.android.messaging.debug.CrashGuard;
 import com.android.messaging.debug.UploadLeakService;
 import com.android.messaging.privatebox.AppPrivateLockManager;
 import com.android.messaging.receiver.SmsReceiver;
@@ -139,6 +141,7 @@ public class BugleApplication extends HSApplication implements UncaughtException
     /**
      * We log daily events on start of the 2nd session every day.
      */
+    public static long sMainProcessCreatedTime;
     private static final long DAILY_EVENTS_LOG_SESSION_SEQ = 2;
 
     private UncaughtExceptionHandler sSystemUncaughtExceptionHandler;
@@ -188,6 +191,7 @@ public class BugleApplication extends HSApplication implements UncaughtException
             initKeepAlive();
             sSystemUncaughtExceptionHandler = Thread.getDefaultUncaughtExceptionHandler();
             Thread.setDefaultUncaughtExceptionHandler(this);
+            CrashGuard.install();
         } finally {
             Trace.endSection();
         }
@@ -228,6 +232,7 @@ public class BugleApplication extends HSApplication implements UncaughtException
 
     private void onMainProcessApplicationCreate() {
         TraceCompat.beginSection("Application#onMainProcessApplicationCreate");
+        sMainProcessCreatedTime = SystemClock.elapsedRealtime();
         try {
             List<Task> initWorks = new ArrayList<>();
 
@@ -685,6 +690,9 @@ public class BugleApplication extends HSApplication implements UncaughtException
                         logDailyStatus(daysSinceInstall);
                     }
                 }
+                break;
+            case HSNotificationConstant.HS_CONFIG_CHANGED:
+                CrashGuard.updateIgnoredCrashes();
                 break;
             default:
                 break;
