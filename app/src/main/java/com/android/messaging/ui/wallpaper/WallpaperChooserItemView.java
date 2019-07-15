@@ -87,9 +87,9 @@ public class WallpaperChooserItemView extends FrameLayout {
             mWallpaperIv.setVisibility(View.GONE);
         } else if (viewType == WallpaperChooserItem.TYPE_EMPTY) {
             if (WallpaperDrawables.getConversationWallpaperBg() != null) {
-                mWallpaperIv.setBackground(WallpaperDrawables.getConversationWallpaperBg());
+                mWallpaperIv.setImageDrawable(WallpaperDrawables.getConversationWallpaperBg());
             } else {
-                mWallpaperIv.setBackground(BackgroundDrawables.createBackgroundDrawable(
+                mWallpaperIv.setImageDrawable(BackgroundDrawables.createBackgroundDrawable(
                         0xffffffff, Dimensions.pxFromDp(3.3f), false));
             }
         } else {
@@ -101,24 +101,24 @@ public class WallpaperChooserItemView extends FrameLayout {
         mWallpaperIv.setImageResource(resId);
     }
 
-    boolean isItemSelected() {
+    public boolean isItemSelected() {
         return mIsItemSelected;
     }
 
-    void onItemPreSelected() {
+    public void onItemPreSelected() {
         mIsItemPreSelected = true;
     }
 
-    boolean isItemPreSelected() {
+    public boolean isItemPreSelected() {
         return mIsItemPreSelected;
     }
 
-    void onItemSelected() {
+    public void onItemSelected() {
         mIsItemSelected = true;
         onSelected();
     }
 
-    void onItemDeselected() {
+    public void onItemDeselected() {
         mIsItemPreSelected = false;
         if (mIsItemSelected) {
             mIsItemSelected = false;

@@ -16,7 +16,7 @@ import static com.android.messaging.ui.wallpaper.WallpaperManager.LOCAL_DIRECTOR
 public class WallpaperDownloader {
     private static final String TAG = WallpaperDownloader.class.getSimpleName();
 
-    interface WallpaperDownloadListener {
+    public interface WallpaperDownloadListener {
         void onDownloadSuccess(String path);
 
         void onDownloadFailed();

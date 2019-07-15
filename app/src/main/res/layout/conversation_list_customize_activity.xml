@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/audio_attachment_background"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    android:fitsSystemWindows="false">
+
+    <!--1. all wallpaper bg-->
+    <!--full screen bg-->
+    <ImageView
+        android:id="@+id/chat_list_full_screen_bg"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:contentDescription="@null" />
+
+    <!--theme toolbar bg-->
+    <com.android.messaging.ui.customize.theme.ToolbarBackgroundImageView
+        android:id="@+id/chat_list_theme_toolbar_bg"
+        android:layout_width="match_parent"
+        android:layout_height="56dp"
+        android:scaleType="fitXY" />
+
+    <View
+        android:id="@+id/chat_list_theme_toolbar_color_bg"
+        android:layout_width="match_parent"
+        android:layout_height="56dp" />
+
+    <!--theme wallpaper bg-->
+    <com.android.messaging.ui.customize.theme.WallpaperBackgroundImageView
+        android:id="@+id/chat_list_theme_list_bg"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:scaleType="fitXY"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/chat_list_theme_toolbar_bg" />
+
+    <android.support.constraint.Group
+        android:id="@+id/chat_list_theme_group"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:constraint_referenced_ids="chat_list_theme_toolbar_bg,chat_list_theme_toolbar_color_bg,chat_list_theme_list_bg" />
+    <!--2. mask layer-->
+    <View
+        android:id="@+id/list_bg_mask"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:alpha="0"
+        android:background="@color/white" />
+
+    <!--3. conversation list layer-->
+    <RelativeLayout
+        android:id="@+id/toolbar_container"
+        android:layout_width="match_parent"
+        android:layout_height="56dp">
+
+        <View
+            android:id="@+id/status_bar_inset"
+            android:layout_width="match_parent"
+            android:layout_height="0dp" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/action_bar_height"
+            android:layout_below="@id/status_bar_inset"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:id="@+id/chat_list_navigation_icon"
+                android:layout_width="@dimen/action_bar_height"
+                android:layout_height="@dimen/action_bar_height"
+                android:layout_gravity="center_vertical"
+                android:contentDescription="@null"
+                android:scaleType="center"
+                android:src="@drawable/ic_navigation_drawer" />
+
+            <com.android.messaging.ui.view.MessagesTextView
+                android:id="@+id/toolbar_title"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginEnd="72dp"
+                android:layout_marginStart="17dp"
+                android:gravity="center_vertical"
+                android:includeFontPadding="false"
+                android:text="@string/messages"
+                android:textColor="@color/action_bar_title_text_color"
+                android:textSize="@dimen/action_bar_page_title_text_size"
+                app:font_family_changeable="false"
+                app:typefaceFileName="@string/action_bar_title_typeface" />
+        </LinearLayout>
+    </RelativeLayout>
+
+    <com.android.messaging.ui.customize.mainpage.ChatListItemListView
+        android:id="@+id/list_view"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:orientation="vertical"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/toolbar_container" />
+
+    <!--control view-->
+    <include
+        android:id="@+id/chat_list_customize_view"
+        layout="@layout/chat_list_customize_control_layout" />
+</android.support.constraint.ConstraintLayout>

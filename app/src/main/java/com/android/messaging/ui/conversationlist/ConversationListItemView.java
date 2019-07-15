@@ -50,6 +50,7 @@ import com.android.messaging.ui.SnackBarInteraction;
 import com.android.messaging.ui.customize.AvatarBgDrawables;
 import com.android.messaging.ui.customize.ConversationColors;
 import com.android.messaging.ui.customize.PrimaryColors;
+import com.android.messaging.ui.customize.mainpage.ChatListDrawableManager;
 import com.android.messaging.util.Assert;
 import com.android.messaging.util.AvatarUriUtil;
 import com.android.messaging.util.BugleAnalytics;
@@ -216,6 +217,7 @@ public class ConversationListItemView extends FrameLayout implements OnClickList
 
     private void setConversationName() {
         mConversationNameView.setTextColor(mConversationNameColor);
+        ChatListDrawableManager.changeViewColorIfNeed(mConversationNameView);
         if (mData.getIsRead() || mData.getShowDraft()) {
             mConversationNameView.setTypeface(FontUtils.getTypeface(FontUtils.MEDIUM));
         } else {
@@ -333,13 +335,15 @@ public class ConversationListItemView extends FrameLayout implements OnClickList
         if (mData.getIsFailedStatus()) {
             color = resources.getColor(R.color.conversation_list_error);
             maxLines = ERROR_MESSAGE_LINE_COUNT;
+            mSnippetTextView.setTextColor(color);
         } else {
             maxLines = TextUtils.isEmpty(snippetText) ? 0 : SNIPPET_LINE_COUNT;
             color = mSnippetColor;
+            mSnippetTextView.setTextColor(color);
+            ChatListDrawableManager.changeViewColorIfNeed(mSnippetTextView);
         }
 
         mSnippetTextView.setMaxLines(maxLines);
-        mSnippetTextView.setTextColor(color);
 
         mTimestampTextView.setTextColor(mTimestampColor);
 
@@ -365,6 +369,7 @@ public class ConversationListItemView extends FrameLayout implements OnClickList
         }
 
         mTimestampTextView.setTypeface(FontUtils.getTypeface());
+        ChatListDrawableManager.changeViewColorIfNeed(mTimestampTextView);
 
         final boolean isSelected = mHostInterface.isConversationSelected(mData.getConversationId());
         setSelected(isSelected);

@@ -73,12 +73,12 @@ public class ChooseThemePagerView extends ConstraintLayout {
                 Color.parseColor(mAdapter.getThemeInfo(0).themeColor), Dimensions.pxFromDp(6.7f), true));
 
         applyTextView.setOnClickListener(v -> {
+            ThemeUtils.applyTheme(mAdapter.getThemeInfo(mPager.getCurrentItem()), 0);
+            FontUtils.onFontTypefaceChanged();
+
             if (mApplyClickListener != null) {
                 mApplyClickListener.onClick(applyTextView);
             }
-
-            ThemeUtils.applyTheme(mAdapter.getThemeInfo(mPager.getCurrentItem()), 0);
-            FontUtils.onFontTypefaceChanged();
 
             BugleAnalytics.logEvent("Start_ChooseTheme_Apply", true, true, "theme", ThemeUtils.getCurrentThemeName());
         });

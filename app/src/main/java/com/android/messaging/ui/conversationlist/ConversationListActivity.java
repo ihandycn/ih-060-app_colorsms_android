@@ -66,6 +66,8 @@ import com.android.messaging.ui.customize.ConversationColors;
 import com.android.messaging.ui.customize.CustomBubblesActivity;
 import com.android.messaging.ui.customize.PrimaryColors;
 import com.android.messaging.ui.customize.ToolbarDrawables;
+import com.android.messaging.ui.customize.mainpage.ChatListCustomizeActivity;
+import com.android.messaging.ui.customize.mainpage.ChatListDrawableManager;
 import com.android.messaging.ui.customize.theme.ThemeSelectActivity;
 import com.android.messaging.ui.customize.theme.ThemeUtils;
 import com.android.messaging.ui.dialog.FiveStarRateDialog;
@@ -478,6 +480,7 @@ public class ConversationListActivity extends AbstractConversationListActivity
                         navigationContent.findViewById(R.id.navigation_item_background_new_text).setVisibility(View.GONE);
                         break;
                     case DRAWER_INDEX_CHAT_LIST:
+                        Navigations.startActivitySafely(ConversationListActivity.this, ChatListCustomizeActivity.class);
                         break;
                     case DRAWER_INDEX_CHANGE_FONT:
                         BugleAnalytics.logEvent("Menu_ChangeFont_Click");
@@ -669,6 +672,7 @@ public class ConversationListActivity extends AbstractConversationListActivity
             drawable = AppCompatDrawableManager.get().getDrawable(this, R.drawable.ic_navigation_drawer_dot);
         } else {
             drawable = AppCompatDrawableManager.get().getDrawable(this, R.drawable.ic_navigation_drawer);
+            ChatListDrawableManager.changeDrawableColorIfNeed(drawable);
         }
         getSupportActionBar().setHomeAsUpIndicator(drawable);
     }
@@ -833,7 +837,12 @@ public class ConversationListActivity extends AbstractConversationListActivity
         ViewGroup.LayoutParams layoutParams = accessoryContainer.getLayoutParams();
         layoutParams.height = Dimensions.getStatusBarHeight(ConversationListActivity.this) + Dimensions.pxFromDp(56);
         accessoryContainer.setLayoutParams(layoutParams);
-        if (ToolbarDrawables.getToolbarBg() != null) {
+        Drawable customToolBar = ChatListDrawableManager.getToolbarDrawable();
+        if (customToolBar != null) {
+            ImageView ivAccessoryBg = accessoryContainer.findViewById(R.id.accessory_bg);
+            ivAccessoryBg.setVisibility(View.VISIBLE);
+            ivAccessoryBg.setImageDrawable(customToolBar);
+        } else if (ToolbarDrawables.getToolbarBg() != null) {
             ImageView ivAccessoryBg = accessoryContainer.findViewById(R.id.accessory_bg);
             ivAccessoryBg.setVisibility(View.VISIBLE);
             ivAccessoryBg.setImageDrawable(ToolbarDrawables.getToolbarBg());
@@ -842,15 +851,16 @@ public class ConversationListActivity extends AbstractConversationListActivity
             accessoryContainer.findViewById(R.id.accessory_bg).setVisibility(View.GONE);
         }
 
-        View statusbarInset = findViewById(R.id.status_bar_inset);
-        layoutParams = statusbarInset.getLayoutParams();
+        View statusBarInset = findViewById(R.id.status_bar_inset);
+        layoutParams = statusBarInset.getLayoutParams();
         layoutParams.height = Dimensions.getStatusBarHeight(ConversationListActivity.this);
-        statusbarInset.setLayoutParams(layoutParams);
+        statusBarInset.setLayoutParams(layoutParams);
 
         Toolbar toolbar = findViewById(R.id.toolbar);
         toolbar.setTitle("");
         toolbar.setContentInsetsRelative(0, 0);
         LayoutInflater.from(this).inflate(R.layout.conversation_list_toolbar_layout, toolbar, true);
+        ChatListDrawableManager.changeViewColorIfNeed(toolbar.findViewById(R.id.toolbar_title));
         setSupportActionBar(toolbar);
         invalidateActionBar();
         setupToolbarUI();

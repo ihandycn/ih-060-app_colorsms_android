@@ -1,0 +1,218 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.android.messaging.ui.customize.mainpage.ChatListCustomizeControlView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <!--back button-->
+    <LinearLayout
+        android:id="@+id/chat_list_back"
+        android:layout_width="wrap_content"
+        android:layout_height="33.3dp"
+        android:layout_marginStart="13.3dp"
+        android:layout_marginTop="11dp"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:paddingEnd="19dp"
+        android:paddingStart="12dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:contentDescription="@null"
+            android:src="@drawable/chat_list_background" />
+
+        <com.android.messaging.ui.view.MessagesTextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:includeFontPadding="false"
+            android:text="@string/back"
+            android:textColor="@color/white"
+            android:textSize="12.7sp"
+            app:typeface="@string/custom_font_medium" />
+    </LinearLayout>
+
+    <!--apply button-->
+    <com.android.messaging.ui.view.MessagesTextView
+        android:id="@+id/chat_list_apply"
+        android:layout_width="wrap_content"
+        android:layout_height="33.3dp"
+        android:layout_marginEnd="13.3dp"
+        android:layout_marginTop="11dp"
+        android:gravity="center"
+        android:includeFontPadding="false"
+        android:paddingEnd="19dp"
+        android:paddingStart="19dp"
+        android:text="@string/sms_show_apply"
+        android:textColor="@color/white"
+        android:textSize="12.7sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:typeface="@string/custom_font_medium" />
+
+    <FrameLayout
+        android:id="@+id/select_container"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:elevation="8dp"
+        app:layout_constraintBottom_toBottomOf="parent">
+
+        <View
+            android:id="@+id/toggle_view"
+            android:layout_width="56dp"
+            android:layout_height="4dp"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="10.7dp" />
+
+        <View
+            android:id="@+id/chat_list_customize_touch_view"
+            android:layout_width="105.3dp"
+            android:layout_height="32dp"
+            android:layout_gravity="center_horizontal" />
+
+        <android.support.constraint.ConstraintLayout
+            android:id="@+id/chat_list_bg_select_container"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="32dp">
+
+            <com.android.messaging.ui.view.MessagesTextView
+                android:id="@+id/change_bg_title"
+
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/chat_list_control_area_padding"
+                android:layout_marginTop="5.3dp"
+                android:text="Change Background"
+                android:textColor="#4f5157"
+                android:textSize="14sp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:typeface="@string/custom_font_regular" />
+
+            <FrameLayout
+                android:id="@+id/chooser_container"
+                android:layout_width="0dp"
+                android:layout_height="58.7dp"
+                android:layout_marginStart="@dimen/chat_list_control_area_padding"
+                android:layout_marginTop="14.7dp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/change_bg_title">
+
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/wallpaper_chooser_container"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:orientation="horizontal" />
+            </FrameLayout>
+
+            <com.android.messaging.ui.view.MessagesTextView
+                android:id="@+id/opacity_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/chat_list_control_area_padding"
+                android:layout_marginTop="31dp"
+                android:text="Background Opacity"
+                android:textColor="#4f5157"
+                android:textSize="14sp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/chooser_container"
+                app:typeface="@string/custom_font_regular" />
+
+            <com.android.messaging.ui.view.MessagesTextView
+                android:id="@+id/chat_list_customize_opacity_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="@dimen/chat_list_control_area_padding"
+                android:textColor="#4f5157"
+                android:textSize="14sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="@id/opacity_title"
+                app:typeface="@string/custom_font_regular" />
+
+            <SeekBar
+                android:id="@+id/chat_list_seek_bar"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_marginEnd="@dimen/chat_list_control_area_padding"
+                android:layout_marginStart="@dimen/chat_list_control_area_padding"
+                android:layout_marginTop="12.3dp"
+                android:background="@null"
+                android:paddingEnd="11.5dp"
+                android:paddingStart="11.5dp"
+                android:splitTrack="false"
+                android:thumb="@drawable/chat_list_seekbar_thumb"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/opacity_title" />
+
+            <View
+                android:id="@+id/chat_list_text_color_preview"
+                android:layout_width="33.3dp"
+                android:layout_height="33.3dp"
+                android:layout_marginBottom="21.3dp"
+                android:layout_marginEnd="@dimen/chat_list_control_area_padding"
+                android:layout_marginTop="19.7dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/chat_list_seek_bar" />
+
+            <com.android.messaging.ui.view.MessagesTextView
+                android:id="@+id/color_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/chat_list_control_area_padding"
+                android:text="Text color"
+                android:textColor="#4f5157"
+                android:textSize="14sp"
+                app:layout_constraintBottom_toBottomOf="@id/chat_list_text_color_preview"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="@id/chat_list_text_color_preview"
+                app:typeface="@string/custom_font_regular" />
+        </android.support.constraint.ConstraintLayout>
+
+        <android.support.constraint.ConstraintLayout
+            android:id="@+id/chat_list_color_select_container"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="32dp"
+            android:background="@color/white">
+
+            <ImageView
+                android:id="@+id/chat_list_text_color_back"
+                android:layout_width="29.3dp"
+                android:layout_height="29.3dp"
+                android:layout_marginStart="8dp"
+                android:contentDescription="@null"
+                android:scaleType="center"
+                android:src="@drawable/chat_list_text_color_back"
+                app:layout_constraintStart_toStartOf="parent" />
+
+            <com.android.messaging.ui.view.MessagesTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="3.7dp"
+                android:includeFontPadding="false"
+                android:text="Text color"
+                android:textColor="#4f5157"
+                android:textSize="14sp"
+                app:layout_constraintBottom_toBottomOf="@id/chat_list_text_color_back"
+                app:layout_constraintStart_toEndOf="@id/chat_list_text_color_back"
+                app:layout_constraintTop_toTopOf="@id/chat_list_text_color_back"
+                app:typeface="@string/custom_font_regular" />
+
+            <com.android.messaging.ui.customize.mainpage.ChatListChooseColorView
+                android:id="@+id/choose_message_color_view"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/chat_list_text_color_back" />
+        </android.support.constraint.ConstraintLayout>
+    </FrameLayout>
+</com.android.messaging.ui.customize.mainpage.ChatListCustomizeControlView>

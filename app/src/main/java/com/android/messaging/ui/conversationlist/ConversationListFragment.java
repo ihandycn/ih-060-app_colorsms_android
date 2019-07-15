@@ -72,6 +72,7 @@ import com.android.messaging.ui.UIIntents;
 import com.android.messaging.ui.customize.ConversationColors;
 import com.android.messaging.ui.customize.PrimaryColors;
 import com.android.messaging.ui.customize.WallpaperDrawables;
+import com.android.messaging.ui.customize.mainpage.ChatListDrawableManager;
 import com.android.messaging.ui.customize.theme.CreateIconDrawable;
 import com.android.messaging.ui.customize.theme.ThemeInfo;
 import com.android.messaging.ui.customize.theme.ThemeUtils;
@@ -260,7 +261,8 @@ public class ConversationListFragment extends Fragment implements ConversationLi
         mEmptyListMessageView.setImageHint(R.drawable.ic_oobe_conv_list);
         mBackupBannerGuideContainer = rootView.findViewById(R.id.backup_banner_guide_container);
         ImageView conversationListBg = rootView.findViewById(R.id.conversation_list_bg);
-        Drawable bgDrawable = WallpaperDrawables.getConversationListWallpaperDrawable();
+        Drawable customDrawable = ChatListDrawableManager.getWallpaperDrawable();
+        Drawable bgDrawable = customDrawable != null ? customDrawable : WallpaperDrawables.getConversationListWallpaperDrawable();
         getActivity().getWindow().getDecorView().setBackground(null);
         if (bgDrawable == null) {
             getActivity().getWindow().getDecorView().setBackgroundColor(Color.WHITE);

@@ -16,6 +16,7 @@ import com.android.messaging.ui.customize.ConversationColors;
 import com.android.messaging.ui.customize.PrimaryColors;
 import com.android.messaging.ui.customize.ToolbarDrawables;
 import com.android.messaging.ui.customize.WallpaperDrawables;
+import com.android.messaging.ui.customize.mainpage.ChatListDrawableManager;
 import com.android.messaging.util.BugleAnalytics;
 import com.android.messaging.util.BuglePrefsKeys;
 import com.ihs.app.framework.HSApplication;
@@ -23,6 +24,7 @@ import com.ihs.commons.config.HSConfig;
 import com.ihs.commons.notificationcenter.HSGlobalNotificationCenter;
 import com.superapps.util.Threads;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Map;
@@ -79,6 +81,8 @@ public class ThemeUtils {
         if (!themeInfo.mThemeKey.equals(ThemeUtils.DEFAULT_THEME_KEY)) {
             BubbleDrawables.setSelectedIdentifier(-1);
         }
+
+        ChatListDrawableManager.resetAllCustomData();
 
         FontStyleManager.getInstance().setFontFamily(themeInfo.fontName);
 
@@ -176,7 +180,7 @@ public class ThemeUtils {
 
     static Drawable getLocalThemeDrawableFromPath(String path) {
         try {
-            InputStream ims = HSApplication.getContext().getAssets().open("themes/" + path);
+            InputStream ims = HSApplication.getContext().getAssets().open("themes" + File.separator + path);
             Bitmap bitmap = BitmapFactory.decodeStream(ims);
             return new BitmapDrawable(HSApplication.getContext().getResources(), bitmap);
         } catch (IOException e) {

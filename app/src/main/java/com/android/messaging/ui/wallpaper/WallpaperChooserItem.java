@@ -3,9 +3,9 @@ package com.android.messaging.ui.wallpaper;
 import com.android.messaging.R;
 
 public class WallpaperChooserItem {
-    static final int TYPE_ADD_PHOTO = 0;
-    static final int TYPE_EMPTY = 1;
-    static final int TYPE_NORMAL_WALLPAPER = 2;
+    public static final int TYPE_ADD_PHOTO = 0;
+    public static final int TYPE_EMPTY = 1;
+    public static final int TYPE_NORMAL_WALLPAPER = 2;
 
     private int mItemType = TYPE_NORMAL_WALLPAPER;
 
@@ -47,7 +47,7 @@ public class WallpaperChooserItem {
         this.mIndex = mIndex;
     }
 
-    int getItemType() {
+    public int getItemType() {
         return mItemType;
     }
 
@@ -59,7 +59,7 @@ public class WallpaperChooserItem {
         return sThumbnailRes[mIndex];
     }
 
-    String getLocalPath() {
+    public String getLocalPath() {
         return WallpaperDownloader.getWallPaperLocalPath(sRemoteUrl[mIndex]);
     }
 
@@ -67,7 +67,7 @@ public class WallpaperChooserItem {
         return WallpaperDownloader.getAbsolutePath(sRemoteUrl[mIndex]);
     }
 
-    String getRemoteUrl() {
+    public String getRemoteUrl() {
         return sRemoteUrl[mIndex];
     }
 

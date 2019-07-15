@@ -15,8 +15,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class WallpaperManager {
-
-
     private static final String PREF_KEY_WALLPAPER_PATH = "pref_key_wallpaper_path";
     static final String LOCAL_DIRECTORY = "wallpapers" + File.separator + "local";
     private static List<WallpaperChangeListener> sWallpaperChangeListeners;
@@ -176,7 +174,7 @@ public class WallpaperManager {
         }
     }
 
-    static List<WallpaperChooserItem> getWallpaperChooserList() {
+    public static List<WallpaperChooserItem> getWallpaperChooserList() {
         List<WallpaperChooserItem> list = new ArrayList<>();
         WallpaperChooserItem addItem = new WallpaperChooserItem();
         addItem.setItemType(WallpaperChooserItem.TYPE_ADD_PHOTO);
