@@ -607,9 +607,11 @@ public class ConversationListFragment extends Fragment implements ConversationLi
         mAdContentView.setAdIconView(icon);
         TextView title = ViewUtils.findViewById(adView, R.id.banner_title);
         title.setTextColor(ConversationColors.get().getListTitleColor());
+        ChatListDrawableManager.changeViewColorIfNeed(title);
         mAdContentView.setAdTitleView(title);
         TextView description = ViewUtils.findViewById(adView, R.id.banner_des);
         description.setTextColor(ConversationColors.get().getListSubtitleColor());
+        ChatListDrawableManager.changeViewColorIfNeed(description);
         mAdContentView.setAdBodyView(description);
 
         TextView actionBtn = ViewUtils.findViewById(adView, R.id.banner_action);
@@ -634,6 +636,7 @@ public class ConversationListFragment extends Fragment implements ConversationLi
 
         ImageView ivAdPreview = adView.findViewById(R.id.icon_ad_preview);
         ivAdPreview.getDrawable().setColorFilter(ConversationColors.get().getListTimeColor(), PorterDuff.Mode.SRC_ATOP);
+        ChatListDrawableManager.changeDrawableColorIfNeed(ivAdPreview.getDrawable());
 
         mAdContentView.hideAdCorner();
         mAdContentView.fillNativeAd(mNativeAd);
