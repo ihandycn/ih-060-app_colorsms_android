@@ -91,10 +91,10 @@ public class ChatListCustomizeActivity extends BaseActivity implements INotifica
         mThemeViewGroup = findViewById(R.id.chat_list_theme_group);
 
         //set custom wallpaper
-        mCurrentSelectedWallpaperPath = ChatListDrawableManager.getListWallpaperPath();
+        mPreviousPath = mCurrentSelectedWallpaperPath = ChatListDrawableManager.getListWallpaperPath();
         if (!TextUtils.isEmpty(mCurrentSelectedWallpaperPath)) {
             mThemeViewGroup.setVisibility(View.INVISIBLE);
-            setPreviewImage(mCurrentSelectedWallpaperPath);
+            setPreviewImage(mCurrentSelectedWallpaperPath, false);
         }
         //set mask opacity
         mBgMaskView.setAlpha(ChatListDrawableManager.getMaskOpacity());
@@ -119,7 +119,7 @@ public class ChatListCustomizeActivity extends BaseActivity implements INotifica
                     useThemeTextColor();
                     mUseThemeColor = true;
                 } else {
-                    setPreviewImage(path);
+                    setPreviewImage(path, true);
                     mUseThemeColor = false;
                 }
             }
@@ -255,7 +255,7 @@ public class ChatListCustomizeActivity extends BaseActivity implements INotifica
         themeWallpaperBackground.setImageDrawable(WallpaperDrawables.getConversationListWallpaperDrawable());
     }
 
-    private void setPreviewImage(String path) {
+    private void setPreviewImage(String path, boolean changeTextColor) {
         String url = Uri.fromFile(new File(path)).toString();
         GlideApp.with(this)
                 .asBitmap()
@@ -299,16 +299,18 @@ public class ChatListCustomizeActivity extends BaseActivity implements INotifica
                             Bitmap resizeBitmap = Bitmap.createBitmap(resource, left, top, resizeWidth, resizeHeight);
                             mCustomBackground.setImageBitmap(resizeBitmap);
 
-                            Palette.Builder builder = Palette.from(resource);
-                            builder.generate(palette -> Threads.postOnMainThread(() -> {
-                                Palette.Swatch vibrant = palette.getDominantSwatch();
-                                if (vibrant != null) {
-                                    int textColor = calculateTextColor(vibrant.getRgb());
-                                    setTextColor(textColor);
-                                    mCurrentSelectedColor = textColor;
-                                    mCurrentRecommendColor = textColor;
-                                }
-                            }));
+                            if (changeTextColor) {
+                                Palette.Builder builder = Palette.from(resource);
+                                builder.generate(palette -> Threads.postOnMainThread(() -> {
+                                    Palette.Swatch vibrant = palette.getDominantSwatch();
+                                    if (vibrant != null) {
+                                        int textColor = calculateTextColor(vibrant.getRgb());
+                                        setTextColor(textColor);
+                                        mCurrentSelectedColor = textColor;
+                                        mCurrentRecommendColor = textColor;
+                                    }
+                                }));
+                            }
                         });
                     }
 
@@ -349,7 +351,7 @@ public class ChatListCustomizeActivity extends BaseActivity implements INotifica
         switch (s) {
             case CHAT_LIST_WALLPAPER_CHANGED:
                 String wallpaperPath = hsBundle.getString(BUNDLE_KEY_WALLPAPER_PATH);
-                setPreviewImage(wallpaperPath);
+                setPreviewImage(wallpaperPath, true);
                 mCurrentSelectedWallpaperPath = wallpaperPath;
                 mControlView.onItemSelected(null);
                 break;
