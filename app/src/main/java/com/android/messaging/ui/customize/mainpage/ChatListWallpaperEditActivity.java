@@ -219,9 +219,8 @@ public class ChatListWallpaperEditActivity extends BaseActivity implements View.
     }
 
     private String saveWallpaperToLocal(Bitmap bitmap) {
-        String fileName = Utils.md5(mWallpaperPath);
         File storedWallpaper = new File(CommonUtils.getDirectory(LOCAL_DIRECTORY),
-                fileName + "_1.png");
+                System.currentTimeMillis() + ".png");
 
         FileOutputStream out;
         try {

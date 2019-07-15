@@ -115,7 +115,7 @@ public class ChatListCustomizeControlView extends ConstraintLayout {
         moveView.setBackground(BackgroundDrawables.createBackgroundDrawable(Color.WHITE, 0,
                 Dimensions.pxFromDp(13.3f), Dimensions.pxFromDp(13.3f), 0, 0,
                 false, false));
-        new ViewSwipeHelper(touchAreaView, moveView);
+        new ChatListViewSwipeHelper(touchAreaView, moveView);
     }
 
     private void initTopBackAndApplyBtn() {

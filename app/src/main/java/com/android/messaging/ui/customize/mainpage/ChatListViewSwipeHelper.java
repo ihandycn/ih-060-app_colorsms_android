@@ -10,10 +10,13 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.animation.Interpolator;
 
+import com.android.messaging.util.BugleAnalytics;
 import com.superapps.util.Dimensions;
 
-class ViewSwipeHelper {
+class ChatListViewSwipeHelper {
     private float mInitY;
+    private float mInitX;
+    private long mTouchStartTime;
     private int mContainerMinHeight = Dimensions.pxFromDp(32);
     private int mContainerMaxHeight;
     private int mMaxDistance;
@@ -21,7 +24,7 @@ class ViewSwipeHelper {
     private View mContainerView;
 
     @SuppressLint("ClickableViewAccessibility")
-    ViewSwipeHelper(@NonNull View slider, @NonNull View container) {
+    ChatListViewSwipeHelper(@NonNull View slider, @NonNull View container) {
         mContainerView = container;
         slider.setOnTouchListener((v, event) -> {
             if (v != slider) {
@@ -38,6 +41,9 @@ class ViewSwipeHelper {
             switch (event.getAction()) {
                 case MotionEvent.ACTION_DOWN:
                     mInitY = event.getRawY();
+                    mInitX = event.getRawX();
+                    mTouchStartTime = System.currentTimeMillis();
+                    BugleAnalytics.logEvent("Customize_ChatList_Slide");
                     break;
                 case MotionEvent.ACTION_MOVE:
                     float translateY = event.getRawY() - mInitY;
@@ -60,6 +66,19 @@ class ViewSwipeHelper {
                     }
                     break;
                 case MotionEvent.ACTION_UP:
+                    if (Math.abs(event.getRawX() - mInitX) + Math.abs(event.getRawY() - mInitY) < 20
+                            && System.currentTimeMillis() - mTouchStartTime < 100) {
+                        Animator animator = mIsBottomMode ? getGestureEndAnimation(mMaxDistance, 0)
+                                : getGestureEndAnimation(0, mMaxDistance);
+                        animator.addListener(new AnimatorListenerAdapter() {
+                            @Override
+                            public void onAnimationEnd(Animator animation) {
+                                mIsBottomMode = !(mContainerView.getTranslationY() == 0);
+                            }
+                        });
+                        animator.start();
+                        break;
+                    }
                 case MotionEvent.ACTION_CANCEL:
                 case MotionEvent.ACTION_OUTSIDE:
                     float y = event.getRawY() - mInitY;
@@ -89,7 +108,6 @@ class ViewSwipeHelper {
                         });
                         animator.start();
                     }
-                    mInitY = 0;
                     break;
             }
             return true;

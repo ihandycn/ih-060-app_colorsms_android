@@ -1002,8 +1002,29 @@ public class ConversationListActivity extends AbstractConversationListActivity
                                 "archive", String.valueOf(archivedCount > 0),
                                 "emojiskintone", String.valueOf(EmojiManager.getSkinDefault() + 1));
 
+                        String bgString;
+                        String path = ChatListDrawableManager.getListWallpaperPath();
+                        if (TextUtils.isEmpty(path)) {
+                            bgString = "theme";
+                        } else if (path.contains("list_wallpapers")) {
+                            bgString = "customize";
+                        } else {
+                            bgString = "recommend";
+                        }
+                        String opacityStr;
+                        float alpha = ChatListDrawableManager.getMaskOpacity();
+                        if (alpha < 0.1f) {
+                            opacityStr = "<10%";
+                        } else {
+                            int tensNum = Math.min((int) (alpha * 10), 9);
+                            opacityStr = tensNum + "0%-" + (tensNum + 1) + "0%";
+                        }
                         BugleAnalytics.logEvent("SMS_Messages_Show_2", true,
-                                "subscription", String.valueOf(BillingManager.isPremiumUser()));
+                                "subscription", String.valueOf(BillingManager.isPremiumUser()),
+                                "chat_list_background", bgString,
+                                "chat_list_text_color", Preferences.getDefault()
+                                        .getString(ChatListCustomizeActivity.PREF_KEY_EVENT_CHANGE_COLOR_TYPE, "theme"),
+                                "chat_list_opacity", opacityStr);
 
                     });
                 }

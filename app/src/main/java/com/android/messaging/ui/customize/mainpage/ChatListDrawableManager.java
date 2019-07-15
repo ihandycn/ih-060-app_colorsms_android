@@ -47,17 +47,18 @@ public class ChatListDrawableManager {
         sPref.remove(PREF_KEY_CHAT_LIST_USE_THEME_TEXT_COLOR);
 
         sPref.remove(PREF_KEY_HAS_CHAT_LIST_CUSTOM);
+        sPref.remove(ChatListCustomizeActivity.PREF_KEY_EVENT_CHANGE_COLOR_TYPE);
         sHasCustomWallpaper = false;
     }
 
-    static String getListWallpaperPath() {
+    public static String getListWallpaperPath() {
         if (sHasCustomWallpaper) {
             return sPref.getString(PREF_KEY_CONVERSATION_LIST_WALLPAPER_PATH, null);
         }
         return null;
     }
 
-    static float getMaskOpacity() {
+    public static float getMaskOpacity() {
         if (sHasCustomWallpaper) {
             return sPref.getFloat(PREF_KEY_CHAT_LIST_MASK_OPACITY, 0);
         }
