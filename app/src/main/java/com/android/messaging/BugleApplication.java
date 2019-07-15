@@ -61,6 +61,7 @@ import com.android.messaging.util.CommonUtils;
 import com.android.messaging.util.DebugUtils;
 import com.android.messaging.util.DefaultSMSUtils;
 import com.android.messaging.util.DefaultSmsAppChangeObserver;
+import com.android.messaging.util.ExitAdConfig;
 import com.android.messaging.util.FabricUtils;
 import com.android.messaging.util.LogUtil;
 import com.android.messaging.util.OsUtil;
@@ -168,6 +169,7 @@ public class BugleApplication extends HSApplication implements UncaughtException
 
     @Override
     public void onCreate() {
+        HSLog.d("AdTest", "BugleApplication onCreate");
         Trace.beginSection("app.onCreate");
         try {
             super.onCreate();
@@ -183,6 +185,7 @@ public class BugleApplication extends HSApplication implements UncaughtException
             String processName = getProcessName();
             boolean isOnMainProcess = TextUtils.equals(processName, packageName);
             if (isOnMainProcess) {
+                HSLog.d("AdTest", "BugleApplication onMainProcessApplicationCreate();");
                 onMainProcessApplicationCreate();
             }
 
@@ -212,6 +215,7 @@ public class BugleApplication extends HSApplication implements UncaughtException
     }
 
     private void initAd() {
+        HSLog.d("AdTest", "initAd()");
         if (HSGdprConsent.isGdprUser()) {
             if (HSGdprConsent.getConsentState() != HSGdprConsent.ConsentState.ACCEPTED) {
                 AcbAds.getInstance().setGdprInfo(GDPR_USER, GDPR_NOT_GRANTED);
@@ -219,10 +223,20 @@ public class BugleApplication extends HSApplication implements UncaughtException
         }
 
         if (AcbIAPTransaction.isServiceAvailable()) {
+            HSLog.d("AdTest", "AcbIAPTransaction.isServiceAvailable() = true");
             BillingManager.init(this, isPremiumUser -> {
+                HSLog.d("AdTest", "BillingManager.init");
                 if (!isPremiumUser) {
+                    HSLog.d("AdTest", "AdConfig.activeAllAdsReentrantly();");
                     AcbAds.getInstance().initializeFromGoldenEye(BugleApplication.this);
                     AdConfig.activeAllAdsReentrantly();
+                    new Handler().postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            HSLog.d("AdTest", "BugleApplication Preload");
+                            ExitAdConfig.preLoadExitAd();
+                        }
+                    }, 2000);
                 }
             });
         } else {
