@@ -806,8 +806,8 @@ public class ConversationListActivity extends AbstractConversationListActivity
             HSLog.d("AdTest", "exitAdShownCountInOneDay <= ExitAdAutopilotUtils.getExitAdShowMaxTimes()");
             HSLog.d("AdTest", "exitAdShownCountInOneDay = " + exitAdShownCountInOneDay);
             HSLog.d("AdTest", "ExitAdAutopilotUtils.getExitAdShowMaxTimes() = " + ExitAdAutopilotUtils.getExitAdShowMaxTimes());
-            if (exitAdShownCountInOneDay > ExitAdAutopilotUtils.getExitAdShowMaxTimes()) {
-                HSLog.d("AdTest", "exitAdShownCountInOneDay > ExitAdAutopilotUtils.getExitAdShowMaxTimes()");
+            if (exitAdShownCountInOneDay == ExitAdAutopilotUtils.getExitAdShowMaxTimes()) {
+                HSLog.d("AdTest", "exitAdShownCountInOneDay == ExitAdAutopilotUtils.getExitAdShowMaxTimes()");
                 HSLog.d("AdTest", "exitAdShownCountInOneDay = " + exitAdShownCountInOneDay);
                 HSLog.d("AdTest", "ExitAdAutopilotUtils.getExitAdShowMaxTimes() = " + ExitAdAutopilotUtils.getExitAdShowMaxTimes());
                 return false;
@@ -835,7 +835,7 @@ public class ConversationListActivity extends AbstractConversationListActivity
         BugleAnalytics.logEvent("SMS_ExitAd_Chance", true, true);
         BugleAnalytics.logEvent("SMS_Ad", false, true, "type", "exitad_chance");
         ExitAdAutopilotUtils.logExitAdChance();
-        List<AcbInterstitialAd> ads = AcbInterstitialAdManager.fetch(AdPlacement.AD_WIRE, 1);
+        List<AcbInterstitialAd> ads = AcbInterstitialAdManager.fetch(AdPlacement.AD_EXIT_WIRE, 1);
         HSLog.d("AdTest", "List<AcbInterstitialAd> ads = AcbInterstitialAdManager.fetch(AdPlacement.AD_EXIT_WIRE, 1);");
         if (ads.size() > 0) {
             mInterstitialAd = ads.get(0);
@@ -850,7 +850,7 @@ public class ConversationListActivity extends AbstractConversationListActivity
                     long currentTime = Calendar.getInstance().getTimeInMillis();
                     if (currentTime - mLastAdClickTime > MIN_AD_CLICK_DELAY_TIME) {
                         BugleAnalytics.logEvent("SMS_ExitAd_Click", true, true);
-                        BugleAnalytics.logEvent("SMS_Ad", false, true, "type", "exit_click");
+                        BugleAnalytics.logEvent("SMS_Ad", false, true, "type", "exitad_click");
                         ExitAdAutopilotUtils.logExitAdClick();
                         mLastAdClickTime = currentTime;
                     }
@@ -878,7 +878,7 @@ public class ConversationListActivity extends AbstractConversationListActivity
             mInterstitialAd.setSoundEnable(false);
             mInterstitialAd.show();
             BugleAnalytics.logEvent("SMS_ExitAd_Show", true, true);
-            BugleAnalytics.logEvent("SMS_Ad", false, true, "type", "exit_show");
+            BugleAnalytics.logEvent("SMS_Ad", false, true, "type", "exitad_show");
             ExitAdAutopilotUtils.logExitAdShow();
             mPrefs.putInt(PREF_KEY_EXIT_WIRE_AD_SHOW_COUNT_IN_ONE_DAY, exitAdShownCountInOneDay + 1);
             mPrefs.putLong(PREF_KEY_EXIT_WIRE_AD_SHOW_TIME, System.currentTimeMillis());

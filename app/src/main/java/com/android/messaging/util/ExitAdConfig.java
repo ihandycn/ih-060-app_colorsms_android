@@ -28,7 +28,7 @@ public class ExitAdConfig {
                 && System.currentTimeMillis() - mPrefs.getLong(PREF_KEY_WIRE_AD_SHOW_TIME_FOR_EXIT_WIRE_AD, -1)
                 >= 20 * DateUtils.SECOND_IN_MILLIS) {
             HSLog.d("AdTest", "AcbInterstitialAdManager.preload(1, AdPlacement.AD_EXIT_WIRE);");
-            AcbInterstitialAdManager.preload(1, AdPlacement.AD_WIRE);
+            AcbInterstitialAdManager.preload(1, AdPlacement.AD_EXIT_WIRE);
         }
     }
 }
