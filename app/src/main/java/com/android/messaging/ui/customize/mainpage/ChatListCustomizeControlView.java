@@ -6,12 +6,14 @@ import android.animation.ObjectAnimator;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.ColorStateList;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.drawable.ClipDrawable;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.LayerDrawable;
+import android.graphics.drawable.RippleDrawable;
 import android.graphics.drawable.ShapeDrawable;
 import android.graphics.drawable.shapes.Shape;
 import android.support.annotation.ColorInt;
@@ -44,6 +46,7 @@ import com.superapps.util.BackgroundDrawables;
 import com.superapps.util.Dimensions;
 import com.superapps.util.Navigations;
 import com.superapps.util.Threads;
+import com.superapps.view.SelectorDrawable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -198,19 +201,32 @@ public class ChatListCustomizeControlView extends ConstraintLayout {
     }
 
     public void setTextColorBtnColor(@ColorInt int color) {
-        if ((color & 0xffffff) == 0xffffff) {
-            Drawable drawable = BackgroundDrawables.createBackgroundDrawable(color,
-                    getContext().getResources().getColor(com.superapps.R.color.ripples_ripple_color),
-                    Dimensions.pxFromDp(1.3f), 0xffdee0e8,
-                    Dimensions.pxFromDp(33.3f) / 2,
-                    true, true);
-            mTextColorPreview.setBackground(drawable);
+        mTextColorPreview.setBackground(createTextPreviewDrawable(color));
+    }
+
+    private Drawable createTextPreviewDrawable(int color) {
+        int rippleColor = getContext().getResources().getColor(com.superapps.R.color.ripples_ripple_color);
+        ShapeDrawable drawable = new ShapeDrawable(new Shape() {
+
+            @Override
+            public void draw(Canvas canvas, Paint paint) {
+                paint.setStrokeWidth(Dimensions.pxFromDp(1.3f));
+                paint.setDither(true);
+                paint.setAntiAlias(true);
+                paint.setStyle(Paint.Style.STROKE);
+                paint.setColor(0xffdee0e8);
+                float radius = Math.min(getHeight() / 2, getWidth() / 2) - Dimensions.pxFromDp(1.3f);
+                canvas.drawCircle(getWidth() / 2, getHeight() / 2, radius, paint);
+                paint.setColor(color);
+                paint.setStyle(Paint.Style.FILL);
+                canvas.drawCircle(getWidth() / 2, getHeight() / 2, Dimensions.pxFromDp(13), paint);
+            }
+        });
+
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
+            return new RippleDrawable(ColorStateList.valueOf(rippleColor), drawable, null);
         } else {
-            Drawable drawable = BackgroundDrawables.createBackgroundDrawable(color,
-                    getContext().getResources().getColor(com.superapps.R.color.ripples_ripple_color),
-                    Dimensions.pxFromDp(33.3f) / 2,
-                    true, true);
-            mTextColorPreview.setBackground(drawable);
+            return new SelectorDrawable(drawable, rippleColor);
         }
     }
 
