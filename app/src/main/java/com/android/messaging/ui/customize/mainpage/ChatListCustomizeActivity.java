@@ -94,7 +94,7 @@ public class ChatListCustomizeActivity extends BaseActivity implements INotifica
         //set custom wallpaper
         mPreviousPath = mCurrentSelectedWallpaperPath = ChatListDrawableManager.getListWallpaperPath();
         if (!TextUtils.isEmpty(mCurrentSelectedWallpaperPath)) {
-            mThemeViewGroup.setVisibility(View.INVISIBLE);
+            mThemeViewGroup.setVisibility(View.GONE);
             setPreviewImage(mCurrentSelectedWallpaperPath, false);
         }
         //set mask opacity
@@ -282,7 +282,7 @@ public class ChatListCustomizeActivity extends BaseActivity implements INotifica
                             }
 
                             mCustomBackground.setVisibility(View.VISIBLE);
-                            mThemeViewGroup.setVisibility(View.INVISIBLE);
+                            mThemeViewGroup.setVisibility(View.GONE);
 
                             int height = Dimensions.getPhoneHeight(ChatListCustomizeActivity.this)
                                     - Dimensions.getNavigationBarHeight(ChatListCustomizeActivity.this);
