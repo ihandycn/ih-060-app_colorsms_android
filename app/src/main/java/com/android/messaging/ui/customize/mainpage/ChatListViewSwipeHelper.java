@@ -67,7 +67,7 @@ class ChatListViewSwipeHelper {
                     break;
                 case MotionEvent.ACTION_UP:
                     if (Math.abs(event.getRawX() - mInitX) + Math.abs(event.getRawY() - mInitY) < 20
-                            && System.currentTimeMillis() - mTouchStartTime < 100) {
+                            && System.currentTimeMillis() - mTouchStartTime < 130) {
                         Animator animator = mIsBottomMode ? getGestureEndAnimation(mMaxDistance, 0)
                                 : getGestureEndAnimation(0, mMaxDistance);
                         animator.addListener(new AnimatorListenerAdapter() {

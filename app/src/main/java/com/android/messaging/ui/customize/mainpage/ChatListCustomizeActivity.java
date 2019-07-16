@@ -93,7 +93,7 @@ public class ChatListCustomizeActivity extends BaseActivity implements INotifica
         //set custom wallpaper
         mPreviousPath = mCurrentSelectedWallpaperPath = ChatListDrawableManager.getListWallpaperPath();
         if (!TextUtils.isEmpty(mCurrentSelectedWallpaperPath)) {
-            mThemeViewGroup.setVisibility(View.GONE);
+            mThemeViewGroup.setVisibility(View.INVISIBLE);
             setPreviewImage(mCurrentSelectedWallpaperPath, false);
         }
         //set mask opacity
@@ -152,7 +152,10 @@ public class ChatListCustomizeActivity extends BaseActivity implements INotifica
                     //this event must log before apply
                     logApplyEvent();
                     ChatListDrawableManager.saveChatListCustomizeInfo(mCurrentSelectedWallpaperPath, mBgMaskView.getAlpha(), mUseThemeColor, mCurrentSelectedColor);
-                    Threads.postOnMainThread(() -> HSGlobalNotificationCenter.sendNotification(ConversationListActivity.EVENT_MAINPAGE_RECREATE));
+                    Threads.postOnMainThread(() -> {
+                        HSGlobalNotificationCenter.sendNotification(ConversationListActivity.EVENT_MAINPAGE_RECREATE);
+                        finish();
+                    });
                 });
             }
         });
@@ -359,6 +362,8 @@ public class ChatListCustomizeActivity extends BaseActivity implements INotifica
                 setPreviewImage(wallpaperPath, true);
                 mCurrentSelectedWallpaperPath = wallpaperPath;
                 mControlView.onItemSelected(null);
+                mControlView.resetOpacitySeekBar();
+                mBgMaskView.setAlpha(0);
                 break;
         }
     }

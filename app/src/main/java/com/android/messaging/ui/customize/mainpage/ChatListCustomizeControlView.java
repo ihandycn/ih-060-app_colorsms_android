@@ -212,6 +212,10 @@ public class ChatListCustomizeControlView extends ConstraintLayout {
         });
     }
 
+    public void resetOpacitySeekBar() {
+        mOpacitySeekBar.setProgress(0);
+    }
+
     public void changeRecommendTextColor(@ColorInt int color) {
         mColorChooseView.changeRecommendColor(color);
     }

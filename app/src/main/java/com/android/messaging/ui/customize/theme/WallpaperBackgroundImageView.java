@@ -22,7 +22,7 @@ public class WallpaperBackgroundImageView extends AppCompatImageView {
 
     @Override
     public void layout(int l, int t, int r, int b) {
-        b = Dimensions.getPhoneHeight(getContext()) - Dimensions.pxFromDp(56) - Dimensions.getStatusBarHeight(getContext());
+       // b = Dimensions.getPhoneHeight(getContext()) - Dimensions.pxFromDp(56) - Dimensions.getStatusBarHeight(getContext());
         super.layout(l, t, r, b);
     }
 }
