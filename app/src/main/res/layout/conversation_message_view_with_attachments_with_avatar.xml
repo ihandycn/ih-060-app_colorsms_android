@@ -22,63 +22,6 @@
     android:layout_height="wrap_content">
 
     <include layout="@layout/layout_conversation_message_icon"/>
-
-    <ImageView
-        android:id="@+id/check_box"
-        android:layout_width="20dp"
-        android:layout_height="20dp"
-        android:scaleType="fitXY"
-        android:visibility="gone"/>
-
-    <com.android.messaging.ui.conversation.ConversationMessageBubbleView
-        android:id="@+id/message_content"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_vertical"
-        android:orientation="vertical">
-
-        <LinearLayout
-            android:id="@+id/message_attachments"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:visibility="gone">
-
-            <!-- Video, audio and vcard attachments (if present) will be added here -->
-            <com.android.messaging.ui.MultiAttachmentLayout
-                android:id="@+id/multiple_attachments"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:visibility="gone"/>
-
-            <com.android.messaging.ui.AsyncImageView
-                android:id="@+id/message_image"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:adjustViewBounds="true"
-                android:contentDescription="@string/message_image_content_description"
-                android:minWidth="@dimen/conversation_message_photo_min_size"
-                android:minHeight="@dimen/conversation_message_photo_min_size"
-                android:scaleType="fitCenter"
-                android:visibility="gone"
-                app:cornerRadius="@dimen/attachment_rounded_corner_radius"
-                app:placeholderDrawable="@drawable/attachment_image_placeholder_background"/>
-        </LinearLayout>
-
-        <com.android.messaging.ui.conversation.MessageBubbleBackground
-            android:id="@+id/message_text_and_info"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:gravity="center_vertical"
-            android:orientation="vertical">
-
-            <include layout="@layout/layout_conversation_message_text"/>
-
-        </com.android.messaging.ui.conversation.MessageBubbleBackground>
-
-        <include layout="@layout/layout_conversation_message_metadata"/>
-
-    </com.android.messaging.ui.conversation.ConversationMessageBubbleView>
+    <include layout="@layout/layout_conversation_bubble_with_attachment"/>
 
 </com.android.messaging.ui.conversation.ConversationMessageView>
