@@ -1,6 +1,13 @@
 package com.android.messaging.privatebox.ui;
 
 import android.content.Intent;
+import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.Paint;
+import android.graphics.drawable.Drawable;
+import android.graphics.drawable.LayerDrawable;
+import android.graphics.drawable.ShapeDrawable;
+import android.graphics.drawable.shapes.Shape;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.widget.Toolbar;
@@ -10,6 +17,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
 
 import com.android.messaging.R;
@@ -23,6 +31,7 @@ import com.android.messaging.ui.BaseAlertDialog;
 import com.android.messaging.ui.conversationlist.ConversationListActivity;
 import com.android.messaging.ui.customize.PrimaryColors;
 import com.android.messaging.ui.customize.ToolbarDrawables;
+import com.android.messaging.ui.customize.mainpage.ChatListDrawableManager;
 import com.android.messaging.util.BugleAnalytics;
 import com.ihs.commons.notificationcenter.HSGlobalNotificationCenter;
 import com.ihs.commons.notificationcenter.INotificationObserver;
@@ -41,7 +50,6 @@ public class PrivateConversationListActivity extends MultiSelectConversationList
 
     private static final String PREF_KEY_ADD_BUTTON_CLICKED = "pref_key_private_toolbar_add_button_clicked";
     private PrivateConversationListFragment mConversationListFragment;
-    private View mStatusBarInset;
     private View mTitle;
 
     private volatile boolean mIsMessageMoving;
@@ -157,7 +165,9 @@ public class PrivateConversationListActivity extends MultiSelectConversationList
         }
 
         if (mActionMode == null && getSupportActionBar() != null) {
-            getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_back);
+            Drawable drawable = getDrawable(R.drawable.ic_back);
+            ChatListDrawableManager.changeDrawableColorIfNeed(drawable);
+            getSupportActionBar().setHomeAsUpIndicator(drawable);
         }
     }
 
@@ -167,8 +177,27 @@ public class PrivateConversationListActivity extends MultiSelectConversationList
             return super.onCreateOptionsMenu(menu);
         }
         getMenuInflater().inflate(R.menu.private_list_conversation_list_menu, menu);
+        for (int i = 0; i < menu.size(); i++) {
+            ChatListDrawableManager.changeDrawableColorIfNeed(menu.getItem(i).getIcon());
+        }
         if (!Preferences.getDefault().getBoolean(PREF_KEY_ADD_BUTTON_CLICKED, false)) {
-            menu.findItem(R.id.private_action_add).setIcon(R.drawable.private_add_btn_unclick);
+            Drawable drawable = menu.findItem(R.id.private_action_add).getIcon();
+            ShapeDrawable markDrawable = new ShapeDrawable(new Shape() {
+                @Override
+                public void draw(Canvas canvas, Paint paint) {
+                    float x = getWidth() * 25.3f / 30;
+                    float y = getHeight() * 4.7f / 30;
+                    paint.setStyle(Paint.Style.FILL);
+                    paint.setAntiAlias(true);
+                    paint.setDither(true);
+                    paint.setColor(Color.WHITE);
+                    canvas.drawCircle(x, y, Dimensions.pxFromDp(3), paint);
+                    paint.setColor(Color.RED);
+                    canvas.drawCircle(x, y, Dimensions.pxFromDp(2), paint);
+                }
+            });
+            LayerDrawable layerDrawable = new LayerDrawable(new Drawable[]{drawable, markDrawable});
+            menu.findItem(R.id.private_action_add).setIcon(layerDrawable);
         }
         return true;
     }
@@ -232,7 +261,12 @@ public class PrivateConversationListActivity extends MultiSelectConversationList
         ViewGroup.LayoutParams lp = accessoryContainer.getLayoutParams();
         lp.height = Dimensions.getStatusBarHeight(PrivateConversationListActivity.this) + Dimensions.pxFromDp(56);
         accessoryContainer.setLayoutParams(lp);
-        if (ToolbarDrawables.getToolbarBg() != null) {
+        Drawable customToolBar = ChatListDrawableManager.getToolbarDrawable();
+        if (customToolBar != null) {
+            ImageView ivAccessoryBg = accessoryContainer.findViewById(R.id.accessory_bg);
+            ivAccessoryBg.setVisibility(View.VISIBLE);
+            ivAccessoryBg.setImageDrawable(customToolBar);
+        } else if (ToolbarDrawables.getToolbarBg() != null) {
             mHasTheme = true;
             findViewById(R.id.accessory_bg).setBackground(ToolbarDrawables.getToolbarBg());
         } else {
@@ -241,7 +275,7 @@ public class PrivateConversationListActivity extends MultiSelectConversationList
         }
         mConversationListFragment.onThemeChanged(mHasTheme);
 
-        mStatusBarInset = findViewById(R.id.status_bar_inset);
+        View mStatusBarInset = findViewById(R.id.status_bar_inset);
         ViewGroup.LayoutParams layoutParams = mStatusBarInset.getLayoutParams();
         layoutParams.height = Dimensions.getStatusBarHeight(this);
         mStatusBarInset.setLayoutParams(layoutParams);
@@ -249,6 +283,7 @@ public class PrivateConversationListActivity extends MultiSelectConversationList
         Toolbar toolbar = findViewById(R.id.toolbar);
         toolbar.setTitle("");
         mTitle = findViewById(R.id.private_conversation_title);
+        ChatListDrawableManager.changeViewColorIfNeed(mTitle);
         setSupportActionBar(toolbar);
 
         if (getSupportActionBar() != null) {

@@ -3,6 +3,7 @@ package com.android.messaging.ui.customize.mainpage;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
@@ -75,14 +76,15 @@ public class ChatListDrawableManager {
 
     public static void changeDrawableColorIfNeed(Drawable drawable) {
         if (!sHasCustomWallpaper) {
+            drawable.clearColorFilter();
             return;
         }
 
         if (sUseThemeColor) {
+            drawable.clearColorFilter();
             return;
         }
         drawable.setColorFilter(sCurrentTextColor, PorterDuff.Mode.SRC_IN);
-
     }
 
     public static void changeViewColorIfNeed(View view) {
@@ -99,7 +101,6 @@ public class ChatListDrawableManager {
         } else if (view instanceof ImageView) {
             ((ImageView) view).setColorFilter(sCurrentTextColor);
         }
-
     }
 
     static boolean isCustomInfoChanged(String wallpaperPath, float opacity, boolean useThemeColor, int textColor) {
