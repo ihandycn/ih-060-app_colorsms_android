@@ -5,12 +5,11 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.support.v4.content.LocalBroadcastManager;
-import android.text.TextUtils;
-import android.util.Log;
 
 import com.android.messaging.BugleApplication;
 import com.android.messaging.R;
 import com.android.messaging.util.BugleAnalytics;
+import com.android.messaging.util.BugleApplicationPrefs;
 import com.ihs.commons.notificationcenter.HSGlobalNotificationCenter;
 import com.superapps.util.Toasts;
 
@@ -25,6 +24,7 @@ public class BillingManager {
 
     public static final String BILLING_VERIFY_SUCCESS = "billing.verify.success";
     public static final String PRODUCT_ID = "com.color.sms.messages.emoji.pid.adfree.tier1";
+    private static final String PREF_KEY_USER_HAS_VERIFIED_SUCCESS = "iap.user.has.verified.success";
 
     public interface CheckIapStateCallBack {
         void onGetResult(boolean isPremiumUser);
@@ -47,6 +47,11 @@ public class BillingManager {
                 }
 
         }, new IntentFilter(AcbIAPTransaction.INVENTORY_DID_UPDATE_NOTIFICATION));
+    }
+
+
+    public static boolean hasUserEverVerifiedSuccessfully() {
+        return BugleApplicationPrefs.getApplicationPrefs().getBoolean(PREF_KEY_USER_HAS_VERIFIED_SUCCESS, false);
     }
 
     public static void requestPurchase() {
@@ -74,8 +79,9 @@ public class BillingManager {
             public void onVerificationSuccess() {
                 // 验证通过，交易结束
                 // 可在此处增加用户资产或资格
-                AdConfig.disableAllAds();
+                AdConfig.deactiveAllAds();
                 HSGlobalNotificationCenter.sendNotification(BILLING_VERIFY_SUCCESS);
+                BugleApplicationPrefs.getApplicationPrefs().putBoolean(PREF_KEY_USER_HAS_VERIFIED_SUCCESS, true);
 
                 BugleAnalytics.logEvent("SMS_Subscription_Purchase_Success", true);
                 BugleAnalytics.logEvent("Subscription_Analysis",

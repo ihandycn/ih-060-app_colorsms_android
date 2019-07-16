@@ -1001,8 +1001,13 @@ public class ConversationListActivity extends AbstractConversationListActivity
                 final ConversationListFragment conversationListFragment =
                         (ConversationListFragment) getFragmentManager().findFragmentById(
                                 R.id.conversation_list_fragment);
-                conversationListFragment.disableTopNativeAd();
-                findViewById(R.id.navigation_item_remove_ads).setVisibility(View.GONE);
+                if (conversationListFragment != null) {
+                    conversationListFragment.disableTopNativeAd();
+                }
+                View navigationItemRemoveAds = findViewById(R.id.navigation_item_remove_ads);
+                if (navigationItemRemoveAds != null) {
+                    navigationItemRemoveAds.setVisibility(View.GONE);
+                }
                 break;
             default:
                 break;
