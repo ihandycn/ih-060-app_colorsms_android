@@ -481,6 +481,7 @@ public class ConversationListActivity extends AbstractConversationListActivity
                         break;
                     case DRAWER_INDEX_CHAT_LIST:
                         Navigations.startActivitySafely(ConversationListActivity.this, ChatListCustomizeActivity.class);
+                        overridePendingTransition(R.anim.slide_in_from_right_and_fade, R.anim.anim_null);
                         break;
                     case DRAWER_INDEX_CHANGE_FONT:
                         BugleAnalytics.logEvent("Menu_ChangeFont_Click");

@@ -16,6 +16,7 @@ import android.graphics.drawable.LayerDrawable;
 import android.graphics.drawable.RippleDrawable;
 import android.graphics.drawable.ShapeDrawable;
 import android.graphics.drawable.shapes.Shape;
+import android.os.Build;
 import android.support.annotation.ColorInt;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -114,11 +115,26 @@ public class ChatListCustomizeControlView extends ConstraintLayout {
                 Dimensions.pxFromDp(2), false));
 
         View touchAreaView = findViewById(R.id.chat_list_customize_touch_view);
-        View moveView = findViewById(R.id.select_container);
-        moveView.setBackground(BackgroundDrawables.createBackgroundDrawable(Color.WHITE, 0,
+        View controlViewContainer = findViewById(R.id.select_container);
+        controlViewContainer.setBackground(BackgroundDrawables.createBackgroundDrawable(Color.WHITE, 0,
                 Dimensions.pxFromDp(13.3f), Dimensions.pxFromDp(13.3f), 0, 0,
                 false, false));
-        new ChatListViewSwipeHelper(touchAreaView, moveView);
+        controlViewContainer.addOnLayoutChangeListener(new OnLayoutChangeListener() {
+            @Override
+            public void onLayoutChange(View v, int left, int top, int right, int bottom, int oldLeft, int oldTop, int oldRight, int oldBottom) {
+                if (bottom - top > 0) {
+                    controlViewContainer.setTranslationY(bottom - top - Dimensions.pxFromDp(32));
+                    controlViewContainer.removeOnLayoutChangeListener(this);
+                    Threads.postOnMainThreadDelayed(() -> {
+                        ObjectAnimator animator = ObjectAnimator.ofFloat(controlViewContainer, "translationY", 0);
+                        animator.setDuration(600);
+                        animator.setInterpolator(PathInterpolatorCompat.create(0.18f, 0.99f, 0.36f, 1));
+                        animator.start();
+                    }, Build.VERSION.SDK_INT >= 21 ? 380 : 180);
+                }
+            }
+        });
+        new ChatListViewSwipeHelper(touchAreaView, controlViewContainer);
     }
 
     private void initTopBackAndApplyBtn() {

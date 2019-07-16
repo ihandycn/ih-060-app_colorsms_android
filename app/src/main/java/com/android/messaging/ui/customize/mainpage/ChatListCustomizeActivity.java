@@ -87,7 +87,6 @@ public class ChatListCustomizeActivity extends BaseActivity implements INotifica
         mBgMaskView = findViewById(R.id.list_bg_mask);
         mControlView = findViewById(R.id.chat_list_customize_view);
         mNavigationIcon = findViewById(R.id.chat_list_navigation_icon);
-        initThemeBg();
 
         mThemeViewGroup = findViewById(R.id.chat_list_theme_group);
 
@@ -108,6 +107,8 @@ public class ChatListCustomizeActivity extends BaseActivity implements INotifica
             mUseThemeColor = false;
             setTextColor(mCurrentSelectedColor);
         }
+
+        initThemeBg();
 
         mControlView.addCustomizeChangeListener(new ChatListCustomizeControlView.ChatListCustomizeChangeListener() {
             @Override
@@ -155,11 +156,6 @@ public class ChatListCustomizeActivity extends BaseActivity implements INotifica
                 });
             }
         });
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
     }
 
     @Override
