@@ -257,7 +257,7 @@ public class WallpaperPreviewActivity extends BaseActivity implements WallpaperM
                 view.setOnClickListener(v -> {
                     Intent pickIntent = new Intent(Intent.ACTION_PICK);
                     pickIntent.setDataAndType(android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI, "image/*");
-                    Intent chooserIntent = Intent.createChooser(pickIntent, "Select Image");
+                    Intent chooserIntent = Intent.createChooser(pickIntent, getResources().getString(R.string.select_image));
                     Navigations.startActivityForResultSafely((Activity) mContext, chooserIntent, REQUEST_CODE_PICK_WALLPAPER);
                     BugleAnalytics.logEvent("SMS_ChatBackground_AddPhotos_Clicked", true, true,
                             "from", TextUtils.isEmpty(mConversationId) ? "Menu" : "Options");

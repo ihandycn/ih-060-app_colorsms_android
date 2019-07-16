@@ -946,7 +946,7 @@
     <string name="sms_emoji_recent_empty_description">No Recent</string>
 
     <!--sms show-->
-    <string name="sms_show_apply">APPLY</string>
+    <string name="sms_show_apply">Apply</string>
     <string name="sms_show_current_theme">CURRENT THEME</string>
 
     <!-- Welcome-->
@@ -1315,6 +1315,14 @@
     <string name="purchase_description">Purchase the AD-FREE version. No ads ever again.</string>
     <string name="purchase_failed">failed</string>
     <string name="switch_sim">Switch SIM</string>
-    
+
+    <!--chat list-->
+    <string name="chat_list_confirm_dialog_title">Save Changes?</string>
+    <string name="chat_list_config_dialog_message">Chat list have been modified, would you like to keep changes?</string>
+    <string name="select_image">Select Image</string>
+    <string name="chat_list_change_background">Change Background</string>
+    <string name="chat_list_background_opacity">Background Opacity</string>
+    <string name="chat_list_text_color">Text color</string>
+
 </resources>
 

@@ -185,10 +185,10 @@ public class ChatListCustomizeActivity extends BaseActivity implements INotifica
         if (ChatListDrawableManager.isCustomInfoChanged(mCurrentSelectedWallpaperPath,
                 mBgMaskView.getAlpha(), mUseThemeColor, mCurrentSelectedColor)) {
             BaseAlertDialog.Builder builder = new BaseAlertDialog.Builder(this);
-            builder.setTitle("Save Changes?");
-            builder.setMessage("Chat list have been modified, would you like to keep changes?");
-            builder.setNegativeButton("Cancel", (dialog, which) -> finish());
-            builder.setPositiveButton("Save", ((dialog, which) -> {
+            builder.setTitle(R.string.chat_list_confirm_dialog_title);
+            builder.setMessage(R.string.chat_list_config_dialog_message);
+            builder.setNegativeButton(R.string.cancel, (dialog, which) -> finish());
+            builder.setPositiveButton(R.string.bubble_customize_save, ((dialog, which) -> {
                 //this event must log before apply
                 logApplyEvent();
                 ChatListDrawableManager.saveChatListCustomizeInfo(mCurrentSelectedWallpaperPath, mBgMaskView.getAlpha(), mUseThemeColor, mCurrentSelectedColor);

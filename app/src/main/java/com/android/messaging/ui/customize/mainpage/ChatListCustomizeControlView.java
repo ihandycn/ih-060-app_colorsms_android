@@ -281,7 +281,6 @@ public class ChatListCustomizeControlView extends ConstraintLayout {
     }
 
     private void onWallpaperChanged(String path) {
-        //ChatListWallpaperManager.setWallpaperPath(path);
         if (mChangeListener != null) {
             mChangeListener.onWallpaperChange(path);
         }
@@ -343,7 +342,7 @@ public class ChatListCustomizeControlView extends ConstraintLayout {
                 view.setOnClickListener(v -> {
                     Intent pickIntent = new Intent(Intent.ACTION_PICK);
                     pickIntent.setDataAndType(android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI, "image/*");
-                    Intent chooserIntent = Intent.createChooser(pickIntent, "Select Image");
+                    Intent chooserIntent = Intent.createChooser(pickIntent, getContext().getString(R.string.select_image));
                     Navigations.startActivityForResultSafely((Activity) mContext, chooserIntent, REQUEST_CODE_PICK_WALLPAPER);
                 });
             } else if (item.getItemType() == WallpaperChooserItem.TYPE_EMPTY) {
