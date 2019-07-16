@@ -50,8 +50,6 @@ public class ConversationMessageAdapter extends
     private final ConversationMessageViewHost mHost;
     private final AsyncImageViewDelayLoader mImageViewDelayLoader;
     private final ConversationMessageClickListener mViewClickListener;
-    // treat all conversation as oneOnOne
-    private boolean mOneOnOne = true;
     private static boolean multiSelectMode;
     public static final int NORMAL = 1000;
     public static final int SLIDE = 2000;
@@ -135,7 +133,7 @@ public class ConversationMessageAdapter extends
         final ConversationMessageView conversationMessageView =
                 (ConversationMessageView) ((ConversationMessageViewHolder) holder).mView;
         ImageView checkbox = conversationMessageView.findViewById(R.id.check_box);
-        conversationMessageView.bind((ConversationMessageData) mDataList.get(position), mOneOnOne, multiSelectMode);
+        conversationMessageView.bind((ConversationMessageData) mDataList.get(position), multiSelectMode);
         ConversationMessageData data = conversationMessageView.getData();
 
         conversationMessageView.setOnClickListener(v -> {
@@ -167,7 +165,6 @@ public class ConversationMessageAdapter extends
 
     @Override
     public int getItemViewType(int position) {
-
         ConversationMessageData data = mDataList.get(position);
         boolean hasAttachments = data.hasAttachments();
         boolean showAvatar = data.getIsIncoming() && !data.getCanClusterWithPreviousMessage();

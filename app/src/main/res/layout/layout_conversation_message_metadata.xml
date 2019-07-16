@@ -12,15 +12,6 @@
     android:importantForAccessibility="noHideDescendants"
     android:orientation="horizontal">
 
-    <com.android.messaging.ui.view.MessagesTextView
-        android:id="@+id/message_sender_name"
-        style="@style/ConversationMessageStatus"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="4dp"
-        android:visibility="gone"
-        app:typeface="@string/custom_font_regular"/>
-
     <LinearLayout
         android:id="@+id/message_status_container"
         android:layout_width="wrap_content"

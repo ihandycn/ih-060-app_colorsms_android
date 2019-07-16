@@ -101,7 +101,6 @@ public class ConversationMessageView extends RelativeLayout implements View.OnCl
     private ImageView mMessageIsLockView;
     private ViewGroup mStatusContainer;
     private TextView mStatusTextView;
-    private TextView mSenderNameTextView;
     @Nullable
     private ContactIconView mContactIconView;
     @Nullable
@@ -112,7 +111,6 @@ public class ConversationMessageView extends RelativeLayout implements View.OnCl
     private ImageView mDeliveredBadge;
     private ViewGroup mMessageMetadataView;
     private ViewGroup mMessageTextAndInfoView;
-    private boolean mOneOnOne;
     private ConversationMessageViewHost mHost;
     private ImageView checkBox;
     private int mOffset;
@@ -163,7 +161,6 @@ public class ConversationMessageView extends RelativeLayout implements View.OnCl
 
         mMessageIsLockView = findViewById(R.id.message_lock);
 
-        mSenderNameTextView = findViewById(R.id.message_sender_name);
         mMessageBubble = findViewById(R.id.message_content);
         mDeliveredBadge = findViewById(R.id.smsDeliveredBadge);
         mMessageMetadataView = findViewById(R.id.message_metadata);
@@ -199,7 +196,7 @@ public class ConversationMessageView extends RelativeLayout implements View.OnCl
         // We need to subtract contact icon width twice from the horizontal space to get
         // the max leftover space because we want the message bubble to extend no further than the
         // starting position of the message bubble in the opposite direction.
-        final int maxLeftoverSpace = horizontalSpace - Dimensions.pxFromDp(66) * 2
+        final int maxLeftoverSpace = horizontalSpace - iconSize * 2
                 - arrowWidth - getPaddingLeft() - getPaddingRight();
         final int messageContentWidthMeasureSpec = MeasureSpec.makeMeasureSpec(maxLeftoverSpace,
                 MeasureSpec.AT_MOST);
@@ -273,11 +270,8 @@ public class ConversationMessageView extends RelativeLayout implements View.OnCl
     /**
      * Fills in the data associated with this view.
      *
-     * @param oneOnOne Whether this is a 1:1 conversation
      */
-    public void bind(final ConversationMessageData data,
-                     final boolean oneOnOne, boolean isMultiSelected) {
-        mOneOnOne = oneOnOne;
+    public void bind(final ConversationMessageData data, boolean isMultiSelected) {
 
         // Update our UI model
         mData = data;
@@ -352,15 +346,6 @@ public class ConversationMessageView extends RelativeLayout implements View.OnCl
 
     private void updateViewContent() {
         updateMessageContent();
-
-        final boolean senderNameVisible = !mOneOnOne && !mData.getCanClusterWithNextMessage()
-                && mData.getIsIncoming();
-        if (senderNameVisible) {
-            mSenderNameTextView.setText(mData.getSenderDisplayName());
-            mSenderNameTextView.setVisibility(View.VISIBLE);
-        } else {
-            mSenderNameTextView.setVisibility(View.GONE);
-        }
 
         // Update the sim indicator.
         final SubscriptionListEntry subscriptionEntry =
@@ -483,7 +468,7 @@ public class ConversationMessageView extends RelativeLayout implements View.OnCl
             mDeliveredBadge.setVisibility(View.GONE);
         }
 
-        final boolean metadataVisible = senderNameVisible || statusVisible
+        final boolean metadataVisible =  statusVisible
                 || deliveredBadgeVisible || simNameVisible;
         mMessageMetadataView.setVisibility(metadataVisible ? VISIBLE : GONE);
 
@@ -885,8 +870,6 @@ public class ConversationMessageView extends RelativeLayout implements View.OnCl
         }
 
         mStatusTextView.setTextColor(resources.getColor(timestampColorResId));
-
-        mSenderNameTextView.setTextColor(resources.getColor(timestampColorResId));
     }
 
     /**
