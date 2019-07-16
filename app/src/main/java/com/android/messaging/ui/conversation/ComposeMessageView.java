@@ -17,7 +17,6 @@ package com.android.messaging.ui.conversation;
 
 import android.Manifest;
 import android.animation.Animator;
-import android.animation.ObjectAnimator;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
@@ -48,7 +47,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
+import android.view.animation.Animation;
 import android.view.animation.Interpolator;
+import android.view.animation.TranslateAnimation;
 import android.view.inputmethod.EditorInfo;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
@@ -100,7 +101,6 @@ import com.android.messaging.util.MediaUtil;
 import com.android.messaging.util.OsUtil;
 import com.android.messaging.util.TextViewUtil;
 import com.android.messaging.util.UiUtils;
-import com.ihs.commons.utils.HSLog;
 import com.superapps.util.BackgroundDrawables;
 import com.superapps.util.Compats;
 import com.superapps.util.Dimensions;
@@ -720,34 +720,27 @@ public class ComposeMessageView extends LinearLayout
     }
 
     private void startEmojiPickerAnimation(ViewGroup container, int startPos) {
-        ObjectAnimator va = ObjectAnimator.ofFloat(container, "translationY",
-                startPos, 0f);
-        va.setDuration(520);
-        va.setInterpolator(PathInterpolatorCompat.create(0.26f, 1, 0.48f, 1));
-
-        va.addListener(new Animator.AnimatorListener() {
+        Animation ta = new TranslateAnimation(0, 0 , startPos, 0);
+        ta.setDuration(520);
+        ta.setInterpolator(PathInterpolatorCompat.create(0.26f, 1, 0.48f, 1));
+        ta.setAnimationListener(new Animation.AnimationListener() {
             @Override
-            public void onAnimationStart(Animator animation) {
+            public void onAnimationStart(Animation animation) {
 
             }
 
             @Override
-            public void onAnimationEnd(Animator animation) {
+            public void onAnimationEnd(Animation animation) {
                 isFirstEmojiStart = false;
                 mInputManager.onEmojiAnimationFinished();
             }
 
             @Override
-            public void onAnimationCancel(Animator animation) {
-                HSLog.e("emoji_picker", "onAnimationCancel: onAnimationCancelFinished not do");
-            }
-
-            @Override
-            public void onAnimationRepeat(Animator animation) {
+            public void onAnimationRepeat(Animation animation) {
 
             }
         });
-        va.start();
+        container.startAnimation(ta);
     }
 
     @Override

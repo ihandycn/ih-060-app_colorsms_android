@@ -1,18 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/emoji_item_container"
     android:layout_width="match_parent"
     android:layout_height="42.7dp"
     android:layout_marginTop="1dp"
     android:layout_marginBottom="1dp">
+
     <ImageView
         android:id="@+id/emoji_view"
         android:layout_width="32dp"
         android:layout_height="32dp"
-        android:includeFontPadding="false"
-        android:gravity="center"
         android:layout_centerInParent="true"
-        android:textColor="#000000" />
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp"
+        android:gravity="center"
+        android:includeFontPadding="false"
+        android:textColor="#000000"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf= "parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <ImageView
         android:id="@+id/emoji_more"
@@ -21,5 +30,9 @@
         android:layout_alignEnd="@id/emoji_view"
         android:layout_alignBottom="@id/emoji_view"
         android:src="@drawable/emoji_item_more"
-        android:visibility="gone" />
-</RelativeLayout>
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="@+id/emoji_view"
+        android:baselineAlignBottom="@id/emoji_view"
+        app:layout_constraintEnd_toEndOf="@+id/emoji_view"
+        />
+</android.support.constraint.ConstraintLayout>

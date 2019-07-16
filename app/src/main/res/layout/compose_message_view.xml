@@ -195,7 +195,7 @@
                     android:layout_width="7dp"
                     android:layout_height="1dp"/>
 
-                <com.android.messaging.ui.PlainTextEditText
+                <com.android.messaging.ui.emoji.EmojiEditText
                     android:id="@+id/compose_message_text"
                     style="@style/ConversationComposeSendText"
                     android:includeFontPadding="false"

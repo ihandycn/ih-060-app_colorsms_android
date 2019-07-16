@@ -15,7 +15,6 @@ import com.android.messaging.ui.emoji.EmojiInfo;
 import com.android.messaging.ui.emoji.EmojiPackageType;
 import com.android.messaging.ui.emoji.GiphyInfo;
 import com.android.messaging.ui.emoji.StickerInfo;
-import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.target.SimpleTarget;
 import com.bumptech.glide.request.transition.Transition;
 import com.ihs.commons.utils.HSLog;
@@ -51,6 +50,9 @@ public class EmojiManager {
             new String(Character.toChars(0x1F3FE)),
             new String(Character.toChars(0x1F3FF)),
     };
+
+    private static final String PREF_EMOJI_STYLE = "pref_emoji_style";
+    public static final String EMOJI_STYLE_SYSTEM = "stystem";
 
     static List<String> getTabSticker() {
         return Preferences.get(PREF_FILE_NAME).getStringList(PREF_TAB_STICKER);
@@ -132,6 +134,7 @@ public class EmojiManager {
     public static List<BaseEmojiInfo> getRecentInfo(EmojiPackageType emojiType) {
         List<String> recentList = getRecentStr(emojiType);
         List<BaseEmojiInfo> result = new ArrayList<>(recentList.size());
+        String emojiStyle = getEmojiStyle();
         for (int i = 0; i < recentList.size(); i++) {
             String msg = recentList.get(i);
             BaseEmojiInfo info;
@@ -140,7 +143,7 @@ public class EmojiManager {
                     info = StickerInfo.unflatten(msg);
                     break;
                 case EMOJI:
-                    info = EmojiInfo.unflatten(msg);
+                    info = EmojiInfo.unflatten(msg, emojiStyle);
                     break;
                 case GIF:
                     info = GiphyInfo.unflatten(msg);
@@ -319,4 +322,26 @@ public class EmojiManager {
     public static void setDefaultMainPosition(int position){
         Preferences.get(PREF_FILE_NAME).putInt(PREF_DEFAULT_MAIN_POSITION, position);
     }
+
+    public static String getEmojiStyle(){
+        return "Blob";
+//        return Preferences.get(PREF_FILE_NAME).getInt(PREF_EMOJI_STYLE, EMOJI_STYLE_SYSTEM);
+    }
+
+    public static boolean isSystemEmojiStyle(){
+        return getEmojiStyle().equals(EMOJI_STYLE_SYSTEM);
+    }
+
+    public static void setEmojiStyle(String style){
+        Preferences.get(PREF_FILE_NAME).putString(PREF_EMOJI_STYLE, style);
+    }
+
+    public static long getEmojiStyleFileSize(String name){
+        return Preferences.get(PREF_FILE_NAME).getLong(name, 0);
+    }
+
+    public static void setEmojiStyleFileSize(String name, long size){
+        Preferences.get(PREF_FILE_NAME).putLong(name, size);
+    }
+
 }

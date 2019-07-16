@@ -48,6 +48,8 @@ import com.android.messaging.sms.MmsConfig;
 import com.android.messaging.ui.ConversationDrawables;
 import com.android.messaging.ui.SetAsDefaultGuideActivity;
 import com.android.messaging.ui.emoji.utils.EmojiConfig;
+import com.android.messaging.ui.emoji.utils.emoispan.EmojiCache;
+import com.android.messaging.ui.emoji.utils.emoispan.EmojiSpannableWorker;
 import com.android.messaging.upgrader.Upgrader;
 import com.android.messaging.util.BugleAnalytics;
 import com.android.messaging.util.BugleGservices;
@@ -109,6 +111,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
+import hugo.weaving.DebugLog;
 import io.fabric.sdk.android.Fabric;
 
 import static android.content.IntentFilter.SYSTEM_HIGH_PRIORITY;
@@ -200,6 +203,16 @@ public class BugleApplication extends HSApplication implements UncaughtException
                 Threads.postOnMainThreadDelayed(() -> System.exit(0), 800);
             }
         });
+
+        prepareEmoji();
+    }
+
+    @DebugLog
+    private void prepareEmoji() {
+        EmojiSpannableWorker.install(this);
+
+        // initialize emoji cache
+        EmojiCache.getInstance();
     }
 
     private void initAd() {

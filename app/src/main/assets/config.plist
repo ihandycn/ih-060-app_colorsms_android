@@ -6,6 +6,15 @@
 	<dict>
 		<key>Application</key>
 		<dict>
+			<key>EmojiStyle</key>
+			<dict>
+				<key>Twitter</key>
+				<string>https://s3.amazonaws.com/superapps-dev/ColorSMS/emojistyle/Twitter.zip</string>
+				<key>Pie</key>
+				<string>https://s3.amazonaws.com/superapps-dev/ColorSMS/emojistyle/Pie.zip</string>
+				<key>Blob</key>
+				<string>https://s3.amazonaws.com/superapps-dev/ColorSMS/emojistyle/Blob.zip</string>
+			</dict>
 			<key>PrivateBox</key>
 			<true/>
 			<key>BackupRestore</key>

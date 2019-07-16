@@ -56,6 +56,7 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.RecyclerView.ViewHolder;
 import android.text.TextUtils;
 import android.text.format.DateUtils;
+import android.util.Log;
 import android.view.ActionMode;
 import android.view.Display;
 import android.view.LayoutInflater;
@@ -107,6 +108,7 @@ import com.android.messaging.ui.customize.theme.ThemeInfo;
 import com.android.messaging.ui.customize.theme.ThemeUtils;
 import com.android.messaging.ui.dialog.FiveStarRateDialog;
 import com.android.messaging.ui.emoji.EmojiPickerFragment;
+import com.android.messaging.ui.emoji.utils.EmojiStyleDownloadManager;
 import com.android.messaging.ui.mediapicker.CameraGalleryFragment;
 import com.android.messaging.ui.mediapicker.MediaPickerFragment;
 import com.android.messaging.ui.senddelaymessages.SendDelayMessagesManager;
@@ -667,6 +669,7 @@ public class ConversationFragment extends Fragment implements ConversationDataLi
         BugleAnalytics.logEvent("SMS_DetailsPage_Show", true, true);
         AutopilotEvent.logTopicEvent("topic-768lyi3sp", "detailspage_show");
     }
+
 
     private void loadTopBannerAd() {
         BugleAnalytics.logEvent("Detailspage_TopAd_Should_Show", true, true);

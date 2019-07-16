@@ -64,6 +64,11 @@ public class EmojiItemPagerAdapter extends AbstractEmojiItemPagerAdapter {
             recyclerView.setAdapter(adapter);
             recyclerView.setOverScrollMode(View.OVER_SCROLL_NEVER);
             recyclerView.setLayoutManager(new GridLayoutManager(context, EMOJI_COLUMNS));
+
+            recyclerView.setHasFixedSize(true);
+            recyclerView.setItemViewCacheSize(20);
+            recyclerView.setDrawingCacheEnabled(true);
+            recyclerView.setDrawingCacheQuality(View.DRAWING_CACHE_QUALITY_HIGH);
             view = recyclerView;
         }
         view.setTag(position + "");

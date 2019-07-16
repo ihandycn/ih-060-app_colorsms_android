@@ -99,7 +99,7 @@ public class EmojiVariantPopup {
             int dpToPx = (int) DisplayUtils.dpToPx(context, 2.0f);
             marginLayoutParams.width = width;
             marginLayoutParams.setMargins(dpToPx, dpToPx, dpToPx, dpToPx);
-            view.setImageDrawable(new EmojiItemRecyclerAdapter.EmojiDrawable(item.mEmoji));
+            view.setImageDrawable(item.getDrawable());
             view.setOnClickListener(new OnClickListener() {
                 public void onClick(View view) {
                     if (mListener != null) {
@@ -112,7 +112,8 @@ public class EmojiVariantPopup {
                     }
                     EmojiManager.addSkinSingleRecord(item.getUnicode(), item.mEmoji);
                     emojiInfo.mEmoji = item.mEmoji;
-                    ((ImageView)mAnchorView).setImageDrawable(new EmojiItemRecyclerAdapter.EmojiDrawable(emojiInfo.mEmoji));
+                    emojiInfo.mResource = item.mResource;
+                    ((ImageView)mAnchorView).setImageDrawable(emojiInfo.getDrawable());
                     mPopupWindow.dismiss();
                 }
             });
