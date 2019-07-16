@@ -1,5 +1,6 @@
 package com.android.messaging.ui.customize.mainpage;
 
+import android.animation.ObjectAnimator;
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -133,6 +134,7 @@ public class ChatListCustomizeActivity extends BaseActivity implements INotifica
             public void onTextColorChange(int color) {
                 mTitleView.setTextColor(color);
                 mListView.changeFontColor(color, color, color);
+                mNavigationIcon.setColorFilter(color);
                 mUseThemeColor = false;
                 mCurrentSelectedColor = color;
             }
@@ -201,6 +203,12 @@ public class ChatListCustomizeActivity extends BaseActivity implements INotifica
         } else {
             finish();
         }
+    }
+
+    private void startPreviewTransitionAnimation() {
+        ObjectAnimator animator = ObjectAnimator.ofFloat(mCustomBackground, "alpha", 0f, 1f);
+        animator.setDuration(200);
+        animator.start();
     }
 
     private void setTextColor(int textColor) {
@@ -298,6 +306,7 @@ public class ChatListCustomizeActivity extends BaseActivity implements INotifica
 
                             Bitmap resizeBitmap = Bitmap.createBitmap(resource, left, top, resizeWidth, resizeHeight);
                             mCustomBackground.setImageBitmap(resizeBitmap);
+                            startPreviewTransitionAnimation();
 
                             if (changeTextColor) {
                                 Palette.Builder builder = Palette.from(resource);
