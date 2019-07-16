@@ -87,7 +87,7 @@ public class ThemeUtils {
         FontStyleManager.getInstance().setFontFamily(themeInfo.fontName);
 
         if (themeInfo.mIsLocalTheme) {
-            ThemeDownloadManager.getInstance().copyFileFromAssetsAsync(themeInfo,
+            ThemeDownloadManager.getInstance().copyFileFromAssetsSync(themeInfo,
                     new ThemeDownloadManager.IThemeMoveListener() {
                         @Override
                         public void onMoveSuccess() {

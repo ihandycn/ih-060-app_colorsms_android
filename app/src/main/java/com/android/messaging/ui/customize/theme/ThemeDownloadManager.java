@@ -506,7 +506,6 @@ public class ThemeDownloadManager {
         }
         if (listener != null) {
             listener.onMoveSuccess();
-
         }
     }
 

@@ -74,7 +74,7 @@ public class ChooseThemePagerView extends ConstraintLayout {
 
         applyTextView.setOnClickListener(v -> {
             ThemeUtils.applyTheme(mAdapter.getThemeInfo(mPager.getCurrentItem()), 0);
-            FontUtils.onFontTypefaceChanged();
+           // FontUtils.onFontTypefaceChanged();
 
             if (mApplyClickListener != null) {
                 mApplyClickListener.onClick(applyTextView);

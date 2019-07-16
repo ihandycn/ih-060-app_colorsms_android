@@ -283,8 +283,7 @@ public class ChatListCustomizeActivity extends BaseActivity implements INotifica
                             mCustomBackground.setVisibility(View.VISIBLE);
                             mThemeViewGroup.setVisibility(View.GONE);
 
-                            int height = Dimensions.getPhoneHeight(ChatListCustomizeActivity.this)
-                                    - Dimensions.getNavigationBarHeight(ChatListCustomizeActivity.this);
+                            int height = Dimensions.getPhoneHeight(ChatListCustomizeActivity.this);
                             int width = Dimensions.getPhoneWidth(ChatListCustomizeActivity.this);
 
                             int bitmapHeight = resource.getHeight();
