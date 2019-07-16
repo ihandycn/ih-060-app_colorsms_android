@@ -24,6 +24,7 @@ import android.net.ConnectivityManager;
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.telephony.ServiceState;
+import android.text.TextUtils;
 
 import com.android.messaging.Factory;
 import com.android.messaging.datamodel.BugleDatabaseOperations;
@@ -66,7 +67,7 @@ public class ProcessPendingMessagesAction extends Action implements Parcelable {
     }
 
     public static void scheduleProcessPendingMessagesAction(final boolean failed,
-            final Action processingAction) {
+                                                            final Action processingAction) {
         LogUtil.i(TAG, "ProcessPendingMessagesAction: Scheduling pending messages"
                 + (failed ? "(message failed)" : ""));
         // Can safely clear any pending alarms or connectivity events as either an action
@@ -210,6 +211,7 @@ public class ProcessPendingMessagesAction extends Action implements Parcelable {
 
     /**
      * Read from the DB and determine if there are any messages we should process
+     *
      * @return true if we have pending messages
      */
     private static boolean getHavePendingMessages() {
@@ -232,7 +234,8 @@ public class ProcessPendingMessagesAction extends Action implements Parcelable {
 
     /**
      * Queue any pending actions
-     * @param actionState
+     *
+     * @param processingAction
      * @return true if action queued (or no actions to queue) else false
      */
     private boolean queueActions(final Action processingAction) {
@@ -243,8 +246,14 @@ public class ProcessPendingMessagesAction extends Action implements Parcelable {
         // Will queue no more than one message to send plus one message to download
         // This keeps outgoing messages "in order" but allow downloads to happen even if sending
         //  gets blocked until messages time out.  Manual resend bumps messages to head of queue.
-        final String toSendMessageId = findNextMessageToSend(db, now);
-        final String toDownloadMessageId = findNextMessageToDownload(db, now);
+        String toSendMessageId = findNextMessageToSend(db, now);
+        String toDownloadMessageId = findNextMessageToDownload(db, now);
+
+        if (processingAction instanceof InsertNewMessageAction
+                && !TextUtils.isEmpty(((InsertNewMessageAction) processingAction).messageId)) {
+            toSendMessageId = ((InsertNewMessageAction) processingAction).messageId;
+        }
+
         if (toSendMessageId != null) {
             LogUtil.i(TAG, "ProcessPendingMessagesAction: Queueing message " + toSendMessageId
                     + " for sending");
@@ -305,7 +314,7 @@ public class ProcessPendingMessagesAction extends Action implements Parcelable {
                     MessageData.getProjection(),
                     DatabaseHelper.MessageColumns.STATUS + " IN (?, ?)",
                     new String[]{Integer.toString(MessageData.BUGLE_STATUS_OUTGOING_SENDING),
-                           Integer.toString(MessageData.BUGLE_STATUS_OUTGOING_RESENDING)},
+                            Integer.toString(MessageData.BUGLE_STATUS_OUTGOING_RESENDING)},
                     null,
                     null,
                     DatabaseHelper.MessageColumns.RECEIVED_TIMESTAMP + " ASC");
@@ -397,9 +406,9 @@ public class ProcessPendingMessagesAction extends Action implements Parcelable {
             // First check if we have any messages already downloading
             downloadingCnt = (int) db.queryNumEntries(DatabaseHelper.MESSAGES_TABLE,
                     DatabaseHelper.MessageColumns.STATUS + " IN (?, ?)",
-                    new String[] {
-                        Integer.toString(MessageData.BUGLE_STATUS_INCOMING_AUTO_DOWNLOADING),
-                        Integer.toString(MessageData.BUGLE_STATUS_INCOMING_MANUAL_DOWNLOADING)
+                    new String[]{
+                            Integer.toString(MessageData.BUGLE_STATUS_INCOMING_AUTO_DOWNLOADING),
+                            Integer.toString(MessageData.BUGLE_STATUS_INCOMING_MANUAL_DOWNLOADING)
                     });
 
             // TODO: This query is not actually needed if downloadingCnt == 0.

@@ -190,13 +190,12 @@ public class SmsSender {
     public static SendResult sendMessage(final Context context, final int subId, String dest,
                                          String message, final String serviceCenter, final boolean requireDeliveryReport,
                                          final Uri messageUri) throws SmsException {
-        if (LogUtil.isLoggable(TAG, LogUtil.VERBOSE)) {
-            LogUtil.v(TAG, "SmsSender: sending message. " +
-                    "dest=" + dest + " message=" + message +
-                    " serviceCenter=" + serviceCenter +
-                    " requireDeliveryReport=" + requireDeliveryReport +
-                    " requestId=" + messageUri);
-        }
+        LogUtil.v(TAG, "SmsSender: sending message. " +
+                "dest=" + dest + " message=" + message +
+                " serviceCenter=" + serviceCenter +
+                " requireDeliveryReport=" + requireDeliveryReport +
+                " requestId=" + messageUri +
+                " subId=" + subId);
         if (TextUtils.isEmpty(message)) {
             throw new SmsException("SmsSender: empty text message");
         }
