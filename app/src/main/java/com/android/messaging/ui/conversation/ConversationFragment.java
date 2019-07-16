@@ -834,7 +834,6 @@ public class ConversationFragment extends Fragment implements ConversationDataLi
         mComposeMessageView.setInputManager(inputManager);
         mComposeMessageView.setConversationDataModel(BindingBase.createBindingReference(mBinding));
         mComposeMessageView.getComposeEditText().getViewTreeObserver().addOnGlobalLayoutListener(globalLayoutListener);
-        mHost.invalidateActionBar();
 
         mDraftMessageDataModel =
                 BindingBase.createBindingReference(mComposeMessageView.getDraftDataModel());
@@ -1247,8 +1246,6 @@ public class ConversationFragment extends Fragment implements ConversationDataLi
                 clearScrollToMessagePosition();
             }
         }
-
-        mHost.invalidateActionBar();
     }
 
     /**
