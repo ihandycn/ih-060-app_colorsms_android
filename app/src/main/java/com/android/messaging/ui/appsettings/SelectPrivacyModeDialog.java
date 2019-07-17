@@ -15,6 +15,7 @@ import com.android.messaging.R;
 import com.android.messaging.ui.BaseDialogFragment;
 import com.android.messaging.ui.customize.PrimaryColors;
 import com.android.messaging.util.BugleAnalytics;
+import com.android.messaging.util.BugleFirebaseAnalytics;
 import com.android.messaging.util.OsUtil;
 import com.superapps.util.Fonts;
 import com.superapps.util.Threads;
@@ -131,10 +132,14 @@ public class SelectPrivacyModeDialog extends BaseDialogFragment {
             }
 
             if (TextUtils.isEmpty(mConversationId)) {
-                BugleAnalytics.logEvent("SMS_Settings_Privacy_Click", false, true,
+                BugleAnalytics.logEvent("SMS_Settings_Privacy_Click",
+                        "type", PrivacyModeSettings.getPrivacyModeDescription(mConversationId));
+                BugleFirebaseAnalytics.logEvent("SMS_Settings_Privacy_Click",
                         "type", PrivacyModeSettings.getPrivacyModeDescription(mConversationId));
             } else {
-                BugleAnalytics.logEvent("SMS_DetailsPage_Privacy_Click", false, true,
+                BugleAnalytics.logEvent("SMS_DetailsPage_Privacy_Click",
+                        "type", PrivacyModeSettings.getPrivacyModeDescription(mConversationId));
+                BugleFirebaseAnalytics.logEvent("SMS_DetailsPage_Privacy_Click",
                         "type", PrivacyModeSettings.getPrivacyModeDescription(mConversationId));
             }
         });

@@ -91,6 +91,7 @@ import com.android.messaging.ui.signature.SignatureSettingDialog;
 import com.android.messaging.util.Assert;
 import com.android.messaging.util.BugleActivityUtil;
 import com.android.messaging.util.BugleAnalytics;
+import com.android.messaging.util.BugleFirebaseAnalytics;
 import com.android.messaging.util.BuglePrefs;
 import com.android.messaging.util.ContentType;
 import com.android.messaging.util.DefaultSMSUtils;
@@ -311,7 +312,8 @@ public class ComposeMessageView extends LinearLayout
                 if (mHost.shouldHideAttachmentsWhenSimSelectorShown()) {
                     hideSimSelector();
                 }
-                BugleAnalytics.logEvent("SMS_DetailsPage_DialogBox_Click", true, true);
+                BugleAnalytics.logEvent("SMS_DetailsPage_DialogBox_Click", true);
+                BugleFirebaseAnalytics.logEvent("SMS_DetailsPage_DialogBox_Click");
             }
         });
 
@@ -408,7 +410,14 @@ public class ComposeMessageView extends LinearLayout
             }
 
             startMessageSendDelayAction(System.currentTimeMillis());
-            BugleAnalytics.logEvent("Detailpage_BtnSend_Click", true, true,
+            BugleAnalytics.logEvent("Detailpage_BtnSend_Click", true,
+                    "SendDelay", "" + SendDelaySettings.getSendDelayInSecs(),
+                    "IsDefaultSMS", String.valueOf(DefaultSMSUtils.isDefaultSmsApp()),
+                    "SendSMSPermission", String.valueOf(RuntimePermissions.checkSelfPermission(getContext(),
+                            Manifest.permission.SEND_SMS) == RuntimePermissions.PERMISSION_GRANTED),
+                    "ReadSMSPermission", String.valueOf(RuntimePermissions.checkSelfPermission(getContext(),
+                            Manifest.permission.READ_SMS) == RuntimePermissions.PERMISSION_GRANTED));
+            BugleFirebaseAnalytics.logEvent("Detailpage_BtnSend_Click",
                     "SendDelay", "" + SendDelaySettings.getSendDelayInSecs(),
                     "IsDefaultSMS", String.valueOf(DefaultSMSUtils.isDefaultSmsApp()),
                     "SendSMSPermission", String.valueOf(RuntimePermissions.checkSelfPermission(getContext(),
@@ -521,7 +530,8 @@ public class ComposeMessageView extends LinearLayout
             } else {
                 showMediaPicker();
             }
-            BugleAnalytics.logEvent("SMS_DetailsPage_IconPlus_Click", true, true);
+            BugleAnalytics.logEvent("SMS_DetailsPage_IconPlus_Click", true);
+            BugleFirebaseAnalytics.logEvent("SMS_DetailsPage_IconPlus_Click");
         });
 
         mAttachmentPreview = (AttachmentPreview) findViewById(R.id.attachment_draft_view);
@@ -696,7 +706,8 @@ public class ComposeMessageView extends LinearLayout
     }
 
     private void showEmojiPicker() {
-        BugleAnalytics.logEvent("SMSEmoji_Chat_Emoji_Click", true, true);
+        BugleAnalytics.logEvent("SMSEmoji_Chat_Emoji_Click", true);
+        BugleFirebaseAnalytics.logEvent("SMSEmoji_Chat_Emoji_Click");
         if (EmojiManager.isShowEmojiGuide()) {
             EmojiManager.recordAlreadyShowEmojiGuide();
             mEmojiGuideView.setVisibility(GONE);
@@ -767,7 +778,8 @@ public class ComposeMessageView extends LinearLayout
             String message = mComposeEditText.getText().toString();
             for (String code : mEmojiLogCodeList) {
                 if (message.contains(code)) {
-                    BugleAnalytics.logEvent("SMSEmoji_ChatEmoji_LittleEmoji_Send", true, true, "type", code);
+                    BugleAnalytics.logEvent("SMSEmoji_ChatEmoji_LittleEmoji_Send", true, "type", code);
+                    BugleFirebaseAnalytics.logEvent("SMSEmoji_ChatEmoji_LittleEmoji_Send", "type", code);
                     hasLittleEmoji = true;
                 }
             }
@@ -776,15 +788,20 @@ public class ComposeMessageView extends LinearLayout
         boolean hasSticker = mStickerLogNameList != null && !mStickerLogNameList.isEmpty();
         boolean hasMagicSticker = mMagicStickerLogNameList != null && !mMagicStickerLogNameList.isEmpty();
         if (hasLittleEmoji && !hasSticker && !hasMagicSticker && !mHasGif) {
-            BugleAnalytics.logEvent("SMSEmoji_ChatEmoji_Emoji_Send", true, true, "type", "emoji");
+            BugleAnalytics.logEvent("SMSEmoji_ChatEmoji_Emoji_Send", true, "type", "emoji");
+            BugleFirebaseAnalytics.logEvent("SMSEmoji_ChatEmoji_Emoji_Send", "type", "emoji");
         } else if (!hasLittleEmoji && hasSticker && !hasMagicSticker && !mHasGif) {
-            BugleAnalytics.logEvent("SMSEmoji_ChatEmoji_Emoji_Send", true, true, "type", "sticker");
+            BugleAnalytics.logEvent("SMSEmoji_ChatEmoji_Emoji_Send", true, "type", "sticker");
+            BugleFirebaseAnalytics.logEvent("SMSEmoji_ChatEmoji_Emoji_Send", "type", "sticker");
         } else if (!hasLittleEmoji && !hasSticker && hasMagicSticker && !mHasGif) {
-            BugleAnalytics.logEvent("SMSEmoji_ChatEmoji_Emoji_Send", true, true, "type", "magic");
+            BugleAnalytics.logEvent("SMSEmoji_ChatEmoji_Emoji_Send", true, "type", "magic");
+            BugleFirebaseAnalytics.logEvent("SMSEmoji_ChatEmoji_Emoji_Send", "type", "magic");
         } else if (!hasLittleEmoji && !hasSticker && !hasMagicSticker && mHasGif) {
-            BugleAnalytics.logEvent("SMSEmoji_ChatEmoji_Emoji_Send", true, true, "type", "gif");
+            BugleAnalytics.logEvent("SMSEmoji_ChatEmoji_Emoji_Send", true, "type", "gif");
+            BugleFirebaseAnalytics.logEvent("SMSEmoji_ChatEmoji_Emoji_Send", "type", "gif");
         } else if (hasLittleEmoji || hasSticker || hasMagicSticker || mHasGif) {
-            BugleAnalytics.logEvent("SMSEmoji_ChatEmoji_Emoji_Send", true, true, "type", "other");
+            BugleAnalytics.logEvent("SMSEmoji_ChatEmoji_Emoji_Send", true, "type", "other");
+            BugleFirebaseAnalytics.logEvent("SMSEmoji_ChatEmoji_Emoji_Send", "type", "other");
         }
 
         if (mHasGif) {
@@ -799,7 +816,8 @@ public class ComposeMessageView extends LinearLayout
         if (data != null && !data.isEmpty()) {
             for (String type : data) {
                 if (eventName.contains("Send")) {
-                    BugleAnalytics.logEvent(eventName, true, true, "type", type);
+                    BugleAnalytics.logEvent(eventName, true, "type", type);
+                    BugleFirebaseAnalytics.logEvent(eventName, "type", type);
                 } else {
                     BugleAnalytics.logEvent(eventName, true, "type", type);
                 }
@@ -922,12 +940,16 @@ public class ComposeMessageView extends LinearLayout
                 } else {
                     mBinding.getData().setMessageText("");
                 }
-                BugleAnalytics.logEvent("SMS_DetailsPage_IconSend_Click", true, true, "Type", "MMS",
+                BugleAnalytics.logEvent("SMS_DetailsPage_IconSend_Click", true, "Type", "MMS",
+                        "isContact", isContactValue);
+                BugleFirebaseAnalytics.logEvent("SMS_DetailsPage_IconSend_Click", "Type", "MMS",
                         "isContact", isContactValue);
             } else {
                 final String messageToSend = mComposeEditText.getText().toString();
                 mBinding.getData().setMessageText(messageToSend);
-                BugleAnalytics.logEvent("SMS_DetailsPage_IconSend_Click", true, true, "Type", "SMS",
+                BugleAnalytics.logEvent("SMS_DetailsPage_IconSend_Click", true, "Type", "SMS",
+                        "isContact", isContactValue);
+                BugleFirebaseAnalytics.logEvent("SMS_DetailsPage_IconSend_Click", "Type", "SMS",
                         "isContact", isContactValue);
             }
 

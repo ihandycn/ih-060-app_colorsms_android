@@ -30,6 +30,7 @@ import com.android.messaging.ui.emoji.utils.LoadEmojiManager;
 import com.android.messaging.ui.view.MessagesTextView;
 import com.android.messaging.ui.view.RecyclerViewWidthSlideListener;
 import com.android.messaging.util.BugleAnalytics;
+import com.android.messaging.util.BugleFirebaseAnalytics;
 import com.android.messaging.util.TransitionUtils;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.ihs.commons.notificationcenter.HSGlobalNotificationCenter;
@@ -229,7 +230,8 @@ public class EmojiStoreFragment extends Fragment implements INotificationObserve
                     storeViewHolder.getBtn.setBackground(BackgroundDrawables.createBackgroundDrawable(0xFFF4BE3E, 0xFFDAA017, Dimensions.pxFromDp(15), false, true));
                     storeViewHolder.getBtn.setOnClickListener(v -> {
                         if (!TextUtils.isEmpty(mSource)) {
-                            BugleAnalytics.logEvent("SMSEmoji_ChatEmoji_StoreList_Get", true, true, "type", packageInfo.mName, "source", mSource);
+                            BugleAnalytics.logEvent("SMSEmoji_ChatEmoji_StoreList_Get", true, "type", packageInfo.mName, "source", mSource);
+                            BugleFirebaseAnalytics.logEvent("SMSEmoji_ChatEmoji_StoreList_Get", "type", packageInfo.mName, "source", mSource);
                         }
                         storeViewHolder.getBtn.setOnClickListener(null);
                         storeViewHolder.getBtn.setText(res.getString(R.string.sms_emoji_added));

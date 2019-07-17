@@ -53,6 +53,7 @@ import com.android.messaging.ui.messagebox.MessageBoxActivity;
 import com.android.messaging.ui.wallpaper.WallpaperManager;
 import com.android.messaging.util.Assert;
 import com.android.messaging.util.BugleAnalytics;
+import com.android.messaging.util.BugleFirebaseAnalytics;
 import com.android.messaging.util.CommonUtils;
 import com.android.messaging.util.ContentType;
 import com.android.messaging.util.FabricUtils;
@@ -64,7 +65,6 @@ import com.crashlytics.android.core.CrashlyticsCore;
 import com.ihs.app.framework.HSApplication;
 import com.ihs.commons.config.HSConfig;
 import com.ihs.commons.notificationcenter.HSGlobalNotificationCenter;
-import com.ihs.commons.utils.HSLog;
 import com.superapps.debug.CrashlyticsLog;
 import com.superapps.util.Dimensions;
 import com.superapps.util.IntegerBuckets;
@@ -117,7 +117,8 @@ public class ConversationActivity extends BugleActionBarActivity
             getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
         }
         if (getIntent() != null && getIntent().getBooleanExtra(BugleNotifications.EXTRA_FROM_NOTIFICATION, false)) {
-            BugleAnalytics.logEvent("SMS_Notifications_Clicked", true, true);
+            BugleAnalytics.logEvent("SMS_Notifications_Clicked", true);
+            BugleFirebaseAnalytics.logEvent("SMS_Notifications_Clicked");
             AutopilotEvent.logTopicEvent("topic-768lyi3sp", "notification_clicked");
         }
 
@@ -182,7 +183,9 @@ public class ConversationActivity extends BugleActionBarActivity
         long lastShowTime = Preferences.getDefault().getLong(PREF_KEY_CONVERSATION_ACTIVITY_SHOW_TIME, -1);
         if (lastShowTime != -1) {
             IntegerBuckets buckets = new IntegerBuckets(5, 10, 30, 60, 300, 600, 1800, 3600, 7200);
-            BugleAnalytics.logEvent("Detailspage_Show_Interval", false, true, "interval",
+            BugleAnalytics.logEvent("Detailspage_Show_Interval", "interval",
+                    buckets.getBucket((int) ((System.currentTimeMillis() - lastShowTime) / 1000)));
+            BugleFirebaseAnalytics.logEvent("Detailspage_Show_Interval",  "interval",
                     buckets.getBucket((int) ((System.currentTimeMillis() - lastShowTime) / 1000)));
         }
         Preferences.getDefault().putLong(PREF_KEY_CONVERSATION_ACTIVITY_SHOW_TIME, System.currentTimeMillis());
@@ -362,7 +365,8 @@ public class ConversationActivity extends BugleActionBarActivity
 
         showInterstitialAd();
         if (conversationFragment != null) {
-            BugleAnalytics.logEvent("Detailspage_Back", false, true, "type", "back");
+            BugleAnalytics.logEvent("Detailspage_Back", "type", "back");
+            BugleFirebaseAnalytics.logEvent("Detailspage_Back", "type", "back" );
         }
         super.onBackPressed();
     }
@@ -375,7 +379,10 @@ public class ConversationActivity extends BugleActionBarActivity
         final ConversationFragment conversationFragment = getConversationFragment();
         if (conversationFragment != null) {
             IntegerBuckets integerBuckets = new IntegerBuckets(5, 10, 15, 20, 30, 60, 120, 180, 300);
-            BugleAnalytics.logEvent("Detailspage_Show_Details", false, true,
+            BugleAnalytics.logEvent("Detailspage_Show_Details",
+                    "length", integerBuckets.getBucket((int) ((System.currentTimeMillis() - mCreateTime) / 1000)),
+                    "sendmessage", String.valueOf(conversationFragment.hasSentMessages()));
+            BugleFirebaseAnalytics.logEvent("Detailspage_Show_Details",
                     "length", integerBuckets.getBucket((int) ((System.currentTimeMillis() - mCreateTime) / 1000)),
                     "sendmessage", String.valueOf(conversationFragment.hasSentMessages()));
         }
@@ -396,7 +403,8 @@ public class ConversationActivity extends BugleActionBarActivity
 
                     @Override
                     public void onAdClicked() {
-                        BugleAnalytics.logEvent("Detailspage_FullAd_Click", true, true);
+                        BugleAnalytics.logEvent("Detailspage_FullAd_Click", true);
+                        BugleFirebaseAnalytics.logEvent("Detailspage_FullAd_Click");
                     }
 
                     @Override
@@ -411,11 +419,13 @@ public class ConversationActivity extends BugleActionBarActivity
                 });
                 mInterstitialAd.setSoundEnable(false);
                 mInterstitialAd.show();
-                BugleAnalytics.logEvent("Detailspage_FullAd_Show", true, true);
+                BugleAnalytics.logEvent("Detailspage_FullAd_Show", true);
+                BugleFirebaseAnalytics.logEvent("Detailspage_FullAd_Show");
                 AutopilotEvent.logTopicEvent("topic-768lyi3sp", "fullad_show");
                 Preferences.getDefault().putLong(PREF_KEY_WIRE_AD_SHOW_TIME, System.currentTimeMillis());
             }
-            BugleAnalytics.logEvent("Detailspage_FullAd_Should_Show", true, true);
+            BugleAnalytics.logEvent("Detailspage_FullAd_Should_Show", true);
+            BugleFirebaseAnalytics.logEvent("Detailspage_FullAd_Should_Show");
             AutopilotEvent.logTopicEvent("topic-768lyi3sp", "fullad_chance");
         }
     }
@@ -511,7 +521,8 @@ public class ConversationActivity extends BugleActionBarActivity
         } else {
             finish();
         }
-        BugleAnalytics.logEvent("Detailspage_Back", false, true, "type", "back_icon");
+        BugleAnalytics.logEvent("Detailspage_Back", "type", "back_icon");
+        BugleFirebaseAnalytics.logEvent("Detailspage_Back", "type", "back_icon");
     }
 
     @Override

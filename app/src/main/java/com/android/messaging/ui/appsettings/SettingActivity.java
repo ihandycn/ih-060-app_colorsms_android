@@ -29,6 +29,7 @@ import com.android.messaging.ui.emoji.utils.EmojiManager;
 import com.android.messaging.ui.messagebox.MessageBoxSettings;
 import com.android.messaging.ui.signature.SignatureSettingDialog;
 import com.android.messaging.util.BugleAnalytics;
+import com.android.messaging.util.BugleFirebaseAnalytics;
 import com.android.messaging.util.BuglePrefs;
 import com.android.messaging.util.DefaultSMSUtils;
 import com.android.messaging.util.PhoneUtils;
@@ -470,7 +471,8 @@ public class SettingActivity extends BaseActivity {
                 String prefKey = getString(R.string.notification_sound_pref_key);
                 String currentRingtone = prefs.getString(prefKey, Settings.System.DEFAULT_NOTIFICATION_URI.toString());
                 if (currentRingtone != null && !currentRingtone.equals(uri == null ? "" : uri.toString())) {
-                    BugleAnalytics.logEvent("Customize_Notification_Sound_Change", true, true, "from", "settings");
+                    BugleAnalytics.logEvent("Customize_Notification_Sound_Change", true, "from", "settings");
+                    BugleFirebaseAnalytics.logEvent("Customize_Notification_Sound_Change", "from", "settings");
                 }
                 prefs.putString(prefKey, uri == null ? "" : uri.toString());
                 updateSoundSummary();

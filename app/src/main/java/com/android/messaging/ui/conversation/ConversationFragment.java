@@ -50,10 +50,8 @@ import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.text.BidiFormatter;
 import android.support.v4.text.TextDirectionHeuristicsCompat;
 import android.support.v7.app.ActionBar;
-import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.RecyclerView.ViewHolder;
 import android.text.TextUtils;
 import android.text.format.DateUtils;
 import android.view.ActionMode;
@@ -77,7 +75,6 @@ import com.android.messaging.ad.BillingManager;
 import com.android.messaging.datamodel.BugleNotifications;
 import com.android.messaging.datamodel.DataModel;
 import com.android.messaging.datamodel.MessagingContentProvider;
-import com.android.messaging.datamodel.action.InsertNewMessageAction;
 import com.android.messaging.datamodel.binding.Binding;
 import com.android.messaging.datamodel.binding.BindingBase;
 import com.android.messaging.datamodel.binding.ImmutableBindingRef;
@@ -98,7 +95,6 @@ import com.android.messaging.ui.BugleActionBarActivity;
 import com.android.messaging.ui.ConversationDrawables;
 import com.android.messaging.ui.SnackBar;
 import com.android.messaging.ui.UIIntents;
-import com.android.messaging.ui.animation.BubbleTransitionAnimation;
 import com.android.messaging.ui.conversation.ComposeMessageView.IComposeMessageViewHost;
 import com.android.messaging.ui.conversation.ConversationInputManager.ConversationInputHost;
 import com.android.messaging.ui.conversation.ConversationMessageView.ConversationMessageViewHost;
@@ -114,6 +110,7 @@ import com.android.messaging.ui.senddelaymessages.SendDelayMessagesManager;
 import com.android.messaging.ui.wallpaper.WallpaperManager;
 import com.android.messaging.util.Assert;
 import com.android.messaging.util.BugleAnalytics;
+import com.android.messaging.util.BugleFirebaseAnalytics;
 import com.android.messaging.util.ChangeDefaultSmsAppHelper;
 import com.android.messaging.util.ContentType;
 import com.android.messaging.util.FabricUtils;
@@ -568,7 +565,8 @@ public class ConversationFragment extends Fragment implements ConversationDataLi
 
         @Override
         public void onDestroyActionMode(final ActionMode actionMode) {
-            BugleAnalytics.logEvent("SMS_DetailsPage_LongPress_Close", true, true);
+            BugleAnalytics.logEvent("SMS_DetailsPage_LongPress_Close", true);
+            BugleFirebaseAnalytics.logEvent("SMS_DetailsPage_LongPress_Close");
         }
     };
 
@@ -665,7 +663,8 @@ public class ConversationFragment extends Fragment implements ConversationDataLi
         HSGlobalNotificationCenter.addObserver(EVENT_HIDE_MEDIA_PICKER, this);
         HSGlobalNotificationCenter.addObserver(RESET_ITEM, this);
         HSGlobalNotificationCenter.addObserver(EVENT_UPDATE_BUBBLE_DRAWABLE, this);
-        BugleAnalytics.logEvent("SMS_DetailsPage_Show", true, true);
+        BugleAnalytics.logEvent("SMS_DetailsPage_Show", true);
+        BugleFirebaseAnalytics.logEvent("SMS_DetailsPage_Show");
         AutopilotEvent.logTopicEvent("topic-768lyi3sp", "detailspage_show");
     }
 
@@ -674,7 +673,8 @@ public class ConversationFragment extends Fragment implements ConversationDataLi
             return;
         }
 
-        BugleAnalytics.logEvent("Detailspage_TopAd_Should_Show", true, true);
+        BugleAnalytics.logEvent("Detailspage_TopAd_Should_Show", true);
+        BugleFirebaseAnalytics.logEvent("Detailspage_TopAd_Should_Show");
         AutopilotEvent.logTopicEvent("topic-768lyi3sp", "topad_chance");
 
         List<AcbNativeAd> nativeAds = AcbNativeAdManager.fetch(AdPlacement.AD_DETAIL_NATIVE, 1);
@@ -684,7 +684,7 @@ public class ConversationFragment extends Fragment implements ConversationDataLi
             }
             mNativeAd = nativeAds.get(0);
             mNativeAd.setNativeClickListener(
-                    acbAd -> BugleAnalytics.logEvent("Detailspage_TopAd_Click", true, false));
+                    acbAd -> BugleAnalytics.logEvent("Detailspage_TopAd_Click", true));
             showTopBannerAd();
         } else {
             mNativeAdLoader = AcbNativeAdManager.createLoaderWithPlacement(AdPlacement.AD_DETAIL_NATIVE);
@@ -697,7 +697,7 @@ public class ConversationFragment extends Fragment implements ConversationDataLi
                         }
                         mNativeAd = list.get(0);
                         mNativeAd.setNativeClickListener(
-                                acbAd -> BugleAnalytics.logEvent("Detailspage_TopAd_Click", true, false));
+                                acbAd -> BugleAnalytics.logEvent("Detailspage_TopAd_Click", true));
                         showTopBannerAd();
                     } else {
                         enqueueNextAd();
@@ -785,7 +785,8 @@ public class ConversationFragment extends Fragment implements ConversationDataLi
             }
         }
 
-        BugleAnalytics.logEvent("Detailspage_TopAd_Show", true, true);
+        BugleAnalytics.logEvent("Detailspage_TopAd_Show", true);
+        BugleFirebaseAnalytics.logEvent("Detailspage_TopAd_Show");
         AutopilotEvent.logTopicEvent("topic-768lyi3sp", "topad_show");
 
         enqueueNextAd();
@@ -1095,7 +1096,8 @@ public class ConversationFragment extends Fragment implements ConversationDataLi
     public boolean onOptionsItemSelected(final MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_menu:
-                BugleAnalytics.logEvent("SMS_DetailsPage_IconSettings_Click", true, true);
+                BugleAnalytics.logEvent("SMS_DetailsPage_IconSettings_Click", true);
+                BugleFirebaseAnalytics.logEvent("SMS_DetailsPage_IconSettings_Click");
                 if (!mAdapter.isMultiSelectMode()) {
                     UIIntents.get().launchPeopleAndOptionsActivity(getActivity(), mConversationId);
                 }
@@ -1117,7 +1119,8 @@ public class ConversationFragment extends Fragment implements ConversationDataLi
                     centerPoint = new Point(display.getWidth() / 2, display.getHeight() / 2);
                 }
                 UIIntents.get().launchPhoneCallActivity(getActivity(), phoneNumber, centerPoint);
-                BugleAnalytics.logEvent("SMS_DetailsPage_IconCall_Click", true, true);
+                BugleAnalytics.logEvent("SMS_DetailsPage_IconCall_Click", true);
+                BugleFirebaseAnalytics.logEvent("SMS_DetailsPage_IconCall_Click");
                 return true;
         }
         return super.onOptionsItemSelected(item);
@@ -1380,7 +1383,8 @@ public class ConversationFragment extends Fragment implements ConversationDataLi
                 String name = mBinding.getData().getConversationName();
                 if (!TextUtils.isEmpty(name)) {
                     String[] count = name.split(",");
-                    BugleAnalytics.logEvent("SMS_SendPeopleAmount_Statistics", true, true, "type", String.valueOf(count.length));
+                    BugleAnalytics.logEvent("SMS_SendPeopleAmount_Statistics", true, "type", String.valueOf(count.length));
+                    BugleFirebaseAnalytics.logEvent("SMS_SendPeopleAmount_Statistics", "type", String.valueOf(count.length));
                 }
 
                 // Merge the caption text from attachments into the text body of the messages

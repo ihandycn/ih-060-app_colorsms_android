@@ -12,6 +12,7 @@ import com.android.messaging.ui.customize.theme.ThemeInfo;
 import com.android.messaging.ui.customize.theme.ThemeUtils;
 import com.android.messaging.util.BugleActivityUtil;
 import com.android.messaging.util.BugleAnalytics;
+import com.android.messaging.util.BugleFirebaseAnalytics;
 import com.superapps.util.Preferences;
 
 public class WelcomeChooseThemeActivity extends AppCompatActivity {
@@ -31,7 +32,8 @@ public class WelcomeChooseThemeActivity extends AppCompatActivity {
             finish();
         });
 
-        BugleAnalytics.logEvent("Start_ChooseTheme_Show", true, true);
+        BugleAnalytics.logEvent("Start_ChooseTheme_Show", true);
+        BugleFirebaseAnalytics.logEvent("Start_ChooseTheme_Show");
         Preferences.getDefault().putBoolean(PREF_KEY_WELCOME_CHOOSE_THEME_SHOWN, true);
     }
 

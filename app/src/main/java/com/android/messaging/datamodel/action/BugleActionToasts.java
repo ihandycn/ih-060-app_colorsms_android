@@ -26,6 +26,7 @@ import com.android.messaging.datamodel.data.MessageData;
 import com.android.messaging.datamodel.data.ParticipantData;
 import com.android.messaging.sms.MmsUtils;
 import com.android.messaging.util.BugleAnalytics;
+import com.android.messaging.util.BugleFirebaseAnalytics;
 import com.android.messaging.util.PhoneUtils;
 import com.android.messaging.util.ThreadUtil;
 
@@ -77,8 +78,10 @@ public class BugleActionToasts {
 
     public static void onMessageReceived(final String conversationId,
                                          @Nullable final ParticipantData sender, @Nullable final MessageData message) {
-        BugleAnalytics.logEvent("SMS_Received", true, true,
+        BugleAnalytics.logEvent("SMS_Received", true,
                 "type", message != null && message.getIsMms() ? "mms" : "sms",
+                "isContact", sender != null && sender.getContactId() > 0 ? "true" : "false");
+        BugleFirebaseAnalytics.logEvent("SMS_Received", "type", message != null && message.getIsMms() ? "mms" : "sms",
                 "isContact", sender != null && sender.getContactId() > 0 ? "true" : "false");
     }
 

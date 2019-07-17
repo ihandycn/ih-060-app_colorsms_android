@@ -46,6 +46,7 @@ import com.android.messaging.ui.contact.ContactPickerActivity;
 import com.android.messaging.ui.conversationlist.ConversationListFragment.ConversationListFragmentHost;
 import com.android.messaging.ui.conversationlist.MultiSelectActionModeCallback.SelectedConversation;
 import com.android.messaging.util.BugleAnalytics;
+import com.android.messaging.util.BugleFirebaseAnalytics;
 import com.android.messaging.util.DebugUtils;
 import com.android.messaging.util.DefaultSMSUtils;
 import com.android.messaging.util.Trace;
@@ -301,7 +302,9 @@ public abstract class AbstractConversationListActivity extends BugleActionBarAct
 
             UIIntents.get().launchConversationActivity(
                     this, conversationId, null, formattedName, false);
-            BugleAnalytics.logEvent("SMS_Messages_Message_Click", true, true,
+            BugleAnalytics.logEvent("SMS_Messages_Message_Click", true,
+                    "Type", conversationListItemData.isPinned() ? "pin" : "unpin");
+            BugleFirebaseAnalytics.logEvent("SMS_Messages_Message_Click",
                     "Type", conversationListItemData.isPinned() ? "pin" : "unpin");
         }
     }

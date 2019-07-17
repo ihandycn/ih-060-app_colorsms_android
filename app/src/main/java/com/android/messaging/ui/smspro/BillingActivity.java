@@ -9,6 +9,7 @@ import android.widget.TextView;
 import com.android.messaging.R;
 import com.android.messaging.ad.BillingManager;
 import com.android.messaging.util.BugleAnalytics;
+import com.android.messaging.util.BugleFirebaseAnalytics;
 import com.ihs.commons.notificationcenter.HSGlobalNotificationCenter;
 import com.ihs.commons.notificationcenter.INotificationObserver;
 import com.ihs.commons.utils.HSBundle;
@@ -71,16 +72,16 @@ public class BillingActivity extends AppCompatActivity implements INotificationO
             BillingManager.requestPurchase();
 
             BugleAnalytics.logEvent("SMS_Subscription_Click");
-            BugleAnalytics.logEvent("Subscription_Analysis",
-                    false, true, "Subscription_Click", "true");
+            BugleAnalytics.logEvent("Subscription_Analysis", "Subscription_Click", "true");
+            BugleFirebaseAnalytics.logEvent("Subscription_Analysis", "Subscription_Click", "true");
         });
 
         ImageView closeActionImage = findViewById(R.id.action_close);
         closeActionImage.setOnClickListener(v -> finish());
 
         BugleAnalytics.logEvent("SMS_Subscription_Show", true);
-        BugleAnalytics.logEvent("Subscription_Analysis",
-                false, true, "Subscription_Show", "true");
+        BugleAnalytics.logEvent("Subscription_Analysis", "Subscription_Show", "true");
+        BugleFirebaseAnalytics.logEvent("Subscription_Analysis", "Subscription_Show", "true");
 
         HSGlobalNotificationCenter.addObserver(BILLING_VERIFY_SUCCESS, this);
     }

@@ -18,6 +18,7 @@ import com.android.messaging.ui.customize.theme.ThemeInfo;
 import com.android.messaging.ui.customize.theme.ThemeUtils;
 import com.android.messaging.ui.wallpaper.WallpaperManager;
 import com.android.messaging.util.BugleAnalytics;
+import com.android.messaging.util.BugleFirebaseAnalytics;
 import com.superapps.util.BackgroundDrawables;
 import com.superapps.util.Dimensions;
 
@@ -190,7 +191,9 @@ public class CustomMessagePreviewView extends ConstraintLayout
         if (mPreviewBubbleDrawableIndex != BubbleDrawables.getSelectedIndex(mConversationId)) {
             BubbleDrawables.setSelectedIndex(mPreviewBubbleDrawableIndex, mConversationId);
             bubbleDrawableChanged = true;
-            BugleAnalytics.logEvent("Customize_Bubble_Style_Change", false, true, "style",
+            BugleAnalytics.logEvent("Customize_Bubble_Style_Change", "style",
+                    String.valueOf(BubbleDrawables.getSelectedIdentifier()));
+            BugleFirebaseAnalytics.logEvent("Customize_Bubble_Style_Change",  "style",
                     String.valueOf(BubbleDrawables.getSelectedIdentifier()));
         }
 
@@ -216,11 +219,15 @@ public class CustomMessagePreviewView extends ConstraintLayout
 
         String from = TextUtils.isEmpty(mConversationId) ? "settings" : "chat";
 
-        BugleAnalytics.logEvent("Customize_Bubble_Change", true, true, "from", from, "type",
+        BugleAnalytics.logEvent("Customize_Bubble_Change", true, "from", from, "type",
+                getBubbleChangeString(bubbleDrawableChanged, bubbleBackgroundColorChanged || bubbleTextColorChanged));
+        BugleFirebaseAnalytics.logEvent("Customize_Bubble_Change",  "from", from, "type",
                 getBubbleChangeString(bubbleDrawableChanged, bubbleBackgroundColorChanged || bubbleTextColorChanged));
 
         if (bubbleBackgroundColorChanged || bubbleTextColorChanged) {
-            BugleAnalytics.logEvent("Customize_Bubble_Color_Change", false, true, "type",
+            BugleAnalytics.logEvent("Customize_Bubble_Color_Change", "type",
+                    getBubbleColorChangeString(bubbleBackgroundColorChanged, bubbleTextColorChanged));
+            BugleFirebaseAnalytics.logEvent("Customize_Bubble_Color_Change",  "type",
                     getBubbleColorChangeString(bubbleBackgroundColorChanged, bubbleTextColorChanged));
         }
     }

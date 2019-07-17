@@ -26,6 +26,7 @@ import com.android.messaging.ui.appsettings.PrivacyModeSettings;
 import com.android.messaging.ui.customize.theme.ThemeUtils;
 import com.android.messaging.ui.emoji.EmojiPickerFragment;
 import com.android.messaging.util.BugleAnalytics;
+import com.android.messaging.util.BugleFirebaseAnalytics;
 import com.android.messaging.util.FabricUtils;
 import com.android.messaging.util.UiUtils;
 import com.crashlytics.android.core.CrashlyticsCore;
@@ -145,7 +146,8 @@ public class MessageBoxActivity extends AppCompatActivity implements INotificati
         });
         mHomeKeyWatcher.startWatch();
 
-        BugleAnalytics.logEvent("SMS_PopUp_Show", false, true);
+        BugleAnalytics.logEvent("SMS_PopUp_Show");
+        BugleFirebaseAnalytics.logEvent("SMS_PopUp_Show");
     }
 
 
@@ -308,8 +310,9 @@ public class MessageBoxActivity extends AppCompatActivity implements INotificati
                     }
                 }
                 finish(OPEN);
-                BugleAnalytics.logEvent("SMS_PopUp_Open_Click",
-                        false, true, "type", getConversationType(),
+                BugleAnalytics.logEvent("SMS_PopUp_Open_Click", "type", getConversationType(),
+                        "privacyMode", String.valueOf(mHasPrivacyModeConversation));
+                BugleFirebaseAnalytics.logEvent("SMS_PopUp_Open_Click", "type", getConversationType(),
                         "privacyMode", String.valueOf(mHasPrivacyModeConversation));
                 break;
             case R.id.self_send_icon:
@@ -406,9 +409,11 @@ public class MessageBoxActivity extends AppCompatActivity implements INotificati
         finish();
         overridePendingTransition(R.anim.anim_null, R.anim.anim_null);
         if (MessageBoxAnalytics.getIsMultiConversation()) {
-            BugleAnalytics.logEvent("SMS_PopUp_Close_Multifunction_MultiUser", false, true, "closeType", source);
+            BugleAnalytics.logEvent("SMS_PopUp_Close_Multifunction_MultiUser", "closeType", source);
+            BugleFirebaseAnalytics.logEvent("SMS_PopUp_Close_Multifunction_MultiUser",  "closeType", source);
         } else {
-            BugleAnalytics.logEvent("SMS_PopUp_Close_Multifunction_SingleUser", false, true, "closeType", source);
+            BugleAnalytics.logEvent("SMS_PopUp_Close_Multifunction_SingleUser", "closeType", source);
+            BugleFirebaseAnalytics.logEvent("SMS_PopUp_Close_Multifunction_SingleUser",  "closeType", source);
         }
     }
 
@@ -461,7 +466,13 @@ public class MessageBoxActivity extends AppCompatActivity implements INotificati
             messageType += "sms";
         }
 
-        BugleAnalytics.logEvent("SMS_PopUp_Show_Multifunction", false, true,
+        BugleAnalytics.logEvent("SMS_PopUp_Show_Multifunction",
+                "msgNum", String.valueOf(mMessagesNum),
+                "contactNum", String.valueOf(mContactsNum),
+                "message type", messageType,
+                "withTheme", String.valueOf(!ThemeUtils.isDefaultTheme()),
+                "privacyMode", String.valueOf(mHasPrivacyModeConversation));
+        BugleFirebaseAnalytics.logEvent("SMS_PopUp_Show_Multifunction",
                 "msgNum", String.valueOf(mMessagesNum),
                 "contactNum", String.valueOf(mContactsNum),
                 "message type", messageType,
@@ -469,7 +480,8 @@ public class MessageBoxActivity extends AppCompatActivity implements INotificati
                 "privacyMode", String.valueOf(mHasPrivacyModeConversation));
 
         if (mContactsNum > 1) {
-            BugleAnalytics.logEvent("SMS_PopUp_MultiUser_Show", false, true);
+            BugleAnalytics.logEvent("SMS_PopUp_MultiUser_Show");
+            BugleFirebaseAnalytics.logEvent("SMS_PopUp_MultiUser_Show");
         }
         if (mHasPrivacyModeConversation) {
             MessageBoxAnalytics.logEvent("SMS_PrivacyPopUp_Show");

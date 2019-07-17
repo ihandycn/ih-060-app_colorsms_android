@@ -11,6 +11,7 @@ import android.util.Log;
 import com.android.messaging.BugleApplication;
 import com.android.messaging.R;
 import com.android.messaging.util.BugleAnalytics;
+import com.android.messaging.util.BugleFirebaseAnalytics;
 import com.ihs.commons.notificationcenter.HSGlobalNotificationCenter;
 import com.superapps.util.Toasts;
 
@@ -78,8 +79,8 @@ public class BillingManager {
                 HSGlobalNotificationCenter.sendNotification(BILLING_VERIFY_SUCCESS);
 
                 BugleAnalytics.logEvent("SMS_Subscription_Purchase_Success", true);
-                BugleAnalytics.logEvent("Subscription_Analysis",
-                        false, true, "Subscription_Purchase_Success", "true");
+                BugleAnalytics.logEvent("Subscription_Analysis", "Subscription_Purchase_Success", "true");
+                BugleFirebaseAnalytics.logEvent("Subscription_Analysis", "Subscription_Purchase_Success", "true");
 
             }
 

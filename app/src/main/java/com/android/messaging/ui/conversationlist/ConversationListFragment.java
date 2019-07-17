@@ -79,6 +79,7 @@ import com.android.messaging.ui.view.MessagesTextView;
 import com.android.messaging.util.AccessibilityUtil;
 import com.android.messaging.util.Assert;
 import com.android.messaging.util.BugleAnalytics;
+import com.android.messaging.util.BugleFirebaseAnalytics;
 import com.android.messaging.util.CommonUtils;
 import com.android.messaging.util.ImeUtil;
 import com.android.messaging.util.LogUtil;
@@ -366,7 +367,8 @@ public class ConversationListFragment extends Fragment implements ConversationLi
             mStartNewConversationButton.setVisibility(View.VISIBLE);
             mStartNewConversationButton.setOnClickListener(clickView -> {
                 ConversationListActivity.logFirstComeInClickEvent("create");
-                BugleAnalytics.logEvent("SMS_CreateMessage_ButtonClick", true, true);
+                BugleAnalytics.logEvent("SMS_CreateMessage_ButtonClick", true);
+                BugleFirebaseAnalytics.logEvent("SMS_CreateMessage_ButtonClick");
                 mHost.onCreateConversationClick();
             });
             mStartNewConversationButton.setOnLongClickListener(v -> {
@@ -551,15 +553,20 @@ public class ConversationListFragment extends Fragment implements ConversationLi
             mNativeAdLoader.cancel();
         }
 
-        BugleAnalytics.logEvent("SMS_Messages_BannerAd_Should_Show", true, true);
+        BugleAnalytics.logEvent("SMS_Messages_BannerAd_Should_Show", true);
+        BugleFirebaseAnalytics.logEvent("SMS_Messages_BannerAd_Should_Show");
         AutopilotEvent.logTopicEvent("topic-768lyi3sp", "bannerad_chance");
 
         List<AcbNativeAd> nativeAds = AcbNativeAdManager.fetch(AdPlacement.AD_BANNER, 1);
         if (nativeAds.size() > 0) {
             mNativeAd = nativeAds.get(0);
             mNativeAd.setNativeClickListener(
-                    acbAd -> BugleAnalytics.logEvent("SMS_Messages_BannerAd_Click", true, true,
-                            "theme", String.valueOf(ThemeUtils.isDefaultTheme())));
+                    acbAd -> {
+                        BugleAnalytics.logEvent("SMS_Messages_BannerAd_Click", true,
+                                "theme", String.valueOf(ThemeUtils.isDefaultTheme()));
+                        BugleFirebaseAnalytics.logEvent("SMS_Messages_BannerAd_Click",
+                                "theme", String.valueOf(ThemeUtils.isDefaultTheme()));
+                    });
             showTopNativeAd();
         } else {
             mNativeAdLoader = AcbNativeAdManager.createLoaderWithPlacement(AdPlacement.AD_BANNER);
@@ -569,8 +576,12 @@ public class ConversationListFragment extends Fragment implements ConversationLi
                     if (list.size() > 0) {
                         mNativeAd = list.get(0);
                         mNativeAd.setNativeClickListener(
-                                acbAd -> BugleAnalytics.logEvent("SMS_Messages_BannerAd_Click", true, true,
-                                        "theme", String.valueOf(ThemeUtils.isDefaultTheme())));
+                                acbAd -> {
+                                    BugleAnalytics.logEvent("SMS_Messages_BannerAd_Click", true,
+                                            "theme", String.valueOf(ThemeUtils.isDefaultTheme()));
+                                    BugleFirebaseAnalytics.logEvent("SMS_Messages_BannerAd_Click",
+                                            "theme", String.valueOf(ThemeUtils.isDefaultTheme()));
+                                });
                         showTopNativeAd();
                     }
                     isAdLoading = false;
@@ -642,7 +653,9 @@ public class ConversationListFragment extends Fragment implements ConversationLi
                 mRecyclerView.scrollToPosition(0);
             }
         }
-        BugleAnalytics.logEvent("SMS_Messages_BannerAd_Show", true, true,
+        BugleAnalytics.logEvent("SMS_Messages_BannerAd_Show", true,
+                "theme", String.valueOf(ThemeUtils.isDefaultTheme()));
+        BugleFirebaseAnalytics.logEvent("SMS_Messages_BannerAd_Show",
                 "theme", String.valueOf(ThemeUtils.isDefaultTheme()));
         AutopilotEvent.logTopicEvent("topic-768lyi3sp", "bannerad_show");
     }

@@ -18,6 +18,7 @@ import android.widget.TextView;
 import com.android.messaging.BaseActivity;
 import com.android.messaging.R;
 import com.android.messaging.util.BugleAnalytics;
+import com.android.messaging.util.BugleFirebaseAnalytics;
 import com.android.messaging.util.UiUtils;
 import com.superapps.util.Dimensions;
 
@@ -121,7 +122,8 @@ public class ThemeSelectActivity extends BaseActivity {
             }
         });
 
-        BugleAnalytics.logEvent("Customize_ThemeCenter_Show", true, true);
+        BugleAnalytics.logEvent("Customize_ThemeCenter_Show", true);
+        BugleFirebaseAnalytics.logEvent("Customize_ThemeCenter_Show");
     }
 
     @Override

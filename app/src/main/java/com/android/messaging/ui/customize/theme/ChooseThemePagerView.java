@@ -11,6 +11,7 @@ import android.widget.TextView;
 import com.android.messaging.R;
 import com.android.messaging.font.FontUtils;
 import com.android.messaging.util.BugleAnalytics;
+import com.android.messaging.util.BugleFirebaseAnalytics;
 import com.superapps.util.BackgroundDrawables;
 import com.superapps.util.Dimensions;
 
@@ -80,7 +81,8 @@ public class ChooseThemePagerView extends ConstraintLayout {
             ThemeUtils.applyTheme(mAdapter.getThemeInfo(mPager.getCurrentItem()), 0);
             FontUtils.onFontTypefaceChanged();
 
-            BugleAnalytics.logEvent("Start_ChooseTheme_Apply", true, true, "theme", ThemeUtils.getCurrentThemeName());
+            BugleAnalytics.logEvent("Start_ChooseTheme_Apply", true, "theme", ThemeUtils.getCurrentThemeName());
+            BugleFirebaseAnalytics.logEvent("Start_ChooseTheme_Apply", "theme", ThemeUtils.getCurrentThemeName());
         });
     }
 

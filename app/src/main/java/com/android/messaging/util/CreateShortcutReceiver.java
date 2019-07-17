@@ -15,6 +15,7 @@ public class CreateShortcutReceiver extends BroadcastReceiver {
         Toast.makeText(context, HSApplication.getContext().getResources().getString(R.string.create_shortcut_has_been_create)
                 , Toast.LENGTH_SHORT).show();
 
-        BugleAnalytics.logEvent("SMS_Shortcut_Creat_Success", false, true);
+        BugleAnalytics.logEvent("SMS_Shortcut_Creat_Success");
+        BugleFirebaseAnalytics.logEvent("SMS_Shortcut_Creat_Success");
     }
 }

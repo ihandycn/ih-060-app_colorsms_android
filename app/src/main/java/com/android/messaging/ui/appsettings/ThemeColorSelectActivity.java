@@ -20,6 +20,7 @@ import com.android.messaging.ui.customize.OnColorChangedListener;
 import com.android.messaging.ui.customize.PrimaryColors;
 import com.android.messaging.ui.customize.theme.ThemeUtils;
 import com.android.messaging.util.BugleAnalytics;
+import com.android.messaging.util.BugleFirebaseAnalytics;
 import com.android.messaging.util.UiUtils;
 import com.ihs.commons.notificationcenter.HSGlobalNotificationCenter;
 
@@ -55,7 +56,9 @@ public class ThemeColorSelectActivity extends BaseActivity implements OnColorCha
 
         initPager(this);
 
-        BugleAnalytics.logEvent("Customize_ThemeColor_Show", true, true,
+        BugleAnalytics.logEvent("Customize_ThemeColor_Show", true,
+                "withTheme", String.valueOf(!ThemeUtils.isDefaultTheme()));
+        BugleFirebaseAnalytics.logEvent("Customize_ThemeColor_Show",
                 "withTheme", String.valueOf(!ThemeUtils.isDefaultTheme()));
 
         UiUtils.setTitleBarBackground(mToolbar, this);

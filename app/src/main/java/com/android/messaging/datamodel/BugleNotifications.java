@@ -78,6 +78,7 @@ import com.android.messaging.ui.messagebox.MessageBoxSettings;
 import com.android.messaging.util.Assert;
 import com.android.messaging.util.AvatarUriUtil;
 import com.android.messaging.util.BugleAnalytics;
+import com.android.messaging.util.BugleFirebaseAnalytics;
 import com.android.messaging.util.BugleGservices;
 import com.android.messaging.util.BugleGservicesKeys;
 import com.android.messaging.util.BuglePrefs;
@@ -694,11 +695,13 @@ public class BugleNotifications {
         if (!isPrivateConversation || PrivateSettingManager.isNotificationEnable()) {
             processAndSend(state, silent, softSound, conversationId == null);
             boolean isPrivacyMode = PrivacyModeSettings.getPrivacyMode(conversationId) != PrivacyModeSettings.NONE;
-            BugleAnalytics.logEvent("SMS_Notifications_Pushed", true, true,
+            BugleAnalytics.logEvent("SMS_Notifications_Pushed", true,
                     "PrivacyMode", String.valueOf(isPrivacyMode));
+            BugleFirebaseAnalytics.logEvent("SMS_Notifications_Pushed", "PrivacyMode", String.valueOf(isPrivacyMode));
             AutopilotEvent.logTopicEvent("topic-768lyi3sp", "notification_pushed");
             if (isPrivacyMode) {
-                BugleAnalytics.logEvent("SMS_PrivacyNotifications_Pushed", false, true);
+                BugleAnalytics.logEvent("SMS_PrivacyNotifications_Pushed");
+                BugleFirebaseAnalytics.logEvent("SMS_PrivacyNotifications_Pushed");
             }
         }
     }

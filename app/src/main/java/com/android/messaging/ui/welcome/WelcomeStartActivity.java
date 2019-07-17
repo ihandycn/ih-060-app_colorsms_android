@@ -28,6 +28,7 @@ import com.android.messaging.ui.WebViewActivity;
 import com.android.messaging.ui.view.MessagesTextView;
 import com.android.messaging.util.BugleAnalytics;
 import com.android.messaging.util.BugleAnimUtils;
+import com.android.messaging.util.BugleFirebaseAnalytics;
 import com.android.messaging.util.DefaultSMSUtils;
 import com.android.messaging.util.OsUtil;
 import com.android.messaging.util.view.AdvancedPageIndicator;
@@ -103,7 +104,8 @@ public class WelcomeStartActivity extends AppCompatActivity implements View.OnCl
                             new Intent(WelcomeStartActivity.this, WelcomeChooseThemeActivity.class));
                     overridePendingTransition(R.anim.slide_in_from_right_and_fade, R.anim.anim_null);
                     Toasts.showToast(R.string.set_as_default_success);
-                    BugleAnalytics.logEvent("Start_SetAsDefault_Success", true, true, "step", "detail page");
+                    BugleAnalytics.logEvent("Start_SetAsDefault_Success", true, "step", "detail page");
+                    BugleFirebaseAnalytics.logEvent("Start_SetAsDefault_Success", "step", "detail page" );
                     finish();
                 } else {
                     sendEmptyMessageDelayed(EVENT_RETRY_NAVIGATION, 100);
@@ -163,30 +165,30 @@ public class WelcomeStartActivity extends AppCompatActivity implements View.OnCl
                 if (Compats.IS_MOTOROLA_DEVICE
                         || Compats.IS_LGE_DEVICE
                         || Compats.IS_ZTE_DEVICE) {
-                    BugleAnalytics.logEventToFirebase("Device_High_Retention", new HashMap<>());
+                    BugleFirebaseAnalytics.logEvent("Device_High_Retention", new HashMap<>());
                 }
                 if (Compats.IS_MOTOROLA_DEVICE
                         || (Compats.IS_LGE_DEVICE && Build.VERSION.SDK_INT == Build.VERSION_CODES.O_MR1)) {
-                    BugleAnalytics.logEventToFirebase("Device_ExtraHigh_Retention", new HashMap<>());
+                    BugleFirebaseAnalytics.logEvent("Device_ExtraHigh_Retention",  new HashMap<>());
                 }
             } else if (locale.equalsIgnoreCase("PH")) {
                 if (Compats.IS_SAMSUNG_DEVICE
                         || Compats.IS_VIVO_DEVICE
                         || Compats.IS_HUAWEI_DEVICE
                         || Compats.IS_CHERRY_MOBILE) {
-                    BugleAnalytics.logEventToFirebase("Device_High_Retention", new HashMap<>());
+                    BugleFirebaseAnalytics.logEvent("Device_High_Retention", new HashMap<>());
                 }
                 if (Compats.IS_SAMSUNG_DEVICE
                         || Compats.IS_VIVO_DEVICE
                         || Compats.IS_HUAWEI_DEVICE
                         || Compats.IS_CHERRY_MOBILE
                         || (Compats.IS_OPPO_DEVICE && Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)) {
-                    BugleAnalytics.logEventToFirebase("Device_ExtraHigh_Retention", new HashMap<>());
+                    BugleFirebaseAnalytics.logEvent("Device_ExtraHigh_Retention", new HashMap<>());
                 }
             }
 
             if (Compats.IS_HUAWEI_DEVICE) {
-                BugleAnalytics.logEventToFirebase("Device_HUAWEI", new HashMap<>());
+                BugleFirebaseAnalytics.logEvent("Device_HUAWEI", new HashMap<>());
             }
         }, "pref_key_log_retention_events");
     }
@@ -194,7 +196,8 @@ public class WelcomeStartActivity extends AppCompatActivity implements View.OnCl
     @Override
     public void onStart() {
         super.onStart();
-        BugleAnalytics.logEvent("Start_WelcomePage_Show", true, true);
+        BugleAnalytics.logEvent("Start_WelcomePage_Show", true);
+        BugleFirebaseAnalytics.logEvent("Start_WelcomePage_Show");
     }
 
     @Override protected void onResume() {
@@ -307,7 +310,8 @@ public class WelcomeStartActivity extends AppCompatActivity implements View.OnCl
                         mForwardLottieView.postDelayed(() -> playForwardDropAnimation(0), 200);
 
                         if (!mIsActivityPaused) {
-                            BugleAnalytics.logEvent("Start_DetailPage_Show", true, true);
+                            BugleAnalytics.logEvent("Start_DetailPage_Show", true);
+                            BugleFirebaseAnalytics.logEvent("Start_DetailPage_Show");
                         }
                     });
         } catch (RejectedExecutionException e) {
@@ -499,7 +503,8 @@ public class WelcomeStartActivity extends AppCompatActivity implements View.OnCl
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.welcome_start_button:
-                BugleAnalytics.logEvent("Start_DetailPage_Click", true, true, "Page", String.valueOf(mViewPagerCurrentPosition));
+                BugleAnalytics.logEvent("Start_DetailPage_Click", true, "Page", String.valueOf(mViewPagerCurrentPosition));
+                BugleFirebaseAnalytics.logEvent("Start_DetailPage_Click",  "Page", String.valueOf(mViewPagerCurrentPosition));
                 Preferences.getDefault().putBoolean(PREF_KEY_START_BUTTON_CLICKED, true);
                 final Intent intent = UIIntents.get().getChangeDefaultSmsAppIntent(WelcomeStartActivity.this);
                 startActivityForResult(intent, REQUEST_SET_DEFAULT_SMS_APP);

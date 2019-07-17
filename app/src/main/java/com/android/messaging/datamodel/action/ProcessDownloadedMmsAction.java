@@ -49,6 +49,7 @@ import com.android.messaging.sms.MmsUtils;
 import com.android.messaging.ui.conversationlist.ArchivedConversationListActivity;
 import com.android.messaging.util.Assert;
 import com.android.messaging.util.BugleAnalytics;
+import com.android.messaging.util.BugleFirebaseAnalytics;
 import com.android.messaging.util.FabricUtils;
 import com.android.messaging.util.LogUtil;
 import com.google.common.io.Files;
@@ -529,7 +530,8 @@ public class ProcessDownloadedMmsAction extends Action {
                     mmsType = "other";
                 }
 
-                BugleAnalytics.logEvent("MMS_Received", true, true, "mms_type", mmsType);
+                BugleAnalytics.logEvent("MMS_Received", true, "mms_type", mmsType);
+                BugleFirebaseAnalytics.logEvent("MMS_Received",  "mms_type", mmsType);
 
                 final MessageData current = BugleDatabaseOperations.readMessageData(db, messageId);
                 if (current == null) {

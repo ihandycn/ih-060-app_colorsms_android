@@ -31,6 +31,7 @@ import com.android.messaging.R;
 import com.android.messaging.receiver.SendStatusReceiver;
 import com.android.messaging.util.Assert;
 import com.android.messaging.util.BugleAnalytics;
+import com.android.messaging.util.BugleFirebaseAnalytics;
 import com.android.messaging.util.BugleGservices;
 import com.android.messaging.util.BugleGservicesKeys;
 import com.android.messaging.util.FabricUtils;
@@ -106,7 +107,9 @@ public class SmsSender {
         }
 
         private int getFailureLevel(final int resultCode) {
-            BugleAnalytics.logEvent("SMS_Send_Failed", false, true,
+            BugleAnalytics.logEvent("SMS_Send_Failed",
+                    "SmsSendResultCode", String.valueOf(resultCode));
+            BugleFirebaseAnalytics.logEvent("SMS_Send_Failed",
                     "SmsSendResultCode", String.valueOf(resultCode));
             switch (resultCode) {
                 case Activity.RESULT_OK:
@@ -146,8 +149,9 @@ public class SmsSender {
             LogUtil.e(TAG, "SmsSender: failure in sending message part. "
                     + " requestId=" + requestId + " partId=" + partId
                     + " resultCode=" + resultCode + " errorCode=" + errorCode);
-            BugleAnalytics.logEvent("SMS_Send_Failed", false, true,
+            BugleAnalytics.logEvent("SMS_Send_Failed",
                     "SmsSendResult", "False");
+            BugleFirebaseAnalytics.logEvent("SMS_Send_Failed", "SmsSendResult", "False");
             if (errorCode != SendStatusReceiver.NO_ERROR_CODE) {
                 final Context context = Factory.get().getApplicationContext();
                 UiUtils.showToastAtBottom(getSendErrorToastMessage(context, subId, errorCode));
@@ -157,8 +161,8 @@ public class SmsSender {
                 LogUtil.v(TAG, "SmsSender: received sent result. " + " requestId=" + requestId
                         + " partId=" + partId + " resultCode=" + resultCode);
             }
-            BugleAnalytics.logEvent("SMS_Send_Failed", false, true,
-                    "SmsSendResult", "True");
+            BugleAnalytics.logEvent("SMS_Send_Failed", "SmsSendResult", "True");
+            BugleFirebaseAnalytics.logEvent("SMS_Send_Failed", "SmsSendResult", "True");
         }
         if (requestId != null) {
             final SendResult result = sPendingMessageMap.get(requestId);

@@ -54,6 +54,7 @@ import com.android.messaging.ui.SetAsDefaultGuideActivity;
 import com.android.messaging.ui.emoji.utils.EmojiConfig;
 import com.android.messaging.upgrader.Upgrader;
 import com.android.messaging.util.BugleAnalytics;
+import com.android.messaging.util.BugleFirebaseAnalytics;
 import com.android.messaging.util.BugleGservices;
 import com.android.messaging.util.BugleGservicesKeys;
 import com.android.messaging.util.BuglePrefs;
@@ -204,7 +205,7 @@ public class BugleApplication extends HSApplication implements UncaughtException
             if (newState == HSGdprConsent.ConsentState.ACCEPTED) {
                 initFabric();
                 AcbService.setGDPRConsentGranted(true);
-                BugleAnalytics.sFirebaseAnalytics.setAnalyticsCollectionEnabled(true);
+                BugleFirebaseAnalytics.sFirebaseAnalytics.setAnalyticsCollectionEnabled(true);
             }
 
             if (oldState == HSGdprConsent.ConsentState.ACCEPTED && newState == HSGdprConsent.ConsentState.DECLINED) {
@@ -241,10 +242,10 @@ public class BugleApplication extends HSApplication implements UncaughtException
                     HSLog.d("gdpr", "app start with permission");
                     initFabric();
                     AcbService.setGDPRConsentGranted(true);
-                    BugleAnalytics.sFirebaseAnalytics.setAnalyticsCollectionEnabled(true);
+                    BugleFirebaseAnalytics.sFirebaseAnalytics.setAnalyticsCollectionEnabled(true);
                 } else {
                     HSLog.d("gdpr", "app start with no permission");
-                    BugleAnalytics.sFirebaseAnalytics.setAnalyticsCollectionEnabled(false);
+                    BugleFirebaseAnalytics.sFirebaseAnalytics.setAnalyticsCollectionEnabled(false);
                 }
             }));
 
@@ -417,9 +418,10 @@ public class BugleApplication extends HSApplication implements UncaughtException
 
     private void recordInstallType() {
         AcbPublisherMgr.PublisherData data = AcbPublisherMgr.getPublisherData(BugleApplication.this);
-        BugleAnalytics.logUserProperty("MediaSource", data.getMediaSource());
-        BugleAnalytics.logUserProperty("Compaign", data.getCampaign());
-        BugleAnalytics.logUserProperty("Channel", data.getAfChannel());
+
+        BugleFirebaseAnalytics.logUserProperty("MediaSource", data.getMediaSource());
+        BugleFirebaseAnalytics.logUserProperty("Compaign", data.getCampaign());
+        BugleFirebaseAnalytics.logUserProperty("Channel", data.getAfChannel());
 
         Map<String, String> parameters = new HashMap<>();
         String installType = data.getInstallMode().name();
@@ -433,16 +435,17 @@ public class BugleApplication extends HSApplication implements UncaughtException
 
         long lastLogProcessStart = Preferences.getDefault().getLong("pref_key_last_log_process_start", -1);
         if (!Calendars.isSameDay(System.currentTimeMillis(), lastLogProcessStart)) {
-            BugleAnalytics.logEvent("process_start_daily", true, true,
+            BugleAnalytics.logEvent("process_start_daily", true,
                     "isDefault", String.valueOf(DefaultSMSUtils.isDefaultSmsApp()));
+            BugleFirebaseAnalytics.logEvent("process_start_daily", "isDefault", String.valueOf(DefaultSMSUtils.isDefaultSmsApp()));
             Preferences.getDefault().putLong("pref_key_last_log_process_start", System.currentTimeMillis());
         }
 
         Threads.postOnMainThreadDelayed(() -> {
             AcbPublisherMgr.PublisherData publisherData = AcbPublisherMgr.getPublisherData(BugleApplication.this);
-            BugleAnalytics.logUserProperty("MediaSource", publisherData.getMediaSource());
-            BugleAnalytics.logUserProperty("Compaign", publisherData.getCampaign());
-            BugleAnalytics.logUserProperty("Channel", publisherData.getAfChannel());
+            BugleFirebaseAnalytics.logUserProperty("MediaSource", publisherData.getMediaSource());
+            BugleFirebaseAnalytics.logUserProperty("Compaign", publisherData.getCampaign());
+            BugleFirebaseAnalytics.logUserProperty("Channel", publisherData.getAfChannel());
             BugleAnalytics.logEvent("Agency_Info", true,
                     "install_type", installType,
                     "campaign_id", "" + publisherData.getCampaignID(),
@@ -456,9 +459,9 @@ public class BugleApplication extends HSApplication implements UncaughtException
                 for (int delay : delayTimes) {
                     Threads.postOnMainThreadDelayed(() -> {
                         AcbPublisherMgr.PublisherData publisherData = AcbPublisherMgr.getPublisherData(BugleApplication.this);
-                        BugleAnalytics.logUserProperty("MediaSource", publisherData.getMediaSource());
-                        BugleAnalytics.logUserProperty("Compaign", publisherData.getCampaign());
-                        BugleAnalytics.logUserProperty("Channel", publisherData.getAfChannel());
+                        BugleFirebaseAnalytics.logUserProperty("MediaSource", publisherData.getMediaSource());
+                        BugleFirebaseAnalytics.logUserProperty("Compaign", publisherData.getCampaign());
+                        BugleFirebaseAnalytics.logUserProperty("Channel", publisherData.getAfChannel());
                         if (!mAppsFlyerResultReceived) {
                             mAppsFlyerResultReceived = true;
                             String userLevel = HSConfig.optString("not_configured", "UserLevel");

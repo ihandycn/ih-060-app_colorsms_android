@@ -21,6 +21,7 @@ import com.android.messaging.ui.CustomPagerViewHolder;
 import com.android.messaging.ui.customize.PrimaryColors;
 import com.android.messaging.ui.view.MessagesTextView;
 import com.android.messaging.util.BugleAnalytics;
+import com.android.messaging.util.BugleFirebaseAnalytics;
 import com.android.messaging.util.UiUtils;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -313,7 +314,7 @@ public class ChooseBackupViewHolder extends BasePagerViewHolder implements Custo
                 Preferences.getDefault().doOnce(BackupAutopilotUtils::logBackupOnce, PREF_KEY_LOG_BACKUP_SUCCESS_ONLY_ONCE);
                 Map<String, String> params = new HashMap<>();
                 params.put("Backup", "Backup_BackupSuccess");
-                BugleAnalytics.logEventToFirebase("Feature_BackupRestore", params);
+                BugleFirebaseAnalytics.logEvent("Feature_BackupRestore", params);
             }
 
             void dismiss() {
@@ -412,7 +413,7 @@ public class ChooseBackupViewHolder extends BasePagerViewHolder implements Custo
                 
                 Map<String, String> params = new HashMap<>();
                 params.put("Backup", "Backup_CleanSuccess");
-                BugleAnalytics.logEventToFirebase("Feature_BackupRestore", params);
+                BugleFirebaseAnalytics.logEvent("Feature_BackupRestore", params);
             }
         });
 

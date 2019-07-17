@@ -19,6 +19,7 @@ import com.android.messaging.ui.conversationlist.ConversationListActivity;
 import com.android.messaging.ui.messagebox.MessageBoxActivity;
 import com.android.messaging.util.Assert;
 import com.android.messaging.util.BugleAnalytics;
+import com.android.messaging.util.BugleFirebaseAnalytics;
 import com.android.messaging.util.FabricUtils;
 import com.android.messaging.util.UiUtils;
 import com.android.messaging.util.ViewUtils;
@@ -87,7 +88,9 @@ public class ContactPickerActivity extends BugleActionBarActivity implements
         long lastShowTime = Preferences.getDefault().getLong(PREF_KEY_CONVERSATION_ACTIVITY_SHOW_TIME, -1);
         if (lastShowTime != -1) {
             IntegerBuckets buckets = new IntegerBuckets(5, 10, 30, 60, 300, 600, 1800, 3600, 7200);
-            BugleAnalytics.logEvent("Detailspage_Show_Interval", false, true, "interval",
+            BugleAnalytics.logEvent("Detailspage_Show_Interval", "interval",
+                    buckets.getBucket((int) ((System.currentTimeMillis() - lastShowTime) / 1000)));
+            BugleFirebaseAnalytics.logEvent("Detailspage_Show_Interval",  "interval",
                     buckets.getBucket((int) ((System.currentTimeMillis() - lastShowTime) / 1000)));
         }
         Preferences.getDefault().putLong(PREF_KEY_CONVERSATION_ACTIVITY_SHOW_TIME, System.currentTimeMillis());
