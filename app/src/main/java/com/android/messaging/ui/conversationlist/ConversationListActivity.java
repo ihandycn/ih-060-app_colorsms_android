@@ -104,6 +104,7 @@ import com.ihs.commons.utils.HSLog;
 import com.superapps.util.BackgroundDrawables;
 import com.superapps.util.Calendars;
 import com.superapps.util.Dimensions;
+import com.superapps.util.HomeKeyWatcher;
 import com.superapps.util.Navigations;
 import com.superapps.util.Preferences;
 import com.superapps.util.RuntimePermissions;
@@ -195,6 +196,7 @@ public class ConversationListActivity extends AbstractConversationListActivity
 
     private boolean mIsMessageMoving;
     private final BuglePrefs mPrefs = Factory.get().getApplicationPrefs();
+    private HomeKeyWatcher mHomeKeyWatcher;
     @Override
     @DebugLog
     protected void onCreate(final Bundle savedInstanceState) {
@@ -331,6 +333,29 @@ public class ConversationListActivity extends AbstractConversationListActivity
                 navigationView.getViewTreeObserver().removeOnGlobalLayoutListener(this);
             }
         });
+        mHomeKeyWatcher = new HomeKeyWatcher(this);
+        mHomeKeyWatcher.setOnHomePressedListener(new HomeKeyWatcher.OnHomePressedListener() {
+            @Override
+            public void onHomePressed() {
+                if (mInterstitialAd != null){
+                    mInterstitialAd.release();
+                    mIsExitAdShown = false;
+                    final ConversationListFragment conversationListFragment =
+                            (ConversationListFragment) getFragmentManager().findFragmentById(
+                                    R.id.conversation_list_fragment);
+                    if (conversationListFragment != null) {
+                        conversationListFragment.setExitAdShown(mIsExitAdShown);
+                    }
+                    ViewStub stub = findViewById(R.id.exit_app_stub);
+                    stub.setVisibility(View.GONE);
+                }
+            }
+
+            @Override
+            public void onRecentsPressed() {
+            }
+        });
+        mHomeKeyWatcher.startWatch();
     }
 
     private void onPostPageVisible() {
@@ -714,6 +739,8 @@ public class ConversationListActivity extends AbstractConversationListActivity
 
         FiveStarRateDialog.dismissDialogs();
         HSGlobalNotificationCenter.removeObserver(this);
+        mHomeKeyWatcher.stopWatch();
+        mHomeKeyWatcher = null;
     }
 
     @Override
@@ -852,6 +879,7 @@ public class ConversationListActivity extends AbstractConversationListActivity
                 @Override
                 public void onAdDisplayed() {
                     stub.inflate();
+                    stub.setVisibility(View.VISIBLE);
                     lottieAnimationView = findViewById(R.id.exit_app_lottie);
                     mIsExitAdShown = true;
                     final ConversationListFragment conversationListFragment =
