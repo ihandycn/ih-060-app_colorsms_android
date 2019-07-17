@@ -75,7 +75,7 @@
 				</dict>
 				<dict>
 					<key>MessagePattern</key>
-					<string>can't deliver broadcast</string>
+					<string>can&apos;t deliver broadcast</string>
 					<key>Type</key>
 					<string>RemoteServiceException</string>
 				</dict>
@@ -110,7 +110,7 @@
 				</dict>
 				<dict>
 					<key>MessagePattern</key>
-					<string>Attempt to invoke virtual method 'void android.view.Display.getSize(android.graphics.Point)' on a null object reference</string>
+					<string>Attempt to invoke virtual method &apos;void android.view.Display.getSize(android.graphics.Point)&apos; on a null object reference</string>
 				</dict>
 				<dict>
 					<key>MessagePattern</key>
@@ -131,7 +131,7 @@
 				</dict>
 				<dict>
 					<key>MessagePattern</key>
-					<string>Attempt to read from field 'int android.view.View.mViewFlags' on a null object reference</string>
+					<string>Attempt to read from field &apos;int android.view.View.mViewFlags&apos; on a null object reference</string>
 				</dict>
 				<dict>
 					<key>MessagePattern</key>
@@ -593,7 +593,7 @@
 						<key>IsLocalTheme</key>
 						<true/>
 						<key>LocalIndex</key>
-						<integer>1</integer>
+						<integer>8</integer>
 						<key>Name</key>
 						<string>Default</string>
 						<key>PreviewList</key>
@@ -659,7 +659,7 @@
 						<key>IsLocalTheme</key>
 						<true/>
 						<key>LocalIndex</key>
-						<integer>2</integer>
+						<integer>1</integer>
 						<key>Name</key>
 						<string>Red Rose</string>
 						<key>PreviewList</key>
@@ -789,7 +789,7 @@
 						<key>IsLocalTheme</key>
 						<true/>
 						<key>LocalIndex</key>
-						<integer>7</integer>
+						<integer>6</integer>
 						<key>Name</key>
 						<string>Rain Drop</string>
 						<key>PreviewList</key>
@@ -855,7 +855,7 @@
 						<key>IsLocalTheme</key>
 						<true/>
 						<key>LocalIndex</key>
-						<integer>5</integer>
+						<integer>4</integer>
 						<key>Name</key>
 						<string>Pink Diamond</string>
 						<key>PreviewList</key>
@@ -985,7 +985,7 @@
 						<key>IsLocalTheme</key>
 						<true/>
 						<key>LocalIndex</key>
-						<integer>3</integer>
+						<integer>2</integer>
 						<key>Name</key>
 						<string>Unicorn</string>
 						<key>PreviewList</key>
@@ -1051,7 +1051,7 @@
 						<key>IsLocalTheme</key>
 						<true/>
 						<key>LocalIndex</key>
-						<integer>4</integer>
+						<integer>3</integer>
 						<key>PreviewList</key>
 						<array>
 							<string>preview_1.jpg</string>
@@ -1245,7 +1245,7 @@
 						<key>IsLocalTheme</key>
 						<true/>
 						<key>LocalIndex</key>
-						<integer>8</integer>
+						<integer>7</integer>
 						<key>Name</key>
 						<string>Cool Graffiti</string>
 						<key>PreviewList</key>
@@ -2271,7 +2271,7 @@
 						<key>IsLocalTheme</key>
 						<true/>
 						<key>LocalIndex</key>
-						<integer>6</integer>
+						<integer>5</integer>
 						<key>Name</key>
 						<string>Neon</string>
 						<key>PreviewList</key>
@@ -3006,42 +3006,42 @@
 					<dict>
 						<key>ThemeList</key>
 						<dict>
-							<key>default</key>
+							<key>redrose</key>
 							<dict>
 								<key>LocalIndex</key>
 								<integer>1</integer>
 							</dict>
-							<key>redrose</key>
+							<key>unicorn</key>
 							<dict>
 								<key>LocalIndex</key>
 								<integer>2</integer>
 							</dict>
-							<key>unicorn</key>
+							<key>cutegraffiti</key>
 							<dict>
 								<key>LocalIndex</key>
 								<integer>3</integer>
 							</dict>
-							<key>cutegraffiti</key>
+							<key>diamond</key>
 							<dict>
 								<key>LocalIndex</key>
 								<integer>4</integer>
 							</dict>
-							<key>diamond</key>
+							<key>neon</key>
 							<dict>
 								<key>LocalIndex</key>
 								<integer>5</integer>
 							</dict>
-							<key>neon</key>
+							<key>raindrop</key>
 							<dict>
 								<key>LocalIndex</key>
 								<integer>6</integer>
 							</dict>
-							<key>raindrop</key>
+							<key>coolgraffiti</key>
 							<dict>
 								<key>LocalIndex</key>
 								<integer>7</integer>
 							</dict>
-							<key>coolgraffiti</key>
+							<key>default</key>
 							<dict>
 								<key>LocalIndex</key>
 								<integer>8</integer>
@@ -3061,42 +3061,42 @@
 					<dict>
 						<key>ThemeList</key>
 						<dict>
-							<key>default</key>
+							<key>redrose</key>
 							<dict>
 								<key>LocalIndex</key>
 								<integer>1</integer>
 							</dict>
-							<key>redrose</key>
+							<key>unicorn</key>
 							<dict>
 								<key>LocalIndex</key>
 								<integer>2</integer>
 							</dict>
-							<key>unicorn</key>
+							<key>cutegraffiti</key>
 							<dict>
 								<key>LocalIndex</key>
 								<integer>3</integer>
 							</dict>
-							<key>cutegraffiti</key>
+							<key>diamond</key>
 							<dict>
 								<key>LocalIndex</key>
 								<integer>4</integer>
 							</dict>
-							<key>diamond</key>
+							<key>coolgraffiti</key>
 							<dict>
 								<key>LocalIndex</key>
 								<integer>5</integer>
 							</dict>
-							<key>coolgraffiti</key>
+							<key>raindrop</key>
 							<dict>
 								<key>LocalIndex</key>
 								<integer>6</integer>
 							</dict>
-							<key>raindrop</key>
+							<key>neon</key>
 							<dict>
 								<key>LocalIndex</key>
 								<integer>7</integer>
 							</dict>
-							<key>neon</key>
+							<key>default</key>
 							<dict>
 								<key>LocalIndex</key>
 								<integer>8</integer>
