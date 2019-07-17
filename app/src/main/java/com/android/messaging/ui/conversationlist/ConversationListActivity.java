@@ -32,8 +32,8 @@ import com.android.messaging.BuildConfig;
 import com.android.messaging.R;
 import com.android.messaging.ad.AdConfig;
 import com.android.messaging.ad.AdPlacement;
-import com.android.messaging.backup.BackupAutopilotUtils;
 import com.android.messaging.ad.BillingManager;
+import com.android.messaging.backup.BackupAutopilotUtils;
 import com.android.messaging.backup.ui.BackupGuideDialogActivity;
 import com.android.messaging.backup.ui.BackupRestoreActivity;
 import com.android.messaging.backup.ui.ChooseBackupViewHolder;
@@ -44,7 +44,6 @@ import com.android.messaging.datamodel.DatabaseHelper;
 import com.android.messaging.datamodel.DatabaseWrapper;
 import com.android.messaging.datamodel.data.MessageBoxItemData;
 import com.android.messaging.font.ChangeFontActivity;
-import com.android.messaging.font.FontDownloadManager;
 import com.android.messaging.font.FontStyleManager;
 import com.android.messaging.mmslib.SqliteWrapper;
 import com.android.messaging.privatebox.AppPrivateLockManager;
@@ -288,10 +287,13 @@ public class ConversationListActivity extends AbstractConversationListActivity
                 } else {
                     simStatus = "No Permission";
                 }
+
                 BugleAnalytics.logEvent("SMS_HomePage_Show", true,
                         "SIM", simStatus,
                         "Signal", String.valueOf(DataModelImpl.get().getConnectivityUtil().getSignalLevel(0)),
-                        "Popups", String.valueOf(MessageBoxSettings.isSMSAssistantModuleEnabled()));
+                        "Popups", String.valueOf(MessageBoxSettings.isSMSAssistantModuleEnabled()),
+                        "DeliveryReport", String.valueOf(Preferences.getDefault().getBoolean(getString(R.string.delivery_reports_pref_key),
+                                getResources().getBoolean(R.bool.delivery_reports_pref_default))));
             });
         }
 
