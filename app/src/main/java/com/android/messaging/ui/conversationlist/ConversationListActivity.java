@@ -1,6 +1,8 @@
 package com.android.messaging.ui.conversationlist;
 
 import android.Manifest;
+import android.animation.Animator;
+import android.animation.ValueAnimator;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.drawable.Drawable;
@@ -25,10 +27,12 @@ import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewStub;
 import android.view.ViewTreeObserver;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.airbnb.lottie.LottieAnimationView;
 import com.android.messaging.BuildConfig;
 import com.android.messaging.Factory;
 import com.android.messaging.R;
@@ -840,9 +844,12 @@ public class ConversationListActivity extends AbstractConversationListActivity
         if (ads.size() > 0) {
             mInterstitialAd = ads.get(0);
             mInterstitialAd.setInterstitialAdListener(new AcbInterstitialAd.IAcbInterstitialAdListener() {
+                ViewStub stub = findViewById(R.id.exit_app_stub);
+                LottieAnimationView lottieAnimationView;
                 @Override
                 public void onAdDisplayed() {
-
+                    stub.inflate();
+                    lottieAnimationView = findViewById(R.id.exit_app_lottie);
                 }
 
                 @Override
@@ -859,15 +866,37 @@ public class ConversationListActivity extends AbstractConversationListActivity
                 @Override
                 public void onAdClosed() {
                     mInterstitialAd.release();
-                    ExitAdAutopilotUtils.logSmsExitApp();
-                    finish();
-                    int mainActivityCreateTime = Preferences.get(DESKTOP_PREFS).getInt(PREF_KEY_MAIN_ACTIVITY_SHOW_TIME, 0);
-                    if (!shouldShowCreateShortcutGuide && mainActivityCreateTime >= 2) {
-                        Preferences.getDefault().doOnce(
-                                () -> UIIntentsImpl.get().launchDragHotSeatActivity(ConversationListActivity.this),
-                                DragHotSeatActivity.SHOW_DRAG_HOTSEAT);
-                    }
-                    HSLog.d("AdTest", "onAdClosed");
+                    lottieAnimationView.addAnimatorListener(new Animator.AnimatorListener() {
+                        @Override
+                        public void onAnimationStart(Animator animation) {
+
+                        }
+
+                        @Override
+                        public void onAnimationEnd(Animator animation) {
+                            ExitAdAutopilotUtils.logSmsExitApp();
+                            finish();
+                            int mainActivityCreateTime = Preferences.get(DESKTOP_PREFS).getInt(PREF_KEY_MAIN_ACTIVITY_SHOW_TIME, 0);
+                            if (!shouldShowCreateShortcutGuide && mainActivityCreateTime >= 2) {
+                                Preferences.getDefault().doOnce(
+                                        () -> UIIntentsImpl.get().launchDragHotSeatActivity(ConversationListActivity.this),
+                                        DragHotSeatActivity.SHOW_DRAG_HOTSEAT);
+                            }
+                            HSLog.d("AdTest", "onAdClosed");
+                        }
+
+                        @Override
+                        public void onAnimationCancel(Animator animation) {
+
+                        }
+
+                        @Override
+                        public void onAnimationRepeat(Animator animation) {
+
+                        }
+                    });
+                    lottieAnimationView.useHardwareAcceleration();
+                    lottieAnimationView.playAnimation();
                 }
 
                 @Override
