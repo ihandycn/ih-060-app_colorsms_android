@@ -52,8 +52,7 @@
             android:id="@+id/conversation_list_fragment"
             class="com.android.messaging.ui.conversationlist.ConversationListFragment"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:theme="@style/Theme.AppCompat.Light.DarkActionBar"/>
+            android:layout_height="match_parent" />
     </LinearLayout>
 
     <!-- Side navigation drawer UI -->
