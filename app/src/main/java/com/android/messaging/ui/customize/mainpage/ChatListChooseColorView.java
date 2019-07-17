@@ -11,6 +11,7 @@ import com.android.messaging.ui.CustomFooterViewPager;
 import com.android.messaging.ui.CustomPagerViewHolder;
 import com.android.messaging.ui.CustomViewPager;
 import com.android.messaging.ui.customize.OnColorChangedListener;
+import com.android.messaging.util.UiUtils;
 
 public class ChatListChooseColorView extends FrameLayout implements OnColorChangedListener {
 
@@ -54,7 +55,11 @@ public class ChatListChooseColorView extends FrameLayout implements OnColorChang
         mCustomHeaderViewPager.setViewHolders(viewHolders);
         mCustomHeaderViewPager.setViewPagerTabHeight(CustomViewPager.DEFAULT_TAB_STRIP_SIZE);
         mCustomHeaderViewPager.setBackgroundColor(getResources().getColor(R.color.contact_picker_background));
-        mCustomHeaderViewPager.setCurrentItem(0);
+        if (UiUtils.isRtlMode()) {
+            mCustomHeaderViewPager.setCurrentItem(1);
+        } else {
+            mCustomHeaderViewPager.setCurrentItem(0);
+        }
     }
 
     @Override
