@@ -29,8 +29,9 @@ public class EmojiManager {
 
     private static final String TAG = EmojiManager.class.getSimpleName();
 
+    public static final String PREF_FILE_NAME = "emoji";
+
     private static final String PREF_TAB_STICKER = "pref_tab_sticker";
-    private static final String PREF_FILE_NAME = "emoji";
     private static final String PREF_RECENT_STICKER = "pref_recent_sticker";
     private static final String PREF_RECENT_EMOJI = "pref_recent_emoji";
     private static final String PREF_RECENT_GIF = "pref_recent_gif";

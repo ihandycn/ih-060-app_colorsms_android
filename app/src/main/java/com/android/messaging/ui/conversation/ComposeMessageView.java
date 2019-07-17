@@ -27,7 +27,6 @@ import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.v4.graphics.drawable.DrawableCompat;
 import android.support.v4.view.animation.PathInterpolatorCompat;
 import android.support.v7.app.ActionBar;
@@ -47,16 +46,15 @@ import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewStub;
 import android.view.Window;
 import android.view.animation.Interpolator;
 import android.view.inputmethod.EditorInfo;
 import android.widget.FrameLayout;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.airbnb.lottie.LottieAnimationView;
 import com.android.messaging.Factory;
 import com.android.messaging.R;
 import com.android.messaging.datamodel.binding.Binding;
@@ -172,19 +170,14 @@ public class ComposeMessageView extends LinearLayout
     private static final int DEFAULT_EMOJI_PICKER_HEIGHT = Dimensions.pxFromDp(243);
 
     private PlainTextEditText mComposeEditText;
-    private PlainTextEditText mComposeSubjectText;
-    private TextView mMmsIndicator;
     private ImageView mSendButton;
     private ImageView mSimButton;
     private ImageView mDelayCloseButton;
-    private SendDelayProgressBar mSendDelayProgressBar;
-    private View mSubjectView;
-    private ImageButton mDeleteSubjectButton;
     private AttachmentPreview mAttachmentPreview;
+    private SendDelayProgressBar mSendDelayProgressBar;
     private ImageView mAttachMediaButton;
     private ImageView mEmojiKeyboardBtn;
     private ImageView mEmojiGuideView;
-    private LottieAnimationView mEmojiLottieGuideView;
     private LinearLayout mInputLayout;
     private FrameLayout mMediaPickerLayout;
     private FrameLayout mEmojiPickerLayout;
@@ -308,9 +301,6 @@ public class ComposeMessageView extends LinearLayout
             public void onClick(View arg0) {
                 mHost.onClickMediaOrEmoji();
 
-                if (mHost.shouldHideAttachmentsWhenSimSelectorShown()) {
-                    hideSimSelector();
-                }
                 BugleAnalytics.logEvent("SMS_DetailsPage_DialogBox_Click", true, true);
             }
         });
@@ -348,26 +338,6 @@ public class ComposeMessageView extends LinearLayout
             return true;
         });
 
-        mComposeSubjectText = (PlainTextEditText) findViewById(
-                R.id.compose_subject_text);
-        // We need the listener to change the avatar to the send button when the user starts
-        // typing a subject without a message.
-        mComposeSubjectText.addTextChangedListener(this);
-        // onFinishInflate() is called before self is loaded from db. We set the default text
-        // limit here, and apply the real limit later in updateOnSelfSubscriptionChange().
-        mComposeSubjectText.setFilters(new InputFilter[]{
-                new LengthFilter(MmsConfig.get(ParticipantData.DEFAULT_SELF_SUB_ID)
-                        .getMaxSubjectLength())});
-
-        mDeleteSubjectButton = (ImageButton) findViewById(R.id.delete_subject_button);
-        mDeleteSubjectButton.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(final View clickView) {
-                mComposeSubjectText.setText(null);
-                mBinding.getData().setMessageSubject(null);
-            }
-        });
-        mSubjectView = findViewById(R.id.subject_view);
         mDelayCloseButton = findViewById(R.id.delay_close_button);
 
         mSendDelayRunnable = () -> {
@@ -399,9 +369,7 @@ public class ComposeMessageView extends LinearLayout
                 }
             }
 
-            final String subject = mComposeSubjectText.getText().toString();
-            final boolean hasSubject = (TextUtils.getTrimmedLength(subject) > 0);
-            final boolean hasWorkingDraft = hasMessageText || hasSubject ||
+            final boolean hasWorkingDraft = hasMessageText ||
                     (mBinding.getData() != null && mBinding.getData().hasAttachments());
             if (!hasWorkingDraft || !isDataLoadedForMessageSend()) {
                 return;
@@ -524,53 +492,15 @@ public class ComposeMessageView extends LinearLayout
             BugleAnalytics.logEvent("SMS_DetailsPage_IconPlus_Click", true, true);
         });
 
-        mAttachmentPreview = (AttachmentPreview) findViewById(R.id.attachment_draft_view);
-        mAttachmentPreview.setComposeMessageView(this);
-
-        mMmsIndicator = (TextView) findViewById(R.id.mms_indicator);
         mEmojiGuideView = findViewById(R.id.emoji_guide_view);
-        mEmojiLottieGuideView = findViewById(R.id.emoji_lottie_guide_view);
         if (EmojiManager.isShowEmojiGuide()) {
             mEmojiGuideView.setVisibility(VISIBLE);
         }
-        Preferences.getDefault().doLimitedTimes(new Runnable() {
-            @Override
-            public void run() {
-                if (EmojiManager.isShowEmojiGuide()) {
-                    mEmojiLottieGuideView.setVisibility(View.VISIBLE);
-                    mEmojiLottieGuideView.setImageAssetsFolder("lottie/emoji_input_guide/");
-                    mEmojiLottieGuideView.setAnimation("lottie/emoji_input_guide.json");
-                    mEmojiLottieGuideView.addAnimatorListener(new Animator.AnimatorListener() {
-                        @Override
-                        public void onAnimationStart(Animator animation) {
-                            mEmojiKeyboardBtn.setImageResource(android.R.color.transparent);
-                        }
 
-                        @Override
-                        public void onAnimationEnd(Animator animation) {
-                            mEmojiKeyboardBtn.setImageResource(R.drawable.input_emoji_icon);
-                        }
-
-                        @Override
-                        public void onAnimationCancel(Animator animation) {
-
-                        }
-
-                        @Override
-                        public void onAnimationRepeat(Animator animation) {
-
-                        }
-                    });
-                    new Handler().postDelayed(() -> mEmojiLottieGuideView.playAnimation(), 180);
-                }
-            }
-        }, "pref_key_emoji_lottie_guide", 1);
         mEmojiPickerLayout = findViewById(R.id.emoji_picker_container);
         mEmojiKeyboardBtn = findViewById(R.id.emoji_btn);
         mEmojiKeyboardBtn.setOnClickListener(v -> {
             mHost.onClickMediaOrEmoji();
-
-            mEmojiLottieGuideView.setVisibility(View.GONE);
             mEmojiGuideView.setVisibility(View.GONE);
             if (isEmojiPickerShowing()) {
                 BugleAnalytics.logEvent("SMSEmoji_Chat_Keyboard_Click");
@@ -686,9 +616,6 @@ public class ComposeMessageView extends LinearLayout
 
     private void showKeyboard() {
         ImeUtil.get().showImeKeyboard(getContext(), mComposeEditText);
-        if (mHost.shouldHideAttachmentsWhenSimSelectorShown()) {
-            hideSimSelector();
-        }
     }
 
     private void hideKeyboard() {
@@ -894,10 +821,6 @@ public class ComposeMessageView extends LinearLayout
         }
         // Check the host for pre-conditions about any action.
         if (mHost.isReadyForAction()) {
-            mInputManager.showHideSimSelector(false /* show */, true /* animate */);
-            final String subject = mComposeSubjectText.getText().toString();
-            mBinding.getData().setMessageSubject(subject);
-
             boolean includeSignature = false;
             Editable inputEditable = mComposeEditText.getText();
 
@@ -1064,15 +987,7 @@ public class ComposeMessageView extends LinearLayout
         // which immediately reloads the text from the subject and message fields and replaces
         // what's in the DraftMessageData.
 
-        final String subject = data.getMessageSubject();
         final String message = data.getMessageText();
-        if ((changeFlags & DraftMessageData.MESSAGE_SUBJECT_CHANGED) ==
-                DraftMessageData.MESSAGE_SUBJECT_CHANGED) {
-            mComposeSubjectText.setText(subject);
-
-            // Set the cursor selection to the end since setText resets it to the start
-            mComposeSubjectText.setSelection(mComposeSubjectText.getText().length());
-        }
 
         if ((changeFlags & DraftMessageData.MESSAGE_TEXT_CHANGED) ==
                 DraftMessageData.MESSAGE_TEXT_CHANGED) {
@@ -1092,6 +1007,21 @@ public class ComposeMessageView extends LinearLayout
 
         if ((changeFlags & DraftMessageData.ATTACHMENTS_CHANGED) ==
                 DraftMessageData.ATTACHMENTS_CHANGED) {
+
+            if (mAttachmentPreview == null) {
+                // first load
+                final List<MessagePartData> attachments = data.getReadOnlyAttachments();
+                final List<PendingAttachmentData> pendingAttachments =
+                        data.getReadOnlyPendingAttachments();
+                if (attachments.isEmpty() && pendingAttachments.isEmpty()) {
+                    return;
+                }
+
+                ViewStub stub = findViewById(R.id.attachment_container_stub);
+                mAttachmentPreview = stub.inflate().findViewById(R.id.attachment_draft_view);
+                mAttachmentPreview.setComposeMessageView(this);
+            }
+
             final boolean haveAttachments = mAttachmentPreview.onAttachmentsChanged(data);
             mHost.onAttachmentsChanged(haveAttachments);
         }
@@ -1113,9 +1043,6 @@ public class ComposeMessageView extends LinearLayout
         mComposeEditText.setFilters(new InputFilter[]{
                 new LengthFilter(MmsConfig.get(mBinding.getData().getSelfSubId())
                         .getMaxTextLimit())});
-        mComposeSubjectText.setFilters(new InputFilter[]{
-                new LengthFilter(MmsConfig.get(mBinding.getData().getSelfSubId())
-                        .getMaxSubjectLength())});
         mSimButton.setVisibility(shouldShowSimSelector(mConversationDataModel.getData()) ? View.VISIBLE : View.GONE);
         final SubscriptionListEntry subscriptionListEntry = getSelfSubscriptionListEntry();
         if (subscriptionListEntry != null) {
@@ -1200,9 +1127,6 @@ public class ComposeMessageView extends LinearLayout
         }
         mBinding.getData().setMessageText(messageText);
 
-        final String subject = mComposeSubjectText.getText().toString();
-        mBinding.getData().setMessageSubject(subject);
-
         mBinding.getData().saveToStorage(mBinding);
     }
 
@@ -1229,14 +1153,7 @@ public class ComposeMessageView extends LinearLayout
         final DraftMessageData draftMessageData = mBinding.getData();
         draftMessageData.setMessageText(messageText);
 
-        final String subject = mComposeSubjectText.getText().toString();
-        draftMessageData.setMessageSubject(subject);
-        if (!TextUtils.isEmpty(subject)) {
-            mSubjectView.setVisibility(View.VISIBLE);
-        }
-
         mSendButton.setVisibility(View.VISIBLE);
-        mMmsIndicator.setVisibility(draftMessageData.getIsMms() ? VISIBLE : INVISIBLE);
 
         // Update the text hint on the message box depending on the attachment type.
         final List<MessagePartData> attachments = draftMessageData.getReadOnlyAttachments();
@@ -1307,18 +1224,8 @@ public class ComposeMessageView extends LinearLayout
     @Override
     public void beforeTextChanged(final CharSequence s, final int start, final int count,
                                   final int after) {
-        if (mHost.shouldHideAttachmentsWhenSimSelectorShown()) {
-            hideSimSelector();
-        }
     }
 
-    private void hideSimSelector() {
-        if (mInputManager.showHideSimSelector(false /* show */, true /* animate */)) {
-            // Now that the sim selector has been hidden, reshow the attachments if they
-            // have been hidden.
-            hideAttachmentsWhenShowingSims(false /*simPickerVisible*/);
-        }
-    }
 
     @Override
     public void onTextChanged(final CharSequence s, final int start, final int before,

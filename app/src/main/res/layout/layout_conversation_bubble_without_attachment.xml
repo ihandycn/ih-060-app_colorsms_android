@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<merge xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <ImageView
+        android:id="@+id/check_box"
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        android:scaleType="fitXY"
+        android:visibility="gone" />
+
+    <com.android.messaging.ui.conversation.ConversationMessageBubbleView
+        android:id="@+id/message_content"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:orientation="vertical">
+
+        <com.android.messaging.ui.conversation.MessageBubbleBackground
+            android:id="@+id/message_text_and_info"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:orientation="vertical">
+
+            <include layout="@layout/layout_conversation_message_text" />
+
+        </com.android.messaging.ui.conversation.MessageBubbleBackground>
+
+        <include layout="@layout/layout_conversation_message_metadata" />
+
+    </com.android.messaging.ui.conversation.ConversationMessageBubbleView>
+
+</merge>
+
