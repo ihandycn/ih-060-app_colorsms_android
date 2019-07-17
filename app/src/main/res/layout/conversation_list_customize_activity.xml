@@ -13,7 +13,8 @@
         android:id="@+id/chat_list_full_screen_bg"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:contentDescription="@null" />
+        android:contentDescription="@null"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <!--theme toolbar bg-->
     <com.android.messaging.ui.customize.theme.ToolbarBackgroundImageView

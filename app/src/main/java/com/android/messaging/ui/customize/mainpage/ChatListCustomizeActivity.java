@@ -84,6 +84,9 @@ public class ChatListCustomizeActivity extends BaseActivity implements INotifica
 
     private void initView() {
         mCustomBackground = findViewById(R.id.chat_list_full_screen_bg);
+        ViewGroup.LayoutParams params = mCustomBackground.getLayoutParams();
+        params.height = Dimensions.getPhoneHeight(this);
+        mCustomBackground.setLayoutParams(params);
         mTitleView = findViewById(R.id.toolbar_title);
         mListView = findViewById(R.id.list_view);
         mBgMaskView = findViewById(R.id.list_bg_mask);
