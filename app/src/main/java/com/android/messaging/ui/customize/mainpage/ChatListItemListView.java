@@ -2,6 +2,7 @@ package com.android.messaging.ui.customize.mainpage;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.graphics.Color;
 import android.net.Uri;
 import android.support.annotation.Nullable;
 import android.util.AttributeSet;
@@ -78,10 +79,19 @@ public class ChatListItemListView extends LinearLayout {
     }
 
     public void changeFontColor(int titleColor, int snippetColor, int timeColor) {
+        boolean titleAddShadow = timeColor == Color.WHITE;
+        boolean snippetAddShadow = timeColor == Color.WHITE;
+        boolean timeAddShadow = timeColor == Color.WHITE;
         for (View v : mChildrenView) {
-            ((TextView) v.findViewById(R.id.conversation_name)).setTextColor(titleColor);
-            ((TextView) v.findViewById(R.id.conversation_snippet)).setTextColor(snippetColor);
-            ((TextView) v.findViewById(R.id.conversation_timestamp)).setTextColor(timeColor);
+            TextView name = v.findViewById(R.id.conversation_name);
+            TextView snippet = v.findViewById(R.id.conversation_snippet);
+            TextView time = v.findViewById(R.id.conversation_timestamp);
+            name.setTextColor(titleColor);
+            snippet.setTextColor(snippetColor);
+            time.setTextColor(timeColor);
+            ChatListUtils.changeTextViewShadow(name, titleAddShadow);
+            ChatListUtils.changeTextViewShadow(snippet, snippetAddShadow);
+            ChatListUtils.changeTextViewShadow(time, timeAddShadow);
         }
     }
 }

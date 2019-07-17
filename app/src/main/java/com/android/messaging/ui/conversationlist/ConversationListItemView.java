@@ -51,6 +51,7 @@ import com.android.messaging.ui.customize.AvatarBgDrawables;
 import com.android.messaging.ui.customize.ConversationColors;
 import com.android.messaging.ui.customize.PrimaryColors;
 import com.android.messaging.ui.customize.mainpage.ChatListDrawableManager;
+import com.android.messaging.ui.customize.mainpage.ChatListUtils;
 import com.android.messaging.util.Assert;
 import com.android.messaging.util.AvatarUriUtil;
 import com.android.messaging.util.BugleAnalytics;
@@ -218,6 +219,7 @@ public class ConversationListItemView extends FrameLayout implements OnClickList
     private void setConversationName() {
         mConversationNameView.setTextColor(mConversationNameColor);
         ChatListDrawableManager.changeViewColorIfNeed(mConversationNameView);
+        ChatListUtils.changeTextViewShadow(mConversationNameView);
         if (mData.getIsRead() || mData.getShowDraft()) {
             mConversationNameView.setTypeface(FontUtils.getTypeface(FontUtils.MEDIUM));
         } else {
@@ -336,16 +338,20 @@ public class ConversationListItemView extends FrameLayout implements OnClickList
             color = resources.getColor(R.color.conversation_list_error);
             maxLines = ERROR_MESSAGE_LINE_COUNT;
             mSnippetTextView.setTextColor(color);
+            ChatListUtils.changeTextViewShadow(mSnippetTextView, false);
         } else {
             maxLines = TextUtils.isEmpty(snippetText) ? 0 : SNIPPET_LINE_COUNT;
             color = mSnippetColor;
             mSnippetTextView.setTextColor(color);
             ChatListDrawableManager.changeViewColorIfNeed(mSnippetTextView);
+            ChatListUtils.changeTextViewShadow(mSnippetTextView);
         }
 
         mSnippetTextView.setMaxLines(maxLines);
 
         mTimestampTextView.setTextColor(mTimestampColor);
+        ChatListDrawableManager.changeViewColorIfNeed(mTimestampTextView);
+        ChatListUtils.changeTextViewShadow(mTimestampTextView);
 
         setSnippet();
         setConversationName();
@@ -369,7 +375,6 @@ public class ConversationListItemView extends FrameLayout implements OnClickList
         }
 
         mTimestampTextView.setTypeface(FontUtils.getTypeface());
-        ChatListDrawableManager.changeViewColorIfNeed(mTimestampTextView);
 
         final boolean isSelected = mHostInterface.isConversationSelected(mData.getConversationId());
         setSelected(isSelected);
