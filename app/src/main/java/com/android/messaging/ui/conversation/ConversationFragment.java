@@ -1386,6 +1386,11 @@ public class ConversationFragment extends Fragment implements ConversationDataLi
                 // Merge the caption text from attachments into the text body of the messages
                 message.consolidateText();
 
+
+                final String deliveryReportsKey = getString(R.string.delivery_reports_pref_key);
+                message.setIsDeliveryReportOpen(Preferences.getDefault().getBoolean(deliveryReportsKey,
+                        getResources().getBoolean(R.bool.delivery_reports_pref_default)));
+
                 mBinding.getData().sendMessage(mBinding, message);
 
                 mHasSentMessages = true;

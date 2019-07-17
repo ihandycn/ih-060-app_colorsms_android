@@ -283,6 +283,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         public static final String IS_LOCKED = "is_locked";
 
         public static final String IS_DELETED = "is_deleted";
+
+        public static final String IS_DELIVERY_REPORT_OPEN = "is_delivery_report_open";
     }
 
     // Messages table SQL
@@ -309,6 +311,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                     + MessageColumns.RETRY_START_TIMESTAMP + " INT DEFAULT(0), "
                     + MessageColumns.IS_LOCKED + " INT DEFAULT(0), "
                     + MessageColumns.IS_DELETED + " INT DEFAULT(0), "
+                    + MessageColumns.IS_DELIVERY_REPORT_OPEN + " INT DEFAULT(0), "
                     + "FOREIGN KEY (" + MessageColumns.CONVERSATION_ID + ") REFERENCES "
                     + CONVERSATIONS_TABLE + "(" + ConversationColumns._ID + ") ON DELETE CASCADE "
                     + "FOREIGN KEY (" + MessageColumns.SENDER_PARTICIPANT_ID + ") REFERENCES "

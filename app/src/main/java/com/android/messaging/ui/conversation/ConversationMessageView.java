@@ -352,9 +352,32 @@ public class ConversationMessageView extends RelativeLayout implements View.OnCl
                 !TextUtils.isEmpty(subscriptionEntry.displayName) &&
                 !mData.getCanClusterWithNextMessage();
 
-        final boolean statusVisible = !mData.getCanClusterWithNextMessage() || mData.getIsLocked();
-        if (statusVisible) {
+        boolean deliveredBadgeVisible = false;
+        if (mData.getIsDeliveryReportOpen()) {
+            if (mData.getStatus() == MessageData.BUGLE_STATUS_OUTGOING_COMPLETE) {
+                mDeliveredBadge.setVisibility(View.VISIBLE);
+                mDeliveredBadge.setImageResource(R.drawable.ic_message_sent);
+                deliveredBadgeVisible = true;
+            } else if (mData.getStatus() == MessageData.BUGLE_STATUS_OUTGOING_DELIVERED) {
+                mDeliveredBadge.setVisibility(View.VISIBLE);
+                mDeliveredBadge.setImageResource(R.drawable.ic_message_delivered);
+                deliveredBadgeVisible = true;
+            } else {
+                mDeliveredBadge.setVisibility(View.GONE);
+            }
+        } else {
+            if (mData.getStatus() == MessageData.BUGLE_STATUS_OUTGOING_DELIVERED) {
+                mDeliveredBadge.setVisibility(View.VISIBLE);
+                mDeliveredBadge.setImageResource(R.drawable.ic_message_delivered);
+                deliveredBadgeVisible = true;
+            } else {
+                mDeliveredBadge.setVisibility(View.GONE);
+            }
+        }
 
+        final boolean statusVisible = !mData.getCanClusterWithNextMessage()
+                || mData.getIsLocked() || deliveredBadgeVisible;
+        if (statusVisible) {
             int statusResId = -1;
             String statusText = null;
             switch (mData.getStatus()) {
@@ -441,7 +464,7 @@ public class ConversationMessageView extends RelativeLayout implements View.OnCl
                 final String simNameText = mData.getIsIncoming() ? getResources().getString(
                         R.string.incoming_sim_name_text, subscriptionEntry.displayName) :
                         subscriptionEntry.displayName;
-                mStatusTextView.setText(statusText + "   " + simNameText);
+                mStatusTextView.setText(statusText + "  " + simNameText);
             } else {
                 mStatusTextView.setText(statusText);
             }
@@ -454,15 +477,6 @@ public class ConversationMessageView extends RelativeLayout implements View.OnCl
             mMessageIsLockView.setVisibility(VISIBLE);
         } else {
             mMessageIsLockView.setVisibility(GONE);
-        }
-
-        final boolean deliveredBadgeVisible =
-                mData.getStatus() == MessageData.BUGLE_STATUS_OUTGOING_DELIVERED;
-        if (deliveredBadgeVisible) {
-            mDeliveredBadge.setVisibility(View.VISIBLE);
-            mDeliveredBadge.setImageResource(R.drawable.ic_sms_delivery_ok);
-        } else {
-            mDeliveredBadge.setVisibility(View.GONE);
         }
 
         final boolean metadataVisible = senderNameVisible || statusVisible

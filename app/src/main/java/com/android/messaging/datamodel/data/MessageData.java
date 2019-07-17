@@ -61,6 +61,7 @@ public class MessageData implements Parcelable {
             MessageColumns.RAW_TELEPHONY_STATUS,
             MessageColumns.RETRY_START_TIMESTAMP,
             MessageColumns.IS_LOCKED,
+            MessageColumns.IS_DELIVERY_REPORT_OPEN,
     };
 
     private static final int INDEX_ID = 0;
@@ -83,13 +84,14 @@ public class MessageData implements Parcelable {
     private static final int INDEX_RAW_TELEPHONY_STATUS = 17;
     private static final int INDEX_RETRY_START_TIMESTAMP = 18;
     private static final int INDEX_IS_LOCKED = 19;
+    private static final int INDEX_IS_DELIVERY_REPORT_OPEN = 20;
 
     // SQL statement to insert a "complete" message row (columns based on the projection above).
     private static final String INSERT_MESSAGE_SQL =
             "INSERT INTO " + DatabaseHelper.MESSAGES_TABLE + " ( "
                     + TextUtils.join(", ", Arrays.copyOfRange(sProjection, 1,
-                    INDEX_RETRY_START_TIMESTAMP + 1))
-                    + ") VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";  // when insert a new message, don't need param IS_LOCKED, use it default value 0.
+                    INDEX_IS_DELIVERY_REPORT_OPEN + 1))
+                    + ") VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";  // when insert a new message, don't need param IS_LOCKED, use it default value 0.
 
     private String mMessageId;
     private String mConversationId;
@@ -112,6 +114,7 @@ public class MessageData implements Parcelable {
     private final ArrayList<MessagePartData> mParts;
     private long mRetryStartTimestamp;
     private boolean mIsLocked = false;
+    private boolean mIsDeliveryReportOpen = false;
 
     // PROTOCOL Values
     public static final int PROTOCOL_UNKNOWN = -1;              // Unknown type
@@ -403,6 +406,7 @@ public class MessageData implements Parcelable {
         mRetryStartTimestamp = cursor.getLong(INDEX_RETRY_START_TIMESTAMP);
 
         mIsLocked = cursor.getInt(INDEX_IS_LOCKED) == 1;
+        mIsDeliveryReportOpen = cursor.getInt(INDEX_IS_DELIVERY_REPORT_OPEN) == 1;
     }
 
     /**
@@ -439,6 +443,7 @@ public class MessageData implements Parcelable {
         values.put(MessageColumns.RAW_TELEPHONY_STATUS, mRawStatus);
         values.put(MessageColumns.RETRY_START_TIMESTAMP, mRetryStartTimestamp);
         values.put(MessageColumns.IS_LOCKED, mIsLocked);
+        values.put(MessageColumns.IS_DELIVERY_REPORT_OPEN, mIsDeliveryReportOpen);
     }
 
     /**
@@ -475,6 +480,8 @@ public class MessageData implements Parcelable {
         }
         insert.bindLong(INDEX_RAW_TELEPHONY_STATUS, mRawStatus);
         insert.bindLong(INDEX_RETRY_START_TIMESTAMP, mRetryStartTimestamp);
+        insert.bindLong(INDEX_IS_LOCKED, 0);
+        insert.bindLong(INDEX_IS_DELIVERY_REPORT_OPEN, mIsDeliveryReportOpen ? 1 : 0);
         // when insert new message, IS_LOCKED use default value 0.
         return insert;
     }
@@ -693,6 +700,10 @@ public class MessageData implements Parcelable {
         return mIsLocked;
     }
 
+    public boolean getIsDeliveryReportOpen() {
+        return mIsDeliveryReportOpen;
+    }
+
     /**
      * Takes all captions from attachments and adds them as a prefix to the first text part or
      * appends a text part
@@ -821,6 +832,10 @@ public class MessageData implements Parcelable {
         mIsLocked = isLocked;
     }
 
+    public final void setIsDeliveryReportOpen(boolean isDeliveryReportOpen) {
+        mIsDeliveryReportOpen = isDeliveryReportOpen;
+    }
+
     public final void setRawTelephonyStatus(final int rawStatus) {
         mRawStatus = rawStatus;
     }
@@ -860,6 +875,7 @@ public class MessageData implements Parcelable {
         mMmsContentLocation = in.readString();
         mRawStatus = in.readInt();
         mRetryStartTimestamp = in.readLong();
+        mIsDeliveryReportOpen = (in.readInt() != 0);
 
         // Read parts
         mParts = new ArrayList<MessagePartData>();
@@ -896,6 +912,7 @@ public class MessageData implements Parcelable {
         dest.writeString(mMmsContentLocation);
         dest.writeInt(mRawStatus);
         dest.writeLong(mRetryStartTimestamp);
+        dest.writeInt(mIsDeliveryReportOpen ? 1 : 0);
 
         // Write parts
         dest.writeInt(mParts.size());

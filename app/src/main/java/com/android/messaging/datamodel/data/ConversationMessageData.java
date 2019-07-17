@@ -20,7 +20,6 @@ import android.net.Uri;
 import android.provider.BaseColumns;
 import android.provider.ContactsContract;
 import android.text.TextUtils;
-import android.text.format.DateUtils;
 
 import com.android.messaging.datamodel.DatabaseHelper;
 import com.android.messaging.datamodel.DatabaseHelper.MessageColumns;
@@ -43,7 +42,7 @@ import java.util.List;
 /**
  * Class representing a message within a conversation sequence. The message parts
  * are available via the getParts() method.
- *
+ * <p>
  * TODO: See if we can delegate to MessageData for the logic that this class duplicates
  * (e.g. getIsMms).
  */
@@ -77,8 +76,11 @@ public class ConversationMessageData {
     private String mSelfParticipantId;
     private boolean mIsLocked;
     private boolean mIsDeleted;
+    private boolean mIsDeliveryReportOpen;
 
-    /** Are we similar enough to the previous/next messages that we can cluster them? */
+    /**
+     * Are we similar enough to the previous/next messages that we can cluster them?
+     */
     private boolean mCanClusterWithPreviousMessage;
     private boolean mCanClusterWithNextMessage;
 
@@ -123,6 +125,7 @@ public class ConversationMessageData {
         mSelfParticipantId = cursor.getString(INDEX_SELF_PARTICIPIANT_ID);
         mIsLocked = cursor.getInt(INDEX_IS_LOCKED) == 1;
         mIsDeleted = cursor.getInt(INDEX_IS_DELETED) == 1;
+        mIsDeliveryReportOpen = cursor.getInt(INDEX_IS_DELIVERY_REPORT_OPEN) == 1;
     }
 
     private static final Character QUOTE_CHAR = '\'';
@@ -157,14 +160,14 @@ public class ConversationMessageData {
      * parts.  A quoted string starts and ends with a single quote.  Actual single quotes
      * within the string are escaped using a second single quote.  So, for example, an
      * input string with 3 constituent parts might look like this:
-     *
+     * <p>
      * 'now is the time'|'I can''t do it'|'foo'
-     *
+     * <p>
      * This would be returned as an array of 3 strings as follows:
      * now is the time
      * I can't do it
      * foo
-     *
+     * <p>
      * This is achieved by walking through the inputString, character by character,
      * ignoring the outer quotes and the divider and replacing any pair of consecutive
      * single quotes with a single single quote.
@@ -360,7 +363,7 @@ public class ConversationMessageData {
                         // Need the StringBuilder and the separator starting from 2nd text part
                         sb = new StringBuilder();
                         if (!TextUtils.isEmpty(firstTextPart)) {
-                              sb.append(firstTextPart);
+                            sb.append(firstTextPart);
                         }
                         separator = BugleGservices.get().getString(
                                 BugleGservicesKeys.MMS_TEXT_CONCAT_SEPARATOR,
@@ -482,11 +485,15 @@ public class ConversationMessageData {
         return mSelfParticipantId;
     }
 
-    public final boolean getIsLocked(){
+    public final boolean getIsLocked() {
         return mIsLocked;
     }
 
-    public final boolean getIsDeleted(){
+    public final boolean getIsDeliveryReportOpen() {
+        return mIsDeliveryReportOpen;
+    }
+
+    public final boolean getIsDeleted() {
         return mIsDeleted;
     }
 
@@ -741,6 +748,8 @@ public class ConversationMessageData {
                     + " as " + ConversationMessageViewColumns.IS_LOCKED + ", "
                     + DatabaseHelper.MESSAGES_TABLE + "." + MessageColumns.IS_DELETED
                     + " as " + ConversationMessageViewColumns.IS_DELETED + ", "
+                    + DatabaseHelper.MESSAGES_TABLE + "." + MessageColumns.IS_DELIVERY_REPORT_OPEN
+                    + " as " + ConversationMessageViewColumns.IS_DELIVERY_REPORT_OPEN + ", "
                     + DatabaseHelper.PARTICIPANTS_TABLE + '.' + ParticipantColumns.FULL_NAME
                     + " as " + ConversationMessageViewColumns.SENDER_FULL_NAME + ", "
                     + DatabaseHelper.PARTICIPANTS_TABLE + '.' + ParticipantColumns.FIRST_NAME
@@ -758,15 +767,15 @@ public class ConversationMessageData {
 
     private static final String CONVERSATION_MESSAGES_QUERY_FROM_WHERE_SQL =
             " FROM " + DatabaseHelper.MESSAGES_TABLE
-            + " LEFT JOIN " + DatabaseHelper.PARTS_TABLE
-            + " ON (" + DatabaseHelper.MESSAGES_TABLE + "." + MessageColumns._ID
-            + "=" + DatabaseHelper.PARTS_TABLE + "." + PartColumns.MESSAGE_ID + ") "
-            + " LEFT JOIN " + DatabaseHelper.PARTICIPANTS_TABLE
-            + " ON (" + DatabaseHelper.MESSAGES_TABLE + '.' +  MessageColumns.SENDER_PARTICIPANT_ID
-            + '=' + DatabaseHelper.PARTICIPANTS_TABLE + '.' + ParticipantColumns._ID + ")"
-            // Exclude draft messages from main view
-            + " WHERE (" + DatabaseHelper.MESSAGES_TABLE + "." + MessageColumns.STATUS
-            + " <> " + MessageData.BUGLE_STATUS_OUTGOING_DRAFT;
+                    + " LEFT JOIN " + DatabaseHelper.PARTS_TABLE
+                    + " ON (" + DatabaseHelper.MESSAGES_TABLE + "." + MessageColumns._ID
+                    + "=" + DatabaseHelper.PARTS_TABLE + "." + PartColumns.MESSAGE_ID + ") "
+                    + " LEFT JOIN " + DatabaseHelper.PARTICIPANTS_TABLE
+                    + " ON (" + DatabaseHelper.MESSAGES_TABLE + '.' + MessageColumns.SENDER_PARTICIPANT_ID
+                    + '=' + DatabaseHelper.PARTICIPANTS_TABLE + '.' + ParticipantColumns._ID + ")"
+                    // Exclude draft messages from main view
+                    + " WHERE (" + DatabaseHelper.MESSAGES_TABLE + "." + MessageColumns.STATUS
+                    + " <> " + MessageData.BUGLE_STATUS_OUTGOING_DRAFT;
 
     // This query is mostly static, except for the injection of conversation id. This is for
     // performance reasons, to ensure that the query uses indices and does not trigger full scans
@@ -787,13 +796,13 @@ public class ConversationMessageData {
     // issue (improvement) for large cursors.
     private static final String CONVERSATION_MESSAGES_QUERY_SQL_GROUP_BY =
             " GROUP BY " + DatabaseHelper.PARTS_TABLE + '.' + PartColumns.MESSAGE_ID
-          + " ORDER BY "
-          + DatabaseHelper.MESSAGES_TABLE + '.' + MessageColumns.RECEIVED_TIMESTAMP + " DESC";
+                    + " ORDER BY "
+                    + DatabaseHelper.MESSAGES_TABLE + '.' + MessageColumns.RECEIVED_TIMESTAMP + " DESC";
 
     private static final String NOTIFICATION_QUERY_SQL_GROUP_BY =
             " GROUP BY " + DatabaseHelper.PARTS_TABLE + '.' + PartColumns.MESSAGE_ID
-          + " ORDER BY "
-          + DatabaseHelper.MESSAGES_TABLE + '.' + MessageColumns.RECEIVED_TIMESTAMP + " DESC";
+                    + " ORDER BY "
+                    + DatabaseHelper.MESSAGES_TABLE + '.' + MessageColumns.RECEIVED_TIMESTAMP + " DESC";
 
     public interface ConversationMessageViewColumns extends BaseColumns {
         static final String _ID = MessageColumns._ID;
@@ -815,6 +824,7 @@ public class ConversationMessageData {
         static final String SELF_PARTICIPANT_ID = MessageColumns.SELF_PARTICIPANT_ID;
         static final String IS_LOCKED = MessageColumns.IS_LOCKED;
         static final String IS_DELETED = MessageColumns.IS_DELETED;
+        static final String IS_DELIVERY_REPORT_OPEN = MessageColumns.IS_DELIVERY_REPORT_OPEN;
         static final String SENDER_FULL_NAME = ParticipantColumns.FULL_NAME;
         static final String SENDER_FIRST_NAME = ParticipantColumns.FIRST_NAME;
         static final String SENDER_DISPLAY_DESTINATION = ParticipantColumns.DISPLAY_DESTINATION;
@@ -833,42 +843,43 @@ public class ConversationMessageData {
 
     private static int sIndexIncrementer = 0;
 
-    private static final int INDEX_MESSAGE_ID                    = sIndexIncrementer++;
-    private static final int INDEX_CONVERSATION_ID               = sIndexIncrementer++;
-    private static final int INDEX_PARTICIPANT_ID                = sIndexIncrementer++;
+    private static final int INDEX_MESSAGE_ID = sIndexIncrementer++;
+    private static final int INDEX_CONVERSATION_ID = sIndexIncrementer++;
+    private static final int INDEX_PARTICIPANT_ID = sIndexIncrementer++;
 
-    private static final int INDEX_PARTS_IDS                     = sIndexIncrementer++;
-    private static final int INDEX_PARTS_CONTENT_TYPES           = sIndexIncrementer++;
-    private static final int INDEX_PARTS_CONTENT_URIS            = sIndexIncrementer++;
-    private static final int INDEX_PARTS_WIDTHS                  = sIndexIncrementer++;
-    private static final int INDEX_PARTS_HEIGHTS                 = sIndexIncrementer++;
-    private static final int INDEX_PARTS_TEXTS                   = sIndexIncrementer++;
+    private static final int INDEX_PARTS_IDS = sIndexIncrementer++;
+    private static final int INDEX_PARTS_CONTENT_TYPES = sIndexIncrementer++;
+    private static final int INDEX_PARTS_CONTENT_URIS = sIndexIncrementer++;
+    private static final int INDEX_PARTS_WIDTHS = sIndexIncrementer++;
+    private static final int INDEX_PARTS_HEIGHTS = sIndexIncrementer++;
+    private static final int INDEX_PARTS_TEXTS = sIndexIncrementer++;
 
-    private static final int INDEX_PARTS_COUNT                   = sIndexIncrementer++;
+    private static final int INDEX_PARTS_COUNT = sIndexIncrementer++;
 
-    private static final int INDEX_SENT_TIMESTAMP                = sIndexIncrementer++;
-    private static final int INDEX_RECEIVED_TIMESTAMP            = sIndexIncrementer++;
-    private static final int INDEX_SEEN                          = sIndexIncrementer++;
-    private static final int INDEX_READ                          = sIndexIncrementer++;
-    private static final int INDEX_PROTOCOL                      = sIndexIncrementer++;
-    private static final int INDEX_STATUS                        = sIndexIncrementer++;
-    private static final int INDEX_SMS_MESSAGE_URI               = sIndexIncrementer++;
-    private static final int INDEX_SMS_PRIORITY                  = sIndexIncrementer++;
-    private static final int INDEX_SMS_MESSAGE_SIZE              = sIndexIncrementer++;
-    private static final int INDEX_MMS_SUBJECT                   = sIndexIncrementer++;
-    private static final int INDEX_MMS_EXPIRY                    = sIndexIncrementer++;
-    private static final int INDEX_RAW_TELEPHONY_STATUS          = sIndexIncrementer++;
-    private static final int INDEX_SELF_PARTICIPIANT_ID          = sIndexIncrementer++;
-    private static final int INDEX_IS_LOCKED                     = sIndexIncrementer++;
-    private static final int INDEX_IS_DELETED                    = sIndexIncrementer++;
+    private static final int INDEX_SENT_TIMESTAMP = sIndexIncrementer++;
+    private static final int INDEX_RECEIVED_TIMESTAMP = sIndexIncrementer++;
+    private static final int INDEX_SEEN = sIndexIncrementer++;
+    private static final int INDEX_READ = sIndexIncrementer++;
+    private static final int INDEX_PROTOCOL = sIndexIncrementer++;
+    private static final int INDEX_STATUS = sIndexIncrementer++;
+    private static final int INDEX_SMS_MESSAGE_URI = sIndexIncrementer++;
+    private static final int INDEX_SMS_PRIORITY = sIndexIncrementer++;
+    private static final int INDEX_SMS_MESSAGE_SIZE = sIndexIncrementer++;
+    private static final int INDEX_MMS_SUBJECT = sIndexIncrementer++;
+    private static final int INDEX_MMS_EXPIRY = sIndexIncrementer++;
+    private static final int INDEX_RAW_TELEPHONY_STATUS = sIndexIncrementer++;
+    private static final int INDEX_SELF_PARTICIPIANT_ID = sIndexIncrementer++;
+    private static final int INDEX_IS_LOCKED = sIndexIncrementer++;
+    private static final int INDEX_IS_DELETED = sIndexIncrementer++;
+    private static final int INDEX_IS_DELIVERY_REPORT_OPEN = sIndexIncrementer++;
 
-    private static final int INDEX_SENDER_FULL_NAME              = sIndexIncrementer++;
-    private static final int INDEX_SENDER_FIRST_NAME             = sIndexIncrementer++;
-    private static final int INDEX_SENDER_DISPLAY_DESTINATION    = sIndexIncrementer++;
+    private static final int INDEX_SENDER_FULL_NAME = sIndexIncrementer++;
+    private static final int INDEX_SENDER_FIRST_NAME = sIndexIncrementer++;
+    private static final int INDEX_SENDER_DISPLAY_DESTINATION = sIndexIncrementer++;
     private static final int INDEX_SENDER_NORMALIZED_DESTINATION = sIndexIncrementer++;
-    private static final int INDEX_SENDER_PROFILE_PHOTO_URI      = sIndexIncrementer++;
-    private static final int INDEX_SENDER_CONTACT_ID             = sIndexIncrementer++;
-    private static final int INDEX_SENDER_CONTACT_LOOKUP_KEY     = sIndexIncrementer++;
+    private static final int INDEX_SENDER_PROFILE_PHOTO_URI = sIndexIncrementer++;
+    private static final int INDEX_SENDER_CONTACT_ID = sIndexIncrementer++;
+    private static final int INDEX_SENDER_CONTACT_LOOKUP_KEY = sIndexIncrementer++;
 
 
     private static String[] sProjection = {
@@ -899,6 +910,7 @@ public class ConversationMessageData {
             ConversationMessageViewColumns.SELF_PARTICIPANT_ID,
             ConversationMessageViewColumns.IS_LOCKED,
             ConversationMessageViewColumns.IS_DELETED,
+            ConversationMessageViewColumns.IS_DELIVERY_REPORT_OPEN,
             ConversationMessageViewColumns.SENDER_FULL_NAME,
             ConversationMessageViewColumns.SENDER_FIRST_NAME,
             ConversationMessageViewColumns.SENDER_DISPLAY_DESTINATION,

@@ -408,6 +408,7 @@ public class InsertNewMessageAction extends Action implements Parcelable {
                 message = MessageData.createDraftSmsMessage(conversationId,
                         content.getSelfId(), messageText);
                 message.updateSendingMessage(conversationId, messageUri, timestamp);
+                message.setIsDeliveryReportOpen(content.getIsDeliveryReportOpen());
 
                 BugleDatabaseOperations.insertNewMessageInTransaction(db, message);
 
