@@ -37,7 +37,6 @@ import android.text.TextUtils;
 
 import com.android.ex.photo.util.PhotoViewAnalytics;
 import com.android.messaging.ad.AdConfig;
-import com.android.messaging.ad.AdPlacement;
 import com.android.messaging.ad.BillingManager;
 import com.android.messaging.datamodel.DataModel;
 import com.android.messaging.debug.BlockCanaryConfig;
@@ -100,8 +99,6 @@ import com.superapps.util.Preferences;
 import com.superapps.util.Threads;
 
 import net.appcloudbox.AcbAds;
-import net.appcloudbox.ads.interstitialad.AcbInterstitialAdManager;
-import net.appcloudbox.ads.nativead.AcbNativeAdManager;
 import net.appcloudbox.autopilot.AutopilotConfig;
 import net.appcloudbox.autopilot.core.PrefsUtils;
 import net.appcloudbox.common.analytics.publisher.AcbPublisherMgr;
@@ -205,7 +202,7 @@ public class BugleApplication extends HSApplication implements UncaughtException
             if (newState == HSGdprConsent.ConsentState.ACCEPTED) {
                 initFabric();
                 AcbService.setGDPRConsentGranted(true);
-                BugleFirebaseAnalytics.sFirebaseAnalytics.setAnalyticsCollectionEnabled(true);
+                BugleFirebaseAnalytics.setAnalyticsCollectionEnabled(true);
             }
 
             if (oldState == HSGdprConsent.ConsentState.ACCEPTED && newState == HSGdprConsent.ConsentState.DECLINED) {
@@ -242,10 +239,10 @@ public class BugleApplication extends HSApplication implements UncaughtException
                     HSLog.d("gdpr", "app start with permission");
                     initFabric();
                     AcbService.setGDPRConsentGranted(true);
-                    BugleFirebaseAnalytics.sFirebaseAnalytics.setAnalyticsCollectionEnabled(true);
+                    BugleFirebaseAnalytics.setAnalyticsCollectionEnabled(true);
                 } else {
                     HSLog.d("gdpr", "app start with no permission");
-                    BugleFirebaseAnalytics.sFirebaseAnalytics.setAnalyticsCollectionEnabled(false);
+                    BugleFirebaseAnalytics.setAnalyticsCollectionEnabled(false);
                 }
             }));
 

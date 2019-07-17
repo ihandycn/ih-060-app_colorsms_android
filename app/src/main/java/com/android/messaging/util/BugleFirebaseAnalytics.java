@@ -16,7 +16,7 @@ import java.util.Map;
 public class BugleFirebaseAnalytics {
     private static final String TAG = BugleFirebaseAnalytics.class.getSimpleName();
 
-    public static FirebaseAnalytics sFirebaseAnalytics;
+    private static FirebaseAnalytics sFirebaseAnalytics;
 
     private static HashMap<String, List<String>> sDebugEventMap = null;
 
@@ -78,6 +78,16 @@ public class BugleFirebaseAnalytics {
         }
     }
 
+    public static void logUserProperty(String key, String value) {
+        if (!TextUtils.isEmpty(value) && value.length() > 36) {
+            value = value.substring(0, 36);
+        }
+        sFirebaseAnalytics.setUserProperty(key, value);
+    }
+
+    public static void setAnalyticsCollectionEnabled(boolean isEnabled) {
+        sFirebaseAnalytics.setAnalyticsCollectionEnabled(isEnabled);
+    }
 
     private static void onLogEvent(String eventID, Map<String, String> eventValues) {
         if (BuildConfig.DEBUG) {
@@ -158,12 +168,5 @@ public class BugleFirebaseAnalytics {
 
             sDebugEventMap.put(eventId, keyList);
         }
-    }
-
-    public static void logUserProperty(String key, String value) {
-        if (!TextUtils.isEmpty(value) && value.length() > 36) {
-            value = value.substring(0, 36);
-        }
-        sFirebaseAnalytics.setUserProperty(key, value);
     }
 }
