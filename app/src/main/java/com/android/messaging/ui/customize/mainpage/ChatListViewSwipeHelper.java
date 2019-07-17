@@ -22,6 +22,7 @@ class ChatListViewSwipeHelper {
     private int mMaxDistance;
     private boolean mIsBottomMode = false;
     private View mContainerView;
+    private boolean mIsHiding;
 
     @SuppressLint("ClickableViewAccessibility")
     ChatListViewSwipeHelper(@NonNull View slider, @NonNull View container) {
@@ -115,6 +116,9 @@ class ChatListViewSwipeHelper {
     }
 
     boolean hideView() {
+        if (mIsHiding) {
+            return true;
+        }
         if (mContainerMaxHeight <= 0 || mMaxDistance == 0) {
             if (mContainerView.getHeight() > 0) {
                 mContainerMaxHeight = mContainerView.getHeight();
@@ -129,9 +133,11 @@ class ChatListViewSwipeHelper {
             @Override
             public void onAnimationEnd(Animator animation) {
                 mIsBottomMode = true;
+                mIsHiding = false;
             }
         });
         animator.start();
+        mIsHiding = true;
         return true;
     }
 

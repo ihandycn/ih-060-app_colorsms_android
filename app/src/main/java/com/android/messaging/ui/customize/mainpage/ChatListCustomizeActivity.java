@@ -161,7 +161,7 @@ public class ChatListCustomizeActivity extends BaseActivity implements INotifica
                     ChatListDrawableManager.saveChatListCustomizeInfo(mCurrentSelectedWallpaperPath, mBgMaskView.getAlpha(), mUseThemeColor, mCurrentSelectedColor);
                     Threads.postOnMainThread(() -> {
                         HSGlobalNotificationCenter.sendNotification(ConversationListActivity.EVENT_MAINPAGE_RECREATE);
-                        finish();
+                        Threads.postOnMainThreadDelayed(()->finish(), 100);
                     });
                 });
             }
@@ -206,7 +206,7 @@ public class ChatListCustomizeActivity extends BaseActivity implements INotifica
                 ChatListDrawableManager.saveChatListCustomizeInfo(mCurrentSelectedWallpaperPath, mBgMaskView.getAlpha(), mUseThemeColor, mCurrentSelectedColor);
                 HSGlobalNotificationCenter.sendNotification(ConversationListActivity.EVENT_MAINPAGE_RECREATE);
                 BugleAnalytics.logEvent("Customize_ChatList_Alert_Click");
-                finish();
+                Threads.postOnMainThreadDelayed(this::finish, 100);
             }));
             builder.show();
             BugleAnalytics.logEvent("Customize_ChatList_Alert_Show");
