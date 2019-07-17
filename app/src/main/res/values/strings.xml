@@ -1233,7 +1233,7 @@
     <string name="invite_friends_invite_send_sms_description">Send SMS to the friend that you’d like to invite</string>
 
     <!--New setting-->
-    <string name="emoji">Emoji</string>
+    <string name="emoji" translatable="false">Emoji</string>
     <string name="others">Others</string>
     <string name="about">About</string>
     <string name="notification_summary">Get notify when receiving messages</string>
@@ -1317,12 +1317,12 @@
     <string name="switch_sim">Switch SIM</string>
 
     <!--chat list-->
-    <string name="chat_list_confirm_dialog_title">Save Changes?</string>
+    <string name="chat_list_confirm_dialog_title">Save Changes</string>
     <string name="chat_list_config_dialog_message">Chat list have been modified, would you like to keep changes?</string>
     <string name="select_image">Select Image</string>
     <string name="chat_list_change_background">Change Background</string>
     <string name="chat_list_background_opacity">Background Opacity</string>
-    <string name="chat_list_text_color">Text color</string>
+    <string name="chat_list_text_color">Text Color</string>
 
 </resources>
 

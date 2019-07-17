@@ -838,4 +838,13 @@
 	<string name="life_time">НАВСЕГДА</string>
 	<string name="purchase_description">Купите версию БЕЗ РЕКЛАМЫ. Больше никакой рекламы.</string>
 
+    <string name="chat_list_text_color">Цвет текста</string>
+    <string name="purchase_failed">ошибка</string>
+    <string name="chat_list_confirm_dialog_title">Сохранить изменения</string>
+
+	<string name="menu_chat_list">Список чатов</string>
+	<string name="chat_list_background_opacity">Прозрачность фона</string>
+	<string name="chat_list_change_background">Изменить фон</string>
+	<string name="chat_list_config_dialog_message">Список чатов был изменен, хотите сохранить изменения?</string>
+
 </resources>

@@ -787,4 +787,14 @@
 	<string name="life_time">À VIE</string>
 	<string name="purchase_description">Achetez la version SANS PUBS. Plus jamais de pubs.</string>
 
+
+    <string name="chat_list_text_color">Couleur du texte</string>
+    <string name="purchase_failed">échec</string>
+    <string name="chat_list_confirm_dialog_title">Enregistrer les changements</string>
+
+	<string name="menu_chat_list">Liste de chats</string>
+	<string name="chat_list_background_opacity">Opacité de l\'arrière-plan</string>
+	<string name="chat_list_change_background">Modifier l\'arrière-plan</string>
+	<string name="chat_list_config_dialog_message">La liste de chats a été modifiée, voulez-vous conserver les changements ?</string>
+
 </resources>

@@ -791,4 +791,14 @@
 	<string name="life_time">PER SEMPRE</string>
 	<string name="purchase_description">Acquista la versione SENZA PUBBLICITÀ. Mai più pubblicità.</string>
 
+
+    <string name="chat_list_text_color">Colore testo</string>
+    <string name="purchase_failed">non riuscito</string>
+    <string name="chat_list_confirm_dialog_title">Salva modifiche</string>
+
+	<string name="menu_chat_list">Elenco chat</string>
+	<string name="chat_list_background_opacity">Opacità sfondo</string>
+	<string name="chat_list_change_background">Modifica lo sfondo</string>
+	<string name="chat_list_config_dialog_message">L\'elenco della chat è stato modificato. Vuoi salvare le modifiche?</string>
+
 </resources>

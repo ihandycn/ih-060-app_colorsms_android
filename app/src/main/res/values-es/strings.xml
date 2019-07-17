@@ -793,4 +793,14 @@
 	<string name="life_time">NUNCA</string>
 	<string name="purchase_description">Compra la versión sin publicidad. Ningún anuncio nunca más.</string>
 
+
+    <string name="chat_list_text_color">Color de texto</string>
+    <string name="purchase_failed">error</string>
+    <string name="chat_list_confirm_dialog_title">Guardar cambios</string>
+
+	<string name="menu_chat_list">Lista de chat</string>
+	<string name="chat_list_background_opacity">Opacidad del fondo</string>
+	<string name="chat_list_change_background">Cambiar fondo</string>
+	<string name="chat_list_config_dialog_message">Se ha modificado la lista de chat. ¿Quieres conservar los cambios?</string>
+
 </resources>
