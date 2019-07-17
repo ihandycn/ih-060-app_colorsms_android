@@ -19,6 +19,7 @@ import android.animation.LayoutTransition;
 import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Color;
+import android.graphics.PorterDuff;
 import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
@@ -353,14 +354,29 @@ public class ConversationMessageView extends RelativeLayout implements View.OnCl
                 !mData.getCanClusterWithNextMessage();
 
         boolean deliveredBadgeVisible = false;
+        boolean hasWallPaper = WallpaperManager.hasWallpaper(mData.getConversationId());
         if (mData.getIsDeliveryReportOpen()) {
             if (mData.getStatus() == MessageData.BUGLE_STATUS_OUTGOING_COMPLETE) {
                 mDeliveredBadge.setVisibility(View.VISIBLE);
                 mDeliveredBadge.setImageResource(R.drawable.ic_message_sent);
+                if (!hasWallPaper) {
+                    mDeliveredBadge.getDrawable().setColorFilter(
+                            getResources().getColor(R.color.timestamp_text_outgoing), PorterDuff.Mode.SRC_ATOP);
+                } else {
+                    mDeliveredBadge.getDrawable().setColorFilter(
+                            getResources().getColor(R.color.white), PorterDuff.Mode.SRC_ATOP);
+                }
                 deliveredBadgeVisible = true;
             } else if (mData.getStatus() == MessageData.BUGLE_STATUS_OUTGOING_DELIVERED) {
                 mDeliveredBadge.setVisibility(View.VISIBLE);
                 mDeliveredBadge.setImageResource(R.drawable.ic_message_delivered);
+                if (!hasWallPaper) {
+                    mDeliveredBadge.getDrawable().setColorFilter(
+                            getResources().getColor(R.color.timestamp_text_outgoing), PorterDuff.Mode.SRC_ATOP);
+                } else {
+                    mDeliveredBadge.getDrawable().setColorFilter(
+                            getResources().getColor(R.color.white), PorterDuff.Mode.SRC_ATOP);
+                }
                 deliveredBadgeVisible = true;
             } else {
                 mDeliveredBadge.setVisibility(View.GONE);
@@ -369,6 +385,13 @@ public class ConversationMessageView extends RelativeLayout implements View.OnCl
             if (mData.getStatus() == MessageData.BUGLE_STATUS_OUTGOING_DELIVERED) {
                 mDeliveredBadge.setVisibility(View.VISIBLE);
                 mDeliveredBadge.setImageResource(R.drawable.ic_message_delivered);
+                if (!hasWallPaper) {
+                    mDeliveredBadge.getDrawable().setColorFilter(
+                            getResources().getColor(R.color.timestamp_text_outgoing), PorterDuff.Mode.SRC_ATOP);
+                } else {
+                    mDeliveredBadge.getDrawable().setColorFilter(
+                            getResources().getColor(R.color.white), PorterDuff.Mode.SRC_ATOP);
+                }
                 deliveredBadgeVisible = true;
             } else {
                 mDeliveredBadge.setVisibility(View.GONE);
