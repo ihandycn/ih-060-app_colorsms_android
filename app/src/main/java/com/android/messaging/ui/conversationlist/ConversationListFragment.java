@@ -130,6 +130,7 @@ public class ConversationListFragment extends Fragment implements ConversationLi
     private boolean adFirstPrepared = true;
     private boolean conversationFirstUpdated = true;
     private boolean isFirstOnResume = true;
+    private boolean mIsExitAdShown;
 
     private AcbNativeAd mNativeAd;
     private AcbNativeAdLoader mNativeAdLoader;
@@ -196,6 +197,9 @@ public class ConversationListFragment extends Fragment implements ConversationLi
     @Override
     public void onResume() {
         super.onResume();
+        if (mIsExitAdShown){
+            return;
+        }
         if (mRecyclerView != null) {
             if (mRecyclerView.canScrollVertically(-1)) {
                 BugleAnalytics.logEvent("SMS_Messages_Show_NotOnTop", true);
@@ -787,6 +791,10 @@ public class ConversationListFragment extends Fragment implements ConversationLi
 
     public void hideBackupBannerGuide() {
         mBackupBannerGuideContainer.setVisibility(View.GONE);
+    }
+
+    public void setExitAdShown(boolean isExitAdShown){
+        mIsExitAdShown = isExitAdShown;
     }
 
     /**
