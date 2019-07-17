@@ -187,7 +187,7 @@ public class ConversationListItemView extends FrameLayout implements OnClickList
         mTimestampColor = ConversationColors.get().getListTimeColor();
 
         mContactBackground = findViewById(R.id.conversation_icon_bg);
-        mContactBackground.setImageDrawable(AvatarBgDrawables.getAvatarBg(false));
+        mContactBackground.setImageDrawable(AvatarBgDrawables.getAvatarBg(false, ChatListDrawableManager.hasCustomWallpaper()));
 
         LayoutTransition layoutTransition = new LayoutTransition();
         layoutTransition.setDuration(200);
@@ -259,10 +259,10 @@ public class ConversationListItemView extends FrameLayout implements OnClickList
             if (AvatarUriUtil.TYPE_LOCAL_RESOURCE_URI.equals(iconType)) {
                 mContactBackground.setImageDrawable(null);
             } else {
-                mContactBackground.setImageDrawable(AvatarBgDrawables.getAvatarBg(false));
+                mContactBackground.setImageDrawable(AvatarBgDrawables.getAvatarBg(false, ChatListDrawableManager.hasCustomWallpaper()));
             }
         } else {
-            mContactBackground.setImageDrawable(AvatarBgDrawables.getAvatarBg(false));
+            mContactBackground.setImageDrawable(AvatarBgDrawables.getAvatarBg(false, ChatListDrawableManager.hasCustomWallpaper()));
         }
         mContactIconView.setImageResourceUri(iconUri, mData.getParticipantContactId(),
                 mData.getParticipantLookupKey(), mData.getOtherParticipantNormalizedDestination(), Color.TRANSPARENT);
@@ -312,6 +312,9 @@ public class ConversationListItemView extends FrameLayout implements OnClickList
         mRippleBackgroundView.setOnClickListener(this);
         mRippleBackgroundView.setOnLongClickListener(this);
         mPinView.setVisibility(mData.isPinned() ? VISIBLE : GONE);
+        if (mData.isPinned()) {
+            ChatListDrawableManager.changeViewColorIfNeed(mPinView);
+        }
 
         if (mIsFirstBind) {
             if (!mHostInterface.isArchived()) {
@@ -424,6 +427,9 @@ public class ConversationListItemView extends FrameLayout implements OnClickList
 
         final int notificationBellVisibility = mData.getNotificationEnabled() ? GONE : VISIBLE;
         mNotificationBellView.setVisibility(notificationBellVisibility);
+        if (!mData.getNotificationEnabled()) {
+           ChatListDrawableManager.changeViewColorIfNeed(mNotificationBellView);
+        }
     }
 
     public boolean isSwipeAnimatable() {

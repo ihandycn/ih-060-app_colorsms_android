@@ -1,6 +1,7 @@
 package com.android.messaging.ui.customize.mainpage;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.support.annotation.ColorInt;
 import android.support.annotation.NonNull;
@@ -88,6 +89,7 @@ public class ChatListChooseColorRecommendAdapter extends RecyclerView.Adapter<Ch
 
         if ((mData[position] & 0x00ffffff) == 0x00ffffff) {
             GlideApp.with(mContext).load(R.drawable.bubble_customize_color_ring).into(holder.mColor);
+            holder.mCheckMark.setColorFilter(Color.BLACK);
         } else {
             if (mColorDrawables[position] == null) {
                 mColorDrawables[position] = new ColorDrawable(mData[position]);
@@ -96,6 +98,7 @@ public class ChatListChooseColorRecommendAdapter extends RecyclerView.Adapter<Ch
                     .load(mColorDrawables[position])
                     .apply(RequestOptions.circleCropTransform())
                     .into(holder.mColor);
+            holder.mCheckMark.clearColorFilter();
         }
     }
 

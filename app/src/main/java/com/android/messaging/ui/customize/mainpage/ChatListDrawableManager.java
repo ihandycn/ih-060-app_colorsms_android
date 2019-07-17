@@ -51,6 +51,10 @@ public class ChatListDrawableManager {
         sHasCustomWallpaper = false;
     }
 
+    public static boolean hasCustomWallpaper() {
+        return sHasCustomWallpaper;
+    }
+
     public static String getListWallpaperPath() {
         if (sHasCustomWallpaper) {
             return sPref.getString(PREF_KEY_CONVERSATION_LIST_WALLPAPER_PATH, null);

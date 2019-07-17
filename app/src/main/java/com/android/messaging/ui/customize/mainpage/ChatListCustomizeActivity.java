@@ -4,7 +4,9 @@ import android.animation.ObjectAnimator;
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
+import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
@@ -94,7 +96,9 @@ public class ChatListCustomizeActivity extends BaseActivity implements INotifica
         mPreviousPath = mCurrentSelectedWallpaperPath = ChatListDrawableManager.getListWallpaperPath();
         if (!TextUtils.isEmpty(mCurrentSelectedWallpaperPath)) {
             mThemeViewGroup.setVisibility(View.INVISIBLE);
-            setPreviewImage(mCurrentSelectedWallpaperPath, false);
+            //setPreviewImage(mCurrentSelectedWallpaperPath, false);
+            Drawable drawable = new BitmapDrawable(resizeCustomBitmap(BitmapFactory.decodeFile(mCurrentSelectedWallpaperPath)));
+            mCustomBackground.setImageDrawable(drawable);
         }
         //set mask opacity
         mBgMaskView.setAlpha(ChatListDrawableManager.getMaskOpacity());
@@ -134,7 +138,7 @@ public class ChatListCustomizeActivity extends BaseActivity implements INotifica
             @Override
             public void onTextColorChange(int color) {
                 mTitleView.setTextColor(color);
-                mListView.changeFontColor(color, color, color);
+                mListView.changeFontColor(color, color, color, false);
                 mNavigationIcon.setColorFilter(color);
                 mUseThemeColor = false;
                 mCurrentSelectedColor = color;
@@ -159,6 +163,8 @@ public class ChatListCustomizeActivity extends BaseActivity implements INotifica
                 });
             }
         });
+
+        mCustomBackground.setOnClickListener(v -> mControlView.hideControlView());
     }
 
     @Override
@@ -178,7 +184,9 @@ public class ChatListCustomizeActivity extends BaseActivity implements INotifica
     @Override
     public void onBackPressed() {
         if (!mControlView.handleBackEvent()) {
-            handleBackEvent();
+            if (!mControlView.hideControlView()) {
+                handleBackEvent();
+            }
         }
     }
 
@@ -204,6 +212,29 @@ public class ChatListCustomizeActivity extends BaseActivity implements INotifica
         }
     }
 
+    private Bitmap resizeCustomBitmap(@NonNull Bitmap resource) {
+        int height = Dimensions.getPhoneHeight(ChatListCustomizeActivity.this);
+        int width = Dimensions.getPhoneWidth(ChatListCustomizeActivity.this);
+
+        int bitmapHeight = resource.getHeight();
+        int bitmapWidth = resource.getWidth();
+
+        int left = 0;
+        int top = 0;
+        int resizeWidth = bitmapWidth;
+        int resizeHeight = bitmapHeight;
+
+        if (height * bitmapWidth < width * bitmapHeight) {
+            resizeHeight = (int) (bitmapWidth * height * 1.0f / width);
+            top = bitmapHeight / 2 - resizeHeight / 2;
+        } else {
+            resizeWidth = (int) (bitmapHeight * width * 1.0f / height);
+            left = bitmapWidth / 2 - resizeWidth / 2;
+        }
+
+        return Bitmap.createBitmap(resource, left, top, resizeWidth, resizeHeight);
+    }
+
     private void startPreviewTransitionAnimation() {
         ObjectAnimator animator = ObjectAnimator.ofFloat(mCustomBackground, "alpha", 0f, 1f);
         animator.setDuration(200);
@@ -213,7 +244,7 @@ public class ChatListCustomizeActivity extends BaseActivity implements INotifica
     private void setTextColor(int textColor) {
         mTitleView.setTextColor(textColor);
         mControlView.changeRecommendTextColor(textColor);
-        mListView.changeFontColor(textColor, textColor, textColor);
+        mListView.changeFontColor(textColor, textColor, textColor, false);
         mControlView.setTextColorBtnColor(textColor);
         mNavigationIcon.setColorFilter(textColor);
     }
@@ -225,7 +256,7 @@ public class ChatListCustomizeActivity extends BaseActivity implements INotifica
         mTitleView.setTextColor(Color.WHITE);
         mControlView.setTextColorBtnColor(Color.parseColor(info.listTitleColor));
         mListView.changeFontColor(Color.parseColor(info.listTitleColor),
-                Color.parseColor(info.listSubtitleColor), Color.parseColor(info.listTimeColor));
+                Color.parseColor(info.listSubtitleColor), Color.parseColor(info.listTimeColor), true);
         mNavigationIcon.setColorFilter(Color.WHITE);
     }
 
@@ -283,26 +314,7 @@ public class ChatListCustomizeActivity extends BaseActivity implements INotifica
                             mCustomBackground.setVisibility(View.VISIBLE);
                             mThemeViewGroup.setVisibility(View.GONE);
 
-                            int height = Dimensions.getPhoneHeight(ChatListCustomizeActivity.this);
-                            int width = Dimensions.getPhoneWidth(ChatListCustomizeActivity.this);
-
-                            int bitmapHeight = resource.getHeight();
-                            int bitmapWidth = resource.getWidth();
-
-                            int left = 0;
-                            int top = 0;
-                            int resizeWidth = bitmapWidth;
-                            int resizeHeight = bitmapHeight;
-
-                            if (height * bitmapWidth < width * bitmapHeight) {
-                                resizeHeight = (int) (bitmapWidth * height * 1.0f / width);
-                                top = bitmapHeight / 2 - resizeHeight / 2;
-                            } else {
-                                resizeWidth = (int) (bitmapHeight * width * 1.0f / height);
-                                left = bitmapWidth / 2 - resizeWidth / 2;
-                            }
-
-                            Bitmap resizeBitmap = Bitmap.createBitmap(resource, left, top, resizeWidth, resizeHeight);
+                            Bitmap resizeBitmap = resizeCustomBitmap(resource);
                             mCustomBackground.setImageBitmap(resizeBitmap);
                             startPreviewTransitionAnimation();
 

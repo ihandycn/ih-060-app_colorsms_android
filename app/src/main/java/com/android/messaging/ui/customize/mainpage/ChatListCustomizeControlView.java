@@ -63,7 +63,9 @@ public class ChatListCustomizeControlView extends ConstraintLayout {
     private View mTextColorBackIcon;
     private SeekBar mOpacitySeekBar;
     private ChatListChooseColorView mColorChooseView;
+    private View mControlViewContainer;
 
+    private ChatListViewSwipeHelper mSwipeHelper;
 
     public interface ChatListCustomizeChangeListener {
         void onWallpaperChange(String path);
@@ -93,6 +95,13 @@ public class ChatListCustomizeControlView extends ConstraintLayout {
         mChangeListener = listener;
     }
 
+    public boolean hideControlView() {
+        if (mSwipeHelper != null) {
+            return mSwipeHelper.hideView();
+        }
+        return false;
+    }
+
     @Override
     protected void onFinishInflate() {
         super.onFinishInflate();
@@ -115,18 +124,20 @@ public class ChatListCustomizeControlView extends ConstraintLayout {
                 Dimensions.pxFromDp(2), false));
 
         View touchAreaView = findViewById(R.id.chat_list_customize_touch_view);
-        View controlViewContainer = findViewById(R.id.select_container);
-        controlViewContainer.setBackground(BackgroundDrawables.createBackgroundDrawable(Color.WHITE, 0,
+        mControlViewContainer = findViewById(R.id.select_container);
+        mControlViewContainer.setBackground(BackgroundDrawables.createBackgroundDrawable(Color.WHITE, 0,
                 Dimensions.pxFromDp(13.3f), Dimensions.pxFromDp(13.3f), 0, 0,
                 false, false));
-        controlViewContainer.addOnLayoutChangeListener(new OnLayoutChangeListener() {
+        mControlViewContainer.setVisibility(INVISIBLE);
+        mControlViewContainer.addOnLayoutChangeListener(new OnLayoutChangeListener() {
             @Override
             public void onLayoutChange(View v, int left, int top, int right, int bottom, int oldLeft, int oldTop, int oldRight, int oldBottom) {
                 if (bottom - top > 0) {
-                    controlViewContainer.setTranslationY(bottom - top - Dimensions.pxFromDp(32));
-                    controlViewContainer.removeOnLayoutChangeListener(this);
+                    mControlViewContainer.setVisibility(VISIBLE);
+                    mControlViewContainer.setTranslationY(bottom - top - Dimensions.pxFromDp(32));
+                    mControlViewContainer.removeOnLayoutChangeListener(this);
                     Threads.postOnMainThreadDelayed(() -> {
-                        ObjectAnimator animator = ObjectAnimator.ofFloat(controlViewContainer, "translationY", 0);
+                        ObjectAnimator animator = ObjectAnimator.ofFloat(mControlViewContainer, "translationY", 0);
                         animator.setDuration(600);
                         animator.setInterpolator(PathInterpolatorCompat.create(0.18f, 0.99f, 0.36f, 1));
                         animator.start();
@@ -134,7 +145,11 @@ public class ChatListCustomizeControlView extends ConstraintLayout {
                 }
             }
         });
-        new ChatListViewSwipeHelper(touchAreaView, controlViewContainer);
+        //don't remove
+        mControlViewContainer.setOnClickListener(v -> {
+
+        });
+        mSwipeHelper = new ChatListViewSwipeHelper(touchAreaView, mControlViewContainer);
     }
 
     private void initTopBackAndApplyBtn() {
@@ -179,7 +194,7 @@ public class ChatListCustomizeControlView extends ConstraintLayout {
         ObjectAnimator animator = ObjectAnimator.ofFloat(textColorChooseContainer, "translationX", 0);
         animator.setDuration(440);
         animator.setInterpolator(PathInterpolatorCompat.create(0.26f, 1, 0.48f, 1));
-        mTextColorPreview.setOnClickListener(v -> {
+        findViewById(R.id.chat_list_text_color_click_container).setOnClickListener(v -> {
             textColorChooseContainer.setVisibility(View.VISIBLE);
             animator.start();
             mIsColorChooseViewShowing = true;
@@ -213,7 +228,7 @@ public class ChatListCustomizeControlView extends ConstraintLayout {
     }
 
     public void resetOpacitySeekBar() {
-        mOpacitySeekBar.setProgress(0);
+        mOpacitySeekBar.setProgress(mOpacitySeekBar.getMax());
     }
 
     public void changeRecommendTextColor(@ColorInt int color) {
@@ -299,7 +314,7 @@ public class ChatListCustomizeControlView extends ConstraintLayout {
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
                 opacityText.setText(String.valueOf(progress + "%"));
                 if (mChangeListener != null) {
-                    mChangeListener.onOpacityChange(progress * 1.0f / maxProgressValue);
+                    mChangeListener.onOpacityChange((maxProgressValue - progress) * 1.0f / maxProgressValue);
                 }
             }
 
@@ -313,14 +328,14 @@ public class ChatListCustomizeControlView extends ConstraintLayout {
 
             }
         });
-        mOpacitySeekBar.setProgress((int) (ChatListDrawableManager.getMaskOpacity() * maxProgressValue));
+        mOpacitySeekBar.setProgress((int) ((1 - ChatListDrawableManager.getMaskOpacity()) * maxProgressValue));
     }
 
     private void onWallpaperChanged(String path) {
         if (mChangeListener != null) {
             mChangeListener.onWallpaperChange(path);
         }
-        mOpacitySeekBar.setProgress(0);
+        mOpacitySeekBar.setProgress(mOpacitySeekBar.getMax());
     }
 
     public void addListener(WallpaperChooserItemView listener) {

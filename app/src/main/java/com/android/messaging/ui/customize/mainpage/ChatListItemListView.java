@@ -65,7 +65,6 @@ public class ChatListItemListView extends LinearLayout {
     private void addItemView(String name, String snippet, String time) {
         View view =
                 mInflater.inflate(R.layout.conversation_list_customize_item_view, this, false);
-        ((ImageView) view.findViewById(R.id.conversation_icon_bg)).setImageDrawable(AvatarBgDrawables.getAvatarBg(false));
         String s = "[A-Z]+.*";
         Uri avatarUri = AvatarUriUtil.createAvatarUri(null, Pattern.matches(s, name) ? name : null, null, null);
         ContactIconView icon = view.findViewById(R.id.conversation_icon);
@@ -78,7 +77,7 @@ public class ChatListItemListView extends LinearLayout {
         mChildrenView.add(view);
     }
 
-    public void changeFontColor(int titleColor, int snippetColor, int timeColor) {
+    public void changeFontColor(int titleColor, int snippetColor, int timeColor, boolean useThemeBg) {
         boolean titleAddShadow = timeColor == Color.WHITE;
         boolean snippetAddShadow = timeColor == Color.WHITE;
         boolean timeAddShadow = timeColor == Color.WHITE;
@@ -92,6 +91,8 @@ public class ChatListItemListView extends LinearLayout {
             ChatListUtils.changeTextViewShadow(name, titleAddShadow);
             ChatListUtils.changeTextViewShadow(snippet, snippetAddShadow);
             ChatListUtils.changeTextViewShadow(time, timeAddShadow);
+            ((ImageView) v.findViewById(R.id.conversation_icon_bg))
+                    .setImageDrawable(AvatarBgDrawables.getAvatarBg(false, !useThemeBg));
         }
     }
 }

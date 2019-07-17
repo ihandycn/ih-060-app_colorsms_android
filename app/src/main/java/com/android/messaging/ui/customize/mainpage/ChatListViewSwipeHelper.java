@@ -114,6 +114,47 @@ class ChatListViewSwipeHelper {
         });
     }
 
+    boolean hideView() {
+        if (mContainerMaxHeight <= 0 || mMaxDistance == 0) {
+            if (mContainerView.getHeight() > 0) {
+                mContainerMaxHeight = mContainerView.getHeight();
+                mMaxDistance = mContainerMaxHeight - mContainerMinHeight;
+            }
+        }
+        if (mContainerView.getTranslationY() >= mMaxDistance) {
+            return false;
+        }
+        Animator animator = getGestureEndAnimation(mContainerView.getTranslationY(), mMaxDistance);
+        animator.addListener(new AnimatorListenerAdapter() {
+            @Override
+            public void onAnimationEnd(Animator animation) {
+                mIsBottomMode = true;
+            }
+        });
+        animator.start();
+        return true;
+    }
+
+    public void showView() {
+        if (mContainerMaxHeight <= 0 || mMaxDistance == 0) {
+            if (mContainerView.getHeight() > 0) {
+                mContainerMaxHeight = mContainerView.getHeight();
+                mMaxDistance = mContainerMaxHeight - mContainerMinHeight;
+            }
+        }
+        if (mContainerView.getTranslationY() == 0) {
+            return;
+        }
+        Animator animator = getGestureEndAnimation(mContainerView.getTranslationY(), 0);
+        animator.addListener(new AnimatorListenerAdapter() {
+            @Override
+            public void onAnimationEnd(Animator animation) {
+                mIsBottomMode = false;
+            }
+        });
+        animator.start();
+    }
+
     private Animator getGestureEndAnimation(float currentPosition, float targetPosition) {
         int duration;
         Interpolator interpolator;
