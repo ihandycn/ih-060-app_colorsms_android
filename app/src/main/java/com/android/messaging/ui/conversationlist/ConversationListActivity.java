@@ -245,12 +245,7 @@ public class ConversationListActivity extends AbstractConversationListActivity
         HSGlobalNotificationCenter.addObserver(BILLING_VERIFY_SUCCESS, this);
 
         BugleAnalytics.logEvent("SMS_ActiveUsers", true);
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                ExitAdConfig.preLoadExitAd();
-            }
-        }, 2000);
+        new Handler().postDelayed(ExitAdConfig::preLoadExitAd, 2000);
         if (!sIsRecreate) {
             Threads.postOnThreadPoolExecutor(() -> {
                 String bgPath = WallpaperManager.getWallpaperPathByConversationId(null);
@@ -837,13 +832,11 @@ public class ConversationListActivity extends AbstractConversationListActivity
 
                 @Override
                 public void onAdDisplayed() {
-                    new Handler().postDelayed(new Runnable() {
-                        @Override
-                        public void run() {
-                            mExitAppAnimationViewStub = findViewById(R.id.exit_app_stub);
-                            mExitAppAnimationViewStub.inflate();
-                            mLottieAnimationView = findViewById(R.id.exit_app_lottie);
-                        }
+                    new Handler().postDelayed(() -> {
+                        mExitAppAnimationViewStub = findViewById(R.id.exit_app_stub);
+                        mExitAppAnimationViewStub.inflate();
+                        mLottieAnimationView = findViewById(R.id.exit_app_lottie);
+                        mLottieAnimationView.useHardwareAcceleration();
                     }, 200);
                     mIsExitAdShown = true;
                     final ConversationListFragment conversationListFragment =
@@ -898,7 +891,6 @@ public class ConversationListActivity extends AbstractConversationListActivity
 
                         }
                     });
-                    mLottieAnimationView.useHardwareAcceleration();
                     mLottieAnimationView.playAnimation();
                 }
 
