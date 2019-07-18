@@ -797,8 +797,9 @@ public class ConversationListActivity extends AbstractConversationListActivity
             if (showInterstitialAd()) {
                 return;
             }
+        } else {
+            BugleAnalytics.logEvent("SMS_Messages_Back", true);
         }
-        BugleAnalytics.logEvent("SMS_Messages_Back", true);
         ExitAdAutopilotUtils.logSmsExitApp();
         HSLog.d("AdTest", "super.onBackPressed()");
         super.onBackPressed();
