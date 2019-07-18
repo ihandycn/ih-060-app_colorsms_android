@@ -15,16 +15,12 @@ public class WallpaperChooserItem {
             R.drawable.wallpaper_thumbnail_abstract,
             R.drawable.wallpaper_thumbnail_butterfly1,
             R.drawable.wallpaper_thumbnail_butterfly2,
+            R.drawable.wallpaper_thumbnail_sea,
             R.drawable.wallpaper_thumbnail_chocolate,
             R.drawable.wallpaper_thumbnail_dandelion1,
             R.drawable.wallpaper_thumbnail_dandelion2,
             R.drawable.wallpaper_thumbnail_dandelion3,
             R.drawable.wallpaper_thumbnail_flower,
-            R.drawable.wallpaper_thumbnail_frost,
-            R.drawable.wallpaper_thumbnail_gates_wood,
-            R.drawable.wallpaper_thumbnail_iceland,
-            R.drawable.wallpaper_thumbnail_sea,
-            R.drawable.wallpaper_thumbnail_winter,
             R.drawable.wallpaper_thumbnail_001,
             R.drawable.wallpaper_thumbnail_002,
             R.drawable.wallpaper_thumbnail_003,
@@ -44,8 +40,10 @@ public class WallpaperChooserItem {
             R.drawable.wallpaper_thumbnail_017,
             R.drawable.wallpaper_thumbnail_018,
             R.drawable.wallpaper_thumbnail_019,
-            R.drawable.wallpaper_thumbnail_020,
-            R.drawable.wallpaper_thumbnail_021
+            R.drawable.wallpaper_thumbnail_frost,
+            R.drawable.wallpaper_thumbnail_winter,
+            R.drawable.wallpaper_thumbnail_gates_wood,
+            R.drawable.wallpaper_thumbnail_iceland
     };
 
     private static final String sBaseUrl = "http://cdn.appcloudbox.net/smoothappsstudio/apps/bubble/chatbackground/";
@@ -54,16 +52,12 @@ public class WallpaperChooserItem {
             sBaseUrl + "wallpaper_abstract.jpg",
             sBaseUrl + "wallpaper_butterfly1.jpg",
             sBaseUrl + "wallpaper_butterfly2.jpg",
+            sBaseUrl + "wallpaper_sea.jpg",
             sBaseUrl + "wallpaper_chocolate.jpg",
             sBaseUrl + "wallpaper_dandelion1.jpg",
             sBaseUrl + "wallpaper_dandeline2.jpg",
             sBaseUrl + "wallpaper_dandelion3.jpg",
             sBaseUrl + "wallpaper_flower.jpg",
-            sBaseUrl + "wallpaper_forst.jpg",
-            sBaseUrl + "wallpaper_gates_wood.jpg",
-            sBaseUrl + "wallpaper_iceland.jpg",
-            sBaseUrl + "wallpaper_sea.jpg",
-            sBaseUrl + "wallpaper_winter.jpg",
             sBaseUrl + "wallpaper_001.jpg",
             sBaseUrl + "wallpaper_002.jpg",
             sBaseUrl + "wallpaper_003.jpg",
@@ -83,8 +77,10 @@ public class WallpaperChooserItem {
             sBaseUrl + "wallpaper_017.jpg",
             sBaseUrl + "wallpaper_018.jpg",
             sBaseUrl + "wallpaper_019.jpg",
-            sBaseUrl + "wallpaper_020.jpg",
-            sBaseUrl + "wallpaper_021.jpg"
+            sBaseUrl + "wallpaper_forst.jpg",
+            sBaseUrl + "wallpaper_winter.jpg",
+            sBaseUrl + "wallpaper_gates_wood.jpg",
+            sBaseUrl + "wallpaper_iceland.jpg"
     };
 
     public void setIndex(int mIndex) {
