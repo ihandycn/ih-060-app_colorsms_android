@@ -63,6 +63,7 @@ import com.android.messaging.util.CommonUtils;
 import com.android.messaging.util.DebugUtils;
 import com.android.messaging.util.DefaultSMSUtils;
 import com.android.messaging.util.DefaultSmsAppChangeObserver;
+import com.android.messaging.util.ExitAdConfig;
 import com.android.messaging.util.FabricUtils;
 import com.android.messaging.util.LogUtil;
 import com.android.messaging.util.OsUtil;
@@ -105,6 +106,7 @@ import net.appcloudbox.common.analytics.publisher.AcbPublisherMgr;
 import net.appcloudbox.common.utils.AcbApplicationHelper;
 import net.appcloudbox.service.AcbService;
 import net.appcloudbox.service.iap.AcbIAPKit;
+import net.appcloudbox.service.iap.AcbIAPTransaction;
 
 import org.json.JSONObject;
 
@@ -234,6 +236,7 @@ public class BugleApplication extends HSApplication implements UncaughtException
             BillingManager.init(BugleApplication.this, isPremiumUser -> {
                 if (!isPremiumUser) {
                     AdConfig.activeAllAdsReentrantly();
+                    new Handler().postDelayed(ExitAdConfig::preLoadExitAd, 2000);
                 } else {
                     AdConfig.deactiveAllAds();
                     Threads.postOnMainThread(() -> HSGlobalNotificationCenter.sendNotification(BILLING_VERIFY_SUCCESS));

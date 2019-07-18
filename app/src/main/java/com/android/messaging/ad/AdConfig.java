@@ -31,6 +31,7 @@ public class AdConfig {
     public static void deactiveAllAds() {
         AcbNativeAdManager.getInstance().deactivePlacementInProcess(AdPlacement.AD_BANNER);
         AcbInterstitialAdManager.getInstance().deactivePlacementInProcess(AdPlacement.AD_WIRE);
+        AcbInterstitialAdManager.getInstance().deactivePlacementInProcess(AdPlacement.AD_EXIT_WIRE);
         AcbNativeAdManager.getInstance().deactivePlacementInProcess(AdPlacement.AD_DETAIL_NATIVE);
         sIsAllAdActivated = false;
     }
@@ -40,6 +41,7 @@ public class AdConfig {
             sIsAllAdActivated = true;
             AcbNativeAdManager.getInstance().activePlacementInProcess(AdPlacement.AD_BANNER);
             AcbInterstitialAdManager.getInstance().activePlacementInProcess(AdPlacement.AD_WIRE);
+            AcbInterstitialAdManager.getInstance().activePlacementInProcess(AdPlacement.AD_EXIT_WIRE);
             AcbNativeAdManager.getInstance().activePlacementInProcess(AdPlacement.AD_DETAIL_NATIVE);
         }
     }

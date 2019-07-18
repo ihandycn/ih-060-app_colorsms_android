@@ -1,11 +1,13 @@
 package com.android.messaging.ui.conversationlist;
 
 import android.Manifest;
+import android.animation.Animator;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
 import android.provider.Telephony;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
@@ -24,11 +26,14 @@ import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewStub;
 import android.view.ViewTreeObserver;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.airbnb.lottie.LottieAnimationView;
 import com.android.messaging.BuildConfig;
+import com.android.messaging.Factory;
 import com.android.messaging.R;
 import com.android.messaging.ad.AdConfig;
 import com.android.messaging.ad.AdPlacement;
@@ -81,9 +86,12 @@ import com.android.messaging.ui.wallpaper.WallpaperDownloader;
 import com.android.messaging.ui.wallpaper.WallpaperManager;
 import com.android.messaging.ui.wallpaper.WallpaperPreviewActivity;
 import com.android.messaging.util.BugleAnalytics;
+import com.android.messaging.util.BuglePrefs;
 import com.android.messaging.util.BuglePrefsKeys;
 import com.android.messaging.util.CommonUtils;
 import com.android.messaging.util.CreateShortcutUtils;
+import com.android.messaging.util.ExitAdAutopilotUtils;
+import com.android.messaging.util.ExitAdConfig;
 import com.android.messaging.util.PhoneUtils;
 import com.android.messaging.util.TransitionUtils;
 import com.ihs.app.framework.HSApplication;
@@ -101,6 +109,9 @@ import com.superapps.util.RuntimePermissions;
 import com.superapps.util.Threads;
 import com.superapps.util.Toasts;
 
+import net.appcloudbox.ads.base.AcbInterstitialAd;
+import net.appcloudbox.ads.common.utils.AcbError;
+import net.appcloudbox.ads.interstitialad.AcbInterstitialAdManager;
 import net.appcloudbox.ads.nativead.AcbNativeAdManager;
 import net.appcloudbox.autopilot.AutopilotEvent;
 
@@ -114,6 +125,7 @@ import java.util.Map;
 import hugo.weaving.DebugLog;
 
 import static com.android.messaging.ad.BillingManager.BILLING_VERIFY_SUCCESS;
+import static com.android.messaging.ui.conversation.ConversationActivity.PREF_KEY_WIRE_AD_SHOW_TIME_FOR_EXIT_WIRE_AD;
 import static com.android.messaging.ui.dialog.FiveStarRateDialog.DESKTOP_PREFS;
 import static com.android.messaging.ui.dialog.FiveStarRateDialog.PREF_KEY_MAIN_ACTIVITY_SHOW_TIME;
 import static com.android.messaging.ui.invitefriends.InviteFriendsActivity.INTENT_KEY_FROM;
@@ -140,6 +152,8 @@ public class ConversationListActivity extends AbstractConversationListActivity
 
     public static final String EXTRA_FROM_DESKTOP_ICON = "extra_from_desktop_icon";
     public static final String PREF_KEY_CREATE_SHORTCUT_GUIDE_SHOWN = "pref_key_create_shortcut_guide_shown";
+    public static final String PREF_KEY_EXIT_WIRE_AD_SHOW_TIME = "pref_key_exit_wire_ad_show_time";
+    public static final String PREF_KEY_EXIT_WIRE_AD_SHOW_COUNT_IN_ONE_DAY = "pref_key_exit_wire_ad_show_count_in_one_day";
 
     private static final String NOTIFICATION_NAME_MESSAGES_MOVE_END = "conversation_list_move_end";
     private static final int REQUEST_PERMISSION_CODE = 1001;
@@ -160,6 +174,7 @@ public class ConversationListActivity extends AbstractConversationListActivity
     private static final int DRAWER_INDEX_EMOJI_STORE = 10;
     private static final int DRAWER_INDEX_REMOVE_ADS = 11;
 
+    private static final int MIN_AD_CLICK_DELAY_TIME = 300;
     private int drawerClickIndex = DRAWER_INDEX_NONE;
 
     // Drawer related stuff
@@ -170,12 +185,14 @@ public class ConversationListActivity extends AbstractConversationListActivity
 
     private static boolean mIsNoActionBack = true;
     private boolean mIsRealCreate = false;
-    private boolean shouldShowCreateShortcutGuide;
     private String size;
     private View mPrivateBoxEntrance;
+    private AcbInterstitialAd mInterstitialAd;
+    private long mLastAdClickTime = 0;
+    private boolean mIsExitAdShown;
 
     private boolean mIsMessageMoving;
-
+    private final BuglePrefs mPrefs = Factory.get().getApplicationPrefs();
     @Override
     @DebugLog
     protected void onCreate(final Bundle savedInstanceState) {
@@ -228,7 +245,12 @@ public class ConversationListActivity extends AbstractConversationListActivity
         HSGlobalNotificationCenter.addObserver(BILLING_VERIFY_SUCCESS, this);
 
         BugleAnalytics.logEvent("SMS_ActiveUsers", true);
-
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                ExitAdConfig.preLoadExitAd();
+            }
+        }, 2000);
         if (!sIsRecreate) {
             Threads.postOnThreadPoolExecutor(() -> {
                 String bgPath = WallpaperManager.getWallpaperPathByConversationId(null);
@@ -332,7 +354,9 @@ public class ConversationListActivity extends AbstractConversationListActivity
     @DebugLog
     protected void onResume() {
         super.onResume();
-
+        if (mIsExitAdShown){
+            return;
+        }
         AppPrivateLockManager.getInstance().lockAppLock();
         if (mPrivateBoxEntrance != null) {
             if (PrivateSettingManager.isPrivateBoxIconHidden()) {
@@ -683,7 +707,9 @@ public class ConversationListActivity extends AbstractConversationListActivity
     @Override
     protected void onDestroy() {
         super.onDestroy();
-
+        if (mInterstitialAd != null) {
+            mInterstitialAd.release();
+        }
         FiveStarRateDialog.dismissDialogs();
         HSGlobalNotificationCenter.removeObserver(this);
     }
@@ -704,7 +730,6 @@ public class ConversationListActivity extends AbstractConversationListActivity
                 && HSConfig.optBoolean(false, "Application", "ShortcutLikeSystemSMS")) {
             Drawable smsIcon = CreateShortcutUtils.getSystemSMSIcon();
             if (smsIcon != null && ShortcutManagerCompat.isRequestPinShortcutSupported(HSApplication.getContext())) {
-                shouldShowCreateShortcutGuide = true;
                 Preferences.getDefault().putBoolean(PREF_KEY_CREATE_SHORTCUT_GUIDE_SHOWN, true);
                 Navigations.startActivitySafely(ConversationListActivity.this,
                         new Intent(ConversationListActivity.this, CreateShortcutActivity.class));
@@ -714,29 +739,29 @@ public class ConversationListActivity extends AbstractConversationListActivity
 
         int mainActivityCreateTime = Preferences.get(DESKTOP_PREFS).getInt(PREF_KEY_MAIN_ACTIVITY_SHOW_TIME, 0);
         // show backup full guide
-        if (!shouldShowCreateShortcutGuide
-                && mainActivityCreateTime >= 2 && CommonUtils.isNewUser()
+        if (mainActivityCreateTime >= 2 && CommonUtils.isNewUser()
                 && !Preferences.getDefault().getBoolean(BackupRestoreActivity.PREF_KEY_BACKUP_ACTIVITY_SHOWN, false)
                 && !Preferences.getDefault()
                 .getBoolean(BackupGuideDialogActivity.PREF_KEY_BACKUP_FULL_GUIDE_SHOWN, false)
                 && BackupAutopilotUtils.getIsBackupSwitchOn()
                 && (HSConfig.optBoolean(false, "Application", "BackupRestore", "RecommendFull")
                 || BackupAutopilotUtils.getIsBackupFullScreenGuideSwitchOn())) {
-            shouldShowCreateShortcutGuide = true;
             Intent intent = new Intent(this, BackupGuideDialogActivity.class);
             Navigations.startActivitySafely(this, intent);
             return;
         }
 
-        if (!shouldShowCreateShortcutGuide
-                && FiveStarRateDialog.showShowFiveStarRateDialogOnBackToDesktopIfNeed(this)) {
+        if (FiveStarRateDialog.showShowFiveStarRateDialogOnBackToDesktopIfNeed(this)) {
             return;
         }
 
-        BugleAnalytics.logEvent("SMS_Messages_Back", true);
+        if (showInterstitialAd()) {
+            return;
+        }
+        ExitAdAutopilotUtils.logSmsExitApp();
         super.onBackPressed();
         overridePendingTransition(0, 0);
-        if (!shouldShowCreateShortcutGuide && mainActivityCreateTime >= 2) {
+        if (mainActivityCreateTime >= 2) {
             Preferences.getDefault().doOnce(
                     () -> UIIntentsImpl.get().launchDragHotSeatActivity(this),
                     DragHotSeatActivity.SHOW_DRAG_HOTSEAT);
@@ -761,6 +786,139 @@ public class ConversationListActivity extends AbstractConversationListActivity
                 }
         }
         return super.onOptionsItemSelected(menuItem);
+    }
+
+    private boolean showInterstitialAd() {
+        int exitAdShownCountInOneDay = mPrefs.getInt(PREF_KEY_EXIT_WIRE_AD_SHOW_COUNT_IN_ONE_DAY, 0);
+        if (BillingManager.isPremiumUser()) {
+            BugleAnalytics.logEvent("SMS_Messages_Back", true, "type", "premiumuser");
+            return false;
+        }
+        if (!(HSConfig.optBoolean(true, "Application", "SMSAd", "SMSExitAd", "Enabled")
+                && ExitAdAutopilotUtils.getIsExitAdSwitchOn())) {
+            BugleAnalytics.logEvent("SMS_Messages_Back", true, "type", "configdisabled");
+            return false;
+        }
+        if (Calendars.isSameDay(System.currentTimeMillis(), mPrefs.getLong(PREF_KEY_EXIT_WIRE_AD_SHOW_TIME, -1))) {
+            if (exitAdShownCountInOneDay == ExitAdAutopilotUtils.getExitAdShowMaxTimes()) {
+                BugleAnalytics.logEvent("SMS_Messages_Back", true, "type", "maxtimes");
+                return false;
+            }
+        } else {
+            exitAdShownCountInOneDay = 0;
+        }
+        if (System.currentTimeMillis() - CommonUtils.getAppInstallTimeMillis()
+                <= HSConfig.optInteger(2, "Application", "SMSAd", "SMSExitAd", "ShowAfterInstall") * DateUtils.HOUR_IN_MILLIS) {
+            BugleAnalytics.logEvent("SMS_Messages_Back", true, "type", "newuser");
+            return false;
+        }
+        if (System.currentTimeMillis() - mPrefs.getLong(PREF_KEY_EXIT_WIRE_AD_SHOW_TIME, -1)
+                < HSConfig.optInteger(5, "Application", "SMSAd", "SMSExitAd", "MinInterval") * DateUtils.MINUTE_IN_MILLIS) {
+            BugleAnalytics.logEvent("SMS_Messages_Back", true, "type", "exitadinterval");
+            return false;
+        }
+        if (System.currentTimeMillis() - mPrefs.getLong(PREF_KEY_WIRE_AD_SHOW_TIME_FOR_EXIT_WIRE_AD, -1)
+                < 20 * DateUtils.SECOND_IN_MILLIS) {
+            BugleAnalytics.logEvent("SMS_Messages_Back", true, "type", "fulladinterval");
+            return false;
+        }
+        BugleAnalytics.logEvent("SMS_Messages_Back", true, "type", "exitadchance");
+        BugleAnalytics.logEvent("SMS_ExitAd_Chance", true);
+        BugleAnalytics.logEvent("SMS_Ad", false, true, "type", "exitad_chance");
+        ExitAdAutopilotUtils.logExitAdChance();
+        List<AcbInterstitialAd> ads = AcbInterstitialAdManager.fetch(AdPlacement.AD_EXIT_WIRE, 1);
+        if (ads.size() > 0) {
+            ExitAdAutopilotUtils.logSmsExitApp();
+            mInterstitialAd = ads.get(0);
+            mInterstitialAd.setInterstitialAdListener(new AcbInterstitialAd.IAcbInterstitialAdListener() {
+
+                private LottieAnimationView mLottieAnimationView;
+                private ViewStub mExitAppAnimationViewStub;
+
+                @Override
+                public void onAdDisplayed() {
+                    new Handler().postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            mExitAppAnimationViewStub = findViewById(R.id.exit_app_stub);
+                            mExitAppAnimationViewStub.inflate();
+                            mLottieAnimationView = findViewById(R.id.exit_app_lottie);
+                        }
+                    }, 200);
+                    mIsExitAdShown = true;
+                    final ConversationListFragment conversationListFragment =
+                            (ConversationListFragment) getFragmentManager().findFragmentById(
+                                    R.id.conversation_list_fragment);
+                    if (conversationListFragment != null) {
+                        conversationListFragment.setExitAdShown(mIsExitAdShown);
+                    }
+                }
+
+                @Override
+                public void onAdClicked() {
+                    long currentTime = Calendar.getInstance().getTimeInMillis();
+                    if (currentTime - mLastAdClickTime > MIN_AD_CLICK_DELAY_TIME) {
+                        BugleAnalytics.logEvent("SMS_ExitAd_Click", true);
+                        BugleAnalytics.logEvent("SMS_Ad", false, true, "type", "exitad_click");
+                        ExitAdAutopilotUtils.logExitAdClick();
+                        mLastAdClickTime = currentTime;
+                    }
+                }
+
+                @Override
+                public void onAdClosed() {
+                    if (mInterstitialAd != null) {
+                        mInterstitialAd.release();
+                    }
+                    mLottieAnimationView.addAnimatorListener(new Animator.AnimatorListener() {
+                        @Override
+                        public void onAnimationStart(Animator animation) {
+
+                        }
+
+                        @Override
+                        public void onAnimationEnd(Animator animation) {
+                            finishWithoutOverridePendingTransition();
+                            overridePendingTransition(0, 0);
+                            int mainActivityCreateTime = Preferences.get(DESKTOP_PREFS).getInt(PREF_KEY_MAIN_ACTIVITY_SHOW_TIME, 0);
+                            if (mainActivityCreateTime >= 2) {
+                                Preferences.getDefault().doOnce(
+                                        () -> UIIntentsImpl.get().launchDragHotSeatActivity(ConversationListActivity.this),
+                                        DragHotSeatActivity.SHOW_DRAG_HOTSEAT);
+                            }
+                        }
+
+                        @Override
+                        public void onAnimationCancel(Animator animation) {
+
+                        }
+
+                        @Override
+                        public void onAnimationRepeat(Animator animation) {
+
+                        }
+                    });
+                    mLottieAnimationView.useHardwareAcceleration();
+                    mLottieAnimationView.playAnimation();
+                }
+
+                @Override
+                public void onAdDisplayFailed(AcbError acbError) {
+
+                }
+            });
+
+            mInterstitialAd.setSoundEnable(false);
+            mInterstitialAd.show();
+            BugleAnalytics.logEvent("SMS_ExitAd_Show", true);
+            BugleAnalytics.logEvent("SMS_Ad", false, true, "type", "exitad_show");
+            ExitAdAutopilotUtils.logExitAdShow();
+            mPrefs.putInt(PREF_KEY_EXIT_WIRE_AD_SHOW_COUNT_IN_ONE_DAY, exitAdShownCountInOneDay + 1);
+            mPrefs.putLong(PREF_KEY_EXIT_WIRE_AD_SHOW_TIME, System.currentTimeMillis());
+            return true;
+        } else {
+            return false;
+        }
     }
 
     @Override
