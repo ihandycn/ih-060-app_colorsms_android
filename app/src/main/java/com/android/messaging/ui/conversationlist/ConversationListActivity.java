@@ -195,8 +195,6 @@ public class ConversationListActivity extends AbstractConversationListActivity
 
     private boolean mIsMessageMoving;
     private final BuglePrefs mPrefs = Factory.get().getApplicationPrefs();
-    private HomeKeyWatcher mHomeKeyWatcher;
-    private ConstraintLayout mExitAppAnimationViewContainer;
     @Override
     @DebugLog
     protected void onCreate(final Bundle savedInstanceState) {
@@ -333,33 +331,6 @@ public class ConversationListActivity extends AbstractConversationListActivity
                 navigationView.getViewTreeObserver().removeOnGlobalLayoutListener(this);
             }
         });
-        
-        mHomeKeyWatcher = new HomeKeyWatcher(this);
-        mHomeKeyWatcher.setOnHomePressedListener(new HomeKeyWatcher.OnHomePressedListener() {
-            @Override
-            public void onHomePressed() {
-                if (mInterstitialAd != null){
-                    mInterstitialAd.release();
-                    mIsExitAdShown = false;
-                    final ConversationListFragment conversationListFragment =
-                            (ConversationListFragment) getFragmentManager().findFragmentById(
-                                    R.id.conversation_list_fragment);
-                    if (conversationListFragment != null) {
-                        HSLog.d("AdTest", "conversationListFragment != null");
-                        conversationListFragment.setExitAdShown(mIsExitAdShown);
-                    }
-                    if (mExitAppAnimationViewContainer != null){
-                        HSLog.d("AdTest", "mExitAppAnimationViewContainer != null");
-                        mExitAppAnimationViewContainer.setVisibility(View.GONE);
-                    }
-                }
-            }
-
-            @Override
-            public void onRecentsPressed() {
-            }
-        });
-        mHomeKeyWatcher.startWatch();
     }
 
     private void onPostPageVisible() {
@@ -740,11 +711,11 @@ public class ConversationListActivity extends AbstractConversationListActivity
     @Override
     protected void onDestroy() {
         super.onDestroy();
-
+        if (mInterstitialAd != null) {
+            mInterstitialAd.release();
+        }
         FiveStarRateDialog.dismissDialogs();
         HSGlobalNotificationCenter.removeObserver(this);
-        mHomeKeyWatcher.stopWatch();
-        mHomeKeyWatcher = null;
     }
 
     @Override
@@ -880,13 +851,14 @@ public class ConversationListActivity extends AbstractConversationListActivity
 
                 @Override
                 public void onAdDisplayed() {
-                    if (mExitAppAnimationViewContainer == null) {
-                        mExitAppAnimationViewStub = findViewById(R.id.exit_app_stub);
-                        mExitAppAnimationViewContainer = (ConstraintLayout) mExitAppAnimationViewStub.inflate();
-                        mLottieAnimationView = findViewById(R.id.exit_app_lottie);
-                    } else {
-                        mExitAppAnimationViewContainer.setVisibility(View.VISIBLE);
-                    }
+                    new Handler().postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            mExitAppAnimationViewStub = findViewById(R.id.exit_app_stub);
+                            mExitAppAnimationViewStub.inflate();
+                            mLottieAnimationView = findViewById(R.id.exit_app_lottie);
+                        }
+                    }, 200);
                     mIsExitAdShown = true;
                     final ConversationListFragment conversationListFragment =
                             (ConversationListFragment) getFragmentManager().findFragmentById(
@@ -909,7 +881,9 @@ public class ConversationListActivity extends AbstractConversationListActivity
 
                 @Override
                 public void onAdClosed() {
-                    mInterstitialAd.release();
+                    if (mInterstitialAd != null) {
+                        mInterstitialAd.release();
+                    }
                     mLottieAnimationView.addAnimatorListener(new Animator.AnimatorListener() {
                         @Override
                         public void onAnimationStart(Animator animation) {
@@ -918,7 +892,8 @@ public class ConversationListActivity extends AbstractConversationListActivity
 
                         @Override
                         public void onAnimationEnd(Animator animation) {
-                            finish();
+                            finishWithoutOverridePendingTransition();
+                            overridePendingTransition(0, 0);
                             int mainActivityCreateTime = Preferences.get(DESKTOP_PREFS).getInt(PREF_KEY_MAIN_ACTIVITY_SHOW_TIME, 0);
                             if (mainActivityCreateTime >= 2) {
                                 Preferences.getDefault().doOnce(
