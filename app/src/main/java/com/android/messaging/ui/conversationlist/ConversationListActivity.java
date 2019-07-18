@@ -187,7 +187,6 @@ public class ConversationListActivity extends AbstractConversationListActivity
 
     private static boolean mIsNoActionBack = true;
     private boolean mIsRealCreate = false;
-    private boolean shouldShowCreateShortcutGuide;
     private String size;
     private View mPrivateBoxEntrance;
     private AcbInterstitialAd mInterstitialAd;
@@ -764,7 +763,6 @@ public class ConversationListActivity extends AbstractConversationListActivity
                 && HSConfig.optBoolean(false, "Application", "ShortcutLikeSystemSMS")) {
             Drawable smsIcon = CreateShortcutUtils.getSystemSMSIcon();
             if (smsIcon != null && ShortcutManagerCompat.isRequestPinShortcutSupported(HSApplication.getContext())) {
-                shouldShowCreateShortcutGuide = true;
                 Preferences.getDefault().putBoolean(PREF_KEY_CREATE_SHORTCUT_GUIDE_SHOWN, true);
                 Navigations.startActivitySafely(ConversationListActivity.this,
                         new Intent(ConversationListActivity.this, CreateShortcutActivity.class));
@@ -774,37 +772,30 @@ public class ConversationListActivity extends AbstractConversationListActivity
 
         int mainActivityCreateTime = Preferences.get(DESKTOP_PREFS).getInt(PREF_KEY_MAIN_ACTIVITY_SHOW_TIME, 0);
         // show backup full guide
-        if (!shouldShowCreateShortcutGuide
-                && mainActivityCreateTime >= 2 && CommonUtils.isNewUser()
+        if (mainActivityCreateTime >= 2 && CommonUtils.isNewUser()
                 && !Preferences.getDefault().getBoolean(BackupRestoreActivity.PREF_KEY_BACKUP_ACTIVITY_SHOWN, false)
                 && !Preferences.getDefault()
                 .getBoolean(BackupGuideDialogActivity.PREF_KEY_BACKUP_FULL_GUIDE_SHOWN, false)
                 && BackupAutopilotUtils.getIsBackupSwitchOn()
                 && (HSConfig.optBoolean(false, "Application", "BackupRestore", "RecommendFull")
                 || BackupAutopilotUtils.getIsBackupFullScreenGuideSwitchOn())) {
-            shouldShowCreateShortcutGuide = true;
             Intent intent = new Intent(this, BackupGuideDialogActivity.class);
             Navigations.startActivitySafely(this, intent);
             return;
         }
 
-        if (!shouldShowCreateShortcutGuide
-                && FiveStarRateDialog.showShowFiveStarRateDialogOnBackToDesktopIfNeed(this)) {
+        if (FiveStarRateDialog.showShowFiveStarRateDialogOnBackToDesktopIfNeed(this)) {
             return;
         }
 
-        if (!shouldShowCreateShortcutGuide) {
-            if (showInterstitialAd()) {
-                return;
-            }
-        } else {
-            BugleAnalytics.logEvent("SMS_Messages_Back", true);
+        if (showInterstitialAd()) {
+            return;
         }
         ExitAdAutopilotUtils.logSmsExitApp();
         HSLog.d("AdTest", "super.onBackPressed()");
         super.onBackPressed();
         overridePendingTransition(0, 0);
-        if (!shouldShowCreateShortcutGuide && mainActivityCreateTime >= 2) {
+        if (mainActivityCreateTime >= 2) {
             Preferences.getDefault().doOnce(
                     () -> UIIntentsImpl.get().launchDragHotSeatActivity(this),
                     DragHotSeatActivity.SHOW_DRAG_HOTSEAT);
@@ -880,13 +871,15 @@ public class ConversationListActivity extends AbstractConversationListActivity
         if (ads.size() > 0) {
             mInterstitialAd = ads.get(0);
             mInterstitialAd.setInterstitialAdListener(new AcbInterstitialAd.IAcbInterstitialAdListener() {
-                LottieAnimationView mLottieAnimationView;
-                ViewStub mViewStub;
+
+                private LottieAnimationView mLottieAnimationView;
+                private ViewStub mExitAppAnimationViewStub;
+
                 @Override
                 public void onAdDisplayed() {
                     if (mExitAppAnimationViewContainer == null) {
-                        mViewStub = findViewById(R.id.exit_app_stub);
-                        mExitAppAnimationViewContainer = (ConstraintLayout) mViewStub.inflate();
+                        mExitAppAnimationViewStub = findViewById(R.id.exit_app_stub);
+                        mExitAppAnimationViewContainer = (ConstraintLayout) mExitAppAnimationViewStub.inflate();
                         mLottieAnimationView = findViewById(R.id.exit_app_lottie);
                     } else {
                         mExitAppAnimationViewContainer.setVisibility(View.VISIBLE);
@@ -922,11 +915,10 @@ public class ConversationListActivity extends AbstractConversationListActivity
 
                         @Override
                         public void onAnimationEnd(Animator animation) {
-                            BugleAnalytics.logEvent("SMS_Messages_Back", true);
                             ExitAdAutopilotUtils.logSmsExitApp();
                             finish();
                             int mainActivityCreateTime = Preferences.get(DESKTOP_PREFS).getInt(PREF_KEY_MAIN_ACTIVITY_SHOW_TIME, 0);
-                            if (!shouldShowCreateShortcutGuide && mainActivityCreateTime >= 2) {
+                            if (mainActivityCreateTime >= 2) {
                                 Preferences.getDefault().doOnce(
                                         () -> UIIntentsImpl.get().launchDragHotSeatActivity(ConversationListActivity.this),
                                         DragHotSeatActivity.SHOW_DRAG_HOTSEAT);
@@ -953,6 +945,7 @@ public class ConversationListActivity extends AbstractConversationListActivity
 
                 }
             });
+
             mInterstitialAd.setSoundEnable(false);
             mInterstitialAd.show();
             BugleAnalytics.logEvent("SMS_ExitAd_Show", true);
