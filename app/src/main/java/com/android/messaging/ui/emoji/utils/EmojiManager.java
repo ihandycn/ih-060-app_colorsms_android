@@ -15,7 +15,6 @@ import com.android.messaging.ui.emoji.EmojiInfo;
 import com.android.messaging.ui.emoji.EmojiPackageType;
 import com.android.messaging.ui.emoji.GiphyInfo;
 import com.android.messaging.ui.emoji.StickerInfo;
-import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.target.SimpleTarget;
 import com.bumptech.glide.request.transition.Transition;
 import com.ihs.commons.utils.HSLog;
@@ -41,6 +40,7 @@ public class EmojiManager {
     private static final String PREF_STICKER_MAGIC_SOUND_URL_PREFIX = "pref_sticker_magic_sound_url_";
     private static final String PREF_STICKER_MAGIC_FILE_URI = "pref_sticker_magic_file_uri";
     private static final String PREF_DEFAULT_MAIN_POSITION = "pref_default_main_position";
+    private static final String PREF_FIRST_VARIANT_CLICK = "pref_first_variant_click";
 
     private static final String PREF_SKIN_FILE_NAME = "pref_skin_record";
     private static final String PREF_SKIN_SET_DEFAULT = "pref_skin_set_default";
@@ -319,5 +319,11 @@ public class EmojiManager {
 
     public static void setDefaultMainPosition(int position){
         Preferences.get(PREF_FILE_NAME).putInt(PREF_DEFAULT_MAIN_POSITION, position);
+    }
+
+    public static boolean isFirstEmojiVariantClick(){
+        boolean result = Preferences.get(PREF_FILE_NAME).getBoolean(PREF_FIRST_VARIANT_CLICK, true);
+        Preferences.get(PREF_FILE_NAME).putBoolean(PREF_FIRST_VARIANT_CLICK, false);
+        return result;
     }
 }

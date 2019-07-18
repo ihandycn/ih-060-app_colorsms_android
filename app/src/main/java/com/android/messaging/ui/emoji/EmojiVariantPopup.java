@@ -13,6 +13,7 @@ import android.view.ViewGroup.MarginLayoutParams;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
+import android.widget.Toast;
 
 import com.android.messaging.R;
 import com.android.messaging.ui.emoji.utils.EmojiManager;
@@ -104,16 +105,19 @@ public class EmojiVariantPopup {
                 public void onClick(View view) {
                     if (mListener != null) {
                         item.isRecent = emojiInfo.isRecent;
-                        if(emojiInfo.isRecent) {
+                        if (emojiInfo.isRecent) {
                             mListener.emojiClick(item, false);
-                        }else{
+                        } else {
                             mListener.emojiClick(item, true);
                         }
                     }
                     EmojiManager.addSkinSingleRecord(item.getUnicode(), item.mEmoji);
                     emojiInfo.mEmoji = item.mEmoji;
-                    ((ImageView)mAnchorView).setImageDrawable(new EmojiItemRecyclerAdapter.EmojiDrawable(emojiInfo.mEmoji));
+                    ((ImageView) mAnchorView).setImageDrawable(new EmojiItemRecyclerAdapter.EmojiDrawable(emojiInfo.mEmoji));
                     mPopupWindow.dismiss();
+                    if (EmojiManager.isFirstEmojiVariantClick()) {
+                        Toast.makeText(context, context.getResources().getString(R.string.emoji_long_click), Toast.LENGTH_LONG).show();
+                    }
                 }
             });
             view.setBackground(BackgroundDrawables.createBackgroundDrawable(
