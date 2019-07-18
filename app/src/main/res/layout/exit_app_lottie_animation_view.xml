@@ -7,8 +7,8 @@
 
     <com.airbnb.lottie.LottieAnimationView
         android:id="@+id/exit_app_lottie"
-        android:layout_width="192dp"
-        android:layout_height="281.7dp"
+        android:layout_width="226.7dp"
+        android:layout_height="353.3dp"
         android:layout_gravity="center_horizontal"
         app:lottie_fileName="lottie/exit_app.json"
         app:lottie_imageAssetsFolder="lottie/exit_app/"
