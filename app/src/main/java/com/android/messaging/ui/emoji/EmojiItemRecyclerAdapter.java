@@ -12,6 +12,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import com.android.messaging.R;
 import com.superapps.util.BackgroundDrawables;
@@ -99,6 +100,7 @@ public class EmojiItemRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.
                             if (mOnEmojiClickListener != null) {
                                 EmojiInfo info = (EmojiInfo) emojiHolder.itemView.getTag();
                                 mOnEmojiClickListener.emojiLongClick(emojiHolder.emojiView, info);
+                                Toast.makeText(mContext, mContext.getResources().getString(R.string.emoji_long_click), Toast.LENGTH_LONG).show();
                             }
                             return true;
                         }
