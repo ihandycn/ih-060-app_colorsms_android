@@ -37,7 +37,7 @@ public class ChatListChooseColorRecommendViewHolder extends BasePagerViewHolder 
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new GridLayoutManager(mContext, 4));
 
-        float size = Dimensions.pxFromDp(44.3f);
+        float size = Dimensions.getPhoneWidth(mContext) * 0.125f;
         recyclerView.setPadding(Dimensions.pxFromDp(47f), Dimensions.pxFromDp(10f), Dimensions.pxFromDp(47f), Dimensions.pxFromDp(10f));
         recyclerView.addItemDecoration(new RecommendColorItemDecoration(4, 2, (int) size, (int) size));
         mAdapter = new ChatListChooseColorRecommendAdapter(mContext);

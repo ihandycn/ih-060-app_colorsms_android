@@ -78,13 +78,14 @@ public class ChatListDrawableManager {
     }
 
     public static void changeDrawableColorIfNeed(Drawable drawable) {
-        if (!sHasCustomWallpaper) {
-            drawable.clearColorFilter();
-            return;
-        }
+        changeDrawableColorIfNeed(drawable, true);
+    }
 
-        if (sUseThemeColor) {
-            drawable.clearColorFilter();
+    public static void changeDrawableColorIfNeed(Drawable drawable, boolean clearFilterIfNotNeed) {
+        if (!sHasCustomWallpaper || sUseThemeColor) {
+            if (clearFilterIfNotNeed) {
+                drawable.clearColorFilter();
+            }
             return;
         }
         drawable.setColorFilter(sCurrentTextColor, PorterDuff.Mode.SRC_IN);

@@ -96,10 +96,7 @@ public class ChatListCustomizeControlView extends ConstraintLayout {
     }
 
     public boolean hideControlView() {
-        if (mSwipeHelper != null) {
-            return mSwipeHelper.hideView();
-        }
-        return false;
+        return mSwipeHelper != null && mSwipeHelper.hideView();
     }
 
     @Override
@@ -167,10 +164,14 @@ public class ChatListCustomizeControlView extends ConstraintLayout {
         }
         backBtn.setBackground(BackgroundDrawables.createBackgroundDrawable(
                 getContext().getResources().getColor(R.color.black_60_transparent),
-                Dimensions.pxFromDp(33.3f) / 2, true));
+                getContext().getResources().getColor(com.superapps.R.color.ripples_ripple_color),
+                Dimensions.pxFromDp(1), getContext().getResources().getColor(R.color.white_50_transparent),
+                Dimensions.pxFromDp(33.3f) / 2, true, true));
         applyBtn.setBackground(BackgroundDrawables.createBackgroundDrawable(
                 getContext().getResources().getColor(R.color.black_60_transparent),
-                Dimensions.pxFromDp(33.3f) / 2, true));
+                getContext().getResources().getColor(com.superapps.R.color.ripples_ripple_color),
+                Dimensions.pxFromDp(1), getContext().getResources().getColor(R.color.white_50_transparent),
+                Dimensions.pxFromDp(33.3f) / 2, true, true));
 
         backBtn.setOnClickListener(v -> {
             if (mChangeListener != null) {
@@ -368,17 +369,26 @@ public class ChatListCustomizeControlView extends ConstraintLayout {
     public class WallpaperChooserAdapter extends RecyclerView.Adapter<WallpaperChooserViewHolder> {
         private List<WallpaperChooserItem> wallpaperInfoList;
         private Context mContext;
+        private int mItemViewWidth;
+        private int mItemPadding;
 
         WallpaperChooserAdapter(Context context, List<WallpaperChooserItem> wallpaperInfos) {
             mContext = context;
             wallpaperInfoList = wallpaperInfos;
+            mItemViewWidth = (int) (Dimensions.getPhoneHeight(context) * 58.7f / 640);
+            mItemPadding = (int) (mItemViewWidth * 5.3f / 58.7f);
         }
 
         @NonNull
         @Override
         public WallpaperChooserViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-            return new WallpaperChooserViewHolder(
-                    LayoutInflater.from(mContext).inflate(R.layout.chat_list_wallpaper_choose_layout, parent, false));
+            View itemView = LayoutInflater.from(mContext).inflate(R.layout.chat_list_wallpaper_choose_layout, parent, false);
+            RecyclerView.LayoutParams params = (RecyclerView.LayoutParams) itemView.getLayoutParams();
+            params.height = mItemViewWidth;
+            params.width = mItemViewWidth;
+            params.setMarginStart(mItemPadding);
+            itemView.setLayoutParams(params);
+            return new WallpaperChooserViewHolder(itemView);
         }
 
         @Override

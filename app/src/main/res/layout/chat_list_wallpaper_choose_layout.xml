@@ -4,9 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="64dp"
     android:layout_height="58.7dp"
-    android:gravity="center_vertical"
-    android:paddingLeft="2.6dp"
-    android:paddingRight="2.6dp">
+    android:gravity="center_vertical">
 
     <FrameLayout
         android:id="@+id/wallpaper_chooser_add_photo_container"
@@ -15,9 +13,9 @@
         android:visibility="gone">
 
         <ImageView
-            android:layout_gravity="center"
             android:layout_width="22dp"
             android:layout_height="22dp"
+            android:layout_gravity="center"
             android:src="@drawable/list_wallpaper_add_photo"
             tools:ignore="ContentDescription" />
     </FrameLayout>
@@ -26,7 +24,7 @@
         android:id="@+id/wallpaper_chooser_item_iv"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        app:radius="3.3dp"/>
+        app:radius="3.3dp" />
 
     <View
         android:id="@+id/wallpaper_loading_bg"

@@ -32,6 +32,8 @@
     <color name="white">#FFFFFFFF</color>
     <color name="white_20_transparent">#32FFFFFF</color>
     <color name="white_40_transparent">#66FFFFFF</color>
+    <color name="white_50_transparent">#8fFFFFFF</color>
+    <color name="white_60_transparent">#99FFFFFF</color>
     <color name="white_70_transparent">#B3FFFFFF</color>
 
     <!--  Action bar -->

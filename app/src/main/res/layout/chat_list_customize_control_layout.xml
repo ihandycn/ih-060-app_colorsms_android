@@ -69,9 +69,8 @@
 
         <View
             android:id="@+id/chat_list_customize_touch_view"
-            android:layout_width="105.3dp"
-            android:layout_height="32dp"
-            android:layout_gravity="center_horizontal" />
+            android:layout_width="match_parent"
+            android:layout_height="32dp" />
 
         <android.support.constraint.ConstraintLayout
             android:id="@+id/chat_list_bg_select_container"
@@ -84,7 +83,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/chat_list_control_area_padding"
-                android:layout_marginTop="5.3dp"
+                android:layout_marginTop="6.3dp"
                 android:text="@string/chat_list_change_background"
                 android:textColor="#4f5157"
                 android:textSize="14sp"
@@ -95,9 +94,9 @@
             <FrameLayout
                 android:id="@+id/chooser_container"
                 android:layout_width="0dp"
-                android:layout_height="58.7dp"
+                android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/chat_list_control_area_padding"
-                android:layout_marginTop="14.7dp"
+                android:layout_marginTop="13.7dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/change_bg_title">
@@ -115,7 +114,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/chat_list_control_area_padding"
-                android:layout_marginTop="31dp"
+                android:layout_marginTop="32dp"
                 android:text="@string/chat_list_background_opacity"
                 android:textColor="#4f5157"
                 android:textSize="14sp"
@@ -140,7 +139,7 @@
                 android:layout_height="match_parent"
                 android:layout_marginEnd="@dimen/chat_list_control_area_padding"
                 android:layout_marginStart="@dimen/chat_list_control_area_padding"
-                android:layout_marginTop="12.3dp"
+                android:layout_marginTop="11.3dp"
                 android:background="@null"
                 android:paddingEnd="11.5dp"
                 android:paddingStart="11.5dp"

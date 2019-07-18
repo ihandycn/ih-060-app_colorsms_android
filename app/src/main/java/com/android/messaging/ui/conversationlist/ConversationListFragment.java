@@ -636,7 +636,7 @@ public class ConversationListFragment extends Fragment implements ConversationLi
 
         ImageView ivAdPreview = adView.findViewById(R.id.icon_ad_preview);
         ivAdPreview.getDrawable().setColorFilter(ConversationColors.get().getListTimeColor(), PorterDuff.Mode.SRC_ATOP);
-        ChatListDrawableManager.changeDrawableColorIfNeed(ivAdPreview.getDrawable());
+        ChatListDrawableManager.changeDrawableColorIfNeed(ivAdPreview.getDrawable(), false);
 
         mAdContentView.hideAdCorner();
         mAdContentView.fillNativeAd(mNativeAd);
