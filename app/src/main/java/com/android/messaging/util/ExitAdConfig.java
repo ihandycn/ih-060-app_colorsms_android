@@ -6,7 +6,6 @@ import com.android.messaging.Factory;
 import com.android.messaging.ad.AdPlacement;
 import com.android.messaging.ad.BillingManager;
 import com.ihs.commons.config.HSConfig;
-import com.ihs.commons.utils.HSLog;
 import com.superapps.util.Calendars;
 
 import net.appcloudbox.ads.interstitialad.AcbInterstitialAdManager;
@@ -26,7 +25,6 @@ public class ExitAdConfig {
                 > HSConfig.optInteger(2, "Application", "SMSAd", "SMSExitAd", "ShowAfterInstall") * DateUtils.HOUR_IN_MILLIS
                 && !(Calendars.isSameDay(System.currentTimeMillis(), mPrefs.getLong(PREF_KEY_EXIT_WIRE_AD_SHOW_TIME, -1))
                 && mPrefs.getInt(PREF_KEY_EXIT_WIRE_AD_SHOW_COUNT_IN_ONE_DAY, 0) == ExitAdAutopilotUtils.getExitAdShowMaxTimes())) {
-            HSLog.d("AdTest", "AcbInterstitialAdManager.preload(1, AdPlacement.AD_EXIT_WIRE);");
             AcbInterstitialAdManager.preload(1, AdPlacement.AD_EXIT_WIRE);
         }
     }

@@ -36,7 +36,6 @@ import android.text.TextUtils;
 
 import com.android.ex.photo.util.PhotoViewAnalytics;
 import com.android.messaging.ad.AdConfig;
-import com.android.messaging.ad.AdPlacement;
 import com.android.messaging.ad.BillingManager;
 import com.android.messaging.datamodel.DataModel;
 import com.android.messaging.debug.BlockCanaryConfig;
@@ -98,8 +97,6 @@ import com.superapps.util.Preferences;
 import com.superapps.util.Threads;
 
 import net.appcloudbox.AcbAds;
-import net.appcloudbox.ads.interstitialad.AcbInterstitialAdManager;
-import net.appcloudbox.ads.nativead.AcbNativeAdManager;
 import net.appcloudbox.autopilot.AutopilotConfig;
 import net.appcloudbox.autopilot.core.PrefsUtils;
 import net.appcloudbox.common.analytics.publisher.AcbPublisherMgr;
@@ -169,7 +166,6 @@ public class BugleApplication extends HSApplication implements UncaughtException
 
     @Override
     public void onCreate() {
-        HSLog.d("AdTest", "BugleApplication onCreate");
         Trace.beginSection("app.onCreate");
         try {
             super.onCreate();
@@ -185,7 +181,6 @@ public class BugleApplication extends HSApplication implements UncaughtException
             String processName = getProcessName();
             boolean isOnMainProcess = TextUtils.equals(processName, packageName);
             if (isOnMainProcess) {
-                HSLog.d("AdTest", "BugleApplication onMainProcessApplicationCreate();");
                 onMainProcessApplicationCreate();
             }
 
@@ -215,7 +210,6 @@ public class BugleApplication extends HSApplication implements UncaughtException
     }
 
     private void initAd() {
-        HSLog.d("AdTest", "initAd()");
         if (HSGdprConsent.isGdprUser()) {
             if (HSGdprConsent.getConsentState() != HSGdprConsent.ConsentState.ACCEPTED) {
                 AcbAds.getInstance().setGdprInfo(GDPR_USER, GDPR_NOT_GRANTED);
@@ -223,17 +217,13 @@ public class BugleApplication extends HSApplication implements UncaughtException
         }
 
         if (AcbIAPTransaction.isServiceAvailable()) {
-            HSLog.d("AdTest", "AcbIAPTransaction.isServiceAvailable() = true");
             BillingManager.init(this, isPremiumUser -> {
-                HSLog.d("AdTest", "BillingManager.init");
                 if (!isPremiumUser) {
-                    HSLog.d("AdTest", "AdConfig.activeAllAdsReentrantly();");
                     AcbAds.getInstance().initializeFromGoldenEye(BugleApplication.this);
                     AdConfig.activeAllAdsReentrantly();
                     new Handler().postDelayed(new Runnable() {
                         @Override
                         public void run() {
-                            HSLog.d("AdTest", "BugleApplication Preload");
                             ExitAdConfig.preLoadExitAd();
                         }
                     }, 2000);

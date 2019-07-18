@@ -10,7 +10,6 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.provider.Telephony;
 import android.support.annotation.NonNull;
-import android.support.constraint.ConstraintLayout;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.content.pm.ShortcutManagerCompat;
@@ -104,7 +103,6 @@ import com.ihs.commons.utils.HSLog;
 import com.superapps.util.BackgroundDrawables;
 import com.superapps.util.Calendars;
 import com.superapps.util.Dimensions;
-import com.superapps.util.HomeKeyWatcher;
 import com.superapps.util.Navigations;
 import com.superapps.util.Preferences;
 import com.superapps.util.RuntimePermissions;
@@ -198,7 +196,6 @@ public class ConversationListActivity extends AbstractConversationListActivity
     @Override
     @DebugLog
     protected void onCreate(final Bundle savedInstanceState) {
-        HSLog.d("AdTest", "ConversationListActivity onCreate");
         super.onCreate(savedInstanceState);
 
         if (mShouldFinishThisTime) {
@@ -248,13 +245,9 @@ public class ConversationListActivity extends AbstractConversationListActivity
         HSGlobalNotificationCenter.addObserver(BILLING_VERIFY_SUCCESS, this);
 
         BugleAnalytics.logEvent("SMS_ActiveUsers", true);
-        HSLog.d("AdTest", "Before AD_EXIT_WIRE Preload");
-        HSLog.d("AdTest", "AD_EXIT_WIRE JUDGE 1 = " + HSConfig.optBoolean(true, "Application", "SMSAd", "SMSExitAd", "Enabled"));
-        HSLog.d("AdTest", "AD_EXIT_WIRE JUDGE 2 = " + ExitAdAutopilotUtils.getIsExitAdSwitchOn());
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
-                HSLog.d("AdTest", "ConversationListActivity Preload");
                 ExitAdConfig.preLoadExitAd();
             }
         }, 2000);
@@ -763,7 +756,6 @@ public class ConversationListActivity extends AbstractConversationListActivity
             return;
         }
         ExitAdAutopilotUtils.logSmsExitApp();
-        HSLog.d("AdTest", "super.onBackPressed()");
         super.onBackPressed();
         overridePendingTransition(0, 0);
         if (mainActivityCreateTime >= 2) {
@@ -805,19 +797,11 @@ public class ConversationListActivity extends AbstractConversationListActivity
             return false;
         }
         if (Calendars.isSameDay(System.currentTimeMillis(), mPrefs.getLong(PREF_KEY_EXIT_WIRE_AD_SHOW_TIME, -1))) {
-            HSLog.d("AdTest", "Calendars.isSameDay = true");
-            HSLog.d("AdTest", "exitAdShownCountInOneDay <= ExitAdAutopilotUtils.getExitAdShowMaxTimes()");
-            HSLog.d("AdTest", "exitAdShownCountInOneDay = " + exitAdShownCountInOneDay);
-            HSLog.d("AdTest", "ExitAdAutopilotUtils.getExitAdShowMaxTimes() = " + ExitAdAutopilotUtils.getExitAdShowMaxTimes());
             if (exitAdShownCountInOneDay == ExitAdAutopilotUtils.getExitAdShowMaxTimes()) {
-                HSLog.d("AdTest", "exitAdShownCountInOneDay == ExitAdAutopilotUtils.getExitAdShowMaxTimes()");
-                HSLog.d("AdTest", "exitAdShownCountInOneDay = " + exitAdShownCountInOneDay);
-                HSLog.d("AdTest", "ExitAdAutopilotUtils.getExitAdShowMaxTimes() = " + ExitAdAutopilotUtils.getExitAdShowMaxTimes());
                 BugleAnalytics.logEvent("SMS_Messages_Back", true, "type", "maxtimes");
                 return false;
             }
         } else {
-            HSLog.d("AdTest", "Calendars.isSameDay = false");
             exitAdShownCountInOneDay = 0;
         }
         if (System.currentTimeMillis() - CommonUtils.getAppInstallTimeMillis()
@@ -840,7 +824,6 @@ public class ConversationListActivity extends AbstractConversationListActivity
         BugleAnalytics.logEvent("SMS_Ad", false, true, "type", "exitad_chance");
         ExitAdAutopilotUtils.logExitAdChance();
         List<AcbInterstitialAd> ads = AcbInterstitialAdManager.fetch(AdPlacement.AD_EXIT_WIRE, 1);
-        HSLog.d("AdTest", "List<AcbInterstitialAd> ads = AcbInterstitialAdManager.fetch(AdPlacement.AD_EXIT_WIRE, 1);");
         if (ads.size() > 0) {
             ExitAdAutopilotUtils.logSmsExitApp();
             mInterstitialAd = ads.get(0);
@@ -900,7 +883,6 @@ public class ConversationListActivity extends AbstractConversationListActivity
                                         () -> UIIntentsImpl.get().launchDragHotSeatActivity(ConversationListActivity.this),
                                         DragHotSeatActivity.SHOW_DRAG_HOTSEAT);
                             }
-                            HSLog.d("AdTest", "onAdClosed");
                         }
 
                         @Override
@@ -930,7 +912,6 @@ public class ConversationListActivity extends AbstractConversationListActivity
             ExitAdAutopilotUtils.logExitAdShow();
             mPrefs.putInt(PREF_KEY_EXIT_WIRE_AD_SHOW_COUNT_IN_ONE_DAY, exitAdShownCountInOneDay + 1);
             mPrefs.putLong(PREF_KEY_EXIT_WIRE_AD_SHOW_TIME, System.currentTimeMillis());
-            HSLog.d("AdTest", "SMS_ExitAd_Show");
             return true;
         } else {
             return false;
