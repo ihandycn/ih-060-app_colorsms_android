@@ -162,7 +162,7 @@ public class WallpaperPreviewActivity extends BaseActivity implements WallpaperM
         RecyclerView wallpaperChooser = findViewById(R.id.wallpaper_chooser_container);
         wallpaperChooser.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
         wallpaperChooser.setAdapter(new WallpaperChooserAdapter(this, WallpaperManager.getWallpaperChooserList()));
-        wallpaperChooser.setItemViewCacheSize(15);
+        wallpaperChooser.setItemViewCacheSize(50);
 
         String conversationId = getIntent().getStringExtra("conversation_id");
         if (conversationId != null) {

@@ -113,7 +113,7 @@ public class ChatListCustomizeControlView extends ConstraintLayout {
         RecyclerView wallpaperChooser = findViewById(R.id.wallpaper_chooser_container);
         wallpaperChooser.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false));
         wallpaperChooser.setAdapter(new WallpaperChooserAdapter(getContext(), WallpaperManager.getWallpaperChooserList()));
-        wallpaperChooser.setItemViewCacheSize(15);
+        wallpaperChooser.setItemViewCacheSize(50);
     }
 
     private void initTouchArea() {
