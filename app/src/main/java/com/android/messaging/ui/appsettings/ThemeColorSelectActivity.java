@@ -118,7 +118,7 @@ public class ThemeColorSelectActivity extends BaseActivity implements OnColorCha
             Factory.get().reclaimMemory();
             // update drawable color cache
             ConversationDrawables.get().updateDrawables();
-            BugleAnalytics.logEvent("Customize_ThemeColor_Change", true, "color",
+            BugleAnalytics.logEvent("Customize_ThemeColor_Change", true, true, "color",
                     String.valueOf(getPrimaryColorType()), "withTheme", String.valueOf(!ThemeUtils.isDefaultTheme()));
             HSGlobalNotificationCenter.sendNotification(ConversationListActivity.EVENT_MAINPAGE_RECREATE);
         }
