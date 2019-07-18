@@ -825,10 +825,12 @@ public class ConversationListActivity extends AbstractConversationListActivity
     private boolean showInterstitialAd() {
         int exitAdShownCountInOneDay = mPrefs.getInt(PREF_KEY_EXIT_WIRE_AD_SHOW_COUNT_IN_ONE_DAY, 0);
         if (BillingManager.isPremiumUser()) {
+            BugleAnalytics.logEvent("SMS_Messages_Back", true, "type", "premiumuser");
             return false;
         }
         if (!(HSConfig.optBoolean(true, "Application", "SMSAd", "SMSExitAd", "Enabled")
                 && ExitAdAutopilotUtils.getIsExitAdSwitchOn())) {
+            BugleAnalytics.logEvent("SMS_Messages_Back", true, "type", "configdisabled");
             return false;
         }
         if (Calendars.isSameDay(System.currentTimeMillis(), mPrefs.getLong(PREF_KEY_EXIT_WIRE_AD_SHOW_TIME, -1))) {
@@ -869,6 +871,7 @@ public class ConversationListActivity extends AbstractConversationListActivity
         List<AcbInterstitialAd> ads = AcbInterstitialAdManager.fetch(AdPlacement.AD_EXIT_WIRE, 1);
         HSLog.d("AdTest", "List<AcbInterstitialAd> ads = AcbInterstitialAdManager.fetch(AdPlacement.AD_EXIT_WIRE, 1);");
         if (ads.size() > 0) {
+            ExitAdAutopilotUtils.logSmsExitApp();
             mInterstitialAd = ads.get(0);
             mInterstitialAd.setInterstitialAdListener(new AcbInterstitialAd.IAcbInterstitialAdListener() {
 
@@ -915,7 +918,6 @@ public class ConversationListActivity extends AbstractConversationListActivity
 
                         @Override
                         public void onAnimationEnd(Animator animation) {
-                            ExitAdAutopilotUtils.logSmsExitApp();
                             finish();
                             int mainActivityCreateTime = Preferences.get(DESKTOP_PREFS).getInt(PREF_KEY_MAIN_ACTIVITY_SHOW_TIME, 0);
                             if (mainActivityCreateTime >= 2) {
