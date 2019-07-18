@@ -798,4 +798,7 @@
 	<string name="life_time">SELAMANYA</string>
 	<string name="purchase_description">Beli versi BEBAS-IKLAN. Tak ada iklan lagi.</string>
 
+
+	<string name="emoji_skin_tone_setting">Warna Kulit Emoji </string>
+
 </resources>

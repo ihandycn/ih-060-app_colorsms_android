@@ -838,4 +838,7 @@
 	<string name="life_time">НАВСЕГДА</string>
 	<string name="purchase_description">Купите версию БЕЗ РЕКЛАМЫ. Больше никакой рекламы.</string>
 
+
+	<string name="emoji_skin_tone_setting">Цвет кожи эмотиконов</string>
+
 </resources>

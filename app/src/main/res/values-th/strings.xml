@@ -789,4 +789,7 @@
 	<string name="life_time">ตลอดชีพ</string>
 	<string name="purchase_description">ซื้อเวอร์ชันปลอดโฆษณา ไม่มีโฆษณาอีกต่อไป</string>
 
+
+	<string name="emoji_skin_tone_setting">สีผิวอิโมจิ </string>
+
 </resources>

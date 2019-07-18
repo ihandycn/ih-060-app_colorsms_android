@@ -793,4 +793,7 @@
 	<string name="life_time">NUNCA</string>
 	<string name="purchase_description">Compra la versión sin publicidad. Ningún anuncio nunca más.</string>
 
+    <string name="emoji_long_click"> El tono de máscara predeterminado se puede configurar en Configuración. </string>
+	<string name="emoji_skin_tone_setting">Tono de aspecto de emoji </string>
+
 </resources>

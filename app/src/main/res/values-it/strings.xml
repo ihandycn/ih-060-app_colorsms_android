@@ -791,4 +791,7 @@
 	<string name="life_time">PER SEMPRE</string>
 	<string name="purchase_description">Acquista la versione SENZA PUBBLICITÀ. Mai più pubblicità.</string>
 
+
+	<string name="emoji_skin_tone_setting">Colore pelle emoji </string>
+
 </resources>

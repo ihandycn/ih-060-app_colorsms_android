@@ -791,4 +791,7 @@
 	<string name="life_time">永久的</string>
 	<string name="purchase_description">広告なしバージョンを購入してください。もう広告を見ることはありません。</string>
 
+
+	<string name="emoji_skin_tone_setting">絵文字スキントーン</string>
+
 </resources>

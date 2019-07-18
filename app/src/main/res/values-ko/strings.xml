@@ -789,4 +789,7 @@
 	<string name="life_time">평생</string>
 	<string name="purchase_description">광고 없는 버전을 구매하세요. 다시는 광고가 표시되지 않음.</string>
 
+
+	<string name="emoji_skin_tone_setting">이모지 스킨 톤 </string>
+
 </resources>

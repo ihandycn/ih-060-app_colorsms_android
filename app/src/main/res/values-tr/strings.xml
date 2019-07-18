@@ -783,4 +783,7 @@
 	<string name="life_time">ÖMÜR BOYU</string>
 	<string name="purchase_description">REKLAMSIZ sürümü satın alın. Bir daha reklam görmeyin.</string>
 
+
+	<string name="emoji_skin_tone_setting">Emoji Dış Görünüm Rengi </string>
+
 </resources>

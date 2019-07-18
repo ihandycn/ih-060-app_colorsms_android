@@ -884,4 +884,7 @@
 	<string name="life_time">مدى الحياة</string>
 	<string name="purchase_description">اشتر النسخة الخالية من الإعلانات. لا إعلانات بعد الآن نهائياً.</string>
 
+
+	<string name="emoji_skin_tone_setting">ثيم الرموز التعبيرية </string>
+
 </resources>

@@ -784,4 +784,7 @@
 	<string name="life_time">LEBENSLANG</string>
 	<string name="purchase_description">Kaufen Sie die Version OHNE WERBUNG.Nie wieder Werbung.</string>
 
+
+	<string name="emoji_skin_tone_setting">Emoji-Hautfarbe </string>
+
 </resources>

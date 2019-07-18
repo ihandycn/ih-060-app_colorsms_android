@@ -791,4 +791,7 @@
 	<string name="life_time">TRỌN ĐỜI</string>
 	<string name="purchase_description">Mua phiên bản KHÔNG QUẢNG CÁO. Không còn quảng cáo.</string>
 
+
+	<string name="emoji_skin_tone_setting">Màu da Emoji </string>
+
 </resources>
