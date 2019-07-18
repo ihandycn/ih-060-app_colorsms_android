@@ -31,7 +31,9 @@ import android.view.ViewTreeObserver;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.airbnb.lottie.Cancellable;
 import com.airbnb.lottie.LottieAnimationView;
+import com.airbnb.lottie.LottieComposition;
 import com.android.messaging.BuildConfig;
 import com.android.messaging.Factory;
 import com.android.messaging.R;
@@ -121,6 +123,7 @@ import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.RejectedExecutionException;
 
 import hugo.weaving.DebugLog;
 
@@ -129,6 +132,7 @@ import static com.android.messaging.ui.conversation.ConversationActivity.PREF_KE
 import static com.android.messaging.ui.dialog.FiveStarRateDialog.DESKTOP_PREFS;
 import static com.android.messaging.ui.dialog.FiveStarRateDialog.PREF_KEY_MAIN_ACTIVITY_SHOW_TIME;
 import static com.android.messaging.ui.invitefriends.InviteFriendsActivity.INTENT_KEY_FROM;
+import static com.ihs.app.framework.HSApplication.getContext;
 
 public class ConversationListActivity extends AbstractConversationListActivity
         implements View.OnClickListener, INotificationObserver {
@@ -386,8 +390,8 @@ public class ConversationListActivity extends AbstractConversationListActivity
     }
 
     private static String getScreenSize() {
-        int screenWidth = Dimensions.getPhoneWidth(HSApplication.getContext());
-        int screenHeight = Dimensions.getPhoneHeight(HSApplication.getContext());
+        int screenWidth = Dimensions.getPhoneWidth(getContext());
+        int screenHeight = Dimensions.getPhoneHeight(getContext());
         return screenWidth + "x" + screenHeight;
     }
 
@@ -644,7 +648,7 @@ public class ConversationListActivity extends AbstractConversationListActivity
         navigationContent.findViewById(R.id.navigation_item_clear_private_parts).setOnClickListener(v -> {
             Threads.postOnSingleThreadExecutor(() -> {
                 List<Integer> privatePartIdList = new ArrayList<>();
-                final Cursor c = SqliteWrapper.query(HSApplication.getContext(), HSApplication.getContext().getContentResolver(),
+                final Cursor c = SqliteWrapper.query(getContext(), getContext().getContentResolver(),
                         Uri.parse("content://mms/part"),
                         new String[]{Telephony.Mms.Part._ID, Telephony.Mms.Part.MSG_ID},
                         Telephony.Mms.Part.MSG_ID + "< 0",
@@ -658,8 +662,8 @@ public class ConversationListActivity extends AbstractConversationListActivity
                     c.close();
                 }
                 for (int i = 0; i < privatePartIdList.size(); i++) {
-                    int k = SqliteWrapper.delete(HSApplication.getContext(),
-                            HSApplication.getContext().getContentResolver(),
+                    int k = SqliteWrapper.delete(getContext(),
+                            getContext().getContentResolver(),
                             Uri.parse("content://mms/part/" + privatePartIdList.get(i)), null, null);
                     if (k > 0) {
                         HSLog.d("---->>>>", "delete part : id = " + privatePartIdList.get(i));
@@ -724,7 +728,7 @@ public class ConversationListActivity extends AbstractConversationListActivity
         if (!Preferences.getDefault().contains(PREF_KEY_CREATE_SHORTCUT_GUIDE_SHOWN)
                 && HSConfig.optBoolean(false, "Application", "ShortcutLikeSystemSMS")) {
             Drawable smsIcon = CreateShortcutUtils.getSystemSMSIcon();
-            if (smsIcon != null && ShortcutManagerCompat.isRequestPinShortcutSupported(HSApplication.getContext())) {
+            if (smsIcon != null && ShortcutManagerCompat.isRequestPinShortcutSupported(getContext())) {
                 Preferences.getDefault().putBoolean(PREF_KEY_CREATE_SHORTCUT_GUIDE_SHOWN, true);
                 Navigations.startActivitySafely(ConversationListActivity.this,
                         new Intent(ConversationListActivity.this, CreateShortcutActivity.class));
@@ -829,6 +833,7 @@ public class ConversationListActivity extends AbstractConversationListActivity
 
                 private LottieAnimationView mLottieAnimationView;
                 private ViewStub mExitAppAnimationViewStub;
+                private Cancellable mAnimationLoadTask;
 
                 @Override
                 public void onAdDisplayed() {
@@ -837,6 +842,7 @@ public class ConversationListActivity extends AbstractConversationListActivity
                         mExitAppAnimationViewStub.inflate();
                         mLottieAnimationView = findViewById(R.id.exit_app_lottie);
                         mLottieAnimationView.useHardwareAcceleration();
+                        loadAnimation();
                     }, 200);
                     mIsExitAdShown = true;
                     final ConversationListFragment conversationListFragment =
@@ -897,6 +903,28 @@ public class ConversationListActivity extends AbstractConversationListActivity
                 @Override
                 public void onAdDisplayFailed(AcbError acbError) {
 
+                }
+
+                private void loadAnimation() {
+                    cancelAnimationLoadTask();
+                    try {
+                        mAnimationLoadTask = LottieComposition.Factory.fromAssetFileName(getContext(),
+                                "lottie/exit_app.json", lottieComposition -> {
+                                    if (lottieComposition != null) {
+                                        mLottieAnimationView.setComposition(lottieComposition);
+                                        mLottieAnimationView.setProgress(0f);
+                                    }
+                                });
+                    } catch (RejectedExecutionException e) {
+                        e.printStackTrace();
+                    }
+                }
+
+                private void cancelAnimationLoadTask() {
+                    if (mAnimationLoadTask != null) {
+                        mAnimationLoadTask.cancel();
+                        mAnimationLoadTask = null;
+                    }
                 }
             });
 
