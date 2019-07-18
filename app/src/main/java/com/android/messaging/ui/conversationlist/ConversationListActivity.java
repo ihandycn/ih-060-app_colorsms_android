@@ -10,6 +10,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.provider.Telephony;
 import android.support.annotation.NonNull;
+import android.support.constraint.ConstraintLayout;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.content.pm.ShortcutManagerCompat;
@@ -49,7 +50,6 @@ import com.android.messaging.datamodel.DatabaseHelper;
 import com.android.messaging.datamodel.DatabaseWrapper;
 import com.android.messaging.datamodel.data.MessageBoxItemData;
 import com.android.messaging.font.ChangeFontActivity;
-import com.android.messaging.font.FontDownloadManager;
 import com.android.messaging.font.FontStyleManager;
 import com.android.messaging.mmslib.SqliteWrapper;
 import com.android.messaging.privatebox.AppPrivateLockManager;
@@ -197,6 +197,7 @@ public class ConversationListActivity extends AbstractConversationListActivity
     private boolean mIsMessageMoving;
     private final BuglePrefs mPrefs = Factory.get().getApplicationPrefs();
     private HomeKeyWatcher mHomeKeyWatcher;
+    private ConstraintLayout mExitAppAnimationViewContainer;
     @Override
     @DebugLog
     protected void onCreate(final Bundle savedInstanceState) {
@@ -333,6 +334,7 @@ public class ConversationListActivity extends AbstractConversationListActivity
                 navigationView.getViewTreeObserver().removeOnGlobalLayoutListener(this);
             }
         });
+        
         mHomeKeyWatcher = new HomeKeyWatcher(this);
         mHomeKeyWatcher.setOnHomePressedListener(new HomeKeyWatcher.OnHomePressedListener() {
             @Override
@@ -344,10 +346,13 @@ public class ConversationListActivity extends AbstractConversationListActivity
                             (ConversationListFragment) getFragmentManager().findFragmentById(
                                     R.id.conversation_list_fragment);
                     if (conversationListFragment != null) {
+                        HSLog.d("AdTest", "conversationListFragment != null");
                         conversationListFragment.setExitAdShown(mIsExitAdShown);
                     }
-                    ViewStub stub = findViewById(R.id.exit_app_stub);
-                    stub.setVisibility(View.GONE);
+                    if (mExitAppAnimationViewContainer != null){
+                        HSLog.d("AdTest", "mExitAppAnimationViewContainer != null");
+                        mExitAppAnimationViewContainer.setVisibility(View.GONE);
+                    }
                 }
             }
 
@@ -874,13 +879,17 @@ public class ConversationListActivity extends AbstractConversationListActivity
         if (ads.size() > 0) {
             mInterstitialAd = ads.get(0);
             mInterstitialAd.setInterstitialAdListener(new AcbInterstitialAd.IAcbInterstitialAdListener() {
-                ViewStub stub = findViewById(R.id.exit_app_stub);
-                LottieAnimationView lottieAnimationView;
+                LottieAnimationView mLottieAnimationView;
+                ViewStub mViewStub;
                 @Override
                 public void onAdDisplayed() {
-                    stub.inflate();
-                    stub.setVisibility(View.VISIBLE);
-                    lottieAnimationView = findViewById(R.id.exit_app_lottie);
+                    if (mExitAppAnimationViewContainer == null) {
+                        mViewStub = findViewById(R.id.exit_app_stub);
+                        mExitAppAnimationViewContainer = (ConstraintLayout) mViewStub.inflate();
+                        mLottieAnimationView = findViewById(R.id.exit_app_lottie);
+                    } else {
+                        mExitAppAnimationViewContainer.setVisibility(View.VISIBLE);
+                    }
                     mIsExitAdShown = true;
                     final ConversationListFragment conversationListFragment =
                             (ConversationListFragment) getFragmentManager().findFragmentById(
@@ -904,7 +913,7 @@ public class ConversationListActivity extends AbstractConversationListActivity
                 @Override
                 public void onAdClosed() {
                     mInterstitialAd.release();
-                    lottieAnimationView.addAnimatorListener(new Animator.AnimatorListener() {
+                    mLottieAnimationView.addAnimatorListener(new Animator.AnimatorListener() {
                         @Override
                         public void onAnimationStart(Animator animation) {
 
@@ -934,8 +943,8 @@ public class ConversationListActivity extends AbstractConversationListActivity
 
                         }
                     });
-                    lottieAnimationView.useHardwareAcceleration();
-                    lottieAnimationView.playAnimation();
+                    mLottieAnimationView.useHardwareAcceleration();
+                    mLottieAnimationView.playAnimation();
                 }
 
                 @Override
