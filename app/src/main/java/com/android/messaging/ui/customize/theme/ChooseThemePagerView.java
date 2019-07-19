@@ -9,7 +9,6 @@ import android.view.LayoutInflater;
 import android.widget.TextView;
 
 import com.android.messaging.R;
-import com.android.messaging.font.FontUtils;
 import com.android.messaging.util.BugleAnalytics;
 import com.superapps.util.BackgroundDrawables;
 import com.superapps.util.Dimensions;
@@ -20,10 +19,14 @@ public class ChooseThemePagerView extends ConstraintLayout {
         void onPageSelected(int position, int themeColor);
     }
 
+    public interface OnThemeSelectListener{
+        void onThemeSelect(ThemeInfo themeInfo);
+    }
+
     private ViewPager mPager;
     private ThemePagerAdapter mAdapter;
 
-    private OnClickListener mApplyClickListener;
+    private OnThemeSelectListener onThemeSelectListener;
     private OnPageSelectedListener mOnPageSelectedListener;
 
     public ChooseThemePagerView(Context context) {
@@ -73,19 +76,16 @@ public class ChooseThemePagerView extends ConstraintLayout {
                 Color.parseColor(mAdapter.getThemeInfo(0).themeColor), Dimensions.pxFromDp(6.7f), true));
 
         applyTextView.setOnClickListener(v -> {
-            if (mApplyClickListener != null) {
-                mApplyClickListener.onClick(applyTextView);
+            if (onThemeSelectListener != null) {
+                onThemeSelectListener.onThemeSelect(mAdapter.getThemeInfo(mPager.getCurrentItem()));
             }
-
-            ThemeUtils.applyTheme(mAdapter.getThemeInfo(mPager.getCurrentItem()), 0);
-            FontUtils.onFontTypefaceChanged();
 
             BugleAnalytics.logEvent("Start_ChooseTheme_Apply", true, true, "theme", ThemeUtils.getCurrentThemeName());
         });
     }
 
-    public void setOnApplyClickListener(OnClickListener listener) {
-        mApplyClickListener = listener;
+    public void setOnApplyClickListener(OnThemeSelectListener listener) {
+        onThemeSelectListener = listener;
     }
 
     public void setOnPageSelectedListener(OnPageSelectedListener listener) {
