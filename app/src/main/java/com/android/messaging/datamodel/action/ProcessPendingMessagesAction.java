@@ -312,7 +312,7 @@ public class ProcessPendingMessagesAction extends Action implements Parcelable {
             // First check to see if we have any messages already sending
             sending = db.query(DatabaseHelper.MESSAGES_TABLE,
                     MessageData.getProjection(),
-                    DatabaseHelper.MessageColumns.STATUS + " IN (?, ?)",
+                    DatabaseHelper.MessageColumns.STATUS + " IN (?, ?) and " + MessageColumns.IS_DELETED + " = 0",
                     new String[]{Integer.toString(MessageData.BUGLE_STATUS_OUTGOING_SENDING),
                             Integer.toString(MessageData.BUGLE_STATUS_OUTGOING_RESENDING)},
                     null,
