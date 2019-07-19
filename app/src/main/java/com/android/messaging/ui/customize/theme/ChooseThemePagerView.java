@@ -79,8 +79,6 @@ public class ChooseThemePagerView extends ConstraintLayout {
             if (onThemeSelectListener != null) {
                 onThemeSelectListener.onThemeSelect(mAdapter.getThemeInfo(mPager.getCurrentItem()));
             }
-
-            BugleAnalytics.logEvent("Start_ChooseTheme_Apply", true, true, "theme", ThemeUtils.getCurrentThemeName());
         });
     }
 
