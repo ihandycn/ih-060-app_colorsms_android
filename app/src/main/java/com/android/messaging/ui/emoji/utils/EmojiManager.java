@@ -15,14 +15,18 @@ import com.android.messaging.ui.emoji.EmojiInfo;
 import com.android.messaging.ui.emoji.EmojiPackageType;
 import com.android.messaging.ui.emoji.GiphyInfo;
 import com.android.messaging.ui.emoji.StickerInfo;
+import com.android.messaging.ui.emoji.utils.emoispan.EmojiCache;
+import com.android.messaging.ui.emoji.utils.emoispan.EmojiSpannableWorker;
 import com.bumptech.glide.request.target.SimpleTarget;
 import com.bumptech.glide.request.transition.Transition;
+import com.ihs.commons.config.HSConfig;
 import com.ihs.commons.utils.HSLog;
 import com.superapps.util.Preferences;
 
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 public class EmojiManager {
 
@@ -52,7 +56,7 @@ public class EmojiManager {
     };
 
     private static final String PREF_EMOJI_STYLE = "pref_emoji_style";
-    public static final String EMOJI_STYLE_SYSTEM = "stystem";
+    public static final String EMOJI_STYLE_SYSTEM = "System";
 
     static List<String> getTabSticker() {
         return Preferences.get(PREF_FILE_NAME).getStringList(PREF_TAB_STICKER);
@@ -315,33 +319,48 @@ public class EmojiManager {
         Preferences.get(PREF_SKIN_FILE_NAME).putInt(PREF_SKIN_SET_DEFAULT, index);
     }
 
-    public static int getDefaultMainPosition(){
+    public static int getDefaultMainPosition() {
         return Preferences.get(PREF_FILE_NAME).getInt(PREF_DEFAULT_MAIN_POSITION, 1);
     }
 
-    public static void setDefaultMainPosition(int position){
+    public static void setDefaultMainPosition(int position) {
         Preferences.get(PREF_FILE_NAME).putInt(PREF_DEFAULT_MAIN_POSITION, position);
     }
 
-    public static String getEmojiStyle(){
-        return "Blob";
-//        return Preferences.get(PREF_FILE_NAME).getInt(PREF_EMOJI_STYLE, EMOJI_STYLE_SYSTEM);
+    public static String getEmojiStyle() {
+        return Preferences.get(PREF_FILE_NAME).getString(PREF_EMOJI_STYLE, EMOJI_STYLE_SYSTEM);
     }
 
-    public static boolean isSystemEmojiStyle(){
+    public static List<Map<String, String>> getAllEmojiStyles() {
+        return (List<Map<String, String>>) HSConfig.getList("Application", "EmojiStyle");
+    }
+
+    public static boolean isSystemEmojiStyle() {
         return getEmojiStyle().equals(EMOJI_STYLE_SYSTEM);
     }
 
-    public static void setEmojiStyle(String style){
-        Preferences.get(PREF_FILE_NAME).putString(PREF_EMOJI_STYLE, style);
+    public static void setEmojiStyle(String style) {
+        if(!style.equals(getEmojiStyle())) {
+            Preferences.get(PREF_FILE_NAME).putString(PREF_EMOJI_STYLE, style);
+            EmojiCache.getInstance().flush();
+            LoadEmojiManager.getInstance().flush();
+            EmojiSpannableWorker.install();
+        }
     }
 
-    public static long getEmojiStyleFileSize(String name){
-        return Preferences.get(PREF_FILE_NAME).getLong(name, 0);
+    public static long getEmojiStyleFileSize(String name) {
+        return Preferences.get(PREF_FILE_NAME).getLong(name + "_size", 0);
     }
 
-    public static void setEmojiStyleFileSize(String name, long size){
-        Preferences.get(PREF_FILE_NAME).putLong(name, size);
+    public static void setEmojiStyleFileSize(String name, long size) {
+        Preferences.get(PREF_FILE_NAME).putLong(name + "_size", size);
     }
 
+    public static void setEmojiStyleDownloaded(String name) {
+        Preferences.get(PREF_FILE_NAME).putBoolean(name, true);
+    }
+
+    public static boolean isEmojiStyleDownloaded(String name) {
+        return Preferences.get(PREF_FILE_NAME).getBoolean(name, false);
+    }
 }

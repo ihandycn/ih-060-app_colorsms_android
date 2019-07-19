@@ -98,6 +98,7 @@ public class EmojiDataProducer {
         return result;
     }
 
+    // load emoji don't include recent emoji
     public static List<EmojiPackageInfo> loadEmojiData(String emojiStyle) {
         boolean useSystemStyle = EmojiManager.isSystemEmojiStyle();
         List<EmojiPackageInfo> result = new ArrayList<>();
@@ -134,6 +135,7 @@ public class EmojiDataProducer {
         return result;
     }
 
+    // load sticker don't include recent sticker
     public static List<EmojiPackageInfo> loadStickerData() {
         return EmojiConfig.getInstance().getAddedEmojiFromConfig();
     }

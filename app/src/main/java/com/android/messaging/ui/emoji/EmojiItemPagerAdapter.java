@@ -76,6 +76,7 @@ public class EmojiItemPagerAdapter extends AbstractEmojiItemPagerAdapter {
         return view;
     }
 
+    // init emoji exclude recent emoji
     public void initData(List<EmojiPackageInfo> infoList) {
         for (int i = 1; i < mData.size(); i++) {
             mData.get(i).mEmojiInfoList.clear();

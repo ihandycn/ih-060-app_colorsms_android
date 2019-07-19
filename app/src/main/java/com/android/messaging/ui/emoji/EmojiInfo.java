@@ -112,7 +112,7 @@ public class EmojiInfo extends BaseEmojiInfo {
         return info;
     }
 
-    // unicode | emoji_skin ; resource | variant_0 ; resource_0 | variant_1 : resource_0 | variant_2 ; resource_0....
+    // unicode | emoji_skin ; resource | variant_0 ; resource_0 | variant_1 ; resource_0 | variant_2 ; resource_0....
     @Override
     public String toString() {
         StringBuilder builder = new StringBuilder();
@@ -121,7 +121,7 @@ public class EmojiInfo extends BaseEmojiInfo {
         builder.append(mEmoji + ";" + mResource);
         for (EmojiInfo item : mVariants) {
             builder.append("|");
-            builder.append(item.mEmoji + ";" + mResource);
+            builder.append(item.mEmoji + ";" + item.mResource);
         }
         return builder.toString();
     }
@@ -141,8 +141,8 @@ public class EmojiInfo extends BaseEmojiInfo {
 
     private Drawable getDrawableFromFile() {
         File dir = new File(EmojiStyleDownloadManager.getBaseDir(), mEmojiStyle);
-        if(!dir.exists()){
-            throw new RuntimeException("getDrawableFromFile: the resource file of emoji-style not exists");
+        if (!dir.exists()) {
+            throw new RuntimeException("getDrawableFromFile: the resource file of " + mEmojiStyle + " not exists");
         }
         File file = new File(dir.getAbsolutePath(), mResource + ".png");
         return Drawable.createFromPath(file.getAbsolutePath());

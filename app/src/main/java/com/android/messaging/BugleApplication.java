@@ -47,9 +47,14 @@ import com.android.messaging.sms.BugleUserAgentInfoLoader;
 import com.android.messaging.sms.MmsConfig;
 import com.android.messaging.ui.ConversationDrawables;
 import com.android.messaging.ui.SetAsDefaultGuideActivity;
+import com.android.messaging.ui.emoji.EmojiInfo;
 import com.android.messaging.ui.emoji.utils.EmojiConfig;
+import com.android.messaging.ui.emoji.utils.EmojiManager;
 import com.android.messaging.ui.emoji.utils.emoispan.EmojiCache;
 import com.android.messaging.ui.emoji.utils.emoispan.EmojiSpannableWorker;
+import com.android.messaging.ui.emoji.utils.emoji.Emoji;
+import com.android.messaging.ui.emoji.utils.emoji.EmojiCategory;
+import com.android.messaging.ui.emoji.utils.emoji.EmojiProvider;
 import com.android.messaging.upgrader.Upgrader;
 import com.android.messaging.util.BugleAnalytics;
 import com.android.messaging.util.BugleGservices;
@@ -205,14 +210,33 @@ public class BugleApplication extends HSApplication implements UncaughtException
         });
 
         prepareEmoji();
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                checkEmoji();
+            }
+        }).start();
     }
 
     @DebugLog
     private void prepareEmoji() {
-        EmojiSpannableWorker.install(this);
+        EmojiSpannableWorker.install();
 
         // initialize emoji cache
         EmojiCache.getInstance();
+    }
+
+    private void checkEmoji(){
+        EmojiCategory[] categories = EmojiProvider.getCategories();
+        String emojiStyle = EmojiManager.getEmojiStyle();
+        for(EmojiCategory category : categories){
+            for (Emoji emoji : category.getEmojis()){
+                EmojiInfo info = EmojiInfo.convert(emoji, emojiStyle);
+                if(info.getDrawable() == null){
+                    HSLog.d("emoji_resource_check", info.mResource);
+                }
+            }
+        }
     }
 
     private void initAd() {

@@ -8,7 +8,6 @@ import android.text.TextUtils;
 import android.util.Log;
 
 import com.ihs.app.framework.HSApplication;
-import com.ihs.commons.config.HSConfig;
 import com.ihs.commons.utils.HSLog;
 import com.superapps.util.Threads;
 
@@ -18,12 +17,10 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.RandomAccessFile;
-import java.lang.ref.WeakReference;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
@@ -38,21 +35,30 @@ public class EmojiStyleDownloadManager {
     private EmojiStyleDownloadManager() {
     }
 
-    public static EmojiStyleDownloadManager getInstance(){
+    public static EmojiStyleDownloadManager getInstance() {
         return INSTANCE;
     }
 
-    // callback must not a instance of inner class, because WeakReference.get() may return null;
-    public void downloadEmojiStyle(String name, final DownloadCallback callback) {
-        EmojiStyleDownloadTask task = new EmojiStyleDownloadTask(getUrl(name), name);
-        task.setCallBack(callback);
+    public void downloadEmojiStyle(String url, String name, final DownloadCallback callback) {
+        HSLog.i("emoji_download", url);
+        synchronized (mConnections) {
+            for (EmojiStyleDownloadTask task : mConnections) {
+                // if has the same task in task list, use it and do not create new.
+                if (task.getName().equals(name)) {
+                    task.setCallback(callback);
+                    return;
+                }
+            }
+        }
+        EmojiStyleDownloadTask task = new EmojiStyleDownloadTask(url, name);
+        task.setCallback(callback);
         Threads.postOnThreadPoolExecutor(task);
         synchronized (mConnections) {
             mConnections.add(task);
         }
     }
 
-    public static File getBaseDir(){
+    public static File getBaseDir() {
         return dir;
     }
 
@@ -107,13 +113,15 @@ public class EmojiStyleDownloadManager {
         });
     }
 
-    private String getUrl(String name) {
-        Map<String, String> map = getEmojiStyleConfig();
-        return map.get(name);
-    }
-
-    private Map<String, String> getEmojiStyleConfig() {
-        return (Map<String, String>) HSConfig.getMap("Application", "EmojiStyle");
+    private void retryTask(EmojiStyleDownloadTask task) {
+        synchronized (mConnections) {
+            for (EmojiStyleDownloadTask item : mConnections) {
+                if (item == task) {
+                    Threads.postOnThreadPoolExecutor(task);
+                    break;
+                }
+            }
+        }
     }
 
     public class EmojiStyleDownloadTask implements Runnable {
@@ -122,11 +130,13 @@ public class EmojiStyleDownloadManager {
         private final String mUrl;
         private String mName;
         private long mTotalSize;
-        private WeakReference<DownloadCallback> callBack;
+        private DownloadCallback callback;
 
         private final File file;
         private boolean mCanceled;
         private long mDownloadSize = 0;
+        private int mRepeatCount = 0;
+        private final int MAX_REPEAT = 5;
 
         private Handler mMainHandler = new Handler(Looper.getMainLooper());
 
@@ -138,6 +148,7 @@ public class EmojiStyleDownloadManager {
 
         @Override
         public void run() {
+            mRepeatCount++;
             if (isCanceled()) {
                 onDownloadCancel();
             }
@@ -217,8 +228,9 @@ public class EmojiStyleDownloadManager {
                     onDownloadFinished(tmpFile);
                 }
             } catch (Exception e) {
+                HSLog.e(TAG, "emoji style download error");
                 e.printStackTrace();
-                onDownloadFailed(e.toString());
+                onDownloadFailed("internet: " + e.toString());
             } finally {
                 if (conn != null) {
                     conn.disconnect();
@@ -244,11 +256,11 @@ public class EmojiStyleDownloadManager {
             mCanceled = true;
         }
 
-        public void setCallBack(DownloadCallback callback) {
-            callBack = new WeakReference<>(callback);
+        public void setCallback(DownloadCallback callback) {
+            this.callback = callback;
         }
 
-        public long getFileSize(){
+        public long getFileSize() {
             return EmojiManager.getEmojiStyleFileSize(mName);
         }
 
@@ -263,8 +275,8 @@ public class EmojiStyleDownloadManager {
             mMainHandler.post(new Runnable() {
                 @Override
                 public void run() {
-                    if (callBack.get() != null) {
-                        callBack.get().onCancel();
+                    if (callback != null) {
+                        callback.onCancel();
                     }
                 }
             });
@@ -277,34 +289,40 @@ public class EmojiStyleDownloadManager {
             mMainHandler.post(new Runnable() {
                 @Override
                 public void run() {
-                    if (callBack.get() != null) {
-                        callBack.get().onSuccess(EmojiStyleDownloadTask.this);
+                    if (callback != null) {
+                        callback.onSuccess(EmojiStyleDownloadTask.this);
                     }
                 }
             });
         }
 
         private void onDownloadFailed(String msg) {
+            if (mRepeatCount < MAX_REPEAT && msg.contains("internet")) {
+                HSLog.d(TAG, "download try again");
+                retryTask(this);
+                return;
+            }
             synchronized (mConnections) {
                 mConnections.remove(this);
             }
             mMainHandler.post(new Runnable() {
                 @Override
                 public void run() {
-                    if (callBack.get() != null) {
-                        callBack.get().onFail(EmojiStyleDownloadTask.this, msg);
+                    if (callback != null) {
+                        callback.onFail(EmojiStyleDownloadTask.this, msg);
                     }
                 }
             });
         }
 
         private void onDownloadProgress(long downloadSize, long totalSize) {
-            if (callBack != null) {
+            HSLog.i("emoji_download", downloadSize + "  " + totalSize);
+            if (callback != null) {
                 mMainHandler.post(new Runnable() {
                     @Override
                     public void run() {
-                        if (callBack.get() != null) {
-                            callBack.get().onUpdate(downloadSize, totalSize);
+                        if (callback != null) {
+                            callback.onUpdate(downloadSize, totalSize);
                         }
                     }
                 });
@@ -328,7 +346,7 @@ public class EmojiStyleDownloadManager {
             } catch (IOException e) {
                 e.printStackTrace();
                 File file = new File(dir, mName);
-                if(file.exists()){
+                if (file.exists()) {
                     file.delete();
                 }
                 onDownloadFailed("decompress failed");

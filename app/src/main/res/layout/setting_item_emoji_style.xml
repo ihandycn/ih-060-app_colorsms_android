@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="58dp">
+
+    <android.support.v7.widget.AppCompatRadioButton
+        android:id="@+id/radio_btn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_marginStart="15dp"
+        android:drawablePadding="0dp"
+        android:textColor="@color/text_primary_color" />
+
+    <com.android.messaging.ui.view.MessagesTextView
+        android:id="@+id/name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="10dp"
+        android:layout_toEndOf="@+id/radio_btn"
+        android:text="name"
+        android:textColor="#222327"
+        android:textSize="15.3sp"
+        android:includeFontPadding="false"
+        app:typeface="@string/custom_font_medium" />
+
+    <com.android.messaging.ui.view.MessagesTextView
+        android:id="@+id/download_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/name"
+        android:layout_alignStart="@+id/name"
+        android:layout_marginTop="2.7dp"
+        android:text="@string/emoji_style_current_set"
+        android:textColor="#858b92"
+        android:textSize="11.3sp"
+        android:includeFontPadding="false"
+        app:typeface="@string/custom_font_regular" />
+
+    <ImageView
+        android:id="@+id/sample_image"
+        android:layout_width="44.7dp"
+        android:layout_height="44.7dp"
+        android:layout_alignParentEnd="true"
+        android:layout_centerVertical="true"
+        android:layout_marginEnd="16dp" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginStart="15dp"
+        android:layout_alignParentBottom="true"
+        android:background="#ebeff3" />
+</RelativeLayout>

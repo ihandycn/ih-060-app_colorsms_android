@@ -1,6 +1,5 @@
 package com.android.messaging.ui.emoji.utils.emoispan;
 
-import android.content.Context;
 import android.text.Spannable;
 import android.text.TextUtils;
 
@@ -47,7 +46,7 @@ public final class EmojiSpannableWorker {
     }
 
     @DebugLog
-    public static void install(Context context) {
+    public static void install() {
         int size;
         INSTANCE.categories = EmojiDataProducer.loadEmojiData(EmojiManager.getEmojiStyle());
         INSTANCE.emojiMap.clear();

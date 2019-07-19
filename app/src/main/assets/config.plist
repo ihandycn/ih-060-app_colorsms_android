@@ -7,14 +7,38 @@
 		<key>Application</key>
 		<dict>
 			<key>EmojiStyle</key>
-			<dict>
-				<key>Twitter</key>
-				<string>https://s3.amazonaws.com/superapps-dev/ColorSMS/emojistyle/Twitter.zip</string>
-				<key>Pie</key>
-				<string>https://s3.amazonaws.com/superapps-dev/ColorSMS/emojistyle/Pie.zip</string>
-				<key>Blob</key>
-				<string>https://s3.amazonaws.com/superapps-dev/ColorSMS/emojistyle/Blob.zip</string>
-			</dict>
+			<array>
+				<dict>
+					<key>name</key>
+					<string>Twitter</string>
+					<key>PreViewPicUrl</key>
+					<string>https://s3.amazonaws.com/superapps-dev/ColorSMS/emojistyle/twitter.jpg</string>
+					<key>DownloadUrl</key>
+					<string>https://s3.amazonaws.com/superapps-dev/ColorSMS/emojistyle/Twitter.zip</string>
+					<key>DownloadSize</key>
+					<string>7.0</string>
+				</dict>
+				<dict>
+					<key>name</key>
+					<string>Pie</string>
+					<key>PreViewPicUrl</key>
+					<string>https://s3.amazonaws.com/superapps-dev/ColorSMS/emojistyle/androidpie.jpg</string>
+					<key>DownloadUrl</key>
+					<string>https://s3.amazonaws.com/superapps-dev/ColorSMS/emojistyle/Pie.zip</string>
+					<key>DownloadSize</key>
+					<string>7.1</string>
+				</dict>
+				<dict>
+					<key>name</key>
+					<string>Blob</string>
+					<key>PreViewPicUrl</key>
+					<string>https://s3.amazonaws.com/superapps-dev/ColorSMS/emojistyle/androidblob.jpg</string>
+					<key>DownloadUrl</key>
+					<string>https://s3.amazonaws.com/superapps-dev/ColorSMS/emojistyle/Blob.zip</string>
+					<key>DownloadSize</key>
+					<string>7.3</string>
+				</dict>
+			</array>
 			<key>PrivateBox</key>
 			<true/>
 			<key>BackupRestore</key>

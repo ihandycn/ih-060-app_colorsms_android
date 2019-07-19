@@ -23,6 +23,7 @@ import com.android.messaging.feedback.FeedbackActivity;
 import com.android.messaging.smsshow.SmsShowUtils;
 import com.android.messaging.ui.BaseAlertDialog;
 import com.android.messaging.ui.BaseDialogFragment;
+import com.android.messaging.ui.SettingEmojiStyleItemView;
 import com.android.messaging.ui.UIIntents;
 import com.android.messaging.ui.customize.PrimaryColors;
 import com.android.messaging.ui.emoji.utils.EmojiManager;
@@ -46,6 +47,7 @@ import static android.view.View.GONE;
 public class SettingActivity extends BaseActivity {
     private static final int REQUEST_CODE_START_RINGTONE_PICKER = 1;
     private static final int RC_SIGN_IN = 12;
+    private static final int EMOJI_STYLE_SET = 13;
 
     private GeneralSettingItemView mSmsShowView;
     private GeneralSettingItemView mNotificationView;
@@ -57,6 +59,8 @@ public class SettingActivity extends BaseActivity {
     private GeneralSettingItemView mSyncSettingsView;
     private GeneralSettingItemView mSendDelayView;
     private GeneralSettingItemView mSMSDeliveryReports;
+
+    private SettingEmojiStyleItemView settingEmojiStyleItemView;
 
 
     private View mNotificationChildrenGroup;
@@ -179,7 +183,15 @@ public class SettingActivity extends BaseActivity {
         setUpNotificationView();
 
         //emoji
-        SettingEmojiItemView settingEmojiItemView = findViewById(R.id.setting_item_emoji);
+        settingEmojiStyleItemView = findViewById(R.id.setting_item_emoji_style);
+        settingEmojiStyleItemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(SettingActivity.this, EmojiStyleSetActivity.class);
+                startActivityForResult(intent, EMOJI_STYLE_SET);
+            }
+        });
+        SettingEmojiItemView settingEmojiItemView = findViewById(R.id.setting_item_emoji_skin);
         if (Build.VERSION.SDK_INT >= 24) {
             settingEmojiItemView.setDefault(EmojiManager.EMOJI_SKINS[EmojiManager.getSkinDefault()]);
             settingEmojiItemView.setOnItemClickListener(() -> {
@@ -487,6 +499,12 @@ public class SettingActivity extends BaseActivity {
                 mSyncSettingsView.setSummary(getString(R.string.firebase_sync_desktop_settings_description_logged_in));
             } else {
                 Toasts.showToast(R.string.firebase_login_failed);
+            }
+        } else if (requestCode == EMOJI_STYLE_SET) {
+            if (resultCode == RESULT_OK) {
+                String name = data.getStringExtra("name");
+                String url = data.getStringExtra("url");
+                settingEmojiStyleItemView.update(name, url);
             }
         }
     }
