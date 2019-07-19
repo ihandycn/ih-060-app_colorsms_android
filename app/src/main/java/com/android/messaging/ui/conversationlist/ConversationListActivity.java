@@ -200,6 +200,7 @@ public class ConversationListActivity extends AbstractConversationListActivity
     private boolean mIsExitAdShown;
 
     private boolean mIsMessageMoving;
+    private LottieAnimationView mLottieAnimationView;
     private final BuglePrefs mPrefs = Factory.get().getApplicationPrefs();
     @Override
     @DebugLog
@@ -368,6 +369,7 @@ public class ConversationListActivity extends AbstractConversationListActivity
     protected void onResume() {
         super.onResume();
         if (mIsExitAdShown){
+            showExitAppAnimation();
             return;
         }
         AppPrivateLockManager.getInstance().lockAppLock();
@@ -425,6 +427,41 @@ public class ConversationListActivity extends AbstractConversationListActivity
             overridePendingTransition(R.anim.slide_in_from_right_and_fade, R.anim.anim_null);
             Preferences.getDefault().putBoolean(BuglePrefsKeys.PREFS_KEY_THEME_CLEARED_TO_DEFAULT, false);
         }
+    }
+
+    private void showExitAppAnimation() {
+        if (mInterstitialAd != null) {
+            mInterstitialAd.release();
+        }
+        mLottieAnimationView.addAnimatorListener(new Animator.AnimatorListener() {
+            @Override
+            public void onAnimationStart(Animator animation) {
+
+            }
+
+            @Override
+            public void onAnimationEnd(Animator animation) {
+                finishWithoutOverridePendingTransition();
+                overridePendingTransition(0, 0);
+                int mainActivityCreateTime = Preferences.get(DESKTOP_PREFS).getInt(PREF_KEY_MAIN_ACTIVITY_SHOW_TIME, 0);
+                if (mainActivityCreateTime >= 2) {
+                    Preferences.getDefault().doOnce(
+                            () -> UIIntentsImpl.get().launchDragHotSeatActivity(ConversationListActivity.this),
+                            DragHotSeatActivity.SHOW_DRAG_HOTSEAT);
+                }
+            }
+
+            @Override
+            public void onAnimationCancel(Animator animation) {
+
+            }
+
+            @Override
+            public void onAnimationRepeat(Animator animation) {
+
+            }
+        });
+        mLottieAnimationView.playAnimation();
     }
 
     @Override
@@ -854,7 +891,6 @@ public class ConversationListActivity extends AbstractConversationListActivity
             mInterstitialAd = ads.get(0);
             mInterstitialAd.setInterstitialAdListener(new AcbInterstitialAd.IAcbInterstitialAdListener() {
 
-                private LottieAnimationView mLottieAnimationView;
                 private ViewStub mExitAppAnimationViewStub;
                 private Cancellable mAnimationLoadTask;
 
@@ -889,38 +925,7 @@ public class ConversationListActivity extends AbstractConversationListActivity
 
                 @Override
                 public void onAdClosed() {
-                    if (mInterstitialAd != null) {
-                        mInterstitialAd.release();
-                    }
-                    mLottieAnimationView.addAnimatorListener(new Animator.AnimatorListener() {
-                        @Override
-                        public void onAnimationStart(Animator animation) {
 
-                        }
-
-                        @Override
-                        public void onAnimationEnd(Animator animation) {
-                            finishWithoutOverridePendingTransition();
-                            overridePendingTransition(0, 0);
-                            int mainActivityCreateTime = Preferences.get(DESKTOP_PREFS).getInt(PREF_KEY_MAIN_ACTIVITY_SHOW_TIME, 0);
-                            if (mainActivityCreateTime >= 2) {
-                                Preferences.getDefault().doOnce(
-                                        () -> UIIntentsImpl.get().launchDragHotSeatActivity(ConversationListActivity.this),
-                                        DragHotSeatActivity.SHOW_DRAG_HOTSEAT);
-                            }
-                        }
-
-                        @Override
-                        public void onAnimationCancel(Animator animation) {
-
-                        }
-
-                        @Override
-                        public void onAnimationRepeat(Animator animation) {
-
-                        }
-                    });
-                    mLottieAnimationView.playAnimation();
                 }
 
                 @Override
