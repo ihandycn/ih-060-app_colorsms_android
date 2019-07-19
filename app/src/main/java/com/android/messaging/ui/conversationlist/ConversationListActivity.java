@@ -10,6 +10,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.provider.Telephony;
 import android.support.annotation.NonNull;
+import android.support.constraint.ConstraintLayout;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.content.pm.ShortcutManagerCompat;
@@ -196,12 +197,12 @@ public class ConversationListActivity extends AbstractConversationListActivity
     private String size;
     private View mPrivateBoxEntrance;
     private AcbInterstitialAd mInterstitialAd;
-    private boolean mInterstitialAdShown;
     private long mLastAdClickTime = 0;
     private boolean mIsExitAdShown;
     private boolean mHasInflatedDrawer;
 
     private boolean mIsMessageMoving;
+    private ConstraintLayout mExitAppAnimationViewContainer;
     private LottieAnimationView mLottieAnimationView;
     private final BuglePrefs mPrefs = Factory.get().getApplicationPrefs();
 
@@ -257,7 +258,7 @@ public class ConversationListActivity extends AbstractConversationListActivity
         HSGlobalNotificationCenter.addObserver(BILLING_VERIFY_SUCCESS, this);
 
         BugleAnalytics.logEvent("SMS_ActiveUsers", true);
-        new Handler().postDelayed(ExitAdConfig::preLoadExitAd, 2000);
+        Threads.postOnMainThreadDelayed(ExitAdConfig::preLoadExitAd, 2000);
         if (!sIsRecreate) {
             Threads.postOnThreadPoolExecutor(() -> {
                 String bgPath = WallpaperManager.getWallpaperPathByConversationId(null);
@@ -905,13 +906,22 @@ public class ConversationListActivity extends AbstractConversationListActivity
 
                 @Override
                 public void onAdDisplayed() {
-                    new Handler().postDelayed(() -> {
-                        mExitAppAnimationViewStub = findViewById(R.id.exit_app_stub);
-                        mExitAppAnimationViewStub.inflate();
-                        mLottieAnimationView = findViewById(R.id.exit_app_lottie);
-                        mLottieAnimationView.useHardwareAcceleration();
-                        loadAnimation();
+
+                    Threads.postOnMainThreadDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            if (mExitAppAnimationViewContainer == null) {
+                                mExitAppAnimationViewStub = findViewById(R.id.exit_app_stub);
+                                mExitAppAnimationViewContainer = (ConstraintLayout) mExitAppAnimationViewStub.inflate();
+                                mLottieAnimationView = findViewById(R.id.exit_app_lottie);
+                                mLottieAnimationView.useHardwareAcceleration();
+                                loadAnimation();
+                            } else {
+                                mExitAppAnimationViewContainer.setVisibility(View.VISIBLE);
+                            }
+                        }
                     }, 200);
+
                     mIsExitAdShown = true;
                     final ConversationListFragment conversationListFragment =
                             (ConversationListFragment) getFragmentManager().findFragmentById(
@@ -967,7 +977,6 @@ public class ConversationListActivity extends AbstractConversationListActivity
 
             mInterstitialAd.setSoundEnable(false);
             mInterstitialAd.show();
-            mInterstitialAdShown = true;
             BugleAnalytics.logEvent("SMS_ExitAd_Show", true);
             BugleAnalytics.logEvent("SMS_Ad", false, true, "type", "exitad_show");
             ExitAdAutopilotUtils.logExitAdShow();
@@ -981,12 +990,15 @@ public class ConversationListActivity extends AbstractConversationListActivity
 
     @Override protected void onRestart() {
         super.onRestart();
-
-        if (mInterstitialAdShown) {
+        if (mIsExitAdShown) {
             Intent intent = new Intent(this, ConversationListActivity.class);
-            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
             startActivity(intent);
-            mInterstitialAdShown = false;
+            mIsExitAdShown = false;
+            if (mExitAppAnimationViewContainer != null){
+                mExitAppAnimationViewContainer.setVisibility(View.GONE);
+            }
+
         }
     }
 
