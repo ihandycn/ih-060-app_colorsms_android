@@ -1,87 +1,95 @@
 package com.android.messaging.ui.wallpaper;
 
-import com.android.messaging.R;
-
 public class WallpaperChooserItem {
     public static final int TYPE_ADD_PHOTO = 0;
     public static final int TYPE_EMPTY = 1;
     public static final int TYPE_NORMAL_WALLPAPER = 2;
 
     private int mItemType = TYPE_NORMAL_WALLPAPER;
-
     private int mIndex;
+    private boolean mIsWallpaperDownloading = false;
+    private boolean mIsItemSelected = false;
+    private boolean mIsItemPreSelected = false;
+    private WallpaperChooserItemView mItemView;
+    private WallpaperDownloader.WallpaperDownloadListener mDownloadListener;
 
-    public static final int[] sThumbnailRes = {
-            R.drawable.wallpaper_thumbnail_abstract,
-            R.drawable.wallpaper_thumbnail_butterfly1,
-            R.drawable.wallpaper_thumbnail_butterfly2,
-            R.drawable.wallpaper_thumbnail_sea,
-            R.drawable.wallpaper_thumbnail_chocolate,
-            R.drawable.wallpaper_thumbnail_dandelion1,
-            R.drawable.wallpaper_thumbnail_dandelion2,
-            R.drawable.wallpaper_thumbnail_dandelion3,
-            R.drawable.wallpaper_thumbnail_flower,
-            R.drawable.wallpaper_thumbnail_001,
-            R.drawable.wallpaper_thumbnail_002,
-            R.drawable.wallpaper_thumbnail_003,
-            R.drawable.wallpaper_thumbnail_004,
-            R.drawable.wallpaper_thumbnail_005,
-            R.drawable.wallpaper_thumbnail_006,
-            R.drawable.wallpaper_thumbnail_007,
-            R.drawable.wallpaper_thumbnail_008,
-            R.drawable.wallpaper_thumbnail_009,
-            R.drawable.wallpaper_thumbnail_010,
-            R.drawable.wallpaper_thumbnail_011,
-            R.drawable.wallpaper_thumbnail_012,
-            R.drawable.wallpaper_thumbnail_013,
-            R.drawable.wallpaper_thumbnail_014,
-            R.drawable.wallpaper_thumbnail_015,
-            R.drawable.wallpaper_thumbnail_016,
-            R.drawable.wallpaper_thumbnail_017,
-            R.drawable.wallpaper_thumbnail_018,
-            R.drawable.wallpaper_thumbnail_019,
-            R.drawable.wallpaper_thumbnail_frost,
-            R.drawable.wallpaper_thumbnail_winter,
-            R.drawable.wallpaper_thumbnail_gates_wood,
-            R.drawable.wallpaper_thumbnail_iceland
-    };
+    public void downloadWallpaper() {
+        if (mIsWallpaperDownloading) {
+            return;
+        }
+        mIsWallpaperDownloading = true;
+        if (mItemView != null) {
+            mItemView.onDownloadStart();
+        }
+        WallpaperDownloader.download(new WallpaperDownloader.WallpaperDownloadListener() {
+            @Override
+            public void onDownloadSuccess() {
+                if (mItemView != null) {
+                    if (mIsItemPreSelected) {
+                        mItemView.onDownloadSuccessAndChecked();
+                    } else {
+                        mItemView.onDownloadFinish();
+                    }
+                }
+                mIsItemSelected = mIsItemPreSelected;
+                mIsWallpaperDownloading = false;
+                mIsItemPreSelected = false;
+                if (mDownloadListener != null) {
+                    mDownloadListener.onDownloadSuccess();
+                }
+            }
 
-    private static final String sBaseUrl = "http://cdn.appcloudbox.net/smoothappsstudio/apps/bubble/chatbackground/";
+            @Override
+            public void onDownloadFailed() {
+                if (mItemView != null) {
+                    mItemView.onDownloadFinish();
+                }
+                mIsWallpaperDownloading = false;
+                mIsItemSelected = false;
+                mIsItemPreSelected = false;
+                if (mDownloadListener != null) {
+                    mDownloadListener.onDownloadFailed();
+                }
+            }
+        }, getRemoteUrl());
+    }
 
-    public static final String[] sRemoteUrl = {
-            sBaseUrl + "wallpaper_abstract.jpg",
-            sBaseUrl + "wallpaper_butterfly1.jpg",
-            sBaseUrl + "wallpaper_butterfly2.jpg",
-            sBaseUrl + "wallpaper_sea.jpg",
-            sBaseUrl + "wallpaper_chocolate.jpg",
-            sBaseUrl + "wallpaper_dandelion1.jpg",
-            sBaseUrl + "wallpaper_dandeline2.jpg",
-            sBaseUrl + "wallpaper_dandelion3.jpg",
-            sBaseUrl + "wallpaper_flower.jpg",
-            sBaseUrl + "wallpaper_001.jpg",
-            sBaseUrl + "wallpaper_002.jpg",
-            sBaseUrl + "wallpaper_003.jpg",
-            sBaseUrl + "wallpaper_004.jpg",
-            sBaseUrl + "wallpaper_005.jpg",
-            sBaseUrl + "wallpaper_006.jpg",
-            sBaseUrl + "wallpaper_007.jpg",
-            sBaseUrl + "wallpaper_008.jpg",
-            sBaseUrl + "wallpaper_009.jpg",
-            sBaseUrl + "wallpaper_010.jpg",
-            sBaseUrl + "wallpaper_011.jpg",
-            sBaseUrl + "wallpaper_012.jpg",
-            sBaseUrl + "wallpaper_013.jpg",
-            sBaseUrl + "wallpaper_014.jpg",
-            sBaseUrl + "wallpaper_015.jpg",
-            sBaseUrl + "wallpaper_016.jpg",
-            sBaseUrl + "wallpaper_017.jpg",
-            sBaseUrl + "wallpaper_018.jpg",
-            sBaseUrl + "wallpaper_019.jpg",
-            sBaseUrl + "wallpaper_forst.jpg",
-            sBaseUrl + "wallpaper_winter.jpg",
-            sBaseUrl + "wallpaper_gates_wood.jpg",
-            sBaseUrl + "wallpaper_iceland.jpg"
-    };
+    public void bindView(WallpaperChooserItemView view) {
+        mItemView = view;
+        if (view != null) {
+            view.initViewByItemState(this);
+        }
+    }
+
+    public boolean isItemDownloading() {
+        return mIsWallpaperDownloading;
+    }
+
+    public void setSelectedState(boolean isSelected) {
+        if (isSelected == mIsItemSelected) {
+            return;
+        }
+        mIsItemSelected = isSelected;
+        if (mItemView != null) {
+            if (isSelected) {
+                mItemView.setCheckedState();
+            } else {
+                mItemView.setUncheckedState();
+            }
+        }
+    }
+
+    public void setDownloadListener(WallpaperDownloader.WallpaperDownloadListener listener){
+        mDownloadListener = listener;
+    }
+
+    public void setPreSelectState(boolean isSelected) {
+        mIsItemPreSelected = isSelected;
+    }
+
+    public boolean isItemChecked() {
+        return mIsItemSelected;
+    }
 
     public void setIndex(int mIndex) {
         this.mIndex = mIndex;
@@ -96,22 +104,22 @@ public class WallpaperChooserItem {
     }
 
     int getThumbnailResId() {
-        return sThumbnailRes[mIndex];
+        return WallpaperInfos.sThumbnailRes[mIndex];
     }
 
     public String getLocalPath() {
-        return WallpaperDownloader.getWallPaperLocalPath(sRemoteUrl[mIndex]);
+        return WallpaperDownloader.getWallPaperLocalPath(WallpaperInfos.sRemoteUrl[mIndex]);
     }
 
     public String getAbsolutePath() {
-        return WallpaperDownloader.getAbsolutePath(sRemoteUrl[mIndex]);
+        return WallpaperDownloader.getAbsolutePath(WallpaperInfos.sRemoteUrl[mIndex]);
     }
 
     public String getRemoteUrl() {
-        return sRemoteUrl[mIndex];
+        return WallpaperInfos.sRemoteUrl[mIndex];
     }
 
     public boolean isDownloaded() {
-        return WallpaperDownloader.isWallpaperDownloaded(sRemoteUrl[mIndex]);
+        return WallpaperDownloader.isWallpaperDownloaded(WallpaperInfos.sRemoteUrl[mIndex]);
     }
 }

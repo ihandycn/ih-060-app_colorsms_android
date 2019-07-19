@@ -43,20 +43,20 @@ import com.android.messaging.ui.wallpaper.WallpaperChooserItem;
 import com.android.messaging.ui.wallpaper.WallpaperChooserItemView;
 import com.android.messaging.ui.wallpaper.WallpaperDownloader;
 import com.android.messaging.ui.wallpaper.WallpaperManager;
+import com.android.messaging.ui.wallpaper.WallpaperPreviewActivity;
+import com.android.messaging.util.BugleAnalytics;
 import com.superapps.util.BackgroundDrawables;
 import com.superapps.util.Dimensions;
 import com.superapps.util.Navigations;
 import com.superapps.util.Threads;
 import com.superapps.view.SelectorDrawable;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import static com.android.messaging.ui.customize.mainpage.ChatListCustomizeActivity.REQUEST_CODE_PICK_WALLPAPER;
 
 public class ChatListCustomizeControlView extends ConstraintLayout {
 
-    private List<WallpaperChooserItemView> mListeners = new ArrayList<>();
     private ChatListCustomizeChangeListener mChangeListener;
     private View mTextColorPreview;
     private boolean mIsColorChooseViewShowing;
@@ -64,6 +64,7 @@ public class ChatListCustomizeControlView extends ConstraintLayout {
     private SeekBar mOpacitySeekBar;
     private ChatListChooseColorView mColorChooseView;
     private View mControlViewContainer;
+    private WallpaperChooserAdapter mAdapter;
 
     private ChatListViewSwipeHelper mSwipeHelper;
 
@@ -112,8 +113,8 @@ public class ChatListCustomizeControlView extends ConstraintLayout {
     private void initWallpaperChooseView() {
         RecyclerView wallpaperChooser = findViewById(R.id.wallpaper_chooser_container);
         wallpaperChooser.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false));
-        wallpaperChooser.setAdapter(new WallpaperChooserAdapter(getContext(), WallpaperManager.getWallpaperChooserList()));
-        wallpaperChooser.setItemViewCacheSize(50);
+        mAdapter = new WallpaperChooserAdapter(getContext(), WallpaperManager.getWallpaperChooserList());
+        wallpaperChooser.setAdapter(mAdapter);
     }
 
     private void initTouchArea() {
@@ -339,44 +340,79 @@ public class ChatListCustomizeControlView extends ConstraintLayout {
         mOpacitySeekBar.setProgress(mOpacitySeekBar.getMax());
     }
 
-    public void addListener(WallpaperChooserItemView listener) {
-        mListeners.add(listener);
-    }
-
-    public void onItemSelected(WallpaperChooserItemView view) {
-        for (WallpaperChooserItemView v : mListeners) {
-            if (v.equals(view)) {
-                v.onItemSelected();
-            } else {
-                v.onItemDeselected();
-            }
-        }
-    }
-
-    public void onItemPreSelected(WallpaperChooserItemView view) {
-        for (WallpaperChooserItemView v : mListeners) {
-            if (v.isItemSelected()) {
-                continue;
-            }
-            if (v.equals(view)) {
-                v.onItemPreSelected();
-            } else {
-                v.onItemDeselected();
-            }
-        }
+    public void onCustomItemSelected() {
+        mAdapter.onItemSelected(null);
     }
 
     public class WallpaperChooserAdapter extends RecyclerView.Adapter<WallpaperChooserViewHolder> {
-        private List<WallpaperChooserItem> wallpaperInfoList;
+        private List<WallpaperChooserItem> mWallpaperInfoList;
         private Context mContext;
-        private int mItemViewWidth;
+        private int mItemViewLength;
         private int mItemPadding;
+        private String mWallpaperPath = ChatListDrawableManager.getListWallpaperPath();
 
         WallpaperChooserAdapter(Context context, List<WallpaperChooserItem> wallpaperInfos) {
             mContext = context;
-            wallpaperInfoList = wallpaperInfos;
-            mItemViewWidth = (int) (Dimensions.getPhoneHeight(context) * 58.7f / 640);
-            mItemPadding = (int) (mItemViewWidth * 5.3f / 58.7f);
+            mWallpaperInfoList = wallpaperInfos;
+            mItemViewLength = (int) (Dimensions.getPhoneHeight(context) * 58.7f / 640);
+            mItemPadding = (int) (mItemViewLength * 5.3f / 58.7f);
+
+            if (TextUtils.isEmpty(mWallpaperPath)) {
+                for (int i = 0; i < mWallpaperInfoList.size(); i++) {
+                    if (mWallpaperInfoList.get(i).getItemType() == WallpaperChooserItem.TYPE_EMPTY) {
+                        mWallpaperInfoList.get(i).setSelectedState(true);
+                        break;
+                    }
+                }
+            } else {
+                for (int i = 0; i < mWallpaperInfoList.size(); i++) {
+                    WallpaperChooserItem item = mWallpaperInfoList.get(i);
+                    if (item.getItemType() == WallpaperChooserItem.TYPE_NORMAL_WALLPAPER
+                            && mWallpaperPath.equals(item.getAbsolutePath())) {
+                        item.setSelectedState(true);
+                        break;
+                    }
+                }
+            }
+
+            for (int i = 0; i < mWallpaperInfoList.size(); i++) {
+                WallpaperChooserItem item = mWallpaperInfoList.get(i);
+                if (item.getItemType() == WallpaperChooserItem.TYPE_NORMAL_WALLPAPER
+                        && !item.isDownloaded()) {
+                    item.setDownloadListener(
+                            new WallpaperDownloader.WallpaperDownloadListener() {
+                                @Override
+                                public void onDownloadSuccess() {
+                                    if (item.isItemChecked()) {
+                                        onItemSelected(item);
+                                        if (getContext() instanceof Activity
+                                                && ((Activity) getContext()).isDestroyed()) {
+                                            return;
+                                        }
+                                        onWallpaperChanged(item.getAbsolutePath());
+                                    }
+                                }
+
+                                @Override
+                                public void onDownloadFailed() {
+                                }
+                            }
+                    );
+                }
+            }
+        }
+
+        public void onItemSelected(WallpaperChooserItem selectedItem) {
+            for (WallpaperChooserItem item : mWallpaperInfoList) {
+                item.setSelectedState(item.equals(selectedItem));
+                item.setPreSelectState(false);
+            }
+        }
+
+        void onItemPreSelected(WallpaperChooserItem selectedItem) {
+            for (WallpaperChooserItem item : mWallpaperInfoList) {
+                item.setPreSelectState(item.equals(selectedItem));
+            }
         }
 
         @NonNull
@@ -384,8 +420,8 @@ public class ChatListCustomizeControlView extends ConstraintLayout {
         public WallpaperChooserViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
             View itemView = LayoutInflater.from(mContext).inflate(R.layout.chat_list_wallpaper_choose_layout, parent, false);
             RecyclerView.LayoutParams params = (RecyclerView.LayoutParams) itemView.getLayoutParams();
-            params.height = mItemViewWidth;
-            params.width = mItemViewWidth;
+            params.height = mItemViewLength;
+            params.width = mItemViewLength;
             params.setMarginStart(mItemPadding);
             itemView.setLayoutParams(params);
             return new WallpaperChooserViewHolder(itemView);
@@ -393,10 +429,10 @@ public class ChatListCustomizeControlView extends ConstraintLayout {
 
         @Override
         public void onBindViewHolder(@NonNull WallpaperChooserViewHolder holder, int position) {
-            WallpaperChooserItem item = wallpaperInfoList.get(position);
+            WallpaperChooserItem item = mWallpaperInfoList.get(position);
             WallpaperChooserItemView view = (WallpaperChooserItemView) holder.itemView;
-            view.setChooserItem(item);
-            String wallpaperPath = ChatListDrawableManager.getListWallpaperPath();
+            item.bindView(view);
+
             if (item.getItemType() == WallpaperChooserItem.TYPE_ADD_PHOTO) {
                 view.findViewById(R.id.wallpaper_chooser_add_photo_container).setBackground(
                         BackgroundDrawables.createBackgroundDrawable(0xffeff3f5, Dimensions.pxFromDp(3.3f), true));
@@ -407,7 +443,6 @@ public class ChatListCustomizeControlView extends ConstraintLayout {
                     Navigations.startActivityForResultSafely((Activity) mContext, chooserIntent, REQUEST_CODE_PICK_WALLPAPER);
                 });
             } else if (item.getItemType() == WallpaperChooserItem.TYPE_EMPTY) {
-                addListener(view);
                 ThemeInfo info = ThemeUtils.getCurrentTheme();
                 if (WallpaperDrawables.getConversationWallpaperBg() == null) {
                     ImageView v = view.findViewById(R.id.wallpaper_chooser_item_iv);
@@ -418,67 +453,40 @@ public class ChatListCustomizeControlView extends ConstraintLayout {
                                     false, false));
                 }
                 view.setOnClickListener(v -> {
-                    if (view.isItemSelected()) {
+                    if (item.isItemChecked()) {
                         return;
                     }
-                    onItemSelected(view);
+                    onItemSelected(item);
                     onWallpaperChanged("");
 
                     setTextColorBtnColor(Color.parseColor(info.listTitleColor));
                 });
-                if (TextUtils.isEmpty(wallpaperPath)) {
-                    onItemSelected(view);
-                }
-            } else {
-                addListener(view);
-                if (wallpaperPath != null && wallpaperPath.equals(item.getAbsolutePath())) {
-                    onItemSelected(view);
-                }
-                view.setOnClickListener(v -> {
-                    if (view.isItemSelected() || view.isItemPreSelected()) {
-                        return;
-                    }
-                    if (item.isDownloaded()) {
-                        onItemSelected(view);
-                        if (view.isItemSelected()) {
-                            view.onItemSelected();
-                            onWallpaperChanged(item.getAbsolutePath());
-                        }
-                    } else {
-                        view.onLoadingStart();
-                        onItemPreSelected(view);
-                        WallpaperDownloader.download(new WallpaperDownloader.WallpaperDownloadListener() {
-                            @Override
-                            public void onDownloadSuccess(String path) {
-                                Threads.postOnMainThread(() -> {
-                                    if (view.isItemPreSelected()) {
-                                        onItemSelected(view);
-                                    }
-                                    view.onLoadingDone();
-                                    if (view.isItemSelected()) {
-                                        if (getContext() instanceof Activity
-                                                && ((Activity) getContext()).isDestroyed()) {
-                                            return;
-                                        }
-                                        onWallpaperChanged(item.getAbsolutePath());
-                                    }
-                                });
-                            }
 
-                            @Override
-                            public void onDownloadFailed() {
-                                view.onItemDeselected();
-                                view.onLoadingDone();
-                            }
-                        }, item.getRemoteUrl());
+            } else {
+                view.setOnClickListener(v -> {
+                    if (!item.isItemDownloading() && item.isDownloaded()) {
+                        if (item.isItemChecked()) {
+                            onItemSelected(item);
+                            return;
+                        }
+                        onItemSelected(item);
+                        onWallpaperChanged(item.getAbsolutePath());
+                    } else {
+                        onItemPreSelected(item);
+                        item.downloadWallpaper();
                     }
                 });
             }
         }
 
         @Override
+        public void onViewRecycled(@NonNull WallpaperChooserViewHolder holder) {
+            mWallpaperInfoList.get(holder.getAdapterPosition()).bindView(null);
+        }
+
+        @Override
         public int getItemCount() {
-            return wallpaperInfoList.size();
+            return mWallpaperInfoList.size();
         }
     }
 

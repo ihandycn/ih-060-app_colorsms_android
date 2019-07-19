@@ -17,7 +17,7 @@ public class WallpaperDownloader {
     private static final String TAG = WallpaperDownloader.class.getSimpleName();
 
     public interface WallpaperDownloadListener {
-        void onDownloadSuccess(String path);
+        void onDownloadSuccess();
 
         void onDownloadFailed();
     }
@@ -36,7 +36,7 @@ public class WallpaperDownloader {
                     if (hsHttpConnection.isSucceeded()) {
                         HSLog.d(TAG, "File download success");
                         final String storedPath = storedWallpaper.getAbsolutePath();
-                        Threads.postOnMainThread(() -> listener.onDownloadSuccess(storedPath));
+                        Threads.postOnMainThread(() -> listener.onDownloadSuccess());
                     } else {
                         HSLog.d(TAG, "File download failed");
                         Threads.postOnMainThread(() -> {

@@ -5,7 +5,6 @@ import android.animation.AnimatorListenerAdapter;
 import android.animation.ObjectAnimator;
 import android.animation.ValueAnimator;
 import android.content.Context;
-import android.support.annotation.DrawableRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.util.AttributeSet;
@@ -20,19 +19,16 @@ import com.android.messaging.ui.customize.WallpaperDrawables;
 import com.superapps.util.BackgroundDrawables;
 import com.superapps.util.Dimensions;
 
-
 public class WallpaperChooserItemView extends FrameLayout {
 
     private ImageView mWallpaperIv;
     private View mAddPhotosContainer;
     private View mLoadingBg;
     private ImageView mLoadingIv;
-    private LottieAnimationView mLoadEndLottie;
+    private LottieAnimationView mCheckedLottie;
 
-    private ObjectAnimator mLoadingAnimator;
-    private boolean mIsItemSelected;
-    private boolean mIsLoadingPlaying;
-    private boolean mIsItemPreSelected;
+    private ObjectAnimator mDownloadingAnimator;
+    private boolean mIsDownloadAnimationPlaying;
 
     public WallpaperChooserItemView(@NonNull Context context) {
         super(context);
@@ -51,19 +47,21 @@ public class WallpaperChooserItemView extends FrameLayout {
         mAddPhotosContainer = findViewById(R.id.wallpaper_chooser_add_photo_container);
         mLoadingBg = findViewById(R.id.wallpaper_loading_bg);
         mLoadingIv = findViewById(R.id.wallpaper_loading_image);
-        mLoadEndLottie = findViewById(R.id.wallpaper_loading_end);
+        mCheckedLottie = findViewById(R.id.wallpaper_loading_end);
         mLoadingBg.setBackground(BackgroundDrawables.createBackgroundDrawable(
                 getContext().getResources().getColor(R.color.black_20_transparent),
                 Dimensions.pxFromDp(16), false));
 
+        mLoadingIv.setImageResource(R.drawable.wallpaper_loading);
+
         mLoadingBg.setVisibility(GONE);
         mLoadingIv.setVisibility(GONE);
-        mLoadEndLottie.setVisibility(GONE);
+        mCheckedLottie.setVisibility(GONE);
 
-        mLoadingAnimator = ObjectAnimator.ofFloat(mLoadingIv, "rotation", 0, 360);
-        mLoadingAnimator.setInterpolator(new LinearInterpolator());
-        mLoadingAnimator.setDuration(1000);
-        mLoadingAnimator.setRepeatCount(ValueAnimator.INFINITE);
+        mDownloadingAnimator = ObjectAnimator.ofFloat(mLoadingIv, "rotation", 0, 360);
+        mDownloadingAnimator.setInterpolator(new LinearInterpolator());
+        mDownloadingAnimator.setDuration(1000);
+        mDownloadingAnimator.setRepeatCount(ValueAnimator.INFINITE);
     }
 
     @Override
@@ -75,92 +73,68 @@ public class WallpaperChooserItemView extends FrameLayout {
     @Override
     protected void onDetachedFromWindow() {
         super.onDetachedFromWindow();
-        if (mLoadingAnimator != null) {
-            mLoadingAnimator.cancel();
+        if (mDownloadingAnimator != null) {
+            mDownloadingAnimator.cancel();
         }
     }
 
-    public void setChooserItem(WallpaperChooserItem item) {
+    public void initViewByItemState(WallpaperChooserItem item) {
         int viewType = item.getItemType();
         if (viewType == WallpaperChooserItem.TYPE_ADD_PHOTO) {
             mAddPhotosContainer.setVisibility(View.VISIBLE);
             mWallpaperIv.setVisibility(View.GONE);
         } else if (viewType == WallpaperChooserItem.TYPE_EMPTY) {
+            mWallpaperIv.setVisibility(VISIBLE);
             if (WallpaperDrawables.getConversationWallpaperBg() != null) {
                 mWallpaperIv.setImageDrawable(WallpaperDrawables.getConversationWallpaperBg());
             } else {
                 mWallpaperIv.setImageDrawable(BackgroundDrawables.createBackgroundDrawable(
                         0xffffffff, Dimensions.pxFromDp(3.3f), false));
             }
+            mAddPhotosContainer.setVisibility(View.GONE);
+            setBackground(null);
         } else {
-            setThumbnail(item.getThumbnailResId());
+            mWallpaperIv.setVisibility(VISIBLE);
+            mWallpaperIv.setImageResource(item.getThumbnailResId());
+            mAddPhotosContainer.setVisibility(View.GONE);
+            setBackground(null);
+        }
+
+        if (mDownloadingAnimator.isRunning()) {
+            mDownloadingAnimator.cancel();
+        }
+        if (mCheckedLottie.isAnimating()) {
+            mCheckedLottie.cancelAnimation();
+        }
+        if (item.isItemDownloading()) {
+            mIsDownloadAnimationPlaying = true;
+            mCheckedLottie.setVisibility(GONE);
+            mLoadingBg.setVisibility(VISIBLE);
+            mLoadingBg.setAlpha(1);
+            mLoadingIv.setVisibility(VISIBLE);
+            mLoadingIv.setAlpha(255);
+            mDownloadingAnimator.start();
+        } else if (item.isItemChecked()) {
+            mCheckedLottie.setProgress(1);
+            mCheckedLottie.setVisibility(VISIBLE);
+            mLoadingBg.setAlpha(1);
+            mLoadingBg.setVisibility(VISIBLE);
+            mLoadingIv.setVisibility(GONE);
+        } else {
+            mCheckedLottie.setVisibility(GONE);
+            mLoadingBg.setVisibility(GONE);
+            mLoadingIv.setVisibility(GONE);
         }
     }
 
-    public void setThumbnail(@DrawableRes int resId) {
-        mWallpaperIv.setImageResource(resId);
-    }
-
-    public boolean isItemSelected() {
-        return mIsItemSelected;
-    }
-
-    public void onItemPreSelected() {
-        mIsItemPreSelected = true;
-    }
-
-    public boolean isItemPreSelected() {
-        return mIsItemPreSelected;
-    }
-
-    public void onItemSelected() {
-        mIsItemSelected = true;
-        onSelected();
-    }
-
-    public void onItemDeselected() {
-        mIsItemPreSelected = false;
-        if (mIsItemSelected) {
-            mIsItemSelected = false;
-            if (!mIsLoadingPlaying) {
-                onDeselected();
-            }
-        }
-        if (mLoadEndLottie.isAnimating()) {
-            mLoadEndLottie.cancelAnimation();
-        }
-    }
-
-    public void onLoadingDone() {
-        if (mIsItemSelected) {
-            onLoadingSuccessAndSelected();
-        } else if (mLoadingAnimator != null && mLoadingAnimator.isRunning()) {
-            ObjectAnimator ivAnimator = ObjectAnimator.ofFloat(mLoadingIv, "alpha", 1, 0);
-            ivAnimator.setDuration(200);
-            ivAnimator.start();
-            ObjectAnimator bgAnimator = ObjectAnimator.ofFloat(mLoadingBg, "alpha", 1, 0);
-            bgAnimator.setDuration(200);
-            bgAnimator.addListener(new AnimatorListenerAdapter() {
-                @Override
-                public void onAnimationEnd(Animator animation) {
-                    mLoadingAnimator.cancel();
-                }
-            });
-            bgAnimator.start();
-        }
-        mIsLoadingPlaying = false;
-    }
-
-    public void onLoadingStart() {
-        if (mIsLoadingPlaying) {
+    public void onDownloadStart() {
+        if (mIsDownloadAnimationPlaying) {
             return;
         }
-        mIsLoadingPlaying = true;
+        mIsDownloadAnimationPlaying = true;
         mLoadingBg.setVisibility(VISIBLE);
         mLoadingIv.setVisibility(VISIBLE);
-        mLoadingBg.setAlpha(0);
-        mLoadingIv.setImageResource(R.drawable.wallpaper_loading);
-        mLoadEndLottie.setVisibility(GONE);
+        mCheckedLottie.setVisibility(GONE);
 
         ObjectAnimator bgAnimator = ObjectAnimator.ofFloat(mLoadingBg, "alpha", 0, 1f);
         bgAnimator.setDuration(120);
@@ -168,59 +142,100 @@ public class WallpaperChooserItemView extends FrameLayout {
         ivAnimator.setDuration(120);
         bgAnimator.start();
         ivAnimator.start();
-        mLoadingAnimator.start();
+        if (mCheckedLottie.isAnimating()) {
+            mCheckedLottie.cancelAnimation();
+        }
+        mDownloadingAnimator.start();
     }
 
-    private void onDeselected() {
-        ObjectAnimator bgAnimator = ObjectAnimator.ofFloat(mLoadingBg, "alpha", 0f);
-        bgAnimator.setDuration(120);
+    public void setUncheckedState() {
+        mIsDownloadAnimationPlaying = false;
+        if (mCheckedLottie.isAnimating()) {
+            mCheckedLottie.cancelAnimation();
+        }
+        mCheckedLottie.setVisibility(GONE);
+        mLoadingIv.setVisibility(GONE);
 
-        mLoadEndLottie.setVisibility(GONE);
-        bgAnimator.start();
+        if (mLoadingBg.getVisibility() == VISIBLE
+                && mLoadingBg.getAlpha() == 1) {
+            ObjectAnimator bgAnimator = ObjectAnimator.ofFloat(mLoadingBg, "alpha", 0f);
+            bgAnimator.setDuration(120);
+            bgAnimator.start();
+        }
     }
 
-    private void onSelected() {
+    public void setCheckedState() {
+        mIsDownloadAnimationPlaying = false;
         mLoadingBg.setVisibility(VISIBLE);
         mLoadingBg.setAlpha(0);
 
-        mLoadEndLottie.setProgress(0);
-        mLoadEndLottie.setVisibility(VISIBLE);
+        mCheckedLottie.setProgress(0);
+        mCheckedLottie.setVisibility(VISIBLE);
 
         ObjectAnimator bgAnimator = ObjectAnimator.ofFloat(mLoadingBg, "alpha", 1f);
         bgAnimator.setDuration(120);
         bgAnimator.addListener(new AnimatorListenerAdapter() {
             @Override
             public void onAnimationEnd(Animator animation) {
-                mLoadEndLottie.playAnimation();
+                mCheckedLottie.playAnimation();
             }
         });
-
         bgAnimator.start();
     }
 
-    private void onLoadingSuccessAndSelected() {
-        if (mLoadingAnimator != null && mLoadingAnimator.isRunning()) {
+    //download finish but not check
+    public void onDownloadFinish() {
+        // if (mDownloadingAnimator != null && mDownloadingAnimator.isRunning()) {
+        if (mLoadingIv.getVisibility() == VISIBLE && mLoadingIv.getAlpha() == 1) {
+            ObjectAnimator ivAnimator = ObjectAnimator.ofFloat(mLoadingIv, "alpha", 1, 0);
+            ivAnimator.setDuration(200);
+            ivAnimator.start();
+        }
+        if (mLoadingBg.getVisibility() == VISIBLE && mLoadingBg.getAlpha() == 1) {
+            ObjectAnimator bgAnimator = ObjectAnimator.ofFloat(mLoadingBg, "alpha", 1, 0);
+            bgAnimator.setDuration(200);
+            bgAnimator.addListener(new AnimatorListenerAdapter() {
+                @Override
+                public void onAnimationEnd(Animator animation) {
+                    mDownloadingAnimator.cancel();
+                }
+            });
+            bgAnimator.start();
+        } else {
+            mDownloadingAnimator.cancel();
+        }
+        //   }
+        mIsDownloadAnimationPlaying = false;
+    }
+
+    //download finish & check
+    public void onDownloadSuccessAndChecked() {
+        if (mIsDownloadAnimationPlaying) {
             ObjectAnimator ivAnimator = ObjectAnimator.ofFloat(mLoadingIv, "alpha", 1, 0);
             ivAnimator.setDuration(200);
             ivAnimator.addListener(new AnimatorListenerAdapter() {
                 @Override
                 public void onAnimationEnd(Animator animation) {
-                    mLoadEndLottie.setVisibility(VISIBLE);
-                    mLoadEndLottie.playAnimation();
+                    mDownloadingAnimator.cancel();
+                    mCheckedLottie.setVisibility(VISIBLE);
+                    mCheckedLottie.playAnimation();
                 }
             });
             ivAnimator.start();
         } else {
+            mLoadingIv.setVisibility(GONE);
             ObjectAnimator bgAnimator = ObjectAnimator.ofFloat(mLoadingBg, "alpha", 0, 1);
             bgAnimator.setDuration(120);
             bgAnimator.addListener(new AnimatorListenerAdapter() {
                 @Override
                 public void onAnimationEnd(Animator animation) {
-                    mLoadEndLottie.setVisibility(VISIBLE);
-                    mLoadEndLottie.playAnimation();
+                    mCheckedLottie.setVisibility(VISIBLE);
+                    mCheckedLottie.playAnimation();
                 }
             });
             bgAnimator.start();
         }
+
+        mIsDownloadAnimationPlaying = false;
     }
 }

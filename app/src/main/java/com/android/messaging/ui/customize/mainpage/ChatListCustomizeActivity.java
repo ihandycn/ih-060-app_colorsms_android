@@ -375,7 +375,7 @@ public class ChatListCustomizeActivity extends BaseActivity implements INotifica
                 String wallpaperPath = hsBundle.getString(BUNDLE_KEY_WALLPAPER_PATH);
                 setPreviewImage(wallpaperPath, true);
                 mCurrentSelectedWallpaperPath = wallpaperPath;
-                mControlView.onItemSelected(null);
+                mControlView.onCustomItemSelected();
                 mControlView.resetOpacitySeekBar();
                 mBgMaskView.setAlpha(0);
                 break;

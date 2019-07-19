@@ -44,7 +44,7 @@ public class WallpaperManager {
         }
     }
 
-    public static void onWallpaperChanged() {
+    static void onWallpaperChanged() {
         if (sWallpaperChangeListeners == null || sWallpaperChangeListeners.size() == 0) {
             return;
         }
@@ -54,7 +54,7 @@ public class WallpaperManager {
         }
     }
 
-    public static void onOnlineWallpaperChanged() {
+    static void onOnlineWallpaperChanged() {
         if (sWallpaperChangeListeners == null || sWallpaperChangeListeners.size() == 0) {
             return;
         }
@@ -156,7 +156,7 @@ public class WallpaperManager {
         sPrefs.remove(PREF_KEY_WALLPAPER_PATH);
     }
 
-    public static String getWallpaperPath() {
+    private static String getWallpaperPath() {
         String wallpaperPath = sPrefs.
                 getString(PREF_KEY_WALLPAPER_PATH, "");
         if (wallpaperPath != null && !wallpaperPath.equals("")) {
@@ -183,7 +183,7 @@ public class WallpaperManager {
         emptyItem.setItemType(WallpaperChooserItem.TYPE_EMPTY);
         list.add(emptyItem);
 
-        for (int i = 0; i < WallpaperChooserItem.sThumbnailRes.length; i++) {
+        for (int i = 0; i < WallpaperInfos.sThumbnailRes.length; i++) {
             WallpaperChooserItem item = new WallpaperChooserItem();
             item.setItemType(WallpaperChooserItem.TYPE_NORMAL_WALLPAPER);
             item.setIndex(i);

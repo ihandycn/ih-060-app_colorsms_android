@@ -80,6 +80,7 @@ import com.android.messaging.ui.signature.SignatureSettingDialog;
 import com.android.messaging.ui.smspro.BillingActivity;
 import com.android.messaging.ui.wallpaper.WallpaperChooserItem;
 import com.android.messaging.ui.wallpaper.WallpaperDownloader;
+import com.android.messaging.ui.wallpaper.WallpaperInfos;
 import com.android.messaging.ui.wallpaper.WallpaperManager;
 import com.android.messaging.ui.wallpaper.WallpaperPreviewActivity;
 import com.android.messaging.util.BugleAnalytics;
@@ -243,8 +244,8 @@ public class ConversationListActivity extends AbstractConversationListActivity
                 } else if (bgPath.contains("_1.png")) {
                     backgroundStr = "customize";
                 } else {
-                    for (int i = 0; i < WallpaperChooserItem.sRemoteUrl.length; i++) {
-                        if (WallpaperDownloader.getAbsolutePath(WallpaperChooserItem.sRemoteUrl[i]).equals(bgPath)) {
+                    for (int i = 0; i < WallpaperInfos.sRemoteUrl.length; i++) {
+                        if (WallpaperDownloader.getAbsolutePath(WallpaperInfos.sRemoteUrl[i]).equals(bgPath)) {
                             wallpaperIndex = i;
                             break;
                         }
