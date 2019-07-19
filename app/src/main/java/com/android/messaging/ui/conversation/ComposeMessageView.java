@@ -1013,17 +1013,14 @@ public class ComposeMessageView extends LinearLayout
                 final List<MessagePartData> attachments = data.getReadOnlyAttachments();
                 final List<PendingAttachmentData> pendingAttachments =
                         data.getReadOnlyPendingAttachments();
-                if (attachments.isEmpty() && pendingAttachments.isEmpty()) {
-                    return;
+                if (!attachments.isEmpty() || !pendingAttachments.isEmpty()) {
+                    ViewStub stub = findViewById(R.id.attachment_container_stub);
+                    mAttachmentPreview = stub.inflate().findViewById(R.id.attachment_draft_view);
+                    mAttachmentPreview.setComposeMessageView(this);
+                    final boolean haveAttachments = mAttachmentPreview.onAttachmentsChanged(data);
+                    mHost.onAttachmentsChanged(haveAttachments);
                 }
-
-                ViewStub stub = findViewById(R.id.attachment_container_stub);
-                mAttachmentPreview = stub.inflate().findViewById(R.id.attachment_draft_view);
-                mAttachmentPreview.setComposeMessageView(this);
             }
-
-            final boolean haveAttachments = mAttachmentPreview.onAttachmentsChanged(data);
-            mHost.onAttachmentsChanged(haveAttachments);
         }
 
         if ((changeFlags & DraftMessageData.SELF_CHANGED) == DraftMessageData.SELF_CHANGED) {
