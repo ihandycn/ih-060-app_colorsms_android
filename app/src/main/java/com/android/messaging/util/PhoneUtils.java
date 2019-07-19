@@ -592,11 +592,11 @@ public abstract class PhoneUtils {
 
         private int getEffectiveIncomingSubIdFromSystem(int subId) {
             if (subId < 0) {
-                if (getActiveSubscriptionCount() > 1) {
-                    // For multi-SIM device, we can not decide which SIM to use if system
-                    // does not know either. So just make it the invalid sub id.
-                    return ParticipantData.DEFAULT_SELF_SUB_ID;
-                }
+//                if (getActiveSubscriptionCount() > 1) {
+//                    // For multi-SIM device, we can not decide which SIM to use if system
+//                    // does not know either. So just make it the invalid sub id.
+//                    return ParticipantData.DEFAULT_SELF_SUB_ID;
+//                }
                 // For single-SIM device, it must come from the only SIM we have
                 return getDefaultSmsSubscriptionId();
             }
