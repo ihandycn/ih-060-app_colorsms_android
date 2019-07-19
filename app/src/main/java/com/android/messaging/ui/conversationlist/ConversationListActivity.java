@@ -196,12 +196,14 @@ public class ConversationListActivity extends AbstractConversationListActivity
     private String size;
     private View mPrivateBoxEntrance;
     private AcbInterstitialAd mInterstitialAd;
+    private boolean mInterstitialAdShown;
     private long mLastAdClickTime = 0;
     private boolean mIsExitAdShown;
 
     private boolean mIsMessageMoving;
     private LottieAnimationView mLottieAnimationView;
     private final BuglePrefs mPrefs = Factory.get().getApplicationPrefs();
+
     @Override
     @DebugLog
     protected void onCreate(final Bundle savedInstanceState) {
@@ -368,7 +370,7 @@ public class ConversationListActivity extends AbstractConversationListActivity
     @DebugLog
     protected void onResume() {
         super.onResume();
-        if (mIsExitAdShown){
+        if (mIsExitAdShown) {
             showExitAppAnimation();
             return;
         }
@@ -958,6 +960,7 @@ public class ConversationListActivity extends AbstractConversationListActivity
 
             mInterstitialAd.setSoundEnable(false);
             mInterstitialAd.show();
+            mInterstitialAdShown = true;
             BugleAnalytics.logEvent("SMS_ExitAd_Show", true);
             BugleAnalytics.logEvent("SMS_Ad", false, true, "type", "exitad_show");
             ExitAdAutopilotUtils.logExitAdShow();
@@ -966,6 +969,17 @@ public class ConversationListActivity extends AbstractConversationListActivity
             return true;
         } else {
             return false;
+        }
+    }
+
+    @Override protected void onRestart() {
+        super.onRestart();
+
+        if (mInterstitialAdShown) {
+            Intent intent = new Intent(this, ConversationListActivity.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            startActivity(intent);
+            mInterstitialAdShown = false;
         }
     }
 
