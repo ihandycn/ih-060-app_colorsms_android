@@ -180,13 +180,13 @@ public class ConversationMessageView extends RelativeLayout implements View.OnCl
     @Override
     protected void onMeasure(final int widthMeasureSpec, final int heightMeasureSpec) {
         final int horizontalSpace = MeasureSpec.getSize(widthMeasureSpec);
-        final int iconSize = getResources()
+        final int iconContainerSize = getResources()
                 .getDimensionPixelSize(R.dimen.conversation_message_contact_icon_container_size);
 
         final int unspecifiedMeasureSpec = MeasureSpec.makeMeasureSpec(0, MeasureSpec.UNSPECIFIED);
 
         if (mContactIconContainer != null) {
-            final int iconMeasureSpec = MeasureSpec.makeMeasureSpec(iconSize, MeasureSpec.EXACTLY);
+            final int iconMeasureSpec = MeasureSpec.makeMeasureSpec(iconContainerSize, MeasureSpec.EXACTLY);
             mContactIconContainer.measure(iconMeasureSpec, iconMeasureSpec);
         }
 
@@ -197,6 +197,9 @@ public class ConversationMessageView extends RelativeLayout implements View.OnCl
         // We need to subtract contact icon width twice from the horizontal space to get
         // the max leftover space because we want the message bubble to extend no further than the
         // starting position of the message bubble in the opposite direction.
+        final int iconSize = getResources()
+                .getDimensionPixelSize(R.dimen.conversation_message_contact_icon_size);
+
         final int maxLeftoverSpace = horizontalSpace - iconSize * 2
                 - arrowWidth - getPaddingLeft() - getPaddingRight();
         final int messageContentWidthMeasureSpec = MeasureSpec.makeMeasureSpec(maxLeftoverSpace,

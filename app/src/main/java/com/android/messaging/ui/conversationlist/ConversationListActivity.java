@@ -199,6 +199,7 @@ public class ConversationListActivity extends AbstractConversationListActivity
     private boolean mInterstitialAdShown;
     private long mLastAdClickTime = 0;
     private boolean mIsExitAdShown;
+    private boolean mHasInflatedDrawer;
 
     private boolean mIsMessageMoving;
     private LottieAnimationView mLottieAnimationView;
@@ -346,6 +347,12 @@ public class ConversationListActivity extends AbstractConversationListActivity
     }
 
     private void onPostPageVisible() {
+
+        if (mHasInflatedDrawer) {
+            return;
+        }
+        mHasInflatedDrawer = true;
+
         setupDrawer();
 
         if (AdConfig.isHomepageBannerAdEnabled()) {
