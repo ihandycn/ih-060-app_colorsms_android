@@ -184,10 +184,6 @@ public class WelcomeStartActivity extends AppCompatActivity implements View.OnCl
                     BugleAnalytics.logEventToFirebase("Device_ExtraHigh_Retention", new HashMap<>());
                 }
             }
-
-            if (Compats.IS_HUAWEI_DEVICE) {
-                BugleAnalytics.logEventToFirebase("Device_HUAWEI", new HashMap<>());
-            }
         }, "pref_key_log_retention_events");
     }
 

@@ -104,6 +104,7 @@ import com.ihs.commons.utils.HSBundle;
 import com.ihs.commons.utils.HSLog;
 import com.superapps.util.BackgroundDrawables;
 import com.superapps.util.Calendars;
+import com.superapps.util.Compats;
 import com.superapps.util.Dimensions;
 import com.superapps.util.Navigations;
 import com.superapps.util.Preferences;
@@ -144,6 +145,9 @@ public class ConversationListActivity extends AbstractConversationListActivity
     public static final String SHOW_EMOJI = "show_emoj";
     public static final String FIRST_LOAD = "first_load";
     public static final String HAS_PIN_CONVERSATION = "has_pin_conversation";
+
+    public static final String PREF_KEY_LAST_SHOW_TIME = "pref_key_last_show_time";
+    public static final String PREF_KEY_TODAY_SHOW_COUNT = "pref_key_today_show_count";
 
     public static final String PREF_KEY_MAIN_DRAWER_OPENED = "pref_key_main_drawer_opened";
     private static final String PREF_KEY_THEME_CLICKED = "pref_key_navigation_theme_clicked";
@@ -315,6 +319,16 @@ public class ConversationListActivity extends AbstractConversationListActivity
                         "Popups", String.valueOf(MessageBoxSettings.isSMSAssistantModuleEnabled()),
                         "DeliveryReport", String.valueOf(Preferences.getDefault().getBoolean(getString(R.string.delivery_reports_pref_key),
                                 getResources().getBoolean(R.bool.delivery_reports_pref_default))));
+
+                if (Compats.IS_HUAWEI_DEVICE) {
+                    BugleAnalytics.logEventToFirebase("Device_HUAWEI", new HashMap<>());
+                } else if (Compats.IS_MOTOROLA_DEVICE || Compats.IS_LGE_DEVICE) {
+                    BugleAnalytics.logEventToFirebase("Device_MOTOLG", new HashMap<>());
+                } else if (Compats.IS_SAMSUNG_DEVICE) {
+                    BugleAnalytics.logEventToFirebase("Device_Samsung", new HashMap<>());
+                } else if (Compats.IS_VIVO_DEVICE) {
+                    BugleAnalytics.logEventToFirebase("Device_Vivo", new HashMap<>());
+                }
             });
         }
 
@@ -365,9 +379,18 @@ public class ConversationListActivity extends AbstractConversationListActivity
             }
         }
 
+        if (!Calendars.isSameDay(System.currentTimeMillis(),
+                Preferences.getDefault().getLong(PREF_KEY_LAST_SHOW_TIME, -1))) {
+            Preferences.getDefault().putInt(PREF_KEY_TODAY_SHOW_COUNT, 0);
+        }
+        int todayShowCount = Preferences.getDefault().incrementAndGetInt(PREF_KEY_TODAY_SHOW_COUNT);
+        Preferences.getDefault().putLong(PREF_KEY_LAST_SHOW_TIME, System.currentTimeMillis());
+        if (todayShowCount > 20) {
+            BugleAnalytics.logEventToFirebase("SMS_Messages_Show_Positive", new HashMap<>());
+        }
+
         BugleAnalytics.logEvent("SMS_Messages_Show_Corrected", true, true);
         AutopilotEvent.logTopicEvent("topic-768lyi3sp", "homepage_show");
-        Preferences.getDefault().incrementAndGetInt(CustomizeGuideController.PREF_KEY_MAIN_PAGE_SHOW_TIME);
         showThemeUpgradeDialog();
 
         if (drawerLayout != null) {
