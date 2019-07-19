@@ -7,7 +7,6 @@ import android.database.Cursor;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Handler;
 import android.provider.Telephony;
 import android.support.annotation.NonNull;
 import android.support.constraint.ConstraintLayout;
@@ -994,6 +993,9 @@ public class ConversationListActivity extends AbstractConversationListActivity
             Intent intent = new Intent(this, ConversationListActivity.class);
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
             startActivity(intent);
+            if (mInterstitialAd != null){
+                mInterstitialAd.release();
+            }
             mIsExitAdShown = false;
             if (mExitAppAnimationViewContainer != null){
                 mExitAppAnimationViewContainer.setVisibility(View.GONE);
