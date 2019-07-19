@@ -477,9 +477,9 @@
 					<key>Enabled</key>
 					<true/>
 					<key>MinInterval</key>
-					<integer>5</integer>
+					<integer>3</integer>
 					<key>ShowAfterInstall</key>
-					<integer>2</integer>
+					<integer>1</integer>
 					<key>MaxTimes</key>
 					<integer>2</integer>
 				</dict>
