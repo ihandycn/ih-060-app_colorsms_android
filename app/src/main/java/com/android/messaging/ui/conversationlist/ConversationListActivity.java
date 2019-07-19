@@ -922,12 +922,6 @@ public class ConversationListActivity extends AbstractConversationListActivity
                     }, 200);
 
                     mIsExitAdShown = true;
-                    final ConversationListFragment conversationListFragment =
-                            (ConversationListFragment) getFragmentManager().findFragmentById(
-                                    R.id.conversation_list_fragment);
-                    if (conversationListFragment != null) {
-                        conversationListFragment.setExitAdShown(mIsExitAdShown);
-                    }
                 }
 
                 @Override
@@ -985,6 +979,10 @@ public class ConversationListActivity extends AbstractConversationListActivity
         } else {
             return false;
         }
+    }
+
+    boolean getExitAdShown() {
+        return mIsExitAdShown;
     }
 
     @Override protected void onRestart() {

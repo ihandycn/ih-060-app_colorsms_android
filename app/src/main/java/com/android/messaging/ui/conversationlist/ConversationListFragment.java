@@ -129,7 +129,6 @@ public class ConversationListFragment extends Fragment implements ConversationLi
     private boolean adFirstPrepared = true;
     private boolean conversationFirstUpdated = true;
     private boolean isFirstOnResume = true;
-    private boolean mIsExitAdShown;
 
     private AcbNativeAd mNativeAd;
     private AcbNativeAdLoader mNativeAdLoader;
@@ -196,8 +195,11 @@ public class ConversationListFragment extends Fragment implements ConversationLi
     @Override
     public void onResume() {
         super.onResume();
-        if (mIsExitAdShown){
-            return;
+        Activity activity = getActivity();
+        if (activity instanceof ConversationListActivity) {
+            if (((ConversationListActivity) activity).getExitAdShown()) {
+                return;
+            }
         }
         if (mRecyclerView != null) {
             if (mRecyclerView.canScrollVertically(-1)) {
@@ -793,10 +795,6 @@ public class ConversationListFragment extends Fragment implements ConversationLi
 
     public void hideBackupBannerGuide() {
         mBackupBannerGuideContainer.setVisibility(View.GONE);
-    }
-
-    public void setExitAdShown(boolean isExitAdShown){
-        mIsExitAdShown = isExitAdShown;
     }
 
     /**
