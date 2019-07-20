@@ -58,6 +58,11 @@ public class ProcessDeliveryReportAction extends Action implements Parcelable {
 
         final DatabaseWrapper db = DataModel.get().getDatabase();
 
+        if (smsMessageUri == null) {
+            LogUtil.e(TAG, "ProcessDeliveryReportAction: can't find message");
+            return null;
+        }
+
         final long messageRowId = ContentUris.parseId(smsMessageUri);
         if (messageRowId < 0) {
             LogUtil.e(TAG, "ProcessDeliveryReportAction: can't find message");
@@ -83,7 +88,7 @@ public class ProcessDeliveryReportAction extends Action implements Parcelable {
                     BugleDatabaseOperations.readMessageData(db, smsMessageUri);
 
             // Check the message was not removed before the delivery report comes in
-            if (messageData !=  null) {
+            if (messageData != null) {
                 Assert.isTrue(smsMessageUri.equals(messageData.getSmsMessageUri()));
 
                 // Row must exist as was just loaded above (on ActionService thread)
