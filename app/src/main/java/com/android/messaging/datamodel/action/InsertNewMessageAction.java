@@ -178,7 +178,9 @@ public class InsertNewMessageAction extends Action implements Parcelable {
                 // Start actual sending
                 MessageData messageData = insertSendingSmsMessage(message, subId, recipient,
                         timestamp, sendingConversationId);
-                messageId = messageData.getMessageId();
+                if (messageData != null) {
+                    messageId = messageData.getMessageId();
+                }
             }
 
             // Can now clear draft from conversation (deleting attachments if necessary)
@@ -189,7 +191,9 @@ public class InsertNewMessageAction extends Action implements Parcelable {
             // Write place holder message directly referencing parts from the draft
             final MessageData messageToSend = insertSendingMmsMessage(conversationId,
                     message, timestampRoundedToSecond);
-            messageId = messageToSend.getMessageId();
+            if (messageToSend != null) {
+                messageId = messageToSend.getMessageId();
+            }
 
             // Can now clear draft from conversation (preserving attachments which are now
             // referenced by messageToSend)
