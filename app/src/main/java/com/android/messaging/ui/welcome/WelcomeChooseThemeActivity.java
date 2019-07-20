@@ -29,7 +29,7 @@ public class WelcomeChooseThemeActivity extends AppCompatActivity {
                     BugleActivityUtil.cancelAdaptScreen(WelcomeChooseThemeActivity.this);
                     UIIntents.get().launchConversationListActivity(WelcomeChooseThemeActivity.this);
                     finish();
-                    BugleAnalytics.logEvent("Start_ChooseTheme_Apply", true, true, "theme", themeInfo.name);
+                    BugleAnalytics.logEvent("Start_ChooseTheme_Apply", true, true, "theme", themeInfo.mThemeKey);
                 }));
 
         BugleAnalytics.logEvent("Start_ChooseTheme_Show", true, true);
