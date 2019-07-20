@@ -19,14 +19,15 @@ import com.android.messaging.ui.emoji.utils.EmojiManager;
 import com.android.messaging.util.DisplayUtils;
 import com.superapps.util.BackgroundDrawables;
 import com.superapps.util.Dimensions;
+import com.android.messaging.ui.emoji.EmojiPagerFragment.OnEmojiClickListener;
 
 public class EmojiVariantPopup {
-    private final EmojiPackagePagerAdapter.OnEmojiClickListener mListener;
+    private final OnEmojiClickListener mListener;
     private PopupWindow mPopupWindow;
     private View mAnchorView;
     private final View mRootView;
 
-    public EmojiVariantPopup(View rootView, EmojiPackagePagerAdapter.OnEmojiClickListener onEmojiInfoClickListener) {
+    public EmojiVariantPopup(View rootView, OnEmojiClickListener onEmojiInfoClickListener) {
         this.mRootView = rootView;
         this.mListener = onEmojiInfoClickListener;
     }

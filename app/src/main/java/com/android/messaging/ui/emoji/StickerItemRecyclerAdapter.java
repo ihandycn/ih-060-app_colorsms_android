@@ -12,6 +12,7 @@ import com.android.messaging.R;
 import com.android.messaging.ui.emoji.utils.EmojiConfig;
 import com.android.messaging.ui.emoji.utils.EmojiManager;
 import com.superapps.util.Threads;
+import com.android.messaging.ui.emoji.EmojiPagerFragment.OnEmojiClickListener;
 
 import java.util.List;
 
@@ -20,10 +21,10 @@ public class StickerItemRecyclerAdapter extends BaseStickerItemRecyclerAdapter {
     private List<BaseEmojiInfo> mData;
     private int mMagicPreloadCount;
     private int mPositionInViewPager;
-    private EmojiPackagePagerAdapter.OnEmojiClickListener mOnEmojiClickListener;
+    private OnEmojiClickListener mOnEmojiClickListener;
     private boolean mCouldClickSticker = true;
 
-    StickerItemRecyclerAdapter(int position, List<BaseEmojiInfo> data, EmojiPackagePagerAdapter.OnEmojiClickListener emojiClickListener) {
+    StickerItemRecyclerAdapter(int position, List<BaseEmojiInfo> data, OnEmojiClickListener emojiClickListener) {
         mPositionInViewPager = position;
         mOnEmojiClickListener = emojiClickListener;
         mData = data;

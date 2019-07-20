@@ -6,8 +6,7 @@ public enum EmojiType {
     STICKER_MAGIC(3),
     STICKER_GIF(4),
     EMOJI_EMPTY(5),
-    EMOJI_DELETE(6),
-    GIPHY_GIF(7);
+    GIPHY_GIF(6);
 
     public int value;
 
@@ -28,8 +27,6 @@ public enum EmojiType {
             case 5:
                 return EMOJI_EMPTY;
             case 6:
-                return EMOJI_DELETE;
-            case 7:
                 return GIPHY_GIF;
             default:
                 throw new IllegalStateException(value + "no this type!!!");

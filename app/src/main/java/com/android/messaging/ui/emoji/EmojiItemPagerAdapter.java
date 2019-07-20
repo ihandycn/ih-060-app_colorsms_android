@@ -16,7 +16,7 @@ import com.android.messaging.R;
 import com.android.messaging.ui.customize.PrimaryColors;
 import com.android.messaging.ui.emoji.utils.EmojiManager;
 import com.superapps.util.Dimensions;
-
+import com.android.messaging.ui.emoji.EmojiPagerFragment.OnEmojiClickListener;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -29,9 +29,9 @@ public class EmojiItemPagerAdapter extends AbstractEmojiItemPagerAdapter {
     private boolean mIsFirst = true;
 
     private List<EmojiPackageInfo> mData = new ArrayList<>();
-    private EmojiPackagePagerAdapter.OnEmojiClickListener mOnEmojiClickListener;
+    private OnEmojiClickListener mOnEmojiClickListener;
 
-    public EmojiItemPagerAdapter(Context context, List<EmojiPackageInfo> data, EmojiPackagePagerAdapter.OnEmojiClickListener emojiClickListener) {
+    public EmojiItemPagerAdapter(Context context, List<EmojiPackageInfo> data, OnEmojiClickListener emojiClickListener) {
         if (data == null || data.isEmpty()) {
             return;
         }
@@ -77,7 +77,8 @@ public class EmojiItemPagerAdapter extends AbstractEmojiItemPagerAdapter {
     }
 
     // init emoji exclude recent emoji
-    public void initData(List<EmojiPackageInfo> infoList) {
+    @Override
+    public void loadData(List<EmojiPackageInfo> infoList) {
         for (int i = 1; i < mData.size(); i++) {
             mData.get(i).mEmojiInfoList.clear();
             mData.get(i).mEmojiInfoList.addAll(infoList.get(i - 1).mEmojiInfoList);

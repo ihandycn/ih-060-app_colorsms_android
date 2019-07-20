@@ -2,7 +2,6 @@ package com.android.messaging.ui.emoji;
 
 import android.content.Context;
 import android.graphics.Rect;
-import android.os.Parcelable;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
@@ -13,6 +12,7 @@ import android.widget.ImageView;
 
 import com.android.messaging.R;
 import com.android.messaging.glide.GlideApp;
+import com.android.messaging.ui.emoji.EmojiPagerFragment.OnEmojiClickListener;
 import com.android.messaging.ui.emoji.utils.GiphyListManager;
 import com.android.messaging.util.BugleAnalytics;
 import com.android.messaging.util.UiUtils;
@@ -22,7 +22,6 @@ import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
 import com.bumptech.glide.request.RequestOptions;
 import com.giphy.sdk.core.models.Image;
 import com.giphy.sdk.core.models.Media;
-import com.ihs.commons.utils.HSLog;
 import com.superapps.util.Dimensions;
 
 import java.util.ArrayList;
@@ -39,7 +38,7 @@ public class GiphyItemRecyclerAdapter extends RecyclerView.Adapter<GiphyItemRecy
 
     private Context mContext;
     private List<BaseEmojiInfo> mDataList = new ArrayList<>(20);
-    private EmojiPackagePagerAdapter.OnEmojiClickListener mOnEmojiClickListener;
+    private OnEmojiClickListener mOnEmojiClickListener;
     private OnDataFetchedListener mOnDataFetchedListener;
 
     private int mOffset;
@@ -47,13 +46,13 @@ public class GiphyItemRecyclerAdapter extends RecyclerView.Adapter<GiphyItemRecy
 
     private boolean mIsRecentPage;
 
-    private GiphyItemRecyclerAdapter(EmojiPackagePagerAdapter.OnEmojiClickListener emojiClickListener, OnDataFetchedListener onDataFetchedListener, Context context) {
+    private GiphyItemRecyclerAdapter(OnEmojiClickListener emojiClickListener, OnDataFetchedListener onDataFetchedListener, Context context) {
         mOnEmojiClickListener = emojiClickListener;
         mOnDataFetchedListener = onDataFetchedListener;
         mContext = context;
     }
 
-    GiphyItemRecyclerAdapter(EmojiPackagePagerAdapter.OnEmojiClickListener emojiClickListener,
+    GiphyItemRecyclerAdapter(OnEmojiClickListener emojiClickListener,
                              OnDataFetchedListener onDataFetchedListener,
                              Context context,
                              String category) {
@@ -68,7 +67,7 @@ public class GiphyItemRecyclerAdapter extends RecyclerView.Adapter<GiphyItemRecy
 
     }
 
-    GiphyItemRecyclerAdapter(EmojiPackagePagerAdapter.OnEmojiClickListener emojiClickListener,
+    GiphyItemRecyclerAdapter(OnEmojiClickListener emojiClickListener,
                              OnDataFetchedListener onDataFetchedListener,
                              Context context,
                              List<BaseEmojiInfo> data) {

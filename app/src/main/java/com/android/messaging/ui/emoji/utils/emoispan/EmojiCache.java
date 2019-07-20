@@ -9,7 +9,6 @@ import com.android.messaging.ui.emoji.EmojiPackageInfo;
 import com.android.messaging.ui.emoji.utils.EmojiDataProducer;
 import com.android.messaging.ui.emoji.utils.EmojiManager;
 import com.ihs.app.framework.HSApplication;
-import com.ihs.commons.utils.HSLog;
 
 import java.util.List;
 
@@ -59,7 +58,6 @@ public class EmojiCache {
 
     public Drawable getFromCache(EmojiInfo emojiInfo) {
         Drawable drawable = mMemoryCache.get(emojiInfo.mResource);
-        HSLog.d("emoji_style_test", "drawable hit: " + (drawable != null));
         if (drawable == null) {
             Drawable drawableCreated = emojiInfo.getDrawable();
             if (drawableCreated != null) {
