@@ -38,7 +38,7 @@ public class WallpaperInfos {
             R.drawable.wallpaper_thumbnail_iceland
     };
 
-    private static final String sBaseUrl = "http://s3.amazonaws.com/superapps-dev/ColorSMS/wallpaper/";
+    private static final String sBaseUrl = "http://cdn.appcloudbox.net/smoothappsstudio/apps/bubble/chatbackground/";
 
     public static final String[] sRemoteUrl = {
             sBaseUrl + "wallpaper_abstract.jpg",
